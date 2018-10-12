@@ -1,0 +1,5 @@
+<div tal:repeat="item view/items">
+  <div tal:replace="python: view.display_item(item)">
+    item display here
+  </div>
+</div>

@@ -1,0 +1,28 @@
+<div
+  tal:define="css_class view/css_class | string:"
+  tal:attributes="class string:item-subform subform ${css_class};
+                  id view/form_name">
+
+  <metal:block use-macro="context/@@ploneform-macros/fields" />
+
+  <tal:block tal:condition="python: view.item ">
+      <h3 tal:content="view/get_record_title">Article title here</h3>
+  </tal:block>
+
+  <div tal:content="structure view/data_template | nothing"></div>
+  <div tal:content="structure view/extras | nothing"></div>
+
+  <tal:def define="subform view/subform | nothing">
+    <div class="subform-level-x" tal:condition="subform">
+      <div tal:content="structure subform">subform here</div>
+    </div>
+  </tal:def>
+
+  <!--<tal:def define="compliance view/compliance_module | nothing">-->
+    <!--<div tal:condition="compliance">-->
+      <!--<div tal:content="structure compliance">compliance module here</div>-->
+    <!--</div>-->
+  <!--</tal:def>-->
+
+
+</div>

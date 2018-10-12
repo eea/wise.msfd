@@ -1,0 +1,27 @@
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en"
+    xmlns:tal="http://xml.zope.org/namespaces/tal"
+    xmlns:metal="http://xml.zope.org/namespaces/metal"
+    xmlns:i18n="http://xml.zope.org/namespaces/i18n"
+    lang="en"
+    metal:use-macro="context/main_template/macros/master"
+    i18n:domain="plone">
+<body>
+
+<!-- <metal:content&#45;core fill&#45;slot="content&#45;core"> -->
+<!-- <metal:block define&#45;macro="content&#45;core"> -->
+<!--  -->
+<!-- <form> -->
+<!--   <select name="report_type" tal:define="options view/report_types"> -->
+<!--     <option>&#45;</option> -->
+<!--     <option -->
+<!--           tal:repeat="opt options" -->
+<!--           tal:content="opt" -->
+<!--           tal:attributes="value opt">Measures</option> -->
+<!--   </select> -->
+<!-- </form> -->
+<!--  -->
+<!-- </metal:block> -->
+<!-- </metal:content&#45;core> -->
+
+</body>
+</html>

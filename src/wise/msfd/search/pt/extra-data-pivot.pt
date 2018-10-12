@@ -1,0 +1,66 @@
+<div
+  tal:define="data options/extra_data | view/get_extra_data"
+  class="extra-details">
+
+    <tal:block tal:repeat="info data" >
+      <div class="extra-details-section">
+          <!-- tal:condition="python: len(info[1])>0" -->
+      <tal:section
+        define="section_title python: info[0];
+        section python: info[1];">
+
+        <div class="section-select">
+
+          <h4 class="section-title"><span tal:replace="section_title">...</span>:</h4>
+          <select class="notselect extra-details-select">
+            <tal:block tal:repeat="tab_title section">
+              <tal:block tal:define="utitle python: tab_title or section_title">
+                <option tal:attributes="title utitle; value python:view.title_as_id(utitle);"
+                        tal:content="structure python: view.print_value(utitle)">Section title here</option>
+              </tal:block>
+            </tal:block>
+          </select>
+
+        </div>
+        <p tal:condition="python: not section">No data</p>
+        <div class="tabs-wrapper" >
+          <div class="tab-content">
+            <tal:section tal:repeat="tab_title section">
+              <div
+                tal:define="utitle python:tab_title or section_title;"
+                tal:attributes="
+                class string: tab-panel;
+                id python: view.title_as_id(utitle);"
+                      role="tabpanel"
+              >
+
+                <tal:def define="section_data python:section[tab_title]">
+                  <p tal:condition="python: not section_data">No data</p>
+                  <table class="listing" tal:condition="section_data">
+                    <!-- tal:condition="section_data" -->
+                    <thead>
+                      <tr tal:define="row_labels python:section_data[0].keys()">
+                        <th tal:repeat="l row_labels"
+                            tal:content="python:view.name_as_title(l)">Label</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr tal:repeat="row section_data" >
+                        <td tal:repeat="v row/values"
+                            tal:content="structure python: view.print_value(v)">Value</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                  <!--<p tal:condition="python: not section_data">No data</p>-->
+                </tal:def>
+              </div>
+            </tal:section>
+
+          </div>
+        </div>
+
+      </tal:section>
+      </div>
+    </tal:block>
+
+</div>

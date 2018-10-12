@@ -1,0 +1,37 @@
+<div id="wise-search-form"
+     tal:attributes="id view/form_id | string:wise-search-form">
+
+  <div id="wise-search-form-top"
+       tal:attributes="id view/form_id_top | string:wise-search-form-top">
+    <metal:tabs
+       metal:use-macro="context/wise-macros/macros/tabs"></metal:tabs>
+  </div>
+
+  <div class="wise-search-form-container"
+    tal:attributes="id view/form_container_class | string:wise-search-form-container">
+
+    <!-- <h2 tal:content="view/title">Title here</h2> -->
+
+    <div tal:condition="not: view/subform_content">
+      Please refine your search.
+    </div>
+
+    <metal:block use-macro="context/@@ploneform-macros/titlelessform">
+      <metal:slot fill-slot="fields">
+        <div class="form-right-side">
+          <metal:block use-macro="context/@@ploneform-macros/fields" ></metal:block>
+        </div>
+      </metal:slot>
+      <metal:slot fill-slot="actions">
+        <div tal:content="structure view/subform_content | nothing">subform here</div>
+        <div class="form-right-side">
+          <metal:block use-macro="context/@@ploneform-macros/actions" />
+        </div>
+      </metal:slot>
+      <metal:css fill-slot="formtop">
+        <style>
+        </style>
+      </metal:css>
+    </metal:block>
+  </div>
+</div>

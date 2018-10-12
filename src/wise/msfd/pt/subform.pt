@@ -1,0 +1,11 @@
+<div tal:define="css_class view/css_class | string:"
+     tal:attributes="class string:subform ${css_class}; id view/form_name">
+  <metal:block use-macro="context/@@ploneform-macros/fields" />
+  <metal:block use-macro="context/@@ploneform-macros/actions" />
+
+  <tal:def define="subform view/subform | nothing">
+  <div tal:condition="subform">
+    <div tal:content="structure subform">subform here</div>
+  </div>
+  </tal:def>
+</div>

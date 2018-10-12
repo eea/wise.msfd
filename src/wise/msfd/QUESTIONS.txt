@@ -1,0 +1,50 @@
+- the "General" table in MSFDcompliancemodulefields.
+  - is it for a wizard like "Create a new report"... to choose what type of
+    report?
+
+  - assessment topic: not needed if we have tabs?
+
+
+- what to do about the different databases?
+- general data: is it one per descriptor? (asta se intelege din exemplul cu
+  Latvia). Cum se completeaza general data?
+
+
+- pot fi 2 assessemnturi pentru acelasi topic? una de la comisie, alta de la
+  consultanti? Can there be multiple assessments?
+
+- multiple regions?
+
+- how to get from feature to list of descriptors?
+
+
+- ce inseamna "Feature(s) reported" din Assessment 2018 pt Art 8? Are impact
+  asupra selectiei de GES descriptors?
+
+- articolul 8 si 10, avem nevoie de ajutor ca sa intelegem cum generam anumite
+  liste de campuri si criterii dupa care ne uitam dupa date in baza de date.
+
+- includem numai coloanele care contin date, sau le includem pe toate,
+  indiferent daca au date sau nu?
+
+
+- care este legatura dintre "feature reported" si descriptorii? Cand alegem un
+  descriptor, pot fi mai multe rapoarte, in functie de feature-ul care a fost
+  raportat?
+
+- cum se completeaza Assessment Topic din general? Se completeaza automat, pe
+  baza a informatiei din context (daca fac evaluarea la un GES descriptor
+  pentru Latvia, atunci voi fi cu assessment topic ca si "GES Descriptor", sau
+  poate fi "National Summary". Ce sunt celelalte valori?
+
+
+- do we need to implement specific listing tables (and python code) for each
+  descriptor?
+
+- how do we handle GESOther values? For example:
+  - GESOther value with '1.6' GESOther 1.6 [D5C8 Macrofaunal communities of
+    benthic habitats] listed in the example Excel file for Article 8 Latvia.
+  - There are no 1.6 GESOther values in Nutrient Assessment tables. There is
+    GESOther in Nutrient Assessment Criteria.
+  - But in the terms list mapping, 1.6 corresponds to D6C5, which is not a D5
+    descriptor

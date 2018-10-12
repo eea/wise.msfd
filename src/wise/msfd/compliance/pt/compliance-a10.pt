@@ -1,0 +1,194 @@
+<div class="row">
+  <div class="col-md-12">
+    <h4>Article 10: Environmental targets - 2012</h4>
+    <table class="table table-bordered table-striped first-table">
+      <tr>
+        <td>Article reported</td>
+        <td tal:attributes="colspan view/colspan"
+           tal:content="string:Article 10: Environmental targets (and Art. 17 updates)"/>
+      </tr>
+      <tr>
+        <td>Source file of Member State</td>
+        <td tal:attributes="colspan view/colspan"
+           tal:define="source_file string:http://cdr.eionet.europa.eu/lv/eu/msfd8910/ballv/envuxvsq/MSFD10TI_20130430_215739.xml/manage_document">
+          <a tal:attributes="href source_file"
+           tal:content="source_file"/>
+        </td>
+      </tr>
+      <tr>
+        <td>Assessors</td>
+        <td tal:attributes="colspan view/colspan"
+           tal:content="string:SM Body (Consultancy W); AN Other (Consultancy Y)"/>
+      </tr>
+      <tr>
+        <td>Date report due</td>
+        <td tal:attributes="colspan view/colspan"
+           tal:content="string:2012-10-15"/>
+      </tr>
+      <tr>
+        <td>Date reported by Member State</td>
+        <td tal:attributes="colspan view/colspan"
+           tal:content="string:2013-04-30"/>
+      </tr>
+      <tr>
+        <td>Date assessed</td>
+        <td tal:attributes="colspan view/colspan"
+           tal:content="string:2014-02-07"/>
+      </tr>
+    </table>
+  </div>
+</div>
+
+<div class="">
+  <div class="overflow-table">
+    <h4>2012 Member State report</h4>
+    <table class='table table-bordered table-striped' style='width: 100%; overflow:auto'
+      tal:define="criterias python: view.get_criterias_list(view.descriptor);
+          environment_data python: view.get_environment_data(view.muids);">
+      <tr>
+        <td>Reporting area(s)
+          [MarineUnitID]</td>
+        <td tal:attributes="colspan view/colspan"
+            tal:content="python: ', '.join(view.muids)"/>
+      </tr>
+
+      <tr>
+        <td>[GES component]</td>
+        <!--<tal:block tal:repeat="crit python: view.crit_lab_indics.keys()">-->
+        <td tal:content="python: view.criterion_labels.get(criterias[0][0], criterias[0][1])"/>
+        <tal:block tal:repeat="crit python: criterias[1:]">
+        <td tal:attributes="colspan python: len(view.crit_lab_indics[crit[0]])"
+            tal:content="python: view.criterion_labels.get(crit[0], crit[1])"/>
+        </tal:block>
+      </tr>
+
+      <tr>
+        <td>DescriptorCriterionIndicator</td>
+        <!--<tal:block tal:repeat="crit python: view.crit_lab_indics.keys()">-->
+        <tal:block tal:repeat="crit criterias">
+        <td tal:repeat="value python:view.crit_lab_indics[crit[0]]"
+            tal:content="value"/>
+        </tal:block>
+      </tr>
+
+      <tr>
+        <td>Feature
+          [Target code]</td>
+        <td tal:content="python: view.descriptor[1:]"/>
+        <td colspan="42">Row not implemented</td>
+      </tr>
+
+      <tr tal:define="col_name string:Description">
+        <td rowspan="2">Description
+          [Targets]</td>
+        <metal:macro define-macro="print_environment">
+          <td tal:content="python: getattr(environment_data, col_name)"/>
+        </metal:macro>
+        <td colspan="42">Row not implemented</td>
+      </tr>
+
+      <tr>
+        <td>Row not implemented [English description]</td>
+        <td colspan="42">Row not implemented</td>
+      </tr>
+
+      <tr tal:define="col_name string:ThresholdValue">
+        <td>Threshold value
+          [TargetValue]</td>
+        <metal:macro use-macro="template/macros/print_environment"/>
+        <!--<tal:block tal:repeat="crit python: view.crit_lab_indics.keys()">-->
+        <tal:block tal:repeat="crit python: criterias[1:]">
+        <tal:block tal:repeat="value python:view.crit_lab_indics[crit[0]]">
+        <td tal:define="print_val python: [u'{} = {}'.format(x.MarineUnitID,
+          x.ThresholdValue) for x in view.indicator_descriptors if x.ReportingFeature == value]">
+          <ul>
+            <li tal:repeat="val print_val"
+            tal:content="val"/>
+          </ul>
+        </td>
+        </tal:block>
+        </tal:block>
+      </tr>
+
+      <tr tal:define="col_name string:ReferencePointType">
+        <td>Reference point type</td>
+        <metal:macro use-macro="template/macros/print_environment"/>
+        <td colspan="42">Row not implemented</td>
+      </tr>
+
+      <tr tal:define="col_name string:Baseline">
+        <td>Baseline</td>
+        <metal:macro use-macro="template/macros/print_environment"/>
+        <td colspan="42">Row not implemented</td>
+      </tr>
+
+      <tr tal:define="col_name string:Proportion">
+        <td>Proportion</td>
+        <metal:macro use-macro="template/macros/print_environment"/>
+        <td colspan="42">Row not implemented</td>
+      </tr>
+
+      <tr tal:define="col_name string:AssessmentMethod">
+        <td>AssessmentMethod</td>
+        <metal:macro use-macro="template/macros/print_environment"/>
+        <td colspan="42">Row not implemented</td>
+      </tr>
+
+      <tr tal:define="col_name string:DevelopmentStatus">
+        <td>Development status</td>
+        <metal:macro use-macro="template/macros/print_environment"/>
+        <td colspan="42">Row not implemented</td>
+      </tr>
+
+      <tr tal:define="col_name string:TypeTargetIndicator">
+        <td>Type of target/indicator</td>
+        <metal:macro use-macro="template/macros/print_environment"/>
+        <td colspan="42">Row not implemented</td>
+      </tr>
+
+      <tr tal:define="col_name string:TimeScale">
+        <td>Timescale</td>
+        <metal:macro use-macro="template/macros/print_environment"/>
+        <td colspan="42">Row not implemented</td>
+      </tr>
+
+      <tr tal:define="col_name string:InterimGESTarget">
+        <td>Interim or GES target</td>
+        <metal:macro use-macro="template/macros/print_environment"/>
+        <td colspan="42">Row not implemented</td>
+      </tr>
+
+      <tr tal:define="col_name string:CompatibilityExistingTargets">
+        <td>Compatibility with existing
+          targets/indicators</td>
+        <metal:macro use-macro="template/macros/print_environment"/>
+        <td colspan="42">Row not implemented</td>
+      </tr>
+
+      <tr>
+        <td>Physical/chemical features</td>
+        <td>Not implemented</td>
+        <td colspan="42">Row not implemented</td>
+      </tr>
+
+      <tr>
+        <td>Predominant habitats</td>
+        <td>Not implemented</td>
+        <td colspan="42">Row not implemented</td>
+      </tr>
+
+      <tr>
+        <td>Functional groups</td>
+        <td>Not implemented</td>
+        <td colspan="42">Row not implemented</td>
+      </tr>
+
+      <tr>
+        <td>Pressures</td>
+        <td>Not implemented</td>
+        <td colspan="42">Row not implemented</td>
+      </tr>
+
+    </table>
+  </div>
+</div>

@@ -1,0 +1,1034 @@
+List_short_name,List_long_name
+AT,Austria
+BE,Belgium
+BG,Bulgaria
+CY,Cyprus
+CZ,Czech Republic
+DE,Germany
+DK,Denmark
+EE,Estonia
+EL,Greece
+ES,Spain
+FI,Finland
+FR,France
+HR,Croatia
+HU,Hungary
+IE,Ireland
+IT,Italy
+LT,Lithuania
+LU,Luxembourg
+LV,Latvia
+MT,Malta
+NL,Netherlands
+PL,Poland
+PT,Portugal
+RO,Romania
+SE,Sweden
+SI,Slovenia
+SK,Slovakia
+UK,United Kingdom
+IL,Israel
+IS,Iceland
+LB,Lebanon
+LY,Libya
+MA,Morocco
+MD,Moldova
+ME,Montenegro
+NO,Norway
+RU,Russia
+SY,Syria
+TN,Tunisia
+TR,Turkey
+UA,Ukraine
+BAL or Baltic Sea,Baltic Sea
+ATL or Atlantic,North-East Atlantic Ocean
+ANS or North Sea,"NE Atlantic: Greater North Sea, incl. Kattegat & English Channel"
+ACS or Celtic Seas,NE Atlantic: Celtic Seas
+ABI or Biscay_Iberia,NE Atlantic: Bay of Biscay & Iberian Coast
+AMA or Macaronesia,NE Atlantic: Macaronesia
+MED or Mediterranean,Mediterranean Sea
+MWE or WestMed,Mediterranean: Western Mediterranean Sea
+MAD or Adriatic,Mediterranean: Adriatic Sea
+MIC or Ionian_CentralMed,Mediterranean: Ionian Sea & Central Mediterranean Sea
+MAL or Aegean_Levantine,Mediterranean: Aegean-Levantine Sea
+BLK or Black Sea,Black Sea
+Region,Region
+Subregion,Subregion
+Subdivision,Subdivision (of a Region or Subregion)
+RegionSubregion_MSpart,MS marine waters part of a Region or Subregion
+Subdivision_MSpart,MS marine waters part of a Subdivision
+Subdivision_MSpart_WFD-CW,MS WFD coastal waters part of subdivision
+Subdivision_MSpart_WFD-TeW,MS WFD territorial waters part of subdivision
+Subdivision_MSpart_beyondWFD-TeW,MS marine waters beyond territorial waters part of a subdivision
+WFD_CW,WFD Coastal water body
+WFD_TeW,WFD Territorial water body
+AssessmentArea,Assessment area (other)
+UA_UndisputedArea,"Undisputed area (of MS marine waters, including agreed Continental Shelf areas)"
+DA_DisputedArea,Disputed/unresolved area (of MS marine waters with neighbouring state)
+CS_ShelfSubmission,Continental Shelf area awaiting CLCS outcome
+JM_JointArea,Jointly managed area (with neighbouring state)
+LD_Land,MS land outside marine waters (mainland)
+LM_Island,MS land within marine waters (island/rocks)
+MS_MSpartRegionSubregion,MS marine waters part of a Region or Subregion
+MW_MarineWaters,MS marine waters (i.e. waters and seabed/subsoil)
+SD_Subdivision,MS subdivision
+WC_WaterColumn,MS waters (water column)
+SS_Seabed,MS seabed and subsoil
+MS land/FW,Terrestrial/freshwater part of MS
+WFD TrW,Transitional waters (WFD)
+WFD CW,Coastal waters (WFD)
+WFD TeW,Territorial waters (WFD) beyond Coastal Waters
+EEZ,EEZ (or similar e.g. Ecological Protection Zone)
+CS (beyond EEZ/TeW),Continental shelf (beyond EEZ or Territorial waters)
+Beyond MS waters,Beyond MS Marine Waters
+OOAO,One-out-all-out
+OOAO_HIE,Hierarchical application of OOAO
+2OAO,Two-out-all-out
+THRES,Threshold methods
+TREE,Decision tree approach
+NHIE_NWEI,"Non-hierarchical, non-weighted averaging"
+NHIE_WEI,"Non-hierarchical, weighted averaging"
+HIE_NWEI,"Hierarchical, non-weighted averaging"
+HIE_WEI,"Hierarchical, weighted averaging"
+MULTIMETRIC,Multi-metric indices
+MULTIVARIATE,Multivariate analyses
+SPATIAL,Spatial analysis
+OTH,Other
+NotRelevant,Not relevant
+High,High
+Moderate,Moderate
+Low,Low
+NotRelevant,Not relevant
+Yes,Yes
+Yes-LowRisk,"Yes, based on low risk (describe or refer to where assessment is described in Description field"
+No,No
+Unknown,Unknown
+NotAssessed,Not assessed
+Good,Good
+Good-LowRisk,"Yes, based on low risk (describe or refer to where assessment is described in Description field"
+NotGood,Not good
+Unknown,Unknown
+NotAssessed,Not assessed
+ContributesToAnotherAssessment,Contributes to assessment of another criterion or element
+OtherStatus,Other status class (specify)
+Descriptive,Description provided (specify)
+Improving,Improving
+Stable,Stable
+Deteriorating,Deteriorating
+Unknown,Unknown
+NotAssessed,Not assessed
+Increasing,Increasing
+Stable,Stable
+Decreasing,Decreasing
+Unknown/NotAssessed,Unknown/not assessed
+Increase,Increase
+BeStable,Be stable
+Decrease,Decrease
+Unknown/NotAssessed,Unknown/not assessed
+TRA,Transparency of water
+SPL,Level of sound (continuous)
+LEV-N,Level of sound (impulsive)
+CONC-W,Concentration in water
+CONC-S,Concentration in sediment
+CONC-B,Concentration in biota
+CONC-FMM,Concentration in muscle meat of fish or fishery products
+CONC-CEPH,Concentration in cephalopods
+CONC-CRUS,Concentration in crustaceans
+CONC-MOL,Concentration in bivalve molluscs
+AMO-WS,Amount on water surface
+AMO-C,Amount on coastline
+AMO-SB,Amount on seabed
+AMO-B,Amount in biota (ingested)
+PRES,Presence (of a species/element)
+INC,Incidence
+ABU,Abundance (number of individuals)
+BIOM,Biomass
+BIOM-SSB,Biomass of spawning stock (SSB)
+MASS,Mass
+BIOM-MUSC,Muscle biomass (blubber thickness - nutritional status)
+PROD,Productivity
+SIZE ,Size (length)
+SIZE-D,Size distribution
+AGE-D,Age distribution
+SEX-D,Sex distribution
+FEC,Fecundity rate
+BREED,Breeding rate
+SURV,Survival rate
+MOR/F,Mortality rate (incl. from fishing - F)
+DIST-SPAT,Distribution (spatial)
+DIST-PAT,Distribution (pattern)
+DIST-RANGE,Distribution (range)
+DIST-DEPTH,Distribution (maximum depth)
+HAB-COM,Community state (species composition and relative abundance)
+HAB-SPP,Species composition (of community)
+HAB-RELABU,Species relative abundance (within community)
+EXT,Extent
+FRE,Frequency (temporal)
+DUR,Duration
+OTH,Other
+Composition,Composition and number of retained/landed catch
+Composition,Composition and number of discards
+Composition,Composition and number of incidental/by-catch
+Predation,"Predation rates on eggs, juveniles and/or adults"
+Disturbance,Disturbance rates by human activities
+Alterations,Alterations to habitat (e.g. to breeding areas)
+Age,Age at maturity
+Diet,Diet
+Life,"Life history stage (e.g. egg, juvenile, adult)"
+Other,Other (specify in Description field)
+Species,Species present (whole community or selected species only)
+Proportion,"Proportion of habitat covered by habitat-defining species (e.g. a seagrass, biogenic reef-forming species)"
+Stability,"Stability of edges to community (e.g. of seagrass, biogenic reefs)"
+Temperature,Temperature
+Salinity,Salinity
+CurrentVelocity,Current velocity
+WaveAction,Wave action
+pH,pH 
+BathymetricDepth,Bathymetric depth
+Freshwater,Freshwater input rates from rivers
+Physical,"Physical structure of habitat (e.g. sediment characteristics, topographic structure)"
+Hydrological,Hydrological conditions of habitat
+None,None
+1-90days,1-90 days
+91-150days,91-150 days
+>150days,>150 days
+Area,"Area of dead biota (e.g. rhizomes or dead “matte” of Posidonia meadows, dead maerl or coral)"
+EcosystemStructure,"Ecosystem structure - predominant habitats, functional groups"
+EcosystemFunctionProductivity,Ecosystem function - productivity of key species/groups
+EcosystemFunctionProportionTopWeb,Ecosystem function - proportion of species at top of food web
+EcosystemFunctionAbundanceDistribution,Ecosystem function - abundance/distribution of key groups/species
+Input - atmospheric,Input level of chemical/nutrient/pollutant from atmosphere
+Input - land-based,Input level of chemical/nutrient/pollutant from land-based sources
+Input - sea-based,Input level of chemical/nutrient/pollutant from sea-based sources
+ActivityDistributionExtent,Spatial distribution/extent of activity
+ActivityIntensity,Intensity of activity
+ActivityTemporal,Temporal changes in activity
+Water  ,Water  
+Sediment,Sediment
+Biota,Biota
+SedimentBiota,Sediment biota
+ThresholdTarget,Target reference point (GES achieved at or above threshold value)
+ThresholdLimit,Limit reference point (GES achieved at or below threshold value)
+No. criteria GES,Number of criteria in good status
+No. spp.,Number of species (newly-introduced NIS)
+% habitats GES,Proportion (%) of (pelagic/benthic/other) habitat types in good status
+% area GES,Proportion (%) of area in good status
+% ecosystems GES,Proportion (%) of ecosystems in good status
+% spp. GES,Proportion (%) of species in good status within species group
+% substances GES,Proportion (%) of substances in good status
+<1%,Proportion <1%
+1-5%,Proportion 1-5%
+5-25%,Proportion 5-25%
+25-50%,Proportion 25-50%
+50-75%,Proportion 50-75%
+75-100%,Proportion 75-100%
+Unknown/not assessed,Unknown/not assessed
+{events}/y,(number of) events per year
+{individuals},(number of) individuals
+{species},(number of) species
+Bq/kg ww,Becquerels per kilogram of wet weight
+CPUE,Catch-Per-Unit-Effort
+cm,Centimetre
+d,Days
+d/qrt,days per quarter year
+dB/??,decibel re 1 µPa per unit area (continuous noise)
+dB re 1 µPa2,decibel reference 1 microPascal squared second (acute noise)
+EQR,Ecological Quality Ratio
+F ,Fishing mortality rate per year
+g/cm,gram per centimetre
+g/ind,gram per individual
+g/kg,gram per kilogram
+g/kg dw,gram per kilogram of dry weight
+g/m2,gram per square metre
+g/m2d,gram per square metre per day
+ind/6y,individuals per 6 years
+ind/y,individuals per year (mortality rate - fishing/incidental bycatch)
+Locations,Locations (occurrences of NIS)
+meanVDSI,mean vas deferens sequence index (gastropod imposex)
+m,metre
+µg/kg dw,microgram per kilogram of dry weight
+µg/kg ww,microgram per kilogram of wet weight
+µg/L,microgram per litre
+µmol/L,micromole per litre
+mg/kg,milligram per kilogram
+mg/kg ww,milligram per kilogram of wet weight
+mg/L,milligram per litre
+mm,millimetre
+min,minute
+days/yr,"number of days per year (HABs, acute pollution events)"
+events/yr,number of events per year (HABs)
+items/100m,number of items per 100 meters
+items/cm,number of items per centimetre
+items/kg,number of items per kilogram
+items/kg dw,number of items per kilogram of dry weight
+items/m,number of items per meter
+items/km2,number of items per square kilometre
+items/m2,number of items per square metre
+Other,other
+%,Percentage
+%/yr,Percentage per year (breeding colony failures)
+pg/g ww,picogram per gram of wet weight
+proportion ind.>50cm,Proportion of individuals > 50cm long (large fish index)
+{ratio},ratio
+km2,square kilometre
+t,tonne
+km2 habitat affected,Extent in km2 of habitat adversely affected
+km2 MRU affected,Extent in km2 of MRU adversely affected
+km2 pressure,Extent in km2 of pressure
+NotRelevant,Not relevant
+% area habitat achieve TV,Percentage area of habitat in Marine Reporting Unit achieving threshold value
+% area MRU achieve TV,Percentage area of Marine Reporting Unit achieving threshold value
+% population achieve TV,Percentage of population achieving threshold value
+% samples achieve TV,Percentage of samples achieving threshold value
+% species group affected,Percentage of species group adversely affected
+ESAWaterAccounts,Economic and social analysis - water accounts approach
+ESACost,Economic and social analysis - cost-based approach
+ESAEcosystemServices,Economic and social analysis - ecosystem services approach
+ESAThematic,Economic and social analysis - thematic approach
+ESAOther,Economic and social analysis - other approach
+DegradationAnalysis,Analysis-cost of degradation
+DegradationCostBased,Cost of degradation - cost-based approach
+DegradationEcoServices,Cost of degradation - ecosystem services approach
+DegradationThematic,Cost of degradation - thematic approach
+ESAIndicator-all,Analysis-of socio-economic indicators (all)
+ESAIndicatorProduction,Analysis-of socio-economic indicators (production value)
+ESAIndicatorValue,Analysis-of socio-economic indicators (added value)
+ESAIndicatorEmployment,Analysis-of socio-economic indicators (employment)
+ESAIndicatorOther,Analysis-of socio-economic indicators (other)
+Analysis-all,Analysis (all aspects)
+AnalysisCharactTrend,"Analysis-of characteristics/trends (state, pressure or use)"
+AnalysisPressureImpact,Analysis-of pressures & impacts on state
+AnalysisActivityfromPressure,Analysis-of activities from pressures
+AnalysisPressurefromActivity,Analysis-of pressures from activities
+Assessment,Assessment (of status)
+Location international DC,"Provide location of data in international data centre (e.g. RSC, ICES, EEA, EMODnet)"
+Location national DC,Provide location of data in national data centre
+URLdownload,Providing URL to download data
+URLview,Providing URL to view data
+Not available,Data will not be available
+Moratorium,Moratorium
+Open,Open access
+RestrictedGeneral,Restricted by general licence
+RestrictedSpecific,Restricted by specific licence
+EU ,EU 
+Region ,Region 
+Subregion,Subregion
+Other,Other (specify)
+Unknown,Unknown
+UnprocessedData,Unprocessed/raw data
+ProcessedData,Processed data sets
+DataProducts,Data products
+Modelled data,Simulated (modelled) data
+bg,Bulgarian
+es,Spanish
+cs,Czech
+da ,Danish
+de,German
+et,Estonian
+el,Greek
+en,English
+fr,French
+ga,Irish
+it,Italian
+lv,Latvian
+lt,Lithuanian
+hr,Croatian
+hu,Hungarian
+mt,Maltese
+nl,Dutch
+pl,Polish
+pt,Portuguese
+ro,Romanian
+sk,Slovak
+sl,Slovenian
+fi,Finnish
+sv,Swedish
+AquacultureFacilities,Agriculture and aquaculture facilities
+ManagementZonesReportingUnits,Area management/restriction/regulation zones and reporting units
+EnvMonitoringFacilities,Environmental monitoring facilities
+Geology,Geology
+HabitatsBiotopes,Habitats and biotopes
+Hydrography,Hydrography
+LandCover,Land cover
+LandUse,Land use
+OceanographicFeatures,Oceanographic geographical features
+ProtectedSites,Protected sites
+SeaRegions,Sea regions
+SpeciesDistribution,Species distribution
+SeaDataNet CDI,SeaDataNet Common Data Index
+SeaDataNet EDMED,SeaDataNet Directory of Marine Environmental Data
+Darwin,Darwin core
+OGC,Open geospatial consortium
+ODS,Ocean Data Standards
+INSPIRE,INSPIRE
+ISO19115,ISO19115
+ISO19139,ISO19139
+Other ISO,Other ISO compliant standard
+Other non-ISO,Other ISO non-compliant standard
+EcosysElemAll,All marine ecosystem elements
+Species,Species
+SpeciesAll,Species - all
+SpeciesListedAll,Species - listed (all)
+SpeciesCommercial,Commercially-exploited fish and shellfish
+NIS-Invasive,Species - non-indigenous invasive
+NIS-NonInvasive,Species - non-indigenous non-invasive
+NIS-inventory,Species - non-indigenous - inventory
+NIS-new,Newly-introduced non-indigenous species
+NIS-established,Established non-indigenous species
+HabAll,Marine habitats - all
+HabSpecialAll,Special habitats - all
+HabOther,Other habitat types
+HabOther,Other habitat types
+HabBenAll,Benthic habitats - all
+HabBenBroad,Benthic broad habitats
+HabBenOther,Other benthic habitats
+HabBenLitRock,Littoral rock and biogenic reef
+HabBenLitSed,Littoral sediment
+HabBenInfralitRock,Infralittoral rock and biogenic reef 
+HabBenInfralitCoarSed,Infralittoral coarse sediment 
+HabBenInfralitMxdSed,Infralittoral mixed sediment 
+HabBenInfralitSand,Infralittoral sand 
+HabBenInfralitMud,Infralittoral mud 
+HabBenCircalitRock,Circalittoral rock and biogenic reef 
+HabBenCircalitCoarSed,Circalittoral coarse sediment 
+HabBenCircalitMxdSed,Circalittoral mixed sediment 
+HabBenCircalitSand,Circalittoral sand 
+HabBenCircalitMud,Circalittoral mud 
+HabBenOffshRock,Offshore circalittoral rock and biogenic reef 
+HabBenOffshCoarSed,Offshore circalittoral coarse sediment 
+HabBenOffshMxdSed,Offshore circalittoral mixed sediment 
+HabBenOffshSand,Offshore circalittoral sand 
+HabBenOffshMud,Offshore circalittoral mud 
+HabBenBathyalUpRock,Upper bathyal rock and biogenic reef
+HabBenBathyalUpSed,Upper bathyal sediment
+HabBenBathyalLowRock,Lower bathyal rock and biogenic reef
+HabBenBathyalLowSed,Lower bathyal sediment
+HabBenAbyssal,Abyssal 
+HabBenAbyssal,Abyssal 
+HabPelagAll,Pelagic habitats - all
+HabPelagBroad,Pelagic broad habitats
+HabPelagOther,Pelagic other habitats
+HabPelagVarSalinity,Variable salinity
+HabPelagVarSalinity,Variable salinity
+HabPelagCoastal,Coastal
+HabPelagShelf,Shelf
+HabPelagOcean,Oceanic/beyond shelf
+HabIce-associated,Ice-associated habitats
+SpeciesGroups,Species groups
+FunctionalGroupOther,Functional group - other (highly mobile/widely dispersed species groups)
+BirdsAll,Birds (all marine species)
+BirdsGrazing,Grazing birds
+BirdsWading,Wading birds
+BirdsSurfaceFeeding,Surface-feeding birds
+BirdsSurfaceFeeding,Surface-feeding birds
+BirdsPelagicFeeding,Pelagic-feeding birds
+BirdsPelagicFeeding,Pelagic-feeding birds
+BirdsBenthicFeeding,Benthic-feeding birds
+BirdsIce-associated,Ice-associated birds
+MamAll,Mammals (all marine species)
+MamCetacSmall,Small toothed whales
+MamCetacDeepDiving,Deep-diving toothed whales
+MamCetacBaleenWhales,Baleen whales
+MamSeals,Seals
+MamIce-associated,Ice-associated mammals
+RepTurtles,Turtles
+FishAll,Fish (all marine species)
+FishDiadromous,Diadromous fish
+FishCoastal,Coastal fish
+FishPelagicShelf,Pelagic shelf fish
+FishPelagicShelf,Pelagic shelf fish
+FishDemersalShelf,Demersal shelf fish
+FishDemersalShelf,Demersal shelf fish
+FishDeepSea,Deep-sea fish
+FishDeepSea,Deep-sea fish
+FishIce-associated,Ice-associated fish
+CephaAll,Cephalopods (all pelagic species)
+CephaCoastShelf,Coastal/shelf pelagic cephalopods
+CephDeepSea,Deep-sea pelagic cephalopods
+PhyHydroCharacAll,All physical and hydrological characteristics
+Temperature,[Sea] Temperature
+Ice,Ice
+Currents,Current regime
+Waves,Wave regime
+Upwelling,Upwelling
+Mixing,Mixing
+ResidenceTime,Residence time
+FreshwaterInput,Freshwater input
+SeaLevel,Sea level
+Bathymetry,Bathymetry
+Turbidity,Turbidity (silt/sediment loads)
+Transparency,Transparency
+Sound,Sound
+SubstrateMorphology,Seabed substrate and morphology
+ChemCharacAll,All chemical characteristics
+Salinity,Salinity
+Nutrients,"Nutrients (N, P)"
+OrganicCarbon,Organic carbon
+pCO2,Dissolved carbon dioxide (pCO2)
+Oxygen,Dissolved Oxygen
+pH,pH
+TrophicGuildAll,All trophic guilds
+TrophicGuildPrimProd,Primary producers
+TrophicGuildSecProd,Secondary producers
+TrophicGuildFilFeed,Filter-feeders
+TrophicGuildDepFeed,Deposit-feeders
+TrophicGuildPlankt,Planktivores
+TrophicGuildPredSApexPel,Sub-apex pelagic predators
+TrophicGuildPredSApexDem,Sub-apex demersal predators
+TrophicGuildPredApex,Apex predators
+FoodWebs,Ecosystems including food webs
+EcosysCoastal,Coastal ecosystem
+EcosysShelf,Shelf ecosystem
+EcosysOceanic,Oceanic/deep-sea ecosystem
+PresAll,All pressures
+PresOther,Pressure - other
+PresBioAll,Biological pressures (all)
+PresBioIntroNIS,Input or spread of non-indigenous species
+PresBioIntroMicroPath,Input of microbial pathogens
+PresBioIntroGenModSpp,Input of genetically modified species and translocation of native species
+PresBioCultHab,"Loss of, or change to, natural biological communities due to cultivation of animal or plant species"
+PresBioDisturbSpp,"Disturbance of species (e.g. where they breed, rest and feed) due to human presence"
+PresBioExtractSpp,"Extraction of, or mortality/injury to, wild species (by commercial and recreational fishing and other activities)"
+PresBioExtractSpp,"Extraction of, or mortality/injury to, wild species (by commercial and recreational fishing and other activities)"
+PresBioExtractSpp,"Extraction of, or mortality/injury to, wild species (by commercial and recreational fishing and other activities)"
+PresBioExtractSpp,"Extraction of, or mortality/injury to, wild species (by commercial and recreational fishing and other activities)"
+PresBioExtractSpp,"Extraction of, or mortality/injury to, wild species (by commercial and recreational fishing and other activities)"
+PresPhyAll,All physical pressures
+PresPhyDisturbSeabed,Physical disturbance to seabed
+PresPhyDisturbSeabed,Physical disturbance to seabed
+PresPhyDisturbSeabed,Physical disturbance to seabed
+PresPhyDisturbSeabed,Physical disturbance to seabed
+PresPhyDisturbSeabed,Physical disturbance to seabed
+PresPhyLoss,Physical loss of the seabed
+PresPhyLoss,Physical loss of the seabed
+PresPhyLoss,Physical loss of the seabed
+PresPhyHydroCond,Hydrographical changes to the seabed & water column
+PresPhyHydroCond,Changes to hydrological conditions
+PresPhyHydroCond,Changes to hydrological conditions
+PresPhyHydroCond,Changes to hydrological conditions
+PresInputAll,"All pressures related to inputs of substances, litter and energy"
+PresInputNut,"Input of nutrients – diffuse sources, point sources, atmospheric deposition"
+PresInputNut,"Input of nutrients – diffuse sources, point sources, atmospheric deposition"
+PresInputOrg,Input of organic matter – diffuse sources and point sources
+PresInputCont,"Input of other substances (e.g. synthetic substances, non-synthetic substances, radionuclides) – diffuse sources, point sources, atmospheric deposition, acute events"
+PresInputCont,"Input of other substances (e.g. synthetic substances, non-synthetic substances, radionuclides) – diffuse sources, point sources, atmospheric deposition, acute events"
+PresInputCont,"Input of other substances (e.g. synthetic substances, non-synthetic substances, radionuclides) – diffuse sources, point sources, atmospheric deposition, acute events"
+PresInputCont,"Input of other substances (e.g. synthetic substances, non-synthetic substances, radionuclides) – diffuse sources, point sources, atmospheric deposition, acute events"
+PresInputCont,"Input of other substances (e.g. synthetic substances, non-synthetic substances, radionuclides) – diffuse sources, point sources, atmospheric deposition, acute events"
+PresInputLitter,"Input of litter (solid waste matter, including micro-sized litter)"
+PresInputSound,"Input of anthropogenic sound (impulsive, continuous)"
+PresInputOthEnergy,"Input of other forms of energy (including electromagnetic fields, light and heat)"
+PresInputWater,Input of water – point sources (e.g. brine)
+SoundImpulsive,Impulsive sound in water
+SoundContinuous,Continuous low-frequency sound
+NutrientEnrichment,Nutrient enrichment
+ContNonUPBTs,Non-UPBT substances
+ContUPBTs,UPBT substances
+ContSeafood,Contaminants in seafood
+AcuPolluEvents,Acute pollution events
+Litter,Litter [macro]
+LitterMicro,Micro-litter
+LitterSpp,Litter & micro-litter in species
+Acidification,Marine acidification
+SynthComp,Synthetic compounds
+NonSynthSubst,Non-synthetic substances and compounds
+RadioNuclides,Radio-nuclides
+WorksheetHazsubstanceslist,Worksheet HazSubstancesList contains relevant substances and CAS numbers
+Plastic,Artificial polymer materials
+Rubber,Rubber
+Textile,Cloth/textile
+Paper,Paper/cardboard
+Wood,Processed/worked wood
+Metal,Metal
+Glass,Glass/ceramics
+Chemicals,Chemicals
+FoodWaste,Food waste
+Undefined,Undefined
+Plastic,Artificial polymer materials
+Other,Other materials
+EcosysServAll,All ecosystem services
+EcosysServNutrAll,All ecosystem services relevant for nutrition
+EcosysServNutrSeafoodAlgae,"Wild plants, algae and their outputs"
+EcosysServNutrSeafoodAnimals,Wild animals and their outputs
+EcosysServNutrAquacAlgae,Plants and algae from in-situ aquaculture
+EcosysServNutrAquacAnimals,Animals from in-situ aquaculture
+EcosysServMatAll, All ecosystem services relevant for provision of materials
+EcosysServMatRaw,"Fibres and other materials from plants, algae and animals for direct use or processing"
+EcosysServMatAlgaeAnimalsForAquac,"Materials from plants, algae and animals for agricultural use"
+EcosysServMatGenetic,Genetic materials from all biota
+EcosysServEnerAll,All ecosystem services relevant for provision of energy
+EcosysServEnerPlants,Plant-based resources
+EcosysServEnerAnimals,Animal-based resources
+EcosysServWasteAll,"All ecosystem services relevant for mediation of waste, toxics and other nuisances"
+EcosysServWasteTreatment,"Bio-remediation by micro-organisms, algae, plants, and animals"
+EcosysServWasteRemovalByOrgan,"Filtration/sequestration/storage/accumulation by micro-organisms, algae, plants, and animals"
+EcosysServWasteRemovalByEcosys,Filtration/sequestration/storage/accumulation by ecosystems
+EcosysServWasteSmellVisImpacts,Mediation of smell/visual impacts
+EcosysServFlowsAll,All ecosystem services relevant for mediation of flows
+EcosysServFlowsErosionPrev1,Mass stabilisation and control of erosion rates
+EcosysServFlowsErosionPrev2,Buffering and attenuation of mass flows
+EcosysServFlowsFloodProt,Flood protection
+EcosysServFlowsOxygenProd,Ventilation and transpiration
+EcosysServMainCondAll,"All ecosystem services relevant for maintenance of physical, chemical and biological conditions"
+EcosysServMainCondPolli,Pollination and seed dispersal
+EcosysServMainCondNurs,Maintaining Nursery Populations and Habitats 
+EcosysServMainCondGene,Gene pool protection
+EcosysServMainCondPest,Pest control
+EcosysServMainCondDis,Disease control
+EcosysServMainCondDeco,Decomposition and fixing processes
+EcosysServMainCondChem,Chemical condition of salt waters
+EcosysServMainCondClim,Global climate regulation by reduction of greenhouse gas concentrations
+EcosysServInteracPhyAll,All ecosystem services underpinning physical and intellectual interactions
+EcosysServInteracPhyRecreat1,"Experiential use of plants, animals and land-/seascapes in different environmental settings"
+EcosysServInteracPhyRecreat2,Physical use of land-/seascapes in different environmental settings 
+EcosysServInteracPhyScientif,Scientific
+EcosysServInteracPhyEducat,Educational
+EcosysServInteracPhyCultur,"Heritage, cultural"
+EcosysServInteracPhyEntert,Entertainment
+EcosysServInteracPhyAesthe,Aesthetic
+EcosysServInteracSpiAll,"All ecosystem services underpinning spiritual, symbolic and other interactions"
+EcosysServInteracSpiSymb,Symbolic
+EcosysServInteracSpiRelig,Sacred and/or religious
+EcosysServInteracSpiExis,Existence
+EcosysServInteracSpiBequ,Bequest
+ActivAll,Uses and activities - all
+ActivOther,Uses and activities - other
+ActivRestrucAll,"All activities related to physical restructuring of rivers, coastline or seabed"
+ActivRestrucLandClaim,Land claim
+ActivRestrucCanalisation,Canalisation and other watercourse modifications
+ActivRestrucCoastalDef,Coastal defence and flood protection
+ActiveRestrucOffshStruc,Offshore structures (other than for oil/gas/renewables)
+ActivRestrucSeabedMorph,"Restructuring of seabed morphology, including dredging and depositing of materials"
+ActivRestrucSeabedMorph,"Restructuring of seabed morphology, including dredging and depositing of materials"
+ActivExtrNonLivingAll,All activities related to extraction of non-living resources
+ActivExtrNonLivingWater,Extraction of water
+ActivExtrNonLivingMinerals,"Extraction of minerals (rock, metal ores, gravel, sand, shell)"
+ActivExtrNonLivingOilGas,"Extraction of oil and gas, including infrastructure"
+ActivExtrNonLivingSalt,Extraction of salt
+ActivProdEnerAll,All activities related to production of energy
+ActivProdEnerRenew,"Renewable energy generation (wind, wave and tidal power), including infrastructure"
+ActivProdEnerNonRenew,Non-renewable energy generation
+ActivProdEnerCables,Transmission of electricity and communications (cables)
+ActivExtrLivingAll,All activities related to extraction of living resources
+ActivExtrLivingFishHarv,"Fish and shellfish harvesting (professional, recreational)"
+ActivExtrLivingFishProcess,Fish and shellfish processing
+ActivExtrLivingPlantHarv,Marine plant harvesting
+ActivExtrLivingHunt,Hunting and collecting for other purposes
+ActivCultivAll,All activities related to cultivation of living resources
+ActivCultivAquaculMarine,"Aquaculture – marine, including infrastructure"
+ActivCultivAquaculFreshwa,Aquaculture – freshwater
+ActivCultivAgri,Agriculture
+ActivCultivFores,Forestry
+ActivTranspAll,All activities related to transport
+ActivTranspInfras,Transport infrastructure
+ActivTranspShip,Transport – shipping
+ActivTranspAir,Transport – air
+ActivTranspLand,Transport – land
+ActivUrbIndAll,All urban and industrial uses
+ActivUrbIndUrban,Urban uses
+ActivUrbIndIndustrial,Industrial uses
+ActivUrbIndWaste,Waste treatment and disposal
+ActivTourismAll,All activities related to tourism and leisure
+ActiveTourismInfras,Tourism and leisure infrastructure
+ActiveTourismActiv,Tourism and leisure activities
+ActivMilitary,Military operations (subject to Article 2(2))
+ActivResearch,"Research, survey and educational activities"
+Fishing-<12mAll,Fishing - vessels <12m - passive & mobile gears
+Fishing->12mPassive,Fishing - vessels >12m - passive gears
+Fishing->12mMobileTrawl,"Fishing - vessels >12m - mobile gears - affecting seabed (i.e. trawls, dredges)"
+Fishing->12mMobileOther,Fishing - vessels >12m - mobile gears - other types
+Fishing-recreation,Fishing - recreational
+Fishing-other,Fishing - other (specify in Description field)
+ShellfishCollection,Shellfish collection
+SeaweedHarvesting,Seaweed harvesting
+MaerlExtract,Maerl extraction
+SppExtract-other,Other types of extraction (specify in Description field)
+Shipping,"Shipping & floating structures (all vessels, buoys, etc.)"
+Canals,"Canals (channels, drainage cuts to lagoons, marina basins etc.)"
+Fisheries,Wild fisheries
+Culturing,Culture activities
+AquariumLiveTrade,Aquarium & live food trade
+Leisure,Leisure activities
+ResearchEducation,Research & education (including pilot projects)
+BiolControl,Biological control
+AlteredNaturalFlow,Alteration to natural water flow
+HabitatManagement,Habitat management
+311,Marine fishing
+321,Marine aquaculture
+1020,"Processing and preserving of fish, crustaceans and molluscs"
+5010,Sea and coastal passenger water transport
+5020,Sea and coastal freight water transport
+3011,Building of ships and floating structures
+3012,Building of pleasure and sporting boats
+3315,Repair and maintenance of ships and boats
+4671,"Wholesale of solid, liquid and gaseous fuels and related products"
+4672,Wholesale of metals and metal ores
+4673,"Wholesale of wood, construction materials and sanitary equipment"
+4674,"Wholesale of hardware, plumbing and heating equipment and supplies"
+4675,Wholesale of chemical products
+4676,Wholesale of other intermediate products
+4677,Wholesale of waste and scrap
+4211,Construction of roads and motorways
+4212,Construction of railways and underground railways
+4213,Construction of bridges and tunnels
+4221,Construction of utility projects for fluids
+4222,Construction of utility projects for electricity and telecommunications
+4291,Construction of water projects
+4299,Construction of other civil engineering projects n.e.c.
+5222,Service activities incidental to water transportation
+610,Extraction of crude petroleum
+620,Extraction of natural gas
+910,Support activities for petroleum and natural gas extraction
+811,"Quarrying of ornamental and building stone, limestone, gypsum, chalk and slate"
+812,Operation of gravel and sand pits
+899,Other mining and quarrying n.e.c.
+893,Extraction of salt
+5510,Hotels and similar accommodation
+0,Exploitation of offshore wind energy for producing electricity
+MSDefined,MS-defined list
+CostDegradationOverview,Cost of degradation overview
+CostEnhancement,Enhancement costs
+CostMitigation,Mitigation cost
+CostOpportunity,Opportunity cost
+CostTransaction,Transaction cost
+CostMonitoring,Monitoring and information costs
+CostPrevention,Preventing and avoidance costs
+ResidualImpacts,"Residual impacts, with reference to the current legislative objectives"
+CostOther,Other type of degradation cost (specify in Description field)
+ConventionBarcelona,Barcelona Convention
+ConventionBucharest,Bucharest Convention
+ConventionHelsinki,Helsinki Convention
+ConventionOSPAR,OSPAR Convention
+ConventionOther,Other international agreement (specify)
+MSFDArt3_4,MSFD Articles 3 and 4
+MSFDArt5_6,MSFD Articles 5 and 6
+MSFDAnnexI ,MSFD Annex I 
+MSFDAnnexIII2008,MSFD Annex III (2008)
+MSFDAnnexIII2017,MSFD Annex III (2017)
+MSFDDecision2010,MSFD Decision 2010
+MSFDDecision2017,MSFD Decision 2017
+MSFDCSWP,MSFD CSWP 2011
+MSFDDIKE,WG DIKE
+WISE,http://dd.eionet.europa.eu/vocabulary/wise/ObservedProperty/view
+BODC-SDN ,http://seadatanet.maris2.nl/v_bodc_vocab_v2/search.asp?lib=P01
+ICES-Param,http://vocab.ices.dk/?ref=37
+WISE-B,http://dd.eionet.europa.eu/vocabulary/wise/ObservedPropertyBiologyEQR/view
+EUNIS,EUNIS habitat classification (version 2011-11) http://dd.eionet.europa.eu/vocabulary/biodiversity/eunishabitats/view
+HELCOM-HUB/RedList,HELCOM UnderwaterBiotopes/Red List
+HabitatsDirective: habitats,http://dd.eionet.europa.eu/vocabulary/biodiversity/n2000habitats/view 
+BHT,http://dd.eionet.europa.eu/vocabulary/msfd/broadHabitatTypes/view
+OSPARHabitats,http://www.ospar.org/documents?d=32794
+Other,Link to other vocabulary or code lists that may be relevant
+BirdsDirective,http://dd.eionet.europa.eu/vocabulary/biodiversity/n2000birds/view 
+HabitatsDirective: species,http://dd.eionet.europa.eu/vocabulary/biodiversity/n2000species/view 
+ICES-Stock,http://vocab.ices.dk/?ref=357
+Algaebase,http://www.algaebase.org
+CoL,http://www.catalogueoflife.org/ 
+FAO,http://www.fao.org/fishery/collection/asfis/en
+WoRMS,http://www.marinespecies.org/ 
+AreaOfMerit,Habitats in areas meriting particular reference
+TypicalFeature,Typical features or characteristics
+MSwatersGeogAreas,MS marine waters and other geographic areas
+AssessmentAreasList,Assessment areas list (with MarineUnitIDs)
+GeogAreas,Geographic areas
+RegCoord,Regional coordination
+PhysicalFeature,Physical feature
+ChemicalFeature,Chemical feature
+HabitatPredominant,Habitat - predominant
+HabitatSpecial,Habitat - special (listed)
+HabitatOther,Habitat - other
+SpeciesGroup,Species group
+FunctionalGroup ,"Functional group (of birds, mammals, reptiles, fish or pelagic cephalopods)"
+SpeciesListed,Species - listed (in a Directive or Convention)
+SpeciesOther,Species - other
+SpeciesCommercial,Species - commercial
+Ecosystem,Ecosystem
+SpeciesNIS,Species - non-indigenous
+SpeciesGeneticForm,Species - genetically distinct forms of native species
+Pressure  ,Pressure
+UseActivity,Use/activity
+EcosystemService,Ecosystem service
+ESATheme ,Theme (economic and social analysis)
+CostDegradation,Cost of degradation
+DeterminationGES,Determination of GES (Art. 9)
+TargetsIndicators,Environmental targets and associated indicators (Art. 10)
+GESOther,GES - other (describe in field DescriptionGES)
+D1,D1 Biodiversity
+D1 Birds,D1 Biodiversity – birds
+D1 Mammals,D1 Biodiversity – mammals
+D1 Reptiles,D1 Biodiversity – reptiles
+D1 Fish,D1 Biodiversity – fish
+D1 Cephalopods,D1 Biodiversity –  cephalopods
+D1 Pelagic habitats,D1 Biodiversity – pelagic habitats
+D2,D2 Non-indigenous species
+D3,D3 Commercial fish and shellfish
+D4/D1,D4/D1 Food webs [D1 Biodiversity - ecosystems]
+D5,D5 Eutrophication
+D6/D1,D6/D1 Sea-floor integrity [D1 Biodiversity - benthic habitats]
+D7,D7 Hydrographical changes
+D8,D8 Contaminants
+D9,D9 Contaminants in seafood
+D10,D10 Marine litter
+D11,"D11 Energy, incl. underwater noise"
+D2C1,D2C1 Newly-introduced NIS
+D2C2,D2C2 Established NIS
+D2C2,D2C2 Established NIS
+D2C3,D2C3 Adverse effects of NIS on species and habitats
+D2C3,D2C3 Adverse effects of NIS on species and habitats
+D2C3,D2C3 Adverse effects of NIS on species and habitats
+D3C1,D3C1 Fishing mortality rate (F)
+D3C1,D3C1 Fishing mortality rate (F)
+D3C1,D3C1 Fishing mortality rate (F)
+D3C2,D3C2 Spawning stock biomass (SSB)
+D3C2,D3C2 Spawning stock biomass (SSB)
+D3C2,D3C2 Spawning stock biomass (SSB)
+D3C3,D3C3 Population age and size distribution
+D3C3,D3C3 Population age and size distribution
+D3C3,D3C3 Population age and size distribution
+D3C3,D3C3 Population age and size distribution
+D5C1,D5C1 Nutrient concentrations
+D5C1,D5C1 Nutrient concentrations
+D5C2,D5C2 Chlorophyll a concentration
+D5C3,D5C3 Harmful algal blooms
+D5C4,D5C4 Photic limit
+D5C5,D5C5 Dissolved oxygen concentration
+D5C6,D5C6 Opportunistic macroalgae of benthic habitats
+D5C7,D5C7 Macrophyte communities of benthic habitats
+D5C8,D5C8 Macrofaunal communities of benthic habitats
+D6C1,D6C1 Physical loss of the seabed
+D6C2,D6C2 Physical disturbance to the seabed
+D6C3,D6C3 Adverse effects from physical disturbance on benthic habitats
+D7C1,D7C1 Permanent alteration of hydrographical conditions
+D7C1,D7C1 Permanent alteration of hydrographical conditions
+D7C2,D7C2 Adverse effects from permanent alteration of hydrographical conditions on benthic habitats
+D7C2,D7C2 Adverse effects from permanent alteration of hydrographical conditions on benthic habitats
+D7C2,D7C2 Adverse effects from permanent alteration of hydrographical conditions on benthic habitats
+D8C1,D8C1 Contaminants in environment
+D8C1,D8C1 Contaminants in environment
+D8C2,D8C2 Adverse effects of contaminants on species and habitats
+D8C2,D8C2 Adverse effects of contaminants on species and habitats
+D8C3,D8C3 Significant acute pollution events
+D8C4,D8C4 Adverse effects of significant pollution events on species and habitats
+D9C1,D9C1 Contaminants in seafood
+D9C1,D9C1 Contaminants in seafood
+D10C1,D10C1 Litter
+D10C1,D10C1 Litter
+D10C1,D10C1 Litter
+D10C2,D10C2 Micro-litter
+D10C2,D10C2 Micro-litter
+D10C3,D10C3 Litter ingested
+D10C3,D10C3 Litter ingested
+D10C4,D10C4 Adverse effects of litter on species
+D11C1,D11C1 Anthropogenic impulsive sound
+D11C1,D11C1 Anthropogenic impulsive sound
+D11C2,D11C2 Anthropogenic continuous low-frequency sound
+D11C2,D11C2 Anthropogenic continuous low-frequency sound
+D1C1,D1C1 Mortality rate from incidental by-catch
+D1C2,D1C2 Population abundance
+D1C2,D1C2 Population abundance
+D1C3,D1C3 Population demographic characteristics
+D1C3,D1C3 Population demographic characteristics
+D1C4,D1C4 Population distributional range and pattern
+D1C4,D1C4 Population distributional range and pattern
+D1C4,D1C4 Population distributional range and pattern
+D1C5,D1C5 Habitat for the species
+D1C6,D1C6 Pelagic habitat condition
+D1C6,D1C6 Pelagic habitat condition
+D1C6,D1C6 Pelagic habitat condition
+D1C6,D1C6 Pelagic habitat condition
+D6C4,D6C4 Benthic habitat extent
+D6C4,D6C4 Benthic habitat extent
+D6C4,D6C4 Benthic habitat extent
+D6C5,D6C5 Benthic habitat condition
+D6C5,D6C5 Benthic habitat condition
+D6C5,D6C5 Benthic habitat condition
+D6C5,D6C5 Benthic habitat condition
+D6C5,D6C5 Benthic habitat condition
+D6C5,D6C5 Benthic habitat condition
+D6C5,D6C5 Benthic habitat condition
+D6C5,D6C5 Benthic habitat condition
+D6C5,D6C5 Benthic habitat condition
+D4C1,D4C1 Trophic guild species diversity
+D4C1,D4C1 Trophic guild species diversity
+D4C2,D4C2 Abundance across trophic guilds
+D4C2,D4C2 Abundance across trophic guilds
+D4C2,D4C2 Abundance across trophic guilds
+D4C2,D4C2 Abundance across trophic guilds
+D4C3,D4C3 Trophic guild size distribution
+D4C3,D4C3 Trophic guild size distribution
+D4C4,D4C4 Trophic guild productivity
+D4C4,D4C4 Trophic guild productivity
+1.1.3,1.1.3 Area covered by species
+1.3.2,1.3.2 Population genetic structure
+1.4,1.4 Habitat distribution
+1.4.1,1.4.1 Habitat distributional range
+1.4.2,1.4.2 Habitat distributional pattern
+1.5.2,1.5.2 Habitat volume
+3.3.2,3.3.2 Maximum length of fish
+5.1.2,5.1.2 Nutrient ratio
+5.2,5.2 Direct effects of nutrient enrichment
+5.3,5.3 Indirect effects of nutrient enrichment
+9.1.2,9.1.2 Frequency of levels exceeded in seafood
+NotRelevant,Not relevant
+WFD01 Waste water treatment plants ,Construction or upgrades of wastewater treatment plants 
+WFD02 Nutrients from agriculture,Reduce nutrient pollution from agriculture 
+WFD03 Pesticides from agriculture,Reduce pesticides pollution from agriculture. 
+WFD04 Historical contamination,"Remediation of contaminated sites (historical pollution including sediments, groundwater, soil). "
+WFD05 Longitudinal continuity,"Improving longitudinal continuity (e.g. establishing fish passes, demolishing old dams). "
+WFD06 Hydromorphology,"Improving hydromorphological conditions of water bodies other than longitudinal continuity (e.g. river restoration, improvement of riparian areas, removal of hard embankments, reconnecting rivers to floodplains, improvement of hydromorphological condition of transitional and coastal waters, etc.). "
+WFD07 Flow regime,Improvements in flow regime and/or establishment of ecological flows. 
+WFD08 Water efficiency,"Water efficiency technical measures for irrigation, industry, energy and  households"
+WFD09 Water pricing households,Water pricing policy measures for the implementation of the recovery of cost of water services from households
+WFD10 Water pricing industry,Water pricing policy measures for the implementation of the recovery of cost of water services from industry
+WFD11 Water pricing agriculture,Water pricing policy measures for the implementation of the recovery of cost of water services from agriculture
+WFD12 Advice agriculture,Advisory services for agriculture
+WFD13 Drinking water,"Drinking water protection measures (e.g. establishment of safeguard zones, buffer zones etc.)"
+WFD14 Research & knowledge,"Research, improvement of knowledge base reducing uncertainty. "
+WFD15 Phase out priority substances,"Measures for the phasing-out of emissions, discharges and losses of priority hazardous substances or for the reduction of emissions, discharges and losses of priority substances.  "
+WFD16 Industrial waste water treatment,Upgrades or improvements of industrial wastewater treatment plants (including farms) 
+WFD17 Soil erosion,Measures to reduce sediment from soil erosion and surface run-off  
+WFD18 Invasive alien species,Measures to prevent or control the adverse impacts of invasive alien species and introduced diseases
+WFD19 Recreation & angling,Measures to prevent or control the adverse impacts of recreation including angling
+WFD20 Fishing & other exploitation,Measures to prevent or control the adverse impacts of fishing and other exploitation/removal of animal and plants
+WFD21 Urban & transport pollution,"Measures to prevent or control the input of pollution from urban areas, transport and built infrastructure"
+WFD22 Forestry pollution,Measures to prevent or control the input of pollution from forestry
+WFD23 Water retention,Natural water retention measures
+WFD24 Climate change adaptation,Adaptation to climate change
+WFD25 Freshwater acidification,Measures to counteract acidification (in freshwater systems)
+MSFD26 Physical loss,Measures to reduce physical loss of seabed habitats in the marine environment (beyond WFD coastal waters)
+MSFD 27 Physical damage,Measures to reduce physical damage to the marine environment (beyond WFD Coastal waters)
+MSFD28 Energy inputs,"Measures to reduce inputs of energy to the marine environment, including underwater noise"
+MSFD29 Litter,Measures to reduce marine litter 
+MSFD30 Hydrological processes,Measures to reduce interferences with hydrological processes in the marine environment (beyond WFD Coastal waters)
+MSFD31 Contamination,"Measures to reduce contamination by hazardous substances (synthetic substances, non-synthetic substances, radio-nuclides) and the systematic and/or intentional release of substances in the marine environment from sea-based or air-based sources"
+MSFD32 Accidental pollution,Measures to reduce sea-based accidental pollution
+MSFD33 Nutrient enrichment,Measures to reduce nutrient and organic matter inputs to the marine environment from sea-based or air-based sources
+MSFD34 Climate change adaptation/acidification,"Measures to adapt to climate change impacts on the marine environment , including marine acidification"
+MSFD35 Non-indigenous species,Measures to reduce the introduction and spread of non-indigenous species in the marine environment and for their control
+MSFD36 Extraction of species,Measures to reduce biological disturbances in the marine environment from the extraction of species including incidental non-target catches
+MSFD37 Other biological disturbance,"Measures to reduce other types of biological disturbance, including death, injury, disturbance and translocation of marine species, and the introduction of genetically-modified individuals"
+MSFD38 Microbial pathogens,Measures to address the introduction of microbial pathogens
+MSFD39 Restore & conserve marine ecosystems,"Measures to restore and conserve marine ecosystems, including habitats and species"
+MSFD40 Spatial protection,Measures related to Spatial Protection Measures for the marine environment (addressing multiple pressures)
+MSFD41 Marine research & knowledge,Complementary activities on research and improvement of the knowledge base to facilitate the devising of measures
+Legal,Legal
+Policy,Policy
+Economic,Economic (e.g. incentives)
+Management coordination,Management coordination
+Mitigation and remediation tools,Mitigation and remediation tools
+Spatial - temporary,Spatial - temporary
+Spatial - permanent,Spatial - permanent
+Communication,"Communication, stakeholder engagement, public awareness"
+One-off,One-off
+Continually,Continually
+Hourly,Hourly
+Daily,Daily
+Weekly,Weekly
+2-weekly,2-weekly
+Monthly,Monthly
+3-monthly,3-monthly
+6-monthly,6-monthly
+Yearly,Yearly
+2-yearly,Every 2 years
+3-yearly,Every 3 years
+6-yearly,Every 6 years
+As needed,As needed
+Other,Other (specify)
+Unknown,Unknown
+Quantiative,In a quantitative process
+Qualitative,In a qualitative process
+Expert opinion,Expert opinion
+Other,Other
+BEQUALM,Biological Effects Quality Assurance in Monitoring Programmes
+COMBINE,Helsinki Commission Cooperative Monitoring in the Baltic Marine Environment manual of measurement protocols
+ICESDataTypeGuide,ICES Data Centre Data Type Guides
+IODE,IOC Manual of Quality Control Procedures for Validation of Oceanographic Data
+JGOFSL1,Joint Global Ocean Flux Study core measurement protocols
+National,National standard (specify)
+Other,Other standard (specify)
+QUASIMEM,Quality Assurance of Information for Marine Environmental Monitoring in Europe
+Unknown,Unknown
+DelayedValidation,Delayed mode validation on the data
+NoValidation,No validation on the data
+Other QC,Other type of QC (specify)
+Real&DelayedValidation,Real-time plus delayed mode validation on the data
+RealValidation,Real-time validation on the data
+Unknown,Unknown
+GESachieved,GES achieved [by 2018]
+GESby2020,GES expected to be achieved by 2020
+GESafter2020Exception,"GES expected to be achieved later than 2020, Article 14 exception reported"
+GESafter2020NoException,"GES expected to be achieved later than 2020, no Article 14 exception reported"
+Unknown,Unknown
+NotAssessed,Not assessed
+NotRelevant,Not relevant
+By 2014,Adequately covered by 2014
+By 2018,In time for the next assessment due in 2018
+By 2020,In time for the updating of monitoring programmes due in 2020
+After 2020,Later than 2020.
+NotRelevant,Not relevant
+Full,Full
+Partial,Partial
+Incomplete,Incomplete
+Local,Local
+Sub-national,Sub-national
+National,National
+Bilateral,Bilateral (one/several other states)
+Sub-regional,Sub-regional
+Regional,Regional
+EU level,EU level
+International,International
+Activities,Human activities causing the pressures
+Pressures,Pressures
+State/impact,Environmental state and impacts
+State,State
+Measures,Effectiveness of measures
+TargetGeneral,Targets - general characteristics
+,MS-defined features
+TargetInterim,Interim target
+TargetGES,Target for GES
+TargetOperational,Operational
+TargetOther,Other
+Art8_IA,Article 8  - initial assessment
+Art9_GES,Article 9 - determination of GES
+Art10_Targets,Article 10 - environmental targets and indicators
+CBD,Convention on Biological Diversity
+CMS,Convention on Migratory Species
+IMO,"International Maritime Organisation (MARPOL, Ballast Water Convention, Antifouling Convention)"
+Other international,Other international policies (specify)
+LTRAP,UNECE Convention on long-range transboundary air pollution
+BathingWater,Bathing Water Directive (76/160/EEC)
+Birds,Birds Directive (2009/147/EC)
+DrinkingWater,Drinking Water Directive (80/778/EEC) as amended by Directive (98/83/EC)
+EIA Directive,Environmental Impact Assessment Directive (85/337/EEC)
+FD,Floods Directive (2007/60/EC)
+Habitats ,Habitats Directive (92/43/EEC)
+IPPC,Integrated Pollution Prevention Control Directive (96/61/EC)
+Seveso,Major Accidents (Seveso) Directive (96/82/EC)
+MSFD,Marine Strategy Framework Directive (2008/56/EC)
+NEC,National Emission Ceilings for certain pollutants Directive (2001/81/EC)
+Nitrates,Nitrates Directive (91/676/EEC)
+PPPP,Plant Protection Products Directive (91/414/EEC)
+PSD,Priority substances Directive (2013/39/EU)
+SSD,Sewage Sludge Directive (86/278/EEC)
+UWWTD,Urban Waste Water Treatment Directive (91/271/EEC)
+WasteFD,Waste Framework Directive (2008/98/EC)
+WaterFD,Water Framework Directive (2000/60/EC)
+CFP,Common Fisheries Policy
+CFP-DC-MAP,Common Fisheries Policy - Data Collection Framework (DC-MAP)
+EUBiodivStrategy,EU Biodiversity Strategy
+PPPP,Placing of plant protection products on the market (Regulation EC/1107/2007)
+IAER,Prevention and management of the introduction and spread of invasive alien species (Regulation 1143/2014)
+Foodstuffs,Regulation on contaminants in foodstuffs (EC 1881/2006)
+REACH,"Regulation on Registration, Evaluation, Authorisation and Restriction of Chemicals (EC 1907/2006)"
+HELCOM,Helsinki Convention
+OSPAR,OSPAR Convention
+BarCon,Barcelona Convention UNEP/MAP
+BuchCon,Bucharest Convention
+TWSC,Trilateral Wadden Sea Cooperation
+GFCM,General Fisheries Commission for the Mediterranean
+ICCAT,International Commission for the Conservation of Atlantic Tunas
+NEAFC,North East Atlantic Fisheries Commission
+National,National policies (specify)
+Not applicable,Not applicable
+Other,Other (specify)
+Impact,Impact

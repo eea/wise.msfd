@@ -1,0 +1,24 @@
+<dl tal:define="item options/item | view/item;
+  blacklist options/blacklist | view/blacklist | python: [];
+  ">
+  <tal:cond tal:condition="item">
+    <tal:def define="fields python:view.get_obj_fields(item);
+      fields python: [x for x in fields if x not in blacklist]">
+
+      <tal:rep repeat="key fields" >
+        <tal:def tal:define="value item/?key; value python: view.print_value(value)">
+          <dt tal:condition="value">
+            <span tal:content="python: view.name_as_title(key)"
+              tal:attributes="title key">Label</span>
+          </dt>
+          <dd tal:condition="value">
+            <span tal:content="structure value">Some value here</span>
+            <em tal:condition="not: value">No value</em>
+          </dd>
+        </tal:def>
+      </tal:rep>
+
+    </tal:def>
+  </tal:cond>
+
+</dl>

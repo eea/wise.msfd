@@ -1,0 +1,46 @@
+<div tal:define="data options/extra_data | view/get_extra_data" class="extra-details">
+  <tal:block tal:repeat="info data" >
+  <tal:section define="section_title python: info[0]; section python: info[1]">
+  <h4 tal:content="section_title">Section title</h4>
+
+  <div class="tabs-wrapper" >
+
+    <div tal:attributes="class string:tab-content;id string:tabContents2">
+      <tal:sec tal:repeat="section_label section"
+       tal:define="istab python: 'tab-pane fade' if(len(info[1]) > 1) else ''" >
+       <div
+       tal:define="utitle python:section_label or section_title;"
+       tal:attributes="id python: view.title_as_id(utitle);
+       class string: ${istab}"
+       role="tabpanel"
+       >
+
+       section label: <div tal:content="python: section_label"></div>
+       section: <div tal:content="python: section.keys()"></div>
+      <tal:def define="section_data python:section[section_label]">
+      section data: <div tal:content="section_data"></div>
+      <table class="listing" tal:condition="section_data">
+        <thead>
+          <tr tal:define="row_labels python:section_data[0].keys()">
+            <th tal:repeat="l row_labels"
+             tal:content="python:view.name_as_title(l)">Label</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- <tr tal:repeat="row section_data" > -->
+          <!--   <td tal:repeat="v row/values" -->
+          <!--    tal:content="structure python: view.print_value(v)">Value</td> -->
+          <!-- </tr> -->
+        </tbody>
+      </table>
+      </tal:def>
+       </div>
+
+      </tal:sec>
+
+    </div>
+  </div>
+
+  </tal:section>
+  </tal:block>
+</div>

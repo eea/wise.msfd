@@ -1,0 +1,2 @@
+<div tal:content="structure view/data_template | nothing"></div>
+<div tal:content="structure view/extras | nothing"></div>

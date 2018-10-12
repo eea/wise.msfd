@@ -1,0 +1,339 @@
+<div class="row">
+  <div class="col-md-12">
+    <h4>Article 8: Initial assessment - 2012</h4>
+    <table class="table table-bordered table-striped first-table">
+      <tr>
+        <td>Article reported</td>
+        <td tal:attributes="colspan view/colspan">
+          Article 8: Determination of GES (and Art. 17 updates)
+        </td>
+      </tr>
+      <tr>
+        <td>Source file of Member State</td>
+        <td tal:attributes="colspan view/colspan"
+           tal:define="source_file string:http://cdr.eionet.europa.eu/lv/eu/msfd8910/ballv/envuxvsq/MSFD9GES_20130430_215711.xml/manage_document">
+          <a tal:attributes="href source_file"
+           tal:content="source_file"/>
+        </td>
+      </tr>
+      <tr>
+        <td>Assessors</td>
+        <td tal:attributes="colspan view/colspan"
+           tal:content="string:SM Body (Consultancy W); AN Other (Consultancy Y)"/>
+      </tr>
+      <tr>
+        <td>Date report due</td>
+        <td tal:attributes="colspan view/colspan"
+           tal:content="string:2012-10-15"/>
+      </tr>
+      <tr>
+        <td>Date reported by Member State</td>
+        <td tal:attributes="colspan view/colspan"
+           tal:content="string:2013-04-30"/>
+      </tr>
+      <tr>
+        <td>Date assessed</td>
+        <td tal:attributes="colspan view/colspan"
+           tal:content="string:2014-02-07"/>
+      </tr>
+    </table>
+  </div>
+</div>
+
+<div class="overflow-table">
+  <div class="">
+    <h5>2012 Member State Report</h5>
+    <table tal:repeat="muid view/muids" class="table table-bordered table-striped">
+    <tal:block tal:define="art8data python: view.get_data_reported(muid, view.descriptor);
+            topic_assessment python: view.get_topic_assessment(muid, view.descriptor);
+            criterias python: view.get_criterias_list(view.descriptor);
+            colspan_base python:1;">
+            <!-- art8assesment_data python: view.get_assesment_data(muid, view.descriptor); -->
+
+      <div style="display:none">
+      <h6>Article 8 topics/indicators (topic_assessment)</h6>
+      <div tal:replace="topic_assessment"></div>
+      <h6>Article 8 criterias (get_criterias_list())</h6>
+      <div tal:replace="criterias"></div>
+      </div>
+
+      <tr>
+        <th>MarineUnitID</th>
+        <td tal:attributes="colspan python: 42"
+            tal:content="muid">DE_ANS</td>
+      </tr>
+
+      <tr tal:define="col_name string:Topic;">
+        <th>Analysis</th>
+        <tal:block tal:repeat="crit criterias">
+          <tal:block tal:repeat="print_val python:
+                view.print_feature(crit[0], col_name, 0)">
+            <td tal:content="print_val"/>
+          </tal:block>
+        </tal:block>
+      </tr>
+
+      <tr>
+        <th>[Element]</th>
+        <td colspan="42">Row not implemented</td>
+      </tr>
+
+      <tr>
+        <th>CriteriaType
+          [GESComponent]</th>
+        <tal:block tal:repeat="crit criterias">
+        <td tal:attributes="colspan python: view.get_col_span_indicator(crit[0])"
+            tal:content="python: ' '.join((crit[1], crit[0]))"/>
+        </tal:block>
+      </tr>
+
+      <tr>
+        <th>[Parameter]</th>
+        <td colspan="42">Row not implemented</td>
+      </tr>
+
+      <tal:block tal:define="topic_group_index python:0;">
+      <tr tal:define="col_name string:ThresholdValue;">
+        <th>Threshold Value</th>
+        <metal:row define-macro="print_asses_ind">
+          <tal:block tal:repeat="crit criterias">
+            <tal:block tal:repeat="print_val python:
+                  view.print_asses_ind(crit[0], col_name, topic_group_index)">
+              <td tal:content="print_val"/>
+            </tal:block>
+          </tal:block>
+        </metal:row>
+      </tr>
+
+      <tr tal:define="col_name string:SumInfo1">
+        <th>SumInfo1
+          [ValueAchieved]</th>
+        <td colspan="42">Row not implemented</td>
+      </tr>
+
+      <tr tal:define="col_name string:ThresholdValueUnit;">
+        <th>SumInfo1Unit/
+          ThresholdValueUnit [ValueUnit]</th>
+        <metal:macro use-macro="template/macros/print_asses_ind"/>
+      </tr>
+
+      <tr>
+        <th>[ProportionThresholdValue]</th>
+        <td colspan="42">Row not implemented</td>
+      </tr>
+
+      <tr tal:define="col_name string:SumInfo1">
+        <th>PressureLevelN/P/
+          Oconcentration/
+          ImpactsPressureWater/
+          Seabed: SumInfo1
+          [ProportionValueAchieved]</th>
+        <metal:row define-macro="print_base">
+          <tal:block tal:repeat="crit criterias">
+            <tal:block tal:repeat="print_val python:
+                  view.print_base(crit[0], col_name, topic_group_index)">
+              <td tal:attributes="colspan python: colspan_base if print_val else 1"
+                  tal:content="print_val"/>
+            </tal:block>
+          </tal:block>
+        </metal:row>
+      </tr>
+
+      <!-- TODO not sure which column to show here-->
+      <!-- SumInfo1Confidence, StatusConfidence -->
+      <tr tal:define="col_name string:SumInfo1Confidence;">
+        <th>PressureLevelN/P/
+          OConcentration/
+          ImpactsPressureWater/
+          Seabed: SumInfo1Confidence</th>
+        <metal:macro use-macro="template/macros/print_base"/>
+      </tr>
+
+      <tr tal:define="col_name string:TrendsRecent;">
+        <th>PressureLevelN/P/
+          OConcentration/
+          ImpactsPressureWater/
+          Seabed: TrendRecent</th>
+        <metal:macro use-macro="template/macros/print_base"/>
+      </tr>
+
+      <tr tal:define="col_name string:TrendsFuture;">
+        <th>PressureLevelN/P/
+          OConcentration/
+          ImpactsPressureWater/
+          Seabed: TrendFuture</th>
+        <metal:macro use-macro="template/macros/print_base"/>
+      </tr>
+
+      <tr tal:define="col_name string:Description;">
+        <th>PressureLevelN/P/
+          Oconcentration/
+          ImpactsPressureWater/
+          Seabed: Description
+          [Parameter]</th>
+        <metal:macro use-macro="template/macros/print_base"/>
+      </tr>
+
+      <tr tal:define="col_name string:SumInfo2">
+        <th>ImpactsPressureWater/
+          Seabed: SumInfo2</th>
+        <!--<td colspan="42">Row not implemented</td>-->
+        <tal:block tal:repeat="crit criterias">
+          <tal:block tal:repeat="print_val python:
+                view.print_suminfo2(crit[0], topic_group_index)">
+            <td tal:content="print_val"/>
+          </tal:block>
+        </tal:block>
+      </tr>
+
+      <tr tal:define="col_name string:GESIndicators;">
+        <th>Indicator
+          [RelatedIndicator]</th>
+        <metal:macro use-macro="template/macros/print_asses_ind"/>
+      </tr>
+
+      <tr tal:define="col_name string:Status;">
+        <th>Status
+          [CriteriaStatus]</th>
+        <metal:row define-macro="print_asses">
+          <tal:block tal:repeat="crit criterias">
+            <tal:block tal:repeat="print_val python:
+                  view.print_asses(crit[0], col_name, topic_group_index)">
+              <td tal:content="print_val"/>
+            </tal:block>
+          </tal:block>
+        </metal:row>
+      </tr>
+
+      <tr tal:define="col_name string:StatusTrend;">
+        <th>StatusTrend</th>
+        <metal:macro use-macro="template/macros/print_asses"/>
+      </tr>
+
+      <!-- TODO not sure which column to show here-->
+      <!-- SumInfo1Confidence, StatusConfidence -->
+      <tr tal:define="col_name string:StatusConfidence;">
+        <th>StatusConfidence</th>
+        <metal:macro use-macro="template/macros/print_asses"/>
+      </tr>
+
+      <tr tal:define="col_name string:StatusDescription;">
+        <th>StatusDescription
+          [DescriptionCriteria]</th>
+        <metal:macro use-macro="template/macros/print_asses"/>
+      </tr>
+
+      <tr tal:define="col_name string:Limitations;">
+        <th>Limitations
+          (DesciptionElement)</th>
+        <metal:macro use-macro="template/macros/print_asses"/>
+      </tr>
+
+      <tr tal:define="col_name_start string:RecentTimeStart;
+          col_name_end string:RecentTimeEnd">
+        <th>RecentTimeStart/
+          RecentTimeEnd/
+          AssessmentDateStart/
+          AssessmentDateEnd
+          [AssessmentPeriod</th>
+        <td colspan="42"
+          tal:define="print_val python: view.metadata_data"
+          tal:content="python: print_val[0] if print_val else ''">Row not implemented</td>
+      </tr>
+      </tal:block>
+
+
+      <tal:block tal:define="topic_group_index python:1;
+        colspan_base python: sum((len(topic_assessment['LevelPressureNConcentration']),
+                        len(topic_assessment['LevelPressurePConcentration']),
+                        len(topic_assessment['LevelPressureOConcentration'])));">
+      <tr tal:define="col_name string:Description;">
+        <th>LevelPressureOverall:
+          Description</th>
+        <metal:macro use-macro="template/macros/print_base"/>
+      </tr>
+
+      <tr tal:define="col_name string:SumInfo1;">
+        <th>LevelPressureOverall:
+          SumInfo1
+          [proportion of area subject
+          to nutrient enrichment]</th>
+        <metal:macro use-macro="template/macros/print_base"/>
+      </tr>
+
+      <tr tal:define="col_name string:SumInfo1Confidence;">
+        <th>LevelPressureOverall:
+          SumInfo1Confidence</th>
+        <metal:macro use-macro="template/macros/print_base"/>
+      </tr>
+      </tal:block>
+
+
+      <tal:block tal:define="topic_group_index python:2;">
+      <tr tal:define="col_name string:Description;">
+        <th>LevelPressureN/P/OLoad:
+          Desciption</th>
+        <metal:macro use-macro="template/macros/print_base"/>
+      </tr>
+
+      <tr tal:define="col_name string:SumInfo1;">
+        <th>LevelPressureN/P/
+          OLoad: SumInfo1
+          [input load of nitrogen/
+          phosphorus/organic matter]</th>
+        <metal:macro use-macro="template/macros/print_base"/>
+      </tr>
+
+      <tr tal:define="col_name string:SumInfo1Unit;">
+        <th>LevelPressureN/P/
+          OLoad: SumInfo1Unit</th>
+        <metal:macro use-macro="template/macros/print_base"/>
+      </tr>
+
+      <tr tal:define="col_name string:SumInfo1Confidence;">
+        <th>LevelPressureN/P/
+          OLoad: SumInfo1Confidence</th>
+        <metal:macro use-macro="template/macros/print_base"/>
+      </tr>
+
+      <tr tal:define="col_name string:TrendsRecent;">
+        <th>LevelPressureN/P/
+          OLoad: TrendsRecent</th>
+        <metal:macro use-macro="template/macros/print_base"/>
+      </tr>
+
+      <tr tal:define="col_name string:TrendsFuture;">
+        <th>LevelPressureN/P/
+          OLoad: TrendFuture</th>
+        <metal:macro use-macro="template/macros/print_base"/>
+      </tr>
+      </tal:block>
+
+      <tr tal:define="col_name string:Description;">
+        <th>Activities:
+          Description</th>
+        <td tal:attributes="colspan python:42"
+          tal:define="print_val python: view.activ_descr_data[0]"
+          tal:content="python: print_val[0].Description if print_val else ''">Row not implemented</td>
+      </tr>
+
+      <tr tal:define="col_name string:ActivityType;">
+        <th>ActivityType</th>
+        <td tal:attributes="colspan python:42"
+          tal:content="python: view.activ_data[0]">Row not implemented</td>
+      </tr>
+
+      <tr tal:define="col_name string:InfoGaps;">
+        <th>InfoGaps</th>
+        <td tal:attributes="colspan python:42"
+          tal:define="print_val python:[
+            row.Description
+            for row in view.base_data[0]
+            if row.Topic == 'InfoGaps'];"
+          tal:content="python: print_val[0] if print_val else ''">Row not implemented</td>
+      </tr>
+
+    </tal:block>
+    </table>
+  </div>
+</div>

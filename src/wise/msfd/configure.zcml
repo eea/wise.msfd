@@ -1,0 +1,47 @@
+<configure
+  xmlns="http://namespaces.zope.org/zope"
+  xmlns:browser="http://namespaces.zope.org/browser"
+  xmlns:i18n="http://namespaces.zope.org/i18n"
+  xmlns:z3c="http://namespaces.zope.org/z3c"
+  i18n_domain="wise.content">
+
+  <include file="utility.zcml" />
+  <include package=".search" />
+  <include package=".compliance" />
+  <include package="z3c.formwidget.optgroup" />
+
+  <browser:page
+    for="*"
+    name="wise-macros"
+    permission="zope.Public"
+    template="pt/wise-macros.pt"
+    />
+
+  <browser:resourceDirectory
+    name="static_css"
+    directory="./static/wise/dist/css"
+    />
+  <browser:resource
+     name="msfd_search.js"
+     file="./static/wise/dist/js/msfd_search.js"
+  />
+  <browser:resource
+     name="wise_javascript_variables.js"
+     file="./static/wise/dist/js/wise_javascript_variables.js"
+  />
+  <browser:resource
+     name="tabs.js"
+     file="./static/wise/dist/js/tabs.js"
+  />
+
+  <browser:resource
+     name="compliance.js"
+     file="./static/wise/dist/js/compliance.js"
+  />
+
+  <browser:resource
+     name="lz-string.js"
+     file="./static/wise/dist/js/lz-string.js"
+  />
+
+</configure>

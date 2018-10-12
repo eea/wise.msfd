@@ -1,0 +1,166 @@
+<configure
+  xmlns="http://namespaces.zope.org/zope"
+  xmlns:browser="http://namespaces.zope.org/browser"
+  xmlns:i18n="http://namespaces.zope.org/i18n"
+  xmlns:z3c="http://namespaces.zope.org/z3c"
+  i18n_domain="wise.content">
+
+  <utility
+    component=".vocabulary.get_member_states_vb_factory"
+    name="wise_search_member_states"
+    />
+
+  <utility
+    component=".vocabulary.get_region_subregions_vb_factory"
+    name="wise_search_region_subregions"
+    />
+
+  <utility
+    component=".vocabulary.get_area_type_vb_factory"
+    name="wise_search_area_type"
+    />
+
+  <utility
+    component=".vocabulary.articles_vocabulary_factory"
+    name="wise_search_articles"
+    />
+
+  <utility
+    component=".vocabulary.marine_unit_id_vocab_factory"
+    name="wise_search_marine_unit_id"
+    />
+
+  <utility
+    component=".vocabulary.marine_unit_ids_vocab_factory"
+    name="wise_search_marine_unit_ids"
+    />
+
+  <utility
+    component=".vocabulary.a81_forms_vocab_factory"
+    name="wise_search_a81_forms"
+    />
+
+  <utility
+    component=".vocabulary.art11_country"
+    name="wise_search_art11_country"
+    />
+
+  <utility
+    component=".vocabulary.art11_country_ms"
+    name="wise_search_art11_country_ms"
+    />
+
+  <utility
+    component=".vocabulary.art11_region"
+    name="wise_search_art11_region"
+    />
+
+  <utility
+    component=".vocabulary.art11_region_ms"
+    name="wise_search_art11_region_ms"
+    />
+
+  <utility
+    component=".vocabulary.art11_marine_unit_id"
+    name="wise_search_art11_marine_unit_id"
+    />
+
+  <utility
+    component=".vocabulary.art11_marine_unit_id_ms"
+    name="wise_search_art11_marine_unit_id_ms"
+    />
+
+  <utility
+    component=".vocabulary.a1314_report_types"
+    name="wise_search_a1314_report_types"
+    />
+
+  <utility
+    component=".vocabulary.a1314_regions"
+    name="wise_search_a1314_regions"
+    />
+
+  <utility
+    component=".vocabulary.a1314_member_states"
+    name="wise_search_a1314_member_states"
+    />
+
+  <utility
+    component=".vocabulary.a1314_unique_codes"
+    name="wise_search_a1314_unique_codes"
+    />
+
+  <utility
+    component=".vocabulary.monitoring_programme_vb_factory"
+    name="wise_search_monitoring_programme_vb_factory"
+    />
+
+  <utility
+    component=".vocabulary.monitoring_programme_info_types"
+    name="wise_search_monitoring_programme_info_types"
+    />
+
+  <!--
+    Articles 8, 9, 10 reporting year 2018
+  -->
+  <utility
+    component=".vocabulary.articles_vocabulary_factory_2018"
+    name="wise_search_articles_2018"
+    />
+
+  <utility
+    component=".vocabulary.a2018_country"
+    name="wise_search_a2018_country"
+    />
+
+  <utility
+    component=".vocabulary.a2018_marine_reporting_unit"
+    name="wise_search_a2018_marine_reporting_unit"
+    />
+
+  <utility
+    component=".vocabulary.a2018_ges_component_art9"
+    name="wise_search_a2018_ges_component_art9"
+    />
+
+  <utility
+    component=".vocabulary.a2018_feature_art9"
+    name="wise_search_a2018_feature_art9"
+    />
+
+  <utility
+    component=".vocabulary.a2018_feature_art81c"
+    name="wise_search_a2018_feature_art81c"
+    />
+
+  <utility
+    component=".vocabulary.a2018_feature"
+    name="wise_search_a2018_feature"
+    />
+
+  <utility
+    component=".vocabulary.a2018_ges_component"
+    name="wise_search_a2018_ges_component"
+    />
+
+  <utility
+    component=".vocabulary.a2018_ges_component_ind"
+    name="wise_search_a2018_ges_component_ind"
+    />
+
+  <utility
+    component=".vocabulary.a2018_feature_ind"
+    name="wise_search_a2018_feature_ind"
+    />
+
+  <utility
+    component=".vocabulary.a2018_mru_ind"
+    name="wise_search_a2018_mru_ind"
+    />
+
+  <!-- <utility -->
+  <!--   component=".vocabulary.wise_search_compliance" -->
+  <!--   name="wise_search_compliance_factory" -->
+  <!--   /> -->
+
+</configure>

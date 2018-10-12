@@ -1,0 +1,403 @@
+A - Species	SppAll	All marine species	1				Y
+A - Species		MS-defined species	2	Y
+B - Species - listed	SpeciesListedAll	Species - listed (all)	4	Y
+B - Species - listed		MS-defined species (from Convention lists)	5	Y
+C - Species - commercial fish and shellfish	FishCommercial	Commercially-exploited fish and shellfish	6				Y
+C - Species - commercial fish and shellfish		MS-defined species (commercially-exploited)  	7	Y
+D - Species - non-indigenous	NIS-Invasive	Species - non-indigenous invasive	8	NIS inventory
+D - Species - non-indigenous	NIS-NonInvasive	Species - non-indigenous non-invasive	9	NIS inventory
+D - Species - non-indigenous	NIS-inventory	Species - non-indigenous - inventory	10	Y
+D - Species - non-indigenous	NIS-new	Newly-introduced non-indigenous species	11				Y
+D - Species - non-indigenous	NIS-established	Established non-indigenous species	12				Y
+E - Species - genetically-distinct forms	SpeciesGeneticallyDistinct	Genetically distinct forms of native species	13	Genetically distinct forms of native species inventory
+A - Species group	SpeciesGroups	Species groups	1				Y
+A - Species group	FunctionalGroupOther	Functional group - other (highly mobile/widely dispersed species groups)	2	Y	Y
+B - Birds	BirdsAll	Birds (all marine species)	3	Y	Y	Y	y
+B - Birds	BirdsGrazing	Grazing birds	4	Inshore herbivorous-feeding birds	Inshore herbivorous-feeding birds	-	y
+B - Birds	BirdsWading	Wading birds	5	Intertidal benthic-feeding birds	Intertidal benthic-feeding birds	-	y
+B - Birds	BirdsSurfaceFeeding	Surface-feeding birds	6	Inshore surface-feeding birds	Inshore surface-feeding birds	-	y
+B - Birds	BirdsSurfaceFeeding	Surface-feeding birds	6	Offshore surface-feeding birds	Offshore surface-feeding birds	-	y
+B - Birds	BirdsPelagicFeeding	Pelagic-feeding birds	7	Inshore pelagic-feeding birds	Inshore pelagic-feeding birds	-	y
+B - Birds	BirdsPelagicFeeding	Pelagic-feeding birds	7	Offshore pelagic-feeding birds	Offshore pelagic-feeding birds	-	y
+B - Birds	BirdsBenthicFeeding	Benthic-feeding birds	8	Inshore benthic-feeding birds	Inshore benthic-feeding birds	-	y
+B - Birds	BirdsIce-associated	Ice-associated birds	9	Y	Y	-	-
+C - Mammals	MamAll	Mammals (all marine species)	10	Y	Y	Y	y
+C - Mammals	MamCetacSmall	Small toothed cetaceans	11	Toothed whales	Toothed whales	-	y
+C - Mammals	MamCetacDeepDiving	Deep-diving toothed cetaceans	12	Toothed whales	Toothed whales	-	y
+C - Mammals	MamCetacBaleenWhales	Baleen whales	13	Y	Y	-	y
+C - Mammals	MamSeals	Seals	14	Y	Y	-	y
+C - Mammals	MamIce-associated	Ice-associated mammals	15	Y	Y	-	-
+D - Reptiles	Reptiles-all	Reptiles (all marine species)	16	Y
+D - Reptiles	RepTurtles	Turtles	17	Y	Y	-	y
+E - Fish	FishAll	Fish (all marine species)	18	Y	Y	Y	y
+E - Fish	FishDiadromous	Diadromous fish	19	Y	Y	-	-
+E - Fish	FishCoastal	Coastal fish	20	Y	Y	y	y
+E - Fish	FishPelagicShelf	Pelagic shelf fish	21	Pelagic fish	Pelagic fish	-	y
+E - Fish	FishPelagicShelf	Pelagic shelf fish	21	Pelagic elasmobranchs	Pelagic elasmobranchs	-	y
+E - Fish	FishDemersalShelf	Demersal shelf fish	22	Demersal fish	Demersal fish	-	y
+E - Fish	FishDemersalShelf	Demersal shelf fish	22	Demersal elasmobranchs	Demersal elasmobranchs	-	y
+E - Fish	FishDeepSea	Deep-sea fish	23	Deep-sea fish	Deep-sea fish	-	y
+E - Fish	FishDeepSea	Deep-sea fish	23	Deep-sea elasmobranchs	Deep-sea elasmobranchs	-	y
+E - Fish	FishIce-associated	Ice-associated fish	24	Y	Y	-	-
+F - Cephalopods	CephaAll	Cephalopods (all pelagic species)	25	Y	Y	Y	y
+F - Cephalopods	CephaCoastShelf	Coastal/shelf cephalopods	26	Y	Y	-	y
+F - Cephalopods	CephaDeepSea	Deep-sea cephalopods	27	Y	Y	-	y
+A - Habitats	HabAll	Marine habitats (all)	1				Y
+A - Habitats	HabSpecialAll	Special habitats (all)	2	Y
+A - Habitats	HabOther	Other habitat types	3	MS-defined habitat (from Convention lists; using EUNIS classes)			Y
+B - Habitats - benthic	HabBenAll	Benthic habitats (all)	4	Seabed habitats - all	Seabed habitats - all	Y	y
+B - Habitats - benthic	HabBenBroad	Benthic broad habitats	5				Y
+B - Habitats - benthic	HabBenOther	Other benthic habitats	6				Y
+B - Habitats - benthic	HabBenLitRock	Littoral rock and biogenic reef	7	Y	Y	-	y
+B - Habitats - benthic	HabBenLitSed	Littoral sediment	8	Y	Y	-	y
+B - Habitats - benthic	HabBenInfralitRock	Infralittoral rock and biogenic reef 	9	Shallow sublittoral rock and biogenic reef	Shallow sublittoral rock and biogenic reef	-	y
+B - Habitats - benthic	HabBenInfralitCoarSed	Infralittoral coarse sediment 	10	Shallow sublittoral coarse sediment	Shallow sublittoral coarse sediment	-	y
+B - Habitats - benthic	HabBenInfralitMxdSed	Infralittoral mixed sediment 	11	Shallow sublittoral mixed sediment	Shallow sublittoral mixed sediment	-	y
+B - Habitats - benthic	HabBenInfralitSand	Infralittoral sand 	12	Shallow sublittoral sand	Shallow sublittoral sand	-	y
+B - Habitats - benthic	HabBenInfralitMud	Infralittoral mud 	13	Shallow sublittoral mud	Shallow sublittoral mud	-	y
+B - Habitats - benthic	HabBenCircalitRock	Circalittoral rock and biogenic reef 	14	Shallow sublittoral rock and biogenic reef	Shallow sublittoral rock and biogenic reef	-	y
+B - Habitats - benthic	HabBenCircalitCoarSed	Circalittoral coarse sediment 	15	Shallow sublittoral coarse sediment	Shallow sublittoral coarse sediment	-	y
+B - Habitats - benthic	HabBenCircalitMxdSed	Circalittoral mixed sediment 	16	Shallow sublittoral mixed sediment	Shallow sublittoral mixed sediment	-	y
+B - Habitats - benthic	HabBenCircalitSand	Circalittoral sand 	17	Shallow sublittoral sand	Shallow sublittoral sand	-	y
+B - Habitats - benthic	HabBenCircalitMud	Circalittoral mud 	18	Shallow sublittoral mud	Shallow sublittoral mud	-	y
+B - Habitats - benthic	HabBenOffshRock	Offshore circalittoral rock and biogenic reef 	19	Shelf sublittoral rock and biogenic reef	Shelf sublittoral rock and biogenic reef	-	y
+B - Habitats - benthic	HabBenOffshCoarSed	Offshore circalittoral coarse sediment 	20	Shelf sublittoral coarse sediment	Shelf sublittoral coarse sediment	-	y
+B - Habitats - benthic	HabBenOffshMxdSed	Offshore circalittoral mixed sediment 	21	Shelf sublittoral mixed sediment	Shelf sublittoral mixed sediment	-	y
+B - Habitats - benthic	HabBenOffshSand	Offshore circalittoral sand 	22	Shelf sublittoral sand	Shelf sublittoral sand	-	y
+B - Habitats - benthic	HabBenOffshMud	Offshore circalittoral mud 	23	Shelf sublittoral mud	Shelf sublittoral mud	-	y
+B - Habitats - benthic	HabBenBathyalUpRock	Upper bathyal rock and biogenic reef	24	Y	Y	-	y
+B - Habitats - benthic	HabBenBathyalUpSed	Upper bathyal sediment	25	Y	Y	-	y
+B - Habitats - benthic	HabBenBathyalLowRock	Lower bathyal rock and biogenic reef	26	Y	Y	-	y
+B - Habitats - benthic	HabBenBathyalLowSed	Lower bathyal sediment	27	Y	Y	-	y
+B - Habitats - benthic	HabBenAbyssal	Abyssal 	28	Abyssal rock and biogenic reef	Abyssal rock and biogenic reef	-	y
+B - Habitats - benthic	HabBenAbyssal	Abyssal 	28	Abyssal sediment	Abyssal sediment	-	y
+C - Habitats - pelagic	HabPelagAll	Pelagic habitats (all)	29	Water column habitats - all	Water column habitats - all	Y	y
+C - Habitats - pelagic	HabPelagBroad	Pelagic broad habitats	30				Y
+C - Habitats - pelagic	HabPelagOther	Pelagic other habitats	31				Y
+C - Habitats - pelagic	HabPelagVarSalinity	Variable salinity	32	Reduced salinity water	Reduced salinity water	-	-
+C - Habitats - pelagic	HabPelagVarSalinity	Variable salinity	32	Variable salinity (estuarine) water	Variable salinity (estuarine) water	-	y
+C - Habitats - pelagic	HabPelagCoastal	Coastal	33	Marine water: coastal	Marine water: coastal	-	y
+C - Habitats - pelagic	HabPelagShelf	Shelf	34	Marine water: shelf	Marine water: shelf	-	y
+C - Habitats - pelagic	HabPelagOcean	Oceanic/beyond shelf	35	Marine water: oceanic	Marine water: oceanic	-	y
+D - Habitats - ice	HabIce-associated	Ice-associated habitats	36	Y	Y	-	-
+A - Physical & hydrological characteristics	PhyHydroCharacAll	All physical and hydrological characteristics	2				Y
+A - Physical & hydrological characteristics	Temperature	Temperature	3	Physical & chemical features list	Y		y
+A - Physical & hydrological characteristics	Ice	Ice	4	Physical & chemical features list: Ice cover	Ice cover		y
+A - Physical & hydrological characteristics	Waves	Wave regime	5	Physical & chemical features list: Wave exposure	Wave exposure		y
+A - Physical & hydrological characteristics	Currents	Current regime	6	Physical & chemical features list: Current velocity	Current velocity		y
+A - Physical & hydrological characteristics	Upwelling	Upwelling	7	Physical & chemical features list	Y		y
+A - Physical & hydrological characteristics	Mixing	Mixing	8	Physical & chemical features list: Mixing characteristics	Mixing characteristics		y
+A - Physical & hydrological characteristics	ResidenceTime	Residence time	9	Physical & chemical features list	Y		y
+A - Physical & hydrological characteristics	FreshwaterInput	Freshwater input	10				Y
+A - Physical & hydrological characteristics	SeaLevel	Sea level	11				Y
+A - Physical & hydrological characteristics	Bathymetry	Bathymetry	12	Physical & chemical features list: Topography and bathymetry	Topography and bathymetry		y
+A - Physical & hydrological characteristics	Turbidity	Turbidity (silt/sediment loads)	13	Physical & chemical features list: Turbidity	Y		y
+A - Physical & hydrological characteristics	Transparency	Transparency	14	Physical & chemical features list	Y		y
+A - Physical & hydrological characteristics	Sound	Sound	15				Y
+A - Physical & hydrological characteristics	SubstrateMorphology	Seabed substrate and morphology	16	Physical & chemical features list: Topography and bathymetry			Y
+B - Chemical characteristics	ChemCharacAll	All chemical characteristics	17				Y
+B - Chemical characteristics	Salinity	Salinity	18	Physical & chemical features list	Y		y
+B - Chemical characteristics	Nutrients	Nutrients (N, P)	19	Physical & chemical features list: Nutrient levels (DIN, TN, DIP, TP, TOC)	Nutrient levels (DIN, TN, DIP, TP, TOC)		y
+B - Chemical characteristics	OrganicCarbon	Organic carbon	20				Y
+B - Chemical characteristics	pCO2	Dissolved carbon dioxide (pCO2)	21				Y
+B - Chemical characteristics	Oxygen	Dissolved Oxygen	22	Physical & chemical features list: Oxygen levels	Oxygen levels		y
+B - Chemical characteristics	pH	pH	23	Physical & chemical features list	Y		y
+C - Biological characteristics - trophic guild	TrophicGuildAll	All trophic guilds	24				Y
+C - Biological characteristics - trophic guild	TrophicGuildPrimProd	Primary producers	25				y
+C - Biological characteristics - trophic guild	TrophicGuildSecProd	Secondary producers	26				y
+C - Biological characteristics - trophic guild	TrophicGuildFilFeed	Filter-feeders	27				y
+C - Biological characteristics - trophic guild	TrophicGuildDepFeed	Deposit-feeders	28				y
+C - Biological characteristics - trophic guild	TrophicGuildPlankt	Planktivores	29				y
+C - Biological characteristics - trophic guild	TrophicGuildPredSApexPel	Sub-apex pelagic predators	30				y
+C - Biological characteristics - trophic guild	TrophicGuildPredSApexDem	Sub-apex demersal predators	31				y
+C - Biological characteristics - trophic guild	TrophicGuildPredApex	Apex predators	32				y
+D - Ecosystems	EcosysElemAll	All marine ecosystem elements	1				Y
+D - Ecosystems	EcosystemFoodWeb	Ecosystem, including food webs	33				Y
+D - Ecosystems	EcosysCoastal	Coastal ecosystem	34				Y
+D - Ecosystems	EcosysShelf	Shelf ecosystem	35				Y
+D - Ecosystems	EcosysOceanic	Oceanic/deep-sea ecosystem	36				Y
+D - Ecosystems		MS-defined features	37	Y
+E - Other features	AreaOfMerit	Habitats in areas meriting particular reference	1	Y
+E - Other features	TypicalFeature	Typical features or characteristics	2	Y
+A - Pressures - general	PresAll	All pressures	1				Y
+A - Pressures - general	PresOther	Pressure - other	2	Y	Y
+B - Biological	PresBioAll	All biological pressures	1	Biological disturbance (all)	Biological disturbance (all)		Y
+B - Biological	PresBioIntroNIS	Input or spread of non-indigenous species	2	Introduction of non-indigenous species and translocations	Introduction of non-indigenous species and translocations		Y
+B - Biological	PresBioIntroMicroPath	Input of microbial pathogens	3	Introduction of microbial pathogens	Introduction of microbial pathogens		Y
+B - Biological	PresBioIntroGenModSpp	Input of genetically modified species and translocation of native species	4	Genetically distinct forms of native species inventory	Genetically distinct forms of native species inventory		Y
+B - Biological	PresBioCultHab	Loss of, or change to, natural biological communities due to cultivation of animal or plant species	5	-	-		Y
+B - Biological	PresBioDisturbSpp	Disturbance of species (e.g. where they breed, rest and feed) due to human presence	6	-	-		Y
+B - Biological	PresBioExtractSpp	Extraction of, or mortality/injury to, wild species (by commercial and recreational fishing and other activities)	7	Selective extraction of species, including non-target catches (all)	Selective extraction of species, including non-target catches (all)		Y
+B - Biological	PresBioExtractSpp	Extraction of, or mortality/injury to, wild species (by commercial and recreational fishing and other activities)	7	Extraction of species: fish & shellfish	Extraction of species: fish & shellfish		y
+B - Biological	PresBioExtractSpp	Extraction of, or mortality/injury to, wild species (by commercial and recreational fishing and other activities)	7	Extraction of species: maerl extraction	Extraction of species: maerl extraction		y
+B - Biological	PresBioExtractSpp	Extraction of, or mortality/injury to, wild species (by commercial and recreational fishing and other activities)	7	Extraction of species: seaweed harvesting	Extraction of species: seaweed harvesting		y
+B - Biological	PresBioExtractSpp	Extraction of, or mortality/injury to, wild species (by commercial and recreational fishing and other activities)	7	Extraction of species: other	Extraction of species: other		y
+C - Physical	PresPhyAll	All physical pressures	1				Y
+C - Physical	PresPhyDisturbSeabed	Physical disturbance to seabed	2	Physical damage (all)	Physical damage (all)		y
+C - Physical	PresPhyDisturbSeabed	Physical disturbance to seabed	2	Physical damage (abrasion)	Physical damage (abrasion)		y
+C - Physical	PresPhyDisturbSeabed	Physical disturbance to seabed	2	Physical damage (changes in siltation)	Physical damage (changes in siltation)		y
+C - Physical	PresPhyDisturbSeabed	Physical disturbance to seabed	2	Physical damage (selective extraction)	Physical damage (selective extraction)		y
+C - Physical	PresPhyDisturbSeabed	Physical disturbance to seabed	2	Physical disturbance (other)	Physical disturbance (other)		y
+C - Physical	PresPhyLoss	Physical loss of the seabed	3	Physical loss (all)	Physical loss (all)		y
+C - Physical	PresPhyLoss	Physical loss of the seabed	3	Physical loss (sealing)	Physical loss (sealing)		y
+C - Physical	PresPhyLoss	Physical loss of the seabed	3	Physical loss (smothering)	Physical loss (smothering)		y
+C - Physical	PresPhyHydroCond	Changes to hydrological conditions	4	Interference with hydrological processes (all)	Interference with hydrological processes (all)		y
+C - Physical	PresPhyHydroCond	Changes to hydrological conditions	4	Changes in salinity regime	Changes in salinity regime		y
+C - Physical	PresPhyHydroCond	Changes to hydrological conditions	4	Changes in thermal regime	Changes in thermal regime		y
+D - Substances, litter and energy	PresInputAll	All pressures related to inputs of substances, litter and energy	1				Y
+D - Substances, litter and energy	PresInputNut	Input of nutrients – diffuse sources, point sources, atmospheric deposition	2	Nutrient and organic matter enrichment (all)	Nutrient and organic matter enrichment (all)		y
+D - Substances, litter and energy	PresInputNut	Input of nutrients – diffuse sources, point sources, atmospheric deposition	2	Inputs of fertilisers and other N- and P-rich substances	Inputs of fertilisers and other N- and P-rich substances		y
+D - Substances, litter and energy	PresInputOrg	Input of organic matter – diffuse sources and point sources	3	Inputs of organic matter	Inputs of organic matter		y
+D - Substances, litter and energy	PresInputCont	Input of other substances (e.g. synthetic substances, non-synthetic substances, radionuclides) – diffuse sources, point sources, atmospheric deposition, acute events	4	Contamination by hazardous substances (all)	Contamination by hazardous substances (all)		y
+D - Substances, litter and energy	PresInputCont	Input of other substances (e.g. synthetic substances, non-synthetic substances, radionuclides) – diffuse sources, point sources, atmospheric deposition, acute events	4	Introduction of non-synthetic substances & compounds	Introduction of non-synthetic substances & compounds		y
+D - Substances, litter and energy	PresInputCont	Input of other substances (e.g. synthetic substances, non-synthetic substances, radionuclides) – diffuse sources, point sources, atmospheric deposition, acute events	4	Introduction of synthetic compounds	Introduction of synthetic compounds		y
+D - Substances, litter and energy	PresInputCont	Input of other substances (e.g. synthetic substances, non-synthetic substances, radionuclides) – diffuse sources, point sources, atmospheric deposition, acute events	4	Introduction of radio-nuclides	Introduction of radio-nuclides		y
+D - Substances, litter and energy	PresInputCont	Input of other substances (e.g. synthetic substances, non-synthetic substances, radionuclides) – diffuse sources, point sources, atmospheric deposition, acute events	4	Systematic/intentional release of substances	Systematic/intentional release of substances		y
+D - Substances, litter and energy	PresInputCont	Input of other substances (e.g. synthetic substances, non-synthetic substances, radionuclides) – diffuse sources, point sources, atmospheric deposition, acute events	4	Acute pollution events			Y
+D - Substances, litter and energy	PresInputLitter	Input of litter (solid waste matter, including micro-sized litter)	5	Marine litter	Marine litter		y
+D - Substances, litter and energy	PresInputSound	Input of anthropogenic sound (impulsive, continuous)	6	Underwater noise	Underwater noise		y
+D - Substances, litter and energy	PresInputOthEnergy	Input of other forms of energy (including electromagnetic fields, light and heat)	7	-	-		y
+D - Substances, litter and energy	PresInputWater	Input of water – point sources (e.g. brine)	8	-	-		y
+E - Other	PressureOther	Pressure - other	1	Y
+E - Other	Unknown	Unknown	2				Y
+A - Biological	PresEnvNISnew	Newly-introduced non-indigenous species	1				Y
+A - Biological	PresEnvNISestablished	Established non-indigenous species	2				Y
+B - Physical and hydrological	PresEnvPhyDist	Physical disturbance to seabed	1				Y
+B - Physical and hydrological	PresEnvPhyLoss	Physical loss of the seabed	2				Y
+B - Physical and hydrological	PresEnvHydroChanges	Hydrographical changes	3				Y
+C - Substances, litter and energy	PresEnvEutrophi	Eutrophication	1				Y
+C - Substances, litter and energy	PresEnvContNonUPBTs	Contaminants - non-UPBT substances	2				Y
+C - Substances, litter and energy	PresEnvContUPBTs	Contaminants - UPBT substances	3				Y
+C - Substances, litter and energy	PresEnvContSeafood	Contaminants - in seafood	4				Y
+C - Substances, litter and energy	PresEnvAcuPolluEvents	Acute pollution events	5	Y	Y		y
+C - Substances, litter and energy	PreEnvLitter	Litter [macro]	6				Y
+C - Substances, litter and energy	PresEnvLitterMicro	Micro-litter	7				Y
+C - Substances, litter and energy	PresEnvLitterSpp	Litter & micro-litter in species	8				Y
+C - Substances, litter and energy	PresEnvSoundImpulsive	Impulsive sound in water	9				Y
+C - Substances, litter and energy	PresEnvSoundContinuous	Continuous low-frequency sound	10				Y
+C - Substances, litter and energy	Acidification	Marine acidification	11	Y	Y		y
+D - Hazardous substances	SynthComp	Synthetic compounds	1	Y
+D - Hazardous substances	NonSynthSubst	Non-synthetic substances and compounds	2	Y
+D - Hazardous substances	RadioNuclides	Radio-nuclides	3	Y
+D - Hazardous substances	WorksheetHazsubstanceslist	Worksheet HazSubstancesList contains relevant substances and CAS numbers	4	Y
+E - Macro-litter	Artpoly	Artificial polymer materials	1				Y
+E - Macro-litter	Rubber	Rubber	2				Y
+E - Macro-litter	Textile	Cloth/textile	3				Y
+E - Macro-litter	Paper	Paper/cardboard	4				Y
+E - Macro-litter	Wood	Processed/worked wood	5				Y
+E - Macro-litter	Metal	Metal	6				Y
+E - Macro-litter	Glass	Glass/ceramics	7				Y
+E - Macro-litter	Chem	Chemicals	8				Y
+E - Macro-litter	Food	Food waste	9				Y
+E - Macro-litter	Undef	Undefined	10				Y
+F - Micro-litter	ArtPoly	Artificial polymer materials	11				Y
+F - Micro-litter	Other	Other materials	12				Y
+A - Ecosystem services - all	EcosysServAll	All ecosystem services	1				Y
+B - Nutrition - biomass	EcosysServNutrAll	All ecosystem services relevant for nutrition	2	Nutrition			Y
+B - Nutrition - biomass	EcosysServNutrSeafoodAlgae	Wild plants, algae and their outputs	3	Nutrition			Y
+B - Nutrition - biomass	EcosysServNutrSeafoodAnimals	Wild animals and their outputs	4	Nutrition			Y
+B - Nutrition - biomass	EcosysServNutrAquacAlgae	Algal seafood from in-situ aquaculture	5	Nutrition			Y
+B - Nutrition - biomass	EcosysServNutrAquacAnimals	Animals from in-situ aquaculture	6	Nutrition			Y
+C - Materials - biomass	EcosysServMatAll	 All ecosystem services relevant for provision of materials	7	Materials			Y
+C - Materials - biomass	EcosysServMatRaw	Fibres and other materials from plants, algae and animals for direct use or processing	8	Materials			Y
+C - Materials - biomass	EcosysServMatAlgaeAnimalsForAquac	Materials from plants, algae and animals for agricultural use	9	Materials			Y
+C - Materials - biomass	EcosysServMatGenetic	Genetic materials from all biota	10	Materials			Y
+D - Energy - Biomass-based energy sources	EcosysServEnerAll	All ecosystem services relevant for provision of energy	11	Energy			Y
+D - Energy - Biomass-based energy sources	EcosysServEnerPlants	Plant-based resources	12	Energy			Y
+D - Energy - Biomass-based energy sources	EcosysServEnerAnimals	Animal-based resources	13	Energy			Y
+E - Mediation of waste, toxics and other nuisances	EcosysServWasteAll	All ecosystem services relevant for mediation of waste, toxics and other nuisances	14	Regulation of wastes			Y
+F - Mediation of waste, toxics and other nuisances - Mediation by biota	EcosysServWasteTreatment	Bio-remediation by micro-organisms, algae, plants, and animals	15	Regulation of wastes			Y
+F - Mediation of waste, toxics and other nuisances - Mediation by biota	EcosysServWasteRemovalByOrgan	Filtration/sequestration/storage/accumulation by micro-organisms, algae, plants, and animals	16	Regulation of wastes			Y
+F - Mediation of waste, toxics and other nuisances - Mediation by biota	EcosysServWasteRemovalByEcosys	Filtration/sequestration/storage/accumulation by ecosystems	17	Regulation of wastes			Y
+F - Mediation of waste, toxics and other nuisances - Mediation by biota	EcosysServWasteSmellVisImpacts	Mediation of smell/visual impacts	18	Regulation of wastes			Y
+G - Mediation of flows	EcosysServFlowsAll	All ecosystem services relevant for mediation of flows	19	Flow regulation			Y
+H - Mediation of flows - Mass flows	EcosysServFlowsErosionPrev1	Mass stabilisation and control of erosion rates	20	Flow regulation			Y
+H - Mediation of flows - Mass flows	EcosysServFlowsErosionPrev2	Buffering and attenuation of mass flows	21	Flow regulation			Y
+I - Mediation of flows - Liquid flows	EcosysServFlowsFloodProt	Flood protection	22	Flow regulation			Y
+J - Mediation of flows - Gaseous / air flows	EcosysServFlowsOxygenProd	Ventilation and transpiration	23	Flow regulation			Y
+K - Maintenance of physical, chemical, biological conditions	EcosysServMainCondAll	All ecosystem services relevant for maintenance of physical, chemical and biological conditions	24	Regulation of physical environment			Y
+L - Maintenance of physical, chemical, biological conditions - Lifecycle maintenance, habitat and gene pool protection	EcosysServMainCondPolli	Pollination and seed dispersal	25	Regulation of biotic environment			Y
+L - Maintenance of physical, chemical, biological conditions - Lifecycle maintenance, habitat and gene pool protection	EcosysServMainCondNurs	Maintaining Nursery Populations and Habitats 	26	Regulation of biotic environment			Y
+L - Maintenance of physical, chemical, biological conditions - Lifecycle maintenance, habitat and gene pool protection	EcosysServMainCondGene	Gene pool protection	27	Regulation of biotic environment			Y
+M - Maintenance of physical, chemical, biological conditions - Pest and disease control	EcosysServMainCondPest	Pest control	28	Regulation of biotic environment			Y
+M - Maintenance of physical, chemical, biological conditions - Pest and disease control	EcosysServMainCondDis	Disease control	29	Regulation of biotic environment			Y
+N - Maintenance of physical, chemical, biological conditions - Soil formation and composition	EcosysServMainCondDeco	Decomposition and fixing processes	30	Regulation of biotic environment			Y
+O - Maintenance of physical, chemical, biological conditions - Water conditions	EcosysServMainCondChem	Chemical condition of salt waters	31				Y
+P - Maintenance of physical, chemical, biological conditions - Atmospheric composition and climate regulation	EcosysServMainCondClim	Global climate regulation by reduction of greenhouse gas concentrations	32				Y
+Q - Underpinning and/or enhancing physical and intellectual interactions	EcosysServInteracPhyAll	All ecosystem services underpinning physical and intellectual interactions	33				Y
+R - Underpinning and/or enhancing physical and intellectual interactions - Physical and experiential interactions	EcosysServInteracPhyRecreat1	Experiential use of plants, animals and land-/seascapes in different environmental settings	34				Y
+R - Underpinning and/or enhancing physical and intellectual interactions - Physical and experiential interactions	EcosysServInteracPhyRecreat2	Physical use of land-/seascapes in different environmental settings 	35				Y
+S - Underpinning and/or enhancing physical and intellectual interactions - Intellectual and representative interactions	EcosysServInteracPhyScientif	Scientific	36	Intellectual and experimental			Y
+S - Underpinning and/or enhancing physical and intellectual interactions - Intellectual and representative interactions	EcosysServInteracPhyEducat	Educational	37	Intellectual and experimental			Y
+S - Underpinning and/or enhancing physical and intellectual interactions - Intellectual and representative interactions	EcosysServInteracPhyCultur	Heritage, cultural	38	Intellectual and experimental			Y
+S - Underpinning and/or enhancing physical and intellectual interactions - Intellectual and representative interactions	EcosysServInteracPhyEntert	Entertainment	39	Intellectual and experimental			Y
+S - Underpinning and/or enhancing physical and intellectual interactions - Intellectual and representative interactions	EcosysServInteracPhyAesthe	Aesthetic	40	Intellectual and experimental			Y
+T - Underpinning and/or enhancing spiritual, symbolic and other interactions	EcosysServInteracSpiAll	All ecosystem services underpinning spiritual, symbolic and other interactions	41	Symbolic			Y
+U - Underpinning and/or enhancing spiritual, symbolic and other interactions - Spiritual and/or emblematic 	EcosysServInteracSpiSymb	Symbolic	42	Symbolic			Y
+U - Underpinning and/or enhancing spiritual, symbolic and other interactions - Spiritual and/or emblematic 	EcosysServInteracSpiRelig	Sacred and/or religious	43	Symbolic			Y
+V - Underpinning and/or enhancing spiritual, symbolic and other interactions - Other cultural outputs	EcosysServInteracSpiExis	Existence	44	Symbolic			Y
+V - Underpinning and/or enhancing spiritual, symbolic and other interactions - Other cultural outputs	EcosysServInteracSpiBequ	Bequest	45	Symbolic			Y
+W - Ecosystems		MS-defined features	46	Y
+A - Uses and activities	ActivAll	All activities	1	Uses and activities - all	y		y
+A - Uses and activities	ActivOther	Uses and activities - other	2	Other marine uses and activities	Other marine uses and activities
+A - Uses and activities		MS-defined features	3	Theme (ESA)
+A - Uses and activities		Type of activity (within broad category of, e.g. fisheries, tourism/recreation)	4		Y
+B - Physical restructuring of rivers, coastline or seabed (water management)	ActivRestrucAll	All activities related to physical restructuring of rivers, coastline or seabed	1				Y
+B - Physical restructuring of rivers, coastline or seabed (water management)	ActivRestrucLandClaim	Land claim	2	Land claim, coastal defence	Land claim, coastal defence		y
+B - Physical restructuring of rivers, coastline or seabed (water management)	ActivRestrucCanalisation	Canalisation and other watercourse modifications	3	-	-		y
+B - Physical restructuring of rivers, coastline or seabed (water management)	ActivRestrucCoastalDef	Coastal defence and flood protection	4	Land claim, coastal defence	Land claim, coastal defence		y
+B - Physical restructuring of rivers, coastline or seabed (water management)	ActiveRestrucOffshStruc	Offshore structures (other than for oil/gas/renewables)	5	Placement & operation of offshore structures (other than for energy production)	Placement & operation of offshore structures (other than for energy production)		y
+B - Physical restructuring of rivers, coastline or seabed (water management)	ActivRestrucSeabedMorph	Restructuring of seabed morphology, including dredging and depositing of materials	6	Dredging	Dredging		y
+B - Physical restructuring of rivers, coastline or seabed (water management)	ActivRestrucSeabedMorph	Restructuring of seabed morphology, including dredging and depositing of materials	7	Solid waste disposal incl. dredge material	Solid waste disposal incl. dredge material		y
+C - Extraction of non-living resources	ActivExtrNonLivingAll	All activities related to extraction of non-living resources	1				Y
+C - Extraction of non-living resources	ActivExtrNonLivingMinerals	Extraction of minerals (rock, metal ores, gravel, sand, shell)	2	Marine mining (sand, gravel, rock)	Marine mining (sand, gravel, rock)		y
+C - Extraction of non-living resources	ActivExtrNonLivingOilGas	Extraction of oil and gas, including infrastructure	3	Marine hydrocarbon extraction (oil & gas)	Marine hydrocarbon extraction (oil & gas)		y
+C - Extraction of non-living resources	ActivExtrNonLivingSalt	Extraction of salt	4	-	-		y
+C - Extraction of non-living resources	ActivExtrNonLivingWater	Extraction of water	5	Desalination/water abstraction	Desalination/water abstraction		y
+D - Production of energy	ActivProdEnerAll	All activities related to production of energy	1				Y
+D - Production of energy	ActivProdEnerRenew	Renewable energy generation (wind, wave and tidal power), including infrastructure	2	Marine-based renewable energy generation (wind, wave & tidal power)	Marine-based renewable energy generation (wind, wave & tidal power)		y
+D - Production of energy	ActivProdEnerNonRenew	Non-renewable energy generation	3	-	-		y
+D - Production of energy	ActivProdEnerCables	Transmission of electricity and communications (cables)	4	Submarine cable & pipeline operations	Submarine cable & pipeline operations		y
+E - Extraction of living resources	ActivExtrLivingAll	All activities related to extraction of living resources	1				Y
+E - Extraction of living resources	ActivExtrLivingFishHarv	Fish and shellfish harvesting (professional, recreational)	2	Fisheries incl. recreational fishing (fish & shellfish)	Fisheries incl. recreational fishing (fish & shellfish)		y
+E - Extraction of living resources	ActivExtrLivingFishProcess	Fish and shellfish processing	3	-	-		y
+E - Extraction of living resources	ActivExtrLivingPlantHarv	Marine plant harvesting	4	Seaweed and other sea-based food harvesting	Seaweed and other sea-based food harvesting		y
+E - Extraction of living resources	ActivExtrLivingHunt	Hunting and collecting for other purposes	5	-	-		y
+E - Extraction of living resources	GeneticBioprospectMaerl	Extraction of genetic resources/bioprospecting/maerl	6	Y	Y
+F - Cultivation of living resources	ActivCultivAll	All activities related to cultivation of living resources	1				Y
+F - Cultivation of living resources	ActivCultivAquaculMarine	Aquaculture – marine, including infrastructure	2	Aquaculture (fin-fish & shellfish)	Aquaculture (fin-fish & shellfish)		y
+F - Cultivation of living resources	ActivCultivAquaculFreshwa	Aquaculture – freshwater	3	-	-		y
+F - Cultivation of living resources	ActivCultivAgri	Agriculture	4	Agriculture & forestry (run-off,  emissions)	Agriculture & forestry (run-off,  emissions)		y
+F - Cultivation of living resources	ActivCultivFores	Forestry	5	Agriculture & forestry (run-off,  emissions)	Agriculture & forestry (run-off,  emissions)		y
+G - Transport	ActivTranspAll	All activities related to transport	1				Y
+G - Transport	ActivTranspInfras	Transport infrastructure	2	Port operations	Port operations		y
+G - Transport	ActivTranspShip	Transport – shipping	3	Shipping	Shipping		y
+G - Transport	ActivTranspAir	Transport – air	4	-	-		y
+G - Transport	ActivTranspLand	Transport – land	5	-	-		y
+H - Urban and industrial uses	ActivUrbIndAll	All urban and industrial uses	1				Y
+H - Urban and industrial uses	ActivUrbIndUrban	Urban uses	2	-	-		y
+H - Urban and industrial uses	ActivUrbIndIndustrial	Industrial uses	3	Industry (discharges, emissions)	Industry (discharges, emissions)		y
+H - Urban and industrial uses	ActivUrbIndWaste	Waste treatment and disposal	4	Urban (municipal waste water discharge)	Urban (municipal waste water discharge)		y
+H - Urban and industrial uses	StorageGases	Storage of gases	5	Y	Y		y
+I - Tourism and leisure	ActivTourismAll	All activities related to tourism and leisure	1				Y
+I - Tourism and leisure	ActiveTourismInfras	Tourism and leisure infrastructure	2	-	-		y
+I - Tourism and leisure	ActiveTourismActiv	Tourism and leisure activities	3	Tourism & recreation incl. yachting	Tourism & recreation incl. yachting		y
+J - Security/defence	ActivMilitary	Military operations (subject to Article 2(2))	1	Defence operations	Defence operations		y
+J - Security/defence	DumpingMunitions	Dumping of munitions	2	Y	Y
+K - Education and research	ActivResearch	Research, survey and educational activities	1	Marine research, survey & educational activities	Marine research, survey & educational activities		y
+L - Extraction of species type	Fishing-<12mAll	Fishing - vessels <12m - passive & mobile gears	1	Y
+L - Extraction of species type	Fishing->12mPassive	Fishing - vessels >12m - passive gears	2	Y
+L - Extraction of species type	Fishing->12mMobileTrawl	Fishing - vessels >12m - mobile gears - affecting seabed (i.e. trawls, dredges)	3	Y
+L - Extraction of species type	Fishing->12mMobileOther	Fishing - vessels >12m - mobile gears - other types	4	Y
+L - Extraction of species type	Fishing-recreation	Fishing - recreational	5	Y
+L - Extraction of species type	Fishing-other	Fishing - other (specify in Description field)	6	Y
+L - Extraction of species type	ShellfishCollection	Shellfish collection	7	Y
+L - Extraction of species type	SeaweedHarvesting	Seaweed harvesting	8	Y
+L - Extraction of species type	MaerlExtract	Maerl extraction	9	Y
+L - Extraction of species type	SppExtract-other	Other types of extraction (specify in Description field)	10	Y
+M - NIS pathway	Shipping	Shipping & floating structures (all vessels, buoys, etc.)	1	Y
+M - NIS pathway	Canals	Canals (channels, drainage cuts to lagoons, marina basins etc.)	2	Y
+M - NIS pathway	Fisheries	Wild fisheries	3	Y
+M - NIS pathway	Culturing	Culture activities	4	Y
+M - NIS pathway	AquariumLiveTrade	Aquarium & live food trade	5	Y
+M - NIS pathway	Leisure	Leisure activities	6	Y
+M - NIS pathway	ResearchEducation	Research & education (including pilot projects)	7	Y
+M - NIS pathway	BiolControl	Biological control	8	Y
+M - NIS pathway	AlteredNaturalFlow	Alteration to natural water flow	9	Y
+M - NIS pathway	HabitatManagement	Habitat management	10	Y
+A - Fisheries and aquaculture	0311	Marine fishing	1				Y
+A - Fisheries and aquaculture	0321	Marine aquaculture	2				Y
+A - Fisheries and aquaculture	1020	Processing and preserving of fish, crustaceans and molluscs	3				Y
+B - Shipping (or maritime transport)	5010	Sea and coastal passenger water transport	1				Y
+B - Shipping (or maritime transport)	5020	Sea and coastal freight water transport	2				Y
+C - Ports	3011	Building of ships and floating structures	1				Y
+C - Ports	3012	Building of pleasure and sporting boats	2				Y
+C - Ports	3315	Repair and maintenance of ships and boats	3				Y
+C - Ports	4671	Wholesale of solid, liquid and gaseous fuels and related products	4				Y
+C - Ports	4672	Wholesale of metals and metal ores	5				Y
+C - Ports	4673	Wholesale of wood, construction materials and sanitary equipment	6				Y
+C - Ports	4674	Wholesale of hardware, plumbing and heating equipment and supplies	7				Y
+C - Ports	4675	Wholesale of chemical products	8				Y
+C - Ports	4676	Wholesale of other intermediate products	9				Y
+C - Ports	4677	Wholesale of waste and scrap	10				Y
+C - Ports	4211	Construction of roads and motorways	11				Y
+C - Ports	4212	Construction of railways and underground railways	12				Y
+C - Ports	4213	Construction of bridges and tunnels	13				Y
+C - Ports	4221	Construction of utility projects for fluids	14				Y
+C - Ports	4222	Construction of utility projects for electricity and telecommunications	15				Y
+C - Ports	4291	Construction of water projects	16				Y
+C - Ports	4299	Construction of other civil engineering projects n.e.c.	17				Y
+C - Ports	5222	Service activities incidental to water transportation	18				Y
+D - Oil and Gas	0610	Extraction of crude petroleum	1				Y
+D - Oil and Gas	0620	Extraction of natural gas	2				Y
+D - Oil and Gas	0910	Support activities for petroleum and natural gas extraction	3				Y
+E - Marine mining (sand and gravel, rock)	0811	Quarrying of ornamental and building stone, limestone, gypsum, chalk and slate	1				Y
+E - Marine mining (sand and gravel, rock)	0812	Operation of gravel and sand pits; mining of clays and kaolin	2				Y
+E - Marine mining (sand and gravel, rock)	0899	Other mining and quarrying n.e.c.	3				Y
+F - Extraction of non-living resources - Other	0893	Extraction of salt	1				Y
+G - Tourism and recreation incl. yachting	5510	Hotels and similar accommodation	1				Y
+H - Off-shore Wind Energy	0000	Exploitation of offshore wind energy for producing electricity	1				Y
+I - NACE code	MSDefined	MS-defined list	1	Y
+Element list/indicator	EU 	EU directive, regulation or policy	1				Y
+Element list/indicator	CFP	CFP	2				Y
+Element list/indicator	ConventionHelsinki	Helsinki Convention	3	Y			Y
+Element list/indicator	ConventionOSPAR	OSPAR Convention	4	Y			Y
+Element list/indicator	ConventionBarcelona	Barcelona Convention	5	Y			Y
+Element list/indicator	ConventionBucharest	Bucharest Convention	6	Y			Y
+Element list/indicator	ICES	ICES	7				Y
+Element list/indicator	GFCM	GFCM	8				Y
+Element list/indicator	MS(sub)region	Member States in (sub)region	9				Y
+Element list/indicator	National	National	10				Y
+Element list/indicator	Other	Other	11				Y
+Element list/indicator	ConventionOther	Other international agreement	14	Y
+EU Directive - MSFD	MSFDArt3_4	MSFD Articles 3 and 4	1	Y
+EU Directive - MSFD	MSFDArt5_6	MSFD Articles 5 and 6	2	Y
+EU Directive - MSFD	MSFDAnnexI 	MSFD Annex I 	3	Y
+EU Directive - MSFD	MSFDAnnexIII2008	MSFD Annex III (2008)	4	Y
+EU Directive - MSFD	MSFDAnnexIII2017	MSFD Annex III (2017)	5				Y
+EU Directive - MSFD	MSFDDecision2010	MSFD Decision 2010	6	Y
+EU Directive - MSFD	MSFDDecision2017	MSFD Decision 2017	7				Y
+EU Directive - MSFD	MSFDCSWP	MSFD CSWP 2011	8	Y
+EU Directive - MSFD	MSFDDIKE	WG DIKE	9	Y
+List/code - contaminants (D8, D9)	BODC-SDN 	BODC parameter vocabulary					ElementCodeSource
+List/code - contaminants (D8, D9)	ICES-Param	ICES parameter vocabulary					ElementCodeSource
+List/code - contaminants (D8, D9)	WISE	WISE vocabulary					ElementCodeSource
+List/code - elements (D5)	WISE-B	WISE biology vocabulary					ElementCodeSource
+List/code - habitats	EUNIS_2011	EUNIS habitat classification (version 2011-11)		Y			ElementCodeSource
+List/code - habitats	HabitatsDirective: habitats	Habitats Directive: habitats (Annex I)		Habitats Directive			ElementCodeSource
+List/code - habitats	HELCOMHabitats	HELCOM Underwater Biotopes/Red List					ElementCodeSource
+List/code - habitats	BHT	MSFD broad habitat types (2017 Decision)					ElementCodeSource
+List/code - habitats	OSPARHabitats	OSPAR: Habitats list					ElementCodeSource
+List/code - other	Other	Other list					ElementCodeSource
+List/code - species	Algaebase	AlgaeBase					ElementCodeSource
+List/code - species	BirdsDirective	Birds Directive (Annex I)		Birds Directive			ElementCodeSource
+List/code - species	CoL	Catalogue of Life					ElementCodeSource
+List/code - species	FAO	FAO ASFIS list of species for fishery statistics purposes					ElementCodeSource
+List/code - species	HabitatsDirective: species	Habitats Directive: species (Annexes II, IV, V)		Habitats Directive			ElementCodeSource
+List/code - species	ICES-Stock	ICES stock codes					ElementCodeSource
+List/code - species	WoRMS	World Register of Marine Species					ElementCodeSource
+Geographic areas	MSwatersGeogAreas	MS marine waters and other geographic areas	1	List: feature
+Geographic areas	AssessmentAreasList	Assessment areas list (with MarineUnitIDs)	2	List: feature
+	GeogAreas	Geographic areas	1	Y
+	RegCoord	Regional coordination	2	Y
+	PhysicalFeature	Physical feature	3	Y
+	ChemicalFeature	Chemical feature	4	Y
+	HabitatPredominant	Habitat - predominant	5	Y
+	HabitatSpecial	Habitat - special (listed)	6	Y
+	HabitatOther	Habitat - other	7	Y
+	SpeciesGroup	Species group	8	Y
+	FunctionalGroup 	Functional group (of birds, mammals, reptiles, fish or pelagic cephalopods)	9	Y
+	SpeciesListed	Species - listed (in a Directive or Convention)	10	Y
+	SpeciesOther	Species - other	11	Y
+	SpeciesCommercial	Species - commercial	12	Y
+	Ecosystem	Ecosystem	13	Y
+	SpeciesNIS	Species - non-indigenous	14	Y
+	SpeciesGeneticForm	Species - genetically distinct forms of native species	15	Y
+	Pressure  	Pressure	18	Y
+	UseActivity	Use/activity	19	Y
+	EcosystemService	Ecosystem service	20	Y
+	ESATheme 	Theme (economic and social analysis)	21	Y
+	CostDegradation	Cost of degradation	22	Y
+	DeterminationGES	Determination of GES (Art. 9)	23	Y
+	TargetsIndicators	Environmental targets and associated indicators (Art. 10)	24	Y
+

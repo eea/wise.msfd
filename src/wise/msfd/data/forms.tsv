@@ -1,0 +1,143 @@
+Art9	Adequacy	CriteriaUsed	Primary criterion used
+Art9	Adequacy	CriteriaUsed	Primary criterion replaced with secondary criterion
+Art9	Adequacy	CriteriaUsed	Primary criterion not used
+Art9	Adequacy	CriteriaUsed	Secondary criterion used
+Art9	Adequacy	CriteriaUsed	Secondary criterion used instead of primary criterion
+Art9	Adequacy	CriteriaUsed	Secondary criterion not used
+Art9	Adequacy	CriteriaUsed	2010 criterion/indicator used
+Art9	Adequacy	CriteriaUsed	2010 criterion/indicator not used
+Art9	Adequacy	CriteriaUsed	Other criterion (indicator) used
+Art9	Adequacy	CriteriaUsed	Not relevant
+Art9	Adequacy	GESQualitative	Adapted from Annex I definition
+Art9	Adequacy	GESQualitative	Adapted from 2017 Decision
+Art9	Adequacy	GESQualitative	Adapted from 2010 Decision
+Art9	Adequacy	GESQualitative	Not relevant
+Art9	Adequacy	GESQuantitative	Threshold values per MRU
+Art9	Adequacy	GESQuantitative	No threshold values
+Art9	Adequacy	GESQuantitative	Not relevant
+Art9	Adequacy	GESAmbition	No GES extent threshold defined
+Art9	Adequacy	GESAmbition	Proportion value per MRU set
+Art9	Adequacy	GESAmbition	No proportion value set
+Art9	Coherence	CriteriaUsed	Criterion used by all MS in region
+Art9	Coherence	CriteriaUsed	Criterion used by ≥75% MS in region
+Art9	Coherence	CriteriaUsed	Criterion used by ≥50% MS in region
+Art9	Coherence	CriteriaUsed	Criterion used by ≥25% MS in region
+Art9	Coherence	CriteriaUsed	Criterion used by ≤25% MS in region
+Art9	Coherence	CriteriaUsed	Criterion used by all MS in subregion
+Art9	Coherence	GESQualitative	High
+Art9	Coherence	GESQualitative	Moderate
+Art9	Coherence	GESQualitative	Poor
+Art9	Coherence	GESQualitative	Not relevant
+Art9	Coherence	GESQuantitative	All MS in region use EU (Directive, Regulation or Decision) values
+Art9	Coherence	GESQuantitative	All MS in region use regional (RSC) values
+Art9	Coherence	GESQuantitative	All MS in region use EU (WFD coastal) and regional (RSC offshore) values
+Art9	Coherence	GESQuantitative	All MS in region use EU (WFD coastal); and national (offshore) values
+Art9	Coherence	GESQuantitative	All MS in region use national values
+Art9	Coherence	GESQuantitative	Some MS in region use EU (Directive, Regulation or Decision) values and some MS use national values
+Art9	Coherence	GESQuantitative	Some MS in region use regional (RSC) values and some MS use national values
+Art9	Coherence	GESQuantitative	Not relevant
+Art9	Coherence	GESAmbition	GES extent value same/similar for all MS in region
+Art9	Coherence	GESAmbition	GES extent value varies between MS in region
+Art9	Coherence	GESAmbition	GES extent threshold varies markedly between MS
+Art9	Coherence	GESAmbition	GES extent threshold not reported
+Art9	Coherence	GESAmbition	GES proportion value same/similar for all MS in region
+Art9	Coherence	GESAmbition	GES proportion value varies between MS in region
+Art9	Coherence	GESAmbition	GES proportion value varies markedly between MS
+Art9	Coherence	GESAmbition	GES proportion value not reported
+Art9	Coherence	GESAmbition	Not relevant
+Art8	Adequacy	Elements	As required for 2017 Decision
+Art8	Adequacy	Elements	Mostly as required for 2017 Decision (≥75%)
+Art8	Adequacy	Elements	Many as required for 2017 Decision (≥50%)
+Art8	Adequacy	Elements	Some as required for 2017 Decision (≥25%)
+Art8	Adequacy	Elements	A few as required for 2017 Decision (<25%)
+Art8	Adequacy	Elements	Not as required for 2017 Decision
+Art8	Adequacy	Elements	Not relevant
+Art8	Adequacy	StatusAssessment	3 (parameter, criterion, element)
+Art8	Adequacy	StatusAssessment	2 (from parameter, criterion or element)
+Art8	Adequacy	StatusAssessment	1 (from parameter, criterion or element)
+Art8	Adequacy	StatusAssessment	Not reported
+Art8	Adequacy	StatusAssessment	Not relevant
+Art8	Adequacy	ExtentPressureImpact	Proportion of MRU with pressure reported
+Art8	Adequacy	ExtentPressureImpact	Proportion of water column with impact reported
+Art8	Adequacy	ExtentPressureImpact	Proportion of seabed with impact not reported
+Art8	Adequacy	ExtentPressureImpact	Not reported
+Art8	Adequacy	ExtentPressureImpact	Not relevant
+Art8	Adequacy	AccessArt8Data	URLs provided
+Art8	Adequacy	AccessArt8Data	Data being prepared for publication
+Art8	Adequacy	AccessArt8Data	Data not publicly accessible
+Art8	Adequacy	AccessArt8Data	Data not in electronic format
+Art8	Adequacy	AccessArt8Data	Not reported
+Art8	Adequacy	AccessArt8Data	Not relevant
+Art8	Consistency	AssessmentDetermination	Assessed against latest (2018) GES determination
+Art8	Consistency	AssessmentDetermination	Assessed against previous (2012) GES determination
+Art8	Consistency	AssessmentDetermination	Not assessed against reported GES determination
+Art8	Consistency	AssessmentDetermination	Not relevant
+Art8	Coherence	Elements	All MS in region use/report same as this MS
+Art8	Coherence	Elements	Most MS in region (≥75%) use/report same as this MS
+Art8	Coherence	Elements	Many MS in region (≥50%) use/report same as this MS
+Art8	Coherence	Elements	Some MS in region (≥25%) use/report same as this MS
+Art8	Coherence	Elements	Few MS in region (<25%) use/report same as this MS
+Art8	Coherence	Elements	Not relevant
+Art8	Coherence	Parameters	All MS in region use/report same as this MS
+Art8	Coherence	Parameters	Most MS in region (≥75%) use/report same as this MS
+Art8	Coherence	Parameters	Many MS in region (≥50%) use/report same as this MS
+Art8	Coherence	Parameters	Some MS in region (≥25%) use/report same as this MS
+Art8	Coherence	Parameters	Few MS in region (<25%) use/report same as this MS
+Art8	Coherence	Parameters	Not relevant
+Art8	Coherence	Pressures	All MS in region use/report same as this MS
+Art8	Coherence	Pressures	Most MS in region (≥75%) use/report same as this MS
+Art8	Coherence	Pressures	Many MS in region (≥50%) use/report same as this MS
+Art8	Coherence	Pressures	Some MS in region (≥25%) use/report same as this MS
+Art8	Coherence	Pressures	Few MS in region (<25%) use/report same as this MS
+Art8	Coherence	Pressures	Not relevant
+Art8	Coherence	GESachievementDate	All MS in region use/report same as this MS
+Art8	Coherence	GESachievementDate	Most MS in region (≥75%) use/report same as this MS
+Art8	Coherence	GESachievementDate	Many MS in region (≥50%) use/report same as this MS
+Art8	Coherence	GESachievementDate	Some MS in region (≥25%) use/report same as this MS
+Art8	Coherence	GESachievementDate	Few MS in region (<25%) use/report same as this MS
+Art8	Coherence	GESachievementDate	Not relevant
+Art10	Adequacy	TargetSubject	Target focused on reducing pressure/impact at sea to achieve GES
+Art10	Adequacy	TargetSubject	Target focused on reducing pressure input level at source
+Art10	Adequacy	TargetSubject	Target describes pressure level at sea (defines GES)
+Art10	Adequacy	TargetSubject	Target describes impact/state level (defines GES)
+Art10	Adequacy	TargetSubject	Target not addressing pressure or impact
+Art10	Adequacy	TargetSubject	Not relevant
+Art10	Adequacy	TargetAmount	Target sufficient to reduce pressure/impact level at sea to achieve GES
+Art10	Adequacy	TargetAmount	Target insufficient to reduce pressure/impact level at sea to achieve GES
+Art10	Adequacy	TargetAmount	Target will reduce pressure input level at source (no clear relation to level needed at sea to achieve GES)
+Art10	Adequacy	TargetAmount	Target effect on achieving GES unclear
+Art10	Adequacy	TargetAmount	Not relevant
+Art10	Adequacy	TargetMeasurability	5/5 (SMART)
+Art10	Adequacy	TargetMeasurability	4/5 (SMART)
+Art10	Adequacy	TargetMeasurability	3/5 (SMART)
+Art10	Adequacy	TargetMeasurability	2/5 (SMART)
+Art10	Adequacy	TargetMeasurability	1/5 (SMART)
+Art10	Adequacy	TargetMeasurability	Not relevant
+Art10	Consistency	TargettoMeasures	Target linked to direct measure(s)
+Art10	Consistency	TargettoMeasures	Target not linked to direct measure(s)
+Art10	Consistency	TargettoMeasures	Not relevant
+Art10	Coherence	TargetinRegion	All MS in region use/report same/similar as this MS
+Art10	Coherence	TargetinRegion	Most MS in region (≥75%) use/report same/similar as this MS
+Art10	Coherence	TargetinRegion	Many MS in region (≥50%) use/report same/similar as this MS
+Art10	Coherence	TargetinRegion	Some MS in region (≥25%) use/report same/similar as this MS
+Art10	Coherence	TargetinRegion	Few MS in region (<25%) use/report same/similar as this MS
+Art10	Coherence	TargetinRegion	Not relevant
+Art4	Adequacy	MRUscales2017Decision	Follow scales in 2017 Decision
+Art4	Adequacy	MRUscales2017Decision	Partially follow scales in 2017 Decision
+Art4	Adequacy	MRUscales2017Decision	Do not follow scales in 2017 Decision
+Art4	Adequacy	MRUscales2017Decision	Not relevant
+Art4	Consistency	MRUsbtwnDescriptors	MRU bears no relationship to that for D1 (relevant) species groups
+Art4	Consistency	MRUsbtwnDescriptors	MRU bears no relationship to that for D1 pelagic habitats
+Art4	Consistency	MRUsbtwnDescriptors	MRU bears  moderate relationship to that for D6 benthic habitats
+Art4	Consistency	MRUsbtwnDescriptors	Not relevant
+Art4	Consistency	TargetMRUtoStatusMRU	Same MRU as Art 9
+Art4	Consistency	TargetMRUtoStatusMRU	Same MRU as Art 8
+Art4	Consistency	TargetMRUtoStatusMRU	Nested within Art 8 MRU
+Art4	Consistency	TargetMRUtoStatusMRU	Not related to Art 8 MRU
+Art4	Consistency	TargetMRUtoStatusMRU	Not relevant
+Art4	Coherence	MRUscalesRegion	All MS in region use/report same as this MS
+Art4	Coherence	MRUscalesRegion	Most MS in region (≥75%) use/report same as this MS
+Art4	Coherence	MRUscalesRegion	Many MS in region (≥50%) use/report same as this MS
+Art4	Coherence	MRUscalesRegion	Some MS in region (≥25%) use/report same as this MS
+Art4	Coherence	MRUscalesRegion	Few MS in region (<25%) use/report same as this MS
+Art4	Coherence	MRUscalesRegion	Not relevant
