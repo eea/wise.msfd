@@ -4,11 +4,13 @@ from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 from z3c.form.browser.checkbox import CheckBoxFieldWidget
 from z3c.form.field import Fields
 
-from .. import db, interfaces, sql
+from .. import db, sql
+from ..interfaces import IMarineUnitIDsSelect
 from ..base import EmbededForm
 from ..utils import (all_values_from_field, data_to_xls, db_objects_to_dict,
                      pivot_data, register_form_art11, register_form_section)
 from .base import ItemDisplay, ItemDisplayForm, MainForm, MultiItemDisplayForm
+from . import interfaces
 
 # default_value_from_field,
 # TODO: cache in klass
@@ -157,7 +159,7 @@ class A11MSubMemberStateForm(EmbededForm):
 
 
 class A11MProgMarineUnitIdForm(EmbededForm):
-    fields = Fields(interfaces.IMarineUnitIDsSelect)
+    fields = Fields(IMarineUnitIDsSelect)
     # fields = Fields(interfaces.IMonitoringProgramme)
     fields['marine_unit_ids'].widgetFactory = CheckBoxFieldWidget
 
@@ -166,7 +168,7 @@ class A11MProgMarineUnitIdForm(EmbededForm):
 
 
 class A11MSubMarineUnitIdForm(EmbededForm):
-    fields = Fields(interfaces.IMarineUnitIDsSelect)
+    fields = Fields(IMarineUnitIDsSelect)
     # fields = Fields(interfaces.IMonitoringSubprogramme)
     fields['marine_unit_ids'].widgetFactory = CheckBoxFieldWidget
 
@@ -662,7 +664,7 @@ class A11MonSubDisplay(MultiItemDisplayForm):
                          self.mapper_class.SubMonitoringProgrammeID.in_(
                              q4g_subprogids_2
                          )
-                     )),
+                )),
                 page=page
             )
             item.whitelist = ['SubMonitoringProgrammeID']

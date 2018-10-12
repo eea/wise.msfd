@@ -7,12 +7,14 @@ from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 from z3c.form.browser.checkbox import CheckBoxFieldWidget
 from z3c.form.field import Fields
 
-from .. import db, interfaces, sql2018
+from .. import db, sql2018
 from ..base import EmbededForm
 from ..sql_extra import MSFD4GeographicalAreaID
 from ..utils import (all_values_from_field, data_to_xls, db_objects_to_dict,
                      pivot_data, register_form_2018)
-from .base import ItemDisplayForm, MarineUnitIDSelectForm
+from .base import ItemDisplayForm
+from ..base import MarineUnitIDSelectForm
+from . import interfaces
 
 
 class Art9Display(ItemDisplayForm):

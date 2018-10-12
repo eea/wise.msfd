@@ -250,7 +250,7 @@ class NationalDescriptorAssessmentForm(Container):
     assessment_topic = u'National summary'
 
     form_name = "national-descriptor-assessment-form"
-    render = Template('../pt/container.pt')
+    render = Template('pt/container.pt')
     css_class = "left-side-form"
 
     def update(self):

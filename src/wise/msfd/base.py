@@ -304,7 +304,7 @@ class MarineUnitIDSelectForm(EmbededForm):
         super(MarineUnitIDSelectForm, self).updateWidgets(prefix=prefix)
 
         widget = self.widgets["marine_unit_id"]
-        widget.template = Z3ViewPageTemplateFile("pt/marine-widget.pt")
+        widget.template = Z3ViewPageTemplateFile("search/pt/marine-widget.pt")
 
     def get_available_marine_unit_ids(self):
         # filter available records based on the parent selected MUIDs

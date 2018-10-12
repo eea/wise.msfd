@@ -34,9 +34,9 @@ class Report2012(BrowserView, Article8, Article10, BaseUtil):
     """
 
     # art3 = ViewPageTemplateFile('../pt/compliance-a10.pt')
-    Art8 = ViewPageTemplateFile('../pt/compliance-a8.pt')
-    Art9 = ViewPageTemplateFile('../pt/compliance-a9.pt')
-    Art10 = ViewPageTemplateFile('../pt/compliance-a10.pt')
+    Art8 = ViewPageTemplateFile('pt/compliance-a8.pt')
+    Art9 = ViewPageTemplateFile('pt/compliance-a9.pt')
+    Art10 = ViewPageTemplateFile('pt/compliance-a10.pt')
 
     # def __init__(self, context, request):
     #     super(Report2012, self).__init__(context, request)
@@ -265,7 +265,7 @@ class ReportData2018(BrowserView):
     """ TODO: get code in this
     """
 
-    Art8 = ViewPageTemplateFile('../pt/nat-desc-report-data-multiple-muid.pt')
+    Art8 = ViewPageTemplateFile('pt/nat-desc-report-data-multiple-muid.pt')
     Art9 = ''
     Art10 = ''
     view_name = 't_V_ART8_GES_2018'

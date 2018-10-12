@@ -1,9 +1,10 @@
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 
 from .. import db, sql
-from ..base import ItemDisplayForm, MarineUnitIDSelectForm
+from ..base import MarineUnitIDSelectForm
 from ..db import get_all_records
 from ..utils import data_to_xls, pivot_query, register_form
+from .base import ItemDisplayForm
 
 
 @register_form

@@ -6,11 +6,13 @@ from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 from z3c.form.browser.checkbox import CheckBoxFieldWidget
 from z3c.form.field import Fields
 
-from .. import db, interfaces, sql
+from .. import db, sql
 from ..base import EmbededForm
 from ..db import get_all_records
+from ..interfaces import IMarineUnitIDsSelect
 from ..utils import data_to_xls, default_value_from_field
 from .base import ItemDisplayForm, MainForm
+from . import interfaces
 
 # all_values_from_field,#
 
@@ -67,7 +69,7 @@ class MarineUnitIDsForm(EmbededForm):
     """
 
     # TODO: properly show only available marine unit ids
-    fields = Fields(interfaces.IMarineUnitIDsSelect)
+    fields = Fields(IMarineUnitIDsSelect)
     fields['marine_unit_ids'].widgetFactory = CheckBoxFieldWidget
 
     def get_subform(self):
