@@ -39,10 +39,10 @@
   <browser:page
     for=".interfaces.INationalDescriptorAssessment"
     name="nat-desc-art-view"
+    template="./pt/nat-desc-art-view.pt"
     class=".main.NationalDescriptorArticleView"
     permission="zope2.View"
     />
-    <!-- template="./pt/nat-desc-art-view.pt" -->
 
   <!-- <browser:page -->
   <!--   for="*" -->

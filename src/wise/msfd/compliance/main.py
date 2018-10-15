@@ -62,12 +62,47 @@ class BaseComplianceView(BrowserView):
 
     main_forms = MAIN_FORMS
 
-    def root_url(self):
+    def get_parent_by_iface(self, iface):
         for parent in self.request.other['PARENTS']:
-            if interfaces.IComplianceModuleFolder.providedBy(parent):
-                return parent.absolute_url()
+            if iface.providedBy(parent):
+                return parent
 
-        return ''
+        raise ValueError('Parent not found: {}'.format(iface))
+
+    def root_url(self):
+        root = self.get_parent_by_iface(interfaces.IComplianceModuleFolder)
+
+        return root and root.absolute_url() or ''
+
+    @property
+    def _article_assessment(self):
+        return self.get_parent_by_iface(
+            interfaces.INationalDescriptorAssessment
+        )
+
+    @property
+    def _descriptor_folder(self):
+        return self.get_parent_by_iface(
+            interfaces.IDescriptorFolder
+        )
+
+    @property
+    def _country_folder(self):
+        return self.get_parent_by_iface(
+            interfaces.ICountryDescriptorsFolder
+        )
+
+    @property
+    def _national_descriptors_folder(self):
+        return self.get_parent_by_iface(
+            interfaces.INationalDescriptorsFolder
+        )
+
+    @property
+    def _compliance_folder(self):
+        return self.get_parent_by_iface(
+            interfaces.IComplianceModuleFolder
+        )
 
 
 class StartComplianceView(BaseComplianceView):
@@ -97,22 +132,15 @@ class NationalDescriptorCountryOverview(BaseComplianceView):
         return self.context.contentValues()
 
 
-class NationalDescriptorArticleView(BrowserView):
+class NationalDescriptorArticleView(BaseComplianceView):
     name = 'nat-desc-art-view'
 
-    template = Template("./pt/nat-desc-art-view.pt")
+    def __init__(self, context, request):
+        super(NationalDescriptorArticleView, self).__init__(context, request)
 
-    def __call__(self):
-        # import pdb; pdb.set_trace()
-
-        article = self.context.aq_parent.id
-        descriptor = self.context.aq_parent.aq_parent.id
-        country = self.context.aq_parent.aq_parent.aq_parent.id
-
-        if self.template:
-            return self.template()
-
-        return ''
+        self.article = self._article_assessment.getId()
+        self.descriptor = self._descriptor_folder.getId()
+        self.country = self._country_folder.getId()
 
 
 class MainAssessmentForm(BaseEnhancedForm, Form):

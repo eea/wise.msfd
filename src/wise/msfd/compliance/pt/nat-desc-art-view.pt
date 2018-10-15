@@ -8,7 +8,24 @@
 
   <body metal:fill-slot="content">
 
-    HELLO HEHE
+    <div id="layout-contents" tal:define="text context/text | nothing" >
+      <div id="wise-search-form">
+        <div id="wise-search-form-top">
+          <metal:tabs
+             metal:use-macro="context/wise-macros/macros/tabs"></metal:tabs>
+        </div>
+
+        <div class="start-page-content left-side-form">
+
+          <h1>
+            <span tal:replace="view/article">Art0</span>
+            <span tal:replace="view/descriptor">D0</span>
+            <span tal:replace="view/country">US</span>
+          </h1>
+
+        </div>
+      </div>
+    </div>
 
   </body>
 </html>
