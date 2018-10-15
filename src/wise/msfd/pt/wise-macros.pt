@@ -1,15 +1,15 @@
 <metal:macro define-macro="tabs">
   <div id="mainform-tabs">
-    <ul class="nav nav-pills topnav hidden-xs">
+    <ul class="nav nav-pills topnav hidden-xs" tal:define="root_url view/root_url | string:.">
       <tal:rep tal:repeat="info view/main_forms">
         <li tal:define="name python:info[0];
           maintitle python: info[1][0];
           subtitle python: info[1][1];
-          active python: view.name == name"
+          active python: name in request.URL0"
           tal:attributes="class python: active and 'tab-active' or ''"
           >
           <a href=""
-            tal:attributes="href string:./@@${name}"
+             tal:attributes="href string:${root_url}/${name}"
             >
             <span tal:content="maintitle">Article X</span>
             <span tal:content="subtitle">Subtitle here</span>

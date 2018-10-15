@@ -1,17 +1,28 @@
 from zope.interface import Interface
 
+from plone.supermodel.model import Schema
 
-class IComplianceModule(Interface):
+
+class IComplianceModuleFolder(Interface):
     """ A container that implements the compliance module functionality
     """
 
 
-class INationalDescriptors(Interface):
-    """ A container for national descriptors
+class INationalDescriptorsFolder(Interface):
+    """ A container for national descriptors assessments
     """
 
 
-class ICountryDescriptors(Interface):
+class ICountryDescriptorsFolder(Interface):
     """ A container for a country's descriptor assessments
     """
 
+
+class IDescriptorFolder(Interface):
+    """ Container for individual descriptor article assessments
+    """
+
+
+class INationalDescriptorAssessment(Schema):
+    """ A Country > Descriptor > Article assessment
+    """

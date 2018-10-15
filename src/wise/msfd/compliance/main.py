@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 # from zope.component import getMultiAdapter
+from collections import namedtuple
+
 from zope.interface import Interface, implements
 from zope.schema import Choice, List
 
@@ -13,6 +15,7 @@ from z3c.form.field import Fields
 from z3c.form.form import Form
 from z3c.formwidget.optgroup.widget import OptgroupFieldWidget
 
+from . import interfaces
 from .. import db, sql2018
 from ..base import MainFormWrapper as BaseFormWrapper
 from ..base import BaseEnhancedForm, EmbededForm
@@ -23,21 +26,28 @@ from .nat_desc import (AssessmentDataForm2018, AssessmentHeaderForm2018,
                        Report2012, ReportData2018, ReportHeaderForm2018)
 from .vocabulary import articles_vocabulary, descriptors_vocabulary
 
+CountryStatus = namedtuple('CountryStatus', ['name', 'status', 'url'])
+
+
 MAIN_FORMS = [
     # view name, (title, explanation)
-    ('comp-national-descriptor',
+    ('@@comp-start',
+     ('Compliance Module',
+      'Start Page'),
+     ),
+    ('national-descriptors-assessments/@@nat-desc-start',
      ('National descriptors',
       'Member states reports and Commission assessments'),
      ),
-    ('comp-regional-descriptor',
+    ('@@comp-regional-descriptor',
      ('Regional descriptors',
       'Member states reports and Commission assessments'),
      ),
-    ('comp-national-overviews',
+    ('@@comp-national-overviews',
      ('National overviews',
       'Overview for a Member state'),
      ),
-    ('comp-regional-overviews',
+    ('@@comp-regional-overviews',
      ('Regional overviews',
       'Overview for all Member states in a region',),
      ),
@@ -46,9 +56,45 @@ MAIN_FORMS = [
 # TODO: define the tabs selection label for mobile view (see wise-macros.pt)
 
 
-class StartComplianceView(BrowserView):
+class BaseComplianceView(BrowserView):
+    """ Base class for compliance views
+    """
+
     main_forms = MAIN_FORMS
-    name = 'compliance-start'
+
+    def root_url(self):
+        for parent in self.request.other['PARENTS']:
+            if interfaces.IComplianceModuleFolder.providedBy(parent):
+                return parent.absolute_url()
+
+        return ''
+
+
+class StartComplianceView(BaseComplianceView):
+    name = 'comp-start'
+
+
+class NationalDescriptorsOverview(BaseComplianceView):
+    name = 'nat-desc-start'
+
+    def countries(self):
+        countries = self.context.contentValues()
+
+        return [CountryStatus(country.Title(), 'phase0',
+                              country.absolute_url()) for country in countries]
+
+
+class NationalDescriptorCountryOverview(BaseComplianceView):
+    name = 'nat-desc-country-start'
+
+    def get_status(self):
+        return "Phase 1"
+
+    def get_articles(self):
+        return ['Art8', 'Art9', 'Art10']
+
+    def get_descriptors(self):
+        return self.context.contentValues()
 
 
 class MainAssessmentForm(BaseEnhancedForm, Form):
@@ -122,6 +168,7 @@ class IMemberState(Interface):
 
 
 class NationalDescriptorForm(MainAssessmentForm):
+    # TODO: redo. Old '@@comp-national-descriptor'
     assessment_topic = 'GES Descriptor (see term list)'
     fields = Fields(IMemberState)
     name = "comp-national-descriptor"

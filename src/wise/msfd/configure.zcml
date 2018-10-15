@@ -5,10 +5,13 @@
   xmlns:z3c="http://namespaces.zope.org/z3c"
   i18n_domain="wise.msfd">
 
-  <include file="utility.zcml" />
+  <include package="z3c.formwidget.optgroup" />
+
   <include package=".search" />
   <include package=".compliance" />
-  <include package="z3c.formwidget.optgroup" />
+
+  <include file="profiles.zcml" />
+  <include file="utility.zcml" />
 
   <browser:page
     for="*"
@@ -22,26 +25,26 @@
     directory="./static/wise/dist/css"
     />
   <browser:resource
-     name="msfd_search.js"
-     file="./static/wise/dist/js/msfd_search.js"
-  />
+    name="msfd_search.js"
+    file="./static/wise/dist/js/msfd_search.js"
+    />
   <browser:resource
-     name="wise_javascript_variables.js"
-     file="./static/wise/dist/js/wise_javascript_variables.js"
-  />
+    name="wise_javascript_variables.js"
+    file="./static/wise/dist/js/wise_javascript_variables.js"
+    />
   <browser:resource
-     name="tabs.js"
-     file="./static/wise/dist/js/tabs.js"
-  />
+    name="tabs.js"
+    file="./static/wise/dist/js/tabs.js"
+    />
 
   <browser:resource
-     name="compliance.js"
-     file="./static/wise/dist/js/compliance.js"
-  />
+    name="compliance.js"
+    file="./static/wise/dist/js/compliance.js"
+    />
 
   <browser:resource
-     name="lz-string.js"
-     file="./static/wise/dist/js/lz-string.js"
-  />
+    name="lz-string.js"
+    file="./static/wise/dist/js/lz-string.js"
+    />
 
 </configure>

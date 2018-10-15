@@ -7,6 +7,13 @@
 
   <browser:page
     for="*"
+    name="pdb"
+    class=".admin.ToPDB"
+    permission="cmf.ManagePortal"
+    />
+
+  <browser:page
+    for=".interfaces.IComplianceModuleFolder"
     name="comp-start"
     class=".main.StartComplianceView"
     template="../pt/start.pt"
@@ -14,9 +21,32 @@
     />
 
   <browser:page
+    for=".interfaces.INationalDescriptorsFolder"
+    name="nat-desc-start"
+    class=".main.NationalDescriptorsOverview"
+    template="./pt/nat-desc-start.pt"
+    permission="zope2.View"
+    />
+
+  <browser:page
+    for=".interfaces.ICountryDescriptorsFolder"
+    name="nat-desc-country-start"
+    class=".main.NationalDescriptorCountryOverview"
+    template="./pt/nat-desc-country-start.pt"
+    permission="zope2.View"
+    />
+
+  <!-- <browser:page -->
+  <!--   for="*" -->
+  <!--   name="comp&#45;national&#45;descriptor" -->
+  <!--   class=".main.NationalDescriptorFormView" -->
+  <!--   permission="zope2.View" -->
+  <!--   /> -->
+
+  <browser:page
     for="*"
-    name="comp-national-descriptor"
-    class=".main.NationalDescriptorFormView"
+    name="bootstrap-compliance"
+    class=".admin.BootstrapCompliance"
     permission="zope2.View"
     />
 
