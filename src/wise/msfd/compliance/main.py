@@ -97,6 +97,24 @@ class NationalDescriptorCountryOverview(BaseComplianceView):
         return self.context.contentValues()
 
 
+class NationalDescriptorArticleView(BrowserView):
+    name = 'nat-desc-art-view'
+
+    template = Template("./pt/nat-desc-art-view.pt")
+
+    def __call__(self):
+        # import pdb; pdb.set_trace()
+
+        article = self.context.aq_parent.id
+        descriptor = self.context.aq_parent.aq_parent.id
+        country = self.context.aq_parent.aq_parent.aq_parent.id
+
+        if self.template:
+            return self.template()
+
+        return ''
+
+
 class MainAssessmentForm(BaseEnhancedForm, Form):
     """ Base form for all main compliance view forms
 

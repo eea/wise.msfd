@@ -26,3 +26,4 @@ class IDescriptorFolder(Interface):
 class INationalDescriptorAssessment(Schema):
     """ A Country > Descriptor > Article assessment
     """
+

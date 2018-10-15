@@ -36,6 +36,14 @@
     permission="zope2.View"
     />
 
+  <browser:page
+    for=".interfaces.INationalDescriptorAssessment"
+    name="nat-desc-art-view"
+    class=".main.NationalDescriptorArticleView"
+    permission="zope2.View"
+    />
+    <!-- template="./pt/nat-desc-art-view.pt" -->
+
   <!-- <browser:page -->
   <!--   for="*" -->
   <!--   name="comp&#45;national&#45;descriptor" -->

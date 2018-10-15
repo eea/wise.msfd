@@ -54,6 +54,8 @@ class BootstrapCompliance(BrowserView):
                 logger.info("Created NationalDescriptorAssessment %s",
                             nda.absolute_url())
 
+                self.set_layout(nda, '@@nat-desc-art-view')
+
         return cf
 
     def __call__(self):

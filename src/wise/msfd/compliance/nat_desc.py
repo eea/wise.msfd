@@ -766,7 +766,7 @@ class SummaryAssessmentDataForm2018(EmbededForm):
         self.fields = Fields(*fields)
 
     def set_default_values(self, data):
-        general_id = getattr(self.context, 'general_id')
+        general_id = getattr(self.context, 'general_id', None)
         feature = data.get('feature_reported', None)
 
         if feature:
