@@ -653,3 +653,662 @@ class ComplianceAssessment(EmbededForm):
 #
 #
 # FEATURES = parse_features_file()
+
+
+# from zope.component import getMultiAdapter
+# from zope.interface import Interface, implements
+# from zope.schema import Choice, List
+#
+# from plone.z3cform.layout import wrap_form
+# from Products.Five.browser.pagetemplatefile import \
+#     ViewPageTemplateFile as Template
+# from z3c.form.browser.checkbox import CheckBoxFieldWidget
+# from z3c.form.button import buttonAndHandler
+# from z3c.form.field import Fields
+# from z3c.form.form import Form
+# from z3c.formwidget.optgroup.widget import OptgroupFieldWidget
+#
+# from .. import db, sql2018
+# from ..base import MainFormWrapper as BaseFormWrapper
+# from ..base import BaseEnhancedForm, EmbededForm
+# from ..features import features_vocabulary
+# from ..interfaces import IMainForm, IMarineUnitIDsSelect
+# , Container
+
+# # from .nat_desc import (AssessmentDataForm2018, AssessmentHeaderForm2018,
+# #                       ReportData2012, ReportData2018, ReportHeaderForm2018,
+# #                        get_assessment_data_2012, get_assessment_data_2018)
+# from .vocabulary import articles_vocabulary, descriptors_vocabulary
+
+
+class ReportHeaderForm2018(BrowserView):
+    """ TODO: get code in this
+    """
+
+    def __call__(self):
+        return ''
+
+        return 'report header form 2018'
+
+
+class AssessmentHeaderForm2018(BrowserView):
+    """ TODO: get code in this
+    """
+    def __call__(self):
+        return ''
+
+        return 'assessment header form 2018'
+
+
+class ISummaryAssessmentData2018(Interface):
+    assessment_summary = Text(
+        title=u'Assessment summary',
+        required=False
+    )
+    recommendations = Text(
+        title=u'Recommendations',
+        required=False
+    )
+
+
+class SummaryAssessmentDataForm2018(EmbededForm):
+    """
+    """
+
+    def __init__(self, context, request):
+        super(SummaryAssessmentDataForm2018, self).__init__(context, request)
+        fields = [ISummaryAssessmentData2018]
+        self.fields = Fields(*fields)
+
+    def set_default_values(self, data):
+        general_id = getattr(self.context, 'general_id', None)
+        feature = data.get('feature_reported', None)
+
+        if feature:
+            feature = feature[0]
+
+        if not general_id:
+            return
+
+        assess_data = self.context.get_assessment_data(
+            general_id,
+            feature
+        )
+        value = ''
+
+        for name, field in self.fields.items():
+            db_field_name = summary_fields[name]
+            # import pdb; pdb.set_trace()
+
+            for row in assess_data:
+                value = getattr(row, db_field_name)
+
+                if row.MSFDArticle == data['article'] and \
+                   row.Feature in data['feature_reported'] and \
+                   row.MarineUnit in data['marine_unit_ids'] and \
+                   not row.AssessmentCriteria and \
+                   value:
+                    break
+
+            field.field.default = unicode(value)
+
+
+
+class AssessmentDataForm2018(Container, BaseUtil):
+    """ The assessment form for 2018
+    """
+
+    def __init__(self, context, request):
+        super(AssessmentDataForm2018, self).__init__(context, request)
+        main_form = self.get_main_form()
+        main_form.add_save_handler(self.handle_save)
+        self.subforms = []   # make subforms discoverable for saving
+
+    def handle_save(self):
+        # TODO: build records from the subforms
+        # TODO: don't do saving unless all forms are clear of errors. This
+        # needs handling here
+        print "Saving assessment form data"
+
+        data = {}
+        child_data = {}
+        parent_data = self.get_flattened_data(self)
+
+        for form in self.subforms:
+            data.update(form.data)
+
+        for children in self.main_assessment_data_forms:
+            child_data.update(children.data)
+
+        self._save(data, parent_data, child_data)
+
+    def _save(self, data, parent_data, child_data):
+
+        # save COM_General data
+        self.general_id = self.save_general(parent_data)
+
+        # save COM_Assessment data
+        self.save_assessment(data, parent_data)
+
+        # save Summary data
+        self.save_summary(parent_data, child_data)
+
+        print data
+        print parent_data
+        print child_data
+
+    def save_general(self, parent_data):
+        d_general = {}
+
+        # TODO get Reporting_historyId
+        d_general['Reporting_historyId'] = 48
+        d_general['CountryCode'] = parent_data['member_state']
+
+        d_general['AssessmentTopic'] = self.context.assessment_topic
+        d_general['MSFDArticle'] = parent_data['article']
+
+        # TODO get DateReportDue, ReportBy etc...
+        d_general['DateReportDue'] = u'2011-01-15'
+        d_general['ReportBy'] = u'Commission'
+        d_general['SourceFile'] = ''
+        d_general['DateReported'] = ''
+        d_general['DateAssessed'] = ''
+        d_general['Assessors'] = ''
+        d_general['CommissionReport'] = ''
+
+        mc = sql2018.COMGeneral
+
+        if self.general_id:
+            d_general['Id'] = [unicode(self.general_id)]
+        general_id = db.save_record(mc, **d_general)
+
+        return general_id
+
+    def save_assessment(self, data, parent_data):
+        all_features_reported = parent_data['feature_reported']
+
+        for feature_reported in all_features_reported:
+
+            assessment_data = self.get_assessment_data(
+                self.general_id,
+                feature_reported
+            )
+
+            for k, v in data.items():
+                if not v:
+                    continue
+
+                d = {}
+
+                d['COM_GeneralId'] = self.general_id
+                d['MSFDArticle'] = parent_data['article']
+                d['Feature'] = feature_reported
+
+                d['AssessmentCriteria'], d['AssessedInformation'], \
+                    d['GESComponent_Target'] = k.split('_')
+
+                if d['GESComponent_Target'] in additional_fields.keys():
+                    field_name = d.pop('GESComponent_Target')
+                    field_name = additional_fields.get(field_name)
+                    d[field_name] = v
+                else:
+                    field_name = 'GESComponent_Target'
+                    d['Evidence'] = v
+
+                # TODO
+                # 1 - create separate entry in COM_Assessments table for
+                #   every Marine Unit ID ??????
+                # 2 - save records one by one, or many at once
+
+                for mru in parent_data['marine_unit_ids']:
+                    d['MarineUnit'] = mru
+
+                    id_assess = []
+
+                    # get the Id from assessment_data, if found it will be
+                    # an update, otherwise an insert into db
+
+                    for x in assessment_data:
+                        if x.MarineUnit != mru:
+                            continue
+
+                        if (x.AssessedInformation != d['AssessedInformation']):
+                            continue
+
+                        if (x.AssessmentCriteria != d['AssessmentCriteria']):
+                            continue
+
+                        if field_name in additional_fields.values():
+                            if getattr(x, field_name):
+                                id_assess.append(x.Id)
+
+                                break
+
+                        if (getattr(x, field_name) == d.get(field_name)):
+                            id_assess.append(x.Id)
+
+                            break
+
+                    if id_assess:
+                        d['Id'] = id_assess
+                    db.save_record(sql2018.COMAssessment, **d)
+
+    def save_summary(self, parent_data, child_data):
+        features_reported = parent_data['feature_reported']
+
+        for feature in features_reported:
+
+            assessment_data = self.get_assessment_data(
+                self.general_id,
+                feature
+            )
+
+            for k, v in child_data.items():
+                if not v:
+                    continue
+
+                field_name = summary_fields.get(k)
+                d = {}
+
+                d[field_name] = unicode(v)
+                d['COM_GeneralId'] = self.general_id
+                d['MSFDArticle'] = parent_data['article']
+                d['Feature'] = feature
+
+                for mru in parent_data['marine_unit_ids']:
+                    d['MarineUnit'] = mru
+
+                    id_assess = []
+
+                    for row in assessment_data:
+                        if getattr(row, field_name) and \
+                           not row.AssessmentCriteria:
+
+                            id_assess.append(row.Id)
+
+                    if id_assess:
+                        d['Id'] = id_assess
+                    db.save_record(sql2018.COMAssessment, **d)
+
+    @use_db_session('session_2018')
+    def get_assessment_data(self, general_id, feature=None):
+        conditions = []
+        conditions.append(sql2018.COMAssessment.COM_GeneralId == general_id)
+
+        if feature:
+            conditions.append(sql2018.COMAssessment.Feature == feature)
+
+        cnt, assess_data = db.get_all_records(
+            sql2018.COMAssessment,
+            *conditions
+        )
+
+        return assess_data
+
+    def _build_subforms(self, tree):
+        """ Build a form of options from a tree of options
+        """
+        base_name = tree.name
+        # TODO: get list of descriptors?
+        data = self.get_flattened_data(self)
+
+        descriptor = data['descriptor']
+        descriptor_criterions = get_ges_criterions(descriptor)
+
+        forms = []
+
+        # check if article was already assessed
+        @use_db_session('session_2018')
+        def func():
+            mc = sql2018.COMGeneral
+            conditions = []
+            conditions.append(mc.CountryCode == data['member_state'])
+            conditions.append(mc.AssessmentTopic == u'National summary')
+            conditions.append(mc.MSFDArticle == data['article'])
+            count, res = db.get_all_records(
+                mc,
+                *conditions
+            )
+
+            if not count:
+                return [], None
+            else:
+                general_id = res[0].Id
+                assess_data = self.get_assessment_data(general_id)
+
+                return assess_data, general_id
+
+        data_assess, self.general_id = func()
+
+        for row in tree.children:
+            row_name = row.name
+
+            form = EmbededForm(self, self.request)
+
+            form.form_name = 'form' + row_name
+            fields = []
+
+            form.title = '{}: {}'.format(base_name, row_name)
+
+            for crit in descriptor_criterions:
+                field_title = u'{} {}: {}'.format(base_name, row_name,
+                                                  crit.title)
+                field_name = '{}_{}_{}'.format(base_name, row_name, crit.id)
+                # choices = [''] + [x.name for x in row.children]
+                choices = [x.name for x in row.children]
+                terms = [SimpleTerm(c, i, c) for i, c in enumerate(choices)]
+
+                default = get_default_assessment_value(
+                    data_assess,
+                    data['article'],  # MSFDArticle
+                    data['feature_reported'][0],  # Feature
+                    base_name,  # AssessmentCriteria
+                    row_name,  # AssessedInformation
+                    crit.id  # GESComponent_Target
+                )
+
+                field = Choice(
+                    title=field_title,
+                    __name__=field_name,
+                    vocabulary=SimpleVocabulary(terms),
+                    required=False,
+                    default=default,
+                )
+                fields.append(field)
+
+            for f in additional_fields.keys():
+                default = get_default_additional_field_value(
+                    data_assess,
+                    data['article'],  # MSFDArticle
+                    data['feature_reported'][0],  # Feature
+                    base_name,  # AssessmentCriteria
+                    row_name,  # AssessedInformation
+                    additional_fields[f]
+                )
+
+                _title = u'{}: {} {}'.format(base_name, row_name, f)
+                _name = '{}_{}_{}'.format(base_name, row_name, f)
+                _field = Text(
+                    title=_title,
+                    __name__=_name,
+                    required=False,
+                    default=default
+                )
+
+                fields.append(_field)
+
+            form.fields = Fields(*fields)
+
+            forms.append(form)
+
+        return forms
+
+    def build_forms(self):
+        article = self.get_flattened_data(self)['article'].capitalize()
+        try:
+            article = form_structure[article]
+        except KeyError:    # article is not in form structure yet
+            return
+        assessment_criterias = article.children
+
+        for criteria in assessment_criterias:
+            subforms = self._build_subforms(criteria)
+
+            for subform in subforms:
+                self.subforms.append(subform)
+
+    def render_subforms(self):
+        out = u''
+
+        for form in self.subforms:
+            out += form()
+
+        out = u'<div class="collapsed-container">{}</div>'.format(out)
+
+        return out
+
+    def update(self):
+        print ("====Doing assessment data form update")
+        # TODO: identify the cases when the update happens
+
+        if not self.subforms:  # update may be called multiple times? When?
+            self.build_forms()
+
+        sumform = SummaryAssessmentDataForm2018(self, self.request)
+
+        data = self.get_flattened_data(self)
+        sumform.set_default_values(data)
+        # sumform.fields['recommendations'].field.default = u'DEFAULTED'
+
+        self.main_assessment_data_forms = [
+            sumform
+        ]
+        self.children = [
+            # BasicAssessmentDataForm2018(self, self.request),
+            self.render_subforms,
+        ] + self.main_assessment_data_forms
+# TODO: define the tabs selection label for mobile view (see wise-macros.pt)
+
+# class MainAssessmentForm(BaseEnhancedForm, Form):
+#     """ Base form for all main compliance view forms
+#
+#     # mostly similar to .base.MainForm
+#     """
+#     implements(IMainForm)
+#     template = Template('../pt/mainform.pt')        # compliance-main
+#     ignoreContext = True
+#     reset_page = False
+#     subform = None
+#     subform_content = None
+#     fields = Fields()
+#     # css_class = 'compliance-form-main'
+#     session_name = 'session'
+#
+#     main_forms = MAIN_FORMS
+#     _is_save = False
+#
+#     def __init__(self, context, request):
+#         Form.__init__(self, context, request)
+#         self.save_handlers = []
+#
+#     def add_save_handler(self, handler):
+#         self.save_handlers.append(handler)
+#
+#     @buttonAndHandler(u'Apply filters', name='continue')
+#     def handle_continue(self, action):
+#         self._is_save = True
+#
+#     def get_subform(self):
+#         if self.subform:
+#             return self.subform(self, self.request)
+#
+#     def update(self):
+#         super(MainAssessmentForm, self).update()
+#         print ("===Doing main form update")
+#         self.data, self.errors = self.extractData()
+#
+#         has_values = self.data.values() and all(self.data.values())
+#
+#         if has_values:
+#             self.subform = self.get_subform()
+#
+#             if self.subform:
+#                 # we need to update and "execute" the subforms to be able to
+#                 # discover them, because the decision process regarding
+#                 # discovery is done in the update() method of subforms
+#
+#                 # with restore_session():
+#                 # when using different sessions, we will need to restore
+#                 # the self.session current session name
+#                 self.subform_content = self.subform()
+#
+#         if self._is_save:
+#             for handler in self.save_handlers:
+#                 handler()
+#
+#
+# class MainFormWrapper(BaseFormWrapper):
+#     index = Template('../pt/layout.pt')     # compliance-
+#
+#
+# class IMemberState(Interface):
+#     member_state = Choice(
+#         title=u"Country",
+#         vocabulary="wise_search_member_states",
+#         required=False,
+#     )
+#
+#
+# class NationalDescriptorForm(MainAssessmentForm):
+#     # TODO: redo. Old '@@comp-national-descriptor'
+#     assessment_topic = 'GES Descriptor (see term list)'
+#     fields = Fields(IMemberState)
+#     name = "comp-national-descriptor"
+#
+#     form_id = 'wise-compliance-form'
+#
+#     form_id_top = 'wise-compliance-form-top'
+#
+#     form_container_class = 'wise-compliance-form-container'
+#
+#     def get_subform(self):
+#         return GESDescriptorForm(self, self.request)
+#
+#
+# NationalDescriptorFormView = wrap_form(NationalDescriptorForm,
+# MainFormWrapper)
+#
+#
+# class IGESDescriptor(Interface):
+#     descriptor = Choice(
+#         title=u"Descriptor",
+#         vocabulary=descriptors_vocabulary,
+#         required=False,
+#         default='D5'
+#     )
+#
+#
+# class GESDescriptorForm(EmbededForm):
+#     fields = Fields(IGESDescriptor)
+#
+#     def get_subform(self):
+#         return ArticleForm(self, self.request)
+#
+#
+# class IArticle(Interface):
+#     article = Choice(
+#         title=u"Article",
+#         vocabulary=articles_vocabulary,
+#         required=False,
+#     )
+#
+#
+# class ArticleForm(EmbededForm):
+#     fields = Fields(IArticle)
+#
+#     def get_subform(self):
+#         return MarineUnitIDsForm(self, self.request)
+#
+#     @db.use_db_session('session_2018')
+#     def get_muids_2018(self, article, country):
+#         m = {
+#             'Art8': sql2018.ART8GESMarineUnit
+#         }
+#
+#         ris = db.get_unique_from_mapper(
+#             sql2018.ReportedInformation,
+#             'Id',
+#             sql2018.ReportedInformation.CountryCode == country
+#         )
+#         ris = [int(c) for c in ris]
+#         t = m.get(article)
+#
+#         if not t:
+#             print "TODO: provide support for article ", article
+#
+#             return []
+#
+#         muids = db.get_unique_from_mapper(
+#             t,
+#             'MarineReportingUnit',
+#             t.IdReportedInformation.in_(ris),
+#         )
+#
+#         print muids
+#
+#         return muids
+#
+#     def get_available_marine_unit_ids(self):
+#         # marine_unit_ids = self.data.get('marine_unit_ids')
+#
+#         # TODO: should also do the request form reading
+#         data = self.get_flattened_data(self)
+#         article = data['article']
+#         country = data['member_state']
+#
+#         if country:
+#             _count, d_2012 = db.get_marine_unit_ids(member_states=[country])
+#             d_2018 = self.get_muids_2018(article, country)
+#
+#             return (_count + len(d_2018), d_2012 + d_2018)
+#         else:
+#             return []
+#
+#
+# class MarineUnitIDsForm(EmbededForm):
+#     fields = Fields(IMarineUnitIDsSelect)
+#     fields['marine_unit_ids'].widgetFactory = CheckBoxFieldWidget
+#
+#     def get_subform(self):
+#         return BasicAssessmentDataForm2018(self, self.request)
+#
+#
+# class IBasicAssessmentData2018(Interface):
+#     """ The basic fields for the assessment data for 2018
+#     """
+#     # TODO: this needs a select box?
+#     feature_reported = List(
+#         title=u'Feature reported',
+#         value_type=Choice(vocabulary=features_vocabulary),
+#     )
+#
+#
+# class BasicAssessmentDataForm2018(EmbededForm):
+#     """
+#     """
+#
+#     fields = Fields(IBasicAssessmentData2018)
+#     fields['feature_reported'].widgetFactory = OptgroupFieldWidget
+#
+#     def get_subform(self):
+#         return NationalDescriptorAssessmentForm(self, self.request)
+#
+#
+# class NationalDescriptorAssessmentForm(Container):
+#     """ Form to create and assess a national descriptor overview
+#     """
+#     assessment_topic = u'National summary'
+#
+#     form_name = "national-descriptor-assessment-form"
+#     render = Template('pt/container.pt')
+#     css_class = "left-side-form"
+#
+#     def update(self):
+#         super(NationalDescriptorAssessmentForm, self).update()
+#
+#         # a quick hack to allow splitting up the code reusing the concept of
+#         # subforms. Some of them are actually views. They're callbables that:
+#         # - render themselves
+#         # - answer to the save() method?
+#         self.subforms = [
+#             ReportData2012(self, self.request),
+#
+#             ReportHeaderForm2018(self, self.request),
+#             ReportData2018(self, self.request),
+#             AssessmentHeaderForm2018(self, self.request),
+#             AssessmentDataForm2018(self, self.request)
+#         ]
+#
+#         for child in self.subforms:
+#             if hasattr(child, 'update'):
+#                 child.update()

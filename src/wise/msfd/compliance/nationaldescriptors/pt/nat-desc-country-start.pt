@@ -22,6 +22,9 @@
           <h1>National descriptors overview for <span tal:content="context/title"></span></h1>
           <div>Process is in phase
             <span tal:replace="view/get_status">Phase 0</span>
+            <select>
+              <option>Send to Phase 3</option>
+            </select>
           </div>
 
           <table class="table">
@@ -39,8 +42,10 @@
                   <span tal:content="desc/title_or_id">D0</span>
                 </td>
                 <td tal:repeat="assessment desc/contentValues">
-                  <a href="" tal:attributes="href assessment/absolute_url"
-                     tal:content="assessment/title_or_id">Germany</a>
+                  <div>
+                  <a href="" tal:attributes="href assessment/absolute_url">View</a>
+                  </div>
+                  Ready for Phase 2
                 </td>
               </tr>
             </tbody>

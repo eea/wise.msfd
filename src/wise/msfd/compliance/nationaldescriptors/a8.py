@@ -1,6 +1,6 @@
 from collections import defaultdict
 
-from .. import db, sql
+from wise.msfd import db, sql
 
 DESCRIPTORS = {}
 

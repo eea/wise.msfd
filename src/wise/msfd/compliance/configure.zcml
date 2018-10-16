@@ -5,6 +5,8 @@
   xmlns:z3c="http://namespaces.zope.org/z3c"
   i18n_domain="wise.msfd">
 
+  <include package='.nationaldescriptors' />
+
   <browser:page
     for="*"
     name="pdb"
@@ -13,48 +15,17 @@
     />
 
   <browser:page
+    for="*"
+    name="bootstrap-compliance"
+    class=".admin.BootstrapCompliance"
+    permission="zope2.View"
+    />
+
+  <browser:page
     for=".interfaces.IComplianceModuleFolder"
     name="comp-start"
     class=".main.StartComplianceView"
     template="../pt/start.pt"
-    permission="zope2.View"
-    />
-
-  <browser:page
-    for=".interfaces.INationalDescriptorsFolder"
-    name="nat-desc-start"
-    class=".main.NationalDescriptorsOverview"
-    template="./pt/nat-desc-start.pt"
-    permission="zope2.View"
-    />
-
-  <browser:page
-    for=".interfaces.ICountryDescriptorsFolder"
-    name="nat-desc-country-start"
-    class=".main.NationalDescriptorCountryOverview"
-    template="./pt/nat-desc-country-start.pt"
-    permission="zope2.View"
-    />
-
-  <browser:page
-    for=".interfaces.INationalDescriptorAssessment"
-    name="nat-desc-art-view"
-    template="./pt/nat-desc-art-view.pt"
-    class=".main.NationalDescriptorArticleView"
-    permission="zope2.View"
-    />
-
-  <!-- <browser:page -->
-  <!--   for="*" -->
-  <!--   name="comp&#45;national&#45;descriptor" -->
-  <!--   class=".main.NationalDescriptorFormView" -->
-  <!--   permission="zope2.View" -->
-  <!--   /> -->
-
-  <browser:page
-    for="*"
-    name="bootstrap-compliance"
-    class=".admin.BootstrapCompliance"
     permission="zope2.View"
     />
 

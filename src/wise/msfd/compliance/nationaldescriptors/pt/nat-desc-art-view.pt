@@ -1,0 +1,58 @@
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en"
+  xmlns:tal="http://xml.zope.org/namespaces/tal"
+  xmlns:metal="http://xml.zope.org/namespaces/metal"
+  xmlns:i18n="http://xml.zope.org/namespaces/i18n"
+  lang="en"
+  metal:use-macro="context/main_template/macros/master"
+  i18n:domain="eea">
+
+  <body metal:fill-slot="content">
+
+    <div id="layout-contents" tal:define="text context/text | nothing" >
+      <div id="wise-search-form">
+        <div id="wise-search-form-top">
+          <metal:tabs
+             metal:use-macro="context/wise-macros/macros/tabs"></metal:tabs>
+        </div>
+
+        <div class="start-page-content left-side-form">
+
+          <h1>
+            <span tal:replace="view/article">Art0</span> assessment on
+            <span tal:replace="view/descriptor">D0</span> for
+            <span tal:replace="view/country_code">US</span>
+          </h1>
+
+          <div>Change status:
+            <select>
+              <option>Send to Topic Lead</option>
+            </select>
+          </div>
+
+          <div>
+            <ul>
+              <li><a href="./@@view-report-data-2012">View 2012 Report Data</a></li>
+              <li><a href="./@@view-report-data-2018">View 2018 Report Data</a></li>
+              <li><a href="./@@edit-assessment-data-2018">Edit 2018 Report Data
+                  (for Topic Lead)</a></li>
+            </ul>
+          </div>
+
+          <div>
+            <h3>2018 Assessment</h3>
+            <div tal:replace="structure view/assessment_data_2018"></div>
+            <h3>2012 Assessment</h3>
+            <div tal:replace="structure view/assessment_data_2012"></div>
+          </div>
+
+          <div>
+            <h4>Comments</h4>
+            ...
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+  </body>
+</html>

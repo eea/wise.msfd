@@ -1,6 +1,6 @@
 from sqlalchemy import and_  # , or_
 
-from .. import db, sql
+from wise.msfd import db, sql
 
 
 class Article10(object):

@@ -16,16 +16,13 @@
         </div>
 
         <div class="start-page-content left-side-form">
-
-          <h1>
-            <span tal:replace="view/article">Art0</span>
-            <span tal:replace="view/descriptor">D0</span>
-            <span tal:replace="view/country">US</span>
-          </h1>
-
+          <div tal:replace="structure view/content">
+            Report data here
+          </div>
         </div>
       </div>
     </div>
 
   </body>
 </html>
+
