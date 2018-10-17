@@ -5,6 +5,7 @@ from zope.interface import alsoProvides
 from plone.dexterity.utils import createContentInContainer as create
 from Products.CMFDynamicViewFTI.interfaces import ISelectableBrowserDefault
 from Products.Five.browser import BrowserView
+from wise.msfd import db, sql2018
 
 from . import interfaces
 
@@ -22,19 +23,39 @@ class BootstrapCompliance(BrowserView):
     """ Bootstrap the compliance module by creating all needed country folders
     """
 
+    @db.use_db_session('session_2018')
     def _get_countries(self):
         """ Get a list of (code, name) countries
         """
 
-        return [
-            ('RO', 'Romania'),
-        ]
+        count, res = db.get_all_records(
+            sql2018.LCountry
+        )
+        countries = [(x.Code, x.Country) for x in res]
 
+        return countries
+
+    @db.use_db_session('session_2018')
     def _get_descriptors(self):
-        return ['D1', 'D5']
+        mc = sql2018.LGESComponent
+        descriptors = db.get_unique_from_mapper(
+            mc,
+            'Code',
+            mc.GESComponent == 'Descriptor'
+        )
 
+        return ['D1', 'D5']
+        return descriptors
+
+    @db.use_db_session('session_2018')
     def _get_articles(self):
+        articles = db.get_unique_from_mapper(
+            sql2018.LMSFDArticle,
+            'MSFDArticle'
+        )
+
         return ['Art8', 'Art9', 'Art10']
+        return articles
 
     def set_layout(self, obj, name):
         ISelectableBrowserDefault(obj).setLayout(name)

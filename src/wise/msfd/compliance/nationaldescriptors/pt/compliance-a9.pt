@@ -88,8 +88,8 @@
       <tr>
         <td>Feature(s) reported
           [Feature]</td>
-        <tal:block tal:repeat="crit python: view.crit_lab_indics.keys()">
-        <td tal:repeat="value python:view.crit_lab_indics[crit]"
+        <tal:block tal:repeat="crit criterias">
+        <td tal:repeat="value python:view.crit_lab_indics[crit[0]]"
             tal:content="python:', '.join(view.indic_w_p[value]) if value else ''"/>
         </tal:block>
       </tr>
@@ -232,22 +232,22 @@
         </tal:block>
       </tr>
 
-      <tr>
-        <td>Physical/chemical features</td>
-        <td>Implement this</td>
-      </tr>
-      <tr>
-        <td>Predominant habitats</td>
-        <td>Implement this</td>
-      </tr>
-      <tr>
-        <td>Functional groups</td>
-        <td>Implement this</td>
-      </tr>
-      <tr>
-        <td>Pressures</td>
-        <td>Implement this</td>
-      </tr>
+      <!--<tr>-->
+        <!--<td>Physical/chemical features</td>-->
+        <!--<td>Implement this</td>-->
+      <!--</tr>-->
+      <!--<tr>-->
+        <!--<td>Predominant habitats</td>-->
+        <!--<td>Implement this</td>-->
+      <!--</tr>-->
+      <!--<tr>-->
+        <!--<td>Functional groups</td>-->
+        <!--<td>Implement this</td>-->
+      <!--</tr>-->
+      <!--<tr>-->
+        <!--<td>Pressures</td>-->
+        <!--<td>Implement this</td>-->
+      <!--</tr>-->
 
     </table>
   </div>

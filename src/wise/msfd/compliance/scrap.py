@@ -1312,3 +1312,23 @@ class AssessmentDataForm2018(Container, BaseUtil):
 #         for child in self.subforms:
 #             if hasattr(child, 'update'):
 #                 child.update()
+
+    # TODO NOT used method, delete this?
+    # def get_ges_descriptions(self, indicators):
+    #     """
+    #     :param indicators:
+    #     :return:
+    #     """
+    #     res = {}
+    #
+    #     for indic in indicators:
+    #         res[indic.ReportingFeature] = indic.DescriptionGES
+    #
+    #     return res
+
+    # TODO NOT used method, delete this?
+    # def get_descriptors_for_muid(self, muid):
+    #     return sorted(
+    #         [x for x in self.indicator_descriptors if x.MarineUnitID == muid],
+    #         key=lambda o: o.ReportingFeature
+    #     )

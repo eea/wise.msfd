@@ -1,4 +1,4 @@
-from collections import defaultdict  # , namedtuple
+from collections import defaultdict
 
 from sqlalchemy import and_, or_
 
@@ -11,11 +11,6 @@ from ..base import BaseComplianceView
 from .a8 import Article8
 from .a10 import Article10
 from .utils import row_to_dict
-
-# from wise.msfd.base import BaseUtil, EmbededForm, MainFormWrapper
-# from wise.msfd.gescomponents import get_ges_criterions
-# from z3c.form.field import Fields
-# from z3c.form.form import Form
 
 
 class ReportData2012(BaseComplianceView, Article8, Article10, BaseUtil):
@@ -34,6 +29,9 @@ class ReportData2012(BaseComplianceView, Article8, Article10, BaseUtil):
     #     super(Report2012, self).__init__(context, request)
 
     def get_country_name(self):
+        """ Get country name based on country code
+        :return: 'Latvia'
+        """
         count, obj = db.get_item_by_conditions(
             sql.MSFD11CommonLabel,
             'ID',
@@ -44,6 +42,9 @@ class ReportData2012(BaseComplianceView, Article8, Article10, BaseUtil):
         return obj.Text
 
     def get_regions(self):
+        """ Get all regions and subregions for a country
+        :return: ['BAL', 'ANS']
+        """
         t = sql.t_MSFD4_GegraphicalAreasID
         count, res = db.get_all_records(
             t,
@@ -56,6 +57,9 @@ class ReportData2012(BaseComplianceView, Article8, Article10, BaseUtil):
         return regions
 
     def get_ges_descriptors(self):
+        """ Get all descriptor codes
+        :return: ['D1', 'D2', ..., 'D10', 'D11']
+        """
         m = sql.MSFDFeaturesOverview
         res = db.get_unique_from_mapper(
             m, 'RFCode',
@@ -65,6 +69,10 @@ class ReportData2012(BaseComplianceView, Article8, Article10, BaseUtil):
         return res
 
     def get_ges_descriptor_label(self, ges):
+        """ Get the label(text) for a descriptor
+        :param ges: 'D5'
+        :return: 'D5 Eutrophication'
+        """
         count, obj = db.get_item_by_conditions(
             sql.MSFD11CommonLabel,
             'ID',
@@ -76,6 +84,9 @@ class ReportData2012(BaseComplianceView, Article8, Article10, BaseUtil):
             return obj.Text
 
     def get_marine_unit_ids(self):
+        """ Get all Marine Units for a country
+        :return: ['BAL- LV- AA- 001', 'BAL- LV- AA- 002', ...]
+        """
         t = sql.t_MSFD4_GegraphicalAreasID
         count, res = db.get_all_records(
             t,
@@ -88,6 +99,11 @@ class ReportData2012(BaseComplianceView, Article8, Article10, BaseUtil):
         return sorted(muids)
 
     def get_ges_criterions(self, descriptor):
+        """ Get all criterions(indicators) and the descriptor
+            for a descriptor
+        :param descriptor: 'D5'
+        :return: ['D5', '5.1', '5.2', ..., '5.1.2', '5.2.4', ...]
+        """
         nr = descriptor[1:]
         m = sql.MSFDFeaturesOverview
         res = db.get_unique_from_mapper(
@@ -105,8 +121,13 @@ class ReportData2012(BaseComplianceView, Article8, Article10, BaseUtil):
         return res
 
     def get_indicators_with_feature_pressures(self, muids, criterions):
-        # returns a dict key Indicator, value: list of feature pressures
-        # {u'5.2.2-indicator 5.2C': set([u'Transparency', u'InputN_Psubst']),
+        """ Get a dict with all indicators and their corresponding features
+        :param muids: ['BAL- LV- AA- 001', 'BAL- LV- AA- 002', ...]
+        :param criterions: ['D5', '5.1', '5.2', ..., '5.1.2', '5.2.4', ...]
+        :return: {'5.2.2-indicator 5.2C': ['Transparency', 'InputN_Psubst'],
+            {'5.2.1- indicator 5.2B': ['InputN_Psubst', 'FunctionalGroupOther'],
+            ...}
+        """
         t = sql.t_MSFD9_Features
         count, res = db.get_all_records(
             t,
@@ -135,6 +156,11 @@ class ReportData2012(BaseComplianceView, Article8, Article10, BaseUtil):
         return res
 
     def get_criterion_labels(self, criterions):
+        """ Get all labels for the criterions
+        :param criterions: ['D5', '5.1', '5.2', ..., '5.1.2', '5.2.4', ...]
+        :return: [('5.1', '5.1: Nutrients levels'),
+            ('5.1.2', '5.1.2: Nutrient ratios (silica'), (...)]
+        """
         count, res = db.get_all_records(
             sql.MSFD11CommonLabel,
             sql.MSFD11CommonLabel.value.in_(criterions),
@@ -142,9 +168,19 @@ class ReportData2012(BaseComplianceView, Article8, Article10, BaseUtil):
                                              'list-GESCriteria')),
         )
 
-        return [(x.value, x.Text) for x in res]
+        criterion_labels = dict([(x.value, x.Text) for x in res])
+        # add D5 criterion to the criterion lists too
+        criterion_labels[self.descriptor] = self.desc_label
+
+        return criterion_labels
 
     def get_indicator_descriptors(self, muids, available_indicators):
+        """ Get data based on Marine Units and available indicators
+        :param muids: ['BAL- LV- AA- 001', 'BAL- LV- AA- 002', ...]
+        :param available_indicators: ['5.2.2-indicator 5.2C',
+            '5.2.1- indicator 5.2B']
+        :return: table result
+        """
         count, res = db.get_all_records(
             sql.MSFD9Descriptor,
             sql.MSFD9Descriptor.MarineUnitID.in_(muids),
@@ -153,42 +189,43 @@ class ReportData2012(BaseComplianceView, Article8, Article10, BaseUtil):
 
         return res
 
-    def get_ges_descriptions(self, indicators):
-        res = {}
+    def get_criterions_indics(self):
+        """ Get all criterions with their reported indicators
+        :return: {'5.1': [],
+            '5.1.1': ['5.1.1-indicator 5.1A', '5.1.1-indicator 5.1B']
+            , ...}
+        """
+        crit_lab_indics = defaultdict(list)
 
-        for indic in indicators:
-            res[indic.ReportingFeature] = indic.DescriptionGES
+        for crit_lab in self.criterion_labels.keys():
+            crit_lab_indics[crit_lab] = []
 
-        return res
+            for ind in self.indic_w_p.keys():
+                norm_ind = ind.split('-')[0]
 
-    def get_descriptors_for_muid(self, muid):
-        return sorted(
-            [x for x in self.indicator_descriptors if x.MarineUnitID == muid],
-            key=lambda o: o.ReportingFeature
-        )
+                if crit_lab == norm_ind:
+                    crit_lab_indics[crit_lab].append(ind)
 
-    @db.use_db_session('session')
-    def __call__(self):
-        # threadlocals.session_name = 'session'
+            if not crit_lab_indics[crit_lab]:
+                crit_lab_indics[crit_lab].append('')
 
-        # data = self.get_flattened_data(self)
+        crit_lab_indics[u'GESOther'] = ['']
 
-        self.country = self.country_code
-        # self.country = self._country_folder.getId().upper()
-        # self.descriptor = self._descriptor_folder.getId().upper()
-        # self.article = self._article_assessment.getId().capitalize()
+        return crit_lab_indics
 
-        if not self.country:
-            return ''
+    def get_colspan(self):
+        colspan = len([item
+                       for sublist in self.crit_lab_indics.values()
+                       for item in sublist])
 
-        # descriptor = 'D5'
-        # descriptor_prefix = descriptor[1:]
+        return colspan
 
+    def setup_data(self):
         self.country_name = self.get_country_name()
         self.regions = self.get_regions()
 
-        # TODO: optimize this with a single function and a single query (w/
-        # JOIN)
+        # TODO: optimize this with a single function
+        # and a single query (w/ JOIN)
         self.descriptors = self.get_ges_descriptors()
         self.descs = {}
 
@@ -206,46 +243,24 @@ class ReportData2012(BaseComplianceView, Article8, Article10, BaseUtil):
             self.muids, self.criterions
         )
 
-        self.criterion_labels = dict(
-            self.get_criterion_labels(self.criterions)
-        )
-        # add D5 criterion to the criterion lists too
-        self.criterion_labels.update({self.descriptor: self.desc_label})
+        self.criterion_labels = self.get_criterion_labels(self.criterions)
 
         self.indicator_descriptors = self.get_indicator_descriptors(
             self.muids, self.indic_w_p.keys()
         )
 
-        # indicator_ids = self.indics.keys()
-        # res = self.get_ges_descriptions(self.indicators)
-        # self.ges_descriptions = {k: v
-        #                          for k, v in res.items()
-        #                          if k in indicator_ids}
+        self.crit_lab_indics = self.get_criterions_indics()
 
-        # TODO create a function for this
-        self.crit_lab_indics = defaultdict(list)
+        self.colspan = self.get_colspan()
 
-        for crit_lab in self.criterion_labels.keys():
-            self.crit_lab_indics[crit_lab] = []
+    @db.use_db_session('session')
+    def __call__(self):
+        self.country = self.country_code
 
-            for ind in self.indic_w_p.keys():
-                norm_ind = ind.split('-')[0]
+        if not self.country:
+            return ''
 
-                if crit_lab == norm_ind:
-                    self.crit_lab_indics[crit_lab].append(ind)
-
-            if not self.crit_lab_indics[crit_lab]:
-                self.crit_lab_indics[crit_lab].append('')
-        self.crit_lab_indics[u'GESOther'] = ['']
-
-        self.colspan = len([item
-                            for sublist in self.crit_lab_indics.values()
-
-                            for item in sublist])
-
-        # Article 8 stuff
-        # self.art8data = self.get_data_reported('BAL- LV- AA- 001',
-        # self.descriptor)
+        self.setup_data()
 
         print "Will render report for ", self.article
 
@@ -270,18 +285,6 @@ class ReportData2018(BaseComplianceView):
     }
 
     def get_data_from_view(self):
-
-        # data = self.context.context.get_flattened_data(self)
-        #
-        # def d(k):
-        #     return data.get(k, None)
-        #
-        # article = d('article')
-        #
-        # member_state = d('member_state')
-        # descriptor = d('descriptor')
-        # marine_unit_ids = d('marine_unit_ids')
-        # feature = d('feature_reported')
 
         view_name = self.view_names[self.article]
         t = getattr(sql2018, view_name)

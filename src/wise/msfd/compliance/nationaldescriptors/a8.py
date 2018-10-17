@@ -42,7 +42,7 @@ class Nutrients(object):
         'LevelPressureOverall': 'NutrientsOrganicEnrichment5_1',
         'ImpactPressureWaterColumn': 'NutrientsEnrichmentWaterColumn5_2or5_3',
         'ImpactPressureSeabedHabitats':
-        'NutrientsEnrichmentSeabedHabitats5_2or5_3',
+            'NutrientsEnrichmentSeabedHabitats5_2or5_3',
     }
 
 

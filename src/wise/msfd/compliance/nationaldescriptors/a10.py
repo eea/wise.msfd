@@ -5,6 +5,10 @@ from wise.msfd import db, sql
 
 class Article10(object):
     def get_environment_data(self, muids):
+        """ Get all data from a table
+        :param muids: ['LV-001', 'LV-002', ...]
+        :return: table result
+        """
         mc = sql.MSFD10Target
         descr_nr = self.descriptor[1:]
         count, res = db.get_all_records(
@@ -18,3 +22,5 @@ class Article10(object):
 
         if res:
             return res[0]
+
+        return []
