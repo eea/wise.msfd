@@ -9,7 +9,7 @@ from wise.msfd.base import BaseUtil
 
 from ..base import BaseComplianceView
 from .a8 import Article8, DESCRIPTORS
-from .a9 import Article910
+from .a910 import Article910
 from .a10 import Article10
 from .utils import row_to_dict
 
