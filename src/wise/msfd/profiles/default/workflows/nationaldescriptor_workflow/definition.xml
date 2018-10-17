@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+<dc-workflow workflow_id="nationaldescriptor_workflow" title="National descriptors workflow" description="To be used for MSFD Compliance module, for national descriptors" state_variable="state" initial_state="phase1" manager_bypass="False">
+ <state state_id="final" title="">
+ </state>
+ <state state_id="phase1" title="">
+  <exit-transition transition_id="to_phase2"/>
+ </state>
+ <state state_id="phase2" title="">
+  <exit-transition transition_id="to_phase3"/>
+ </state>
+ <state state_id="phase3" title="">
+  <exit-transition transition_id="to_final"/>
+ </state>
+ <transition transition_id="to_final" title="" new_state="final" trigger="USER" before_script="" after_script="">
+  
+  <guard>
+  </guard>
+ </transition>
+ <transition transition_id="to_phase2" title="" new_state="phase2" trigger="USER" before_script="" after_script="">
+  
+  <guard>
+  </guard>
+ </transition>
+ <transition transition_id="to_phase3" title="" new_state="phase3" trigger="USER" before_script="" after_script="">
+  
+  <guard>
+  </guard>
+ </transition>
+</dc-workflow>

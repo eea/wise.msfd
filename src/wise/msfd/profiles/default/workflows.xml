@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<object name="portal_workflow" meta_type="Plone Workflow Tool">
+ <object name="nationaldescriptor_workflow" meta_type="Workflow"/>
+ <bindings>
+  <type type_id="wise.msfd.nationaldescriptorassessment">
+   <bound-workflow workflow_id="nationaldescriptor_workflow"/>
+  </type>
+ </bindings>
+</object>

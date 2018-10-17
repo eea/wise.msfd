@@ -26,7 +26,7 @@ class CommentsView(object):
 
         form.action = context.absolute_url() + '/++add++wise.msfd.comment'
 
-        form.status = 'ok'
+        form.status = ''
 
         return form
 
