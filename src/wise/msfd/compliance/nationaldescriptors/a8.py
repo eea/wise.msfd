@@ -83,6 +83,13 @@ class Article8(BrowserView):
     template = Template('pt/compliance-a8.pt')
 
     def get_suminfo2_data(self, marine_unit_id, descriptor_class):
+        """ Get all data from table _SumInfo2ImpactedElement
+            for specific Marine Units and descriptor_class
+        :param marine_unit_id: ['LV-001', 'LV-002']
+        :param descriptor_class: Descriptor5
+        :return: table results
+        """
+
         results = []
 
         for mc in descriptor_class.article8_mapper_classes:
@@ -103,6 +110,13 @@ class Article8(BrowserView):
         return results
 
     def get_metadata_data(self, marine_unit_id, descriptor_class):
+        """ Get all data from table _Metadata
+            for specific Marine Units and descriptor_class
+        :param marine_unit_id: ['LV-001', 'LV-002']
+        :param descriptor_class: Descriptor5
+        :return: table results
+        """
+
         results = []
 
         for mc in descriptor_class.article8_mapper_classes:
@@ -126,6 +140,13 @@ class Article8(BrowserView):
         return results
 
     def get_activity_descr_data(self, marine_unit_id, descriptor_class):
+        """ Get all data from table _ActivityDescription
+            for specific Marine Units and descriptor_class
+        :param marine_unit_id: ['LV-001', 'LV-002']
+        :param descriptor_class: Descriptor5
+        :return: table results
+        """
+
         results = []
 
         for mc in descriptor_class.article8_mapper_classes:
@@ -141,6 +162,11 @@ class Article8(BrowserView):
         return results
 
     def get_activity_data(self, descriptor_class):
+        """ Get all data from table _Activity for specific descriptor_class
+        :param descriptor_class: Descriptor5
+        :return: table results
+        """
+
         results = []
 
         for mc in descriptor_class.article8_mapper_classes:
@@ -162,6 +188,13 @@ class Article8(BrowserView):
         return results
 
     def get_assesment_ind_data(self, marine_unit_id, descriptor_class):
+        """ Get all data from table _AssesmentIndicator
+            for specific Marine Units and descriptor_class
+        :param marine_unit_id: ['LV-001', 'LV-002']
+        :param descriptor_class: Descriptor5
+        :return: table results
+        """
+
         results = []
 
         for mc in descriptor_class.article8_mapper_classes:
@@ -177,6 +210,13 @@ class Article8(BrowserView):
         return results
 
     def get_assesment_data(self, marine_unit_id, descriptor_class):
+        """ Get all data from table _Assesment
+            for specific Marine Units and descriptor_class
+        :param marine_unit_id: ['LV-001', 'LV-002']
+        :param descriptor_class: Descriptor5
+        :return: table results
+        """
+
         results = []
 
         for mc in descriptor_class.article8_mapper_classes:
@@ -191,6 +231,13 @@ class Article8(BrowserView):
         return results
 
     def get_base_data(self, marine_unit_id, descriptor_class):
+        """ Get all data from base table
+            for specific Marine Units and descriptor_class
+        :param marine_unit_id: ['LV-001', 'LV-002']
+        :param descriptor_class: Descriptor5
+        :return: table results
+        """
+
         results = []
 
         for mc in descriptor_class.article8_mapper_classes:
@@ -204,6 +251,14 @@ class Article8(BrowserView):
         return results
 
     def get_topic_assessment(self, marine_unit_id, descriptor):
+        """ Get dict with topics(analisys/features) and the GESComponents
+        :param marine_unit_id: 'LV-001'
+        :param descriptor: 'D5'
+        :return: {'LevelPressureOLoad': ['5.1.1'],
+            u'ImpactPressureWaterColumn': [u'5.2.1', u'5.2.1', u'5.2.2'],
+            ...}
+        """
+
         self.descriptor_class = DESCRIPTORS.get(descriptor, None)
 
         if not self.descriptor_class:
@@ -257,9 +312,17 @@ class Article8(BrowserView):
 
         self.topic_assesment = topic_assesment
 
+        print "\n\n"
+        print topic_assesment
+
         return topic_assesment
 
     def get_col_span_indicator(self, indicator):
+        """ Get colspan based on the count if indicators
+        :param indicator: '5.2.1'
+        :return: integer
+        """
+
         colspan = 0
 
         for topic, indics in self.topic_assesment.items():
@@ -274,6 +337,9 @@ class Article8(BrowserView):
         return colspan
 
     def print_feature(self, indicator, col_name, topic_group_index):
+        """ Get data to be printed in template
+        """
+
         results = []
 
         for row in self.base_data[0]:
@@ -291,6 +357,9 @@ class Article8(BrowserView):
         return results
 
     def print_asses_ind(self, indicator, col_name, topic_group_index):
+        """ Get data to be printed in template
+        """
+
         topics_needed = []
 
         for topic, indics in self.topic_assesment.items():
@@ -328,6 +397,9 @@ class Article8(BrowserView):
         return results
 
     def print_base(self, indicator, col_name, topic_group_index):
+        """ Get data to be printed in template
+        """
+
         topics_needed = []
 
         for topic, indics in self.topic_assesment.items():
@@ -356,6 +428,9 @@ class Article8(BrowserView):
         return results
 
     def print_asses(self, indicator, col_name, topic_group_index):
+        """ Get data to be printed in template
+        """
+
         topics_needed = []
 
         for topic, indics in self.topic_assesment.items():
@@ -394,6 +469,9 @@ class Article8(BrowserView):
         return results
 
     def print_suminfo2(self, indicator, topic_group_index):
+        """ Get data to be printed in template
+        """
+
         topics_needed = []
 
         for topic, indics in self.topic_assesment.items():
