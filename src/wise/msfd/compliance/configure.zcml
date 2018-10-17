@@ -29,4 +29,19 @@
     permission="zope2.View"
     />
 
+  <browser:page
+    for=".interfaces.INationalDescriptorAssessment"
+    name="comments-view"
+    class=".comments.CommentsView"
+    template="./pt/comments-view.pt"
+    permission="zope2.View"
+    />
+
+  <browser:page
+    for=".interfaces.IComment"
+    name="comment-view"
+    class=".comments.CommentView"
+    permission="zope2.View"
+    />
+
 </configure>

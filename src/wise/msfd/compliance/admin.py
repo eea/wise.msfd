@@ -28,10 +28,15 @@ class BootstrapCompliance(BrowserView):
         """ Get a list of (code, name) countries
         """
 
+        is_debug = 'production' not in self.request.form
+
         count, res = db.get_all_records(
             sql2018.LCountry
         )
         countries = [(x.Code, x.Country) for x in res]
+
+        if is_debug:
+            countries = [x for x in countries if x[0] == 'LV']
 
         return countries
 
@@ -45,6 +50,7 @@ class BootstrapCompliance(BrowserView):
         )
 
         return ['D1', 'D5']
+
         return descriptors
 
     @db.use_db_session('session_2018')
@@ -55,6 +61,7 @@ class BootstrapCompliance(BrowserView):
         )
 
         return ['Art8', 'Art9', 'Art10']
+
         return articles
 
     def set_layout(self, obj, name):
@@ -76,6 +83,9 @@ class BootstrapCompliance(BrowserView):
                             nda.absolute_url())
 
                 self.set_layout(nda, '@@nat-desc-art-view')
+
+                for id in [u'tl', u'ec']:
+                    create(nda, 'wise.msfd.commentsfolder', id=id)
 
         return cf
 

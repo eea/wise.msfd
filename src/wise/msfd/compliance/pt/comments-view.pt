@@ -1,0 +1,19 @@
+<div tal:repeat="folder context/contentValues">
+
+  <h4>Comments for <span tal:content="folder/getId">UN</span></h4>
+
+  <ul tal:define="comments folder/contentValues">
+    <li tal:repeat="comment comments">
+      <div tal:content="comment/Creator">Creator</div>
+      <div tal:content="comment/created">Creator</div>
+      <div tal:content="comment/text">Comment here</div>
+    </li>
+  </ul>
+
+  <tal:form tal:define="form python: view.add_form(folder)">
+    <div tal:content="structure form">
+      Add new comment
+    </div>
+  </tal:form>
+
+</div>

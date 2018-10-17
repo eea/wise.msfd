@@ -1,4 +1,5 @@
 from zope.interface import Interface
+from zope.schema import Text
 
 from plone.supermodel.model import Schema
 
@@ -27,3 +28,14 @@ class INationalDescriptorAssessment(Schema):
     """ A Country > Descriptor > Article assessment
     """
 
+
+class ICommentsFolder(Schema):
+    """ A container for a track of discussion (comments)
+    """
+
+
+class IComment(Schema):
+    """ A container for a track of discussion (comments)
+    """
+
+    text = Text(title=u'Comment text', required=True)

@@ -47,7 +47,7 @@
 
           <div>
             <h4>Comments</h4>
-            ...
+            <div tal:content="structure context/@@comments-view"></div>
           </div>
 
         </div>
