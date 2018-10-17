@@ -26,6 +26,11 @@ class ReportData2012(BaseComplianceView, BaseUtil):
     Art10 = Article910
 
     def get_criterias_list(self, descriptor):
+        """ Get the list of criterias for the specified descriptor
+        :param descriptor: 'D5'
+        :return: (('D5', 'Eutrophication'), ('5.1.1', 'D5C1'),
+            ('5.2.1', 'D5C2'), ... )
+        """
         descriptor_class = DESCRIPTORS.get(descriptor, None)
 
         if descriptor_class:
