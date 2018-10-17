@@ -1,26 +1,22 @@
 """ Classes and views to implement the National Descriptors compliance page
 """
-from collections import defaultdict, namedtuple
 
-from sqlalchemy import and_, or_
-from zope.interface import Interface
-from zope.schema import Choice, Text
-from zope.schema.vocabulary import SimpleTerm, SimpleVocabulary
+from collections import namedtuple  # defaultdict,
 
-from plone.z3cform.layout import wrap_form
-from Products.Five.browser import BrowserView
 from Products.Five.browser.pagetemplatefile import \
     ViewPageTemplateFile as Template
-from wise.msfd import db, sql, sql2018
-from wise.msfd.base import BaseUtil, EmbededForm, MainFormWrapper
-from wise.msfd.gescomponents import get_ges_criterions
-from z3c.form.field import Fields
-from z3c.form.form import Form
 
-from ..base import BaseComplianceView, Container
-from ..vocabulary import form_structure
-from .a8 import Article8
-from .a10 import Article10
+from ..base import BaseComplianceView  # , Container
+
+# from wise.msfd import db, sql, sql2018
+# from wise.msfd.base import BaseUtil, EmbededForm, MainFormWrapper
+# from wise.msfd.gescomponents import get_ges_criterions
+# from z3c.form.field import Fields
+# from z3c.form.form import Form
+#
+# from ..vocabulary import form_structure
+# from .a8 import Article8
+# from .a10 import Article10
 
 CountryStatus = namedtuple('CountryStatus', ['name', 'status', 'url'])
 

@@ -1,8 +1,9 @@
-<div id="wise-search-form"
-  tal:attributes="id view/form_id | string:wise-search-form">
+<div id="wise-compliance-form"
+  class="full-width drop-right-column"
+  tal:attributes="id view/form_id | string:wise-compliance-form">
 
-  <div id="wise-search-form-top"
-    tal:attributes="id view/form_id_top | string:wise-search-form-top">
+  <div id="wise-compliance-form-top"
+    tal:attributes="id view/form_id_top | string:wise-compliance-form-top">
     <metal:tabs
       metal:use-macro="context/wise-macros/macros/tabs"></metal:tabs>
   </div>
@@ -10,40 +11,39 @@
   <div class="wise-search-form-container"
     tal:attributes="id view/form_container_class | string:wise-search-form-container">
 
-    <h2 tal:content="view/title">Title here</h2>
+    <div class="left-side-form">
+      <h2 tal:content="view/title">Title here</h2>
 
-    <metal:block use-macro="context/@@ploneform-macros/titlelessform">
-      <metal:slot fill-slot="fields">
-        <div class="form-right-side">
+      <div id="comp-national-descriptor">
+        <metal:form use-macro="context/@@ploneform-macros/titlelessform">
 
-
-
-
-
-
-          <tal:widgets repeat="widget view/widgets/values">
-            <div class="row"
-              tal:define="hidden python:widget.mode == 'hidden'"
-              tal:omit-tag="hidden">
-
-              field here
-
+          <metal:fields fill-slot="fields">
+            <div class="collapsed-container">
+              <tal:subform repeat='subform view/subforms'>
+                <div class="subform">
+                  <div tal:repeat="fieldname subform/fields">
+                    <tal:def define="widget python: view.widgets[fieldname]">
+                      <metal:block use-macro="context/@@ploneform-macros/field" />
+                    </tal:def>
+                  </div>
+                </div>
+              </tal:subform>
             </div>
-          </tal:widgets>
+          </metal:fields>
 
+          <metal:slot fill-slot="actions">
+            <div class="form-right-side">
+              <metal:block use-macro="context/@@ploneform-macros/actions" />
+            </div>
+          </metal:slot>
 
+          <metal:css fill-slot="formtop">
+            <style>
+            </style>
+          </metal:css>
 
-        </div>
-      </metal:slot>
-      <metal:slot fill-slot="actions">
-        <div class="form-right-side">
-          <metal:block use-macro="context/@@ploneform-macros/actions" />
-        </div>
-      </metal:slot>
-      <metal:css fill-slot="formtop">
-        <style>
-        </style>
-      </metal:css>
-    </metal:block>
+        </metal:form>
+      </div>
+    </div>
   </div>
 </div>

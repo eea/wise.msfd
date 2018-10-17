@@ -35,7 +35,6 @@
     class=".assessment.EditAssessmentDataView"
     permission="zope2.View"
     />
-    template="./pt/nat-desc-edit-assessment-data.pt"
 
   <browser:page
     for="..interfaces.INationalDescriptorAssessment"

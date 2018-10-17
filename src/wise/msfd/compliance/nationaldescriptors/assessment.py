@@ -2,22 +2,16 @@ from zope.schema import Choice, Text
 from zope.schema.vocabulary import SimpleTerm, SimpleVocabulary
 
 from plone.z3cform.layout import wrap_form
+from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 from wise.msfd import db, sql2018  # sql,
 from wise.msfd.base import EmbededForm, MainFormWrapper  # BaseUtil,
 from wise.msfd.gescomponents import get_ges_criterions
+from z3c.form.button import buttonAndHandler
 from z3c.form.field import Fields
 from z3c.form.form import Form
 
 from ..base import BaseComplianceView  # , Container
 from ..vocabulary import form_structure
-
-# from .a8 import Article8
-# from .a10 import Article10
-# from sqlalchemy import and_, or_
-# from zope.interface import Interface
-# from Products.Five.browser.pagetemplatefile import \
-#     ViewPageTemplateFile as Template
-# from collections import defaultdict  # , namedtuple
 
 
 def get_default_additional_field_value(
@@ -29,17 +23,20 @@ def get_default_additional_field_value(
         field_name
         ):
 
+    # TODO: check the feature param, we no longer need it
+
     if not data_assess:
         return None
 
     for x in data_assess:
         field_data = getattr(x, field_name)
 
+        # x.Feature == feature and \
+
         if x.MSFDArticle == article and \
-           x.Feature == feature and \
-           x.AssessmentCriteria == assess_crit and \
-           x.AssessedInformation == assess_info and \
-           field_data:
+                x.AssessmentCriteria == assess_crit and \
+                x.AssessedInformation == assess_info and \
+                field_data:
 
             return field_data
 
@@ -70,8 +67,8 @@ def get_default_assessment_value(
     return None
 
 
+# mapping of title: field_name
 additional_fields = {
-    # mapping of title: field_name
     u'Summary': 'Description_Summary',
     u'Conclusion': 'Conclusion',
     # 'Score': 'Score'
@@ -87,15 +84,24 @@ class EditAssessmentDataForm(Form, BaseComplianceView):
     """ Edit the assessment for a national descriptor, for a specific article
     """
 
+    subforms = None
     session_name = 'session_2018'
+    template = ViewPageTemplateFile("./pt/nat-desc-edit-assessment-data.pt")
+
+    @property
+    def title(self):
+        return 'Edit Assessment for {}'.format(self.descriptor)
+
+    @buttonAndHandler(u'Save', name='save')
+    def handle_save(self, action):
+        pass
 
     @property
     def fields(self):
-        self.subforms = []
-        self.build_forms()
-        fields = []
+        if not self.subforms:
+            self.subforms = self.build_forms()
 
-        # import pdb; pdb.set_trace()
+        fields = []
 
         for subform in self.subforms:
             fields.extend(subform.fields._data_values)
@@ -106,10 +112,6 @@ class EditAssessmentDataForm(Form, BaseComplianceView):
         """ Build a form of options from a tree of options
         """
         base_name = tree.name
-        # TODO: get list of descriptors?
-        # data = self.get_flattened_data(self)
-
-        # descriptor = data['descriptor']
         descriptor_criterions = get_ges_criterions(self.descriptor)
 
         forms = []
@@ -139,6 +141,8 @@ class EditAssessmentDataForm(Form, BaseComplianceView):
 
         for row in tree.children:
             row_name = row.name
+
+            # TODO: we no longer need EmbededForm here, we should get rid of
 
             form = EmbededForm(self, self.request)
 
@@ -205,6 +209,7 @@ class EditAssessmentDataForm(Form, BaseComplianceView):
 
     def build_forms(self):
         # article = self.get_flattened_data(self)['article'].capitalize()
+        subforms = []
         article = self.article
         try:
             article = form_structure[article]
@@ -216,7 +221,9 @@ class EditAssessmentDataForm(Form, BaseComplianceView):
             subforms = self._build_subforms(criteria)
 
             for subform in subforms:
-                self.subforms.append(subform)
+                subforms.append(subform)
+
+        return subforms
 
 
 EditAssessmentDataView = wrap_form(EditAssessmentDataForm, MainFormWrapper)

@@ -2,15 +2,14 @@
 @import "variables.less";
 
 .vendor-prefix(@prop; @val) {
-    @{prop}: @val;
+  @{prop}: @val;
   -ms-@{prop}: @val;
   -moz-@{prop}: @val;
   -webkit-@{prop}: @val;
   -o-@{prop}: @val;
 }
 
-.wise-search-form-container dl
-{
+.wise-search-form-container dl {
   display: flex;
   flex-flow: row wrap;
 }
@@ -152,11 +151,10 @@
       white-space: pre-line;
     }
 
-
     .vendor-prefix(box-shadow ; inset 1px 0px 1px rgba(0,0,0,0.1));
   }
 
-   .tab-content {
+  .tab-content {
     padding-top: 10px;
   }
 
@@ -280,12 +278,12 @@
     padding-right: 1%;
 
     .label {
-       color: black;
+      color: black;
 
-       &:hover {
-         color: white;
-         cursor: pointer;
-        }
+      &:hover {
+        color: white;
+        cursor: pointer;
+      }
     }
 
 
@@ -390,10 +388,10 @@
   margin-bottom: 20px;
 
   & > span {
-      max-height: 150px;
-      position: relative;
-      overflow-y: auto;
-      overflow-x: hidden;
+    max-height: 150px;
+    position: relative;
+    overflow-y: auto;
+    overflow-x: hidden;
   }
 
   label.horizontal {
@@ -658,7 +656,6 @@
     padding-right: 1rem;
   }
 
-
   #marine-widget-top {
     display: block;
 
@@ -684,7 +681,6 @@
 
 // TABLET
 @media (max-width: @screen-md-min){
-
 
   #form-buttons-next-top {
     /*position: relative !important;*/
@@ -783,7 +779,7 @@
     }
 
     .extra-details-section {
-       margin-top: 0;
+      margin-top: 0;
     }
   }
 
