@@ -218,10 +218,8 @@ class EditAssessmentDataForm(Form, BaseComplianceView):
         criterias = filtered_criterias(self.article, self.process_phase)
 
         for criteria in criterias:
-            subforms = self._build_subforms(criteria)
-
-            for subform in subforms:
-                subforms.append(subform)
+            forms = self._build_subforms(criteria)
+            subforms.extend(forms)
 
         return subforms
 
