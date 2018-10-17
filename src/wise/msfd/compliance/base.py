@@ -141,3 +141,7 @@ class BaseComplianceView(BrowserView):
         return self.get_parent_by_iface(
             interfaces.IComplianceModuleFolder
         )
+
+    @property
+    def process_phase(self):
+        return 'phase2'     # get the workflow state for the _compliance_folder

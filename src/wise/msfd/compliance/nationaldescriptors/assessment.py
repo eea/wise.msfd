@@ -1,3 +1,5 @@
+import logging
+
 from zope.schema import Choice, Text
 from zope.schema.vocabulary import SimpleTerm, SimpleVocabulary
 
@@ -12,6 +14,8 @@ from z3c.form.form import Form
 
 from ..base import BaseComplianceView  # , Container
 from ..vocabulary import form_structure
+
+logger = logging.getLogger('wise.msfd')
 
 
 def get_default_additional_field_value(
@@ -99,7 +103,7 @@ class EditAssessmentDataForm(Form, BaseComplianceView):
     @property
     def fields(self):
         if not self.subforms:
-            self.subforms = self.build_forms()
+            self.subforms = self.get_subforms()
 
         fields = []
 
@@ -207,23 +211,40 @@ class EditAssessmentDataForm(Form, BaseComplianceView):
 
         return forms
 
-    def build_forms(self):
+    def get_subforms(self):
         # article = self.get_flattened_data(self)['article'].capitalize()
         subforms = []
-        article = self.article
-        try:
-            article = form_structure[article]
-        except KeyError:    # article is not in form structure yet
-            return
-        assessment_criterias = article.children
 
-        for criteria in assessment_criterias:
+        criterias = filtered_criterias(self.article, self.process_phase)
+
+        for criteria in criterias:
             subforms = self._build_subforms(criteria)
 
             for subform in subforms:
                 subforms.append(subform)
 
         return subforms
+
+
+def filtered_criterias(article, phase):
+    """ Get the assessment criterias
+    """
+
+    try:
+        struct = form_structure[article]
+    except KeyError:    # article is not in form structure yet
+        logger.warning("Article form not implemented %s", article)
+
+        return []
+
+    if phase != 'phase3':
+        children = [c.name for c in struct.children if c.name != 'Coherence']
+    else:
+        children = ['Coherence']
+
+    criterias = [c for c in struct.children if c.name in children]
+
+    return criterias
 
 
 EditAssessmentDataView = wrap_form(EditAssessmentDataForm, MainFormWrapper)
