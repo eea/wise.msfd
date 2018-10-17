@@ -1332,3 +1332,54 @@ class AssessmentDataForm2018(Container, BaseUtil):
     #         [x for x in self.indicator_descriptors if x.MarineUnitID == muid],
     #         key=lambda o: o.ReportingFeature
     #     )
+
+    # old method to get data, not used
+    # TODO maybe delete this in the future
+    def get_data_reported(self, marine_unit_id, descriptor):
+        descriptor_class = DESCRIPTORS.get(descriptor, None)
+
+        if not descriptor_class:
+            return []
+
+        results = []
+
+        for mc in descriptor_class.article8_mapper_classes:
+            theme_name = mc[0]
+            mapper_class = mc[1]
+            mc_assessment = getattr(sql, 'MSFD8b' + theme_name + 'Assesment')
+            mc_assesment_ind = getattr(sql, 'MSFD8b' + theme_name +
+                                       'AssesmentIndicator')
+            id_indicator_col = 'MSFD8b_' + theme_name + \
+                '_AssesmentIndicator_ID'
+
+            count, res = db.compliance_art8_join(
+                [
+                    # getattr(mc_assesment_ind, id_indicator_col),
+                    mapper_class.Topic, mapper_class.Description,
+                    mapper_class.SumInfo1,
+                    mapper_class.SumInfo1Unit,
+                    mapper_class.SumInfo1Confidence, mapper_class.TrendsRecent,
+                    mapper_class.TrendsFuture,
+
+                    getattr(mc_assesment_ind, id_indicator_col),
+
+                    mc_assesment_ind.GESIndicators,
+                    mc_assesment_ind.OtherIndicatorDescription,
+                    mc_assesment_ind.ThresholdValue,
+                    mc_assesment_ind.ThresholdValueUnit,
+                    mc_assesment_ind.ThresholdProportion,
+
+                    mc_assessment.Status,
+                    mc_assessment.StatusConfidence,
+                    mc_assessment.StatusTrend, mc_assessment.StatusDescription,
+                    mc_assessment.Limitations,
+                    mapper_class.RecentTimeStart, mapper_class.RecentTimeEnd
+                ],
+                mc_assessment,
+                mc_assesment_ind,
+                mapper_class.MarineUnitID == marine_unit_id
+            )
+
+            results.append(res)
+
+        return results[0]

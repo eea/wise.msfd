@@ -43,7 +43,7 @@
   <div class="overflow-table">
     <h4>2012 Member State report</h4>
     <table class='table table-bordered table-striped' style='width: 100%; overflow:auto'
-      tal:define="criterias python: view.get_criterias_list(view.descriptor);
+      tal:define="criterias python: view.context.get_criterias_list(view.descriptor);
           environment_data python: view.get_environment_data(view.muids);">
       <tr>
         <td>Reporting area(s)

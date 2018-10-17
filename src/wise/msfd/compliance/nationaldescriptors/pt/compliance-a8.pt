@@ -44,9 +44,8 @@
   <div class="">
     <h5>2012 Member State Report</h5>
     <table tal:repeat="muid view/muids" class="table table-bordered table-striped">
-    <tal:block tal:define="art8data python: view.get_data_reported(muid, view.descriptor);
-            topic_assessment python: view.get_topic_assessment(muid, view.descriptor);
-            criterias python: view.get_criterias_list(view.descriptor);
+    <tal:block tal:define="topic_assessment python: view.get_topic_assessment(muid, view.descriptor);
+            criterias python: view.context.get_criterias_list(view.descriptor);
             colspan_base python:1;">
             <!-- art8assesment_data python: view.get_assesment_data(muid, view.descriptor); -->
 
