@@ -15,9 +15,9 @@ class Article910(BrowserView):
     Art10 = Template('pt/compliance-a10.pt')
 
     # Art 10 methods
-    def get_environment_data(self, muids):
+    @property
+    def get_environment_data(self):
         """ Get all data from a table
-        :param muids: ['LV-001', 'LV-002', ...]
         :return: table result
         """
         mc = sql.MSFD10Target
@@ -27,7 +27,7 @@ class Article910(BrowserView):
             and_(
                 mc.Topic == 'EnvironmentalTarget',
                 mc.ReportingFeature.like('%{}%'.format(descr_nr)),
-                mc.MarineUnitID.in_(muids)
+                mc.MarineUnitID.in_(self.muids)
             )
         )
 
@@ -38,47 +38,19 @@ class Article910(BrowserView):
 
     # Art 9 methods
     @property
-    def descriptors(self):
-        """ Get all descriptor codes
-        :return: ['D1', 'D2', ..., 'D10', 'D11']
-        """
-        m = sql.MSFDFeaturesOverview
-        res = db.get_unique_from_mapper(
-            m, 'RFCode',
-            m.FeatureType == 'GES descriptor'
-        )
-
-        return res
-
-    def get_ges_descriptor_label(self, ges):
-        """ Get the label(text) for a descriptor
-        :param ges: 'D5'
-        :return: 'D5 Eutrophication'
-        """
-        count, obj = db.get_item_by_conditions(
-            sql.MSFD11CommonLabel,
-            'ID',
-            sql.MSFD11CommonLabel.value == ges,
-            sql.MSFD11CommonLabel.group == 'list-MonitoringProgramme',
-        )
-
-        if obj:
-            return obj.Text
-
-    def get_ges_criterions(self, descriptor):
+    def criterions(self):
         """ Get all criterions(indicators) and the descriptor
             for a descriptor
-        :param descriptor: 'D5'
         :return: ['D5', '5.1', '5.2', ..., '5.1.2', '5.2.4', ...]
         """
-        nr = descriptor[1:]
+        nr = self.descriptor[1:]
         m = sql.MSFDFeaturesOverview
         res = db.get_unique_from_mapper(
             m, 'RFCode',
             or_(
                 and_(m.RFCode.like('{}.%'.format(nr)),
                      m.FeatureType == 'GES criterion',),
-                and_(m.RFCode.like('{}'.format(descriptor)),
+                and_(m.RFCode.like('{}'.format(self.descriptor)),
                      m.FeatureType == 'GES descriptor')
             ),
             m.FeatureRelevant == 'Y',
@@ -137,7 +109,7 @@ class Article910(BrowserView):
 
         criterion_labels = dict([(x.value, x.Text) for x in res])
         # add D5 criterion to the criterion lists too
-        criterion_labels[self.descriptor] = self.desc_label
+        criterion_labels[self.descriptor] = self.context.desc_label
 
         return criterion_labels
 
@@ -190,17 +162,6 @@ class Article910(BrowserView):
         return colspan
 
     def setup_data(self):
-        # TODO: optimize this with a single function
-        # and a single query (w/ JOIN)
-        self.descs = {}
-
-        for d in self.descriptors:
-            self.descs[d] = self.get_ges_descriptor_label(d)
-        self.desc_label = self.descs.get(self.descriptor,
-                                         'Descriptor Not Found')
-
-        self.criterions = self.get_ges_criterions(self.descriptor)
-
         # {u'5.2.2-indicator 5.2C': set([u'Transparency', u'InputN_Psubst']),
         self.indic_w_p = self.get_indicators_with_feature_pressures(
             self.muids, self.criterions

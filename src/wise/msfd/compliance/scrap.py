@@ -1383,3 +1383,16 @@ class AssessmentDataForm2018(Container, BaseUtil):
             results.append(res)
 
         return results[0]
+
+    # @property
+    # def descriptors(self):
+    #     """ Get all descriptor codes
+    #     :return: ['D1', 'D2', ..., 'D10', 'D11']
+    #     """
+    #     m = sql.MSFDFeaturesOverview
+    #     res = db.get_unique_from_mapper(
+    #         m, 'RFCode',
+    #         m.FeatureType == 'GES descriptor'
+    #     )
+    #
+    #     return res

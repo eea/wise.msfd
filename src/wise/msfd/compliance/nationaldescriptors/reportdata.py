@@ -62,6 +62,7 @@ class ReportData2012(BaseComplianceView, BaseUtil):
     def colspan(self):
         return 42
 
+    # TODO use other db method for caching
     @property
     def country_name(self):
         """ Get country name based on country code
@@ -91,6 +92,22 @@ class ReportData2012(BaseComplianceView, BaseUtil):
         regions = set([x['RegionSubRegions'] for x in res])
 
         return regions
+
+    # TODO use other db method for caching
+    @property
+    def desc_label(self):
+        """ Get the label(text) for a descriptor
+        :return: 'D5 Eutrophication'
+        """
+        count, obj = db.get_item_by_conditions(
+            sql.MSFD11CommonLabel,
+            'ID',
+            sql.MSFD11CommonLabel.value == self.descriptor,
+            sql.MSFD11CommonLabel.group == 'list-MonitoringProgramme',
+        )
+
+        if obj:
+            return obj.Text
 
     @db.use_db_session('session')
     def __call__(self):

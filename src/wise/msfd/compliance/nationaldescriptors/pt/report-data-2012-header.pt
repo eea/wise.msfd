@@ -10,7 +10,7 @@
       <tr>
         <td>Descriptor</td>
         <td tal:attributes="colspan view/colspan"
-           tal:content="python:view.descriptor"/>
+           tal:content="python:view.desc_label"/>
       </tr>
       <tr>
         <td>Region(s) and subregion(s)</td>
