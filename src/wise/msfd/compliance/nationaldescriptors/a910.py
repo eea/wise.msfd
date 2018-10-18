@@ -14,6 +14,7 @@ class Article910(BrowserView):
     Art9 = Template('pt/compliance-a9.pt')
     Art10 = Template('pt/compliance-a10.pt')
 
+    # Art 10 methods
     def get_environment_data(self, muids):
         """ Get all data from a table
         :param muids: ['LV-001', 'LV-002', ...]
@@ -35,36 +36,7 @@ class Article910(BrowserView):
 
         return []
 
-    @property
-    def country_name(self):
-        """ Get country name based on country code
-        :return: 'Latvia'
-        """
-        count, obj = db.get_item_by_conditions(
-            sql.MSFD11CommonLabel,
-            'ID',
-            sql.MSFD11CommonLabel.value == self.country,
-            sql.MSFD11CommonLabel.group == 'list-countries',
-        )
-
-        return obj.Text
-
-    @property
-    def regions(self):
-        """ Get all regions and subregions for a country
-        :return: ['BAL', 'ANS']
-        """
-        t = sql.t_MSFD4_GegraphicalAreasID
-        count, res = db.get_all_records(
-            t,
-            t.c.MemberState == self.country
-        )
-
-        res = [row_to_dict(t, r) for r in res]
-        regions = set([x['RegionSubRegions'] for x in res])
-
-        return regions
-
+    # Art 9 methods
     @property
     def descriptors(self):
         """ Get all descriptor codes

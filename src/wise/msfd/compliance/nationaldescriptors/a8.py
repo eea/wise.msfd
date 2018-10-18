@@ -312,8 +312,8 @@ class Article8(BrowserView):
 
         self.topic_assesment = topic_assesment
 
-        print "\n\n"
-        print topic_assesment
+        # print "\n\n"
+        # print topic_assesment
 
         return topic_assesment
 

@@ -21,6 +21,8 @@ class ReportData2012(BaseComplianceView, BaseUtil):
 
     name = 'nat-desc-start'
 
+    header_template = Template('pt/report-data-2012-header.pt')
+
     Art8 = Article8
     Art9 = Article910
     Art10 = Article910
@@ -60,6 +62,36 @@ class ReportData2012(BaseComplianceView, BaseUtil):
     def colspan(self):
         return 42
 
+    @property
+    def country_name(self):
+        """ Get country name based on country code
+        :return: 'Latvia'
+        """
+        count, obj = db.get_item_by_conditions(
+            sql.MSFD11CommonLabel,
+            'ID',
+            sql.MSFD11CommonLabel.value == self.country_code,
+            sql.MSFD11CommonLabel.group == 'list-countries',
+        )
+
+        return obj.Text
+
+    @property
+    def regions(self):
+        """ Get all regions and subregions for a country
+        :return: ['BAL', 'ANS']
+        """
+        t = sql.t_MSFD4_GegraphicalAreasID
+        count, res = db.get_all_records(
+            t,
+            t.c.MemberState == self.country_code
+        )
+
+        res = [row_to_dict(t, r) for r in res]
+        regions = set([x['RegionSubRegions'] for x in res])
+
+        return regions
+
     @db.use_db_session('session')
     def __call__(self):
         article_class = getattr(self, self.article)
@@ -68,13 +100,13 @@ class ReportData2012(BaseComplianceView, BaseUtil):
         article_class.country = self.country_code
         article_class.descriptor = self.descriptor
         article_class.article = self.article
-
         article_class.muids = self.muids
         article_class.colspan = self.colspan
 
         print "Will render report for ", self.article
 
-        self.content = article_class(self, self.request)()
+        self.content = self.header_template() + \
+            article_class(self, self.request)()
 
         return self.index()
 
