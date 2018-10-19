@@ -3,9 +3,9 @@
   <h4 tal:content="folder/title_or_id">Discussion track with UN</h4>
 
   <ul tal:define="comments folder/contentValues">
-    <li tal:repeat="comment comments" style="list-style-type: none; border-bottom: 1px solid #666; margin-bottom: 1em">
+    <li tal:repeat="comment comments" style="list-style-type: none; border-bottom: 1px solid #CCC; margin-bottom: 1em">
       <div tal:content="comment/text">Comment here</div>
-      <em>
+      <em style="color: #AAA">
         <span tal:content="comment/Creator">Creator</span>, at
         <span tal:content="python: plone.toLocalizedTime(comment.created(), long_format=True)">Creator</span>
       </em>
