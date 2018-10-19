@@ -20,11 +20,20 @@
           >
 
           <h1>National descriptors overview for <span tal:content="context/title"></span></h1>
-          <div>Process is in phase
-            <span tal:replace="view/get_status">Phase 0</span>
-            <select>
-              <option>Send to Phase 3</option>
-            </select>
+          <div style="background-color: #DDD; padding: 1rem; border: 1px solid #AAA">
+            <div>
+              Process is in phase
+              <span tal:replace="view/get_status">Phase 0</span>
+            </div>
+
+            <form method="GET" action='./content_status_modify'>
+              <select onchange="javascript:this.form.submit()" name="workflow_action">
+                <option value=''>Choose action...</option>
+                <tal:rep repeat="trans view/get_transitions">
+                  <option tal:content="trans/title" tal:attributes="value trans/id">Send to Phase 3</option>
+                </tal:rep>
+              </select>
+            </form>
           </div>
 
           <table class="table">

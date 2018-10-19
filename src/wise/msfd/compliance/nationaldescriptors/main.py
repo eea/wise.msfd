@@ -3,6 +3,8 @@
 
 from collections import namedtuple  # defaultdict,
 
+from plone.api.content import get_state
+from plone.api.portal import get_tool
 from Products.Five.browser.pagetemplatefile import \
     ViewPageTemplateFile as Template
 
@@ -49,7 +51,20 @@ class NationalDescriptorCountryOverview(BaseComplianceView):
     name = 'nat-desc-country-start'
 
     def get_status(self):
-        return "Phase 1"
+        state = get_state(self.context)
+        wftool = get_tool('portal_workflow')
+        wf = wftool.getWorkflowsFor(self.context)[0]        # assumes one wf
+        wf_state = wf.states[state]
+        title = wf_state.title.strip() or state
+
+        return title
+
+    def get_transitions(self):
+        wftool = get_tool('portal_workflow')
+        transitions = wftool.listActionInfos(object=self.context, max=1)
+        print transitions
+
+        return [t for t in transitions if t['allowed']]
 
     def get_articles(self):
         return ['Art8', 'Art9', 'Art10']
