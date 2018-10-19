@@ -68,9 +68,10 @@ class BootstrapCompliance(BrowserView):
         ISelectableBrowserDefault(obj).setLayout(name)
 
     def make_country(self, parent, code, name):
-        cf = create(parent, 'Folder', title=name, id=code)
-        self.set_layout(cf, '@@nat-desc-country-start')
-        alsoProvides(cf, interfaces.ICountryDescriptorsFolder)
+        cf = create(parent, 'wise.msfd.countrydescriptorsfolder',
+                    title=name, id=code)
+        # self.set_layout(cf, '@@nat-desc-country-start')
+        # alsoProvides(cf, interfaces.ICountryDescriptorsFolder)
 
         for code in self._get_descriptors():
             df = create(cf, 'Folder', title=code, id=code)

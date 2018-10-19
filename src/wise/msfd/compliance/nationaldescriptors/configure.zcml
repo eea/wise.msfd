@@ -15,11 +15,12 @@
 
   <browser:page
     for="..interfaces.ICountryDescriptorsFolder"
-    name="nat-desc-country-start"
+    name="view"
     class=".main.NationalDescriptorCountryOverview"
     template="./pt/nat-desc-country-start.pt"
     permission="zope2.View"
     />
+    name="nat-desc-country-start"
 
   <browser:page
     for="..interfaces.INationalDescriptorAssessment"

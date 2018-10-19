@@ -14,7 +14,7 @@ class INationalDescriptorsFolder(Interface):
     """
 
 
-class ICountryDescriptorsFolder(Interface):
+class ICountryDescriptorsFolder(Schema):
     """ A container for a country's descriptor assessments
     """
 

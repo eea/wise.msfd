@@ -6,7 +6,12 @@ from .base import BaseComplianceView
 
 
 class AddForm(DefaultAddForm):
-    action = None
+    """ Add form with a custom action
+    """
+
+    @property
+    def action(self):
+        return self.context.absolute_url() + '/++add++wise.msfd.comment'
 
 
 class CommentsView(object):
@@ -22,11 +27,9 @@ class CommentsView(object):
 
         form.template = form_template.__get__(form)
 
-        form.nextURL = ''
-
-        form.action = context.absolute_url() + '/++add++wise.msfd.comment'
-
         form.status = ''
+
+        form.nextURL = ''
 
         return form
 
