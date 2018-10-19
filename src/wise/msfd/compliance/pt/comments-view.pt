@@ -1,12 +1,14 @@
-<div tal:repeat="folder context/contentValues">
+<div tal:repeat="folder context/contentValues" tal:define="plone nocall:context/@@plone">
 
-  <h4>Comments for <span tal:content="folder/getId">UN</span></h4>
+  <h4 tal:content="folder/title_or_id">Discussion track with UN</h4>
 
   <ul tal:define="comments folder/contentValues">
-    <li tal:repeat="comment comments">
-      <div tal:content="comment/Creator">Creator</div>
-      <div tal:content="comment/created">Creator</div>
+    <li tal:repeat="comment comments" style="list-style-type: none; border-bottom: 1px solid #666; margin-bottom: 1em">
       <div tal:content="comment/text">Comment here</div>
+      <em>
+        <span tal:content="comment/Creator">Creator</span>, at
+        <span tal:content="python: plone.toLocalizedTime(comment.created(), long_format=True)">Creator</span>
+      </em>
     </li>
   </ul>
 

@@ -1,3 +1,5 @@
+from plone.api.content import get_state
+from plone.api.portal import get_tool
 from Products.Five.browser import BrowserView
 
 from . import interfaces
@@ -142,6 +144,27 @@ class BaseComplianceView(BrowserView):
             interfaces.IComplianceModuleFolder
         )
 
-    @property
-    def process_phase(self):
-        return 'phase2'     # get the workflow state for the _compliance_folder
+    def process_phase(self, context=None):
+        if context is None:
+            context = self.context
+
+        return self.get_status(context)
+
+    def get_status(self, context=None):
+        if context is None:
+            context = self.context
+
+        state = get_state(context)
+        wftool = get_tool('portal_workflow')
+        wf = wftool.getWorkflowsFor(context)[0]        # assumes one wf
+        wf_state = wf.states[state]
+        title = wf_state.title.strip() or state
+
+        return title
+
+    def get_transitions(self):
+        wftool = get_tool('portal_workflow')
+        transitions = wftool.listActionInfos(object=self.context, max=1)
+        print transitions
+
+        return [t for t in transitions if t['allowed']]

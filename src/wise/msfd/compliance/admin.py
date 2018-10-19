@@ -85,8 +85,11 @@ class BootstrapCompliance(BrowserView):
 
                 self.set_layout(nda, '@@nat-desc-art-view')
 
-                for id in [u'tl', u'ec']:
-                    create(nda, 'wise.msfd.commentsfolder', id=id)
+                for id, title in [
+                        (u'tl', 'Discussion track with Topic Leads'),
+                        (u'ec', 'Discussion track with EC'),
+                ]:
+                    create(nda, 'wise.msfd.commentsfolder', id=id, title=title)
 
         return cf
 

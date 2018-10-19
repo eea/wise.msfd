@@ -2,7 +2,7 @@
 <object name="wise.msfd.comment" meta_type="Dexterity FTI" i18n:domain="plone"
    xmlns:i18n="http://xml.zope.org/namespaces/i18n">
  <property name="title" i18n:translate="">Compliance Comment</property>
- <property name="description" i18n:translate="">None</property>
+ <property name="description" i18n:translate=""></property>
  <property name="icon_expr">string:${portal_url}/document_icon.png</property>
  <property name="factory">wise.msfd.comment</property>
  <property

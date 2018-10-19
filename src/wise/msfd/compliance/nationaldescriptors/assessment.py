@@ -215,7 +215,7 @@ class EditAssessmentDataForm(Form, BaseComplianceView):
         # article = self.get_flattened_data(self)['article'].capitalize()
         subforms = []
 
-        criterias = filtered_criterias(self.article, self.process_phase)
+        criterias = filtered_criterias(self.article, self.process_phase())
 
         for criteria in criterias:
             forms = self._build_subforms(criteria)

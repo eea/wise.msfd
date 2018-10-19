@@ -3,22 +3,10 @@
 
 from collections import namedtuple  # defaultdict,
 
-from plone.api.content import get_state
-from plone.api.portal import get_tool
 from Products.Five.browser.pagetemplatefile import \
     ViewPageTemplateFile as Template
 
 from ..base import BaseComplianceView  # , Container
-
-# from wise.msfd import db, sql, sql2018
-# from wise.msfd.base import BaseUtil, EmbededForm, MainFormWrapper
-# from wise.msfd.gescomponents import get_ges_criterions
-# from z3c.form.field import Fields
-# from z3c.form.form import Form
-#
-# from ..vocabulary import form_structure
-# from .a8 import Article8
-# from .a10 import Article10
 
 CountryStatus = namedtuple('CountryStatus', ['name', 'status', 'url'])
 
@@ -43,28 +31,12 @@ class NationalDescriptorsOverview(BaseComplianceView):
     def countries(self):
         countries = self.context.contentValues()
 
-        return [CountryStatus(country.Title(), 'phase0',
+        return [CountryStatus(country.Title(), self.process_phase(country),
                               country.absolute_url()) for country in countries]
 
 
 class NationalDescriptorCountryOverview(BaseComplianceView):
     name = 'nat-desc-country-start'
-
-    def get_status(self):
-        state = get_state(self.context)
-        wftool = get_tool('portal_workflow')
-        wf = wftool.getWorkflowsFor(self.context)[0]        # assumes one wf
-        wf_state = wf.states[state]
-        title = wf_state.title.strip() or state
-
-        return title
-
-    def get_transitions(self):
-        wftool = get_tool('portal_workflow')
-        transitions = wftool.listActionInfos(object=self.context, max=1)
-        print transitions
-
-        return [t for t in transitions if t['allowed']]
 
     def get_articles(self):
         return ['Art8', 'Art9', 'Art10']
