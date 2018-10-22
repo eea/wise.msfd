@@ -147,7 +147,7 @@ class SnapshotSelectForm(Form):
     def __init__(self, context, request):
         super(SnapshotSelectForm, self).__init__(context, request)
 
-        snaps = getattr(context.context, 'snapshots', None)
+        snaps = getattr(context.context, 'snapshots', [])
 
         if snaps:
             default = snaps[-1][0]
