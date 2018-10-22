@@ -1,14 +1,12 @@
 <div class="overflow-table"
   tal:define="title options/title; data options/data">
   <h4 tal:content="title">2018 Member State Report</h4>
-  <div tal:condition="view/is_changed">
-    <span>There are updates in the database, refresh table?</span>
-    <tal:form tal:define="form python: view.add_form(view, view.new_data)">
+  <div>
+    <tal:form tal:define="form view/subform">
         <div tal:content="structure form">
           refresh
         </div>
     </tal:form>
-
   </div>
   <div tal:condition="data" tal:repeat="info data">
     <div

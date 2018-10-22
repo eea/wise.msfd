@@ -1,5 +1,6 @@
 from collections import defaultdict
 from copy import deepcopy
+from datetime import datetime
 
 from persistent.list import PersistentList
 from plone.api import portal
@@ -8,29 +9,23 @@ from Products.Five.browser.pagetemplatefile import \
     ViewPageTemplateFile as Template
 from wise.msfd import db, sql, sql2018
 from wise.msfd.base import BaseUtil
+<<<<<<< Updated upstream
 from z3c.form.button import buttonAndHandler
 from z3c.form.form import Form
+=======
+from z3c.form.field import Fields
+from z3c.form.form import Form
+from z3c.form.button import buttonAndHandler
+from zope.schema import Choice
+from zope.schema.vocabulary import SimpleTerm, SimpleVocabulary
+from wise.content.search.base import EmbededForm
+>>>>>>> Stashed changes
 
 from ..base import BaseComplianceView
 from .a8 import DESCRIPTORS, Article8
 from .a10 import Article10
 from .a910 import Article910
 from .utils import row_to_dict
-
-
-class RefreshForm(Form):
-    template = Template('../pt/comment-add-form.pt')
-
-    @buttonAndHandler(u'Refresh')
-    def refresh(self, action):
-        # TODO refresh the table with updated data
-        # self.context.context.is_refreshed = True
-
-        # self.context.is_changed = False
-        self.context.context.snapshots.append(self.new_data)
-
-        self.request.response.redirect('./@@view-report-data-2018')
-        # import pdb; pdb.set_trace()
 
 
 class ReportData2012(BaseComplianceView, BaseUtil):
@@ -152,9 +147,49 @@ class ReportData2012(BaseComplianceView, BaseUtil):
         return self.index()
 
 
+class SnapshotSelectForm(Form):
+    template = Template('../pt/comment-add-form.pt')
+
+    def __init__(self, context, request):
+        super(SnapshotSelectForm, self).__init__(context, request)
+
+        # import pdb; pdb.set_trace()
+        snaps = context.context.snapshots
+        dates = [SimpleTerm(x[0], x[0].isoformat(), x[0]) for x in snaps]
+
+        fields = []
+
+        field = Choice(
+            title=u'Date of harvest',
+            __name__='harvest_date',
+            vocabulary=SimpleVocabulary(dates),
+            required=False,
+            default=snaps[-1][0]
+        )
+
+        fields.append(field)
+
+        self.fields = Fields(*fields)
+
+        self.update()
+        self.updateWidgets()
+
+        # self.widgets['harvest_date']
+    @buttonAndHandler(u'Apply')
+    def apply(self, action):
+        pass
+
+    @buttonAndHandler(u'Harvest new data')
+    def harvest(self, action):
+        data = self.context.get_data_from_db()
+        # import pdb; pdb.set_trace()
+        self.context.context.snapshots.append((datetime.now(), data))
+
+        # self.request.response.redirect('./@@view-report-data-2018')
+
+
 class ReportData2018(BaseComplianceView):
-    """ TODO: get code in this
-    """
+
     name = 'nat-desc-start'
 
     Art8 = Template('pt/nat-desc-report-data-multiple-muid.pt')
@@ -165,6 +200,11 @@ class ReportData2018(BaseComplianceView):
         'Art8': 't_V_ART8_GES_2018',
         # TODO: do the other: 9, 10
     }
+
+    def __init__(self, context, request):
+        super(ReportData2018, self).__init__(context, request)
+
+        self.subform = SnapshotSelectForm(self, request)
 
     def get_data_from_view(self):
 
@@ -178,10 +218,6 @@ class ReportData2018(BaseComplianceView):
             # t.c.MarineReportingUnit.in_(marine_unit_ids),
             # t.c.Feature.in_(feature),
         )
-
-        # result = PersistentList()
-        # for row in res:
-        #     result.append(row)
 
         return res
 
@@ -198,6 +234,161 @@ class ReportData2018(BaseComplianceView):
         return res
 
     def compare_data(self, res, prev_snap):
+
+        return res != prev_snap
+
+
+        is_changed = False
+
+        if not prev_snap:
+            return is_changed, res
+
+        res_changed = deepcopy(res)
+
+        for mru_row in res_changed:
+            mru = mru_row[0]
+            data = mru_row[1]
+            prev_data = [x[1] for x in prev_snap if x[0] == mru][0]
+
+            for val_name_row in data:
+                val_name = val_name_row[0]
+                values = val_name_row[1]
+                prev_values = [x[1] for x in prev_data if x[0] == val_name][0]
+
+                for indx in range(len(values)):
+                    val = values[indx]
+                    prev_val = prev_values[indx]
+                    if val != prev_val:
+                        values[indx] = [prev_val, val]
+                        is_changed = True
+
+        return is_changed, res_changed
+
+    def get_data_from_db(self):
+        data = self.get_data_from_view()
+
+        g = defaultdict(list)
+
+        for row in data:
+            g[row.MarineReportingUnit].append(row)
+
+        res = [(k, self.change_orientation(v)) for k, v in g.items()]
+        res[0][1][3][1][0] = 'DE_ANS'
+
+        return res
+
+    def get_snapshots(self):
+        # self.context.snapshots = []
+        snapshots = getattr(self.context, 'snapshots', [])
+
+        if not snapshots:
+            new_data = self.get_data_from_db()
+            date = datetime.now()
+            self.context.snapshots = PersistentList()
+            self.context.snapshots.append((date, new_data))
+            self.context.snapshots._p_changed = True
+
+            return self.context.snapshots
+
+        return snapshots
+
+    def get_form(self):
+        if not hasattr(self, 'subform'):
+            form = SnapshotSelectForm(self, self.request)
+            return form
+
+        return self.subform
+
+    @db.use_db_session('session_2018')
+    def __call__(self):
+
+        self.content = ''
+        template = getattr(self, self.article, None)
+
+        if not template:
+            return self.index()
+
+        self.new_data = self.get_data_from_db()
+        snapshots = self.get_snapshots()
+        last_snap = snapshots[-1]
+
+        self.is_changed = self.compare_data(self.new_data, last_snap[1])
+
+        # self.subform = self.get_form()
+
+        print "Nr of snapshots: {}".format(len(snapshots))
+
+        date_selected = self.subform.widgets['harvest_date'].value
+
+        print "selected date: {}".format(date_selected)
+
+        result = [x for x in snapshots if x[0].isoformat() == date_selected]
+        import pdb; pdb.set_trace()
+
+        # if self.is_changed:
+        #     res = changes
+            # self.context.snapshots.append(new_data)
+        # else:
+        #     res = self.new_data
+
+        self.content = template(data=result,
+                                title='2018 Member State Report')
+
+        return self.index()
+
+
+
+class ReportData2018_old(Form, BaseComplianceView):
+    """ TODO: get code in this
+    """
+    name = 'nat-desc-start'
+
+    Art8 = Template('pt/nat-desc-report-data-multiple-muid.pt')
+    Art9 = ''
+    Art10 = ''
+
+    view_names = {
+        'Art8': 't_V_ART8_GES_2018',
+        # TODO: do the other: 9, 10
+    }
+
+    # def __init__(self, context, request):
+    #     super(ReportData2018, self).__init__(context, request)
+    #
+    #     self.subform = RefreshForm(context, self.request)
+
+    def get_data_from_view(self):
+
+        view_name = self.view_names[self.article]
+        t = getattr(sql2018, view_name)
+
+        count, res = db.get_all_records(
+            t,
+            t.c.CountryCode == self.country_code,
+            t.c.GESComponent == self.descriptor,
+            # t.c.MarineReportingUnit.in_(marine_unit_ids),
+            # t.c.Feature.in_(feature),
+        )
+
+        return res
+
+    def change_orientation(self, data):
+        """ From a set of results, create labeled list of rows
+        """
+        res = []
+        row0 = data[0]
+
+        for name in row0._fields:
+            values = [getattr(row, name) for row in data]
+            res.append([name, values])
+
+        return res
+
+    def compare_data(self, res, prev_snap):
+
+        return res != prev_snap
+
+
         is_changed = False
 
         if not prev_snap:
@@ -243,20 +434,22 @@ class ReportData2018(BaseComplianceView):
         snapshots = getattr(self.context, 'snapshots', [])
 
         if not snapshots:
+            new_data = self.get_data_from_db()
+            date = datetime.now()
             self.context.snapshots = PersistentList()
-            self.context._p_changed = True
-            self.context.snapshots.append(self.new_data)
+            self.context.snapshots.append((date, new_data))
+            self.context.snapshots._p_changed = True
 
             return self.context.snapshots
 
         return snapshots
 
-    def add_form(self, context, new_data):
-        form = RefreshForm(context, self.request)
+    def get_form(self):
+        if not hasattr(self, 'subform'):
+            form = SnapshotSelectForm(self, self.request)
+            return form
 
-        form.new_data = new_data
-
-        return form
+        return self.subform
 
     @db.use_db_session('session_2018')
     def __call__(self):
@@ -271,18 +464,24 @@ class ReportData2018(BaseComplianceView):
         snapshots = self.get_snapshots()
         last_snap = snapshots[-1]
 
+        self.is_changed = self.compare_data(self.new_data, last_snap[1])
+
+        self.subform = self.get_form()
+
         print "Nr of snapshots: {}".format(len(snapshots))
+
+        # print self.subform.form.data
         # import pdb; pdb.set_trace()
 
-        self.is_changed, changes = self.compare_data(self.new_data, last_snap)
+        self.is_changed = self.compare_data(self.new_data, last_snap[1])
 
-        if self.is_changed:
-            res = changes
+        # if self.is_changed:
+        #     res = changes
             # self.context.snapshots.append(new_data)
-        else:
-            res = self.new_data
+        # else:
+        #     res = self.new_data
 
-        self.content = template(data=res,
+        self.content = template(data=last_snap[-1],
                                 title='2018 Member State Report')
 
         return self.index()
