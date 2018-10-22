@@ -25,18 +25,22 @@
 
 
           <div style="background-color: #DDD; padding: 1rem; border: 1px solid #AAA">
-            <div>
-              Process state:
-              <span tal:replace="view/get_status">Phase 0</span>
-            </div>
 
             <form method="GET" action='./content_status_modify'>
-              <select onchange="javascript:this.form.submit()" name="workflow_action">
-                <option value=''>Choose action...</option>
-                <tal:rep repeat="trans view/get_transitions">
-                  <option tal:content="trans/title" tal:attributes="value trans/id">Send to Phase 0</option>
-                </tal:rep>
-              </select>
+              <div>
+                Process state:
+                <span tal:replace="view/get_status">Phase 0</span>
+
+                <div style="float: right">
+                  <select onchange="javascript:this.form.submit()" name="workflow_action">
+                    <option value=''>Choose action...</option>
+                    <tal:rep repeat="trans view/get_transitions">
+                      <option tal:content="trans/title"
+                        tal:attributes="value trans/id">Send to Phase 0</option>
+                    </tal:rep>
+                  </select>
+                </div>
+              </div>
             </form>
           </div>
 

@@ -17,10 +17,6 @@ from z3c.form.button import buttonAndHandler
 from z3c.form.field import Fields
 from z3c.form.form import Form
 
-from z3c.form.button import buttonAndHandler
-from zope.schema import Choice
-from zope.schema.vocabulary import SimpleTerm, SimpleVocabulary
-
 from ..base import BaseComplianceView
 from .a8 import DESCRIPTORS, Article8
 from .a10 import Article10
@@ -185,7 +181,6 @@ class SnapshotSelectForm(Form):
     @buttonAndHandler(u'Harvest new data', name='harvest')
     def harvest(self, action):
         print "harvesting data"
-        import pdb; pdb.set_trace()
         data = self.context.get_data_from_db()
 
         self.context.context.snapshots.append((datetime.now(), data))
@@ -337,7 +332,6 @@ class ReportData2018(BaseComplianceView):
         print "selected date: {}".format(date_selected)
 
         res = [x for x in snapshots if x[0].isoformat() == date_selected][0]
-        import pdb; pdb.set_trace()
 
         self.content = template(data=res[1],
                                 title='2018 Member State Report')
