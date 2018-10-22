@@ -84,8 +84,6 @@ class ReportData2012(BaseComplianceView, BaseUtil):
             sql.MSFD11CommonLabel.group == 'list-countries',
         )
 
-        # import pdb; pdb.set_trace()
-
         if not res:
             return ''
 
@@ -149,8 +147,13 @@ class SnapshotSelectForm(Form):
     def __init__(self, context, request):
         super(SnapshotSelectForm, self).__init__(context, request)
 
-        # import pdb; pdb.set_trace()
-        snaps = context.context.snapshots
+        snaps = getattr(context.context, 'snapshots', None)
+
+        if snaps:
+            default = snaps[-1][0]
+        else:
+            default = None
+
         dates = [SimpleTerm(x[0], x[0].isoformat(), x[0]) for x in snaps]
 
         fields = []
@@ -160,7 +163,7 @@ class SnapshotSelectForm(Form):
             __name__='harvest_date',
             vocabulary=SimpleVocabulary(dates),
             required=False,
-            default=snaps[-1][0]
+            default=default
         )
 
         fields.append(field)
@@ -178,7 +181,6 @@ class SnapshotSelectForm(Form):
     @buttonAndHandler(u'Harvest new data')
     def harvest(self, action):
         data = self.context.get_data_from_db()
-        # import pdb; pdb.set_trace()
         self.context.context.snapshots.append((datetime.now(), data))
 
         # self.request.response.redirect('./@@view-report-data-2018')
@@ -320,7 +322,6 @@ class ReportData2018(BaseComplianceView):
         print "selected date: {}".format(date_selected)
 
         result = [x for x in snapshots if x[0].isoformat() == date_selected]
-        import pdb; pdb.set_trace()
 
         # if self.is_changed:
         #     res = changes
@@ -469,7 +470,6 @@ class ReportData2018_old(Form, BaseComplianceView):
         print "Nr of snapshots: {}".format(len(snapshots))
 
         # print self.subform.form.data
-        # import pdb; pdb.set_trace()
 
         self.is_changed = self.compare_data(self.new_data, last_snap[1])
 
