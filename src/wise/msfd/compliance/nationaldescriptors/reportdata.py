@@ -25,10 +25,12 @@ class RefreshForm(Form):
     @buttonAndHandler(u'Refresh')
     def refresh(self, action):
         # TODO refresh the table with updated data
-        self.context.context.is_refreshed = True
+        # self.context.context.is_refreshed = True
 
-        self.context.is_changed = False
+        # self.context.is_changed = False
+        self.context.context.snapshots.append(self.new_data)
 
+        self.request.response.redirect('./@@view-report-data-2018')
         # import pdb; pdb.set_trace()
 
 
@@ -231,27 +233,26 @@ class ReportData2018(BaseComplianceView):
             g[row.MarineReportingUnit].append(row)
 
         res = [(k, self.change_orientation(v)) for k, v in g.items()]
-        res[0][1][3][1][0] = 'USA'
+        res[0][1][3][1][0] = 'DE_BAL'
 
         return res
 
     def get_snapshots(self):
+        # self.context.snapshots = []
         snapshots = getattr(self.context, 'snapshots', [])
 
         if not snapshots:
             self.context.snapshots = PersistentList()
+            self.context.snapshots.append(self.new_data)
+
+            return self.context.snapshots
 
         return snapshots
 
-    def update(self):
-        import pdb; pdb.set_trace()
-        template = getattr(self, self.article, None)
-
-        self.content = template(data=[],
-                                title='2018 Member State Report')
-
-    def add_form(self, context):
+    def add_form(self, context, new_data):
         form = RefreshForm(context, self.request)
+
+        form.new_data = new_data
 
         return form
 
@@ -264,24 +265,23 @@ class ReportData2018(BaseComplianceView):
         if not template:
             return self.index()
 
-        new_data = self.get_data_from_db()
+        self.new_data = self.get_data_from_db()
         snapshots = self.get_snapshots()
         last_snap = snapshots[-1]
 
-        self.is_changed, changes = self.compare_data(new_data, last_snap)
+        print "Nr of snapshots: {}".format(len(snapshots))
+        # import pdb; pdb.set_trace()
+
+        self.is_changed, changes = self.compare_data(self.new_data, last_snap)
 
         if self.is_changed:
             res = changes
             # self.context.snapshots.append(new_data)
         else:
-            res = new_data
-
-        # import pdb; pdb.set_trace()
+            res = self.new_data
 
         self.content = template(data=res,
                                 title='2018 Member State Report')
-
-        print getattr(self, 'is_refreshed', 'not found')
 
         return self.index()
 
