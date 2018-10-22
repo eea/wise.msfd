@@ -2,6 +2,9 @@ from collections import defaultdict
 from copy import deepcopy
 from datetime import datetime
 
+from zope.schema import Choice
+from zope.schema.vocabulary import SimpleTerm, SimpleVocabulary
+
 from persistent.list import PersistentList
 from plone.api import portal
 from plone.dexterity.browser.add import DefaultAddForm
@@ -9,13 +12,10 @@ from Products.Five.browser.pagetemplatefile import \
     ViewPageTemplateFile as Template
 from wise.msfd import db, sql, sql2018
 from wise.msfd.base import BaseUtil
-
+from wise.msfd.search.base import EmbededForm
+from z3c.form.button import buttonAndHandler
 from z3c.form.field import Fields
 from z3c.form.form import Form
-from z3c.form.button import buttonAndHandler
-from zope.schema import Choice
-from zope.schema.vocabulary import SimpleTerm, SimpleVocabulary
-from wise.content.search.base import EmbededForm
 
 from ..base import BaseComplianceView
 from .a8 import DESCRIPTORS, Article8
@@ -233,7 +233,6 @@ class ReportData2018(BaseComplianceView):
 
         return res != prev_snap
 
-
         is_changed = False
 
         if not prev_snap:
@@ -254,6 +253,7 @@ class ReportData2018(BaseComplianceView):
                 for indx in range(len(values)):
                     val = values[indx]
                     prev_val = prev_values[indx]
+
                     if val != prev_val:
                         values[indx] = [prev_val, val]
                         is_changed = True
@@ -269,7 +269,7 @@ class ReportData2018(BaseComplianceView):
             g[row.MarineReportingUnit].append(row)
 
         res = [(k, self.change_orientation(v)) for k, v in g.items()]
-        res[0][1][3][1][0] = 'DE_ANS'
+        # res[0][1][3][1][0] = 'DE_ANS'
 
         return res
 
@@ -291,6 +291,7 @@ class ReportData2018(BaseComplianceView):
     def get_form(self):
         if not hasattr(self, 'subform'):
             form = SnapshotSelectForm(self, self.request)
+
             return form
 
         return self.subform
@@ -443,6 +444,7 @@ class ReportData2018_old(Form, BaseComplianceView):
     def get_form(self):
         if not hasattr(self, 'subform'):
             form = SnapshotSelectForm(self, self.request)
+
             return form
 
         return self.subform
