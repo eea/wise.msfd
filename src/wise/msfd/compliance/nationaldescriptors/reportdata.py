@@ -1,21 +1,20 @@
 from collections import defaultdict
 from copy import deepcopy
 
+from persistent.list import PersistentList
 from plone.api import portal
 from plone.dexterity.browser.add import DefaultAddForm
-
-from persistent.list import PersistentList
 from Products.Five.browser.pagetemplatefile import \
     ViewPageTemplateFile as Template
 from wise.msfd import db, sql, sql2018
 from wise.msfd.base import BaseUtil
-from z3c.form.form import Form
 from z3c.form.button import buttonAndHandler
+from z3c.form.form import Form
 
 from ..base import BaseComplianceView
-from .a8 import Article8, DESCRIPTORS
-from .a910 import Article910
+from .a8 import DESCRIPTORS, Article8
 from .a10 import Article10
+from .a910 import Article910
 from .utils import row_to_dict
 
 
@@ -95,6 +94,7 @@ class ReportData2012(BaseComplianceView, BaseUtil):
         )
 
         # import pdb; pdb.set_trace()
+
         if not res:
             return ''
 
@@ -218,6 +218,7 @@ class ReportData2018(BaseComplianceView):
                 for indx in range(len(values)):
                     val = values[indx]
                     prev_val = prev_values[indx]
+
                     if val != prev_val:
                         values[indx] = [prev_val, val]
                         is_changed = True
@@ -233,7 +234,7 @@ class ReportData2018(BaseComplianceView):
             g[row.MarineReportingUnit].append(row)
 
         res = [(k, self.change_orientation(v)) for k, v in g.items()]
-        res[0][1][3][1][0] = 'DE_BAL'
+        res[0][1][3][1][0] = 'DE_URL'
 
         return res
 
@@ -243,6 +244,7 @@ class ReportData2018(BaseComplianceView):
 
         if not snapshots:
             self.context.snapshots = PersistentList()
+            self.context._p_changed = True
             self.context.snapshots.append(self.new_data)
 
             return self.context.snapshots
@@ -284,4 +286,3 @@ class ReportData2018(BaseComplianceView):
                                 title='2018 Member State Report')
 
         return self.index()
-
