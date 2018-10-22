@@ -9,17 +9,13 @@ from Products.Five.browser.pagetemplatefile import \
     ViewPageTemplateFile as Template
 from wise.msfd import db, sql, sql2018
 from wise.msfd.base import BaseUtil
-<<<<<<< Updated upstream
-from z3c.form.button import buttonAndHandler
-from z3c.form.form import Form
-=======
+
 from z3c.form.field import Fields
 from z3c.form.form import Form
 from z3c.form.button import buttonAndHandler
 from zope.schema import Choice
 from zope.schema.vocabulary import SimpleTerm, SimpleVocabulary
 from wise.content.search.base import EmbededForm
->>>>>>> Stashed changes
 
 from ..base import BaseComplianceView
 from .a8 import DESCRIPTORS, Article8
