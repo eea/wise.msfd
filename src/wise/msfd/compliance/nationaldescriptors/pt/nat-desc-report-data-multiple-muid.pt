@@ -1,13 +1,13 @@
 <div class="overflow-table"
   tal:define="title options/title; data options/data">
   <h4 tal:content="title">2018 Member State Report</h4>
-  <div>
-    <tal:form tal:define="form view/subform">
-        <div tal:content="structure form">
-          refresh
-        </div>
-    </tal:form>
+
+  <div tal:define="form nocall:view/subform">
+    <div tal:replace="structure form">
+      refresh
+    </div>
   </div>
+
   <div tal:condition="data" tal:repeat="info data">
     <div
       tal:define="muid python:info[0]; muid_data python: info[1];"
@@ -18,8 +18,7 @@
         <tr tal:repeat="row muid_data">
           <th tal:content="python: row[0]">Element</th>
           <td tal:repeat="r python: row[1]">
-            <span tal:attributes="style python:'background-color: green' if isinstance(r, list) else ''"
-                  tal:content="r">Value</span>
+            <div tal:replace="python: view.translate_snip(value=row[1])"></div>
           </td>
         </tr>
       </table>

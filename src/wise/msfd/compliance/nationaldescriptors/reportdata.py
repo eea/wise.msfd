@@ -6,22 +6,21 @@ from zope.schema import Choice
 from zope.schema.vocabulary import SimpleTerm, SimpleVocabulary
 
 from persistent.list import PersistentList
-from plone.api import portal
-from plone.dexterity.browser.add import DefaultAddForm
 from Products.Five.browser.pagetemplatefile import \
     ViewPageTemplateFile as Template
 from wise.msfd import db, sql, sql2018
 from wise.msfd.base import BaseUtil
-from wise.msfd.search.base import EmbededForm
 from z3c.form.button import buttonAndHandler
 from z3c.form.field import Fields
 from z3c.form.form import Form
 
 from ..base import BaseComplianceView
 from .a8 import DESCRIPTORS, Article8
-from .a10 import Article10
 from .a910 import Article910
 from .utils import row_to_dict
+
+# from wise.msfd.search.base import EmbededForm
+# from .a10 import Article10
 
 
 class ReportData2012(BaseComplianceView, BaseUtil):
@@ -142,12 +141,14 @@ class ReportData2012(BaseComplianceView, BaseUtil):
 
 
 class SnapshotSelectForm(Form):
-    template = Template('../pt/comment-add-form.pt')
+    template = Template('../pt/inline-form.pt')
 
-    def __init__(self, context, request):
-        super(SnapshotSelectForm, self).__init__(context, request)
+    # def __init__(self, context, request):
+    #     super(SnapshotSelectForm, self).__init__(context, request)
 
-        snaps = getattr(context.context, 'snapshots', [])
+    @property
+    def fields(self):
+        snaps = getattr(self.context.context, 'snapshots', [])
 
         if snaps:
             default = snaps[-1][0]
@@ -168,10 +169,14 @@ class SnapshotSelectForm(Form):
 
         fields.append(field)
 
-        self.fields = Fields(*fields)
+        return Fields(*fields)
 
-        self.update()
-        self.updateWidgets()
+    def get_selected_date(self):
+        if not self.widgets:
+            self.update()
+            self.updateWidgets()
+
+        return self.widgets['harvest_date'].value[0]
 
     @buttonAndHandler(u'Apply', name='apply')
     def apply(self, action):
@@ -180,16 +185,16 @@ class SnapshotSelectForm(Form):
 
     @buttonAndHandler(u'Harvest new data', name='harvest')
     def harvest(self, action):
-        print "harvesting data"
         data = self.context.get_data_from_db()
 
         self.context.context.snapshots.append((datetime.now(), data))
+        print "harvesting data"
 
         self.request.response.redirect('./@@view-report-data-2018')
 
-    def is_changed(self):
-
-        return self.is_changed
+        # is_changed = snapshots[-1] != db_data
+        #
+        # if is_changed:
 
 
 class ReportData2018(BaseComplianceView):
@@ -208,7 +213,7 @@ class ReportData2018(BaseComplianceView):
     def __init__(self, context, request):
         super(ReportData2018, self).__init__(context, request)
 
-        self.subform = SnapshotSelectForm(self, request)
+        self.subform = None     # SnapshotSelectForm(self, request)
 
     def get_data_from_view(self):
 
@@ -237,37 +242,6 @@ class ReportData2018(BaseComplianceView):
 
         return res
 
-    def compare_data(self, res, prev_snap):
-
-        return res != prev_snap
-
-        is_changed = False
-
-        if not prev_snap:
-            return is_changed, res
-
-        res_changed = deepcopy(res)
-
-        for mru_row in res_changed:
-            mru = mru_row[0]
-            data = mru_row[1]
-            prev_data = [x[1] for x in prev_snap if x[0] == mru][0]
-
-            for val_name_row in data:
-                val_name = val_name_row[0]
-                values = val_name_row[1]
-                prev_values = [x[1] for x in prev_data if x[0] == val_name][0]
-
-                for indx in range(len(values)):
-                    val = values[indx]
-                    prev_val = prev_values[indx]
-
-                    if val != prev_val:
-                        values[indx] = [prev_val, val]
-                        is_changed = True
-
-        return is_changed, res_changed
-
     @db.use_db_session('session_2018')
     def get_data_from_db(self):
         data = self.get_data_from_view()
@@ -278,32 +252,49 @@ class ReportData2018(BaseComplianceView):
             g[row.MarineReportingUnit].append(row)
 
         res = [(k, self.change_orientation(v)) for k, v in g.items()]
-        res[0][1][3][1][0] = 'REGION 56'
+        # res[0][1][3][1][0] = 'REGION 56'
 
         return res
 
     def get_snapshots(self):
-        # self.context.snapshots = []
-        snapshots = getattr(self.context, 'snapshots', [])
+        """ Returns all snapshots, in the chronological order they were created
+        """
 
-        if not snapshots:
-            new_data = self.get_data_from_db()
-            date = datetime.now()
+        snapshots = getattr(self.context, 'snapshots', None)
+
+        if snapshots is None:
             self.context.snapshots = PersistentList()
-            self.context.snapshots.append((date, new_data))
+
+            db_data = self.get_data_from_db()
+            snapshot = (datetime.now(), db_data)
+
+            self.context.snapshots.append(snapshot)
+
             self.context.snapshots._p_changed = True
+            self.context._p_changed = True
 
             return self.context.snapshots
 
         return snapshots
 
     def get_form(self):
-        if not hasattr(self, 'subform'):
-            form = SnapshotSelectForm(self, self.request)
 
-            return form
+        if not self.subform:
+            form = SnapshotSelectForm(self, self.request)
+            self.subform = form
 
         return self.subform
+
+    def get_data(self):
+        """ Returns the data to display in the template
+        """
+
+        snapshots = self.get_snapshots()
+        date_selected = self.subform.get_selected_date()
+        date, data = [x for x in snapshots
+                      if x[0].isoformat() == date_selected][0]
+
+        return data
 
     # @db.use_db_session('session_2018')
     def __call__(self):
@@ -314,26 +305,12 @@ class ReportData2018(BaseComplianceView):
         if not template:
             return self.index()
 
-        self.new_data = self.get_data_from_db()
-        snapshots = self.get_snapshots()
-        last_snap = snapshots[-1]
+        self.db_data = self.get_data_from_db()
 
-        # self.is_changed = self.compare_data(self.new_data, last_snap[1])
-        self.is_changed = True
-        self.subform.is_changed = lambda: self.is_changed
-        self.subform.buttons['harvest'].condition = \
-            lambda form: form.is_changed()
+        self.subform = self.get_form()
 
-        # self.subform = self.get_form()
+        data = self.get_data()
 
-        print "Nr of snapshots: {}".format(len(snapshots))
-
-        date_selected = self.subform.widgets['harvest_date'].value[0]
-        print "selected date: {}".format(date_selected)
-
-        res = [x for x in snapshots if x[0].isoformat() == date_selected][0]
-
-        self.content = template(data=res[1],
-                                title='2018 Member State Report')
+        self.content = template(data=data, title='2018 Member State Report')
 
         return self.index()

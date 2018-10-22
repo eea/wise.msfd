@@ -23,7 +23,7 @@ class CommentsView(object):
 
         form = AddForm(context, self.request, fti)
 
-        form_template = ViewPageTemplateFile('pt/comment-add-form.pt')
+        form_template = ViewPageTemplateFile('pt/inline-form.pt')
 
         form.template = form_template.__get__(form)
 

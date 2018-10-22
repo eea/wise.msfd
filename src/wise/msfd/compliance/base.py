@@ -1,6 +1,7 @@
 from plone.api.content import get_state
 from plone.api.portal import get_tool
 from Products.Five.browser import BrowserView
+from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 
 from . import interfaces
 
@@ -89,6 +90,8 @@ class BaseComplianceView(BrowserView):
     """
 
     main_forms = MAIN_FORMS
+
+    translate_snip = ViewPageTemplateFile('pt/translate-snip.pt')
 
     def get_parent_by_iface(self, iface):
         for parent in self.request.other['PARENTS']:

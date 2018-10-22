@@ -1396,3 +1396,46 @@ class AssessmentDataForm2018(Container, BaseUtil):
     #     )
     #
     #     return res
+
+        # is_changed = False
+        #
+        # if not prev_snap:
+        #     return is_changed, res
+        #
+        # res_changed = deepcopy(res)
+        #
+        # for mru_row in res_changed:
+        #     mru = mru_row[0]
+        #     data = mru_row[1]
+        #     prev_data = [x[1] for x in prev_snap if x[0] == mru][0]
+        #
+        #     for val_name_row in data:
+        #         val_name = val_name_row[0]
+        #         values = val_name_row[1]
+        #         prev_values = [x[1] for x in prev_data if \
+        #         x[0] == val_name][0]
+        #
+        #         for indx in range(len(values)):
+        #             val = values[indx]
+        #             prev_val = prev_values[indx]
+        #
+        #             if val != prev_val:
+        #                 values[indx] = [prev_val, val]
+        #                 is_changed = True
+        #
+        # return is_changed, res_changed
+
+    def compare_data(self, res, prev_snap):
+
+        return res != prev_snap
+        # last_snap = snapshots[-1]
+
+        # # self.is_changed = self.compare_data(self.new_data, last_snap[1])
+        # self.is_changed = True
+        # self.subform.is_changed = lambda: self.is_changed
+        # self.subform.buttons['harvest'].condition = \
+        #     lambda form: form.is_changed()
+
+        # print "Nr of snapshots: {}".format(len(snapshots))
+        # print "selected date: {}".format(date_selected)
+
