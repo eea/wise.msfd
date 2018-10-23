@@ -9,15 +9,13 @@
   <body metal:fill-slot="content">
 
     <div id="layout-contents" tal:define="text context/text | nothing" >
-      <div id="wise-search-form">
+      <div id="wise-search-form" class="full-width-marker">
         <div id="wise-search-form-top">
           <metal:tabs
-             metal:use-macro="context/wise-macros/macros/tabs"></metal:tabs>
+            metal:use-macro="context/wise-macros/macros/tabs"></metal:tabs>
         </div>
 
-        <div
-          class="start-page-content left-side-form"
-          >
+        <div class="start-page-content left-side-form">
 
           <h1>National descriptors assessment overview</h1>
 
@@ -33,16 +31,16 @@
               <tr tal:repeat="country view/countries">
                 <td>
                   <a href="" tal:attributes="href country/url"
-                     tal:content="country/name">Germany</a>
+                    tal:content="country/name">Germany</a>
                 </td>
                 <td tal:content="country/status">Phase -1</td>
                 <!-- <td> -->
-                <!--   <select> -->
-                <!--     <option value='send_to_phase3'>Choose action...</option> -->
-                <!--     <option value='send_to_phase3'>View</option> -->
-                <!--     <option value='send_to_phase3'>Send to Phase 2</option> -->
-                <!--   </select> -->
-                <!-- </td> -->
+                  <!--   <select> -->
+                    <!--     <option value='send_to_phase3'>Choose action...</option> -->
+                    <!--     <option value='send_to_phase3'>View</option> -->
+                    <!--     <option value='send_to_phase3'>Send to Phase 2</option> -->
+                    <!--   </select> -->
+                  <!-- </td> -->
               </tr>
             </tbody>
           </table>
