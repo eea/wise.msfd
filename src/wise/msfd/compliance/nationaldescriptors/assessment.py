@@ -5,7 +5,7 @@ from zope.schema.vocabulary import SimpleTerm, SimpleVocabulary
 
 from plone.z3cform.layout import wrap_form
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
-from wise.msfd import db, sql2018  # sql,
+# from wise.msfd import db, sql2018  # sql,
 from wise.msfd.base import EmbededForm, MainFormWrapper  # BaseUtil,
 from wise.msfd.gescomponents import get_ges_criterions
 from z3c.form.button import buttonAndHandler
@@ -92,7 +92,7 @@ class EditAssessmentDataForm(Form, BaseComplianceView):
                 choices = [x.name for x in row.children]
                 terms = [SimpleTerm(c, i, c) for i, c in enumerate(choices)]
 
-                default = assessment_data[field_name]
+                default = assessment_data.get(field_name, None)
                 field = Choice(
                     title=field_title,
                     __name__=field_name,
