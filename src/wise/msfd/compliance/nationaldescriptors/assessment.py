@@ -106,7 +106,7 @@ class EditAssessmentDataForm(Form, BaseComplianceView):
 
                 _title = u'{}: {} {}'.format(base_name, row_name, f)
                 _name = '{}_{}_{}'.format(base_name, row_name, f)
-                default = assessment_data[_name]
+                default = assessment_data.get(_name, None)
                 _field = Text(
                     title=_title,
                     __name__=_name,
