@@ -1439,3 +1439,55 @@ class AssessmentDataForm2018(Container, BaseUtil):
         # print "Nr of snapshots: {}".format(len(snapshots))
         # print "selected date: {}".format(date_selected)
 
+# def get_default_additional_field_value(
+#         data_assess,
+#         article,
+#         feature,
+#         assess_crit,
+#         assess_info,
+#         field_name
+#         ):
+#
+#     # TODO: check the feature param, we no longer need it
+#
+#     if not data_assess:
+#         return None
+#
+#     for x in data_assess:
+#         field_data = getattr(x, field_name)
+#
+#         # x.Feature == feature and \
+#
+#         if x.MSFDArticle == article and \
+#                 x.AssessmentCriteria == assess_crit and \
+#                 x.AssessedInformation == assess_info and \
+#                 field_data:
+#
+#             return field_data
+#
+#     return None
+
+
+# def get_default_assessment_value(
+#         data_assess,
+#         article,
+#         feature,
+#         assess_crit,
+#         assess_info,
+#         ges_comp
+#         ):
+#
+#     if not data_assess:
+#         return None
+#
+#     for x in data_assess:
+#         if x.MSFDArticle == article and \
+#                 x.AssessmentCriteria == assess_crit and \
+#                 x.AssessedInformation == assess_info and \
+#                 x.GESComponent_Target == ges_comp:
+#             # x.Feature == feature and \
+#
+#             return x.Evidence
+#
+#     return None
+#

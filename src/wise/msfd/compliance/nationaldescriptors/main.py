@@ -5,8 +5,10 @@ from collections import namedtuple  # defaultdict,
 
 from Products.Five.browser.pagetemplatefile import \
     ViewPageTemplateFile as Template
+from wise.msfd.gescomponents import get_ges_criterions
 
 from ..base import BaseComplianceView  # , Container
+from ..vocabulary import form_structure
 
 CountryStatus = namedtuple('CountryStatus', ['name', 'status', 'url'])
 
@@ -45,6 +47,59 @@ class NationalDescriptorCountryOverview(BaseComplianceView):
         return self.context.contentValues()
 
 
+Assessment = namedtuple('Assessment',
+                        [
+                            'gescomponents',
+                            'answers',
+                            'summary',
+                            'recommendations',
+                         ])
+AssessmentRow = namedtuple(
+    'AssessmentRow',
+    ['question', 'summary', 'conclusion', 'score', 'values']
+)
+
+
+def get_assessment_data(descriptor_criterions, question_tree, data):
+    """ Builds a data structure suitable for display in a template
+    """
+
+    # tree = question_tree
+    answers = []
+    gescomponents = [c.id for c in descriptor_criterions]
+
+    for tree in question_tree.children:
+        base_name = tree.name       # can be Adequacy, Consistency or Coherence
+
+        for row in tree.children:
+            row_name = row.name     # such as "status assessment"
+
+            values = []
+
+            for crit in descriptor_criterions:
+                field_name = '{}_{}_{}'.format(base_name, row_name, crit.id)
+                value = data.get(field_name, '-') or '-'
+                # values.append((crit.id, value))
+                values.append(value)
+
+            question = "{} of {}".format(base_name, row_name)
+            summary = 'summary here'
+            conclusion = 'conclusion here'
+            score = '1'
+
+            qr = AssessmentRow(question, summary, conclusion, score, values)
+            answers.append(qr)
+
+    assessment = Assessment(
+        gescomponents,
+        answers,
+        'descriptor summary',
+        'descriptor recommendations',
+    )
+
+    return assessment
+
+
 class NationalDescriptorArticleView(BaseComplianceView):
     name = 'nat-desc-art-view'
     assessment_data_2012_tpl = Template('./pt/assessment-data-2012.pt')
@@ -60,9 +115,24 @@ class NationalDescriptorArticleView(BaseComplianceView):
         )
         self.assessment_data_2012 = self.assessment_data_2012_tpl(data=data)
 
-        data = get_assessment_data_2018(
-            self.country_code,
-            self.descriptor,
-            self.article
+        # data = get_assessment_data_2018(
+        #     self.country_code,
+        #     self.descriptor,
+        #     self.article
+        # )
+
+        data = self.context.assessment_data
+
+        descriptor_criterions = get_ges_criterions(self.descriptor)
+        question_tree = form_structure[self.article]
+
+        assessment = get_assessment_data(
+            descriptor_criterions,
+            question_tree,
+            data
         )
-        self.assessment_data_2018 = self.assessment_data_2018_tpl(data=data)
+        # print assessment
+
+        self.assessment_data_2018 = self.assessment_data_2018_tpl(
+            assessment=assessment
+        )

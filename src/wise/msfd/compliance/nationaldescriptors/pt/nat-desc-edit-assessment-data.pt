@@ -12,6 +12,9 @@
 
     <div class="left-side-form">
       <h2 tal:content="view/title">Title here</h2>
+      <div style="margin-bottom: 1em; top: -0.8em; position: relative">
+        <a href="./">Back to Descriptor</a>
+      </div>
 
       <div id="comp-national-descriptor">
         <metal:form use-macro="context/@@ploneform-macros/titlelessform">

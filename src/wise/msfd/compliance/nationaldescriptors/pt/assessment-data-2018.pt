@@ -1,1 +1,37 @@
-here we compute the assessments data for 2018, based on COM_Assessments table
+<div tal:define="assessment options/assessment">
+  <!-- <span tal:content="data"></span> -->
+  <style>
+    #assessment-data-table td {
+    min-width: 4em;
+    border: 1px solid #CCC;
+    background-color: white;
+    }
+    #assessment-data-table th {
+    background-color: #EEE;
+    text-align: right;
+    }
+  </style>
+
+
+  <table class="table table-condensed" id="assessment-data-table">
+    <tbody>
+      <tr>
+        <th>GESComponent</th>
+        <td tal:repeat="g assessment/gescomponents">
+          <span tal:replace="g">D0C0</span>
+        </td>
+      </tr>
+      <tal:rep tal:repeat="row assessment/answers">
+        <tr>
+          <th rowspan="2" tal:content="row/question">Question</th>
+          <td tal:repeat="value row/values" tal:content="value">X</td>
+        </tr>
+        <tr>
+          <td colspan="50" tal:content="row/summary">Summary</td>
+        </tr>
+      </tal:rep>
+    </tbody>
+  </table>
+
+
+</div>
