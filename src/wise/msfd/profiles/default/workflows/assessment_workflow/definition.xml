@@ -1,18 +1,18 @@
 <?xml version="1.0"?>
 <dc-workflow workflow_id="assessment_workflow" title="DC Workflow Definition" description="" state_variable="review_state" initial_state="in_work" manager_bypass="False">
  <permission>View</permission>
- <state state_id="approved" title="">
+ <state state_id="approved" title="Approved">
   <exit-transition transition_id="send_back_to_final_review"/>
  </state>
- <state state_id="in_draft_review" title="">
+ <state state_id="in_draft_review" title="In draft review">
   <exit-transition transition_id="send_back_to_work"/>
   <exit-transition transition_id="send_for_final_review"/>
  </state>
- <state state_id="in_final_review" title="">
+ <state state_id="in_final_review" title="In final review">
   <exit-transition transition_id="approve"/>
   <exit-transition transition_id="send_for_draft_review"/>
  </state>
- <state state_id="in_work" title="">
+ <state state_id="in_work" title="In work by Topic Lead">
   <exit-transition transition_id="send_for_draft_review"/>
  </state>
  <transition transition_id="approve" title="Approve assessment" new_state="approved" trigger="USER" before_script="" after_script="">
