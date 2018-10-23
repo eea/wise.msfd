@@ -27,26 +27,6 @@
             <a href="./../../">Go to National Descriptor Assessment</a>
           </div>
 
-          <div style="background-color: #DDD; padding: 1rem; border: 1px solid #AAA">
-
-            <form method="GET" action='./content_status_modify'>
-              <div>
-                Process state:
-                <span tal:replace="view/get_status">Phase 0</span>
-
-                <div style="float: right">
-                  <select onchange="javascript:this.form.submit()" name="workflow_action">
-                    <option value=''>Choose action...</option>
-                    <tal:rep repeat="trans view/get_transitions">
-                      <option tal:content="trans/title"
-                        tal:attributes="value trans/id">Send to Phase 0</option>
-                    </tal:rep>
-                  </select>
-                </div>
-              </div>
-            </form>
-          </div>
-
           <style>
             .nat-desc-art-menu {
             margin-top: 1em;
@@ -71,6 +51,27 @@
               <li><a href="./@@view-report-data-2018">View 2018 Report Data</a></li>
               <li><a href="./@@edit-assessment-data-2018">Edit 2018 Report Data
                   (for Topic Lead)</a></li>
+              <li>
+                <form method="GET" action='./content_status_modify'>
+                  <div>
+                    Process state:
+                    <span tal:replace="view/get_status">Phase 0</span>
+                    &nbsp;
+                    &nbsp;
+
+                    <!-- <div style="float: right"> -->
+                      <select onchange="javascript:this.form.submit()" name="workflow_action">
+                        <option value=''>Choose action...</option>
+                        <tal:rep repeat="trans view/get_transitions">
+                          <option tal:content="trans/title"
+                            tal:attributes="value trans/id">Send to Phase 0</option>
+                        </tal:rep>
+                      </select>
+                    <!-- </div> -->
+                  </div>
+                </form>
+
+              </li>
             </ul>
           </div>
 
