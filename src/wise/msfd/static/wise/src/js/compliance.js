@@ -439,9 +439,9 @@
     }
 
     // fade the content in
-    $(document).on("page-ready", function (ev) {
-       $("#wise-compliance-form-top,#comp-national-descriptor").animate({"opacity" : 1}, 500);
-    });
+    // $(document).on("page-ready", function (ev) {
+    //    $("#wise-compliance-form-top,#comp-national-descriptor").animate({"opacity" : 1}, 500);
+    // });
 
     $(document).ready(function($){
         initStyling();
@@ -461,8 +461,8 @@
             $(".overflow-table h5").width( $(".overflow-table table").width() );
         }
 
-        setupFormToggle();
+        // setupFormToggle();
 
-        $(document).trigger("page-ready");
+        // $(document).trigger("page-ready");
     });
 }(window, document, $));

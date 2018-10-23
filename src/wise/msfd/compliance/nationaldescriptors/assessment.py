@@ -18,58 +18,58 @@ from ..vocabulary import form_structure
 logger = logging.getLogger('wise.msfd')
 
 
-def get_default_additional_field_value(
-        data_assess,
-        article,
-        feature,
-        assess_crit,
-        assess_info,
-        field_name
-        ):
+# def get_default_additional_field_value(
+#         data_assess,
+#         article,
+#         feature,
+#         assess_crit,
+#         assess_info,
+#         field_name
+#         ):
+#
+#     # TODO: check the feature param, we no longer need it
+#
+#     if not data_assess:
+#         return None
+#
+#     for x in data_assess:
+#         field_data = getattr(x, field_name)
+#
+#         # x.Feature == feature and \
+#
+#         if x.MSFDArticle == article and \
+#                 x.AssessmentCriteria == assess_crit and \
+#                 x.AssessedInformation == assess_info and \
+#                 field_data:
+#
+#             return field_data
+#
+#     return None
 
-    # TODO: check the feature param, we no longer need it
 
-    if not data_assess:
-        return None
-
-    for x in data_assess:
-        field_data = getattr(x, field_name)
-
-        # x.Feature == feature and \
-
-        if x.MSFDArticle == article and \
-                x.AssessmentCriteria == assess_crit and \
-                x.AssessedInformation == assess_info and \
-                field_data:
-
-            return field_data
-
-    return None
-
-
-def get_default_assessment_value(
-        data_assess,
-        article,
-        feature,
-        assess_crit,
-        assess_info,
-        ges_comp
-        ):
-
-    if not data_assess:
-        return None
-
-    for x in data_assess:
-        if x.MSFDArticle == article and \
-                x.AssessmentCriteria == assess_crit and \
-                x.AssessedInformation == assess_info and \
-                x.GESComponent_Target == ges_comp:
-            # x.Feature == feature and \
-
-            return x.Evidence
-
-    return None
-
+# def get_default_assessment_value(
+#         data_assess,
+#         article,
+#         feature,
+#         assess_crit,
+#         assess_info,
+#         ges_comp
+#         ):
+#
+#     if not data_assess:
+#         return None
+#
+#     for x in data_assess:
+#         if x.MSFDArticle == article and \
+#                 x.AssessmentCriteria == assess_crit and \
+#                 x.AssessedInformation == assess_info and \
+#                 x.GESComponent_Target == ges_comp:
+#             # x.Feature == feature and \
+#
+#             return x.Evidence
+#
+#     return None
+#
 
 # mapping of title: field_name
 additional_fields = {
@@ -98,7 +98,10 @@ class EditAssessmentDataForm(Form, BaseComplianceView):
 
     @buttonAndHandler(u'Save', name='save')
     def handle_save(self, action):
-        pass
+        data, errors = self.extractData()
+        # if not errors:
+        # TODO: check for errors
+        self.context.assessment_data = data
 
     @property
     def fields(self):
@@ -120,28 +123,30 @@ class EditAssessmentDataForm(Form, BaseComplianceView):
 
         forms = []
 
-        # check if article was already assessed
-        @db.use_db_session('session_2018')
-        def func():
-            mc = sql2018.COMGeneral
-            conditions = []
-            conditions.append(mc.CountryCode == self.country_code)
-            conditions.append(mc.AssessmentTopic == u'National summary')
-            conditions.append(mc.MSFDArticle == self.article)
-            count, res = db.get_all_records(
-                mc,
-                *conditions
-            )
+        # # check if article was already assessed
+        # @db.use_db_session('session_2018')
+        # def func():
+        #     mc = sql2018.COMGeneral
+        #     conditions = []
+        #     conditions.append(mc.CountryCode == self.country_code)
+        #     conditions.append(mc.AssessmentTopic == u'National summary')
+        #     conditions.append(mc.MSFDArticle == self.article)
+        #     count, res = db.get_all_records(
+        #         mc,
+        #         *conditions
+        #     )
+        #
+        #     if not count:
+        #         return [], None
+        #     else:
+        #         general_id = res[0].Id
+        #         assess_data = self.get_assessment_data(general_id)
+        #
+        #         return assess_data, general_id
+        #
+        # data_assess, self.general_id = func()
 
-            if not count:
-                return [], None
-            else:
-                general_id = res[0].Id
-                assess_data = self.get_assessment_data(general_id)
-
-                return assess_data, general_id
-
-        data_assess, self.general_id = func()
+        assessment_data = self.context.assessment_data
 
         for row in tree.children:
             row_name = row.name
@@ -163,16 +168,17 @@ class EditAssessmentDataForm(Form, BaseComplianceView):
                 choices = [x.name for x in row.children]
                 terms = [SimpleTerm(c, i, c) for i, c in enumerate(choices)]
 
-                default = get_default_assessment_value(
-                    data_assess,
-                    self.article,  # MSFDArticle
-                    # data['feature_reported'][0],  # Feature
-                    None,       # TODO: what is here????
-                    base_name,  # AssessmentCriteria
-                    row_name,  # AssessedInformation
-                    crit.id  # GESComponent_Target
-                )
+                # default = get_default_assessment_value(
+                #     data_assess,
+                #     self.article,  # MSFDArticle
+                #     # data['feature_reported'][0],  # Feature
+                #     None,       # TODO: what is here????
+                #     base_name,  # AssessmentCriteria
+                #     row_name,  # AssessedInformation
+                #     crit.id  # GESComponent_Target
+                # )
 
+                default = assessment_data[field_name]
                 field = Choice(
                     title=field_title,
                     __name__=field_name,
@@ -183,19 +189,20 @@ class EditAssessmentDataForm(Form, BaseComplianceView):
                 fields.append(field)
 
             for f in additional_fields.keys():
-                default = get_default_additional_field_value(
-                    data_assess,
-                    self.article,
-                    # data['article'],  # MSFDArticle
-                    # data['feature_reported'][0],  # Feature
-                    None,
-                    base_name,  # AssessmentCriteria
-                    row_name,  # AssessedInformation
-                    additional_fields[f]
-                )
+                # default = get_default_additional_field_value(
+                #     data_assess,
+                #     self.article,
+                #     # data['article'],  # MSFDArticle
+                #     # data['feature_reported'][0],  # Feature
+                #     None,
+                #     base_name,  # AssessmentCriteria
+                #     row_name,  # AssessedInformation
+                #     additional_fields[f]
+                # )
 
                 _title = u'{}: {} {}'.format(base_name, row_name, f)
                 _name = '{}_{}_{}'.format(base_name, row_name, f)
+                default = assessment_data[_name]
                 _field = Text(
                     title=_title,
                     __name__=_name,

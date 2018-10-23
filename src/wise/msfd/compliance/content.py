@@ -15,4 +15,15 @@ class CountryDescriptorsFolder(Container):
 class NationalDescriptorAssessment(Container):
     """ Assessment implementation for national descriptor assessments
     """
+
     implements(INationalDescriptorAssessment)
+    _data = None
+
+    def _get_assessment_data(self):
+        return self._data or {}
+
+    def _set_assessment_data(self, value):
+        self._data = value
+        self._p_changed = True
+
+    assessment_data = property(_get_assessment_data, _set_assessment_data)

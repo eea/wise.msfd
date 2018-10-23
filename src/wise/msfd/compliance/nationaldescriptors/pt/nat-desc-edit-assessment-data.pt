@@ -1,5 +1,4 @@
-<div id="wise-compliance-form"
-  class="full-width drop-right-column"
+<div id="wise-compliance-form" class="full-width-marker"
   tal:attributes="id view/form_id | string:wise-compliance-form">
 
   <div id="wise-compliance-form-top"

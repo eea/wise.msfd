@@ -1,1 +1,2 @@
+<!-- <button type="button">Translate</button> -->
 <div tal:replace="options/value"></div>

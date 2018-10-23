@@ -9,7 +9,7 @@
   <body metal:fill-slot="content">
 
     <div id="layout-contents" tal:define="text context/text | nothing" >
-      <div id="wise-search-form">
+      <div id="wise-search-form" class="full-width-marker">
         <div id="wise-search-form-top">
           <metal:tabs
             metal:use-macro="context/wise-macros/macros/tabs"></metal:tabs>
@@ -23,6 +23,9 @@
             <span tal:replace="view/country_code">US</span>
           </h1>
 
+          <div style="margin-bottom: 1em; top: -0.8em; position: relative">
+            <a href="./../../">Back to National Descriptor Assessment</a>
+          </div>
 
           <div style="background-color: #DDD; padding: 1rem; border: 1px solid #AAA">
 
@@ -44,7 +47,25 @@
             </form>
           </div>
 
-          <div>
+          <style>
+            .nat-desc-art-menu {
+            margin-top: 1em;
+            }
+            .nat-desc-art-menu ul {
+            display: flex;
+            margin-left: 0em !important;
+            }
+            .nat-desc-art-menu li {
+            padding: 1em;
+            list-style-type: none;
+            display: block;
+            margin-right: 1em;
+            background-color: #EEE;
+            }
+
+          </style>
+
+          <div class="nat-desc-art-menu">
             <ul>
               <li><a href="./@@view-report-data-2012">View 2012 Report Data</a></li>
               <li><a href="./@@view-report-data-2018">View 2018 Report Data</a></li>

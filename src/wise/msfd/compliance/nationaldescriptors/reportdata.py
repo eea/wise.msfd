@@ -142,9 +142,8 @@ class ReportData2012(BaseComplianceView, BaseUtil):
 
 class SnapshotSelectForm(Form):
     template = Template('../pt/inline-form.pt')
-
-    # def __init__(self, context, request):
-    #     super(SnapshotSelectForm, self).__init__(context, request)
+    method = 'GET'
+    _updated = False
 
     @property
     def fields(self):
@@ -157,32 +156,28 @@ class SnapshotSelectForm(Form):
 
         dates = [SimpleTerm(x[0], x[0].isoformat(), x[0]) for x in snaps]
 
-        fields = []
-
         field = Choice(
             title=u'Date of harvest',
-            __name__='harvest_date',
+            __name__='sd',
             vocabulary=SimpleVocabulary(dates),
             required=False,
             default=default
         )
 
-        fields.append(field)
+        return Fields(field)
 
-        return Fields(*fields)
+    def update(self):
+        if not self._updated:
+            Form.update(self)
+            self._updated = True
 
-    def get_selected_date(self):
-        if not self.widgets:
-            self.update()
-            self.updateWidgets()
-
-        return self.widgets['harvest_date'].value[0]
-
-    @buttonAndHandler(u'Apply', name='apply')
+    @buttonAndHandler(u'View snapshot', name='view')
     def apply(self, action):
         print "apply pushed"
-        pass
 
+        return
+
+    # TODO: make a condition for this button
     @buttonAndHandler(u'Harvest new data', name='harvest')
     def harvest(self, action):
         data = self.context.get_data_from_db()
@@ -191,10 +186,6 @@ class SnapshotSelectForm(Form):
         print "harvesting data"
 
         self.request.response.redirect('./@@view-report-data-2018')
-
-        # is_changed = snapshots[-1] != db_data
-        #
-        # if is_changed:
 
 
 class ReportData2018(BaseComplianceView):
@@ -210,10 +201,7 @@ class ReportData2018(BaseComplianceView):
         # TODO: do the other: 9, 10
     }
 
-    def __init__(self, context, request):
-        super(ReportData2018, self).__init__(context, request)
-
-        self.subform = None     # SnapshotSelectForm(self, request)
+    subform = None
 
     def get_data_from_view(self):
 
@@ -269,8 +257,8 @@ class ReportData2018(BaseComplianceView):
             snapshot = (datetime.now(), db_data)
 
             self.context.snapshots.append(snapshot)
-
             self.context.snapshots._p_changed = True
+
             self.context._p_changed = True
 
             return self.context.snapshots
@@ -290,9 +278,20 @@ class ReportData2018(BaseComplianceView):
         """
 
         snapshots = self.get_snapshots()
-        date_selected = self.subform.get_selected_date()
-        date, data = [x for x in snapshots
-                      if x[0].isoformat() == date_selected][0]
+        self.subform.update()
+        fd, errors = self.subform.extractData()
+        date_selected = fd['sd']
+
+        data = snapshots[-1][1]
+
+        if date_selected:
+            print date_selected
+            filtered = [x for x in snapshots if x[0] == date_selected]
+
+            if filtered:
+                date, data = filtered[0]
+            else:
+                raise ValueError("Snapshot doesn't exist at this date")
 
         return data
 
@@ -305,12 +304,11 @@ class ReportData2018(BaseComplianceView):
         if not template:
             return self.index()
 
-        self.db_data = self.get_data_from_db()
+        # self.db_data = self.get_data_from_db()
 
         self.subform = self.get_form()
 
         data = self.get_data()
-
         self.content = template(data=data, title='2018 Member State Report')
 
         return self.index()
