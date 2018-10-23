@@ -1,1 +1,32 @@
-here we show assessment data for 2012, extracted from COM_Assessment_2012 table
+<div tal:define="assessments options/data">
+
+  <tal:rep tal:repeat="country python:assessments.keys()">
+    <span tal:content="country">Country</span>
+    <table class="table table-condensed" id="assessment-data-table">
+      <tbody>
+        <!--<div tal:content="assessments/?country">asd</div>-->
+        <tal:def tal:define="assessment assessments/?country">
+          <tr>
+            <th>GEScomponent</th>
+            <tal:rep tal:repeat="ges assessment/gescomponents">
+              <td tal:content="ges">D0C0</td>
+            </tal:rep>
+          </tr>
+          <tal:rep tal:repeat="crit assessment/criteria">
+            <tr>
+              <th tal:content="crit/crit_name">
+                Criteria
+              </th>
+              <td tal:content="crit/answer" colspan="50">Text</td>
+            </tr>
+          </tal:rep>
+          <tr>
+            <th>Assessment summary</th>
+            <td tal:content="assessment/summary" colspan="50">Summary</td>
+          </tr>
+        </tal:def>
+      </tbody>
+    </table>
+  </tal:rep>
+
+</div>

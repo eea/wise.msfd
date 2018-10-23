@@ -1,11 +1,13 @@
 """ Classes and views to implement the National Descriptors compliance page
 """
 
-from collections import namedtuple  # defaultdict,
+from collections import namedtuple, defaultdict
+from sqlalchemy import or_
 
 from Products.Five.browser.pagetemplatefile import \
     ViewPageTemplateFile as Template
 from wise.msfd.gescomponents import get_ges_criterions
+from wise.msfd import db, sql2018
 
 from ..base import BaseComplianceView  # , Container
 from ..vocabulary import form_structure
@@ -13,18 +15,39 @@ from ..vocabulary import form_structure
 CountryStatus = namedtuple('CountryStatus', ['name', 'status', 'url'])
 
 
-def get_assessment_data_2012(*args):
+@db.use_db_session('session_2018')
+def get_assessment_data_2012_db(*args):
     """ Returns the 2012 assessment data, from COM_Assessments_2012 table
     """
 
-    return []
+    articles = {
+        'Art8': 'Initial assessment (Article 8)',
+        'Art9': 'GES (Article 9)',
+        'Art10': 'Targets (Article 10)',
+    }
+
+    country, descriptor, article = args
+    art = articles.get(article)
+    # TODO get country name from country code
+    country = 'Latvia'
+
+    t = sql2018.t_COM_Assessments_2012
+    count, res = db.get_all_records(
+        t,
+        t.c.Country.like('%{}%'.format(country)),
+        t.c.Descriptor == descriptor,
+        or_(t.c.MSFDArticle == art,
+            t.c.MSFDArticle.is_(None))
+    )
+
+    return res
 
 
-def get_assessment_data_2018(*args):
-    """ Returns the 2018 assessment data, from COM_Assessments table
-    """
-
-    return []
+# def get_assessment_data_2018(*args):
+#     """ Returns the 2018 assessment data, from COM_Assessments table
+#     """
+#
+#     return []
 
 
 class NationalDescriptorsOverview(BaseComplianceView):
@@ -100,6 +123,49 @@ def get_assessment_data(descriptor_criterions, question_tree, data):
     return assessment
 
 
+def get_assessment_data_2012(descriptor_criterions, data):
+    Assessment2012 = namedtuple(
+        'Assessment2012', ['gescomponents', 'criteria',
+                           'summary', 'score']
+    )
+
+    Criteria = namedtuple(
+        'Criteria', ['crit_name', 'answer']
+    )
+
+    gescomponents = [c.id for c in descriptor_criterions]
+
+    assessments = {}
+
+    for row in data:
+        fields = row._fields
+
+        def get_val(col):
+            return row[fields.index(col)]
+
+        country = get_val('Country')
+        criteria = [
+            Criteria(get_val('AssessmentCriteria'),
+                     get_val('Assessment')),
+        ]
+        summary = get_val('Conclusions')
+        score = get_val('OverallScore')
+
+        if country not in assessments:
+            # import pdb; pdb.set_trace()
+            assessment = Assessment2012(
+                gescomponents,
+                criteria,
+                summary,
+                score,
+            )
+            assessments[country] = assessment
+        else:
+            assessments[country].criteria.extend(criteria)
+
+    return assessments
+
+
 class NationalDescriptorArticleView(BaseComplianceView):
     name = 'nat-desc-art-view'
     assessment_data_2012_tpl = Template('./pt/assessment-data-2012.pt')
@@ -108,12 +174,21 @@ class NationalDescriptorArticleView(BaseComplianceView):
     def __init__(self, context, request):
         super(NationalDescriptorArticleView, self).__init__(context, request)
 
-        data = get_assessment_data_2012(
+        descriptor_criterions = get_ges_criterions(self.descriptor)
+
+        data = get_assessment_data_2012_db(
             self.country_code,
             self.descriptor,
             self.article
         )
-        self.assessment_data_2012 = self.assessment_data_2012_tpl(data=data)
+        assessments = get_assessment_data_2012(descriptor_criterions,
+                                               data)
+
+        # assessments = []
+
+        self.assessment_data_2012 = self.assessment_data_2012_tpl(
+            data=assessments
+        )
 
         # data = get_assessment_data_2018(
         #     self.country_code,
@@ -123,7 +198,6 @@ class NationalDescriptorArticleView(BaseComplianceView):
 
         data = self.context.assessment_data
 
-        descriptor_criterions = get_ges_criterions(self.descriptor)
         question_tree = form_structure[self.article]
 
         assessment = get_assessment_data(
