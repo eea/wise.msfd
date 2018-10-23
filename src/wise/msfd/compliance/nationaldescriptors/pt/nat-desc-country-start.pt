@@ -18,19 +18,26 @@
         <div class="start-page-content left-side-form">
 
           <h1>National descriptors overview for <span tal:content="context/title"></span></h1>
-          <div style="background-color: #DDD; padding: 1rem; border: 1px solid #AAA">
-            <div>
-              Process state:
-              <em tal:content="view/get_status">Phase 0</em>
-            </div>
+
+          <div style="margin-bottom: 1em; top: -0.8em; position: relative">
+            <a href="./../">Go to all National Descriptor Assessments</a>
+          </div>
+
+          <div style="background-color: #DDD; padding: 1rem; border: 1px solid #AAA; margin-bottom: 1em;">
 
             <form method="GET" action='./content_status_modify'>
-              <select onchange="javascript:this.form.submit()" name="workflow_action">
-                <option value=''>Choose action...</option>
-                <tal:rep repeat="trans view/get_transitions">
-                  <option tal:content="trans/title" tal:attributes="value trans/id">Send to Phase 0</option>
-                </tal:rep>
-              </select>
+              <div>
+                Process state:
+                <em tal:content="view/get_status">Phase 0</em>
+
+              <div style="float: right">
+                <select onchange="javascript:this.form.submit()" name="workflow_action">
+                  <option value=''>Choose action...</option>
+                  <tal:rep repeat="trans view/get_transitions">
+                    <option tal:content="trans/title" tal:attributes="value trans/id">Send to Phase 0</option>
+                  </tal:rep>
+                </select>
+              </div>
             </form>
           </div>
 
@@ -45,14 +52,14 @@
             </thead>
             <tbody>
               <tr tal:repeat="desc view/get_descriptors">
-                <td>
+                <th>
                   <span tal:content="desc/title_or_id">D0</span>
-                </td>
+                </th>
                 <td tal:repeat="assessment desc/contentValues">
                   <div>
                   <a href="" tal:attributes="href assessment/absolute_url">View</a>
                   </div>
-                  Ready for Phase 2
+                  <div tal:replace="python: view.get_status(assessment)">State</div>
                 </td>
               </tr>
             </tbody>
