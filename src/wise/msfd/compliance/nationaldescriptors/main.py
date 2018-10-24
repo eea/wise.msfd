@@ -28,8 +28,8 @@ def get_assessment_data_2012_db(*args):
 
     country, descriptor, article = args
     art = articles.get(article)
-    # TODO get country name from country code
-    country = 'Latvia'
+
+    # country = 'Germany'
 
     t = sql2018.t_COM_Assessments_2012
     count, res = db.get_all_records(
@@ -41,13 +41,6 @@ def get_assessment_data_2012_db(*args):
     )
 
     return res
-
-
-# def get_assessment_data_2018(*args):
-#     """ Returns the 2018 assessment data, from COM_Assessments table
-#     """
-#
-#     return []
 
 
 class NationalDescriptorsOverview(BaseComplianceView):
@@ -176,25 +169,19 @@ class NationalDescriptorArticleView(BaseComplianceView):
 
         descriptor_criterions = get_ges_criterions(self.descriptor)
 
+        country_name = self._country_folder.title
+
         data = get_assessment_data_2012_db(
-            self.country_code,
+            country_name,
             self.descriptor,
             self.article
         )
         assessments = get_assessment_data_2012(descriptor_criterions,
                                                data)
 
-        # assessments = []
-
         self.assessment_data_2012 = self.assessment_data_2012_tpl(
             data=assessments
         )
-
-        # data = get_assessment_data_2018(
-        #     self.country_code,
-        #     self.descriptor,
-        #     self.article
-        # )
 
         data = self.context.assessment_data
 

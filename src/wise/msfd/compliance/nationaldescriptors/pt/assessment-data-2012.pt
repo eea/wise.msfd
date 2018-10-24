@@ -1,7 +1,8 @@
 <div tal:define="assessments options/data">
 
   <tal:rep tal:repeat="country python:assessments.keys()">
-    <span tal:content="country">Country</span>
+    <span tal:condition="python: len(assessments) > 1"
+        tal:content="country">Country</span>
     <table class="table table-condensed" id="assessment-data-table">
       <tbody>
         <!--<div tal:content="assessments/?country">asd</div>-->
