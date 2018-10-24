@@ -21,7 +21,6 @@ module.exports = {
           ],
           '<%= path.dest %>/css/compliance.css': '<%= path.src %>/less/compliance.less'
       }
-
     }
   },
   // concat: {

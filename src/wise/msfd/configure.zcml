@@ -44,6 +44,11 @@
     />
 
   <browser:resource
+    name="translate.js"
+    file="./static/wise/dist/js/translate.js"
+    />
+
+  <browser:resource
     name="lz-string.js"
     file="./static/wise/dist/js/lz-string.js"
     />

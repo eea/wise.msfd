@@ -1,5 +1,5 @@
 module.exports = {
- template: {
+  template: {
     dev: {
       engine: 'handlebars',
       cwd: 'src/tpl/',
