@@ -42,15 +42,16 @@
             margin-right: 1em;
             background-color: #EEE;
             }
-
           </style>
 
           <div class="nat-desc-art-menu">
             <ul>
               <li><a href="./@@view-report-data-2012">View 2012 Report Data</a></li>
               <li><a href="./@@view-report-data-2018">View 2018 Report Data</a></li>
-              <li><a href="./@@edit-assessment-data-2018">Edit 2018 Report Data
-                  (for Topic Lead)</a></li>
+              <li tal:condition="python: view.check_permission('wise.msfd: Edit Assessment')">
+                <a href="./@@edit-assessment-data-2018">Edit 2018 Report Data
+                  (for Topic Lead)</a>
+              </li>
               <li>
                 <form method="GET" action='./content_status_modify'>
                   <div>

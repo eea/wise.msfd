@@ -1,3 +1,4 @@
+from Acquisition import aq_inner
 from plone.api.content import get_state
 from plone.api.portal import get_tool
 from Products.Five.browser import BrowserView
@@ -171,3 +172,12 @@ class BaseComplianceView(BrowserView):
         print transitions
 
         return [t for t in transitions if t['allowed']]
+
+    def check_permission(self, permission, context=None):
+
+        tool = get_tool('portal_membership')
+
+        if context is None:
+            context = self.context
+
+        return bool(tool.checkPermission(permission, aq_inner(context)))

@@ -2,6 +2,7 @@ import logging
 
 from zope.interface import alsoProvides
 
+from plone.api.portal import get_tool
 from plone.dexterity.utils import createContentInContainer as create
 from Products.CMFDynamicViewFTI.interfaces import ISelectableBrowserDefault
 from Products.Five.browser import BrowserView
@@ -67,6 +68,15 @@ class BootstrapCompliance(BrowserView):
     def set_layout(self, obj, name):
         ISelectableBrowserDefault(obj).setLayout(name)
 
+    def set_policy(self, context, name):
+        logger.info("Set placeful workflow policy for %s", context.getId())
+
+        tool = get_tool('portal_placeful_workflow')
+        config = tool.getWorkflowPolicyConfig(context)
+
+        # NOTE: updates workflow mappings
+        config.setPolicyBelow(name, True)
+
     def make_country(self, parent, code, name):
         cf = create(parent, 'wise.msfd.countrydescriptorsfolder',
                     title=name, id=code)
@@ -96,6 +106,11 @@ class BootstrapCompliance(BrowserView):
     def __call__(self):
         cm = create(self.context, 'Folder', title=u'Compliance Module')
         self.set_layout(cm, '@@comp-start')
+        self.set_policy(cm, 'compliance_section_policy')
+
+        # cm.__ac_local_roles__['extranet-someone'] = [u'Contributor',
+        # u'Editor']
+
         alsoProvides(cm, interfaces.IComplianceModuleFolder)
 
         nda = create(cm, 'Folder', title=u'National Descriptors Assessments')

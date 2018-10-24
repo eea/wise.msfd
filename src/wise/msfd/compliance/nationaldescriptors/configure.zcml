@@ -34,7 +34,7 @@
     for="*"
     name="edit-assessment-data-2018"
     class=".assessment.EditAssessmentDataView"
-    permission="zope2.View"
+    permission="wise.EditAssessment"
     />
 
   <browser:page

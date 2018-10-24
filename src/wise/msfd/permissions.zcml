@@ -1,0 +1,14 @@
+<configure
+  xmlns="http://namespaces.zope.org/zope"
+  xmlns:browser="http://namespaces.zope.org/browser"
+  xmlns:i18n="http://namespaces.zope.org/i18n"
+  xmlns:z3c="http://namespaces.zope.org/z3c"
+  i18n_domain="wise.msfd">
+
+  <permission
+    id="wise.EditAssessment"
+    title="wise.msfd: Edit Assessment"
+    description="Edit a Compliance Assessment"
+    />
+
+</configure>
