@@ -37,7 +37,7 @@ class BootstrapCompliance(BrowserView):
         countries = [(x.Code, x.Country) for x in res]
 
         if is_debug:
-            countries = [x for x in countries if x[0] == 'LV']
+            countries = [x for x in countries if x[0] in ('LV', 'NL')]
 
         return countries
 
@@ -106,7 +106,7 @@ class BootstrapCompliance(BrowserView):
     def __call__(self):
         cm = create(self.context, 'Folder', title=u'Compliance Module')
         self.set_layout(cm, '@@comp-start')
-        self.set_policy(cm, 'compliance_section_policy')
+        # self.set_policy(cm, 'compliance_section_policy')
 
         # cm.__ac_local_roles__['extranet-someone'] = [u'Contributor',
         # u'Editor']

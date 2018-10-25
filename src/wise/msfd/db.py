@@ -16,7 +16,7 @@ env = os.environ.get
 DSN = env('MSFDURI', 'mssql+pymssql://SA:bla3311!@msdb')  # ?charset=utf8mb4
 DBS = {
     'session': env('MSFD_db_default', 'MarineDB'),
-    'session_2018': env('MSFD_db_2018', 'MSFD2018_sandbox_16102018')
+    'session_2018': env('MSFD_db_2018', 'MSFD2018_sandbox_25102018')
 }
 
 # DBS = {
@@ -374,6 +374,20 @@ def get_related_record_join(klass, klass_join, column, rel_id):
 def get_all_records(mapper_class, *conditions):
     sess = session()
     q = sess.query(mapper_class).filter(*conditions)
+    count = q.count()
+    q = [x for x in q]
+
+    return [count, q]
+
+
+@cache(db_result_key)
+def get_all_records_ordered(table, order_col, *conditions):
+    sess = session()
+
+    col = getattr(table.c, order_col)
+
+    q = sess.query(table).filter(*conditions).\
+        order_by(table.c.MarineReportingUnit, col)
     count = q.count()
     q = [x for x in q]
 

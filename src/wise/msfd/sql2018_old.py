@@ -1,11 +1,10 @@
 # coding: utf-8
-from sqlalchemy import (BigInteger, Column, Date, DateTime, Float, ForeignKey,
-                        Index, Integer, LargeBinary, Numeric, SmallInteger,
-                        String, Table, Unicode, UnicodeText)
-from sqlalchemy.dialects.mssql.base import BIT
-from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy import BigInteger, Column, Date, DateTime, Float, ForeignKey, Index, Integer, LargeBinary, Numeric, SmallInteger, String, Table, Unicode, UnicodeText, text
 from sqlalchemy.orm import relationship
+from sqlalchemy.dialects.mssql.base import BIT
 from sqlalchemy.sql.sqltypes import NullType
+from sqlalchemy.ext.declarative import declarative_base
+
 
 Base = declarative_base()
 metadata = Base.metadata
@@ -278,7 +277,7 @@ class ART8GESOverallStatu(Base):
     GESExtentAchieved = Column(Numeric(8, 5))
     GESExtentUnit = Column(Unicode(250))
     GESExtentThreshold = Column(Numeric(8, 5))
-    GESAchieved = Column(Unicode(50), nullable=False)
+    GESAchieved = Column(Unicode(50))
     AssessmentsPeriod = Column(Unicode(9), nullable=False)
     DescriptionOverallStatus = Column(Unicode(2500))
     IntegrationRuleTypeCriteria = Column(Unicode(50))
@@ -376,8 +375,6 @@ class COMAssessment(Base):
 
 t_COM_Assessments_2012 = Table(
     'COM_Assessments_2012', metadata,
-    Column('CountryCode', Unicode(255)),
-    Column('Subregion', Unicode(255)),
     Column('Country', Unicode(255)),
     Column('Descriptor', Unicode(255)),
     Column('AssessmentCriteria', Unicode(255)),
@@ -386,7 +383,8 @@ t_COM_Assessments_2012 = Table(
     Column('Conclusions', Unicode),
     Column('Criteria', Unicode),
     Column('OverallScore', Float(53)),
-    Column('OverallAssessment', Unicode(255))
+    Column('OverallAssessment', Unicode(255)),
+    Column('COM_General_Id', Integer)
 )
 
 
@@ -405,7 +403,7 @@ class COMGeneral(Base):
     __tablename__ = 'COM_General'
 
     Id = Column(Integer, primary_key=True)
-    Reporting_historyId = Column(ForeignKey(u'Reporting_history.Id'), nullable=False)
+    Reporting_historyId = Column(ForeignKey(u'Reporting_history.Id'))
     CountryCode = Column(Unicode(2))
     RegionSubregion = Column(Unicode(20))
     AssessmentTopic = Column(Unicode(200))
@@ -635,7 +633,7 @@ class LGESComponent(Base):
     Code = Column(Unicode(10), primary_key=True)
     Description = Column(Unicode(100))
     GESComponent = Column(Unicode(15))
-    Old = Column(BIT, nullable=False)
+    Old = Column(BIT, nullable=False, server_default=text("((0))"))
 
 
 class LIntegrationRule(Base):
@@ -766,6 +764,118 @@ class ReportingHistory(Base):
     DateReceived = Column(DateTime, nullable=False)
     ReportingDelay = Column(Integer)
     ReportType = Column(Unicode(50))
+
+
+t_V_ART8_GES_2018 = Table(
+    'V_ART8_GES_2018', metadata,
+    Column('CountryCode', Unicode(2), nullable=False),
+    Column('ReportingDate', Date, nullable=False),
+    Column('ReportedFileLink', Unicode(350), nullable=False),
+    Column('Region', Unicode(20)),
+    Column('MarineReportingUnit', Unicode(50), nullable=False),
+    Column('GESComponent', Unicode(50), nullable=False),
+    Column('Feature', Unicode(250), nullable=False),
+    Column('GESExtentAchieved', Numeric(8, 5)),
+    Column('GESExtentUnit', Unicode(250)),
+    Column('GESExtentThreshold', Numeric(8, 5)),
+    Column('GESAchieved', Unicode(50)),
+    Column('AssessmentsPeriod', Unicode(9), nullable=False),
+    Column('DescriptionOverallStatus', Unicode(2500)),
+    Column('IntegrationRuleTypeCriteria', Unicode(50)),
+    Column('IntegrationRuleDescriptionCriteria', Unicode(1000)),
+    Column('IntegrationRuleDescriptionReferenceCriteria', Unicode(250)),
+    Column('IntegrationRuleTypeParameter', Unicode(50)),
+    Column('IntegrationRuleDescriptionParameter', Unicode(1000)),
+    Column('IntegrationRuleDescriptionReferenceParameter', Unicode(250)),
+    Column('PressureCode', Unicode(50)),
+    Column('TargetCode', Unicode(50)),
+    Column('Element', Unicode(250)),
+    Column('Element2', Unicode(250)),
+    Column('ElementSource', Unicode(50)),
+    Column('ElementCode', Unicode(50)),
+    Column('Element2Code', Unicode(50)),
+    Column('ElementCodeSource', Unicode(50)),
+    Column('Element2CodeSource', Unicode(50)),
+    Column('DescriptionElement', Unicode(2500)),
+    Column('ElementStatus', Unicode(50)),
+    Column('Criteria', Unicode(50)),
+    Column('CriteriaStatus', Unicode(50)),
+    Column('DescriptionCriteria', Unicode(2500)),
+    Column('Parameter', Unicode(50)),
+    Column('ParameterOther', Unicode(250)),
+    Column('ThresholdValueUpper', Float(53)),
+    Column('ThresholdValueLower', Float(53)),
+    Column('ThresholdQualitative', Unicode(250)),
+    Column('ThresholdValueSource', Unicode(50)),
+    Column('ThresholdValueSourceOther', Unicode(250)),
+    Column('ValueAchievedUpper', Float(53)),
+    Column('ValueAchievedLower', Float(53)),
+    Column('ValueUnit', Unicode(50)),
+    Column('ValueUnitOther', Unicode(100)),
+    Column('ProportionThresholdValue', Float(53)),
+    Column('ProportionThresholdValueUnit', Unicode(50)),
+    Column('ProportionValueAchieved', Float(53)),
+    Column('Trend', Unicode(50)),
+    Column('ParameterAchieved', Unicode(50)),
+    Column('DescriptionParameter', Unicode(2500)),
+    Column('IndicatorCode', Unicode(50))
+)
+
+
+t_V_ART8_GES_2018_All = Table(
+    'V_ART8_GES_2018_All', metadata,
+    Column('CountryCode', Unicode(2), nullable=False),
+    Column('ReportingDate', Date, nullable=False),
+    Column('ReportedFileLink', Unicode(350), nullable=False),
+    Column('Region', Unicode(20)),
+    Column('MarineReportingUnit', Unicode(50), nullable=False),
+    Column('GESComponent', Unicode(50), nullable=False),
+    Column('Feature', Unicode(250), nullable=False),
+    Column('GESExtentAchieved', Numeric(8, 5)),
+    Column('GESExtentUnit', Unicode(250)),
+    Column('GESExtentThreshold', Numeric(8, 5)),
+    Column('GESAchieved', Unicode(50)),
+    Column('AssessmentsPeriod', Unicode(9), nullable=False),
+    Column('DescriptionOverallStatus', Unicode(2500)),
+    Column('IntegrationRuleTypeCriteria', Unicode(50)),
+    Column('IntegrationRuleDescriptionCriteria', Unicode(1000)),
+    Column('IntegrationRuleDescriptionReferenceCriteria', Unicode(250)),
+    Column('IntegrationRuleTypeParameter', Unicode(50)),
+    Column('IntegrationRuleDescriptionParameter', Unicode(1000)),
+    Column('IntegrationRuleDescriptionReferenceParameter', Unicode(250)),
+    Column('PressureCode', Unicode(50)),
+    Column('TargetCode', Unicode(50)),
+    Column('Element', Unicode(250)),
+    Column('Element2', Unicode(250)),
+    Column('ElementSource', Unicode(50)),
+    Column('ElementCode', Unicode(50)),
+    Column('Element2Code', Unicode(50)),
+    Column('ElementCodeSource', Unicode(50)),
+    Column('Element2CodeSource', Unicode(50)),
+    Column('DescriptionElement', Unicode(2500)),
+    Column('ElementStatus', Unicode(50)),
+    Column('Criteria', Unicode(50)),
+    Column('CriteriaStatus', Unicode(50)),
+    Column('DescriptionCriteria', Unicode(2500)),
+    Column('Parameter', Unicode(50)),
+    Column('ParameterOther', Unicode(250)),
+    Column('ThresholdValueUpper', Float(53)),
+    Column('ThresholdValueLower', Float(53)),
+    Column('ThresholdQualitative', Unicode(250)),
+    Column('ThresholdValueSource', Unicode(50)),
+    Column('ThresholdValueSourceOther', Unicode(250)),
+    Column('ValueAchievedUpper', Float(53)),
+    Column('ValueAchievedLower', Float(53)),
+    Column('ValueUnit', Unicode(50)),
+    Column('ValueUnitOther', Unicode(100)),
+    Column('ProportionThresholdValue', Float(53)),
+    Column('ProportionThresholdValueUnit', Unicode(50)),
+    Column('ProportionValueAchieved', Float(53)),
+    Column('Trend', Unicode(50)),
+    Column('ParameterAchieved', Unicode(50)),
+    Column('DescriptionParameter', Unicode(2500)),
+    Column('IndicatorCode', Unicode(50))
+)
 
 
 t_V_CriteriaStatus2018 = Table(
