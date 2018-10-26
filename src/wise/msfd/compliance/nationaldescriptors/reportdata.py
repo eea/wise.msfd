@@ -1,8 +1,8 @@
 from collections import defaultdict
 from copy import deepcopy
 from datetime import datetime
-from sqlalchemy import or_
 
+from sqlalchemy import or_
 from zope.schema import Choice
 from zope.schema.vocabulary import SimpleTerm, SimpleVocabulary
 
@@ -198,7 +198,7 @@ class ReportData2018(BaseComplianceView):
     Art10 = Template('pt/nat-desc-report-data-multiple-muid.pt')
 
     view_names = {
-        'Art8': 't_V_ART8_GES_2018_All',
+        'Art8': 't_V_ART8_GES_2018',
         'Art9': 't_V_ART9_GES_2018',
         'Art10': 't_V_ART10_Targets_2018'
     }

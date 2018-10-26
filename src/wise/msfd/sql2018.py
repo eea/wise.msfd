@@ -1,10 +1,11 @@
 # coding: utf-8
-from sqlalchemy import BigInteger, Column, Date, DateTime, Float, ForeignKey, Integer, Numeric, SmallInteger, String, Table, Unicode, UnicodeText, text
-from sqlalchemy.orm import relationship
+from sqlalchemy import (BigInteger, Column, Date, DateTime, Float, ForeignKey,
+                        Index, Integer, LargeBinary, Numeric, SmallInteger,
+                        String, Table, Unicode, UnicodeText, text)
 from sqlalchemy.dialects.mssql.base import BIT
-from sqlalchemy.sql.sqltypes import NullType
 from sqlalchemy.ext.declarative import declarative_base
-
+from sqlalchemy.orm import relationship
+from sqlalchemy.sql.sqltypes import NullType
 
 Base = declarative_base()
 metadata = Base.metadata
@@ -36,7 +37,9 @@ class ART10TargetsProgressAssessment(Base):
     TargetStatus = Column(Unicode(50))
     AssessmentPeriod = Column(Unicode(9), nullable=False)
     Description = Column(Unicode(2500))
-    IdTarget = Column(Integer, nullable=False)
+    IdTarget = Column(ForeignKey(u'ART10_Targets_Target.Id'), nullable=False)
+
+    ART10_Targets_Target = relationship(u'ART10TargetsTarget')
 
 
 class ART10TargetsProgressAssessmentIndicator(Base):
@@ -66,14 +69,18 @@ class ART10TargetsTargetFeature(Base):
     __tablename__ = 'ART10_Targets_Target_Feature'
 
     Feature = Column(Unicode(250), primary_key=True, nullable=False)
-    IdTarget = Column(Integer, primary_key=True, nullable=False)
+    IdTarget = Column(ForeignKey(u'ART10_Targets_Target.Id'), primary_key=True, nullable=False)
+
+    ART10_Targets_Target = relationship(u'ART10TargetsTarget')
 
 
 class ART10TargetsTargetGESComponent(Base):
     __tablename__ = 'ART10_Targets_Target_GESComponent'
 
     GESComponent = Column(Unicode(50), primary_key=True, nullable=False)
-    IdTarget = Column(Integer, primary_key=True, nullable=False)
+    IdTarget = Column(ForeignKey(u'ART10_Targets_Target.Id'), primary_key=True, nullable=False)
+
+    ART10_Targets_Target = relationship(u'ART10TargetsTarget')
 
 
 class ART10TargetsTargetMeasure(Base):
@@ -164,7 +171,7 @@ class ART8ESAUsesActivitiesEcosystemService(Base):
     EcosystemServiceCode = Column(Unicode(50), primary_key=True, nullable=False)
     IdUsesActivities = Column(ForeignKey(u'ART8_ESA_UsesActivities.Id'), primary_key=True, nullable=False)
 
-    ART8_ESA_UsesActivity = relationship('ART8ESAUsesActivity')
+    ART8_ESA_UsesActivity = relationship(u'ART8ESAUsesActivity')
 
 
 class ART8ESAUsesActivitiesIndicator(Base):
@@ -173,7 +180,7 @@ class ART8ESAUsesActivitiesIndicator(Base):
     IndicatorCode = Column(Unicode(50), primary_key=True, nullable=False)
     IdUsesActivities = Column(ForeignKey(u'ART8_ESA_UsesActivities.Id'), primary_key=True, nullable=False)
 
-    ART8_ESA_UsesActivity = relationship('ART8ESAUsesActivity')
+    ART8_ESA_UsesActivity = relationship(u'ART8ESAUsesActivity')
 
 
 class ART8ESAUsesActivitiesPressure(Base):
@@ -182,7 +189,7 @@ class ART8ESAUsesActivitiesPressure(Base):
     PressureCode = Column(Unicode(50), primary_key=True, nullable=False)
     IdUsesActivities = Column(ForeignKey(u'ART8_ESA_UsesActivities.Id'), primary_key=True, nullable=False)
 
-    ART8_ESA_UsesActivity = relationship('ART8ESAUsesActivity')
+    ART8_ESA_UsesActivity = relationship(u'ART8ESAUsesActivity')
 
 
 class ART8GESCriteriaStatu(Base):
@@ -195,8 +202,8 @@ class ART8GESCriteriaStatu(Base):
     IdOverallStatus = Column(ForeignKey(u'ART8_GES_OverallStatus.Id'))
     IdElementStatus = Column(ForeignKey(u'ART8_GES_ElementStatus.Id'))
 
-    ART8_GES_ElementStatu = relationship('ART8GESElementStatu')
-    ART8_GES_OverallStatu = relationship('ART8GESOverallStatu')
+    ART8_GES_ElementStatu = relationship(u'ART8GESElementStatu')
+    ART8_GES_OverallStatu = relationship(u'ART8GESOverallStatu')
 
 
 class ART8GESCriteriaValue(Base):
@@ -222,7 +229,7 @@ class ART8GESCriteriaValue(Base):
     DescriptionParameter = Column(Unicode(2500))
     IdCriteriaStatus = Column(ForeignKey(u'ART8_GES_CriteriaStatus.Id'), nullable=False)
 
-    ART8_GES_CriteriaStatu = relationship('ART8GESCriteriaStatu')
+    ART8_GES_CriteriaStatu = relationship(u'ART8GESCriteriaStatu')
 
 
 class ART8GESCriteriaValuesIndicator(Base):
@@ -231,7 +238,7 @@ class ART8GESCriteriaValuesIndicator(Base):
     IndicatorCode = Column(Unicode(50), primary_key=True, nullable=False)
     IdCriteriaValues = Column(ForeignKey(u'ART8_GES_CriteriaValues.Id'), primary_key=True, nullable=False)
 
-    ART8_GES_CriteriaValue = relationship('ART8GESCriteriaValue')
+    ART8_GES_CriteriaValue = relationship(u'ART8GESCriteriaValue')
 
 
 class ART8GESElementStatu(Base):
@@ -249,7 +256,7 @@ class ART8GESElementStatu(Base):
     ElementStatus = Column(Unicode(50))
     IdOverallStatus = Column(ForeignKey(u'ART8_GES_OverallStatus.Id'), nullable=False)
 
-    ART8_GES_OverallStatu = relationship('ART8GESOverallStatu')
+    ART8_GES_OverallStatu = relationship(u'ART8GESOverallStatu')
 
 
 class ART8GESMarineUnit(Base):
@@ -291,7 +298,7 @@ class ART8GESOverallStatusPressure(Base):
     PressureCode = Column(Unicode(50), primary_key=True, nullable=False)
     IdOverallStatus = Column(ForeignKey(u'ART8_GES_OverallStatus.Id'), primary_key=True, nullable=False)
 
-    ART8_GES_OverallStatu = relationship('ART8GESOverallStatu')
+    ART8_GES_OverallStatu = relationship(u'ART8GESOverallStatu')
 
 
 class ART8GESOverallStatusTarget(Base):
@@ -300,7 +307,7 @@ class ART8GESOverallStatusTarget(Base):
     TargetCode = Column(Unicode(50), primary_key=True, nullable=False)
     IdOverallStatus = Column(ForeignKey(u'ART8_GES_OverallStatus.Id'), primary_key=True, nullable=False)
 
-    ART8_GES_OverallStatu = relationship('ART8GESOverallStatu')
+    ART8_GES_OverallStatu = relationship(u'ART8GESOverallStatu')
 
 
 class ART9GESGESComponent(Base):
@@ -332,14 +339,18 @@ class ART9GESGESDeterminationFeature(Base):
 
     Id = Column(Integer, primary_key=True)
     Feature = Column(Unicode(50), nullable=False)
-    IdGESDetermination = Column(Integer, nullable=False)
+    IdGESDetermination = Column(ForeignKey(u'ART9_GES_GESDetermination.Id'), nullable=False)
+
+    ART9_GES_GESDetermination = relationship(u'ART9GESGESDetermination')
 
 
 class ART9GESMarineUnit(Base):
     __tablename__ = 'ART9_GES_MarineUnit'
 
     MarineReportingUnit = Column(Unicode(50), primary_key=True, nullable=False)
-    IdGESDetermination = Column(Integer, primary_key=True, nullable=False)
+    IdGESDetermination = Column(ForeignKey(u'ART9_GES_GESDetermination.Id'), primary_key=True, nullable=False)
+
+    ART9_GES_GESDetermination = relationship(u'ART9GESGESDetermination')
 
 
 class COMAssessment(Base):
@@ -386,7 +397,7 @@ class COMAssessmentsComment(Base):
     Organisation = Column(Unicode(50))
     Comment = Column(Unicode)
 
-    COM_Assessment = relationship('COMAssessment')
+    COM_Assessment = relationship(u'COMAssessment')
 
 
 class COMGeneral(Base):
@@ -488,7 +499,7 @@ class IMPORTERROR(Base):
     envelopeImportID = Column(ForeignKey(u'Envelope_Import.envelopeImportID'))
     importID = Column(BigInteger)
     schema = Column(Unicode(10), nullable=False)
-    table = Column(String(255, u'SQL_Latin1_General_CP1_CI_AS'))
+    table = Column(String(255, u'Latin1_General_CI_AS'))
     message = Column(Unicode(4000))
     raisedAt = Column(DateTime, nullable=False)
 
@@ -843,62 +854,6 @@ t_V_ART8_GES_2018 = Table(
 )
 
 
-t_V_ART8_GES_2018_All = Table(
-    'V_ART8_GES_2018_All', metadata,
-    Column('CountryCode', Unicode(2), nullable=False),
-    Column('ReportingDate', Date, nullable=False),
-    Column('ReportedFileLink', Unicode(350), nullable=False),
-    Column('Region', Unicode(20)),
-    Column('MarineReportingUnit', Unicode(50), nullable=False),
-    Column('GESComponent', Unicode(50), nullable=False),
-    Column('Feature', Unicode(250), nullable=False),
-    Column('GESExtentAchieved', Numeric(8, 5)),
-    Column('GESExtentUnit', Unicode(250)),
-    Column('GESExtentThreshold', Numeric(8, 5)),
-    Column('GESAchieved', Unicode(50)),
-    Column('AssessmentsPeriod', Unicode(9), nullable=False),
-    Column('DescriptionOverallStatus', Unicode(2500)),
-    Column('IntegrationRuleTypeCriteria', Unicode(50)),
-    Column('IntegrationRuleDescriptionCriteria', Unicode(1000)),
-    Column('IntegrationRuleDescriptionReferenceCriteria', Unicode(250)),
-    Column('IntegrationRuleTypeParameter', Unicode(50)),
-    Column('IntegrationRuleDescriptionParameter', Unicode(1000)),
-    Column('IntegrationRuleDescriptionReferenceParameter', Unicode(250)),
-    Column('PressureCode', Unicode(50)),
-    Column('TargetCode', Unicode(50)),
-    Column('Element', Unicode(250)),
-    Column('Element2', Unicode(250)),
-    Column('ElementSource', Unicode(50)),
-    Column('ElementCode', Unicode(50)),
-    Column('Element2Code', Unicode(50)),
-    Column('ElementCodeSource', Unicode(50)),
-    Column('Element2CodeSource', Unicode(50)),
-    Column('DescriptionElement', Unicode(2500)),
-    Column('ElementStatus', Unicode(50)),
-    Column('Criteria', Unicode(50)),
-    Column('CriteriaStatus', Unicode(50)),
-    Column('DescriptionCriteria', Unicode(2500)),
-    Column('Parameter', Unicode(50)),
-    Column('ParameterOther', Unicode(250)),
-    Column('ThresholdValueUpper', Float(53)),
-    Column('ThresholdValueLower', Float(53)),
-    Column('ThresholdQualitative', Unicode(250)),
-    Column('ThresholdValueSource', Unicode(50)),
-    Column('ThresholdValueSourceOther', Unicode(250)),
-    Column('ValueAchievedUpper', Float(53)),
-    Column('ValueAchievedLower', Float(53)),
-    Column('ValueUnit', Unicode(50)),
-    Column('ValueUnitOther', Unicode(100)),
-    Column('ProportionThresholdValue', Float(53)),
-    Column('ProportionThresholdValueUnit', Unicode(50)),
-    Column('ProportionValueAchieved', Float(53)),
-    Column('Trend', Unicode(50)),
-    Column('ParameterAchieved', Unicode(50)),
-    Column('DescriptionParameter', Unicode(2500)),
-    Column('IndicatorCode', Unicode(50))
-)
-
-
 t_V_ART9_GES_2018 = Table(
     'V_ART9_GES_2018', metadata,
     Column('CountryCode', Unicode(2), nullable=False),
@@ -1012,7 +967,7 @@ t_V_OverallStatus2018 = Table(
     Column('MRUArea', Float(53)),
     Column('Feature', Unicode(250), nullable=False),
     Column('GESComponent', Unicode(50), nullable=False),
-    Column('GESAchieved', Unicode(50)),
+    Column('GESAchieved', Unicode(50), nullable=False),
     Column('GESExtentAchieved', Numeric(8, 5)),
     Column('GESExtentUnit', Unicode(250)),
     Column('GESExtentThreshold', Numeric(8, 5))
@@ -1048,3 +1003,16 @@ t_V_ReportList = Table(
     Column('reportingdate', DateTime),
     Column('obligation', Unicode(255))
 )
+
+
+class Sysdiagram(Base):
+    __tablename__ = 'sysdiagrams'
+    __table_args__ = (
+        Index('UK_principal_name', 'principal_id', 'name', unique=True),
+    )
+
+    name = Column(Unicode(128), nullable=False)
+    principal_id = Column(Integer, nullable=False)
+    diagram_id = Column(Integer, primary_key=True)
+    version = Column(Integer)
+    definition = Column(LargeBinary)

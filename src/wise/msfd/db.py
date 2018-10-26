@@ -6,11 +6,12 @@ from sqlalchemy.orm import scoped_session, sessionmaker
 from sqlalchemy.orm.relationships import RelationshipProperty
 from zope.sqlalchemy import register
 
-import transaction
 from eea.cache import cache
 
-from . import sql, sql2018
+from . import sql  # , sql2018
 from .utils import db_result_key, pivot_query
+
+# import transaction
 
 env = os.environ.get
 DSN = env('MSFDURI', 'mssql+pymssql://SA:bla3311!@msdb')  # ?charset=utf8mb4
@@ -37,6 +38,9 @@ def session():
 
     if hasattr(threadlocals, session_name):
         return getattr(threadlocals, session_name)
+
+    print "Session DSN: ", DSN
+    print "Session DBS: ", DBS[session_name]
 
     session = _make_session(DSN)
     session.execute(USE_DB.format(DBS[session_name]))
@@ -416,7 +420,9 @@ def get_all_records_join(columns, klass_join, *conditions):
 
 def compliance_art8_join(columns, mc_join1, mc_join2, *conditions):
     sess = session()
-    q = sess.query(*columns).outerjoin(mc_join1).outerjoin(mc_join2).filter(*conditions)
+    q = sess.query(*columns).outerjoin(mc_join1).outerjoin(mc_join2).filter(
+        *conditions
+    )
     count = q.count()
     q = [x for x in q]
 
