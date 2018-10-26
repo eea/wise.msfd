@@ -46,14 +46,21 @@ class BootstrapCompliance(BrowserView):
 
     @db.use_db_session('session_2018')
     def _get_descriptors(self):
+        """ Get a list of (code, description) descriptors
+        """
+
+        is_debug = 'production' not in self.request.form
+
         mc = sql2018.LGESComponent
-        descriptors = db.get_unique_from_mapper(
+        count, res = db.get_all_records(
             mc,
-            'Code',
             mc.GESComponent == 'Descriptor'
         )
+        descriptors = [(x.Code, x.Description) for x in res]
 
-        return ['D1', 'D5']
+        descs = ('D1.1', 'D1.4', 'D5')
+        if is_debug:
+            descriptors = [x for x in descriptors if x[0] in descs]
 
         return descriptors
 
@@ -85,8 +92,8 @@ class BootstrapCompliance(BrowserView):
         # self.set_layout(cf, '@@nat-desc-country-start')
         # alsoProvides(cf, interfaces.ICountryDescriptorsFolder)
 
-        for code in self._get_descriptors():
-            df = create(cf, 'Folder', title=code, id=code)
+        for code, description in self._get_descriptors():
+            df = create(cf, 'Folder', title=description, id=code)
             alsoProvides(df, interfaces.IDescriptorFolder)
 
             for art in self._get_articles():

@@ -1,5 +1,5 @@
 <div class="overflow-table"
-  tal:define="title options/title; data options/data">
+  tal:define="data options/data">
 
   <div tal:define="form nocall:view/subform"
     style="padding: 1em; background-color: #CCC; width: 20em; float: right">
@@ -8,8 +8,7 @@
     </div>
   </div>
 
-  <h4 tal:content="title">2018 Member State Report</h4>
-  <a href="./">Back to Descriptor</a>
+  <div style="overflow: auto" tal:content="structure view/head_tpl">Header</div>
 
   <div tal:condition="not: data">
     No data reported for this Descriptor

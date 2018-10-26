@@ -1,6 +1,5 @@
 <div class="overflow-table">
   <div class="">
-    <h5>2012 Member State Report</h5>
     <table tal:repeat="muid view/muids" class="table table-bordered table-striped">
     <tal:block tal:define="topic_assessment python: view.get_topic_assessment(muid, view.descriptor);
             criterias python: view.context.get_criterias_list(view.descriptor);

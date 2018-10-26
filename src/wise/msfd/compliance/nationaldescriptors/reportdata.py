@@ -1,5 +1,4 @@
 from collections import defaultdict
-from copy import deepcopy
 from datetime import datetime
 
 from sqlalchemy import or_
@@ -22,7 +21,7 @@ from .utils import row_to_dict
 
 # from wise.msfd.search.base import EmbededForm
 # from .a10 import Article10
-
+# from copy import deepcopy
 
 class ReportData2012(BaseComplianceView, BaseUtil):
 
@@ -30,8 +29,6 @@ class ReportData2012(BaseComplianceView, BaseUtil):
     """
 
     name = 'nat-desc-start'
-
-    header_template = Template('pt/report-data-2012-header.pt')
 
     Art8 = Article8
     Art9 = Article910
@@ -68,60 +65,6 @@ class ReportData2012(BaseComplianceView, BaseUtil):
 
         return sorted(muids)
 
-    @property
-    def colspan(self):
-        return 42
-
-    @property
-    def country_name(self):
-        """ Get country name based on country code
-        :return: 'Latvia'
-        """
-        res = db.get_unique_from_mapper(
-            sql.MSFD11CommonLabel,
-            'Text',
-            sql.MSFD11CommonLabel.value == self.country_code,
-            sql.MSFD11CommonLabel.group == 'list-countries',
-        )
-
-        if not res:
-            return ''
-
-        return res[0]
-
-    @property
-    def regions(self):
-        """ Get all regions and subregions for a country
-        :return: ['BAL', 'ANS']
-        """
-        t = sql.t_MSFD4_GegraphicalAreasID
-        count, res = db.get_all_records(
-            t,
-            t.c.MemberState == self.country_code
-        )
-
-        res = [row_to_dict(t, r) for r in res]
-        regions = set([x['RegionSubRegions'] for x in res])
-
-        return regions
-
-    @property
-    def desc_label(self):
-        """ Get the label(text) for a descriptor
-        :return: 'D5 Eutrophication'
-        """
-        res = db.get_unique_from_mapper(
-            sql.MSFD11CommonLabel,
-            'Text',
-            sql.MSFD11CommonLabel.value == self.descriptor,
-            sql.MSFD11CommonLabel.group == 'list-MonitoringProgramme',
-        )
-
-        if not res:
-            return ''
-
-        return res[0]
-
     @db.use_db_session('session')
     def __call__(self):
         article_class = getattr(self, self.article)
@@ -135,8 +78,13 @@ class ReportData2012(BaseComplianceView, BaseUtil):
 
         print "Will render report for ", self.article
 
-        self.content = self.header_template() + \
-            article_class(self, self.request)()
+        head_tpl = self.header_template(title='2012 Member State Report',
+                                        report_by='Member State',
+                                        source_file='to be added',
+                                        report_due='2012-10-15',
+                                        report_date='2013-04-30')
+
+        self.content = head_tpl + article_class(self, self.request)()
 
         return self.index()
 
@@ -214,7 +162,7 @@ class ReportData2018(BaseComplianceView):
             t,
             'Criteria',
             t.c.CountryCode == self.country_code,
-            t.c.GESComponent == self.descriptor,
+            t.c.GESComponent.like('{}%'.format(self.descriptor)),
         )
 
         return res
@@ -364,6 +312,13 @@ class ReportData2018(BaseComplianceView):
         self.subform = self.get_form()
 
         data = self.get_data()
-        self.content = template(data=data, title='2018 Member State Report')
+
+        self.head_tpl = self.header_template(title='2018 Member State Report',
+                                             report_by='Member State',
+                                             source_file='To be addedd...',
+                                             report_due='2018-10-15',
+                                             report_date='2018-11-19')
+
+        self.content = template(data=data)
 
         return self.index()

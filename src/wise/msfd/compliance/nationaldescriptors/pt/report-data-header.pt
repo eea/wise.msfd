@@ -1,6 +1,6 @@
 <div class="row">
   <div class="col-md-12">
-    <h4>National descriptors assessments</h4>
+    <h4 tal:content="options/title">201X Member State Report</h4>
     <a href="./">Back to Descriptor</a>
     <table class="table table-bordered table-striped first-table">
       <tr>
@@ -26,25 +26,24 @@
       <tr>
         <td>Reported by</td>
         <td tal:attributes="colspan view/colspan"
-           tal:content="string:Member State"/>
+           tal:content="options/report_by"/>
       </tr>
       <tr>
         <td>Source file of Member State</td>
-        <td tal:attributes="colspan view/colspan"
-           tal:define="source_file string:to be added">
-          <a tal:attributes="href source_file"
-           tal:content="source_file"/>
+        <td tal:attributes="colspan view/colspan">
+          <a tal:attributes="href options/source_file"
+           tal:content="options/source_file"/>
         </td>
       </tr>
       <tr>
         <td>Date report due</td>
         <td tal:attributes="colspan view/colspan"
-           tal:content="string:2012-10-15"/>
+           tal:content="options/report_due"/>
       </tr>
       <tr>
         <td>Date reported by Member State</td>
         <td tal:attributes="colspan view/colspan"
-           tal:content="string:2013-04-30"/>
+           tal:content="options/report_date"/>
       </tr>
     </table>
   </div>

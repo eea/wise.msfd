@@ -4,7 +4,10 @@ from plone.api.portal import get_tool
 from Products.Five.browser import BrowserView
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 
+from wise.msfd import db, sql
 from . import interfaces
+from .nationaldescriptors.utils import row_to_dict
+
 
 MAIN_FORMS = [
     # view name, (title, explanation)
@@ -92,7 +95,65 @@ class BaseComplianceView(BrowserView):
 
     main_forms = MAIN_FORMS
 
+    header_template = ViewPageTemplateFile(
+        'nationaldescriptors/pt/report-data-header.pt'
+    )
+
     translate_snip = ViewPageTemplateFile('pt/translate-snip.pt')
+
+    @property
+    def colspan(self):
+        return 42
+
+    @property
+    def country_name(self):
+        """ Get country name based on country code
+        :return: 'Latvia'
+        """
+
+        name = self._country_folder.Title()
+
+        return name
+
+    @property
+    def desc_label(self):
+        """ Get the label(text) for a descriptor
+        :return: 'D5 Eutrophication'
+        """
+
+        res = self._descriptor_folder.Title()
+
+        return res
+
+        # res = db.get_unique_from_mapper(
+        #     sql.MSFD11CommonLabel,
+        #     'Text',
+        #     sql.MSFD11CommonLabel.value == self.descriptor,
+        #     sql.MSFD11CommonLabel.group == 'list-MonitoringProgramme',
+        # )
+        #
+        # if not res:
+        #     return ''
+        #
+        # return res[0]
+
+    @property
+    @db.use_db_session('session')
+    def regions(self):
+        """ Get all regions and subregions for a country
+        :return: ['BAL', 'ANS']
+        """
+
+        t = sql.t_MSFD4_GegraphicalAreasID
+        count, res = db.get_all_records(
+            t,
+            t.c.MemberState == self.country_code
+        )
+
+        res = [row_to_dict(t, r) for r in res]
+        regions = set([x['RegionSubRegions'] for x in res])
+
+        return regions
 
     def get_parent_by_iface(self, iface):
         for parent in self.request.other['PARENTS']:
