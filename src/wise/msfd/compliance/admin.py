@@ -111,6 +111,7 @@ class BootstrapCompliance(BrowserView):
     def __call__(self):
         cm = create(self.context, 'Folder', title=u'Compliance Module')
         self.set_layout(cm, '@@comp-start')
+        # import pdb; pdb.set_trace()
         self.set_policy(cm, 'compliance_section_policy')
 
         # cm.__ac_local_roles__['extranet-someone'] = [u'Contributor',
