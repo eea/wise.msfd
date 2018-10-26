@@ -19,18 +19,13 @@ module.exports = {
               '<%= path.src %>/less/select2-override.less',
               '<%= path.src %>/less/select2-top-override.less'
           ],
-          '<%= path.dest %>/css/compliance.css': '<%= path.src %>/less/compliance.less'
+          '<%= path.dest %>/css/compliance.css': [
+            '<%= path.src %>/less/compliance.less',
+            '<%= path.src %>/less/translate.less',
+          ]
       }
     }
   },
-  // concat: {
-  //   scripts: {
-  //     src: [
-  //       '<%= path.src %>/js/**/*.js'
-  //     ],
-  //     dest: '<%= path.static %>/js/main.js'
-  //   }
-  // },
   copy: {
     scripts: {
       files: [

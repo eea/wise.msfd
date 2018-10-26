@@ -1,7 +1,7 @@
 module.exports = function(grunt) {
   require('load-grunt-tasks')(grunt);
 
-  grunt.loadNpmTasks('grunt-template-html');
+  // grunt.loadNpmTasks('grunt-template-html');
 
   // Config
   var merge = require('merge'),
@@ -26,14 +26,14 @@ module.exports = function(grunt) {
 
   // Tasks
   grunt.registerTask('development', [
-    'template:dev',
+    // 'template:dev',
     'less:development',
     'copy'
     // 'concat'
   ]);
 
   grunt.registerTask('production', [
-    'template:dev',
+    // 'template:dev',
     'less:production',
     'copy',
     // 'concat',

@@ -2,9 +2,9 @@
 function set_translatable(i, node) {
   $(node).mouseenter(
     function() {
-      $(this).css(
-        'background-color', 'red'
-      )
+      // $(this).css(
+      //   'background-color', 'red'
+      // )
     });
 }
 

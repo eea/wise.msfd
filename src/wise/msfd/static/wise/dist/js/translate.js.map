@@ -1,0 +1,1 @@
+{"version":3,"sources":["../../src/js/translate.js"],"names":["set_translatable","i","node","$","mouseenter","jQuery","document","ready","each"],"mappings":"AACA,QAASA,kBAAiBC,EAAGC,GAC3BC,EAAED,GAAME,WACN,cAOJC,OAAOC,UAAUC,MAAM,WACrBJ,EAAE,iBAAiBK,KAAKR","file":"translate.js"}
