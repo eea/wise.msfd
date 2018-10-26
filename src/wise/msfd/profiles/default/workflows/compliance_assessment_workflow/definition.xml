@@ -1,6 +1,7 @@
 <?xml version="1.0"?>
-<dc-workflow workflow_id="assessment_workflow" title="DC Workflow Definition" description="" state_variable="review_state" initial_state="in_work" manager_bypass="False">
+<dc-workflow workflow_id="compliance_assessment_workflow" title="Compliance Asessment workflow" description="Workflow to be used for Assessments on Articles/Descriptors, in National Descriptors Assessment" state_variable="review_state" initial_state="in_work" manager_bypass="False">
  <permission>View</permission>
+ <permission>wise.msfd: Edit Assessment</permission>
  <state state_id="approved" title="Approved">
   <exit-transition transition_id="send_back_to_final_review"/>
  </state>
@@ -14,6 +15,14 @@
  </state>
  <state state_id="in_work" title="In work by Topic Lead">
   <exit-transition transition_id="send_for_draft_review"/>
+  <permission-map name="View" acquired="False">
+   <permission-role>Contributor</permission-role>
+   <permission-role>Manager</permission-role>
+  </permission-map>
+  <permission-map name="wise.msfd: Edit Assessment" acquired="False">
+   <permission-role>Contributor</permission-role>
+   <permission-role>Manager</permission-role>
+  </permission-map>
  </state>
  <transition transition_id="approve" title="Approve assessment" new_state="approved" trigger="USER" before_script="" after_script="">
   <action url="%(content_url)s/content_status_modify?workflow_action=approve" category="workflow" icon="">Approve assessment</action>
@@ -54,7 +63,7 @@
  <variable variable_id="action" for_catalog="False" for_status="True" update_always="True">
   <description>Previous transition</description>
   <default>
-   
+
    <expression>transition/getId|nothing</expression>
   </default>
   <guard>
@@ -63,7 +72,7 @@
  <variable variable_id="actor" for_catalog="False" for_status="True" update_always="True">
   <description>The ID of the user who performed the last transition</description>
   <default>
-   
+
    <expression>user/getId</expression>
   </default>
   <guard>
@@ -72,7 +81,7 @@
  <variable variable_id="comments" for_catalog="False" for_status="True" update_always="True">
   <description>Comment about the last transition</description>
   <default>
-   
+
    <expression>python:state_change.kwargs.get('comment', '')</expression>
   </default>
   <guard>
@@ -81,7 +90,7 @@
  <variable variable_id="review_history" for_catalog="False" for_status="False" update_always="False">
   <description>Provides access to workflow history</description>
   <default>
-   
+
    <expression>state_change/getHistory</expression>
   </default>
   <guard>
@@ -92,7 +101,7 @@
  <variable variable_id="time" for_catalog="False" for_status="True" update_always="True">
   <description>When the previous transition was performed</description>
   <default>
-   
+
    <expression>state_change/getDateTime</expression>
   </default>
   <guard>

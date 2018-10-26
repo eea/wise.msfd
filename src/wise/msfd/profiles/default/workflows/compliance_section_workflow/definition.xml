@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<dc-workflow workflow_id="compliance_section_workflow" title="Compliance section Workflow" description="- Essentially a workflow with no transitions, but has a Published state, so portlets and applications that expect that state will continue to work." state_variable="review_state" initial_state="internal" manager_bypass="False">
+<dc-workflow workflow_id="compliance_section_workflow" title="Compliance section Workflow" description="Generic one-state workflow for the compliance section. To be used for all objects that don't have a specific workflow." state_variable="review_state" initial_state="internal" manager_bypass="False">
  <permission>Access contents information</permission>
  <permission>Change portal events</permission>
  <permission>Modify portal content</permission>
