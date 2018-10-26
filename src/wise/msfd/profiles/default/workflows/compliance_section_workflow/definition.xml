@@ -1,40 +1,64 @@
 <?xml version="1.0"?>
-<dc-workflow workflow_id="compliance_section_workflow" title="Compliance section Workflow" description="Generic one-state workflow for the compliance section. To be used for all objects that don't have a specific workflow." state_variable="review_state" initial_state="internal" manager_bypass="False">
- <permission>Access contents information</permission>
- <permission>Change portal events</permission>
- <permission>Modify portal content</permission>
+<dc-workflow workflow_id="compliance_section_workflow" title="Compliance section Workflow" description="Generic one-state workflow for the compliance section. To be used for all objects that don't have a specific workflow." state_variable="review_state" initial_state="closed" manager_bypass="False">
  <permission>View</permission>
- <state state_id="internal" title="Internal use">
-  <description>Objects cannot be published</description>
-  <permission-map name="Access contents information" acquired="False">
-   <permission-role>Contributor</permission-role>
-   <permission-role>Editor</permission-role>
-   <permission-role>Manager</permission-role>
-   <permission-role>Owner</permission-role>
-   <permission-role>Reader</permission-role>
-   <permission-role>Reviewer</permission-role>
-  </permission-map>
-  <permission-map name="Change portal events" acquired="False">
-   <permission-role>Contributor</permission-role>
-   <permission-role>Editor</permission-role>
-   <permission-role>Manager</permission-role>
-   <permission-role>Owner</permission-role>
-   <permission-role>Reader</permission-role>
-   <permission-role>Reviewer</permission-role>
-  </permission-map>
-  <permission-map name="Modify portal content" acquired="False">
-   <permission-role>Manager</permission-role>
-   <permission-role>Owner</permission-role>
+ <permission>Add portal content</permission>
+ <state state_id="closed" title="Closed for discussions">
+  <exit-transition transition_id="open_for_ec"/>
+  <exit-transition transition_id="open_for_tl"/>
+  <permission-map name="Add portal content" acquired="False">
   </permission-map>
   <permission-map name="View" acquired="False">
-   <permission-role>Contributor</permission-role>
+   <permission-role>Manager</permission-role>
+   <permission-role>Reader</permission-role>
+  </permission-map>
+ </state>
+ <state state_id="opened_for_ec" title="Opened for discussions with EC">
+  <exit-transition transition_id="close"/>
+  <permission-map name="Add portal content" acquired="False">
    <permission-role>Editor</permission-role>
    <permission-role>Manager</permission-role>
-   <permission-role>Owner</permission-role>
+   <permission-role>Reviewer</permission-role>
+  </permission-map>
+  <permission-map name="View" acquired="False">
+   <permission-role>Editor</permission-role>
+   <permission-role>Manager</permission-role>
    <permission-role>Reader</permission-role>
    <permission-role>Reviewer</permission-role>
   </permission-map>
  </state>
+ <state state_id="opened_for_tl" title="Opened for discussions with TL">
+  <exit-transition transition_id="close"/>
+  <permission-map name="Add portal content" acquired="False">
+   <permission-role>Editor</permission-role>
+   <permission-role>Manager</permission-role>
+   <permission-role>Reader</permission-role>
+  </permission-map>
+  <permission-map name="View" acquired="False">
+   <permission-role>Editor</permission-role>
+   <permission-role>Manager</permission-role>
+   <permission-role>Reader</permission-role>
+  </permission-map>
+ </state>
+ <transition transition_id="close" title="Close discussions" new_state="closed" trigger="USER" before_script="" after_script="">
+  <action url="%(content_url)s/content_status_modify?workflow_action=close" category="workflow" icon="">Close discussions</action>
+  <guard>
+   <guard-permission>Review portal content</guard-permission>
+  </guard>
+ </transition>
+ <transition transition_id="open_for_ec" title="Open for EC" new_state="opened_for_ec" trigger="USER" before_script="" after_script="">
+  <action url="%(content_url)s/content_status_modify?workflow_action=open_for_ec" category="workflow" icon="">Open for EC</action>
+  <guard>
+   <guard-permission>Review portal content</guard-permission>
+   <guard-expression>python: object.getId() == 'ec'</guard-expression>
+  </guard>
+ </transition>
+ <transition transition_id="open_for_tl" title="Open for TL" new_state="opened_for_tl" trigger="USER" before_script="" after_script="">
+  <action url="%(content_url)s/content_status_modify?workflow_action=open_for_tl" category="workflow" icon="">Open for TL</action>
+  <guard>
+   <guard-permission>Review portal content</guard-permission>
+   <guard-expression>python: object.getId() == 'tl'</guard-expression>
+  </guard>
+ </transition>
  <variable variable_id="action" for_catalog="False" for_status="True" update_always="True">
   <description>Previous transition</description>
   <default>

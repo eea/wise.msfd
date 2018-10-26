@@ -2,6 +2,7 @@ import logging
 
 from zope.interface import alsoProvides
 
+from plone.api.content import transition
 from plone.dexterity.utils import createContentInContainer as create
 from Products.CMFDynamicViewFTI.interfaces import ISelectableBrowserDefault
 from Products.CMFPlacefulWorkflow.WorkflowPolicyConfig import \
@@ -96,11 +97,14 @@ class BootstrapCompliance(BrowserView):
 
                 self.set_layout(nda, '@@nat-desc-art-view')
 
-                for id, title in [
-                        (u'tl', 'Discussion track with Topic Leads'),
-                        (u'ec', 'Discussion track with EC'),
+                for id, title, trans in [
+                        (u'tl', 'Discussion track with Topic Leads',
+                         'open_for_tl'),
+                        (u'ec', 'Discussion track with EC', 'open_for_ec'),
                 ]:
-                    create(nda, 'wise.msfd.commentsfolder', id=id, title=title)
+                    dt = create(nda,
+                                'wise.msfd.commentsfolder', id=id, title=title)
+                    transition(obj=dt, transition=trans)
 
         return cf
 
