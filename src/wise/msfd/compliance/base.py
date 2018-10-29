@@ -3,11 +3,10 @@ from plone.api.content import get_state
 from plone.api.portal import get_tool
 from Products.Five.browser import BrowserView
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
-
 from wise.msfd import db, sql
+
 from . import interfaces
 from .nationaldescriptors.utils import row_to_dict
-
 
 MAIN_FORMS = [
     # view name, (title, explanation)
@@ -95,7 +94,7 @@ class BaseComplianceView(BrowserView):
 
     main_forms = MAIN_FORMS
 
-    header_template = ViewPageTemplateFile(
+    report_header_template = ViewPageTemplateFile(
         'nationaldescriptors/pt/report-data-header.pt'
     )
 

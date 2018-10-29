@@ -1,3 +1,4 @@
+import logging
 from collections import defaultdict
 from datetime import datetime
 
@@ -5,6 +6,7 @@ from sqlalchemy import or_
 from zope.schema import Choice
 from zope.schema.vocabulary import SimpleTerm, SimpleVocabulary
 
+import sparql
 from persistent.list import PersistentList
 from Products.Five.browser.pagetemplatefile import \
     ViewPageTemplateFile as Template
@@ -22,6 +24,8 @@ from .utils import row_to_dict
 # from wise.msfd.search.base import EmbededForm
 # from .a10 import Article10
 # from copy import deepcopy
+
+logger = logging.getLogger('wise.msfd')
 
 
 class ReportData2012(BaseComplianceView, BaseUtil):
@@ -66,6 +70,43 @@ class ReportData2012(BaseComplianceView, BaseUtil):
 
         return sorted(muids)
 
+    def get_report_filename(self):
+        t = sql.MSFD10Import
+        count, item = db.get_item_by_conditions(
+            t,
+            'MSFD10_Import_ReportingCountry',
+            t.MSFD10_Import_ReportingCountry == 'LV',
+        )
+        assert count == 1
+
+        return item.MSFD10_Import_FileName
+
+    def get_report_file_url(self, filename):
+        """ Retrieve the CDR url based on query in ContentRegistry
+        """
+        q = """
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX cr: <http://cr.eionet.europa.eu/ontologies/contreg.rdf#>
+PREFIX dc: <http://purl.org/dc/dcmitype/>
+
+SELECT ?file
+WHERE {
+  ?file a dc:Dataset .
+  FILTER regex(str(?file), '%s')
+} LIMIT 50""" % filename
+        service = sparql.Service('http://cr.eionet.europa.eu/sparql')
+        try:
+            req = service.query(q)
+            rows = req.fetchall()
+            assert len(rows) == 1
+        except:
+            logger.exception('Got an error in querying SPARQL endpoint for '
+                             'filename url: %s', filename)
+
+            return ''
+
+        return rows[0][0].value
+
     @db.use_db_session('session')
     def __call__(self):
         article_class = getattr(self, self.article)
@@ -78,12 +119,18 @@ class ReportData2012(BaseComplianceView, BaseUtil):
         article_class.colspan = self.colspan
 
         print "Will render report for ", self.article
+        filename = self.get_report_filename()
+        url = self.get_report_file_url(filename)
 
-        head_tpl = self.header_template(title='2012 Member State Report',
-                                        report_by='Member State',
-                                        source_file='to be added',
-                                        report_due='2012-10-15',
-                                        report_date='2013-04-30')
+        head_tpl = self.report_header_template(
+            title='2012 Member State Report',
+            # TODO: find out how to get info about who reported
+            report_by='Member State',
+            source_file=(filename, url),
+            # TODO: do the report_due by a mapping with article: date
+            report_due='2012-10-15',
+            report_date='2013-04-30'
+        )
 
         self.content = head_tpl + article_class(self, self.request)()
 
@@ -314,11 +361,13 @@ class ReportData2018(BaseComplianceView):
 
         data = self.get_data()
 
-        self.head_tpl = self.header_template(title='2018 Member State Report',
-                                             report_by='Member State',
-                                             source_file='To be addedd...',
-                                             report_due='2018-10-15',
-                                             report_date='2018-11-19')
+        self.head_tpl = self.report_header_template(
+            title='2018 Member State Report',
+            report_by='Member State',
+            source_file='To be addedd...',
+            report_due='2018-10-15',
+            report_date='2018-11-19'
+        )
 
         self.content = template(data=data)
 
