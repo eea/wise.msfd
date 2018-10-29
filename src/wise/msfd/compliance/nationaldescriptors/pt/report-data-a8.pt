@@ -19,6 +19,15 @@
             tal:content="muid">DE_ANS</td>
       </tr>
 
+      <tr>
+        <th>CriteriaType
+          [GESComponent]</th>
+        <tal:block tal:repeat="crit criterias">
+        <td tal:attributes="colspan python: view.get_col_span_indicator(crit[0])"
+            tal:content="python: ' '.join((crit[1], crit[0]))"/>
+        </tal:block>
+      </tr>
+
       <tr tal:define="col_name string:Topic;">
         <th>Analysis</th>
         <tal:block tal:repeat="crit criterias">
@@ -34,14 +43,6 @@
         <td colspan="42">Row not implemented</td>
       </tr>
 
-      <tr>
-        <th>CriteriaType
-          [GESComponent]</th>
-        <tal:block tal:repeat="crit criterias">
-        <td tal:attributes="colspan python: view.get_col_span_indicator(crit[0])"
-            tal:content="python: ' '.join((crit[1], crit[0]))"/>
-        </tal:block>
-      </tr>
 
       <tr>
         <th>[Parameter]</th>
@@ -181,7 +182,7 @@
 
       <tr tal:define="col_name string:Limitations;">
         <th>Limitations
-          (DesciptionElement)</th>
+          (DescriptionElement)</th>
         <metal:macro use-macro="template/macros/print_asses"/>
       </tr>
 

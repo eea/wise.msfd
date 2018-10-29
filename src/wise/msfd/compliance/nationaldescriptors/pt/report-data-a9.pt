@@ -1,6 +1,6 @@
 <div class="">
   <div class="overflow-table">
-    <table class='table table-bordered table-striped' style='width: 100%; overflow:auto'
+    <table class='table table-bordered table-striped table-report' style='width: 100%; overflow:auto'
       tal:define="criterias python: view.context.get_criterias_list(view.descriptor);">
       <tr>
         <td>Reporting area(s)
@@ -37,7 +37,7 @@
       </tr>
 
       <tr>
-        <td rowspan="2">GES description [DescriptionGES]</td>
+        <td>GES description [DescriptionGES]</td>
         <!--<tal:block tal:repeat="crit python: view.crit_lab_indics.keys()">-->
         <tal:block tal:repeat="crit criterias">
         <tal:block tal:repeat="value python:view.crit_lab_indics[crit[0]]">
@@ -48,30 +48,24 @@
         </tal:block>
         </tal:block>
       </tr>
-      <tr>
-        <!--<tal:block tal:repeat="crit python: view.crit_lab_indics.keys()">-->
-        <tal:block tal:repeat="crit criterias">
-        <tal:block tal:repeat="value python:view.crit_lab_indics[crit[0]]">
-        <td tal:define="print_val python: [x.DescriptionGES for x in
-            view.indicator_descriptors if x.ReportingFeature == value]"
-            tal:content="python: '[English translation]' if print_val else ''"/>
-        </tal:block>
-        </tal:block>
-      </tr>
 
       <tr>
         <td>Threshold value(s)</td>
-        <!--<tal:block tal:repeat="crit python: view.crit_lab_indics.keys()">-->
         <tal:block tal:repeat="crit criterias">
-        <tal:block tal:repeat="value python:view.crit_lab_indics[crit[0]]">
-        <td tal:define="print_val python: [u'{} = {}'.format(x.MarineUnitID,
-          x.ThresholdValue) for x in view.indicator_descriptors if x.ReportingFeature == value]">
-          <ul>
-            <li tal:repeat="val print_val"
-            tal:content="val"/>
-          </ul>
-        </td>
-        </tal:block>
+          <tal:block tal:repeat="value python:view.crit_lab_indics[crit[0]]">
+
+            <td>
+              <ul>
+                <tal:rep repeat="val view/indicator_descriptors">
+                  <li tal:condition="python: val.ReportingFeature == value">
+                    <span tal:replace="python: view.get_marine_unit_id_title(val.MarineUnitID)">LV-01</span> =
+                    <span tal:replace="val/ThresholdValue">10</span>
+                  </li>
+                </tal:rep>
+              </ul>
+            </td>
+
+          </tal:block>
         </tal:block>
       </tr>
 
@@ -123,23 +117,13 @@
       </tr>
 
       <tr>
-        <td rowspan="2">Assessment method</td>
+        <td>Assessment method</td>
         <!--<tal:block tal:repeat="crit python: view.crit_lab_indics.keys()">-->
         <tal:block tal:repeat="crit criterias">
         <tal:block tal:repeat="value python:view.crit_lab_indics[crit[0]]">
         <td tal:define="print_val python: [x.AssessmentMethod for x in
             view.indicator_descriptors if x.ReportingFeature == value]"
             tal:content="python: print_val[0] if print_val else ''"/>
-        </tal:block>
-        </tal:block>
-      </tr>
-      <tr>
-        <!--<tal:block tal:repeat="crit python: view.crit_lab_indics.keys()">-->
-        <tal:block tal:repeat="crit criterias">
-        <tal:block tal:repeat="value python:view.crit_lab_indics[crit[0]]">
-        <td tal:define="print_val python: [x.AssessmentMethod for x in
-            view.indicator_descriptors if x.ReportingFeature == value]"
-            tal:content="python: '[English translation]' if print_val else ''"/>
         </tal:block>
         </tal:block>
       </tr>

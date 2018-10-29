@@ -59,6 +59,7 @@ class BootstrapCompliance(BrowserView):
         descriptors = [(x.Code, x.Description) for x in res]
 
         descs = ('D1.1', 'D1.4', 'D5')
+
         if is_debug:
             descriptors = [x for x in descriptors if x[0] in descs]
 
@@ -116,9 +117,11 @@ class BootstrapCompliance(BrowserView):
         return cf
 
     def __call__(self):
+
+        if 'compliance-module' in self.context.contentIds():
+            self.context.manage_delObjects(['compliance-module'])
         cm = create(self.context, 'Folder', title=u'Compliance Module')
         self.set_layout(cm, '@@comp-start')
-        # import pdb; pdb.set_trace()
         self.set_policy(cm, 'compliance_section_policy')
 
         # cm.__ac_local_roles__['extranet-someone'] = [u'Contributor',

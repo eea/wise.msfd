@@ -1,8 +1,8 @@
 from collections import defaultdict
 
+from Products.Five.browser import BrowserView
 from Products.Five.browser.pagetemplatefile import \
     ViewPageTemplateFile as Template
-from Products.Five.browser import BrowserView
 from wise.msfd import db, sql
 
 # from .reportdata import ReportData2012
@@ -80,7 +80,7 @@ class Descriptor5(Nutrients):
 
 
 class Article8(BrowserView):
-    template = Template('pt/compliance-a8.pt')
+    template = Template('pt/report-data-a8.pt')
 
     def get_suminfo2_data(self, marine_unit_id, descriptor_class):
         """ Get all data from table _SumInfo2ImpactedElement

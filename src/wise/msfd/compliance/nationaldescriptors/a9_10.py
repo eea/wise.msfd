@@ -2,17 +2,17 @@ from collections import defaultdict
 
 from sqlalchemy import and_, or_
 
+from Products.Five.browser import BrowserView
 from Products.Five.browser.pagetemplatefile import \
     ViewPageTemplateFile as Template
-from Products.Five.browser import BrowserView
-from wise.msfd import db, sql, sql2018
+from wise.msfd import db, sql, sql_extra  # sql2018,
 
 from .utils import row_to_dict
 
 
 class Article910(BrowserView):
-    Art9 = Template('pt/compliance-a9.pt')
-    Art10 = Template('pt/compliance-a10.pt')
+    Art9 = Template('pt/report-data-a9.pt')
+    Art10 = Template('pt/report-data-a10.pt')
 
     # Art 10 methods
     @property
@@ -64,7 +64,7 @@ class Article910(BrowserView):
         :param muids: ['BAL- LV- AA- 001', 'BAL- LV- AA- 002', ...]
         :param criterions: ['D5', '5.1', '5.2', ..., '5.1.2', '5.2.4', ...]
         :return: {'5.2.2-indicator 5.2C': ['Transparency', 'InputN_Psubst'],
-            {'5.2.1- indicator 5.2B': ['InputN_Psubst', 'FunctionalGroupOther'],
+        {'5.2.1- indicator 5.2B': ['InputN_Psubst', 'FunctionalGroupOther'],
             ...}
         """
         t = sql.t_MSFD9_Features
@@ -113,6 +113,23 @@ class Article910(BrowserView):
 
         return criterion_labels
 
+    def get_marine_unit_id_title(self, muid):
+        t = sql_extra.MSFD4GeographicalAreaID
+        res = db.get_unique_from_mapper(
+            t,
+            'MarineUnits_ReportingAreas',
+            t.MarineUnitID == muid,
+        )
+
+        assert len(res) == 1
+
+        if res:
+            title = u'{} - {}'.format(muid, res[0])
+        else:
+            title = muid
+
+        return title
+
     def get_indicator_descriptors(self, muids, available_indicators):
         """ Get data based on Marine Units and available indicators
         :param muids: ['BAL- LV- AA- 001', 'BAL- LV- AA- 002', ...]
@@ -120,6 +137,7 @@ class Article910(BrowserView):
             '5.2.1- indicator 5.2B']
         :return: table result
         """
+        # TODO: sort the results based on ascending muid?
         count, res = db.get_all_records(
             sql.MSFD9Descriptor,
             sql.MSFD9Descriptor.MarineUnitID.in_(muids),
@@ -157,6 +175,7 @@ class Article910(BrowserView):
     def colspan(self):
         colspan = len([item
                        for sublist in self.crit_lab_indics.values()
+
                        for item in sublist])
 
         return colspan

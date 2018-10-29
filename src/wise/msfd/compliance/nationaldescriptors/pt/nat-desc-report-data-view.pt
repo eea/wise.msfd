@@ -15,7 +15,21 @@
              metal:use-macro="context/wise-macros/macros/tabs"></metal:tabs>
         </div>
 
-        <div class="start-page-content left-side-form full-width-marker">
+        <div class="report-page-view left-side-form full-width-marker">
+          <style>
+            .table-report td ul {
+            margin: 0em !important;
+            }
+            .table-report td ul li {
+            display: inline-block !important;
+            list-style: none;
+            padding: 0em;
+            border-bottom: 1px dashed #9a9a9a;
+            padding-left: 4px;
+            margin-left: -4px;
+            }
+
+          </style>
           <div tal:replace="structure view/content">
             Report data here
           </div>
