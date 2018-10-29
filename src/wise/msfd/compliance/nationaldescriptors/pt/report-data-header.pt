@@ -1,6 +1,6 @@
 <div class="row">
   <div class="col-md-12">
-    <h4 tal:content="options/title">201X Member State Report</h4>
+    <h3 tal:content="options/title">201X Member State Report</h3>
     <a href="./">Back to Descriptor</a>
     <table class="table table-bordered table-striped first-table">
       <tr>

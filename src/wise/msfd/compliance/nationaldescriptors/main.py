@@ -28,6 +28,7 @@ def get_assessment_data_2012_db(*args):
 
     country, descriptor, article = args
     art = articles.get(article)
+    descriptor = descriptor.split('.')[0]
 
     # country = 'Germany'
 

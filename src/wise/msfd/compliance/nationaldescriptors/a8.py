@@ -8,6 +8,24 @@ from wise.msfd import db, sql
 # from .reportdata import ReportData2012
 
 
+MAPPING_ART8 = {
+    'D1': ('MSFD8a_Functional', 'MSFD8a_Species'),
+    'D2': ('MSFD8b_NIS', ),
+    'D3': ('MSFD8b_ExtractionFishShellfish',
+           'MSFD8b_ExtractionSeaweedMaerlOther'),
+    'D4': ('MSFD8b_Acidification', 'MSFD8a_Ecosystem', 'MSFD8a_Other',
+           'MSFD8a_Physical'),
+    'D5': ('MSFD8b_Nutrients', ),
+    'D6': ('MSFD8a_Habitat', 'MSFD8b_PhysicalDamage', 'MSFD8b_PhysicalLoss'),
+    'D7': ('MSFD8b_HydrologicalProcesses', ),
+    'D8': ('MSFD8b_HazardousSubstances', 'MSFD8b_MicrobialPathogens',
+           'MSFD8b_PollutantEvents'),
+    'D9': ('MSFD8b_HazardousSubstances', ),
+    'D10': ('MSFD8b_Litter', ),
+    'D11': ('MSFD8b_Noise', ),
+}
+
+
 DESCRIPTORS = {}
 
 
@@ -81,8 +99,17 @@ class Descriptor5(Nutrients):
 
 class Article8(BrowserView):
     template = Template('pt/report-data-a8.pt')
-    def __init__(self, self, self.request, self.countr_code, self.descriptor,
-                     self.article, self.muids, self.colspan)
+
+    def __init__(self, context, request, country_code,
+                 descriptor, article,  muids, colspan):
+
+        BrowserView.__init__(self, context, request)
+
+        self.country_code = country_code
+        self.descriptor = descriptor
+        self.article = article
+        self.muids = muids
+        self.colspan = colspan
 
     def get_suminfo2_data(self, marine_unit_id, descriptor_class):
         """ Get all data from table _SumInfo2ImpactedElement
@@ -133,6 +160,8 @@ class Article8(BrowserView):
             for row in res:
                 start = row[2]
                 end = row[3]
+                # start = row.get('AssessmentDateStart', None)
+                # end = row.get('AssessmentDateEnd', None)
 
                 if row[1].startswith('Analysis') and start and end:
                     results.append(' - '.join((start, end)))
@@ -320,7 +349,7 @@ class Article8(BrowserView):
         return topic_assesment
 
     def get_col_span_indicator(self, indicator):
-        """ Get colspan based on the count if indicators
+        """ Get colspan based on the count of indicators
         :param indicator: '5.2.1'
         :return: integer
         """

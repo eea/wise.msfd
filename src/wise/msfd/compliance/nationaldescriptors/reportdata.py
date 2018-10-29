@@ -112,7 +112,7 @@ WHERE {
         )
         klass = mapping[self.article]
 
-        return klass(self, self.request, self.countr_code, self.descriptor,
+        return klass(self, self.request, self.country_code, self.descriptor,
                      self.article, self.muids, self.colspan)
 
     @db.use_db_session('session')
@@ -142,7 +142,7 @@ WHERE {
 
         article_implementation = self.get_article_report_implementation()
         # article_class(self, self.request)
-        self.content = head_tpl + article_implementation
+        self.content = head_tpl + article_implementation()
 
         return self.index()
 
@@ -200,8 +200,8 @@ class ReportData2018(BaseComplianceView):
     name = 'nat-desc-start'
 
     Art8 = Template('pt/nat-desc-report-data-multiple-muid.pt')
-    Art9 = Template('pt/nat-desc-report-data-multiple-muid.pt')
-    Art10 = Template('pt/nat-desc-report-data-multiple-muid.pt')
+    Art9 = Template('pt/nat-desc-report-data-single-muid.pt')
+    Art10 = Template('pt/nat-desc-report-data-single-muid.pt')
 
     view_names = {
         'Art8': 't_V_ART8_GES_2018',
@@ -253,22 +253,7 @@ class ReportData2018(BaseComplianceView):
                 t.c.GESComponent.like('{}%'.format(self.descriptor[1]))),
         )
 
-        res = r
-
-        # for row in r:
-        #     row_changed = list(row)
-        #
-        #     features = row.Features
-        #     features = features.split(',')
-        #     features = set(features)
-        #
-        #     import pdb; pdb.set_trace()
-        #
-        #     row_changed[indx] = ', '.join(features)
-        #
-        #     res.append(row_changed)
-
-        return res
+        return r
 
     def change_orientation(self, data):
         """ From a set of results, create labeled list of rows
@@ -278,9 +263,6 @@ class ReportData2018(BaseComplianceView):
 
         for name in row0._fields:
             values = [getattr(row, name) for row in data]
-
-            # if len(set(values)) == 1:
-            #     values = set(values)
 
             res.append([name, values])
 

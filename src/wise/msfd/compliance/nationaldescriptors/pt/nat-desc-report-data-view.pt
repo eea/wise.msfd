@@ -24,7 +24,7 @@
             display: inline-block !important;
             list-style: none;
             padding: 0em;
-            border-bottom: 1px dashed #9a9a9a;
+            border-top: 1px dashed #9a9a9a;
             padding-left: 4px;
             margin-left: -4px;
             }

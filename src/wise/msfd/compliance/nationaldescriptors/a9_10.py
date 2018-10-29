@@ -14,6 +14,16 @@ class Article910(BrowserView):
     Art9 = Template('pt/report-data-a9.pt')
     Art10 = Template('pt/report-data-a10.pt')
 
+    def __init__(self, context, request, country_code,
+                 descriptor, article,  muids, colspan):
+
+        BrowserView.__init__(self, context, request)
+
+        self.country_code = country_code
+        self.descriptor = descriptor
+        self.article = article
+        self.muids = muids
+
     # Art 10 methods
     @property
     def get_environment_data(self):
@@ -113,6 +123,10 @@ class Article910(BrowserView):
 
         return criterion_labels
 
+    def get_indicator_title(self, value):
+
+        return value
+
     def get_marine_unit_id_title(self, muid):
         t = sql_extra.MSFD4GeographicalAreaID
         res = db.get_unique_from_mapper(
@@ -198,6 +212,9 @@ class Article910(BrowserView):
         self.setup_data()
 
         template = getattr(self, self.article, None)
+
+        print template
+
         self.content = template and template() or ""
 
         return self.content

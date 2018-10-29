@@ -1,6 +1,6 @@
 <div class="">
   <div class="overflow-table">
-    <table class='table table-bordered table-striped' style='width: 100%; overflow:auto'
+    <table class='table table-bordered table-striped table-report' style='width: 100%; overflow:auto'
       tal:define="criterias python: view.context.get_criterias_list(view.descriptor);
           environment_data python: view.get_environment_data;">
       <tr>
@@ -52,19 +52,25 @@
 
       <tr tal:define="col_name string:ThresholdValue">
         <td>Threshold value
-          [TargetValue]</td>
-        <metal:macro use-macro="template/macros/print_environment"/>
-        <!--<tal:block tal:repeat="crit python: view.crit_lab_indics.keys()">-->
-        <tal:block tal:repeat="crit python: criterias[1:]">
-        <tal:block tal:repeat="value python:view.crit_lab_indics[crit[0]]">
-        <td tal:define="print_val python: [u'{} = {}'.format(x.MarineUnitID,
-          x.ThresholdValue) for x in view.indicator_descriptors if x.ReportingFeature == value]">
-          <ul>
-            <li tal:repeat="val print_val"
-            tal:content="val"/>
-          </ul>
+          [TargetValue]
         </td>
-        </tal:block>
+        <metal:macro use-macro="template/macros/print_environment"/>
+        <tal:block tal:repeat="crit python: criterias[1:]">
+          <tal:block tal:repeat="value python:view.crit_lab_indics[crit[0]]">
+
+            <td>
+              <span style="font-weight: bolder;" tal:content="python: view.get_indicator_title(value)">5.1A</span>
+              <ul>
+                <tal:rep repeat="val view/indicator_descriptors">
+                  <li tal:condition="python: val.ReportingFeature == value">
+                    <span tal:replace="python: view.get_marine_unit_id_title(val.MarineUnitID)">LV-01</span> =
+                    <span tal:replace="val/ThresholdValue">10</span>
+                  </li>
+                </tal:rep>
+              </ul>
+            </td>
+
+          </tal:block>
         </tal:block>
       </tr>
 
