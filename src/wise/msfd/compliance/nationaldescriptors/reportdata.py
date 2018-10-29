@@ -35,10 +35,6 @@ class ReportData2012(BaseComplianceView, BaseUtil):
 
     name = 'nat-desc-start'
 
-    Art8 = Article8
-    Art9 = Article910
-    Art10 = Article910
-
     def get_criterias_list(self, descriptor):
         """ Get the list of criterias for the specified descriptor
         :param descriptor: 'D5'
@@ -107,16 +103,28 @@ WHERE {
 
         return rows[0][0].value
 
+    def get_article_report_implementation(self):
+
+        mapping = dict(
+            Art8=Article8,
+            Art9=Article910,
+            Art10=Article910,
+        )
+        klass = mapping[self.article]
+
+        return klass(self, self.request, self.countr_code, self.descriptor,
+                     self.article, self.muids, self.colspan)
+
     @db.use_db_session('session')
     def __call__(self):
-        article_class = getattr(self, self.article)
-
-        # TODO find another way to pass these
-        article_class.country = self.country_code
-        article_class.descriptor = self.descriptor
-        article_class.article = self.article
-        article_class.muids = self.muids
-        article_class.colspan = self.colspan
+        # article_class = getattr(self, self.article)
+        #
+        # # TODO find another way to pass these
+        # article_class.country = self.country_code
+        # article_class.descriptor = self.descriptor
+        # article_class.article = self.article
+        # article_class.muids = self.muids
+        # article_class.colspan = self.colspan
 
         print "Will render report for ", self.article
         filename = self.get_report_filename()
@@ -132,7 +140,9 @@ WHERE {
             report_date='2013-04-30'
         )
 
-        self.content = head_tpl + article_class(self, self.request)()
+        article_implementation = self.get_article_report_implementation()
+        # article_class(self, self.request)
+        self.content = head_tpl + article_implementation
 
         return self.index()
 

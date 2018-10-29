@@ -81,6 +81,8 @@ class Descriptor5(Nutrients):
 
 class Article8(BrowserView):
     template = Template('pt/report-data-a8.pt')
+    def __init__(self, self, self.request, self.countr_code, self.descriptor,
+                     self.article, self.muids, self.colspan)
 
     def get_suminfo2_data(self, marine_unit_id, descriptor_class):
         """ Get all data from table _SumInfo2ImpactedElement
