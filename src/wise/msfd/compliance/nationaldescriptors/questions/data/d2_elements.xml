@@ -16,8 +16,8 @@
       </p>
       ]]>
     </definition>
-    <uses-element element="el-1" />
-    <uses-methodological-standards element="m-1" />
+    <uses-element id="el-1" />
+    <uses-methodological-standard id="m-1" />
   </criteria>
 
   <criteria primary='false' id='D2C2'>
@@ -32,8 +32,8 @@
       </p>
       ]]>
     </definition>
-    <uses-element element="el-2" />
-    <uses-methodological-standards element="m-2" />
+    <uses-element id="el-2" />
+    <uses-methodological-standard id="m-2" />
   </criteria>
 
   <criteria primary='false' id='D2C3'>
@@ -49,8 +49,8 @@
       </p>
       ]]>
     </definition>
-    <uses-element element="el-3" />
-    <uses-methodological-standards element="m-2" />
+    <uses-element id="el-3" />
+    <uses-methodological-standard id="m-2" />
   </criteria>
 
   <methodological-standard id="m1">
