@@ -79,10 +79,12 @@
           <div style="margin-bottom: 2em">
             <h3>2018 Assessment</h3>
             <div style="background-color: #DDD; border-color: 1px solid #BBB; padding: 1em;">
+              <div tal:replace="structure view/assessment_header_2018"></div>
               <div tal:replace="structure view/assessment_data_2018"></div>
             </div>
             <h3>2012 Assessment</h3>
             <div style="background-color: #DDD; border-color: 1px solid #BBB; padding: 1em;">
+              <div tal:replace="structure view/assessment_header_2012"></div>
               <div tal:replace="structure view/assessment_data_2012"></div>
             </div>
           </div>
