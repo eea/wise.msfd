@@ -223,7 +223,7 @@ class ReportData2018(BaseComplianceView):
 
     Art8 = Template('pt/nat-desc-report-data-multiple-muid.pt')
     Art9 = Template('pt/nat-desc-report-data-single-muid.pt')
-    Art10 = Template('pt/nat-desc-report-data-single-muid.pt')
+    Art10 = Template('pt/nat-desc-report-data-multiple-muid.pt')
 
     view_names = {
         'Art8': 't_V_ART8_GES_2018',

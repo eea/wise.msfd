@@ -168,6 +168,15 @@ class NationalDescriptorArticleView(BaseComplianceView):
     def __init__(self, context, request):
         super(NationalDescriptorArticleView, self).__init__(context, request)
 
+        # Assessment header 2012
+        self.assessment_header_2012 = self.assessment_header_template(
+            report_by='Commission',
+            assessors='Some Body',
+            assess_date='2012-12-22',
+            source_file=('To be addedd...', '.')
+        )
+
+        # Assessment data 2012
         descriptor_criterions = get_ges_criterions(self.descriptor)
 
         country_name = self._country_folder.title
@@ -184,6 +193,15 @@ class NationalDescriptorArticleView(BaseComplianceView):
             data=assessments
         )
 
+        # Assessment header 2018
+        self.assessment_header_2018 = self.assessment_header_template(
+            report_by='Commission',
+            assessors='Some Body',
+            assess_date='2018-12-22',
+            source_file=('To be addedd...', '.')
+        )
+
+        # Assessment data 2018
         data = self.context.assessment_data
 
         question_tree = form_structure[self.article]

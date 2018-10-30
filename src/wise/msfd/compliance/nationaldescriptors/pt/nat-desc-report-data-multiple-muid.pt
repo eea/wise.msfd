@@ -22,15 +22,16 @@
       tal:define="muid python:info[0]; muid_data python: info[1];"
       >
       <h4 tal:content="muid">LV-01</h4>
-      <table class="table table-bordered table-striped"
-        >
-        <tr tal:repeat="row muid_data">
-          <th tal:content="python: row[0]">Element</th>
-          <td tal:repeat="r python: row[1]">
-            <!-- <metal:m use&#45;macro="context/@@wise&#45;macros/macros/translate"></metal:m> -->
-            <div tal:replace="structure python: view.translate_snip(value=r)"></div>
-          </td>
-        </tr>
+      <table class="table table-bordered table-striped">
+        <tal:rep tal:repeat="row muid_data">
+          <tr tal:condition="python: row[0] not in view.BLACKLIST">
+            <th tal:content="python: row[0]">Element</th>
+            <td tal:repeat="r python: row[1]">
+              <!-- <metal:m use&#45;macro="context/@@wise&#45;macros/macros/translate"></metal:m> -->
+              <div tal:replace="structure python: view.translate_snip(value=r)"></div>
+            </td>
+          </tr>
+        </tal:rep>
       </table>
     </div>
   </div>

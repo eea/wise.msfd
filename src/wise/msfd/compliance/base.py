@@ -100,6 +100,10 @@ class BaseComplianceView(BrowserView):
         'nationaldescriptors/pt/report-data-header.pt'
     )
 
+    assessment_header_template = ViewPageTemplateFile(
+        'nationaldescriptors/pt/assessment-header.pt'
+    )
+
     translate_snip = ViewPageTemplateFile('pt/translate-snip.pt')
 
     @property
