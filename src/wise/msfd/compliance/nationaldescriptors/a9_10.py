@@ -2,27 +2,17 @@ from collections import defaultdict
 
 from sqlalchemy import and_, or_
 
-from Products.Five.browser import BrowserView
 from Products.Five.browser.pagetemplatefile import \
     ViewPageTemplateFile as Template
 from wise.msfd import db, sql, sql_extra  # sql2018,
 
+from ..base import BaseArticle2012
 from .utils import row_to_dict
 
 
-class Article910(BrowserView):
+class Article910(BaseArticle2012):
     Art9 = Template('pt/report-data-a9.pt')
     Art10 = Template('pt/report-data-a10.pt')
-
-    def __init__(self, context, request, country_code,
-                 descriptor, article,  muids, colspan):
-
-        BrowserView.__init__(self, context, request)
-
-        self.country_code = country_code
-        self.descriptor = descriptor
-        self.article = article
-        self.muids = muids
 
     # Art 10 methods
     @property

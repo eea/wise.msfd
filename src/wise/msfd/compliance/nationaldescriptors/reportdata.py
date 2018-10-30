@@ -21,10 +21,6 @@ from .a8 import DESCRIPTORS, Article8
 from .a9_10 import Article910
 from .utils import row_to_dict
 
-# from wise.msfd.search.base import EmbededForm
-# from .a10 import Article10
-# from copy import deepcopy
-
 logger = logging.getLogger('wise.msfd')
 
 
@@ -67,15 +63,29 @@ class ReportData2012(BaseComplianceView, BaseUtil):
         return sorted(muids)
 
     def get_report_filename(self):
-        t = sql.MSFD10Import
+        map_articles = {
+            'Art8': '8b',
+            'Art9': '9',
+            'Art10': '10',
+        }
+
+        article_nr = map_articles[self.article]
+        mc_name = 'MSFD{}Import'.format(article_nr)
+        country_col = 'MSFD{}_Import_ReportingCountry'.format(article_nr)
+        filename_col = 'MSFD{}_Import_FileName'.format(article_nr)
+
+        t = getattr(sql, mc_name)
+
         count, item = db.get_item_by_conditions(
             t,
-            'MSFD10_Import_ReportingCountry',
-            t.MSFD10_Import_ReportingCountry == 'LV',
+            country_col,
+            getattr(t, country_col) == self.country_code,
         )
         assert count == 1
 
-        return item.MSFD10_Import_FileName
+        file_name = getattr(item, filename_col, 'File not found')
+
+        return file_name
 
     def get_report_file_url(self, filename):
         """ Retrieve the CDR url based on query in ContentRegistry
@@ -94,14 +104,25 @@ WHERE {
         try:
             req = service.query(q)
             rows = req.fetchall()
-            assert len(rows) == 1
+
+            urls = []
+            for row in rows:
+                url = row[0].value
+                splitted = url.split('/')
+
+                filename_from_url = splitted[-1]
+
+                if filename == filename_from_url:
+                    urls.append(url)
+
+            assert len(urls) == 1
         except:
             logger.exception('Got an error in querying SPARQL endpoint for '
                              'filename url: %s', filename)
 
             return ''
 
-        return rows[0][0].value
+        return urls[0]
 
     def get_article_report_implementation(self):
 
@@ -117,15 +138,6 @@ WHERE {
 
     @db.use_db_session('session')
     def __call__(self):
-        # article_class = getattr(self, self.article)
-        #
-        # # TODO find another way to pass these
-        # article_class.country = self.country_code
-        # article_class.descriptor = self.descriptor
-        # article_class.article = self.article
-        # article_class.muids = self.muids
-        # article_class.colspan = self.colspan
-
         print "Will render report for ", self.article
         filename = self.get_report_filename()
         url = self.get_report_file_url(filename)
@@ -137,6 +149,8 @@ WHERE {
             source_file=(filename, url),
             # TODO: do the report_due by a mapping with article: date
             report_due='2012-10-15',
+            # TODO get info about report date from _ReportingInformation?? or
+            # find another source
             report_date='2013-04-30'
         )
 
@@ -199,6 +213,14 @@ class ReportData2018(BaseComplianceView):
 
     name = 'nat-desc-start'
 
+    BLACKLIST = (
+        'CountryCode',
+        'ReportingDate',
+        'ReportedFileLink',
+        'Region',
+        'MarineReportingUnit'
+    )
+
     Art8 = Template('pt/nat-desc-report-data-multiple-muid.pt')
     Art9 = Template('pt/nat-desc-report-data-single-muid.pt')
     Art10 = Template('pt/nat-desc-report-data-single-muid.pt')
@@ -258,11 +280,22 @@ class ReportData2018(BaseComplianceView):
     def change_orientation(self, data):
         """ From a set of results, create labeled list of rows
         """
+        def make_distinct(col_name, col_data):
+            columns = ('Features', )
+
+            if col_name not in columns:
+                return col_data
+
+            splitted = col_data.split(',')
+            distinct = ', '.join(sorted(set(splitted)))
+
+            return distinct
+
         res = []
         row0 = data[0]
 
         for name in row0._fields:
-            values = [getattr(row, name) for row in data]
+            values = [make_distinct(name, getattr(row, name)) for row in data]
 
             res.append([name, values])
 
@@ -270,8 +303,10 @@ class ReportData2018(BaseComplianceView):
 
     @db.use_db_session('session_2018')
     def get_data_from_db(self):
-        get_data_method = getattr(self, 'get_data_from_view_'
-                                        + self.article.lower())
+        get_data_method = getattr(
+            self,
+            'get_data_from_view_' + self.article.lower()
+        )
 
         data = get_data_method()
 
@@ -338,7 +373,15 @@ class ReportData2018(BaseComplianceView):
 
         return data
 
-    # @db.use_db_session('session_2018')
+    def get_muids_from_data(self, data):
+        muids = [x[0] for x in data]
+
+        muids = sorted(set(muids))
+
+        result = ', '.join(muids)
+
+        return result
+
     def __call__(self):
 
         self.content = ''
@@ -347,20 +390,29 @@ class ReportData2018(BaseComplianceView):
         if not template:
             return self.index()
 
-        # self.db_data = self.get_data_from_db()
-
         self.subform = self.get_form()
-
         data = self.get_data()
 
-        self.head_tpl = self.report_header_template(
+        report_date = ''
+        source_file = ['To be addedd...', '.']
+
+        if data[0][1]:
+            for row in data[0][1]:
+                if row[0] == 'ReportingDate':
+                    report_date = row[1][0]
+                if row[0] == 'ReportedFileLink':
+                    source_file[1] = row[1][0]
+                    source_file[0] = row[1][0].split('/')[-1]
+
+        head_tpl = self.report_header_template(
             title='2018 Member State Report',
+            # TODO: find out how to get info about who reported
             report_by='Member State',
-            source_file='To be addedd...',
+            source_file=source_file,
             report_due='2018-10-15',
-            report_date='2018-11-19'
+            report_date=report_date
         )
 
-        self.content = template(data=data)
+        self.content = template(data=data, head_tpl=head_tpl)
 
         return self.index()

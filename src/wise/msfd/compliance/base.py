@@ -245,6 +245,7 @@ class BaseComplianceView(BrowserView):
         return bool(tool.checkPermission(permission, aq_inner(context)))
 
 
+<<<<<<< HEAD
 class ArticleDescriptorAssessmentDefinition:
     def __init__(self, criterias=None):
         self.criterias = criterias
@@ -280,3 +281,17 @@ def parse_questions_file(relpath):
             questions.append(q)
 
     return questions
+
+
+class BaseArticle2012(BrowserView):
+
+    def __init__(self, context, request, country_code,
+                 descriptor, article,  muids, colspan):
+
+        BrowserView.__init__(self, context, request)
+
+        self.country_code = country_code
+        self.descriptor = descriptor
+        self.article = article
+        self.muids = muids
+        # self.colspan = colspan

@@ -8,7 +8,7 @@
     </div>
   </div>
 
-  <div style="overflow: auto" tal:content="structure view/head_tpl">Header</div>
+  <div style="overflow: auto" tal:content="structure options/head_tpl">Header</div>
 
   <div tal:condition="not: data">
     No data reported for this Descriptor
