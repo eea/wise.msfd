@@ -22,6 +22,7 @@
           <metal:fields fill-slot="fields">
             <div class="collapsed-container">
               <tal:subform repeat='subform view/subforms'>
+                <!-- <div tal:content="nocall: subform"></div> -->
                 <div class="subform">
                   <div tal:repeat="fieldname subform/fields">
                     <tal:def define="widget python: view.widgets[fieldname]">

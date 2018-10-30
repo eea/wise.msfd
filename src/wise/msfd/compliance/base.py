@@ -1,3 +1,5 @@
+from pkg_resources import resource_filename
+
 from Acquisition import aq_inner
 from plone.api.content import get_state
 from plone.api.portal import get_tool
@@ -241,3 +243,40 @@ class BaseComplianceView(BrowserView):
             context = self.context
 
         return bool(tool.checkPermission(permission, aq_inner(context)))
+
+
+class ArticleDescriptorAssessmentDefinition:
+    def __init__(self, criterias=None):
+        self.criterias = criterias
+
+
+class CriteriaAssessmentDefinition:
+    def __init__(self, descriptor=None, criteria_elements=None,):
+        self.criteria_elements = criteria_elements
+        pass
+
+
+class QuestionDefinition:
+    def __init__(self, id, text):
+        self.id = id
+        self.text = text
+
+
+def parse_questions_file(relpath):
+    path = resource_filename(
+        'wise.msfd.compliance',
+        relpath
+    )
+    questions = []
+    with open(path) as f:
+        for line in f.read():
+            line = line.strip()
+
+            if not line or line.startswith('#'):
+                continue
+
+            id, text = line.split('\t')
+            q = QuestionDefinition(id, text)
+            questions.append(q)
+
+    return questions
