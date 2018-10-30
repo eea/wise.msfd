@@ -8,7 +8,7 @@
     </div>
   </div>
 
-  <div style="overflow: auto" tal:content="structure view/head_tpl">Header</div>
+  <div style="overflow: auto" tal:content="structure options/head_tpl">Header</div>
 
   <div tal:condition="not: data">
     No data reported for this Descriptor
@@ -17,21 +17,26 @@
   <div style="clear: both"><!-- -->
   </div>
 
-  <div tal:condition="data" tal:repeat="info data">
-    <div
-      tal:define="muid python:info[0]; muid_data python: info[1];"
-      >
-      <h4 tal:content="muid">LV-01</h4>
-      <table class="table table-bordered table-striped"
-        >
-        <tr tal:repeat="row muid_data">
-          <th tal:content="python: row[0]">Element</th>
-          <td tal:repeat="r python: row[1]">
-            <!-- <metal:m use&#45;macro="context/@@wise&#45;macros/macros/translate"></metal:m> -->
-            <div tal:replace="structure python: view.translate_snip(value=r)"></div>
-          </td>
+  <tal:def tal:condition="data"
+     tal:define="muid_data python: data[0][1];
+     muids python:view.get_muids_from_data(data)">
+    <div>
+      <!--<h4 tal:content="muids">LV-01</h4>-->
+      <table class="table table-bordered table-striped">
+        <tr>
+          <th>MarineReportingUnit</th>
+          <td colspan="50" tal:content="muids">LV-001, LV-002</td>
         </tr>
+        <tal:rep tal:repeat="row muid_data">
+          <tr tal:condition="python: row[0] not in view.BLACKLIST">
+            <th tal:content="python: row[0]">Element</th>
+            <td tal:repeat="r python: row[1]">
+              <!-- <metal:m use&#45;macro="context/@@wise&#45;macros/macros/translate"></metal:m> -->
+              <div tal:replace="structure python: view.translate_snip(value=r)"></div>
+            </td>
+          </tr>
+        </tal:rep>
       </table>
     </div>
-  </div>
+  </tal:def>
 </div>

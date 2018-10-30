@@ -149,6 +149,8 @@ WHERE {
             source_file=(filename, url),
             # TODO: do the report_due by a mapping with article: date
             report_due='2012-10-15',
+            # TODO get info about report date from _ReportingInformation?? or
+            # find another source
             report_date='2013-04-30'
         )
 
@@ -211,6 +213,14 @@ class ReportData2018(BaseComplianceView):
 
     name = 'nat-desc-start'
 
+    BLACKLIST = (
+        'CountryCode',
+        'ReportingDate',
+        'ReportedFileLink',
+        'Region',
+        'MarineReportingUnit'
+    )
+
     Art8 = Template('pt/nat-desc-report-data-multiple-muid.pt')
     Art9 = Template('pt/nat-desc-report-data-single-muid.pt')
     Art10 = Template('pt/nat-desc-report-data-single-muid.pt')
@@ -270,11 +280,22 @@ class ReportData2018(BaseComplianceView):
     def change_orientation(self, data):
         """ From a set of results, create labeled list of rows
         """
+        def make_distinct(col_name, col_data):
+            columns = ('Features', )
+
+            if col_name not in columns:
+                return col_data
+
+            splitted = col_data.split(',')
+            distinct = ', '.join(sorted(set(splitted)))
+
+            return distinct
+
         res = []
         row0 = data[0]
 
         for name in row0._fields:
-            values = [getattr(row, name) for row in data]
+            values = [make_distinct(name, getattr(row, name)) for row in data]
 
             res.append([name, values])
 
@@ -282,8 +303,10 @@ class ReportData2018(BaseComplianceView):
 
     @db.use_db_session('session_2018')
     def get_data_from_db(self):
-        get_data_method = getattr(self, 'get_data_from_view_'
-                                        + self.article.lower())
+        get_data_method = getattr(
+            self,
+            'get_data_from_view_' + self.article.lower()
+        )
 
         data = get_data_method()
 
@@ -350,7 +373,15 @@ class ReportData2018(BaseComplianceView):
 
         return data
 
-    # @db.use_db_session('session_2018')
+    def get_muids_from_data(self, data):
+        muids = [x[0] for x in data]
+
+        muids = sorted(set(muids))
+
+        result = ', '.join(muids)
+
+        return result
+
     def __call__(self):
 
         self.content = ''
@@ -359,18 +390,27 @@ class ReportData2018(BaseComplianceView):
         if not template:
             return self.index()
 
-        # self.db_data = self.get_data_from_db()
-
         self.subform = self.get_form()
-
         data = self.get_data()
+
+        report_date = ''
+        source_file = ['To be addedd...', '.']
+
+        if data[0][1]:
+            for row in data[0][1]:
+                if row[0] == 'ReportingDate':
+                    report_date = row[1][0]
+                if row[0] == 'ReportedFileLink':
+                    source_file[1] = row[1][0]
+                    source_file[0] = row[1][0].split('/')[-1]
 
         head_tpl = self.report_header_template(
             title='2018 Member State Report',
+            # TODO: find out how to get info about who reported
             report_by='Member State',
-            source_file=('To be addedd...', '.'),
+            source_file=source_file,
             report_due='2018-10-15',
-            report_date='2018-11-19'
+            report_date=report_date
         )
 
         self.content = template(data=data, head_tpl=head_tpl)
