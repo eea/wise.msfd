@@ -21,10 +21,6 @@ from .a8 import DESCRIPTORS, Article8
 from .a9_10 import Article910
 from .utils import row_to_dict
 
-# from wise.msfd.search.base import EmbededForm
-# from .a10 import Article10
-# from copy import deepcopy
-
 logger = logging.getLogger('wise.msfd')
 
 
@@ -67,15 +63,29 @@ class ReportData2012(BaseComplianceView, BaseUtil):
         return sorted(muids)
 
     def get_report_filename(self):
-        t = sql.MSFD10Import
+        map_articles = {
+            'Art8': '8b',
+            'Art9': '9',
+            'Art10': '10',
+        }
+
+        article_nr = map_articles[self.article]
+        mc_name = 'MSFD{}Import'.format(article_nr)
+        country_col = 'MSFD{}_Import_ReportingCountry'.format(article_nr)
+        filename_col = 'MSFD{}_Import_FileName'.format(article_nr)
+
+        t = getattr(sql, mc_name)
+
         count, item = db.get_item_by_conditions(
             t,
-            'MSFD10_Import_ReportingCountry',
-            t.MSFD10_Import_ReportingCountry == 'LV',
+            country_col,
+            getattr(t, country_col) == self.country_code,
         )
         assert count == 1
 
-        return item.MSFD10_Import_FileName
+        file_name = getattr(item, filename_col, 'File not found')
+
+        return file_name
 
     def get_report_file_url(self, filename):
         """ Retrieve the CDR url based on query in ContentRegistry
@@ -94,14 +104,25 @@ WHERE {
         try:
             req = service.query(q)
             rows = req.fetchall()
-            assert len(rows) == 1
+
+            urls = []
+            for row in rows:
+                url = row[0].value
+                splitted = url.split('/')
+
+                filename_from_url = splitted[-1]
+
+                if filename == filename_from_url:
+                    urls.append(url)
+
+            assert len(urls) == 1
         except:
             logger.exception('Got an error in querying SPARQL endpoint for '
                              'filename url: %s', filename)
 
             return ''
 
-        return rows[0][0].value
+        return urls[0]
 
     def get_article_report_implementation(self):
 
@@ -117,15 +138,6 @@ WHERE {
 
     @db.use_db_session('session')
     def __call__(self):
-        # article_class = getattr(self, self.article)
-        #
-        # # TODO find another way to pass these
-        # article_class.country = self.country_code
-        # article_class.descriptor = self.descriptor
-        # article_class.article = self.article
-        # article_class.muids = self.muids
-        # article_class.colspan = self.colspan
-
         print "Will render report for ", self.article
         filename = self.get_report_filename()
         url = self.get_report_file_url(filename)
@@ -353,14 +365,14 @@ class ReportData2018(BaseComplianceView):
 
         data = self.get_data()
 
-        self.head_tpl = self.report_header_template(
+        head_tpl = self.report_header_template(
             title='2018 Member State Report',
             report_by='Member State',
-            source_file='To be addedd...',
+            source_file=('To be addedd...', '.'),
             report_due='2018-10-15',
             report_date='2018-11-19'
         )
 
-        self.content = template(data=data)
+        self.content = template(data=data, head_tpl=head_tpl)
 
         return self.index()

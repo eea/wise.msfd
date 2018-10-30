@@ -1,11 +1,10 @@
 from collections import defaultdict
 
-from Products.Five.browser import BrowserView
 from Products.Five.browser.pagetemplatefile import \
     ViewPageTemplateFile as Template
 from wise.msfd import db, sql
 
-# from .reportdata import ReportData2012
+from ..base import BaseArticle2012
 
 
 MAPPING_ART8 = {
@@ -97,19 +96,8 @@ class Descriptor5(Nutrients):
     )
 
 
-class Article8(BrowserView):
+class Article8(BaseArticle2012):
     template = Template('pt/report-data-a8.pt')
-
-    def __init__(self, context, request, country_code,
-                 descriptor, article,  muids, colspan):
-
-        BrowserView.__init__(self, context, request)
-
-        self.country_code = country_code
-        self.descriptor = descriptor
-        self.article = article
-        self.muids = muids
-        self.colspan = colspan
 
     def get_suminfo2_data(self, marine_unit_id, descriptor_class):
         """ Get all data from table _SumInfo2ImpactedElement
