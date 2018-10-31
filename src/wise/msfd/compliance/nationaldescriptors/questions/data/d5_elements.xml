@@ -9,8 +9,8 @@
       </p>
       ]]>
     </definition>
-    <uses-element id="el-1" />
-    <uses-methodological-standard id="m-1" />
+    <uses-element href="#el-1" />
+    <uses-methodological-standard href="#m--1" />
   </criteria>
     
   <criteria primary='true' id='D5C2'>
@@ -22,8 +22,8 @@
       </p>
       ]]>
     </definition>
-    <uses-element id="el-2" />
-    <uses-methodological-standard id="m-1" />
+    <uses-element href="#el-2" />
+    <uses-methodological-standard href="#m--1" />
   </criteria>
 
   <criteria primary='false' id='D5C3'>
@@ -37,8 +37,8 @@
       </p>
       ]]>
     </definition>
-    <uses-element id="el-3" />
-    <uses-methodological-standard id="m-1" />
+    <uses-element href="#el-3" />
+    <uses-methodological-standard href="#m--1" />
   </criteria>
 
   <criteria primary='false' id='D5C4'>
@@ -51,8 +51,8 @@
       </p>
       ]]>
     </definition>
-    <uses-element id="el-4" />
-    <uses-methodological-standard id="m-1" />
+    <uses-element href="#el-4" />
+    <uses-methodological-standard href="#m--1" />
   </criteria>
 
   <criteria primary='true' id='D5C5'>
@@ -66,8 +66,8 @@
       </p>
       ]]>
     </definition>
-    <uses-element id="el-5" />
-    <uses-methodological-standard id="m-1" />
+    <uses-element href="#el-5" />
+    <uses-methodological-standard href="#m--1" />
   </criteria>
     
   <criteria primary='false' id='D5C6'>
@@ -79,8 +79,8 @@
       </p>
       ]]>
     </definition>
-    <uses-element id="el-6" />
-    <uses-methodological-standard id="m-1" />
+    <uses-element href="#el-6" />
+    <uses-methodological-standard href="#m--1" />
   </criteria>
 
   <criteria primary='false' id='D5C7'>
@@ -94,8 +94,8 @@
       </p>
       ]]>
     </definition>
-    <uses-element id="el-7" />
-    <uses-methodological-standard id="m-1" />
+    <uses-element href="#el-7" />
+    <uses-methodological-standard href="#m--1" />
   </criteria>
 
   <criteria primary='false' id='D5C8'>
@@ -108,8 +108,8 @@
       </p>
       ]]>
     </definition>
-    <uses-element id="el-8" />
-    <uses-methodological-standard id="m-1" />
+    <uses-element href="#el-8" />
+    <uses-methodological-standard href="#m--1" />
   </criteria>
 
   <methodological-standard id="m-1">
