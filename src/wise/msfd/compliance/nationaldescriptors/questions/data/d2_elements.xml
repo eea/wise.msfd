@@ -49,11 +49,11 @@
       </p>
       ]]>
     </definition>
-    <uses-element id="el-3" />
-    <uses-methodological-standard href="m-2" />
+    <uses-element href="#el-3" />
+    <uses-methodological-standard href="#m-2" />
   </criteria>
 
-  <methodological-standard id="m-1">
+  <methodological-standard id="m1">
     <![CDATA[
     <p>
       <strong>Scale of assessment:</strong><br/>
@@ -71,7 +71,7 @@
     ]]>
   </methodological-standard>
 
-  <methodological-standard id="m-2">
+  <methodological-standard id="m2">
     <![CDATA[
     <p>
       <strong>Scale of assessment:</strong><br/>
