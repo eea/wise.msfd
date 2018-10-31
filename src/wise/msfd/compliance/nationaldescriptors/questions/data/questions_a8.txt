@@ -1,0 +1,15 @@
+# Format of file: one question per line
+# Format is: <question id> <tab \t> <question text>
+# TODO: do we need question type?
+Q1	To what extent is information reported based on the scales expressed in 2017 Decision?
+Q2	To what extent does the Member State report the criteria elements required by the 2017 Decision?
+Q3	To what extent does the Member State report the primary criteria required by the 2017 Decision?
+Q4	To what extent does the Member State report beyond the minimum requirements of the 2017 Decision?
+Q5	To what extent does the Member State report key aspects of its assessment methodology?
+Q6	To what extent is the status assessment of parameters, criteria and elements reported?
+Q7	To what extent is the assessment on extent of pressure and impacts reported?
+Q8	To what extent is the Member State’s level of ambition for GES the same as other Member States in the same (sub)region?
+Q9	To what extent does the Member State report the same elements as the other countries in the (sub)region?
+Q10	To what extent does the Member State report the same parameters within the (sub)marine region?
+Q11	To what extent does the Member State report the same pressures within the (sub)marine region?
+Q12	To what extent does the Member State report the same result and date for GES achievement within the (sub)region?

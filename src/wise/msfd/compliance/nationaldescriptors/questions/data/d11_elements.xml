@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<descriptor-definition id='D11'>
+  <criteria primary='true' id='D11C1'>
+    <definition>
+      <![CDATA[
+      <p>
+        The spatial distribution, temporal extent, and levels of anthropogenic
+        impulsive sound sources do not exceed levels that adversely affect 
+        populations of marine animals.<br/>
+        Member States shall establish threshold values for these levels through
+        cooperation at Union level, taking into account regional or subregional
+        specificities.<br/>
+      </p>
+      ]]>
+    </definition>
+    <uses-element id="el-1" />
+    <uses-methodological-standard id="m-1" />
+  </criteria>
+
+  <criteria primary='true' id='D11C2'>
+    <definition>
+      <![CDATA[
+      <p>
+        The spatial distribution, temporal extent and levels of anthropogenic
+        continuous low-frequency sound do not exceed levels that adversely
+        affect populations of marine animals.<br/>
+        Member States shall establish threshold values for these levels
+        through cooperation at Union level, taking into account regional or
+        subregional specificities.<br/>
+      </p>
+      ]]>
+    </definition>
+    <uses-element id="el-2" />
+    <uses-methodological-standard id="m-1" />
+  </criteria>
+
+  <methodological-standard id="m-1">
+    <![CDATA[
+    <p>
+        <strong>Scale of assessment:</strong><br/>
+        Region, subregion or subdivisions.
+    <p>
+        <strong>Use of criteria: </strong><br/>
+        The extent to which good environmental status has been achieved shall be
+        expressed for each area assessed as follows:<br/>
+        (a)  for D11C1, the duration per calendar year of impulsive sound sources,
+        their distribution within the year and spatially within the assessment area,
+        and whether the threshold values set have been achieved;<br/>
+        (b)  for D11C2, the annual average of the sound level, or other suitable
+        temporal metric agreed at regional or subregional level, per unit area and
+        its spatial distribution within the assessment area, and the extent (%, km2)
+        of the assessment area over which the threshold values set have been achieved.<br/>
+
+        The use of criteria D11C1 and D11C2 in the assessment of good environmental status
+        for Descriptor 11 shall be agreed at Union level.<br/>
+        The outcomes of these criteria shall also contribute to assessments under
+        Descriptor 1.<br/>
+    </p>
+    ]]>
+  </methodological-standard>
+
+  <criteria-element id="el-1">
+    <![CDATA[
+    <p>
+      Anthropogenic impulsive sound in water.
+    /p>
+    ]]>
+  </criteria-element>
+
+  <criteria-element id="el-2">
+    <![CDATA[
+    <p>
+      Anthropogenic continuous low-frequency sound in water.
+    /p>
+    ]]>
+  </criteria-element>
+
+</descriptor-definition>
