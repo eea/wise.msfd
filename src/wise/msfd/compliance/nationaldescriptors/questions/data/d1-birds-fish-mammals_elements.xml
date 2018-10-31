@@ -3,14 +3,14 @@
   <criteria primary='true' id='D1C1'>
     <definition>
       <![CDATA[
-      <p>
-        The mortality rate per species from incidental by-catch is below
-        levels which threaten the species, such that its long-term
-        viability is ensured.<br/>
-        Member States shall establish the threshold values for the mortality
-        rate from incidental by-catch per species, through regional or
-        subregional cooperation.<br/>
-      </p>
+        <p>
+          The mortality rate per species from incidental by-catch is below
+          levels which threaten the species, such that its long-term
+          viability is ensured.<br/>
+          Member States shall establish the threshold values for the mortality
+          rate from incidental by-catch per species, through regional or
+          subregional cooperation.<br/>
+        </p>
       ]]>
     </definition>
     <uses-element href="#el-1" />
@@ -20,16 +20,16 @@
   <criteria primary='true' id='D1C2'>
     <definition>
       <![CDATA[
-      <p>
-        The population abundance of the species is not adversely affected due
-        to anthropogenic pressures, such that its long-term viability is ensured. <br/>
-        Member States shall establish threshold values for each species through regional
-        or subregional cooperation, taking account of natural variation in population
-        size and the mortality rates derived from D1C1, D8C4 and D10C4 and other relevant
-        pressures. For species covered by Directive 92/43/EEC, these values shall be
-        consistent with the Favourable Reference Population values established by the
-        relevant Member States under Directive 92/43/EEC. <br/>
-      </p>
+        <p>
+          The population abundance of the species is not adversely affected due
+          to anthropogenic pressures, such that its long-term viability is ensured. <br/>
+          Member States shall establish threshold values for each species through regional
+          or subregional cooperation, taking account of natural variation in population
+          size and the mortality rates derived from D1C1, D8C4 and D10C4 and other relevant
+          pressures. For species covered by Directive 92/43/EEC, these values shall be
+          consistent with the Favourable Reference Population values established by the
+          relevant Member States under Directive 92/43/EEC. <br/>
+        </p>
       ]]>
     </definition>
     <uses-element href="#el-2"/>
@@ -39,15 +39,15 @@
   <criteria primary='raise error' id='D1C3'>
     <definition>
       <![CDATA[
-      <p>
-        The population demographic characteristics (e.g. body size or age class structure,
-        sex ratio, fecundity, and survival rates) of the species are indicative of a healthy
-        population which is not adversely affected due to anthropogenic pressures.<br/>
+        <p>
+          The population demographic characteristics (e.g. body size or age class structure,
+          sex ratio, fecundity, and survival rates) of the species are indicative of a healthy
+          population which is not adversely affected due to anthropogenic pressures.<br/>
 
-        Member States shall establish threshold values for specified characteristics of each
-        species through regional or subregional cooperation, taking account of adverse effects
-        on their health derived from D8C2, D8C4 and other relevant pressures.<br/>
-      </p>
+          Member States shall establish threshold values for specified characteristics of each
+          species through regional or subregional cooperation, taking account of adverse effects
+          on their health derived from D8C2, D8C4 and other relevant pressures.<br/>
+        </p>
       ]]>
     </definition>
     <uses-element href="#el-2" />
@@ -57,14 +57,14 @@
   <criteria primary='raise error' id='D1C4'>
     <definition>
       <![CDATA[
-      <p>
-        The species distributional range and, where relevant, pattern is in line with prevailing
-        physiographic, geographic and climatic conditions.<br/>
-        Member States shall establish threshold values for each species through regional or
-        subregional cooperation. For species covered by Directive 92/43/EEC, these shall be
-        consistent with the Favourable Reference Range values established by the relevant Member
-        States under Directive 92/43/EEC.<br/>
-      </p>
+        <p>
+          The species distributional range and, where relevant, pattern is in line with prevailing
+          physiographic, geographic and climatic conditions.<br/>
+          Member States shall establish threshold values for each species through regional or
+          subregional cooperation. For species covered by Directive 92/43/EEC, these shall be
+          consistent with the Favourable Reference Range values established by the relevant Member
+          States under Directive 92/43/EEC.<br/>
+        </p>
       ]]>
     </definition>
     <uses-element href="#el-2"/>
@@ -74,10 +74,10 @@
   <criteria primary='raise error' id='D1C5'>
     <definition>
       <![CDATA[
-      <p>
-        The habitat for the species has the necessary extent and condition to support
-        the different stages in the life history of the species.
-      </p>
+        <p>
+          The habitat for the species has the necessary extent and condition to support
+          the different stages in the life history of the species.
+        </p>
       ]]>
     </definition>
     <uses-element href="#el-2" />
@@ -86,61 +86,61 @@
 
 
   <methodological-standard id="m-1">
-    <![CDATA[
-    <p>
-        <strong>Scale of assessment:</strong><br/>
-        As used for assessment of the corresponding species or species groups under criteria D1C2-D1C5.
-    <p>
-        <strong>Use of criteria: </strong><br/>
-        The extent to which good environmental status has been achieved shall be expressed for each
-        area assessed as follows:<br/>
-        — the mortality rate per species and whether this has achieved the threshold value set.<br/>
-        This criterion shall contribute to assessment of the corresponding species under criterion D1C2.<br/>
-    </p>
-    ]]>
-  </methodological-standard>
+      <![CDATA[
+        <p>
+            <strong>Scale of assessment:</strong><br/>
+            As used for assessment of the corresponding species or species groups under criteria D1C2-D1C5.
+        <p>
+            <strong>Use of criteria: </strong><br/>
+            The extent to which good environmental status has been achieved shall be expressed for each
+            area assessed as follows:<br/>
+            — the mortality rate per species and whether this has achieved the threshold value set.<br/>
+            This criterion shall contribute to assessment of the corresponding species under criterion D1C2.<br/>
+        </p>
+      ]]>
+    </methodological-standard>
 
   <methodological-standard id="m-2">
-    <![CDATA[
-    <p>
-        <strong>Scale of assessment:</strong><br/>
-        As used for assessment of the corresponding species or species groups under criteria D1C2-D1C5.
-    <p>
-        <strong>Use of criteria: </strong><br/>
-        The extent to which good environmental status has been achieved shall be expressed for each area
-        assessed as follows:<br/>
-        — the mortality rate per species and whether this has achieved the threshold value set.<br/>
-        This criterion shall contribute to assessment of the corresponding species under criterion D1C2.<br/>
-    </p>
-    ]]>
+      <![CDATA[
+        <p>
+            <strong>Scale of assessment:</strong><br/>
+            As used for assessment of the corresponding species or species groups under criteria D1C2-D1C5.
+        <p>
+            <strong>Use of criteria: </strong><br/>
+            The extent to which good environmental status has been achieved shall be expressed for each area
+            assessed as follows:<br/>
+            — the mortality rate per species and whether this has achieved the threshold value set.<br/>
+            This criterion shall contribute to assessment of the corresponding species under criterion D1C2.<br/>
+        </p>
+      ]]>
   </methodological-standard>
 
 
   <criteria-element id="el-1">
-    <![CDATA[
-    <p>
-      Species of birds, mammals, reptiles and non-commercially-exploited species of fish and cephalopods,
-      which are at risk from incidental by-catch in the region or subregion.
-      Member States shall establish that list of species through regional or subregional cooperation,
-      pursuant to the obligations laid down in Article 25(5) of Regulation (EU) No 1380/2013 for data
-      collection activities and taking into account the list of species in Table 1D of the Annex to
-      Commission Implementing Decision (EU) 2016/1251
-    /p>
-    ]]>
-  </criteria-element>
+      <![CDATA[
+        <p>
+          Species of birds, mammals, reptiles and non-commercially-exploited species of fish and cephalopods,
+          which are at risk from incidental by-catch in the region or subregion.
+          Member States shall establish that list of species through regional or subregional cooperation,
+          pursuant to the obligations laid down in Article 25(5) of Regulation (EU) No 1380/2013 for data
+          collection activities and taking into account the list of species in Table 1D of the Annex to
+          Commission Implementing Decision (EU) 2016/1251
+        /p>
+      ]]>
+    </criteria-element>
 
-  <criteria-element id="el-2">
-    <![CDATA[
-    <p>
-      Species groups, as listed under Table 1 and if present in the region or subregion.
-      Member States shall establish a set of species representative of each species group, selected
-      according to the criteria laid down under ‘specifications for the selection of species and habitats’,
-      through regional or subregional cooperation. These shall include the mammals and reptiles listed in
-      Annex II to Directive 92/43/EEC and may include any other species, such as those listed under Union
-      legislation (other Annexes to Directive 92/43/EEC, Directive 2009/147/EC or through Regulation (EU)
-      No 1380/2013) and international agreements such as Regional Sea Conventions.
-    /p>
-    ]]>
+    <criteria-element id="el-2">
+      <![CDATA[
+        <p>
+          Species groups, as listed under Table 1 and if present in the region or subregion.
+          Member States shall establish a set of species representative of each species group, selected
+          according to the criteria laid down under ‘specifications for the selection of species and habitats’,
+          through regional or subregional cooperation. These shall include the mammals and reptiles listed in
+          Annex II to Directive 92/43/EEC and may include any other species, such as those listed under Union
+          legislation (other Annexes to Directive 92/43/EEC, Directive 2009/147/EC or through Regulation (EU)
+          No 1380/2013) and international agreements such as Regional Sea Conventions.
+        /p>
+      ]]>
   </criteria-element>
 </descriptor-definition>
 
@@ -148,11 +148,11 @@
   <criteria primary='true' id='D4C1'>
     <definition>
       <![CDATA[
-      <p>
-        The diversity (species composition and their relative abundance) of the trophic guild is not adversely
-        affected due to anthropogenic pressures.<br/>
-        Member States shall establish threshold values through regional or subregional cooperation.<br/>
-      </p>
+        <p>
+          The diversity (species composition and their relative abundance) of the trophic guild is not adversely
+          affected due to anthropogenic pressures.<br/>
+          Member States shall establish threshold values through regional or subregional cooperation.<br/>
+        </p>
       ]]>
     </definition>
     <uses-element href="#el-1" />
@@ -162,11 +162,11 @@
   <criteria primary='true' id='D4C2'>
     <definition>
       <![CDATA[
-      <p>
-        The balance of total abundance between the trophic guilds is not adversely affected due to
-        anthropogenic pressures.<br/>
-        Member States shall establish threshold values through regional or subregional cooperation.
-      </p>
+        <p>
+          The balance of total abundance between the trophic guilds is not adversely affected due to
+          anthropogenic pressures.<br/>
+          Member States shall establish threshold values through regional or subregional cooperation.
+        </p>
       ]]>
     </definition>
     <uses-element href="#el-1" />
@@ -176,11 +176,11 @@
   <criteria primary='false' id='D4C3'>
     <definition>
       <![CDATA[
-      <p>
-        The size distribution of individuals across the trophic guild is not adversely affected due to
-        anthropogenic pressures.<br/>
-        Member States shall establish threshold values through regional or subregional cooperation.<br/>
-      </p>
+        <p>
+          The size distribution of individuals across the trophic guild is not adversely affected due to
+          anthropogenic pressures.<br/>
+          Member States shall establish threshold values through regional or subregional cooperation.<br/>
+        </p>
       ]]>
     </definition>
     <uses-element href="#el-1" />
@@ -190,10 +190,10 @@
   <criteria primary='false' id='D4C4'>
     <definition>
       <![CDATA[
-      <p>
-        Productivity of the trophic guild is not adversely affected due to anthropogenic pressures.<br/>
-        Member States shall establish threshold values through regional or subregional cooperation.<br/>
-      </p>
+        <p>
+          Productivity of the trophic guild is not adversely affected due to anthropogenic pressures.<br/>
+          Member States shall establish threshold values through regional or subregional cooperation.<br/>
+        </p>
       ]]>
     </definition>
     <uses-element href="#el-1"/>
@@ -202,25 +202,25 @@
 
   <methodological-standard id="m-1">
     <![CDATA[
-    <p>
-        <strong>Scale of assessment:</strong><br/>
-        Regional level for Baltic Sea and Black Sea; subregional level for North-East Atlantic and
-        Mediterranean Sea.<br/>
-        Subdivisions may be used where appropriate.
-    <p>
-        <strong>Use of criteria: </strong><br/>
-        Where values do not fall within the threshold values, this may trigger further research and
-        investigation to understand the causes for the failure
-    </p>
+      <p>
+          <strong>Scale of assessment:</strong><br/>
+          Regional level for Baltic Sea and Black Sea; subregional level for North-East Atlantic and
+          Mediterranean Sea.<br/>
+          Subdivisions may be used where appropriate.
+      <p>
+          <strong>Use of criteria: </strong><br/>
+          Where values do not fall within the threshold values, this may trigger further research and
+          investigation to understand the causes for the failure
+      </p>
     ]]>
   </methodological-standard>
 
   <criteria-element id="el-1">
     <![CDATA[
-    <p>
-      Trophic guilds of an ecosystem.<br/>
-      Member States shall establish the list of trophic guilds through regional or subregional cooperation.
-    /p>
+      <p>
+        Trophic guilds of an ecosystem.<br/>
+        Member States shall establish the list of trophic guilds through regional or subregional cooperation.
+      /p>
     ]]>
   </criteria-element>
 

@@ -16,10 +16,10 @@
   <criteria primary='true' id='D5C2'>
     <definition>
       <![CDATA[
-      <p>
-        Chlorophyll a concentrations are not at levels that indicate adverse
-        effects of nutrient enrichment
-      </p>
+        <p>
+          Chlorophyll a concentrations are not at levels that indicate adverse
+          effects of nutrient enrichment
+        </p>
       ]]>
     </definition>
     <uses-element href="#el-2" />
@@ -29,13 +29,13 @@
   <criteria primary='false' id='D5C3'>
     <definition>
       <![CDATA[
-      <p>
-        The number, spatial extent and duration of harmful algal bloom events
-        are not at levels that indicate adverse effects of nutrient
-        enrichment.<br/>
-        Member States shall establish threshold values for these levels through
-        regional or subregional cooperation.
-      </p>
+        <p>
+          The number, spatial extent and duration of harmful algal bloom events
+          are not at levels that indicate adverse effects of nutrient
+          enrichment.<br/>
+          Member States shall establish threshold values for these levels through
+          regional or subregional cooperation.
+        </p>
       ]]>
     </definition>
     <uses-element href="#el-3" />
@@ -45,11 +45,11 @@
   <criteria primary='false' id='D5C4'>
     <definition>
       <![CDATA[
-      <p>
-        The photic limit (transparency) of the water column is not reduced, due
-        to increases in suspended algae, to a level that indicates adverse
-        effects of nutrient enrichment.
-      </p>
+        <p>
+          The photic limit (transparency) of the water column is not reduced, due
+          to increases in suspended algae, to a level that indicates adverse
+          effects of nutrient enrichment.
+        </p>
       ]]>
     </definition>
     <uses-element href="#el-4" />
@@ -59,12 +59,12 @@
   <criteria primary='true' id='D5C5'>
     <definition>
       <![CDATA[
-      <p>
-        The concentration of dissolved oxygen is not reduced, due to nutrient
-        enrichment, to levels that indicate adverse effects on benthic habitats
-        (including on associated biota and mobile species) or other eutrophication
-        effects.
-      </p>
+        <p>
+          The concentration of dissolved oxygen is not reduced, due to nutrient
+          enrichment, to levels that indicate adverse effects on benthic habitats
+          (including on associated biota and mobile species) or other eutrophication
+          effects.
+        </p>
       ]]>
     </definition>
     <uses-element href="#el-5" />
@@ -74,10 +74,10 @@
   <criteria primary='false' id='D5C6'>
     <definition>
       <![CDATA[
-      <p>
-        The abundance of opportunistic macroalgae is not at levels that indicate
-        adverse effects of nutrient enrichment.
-      </p>
+        <p>
+          The abundance of opportunistic macroalgae is not at levels that indicate
+          adverse effects of nutrient enrichment.
+        </p>
       ]]>
     </definition>
     <uses-element href="#el-6" />
@@ -87,12 +87,12 @@
   <criteria primary='false' id='D5C7'>
     <definition>
       <![CDATA[
-      <p>
-        The species composition and relative abundance or depth distribution of
-        macrophyte communities achieve values that indicate there is no adverse
-        effect due to nutrient enrichment including via a decrease in water
-        transparency
-      </p>
+        <p>
+          The species composition and relative abundance or depth distribution of
+          macrophyte communities achieve values that indicate there is no adverse
+          effect due to nutrient enrichment including via a decrease in water
+          transparency
+        </p>
       ]]>
     </definition>
     <uses-element href="#el-7" />
@@ -102,11 +102,11 @@
   <criteria primary='false' id='D5C8'>
     <definition>
       <![CDATA[
-      <p>
-        The species composition and relative abundance of macrofaunal communities,
-        achieve values that indicate that there is no adverse effect due to nutrient
-        and organic enrichment
-      </p>
+        <p>
+          The species composition and relative abundance of macrofaunal communities,
+          achieve values that indicate that there is no adverse effect due to nutrient
+          and organic enrichment
+        </p>
       ]]>
     </definition>
     <uses-element href="#el-8" />
@@ -115,111 +115,110 @@
 
   <methodological-standard id="m-1">
     <![CDATA[
-    <p>
-        <strong>Scale of assessment:</strong><br/>
-        - within coastal waters, as used under Directive 2000/60/EC, <br/>
-        - beyond coastal waters, subdivisions of the region or subregion,
-        divided where needed by national boundaries.
-    </p>
+      <p>
+          <strong>Scale of assessment:</strong><br/>
+          - within coastal waters, as used under Directive 2000/60/EC, <br/>
+          - beyond coastal waters, subdivisions of the region or subregion,
+          divided where needed by national boundaries.
+      </p>
 
-    <p>
-      <strong>Use of criteria: </strong><br/>
-        The extent to which good environmental status has been achieved shall be expressed for each area assessed as follows:
-        (a) the values achieved for each criterion used, and an estimate of the extent of the assessment area over which the threshold values set have been achieved; <br/>
-        (b) in coastal waters, the criteria shall be used in accordance with the requirements of Directive 2000/60/EC to conclude on whether the water body is subject to eutrophication (5); <br/>
-        (c) beyond coastal waters, an estimate of the extent of the area (as a proportion (percentage)) that is not subject to eutrophication (as indicated by the results of all criteria used, integrated in a manner agreed where possible at Union level, but at least at regional or subregional level). <br/>
+      <p>
+        <strong>Use of criteria: </strong><br/>
+          The extent to which good environmental status has been achieved shall be expressed for each area assessed as follows:
+          (a) the values achieved for each criterion used, and an estimate of the extent of the assessment area over which the threshold values set have been achieved; <br/>
+          (b) in coastal waters, the criteria shall be used in accordance with the requirements of Directive 2000/60/EC to conclude on whether the water body is subject to eutrophication (5); <br/>
+          (c) beyond coastal waters, an estimate of the extent of the area (as a proportion (percentage)) that is not subject to eutrophication (as indicated by the results of all criteria used, integrated in a manner agreed where possible at Union level, but at least at regional or subregional level). <br/>
 
-        Beyond coastal waters, the use of the secondary criteria shall be agreed at regional or subregional level. <br/>
+          Beyond coastal waters, the use of the secondary criteria shall be agreed at regional or subregional level. <br/>
 
-        The outcomes of the assessments shall also contribute to assessments for pelagic habitats under Descriptor 1 as follows: <br/>
-        - the distribution and an estimate of the extent of the area (as a proportion (percentage)) that is subject to eutrophication in the water column (as indicated by whether the threshold values for criteria D5C2, D5C3 and D5C4, when used, have been achieved); <br/>
+          The outcomes of the assessments shall also contribute to assessments for pelagic habitats under Descriptor 1 as follows: <br/>
+          - the distribution and an estimate of the extent of the area (as a proportion (percentage)) that is subject to eutrophication in the water column (as indicated by whether the threshold values for criteria D5C2, D5C3 and D5C4, when used, have been achieved); <br/>
 
-        The outcomes of the assessments shall also contribute to assessments for benthic habitats under Descriptors 1 and 6 as follows: <br/>
-        - the distribution and an estimate of the extent of the area (as a proportion (percentage)) that is subject to eutrophication on theseabed (as indicated by whether the threshold values for criteria D5C4, D5C5, D5C6, D5C7 and D5C8, when used, have been achieved).
-    </p>
+          The outcomes of the assessments shall also contribute to assessments for benthic habitats under Descriptors 1 and 6 as follows: <br/>
+          - the distribution and an estimate of the extent of the area (as a proportion (percentage)) that is subject to eutrophication on theseabed (as indicated by whether the threshold values for criteria D5C4, D5C5, D5C6, D5C7 and D5C8, when used, have been achieved).
+      </p>
 
-    <p>
-        <strong>Threshold values:</strong><br/>
-        (a) in coastal waters, the values set in accordance with Directive 2000/60/EC; <br/>
-        (b) should this criterion be relevant for waters beyond coastal waters, values
-        consistent with those for coastal waters under Directive 2000/60/EC. Member States shall establish those values through regional or subregional cooperation. </br>
-    </p>
+      <p>
+          <strong>Threshold values:</strong><br/>
+          (a) in coastal waters, the values set in accordance with Directive 2000/60/EC; <br/>
+          (b) should this criterion be relevant for waters beyond coastal waters, values
+          consistent with those for coastal waters under Directive 2000/60/EC. Member States shall establish those values through regional or subregional cooperation. </br>
+      </p>
 
     ]]>
   </methodological-standard>
 
   <criteria-element id="el-1">
     <![CDATA[
-    <p>
-        Nutrients in the water column: <br/>
-        Dissolved Inorganic Nitrogen (DIN), Total Nitrogen (TN), Dissolved Inorganic Phosphorus (DIP), Total Phosphorus (TP).
-    </p>
+      <p>
+          Nutrients in the water column: <br/>
+          Dissolved Inorganic Nitrogen (DIN), Total Nitrogen (TN), Dissolved Inorganic Phosphorus (DIP), Total Phosphorus (TP).
+      </p>
     ]]>
   </criteria-element>
 
   <criteria-element id="el-2">
     <![CDATA[
-    <p>
-      Chlorophyll a in the water column
-    </p>
+      <p>
+        Chlorophyll a in the water column
+      </p>
     ]]>
   </criteria-element>
 
   <criteria-element id="el-3">
     <![CDATA[
-    <p>
-      Harmful algal blooms (e.g. cyanobacteria) in the water column
-    </p>
+      <p>
+        Harmful algal blooms (e.g. cyanobacteria) in the water column
+      </p>
     ]]>
   </criteria-element>
 
   <criteria-element id="el-4">
     <![CDATA[
-    <p>
-      Photic limit (transparency) of the water column
-    </p>
-    ]]>
-  </criteria-element>
-
-  <criteria-element id="el-5">
-    <![CDATA[
-    <p>
+      <p>
         Photic limit (transparency) of the water column
-    </p>
+      </p>
     ]]>
   </criteria-element>
 
   <criteria-element id="el-5">
     <![CDATA[
-    <p>
-        Dissolved oxygen in the bottom of the water column
-    </p>
+      <p>
+          Photic limit (transparency) of the water column
+      </p>
+    ]]>
+  </criteria-element>
+
+  <criteria-element id="el-5">
+    <![CDATA[
+      <p>
+          Dissolved oxygen in the bottom of the water column
+      </p>
     ]]>
   </criteria-element>
 
   <criteria-element id="el-6">
     <![CDATA[
-    <p>
-        Opportunistic macroalgae of benthic habitats
-    </p>
+      <p>
+          Opportunistic macroalgae of benthic habitats
+      </p>
     ]]>
   </criteria-element>
 
   <criteria-element id="el-7">
     <![CDATA[
-    <p>
-        Macrophyte communities (perennial seaweeds and seagrasses
-        such as fucoids, eelgrass and Neptune grass) of benthic habitats
-    </p>
+      <p>
+          Macrophyte communities (perennial seaweeds and seagrasses
+          such as fucoids, eelgrass and Neptune grass) of benthic habitats
+      </p>
     ]]>
   </criteria-element>
 
   <criteria-element id="el-8">
     <![CDATA[
-    <p>
-        Macrofaunal communities of benthic habitats
-    </p>
+      <p>
+          Macrofaunal communities of benthic habitats
+      </p>
     ]]>
   </criteria-element>
-
 </descriptor-definition>

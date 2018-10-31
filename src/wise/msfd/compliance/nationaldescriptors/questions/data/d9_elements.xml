@@ -3,18 +3,18 @@
     <criteria primary='true' id='D9C1'>
     <definition>
       <![CDATA[
-      <p>
-        The level of contaminants in edible tissues (muscle, liver, roe, flesh or other soft
-        parts, as appropriate) of seafood (including fish, crustaceans, molluscs, echinoderms,
-        seaweed and other marine plants) caught or harvested in the wild (excluding fin-fish
-        from mariculture) does not exceed: <br/>
+        <p>
+          The level of contaminants in edible tissues (muscle, liver, roe, flesh or other soft
+          parts, as appropriate) of seafood (including fish, crustaceans, molluscs, echinoderms,
+          seaweed and other marine plants) caught or harvested in the wild (excluding fin-fish
+          from mariculture) does not exceed: <br/>
 
-        (a) for contaminants listed in Regulation (EC) No 1881/2006, the maximum levels laid
-        down in that Regulation, which are the threshold values for the purposes of this Decision; <br/>
+          (a) for contaminants listed in Regulation (EC) No 1881/2006, the maximum levels laid
+          down in that Regulation, which are the threshold values for the purposes of this Decision; <br/>
 
-        (b) for additional contaminants, not listed in Regulation (EC) No 1881/2006, threshold values,
-        which Member States shall establish through regional or subregional cooperation <br/>
-      </p>
+          (b) for additional contaminants, not listed in Regulation (EC) No 1881/2006, threshold values,
+          which Member States shall establish through regional or subregional cooperation <br/>
+        </p>
       ]]>
     </definition>
     <uses-element href="#el-1"/>
@@ -22,39 +22,38 @@
   </criteria>
 
   <methodological-standard id="m-1">
-    <![CDATA[
-    <p>
-        <strong>Scale of assessment:</strong><br/>
-        The catch or production area in accordance with Article 38 of Regulation (EU)
-        No 1379/2013 of the European Parliament and of the Council.
-    <p>
-      <strong>Use of criteria: </strong><br/>
-      The extent to which good environmental status has been achieved shall be expressed
-      for each area assessed as follows: <br/>
-      — for each contaminant, its concentration in seafood, the matrix used (species and
-      tissue), whether the threshold values set have been achieved, and the proportion of
-      contaminants assessed which have achieved their threshold values.
-      </p>
-    ]]>
+      <![CDATA[
+        <p>
+          <strong>Scale of assessment:</strong><br/>
+          The catch or production area in accordance with Article 38 of Regulation (EU)
+          No 1379/2013 of the European Parliament and of the Council.
+        <p>
+          <strong>Use of criteria: </strong><br/>
+          The extent to which good environmental status has been achieved shall be expressed
+          for each area assessed as follows: <br/>
+          — for each contaminant, its concentration in seafood, the matrix used (species and
+          tissue), whether the threshold values set have been achieved, and the proportion of
+          contaminants assessed which have achieved their threshold values.
+        </p>
+      ]]>
   </methodological-standard>
 
   <criteria-element id="el-1">
-    <![CDATA[
-    <p>
-      Contaminants listed in Regulation (EC) No 1881/2006.<br/>
+      <![CDATA[
+        <p>
+          Contaminants listed in Regulation (EC) No 1881/2006.<br/>
 
-      For the purposes of this Decision, Member States may decide not to consider contaminants
-      from Regulation (EC) No 1881/2006 where justified on the basis of a risk assessment.<br/>
+          For the purposes of this Decision, Member States may decide not to consider contaminants
+          from Regulation (EC) No 1881/2006 where justified on the basis of a risk assessment.<br/>
 
-      Member States may assess additional contaminants that are not included in Regulation (EC)
-      No 1881/2006. Member States shall establish a list of those additional contaminants throgh
-      regional or subregional cooperation.<br/>
+          Member States may assess additional contaminants that are not included in Regulation (EC)
+          No 1881/2006. Member States shall establish a list of those additional contaminants throgh
+          regional or subregional cooperation.<br/>
 
-      Member States shall establish the list of species and relevant tissues to be assessed,
-      according to the conditions laid down under ‘specifications’. They may cooperate at regional
-      or subregional level to establish that list of species and relevant tissues.<br/>
-    /p>
-    ]]>
+          Member States shall establish the list of species and relevant tissues to be assessed,
+          according to the conditions laid down under ‘specifications’. They may cooperate at regional
+          or subregional level to establish that list of species and relevant tissues.<br/>
+        /p>
+      ]]>
   </criteria-element>
-
 </descriptor-definition>
