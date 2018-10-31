@@ -6,7 +6,8 @@
     <table class="table table-condensed assessment-data-table">
       <tbody>
         <!--<div tal:content="assessments/?country">asd</div>-->
-        <tal:def tal:define="assessment assessments/?country">
+        <tal:def tal:define="assessment assessments/?country;
+            colspan python: len(assessment.gescomponents)">
           <tr>
             <th>GEScomponent</th>
             <tal:rep tal:repeat="ges assessment/gescomponents">
@@ -18,12 +19,25 @@
               <th tal:content="crit/crit_name">
                 Criteria
               </th>
-              <td tal:content="crit/answer" colspan="50">Text</td>
+              <td tal:content="crit/answer"
+                  tal:attributes="colspan colspan">Text</td>
             </tr>
           </tal:rep>
           <tr>
-            <th>Assessment summary</th>
-            <td tal:content="assessment/summary" colspan="50">Summary</td>
+            <th rowspan="3">Assessment summary</th>
+            <td tal:content="assessment/summary"
+                tal:attributes="rowspan string:3;
+                      colspan python:colspan-2">
+              Summary
+            </td>
+          </tr>
+          <tr class="overall-score">
+            <th>Overall score</th>
+            <td>2</td>
+          </tr>
+          <tr class="overall-score">
+            <th>Overall conclusion</th>
+            <td>Partially adequate</td>
           </tr>
         </tal:def>
       </tbody>

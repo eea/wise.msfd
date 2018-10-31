@@ -191,7 +191,7 @@
 #
 #         return d
 
-# class CollectionDisplayForm(EmbededForm):
+# class CollectionDisplayForm(EmbeddedForm):
 #     """ Display a collection of data (multiple rows of results)
 #     """
 #

@@ -50,10 +50,14 @@
             .assessment-data-table th {
             background-color: #EEE;
             text-align: right;
-            width: 20%;
+            width: 15%;
             }
             .assessment-header th {
-            width: 20%;
+            width: 15%;
+            }
+            .overall-score th,
+            .overall-score td {
+            width: 8%;
             }
 
           </style>

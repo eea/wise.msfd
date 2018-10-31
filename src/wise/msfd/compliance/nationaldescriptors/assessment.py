@@ -7,7 +7,7 @@ from zope.schema.vocabulary import SimpleTerm, SimpleVocabulary
 from plone.api import user
 from plone.z3cform.layout import wrap_form
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
-from wise.msfd.base import EmbededForm, MainFormWrapper  # BaseUtil,
+from wise.msfd.base import EmbeddedForm, MainFormWrapper  # BaseUtil,
 from wise.msfd.compliance.base import get_descriptor_elements, get_questions
 from wise.msfd.gescomponents import get_ges_criterions
 from z3c.form.button import buttonAndHandler
@@ -52,8 +52,8 @@ class EditAssessmentDataForm(Form, BaseComplianceView):
         data, errors = self.extractData()
         # if not errors:
         # TODO: check for errors
-        # data['assessor'] = user.get_current()
-        # data['assess_date'] = datetime.date.today()
+        data['assessor'] = user.get_current()
+        data['assess_date'] = datetime.date.today()
         self.context.assessment_data = data
 
     @property
@@ -83,9 +83,9 @@ class EditAssessmentDataForm(Form, BaseComplianceView):
         # for row in tree.children:
         #     row_name = row.name
         #
-        #     # TODO: we no longer need EmbededForm here, we should get rid of
+        #     # TODO: we no longer need EmbeddedForm here, we should get rid of
         #
-        #     form = EmbededForm(self, self.request)
+        #     form = EmbeddedForm(self, self.request)
         #
         #     form.form_name = 'form' + row_name
         #     fields = []
