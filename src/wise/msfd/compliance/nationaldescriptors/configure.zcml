@@ -53,4 +53,12 @@
     permission="zope2.View"
     />
 
+  <!-- <browser:page -->
+  <!--   for="*" -->
+  <!--   name="question&#45;help" -->
+  <!--   class=".assessment.AssessmentQuestionHelp" -->
+  <!--   template="./pt/assessment&#45;question&#45;help.pt" -->
+  <!--   permission="zope2.View" -->
+  <!--   /> -->
+
 </configure>

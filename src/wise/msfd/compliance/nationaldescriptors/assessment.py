@@ -1,15 +1,14 @@
-import datetime
 import logging
+from collections import namedtuple
 
 from zope.schema import Choice, Text
 from zope.schema.vocabulary import SimpleTerm, SimpleVocabulary
 
-from plone.api import user
 from plone.z3cform.layout import wrap_form
-from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
-from wise.msfd.base import EmbededForm, MainFormWrapper  # BaseUtil,
+from Products.Five.browser.pagetemplatefile import (PageTemplateFile,
+                                                    ViewPageTemplateFile)
+from wise.msfd.base import EmbeddedForm, MainFormWrapper  # BaseUtil,
 from wise.msfd.compliance.base import get_descriptor_elements, get_questions
-from wise.msfd.gescomponents import get_ges_criterions
 from z3c.form.button import buttonAndHandler
 from z3c.form.field import Fields
 from z3c.form.form import Form
@@ -17,6 +16,10 @@ from z3c.form.form import Form
 from ..base import BaseComplianceView  # , Container
 from ..vocabulary import form_structure
 
+# from plone.api import user
+# from Products.Five.browser import BrowserView
+# from wise.msfd.gescomponents import get_ges_criterions
+# import datetime
 # from wise.msfd import db, sql2018  # sql,
 
 logger = logging.getLogger('wise.msfd')
@@ -44,6 +47,10 @@ class EditAssessmentDataForm(Form, BaseComplianceView):
     template = ViewPageTemplateFile("./pt/nat-desc-edit-assessment-data.pt")
 
     @property
+    def help(self):
+        return render_assessment_help(self.criterias)
+
+    @property
     def title(self):
         return 'Edit Assessment for {}'.format(self.descriptor)
 
@@ -68,10 +75,51 @@ class EditAssessmentDataForm(Form, BaseComplianceView):
 
         return Fields(*fields)
 
-    def _build_subforms(self, questions, criteria):
+    def _build_subforms(self, questions, criterias):
         """ Build a form of options from a tree of options
         """
-        import pdb; pdb.set_trace()
+
+        assessment_data = self.context.assessment_data
+
+        forms = []
+
+        for question in questions:
+            form = EmbeddedForm(self, self.request)
+
+            form.title = question.definition
+
+            form._question = question
+
+            form._criterias = criterias
+
+            fields = []
+
+            for criteria in criterias:
+                for element in criteria.elements:
+                    # u'{}_{}'.format(criteria.id, element.id)
+                    field_title = criteria.title
+                    field_name = '{}_{}_{}_{}'.format(
+                        self.article, question.id, criteria.id, element.id
+                    )
+                    choices = question.answers
+                    terms = [SimpleTerm(c, i, c)
+                             for i, c in enumerate(choices)]
+                    default = assessment_data.get(field_name, None)
+                    field = Choice(
+                        title=field_title,
+                        __name__=field_name,
+                        vocabulary=SimpleVocabulary(terms),
+                        required=False,
+                        default=default,
+                    )
+                    field._criteria = criteria
+                    fields.append(field)
+
+            form.fields = Fields(*fields)
+
+            forms.append(form)
+
+        return forms
 
         # base_name = tree.name
         # descriptor_criterions = get_ges_criterions(self.descriptor)
@@ -130,22 +178,28 @@ class EditAssessmentDataForm(Form, BaseComplianceView):
         #
         # return forms
 
-    def get_subforms(self):
-        # article = self.get_flattened_data(self)['article'].capitalize()
-        subforms = []
-
+    # TODO: use memoize
+    @property
+    def criterias(self):
         els = get_descriptor_elements(
             'compliance/nationaldescriptors/questions/data'
         )
+
+        return els[self.descriptor]
+
+    def get_subforms(self):
+        # article = self.get_flattened_data(self)['article'].capitalize()
+
         qs = get_questions(
             'compliance/nationaldescriptors/questions/data'
         )
-        import pdb; pdb.set_trace()
         questions = qs[self.article]
 
-        for criteria in els[self.descriptor]:
-            forms = self._build_subforms(questions, criteria)
-            subforms.extend(forms)
+        subforms = self._build_subforms(questions, self.criterias)
+
+        # for criterias in els[self.descriptor]:
+        #     forms = self._build_subforms(questions, criterias)
+        #     subforms.extend(forms)
 
         # criterias = filtered_criterias(self.article, self.process_phase())
         #
@@ -178,3 +232,55 @@ def filtered_criterias(article, phase):
 
 
 EditAssessmentDataView = wrap_form(EditAssessmentDataForm, MainFormWrapper)
+
+Cell = namedtuple('Cell', ['text', 'rowspan'])
+
+
+help_template = PageTemplateFile('./pt/assessment-question-help.pt')
+
+
+def render_assessment_help(criterias):
+    elements = []
+    methods = []
+
+    for c in criterias:
+        elements.extend([e.id for e in c.elements])
+        methods.append(c.methodological_standard.id)
+
+    element_count = {}
+
+    for k in elements:
+        element_count[k] = elements.count(k)
+
+    method_count = {}
+
+    for k in methods:
+        method_count[k] = methods.count(k)
+
+    rows = []
+    seen = []
+
+    for c in criterias:
+        row = []
+        cel = c.elements[0]     # TODO: also support multiple elements
+
+        if cel.id not in seen:
+            seen.append(cel.id)
+            rowspan = element_count[cel.id]
+            cell = Cell(cel.definition, rowspan)
+            row.append(cell)
+
+        cell = Cell(c.definition, 1)
+        row.append(cell)
+
+        meth = c.methodological_standard
+
+        if meth.id not in seen:
+            seen.append(meth.id)
+            rowspan = method_count[meth.id]
+            cell = Cell(meth.definition, rowspan)
+            row.append(cell)
+
+        rows.append(row)
+
+    return help_template(rows=rows)
