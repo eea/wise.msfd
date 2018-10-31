@@ -1,8 +1,10 @@
+import datetime
 import logging
 
 from zope.schema import Choice, Text
 from zope.schema.vocabulary import SimpleTerm, SimpleVocabulary
 
+from plone.api import user
 from plone.z3cform.layout import wrap_form
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 # from wise.msfd import db, sql2018  # sql,
@@ -48,6 +50,8 @@ class EditAssessmentDataForm(Form, BaseComplianceView):
         data, errors = self.extractData()
         # if not errors:
         # TODO: check for errors
+        data['assessor'] = user.get_current()
+        data['assess_date'] = datetime.date.today()
         self.context.assessment_data = data
 
     @property

@@ -117,6 +117,33 @@ def get_assessment_data(descriptor_criterions, question_tree, data):
     return assessment
 
 
+@db.use_db_session('session_2018')
+def get_assessment_head_data_2012(data):
+    if not data:
+        return ['Not found'] * 3 + [('Not found', '')]
+
+    ids = [x.COM_General_Id for x in data]
+    ids = tuple(set(ids))
+
+    t = sql2018.COMGeneral
+    count, res = db.get_all_records(
+        t,
+        t.Id.in_(ids)
+    )
+    if count:
+        report_by = res[0].ReportBy
+        assessors = res[0].Assessors
+        assess_date = res[0].DateAssessed
+        com_report = res[0].CommissionReport
+
+        return (report_by,
+                assessors,
+                assess_date,
+                (com_report.split('/')[-1], com_report))
+
+    return ['Not found'] * 3 + [('Not found', '')]
+
+
 def get_assessment_data_2012(descriptor_criterions, data):
     Assessment2012 = namedtuple(
         'Assessment2012', ['gescomponents', 'criteria',
@@ -168,14 +195,6 @@ class NationalDescriptorArticleView(BaseComplianceView):
     def __init__(self, context, request):
         super(NationalDescriptorArticleView, self).__init__(context, request)
 
-        # Assessment header 2012
-        self.assessment_header_2012 = self.assessment_header_template(
-            report_by='Commission',
-            assessors='Some Body',
-            assess_date='2012-12-22',
-            source_file=('To be addedd...', '.')
-        )
-
         # Assessment data 2012
         descriptor_criterions = get_ges_criterions(self.descriptor)
 
@@ -186,19 +205,24 @@ class NationalDescriptorArticleView(BaseComplianceView):
             self.descriptor,
             self.article
         )
-        assessments = get_assessment_data_2012(descriptor_criterions,
-                                               data)
+        assessments = get_assessment_data_2012(
+            descriptor_criterions,
+            data
+        )
 
         self.assessment_data_2012 = self.assessment_data_2012_tpl(
             data=assessments
         )
 
-        # Assessment header 2018
-        self.assessment_header_2018 = self.assessment_header_template(
-            report_by='Commission',
-            assessors='Some Body',
-            assess_date='2018-12-22',
-            source_file=('To be addedd...', '.')
+        # Assessment header 2012
+        report_by, assessors, assess_date, source_file = \
+            get_assessment_head_data_2012(data)
+
+        self.assessment_header_2012 = self.assessment_header_template(
+            report_by=report_by,
+            assessors=assessors,
+            assess_date=assess_date,
+            source_file=source_file
         )
 
         # Assessment data 2018
@@ -215,4 +239,17 @@ class NationalDescriptorArticleView(BaseComplianceView):
 
         self.assessment_data_2018 = self.assessment_data_2018_tpl(
             assessment=assessment
+        )
+
+        # Assessment header 2018
+        report_by_2018 = u'Commission'
+        assessors_2018 = data.get('assessor', u'Not assessed')
+        assess_date_2018 = data.get('assess_date', u'Not assessed')
+        source_file_2018 = ('To be addedd...', '.')
+
+        self.assessment_header_2018 = self.assessment_header_template(
+            report_by=report_by_2018,
+            assessors=assessors_2018,
+            assess_date=assess_date_2018,
+            source_file=source_file_2018
         )

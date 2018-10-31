@@ -42,6 +42,20 @@
             margin-right: 1em;
             background-color: #EEE;
             }
+            .assessment-data-table td {
+            min-width: 4em;
+            border: 1px solid #CCC;
+            background-color: white;
+            }
+            .assessment-data-table th {
+            background-color: #EEE;
+            text-align: right;
+            width: 20%;
+            }
+            .assessment-header th {
+            width: 20%;
+            }
+
           </style>
 
           <div class="nat-desc-art-menu">
