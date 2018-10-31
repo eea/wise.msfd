@@ -1,5 +1,5 @@
 # TODO: we need to check behavior of this module after modifications to
-# extractData() in EmbededForm
+# extractData() in EmbeddedForm
 
 from sqlalchemy import and_, or_
 
@@ -8,7 +8,7 @@ from z3c.form.browser.checkbox import CheckBoxFieldWidget
 from z3c.form.field import Fields
 
 from .. import db, sql2018
-from ..base import EmbededForm
+from ..base import EmbeddedForm
 from ..sql_extra import MSFD4GeographicalAreaID
 from ..utils import (all_values_from_field, data_to_xls, db_objects_to_dict,
                      pivot_data, register_form_2018)
@@ -146,7 +146,7 @@ class Art9Display(ItemDisplayForm):
 
 
 @register_form_2018
-class A2018Article9(EmbededForm):
+class A2018Article9(EmbeddedForm):
     record_title = title = 'Article 9 (GES determination)'
     mapper_class = sql2018.ART9GESGESComponent
     display_klass = Art9Display
@@ -166,7 +166,7 @@ class A2018Article9(EmbededForm):
     #     return all_values_from_field(self, self.fields['ges_component'])
 
 
-class A2018GesComponentA9(EmbededForm):
+class A2018GesComponentA9(EmbeddedForm):
     fields = Fields(interfaces.IGESComponentsA9)
     fields['ges_component'].widgetFactory = CheckBoxFieldWidget
 
@@ -177,7 +177,7 @@ class A2018GesComponentA9(EmbededForm):
     #     return all_values_from_field(self, self.fields['ges_component'])
 
 
-class A2018FeatureA9(EmbededForm):
+class A2018FeatureA9(EmbeddedForm):
     fields = Fields(interfaces.IFeaturesA9)
     fields['feature'].widgetFactory = CheckBoxFieldWidget
 
@@ -341,7 +341,7 @@ class A2018Art10Display(ItemDisplayForm):
         return res
 
 
-class A2018Art10FeaturesForm(EmbededForm):
+class A2018Art10FeaturesForm(EmbeddedForm):
     fields = Fields(interfaces.IFeatures)
     fields['feature'].widgetFactory = CheckBoxFieldWidget
 
@@ -352,7 +352,7 @@ class A2018Art10FeaturesForm(EmbededForm):
         pass
 
 
-class A2018Art10GesComponentsForm(EmbededForm):
+class A2018Art10GesComponentsForm(EmbeddedForm):
     fields = Fields(interfaces.IGESComponents)
     fields['ges_component'].widgetFactory = CheckBoxFieldWidget
 
@@ -421,7 +421,7 @@ class A2018MarineUnitID(MarineUnitIDSelectForm):
 
 
 @register_form_2018
-class A2018Article10(EmbededForm):
+class A2018Article10(EmbeddedForm):
     record_title = 'Article 10 (Targets and associated indicators)'
     title = 'Article 10 (Targets)'
     mapper_class = sql2018.ART10TargetsMarineUnit
@@ -707,7 +707,7 @@ class A2018Art81abDisplay(ItemDisplayForm):
 
 
 @register_form_2018
-class A2018Article81ab(EmbededForm):
+class A2018Article81ab(EmbeddedForm):
     record_title = title = 'Article 8.1ab (GES assessments)'
     mapper_class = sql2018.ART8GESMarineUnit
     display_klass = A2018Art81abDisplay
@@ -731,7 +731,7 @@ class A2018Article81ab(EmbededForm):
                                      self.fields['marine_unit_id'])
 
 
-class A2018Art81abFeatures(EmbededForm):
+class A2018Art81abFeatures(EmbeddedForm):
     fields = Fields(interfaces.IFeatures)
     fields['feature'].widgetFactory = CheckBoxFieldWidget
 
@@ -739,7 +739,7 @@ class A2018Art81abFeatures(EmbededForm):
         return A2018Art81abGesComponents(self, self.request)
 
 
-class A2018Art81abGesComponents(EmbededForm):
+class A2018Art81abGesComponents(EmbeddedForm):
     fields = Fields(interfaces.IGESComponents)
     fields['ges_component'].widgetFactory = CheckBoxFieldWidget
 
@@ -1051,7 +1051,7 @@ class A2018Art81cDisplay(ItemDisplayForm):
         return res
 
 
-class A2018Features81cForm(EmbededForm):
+class A2018Features81cForm(EmbeddedForm):
 
     fields = Fields(interfaces.IFeatures81c)
     fields['feature'].widgetFactory = CheckBoxFieldWidget
@@ -1110,7 +1110,7 @@ class A2018Art81cMarineUnitId(MarineUnitIDSelectForm):
 
 
 @register_form_2018
-class A2018Article81c(EmbededForm):
+class A2018Article81c(EmbeddedForm):
     record_title = 'Article 8.1c (Economic and social analysis assessments)'
     title = 'Article 8.1c (ESA assessments)'
     mapper_class = sql2018.ART8ESAMarineUnit
@@ -1134,7 +1134,7 @@ class A2018Article81c(EmbededForm):
 ##############################################################################
 
 
-class A2018IndicatorsGesComponent(EmbededForm):
+class A2018IndicatorsGesComponent(EmbeddedForm):
     fields = Fields(interfaces.IIndicatorsGesComponent)
     fields['ges_component'].widgetFactory = CheckBoxFieldWidget
 
@@ -1142,7 +1142,7 @@ class A2018IndicatorsGesComponent(EmbededForm):
         return A2018IndicatorsFeature(self, self.request)
 
 
-class A2018IndicatorsFeature(EmbededForm):
+class A2018IndicatorsFeature(EmbeddedForm):
     fields = Fields(interfaces.IIndicatorsFeature)
     fields['feature'].widgetFactory = CheckBoxFieldWidget
 
@@ -1385,7 +1385,7 @@ class A2018IndicatorsDisplay(ItemDisplayForm):
 
 
 @register_form_2018
-class A2018ArticleIndicators(EmbededForm):
+class A2018ArticleIndicators(EmbeddedForm):
     record_title = title = 'Indicators'
     mapper_class = sql2018.IndicatorsIndicatorAssessment
     features_mc = sql2018.IndicatorsFeatureFeature

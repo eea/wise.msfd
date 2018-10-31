@@ -52,8 +52,8 @@ class EditAssessmentDataForm(Form, BaseComplianceView):
         data, errors = self.extractData()
         # if not errors:
         # TODO: check for errors
-        data['assessor'] = user.get_current()
-        data['assess_date'] = datetime.date.today()
+        # data['assessor'] = user.get_current()
+        # data['assess_date'] = datetime.date.today()
         self.context.assessment_data = data
 
     @property

@@ -1,10 +1,10 @@
 from zope.interface import Attribute, Interface
 from zope.schema import Choice, Int, List  # , Text  # , TextLine
 
-from ..interfaces import IEmbededForm
+from ..interfaces import IEmbeddedForm
 
 
-class IItemDisplayForm(IEmbededForm):
+class IItemDisplayForm(IEmbeddedForm):
     data_template = Attribute(u"Template to be used to show item data")
     extra_data_template = Attribute(u"Template for any extra item data")
 

@@ -2,7 +2,7 @@ from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 from z3c.form.field import Fields
 
 from .. import db, sql
-from ..base import EmbededForm, MarineUnitIDSelectForm
+from ..base import EmbeddedForm, MarineUnitIDSelectForm
 from ..utils import (data_to_xls, register_form, register_form_section,
                      register_subform)
 from .base import ItemDisplay, MultiItemDisplayForm
@@ -10,7 +10,7 @@ from .interfaces import IA81Form
 
 
 @register_form
-class A81bForm(EmbededForm):
+class A81bForm(EmbeddedForm):
     """ Main form for A81b.
 
     Allows selecting between Extraction of fish, seaweed, etc

@@ -12,7 +12,7 @@ from z3c.form.field import Fields
 from z3c.form.form import Form
 
 from .db import get_available_marine_unit_ids, threadlocals
-from .interfaces import IEmbededForm, IMainForm, IMarineUnitIDSelect
+from .interfaces import IEmbeddedForm, IMainForm, IMarineUnitIDSelect
 from .utils import all_values_from_field, get_obj_fields, print_value
 from .widget import MarineUnitIDSelectFieldWidget
 
@@ -228,13 +228,13 @@ class MainFormWrapper(FormWrapper):
         return super(MainFormWrapper, self).render()
 
 
-class EmbededForm(BaseEnhancedForm, Form, BaseUtil):
+class EmbeddedForm(BaseEnhancedForm, Form, BaseUtil):
     """ Our most basic super-smart-superclass for forms
 
     It can embed other children forms
     """
 
-    implements(IEmbededForm)
+    implements(IEmbeddedForm)
     ignoreContext = True
 
     template = ViewPageTemplateFile('pt/subform.pt')
@@ -247,7 +247,7 @@ class EmbededForm(BaseEnhancedForm, Form, BaseUtil):
         self.data = {}
 
     def update(self):
-        super(EmbededForm, self).update()
+        super(EmbeddedForm, self).update()
 
         self.data, errors = self.extractData()
 
@@ -275,7 +275,7 @@ class EmbededForm(BaseEnhancedForm, Form, BaseUtil):
             return extras()
 
 
-class MarineUnitIDSelectForm(EmbededForm):
+class MarineUnitIDSelectForm(EmbeddedForm):
     """ Base form for displaying information for a single MarineUnitID
     """
 

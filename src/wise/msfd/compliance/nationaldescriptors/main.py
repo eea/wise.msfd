@@ -251,5 +251,5 @@ class NationalDescriptorArticleView(BaseComplianceView):
             report_by=report_by_2018,
             assessors=assessors_2018,
             assess_date=assess_date_2018,
-            source_file=source_file_2018
+            source_file=source_file_2018,
         )
