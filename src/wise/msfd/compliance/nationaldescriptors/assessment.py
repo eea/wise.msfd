@@ -126,6 +126,17 @@ class EditAssessmentDataForm(Form, BaseComplianceView):
         # article = self.get_flattened_data(self)['article'].capitalize()
         subforms = []
 
+        from wise.msfd.compliance.base import get_descriptor_elements
+        els = get_descriptor_elements(
+            'compliance/nationaldescriptors/questions/data'
+        )
+        print els
+        from wise.msfd.compliance.base import get_questions
+        qs = get_questions(
+            'compliance/nationaldescriptors/questions/data'
+        )
+        import pdb; pdb.set_trace()
+
         criterias = filtered_criterias(self.article, self.process_phase())
 
         for criteria in criterias:

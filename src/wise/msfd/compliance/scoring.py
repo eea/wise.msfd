@@ -8,7 +8,7 @@ DEFAULT_RANGES = [
 
 
 def get_percentage(values):
-    """ Compute how many True values are in the list
+    """ Compute percentage of True values in the list
     """
     trues = len([x for x in values if x is True])
 
@@ -27,11 +27,13 @@ def alternative_based(args):
             else:
                 acc.append(False)
 
-        percentage = get_percentage(acc)
+        p = get_percentage(acc)
 
-        for position, _range in reversed(DEFAULT_RANGES):
-            if percentage >= _range[0] and percentage <= _range[1]:
-                return position
+        for x, r in enumerate(reversed(DEFAULT_RANGES)):
+            if (p >= r[0]) and (p <= r[1]):
+                return x
+
+        # TODO: offer default value here as return?
 
     return calculate
 

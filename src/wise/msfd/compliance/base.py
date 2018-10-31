@@ -1,3 +1,7 @@
+import logging
+import os
+
+import lxml.etree
 from pkg_resources import resource_filename
 
 from Acquisition import aq_inner
@@ -9,6 +13,8 @@ from wise.msfd import db, sql
 
 from . import interfaces
 from .nationaldescriptors.utils import row_to_dict
+
+logger = logging.getLogger('wise.msfd')
 
 MAIN_FORMS = [
     # view name, (title, explanation)
@@ -249,42 +255,124 @@ class BaseComplianceView(BrowserView):
         return bool(tool.checkPermission(permission, aq_inner(context)))
 
 
-<<<<<<< HEAD
-class ArticleDescriptorAssessmentDefinition:
-    def __init__(self, criterias=None):
-        self.criterias = criterias
+def get_element_by_id(root, id):
+    if id.startswith('#'):
+        id = id[1:]
+    el = root.xpath('//*[@id = "' + id + '"]')[0]
+
+    return el
+
+
+class ElementDefinition:
+    def __init__(self, node, root):
+        self.id = node.get('id')
+        self.definition = node.text.strip()
+
+
+class MetodologicalStandardDefinition:
+    def __init__(self, node, root):
+        self.id = node.get('id')
+        self.definition = node.text.strip()
 
 
 class CriteriaAssessmentDefinition:
-    def __init__(self, descriptor=None, criteria_elements=None,):
-        self.criteria_elements = criteria_elements
-        pass
+    def __init__(self, node, root):
+        self.id = node.get('id')
+        defn = node.find('definition')
+        self.definition = defn.text.strip()
+
+        self.elements = []
+
+        for eid in node.xpath('uses-element/@href'):
+            el = get_element_by_id(root, eid)
+            self.elements.append(ElementDefinition(el, root))
+
+        msid = node.xpath('uses-methodological-standard/@href')[0]
+        mel = get_element_by_id(root, msid)
+        self.methodological_standard = MetodologicalStandardDefinition(
+            mel, root
+        )
 
 
-class QuestionDefinition:
-    def __init__(self, id, text):
-        self.id = id
-        self.text = text
+def parse_elements_file(fpath):
+    # Note: this parsing is pretty optimistic that there's a single descriptor
+    # in the file. Keep that true
+    res = []
+
+    try:
+        root = lxml.etree.parse(fpath).getroot()
+    except:
+        logger.exception('Could not parse file: %s', fpath)
+
+        return
+
+    desc_id = root.get('id')
+
+    for critn in root.iterchildren('criteria'):
+
+        crit = CriteriaAssessmentDefinition(critn, root)
+        res.append(crit)
+
+    return desc_id, res
 
 
-def parse_questions_file(relpath):
-    path = resource_filename(
-        'wise.msfd.compliance',
-        relpath
-    )
-    questions = []
-    with open(path) as f:
-        for line in f.read():
-            line = line.strip()
+def _parse_files_in_location(location, check_filename, parser):
+    dirpath = resource_filename('wise.msfd', location)
+    out = {}
 
-            if not line or line.startswith('#'):
-                continue
+    for fname in os.listdir(dirpath):
+        if check_filename(fname):
+            fpath = os.path.join(dirpath, fname)
+            res = parser(fpath)
 
-            id, text = line.split('\t')
-            q = QuestionDefinition(id, text)
-            questions.append(q)
+            if res:
+                desc, elements = res
+                out[desc] = elements
 
-    return questions
+    return out
+
+
+def get_descriptor_elements(location):
+    """ Parse the descriptor elements in a location and build a mapping struct
+
+    The location argument should be a path relative to wise.msfd package.
+    The return data is used to build the automatic forms.
+    """
+    def check_filename(fname):
+        return fname.endswith('_elements.xml')
+
+    return _parse_files_in_location(location,
+                                    check_filename, parse_elements_file)
+
+
+class AssessmentQuestionDefinition:
+    def __init__(self, node, root):
+        self.id = node.get('id')
+        self.klass = node.get('class')
+        self.use_criteria = node.get('use-criteria')
+        self.definition = node.find('definition').text.strip()
+        self.answers = [x.strip() for x in node.xpath('answers/option/text()')]
+
+
+def parse_question_file(fpath):
+    res = []
+
+    root = lxml.etree.parse(fpath).getroot()
+    article_id = root.get('article')
+
+    for qn in root.iterchildren('assessment-question'):
+        q = AssessmentQuestionDefinition(qn, root)
+        res.append(q)
+
+    return article_id, res
+
+
+def get_questions(location):
+    def check_filename(fname):
+        return fname.startswith('questions_')
+
+    return _parse_files_in_location(location,
+                                    check_filename, parse_question_file)
 
 
 class BaseArticle2012(BrowserView):
