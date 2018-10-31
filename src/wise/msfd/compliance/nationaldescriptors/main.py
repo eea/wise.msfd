@@ -1,16 +1,19 @@
 """ Classes and views to implement the National Descriptors compliance page
 """
 
-from collections import namedtuple, defaultdict
+from collections import namedtuple  # , defaultdict
+
 from sqlalchemy import or_
 
 from Products.Five.browser.pagetemplatefile import \
     ViewPageTemplateFile as Template
-from wise.msfd.gescomponents import get_ges_criterions
 from wise.msfd import db, sql2018
+from wise.msfd.compliance.base import get_descriptor_elements, get_questions
+from wise.msfd.gescomponents import get_ges_criterions
 
 from ..base import BaseComplianceView  # , Container
-from ..vocabulary import form_structure
+
+# from ..vocabulary import form_structure
 
 CountryStatus = namedtuple('CountryStatus', ['name', 'status', 'url'])
 
@@ -77,35 +80,55 @@ AssessmentRow = namedtuple(
 )
 
 
-def get_assessment_data(descriptor_criterions, question_tree, data):
+def get_assessment_data(article, criterias, questions, data):
     """ Builds a data structure suitable for display in a template
     """
 
     # tree = question_tree
     answers = []
-    gescomponents = [c.id for c in descriptor_criterions]
+    gescomponents = [c.id for c in criterias]
 
-    for tree in question_tree.children:
-        base_name = tree.name       # can be Adequacy, Consistency or Coherence
+    for question in questions:
+        # base_name = tree.name
+        # # can be Adequacy, Consistency or Coherence
+        # base_name = question.klass
+        # row_name = question.id
+        values = []
 
-        for row in tree.children:
-            row_name = row.name     # such as "status assessment"
-
-            values = []
-
-            for crit in descriptor_criterions:
-                field_name = '{}_{}_{}'.format(base_name, row_name, crit.id)
+        for criteria in criterias:
+            for element in criteria.elements:
+                field_name = '{}_{}_{}_{}'.format(
+                        article, question.id, criteria.id, element.id
+                    )
                 value = data.get(field_name, '-') or '-'
-                # values.append((crit.id, value))
                 values.append(value)
 
-            question = "{} of {}".format(base_name, row_name)
-            summary = 'summary here'
-            conclusion = 'conclusion here'
-            score = '1'
+        summary = 'summary here'
+        conclusion = 'conclusion here'
+        score = '1'
 
-            qr = AssessmentRow(question, summary, conclusion, score, values)
-            answers.append(qr)
+        qr = AssessmentRow(question.definition,
+                           summary, conclusion, score, values)
+        answers.append(qr)
+
+        # for row in tree.children:
+        #     row_name = row.name     # such as "status assessment"
+        #
+        #     values = []
+        #
+        #     for crit in descriptor_criterions:
+        #         field_name = '{}_{}_{}'.format(base_name, row_name, crit.id)
+        #         value = data.get(field_name, '-') or '-'
+        #         # values.append((crit.id, value))
+        #         values.append(value)
+        #
+        #     question = "{} of {}".format(base_name, row_name)
+        #     summary = 'summary here'
+        #     conclusion = 'conclusion here'
+        #     score = '1'
+        #
+        #     qr = AssessmentRow(question, summary, conclusion, score, values)
+        #     answers.append(qr)
 
     assessment = Assessment(
         gescomponents,
@@ -130,6 +153,7 @@ def get_assessment_head_data_2012(data):
         t,
         t.Id.in_(ids)
     )
+
     if count:
         report_by = res[0].ReportBy
         assessors = res[0].Assessors
@@ -194,6 +218,22 @@ class NationalDescriptorArticleView(BaseComplianceView):
     assessment_data_2012_tpl = Template('./pt/assessment-data-2012.pt')
     assessment_data_2018_tpl = Template('./pt/assessment-data-2018.pt')
 
+    @property
+    def criterias(self):
+        els = get_descriptor_elements(
+            'compliance/nationaldescriptors/questions/data'
+        )
+
+        return els[self.descriptor]
+
+    @property
+    def questions(self):
+        qs = get_questions(
+            'compliance/nationaldescriptors/questions/data'
+        )
+
+        return qs[self.article]
+
     def __init__(self, context, request):
         super(NationalDescriptorArticleView, self).__init__(context, request)
 
@@ -230,11 +270,10 @@ class NationalDescriptorArticleView(BaseComplianceView):
         # Assessment data 2018
         data = self.context.assessment_data
 
-        question_tree = form_structure[self.article]
-
         assessment = get_assessment_data(
-            descriptor_criterions,
-            question_tree,
+            self.article,
+            self.criterias,
+            self.questions,
             data
         )
         # print assessment
