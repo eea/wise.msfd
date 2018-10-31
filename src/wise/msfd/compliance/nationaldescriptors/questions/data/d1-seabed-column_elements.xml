@@ -9,7 +9,7 @@
       ]]>
     </definition>
     <uses-element href="#el-1" />
-    <uses-methodological-standard href="#mm-1" />
+    <uses-methodological-standard href="#m-1" />
   </criteria>
 
   <criteria primary='true' id='D6C2'>
@@ -21,7 +21,7 @@
       ]]>
     </definition>
     <uses-element href="#el-2" />
-    <uses-methodological-standard href="#mm-1" />
+    <uses-methodological-standard href="#m-1" />
   </criteria>
 
   <criteria primary='true' id='D6C3'>
@@ -64,16 +64,24 @@
     <definition>
       <![CDATA[
       <p>
-        The extent of loss of the habitat type, resulting from anthropogenic pressures,
-        does not exceed a specified proportion of the natural extent of the habitat type
-        in the assessment area.<br/>
-        Member States shall establish the maximum allowable extent of habitat loss as a
-        proportion of the total natural extent of the habitat type, through cooperation
-        at Union level, taking into account regional or subregional specificities.<br/>
+        The extent of adverse effects from anthropogenic pressures on the condition of
+        the habitat type, including alteration to its biotic and abiotic structure and
+        its functions (e.g. its typical species composition and their relative abundance,
+        absence of particularly sensitive or fragile species or species providing a key
+        function, size structure of species), does not exceed a specified proportion of
+        the natural extent of the habitat type in the assessment area.<br/>
+        Member States shall establish threshold values for adverse effects on the
+        condition of each habitat type, ensuring compatibility with related values set
+        under Descriptors 2, 5, 6, 7 and 8, through cooperation at Union level, taking
+        into account regional or subregional specificities.<br/>
+        Member States shall establish the maximum allowable extent of those adverse
+        effects as a proportion of the total natural extent of the habitat type, through
+        cooperation at Union level, taking into account regional or subregional
+        specificities.<br/>
       </p>
       ]]>
     </definition>
-    <uses-element href="#el-4" />
+    <uses-element href="#el-5" />
     <uses-methodological-standard href="#m-2" />
   </criteria>
 
@@ -82,114 +90,92 @@
     <![CDATA[
     <p>
         <strong>Scale of assessment:</strong><br/>
-        Subdivision of region or subregion as used for assessments of benthic broad habitat
-        types, reflecting biogeographic differences in species composition of the habitat
-        type.
+        As used for assessment of the benthic broad habitat types under Descriptors 1 and 6.
     <p>
         <strong>Use of criteria: </strong><br/>
-        The extent to which good environmental status has been achieved shall be expressed
-        for each area assessed as:<br/>
-        (a) an estimate of the proportion and extent of each habitat type assessed that
-        has achieved the threshold value set;<br/>
-        (b) a list of broad habitat types in the assessment area that were not assessed.
+        The outcomes of assessment of criterion D6C1 (the distribution and an estimate of the
+        extent of physical loss) shall be used to assess criteria D6C4 and D7C1.<br/>
+        The outcomes of assessment of criterion D6C2 (the distribution and an estimate of the
+        extent of physical disturbance pressures) shall be used to assess criterion D6C3.<br/>
+        The outcomes of assessment of criterion D6C3 (an estimate of the extent of adverse 
+        effect by physical disturbance per habitat type in each assessment area) shall 
+        contribute to the assessment of criterion D6C5.<br/>
     </p>
     ]]>
   </methodological-standard>
 
-  <criteria-element id="el-1">
-    <![CDATA[
-    <p>
-      Pelagic broad habitat types (variable salinity (17), coastal, shelf and oceanic/beyond
-      shelf), if present in the region or subregion, and other habitat types as defined in
-      the second paragraph.<br/>
-      Member States may select, through regional or subregional cooperation, additional
-      habitat types according to the criteria laid down under ‘specifications for the
-      selection of species and habitats’.<br/>
-    /p>
-    ]]>
-  </criteria-element>
-
-</descriptor-definition>
-
-<descriptor-definition id='D4'>
-  <criteria primary='true' id='D4C1'>
-    <definition>
-      <![CDATA[
-      <p>
-        The diversity (species composition and their relative abundance) of the trophic guild is
-        not adversely affected due to anthropogenic pressures.<br/>
-        Member States shall establish threshold values through regional or subregional
-        cooperation.<br/>
-      </p>
-      ]]>
-    </definition>
-    <uses-element href="#el-1" />
-    <uses-methodological-standard href="#m-1" />
-  </criteria>
-
-  <criteria primary='true' id='D4C2'>
-    <definition>
-      <![CDATA[
-      <p>
-        The balance of total abundance between the trophic guilds is not adversely affected due to
-        anthropogenic pressures.<br/>
-        Member States shall establish threshold values through regional or subregional cooperation.<br/>
-      </p>
-      ]]>
-    </definition>
-    <uses-element href="#el-1" />
-    <uses-methodological-standard href="#m-1"/>
-  </criteria>
-
-  <criteria primary='false' id='D4C3'>
-    <definition>
-      <![CDATA[
-      <p>
-        The size distribution of individuals across the trophic guild is not adversely affected due to
-        anthropogenic pressures.<br/>
-        Member States shall establish threshold values through regional or subregional cooperation.<br/>
-      </p>
-      ]]>
-    </definition>
-    <uses-element href="#el-1" />
-    <uses-methodological-standard href="#m-1" />
-  </criteria>
-
-  <criteria primary='false' id='D4C4'>
-    <definition>
-      <![CDATA[
-      <p>
-        Productivity of the trophic guild is not adversely affected due to anthropogenic pressures.<br/>
-        Member States shall establish threshold values through regional or subregional cooperation.<br/>
-      </p>
-      ]]>
-    </definition>
-    <uses-element href="#el-1"/>
-    <uses-methodological-standard href="#m-1"/>
-  </criteria>
-
-  <methodological-standard id="m-1">
+  <methodological-standard id="m-2">
     <![CDATA[
     <p>
         <strong>Scale of assessment:</strong><br/>
-        Regional level for Baltic Sea and Black Sea; subregional level for North-East Atlantic and
-        Mediterranean Sea.<br/>
-        Subdivisions may be used where appropriate.
+        Subdivision of region or subregion, reflecting biogeographic differences in species
+        composition of the broad habitat type.
     <p>
         <strong>Use of criteria: </strong><br/>
-        Where values do not fall within the threshold values, this may trigger further research and
-        investigation to understand the causes for the failure
+        A single assessment per habitat type, using criteria D6C4 and D6C5, shall serve the
+        purpose of assessments of both benthic habitats under Descriptor 1 and sea-floor
+        integrity under Descriptor 6.<br/>
+
+        The extent to which good environmental status has been achieved shall be expressed
+        for each area assessed as: <br/>
+
+        (a) for D6C4, an estimate of the proportion and extent of loss per habitat type and
+        whether this has achieved the extent value set; <br/>
+
+        (b) for D6C5, an estimate of the proportion and extent of adverse effects, including
+        the proportion lost from point (a), per habitat type and whether this has achieved
+        the extent value set; <br/>
+
+        (c) overall status of the habitat type, using a method agreed at Union level based
+        on points (a) and (b), and a list of broad habitat types in the assessment area
+        that were not assessed. <br/>
     </p>
     ]]>
   </methodological-standard>
 
+
   <criteria-element id="el-1">
     <![CDATA[
     <p>
-      Trophic guilds of an ecosystem.<br/>
-      Member States shall establish the list of trophic guilds through regional or subregional cooperation.
+      Physical loss of the seabed (including intertidal areas).
     /p>
     ]]>
   </criteria-element>
 
+  <criteria-element id="el-2">
+    <![CDATA[
+    <p>
+      Physical disturbance to the seabed (including intertidal areas).
+    /p>
+    ]]>
+  </criteria-element>
+
+  <criteria-element id="el-3">
+    <![CDATA[
+    <p>
+      Benthic broad habitat types or other habitat types, as used under Descriptors 1 and 6.
+    /p>
+    ]]>
+  </criteria-element>
+
+  <criteria-element id="el-3">
+    <![CDATA[
+    <p>
+      Benthic broad habitat types as listed in Table 2 and if present in the region or subregion,
+      and other habitat types as defined in the second paragraph. <br/>
+
+      Member States may select, through regional or subregional cooperation, additional habitat
+      types, according to the criteria laid down under ‘specifications for the selection of species
+      and habitats’, and which may include habitat types listed under Directive 92/43/EEC or
+      international agreements such as Regional Sea Conventions, for the purposes of: <br/>
+
+      (a) assessing each broad habitat type under criterion D6C5; <br/>
+
+      (b) assessing these habitat types. <br/>
+
+      A single set of habitat types shall serve the purpose of assessments of both benthic
+      habitats under Descriptor 1 and sea-floor integrity under Descriptor 6. <br/>
+    /p>
+    ]]>
+  </criteria-element>
 </descriptor-definition>
