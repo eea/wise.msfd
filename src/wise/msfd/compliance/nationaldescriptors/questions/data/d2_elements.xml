@@ -4,16 +4,16 @@
   <criteria primary='true' id='D2C1'>
     <definition>
       <![CDATA[
-      <p>
-        The number of non-indigenous species which are newly introduced via
-        human activity into the wild, per assessment period (6 years), measured
-        from the reference year as reported for the initial assessment under
-        Article 8(1) of Directive 2008/56/EC, is minimised and where possible
-        reduced to zero. <br/>
-        Member States shall establish the threshold value for the number
-        of new introductions of non-indigenous species, through regional or
-        subregional cooperation.
-      </p>
+        <p>
+          The number of non-indigenous species which are newly introduced via
+          human activity into the wild, per assessment period (6 years), measured
+          from the reference year as reported for the initial assessment under
+          Article 8(1) of Directive 2008/56/EC, is minimised and where possible
+          reduced to zero. <br/>
+          Member States shall establish the threshold value for the number
+          of new introductions of non-indigenous species, through regional or
+          subregional cooperation.
+        </p>
       ]]>
     </definition>
     <uses-element href="#el-1" />
@@ -23,13 +23,13 @@
   <criteria primary='false' id='D2C2'>
     <definition>
       <![CDATA[
-      <p>
-        Established non-indigenous species, particularly invasive
-        non-indigenous species, which include relevant species on the list of
-        invasive alien species of Union concern adopted in accordance with
-        Article 4(1) of Regulation (EU) No 1143/2014 and species which are
-        relevant for use under criterion D2C3.
-      </p>
+        <p>
+          Established non-indigenous species, particularly invasive
+          non-indigenous species, which include relevant species on the list of
+          invasive alien species of Union concern adopted in accordance with
+          Article 4(1) of Regulation (EU) No 1143/2014 and species which are
+          relevant for use under criterion D2C3.
+        </p>
       ]]>
     </definition>
     <uses-element href="#el-2" />
@@ -39,14 +39,14 @@
   <criteria primary='false' id='D2C3'>
     <definition>
       <![CDATA[
-      <p>
-        Proportion of the species group or spatial extent of the broad habitat
-        type which is adversely altered due to non-indigenous species,
-        particularly invasive non-indigenous species. <br/>
-        Member States shall establish the threshold values for the adverse
-        alteration to species groups and broad habitat types due to
-        non-indigenous species, through regional or subregional cooperation.
-      </p>
+        <p>
+          Proportion of the species group or spatial extent of the broad habitat
+          type which is adversely altered due to non-indigenous species,
+          particularly invasive non-indigenous species. <br/>
+          Member States shall establish the threshold values for the adverse
+          alteration to species groups and broad habitat types due to
+          non-indigenous species, through regional or subregional cooperation.
+        </p>
       ]]>
     </definition>
     <uses-element href="#el-3" />
@@ -55,60 +55,60 @@
 
   <methodological-standard id="m-1">
     <![CDATA[
-    <p>
-      <strong>Scale of assessment:</strong><br/>
-      Subdivisions of the region or subregion, divided where needed by national
-      boundaries.
-    </p>
+      <p>
+        <strong>Scale of assessment:</strong><br/>
+        Subdivisions of the region or subregion, divided where needed by national
+        boundaries.
+      </p>
 
-    <p>
-      <strong>Use of criteria: </strong><br/>
-      The extent to which good environmental status has been
-      achieved shall be expressed for each area assessed as follows: <br/>
-      — the number of non-indigenous species newly introduced via human activity,
-      in the 6-year assessment period and a list of those species.
-    </p>
+      <p>
+        <strong>Use of criteria: </strong><br/>
+        The extent to which good environmental status has been
+        achieved shall be expressed for each area assessed as follows: <br/>
+        — the number of non-indigenous species newly introduced via human activity,
+        in the 6-year assessment period and a list of those species.
+      </p>
     ]]>
   </methodological-standard>
 
   <methodological-standard id="m-2">
     <![CDATA[
-    <p>
-      <strong>Scale of assessment:</strong><br/>
-      As used for assessment of the corresponding species groups or broad
-      habitat types under Descriptors 1 and 6.
-    </p>
+      <p>
+        <strong>Scale of assessment:</strong><br/>
+        As used for assessment of the corresponding species groups or broad
+        habitat types under Descriptors 1 and 6.
+      </p>
 
-    <p>
-      <strong>Use of criteria:</strong>
-      Criterion D2C2 (quantification of non-indigenous species) shall be
-      expressed per species assessed and shall contribute to the assessment of
-      criterion D2C3 (adverse effects of non-indigenous species).
-    </p>
+      <p>
+        <strong>Use of criteria:</strong>
+        Criterion D2C2 (quantification of non-indigenous species) shall be
+        expressed per species assessed and shall contribute to the assessment of
+        criterion D2C3 (adverse effects of non-indigenous species).
+      </p>
 
-    <p>
-      Criterion D2C3 shall provide the proportion per species group and extent
-      per broad habitat type assessed which is adversely altered, and thus
-      contribute to their assessments under Descriptors 1 and 6.
-    </p>
+      <p>
+        Criterion D2C3 shall provide the proportion per species group and extent
+        per broad habitat type assessed which is adversely altered, and thus
+        contribute to their assessments under Descriptors 1 and 6.
+      </p>
     ]]>
   </methodological-standard>
 
   <criteria-element id="el-1">
     <![CDATA[
-    Newly-introduced non-indigenous species
+      Newly-introduced non-indigenous species
     ]]>
   </criteria-element>
 
   <criteria-element id="el-2">
     <![CDATA[
-    <p>
-      Established non-indigenous species, particularly invasive non-indigenous
-      species, which include relevant species on the list of invasive alien
-      species of Union concern adopted in accordance with Article 4(1) of
-      Regulation (EU) No 1143/2014 and species which are relevant for use under
-      criterion D2C3.
-    </p>
+      <p>
+        Established non-indigenous species, particularly invasive non-indigenous
+        species, which include relevant species on the list of invasive alien
+        species of Union concern adopted in accordance with Article 4(1) of
+        Regulation (EU) No 1143/2014 and species which are relevant for use under
+        criterion D2C3.
+      </p>
     ]]>
   </criteria-element>
 

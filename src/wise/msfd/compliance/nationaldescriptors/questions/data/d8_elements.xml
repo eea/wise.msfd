@@ -3,30 +3,30 @@
     <criteria primary='true' id='D8C1'>
     <definition>
       <![CDATA[
-      <p>
-        Within coastal and territorial waters, the concentrations of contaminants
-        do not exceed the following threshold values: <br/>
+        <p>
+          Within coastal and territorial waters, the concentrations of contaminants
+          do not exceed the following threshold values: <br/>
 
-        (a) for contaminants set out under point 1(a) of criteria elements,
-        the values set in accordance with Directive 2000/60/EC; <br/>
+          (a) for contaminants set out under point 1(a) of criteria elements,
+          the values set in accordance with Directive 2000/60/EC; <br/>
 
-        (b) when contaminants under point (a) are measured in a matrix for which
-        no value is set under Directive 2000/60/EC, the concentration of those
-        contaminants in that matrix established by Member States through regional or subregional cooperation; <br/>
+          (b) when contaminants under point (a) are measured in a matrix for which
+          no value is set under Directive 2000/60/EC, the concentration of those
+          contaminants in that matrix established by Member States through regional or subregional cooperation; <br/>
 
-        (c) for additional contaminants selected under point 1(b) of criteria elements,
-        the concentrations for a specified matrix (water, sediment or biota) which may
-        give rise to pollution effects. Member States shall establish these concentrations through regional or subregional cooperation, considering their application within and beyond coastal and territorial waters. <br/>
+          (c) for additional contaminants selected under point 1(b) of criteria elements,
+          the concentrations for a specified matrix (water, sediment or biota) which may
+          give rise to pollution effects. Member States shall establish these concentrations through regional or subregional cooperation, considering their application within and beyond coastal and territorial waters. <br/>
 
-        Beyond territorial waters, the concentrations of contaminants do not exceed the
-        following threshold values: <br/>
-        (a) for contaminants selected under point 2(a) of criteria elements, the values
-        as applicable within coastal and territorial waters; <br/>
+          Beyond territorial waters, the concentrations of contaminants do not exceed the
+          following threshold values: <br/>
+          (a) for contaminants selected under point 2(a) of criteria elements, the values
+          as applicable within coastal and territorial waters; <br/>
 
-        (b) for contaminants selected under point 2(b) of criteria elements, the concentrations
-        for a specified matrix (water, sediment or biota) which may give rise to pollution effects. 
-        Member States shall establish these concentrations through regional or subregional cooperation. <br/>
-      </p>
+          (b) for contaminants selected under point 2(b) of criteria elements, the concentrations
+          for a specified matrix (water, sediment or biota) which may give rise to pollution effects. 
+          Member States shall establish these concentrations through regional or subregional cooperation. <br/>
+        </p>
       ]]>
     </definition>
     <uses-element href="#el-1" />
@@ -36,13 +36,13 @@
   <criteria primary='false' id='D8C2'>
     <definition>
       <![CDATA[
-      <p>
-        The health of species and the condition of habitats (such as their species composition
-        and relative abundance at locations of chronic pollution) are not adversely affected due
-        to contaminants including cumulative and synergetic effects.<br/>
-        Member States shall establish those adverse effects and their threshold values through
-        regional or subregional cooperation.<br/>
-      </p>
+        <p>
+          The health of species and the condition of habitats (such as their species composition
+          and relative abundance at locations of chronic pollution) are not adversely affected due
+          to contaminants including cumulative and synergetic effects.<br/>
+          Member States shall establish those adverse effects and their threshold values through
+          regional or subregional cooperation.<br/>
+        </p>
       ]]>
     </definition>
     <uses-element href="#el-2" />
@@ -52,9 +52,9 @@
   <criteria primary='true' id='D8C3'>
     <definition>
       <![CDATA[
-      <p>
-        The spatial extent and duration of significant acute pollution events are minimised.
-      </p>
+        <p>
+          The spatial extent and duration of significant acute pollution events are minimised.
+        </p>
       ]]>
     </definition>
     <uses-element href="#el-3" />
@@ -64,11 +64,11 @@
   <criteria primary='false' id='D8C4'>
     <definition>
       <![CDATA[
-      <p>
-        The adverse effects of significant acute pollution events on the health of species
-        and on the condition of habitats (such as their species composition and relative
-        abundance) are minimised and, where possible, eliminated.
-      </p>
+        <p>
+          The adverse effects of significant acute pollution events on the health of species
+          and on the condition of habitats (such as their species composition and relative
+          abundance) are minimised and, where possible, eliminated.
+        </p>
       ]]>
     </definition>
     <uses-element href="#el-4" />
@@ -78,37 +78,37 @@
 
   <methodological-standard id="m-1">
     <![CDATA[
-    <p>
+      <p>
         <strong>Scale of assessment:</strong><br/>
         — within coastal and territorial waters, as used under Directive 2000/60/EC,<br/>
 
         — beyond territorial waters, subdivisions of the region or subregion, divided
         where needed by national boundaries.<br/>
-    </p>
+      </p>
 
-    <p>
-      <strong>Use of criteria: </strong><br/>
-      The extent to which good environmental status has been achieved shall be expressed
-      for each area assessed as follows:
+      <p>
+        <strong>Use of criteria: </strong><br/>
+        The extent to which good environmental status has been achieved shall be expressed
+        for each area assessed as follows:
 
-      (a) for each contaminant under criterion D8C1, its concentration, the matrix used
-      (water, sediment, biota), whether the threshold values set have been achieved, and
-      the proportion of contaminants assessed which have achieved the threshold values,
-      including indicating separately substances behaving like ubiquitous persistent,
-      bioaccumulative and toxic substances (uPBTs), as referred to in Article 8a(1)(a)
-      of Directive 2008/105/EC; <br/>
+        (a) for each contaminant under criterion D8C1, its concentration, the matrix used
+        (water, sediment, biota), whether the threshold values set have been achieved, and
+        the proportion of contaminants assessed which have achieved the threshold values,
+        including indicating separately substances behaving like ubiquitous persistent,
+        bioaccumulative and toxic substances (uPBTs), as referred to in Article 8a(1)(a)
+        of Directive 2008/105/EC; <br/>
 
-      (b) for each species assessed under criterion D8C2, an estimate of the abundance of
-      its population in the assessment area that is adversely affected; <br/>
+        (b) for each species assessed under criterion D8C2, an estimate of the abundance of
+        its population in the assessment area that is adversely affected; <br/>
 
-      (c) for each habitat assessed under criterion D8C2, an estimate of the extent in the
-      assessment area that is adversely affected. <br/>
+        (c) for each habitat assessed under criterion D8C2, an estimate of the extent in the
+        assessment area that is adversely affected. <br/>
 
-      The use of criterion D8C2 in the overall assessment of good environmental status for
-      Descriptor 8 shall be agreed at regional or subregional level. <br/>
+        The use of criterion D8C2 in the overall assessment of good environmental status for
+        Descriptor 8 shall be agreed at regional or subregional level. <br/>
 
-      The outcomes of the assessment of criterion D8C2 shall contribute to assessments under
-      Descriptors 1 and 6, where appropriate <br/>
+        The outcomes of the assessment of criterion D8C2 shall contribute to assessments under
+        Descriptors 1 and 6, where appropriate <br/>
 
       </p>
     ]]>
@@ -116,96 +116,95 @@
   
   <methodological-standard id="m-2">
     <![CDATA[
-    <p>
+      <p>
         <strong>Scale of assessment:</strong><br/>
         Regional or subregional level, divided where needed by national boundaries.
-    </p>
+      </p>
 
-    <p>
+      <p>
         <strong>Use of criteria: </strong><br/>
         The extent to which good environmental status has been achieved shall be expressed
         for each area assessed as follows: <br/>
         — an estimate of the total spatial extent of significant acute pollution events and
         their distribution and total duration for each year. <br/>
         This criterion shall be used to trigger assessment of criterion D8C4.
-    </p>
+      </p>
     ]]>
   </methodological-standard>
 
   <methodological-standard id="m-3">
     <![CDATA[
-    <p>
-        <strong>Scale of assessment:</strong><br/>
-        Regional or subregional level, divided where needed by national boundaries.
-    </p>
+      <p>
+          <strong>Scale of assessment:</strong><br/>
+          Regional or subregional level, divided where needed by national boundaries.
+      </p>
 
-    <p>
-        <strong>Use of criteria: </strong><br/>
-        The extent to which good environmental status has been achieved shall be expressed for each area assessed as follows: <br/>
-        — an estimate of the total spatial extent of significant acute pollution events and their distribution and total duration for each year. <br/>
-        This criterion shall be used to trigger assessment of criterion D8C4. <br/>
-    </p>
+      <p>
+          <strong>Use of criteria: </strong><br/>
+          The extent to which good environmental status has been achieved shall be expressed for each area assessed as follows: <br/>
+          — an estimate of the total spatial extent of significant acute pollution events and their distribution and total duration for each year. <br/>
+          This criterion shall be used to trigger assessment of criterion D8C4. <br/>
+      </p>
     ]]>
   </methodological-standard>
 
 
   <criteria-element id="el-1">
     <![CDATA[
-    <p>
-      Within coastal and territorial waters:<br/>
+      <p>
+        Within coastal and territorial waters:<br/>
 
-      (a) contaminants selected in accordance with Directive 2000/60/EC:<br/>
-      (i) contaminants for which an environmental quality standard is laid down in Part A
-      of Annex I to Directive 2008/105/EC;<br/>
-      (ii) River Basin Specific Pollutants under Annex VIII to Directive 2000/60/EC, in
-      coastal waters;<br/>
+        (a) contaminants selected in accordance with Directive 2000/60/EC:<br/>
+        (i) contaminants for which an environmental quality standard is laid down in Part A
+        of Annex I to Directive 2008/105/EC;<br/>
+        (ii) River Basin Specific Pollutants under Annex VIII to Directive 2000/60/EC, in
+        coastal waters;<br/>
 
-      (b) additional contaminants, if relevant, such as from offshore sources, which are
-      not already identified under point (a) and which may give rise to pollution effects
-      in the region or subregion. Member States shall establish that list of contaminants
-      through regional or subregional cooperation.<br/>
+        (b) additional contaminants, if relevant, such as from offshore sources, which are
+        not already identified under point (a) and which may give rise to pollution effects
+        in the region or subregion. Member States shall establish that list of contaminants
+        through regional or subregional cooperation.<br/>
 
-      (2) Beyond territorial waters:<br/>
-      (a) the contaminants considered under point (1), where these still may give rise to
-      pollution effects;<br/>
+        (2) Beyond territorial waters:<br/>
+        (a) the contaminants considered under point (1), where these still may give rise to
+        pollution effects;<br/>
 
-      (b) additional contaminants, if relevant, which are not already identified under point
-      (2)(a) and which may give rise to pollution effects in the region or subregion. Member
-      States shall establish that list of contaminants through regional or subregional
-      cooperation.<br/>
-
-    /p>
+        (b) additional contaminants, if relevant, which are not already identified under point
+        (2)(a) and which may give rise to pollution effects in the region or subregion. Member
+        States shall establish that list of contaminants through regional or subregional
+        cooperation.<br/>
+      /p>
     ]]>
   </criteria-element>
 
   <criteria-element id="el-2">
     <![CDATA[
-    <p>
-      Species and habitats which are at risk from contaminants.<br/>
-      Member States shall establish that list of species, and
-      relevant tissues to be assessed, and habitats, through
-      regional or subregional cooperation.
-    </p>
+      <p>
+        Species and habitats which are at risk from contaminants.<br/>
+        Member States shall establish that list of species, and
+        relevant tissues to be assessed, and habitats, through
+        regional or subregional cooperation.
+      </p>
     ]]>
   </criteria-element>
 
   <criteria-element id="el-3">
     <![CDATA[
-    <p>
-      Significant acute pollution events involving polluting substances, as defined in Article 2(2)
-      of Directive 2005/35/EC of the European Parliament and of the Council, including crude oil and
-      similar compounds.
-    </p>
+      <p>
+        Significant acute pollution events involving polluting substances, as defined in Article 2(2)
+        of Directive 2005/35/EC of the European Parliament and of the Council, including crude oil and
+        similar compounds.
+      </p>
     ]]>
   </criteria-element>
 
   <criteria-element id="el-4">
     <![CDATA[
-    <p>
-      Species of the species groups, as listed under Table 1 of Part II, and benthic broad habitat types,
-      as listed under Table 2 of Part II.
-    </p>
+      <p>
+        Species of the species groups, as listed under Table 1 of Part II, and benthic broad habitat types,
+        as listed under Table 2 of Part II.
+      </p>
     ]]>
   </criteria-element>
-
-</descriptor-definition>
+</descriptor-definition
+>

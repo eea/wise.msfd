@@ -3,13 +3,13 @@
   <criteria primary='true' id='D10C1'>
     <definition>
       <![CDATA[
-      <p>
-        The composition, amount and spatial distribution of litter on the coastline, in
-        the surface layer of the water column, and on the seabed, are at levels that do
-        not cause harm to the coastal and marine environment.<br/>
-        Member States shall establish threshold values for these levels through cooperation
-        at Union level, taking into account regional or subregional specificities.<br/>
-      </p>
+        <p>
+          The composition, amount and spatial distribution of litter on the coastline, in
+          the surface layer of the water column, and on the seabed, are at levels that do
+          not cause harm to the coastal and marine environment.<br/>
+          Member States shall establish threshold values for these levels through cooperation
+          at Union level, taking into account regional or subregional specificities.<br/>
+        </p>
       ]]>
     </definition>
     <uses-element href="#el-1"/>
@@ -19,13 +19,13 @@
   <criteria primary='true' id='D10C2'>
     <definition>
       <![CDATA[
-      <p>
-        The composition, amount and spatial distribution of micro-litter on the coastline,
-        in the surface layer of the water column, and in seabed sediment, are at levels
-        that do not cause harm to the coastal and marine environment.<br/>
-        Member States shall establish threshold values for these levels through cooperation
-        at Union level, taking into account regional or subregional specificities.<br/>
-      </p>
+        <p>
+          The composition, amount and spatial distribution of micro-litter on the coastline,
+          in the surface layer of the water column, and in seabed sediment, are at levels
+          that do not cause harm to the coastal and marine environment.<br/>
+          Member States shall establish threshold values for these levels through cooperation
+          at Union level, taking into account regional or subregional specificities.<br/>
+        </p>
       ]]>
     </definition>
     <uses-element href="#el-2" />
@@ -35,12 +35,12 @@
   <criteria primary='false' id='D10C3'>
     <definition>
       <![CDATA[
-      <p>
-        The amount of litter and micro-litter ingested by marine animals is at a level
-        that does not adversely affect the health of the species concerned.<br/>
-        Member States shall establish threshold values for these levels through regional
-        or subregional cooperation.<br/>
-      </p>
+        <p>
+          The amount of litter and micro-litter ingested by marine animals is at a level
+          that does not adversely affect the health of the species concerned.<br/>
+          Member States shall establish threshold values for these levels through regional
+          or subregional cooperation.<br/>
+        </p>
       ]]>
     </definition>
     <uses-element href="#el-3"/>
@@ -50,13 +50,13 @@
   <criteria primary='false' id='D10C4'>
     <definition>
       <![CDATA[
-      <p>
-        The number of individuals of each species which are adversely affected due
-        to litter, such as by entanglement, other types of injury or mortality, or
-        health effects.<br/>
-        Member States shall establish threshold values for the adverse effects of
-        litter, through regional or subregional cooperation.<br/>
-      </p>
+        <p>
+          The number of individuals of each species which are adversely affected due
+          to litter, such as by entanglement, other types of injury or mortality, or
+          health effects.<br/>
+          Member States shall establish threshold values for the adverse effects of
+          litter, through regional or subregional cooperation.<br/>
+        </p>
       ]]>
     </definition>
     <uses-element href="#el-4"/>
@@ -64,95 +64,95 @@
   </criteria>
 
   <methodological-standard id="m-1">
-    <![CDATA[
-    <p>
-        <strong>Scale of assessment:</strong><br/>
-        Subdivisions of the region or subregion, divided where needed by national
-        boundaries.
-    <p>
-      <strong>Use of criteria: </strong><br/>
-      The extent to which good environmental status has been achieved shall be
-      expressed for each criterion separately for each area assessed as follows:<br/>
+      <![CDATA[
+        <p>
+            <strong>Scale of assessment:</strong><br/>
+            Subdivisions of the region or subregion, divided where needed by national
+            boundaries.
+        <p>
+          <strong>Use of criteria: </strong><br/>
+          The extent to which good environmental status has been achieved shall be
+          expressed for each criterion separately for each area assessed as follows:<br/>
 
-      (a) the outcomes for each criterion (amount of litter or micro-litter per
-      category) and its distribution per matrix used under D10C1 and D10C2 and
-      whether the threshold values set have been achieved;<br/>
+          (a) the outcomes for each criterion (amount of litter or micro-litter per
+          category) and its distribution per matrix used under D10C1 and D10C2 and
+          whether the threshold values set have been achieved;<br/>
 
-      (b) the outcomes for D10C3 (amount of litter and micro-litter per category
-      per species) and whether the threshold values set have been achieved.<br/>
+          (b) the outcomes for D10C3 (amount of litter and micro-litter per category
+          per species) and whether the threshold values set have been achieved.<br/>
 
-      The use of criteria D10C1, D10C2 and D10C3 in the overall assessment of good
-      environmental status for Descriptor 10 shall be agreed at Union level.<br/>
+          The use of criteria D10C1, D10C2 and D10C3 in the overall assessment of good
+          environmental status for Descriptor 10 shall be agreed at Union level.<br/>
 
-      The outcomes of criterion D10C3 shall also contribute to assessments under
-      Descriptor 1, where appropriate.<br/>
-      </p>
-    ]]>
+          The outcomes of criterion D10C3 shall also contribute to assessments under
+          Descriptor 1, where appropriate.<br/>
+        </p>
+      ]]>
   </methodological-standard>
 
   <methodological-standard id="m-2">
-    <![CDATA[
-    <p>
-        <strong>Scale of assessment:</strong><br/>
-        As used for assessment of the species group under Descriptor 1.
-    <p>
-      <strong>Use of criteria: </strong><br/>
-      The extent to which good environmental status has been achieved shall be
-      expressed for each area assessed as follows:<br/>
-      — for each species assessed under criterion D10C4, an estimate of the number
-      of individuals in the assessment area that have been adversely affected.<br/>
-      The use of criterion D10C4 in the overall assessment of good environmental
-      status for Descriptor 10 shall be agreed at Union level.<br/>
-      The outcomes of this criterion shall also contribute to assessments under
-      Descriptor 1, where appropriate.<br/>
-    </p>
-    ]]>
+      <![CDATA[
+        <p>
+            <strong>Scale of assessment:</strong><br/>
+            As used for assessment of the species group under Descriptor 1.
+        <p>
+          <strong>Use of criteria: </strong><br/>
+          The extent to which good environmental status has been achieved shall be
+          expressed for each area assessed as follows:<br/>
+          — for each species assessed under criterion D10C4, an estimate of the number
+          of individuals in the assessment area that have been adversely affected.<br/>
+          The use of criterion D10C4 in the overall assessment of good environmental
+          status for Descriptor 10 shall be agreed at Union level.<br/>
+          The outcomes of this criterion shall also contribute to assessments under
+          Descriptor 1, where appropriate.<br/>
+        </p>
+      ]]>
   </methodological-standard>
 
   <criteria-element id="el-1">
-    <![CDATA[
-    <p>
-      Litter (excluding micro-litter), classified in the following categories (13):
-      artificial polymer materials, rubber, cloth/textile, paper/cardboard,
-      processed/worked wood, metal, glass/ceramics, chemicals, undefined, and
-      food waste.<br/>
+      <![CDATA[
+        <p>
+          Litter (excluding micro-litter), classified in the following categories (13):
+          artificial polymer materials, rubber, cloth/textile, paper/cardboard,
+          processed/worked wood, metal, glass/ceramics, chemicals, undefined, and
+          food waste.<br/>
 
-      Member States may define further sub-categories.<br/>
-    /p>
-    ]]>
+          Member States may define further sub-categories.<br/>
+        /p>
+      ]]>
   </criteria-element>
 
   <criteria-element id="el-2">
-    <![CDATA[
-    <p>
-      Micro-litter (particles < 5mm), classified in the categories ‘artificial
-      polymer materials’ and ‘other’.
-    /p>
-    ]]>
+      <![CDATA[
+        <p>
+          Micro-litter (particles < 5mm), classified in the categories ‘artificial
+          polymer materials’ and ‘other’.
+        /p>
+      ]]>
   </criteria-element>
 
   <criteria-element id="el-3">
-    <![CDATA[
-    <p>
-      Litter and micro-litter classified in the categories ‘artificial polymer
-      materials’ and ‘other’, assessed in any species from the following groups:
-      birds, mammals, reptiles, fish or invertebrates.<br/>
+      <![CDATA[
+        <p>
+          Litter and micro-litter classified in the categories ‘artificial polymer
+          materials’ and ‘other’, assessed in any species from the following groups:
+          birds, mammals, reptiles, fish or invertebrates.<br/>
 
-      Member States shall establish that list of species to be assessed through
-      regional or subregional cooperation.<br/>
-    /p>
-    ]]>
+          Member States shall establish that list of species to be assessed through
+          regional or subregional cooperation.<br/>
+        /p>
+      ]]>
   </criteria-element>
 
   <criteria-element id="el-4">
-    <![CDATA[
-    <p>
-      Species of birds, mammals, reptiles, fish or invertebrates which are at risk
-      from litter.<br/>
+      <![CDATA[
+        <p>
+          Species of birds, mammals, reptiles, fish or invertebrates which are at risk
+          from litter.<br/>
 
-      Member States shall establish that list of species to be assessed through
-      regional or subregional cooperation.<br/>
-    /p>
-    ]]>
+          Member States shall establish that list of species to be assessed through
+          regional or subregional cooperation.<br/>
+        /p>
+      ]]>
   </criteria-element>
 </descriptor-definition>
