@@ -281,6 +281,9 @@ class CriteriaAssessmentDefinition:
         defn = node.find('definition')
         self.definition = defn.text.strip()
 
+        self.is_primary = bool(['false', 'true'].index(node.get('primary',
+                                                                'false')))
+
         self.elements = []
 
         for eid in node.xpath('uses-element/@href'):
@@ -292,6 +295,11 @@ class CriteriaAssessmentDefinition:
         self.methodological_standard = MetodologicalStandardDefinition(
             mel, root
         )
+
+    @property
+    def title(self):
+        return u"{} - {}".format(self.id,
+                                 self.is_primary and 'Primary' or 'Secondary')
 
 
 def parse_elements_file(fpath):

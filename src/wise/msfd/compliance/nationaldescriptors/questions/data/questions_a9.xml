@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <questions article='Art9'>
+
   <assessment-question id="q1" class="adequacy" use-criteria='primary'>
     <definition>
       To what extent are the 2017 Decision criteria covered?
@@ -9,6 +10,24 @@
       <option>Primary criterion not used</option>
       <option>Primary criterion replaced with secondary criterion (with grounded justification)</option>
     </answers>
+    <scoring determination-method="wise.msfd.compliance.scoring.alternative_based" determination-method-args="0 2">
+      <option score="4">76-100% of primary criteria used (or replaced with secondary with grounded justification)</option>
+      <option score="3">50-75% of primary criteria used (or replaced with secondary with grounded justification)</option>
+      <option score="2">26-50% of primary criteria used (or replaced with secondary with grounded justification)</option>
+      <option score="1">1-25% of primary criteria used (or replaced with secondary with grounded justification)</option>
+      <option score="0">Not reported</option>
+    </scoring>
+  </assessment-question>
+
+  <assessment-question id="q2" class="adequacy" use-criteria='secondary'>
+    <definition>
+      To what extent does the Member State report beyond the minimum requirements of the 2017 Decision?
+    </definition>
+    <answers>
+      <option>Secondary criteria used</option>
+      <option>Secondary criteria not used</option>
+    </answers>
+    TODO: need to redo method here
     <scoring determination-method="wise.msfd.compliance.scoring.alternative_based" determination-method-args="0 2">
       <option score="4">76-100% of primary criteria used (or replaced with secondary with grounded justification)</option>
       <option score="3">50-75% of primary criteria used (or replaced with secondary with grounded justification)</option>

@@ -1,0 +1,40 @@
+<!--
+  This needs to be moved to the compliance folder
+-->
+
+<div class="modal fade" id="assessment-help" tabindex="-1" role="dialog">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title">Criteria definition</h4>
+      </div>
+      <div class="modal-body">
+        <table class="table table-listing">
+          <thead>
+            <tr>
+              <th>Criteria elements</th>
+              <th>Criteria</th>
+              <th>Methodological standards</th>
+            </tr>
+            <tbody>
+              <tr tal:repeat="row options/rows">
+                <tal:cell tal:repeat="cell row">
+                  <td
+                    tal:attributes="rowspan cell/rowspan"
+                    tal:content="structure cell/text">
+                    Text here
+                  </td>
+                </tal:cell>
+              </tr>
+            </tbody>
+          </thead>
+        </table>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+

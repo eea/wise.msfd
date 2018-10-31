@@ -1,5 +1,10 @@
 <div id="wise-compliance-form" class="full-width-marker"
   tal:attributes="id view/form_id | string:wise-compliance-form">
+  <script>
+    jQuery(document).ready(function() {
+    $('.help-popover').popover();
+    });
+  </script>
 
   <div id="wise-compliance-form-top"
     tal:attributes="id view/form_id_top | string:wise-compliance-form-top">
@@ -11,22 +16,78 @@
     tal:attributes="id view/form_container_class | string:wise-search-form-container">
 
     <div class="left-side-form">
+
+      <div style="width: 200px; float: right">
+        <button type="button"
+          class="btn btn-primary btn-lg"
+          data-toggle="modal" data-target="#assessment-help">
+          Criteria definition
+        </button>
+      </div>
       <h2 tal:content="view/title">Title here</h2>
       <div style="margin-bottom: 1em; top: -0.8em; position: relative">
         <a href="./">Back to Descriptor</a>
       </div>
 
       <div id="comp-national-descriptor">
+
+        <div tal:replace="structure view/help">Subform help here</div>
+
         <metal:form use-macro="context/@@ploneform-macros/titlelessform">
 
           <metal:fields fill-slot="fields">
             <div class="collapsed-container">
+
               <tal:subform repeat='subform view/subforms'>
                 <!-- <div tal:content="nocall: subform"></div> -->
                 <div class="subform">
+                  <h3 tal:content="subform/title">Question here</h3>
+
                   <div tal:repeat="fieldname subform/fields">
                     <tal:def define="widget python: view.widgets[fieldname]">
-                      <metal:block use-macro="context/@@ploneform-macros/field" />
+
+                      <div class="field"
+                           tal:define="error widget/error;
+                           hidden python:widget.mode == 'hidden';
+                           criteria nocall: widget/field/_criteria
+                           "
+                           tal:attributes="class python:'field' + (error and ' error' or '')">
+                        <label for=""
+                               tal:condition="not:hidden"
+                               class="help-popover"
+                               data-trigger="hover"
+                               data-html="true"
+                               tal:attributes="for widget/id; title criteria/title; data-content criteria/definition"
+                               >
+                          <span i18n:translate=""
+                                tal:content="widget/label">label</span>
+                        </label>
+
+                        <span class="fieldRequired" title="Required"
+                              tal:condition="python:widget.required and not hidden"
+                              i18n:translate="label_required"
+                              i18n:attributes="title title_required;">
+                          (Required)
+                        </span>
+
+                        <div class="formHelp"
+                             tal:define="description widget/field/description"
+                             i18n:translate=""
+                             tal:content="description"
+                             tal:condition="python:description and not hidden"
+                             >field description</div>
+
+                        <div tal:condition="error"
+                             tal:content="structure error/render">
+                          Error
+                        </div>
+
+                        <div class="widget">
+                          <input type="text" tal:replace="structure widget/render" />
+                        </div>
+                      </div>
+
+
                     </tal:def>
                   </div>
                 </div>

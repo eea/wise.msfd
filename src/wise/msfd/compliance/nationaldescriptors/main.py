@@ -147,7 +147,7 @@ def get_assessment_head_data_2012(data):
 def get_assessment_data_2012(descriptor_criterions, data):
     Assessment2012 = namedtuple(
         'Assessment2012', ['gescomponents', 'criteria',
-                           'summary', 'score']
+                           'summary', 'overall_ass', 'score']
     )
 
     Criteria = namedtuple(
@@ -171,6 +171,7 @@ def get_assessment_data_2012(descriptor_criterions, data):
         ]
         summary = get_val('Conclusions')
         score = get_val('OverallScore')
+        overall_ass = get_val('OverallAssessment')
 
         if country not in assessments:
             # import pdb; pdb.set_trace()
@@ -178,6 +179,7 @@ def get_assessment_data_2012(descriptor_criterions, data):
                 gescomponents,
                 criteria,
                 summary,
+                overall_ass,
                 score,
             )
             assessments[country] = assessment
