@@ -9,50 +9,51 @@
       </p>
       ]]>
     </definition>
-    <uses-element id="el-1" />
-    <uses-methodological-standard id="m-1" />
+    <uses-element href="#el-1" />
+    <uses-methodological-standard href="#m-1" />
   </criteria>
-    
+
   <criteria primary='true' id='D5C2'>
     <definition>
       <![CDATA[
       <p>
-        Chlorophyll a concentrations are not at levels that indicate adverse 
+        Chlorophyll a concentrations are not at levels that indicate adverse
         effects of nutrient enrichment
       </p>
       ]]>
     </definition>
-    <uses-element id="el-2" />
-    <uses-methodological-standard id="m-1" />
+    <uses-element href="#el-2" />
+    <uses-methodological-standard href="#m-1" />
   </criteria>
 
   <criteria primary='false' id='D5C3'>
     <definition>
       <![CDATA[
       <p>
-        The number, spatial extent and duration of harmful algal bloom events are
-        not at levels that indicate adverse effects of nutrient enrichment.<br/>
+        The number, spatial extent and duration of harmful algal bloom events
+        are not at levels that indicate adverse effects of nutrient
+        enrichment.<br/>
         Member States shall establish threshold values for these levels through
         regional or subregional cooperation.
       </p>
       ]]>
     </definition>
-    <uses-element id="el-3" />
-    <uses-methodological-standard id="m-1" />
+    <uses-element href="#el-3" />
+    <uses-methodological-standard href="#m-1" />
   </criteria>
 
   <criteria primary='false' id='D5C4'>
     <definition>
       <![CDATA[
       <p>
-        The photic limit (transparency) of the water column is not reduced, due to
-        increases in suspended algae, to a level that indicates adverse effects of
-        nutrient enrichment.
+        The photic limit (transparency) of the water column is not reduced, due
+        to increases in suspended algae, to a level that indicates adverse
+        effects of nutrient enrichment.
       </p>
       ]]>
     </definition>
-    <uses-element id="el-4" />
-    <uses-methodological-standard id="m-1" />
+    <uses-element href="#el-4" />
+    <uses-methodological-standard href="#m-1" />
   </criteria>
 
   <criteria primary='true' id='D5C5'>
@@ -66,10 +67,10 @@
       </p>
       ]]>
     </definition>
-    <uses-element id="el-5" />
-    <uses-methodological-standard id="m-1" />
+    <uses-element href="#el-5" />
+    <uses-methodological-standard href="#m-1" />
   </criteria>
-    
+
   <criteria primary='false' id='D5C6'>
     <definition>
       <![CDATA[
@@ -79,8 +80,8 @@
       </p>
       ]]>
     </definition>
-    <uses-element id="el-6" />
-    <uses-methodological-standard id="m-1" />
+    <uses-element href="#el-6" />
+    <uses-methodological-standard href="#m-1" />
   </criteria>
 
   <criteria primary='false' id='D5C7'>
@@ -94,8 +95,8 @@
       </p>
       ]]>
     </definition>
-    <uses-element id="el-7" />
-    <uses-methodological-standard id="m-1" />
+    <uses-element href="#el-7" />
+    <uses-methodological-standard href="#m-1" />
   </criteria>
 
   <criteria primary='false' id='D5C8'>
@@ -108,8 +109,8 @@
       </p>
       ]]>
     </definition>
-    <uses-element id="el-8" />
-    <uses-methodological-standard id="m-1" />
+    <uses-element href="#el-8" />
+    <uses-methodological-standard href="#m-1" />
   </criteria>
 
   <methodological-standard id="m-1">
@@ -117,7 +118,7 @@
     <p>
         <strong>Scale of assessment:</strong><br/>
         - within coastal waters, as used under Directive 2000/60/EC, <br/>
-        - beyond coastal waters, subdivisions of the region or subregion, 
+        - beyond coastal waters, subdivisions of the region or subregion,
         divided where needed by national boundaries.
     </p>
 
@@ -140,13 +141,13 @@
     <p>
         <strong>Threshold values:</strong><br/>
         (a) in coastal waters, the values set in accordance with Directive 2000/60/EC; <br/>
-        (b) should this criterion be relevant for waters beyond coastal waters, values 
+        (b) should this criterion be relevant for waters beyond coastal waters, values
         consistent with those for coastal waters under Directive 2000/60/EC. Member States shall establish those values through regional or subregional cooperation. </br>
     </p>
 
     ]]>
   </methodological-standard>
-  
+
   <criteria-element id="el-1">
     <![CDATA[
     <p>
