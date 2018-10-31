@@ -4,91 +4,90 @@
     <criteria primary='true' id='D3C1'>
       <definition>
         <![CDATA[
-        <p>
+          <p>
             The Fishing mortality rate of populations of commercially-exploited 
             species is at or below levels which can produce the maximum sustainable 
             yield (MSY). Appropriate scientific bodies shall be consulted in accordance 
             with Article 26 of Regulation (EU) No 1380/2013.
-        </p>
+          </p>
         ]]>      
       </definition>
-      <uses-element id="el-1"/>
-      <uses-methodological-standard id="m-1"/>
+      <uses-element href="#el-1"/>
+      <uses-methodological-standard href="#m-1"/>
     </criteria>
 
     <criteria primary='true' id='D3C2'>
-      <definition>
+      <definition> 
         <![CDATA[
-        <p>
-        The Spawning Stock Biomass of populations of commercially-exploited species 
-        are above biomass levels capable of producing maximum sustainable yield. 
-        Appropriate scientific bodies shall be consulted in accordance with Article 26 
-        of Regulation (EU) No 1380/2013.
-        </p>
+          <p>
+            The Spawning Stock Biomass of populations of commercially-exploited species 
+            are above biomass levels capable of producing maximum sustainable yield. 
+            Appropriate scientific bodies shall be consulted in accordance with Article 26 
+            of Regulation (EU) No 1380/2013.
+          </p>
         ]]>      
       </definition>
-      <uses-element id="el-1"/>
-      <uses-methodological-standard id="m-1"/>
+      <uses-element href="#el-1"/>
+      <uses-methodological-standard href="#m-1"/>
     </criteria>
     
     <criteria primary='true' id='D3C3'>
       <definition>
         <![CDATA[
-        <p>
-        The age and size distribution of individuals in the populations of 
-        commercially-exploited species is indicative of a healthy population. 
-        This shall include a high proportion of old/large individuals and limited 
-        adverse effects of exploitation on genetic diversity. <br/>
-        Member States shall establish threshold values through regional or subregional
-        cooperation for each population of species in accordance with scientific advice 
-        obtained pursuant to Article 26 of Regulation (EU) No 1380/2013.
-        </p>
+          <p>
+            The age and size distribution of individuals in the populations of 
+            commercially-exploited species is indicative of a healthy population. 
+            This shall include a high proportion of old/large individuals and limited 
+            adverse effects of exploitation on genetic diversity. <br/>
+            Member States shall establish threshold values through regional or subregional
+            cooperation for each population of species in accordance with scientific advice 
+            obtained pursuant to Article 26 of Regulation (EU) No 1380/2013.
+          </p>
         ]]>      
       </definition>
-      <uses-element id="el-1"/>
-      <uses-methodological-standard id="m-1"/>
+      <uses-element href="#el-1"/>
+      <uses-methodological-standard href="#m-1"/>
     </criteria>
 
     <methodological-standard id="m1">
         <![CDATA[
-            <p>
-                <strong>Scale of assessment:</strong><br/>
-                Populations of each species are assessed at ecologically-relevant scales within
-                each region or subregion, as established by appropriate scientific bodies 
-                as referred to in Article 26 of Regulation (EU) No 1380/2013, based on specified
-                aggregations of International Council for the Exploration of the Sea (ICES) areas,
-                General Fisheries Commission for the Mediterranean (GFCM) geographical sub-areas 
-                and Food and Agriculture Organisation (FAO) fishing areas for the Macaronesian 
-                biogeographic region.
-            </p>
+          <p>
+            <strong>Scale of assessment:</strong><br/>
+            Populations of each species are assessed at ecologically-relevant scales within
+            each region or subregion, as established by appropriate scientific bodies 
+            as referred to in Article 26 of Regulation (EU) No 1380/2013, based on specified
+            aggregations of International Council for the Exploration of the Sea (ICES) areas,
+            General Fisheries Commission for the Mediterranean (GFCM) geographical sub-areas 
+            and Food and Agriculture Organisation (FAO) fishing areas for the Macaronesian 
+            biogeographic region.
+          </p>
 
-            <p>
-                <strong>Use of criteria: </strong><br/>
-                The extent to which good environmental status has been achieved shall be 
-                expressed for each area assessed as follows: <br/>
-                (a) the populations assessed, the values achieved for each criterion and
-                whether the levels for D3C1 and D3C2 and the threshold values for D3C3 
-                have been achieved, and the overall status of the population on the basis
-                of criteria integration rules agreed at Union level; <br/>
-                (b) the populations of commercially-exploited species in the assessment 
-                area which were not assessed. <br/>
-                The outcomes of these population assessments shall also contribute to
-                the assessments under Descriptors 1 and 6, if the species are relevant
-                for assessment of particular species groups and benthic habitat types.<br/>
-            </p>
+          <p>
+            <strong>Use of criteria: </strong><br/>
+            The extent to which good environmental status has been achieved shall be 
+            expressed for each area assessed as follows: <br/>
+            (a) the populations assessed, the values achieved for each criterion and
+            whether the levels for D3C1 and D3C2 and the threshold values for D3C3 
+            have been achieved, and the overall status of the population on the basis
+            of criteria integration rules agreed at Union level; <br/>
+            (b) the populations of commercially-exploited species in the assessment 
+            area which were not assessed. <br/>
+            The outcomes of these population assessments shall also contribute to
+            the assessments under Descriptors 1 and 6, if the species are relevant
+            for assessment of particular species groups and benthic habitat types.<br/>
+          </p>
         ]]>
     </methodological-standard>
 
 
   <criteria-element id="el-1">
-    <![CDATA[
-    <p>
-    Commercially-exploited fish and shellfish.<br/>
-    Member States shall establish through regional or subregional cooperation
-    a list of commercially-exploited fish and shellfish, according to the criteria
-    laid down under ‘specifications’
-    </p>
-    ]]>
+        <![CDATA[
+          <p>
+              Commercially-exploited fish and shellfish.<br/>
+              Member States shall establish through regional or subregional cooperation
+              a list of commercially-exploited fish and shellfish, according to the criteria
+              laid down under ‘specifications’
+          </p>
+        ]]>
   </criteria-element>
-
 </descriptor-definition>

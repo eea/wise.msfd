@@ -10,8 +10,8 @@
       </p>
       ]]>
     </definition>
-    <uses-element id="el-1" />
-    <uses-methodological-standard id="m-1" />
+    <uses-element href="#el-1" />
+    <uses-methodological-standard href="#m-1" />
   </criteria>
     
   <criteria primary='false' id='D7C2'>
@@ -27,15 +27,15 @@
       </p>
       ]]>
     </definition>
-    <uses-element id="el-2" />
-    <uses-methodological-standard id="m-1" />
+    <uses-element href="#el-2" />
+    <uses-methodological-standard href="#m-1" />
   </criteria>
 
   <methodological-standard id="m-1">
     <![CDATA[
     <p>
-        <strong>Scale of assessment:</strong><br/>
-        As used for assessment of the benthic broad habitat types under Descriptors 1 and 6.
+      <strong>Scale of assessment:</strong><br/>
+      As used for assessment of the benthic broad habitat types under Descriptors 1 and 6.
     </p>
 
     <p>

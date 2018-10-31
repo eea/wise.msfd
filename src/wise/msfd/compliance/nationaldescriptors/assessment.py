@@ -1,9 +1,11 @@
+import datetime
 import logging
 from collections import namedtuple
 
 from zope.schema import Choice, Text
 from zope.schema.vocabulary import SimpleTerm, SimpleVocabulary
 
+from plone.api import user
 from plone.z3cform.layout import wrap_form
 from Products.Five.browser.pagetemplatefile import (PageTemplateFile,
                                                     ViewPageTemplateFile)
@@ -16,10 +18,8 @@ from z3c.form.form import Form
 from ..base import BaseComplianceView  # , Container
 from ..vocabulary import form_structure
 
-# from plone.api import user
 # from Products.Five.browser import BrowserView
 # from wise.msfd.gescomponents import get_ges_criterions
-# import datetime
 # from wise.msfd import db, sql2018  # sql,
 
 logger = logging.getLogger('wise.msfd')
@@ -59,8 +59,8 @@ class EditAssessmentDataForm(Form, BaseComplianceView):
         data, errors = self.extractData()
         # if not errors:
         # TODO: check for errors
-        # data['assessor'] = user.get_current()
-        # data['assess_date'] = datetime.date.today()
+        data['assessor'] = user.get_current()
+        data['assess_date'] = datetime.date.today()
         self.context.assessment_data = data
 
     @property
@@ -131,9 +131,9 @@ class EditAssessmentDataForm(Form, BaseComplianceView):
         # for row in tree.children:
         #     row_name = row.name
         #
-        #     # TODO: we no longer need EmbededForm here, we should get rid of
+        #     # TODO: we no longer need EmbeddedForm here, we should get rid of
         #
-        #     form = EmbededForm(self, self.request)
+        #     form = EmbeddedForm(self, self.request)
         #
         #     form.form_name = 'form' + row_name
         #     fields = []

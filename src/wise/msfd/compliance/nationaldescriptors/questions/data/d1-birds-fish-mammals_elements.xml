@@ -14,7 +14,7 @@
       ]]>
     </definition>
     <uses-element href="#el-1" />
-    <uses-methodological-standard href="#m-1" />
+    <uses-methodological-standard href="#m-1"/>
   </criteria>
 
   <criteria primary='true' id='D1C2'>
@@ -32,8 +32,8 @@
       </p>
       ]]>
     </definition>
-    <uses-element href="#el-2" />
-    <uses-methodological-standard href="#m-2" />
+    <uses-element href="#el-2"/>
+    <uses-methodological-standard href="#m-2"/>
   </criteria>
 
   <criteria primary='raise error' id='D1C3'>
@@ -51,7 +51,7 @@
       ]]>
     </definition>
     <uses-element href="#el-2" />
-    <uses-methodological-standard href="#m-2" />
+    <uses-methodological-standard href="#m-2"/>
   </criteria>
 
   <criteria primary='raise error' id='D1C4'>
@@ -67,8 +67,8 @@
       </p>
       ]]>
     </definition>
-    <uses-element href="#el-2" />
-    <uses-methodological-standard href="#m-2" />
+    <uses-element href="#el-2"/>
+    <uses-methodological-standard href="#m-2"/>
   </criteria>
 
   <criteria primary='raise error' id='D1C5'>
@@ -81,7 +81,7 @@
       ]]>
     </definition>
     <uses-element href="#el-2" />
-    <uses-methodological-standard href="#m-2" />
+    <uses-methodological-standard href="#m-2"/>
   </criteria>
 
 
@@ -142,7 +142,6 @@
     /p>
     ]]>
   </criteria-element>
-
 </descriptor-definition>
 
 <descriptor-definition id='D4'>

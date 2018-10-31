@@ -3,10 +3,10 @@
     <criteria primary='true' id='D5C1'>
     <definition>
       <![CDATA[
-      <p>
-        Nutrient concentrations are not at levels that indicate adverse
-        eutrophication effects.
-      </p>
+        <p>
+          Nutrient concentrations are not at levels that indicate adverse
+          eutrophication effects.
+        </p>
       ]]>
     </definition>
     <uses-element href="#el-1" />
