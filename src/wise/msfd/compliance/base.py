@@ -323,12 +323,13 @@ def _parse_files_in_location(location, check_filename, parser):
     for fname in os.listdir(dirpath):
         if check_filename(fname):
             fpath = os.path.join(dirpath, fname)
+            logger.info("Parsing file: %s", fname)
             try:
                 res = parser(fpath)
             except:
                 logger.exception('Could not parse file: %s', fpath)
 
-                return out
+                continue
 
             if res:
                 desc, elements = res

@@ -140,6 +140,7 @@ class EditAssessmentDataForm(Form, BaseComplianceView):
         qs = get_questions(
             'compliance/nationaldescriptors/questions/data'
         )
+        import pdb; pdb.set_trace()
         questions = qs[self.article]
 
         for criteria in els[self.descriptor]:
