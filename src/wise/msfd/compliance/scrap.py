@@ -8,7 +8,7 @@
 #     )
 
 
-# class AssessmentTopicForm(EmbededForm):
+# class AssessmentTopicForm(EmbeddedForm):
 #     """ Select the memberstate, region, area form
 #     """
 #
@@ -28,7 +28,7 @@
 #     )
 #
 #
-# class ArticleForm(EmbededForm):
+# class ArticleForm(EmbeddedForm):
 #     """
 #     """
 #
@@ -48,7 +48,7 @@
 #     )
 #
 #
-# class ReportingDeadlineForm(EmbededForm):
+# class ReportingDeadlineForm(EmbeddedForm):
 #     """
 #     """
 #
@@ -59,7 +59,7 @@
 
 
 
-# class AssessmentDisplayForm(EmbededForm):
+# class AssessmentDisplayForm(EmbeddedForm):
 #     """
 #     """
 #     template = ViewPageTemplateFile('pt/assessment_display.pt')
@@ -257,7 +257,7 @@ from z3c.form.browser.textarea import TextAreaWidget
 from z3c.form.button import buttonAndHandler
 from z3c.form.field import Fields
 
-from .base import EmbededForm, ItemDisplayForm
+from .base import EmbeddedForm, ItemDisplayForm
 
 
 def register_compliance_module(klass):
@@ -279,7 +279,7 @@ def register_compliance_module(klass):
     return ComplianceModuleMain
 
 
-class ComplianceModule(EmbededForm):
+class ComplianceModule(EmbeddedForm):
     css_class = 'only-left-side-form'
     # template = ViewPageTemplateFile('pt/compliance.pt')
     fields = Fields(interfaces.IComplianceModule)
@@ -323,7 +323,7 @@ class ComplianceDisplay(ItemDisplayForm):
         del self.widgets['page']
 
 
-class ComplianceAssessment(EmbededForm):
+class ComplianceAssessment(EmbeddedForm):
     # css_class = 'only-left-side-form'
     fields = Fields(interfaces.IComplianceAssessment)
     # fields['com_assessment'].widgetFactory = TextWidget
@@ -475,7 +475,7 @@ class ComplianceAssessment(EmbededForm):
 #     pass
 #
 #
-# class ReportForm2018(EmbededForm):
+# class ReportForm2018(EmbeddedForm):
 #     fields = Fields(IReportForm)
   <!-- <browser:page -->
   <!--   for="*" -->
@@ -670,7 +670,7 @@ class ComplianceAssessment(EmbededForm):
 #
 # from .. import db, sql2018
 # from ..base import MainFormWrapper as BaseFormWrapper
-# from ..base import BaseEnhancedForm, EmbededForm
+# from ..base import BaseEnhancedForm, EmbeddedForm
 # from ..features import features_vocabulary
 # from ..interfaces import IMainForm, IMarineUnitIDsSelect
 # , Container
@@ -711,7 +711,7 @@ class ISummaryAssessmentData2018(Interface):
     )
 
 
-class SummaryAssessmentDataForm2018(EmbededForm):
+class SummaryAssessmentDataForm2018(EmbeddedForm):
     """
     """
 
@@ -983,7 +983,7 @@ class AssessmentDataForm2018(Container, BaseUtil):
         for row in tree.children:
             row_name = row.name
 
-            form = EmbededForm(self, self.request)
+            form = EmbeddedForm(self, self.request)
 
             form.form_name = 'form' + row_name
             fields = []
@@ -1188,7 +1188,7 @@ class AssessmentDataForm2018(Container, BaseUtil):
 #     )
 #
 #
-# class GESDescriptorForm(EmbededForm):
+# class GESDescriptorForm(EmbeddedForm):
 #     fields = Fields(IGESDescriptor)
 #
 #     def get_subform(self):
@@ -1203,7 +1203,7 @@ class AssessmentDataForm2018(Container, BaseUtil):
 #     )
 #
 #
-# class ArticleForm(EmbededForm):
+# class ArticleForm(EmbeddedForm):
 #     fields = Fields(IArticle)
 #
 #     def get_subform(self):
@@ -1255,7 +1255,7 @@ class AssessmentDataForm2018(Container, BaseUtil):
 #             return []
 #
 #
-# class MarineUnitIDsForm(EmbededForm):
+# class MarineUnitIDsForm(EmbeddedForm):
 #     fields = Fields(IMarineUnitIDsSelect)
 #     fields['marine_unit_ids'].widgetFactory = CheckBoxFieldWidget
 #
@@ -1273,7 +1273,7 @@ class AssessmentDataForm2018(Container, BaseUtil):
 #     )
 #
 #
-# class BasicAssessmentDataForm2018(EmbededForm):
+# class BasicAssessmentDataForm2018(EmbeddedForm):
 #     """
 #     """
 #

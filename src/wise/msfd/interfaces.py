@@ -9,7 +9,7 @@ class IMainForm(Interface):
     """
 
 
-class IEmbededForm(Interface):
+class IEmbeddedForm(Interface):
     """ A form that is "embeded" in another form
     """
 

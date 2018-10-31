@@ -1,18 +1,7 @@
 <div tal:define="assessment options/assessment">
   <!-- <span tal:content="data"></span> -->
-  <style>
-    #assessment-data-table td {
-    min-width: 4em;
-    border: 1px solid #CCC;
-    background-color: white;
-    }
-    #assessment-data-table th {
-    background-color: #EEE;
-    text-align: right;
-    }
-  </style>
 
-  <table class="table table-condensed" id="assessment-data-table">
+  <table class="table table-condensed assessment-data-table">
     <tbody>
       <tr>
         <th>GESComponent</th>

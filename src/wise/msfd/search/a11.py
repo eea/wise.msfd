@@ -6,7 +6,7 @@ from z3c.form.field import Fields
 
 from .. import db, sql
 from ..interfaces import IMarineUnitIDsSelect
-from ..base import EmbededForm
+from ..base import EmbeddedForm
 from ..utils import (all_values_from_field, data_to_xls, db_objects_to_dict,
                      pivot_data, register_form_art11, register_form_section)
 from .base import ItemDisplay, ItemDisplayForm, MainForm, MultiItemDisplayForm
@@ -49,7 +49,7 @@ class StartArticle11Form(MainForm):
     #     return klass
 
 
-class A11MProgMemberStateForm(EmbededForm):
+class A11MProgMemberStateForm(EmbeddedForm):
     fields = Fields(interfaces.IMemberStates)
     fields['member_states'].widgetFactory = CheckBoxFieldWidget
 
@@ -89,7 +89,7 @@ class A11MProgMemberStateForm(EmbededForm):
         return [count, mrus]
 
 
-class A11MSubMemberStateForm(EmbededForm):
+class A11MSubMemberStateForm(EmbeddedForm):
     fields = Fields(interfaces.IMemberStates)
     fields['member_states'].widgetFactory = CheckBoxFieldWidget
 
@@ -158,7 +158,7 @@ class A11MSubMemberStateForm(EmbededForm):
         return [count, mrus]
 
 
-class A11MProgMarineUnitIdForm(EmbededForm):
+class A11MProgMarineUnitIdForm(EmbeddedForm):
     fields = Fields(IMarineUnitIDsSelect)
     # fields = Fields(interfaces.IMonitoringProgramme)
     fields['marine_unit_ids'].widgetFactory = CheckBoxFieldWidget
@@ -167,7 +167,7 @@ class A11MProgMarineUnitIdForm(EmbededForm):
         return A11MonProgDisplay(self, self.request)
 
 
-class A11MSubMarineUnitIdForm(EmbededForm):
+class A11MSubMarineUnitIdForm(EmbeddedForm):
     fields = Fields(IMarineUnitIDsSelect)
     # fields = Fields(interfaces.IMonitoringSubprogramme)
     fields['marine_unit_ids'].widgetFactory = CheckBoxFieldWidget
@@ -308,7 +308,7 @@ class A11MonProgDisplay(ItemDisplayForm):
 
 
 @register_form_art11
-class A11MonitoringProgrammeForm(EmbededForm):
+class A11MonitoringProgrammeForm(EmbeddedForm):
     title = "Monitoring Programmes"
     mru_class = A11MProgMarineUnitIdForm
 
@@ -394,7 +394,7 @@ class A11MonitoringProgrammeForm(EmbededForm):
 
 
 @register_form_art11
-class A11MonitorSubprogrammeForm(EmbededForm):
+class A11MonitorSubprogrammeForm(EmbeddedForm):
     title = "Monitoring Subprogrammes"
     mru_class = A11MSubMarineUnitIdForm
 
@@ -407,7 +407,7 @@ class A11MonitorSubprogrammeForm(EmbededForm):
     # fields['marine_unit_ids'].widgetFactory = CheckBoxFieldWidget
 
     def __init__(self, context, request):
-        EmbededForm.__init__(self, context, request)
+        EmbeddedForm.__init__(self, context, request)
         self.__mptypes_subprog = None
 
     def get_mp_type_ids(self):

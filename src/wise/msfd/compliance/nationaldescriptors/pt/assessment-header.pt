@@ -1,24 +1,24 @@
 <div class="row">
   <div class="col-md-12">
-    <table class="table table-bordered table-striped first-table ">
+    <table class="table table-condensed assessment-data-table assessment-header">
       <tr>
-        <td>Reported by</td>
+        <th>Reported by</th>
         <td tal:attributes="colspan view/colspan"
            tal:content="options/report_by"/>
       </tr>
       <tr>
-        <td>Assessors</td>
+        <th>Assessors</th>
         <td tal:attributes="colspan view/colspan"
             tal:content="options/assessors">
         </td>
       </tr>
       <tr>
-        <td>Date assessed</td>
+        <th>Date assessed</th>
         <td tal:attributes="colspan view/colspan"
            tal:content="options/assess_date"/>
       </tr>
       <tr>
-        <td>Commission technical report</td>
+        <th>Commission technical report</th>
         <td tal:attributes="colspan view/colspan">
           <a tal:attributes="href python: options['source_file'][1]"
            tal:content="python: options['source_file'][0]"/>

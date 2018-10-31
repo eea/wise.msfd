@@ -7,13 +7,13 @@ from z3c.form.field import Fields
 from z3c.form.form import Form
 
 from . import interfaces
-from ..base import BaseEnhancedForm, BaseUtil, EmbededForm
+from ..base import BaseEnhancedForm, BaseUtil, EmbeddedForm
 from ..db import get_item_by_conditions
 from ..interfaces import IMainForm
 from ..utils import get_registered_form_sections
 
 
-class ItemDisplayForm(EmbededForm):
+class ItemDisplayForm(EmbeddedForm):
     """ Generic form for displaying records
     """
 
