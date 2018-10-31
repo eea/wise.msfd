@@ -53,7 +53,7 @@
     <uses-methodological-standard href="#m-2" />
   </criteria>
 
-  <methodological-standard id="m1">
+  <methodological-standard id="m-1">
     <![CDATA[
     <p>
       <strong>Scale of assessment:</strong><br/>
@@ -71,7 +71,7 @@
     ]]>
   </methodological-standard>
 
-  <methodological-standard id="m2">
+  <methodological-standard id="m-2">
     <![CDATA[
     <p>
       <strong>Scale of assessment:</strong><br/>

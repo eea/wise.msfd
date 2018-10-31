@@ -81,7 +81,7 @@
       </p>
       ]]>
     </definition>
-    <uses-element href="#el-5" />
+    <uses-element href="#el-4" />
     <uses-methodological-standard href="#m-2" />
   </criteria>
 
@@ -158,7 +158,7 @@
     ]]>
   </criteria-element>
 
-  <criteria-element id="el-3">
+  <criteria-element id="el-4">
     <![CDATA[
     <p>
       Benthic broad habitat types as listed in Table 2 and if present in the region or subregion,

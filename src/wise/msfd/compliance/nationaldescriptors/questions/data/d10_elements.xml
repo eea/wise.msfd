@@ -12,8 +12,8 @@
       </p>
       ]]>
     </definition>
-    <uses-element href="#el-1" />
-    <uses-methodological-standard href="#m-1" />
+    <uses-element href="#el-1"/>
+    <uses-methodological-standard href="#m-1"/>
   </criteria>
 
   <criteria primary='true' id='D10C2'>
@@ -29,7 +29,7 @@
       ]]>
     </definition>
     <uses-element href="#el-2" />
-    <uses-methodological-standard href="#m-1" />
+    <uses-methodological-standard href="#m-1"/>
   </criteria>
 
   <criteria primary='false' id='D10C3'>
@@ -43,8 +43,8 @@
       </p>
       ]]>
     </definition>
-    <uses-element href="#el-3" />
-    <uses-methodological-standard href="#m-1" />
+    <uses-element href="#el-3"/>
+    <uses-methodological-standard href="#m-1"/>
   </criteria>
 
   <criteria primary='false' id='D10C4'>
@@ -59,8 +59,8 @@
       </p>
       ]]>
     </definition>
-    <uses-element href="#el-4" />
-    <uses-methodological-standard href="#m-2" />
+    <uses-element href="#el-4"/>
+    <uses-methodological-standard href="#m-2"/>
   </criteria>
 
   <methodological-standard id="m-1">
@@ -109,7 +109,6 @@
     ]]>
   </methodological-standard>
 
-
   <criteria-element id="el-1">
     <![CDATA[
     <p>
@@ -156,5 +155,4 @@
     /p>
     ]]>
   </criteria-element>
-
 </descriptor-definition>
