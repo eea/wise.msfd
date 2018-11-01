@@ -69,6 +69,7 @@
             <strong>Scale of assessment:</strong><br/>
             Subdivisions of the region or subregion, divided where needed by national
             boundaries.
+        </p>
         <p>
           <strong>Use of criteria: </strong><br/>
           The extent to which good environmental status has been achieved shall be
@@ -95,6 +96,7 @@
         <p>
             <strong>Scale of assessment:</strong><br/>
             As used for assessment of the species group under Descriptor 1.
+        </p>
         <p>
           <strong>Use of criteria: </strong><br/>
           The extent to which good environmental status has been achieved shall be
@@ -118,7 +120,7 @@
           food waste.<br/>
 
           Member States may define further sub-categories.<br/>
-        /p>
+        </p>
       ]]>
   </criteria-element>
 
@@ -127,7 +129,7 @@
         <p>
           Micro-litter (particles < 5mm), classified in the categories ‘artificial
           polymer materials’ and ‘other’.
-        /p>
+        </p>
       ]]>
   </criteria-element>
 
@@ -140,7 +142,7 @@
 
           Member States shall establish that list of species to be assessed through
           regional or subregional cooperation.<br/>
-        /p>
+        </p>
       ]]>
   </criteria-element>
 
@@ -152,7 +154,7 @@
 
           Member States shall establish that list of species to be assessed through
           regional or subregional cooperation.<br/>
-        /p>
+        </p>
       ]]>
   </criteria-element>
 </descriptor-definition>
