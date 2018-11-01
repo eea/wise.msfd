@@ -16,8 +16,8 @@ from z3c.form.field import Fields
 from z3c.form.form import Form
 
 from ..base import BaseComplianceView  # , Container
-from ..vocabulary import form_structure
 
+# from ..vocabulary import form_structure
 # from Products.Five.browser import BrowserView
 # from wise.msfd.gescomponents import get_ges_criterions
 # from wise.msfd import db, sql2018  # sql,
@@ -87,21 +87,19 @@ class EditAssessmentDataForm(Form, BaseComplianceView):
 
         forms = []
 
-        # TODO: filter on question klass and national descriptor assessment
-        # phase
-
         for question in questions:
             form = EmbeddedForm(self, self.request)
 
             form.title = question.definition
 
             form._question = question
+            crits = filtered_criterias(criterias, question)
 
-            form._criterias = criterias
+            form._criterias = crits
 
             fields = []
 
-            for criteria in criterias:
+            for criteria in crits:
                 for element in criteria.elements:
                     # u'{}_{}'.format(criteria.id, element.id)
                     field_title = criteria.title
@@ -112,13 +110,16 @@ class EditAssessmentDataForm(Form, BaseComplianceView):
                     terms = [SimpleTerm(c, i, c)
                              for i, c in enumerate(choices)]
                     default = assessment_data.get(field_name, None)
-                    field = Choice(
-                        title=field_title,
-                        __name__=field_name,
-                        vocabulary=SimpleVocabulary(terms),
-                        required=False,
-                        default=default,
-                    )
+                    try:
+                        field = Choice(
+                            title=field_title,
+                            __name__=field_name,
+                            vocabulary=SimpleVocabulary(terms),
+                            required=False,
+                            default=default,
+                        )
+                    except:
+                        import pdb; pdb.set_trace()
                     field._criteria = criteria
                     fields.append(field)
 
@@ -187,6 +188,17 @@ def filtered_questions(questions, phase):
         res = [q for q in questions if q.klass != 'coherence']
 
     return res
+
+
+def filtered_criterias(criterias, question):
+
+    if question.use_criteria == 'primary':
+        return [c for c in criterias if c.is_primary is True]
+
+    if question.use_criteria == 'secondary':
+        return [c for c in criterias if c.is_primary is False]
+
+    return criterias
 
 
 EditAssessmentDataView = wrap_form(EditAssessmentDataForm, MainFormWrapper)

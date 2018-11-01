@@ -281,6 +281,7 @@ class CriteriaAssessmentDefinition:
         defn = node.find('definition')
         self.definition = defn.text.strip()
 
+        # TODO: there are some edge cases. Handle them?
         self.is_primary = bool(['false', 'true'].index(node.get('primary',
                                                                 'false')))
 
@@ -300,6 +301,15 @@ class CriteriaAssessmentDefinition:
     def title(self):
         return u"{} - {}".format(self.id,
                                  self.is_primary and 'Primary' or 'Secondary')
+
+
+class AssessmentQuestionDefinition:
+    def __init__(self, node, root):
+        self.id = node.get('id')
+        self.klass = node.get('class')
+        self.use_criteria = node.get('use-criteria')
+        self.definition = node.find('definition').text.strip()
+        self.answers = [x.strip() for x in node.xpath('answers/option/text()')]
 
 
 def parse_elements_file(fpath):
@@ -357,15 +367,6 @@ def get_descriptor_elements(location):
 
     return _parse_files_in_location(location,
                                     check_filename, parse_elements_file)
-
-
-class AssessmentQuestionDefinition:
-    def __init__(self, node, root):
-        self.id = node.get('id')
-        self.klass = node.get('class')
-        self.use_criteria = node.get('use-criteria')
-        self.definition = node.find('definition').text.strip()
-        self.answers = [x.strip() for x in node.xpath('answers/option/text()')]
 
 
 def parse_question_file(fpath):
