@@ -110,7 +110,8 @@ def get_assessment_data(article, criterias, questions, data):
 
     # Add to answers 2 more rows: assessment summary and recommendations
     assess_sum = data.get('{}_assessment_summary'.format(article), '-') or '-'
-    recommendations = data.get('{}_recommendations'.format(article), '-') or '-'
+    recommendations = data.get(
+        '{}_recommendations'.format(article), '-') or '-'
 
     assessment = Assessment(
         gescomponents,

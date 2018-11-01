@@ -59,11 +59,32 @@ class EditAssessmentDataForm(Form, BaseComplianceView):
         data, errors = self.extractData()
         # if not errors:
         # TODO: check for errors
-        # TODO: check the following code, maybe we don't need the try/except
+
+        for question in self.questions:
+            criterias = filtered_criterias(self.criterias, question)
+
+            values = []
+
+            for criteria in criterias:
+                for element in criteria.elements:
+                    field_name = '{}_{}_{}_{}'.format(
+                        self.article, question.id, criteria.id, element.id
+                    )
+                    values.append(data.get(field_name, None))
+
+            # update the score if all fields have been answered
+
+            if None not in values:
+                score = question.calculate_score(values)
+                name = '{}_{}_Score'.format(self.article, question.id)
+                logger.info("Set score: %s - %s", name, score)
+                data[name] = score
+
         try:
             data['assessor'] = user.get_current().getId()
         except:
             data['assessor'] = 'system'
+
         data['assess_date'] = datetime.date.today()
         self.context.assessment_data = data
 
@@ -79,27 +100,45 @@ class EditAssessmentDataForm(Form, BaseComplianceView):
 
         return Fields(*fields)
 
-    def _build_subforms(self, questions, criterias):
+    # TODO: use memoize
+    @property
+    def criterias(self):
+        els = get_descriptor_elements(
+            'compliance/nationaldescriptors/questions/data'
+        )
+
+        return els[self.descriptor]
+
+    # TODO: use memoize
+    @property
+    def questions(self):
+        qs = get_questions(
+            'compliance/nationaldescriptors/questions/data'
+        )
+
+        return filtered_questions(qs[self.article], self.process_phase())
+
+    def get_subforms(self):
         """ Build a form of options from a tree of options
         """
-
         assessment_data = self.context.assessment_data
 
         forms = []
 
-        for question in questions:
+        for question in self.questions:
+            criterias = filtered_criterias(self.criterias, question)
+
             form = EmbeddedForm(self, self.request)
 
             form.title = question.definition
 
             form._question = question
-            crits = filtered_criterias(criterias, question)
 
-            form._criterias = crits
+            form._criterias = criterias
 
             fields = []
 
-            for criteria in crits:
+            for criteria in criterias:
                 for element in criteria.elements:
                     # u'{}_{}'.format(criteria.id, element.id)
                     field_title = criteria.title
@@ -107,19 +146,16 @@ class EditAssessmentDataForm(Form, BaseComplianceView):
                         self.article, question.id, criteria.id, element.id
                     )
                     choices = question.answers
-                    terms = [SimpleTerm(c, i, c)
+                    terms = [SimpleTerm(token=i, value=i, title=c)
                              for i, c in enumerate(choices)]
                     default = assessment_data.get(field_name, None)
-                    try:
-                        field = Choice(
-                            title=field_title,
-                            __name__=field_name,
-                            vocabulary=SimpleVocabulary(terms),
-                            required=False,
-                            default=default,
-                        )
-                    except:
-                        import pdb; pdb.set_trace()
+                    field = Choice(
+                        title=field_title,
+                        __name__=field_name,
+                        vocabulary=SimpleVocabulary(terms),
+                        required=False,
+                        default=default,
+                    )
                     field._criteria = criteria
                     fields.append(field)
 
@@ -161,27 +197,6 @@ class EditAssessmentDataForm(Form, BaseComplianceView):
         forms.append(assessment_summary_form)
 
         return forms
-
-    # TODO: use memoize
-    @property
-    def criterias(self):
-        els = get_descriptor_elements(
-            'compliance/nationaldescriptors/questions/data'
-        )
-
-        return els[self.descriptor]
-
-    def get_subforms(self):
-        # article = self.get_flattened_data(self)['article'].capitalize()
-
-        qs = get_questions(
-            'compliance/nationaldescriptors/questions/data'
-        )
-        questions = filtered_questions(qs[self.article], self.process_phase())
-
-        subforms = self._build_subforms(questions, self.criterias)
-
-        return subforms
 
 
 def filtered_questions(questions, phase):
@@ -246,7 +261,12 @@ def render_assessment_help(criterias):
             cell = Cell(cel.definition, rowspan)
             row.append(cell)
 
-        cell = Cell(c.definition, 1)
+        prim_label = c.is_primary and 'primary' or 'secondary'
+        cdef = u"<strong>{} ({})</strong><br/>{}".format(
+            c.id, prim_label, c.definition
+        )
+
+        cell = Cell(cdef, 1)
         row.append(cell)
 
         meth = c.methodological_standard
