@@ -16,6 +16,7 @@
       <option score="1">1-25% of criteria elements are reported</option>
       <option score="0">Not reported</option>
     </scoring>
+    <score-weight descriptor="D5" value="10" />
   </assessment-question>
 
   <assessment-question id="q2" class="adequacy" use-criteria=''>
@@ -33,6 +34,7 @@
       <option score="1">Key aspects are reported for 1-25% of criteria</option>
       <option score="0">Not reported / No assessment aspects satisfied</option>
     </scoring>
+    <score-weight descriptor="D5" value="20" />
   </assessment-question>
 
   <assessment-question id="q3" class="adequacy" use-criteria=''>
@@ -50,5 +52,6 @@
       <option score="1">Elements and parameters are specified for 1-25% of criteria</option>
       <option score="0">Not reported</option>
     </scoring>
+    <score-weight descriptor="D5" value="15" />
   </assessment-question>
 </questions>

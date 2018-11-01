@@ -39,7 +39,7 @@
 
   <assessment-question id="q3" class="adequacy" use-criteria=''>
     <definition>
-      To what extent is the qualitative GES determination adequate? 
+      To what extent is the qualitative GES determination adequate?
     </definition>
     <answers>
       <option>Elements and parameters specified for this criterion</option>
@@ -56,7 +56,7 @@
 
   <assessment-question id="q4" class="adequacy" use-criteria=''>
     <definition>
-      To what extent is the quantitative determination of GES adequate?  
+      To what extent is the quantitative determination of GES adequate?
     </definition>
     <answers>
       <option>Elements and parameters specified for this criterion</option>
