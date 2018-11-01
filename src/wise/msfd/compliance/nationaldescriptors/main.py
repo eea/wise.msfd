@@ -89,10 +89,6 @@ def get_assessment_data(article, criterias, questions, data):
     gescomponents = [c.id for c in criterias]
 
     for question in questions:
-        # base_name = tree.name
-        # # can be Adequacy, Consistency or Coherence
-        # base_name = question.klass
-        # row_name = question.id
         values = []
 
         for criteria in criterias:
@@ -111,24 +107,7 @@ def get_assessment_data(article, criterias, questions, data):
                            summary, conclusion, score, values)
         answers.append(qr)
 
-        # for row in tree.children:
-        #     row_name = row.name     # such as "status assessment"
-        #
-        #     values = []
-        #
-        #     for crit in descriptor_criterions:
-        #         field_name = '{}_{}_{}'.format(base_name, row_name, crit.id)
-        #         value = data.get(field_name, '-') or '-'
-        #         # values.append((crit.id, value))
-        #         values.append(value)
-        #
-        #     question = "{} of {}".format(base_name, row_name)
-        #     summary = 'summary here'
-        #     conclusion = 'conclusion here'
-        #     score = '1'
-        #
-        #     qr = AssessmentRow(question, summary, conclusion, score, values)
-        #     answers.append(qr)
+    # Add to answers 2 more rows: assessment summary and recommendations
 
     assessment = Assessment(
         gescomponents,

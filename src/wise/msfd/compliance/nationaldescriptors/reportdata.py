@@ -106,6 +106,7 @@ WHERE {
             rows = req.fetchall()
 
             urls = []
+
             for row in rows:
                 url = row[0].value
                 splitted = url.split('/')
@@ -194,8 +195,6 @@ class SnapshotSelectForm(Form):
 
     @buttonAndHandler(u'View snapshot', name='view')
     def apply(self, action):
-        print "apply pushed"
-
         return
 
     # TODO: make a condition for this button
@@ -400,6 +399,7 @@ class ReportData2018(BaseComplianceView):
             for row in data[0][1]:
                 if row[0] == 'ReportingDate':
                     report_date = row[1][0]
+
                 if row[0] == 'ReportedFileLink':
                     source_file[1] = row[1][0]
                     source_file[0] = row[1][0].split('/')[-1]

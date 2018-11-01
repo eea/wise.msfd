@@ -27,15 +27,15 @@ logger = logging.getLogger('wise.msfd')
 
 # mapping of title: field_name
 additional_fields = {
-    u'Summary': 'Description_Summary',
-    u'Conclusion': 'Conclusion',
+    'Summary': u'Summary',
+    # u'Conclusion': 'Conclusion',
     # 'Score': 'Score'
 }
 
-summary_fields = {
-    'assessment_summary': u'Description_Summary',
-    'recommendations': u'RecommendationsArt9'
-}
+summary_fields = (
+    ('assessment_summary', u'Assessment summary'),
+    ('recommendations', u'Recommendations for Member State')
+)
 
 
 class EditAssessmentDataForm(Form, BaseComplianceView):
@@ -59,7 +59,11 @@ class EditAssessmentDataForm(Form, BaseComplianceView):
         data, errors = self.extractData()
         # if not errors:
         # TODO: check for errors
-        data['assessor'] = user.get_current()
+        # TODO: check the following code, maybe we don't need the try/except
+        try:
+            data['assessor'] = user.get_current().getId()
+        except:
+            data['assessor'] = 'system'
         data['assess_date'] = datetime.date.today()
         self.context.assessment_data = data
 
@@ -82,6 +86,9 @@ class EditAssessmentDataForm(Form, BaseComplianceView):
         assessment_data = self.context.assessment_data
 
         forms = []
+
+        # TODO: filter on question klass and national descriptor assessment
+        # phase
 
         for question in questions:
             form = EmbeddedForm(self, self.request)
@@ -115,68 +122,38 @@ class EditAssessmentDataForm(Form, BaseComplianceView):
                     field._criteria = criteria
                     fields.append(field)
 
+            for name, title in additional_fields.items():
+                _name = '{}_{}_{}'.format(self.article, question.id, name)
+
+                default = assessment_data.get(_name, None)
+                _field = Text(title=title,
+                              __name__=_name, required=False, default=default)
+
+                fields.append(_field)
+
             form.fields = Fields(*fields)
 
             forms.append(form)
 
-        return forms
+        assessment_summary_form = EmbeddedForm(self, self.request)
+        assessment_summary_form.title = u"Assessment summary"
+        asf_fields = []
 
-        # base_name = tree.name
-        # descriptor_criterions = get_ges_criterions(self.descriptor)
-        #
-        # forms = []
-        #
-        # assessment_data = self.context.assessment_data
-        #
-        # for row in tree.children:
-        #     row_name = row.name
-        #
-        #     # TODO: we no longer need EmbeddedForm here, we should get rid of
-        #
-        #     form = EmbeddedForm(self, self.request)
-        #
-        #     form.form_name = 'form' + row_name
-        #     fields = []
-        #
-        #     form.title = '{}: {}'.format(base_name, row_name)
-        #
-        #     for crit in descriptor_criterions:
-        #         field_title = u'{} {}: {}'.format(base_name, row_name,
-        #                                           crit.title)
-        #         field_name = '{}_{}_{}'.format(base_name, row_name, crit.id)
-        #         # choices = [''] + [x.name for x in row.children]
-        #         choices = [x.name for x in row.children]
-        #         terms = [SimpleTerm(c, i, c) for i, c in enumerate(choices)]
-        #
-        #         default = assessment_data.get(field_name, None)
-        #         field = Choice(
-        #             title=field_title,
-        #             __name__=field_name,
-        #             vocabulary=SimpleVocabulary(terms),
-        #             required=False,
-        #             default=default,
-        #         )
-        #         fields.append(field)
-        #
-        #     for f in additional_fields.keys():
-        #
-        #         _title = u'{}: {} {}'.format(base_name, row_name, f)
-        #         _name = '{}_{}_{}'.format(base_name, row_name, f)
-        #         default = assessment_data.get(_name, None)
-        #         _field = Text(
-        #             title=_title,
-        #             __name__=_name,
-        #             required=False,
-        #             default=default
-        #         )
-        #
-        #         fields.append(_field)
-        #
-        #     form.fields = Fields(*fields)
-        #
-        #     forms.append(form)
-        #
-        # return forms
+        for name, title in summary_fields:
+            _name = '{}_{}'.format(
+                self.article, name
+            )
+
+            default = assessment_data.get(_name, None)
+            _field = Text(title=title,
+                          __name__=_name, required=False, default=default)
+            asf_fields.append(_field)
+
+        assessment_summary_form.fields = Fields(*asf_fields)
+
+        forms.append(assessment_summary_form)
+
+        return forms
 
     # TODO: use memoize
     @property
@@ -193,42 +170,23 @@ class EditAssessmentDataForm(Form, BaseComplianceView):
         qs = get_questions(
             'compliance/nationaldescriptors/questions/data'
         )
-        questions = qs[self.article]
+        questions = filtered_questions(qs[self.article], self.process_phase())
 
         subforms = self._build_subforms(questions, self.criterias)
-
-        # for criterias in els[self.descriptor]:
-        #     forms = self._build_subforms(questions, criterias)
-        #     subforms.extend(forms)
-
-        # criterias = filtered_criterias(self.article, self.process_phase())
-        #
-        # for criteria in criterias:
-        #     forms = self._build_subforms(criteria)
-        #     subforms.extend(forms)
 
         return subforms
 
 
-def filtered_criterias(article, phase):
-    """ Get the assessment criterias
+def filtered_questions(questions, phase):
+    """ Get the questions appropriate for the phase
     """
 
-    try:
-        struct = form_structure[article]
-    except KeyError:    # article is not in form structure yet
-        logger.warning("Article form not implemented %s", article)
-
-        return []
-
-    if phase != 'phase3':
-        children = [c.name for c in struct.children if c.name != 'Coherence']
+    if phase == 'phase3':
+        res = [q for q in questions if q.klass == 'coherence']
     else:
-        children = ['Coherence']
+        res = [q for q in questions if q.klass != 'coherence']
 
-    criterias = [c for c in struct.children if c.name in children]
-
-    return criterias
+    return res
 
 
 EditAssessmentDataView = wrap_form(EditAssessmentDataForm, MainFormWrapper)

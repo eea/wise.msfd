@@ -2,7 +2,7 @@
   tal:define="data options/data">
 
   <div tal:define="form nocall:view/subform"
-    style="padding: 1em; background-color: #CCC; width: 20em; float: right">
+    style="padding: 1em; margin: 1em 0 1em 1em; background-color: #CCC; width: 20em; float: right">
     <div tal:replace="structure form">
       refresh
     </div>
@@ -14,8 +14,7 @@
     No data reported for this Descriptor
   </div>
 
-  <div style="clear: both"><!-- -->
-  </div>
+  <div style="clear: both; overflow:hidden"><!-- --></div>
 
   <tal:def tal:condition="data"
      tal:define="muid_data python: data[0][1];
