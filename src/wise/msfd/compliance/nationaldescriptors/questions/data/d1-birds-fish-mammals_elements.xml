@@ -90,6 +90,7 @@
         <p>
             <strong>Scale of assessment:</strong><br/>
             As used for assessment of the corresponding species or species groups under criteria D1C2-D1C5.
+        </p>
         <p>
             <strong>Use of criteria: </strong><br/>
             The extent to which good environmental status has been achieved shall be expressed for each
@@ -105,6 +106,7 @@
         <p>
             <strong>Scale of assessment:</strong><br/>
             As used for assessment of the corresponding species or species groups under criteria D1C2-D1C5.
+        </p>
         <p>
             <strong>Use of criteria: </strong><br/>
             The extent to which good environmental status has been achieved shall be expressed for each area
@@ -125,7 +127,7 @@
           pursuant to the obligations laid down in Article 25(5) of Regulation (EU) No 1380/2013 for data
           collection activities and taking into account the list of species in Table 1D of the Annex to
           Commission Implementing Decision (EU) 2016/1251
-        /p>
+        </p>
       ]]>
     </criteria-element>
 
@@ -139,7 +141,7 @@
           Annex II to Directive 92/43/EEC and may include any other species, such as those listed under Union
           legislation (other Annexes to Directive 92/43/EEC, Directive 2009/147/EC or through Regulation (EU)
           No 1380/2013) and international agreements such as Regional Sea Conventions.
-        /p>
+        </p>
       ]]>
   </criteria-element>
 </descriptor-definition>
@@ -207,6 +209,7 @@
           Regional level for Baltic Sea and Black Sea; subregional level for North-East Atlantic and
           Mediterranean Sea.<br/>
           Subdivisions may be used where appropriate.
+      </p>
       <p>
           <strong>Use of criteria: </strong><br/>
           Where values do not fall within the threshold values, this may trigger further research and
@@ -220,7 +223,7 @@
       <p>
         Trophic guilds of an ecosystem.<br/>
         Member States shall establish the list of trophic guilds through regional or subregional cooperation.
-      /p>
+      </p>
     ]]>
   </criteria-element>
 </descriptor-definition>

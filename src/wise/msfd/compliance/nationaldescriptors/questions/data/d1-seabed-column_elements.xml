@@ -91,6 +91,7 @@
       <p>
           <strong>Scale of assessment:</strong><br/>
           As used for assessment of the benthic broad habitat types under Descriptors 1 and 6.
+      </p>
       <p>
           <strong>Use of criteria: </strong><br/>
           The outcomes of assessment of criterion D6C1 (the distribution and an estimate of the
@@ -110,6 +111,7 @@
           <strong>Scale of assessment:</strong><br/>
           Subdivision of region or subregion, reflecting biogeographic differences in species
           composition of the broad habitat type.
+      </p>
       <p>
           <strong>Use of criteria: </strong><br/>
           A single assessment per habitat type, using criteria D6C4 and D6C5, shall serve the
@@ -138,7 +140,7 @@
     <![CDATA[
       <p>
         Physical loss of the seabed (including intertidal areas).
-      /p>
+      </p>
     ]]>
   </criteria-element>
 
@@ -146,7 +148,7 @@
     <![CDATA[
       <p>
         Physical disturbance to the seabed (including intertidal areas).
-      /p>
+      </p>
     ]]>
   </criteria-element>
 
@@ -154,7 +156,7 @@
     <![CDATA[
       <p>
         Benthic broad habitat types or other habitat types, as used under Descriptors 1 and 6.
-      /p>
+     </p>
     ]]>
   </criteria-element>
 
@@ -175,7 +177,7 @@
 
         A single set of habitat types shall serve the purpose of assessments of both benthic
         habitats under Descriptor 1 and sea-floor integrity under Descriptor 6. <br/>
-      /p>
+     </p>
     ]]>
   </criteria-element>
 </descriptor-definition>

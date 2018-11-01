@@ -39,6 +39,7 @@
       <p>
           <strong>Scale of assessment:</strong><br/>
           Region, subregion or subdivisions.
+      </p>    
       <p>
           <strong>Use of criteria: </strong><br/>
           The extent to which good environmental status has been achieved shall be
@@ -63,7 +64,7 @@
     <![CDATA[
       <p>
         Anthropogenic impulsive sound in water.
-      /p>
+      </p>
     ]]>
   </criteria-element>
 
@@ -71,7 +72,7 @@
     <![CDATA[
       <p>
         Anthropogenic continuous low-frequency sound in water.
-      /p>
+      </p>
     ]]>
   </criteria-element>
 </descriptor-definition>
