@@ -23,7 +23,7 @@
       </tr>
       <tr>
         <th>Recommendations</th>
-        <td colspan="50" ral:content="assessment/recommendations">Recomendation text</td>
+        <td colspan="50" tal:content="assessment/recommendations">Recomendation text</td>
       </tr>
     </tbody>
   </table>
