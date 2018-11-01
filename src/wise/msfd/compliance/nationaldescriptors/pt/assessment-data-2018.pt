@@ -4,14 +4,19 @@
     <tbody>
       <tr>
         <th>GESComponent</th>
-        <td tal:repeat="g assessment/gescomponents">
+        <th tal:repeat="g assessment/gescomponents">
           <span tal:replace="g">D0C0</span>
-        </td>
+        </th>
+        <!-- TODO: add "conclusion score" and "Weighting" as titles -->
+        <th>Conclusion</th>
+        <th>Score</th>
       </tr>
       <tal:rep tal:repeat="row assessment/answers">
         <tr>
           <th rowspan="2" tal:content="row/question">Question</th>
           <td tal:repeat="value row/values" tal:content="value">X</td>
+          <td tal:content="row/conclusion">X</td>
+          <td tal:content="row/score">X</td>
         </tr>
         <tr>
           <td colspan="50" tal:content="row/summary">Summary</td>

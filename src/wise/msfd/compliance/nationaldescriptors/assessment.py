@@ -60,8 +60,6 @@ class EditAssessmentDataForm(Form, BaseComplianceView):
         # if not errors:
         # TODO: check for errors
 
-        import pdb; pdb.set_trace()
-
         for question in self.questions:
             criterias = filtered_criterias(self.criterias, question)
 
@@ -74,7 +72,13 @@ class EditAssessmentDataForm(Form, BaseComplianceView):
                     )
                     values.append(data.get(field_name, None))
 
-            # compute score
+            # update the score if all fields have been answered
+
+            if None not in values:
+                score = question.calculate_score(values)
+                name = '{}_{}_Score'.format(self.article, question.id)
+                logger.info("Set score: %s - %s", name, score)
+                data[name] = score
 
         try:
             data['assessor'] = user.get_current().getId()

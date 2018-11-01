@@ -277,6 +277,11 @@ class CriteriaAssessmentDefinition:
 
 
 class AssessmentQuestionDefinition:
+    """ A definition for a single assessment question.
+
+    Pass an <assessment-question> node to initialize it
+    """
+
     def __init__(self, node, root):
         self.id = node.get('id')
         self.klass = node.get('class')
@@ -300,6 +305,11 @@ class AssessmentQuestionDefinition:
         for onode in sn.iterchildren('option'):
             si = (int(onode.get('score')), onode.text.strip())
             self.scores.append(si)
+
+    def calculate_score(self, values):
+        # TODO: implement this
+
+        return 0
 
 
 def parse_elements_file(fpath):
