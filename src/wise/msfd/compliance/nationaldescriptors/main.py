@@ -91,8 +91,6 @@ def get_assessment_data(article, criterias, questions, data):
     for question in questions:
         values = []
 
-        # import pdb; pdb.set_trace()
-
         for criteria in criterias:
             for element in criteria.elements:
                 field_name = '{}_{}_{}_{}'.format(

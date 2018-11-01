@@ -34,7 +34,7 @@
     </scoring>
   </assessment-question>
 
-  <assessment-question id="q1" class="coherente" use-criteria=''>
+  <assessment-question id="q3" class="coherence" use-criteria=''>
     <definition>
       To what extent does the Member State define similar targets to the rest of the Member States in the (sub)region? 
     </definition>
@@ -53,7 +53,7 @@
     </scoring>
   </assessment-question>
 
-  <assessment-question id="q1" class="consistency" use-criteria=''>
+  <assessment-question id="q4" class="consistency" use-criteria=''>
     <definition>
       Is the assessment under Art 8 based on the latest (2018) determination of GES under Art.
     </definition>
@@ -71,7 +71,7 @@
     </scoring>
   </assessment-question>
 
-  <assessment-question id="q2" class="consistency" use-criteria=''>
+  <assessment-question id="q5" class="consistency" use-criteria=''>
     <definition>
       To what extent do targets adequately reflect the gap between current (2018) state and GES?
     </definition>
@@ -89,7 +89,7 @@
     </scoring>
   </assessment-question>
 
-  <assessment-question id="q3" class="consistency" use-criteria=''>
+  <assessment-question id="q6" class="consistency" use-criteria=''>
     <definition>
       To what extent are targets clearly linked to measures (reported under Art 13 in 2016) which aim to reduce the pressures and impacts?  
     </definition>

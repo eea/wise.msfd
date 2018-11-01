@@ -106,7 +106,7 @@
     </scoring>
   </assessment-question>
 
-  <assessment-question id="q1" class="coherence" use-criteria='primary'>
+  <assessment-question id="q7" class="coherence" use-criteria='primary'>
     <definition>
       To what extent does the Member State in a marine region use the same primary/ secondary criteria as the other MS in this region?
     </definition>
@@ -125,7 +125,7 @@
     </scoring>
   </assessment-question>
 
-  <assessment-question id="q2" class="coherence" use-criteria=''>
+  <assessment-question id="q8" class="coherence" use-criteria=''>
     <definition>
       To what extent does the Member State use GES determinations that are similar to those of other Member States in the region?
     </definition>
@@ -144,7 +144,7 @@
     </scoring>
   </assessment-question>
 
-  <assessment-question id="q3" class="coherence" use-criteria=''>
+  <assessment-question id="q9" class="coherence" use-criteria=''>
     <definition>
       To what extent does the Member State use threshold values agreed at EU or regional level?
     </definition>
@@ -163,7 +163,7 @@
     </scoring>
   </assessment-question>
 
-  <assessment-question id="q4" class="coherence" use-criteria=''>
+  <assessment-question id="q10" class="coherence" use-criteria=''>
     <definition>
       To what extent is the Member State’s level of ambition for GES the same as other Member States in the same region?
     </definition>
