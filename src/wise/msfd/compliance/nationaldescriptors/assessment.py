@@ -170,42 +170,23 @@ class EditAssessmentDataForm(Form, BaseComplianceView):
         qs = get_questions(
             'compliance/nationaldescriptors/questions/data'
         )
-        questions = qs[self.article]
+        questions = filtered_questions(qs[self.article], self.process_phase())
 
         subforms = self._build_subforms(questions, self.criterias)
-
-        # for criterias in els[self.descriptor]:
-        #     forms = self._build_subforms(questions, criterias)
-        #     subforms.extend(forms)
-
-        # criterias = filtered_criterias(self.article, self.process_phase())
-        #
-        # for criteria in criterias:
-        #     forms = self._build_subforms(criteria)
-        #     subforms.extend(forms)
 
         return subforms
 
 
-def filtered_criterias(article, phase):
-    """ Get the assessment criterias
+def filtered_questions(questions, phase):
+    """ Get the questions appropriate for the phase
     """
 
-    try:
-        struct = form_structure[article]
-    except KeyError:    # article is not in form structure yet
-        logger.warning("Article form not implemented %s", article)
-
-        return []
-
-    if phase != 'phase3':
-        children = [c.name for c in struct.children if c.name != 'Coherence']
+    if phase == 'phase3':
+        res = [q for q in questions if q.klass == 'coherence']
     else:
-        children = ['Coherence']
+        res = [q for q in questions if q.klass != 'coherence']
 
-    criterias = [c for c in struct.children if c.name in children]
-
-    return criterias
+    return res
 
 
 EditAssessmentDataView = wrap_form(EditAssessmentDataForm, MainFormWrapper)
