@@ -1,6 +1,5 @@
 <div tal:define="assessment options/assessment">
   <!-- <span tal:content="data"></span> -->
-
   <table class="table table-condensed assessment-data-table">
     <tbody>
       <tr>
@@ -20,6 +19,4 @@
       </tal:rep>
     </tbody>
   </table>
-
-
 </div>
