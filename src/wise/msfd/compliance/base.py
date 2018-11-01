@@ -3,6 +3,7 @@ import os
 
 import lxml.etree
 from pkg_resources import resource_filename
+from zope.dottedname.resolve import resolve
 
 from Acquisition import aq_inner
 from plone.api.content import get_state
@@ -66,34 +67,6 @@ class Container(object):
         # TODO: maybe use a template for this?
 
         return u'\n'.join(lines)
-
-
-class Leaf(object):
-    """ A generic leaf in a tree. Behaves somehow like a tree
-    """
-
-    children = ()
-
-    def __repr__(self):
-        return "<Leaf '%s'>" % self.name
-
-    def __init__(self, name, children=None):
-        self.name = name
-        self.children = children or []
-
-    def __getitem__(self, name):
-        for c in self.children:
-            if c.name == name:
-                return c
-        raise KeyError
-
-    def __setitem__(self, name, v):
-        v.name = name
-        self.children.append(v)
-
-    def add(self, item):
-        if item not in self.children:
-            self.children.append(item)
 
 
 class BaseComplianceView(BrowserView):
@@ -309,7 +282,24 @@ class AssessmentQuestionDefinition:
         self.klass = node.get('class')
         self.use_criteria = node.get('use-criteria')
         self.definition = node.find('definition').text.strip()
-        self.answers = [x.strip() for x in node.xpath('answers/option/text()')]
+        self.answers = [x.strip()
+                        for x in node.xpath('answers/option/text()')]
+
+        self.score_weights = {}
+
+        for wn in node.iterchildren('score-weight'):
+            desc = wn.get('descriptor')
+            weight = wn.get('value')
+            self.score_weights[desc] = weight
+
+        sn = node.find('scoring')
+        self.score_method_factory = resolve(sn.get('determination-method'))
+        self.score_method_args = sn.get('determination-method-args')
+        self.scores = []
+
+        for onode in sn.iterchildren('option'):
+            si = (int(onode.get('score')), onode.text.strip())
+            self.scores.append(si)
 
 
 def parse_elements_file(fpath):
