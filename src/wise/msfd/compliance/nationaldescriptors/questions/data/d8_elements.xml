@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <descriptor-definition id='D8'>
-    <criteria primary='true' id='D8C1'>
+    <criteria primary='true' id='D8C1' title='D8-Concentrations of contaminants are
+     at levels not giving rise to pollution effects'>
     <definition>
       <![CDATA[
         <p>
@@ -12,11 +13,14 @@
 
           (b) when contaminants under point (a) are measured in a matrix for which
           no value is set under Directive 2000/60/EC, the concentration of those
-          contaminants in that matrix established by Member States through regional or subregional cooperation; <br/>
+          contaminants in that matrix established by Member States through regional
+          or subregional cooperation; <br/>
 
           (c) for additional contaminants selected under point 1(b) of criteria elements,
           the concentrations for a specified matrix (water, sediment or biota) which may
-          give rise to pollution effects. Member States shall establish these concentrations through regional or subregional cooperation, considering their application within and beyond coastal and territorial waters. <br/>
+          give rise to pollution effects. Member States shall establish these concentrations
+          through regional or subregional cooperation, considering their application within 
+          and beyond coastal and territorial waters. <br/>
 
           Beyond territorial waters, the concentrations of contaminants do not exceed the
           following threshold values: <br/>
@@ -33,7 +37,8 @@
     <uses-methodological-standard href="#m-1" />
   </criteria>
     
-  <criteria primary='false' id='D8C2'>
+  <criteria primary='false' id='D8C2' title='D8-Concentrations of contaminants are
+     at levels not giving rise to pollution effects'>
     <definition>
       <![CDATA[
         <p>
@@ -49,7 +54,7 @@
     <uses-methodological-standard href="#m-1" />
   </criteria>
 
-  <criteria primary='true' id='D8C3'>
+  <criteria primary='true' id='D8C3' title=''>
     <definition>
       <![CDATA[
         <p>
@@ -61,7 +66,8 @@
     <uses-methodological-standard href="#m-2" />
   </criteria>
 
-  <criteria primary='false' id='D8C4'>
+  <criteria primary='false' id='D8C4' title='D8-Concentrations of contaminants are
+     at levels not giving rise to pollution effects'>
     <definition>
       <![CDATA[
         <p>

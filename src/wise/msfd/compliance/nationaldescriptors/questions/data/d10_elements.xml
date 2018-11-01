@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <descriptor-definition id='D10'>
-  <criteria primary='true' id='D10C1'>
+  <criteria primary='true' id='D10C1' title='Properties and quantities of marine litter
+     do not cause harm to the coastal and marine environment'>
     <definition>
       <![CDATA[
         <p>
@@ -16,7 +17,8 @@
     <uses-methodological-standard href="#m-1"/>
   </criteria>
 
-  <criteria primary='true' id='D10C2'>
+  <criteria primary='true' id='D10C2' title='Properties and quantities of marine litter
+     do not cause harm to the coastal and marine environment'>
     <definition>
       <![CDATA[
         <p>
@@ -32,7 +34,8 @@
     <uses-methodological-standard href="#m-1"/>
   </criteria>
 
-  <criteria primary='false' id='D10C3'>
+  <criteria primary='false' id='D10C3' title='Properties and quantities of marine litter
+     do not cause harm to the coastal and marine environment'>
     <definition>
       <![CDATA[
         <p>
@@ -47,7 +50,8 @@
     <uses-methodological-standard href="#m-1"/>
   </criteria>
 
-  <criteria primary='false' id='D10C4'>
+  <criteria primary='false' id='D10C4' title='Properties and quantities of marine litter
+     do not cause harm to the coastal and marine environment'>
     <definition>
       <![CDATA[
         <p>

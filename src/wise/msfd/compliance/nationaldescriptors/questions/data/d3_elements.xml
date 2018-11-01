@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <descriptor-definition id='D3'>
 
-    <criteria primary='true' id='D3C1'>
+    <criteria primary='true' id='D3C1' title='Populations of all commercially-exploited
+     fish and shellfish are within safe biological limits, exhibiting a population age
+     and size distribution that is indicative of a healthy stock'>
       <definition>
         <![CDATA[
           <p>
@@ -16,7 +18,9 @@
       <uses-methodological-standard href="#m-1"/>
     </criteria>
 
-    <criteria primary='true' id='D3C2'>
+    <criteria primary='true' id='D3C2' title='Populations of all commercially-exploited
+     fish and shellfish are within safe biological limits, exhibiting a population age
+     and size distribution that is indicative of a healthy stock'>
       <definition> 
         <![CDATA[
           <p>
@@ -31,7 +35,9 @@
       <uses-methodological-standard href="#m-1"/>
     </criteria>
     
-    <criteria primary='true' id='D3C3'>
+    <criteria primary='true' id='D3C3' title='Populations of all commercially-exploited
+     fish and shellfish are within safe biological limits, exhibiting a population age
+     and size distribution that is indicative of a healthy stock'>
       <definition>
         <![CDATA[
           <p>
