@@ -61,21 +61,24 @@
                         </span>
 
                         <div class="widget">
-
-                          <label for=""
-                            tal:condition="not:hidden"
-                            class="help-popover"
-                            data-trigger="hover"
-                            data-html="true"
-                            tal:attributes="for widget/id;
-                            title python: criteria and criteria.title or '';
-                            data-content python: criteria and criteria.definition or ''"
-                            >
-                            <span i18n:translate=""
-                              tal:content="widget/label">label</span>
-                            <span tal:condition="criteria" class="fa fa-question-circle" style="color: lightblue"></span>
-                          </label>
-                          <input type="text" tal:replace="structure widget/render" />
+                          <div>
+                            <label for=""
+                              tal:condition="not:hidden"
+                              class="help-popover"
+                              data-trigger="hover"
+                              data-html="true"
+                              tal:attributes="for widget/id;
+                              title python: criteria and criteria.title or '';
+                              data-content python: criteria and criteria.definition or ''"
+                              >
+                              <span i18n:translate=""
+                                tal:content="widget/label">label</span>
+                              <span tal:condition="criteria" class="fa fa-question-circle" style="color: lightblue"></span>
+                            </label>
+                          </div>
+                          <div class="assessment-form-input">
+                            <input type="text" tal:replace="structure widget/render" />
+                          </div>
                         </div>
 
                         <div class="formHelp"
@@ -113,7 +116,13 @@
               text-align: right;
               padding-right: 0.7em;
               }
-
+              .widget {
+              display: flex;
+              }
+              .assessment-form-input {
+              margin: auto;
+              width: 100%;
+              }
             </style>
           </metal:css>
 

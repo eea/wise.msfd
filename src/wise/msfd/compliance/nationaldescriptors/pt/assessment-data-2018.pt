@@ -17,6 +17,14 @@
           <td colspan="50" tal:content="row/summary">Summary</td>
         </tr>
       </tal:rep>
+      <tr>
+        <th>Assessment summary</th>
+        <td colspan="50" tal:content="assessment/assessment_summary">Summary text</td>
+      </tr>
+      <tr>
+        <th>Recommendations</th>
+        <td colspan="50" ral:content="assessment/recommendations">Recomendation text</td>
+      </tr>
     </tbody>
   </table>
 </div>

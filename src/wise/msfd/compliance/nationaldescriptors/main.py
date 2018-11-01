@@ -71,7 +71,7 @@ Assessment = namedtuple('Assessment',
                         [
                             'gescomponents',
                             'answers',
-                            'summary',
+                            'assessment_summary',
                             'recommendations',
                          ])
 AssessmentRow = namedtuple(
@@ -91,6 +91,8 @@ def get_assessment_data(article, criterias, questions, data):
     for question in questions:
         values = []
 
+        # import pdb; pdb.set_trace()
+
         for criteria in criterias:
             for element in criteria.elements:
                 field_name = '{}_{}_{}_{}'.format(
@@ -99,7 +101,8 @@ def get_assessment_data(article, criterias, questions, data):
                 value = data.get(field_name, '-') or '-'
                 values.append(value)
 
-        summary = 'summary here'
+        summary_title = '{}_{}_Summary'.format(article, question.id)
+        summary = data.get(summary_title, '-')
         conclusion = 'conclusion here'
         score = '1'
 
@@ -108,12 +111,14 @@ def get_assessment_data(article, criterias, questions, data):
         answers.append(qr)
 
     # Add to answers 2 more rows: assessment summary and recommendations
+    assessment_summary = data.get('{}_assessment_summary'.format(article), '-')
+    recommendations = data.get('{}_recommendations'.format(article), '-')
 
     assessment = Assessment(
         gescomponents,
         answers,
-        'descriptor summary',
-        'descriptor recommendations',
+        assessment_summary,
+        recommendations,
     )
 
     return assessment
@@ -255,7 +260,6 @@ class NationalDescriptorArticleView(BaseComplianceView):
             self.questions,
             data
         )
-        # print assessment
 
         self.assessment_data_2018 = self.assessment_data_2018_tpl(
             assessment=assessment

@@ -151,6 +151,12 @@ class EditAssessmentDataForm(Form, BaseComplianceView):
             asf_fields.append(_field)
 
         assessment_summary_form.fields = Fields(*asf_fields)
+        # assessment_summary_form.updateWidgets()
+        # assessment_summary_form.widgets['Art9_assessment_summary']\
+        #     .addClass('assessment-form-input')
+        # assessment_summary_form.updateWidgets()
+
+        # import pdb; pdb.set_trace()
 
         forms.append(assessment_summary_form)
 
