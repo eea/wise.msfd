@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<questions article='Art8'>
+
+  <assessment-question id="q1" class="adequacy" use-criteria=''>
+    <definition>
+      To what extent does the Member State report the criteria elements required by the 2017 Decision?
+    </definition>
+    <answers>
+      <option>All elements reported for this criterion</option>
+      <option>Not all elements reported for this criterion</option>
+    </answers>
+    <scoring determination-method="wise.msfd.compliance.scoring.alternative_based" determination-method-args="0 2">
+      <option score="4">76-100% of criteria elements are reported</option>
+      <option score="3">51-75% of criteria elements are reported</option>
+      <option score="2">26-50% of criteria elements are reported</option>
+      <option score="1">1-25% of criteria elements are reported</option>
+      <option score="0">Not reported</option>
+    </scoring>
+  </assessment-question>
+
+  <assessment-question id="q2" class="adequacy" use-criteria=''>
+    <definition>
+      To what extent does the Member State report beyond the minimum requirements of the 2017 Decision?
+    </definition>
+    <answers>
+      <option>All key aspects reported for this criterion</option>
+      <option>Not all key aspects are reported for this criterion</option>
+    </answers>
+    <scoring determination-method="wise.msfd.compliance.scoring.alternative_based" determination-method-args="0 2">
+      <option score="4">Key aspects are reported for 76-100% of criteria</option>
+      <option score="3">Key aspects are reported for 51-75% of criteria</option>
+      <option score="2">Key aspects are reported for 26-50% of criteria</option>
+      <option score="1">Key aspects are reported for 1-25% of criteria</option>
+      <option score="0">Not reported / No assessment aspects satisfied</option>
+    </scoring>
+  </assessment-question>
+
+  <assessment-question id="q3" class="adequacy" use-criteria=''>
+    <definition>
+      To what extent is the status assessment of parameters, criteria and elements reported?
+    </definition>
+    <answers>
+      <option>Parameters, criteria and elements are reported with status assessment for this criterion</option>
+      <option>Parameters, criteria and elements are not reported with status assessment for this criterion</option>
+    </answers>
+    <scoring determination-method="wise.msfd.compliance.scoring.alternative_based" determination-method-args="0 2">
+      <option score="4">Elements and parameters are specified for 76-100% of criteria</option>
+      <option score="3">Elements and parameters are specified for 51-75% of criteria</option>
+      <option score="2">Elements and parameters are specified for 26-50% of criteria</option>
+      <option score="1">Elements and parameters are specified for 1-25% of criteria</option>
+      <option score="0">Not reported</option>
+    </scoring>
+  </assessment-question>
+</questions>

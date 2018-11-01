@@ -36,4 +36,149 @@
       <option score="0">Not reported</option>
     </scoring>
   </assessment-question>
+
+  <assessment-question id="q3" class="adequacy" use-criteria=''>
+    <definition>
+      To what extent is the qualitative GES determination adequate? 
+    </definition>
+    <answers>
+      <option>Elements and parameters specified for this criterion</option>
+      <option>Elements and parameters not specified for this criterion</option>
+    </answers>
+    <scoring determination-method="wise.msfd.compliance.scoring.alternative_based" determination-method-args="0 2">
+      <option score="4">Elements and parameters are specified for 76-100% of criteria</option>
+      <option score="3">Elements and parameters are specified for 51-75% of criteria</option>
+      <option score="2">Elements and parameters are specified for 26-50% of criteria</option>
+      <option score="1">Elements and parameters are specified for 1-25% of criteria</option>
+      <option score="0">Not reported</option>
+    </scoring>
+  </assessment-question>
+
+  <assessment-question id="q4" class="adequacy" use-criteria=''>
+    <definition>
+      To what extent is the quantitative determination of GES adequate?  
+    </definition>
+    <answers>
+      <option>Elements and parameters specified for this criterion</option>
+      <option>Elements and parameters not specified for this criterion</option>
+    </answers>
+    <scoring determination-method="wise.msfd.compliance.scoring.alternative_based" determination-method-args="0 2">
+      <option score="4">Elements and parameters are specified for 76-100% of criteria</option>
+      <option score="3">Elements and parameters are specified for 51-75% of criteria</option>
+      <option score="2">Elements and parameters are specified for 26-50% of criteria</option>
+      <option score="1">Elements and parameters are specified for 1-25% of criteria</option>
+      <option score="0">Not reported</option>
+    </scoring>
+  </assessment-question>
+
+  <assessment-question id="q5" class="adequacy" use-criteria=''>
+    <definition>
+      To what extent are levels of ambition defined for GES adequate? (I)
+    </definition>
+    <answers>
+      <option>Clear objectives are included in the definition of this criterion</option>
+      <option>Clear objectives are not included in the definition of this criterion</option>
+    </answers>
+    <scoring determination-method="wise.msfd.compliance.scoring.alternative_based" determination-method-args="0 2">
+      <option score="4">Clear objectives are included for 76-100% of the criteria</option>
+      <option score="3">Clear objectives are included for 51-75% of the criteria</option>
+      <option score="2">Clear objectives are included for 26-50% of the criteria</option>
+      <option score="1">Clear objectives are included for 1-25% of the criteria</option>
+      <option score="0">Not reported</option>
+    </scoring>
+  </assessment-question>
+
+  <assessment-question id="q6" class="adequacy" use-criteria='raise error'>
+    <definition>
+      To what extent are levels of ambition defined for GES adequate? (II)
+    </definition>
+    <answers>
+      <option>GES extent threshold defined GES extent threshold not defined</option>
+      <option>The proportion value is set for this criterion</option>
+      <option>The proportion value is not set for this criterion</option>
+    </answers>
+    <scoring determination-method="wise.msfd.compliance.scoring.alternative_based" determination-method-args="0 2">
+      <option score="4">GES extent threshold defined; Proportion values are set for 76-100% of the criteria</option>
+      <option score="3">GES extent threshold defined; Proportion values are set for 51-75% of the criteria</option>
+      <option score="2">GES extent threshold defined; Proportion values are set for 26-50% of the criteria</option>
+      <option score="1">GES extent threshold not defined; Proportion values are set for 1-25% of the criteria</option>
+      <option score="0">Not reported/ No assessment aspects satisfied</option>
+    </scoring>
+  </assessment-question>
+
+  <assessment-question id="q1" class="coherence" use-criteria='primary'>
+    <definition>
+      To what extent does the Member State in a marine region use the same primary/ secondary criteria as the other MS in this region?
+    </definition>
+    <answers>
+      <option>This criterion is the same as in most (76%-100%) of the MS in the region</option>
+      <option>This criterion is the same as in more than half (51-75%) of MS in the region</option>
+      <option>This criterion is the same as in less than half (26-50%) of MS in the region</option>
+      <option>This criterion is different from those of the rest of the MS in the region</option>
+    </answers>
+    <scoring determination-method="wise.msfd.compliance.scoring.alternative_based" determination-method-args="0 2">
+      <option score="4">The MS uses the same criteria as most (76%-100%) of the MS in the region</option>
+      <option score="3">The MS uses the same criteria as more than half (51-75%) of MS in the region</option>
+      <option score="2">The MS uses the same criteria as less than half (26-50%) of MS in the region</option>
+      <option score="1">The MS uses criteria that are different from those of the rest of the MS in the region</option>
+      <option score="0">Not reported\the information is provided in different formats across MS and it is impossible to compare</option>
+    </scoring>
+  </assessment-question>
+
+  <assessment-question id="q2" class="coherence" use-criteria=''>
+    <definition>
+      To what extent does the Member State use GES determinations that are similar to those of other Member States in the region?
+    </definition>
+    <answers>
+      <option>Elements, parameters and objectives for this criterion are the same/similar as in most (76%-100%) of the MS in the region</option>
+      <option>Elements, parameters and objectives for this criterion are the same/similar as in more than half (51-75%) of MS in the region</option>
+      <option>Elements, parameters and objectives for this criterion are the same/similar as in less than half (26-50%) of MS in the region</option>
+      <option>Elements, parameters and objectives for this criterion are different from those of the rest of the MS in the region</option>
+    </answers>
+    <scoring determination-method="wise.msfd.compliance.scoring.alternative_based" determination-method-args="0 2">
+      <option score="4">Elements, parameters and objectives are the same/similar as in most (76%-100%) of the MS in the region</option>
+      <option score="3">Elements, parameters and objectives are the same/similar as in more than half (51-75%) of MS in the region</option>
+      <option score="2">Elements, parameters and objectives are the same/similar as in less than half (26-50%) of MS in the region</option>
+      <option score="1">Elements, parameters and objectives are different from those of the rest of the MS in the region</option>
+      <option score="0">Not reported\the information is provided in different formats across MS and it is not possible to compare</option>
+    </scoring>
+  </assessment-question>
+
+  <assessment-question id="q3" class="coherence" use-criteria=''>
+    <definition>
+      To what extent does the Member State use threshold values agreed at EU or regional level?
+    </definition>
+    <answers>
+      <option>Threshold value for this criterion is the same as in most (76%-100%) of the MS in the region</option>
+      <option>Threshold value for this criterion is the same as in more than half (51-75%) of MS in the region</option>
+      <option>Threshold value for this criterion is the same as in less than half (26-50%) of MS in the region</option>
+      <option>Threshold value for this criterion is different from those of the rest of the MS in the region</option>
+    </answers>
+    <scoring determination-method="wise.msfd.compliance.scoring.alternative_based" determination-method-args="0 2">
+      <option score="4">The MS uses the same thresholds values as most (76%-100%) of the MS in the region</option>
+      <option score="3">The MS uses the same thresholds values as more than half (51-75%) of MS in the region</option>
+      <option score="2">The MS uses the same thresholds values as less than half (26-50%) of MS in the region</option>
+      <option score="1">The MS uses thresholds values that are different from those of the rest of the MS in the region</option>
+      <option score="0">Not reported\the information is provided in different formats across MS and it is impossible to compare</option>
+    </scoring>
+  </assessment-question>
+
+  <assessment-question id="q4" class="coherence" use-criteria=''>
+    <definition>
+      To what extent is the Member State’s level of ambition for GES the same as other Member States in the same region?
+    </definition>
+    <answers>
+      <option>Threshold value for this criterion is the same as in most (76%-100%) of the MS in the region</option>
+      <option>Threshold value for this criterion is the same as in more than half (51-75%) of MS in the region</option>
+      <option>Threshold value for this criterion is the same as in less than half (26-50%) of MS in the region</option>
+      <option>Threshold value for this criterion is different from those of the rest of the MS in the region</option>
+    </answers>
+    <scoring determination-method="wise.msfd.compliance.scoring.alternative_based" determination-method-args="0 2">
+      <option score="4">The MS uses the same proportion values as most (76%-100%) of the MS in the region</option>
+      <option score="3">The MS uses the same proportion values as more than half (51-75%)of MS in the region</option>
+      <option score="2">The MS uses the same proportion values as less than half (26-50%) of MS in the region</option>
+      <option score="1">The MS uses proportion values that are different from those of the rest of the MS in the region</option>
+      <option score="0">Not reported\the information is provided in different formats across MS and it is impossible to compare</option>
+    </scoring>
+  </assessment-question>
 </questions>
