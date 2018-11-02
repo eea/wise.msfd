@@ -1,5 +1,9 @@
 <div tal:define="assessment options/assessment">
   <style>
+    th.as-header {
+    background-color: #999;
+    color: white;
+    }
     th.as-th-score {
     /* display: inline-block;
     width: 4em; */
@@ -41,13 +45,13 @@
   <table class="table table-condensed assessment-data-table">
     <tbody>
       <tr>
-        <th class="as-question">Question / GESComponent</th>
-        <th tal:repeat="g assessment/gescomponents" class="as-ges-component">
+        <th class="as-question as-header">Question / GESComponent</th>
+        <th tal:repeat="g assessment/gescomponents" class="as-ges-component as-header">
           <span tal:replace="g">D0C0</span>
         </th>
         <!-- TODO: add "conclusion score" and "Weighting" as titles -->
-        <th>Conclusion</th>
-        <th class="as-th-score">Score</th>
+        <th class='as-header'>Conclusion</th>
+        <th class="as-th-score as-header">Score</th>
       </tr>
       <tal:rep tal:repeat="row assessment/answers">
         <tr>
@@ -73,12 +77,28 @@
         </tr>
       </tal:rep>
       <tr>
-        <th>Assessment summary</th>
-        <td colspan="50" tal:content="assessment/assessment_summary">Summary text</td>
+        <th rowspan="2">Assessment summary</th>
+        <td
+          rowspan="2"
+          colspan="50"
+          tal:attributes="colspan python: len(assessment.gescomponents)"
+          tal:content="assessment/assessment_summary">Summary text</td>
+        <th>Overall score (%)</th>
+        <td tal:content="assessment/overall_score">123</td>
       </tr>
+
       <tr>
-        <th>Recommendations</th>
-        <td colspan="50" tal:content="assessment/recommendations">Recomendation text</td>
+        <th>Overall conclusion: 2018</th>
+        <td tal:content="assessment/overall_conclusion">124</td>
+      </tr>
+
+      <tr>
+        <th rowspan="1">Recommendations</th>
+        <td colspan="50"
+          tal:attributes="colspan python: len(assessment.gescomponents)"
+          tal:content="assessment/recommendations">Recomendation text</td>
+        <th>Change since 2012</th>
+        <td tal:content="assessment/change">+1</td>
       </tr>
     </tbody>
   </table>

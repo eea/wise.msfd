@@ -66,6 +66,17 @@ class NationalDescriptorCountryOverview(BaseComplianceView):
     def get_descriptors(self):
         return self.context.contentValues()
 
+    def get_score(self, descriptor):
+
+        total = 0
+
+        for assessment in descriptor.contentValues():
+            data = getattr(assessment, 'assessment_data', {})
+            score = data.get('OverallScore', 0)
+            total += score
+
+        return total
+
 
 Assessment = namedtuple('Assessment',
                         [
@@ -73,6 +84,9 @@ Assessment = namedtuple('Assessment',
                             'answers',
                             'assessment_summary',
                             'recommendations',
+                            'overall_score',
+                            'overall_conclusion',
+                            'change',
                          ])
 AssessmentRow = namedtuple(
     'AssessmentRow',
@@ -81,10 +95,12 @@ AssessmentRow = namedtuple(
 )
 
 
-# This will be
+# This somehow translates the real value in a color, to be able to compress the
+# displayed information in the assessment table
 COLOR_TABLE = {
-    2: [1, 5],
-    3: [1, 3, 5],
+    2: [1, 4],
+    3: [1, 3, 4],
+    4: [1, 2, 3, 4],
     5: [1, 2, 3, 4, 5]
 }
 
@@ -93,9 +109,9 @@ def get_assessment_data(article, criterias, questions, data):
     """ Builds a data structure suitable for display in a template
     """
 
-    # tree = question_tree
     answers = []
     gescomponents = [c.id for c in criterias]
+    overall_score = 0
 
     for question in questions:
         values = []
@@ -107,6 +123,8 @@ def get_assessment_data(article, criterias, questions, data):
                     article, question.id, criteria.id, element.id
                 )
                 v = data.get(field_name, None)
+
+                # TODO
 
                 if v is not None:
                     label = choices[v]
@@ -129,6 +147,7 @@ def get_assessment_data(article, criterias, questions, data):
         conclusion_color = 5 - data.get(
             '{}_{}_RawScore'.format(article, question.id), 5
         )
+        overall_score += score     # use raw score or score?
 
         qr = AssessmentRow(question.definition, summary, conclusion,
                            conclusion_color, score, values)
@@ -139,11 +158,18 @@ def get_assessment_data(article, criterias, questions, data):
     recommendations = data.get(
         '{}_recommendations'.format(article), '-') or '-'
 
+    overall_score = overall_score * 100 / len(questions)
+    overall_conclusion = '-'
+    change = ''
+
     assessment = Assessment(
         gescomponents,
         answers,
         assess_sum,
         recommendations,
+        overall_score,
+        overall_conclusion,
+        change
     )
 
     return assessment
@@ -177,6 +203,10 @@ def get_assessment_head_data_2012(data):
     return ['Not found'] * 3 + [('Not found', '')]
 
 
+# TODO: use memoization for old data, needs to be called again to get the
+# score, to allow delta compute for 2018
+#
+# @memoize
 def get_assessment_data_2012(descriptor_criterions, data):
     Assessment2012 = namedtuple(
         'Assessment2012', ['gescomponents', 'criteria',

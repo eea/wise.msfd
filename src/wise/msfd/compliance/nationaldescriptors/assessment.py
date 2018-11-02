@@ -89,6 +89,17 @@ class EditAssessmentDataForm(Form, BaseComplianceView):
                 logger.info("Set conclusion: %s - %s", name, conclusion)
                 data[name] = conclusion
 
+        # TODO: update the overall score
+        overall_score = 0
+
+        for k, v in data.items():
+            if not k.endswith('_Score'):
+                continue
+            else:
+                overall_score += v
+
+        data['OverallScore'] = overall_score
+
         try:
             data['assessor'] = user.get_current().getId()
         except:
