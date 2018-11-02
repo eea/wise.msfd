@@ -9,7 +9,7 @@
       <option>All elements reported for this criterion</option>
       <option>Not all elements reported for this criterion</option>
     </answers>
-    <scoring determination-method="wise.msfd.compliance.scoring.alternative_based" determination-method-args="1 4">
+    <scoring determination-method="wise.msfd.compliance.scoring.alternative_based" determination-method-args="0 2">
       <option score="4">76-100% of criteria elements are reported</option>
       <option score="3">51-75% of criteria elements are reported</option>
       <option score="2">26-50% of criteria elements are reported</option>
@@ -27,7 +27,7 @@
       <option>All key aspects reported for this criterion</option>
       <option>Not all key aspects are reported for this criterion</option>
     </answers>
-    <scoring determination-method="wise.msfd.compliance.scoring.alternative_based" determination-method-args="1 4">
+    <scoring determination-method="wise.msfd.compliance.scoring.alternative_based" determination-method-args="0 2">
       <option score="4">Key aspects are reported for 76-100% of criteria</option>
       <option score="3">Key aspects are reported for 51-75% of criteria</option>
       <option score="2">Key aspects are reported for 26-50% of criteria</option>
