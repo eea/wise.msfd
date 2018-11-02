@@ -11,6 +11,7 @@ from plone.api.portal import get_tool
 from Products.Five.browser import BrowserView
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 from wise.msfd import db, sql
+from wise.msfd.compliance.scoring import compute_score
 
 from . import interfaces
 from .nationaldescriptors.utils import row_to_dict
@@ -300,23 +301,19 @@ class AssessmentQuestionDefinition:
         sn = node.find('scoring')
         self.score_method_factory = resolve(sn.get('determination-method'))
         self.score_method_args = sn.get('determination-method-args')
+
+        factory_method = self.score_method_factory
+        method = factory_method(self.score_method_args)
+        self.score_method = method
+
         self.scores = []
 
         for onode in sn.iterchildren('option'):
             si = (int(onode.get('score')), onode.text.strip())
             self.scores.append(si)
 
-    def calculate_score(self, values):
-        # TODO: implement this
-        # import pdb; pdb.set_trace()
-
-        calc_method = self.score_method_factory(self.score_method_args)
-
-        score = calc_method(values)
-
-        # score = 2
-
-        return score
+    def calculate_score(self, descriptor, values):
+        return compute_score(self, descriptor, values)
 
 
 def parse_elements_file(fpath):

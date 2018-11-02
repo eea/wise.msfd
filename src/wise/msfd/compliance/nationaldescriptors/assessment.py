@@ -75,13 +75,17 @@ class EditAssessmentDataForm(Form, BaseComplianceView):
             # update the score if all fields have been answered
 
             if None not in values:
-                score = question.calculate_score(values)
+                conclusion, raw_score, score = question.calculate_score(
+                    self.descriptor, values)
+
                 name = '{}_{}_Score'.format(self.article, question.id)
                 logger.info("Set score: %s - %s", name, score)
                 data[name] = score
 
+                name = '{}_{}_RawScore'.format(self.article, question.id)
+                data[name] = raw_score
+
                 name = '{}_{}_Conclusion'.format(self.article, question.id)
-                conclusion = ''
                 logger.info("Set conclusion: %s - %s", name, conclusion)
                 data[name] = conclusion
 
@@ -192,12 +196,6 @@ class EditAssessmentDataForm(Form, BaseComplianceView):
             asf_fields.append(_field)
 
         assessment_summary_form.fields = Fields(*asf_fields)
-        # assessment_summary_form.updateWidgets()
-        # assessment_summary_form.widgets['Art9_assessment_summary']\
-        #     .addClass('assessment-form-input')
-        # assessment_summary_form.updateWidgets()
-
-        # import pdb; pdb.set_trace()
 
         forms.append(assessment_summary_form)
 

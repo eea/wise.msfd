@@ -60,7 +60,11 @@
               <!-- -->
             </td>
           </tal:rep>
-          <td tal:content="row/conclusion">X</td>
+
+          <td
+            tal:attributes="class python: 'as-value as-value-{}'.format(row.conclusion_color)"
+            tal:content="row/conclusion">X</td>
+
           <td tal:attributes="class python: 'as-value as-value-{}'.format(5 - int(row.score))"
               tal:content="row/score">X</td>
         </tr>

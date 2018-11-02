@@ -12,18 +12,17 @@ def get_percentage(values):
     """
     trues = len([x for x in values if x is True])
 
-    return (trues * 100) / len(values)
+    return (trues * 100.0) / len(values)
 
 
 def alternative_based(args):
-    all_values = map(int, filter(None, args.strip().split(' ')))
+    true_values = map(int, filter(None, args.strip().split(' ')))
 
     def calculate(values):
         acc = []
 
         for v in values:
-            color_index = all_values[v]
-            if color_index == 1:
+            if v in true_values:
                 acc.append(True)
             else:
                 acc.append(False)
@@ -39,12 +38,20 @@ def alternative_based(args):
     return calculate
 
 
-def compute_score(definition, method, args, values):
-    # all scores are percentage based, so we can rely on
+CONCLUSIONS = [
+    'Very good',
+    'Good',
+    'Poor',
+    'Very poor',
+    'Not reported',
+]
 
-    raw_score = method(args)
 
-    score = definition[raw_score]
-    # this is an option score, with text and score attribute
+def compute_score(question, descriptor, values):
+    raw_score = question.score_method(values)
 
-    return score
+    weight = question.score_weights.get(descriptor, 10.0)
+    score = raw_score * weight / 4
+    conclusion = list(reversed(CONCLUSIONS))[raw_score]
+
+    return conclusion, raw_score, score

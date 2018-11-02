@@ -76,8 +76,17 @@ Assessment = namedtuple('Assessment',
                          ])
 AssessmentRow = namedtuple(
     'AssessmentRow',
-    ['question', 'summary', 'conclusion', 'score', 'values']
+    ['question', 'summary', 'conclusion', 'conclusion_color', 'score',
+     'values']
 )
+
+
+# This will be
+COLOR_TABLE = {
+    2: [1, 5],
+    3: [1, 3, 5],
+    5: [1, 2, 3, 4, 5]
+}
 
 
 def get_assessment_data(article, criterias, questions, data):
@@ -100,22 +109,12 @@ def get_assessment_data(article, criterias, questions, data):
                 v = data.get(field_name, None)
 
                 if v is not None:
-                    try:
-                        method_args = getattr(question, 'score_method_args', [])
-                        method_args = method_args.strip().split(' ')
-                        answers_weigth = map(int, filter(None, method_args))
-
-                        color_index = answers_weigth[v]
-                    except Exception as e:
-                        color_index = 0
-                        import pdb; pdb.set_trace()
-
-                    # TODO: normalize based on number of choices
-                    # color_index = v + 1
                     label = choices[v]
+                    color_index = COLOR_TABLE[len(choices)][v]
                 else:
                     color_index = 0
                     label = 'Not filled in'
+
                 value = (label, color_index)
                 values.append(value)
 
@@ -127,9 +126,12 @@ def get_assessment_data(article, criterias, questions, data):
 
         cn = '{}_{}_Conclusion'.format(article, question.id)
         conclusion = data.get(cn, '')
+        conclusion_color = 5 - data.get(
+            '{}_{}_RawScore'.format(article, question.id), 5
+        )
 
-        qr = AssessmentRow(question.definition,
-                           summary, conclusion, score, values)
+        qr = AssessmentRow(question.definition, summary, conclusion,
+                           conclusion_color, score, values)
         answers.append(qr)
 
     # Add to answers 2 more rows: assessment summary and recommendations
