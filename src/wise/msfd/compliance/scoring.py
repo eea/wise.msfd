@@ -23,7 +23,7 @@ def alternative_based(args):
 
         for v in values:
             color_index = all_values[v]
-            if color_index == 0:
+            if color_index == 1:
                 acc.append(True)
             else:
                 acc.append(False)

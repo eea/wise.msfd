@@ -105,7 +105,7 @@ def get_assessment_data(article, criterias, questions, data):
                         method_args = method_args.strip().split(' ')
                         answers_weigth = map(int, filter(None, method_args))
 
-                        color_index = answers_weigth[v] + 1
+                        color_index = answers_weigth[v]
                     except Exception as e:
                         color_index = 0
                         import pdb; pdb.set_trace()
