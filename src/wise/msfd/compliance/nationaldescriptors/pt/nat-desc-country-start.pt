@@ -66,9 +66,7 @@
                   </div>
                   <div tal:replace="python: view.get_status(assessment)">State</div>
                 </td>
-                <td>
-                  -
-                </td>
+                <td tal:content="python: view.get_score(desc)">10</td>
               </tr>
             </tbody>
           </table>
