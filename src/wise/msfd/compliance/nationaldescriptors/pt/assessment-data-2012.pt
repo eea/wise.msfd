@@ -27,17 +27,17 @@
             <th rowspan="3">Assessment summary</th>
             <td tal:content="assessment/summary"
                 tal:attributes="rowspan string:3;
-                      colspan python:colspan-2">
+                      colspan python:colspan - 2">
               Summary
             </td>
           </tr>
           <tr class="overall-score">
             <th>Overall score</th>
-            <td>2</td>
+            <td tal:content="assessment/overall_ass">2</td>
           </tr>
           <tr class="overall-score">
             <th>Overall conclusion</th>
-            <td>Partially adequate</td>
+            <td tal:content="assessment/score">Partially adequate</td>
           </tr>
         </tal:def>
       </tbody>

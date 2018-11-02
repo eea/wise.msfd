@@ -85,8 +85,7 @@ Assessment = namedtuple('Assessment',
                             'assessment_summary',
                             'recommendations',
                             'overall_score',
-                            'overall_conclusion',
-                            'change',
+                            'overall_conclusion'
                          ])
 AssessmentRow = namedtuple(
     'AssessmentRow',
@@ -160,7 +159,6 @@ def get_assessment_data(article, criterias, questions, data):
 
     overall_score = overall_score * 100 / len(questions)
     overall_conclusion = '-'
-    change = ''
 
     assessment = Assessment(
         gescomponents,
@@ -168,8 +166,7 @@ def get_assessment_data(article, criterias, questions, data):
         assess_sum,
         recommendations,
         overall_score,
-        overall_conclusion,
-        change
+        overall_conclusion
     )
 
     return assessment
@@ -294,6 +291,7 @@ class NationalDescriptorArticleView(BaseComplianceView):
         self.assessment_data_2012 = self.assessment_data_2012_tpl(
             data=assessments
         )
+        score_2012 = assessments[country_name].score
 
         # Assessment header 2012
         report_by, assessors, assess_date, source_file = \
@@ -317,7 +315,8 @@ class NationalDescriptorArticleView(BaseComplianceView):
         )
 
         self.assessment_data_2018 = self.assessment_data_2018_tpl(
-            assessment=assessment
+            assessment=assessment,
+            score_2012=score_2012
         )
 
         # Assessment header 2018

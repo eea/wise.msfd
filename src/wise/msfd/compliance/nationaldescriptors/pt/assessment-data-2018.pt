@@ -1,4 +1,4 @@
-<div tal:define="assessment options/assessment">
+<div tal:define="assessment options/assessment; score_2012 options/score_2012">
   <style>
     th.as-header {
     background-color: #999;
@@ -98,7 +98,7 @@
           tal:attributes="colspan python: len(assessment.gescomponents)"
           tal:content="assessment/recommendations">Recomendation text</td>
         <th>Change since 2012</th>
-        <td tal:content="assessment/change">+1</td>
+        <td tal:content="python: assessment.overall_score - score_2012">+1</td>
       </tr>
     </tbody>
   </table>
