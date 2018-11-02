@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <questions article='Art8'>
 
-  <assessment-question id="q1" class="adequacy" use-criteria=''>
+  <assessment-question id="q1-a" class="adequacy" use-criteria=''>
     <definition>
       To what extent does the Member State report the criteria elements required by the 2017 Decision?
     </definition>
@@ -19,9 +19,9 @@
     <score-weight descriptor="D5" value="10" />
   </assessment-question>
 
-  <assessment-question id="q2" class="adequacy" use-criteria=''>
+  <assessment-question id="q2-a" class="adequacy" use-criteria=''>
     <definition>
-      To what extent does the Member State report beyond the minimum requirements of the 2017 Decision?
+      To what extent does the Member State report key aspects of its assessment methodology?  
     </definition>
     <answers>
       <option>All key aspects reported for this criterion</option>
@@ -37,21 +37,119 @@
     <score-weight descriptor="D5" value="20" />
   </assessment-question>
 
-  <assessment-question id="q3" class="adequacy" use-criteria=''>
+  <assessment-question id="q3-a" class="adequacy" use-criteria=''>
     <definition>
       To what extent is the status assessment of parameters, criteria and elements reported?
     </definition>
     <answers>
-      <option>Parameters, criteria and elements are reported with status assessment for this criterion</option>
       <option>Parameters, criteria and elements are not reported with status assessment for this criterion</option>
+      <option>Parameters, criteria and elements are reported with status assessment for this criterion</option>
     </answers>
-    <scoring determination-method="wise.msfd.compliance.scoring.alternative_based" determination-method-args="1 4">
-      <option score="4">Elements and parameters are specified for 76-100% of criteria</option>
-      <option score="3">Elements and parameters are specified for 51-75% of criteria</option>
-      <option score="2">Elements and parameters are specified for 26-50% of criteria</option>
-      <option score="1">Elements and parameters are specified for 1-25% of criteria</option>
-      <option score="0">Not reported</option>
+    <scoring determination-method="wise.msfd.compliance.scoring.alternative_based" determination-method-args="0 2">
+      <option score="4">76-100% of assessment aspects are assessed</option>
+      <option score="3">51-75% of assessment aspects are satisfied</option>
+      <option score="2">26-50% of assessment aspects satisfied</option>
+      <option score="1">1-25% of assessment aspects satisfied</option>
+      <option score="0">Not reported/No assessment aspects satisfied</option>
     </scoring>
     <score-weight descriptor="D5" value="15" />
+  </assessment-question>
+
+  <assessment-question id="q4-a" class="adequacy" use-criteria=''>
+    <definition>
+      To what extent is the assessment on extent of pressure and impacts reported?
+    </definition>
+    <answers>
+      <option>Pressures and/or impacts reported for this criterion</option>
+      <option>Pressures and/or impacts not reported for this criterion</option>
+    </answers>
+    <scoring determination-method="wise.msfd.compliance.scoring.alternative_based" determination-method-args="0 2">
+      <option score="4">Pressures and impacts reported for 76-100% of the criteria elements</option>
+      <option score="3">Pressures and impacts reported for 51-75% of the criteria elements</option>
+      <option score="2">Pressures and impacts reported for 26-50% of the criteria elements</option>
+      <option score="1">Pressures and impacts reported for 1-25% of the criteria elements</option>
+      <option score="0">Pressures and impacts reported not reported\not clear</option>
+    </scoring>
+    <score-weight descriptor="D5" value="15" />
+  </assessment-question>
+
+  <assessment-question id="q1-c" class="coherence" use-criteria=''>
+    <definition>
+      To what extent does the Member State report the same elements as the other countries in the region?
+    </definition>
+    <answers>
+      <option>Element(s) used for this criterion is/are the same as in most (76%-100%) of the MS in the region</option>
+      <option>Element(s) used for this criterion is/are the same as in more than half (51-75%) of MS in the region</option>
+      <option>Element(s) used for this criterion is/are the same as in less than half (26-50%) of MS in the region</option>
+      <option>Element(s) used for this criterion is/are different from those of the rest of the MS in the region</option>
+    </answers>
+    <scoring determination-method="wise.msfd.compliance.scoring.alternative_based" determination-method-args="0 2">
+      <option score="4">The MS uses the same elements as most (76%- 100%)of the MS in the region</option>
+      <option score="3">The MS uses the same elements as more than half (51-75%)of MS in the region</option>
+      <option score="2">The MS uses the same elements as less then half (26-50%)of MS in the region</option>
+      <option score="1">The MS uses elements that are different from those of the rest of the MS in the region</option>
+      <option score="0">Not reported\the information is provided in different formats across MS and it is impossible to compare</option>
+    </scoring>
+    <score-weight descriptor="D5" value="15" />
+  </assessment-question>
+
+  <assessment-question id="q2-c" class="coherence" use-criteria=''>
+    <definition>
+      To what extent does the Member State report the same parameters within the marine region?
+    </definition>
+    <answers>
+      <option>Parameter(s) used for this criterion is/are the same as in most (76%-100%) of the MS in the region</option>
+      <option>Parameter(s) used for this criterion is/are the same as in more than half (51-75%) of MS in the region</option>
+      <option>Parameter(s) used for this criterion is/are the same as in less than half (26-50%) of MS in the region</option>
+      <option>Parameter(s) used for this criterion is/are different from those of the rest of the MS in the region</option>
+    </answers>
+    <scoring determination-method="wise.msfd.compliance.scoring.alternative_based" determination-method-args="0 2">
+      <option score="4">The MS uses the same parameters as most (76%-100%)of the MS in the region</option>
+      <option score="3">The MS uses the same parameters as more than half (51-75%)of MS in the region</option>
+      <option score="2">The MS uses the same parameters as less then half (26-50%)of MS in the region</option>
+      <option score="1">The MS uses parameters that are different from those of the rest of the MS in the region</option>
+      <option score="0">Not reported\the information is provided in different formats across MS and it is impossible to compare</option>
+    </scoring>
+    <score-weight descriptor="D5" value="10" />
+  </assessment-question>
+
+  <assessment-question id="q3-c" class="coherence" use-criteria=''>
+    <definition>
+      To what extent does the Member State report the same pressures within the marine region?
+    </definition>
+    <answers>
+      <option>The MS reports the same pressures as most (76%- 100%)of the MS in the region</option>
+      <option>The MS reports the same pressures as more than half (51-75%)of MS in the region</option>
+      <option>The MS reports the same pressures as less then half</option>
+      <option>The MS reports pressures that are different from those of the rest of the MS in the region</option>
+    </answers>
+    <scoring determination-method="wise.msfd.compliance.scoring.alternative_based" determination-method-args="0 2">
+      <option score="4">The MS reports the same pressures as most (76%-100%)of the MS in the region</option>
+      <option score="3">The MS reports the same pressures as more than half (51- 75%)of MS in the region</option>
+      <option score="2">The MS reports the same pressures as less then half (26-50%)of MS in the region</option>
+      <option score="1">The MS reports pressures that are different from those of the rest of the MS in the region</option>
+      <option score="0">Not reported\the information is provided in different formats across MS and it is impossible to compare</option>
+    </scoring>
+    <score-weight descriptor="D5" value="5" />
+  </assessment-question>
+
+  <assessment-question id="q4-c" class="coherence" use-criteria=''>
+    <definition>
+      To what extent does the Member State report the same result and date for GES achievement within the region?
+    </definition>
+    <answers>
+      <option>The MS uses similar date for achieving GES as most (76%- 100%)of the MS in the region</option>
+      <option>The MS uses similar date for achieving GES as more than half (51-75%)of MS in the region</option>
+      <option>The MS uses similar date for achieving GES as less then half (26-50%)of MS in the region</option>
+      <option>The MS uses different date for achieving GES from those of the rest of the MS in the region</option>
+    </answers>
+    <scoring determination-method="wise.msfd.compliance.scoring.alternative_based" determination-method-args="0 2">
+      <option score="4">The MS uses similar date (by 2020/after 2020) for achieving GES as most (76%-100%)of the MS in the region</option>
+      <option score="3">The MS uses similar date (by 2020/after 2020) for achieving GES as more than half (51- 75%)of MS in the region</option>
+      <option score="2">The MS uses similar date (by 2020/after 2020) for achieving GES as less then half (26-50%)of MS in the region</option>
+      <option score="1">The MS uses different date (by 2020/after 2020) for achieving GES from those of the rest of the MS in the region</option>
+      <option score="0">Not reported\the information is provided in different formats across MS and it is impossible to compare</option>
+    </scoring>
+    <score-weight descriptor="D5" value="5" />
   </assessment-question>
 </questions>

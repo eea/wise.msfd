@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <questions article='Art9'>
-
-  <assessment-question id="q1" class="adequacy" use-criteria='primary'>
+  <assessment-question id="q1-a" class="adequacy" use-criteria='primary'>
     <definition>
       To what extent are the 2017 Decision criteria covered?
     </definition>
@@ -17,9 +16,10 @@
       <option score="1">1-25% of primary criteria used (or replaced with secondary with grounded justification)</option>
       <option score="0">Not reported</option>
     </scoring>
+    <score-weight descriptor="D5" value="7.5" />
   </assessment-question>
 
-  <assessment-question id="q2" class="adequacy" use-criteria='secondary'>
+  <assessment-question id="q2-a" class="adequacy" use-criteria='secondary'>
     <definition>
       To what extent does the Member State report beyond the minimum requirements of the 2017 Decision?
     </definition>
@@ -35,9 +35,10 @@
       <option score="1">1-25% of primary criteria used (or replaced with secondary with grounded justification)</option>
       <option score="0">Not reported</option>
     </scoring>
+    <score-weight descriptor="D5" value="7.5" />
   </assessment-question>
 
-  <assessment-question id="q3" class="adequacy" use-criteria=''>
+  <assessment-question id="q3-a" class="adequacy" use-criteria=''>
     <definition>
       To what extent is the qualitative GES determination adequate?
     </definition>
@@ -52,9 +53,10 @@
       <option score="1">Elements and parameters are specified for 1-25% of criteria</option>
       <option score="0">Not reported</option>
     </scoring>
+    <score-weight descriptor="D5" value="10" />
   </assessment-question>
 
-  <assessment-question id="q4" class="adequacy" use-criteria=''>
+  <assessment-question id="q4-a" class="adequacy" use-criteria=''>
     <definition>
       To what extent is the quantitative determination of GES adequate?
     </definition>
@@ -69,9 +71,10 @@
       <option score="1">Elements and parameters are specified for 1-25% of criteria</option>
       <option score="0">Not reported</option>
     </scoring>
+    <score-weight descriptor="D5" value="12.5" />
   </assessment-question>
 
-  <assessment-question id="q5" class="adequacy" use-criteria=''>
+  <assessment-question id="q5-a" class="adequacy" use-criteria=''>
     <definition>
       To what extent are levels of ambition defined for GES adequate? (I)
     </definition>
@@ -86,9 +89,10 @@
       <option score="1">Clear objectives are included for 1-25% of the criteria</option>
       <option score="0">Not reported</option>
     </scoring>
+    <score-weight descriptor="D5" value="10" />
   </assessment-question>
 
-  <assessment-question id="q6" class="adequacy" use-criteria='raise error'>
+  <assessment-question id="q6-a" class="adequacy" use-criteria='raise error'>
     <definition>
       To what extent are levels of ambition defined for GES adequate? (II)
     </definition>
@@ -104,9 +108,10 @@
       <option score="1">GES extent threshold not defined; Proportion values are set for 1-25% of the criteria</option>
       <option score="0">Not reported/ No assessment aspects satisfied</option>
     </scoring>
+    <score-weight descriptor="D5" value="10" />
   </assessment-question>
 
-  <assessment-question id="q7" class="coherence" use-criteria='primary'>
+  <assessment-question id="q1-c" class="coherence" use-criteria='primary'>
     <definition>
       To what extent does the Member State in a marine region use the same primary/ secondary criteria as the other MS in this region?
     </definition>
@@ -123,9 +128,10 @@
       <option score="1">The MS uses criteria that are different from those of the rest of the MS in the region</option>
       <option score="0">Not reported\the information is provided in different formats across MS and it is impossible to compare</option>
     </scoring>
+    <score-weight descriptor="D5" value="12.5" />
   </assessment-question>
 
-  <assessment-question id="q8" class="coherence" use-criteria=''>
+  <assessment-question id="q2-c" class="coherence" use-criteria=''>
     <definition>
       To what extent does the Member State use GES determinations that are similar to those of other Member States in the region?
     </definition>
@@ -142,9 +148,10 @@
       <option score="1">Elements, parameters and objectives are different from those of the rest of the MS in the region</option>
       <option score="0">Not reported\the information is provided in different formats across MS and it is not possible to compare</option>
     </scoring>
+    <score-weight descriptor="D5" value="17.5" />
   </assessment-question>
 
-  <assessment-question id="q9" class="coherence" use-criteria=''>
+  <assessment-question id="q3-c" class="coherence" use-criteria=''>
     <definition>
       To what extent does the Member State use threshold values agreed at EU or regional level?
     </definition>
@@ -161,9 +168,10 @@
       <option score="1">The MS uses thresholds values that are different from those of the rest of the MS in the region</option>
       <option score="0">Not reported\the information is provided in different formats across MS and it is impossible to compare</option>
     </scoring>
+    <score-weight descriptor="D5" value="17.5" />
   </assessment-question>
 
-  <assessment-question id="q10" class="coherence" use-criteria=''>
+  <assessment-question id="q4-c" class="coherence" use-criteria=''>
     <definition>
       To what extent is the Member State’s level of ambition for GES the same as other Member States in the same region?
     </definition>
@@ -180,5 +188,6 @@
       <option score="1">The MS uses proportion values that are different from those of the rest of the MS in the region</option>
       <option score="0">Not reported\the information is provided in different formats across MS and it is impossible to compare</option>
     </scoring>
+    <score-weight descriptor="D5" value="17.5" />
   </assessment-question>
 </questions>
