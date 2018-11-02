@@ -12,34 +12,41 @@ from Products.Five.browser import BrowserView
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 from wise.msfd import db, sql
 from wise.msfd.compliance.scoring import compute_score
+from wise.msfd.utils import Tab
 
 from . import interfaces
 from .nationaldescriptors.utils import row_to_dict
 
 logger = logging.getLogger('wise.msfd')
 
-MAIN_FORMS = [
+MAIN_FORMS = [Tab(*x) for x in [
     # view name, (title, explanation)
     ('@@comp-start',
-     ('Compliance Module',
-      'Start Page'),
+     'compliance-start',    # section name
+     'Compliance Module',
+     'Start Page',
      ),
     ('national-descriptors-assessments/@@nat-desc-start',
-     ('National descriptors',
-      'Member states reports and Commission assessments'),
+     'national-descriptors',
+     'National descriptors',
+     'Member states reports and Commission assessments',
      ),
     ('@@comp-regional-descriptor',
-     ('Regional descriptors',
-      'Member states reports and Commission assessments'),
+     'regional-descriptors',
+     'Regional descriptors',
+     'Member states reports and Commission assessments',
      ),
     ('@@comp-national-overviews',
-     ('National overviews',
-      'Overview for a Member state'),
+     'national-overviews',
+     'National overviews',
+     'Overview for a Member state',
      ),
     ('@@comp-regional-overviews',
-     ('Regional overviews',
-      'Overview for all Member states in a region',),
+     'regional-overviews',
+     'Regional overviews',
+     'Overview for all Member states in a region',
      ),
+]
 ]
 
 

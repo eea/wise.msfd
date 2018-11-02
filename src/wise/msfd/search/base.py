@@ -2,6 +2,7 @@ from zope.interface import implements
 
 from Products.Five.browser import BrowserView
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
+from wise.msfd.utils import Tab
 from z3c.form.button import buttonAndHandler
 from z3c.form.field import Fields
 from z3c.form.form import Form
@@ -160,12 +161,13 @@ class ItemDisplay(BrowserView, BaseUtil):
 
 
 MAIN_FORMS = (
-    ('msfd-start', ('Start', 'About search engine')),
-    ('msfd-ca', ('Article 7', 'Competent Authorities')),
-    ('msfd-c1', ('Articles 4, 8, 9 & 10', '2012 reporting exercise')),
-    ('msfd-c2', ('Article 11', '2014 reporting exercise')),
-    ('msfd-c3', ('Articles 13 & 14', '2015 reporting exercise')),
-    ('msfd-c4', ('Articles 8, 9 & 10', '2018 reporting exercise')),
+    Tab('msfd-start', 'msfd-start', 'Start', 'About search engine'),
+    Tab('msfd-ca', 'msfd-ca', 'Article 7', 'Competent Authorities'),
+    Tab('msfd-c1', 'msfd-c1',
+        'Articles 4, 8, 9 & 10', '2012 reporting exercise'),
+    Tab('msfd-c2', 'msfd-c2', 'Article 11', '2014 reporting exercise'),
+    Tab('msfd-c3', 'msfd-c3', 'Articles 13 & 14', '2015 reporting exercise'),
+    Tab('msfd-c4', 'msfd-c4', 'Articles 8, 9 & 10', '2018 reporting exercise'),
 )
 
 

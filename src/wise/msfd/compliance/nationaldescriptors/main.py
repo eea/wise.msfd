@@ -33,8 +33,6 @@ def get_assessment_data_2012_db(*args):
     art = articles.get(article)
     descriptor = descriptor.split('.')[0]
 
-    # country = 'Germany'
-
     t = sql2018.t_COM_Assessments_2012
     count, res = db.get_all_records(
         t,
@@ -48,7 +46,7 @@ def get_assessment_data_2012_db(*args):
 
 
 class NationalDescriptorsOverview(BaseComplianceView):
-    name = 'nat-desc-start'
+    section = 'national-descriptors'
 
     def countries(self):
         countries = self.context.contentValues()
@@ -58,7 +56,7 @@ class NationalDescriptorsOverview(BaseComplianceView):
 
 
 class NationalDescriptorCountryOverview(BaseComplianceView):
-    name = 'nat-desc-country-start'
+    section = 'national-descriptors'
 
     def get_articles(self):
         return ['Art8', 'Art9', 'Art10']
@@ -253,7 +251,8 @@ def get_assessment_data_2012(descriptor_criterions, data):
 
 
 class NationalDescriptorArticleView(BaseComplianceView):
-    name = 'nat-desc-art-view'
+    section = 'national-descriptors'
+
     assessment_data_2012_tpl = Template('./pt/assessment-data-2012.pt')
     assessment_data_2018_tpl = Template('./pt/assessment-data-2018.pt')
 

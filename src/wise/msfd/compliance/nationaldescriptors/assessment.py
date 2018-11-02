@@ -41,6 +41,7 @@ summary_fields = (
 class EditAssessmentDataForm(Form, BaseComplianceView):
     """ Edit the assessment for a national descriptor, for a specific article
     """
+    name = 'nat-desc-art-view'
 
     subforms = None
     session_name = 'session_2018'

@@ -28,8 +28,7 @@ class ReportData2012(BaseComplianceView, BaseUtil):
 
     """ WIP on compliance tables
     """
-
-    name = 'nat-desc-start'
+    section = 'national-descriptors'
 
     def get_criterias_list(self, descriptor):
         """ Get the list of criterias for the specified descriptor
@@ -210,7 +209,7 @@ class SnapshotSelectForm(Form):
 
 class ReportData2018(BaseComplianceView):
 
-    name = 'nat-desc-start'
+    section = 'national-descriptors'
 
     BLACKLIST = (
         'CountryCode',

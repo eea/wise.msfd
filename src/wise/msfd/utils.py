@@ -1,5 +1,5 @@
 import datetime
-from collections import OrderedDict, defaultdict
+from collections import OrderedDict, defaultdict, namedtuple
 from cPickle import dumps
 from hashlib import md5
 from inspect import getsource, isclass
@@ -404,3 +404,7 @@ def db_result_key(func, *argss, **kwargs):
     key = md5(bits).hexdigest()
 
     return key
+
+
+# To be used as data container when defining tabs for navigation
+Tab = namedtuple('Tab', ['view', 'section', 'title', 'subtitle'])
