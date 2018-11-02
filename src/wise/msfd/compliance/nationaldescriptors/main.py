@@ -90,19 +90,33 @@ def get_assessment_data(article, criterias, questions, data):
 
     for question in questions:
         values = []
+        choices = dict(enumerate(question.answers))
 
         for criteria in criterias:
             for element in criteria.elements:
                 field_name = '{}_{}_{}_{}'.format(
-                        article, question.id, criteria.id, element.id
-                    )
-                value = data.get(field_name, '-') or '-'
+                    article, question.id, criteria.id, element.id
+                )
+                v = data.get(field_name, None)
+
+                if v is not None:
+                    # TODO: normalize based on number of choices
+                    color_index = v + 1
+                    label = choices[v]
+                else:
+                    color_index = 0
+                    label = 'Not filled in'
+                value = (label, color_index)
                 values.append(value)
 
         summary_title = '{}_{}_Summary'.format(article, question.id)
         summary = data.get(summary_title, '-') or '-'
-        conclusion = 'conclusion here'
-        score = '1'
+
+        sn = '{}_{}_Score'.format(article, question.id)
+        score = data.get(sn, '')
+
+        cn = '{}_{}_Conclusion'.format(article, question.id)
+        conclusion = data.get(cn, '')
 
         qr = AssessmentRow(question.definition,
                            summary, conclusion, score, values)

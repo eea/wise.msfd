@@ -1,22 +1,67 @@
 <div tal:define="assessment options/assessment">
-  <!-- <span tal:content="data"></span> -->
+  <style>
+    th.as-th-score {
+    /* display: inline-block;
+    width: 4em; */
+    }
+    td.as-score {
+    text-align: right;
+    }
+    th.as-question {
+      width: 22em !important;
+      display: inline-block;
+    }
+    td.as-value {
+      width: 30px;
+      height: 30px;
+    }
+    th.as-ges-component {
+      width: 30px;
+    }
+    td.as-value-0 {
+      background-color: #DDD;
+    }
+    td.as-value-1 {
+      background-color: #9bbb59;
+    }
+    td.as-value-2 {
+      background-color: #d6e3bc;
+    }
+    td.as-value-3 {
+      background-color: #ff99cc;
+    }
+    td.as-value-4 {
+      background-color: #ff3399;
+    }
+    td.as-value-5 {
+      background-color: #ffffff;
+    }
+  </style>
+
   <table class="table table-condensed assessment-data-table">
     <tbody>
       <tr>
-        <th>GESComponent</th>
-        <th tal:repeat="g assessment/gescomponents">
+        <th class="as-question">Question / GESComponent</th>
+        <th tal:repeat="g assessment/gescomponents" class="as-ges-component">
           <span tal:replace="g">D0C0</span>
         </th>
         <!-- TODO: add "conclusion score" and "Weighting" as titles -->
         <th>Conclusion</th>
-        <th>Score</th>
+        <th class="as-th-score">Score</th>
       </tr>
       <tal:rep tal:repeat="row assessment/answers">
         <tr>
           <th rowspan="2" tal:content="row/question">Question</th>
-          <td tal:repeat="value row/values" tal:content="value">X</td>
+          <tal:rep tal:repeat="value row/values" >
+            <td
+              tal:attributes="class python: 'as-value as-value-{}'.format(value[1]);
+              title python: value[0];"
+              >
+              <!-- -->
+            </td>
+          </tal:rep>
           <td tal:content="row/conclusion">X</td>
-          <td tal:content="row/score">X</td>
+          <td class='as-score' tal:content="row/score">X</td>
         </tr>
         <tr>
           <td colspan="50" tal:content="row/summary">Summary</td>

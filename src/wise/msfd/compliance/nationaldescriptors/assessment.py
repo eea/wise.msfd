@@ -80,6 +80,11 @@ class EditAssessmentDataForm(Form, BaseComplianceView):
                 logger.info("Set score: %s - %s", name, score)
                 data[name] = score
 
+                name = '{}_{}_Conclusion'.format(self.article, question.id)
+                conclusion = ''
+                logger.info("Set conclusion: %s - %s", name, conclusion)
+                data[name] = conclusion
+
         try:
             data['assessor'] = user.get_current().getId()
         except:
