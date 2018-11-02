@@ -110,7 +110,7 @@ def get_assessment_data(article, criterias, questions, data):
                 values.append(value)
 
         summary_title = '{}_{}_Summary'.format(article, question.id)
-        summary = data.get(summary_title, '-') or '-'
+        summary = data.get(summary_title) or ''
 
         sn = '{}_{}_Score'.format(article, question.id)
         score = data.get(sn, '')
