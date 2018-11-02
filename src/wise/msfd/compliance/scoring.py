@@ -12,17 +12,18 @@ def get_percentage(values):
     """
     trues = len([x for x in values if x is True])
 
-    return (len(trues) * 100) / len(values)
+    return (trues * 100) / len(values)
 
 
 def alternative_based(args):
-    true_values = map(int, filter(None, args.strip().split(' ')))
+    all_values = map(int, filter(None, args.strip().split(' ')))
 
     def calculate(values):
         acc = []
 
         for v in values:
-            if v in true_values:
+            color_index = all_values[v]
+            if color_index == 0:
                 acc.append(True)
             else:
                 acc.append(False)

@@ -308,8 +308,15 @@ class AssessmentQuestionDefinition:
 
     def calculate_score(self, values):
         # TODO: implement this
+        # import pdb; pdb.set_trace()
 
-        return 0
+        calc_method = self.score_method_factory(self.score_method_args)
+
+        score = calc_method(values)
+
+        # score = 2
+
+        return score
 
 
 def parse_elements_file(fpath):

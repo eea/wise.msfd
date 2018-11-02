@@ -100,8 +100,18 @@ def get_assessment_data(article, criterias, questions, data):
                 v = data.get(field_name, None)
 
                 if v is not None:
+                    try:
+                        method_args = getattr(question, 'score_method_args', [])
+                        method_args = method_args.strip().split(' ')
+                        answers_weigth = map(int, filter(None, method_args))
+
+                        color_index = answers_weigth[v] + 1
+                    except Exception as e:
+                        color_index = 0
+                        import pdb; pdb.set_trace()
+
                     # TODO: normalize based on number of choices
-                    color_index = v + 1
+                    # color_index = v + 1
                     label = choices[v]
                 else:
                     color_index = 0
@@ -113,7 +123,7 @@ def get_assessment_data(article, criterias, questions, data):
         summary = data.get(summary_title) or ''
 
         sn = '{}_{}_Score'.format(article, question.id)
-        score = data.get(sn, '')
+        score = data.get(sn, 0)
 
         cn = '{}_{}_Conclusion'.format(article, question.id)
         conclusion = data.get(cn, '')
