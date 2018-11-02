@@ -50,7 +50,7 @@ CONCLUSIONS = [
 def compute_score(question, descriptor, values):
     raw_score = question.score_method(values)
 
-    weight = question.score_weights.get(descriptor, 10.0)
+    weight = float(question.score_weights.get(descriptor, 10.0))
     score = raw_score * weight / 4
     conclusion = list(reversed(CONCLUSIONS))[raw_score]
 
