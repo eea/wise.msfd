@@ -26,7 +26,10 @@
       </div>
       <h2 tal:content="view/title">Title here</h2>
       <div style="margin-bottom: 1em; top: -0.8em; position: relative">
-        <a href="./">Back to Descriptor</a>
+        <a href="./">
+          <i class='fa fa-level-up'></i>
+          Back to Descriptor
+        </a>
       </div>
 
       <div id="comp-national-descriptor">

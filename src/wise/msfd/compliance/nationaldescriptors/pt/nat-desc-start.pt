@@ -34,13 +34,6 @@
                     tal:content="country/name">Germany</a>
                 </td>
                 <td tal:content="country/status">Phase -1</td>
-                <!-- <td> -->
-                  <!--   <select> -->
-                    <!--     <option value='send_to_phase3'>Choose action...</option> -->
-                    <!--     <option value='send_to_phase3'>View</option> -->
-                    <!--     <option value='send_to_phase3'>Send to Phase 2</option> -->
-                    <!--   </select> -->
-                  <!-- </td> -->
               </tr>
             </tbody>
           </table>

@@ -20,7 +20,10 @@
           <h1>National descriptors overview for <span tal:content="context/title"></span></h1>
 
           <div style="margin-bottom: 1em; top: -0.8em; position: relative">
-            <a href="./../">Go to all National Descriptor Assessments</a>
+            <a href="./../">
+              <i class='fa fa-level-up'></i>
+              Go to all National Descriptor Assessments
+            </a>
           </div>
 
           <div style="background-color: #DDD; padding: 1rem; border: 1px solid #AAA; margin-bottom: 1em;">
