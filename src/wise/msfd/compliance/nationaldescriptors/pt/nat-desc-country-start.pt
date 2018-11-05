@@ -12,7 +12,7 @@
       <div id="wise-search-form" class="full-width-marker">
         <div id="wise-search-form-top">
           <metal:tabs
-             metal:use-macro="context/wise-macros/macros/tabs"></metal:tabs>
+            metal:use-macro="context/wise-macros/macros/tabs"></metal:tabs>
         </div>
 
         <div class="start-page-content left-side-form">
@@ -26,75 +26,75 @@
             </a>
           </div>
 
-          <div style="background-color: #DDD; padding: 1rem; border: 1px solid #AAA; margin-bottom: 1em;">
+          <div style="background-color: #e6f7ca; padding: 1rem; border: 1px solid #AAA; margin-bottom: 1em;">
 
             <form method="GET" action='./content_status_modify'>
               <div>
                 Process state:
-                <em tal:content="view/get_status">Phase 0</em>
+                <strong tal:content="view/get_status">Phase 0</strong>
 
-              <div style="float: right">
-                <select onchange="javascript:this.form.submit()" name="workflow_action">
-                  <option value=''>Choose action...</option>
-                  <tal:rep repeat="trans view/get_transitions">
-                    <option tal:content="trans/title" tal:attributes="value trans/id">Send to Phase 0</option>
-                  </tal:rep>
-                </select>
-              </div>
-            </form>
+                <div style="float: right">
+                  <select onchange="javascript:this.form.submit()" name="workflow_action">
+                    <option value=''>Choose action...</option>
+                    <tal:rep repeat="trans view/get_transitions">
+                      <option tal:content="trans/title" tal:attributes="value trans/id">Send to Phase 0</option>
+                    </tal:rep>
+                  </select>
+                </div>
+              </form>
+            </div>
+
+            <style>
+              .as-state-label {
+              font-size: 80%;
+              background-color: #EEE;
+              display: inline-block;
+              padding: 2px 4px;
+              border-radius: 6px;
+              }
+              .as-table-overview blockquote {
+              font-size: 80%;
+              margin: 0.6em 0em 0em 0em;
+              padding-left: 1em;
+              }
+            </style>
+
+            <table class="table as-table-overview table-striped">
+              <thead>
+                <tr>
+                  <th>Descriptor</th>
+                  <th tal:repeat='art view/get_articles'>
+                    <span tal:replace="art">Art0</span>
+                  </th>
+                  <th>
+                    Score
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr tal:repeat="desc view/get_descriptors">
+                  <th>
+                    <span tal:content="desc/title_or_id">D0</span>
+                  </th>
+                  <td tal:repeat="assessment desc/contentValues">
+                    <a class="btn btn-primary btn-xs" href="" tal:attributes="href assessment/absolute_url">View</a>
+                    <div class="as-state-label" tal:content="python: view.get_status(assessment)">State</div>
+                    <div>
+                      <blockquote tal:condition="assessment/assessment_summary">
+                        <p tal:content="assessment/assessment_summary" >
+                          Summary here
+                        </p>
+                      </blockquote>
+                    </div>
+                  </td>
+                  <td tal:content="python: view.get_score(desc)">10</td>
+                </tr>
+              </tbody>
+            </table>
+
           </div>
-
-    <style>
-      .as-state-label {
-      font-size: 80%;
-      background-color: #EEE;
-      display: inline-block;
-      padding: 2px 4px;
-      border-radius: 6px;
-      }
-      .as-table-overview blockquote {
-      font-size: 80%;
-      margin: 0.6em 0em 0em 0em;
-      padding-left: 1em;
-      }
-    </style>
-
-          <table class="table as-table-overview">
-            <thead>
-              <tr>
-                <th>Desc</th>
-                <th tal:repeat='art view/get_articles'>
-                  <span tal:replace="art">Art0</span>
-                </th>
-                <th>
-                  Score
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr tal:repeat="desc view/get_descriptors">
-                <th>
-                  <span tal:content="desc/title_or_id">D0</span>
-                </th>
-                <td tal:repeat="assessment desc/contentValues">
-                  <a class="btn btn-primary btn-xs" href="" tal:attributes="href assessment/absolute_url">View</a>
-                  <div class="as-state-label" tal:content="python: view.get_status(assessment)">State</div>
-                  <div>
-                    <blockquote tal:condition="assessment/assessment_summary">
-                      <p tal:content="assessment/assessment_summary" >
-                        Summary here
-                      </p>
-                    </blockquote>
-                  </div>
-                </td>
-                <td tal:content="python: view.get_score(desc)">10</td>
-              </tr>
-            </tbody>
-          </table>
-
         </div>
       </div>
-    </div>
 
-  </body>
-</html>
+    </body>
+  </html>

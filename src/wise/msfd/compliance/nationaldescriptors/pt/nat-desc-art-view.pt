@@ -80,12 +80,12 @@
                   <i class='fa fa-edit'></i> Edit 2018 Report Data
                 </a>
               </li>
-              <li>
+              <li style="background-color: #e6f7ca">
                 <form method="GET" action='./content_status_modify'>
                   <div>
                     <i class='fa fa-exchange'></i>
                     Process state:
-                    <span tal:replace="view/get_status">Phase 0</span>
+                    <strong tal:content="view/get_status">Phase 0</strong>
                     &nbsp;
                     &nbsp;
 
