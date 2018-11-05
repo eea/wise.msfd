@@ -1,4 +1,5 @@
-<div tal:define="assessment options/assessment; score_2012 options/score_2012">
+<div tal:define="assessment options/assessment;
+                score_2012 python: int(options['score_2012'])">
   <style>
     th.as-header {
     background-color: #999;
@@ -23,7 +24,7 @@
       width: 30px;
     }
     td.as-value-0 {
-      background-color: #DDD;
+      background-color: #eee;
     }
     td.as-value-1 {
       background-color: #9bbb59;
@@ -71,7 +72,7 @@
 
           <td tal:content="row/score">X</td>
         </tr>
-        <tr>
+        <tr style="margin-bottom: 20px; border-bottom: solid 0.8em #ddd;">
           <td colspan="50" tal:content="row/summary">Summary</td>
         </tr>
       </tal:rep>
@@ -88,7 +89,7 @@
 
       <tr>
         <th>Overall conclusion: 2018</th>
-        <td tal:content="assessment/overall_conclusion">124</td>
+        <td tal:content="python:assessment.overall_conclusion[1]">124</td>
       </tr>
 
       <tr>
@@ -97,7 +98,7 @@
           tal:attributes="colspan python: len(assessment.gescomponents)"
           tal:content="assessment/recommendations">Recomendation text</td>
         <th>Change since 2012</th>
-        <td tal:content="python: assessment.overall_score - score_2012">+1</td>
+        <td tal:content="python: assessment.overall_conclusion[0] - score_2012">+1</td>
       </tr>
     </tbody>
   </table>
