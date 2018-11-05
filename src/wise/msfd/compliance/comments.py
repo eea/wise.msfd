@@ -1,6 +1,8 @@
 from plone.api import portal
 from plone.dexterity.browser.add import DefaultAddForm
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
+from Products.statusmessages.interfaces import IStatusMessage
+from z3c.form import button
 
 from .base import BaseComplianceView
 
@@ -12,6 +14,27 @@ class AddForm(DefaultAddForm):
     @property
     def action(self):
         return self.context.absolute_url() + '/++add++wise.msfd.comment'
+
+    @button.buttonAndHandler(u'Add comment', name='save')
+    def handleAdd(self, action):
+        data, errors = self.extractData()
+
+        if errors:
+            self.status = self.formErrorsMessage
+
+            return
+        obj = self.createAndAdd(data)
+
+        if obj is not None:
+            # mark only as finished if we get the new object
+            self._finishedAdd = True
+            IStatusMessage(self.request).addStatusMessage(u"Comment added",
+                                                          "info")
+
+    @button.buttonAndHandler(u'Cancel', name='cancel',
+                             condition=lambda *a: None)
+    def handleCancel(self, action):
+        return
 
 
 class CommentsView(object):

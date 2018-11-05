@@ -118,7 +118,7 @@
             </div>
           </div>
 
-          <div style="background-color: #DDD; border-color: 1px solid #BBB; padding: 1em;">
+          <div style="">
             <div tal:content="structure context/@@comments-view"></div>
           </div>
 

@@ -1,21 +1,45 @@
-<div tal:repeat="folder context/contentValues" tal:define="plone nocall:context/@@plone">
+<div tal:define="plone nocall:context/@@plone">
+  <style>
+    .comp-discussion-track-container {
+    margin: 3em 0;
+    background-color: #F7F7F7;
+    padding: 1em;
+    }
+    .comp-discussion-track-container h4 {
+    margin-bottom: 2em;
+    }
+    .comp-discussion-track-container form {
+    margin-top: 2em;
+    }
+    .comp-discussion-track-container div.formControls {
+    margin: 0em;
+    }
+  </style>
 
-  <h4 tal:content="folder/title_or_id">Discussion track with UN</h4>
+  <div
+    tal:repeat="folder context/contentValues"
+    class="comp-discussion-track-container">
 
-  <ul tal:define="comments folder/contentValues">
-    <li tal:repeat="comment comments" style="list-style-type: none; border-bottom: 1px solid #CCC; margin-bottom: 1em">
-      <div tal:content="comment/text">Comment here</div>
-      <em style="color: #AAA">
-        <span tal:content="comment/Creator">Creator</span>, at
-        <span tal:content="python: plone.toLocalizedTime(comment.created(), long_format=True)">Creator</span>
-      </em>
-    </li>
-  </ul>
+    <h4>
+      <i class='fa fa-comments'></i>
+      <span tal:replace="folder/title_or_id">Discussion track with UN</span>
+    </h4>
 
-  <tal:form tal:define="form python: view.add_form(folder)">
-    <div tal:content="structure form">
-      Add new comment
-    </div>
-  </tal:form>
+    <ul tal:define="comments folder/contentValues">
+      <li tal:repeat="comment comments" style="list-style-type: none; border-bottom: 1px solid #CCC; margin-bottom: 1em">
+        <div tal:content="comment/text">Comment here</div>
+        <em style="color: #AAA">
+          <span tal:content="comment/Creator">Creator</span>, at
+          <span tal:content="python: plone.toLocalizedTime(comment.created(), long_format=True)">Creator</span>
+        </em>
+      </li>
+    </ul>
 
+    <tal:form tal:define="form python: view.add_form(folder)">
+      <div tal:content="structure form">
+        Add new comment
+      </div>
+    </tal:form>
+
+  </div>
 </div>
