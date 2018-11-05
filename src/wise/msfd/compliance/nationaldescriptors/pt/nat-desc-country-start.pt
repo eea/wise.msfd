@@ -41,7 +41,22 @@
             </form>
           </div>
 
-          <table class="table">
+    <style>
+      .as-state-label {
+      font-size: 80%;
+      background-color: #EEE;
+      display: inline-block;
+      padding: 2px 4px;
+      border-radius: 6px;
+      }
+      .as-table-overview blockquote {
+      font-size: 80%;
+      margin: 0.6em 0em 0em 0em;
+      padding-left: 1em;
+      }
+    </style>
+
+          <table class="table as-table-overview">
             <thead>
               <tr>
                 <th>Desc</th>
@@ -59,14 +74,14 @@
                   <span tal:content="desc/title_or_id">D0</span>
                 </th>
                 <td tal:repeat="assessment desc/contentValues">
-                  <div tal:replace="python: view.get_status(assessment)">State</div>
+                  <a class="btn btn-primary btn-xs" href="" tal:attributes="href assessment/absolute_url">View</a>
+                  <div class="as-state-label" tal:content="python: view.get_status(assessment)">State</div>
                   <div>
-                    <a href="" tal:attributes="href assessment/absolute_url">View</a>
-                    <p tal:condition="assessment/assessment_summary">
-                      <em tal:content="assessment/assessment_summary" >
+                    <blockquote tal:condition="assessment/assessment_summary">
+                      <p tal:content="assessment/assessment_summary" >
                         Summary here
-                      </em>
-                    </p>
+                      </p>
+                    </blockquote>
                   </div>
                 </td>
                 <td tal:content="python: view.get_score(desc)">10</td>
