@@ -69,8 +69,7 @@
             tal:attributes="class python: 'as-value as-value-{}'.format(row.conclusion_color)"
             tal:content="row/conclusion">X</td>
 
-          <td tal:attributes="class python: 'as-value as-value-{}'.format(5 - int(row.score))"
-              tal:content="row/score">X</td>
+          <td tal:content="row/score">X</td>
         </tr>
         <tr>
           <td colspan="50" tal:content="row/summary">Summary</td>

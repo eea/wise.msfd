@@ -8,6 +8,7 @@
       <option>Primary criterion used</option>
       <option>Primary criterion not used</option>
       <option>Primary criterion replaced with secondary criterion (with grounded justification)</option>
+      <option>Primary criterion replaced with secondary criterion (without clear justification)</option>
     </answers>
     <scoring determination-method="wise.msfd.compliance.scoring.alternative_based" determination-method-args="0 2">
       <option score="4">76-100% of primary criteria used (or replaced with secondary with grounded justification)</option>
