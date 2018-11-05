@@ -59,12 +59,15 @@
                   <span tal:content="desc/title_or_id">D0</span>
                 </th>
                 <td tal:repeat="assessment desc/contentValues">
-                  <div>
-                  <a href="" tal:attributes="href assessment/absolute_url">View</a>
-                  <!-- TODO: show summary here -->
-                  summary here
-                  </div>
                   <div tal:replace="python: view.get_status(assessment)">State</div>
+                  <div>
+                    <a href="" tal:attributes="href assessment/absolute_url">View</a>
+                    <p tal:condition="assessment/assessment_summary">
+                      <em tal:content="assessment/assessment_summary" >
+                        Summary here
+                      </em>
+                    </p>
+                  </div>
                 </td>
                 <td tal:content="python: view.get_score(desc)">10</td>
               </tr>
