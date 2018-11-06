@@ -79,7 +79,7 @@
               <li><a href="./@@view-report-data-2018"><i class='fa fa-table'></i> View 2018 Report Data</a></li>
               <li tal:condition="python: view.check_permission('wise.msfd: Edit Assessment')">
                 <a href="./@@edit-assessment-data-2018">
-                  <i class='fa fa-edit'></i> Edit 2018 Report Data
+                  <i class='fa fa-edit'></i> Edit 2018 Assessment
                 </a>
               </li>
               <li style="background-color: #e6f7ca">
