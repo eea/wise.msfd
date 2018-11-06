@@ -43,7 +43,9 @@
             list-style-type: none;
             display: block;
             margin-right: 1em;
-            background-color: #EEE;
+            background-color: #d3f3f9;
+            }
+            .nat-desc-art-menu li a {
             }
             .assessment-data-table {
             margin: 0em;

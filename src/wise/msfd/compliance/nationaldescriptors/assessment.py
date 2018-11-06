@@ -136,8 +136,9 @@ class EditAssessmentDataForm(Form, BaseComplianceView):
         qs = get_questions(
             'compliance/nationaldescriptors/questions/data'
         )
+        state_id, state_label = self.process_phase()
 
-        return filtered_questions(qs[self.article], self.process_phase())
+        return filtered_questions(qs[self.article], state_id)
 
     def get_subforms(self):
         """ Build a form of options from a tree of options

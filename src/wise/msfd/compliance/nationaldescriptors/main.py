@@ -15,7 +15,8 @@ from ..base import BaseComplianceView  # , Container
 
 # from ..vocabulary import form_structure
 
-CountryStatus = namedtuple('CountryStatus', ['name', 'status', 'url'])
+CountryStatus = namedtuple('CountryStatus',
+                           ['name', 'status', 'state_id', 'url'])
 
 
 @db.use_db_session('session_2018')
@@ -50,9 +51,16 @@ class NationalDescriptorsOverview(BaseComplianceView):
 
     def countries(self):
         countries = self.context.contentValues()
+        res = []
 
-        return [CountryStatus(country.Title(), self.process_phase(country),
-                              country.absolute_url()) for country in countries]
+        for country in countries:
+            state_id, state_label = self.process_phase(country)
+            info = CountryStatus(country.Title(), state_label, state_id,
+                                 country.absolute_url())
+
+            res.append(info)
+
+        return res
 
 
 class NationalDescriptorCountryOverview(BaseComplianceView):

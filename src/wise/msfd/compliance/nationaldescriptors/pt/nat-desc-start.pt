@@ -18,8 +18,21 @@
         <div class="start-page-content left-side-form">
 
           <h1>National descriptors assessment overview</h1>
+          <style>
+            td.p-phase1 {
+              background-color: #8da530;
+              color: white;
+            }
+            td.p-phase2 {
+              background-color: #2d9849;
+              color: white;
+            }
+            table.comp-c-listing {
+              width: inherit;
+            }
+          </style>
 
-          <table class="table">
+          <table class="table table-striped table-condensed comp-c-listing">
             <thead>
               <tr>
                 <th>Country</th>
@@ -33,7 +46,12 @@
                   <a href="" tal:attributes="href country/url"
                     tal:content="country/name">Germany</a>
                 </td>
-                <td tal:content="country/status">Phase -1</td>
+                <td
+                  tal:content="country/status"
+                  tal:attributes="class string:p-${country/state_id}"
+                  >
+                  Phase -1
+                </td>
               </tr>
             </tbody>
           </table>

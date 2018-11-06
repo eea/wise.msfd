@@ -205,7 +205,13 @@ class BaseComplianceView(BrowserView):
         if context is None:
             context = self.context
 
-        return self.get_status(context)
+        state = get_state(context)
+        wftool = get_tool('portal_workflow')
+        wf = wftool.getWorkflowsFor(context)[0]        # assumes one wf
+        wf_state = wf.states[state]
+        title = wf_state.title.strip() or state
+
+        return state, title
 
     def get_status(self, context=None):
         if context is None:
