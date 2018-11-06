@@ -68,7 +68,7 @@
             }
             .overall-score th,
             .overall-score td {
-            width: 8%;
+            width: 15%;
             }
 
           </style>

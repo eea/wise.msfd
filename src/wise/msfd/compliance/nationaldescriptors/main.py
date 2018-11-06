@@ -9,6 +9,7 @@ from Products.Five.browser.pagetemplatefile import \
     ViewPageTemplateFile as Template
 from wise.msfd import db, sql2018
 from wise.msfd.compliance.base import get_descriptor_elements, get_questions
+from wise.msfd.compliance.scoring import get_overall_conclusion
 from wise.msfd.gescomponents import get_ges_criterions
 
 from ..base import BaseComplianceView  # , Container
@@ -163,8 +164,8 @@ def get_assessment_data(article, criterias, questions, data):
     recommendations = data.get(
         '{}_recommendations'.format(article), '-') or '-'
 
-    overall_score = overall_score * 100 / len(questions)
-    overall_conclusion = '-'
+    # overall_score = overall_score * 100 / len(questions)
+    overall_conclusion = get_overall_conclusion(overall_score)
 
     assessment = Assessment(
         gescomponents,

@@ -33,11 +33,11 @@
           </tr>
           <tr class="overall-score">
             <th>Overall score</th>
-            <td tal:content="assessment/overall_ass">2</td>
+            <td tal:content="python: int(assessment.score)">2</td>
           </tr>
           <tr class="overall-score">
             <th>Overall conclusion</th>
-            <td tal:content="assessment/score">Partially adequate</td>
+            <td tal:content="assessment/overall_ass">Partially adequate</td>
           </tr>
         </tal:def>
       </tbody>
