@@ -1,0 +1,61 @@
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en"
+  xmlns:tal="http://xml.zope.org/namespaces/tal"
+  xmlns:metal="http://xml.zope.org/namespaces/metal"
+  xmlns:i18n="http://xml.zope.org/namespaces/i18n"
+  lang="en"
+  metal:use-macro="context/main_template/macros/master"
+  i18n:domain="eea">
+
+  <body metal:fill-slot="content">
+
+    <div id="layout-contents" tal:define="text context/text | nothing" >
+      <div id="wise-search-form" class="full-width-marker">
+        <div id="wise-search-form-top">
+          <metal:tabs
+            metal:use-macro="context/wise-macros/macros/tabs"></metal:tabs>
+        </div>
+
+        <div class="start-page-content left-side-form">
+
+          <h1>Regional descriptors assessment overview</h1>
+          <style>
+            td.p-phase1 {
+              background-color: #8da530;
+              color: white;
+            }
+            td.p-phase2 {
+              background-color: #2d9849;
+              color: white;
+            }
+            table.comp-c-listing {
+              width: inherit;
+            }
+          </style>
+
+          <table class="table table-striped table-condensed comp-c-listing">
+            <thead>
+              <tr>
+                <th>Region</th>
+                <th>Status</th>
+                <!-- <th>Actions</th> -->
+              </tr>
+            </thead>
+            <tbody>
+              <tr tal:repeat="region view/regions">
+                <td>
+                  <a href="" tal:attributes="href region/url"
+                    tal:content="region/name">Germany</a>
+                </td>
+                <td>
+                  Phase -1
+                </td>
+              </tr>
+            </tbody>
+          </table>
+
+        </div>
+      </div>
+    </div>
+
+  </body>
+</html>

@@ -39,3 +39,8 @@ class IComment(Schema):
     """
 
     text = Text(title=u'Comment text', required=True)
+
+
+class IRegionalDescriptorsFolder(Interface):
+    """ A container for national descriptors assessments
+    """

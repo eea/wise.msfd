@@ -45,6 +45,15 @@ class BootstrapCompliance(BrowserView):
         return countries
 
     @db.use_db_session('session_2018')
+    def _get_regions(self):
+
+        regions = [
+            ('BAL', 'Baltic Sea'),
+        ]
+
+        return regions
+
+    @db.use_db_session('session_2018')
     def _get_descriptors(self):
         """ Get a list of (code, description) descriptors
         """
@@ -116,6 +125,12 @@ class BootstrapCompliance(BrowserView):
 
         return cf
 
+    def make_region(self, parent, code, name):
+        rf = create(parent, 'wise.msfd.countrydescriptorsfolder',
+                    title=name, id=code)
+
+        return rf
+
     def __call__(self):
 
         if 'compliance-module' in self.context.contentIds():
@@ -129,11 +144,20 @@ class BootstrapCompliance(BrowserView):
 
         alsoProvides(cm, interfaces.IComplianceModuleFolder)
 
+        # National Descriptors Assessments
         nda = create(cm, 'Folder', title=u'National Descriptors Assessments')
         self.set_layout(nda, '@@nat-desc-start')
         alsoProvides(nda, interfaces.INationalDescriptorsFolder)
 
         for code, country in self._get_countries():
             self.make_country(nda, code, country)
+
+        # Regional Descriptors Assessments
+        rda = create(cm, 'Folder', title=u'Regional Descriptors Assessments')
+        self.set_layout(rda, '@@reg-desc-start')
+        alsoProvides(rda, interfaces.IRegionalDescriptorsFolder)
+
+        for rcode, region in self._get_regions():
+            self.make_region(rda, rcode, region)
 
         return cm.absolute_url()

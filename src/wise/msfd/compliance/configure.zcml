@@ -6,6 +6,7 @@
   i18n_domain="wise.msfd">
 
   <include package='.nationaldescriptors' />
+  <include package='.regionaldescriptors'/>
 
   <browser:page
     for="*"

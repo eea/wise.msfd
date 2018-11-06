@@ -41,6 +41,12 @@
     td.as-value-5 {
       background-color: #ffffff;
     }
+    .assessment-summary {
+      border-bottom: solid 0.8em #ddd;
+    }
+    .assessment-summary td {
+      min-height: 30px;
+    }
   </style>
 
   <table class="table table-condensed assessment-data-table">
@@ -72,7 +78,7 @@
 
           <td tal:content="row/score">X</td>
         </tr>
-        <tr style="margin-bottom: 20px; border-bottom: solid 0.8em #ddd;">
+        <tr class="assessment-summary">
           <td colspan="50" tal:content="row/summary">Summary</td>
         </tr>
       </tal:rep>

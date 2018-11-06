@@ -31,7 +31,7 @@ MAIN_FORMS = [Tab(*x) for x in [
      'National descriptors',
      'Member states reports and Commission assessments',
      ),
-    ('@@comp-regional-descriptor',
+    ('regional-descriptors-assessments/@@reg-desc-start',
      'regional-descriptors',
      'Regional descriptors',
      'Member states reports and Commission assessments',
