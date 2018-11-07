@@ -12,10 +12,6 @@ from ..utils import (all_values_from_field, data_to_xls, db_objects_to_dict,
 from .base import ItemDisplay, ItemDisplayForm, MainForm, MultiItemDisplayForm
 from . import interfaces
 
-# default_value_from_field,
-# TODO: cache in klass
-# ART11_GlOBALS = dict()
-
 
 class StartArticle11Form(MainForm):
     """
@@ -41,13 +37,6 @@ class StartArticle11Form(MainForm):
 
         return [int(x) for x in all_values_from_field(self, field)]
 
-    # def default_monitoring_programme_info_type(self):
-    #     klass, token = default_value_from_field(
-    #         self, self.fields['monitoring_programme_info_type']
-    #     )
-    #
-    #     return klass
-
 
 class A11MProgMemberStateForm(EmbeddedForm):
     fields = Fields(interfaces.IMemberStates)
@@ -72,9 +61,7 @@ class A11MProgMemberStateForm(EmbeddedForm):
         mon_prog_ids = db.get_unique_from_mapper(
             sql.MSFD11MP,
             'MonitoringProgramme',
-            and_(sql.MSFD11MP.MON.in_(mon_ids)
-                 # ,sql.MSFD11MP.MPType.in_(mp_type_ids)
-                 )
+            and_(sql.MSFD11MP.MON.in_(mon_ids))
         )
         mon_prog_ids = [x.strip() for x in mon_prog_ids]
 
@@ -160,7 +147,6 @@ class A11MSubMemberStateForm(EmbeddedForm):
 
 class A11MProgMarineUnitIdForm(EmbeddedForm):
     fields = Fields(IMarineUnitIDsSelect)
-    # fields = Fields(interfaces.IMonitoringProgramme)
     fields['marine_unit_ids'].widgetFactory = CheckBoxFieldWidget
 
     def get_subform(self):
@@ -169,7 +155,6 @@ class A11MProgMarineUnitIdForm(EmbeddedForm):
 
 class A11MSubMarineUnitIdForm(EmbeddedForm):
     fields = Fields(IMarineUnitIDsSelect)
-    # fields = Fields(interfaces.IMonitoringSubprogramme)
     fields['marine_unit_ids'].widgetFactory = CheckBoxFieldWidget
 
     def get_subform(self):
@@ -248,7 +233,7 @@ class A11MonProgDisplay(ItemDisplayForm):
                      klass_join.MonitoringProgramme.in_(mon_prog_ids)),
                 page=page
             )
-            # import pdb; pdb.set_trace()
+
             item.whitelist = ['Q4e_ProgrammeID']
 
             return [count, item]
@@ -315,42 +300,8 @@ class A11MonitoringProgrammeForm(EmbeddedForm):
     fields = Fields(interfaces.IRegionSubregions)
     fields['region_subregions'].widgetFactory = CheckBoxFieldWidget
 
-    # fields = Fields(interfaces.IMonitoringProgramme)
-    # fields['regions'].widgetFactory = CheckBoxFieldWidget
-    # fields['countries'].widgetFactory = CheckBoxFieldWidget
-    # fields['marine_unit_ids'].widgetFactory = CheckBoxFieldWidget
-
     def get_subform(self):
         return A11MProgMemberStateForm(self, self.request)
-
-        # return A11MonProgDisplay(self, self.request)
-
-    # def default_regions(self):
-    #     return all_values_from_field(self, self.fields['region_subregions'])
-    #
-    # def default_countries(self):
-    #     regions = self.data.get('regions')
-    #
-    #     if regions:
-    #         mp_type_ids = self.context.get_mp_type_ids()
-    #         mon_ids = db.get_unique_from_mapper(
-    #             sql.MSFD11MP,
-    #             'MON',
-    #             sql.MSFD11MP.MPType.in_(mp_type_ids)
-    #         )
-    #         res = db.get_unique_from_mapper(
-    #             sql.MSFD11MON,
-    #             'MemberState',
-    #             sql.MSFD11MON.ID.in_(mon_ids),
-    #             sql.MSFD11MON.Region.in_(regions)
-    #         )
-    #
-    #         return [x.strip() for x in res]
-    #
-    #     return all_values_from_field(self, self.fields['member_states'])
-    #
-    # def default_marine_unit_ids(self):
-    #     return all_values_from_field(self, self.fields['marine_unit_ids'])
 
     def get_monitoring_programme_ids(self):
         regions = self.data.get('region_subregions', [])
@@ -400,11 +351,6 @@ class A11MonitorSubprogrammeForm(EmbeddedForm):
 
     fields = Fields(interfaces.IRegionSubregions)
     fields['region_subregions'].widgetFactory = CheckBoxFieldWidget
-
-    # fields = Fields(interfaces.IMonitoringSubprogramme)
-    # fields['regions'].widgetFactory = CheckBoxFieldWidget
-    # fields['countries'].widgetFactory = CheckBoxFieldWidget
-    # fields['marine_unit_ids'].widgetFactory = CheckBoxFieldWidget
 
     def __init__(self, context, request):
         EmbeddedForm.__init__(self, context, request)
@@ -475,50 +421,15 @@ class A11MonitorSubprogrammeForm(EmbeddedForm):
 
     def get_subform(self):
         return A11MSubMemberStateForm(self, self.request)
-        # return A11MonSubDisplay(self, self.request)
-
-    # def default_countries(self):
-    #     # TODO: this needs to be adjusted for subprogrammes
-    #
-    #     regions = self.data.get('region_subregions')
-    #
-    #     if regions:
-    #         submonprog_ids = []
-    #         mptypes_subprog = self.get_mptypes_subprog()
-    #         mp_type_ids = self.get_mp_type_ids()
-    #
-    #         for mid in mp_type_ids:
-    #             submonprog_ids.extend(mptypes_subprog[int(mid)])
-    #
-    #         res = db.get_unique_from_mapper(
-    #             sql.MSFD11MONSub,
-    #             'MemberState',
-    #             sql.MSFD11MONSub.SubProgramme.in_(submonprog_ids),
-    #             sql.MSFD11MONSub.Region.in_(regions),
-    #         )
-    #
-    #         return res
-    #
-    #     return all_values_from_field(self, self.fields['member_states'])
-    #
-    # def default_regions(self):
-    #     return all_values_from_field(self, self.fields['region_subregions'])
-    #
-    # def default_marine_unit_ids(self):
-    #     return all_values_from_field(self, self.fields['marine_unit_ids'])
 
 
 class A11MonSubDisplay(MultiItemDisplayForm):
 
     title = "Monitoring Subprogramme display"
 
-    # fields = Fields(interfaces.I11Subprogrammes)
-
     mapper_class = sql.MSFD11ReferenceSubProgramme
     order_field = "ID"
     css_class = 'left-side-form'
-
-    # extra_data_template = ViewPageTemplateFile('pt/extra-data-item.pt')
 
     def download_results(self):
         mp_type_ids = self.context.context.context.context.get_mp_type_ids()
@@ -608,7 +519,6 @@ class A11MonSubDisplay(MultiItemDisplayForm):
 
     def get_db_results(self):
         page = self.get_page()
-        # needed_ids = self.context.data.get('monitoring_programme_types', [])
         needed_ids = self.context.context.context.context.get_mp_type_ids()
         klass_join = sql.MSFD11MP
 
@@ -727,7 +637,6 @@ class A11MPExtraInfo(ItemDisplay):
         excluded_columns = ('ID', 'SubProgramme')
         parameters_measured = db_objects_to_dict(parameters_measured,
                                                  excluded_columns)
-        # parameters_measured = pivot_data(parameters_measured, 'SubProgramme')
 
         return [
             ('Elements monitored', {

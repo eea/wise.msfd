@@ -117,18 +117,6 @@ class BaseComplianceView(BrowserView):
 
         return res
 
-        # res = db.get_unique_from_mapper(
-        #     sql.MSFD11CommonLabel,
-        #     'Text',
-        #     sql.MSFD11CommonLabel.value == self.descriptor,
-        #     sql.MSFD11CommonLabel.group == 'list-MonitoringProgramme',
-        # )
-        #
-        # if not res:
-        #     return ''
-        #
-        # return res[0]
-
     @property
     @db.use_db_session('session')
     def regions(self):

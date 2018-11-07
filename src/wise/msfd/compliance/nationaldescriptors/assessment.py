@@ -9,18 +9,14 @@ from plone.api import user
 from plone.z3cform.layout import wrap_form
 from Products.Five.browser.pagetemplatefile import (PageTemplateFile,
                                                     ViewPageTemplateFile)
-from wise.msfd.base import EmbeddedForm, MainFormWrapper  # BaseUtil,
+from wise.msfd.base import EmbeddedForm, MainFormWrapper
 from wise.msfd.compliance.base import get_descriptor_elements, get_questions
 from z3c.form.button import buttonAndHandler
 from z3c.form.field import Fields
 from z3c.form.form import Form
 
-from ..base import BaseComplianceView  # , Container
+from ..base import BaseComplianceView
 
-# from ..vocabulary import form_structure
-# from Products.Five.browser import BrowserView
-# from wise.msfd.gescomponents import get_ges_criterions
-# from wise.msfd import db, sql2018  # sql,
 
 logger = logging.getLogger('wise.msfd')
 
@@ -28,8 +24,6 @@ logger = logging.getLogger('wise.msfd')
 # mapping of title: field_name
 additional_fields = {
     'Summary': u'Summary',
-    # u'Conclusion': 'Conclusion',
-    # 'Score': 'Score'
 }
 
 summary_fields = (
@@ -162,7 +156,6 @@ class EditAssessmentDataForm(Form, BaseComplianceView):
 
             for criteria in criterias:
                 for element in criteria.elements:
-                    # u'{}_{}'.format(criteria.id, element.id)
                     field_title = criteria.title
                     field_name = '{}_{}_{}_{}'.format(
                         self.article, question.id, criteria.id, element.id

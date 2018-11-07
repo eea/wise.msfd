@@ -1,0 +1,73 @@
+<metal:macro define-macro="tabs-comp">
+  <div id="wise-search-form">
+    <div id="wise-search-form-top">
+      <ul class="nav nav-pills topnav hidden-xs">
+        <tal:rep tal:repeat="tab view/main_forms">
+          <li tal:define="
+            maintitle python: tab.titles[0];
+            subtitle python: tab.titles[1];
+            active python: view.section == tab.section"
+            tal:attributes="class python: active and 'tab-active'"
+            >
+            <a href=""
+              tal:attributes="href string:./${tab.view}"
+              >
+              <span tal:content="maintitle">Article X</span>
+              <span tal:content="subtitle">Subtitle here</span>
+            </a>
+          </li>
+        </tal:rep>
+      </ul>
+
+      <div class="visible-xs" style="clear: both;">
+        <div>
+          Select article:
+        </div>
+          <select class="notselect" id="mobile-select-article" >
+            <tal:rep tal:repeat="tab view/main_forms" >
+              <tal:block tal:define="
+                maintitle python: tab.titles[0];
+                subtitle python: tab.titles[1];
+                active python: view.section == tab.section">
+                <option tal:attributes="value string:./${tab.view}; data-maintitle maintitle; data-subtitle subtitle;
+                selected python: active and 'selected'"
+                        tal:content="python: tab.title + ' ' + tab.subtitle"
+                >
+                </option>
+              </tal:block>
+            </tal:rep>
+          </select>
+      </div>
+      <!-- <h2 tal:content="view/title">Title here</h2> -->
+      <div tal:condition="not: view/subform_content">
+        Please refine your search.
+      </div>
+    </div>
+
+    <!--<div class="wise-search-form-container">-->
+      <!--<metal:block use-macro="context/@@ploneform-macros/titlelessform">-->
+        <!--<metal:slot fill-slot="fields">-->
+          <!--<div class="form-right-side">-->
+            <!--<metal:block use-macro="context/@@ploneform-macros/fields" ></metal:block>-->
+          <!--</div>-->
+        <!--</metal:slot>-->
+        <!--<metal:slot fill-slot="actions">-->
+          <!--<div tal:content="structure view/subform_content | nothing">subform here</div>-->
+          <!--<div class="form-right-side">-->
+            <!--<metal:block use-macro="context/@@ploneform-macros/actions" />-->
+          <!--</div>-->
+        <!--</metal:slot>-->
+        <!--<metal:css fill-slot="formtop">-->
+          <!--<style>-->
+
+          <!--</style>-->
+        <!--</metal:css>-->
+      <!--</metal:block>-->
+
+    </div>
+  </div>
+</metal:macro>
+<!--<div id="compliance-module-container">-->
+  <!--<div tal:content="structure view/compliance_content">forms</div>-->
+<!--</div>-->
+

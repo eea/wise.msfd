@@ -1,5 +1,5 @@
 from zope.interface import Attribute, Interface
-from zope.schema import Choice, Int, List  # , Text  # , TextLine
+from zope.schema import Choice, Int, List
 
 from ..interfaces import IEmbeddedForm
 
@@ -79,12 +79,6 @@ class IStartArticles1314(Interface):
         required=False,
     )
 
-    # region_subregions = List(
-    #     title=u"Region and Subregions",
-    #     value_type=Choice(vocabulary="wise_search_region_subregions"),
-    #     required=False,
-    # )
-
     region_subregions = List(
         title=u"Region and Subregions",
         value_type=Choice(vocabulary="wise_search_a1314_regions"),
@@ -118,8 +112,6 @@ class IA1314MemberStates(Interface):
 class IA1314UniqueCodes(Interface):
     unique_codes = List(
         title=u"Unique Codes",
-        # description=u"Select one or more Unique Codes that you're
-        # interested",
         required=False,
         value_type=Choice(vocabulary="wise_search_a1314_unique_codes")
     )

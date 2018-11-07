@@ -1519,3 +1519,61 @@ class Leaf(object):
     def add(self, item):
         if item not in self.children:
             self.children.append(item)
+
+
+    # def default_countries(self):
+    #     # TODO: this needs to be adjusted for subprogrammes
+    #
+    #     regions = self.data.get('region_subregions')
+    #
+    #     if regions:
+    #         submonprog_ids = []
+    #         mptypes_subprog = self.get_mptypes_subprog()
+    #         mp_type_ids = self.get_mp_type_ids()
+    #
+    #         for mid in mp_type_ids:
+    #             submonprog_ids.extend(mptypes_subprog[int(mid)])
+    #
+    #         res = db.get_unique_from_mapper(
+    #             sql.MSFD11MONSub,
+    #             'MemberState',
+    #             sql.MSFD11MONSub.SubProgramme.in_(submonprog_ids),
+    #             sql.MSFD11MONSub.Region.in_(regions),
+    #         )
+    #
+    #         return res
+    #
+    #     return all_values_from_field(self, self.fields['member_states'])
+    #
+    # def default_regions(self):
+    #     return all_values_from_field(self, self.fields['region_subregions'])
+    #
+    # def default_marine_unit_ids(self):
+    #     return all_values_from_field(self, self.fields['marine_unit_ids'])
+
+    # def default_regions(self):
+    #     return all_values_from_field(self, self.fields['region_subregions'])
+    #
+    # def default_countries(self):
+    #     regions = self.data.get('regions')
+    #
+    #     if regions:
+    #         mp_type_ids = self.context.get_mp_type_ids()
+    #         mon_ids = db.get_unique_from_mapper(
+    #             sql.MSFD11MP,
+    #             'MON',
+    #             sql.MSFD11MP.MPType.in_(mp_type_ids)
+    #         )
+    #         res = db.get_unique_from_mapper(
+    #             sql.MSFD11MON,
+    #             'MemberState',
+    #             sql.MSFD11MON.ID.in_(mon_ids),
+    #             sql.MSFD11MON.Region.in_(regions)
+    #         )
+    #
+    #         return [x.strip() for x in res]
+    #
+    #     return all_values_from_field(self, self.fields['member_states'])
+    #
+    # def default_marine_unit_ids(self):
+    #     return all_values_from_field(self, self.fields['marine_unit_ids'])

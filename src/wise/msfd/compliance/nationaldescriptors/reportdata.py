@@ -155,7 +155,7 @@ WHERE {
         )
 
         article_implementation = self.get_article_report_implementation()
-        # article_class(self, self.request)
+
         self.content = head_tpl + article_implementation()
 
         return self.index()
@@ -163,7 +163,6 @@ WHERE {
 
 class SnapshotSelectForm(Form):
     template = Template('../pt/inline-form.pt')
-    # method = 'GET'
     _updated = False
 
     @property
@@ -314,7 +313,6 @@ class ReportData2018(BaseComplianceView):
             g[row.MarineReportingUnit].append(row)
 
         res = [(k, self.change_orientation(v)) for k, v in g.items()]
-        # res[0][1][3][1][0] = 'REGION 56'
 
         res = sorted(res, key=lambda r: r[0])
 

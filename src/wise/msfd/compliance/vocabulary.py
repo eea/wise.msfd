@@ -28,10 +28,6 @@ ASSESSED_ARTICLES = (
 def parse_forms_file():
     csv_f = resource_filename('wise.msfd',
                               'data/forms.tsv')
-    # hierarchy = [
-    #     'MSFD article', 'AssessmentCriteria', 'AssessedInformation',
-    #     'Evidence'
-    # ]
 
     res = L('articles')
 

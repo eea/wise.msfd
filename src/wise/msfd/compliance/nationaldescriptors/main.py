@@ -1,7 +1,7 @@
 """ Classes and views to implement the National Descriptors compliance page
 """
 
-from collections import namedtuple  # , defaultdict
+from collections import namedtuple
 
 from sqlalchemy import or_
 
@@ -12,9 +12,8 @@ from wise.msfd.compliance.base import get_descriptor_elements, get_questions
 from wise.msfd.compliance.scoring import get_overall_conclusion
 from wise.msfd.gescomponents import get_ges_criterions
 
-from ..base import BaseComplianceView  # , Container
+from ..base import BaseComplianceView
 
-# from ..vocabulary import form_structure
 
 CountryStatus = namedtuple('CountryStatus',
                            ['name', 'status', 'state_id', 'url'])
@@ -241,7 +240,6 @@ def get_assessment_data_2012(descriptor_criterions, data):
         overall_ass = get_val('OverallAssessment')
 
         if country not in assessments:
-            # import pdb; pdb.set_trace()
             assessment = Assessment2012(
                 gescomponents,
                 criteria,

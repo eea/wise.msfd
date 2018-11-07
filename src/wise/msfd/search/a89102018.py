@@ -70,8 +70,6 @@ class Art9Display(ItemDisplayForm):
 
         data = self.get_flattened_data(self)
 
-        # import pdb; pdb.set_trace()
-
         member_states = data.get('member_states', ())
         ges_components = data.get('ges_component', ())
         features = data.get('feature', ())
@@ -159,12 +157,6 @@ class A2018Article9(EmbeddedForm):
     def get_subform(self):
         return A2018GesComponentA9(self, self.request)
 
-    # def default_member_states(self):
-    #     return all_values_from_field(self, self.fields['member_states'])
-
-    # def default_ges_component(self):
-    #     return all_values_from_field(self, self.fields['ges_component'])
-
 
 class A2018GesComponentA9(EmbeddedForm):
     fields = Fields(interfaces.IGESComponentsA9)
@@ -172,9 +164,6 @@ class A2018GesComponentA9(EmbeddedForm):
 
     def get_subform(self):
         return A2018FeatureA9(self, self.request)
-
-    # def default_ges_component(self):
-    #     return all_values_from_field(self, self.fields['ges_component'])
 
 
 class A2018FeatureA9(EmbeddedForm):
@@ -184,18 +173,12 @@ class A2018FeatureA9(EmbeddedForm):
     def get_subform(self):
         return Art9Display(self, self.request)
 
-    # def default_feature(self):
-    #     return all_values_from_field(self, self.fields['feature'])
 
-
-# @register_compliance_module
 class A2018Art10Display(ItemDisplayForm):
     extra_data_template = ViewPageTemplateFile('pt/extra-data-pivot.pt')
-    # css_class = 'left-side-form'
     target_ids = tuple()
 
     def download_results(self):
-        # mapper_class = self.context.context.mapper_class
         data = self.get_flattened_data(self)
 
         parent = self.context.context.context.context
@@ -438,9 +421,6 @@ class A2018Article10(EmbeddedForm):
     def get_subform(self):
         return A2018Art10FeaturesForm(self, self.request)
 
-    # def default_member_states(self):
-    #     return all_values_from_field(self, self.fields['member_states'])
-
     def get_available_features(self):
         pass
 
@@ -448,7 +428,6 @@ class A2018Article10(EmbeddedForm):
 ###############################################################################
 
 class A2018Art81abDisplay(ItemDisplayForm):
-    # css_class = 'left-side-form'
     extra_data_template = ViewPageTemplateFile('pt/extra-data-pivot.pt')
 
     def download_results(self):
@@ -723,9 +702,6 @@ class A2018Article81ab(EmbeddedForm):
     def get_subform(self):
         return A2018Art81abFeatures(self, self.request)
 
-    # def default_member_states(self):
-    #     return all_values_from_field(self, self.fields['member_states'])
-
     def default_marine_unit_id(self):
         return all_values_from_field(self,
                                      self.fields['marine_unit_id'])
@@ -797,7 +773,6 @@ class A2018Art81abMarineUnitID(MarineUnitIDSelectForm):
 
 
 class A2018Art81cDisplay(ItemDisplayForm):
-    # css_class = 'left-side-form'
     extra_data_template = ViewPageTemplateFile('pt/extra-data-pivot.pt')
     id_marine_units = list()
 
@@ -811,8 +786,6 @@ class A2018Art81cDisplay(ItemDisplayForm):
         features = data.get('feature', ())
         member_states = data.get('member_states')
         marine_units = self.context.get_available_marine_unit_ids()[1]
-
-        # import pdb; pdb.set_trace()
 
         count, marine_unit = db.get_all_records_outerjoin(
             mapper_class,
@@ -1059,9 +1032,6 @@ class A2018Features81cForm(EmbeddedForm):
     def get_subform(self):
         return A2018Art81cMarineUnitId(self, self.request)
 
-    # def default_feature(self):
-    #     return all_values_from_field(self, self.fields['feature'])
-
 
 class A2018Art81cMarineUnitId(MarineUnitIDSelectForm):
     mapper_class = MSFD4GeographicalAreaID
@@ -1123,9 +1093,6 @@ class A2018Article81c(EmbeddedForm):
     def get_subform(self):
         return A2018Features81cForm(self, self.request)
 
-    # def default_member_states(self):
-    #     return all_values_from_field(self, self.fields['member_states'])
-
     def default_marine_unit_id(self):
         return all_values_from_field(self,
                                      self.fields['marine_unit_id'])
@@ -1148,16 +1115,6 @@ class A2018IndicatorsFeature(EmbeddedForm):
 
     def get_subform(self):
         return A2018IndicatorsMarineUnitId(self, self.request)
-
-    # def default_ges_component(self):
-    #     return all_values_from_field(self, self.fields['ges_component'])
-
-    # def default_feature(self):
-    #     return all_values_from_field(self, self.fields['feature'])
-
-    # def default_marine_unit_id(self):
-    #     return all_values_from_field(self,
-    #                                  self.fields['marine_unit_id'])
 
 
 class A2018IndicatorsMarineUnitId(MarineUnitIDSelectForm):
@@ -1229,7 +1186,6 @@ class A2018IndicatorsMarineUnitId(MarineUnitIDSelectForm):
 class A2018IndicatorsDisplay(ItemDisplayForm):
     title = "Indicator Display Form"
     extra_data_template = ViewPageTemplateFile('pt/extra-data-pivot.pt')
-    # css_class = 'left-side-form'
 
     conditions_ind_assess = list()
 
@@ -1246,7 +1202,6 @@ class A2018IndicatorsDisplay(ItemDisplayForm):
         count, indicator_assessment = db.get_all_records(
             mapper_class,
             mapper_class.Id.in_(ids_needed)
-            # *self.conditions_ind_assess
         )
 
         ids_indicator = [x.Id for x in indicator_assessment]
@@ -1341,7 +1296,6 @@ class A2018IndicatorsDisplay(ItemDisplayForm):
         if ids_ind_ass_ges:
             conditions.append(mapper_class.Id.in_(ids_ind_ass_ges))
 
-        # self.conditions_ind_assess = conditions
         self.ids_indicator_main = ids_indicator_main
         self.ids_ind_ass_ges = ids_ind_ass_ges
 
@@ -1397,6 +1351,3 @@ class A2018ArticleIndicators(EmbeddedForm):
 
     def get_subform(self):
         return A2018IndicatorsGesComponent(self, self.request)
-
-    # def default_member_states(self):
-    #     return all_values_from_field(self, self.fields['member_states'])

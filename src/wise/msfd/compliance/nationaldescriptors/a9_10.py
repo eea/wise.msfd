@@ -4,7 +4,7 @@ from sqlalchemy import and_, or_
 
 from Products.Five.browser.pagetemplatefile import \
     ViewPageTemplateFile as Template
-from wise.msfd import db, sql, sql_extra  # sql2018,
+from wise.msfd import db, sql, sql_extra
 
 from ..base import BaseArticle2012
 from .utils import row_to_dict

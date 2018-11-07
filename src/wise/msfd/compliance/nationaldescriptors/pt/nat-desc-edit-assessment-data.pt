@@ -7,7 +7,8 @@
   </script>
 
   <div id="wise-compliance-form-top"
-    tal:attributes="id view/form_id_top | string:wise-compliance-form-top">
+    tal:attributes="id view/form_id_top | string:wise-compliance-form-top"
+    tal:define="tabs_type string: tab">
     <metal:tabs
       metal:use-macro="context/wise-macros/macros/tabs"></metal:tabs>
   </div>

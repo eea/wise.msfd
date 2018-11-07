@@ -1,5 +1,5 @@
 <metal:macro define-macro="tabs">
-  <div id="mainform-tabs">
+  <div id="mainform-tabs" tal:define="tab_type tabs_type | string:article">
     <ul class="nav nav-pills topnav hidden-xs"
       tal:define="root_url view/root_url | string:.">
       <tal:rep tal:repeat="tab view/main_forms">
@@ -19,8 +19,8 @@
     </ul>
 
     <div class="visible-xs" style="clear: both;">
-      <div tal:content="view/tab_select_label | string:Select article:">
-        Select article:
+      <div tal:content="view/tab_select_label | string:Select ${tab_type}:">
+        Select article/tab:
       </div>
       <select class="notselect" id="mobile-select-article" >
         <tal:rep tal:repeat="tab view/main_forms" >

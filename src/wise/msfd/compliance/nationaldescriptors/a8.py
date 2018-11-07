@@ -138,7 +138,7 @@ class Article8(BaseArticle2012):
 
         for mc in descriptor_class.article8_mapper_classes:
             theme_name = mc[0]
-            # t_MSFD8b_NutrientsMetadata
+
             mc_assessment = getattr(sql, 't_MSFD8b_' + theme_name + 'Metadata')
             count, res = db.get_all_records(
                 mc_assessment,
@@ -148,8 +148,6 @@ class Article8(BaseArticle2012):
             for row in res:
                 start = row[2]
                 end = row[3]
-                # start = row.get('AssessmentDateStart', None)
-                # end = row.get('AssessmentDateEnd', None)
 
                 if row[1].startswith('Analysis') and start and end:
                     results.append(' - '.join((start, end)))
@@ -330,9 +328,6 @@ class Article8(BaseArticle2012):
                 topic_assesment[base_topic].extend(indicators)
 
         self.topic_assesment = topic_assesment
-
-        # print "\n\n"
-        # print topic_assesment
 
         return topic_assesment
 

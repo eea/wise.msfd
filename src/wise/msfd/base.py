@@ -3,11 +3,8 @@ from zope.browserpage.viewpagetemplatefile import \
 from zope.component import queryMultiAdapter
 from zope.interface import implements
 
-# from eea.cache import cache
 from plone.z3cform.layout import FormWrapper
-# from Products.Five.browser import BrowserView
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
-from z3c.form.button import buttonAndHandler
 from z3c.form.field import Fields
 from z3c.form.form import Form
 
@@ -20,8 +17,6 @@ from .widget import MarineUnitIDSelectFieldWidget
 class BaseUtil(object):
     """ Generic utilities for search views
     """
-
-    # value_template = ViewPageTemplateFile('pt/value-display.pt')
 
     def title_as_id(self, text):
         """ Given some text, return an id
@@ -242,8 +237,7 @@ class EmbeddedForm(BaseEnhancedForm, Form, BaseUtil):
 
     def __init__(self, context, request):
         Form.__init__(self, context, request)
-        self.__parent__ = self.context      # = context
-        # self.request = request
+        self.__parent__ = self.context
         self.data = {}
 
     def update(self):
@@ -312,8 +306,6 @@ class MarineUnitIDSelectForm(EmbeddedForm):
 
         # Get selected marineunitids. Method from base class
         ids = self.get_marine_unit_ids()
-
-        # print "Parent available MUIDS", ids
 
         count, res = get_available_marine_unit_ids(
             ids, self.mapper_class

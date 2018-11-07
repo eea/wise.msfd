@@ -14,7 +14,6 @@ from zope.schema.vocabulary import SimpleTerm, SimpleVocabulary
 from eea.cache import cache
 
 from . import db, sql, sql2018
-# from .a11 import ART11_GlOBALS
 from .utils import FORMS, FORMS_2018, FORMS_ART11, LABELS, SUBFORMS
 
 ART_RE = re.compile('\s(\d+\.*\d?\w?)\s')
@@ -97,8 +96,6 @@ populate_labels()
 
 
 def vocab_from_values(values):
-    # if not values:
-    #     values = (u' - (No data)', )
     terms = [SimpleTerm(x, x, LABELS.get(x, x)) for x in values]
     # TODO fix UnicodeDecodeError
     # Article Indicators, country Lithuania
@@ -220,8 +217,6 @@ def get_member_states_vb_factory(context):
     )
 
     return values_to_vocab(set(x[1] for x in rows))
-
-    # return db_vocab(sql.t_MSFD4_GegraphicalAreasID, 'MemberState')
 
 
 @provider(IVocabularyFactory)
@@ -415,7 +410,6 @@ def art11_region_ms(context):
     ctx = context
 
     if not hasattr(context, 'subform'):
-        # json_str = json.loads(context.json())
         ctx = context.context
     mp_type_ids = ctx.get_mp_type_ids()
     mptypes_subprog = ctx.subform.get_mptypes_subprog()
@@ -443,10 +437,9 @@ def art11_region_ms(context):
 def art11_marine_unit_id(context):
     if not hasattr(context, 'subform'):
         json_str = json.loads(context.json())
-        # mp_type_ids = context.context.get_mp_type_ids()
     else:
         json_str = json.loads(context.subform.json())
-        # mp_type_ids = context.get_mp_type_ids()
+
     countries_form_data = [
         field['options']
 
@@ -503,9 +496,7 @@ def art11_marine_unit_id(context):
     mon_prog_ids = db.get_unique_from_mapper(
         sql.MSFD11MP,
         'MonitoringProgramme',
-        and_(sql.MSFD11MP.MON.in_(mon_ids)
-             # ,sql.MSFD11MP.MPType.in_(mp_type_ids)
-             )
+        and_(sql.MSFD11MP.MON.in_(mon_ids))
     )
     mon_prog_ids = [x.strip() for x in mon_prog_ids]
 
@@ -711,12 +702,6 @@ def a2018_marine_reporting_unit(context):
 
     mapper_class = context.context.context.mapper_class
 
-    # key = (mapper_class.__class__.__name__, str(countries))
-    # key = (mapper_class.__name__, str(countries))
-
-    # @cache(lambda func: key)
-    # import pdb; pdb.set_trace()
-
     def get_res():
         mc_countries = sql2018.ReportedInformation
         conditions = []
@@ -731,7 +716,6 @@ def a2018_marine_reporting_unit(context):
         )
 
         res = set([x.MarineReportingUnit for x in res])
-        # res = ['Marine%s' % x for x in range(0, 10)]
 
         return res
 

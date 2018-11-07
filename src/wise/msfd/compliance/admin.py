@@ -99,8 +99,6 @@ class BootstrapCompliance(BrowserView):
     def make_country(self, parent, code, name):
         cf = create(parent, 'wise.msfd.countrydescriptorsfolder',
                     title=name, id=code)
-        # self.set_layout(cf, '@@nat-desc-country-start')
-        # alsoProvides(cf, interfaces.ICountryDescriptorsFolder)
 
         for code, description in self._get_descriptors():
             df = create(cf, 'Folder', title=description, id=code)
