@@ -5,6 +5,7 @@ from collections import namedtuple
 
 from sqlalchemy import or_
 
+from persistent.list import PersistentList
 from Products.Five.browser.pagetemplatefile import \
     ViewPageTemplateFile as Template
 from wise.msfd import db, sql2018
@@ -254,6 +255,36 @@ def get_assessment_data_2012(descriptor_criterions, data):
     return assessments
 
 
+class AssessmentData(PersistentList):
+
+    data = []
+
+    @property
+    def assessors(self):
+        assessors = []
+
+        for data in self.data:
+            assessor = data['assessor']
+            if assessor not in assessors:
+                assessors.append(assessor)
+
+        if not assessors:
+            return 'Not assessed'
+
+        return ', '.join(assessors)
+
+    def append(self, data):
+        self.data.append(data)
+
+        self._p_changed = True
+
+    def last(self):
+        if not self.data:
+            return {}
+
+        return self.data[-1]
+
+
 class NationalDescriptorArticleView(BaseComplianceView):
     section = 'national-descriptors'
 
@@ -278,6 +309,10 @@ class NationalDescriptorArticleView(BaseComplianceView):
 
     def __init__(self, context, request):
         super(NationalDescriptorArticleView, self).__init__(context, request)
+
+        if not hasattr(context, 'pers_assessment_data') or \
+                not isinstance(context.pers_assessment_data, PersistentList):
+            context.pers_assessment_data = AssessmentData()
 
         # Assessment data 2012
         descriptor_criterions = get_ges_criterions(self.descriptor)
@@ -311,7 +346,9 @@ class NationalDescriptorArticleView(BaseComplianceView):
         )
 
         # Assessment data 2018
-        data = self.context.assessment_data
+        data = self.context.pers_assessment_data.last()
+
+        # import pdb; pdb.set_trace()
 
         assessment = get_assessment_data(
             self.article,
@@ -327,7 +364,7 @@ class NationalDescriptorArticleView(BaseComplianceView):
 
         # Assessment header 2018
         report_by_2018 = u'Commission'
-        assessors_2018 = data.get('assessor', u'Not assessed')
+        assessors_2018 = self.context.pers_assessment_data.assessors
         assess_date_2018 = data.get('assess_date', u'Not assessed')
         source_file_2018 = ('To be addedd...', '.')
 

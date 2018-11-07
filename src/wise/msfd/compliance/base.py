@@ -94,6 +94,13 @@ class BaseComplianceView(BrowserView):
 
     translate_snip = ViewPageTemplateFile('pt/translate-snip.pt')
 
+    # def __init__(self, context, request):
+    #     BrowserView.__init__(self, context, request)
+    #
+    #     if not hasattr(context, 'pers_assessment_data') or \
+    #             not isinstance(context.pers_assessment_data, PersistentList):
+    #         context.pers_assessment_data = AssessmentData()
+
     @property
     def colspan(self):
         return 42
