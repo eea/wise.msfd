@@ -81,6 +81,7 @@ class BaseComplianceView(BrowserView):
     """ Base class for compliance views
     """
 
+    tabs_type = 'tab'
     main_forms = MAIN_FORMS
 
     report_header_template = ViewPageTemplateFile(

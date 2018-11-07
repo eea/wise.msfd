@@ -10,8 +10,7 @@
 
     <div id="layout-contents" tal:define="text context/text | nothing" >
       <div id="wise-search-form" class="full-width-marker">
-        <div id="wise-search-form-top"
-           tal:define="tabs_type string: tab">
+        <div id="wise-search-form-top">
           <metal:tabs
             metal:use-macro="context/wise-macros/macros/tabs"></metal:tabs>
         </div>
