@@ -9,7 +9,8 @@
   </head>
 <body>
 
-  <div style="display:none">
+  <!-- <div style="display:none"> -->
+  <div class="titles">
 <h5>Descriptors (descriptors)</h5>
 <div tal:replace="view/descriptors"></div>
 

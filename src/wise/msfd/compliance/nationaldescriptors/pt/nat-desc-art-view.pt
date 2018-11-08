@@ -23,7 +23,7 @@
             <span tal:replace="view/country_code">US</span>
           </h1>
 
-          <div style="margin-bottom: 1em; top: -0.8em; position: relative">
+          <div class="nda_link">
             <a href="./../../">
               <i class='fa fa-level-up'></i>
               Go to National Descriptor Assessment

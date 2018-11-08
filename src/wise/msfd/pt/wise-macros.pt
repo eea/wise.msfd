@@ -19,6 +19,7 @@
     </ul>
 
     <div class="visible-xs" style="clear: both;">
+    <!-- <div class="visible-xs"> -->
       <div tal:content="view/tab_select_label | string:Select ${tab_type}:">
         Select article/tab:
       </div>
