@@ -1,1 +1,14 @@
-<div class="translatable" tal:content="options/value"></div>
+<div class="translatable" tal:define="text options/value">
+
+  <div class="dropdown" tal:condition="text">
+    <button id="dLabel" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+      <span class="caret"></span>
+    </button>
+    <ul class="dropdown-menu" aria-labelledby="dLabel">
+      <li><a href="#">Auto-translate</a></li>
+      <li><a href="#">Edit translation</a></li>
+    </ul>
+  </div>
+
+  <div class="text" tal:content="text"></div>
+</div>

@@ -406,4 +406,8 @@
 .translatable:hover {
   background-color: #EEE;
 }
+.translatable .dropdown {
+  display: inline-block;
+  float: right;
+}
 /*# sourceMappingURL=./source.css.map */
