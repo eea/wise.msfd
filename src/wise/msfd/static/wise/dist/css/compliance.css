@@ -412,9 +412,6 @@
   #comp-national-descriptor .first-table .creator {
     color: #AAA;
   }
-  #comp-national-descriptor .first-table .visible-xs {
-    clear: both;
-  }
   #comp-national-descriptor .first-table .nda_link {
     margin-bottom: 1em;
     top: -0.8em;
