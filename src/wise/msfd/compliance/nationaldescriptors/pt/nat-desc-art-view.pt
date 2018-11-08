@@ -82,7 +82,9 @@
                   <i class='fa fa-edit'></i> Edit 2018 Assessment
                 </a>
               </li>
-              <li style="background-color: #e6f7ca">
+              
+              <!-- <li style="background-color: #e6f7ca"> -->
+              <li class="process_state_phase_form">
                 <form method="GET" action='./content_status_modify'>
                   <div>
                     <i class='fa fa-exchange'></i>
@@ -102,19 +104,21 @@
                     <!-- </div> -->
                   </div>
                 </form>
-
               </li>
+
             </ul>
           </div>
 
-          <div style="margin-bottom: 2em">
+          <!-- <div style="margin-bottom: 2em"> -->
+          <div class="assessments">
             <h3>2018 Assessment</h3>
-            <div style="background-color: #DDD; border-color: 1px solid #BBB; padding: 1em;">
+            <!-- <div style="background-color: #DDD; border-color: 1px solid #BBB; padding: 1em;"> -->
+            <div class="assessment">
               <div tal:replace="structure view/assessment_header_2018"></div>
               <div tal:replace="structure view/assessment_data_2018"></div>
             </div>
             <h3>2012 Assessment</h3>
-            <div style="background-color: #DDD; border-color: 1px solid #BBB; padding: 1em;">
+            <div class="assessment">
               <div tal:replace="structure view/assessment_header_2012"></div>
               <div tal:replace="structure view/assessment_data_2012"></div>
             </div>

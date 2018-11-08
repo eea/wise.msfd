@@ -454,6 +454,14 @@
   #comp-national-descriptor .first-table .back_to_article {
     margin-bottom: 2em;
   }
+  #comp-national-descriptor .first-table .assessments {
+    margin-bottom: 2em;
+  }
+  #comp-national-descriptor .first-table .assessment {
+    background-color: #DDD;
+    border-color: 1px solid #BBB;
+    padding: 1em;
+  }
 }
 /*# sourceMappingURL=./source.css.map */
 .translatable:hover {
