@@ -94,12 +94,12 @@ class BaseComplianceView(BrowserView):
 
     translate_snip = ViewPageTemplateFile('pt/translate-snip.pt')
 
-    # def __init__(self, context, request):
-    #     BrowserView.__init__(self, context, request)
-    #
-    #     if not hasattr(context, 'pers_assessment_data') or \
-    #             not isinstance(context.pers_assessment_data, PersistentList):
-    #         context.pers_assessment_data = AssessmentData()
+    def translate_value(self, value):
+        # TODO: implement getting the translation from annotations
+
+        translated = u'dummy translated: {}'.format(value)
+
+        return self.translate_snip(text=value, translation=translated)
 
     @property
     def colspan(self):

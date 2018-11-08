@@ -410,4 +410,7 @@
   display: inline-block;
   float: right;
 }
+.translatable .dropdown li {
+  list-style-type: none;
+}
 /*# sourceMappingURL=./source.css.map */

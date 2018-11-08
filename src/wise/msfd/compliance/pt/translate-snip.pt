@@ -1,4 +1,4 @@
-<div class="translatable" tal:define="text options/value">
+<div class="translatable" tal:define="text options/text; translation options/translation">
 
   <div class="dropdown" tal:condition="text">
     <button id="dLabel" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -10,5 +10,9 @@
     </ul>
   </div>
 
-  <div class="text" tal:content="text"></div>
+  <div tal:condition="translation">
+    <div class="text" tal:content="text"></div>
+    <div class="text" tal:content="text"></div>
+  </div>
+
 </div>

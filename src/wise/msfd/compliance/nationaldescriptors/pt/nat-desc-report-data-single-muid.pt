@@ -31,7 +31,7 @@
             <th tal:content="python: row[0]">Element</th>
             <td tal:repeat="r python: row[1]">
               <!-- <metal:m use&#45;macro="context/@@wise&#45;macros/macros/translate"></metal:m> -->
-              <div tal:replace="structure python: view.translate_snip(value=r)"></div>
+              <div tal:replace="structure python: view.translate_value(value=r)"></div>
             </td>
           </tr>
         </tal:rep>
