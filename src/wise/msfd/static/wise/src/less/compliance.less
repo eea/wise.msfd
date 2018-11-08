@@ -342,8 +342,6 @@
             color: inherit !important;
 
           }
-
-
         }
 
       }
@@ -493,51 +491,51 @@
     word-break: break-all;
   }
 
-  .titles {
-    display: none;
-  }
-
-  .comments {
+  .comms {
     list-style-type: none; 
     border-bottom: 1px solid #CCC;
     margin-bottom: 1em;
   }
 
-  .creator {
+  .comm-crtr {
     color: #AAA;
   }
 
-  .nda_link {
+  .visible-xs {
+    clear: both;
+  }
+  
+  .nda-link {
     margin-bottom: 1em;
     top: -0.8em;
     position: relative
   }
 
-  .process_state_phase_form {
+  .process-state-phase-form {
     background-color: #e6f7ca;
     padding: 1rem; border: 1px solid #AAA;
     margin-bottom: 1em;
   }
 
-  .phase_selector {
+  .phase-selector {
     float: right;
   }
 
-  .criteria_definition {
+  .crt-def {
     width: 200px;
     float: right
   }
 
-  .back_to_descriptor {
+  .back-to-descr {
     margin-bottom: 1em; top: -0.8em;
     position: relative;
   }
 
-  .indicator_title {
+  .ind-title {
     font-weight: bolder;
   }
 
-  .subform_refresh {
+  .subform-refresh {
     padding: 1em;
     margin: 1em 0 1em 1em;
     background-color: #CCC;
@@ -545,22 +543,72 @@
     float: right
   }
 
-  .head_tpl {
+  .head-tpl {
     overflow: auto
   }
 
-  .back_to_article {
+  .back-to-art {
     margin-bottom: 2em;
   }
 
-  .assessments {
+  .asts-header-data {
     margin-bottom: 2em;
   }
 
-  .assessment {
+  .ast-header-data {
     background-color: #DDD;
     border-color: 1px solid #BBB; 
     padding: 1em;
+  }
+
+  // copied the styling below from nat-desc-art-view.pt
+
+  .nat-desc-art-menu {
+    margin-top: 1em;
+    }
+  
+  .nat-desc-art-menu ul {
+    display: flex;
+    margin-left: 0em !important;
+  }
+
+  .nat-desc-art-menu li {
+    padding: 1em;
+    list-style-type: none;
+    display: block;
+    margin-right: 1em;
+    background-color: #d3f3f9;
+  }
+  
+  .nat-desc-art-menu li a {
+  }
+  
+  .assessment-data-table {
+    margin: 0em;
+  }
+  .assessment-data-table td {
+    min-width: 4em;
+    border: 1px solid #CCC;
+    background-color: white;
+  }
+  
+  .assessment-data-table th {
+    background-color: #EEE;
+    text-align: right;
+    width: 15%;
+  }
+  
+  .assessment-header {
+    margin-bottom: 1em;
+  }
+  
+  .assessment-header th {
+    width: 15%;
+  }
+  
+  .overall-score th,
+  .overall-score td {
+    width: 15%;
   }
 
 }

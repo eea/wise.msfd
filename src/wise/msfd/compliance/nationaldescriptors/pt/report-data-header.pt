@@ -2,7 +2,7 @@
   <div class="col-md-12">
     <h3 tal:content="options/title">201X Member State Report</h3>
     <!-- <div style="margin-bottom: 2em;"> -->
-    <div class="back_to_article">
+    <div class="back-to-art">
       <a href="./">
         <i class='fa fa-level-up'></i>
         Back to Article Assessment for Descriptor

@@ -20,7 +20,7 @@
           <h1>National descriptors overview for <span tal:content="context/title"></span></h1>
 
           <!-- <div style="margin-bottom: 1em; top: -0.8em; position: relative"> -->
-          <div class="nda_link">
+          <div class="nda-link">
             <a href="./../">
               <i class='fa fa-level-up'></i>
               Go to all National Descriptor Assessments
@@ -28,14 +28,14 @@
           </div>
 
           <!-- <div style="background-color: #e6f7ca; padding: 1rem; border: 1px solid #AAA; margin-bottom: 1em;"> -->
-          <div class="process_state_phase_form">
+          <div class="process-state-phase-form">
             <form method="GET" action='./content_status_modify'>
               <div>
                 Process state:
                 <strong tal:content="view/get_status">Phase 0</strong>
 
                 <!-- <div style="float: right"> -->
-                <div class="phase_selector">
+                <div class="phase-selector">
                   <select onchange="javascript:this.form.submit()" name="workflow_action">
                     <option value=''>Choose action...</option>
                     <tal:rep repeat="trans view/get_transitions">

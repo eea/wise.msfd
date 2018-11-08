@@ -18,7 +18,7 @@
     <div class="left-side-form">
 
       <!-- <div style="width: 200px; float: right"> -->
-      <div class="criteria_definition">      
+      <div class="crt-def">      
         <button type="button"
           class="btn btn-primary btn-lg"
           data-toggle="modal" data-target="#assessment-help">
@@ -27,7 +27,7 @@
       </div>
       <h2 tal:content="view/title">Title here</h2>
       <!-- <div style="margin-bottom: 1em; top: -0.8em; position: relative"> -->
-      <div class="back_to_descriptor">
+      <div class="back-to-descr">
         <a href="./">
           <i class='fa fa-level-up'></i>
           Back to Descriptor

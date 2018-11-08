@@ -23,55 +23,12 @@
             <span tal:replace="view/country_code">US</span>
           </h1>
 
-          <div class="nda_link">
+          <div class="nda-link">
             <a href="./../../">
               <i class='fa fa-level-up'></i>
               Go to National Descriptor Assessment
             </a>
           </div>
-
-          <style>
-            .nat-desc-art-menu {
-            margin-top: 1em;
-            }
-            .nat-desc-art-menu ul {
-            display: flex;
-            margin-left: 0em !important;
-            }
-            .nat-desc-art-menu li {
-            padding: 1em;
-            list-style-type: none;
-            display: block;
-            margin-right: 1em;
-            background-color: #d3f3f9;
-            }
-            .nat-desc-art-menu li a {
-            }
-            .assessment-data-table {
-            margin: 0em;
-            }
-            .assessment-data-table td {
-            min-width: 4em;
-            border: 1px solid #CCC;
-            background-color: white;
-            }
-            .assessment-data-table th {
-            background-color: #EEE;
-            text-align: right;
-            width: 15%;
-            }
-            .assessment-header {
-            margin-bottom: 1em;
-            }
-            .assessment-header th {
-            width: 15%;
-            }
-            .overall-score th,
-            .overall-score td {
-            width: 15%;
-            }
-
-          </style>
 
           <div class="nat-desc-art-menu">
             <ul>
@@ -84,7 +41,7 @@
               </li>
               
               <!-- <li style="background-color: #e6f7ca"> -->
-              <li class="process_state_phase_form">
+              <li class="process-state-phase-form">
                 <form method="GET" action='./content_status_modify'>
                   <div>
                     <i class='fa fa-exchange'></i>
@@ -110,15 +67,15 @@
           </div>
 
           <!-- <div style="margin-bottom: 2em"> -->
-          <div class="assessments">
+          <div class="asts-header-data">
             <h3>2018 Assessment</h3>
             <!-- <div style="background-color: #DDD; border-color: 1px solid #BBB; padding: 1em;"> -->
-            <div class="assessment">
+            <div class="ast-header-data">
               <div tal:replace="structure view/assessment_header_2018"></div>
               <div tal:replace="structure view/assessment_data_2018"></div>
             </div>
             <h3>2012 Assessment</h3>
-            <div class="assessment">
+            <div class="ast-header-data">
               <div tal:replace="structure view/assessment_header_2012"></div>
               <div tal:replace="structure view/assessment_data_2012"></div>
             </div>

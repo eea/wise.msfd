@@ -401,63 +401,100 @@
   #comp-national-descriptor .first-table .link-external {
     word-break: break-all;
   }
-  #comp-national-descriptor .first-table .titles {
-    display: none;
-  }
-  #comp-national-descriptor .first-table .comments {
+  #comp-national-descriptor .first-table .comms {
     list-style-type: none;
     border-bottom: 1px solid #CCC;
     margin-bottom: 1em;
   }
-  #comp-national-descriptor .first-table .creator {
+  #comp-national-descriptor .first-table .comm-crtr {
     color: #AAA;
   }
-  #comp-national-descriptor .first-table .nda_link {
+  #comp-national-descriptor .first-table .visible-xs {
+    clear: both;
+  }
+  #comp-national-descriptor .first-table .nda-link {
     margin-bottom: 1em;
     top: -0.8em;
     position: relative;
   }
-  #comp-national-descriptor .first-table .process_state_phase_form {
+  #comp-national-descriptor .first-table .process-state-phase-form {
     background-color: #e6f7ca;
     padding: 1rem;
     border: 1px solid #AAA;
     margin-bottom: 1em;
   }
-  #comp-national-descriptor .first-table .phase_selector {
+  #comp-national-descriptor .first-table .phase-selector {
     float: right;
   }
-  #comp-national-descriptor .first-table .criteria_definition {
+  #comp-national-descriptor .first-table .crt-def {
     width: 200px;
     float: right;
   }
-  #comp-national-descriptor .first-table .back_to_descriptor {
+  #comp-national-descriptor .first-table .back-to-descr {
     margin-bottom: 1em;
     top: -0.8em;
     position: relative;
   }
-  #comp-national-descriptor .first-table .indicator_title {
+  #comp-national-descriptor .first-table .ind-title {
     font-weight: bolder;
   }
-  #comp-national-descriptor .first-table .subform_refresh {
+  #comp-national-descriptor .first-table .subform-refresh {
     padding: 1em;
     margin: 1em 0 1em 1em;
     background-color: #CCC;
     width: 20em;
     float: right;
   }
-  #comp-national-descriptor .first-table .head_tpl {
+  #comp-national-descriptor .first-table .head-tpl {
     overflow: auto;
   }
-  #comp-national-descriptor .first-table .back_to_article {
+  #comp-national-descriptor .first-table .back-to-art {
     margin-bottom: 2em;
   }
-  #comp-national-descriptor .first-table .assessments {
+  #comp-national-descriptor .first-table .asts-header-data {
     margin-bottom: 2em;
   }
-  #comp-national-descriptor .first-table .assessment {
+  #comp-national-descriptor .first-table .ast-header-data {
     background-color: #DDD;
     border-color: 1px solid #BBB;
     padding: 1em;
+  }
+  #comp-national-descriptor .first-table .nat-desc-art-menu {
+    margin-top: 1em;
+  }
+  #comp-national-descriptor .first-table .nat-desc-art-menu ul {
+    display: flex;
+    margin-left: 0em !important;
+  }
+  #comp-national-descriptor .first-table .nat-desc-art-menu li {
+    padding: 1em;
+    list-style-type: none;
+    display: block;
+    margin-right: 1em;
+    background-color: #d3f3f9;
+  }
+  #comp-national-descriptor .first-table .assessment-data-table {
+    margin: 0em;
+  }
+  #comp-national-descriptor .first-table .assessment-data-table td {
+    min-width: 4em;
+    border: 1px solid #CCC;
+    background-color: white;
+  }
+  #comp-national-descriptor .first-table .assessment-data-table th {
+    background-color: #EEE;
+    text-align: right;
+    width: 15%;
+  }
+  #comp-national-descriptor .first-table .assessment-header {
+    margin-bottom: 1em;
+  }
+  #comp-national-descriptor .first-table .assessment-header th {
+    width: 15%;
+  }
+  #comp-national-descriptor .first-table .overall-score th,
+  #comp-national-descriptor .first-table .overall-score td {
+    width: 15%;
   }
 }
 /*# sourceMappingURL=./source.css.map */
