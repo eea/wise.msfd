@@ -110,9 +110,10 @@ def get_unique_from_table(table, column):
 
 
 @cache(db_result_key)
-def get_unique_from_mapper(mapper_class, column, *conditions):
+def get_unique_from_mapper(mapper_class, column, *conditions, **kwargs):
     """ Retrieves unique values for a mapper class
     """
+    raw = kwargs.pop('raw', False)
     col = getattr(mapper_class, column)
 
     sess = session()
@@ -120,6 +121,9 @@ def get_unique_from_mapper(mapper_class, column, *conditions):
         .filter(*conditions)\
         .distinct()\
         .order_by(col)
+
+    if raw:
+        return res
 
     return [unicode(x[0]).strip() for x in res]
 
@@ -149,9 +153,10 @@ def get_unique_from_mapper_join(
 
 
 @cache(db_result_key)
-def get_all_columns_from_mapper(mapper_class, column, *conditions):
+def get_all_columns_from_mapper(mapper_class, column, *conditions, **kw):
     """ Retrieves all columns for a mapper class
     """
+    # TODO: rename this method to get_column_from_mapper
     col = getattr(mapper_class, column)
 
     sess = session()
@@ -386,7 +391,7 @@ def get_related_record_join(klass, klass_join, column, rel_id):
 
 
 @cache(db_result_key)
-def get_all_records(mapper_class, *conditions):
+def get_all_records(mapper_class, *conditions, **kw):
     sess = session()
     q = sess.query(mapper_class).filter(*conditions)
     count = q.count()

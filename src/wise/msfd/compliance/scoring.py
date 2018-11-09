@@ -17,13 +17,13 @@ def get_percentage(values):
 
 def get_range_index(percentage):
     p = percentage
-    
+
     for x, r in enumerate(reversed(DEFAULT_RANGES)):
         if (p >= r[0]) and (p <= r[1]):
             return x
-        
+
     return len(DEFAULT_RANGES) + 1
-        
+
 
 def alternative_based(args):
     true_values = map(int, filter(None, args.strip().split(' ')))
@@ -40,7 +40,7 @@ def alternative_based(args):
         p = get_percentage(acc)
 
         range_index = get_range_index(p)
-        
+
         return range_index
 
     return calculate

@@ -14,6 +14,7 @@ from zope.schema.interfaces import IVocabularyFactory
 import xlsxwriter
 from plone.intelligenttext.transforms import \
     convertWebIntelligentPlainTextToHtml
+from plone.memoize import volatile
 
 FORMS_2018 = {}
 FORMS_ART11 = {}
@@ -22,6 +23,7 @@ SUBFORMS = defaultdict(set)        # store subform references
 ITEM_DISPLAYS = defaultdict(set)   # store registration for item displays
 LABELS = {}                        # vocabulary of labels
 BLACKLIST = ['ID', 'Import', 'Id']
+
 
 def class_id(obj):
     if type(obj) is type:
@@ -387,6 +389,9 @@ def request_cache_key(func, self):
 
 
 def db_result_key(func, *argss, **kwargs):
+    if kwargs.get('raw', False):
+        raise volatile.DontCache
+
     keys = [func.__name__]
 
     for arg in argss:

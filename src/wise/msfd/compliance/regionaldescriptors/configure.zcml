@@ -15,8 +15,15 @@
 
   <browser:page
     for="*"
-    name="reg-desc-demo"
-    class=".utils.RegDescDemo"
+    name="reg-desc-a9"
+    class=".utils.RegDescA9"
+    permission="zope2.View"
+    />
+
+  <browser:page
+    for="*"
+    name="reg-desc-a11"
+    class=".utils.RegDescA11"
     permission="zope2.View"
     />
 
