@@ -314,7 +314,7 @@ class NationalDescriptorArticleView(BaseComplianceView):
                 not isinstance(context.pers_assessment_data, PersistentList):
             context.pers_assessment_data = AssessmentData()
 
-        # Assessment data 2012
+        # Assessment data 2012`
         descriptor_criterions = get_ges_criterions(self.descriptor)
 
         country_name = self._country_folder.title
@@ -348,14 +348,14 @@ class NationalDescriptorArticleView(BaseComplianceView):
         # Assessment data 2018
         data = self.context.pers_assessment_data.last()
 
-        # import pdb; pdb.set_trace()
-
         assessment = get_assessment_data(
             self.article,
             self.criterias,
             self.questions,
             data
         )
+
+        # import pdb; pdb.set_trace()
 
         self.assessment_data_2018 = self.assessment_data_2018_tpl(
             assessment=assessment,

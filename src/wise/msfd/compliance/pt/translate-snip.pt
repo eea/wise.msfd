@@ -1,18 +1,33 @@
 <div class="translatable" tal:define="text options/text; translation options/translation">
 
   <div class="dropdown" tal:condition="text">
-    <button id="dLabel" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+    <button id="dLabel" type="button" data-toggle="dropdown" aria-haspopup="true"
+            aria-expanded="false">
       <span class="caret"></span>
     </button>
     <ul class="dropdown-menu" aria-labelledby="dLabel">
-      <li><a href="#">Auto-translate</a></li>
-      <li><a href="#">Edit translation</a></li>
+      <li style="text-align: center;">
+        <button class="btn btn-primary btn-xs autoTransl">Auto-translate</button>
+      </li>
+      <li style="text-align: center;">
+        <button class="btn btn-primary btn-xs editTransl">Edit translation</button>
+      </li>
+
+      <!--<li class="buton1"><a href="#">Auto-translate</a></li>-->
+      <!--<li class="editTransl"><a href="#">Edit translation</a></li>-->
     </ul>
   </div>
 
-  <div tal:condition="translation">
+  <div tal:condition="python: translation and text">
     <div class="text" tal:content="text"></div>
-    <div class="text" tal:content="text"></div>
-  </div>
+    <div>-------------------</div>
+    <div class="transl" tal:content="translation"></div>
 
+    <form style="display: none;">
+      New translation:
+      <textarea style="height: 10em;" type="text" name="new_transl"></textarea>
+      <input class="submitTransl" type="submit" value="Save">
+    </form>
+  </div>
+  <!--<button class="buton1">Click me</button>-->
 </div>
