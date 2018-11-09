@@ -3,7 +3,7 @@
   <tal:rep repeat="singlerow options/rows">
     <th tal:content="singlerow/title">Subheader</th>
     <td tal:repeat="val singlerow/cells">
-      <span tal:replace="val">
+      <span tal:replace="structure val">
         Value
       </span>
     </td>
