@@ -39,5 +39,6 @@
         </tal:rep>
       </table>
     </div>
-    </tal:def>
+  </tal:def>
+
 </div>

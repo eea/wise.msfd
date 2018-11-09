@@ -97,6 +97,10 @@ class BaseComplianceView(BrowserView):
         'nationaldescriptors/pt/assessment-header.pt'
     )
 
+    translation_edit_template = ViewPageTemplateFile(
+        'nationaldescriptors/pt/translation-edit-form.pt'
+    )
+
     translate_snip = ViewPageTemplateFile('pt/translate-snip.pt')
 
     def translate_value(self, value):

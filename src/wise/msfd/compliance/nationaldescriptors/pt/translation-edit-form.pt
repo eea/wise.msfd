@@ -1,0 +1,21 @@
+<div id="edit-translation" class="modal fade" tabindex="-1" role="dialog">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4>Edit translation</h4>
+      </div>
+      <div class="modal-body">
+        <h4>Original text</h4>
+        <div id="transl-original-text">Original text</div>
+        <h4>Old translation</h4>
+        <div id="transl-old-translation">Old translation</div>
+        <form id="form-edit-translation">
+          <h4>New translation</h4>
+          <textarea style="height: 10em;" type="text"
+                    name="new_transl"></textarea>
+          <input class="submitTransl" type="submit" value="Save">
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
