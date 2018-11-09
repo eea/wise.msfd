@@ -1,0 +1,11 @@
+<tr tal:attributes="rowspan options/rowspan">
+  <th tal:content="options/title">First header</th>
+  <tal:rep repeat="singlerow options/rows">
+    <th tal:content="singlerow/title">Subheader</th>
+    <td tal:repeat="val singlerow/cells">
+      <span tal:replace="val">
+        Value
+      </span>
+    </td>
+  </tal:rep>
+</tr>

@@ -69,6 +69,10 @@ class Criterion(object):
 
         return 'D' + id.split('.')[0]
 
+    def all_ids(self):
+
+        return [self.id] + [x[0] for x in self.alternatives]
+
 
 def parse_ges_terms():
     csv_f = resource_filename('wise.msfd',
