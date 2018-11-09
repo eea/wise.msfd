@@ -284,7 +284,9 @@ class RegDescA11(BaseComplianceView):
     def get_elements_monitored(self):
         # MONSub = sql_extra.MSFD11MONSub
         all_elements = get_monitored_elements(self.countries)
-        print all_elements
+
+        for el in all_elements:
+            print el.Q9a_ElementMonitored
 
         rows = []
 
@@ -307,3 +309,37 @@ def get_monitored_elements(countryids):
         .filter(MS.MemberState.in_(countryids))
 
     return q.all()
+
+
+class RegDescA10(BaseComplianceView):
+    session_name = '2012'
+    template = ViewPageTemplateFile('pt/report-data-table.pt')
+
+    @property
+    def descriptor(self):
+        return 'D5'
+
+    def __call__(self):
+        db.threadlocals.session_name = self.session_name
+
+        self.region = 'BAL'
+
+        self.countries = countries_in_region(self.region)
+        self.all_countries = muids_by_country()
+        self.muids_in_region = []
+
+        for c in self.countries:
+            self.muids_in_region.extend(self.all_countries[c])
+
+        allrows = [
+            self.get_countries_row(),
+            self.get_threshold_value(),
+        ]
+
+        return self.template(rows=allrows)
+
+    def get_countries_row(self):
+        return TableHeader('Member state', self.countries)
+
+    def get_threshold_value(self):
+        pass
