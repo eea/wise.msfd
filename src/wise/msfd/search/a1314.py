@@ -6,13 +6,13 @@ from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 from z3c.form.browser.checkbox import CheckBoxFieldWidget
 from z3c.form.field import Fields
 
+from . import interfaces
 from .. import db, sql
 from ..base import EmbeddedForm
 from ..db import get_all_records
 from ..interfaces import IMarineUnitIDsSelect
 from ..utils import data_to_xls, default_value_from_field
 from .base import ItemDisplayForm, MainForm
-from . import interfaces
 
 # all_values_from_field,#
 
@@ -25,7 +25,7 @@ class StartArticle1314Form(MainForm):
 
     name = 'msfd-c3'
     record_title = 'Articles 13 & 14'
-    session_name = 'session'
+    session_name = '2012'
 
     def get_subform(self):
         return MemberStatesForm(self, self.request)

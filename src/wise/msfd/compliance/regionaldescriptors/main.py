@@ -1,9 +1,9 @@
 from collections import namedtuple
+
 from ..base import BaseComplianceView
 
-
 RegionStatus = namedtuple('CountryStatus',
-                           ['name', 'status', 'state_id', 'url'])
+                          ['name', 'status', 'state_id', 'url'])
 
 
 class RegionalDescriptorsOverview(BaseComplianceView):
@@ -21,4 +21,3 @@ class RegionalDescriptorsOverview(BaseComplianceView):
             res.append(info)
 
         return res
-

@@ -19,7 +19,7 @@ class StartArticle11Form(MainForm):
 
     record_title = 'Article 11'
     name = 'msfd-c2'
-    session_name = 'session'
+    session_name = '2012'
 
     fields = Fields(interfaces.IStartArticle11)
     fields['monitoring_programme_types'].widgetFactory = CheckBoxFieldWidget

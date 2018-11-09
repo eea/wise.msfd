@@ -16,7 +16,7 @@ def get_feature_terms():
     # TODO: generate the vocabulary based on the context country, descriptor
 
     # TODO: next line needs to be included in the switch_session decorator
-    threadlocals.session_name = 'session_2018'
+    threadlocals.session_name = '2018'
 
     terms = []
     seen = []

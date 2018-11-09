@@ -26,7 +26,7 @@ class StartMSCompetentAuthoritiesForm(MainForm):
     record_title = title = 'Member States - Competent Authorities'
     fields = Fields(interfaces.IMemberStates)
     fields['member_states'].widgetFactory = CheckBoxFieldWidget
-    session_name = 'session'
+    session_name = '2012'
 
     def get_subform(self):
         return CompetentAuthorityItemDisplay(self, self.request)
@@ -78,7 +78,7 @@ class StartArticle8910Form(MainForm):
     name = 'msfd-c1'
 
     fields = Fields(interfaces.IArticleSelect)
-    session_name = 'session'
+    session_name = '2012'
 
     def get_subform(self):
         if self.data['article']:
@@ -172,7 +172,7 @@ class StartArticle89102018Form(MainForm):
     name = 'msfd-c4'
 
     fields = Fields(interfaces.IArticleSelect2018)
-    session_name = 'session_2018'
+    session_name = '2018'
 
     def get_subform(self):
         article = self.data['article']

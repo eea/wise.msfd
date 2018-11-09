@@ -16,8 +16,8 @@ from .utils import db_result_key, pivot_query
 env = os.environ.get
 DSN = env('MSFDURI', 'mssql+pymssql://SA:bla3311!@msdb')  # ?charset=utf8mb4
 DBS = {
-    'session': env('MSFD_db_default', 'MarineDB'),
-    'session_2018': env('MSFD_db_2018', 'MSFD2018_sandbox_25102018')
+    '2012': env('MSFD_db_default', 'MarineDB'),
+    '2018': env('MSFD_db_2018', 'MSFD2018_sandbox_25102018')
 }
 
 # DBS = {

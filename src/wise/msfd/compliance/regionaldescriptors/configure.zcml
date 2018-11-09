@@ -13,4 +13,11 @@
     permission="zope2.View"
     />
 
+  <browser:page
+    for="*"
+    name="reg-desc-demo"
+    class=".utils.RegDescDemo"
+    permission="zope2.View"
+    />
+
 </configure>

@@ -17,7 +17,6 @@ from z3c.form.form import Form
 
 from ..base import BaseComplianceView
 
-
 logger = logging.getLogger('wise.msfd')
 
 
@@ -38,7 +37,7 @@ class EditAssessmentDataForm(Form, BaseComplianceView):
     name = 'nat-desc-art-view'
 
     subforms = None
-    session_name = 'session_2018'
+    session_name = '2018'
     template = ViewPageTemplateFile("./pt/nat-desc-edit-assessment-data.pt")
 
     @property

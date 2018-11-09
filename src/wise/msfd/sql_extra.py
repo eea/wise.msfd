@@ -23,3 +23,14 @@ class MSCompetentAuthority(sql.Base):
     __mapper_args__ = {
         'primary_key': [sql.t_MS_CompetentAuthorities.c.MSCACode]
     }
+
+
+class MSFD9Feature(sql.Base):
+    __table__ = sql.t_MSFD9_Features
+
+    __mapper_args__ = {
+        'primary_key': [
+            sql.t_MSFD9_Features.c.MarineUnitID,
+            sql.t_MSFD9_Features.c.FeaturesPressuresImpacts,
+        ]
+    }
