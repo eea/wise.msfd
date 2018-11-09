@@ -4,6 +4,7 @@ from eea.cache import cache
 from Products.Five.browser.pagetemplatefile import (PageTemplateFile,
                                                     ViewPageTemplateFile)
 from wise.msfd import db, sql_extra
+from wise.msfd.gescomponents import get_ges_criterions
 
 from ..base import BaseComplianceView
 
@@ -79,6 +80,7 @@ class RegDescDemo(BaseComplianceView):
             self.get_countries_row(),
             self.get_reporting_area_row(),
             self.get_features_reported_row(),
+            self.get_gescomponents_row(),
         ]
 
         return self.template(rows=allrows)
@@ -88,7 +90,35 @@ class RegDescDemo(BaseComplianceView):
 
         return row
 
-    # @cache(get_key)
+    def get_gescomponents_row(self):
+        t = sql_extra.MSFD9Feature
+        ges = get_ges_criterions(self.descriptor)
+
+        rows = []
+
+        for crit in ges:
+            crit_ids = crit.all_ids()
+            values = []
+
+            for country in self.countries:
+                muids = self.all_countries[country]
+                count = db.count_items(
+                    t.ReportingFeature,
+                    t.ReportingFeature.in_(crit_ids),
+                    t.MarineUnitID.in_(muids)
+                )
+                has = bool(count)
+                values.append(has and 'Reported' or '')
+
+            row = Row(crit.title, values)
+            rows.append(row)
+
+        return CompoundRow(
+            'GES component [Reporting feature]',
+            rows
+        )
+
+    @cache(get_key)
     def get_reporting_area_row(self):
         row = Row('Number of MRUs used',
                   [len(self.all_countries[c]) for c in self.countries])
@@ -97,6 +127,7 @@ class RegDescDemo(BaseComplianceView):
         return CompoundRow('Reporting area(s)[MarineUnitID]', rows)
 
     # TODO: this takes a long time to generate, it needs caching
+    @cache(get_key)
     def get_features_reported_row(self):
         t = sql_extra.MSFD9Feature
         all_features = sorted(db.get_unique_from_mapper(
