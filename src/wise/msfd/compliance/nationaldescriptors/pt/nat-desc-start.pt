@@ -18,19 +18,6 @@
         <div class="start-page-content left-side-form">
 
           <h1>National descriptors assessment overview</h1>
-          <style>
-            td.p-phase1 {
-              background-color: #8da530;
-              color: white;
-            }
-            td.p-phase2 {
-              background-color: #2d9849;
-              color: white;
-            }
-            table.comp-c-listing {
-              width: inherit;
-            }
-          </style>
 
           <table class="table table-striped table-condensed comp-c-listing">
             <thead>

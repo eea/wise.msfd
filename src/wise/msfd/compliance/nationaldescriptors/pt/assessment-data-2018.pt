@@ -1,54 +1,6 @@
 <div tal:define="assessment options/assessment;
                 score_2012 python: int(options['score_2012'])">
-  <style>
-    th.as-header {
-    background-color: #999;
-    color: white;
-    }
-    th.as-th-score {
-    /* display: inline-block;
-    width: 4em; */
-    }
-    td.as-score {
-    text-align: right;
-    }
-    th.as-question {
-      width: 22em !important;
-      display: inline-block;
-    }
-    td.as-value {
-      width: 30px;
-      height: 30px;
-    }
-    th.as-ges-component {
-      width: 30px;
-    }
-    td.as-value-0 {
-      background-color: #eee;
-    }
-    td.as-value-1 {
-      background-color: #9bbb59;
-    }
-    td.as-value-2 {
-      background-color: #d6e3bc;
-    }
-    td.as-value-3 {
-      background-color: #ff99cc;
-    }
-    td.as-value-4 {
-      background-color: #ff3399;
-    }
-    td.as-value-5 {
-      background-color: #ffffff;
-    }
-    .assessment-summary {
-      border-bottom: solid 0.8em #ddd;
-    }
-    .assessment-summary td {
-      min-height: 30px;
-    }
-  </style>
-
+                
   <table class="table table-condensed assessment-data-table">
     <tbody>
       <tr>
