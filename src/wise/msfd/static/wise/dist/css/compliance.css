@@ -460,87 +460,87 @@
   border: 1px solid #BBB;
   padding: 1em;
 }
-.center-section .nat-desc-art-menu {
+.nat-desc-art-menu {
   margin-top: 1em;
 }
-.center-section .nat-desc-art-menu ul {
+.nat-desc-art-menu ul {
   display: flex;
   margin-left: 0em !important;
 }
-.center-section .nat-desc-art-menu li {
+.nat-desc-art-menu li {
   padding: 1em;
   list-style-type: none;
   display: block;
   margin-right: 1em;
   background-color: #d3f3f9;
 }
-.center-section .assessment-data-table {
+.assessment-data-table {
   margin: 0em;
 }
-.center-section .assessment-data-table td {
+.assessment-data-table td {
   min-width: 4em;
   border: 1px solid #CCC;
   background-color: white;
 }
-.center-section .assessment-data-table th {
+.assessment-data-table th {
   background-color: #EEE;
   text-align: right;
   width: 15%;
 }
-.center-section .assessment-header {
+.assessment-header {
   margin-bottom: 1em;
 }
-.center-section .assessment-header th {
+.assessment-header th {
   width: 15%;
 }
-.center-section .overall-score th,
-.center-section .overall-score td {
+.overall-score th,
+.overall-score td {
   width: 15%;
 }
-.center-section th.as-header {
+th.as-header {
   background-color: #999;
   color: white;
 }
-.center-section th.as-th-score {
+th.as-th-score {
   /* display: inline-block;
   width: 4em; */
 }
-.center-section td.as-score {
+td.as-score {
   text-align: right;
 }
-.center-section th.as-question {
+th.as-question {
   width: 22em !important;
   display: inline-block;
 }
-.center-section td.as-value {
+td.as-value {
   width: 30px;
   height: 30px;
 }
-.center-section th.as-ges-component {
+th.as-ges-component {
   width: 30px;
 }
-.center-section td.as-value-0 {
+td.as-value-0 {
   background-color: #eee;
 }
-.center-section td.as-value-1 {
+td.as-value-1 {
   background-color: #9bbb59;
 }
-.center-section td.as-value-2 {
+td.as-value-2 {
   background-color: #d6e3bc;
 }
-.center-section td.as-value-3 {
+td.as-value-3 {
   background-color: #ff99cc;
 }
-.center-section td.as-value-4 {
+td.as-value-4 {
   background-color: #ff3399;
 }
-.center-section td.as-value-5 {
+td.as-value-5 {
   background-color: #ffffff;
 }
-.center-section .assessment-summary {
+.assessment-summary {
   border-bottom: solid 0.8em #ddd;
 }
-.center-section .assessment-summary td {
+.assessment-summary td {
   min-height: 30px;
 }
 .comp-discussion-track-container {
