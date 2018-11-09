@@ -40,8 +40,8 @@
                 </a>
               </li>
               
-              <!-- <li style="background-color: #e6f7ca"> -->
-              <li class="process-state-phase-form">
+              <li style="background-color: #e6f7ca">
+              <!-- <li class="process-state-phase-form"> -->
                 <form method="GET" action='./content_status_modify'>
                   <div>
                     <i class='fa fa-exchange'></i>
