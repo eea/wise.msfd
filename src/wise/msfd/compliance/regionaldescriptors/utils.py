@@ -3,7 +3,7 @@ from collections import defaultdict
 from eea.cache import cache
 from Products.Five.browser.pagetemplatefile import (PageTemplateFile,
                                                     ViewPageTemplateFile)
-from wise.msfd import db, sql_extra
+from wise.msfd import db, sql, sql_extra
 from wise.msfd.gescomponents import get_ges_criterions
 
 from ..base import BaseComplianceView
@@ -17,6 +17,13 @@ class TemplateMixin:
 
     def __call__(self):
         return self.template(**self.__dict__)
+
+
+class List(TemplateMixin):
+    template = PageTemplateFile('pt/list.pt')
+
+    def __init__(self, rows):
+        self.rows = rows
 
 
 class CompoundRow(TemplateMixin):
@@ -81,15 +88,33 @@ class RegDescDemo(BaseComplianceView):
             self.get_reporting_area_row(),
             self.get_features_reported_row(),
             self.get_gescomponents_row(),
+            self.get_threshold_values(),
         ]
 
         return self.template(rows=allrows)
 
+    def get_threshold_values(self):
+        t = sql.MSFD9Descriptor
+
+        values = []
+
+        for c in self.countries:
+            muids = self.all_countries[c]
+            threshs = db.get_unique_from_mapper(
+                t,
+                'ThresholdValue',
+                t.MarineUnitID.in_(muids),
+            )
+            values.append(List(threshs))
+
+        row = Row('Quantitative values reported', values)
+
+        return CompoundRow('Threshold value(s)', [row])
+
     def get_countries_row(self):
-        row = TableHeader('Member state', self.countries)
+        return TableHeader('Member state', self.countries)
 
-        return row
-
+    @cache(get_key)
     def get_gescomponents_row(self):
         t = sql_extra.MSFD9Feature
         ges = get_ges_criterions(self.descriptor)
@@ -122,9 +147,8 @@ class RegDescDemo(BaseComplianceView):
     def get_reporting_area_row(self):
         row = Row('Number of MRUs used',
                   [len(self.all_countries[c]) for c in self.countries])
-        rows = [row]
 
-        return CompoundRow('Reporting area(s)[MarineUnitID]', rows)
+        return CompoundRow('Reporting area(s)[MarineUnitID]', [row])
 
     # TODO: this takes a long time to generate, it needs caching
     @cache(get_key)
