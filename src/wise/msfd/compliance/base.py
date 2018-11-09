@@ -1,9 +1,12 @@
 import logging
 import os
+import chardet
+import transaction
 
 import lxml.etree
 from pkg_resources import resource_filename
 from zope.dottedname.resolve import resolve
+from zope.annotation.interfaces import IAnnotations
 
 from Acquisition import aq_inner
 from plone.api.content import get_state
@@ -16,6 +19,8 @@ from wise.msfd.utils import Tab
 
 from . import interfaces
 from .nationaldescriptors.utils import row_to_dict
+from .translate import ANNOTATION_KEY
+
 
 logger = logging.getLogger('wise.msfd')
 
@@ -96,10 +101,24 @@ class BaseComplianceView(BrowserView):
 
     def translate_value(self, value):
         # TODO: implement getting the translation from annotations
+        translation = u'Translation not found!'
 
-        translated = u'dummy translated: {}'.format(value)
+        if not value:
+            return self.translate_snip(text=value, translation=translation)
 
-        return self.translate_snip(text=value, translation=translated)
+        site = self.context.Plone
+        annot = IAnnotations(site, None)
+        tbtree = annot[ANNOTATION_KEY]
+
+        if annot and ANNOTATION_KEY in annot:
+            try:
+                if value in annot[ANNOTATION_KEY]:
+                    # import pdb; pdb.set_trace()
+                    translation = annot[ANNOTATION_KEY].get(value, None)
+            except Exception as e:
+                import pdb; pdb.set_trace()
+
+        return self.translate_snip(text=value, translation=translation)
 
     @property
     def colspan(self):
