@@ -1,21 +1,4 @@
 <div tal:define="plone nocall:context/@@plone">
-  <style>
-    .comp-discussion-track-container {
-    margin: 3em 0;
-    background-color: #F7F7F7;
-    padding: 1em;
-    }
-    .comp-discussion-track-container h4 {
-    margin-bottom: 2em;
-    }
-    .comp-discussion-track-container form {
-    margin-top: 2em;
-    }
-    .comp-discussion-track-container div.formControls {
-    margin: 0em;
-    }
-  </style>
-
   <div
     tal:repeat="folder context/contentValues"
     class="comp-discussion-track-container">

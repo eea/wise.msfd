@@ -46,21 +46,6 @@
               </form>
             </div>
 
-            <style>
-              .as-state-label {
-              font-size: 80%;
-              background-color: #EEE;
-              display: inline-block;
-              padding: 2px 4px;
-              border-radius: 6px;
-              }
-              .as-table-overview blockquote {
-              font-size: 80%;
-              margin: 0.6em 0em 0em 0em;
-              padding-left: 1em;
-              }
-            </style>
-
             <table class="table as-table-overview table-striped">
               <thead>
                 <tr>

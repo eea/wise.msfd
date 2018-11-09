@@ -114,21 +114,6 @@
           </metal:slot>
 
           <metal:css fill-slot="formtop">
-            <style>
-              .compliance-assessment-edit-subform label {
-              display: inline-block;
-              width: 10em;
-              text-align: right;
-              padding-right: 0.7em;
-              }
-              .widget {
-              display: flex;
-              }
-              .assessment-form-input {
-              margin: auto;
-              width: 100%;
-              }
-            </style>
           </metal:css>
 
         </metal:form>
