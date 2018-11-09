@@ -1,14 +1,16 @@
 <div class="overflow-table"
   tal:define="data options/data">
 
-  <div tal:define="form nocall:view/subform"
-    style="padding: 1em; background-color: #CCC; width: 20em; float: right">
+  <!-- <div class="subform" tal:define="form nocall:view/subform"
+    style="padding: 1em; background-color: #CCC; width: 20em; float: right"> -->
+  <div class="subform-refresh" tal:define="form nocall:view/subform">
     <div tal:replace="structure form">
       refresh
     </div>
   </div>
 
-  <div style="overflow: auto" tal:content="structure options/head_tpl">Header</div>
+  <!-- <div style="overflow: auto" tal:content="structure options/head_tpl">Header</div> -->
+  <div class="head-tpl" tal:content="structure options/head_tpl">Header</div>
 
   <div tal:condition="not: data">
     No data reported for this Descriptor

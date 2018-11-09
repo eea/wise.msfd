@@ -19,7 +19,8 @@
         </tal:rep>
       </ul>
 
-      <div class="visible-xs" style="clear: both;">
+      <!-- <div class="visible-xs" style="clear: both;"> -->
+      <div class="visible-xs">
         <div>
           Select article:
         </div>

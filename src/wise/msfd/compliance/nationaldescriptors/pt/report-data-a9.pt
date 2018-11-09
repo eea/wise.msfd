@@ -55,7 +55,8 @@
                 <tal:block tal:repeat="value python:view.crit_lab_indics[crit[0]]">
 
                   <td>
-                    <span style="font-weight: bolder;" tal:content="python: view.get_indicator_title(value)">5.1A</span>
+                    <!-- <span style="font-weight: bolder;" tal:content="python: view.get_indicator_title(value)">5.1A</span> -->
+                    <span class="ind-title" tal:content="python: view.get_indicator_title(value)">5.1A</span>
                     <ul>
                       <tal:rep repeat="val view/indicator_descriptors">
                         <li tal:condition="python: val.ReportingFeature == value">
