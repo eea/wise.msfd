@@ -17,6 +17,21 @@
 
   <browser:page
     for="*"
+    name="request-translation2"
+    permission="zope2.View"
+    class=".translate.SendTranslationRequest"
+    />
+
+  <browser:page
+    class=".translate.TranslationCallback"
+    for="*"
+    name="translation-callback2"
+    permission="zope2.View"
+    />
+
+
+  <browser:page
+    for="*"
     name="bootstrap-compliance"
     class=".admin.BootstrapCompliance"
     permission="zope2.View"
