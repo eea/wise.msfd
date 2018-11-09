@@ -199,7 +199,7 @@ def get_region_subregions_vb_factory(context):
 
 
 @provider(IVocabularyFactory)
-@db.use_db_session('session')
+@db.use_db_session('2012')
 def get_member_states_vb_factory(context):
     conditions = []
 

@@ -1,0 +1,15 @@
+<div tal:content="options/rows"></div>
+<hr />
+<table>
+  <tal:rep tal:repeat="row options/rows">
+    <tr tal:attributes="rowspan row/rowspan">
+      <th tal:content="row/title">First header</th>
+    </tr>
+    <tr tal:repeat="sr row/rows">
+      <th tal:content="sr/title">Subrow header</th>
+      <td tal:repeat="val sr/values" tal:content="val">
+        Value
+      </td>
+    </tr>
+  </tal:rep>
+</table>

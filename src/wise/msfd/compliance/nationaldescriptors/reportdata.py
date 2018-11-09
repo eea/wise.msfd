@@ -136,7 +136,7 @@ WHERE {
         return klass(self, self.request, self.country_code, self.descriptor,
                      self.article, self.muids, self.colspan)
 
-    @db.use_db_session('session')
+    @db.use_db_session('2012')
     def __call__(self):
         print "Will render report for ", self.article
         filename = self.get_report_filename()
@@ -298,7 +298,7 @@ class ReportData2018(BaseComplianceView):
 
         return res
 
-    @db.use_db_session('session_2018')
+    @db.use_db_session('2018')
     def get_data_from_db(self):
         get_data_method = getattr(
             self,

@@ -126,7 +126,7 @@ class BaseComplianceView(BrowserView):
         return res
 
     @property
-    @db.use_db_session('session')
+    @db.use_db_session('2012')
     def regions(self):
         """ Get all regions and subregions for a country
         :return: ['BAL', 'ANS']

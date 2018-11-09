@@ -1,7 +1,7 @@
 import os
 import threading
 
-from sqlalchemy import create_engine
+from sqlalchemy import create_engine, distinct, func
 from sqlalchemy.orm import scoped_session, sessionmaker
 from sqlalchemy.orm.relationships import RelationshipProperty
 from zope.sqlalchemy import register
@@ -332,8 +332,19 @@ def get_available_marine_unit_ids(marine_unit_ids, klass):
     return [total, q]
 
 
+def count_items(primary, *conditions):
+    """ Return number of records found with conditions
+    """
+
+    sess = session()
+    fc = func.count(distinct(primary))
+    count = sess.query(fc).filter(*conditions)[0][0]
+
+    return count
+
+
 @cache(db_result_key)
-@use_db_session('session')
+@use_db_session('2012')
 def get_marine_unit_id_names(marine_unit_ids):
     """ Returns tuples of (id, label) based on the marine_unit_ids
     """
@@ -429,7 +440,7 @@ def compliance_art8_join(columns, mc_join1, mc_join2, *conditions):
     return [count, q]
 
 
-@use_db_session('session_2018')
+@use_db_session('2018')
 def save_record(mapper_class, **data):
     print "we don't save, please save"
 

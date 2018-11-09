@@ -20,7 +20,7 @@ CountryStatus = namedtuple('CountryStatus',
                            ['name', 'status', 'state_id', 'url'])
 
 
-@db.use_db_session('session_2018')
+@db.use_db_session('2018')
 def get_assessment_data_2012_db(*args):
     """ Returns the 2012 assessment data, from COM_Assessments_2012 table
     """
@@ -179,7 +179,7 @@ def get_assessment_data(article, criterias, questions, data):
     return assessment
 
 
-@db.use_db_session('session_2018')
+@db.use_db_session('2018')
 def get_assessment_head_data_2012(data):
     if not data:
         return ['Not found'] * 3 + [('Not found', '')]

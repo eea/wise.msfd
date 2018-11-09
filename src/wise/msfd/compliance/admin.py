@@ -27,7 +27,7 @@ class BootstrapCompliance(BrowserView):
     """ Bootstrap the compliance module by creating all needed country folders
     """
 
-    @db.use_db_session('session_2018')
+    @db.use_db_session('2018')
     def _get_countries(self):
         """ Get a list of (code, name) countries
         """
@@ -44,7 +44,7 @@ class BootstrapCompliance(BrowserView):
 
         return countries
 
-    @db.use_db_session('session_2018')
+    @db.use_db_session('2018')
     def _get_regions(self):
 
         regions = [
@@ -53,7 +53,7 @@ class BootstrapCompliance(BrowserView):
 
         return regions
 
-    @db.use_db_session('session_2018')
+    @db.use_db_session('2018')
     def _get_descriptors(self):
         """ Get a list of (code, description) descriptors
         """
@@ -74,7 +74,7 @@ class BootstrapCompliance(BrowserView):
 
         return descriptors
 
-    @db.use_db_session('session_2018')
+    @db.use_db_session('2018')
     def _get_articles(self):
         articles = db.get_unique_from_mapper(
             sql2018.LMSFDArticle,
