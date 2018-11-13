@@ -109,7 +109,7 @@ class SendTranslationRequest(BrowserView):
 
         service_url = 'https://webgate.ec.europa.eu/etranslation/si/translate'
         result = requests.post(service_url, auth=HTTPDigestAuth(
-                 'Marine_EEA_20180706', ''),
+                 'Marine_EEA_20180706', 'P7n3BLvCerm7cx3B'),
                  data=dataj, headers=headers)
 
         self.request.response.headers.update(headers)

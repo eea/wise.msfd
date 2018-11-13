@@ -611,7 +611,33 @@ div.assessment-form-input {
   display: inline-block;
   float: right;
 }
+.translatable .dropdown .dropdown-menu button {
+  width: 10em;
+}
 .translatable .dropdown li {
   list-style-type: none;
+  text-align: center;
+}
+.translatable .translate-show {
+  display: none;
+}
+.translatable .translate-show.active {
+  display: block;
+}
+.translatable .translate-switch {
+  text-align: right;
+}
+.translatable .translate-switch .btn-translate {
+  float: right;
+}
+.translatable .translate-switch .active {
+  background-color: lightblue;
+}
+#edit-translation .modal-translate-section {
+  border-bottom: solid 1px #CCC;
+  padding-bottom: 1em;
+}
+#edit-translation .modal-content {
+  padding: 1em;
 }
 /*# sourceMappingURL=./source.css.map */

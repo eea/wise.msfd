@@ -6,29 +6,22 @@
       <span class="caret"></span>
     </button>
     <ul class="dropdown-menu" aria-labelledby="dLabel">
-      <li style="text-align: center;">
+      <li>
         <button class="btn btn-primary btn-s autoTransl">Auto-translate</button>
       </li>
-      <li style="text-align: center;">
+      <li>
         <button class="btn btn-primary btn-s editTransl"
           data-toggle="modal" data-target="#edit-translation">Edit translation</button>
       </li>
-
-      <!--<li class="buton1"><a href="#">Auto-translate</a></li>-->
-      <!--<li class="editTransl"><a href="#">Edit translation</a></li>-->
     </ul>
   </div>
 
   <div tal:condition="python: translation and text">
-    <div class="text" tal:content="text"></div>
-    <div>-------------------</div>
-    <div class="transl" tal:content="translation"></div>
-
-    <form style="display: none;">
-      New translation:
-      <textarea style="height: 10em;" type="text" name="new_transl"></textarea>
-      <input class="submitTransl" type="submit" value="Save">
-    </form>
+    <div class="translate-show text active" tal:content="text"></div>
+    <div class="translate-show transl" tal:content="translation"></div>
+    <div class="translate-switch">
+      <button class="btn btn-light btn-xs btn-translate btn-translate-orig active">LV</button>
+      <button class="btn btn-light btn-xs btn-translate btn-translate-transl">EN</button>
+    </div>
   </div>
-  <!--<button class="buton1">Click me</button>-->
 </div>

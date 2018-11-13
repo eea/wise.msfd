@@ -5,8 +5,43 @@
   .dropdown {
     display: inline-block;
     float: right;
+
+    .dropdown-menu button {
+      width: 10em;
+    }
+
+    li {
+      list-style-type: none;
+      text-align: center;
+    }
   }
-  .dropdown li {
-    list-style-type: none;
+  .translate-show {
+    display: none;
+
+    &.active {
+      display: block;
+    }
+  }
+
+  .translate-switch{
+    text-align: right;
+
+    .btn-translate {
+      float: right;
+    }
+
+    .active {
+      background-color: lightblue;
+    }
+
+  }
+}
+#edit-translation {
+  .modal-translate-section {
+    border-bottom: solid 1px #CCC;
+    padding-bottom: 1em;
+  }
+  .modal-content {
+    padding: 1em;
   }
 }
