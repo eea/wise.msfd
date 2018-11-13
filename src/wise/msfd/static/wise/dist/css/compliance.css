@@ -625,12 +625,12 @@ div.assessment-form-input {
   display: block;
 }
 .translatable .translate-switch {
-  text-align: right;
+  display: block;
 }
 .translatable .translate-switch .btn-translate {
   float: right;
 }
-.translatable .translate-switch .active {
+.translatable .translate-switch .btn-translate.active {
   background-color: lightblue;
 }
 #edit-translation .modal-translate-section {

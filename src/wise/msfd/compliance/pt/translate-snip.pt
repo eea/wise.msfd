@@ -3,7 +3,7 @@
   <div class="dropdown" tal:condition="text">
     <button id="dLabel" type="button" data-toggle="dropdown" aria-haspopup="true"
             aria-expanded="false">
-      <span class="caret"></span>
+      <span class="fa fa-pencil-square-o"></span>
     </button>
     <ul class="dropdown-menu" aria-labelledby="dLabel">
       <li>
@@ -20,7 +20,8 @@
     <div class="translate-show text active" tal:content="text"></div>
     <div class="translate-show transl" tal:content="translation"></div>
     <div class="translate-switch">
-      <button class="btn btn-light btn-xs btn-translate btn-translate-orig active">LV</button>
+      <button class="btn btn-light btn-xs btn-translate btn-translate-orig active"
+        tal:content="view/country_code">USA</button>
       <button class="btn btn-light btn-xs btn-translate btn-translate-transl">EN</button>
     </div>
   </div>

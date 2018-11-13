@@ -105,7 +105,7 @@ class BaseComplianceView(BrowserView):
 
     def translate_value(self, value):
         # TODO: implement getting the translation from annotations
-        translation = u'Translation not found!'
+        translation = u''
 
         if not value:
             return self.translate_snip(text=value, translation=translation)
