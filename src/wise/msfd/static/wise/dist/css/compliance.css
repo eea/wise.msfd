@@ -604,8 +604,14 @@ div.assessment-form-input {
   width: 100%;
 }
 /*# sourceMappingURL=./source.css.map */
-.translatable:hover {
-  background-color: #AAA;
+.table-comp-translate td {
+  position: relative;
+  padding-bottom: 2.5em !important;
+}
+.table-comp-translate td .absolute {
+  position: absolute;
+  bottom: 0.5em;
+  right: 0.5em;
 }
 .translatable .dropdown {
   display: inline-block;
@@ -618,20 +624,32 @@ div.assessment-form-input {
   list-style-type: none;
   text-align: center;
 }
-.translatable .translate-show {
+.translatable .translate-content {
+  display: block;
+}
+.translatable .translate-content .text {
+  background-color: lightblue;
+}
+.translatable .translate-content .transl {
+  background-color: lightgreen;
+}
+.translatable .translate-container {
   display: none;
 }
-.translatable .translate-show.active {
+.translatable .translate-container.active {
   display: block;
 }
-.translatable .translate-switch {
+.translatable .translate-language {
   display: block;
 }
-.translatable .translate-switch .btn-translate {
+.translatable .translate-language .btn-translate {
   float: right;
 }
-.translatable .translate-switch .btn-translate.active {
+.translatable .translate-language .btn-translate-orig.active {
   background-color: lightblue;
+}
+.translatable .translate-language .btn-translate-transl.active {
+  background-color: lightgreen;
 }
 #edit-translation .modal-translate-section {
   border-bottom: solid 1px #CCC;

@@ -23,7 +23,7 @@
      muids python:view.get_muids_from_data(data)">
     <div>
       <!--<h4 tal:content="muids">LV-01</h4>-->
-      <table class="table table-bordered table-striped">
+      <table class="table table-bordered table-striped table-comp-translate">
         <tr>
           <th>MarineReportingUnit</th>
           <td colspan="50" tal:content="muids">LV-001, LV-002</td>

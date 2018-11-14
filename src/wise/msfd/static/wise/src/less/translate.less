@@ -1,7 +1,17 @@
-.translatable  {
-  &:hover {
-    background-color: #AAA;
+.table-comp-translate {
+  td {
+    position: relative;
+    padding-bottom: 2.5em !important;
+
+    .absolute {
+      position: absolute;
+      bottom: 0.5em;
+      right: 0.5em;
+    }
   }
+}
+
+.translatable  {
   .dropdown {
     display: inline-block;
     float: right;
@@ -15,7 +25,19 @@
       text-align: center;
     }
   }
-  .translate-show {
+
+  .translate-content {
+    display: block;
+
+    .text {
+      background-color: lightblue;
+    }
+    .transl {
+      background-color: lightgreen;
+    }
+  }
+
+  .translate-container {
     display: none;
 
     &.active {
@@ -23,16 +45,25 @@
     }
   }
 
-  .translate-switch{
+  .translate-language{
     display: block;
 
     .btn-translate {
       float: right;
+    }
 
+    .btn-translate-orig {
       &.active {
         background-color: lightblue;
       }
     }
+
+    .btn-translate-transl {
+      &.active {
+        background-color: lightgreen;
+      }
+    }
+
   }
 }
 #edit-translation {
