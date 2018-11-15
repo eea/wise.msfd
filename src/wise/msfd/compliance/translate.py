@@ -96,7 +96,7 @@ class SendTranslationRequest(BrowserView):
         abs_url = self.context.absolute_url()
 
         dest = abs_url + \
-            '/translation-callback2?source_lang={}'.format(sourceLanguage)
+               '/translation-callback2?source_lang={}'.format(sourceLanguage)
 
         data = {
             'priority': 5,
@@ -154,6 +154,7 @@ class TranslationCallback(BrowserView):
 
         if (ANNOTATION_KEY not in annot.keys() or
                 language not in annot[ANNOTATION_KEY].keys()):
+            annot[ANNOTATION_KEY] = OOBTree()
             annot[ANNOTATION_KEY][language] = OOBTree()
 
         annot_lang = annot[ANNOTATION_KEY][language]
