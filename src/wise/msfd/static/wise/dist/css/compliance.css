@@ -519,22 +519,22 @@ th.as-ges-component {
   width: 30px;
 }
 td.as-value-0 {
-  background-color: #eee;
+  background-color: #eee !important;
 }
 td.as-value-1 {
-  background-color: #9bbb59;
+  background-color: #9bbb59 !important;
 }
 td.as-value-2 {
-  background-color: #d6e3bc;
+  background-color: #d6e3bc !important;
 }
 td.as-value-3 {
-  background-color: #ff99cc;
+  background-color: #ff99cc !important;
 }
 td.as-value-4 {
-  background-color: #ff3399;
+  background-color: #ff3399 !important;
 }
 td.as-value-5 {
-  background-color: #ffffff;
+  background-color: #ffffff !important;
 }
 tr.assessment-summary {
   border-bottom: solid 0.8em #ddd;
@@ -628,10 +628,10 @@ div.assessment-form-input {
   display: block;
 }
 .translatable .translate-content .text {
-  background-color: lightblue;
+  background-color: #d3f3f9;
 }
 .translatable .translate-content .transl {
-  background-color: lightgreen;
+  background-color: #e6f7ca;
 }
 .translatable .translate-container {
   display: none;
@@ -646,10 +646,10 @@ div.assessment-form-input {
   float: right;
 }
 .translatable .translate-language .btn-translate-orig.active {
-  background-color: lightblue;
+  background-color: #d3f3f9;
 }
 .translatable .translate-language .btn-translate-transl.active {
-  background-color: lightgreen;
+  background-color: #e6f7ca;
 }
 #edit-translation .modal-translate-section {
   border-bottom: solid 1px #CCC;

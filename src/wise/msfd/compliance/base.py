@@ -112,15 +112,17 @@ class BaseComplianceView(BrowserView):
 
         site = self.context.Plone
         annot = IAnnotations(site, None)
-        tbtree = annot[ANNOTATION_KEY]
 
-        if annot and ANNOTATION_KEY in annot:
-            try:
-                if value in annot[ANNOTATION_KEY]:
-                    # import pdb; pdb.set_trace()
-                    translation = annot[ANNOTATION_KEY].get(value, None)
-            except Exception as e:
-                import pdb; pdb.set_trace()
+        source_lang = self.country_code
+
+        if (annot and ANNOTATION_KEY in annot and
+                source_lang in annot[ANNOTATION_KEY].keys()):
+
+            annot_lang = annot[ANNOTATION_KEY][source_lang]
+
+            if value in annot_lang:
+                translation = annot_lang.get(value, None)
+                translation = translation.lstrip('?')
 
         return self.translate_snip(text=value, translation=translation)
 
