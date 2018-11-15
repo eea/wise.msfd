@@ -93,10 +93,14 @@ class SendTranslationRequest(BrowserView):
         targetLanguages = self.request.form.get('targetLanguages', ['EN'])
         externalReference = self.request.form.get('externalReference', '')
 
-        abs_url = self.context.absolute_url()
+        site = portal.getSite()
+        marine_url = site.Plone.marine.absolute_url()
 
-        dest = abs_url + \
-               '/translation-callback2?source_lang={}'.format(sourceLanguage)
+        dest = marine_url + \
+            '/translation-callback2?source_lang={}'.format(sourceLanguage)
+
+        # dest = 'http://office.pixelblaster.ro:4880/Plone/marine' + \
+        #     '/translation-callback2?source_lang={}'.format(sourceLanguage)
 
         data = {
             'priority': 5,
@@ -112,8 +116,6 @@ class SendTranslationRequest(BrowserView):
             'destinations': {
                 'httpDestinations':
                     [dest],
-                'emailDestinations':
-                    ['']
                     }
         }
 
@@ -152,9 +154,10 @@ class TranslationCallback(BrowserView):
         if not language:
             language = self.context.aq_parent.aq_parent.id.upper()
 
-        if (ANNOTATION_KEY not in annot.keys() or
-                language not in annot[ANNOTATION_KEY].keys()):
+        if ANNOTATION_KEY not in annot.keys():
             annot[ANNOTATION_KEY] = OOBTree()
+
+        if language not in annot[ANNOTATION_KEY].keys():
             annot[ANNOTATION_KEY][language] = OOBTree()
 
         annot_lang = annot[ANNOTATION_KEY][language]
