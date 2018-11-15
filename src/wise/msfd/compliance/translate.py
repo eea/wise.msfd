@@ -93,8 +93,10 @@ class SendTranslationRequest(BrowserView):
         targetLanguages = self.request.form.get('targetLanguages', ['EN'])
         externalReference = self.request.form.get('externalReference', '')
 
-        dest = 'http://office.pixelblaster.ro:4880/Plone/marine' + \
-               '/translation-callback2?source_lang={}'.format(sourceLanguage)
+        abs_url = self.context.absolute_url()
+
+        dest = abs_url + \
+            '/translation-callback2?source_lang={}'.format(sourceLanguage)
 
         data = {
             'priority': 5,
@@ -111,7 +113,7 @@ class SendTranslationRequest(BrowserView):
                 'httpDestinations':
                     [dest],
                 'emailDestinations':
-                    ['laszlo.cseh@eaudeweb.ro']
+                    ['']
                     }
         }
 
