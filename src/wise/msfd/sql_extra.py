@@ -34,3 +34,15 @@ class MSFD9Feature(sql.Base):
             sql.t_MSFD9_Features.c.FeaturesPressuresImpacts,
         ]
     }
+
+
+class MSFD10FeaturePressures(sql.Base):
+    __table__ = sql.t_MSFD10_FeaturesPressures
+
+    __mapper_args__ = {
+        'primary_key': [
+            __table__.c.MarineUnitID,
+            __table__.c.PhysicalChemicalHabitatsFunctionalPressures,
+            __table__.c.Other
+        ]
+    }

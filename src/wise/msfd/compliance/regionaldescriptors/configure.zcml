@@ -27,4 +27,11 @@
     permission="zope2.View"
     />
 
+  <browser:page
+    for="*"
+    name="reg-desc-a10"
+    class=".utils.RegDescA10"
+    permission="zope2.View"
+    />
+
 </configure>
