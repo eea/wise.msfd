@@ -336,15 +336,162 @@ class RegDescA10(BaseComplianceView):
         for c in self.countries:
             self.muids_in_region.extend(self.all_countries[c])
 
+        self.import_data, self.target_data = self.get_base_data()
+        self.features_data = self.get_features_data()
+
         allrows = [
             self.get_countries_row(),
+            self.get_marine_unit_id_nrs(),
             self.get_threshold_value(),
+            self.get_reference_point_type(),
+            self.get_baseline(),
+            self.get_proportion(),
+            self.get_type_of_target(),
+            self.get_timescale(),
+            self.get_interim_of_ges(),
+            self.get_compatibility(),
+            self.get_physical_features(),
+            self.get_predominant_habitats(),
+            self.get_functional_groups(),
+            self.get_pressures(),
         ]
 
         return self.template(rows=allrows)
 
+    def get_base_data(self):
+        imp = sql.MSFD10Import
+        target = sql.MSFD10Target
+
+        count, import_res = db.get_all_records(
+            imp,
+            imp.MSFD10_Import_ReportingCountry.in_(self.countries),
+            imp.MSFD10_Import_ReportingRegion == self.region
+        )
+        import_ids = [x.MSFD10_Import_ID for x in import_res]
+
+        count, target_res = db.get_all_records(
+            target,
+            target.MSFD10_Targets_Import.in_(import_ids),
+            target.Topic == 'EnvironmentalTarget'
+        )
+
+        return import_res, target_res
+
+    def create_feature_row(self, label_name):
+        results = []
+
+        row = Row('', results)
+
+        return CompoundRow(label_name, [row])
+
+    def get_features_data(self):
+        feat = sql_extra.MSFD10FeaturePressures
+        target_ids = [x.MSFD10_Target_ID for x in self.target_data]
+
+        count, feat_res = db.get_all_records(
+            feat,
+            feat.MSFD10_Target.in_(target_ids),
+        )
+
+        return feat_res
+
+    def create_base_row(self, label_name, attr_name):
+        results = []
+
+        for country in self.countries:
+            import_id = 0
+            for imp in self.import_data:
+                if imp.MSFD10_Import_ReportingCountry == country:
+                    import_id = imp.MSFD10_Import_ID
+                    break
+
+            value = ''
+            if not import_id:
+                results.append(value)
+                continue
+
+            for tar in self.target_data:
+                if tar.MSFD10_Targets_Import == import_id:
+                    value = getattr(tar, attr_name, '')
+                    break
+
+            results.append(value)
+
+        row = Row('', results)
+
+        return CompoundRow(label_name, [row])
+
     def get_countries_row(self):
         return TableHeader('Member state', self.countries)
 
+    def get_marine_unit_id_nrs(self):
+        row = Row('Number used',
+                  [len(self.all_countries[c]) for c in self.countries])
+
+        return CompoundRow('MarineUnitID', [row])
+
     def get_threshold_value(self):
         pass
+
+    def get_reference_point_type(self):
+        label = 'Reference point type'
+        attr = 'ReferencePointType'
+
+        return self.create_base_row(label, attr)
+
+    def get_baseline(self):
+        label = 'Baseline'
+        attr = 'Baseline'
+
+        return self.create_base_row(label, attr)
+
+    def get_proportion(self):
+        label = 'Proportion'
+        attr = 'Proportion'
+
+        return self.create_base_row(label, attr)
+
+    def get_type_of_target(self):
+        label = 'Type of target/indicator'
+        attr = 'TypeTargetIndicator'
+
+        return self.create_base_row(label, attr)
+
+    def get_timescale(self):
+        label = 'Timescale'
+        attr = 'TimeScale'
+
+        return self.create_base_row(label, attr)
+
+    def get_interim_of_ges(self):
+        label = 'Interim or GES target'
+        attr = 'InterimGESTarget'
+
+        return self.create_base_row(label, attr)
+
+    def get_compatibility(self):
+        label = 'Compatibility with existing targets/indicators'
+        attr = 'CompatibilityExistingTargets'
+
+        return self.create_base_row(label, attr)
+
+    def get_physical_features(self):
+        label = 'Physical/chemical features'
+
+        return self.create_feature_row(label)
+
+    def get_predominant_habitats(self):
+        label = 'Predominant habitats'
+
+        return self.create_feature_row(label)
+
+    def get_functional_groups(self):
+        label = 'Functional groups'
+
+        return self.create_feature_row(label)
+
+    def get_pressures(self):
+        label = 'Pressures'
+
+        return self.create_feature_row(label)
+
