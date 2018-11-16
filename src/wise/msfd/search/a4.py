@@ -7,10 +7,6 @@ from ..sql_extra import (MSFD4GeographicalAreaID,
 from ..utils import db_objects_to_dict, pivot_data, register_form
 from .base import ItemDisplayForm
 
-# data_to_xls,
-
-LABELS = {}                        # vocabulary of labels
-
 
 @register_form
 class A4Form(MarineUnitIDSelectForm):

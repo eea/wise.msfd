@@ -15,6 +15,7 @@ from ..base import BaseComplianceView
 def get_percentage(values):
     """ Compute percentage of true-ish values in the list
     """
+    # TODO: check if x is 0, consider it True
     trues = len([x for x in values if x])
 
     return (trues * 100.0) / len(values)
@@ -130,6 +131,9 @@ class RegDescA9(BaseComplianceView):
         t = sql.MSFD9Descriptor
 
         values = []
+
+
+        # TODO: filter by descriptor
 
         for c in self.countries:
             muids = self.all_countries[c]
@@ -312,6 +316,7 @@ def get_monitored_elements(countryids):
 
 
 class RegDescA10(BaseComplianceView):
+    # TODO: this is hard to implement
     session_name = '2012'
     template = ViewPageTemplateFile('pt/report-data-table.pt')
 
