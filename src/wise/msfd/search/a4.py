@@ -49,8 +49,6 @@ class A4ItemDisplay(ItemDisplayForm):
     extra_data_pivot = ViewPageTemplateFile('pt/extra-data-pivot.pt')
     blacklist = ('MSFD4_GegraphicalAreasID_Import',)
 
-    # TODO: implement xls download
-
     # TODO: add to blacklist MSFD4 Gegraphical Areas ID Import
     def get_extra_data(self):
         if not self.item:
