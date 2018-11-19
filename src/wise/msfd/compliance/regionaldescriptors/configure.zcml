@@ -16,7 +16,7 @@
   <browser:page
     for="*"
     name="reg-desc-a9"
-    class=".utils.RegDescA9"
+    class=".a9.RegDescA9"
     permission="zope2.View"
     />
 
@@ -30,7 +30,7 @@
   <browser:page
     for="*"
     name="reg-desc-a10"
-    class=".utils.RegDescA10"
+    class=".a10.RegDescA10"
     permission="zope2.View"
     />
 
