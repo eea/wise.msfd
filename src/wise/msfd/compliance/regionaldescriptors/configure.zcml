@@ -34,4 +34,11 @@
     permission="zope2.View"
     />
 
+  <browser:page
+    for="*"
+    name="reg-desc-a8"
+    class=".a8.RegDescA8"
+    permission="zope2.View"
+    />
+
 </configure>

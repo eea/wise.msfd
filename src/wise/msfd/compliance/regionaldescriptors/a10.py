@@ -52,6 +52,15 @@ class RegDescA10(BaseComplianceView):
 
         return self.template(rows=allrows)
 
+    def get_import_id(self, country):
+        for imp in self.import_data:
+            if imp.MSFD10_Import_ReportingCountry == country:
+                import_id = imp.MSFD10_Import_ID
+
+                return import_id
+
+        return 0
+
     def get_base_data(self):
         imp = sql.MSFD10Import
         target = sql.MSFD10Target
@@ -83,11 +92,7 @@ class RegDescA10(BaseComplianceView):
         results = []
 
         for country in self.countries:
-            import_id = 0
-            for imp in self.import_data:
-                if imp.MSFD10_Import_ReportingCountry == country:
-                    import_id = imp.MSFD10_Import_ID
-                    break
+            import_id = self.get_import_id(country)
 
             value = ''
             if not import_id:
@@ -135,11 +140,7 @@ class RegDescA10(BaseComplianceView):
             results = []
 
             for country in self.countries:
-                import_id = 0
-                for imp in self.import_data:
-                    if imp.MSFD10_Import_ReportingCountry == country:
-                        import_id = imp.MSFD10_Import_ID
-                        break
+                import_id = self.get_import_id(country)
 
                 value = ''
                 if not import_id:
