@@ -46,3 +46,16 @@ class MSFD10FeaturePressures(sql.Base):
             __table__.c.Other
         ]
     }
+
+
+class MSFD10DESCrit(sql.Base):
+    __table__ = sql.t_MSFD10_DESCrit
+
+    __mapper_args__ = {
+        'primary_key': [
+            __table__.c.MarineUnitID,
+            __table__.c.ReportingFeature,
+            __table__.c.GESDescriptorsCriteriaIndicators,
+            __table__.c.MSFD10_Target
+        ]
+    }

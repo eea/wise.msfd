@@ -1,4 +1,5 @@
 from collections import defaultdict
+from sqlalchemy import or_
 
 from eea.cache import cache
 from Products.Five.browser.pagetemplatefile import (PageTemplateFile,
@@ -361,39 +362,29 @@ class RegDescA10(BaseComplianceView):
     def get_base_data(self):
         imp = sql.MSFD10Import
         target = sql.MSFD10Target
+        des_crit = sql_extra.MSFD10DESCrit
 
-        count, import_res = db.get_all_records(
+        descriptor = self.descriptor
+        descriptor_code = descriptor[1:]
+
+        count, import_data = db.get_all_records(
             imp,
             imp.MSFD10_Import_ReportingCountry.in_(self.countries),
             imp.MSFD10_Import_ReportingRegion == self.region
         )
-        import_ids = [x.MSFD10_Import_ID for x in import_res]
+        import_ids = [x.MSFD10_Import_ID for x in import_data]
 
-        count, target_res = db.get_all_records(
+        dc_indicator = getattr(des_crit, 'GESDescriptorsCriteriaIndicators')
+        count, target_data = db.get_all_records_outerjoin(
             target,
+            des_crit,
             target.MSFD10_Targets_Import.in_(import_ids),
-            target.Topic == 'EnvironmentalTarget'
+            target.Topic == 'EnvironmentalTarget',
+            or_(dc_indicator == descriptor,
+                dc_indicator.like('{}.%'.format(descriptor_code)))
         )
 
-        return import_res, target_res
-
-    def create_feature_row(self, label_name):
-        results = []
-
-        row = Row('', results)
-
-        return CompoundRow(label_name, [row])
-
-    def get_features_data(self):
-        feat = sql_extra.MSFD10FeaturePressures
-        target_ids = [x.MSFD10_Target_ID for x in self.target_data]
-
-        count, feat_res = db.get_all_records(
-            feat,
-            feat.MSFD10_Target.in_(target_ids),
-        )
-
-        return feat_res
+        return import_data, target_data
 
     def create_base_row(self, label_name, attr_name):
         results = []
@@ -421,6 +412,71 @@ class RegDescA10(BaseComplianceView):
 
         return CompoundRow(label_name, [row])
 
+    def get_features_data(self):
+        feat = sql_extra.MSFD10FeaturePressures
+        target_ids = [x.MSFD10_Target_ID for x in self.target_data]
+
+        count, feat_res = db.get_all_records(
+            feat,
+            feat.MSFD10_Target.in_(target_ids),
+        )
+
+        return feat_res
+
+    def create_feature_row(self, label_name):
+        rows = []
+
+        features = []
+        for row in self.features_data:
+            if row.FeatureType == label_name:
+                val = row.PhysicalChemicalHabitatsFunctionalPressures
+                features.append(val)
+
+                val_other = row.Other
+                if val_other:
+                    features.append(val_other)
+
+        features = sorted(set(features))
+
+        for feature in features:
+            results = []
+
+            for country in self.countries:
+                import_id = 0
+                for imp in self.import_data:
+                    if imp.MSFD10_Import_ReportingCountry == country:
+                        import_id = imp.MSFD10_Import_ID
+                        break
+
+                value = ''
+                if not import_id:
+                    import pdb; pdb.set_trace()
+                    # results.append(value)
+                    # continue
+
+                target_ids = []
+                for tar in self.target_data:
+                    if tar.MSFD10_Targets_Import == import_id:
+                        target_ids.append(tar.MSFD10_Target_ID)
+
+                for r in self.features_data:
+                    if r.MSFD10_Target not in target_ids:
+                        continue
+                    if r.FeatureType != label_name:
+                        continue
+
+                    feat = r.PhysicalChemicalHabitatsFunctionalPressures
+                    if feat == feature or r.Other == feature:
+                        value = 'Reported'
+                        break
+
+                results.append(value)
+
+            row = Row(feature, results)
+            rows.append(row)
+
+        return CompoundRow(label_name, rows)
+
     def get_countries_row(self):
         return TableHeader('Member state', self.countries)
 
@@ -430,8 +486,15 @@ class RegDescA10(BaseComplianceView):
 
         return CompoundRow('MarineUnitID', [row])
 
+    # TODO how to implement this
     def get_threshold_value(self):
-        pass
+        results = ['Not implemented'] * len(self.countries)
+        row = Row('Quantitative values provided', results)
+
+        return CompoundRow(
+            'Threshold value [TargetValue]',
+            [row]
+        )
 
     def get_reference_point_type(self):
         label = 'Reference point type'
@@ -486,7 +549,7 @@ class RegDescA10(BaseComplianceView):
         return self.create_feature_row(label)
 
     def get_functional_groups(self):
-        label = 'Functional groups'
+        label = 'Functional group'
 
         return self.create_feature_row(label)
 
