@@ -15,7 +15,10 @@ MAPPING_ART8 = {
     'D4': ('MSFD8b_Acidification', 'MSFD8a_Ecosystem', 'MSFD8a_Other',
            'MSFD8a_Physical'),
     'D5': ('MSFD8b_Nutrients', ),
-    'D6': ('MSFD8a_Habitat', 'MSFD8b_PhysicalDamage', 'MSFD8b_PhysicalLoss'),
+    'D6': ('MSFD8a_Habitat', 'MSFD8b_PhysicalDamage', 'MSFD8b_PhysicalLoss',
+           'MSFD8b_ExtractionFishShellfish',
+           # TODO not sure if MSFD8b_ExtractionSeaweedMaerlOther belongs here
+           'MSFD8b_ExtractionSeaweedMaerlOther'),
     'D7': ('MSFD8b_HydrologicalProcesses', ),
     'D8': ('MSFD8b_HazardousSubstances', 'MSFD8b_MicrobialPathogens',
            'MSFD8b_PollutantEvents'),
