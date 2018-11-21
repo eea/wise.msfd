@@ -7,7 +7,7 @@ from Products.Five.browser.pagetemplatefile import (PageTemplateFile,
                                                     ViewPageTemplateFile)
 
 from ..base import BaseComplianceView
-from .a8_utils import Article8
+from .a8_utils import UtilsArticle8
 from .utils import (Row, CompoundRow, TableHeader, List,
                     countries_in_region, muids_by_country, get_key,
                     get_percentage)
@@ -19,7 +19,7 @@ class RegDescA8(BaseComplianceView):
 
     @property
     def descriptor(self):
-        return 'D4'
+        return 'D5'
 
     def __call__(self):
         db.threadlocals.session_name = self.session_name
@@ -29,15 +29,17 @@ class RegDescA8(BaseComplianceView):
         self.countries = countries_in_region(self.region)
         self.all_countries = muids_by_country()
 
-        self.art8_class = Article8(self.descriptor)
+        self.utils_art8 = UtilsArticle8(self.descriptor)
 
         self.import_data = self.get_import_data()
         self.base_data = self.get_base_data()
         self.suminfo2_data = self.get_suminfo2_data()
+        self.status_data = self.get_status_data()
 
         allrows = [
             self.get_countries(),
             self.get_marine_unit_id_nrs(),
+            # TODO show the reported value, or Reported/Not reported ??
             self.get_suminfo1_row(),
             self.get_suminfo2_row(),
             self.get_criteria_status_row(),
@@ -47,8 +49,36 @@ class RegDescA8(BaseComplianceView):
 
         return self.template(rows=allrows)
 
+    def get_status_data(self):
+        tables = self.utils_art8.tables
+
+        results = {}
+        for table in tables:
+            suffix = 'Assesment'
+
+            # if table.startswith('MSFD8a'):
+            #     suffix = 'StatusAssessment'
+
+            mc_name = '{}{}'.format(table.replace('_', ''), suffix)
+            mc = getattr(sql, mc_name, None)
+
+            if not mc:
+                continue
+
+            col_id = '{}_ID'.format(table)
+            base_ids = [getattr(x, col_id) for x in self.base_data[table]]
+
+            _, res = db.get_all_records(
+                mc,
+                getattr(mc, table).in_(base_ids)
+            )
+
+            results[table] = res
+
+        return results
+
     def get_import_data(self):
-        tables = self.art8_class.tables
+        tables = self.utils_art8.tables
         import_res = {}
 
         for table in tables:
@@ -80,16 +110,16 @@ class RegDescA8(BaseComplianceView):
         return import_res
 
     def get_base_data(self):
-        tables = self.art8_class.tables
+        tables = self.utils_art8.tables
 
         results = {}
         for table in tables:
-            mc = self.art8_class.get_base_mc(table)
+            mc = self.utils_art8.get_base_mc(table)
             conditions = []
 
-            topics_needed = self.art8_class.get_topic_conditions(table)
-            if topics_needed:
-                conditions.append(mc.Topic.in_(topics_needed))
+            # topics_needed = self.utils_art8.get_topic_conditions(table)
+            # if topics_needed:
+            #     conditions.append(mc.Topic.in_(topics_needed))
 
             col_id = getattr(mc, '{}_Import'.format(table))
 
@@ -105,11 +135,16 @@ class RegDescA8(BaseComplianceView):
         return results
 
     def get_suminfo2_data(self):
-        tables = self.art8_class.tables
+        tables = self.utils_art8.tables
 
         results = {}
         for table in tables:
-            mc_name = '{}SumInfo2ImpactedElement'.format(table.replace('_', ''))
+            suffix = 'SumInfo2ImpactedElement'
+
+            # if table.startswith('MSFD8a'):
+            #     suffix = 'Summary2'
+
+            mc_name = '{}{}'.format(table.replace('_', ''), suffix)
             mc = getattr(sql, mc_name, None)
 
             if not mc:
@@ -128,6 +163,7 @@ class RegDescA8(BaseComplianceView):
         return results
 
     def get_suminfo2_elements(self):
+        # Summary2 for MSFD8a
         result = []
 
         for table, res in self.suminfo2_data.items():
@@ -143,11 +179,15 @@ class RegDescA8(BaseComplianceView):
         result = []
 
         for table, res in self.base_data.items():
+            topics_needed = self.utils_art8.get_topic_conditions(table)
+
             topics = [x.Topic for x in res]
+
+            topics = list(set(topics_needed) & set(topics))
 
             result.extend(topics)
 
-        result = sorted(set(result))
+        result = sorted(result)
 
         return result
 
@@ -181,9 +221,9 @@ class RegDescA8(BaseComplianceView):
 
         rows = []
 
-        topics = self.get_topics()
+        self.topics = self.get_topics()
 
-        for topic in topics:
+        for topic in self.topics:
             results = []
             for country in self.countries:
                 value = self.get_base_value(country, topic, col_name)
@@ -245,9 +285,57 @@ class RegDescA8(BaseComplianceView):
         return CompoundRow(label, rows)
 
     def get_criteria_status_row(self):
-        pass
+        # MSFD8b_Nutrients_Assesment
+        # MSFD8a_Species_StatusAssessment
+        rows = []
+
+        for topic in self.topics:
+            topic_alt = self.utils_art8.get_proper_topic(topic)
+            results = []
+            for country in self.countries:
+                value = ''
+                for table, res in self.base_data.items():
+                    base_import_id = self.import_data[table][country]
+                    col_id = '{}_ID'.format(table)
+                    col_import_id = '{}_Import'.format(table)
+
+                    for row in res:
+                        top = row.Topic
+                        imp_id_ = getattr(row, col_import_id)
+
+                        if base_import_id != imp_id_:
+                            continue
+
+                        if top != topic_alt:
+                            continue
+
+                        id_ = getattr(row, col_id)
+
+                        status = [
+                            x.Status
+                            for x in self.status_data[table]
+                            if getattr(x, table) == id_
+                        ]
+
+                        if status:
+                            value = status[0]
+                            break
+
+                    if value:
+                        break
+
+                results.append(value)
+
+            row = Row(topic, results)
+            rows.append(row)
+
+        label = 'Status [CriteriaStatus]'
+
+        return CompoundRow(label, rows)
 
     def get_activity_type_row(self):
+        # MSFD8b_Nutrients_Activity
+        
         pass
 
     def get_assessment_date_row(self):

@@ -63,15 +63,21 @@ TOPIC_CONDITIONS = {
     'MSFD8b_Noise': (),
     'MSFD8b_Nutrients': (
         'LevelPressureOverall', 'LevelPressureNConcentration',
-        'LevelPressurePConcentration', 'ImpactPressureWaterColumn',
-        'ImpactPressureSeabedHabitats'),
+        'LevelPressurePConcentration', 'LevelPressureOConcentration',
+        'ImpactPressureWaterColumn', 'ImpactPressureSeabedHabitats'),
     'MSFD8b_PhysicalDamage': (),
     'MSFD8b_PhysicalLoss': (),
     'MSFD8b_PollutantEvents': (),
 }
 
+TOPIC_ASSESSMENT = {
+    'LevelPressureNConcentration': 'LevelPressureNLoad',
+    'LevelPressurePConcentration': 'LevelPressurePLoad',
+    'LevelPressureOConcentration': 'LevelPressureOLoad',
+}
 
-class Article8(object):
+
+class UtilsArticle8(object):
     def __init__(self, descriptor):
         self.descriptor = descriptor
         self.tables = DESC_DATA_MAPPING[descriptor]
@@ -85,3 +91,8 @@ class Article8(object):
         topics = TOPIC_CONDITIONS.get(table, [])
 
         return topics
+
+    def get_proper_topic(self, topic):
+        proper = TOPIC_ASSESSMENT.get(topic, topic)
+
+        return proper
