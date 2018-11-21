@@ -1,13 +1,13 @@
 import logging
 import os
-import chardet
-import transaction
 
+import chardet
 import lxml.etree
 from pkg_resources import resource_filename
-from zope.dottedname.resolve import resolve
 from zope.annotation.interfaces import IAnnotations
+from zope.dottedname.resolve import resolve
 
+import transaction
 from Acquisition import aq_inner
 from plone.api.content import get_state
 from plone.api.portal import get_tool
@@ -20,7 +20,6 @@ from wise.msfd.utils import Tab
 from . import interfaces
 from .nationaldescriptors.utils import row_to_dict
 from .translate import ANNOTATION_KEY
-
 
 logger = logging.getLogger('wise.msfd')
 
@@ -290,8 +289,13 @@ class CriteriaAssessmentDefinition:
         self.definition = defn.text.strip()
 
         # TODO: there are some edge cases. Handle them?
-        self.is_primary = bool(['false', 'true'].index(node.get('primary',
-                                                                'false')))
+        prim = node.get('primary', 'false')
+
+        if 'error' in prim:     # this is an error marker, for cases we need to
+                                # handle
+            logger.warning("Please debug this node: %s", node)
+            prim = 'false'
+        self.is_primary = bool(['false', 'true'].index(prim))
 
         self.elements = []
 

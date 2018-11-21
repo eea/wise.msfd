@@ -2,10 +2,12 @@
 """
 
 from collections import namedtuple
+from logging import getLogger
 
 from sqlalchemy import or_
 
 from persistent.list import PersistentList
+from plone.api.portal import get_tool
 from Products.Five.browser.pagetemplatefile import \
     ViewPageTemplateFile as Template
 from wise.msfd import db, sql2018
@@ -15,9 +17,10 @@ from wise.msfd.gescomponents import get_ges_criterions
 
 from ..base import BaseComplianceView
 
-
 CountryStatus = namedtuple('CountryStatus',
                            ['name', 'status', 'state_id', 'url'])
+
+logger = getLogger('wise.msfd')
 
 
 @db.use_db_session('2018')
@@ -113,6 +116,8 @@ COLOR_TABLE = {
 
 def get_assessment_data(article, criterias, questions, data):
     """ Builds a data structure suitable for display in a template
+
+    This is used to generate the assessment data overview table for 2018
     """
 
     answers = []
@@ -211,16 +216,33 @@ def get_assessment_head_data_2012(data):
 # score, to allow delta compute for 2018
 #
 # @memoize
+
+Assessment2012 = namedtuple(
+    'Assessment2012', ['gescomponents', 'criteria',
+                       'summary', 'overall_ass', 'score']
+)
+
+Criteria = namedtuple(
+    'Criteria', ['crit_name', 'answer']
+)
+
+
+def t2rt(text):
+    """ Transform text to richtext using inteligent-text transform
+    """
+
+    portal_transforms = get_tool(name='portal_transforms')
+
+    # Output here is a single <p> which contains <br /> for newline
+    data = portal_transforms.convertTo('text/html',
+                                       text,
+                                       mimetype='text/x-web-intelligent')
+    text = data.getData().strip()
+
+    return text
+
+
 def get_assessment_data_2012(descriptor_criterions, data):
-    Assessment2012 = namedtuple(
-        'Assessment2012', ['gescomponents', 'criteria',
-                           'summary', 'overall_ass', 'score']
-    )
-
-    Criteria = namedtuple(
-        'Criteria', ['crit_name', 'answer']
-    )
-
     gescomponents = [c.id for c in descriptor_criterions]
 
     assessments = {}
@@ -232,10 +254,9 @@ def get_assessment_data_2012(descriptor_criterions, data):
             return row[fields.index(col)]
 
         country = get_val('Country')
-        criteria = [
-            Criteria(get_val('AssessmentCriteria'),
-                     get_val('Assessment')),
-        ]
+        c = Criteria(get_val('AssessmentCriteria'),
+                     t2rt(get_val('Assessment')))
+        criteria = [c]
         summary = get_val('Conclusions')
         score = get_val('OverallScore')
         overall_ass = get_val('OverallAssessment')
@@ -265,6 +286,7 @@ class AssessmentData(PersistentList):
 
         for data in self.data:
             assessor = data['assessor']
+
             if assessor not in assessors:
                 assessors.append(assessor)
 
@@ -297,6 +319,12 @@ class NationalDescriptorArticleView(BaseComplianceView):
             'compliance/nationaldescriptors/questions/data'
         )
 
+        if self.descriptor not in els:
+            logger.warning("Descriptor elements not defined: %s",
+                           self.descriptor)
+
+            return []
+
         return els[self.descriptor]
 
     @property
@@ -319,24 +347,29 @@ class NationalDescriptorArticleView(BaseComplianceView):
 
         country_name = self._country_folder.title
 
-        data = get_assessment_data_2012_db(
+        db_data_2012 = get_assessment_data_2012_db(
             country_name,
             self.descriptor,
             self.article
         )
-        assessments = get_assessment_data_2012(
+        assessments_2012 = get_assessment_data_2012(
             descriptor_criterions,
-            data
+            db_data_2012
         )
+        # import pdb; pdb.set_trace()
 
         self.assessment_data_2012 = self.assessment_data_2012_tpl(
-            data=assessments
+            data=assessments_2012
         )
-        score_2012 = assessments[country_name].score
+
+        if assessments_2012.get(country_name):
+            score_2012 = assessments_2012[country_name].score
+        else:       # fallback
+            score_2012 = -100
 
         # Assessment header 2012
         report_by, assessors, assess_date, source_file = \
-            get_assessment_head_data_2012(data)
+            get_assessment_head_data_2012(db_data_2012)
 
         self.assessment_header_2012 = self.assessment_header_template(
             report_by=report_by,

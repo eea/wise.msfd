@@ -19,7 +19,7 @@
               <th tal:content="crit/crit_name">
                 Criteria
               </th>
-              <td tal:content="crit/answer"
+              <td tal:content="structure crit/answer"
                   tal:attributes="colspan colspan">Text</td>
             </tr>
           </tal:rep>
