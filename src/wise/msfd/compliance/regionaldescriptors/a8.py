@@ -1,16 +1,13 @@
 
-from eea.cache import cache
 
 from wise.msfd import db, sql, sql_extra
-from wise.msfd.gescomponents import get_ges_criterions
 from Products.Five.browser.pagetemplatefile import (PageTemplateFile,
                                                     ViewPageTemplateFile)
 
 from ..base import BaseComplianceView
 from .a8_utils import UtilsArticle8
-from .utils import (Row, CompoundRow, TableHeader, List,
-                    countries_in_region, muids_by_country, get_key,
-                    get_percentage)
+from .utils import (Row, CompoundRow, TableHeader,
+                    countries_in_region, muids_by_country)
 
 
 class RegDescA8(BaseComplianceView):
@@ -19,7 +16,7 @@ class RegDescA8(BaseComplianceView):
 
     @property
     def descriptor(self):
-        return 'D5'
+        return 'D4'
 
     def __call__(self):
         db.threadlocals.session_name = self.session_name
@@ -112,8 +109,8 @@ class RegDescA8(BaseComplianceView):
         for table in tables:
             suffix = 'Assesment'
 
-            # if table.startswith('MSFD8a'):
-            #     suffix = 'StatusAssessment'
+            if table.startswith('MSFD8a'):
+                suffix = 'StatusAssessment'
 
             mc_name = '{}{}'.format(table.replace('_', ''), suffix)
             mc = getattr(sql, mc_name, None)
@@ -172,10 +169,6 @@ class RegDescA8(BaseComplianceView):
         for table in tables:
             mc = self.utils_art8.get_base_mc(table)
             conditions = []
-
-            # topics_needed = self.utils_art8.get_topic_conditions(table)
-            # if topics_needed:
-            #     conditions.append(mc.Topic.in_(topics_needed))
 
             col_id = getattr(mc, '{}_Import'.format(table))
 
