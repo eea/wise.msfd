@@ -33,8 +33,11 @@ class RegDescA8(BaseComplianceView):
 
         self.import_data = self.get_import_data()
         self.base_data = self.get_base_data()
+        self.topics = self.get_topics()
         self.suminfo2_data = self.get_suminfo2_data()
         self.status_data = self.get_status_data()
+        self.activity_data = self.get_activity_data()
+        self.metadata_data = self.get_metadata_data()
 
         allrows = [
             self.get_countries(),
@@ -49,8 +52,61 @@ class RegDescA8(BaseComplianceView):
 
         return self.template(rows=allrows)
 
+    def get_metadata_data(self):
+        tables = self.base_data.keys()
+
+        results = {}
+
+        for table in tables:
+            meta = 't_{}Metadata'.format(table)
+
+            mc_meta = getattr(sql, meta, None)
+
+            if mc_meta is None:
+                continue
+
+            col_id = '{}_ID'.format(table)
+            base_ids = [getattr(x, col_id) for x in self.base_data[table]]
+
+            _, res = db.get_all_records(
+                mc_meta,
+                getattr(mc_meta.c, col_id).in_(base_ids)
+            )
+
+            results[table] = res
+
+        return results
+
+    def get_activity_data(self):
+        tables = self.base_data.keys()
+
+        results = {}
+
+        for table in tables:
+            act = '{}Activity'.format(table.replace('_', ''))
+            act_descr = '{}ActivityDescription'.format(table.replace('_', ''))
+
+            mc_act = getattr(sql, act, None)
+            mc_act_d = getattr(sql, act_descr, None)
+
+            if not mc_act:
+                continue
+
+            col_id = '{}_ID'.format(table)
+            base_ids = [getattr(x, col_id) for x in self.base_data[table]]
+
+            _, res = db.get_all_records_join(
+                [mc_act.Activity, getattr(mc_act_d, table)],
+                mc_act_d,
+                getattr(mc_act_d, table).in_(base_ids)
+            )
+
+            results[table] = res
+
+        return results
+
     def get_status_data(self):
-        tables = self.utils_art8.tables
+        tables = self.base_data.keys()
 
         results = {}
         for table in tables:
@@ -135,14 +191,14 @@ class RegDescA8(BaseComplianceView):
         return results
 
     def get_suminfo2_data(self):
-        tables = self.utils_art8.tables
+        tables = self.base_data.keys()
 
         results = {}
         for table in tables:
             suffix = 'SumInfo2ImpactedElement'
 
-            # if table.startswith('MSFD8a'):
-            #     suffix = 'Summary2'
+            if table.startswith('MSFD8a'):
+                suffix = 'Summary2'
 
             mc_name = '{}{}'.format(table.replace('_', ''), suffix)
             mc = getattr(sql, mc_name, None)
@@ -162,19 +218,6 @@ class RegDescA8(BaseComplianceView):
 
         return results
 
-    def get_suminfo2_elements(self):
-        # Summary2 for MSFD8a
-        result = []
-
-        for table, res in self.suminfo2_data.items():
-            elements = [x.SumInfo2 for x in res]
-
-            result.extend(elements)
-
-        result = sorted(set(result))
-
-        return result
-
     def get_topics(self):
         result = []
 
@@ -182,12 +225,30 @@ class RegDescA8(BaseComplianceView):
             topics_needed = self.utils_art8.get_topic_conditions(table)
 
             topics = [x.Topic for x in res]
-
-            topics = list(set(topics_needed) & set(topics))
+            topics = set(topics)
+            if topics_needed:
+                topics = list(set(topics_needed) & topics)
 
             result.extend(topics)
 
         result = sorted(result)
+
+        return result
+
+    def get_suminfo2_elements(self):
+        # Summary2 for MSFD8a
+        result = []
+
+        for table, res in self.suminfo2_data.items():
+            column = 'SumInfo2'
+            if table.startswith('MSFD8a'):
+                column = 'Summary2'
+
+            elements = [getattr(x, column) for x in res]
+
+            result.extend(elements)
+
+        result = sorted(set(result))
 
         return result
 
@@ -221,8 +282,6 @@ class RegDescA8(BaseComplianceView):
 
         rows = []
 
-        self.topics = self.get_topics()
-
         for topic in self.topics:
             results = []
             for country in self.countries:
@@ -249,6 +308,10 @@ class RegDescA8(BaseComplianceView):
 
             for country in self.countries:
                 for table, res in self.suminfo2_data.items():
+                    column = 'SumInfo2'
+                    if table.startswith('MSFD8a'):
+                        column = 'Summary2'
+
                     value = ''
                     base_import_id = self.import_data[table][country]
 
@@ -265,7 +328,7 @@ class RegDescA8(BaseComplianceView):
                     suminfo_ids = [
                         getattr(x, table)
                         for x in res
-                        if x.SumInfo2 == element
+                        if getattr(x, column) == element
                     ]
 
                     intersect = set(suminfo_ids) & set(base_ids)
@@ -295,6 +358,9 @@ class RegDescA8(BaseComplianceView):
             for country in self.countries:
                 value = ''
                 for table, res in self.base_data.items():
+                    if table not in self.status_data:
+                        continue
+
                     base_import_id = self.import_data[table][country]
                     col_id = '{}_ID'.format(table)
                     col_import_id = '{}_Import'.format(table)
@@ -312,7 +378,7 @@ class RegDescA8(BaseComplianceView):
                         id_ = getattr(row, col_id)
 
                         status = [
-                            x.Status
+                            getattr(x, 'Status', None)
                             for x in self.status_data[table]
                             if getattr(x, table) == id_
                         ]
@@ -334,9 +400,86 @@ class RegDescA8(BaseComplianceView):
         return CompoundRow(label, rows)
 
     def get_activity_type_row(self):
-        # MSFD8b_Nutrients_Activity
-        
-        pass
+        tables = self.base_data.keys()
+
+        results = []
+        for country in self.countries:
+            value = ''
+            for table in tables:
+                if table not in self.activity_data:
+                    continue
+
+                base_import_id = self.import_data[table][country]
+                col_id = '{}_ID'.format(table)
+                col_import_id = '{}_Import'.format(table)
+
+                base_ids = [
+                    getattr(x, col_id)
+                    for x in self.base_data[table]
+                    if getattr(x, col_import_id) == base_import_id
+                ]
+
+                values = [
+                    x.Activity
+                    for x in self.activity_data[table]
+                    if getattr(x, table) in base_ids
+                ]
+
+                value = ', '.join(sorted(set(values)))
+
+            results.append(value)
+
+        row = Row('', results)
+
+        label = 'ActivityType'
+
+        return CompoundRow(label, [row])
 
     def get_assessment_date_row(self):
-        pass
+        tables = self.base_data.keys()
+
+        results = []
+        for country in self.countries:
+            value = ''
+            for table in tables:
+                base_import_id = self.import_data[table][country]
+                col_id = '{}_ID'.format(table)
+                col_import_id = '{}_Import'.format(table)
+
+                base_ids = [
+                    getattr(x, col_id)
+                    for x in self.base_data[table]
+                    if getattr(x, col_import_id) == base_import_id
+                ]
+
+                values = [
+                    (x.AssessmentDateStart, x.AssessmentDateEnd)
+                    for x in self.metadata_data[table]
+                    if (getattr(x, col_id) in base_ids and
+                        x.Topic == 'Assessment' and
+                        x.AssessmentDateStart is not None and
+                        x.AssessmentDateEnd is not None)
+                ]
+
+                if not values:
+                    values = [
+                        (x.RecentTimeStart, x.RecentTimeEnd)
+                        for x in self.base_data[table]
+                        if (getattr(x, col_id) in base_ids and
+                            getattr(x, 'RecentTimeStart', None) is not None and
+                            getattr(x, 'RecentTimeEnd ', None) is not None)
+                    ]
+
+                if values:
+                    value = '-'.join(values[0])
+
+            results.append(value)
+
+        row = Row('', results)
+
+        label = 'RecentTimeStart/RecentTimeEnd/' \
+                'AssessmentDateStart/AssessmentDateEnd ' \
+                '[AssessmentPeriod]'
+
+        return CompoundRow(label, [row])
+
