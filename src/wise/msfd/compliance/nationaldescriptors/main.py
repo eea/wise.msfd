@@ -7,13 +7,13 @@ from logging import getLogger
 from sqlalchemy import or_
 
 from persistent.list import PersistentList
-from plone.api.portal import get_tool
 from Products.Five.browser.pagetemplatefile import \
     ViewPageTemplateFile as Template
 from wise.msfd import db, sql2018
 from wise.msfd.compliance.base import get_descriptor_elements, get_questions
 from wise.msfd.compliance.scoring import get_overall_conclusion
 from wise.msfd.gescomponents import get_ges_criterions
+from wise.msfd.utils import t2rt
 
 from ..base import BaseComplianceView
 
@@ -226,21 +226,6 @@ Assessment2012 = namedtuple(
 Criteria = namedtuple(
     'Criteria', ['crit_name', 'answer']
 )
-
-
-def t2rt(text):
-    """ Transform text to richtext using inteligent-text transform
-    """
-
-    portal_transforms = get_tool(name='portal_transforms')
-
-    # Output here is a single <p> which contains <br /> for newline
-    data = portal_transforms.convertTo('text/html',
-                                       text,
-                                       mimetype='text/x-web-intelligent')
-    text = data.getData().strip()
-
-    return text
 
 
 def get_assessment_data_2012(descriptor_criterions, data):

@@ -1,4 +1,5 @@
 import datetime
+import logging
 from collections import OrderedDict, defaultdict, namedtuple
 from cPickle import dumps
 from hashlib import md5
@@ -12,10 +13,12 @@ from zope.schema import Choice, List
 from zope.schema.interfaces import IVocabularyFactory
 
 import xlsxwriter
+from plone.api.portal import get_tool
 from plone.intelligenttext.transforms import \
     convertWebIntelligentPlainTextToHtml
 from plone.memoize import volatile
 
+# TODO: move this registration to search package
 FORMS_2018 = {}
 FORMS_ART11 = {}
 FORMS = {}                         # main chapter 1 article form classes
@@ -23,6 +26,8 @@ SUBFORMS = defaultdict(set)        # store subform references
 ITEM_DISPLAYS = defaultdict(set)   # store registration for item displays
 LABELS = {}                        # vocabulary of labels
 BLACKLIST = ['ID', 'Import', 'Id']
+
+logger = logging.getLogger('wise.msfd')
 
 
 def class_id(obj):
@@ -139,6 +144,7 @@ def print_value(value):
             except UnicodeEncodeError as e:
                 ret = tmpl.format(value, LABELS[value].encode('utf-8'))
             except Exception as e:
+                logger.exception("Error print_value: %r", e)
                 ret = tmpl.format(value, unicode(LABELS[value]))
 
             return ret
@@ -413,3 +419,18 @@ def db_result_key(func, *argss, **kwargs):
 
 # To be used as data container when defining tabs for navigation
 Tab = namedtuple('Tab', ['view', 'section', 'title', 'subtitle'])
+
+
+def t2rt(text):
+    """ Transform text to richtext using inteligent-text transform
+    """
+
+    portal_transforms = get_tool(name='portal_transforms')
+
+    # Output here is a single <p> which contains <br /> for newline
+    data = portal_transforms.convertTo('text/html',
+                                       text,
+                                       mimetype='text/x-web-intelligent')
+    text = data.getData().strip()
+
+    return text

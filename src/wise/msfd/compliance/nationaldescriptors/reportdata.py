@@ -238,6 +238,8 @@ class ReportData2018(BaseComplianceView):
 
     def get_data_from_view_art8(self):
 
+        # TODO: the data here should be filtered by muids in region
+
         view_name = self.view_names[self.article]
         t = getattr(sql2018, view_name)
 
