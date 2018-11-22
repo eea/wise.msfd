@@ -106,10 +106,11 @@ class BaseComplianceView(BrowserView):
 
     def translate_value(self, value):
         # TODO: implement getting the translation from annotations
-        translation = u''
 
         if not value:
-            return self.translate_snip(text=value, translation=translation)
+            return self.translate_snip(text=value, translation=u"")
+
+        translation = u''
 
         site = self.context.Plone
         annot = IAnnotations(site, None)

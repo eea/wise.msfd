@@ -1616,3 +1616,15 @@ def parse_forms_file():
 
 
 form_structure = parse_forms_file()
+
+    # def get_score(self, descriptor):
+    #     # NOTE: this is not used
+    #
+    #     total = 0
+    #
+    #     for assessment in descriptor.contentValues():
+    #         data = getattr(assessment, 'assessment_data', {})
+    #         score = data.get('OverallScore', 0)
+    #         total += score
+    #
+    #     return total

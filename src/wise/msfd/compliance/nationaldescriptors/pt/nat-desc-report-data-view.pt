@@ -12,7 +12,7 @@
       <div id="wise-search-form">
         <div id="wise-search-form-top">
           <metal:tabs
-             metal:use-macro="context/wise-macros/macros/tabs"></metal:tabs>
+            metal:use-macro="context/wise-macros/macros/tabs"></metal:tabs>
         </div>
 
         <div class="report-page-view left-side-form full-width-marker">
@@ -25,4 +25,3 @@
 
   </body>
 </html>
-
