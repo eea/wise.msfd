@@ -1,9 +1,19 @@
-<td>
-  <div class="translatable" tal:define="text options/text; translation options/translation">
+<td class="translatable"
+  tal:define="text options/text;
+  translation options/translation;
+
+  text_extra_class python:'active' if not translation else '';
+  text_class python:'translate-container text ' + text_extra_class;
+  btn_text_class python: 'btn btn-light btn-xs btn-translate btn-translate-orig ' + text_extra_class;
+
+  transl_extra_class python:'active' if translation else '';
+  trans_class python:'translate-container transl ' + transl_extra_class;
+  btn_trans_class python: 'btn btn-light btn-xs btn-translate btn-translate-transl ' + transl_extra_class;
+  ">
     <tal:cond tal:condition="python: text">
+
       <div class="dropdown" tal:condition="text">
-        <button id="dLabel" type="button" data-toggle="dropdown" aria-haspopup="true"
-          aria-expanded="false">
+        <button id="dLabel" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
           <span class="fa fa-pencil-square-o fa-sm"></span>
         </button>
         <ul class="dropdown-menu" aria-labelledby="dLabel">
@@ -11,30 +21,24 @@
             <button class="btn btn-primary btn-s autoTransl">Auto-translate</button>
           </li>
           <li>
-            <button class="btn btn-primary btn-s editTransl"
-              data-toggle="modal" data-target="#edit-translation">Edit translation</button>
+            <button
+              class="btn btn-primary btn-s editTransl"
+              data-toggle="modal"
+              data-target="#edit-translation">Edit translation</button>
           </li>
         </ul>
       </div>
 
-      <div class="translate-content"
-        tal:define="text_extra_class python:'active' if not translation else '';
-        transl_extra_class python:'active' if translation else '';">
+      <div class="translate-content">
 
-        <div tal:attributes="class python:'translate-container text ' + text_extra_class;"
-          tal:content="text"></div>
+        <div tal:attributes="class text_class" tal:content="text">Original Text</div>
+        <div tal:attributes="class trans_class" tal:content="translation">Translated Text</div>
 
-        <div tal:attributes="class python:'translate-container transl ' + transl_extra_class;"
-          tal:content="translation"></div>
-
-        <div class="translate-language absolute" tal:condition="python: translation">
-          <button tal:attributes="class python: 'btn btn-light btn-xs btn-translate btn-translate-orig ' + text_extra_class"
-            tal:content="view/country_code">USA</button>
-          <button tal:attributes="class python: 'btn btn-light btn-xs btn-translate btn-translate-transl ' + transl_extra_class"
-            >EN</button>
+        <div class="translate-language absolute" tal:condition="translation">
+          <button tal:attributes="class btn_text_class" tal:content="view/country_code">LV</button>
+          <button tal:attributes="class btn_trans_class" >EN</button>
         </div>
 
       </div>
     </tal:cond>
-  </div>
 </td>
