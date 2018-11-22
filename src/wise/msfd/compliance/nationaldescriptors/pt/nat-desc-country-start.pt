@@ -36,7 +36,10 @@
 
                 <!-- <div style="float: right"> -->
                 <div class="phase-selector">
-                  <select onchange="javascript:this.form.submit()" name="workflow_action">
+                  <select onchange="javascript:this.form.submit()"
+                    name="workflow_action"
+                    class="pat-select2"
+                    data-pat-select2="width:10em">
                     <option value=''>Choose action...</option>
                     <tal:rep repeat="trans view/get_transitions">
                       <option tal:content="trans/title" tal:attributes="value trans/id">Send to Phase 0</option>
@@ -46,38 +49,38 @@
               </form>
             </div>
 
-            <table class="table as-table-overview table-striped">
-              <thead>
-                <tr>
-                  <th>Descriptor</th>
-                  <th tal:repeat='art view/get_articles'>
-                    <span tal:replace="art">Art0</span>
-                  </th>
-                  <th>
-                    Score
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr tal:repeat="desc view/get_descriptors">
-                  <th>
-                    <span tal:content="desc/title_or_id">D0</span>
-                  </th>
-                  <td tal:repeat="assessment desc/contentValues">
-                    <a class="btn btn-primary btn-xs" href="" tal:attributes="href assessment/absolute_url">View</a>
-                    <div class="as-state-label" tal:content="python: view.get_status(assessment)">State</div>
-                    <div>
-                      <blockquote tal:condition="assessment/assessment_summary">
-                        <p tal:content="assessment/assessment_summary" >
-                          Summary here
-                        </p>
-                      </blockquote>
-                    </div>
-                  </td>
-                  <td tal:content="python: view.get_score(desc)">10</td>
-                </tr>
-              </tbody>
-            </table>
+            <div tal:repeat="region view/get_regions">
+              <h4 tal:content="region/Title">Region name</h4>
+
+              <table class="table as-table-overview table-striped">
+                <thead>
+                  <tr>
+                    <th>Descriptor</th>
+                    <th tal:repeat='art view/get_articles'>
+                      <span tal:replace="art">Art0</span>
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr tal:repeat="desc region/contentValues">
+                    <th>
+                      <span tal:content="desc/title_or_id">D0</span>
+                    </th>
+                    <td tal:repeat="assessment desc/contentValues">
+                      <a class="btn btn-primary btn-xs" href="" tal:attributes="href assessment/absolute_url">View</a>
+                      <div class="as-state-label" tal:content="python: view.get_status(assessment)">State</div>
+                      <div>
+                        <blockquote tal:condition="assessment/assessment_summary">
+                          <p tal:content="assessment/assessment_summary" >
+                            Summary here
+                          </p>
+                        </blockquote>
+                      </div>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
 
           </div>
         </div>

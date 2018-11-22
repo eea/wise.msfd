@@ -257,6 +257,7 @@ from z3c.form.browser.textarea import TextAreaWidget
 from z3c.form.button import buttonAndHandler
 from z3c.form.field import Fields
 
+from .base import Leaf as L
 from .base import EmbeddedForm, ItemDisplayForm
 
 
@@ -1577,3 +1578,41 @@ class Leaf(object):
     #
     # def default_marine_unit_ids(self):
     #     return all_values_from_field(self, self.fields['marine_unit_ids'])
+
+
+def parse_forms_file():
+    csv_f = resource_filename('wise.msfd',
+                              'data/forms.tsv')
+
+    res = L('articles')
+
+    with open(csv_f, 'rb') as csvfile:
+        csv_file = csv.reader(csvfile, delimiter='\t')
+
+        l1, l2, l3, l4 = None, None, None, None     # the 4 columns
+
+        for row in csv_file:
+            if not row:
+                continue
+            article, criteria, information, evidence = row
+            evidence = unicode(evidence, 'utf-8')
+
+            l4 = L(evidence)    # always last level, we can safely create it
+
+            if (l3 is None) or (l3.name != information):
+                l3 = L(information)
+            l3.add(l4)
+
+            if (l2 is None) or (l2.name != criteria):
+                l2 = L(criteria)
+            l2.add(l3)
+
+            if (l1 is None) or (l1.name != article):
+                l1 = L(article)
+                res.add(l1)
+            l1.add(l2)
+
+    return res
+
+
+form_structure = parse_forms_file()

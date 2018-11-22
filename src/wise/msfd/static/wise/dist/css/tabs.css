@@ -23,7 +23,8 @@
   border-bottom-left-radius: 0;
   border-bottom-right-radius: 0;
   float: left;
-  margin: 0 auto;
+  top: 4px;
+  margin: 0 3px 0 auto;
   padding-bottom: 99999px;
   margin-bottom: -99999px;
   transition: background-color 0.5s ease-in;
@@ -217,6 +218,7 @@
 #mainform-tabs ul.topnav li.tab-active,
 #tabs-wrapper ul.topnav li.tab-active {
   background: #337ab7;
+  top: 0px;
 }
 #mainform-tabs > ul.topnav li.tab-active a,
 #tabs-wrapper > ul.topnav li.tab-active a,

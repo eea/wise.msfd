@@ -9,6 +9,7 @@ from Products.CMFPlacefulWorkflow.WorkflowPolicyConfig import \
     WorkflowPolicyConfig
 from Products.Five.browser import BrowserView
 from wise.msfd import db, sql2018
+from wise.msfd.compliance.vocabulary import REGIONS
 
 from . import interfaces
 
@@ -45,15 +46,6 @@ class BootstrapCompliance(BrowserView):
         return countries
 
     @db.use_db_session('2018')
-    def _get_regions(self):
-
-        regions = [
-            ('BAL', 'Baltic Sea'),
-        ]
-
-        return regions
-
-    @db.use_db_session('2018')
     def _get_descriptors(self):
         """ Get a list of (code, description) descriptors
         """
@@ -76,14 +68,13 @@ class BootstrapCompliance(BrowserView):
 
     @db.use_db_session('2018')
     def _get_articles(self):
-        articles = db.get_unique_from_mapper(
-            sql2018.LMSFDArticle,
-            'MSFDArticle'
-        )
+        # articles = db.get_unique_from_mapper(
+        #     sql2018.LMSFDArticle,
+        #     'MSFDArticle'
+        # )
+        # return articles
 
         return ['Art8', 'Art9', 'Art10']
-
-        return articles
 
     def set_layout(self, obj, name):
         ISelectableBrowserDefault(obj).setLayout(name)
@@ -96,30 +87,53 @@ class BootstrapCompliance(BrowserView):
         )
         context._setObject(config.id, config)
 
-    def make_country(self, parent, code, name):
-        cf = create(parent, 'wise.msfd.countrydescriptorsfolder',
-                    title=name, id=code)
+    @db.use_db_session('2018')
+    def get_country_regions(self, country_code):
+        t = sql2018.MarineReportingUnit
+        regions = db.get_unique_from_mapper(
+            t,
+            'Region',
+            t.CountryCode == country_code
+        )
 
-        for code, description in self._get_descriptors():
-            df = create(cf, 'Folder', title=description, id=code)
-            alsoProvides(df, interfaces.IDescriptorFolder)
+        return [(code, REGIONS[code]) for code in regions]
 
-            for art in self._get_articles():
-                nda = create(df, 'wise.msfd.nationaldescriptorassessment',
-                             title=art)
-                logger.info("Created NationalDescriptorAssessment %s",
-                            nda.absolute_url())
+    def make_country(self, parent, country_code, name):
+        cf = create(parent,
+                    'wise.msfd.countrydescriptorsfolder',
+                    title=name,
+                    id=country_code)
 
-                self.set_layout(nda, '@@nat-desc-art-view')
+        for regid, region in self.get_country_regions(country_code):
+            reg = create(cf,
+                         'Folder',
+                         title=region,
+                         id=regid)
+            alsoProvides(reg, interfaces.INationalRegionDescriptorFolder)
+            self.set_layout(reg, '@@nat-desc-reg-view')
 
-                for id, title, trans in [
-                        (u'tl', 'Discussion track with Topic Leads',
-                         'open_for_tl'),
-                        (u'ec', 'Discussion track with EC', 'open_for_ec'),
-                ]:
-                    dt = create(nda,
-                                'wise.msfd.commentsfolder', id=id, title=title)
-                    transition(obj=dt, transition=trans)
+            for desc_code, description in self._get_descriptors():
+                df = create(reg, 'Folder', title=description, id=desc_code)
+                alsoProvides(df, interfaces.IDescriptorFolder)
+
+                for art in self._get_articles():
+                    nda = create(df, 'wise.msfd.nationaldescriptorassessment',
+                                 title=art)
+                    logger.info("Created NationalDescriptorAssessment %s",
+                                nda.absolute_url())
+
+                    self.set_layout(nda, '@@nat-desc-art-view')
+
+                    for id, title, trans in [
+                            (u'tl', 'Discussion track with Topic Leads',
+                             'open_for_tl'),
+                            (u'ec', 'Discussion track with EC', 'open_for_ec'),
+                    ]:
+                        dt = create(nda,
+                                    'wise.msfd.commentsfolder',
+                                    id=id,
+                                    title=title)
+                        transition(obj=dt, transition=trans)
 
         return cf
 
@@ -129,33 +143,41 @@ class BootstrapCompliance(BrowserView):
 
         return rf
 
-    def __call__(self):
-
-        if 'compliance-module' in self.context.contentIds():
-            self.context.manage_delObjects(['compliance-module'])
-        cm = create(self.context, 'Folder', title=u'Compliance Module')
-        self.set_layout(cm, '@@comp-start')
-        self.set_policy(cm, 'compliance_section_policy')
-
-        # cm.__ac_local_roles__['extranet-someone'] = [u'Contributor',
-        # u'Editor']
-
-        alsoProvides(cm, interfaces.IComplianceModuleFolder)
-
+    def setup_nationaldescriptors(self, parent):
         # National Descriptors Assessments
-        nda = create(cm, 'Folder', title=u'National Descriptors Assessments')
+        nda = create(parent,
+                     'Folder', title=u'National Descriptors Assessments')
         self.set_layout(nda, '@@nat-desc-start')
         alsoProvides(nda, interfaces.INationalDescriptorsFolder)
 
         for code, country in self._get_countries():
             self.make_country(nda, code, country)
 
+    def setup_regionaldescriptors(self, parent):
         # Regional Descriptors Assessments
-        rda = create(cm, 'Folder', title=u'Regional Descriptors Assessments')
+        rda = create(parent,
+                     'Folder', title=u'Regional Descriptors Assessments')
         self.set_layout(rda, '@@reg-desc-start')
         alsoProvides(rda, interfaces.IRegionalDescriptorsFolder)
 
-        for rcode, region in self._get_regions():
+        for rcode, region in REGIONS.items():
             self.make_region(rda, rcode, region)
+
+    def __call__(self):
+
+        if 'compliance-module' in self.context.contentIds():
+            self.context.manage_delObjects(['compliance-module'])
+
+        cm = create(self.context, 'Folder', title=u'Compliance Module')
+        self.set_layout(cm, '@@comp-start')
+        self.set_policy(cm, 'compliance_section_policy')
+
+        alsoProvides(cm, interfaces.IComplianceModuleFolder)
+
+        # cm.__ac_local_roles__['extranet-someone'] = [u'Contributor',
+        # u'Editor']
+
+        self.setup_nationaldescriptors(cm)
+        self.setup_regionaldescriptors(cm)
 
         return cm.absolute_url()

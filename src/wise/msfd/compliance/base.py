@@ -1,13 +1,11 @@
 import logging
 import os
 
-import chardet
 import lxml.etree
 from pkg_resources import resource_filename
 from zope.annotation.interfaces import IAnnotations
 from zope.dottedname.resolve import resolve
 
-import transaction
 from Acquisition import aq_inner
 from plone.api.content import get_state
 from plone.api.portal import get_tool
@@ -15,11 +13,15 @@ from Products.Five.browser import BrowserView
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 from wise.msfd import db, sql
 from wise.msfd.compliance.scoring import compute_score
+from wise.msfd.compliance.vocabulary import REGIONS
 from wise.msfd.utils import Tab
 
 from . import interfaces
 from .nationaldescriptors.utils import row_to_dict
 from .translate import ANNOTATION_KEY
+
+# import chardet
+# import transaction
 
 logger = logging.getLogger('wise.msfd')
 
@@ -208,6 +210,20 @@ class BaseComplianceView(BrowserView):
     @property
     def country_code(self):
         return self._country_folder.getId().upper()
+
+    @property
+    def _countryregion_folder(self):
+        return self.get_parent_by_iface(
+            interfaces.INationalRegionDescriptorFolder
+        )
+
+    @property
+    def country_region_code(self):
+        return self._countryregion_folder.getId().upper()
+
+    @property
+    def country_region_name(self):
+        return REGIONS[self.country_region_code]
 
     @property
     def _national_descriptors_folder(self):

@@ -53,7 +53,8 @@ class ReportData2012(BaseComplianceView, BaseUtil):
         t = sql.t_MSFD4_GegraphicalAreasID
         count, res = db.get_all_records(
             t,
-            t.c.MemberState == self.country_code
+            t.c.MemberState == self.country_code,
+            t.c.RegionSubRegions == self.country_region_code,
         )
 
         res = [row_to_dict(t, r) for r in res]
@@ -143,7 +144,12 @@ WHERE {
         url = self.get_report_file_url(filename)
 
         head_tpl = self.report_header_template(
-            title='2012 Member State Report',
+            title="{}'s 2012 Member State Report for {} / {} / {}".format(
+                self.country_name,
+                self.country_region_name,
+                self.descriptor,
+                self.article
+            ),
             # TODO: find out how to get info about who reported
             report_by='Member State',
             source_file=(filename, url),
@@ -402,7 +408,12 @@ class ReportData2018(BaseComplianceView):
                     source_file[0] = row[1][0].split('/')[-1]
 
         head_tpl = self.report_header_template(
-            title='2018 Member State Report',
+            title="{}'s 2018 Member State Report for {} / {} / {}".format(
+                self.country_name,
+                self.country_region_name,
+                self.descriptor,
+                self.article
+            ),
             # TODO: find out how to get info about who reported
             report_by='Member State',
             source_file=source_file,

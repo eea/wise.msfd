@@ -73,19 +73,20 @@ class NationalDescriptorCountryOverview(BaseComplianceView):
     def get_articles(self):
         return ['Art8', 'Art9', 'Art10']
 
-    def get_descriptors(self):
+    def get_regions(self):
         return self.context.contentValues()
 
-    def get_score(self, descriptor):
-
-        total = 0
-
-        for assessment in descriptor.contentValues():
-            data = getattr(assessment, 'assessment_data', {})
-            score = data.get('OverallScore', 0)
-            total += score
-
-        return total
+    # def get_score(self, descriptor):
+    #     # NOTE: this is not used
+    #
+    #     total = 0
+    #
+    #     for assessment in descriptor.contentValues():
+    #         data = getattr(assessment, 'assessment_data', {})
+    #         score = data.get('OverallScore', 0)
+    #         total += score
+    #
+    #     return total
 
 
 Assessment = namedtuple('Assessment',
@@ -307,6 +308,10 @@ class AssessmentData(PersistentList):
         return self.data[-1]
 
 
+class NationalDescriptorRegionView(BaseComplianceView):
+    section = 'national-descriptors'
+
+
 class NationalDescriptorArticleView(BaseComplianceView):
     section = 'national-descriptors'
 
@@ -347,29 +352,36 @@ class NationalDescriptorArticleView(BaseComplianceView):
 
         country_name = self._country_folder.title
 
-        db_data_2012 = get_assessment_data_2012_db(
-            country_name,
-            self.descriptor,
-            self.article
-        )
-        assessments_2012 = get_assessment_data_2012(
-            descriptor_criterions,
-            db_data_2012
-        )
-        # import pdb; pdb.set_trace()
+        try:
+            db_data_2012 = get_assessment_data_2012_db(
+                country_name,
+                self.descriptor,
+                self.article
+            )
+            assessments_2012 = get_assessment_data_2012(
+                descriptor_criterions,
+                db_data_2012
+            )
 
-        self.assessment_data_2012 = self.assessment_data_2012_tpl(
-            data=assessments_2012
-        )
+            self.assessment_data_2012 = self.assessment_data_2012_tpl(
+                data=assessments_2012
+            )
 
-        if assessments_2012.get(country_name):
-            score_2012 = assessments_2012[country_name].score
-        else:       # fallback
+            if assessments_2012.get(country_name):
+                score_2012 = assessments_2012[country_name].score
+            else:       # fallback
+                score_2012 = -100
+
+            report_by, assessors, assess_date, source_file = \
+                get_assessment_head_data_2012(db_data_2012)
+        except:
+            logger.exception("Could not get assessment data for 2012")
+            self.assessment_data_2012 = ''
             score_2012 = -100
+            report_by, assessors, assess_date, source_file = [
+                'Not found'] * 3 + [('Not found', '')]
 
         # Assessment header 2012
-        report_by, assessors, assess_date, source_file = \
-            get_assessment_head_data_2012(db_data_2012)
 
         self.assessment_header_2012 = self.assessment_header_template(
             report_by=report_by,
@@ -387,8 +399,6 @@ class NationalDescriptorArticleView(BaseComplianceView):
             self.questions,
             data
         )
-
-        # import pdb; pdb.set_trace()
 
         self.assessment_data_2018 = self.assessment_data_2018_tpl(
             assessment=assessment,

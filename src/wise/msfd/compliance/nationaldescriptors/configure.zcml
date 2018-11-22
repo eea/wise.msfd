@@ -31,6 +31,14 @@
     />
 
   <browser:page
+    for="..interfaces.INationalRegionDescriptorFolder"
+    name="nat-desc-reg-view"
+    template="./pt/nat-desc-reg-view.pt"
+    class=".main.NationalDescriptorRegionView"
+    permission="zope2.View"
+    />
+
+  <browser:page
     for="*"
     name="edit-assessment-data-2018"
     class=".assessment.EditAssessmentDataView"

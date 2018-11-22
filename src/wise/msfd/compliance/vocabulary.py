@@ -1,11 +1,6 @@
 # -*- coding: utf-8 -*-
 
-import csv
-
-from pkg_resources import resource_filename
 from zope.schema.vocabulary import SimpleTerm, SimpleVocabulary
-
-from .base import Leaf as L
 
 ASSESSED_ARTICLES = (
     ('Art3', 'Art. 3(1) Marine waters',),
@@ -23,44 +18,6 @@ ASSESSED_ARTICLES = (
     ('Art18', 'Art. 18 Interim report on programme of measures', ),
     ('Art19_3', 'Art. 19(3) Access to data', ),
 )
-
-
-def parse_forms_file():
-    csv_f = resource_filename('wise.msfd',
-                              'data/forms.tsv')
-
-    res = L('articles')
-
-    with open(csv_f, 'rb') as csvfile:
-        csv_file = csv.reader(csvfile, delimiter='\t')
-
-        l1, l2, l3, l4 = None, None, None, None     # the 4 columns
-
-        for row in csv_file:
-            if not row:
-                continue
-            article, criteria, information, evidence = row
-            evidence = unicode(evidence, 'utf-8')
-
-            l4 = L(evidence)    # always last level, we can safely create it
-
-            if (l3 is None) or (l3.name != information):
-                l3 = L(information)
-            l3.add(l4)
-
-            if (l2 is None) or (l2.name != criteria):
-                l2 = L(criteria)
-            l2.add(l3)
-
-            if (l1 is None) or (l1.name != article):
-                l1 = L(article)
-                res.add(l1)
-            l1.add(l2)
-
-    return res
-
-
-form_structure = parse_forms_file()
 
 
 # TODO: sort this vocabulary (somehow)
@@ -103,3 +60,17 @@ def vocab_from_list(values):
 
 descriptors_vocabulary = vocab_from_pairs(GES_DESCRIPTORS)
 articles_vocabulary = vocab_from_pairs(ASSESSED_ARTICLES)
+
+
+REGIONS = {
+    "ABI": "NE Atlantic: Bay of Biscay & Iberian Coast",
+    "ACS": "NE Atlantic: Celtic Seas",
+    "AMA": "NE Atlantic: Macaronesia",
+    "ANS": "NE Atlantic: Greater North Sea, incl. Kattegat & English Channel",
+    "BAL": "Baltic Sea",
+    "BLK": "Black Sea",
+    "MAD": "Mediterranean: Adriatic Sea",
+    "MAL": "Mediterranean: Aegean-Levantine Sea",
+    "MIC": "Mediterranean: Ionian Sea & Central Mediterranean Sea",
+    "MWE": "Mediterranean: Western Mediterranean Sea"
+}

@@ -447,60 +447,52 @@
       display: none;
     }
 
-    /*.table {
-      display: flex;
-      flex-flow: row wrap;
-      td {
-
-      }
-    }*/
-
-.first-table {
-  display: block;
-  border: none;
-
-  thead, tbody, th, td, tr {
-    display: block;
-  }
-
-  .table {
-    td {
-      /* Behave  like a "row" */
+    .first-table {
+      display: block;
       border: none;
-      border-bottom: 1px solid #eee;
-      position: relative;
+
+      thead, tbody, th, td, tr {
+        display: block;
+      }
+
+      .table {
+        td {
+          /* Behave  like a "row" */
+          border: none;
+          border-bottom: 1px solid #eee;
+          position: relative;
+        }
+      }
+
+      td:before {
+        /* Now like a table header */
+        position: absolute;
+        /* Top/left values mimic padding */
+        top: 6px;
+        left: 6px;
+        width: 45%;
+        padding-right: 10px;
+        white-space: nowrap;
+      }
+
+      tr {
+        margin-bottom: 1rem;
+      }
+
+      .link-external {
+        word-break: break-all;
+      }
+
+      .comms {
+        list-style-type: none;
+        border-bottom: 1px solid #CCC;
+        margin-bottom: 1em;
+      }
+
+      .comm-crtr {
+        color: #AAA;
+      }
     }
-  }
-
-  td:before {
-    /* Now like a table header */
-    position: absolute;
-    /* Top/left values mimic padding */
-    top: 6px;
-    left: 6px;
-    width: 45%;
-    padding-right: 10px;
-    white-space: nowrap;
-  }
-
-  tr {
-    margin-bottom: 1rem;
-  }
-
-  .link-external {
-    word-break: break-all;
-  }
-
-  .comms {
-    list-style-type: none; 
-    border-bottom: 1px solid #CCC;
-    margin-bottom: 1em;
-  }
-
-  .comm-crtr {
-    color: #AAA;
-  }
-}
   }
 }
 
@@ -515,10 +507,11 @@ div.nda-link {
   position: relative
 }
 
-li.process-state-phase-form {
-  // background-color: #e6f7ca;
+.process-state-phase-form {
+  background-color: #e6f7ca;
   padding: 1rem; border: 1px solid #AAA;
   margin-bottom: 1em;
+  line-height: 2em;
 }
 
 div.phase-selector {
@@ -561,31 +554,28 @@ div.asts-header-data {
 
 div.ast-header-data {
   background-color: #DDD;
-  border: 1px solid #BBB; 
+  border: 1px solid #BBB;
   padding: 1em;
 }
 
 // copied the styling below from nat-desc-art-view.pt
 
-div.nat-desc-art-menu {
+#nat-desc-art-menu {
   margin-top: 1em;
+  ul {
+    display: flex;
+    margin-left: 0em !important;
+    li {
+      padding: 1em;
+      line-height: 2em;
+      list-style-type: none;
+      display: block;
+      margin-right: 1em;
+      background-color: #d3f3f9;
+    }
   }
-
-div.nat-desc-art-menu ul {
-  display: flex;
-  margin-left: 0em !important;
 }
 
-div.nat-desc-art-menu li {
-  padding: 1em;
-  list-style-type: none;
-  display: block;
-  margin-right: 1em;
-  background-color: #d3f3f9;
-}
-
-div.nat-desc-art-menu li a {
-}
 
 table.assessment-data-table {
   margin: 0em;
@@ -618,15 +608,15 @@ tr.overall-score td {
 th.as-header {
   background-color: #999;
   color: white;
-  }
-  
+}
+
 th.as-th-score {
-/* display: inline-block;
-width: 4em; */
+  /* display: inline-block;
+  width: 4em; */
 }
 
 td.as-score {
-text-align: right;
+  text-align: right;
 }
 
 th.as-question {
@@ -714,25 +704,25 @@ div.as-state-label {
   display: inline-block;
   padding: 2px 4px;
   border-radius: 6px;
-  }
+}
 
 div.as-table-overview blockquote {
   font-size: 80%;
   margin: 0.6em 0em 0em 0em;
   padding-left: 1em;
-  }
+}
 
 table.table-report td ul {
-    margin: 0em !important;
+  margin: 0em !important;
 }
 
 table.table-report td ul li {
-    display: inline-block !important;
-    list-style: none;
-    padding: 0em;
-    border-top: 1px dashed #9a9a9a;
-    padding-left: 4px;
-    margin-left: -4px;
+  display: inline-block !important;
+  list-style: none;
+  padding: 0em;
+  border-top: 1px dashed #9a9a9a;
+  padding-left: 4px;
+  margin-left: -4px;
 }
 
 div.compliance-assessment-edit-subform label {
@@ -740,13 +730,13 @@ div.compliance-assessment-edit-subform label {
   width: 10em;
   text-align: right;
   padding-right: 0.7em;
-  }
+}
 
 div.widget {
   display: flex;
-  }
+}
 
 div.assessment-form-input {
   margin: auto;
   width: 100%;
-  }
+}

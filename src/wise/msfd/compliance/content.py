@@ -12,6 +12,12 @@ class CountryDescriptorsFolder(Container):
     implements(ICountryDescriptorsFolder)
 
 
+# class NationalRegionFolder(Container):
+#     """
+#     """
+#     implements(INationalRegionFolder)
+
+
 class NationalDescriptorAssessment(Container):
     """ Assessment implementation for national descriptor assessments
     """

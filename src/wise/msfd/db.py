@@ -33,6 +33,9 @@ threadlocals = threading.local()
 def session():
     session_name = getattr(threadlocals, 'session_name')
 
+    if not session_name:
+        raise ValueError("Please provide a session name for DB.")
+
     # print "Using session", session_name, DSN
     # print "DBS", DBS
 

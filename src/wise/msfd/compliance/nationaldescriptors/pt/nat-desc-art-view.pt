@@ -30,7 +30,7 @@
             </a>
           </div>
 
-          <div class="nat-desc-art-menu">
+          <div id="nat-desc-art-menu">
             <ul>
               <li><a href="./@@view-report-data-2012"><i class='fa fa-table'></i> View 2012 Report Data</a></li>
               <li><a href="./@@view-report-data-2018"><i class='fa fa-table'></i> View 2018 Report Data</a></li>
@@ -39,7 +39,7 @@
                   <i class='fa fa-edit'></i> Edit 2018 Assessment
                 </a>
               </li>
-              
+
               <li style="background-color: #e6f7ca">
               <!-- <li class="process-state-phase-form"> -->
                 <form method="GET" action='./content_status_modify'>
@@ -50,15 +50,15 @@
                     &nbsp;
                     &nbsp;
 
-                    <!-- <div style="float: right"> -->
-                      <select onchange="javascript:this.form.submit()" name="workflow_action">
-                        <option value=''>Choose action...</option>
-                        <tal:rep repeat="trans view/get_transitions">
-                          <option tal:content="trans/title"
-                            tal:attributes="value trans/id">Send to Phase 0</option>
-                        </tal:rep>
-                      </select>
-                    <!-- </div> -->
+                    <select onchange="javascript:this.form.submit()" name="workflow_action"
+                      class="pat-select2"
+                      data-pat-select2="width:10em">
+                      <option value=''>Choose action...</option>
+                      <tal:rep repeat="trans view/get_transitions">
+                        <option tal:content="trans/title"
+                          tal:attributes="value trans/id">Send to Phase 0</option>
+                      </tal:rep>
+                    </select>
                   </div>
                 </form>
               </li>

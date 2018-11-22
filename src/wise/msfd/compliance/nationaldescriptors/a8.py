@@ -6,7 +6,6 @@ from wise.msfd import db, sql
 
 from ..base import BaseArticle2012
 
-
 MAPPING_ART8 = {
     'D1': ('MSFD8a_Functional', 'MSFD8a_Species'),
     'D2': ('MSFD8b_NIS', ),
@@ -72,6 +71,9 @@ class Nutrients(object):
     }
 
 
+# TODO: this shouldn't exist, get_ges_criterions(descriptor) should be used
+# see gescomponents.py
+#
 @register_descriptor
 class Descriptor5(Nutrients):
     title = 'D5 Eutrophication'
