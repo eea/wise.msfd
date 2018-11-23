@@ -1,11 +1,10 @@
 
-
 from wise.msfd import db, sql, sql_extra
 from Products.Five.browser.pagetemplatefile import (PageTemplateFile,
                                                     ViewPageTemplateFile)
 
 from ..base import BaseComplianceView
-from .a8_utils import UtilsArticle8
+from ..a8_utils import UtilsArticle8
 from .utils import (Row, CompoundRow, TableHeader,
                     countries_in_region, muids_by_country)
 
@@ -16,7 +15,7 @@ class RegDescA8(BaseComplianceView):
 
     @property
     def descriptor(self):
-        return 'D4'
+        return 'D5'
 
     def __call__(self):
         db.threadlocals.session_name = self.session_name

@@ -5,124 +5,35 @@ from Products.Five.browser.pagetemplatefile import \
 from wise.msfd import db, sql
 
 from ..base import BaseArticle2012
-
-MAPPING_ART8 = {
-    'D1': ('MSFD8a_Functional', 'MSFD8a_Species'),
-    'D2': ('MSFD8b_NIS', ),
-    'D3': ('MSFD8b_ExtractionFishShellfish',
-           'MSFD8b_ExtractionSeaweedMaerlOther'),
-    'D4': ('MSFD8b_Acidification', 'MSFD8a_Ecosystem', 'MSFD8a_Other',
-           'MSFD8a_Physical'),
-    'D5': ('MSFD8b_Nutrients', ),
-    'D6': ('MSFD8a_Habitat', 'MSFD8b_PhysicalDamage', 'MSFD8b_PhysicalLoss',
-           'MSFD8b_ExtractionFishShellfish',
-           # TODO not sure if MSFD8b_ExtractionSeaweedMaerlOther belongs here
-           'MSFD8b_ExtractionSeaweedMaerlOther'),
-    'D7': ('MSFD8b_HydrologicalProcesses', ),
-    'D8': ('MSFD8b_HazardousSubstances', 'MSFD8b_MicrobialPathogens',
-           'MSFD8b_PollutantEvents'),
-    'D9': ('MSFD8b_HazardousSubstances', ),
-    'D10': ('MSFD8b_Litter', ),
-    'D11': ('MSFD8b_Noise', ),
-}
-
-
-DESCRIPTORS = {}
-
-
-def register_descriptor(class_):
-    DESCRIPTORS[class_.id] = class_
-
-    return class_
-
-
-class Nutrients(object):
-    topic_indicators = {
-        'ImpactPressureWaterColumn': ('5.2.1', '5.2.4', '5.2.2'),
-        'ImpactPressureSeabedHabitats': ('5.3.2', '5.2.3', '5.3.1'),
-        'LevelPressureNConcentration': '5.1.1',
-        'LevelPressureNLoad': '5.1.1',
-        'LevelPressureOConcentration': '5.1.1',
-        'LevelPressureOLoad': '5.1.1',
-        'LevelPressureOverall': '5.1.1',
-        'LevelPressurePConcentration': '5.1.1',
-        'LevelPressurePLoad': '5.1.1',
-    }
-
-    topic_groups = (
-        ('LevelPressureNConcentration', 'LevelPressurePConcentration',
-         'LevelPressureOConcentration', 'ImpactPressureWaterColumn',
-         'ImpactPressureSeabedHabitats'),
-        ('LevelPressureOverall', ),
-        ('LevelPressureNLoad', 'LevelPressurePLoad', 'LevelPressureOLoad'),
-    )
-
-    topic_assessment_to_nutrients = {
-        'LevelPressureNConcentration': 'NutrientsNitrogen5_1',
-        'LevelPressureNLoad': 'NutrientsNitrogen5_1',
-        'LevelPressurePConcentration': 'NutrientsPhosphorus5_1',
-        'LevelPressurePLoad': 'NutrientsPhosphorus5_1',
-        'LevelPressureOConcentration': 'NutrientsOrganicMatter5_1',
-        'LevelPressureOLoad': 'NutrientsOrganicMatter5_1',
-        'LevelPressureOverall': 'NutrientsOrganicEnrichment5_1',
-        'ImpactPressureWaterColumn': 'NutrientsEnrichmentWaterColumn5_2or5_3',
-        'ImpactPressureSeabedHabitats':
-            'NutrientsEnrichmentSeabedHabitats5_2or5_3',
-    }
-
-
-# TODO: this shouldn't exist, get_ges_criterions(descriptor) should be used
-# see gescomponents.py
-#
-@register_descriptor
-class Descriptor5(Nutrients):
-    title = 'D5 Eutrophication'
-    id = title.split()[0]
-
-    criterias_order = (
-        # descriptor code, indicator
-        ('D5', 'Eutrophication'),
-        ('5.1.1', 'D5C1'),
-        ('5.2.1', 'D5C2'),
-        ('5.2.4', 'D5C3'),
-        ('5.2.2', 'D5C4'),
-        ('5.3.2', 'D5C5'),
-        ('5.2.3', 'D5C6'),
-        ('5.3.1', 'D5C7'),
-        ('GESOther', 'D5C8'),
-        ('5.1.2', ''),
-        ('5.2', ''),
-        ('5.3', '')
-    )
-
-    article8_mapper_classes = (
-        # theme name / mapper class
-        ('Nutrients', sql.MSFD8bNutrient),
-    )
+from ..a8_utils import DESC_DATA_MAPPING, DB_MAPPER_CLASSES, DESCR_TOPIC_UTILS
 
 
 class Article8(BaseArticle2012):
     template = Template('pt/report-data-a8.pt')
 
-    def get_suminfo2_data(self, marine_unit_id, descriptor_class):
+    def get_suminfo2_data(self, marine_unit_id, descriptor):
         """ Get all data from table _SumInfo2ImpactedElement
-            for specific Marine Units and descriptor_class
+            for specific Marine Units and descriptor
         :param marine_unit_id: ['LV-001', 'LV-002']
-        :param descriptor_class: Descriptor5
-        :return: table results
+        :param descriptor: 'D5'
+        :return: {u'ImpactPressureSeabedHabitats': [u'ShallRock', u'ShallSand'],
+            u'ImpactPressureWaterColumn': [u'NutrientLevels', u'Transparency']}
         """
 
-        results = []
+        results = defaultdict(list)
+        tables = DESC_DATA_MAPPING[descriptor]
 
-        for mc in descriptor_class.article8_mapper_classes:
-            theme_name = mc[0]
-            mc_assessment = getattr(sql, 'MSFD8b' + theme_name +
-                                    'SumInfo2ImpactedElement')
+        for table in tables:
+            tbl_name = '{}SumInfo2ImpactedElement'.format(table.replace('_', ''))
+            mc_assessment = getattr(sql, tbl_name, None)
+
+            if not mc_assessment:
+                continue
+
             count, res = db.get_all_records(
                 mc_assessment,
                 mc_assessment.MarineUnitID == marine_unit_id
             )
-            results = defaultdict(list)
 
             for row in res:
                 topic = row.ImpactType
@@ -131,20 +42,25 @@ class Article8(BaseArticle2012):
 
         return results
 
-    def get_metadata_data(self, marine_unit_id, descriptor_class):
+    def get_metadata_data(self, marine_unit_id, descriptor):
         """ Get all data from table _Metadata
-            for specific Marine Units and descriptor_class
+            for specific Marine Units and descriptor
         :param marine_unit_id: ['LV-001', 'LV-002']
-        :param descriptor_class: Descriptor5
-        :return: table results
+        :param descriptor: 'D5'
+        :return: list [u'1973 - 2008', ...]
         """
 
         results = []
 
-        for mc in descriptor_class.article8_mapper_classes:
-            theme_name = mc[0]
+        tables = DESC_DATA_MAPPING[descriptor]
 
-            mc_assessment = getattr(sql, 't_MSFD8b_' + theme_name + 'Metadata')
+        for table in tables:
+            tbl_name = 't_{}Metadata'.format(table)
+            mc_assessment = getattr(sql, tbl_name, None)
+
+            if mc_assessment is None:
+                continue
+
             count, res = db.get_all_records(
                 mc_assessment,
                 mc_assessment.c.MarineUnitID == marine_unit_id
@@ -154,185 +70,212 @@ class Article8(BaseArticle2012):
                 start = row[2]
                 end = row[3]
 
-                if row[1].startswith('Analysis') and start and end:
-                    results.append(' - '.join((start, end)))
+                if row[1].startswith('Assessment') and start and end:
+                    val = ' - '.join((start, end))
+                    results.extend([val])
 
                     break
 
         return results
 
-    def get_activity_descr_data(self, marine_unit_id, descriptor_class):
+    def get_activity_descr_data(self, marine_unit_id, descriptor):
         """ Get all data from table _ActivityDescription
-            for specific Marine Units and descriptor_class
+            for specific Marine Units and descriptor
         :param marine_unit_id: ['LV-001', 'LV-002']
-        :param descriptor_class: Descriptor5
+        :param descriptor: 'D5'
         :return: table results
         """
 
+        tables = DESC_DATA_MAPPING[descriptor]
         results = []
 
-        for mc in descriptor_class.article8_mapper_classes:
-            theme_name = mc[0]
-            mc_assessment = getattr(sql, 'MSFD8b' + theme_name +
-                                    'ActivityDescription')
+        for table in tables:
+            tbl_name = '{}ActivityDescription'.format(table.replace("_", ""))
+            mc_assessment = getattr(sql, tbl_name, None)
+
+            if not mc_assessment:
+                continue
+
             count, res = db.get_all_records(
                 mc_assessment,
                 mc_assessment.MarineUnitID == marine_unit_id
             )
-            results.append(res)
+            results.extend(res)
 
         return results
 
-    def get_activity_data(self, descriptor_class):
-        """ Get all data from table _Activity for specific descriptor_class
-        :param descriptor_class: Descriptor5
-        :return: table results
+    def get_activity_data(self, descriptor):
+        """ Get all data from table _Activity for specific descriptor
+        :param descriptor: 'D5'
+        :return: list [u'AgricultForestry; Urban']
         """
 
+        tables = DESC_DATA_MAPPING[descriptor]
         results = []
 
-        for mc in descriptor_class.article8_mapper_classes:
-            theme_name = mc[0]
-            mc_assessment = getattr(sql, 'MSFD8b' + theme_name + 'Activity')
+        for table in tables:
+            tbl_name = '{}Activity'.format(table.replace('_', ''))
+            mc_assessment = getattr(sql, tbl_name, None)
+
+            if not mc_assessment:
+                continue
 
             d = self.activ_descr_data
-            col = 'MSFD8b_Nutrients_ActivityDescription_ID'
-            _id_act_descr = getattr(d[0][0], col) if d[0] else 0
+            col = '{}_ActivityDescription_ID'.format(table)
+            # _id_act_descr = getattr(d[0], col, 0) if d else 0
+            _id_act_descr = [getattr(x, col, 0) for x in d]
 
+            col_ad = '{}_ActivityDescription'.format(table)
             count, res = db.get_all_records(
                 mc_assessment,
-                mc_assessment.MSFD8b_Nutrients_ActivityDescription ==
-                _id_act_descr
+                getattr(mc_assessment, col_ad).in_(_id_act_descr)
             )
             res = [x.Activity for x in res if x.Activity != 'NotReported']
-            results.append('; '.join(res))
+            results.extend(res)
+
+        results = '; '.join(results)
 
         return results
 
-    def get_assesment_ind_data(self, marine_unit_id, descriptor_class):
+    def get_assesment_ind_data(self, marine_unit_id, descriptor):
         """ Get all data from table _AssesmentIndicator
-            for specific Marine Units and descriptor_class
+            for specific Marine Units and descriptor
         :param marine_unit_id: ['LV-001', 'LV-002']
-        :param descriptor_class: Descriptor5
+        :param descriptor: 'D5'
         :return: table results
         """
 
+        tables = DESC_DATA_MAPPING[descriptor]
         results = []
 
-        for mc in descriptor_class.article8_mapper_classes:
-            theme_name = mc[0]
-            mc_assessment = getattr(sql, 'MSFD8b' + theme_name +
-                                    'AssesmentIndicator')
+        for table in tables:
+            tbl_name = '{}AssesmentIndicator'.format(table.replace('_', ''))
+            mc_assessment = getattr(sql, tbl_name, None)
+
+            if not mc_assessment:
+                continue
+
             count, res = db.get_all_records(
                 mc_assessment,
                 mc_assessment.MarineUnitID == marine_unit_id
             )
-            results.append(res)
+            results.extend(res)
 
         return results
 
-    def get_assesment_data(self, marine_unit_id, descriptor_class):
+    def get_assesment_data(self, marine_unit_id, descriptor):
         """ Get all data from table _Assesment
-            for specific Marine Units and descriptor_class
+            for specific Marine Units and descriptor
         :param marine_unit_id: ['LV-001', 'LV-002']
-        :param descriptor_class: Descriptor5
+        :param descriptor: 'D5'
         :return: table results
         """
 
+        tables = DESC_DATA_MAPPING[descriptor]
         results = []
 
-        for mc in descriptor_class.article8_mapper_classes:
-            theme_name = mc[0]
-            mc_assessment = getattr(sql, 'MSFD8b' + theme_name + 'Assesment')
+        for table in tables:
+            tbl_name = '{}Assesment'.format(table.replace('_', ''))
+            mc_assessment = getattr(sql, tbl_name, None)
+
+            if not mc_assessment:
+                continue
+
             count, res = db.get_all_records(
                 mc_assessment,
                 mc_assessment.MarineUnitID == marine_unit_id
             )
-            results.append(res)
+            results.extend(res)
 
         return results
 
-    def get_base_data(self, marine_unit_id, descriptor_class):
+    def get_base_data(self, marine_unit_id, descriptor):
         """ Get all data from base table
-            for specific Marine Units and descriptor_class
+            for specific Marine Units and descriptor
         :param marine_unit_id: ['LV-001', 'LV-002']
-        :param descriptor_class: Descriptor5
+        :param descriptor: 'D5'
         :return: table results
         """
 
+        tables = DESC_DATA_MAPPING[descriptor]
         results = []
 
-        for mc in descriptor_class.article8_mapper_classes:
-            mapper_class = mc[1]
+        for table in tables:
+            mapper_class = DB_MAPPER_CLASSES.get(table, None)
+
+            if not mapper_class:
+                continue
+
             count, res = db.get_all_records(
                 mapper_class,
                 mapper_class.MarineUnitID == marine_unit_id
             )
-            results.append(res)
+            results.extend(res)
 
         return results
 
-    def get_topic_assessment(self, marine_unit_id, descriptor):
+    def get_topic_assessment(self, marine_unit_id):
         """ Get dict with topics(analisys/features) and the GESComponents
         :param marine_unit_id: 'LV-001'
-        :param descriptor: 'D5'
         :return: {'LevelPressureOLoad': ['5.1.1'],
             u'ImpactPressureWaterColumn': [u'5.2.1', u'5.2.1', u'5.2.2'],
             ...}
         """
-
-        self.descriptor_class = DESCRIPTORS.get(descriptor, None)
-
-        if not self.descriptor_class:
-            return []
+        self.descriptor = self.descriptor.split('.')[0]
 
         self.base_data = self.get_base_data(marine_unit_id,
-                                            self.descriptor_class)
+                                            self.descriptor)
 
         self.asses_data = self.get_assesment_data(marine_unit_id,
-                                                  self.descriptor_class)
+                                                  self.descriptor)
 
         self.asses_ind_data = self.get_assesment_ind_data(
-            marine_unit_id, self.descriptor_class)
+            marine_unit_id, self.descriptor)
 
         self.activ_descr_data = self.get_activity_descr_data(
-            marine_unit_id, self.descriptor_class)
+            marine_unit_id, self.descriptor)
 
-        self.activ_data = self.get_activity_data(self.descriptor_class)
+        self.activ_data = self.get_activity_data(self.descriptor)
 
         self.metadata_data = self.get_metadata_data(marine_unit_id,
-                                                    self.descriptor_class)
+                                                    self.descriptor)
 
         self.suminfo2_data = self.get_suminfo2_data(marine_unit_id,
-                                                    self.descriptor_class)
+                                                    self.descriptor)
 
         topic_assesment = defaultdict(list)
 
-        for table in self.base_data:
-            for row in table:
-                base_topic = getattr(row, 'Topic', None)
-                asses_topic = self.descriptor_class\
-                    .topic_assessment_to_nutrients.get(base_topic)
+        topic_atn = DESCR_TOPIC_UTILS['topic_assessment_to_nutrients'].get(
+            self.descriptor, {}
+        )
+        topic_ind = DESCR_TOPIC_UTILS['topic_indicators'].get(self.descriptor,
+                                                              {})
 
-                if not asses_topic:
-                    continue
-                topic_assesment[base_topic] = []
+        for row in self.base_data:
+            base_topic = getattr(row, 'Topic', None)
+            asses_topic = topic_atn.get(base_topic, 'NOT FOUND')
 
-                indicators = [
-                    x.GESIndicators
+            # if not asses_topic:
+            #     continue
+            topic_assesment[base_topic] = []
 
-                    for x in self.asses_ind_data[0]
+            indicators = [
+                x.GESIndicators
 
-                    if x.Topic == asses_topic
-                ]
+                for x in self.asses_ind_data
 
-                if not indicators:
-                    indicators = (self.descriptor_class.topic_indicators.get(
-                        base_topic), )
+                if x.Topic == asses_topic
+            ]
 
-                topic_assesment[base_topic].extend(indicators)
+            if not indicators:
+                indic = topic_ind.get(base_topic, 'INDICATOR EMPTY')
+                indicators = (indic, )
+
+            topic_assesment[base_topic].extend(indicators)
 
         self.topic_assesment = topic_assesment
+
+        # import pdb; pdb.set_trace()
 
         return topic_assesment
 
@@ -343,11 +286,17 @@ class Article8(BaseArticle2012):
         """
 
         colspan = 0
+        topic_groups = DESCR_TOPIC_UTILS['topic_groups'].get(
+            self.descriptor, [])
+        topics_needed = self.topic_assesment.keys()
+
+        if topic_groups:
+            topics_needed = topic_groups[0]
 
         for topic, indics in self.topic_assesment.items():
             count = indics.count(indicator)
 
-            if topic in self.descriptor_class.topic_groups[0]:
+            if topic in topics_needed:
                 colspan += count
 
         if not colspan:
@@ -360,11 +309,17 @@ class Article8(BaseArticle2012):
         """
 
         results = []
+        topic_groups = DESCR_TOPIC_UTILS['topic_groups'].get(
+            self.descriptor, [])
+        topics_needed = self.topic_assesment.keys()
 
-        for row in self.base_data[0]:
+        if topic_groups:
+            topics_needed = topic_groups[topic_group_index]
+
+        for row in self.base_data:
             topic = row.Topic
 
-            if topic in self.descriptor_class.topic_groups[topic_group_index]:
+            if topic in topics_needed:
                 nr = self.topic_assesment[topic].count(indicator)
 
                 for i in range(nr):
@@ -380,27 +335,30 @@ class Article8(BaseArticle2012):
         """
 
         topics_needed = []
+        topic_groups = DESCR_TOPIC_UTILS['topic_groups'].get(
+            self.descriptor, [])
 
         for topic, indics in self.topic_assesment.items():
             if indicator in indics \
-             and topic in self.descriptor_class.topic_groups[
-                 topic_group_index]:
+             and topic in topic_groups[topic_group_index]:
                 topics_needed.append(topic)
 
         results = []
 
-        for row in self.base_data[0]:
+        topic_atn = DESCR_TOPIC_UTILS['topic_assessment_to_nutrients'].get(
+            self.descriptor, {}
+        )
+        for row in self.base_data:
             topic = row.Topic
 
             if topic not in topics_needed:
                 continue
 
-            asses_topic = self.descriptor_class.topic_assessment_to_nutrients\
-                .get(topic)
+            asses_topic = topic_atn.get(topic)
 
             res = []
 
-            for row_asess in self.asses_ind_data[0]:
+            for row_asess in self.asses_ind_data:
                 if row_asess.Topic == asses_topic and \
                  row_asess.GESIndicators == indicator:
                     res.append(getattr(row_asess, col_name))
@@ -420,16 +378,17 @@ class Article8(BaseArticle2012):
         """
 
         topics_needed = []
+        topic_groups = DESCR_TOPIC_UTILS['topic_groups'].get(
+            self.descriptor, [])
 
         for topic, indics in self.topic_assesment.items():
             if indicator in indics \
-             and topic in self.descriptor_class.topic_groups[
-                 topic_group_index]:
+             and topic in topic_groups[topic_group_index]:
                 topics_needed.append(topic)
 
         results = []
 
-        for row in self.base_data[0]:
+        for row in self.base_data:
             topic = row.Topic
 
             if topic not in topics_needed:
@@ -451,28 +410,31 @@ class Article8(BaseArticle2012):
         """
 
         topics_needed = []
+        topic_groups = DESCR_TOPIC_UTILS['topic_groups'].get(
+            self.descriptor, [])
 
         for topic, indics in self.topic_assesment.items():
             if indicator in indics \
-                    and topic in self.descriptor_class.topic_groups[
-                        topic_group_index]:
+                    and topic in topic_groups[topic_group_index]:
                 topics_needed.append(topic)
 
         results = []
 
-        for row in self.base_data[0]:
+        topic_atn = DESCR_TOPIC_UTILS['topic_assessment_to_nutrients'].get(
+            self.descriptor, {}
+        )
+        for row in self.base_data:
             topic = row.Topic
 
             if topic not in topics_needed:
                 continue
 
-            asses_topic = self.descriptor_class.topic_assessment_to_nutrients\
-                .get(topic)
+            asses_topic = topic_atn.get(topic)
 
             print_val = [
                 getattr(row, col_name)
 
-                for row in self.asses_data[0]
+                for row in self.asses_data
 
                 if row.Topic == asses_topic
             ]
@@ -492,16 +454,17 @@ class Article8(BaseArticle2012):
         """
 
         topics_needed = []
+        topic_groups = DESCR_TOPIC_UTILS['topic_groups'].get(
+            self.descriptor, [])
 
         for topic, indics in self.topic_assesment.items():
             if indicator in indics \
-                    and topic in self.descriptor_class.topic_groups[
-                        topic_group_index]:
+                    and topic in topic_groups[topic_group_index]:
                 topics_needed.append(topic)
 
         results = []
 
-        for row in self.base_data[0]:
+        for row in self.base_data:
             topic = row.Topic
 
             if topic not in topics_needed:

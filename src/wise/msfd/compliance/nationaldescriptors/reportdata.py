@@ -12,12 +12,13 @@ from Products.Five.browser.pagetemplatefile import \
     ViewPageTemplateFile as Template
 from wise.msfd import db, sql, sql2018
 from wise.msfd.base import BaseUtil
+from wise.msfd.gescomponents import get_ges_criterions
 from z3c.form.button import buttonAndHandler
 from z3c.form.field import Fields
 from z3c.form.form import Form
 
 from ..base import BaseComplianceView
-from .a8 import DESCRIPTORS, Article8
+from .a8 import Article8
 from .a9_10 import Article910
 from .utils import row_to_dict
 
@@ -36,14 +37,20 @@ class ReportData2012(BaseComplianceView, BaseUtil):
         :return: (('D5', 'Eutrophication'), ('5.1.1', 'D5C1'),
             ('5.2.1', 'D5C2'), ... )
         """
-        descriptor_class = DESCRIPTORS.get(descriptor, None)
 
-        if descriptor_class:
-            criterias_list = descriptor_class.criterias_order
+        result = []
+        result.append((descriptor, self.desc_label))
 
-            return criterias_list
+        criterions = get_ges_criterions(descriptor)
 
-        return []
+        for crit in criterions:
+            for alt in crit.alternatives:
+                title = '{} ({}) {}'.format(crit._id, alt[0], alt[1])
+                indicator = alt[0]
+
+                result.append((indicator, title))
+
+        return result
 
     @property
     def muids(self):
@@ -72,6 +79,7 @@ class ReportData2012(BaseComplianceView, BaseUtil):
         article_nr = map_articles[self.article]
         mc_name = 'MSFD{}Import'.format(article_nr)
         country_col = 'MSFD{}_Import_ReportingCountry'.format(article_nr)
+        region_col = 'MSFD{}_Import_ReportingRegion'.format(article_nr)
         filename_col = 'MSFD{}_Import_FileName'.format(article_nr)
 
         t = getattr(sql, mc_name)
@@ -80,6 +88,7 @@ class ReportData2012(BaseComplianceView, BaseUtil):
             t,
             country_col,
             getattr(t, country_col) == self.country_code,
+            getattr(t, region_col) == self.country_region_code
         )
         assert count == 1
 

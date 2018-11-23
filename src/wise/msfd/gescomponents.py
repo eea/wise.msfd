@@ -106,6 +106,10 @@ def parse_ges_terms():
                 # we also have the old criterion
                 id_2012 = b4.split(' ', 1)[0]
                 title_2012 = b4.split(' ', 1)[1]
+            else:
+                # add it as GESOther if b4 is '-'
+                id_2012 = 'GESOther'
+                title_2012 = b4
 
             # if the criterion has already been defined, annotate that one
 
