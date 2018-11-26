@@ -1,9 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <descriptor-definition id='D3'>
 
-    <criteria primary='true' id='D3C1' title='Populations of all commercially-exploited
-     fish and shellfish are within safe biological limits, exhibiting a population age
-     and size distribution that is indicative of a healthy stock'>
+    <criteria primary='true' id='D3C1' title='Fishing mortality rate (F)'>
       <definition>
         <![CDATA[
           <p>
@@ -18,9 +16,7 @@
       <uses-methodological-standard href="#m-1"/>
     </criteria>
 
-    <criteria primary='true' id='D3C2' title='Populations of all commercially-exploited
-     fish and shellfish are within safe biological limits, exhibiting a population age
-     and size distribution that is indicative of a healthy stock'>
+    <criteria primary='true' id='D3C2' title='Spawning stock biomass (SSB)'>
       <definition> 
         <![CDATA[
           <p>
@@ -35,9 +31,7 @@
       <uses-methodological-standard href="#m-1"/>
     </criteria>
     
-    <criteria primary='true' id='D3C3' title='Populations of all commercially-exploited
-     fish and shellfish are within safe biological limits, exhibiting a population age
-     and size distribution that is indicative of a healthy stock'>
+    <criteria primary='true' id='D3C3' title='Population age/size distribution'>
       <definition>
         <![CDATA[
           <p>

@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <descriptor-definition id='D10'>
-  <criteria primary='true' id='D10C1' title='Properties and quantities of marine litter
-     do not cause harm to the coastal and marine environment'>
+  <criteria primary='true' id='D10C1' title='Litter (excluding micro-litter)'>
     <definition>
       <![CDATA[
         <p>
@@ -17,8 +16,7 @@
     <uses-methodological-standard href="#m-1"/>
   </criteria>
 
-  <criteria primary='true' id='D10C2' title='Properties and quantities of marine litter
-     do not cause harm to the coastal and marine environment'>
+  <criteria primary='true' id='D10C2' title='Micro-litter'>
     <definition>
       <![CDATA[
         <p>
@@ -34,8 +32,7 @@
     <uses-methodological-standard href="#m-1"/>
   </criteria>
 
-  <criteria primary='false' id='D10C3' title='Properties and quantities of marine litter
-     do not cause harm to the coastal and marine environment'>
+  <criteria primary='false' id='D10C3' title='Litter ingested'>
     <definition>
       <![CDATA[
         <p>
@@ -50,8 +47,7 @@
     <uses-methodological-standard href="#m-1"/>
   </criteria>
 
-  <criteria primary='false' id='D10C4' title='Properties and quantities of marine litter
-     do not cause harm to the coastal and marine environment'>
+  <criteria primary='false' id='D10C4' title='Adverse effects of litter'>
     <definition>
       <![CDATA[
         <p>

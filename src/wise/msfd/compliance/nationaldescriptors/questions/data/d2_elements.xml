@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <descriptor-definition id='D2'>
 
-  <criteria primary='true' id='D2C1' title='Non-indigenous species introduced by human activities are at levels that do not adversely alter the ecosystems'>
+  <criteria primary='true' id='D2C1' title='Newly-introduced NIS'>
     <definition>
       <![CDATA[
         <p>
@@ -20,7 +20,7 @@
     <uses-methodological-standard href="#m-1" />
   </criteria>
 
-  <criteria primary='false' id='D2C2' title='Non-indigenous species introduced by human activities are at levels that do not adversely alter the ecosystems'>
+  <criteria primary='false' id='D2C2' title='Established NIS'>
     <definition>
       <![CDATA[
         <p>
@@ -36,7 +36,7 @@
     <uses-methodological-standard href="#m-2" />
   </criteria>
 
-  <criteria primary='false' id='D2C3' title='Non-indigenous species introduced by human activities are at levels that do not adversely alter the ecosystems'>
+  <criteria primary='false' id='D2C3' title='Adverse effects of NIS'>
     <definition>
       <![CDATA[
         <p>

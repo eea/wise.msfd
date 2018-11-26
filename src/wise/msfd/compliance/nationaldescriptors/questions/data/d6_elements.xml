@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <descriptor-definition id='D6'>
-  <criteria primary='true' id='D6C1' title='Sea-floor integrity is at a level that ensures
-   that the structure and functions of the ecosystems are safeguarded and benthic ecosystems,
-   in particular, are not adversely affected'>
+  <criteria primary='true' id='D6C1' title='Physical loss of the seabed'>
     <definition>
       <![CDATA[
         <p>
@@ -14,9 +12,7 @@
     <uses-methodological-standard href="#m-1" />
   </criteria>
 
-  <criteria primary='true' id='D6C2' title='Sea-floor integrity is at a level that ensures
-   that the structure and functions of the ecosystems are safeguarded and benthic ecosystems,
-   in particular, are not adversely affected'>
+  <criteria primary='true' id='D6C2' title='Physical disturbance to the seabed'>
     <definition>
       <![CDATA[
         <p>
@@ -28,9 +24,7 @@
     <uses-methodological-standard href="#m-1" />
   </criteria>
 
-  <criteria primary='true' id='D6C3' title='Sea-floor integrity is at a level that ensures
-   that the structure and functions of the ecosystems are safeguarded and benthic ecosystems,
-   in particular, are not adversely affected'>
+  <criteria primary='true' id='D6C3' title='Adverse effects from physical disturbance'>
     <definition>
       <![CDATA[
         <p>
@@ -49,7 +43,7 @@
   </criteria>
 
 
-  <criteria primary='true' id='D6C4' title='Benthic habitats (seabed)'>
+  <criteria primary='true' id='D6C4' title='Benthic habitat extent'>
     <definition>
       <![CDATA[
         <p>
@@ -66,7 +60,7 @@
     <uses-methodological-standard href="#m-2" />
   </criteria>
 
-  <criteria primary='true' id='D6C5' title='Benthic habitats (seabed)'>
+  <criteria primary='true' id='D6C5' title='Benthic habitat condition'>
     <definition>
       <![CDATA[
         <p>

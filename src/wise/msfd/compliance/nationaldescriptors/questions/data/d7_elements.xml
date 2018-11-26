@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <descriptor-definition id='D7'>
-    <criteria primary='false' id='D7C1' title='Permanent alteration of hydrographical conditions
-     does not adversely affect marine ecosystems'>
+    <criteria primary='false' id='D7C1' title='Permanent alteration of hydrographical conditions'>
     <definition>
       <![CDATA[
         <p>
@@ -15,8 +14,7 @@
     <uses-methodological-standard href="#m-1" />
   </criteria>
     
-  <criteria primary='false' id='D7C2' title='Permanent alteration of hydrographical conditions
-     does not adversely affect marine ecosystems'>
+  <criteria primary='false' id='D7C2' title='Adverse effects from permanent alterations of hydrographical conditions'>
     <definition>
       <![CDATA[
         <p>
