@@ -294,3 +294,122 @@ div.assessment-form-input {
   margin: auto;
   width: 100%;
 }
+
+#comp-national-descriptor {
+  padding: 1rem;
+  // opacity: 0;
+  border: 1px solid #eee;
+  border-bottom-left-radius: 10px;
+  border-bottom-right-radius: 10px;
+
+  .overflow-table {
+    overflow-x: auto;
+    overflow-y: auto;
+    width: 100%;
+    height: 800px;
+    margin-bottom: 1rem;
+  }
+
+  .table-striped tbody tr:nth-of-type(odd) {
+    background-color: #eee;
+  }
+
+  .collapsed-container {
+
+    .collapsed-header {
+      position: relative;
+      background: @dark-theme-color;
+      border-radius: 10px;
+      margin-top: 1rem;
+      cursor: pointer;
+      color: white;
+      padding: 10px;
+
+      &:after {
+        transition: content .8s;
+        content: "\f078";
+        font-family: FontAwesome;
+        font-weight: 700;
+        float: right;
+        color: white;
+      }
+
+      &.form-collapsed {
+        border-bottom-left-radius: 0;
+        border-bottom-right-radius: 0;
+        background: @grey-theme-color;
+        color: grey;
+        &:after {
+          content: "\f077";
+          color: grey;
+        }
+      }
+    }
+
+    .collapsed-content {
+      padding: 1rem;
+      border: 1px solid #eee;
+    }
+
+    .subform {
+      padding:1rem;
+      padding-left: 2rem;
+      padding-right: 2rem;
+      margin-bottom: 1rem;
+      .vendor-prefix(border-radius; 10px);
+
+      &:nth-of-type(odd) {
+        background-color: #eee;
+        border: 1px solid #ddd;
+      }
+
+      &:nth-of-type(even){
+        background-color: rgba(255,255,255,0.6);
+        border: 1px solid #ccc;
+      }
+
+      .field {
+        margin-bottom: 2rem;
+
+        &:first-child {
+          margin-top: 2rem;
+        }
+
+        .select2-container {
+          width: auto;
+        }
+
+        textarea {
+          background-image: -webkit-gradient(linear, 0 0, 0 100%, color-stop(1%, #EEE), color-stop(10%, #FFF));
+          background-image: -webkit-linear-gradient(top, #EEE 1%, #FFF 10%);
+          background-image: -moz-linear-gradient(top, #EEE 1%, #FFF 10%);
+          background-image: -o-linear-gradient(top, #EEE 1%, #FFF 10%);
+          background-image: -ms-linear-gradient(top, #EEE 1%, #FFF 10%);
+          background-image: linear-gradient(top, #EEE 1%, #FFF 10%);
+        }
+
+      }
+    }
+
+  }
+
+  .subform {
+    h4 {
+      font-weight: 600;
+      background: #ccc;
+      padding: 1rem;
+      color: white;
+      margin-bottom: 0;
+      .vendor-prefix(text-shadow; 1px 1px 2px #aaa);
+    }
+
+    h5 {
+      font-weight: 600;
+      background: #ccc;
+      padding: 1rem;
+      color: white;
+      margin-bottom: 0;
+      .vendor-prefix(text-shadow; 1px 1px 2px #aaa);
+    }
+  }
+}
