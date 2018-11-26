@@ -24,7 +24,8 @@
           </h1>
 
           <div class="nda-link">
-            <a href="./../../">
+            <a href="./../../"
+              tal:attributes="href python:view._country_folder.absolute_url()">
               <i class='fa fa-level-up'></i>
               Go to National Descriptor Assessment
             </a>

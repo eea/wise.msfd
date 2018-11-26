@@ -1,5 +1,4 @@
-<div class="overflow-table"
-  tal:define="data options/data">
+<div tal:define="data options/data">
 
   <div class="subform-refresh" tal:define="form nocall:view/subform">
     <div tal:replace="structure form">
@@ -17,18 +16,20 @@
   </div>
 
   <div tal:condition="data" tal:repeat="info data">
-    <div tal:define="muid python:info[0]; muid_data python: info[1];" >
+    <tal:def tal:define="muid python:info[0]; muid_data python: info[1];" >
       <h4 tal:content="muid">LV-01</h4>
-      <table class="table table-bordered table-striped table-comp-translate">
-        <tal:rep tal:repeat="row muid_data">
-          <tr tal:condition="python: row[0] not in view.BLACKLIST">
-            <th tal:content="python: row[0]">Element</th>
-            <tal:rep tal:repeat="r python: row[1]">
-              <td tal:replace="structure python: view.translate_value(value=r)"> </td>
-            </tal:rep>
-          </tr>
-        </tal:rep>
-      </table>
-    </div>
+      <div class="overflow-table">
+        <table class="table table-bordered table-striped table-comp-translate">
+          <tal:rep tal:repeat="row muid_data">
+            <tr tal:condition="python: row[0] not in view.BLACKLIST">
+              <th tal:content="python: row[0]">Element</th>
+              <tal:rep tal:repeat="r python: row[1]">
+                <td tal:replace="structure python: view.translate_value(value=r)"> </td>
+              </tal:rep>
+            </tr>
+          </tal:rep>
+        </table>
+      </div>
+    </tal:def>
   </div>
 </div>

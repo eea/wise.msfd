@@ -19,7 +19,6 @@
 
           <h1>National descriptors overview for <span tal:content="context/title"></span></h1>
 
-          <!-- <div style="margin-bottom: 1em; top: -0.8em; position: relative"> -->
           <div class="nda-link">
             <a href="./../">
               <i class='fa fa-level-up'></i>
@@ -27,14 +26,12 @@
             </a>
           </div>
 
-          <!-- <div style="background-color: #e6f7ca; padding: 1rem; border: 1px solid #AAA; margin-bottom: 1em;"> -->
           <div class="process-state-phase-form">
             <form method="GET" action='./content_status_modify'>
               <div>
                 Process state:
                 <strong tal:content="view/get_status">Phase 0</strong>
 
-                <!-- <div style="float: right"> -->
                 <div class="phase-selector">
                   <select onchange="javascript:this.form.submit()"
                     name="workflow_action"
@@ -46,45 +43,47 @@
                     </tal:rep>
                   </select>
                 </div>
-              </form>
-            </div>
-
-            <div tal:repeat="region view/get_regions">
-              <h4 tal:content="region/Title">Region name</h4>
-
-              <table class="table as-table-overview table-striped">
-                <thead>
-                  <tr>
-                    <th>Descriptor</th>
-                    <th tal:repeat='art view/get_articles'>
-                      <span tal:replace="art">Art0</span>
-                    </th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr tal:repeat="desc region/contentValues">
-                    <th>
-                      <span tal:content="desc/title_or_id">D0</span>
-                    </th>
-                    <td tal:repeat="assessment desc/contentValues">
-                      <a class="btn btn-primary btn-xs" href="" tal:attributes="href assessment/absolute_url">View</a>
-                      <div class="as-state-label" tal:content="python: view.get_status(assessment)">State</div>
-                      <div>
-                        <blockquote tal:condition="assessment/assessment_summary">
-                          <p tal:content="assessment/assessment_summary" >
-                            Summary here
-                          </p>
-                        </blockquote>
-                      </div>
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-
+              </div>
+            </form>
           </div>
+
+          <div tal:repeat="region view/get_regions" style="padding-top: 2rem">
+            <h4 tal:content="region/Title">Region name</h4>
+            <hr />
+
+            <table class="table as-table-overview table-striped">
+              <thead>
+                <tr>
+                  <th>Descriptor</th>
+                  <th tal:repeat='art view/get_articles'>
+                    <span tal:replace="art">Art0</span>
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr tal:repeat="desc region/contentValues">
+                  <th>
+                    <span tal:content="desc/title_or_id">D0</span>
+                  </th>
+                  <td tal:repeat="assessment desc/contentValues">
+                    <a class="btn btn-primary btn-xs" href="" tal:attributes="href assessment/absolute_url">View</a>
+                    <div class="as-state-label" tal:content="python: view.get_status(assessment)">State</div>
+                    <div>
+                      <blockquote tal:condition="assessment/assessment_summary">
+                        <p tal:content="assessment/assessment_summary" >
+                          Summary here
+                        </p>
+                      </blockquote>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
         </div>
       </div>
+    </div>
 
-    </body>
-  </html>
+  </body>
+</html>

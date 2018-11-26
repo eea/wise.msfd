@@ -28,19 +28,21 @@ class BootstrapCompliance(BrowserView):
     """ Bootstrap the compliance module by creating all needed country folders
     """
 
+    @property
+    def debug(self):
+        return 'production' not in self.request.form
+
     @db.use_db_session('2018')
     def _get_countries(self):
         """ Get a list of (code, name) countries
         """
-
-        is_debug = 'production' not in self.request.form
 
         count, res = db.get_all_records(
             sql2018.LCountry
         )
         countries = [(x.Code, x.Country) for x in res]
 
-        if is_debug:
+        if self.debug:
             countries = [x for x in countries if x[0] in ('LV', 'NL')]
 
         return countries
@@ -50,19 +52,17 @@ class BootstrapCompliance(BrowserView):
         """ Get a list of (code, description) descriptors
         """
 
-        is_debug = 'production' not in self.request.form
-
         mc = sql2018.LGESComponent
         count, res = db.get_all_records(
             mc,
             mc.GESComponent == 'Descriptor'
         )
-        descriptors = [(x.Code, x.Description) for x in res]
+        descriptors = [(x.Code.split('/')[0], x.Description) for x in res]
 
-        descs = ('D1.1', 'D1.4', 'D5')
+        debug_descriptors = ('D1', 'D1.1', 'D4', 'D5', 'D6')
 
-        if is_debug:
-            descriptors = [x for x in descriptors if x[0] in descs]
+        if self.debug:
+            descriptors = [x for x in descriptors if x[0] in debug_descriptors]
 
         return descriptors
 

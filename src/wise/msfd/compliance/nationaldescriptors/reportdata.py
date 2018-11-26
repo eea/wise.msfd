@@ -409,7 +409,9 @@ class ReportData2018(BaseComplianceView):
         report_date = ''
         source_file = ['To be addedd...', '.']
 
-        if data[0][1]:
+        # TODO: check validity of data
+
+        if data and data[0][1]:
             for row in data[0][1]:
                 if row[0] == 'ReportingDate':
                     report_date = row[1][0]

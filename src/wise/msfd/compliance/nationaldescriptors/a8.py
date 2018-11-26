@@ -4,8 +4,8 @@ from Products.Five.browser.pagetemplatefile import \
     ViewPageTemplateFile as Template
 from wise.msfd import db, sql
 
+from ..a8_utils import DB_MAPPER_CLASSES, DESC_DATA_MAPPING, DESCR_TOPIC_UTILS
 from ..base import BaseArticle2012
-from ..a8_utils import DESC_DATA_MAPPING, DB_MAPPER_CLASSES, DESCR_TOPIC_UTILS
 
 
 class Article8(BaseArticle2012):
@@ -13,18 +13,22 @@ class Article8(BaseArticle2012):
 
     def get_suminfo2_data(self, marine_unit_id, descriptor):
         """ Get all data from table _SumInfo2ImpactedElement
-            for specific Marine Units and descriptor
+        for specific Marine Units and descriptor
+
         :param marine_unit_id: ['LV-001', 'LV-002']
         :param descriptor: 'D5'
-        :return: {u'ImpactPressureSeabedHabitats': [u'ShallRock', u'ShallSand'],
-            u'ImpactPressureWaterColumn': [u'NutrientLevels', u'Transparency']}
+        :return: {u'ImpactPressureSeabedHabitats':
+                     [u'ShallRock', u'ShallSand'],
+                  u'ImpactPressureWaterColumn':
+                     [u'NutrientLevels', u'Transparency']}
         """
 
         results = defaultdict(list)
         tables = DESC_DATA_MAPPING[descriptor]
 
         for table in tables:
-            tbl_name = '{}SumInfo2ImpactedElement'.format(table.replace('_', ''))
+            tbl_name = '{}SumInfo2ImpactedElement'.format(table.replace('_',
+                                                                        ''))
             mc_assessment = getattr(sql, tbl_name, None)
 
             if not mc_assessment:
@@ -44,7 +48,8 @@ class Article8(BaseArticle2012):
 
     def get_metadata_data(self, marine_unit_id, descriptor):
         """ Get all data from table _Metadata
-            for specific Marine Units and descriptor
+        for specific Marine Units and descriptor
+
         :param marine_unit_id: ['LV-001', 'LV-002']
         :param descriptor: 'D5'
         :return: list [u'1973 - 2008', ...]
@@ -80,7 +85,7 @@ class Article8(BaseArticle2012):
 
     def get_activity_descr_data(self, marine_unit_id, descriptor):
         """ Get all data from table _ActivityDescription
-            for specific Marine Units and descriptor
+        for specific Marine Units and descriptor
         :param marine_unit_id: ['LV-001', 'LV-002']
         :param descriptor: 'D5'
         :return: table results
@@ -139,7 +144,7 @@ class Article8(BaseArticle2012):
 
     def get_assesment_ind_data(self, marine_unit_id, descriptor):
         """ Get all data from table _AssesmentIndicator
-            for specific Marine Units and descriptor
+        for specific Marine Units and descriptor
         :param marine_unit_id: ['LV-001', 'LV-002']
         :param descriptor: 'D5'
         :return: table results
@@ -165,7 +170,7 @@ class Article8(BaseArticle2012):
 
     def get_assesment_data(self, marine_unit_id, descriptor):
         """ Get all data from table _Assesment
-            for specific Marine Units and descriptor
+        for specific Marine Units and descriptor
         :param marine_unit_id: ['LV-001', 'LV-002']
         :param descriptor: 'D5'
         :return: table results
@@ -191,7 +196,7 @@ class Article8(BaseArticle2012):
 
     def get_base_data(self, marine_unit_id, descriptor):
         """ Get all data from base table
-            for specific Marine Units and descriptor
+        for specific Marine Units and descriptor
         :param marine_unit_id: ['LV-001', 'LV-002']
         :param descriptor: 'D5'
         :return: table results
@@ -216,6 +221,7 @@ class Article8(BaseArticle2012):
 
     def get_topic_assessment(self, marine_unit_id):
         """ Get dict with topics(analisys/features) and the GESComponents
+
         :param marine_unit_id: 'LV-001'
         :return: {'LevelPressureOLoad': ['5.1.1'],
             u'ImpactPressureWaterColumn': [u'5.2.1', u'5.2.1', u'5.2.2'],
@@ -340,7 +346,7 @@ class Article8(BaseArticle2012):
 
         for topic, indics in self.topic_assesment.items():
             if indicator in indics \
-             and topic in topic_groups[topic_group_index]:
+                    and topic in topic_groups[topic_group_index]:
                 topics_needed.append(topic)
 
         results = []
@@ -348,6 +354,7 @@ class Article8(BaseArticle2012):
         topic_atn = DESCR_TOPIC_UTILS['topic_assessment_to_nutrients'].get(
             self.descriptor, {}
         )
+
         for row in self.base_data:
             topic = row.Topic
 
@@ -360,7 +367,7 @@ class Article8(BaseArticle2012):
 
             for row_asess in self.asses_ind_data:
                 if row_asess.Topic == asses_topic and \
-                 row_asess.GESIndicators == indicator:
+                        row_asess.GESIndicators == indicator:
                     res.append(getattr(row_asess, col_name))
 
             if not res:
@@ -383,7 +390,7 @@ class Article8(BaseArticle2012):
 
         for topic, indics in self.topic_assesment.items():
             if indicator in indics \
-             and topic in topic_groups[topic_group_index]:
+                    and topic in topic_groups[topic_group_index]:
                 topics_needed.append(topic)
 
         results = []
@@ -423,6 +430,7 @@ class Article8(BaseArticle2012):
         topic_atn = DESCR_TOPIC_UTILS['topic_assessment_to_nutrients'].get(
             self.descriptor, {}
         )
+
         for row in self.base_data:
             topic = row.Topic
 
