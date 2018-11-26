@@ -1,21 +1,29 @@
 # -*- coding: utf-8 -*-
 
-import os
 import json
-import requests
+import os
 import time
-from Products.Five.browser import BrowserView
-from plone.api import portal
+
+import chardet
+import requests
 from requests.auth import HTTPDigestAuth
 from zope.annotation.interfaces import IAnnotations
-from BTrees.OOBTree import OOBTree
-import chardet
+
 import transaction
+from BTrees.OOBTree import OOBTree
+from plone.api import portal
+from plone.api.portal import get as get_portal
+from Products.Five.browser import BrowserView
+from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile as VPTF
 
 env = os.environ.get
 
 ANNOTATION_KEY = 'translation.msfd.storage'
 MARINE_PASS = env('MARINE_PASS', '')
+SERVICE_URL = 'https://webgate.ec.europa.eu/etranslation/si/translate'
+
+# TODO: get another username?
+TRANS_USERNAME = 'ipetchesi'
 
 
 def decode_text(text):
@@ -23,10 +31,6 @@ def decode_text(text):
     text_encoded = text.decode(encoding)
 
     return text_encoded
-
-
-class TranslateBTree(OOBTree):
-    pass
 
 
 class SendTranslationRequest(BrowserView):
@@ -70,8 +74,6 @@ class SendTranslationRequest(BrowserView):
 
     def __call__(self):
 
-        # import pdb; pdb.set_trace()
-
         sourceLanguage = self.context.aq_parent.aq_parent.id.upper()
 
         if not sourceLanguage:
@@ -106,7 +108,7 @@ class SendTranslationRequest(BrowserView):
             'priority': 5,
             'callerInformation': {
                 'application': 'Marine_EEA_20180706',
-                'username': 'ipetchesi',
+                'username': TRANS_USERNAME,
             },
             'domain': 'SPD',
             'externalReference': externalReference,
@@ -115,17 +117,18 @@ class SendTranslationRequest(BrowserView):
             'targetLanguages': targetLanguages,
             'destinations': {
                 'httpDestinations':
-                    [dest],
-                    }
+                [dest],
+            }
         }
 
         dataj = json.dumps(data)
         headers = {'Content-Type': 'application/json'}
 
-        service_url = 'https://webgate.ec.europa.eu/etranslation/si/translate'
-        result = requests.post(service_url, auth=HTTPDigestAuth(
-                 'Marine_EEA_20180706', MARINE_PASS),
-                 data=dataj, headers=headers)
+        result = requests.post(SERVICE_URL,
+                               auth=HTTPDigestAuth('Marine_EEA_20180706',
+                                                   MARINE_PASS),
+                               data=dataj,
+                               headers=headers)
 
         self.request.response.headers.update(headers)
         res = {
@@ -144,6 +147,7 @@ class TranslationCallback(BrowserView):
 
     def __call__(self):
         self.saveToAnnotation()
+
         return self.request.form
 
     def saveToAnnotation(self):
@@ -151,6 +155,7 @@ class TranslationCallback(BrowserView):
         annot = IAnnotations(site, None)
 
         language = self.request.form.pop('source_lang', None)
+
         if not language:
             language = self.context.aq_parent.aq_parent.id.upper()
 
@@ -180,3 +185,38 @@ class TranslationCallback(BrowserView):
         annot_lang.update(trans_entry)
 
         transaction.commit()
+
+
+class TranslationView(BrowserView):
+    """ This is composed into BaseComplianceView to use the translate() method
+
+    Calling the view yields the translation edit template
+    """
+
+    translation_edit_template = VPTF('./pt/translation-edit-form.pt')
+    translate_snip = VPTF('pt/translate-snip.pt')
+
+    def translate(self, source_lang, value):
+        # TODO: implement getting the translation from annotations
+
+        if not value:
+            return self.translate_snip(text=value, translation=u"")
+
+        translation = u''
+
+        site = get_portal()
+        annot = IAnnotations(site, None)
+
+        if (annot and ANNOTATION_KEY in annot and
+                source_lang in annot[ANNOTATION_KEY].keys()):
+
+            annot_lang = annot[ANNOTATION_KEY][source_lang]
+
+            if value in annot_lang:
+                translation = annot_lang.get(value, None)
+                translation = translation.lstrip('?')
+
+        return self.translate_snip(text=value, translation=translation)
+
+    def __call__(self):
+        return self.translation_edit_template()

@@ -3,12 +3,14 @@ import os
 
 import lxml.etree
 from pkg_resources import resource_filename
-from zope.annotation.interfaces import IAnnotations
+from zope.component import getMultiAdapter
+# from zope.annotation.interfaces import IAnnotations
 from zope.dottedname.resolve import resolve
 
 from Acquisition import aq_inner
 from plone.api.content import get_state
 from plone.api.portal import get_tool
+from plone.memoize.view import memoize
 from Products.Five.browser import BrowserView
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 from wise.msfd import db, sql
@@ -18,10 +20,6 @@ from wise.msfd.utils import Tab
 
 from . import interfaces
 from .nationaldescriptors.utils import row_to_dict
-from .translate import ANNOTATION_KEY
-
-# import chardet
-# import transaction
 
 logger = logging.getLogger('wise.msfd')
 
@@ -97,36 +95,6 @@ class BaseComplianceView(BrowserView):
     assessment_header_template = ViewPageTemplateFile(
         'nationaldescriptors/pt/assessment-header.pt'
     )
-
-    translation_edit_template = ViewPageTemplateFile(
-        'nationaldescriptors/pt/translation-edit-form.pt'
-    )
-
-    translate_snip = ViewPageTemplateFile('pt/translate-snip.pt')
-
-    def translate_value(self, value):
-        # TODO: implement getting the translation from annotations
-
-        if not value:
-            return self.translate_snip(text=value, translation=u"")
-
-        translation = u''
-
-        site = self.context.Plone
-        annot = IAnnotations(site, None)
-
-        source_lang = self.country_code
-
-        if (annot and ANNOTATION_KEY in annot and
-                source_lang in annot[ANNOTATION_KEY].keys()):
-
-            annot_lang = annot[ANNOTATION_KEY][source_lang]
-
-            if value in annot_lang:
-                translation = annot_lang.get(value, None)
-                translation = translation.lstrip('?')
-
-        return self.translate_snip(text=value, translation=translation)
 
     @property
     def colspan(self):
@@ -277,6 +245,18 @@ class BaseComplianceView(BrowserView):
             context = self.context
 
         return bool(tool.checkPermission(permission, aq_inner(context)))
+
+    @memoize
+    def translate_view(self):
+        return getMultiAdapter((self.context, self.request),
+                               name="translation-view")
+
+    def translate_value(self, value):
+        v = self.translate_view()
+
+        source_lang = self.country_code
+
+        return v.translate(source_lang=source_lang, value=value)
 
 
 def get_element_by_id(root, id):

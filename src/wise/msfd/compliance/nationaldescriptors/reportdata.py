@@ -432,7 +432,7 @@ class ReportData2018(BaseComplianceView):
             report_date=report_date
         )
 
-        self.content = template(data=data, head_tpl=head_tpl) + \
-            self.translation_edit_template()
+        trans_edit = self.translate_view()
+        self.content = template(data=data, head_tpl=head_tpl) + trans_edit()
 
         return self.index()

@@ -10,6 +10,7 @@
 
   <include package=".search" />
   <include package=".compliance" />
+  <include package=".translation" />
 
   <include file="profiles.zcml" />
   <include file="utility.zcml" />

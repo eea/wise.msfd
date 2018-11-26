@@ -1628,3 +1628,635 @@ form_structure = parse_forms_file()
     #         total += score
     #
     #     return total
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en"
+  xmlns:tal="http://xml.zope.org/namespaces/tal"
+  xmlns:metal="http://xml.zope.org/namespaces/metal"
+  xmlns:i18n="http://xml.zope.org/namespaces/i18n"
+  lang="en"
+  metal:use-macro="context/main_template/macros/master"
+  i18n:domain="eea">
+
+  <body metal:fill-slot="content">
+
+    <div id="layout-contents" tal:define="text context/text | nothing" >
+      <div id="wise-search-form">
+        <div id="wise-search-form-top">
+          <metal:tabs
+             metal:use-macro="context/wise-macros/macros/tabs"></metal:tabs>
+        </div>
+
+        <div
+          class="start-page-content left-side-form"
+          tal:content="structure text/output"
+          tal:condition="text">
+        </div>
+      </div>
+    </div>
+
+  </body>
+</html>
+<div tal:repeat="item view/items">
+  <div tal:replace="python: view.display_item(item)">
+    item display here
+  </div>
+</div>
+<metal:macro define-macro="tabs-comp">
+  <div id="wise-search-form">
+    <div id="wise-search-form-top">
+      <ul class="nav nav-pills topnav hidden-xs">
+        <tal:rep tal:repeat="tab view/main_forms">
+          <li tal:define="
+            maintitle python: tab.titles[0];
+            subtitle python: tab.titles[1];
+            active python: view.section == tab.section"
+            tal:attributes="class python: active and 'tab-active'"
+            >
+            <a href=""
+              tal:attributes="href string:./${tab.view}"
+              >
+              <span tal:content="maintitle">Article X</span>
+              <span tal:content="subtitle">Subtitle here</span>
+            </a>
+          </li>
+        </tal:rep>
+      </ul>
+
+      <!-- <div class="visible-xs" style="clear: both;"> -->
+      <div class="visible-xs">
+        <div>
+          Select article:
+        </div>
+          <select class="notselect" id="mobile-select-article" >
+            <tal:rep tal:repeat="tab view/main_forms" >
+              <tal:block tal:define="
+                maintitle python: tab.titles[0];
+                subtitle python: tab.titles[1];
+                active python: view.section == tab.section">
+                <option tal:attributes="value string:./${tab.view}; data-maintitle maintitle; data-subtitle subtitle;
+                selected python: active and 'selected'"
+                        tal:content="python: tab.title + ' ' + tab.subtitle"
+                >
+                </option>
+              </tal:block>
+            </tal:rep>
+          </select>
+      </div>
+      <!-- <h2 tal:content="view/title">Title here</h2> -->
+      <div tal:condition="not: view/subform_content">
+        Please refine your search.
+      </div>
+    </div>
+
+    <!--<div class="wise-search-form-container">-->
+      <!--<metal:block use-macro="context/@@ploneform-macros/titlelessform">-->
+        <!--<metal:slot fill-slot="fields">-->
+          <!--<div class="form-right-side">-->
+            <!--<metal:block use-macro="context/@@ploneform-macros/fields" ></metal:block>-->
+          <!--</div>-->
+        <!--</metal:slot>-->
+        <!--<metal:slot fill-slot="actions">-->
+          <!--<div tal:content="structure view/subform_content | nothing">subform here</div>-->
+          <!--<div class="form-right-side">-->
+            <!--<metal:block use-macro="context/@@ploneform-macros/actions" />-->
+          <!--</div>-->
+        <!--</metal:slot>-->
+        <!--<metal:css fill-slot="formtop">-->
+          <!--<style>-->
+
+          <!--</style>-->
+        <!--</metal:css>-->
+      <!--</metal:block>-->
+
+    </div>
+  </div>
+</metal:macro>
+<!--<div id="compliance-module-container">-->
+  <!--<div tal:content="structure view/compliance_content">forms</div>-->
+<!--</div>-->
+<html>
+  <head>
+     <!--<link href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" rel="stylesheet" integrity="sha384&#45;MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous" />-->
+     <!--<style>-->
+       <!--body {-->
+       <!--font&#45;size: 70%;-->
+       <!--}-->
+     <!--</style> -->
+  </head>
+<body>
+
+  <div style="display:none">
+<h5>Descriptors (descriptors)</h5>
+<div tal:replace="view/descriptors"></div>
+
+<h5>Descriptor labels (descs)</h5>
+<div tal:replace="view/descs"></div>
+
+<h5>MarineUnitIds (muids)</h5>
+<div tal:replace="view/muids"></div>
+
+<h5>Criterions (criterions)</h5>
+<div tal:replace="view/criterions"></div>
+
+<h5>Criterions/Indicators (crit_lab_indics)</h5>
+<div tal:replace="view/crit_lab_indics"></div>
+
+<h5>Indicator/Feature Pressures (indics)</h5>
+<div tal:replace="view/indic_w_p"></div>
+
+<h5>Criterion labels (criterion_labels)</h5>
+<div tal:replace="view/criterion_labels"></div>
+
+<!--<h5>Indicators (indicators)</h5>-->
+<!--<div>-->
+  <!--<ul>-->
+    <!--<li tal:repeat="indic view/indicator_descriptors">-->
+      <!--Indicator Code: <span tal:content="indic/ReportingFeature"/>-->
+      <!--, ID: <span tal:content="indic/MSFD9_Descriptor_ID"/>-->
+    <!--</li>-->
+  <!--</ul>-->
+<!--</div>-->
+  </div>
+
+<div class="container-fluid">
+  <!--<div tal:replace="structure view/art_9_tpl" ></div>-->
+  <div tal:replace="structure view/art_8_tpl" ></div>
+  <!--<div tal:replace="structure view/art_10_tpl" ></div>-->
+</div>
+
+</body>
+</html>
+<table tal:define="res view/data_rows">
+  <thead>
+    <tr>
+      <th
+        tal:repeat="label res/keys"
+        tal:content="python: view.labelAsTitle(label)">
+        Label here
+      </th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr tal:repeat="row res">
+      <td tal:repeat="cell row" tal:content="cell"></td>
+    </tr>
+  </tbody>
+</table>
+
+
+# @register_form
+# class A81bForm(SubForm):
+#     title = 'Article 8.1b (Analysis of pressures and impacts)'
+#     fields = Fields(interfaces.IA81bSubformSelect)
+#     prefix = 'a81bselect'
+#     data = {}
+#
+#     def get_subform(self):
+#         klass = THEME_FORMS.get(self.data['theme'])
+#
+#         return super(A81bForm, self).get_subform(klass)
+#
+
+# @register_theme_subform('Ecosystem(s)', 'Pressures and impacts')
+# class XXX(ItemDisplayForm, BaseFormUtil):
+#     fields = Fields(interfaces.IRecordSelect)
+#     prefix = 'a81a_eco'
+#
+#     def get_db_results(self):
+#         page = int(self.data.get('page')) or 0
+#         muid = self.get_marine_unit_id()
+#         res = db.get_a10_targets(marine_unit_id=muid, page=page)
+#
+#         return res
+#
+#     def get_extra_data(self):
+#         if not self.item:
+#             return {}
+#
+#         target_id = self.item['MSFD10_Target_ID']
+#
+#         res = db.get_a10_feature_targets(target_id)
+#         ft = pivot_data(res, 'FeatureType')
+#
+#         # res = db.get_a10_feature_targets(target_id)
+#         # criteria = pivot_data(res, 'FeatureType')
+#
+#         return [
+#             ('Feature Types', ft),
+#             # ('Criteria Indicators', criteria),
+#         ]
+
+
+
+# ARTICLES = [
+#     ('a81c', 'Article 8.1c (Economic and social analysis)'),
+# ]
+
+# articles_vocabulary = SimpleVocabulary(
+#     [SimpleTerm(a[0], a[0], a[1]) for a in ARTICLES]
+# )
+#
+#
+# @provider(IVocabularyFactory)
+# def articles_vocabulary_factory(context):
+#     return articles_vocabulary
+
+
+# A81A_THEMES = [
+#     'Ecosystem(s)',
+#     'Functional group(s)',
+#     'Habitat(s)',
+#     'Species(s)',
+#     'Other(s)',
+#     'NIS Inventory',
+#     'Physical',
+# ]
+#
+# a81a_themes_vocabulary = SimpleVocabulary(
+#     [SimpleTerm(a, a, a) for a in A81A_THEMES]
+# )
+
+
+# @provider(IVocabularyFactory)
+# def a81a_themes_vocabulary_factory(context):
+#     return vocab
+
+
+# A81B_THEMES = [
+#     'Extraction of fish and shellfish',
+#     'Extraction of seaweed, maerl and other',
+#     'Harzardous substances',
+#     'Hydrological processes',
+#     'Marine litter',
+#     'Microbial pathogens',
+#     'Non-indigenous species',
+#     'Underwater noise',
+#     'Nutrients',
+#     'Physical damage',
+#     'Pollutant events',
+#     'Acidification',
+# ]
+
+# a81b_themes_vocabulary = SimpleVocabulary(
+#     [SimpleTerm(a, a, a) for a in A81B_THEMES]
+# )
+
+
+# @provider(IVocabularyFactory)
+# def a81b_themes_vocabulary_factory(context):
+#     return a81b_themes_vocabulary
+
+
+    # def update(self):
+    #     super(MainForm, self).update()
+    #
+    #     self.data, errors = self.extractData()
+    #
+    #     if all(self.data.values()):
+    #         self.data['MarineUnitID'] = db.get_marine_unit_ids(**self.data)
+    #
+    #         if not errors and self.data['MarineUnitID']:
+    #             self.subform = ArticleSelectForm(
+    #                 self.context, self.request, self)
+    #
+    #     if errors:
+    #         self.status = self.formErrorsMessage
+    #
+    #         return
+
+    # import pdb; pdb.set_trace()
+
+#     conn = connection()
+#     res = conn.execute(text("""
+# SELECT *
+# FROM MSFD9_Descriptors
+# WHERE
+# MarineUnitID = :marine_unit_id
+# ORDER BY MSFD9_Descriptor_ID
+# OFFSET :page ROWS
+# FETCH NEXT 1 ROWS ONLY
+# """), marine_unit_id=marine_unit_id, page=page)
+
+# class SubFormsVocabulary(SimpleVocabulary):
+#     """ An hackish vocabulary that retrieves subform names for a form
+#     """
+#
+#     # TODO: I'm not sure if this is needed. Its existance needs to be defended
+#
+#     def __init__(self, form_klass):
+#         self.form_klass = form_klass
+#         pass
+#
+#     def __call__(self, context):
+#         self.context = context
+#
+#     @property
+#     def _terms(self):
+#         terms = []
+#
+#         forms = SUBFORMS[self.form_klass]
+#
+#         for k in forms:
+#             terms.append(SimpleTerm(k, k.title, k.title))
+#
+#         return terms
+#
+#     @property
+#     def by_value(self):
+#         d = {}
+#
+#         for term in self._terms:
+#             d[term.value] = term
+#
+#         return d
+#
+#     @property
+#     def by_token(self):
+#         d = {}
+#
+#         for term in self._terms:
+#             d[term.token] = term
+#
+#         return d
+
+# class CollectionDisplayForm(EmbeddedForm):
+#     """ Display a collection of data (multiple rows of results)
+#     """
+#
+#     pages = None        # a list of items to show
+#
+#     template = ViewPageTemplateFile('pt/collection.pt')
+#
+#     def __init__(self, *args, **kwargs):
+#         super(CollectionDisplayForm, self).__init__(*args, **kwargs)
+#
+#     def update(self):
+#         super(CollectionDisplayForm, self).update()
+#         self.count, self.items = self.get_db_results()
+#
+#     def display_item(self, item):
+#         return item
+
+
+# def get_a9_available_marine_unit_ids(marine_unit_ids):
+#     """ Returns a list of which muid is available, of the ones provided
+#     """
+#     sess = session()
+#     q = sess.query(sql.MSFD9Descriptor.MarineUnitID).filter(
+#         sql.MSFD9Descriptor.MarineUnitID.in_(marine_unit_ids)
+#     ).distinct()
+#
+#     total = q.count()
+#
+#     return [total, q]
+
+
+# def get_a10_available_marine_unit_ids(marine_unit_ids):
+#     """ Returns a list of which muid is available, of the ones provided
+#     """
+#     sess = session()
+#     q = sess.query(sql.MSFD10Target.MarineUnitID).filter(
+#         sql.MSFD10Target.MarineUnitID.in_(marine_unit_ids)
+#     ).distinct()
+#
+#     total = q.count()
+#
+#     return [total, q]
+
+# def get_a8_available_marine_unit_ids(marine_unit_ids):
+#     """ Returns a list of which muid is available, of the ones provided
+#
+#     TODO: implement specific to A8
+#     """
+#     sess = session()
+#     q = sess.query(sql.MSFD10Target.MarineUnitID).filter(
+#         sql.MSFD10Target.MarineUnitID.in_(marine_unit_ids)
+#     ).distinct()
+#
+#     total = q.count()
+#
+#     return [total, q]
+
+
+
+    # def get_db_results(self):
+    #     page = self.get_page()
+    #     muid = self.get_marine_unit_id()
+    #
+    #     return db.get_a81a_ecosystem(marine_unit_id=muid, page=page)
+
+
+
+    # def get_db_results(self):
+    #     mid = self.context.data.get('marine_unit_id')
+    #     page = self.get_page()
+    #
+    #     return db.get_a10_targets(marine_unit_id=mid, page=page)
+    # def get_db_results(self):
+    #     mid = self.context.data.get('marine_unit_id')
+    #     page = self.get_page()
+    #
+    #     return db.get_a9_descriptors(marine_unit_id=mid, page=page)
+
+
+
+# def get_a81a_ecosystem(marine_unit_id, page=0):
+#     klass = sql.MSFD8aEcosystem
+#
+#     sess = session()
+#     q = sess.query(klass).filter(
+#         klass.MarineUnitID == marine_unit_id
+#     ).order_by(
+#         klass.MSFD8a_Ecosystem_ID
+#     )
+#
+#     total = q.count()
+#     item = q.offset(page).limit(1).first()
+#
+#     return [total, item]
+
+
+
+# def get_a81a_ecosystem_pressureimpacts(rel_id, page=0):
+#     klass = sql.MSFD8aEcosystemPressuresImpact
+#
+#     sess = session()
+#     q = sess.query(klass).filter(
+#         klass.MSFD8a_Ecosystem == rel_id
+#     ).one()
+#     item = q.first()
+#
+#     return [1, item]
+# _pressure_impacts
+
+
+# def get_a10_targets(marine_unit_id, page=0):
+#     sess = session()
+#     q = sess.query(sql.MSFD10Target).filter_by(
+#         MarineUnitID=marine_unit_id
+#     ).order_by(sql.MSFD10Target.MSFD10_Target_ID)
+#
+#     total = q.count()
+#     item = q.offset(page).limit(1).first()
+#
+#     # TODO: the MSFD10_DESCrit is not ORM mapped yet
+#     # this query is not finished!!!!
+#
+#     return [total, item]
+
+#     conn = connection()
+#     res = conn.execute(text("""
+# SELECT MSFD10_Targets.*, MSFD10_DESCrit.GESDescriptorsCriteriaIndicators
+# FROM MSFD10_Targets
+# JOIN MSFD10_DESCrit
+#     ON MSFD10_Targets.MSFD10_Target_ID = MSFD10_DESCrit.MSFD10_Target
+# WHERE
+# MSFD10_Targets.MarineUnitID = :marine_unit_id
+# ORDER BY MSFD10_Targets.MSFD10_Target_ID
+# OFFSET :page ROWS
+# FETCH NEXT 1 ROWS ONLY
+# """), marine_unit_id=marine_unit_id, page=page)
+
+    # this is a temporary hack to overcome this
+    # row = next(res)
+    # keys = res.keys()
+    # res = dict(zip(keys, row))
+    # gdci = res.pop('GESDescriptorsCriteriaIndicators')
+    # obj = sql.MSFD10Target(**res)
+    # obj.GESDescriptorsCriteriaIndicators = gdci
+
+
+def get_a9_descriptors(marine_unit_id, page=0):
+    sess = session()
+    q = sess.query(sql.MSFD9Descriptor).filter(
+        sql.MSFD9Descriptor.MarineUnitID == marine_unit_id
+    ).order_by(sql.MSFD9Descriptor.MSFD9_Descriptor_ID)
+
+    total = q.count()
+    item = q.offset(page).limit(1).first()
+
+    return [total, item]
+
+
+    # res = db.get_regions_subregions()
+    # terms = [SimpleTerm(x, x, x) for x in res]
+    # vocab = SimpleVocabulary(terms)
+    #
+    # return vocab
+
+    # res = db.get_area_types()
+    # terms = [SimpleTerm(x, x, x) for x in res]
+    # vocab = SimpleVocabulary(terms)
+    #
+    # return vocab
+
+# def get_member_states():
+#     """ Returns a list of member states. Used in Articles 8, 9 and 10 searches
+#     """
+#     table = sql.t_MSFD4_GegraphicalAreasID
+#     col = table.c.MemberState
+#
+#     sess = session()
+#     res = sess.query(col).distinct().order_by(col)
+#
+#     return [x[0] for x in res]
+
+
+# def get_regions_subregions():
+#     """ Returns a list of regions and subregions.
+#     """
+#     table = sql.t_MSFD4_GegraphicalAreasID
+#     col = table.c.RegionSubRegions
+#
+#     sess = session()
+#     res = sess.query(col).distinct().order_by(col)
+#
+#     return [x[0] for x in res]
+
+
+# def get_area_types():
+#     """ Returns a list of area types.
+#     """
+#
+#     table = sql.t_MSFD4_GegraphicalAreasID
+#     col = table.c.AreaType
+#
+#     sess = session()
+#     res = sess.query(col).distinct().order_by(col)
+#
+#     return [x[0] for x in res]
+
+
+# def get_a10_feature_targets(target_id):
+#     """ Used in extra_data for A10
+#     """
+#     conn = connection()
+#     res = conn.execute(text("""
+# SELECT DISTINCT FeatureType, PhysicalChemicalHabitatsFunctionalPressures
+# FROM MarineDB.dbo.MSFD10_FeaturesPressures
+# WHERE MSFD10_Target = :target_id
+# """), target_id=target_id)
+#
+#     items = []
+#
+#     for item in res:
+#         items.append(item)
+#
+#     return sorted(items)
+#
+#
+# def get_a10_criteria_indicators(target_id):
+#     conn = connection()
+#     res = conn.execute(text("""
+# SELECT DISTINCT GESDescriptorsCriteriaIndicators
+# FROM MarineDB.dbo.MSFD10_DESCrit
+# WHERE MSFD10_Target = :target_id
+# """), target_id=target_id)
+#
+#     items = []
+#
+#     for item in res:
+#         items.append(item)
+#
+#     return sorted(items)
+<div
+  tal:define="css_class view/css_class | string:"
+  tal:attributes="class string:item-subform subform ${css_class};
+                  id view/form_name">
+
+  <metal:block use-macro="context/@@ploneform-macros/fields" />
+
+  <tal:block tal:condition="python: view.item ">
+      <h3 tal:content="view/get_record_title">Article title here</h3>
+  </tal:block>
+
+  <div tal:content="structure view/data_template | nothing"></div>
+  <div tal:content="structure view/extras | nothing"></div>
+
+  <tal:def define="subform view/subform | nothing">
+    <div class="subform-level-x" tal:condition="subform">
+      <div tal:content="structure subform">subform here</div>
+    </div>
+  </tal:def>
+
+  <!--<tal:def define="compliance view/compliance_module | nothing">-->
+    <!--<div tal:condition="compliance">-->
+      <!--<div tal:content="structure compliance">compliance module here</div>-->
+    <!--</div>-->
+  <!--</tal:def>-->
+
+
+</div>
+<dl tal:define="item view/item">
+  <tal:rep repeat="key python:view.get_obj_fields(item)" tal:condition="item">
+    <tal:def tal:define="value item/?key; value python: view.print_value(value)">
+      <dt tal:condition="value">
+        <span tal:content="python: view.name_as_title(key)"
+          tal:attributes="title key">Label</span>
+      </dt>
+      <dd tal:condition="value">
+        <span tal:content="structure value">Some value here</span>
+        <em tal:condition="not: value">No value</em>
+      </dd>
+    </tal:def>
+  </tal:rep>
+</dl>
