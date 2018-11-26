@@ -3,7 +3,7 @@
 
   <assessment-question id="q1-a" class="adequacy" use-criteria=''>
     <definition>
-      To what extent are targets adequate to address the achievement of GES (focus on reducing pressure and impacts)?    
+      To what extent are targets adequate to address the achievement of GES (focus on reducing pressure and impacts)?
     </definition>
     <answers>
       <option>Target for this criterion refers to reduction of pressures and impacts</option>
@@ -39,7 +39,7 @@
 
   <assessment-question id="q1-ch" class="coherence" use-criteria=''>
     <definition>
-      To what extent does the Member State define similar targets to the rest of the Member States in the (sub)region? 
+      1. To what extent does the Member State define similar targets to the rest of the Member States in the (sub)region?
     </definition>
     <answers>
       <option>Target(s) used for this criterion is/are the same as in most (76%-100%) of the MS in the region</option>
@@ -59,7 +59,7 @@
 
   <assessment-question id="q1-c" class="consistency" use-criteria=''>
     <definition>
-      Is the assessment under Art 8 based on the latest (2018) determination of GES under Art.
+      Is the assessment under Art 8 based on the latest (2018) determination of GES under Art. 9?
     </definition>
     <answers>
       <option>Status assessed against the latest GES determination (2018) for this criterion</option>
@@ -97,7 +97,7 @@
 
   <assessment-question id="q3-c" class="consistency" use-criteria=''>
     <definition>
-      To what extent are targets clearly linked to measures (reported under Art 13 in 2016) which aim to reduce the pressures and impacts?  
+      To what extent are targets clearly linked to measures (reported under Art 13 in 2016) which aim to reduce the pressures and impacts?
     </definition>
     <answers>
       <option>Targets are linked to measures for this criterion</option>

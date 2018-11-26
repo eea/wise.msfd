@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <descriptor-definition id='D4'>
-  <criteria primary='true' id='D4C1-birds' title='Ecosystems, including food webs'>
+  <criteria primary='true' id='D4C1' title='Ecosystems, including food webs'>
     <definition>
       <![CDATA[
         <p>
@@ -15,7 +15,7 @@
     <uses-methodological-standard href="#m-1" />
   </criteria>
 
-  <criteria primary='true' id='D4C2-birds' title='Ecosystems, including food webs'>
+  <criteria primary='true' id='D4C2' title='Ecosystems, including food webs'>
     <definition>
       <![CDATA[
         <p>
@@ -29,7 +29,7 @@
     <uses-methodological-standard href="#m-1"/>
   </criteria>
 
-  <criteria primary='false' id='D4C3-birds' title='Ecosystems, including food webs'>
+  <criteria primary='false' id='D4C3' title='Ecosystems, including food webs'>
     <definition>
       <![CDATA[
         <p>
@@ -41,19 +41,6 @@
     </definition>
     <uses-element href="#el-1" />
     <uses-methodological-standard href="#m-1" />
-  </criteria>
-
-  <criteria primary='false' id='D4C4-birds' title='Ecosystems, including food webs'>
-    <definition>
-      <![CDATA[
-        <p>
-          Productivity of the trophic guild is not adversely affected due to anthropogenic pressures.<br/>
-          Member States shall establish threshold values through regional or subregional cooperation.<br/>
-        </p>
-      ]]>
-    </definition>
-    <uses-element href="#el-1"/>
-    <uses-methodological-standard href="#m-1"/>
   </criteria>
 
   <methodological-standard id="m-1">
@@ -81,49 +68,7 @@
     ]]>
   </criteria-element>
 
-  <criteria primary='true' id='D4C1-water' title='Ecosystems, including food webs'>
-    <definition>
-      <![CDATA[
-        <p>
-          The diversity (species composition and their relative abundance) of the trophic guild is not adversely
-          affected due to anthropogenic pressures.<br/>
-          Member States shall establish threshold values through regional or subregional cooperation.<br/>
-        </p>
-      ]]>
-    </definition>
-    <uses-element href="#el-1" />
-    <uses-methodological-standard href="#m-1" />
-  </criteria>
-
-  <criteria primary='true' id='D4C2-water' title='Ecosystems, including food webs'>
-    <definition>
-      <![CDATA[
-        <p>
-          The balance of total abundance between the trophic guilds is not adversely affected due to
-          anthropogenic pressures.<br/>
-          Member States shall establish threshold values through regional or subregional cooperation.
-        </p>
-      ]]>
-    </definition>
-    <uses-element href="#el-1" />
-    <uses-methodological-standard id="m-1"/>
-  </criteria>
-
-  <criteria primary='false' id='D4C3-water' title='Ecosystems, including food webs'>
-    <definition>
-      <![CDATA[
-        <p>
-          The size distribution of individuals across the trophic guild is not adversely affected due to
-          anthropogenic pressures.<br/>
-          Member States shall establish threshold values through regional or subregional cooperation.<br/>
-        </p>
-      ]]>
-    </definition>
-    <uses-element href="#el-1" />
-    <uses-methodological-standard href="#m-1" />
-  </criteria>
-
-  <criteria primary='false' id='D4C4-water' title='Ecosystems, including food webs'>
+  <criteria primary='false' id='D4C4' title='Ecosystems, including food webs'>
     <definition>
       <![CDATA[
         <p>

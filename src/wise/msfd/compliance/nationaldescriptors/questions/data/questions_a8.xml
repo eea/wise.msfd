@@ -42,8 +42,8 @@
       To what extent is the status assessment of parameters, criteria and elements reported?
     </definition>
     <answers>
-      <option>Parameters, criteria and elements are not reported with status assessment for this criterion</option>
       <option>Parameters, criteria and elements are reported with status assessment for this criterion</option>
+      <option>Parameters, criteria and elements are not reported with status assessment for this criterion</option>
     </answers>
     <scoring determination-method="wise.msfd.compliance.scoring.alternative_based" determination-method-args="0 2">
       <option score="4">76-100% of assessment aspects are assessed</option>
