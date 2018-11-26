@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <descriptor-definition id='D1'>
-  <criteria primary='true' id='D1C1' title='Species groups of birds, mammals, reptiles, fish and cephalopods'>
+  <criteria primary='true' id='D1C1' title='Mortality rate from incidental by-catch'>
     <definition>
       <![CDATA[
         <p>
@@ -17,7 +17,7 @@
     <uses-methodological-standard href="#m-1"/>
   </criteria>
 
-  <criteria primary='true' id='D1C2' title='Species groups of birds, mammals, reptiles, fish and cephalopods'>
+  <criteria primary='true' id='D1C2' title='Population abundance'>
     <definition>
       <![CDATA[
         <p>
@@ -36,7 +36,7 @@
     <uses-methodological-standard href="#m-2"/>
   </criteria>
 
-  <criteria primary='raise error' id='D1C3' title='Species groups of birds, mammals, reptiles, fish and cephalopods'>
+  <criteria primary='raise error' id='D1C3' title='Population demographic characteristics'>
     <definition>
       <![CDATA[
         <p>
@@ -54,7 +54,7 @@
     <uses-methodological-standard href="#m-2"/>
   </criteria>
 
-  <criteria primary='raise error' id='D1C4' title='Species groups of birds, mammals, reptiles, fish and cephalopods'>
+  <criteria primary='raise error' id='D1C4' title='Population distributional range and pattern'>
     <definition>
       <![CDATA[
         <p>
@@ -71,7 +71,7 @@
     <uses-methodological-standard href="#m-2"/>
   </criteria>
 
-  <criteria primary='raise error' id='D1C5' title='Species groups of birds, mammals, reptiles, fish and cephalopods'>
+  <criteria primary='raise error' id='D1C5' title='Habitat for the species'>
     <definition>
       <![CDATA[
         <p>
@@ -84,7 +84,7 @@
     <uses-methodological-standard href="#m-2"/>
   </criteria>
 
-  <criteria primary='true' id='D1C6' title='Pelagic broad habitat habitats (water types (variable 17 column)'>
+  <criteria primary='true' id='D1C6' title='Pelagic habitat condition'>
     <definition>
       <![CDATA[
         <p>

@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <descriptor-definition id='D11'>
-  <criteria primary='true' id='D11C1' title='Introduction of energy, including
-    underwater noise, is at levels that do not adversely affect the marine
-    environment'>
+  <criteria primary='true' id='D11C1' title='Anthropogenic impulsive sound'>
     <definition>
       <![CDATA[
         <p>
@@ -19,9 +17,7 @@
     <uses-methodological-standard href="#m-1" />
   </criteria>
 
-  <criteria primary='true' id='D11C2' title='Introduction of energy, including
-    underwater noise, is at levels that do not adversely affect the marine
-    environment'>
+  <criteria primary='true' id='D11C2' title='Anthropogenic continuous low-frequency sound'>
     <definition>
       <![CDATA[
         <p>

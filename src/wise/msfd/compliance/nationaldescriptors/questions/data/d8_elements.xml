@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <descriptor-definition id='D8'>
-    <criteria primary='true' id='D8C1' title='D8-Concentrations of contaminants are
-     at levels not giving rise to pollution effects'>
+    <criteria primary='true' id='D8C1' title='Contaminant in environment'>
     <definition>
       <![CDATA[
         <p>
@@ -37,8 +36,7 @@
     <uses-methodological-standard href="#m-1" />
   </criteria>
     
-  <criteria primary='false' id='D8C2' title='D8-Concentrations of contaminants are
-     at levels not giving rise to pollution effects'>
+  <criteria primary='false' id='D8C2' title='Adverse effects of contaminants'>
     <definition>
       <![CDATA[
         <p>
@@ -54,7 +52,7 @@
     <uses-methodological-standard href="#m-1" />
   </criteria>
 
-  <criteria primary='true' id='D8C3' title=''>
+  <criteria primary='true' id='D8C3' title='Significant acute pollution events'>
     <definition>
       <![CDATA[
         <p>
@@ -66,8 +64,7 @@
     <uses-methodological-standard href="#m-2" />
   </criteria>
 
-  <criteria primary='false' id='D8C4' title='D8-Concentrations of contaminants are
-     at levels not giving rise to pollution effects'>
+  <criteria primary='false' id='D8C4' title='Adverse effect of significant acute pollution events'>
     <definition>
       <![CDATA[
         <p>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <descriptor-definition id='D4'>
-  <criteria primary='true' id='D4C1' title='Ecosystems, including food webs'>
+  <criteria primary='true' id='D4C1' title='Trophic guild species diversity'>
     <definition>
       <![CDATA[
         <p>
@@ -15,7 +15,7 @@
     <uses-methodological-standard href="#m-1" />
   </criteria>
 
-  <criteria primary='true' id='D4C2' title='Ecosystems, including food webs'>
+  <criteria primary='true' id='D4C2' title='Abundance across trophic guilds'>
     <definition>
       <![CDATA[
         <p>
@@ -29,7 +29,7 @@
     <uses-methodological-standard href="#m-1"/>
   </criteria>
 
-  <criteria primary='false' id='D4C3' title='Ecosystems, including food webs'>
+  <criteria primary='false' id='D4C3' title='Trophic guild size distribution'>
     <definition>
       <![CDATA[
         <p>
@@ -68,7 +68,7 @@
     ]]>
   </criteria-element>
 
-  <criteria primary='false' id='D4C4' title='Ecosystems, including food webs'>
+  <criteria primary='false' id='D4C4' title='Trophic guild productivity'>
     <definition>
       <![CDATA[
         <p>

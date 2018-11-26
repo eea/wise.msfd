@@ -1,9 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <descriptor-definition id='D5'>
-  <criteria primary='true' id='D5C1' title='Human-induced eutrophication
-    is minimised, especially adverse effects thereof, such as losses in
-    biodiversity, ecosystem degradation, harmful algae blooms and oxygen
-    deficiency in bottom waters'>
+  <criteria primary='true' id='D5C1' title='Nutrient concentrations'>
     <definition>
       <![CDATA[
       <p>
@@ -16,10 +13,7 @@
     <uses-methodological-standard href="#m-1" />
   </criteria>
 
-  <criteria primary='true' id='D5C2' title='Human-induced eutrophication
-    is minimised, especially adverse effects thereof, such as losses in
-    biodiversity, ecosystem degradation, harmful algae blooms and oxygen
-    deficiency in bottom waters'>
+  <criteria primary='true' id='D5C2' title='Chlorophyll a concentration'>
     <definition>
       <![CDATA[
       <p>
@@ -32,10 +26,7 @@
     <uses-methodological-standard href="#m-1" />
   </criteria>
 
-  <criteria primary='false' id='D5C3' title='Human-induced eutrophication
-    is minimised, especially adverse effects thereof, such as losses in
-    biodiversity, ecosystem degradation, harmful algae blooms and oxygen
-    deficiency in bottom waters'>
+  <criteria primary='false' id='D5C3' title='Harmful algal blooms'>
     <definition>
       <![CDATA[
       <p>
@@ -51,10 +42,7 @@
     <uses-methodological-standard href="#m-1" />
   </criteria>
 
-  <criteria primary='false' id='D5C4' title='Human-induced eutrophication
-    is minimised, especially adverse effects thereof, such as losses in
-    biodiversity, ecosystem degradation, harmful algae blooms and oxygen
-    deficiency in bottom waters'>
+  <criteria primary='false' id='D5C4' title='Photic limit'>
     <definition>
       <![CDATA[
       <p>
@@ -68,10 +56,7 @@
     <uses-methodological-standard href="#m-1" />
   </criteria>
 
-  <criteria primary='true' id='D5C5' title='Human-induced eutrophication
-    is minimised, especially adverse effects thereof, such as losses in
-    biodiversity, ecosystem degradation, harmful algae blooms and oxygen
-    deficiency in bottom waters'>
+  <criteria primary='true' id='D5C5' title='Dissolved oxygen concentration'>
     <definition>
       <![CDATA[
       <p>
@@ -86,10 +71,7 @@
     <uses-methodological-standard href="#m-1" />
   </criteria>
 
-  <criteria primary='false' id='D5C6' title='Human-induced eutrophication
-    is minimised, especially adverse effects thereof, such as losses in
-    biodiversity, ecosystem degradation, harmful algae blooms and oxygen
-    deficiency in bottom waters'>
+  <criteria primary='false' id='D5C6' title='Opportunistic macroalgae of benthic habitats'>
     <definition>
       <![CDATA[
       <p>
@@ -102,10 +84,7 @@
     <uses-methodological-standard href="#m-1" />
   </criteria>
 
-  <criteria primary='false' id='D5C7' title='Human-induced eutrophication
-    is minimised, especially adverse effects thereof, such as losses in
-    biodiversity, ecosystem degradation, harmful algae blooms and oxygen
-    deficiency in bottom waters'>
+  <criteria primary='false' id='D5C7' title='Macrophyte communities of benthic habitats'>
     <definition>
       <![CDATA[
       <p>
@@ -120,10 +99,7 @@
     <uses-methodological-standard href="#m-1" />
   </criteria>
 
-  <criteria primary='false' id='D5C8' title='Human-induced eutrophication
-    is minimised, especially adverse effects thereof, such as losses in
-    biodiversity, ecosystem degradation, harmful algae blooms and oxygen
-    deficiency in bottom waters'>
+  <criteria primary='false' id='D5C8' title='Macrofaunal communities of benthic habitats'>
     <definition>
       <![CDATA[
       <p>
