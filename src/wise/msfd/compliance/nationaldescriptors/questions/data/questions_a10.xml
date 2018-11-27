@@ -6,14 +6,18 @@
       To what extent are targets adequate to address the achievement of GES (focus on reducing pressure and impacts)?
     </definition>
     <answers>
-      <option>Target for this criterion refers to reduction of pressures and impacts</option>
-      <option>Target for this criterion does not refer to reduction of pressures and impacts</option>
+      <option>76-100% of targets relevant for this descriptor refers to reductions of pressures and/or impacts</option>
+      <option>51-75% of targets relevant for this descriptor refers to reductions of pressures and/ or impacts</option>
+      <option>26-50% of target relevant for this descriptor refers to reductions of pressures and/ or impacts</option>
+      <option>1-25% of target relevant for this descriptor refers to reductions of pressures and/or impacts</option>
+      <option>Not relevant</option>
+      <option>Not reported</option>
     </answers>
     <scoring determination-method="wise.msfd.compliance.scoring.alternative_based" determination-method-args="0 2">
-      <option score="4">Target refers to reductions of pressures and impacts for 76-100% of criteria (all primary criteria covered)</option>
-      <option score="3">Target refers to reductions of pressures and impacts for 51-75% of criteria</option>
-      <option score="2">Target refers to reductions of pressures and impacts for 26-50% of criteria</option>
-      <option score="1">Target refers to reductions of pressures and impacts for 1-25% of criteria</option>
+      <option score="4">76-100% of targets relevant for this descriptor refers to reductions of pressures and/or impacts</option>
+      <option score="3">51-75% of targets relevant for this descriptor refers to reductions of pressures and/or impacts</option>
+      <option score="2">26-50% of target relevant for this descriptor refers to reductions of pressures and/or impacts</option>
+      <option score="1">1-25% of target relevant for this descriptor refers to reductions of pressures and/or impacts</option>
       <option score="0">Not reported</option>
     </scoring>
     <score-weight descriptor="D5" value="25" />
@@ -24,14 +28,18 @@
       To what extent are targets measurable?
     </definition>
     <answers>
-      <option>The target for this criterion is measurable</option>
-      <option>The target for this criterion is not measureable</option>
+      <option>76-100% of targets relevant for this descriptor are measurable</option>
+      <option>51-75% of targets relevant for this descriptor are measurable</option>
+      <option>26-50% of targets relevant for this descriptor are measurable</option>
+      <option>1-25% of targets relevant for this descriptor are measurable</option>
+      <option>Not relevant</option>
+      <option>Not reported</option>
     </answers>
     <scoring determination-method="wise.msfd.compliance.scoring.alternative_based" determination-method-args="0 2">
-      <option score="4">Target is measurable for 76-100% of criteria</option>
-      <option score="3">Target is measurable for 51-75% of criteria</option>
-      <option score="2">Target is measurable for 26-50% of criteria</option>
-      <option score="1">Target is measurable for 1-25% of criteria</option>
+      <option score="4">76-100% of targets relevant for this descriptor are measurable</option>
+      <option score="3">51-75% of targets relevant for this descriptor are measurable</option>
+      <option score="2">26-50% of targets relevant for this descriptor are measurable</option>
+      <option score="1">1-25% of targets relevant for this descriptor are measurable</option>
       <option score="0">Not reported</option>
     </scoring>
     <score-weight descriptor="D5" value="15" />
@@ -39,19 +47,21 @@
 
   <assessment-question id="q1-ch" class="coherence" use-criteria=''>
     <definition>
-      1. To what extent does the Member State define similar targets to the rest of the Member States in the (sub)region?
+      To what extent does the Member State define similar targets to the rest of the Member States in the region?
     </definition>
     <answers>
-      <option>Target(s) used for this criterion is/are the same as in most (76%-100%) of the MS in the region</option>
-      <option>Target(s) used for this criterion is/are the same as in more than half (51-75%) of MS in the region</option>
-      <option>Target(s) used for this criterion is/are the same as in less than half (26-50%) of MS in the region</option>
-      <option>Target(s) used for this criterion is/are different from those of the rest of the MS in the region</option>
+      <option>Target(s) used for this descriptor is/are similar to those used most (76%-100%) of the MS in the region</option>
+      <option>Target(s) used for this criterion is/are similar to those used by more than half (51-75%) of MS in the region</option>
+      <option>Target(s) used for this criterion is/are similar to those used in less than half (26-50%) of MS in the region</option>
+      <option>Target(s) used for this criterion is/are similar to those used by few (1-25%) of MS in the region</option>
+      <option>Not relevant</option>
+      <option>Not reported</option>
     </answers>
     <scoring determination-method="wise.msfd.compliance.scoring.alternative_based" determination-method-args="0 2">
       <option score="4">The MS uses the same targets as most (76%-100%)of the MS in the region</option>
       <option score="3">The MS uses the same targets as more than half (51-75%)of MS in the region</option>
       <option score="2">The MS uses the same targets as less then half (26-50%)of MS in the region</option>
-      <option score="1">The MS uses targets that are different from those of the rest of the MS in the region</option>
+      <option score="1">Target(s) used for this criterion is/are similar to those used by few (1-25%) of MS in the region</option>
       <option score="0">Not reported\the information is provided in different formats across MS and it is impossible to compare</option>
     </scoring>
     <score-weight descriptor="D5" value="20" />
@@ -64,7 +74,8 @@
     <answers>
       <option>Status assessed against the latest GES determination (2018) for this criterion</option>
       <option>Status not assessed against the latest GES determination for this criterion</option>
-      <option>Not relevant/not reported</option>
+      <option>Not relevant</option>
+      <option>Not reported</option>
     </answers>
     <scoring determination-method="wise.msfd.compliance.scoring.alternative_based" determination-method-args="0 2">
       <option score="4">Status assessed against the latest GES determination (2018) for 76-100% of criteria</option>
@@ -81,16 +92,19 @@
       To what extent do targets adequately reflect the gap between current (2018) state and GES?
     </definition>
     <answers>
-      <option>Targets reflect the gap between 2018 status and GES for this criterion</option>
-      <option>Targets do not reflect the gap between 2018 status and GES for this criterion</option>
-      <option>Not relevant/not reported</option>
+      <option>76-100% of targets relevant for this descriptor reflect the gap between 2018 status and GES for this descriptor</option>
+      <option>51-75% of targets relevant for this descriptor reflect the gap between 2018 status and GES for this descriptor</option>
+      <option>26-50% of targets relevant for this descriptor reflect the gap between 2018 status and GES for this descriptor</option>
+      <option>1-25% of targets relevant for this descriptor are measurable</option>
+      <option>Not relevant</option>
+      <option>Not reported</option>
     </answers>
     <scoring determination-method="wise.msfd.compliance.scoring.alternative_based" determination-method-args="0 2">
-      <option score="4">Status assessed against the latest GES determination (2018) for 76-100% of criteria</option>
-      <option score="3">Status assessed against the latest GES determination (2018) for 51-75% of criteria</option>
-      <option score="2">Status assessed against the latest GES determination (2018) for 26-50% of criteria</option>
-      <option score="1">Status assessed against the latest GES determination (2018) for 0-25% of criteria</option>
-      <option score="0">Not reported</option>
+      <option score="4">76-100% of targets relevant for this descriptor reflect the gap between 2018 status and GES for this descriptor</option>
+      <option score="3">51-75% of targets relevant for this descriptor reflect the gap between 2018 status and GES for this descriptor</option>
+      <option score="2">26-50% of targets relevant for this descriptor reflect the gap between 2018 status and GES for this descriptor</option>
+      <option score="1">1-25% of targets relevant for this descriptor are measurable</option>
+      <option score="0">Not relevant/Not reported</option>
     </scoring>
     <score-weight descriptor="D5" value="20" />
   </assessment-question>
@@ -100,15 +114,18 @@
       To what extent are targets clearly linked to measures (reported under Art 13 in 2016) which aim to reduce the pressures and impacts?
     </definition>
     <answers>
-      <option>Targets are linked to measures for this criterion</option>
-      <option>Targets are not linked to measures for this criterion</option>
-      <option>Not relevant/not reported</option>
+      <option>76-100% of targets are linked to measures aimed at reducing relevant pressures/impacts for this descriptor</option>
+      <option>51-75% of targets are linked to measures aimed at reducing relevant pressures/impacts for this descriptor</option>
+      <option>26-50% of targets are linked to measures aimed at reducing relevant pressures/impacts for this descriptor</option>
+      <option>0-25% of targets are linked to measures aimed at reducing relevant pressures/impacts for this descriptor</option>
+      <option>Not relevant</option>
+      <option>Not reported</option>
     </answers>
     <scoring determination-method="wise.msfd.compliance.scoring.alternative_based" determination-method-args="0 2">
-      <option score="4">Targets are linked to measures for 76-100% of criteria</option>
-      <option score="3">Targets are linked to measures for 51-75% of criteria</option>
-      <option score="2">Targets are linked to measures for 26-50% of criteria</option>
-      <option score="1">Targets are linked to measures for 0-25% of criteria</option>
+      <option score="4">76-100% of targets are linked to measures aimed at reducing relevant pressures/impacts for this descriptor</option>
+      <option score="3">51-75% of targets are linked to measures aimed at reducing relevant pressures/impacts for this descriptor</option>
+      <option score="2">26-50% of targets are linked to measures aimed at reducing relevant pressures/impacts for this descriptor</option>
+      <option score="1">0-25% of targets are linked to measures aimed at reducing relevant pressures/impacts for this descriptor</option>
       <option score="0">Not reported</option>
     </scoring>
     <score-weight descriptor="D5" value="20" />
