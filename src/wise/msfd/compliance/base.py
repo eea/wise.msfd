@@ -103,6 +103,7 @@ class BaseComplianceView(BrowserView):
     @property
     def country_name(self):
         """ Get country name based on country code
+
         :return: 'Latvia'
         """
 
@@ -113,6 +114,7 @@ class BaseComplianceView(BrowserView):
     @property
     def desc_label(self):
         """ Get the label(text) for a descriptor
+
         :return: 'D5 Eutrophication'
         """
 
@@ -121,9 +123,16 @@ class BaseComplianceView(BrowserView):
         return res
 
     @property
+    def descriptor_label(self):
+        # same as desc_label
+
+        return self._descriptor_folder.Title()
+
+    @property
     @db.use_db_session('2012')
     def regions(self):
         """ Get all regions and subregions for a country
+
         :return: ['BAL', 'ANS']
         """
 
@@ -179,6 +188,10 @@ class BaseComplianceView(BrowserView):
     @property
     def country_code(self):
         return self._country_folder.getId().upper()
+
+    @property
+    def country_title(self):
+        return self._country_folder.title
 
     @property
     def _countryregion_folder(self):

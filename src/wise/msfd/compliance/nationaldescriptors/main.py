@@ -1,6 +1,7 @@
 """ Classes and views to implement the National Descriptors compliance page
 """
 
+import re
 from collections import namedtuple
 from logging import getLogger
 
@@ -12,6 +13,7 @@ from Products.Five.browser.pagetemplatefile import \
 from wise.msfd import db, sql2018
 from wise.msfd.compliance.base import get_descriptor_elements, get_questions
 from wise.msfd.compliance.scoring import get_overall_conclusion
+from wise.msfd.compliance.vocabulary import SUBREGIONS_TO_REGIONS
 from wise.msfd.gescomponents import get_ges_criterions
 from wise.msfd.utils import t2rt
 
@@ -88,13 +90,21 @@ Assessment = namedtuple('Assessment',
                          ])
 AssessmentRow = namedtuple(
     'AssessmentRow',
-    ['question', 'summary', 'conclusion', 'conclusion_color', 'score',
-     'values']
+    [
+        'question',
+        'summary',
+        'conclusion',
+        'conclusion_color',
+        'score',
+        'values'
+     ]
 )
 
 
 # This somehow translates the real value in a color, to be able to compress the
 # displayed information in the assessment table
+
+# TODO: this needs to be redone, according to new scoring rules
 COLOR_TABLE = {
     2: [1, 4],
     3: [1, 3, 4],
@@ -207,16 +217,23 @@ def get_assessment_head_data_2012(data):
 # @memoize
 
 Assessment2012 = namedtuple(
-    'Assessment2012', ['gescomponents', 'criteria',
-                       'summary', 'overall_ass', 'score']
+    'Assessment2012', [
+        'gescomponents',
+        'criteria',
+        'summary',
+        'overall_ass',
+        'score'
+    ]
 )
 
 Criteria = namedtuple(
     'Criteria', ['crit_name', 'answer']
 )
 
+REGION_RE = re.compile('.+\s\((?P<region>.+)\)$')
 
-def get_assessment_data_2012(descriptor_criterions, data):
+
+def filter_assessment_data_2012(data, region_code, descriptor_criterions):
     gescomponents = [c.id for c in descriptor_criterions]
 
     assessments = {}
@@ -224,28 +241,41 @@ def get_assessment_data_2012(descriptor_criterions, data):
     for row in data:
         fields = row._fields
 
-        def get_val(col):
+        def col(col):
             return row[fields.index(col)]
 
-        country = get_val('Country')
-        c = Criteria(get_val('AssessmentCriteria'),
-                     t2rt(get_val('Assessment')))
-        criteria = [c]
-        summary = get_val('Conclusions')
-        score = get_val('OverallScore')
-        overall_ass = get_val('OverallAssessment')
+        country = col('Country')
+
+        # The 2012 assessment data have the region in the country name
+        # For example: United Kingdom (North East Atlantic)
+        # When we display the assessment data (which we do, right now, based on
+        # subregion), we want to match the data according to the "big" region
+
+        if '(' in country:
+            region = REGION_RE.match(country).groupdict()['region']
+
+            if SUBREGIONS_TO_REGIONS[region_code] != region:
+                continue
+
+        summary = col('Conclusions')
+        score = col('OverallScore')
+        overall_ass = col('OverallAssessment')
+        criteria = Criteria(
+            col('AssessmentCriteria'),
+            t2rt(col('Assessment'))
+        )
 
         if country not in assessments:
             assessment = Assessment2012(
                 gescomponents,
-                criteria,
+                [criteria],
                 summary,
                 overall_ass,
                 score,
             )
             assessments[country] = assessment
         else:
-            assessments[country].criteria.extend(criteria)
+            assessments[country].criteria.append(criteria)
 
     return assessments
 
@@ -293,6 +323,7 @@ class NationalDescriptorArticleView(BaseComplianceView):
 
     @property
     def criterias(self):
+        # TODO: unify descriptor handling, should also see ges_components.py
         els = get_descriptor_elements(
             'compliance/nationaldescriptors/questions/data'
         )
@@ -316,11 +347,11 @@ class NationalDescriptorArticleView(BaseComplianceView):
     def __init__(self, context, request):
         super(NationalDescriptorArticleView, self).__init__(context, request)
 
-        if not hasattr(context, 'pers_assessment_data') or \
-                not isinstance(context.pers_assessment_data, PersistentList):
-            context.pers_assessment_data = AssessmentData()
+        if not hasattr(context, 'saved_assessment_data') or \
+                not isinstance(context.saved_assessment_data, PersistentList):
+            context.saved_assessment_data = AssessmentData()
 
-        # Assessment data 2012`
+        # Assessment data 2012
         descriptor_criterions = get_ges_criterions(self.descriptor)
 
         country_name = self._country_folder.title
@@ -331,9 +362,10 @@ class NationalDescriptorArticleView(BaseComplianceView):
                 self.descriptor,
                 self.article
             )
-            assessments_2012 = get_assessment_data_2012(
+            assessments_2012 = filter_assessment_data_2012(
+                db_data_2012,
+                self.country_region_code,       # TODO: this will need refactor
                 descriptor_criterions,
-                db_data_2012
             )
 
             self.assessment_data_2012 = self.assessment_data_2012_tpl(
@@ -364,7 +396,7 @@ class NationalDescriptorArticleView(BaseComplianceView):
         )
 
         # Assessment data 2018
-        data = self.context.pers_assessment_data.last()
+        data = self.context.saved_assessment_data.last()
 
         assessment = get_assessment_data(
             self.article,
@@ -380,7 +412,7 @@ class NationalDescriptorArticleView(BaseComplianceView):
 
         # Assessment header 2018
         report_by_2018 = u'Commission'
-        assessors_2018 = self.context.pers_assessment_data.assessors
+        assessors_2018 = self.context.saved_assessment_data.assessors
         assess_date_2018 = data.get('assess_date', u'Not assessed')
         source_file_2018 = ('To be addedd...', '.')
 

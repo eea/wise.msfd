@@ -39,7 +39,7 @@
     <score-weight descriptor="D5" value="7.5" />
   </assessment-question>
 
-  <assessment-question id="q3-a" class="adequacy" use-criteria=''>
+  <assessment-question id="q3-a" class="adequacy" use-criteria='primary'>
     <definition>
       To what extent is the qualitative GES determination adequate?
     </definition>
@@ -57,9 +57,9 @@
     <score-weight descriptor="D5" value="10" />
   </assessment-question>
 
-  <assessment-question id="q4-a" class="adequacy" use-criteria=''>
+  <assessment-question id="q4-a" class="adequacy" use-criteria='primary'>
     <definition>
-      To what extent is the quantitative determination of GES adequate? 
+      To what extent is the quantitative determination of GES adequate?
     </definition>
     <answers>
       <option>Threshold values are defined for this criterion</option>

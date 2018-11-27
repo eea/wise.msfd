@@ -1,12 +1,11 @@
 from sqlalchemy import or_
 
+from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 from wise.msfd import db, sql, sql_extra
-from Products.Five.browser.pagetemplatefile import (PageTemplateFile,
-                                                    ViewPageTemplateFile)
+from wise.msfd.utils import CompoundRow, Row, TableHeader
 
 from ..base import BaseComplianceView
-from .utils import (Row, CompoundRow, TableHeader,
-                    countries_in_region, muids_by_country)
+from .utils import countries_in_region, muids_by_country
 
 
 class RegDescA10(BaseComplianceView):
@@ -95,13 +94,16 @@ class RegDescA10(BaseComplianceView):
             import_id = self.get_import_id(country)
 
             value = ''
+
             if not import_id:
                 results.append(value)
+
                 continue
 
             for tar in self.target_data:
                 if tar.MSFD10_Targets_Import == import_id:
                     value = getattr(tar, attr_name, '')
+
                     break
 
             results.append(value)
@@ -125,12 +127,14 @@ class RegDescA10(BaseComplianceView):
         rows = []
 
         features = []
+
         for row in self.features_data:
             if row.FeatureType == label_name:
                 val = row.PhysicalChemicalHabitatsFunctionalPressures
                 features.append(val)
 
                 val_other = row.Other
+
                 if val_other:
                     features.append(val_other)
 
@@ -143,12 +147,14 @@ class RegDescA10(BaseComplianceView):
                 import_id = self.get_import_id(country)
 
                 value = ''
+
                 if not import_id:
                     import pdb; pdb.set_trace()
                     # results.append(value)
                     # continue
 
                 target_ids = []
+
                 for tar in self.target_data:
                     if tar.MSFD10_Targets_Import == import_id:
                         target_ids.append(tar.MSFD10_Target_ID)
@@ -156,12 +162,15 @@ class RegDescA10(BaseComplianceView):
                 for r in self.features_data:
                     if r.MSFD10_Target not in target_ids:
                         continue
+
                     if r.FeatureType != label_name:
                         continue
 
                     feat = r.PhysicalChemicalHabitatsFunctionalPressures
+
                     if feat == feature or r.Other == feature:
                         value = 'Reported'
+
                         break
 
                 results.append(value)
@@ -251,4 +260,3 @@ class RegDescA10(BaseComplianceView):
         label = 'Pressures'
 
         return self.create_feature_row(label)
-

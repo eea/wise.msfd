@@ -122,7 +122,7 @@ tr.overall-score td {
   width: 15%;
 }
 th.as-header {
-  background-color: #999;
+  background-color: #999 !important;
   color: white;
 }
 th.as-th-score {

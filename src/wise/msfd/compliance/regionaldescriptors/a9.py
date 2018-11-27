@@ -1,15 +1,17 @@
 
 from eea.cache import cache
-
+from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 from wise.msfd import db, sql, sql_extra
+from wise.msfd.data import countries_in_region, muids_by_country
 from wise.msfd.gescomponents import get_ges_criterions
-from Products.Five.browser.pagetemplatefile import (PageTemplateFile,
-                                                    ViewPageTemplateFile)
+from wise.msfd.utils import CompoundRow, ItemList, Row, TableHeader
 
 from ..base import BaseComplianceView
-from .utils import (Row, CompoundRow, TableHeader, List,
-                    countries_in_region, muids_by_country, get_key,
-                    get_percentage)
+from .utils import get_percentage
+
+
+def get_key(func, self):
+    return self.descriptor + ':' + self.region
 
 
 class RegDescA9(BaseComplianceView):
@@ -60,7 +62,7 @@ class RegDescA9(BaseComplianceView):
             v = '{:.2f}%'.format(get_percentage(vs))
             # TODO: need to change the percentage to labels based on ranges
             values.append(v)
-            # List(props)
+            # ItemList(props)
 
         row = Row('Quantitative values reported', values)
 
@@ -72,7 +74,6 @@ class RegDescA9(BaseComplianceView):
 
         values = []
 
-
         # TODO: filter by descriptor
 
         for c in self.countries:
@@ -83,7 +84,7 @@ class RegDescA9(BaseComplianceView):
                 t.MarineUnitID.in_(muids),
             )
             # TODO: needs to interpret values, instead of listing
-            values.append(List(threshs))
+            values.append(ItemList(threshs))
 
         row = Row('Quantitative values reported', values)
 
@@ -157,4 +158,3 @@ class RegDescA9(BaseComplianceView):
             rows.append(row)
 
         return CompoundRow('Feature(s) reported [Feature]', rows)
-

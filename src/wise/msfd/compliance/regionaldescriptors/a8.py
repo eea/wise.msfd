@@ -1,12 +1,11 @@
 
-from wise.msfd import db, sql, sql_extra
-from Products.Five.browser.pagetemplatefile import (PageTemplateFile,
-                                                    ViewPageTemplateFile)
+from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
+from wise.msfd import db, sql  # , sql_extra
+from wise.msfd.utils import CompoundRow, Row, TableHeader
 
-from ..base import BaseComplianceView
 from ..a8_utils import UtilsArticle8
-from .utils import (Row, CompoundRow, TableHeader,
-                    countries_in_region, muids_by_country)
+from ..base import BaseComplianceView
+from .utils import countries_in_region, muids_by_country
 
 
 class RegDescA8(BaseComplianceView):
@@ -105,6 +104,7 @@ class RegDescA8(BaseComplianceView):
         tables = self.base_data.keys()
 
         results = {}
+
         for table in tables:
             suffix = 'Assesment'
 
@@ -165,6 +165,7 @@ class RegDescA8(BaseComplianceView):
         tables = self.utils_art8.tables
 
         results = {}
+
         for table in tables:
             mc = self.utils_art8.get_base_mc(table)
             conditions = []
@@ -186,6 +187,7 @@ class RegDescA8(BaseComplianceView):
         tables = self.base_data.keys()
 
         results = {}
+
         for table in tables:
             suffix = 'SumInfo2ImpactedElement'
 
@@ -218,6 +220,7 @@ class RegDescA8(BaseComplianceView):
 
             topics = [x.Topic for x in res]
             topics = set(topics)
+
             if topics_needed:
                 topics = list(set(topics_needed) & topics)
 
@@ -233,6 +236,7 @@ class RegDescA8(BaseComplianceView):
 
         for table, res in self.suminfo2_data.items():
             column = 'SumInfo2'
+
             if table.startswith('MSFD8a'):
                 column = 'Summary2'
 
@@ -276,6 +280,7 @@ class RegDescA8(BaseComplianceView):
 
         for topic in self.topics:
             results = []
+
             for country in self.countries:
                 value = self.get_base_value(country, topic, col_name)
                 results.append(value)
@@ -301,6 +306,7 @@ class RegDescA8(BaseComplianceView):
             for country in self.countries:
                 for table, res in self.suminfo2_data.items():
                     column = 'SumInfo2'
+
                     if table.startswith('MSFD8a'):
                         column = 'Summary2'
 
@@ -313,13 +319,17 @@ class RegDescA8(BaseComplianceView):
 
                     base_ids = [
                         getattr(x, col_id)
+
                         for x in data
+
                         if getattr(x, col_import_id) == base_import_id
                     ]
 
                     suminfo_ids = [
                         getattr(x, table)
+
                         for x in res
+
                         if getattr(x, column) == element
                     ]
 
@@ -327,6 +337,7 @@ class RegDescA8(BaseComplianceView):
 
                     if intersect:
                         value = 'Reported'
+
                         break
 
                 results.append(value)
@@ -347,8 +358,10 @@ class RegDescA8(BaseComplianceView):
         for topic in self.topics:
             topic_alt = self.utils_art8.get_proper_topic(topic)
             results = []
+
             for country in self.countries:
                 value = ''
+
                 for table, res in self.base_data.items():
                     if table not in self.status_data:
                         continue
@@ -371,12 +384,15 @@ class RegDescA8(BaseComplianceView):
 
                         status = [
                             getattr(x, 'Status', None)
+
                             for x in self.status_data[table]
+
                             if getattr(x, table) == id_
                         ]
 
                         if status:
                             value = status[0]
+
                             break
 
                     if value:
@@ -395,8 +411,10 @@ class RegDescA8(BaseComplianceView):
         tables = self.base_data.keys()
 
         results = []
+
         for country in self.countries:
             value = ''
+
             for table in tables:
                 if table not in self.activity_data:
                     continue
@@ -407,13 +425,17 @@ class RegDescA8(BaseComplianceView):
 
                 base_ids = [
                     getattr(x, col_id)
+
                     for x in self.base_data[table]
+
                     if getattr(x, col_import_id) == base_import_id
                 ]
 
                 values = [
                     x.Activity
+
                     for x in self.activity_data[table]
+
                     if getattr(x, table) in base_ids
                 ]
 
@@ -431,8 +453,10 @@ class RegDescA8(BaseComplianceView):
         tables = self.base_data.keys()
 
         results = []
+
         for country in self.countries:
             value = ''
+
             for table in tables:
                 base_import_id = self.import_data[table][country]
                 col_id = '{}_ID'.format(table)
@@ -440,13 +464,17 @@ class RegDescA8(BaseComplianceView):
 
                 base_ids = [
                     getattr(x, col_id)
+
                     for x in self.base_data[table]
+
                     if getattr(x, col_import_id) == base_import_id
                 ]
 
                 values = [
                     (x.AssessmentDateStart, x.AssessmentDateEnd)
+
                     for x in self.metadata_data[table]
+
                     if (getattr(x, col_id) in base_ids and
                         x.Topic == 'Assessment' and
                         x.AssessmentDateStart is not None and
@@ -456,7 +484,9 @@ class RegDescA8(BaseComplianceView):
                 if not values:
                     values = [
                         (x.RecentTimeStart, x.RecentTimeEnd)
+
                         for x in self.base_data[table]
+
                         if (getattr(x, col_id) in base_ids and
                             getattr(x, 'RecentTimeStart', None) is not None and
                             getattr(x, 'RecentTimeEnd ', None) is not None)
@@ -474,4 +504,3 @@ class RegDescA8(BaseComplianceView):
                 '[AssessmentPeriod]'
 
         return CompoundRow(label, [row])
-

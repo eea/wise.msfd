@@ -1,12 +1,13 @@
 <div tal:define="data options/data">
 
-  <div class="subform-refresh" tal:define="form nocall:view/subform">
-    <div tal:replace="structure form">
+  <!-- TODO: re&#45;enable the harvest subform -->
+  <div class="subform-refresh" tal:replace="nothing">
+    <div tal:replace="structure view/subform">
       refresh
     </div>
   </div>
 
-  <div class="head-tpl" tal:content="structure options/head_tpl">Header</div>
+  <!-- <div class="head&#45;tpl" tal:content="structure options/head_tpl">Header</div> -->
 
   <div tal:condition="not: data">
     No data reported for this Descriptor
@@ -14,9 +15,11 @@
 
   <div style="clear: both; overflow:hidden"><!-- --></div>
 
+    <!-- tal:on&#45;error="string: Error, nothing reported?" -->
   <tal:def tal:condition="data"
     tal:define="muid_data python: data[0][1];
-    muids python:view.get_muids_from_data(data)">
+    muids python:view.get_muids_from_data(data)"
+    >
     <div class="overflow-table">
       <!--<h4 tal:content="muids">LV-01</h4>-->
       <table class="table table-bordered table-striped table-comp-translate">
@@ -28,7 +31,8 @@
           <tr tal:condition="python: row[0] not in view.BLACKLIST">
             <th tal:content="python: row[0]">Element</th>
             <td tal:repeat="r python: row[1]">
-              <div tal:replace="structure python: view.translate_value(value=r)"></div>
+              <div tal:content="r"></div>
+              <!-- <div tal:replace="structure python: view.translate_value(value=r)"></div> -->
             </td>
           </tr>
         </tal:rep>

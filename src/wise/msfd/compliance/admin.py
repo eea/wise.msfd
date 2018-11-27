@@ -96,7 +96,12 @@ class BootstrapCompliance(BrowserView):
             t.CountryCode == country_code
         )
 
-        return [(code, REGIONS[code]) for code in regions]
+        blacklist = ['NotReported']
+
+        return [(code, REGIONS.get(code, code))
+                for code in regions
+
+                if code not in blacklist]
 
     def make_country(self, parent, country_code, name):
         cf = create(parent,

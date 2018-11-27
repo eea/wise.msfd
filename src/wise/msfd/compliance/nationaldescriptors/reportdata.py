@@ -19,7 +19,7 @@ from z3c.form.form import Form
 
 from ..base import BaseComplianceView
 from .a8 import Article8
-from .a9_10 import Article910
+from .a9_10 import Article10, Article910
 from .utils import row_to_dict
 
 logger = logging.getLogger('wise.msfd')
@@ -33,13 +33,16 @@ class ReportData2012(BaseComplianceView, BaseUtil):
 
     def get_criterias_list(self, descriptor):
         """ Get the list of criterias for the specified descriptor
+
         :param descriptor: 'D5'
-        :return: (('D5', 'Eutrophication'), ('5.1.1', 'D5C1'),
-            ('5.2.1', 'D5C2'), ... )
+        :return: (('D5', 'Eutrophication'),
+                  ('5.1.1', 'D5C1'),
+                  ('5.2.1', 'D5C2'), ... )
         """
 
-        result = []
-        result.append((descriptor, self.desc_label))
+        result = [
+            (descriptor, self.descriptor_label)
+        ]
 
         criterions = get_ges_criterions(descriptor)
 
@@ -55,6 +58,7 @@ class ReportData2012(BaseComplianceView, BaseUtil):
     @property
     def muids(self):
         """ Get all Marine Units for a country
+
         :return: ['BAL- LV- AA- 001', 'BAL- LV- AA- 002', ...]
         """
         t = sql.t_MSFD4_GegraphicalAreasID
@@ -70,6 +74,7 @@ class ReportData2012(BaseComplianceView, BaseUtil):
         return sorted(muids)
 
     def get_report_filename(self):
+        # TODO: this needs to be reimplemented
         map_articles = {
             'Art8': '8b',
             'Art9': '9',
@@ -90,7 +95,11 @@ class ReportData2012(BaseComplianceView, BaseUtil):
             getattr(t, country_col) == self.country_code,
             getattr(t, region_col) == self.country_region_code
         )
-        assert count == 1
+
+        if count != 1:
+            logger.warning("Could not find report filename for %s %s %s",
+                           self.country_code,
+                           self.country_region_code)
 
         file_name = getattr(item, filename_col, 'File not found')
 
@@ -99,6 +108,7 @@ class ReportData2012(BaseComplianceView, BaseUtil):
     def get_report_file_url(self, filename):
         """ Retrieve the CDR url based on query in ContentRegistry
         """
+
         q = """
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 PREFIX cr: <http://cr.eionet.europa.eu/ontologies/contreg.rdf#>
@@ -139,7 +149,7 @@ WHERE {
         mapping = dict(
             Art8=Article8,
             Art9=Article910,
-            Art10=Article910,
+            Art10=Article10,
         )
         klass = mapping[self.article]
 
@@ -152,7 +162,7 @@ WHERE {
         filename = self.get_report_filename()
         url = self.get_report_file_url(filename)
 
-        head_tpl = self.report_header_template(
+        self.report_header = self.report_header_template(
             title="{}'s 2012 Member State Report for {} / {} / {}".format(
                 self.country_name,
                 self.country_region_name,
@@ -169,9 +179,7 @@ WHERE {
             report_date='2013-04-30'
         )
 
-        article_implementation = self.get_article_report_implementation()
-
-        self.content = head_tpl + article_implementation()
+        self.report_data = self.get_article_report_implementation()()
 
         return self.index()
 
@@ -295,10 +303,11 @@ class ReportData2018(BaseComplianceView):
         """ From a set of results, create labeled list of rows
         """
         def make_distinct(col_name, col_data):
-            columns = ('Features', )
-
-            if col_name not in columns:
+            if col_name not in ('Features', ):
                 return col_data
+
+            if not col_data:
+                return ''
 
             splitted = col_data.split(',')
             distinct = ', '.join(sorted(set(splitted)))
@@ -327,6 +336,10 @@ class ReportData2018(BaseComplianceView):
         g = defaultdict(list)
 
         for row in data:
+            if not row.MarineReportingUnit:
+                # skip rows without muid, they can't help us
+
+                continue
             g[row.MarineReportingUnit].append(row)
 
         res = [(k, self.change_orientation(v)) for k, v in g.items()]
@@ -339,7 +352,9 @@ class ReportData2018(BaseComplianceView):
         """ Returns all snapshots, in the chronological order they were created
         """
 
-        snapshots = getattr(self.context, 'snapshots', None)
+        # snapshots = getattr(self.context, 'snapshots', None)
+        snapshots = None
+        # TODO: fix this. I'm hardcoding it now to always use generated data
 
         if snapshots is None:
             self.context.snapshots = PersistentList()
@@ -420,7 +435,7 @@ class ReportData2018(BaseComplianceView):
                     source_file[1] = row[1][0]
                     source_file[0] = row[1][0].split('/')[-1]
 
-        head_tpl = self.report_header_template(
+        self.report_header = self.report_header_template(
             title="{}'s 2018 Member State Report for {} / {} / {}".format(
                 self.country_name,
                 self.country_region_name,
@@ -434,7 +449,8 @@ class ReportData2018(BaseComplianceView):
             report_date=report_date
         )
 
-        trans_edit = self.translate_view()
-        self.content = template(data=data, head_tpl=head_tpl) + trans_edit()
+        trans_edit_html = self.translate_view()()
+        self.report_data = template(data=data) + trans_edit_html
+        # head_tpl=head_tpl
 
         return self.index()

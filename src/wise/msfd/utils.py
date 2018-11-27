@@ -17,6 +17,7 @@ from plone.api.portal import get_tool
 from plone.intelligenttext.transforms import \
     convertWebIntelligentPlainTextToHtml
 from plone.memoize import volatile
+from Products.Five.browser.pagetemplatefile import PageTemplateFile
 
 # TODO: move this registration to search package
 FORMS_2018 = {}
@@ -434,3 +435,53 @@ def t2rt(text):
     text = data.getData().strip()
 
     return text
+
+
+class TemplateMixin:
+    """ Reusable base class for reusable mini-template renderers
+    """
+
+    template = None
+
+    def __call__(self):
+        return self.template(**self.__dict__)
+
+
+class ItemList(TemplateMixin):
+    template = PageTemplateFile('pt/list.pt')
+
+    def __init__(self, rows):
+        self.rows = rows
+
+
+class CompoundRow(TemplateMixin):
+    multi_row = PageTemplateFile('pt/compound-row.pt')
+    one_row = PageTemplateFile('pt/compound-one-row.pt')
+
+    @property
+    def template(self):
+        if self.rowspan > 1:
+            return self.multi_row
+
+        return self.one_row
+
+    def __init__(self, title, rows):
+        self.title = title
+        self.rows = rows
+        self.rowspan = len(rows)
+
+
+class Row(TemplateMixin):
+    template = PageTemplateFile('pt/simple-row.pt')
+
+    def __init__(self, title, values):
+        self.title = title
+        self.cells = values
+
+
+class TableHeader(TemplateMixin):
+    template = PageTemplateFile('pt/table-header.pt')
+
+    def __init__(self, title, values):
+        self.title = title
+        self.cells = values

@@ -19,8 +19,12 @@
 
           <h1>
             <span tal:replace="view/article">Art0</span> assessment on
-            <span tal:replace="view/descriptor">D0</span> for
+            <span tal:replace="view/descriptor">D0</span> for the
+            <span tal:replace="view/country_region_code">ANS</span> region, for
             <span tal:replace="view/country_code">US</span>
+
+            <!-- <span tal:replace="view/country_region_name">D0</span> for -->
+            <!-- <span tal:replace="view/country_title">US</span> -->
           </h1>
 
           <div class="nda-link">

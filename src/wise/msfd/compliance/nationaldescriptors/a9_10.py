@@ -5,12 +5,41 @@ from sqlalchemy import and_, or_
 from Products.Five.browser.pagetemplatefile import \
     ViewPageTemplateFile as Template
 from wise.msfd import db, sql, sql_extra
+from wise.msfd.utils import CompoundRow, Row, TableHeader
 
 from ..base import BaseArticle2012
 from .utils import row_to_dict
 
 
+class Article10(BaseArticle2012):
+    """ Article 10 implementation for nation descriptors data
+
+    klass(self, self.request, self.country_code, self.descriptor,
+          self.article, self.muids, self.colspan)
+    """
+
+    template = Template('pt/report-data-a10.pt')
+
+    def get_gescomponents(self):
+        return Row('[GEScomponent]', [x[1] for x in self.criterias])
+
+    def get_marine_unit_ids(self):
+        return Row('MarineUnitID', [', '.join(self.muids)])
+
+    def __call__(self):
+        self.criterias = self.context.get_criterias_list(self.descriptor)
+        self.rows = [
+            self.get_marine_unit_ids(),
+            self.get_gescomponents(),
+        ]
+
+        return self.template()
+
+
 class Article910(BaseArticle2012):
+    """
+    """
+
     Art9 = Template('pt/report-data-a9.pt')
     Art10 = Template('pt/report-data-a10.pt')
 
@@ -201,10 +230,8 @@ class Article910(BaseArticle2012):
     def __call__(self):
         self.setup_data()
 
-        template = getattr(self, self.article, None)
+        t_impl = getattr(self, self.article, None)
 
-        print template
-
-        self.content = template and template() or ""
+        self.content = t_impl and t_impl() or ""
 
         return self.content

@@ -74,3 +74,33 @@ REGIONS = {
     "MIC": "Mediterranean: Ionian Sea & Central Mediterranean Sea",
     "MWE": "Mediterranean: Western Mediterranean Sea"
 }
+
+
+REGIONS_SIMPLIFIED = {
+    'North East Atlantic': ('ABI', 'ACS', 'AMA'),     # 'ANS'
+    'West Mediterranean': ('MWE',),
+    'Mediterranean': ('MAD', 'MAL', 'MIC'),           # 'MWE'
+    'Baltic Sea': ('BAL',),
+    'North Sea': ('ANS',),
+    'Black Sea': ('BLK',),
+}
+
+
+def make_subregions(d):
+    """ switches direction of REGIONS_SIMPLIFIED
+
+    Returns dict like: {
+        'ABI': 'North East Atlantic',
+    }
+    """
+
+    r = {}
+
+    for k, vs in d.items():
+        for v in vs:
+            r[v] = k
+
+    return r
+
+
+SUBREGIONS_TO_REGIONS = make_subregions(REGIONS_SIMPLIFIED)

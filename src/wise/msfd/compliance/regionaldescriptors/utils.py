@@ -1,8 +1,6 @@
-from collections import defaultdict
-
-from Products.Five.browser.pagetemplatefile import (PageTemplateFile,
-                                                    ViewPageTemplateFile)
-from wise.msfd import db, sql, sql_extra
+from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
+from wise.msfd import db, sql, utils
+from wise.msfd.data import countries_in_region, muids_by_country
 
 from ..base import BaseComplianceView
 
@@ -17,93 +15,6 @@ def get_percentage(values):
     trues = len([x for x in values if x])
 
     return (trues * 100.0) / len(values)
-
-
-class TemplateMixin:
-    template = None
-
-    def __call__(self):
-        return self.template(**self.__dict__)
-
-
-class List(TemplateMixin):
-    template = PageTemplateFile('pt/list.pt')
-
-    def __init__(self, rows):
-        self.rows = rows
-
-
-class CompoundRow(TemplateMixin):
-    multi_row = PageTemplateFile('pt/compound-row.pt')
-    one_row = PageTemplateFile('pt/compound-one-row.pt')
-
-    @property
-    def template(self):
-        if self.rowspan > 1:
-            return self.multi_row
-
-        return self.one_row
-
-    def __init__(self, title, rows):
-        self.title = title
-        self.rows = rows
-        self.rowspan = len(rows)
-
-
-class Row(TemplateMixin):
-    template = PageTemplateFile('pt/simple-row.pt')
-
-    def __init__(self, title, values):
-        self.title = title
-        self.cells = values
-
-
-class TableHeader(TemplateMixin):
-    template = PageTemplateFile('pt/table-header.pt')
-
-    def __init__(self, title, values):
-        self.title = title
-        self.cells = values
-
-
-def get_key(func, self):
-    return self.descriptor + ':' + self.region
-
-
-@db.use_db_session('2012')
-def all_regions():
-    """ Return a list of region ids
-    """
-
-    return db.get_unique_from_mapper(
-        sql_extra.MSFD4GeographicalAreaID,
-        'RegionSubRegions'
-    )
-
-
-@db.use_db_session('2012')
-def countries_in_region(regionid):
-    """ Return a list of (<countryid>, <marineunitids>) pairs
-    """
-    t = sql_extra.MSFD4GeographicalAreaID
-
-    return db.get_unique_from_mapper(
-        t,
-        'MemberState',
-        t.RegionSubRegions == regionid
-     )
-
-
-@db.use_db_session('2012')
-def muids_by_country():
-    t = sql_extra.MSFD4GeographicalAreaID
-    count, records = db.get_all_records(t)
-    res = defaultdict(list)
-
-    for rec in records:
-        res[rec.MemberState].append(rec.MarineUnitID)
-
-    return dict(**res)
 
 
 class RegDescA11(BaseComplianceView):
@@ -134,7 +45,7 @@ class RegDescA11(BaseComplianceView):
         return self.template(rows=allrows)
 
     def get_countries_row(self):
-        return TableHeader('Member state', self.countries)
+        return utils.TableHeader('Member state', self.countries)
 
     def get_elements_monitored(self):
         # MONSub = sql_extra.MSFD11MONSub
@@ -145,7 +56,7 @@ class RegDescA11(BaseComplianceView):
 
         rows = []
 
-        return CompoundRow(
+        return utils.CompoundRow(
             'Elements monitored',
             rows
         )

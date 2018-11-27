@@ -1,13 +1,14 @@
 <div tal:define="assessments options/data">
+  <tal:rep tal:repeat="country assessments">
 
-  <tal:rep tal:repeat="country python:assessments.keys()">
     <span tal:condition="python: len(assessments) > 1"
-        tal:content="country">Country</span>
+      tal:content="country">Country</span>
+
     <table class="table table-condensed assessment-data-table">
       <tbody>
         <!--<div tal:content="assessments/?country">asd</div>-->
         <tal:def tal:define="assessment assessments/?country;
-            colspan python: len(assessment.gescomponents)">
+          colspan python: len(assessment.gescomponents)">
           <tr>
             <th>GEScomponent</th>
             <tal:rep tal:repeat="ges assessment/gescomponents">
@@ -20,14 +21,14 @@
                 Criteria
               </th>
               <td tal:content="structure crit/answer"
-                  tal:attributes="colspan colspan">Text</td>
+                tal:attributes="colspan colspan">Text</td>
             </tr>
           </tal:rep>
           <tr>
             <th rowspan="3">Assessment summary</th>
             <td tal:content="assessment/summary"
-                tal:attributes="rowspan string:3;
-                      colspan python:colspan - 2">
+              tal:attributes="rowspan string:3;
+              colspan python:colspan - 2">
               Summary
             </td>
           </tr>

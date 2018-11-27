@@ -56,7 +56,7 @@
                 <tr>
                   <th>Descriptor</th>
                   <th tal:repeat='art view/get_articles'>
-                    <span tal:replace="art">Art0</span>
+                    <!-- <span tal:replace="art">Art0</span> -->
                   </th>
                 </tr>
               </thead>
@@ -66,8 +66,10 @@
                     <span tal:content="desc/title_or_id">D0</span>
                   </th>
                   <td tal:repeat="assessment desc/contentValues">
-                    <a class="btn btn-primary btn-xs" href="" tal:attributes="href assessment/absolute_url">View</a>
-                    <div class="as-state-label" tal:content="python: view.get_status(assessment)">State</div>
+                    <a class="btn btn-primary btn-xs" href="" tal:attributes="href assessment/absolute_url">
+                      <span tal:content="assessment/title">Art0</span>:
+                      <span class="as-state-label" tal:content="python: view.get_status(assessment)">State</span>
+                    </a>
                     <div>
                       <blockquote tal:condition="assessment/assessment_summary">
                         <p tal:content="assessment/assessment_summary" >

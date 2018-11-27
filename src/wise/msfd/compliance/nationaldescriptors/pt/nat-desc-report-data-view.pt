@@ -16,7 +16,10 @@
         </div>
 
         <div class="report-page-view left-side-form full-width-marker">
-          <div tal:replace="structure view/content">
+          <div tal:replace="structure view/report_header">
+            Report header here
+          </div>
+          <div tal:replace="structure view/report_data">
             Report data here
           </div>
         </div>

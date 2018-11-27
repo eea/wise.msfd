@@ -2260,3 +2260,48 @@ def get_a9_descriptors(marine_unit_id, page=0):
     </tal:def>
   </tal:rep>
 </dl>
+# @use_db_session('2018')
+# def save_record(mapper_class, **data):
+#     print "we don't save, please save"
+#
+#     return
+#     sess = session()
+#
+#     id_primary_key = data.pop('Id', [])
+#     mc = mapper_class(**data)
+#
+#     len_ids = len(id_primary_key)
+#
+#     # insert into db if no Id provided
+#
+#     if len_ids < 1:
+#         sess.add(mc)
+#     # update the row(s) based on the Id(s)
+#     else:
+#         condition = []
+#
+#         # due to a bug??, if only one Id is provided
+#         # because of the "in_" operator we get an error
+#
+#         if len_ids > 1:
+#             condition.append(mapper_class.Id.in_(id_primary_key))
+#         else:
+#             condition.append(mapper_class.Id == id_primary_key[0])
+#
+#         sess.query(mapper_class).filter(*condition).update(data)
+#
+#     return
+#     # try:
+#     #     transaction.commit()
+#     # except Exception as e:
+#     #     print "------------ we rollback, please check before deploy!!!!!!!!!"
+#     #     print e
+#     #     sess.rollback()
+#     #
+#     #     return
+#     #     # transaction.commit()
+#
+#     if not id_primary_key:
+#         id_primary_key = mc.Id
+#
+#     return id_primary_key

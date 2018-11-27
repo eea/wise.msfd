@@ -161,7 +161,7 @@ tr.overall-score td {
 }
 
 th.as-header {
-  background-color: #999;
+  background-color: #999 !important;
   color: white;
 }
 
@@ -279,11 +279,20 @@ table.table-report td ul li {
   margin-left: -4px;
 }
 
-div.compliance-assessment-edit-subform label {
-  display: inline-block;
-  width: 10em;
-  text-align: right;
-  padding-right: 0.7em;
+div.compliance-assessment-edit-subform {
+  // .fields-container {
+  //   display: flex;
+  //   flex-wrap: wrap;
+  //   .fields-container-row {
+  //     flex-basis: 33%;
+  //   }
+  // }
+  label {
+    display: inline-block;
+    width: 10em;
+    text-align: right;
+    padding-right: 0.7em;
+  }
 }
 
 div.widget {

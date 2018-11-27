@@ -100,10 +100,10 @@ class EditAssessmentDataForm(Form, BaseComplianceView):
             data['assessor'] = 'system'
 
         data['assess_date'] = datetime.date.today()
-        last = self.context.pers_assessment_data.last()
+        last = self.context.saved_assessment_data.last()
 
         if last != data:
-            self.context.pers_assessment_data.append(data)
+            self.context.saved_assessment_data.append(data)
 
     @property
     def fields(self):
@@ -139,7 +139,7 @@ class EditAssessmentDataForm(Form, BaseComplianceView):
     def get_subforms(self):
         """ Build a form of options from a tree of options
         """
-        assessment_data = self.context.pers_assessment_data.last()
+        assessment_data = self.context.saved_assessment_data.last()
 
         forms = []
 
