@@ -331,11 +331,12 @@ class AssessmentQuestionDefinition:
     Pass an <assessment-question> node to initialize it
     """
 
-    def __init__(self, node, root):
+    def __init__(self, node, root, position):
         self.id = node.get('id')
         self.klass = node.get('class')
         self.use_criteria = node.get('use-criteria')
-        self.definition = node.find('definition').text.strip()
+        self.definition = u"Q{}: {}".format(
+            position + 1, node.find('definition').text.strip())
         self.answers = [x.strip()
                         for x in node.xpath('answers/option/text()')]
 
@@ -357,7 +358,10 @@ class AssessmentQuestionDefinition:
         self.scores = []
 
         for onode in sn.iterchildren('option'):
-            si = (int(onode.get('score')), onode.text.strip())
+            try:
+                si = (int(onode.get('score')), onode.text.strip())
+            except:
+                import pdb; pdb.set_trace()
             self.scores.append(si)
 
     def calculate_score(self, descriptor, values):
@@ -427,8 +431,8 @@ def parse_question_file(fpath):
     root = lxml.etree.parse(fpath).getroot()
     article_id = root.get('article')
 
-    for qn in root.iterchildren('assessment-question'):
-        q = AssessmentQuestionDefinition(qn, root)
+    for i, qn in enumerate(root.iterchildren('assessment-question')):
+        q = AssessmentQuestionDefinition(qn, root, i)
         res.append(q)
 
     return article_id, res

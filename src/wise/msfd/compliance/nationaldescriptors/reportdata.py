@@ -19,7 +19,7 @@ from z3c.form.form import Form
 
 from ..base import BaseComplianceView
 from .a8 import Article8
-from .a9_10 import Article10, Article910
+from .a9_10 import Article9, Article10
 from .utils import row_to_dict
 
 logger = logging.getLogger('wise.msfd')
@@ -48,7 +48,7 @@ class ReportData2012(BaseComplianceView, BaseUtil):
 
         for crit in criterions:
             for alt in crit.alternatives:
-                title = '{} ({}) {}'.format(crit._id, alt[0], alt[1])
+                title = '{} ({}) {}'.format(crit._id or '', alt[0], alt[1])
                 indicator = alt[0]
 
                 result.append((indicator, title))
@@ -113,12 +113,16 @@ class ReportData2012(BaseComplianceView, BaseUtil):
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 PREFIX cr: <http://cr.eionet.europa.eu/ontologies/contreg.rdf#>
 PREFIX dc: <http://purl.org/dc/dcmitype/>
+PREFIX dcterms: <http://purl.org/dc/terms/>
 
 SELECT ?file
 WHERE {
   ?file a dc:Dataset .
+  ?file dcterms:date ?date .
   FILTER regex(str(?file), '%s')
-} LIMIT 50""" % filename
+}
+ORDER BY DESC(?date)
+LIMIT 1""" % filename
         service = sparql.Service('http://cr.eionet.europa.eu/sparql')
         try:
             req = service.query(q)
@@ -148,7 +152,7 @@ WHERE {
 
         mapping = dict(
             Art8=Article8,
-            Art9=Article910,
+            Art9=Article9,
             Art10=Article10,
         )
         klass = mapping[self.article]

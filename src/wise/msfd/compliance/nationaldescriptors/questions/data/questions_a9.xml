@@ -87,7 +87,6 @@
   <assessment-question id="q5-a" class="adequacy" use-criteria=''>
     <definition>
       To what extent is the quantitative determination of GES adequate?
->>>>>>> 528b08719c2d833f3afe49cff3a43127722414bf
     </definition>
     <answers>
       <option>Threshold values are defined for this criterion</option>
@@ -137,11 +136,13 @@
       <option>Not relevant</option>
       <option>Not reported</option>
     </answers>
+
+    TODO: check why here was / for score
     <scoring determination-method="wise.msfd.compliance.scoring.alternative_based" determination-method-args="0 2">
       <option score="4">GES extent threshold defined</option>
-      <option score="/">/</option>
+      <option score="3">/</option>
       <option score="2">GES extent threshold defined</option>
-      <option score="/">/</option>
+      <option score="1">/</option>
       <option score="0">Not reported</option>
     </scoring>
     <score-weight descriptor="D5" value="10" />
@@ -280,4 +281,4 @@
     <score-weight descriptor="D5" value="17.5" />
   </assessment-question>
 
-  </questions>
+</questions>

@@ -48,8 +48,6 @@
                 <div class="subform compliance-assessment-edit-subform">
                   <h3 tal:content="subform/title">Question here</h3>
 
-                  add the number of question here
-
                   <div class="fields-container">
                     <div tal:repeat="fieldname subform/fields" class="fields-container-row">
                       <tal:def define="widget python: view.widgets[fieldname]">
