@@ -90,7 +90,7 @@ class SendTranslationRequest(BrowserView):
         if not text:
             return ''
 
-        self.delete_translation(text, sourceLanguage)
+        # self.delete_translation(text, sourceLanguage)
 
         targetLanguages = self.request.form.get('targetLanguages', ['EN'])
         externalReference = self.request.form.get('externalReference', '')
@@ -98,11 +98,12 @@ class SendTranslationRequest(BrowserView):
         site = portal.getSite()
         marine_url = site.Plone.marine.absolute_url()
 
-        dest = marine_url + \
-            '/translation-callback2?source_lang={}'.format(sourceLanguage)
-
-        # dest = 'http://office.pixelblaster.ro:4880/Plone/marine' + \
-        #     '/translation-callback2?source_lang={}'.format(sourceLanguage)
+        if 'europa.eu' in marine_url:
+            dest = marine_url + \
+                '/translation-callback2?source_lang={}'.format(sourceLanguage)
+        else:
+            dest = 'http://office.pixelblaster.ro:4880/Plone/marine' + \
+                '/translation-callback2?source_lang={}'.format(sourceLanguage)
 
         data = {
             'priority': 5,
