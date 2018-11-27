@@ -43,7 +43,7 @@ class BootstrapCompliance(BrowserView):
         countries = [(x.Code, x.Country) for x in res]
 
         if self.debug:
-            countries = [x for x in countries if x[0] in ('LV', 'NL')]
+            countries = [x for x in countries if x[0] in ('LV', 'NL', 'DE')]
 
         return countries
 
