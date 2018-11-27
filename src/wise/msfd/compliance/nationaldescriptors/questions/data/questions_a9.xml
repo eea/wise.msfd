@@ -5,7 +5,8 @@
       To what extent are the 2017 Decision criteria covered?
     </definition>
     <answers>
-      <option>Primary criterion used</option>
+      <option>Primary criterion with 2017 code used</option>
+      <option>Primary criterion with 2010 code used</option>
       <option>Primary criterion not used</option>
       <option>Primary criterion replaced with secondary criterion (with grounded justification)</option>
       <option>Not relevant</option>
@@ -26,7 +27,8 @@
       To what extent does the Member State report beyond the minimum requirements of the 2017 Decision?
     </definition>
     <answers>
-      <option>Secondary criteria used</option>
+      <option>Secondary criterion with 2017 code used</option>
+      <option>Secondary criterion with 2010 code used</option>
       <option>Secondary criteria not used</option>
       <option>Not relevant</option>
       <option>Not reported</option>

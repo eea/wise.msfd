@@ -50,18 +50,18 @@
       Does the assessment provide a conclusion on the current status??
     </definition>
     <answers>
-      <option>76-100% of criteria elements are reported with status assessment</option>
-      <option>51-75% of criteria elements are reported with status assessment</option>
-      <option>26-50% of criteria elements are reported with status assessment</option>
-      <option>1-25% of criteria elements are reported with status assessment</option>
+      <option>76-100% of parameters and criteria are reported with status assessment</option>
+      <option>51-75% of parameters and criteria are reported with status assessment</option>
+      <option>26-50% of parameters and criteria are reported with status assessment</option>
+      <option>1-25% of parameters and criteria are reported with status assessment</option>
       <option>Not relevant</option>
       <option>Not reported</option>
     </answers>
     <scoring determination-method="wise.msfd.compliance.scoring.alternative_based" determination-method-args="0 2">
-      <option score="4">76-100% of criteria elements are reported with status assessment</option>
-      <option score="3">51-75% of criteria elements are reported with status assessment</option>
-      <option score="2">26-50% of criteria elements are reported with status assessment</option>
-      <option score="1">1-25% of criteria elements are reported with status assessment</option>
+      <option score="4">76-100% of parameters and criteria are reported with status assessment</option>
+      <option score="3">51-75% of parameters and criteria are reported with status assessment</option>
+      <option score="2">26-50% of parameters and criteria are reported with status assessment</option>
+      <option score="1">1-25% of parameters and criteria are reported with status assessment</option>
       <option score="0">Not reported</option>
     </scoring>
     <score-weight descriptor="D5" value="15" />
