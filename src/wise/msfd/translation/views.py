@@ -74,7 +74,7 @@ class SendTranslationRequest(BrowserView):
 
     def __call__(self):
 
-        sourceLanguage = self.context.aq_parent.aq_parent.id.upper()
+        sourceLanguage = self.context.aq_parent.aq_parent.aq_parent.id.upper()
 
         if not sourceLanguage:
             sourceLanguage = self.request.form.get('sourceLanguage', '')
@@ -90,7 +90,7 @@ class SendTranslationRequest(BrowserView):
         if not text:
             return ''
 
-        # self.delete_translation(text, sourceLanguage)
+        self.delete_translation(text, sourceLanguage)
 
         targetLanguages = self.request.form.get('targetLanguages', ['EN'])
         externalReference = self.request.form.get('externalReference', '')
@@ -158,7 +158,7 @@ class TranslationCallback(BrowserView):
         language = self.request.form.pop('source_lang', None)
 
         if not language:
-            language = self.context.aq_parent.aq_parent.id.upper()
+            language = self.context.aq_parent.aq_parent.aq_parent.id.upper()
 
         if ANNOTATION_KEY not in annot.keys():
             annot[ANNOTATION_KEY] = OOBTree()
@@ -196,6 +196,12 @@ class TranslationView(BrowserView):
 
     translation_edit_template = VPTF('./pt/translation-edit-form.pt')
     translate_snip = VPTF('pt/translate-snip.pt')
+
+    @property
+    def country_code(self):
+        code = self.context.aq_parent.aq_parent.aq_parent.id.upper()
+
+        return code
 
     def translate(self, source_lang, value):
         # TODO: implement getting the translation from annotations
