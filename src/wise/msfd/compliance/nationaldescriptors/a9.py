@@ -231,7 +231,12 @@ class Article9(BaseArticle2012):
             cols.append(item)
             seen.append(item.id)
 
-        self.rows = []
+        muids = root.xpath('//w:MarineUnitID/text()', namespaces=NSMAP)
+        muids = ', '.join(set(muids))
+
+        self.rows = [
+            Row('Reporting area(s) [MarineUnitID]', [muids])
+        ]
 
         for col in cols:
             for name in col.keys():
