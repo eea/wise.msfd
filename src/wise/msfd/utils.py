@@ -485,3 +485,8 @@ class TableHeader(TemplateMixin):
     def __init__(self, title, values):
         self.title = title
         self.cells = values
+
+
+class Item(OrderedDict):
+    """ A generic data container for "columns"
+    """

@@ -7,8 +7,6 @@
       </tal:rep>
     </table>
 
-
-
     <!-- <table class='table table&#45;bordered table&#45;striped table&#45;report' style='width: 100%; overflow:auto' -->
     <!--   tal:define="criterias python: view.context.get_criterias_list(view.descriptor);"> -->
     <!--   <tr> -->
