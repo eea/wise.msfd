@@ -103,6 +103,13 @@ class BootstrapCompliance(BrowserView):
 
                 if code not in blacklist]
 
+    def get_group(self, code):
+        if '.' in code:
+            code = 'd1'
+        code = code.lower()
+
+        return "extranet-wisemarine-msfd-tl-" + code
+
     def make_country(self, parent, country_code, name):
         cf = create(parent,
                     'wise.msfd.countrydescriptorsfolder',
@@ -124,6 +131,12 @@ class BootstrapCompliance(BrowserView):
                 for art in self._get_articles():
                     nda = create(df, 'wise.msfd.nationaldescriptorassessment',
                                  title=art)
+                    lr = nda.__ac_local_roles__
+
+                    group = self.get_group(desc_code)
+
+                    lr[group] = ['Contributor']
+
                     logger.info("Created NationalDescriptorAssessment %s",
                                 nda.absolute_url())
 
@@ -179,8 +192,17 @@ class BootstrapCompliance(BrowserView):
 
         alsoProvides(cm, interfaces.IComplianceModuleFolder)
 
+        lr = cm.__ac_local_roles__
+        lr['extranet-wisemarine-msfd-reviewers'] = [u'Reviewer']
+        lr['extranet-wisemarine-msfd-editors'] = [u'Editor']
+
         # cm.__ac_local_roles__['extranet-someone'] = [u'Contributor',
         # u'Editor']
+        # extranet-wisemarine-msfd-tl-d10
+
+        # Contributor: TL
+        # Reviewer: EC
+        # Editor: Milieu
 
         self.setup_nationaldescriptors(cm)
         self.setup_regionaldescriptors(cm)

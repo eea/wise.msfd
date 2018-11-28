@@ -1,20 +1,24 @@
 <?xml version="1.0"?>
 <dc-workflow workflow_id="compliance_comments_section_workflow" title="Compliance Comments section Workflow" description="To be used as workflow for the folders that hold the comments (one for TL, one for EC)" state_variable="review_state" initial_state="closed" manager_bypass="False">
-
- <permission>Access contents information</permission>
  <permission>View</permission>
-
+ <permission>Add portal content</permission>
  <state state_id="closed" title="Closed for discussions">
   <exit-transition transition_id="open_for_ec"/>
   <exit-transition transition_id="open_for_tl"/>
+  <permission-map name="Access contents information" acquired="False">
+   <permission-role>Manager</permission-role>
+  </permission-map>
   <permission-map name="Add portal content" acquired="False">
+   <permission-role>Manager</permission-role>
   </permission-map>
   <permission-map name="View" acquired="False">
+   <permission-role>Contributor</permission-role>
+   <permission-role>Editor</permission-role>
    <permission-role>Manager</permission-role>
    <permission-role>Reader</permission-role>
+   <permission-role>Reviewer</permission-role>
   </permission-map>
  </state>
-
  <state state_id="opened_for_ec" title="Opened for discussions with EC">
   <exit-transition transition_id="close"/>
   <permission-map name="Add portal content" acquired="False">
@@ -29,21 +33,21 @@
    <permission-role>Reviewer</permission-role>
   </permission-map>
  </state>
-
  <state state_id="opened_for_tl" title="Opened for discussions with TL">
   <exit-transition transition_id="close"/>
   <permission-map name="Add portal content" acquired="False">
+   <permission-role>Contributor</permission-role>
    <permission-role>Editor</permission-role>
    <permission-role>Manager</permission-role>
    <permission-role>Reader</permission-role>
   </permission-map>
   <permission-map name="View" acquired="False">
+   <permission-role>Contributor</permission-role>
    <permission-role>Editor</permission-role>
    <permission-role>Manager</permission-role>
    <permission-role>Reader</permission-role>
   </permission-map>
  </state>
-
  <transition transition_id="close" title="Close discussions" new_state="closed" trigger="USER" before_script="" after_script="">
   <action url="%(content_url)s/content_status_modify?workflow_action=close" category="workflow" icon="">Close discussions</action>
   <guard>
@@ -64,10 +68,10 @@
    <guard-expression>python: object.getId() == 'tl'</guard-expression>
   </guard>
  </transition>
-
  <variable variable_id="action" for_catalog="False" for_status="True" update_always="True">
   <description>Previous transition</description>
   <default>
+   
    <expression>transition/getId|nothing</expression>
   </default>
   <guard>
@@ -76,6 +80,7 @@
  <variable variable_id="actor" for_catalog="False" for_status="True" update_always="True">
   <description>The ID of the user who performed the previous transition</description>
   <default>
+   
    <expression>user/getId</expression>
   </default>
   <guard>
@@ -84,6 +89,7 @@
  <variable variable_id="comments" for_catalog="False" for_status="True" update_always="True">
   <description>Comment about the last transition</description>
   <default>
+   
    <expression>python:state_change.kwargs.get('comment', '')</expression>
   </default>
   <guard>
@@ -92,6 +98,7 @@
  <variable variable_id="review_history" for_catalog="False" for_status="False" update_always="False">
   <description>Provides access to workflow history</description>
   <default>
+   
    <expression>state_change/getHistory</expression>
   </default>
   <guard>
@@ -102,6 +109,7 @@
  <variable variable_id="time" for_catalog="False" for_status="True" update_always="True">
   <description>When the previous transition was performed</description>
   <default>
+   
    <expression>state_change/getDateTime</expression>
   </default>
   <guard>
