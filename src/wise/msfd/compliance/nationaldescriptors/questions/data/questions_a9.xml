@@ -133,8 +133,6 @@
     <answers>
       <option>The proportion value is set for this criterion</option>
       <option>The proportion value is not set for this criterion</option>
-      <option>Not relevant</option>
-      <option>Not reported</option>
     </answers>
 
     TODO: check why here was / for score

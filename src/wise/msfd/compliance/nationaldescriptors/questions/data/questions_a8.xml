@@ -36,10 +36,10 @@
       <option>Not reported</option>
     </answers>
     <scoring determination-method="wise.msfd.compliance.scoring.alternative_based" determination-method-args="0 2">
-      <option score="4">Key aspects are reported for 76-100% of criteria</option>
-      <option score="3">Key aspects are reported for 51-75% of criteria</option>
-      <option score="2">Key aspects are reported for 26-50% of criteria</option>
-      <option score="1">Key aspects are reported for 1-25% of criteria</option>
+      <option score="4">76-100% of all relevant key aspects are reported across criteria</option>
+      <option score="3">51-75% of all relevant key aspects are reported across criteria</option>
+      <option score="2">26-50% of all relevant key aspects are reported across criteria</option>
+      <option score="1">1-25% of all relevant key aspects are reported across criteria</option>
       <option score="0">Not reported / No assessment aspects satisfied</option>
     </scoring>
     <score-weight descriptor="D5" value="20" />
@@ -82,7 +82,7 @@
       <option score="3">Pressures and impacts reported for 51-75% of the criteria elements</option>
       <option score="2">Pressures and impacts reported for 26-50% of the criteria elements</option>
       <option score="1">Pressures and impacts reported for 1-25% of the criteria elements</option>
-      <option score="0">Pressures and impacts reported not reported\not clear</option>
+      <option score="0">Pressures and impacts reported not reported\ not clear</option>
     </scoring>
     <score-weight descriptor="D5" value="15" />
   </assessment-question>
@@ -122,10 +122,10 @@
       <option>Not reported</option>
     </answers>
     <scoring determination-method="wise.msfd.compliance.scoring.alternative_based" determination-method-args="0 2">
-      <option score="4">The MS uses the same parameters as most (76%-100%)of the MS in the region</option>
-      <option score="3">The MS uses the same parameters as more than half (51-75%)of MS in the region</option>
-      <option score="2">The MS uses the same parameters as less then half (26-50%)of MS in the region</option>
-      <option score="1">Element(s) used for this criterion is/are the same as in few (1-25%) of MS in the region</option>
+      <option score="4">The MS uses the same parameters as most (76%-100%) of the MS in the region</option>
+      <option score="3">The MS uses the same parameters as more than half (51-75%) of MS in the region</option>
+      <option score="2">The MS uses the same parameters as less than half (26-50%) of MS in the region</option>
+      <option score="1">Parameter(s) used for this criterion is/are the same as in few (1-25%) of MS in the region</option>
       <option score="0">Not reported\the information is provided in different formats across MS and it is impossible to compare</option>
     </scoring>
     <score-weight descriptor="D5" value="10" />
@@ -133,20 +133,20 @@
 
   <assessment-question id="q3-c" class="coherence" use-criteria=''>
     <definition>
-      To what extent does the Member State report the same pressures within the marine region?
+      To what extent does the Member State report the same pressures as the other countries in the marine region?
     </definition>
     <answers>
-      <option>The MS reports the same pressures as most (76%- 100%)of the MS in the region</option>
-      <option>The MS reports the same pressures as more than half (51-75%)of MS in the region</option>
+      <option>The MS reports the same pressures as most (76%- 100%) of the MS in the region</option>
+      <option>The MS reports the same pressures as more than half (51-75%) of MS in the region</option>
       <option>The MS reports the same pressures as less than half (26-50%) of MS in the region</option>
       <option>The MS reports the same pressures as in few (1-25%) of MS in the region</option>
       <option>Not relevant</option>
       <option>Not reported</option>
     </answers>
     <scoring determination-method="wise.msfd.compliance.scoring.alternative_based" determination-method-args="0 2">
-      <option score="4">The MS reports the same pressures as most (76%-100%)of the MS in the region</option>
-      <option score="3">The MS reports the same pressures as more than half (51- 75%)of MS in the region</option>
-      <option score="2">The MS reports the same pressures as less then half (26-50%)of MS in the region</option>
+      <option score="4">The MS reports the same pressures as most (76%-100%) of the MS in the region</option>
+      <option score="3">The MS reports the same pressures as more than half (51- 75%) of MS in the region</option>
+      <option score="2">The MS reports the same pressures as less than half (26-50%) of MS in the region</option>
       <option score="1">The MS reports the same pressures as in few (1-25%) of MS in the region</option>
       <option score="0">Not reported\the information is provided in different formats across MS and it is impossible to compare</option>
     </scoring>
