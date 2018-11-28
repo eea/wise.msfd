@@ -49,7 +49,7 @@ class Article9(BaseArticle2012):
 
             return res
 
-        descriptors = filter_descriptors(x('//w:Descriptors'), 'D5')
+        descriptors = filter_descriptors(x('//w:Descriptors'), self.descriptor)
 
         def get_marine_unit_ids():
             return set(x('//w:Descriptors/w:MarineUnitID/text()'))
