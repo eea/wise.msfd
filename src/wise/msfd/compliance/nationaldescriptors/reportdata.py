@@ -19,7 +19,8 @@ from z3c.form.form import Form
 
 from ..base import BaseComplianceView
 from .a8 import Article8
-from .a9_10 import Article9, Article10
+from .a9 import Article9
+from .a9_10 import Article10
 from .utils import row_to_dict
 
 logger = logging.getLogger('wise.msfd')
@@ -123,7 +124,7 @@ WHERE {
 }
 ORDER BY DESC(?date)
 LIMIT 1""" % filename
-        service = sparql.Service('http://cr.eionet.europa.eu/sparql')
+        service = sparql.Service('https://cr.eionet.europa.eu/sparql')
         try:
             req = service.query(q)
             rows = req.fetchall()
@@ -175,7 +176,7 @@ LIMIT 1""" % filename
             ),
             # TODO: find out how to get info about who reported
             report_by='Member State',
-            source_file=(filename, url),
+            source_file=(filename, url + '/manage_document'),
             # TODO: do the report_due by a mapping with article: date
             report_due='2012-10-15',
             # TODO get info about report date from _ReportingInformation?? or
@@ -436,7 +437,7 @@ class ReportData2018(BaseComplianceView):
                     report_date = row[1][0]
 
                 if row[0] == 'ReportedFileLink':
-                    source_file[1] = row[1][0]
+                    source_file[1] = row[1][0] + '/manage_document'
                     source_file[0] = row[1][0].split('/')[-1]
 
         self.report_header = self.report_header_template(
