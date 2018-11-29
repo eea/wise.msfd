@@ -138,7 +138,7 @@ class Article8(BaseArticle2012):
             res = [x.Activity for x in res if x.Activity != 'NotReported']
             results.extend(res)
 
-        results = '; '.join(results)
+        results = '; '.join(sorted(set(results)))
 
         return results
 

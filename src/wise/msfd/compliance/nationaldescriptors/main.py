@@ -110,8 +110,26 @@ COLOR_TABLE = {
     3: [1, 3, 4],
     4: [1, 2, 3, 4],
     5: [1, 2, 3, 4, 5],
-    6: [0, 1, 2, 3, 4, 5]      # TODO: this needs to be removed
+    6: [1, 2, 3, 4, 5, 0]      # TODO: this needs to be removed
 }
+
+
+# get the criteria value to be shown in the assessment data 2018 table
+def get_crit_val(question, criteria):
+    use_crit = question.use_criteria
+    is_prim = criteria.is_primary
+    crit = criteria.id
+
+    if use_crit == 'all':
+        return crit
+
+    if is_prim and use_crit == 'primary':
+        return crit
+
+    if not is_prim and use_crit == 'secondary':
+        return crit
+
+    return ''
 
 
 def get_assessment_data(article, criterias, questions, data):
@@ -128,24 +146,40 @@ def get_assessment_data(article, criterias, questions, data):
         values = []
         choices = dict(enumerate(question.answers))
 
-        for criteria in criterias:
-            for element in criteria.elements:
-                field_name = '{}_{}_{}_{}'.format(
-                    article, question.id, criteria.id, element.id
-                )
-                v = data.get(field_name, None)
+        if question.use_criteria == 'none':
+            field_name = '{}_{}'.format(article, question.id)
+            v = data.get(field_name, None)
+            if v is not None:
+                label = choices[v]
+                color_index = COLOR_TABLE[len(choices)][v]
+            else:
+                color_index = 0
+                label = 'Not filled in'
 
-                # TODO
+            value = (label, color_index, u'All criterias')
+            values.append(value)
+        else:
+            for criteria in criterias:
+                for element in criteria.elements:
+                    field_name = '{}_{}_{}_{}'.format(
+                        article, question.id, criteria.id, element.id
+                    )
+                    v = data.get(field_name, None)
 
-                if v is not None:
-                    label = choices[v]
-                    color_index = COLOR_TABLE[len(choices)][v]
-                else:
-                    color_index = 0
-                    label = 'Not filled in'
+                    if v is not None:
+                        label = choices[v]
+                        color_index = COLOR_TABLE[len(choices)][v]
+                    else:
+                        color_index = 0
+                        label = 'Not filled in'
 
-                value = (label, color_index)
-                values.append(value)
+                    value = (
+                        label,
+                        color_index,
+                        get_crit_val(question, criteria)
+                    )
+
+                    values.append(value)
 
         summary_title = '{}_{}_Summary'.format(article, question.id)
         summary = data.get(summary_title) or ''
@@ -385,14 +419,15 @@ class NationalDescriptorArticleView(BaseComplianceView):
             if assessments_2012.get(country_name):
                 score_2012 = assessments_2012[country_name].score
             else:       # fallback
-                score_2012 = -100
+                ctry = assessments_2012.keys()[0]
+                score_2012 = assessments_2012[ctry].score
 
             report_by, assessors, assess_date, source_file = \
                 get_assessment_head_data_2012(db_data_2012)
         except:
             logger.exception("Could not get assessment data for 2012")
             self.assessment_data_2012 = ''
-            score_2012 = -100
+            score_2012 = 100
             report_by, assessors, assess_date, source_file = [
                 'Not found'] * 3 + [('Not found', '')]
 

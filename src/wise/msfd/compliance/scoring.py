@@ -50,6 +50,17 @@ def alternative_based(args):
     return calculate
 
 
+def none_criteria_based(args):
+
+    def calculate(value):
+        if value:
+            return 4 - value[0]
+
+        return len(DEFAULT_RANGES) + 1
+
+    return calculate
+
+
 CONCLUSIONS = [
     'Very good',
     'Good',

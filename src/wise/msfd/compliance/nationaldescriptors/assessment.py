@@ -64,6 +64,10 @@ class EditAssessmentDataForm(Form, BaseComplianceView):
 
             values = []
 
+            if question.use_criteria == 'none':
+                field_name = '{}_{}'.format(self.article, question.id)
+                values.append(data.get(field_name, None))
+
             for criteria in criterias:
                 for element in criteria.elements:
                     field_name = '{}_{}_{}_{}'.format(
@@ -161,6 +165,23 @@ class EditAssessmentDataForm(Form, BaseComplianceView):
 
             fields = []
 
+            if not criterias:
+                field_title = u'All criterias'
+                field_name = '{}_{}'.format(self.article, question.id)
+                choices = question.answers
+                terms = [SimpleTerm(token=i, value=i, title=c)
+                         for i, c in enumerate(choices)]
+                default = assessment_data.get(field_name, None)
+                field = Choice(
+                    title=field_title,
+                    __name__=field_name,
+                    vocabulary=SimpleVocabulary(terms),
+                    required=False,
+                    default=default,
+                )
+                # field._criteria = criteria
+                fields.append(field)
+
             for criteria in criterias:
                 for element in criteria.elements:
                     field_title = criteria.title
@@ -234,6 +255,10 @@ def filtered_criterias(criterias, question):
 
     if question.use_criteria == 'secondary':
         return [c for c in criterias if c.is_primary is False]
+
+    # TODO what to return
+    if question.use_criteria == 'none':
+        return []
 
     return criterias
 

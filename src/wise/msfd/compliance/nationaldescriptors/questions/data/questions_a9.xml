@@ -12,7 +12,7 @@
       <option>Not relevant</option>
       <option>Not reported</option>
     </answers>
-    <scoring determination-method="wise.msfd.compliance.scoring.alternative_based" determination-method-args="0 2">
+    <scoring determination-method="wise.msfd.compliance.scoring.alternative_based" determination-method-args="0 1 3">
       <option score="4">76-100% of primary criteria used (or replaced with secondary with grounded justification)</option>
       <option score="3">51-75% of primary criteria used (or replaced with secondary with grounded justification)</option>
       <option score="2">26-50% of primary criteria used (or replaced with secondary with grounded justification)</option>
@@ -22,7 +22,7 @@
     <score-weight descriptor="D5" value="7.5" />
   </assessment-question>
 
-  <assessment-question id="q2-a" class="adequacy" use-criteria='primary'>
+  <assessment-question id="q2-a" class="adequacy" use-criteria='secondary'>
     <definition>
       To what extent does the Member State report beyond the minimum requirements of the 2017 Decision?
     </definition>
@@ -34,7 +34,7 @@
       <option>Not reported</option>
     </answers>
     TODO: need to redo method here
-    <scoring determination-method="wise.msfd.compliance.scoring.alternative_based" determination-method-args="0 2">
+    <scoring determination-method="wise.msfd.compliance.scoring.alternative_based" determination-method-args="0 1">
       <option score="4">76-100% of secondary criteria used </option>
       <option score="3">51-75% of secondary primary criteria used </option>
       <option score="2">26-50% of secondary criteria used </option>
@@ -44,7 +44,7 @@
     <score-weight descriptor="D5" value="7.5" />
   </assessment-question>
 
-  <assessment-question id="q3-a" class="adequacy" use-criteria='primary'>
+  <assessment-question id="q3-a" class="adequacy" use-criteria='all'>
     <definition>
       To what extent is the qualitative GES determination adequate? (I)
     </definition>
@@ -54,7 +54,7 @@
       <option>Not relevant</option>
       <option>Not reported</option>
     </answers>
-    <scoring determination-method="wise.msfd.compliance.scoring.alternative_based" determination-method-args="0 2">
+    <scoring determination-method="wise.msfd.compliance.scoring.alternative_based" determination-method-args="0">
       <option score="4">Elements and parameters are specified for 76-100% of criteria</option>
       <option score="3">Elements and parameters are specified for 51-75% of criteria</option>
       <option score="2">Elements and parameters are specified for 26-50% of criteria</option>
@@ -64,7 +64,7 @@
     <score-weight descriptor="D5" value="10" />
   </assessment-question>
 
-  <assessment-question id="q4-a" class="adequacy" use-criteria='primary'>
+  <assessment-question id="q4-a" class="adequacy" use-criteria='all'>
     <definition>
       To what extent is the qualitative GES determination adequate? (II)
     </definition>
@@ -74,7 +74,7 @@
       <option>Not relevant</option>
       <option>Not reported</option>
     </answers>
-    <scoring determination-method="wise.msfd.compliance.scoring.alternative_based" determination-method-args="0 2">
+    <scoring determination-method="wise.msfd.compliance.scoring.alternative_based" determination-method-args="0">
       <option score="4">Clear objectives are included for 76-100% of the criteria</option>
       <option score="3">Clear objectives are included for 51-75% of the criteria</option>
       <option score="2">Clear objectives are included for 26-50% of the criteria</option>
@@ -84,7 +84,7 @@
     <score-weight descriptor="D5" value="10" />
   </assessment-question>
 
-  <assessment-question id="q5-a" class="adequacy" use-criteria=''>
+  <assessment-question id="q5-a" class="adequacy" use-criteria='all'>
     <definition>
       To what extent is the quantitative determination of GES adequate?
     </definition>
@@ -94,7 +94,7 @@
       <option>Not relevant</option>
       <option>Not reported</option>
     </answers>
-    <scoring determination-method="wise.msfd.compliance.scoring.alternative_based" determination-method-args="0 2">
+    <scoring determination-method="wise.msfd.compliance.scoring.alternative_based" determination-method-args="0">
       <option score="4">Threshold values defined for 76-100% criteria</option>
       <option score="3">Threshold values defined for 51-75% criteria</option>
       <option score="2">Threshold values defined for 26-50% criteria</option>
@@ -104,7 +104,7 @@
     <score-weight descriptor="D5" value="12.5" />
   </assessment-question>
 
-  <assessment-question id="q6-a" class="adequacy" use-criteria=''>
+  <assessment-question id="q6-a" class="adequacy" use-criteria='none'>
     <definition>
       To what extent are levels of ambition defined for GES adequate? (I)
     </definition>
@@ -116,7 +116,7 @@
       <option>Not relevant</option>
       <option>Not reported</option>
     </answers>
-    <scoring determination-method="wise.msfd.compliance.scoring.alternative_based" determination-method-args="0 2">
+    <scoring determination-method="wise.msfd.compliance.scoring.none_criteria_based" determination-method-args="0 2">
       <option score="4">GES extent threshold defined for 76-100% of elements</option>
       <option score="3">GES extent threshold defined for 51-75% of elements</option>
       <option score="2">GES extent threshold defined for 26-50% of elements</option>
@@ -126,7 +126,7 @@
     <score-weight descriptor="D5" value="10" />
   </assessment-question>
 
-  <assessment-question id="q7-a" class="adequacy" use-criteria='raise error'>
+  <assessment-question id="q7-a" class="adequacy" use-criteria='all'>
     <definition>
       To what extent are levels of ambition defined for GES adequate? (II)
     </definition>
@@ -146,7 +146,7 @@
     <score-weight descriptor="D5" value="10" />
   </assessment-question>
 
-  <assessment-question id="q1-c" class="coherence" use-criteria='primary'>
+  <assessment-question id="q1-c" class="coherence" use-criteria='all'>
     <definition>
       To what extent does the Member State in a marine region use the same primary/secondary criteria as the other MS in this region?
     </definition>
@@ -168,7 +168,7 @@
     <score-weight descriptor="D5" value="12.5" />
   </assessment-question>
 
-  <assessment-question id="q2-c" class="coherence" use-criteria=''>
+  <assessment-question id="q2-c" class="coherence" use-criteria='all'>
     <definition>
       To what extent does the Member State use GES determinations that are similar to those of other Member States in the region? (I)
     </definition>
@@ -190,7 +190,7 @@
     <score-weight descriptor="D5" value="17.5" />
   </assessment-question>
 
-  <assessment-question id="q3-c" class="coherence" use-criteria=''>
+  <assessment-question id="q3-c" class="coherence" use-criteria='all'>
     <definition>
       To what extent does the Member State use GES determinations that are similar to those of other Member States in the region? (II)
     </definition>
@@ -212,7 +212,7 @@
     <score-weight descriptor="D5" value="17.5" />
   </assessment-question>
 
-  <assessment-question id="q4-c" class="coherence" use-criteria=''>
+  <assessment-question id="q4-c" class="coherence" use-criteria='none'>
     <definition>
       To what extent does the Member State use threshold values agreed at EU or regional level?
     </definition>
@@ -224,7 +224,7 @@
       <option>Not relevant</option>
       <option>Not reported</option>
     </answers>
-    <scoring determination-method="wise.msfd.compliance.scoring.alternative_based" determination-method-args="0 2">
+    <scoring determination-method="wise.msfd.compliance.scoring.none_criteria_based" determination-method-args="0 2">
       <option score="4">Threshold values are applied to the same element as in most (76%-100%) of the MS in the region</option>
       <option score="3">Threshold values are applied to the same element as in more than half (51-75%) of MS in the region</option>
       <option score="2">Threshold values are applied to the same element as in less than half (26-50%) of MS in the region</option>
@@ -234,7 +234,7 @@
     <score-weight descriptor="D5" value="17.5" />
   </assessment-question>
 
-  <assessment-question id="q5-c" class="coherence" use-criteria=''>
+  <assessment-question id="q5-c" class="coherence" use-criteria='none'>
     <definition>
       To what extent is the Member State’s level of ambition for GES the same as other Member States in the same region?
     </definition>
@@ -245,9 +245,8 @@
       <option>Threshold values are the same/similar as in few (1-25%) of MS in the region</option>
       <option>Not relevant</option>
       <option>Not reported</option>
-
     </answers>
-    <scoring determination-method="wise.msfd.compliance.scoring.alternative_based" determination-method-args="0 2">
+    <scoring determination-method="wise.msfd.compliance.scoring.none_criteria_based" determination-method-args="0 2">
       <option score="4">The MS uses the same/similar threshold values as most (76%-100%) of the MS in the region</option>
       <option score="3">The MS uses the same/similar threshold values as more than half (51- 75%) of MS in the region</option>
       <option score="2">The MS uses the same/similar threshold values as less than half (26- 50%) of MS in the region</option>
@@ -257,7 +256,7 @@
     <score-weight descriptor="D5" value="17.5" />
   </assessment-question>
 
-  <assessment-question id="q6-c" class="coherence" use-criteria=''>
+  <assessment-question id="q6-c" class="coherence" use-criteria='none'>
     <definition>
       To what extent does the Member State report the same result and date for GES achievement as the other countries in the region?
     </definition>
@@ -269,7 +268,7 @@
       <option>Not relevant</option>
       <option>Not reported</option>
     </answers>
-    <scoring determination-method="wise.msfd.compliance.scoring.alternative_based" determination-method-args="0 2">
+    <scoring determination-method="wise.msfd.compliance.scoring.none_criteria_based" determination-method-args="0 2">
       <option score="4">The MS uses similar date (by 2020/after 2020) for achieving GES as most (76%-100%) of the MS in the region</option>
       <option score="3">The MS uses similar date (by 2020/after 2020) for achieving GES as more than half (51-75%) of MS in the region</option>
       <option score="2">The MS uses similar date (by 2020/after 2020) for achieving GES as less than half (26-50%) of MS in the region</option>

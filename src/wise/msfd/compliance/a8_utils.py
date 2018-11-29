@@ -116,7 +116,7 @@ DESCR_TOPIC_UTILS = {
             ('LevelPressureOverall', ),
             ('LevelPressureNLoad', 'LevelPressurePLoad', 'LevelPressureOLoad'),
         ),
-        'D8': (
+        'D6': (
             ('asd', ),
             ('asd', ),
             ('asd', ),

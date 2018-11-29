@@ -6,7 +6,7 @@
       <tr>
         <th class="as-question as-header">Question / GESComponent</th>
         <th tal:repeat="g assessment/gescomponents" class="as-ges-component as-header">
-          <span tal:replace="g">D0C0</span>
+          <!--<span tal:replace="g">D0C0</span>-->
         </th>
         <!-- TODO: add "conclusion score" and "Weighting" as titles -->
         <th class='as-header'>Conclusion</th>
@@ -18,9 +18,10 @@
           <tal:rep tal:repeat="value row/values" >
             <td
               tal:attributes="class python: 'as-value as-value-{}'.format(value[1]);
-              title python: value[0];"
-              >
-              <!-- -->
+              title python: value[0];
+              colspan python: (len(assessment.gescomponents) + 1) - len(row.values);"
+              tal:content="python: value[2]">
+              D0C0
             </td>
           </tal:rep>
 
