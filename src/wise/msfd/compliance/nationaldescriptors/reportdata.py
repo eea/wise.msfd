@@ -97,6 +97,8 @@ class ReportData2012(BaseComplianceView, BaseUtil):
             getattr(t, region_col) == self.country_region_code
         )
 
+        # TODO: analyse cases when it returns more then one file
+
         if count != 1:
             logger.warning("Could not find report filename for %s %s %s",
                            self.country_code,

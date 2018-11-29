@@ -22,7 +22,7 @@
     <score-weight descriptor="D5" value="7.5" />
   </assessment-question>
 
-  <assessment-question id="q2-a" class="adequacy" use-criteria='secondary'>
+  <assessment-question id="q2-a" class="adequacy" use-criteria='primary'>
     <definition>
       To what extent does the Member State report beyond the minimum requirements of the 2017 Decision?
     </definition>

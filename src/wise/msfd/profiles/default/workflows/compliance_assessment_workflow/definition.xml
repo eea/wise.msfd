@@ -68,7 +68,7 @@
    <guard-role>Reviewer</guard-role>
   </guard>
  </transition>
- <transition transition_id="send_back_to_final_review" title="Send back to final review" new_state="" trigger="USER" before_script="" after_script="">
+ <transition transition_id="send_back_to_final_review" title="Send back to final review" new_state="in_final_review" trigger="USER" before_script="" after_script="">
   <action url="%(content_url)s/content_status_modify?workflow_action=send_back_to_final_review" category="workflow" icon="">Send back to final review</action>
   <guard>
    <guard-role>Reviewer</guard-role>
