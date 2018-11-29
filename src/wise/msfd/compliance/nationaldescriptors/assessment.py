@@ -46,7 +46,12 @@ class EditAssessmentDataForm(Form, BaseComplianceView):
 
     @property
     def title(self):
-        return 'Edit Assessment for {}'.format(self.descriptor)
+        return "Edit {}'s Assessment for {}/{}/{}".format(
+            self.country_title,
+            self.descriptor,
+            self.country_region_code,
+            self.article
+        )
 
     @buttonAndHandler(u'Save', name='save')
     def handle_save(self, action):

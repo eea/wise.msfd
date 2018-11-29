@@ -323,6 +323,15 @@ class NationalDescriptorArticleView(BaseComplianceView):
     assessment_data_2018_tpl = Template('./pt/assessment-data-2018.pt')
 
     @property
+    def title(self):
+        return "{}'s assessment overview for {}/{}/{}".format(
+            self.country_title,
+            self.descriptor,
+            self.country_region_code,
+            self.article
+        )
+
+    @property
     def criterias(self):
         # TODO: unify descriptor handling, should also see ges_components.py
         els = get_descriptor_elements(
