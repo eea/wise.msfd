@@ -75,9 +75,11 @@ class EditAssessmentDataForm(Form, BaseComplianceView):
                     )
                     values.append(data.get(field_name, None))
 
-            # update the score if all fields have been answered
-
-            if None not in values:
+            # TODO update the score if all fields have been answered
+            # score is updated if one of the fields has been answered
+            # import pdb; pdb.set_trace()
+            values = [x for x in values if x is not None]
+            if values:
                 conclusion, raw_score, score = question.calculate_score(
                     self.descriptor, values)
 
@@ -165,12 +167,22 @@ class EditAssessmentDataForm(Form, BaseComplianceView):
 
             fields = []
 
+            # when use-criteria == 'none'
             if not criterias:
                 field_title = u'All criterias'
                 field_name = '{}_{}'.format(self.article, question.id)
                 choices = question.answers
+
                 terms = [SimpleTerm(token=i, value=i, title=c)
                          for i, c in enumerate(choices)]
+
+                # Add 'Not relevant' to choices list
+                terms.extend([
+                    SimpleTerm(token=len(terms)+1,
+                               value=None,
+                               title=u'Not relevant')
+                ])
+
                 default = assessment_data.get(field_name, None)
                 field = Choice(
                     title=field_title,
@@ -191,6 +203,12 @@ class EditAssessmentDataForm(Form, BaseComplianceView):
                     choices = question.answers
                     terms = [SimpleTerm(token=i, value=i, title=c)
                              for i, c in enumerate(choices)]
+                    # Add 'Not relevant' to choices list
+                    terms.extend([
+                        SimpleTerm(token=len(terms) + 1,
+                                   value=None,
+                                   title=u'Not relevant')
+                    ])
                     default = assessment_data.get(field_name, None)
                     field = Choice(
                         title=field_title,
