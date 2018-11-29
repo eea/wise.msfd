@@ -275,6 +275,7 @@ class BaseComplianceView(BrowserView):
 def get_element_by_id(root, id):
     if id.startswith('#'):
         id = id[1:]
+
     el = root.xpath('//*[@id = "' + id + '"]')[0]
 
     return el
