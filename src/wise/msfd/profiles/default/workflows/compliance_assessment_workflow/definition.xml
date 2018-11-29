@@ -4,6 +4,7 @@
  <permission>wise.msfd: Edit Assessment</permission>
  <state state_id="approved" title="Approved">
   <exit-transition transition_id="send_back_to_final_review"/>
+  <exit-transition transition_id="send_for_draft_review"/>
   <permission-map name="View" acquired="False">
    <permission-role>Contributor</permission-role>
    <permission-role>Editor</permission-role>
@@ -25,8 +26,6 @@
    <permission-role>Reviewer</permission-role>
   </permission-map>
   <permission-map name="wise.msfd: Edit Assessment" acquired="False">
-   <permission-role>Editor</permission-role>
-   <permission-role>Manager</permission-role>
   </permission-map>
  </state>
  <state state_id="in_final_review" title="In final review">
