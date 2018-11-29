@@ -172,7 +172,7 @@ LIMIT 1""" % filename
         self.report_header = self.report_header_template(
             title="{}'s 2012 Member State Report for {} / {} / {}".format(
                 self.country_name,
-                self.country_region_name,
+                self.country_region_code,
                 self.descriptor,
                 self.article
             ),
@@ -445,7 +445,7 @@ class ReportData2018(BaseComplianceView):
         self.report_header = self.report_header_template(
             title="{}'s 2018 Member State Report for {} / {} / {}".format(
                 self.country_name,
-                self.country_region_name,
+                self.country_region_code,
                 self.descriptor,
                 self.article
             ),
