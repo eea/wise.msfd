@@ -10,6 +10,10 @@ DEFAULT_RANGES = [
 def get_percentage(values):
     """ Compute percentage of True values in the list
     """
+
+    if not values:
+        return 0
+
     trues = len([x for x in values if x is True])
 
     return (trues * 100.0) / len(values)
