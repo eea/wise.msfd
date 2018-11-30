@@ -9,57 +9,15 @@ from lxml.etree import fromstring
 
 from Products.Five.browser.pagetemplatefile import \
     ViewPageTemplateFile as Template
-from wise.msfd.utils import Item, Row
+from wise.msfd.utils import Item, Node, RelaxedNode, Row
 
 from ..base import BaseArticle2012
 from .utils import get_descriptors
 
 logger = logging.getLogger('wise.msfd')
 
+
 NSMAP = {"w": "http://water.eionet.europa.eu/schemas/dir200856ec"}
-
-
-class Node(object):
-    """ A wrapper over the lxml etree to simplify syntax
-    """
-
-    def __init__(self, node):
-        self.node = node
-
-    def __getitem__(self, name):
-        assert name.startswith('w:')        # this is just a reminder for devel
-
-        return self.node.find(name, namespaces=NSMAP)
-
-    def relax(self):
-        return RelaxedNode(self.node)
-
-
-class Empty(object):
-    """ A "node" with empty text
-    """
-
-    @property
-    def text(self):
-        return ''
-
-
-class RelaxedNode(Node):
-    """ A "relaxed" version of the node getter.
-
-    It never returns None from searches
-    """
-
-    def __getitem__(self, name):
-        n = super(RelaxedNode, self).__getitem__(name)
-
-        if n is None:
-            return Empty()
-
-        return n
-
-
-N = Node        # alias for shorter names
 
 
 class A9Item(Item):
@@ -80,7 +38,7 @@ class A9Item(Item):
         self.siblings = []
 
         for d in self.descriptors:
-            n = Node(d)
+            n = Node(d, nsmap=NSMAP)
 
             muid = n['w:MarineUnitID']
 

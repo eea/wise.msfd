@@ -6,12 +6,12 @@ from sqlalchemy import or_
 from zope.schema import Choice
 from zope.schema.vocabulary import SimpleTerm, SimpleVocabulary
 
-import sparql
 from persistent.list import PersistentList
 from Products.Five.browser.pagetemplatefile import \
     ViewPageTemplateFile as Template
 from wise.msfd import db, sql, sql2018
 from wise.msfd.base import BaseUtil
+from wise.msfd.data import get_report_file_url, get_report_filename
 from wise.msfd.gescomponents import get_ges_criterions
 from z3c.form.button import buttonAndHandler
 from z3c.form.field import Fields
@@ -20,17 +20,23 @@ from z3c.form.form import Form
 from ..base import BaseComplianceView
 from .a8 import Article8
 from .a9 import Article9
-from .a9_10 import Article10
+from .a10 import Article10
 from .utils import row_to_dict
 
 logger = logging.getLogger('wise.msfd')
 
 
 class ReportData2012(BaseComplianceView, BaseUtil):
-
     """ WIP on compliance tables
     """
+
     section = 'national-descriptors'
+
+    article_implementations = {
+        'Art8': Article8,
+        'Art9': Article9,
+        'Art10': Article10,
+    }
 
     def get_criterias_list(self, descriptor):
         """ Get the list of criterias for the specified descriptor
@@ -74,100 +80,30 @@ class ReportData2012(BaseComplianceView, BaseUtil):
 
         return sorted(muids)
 
-    def get_report_filename(self):
-        # TODO: this needs to be reimplemented
-        map_articles = {
-            'Art8': '8b',
-            'Art9': '9',
-            'Art10': '10',
-        }
-
-        article_nr = map_articles[self.article]
-        mc_name = 'MSFD{}Import'.format(article_nr)
-        country_col = 'MSFD{}_Import_ReportingCountry'.format(article_nr)
-        region_col = 'MSFD{}_Import_ReportingRegion'.format(article_nr)
-        filename_col = 'MSFD{}_Import_FileName'.format(article_nr)
-
-        t = getattr(sql, mc_name)
-
-        count, item = db.get_item_by_conditions(
-            t,
-            country_col,
-            getattr(t, country_col) == self.country_code,
-            getattr(t, region_col) == self.country_region_code
-        )
-
-        # TODO: analyse cases when it returns more then one file
-
-        if count != 1:
-            logger.warning("Could not find report filename for %s %s %s",
-                           self.country_code,
-                           self.country_region_code)
-
-        file_name = getattr(item, filename_col, 'File not found')
-
-        return file_name
-
-    def get_report_file_url(self, filename):
-        """ Retrieve the CDR url based on query in ContentRegistry
-        """
-
-        q = """
-PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-PREFIX cr: <http://cr.eionet.europa.eu/ontologies/contreg.rdf#>
-PREFIX dc: <http://purl.org/dc/dcmitype/>
-PREFIX dcterms: <http://purl.org/dc/terms/>
-
-SELECT ?file
-WHERE {
-  ?file a dc:Dataset .
-  ?file dcterms:date ?date .
-  FILTER regex(str(?file), '%s')
-}
-ORDER BY DESC(?date)
-LIMIT 1""" % filename
-        service = sparql.Service('https://cr.eionet.europa.eu/sparql')
-        try:
-            req = service.query(q)
-            rows = req.fetchall()
-
-            urls = []
-
-            for row in rows:
-                url = row[0].value
-                splitted = url.split('/')
-
-                filename_from_url = splitted[-1]
-
-                if filename == filename_from_url:
-                    urls.append(url)
-
-            assert len(urls) == 1
-        except:
-            logger.exception('Got an error in querying SPARQL endpoint for '
-                             'filename url: %s', filename)
-
-            return ''
-
-        return urls[0]
-
     def get_article_report_implementation(self):
-
-        mapping = dict(
-            Art8=Article8,
-            Art9=Article9,
-            Art10=Article10,
-        )
-        klass = mapping[self.article]
+        klass = self.article_implementations[self.article]
 
         return klass(self, self.request, self.country_code, self.descriptor,
                      self.article, self.muids, self.colspan)
+
+    def get_report_filename(self):
+        # needed in article report data implementations, to retrieve the file
+        return get_report_filename('2012',
+                                   self.country_code,
+                                   self.country_region_code,
+                                   self.article,
+                                   self.descriptor)
 
     @db.use_db_session('2012')
     def __call__(self):
         print "Will render report for ", self.article
         filename = self.get_report_filename()
-        url = self.get_report_file_url(filename)
+
+        if filename:
+            url = get_report_file_url(filename)
+            source_file = (filename, url + '/manage_document')
+        else:
+            source_file = ('File not found', None)
 
         self.report_header = self.report_header_template(
             title="{}'s 2012 Member State Report for {} / {} / {}".format(
@@ -178,7 +114,7 @@ LIMIT 1""" % filename
             ),
             # TODO: find out how to get info about who reported
             report_by='Member State',
-            source_file=(filename, url + '/manage_document'),
+            source_file=source_file,
             # TODO: do the report_due by a mapping with article: date
             report_due='2012-10-15',
             # TODO get info about report date from _ReportingInformation?? or
@@ -458,6 +394,5 @@ class ReportData2018(BaseComplianceView):
 
         trans_edit_html = self.translate_view()()
         self.report_data = template(data=data) + trans_edit_html
-        # head_tpl=head_tpl
 
         return self.index()

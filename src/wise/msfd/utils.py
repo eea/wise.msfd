@@ -490,3 +490,46 @@ class TableHeader(TemplateMixin):
 class Item(OrderedDict):
     """ A generic data container for "columns"
     """
+
+
+class Node(object):
+    """ A wrapper over the lxml etree to simplify syntax
+    """
+
+    def __init__(self, node, nsmap):
+        self.node = node
+        self.namespaces = nsmap
+
+    def __getitem__(self, name):
+        assert name.startswith('w:')        # this is just a reminder for devel
+
+        # TODO: this used to be find(), now it's xpath. Check compatibility
+
+        return self.node.xpath(name, namespaces=self.namespaces)
+
+    def relax(self):
+        return RelaxedNode(self.node)
+
+
+class Empty(object):
+    """ A "node" with empty text
+    """
+
+    @property
+    def text(self):
+        return ''
+
+
+class RelaxedNode(Node):
+    """ A "relaxed" version of the node getter.
+
+    It never returns None from searches
+    """
+
+    def __getitem__(self, name):
+        n = super(RelaxedNode, self).__getitem__(name)
+
+        if n is None:
+            return Empty()
+
+        return n

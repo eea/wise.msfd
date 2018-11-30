@@ -19,9 +19,12 @@
       </tr>
       <tr>
         <th>Commission technical report</th>
-        <td tal:attributes="colspan view/colspan">
-          <a tal:attributes="href python: options['source_file'][1]"
-           tal:content="python: options['source_file'][0]"/>
+        <td tal:attributes="colspan view/colspan"
+          tal:define="sf options/source_file;
+          href python: sf[1];
+          text python: sf[0];
+          ">
+          <a tal:attributes="href href" tal:content="text"/>
         </td>
       </tr>
     </table>
