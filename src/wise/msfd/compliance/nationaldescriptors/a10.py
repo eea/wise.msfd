@@ -19,6 +19,8 @@ logger = logging.getLogger('wise.msfd')
 
 NSMAP = {"w": "http://water.eionet.europa.eu/schemas/dir200856ec"}
 
+# TODO: this needs to take region into account
+
 
 class A10Item(Item):
 
@@ -35,6 +37,8 @@ class A10Item(Item):
             targets = ti.targets_for_criterion(self.criterion)
             self.targets.extend(targets)
 
+        feature_pressures = self.get_feature_pressures()
+
         attrs = [
             ('Description [Targets]', self.description()),
             ('Threshold value [TargetValue]', self.threshold_value()),
@@ -50,9 +54,11 @@ class A10Item(Item):
             ('Compatibility with existing targets/indicators',
              self.pick('w:CompatibilityExistingTargets/text()')),
 
-            # ('Physical/chemical features', self.pick('w:/text()')),
-            # ('Functional groups', self.pick('w:/text()')),
-            # ('Pressures', self.pick('w:/text()')),
+            ('Physical/chemical features',
+             ', '.join(feature_pressures['features'])),
+            ('Predominant habitats', ', '.join(feature_pressures['habitats'])),
+            ('Functional groups', ', '.join(feature_pressures['groups'])),
+            ('Pressures', ', '.join(feature_pressures['pressures'])),
         ]
 
         for title, value in attrs:
@@ -74,6 +80,56 @@ class A10Item(Item):
 
         for row in res:
             return row[0]       # there are multiple records, one for each MUID
+
+    @db.use_db_session('2012')
+    def get_feature_pressures(self):
+        t = sql.t_MSFD_19b_10PhysicalChemicalFeatures
+        target = self.pick('w:Feature/text()')
+
+        # TODO: this needs to take region into account
+        count, res = db.get_all_records(
+            t,
+            t.c.MemberState == self.country_code,
+            t.c.Targets == target,
+            # TODO: region here
+            # t.c['Marine region/subregion'] == 'BAL'
+        )
+
+        cols = t.c.keys()
+        recs = [
+            {
+                k: v for k, v in zip(cols, row)
+            } for row in res
+        ]
+
+        habitats = set()
+        features = set()
+        groups = set()
+        pressures = set()
+
+        _types = {
+            'Functional group': groups,
+            'Pressures': pressures,
+            'Predominant habitats': habitats,
+            'Physical/chemical features': features
+        }
+
+        for rec in recs:
+            t = rec['FeatureType']
+            s = _types[t]
+
+            if rec['FeaturesPressures'] == 'FunctionalGroupOther':
+                s.add('FunctionalGroupOther')
+                s.add(rec['OtherExplanation'])
+            else:
+                s.add(rec['FeaturesPressures'])
+
+        return {
+            'habitats': habitats,
+            'features': features,
+            'groups': groups,
+            'pressures': pressures
+        }
 
     def description(self):
         if not self.criterion.startswith('D'):
@@ -118,6 +174,20 @@ class A10Item(Item):
                 return v[0]
 
         return ''
+
+    def set_pick(self, xpath):
+        """ Just like pick, but return all distinct values
+        """
+
+        if not self.is_descriptor:
+            return ''
+
+        res = []
+
+        for target in self.targets:
+            res.extend(target[xpath])
+
+        return set(res) or ''
 
     def reference_point_type(self):
         # for which MarineUnitID do we show information?
@@ -183,6 +253,7 @@ class Article10(BaseArticle2012):
 
     template = Template('pt/report-data-a9.pt')
 
+    @db.use_db_session('2012')
     def _ges_components(self):
         t = sql.t_MSFD_19a_10DescriptiorsCriteriaIndicators
         count, res = db.get_all_records(
