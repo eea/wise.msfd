@@ -8,8 +8,8 @@ from Products.Five.browser.pagetemplatefile import \
     ViewPageTemplateFile as Template
 from wise.msfd import db, sql
 from wise.msfd.data import get_report_data
-from wise.msfd.gescomponents import get_ges_criterions
-from wise.msfd.utils import Item, Node, RelaxedNode, Row
+# from wise.msfd.gescomponents import get_ges_criterions
+from wise.msfd.utils import Item, Node, Row  # RelaxedNode,
 
 from ..base import BaseArticle2012
 from .utils import get_descriptors
@@ -22,19 +22,115 @@ NSMAP = {"w": "http://water.eionet.europa.eu/schemas/dir200856ec"}
 
 class A10Item(Item):
 
-    def __init__(self):
-
+    def __init__(self, criterion, targets_indicators, country_code):
         super(A10Item, self).__init__([])
 
-        self.node = node
-        self.g = RelaxedNode(node)
+        self.criterion = criterion
+        self.targets_indicators = targets_indicators
+        self.country_code = country_code
 
-        self.descriptors = descriptors
+        self.targets = []
 
-        self.id = node.find('w:ReportingFeature', namespaces=NSMAP).text
+        for ti in targets_indicators:
+            targets = ti.targets_for_criterion(self.criterion)
+            self.targets.extend(targets)
+
+        attrs = [
+            ('Description [Targets]', self.description()),
+            ('Threshold value [TargetValue]', self.threshold_value()),
+            ('Reference point type',
+             self.pick('w:ReferencePointType/text()')),
+            ('Baseline', self.pick('w:Baseline/text()')),
+            ('Proportion', self.pick('w:Proportion/text()')),
+            ('AssessmentMethod', self.pick('w:AssessmentMethod/text()')),
+            ('Development status', self.pick('w:DevelopmentStatus/text()')),
+            ('Type of target/indicator', self.pick('w:Type/text()')),
+            ('Timescale', self.pick('w:TimeScale/text()')),
+            ('Interim or GES target', self.pick('w:InterimGESTarget/text()')),
+            ('Compatibility with existing targets/indicators',
+             self.pick('w:CompatibilityExistingTargets/text()')),
+
+            # ('Physical/chemical features', self.pick('w:/text()')),
+            # ('Functional groups', self.pick('w:/text()')),
+            # ('Pressures', self.pick('w:/text()')),
+        ]
+
+        for title, value in attrs:
+            self[title] = value
+
+    @property
+    def is_descriptor(self):
+        return self.criterion.startswith('D')
+
+    @db.use_db_session('2012')
+    def _get_ges_description(self):
+        # TODO: cache this info
+        t = sql.t_MSFD_16a_9Detailed
+        count, res = db.get_all_records(
+            t.c.DescriptionGES,
+            t.c.MemberState == self.country_code,
+            t.c.ListOfGES == self.criterion,
+        )
+
+        for row in res:
+            return row[0]       # there are multiple records, one for each MUID
+
+    def description(self):
+        if not self.criterion.startswith('D'):
+            return self._get_ges_description()
+
+        for ti in self.targets_indicators:
+            for target in ti.targets_for_descriptor(self.criterion):
+                desc = target['w:Description/text()']
+
+                if desc:
+                    return desc[0]
+
+        return ""
+
+    def threshold_value(self):
+        m = {}
+
+        for target in self.targets:
+            m[target.marine_unit_id] = target['w:ThresholdValue/text()'][0]
+
+        res = []
+
+        for k in sorted(m):
+            res.append('{} = {}'.format(k, m[k]))
+
+        # TODO: return a List() here
+
+        return '\n'.join(res)
+
+    def pick(self, xpath):
+        """ For values which are repeated across all targets nodes, try to find
+        one with a positive value
+        """
+
+        if not self.is_descriptor:
+            return ''
+
+        for target in self.targets:
+            v = target[xpath]
+
+            if v:
+                return v[0]
+
+        return ''
+
+    def reference_point_type(self):
+        # for which MarineUnitID do we show information?
+
+        return self.pick('')
 
 
 class Target(Node):
+    """ Wraps a <Target> node
+    """
+    def __init__(self, marine_unit_id, node, nsmap):
+        super(Target, self).__init__(node, nsmap)
+        self.marine_unit_id = marine_unit_id
 
     @property
     def descriptor(self):
@@ -53,18 +149,29 @@ class Target(Node):
 
     @property
     def criterions(self):
-        return self['w:DesriptorCriterionIndicators/'
-                    'w:DesriptorCriterionIndicator/text()']
+
+        return [self.descriptor] + self['w:DesriptorCriterionIndicators/'
+                                        'w:DesriptorCriterionIndicator/text()']
 
 
-class MarineTarget(Node):
+class TargetsIndicators(Node):
+    """ A <TargetsIndicators> wrapper.
+
+    There is one TargetsIndicators node for each MarineUnitID.
+    It has multiple <Targets> nodes, one for each set of "descriptors"
+    """
+
     def __init__(self, node):
-        super(MarineTarget, self).__init__(node)
-        self.id = self['w:MarineUnitID/text()']
-        self.targets = [Target(n) for n in self['w:Targets']]
+        super(TargetsIndicators, self).__init__(node, NSMAP)
+        self.id = self['w:MarineUnitID/text()'][0]
+        self.targets = [Target(self.id, n, NSMAP)
+                        for n in self['w:Targets']]
 
     def targets_for_descriptor(self, descriptor):
         return [t for t in self.targets if t.descriptor == descriptor]
+
+    def targets_for_criterion(self, criterion):
+        return [t for t in self.targets if criterion in t.criterions]
 
 
 class Article10(BaseArticle2012):
@@ -82,14 +189,22 @@ class Article10(BaseArticle2012):
             t,
             t.c.MemberState == self.country_code,
         )
-        import pdb; pdb.set_trace()
 
-        return res
+        cols = t.c.keys()
+        recs = [
+            {
+                k: v for k, v in zip(cols, row)
+            } for row in res
+        ]
+
+        return list(set([c['Descriptors Criterion Indicators'] for c in recs]))
 
     def filtered_ges_components(self):
         m = self.descriptor.replace('D', '')
 
         gcs = self._ges_components()
+
+        # TODO: handle D10, D11     !!
 
         return [self.descriptor] + [g for g in gcs if g.startswith(m)]
 
@@ -109,17 +224,17 @@ class Article10(BaseArticle2012):
 
         self.rows = [
             Row('Reporting area(s) [MarineUnitID]', [muids]),
-            Row('DescriptorCriterionIndicator', [gcs]),
+            Row('DescriptorCriterionIndicator', gcs),
         ]
 
         self.descriptor_label = dict(get_descriptors())[self.descriptor]
         # ges_components = get_ges_criterions(self.descriptor)
 
-        targets = xp('TargetsIndicators')
-
         # wrap the target per MarineUnitID
-        w_targets = [MarineTarget(node) for node in targets]
-        cols = [A10Item(gc, w_targets) for gc in gcs]
+        all_target_indicators = [TargetsIndicators(node)
+                                 for node in xp('w:TargetsIndicators')]
+        cols = [A10Item(gc, all_target_indicators, self.country_code)
+                for gc in gcs]
 
         for col in cols:
             for name in col.keys():
@@ -131,11 +246,5 @@ class Article10(BaseArticle2012):
                 self.rows.append(row)
 
             break       # only need the "first" row
-
-        # straight rendering of all extracted items
-
-        # for item in cols:
-        #     for k, v in item.items():
-        #         self.rows.append(Row(k, [v]))
 
         return self.template()

@@ -163,6 +163,8 @@ LIMIT 1""" % filename
 
         return ''
 
+    print urls
+
     return urls[0]
 
 
