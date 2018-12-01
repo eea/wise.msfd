@@ -23,7 +23,7 @@ NSMAP = {
     "c": "http://water.eionet.europa.eu/schemas/dir200856ec/mscommon",
 }
 
-# TODO: this needs to take region into account
+# TODO: this needs to take regions into account
 
 # a criterion is either a Descriptor (2018 concept), a Criteria or an Indicator
 
@@ -44,7 +44,8 @@ class A8Item(Item):
     It corresponds to the <AssessmentPI> tags in the report
     """
 
-    def __init__(self, reports, country_code, marine_unit_id, criterion):
+    def __init__(self,
+                 report, assessment, country_code, marine_unit_id, criterion):
         super(A8Item, self).__init__([])
 
         self.country_code = country_code
@@ -52,20 +53,22 @@ class A8Item(Item):
         self.marine_unit_id = marine_unit_id
 
         # How to handle multiple reports?
-        self.reports = reports
+        self.report = report
+        self.assessment = assessment
 
         attrs = [
             # ('Indicator [RelatedIndicator]', self.criterion.title),
-            ('CriteriaType [GESComponent]', self.criterion.title)
+            ('CriteriaType [GESComponent]', self.criterion.title),
+            ('Topic', self.topic())
         ]
 
         for title, value in attrs:
             self[title] = value
 
-        for report in self.reports:
-            print report.assessments
+        print report.assessments
 
-        import pdb; pdb.set_trace()
+    def topic(self):
+        return self.assessment and self.assessment.topic or ''
 
 
 class Assessment(Node):
@@ -75,6 +78,16 @@ class Assessment(Node):
     @property
     def indicators(self):
         return self['w:Indicators/w:Indicator/text()']
+
+    @property
+    def parent(self):
+        return Node(self.node.getparent(), NSMAP)
+
+    @property
+    def topic(self):
+        topic = self.parent['w:Topic/text()']
+
+        return topic and topic[0] or ''     # empty if descriptor column
 
 
 class ReportTag(Node):
@@ -118,14 +131,19 @@ class ReportTag(Node):
         for node in self['w:AssessmentPI/w:Assessment']:
             n = Assessment(node, NSMAP)
 
-            for codes in n['c:Indicators/c:Indicator/text()']:
-                for code in codes:
-                    res[code].append(n)
+            for code in n['c:Indicators/c:Indicator/text()']:
+                res[code].append(n)
 
         return res
 
     def assessments_for_indicator(self, indicator):
-        return [a for a in self.assessments if indicator in a.indicators]
+        res = set()
+
+        for iid in indicator.all_ids():
+            for a in self.assessments[iid]:
+                res.add(a)
+
+        return res
 
 
 class Article8(BaseArticle2012):
@@ -219,8 +237,39 @@ class Article8(BaseArticle2012):
 
         for muid in muids:      # TODO: use reported list of muids per country,
                                 # from database
+
+            if muid not in report_map:
+                logger.warning("MarineUnitID not reported: %s, %s, Article 8",
+                               muid, self.descriptor)
+                report_data[muid] = []
+
+                continue
+
             m_reps = report_map[muid]
-            cols = [A8Item(m_reps, self.country_code, muid, gc) for gc in gcs]
+
+            assert len(m_reps) < 2, "Multiple reports for same MarineUnitID?"
+
+            # TODO: redo this, it needs to be done per indicator
+            # join the criterions with their corresponding assessments
+            gc_as = zip(gcs,
+                        [report.assessments_for_indicator(gc) for gc in gcs])
+
+            report = m_reps[0]
+            cols = []
+
+            for gc, assessments in gc_as:
+                if not assessments:     # if there are no assessments for the
+                                        # criterion, just show it
+                    item = A8Item(report,
+                                  None, self.country_code, muid, gc)
+                    cols.append(item)
+
+                    continue
+
+                for assessment in assessments:
+                    item = A8Item(report,
+                                  assessment, self.country_code, muid, gc)
+                    cols.append(item)
 
             rows = []
 

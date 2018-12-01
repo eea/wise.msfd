@@ -500,12 +500,10 @@ class Node(object):
         self.node = node
         self.namespaces = nsmap
 
-    # def __repr__(self):
-    #     import pdb; pdb.set_trace()
-    #     tag = self.node.tag
-    #     tag = tag.replace(self.nsmap[None], '')
-    #
-    #     return "<{} proxy>".format(tag)
+    def __nonzero__(self):
+        # make sure assertions over nodes always "detect" node
+
+        return True
 
     def __getitem__(self, name):
         flag = []
