@@ -168,7 +168,10 @@ FILTER regex(str(?file), '%s')
 ORDER BY DESC(?date)
 LIMIT 1""" % filename
     service = sparql.Service('https://cr.eionet.europa.eu/sparql')
+
+    return "http://cdr.eionet.europa.eu/lv/eu/msfd8910/ballv/envuxvsq/MSFD8bPressures_20130430.xml"
     print "calling sparql"
+    import pdb; pdb.set_trace()
     try:
         req = service.query(q)
         rows = req.fetchall()
@@ -221,3 +224,23 @@ def get_report_data(filename):
     assert text, "Report data could not be fetched"
 
     return text
+
+
+@db.use_db_session('2012')
+def country_ges_components(country_code):
+    """ Get the assigned ges components for a country
+    """
+    t = sql.t_MSFD_19a_10DescriptiorsCriteriaIndicators
+    count, res = db.get_all_records(
+        t,
+        t.c.MemberState == country_code,
+    )
+
+    cols = t.c.keys()
+    recs = [
+        {
+            k: v for k, v in zip(cols, row)
+        } for row in res
+    ]
+
+    return list(set([c['Descriptors Criterion Indicators'] for c in recs]))

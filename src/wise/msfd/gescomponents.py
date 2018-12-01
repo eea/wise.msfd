@@ -12,6 +12,13 @@ from pkg_resources import resource_filename
 
 class Criterion(object):
     """ A container for a GES criterion information
+
+    A criterion is a somewhat confusing concept. In 2012 reporting, the
+    Criteria were used, which had assigned Indicators. In 2018, the Descriptor
+    concept has been introduced, which has Indicators. So, the "virtual"
+    hierarchy is Descriptor > Criteria > Indicator.
+
+    A criterion can be either of Descriptor, Criteria, Indicator.
     """
 
     _id = None      # id for the 2018 version
@@ -24,7 +31,10 @@ class Criterion(object):
         self.alternatives = alternatives or []        # tuples of (id, title)
 
     def __repr__(self):
-        return "<Criterion {}>".format(self.title)
+        title = self.title.encode('ascii', 'replace')
+        title = title.replace('?', '-')
+
+        return "<Criterion {}>".format(title)
 
     def is_2018_exclusive(self):
         return not self.alternatives
@@ -41,17 +51,17 @@ class Criterion(object):
         alter = self.alternatives
 
         if not alter:
-            return "{} {}".format(self._id, self._title)
+            return u"{} {}".format(self._id, self._title)
 
         if not self._id:
             id, title = alter[0]
 
-            return "{} {}".format(id, title)
+            return u"{} {}".format(id, title)
 
         alter_ids = len(alter) == 0 and alter[0][0] \
-            or ', '.join([a[0] for a in alter])
+            or u', '.join([a[0] for a in alter])
 
-        return "{} ({}) {}".format(
+        return u"{} ({}) {}".format(
             self._id,
             alter_ids,
             self._title,

@@ -5,7 +5,7 @@ from lxml.etree import fromstring
 from Products.Five.browser.pagetemplatefile import \
     ViewPageTemplateFile as Template
 from wise.msfd import db, sql
-from wise.msfd.data import get_report_data
+from wise.msfd.data import country_ges_components, get_report_data
 from wise.msfd.utils import Item, Node, Row
 
 from ..base import BaseArticle2012
@@ -237,29 +237,12 @@ class Article10(BaseArticle2012):
           self.article, self.muids, self.colspan)
     """
 
-    template = Template('pt/report-data-a9.pt')
-
-    @db.use_db_session('2012')
-    def _ges_components(self):
-        t = sql.t_MSFD_19a_10DescriptiorsCriteriaIndicators
-        count, res = db.get_all_records(
-            t,
-            t.c.MemberState == self.country_code,
-        )
-
-        cols = t.c.keys()
-        recs = [
-            {
-                k: v for k, v in zip(cols, row)
-            } for row in res
-        ]
-
-        return list(set([c['Descriptors Criterion Indicators'] for c in recs]))
+    template = Template('pt/report-data-a10.pt')
 
     def filtered_ges_components(self):
         m = self.descriptor.replace('D', '')
 
-        gcs = self._ges_components()
+        gcs = country_ges_components(self.country_code)
 
         # TODO: handle D10, D11     !!
 

@@ -500,8 +500,24 @@ class Node(object):
         self.node = node
         self.namespaces = nsmap
 
+    # def __repr__(self):
+    #     import pdb; pdb.set_trace()
+    #     tag = self.node.tag
+    #     tag = tag.replace(self.nsmap[None], '')
+    #
+    #     return "<{} proxy>".format(tag)
+
     def __getitem__(self, name):
-        assert name.startswith('w:')        # this is just a reminder for devel
+        flag = []
+
+        for k in self.namespaces:
+            s = "{}:".format(k)
+
+            if name.startswith(s):
+                flag.append(True)
+
+        # this is just a reminder for devel
+        assert True in flag, "Please remember to use the namespace aliases"
 
         # TODO: this used to be find(), now it's xpath. Check compatibility
 

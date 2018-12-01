@@ -196,10 +196,6 @@ class BootstrapCompliance(BrowserView):
         lr['extranet-wisemarine-msfd-reviewers'] = [u'Reviewer']
         lr['extranet-wisemarine-msfd-editors'] = [u'Editor']
 
-        # cm.__ac_local_roles__['extranet-someone'] = [u'Contributor',
-        # u'Editor']
-        # extranet-wisemarine-msfd-tl-d10
-
         # Contributor: TL
         # Reviewer: EC
         # Editor: Milieu
