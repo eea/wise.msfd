@@ -1,5 +1,3 @@
-# from collections import defaultdict
-
 import logging
 
 from lxml.etree import fromstring
@@ -8,8 +6,7 @@ from Products.Five.browser.pagetemplatefile import \
     ViewPageTemplateFile as Template
 from wise.msfd import db, sql
 from wise.msfd.data import get_report_data
-# from wise.msfd.gescomponents import get_ges_criterions
-from wise.msfd.utils import Item, Node, Row  # RelaxedNode,
+from wise.msfd.utils import Item, Node, Row
 
 from ..base import BaseArticle2012
 from .utils import get_descriptors
@@ -54,12 +51,15 @@ class A10Item(Item):
             ('Compatibility with existing targets/indicators',
              self.pick('w:CompatibilityExistingTargets/text()')),
 
-            ('Physical/chemical features',
-             ', '.join(feature_pressures['features'])),
-            ('Predominant habitats', ', '.join(feature_pressures['habitats'])),
-            ('Functional groups', ', '.join(feature_pressures['groups'])),
-            ('Pressures', ', '.join(feature_pressures['pressures'])),
         ]
+
+        for name in [
+                'Physical/chemical features',
+                'Predominant habitats',
+                'Functional groups',
+                'Pressures'
+        ]:
+            attrs.append((name, feature_pressures[name]))
 
         for title, value in attrs:
             self[title] = value
@@ -96,22 +96,13 @@ class A10Item(Item):
         )
 
         cols = t.c.keys()
-        recs = [
-            {
-                k: v for k, v in zip(cols, row)
-            } for row in res
-        ]
-
-        habitats = set()
-        features = set()
-        groups = set()
-        pressures = set()
+        recs = [{k: v for k, v in zip(cols, row)} for row in res]
 
         _types = {
-            'Functional group': groups,
-            'Pressures': pressures,
-            'Predominant habitats': habitats,
-            'Physical/chemical features': features
+            'Functional group': set(),
+            'Pressures': set(),
+            'Predominant habitats': set(),
+            'Physical/chemical features': set()
         }
 
         for rec in recs:
@@ -124,12 +115,7 @@ class A10Item(Item):
             else:
                 s.add(rec['FeaturesPressures'])
 
-        return {
-            'habitats': habitats,
-            'features': features,
-            'groups': groups,
-            'pressures': pressures
-        }
+        return _types
 
     def description(self):
         if not self.criterion.startswith('D'):

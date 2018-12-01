@@ -91,8 +91,37 @@ def _get_report_filename_art9_2012(country, region, article, descriptor):
     return item.FileName
 
 
-def _get_report_filename_art8_2012():
-    pass
+def _get_report_filename_art8_2012(country, region, article, descriptor):
+
+    d = float(descriptor.replace('D', ''))
+
+    if d > 4:
+        base = 'MSFD8b'
+    else:
+        base = 'MSFD8a'
+
+    mc = getattr(sql, base + 'Import')
+    idcol = base + '_Import_ID'
+    filecol = base + '_Import_FileName'
+    countrycol = getattr(mc, base + '_Import_ReportingCountry')
+    regcol = getattr(mc, base + '_Import_ReportingRegion')
+
+    count, item = db.get_item_by_conditions(
+        mc,
+        idcol,
+        countrycol == country,
+        regcol == region
+    )
+
+    # TODO: analyse cases when it returns more then one file
+
+    if count != 1:
+        logger.warning("Could not find report filename for %s %s %s",
+                       country, region, article,)
+
+        return None
+
+    return getattr(item, filecol)
 
 
 def get_report_filename(report_version,
