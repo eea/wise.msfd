@@ -18,7 +18,7 @@ from z3c.form.field import Fields
 from z3c.form.form import Form
 
 from ..base import BaseComplianceView
-from .a8_old import Article8
+from .a8 import Article8
 # from .a8 import Article8
 from .a9 import Article9
 from .a10 import Article10

@@ -1,7 +1,7 @@
-<div class="overflow-table">
-  <div tal:repeat="muid view/muids" >
-    <h4 tal:content="muid">DE_ANS</h4>
-    <table class="table table-bordered table-striped"
+<div tal:repeat="muid view/muids" class="report-section">
+  <h4 tal:content="muid">DE_ANS</h4>
+  <div class="overflow-table">
+    <table class="table table-bordered table-striped table-report"
       tal:define="topic_assessment python: view.get_topic_assessment(muid)">
       <span tal:condition="python: not topic_assessment">Data not reported</span>
       <tal:block tal:define="criterias python: view.context.get_criterias_list(view.descriptor);
@@ -9,16 +9,16 @@
         tal:condition="topic_assessment">
         <!-- art8assesment_data python: view.get_assesment_data(muid, view.descriptor); -->
 
-        <div style="display:block">
-          <h6>Article 8 topics/indicators (topic_assessment)</h6>
-          <div tal:replace="topic_assessment"></div>
-        </div>
+        <!-- <div style="display:block"> -->
+        <!--   <h6>Article 8 topics/indicators (topic_assessment)</h6> -->
+        <!--   <div tal:replace="topic_assessment"></div> -->
+        <!-- </div> -->
 
-        <tr>
-          <th>MarineUnitID</th>
-          <td tal:attributes="colspan python: 42"
-            tal:content="muid">DE_ANS</td>
-        </tr>
+        <!-- <tr> -->
+        <!--   <th>MarineUnitID</th> -->
+        <!--   <td tal:attributes="colspan python: 42" -->
+        <!--     tal:content="muid">DE_ANS</td> -->
+        <!-- </tr> -->
 
         <tr>
           <th>CriteriaType
