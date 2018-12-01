@@ -56,10 +56,10 @@ class A10Item(Item):
         for name in [
                 'Physical/chemical features',
                 'Predominant habitats',
-                'Functional groups',
+                'Functional group',
                 'Pressures'
         ]:
-            attrs.append((name, feature_pressures[name]))
+            attrs.append((name, ", ".join(feature_pressures[name])))
 
         for title, value in attrs:
             self[title] = value
