@@ -7,13 +7,14 @@ from lxml.etree import fromstring
 
 from Products.Five.browser.pagetemplatefile import \
     ViewPageTemplateFile as Template
-from wise.msfd import db, sql, sql2018
+from wise.msfd import db, sql2018  # sql,
 from wise.msfd.data import country_ges_components, get_report_data
 from wise.msfd.gescomponents import Criterion, get_ges_criterions
 from wise.msfd.utils import Item, Node, Row  # RelaxedNode,
 
 from ..base import BaseArticle2012
-from .utils import get_descriptors
+
+# from .utils import get_descriptors
 
 logger = logging.getLogger('wise.msfd')
 
@@ -41,11 +42,13 @@ class Descriptor(Criterion):
 class A8Item(Item):
     """ A column in the 2012 Art8 assessment.
 
-    It corresponds to the <AssessmentPI> tags in the report
+    It is created with a focus on individual <Indicator> tags, as that is the
+    most basic unit in the report columns
     """
 
-    def __init__(self,
-                 report, assessment, country_code, marine_unit_id, criterion):
+    def __init__(self, report, indicator_assessment, country_code,
+                 marine_unit_id, criterion):
+
         super(A8Item, self).__init__([])
 
         self.country_code = country_code
@@ -54,7 +57,7 @@ class A8Item(Item):
 
         # How to handle multiple reports?
         self.report = report
-        self.assessment = assessment
+        self.indicator_assessment = indicator_assessment
 
         attrs = [
             # ('Indicator [RelatedIndicator]', self.criterion.title),
@@ -65,27 +68,28 @@ class A8Item(Item):
         for title, value in attrs:
             self[title] = value
 
-        print report.assessments
-
     def topic(self):
-        return self.assessment and self.assessment.topic or ''
+        a = self.indicator_assessment
+
+        if a is None:
+            return ''
+
+        return a.topic or ''
 
 
-class Assessment(Node):
-    """ A wrapper over <AssessmentPI> nodes
+class IndicatorAssessment(Node):
+    """ A wrapper over <Indicators> nodes
     """
 
     @property
-    def indicators(self):
-        return self['w:Indicators/w:Indicator/text()']
+    def assessment(self):
+        # the AssessmentPI node
 
-    @property
-    def parent(self):
-        return Node(self.node.getparent(), NSMAP)
+        return Node(self.node.getparent().getparent(), NSMAP)
 
     @property
     def topic(self):
-        topic = self.parent['w:Topic/text()']
+        topic = self.assessment['w:Topic/text()']
 
         return topic and topic[0] or ''     # empty if descriptor column
 
@@ -124,24 +128,18 @@ class ReportTag(Node):
 
         return tag
 
-    @property
-    def assessments(self):
-        res = defaultdict(list)
+    def indicator_assessments(self, criterion):
+        res = []
 
-        for node in self['w:AssessmentPI/w:Assessment']:
-            n = Assessment(node, NSMAP)
+        indicators = [IndicatorAssessment(n, NSMAP)
+                      for n in self['.//c:Indicators']]
 
-            for code in n['c:Indicators/c:Indicator/text()']:
-                res[code].append(n)
+        for crit_id in criterion.all_ids():
+            for n_i in indicators:
+                crit = n_i['c:Indicator/text()'][0]
 
-        return res
-
-    def assessments_for_indicator(self, indicator):
-        res = set()
-
-        for iid in indicator.all_ids():
-            for a in self.assessments[iid]:
-                res.add(a)
+                if crit == crit_id:
+                    res.append(n_i)
 
         return res
 
@@ -252,7 +250,7 @@ class Article8(BaseArticle2012):
             # TODO: redo this, it needs to be done per indicator
             # join the criterions with their corresponding assessments
             gc_as = zip(gcs,
-                        [report.assessments_for_indicator(gc) for gc in gcs])
+                        [report.indicator_assessments(gc) for gc in gcs])
 
             report = m_reps[0]
             cols = []
