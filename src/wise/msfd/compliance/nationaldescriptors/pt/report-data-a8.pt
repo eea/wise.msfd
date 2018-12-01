@@ -4,7 +4,7 @@
 
     <div class="overflow-table">
       <table class='table table-bordered table-striped table-report' style='width: 100%; overflow:auto'>
-        <tal:rep tal:repeat="row view/rows/?muid">
+        <tal:rep tal:repeat="row view/rows/?muid" tal:on-error="string: missing">
           <tal:row replace="structure row"></tal:row>
         </tal:rep>
       </table>

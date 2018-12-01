@@ -1,5 +1,3 @@
-# from collections import defaultdict
-
 import logging
 from collections import defaultdict
 
@@ -13,8 +11,6 @@ from wise.msfd.gescomponents import Criterion, get_ges_criterions
 from wise.msfd.utils import Item, Node, Row  # RelaxedNode,
 
 from ..base import BaseArticle2012
-
-# from .utils import get_descriptors
 
 logger = logging.getLogger('wise.msfd')
 
@@ -59,22 +55,28 @@ class A8Item(Item):
         self.report = report
         self.indicator_assessment = indicator_assessment
 
+        self['CriteriaType [GESComponent]'] = self.criterion.title
+
         attrs = [
-            # ('Indicator [RelatedIndicator]', self.criterion.title),
-            ('CriteriaType [GESComponent]', self.criterion.title),
-            ('Topic', self.topic())
+            ('Topic', self.topic),
+            # ('[Parameter]', self.parameter),
+            ('ThresholdValue', self.threshold_value),
         ]
 
-        for title, value in attrs:
-            self[title] = value
+        for title, handler in attrs:
+            self[title] = self.handle_missing_assessment(handler)
 
-    def topic(self):
-        a = self.indicator_assessment
-
-        if a is None:
+    def handle_missing_assessment(self, handler):
+        if self.indicator_assessment is None:
             return ''
 
-        return a.topic or ''
+        return handler()
+
+    def threshold_value(self):
+        return self.indicator_assessment['c:ThresholdValue/text()'][0]
+
+    def topic(self):
+        return self.indicator_assessment.topic
 
 
 class IndicatorAssessment(Node):
@@ -112,6 +114,8 @@ class ReportTag(Node):
 
     @property
     def descriptor(self):
+        # Used to filter the report based on intended descriptor
+
         for crit in (self.criterias + self.indicators):
             if crit.startswith('D'):
                 return crit
@@ -210,32 +214,28 @@ class Article8(BaseArticle2012):
         # each of the following report tags can appear multiple times, once per
         # MarineUnitID. Each one can have multiple <AssessmentPI>,
         # for specific topics. An AssessmentPI can have multiple indicators
-        reports = []
+
+        report_map = defaultdict(list)
 
         for name in tags:
             nodes = xp('//w:' + name)
 
             for node in nodes:
-                reports.append(ReportTag(node, NSMAP))
+                rep = ReportTag(node, NSMAP)
 
-        filtered_reports = [rep for rep in reports
-                            if rep.descriptor == self.descriptor]
+                if rep.descriptor == self.descriptor:
+                    report_map[rep.marine_unit_id].append(rep)
 
-        report_map = defaultdict(list)      # reports, grouped by MarineUnitID
-
-        for report in filtered_reports:
-            report_map[report.marine_unit_id].append(report)
-
-        gcs = [self.descriptor_criterion()] + \
-            get_ges_criterions(self.descriptor)
+        ges_crits = [self.descriptor_criterion()]
+        ges_crits.extend(get_ges_criterions(self.descriptor))
 
         # a bit confusing code, we have multiple sets of rows, grouped in
-        # report_data under the marine unit id key
+        # report_data under the marine unit id key.
         report_data = {}
 
-        for muid in muids:      # TODO: use reported list of muids per country,
-                                # from database
+        # TODO: use reported list of muids per country,from database
 
+        for muid in muids:
             if muid not in report_map:
                 logger.warning("MarineUnitID not reported: %s, %s, Article 8",
                                muid, self.descriptor)
@@ -246,11 +246,12 @@ class Article8(BaseArticle2012):
             m_reps = report_map[muid]
 
             assert len(m_reps) < 2, "Multiple reports for same MarineUnitID?"
+            report = m_reps[0]
 
             # TODO: redo this, it needs to be done per indicator
             # join the criterions with their corresponding assessments
-            gc_as = zip(gcs,
-                        [report.indicator_assessments(gc) for gc in gcs])
+            gc_as = zip(ges_crits,
+                        [report.indicator_assessments(gc) for gc in ges_crits])
 
             report = m_reps[0]
             cols = []
@@ -282,6 +283,8 @@ class Article8(BaseArticle2012):
 
                 break       # only need the "first" row
             report_data[muid] = rows
+
+            break       # debug, only handle first muid
 
         self.rows = report_data
 
