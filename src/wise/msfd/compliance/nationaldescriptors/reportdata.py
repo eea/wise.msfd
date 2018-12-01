@@ -18,7 +18,8 @@ from z3c.form.field import Fields
 from z3c.form.form import Form
 
 from ..base import BaseComplianceView
-from .a8 import Article8
+from .a8_old import Article8
+# from .a8 import Article8
 from .a9 import Article9
 from .a10 import Article10
 from .utils import row_to_dict
@@ -88,6 +89,7 @@ class ReportData2012(BaseComplianceView, BaseUtil):
 
     def get_report_filename(self):
         # needed in article report data implementations, to retrieve the file
+
         return get_report_filename('2012',
                                    self.country_code,
                                    self.country_region_code,

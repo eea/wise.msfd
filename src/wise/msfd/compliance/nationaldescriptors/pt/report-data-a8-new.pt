@@ -1,0 +1,15 @@
+<div>
+  <div tal:repeat="muid view/muids" class="report-section">
+    <h4 tal:content="muid">DE_ANS</h4>
+
+    <div class="overflow-table">
+      <table class='table table-bordered table-striped table-report' style='width: 100%; overflow:auto'>
+        <tal:rep tal:repeat="row view/rows/?muid" tal:on-error="string: missing">
+          <tal:row replace="structure row"></tal:row>
+        </tal:rep>
+      </table>
+    </div>
+
+  </div>
+</div>
+

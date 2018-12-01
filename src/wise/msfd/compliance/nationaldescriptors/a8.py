@@ -5,7 +5,7 @@ from lxml.etree import fromstring
 
 from Products.Five.browser.pagetemplatefile import \
     ViewPageTemplateFile as Template
-from wise.msfd import db, sql2018  # sql,
+from wise.msfd import db, sql, sql2018
 from wise.msfd.data import country_ges_components, get_report_data
 from wise.msfd.gescomponents import Criterion, get_ges_criterions
 from wise.msfd.utils import Item, Node, Row  # RelaxedNode,
@@ -61,6 +61,8 @@ class A8Item(Item):
             ('Topic', self.topic),
             # ('[Parameter]', self.parameter),
             ('ThresholdValue', self.threshold_value),
+            # ('SumInfo1 [ValueAchieved]', self.suminfo1),
+            ('Analysis', self.analysis),
         ]
 
         for title, handler in attrs:
@@ -78,6 +80,14 @@ class A8Item(Item):
     def topic(self):
         return self.indicator_assessment.topic
 
+    def suminfo1(self):
+        return self.indicator_assessment
+
+    def analysis(self):
+        dbitem = self.indicator_assessment.database_assessment()
+
+        return getattr(dbitem, 'MSFD8_{}'.format(self.report.report_type))
+
 
 class IndicatorAssessment(Node):
     """ A wrapper over <Indicators> nodes
@@ -94,6 +104,29 @@ class IndicatorAssessment(Node):
         topic = self.assessment['w:Topic/text()']
 
         return topic and topic[0] or ''     # empty if descriptor column
+
+    @property
+    def report_type(self):
+        node = self.node.xpath('../../..')[0]
+        tag = node.tag.split('}')[1]
+
+        return tag
+
+    @property
+    def marine_unit_id(self):
+        return self['ancestor::*/w:MarineUnitID/text()'][0]
+
+    @db.use_db_session('2012')
+    def database_assessment(self):
+        name = 'MSFD8b{}Assesment'.format(self.report_type)
+        mc = getattr(sql, name)
+        count, res = db.get_all_records(
+            mc,
+            mc.Topic == self.topic,
+            mc.MarineUnitID == self.marine_unit_id
+        )
+
+        return res[0]
 
 
 class ReportTag(Node):
@@ -128,9 +161,7 @@ class ReportTag(Node):
 
     @property
     def report_type(self):      # TODO: this needs check
-        tag = self.node.tag.replace(self.node.nsmap[None] + '{}', '')
-
-        return tag
+        return self.node.tag.split('}')[1]
 
     def indicator_assessments(self, criterion):
         res = []
@@ -155,7 +186,7 @@ class Article8(BaseArticle2012):
           self.article, self.muids, self.colspan)
     """
 
-    template = Template('pt/report-data-a8.pt')
+    template = Template('pt/report-data-a8-new.pt')
 
     def filtered_ges_components(self):
         m = self.descriptor.replace('D', '')
@@ -284,7 +315,7 @@ class Article8(BaseArticle2012):
                 break       # only need the "first" row
             report_data[muid] = rows
 
-            break       # debug, only handle first muid
+            # break       # debug, only handle first muid
 
         self.rows = report_data
 
