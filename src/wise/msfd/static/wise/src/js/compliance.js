@@ -1,3 +1,9 @@
+if (!Array.prototype.last){
+  Array.prototype.last = function(){
+    return this[this.length - 1];
+  };
+};
+
 (function(window, document, $){
     var selectorFormContainer = ".wise-search-form-container";
     var exceptVal = ["all", "none", "invert", "apply"];
@@ -442,6 +448,60 @@
     // $(document).on("page-ready", function (ev) {
     //    $("#wise-compliance-form-top,#comp-national-descriptor").animate({"opacity" : 1}, 500);
     // });
+
+    jQuery(document).ready(function(){
+      $('.table-report').each(function(i){
+
+        // stretch all cells to the maximum table columns;
+        var max = 0;
+        var $tr = $('tr', this);
+        $tr.each(function(){
+          $tds = $('td', this);
+          if ($tds.length > max) {
+            max = $tds.length;
+          }
+        });
+
+        $tr.each(function(){
+          $tds = $('td', this);
+          if ($tds.length) {
+            var td = $tds[$tds.length - 1];
+            $(td).attr('colspan', max - $tds.length + 1);
+          }
+        });
+
+        $tr.each(function(){
+          var sets = [];
+          $('td', this).each(function() {
+            if (sets.length == 0) {   // start of processing
+              sets.push([this]);
+            } else {
+              var thisText = $(this).text().trim();
+              var lastText = $(sets.last().last()).text().trim();
+
+              // console.log("Text", thisText, );
+              // console.log("Last text", lastText);
+
+              if ((thisText.length > 0) && (thisText == lastText)) {
+                console.log("matches", thisText, lastText);
+                sets.last().push(this);
+              } else {
+                sets.push([this]);
+              }
+            }
+          });
+          $(sets).each(function(){
+            if (this.length > 1) {
+              var colspan = this.length;
+              $(this[0]).attr('colspan', colspan);
+              $(this.slice(1)).each(function(){
+                $(this).remove();
+              });
+            }
+          });
+        });
+      });
+    });
 
     $(document).ready(function($){
         initStyling();

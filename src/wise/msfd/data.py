@@ -71,13 +71,13 @@ def _get_report_filename_art10_2012(country, region, article, descriptor):
 
 @db.use_db_session('2012')
 def _get_report_filename_art9_2012(country, region, article, descriptor):
-    mc = sql.MSFD10Import
+    mc = sql.MSFD9Import
 
     count, item = db.get_item_by_conditions(
         mc,
-        'ID',
-        mc.MemberState == country,
-        mc.Region == region
+        'MSFD9_Import_ID',
+        mc.MSFD9_Import_ReportingCountry == country,
+        mc.MSFD9_Import_ReportingRegion == region
     )
 
     # TODO: analyse cases when it returns more then one file
@@ -88,10 +88,11 @@ def _get_report_filename_art9_2012(country, region, article, descriptor):
 
         return None
 
-    return item.FileName
+    return item.MSFD9_Import_FileName
 
 
 def _get_report_filename_art8_2012(country, region, article, descriptor):
+    # TODO: this implementation (algorithm) needs check
 
     d = float(descriptor.replace('D', ''))
 
@@ -169,9 +170,11 @@ ORDER BY DESC(?date)
 LIMIT 1""" % filename
     service = sparql.Service('https://cr.eionet.europa.eu/sparql')
 
-    # return "http://cdr.eionet.europa.eu/lv/eu/msfd8910/ballv/envuxvsq/MSFD8bPressures_20130430.xml"
-    # print "calling sparql"
+    # return "http://cdr.eionet.europa.eu/lv/eu/msfd8910/ballv/envuxvsq/"\
+    #        "MSFD8bPressures_20130430.xml"
     # import pdb; pdb.set_trace()
+
+    print "calling sparql"
     try:
         req = service.query(q)
         rows = req.fetchall()

@@ -5,7 +5,9 @@ import logging
 from lxml.etree import fromstring
 
 from Products.Five.browser.pagetemplatefile import \
-    ViewPageTemplateFile as Template
+    PageTemplateFile as PageTemplate
+from Products.Five.browser.pagetemplatefile import \
+    ViewPageTemplateFile as ViewTemplate
 from wise.msfd.data import get_report_data
 from wise.msfd.utils import Item, Node, RelaxedNode, Row
 
@@ -19,13 +21,14 @@ NSMAP = {"w": "http://water.eionet.europa.eu/schemas/dir200856ec"}
 
 
 class A9Item(Item):
+    list_tpl = PageTemplate('../../pt/list.pt')
 
     def __init__(self, node, descriptors):
 
         super(A9Item, self).__init__([])
 
         self.node = node
-        self.g = RelaxedNode(node)
+        self.g = RelaxedNode(node, NSMAP)
 
         self.descriptors = descriptors
 
@@ -43,7 +46,7 @@ class A9Item(Item):
             if muid is None:
                 continue
 
-            feature = n['w:ReportingFeature'].text
+            feature = n['w:ReportingFeature/text()'][0]
 
             if feature != self.id:
                 continue
@@ -86,35 +89,47 @@ class A9Item(Item):
 
         for n in self.siblings:
 
-            tv = n['w:ThresholdValue']
+            tv = n['w:ThresholdValue/text()']
 
-            if tv is None:
+            if not tv:
                 continue
 
-            muid = n['w:MarineUnitID'].text
-            m[muid] = tv.text
+            muid = n['w:MarineUnitID/text()'][0]
+            m[muid] = tv[0]
 
         res = ['{} = {}'.format(k, v) for (k, v) in m.items()]
 
-        return "\n".join(res)
+        return self.list_tpl(rows=res)
 
     def threshold_value_unit(self):
-        return self.g['w:ThresholdValueUnit'].text
+        v = self.g['w:ThresholdValueUnit/text()']
+
+        return v and v[0] or ''
 
     def reference_point_type(self):
-        return self.g['w:ReferencePointType'].text
+        v = self.g['w:ReferencePointType/text()']
+
+        return v and v[0] or ''
 
     def baseline(self):
-        return self.g['w:Baseline'].text
+        v = self.g['w:Baseline/text()']
+
+        return v and v[0] or ''
 
     def proportion(self):
-        return self.g['w:Proportion'].text
+        v = self.g['w:Proportion/text()']
+
+        return v and v[0] or ''
 
     def assessment_method(self):
-        return self.g['w:AssessmentMethod'].text
+        v = self.g['w:AssessmentMethod/text()']
+
+        return v and v[0] or ''
 
     def development_status(self):
-        return self.g['w:DevelopmentStatus'].text
+        v = self.g['w:DevelopmentStatus/text()']
+
+        return v and v[0] or ''
 
 
 class Article9(BaseArticle2012):
@@ -124,7 +139,7 @@ class Article9(BaseArticle2012):
           self.article, self.muids, self.colspan)
     """
 
-    template = Template('pt/report-data-a9.pt')
+    template = ViewTemplate('pt/report-data-a9.pt')
 
     def __call__(self):
         filename = self.context.get_report_filename()

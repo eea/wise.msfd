@@ -3,6 +3,8 @@ import logging
 from lxml.etree import fromstring
 
 from Products.Five.browser.pagetemplatefile import \
+    PageTemplateFile as PageTemplate
+from Products.Five.browser.pagetemplatefile import \
     ViewPageTemplateFile as Template
 from wise.msfd import db, sql
 from wise.msfd.data import country_ges_components, get_report_data
@@ -20,6 +22,7 @@ NSMAP = {"w": "http://water.eionet.europa.eu/schemas/dir200856ec"}
 
 
 class A10Item(Item):
+    list_tpl = PageTemplate('../../pt/list.pt')
 
     def __init__(self, criterion, targets_indicators, country_code):
         super(A10Item, self).__init__([])
@@ -143,7 +146,7 @@ class A10Item(Item):
 
         # TODO: return a List() here
 
-        return '\n'.join(res)
+        return self.list_tpl(rows=res)
 
     def pick(self, xpath):
         """ For values which are repeated across all targets nodes, try to find
