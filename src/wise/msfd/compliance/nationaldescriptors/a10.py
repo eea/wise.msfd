@@ -261,7 +261,7 @@ class Article10(BaseArticle2012):
             return node.xpath(xpath, namespaces=NSMAP)
 
         muids = xp('//w:MarineUnitID/text()')
-        muids = ', '.join(set(muids))
+        muids = ', '.join(sorted(set(muids)))
 
         gcs = self.filtered_ges_components()
 
