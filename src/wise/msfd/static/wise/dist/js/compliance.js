@@ -470,6 +470,7 @@ if (!Array.prototype.last){
           }
         });
 
+        // join adjacent cells with identical text
         $tr.each(function(){
           var sets = [];
           $('td', this).each(function() {
@@ -479,11 +480,7 @@ if (!Array.prototype.last){
               var thisText = $(this).text().trim();
               var lastText = $(sets.last().last()).text().trim();
 
-              // console.log("Text", thisText, );
-              // console.log("Last text", lastText);
-
               if ((thisText.length > 0) && (thisText == lastText)) {
-                console.log("matches", thisText, lastText);
                 sets.last().push(this);
               } else {
                 sets.push([this]);
