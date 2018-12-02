@@ -169,9 +169,9 @@ ORDER BY DESC(?date)
 LIMIT 1""" % filename
     service = sparql.Service('https://cr.eionet.europa.eu/sparql')
 
-    return "http://cdr.eionet.europa.eu/lv/eu/msfd8910/ballv/envuxvsq/MSFD8bPressures_20130430.xml"
-    print "calling sparql"
-    import pdb; pdb.set_trace()
+    # return "http://cdr.eionet.europa.eu/lv/eu/msfd8910/ballv/envuxvsq/MSFD8bPressures_20130430.xml"
+    # print "calling sparql"
+    # import pdb; pdb.set_trace()
     try:
         req = service.query(q)
         rows = req.fetchall()

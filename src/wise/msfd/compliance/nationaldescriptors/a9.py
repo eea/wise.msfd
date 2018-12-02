@@ -1,14 +1,12 @@
 # from collections import defaultdict
 
 import logging
-import os
-import tempfile
 
-import requests
 from lxml.etree import fromstring
 
 from Products.Five.browser.pagetemplatefile import \
     ViewPageTemplateFile as Template
+from wise.msfd.data import get_report_data
 from wise.msfd.utils import Item, Node, RelaxedNode, Row
 
 from ..base import BaseArticle2012
@@ -129,25 +127,8 @@ class Article9(BaseArticle2012):
     template = Template('pt/report-data-a9.pt')
 
     def __call__(self):
-        tmpdir = tempfile.gettempdir()
         filename = self.context.get_report_filename()
-        assert '..' not in filename     # need better security?
-
-        fpath = os.path.join(tmpdir, filename)
-
-        if filename in os.listdir(tmpdir):
-            with open(fpath) as f:
-                text = f.read()
-            logger.info("Using cached XML file: %s", fpath)
-        else:
-            url = self.context.get_report_file_url(filename)
-            req = requests.get(url)
-            text = req.content
-            logger.info("Requesting XML file: %s", fpath)
-
-            with open(fpath, 'wb') as f:
-                f.write(text)
-
+        text = get_report_data(filename)
         root = fromstring(text)
 
         self.descriptor_label = dict(get_descriptors())[self.descriptor]

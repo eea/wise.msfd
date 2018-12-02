@@ -1,55 +1,56 @@
 <div class="row">
   <div class="col-md-12">
+
     <h3 tal:content="options/title">201X Member State Report</h3>
-    <!-- <div style="margin-bottom: 2em;"> -->
     <div class="back-to-art">
       <a href="./">
         <i class='fa fa-level-up'></i>
-        Back to Article Assessment for Descriptor
+        Back to Assessment overview
       </a>
     </div>
-    <table class="table table-bordered table-striped first-table">
+
+    <table class="table table-bordered table-striped table-condensed">
       <tr>
         <td>Member State</td>
         <td tal:attributes="colspan view/colspan"
-           tal:content="python:view.country_name"/>
+          tal:content="python:view.country_name"/>
       </tr>
       <tr>
         <td>Descriptor</td>
         <td tal:attributes="colspan view/colspan"
-           tal:content="python:view.desc_label"/>
+          tal:content="python:view.desc_label"/>
       </tr>
       <tr>
         <td>Region(s) and subregion(s)</td>
         <td tal:attributes="colspan view/colspan"
-           tal:content="python:', '.join(view.regions)"/>
+          tal:content="python:', '.join(view.regions)"/>
       </tr>
       <tr>
         <td>Article reported</td>
         <td tal:attributes="colspan view/colspan"
-           tal:content="view/article"/>
+          tal:content="view/article"/>
       </tr>
       <tr>
         <td>Reported by</td>
         <td tal:attributes="colspan view/colspan"
-           tal:content="options/report_by"/>
+          tal:content="options/report_by"/>
       </tr>
       <tr>
         <td>Source file of Member State</td>
         <td tal:attributes="colspan view/colspan">
           <a tal:attributes="href python: options['source_file'][1]"
-           tal:content="python: options['source_file'][0]"/>
+            tal:content="python: options['source_file'][0]"/>
         </td>
       </tr>
       <tr>
         <td>Date report due</td>
         <td tal:attributes="colspan view/colspan"
-           tal:content="options/report_due"/>
+          tal:content="options/report_due"/>
       </tr>
       <tr>
         <td>Date reported by Member State</td>
         <td tal:attributes="colspan view/colspan"
-           tal:content="options/report_date"/>
+          tal:content="options/report_date"/>
       </tr>
     </table>
   </div>

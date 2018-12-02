@@ -1,7 +1,8 @@
 import logging
-from collections import defaultdict
+from collections import defaultdict, namedtuple
 from datetime import datetime
 
+from lxml.etree import fromstring
 from sqlalchemy import or_
 from zope.schema import Choice
 from zope.schema.vocabulary import SimpleTerm, SimpleVocabulary
@@ -11,7 +12,8 @@ from Products.Five.browser.pagetemplatefile import \
     ViewPageTemplateFile as Template
 from wise.msfd import db, sql, sql2018
 from wise.msfd.base import BaseUtil
-from wise.msfd.data import get_report_file_url, get_report_filename
+from wise.msfd.data import (get_report_data, get_report_file_url,
+                            get_report_filename)
 from wise.msfd.gescomponents import get_ges_criterions
 from z3c.form.button import buttonAndHandler
 from z3c.form.field import Fields
@@ -25,6 +27,8 @@ from .a10 import Article10
 from .utils import row_to_dict
 
 logger = logging.getLogger('wise.msfd')
+
+NSMAP = {"w": "http://water.eionet.europa.eu/schemas/dir200856ec"}
 
 
 class ReportData2012(BaseComplianceView, BaseUtil):
@@ -99,13 +103,15 @@ class ReportData2012(BaseComplianceView, BaseUtil):
     @db.use_db_session('2012')
     def __call__(self):
         print "Will render report for ", self.article
-        filename = self.get_report_filename()
+        self.filename = filename = self.get_report_filename()
 
         if filename:
             url = get_report_file_url(filename)
             source_file = (filename, url + '/manage_document')
         else:
             source_file = ('File not found', None)
+
+        rep_info = self.get_reporting_information()
 
         self.report_header = self.report_header_template(
             title="{}'s 2012 Member State Report for {} / {} / {}".format(
@@ -114,19 +120,46 @@ class ReportData2012(BaseComplianceView, BaseUtil):
                 self.descriptor,
                 self.article
             ),
-            # TODO: find out how to get info about who reported
-            report_by='Member State',
+            report_by=rep_info.reporters,
             source_file=source_file,
             # TODO: do the report_due by a mapping with article: date
             report_due='2012-10-15',
-            # TODO get info about report date from _ReportingInformation?? or
-            # find another source
-            report_date='2013-04-30'
+            report_date=rep_info.report_date,
         )
 
         self.report_data = self.get_article_report_implementation()()
 
         return self.index()
+
+    def get_reporting_information(self):
+        # The MSFD<ArtN>_ReportingInformation tables are not reliable
+
+        default = ReportingInformation('Member State', '2013-04-30')
+
+        if not self.filename:
+            return default
+
+        text = get_report_data(self.filename)
+        root = fromstring(text)
+
+        reporters = root.xpath('//w:ReportingInformation/w:Name/text()',
+                               namespaces=NSMAP)
+        date = root.xpath('//w:ReportingInformation/w:ReportingDate/text()',
+                          namespaces=NSMAP)
+
+        try:
+            res = ReportingInformation(date[0], ', '.join(set(reporters)))
+        except Exception:
+            logger.exception('Could not get reporting info for %s, %s, %s',
+                             self.article, self.descriptor, self.country_code
+                             )
+            res = default
+
+        return res
+
+
+ReportingInformation = namedtuple('ReportingInformation',
+                                  ['report_date', 'reporters'])
 
 
 class SnapshotSelectForm(Form):
