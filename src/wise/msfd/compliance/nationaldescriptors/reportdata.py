@@ -21,7 +21,7 @@ from z3c.form.form import Form
 
 from ..base import BaseComplianceView
 from .a8 import Article8
-# from .a8 import Article8
+from .a8_new import Article8 as Article8New
 from .a9 import Article9
 from .a10 import Article10
 from .utils import row_to_dict
@@ -37,11 +37,18 @@ class ReportData2012(BaseComplianceView, BaseUtil):
 
     section = 'national-descriptors'
 
-    article_implementations = {
-        'Art8': Article8,
-        'Art9': Article9,
-        'Art10': Article10,
-    }
+    @property
+    def article_implementations(self):
+        res = {
+            'Art8': Article8,
+            'Art9': Article9,
+            'Art10': Article10,
+        }
+
+        if 'alter' in self.request.form:
+            res['Art8'] = Article8New
+
+        return res
 
     def get_criterias_list(self, descriptor):
         """ Get the list of criterias for the specified descriptor
@@ -50,6 +57,8 @@ class ReportData2012(BaseComplianceView, BaseUtil):
         :return: (('D5', 'Eutrophication'),
                   ('5.1.1', 'D5C1'),
                   ('5.2.1', 'D5C2'), ... )
+
+        # TODO: the results here need to be augumented by L_GESComponents
         """
 
         result = [
@@ -132,7 +141,8 @@ class ReportData2012(BaseComplianceView, BaseUtil):
         return self.index()
 
     def get_reporting_information(self):
-        # The MSFD<ArtN>_ReportingInformation tables are not reliable
+        # The MSFD<ArtN>_ReportingInformation tables are not reliable (8b is
+        # emptt), so we try to get the information from the reported XML files.
 
         default = ReportingInformation('Member State', '2013-04-30')
 
@@ -380,13 +390,9 @@ class ReportData2018(BaseComplianceView):
         return data
 
     def get_muids_from_data(self, data):
-        muids = [x[0] for x in data]
+        muids = sorted(set([x[0] for x in data]))
 
-        muids = sorted(set(muids))
-
-        result = ', '.join(muids)
-
-        return result
+        return ', '.join(muids)
 
     def __call__(self):
 

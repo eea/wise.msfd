@@ -281,8 +281,6 @@ class Article8(BaseArticle2012):
 
         self.topic_assesment = topic_assesment
 
-        # import pdb; pdb.set_trace()
-
         return topic_assesment
 
     def get_col_span_indicator(self, indicator):

@@ -1,8 +1,11 @@
+""" Utilities to help map the 2012->2018 information for Art8
+"""
 
 from wise.msfd import sql
 
 # descriptors mapped to DB tables, based on mappings excel doc
-# TODO should we get data from all of these tables, or only from specific tables
+# TODO should we get data from all of these tables, or only from specific
+# tables
 DESC_DATA_MAPPING = {
     'D1': ('MSFD8a_Functional', 'MSFD8a_Species'),
     'D2': ('MSFD8b_NIS', ),
@@ -32,7 +35,8 @@ DB_MAPPER_CLASSES = {
     'MSFD8a_Species': sql.MSFD8aSpecy,
     'MSFD8b_Acidification': sql.MSFD8bAcidification,
     'MSFD8b_ExtractionFishShellfish': sql.MSFD8bExtractionFishShellfish,
-    'MSFD8b_ExtractionSeaweedMaerlOther': sql.MSFD8bExtractionSeaweedMaerlOther,
+    'MSFD8b_ExtractionSeaweedMaerlOther':
+    sql.MSFD8bExtractionSeaweedMaerlOther,
     'MSFD8b_HazardousSubstances': sql.MSFD8bHazardousSubstance,
     'MSFD8b_HydrologicalProcesses': sql.MSFD8bHydrologicalProcess,
     'MSFD8b_Litter': sql.MSFD8bLitter,
@@ -107,14 +111,18 @@ DESCR_TOPIC_UTILS = {
     },
 
     # The report data view table is separeted in 3 groups based on topics
-    # TODO shoould we separate the topics for other descriptors too
+    # TODO: should we separate the topics for other descriptors too
     'topic_groups': {
         'D5': (
-            ('LevelPressureNConcentration', 'LevelPressurePConcentration',
-             'LevelPressureOConcentration', 'ImpactPressureWaterColumn',
+            ('LevelPressureNConcentration',
+             'LevelPressurePConcentration',
+             'LevelPressureOConcentration',
+             'ImpactPressureWaterColumn',
              'ImpactPressureSeabedHabitats'),
             ('LevelPressureOverall', ),
-            ('LevelPressureNLoad', 'LevelPressurePLoad', 'LevelPressureOLoad'),
+            ('LevelPressureNLoad',
+             'LevelPressurePLoad',
+             'LevelPressureOLoad'),
         ),
         'D6': (
             ('asd', ),
@@ -136,9 +144,10 @@ DESCR_TOPIC_UTILS = {
             'LevelPressureOConcentration': 'NutrientsOrganicMatter5_1',
             'LevelPressureOLoad': 'NutrientsOrganicMatter5_1',
             'LevelPressureOverall': 'NutrientsOrganicEnrichment5_1',
-            'ImpactPressureWaterColumn': 'NutrientsEnrichmentWaterColumn5_2or5_3',
+            'ImpactPressureWaterColumn':
+            'NutrientsEnrichmentWaterColumn5_2or5_3',
             'ImpactPressureSeabedHabitats':
-                'NutrientsEnrichmentSeabedHabitats5_2or5_3',
+            'NutrientsEnrichmentSeabedHabitats5_2or5_3',
         },
         'D8': {
             'LevelPressureEnvironment': 'HazardousSubstances8_1'
