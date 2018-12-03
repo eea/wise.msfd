@@ -10,7 +10,7 @@
       <option>51-75% of criteria elements are reported</option>
       <option>26-50% of criteria elements are reported</option>
       <option>1-25% of criteria elements are reported</option>
-      <option>Not relevant</option>
+      <!--<option>Not relevant</option>-->
       <option>Not reported</option>
     </answers>
     <scoring determination-method="wise.msfd.compliance.scoring.none_criteria_based" determination-method-args="0 2">
@@ -20,7 +20,7 @@
       <option score="1">1-25% of criteria elements are reported</option>
       <option score="0">Not reported</option>
     </scoring>
-    <score-weight descriptor="D5" value="10" />
+    <score-weight descriptor="D5" value="13.5" />
   </assessment-question>
 
   <assessment-question id="q2-a" class="adequacy" use-criteria='none'>
@@ -32,7 +32,7 @@
       <option>51-75% of all relevant key aspects are reported across criteria</option>
       <option>26-50% of all relevant key aspects are reported across criteria</option>
       <option>1-25% of all relevant key aspects are reported across criteria</option>
-      <option>Not relevant</option>
+      <!--<option>Not relevant</option>-->
       <option>Not reported</option>
     </answers>
     <scoring determination-method="wise.msfd.compliance.scoring.none_criteria_based" determination-method-args="0 2">
@@ -42,7 +42,7 @@
       <option score="1">1-25% of all relevant key aspects are reported across criteria</option>
       <option score="0">Not reported / No assessment aspects satisfied</option>
     </scoring>
-    <score-weight descriptor="D5" value="20" />
+    <score-weight descriptor="D5" value="8.5" />
   </assessment-question>
 
   <assessment-question id="q3-a" class="adequacy" use-criteria='none'>
@@ -54,7 +54,7 @@
       <option>51-75% of parameters and criteria are reported with status assessment</option>
       <option>26-50% of parameters and criteria are reported with status assessment</option>
       <option>1-25% of parameters and criteria are reported with status assessment</option>
-      <option>Not relevant</option>
+      <!--<option>Not relevant</option>-->
       <option>Not reported</option>
     </answers>
     <scoring determination-method="wise.msfd.compliance.scoring.none_criteria_based" determination-method-args="0 2">
@@ -64,7 +64,7 @@
       <option score="1">1-25% of parameters and criteria are reported with status assessment</option>
       <option score="0">Not reported</option>
     </scoring>
-    <score-weight descriptor="D5" value="15" />
+    <score-weight descriptor="D5" value="18.5" />
   </assessment-question>
 
   <assessment-question id="q4-a" class="adequacy" use-criteria='all'>
@@ -74,17 +74,17 @@
     <answers>
       <option>Extent of pressure and/or impacts reported for this criterion</option>
       <option>Extent of pressure and/or impacts not reported for this criterion</option>
-      <option>Not relevant</option>
+      <!--<option>Not relevant</option>-->
       <option>Not reported</option>
     </answers>
-    <scoring determination-method="wise.msfd.compliance.scoring.alternative_based" determination-method-args="0 2">
+    <scoring determination-method="wise.msfd.compliance.scoring.alternative_based" determination-method-args="0">
       <option score="4">Pressures and impacts reported for 76-100% of the criteria elements</option>
       <option score="3">Pressures and impacts reported for 51-75% of the criteria elements</option>
       <option score="2">Pressures and impacts reported for 26-50% of the criteria elements</option>
       <option score="1">Pressures and impacts reported for 1-25% of the criteria elements</option>
       <option score="0">Pressures and impacts reported not reported\ not clear</option>
     </scoring>
-    <score-weight descriptor="D5" value="15" />
+    <score-weight descriptor="D5" value="13.5" />
   </assessment-question>
 
   <assessment-question id="q1-c" class="coherence" use-criteria='all'>
@@ -96,7 +96,7 @@
       <option>Element(s) used for this criterion is/are the same as in more than half (51-75%) of MS in the region</option>
       <option>Element(s) used for this criterion is/are the same as in less than half (26-50%) of MS in the region</option>
       <option>Element(s) used for this criterion is/are the same as in few (1-25%) of MS in the region</option>
-      <option>Not relevant</option>
+      <!--<option>Not relevant</option>-->
       <option>Not reported</option>
     </answers>
     <scoring determination-method="wise.msfd.compliance.scoring.alternative_based" determination-method-args="0 2">
@@ -106,7 +106,7 @@
       <option score="1">Element(s) used for this criterion is/are the same as in few (1-25%) of MS in the region</option>
       <option score="0">Not reported\the information is provided in different formats across MS and it is impossible to compare</option>
     </scoring>
-    <score-weight descriptor="D5" value="15" />
+    <score-weight descriptor="D5" value="18.5" />
   </assessment-question>
 
   <assessment-question id="q2-c" class="coherence" use-criteria='all'>
@@ -118,7 +118,7 @@
       <option>Parameter(s) used for this criterion is/are the same as in more than half (51-75%) of MS in the region</option>
       <option>Parameter(s) used for this criterion is/are the same as in less than half (26-50%) of MS in the region</option>
       <option>Parameter(s) used for this criterion is/are the same as in few (1-25%) of MS in the region</option>
-      <option>Not relevant</option>
+      <!--<option>Not relevant</option>-->
       <option>Not reported</option>
     </answers>
     <scoring determination-method="wise.msfd.compliance.scoring.alternative_based" determination-method-args="0 2">
@@ -128,7 +128,7 @@
       <option score="1">Parameter(s) used for this criterion is/are the same as in few (1-25%) of MS in the region</option>
       <option score="0">Not reported\the information is provided in different formats across MS and it is impossible to compare</option>
     </scoring>
-    <score-weight descriptor="D5" value="10" />
+    <score-weight descriptor="D5" value="11.5" />
   </assessment-question>
 
   <assessment-question id="q3-c" class="coherence" use-criteria='none'>
@@ -140,7 +140,7 @@
       <option>The MS reports the same pressures as more than half (51-75%) of MS in the region</option>
       <option>The MS reports the same pressures as less than half (26-50%) of MS in the region</option>
       <option>The MS reports the same pressures as in few (1-25%) of MS in the region</option>
-      <option>Not relevant</option>
+      <!--<option>Not relevant</option>-->
       <option>Not reported</option>
     </answers>
     <scoring determination-method="wise.msfd.compliance.scoring.none_criteria_based" determination-method-args="0 2">
@@ -150,7 +150,49 @@
       <option score="1">The MS reports the same pressures as in few (1-25%) of MS in the region</option>
       <option score="0">Not reported\the information is provided in different formats across MS and it is impossible to compare</option>
     </scoring>
-    <score-weight descriptor="D5" value="5" />
+    <score-weight descriptor="D5" value="6" />
+  </assessment-question>
+
+  <assessment-question id="q1-co" class="consistency" use-criteria='all'>
+    <definition>
+      Is the assessment under Art 8 based on the latest (2018) determination of GES under Art. 9?
+    </definition>
+    <answers>
+      <option>Status assessed against the latest GES determination (2018) for this criterion</option>
+      <option>Status not assessed against the latest GES determination for this criterion</option>
+      <!--<option>Not relevant</option>-->
+      <option>Not reported</option>
+    </answers>
+    <scoring determination-method="wise.msfd.compliance.scoring.alternative_based" determination-method-args="0">
+      <option score="4">Status assessed against the latest GES determination (2018) for 76-100% of criteria</option>
+      <option score="3">Status assessed against the latest GES determination (2018) for 51-75% of criteria</option>
+      <option score="2">Status assessed against the latest GES determination (2018) for 26-50% of criteria</option>
+      <option score="1">Status assessed against the latest GES determination (2018) for 1-25% of criteria</option>
+      <option score="0">Not reported</option>
+    </scoring>
+    <score-weight descriptor="D5" value="10" />
+  </assessment-question>
+
+  <assessment-question id="q2-co" class="consistency" use-criteria='none'>
+    <definition>
+      To what extent do targets adequately reflect the gap between current (2018) state and GES?
+    </definition>
+    <answers>
+      <option>76-100% of targets relevant for this descriptor reflect the gap between 2018 status and GES for this descriptor</option>
+      <option>51-75% of targets relevant for this descriptor reflect the gap between 2018 status and GES for this descriptor</option>
+      <option>26-50% of targets relevant for this descriptor reflect the gap between 2018 status and GES for this descriptor</option>
+      <option>1-25% of targets relevant for this descriptor are measurable</option>
+      <!--<option>Not relevant</option>-->
+      <option>Not reported</option>
+    </answers>
+    <scoring determination-method="wise.msfd.compliance.scoring.none_criteria_based" determination-method-args="0 2">
+      <option score="4">76-100% of targets relevant for this descriptor reflect the gap between 2018 status and GES for this descriptor</option>
+      <option score="3">51-75% of targets relevant for this descriptor reflect the gap between 2018 status and GES for this descriptor</option>
+      <option score="2">26-50% of targets relevant for this descriptor reflect the gap between 2018 status and GES for this descriptor</option>
+      <option score="1">1-25% of targets relevant for this descriptor are measurable</option>
+      <option score="0">Not relevant/Not reported</option>
+    </scoring>
+    <score-weight descriptor="D5" value="8" />
   </assessment-question>
 
 </questions>
