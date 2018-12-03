@@ -442,6 +442,6 @@ class ReportData2018(BaseComplianceView):
         )
 
         # trans_edit_html = self.translate_view()()
-        self.report_data = template(data=data) # + trans_edit_html
+        self.report_data = template(data=data)      # + trans_edit_html
 
         return self.index()
