@@ -203,6 +203,26 @@ LIMIT 1""" % filename
     return urls[0]
 
 
+def get_factsheet_url(url):
+    """ Returns the URL for the conversion that gets the "HTML Factsheet"
+    """
+    cdr = "http://cdr.eionet.europa.eu/Converters/run_conversion"\
+        "?source=remote&file="
+
+    base = url.replace('http://cdr.eionet.europa.eu/', '')
+    base = base.replace('https://cdr.eionet.europa.eu/', '')
+
+    resp = requests.get(url + '/get_possible_conversions')
+    j = resp.json()
+    ids = [x
+           for x in j['remote_converters']
+
+           if x['description'] == 'HTML Factsheet']
+
+    if ids:
+        return '{}{}&conv={}'.format(cdr, base, ids[0]['convert_id'])
+
+
 def get_report_data(filename):
     tmpdir = tempfile.gettempdir()
     assert '..' not in filename     # need better security?

@@ -12,8 +12,8 @@ from Products.Five.browser.pagetemplatefile import \
     ViewPageTemplateFile as Template
 from wise.msfd import db, sql, sql2018
 from wise.msfd.base import BaseUtil
-from wise.msfd.data import (get_report_data, get_report_file_url,
-                            get_report_filename)
+from wise.msfd.data import (get_factsheet_url, get_report_data,
+                            get_report_file_url, get_report_filename)
 from wise.msfd.gescomponents import get_ges_criterions
 from z3c.form.button import buttonAndHandler
 from z3c.form.field import Fields
@@ -114,8 +114,14 @@ class ReportData2012(BaseComplianceView, BaseUtil):
         print "Will render report for ", self.article
         self.filename = filename = self.get_report_filename()
 
+        factsheet = None
+
         if filename:
             url = get_report_file_url(filename)
+            try:
+                factsheet = get_factsheet_url(url)
+            except:
+                logger.exception("Error in getting HTML Factsheet URL %s", url)
             source_file = (filename, url + '/manage_document')
         else:
             source_file = ('File not found', None)
@@ -134,6 +140,7 @@ class ReportData2012(BaseComplianceView, BaseUtil):
             # TODO: do the report_due by a mapping with article: date
             report_due='2012-10-15',
             report_date=rep_info.report_date,
+            factsheet=factsheet,
         )
 
         self.report_data = self.get_article_report_implementation()()
@@ -426,6 +433,7 @@ class ReportData2018(BaseComplianceView):
                 self.descriptor,
                 self.article
             ),
+            factsheet=None,
             # TODO: find out how to get info about who reported
             report_by='Member State',
             source_file=source_file,

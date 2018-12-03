@@ -38,8 +38,14 @@
       <tr>
         <td>Source file of Member State</td>
         <td tal:attributes="colspan view/colspan">
+
           <a tal:attributes="href python: options['source_file'][1]"
-            tal:content="python: options['source_file'][0]"/>
+            tal:content="python: options['source_file'][0]">Filename</a>
+
+          <div tal:condition="options/factsheet">
+            <a tal:attributes="href options/factsheet">HTML Factsheet</a>
+          </div>
+
         </td>
       </tr>
       <tr>

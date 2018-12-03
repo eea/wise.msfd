@@ -527,7 +527,7 @@ class Article8(BaseArticle2012):
                 break       # only need the "first" row
             report_data[muid] = rows
 
-            break       # debug, only handle first muid
+            # break       # debug, only handle first muid
 
         self.rows = report_data
 
