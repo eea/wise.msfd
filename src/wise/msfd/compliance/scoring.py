@@ -50,11 +50,23 @@ def alternative_based(args):
     return calculate
 
 
-def none_criteria_based(args):
+scores = [4, 3, 2, 1, 0]
 
+
+def none_criteria_based(args):
     def calculate(value):
         if value:
-            return 4 - value[0]
+            max_score = len(value) * scores[0]
+            current_score = sum([scores[x] for x in value])
+
+            # max ...... 100%
+            # curent ... x%
+
+            p = (current_score * 100) / max_score
+
+            range_index = get_range_index(p)
+
+            return range_index
 
         return len(DEFAULT_RANGES) + 1
 

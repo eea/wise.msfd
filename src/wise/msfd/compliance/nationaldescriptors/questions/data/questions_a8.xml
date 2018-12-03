@@ -87,7 +87,7 @@
     <score-weight descriptor="D5" value="13.5" />
   </assessment-question>
 
-  <assessment-question id="q1-c" class="coherence" use-criteria='all'>
+  <assessment-question id="q1-c" class="consistency" use-criteria='all'>
     <definition>
       To what extent does the Member State report the same elements as the other countries in the region?
     </definition>
@@ -99,7 +99,7 @@
       <!--<option>Not relevant</option>-->
       <option>Not reported</option>
     </answers>
-    <scoring determination-method="wise.msfd.compliance.scoring.alternative_based" determination-method-args="0 2">
+    <scoring determination-method="wise.msfd.compliance.scoring.none_criteria_based" determination-method-args="0 2">
       <option score="4">The MS uses the same elements as most (76%- 100%)of the MS in the region</option>
       <option score="3">The MS uses the same elements as more than half (51-75%)of MS in the region</option>
       <option score="2">The MS uses the same elements as less then half (26-50%)of MS in the region</option>
@@ -121,7 +121,7 @@
       <!--<option>Not relevant</option>-->
       <option>Not reported</option>
     </answers>
-    <scoring determination-method="wise.msfd.compliance.scoring.alternative_based" determination-method-args="0 2">
+    <scoring determination-method="wise.msfd.compliance.scoring.none_criteria_based" determination-method-args="0 2">
       <option score="4">The MS uses the same parameters as most (76%-100%) of the MS in the region</option>
       <option score="3">The MS uses the same parameters as more than half (51-75%) of MS in the region</option>
       <option score="2">The MS uses the same parameters as less than half (26-50%) of MS in the region</option>
