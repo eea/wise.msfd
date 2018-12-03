@@ -6,8 +6,6 @@
     </div>
   </div>
 
-  <!-- <div class="head&#45;tpl" tal:content="structure options/head_tpl">Header</div> -->
-
   <div tal:condition="not: data">
     No data reported for this Descriptor
   </div>
@@ -15,7 +13,8 @@
   <div style="clear: both"><!-- -->
   </div>
 
-  <div tal:condition="data" tal:repeat="info data">
+  <div tal:condition="data" tal:repeat="info data" class="report-section">
+
     <tal:def tal:define="muid python:info[0]; muid_data python: info[1];" >
       <h4 tal:content="muid">LV-01</h4>
       <div class="overflow-table">
@@ -31,5 +30,6 @@
         </table>
       </div>
     </tal:def>
+
   </div>
 </div>
