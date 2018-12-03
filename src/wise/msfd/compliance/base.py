@@ -265,6 +265,9 @@ class BaseComplianceView(BrowserView):
                                name="translation-view")
 
     def translate_value(self, value):
+        # TODO: re-enable for the translation
+
+        return value
         v = self.translate_view()
 
         source_lang = self.country_code
