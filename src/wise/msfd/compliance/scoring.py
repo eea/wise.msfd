@@ -53,7 +53,7 @@ def alternative_based(args):
 scores = [4, 3, 2, 1, 0]
 
 
-def none_criteria_based(args):
+def percentage_based(args):
     def calculate(value):
         if value:
             max_score = len(value) * scores[0]

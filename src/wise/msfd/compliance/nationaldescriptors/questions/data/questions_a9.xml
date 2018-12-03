@@ -116,7 +116,7 @@
       <!--<option>Not relevant</option>-->
       <option>Not reported</option>
     </answers>
-    <scoring determination-method="wise.msfd.compliance.scoring.none_criteria_based" determination-method-args="0 2">
+    <scoring determination-method="wise.msfd.compliance.scoring.percentage_based" determination-method-args="0 2">
       <option score="4">GES extent threshold defined for 76-100% of elements</option>
       <option score="3">GES extent threshold defined for 51-75% of elements</option>
       <option score="2">GES extent threshold defined for 26-50% of elements</option>
@@ -157,7 +157,7 @@
       <!--<option>Not relevant</option>-->
       <option>Not reported</option>
     </answers>
-    <scoring determination-method="wise.msfd.compliance.scoring.none_criteria_based" determination-method-args="0 2">
+    <scoring determination-method="wise.msfd.compliance.scoring.percentage_based" determination-method-args="0 2">
       <option score="4">The MS uses the same criteria as most (76%-100%) of the MS in the region</option>
       <option score="3">The MS uses the same criteria as more than half (51-75%) of MS in the region</option>
       <option score="2">The MS uses the same criteria as less than half (26-50%) of MS in the region</option>
@@ -179,7 +179,7 @@
       <!--<option>Not relevant</option>-->
       <option>Not reported</option>
     </answers>
-    <scoring determination-method="wise.msfd.compliance.scoring.none_criteria_based" determination-method-args="0 2">
+    <scoring determination-method="wise.msfd.compliance.scoring.percentage_based" determination-method-args="0 2">
       <option score="4">Elements and parameters are the same/similar as in most (76%-100%) of the MS in the region</option>
       <option score="3">Elements and parameters are the same/similar as in more than half (51-75%) of MS in the region</option>
       <option score="2">Elements and parameters are the same/similar as in less than half (26-50%) of MS in the region</option>
@@ -201,7 +201,7 @@
       <!--<option>Not relevant</option>-->
       <option>Not reported</option>
     </answers>
-    <scoring determination-method="wise.msfd.compliance.scoring.none_criteria_based" determination-method-args="0 2">
+    <scoring determination-method="wise.msfd.compliance.scoring.percentage_based" determination-method-args="0 2">
       <option score="4">Objectives are the same/similar as in most (76%-100%) of the MS in the region</option>
       <option score="3">Objectives are the same/similar as in more than half (51-75%) of MS in the region</option>
       <option score="2">Objectives are the same/similar as in less than half (26-50%) of MS in the region</option>
@@ -223,7 +223,7 @@
       <!--<option>Not relevant</option>-->
       <option>Not reported</option>
     </answers>
-    <scoring determination-method="wise.msfd.compliance.scoring.none_criteria_based" determination-method-args="0 2">
+    <scoring determination-method="wise.msfd.compliance.scoring.percentage_based" determination-method-args="0 2">
       <option score="4">Threshold values are applied to the same element as in most (76%-100%) of the MS in the region</option>
       <option score="3">Threshold values are applied to the same element as in more than half (51-75%) of MS in the region</option>
       <option score="2">Threshold values are applied to the same element as in less than half (26-50%) of MS in the region</option>
@@ -245,7 +245,7 @@
       <!--<option>Not relevant</option>-->
       <option>Not reported</option>
     </answers>
-    <scoring determination-method="wise.msfd.compliance.scoring.none_criteria_based" determination-method-args="0 2">
+    <scoring determination-method="wise.msfd.compliance.scoring.percentage_based" determination-method-args="0 2">
       <option score="4">The MS uses the same/similar threshold values as most (76%-100%) of the MS in the region</option>
       <option score="3">The MS uses the same/similar threshold values as more than half (51- 75%) of MS in the region</option>
       <option score="2">The MS uses the same/similar threshold values as less than half (26- 50%) of MS in the region</option>
@@ -267,7 +267,7 @@
       <!--<option>Not relevant</option>-->
       <option>Not reported</option>
     </answers>
-    <scoring determination-method="wise.msfd.compliance.scoring.none_criteria_based" determination-method-args="0 2">
+    <scoring determination-method="wise.msfd.compliance.scoring.percentage_based" determination-method-args="0 2">
       <option score="4">The MS uses similar date (by 2020/after 2020) for achieving GES as most (76%-100%) of the MS in the region</option>
       <option score="3">The MS uses similar date (by 2020/after 2020) for achieving GES as more than half (51-75%) of MS in the region</option>
       <option score="2">The MS uses similar date (by 2020/after 2020) for achieving GES as less than half (26-50%) of MS in the region</option>

@@ -13,7 +13,7 @@
       <!--<option>Not relevant</option>-->
       <option>Not reported</option>
     </answers>
-    <scoring determination-method="wise.msfd.compliance.scoring.none_criteria_based" determination-method-args="0 2">
+    <scoring determination-method="wise.msfd.compliance.scoring.percentage_based" determination-method-args="0 2">
       <option score="4">76-100% of criteria elements are reported</option>
       <option score="3">51-75% of criteria elements are reported</option>
       <option score="2">26-50% of criteria elements are reported</option>
@@ -35,7 +35,7 @@
       <!--<option>Not relevant</option>-->
       <option>Not reported</option>
     </answers>
-    <scoring determination-method="wise.msfd.compliance.scoring.none_criteria_based" determination-method-args="0 2">
+    <scoring determination-method="wise.msfd.compliance.scoring.percentage_based" determination-method-args="0 2">
       <option score="4">76-100% of all relevant key aspects are reported across criteria</option>
       <option score="3">51-75% of all relevant key aspects are reported across criteria</option>
       <option score="2">26-50% of all relevant key aspects are reported across criteria</option>
@@ -57,7 +57,7 @@
       <!--<option>Not relevant</option>-->
       <option>Not reported</option>
     </answers>
-    <scoring determination-method="wise.msfd.compliance.scoring.none_criteria_based" determination-method-args="0 2">
+    <scoring determination-method="wise.msfd.compliance.scoring.percentage_based" determination-method-args="0 2">
       <option score="4">76-100% of parameters and criteria are reported with status assessment</option>
       <option score="3">51-75% of parameters and criteria are reported with status assessment</option>
       <option score="2">26-50% of parameters and criteria are reported with status assessment</option>
@@ -99,7 +99,7 @@
       <!--<option>Not relevant</option>-->
       <option>Not reported</option>
     </answers>
-    <scoring determination-method="wise.msfd.compliance.scoring.none_criteria_based" determination-method-args="0 2">
+    <scoring determination-method="wise.msfd.compliance.scoring.percentage_based" determination-method-args="0 2">
       <option score="4">The MS uses the same elements as most (76%- 100%)of the MS in the region</option>
       <option score="3">The MS uses the same elements as more than half (51-75%)of MS in the region</option>
       <option score="2">The MS uses the same elements as less then half (26-50%)of MS in the region</option>
@@ -121,7 +121,7 @@
       <!--<option>Not relevant</option>-->
       <option>Not reported</option>
     </answers>
-    <scoring determination-method="wise.msfd.compliance.scoring.none_criteria_based" determination-method-args="0 2">
+    <scoring determination-method="wise.msfd.compliance.scoring.percentage_based" determination-method-args="0 2">
       <option score="4">The MS uses the same parameters as most (76%-100%) of the MS in the region</option>
       <option score="3">The MS uses the same parameters as more than half (51-75%) of MS in the region</option>
       <option score="2">The MS uses the same parameters as less than half (26-50%) of MS in the region</option>
@@ -143,7 +143,7 @@
       <!--<option>Not relevant</option>-->
       <option>Not reported</option>
     </answers>
-    <scoring determination-method="wise.msfd.compliance.scoring.none_criteria_based" determination-method-args="0 2">
+    <scoring determination-method="wise.msfd.compliance.scoring.percentage_based" determination-method-args="0 2">
       <option score="4">The MS reports the same pressures as most (76%-100%) of the MS in the region</option>
       <option score="3">The MS reports the same pressures as more than half (51- 75%) of MS in the region</option>
       <option score="2">The MS reports the same pressures as less than half (26-50%) of MS in the region</option>
@@ -171,28 +171,6 @@
       <option score="0">Not reported</option>
     </scoring>
     <score-weight descriptor="D5" value="10" />
-  </assessment-question>
-
-  <assessment-question id="q2-co" class="consistency" use-criteria='none'>
-    <definition>
-      To what extent do targets adequately reflect the gap between current (2018) state and GES?
-    </definition>
-    <answers>
-      <option>76-100% of targets relevant for this descriptor reflect the gap between 2018 status and GES for this descriptor</option>
-      <option>51-75% of targets relevant for this descriptor reflect the gap between 2018 status and GES for this descriptor</option>
-      <option>26-50% of targets relevant for this descriptor reflect the gap between 2018 status and GES for this descriptor</option>
-      <option>1-25% of targets relevant for this descriptor are measurable</option>
-      <!--<option>Not relevant</option>-->
-      <option>Not reported</option>
-    </answers>
-    <scoring determination-method="wise.msfd.compliance.scoring.none_criteria_based" determination-method-args="0 2">
-      <option score="4">76-100% of targets relevant for this descriptor reflect the gap between 2018 status and GES for this descriptor</option>
-      <option score="3">51-75% of targets relevant for this descriptor reflect the gap between 2018 status and GES for this descriptor</option>
-      <option score="2">26-50% of targets relevant for this descriptor reflect the gap between 2018 status and GES for this descriptor</option>
-      <option score="1">1-25% of targets relevant for this descriptor are measurable</option>
-      <option score="0">Not relevant/Not reported</option>
-    </scoring>
-    <score-weight descriptor="D5" value="8" />
   </assessment-question>
 
 </questions>
