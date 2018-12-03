@@ -6,6 +6,7 @@ from lxml.etree import fromstring
 from Products.Five.browser.pagetemplatefile import \
     ViewPageTemplateFile as Template
 from wise.msfd import db, sql, sql2018
+from wise.msfd.compliance import a8_utils
 from wise.msfd.data import country_ges_components, get_report_data
 from wise.msfd.gescomponents import Criterion, get_ges_criterions
 from wise.msfd.utils import Item, Node, Row  # RelaxedNode,
@@ -20,9 +21,63 @@ NSMAP = {
     "c": "http://water.eionet.europa.eu/schemas/dir200856ec/mscommon",
 }
 
+
+def setup_mapper_classes():
+    res = {}
+
+    for k, v in a8_utils.DB_MAPPER_CLASSES.items():
+        res[k.split('_', 1)[1]] = v
+
+    return res
+
+
+MAPPER_CLASSES = setup_mapper_classes()
+
+ASSESSMENT_MAPPER_CLASSES = {
+    'Ecosystem': sql.MSFD8aEcosystemStatusAssessment,
+    'Functional': sql.MSFD8aFunctionalStatusAssessment,
+    'Habitat': sql.MSFD8aHabitatStatusAssessment,
+    'Other': sql.MSFD8aOtherStatusAssessment,
+    # 'MSFD8a_Physical': sql.MSFD8aPhysicalStatusAssessment,
+    'Species': sql.MSFD8aSpeciesStatusAssessment,
+    'ExtractionFishShellfish': sql.MSFD8bExtractionFishShellfishAssesment,
+    'ExtractionSeaweedMaerlOther':
+    sql.MSFD8bExtractionSeaweedMaerlOtherAssesment,
+    'HazardousSubstances': sql.MSFD8bHazardousSubstancesAssesment,
+    'HydrologicalProcesses': sql.MSFD8bHydrologicalProcessesAssesment,
+    'Litter': sql.MSFD8bLitterAssesment,
+    'MicrobialPathogens': sql.MSFD8bMicrobialPathogensAssesment,
+    'NIS': sql.MSFD8bNISAssesment,
+    'Noise': sql.MSFD8bNoiseAssesment,
+    'Nutrients': sql.MSFD8bNutrientsAssesment,
+    'PhysicalDamage': sql.MSFD8bPhysicalDamageAssesment,
+    'PhysicalLoss': sql.MSFD8bPhysicalLossAssesment,
+    'PollutantEvents': sql.MSFD8bPollutantEventsAssesment,
+}
+
+
+def tag_name(node):
+    return node.tag.split('}')[1]
+
 # TODO: this needs to take regions into account
 
 # a criterion is either a Descriptor (2018 concept), a Criteria or an Indicator
+
+# TODO: these are tags for article 8b, needs also for 8a
+# tags = [
+#     'PhysicalLoss',
+#     'PhysicalDamage',
+#     'Noise',
+#     'Litter',
+#     'HydrologicalProcesses',
+#     'HazardousSubstances',
+#     'PollutionEvents',
+#     'Nutrients',
+#     'MicrobialPathogens',
+#     'NIS',
+#     'ExtractionofFishShellfish',
+#     'Acidification',
+# ]
 
 
 class Descriptor(Criterion):
@@ -62,8 +117,8 @@ class A8Item(Item):
             ('Topic', self.topic),
             ('[Parameter]', lambda: 'Row not implemented'),
             ('ThresholdValue', self.threshold_value),
-            ('SumInfo1 [ValueAchieved]', self.suminfo1),
             ('SumInfo1Unit/ThresholdValueUnit [ValueUnit]', self.suminfo1_tv),
+            ('SumInfo1 [ValueAchieved]', self.suminfo1),
             ('[ProportionThresholdValue]', lambda: 'Row not implemented'),
 
             # TODO: check fields
@@ -277,6 +332,8 @@ class A8Item(Item):
         return self.related_assessment.SumInfo1
 
     def analysis(self):
+        # import pdb; pdb.set_trace()
+
         return self.related_assessment.Topic
 
     @property
@@ -290,6 +347,8 @@ class A8Item(Item):
         # We use the database to bypass this problem
         dbitem = self.indicator_assessment.database_assessment()
         rep_type = self.report.report_type
+
+        # TODO: may need a mapping
 
         if rep_type.endswith('s'):      # quick hack, should get a mapping
             rep_type = rep_type[:-1]
@@ -315,10 +374,15 @@ class IndicatorAssessment(Node):
 
     @property
     def report_type(self):
-        node = self.node.xpath('../../..')[0]
-        tag = node.tag.split('}')[1]
+        # get the parent tag name as "report type"
+        root = self.node.getroottree()
+        tag_names = get_report_tags(root)
 
-        return tag
+        for name in tag_names:
+            parent = self['ancestor::w:' + name]
+
+            if parent:
+                return tag_name(parent[0])
 
     @property
     def marine_unit_id(self):
@@ -326,17 +390,19 @@ class IndicatorAssessment(Node):
 
     @db.use_db_session('2012')
     def database_assessment(self):
-        # TODO: this needs to avoid database caching
-        name = 'MSFD8b{}Assesment'.format(self.report_type)
-        mc = getattr(sql, name)
+        mc = ASSESSMENT_MAPPER_CLASSES[self.report_type]
         count, res = db.get_all_records(
             mc,
             mc.Topic == self.topic,
-            mc.MarineUnitID == self.marine_unit_id
+            mc.MarineUnitID == self.marine_unit_id,
+            raw=True,       # avoid db cache
         )
 
         if count > 1:
             raise ValueError("Multiple assessments")
+
+        if not res:
+            import pdb; pdb.set_trace()
 
         return res[0]
 
@@ -373,7 +439,7 @@ class ReportTag(Node):
 
     @property
     def report_type(self):      # TODO: this needs check
-        return self.node.tag.split('}')[1]
+        return tag_name(self.node)
 
     def indicator_assessments(self, criterion):
         res = []
@@ -389,6 +455,30 @@ class ReportTag(Node):
                     res.append(n_i)
 
         return res
+
+    def assessment_types(self):
+        for node in self['w:Analysis/*']:
+            pass
+
+    def columns(self, criterion):
+        map = {
+            'Nutrients': [
+                'LevelPressureNConcentration',
+                'LevelPressurePConcentration',
+                'LevelPressureOConcentration',
+                'ImpactspressureWater',
+                'ImpactspressureSeabed',
+            ],
+        }
+
+        bases = map[self.report_type]
+
+
+def get_report_tags(root):
+    wrapped = Node(root, NSMAP)
+    tag_names = wrapped['w:ReportingInformation/w:ReportingFeature/text()']
+
+    return [t for t in tag_names if ' ' not in t]
 
 
 class Article8(BaseArticle2012):
@@ -414,7 +504,8 @@ class Article8(BaseArticle2012):
         mc = sql2018.LGESComponent
         count, res = db.get_all_records(
             mc,
-            mc.GESComponent == 'Descriptor'
+            mc.GESComponent == 'Descriptor',
+            raw=True,
         )
         descriptors = [(x.Code.split('/')[0], x.Description) for x in res]
         descriptors = dict(descriptors)
@@ -438,29 +529,13 @@ class Article8(BaseArticle2012):
             Row('Reporting area(s) [MarineUnitID]', [', '.join(set(muids))]),
         ]
 
-        # TODO: these are tags for article 8b, needs also for 8a
-        tags = [
-            'PhysicalLoss',
-            'PhysicalDamage',
-            'Noise',
-            'Litter',
-            'HydrologicalProcesses',
-            'HazardousSubstances',
-            'PollutionEvents',
-            'Nutrients',
-            'MicrobialPathogens',
-            'NIS',
-            'ExtractionofFishShellfish',
-            'Acidification',
-        ]
-
         # each of the following report tags can appear multiple times, once per
         # MarineUnitID. Each one can have multiple <AssessmentPI>,
         # for specific topics. An AssessmentPI can have multiple indicators
 
         report_map = defaultdict(list)
 
-        for name in tags:
+        for name in get_report_tags(root):
             nodes = xp('//w:' + name)
 
             for node in nodes:
