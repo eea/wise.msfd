@@ -87,7 +87,7 @@
     <score-weight descriptor="D5" value="13.5" />
   </assessment-question>
 
-  <assessment-question id="q1-c" class="consistency" use-criteria='all'>
+  <assessment-question id="q1-c" class="coherence" use-criteria='all'>
     <definition>
       To what extent does the Member State report the same elements as the other countries in the region?
     </definition>
