@@ -165,3 +165,12 @@ def get_ges_criterions(descriptor=None):
         return GES_CRITERIONS
 
     return [c for c in GES_CRITERIONS if c.descriptor == descriptor]
+
+
+def get_ges_criterion(ges_id):
+    """ Get the first matched criterion for given ges id (ex: D1, or 5.1.1)
+    """
+
+    for c in GES_CRITERIONS:
+        if ges_id in c.all_ids():
+            return c
