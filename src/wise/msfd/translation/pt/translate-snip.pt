@@ -1,8 +1,8 @@
+<!-- show_translation python: True if len(unicode(text).split(' ')) > 4 else False; -->
 <tal:block
   tal:define="text options/text;
   translation options/translation;
-
-  show_translation python: True if len(unicode(text).split(' ')) > 4 else False;
+  show_translation options/show_translation;
 
   background_color python: 'blue' if not translation else 'green';
   translatable_class python: 'translatable ' + background_color if show_translation else 'translatable';
