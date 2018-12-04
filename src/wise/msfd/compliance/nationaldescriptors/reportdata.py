@@ -40,13 +40,13 @@ class ReportData2012(BaseComplianceView, BaseUtil):
     @property
     def article_implementations(self):
         res = {
-            'Art8': Article8,
+            'Art8': Article8New,
             'Art9': Article9,
             'Art10': Article10,
         }
 
         if 'alter' in self.request.form:
-            res['Art8'] = Article8New
+            res['Art8'] = Article8
 
         return res
 
