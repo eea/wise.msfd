@@ -12,6 +12,15 @@
 }
 
 .translatable  {
+  background-clip: padding-box;
+
+  &.blue {
+    background-color: #d3f3f9;
+  }
+  &.green {
+    background-color: #e6f7ca;
+  }
+
   .dropdown {
     display: inline-block;
     float: right;
@@ -28,13 +37,6 @@
 
   .translate-content {
     display: block;
-
-    .text {
-      background-color: #d3f3f9;
-    }
-    .transl {
-      background-color: #e6f7ca;
-    }
   }
 
   .translate-container {
@@ -54,13 +56,13 @@
 
     .btn-translate-orig {
       &.active {
-        background-color: #d3f3f9;
+        background-color: #91d4e0;
       }
     }
 
     .btn-translate-transl {
       &.active {
-        background-color: #e6f7ca;
+        background-color: #b4c8a0;
       }
     }
 

@@ -28,10 +28,9 @@
             <tal:rep tal:repeat="row muid_data">
               <tr tal:condition="python: row[0] not in view.BLACKLIST">
                 <th tal:content="python: row[0]">Element</th>
-                <td tal:repeat="r python: row[1]">
-                  <div tal:content="r"></div>
-                  <!-- <div tal:replace="structure python: view.translate_value(value=r)"></div> -->
-                </td>
+                <tal:rep tal:repeat="r python: row[1]">
+                  <div tal:replace="structure python: view.translate_value(value=r)"></div>
+                </tal:rep>
               </tr>
             </tal:rep>
           </table>
