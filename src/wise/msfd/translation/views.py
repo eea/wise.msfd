@@ -8,6 +8,7 @@ import chardet
 import requests
 from requests.auth import HTTPDigestAuth
 from zope.annotation.interfaces import IAnnotations
+from zope.security import checkPermission
 
 import transaction
 from BTrees.OOBTree import OOBTree
@@ -203,20 +204,19 @@ class TranslationView(BrowserView):
 
         return code
 
+    def can_modify(self):
+        return checkPermission('cmf.ModifyPortalContent', self.context)
+
     def translate(self, source_lang, value):
         # TODO: implement getting the translation from annotations
 
-        # 'cmf.ModifyContent'
-        # context = self.context
-        # from zope.security import checkPermission
-        #
-        # class View(BrowserView):
-        #
-        #     def canRequestReview(self):
-        #         return checkPermission('cmf.RequestReview', self.context)
+        show_translation = (self.can_modify() and
+                            len(unicode(value).split(' ')) > 4)
 
         if not value:
-            return self.translate_snip(text=value, translation=u"")
+            return self.translate_snip(text=value,
+                                       translation=u"",
+                                       show_translation=show_translation)
 
         translation = u''
 
@@ -232,7 +232,9 @@ class TranslationView(BrowserView):
                 translation = annot_lang.get(value, None)
                 translation = translation.lstrip('?')
 
-        return self.translate_snip(text=value, translation=translation)
+        return self.translate_snip(text=value,
+                                   translation=translation,
+                                   show_translation=show_translation)
 
     def __call__(self):
         return self.translation_edit_template()

@@ -118,14 +118,22 @@ $(document).ready(function(){
       $(this)[0].classList.add('active')
       $(this).siblings('.btn-translate-transl')[0].classList.remove('active')
 
+      $(this).parents('td.translatable')[0].classList.remove('blue')
+      $(this).parents('td.translatable')[0].classList.remove('green')
+      $(this).parents('td.translatable')[0].classList.add('blue')
+
       $(this).parent().siblings('.text')[0].classList.add('active')
       $(this).parent().siblings('.transl')[0].classList.remove('active')
     });
 
     $('.btn-translate-transl').click(function(e) {
-      //debugger;
+//      debugger;
       $(this)[0].classList.add('active')
       $(this).siblings('.btn-translate-orig')[0].classList.remove('active')
+
+      $(this).parents('td.translatable')[0].classList.remove('blue')
+      $(this).parents('td.translatable')[0].classList.remove('green')
+      $(this).parents('td.translatable')[0].classList.add('green')
 
       $(this).parent().siblings('.text')[0].classList.remove('active')
       $(this).parent().siblings('.transl')[0].classList.add('active')
