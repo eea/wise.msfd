@@ -2,9 +2,13 @@
 <dc-workflow workflow_id="compliance_assessment_workflow" title="Compliance Asessment workflow" description="Workflow to be used for Assessments on Articles/Descriptors, in National Descriptors Assessment" state_variable="review_state" initial_state="in_work" manager_bypass="False">
  <permission>View</permission>
  <permission>wise.msfd: Edit Assessment</permission>
+ <permission>Modify portal content</permission>
  <state state_id="approved" title="Approved">
   <exit-transition transition_id="send_back_to_final_review"/>
   <exit-transition transition_id="send_for_draft_review"/>
+  <permission-map name="Modify portal content" acquired="False">
+   <permission-role>Manager</permission-role>
+  </permission-map>
   <permission-map name="View" acquired="False">
    <permission-role>Contributor</permission-role>
    <permission-role>Editor</permission-role>
@@ -18,6 +22,10 @@
  <state state_id="in_draft_review" title="In draft review">
   <exit-transition transition_id="send_back_to_work"/>
   <exit-transition transition_id="send_for_final_review"/>
+  <permission-map name="Modify portal content" acquired="False">
+   <permission-role>Editor</permission-role>
+   <permission-role>Manager</permission-role>
+  </permission-map>
   <permission-map name="View" acquired="False">
    <permission-role>Contributor</permission-role>
    <permission-role>Editor</permission-role>
@@ -31,6 +39,9 @@
  <state state_id="in_final_review" title="In final review">
   <exit-transition transition_id="approve"/>
   <exit-transition transition_id="send_for_draft_review"/>
+  <permission-map name="Modify portal content" acquired="False">
+   <permission-role>Manager</permission-role>
+  </permission-map>
   <permission-map name="View" acquired="False">
    <permission-role>Contributor</permission-role>
    <permission-role>Editor</permission-role>
@@ -43,6 +54,10 @@
  </state>
  <state state_id="in_work" title="In work by Topic Lead">
   <exit-transition transition_id="send_for_draft_review"/>
+  <permission-map name="Modify portal content" acquired="False">
+   <permission-role>Editor</permission-role>
+   <permission-role>Manager</permission-role>
+  </permission-map>
   <permission-map name="View" acquired="False">
    <permission-role>Contributor</permission-role>
    <permission-role>Editor</permission-role>

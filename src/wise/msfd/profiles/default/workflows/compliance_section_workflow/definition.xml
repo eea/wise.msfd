@@ -1,8 +1,7 @@
 <?xml version="1.0"?>
 <dc-workflow workflow_id="compliance_section_workflow" title="Compliance section Workflow" description="Generic one-state workflow for the compliance section. To be used for all objects that don't have a specific workflow." state_variable="review_state" initial_state="internal" manager_bypass="False">
- <permission>View</permission>
  <permission>Add portal content</permission>
-
+ <permission>View</permission>
  <state state_id="internal" title="Internal use">
   <description>Objects cannot be published</description>
   <permission-map name="Access contents information" acquired="False">
@@ -26,10 +25,10 @@
    <permission-role>Reviewer</permission-role>
   </permission-map>
  </state>
-
  <variable variable_id="action" for_catalog="False" for_status="True" update_always="True">
   <description>Previous transition</description>
   <default>
+   
    <expression>transition/getId|nothing</expression>
   </default>
   <guard>
@@ -38,6 +37,7 @@
  <variable variable_id="actor" for_catalog="False" for_status="True" update_always="True">
   <description>The ID of the user who performed the previous transition</description>
   <default>
+   
    <expression>user/getId</expression>
   </default>
   <guard>
@@ -46,6 +46,7 @@
  <variable variable_id="comments" for_catalog="False" for_status="True" update_always="True">
   <description>Comment about the last transition</description>
   <default>
+   
    <expression>python:state_change.kwargs.get('comment', '')</expression>
   </default>
   <guard>
@@ -54,6 +55,7 @@
  <variable variable_id="review_history" for_catalog="False" for_status="False" update_always="False">
   <description>Provides access to workflow history</description>
   <default>
+   
    <expression>state_change/getHistory</expression>
   </default>
   <guard>
@@ -64,6 +66,7 @@
  <variable variable_id="time" for_catalog="False" for_status="True" update_always="True">
   <description>When the previous transition was performed</description>
   <default>
+   
    <expression>state_change/getDateTime</expression>
   </default>
   <guard>

@@ -6,6 +6,7 @@
   <exit-transition transition_id="to_phase2"/>
  </state>
  <state state_id="phase2" title="Phase 2">
+  <exit-transition transition_id="to_phase1"/>
   <exit-transition transition_id="to_phase3"/>
  </state>
  <state state_id="phase3" title="Phase 3">
@@ -13,6 +14,12 @@
  </state>
  <transition transition_id="to_final" title="To final state" new_state="final" trigger="USER" before_script="" after_script="">
   <action url="%(content_url)s/content_status_modify?workflow_action=to_final" category="workflow" icon="">To final state</action>
+  <guard>
+   <guard-permission>Review portal content</guard-permission>
+  </guard>
+ </transition>
+ <transition transition_id="to_phase1" title="To Phase1" new_state="phase1" trigger="USER" before_script="" after_script="">
+  <action url="%(content_url)s/content_status_modify?workflow_action=to_phase1" category="workflow" icon="">Back to Phase 1</action>
   <guard>
    <guard-permission>Review portal content</guard-permission>
   </guard>
