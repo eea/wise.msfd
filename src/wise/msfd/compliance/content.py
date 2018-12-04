@@ -33,7 +33,7 @@ class NationalDescriptorAssessment(Container):
         self._p_changed = True
 
     assessment_data = property(_get_assessment_data, _set_assessment_data)
-    
+
     @property
     def assessment_summary(self):
         art = self.getId().capitalize()

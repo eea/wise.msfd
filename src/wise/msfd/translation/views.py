@@ -206,6 +206,15 @@ class TranslationView(BrowserView):
     def translate(self, source_lang, value):
         # TODO: implement getting the translation from annotations
 
+        # 'cmf.ModifyContent'
+        # context = self.context
+        # from zope.security import checkPermission
+        #
+        # class View(BrowserView):
+        #
+        #     def canRequestReview(self):
+        #         return checkPermission('cmf.RequestReview', self.context)
+
         if not value:
             return self.translate_snip(text=value, translation=u"")
 
