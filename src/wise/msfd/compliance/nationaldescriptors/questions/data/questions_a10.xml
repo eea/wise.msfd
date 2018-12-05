@@ -75,7 +75,7 @@
       <option>76-100% of targets relevant for this descriptor reflect the gap between 2018 status and GES for this descriptor</option>
       <option>51-75% of targets relevant for this descriptor reflect the gap between 2018 status and GES for this descriptor</option>
       <option>26-50% of targets relevant for this descriptor reflect the gap between 2018 status and GES for this descriptor</option>
-      <option>1-25% of targets relevant for this descriptor are measurable</option>
+      <option>1-25% of targets relevant for this descriptor reflect the gap between 2018 status and GES for this descriptor</option>
       <!--<option>Not relevant</option>-->
       <option>Not reported</option>
     </answers>
@@ -83,7 +83,7 @@
       <option score="4">76-100% of targets relevant for this descriptor reflect the gap between 2018 status and GES for this descriptor</option>
       <option score="3">51-75% of targets relevant for this descriptor reflect the gap between 2018 status and GES for this descriptor</option>
       <option score="2">26-50% of targets relevant for this descriptor reflect the gap between 2018 status and GES for this descriptor</option>
-      <option score="1">1-25% of targets relevant for this descriptor are measurable</option>
+      <option score="1">1-25% of targets relevant for this descriptor reflect the gap between 2018 status and GES for this descriptor</option>
       <option score="0">Not relevant/Not reported</option>
     </scoring>
     <score-weight descriptor="D5" value="8" />

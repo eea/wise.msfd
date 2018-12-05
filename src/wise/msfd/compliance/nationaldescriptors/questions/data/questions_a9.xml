@@ -2,7 +2,7 @@
 <questions article='Art9'>
   <assessment-question id="q1-a" class="adequacy" use-criteria='primary'>
     <definition>
-      To what extent are the 2017 Decision criteria covered?
+      To what extent are the 2017 Decision primary criteria used?
     </definition>
     <answers>
       <option>Primary criterion with 2017 code used</option>
@@ -24,7 +24,7 @@
 
   <assessment-question id="q2-a" class="adequacy" use-criteria='secondary'>
     <definition>
-      To what extent does the Member State report beyond the minimum requirements of the 2017 Decision?
+      To what extent does the Member State report beyond the minimum requirements of the 2017 Decision by using the secondary criteria?
     </definition>
     <answers>
       <option>Secondary criterion with 2017 code used</option>
