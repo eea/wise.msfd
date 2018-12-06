@@ -97,7 +97,7 @@ class A9Item(Item):
             muid = n['w:MarineUnitID/text()'][0]
             m[muid] = tv[0]
 
-        res = ['{} = {}'.format(k, v) for (k, v) in m.items()]
+        res = ['{} = {}'.format(k, m[k]) for k in sorted(m)]
 
         return self.list_tpl(rows=res)
 

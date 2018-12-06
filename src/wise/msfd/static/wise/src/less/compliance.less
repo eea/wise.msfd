@@ -277,25 +277,19 @@ div.as-table-overview blockquote {
 
 table.table-report td ul {
   margin: 0em !important;
+  li {
+    list-style: none;
+    padding: 0em;
+    padding-left: 4px;
+    margin-left: -4px;
+    span {
+      border-bottom: 1px dashed #9a9a9a;
+    }
+  }
 }
 
-table.table-report td ul li {
-  display: inline-block !important;
-  list-style: none;
-  padding: 0em;
-  border-top: 1px dashed #9a9a9a;
-  padding-left: 4px;
-  margin-left: -4px;
-}
 
 div.compliance-assessment-edit-subform {
-  // .fields-container {
-  //   display: flex;
-  //   flex-wrap: wrap;
-  //   .fields-container-row {
-  //     flex-basis: 33%;
-  //   }
-  // }
   label {
     display: inline-block;
     width: 10em;
