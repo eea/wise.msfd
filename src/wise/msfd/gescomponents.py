@@ -156,10 +156,9 @@ def parse_ges_extended_format():
 
             descriptors[descriptor.id].criterions.append(criterion)
 
-        # TODO: redo this for 2012 exclusive
-        # if b3 and (not criterion.has_alternative(b3)):
-        #     crit = Criterion2012(*b3.split(' ', 1))
-        #     criterion.alternatives.append(crit)
+        if b3 and (not criterion.has_alternative(b3)):
+            crit = Criterion2012(*b3.split(' ', 1))
+            criterion.alternatives.append(crit)
 
     return descriptors, criterions
 

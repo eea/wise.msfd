@@ -243,19 +243,21 @@ class A8Item(Item):
     def row_criteria_type(self):
         if self.indicator:
             ges_id = self.indicator.GESIndicators
+            ges_other = ""
 
             if ges_id == 'GESOther':
                 # TODO: is this valid for all indicators?
                 ges_id = self.indicator.OtherIndicatorDescription
+                ges_other = "GESOther: "
 
             criterion = get_criterion(ges_id)
 
             if criterion is None:
                 logger.warning('Could not find ges: %s from indicator', ges_id)
 
-                return ges_id
+                return ges_other + ges_id
 
-            return criterion.title
+            return ges_other + criterion.title
 
     def row_threshold_value(self):
         if self.indicator:
