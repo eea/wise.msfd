@@ -270,16 +270,24 @@ class ReportData2018(BaseComplianceView):
         return res
 
     def get_data_from_view_art10(self):
+        descr_class = get_descriptor(self.descriptor)
+        all_ids = descr_class.all_ids()
 
         view_name = self.view_names[self.article]
         t = getattr(sql2018, view_name)
 
-        # TODO update conditions
+        # TODO check conditions for other countries beside NL
+        conditions = []
+        conditions.append(
+            t.c.GESComponents.like('%{}%'.format(self.descriptor))
+        )
+        conditions.append(t.c.GESComponents.in_(all_ids))
+
         count, res = db.get_all_records_ordered(
             t,
             'GESComponents',
             t.c.CountryCode == self.country_code,
-            t.c.GESComponents.like('{}%'.format(self.descriptor)),
+            or_(*conditions)
         )
 
         return res

@@ -14,6 +14,12 @@ D1C6	D1C6 Pelagic habitat condition	1.6.1 Condition typical species
 D1C6	D1C6 Pelagic habitat condition	1.6.3 Habitat condition
 D1C6	D1C6 Pelagic habitat condition	1.6 Habitat condition
 D1C6	D1C6 Pelagic habitat condition	1.6.2 Relative abundance
+1.1.3	1.1.3 Area covered by species
+1.3.2	1.3.2 Population genetic structure
+1.4	1.4 Habitat distribution
+1.4.1	1.4.1 Distributional range
+1.4.2	1.4.2 Distributional pattern
+1.5.2	1.5.2 Habitat volume
 
 D1.1	D1 Biodiversity – birds
 D1C1	D1C1 Mortality rate from incidental by-catch
@@ -25,6 +31,12 @@ D1C4	D1C4 Population distributional range and pattern	1.1.1 Species distribution
 D1C4	D1C4 Population distributional range and pattern	1.1.2 Species distributional pattern
 D1C4	D1C4 Population distributional range and pattern	1.1 Species distribution
 D1C5	D1C5 Habitat for the species
+1.1.3	1.1.3 Area covered by species
+1.3.2	1.3.2 Population genetic structure
+1.4	1.4 Habitat distribution
+1.4.1	1.4.1 Distributional range
+1.4.2	1.4.2 Distributional pattern
+1.5.2	1.5.2 Habitat volume
 
 D1.2	D1 Biodiversity – mammals
 D1C1	D1C1 Mortality rate from incidental by-catch
@@ -36,6 +48,12 @@ D1C4	D1C4 Population distributional range and pattern	1.1.1 Species distribution
 D1C4	D1C4 Population distributional range and pattern	1.1.2 Species distributional pattern
 D1C4	D1C4 Population distributional range and pattern	1.1 Species distribution
 D1C5	D1C5 Habitat for the species
+1.1.3	1.1.3 Area covered by species
+1.3.2	1.3.2 Population genetic structure
+1.4	1.4 Habitat distribution
+1.4.1	1.4.1 Distributional range
+1.4.2	1.4.2 Distributional pattern
+1.5.2	1.5.2 Habitat volume
 
 D1.3	D1 Biodiversity – reptiles
 D1C1	D1C1 Mortality rate from incidental by-catch
@@ -47,6 +65,12 @@ D1C4	D1C4 Population distributional range and pattern	1.1.1 Species distribution
 D1C4	D1C4 Population distributional range and pattern	1.1.2 Species distributional pattern
 D1C4	D1C4 Population distributional range and pattern	1.1 Species distribution
 D1C5	D1C5 Habitat for the species
+1.1.3	1.1.3 Area covered by species
+1.3.2	1.3.2 Population genetic structure
+1.4	1.4 Habitat distribution
+1.4.1	1.4.1 Distributional range
+1.4.2	1.4.2 Distributional pattern
+1.5.2	1.5.2 Habitat volume
 
 D1.4	D1 Biodiversity – fish
 D1C1	D1C1 Mortality rate from incidental by-catch
@@ -58,6 +82,12 @@ D1C4	D1C4 Population distributional range and pattern	1.1.1 Species distribution
 D1C4	D1C4 Population distributional range and pattern	1.1.2 Species distributional pattern
 D1C4	D1C4 Population distributional range and pattern	1.1 Species distribution
 D1C5	D1C5 Habitat for the species
+1.1.3	1.1.3 Area covered by species
+1.3.2	1.3.2 Population genetic structure
+1.4	1.4 Habitat distribution
+1.4.1	1.4.1 Distributional range
+1.4.2	1.4.2 Distributional pattern
+1.5.2	1.5.2 Habitat volume
 
 D1.5	D1 Biodiversity –  cephalopods
 D1C1	D1C1 Mortality rate from incidental by-catch
@@ -69,6 +99,12 @@ D1C4	D1C4 Population distributional range and pattern	1.1.1 Species distribution
 D1C4	D1C4 Population distributional range and pattern	1.1.2 Species distributional pattern
 D1C4	D1C4 Population distributional range and pattern	1.1 Species distribution
 D1C5	D1C5 Habitat for the species
+1.1.3	1.1.3 Area covered by species
+1.3.2	1.3.2 Population genetic structure
+1.4	1.4 Habitat distribution
+1.4.1	1.4.1 Distributional range
+1.4.2	1.4.2 Distributional pattern
+1.5.2	1.5.2 Habitat volume
 
 D1.6	D1 Biodiversity – pelagic habitats
 D1C6	D1C6 Pelagic habitat condition	1.6.1 Condition typical species
@@ -95,6 +131,7 @@ D3C3	D3C3 Population age/size distribution	3.3 Population age and size distribut
 D3C3	D3C3 Population age/size distribution	3.3.1 Proportion of larger fish
 D3C3	D3C3 Population age/size distribution	3.3.3 Fish length distribution
 D3C3	D3C3 Population age/size distribution	3.3.4 Fish size at sexual maturation
+3.3.2	3.3.2 Mean maximum length across all fish species found in research vessel
 
 D4	D4 Food webs/D1 Biodiversity - ecosystems (D4/D1)
 D4C1	D4C1 Trophic guild species diversity	1.7 Ecosystem structure
@@ -118,6 +155,9 @@ D5C5	D5C5 Dissolved oxygen concentration	5.3.2 Dissolved oxygen
 D5C6	D5C6 Opportunistic macroalgae of benthic habitats	5.2.3 Abundance of macroalgae
 D5C7	D5C7 Macrophyte communities of benthic habitats	5.3.1 Abundance of seaweeds and seagrasses
 D5C8	D5C8 Macrofaunal communities of benthic habitats
+5.1.2	5.1.2 Nutrient ratios (silica, nitrogen and phosphorus)
+5.2	5.2 Direct effects of nutrient enrichment
+5.3	5.3 Indirect effects of nutrient enrichment
 
 D6	D6 Sea-floor integrity/D1 Biodiversity - benthic habitats (D6/D1)
 D6C1	D6C1 Physical loss of the seabed	6.1 Physical damage, having regard to substrate characteristics
@@ -154,6 +194,7 @@ D8C4	D8C4 Adverse effects of significant pollution events	8.2.2 Occurrence and i
 D9	D9 Contaminants in seafood
 D9C1	D9C1 Contaminants in seafood	9.1.1 Levels of contaminants in seafood
 D9C1	D9C1 Contaminants in seafood	9.1 Levels, number and frequency of contaminants
+9.1.2	9.1.2 Frequency of regulatory levels being exceeded
 
 D10	D10 Marine litter
 D10C1	D10C1 Litter (excluding micro-litter)	10.1.1 Trends in litter on shore
@@ -170,16 +211,3 @@ D11C1	D11C1 Anthropogenic impulsive sound	11.1.1 Proportion of days with loud so
 D11C1	D11C1 Anthropogenic impulsive sound	11.1 Distribution in time and place of loud, low and mid frequency impulsive sounds
 D11C2	D11C2 Anthropogenic continuous low-frequency sound	11.2.1 Ambient noise
 D11C2	D11C2 Anthropogenic continuous low-frequency sound	11.2 Continuous low frequency sound
-
-Unused in 2018
-	1.1.3	1.1.3 Area covered by species
-	1.3.2	1.3.2 Population genetic structure
-	1.4	1.4 Habitat distribution
-	1.4.1	1.4.1 Distributional range
-	1.4.2	1.4.2 Distributional pattern
-	1.5.2	1.5.2 Habitat volume
-	3.3.2	3.3.2 Mean maximum length across all fish species found in research vessel
-	5.1.2	5.1.2 Nutrient ratios (silica, nitrogen and phosphorus)
-	5.2	5.2 Direct effects of nutrient enrichment
-	5.3	5.3 Indirect effects of nutrient enrichment
-	9.1.2	9.1.2 Frequency of regulatory levels being exceeded
