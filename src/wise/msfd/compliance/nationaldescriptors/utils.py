@@ -132,3 +132,54 @@ def get_criterion_labels(criterions, descriptor, descriptor_label):
     criterion_labels[descriptor] = descriptor_label
 
     return criterion_labels
+
+
+def get_sorted_fields_2018(fields, article):
+    sorted_fields = {
+        'Art10': ('TargetCode', 'Description', 'GESComponents',
+                  'TimeScale', 'UpdateDate', 'UpdateType', 'Measures',
+                  'Element', 'Element2', 'Parameter', 'ParameterOther',
+                  'TargetValue', 'ValueAchievedUpper', 'ValueAchievedLower',
+                  'ValueUnit', 'ValueUnitOther', 'TargetStatus',
+                  'AssessmentPeriod', 'ProgressDescription', 'Indicators'),
+        'Art9': ('GESComponent', 'GESDescription', 'JustificationNonUse',
+                 'JustificationDelay', 'DeterminationDate', 'UpdateType'),
+        'Art8': ('Element', 'ElementCode', 'ElementCodeSource',
+                 'Element2', 'Element2Code', 'Element2CodeSource',
+                 'ElementSource', 'Criteria', 'Parameter', 'ParameterOther',
+                 'ThresholdValueUpper', 'ThresholdValueLower',
+                 'ThresholdQualitative', 'ThresholdValueSource',
+                 'ThresholdValueSourceOther',
+                 'ValueAchievedUpper', 'ValueAchievedLower', 'ValueUnit',
+                 'ValueUnitOther', 'ProportionThresholdValue',
+                 'ProportionValueAchieved', 'ProportionThresholdValueUnit',
+                 'Trend', 'ParameterAchieved', 'DescriptionParameter',
+                 'IndicatorCode', 'CriteriaStatus', 'DescriptionCriteria',
+                 'ElementStatus', 'DescriptionElement',
+                 'IntegrationRuleTypeParameter',
+                 'IntegrationRuleDescriptionParameter',
+                 'IntegrationRuleDescriptionReferenceParameter',
+                 'IntegrationRuleTypeCriteria',
+                 'IntegrationRuleDescriptionCriteria',
+                 'IntegrationRuleDescriptionReferenceCriteria',
+                 'GESExtentThreshold', 'GESExtentAchieved', 'GESExtentUnit',
+                 'GESAchieved', 'DescriptionOverallStatus',
+                 'AssessmentsPeriod',
+                 'PressureCode',  # RelatedPressures
+                 # Related activities, Does not have field in DB view
+                 'TargetCode',  # RelatedTargets
+
+                 # NOT used fields
+                 # 'GESComponent',
+                 # 'Feature',
+                 )
+    }
+
+    sf = sorted_fields.get(article, None)
+    if not sf:
+        return fields
+
+    diff = set(fields) - set(sf)
+    final = list(sf) + list(diff)
+
+    return final

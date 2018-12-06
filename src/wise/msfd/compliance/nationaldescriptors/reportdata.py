@@ -24,7 +24,7 @@ from .a8 import Article8
 from .a8_new import Article8 as Article8New
 from .a9 import Article9
 from .a10 import Article10
-from .utils import row_to_dict
+from .utils import row_to_dict, get_sorted_fields_2018
 
 logger = logging.getLogger('wise.msfd')
 
@@ -325,7 +325,9 @@ class ReportData2018(BaseComplianceView):
         res = []
         row0 = data[0]
 
-        for name in row0._fields:
+        sorted_fields = get_sorted_fields_2018(row0._fields, self.article)
+
+        for name in sorted_fields:
             values = [make_distinct(name, getattr(row, name)) for row in data]
 
             res.append([name, values])
