@@ -43,6 +43,9 @@ class Criterion(object):
     hierarchy is Descriptor > Criteria > Indicator.
 
     A criterion can be either of Descriptor, Criteria, Indicator.
+
+    NOTE: there is a criterion that is 2012 exclusive, we don't include it in
+    data: 1.3.2 Population genetic structure
     """
 
     _id = None      # id for the 2018 version
@@ -153,9 +156,10 @@ def parse_ges_extended_format():
 
             descriptors[descriptor.id].criterions.append(criterion)
 
-        if b3 and (not criterion.has_alternative(b3)):
-            crit = Criterion2012(*b3.split(' ', 1))
-            criterion.alternatives.append(crit)
+        # TODO: redo this for 2012 exclusive
+        # if b3 and (not criterion.has_alternative(b3)):
+        #     crit = Criterion2012(*b3.split(' ', 1))
+        #     criterion.alternatives.append(crit)
 
     return descriptors, criterions
 

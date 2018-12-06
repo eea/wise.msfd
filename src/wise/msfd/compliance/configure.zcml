@@ -31,6 +31,14 @@
     />
 
   <browser:page
+    for=".interfaces.IComplianceModuleFolder"
+    name="comp-descriptors"
+    class=".main.DescriptorsView"
+    template="./pt/descriptors-view.pt"
+    permission="zope2.View"
+    />
+
+  <browser:page
     for=".interfaces.INationalDescriptorAssessment"
     name="comments-view"
     class=".comments.CommentsView"

@@ -253,6 +253,8 @@ class A8Item(Item):
             if criterion is None:
                 logger.warning('Could not find ges: %s from indicator', ges_id)
 
+                return ges_id
+
             return criterion.title
 
     def row_threshold_value(self):
