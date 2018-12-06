@@ -7,10 +7,9 @@ from sqlalchemy.orm.relationships import RelationshipProperty
 from Products.Five.browser.pagetemplatefile import \
     ViewPageTemplateFile as Template
 from wise.msfd import db, sql, sql2018
-from wise.msfd.compliance import a8_utils
+# from wise.msfd.compliance import a8_utils
 from wise.msfd.data import country_ges_components, get_report_data
-from wise.msfd.gescomponents import (Criterion, get_ges_criterion,
-                                     get_ges_criterions)
+from wise.msfd.gescomponents import Criterion, get_criterion, get_descriptor
 from wise.msfd.utils import Item, Node, Row  # RelaxedNode,
 
 from ..base import BaseArticle2012
@@ -244,7 +243,15 @@ class A8Item(Item):
     def row_criteria_type(self):
         if self.indicator:
             ges_id = self.indicator.GESIndicators
-            criterion = get_ges_criterion(ges_id)
+
+            if ges_id == 'GESOther':
+                # TODO: is this valid for all indicators?
+                ges_id = self.indicator.OtherIndicatorDescription
+
+            criterion = get_criterion(ges_id)
+
+            if criterion is None:
+                logger.warning('Could not find ges: %s from indicator', ges_id)
 
             return criterion.title
 
@@ -302,19 +309,11 @@ class ReportTag(Node):
         return self['w:AssessmentPI/w:Assessment/c:Indicators/'
                     'c:Indicator/text()']
 
-    @property
-    def descriptor(self):
-        # Used to filter the report based on intended descriptor
+    def matches_descriptor(self, descriptor):
+        descriptor = get_descriptor(descriptor)
+        self_crits = set(self.indicators + self.criterias)
 
-        for crit in (self.criterias + self.indicators):
-            if crit.startswith('D'):
-                return crit
-
-            if '.' in crit:
-                # this means that only D1 is supported, 1.1, etc are not
-                # supported. For 2012, I think this is fine??
-
-                return 'D' + crit.split('.', 1)[0]
+        return bool(self_crits.intersection(descriptor.all_ids()))
 
     @property
     def report_type(self):      # TODO: this needs check
@@ -435,11 +434,11 @@ class Article8(BaseArticle2012):
             for node in nodes:
                 rep = ReportTag(node, NSMAP)
 
-                if rep.descriptor == self.descriptor:
+                if rep.matches_descriptor(self.descriptor):
                     report_map[rep.marine_unit_id].append(rep)
 
-        ges_crits = [self.descriptor_criterion()]
-        ges_crits.extend(get_ges_criterions(self.descriptor))
+        descriptor = get_descriptor(self.descriptor)
+        ges_crits = [descriptor] + descriptor.criterions
 
         # a bit confusing code, we have multiple sets of rows, grouped in
         # report_data under the marine unit id key.
@@ -456,6 +455,9 @@ class Article8(BaseArticle2012):
                 continue
 
             m_reps = report_map[muid]
+
+            if len(m_reps) > 1:
+                import pdb; pdb.set_trace()
 
             assert len(m_reps) < 2, "Multiple reports for same MarineUnitID?"
             report = m_reps[0]

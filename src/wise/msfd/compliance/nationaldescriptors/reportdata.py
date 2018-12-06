@@ -14,7 +14,7 @@ from wise.msfd import db, sql, sql2018
 from wise.msfd.base import BaseUtil
 from wise.msfd.data import (get_factsheet_url, get_report_data,
                             get_report_file_url, get_report_filename)
-from wise.msfd.gescomponents import get_ges_criterions
+from wise.msfd.gescomponents import get_descriptor
 from z3c.form.button import buttonAndHandler
 from z3c.form.field import Fields
 from z3c.form.form import Form
@@ -65,7 +65,7 @@ class ReportData2012(BaseComplianceView, BaseUtil):
             (descriptor, self.descriptor_label)
         ]
 
-        criterions = get_ges_criterions(descriptor)
+        criterions = get_descriptor(descriptor).criterions
 
         for crit in criterions:
             for alt in crit.alternatives:
@@ -111,6 +111,11 @@ class ReportData2012(BaseComplianceView, BaseUtil):
 
     @db.use_db_session('2012')
     def __call__(self):
+
+        if self.descriptor.startswith('D1.'):       # map to old descriptor
+            self._descriptor = 'D1'
+            assert self.descriptor == 'D1'
+
         print "Will render report for ", self.article
         self.filename = filename = self.get_report_filename()
 

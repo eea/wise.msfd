@@ -95,6 +95,7 @@ class BaseComplianceView(BrowserView):
     assessment_header_template = ViewPageTemplateFile(
         'nationaldescriptors/pt/assessment-header.pt'
     )
+    _descriptor = None      # can be overriden
 
     @property
     def colspan(self):
@@ -177,6 +178,9 @@ class BaseComplianceView(BrowserView):
 
     @property
     def descriptor(self):
+        if self._descriptor:        # can be bypassed for D1
+            return self._descriptor
+
         return self._descriptor_folder.getId().upper()
 
     @property

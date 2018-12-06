@@ -4,7 +4,7 @@
 
     <div class="overflow-table" tal:define="muid_data view/rows/?muid">
       <table tal:condition="muid_data" class='table table-bordered table-striped table-report' style='width: 100%; overflow:auto'>
-        <tal:rep tal:repeat="row muid_data" tal:on-error="string: missing">
+        <tal:rep tal:repeat="row muid_data" >
           <tal:row replace="structure row"></tal:row>
         </tal:rep>
       </table>
@@ -12,4 +12,3 @@
 
   </div>
 </div>
-

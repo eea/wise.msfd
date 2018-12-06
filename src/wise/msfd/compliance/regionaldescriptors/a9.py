@@ -3,7 +3,7 @@ from eea.cache import cache
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 from wise.msfd import db, sql, sql_extra
 from wise.msfd.data import countries_in_region, muids_by_country
-from wise.msfd.gescomponents import get_ges_criterions
+from wise.msfd.gescomponents import get_descriptor
 from wise.msfd.utils import CompoundRow, ItemList, Row, TableHeader
 
 from ..base import BaseComplianceView
@@ -96,11 +96,11 @@ class RegDescA9(BaseComplianceView):
     @cache(get_key)
     def get_gescomponents_row(self):
         t = sql_extra.MSFD9Feature
-        ges = get_ges_criterions(self.descriptor)
+        criterions = get_descriptor(self.descriptor).criterions
 
         rows = []
 
-        for crit in ges:
+        for crit in criterions:
             crit_ids = crit.all_ids()
             values = []
 

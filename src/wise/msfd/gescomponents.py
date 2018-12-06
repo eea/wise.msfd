@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import csv
+from collections import namedtuple
 
 from pkg_resources import resource_filename
 
@@ -8,6 +9,29 @@ from pkg_resources import resource_filename
 # reports. As such, some exist in 2010 that didn't exist in 2018, some exist
 # for 2018 that didn't exist for 2010 and they have changed their ids between
 # the two reporting exercises.
+
+
+class Descriptor:
+    """ A descriptor representation
+    """
+
+    def __init__(self, id=None, title=None, criterions=None):
+        self.id = id
+        self.title = title
+        self.criterions = criterions or []
+
+    def all_ids(self):
+        res = set()
+        res.add(self.id)
+
+        for crit in self.criterions:
+            for cid in crit.all_ids():
+                res.add(cid)
+
+        return res
+
+
+Criterion2012 = namedtuple('Descriptor', ['id', 'title'])
 
 
 class Criterion(object):
@@ -25,10 +49,11 @@ class Criterion(object):
     _title = None   # title for the 2018 version
     _alternatives = None
 
-    def __init__(self, id, title, alternatives=None):
+    def __init__(self, id, title, descriptors=None, alternatives=None):
         self._id = id
         self._title = title
-        self.alternatives = alternatives or []        # tuples of (id, title)
+        self.descriptors = descriptors or []    # belongs to these descriptors
+        self.alternatives = alternatives or []  # Criterion2012 objects
 
     def __repr__(self):
         title = self.title.encode('ascii', 'replace')
@@ -67,110 +92,103 @@ class Criterion(object):
             self._title,
         )
 
-    @property
-    def descriptor(self):
-        """ Returns the descriptor as a D<n> id
-        """
+    def belongs_to_descriptor(self, descriptor_id):
+        for descriptor in self.descriptors:
+            if descriptor.id == descriptor_id:
+                return True
 
-        if self._id:        # 2018 version
-            return self._id.split('C')[0]
-
-        id = self.alternatives[0][0]    # 2012 version
-
-        return 'D' + id.split('.')[0]
+        return False
 
     def all_ids(self):
 
-        return [self.id] + [x[0] for x in self.alternatives]
+        return set([self.id] + [x[0] for x in self.alternatives])
+
+    def has_alternative(self, id):
+        return any([x.id == id for x in self.alternatives])
 
 
-def parse_ges_terms():
+def parse_ges_extended_format():
     csv_f = resource_filename('wise.msfd',
-                              'data/ges_terms.tsv')
+                              'data/ges_terms.csv')
 
     with open(csv_f, 'rb') as csvfile:
         csv_file = csv.reader(csvfile, delimiter='\t')
         rows = list(csv_file)
 
-    res = []
+    rows = rows[1:]     # skip header
+
+    descriptors = {}
+    criterions = {}
+    descriptor = None
 
     for row in rows:
-        if len(row) != 4:
+        if not row:
             continue
+
+        if not row[0].strip():
+            continue
+
         bits = [b.strip() for b in row]
 
-        b1, b2, b3, b4 = bits
+        if len(bits) == 1:      # allow for editing with vim
+            bits.extend(['', ''])
 
-        id_2012 = None
-        title_2012 = None
-        id_2018 = None
-        title_2018 = None
+        if len(bits) == 2:
+            bits.append('')
 
-        if b1.startswith('D'):
-            # new style criterions. Ex:
-            # D6C5	D6C5 Benthic habitat condition	38	6.2.3 Proportion of ...
-            id_2018 = b1
-            title_2018 = b2.split(' ', 1)[1]
+        b1, b2, b3 = bits
 
-            if b4[0].isdigit():
-                # we also have the old criterion
-                id_2012 = b4.split(' ', 1)[0]
-                title_2012 = b4.split(' ', 1)[1]
-            else:
-                # add it as GESOther if b4 is '-'
-                id_2012 = 'GESOther'
-                title_2012 = b4
-
-            # if the criterion has already been defined, annotate that one
-
-            seen = False
-
-            for crit in res:
-                if id_2018 and (crit.id == id_2018):
-                    # already seen this criterion, let's append the title
-                    seen = True
-                    crit.alternatives.append((id_2012, title_2012))
-
-            if not seen:
-                crit = Criterion(id_2018, title_2018)
-
-                if id_2012:
-                    crit.alternatives.append((id_2012, title_2012))
-
-                res.append(crit)
+        if b1.startswith('D') and ('C' not in b1):
+            # it's a descriptor label
+            descriptor = Descriptor(b1, b2, [])
+            descriptors[descriptor.id] = descriptor
 
             continue
 
-        if b1[0].isdigit():
-            # old style criterions. Ex:
-            # 5.3	5.3 Indirect effects of nutrient enrichment	52	Y
-            id_2012 = b1
-            title_2012 = b2.split(' ', 1)[1]
+        if b1 in criterions:
+            criterion = criterions[b1]
+        else:
+            criterion = Criterion(id=b1, title=b2, descriptors=[descriptor])
+            criterions[b1] = criterion
 
-            crit = Criterion(None, None)
-            crit.alternatives.append((id_2012, title_2012))
-            res.append(crit)
+            descriptors[descriptor.id].criterions.append(criterion)
 
-    return res
+        if b3 and (not criterion.has_alternative(b3)):
+            crit = Criterion2012(*b3.split(' ', 1))
+            criterion.alternatives.append(crit)
+
+    return descriptors, criterions
 
 
-GES_CRITERIONS = parse_ges_terms()
+GES_DESCRIPTORS, GES_CRITERIONS = parse_ges_extended_format()
 
 
-def get_ges_criterions(descriptor=None):
-    """ Returns a list of Criterion objects
+def get_descriptor(descriptor=None):
+    """ Returns a Descriptor object, that has criterions attached
+
+    :param get_descriptor: descriptor id, ex D5
     """
 
-    if not descriptor:
-        return GES_CRITERIONS
+    if descriptor == 'D6/D1':
+        descriptor = 'D6'
 
-    return [c for c in GES_CRITERIONS if c.descriptor == descriptor]
+    if descriptor == 'D4/D1':
+        descriptor = 'D4'
+
+    return GES_DESCRIPTORS[descriptor]
+
+    # if not descriptor:
+    #     return GES_CRITERIONS
+    #
+    # return [c for c in GES_CRITERIONS if c.descriptor == descriptor]
 
 
-def get_ges_criterion(ges_id):
-    """ Get the first matched criterion for given ges id (ex: D1, or 5.1.1)
+def get_criterion(ges_id):
+    """ Get the first matched criterion for given ges id
+
+    :param ges_id: criterion id (ex: D1, D5C1 or 5.1.1)
     """
 
-    for c in GES_CRITERIONS:
+    for c in GES_CRITERIONS.values():
         if ges_id in c.all_ids():
             return c

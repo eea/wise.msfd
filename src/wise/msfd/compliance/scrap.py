@@ -2954,3 +2954,74 @@ class Article910(BaseArticle2012):
 #
 # # TODO: this needs check for all classes
 # MAPPER_CLASSES = setup_mapper_classes()
+
+
+# def parse_ges_terms():
+#     csv_f = resource_filename('wise.msfd',
+#                               'data/ges_terms.tsv')
+#
+#     with open(csv_f, 'rb') as csvfile:
+#         csv_file = csv.reader(csvfile, delimiter='\t')
+#         rows = list(csv_file)
+#
+#     rows = rows[1:]     # skip header
+#     res = []
+#
+#     for row in rows:
+#         if len(row) != 4:
+#             continue
+#         bits = [b.strip() for b in row]
+#
+#         b1, b2, b3, b4 = bits
+#
+#         id_2012 = None
+#         title_2012 = None
+#         id_2018 = None
+#         title_2018 = None
+#
+#         if b1.startswith('D'):
+#             # new style criterions. Ex:
+#             # D6C5	D6C5 Benthic habitat condition	38	6.2.3 Proportion of ...
+#             id_2018 = b1
+#             title_2018 = b2.split(' ', 1)[1]
+#
+#             if b4[0].isdigit():
+#                 # we also have the old criterion
+#                 id_2012 = b4.split(' ', 1)[0]
+#                 title_2012 = b4.split(' ', 1)[1]
+#             else:
+#                 # add it as GESOther if b4 is '-'
+#                 id_2012 = 'GESOther'
+#                 title_2012 = b4
+#
+#             # if the criterion has already been defined, annotate that one
+#
+#             seen = False
+#
+#             for crit in res:
+#                 if id_2018 and (crit.id == id_2018):
+#                     # already seen this criterion, let's append the title
+#                     seen = True
+#                     crit.alternatives.append((id_2012, title_2012))
+#
+#             if not seen:
+#                 crit = Criterion(id_2018, title_2018)
+#
+#                 if id_2012:
+#                     crit.alternatives.append((id_2012, title_2012))
+#
+#                 res.append(crit)
+#
+#             continue
+#
+#         if b1[0].isdigit():
+#             # old style criterions. Ex:
+#             # 5.3	5.3 Indirect effects of nutrient enrichment	52	Y
+#             id_2012 = b1
+#             title_2012 = b2.split(' ', 1)[1]
+#
+#             crit = Criterion(None, None)
+#             crit.alternatives.append((id_2012, title_2012))
+#             res.append(crit)
+#
+#     return res

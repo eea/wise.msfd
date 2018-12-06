@@ -14,7 +14,7 @@ from wise.msfd import db, sql2018
 from wise.msfd.compliance.base import get_descriptor_elements, get_questions
 from wise.msfd.compliance.scoring import get_overall_conclusion
 from wise.msfd.compliance.vocabulary import SUBREGIONS_TO_REGIONS
-from wise.msfd.gescomponents import get_ges_criterions
+from wise.msfd.gescomponents import get_descriptor
 from wise.msfd.utils import t2rt
 
 from ..base import BaseComplianceView
@@ -149,6 +149,7 @@ def get_assessment_data(article, criterias, questions, data):
         if question.use_criteria == 'none':
             field_name = '{}_{}'.format(article, question.id)
             v = data.get(field_name, None)
+
             if v is not None:
                 label = choices[v]
                 color_index = COLOR_TABLE[len(choices)][v]
@@ -396,7 +397,7 @@ class NationalDescriptorArticleView(BaseComplianceView):
             context.saved_assessment_data = AssessmentData()
 
         # Assessment data 2012
-        descriptor_criterions = get_ges_criterions(self.descriptor)
+        descriptor_criterions = get_descriptor(self.descriptor).criterions
 
         country_name = self._country_folder.title
 
