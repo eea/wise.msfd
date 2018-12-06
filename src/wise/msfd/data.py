@@ -92,15 +92,12 @@ def _get_report_filename_art9_2012(country, region, article, descriptor):
 
 
 def _get_report_filename_art8_2012(country, region, article, descriptor):
-    # TODO: this implementation (algorithm) needs check
+    d = descriptor.split('.')[0]
 
-    base = 'MSFD8b'
-
-    # d = float(descriptor.replace('D', ''))
-    # if d > 4:
-    #     base = 'MSFD8b'
-    # else:
-    #     base = 'MSFD8a'
+    if d in ['D1', 'D4', 'D6']:
+        base = 'MSFD8a'
+    else:
+        base = 'MSFD8b'
 
     mc = getattr(sql, base + 'Import')
     idcol = base + '_Import_ID'
