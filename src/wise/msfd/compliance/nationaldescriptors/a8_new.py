@@ -301,6 +301,7 @@ class ReportTag(Node):
     def __init__(self, node, nsmap):
         super(ReportTag, self).__init__(node, nsmap)
 
+        # TODO: there are report tags that don't match this
         self.marine_unit_id = self['w:MarineUnitID/text()'][0]
 
     @property

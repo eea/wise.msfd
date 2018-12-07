@@ -325,7 +325,11 @@ class AssessmentData(PersistentList):
         assessors = []
 
         for data in self.data:
-            assessor = data['assessor']
+            assessor = data.get('assessor')
+
+            if assessor is None:
+                continue
+                raise ValueError, 'No assessor in data'
 
             if assessor not in assessors:
                 assessors.append(assessor)

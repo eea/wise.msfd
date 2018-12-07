@@ -27,8 +27,82 @@ additional_fields = {
 
 summary_fields = (
     ('assessment_summary', u'Assessment summary'),
-    ('recommendations', u'Recommendations for Member State')
+    ('recommendations', u'Recommendations for Member State'),
 )
+
+progress_fields = (
+    ('progress', u'Progress assessment'),
+)
+
+
+class EditAssessmentSummaryForm(Form, BaseComplianceView):
+    """ Edit the assessment summary
+
+    Fields are: summary, recommendations, progress assessment
+    """
+
+    title = u"Edit progress assessment"
+    template = ViewPageTemplateFile("../pt/inline-form.pt")
+    _saved = False
+
+    @property
+    def fields(self):
+        saved_data = self.context.saved_assessment_data.last()
+
+        _fields = []
+
+        for name, title in progress_fields:
+            _name = '{}_{}'.format(
+                self.article, name
+            )
+
+            default = saved_data.get(_name, None)
+            _field = Text(title=u'',
+                          __name__=_name, required=False, default=default)
+            _fields.append(_field)
+
+        print "fields"
+
+        return Fields(*_fields)
+
+    @buttonAndHandler(u'Save', name='save')
+    def handle_save(self, action):
+        data, errors = self.extractData()
+
+        if errors:
+            return
+
+        saved_data = self.context.saved_assessment_data.last()
+
+        if not saved_data:
+            self.context.saved_assessment_data.append(data)
+        else:
+            saved_data.update(data)
+        self.context.saved_assessment_data._p_changed = True
+
+        print "handle save"
+
+    def nextURL(self):
+        print 'nexturl'
+
+        return self.context.absolute_url()
+
+    @property
+    def action(self):
+
+        print 'action'
+
+        return self.context.absolute_url() + '/@@edit-assessment-summary'
+
+    def render(self):
+
+        if self.request.method == 'POST':
+            Form.render(self)
+            print "Done render"
+
+            return self.request.response.redirect(self.nextURL())
+
+        return Form.render(self)
 
 
 class EditAssessmentDataForm(Form, BaseComplianceView):
@@ -79,6 +153,7 @@ class EditAssessmentDataForm(Form, BaseComplianceView):
             # score is updated if one of the fields has been answered
             # import pdb; pdb.set_trace()
             values = [x for x in values if x is not None]
+
             if values:
                 conclusion, raw_score, score = question.calculate_score(
                     self.descriptor, values)
@@ -114,7 +189,8 @@ class EditAssessmentDataForm(Form, BaseComplianceView):
         last = self.context.saved_assessment_data.last()
 
         if last != data:
-            self.context.saved_assessment_data.append(data)
+            last.update(data)
+            self.context.saved_assessment_data.append(last)
 
     @property
     def fields(self):
@@ -150,6 +226,7 @@ class EditAssessmentDataForm(Form, BaseComplianceView):
     def get_subforms(self):
         """ Build a form of options from a tree of options
         """
+        import pdb; pdb.set_trace()
         assessment_data = self.context.saved_assessment_data.last()
 
         forms = []
@@ -168,6 +245,7 @@ class EditAssessmentDataForm(Form, BaseComplianceView):
             fields = []
 
             # when use-criteria == 'none'
+
             if not criterias:
                 field_title = u'All criterias'
                 field_name = '{}_{}'.format(self.article, question.id)
@@ -275,6 +353,7 @@ def filtered_criterias(criterias, question):
         return [c for c in criterias if c.is_primary is False]
 
     # TODO what to return
+
     if question.use_criteria == 'none':
         return []
 
