@@ -5,6 +5,8 @@
     <tbody>
       <tr>
         <th class="as-question as-header">Question / GESComponent</th>
+        <th class="as-header" tal:condition="not: assessment/gescomponents">
+        </th>
         <th tal:repeat="g assessment/gescomponents" class="as-ges-component as-header">
           <!--<span tal:replace="g">D0C0</span>-->
         </th>
@@ -63,7 +65,7 @@
       <tr>
         <th rowspan="1">Progress assessment</th>
         <td colspan="7"
-          tal:attributes="colspan python: len(assessment.gescomponents)"
+          tal:attributes="colspan python: max(len(assessment.gescomponents), 1) + 1"
           >
 
           <form
@@ -75,7 +77,7 @@
           </form>
 
         </td>
-        <th colspan="2"></th>
+        <th colspan="1"></th>
       </tr>
 
     </tbody>

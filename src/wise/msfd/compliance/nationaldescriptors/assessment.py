@@ -226,7 +226,6 @@ class EditAssessmentDataForm(Form, BaseComplianceView):
     def get_subforms(self):
         """ Build a form of options from a tree of options
         """
-        import pdb; pdb.set_trace()
         assessment_data = self.context.saved_assessment_data.last()
 
         forms = []
