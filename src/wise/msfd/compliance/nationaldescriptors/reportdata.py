@@ -431,9 +431,8 @@ class ReportData2018(BaseComplianceView):
 
         return ', '.join(muids)
 
-    @cache(get_reportdata_key)
     def render_report_header(self):
-        self.data = data = self.get_data()
+        data = self.data
         report_date = ''
         source_file = ['To be addedd...', '.']
 
@@ -467,6 +466,9 @@ class ReportData2018(BaseComplianceView):
 
     @cache(get_reportdata_key)
     def render_reportdata(self):
+        self.data = self.get_data()
+
+        self.report_header = self.render_report_header()
         template = getattr(self, self.article, None)
 
         return template(data=self.data)
@@ -483,7 +485,6 @@ class ReportData2018(BaseComplianceView):
 
         trans_edit_html = self.translate_view()()
 
-        self.report_header = self.render_report_header()
         report_html = self.render_reportdata()
 
         self.report_data = report_html + trans_edit_html
