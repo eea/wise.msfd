@@ -30,8 +30,8 @@ class Descriptor:
         if self.id == 'D4':
             res.add('D4/D1')
 
-        if self.id.startswith('D1.'):
-            res.add('D1')
+        # if self.id.startswith('D1.'):
+        #     res.add('D1')
 
         for crit in self.criterions:
             for cid in crit.all_ids():
