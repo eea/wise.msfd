@@ -396,19 +396,6 @@ class Article8(BaseArticle2012):
 
         return [self.descriptor] + [g for g in gcs if g.startswith(m)]
 
-    @db.use_db_session('2018')
-    def descriptor_criterion(self):
-        mc = sql2018.LGESComponent
-        count, res = db.get_all_records(
-            mc,
-            mc.GESComponent == 'Descriptor',
-            raw=True,
-        )
-        descriptors = [(x.Code.split('/')[0], x.Description) for x in res]
-        descriptors = dict(descriptors)
-
-        return Descriptor(self.descriptor, descriptors[self.descriptor])
-
     def __call__(self):
 
         filename = self.context.get_report_filename()

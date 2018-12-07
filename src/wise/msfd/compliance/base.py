@@ -310,6 +310,7 @@ class CriteriaAssessmentDefinition:
                                 # handle
             logger.warning("Please debug this node: %s", node)
             prim = 'false'
+
         self.is_primary = bool(['false', 'true'].index(prim))
 
         self.elements = []

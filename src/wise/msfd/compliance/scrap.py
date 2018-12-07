@@ -3025,3 +3025,43 @@ class Article910(BaseArticle2012):
 #             res.append(crit)
 #
 #     return res
+
+# from compliance/nationaldescriptors/utils.py
+# @db.use_db_session('2018')
+# def get_descriptors():
+#     """ Get a list of (code, description) descriptors
+#     """
+
+    # mc = sql2018.LGESComponent
+    # count, res = db.get_all_records(
+    #     mc,
+    #     mc.GESComponent == 'Descriptor'
+    # )
+    # descriptors = [(x.Code.split('/')[0], x.Description) for x in res]
+
+    # d = get_all_descriptors()
+    # res = {}
+
+    # for k, v in d.items():
+    #     res[v.id] = v.title
+
+    # import pdb; pdb.set_trace()
+
+    # return res
+
+# from compliance/nationaldescriptors/a8_new/Article8
+    # @db.use_db_session('2018')
+    # def descriptor_criterion(self):
+        # mc = sql2018.LGESComponent
+        # count, res = db.get_all_records(
+        #     mc,
+        #     mc.GESComponent == 'Descriptor',
+        #     raw=True,
+        # )
+        # descriptors = [(x.Code.split('/')[0], x.Description) for x in res]
+        # descriptors = dict(descriptors)
+        # descriptor = get_descriptor(self.descriptor)
+        # import pdb; pdb.set_trace()
+
+        # return Descriptor(self.descriptor, descriptor.value())
+        # return Descriptor(self.descriptor, descriptors[self.descriptor])

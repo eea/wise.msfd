@@ -8,10 +8,10 @@ from Products.Five.browser.pagetemplatefile import \
     ViewPageTemplateFile as Template
 from wise.msfd import db, sql
 from wise.msfd.data import country_ges_components, get_report_data
+from wise.msfd.gescomponents import get_descriptor
 from wise.msfd.utils import Item, Node, Row
 
 from ..base import BaseArticle2012
-from .utils import get_descriptors
 
 logger = logging.getLogger('wise.msfd')
 
@@ -270,7 +270,8 @@ class Article10(BaseArticle2012):
             Row('DescriptorCriterionIndicator', gcs),
         ]
 
-        self.descriptor_label = dict(get_descriptors())[self.descriptor]
+        descriptor_class = get_descriptor(self.descriptor)
+        self.descriptor_label = descriptor_class.title
         # ges_components = get_ges_criterions(self.descriptor)
 
         # wrap the target per MarineUnitID
