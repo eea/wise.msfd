@@ -3,10 +3,11 @@ from collections import defaultdict, namedtuple
 from datetime import datetime
 
 from lxml.etree import fromstring
-from sqlalchemy import or_
+# from sqlalchemy import or_
 from zope.schema import Choice
 from zope.schema.vocabulary import SimpleTerm, SimpleVocabulary
 
+from eea.cache import cache
 from persistent.list import PersistentList
 from Products.Five.browser.pagetemplatefile import \
     ViewPageTemplateFile as Template
@@ -229,6 +230,17 @@ class SnapshotSelectForm(Form):
         self.request.response.redirect('./@@view-report-data-2018')
 
 
+def get_reportdata_key(func, self, *args, **kwargs):
+    """ Reportdata template rendering cache key generation
+    """
+
+    return ':'.join([
+        self.country_code,
+        self.country_region_code,
+        self.descriptor,
+        self.article])
+
+
 class ReportData2018(BaseComplianceView):
 
     section = 'national-descriptors'
@@ -419,17 +431,9 @@ class ReportData2018(BaseComplianceView):
 
         return ', '.join(muids)
 
-    def __call__(self):
-
-        self.content = ''
-        template = getattr(self, self.article, None)
-
-        if not template:
-            return self.index()
-
-        self.subform = self.get_form()
-        data = self.get_data()
-
+    @cache(get_reportdata_key)
+    def render_report_header(self):
+        self.data = data = self.get_data()
         report_date = ''
         source_file = ['To be addedd...', '.']
 
@@ -444,7 +448,7 @@ class ReportData2018(BaseComplianceView):
                     source_file[1] = row[1][0] + '/manage_document'
                     source_file[0] = row[1][0].split('/')[-1]
 
-        self.report_header = self.report_header_template(
+        html = self.report_header_template(
             title="{}'s 2018 Member State Report for {} / {} / {}".format(
                 self.country_name,
                 self.country_region_code,
@@ -459,7 +463,29 @@ class ReportData2018(BaseComplianceView):
             report_date=report_date
         )
 
+        return html
+
+    @cache(get_reportdata_key)
+    def render_reportdata(self):
+        template = getattr(self, self.article, None)
+
+        return template(data=self.data)
+
+    def __call__(self):
+
+        self.content = ''
+        template = getattr(self, self.article, None)
+
+        if not template:
+            return self.index()
+
+        self.subform = self.get_form()
+
         trans_edit_html = self.translate_view()()
-        self.report_data = template(data=data) + trans_edit_html
+
+        self.report_header = self.render_report_header()
+        report_html = self.render_reportdata()
+
+        self.report_data = report_html + trans_edit_html
 
         return self.index()
