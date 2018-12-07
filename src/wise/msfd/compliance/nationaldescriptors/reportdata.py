@@ -1,4 +1,5 @@
 import logging
+import time
 from collections import defaultdict, namedtuple
 from datetime import datetime
 
@@ -234,11 +235,15 @@ def get_reportdata_key(func, self, *args, **kwargs):
     """ Reportdata template rendering cache key generation
     """
 
-    return ':'.join([
+    res = ':'.join([
         self.country_code,
         self.country_region_code,
         self.descriptor,
         self.article])
+
+    print "cache key", res
+
+    return res
 
 
 class ReportData2018(BaseComplianceView):
@@ -466,6 +471,7 @@ class ReportData2018(BaseComplianceView):
 
     @cache(get_reportdata_key)
     def render_reportdata(self):
+        print "rendering data"
         self.data = self.get_data()
 
         self.report_header = self.render_report_header()
@@ -485,7 +491,13 @@ class ReportData2018(BaseComplianceView):
 
         trans_edit_html = self.translate_view()()
 
+        t = time.time()
+        logger.info("Started rendering of report data")
         report_html = self.render_reportdata()
+        delta = time.time() - t
+        logger.info("Rendering report data took: %s, %s/%s/%s/%s",
+                    delta, self.article, self.descriptor,
+                    self.country_region_code, self.country_code)
 
         self.report_data = report_html + trans_edit_html
 
