@@ -24,6 +24,15 @@ class Descriptor:
         res = set()
         res.add(self.id)
 
+        if self.id == 'D6':
+            res.add('D6/D1')
+
+        if self.id == 'D4':
+            res.add('D4/D1')
+
+        if self.id.startswith('D1.'):
+            res.add('D1')
+
         for crit in self.criterions:
             for cid in crit.all_ids():
                 res.add(cid)
@@ -31,7 +40,7 @@ class Descriptor:
         return res
 
 
-Criterion2012 = namedtuple('Descriptor', ['id', 'title'])
+Criterion2012 = namedtuple('Criterion2012', ['id', 'title'])
 
 
 class Criterion(object):
@@ -52,11 +61,13 @@ class Criterion(object):
     _title = None   # title for the 2018 version
     _alternatives = None
 
-    def __init__(self, id, title, descriptors=None, alternatives=None):
+    def __init__(self, id, title, alternatives=None):
         self._id = id
         self._title = title
-        self.descriptors = descriptors or []    # belongs to these descriptors
         self.alternatives = alternatives or []  # Criterion2012 objects
+
+        # self.descriptors = descriptors or []
+        # # belongs to these descriptors
 
     def __repr__(self):
         title = self.title.encode('ascii', 'replace')
@@ -150,15 +161,18 @@ def parse_ges_extended_format():
 
         if b1 in criterions:
             criterion = criterions[b1]
+            descriptors[descriptor.id].criterions.append(criterion)
         else:
-            criterion = Criterion(id=b1, title=b2, descriptors=[descriptor])
-            criterions[b1] = criterion
+            criterion = Criterion(id=b1, title=b2)
 
+            criterions[criterion.id] = criterion
             descriptors[descriptor.id].criterions.append(criterion)
 
         if b3 and (not criterion.has_alternative(b3)):
             crit = Criterion2012(*b3.split(' ', 1))
             criterion.alternatives.append(crit)
+            # criterions[crit.id] = crit
+            # descriptors[descriptor.id].criterions.append(criterion)
 
     return descriptors, criterions
 

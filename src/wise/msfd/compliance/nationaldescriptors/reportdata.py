@@ -24,7 +24,7 @@ from .a8 import Article8
 from .a8_new import Article8 as Article8New
 from .a9 import Article9
 from .a10 import Article10
-from .utils import row_to_dict, get_sorted_fields_2018
+from .utils import get_sorted_fields_2018, row_to_dict
 
 logger = logging.getLogger('wise.msfd')
 
@@ -260,11 +260,15 @@ class ReportData2018(BaseComplianceView):
         view_name = self.view_names[self.article]
         t = getattr(sql2018, view_name)
 
+        descr_class = get_descriptor(self.descriptor)
+        all_ids = descr_class.all_ids()
+        conditions = [t.c.GESComponent.in_(all_ids)]
+
         count, res = db.get_all_records_ordered(
             t,
             'Criteria',
             t.c.CountryCode == self.country_code,
-            t.c.GESComponent.like('{}%'.format(self.descriptor)),
+            *conditions
         )
 
         return res
@@ -277,17 +281,13 @@ class ReportData2018(BaseComplianceView):
         t = getattr(sql2018, view_name)
 
         # TODO check conditions for other countries beside NL
-        conditions = []
-        conditions.append(
-            t.c.GESComponents.like('%{}%'.format(self.descriptor))
-        )
-        conditions.append(t.c.GESComponents.in_(all_ids))
+        conditions = [t.c.GESComponents.in_(all_ids)]
 
         count, res = db.get_all_records_ordered(
             t,
             'GESComponents',
             t.c.CountryCode == self.country_code,
-            or_(*conditions)
+            *conditions
         )
 
         return res
@@ -297,12 +297,15 @@ class ReportData2018(BaseComplianceView):
         view_name = self.view_names[self.article]
         t = getattr(sql2018, view_name)
 
+        descr_class = get_descriptor(self.descriptor)
+        all_ids = descr_class.all_ids()
+        conditions = [t.c.GESComponent.in_(all_ids)]
+
         count, r = db.get_all_records_ordered(
             t,
             'GESComponent',
             t.c.CountryCode == self.country_code,
-            or_(t.c.GESComponent.like('{}%'.format(self.descriptor)),
-                t.c.GESComponent.like('{}%'.format(self.descriptor[1]))),
+            *conditions
         )
 
         return r

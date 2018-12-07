@@ -3,6 +3,9 @@
     <h4 tal:content="muid">DE_ANS</h4>
 
     <div class="overflow-table" tal:define="muid_data view/rows/?muid">
+      <div class="simplify-form">
+        <button>Simplify table</button>
+      </div>
       <table tal:condition="muid_data" class='table table-bordered table-striped table-report' style='width: 100%; overflow:auto'>
         <tal:rep tal:repeat="row muid_data" >
           <tal:row replace="structure row"></tal:row>

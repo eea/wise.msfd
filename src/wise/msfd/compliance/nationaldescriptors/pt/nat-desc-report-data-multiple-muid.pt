@@ -18,8 +18,11 @@
 
     <tal:def tal:define="muid python:info[0]; muid_data python: info[1];" >
       <h4 tal:content="muid">LV-01</h4>
+      <div class="simplify-form">
+        <button>Simplify table</button>
+      </div>
       <div class="overflow-table">
-        <table class="table table-bordered table-striped table-comp-translate">
+        <table class="table table-bordered table-striped table-comp-translate table-report">
           <tal:rep tal:repeat="row muid_data">
             <tr tal:condition="python: row[0] not in view.BLACKLIST">
               <th tal:content="python: row[0]">Element</th>

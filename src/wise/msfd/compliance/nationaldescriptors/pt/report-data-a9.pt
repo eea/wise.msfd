@@ -1,5 +1,8 @@
 <div class="">
   <div class="overflow-table">
+    <div class="simplify-form">
+      <button>Simplify table</button>
+    </div>
     <table class='table table-bordered table-striped table-report' style='width: 100%; overflow:auto'>
       <tal:rep tal:repeat="row view/rows">
         <tal:row replace="structure row"></tal:row>
