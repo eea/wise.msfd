@@ -1,4 +1,5 @@
 <div tal:define="data options/data">
+  <div tal:replace="structure options/report_header"></div>
 
   <!-- TODO: re&#45;enable the harvest subform -->
   <div class="subform-refresh" tal:define="form nocall:view/subform" tal:replace="nothing">

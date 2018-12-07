@@ -436,8 +436,12 @@ class ReportData2018(BaseComplianceView):
 
         return ', '.join(muids)
 
-    def render_report_header(self):
-        data = self.data
+    @cache(get_reportdata_key)
+    def render_reportdata(self):
+        print "rendering data"
+
+        data = self.get_data()
+
         report_date = ''
         source_file = ['To be addedd...', '.']
 
@@ -452,7 +456,7 @@ class ReportData2018(BaseComplianceView):
                     source_file[1] = row[1][0] + '/manage_document'
                     source_file[0] = row[1][0].split('/')[-1]
 
-        html = self.report_header_template(
+        report_header = self.report_header_template(
             title="{}'s 2018 Member State Report for {} / {} / {}".format(
                 self.country_name,
                 self.country_region_code,
@@ -467,17 +471,9 @@ class ReportData2018(BaseComplianceView):
             report_date=report_date
         )
 
-        return html
-
-    @cache(get_reportdata_key)
-    def render_reportdata(self):
-        print "rendering data"
-        self.data = self.get_data()
-
-        self.report_header = self.render_report_header()
         template = getattr(self, self.article, None)
 
-        return template(data=self.data)
+        return template(data=data, report_header=report_header)
 
     def __call__(self):
 
@@ -494,11 +490,12 @@ class ReportData2018(BaseComplianceView):
         t = time.time()
         logger.info("Started rendering of report data")
         report_html = self.render_reportdata()
+
         delta = time.time() - t
         logger.info("Rendering report data took: %s, %s/%s/%s/%s",
                     delta, self.article, self.descriptor,
                     self.country_region_code, self.country_code)
 
-        self.report_data = report_html + trans_edit_html
+        self.report_html = report_html + trans_edit_html
 
         return self.index()
