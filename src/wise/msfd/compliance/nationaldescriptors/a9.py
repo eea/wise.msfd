@@ -9,10 +9,10 @@ from Products.Five.browser.pagetemplatefile import \
 from Products.Five.browser.pagetemplatefile import \
     ViewPageTemplateFile as ViewTemplate
 from wise.msfd.data import get_report_data
+from wise.msfd.gescomponents import get_descriptor
 from wise.msfd.utils import Item, Node, RelaxedNode, Row
 
 from ..base import BaseArticle2012
-from .utils import get_descriptors
 
 logger = logging.getLogger('wise.msfd')
 
@@ -146,7 +146,8 @@ class Article9(BaseArticle2012):
         text = get_report_data(filename)
         root = fromstring(text)
 
-        self.descriptor_label = dict(get_descriptors())[self.descriptor]
+        descriptor_class = get_descriptor(self.descriptor)
+        self.descriptor_label = descriptor_class.title
 
         def x(xpath, node=root):
             return node.xpath(xpath, namespaces=NSMAP)

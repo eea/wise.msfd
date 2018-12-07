@@ -166,10 +166,24 @@ def parse_ges_extended_format():
 GES_DESCRIPTORS, GES_CRITERIONS = parse_ges_extended_format()
 
 
+def get_all_descriptors():
+    """ Returns all descriptors in the following format
+
+    :return: (('D1', 'D1 - Biodiversity'),
+             ('D1.1', 'D1 - Biodiversity – birds'),
+             ... )
+    """
+
+    descriptors = [(v.id, v.title) for k, v in GES_DESCRIPTORS.items()]
+    d_sorted = sorted(descriptors, key=lambda d: float(d[0].replace('D', '')))
+
+    return d_sorted
+
+
 def get_descriptor(descriptor=None):
     """ Returns a Descriptor object, that has criterions attached
 
-    :param get_descriptor: descriptor id, ex D5
+    :param descriptor: descriptor id, ex D5
     """
 
     if descriptor == 'D6/D1':

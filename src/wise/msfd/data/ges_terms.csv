@@ -1,6 +1,6 @@
 GES Term ID	Title	2012 alternative
 		
-D1	D1 Biodiversity	
+D1	D1 - Biodiversity
 D1C1	D1C1 Mortality rate from incidental by-catch	
 D1C2	D1C2 Population abundance	1.2.1 Population abundance
 D1C2	D1C2 Population abundance	1.2 Population size
@@ -15,7 +15,7 @@ D1C6	D1C6 Pelagic habitat condition	1.6.3 Habitat condition
 D1C6	D1C6 Pelagic habitat condition	1.6 Habitat condition
 D1C6	D1C6 Pelagic habitat condition	1.6.2 Relative abundance
 		
-D1.1	D1 Biodiversity – birds	
+D1.1	D1 - Biodiversity – birds
 D1C1	D1C1 Mortality rate from incidental by-catch	
 D1C2	D1C2 Population abundance	1.2.1 Population abundance
 D1C2	D1C2 Population abundance	1.2 Population size
@@ -27,7 +27,7 @@ D1C4	D1C4 Population distributional range and pattern	1.1.2 Species distribution
 D1C4	D1C4 Population distributional range and pattern	1.1.3 Area covered by species
 D1C5	D1C5 Habitat for the species	
 		
-D1.2	D1 Biodiversity – mammals	
+D1.2	D1 - Biodiversity – mammals
 D1C1	D1C1 Mortality rate from incidental by-catch	
 D1C2	D1C2 Population abundance	1.2.1 Population abundance
 D1C2	D1C2 Population abundance	1.2 Population size
@@ -38,7 +38,7 @@ D1C4	D1C4 Population distributional range and pattern	1.1.2 Species distribution
 D1C4	D1C4 Population distributional range and pattern	1.1 Species distribution
 D1C5	D1C5 Habitat for the species	
 		
-D1.3	D1 Biodiversity – reptiles	
+D1.3	D1 - Biodiversity – reptiles
 D1C1	D1C1 Mortality rate from incidental by-catch	
 D1C2	D1C2 Population abundance	1.2.1 Population abundance
 D1C2	D1C2 Population abundance	1.2 Population size
@@ -49,7 +49,7 @@ D1C4	D1C4 Population distributional range and pattern	1.1.2 Species distribution
 D1C4	D1C4 Population distributional range and pattern	1.1 Species distribution
 D1C5	D1C5 Habitat for the species	
 		
-D1.4	D1 Biodiversity – fish	
+D1.4	D1 - Biodiversity – fish
 D1C1	D1C1 Mortality rate from incidental by-catch	
 D1C2	D1C2 Population abundance	1.2.1 Population abundance
 D1C2	D1C2 Population abundance	1.2 Population size
@@ -60,7 +60,7 @@ D1C4	D1C4 Population distributional range and pattern	1.1.2 Species distribution
 D1C4	D1C4 Population distributional range and pattern	1.1 Species distribution
 D1C5	D1C5 Habitat for the species	
 		
-D1.5	D1 Biodiversity –  cephalopods	
+D1.5	D1 - Biodiversity –  cephalopods
 D1C1	D1C1 Mortality rate from incidental by-catch	
 D1C2	D1C2 Population abundance	1.2.1 Population abundance
 D1C2	D1C2 Population abundance	1.2 Population size
@@ -71,14 +71,14 @@ D1C4	D1C4 Population distributional range and pattern	1.1.2 Species distribution
 D1C4	D1C4 Population distributional range and pattern	1.1 Species distribution
 D1C5	D1C5 Habitat for the species	
 		
-D1.6	D1 Biodiversity – pelagic habitats	
+D1.6	D1 - Biodiversity – pelagic habitats
 D1C6	D1C6 Pelagic habitat condition	1.6.1 Condition typical species
 D1C6	D1C6 Pelagic habitat condition	1.6.3 Habitat condition
 D1C6	D1C6 Pelagic habitat condition	1.6 Habitat condition
 D1C6	D1C6 Pelagic habitat condition	1.6.2 Relative abundance
 D1C6	D1C6 Pelagic habitat condition	1.5.2 Habitat volume
 		
-D2	D2 Non-indigenous species	
+D2	D2 - Non-indigenous species
 D2C1	D2C1 Newly-introduced NIS	
 D2C2	D2C2 Established NIS	2.1 Abundance and state characterisation of non-indigenous species, in particular invasive species
 D2C2	D2C2 Established NIS	2.1.1 Trends in abundance of NIS
@@ -86,7 +86,7 @@ D2C3	D2C3 Adverse effects of NIS	2.2 Environmental impact of invasive non-indige
 D2C3	D2C3 Adverse effects of NIS	2.2.1 Ratio invasive to native species
 D2C3	D2C3 Adverse effects of NIS on species and habitats	2.2.2 Impacts of NIS
 		
-D3	D3 Commercial fish and shellfish	
+D3	D3 - Commercial fish and shellfish
 D3C1	D3C1 Fishing mortality rate (F)	3.1 Level of pressure of the fishing activity
 D3C1	D3C1 Fishing mortality rate (F)	3.1.1 Fishing mortality
 D3C1	D3C1 Fishing mortality rate (F)	3.1.2 Fish catch/biomass ratio
@@ -99,7 +99,7 @@ D3C3	D3C3 Population age/size distribution	3.3.3 Fish length distribution
 D3C3	D3C3 Population age/size distribution	3.3.4 Fish size at sexual maturation
 3.3.2	3.3.2 Mean maximum length across all fish species found in research vessel	
 		
-D4	D4 Food webs/D1 Biodiversity - ecosystems (D4/D1)	
+D4	D4 - Food webs/D1 Biodiversity - ecosystems (D4/D1)
 D4C1	D4C1 Trophic guild species diversity	1.7 Ecosystem structure
 D4C1	D4C1 Trophic guild species diversity	1.7.1 Composition ecosystem
 D4C2	D4C2 Abundance across trophic guilds	1.7 Ecosystem structure
@@ -111,7 +111,7 @@ D4C3	D4C3 Trophic guild size distribution	4.2 Proportion of selected species at 
 D4C4	D4C4 Trophic guild productivity	4.1.1 Productivity of key predators
 D4C4	D4C4 Trophic guild productivity	4.1 Productivity (production per unit biomass) of key species or trophic groups
 		
-D5	D5 Eutrophication	
+D5	D5 - Eutrophication
 D5C1	D5C1 Nutrient concentrations	5.1 Nutrients level
 D5C1	D5C1 Nutrient concentrations	5.1.1 Nutrient concentration
 D5C2	D5C2 Chlorophyll-a concentration	5.2.1 Chlorophyll concentration
@@ -125,7 +125,7 @@ D5C8	D5C8 Macrofaunal communities of benthic habitats
 5.2	5.2 Direct effects of nutrient enrichment	
 5.3	5.3 Indirect effects of nutrient enrichment	
 		
-D6	D6 Sea-floor integrity/D1 Biodiversity - benthic habitats (D6/D1)	
+D6	D6 - Sea-floor integrity/D1 Biodiversity - benthic habitats (D6/D1)
 D6C1	D6C1 Physical loss of the seabed	6.1 Physical damage, having regard to substrate characteristics
 D6C2	D6C2 Physical disturbance to the seabed	6.1 Physical damage, having regard to substrate characteristics
 D6C3	D6C3 Adverse effects from physical disturbance	6.1.2 Extent of seabed affected
@@ -145,14 +145,14 @@ D6C5	D6C5 Benthic habitat condition	6.2.2 Benthic multi-metric indexes
 D6C5	D6C5 Benthic habitat condition	6.2.3 Proportion of individuals above specified size
 D6C5	D6C5 Benthic habitat condition	6.2.4 Size spectrum of benthic community
 		
-D7	D7 Hydrographical changes	
+D7	D7 - Hydrographical changes
 D7C1	D7C1 Permanent alteration of hydrographical conditions	7.1.1 Extent of area affected
 D7C1	D7C1 Permanent alteration of hydrographical conditions	7.1 Spatial characterisation of permanent alterations
 D7C2	D7C2 Adverse effects from permanent alteration of hydrographical conditions	7.2.1 Extent of habitats affected
 D7C2	D7C2 Adverse effects from permanent alteration of hydrographical conditions	7.2.2 Change in habitats
 D7C2	D7C2 Adverse effects from permanent alteration of hydrographical conditions	7.2 Impact of permanent hydrographical changes
 		
-D8	D8 Contaminants	
+D8	D8 - Contaminants
 D8C1	D8C1 Contaminants in environment	8.1.1 Concentration of contaminants
 D8C1	D8C1 Contaminants in environment	8.1 Concentration of contaminants
 D8C2	D8C2 Adverse effects of contaminants	8.2.1 Level of pollution effects
@@ -160,12 +160,12 @@ D8C2	D8C2 Adverse effects of contaminants	8.2 Effects of contaminants
 D8C3	D8C3 Significant acute pollution events	8.2.2 Occurrence and impact of acute pollution
 D8C4	D8C4 Adverse effects of significant pollution events	8.2.2 Occurrence and impact of acute pollution
 		
-D9	D9 Contaminants in seafood	
+D9	D9 - Contaminants in seafood
 D9C1	D9C1 Contaminants in seafood	9.1.1 Levels of contaminants in seafood
 D9C1	D9C1 Contaminants in seafood	9.1 Levels, number and frequency of contaminants
 9.1.2	9.1.2 Frequency of regulatory levels being exceeded	
 		
-D10	D10 Marine litter	
+D10	D10 - Marine litter
 D10C1	D10C1 Litter (excluding micro-litter)	10.1.1 Trends in litter on shore
 D10C1	D10C1 Litter (excluding micro-litter)	10.1.2 Trends in litter in water column
 D10C1	D10C1 Litter (excluding micro-litter)	10.1 Characteristics of litter in the marine and coastal environment
@@ -175,7 +175,7 @@ D10C3	D10C3 Litter ingested	10.2.1 Trends in amount of litter ingested
 D10C3	D10C3 Litter ingested	10.1 Characteristics of litter in the marine and coastal environment
 D10C4	D10C4 Adverse effects of litter	10.2 Impacts of marine litter on marine life
 		
-D11	D11 Energy, incl. underwater noise	
+D11	D11 - Energy, incl. underwater noise
 D11C1	D11C1 Anthropogenic impulsive sound	11.1.1 Proportion of days with loud sound levels
 D11C1	D11C1 Anthropogenic impulsive sound	11.1 Distribution in time and place of loud, low and mid frequency impulsive sounds
 D11C2	D11C2 Anthropogenic continuous low-frequency sound	11.2.1 Ambient noise

@@ -12,21 +12,6 @@ def row_to_dict(table, row):
     return res
 
 
-@db.use_db_session('2018')
-def get_descriptors():
-    """ Get a list of (code, description) descriptors
-    """
-
-    mc = sql2018.LGESComponent
-    count, res = db.get_all_records(
-        mc,
-        mc.GESComponent == 'Descriptor'
-    )
-    descriptors = [(x.Code.split('/')[0], x.Description) for x in res]
-
-    return descriptors
-
-
 @db.use_db_session('2012')
 def get_indicator_descriptors(muids, available_indicators):
     """ Get data based on Marine Units and available indicators

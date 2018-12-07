@@ -10,6 +10,7 @@ from Products.CMFPlacefulWorkflow.WorkflowPolicyConfig import \
 from Products.Five.browser import BrowserView
 from wise.msfd import db, sql2018
 from wise.msfd.compliance.vocabulary import REGIONS
+from wise.msfd.gescomponents import get_all_descriptors
 
 from . import interfaces
 
@@ -47,17 +48,11 @@ class BootstrapCompliance(BrowserView):
 
         return countries
 
-    @db.use_db_session('2018')
     def _get_descriptors(self):
         """ Get a list of (code, description) descriptors
         """
 
-        mc = sql2018.LGESComponent
-        count, res = db.get_all_records(
-            mc,
-            mc.GESComponent == 'Descriptor'
-        )
-        descriptors = [(x.Code.split('/')[0], x.Description) for x in res]
+        descriptors = get_all_descriptors()
 
         debug_descriptors = ('D1', 'D1.1', 'D4', 'D5', 'D6')
 
