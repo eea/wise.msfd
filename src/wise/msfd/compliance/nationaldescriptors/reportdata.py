@@ -449,6 +449,9 @@ class ReportData2018(BaseComplianceView):
 
     @cache(get_reportdata_key)
     def render_reportdata(self):
+        logger.info("Quering database for 2018 report data: %s %s %s %s",
+                    self.country_code, self.country_region_code, self.article,
+                    self.descriptor)
         print "rendering data"
 
         data = self.get_data()
