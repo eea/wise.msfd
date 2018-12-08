@@ -280,7 +280,7 @@ class ReportData2018(BaseComplianceView):
         descr_class = get_descriptor(self.descriptor)
         all_ids = descr_class.all_ids()
 
-        if self.id.startswith('D1.'):
+        if self.descriptor.startswith('D1.'):
             all_ids.append('D1')
 
         conditions = [t.c.GESComponent.in_(all_ids)]
