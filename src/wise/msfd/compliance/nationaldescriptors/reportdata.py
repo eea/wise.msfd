@@ -135,7 +135,7 @@ class ReportData2012(BaseComplianceView, BaseUtil):
 
         rep_info = self.get_reporting_information()
 
-        self.report_header = self.report_header_template(
+        report_header = self.report_header_template(
             title="{}'s 2012 Member State Report for {} / {} / {}".format(
                 self.country_name,
                 self.country_region_code,
@@ -150,7 +150,8 @@ class ReportData2012(BaseComplianceView, BaseUtil):
             factsheet=factsheet,
         )
 
-        self.report_data = self.get_article_report_implementation()()
+        report_data = self.get_article_report_implementation()()
+        self.report_html = report_header + report_data
 
         return self.index()
 
