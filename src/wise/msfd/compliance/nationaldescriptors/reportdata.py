@@ -279,7 +279,7 @@ class ReportData2018(BaseComplianceView):
         t = getattr(sql2018, view_name)
 
         descr_class = get_descriptor(self.descriptor)
-        all_ids = descr_class.all_ids()
+        all_ids = list(descr_class.all_ids())
 
         if self.descriptor.startswith('D1.'):
             all_ids.append('D1')
@@ -297,7 +297,7 @@ class ReportData2018(BaseComplianceView):
 
     def get_data_from_view_art10(self):
         descr_class = get_descriptor(self.descriptor)
-        all_ids = descr_class.all_ids()
+        all_ids = list(descr_class.all_ids())
 
         if self.descriptor.startswith('D1.'):
             all_ids.append('D1')
@@ -323,7 +323,7 @@ class ReportData2018(BaseComplianceView):
         t = getattr(sql2018, view_name)
 
         descr_class = get_descriptor(self.descriptor)
-        all_ids = descr_class.all_ids()
+        all_ids = list(descr_class.all_ids())
 
         if self.descriptor.startswith('D1.'):
             all_ids.append('D1')
