@@ -298,6 +298,9 @@ class ReportData2018(BaseComplianceView):
         descr_class = get_descriptor(self.descriptor)
         all_ids = descr_class.all_ids()
 
+        if self.descriptor.startswith('D1.'):
+            all_ids.append('D1')
+
         view_name = self.view_names[self.article]
         t = getattr(sql2018, view_name)
 
@@ -320,6 +323,9 @@ class ReportData2018(BaseComplianceView):
 
         descr_class = get_descriptor(self.descriptor)
         all_ids = descr_class.all_ids()
+
+        if self.descriptor.startswith('D1.'):
+            all_ids.append('D1')
         conditions = [t.c.GESComponent.in_(all_ids)]
 
         count, r = db.get_all_records_ordered(
