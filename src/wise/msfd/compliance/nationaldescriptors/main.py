@@ -205,7 +205,11 @@ def get_assessment_data(article, criterias, questions, data):
         '{}_recommendations'.format(article), '-') or '-'
 
     # overall_score = overall_score * 100 / len(questions)
-    overall_conclusion = get_overall_conclusion(overall_score)
+    try:
+        overall_conclusion = get_overall_conclusion(overall_score)
+    except:
+        logger.exception("Error in getting overall conclusion")
+        overall_conclusion = (1, 'error')
 
     assessment = Assessment(
         gescomponents,
