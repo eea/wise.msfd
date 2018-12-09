@@ -249,13 +249,8 @@ def get_reportdata_key(func, self, *args, **kwargs):
     """ Reportdata template rendering cache key generation
     """
 
-    res = ':'.join([
-        self.country_code,
-        self.country_region_code,
-        self.descriptor,
-        self.article])
-
-    print "cache key", res
+    res = '_cache_' + '_'.join([self.country_code, self.country_region_code,
+                                self.descriptor, self.article])
 
     return res
 
@@ -460,7 +455,7 @@ class ReportData2018(BaseComplianceView):
 
         return ', '.join(muids)
 
-    @cache(get_reportdata_key)
+    # @cache(get_reportdata_key)
     def render_reportdata(self):
         logger.info("Quering database for 2018 report data: %s %s %s %s",
                     self.country_code, self.country_region_code, self.article,
@@ -516,7 +511,16 @@ class ReportData2018(BaseComplianceView):
 
         t = time.time()
         logger.info("Started rendering of report data")
-        report_html = self.render_reportdata()
+        key = get_reportdata_key(None, self)
+        v = getattr(self.context, key, None)
+
+        if v:
+            report_html = v
+        else:
+            report_html = self.render_reportdata()
+            setattr(self.context, key, v)
+            self.context._p_changed = True
+            logger.info("Caching report data: %s, %s bytes", key, len(v))
 
         delta = time.time() - t
         logger.info("Rendering report data took: %s, %s/%s/%s/%s",
