@@ -517,7 +517,7 @@ class ReportData2018(BaseComplianceView):
         if v:
             report_html = v
         else:
-            report_html = self.render_reportdata()
+            report_html = v = self.render_reportdata()
             setattr(self.context, key, v)
             self.context._p_changed = True
             logger.info("Caching report data: %s, %s bytes", key, len(v))
