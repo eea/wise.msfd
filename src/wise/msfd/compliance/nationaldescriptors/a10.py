@@ -242,6 +242,7 @@ class Article10(BaseArticle2012):
 
     template = Template('pt/report-data-a10.pt')
 
+    # TODO: this needs to be redone using latest version of gescomponents.py
     def filtered_ges_components(self):
         m = self.descriptor.replace('D', '')
 

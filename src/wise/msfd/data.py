@@ -6,6 +6,7 @@ from collections import defaultdict
 import requests
 
 import sparql
+from eea.cache import cache
 from wise.msfd import db, sql, sql_extra
 
 logger = logging.getLogger('wise.msfd')
@@ -148,6 +149,7 @@ def get_report_filename(report_version,
     return handler(country, region, article, descriptor)
 
 
+@cache(lambda func, filename: filename)
 def get_report_file_url(filename):
     """ Retrieve the CDR url based on query in ContentRegistry
     """
@@ -168,11 +170,7 @@ ORDER BY DESC(?date)
 LIMIT 1""" % filename
     service = sparql.Service('https://cr.eionet.europa.eu/sparql')
 
-    # return "http://cdr.eionet.europa.eu/lv/eu/msfd8910/ballv/envuxvsq/"\
-    #        "MSFD8bPressures_20130430.xml"
-    # import pdb; pdb.set_trace()
-
-    print "calling sparql"
+    logger.info("Getting filename with SPARQL: %s", filename)
     try:
         req = service.query(q)
         rows = req.fetchall()
@@ -201,6 +199,7 @@ LIMIT 1""" % filename
     return urls[0]
 
 
+@cache(lambda func, url: url)
 def get_factsheet_url(url):
     """ Returns the URL for the conversion that gets the "HTML Factsheet"
     """

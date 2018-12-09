@@ -454,8 +454,8 @@ def get_questions(location):
 
 class BaseArticle2012(BrowserView):
 
-    def __init__(self, context, request, country_code,
-                 descriptor, article,  muids, colspan):
+    def __init__(self,
+                 context, request, country_code, descriptor, article,  muids):
 
         BrowserView.__init__(self, context, request)
 
@@ -463,4 +463,3 @@ class BaseArticle2012(BrowserView):
         self.descriptor = descriptor
         self.article = article
         self.muids = muids
-        # self.colspan = colspan

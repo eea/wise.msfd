@@ -6,13 +6,15 @@ from sqlalchemy.orm.relationships import RelationshipProperty
 
 from Products.Five.browser.pagetemplatefile import \
     ViewPageTemplateFile as Template
-from wise.msfd import db, sql, sql2018
-# from wise.msfd.compliance import a8_utils
-from wise.msfd.data import country_ges_components, get_report_data
+from wise.msfd import db, sql  # , sql2018
+from wise.msfd.data import get_report_data
 from wise.msfd.gescomponents import Criterion, get_criterion, get_descriptor
 from wise.msfd.utils import Item, Node, Row  # RelaxedNode,
 
 from ..base import BaseArticle2012
+
+# from wise.msfd.compliance import a8_utils
+
 
 logger = logging.getLogger('wise.msfd')
 
@@ -388,14 +390,14 @@ class Article8(BaseArticle2012):
 
     template = Template('pt/report-data-a8-new.pt')
 
-    def filtered_ges_components(self):
-        m = self.descriptor.replace('D', '')
-
-        gcs = country_ges_components(self.country_code)
-
-        # TODO: handle D10, D11     !!
-
-        return [self.descriptor] + [g for g in gcs if g.startswith(m)]
+    # def filtered_ges_components(self):
+    #     m = self.descriptor.replace('D', '')
+    #
+    #     gcs = country_ges_components(self.country_code)
+    #
+    #     # TODO: handle D10, D11     !!
+    #
+    #     return [self.descriptor] + [g for g in gcs if g.startswith(m)]
 
     def __call__(self):
 
@@ -449,7 +451,8 @@ class Article8(BaseArticle2012):
             m_reps = report_map[muid]
 
             if len(m_reps) > 1:
-                import pdb; pdb.set_trace()
+                logger.warning("multiple report tags for this marine unit id")
+                # import pdb; pdb.set_trace()
 
             assert len(m_reps) < 2, "Multiple reports for same MarineUnitID?"
             report = m_reps[0]

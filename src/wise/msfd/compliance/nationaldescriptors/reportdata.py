@@ -33,6 +33,12 @@ logger = logging.getLogger('wise.msfd')
 NSMAP = {"w": "http://water.eionet.europa.eu/schemas/dir200856ec"}
 
 
+def cache_key_2012(func, self):
+    muids = ",".join(self.muids)
+
+    return ":".join([self.country_code, self.descriptor, self.article, muids])
+
+
 class ReportData2012(BaseComplianceView, BaseUtil):
     """ WIP on compliance tables
     """
@@ -96,11 +102,18 @@ class ReportData2012(BaseComplianceView, BaseUtil):
 
         return sorted(muids)
 
-    def get_article_report_implementation(self):
+    @cache(cache_key_2012)
+    def get_report_data(self):
+        logger.info("Rendering 2012 report for: %s %s %s %s",
+                    self.country_code, self.descriptor, self.article,
+                    ",".join(self.muids)
+                    )
         klass = self.article_implementations[self.article]
 
-        return klass(self, self.request, self.country_code, self.descriptor,
-                     self.article, self.muids, self.colspan)
+        view = klass(self, self.request, self.country_code, self.descriptor,
+                     self.article, self.muids)
+
+        return view()
 
     def get_report_filename(self):
         # needed in article report data implementations, to retrieve the file
@@ -150,7 +163,7 @@ class ReportData2012(BaseComplianceView, BaseUtil):
             factsheet=factsheet,
         )
 
-        report_data = self.get_article_report_implementation()()
+        report_data = self.get_report_data()
         self.report_html = report_header + report_data
 
         return self.index()
