@@ -1,4 +1,3 @@
-<!-- show_translation python: True if len(unicode(text).split(' ')) > 4 else False; -->
 <tal:block
   tal:define="text options/text;
   translation options/translation;

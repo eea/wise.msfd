@@ -1,3 +1,4 @@
+import hashlib
 import logging
 import time
 from collections import defaultdict, namedtuple
@@ -375,23 +376,71 @@ class ReportData2018(BaseComplianceView):
 
     @db.use_db_session('2018')
     def get_data_from_db(self):
+        article = self.article.lower()
+
         get_data_method = getattr(
             self,
-            'get_data_from_view_' + self.article.lower()
+            'get_data_from_view_' + article
         )
 
         data = get_data_method()
 
         g = defaultdict(list)
 
+        # Ignore the following fields when hashing the rows
+        ignores = {
+            'art8': ('TargetCode', 'PressureCode'),
+            'art9': (),
+            'art10': ()
+        }
+        ignore = [data[0]._fields.index(x) for x in ignores[article]]
+
+        seen = []
+
         for row in data:
-            if not row.MarineReportingUnit:
+            # without the ignored fields create a hash to exclude
+            # duplicate rows
+            as_list = [x for ind, x in enumerate(row) if ind not in ignore]
+            hash = hashlib.md5(''.join(unicode(as_list))).hexdigest()
+
+            if hash in seen:
+                continue
+
+            seen.append(hash)
+
+            # or row.Feature != 'FishAll'
+            if not row.MarineReportingUnit or not row.Element:
                 # skip rows without muid, they can't help us
 
                 continue
+
             g[row.MarineReportingUnit].append(row)
 
-        res = [(k, self.change_orientation(v)) for k, v in g.items()]
+        res = []
+
+        # change the orientation of the data
+        for mru, filtered_data in g.items():
+            changed = (mru, self.change_orientation(filtered_data))
+
+            for row in changed[1]:
+                field = row[0]
+                row_data = row[1]
+                if field not in ignores:
+                    continue
+
+                # override the values for the ignored fields
+                # with all the values from DB
+                all_values = set([
+                    getattr(x, field)
+                    for x in data
+                    if x.MarineReportingUnit == mru
+                ])
+
+                new_row_data = [', '.join(all_values)] * len(row_data)
+
+                row[1] = new_row_data
+
+            res.append(changed)
 
         res = sorted(res, key=lambda r: r[0])
 
@@ -512,6 +561,7 @@ class ReportData2018(BaseComplianceView):
         t = time.time()
         logger.info("Started rendering of report data")
         key = get_reportdata_key(None, self).replace('.', '').replace('-', '')
+        # key = 'none'
         v = getattr(self.context, key, None)
 
         if v:
