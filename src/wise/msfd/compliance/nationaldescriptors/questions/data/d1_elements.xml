@@ -36,6 +36,9 @@
     <uses-methodological-standard href="#m-2"/>
   </criteria>
 
+  <!-- D1C3 — Primary for commercially exploited fish(D1.4)
+  and cephalopods(D1.5) and secondary for other species
+  -->
   <criteria primary='raise error' id='D1C3' title='Population demographic characteristics'>
     <definition>
       <![CDATA[
@@ -54,6 +57,13 @@
     <uses-methodological-standard href="#m-2"/>
   </criteria>
 
+  <!-- — Primary for species covered by
+  Annexes II, IV or V to Directive 92/43/EEC
+    - MAMMALS (D1.2)
+    - REPTILES (D1.3)
+    - FISH (D1.4)
+  and secondary for other species
+  -->
   <criteria primary='raise error' id='D1C4' title='Population distributional range and pattern'>
     <definition>
       <![CDATA[
@@ -71,6 +81,13 @@
     <uses-methodological-standard href="#m-2"/>
   </criteria>
 
+  <!-- — Primary for species covered by
+  Annexes II, IV or V to Directive 92/43/EEC
+    - MAMMALS (D1.2)
+    - REPTILES (D1.3)
+    - FISH (D1.4)
+  and secondary for other species
+  -->
   <criteria primary='raise error' id='D1C5' title='Habitat for the species'>
     <definition>
       <![CDATA[

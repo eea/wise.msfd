@@ -1,3 +1,4 @@
+import hashlib
 import logging
 import time
 from collections import defaultdict, namedtuple
@@ -384,14 +385,48 @@ class ReportData2018(BaseComplianceView):
 
         g = defaultdict(list)
 
+        
+        ignores = ('TargetCode', 'PressureCode')
+        ignore = [data[0]._fields.index(x) for x in ignores]
+
+        seen = []
+
         for row in data:
-            if not row.MarineReportingUnit:
+            as_list = [x for ind, x in enumerate(row) if ind not in ignore]
+            hash = hashlib.md5(''.join(unicode(as_list))).hexdigest()
+
+            if hash in seen:
+                continue
+
+            seen.append(hash)
+
+            # or row.Feature != 'FishAll'
+            if not row.MarineReportingUnit or not row.Element:
                 # skip rows without muid, they can't help us
 
                 continue
+
             g[row.MarineReportingUnit].append(row)
 
-        res = [(k, self.change_orientation(v)) for k, v in g.items()]
+        res = []
+
+        for k, v in g.items():
+            tmp = (k, self.change_orientation(v))
+
+            for row in tmp[1]:
+                if row[0] not in ignores:
+                    continue
+
+                values = set([
+                    getattr(x, row[0])
+                    for x in data
+                    if x.MarineReportingUnit == k
+                ])
+                new = [', '.join(values)] * len(row[1])
+
+                row[1] = new
+
+            res.append(tmp)
 
         res = sorted(res, key=lambda r: r[0])
 
@@ -511,15 +546,16 @@ class ReportData2018(BaseComplianceView):
 
         t = time.time()
         logger.info("Started rendering of report data")
-        key = get_reportdata_key(None, self).replace('.', '').replace('-', '')
+        # key = get_reportdata_key(None, self).replace('.', '').replace('-', '')
+        key = 'none'
         v = getattr(self.context, key, None)
 
         if v:
             report_html = v
         else:
             report_html = v = self.render_reportdata()
-            setattr(self.context, key, v)
-            self.context._p_changed = True
+            # setattr(self.context, key, v)
+            # self.context._p_changed = True
             logger.info("Caching report data: %s, %s bytes", key, len(v))
 
         delta = time.time() - t

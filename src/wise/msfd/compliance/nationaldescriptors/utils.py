@@ -165,6 +165,6 @@ def get_sorted_fields_2018(fields, article):
         return fields
 
     diff = set(fields) - set(sf)
-    final = list(sf) + list(diff)
+    final = list(diff) + list(sf)
 
     return final
