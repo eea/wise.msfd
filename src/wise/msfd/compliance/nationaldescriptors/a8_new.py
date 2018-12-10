@@ -299,7 +299,44 @@ def get_db_record(report_type, marine_unit_id, topic):
     return res[0]
 
 
+class ReportTag8a(Node):
+    """ Handle a <FunctionalGroupFeatures> or <HabitatFeatures> tag
+    """
+
+    def __init__(self, node, nsmap):
+        super(ReportTag8a, self).__init__(node, nsmap)
+
+        self.marine_unit_id = self['w:MarineUnitID/text()'][0]
+
+    def matches_descriptor(self, descriptor):
+        descriptor = get_descriptor(descriptor)
+        self_crits = set(self.criterias)
+
+        return bool(self_crits.intersection(descriptor.all_ids()))
+
+    @property
+    def criterias(self):
+        # if tag_name(self.node) == 'HabitatFeatures':
+        #     import pdb; pdb.set_trace()
+
+        res = self['.//w:AssessmentStatus/c:Criterias'
+                   '/c:Criteria/c:CriteriaType/text()']
+
+        return res
+
+    def columns(self, criterion):
+        print self.criterias
+
+        return []
+
+    def __repr__(self):
+        return "<ReportTag8a for {}>".format(tag_name(self.node))
+
+
 class ReportTag8b(Node):
+    """ Handle a (for ex) <PhysicalLoss> or <Nutrients> tag
+    """
+
     def __init__(self, node, nsmap):
         super(ReportTag8b, self).__init__(node, nsmap)
 
@@ -425,9 +462,15 @@ class Article8(BaseArticle2012):
         # for specific topics. An AssessmentPI can have multiple indicators
 
         report_map = defaultdict(list)
-        ReportTag = ReportTag8b
+        root_tags = get_report_tags(root)
 
-        for name in get_report_tags(root):
+        if 'Nutrients' in root_tags:
+            ReportTag = ReportTag8b
+
+        elif 'FunctionalGroupFeatures' in root_tags:
+            ReportTag = ReportTag8a
+
+        for name in root_tags:
             nodes = xp('//w:' + name)
 
             for node in nodes:
@@ -456,10 +499,10 @@ class Article8(BaseArticle2012):
             m_reps = report_map[muid]
 
             if len(m_reps) > 1:
-                logger.warning("multiple report tags for this marine unit id")
-                # import pdb; pdb.set_trace()
+                logger.warning("Multiple report tags for this "
+                               "marine unit id: %r", m_reps)
 
-            assert len(m_reps) < 2, "Multiple reports for same MarineUnitID?"
+            # assert len(m_reps) < 2, "Multiple reports for same MarineUnitID?"
             report = m_reps[0]
 
             cols = report.columns(ges_crits)
