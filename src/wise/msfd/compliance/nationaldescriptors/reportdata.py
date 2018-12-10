@@ -560,11 +560,12 @@ class ReportData2018(BaseComplianceView):
 
         t = time.time()
         logger.info("Started rendering of report data")
+
         key = get_reportdata_key(None, self).replace('.', '').replace('-', '')
         # key = 'none'
         v = getattr(self.context, key, None)
 
-        if v:
+        if v and 'refresh' not in self.request.form:
             report_html = v
         else:
             report_html = v = self.render_reportdata()
