@@ -511,7 +511,7 @@ class ReportData2018(BaseComplianceView):
 
         t = time.time()
         logger.info("Started rendering of report data")
-        key = get_reportdata_key(None, self)
+        key = get_reportdata_key(None, self).replace('.', '').replace('-', '')
         v = getattr(self.context, key, None)
 
         if v:
