@@ -560,16 +560,16 @@ class ReportData2018(BaseComplianceView):
 
         t = time.time()
         logger.info("Started rendering of report data")
-        # key = get_reportdata_key(None, self).replace('.', '').replace('-', '')
-        key = 'none'
+        key = get_reportdata_key(None, self).replace('.', '').replace('-', '')
+        # key = 'none'
         v = getattr(self.context, key, None)
 
         if v:
             report_html = v
         else:
             report_html = v = self.render_reportdata()
-            # setattr(self.context, key, v)
-            # self.context._p_changed = True
+            setattr(self.context, key, v)
+            self.context._p_changed = True
             logger.info("Caching report data: %s, %s bytes", key, len(v))
 
         delta = time.time() - t
