@@ -299,11 +299,10 @@ def get_db_record(report_type, marine_unit_id, topic):
     return res[0]
 
 
-class ReportTag(Node):
+class ReportTag8b(Node):
     def __init__(self, node, nsmap):
-        super(ReportTag, self).__init__(node, nsmap)
+        super(ReportTag8b, self).__init__(node, nsmap)
 
-        # TODO: there are report tags that don't match this
         self.marine_unit_id = self['w:MarineUnitID/text()'][0]
 
     @property
@@ -375,10 +374,24 @@ class ReportTag(Node):
 
 
 def get_report_tags(root):
-    wrapped = Node(root, NSMAP)
-    tag_names = wrapped['w:ReportingInformation/w:ReportingFeature/text()']
+    """ Get a list of "main" tags in the report XML file
+    """
+    blacklist = [
+        'ReportingInformation',
+        'Country',
+        'Region',
+    ]
 
-    return [t for t in tag_names if ' ' not in t]
+    res = set()
+
+    for node in root.iterchildren():
+        tn = tag_name(node)
+
+        if tn in blacklist:
+            continue
+        res.add(tn)
+
+    return res
 
 
 class Article8(BaseArticle2012):
@@ -389,15 +402,6 @@ class Article8(BaseArticle2012):
     """
 
     template = Template('pt/report-data-a8-new.pt')
-
-    # def filtered_ges_components(self):
-    #     m = self.descriptor.replace('D', '')
-    #
-    #     gcs = country_ges_components(self.country_code)
-    #
-    #     # TODO: handle D10, D11     !!
-    #
-    #     return [self.descriptor] + [g for g in gcs if g.startswith(m)]
 
     def __call__(self):
 
@@ -421,6 +425,7 @@ class Article8(BaseArticle2012):
         # for specific topics. An AssessmentPI can have multiple indicators
 
         report_map = defaultdict(list)
+        ReportTag = ReportTag8b
 
         for name in get_report_tags(root):
             nodes = xp('//w:' + name)

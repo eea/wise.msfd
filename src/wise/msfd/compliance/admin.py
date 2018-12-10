@@ -125,7 +125,7 @@ class BootstrapCompliance(BrowserView):
 
                 for art in self._get_articles():
                     nda = create(df, 'wise.msfd.nationaldescriptorassessment',
-                                 title=art)
+                                 title=u'{} - {}'.format(art, desc_code))
                     lr = nda.__ac_local_roles__
 
                     group = self.get_group(desc_code)
