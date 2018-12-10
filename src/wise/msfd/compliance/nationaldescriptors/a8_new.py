@@ -150,12 +150,100 @@ class Descriptor(Criterion):
         return self._title
 
 
-class A8Item(Item):
+class A8aItem(Item):
     """ A column in the 2012 Art8 assessment.
     """
 
     def __init__(self, **kw):
-        super(A8Item, self).__init__([])
+        super(A8aItem, self).__init__([])
+
+        for k, v in kw.items():
+            setattr(self, k, v)
+
+        # tn = tag_name(self.node)
+        # self.column_type = ASSESSMENT_TOPIC_MAP.get(tn, tn)
+
+        self.node = Node(self.node, NSMAP)
+
+        sn = self.node['ancestor::w:Status'][0]
+        asn = self.node['ancestor::w:AssessmentStatus'][0]
+        rfn = sn.getparent()  # a node like FunctionalGroups
+
+        self.reporting_feature = Node(rfn, NSMAP)
+        self.assessment_status = Node(asn, NSMAP)
+
+        attrs = [
+            ('Topic', self.row_topic()),
+            ('Reporting Feature', self.row_reporting_feature()),
+            ('Indicator', self.row_indicator()),
+            ('Threshold Value', self.row_threshold_value()),
+            ('Threshold Unit', self.row_threshold_value_unit()),
+            ('Threshold Proportion', self.row_threshold_value_proportion()),
+            ('Baseline', self.row_baseline),
+            ('Status', self.row_status),
+            ('Status Description', self.row_status_description),
+            ('Status Trend', self.row_status_trend),
+            ('Status Confidence', self.row_status_confidence),
+        ]
+
+        for title, value in attrs:
+            self[title] = value
+
+    def row_topic(self):
+        return self.assessment_status['parent::*/w:Topic/text()'][0]
+
+    def row_status(self):
+        status = self.assessment_status['c:Status/text()']
+
+        if status:
+            return status[0]
+
+    def row_status_description(self):
+        status = self.assessment_status['c:StatusDescription/text()']
+
+        if status:
+            return status[0]
+
+    def row_status_trend(self):
+        status = self.assessment_status['c:StatusTrend/text()']
+
+        if status:
+            return status[0]
+
+    def row_status_confidence(self):
+        status = self.assessment_status['c:StatusConfidence/text()']
+
+        if status:
+            return status[0]
+
+    def row_reporting_feature(self):
+        return self.reporting_feature['w:ReportingFeature/text()'][0]
+
+    def row_indicator(self):
+        return self.node['c:Indicator/text()'][0]
+
+    def row_threshold_value(self):
+        return self.node['c:ThresholdValue/text()'][0]
+
+    def row_threshold_value_unit(self):
+        return self.node['c:ThresholdValueUnit/text()'][0]
+
+    def row_threshold_value_proportion(self):
+        p = self.node['c:ThresholdProportion/text()']
+
+        if p:
+            return p[0]
+
+    def row_baseline(self):
+        return self.node['c:Baseline/text()'][0]
+
+
+class A8bItem(Item):
+    """ A column in the 2012 Art8 assessment.
+    """
+
+    def __init__(self, **kw):
+        super(A8bItem, self).__init__([])
 
         for k, v in kw.items():
             setattr(self, k, v)
@@ -316,18 +404,26 @@ class ReportTag8a(Node):
 
     @property
     def criterias(self):
-        # if tag_name(self.node) == 'HabitatFeatures':
-        #     import pdb; pdb.set_trace()
-
         res = self['.//w:AssessmentStatus/c:Criterias'
                    '/c:Criteria/c:CriteriaType/text()']
 
         return res
 
-    def columns(self, criterion):
-        print self.criterias
+    @property
+    def indicators(self):
+        res = self['.//w:AssessmentStatus/c:Criterias'
+                   '/c:Indicators/c:Indicator/text()']
 
-        return []
+        return res
+
+    def columns(self, criterion):
+        res = []
+
+        for node in self['.//w:Status/w:AssessmentStatus/c:Indicators']:
+            item = A8aItem(report=self, node=node)
+            res.append(item)
+
+        return res
 
     def __repr__(self):
         return "<ReportTag8a for {}>".format(tag_name(self.node))
@@ -399,13 +495,13 @@ class ReportTag8b(Node):
 
             if not assessment_indicators:
                 kwargs = kw.copy()
-                res.append(A8Item(**kwargs))
+                res.append(A8bItem(**kwargs))
             else:
                 for indicator in assessment_indicators:
                     kwargs = kw.copy()
                     kwargs['indicator'] = indicator
 
-                    res.append(A8Item(**kwargs))
+                    res.append(A8bItem(**kwargs))
 
         return res
 
@@ -464,11 +560,21 @@ class Article8(BaseArticle2012):
         report_map = defaultdict(list)
         root_tags = get_report_tags(root)
 
+        ReportTag = None
+
+        # basic algorthim
+
         if 'Nutrients' in root_tags:
             ReportTag = ReportTag8b
 
         elif 'FunctionalGroupFeatures' in root_tags:
             ReportTag = ReportTag8a
+
+        if ReportTag is None:
+            logger.warning("Unhandled report type?")
+            self.rows = []
+
+            return self.template()
 
         for name in root_tags:
             nodes = xp('//w:' + name)
@@ -502,23 +608,26 @@ class Article8(BaseArticle2012):
                 logger.warning("Multiple report tags for this "
                                "marine unit id: %r", m_reps)
 
-            # assert len(m_reps) < 2, "Multiple reports for same MarineUnitID?"
-            report = m_reps[0]
-
-            cols = report.columns(ges_crits)
-
             rows = []
 
-            for col in cols:
-                for name in col.keys():
-                    values = []
+            for i, report in enumerate(m_reps):
 
-                    for inner in cols:
-                        values.append(inner[name])
-                    row = Row(name, values)
-                    rows.append(row)
+                if i > 0:       # add a splitter row, to separate reports
+                    rows.append(Row('', ''))
 
-                break       # only need the "first" row, for headers
+                cols = report.columns(ges_crits)
+
+                for col in cols:
+                    for name in col.keys():
+                        values = []
+
+                        for inner in cols:
+                            values.append(inner[name])
+                        row = Row(name, values)
+                        rows.append(row)
+
+                    break       # only need the "first" row, for headers
+
             report_data[muid] = rows
 
         self.rows = report_data
