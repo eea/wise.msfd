@@ -495,6 +495,7 @@ if (!Array.prototype.last){
   }
 
   $.fn.simplifyTable = simplifyTable;
+
   $(document).ready(function($){
     initStyling();
 
@@ -513,7 +514,8 @@ if (!Array.prototype.last){
       $(".overflow-table h5").width( $(".overflow-table table").width() );
     }
 
-    $('.simplify-form button').on('click', function(){
+    $('.simplify-form input').on('change', function(){
+      console.log("Change", $(this).val());
       $p = $(this).parent().parent();
       console.log($p);
       $table = ('table', $p);
