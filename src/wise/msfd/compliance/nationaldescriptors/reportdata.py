@@ -376,22 +376,30 @@ class ReportData2018(BaseComplianceView):
 
     @db.use_db_session('2018')
     def get_data_from_db(self):
+        article = self.article.lower()
+
         get_data_method = getattr(
             self,
-            'get_data_from_view_' + self.article.lower()
+            'get_data_from_view_' + article
         )
 
         data = get_data_method()
 
         g = defaultdict(list)
 
-        
-        ignores = ('TargetCode', 'PressureCode')
-        ignore = [data[0]._fields.index(x) for x in ignores]
+        # Ignore the following fields when hashing the rows
+        ignores = {
+            'art8': ('TargetCode', 'PressureCode'),
+            'art9': (),
+            'art10': ()
+        }
+        ignore = [data[0]._fields.index(x) for x in ignores[article]]
 
         seen = []
 
         for row in data:
+            # without the ignored fields create a hash to exclude
+            # duplicate rows
             as_list = [x for ind, x in enumerate(row) if ind not in ignore]
             hash = hashlib.md5(''.join(unicode(as_list))).hexdigest()
 
@@ -410,23 +418,29 @@ class ReportData2018(BaseComplianceView):
 
         res = []
 
-        for k, v in g.items():
-            tmp = (k, self.change_orientation(v))
+        # change the orientation of the data
+        for mru, filtered_data in g.items():
+            changed = (mru, self.change_orientation(filtered_data))
 
-            for row in tmp[1]:
-                if row[0] not in ignores:
+            for row in changed[1]:
+                field = row[0]
+                row_data = row[1]
+                if field not in ignores:
                     continue
 
-                values = set([
-                    getattr(x, row[0])
+                # override the values for the ignored fields
+                # with all the values from DB
+                all_values = set([
+                    getattr(x, field)
                     for x in data
-                    if x.MarineReportingUnit == k
+                    if x.MarineReportingUnit == mru
                 ])
-                new = [', '.join(values)] * len(row[1])
 
-                row[1] = new
+                new_row_data = [', '.join(all_values)] * len(row_data)
 
-            res.append(tmp)
+                row[1] = new_row_data
+
+            res.append(changed)
 
         res = sorted(res, key=lambda r: r[0])
 
