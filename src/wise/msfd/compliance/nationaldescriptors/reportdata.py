@@ -409,7 +409,9 @@ class ReportData2018(BaseComplianceView):
             seen.append(hash)
 
             # or row.Feature != 'FishAll'
-            if not row.MarineReportingUnit or not row.Element:
+
+            if not row.MarineReportingUnit or \
+                    not getattr(row, 'Element', None):
                 # skip rows without muid, they can't help us
 
                 continue
@@ -419,12 +421,14 @@ class ReportData2018(BaseComplianceView):
         res = []
 
         # change the orientation of the data
+
         for mru, filtered_data in g.items():
             changed = (mru, self.change_orientation(filtered_data))
 
             for row in changed[1]:
                 field = row[0]
                 row_data = row[1]
+
                 if field not in ignores:
                     continue
 
@@ -432,7 +436,9 @@ class ReportData2018(BaseComplianceView):
                 # with all the values from DB
                 all_values = set([
                     getattr(x, field)
+
                     for x in data
+
                     if x.MarineReportingUnit == mru
                 ])
 
