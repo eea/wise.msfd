@@ -211,7 +211,9 @@ class EditAssessmentDataForm(Form, BaseComplianceView):
             'compliance/nationaldescriptors/questions/data'
         )
 
-        return els[self.descriptor]
+        desc = self.descriptor.split('.')[0]
+
+        return els[desc]
 
     # TODO: use memoize
     @property

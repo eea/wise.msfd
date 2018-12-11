@@ -385,7 +385,9 @@ class NationalDescriptorArticleView(BaseComplianceView):
             logger.warning("Descriptor elements not defined: %s",
                            self.descriptor)
 
-            return []
+            desc = self.descriptor.split('.')[0]
+
+            return els[desc]
 
         return els[self.descriptor]
 

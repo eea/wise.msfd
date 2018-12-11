@@ -5,7 +5,6 @@ from collections import defaultdict, namedtuple
 from datetime import datetime
 
 from lxml.etree import fromstring
-# from sqlalchemy import or_
 from zope.schema import Choice
 from zope.schema.vocabulary import SimpleTerm, SimpleVocabulary
 
@@ -252,6 +251,7 @@ def get_reportdata_key(func, self, *args, **kwargs):
 
     res = '_cache_' + '_'.join([self.country_code, self.country_region_code,
                                 self.descriptor, self.article])
+    res = res.replace('.', '').replace('-', '')
 
     return res
 
@@ -507,7 +507,7 @@ class ReportData2018(BaseComplianceView):
 
         return ', '.join(muids)
 
-    # @cache(get_reportdata_key)
+    @cache(get_reportdata_key)
     def render_reportdata(self):
         logger.info("Quering database for 2018 report data: %s %s %s %s",
                     self.country_code, self.country_region_code, self.article,
@@ -564,17 +564,7 @@ class ReportData2018(BaseComplianceView):
         t = time.time()
         logger.info("Started rendering of report data")
 
-        key = get_reportdata_key(None, self).replace('.', '').replace('-', '')
-        # key = 'none'
-        v = getattr(self.context, key, None)
-
-        if v and 'refresh' not in self.request.form:
-            report_html = v
-        else:
-            report_html = v = self.render_reportdata()
-            setattr(self.context, key, v)
-            self.context._p_changed = True
-            logger.info("Caching report data: %s, %s bytes", key, len(v))
+        report_html = self.render_reportdata()
 
         delta = time.time() - t
         logger.info("Rendering report data took: %s, %s/%s/%s/%s",
