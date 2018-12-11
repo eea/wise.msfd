@@ -8,8 +8,8 @@
       <div class="modal-body">
         <h4 class="modal-translate-header">Original text</h4>
         <div class="modal-translate-section" id="transl-original-text">Original text</div>
-        <h4 class="modal-translate-header">Old translation</h4>
-        <div class="modal-translate-section" id="transl-old-translation">Old translation</div>
+        <h4 class="modal-translate-header">Current translation</h4>
+        <div class="modal-translate-section" id="transl-old-translation">Current translation</div>
         <form id="form-edit-translation">
           <div class="form-group">
             <h4 class="modal-translate-header">New translation</h4>

@@ -408,10 +408,7 @@ class ReportData2018(BaseComplianceView):
 
             seen.append(hash)
 
-            # or row.Feature != 'FishAll'
-
-            if not row.MarineReportingUnit or \
-                    not getattr(row, 'Element', None):
+            if not row.MarineReportingUnit:
                 # skip rows without muid, they can't help us
 
                 continue
@@ -429,7 +426,7 @@ class ReportData2018(BaseComplianceView):
                 field = row[0]
                 row_data = row[1]
 
-                if field not in ignores:
+                if field not in ignores[article]:
                     continue
 
                 # override the values for the ignored fields
