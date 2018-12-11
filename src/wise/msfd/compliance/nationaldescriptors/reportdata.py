@@ -19,6 +19,7 @@ from wise.msfd.data import (get_factsheet_url, get_report_data,
                             get_report_file_url, get_report_filename)
 from wise.msfd.gescomponents import (get_descriptor, get_features,
                                      get_parameters)
+from wise.msfd.utils import ItemList
 from z3c.form.button import buttonAndHandler
 from z3c.form.field import Fields
 from z3c.form.form import Form
@@ -341,6 +342,10 @@ class ReportData2018(BaseComplianceView):
 
             if feats.intersection(features):
                 out.append(row)
+
+        # TODO: need a proxy here
+        # for row in out:
+        #     row.Features = ItemList(rows=row.Features.split(','))
 
         return out
 
