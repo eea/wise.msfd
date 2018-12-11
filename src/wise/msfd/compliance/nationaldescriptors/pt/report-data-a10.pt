@@ -2,7 +2,7 @@
   <div class="overflow-table">
     <div class="simplify-form">
       <input type="checkbox" name="simplify" value="yes" />
-      <label for="simplfy">Simplify table</label>
+      <label for="simplify">Simplify table</label>
     </div>
 
     <table class='table table-bordered table-striped table-report' style='width: 100%; overflow:auto'>

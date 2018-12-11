@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import csv
+import json
 from collections import namedtuple
 
 from pkg_resources import resource_filename
@@ -9,6 +10,10 @@ from pkg_resources import resource_filename
 # reports. As such, some exist in 2010 that didn't exist in 2018, some exist
 # for 2018 that didn't exist for 2010 and they have changed their ids between
 # the two reporting exercises.
+
+Criterion2012 = namedtuple('Criterion2012', ['id', 'title'])
+Feature = namedtuple('Feature', ['name', 'descriptors'])
+Parameter = namedtuple('Parameter', ['name', 'unit', 'criterias'])
 
 
 class Descriptor:
@@ -38,9 +43,6 @@ class Descriptor:
                 res.add(cid)
 
         return res
-
-
-Criterion2012 = namedtuple('Criterion2012', ['id', 'title'])
 
 
 class Criterion(object):
@@ -223,3 +225,88 @@ def get_criterion(ges_id):
     for c in GES_CRITERIONS.values():
         if ges_id in c.all_ids():
             return c
+
+
+def parse_codelists_file():
+    """ Parse the msfd2018-codelists.json file
+    """
+    jsonf = resource_filename('wise.msfd',
+                              'data/msfd2018-codelists.json')
+    with open(jsonf) as f:
+        d = json.load(f)
+
+    return d
+
+
+TERMSLIST = parse_codelists_file()
+
+
+def parse_parameters():
+    res = {}
+
+    for par in TERMSLIST['ReferenceParameter']:
+        name = par['Parameter']
+
+        if name not in res:
+            unit = par['Unit']
+            criterias = set([p['Criteria']
+                             for p in TERMSLIST['ReferenceParameter']
+
+                             if p['Parameter'] == name])
+            param = Parameter(name, unit, criterias)
+            res[name] = param
+
+    return res
+
+
+PARAMETERS = parse_parameters()
+
+
+def get_parameters(descriptor_code=None):
+
+    if descriptor_code is None:
+        return PARAMETERS.values()
+
+    descriptor = get_descriptor(descriptor_code)
+    crit_ids = set(descriptor.all_ids())
+    res = []
+
+    for p in PARAMETERS.values():
+        if p.criterias.intersection(crit_ids):
+            res.append(p)
+
+    return res
+
+
+def parse_features():
+    res = {}
+
+    for fr in TERMSLIST['ReferenceFeature']:
+        feature = fr['Feature']
+
+        if feature in res:
+            continue
+
+        descs = set([f['GEScomponent']
+                     .replace('D6/D1', 'D6').replace('D4/D1', 'D4')
+
+                     for f in TERMSLIST['ReferenceFeature']
+
+                     if f['Feature'] == feature])
+
+        res[feature] = Feature(feature, descs)
+
+    return res
+
+
+FEATURES = parse_features()
+
+
+def get_features(descriptor_code=None):
+    if descriptor_code is None:
+        return FEATURES.values()
+
+    return [f
+            for f in FEATURES.values()
+
+            if descriptor_code in f.descriptors]

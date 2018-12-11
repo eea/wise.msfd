@@ -10,13 +10,15 @@ from zope.schema.vocabulary import SimpleTerm, SimpleVocabulary
 
 from eea.cache import cache
 from persistent.list import PersistentList
+from plone.memoize import volatile
 from Products.Five.browser.pagetemplatefile import \
     ViewPageTemplateFile as Template
 from wise.msfd import db, sql, sql2018
 from wise.msfd.base import BaseUtil
 from wise.msfd.data import (get_factsheet_url, get_report_data,
                             get_report_file_url, get_report_filename)
-from wise.msfd.gescomponents import get_descriptor
+from wise.msfd.gescomponents import (get_descriptor, get_features,
+                                     get_parameters)
 from z3c.form.button import buttonAndHandler
 from z3c.form.field import Fields
 from z3c.form.form import Form
@@ -249,6 +251,9 @@ def get_reportdata_key(func, self, *args, **kwargs):
     """ Reportdata template rendering cache key generation
     """
 
+    if 'refresh' in self.request.form:
+        raise volatile.DontCache
+
     res = '_cache_' + '_'.join([self.country_code, self.country_region_code,
                                 self.descriptor, self.article])
     res = res.replace('.', '').replace('-', '')
@@ -317,14 +322,27 @@ class ReportData2018(BaseComplianceView):
         # TODO check conditions for other countries beside NL
         conditions = [t.c.GESComponents.in_(all_ids)]
 
+        params = get_parameters(self.descriptor)
+        p_codes = [p.name for p in params]
+        conditions.append(t.c.Parameter.in_(p_codes))
+
+        features = set([f.name for f in get_features(self.descriptor)])
+
         count, res = db.get_all_records_ordered(
             t,
             'GESComponents',
             t.c.CountryCode == self.country_code,
             *conditions
         )
+        out = []
 
-        return res
+        for row in res:
+            feats = set(row.Features.split(','))
+
+            if feats.intersection(features):
+                out.append(row)
+
+        return out
 
     def get_data_from_view_art9(self):
 
@@ -400,6 +418,8 @@ class ReportData2018(BaseComplianceView):
         for row in data:
             # without the ignored fields create a hash to exclude
             # duplicate rows
+
+            # TODO: this needs to be redone
             as_list = [x for ind, x in enumerate(row) if ind not in ignore]
             hash = hashlib.md5(''.join(unicode(as_list))).hexdigest()
 

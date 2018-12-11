@@ -23,7 +23,8 @@
         <div class="overflow-table">
           <!--<h4 tal:content="muids">LV-01</h4>-->
           <div class="simplify-form">
-            <button>Simplify table</button>
+            <input type="checkbox" name="simplify" value="yes" />
+            <label for="simplify">Simplify table</label>
           </div>
           <table class="table table-bordered table-striped table-comp-translate table-report">
             <tr>

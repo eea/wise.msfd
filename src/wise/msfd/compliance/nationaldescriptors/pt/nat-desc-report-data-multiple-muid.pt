@@ -20,7 +20,8 @@
     <tal:def tal:define="muid python:info[0]; muid_data python: info[1];" >
       <h4 tal:content="muid">LV-01</h4>
       <div class="simplify-form">
-        <button>Simplify table</button>
+        <input type="checkbox" name="simplify" value="yes" />
+        <label for="simplify">Simplify table</label>
       </div>
       <div class="overflow-table">
         <table class="table table-bordered table-striped table-comp-translate table-report">
