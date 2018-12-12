@@ -108,12 +108,12 @@ class Criterion(object):
             self._title,
         )
 
-    def belongs_to_descriptor(self, descriptor_id):
-        for descriptor in self.descriptors:
-            if descriptor.id == descriptor_id:
-                return True
-
-        return False
+    # def belongs_to_descriptor(self, descriptor_id):
+    #     for descriptor in self.descriptors:
+    #         if descriptor.id == descriptor_id:
+    #             return True
+    #
+    #     return False
 
     def all_ids(self):
 
@@ -123,38 +123,45 @@ class Criterion(object):
         return any([x.id == id for x in self.alternatives])
 
 
-# def parse_ges_components():
-#     # {
-#     #   "code": "1.1.3",
-#     #   "label": "(Indicator(old)) Area covered by the species (for
-#     #   sessile/benthic species)",
-#     #   "descriptor": "D1"
-#     # },
-#     gcomps = TERMSLIST['GESComponents']
-#
-#     # {
-#     #   "code": "5.2",
-#     #   "label": "(Criteria(old)) Direct effects of nutrient enrichment",
-#     #   "descriptor": "D5"
-#     # },
-#     gcrits = TERMSLIST['GESCriterias']
-#
-#     # {
-#     #   "code": "D1.1",
-#     #   "label": "(Descriptor) D1 - Biodiversity - birds"
-#     # },
-#     gdescs = TERMSLIST['GESDescriptors']
-#
-#     descriptors = {d['label']: Descriptor(d['code'], d['label'])
-#                    for d in gdescs}
-#     descriptors['D1'] = Descriptor('D1', 'D1 - Biodiversity')
-#     criterions = {}
-#
-#     for c in (gcomps + gcrits):
-#         if c['code'] not in criterions:
-#             c = Criterion(c['code'], c['label'], [])
-#         else:
-#             if
+def parse_ges_components():
+    # Node: this method is not used, it doesn't offer a way to map old
+    # criterias to new criterias
+    # {
+    #   "code": "1.1.3",
+    #   "label": "(Indicator(old)) Area covered by the species (for
+    #   sessile/benthic species)",
+    #   "descriptor": "D1"
+    # },
+    gcomps = TERMSLIST['GESComponents']
+
+    # {
+    #   "code": "5.2",
+    #   "label": "(Criteria(old)) Direct effects of nutrient enrichment",
+    #   "descriptor": "D5"
+    # },
+    gcrits = TERMSLIST['GESCriterias']
+
+    # {
+    #   "code": "D1.1",
+    #   "label": "(Descriptor) D1 - Biodiversity - birds"
+    # },
+    gdescs = TERMSLIST['GESDescriptors']
+
+    descriptors = {d['label']: Descriptor(d['code'], d['label'])
+                   for d in gdescs}
+    descriptors['D1'] = Descriptor('D1', 'D1 - Biodiversity')
+    criterions = {}
+
+    for c in (gcomps + gcrits):
+        if c['code'] not in criterions:
+            c = Criterion(c['code'], c['label'], [])
+            descriptors[c['descriptor']].criterions.add(c)
+            criterions[c['code']] = c
+        else:
+            c = criterions[c['code']]
+            descriptors[c['descriptor']].criterions.add(c)
+
+    return descriptors, criterions
 
 
 def parse_ges_extended_format():
