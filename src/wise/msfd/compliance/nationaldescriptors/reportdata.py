@@ -620,7 +620,7 @@ class ReportData2018(BaseComplianceView):
                 worksheet.write(i, 0, row_label)
 
                 for j, v in enumerate(row_values):
-                    worksheet.write(i, j+1, unicode(v))
+                    worksheet.write(i, j+1, unicode(v or ''))
 
         workbook.close()
         out.seek(0)
