@@ -56,6 +56,7 @@ class A9Item(Item):
         attrs = [
             ('Feature(s) reported [Feature]', self.feature),
             ('GES Component [Reporting feature]', self.ges_component),
+            ('GES description', self.ges_description),
             ('Threshold value(s)', self.threshold_value),
             ('Threshold value unit', self.threshold_value_unit),
             ('Reference point type', self.reference_point_type),
@@ -83,6 +84,11 @@ class A9Item(Item):
 
     def ges_component(self):
         return self.id
+
+    def ges_description(self):
+        v = self.g['w:DescriptionGES/text()']
+
+        return v and v[0] or ''
 
     def threshold_value(self):
         m = {}

@@ -582,6 +582,10 @@ class Article8(BaseArticle2012):
             for node in nodes:
                 rep = ReportTag(node, NSMAP)
 
+                # import pdb; pdb.set_trace()
+                # TODO for D7(maybe for other descriptors too)
+                # find a way to match the node with the descriptor
+                # because all reported criterias and indicators are GESOther
                 if rep.matches_descriptor(self.descriptor):
                     report_map[rep.marine_unit_id].append(rep)
 
