@@ -3,11 +3,13 @@ import logging
 import time
 from collections import defaultdict, namedtuple
 from datetime import datetime
+from io import BytesIO
 
 from lxml.etree import fromstring
 from zope.schema import Choice
 from zope.schema.vocabulary import SimpleTerm, SimpleVocabulary
 
+import xlsxwriter
 from eea.cache import cache
 from persistent.list import PersistentList
 from plone.memoize import volatile
@@ -19,7 +21,7 @@ from wise.msfd.data import (get_factsheet_url, get_report_data,
                             get_report_file_url, get_report_filename)
 from wise.msfd.gescomponents import (get_descriptor, get_features,
                                      get_parameters)
-from wise.msfd.utils import ItemList
+# from wise.msfd.utils import ItemList
 from z3c.form.button import buttonAndHandler
 from z3c.form.field import Fields
 from z3c.form.form import Form
@@ -604,6 +606,50 @@ class ReportData2018(BaseComplianceView):
 
         return template(data=data, report_header=report_header)
 
+    def data_to_xls(self, data):
+        # Create a workbook and add a worksheet.
+        out = BytesIO()
+        workbook = xlsxwriter.Workbook(out, {'in_memory': True})
+
+        for wtitle, wdata in data:
+            worksheet = workbook.add_worksheet(wtitle)
+
+            for i, (row_label, row_values) in enumerate(wdata):
+                worksheet.write(i, 0, row_label)
+
+                for j, v in enumerate(row_values):
+                    worksheet.write(i, j+1, unicode(v))
+
+        workbook.close()
+        out.seek(0)
+
+        return out
+
+    def download(self):
+        xlsdata = self.get_data()
+
+        # if self.article == 'Art9':
+        #     xlsdata = [
+        #         ('Reported Data', data),
+        #     ]
+        # else:
+        #     # use marine unit ids as worksheet titles
+        #     xlsdata = data
+
+        xlsio = self.data_to_xls(xlsdata)
+        sh = self.request.response.setHeader
+
+        sh('Content-Type', 'application/vnd.openxmlformats-officedocument.'
+           'spreadsheetml.sheet')
+        fname = "-".join([self.country_code,
+                          self.country_region_code,
+                          self.article,
+                          self.descriptor])
+        sh('Content-Disposition',
+           'attachment; filename=%s.xlsx' % fname)
+
+        return xlsio.read()
+
     def __call__(self):
 
         self.content = ''
@@ -614,10 +660,13 @@ class ReportData2018(BaseComplianceView):
 
         self.subform = self.get_form()
 
+        if 'download' in self.request.form:
+            return self.download()
+
         trans_edit_html = self.translate_view()()
 
         t = time.time()
-        logger.info("Started rendering of report data")
+        logger.debug("Started rendering of report data")
 
         self.muids = []
         report_html = self.render_reportdata()

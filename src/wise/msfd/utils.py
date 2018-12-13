@@ -170,6 +170,8 @@ def print_value(value):
 
 def data_to_xls(data):
     """ Convert python export data to XLS stream of data
+
+    NOTE: this is very specific to MSFD search. Too bad
     """
 
     # Create a workbook and add a worksheet.

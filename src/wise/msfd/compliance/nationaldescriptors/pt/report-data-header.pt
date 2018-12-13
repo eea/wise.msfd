@@ -59,5 +59,13 @@
           tal:content="options/report_date"/>
       </tr>
     </table>
+
+    <div>
+      <form method="POST" action="" tal:attributes="action request/URL0">
+        <input type="hidden" name="download" value="yes" />
+        <button class="btn btn-primary">Download report data as Excel</button>
+      </form>
+    </div>
+
   </div>
 </div>
