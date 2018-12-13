@@ -105,11 +105,17 @@ class A10Item(Item):
             'Functional group': set(),
             'Pressures': set(),
             'Predominant habitats': set(),
-            'Physical/chemical features': set()
+            'Physical/chemical features': set(),
+            'Species group': set(),
+            'None': set(),
         }
 
         for rec in recs:
             t = rec['FeatureType']
+
+            if t is None:
+                continue
+
             s = _types[t]
 
             if rec['FeaturesPressures'] == 'FunctionalGroupOther':
@@ -244,13 +250,14 @@ class Article10(BaseArticle2012):
 
     # TODO: this needs to be redone using latest version of gescomponents.py
     def filtered_ges_components(self):
-        m = self.descriptor.replace('D', '')
-
+        descriptor = get_descriptor(self.descriptor)
+        all_ids = descriptor.all_ids()
         gcs = country_ges_components(self.country_code)
 
-        # TODO: handle D10, D11     !!
+        gcs = set([self.descriptor] + [g for g in gcs if g in all_ids])
+        gcs = sorted(gcs, key=lambda d: d.replace('D', ''))
 
-        return [self.descriptor] + [g for g in gcs if g.startswith(m)]
+        return gcs
 
     def __call__(self):
 
