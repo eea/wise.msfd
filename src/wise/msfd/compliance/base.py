@@ -22,6 +22,9 @@ from . import interfaces
 from .nationaldescriptors.utils import row_to_dict
 
 logger = logging.getLogger('wise.msfd')
+edw_logger = logging.getLogger('edw.logger')
+edw_logger.setLevel('WARNING')
+
 
 MAIN_FORMS = [Tab(*x) for x in [
     # view name, (title, explanation)

@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+import logging
 import json
 import os
 import time
@@ -25,6 +26,8 @@ SERVICE_URL = 'https://webgate.ec.europa.eu/etranslation/si/translate'
 
 # TODO: get another username?
 TRANS_USERNAME = 'ipetchesi'
+
+logger = logging.getLogger('wise.msfd.translation')
 
 
 def decode_text(text):
@@ -106,6 +109,8 @@ class SendTranslationRequest(BrowserView):
             dest = 'http://office.pixelblaster.ro:4880/Plone/marine' + \
                 '/translation-callback2?source_lang={}'.format(sourceLanguage)
 
+        logger.info('Translate callback destination: %s', dest)
+
         data = {
             'priority': 5,
             'callerInformation': {
@@ -139,6 +144,8 @@ class SendTranslationRequest(BrowserView):
         }
 
         # res = {'translation': 'Translation in progress!'}
+
+        logger.info('Translate request sent: %s', res)
 
         return json.dumps(res)
 
@@ -186,6 +193,8 @@ class TranslationCallback(BrowserView):
         trans_entry = {originalText: translatedText}
         annot_lang.update(trans_entry)
 
+        logger.info('Saving to annotation: %s', trans_entry)
+
         transaction.commit()
 
 
@@ -214,6 +223,8 @@ class TranslationView(BrowserView):
         show_translation = self.can_modify() and is_long_text
 
         if not value:
+            # logger.info('Translated value is: %s', value)
+
             return self.translate_snip(text=value,
                                        translation=u"",
                                        show_translation=show_translation)
@@ -231,6 +242,12 @@ class TranslationView(BrowserView):
             if value in annot_lang:
                 translation = annot_lang.get(value, None)
                 translation = translation.lstrip('?')
+            else:
+                logger.info('Value is not in annotation: %s', value)
+        else:
+            logger.warning('Annotation error!')
+
+        logger.info('Translated value for "%s" is: "%s"', value, translation)
 
         return self.translate_snip(text=value,
                                    translation=translation,
