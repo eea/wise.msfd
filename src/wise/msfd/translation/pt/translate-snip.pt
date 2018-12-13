@@ -1,10 +1,10 @@
 <tal:block
   tal:define="text options/text;
   translation options/translation;
-  show_translation options/show_translation;
+  can_translate options/can_translate;
 
   background_color python: 'blue' if not translation else 'green';
-  translatable_class python: 'translatable ' + background_color if show_translation else 'translatable';
+  translatable_class python: 'translatable ' + background_color if can_translate else 'translatable';
 
   text_extra_class python:'active' if not translation else '';
   text_class python:'translate-container text ' + text_extra_class;
@@ -17,7 +17,7 @@
   <td tal:attributes="class translatable_class">
     <tal:cond tal:condition="python: text">
 
-      <div class="dropdown" tal:condition="python: show_translation">
+      <div class="dropdown" tal:condition="can_translate">
         <button id="dLabel" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
           <span class="fa fa-ellipsis-v fa-sm"></span>
         </button>
@@ -39,7 +39,7 @@
         <div tal:attributes="class text_class" tal:content="text">Original Text</div>
         <div tal:attributes="class trans_class" tal:content="translation">Translated Text</div>
 
-        <div class="translate-language absolute" tal:condition="python: show_translation and translation">
+        <div class="translate-language absolute" tal:condition="python: can_translate and translation">
           <button tal:attributes="class btn_text_class" tal:content="view/country_code">LV</button>
           <button tal:attributes="class btn_trans_class" >EN</button>
         </div>

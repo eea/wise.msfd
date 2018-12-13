@@ -1,10 +1,9 @@
 # -*- coding: utf-8 -*-
 
-import logging
 import json
+import logging
 import os
 import time
-from eea.cache.event import InvalidateMemCacheEvent
 
 import chardet
 import requests
@@ -15,6 +14,7 @@ from zope.security import checkPermission
 
 import transaction
 from BTrees.OOBTree import OOBTree
+from eea.cache.event import InvalidateMemCacheEvent
 from plone.api import portal
 from plone.api.portal import get as get_portal
 from Products.Five.browser import BrowserView
@@ -229,11 +229,15 @@ class TranslationView(BrowserView):
 
             return self.translate_snip(text=value,
                                        translation=u"",
-                                       show_translation=False)
+                                       can_translate=False)
 
         value = unicode(value)
+
+        if value.startswith(u'In de init'):
+            logger.info("Looking up translation for: '%r'", value)
+
         is_long_text = len(value.split(' ')) > 4
-        show_translation = self.can_modify() and is_long_text
+        can_translate = self.can_modify() and is_long_text
         translation = u''
 
         site = get_portal()
@@ -250,7 +254,7 @@ class TranslationView(BrowserView):
 
         return self.translate_snip(text=value,
                                    translation=translation,
-                                   show_translation=show_translation)
+                                   can_translate=can_translate)
 
     def __call__(self):
         return self.translation_edit_template()
