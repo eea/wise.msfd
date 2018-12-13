@@ -445,7 +445,8 @@ if (!Array.prototype.last){
   }
 
 
-  function simplifyTable(){
+  function simplifyTable(_restore){
+    console.log("restore", _restore);
 
     // stretch all cells to the maximum table columns;
     var max = 0;
@@ -515,12 +516,9 @@ if (!Array.prototype.last){
     }
 
     $('.simplify-form input').on('change', function(){
-      console.log("Change", $(this).val());
+      var _type = $(this).is(':checked');
       $p = $(this).parent().parent();
-      console.log($p);
-      $table = ('table', $p);
-      console.log('table', $table);
-      $table.simplifyTable();
+      ('table', $p).simplifyTable(_type);
     });
   });
 }(window, document, $));

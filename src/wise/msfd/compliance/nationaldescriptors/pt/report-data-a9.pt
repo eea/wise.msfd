@@ -1,9 +1,6 @@
 <div class="">
   <div class="overflow-table">
-    <div class="simplify-form">
-      <input type="checkbox" name="simplify" value="yes" />
-      <label for="simplify">Simplify table</label>
-    </div>
+    <metal:s metal:use-macro="context/wise-macros/macros/simplify-table"></metal:s>
     <table class='table table-bordered table-striped table-report' style='width: 100%; overflow:auto'>
       <tal:rep tal:repeat="row view/rows">
         <tal:row replace="structure row"></tal:row>

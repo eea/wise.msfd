@@ -36,6 +36,7 @@ logger = logging.getLogger('wise.msfd')
 NSMAP = {"w": "http://water.eionet.europa.eu/schemas/dir200856ec"}
 
 
+# TODO: use only one cache key
 def cache_key_2012(func, self):
     muids = ",".join(self.muids)
 
@@ -46,6 +47,7 @@ class ReportData2012(BaseComplianceView, BaseUtil):
     """ WIP on compliance tables
     """
 
+    report_year = '2012'
     section = 'national-descriptors'
 
     @property
@@ -264,6 +266,7 @@ def get_reportdata_key(func, self, *args, **kwargs):
 
 class ReportData2018(BaseComplianceView):
 
+    report_year = '2018'
     section = 'national-descriptors'
 
     BLACKLIST = (
@@ -321,8 +324,9 @@ class ReportData2018(BaseComplianceView):
         t = getattr(sql2018, view_name)
 
         # TODO check conditions for other countries beside NL
-        conditions = [t.c.GESComponents.in_(all_ids)]
+        # conditions = [t.c.GESComponents.in_(all_ids)]
 
+        conditions = []
         params = get_parameters(self.descriptor)
         p_codes = [p.name for p in params]
         conditions.append(t.c.Parameter.in_(p_codes))
@@ -373,7 +377,12 @@ class ReportData2018(BaseComplianceView):
     def change_orientation(self, data):
         """ From a set of results, create labeled list of rows
         """
+
         def make_distinct(col_name, col_data):
+            """ Features come as a list of comma separated values, with
+            duplicated values among them. We make those values distinct
+            """
+
             if col_name not in ('Features', ):
                 return col_data
 
@@ -390,13 +399,14 @@ class ReportData2018(BaseComplianceView):
 
         sorted_fields = get_sorted_fields_2018(row0._fields, self.article)
 
-        for field in sorted_fields:
+        for fname, label in sorted_fields:
             values = [
-                make_distinct(field[0], getattr(row, field[0]))
+                make_distinct(fname, getattr(row, fname))
+
                 for row in data
             ]
 
-            res.append([field[1], values])
+            res.append([label, values])
 
         return res
 
@@ -467,6 +477,7 @@ class ReportData2018(BaseComplianceView):
                     if x.MarineReportingUnit == mru
                 ]
                 all_values = filter(lambda _: _ is not None, all_values)
+
                 if all_values:
                     all_values = set(all_values)
 

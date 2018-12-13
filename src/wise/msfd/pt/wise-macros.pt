@@ -52,3 +52,11 @@
     </div>
   </tal:def>
 </metal:macro>
+
+
+<metal:macro define-macro="simplify-table">
+  <div class="simplify-form">
+    <input type="checkbox" name="simplify" value="" />
+    <label for="simplify">Simplify table</label>
+  </div>
+</metal:macro>

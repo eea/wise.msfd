@@ -1,8 +1,7 @@
-import lxml.etree
-from pkg_resources import resource_filename
-
 from collections import defaultdict
 
+import lxml.etree
+from pkg_resources import resource_filename
 from sqlalchemy import and_, or_
 
 from wise.msfd import db, sql, sql2018
@@ -129,7 +128,8 @@ def get_sorted_fields_2018(fields, article):
 
     :param fields: ['Feature', 'GESComponents', 'Element', 'TargetCode', ...]
     :param article: 'Art8'
-    :return: [('Feature', 'Feature'), ('GESComponents', ''GESComponents),
+    :return: [('<fieldname>', <title'), ...
+              ('Feature', 'Feature'), ('GESComponents', ''GESComponents),
         ... , ('TargetCode', 'RelatedTargets')]
     """
 
@@ -142,7 +142,9 @@ def get_sorted_fields_2018(fields, article):
 
     labels = [
         (x.tag, x.text)
+
         for x in elements
+
         if x.attrib.get('skip', 'false') == 'false'
     ]
 

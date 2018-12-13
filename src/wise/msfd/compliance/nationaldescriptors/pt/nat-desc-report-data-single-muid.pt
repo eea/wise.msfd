@@ -22,10 +22,7 @@
         >
         <div class="overflow-table">
           <!--<h4 tal:content="muids">LV-01</h4>-->
-          <div class="simplify-form">
-            <input type="checkbox" name="simplify" value="yes" />
-            <label for="simplify">Simplify table</label>
-          </div>
+          <metal:s metal:use-macro="context/wise-macros/macros/simplify-table"></metal:s>
           <table class="table table-bordered table-striped table-comp-translate table-report">
             <tr>
               <th>MarineReportingUnit</th>

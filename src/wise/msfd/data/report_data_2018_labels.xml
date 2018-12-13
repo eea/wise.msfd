@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <data>
     <Art10>
-        <Feature>Feature</Feature>
-        <GESComponent>GESComponent</GESComponent>
+        <Features>Features</Features>
         <TargetCode>TargetCode</TargetCode>
         <Description>Description</Description>
         <GESComponents>GESComponents</GESComponents>
@@ -33,6 +32,8 @@
         <UpdateType>UpdateType</UpdateType>
     </Art9>
     <Art8>
+        <Feature>Feature</Feature>
+        <GESComponent>GESComponent</GESComponent>
         <Element>Element</Element>
         <ElementCode>ElementCode</ElementCode>
         <ElementCodeSource>ElementCodeSource</ElementCodeSource>
@@ -65,14 +66,14 @@
         <DescriptionElement>DescriptionElement</DescriptionElement>
         <IntegrationRuleTypeParameter>IntegrationRuleTypeParameter</IntegrationRuleTypeParameter>
         <IntegrationRuleDescriptionParameter>IntegrationRuleDescriptionParameter</IntegrationRuleDescriptionParameter>
-        <IntegrationRuleDescriptionReferenceParameter skip="true" reason="not in the XML">
+        <IntegrationRuleDescriptionReferenceParameter skip="true" reason="Not in the XML">
             IntegrationRuleDescriptionReferenceParameter
         </IntegrationRuleDescriptionReferenceParameter>
         <IntegrationRuleTypeCriteria>IntegrationRuleTypeCriteria</IntegrationRuleTypeCriteria>
         <IntegrationRuleDescriptionCriteria>
             IntegrationRuleDescriptionCriteria
         </IntegrationRuleDescriptionCriteria>
-        <IntegrationRuleDescriptionReferenceCriteria skip="true" reason="not in the XML">
+        <IntegrationRuleDescriptionReferenceCriteria skip="true" reason="Not in the XML">
             IntegrationRuleDescriptionReferenceCriteria
         </IntegrationRuleDescriptionReferenceCriteria>
         <GESExtentThreshold>GESExtentThreshold</GESExtentThreshold>
@@ -82,7 +83,7 @@
         <DescriptionOverallStatus>DescriptionOverallStatus</DescriptionOverallStatus>
         <AssessmentsPeriod>AssessmentsPeriod</AssessmentsPeriod>
         <PressureCode>RelatedPressures</PressureCode>
-        <RelatedActivities skip="true" reason="this field is not in the DB">
+        <RelatedActivities skip="true" reason="This field is not in the DB">
             Related activities
         </RelatedActivities>
         <TargetCode>RelatedTargets</TargetCode>
