@@ -48,10 +48,10 @@ def get_reportdata_key(func, self, *args, **kwargs):
         raise volatile.DontCache
 
     muids = ",".join(self.muids)
-    # region = getattr(self, 'country_region_code', ''.join(self.regions))
+    region = getattr(self, 'country_region_code', ''.join(self.regions))
 
     res = '_cache_' + '_'.join([self.report_year, self.country_code,
-                                self.country_region_code,
+                                region,
                                 self.descriptor, self.article, muids])
     res = res.replace('.', '').replace('-', '')
 
@@ -190,7 +190,8 @@ class ReportData2012(BaseComplianceView, BaseUtil):
         )
 
         # for caching
-        self.country_region_code = "".join(self.regions)
+        # self.country_region_code = "".join(self.regions)
+        # TODO: fix the above to enable proper cache discriminators
         report_data = self.get_report_data()
         self.report_html = report_header + report_data
 
@@ -478,6 +479,7 @@ class ReportData2018(BaseComplianceView):
 
                 if field[0] not in ignores[article]:
                     row[0] = field[1]
+
                     continue
 
                 # override the values for the ignored fields
