@@ -1,3 +1,6 @@
+import lxml.etree
+from pkg_resources import resource_filename
+
 from collections import defaultdict
 
 from sqlalchemy import and_, or_
@@ -120,51 +123,37 @@ def get_criterion_labels(criterions, descriptor, descriptor_label):
 
 
 def get_sorted_fields_2018(fields, article):
-    sorted_fields = {
-        'Art10': ('TargetCode', 'Description', 'GESComponents',
-                  'TimeScale', 'UpdateDate', 'UpdateType', 'Measures',
-                  'Element', 'Element2', 'Parameter', 'ParameterOther',
-                  'TargetValue', 'ValueAchievedUpper', 'ValueAchievedLower',
-                  'ValueUnit', 'ValueUnitOther', 'TargetStatus',
-                  'AssessmentPeriod', 'ProgressDescription', 'Indicators'),
-        'Art9': ('GESComponent', 'GESDescription', 'JustificationNonUse',
-                 'JustificationDelay', 'DeterminationDate', 'UpdateType'),
-        'Art8': ('Element', 'ElementCode', 'ElementCodeSource',
-                 'Element2', 'Element2Code', 'Element2CodeSource',
-                 'ElementSource', 'Criteria', 'Parameter', 'ParameterOther',
-                 'ThresholdValueUpper', 'ThresholdValueLower',
-                 'ThresholdQualitative', 'ThresholdValueSource',
-                 'ThresholdValueSourceOther',
-                 'ValueAchievedUpper', 'ValueAchievedLower', 'ValueUnit',
-                 'ValueUnitOther', 'ProportionThresholdValue',
-                 'ProportionValueAchieved', 'ProportionThresholdValueUnit',
-                 'Trend', 'ParameterAchieved', 'DescriptionParameter',
-                 'IndicatorCode', 'CriteriaStatus', 'DescriptionCriteria',
-                 'ElementStatus', 'DescriptionElement',
-                 'IntegrationRuleTypeParameter',
-                 'IntegrationRuleDescriptionParameter',
-                 'IntegrationRuleDescriptionReferenceParameter',
-                 'IntegrationRuleTypeCriteria',
-                 'IntegrationRuleDescriptionCriteria',
-                 'IntegrationRuleDescriptionReferenceCriteria',
-                 'GESExtentThreshold', 'GESExtentAchieved', 'GESExtentUnit',
-                 'GESAchieved', 'DescriptionOverallStatus',
-                 'AssessmentsPeriod',
-                 'PressureCode',  # RelatedPressures
-                 # Related activities, Does not have field in DB view
-                 'TargetCode',  # RelatedTargets
+    """ Return field/title by parsing report_data_2018_labels.xml
+        field = name from DB
+        title = title/label showed in the template
 
-                 # NOT used fields
-                 # 'GESComponent',
-                 # 'Feature',
-                 )
-    }
+    :param fields: ['Feature', 'GESComponents', 'Element', 'TargetCode', ...]
+    :param article: 'Art8'
+    :return: [('Feature', 'Feature'), ('GESComponents', ''GESComponents),
+        ... , ('TargetCode', 'RelatedTargets')]
+    """
 
-    sf = sorted_fields.get(article, None)
-    if not sf:
-        return fields
+    labels_file = resource_filename(
+        'wise.msfd',
+        'data/report_data_2018_labels.xml'
+    )
+    doc = lxml.etree.parse(labels_file)
+    elements = doc.find(article).getchildren()
 
-    diff = set(fields) - set(sf)
-    final = list(diff) + list(sf)
+    labels = [
+        (x.tag, x.text)
+        for x in elements
+        if x.attrib.get('skip', 'false') == 'false'
+    ]
+
+    if not labels:
+        final = [(x, x) for x in fields]
+
+        return final
+
+    diff = set(fields) - set([x.tag for x in elements])
+    final = [(x, x) for x in diff]
+
+    final.extend(labels)
 
     return final
