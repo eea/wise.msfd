@@ -106,11 +106,6 @@ class BootstrapCompliance(BrowserView):
         return "extranet-wisemarine-msfd-tl-" + code
 
     def make_country(self, parent, country_code, name):
-        # if 'nl' in country_code.lower():
-        #     import pdb; pdb.set_trace()
-
-        if country_code != 'NL':
-            return
 
         if country_code.lower() in parent.contentIds():
             cf = parent[country_code.lower()]
