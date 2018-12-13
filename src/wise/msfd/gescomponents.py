@@ -319,23 +319,49 @@ def get_parameters(descriptor_code=None):
     return res
 
 
+# def parse_features():
+#     res = {}
+#
+#     FEATURES = TERMSLIST['ReferenceFeature']        # FeaturesSmart
+#
+#     for fr in FEATURES:
+#         feature = fr['Feature']
+#
+#         if feature in res:
+#             continue
+#
+#         descs = set([f['GEScomponent']
+#                      .replace('D6/D1', 'D6').replace('D4/D1', 'D4')
+#
+#                      for f in FEATURES
+#
+#                      if f['Feature'] == feature])
+#
+#         res[feature] = Feature(feature, descs)
+#
+#     return res
+
+
 def parse_features():
     res = {}
 
-    for fr in TERMSLIST['ReferenceFeature']:
-        feature = fr['Feature']
+    FEATURES = TERMSLIST['FeaturesSmart']        #
 
-        if feature in res:
+    for fr in FEATURES:
+        code = fr['code']
+        label = fr['label']
+
+        if code in res:
             continue
 
-        descs = set([f['GEScomponent']
+        descs = set([f['descriptor']
                      .replace('D6/D1', 'D6').replace('D4/D1', 'D4')
 
-                     for f in TERMSLIST['ReferenceFeature']
+                     for f in FEATURES
 
-                     if f['Feature'] == feature])
+                     if f['code'] == code])
 
-        res[feature] = Feature(feature, descs)
+        res[code] = Feature(code, label, descs)
 
     return res
 
