@@ -12,7 +12,7 @@ from pkg_resources import resource_filename
 # the two reporting exercises.
 
 Criterion2012 = namedtuple('Criterion2012', ['id', 'title'])
-Feature = namedtuple('Feature', ['name', 'descriptors'])
+Feature = namedtuple('Feature', ['name', 'label', 'descriptors'])
 Parameter = namedtuple('Parameter', ['name', 'unit', 'criterias'])
 
 
