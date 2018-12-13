@@ -122,7 +122,7 @@ def get_criterion_labels(criterions, descriptor, descriptor_label):
 
 
 def get_sorted_fields_2018(fields, article):
-    """ Return field/title by parsing report_data_2018_labels.xml
+    """ Return field/title by parsing report_2018_def.xml
         field = name from DB
         title = title/label showed in the template
 
@@ -135,7 +135,7 @@ def get_sorted_fields_2018(fields, article):
 
     labels_file = resource_filename(
         'wise.msfd',
-        'data/report_data_2018_labels.xml'
+        'data/report_2018_def.xml'
     )
     doc = lxml.etree.parse(labels_file)
     elements = doc.find(article).getchildren()

@@ -4,10 +4,12 @@ import logging
 import json
 import os
 import time
+from eea.cache.event import InvalidateMemCacheEvent
 
 import chardet
 import requests
 from requests.auth import HTTPDigestAuth
+from zope import event
 from zope.annotation.interfaces import IAnnotations
 from zope.security import checkPermission
 
@@ -77,7 +79,6 @@ class SendTranslationRequest(BrowserView):
         return text
 
     def __call__(self):
-
         sourceLanguage = self.context.aq_parent.aq_parent.aq_parent.id.upper()
 
         if not sourceLanguage:
@@ -160,6 +161,11 @@ class TranslationCallback(BrowserView):
         return self.request.form
 
     def saveToAnnotation(self):
+        # invalidate cache for translation
+        deps = ['translation']
+        event.notify(InvalidateMemCacheEvent(raw=True, dependencies=deps))
+        logger.info('Invalidate cache for dependencies: %s', ', '.join(deps))
+
         site = portal.getSite()
         annot = IAnnotations(site, None)
 
@@ -219,16 +225,15 @@ class TranslationView(BrowserView):
     def translate(self, source_lang, value):
         # TODO: implement getting the translation from annotations
 
-        is_long_text = len(unicode(value).split(' ')) > 4
-        show_translation = self.can_modify() and is_long_text
-
         if not value:
-            # logger.info('Translated value is: %s', value)
 
             return self.translate_snip(text=value,
                                        translation=u"",
-                                       show_translation=show_translation)
+                                       show_translation=False)
 
+        value = unicode(value)
+        is_long_text = len(value.split(' ')) > 4
+        show_translation = self.can_modify() and is_long_text
         translation = u''
 
         site = get_portal()
@@ -242,12 +247,6 @@ class TranslationView(BrowserView):
             if value in annot_lang:
                 translation = annot_lang.get(value, None)
                 translation = translation.lstrip('?')
-            else:
-                logger.info('Value is not in annotation: %s', value)
-        else:
-            logger.warning('Annotation error!')
-
-        logger.info('Translated value for "%s" is: "%s"', value, translation)
 
         return self.translate_snip(text=value,
                                    translation=translation,

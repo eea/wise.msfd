@@ -36,7 +36,26 @@ logger = logging.getLogger('wise.msfd')
 NSMAP = {"w": "http://water.eionet.europa.eu/schemas/dir200856ec"}
 
 
-# TODO: use only one cache key
+def get_reportdata_key(func, self, *args, **kwargs):
+    """ Reportdata template rendering cache key generation
+    """
+
+    # import pdb; pdb.set_trace()
+
+    if 'refresh' in self.request.form:
+        raise volatile.DontCache
+
+    muids = ",".join(self.muids)
+    # region = getattr(self, 'country_region_code', ''.join(self.regions))
+
+    res = '_cache_' + '_'.join([self.report_year, self.country_code,
+                                self.country_region_code,
+                                self.descriptor, self.article, muids])
+    res = res.replace('.', '').replace('-', '')
+
+    return res
+
+
 def cache_key_2012(func, self):
     muids = ",".join(self.muids)
 
@@ -107,7 +126,7 @@ class ReportData2012(BaseComplianceView, BaseUtil):
 
         return sorted(muids)
 
-    @cache(cache_key_2012)
+    @cache(get_reportdata_key, dependencies=['translation'])
     def get_report_data(self):
         logger.info("Rendering 2012 report for: %s %s %s %s",
                     self.country_code, self.descriptor, self.article,
@@ -168,6 +187,8 @@ class ReportData2012(BaseComplianceView, BaseUtil):
             factsheet=factsheet,
         )
 
+        # for caching
+        self.country_region_code = "".join(self.regions)
         report_data = self.get_report_data()
         self.report_html = report_header + report_data
 
@@ -248,20 +269,6 @@ class SnapshotSelectForm(Form):
         print "harvesting data"
 
         self.request.response.redirect('./@@view-report-data-2018')
-
-
-def get_reportdata_key(func, self, *args, **kwargs):
-    """ Reportdata template rendering cache key generation
-    """
-
-    if 'refresh' in self.request.form:
-        raise volatile.DontCache
-
-    res = '_cache_' + '_'.join([self.country_code, self.country_region_code,
-                                self.descriptor, self.article])
-    res = res.replace('.', '').replace('-', '')
-
-    return res
 
 
 class ReportData2018(BaseComplianceView):
@@ -406,7 +413,7 @@ class ReportData2018(BaseComplianceView):
                 for row in data
             ]
 
-            res.append([label, values])
+            res.append([(fname, label), values])
 
         return res
 
@@ -461,21 +468,27 @@ class ReportData2018(BaseComplianceView):
             changed = (mru, self.change_orientation(filtered_data))
 
             for row in changed[1]:
+                # field = db_name/title ('TargetCode', 'RelatedTargets')
                 field = row[0]
                 row_data = row[1]
 
-                if field not in ignores[article]:
+                # import pdb; pdb.set_trace()
+
+                if field[0] not in ignores[article]:
+                    row[0] = field[1]
                     continue
 
                 # override the values for the ignored fields
                 # with all the values from DB
                 all_values = [
-                    getattr(x, field)
+                    getattr(x, field[0])
 
                     for x in data
 
                     if x.MarineReportingUnit == mru
                 ]
+                row[0] = field[1]
+
                 all_values = filter(lambda _: _ is not None, all_values)
 
                 if all_values:
@@ -549,7 +562,7 @@ class ReportData2018(BaseComplianceView):
 
         return ', '.join(muids)
 
-    @cache(get_reportdata_key)
+    @cache(get_reportdata_key, dependencies=['translation'])
     def render_reportdata(self):
         logger.info("Quering database for 2018 report data: %s %s %s %s",
                     self.country_code, self.country_region_code, self.article,
@@ -606,6 +619,7 @@ class ReportData2018(BaseComplianceView):
         t = time.time()
         logger.info("Started rendering of report data")
 
+        self.muids = []
         report_html = self.render_reportdata()
 
         delta = time.time() - t
