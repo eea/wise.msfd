@@ -106,47 +106,67 @@ class BootstrapCompliance(BrowserView):
         return "extranet-wisemarine-msfd-tl-" + code
 
     def make_country(self, parent, country_code, name):
-        cf = create(parent,
-                    'wise.msfd.countrydescriptorsfolder',
-                    title=name,
-                    id=country_code)
+        # if 'nl' in country_code.lower():
+        #     import pdb; pdb.set_trace()
+
+        if country_code != 'NL':
+            return
+
+        if country_code.lower() in parent.contentIds():
+            cf = parent[country_code.lower()]
+        else:
+            cf = create(parent,
+                        'wise.msfd.countrydescriptorsfolder',
+                        title=name,
+                        id=country_code)
 
         for regid, region in self.get_country_regions(country_code):
-            reg = create(cf,
-                         'Folder',
-                         title=region,
-                         id=regid)
-            alsoProvides(reg, interfaces.INationalRegionDescriptorFolder)
-            self.set_layout(reg, '@@nat-desc-reg-view')
+            if regid.lower() in cf.contentIds():
+                reg = cf[regid.lower()]
+            else:
+                reg = create(cf,
+                             'Folder',
+                             title=region,
+                             id=regid.lower())
+                alsoProvides(reg, interfaces.INationalRegionDescriptorFolder)
+                self.set_layout(reg, '@@nat-desc-reg-view')
 
             for desc_code, description in self._get_descriptors():
-                df = create(reg, 'Folder', title=description, id=desc_code)
-                alsoProvides(df, interfaces.IDescriptorFolder)
+                if desc_code.lower() in reg.contentIds():
+                    df = reg[desc_code.lower()]
+                else:
+                    df = create(reg, 'Folder', title=description, id=desc_code)
+                    alsoProvides(df, interfaces.IDescriptorFolder)
 
                 for art in self._get_articles():
-                    nda = create(df, 'wise.msfd.nationaldescriptorassessment',
-                                 title=u'{} - {}'.format(art, desc_code))
-                    lr = nda.__ac_local_roles__
+                    if art.lower() in df.contentIds():
+                        nda = df[art.lower()]
+                    else:
+                        nda = create(df,
+                                     'wise.msfd.nationaldescriptorassessment',
+                                     title=art)
+                        lr = nda.__ac_local_roles__
 
-                    group = self.get_group(desc_code)
+                        group = self.get_group(desc_code)
 
-                    lr[group] = ['Contributor']
+                        lr[group] = ['Contributor']
 
-                    logger.info("Created NationalDescriptorAssessment %s",
-                                nda.absolute_url())
+                        logger.info("Created NationalDescriptorAssessment %s",
+                                    nda.absolute_url())
 
-                    self.set_layout(nda, '@@nat-desc-art-view')
+                        self.set_layout(nda, '@@nat-desc-art-view')
 
                     for id, title, trans in [
                             (u'tl', 'Discussion track with Topic Leads',
                              'open_for_tl'),
                             (u'ec', 'Discussion track with EC', 'open_for_ec'),
                     ]:
-                        dt = create(nda,
-                                    'wise.msfd.commentsfolder',
-                                    id=id,
-                                    title=title)
-                        transition(obj=dt, transition=trans)
+                        if id not in nda.contentIds():
+                            dt = create(nda,
+                                        'wise.msfd.commentsfolder',
+                                        id=id,
+                                        title=title)
+                            transition(obj=dt, transition=trans)
 
         return cf
 
@@ -158,10 +178,14 @@ class BootstrapCompliance(BrowserView):
 
     def setup_nationaldescriptors(self, parent):
         # National Descriptors Assessments
-        nda = create(parent,
-                     'Folder', title=u'National Descriptors Assessments')
-        self.set_layout(nda, '@@nat-desc-start')
-        alsoProvides(nda, interfaces.INationalDescriptorsFolder)
+
+        if 'national-descriptors-assessments' in parent.contentIds():
+            nda = parent['national-descriptors-assessments']
+        else:
+            nda = create(parent,
+                         'Folder', title=u'National Descriptors Assessments')
+            self.set_layout(nda, '@@nat-desc-start')
+            alsoProvides(nda, interfaces.INationalDescriptorsFolder)
 
         for code, country in self._get_countries():
             self.make_country(nda, code, country)
@@ -178,24 +202,28 @@ class BootstrapCompliance(BrowserView):
 
     def __call__(self):
 
+        # if 'compliance-module' in self.context.contentIds():
+        #     self.context.manage_delObjects(['compliance-module'])
+
         if 'compliance-module' in self.context.contentIds():
-            self.context.manage_delObjects(['compliance-module'])
+            cm = self.context['compliance-module']
+        else:
+            cm = create(self.context, 'Folder', title=u'Compliance Module')
 
-        cm = create(self.context, 'Folder', title=u'Compliance Module')
-        self.set_layout(cm, '@@comp-start')
-        self.set_policy(cm, 'compliance_section_policy')
+            self.set_layout(cm, '@@comp-start')
+            self.set_policy(cm, 'compliance_section_policy')
 
-        alsoProvides(cm, interfaces.IComplianceModuleFolder)
+            alsoProvides(cm, interfaces.IComplianceModuleFolder)
 
-        lr = cm.__ac_local_roles__
-        lr['extranet-wisemarine-msfd-reviewers'] = [u'Reviewer']
-        lr['extranet-wisemarine-msfd-editors'] = [u'Editor']
+            lr = cm.__ac_local_roles__
+            lr['extranet-wisemarine-msfd-reviewers'] = [u'Reviewer']
+            lr['extranet-wisemarine-msfd-editors'] = [u'Editor']
 
         # Contributor: TL
         # Reviewer: EC
         # Editor: Milieu
 
         self.setup_nationaldescriptors(cm)
-        self.setup_regionaldescriptors(cm)
+        # self.setup_regionaldescriptors(cm)
 
         return cm.absolute_url()
