@@ -390,10 +390,13 @@ class ReportData2018(BaseComplianceView):
 
         sorted_fields = get_sorted_fields_2018(row0._fields, self.article)
 
-        for name in sorted_fields:
-            values = [make_distinct(name, getattr(row, name)) for row in data]
+        for field in sorted_fields:
+            values = [
+                make_distinct(field[0], getattr(row, field[0]))
+                for row in data
+            ]
 
-            res.append([name, values])
+            res.append([field[1], values])
 
         return res
 
@@ -456,13 +459,16 @@ class ReportData2018(BaseComplianceView):
 
                 # override the values for the ignored fields
                 # with all the values from DB
-                all_values = set([
+                all_values = [
                     getattr(x, field)
 
                     for x in data
 
                     if x.MarineReportingUnit == mru
-                ])
+                ]
+                all_values = filter(lambda _: _ is not None, all_values)
+                if all_values:
+                    all_values = set(all_values)
 
                 new_row_data = [', '.join(all_values)] * len(row_data)
 
