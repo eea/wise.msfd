@@ -231,10 +231,12 @@ class TranslationView(BrowserView):
                                        translation=u"",
                                        can_translate=False)
 
-        value = unicode(value)
-
-        if value.startswith(u'In de init'):
-            logger.info("Looking up translation for: '%r'", value)
+        if isinstance(value, str):
+            value = unicode(value)      # TODO: should use decode?
+        elif isinstance(value, unicode):
+            pass
+        else:
+            value = unicode(value)
 
         is_long_text = len(value.split(' ')) > 4
         can_translate = self.can_modify() and is_long_text
