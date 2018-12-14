@@ -464,9 +464,11 @@ class ItemList(TemplateMixin):
                 res = [LabelItemList(n, n) for n in rows]
 
         else:
-            res = None
+            res = []
 
-        self.rows = res
+        res_sorted = sorted(res, key=lambda r: r[0])
+
+        self.rows = res_sorted
 
 
 class CompoundRow(TemplateMixin):

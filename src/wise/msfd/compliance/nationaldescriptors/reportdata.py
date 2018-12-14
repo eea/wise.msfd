@@ -19,8 +19,9 @@ from wise.msfd import db, sql, sql2018
 from wise.msfd.base import BaseUtil
 from wise.msfd.data import (get_factsheet_url, get_report_data,
                             get_report_file_url, get_report_filename)
-from wise.msfd.gescomponents import (get_descriptor, get_features,
-                                     get_feature_label, get_parameters)
+from wise.msfd.gescomponents import (LabelCollection, get_descriptor,
+                                     get_features, get_parameters)
+
 from wise.msfd.utils import ItemList
 from z3c.form.button import buttonAndHandler
 from z3c.form.field import Fields
@@ -120,7 +121,7 @@ class ReportData2012(BaseComplianceView, BaseUtil):
 
         return sorted(muids)
 
-    # @cache(get_reportdata_key, dependencies=['translation'])
+    @cache(get_reportdata_key, dependencies=['translation'])
     def get_report_data(self):
         logger.info("Rendering 2012 report for: %s %s %s %s",
                     self.country_code, self.descriptor, self.article,
@@ -263,8 +264,22 @@ class SnapshotSelectForm(Form):
         self.request.response.redirect('./@@view-report-data-2018')
 
 
-class Proxy(object):
+# class Proxy(object):
+#
+#     def __init__(self, obj):
+#         self.__o = obj       # original object
+#
+#     def __getattr__(self, name):
+#         return getattr(self.__o, name)
+#
+#     def __iter__(self):
+#         return iter(self.__o)
 
+
+LabelCollection = LabelCollection()
+
+
+class A8Proxy(object):     # Proxy
     def __init__(self, obj):
         self.__o = obj       # original object
 
@@ -273,6 +288,56 @@ class Proxy(object):
 
     def __iter__(self):
         return iter(self.__o)
+
+    @property
+    def Feature(self):
+        s = self.__o.Feature.strip()
+        res = [(LabelCollection.get_feature_label(s), s)]
+
+        return ItemList(rows=res)
+
+    @property
+    def Parameter(self):
+        s = self.__o.Parameter.strip()
+        res = [(LabelCollection.get_parameter_label(s), s)]
+
+        return ItemList(rows=res)
+
+    @property
+    def ThresholdValueSource(self):
+        s = self.__o.ThresholdValueSource.strip()
+        res = [(LabelCollection.get_threshold_sources_label(s), s)]
+
+        return ItemList(rows=res)
+
+    @property
+    def ValueUnit(self):
+        s = self.__o.ValueUnit.strip()
+        res = [(LabelCollection.get_units_label(s), s)]
+
+        return ItemList(rows=res)
+
+    @property
+    def ElementCodeSource(self):
+        s = self.__o.ElementCodeSource.strip()
+        res = [(LabelCollection.get_element_code_sources_label(s), s)]
+
+        return ItemList(rows=res)
+
+    @property
+    def Element2CodeSource(self):
+        s = self.__o.Element2CodeSource.strip()
+        res = [(LabelCollection.get_element_code_sources_label(s), s)]
+
+        return ItemList(rows=res)
+
+    # TODO make this work
+    # @property
+    # def PressureCode(self):
+    #     s = self.__o.PressureCode.strip()
+    #     res = [(LabelCollection.get_pressure_label(s), s)]
+    #
+    #     return ItemList(rows=res)
 
 
 class A10Proxy(object):     # Proxy
@@ -287,9 +352,40 @@ class A10Proxy(object):     # Proxy
 
     @property
     def Features(self):
-        # TODO: label/translate the individual features
-        s = sorted(set(self.__o.Features.split(',')))
-        res = [(get_feature_label(x), x) for x in s]
+        s = set(self.__o.Features.split(','))
+        res = [(LabelCollection.get_feature_label(x), x) for x in s]
+
+        return ItemList(rows=res)
+
+    @property
+    def Parameter(self):
+        s = self.__o.Parameter.strip()
+        res = [(LabelCollection.get_parameter_label(s), s)]
+
+        return ItemList(rows=res)
+
+    @property
+    def ValueUnit(self):
+        s = self.__o.ValueUnit.strip()
+        res = [(LabelCollection.get_units_label(s), s)]
+
+        return ItemList(rows=res)
+
+
+class A9Proxy(object):     # Proxy
+    def __init__(self, obj):
+        self.__o = obj       # original object
+
+    def __getattr__(self, name):
+        return getattr(self.__o, name)
+
+    def __iter__(self):
+        return iter(self.__o)
+
+    @property
+    def Features(self):
+        s = set(self.__o.Features.split(','))
+        res = [(LabelCollection.get_feature_label(x), x) for x in s]
 
         return ItemList(rows=res)
 
@@ -341,7 +437,9 @@ class ReportData2018(BaseComplianceView):
             *conditions
         )
 
-        return res
+        data = [A8Proxy(row) for row in res]
+
+        return data
 
     def get_data_from_view_art10(self):
         descr_class = get_descriptor(self.descriptor)
@@ -361,8 +459,6 @@ class ReportData2018(BaseComplianceView):
         p_codes = [p.name for p in params]
         conditions.append(t.c.Parameter.in_(p_codes))
 
-        # import pdb; pdb.set_trace()
-
         features = set([f.name for f in get_features(self.descriptor)])
 
         count, res = db.get_all_records_ordered(
@@ -380,13 +476,9 @@ class ReportData2018(BaseComplianceView):
             if feats.intersection(features):
                 out.append(row)
 
-        # TODO: need a proxy here
-        # for row in out:
-        #     row.Features = ItemList(rows=row.Features.split(','))
+        data = [A10Proxy(row) for row in out]
 
-        # import pdb; pdb.set_trace()
-
-        return out
+        return data
 
     def get_data_from_view_art9(self):
 
@@ -407,7 +499,9 @@ class ReportData2018(BaseComplianceView):
             *conditions
         )
 
-        return r
+        data = [A9Proxy(row) for row in r]
+
+        return data
 
     def change_orientation(self, data):
         """ From a set of results, create labeled list of rows
@@ -456,9 +550,6 @@ class ReportData2018(BaseComplianceView):
         )
 
         data = get_data_method()
-
-        if self.article == 'Art10':
-            data = [A10Proxy(row) for row in data]
 
         grouped_data = defaultdict(list)
 
@@ -511,13 +602,7 @@ class ReportData2018(BaseComplianceView):
 
                 # override the values for the ignored fields
                 # with all the values from DB
-                all_values = [
-                    getattr(x, field[0])
-
-                    for x in data
-
-                    if x.MarineReportingUnit == mru
-                ]
+                all_values = [getattr(x, field[0]) for x in data if x.MarineReportingUnit == mru]
                 row[0] = field[1]
 
                 all_values = filter(lambda _: _ is not None, all_values)
@@ -594,7 +679,7 @@ class ReportData2018(BaseComplianceView):
 
         return ', '.join(muids)
 
-    # @cache(get_reportdata_key, dependencies=['translation'])
+    @cache(get_reportdata_key, dependencies=['translation'])
     def render_reportdata(self):
         logger.info("Quering database for 2018 report data: %s %s %s %s",
                     self.country_code, self.country_region_code, self.article,
