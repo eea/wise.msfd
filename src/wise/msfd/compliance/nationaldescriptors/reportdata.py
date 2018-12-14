@@ -292,42 +292,60 @@ class A8Proxy(object):     # Proxy
     @property
     def Feature(self):
         s = self.__o.Feature.strip()
-        res = [(LabelCollection.get_feature_label(s), s)]
+        label_name = 'feature_labels'
+        res = [(LabelCollection.get_label(label_name, s), s)]
 
         return ItemList(rows=res)
 
     @property
     def Parameter(self):
         s = self.__o.Parameter.strip()
-        res = [(LabelCollection.get_parameter_label(s), s)]
+        label_name = 'parameter_labels'
+        res = [(LabelCollection.get_label(label_name, s), s)]
+
+        return ItemList(rows=res)
+
+    @property
+    def IntegrationRuleTypeParameter(self):
+        s = self.__o.IntegrationRuleTypeParameter.strip()
+        label_name = 'parameter_labels'
+        res = [(LabelCollection.get_label(label_name, s), s)]
 
         return ItemList(rows=res)
 
     @property
     def ThresholdValueSource(self):
         s = self.__o.ThresholdValueSource.strip()
-        res = [(LabelCollection.get_threshold_sources_label(s), s)]
+        label_name = 'threshold_sources_labels'
+        res = [(LabelCollection.get_label(label_name, s), s)]
 
         return ItemList(rows=res)
 
     @property
     def ValueUnit(self):
         s = self.__o.ValueUnit.strip()
-        res = [(LabelCollection.get_units_label(s), s)]
+        label_name = 'units_labels'
+        res = [(LabelCollection.get_label(label_name, s), s)]
 
         return ItemList(rows=res)
 
     @property
     def ElementCodeSource(self):
         s = self.__o.ElementCodeSource.strip()
-        res = [(LabelCollection.get_element_code_sources_label(s), s)]
+        label_name = 'elementcode_sources_labels'
+        res = [
+            (LabelCollection.get_label(label_name, s), s)
+        ]
 
         return ItemList(rows=res)
 
     @property
     def Element2CodeSource(self):
         s = self.__o.Element2CodeSource.strip()
-        res = [(LabelCollection.get_element_code_sources_label(s), s)]
+        label_name = 'elementcode_sources_labels'
+        res = [
+            (LabelCollection.get_label(label_name, s), s)
+        ]
 
         return ItemList(rows=res)
 
@@ -335,7 +353,8 @@ class A8Proxy(object):     # Proxy
     # @property
     # def PressureCode(self):
     #     s = self.__o.PressureCode.strip()
-    #     res = [(LabelCollection.get_pressure_label(s), s)]
+    #     label_name = 'pressure_labels'
+    #     res = [(LabelCollection.get_pressure_label(label_name, s), s)]
     #
     #     return ItemList(rows=res)
 
@@ -353,21 +372,27 @@ class A10Proxy(object):     # Proxy
     @property
     def Features(self):
         s = set(self.__o.Features.split(','))
-        res = [(LabelCollection.get_feature_label(x), x) for x in s]
+        label_name = 'feature_labels'
+        res = [
+            (LabelCollection.get_label(label_name, x), x)
+            for x in s
+        ]
 
         return ItemList(rows=res)
 
     @property
     def Parameter(self):
         s = self.__o.Parameter.strip()
-        res = [(LabelCollection.get_parameter_label(s), s)]
+        label_name = 'parameter_labels'
+        res = [(LabelCollection.get_label(label_name, s), s)]
 
         return ItemList(rows=res)
 
     @property
     def ValueUnit(self):
         s = self.__o.ValueUnit.strip()
-        res = [(LabelCollection.get_units_label(s), s)]
+        label_name = 'units_labels'
+        res = [(LabelCollection.get_label(label_name, s), s)]
 
         return ItemList(rows=res)
 
@@ -385,7 +410,11 @@ class A9Proxy(object):     # Proxy
     @property
     def Features(self):
         s = set(self.__o.Features.split(','))
-        res = [(LabelCollection.get_feature_label(x), x) for x in s]
+        label_name = 'feature_labels'
+        res = [
+            (LabelCollection.get_label(label_name, x), x)
+            for x in s
+        ]
 
         return ItemList(rows=res)
 
@@ -602,7 +631,13 @@ class ReportData2018(BaseComplianceView):
 
                 # override the values for the ignored fields
                 # with all the values from DB
-                all_values = [getattr(x, field[0]) for x in data if x.MarineReportingUnit == mru]
+                all_values = [
+                    getattr(x, field[0])
+
+                    for x in data
+
+                    if x.MarineReportingUnit == mru
+                ]
                 row[0] = field[1]
 
                 all_values = filter(lambda _: _ is not None, all_values)

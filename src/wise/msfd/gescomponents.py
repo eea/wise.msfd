@@ -379,7 +379,7 @@ def get_features(descriptor_code=None):
             if descriptor_code in f.descriptors]
 
 
-def __parse_labels(label_name):
+def _parse_labels(label_name):
     res = {}
 
     features = TERMSLIST[label_name]
@@ -396,65 +396,20 @@ def __parse_labels(label_name):
     return res
 
 
-# this are needed because ReferenceFeature does not contain all features
-FEATURES_LABELS = __parse_labels('Features')
-
-PRESSURES_LABELS = __parse_labels('Pressures')
-PARAMETERS_LABELS = __parse_labels('Parameters')
-THRESHOLD_SOURCES_LABELS = __parse_labels('ThresholdSources')
-UNITS_LABELS = __parse_labels('Units')
-ELEMENTCODE_SOURCES_LABELS = __parse_labels('ElementCodeSources')
-
-
 class LabelCollection(object):
-    def __get_label(self, labels_dict, value):
-        if not value:
+    # this are needed because ReferenceFeature does not contain all features
+    feature_labels = _parse_labels('Features')
+    pressure_labels = _parse_labels('Pressures')
+    parameter_labels = _parse_labels('Parameters')
+    threshold_sources_labels = _parse_labels('ThresholdSources')
+    units_labels = _parse_labels('Units')
+    elementcode_sources_labels = _parse_labels('ElementCodeSources')
+
+    def get_label(self, label_name, value):
+        label_dict = getattr(self, label_name, None)
+        if not label_dict:
             return value
 
-        label = labels_dict.get(value, None)
-        if label:
-            return label
-
-        return value
-
-    def get_feature_label(self, feature):
-        labels_dict = FEATURES_LABELS
-
-        label = self.__get_label(labels_dict, feature)
-
-        return label
-
-    def get_pressure_label(self, pressure):
-        labels_dict = PRESSURES_LABELS
-
-        label = self.__get_label(labels_dict, pressure)
-
-        return label
-
-    def get_parameter_label(self, parameter):
-        labels_dict = PARAMETERS_LABELS
-
-        label = self.__get_label(labels_dict, parameter)
-
-        return label
-
-    def get_threshold_sources_label(self, threshold):
-        labels_dict = THRESHOLD_SOURCES_LABELS
-
-        label = self.__get_label(labels_dict, threshold)
-
-        return label
-
-    def get_units_label(self, unit):
-        labels_dict = UNITS_LABELS
-
-        label = self.__get_label(labels_dict, unit)
-
-        return label
-
-    def get_element_code_sources_label(self, elem):
-        labels_dict = ELEMENTCODE_SOURCES_LABELS
-
-        label = self.__get_label(labels_dict, elem)
+        label = label_dict.get(value, value)
 
         return label
