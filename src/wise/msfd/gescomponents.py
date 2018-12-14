@@ -397,7 +397,11 @@ def _parse_labels(label_name):
 
 
 class LabelCollection(object):
-    # this are needed because ReferenceFeature does not contain all features
+    """ A convenience wrapper over multiple structures with labels
+
+    Needed because ReferenceFeature does not contain all features
+    """
+
     feature_labels = _parse_labels('Features')
     pressure_labels = _parse_labels('Pressures')
     parameter_labels = _parse_labels('Parameters')
@@ -405,11 +409,15 @@ class LabelCollection(object):
     units_labels = _parse_labels('Units')
     elementcode_sources_labels = _parse_labels('ElementCodeSources')
 
-    def get_label(self, label_name, value):
-        label_dict = getattr(self, label_name, None)
-        if not label_dict:
-            return value
+    def get(self, collection_name, name):
+        label_dict = getattr(self, collection_name, None)
 
-        label = label_dict.get(value, value)
+        if not label_dict:
+            return name
+
+        label = label_dict.get(name, name)
 
         return label
+
+
+LABELS = LabelCollection()

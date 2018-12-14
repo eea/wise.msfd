@@ -6,6 +6,7 @@ from datetime import datetime
 from io import BytesIO
 
 from lxml.etree import fromstring
+from six import string_types
 from zope.schema import Choice
 from zope.schema.vocabulary import SimpleTerm, SimpleVocabulary
 
@@ -19,10 +20,9 @@ from wise.msfd import db, sql, sql2018
 from wise.msfd.base import BaseUtil
 from wise.msfd.data import (get_factsheet_url, get_report_data,
                             get_report_file_url, get_report_filename)
-from wise.msfd.gescomponents import (LabelCollection, get_descriptor,
-                                     get_features, get_parameters)
-
-from wise.msfd.utils import ItemList
+from wise.msfd.gescomponents import (LABELS, get_descriptor, get_features,
+                                     get_parameters)
+from wise.msfd.utils import ItemLabel, ItemList
 from z3c.form.button import buttonAndHandler
 from z3c.form.field import Fields
 from z3c.form.form import Form
@@ -43,7 +43,7 @@ def get_reportdata_key(func, self, *args, **kwargs):
     """ Reportdata template rendering cache key generation
     """
 
-    if 'refresh' in self.request.form:
+    if 'nocache' in self.request.form:
         raise volatile.DontCache
 
     muids = ",".join(self.muids)
@@ -189,7 +189,7 @@ class ReportData2012(BaseComplianceView, BaseUtil):
 
     def get_reporting_information(self):
         # The MSFD<ArtN>_ReportingInformation tables are not reliable (8b is
-        # emptt), so we try to get the information from the reported XML files.
+        # empty), so we try to get the information from the reported XML files.
 
         default = ReportingInformation('Member State', '2013-04-30')
 
@@ -264,90 +264,38 @@ class SnapshotSelectForm(Form):
         self.request.response.redirect('./@@view-report-data-2018')
 
 
-# class Proxy(object):
-#
-#     def __init__(self, obj):
-#         self.__o = obj       # original object
-#
-#     def __getattr__(self, name):
-#         return getattr(self.__o, name)
-#
-#     def __iter__(self):
-#         return iter(self.__o)
-
-
-LabelCollection = LabelCollection()
-
-
-class A8Proxy(object):     # Proxy
+class A8Proxy(object):
     def __init__(self, obj):
-        self.__o = obj       # original object
+        self.__o = obj       # the proxied object
+
+        # we try to translate shortcodes into labels
+        simple_labels = [
+            ('Feature', 'feature_labels'),
+            ('Parameter', 'parameter_labels'),
+            ('IntegrationRuleTypeParameter', 'parameter_labels'),
+            ('ThresholdValueSource', 'threshold_sources_labels'),
+            ('ValueUnit', 'units_labels'),
+            ('ElementCodeSource', 'elementcode_sources_labels'),
+            ('Element2CodeSource', 'elementcode_sources_labels'),
+        ]
+
+        for (name, collection_name) in simple_labels:
+            value = getattr(self.__o, name)
+
+            if isinstance(value, string_types):
+                value = value.strip()
+
+            if not value:       # don't overwrite empty values
+                continue
+
+            title = LABELS.get(collection_name, value)
+            setattr(self, name, ItemLabel(value, title))
 
     def __getattr__(self, name):
         return getattr(self.__o, name)
 
     def __iter__(self):
         return iter(self.__o)
-
-    @property
-    def Feature(self):
-        s = self.__o.Feature.strip()
-        label_name = 'feature_labels'
-        res = [(LabelCollection.get_label(label_name, s), s)]
-
-        return ItemList(rows=res)
-
-    @property
-    def Parameter(self):
-        s = self.__o.Parameter.strip()
-        label_name = 'parameter_labels'
-        res = [(LabelCollection.get_label(label_name, s), s)]
-
-        return ItemList(rows=res)
-
-    @property
-    def IntegrationRuleTypeParameter(self):
-        s = self.__o.IntegrationRuleTypeParameter.strip()
-        label_name = 'parameter_labels'
-        res = [(LabelCollection.get_label(label_name, s), s)]
-
-        return ItemList(rows=res)
-
-    @property
-    def ThresholdValueSource(self):
-        s = self.__o.ThresholdValueSource.strip()
-        label_name = 'threshold_sources_labels'
-        res = [(LabelCollection.get_label(label_name, s), s)]
-
-        return ItemList(rows=res)
-
-    @property
-    def ValueUnit(self):
-        s = self.__o.ValueUnit.strip()
-        label_name = 'units_labels'
-        res = [(LabelCollection.get_label(label_name, s), s)]
-
-        return ItemList(rows=res)
-
-    @property
-    def ElementCodeSource(self):
-        s = self.__o.ElementCodeSource.strip()
-        label_name = 'elementcode_sources_labels'
-        res = [
-            (LabelCollection.get_label(label_name, s), s)
-        ]
-
-        return ItemList(rows=res)
-
-    @property
-    def Element2CodeSource(self):
-        s = self.__o.Element2CodeSource.strip()
-        label_name = 'elementcode_sources_labels'
-        res = [
-            (LabelCollection.get_label(label_name, s), s)
-        ]
-
-        return ItemList(rows=res)
 
     # TODO make this work
     # @property
@@ -363,6 +311,23 @@ class A10Proxy(object):     # Proxy
     def __init__(self, obj):
         self.__o = obj       # original object
 
+        simple_labels = [
+            ('Parameter', 'parameter_labels'),
+            ('ValueUnit', 'units_labels'),
+        ]
+
+        for (name, collection_name) in simple_labels:
+            value = getattr(self.__o, name)
+
+            if isinstance(value, string_types):
+                value = value.strip()
+
+            if not value:       # don't overwrite empty values
+                continue
+
+            title = LABELS.get(collection_name, value)
+            setattr(self, name, ItemLabel(value, title))
+
     def __getattr__(self, name):
         return getattr(self.__o, name)
 
@@ -372,27 +337,14 @@ class A10Proxy(object):     # Proxy
     @property
     def Features(self):
         s = set(self.__o.Features.split(','))
-        label_name = 'feature_labels'
         res = [
-            (LabelCollection.get_label(label_name, x), x)
+            ItemLabel(
+                x,
+                LABELS.get_label('feature_labels', x),
+            )
+
             for x in s
         ]
-
-        return ItemList(rows=res)
-
-    @property
-    def Parameter(self):
-        s = self.__o.Parameter.strip()
-        label_name = 'parameter_labels'
-        res = [(LabelCollection.get_label(label_name, s), s)]
-
-        return ItemList(rows=res)
-
-    @property
-    def ValueUnit(self):
-        s = self.__o.ValueUnit.strip()
-        label_name = 'units_labels'
-        res = [(LabelCollection.get_label(label_name, s), s)]
 
         return ItemList(rows=res)
 
@@ -410,9 +362,12 @@ class A9Proxy(object):     # Proxy
     @property
     def Features(self):
         s = set(self.__o.Features.split(','))
-        label_name = 'feature_labels'
         res = [
-            (LabelCollection.get_label(label_name, x), x)
+            ItemLabel(
+                x,
+                LABELS.get_label('feature_labels', x),
+            )
+
             for x in s
         ]
 

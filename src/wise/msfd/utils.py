@@ -449,26 +449,27 @@ class TemplateMixin:
         return self.template(**self.__dict__)
 
 
-# name = translated value, title = original value
-LabelItemList = namedtuple('LabelItemList', ['name', 'title'])
+class ItemLabel(TemplateMixin):
+    """ Render a <span title='...'>Bla</span> for a Label
+
+    Also serves as a container (tuple) for name/title pairs
+    """
+
+    def __init__(self, name, title):
+        self.name = name            # 'database short code', an identifier
+        self.title = title          # human readable label
+
+    template = PageTemplateFile('pt/label.pt')
 
 
 class ItemList(TemplateMixin):
+    """ Render a python list of ItemLabels as an HTML list
+    """
+
     template = PageTemplateFile('pt/list.pt')
 
     def __init__(self, rows):
-        if rows:
-            if isinstance(rows[0], tuple):
-                res = [LabelItemList(n, t) for n, t in rows]
-            else:
-                res = [LabelItemList(n, n) for n in rows]
-
-        else:
-            res = []
-
-        res_sorted = sorted(res, key=lambda r: r[0])
-
-        self.rows = res_sorted
+        self.rows = sorted(rows, key=lambda r: r.title)
 
 
 class CompoundRow(TemplateMixin):
@@ -506,6 +507,8 @@ class TableHeader(TemplateMixin):
 
 class Item(OrderedDict):
     """ A generic data container for "columns"
+
+    It is used in the 2012 report data tables.
     """
 
 
