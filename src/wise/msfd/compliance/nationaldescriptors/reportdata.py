@@ -328,50 +328,46 @@ class A10Proxy(object):     # Proxy
             title = LABELS.get(collection_name, value)
             setattr(self, name, ItemLabel(value, title))
 
+        s = set(self.__o.Features.split(','))
+        res = [
+            ItemLabel(
+                x,
+                LABELS.get('feature_labels', x),
+            )
+
+            for x in s
+        ]
+        self.Features = ItemList(rows=res)
+
     def __getattr__(self, name):
         return getattr(self.__o, name)
 
     def __iter__(self):
         return iter(self.__o)
-
-    @property
-    def Features(self):
-        s = set(self.__o.Features.split(','))
-        res = [
-            ItemLabel(
-                x,
-                LABELS.get_label('feature_labels', x),
-            )
-
-            for x in s
-        ]
-
-        return ItemList(rows=res)
 
 
 class A9Proxy(object):     # Proxy
     def __init__(self, obj):
         self.__o = obj       # original object
 
-    def __getattr__(self, name):
-        return getattr(self.__o, name)
-
-    def __iter__(self):
-        return iter(self.__o)
-
-    @property
-    def Features(self):
         s = set(self.__o.Features.split(','))
         res = [
             ItemLabel(
                 x,
-                LABELS.get_label('feature_labels', x),
+                LABELS.get('feature_labels', x),
             )
 
             for x in s
         ]
+        self.Features = ItemList(rows=res)
 
-        return ItemList(rows=res)
+    def __getattr__(self, name):
+        v = getattr(self.__o, name)
+        logger.info("getting attribute %s: %r", name, v)
+        return v
+
+    def __iter__(self):
+        return iter(self.__o)
 
 
 class ReportData2018(BaseComplianceView):
