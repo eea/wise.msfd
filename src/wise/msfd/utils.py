@@ -449,11 +449,20 @@ class TemplateMixin:
         return self.template(**self.__dict__)
 
 
+# name = translated value, title = original value
+LabelItemList = namedtuple('LabelItemList', ['name', 'title'])
+
+
 class ItemList(TemplateMixin):
     template = PageTemplateFile('pt/list.pt')
 
     def __init__(self, rows):
-        self.rows = rows
+        if isinstance(rows[0], tuple):
+            res = [LabelItemList(n, t) for n, t in rows]
+        else:
+            res = [LabelItemList(n, n) for n in rows]
+
+        self.rows = res
 
 
 class CompoundRow(TemplateMixin):
@@ -487,9 +496,6 @@ class TableHeader(TemplateMixin):
     def __init__(self, title, values):
         self.title = title
         self.cells = values
-
-
-Label = namedtuple('Label', ['name', 'title'])
 
 
 class Item(OrderedDict):

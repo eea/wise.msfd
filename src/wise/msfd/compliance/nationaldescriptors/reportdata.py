@@ -42,8 +42,6 @@ def get_reportdata_key(func, self, *args, **kwargs):
     """ Reportdata template rendering cache key generation
     """
 
-    # import pdb; pdb.set_trace()
-
     if 'refresh' in self.request.form:
         raise volatile.DontCache
 
@@ -56,12 +54,6 @@ def get_reportdata_key(func, self, *args, **kwargs):
     res = res.replace('.', '').replace('-', '')
 
     return res
-
-
-def cache_key_2012(func, self):
-    muids = ",".join(self.muids)
-
-    return ":".join([self.country_code, self.descriptor, self.article, muids])
 
 
 class ReportData2012(BaseComplianceView, BaseUtil):
@@ -128,7 +120,7 @@ class ReportData2012(BaseComplianceView, BaseUtil):
 
         return sorted(muids)
 
-    @cache(get_reportdata_key, dependencies=['translation'])
+    # @cache(get_reportdata_key, dependencies=['translation'])
     def get_report_data(self):
         logger.info("Rendering 2012 report for: %s %s %s %s",
                     self.country_code, self.descriptor, self.article,
@@ -189,9 +181,6 @@ class ReportData2012(BaseComplianceView, BaseUtil):
             factsheet=factsheet,
         )
 
-        # for caching
-        # self.country_region_code = "".join(self.regions)
-        # TODO: fix the above to enable proper cache discriminators
         report_data = self.get_report_data()
         self.report_html = report_header + report_data
 
@@ -300,8 +289,9 @@ class A10Proxy(object):     # Proxy
     def Features(self):
         # TODO: label/translate the individual features
         s = set(self.__o.Features.split(','))
+        res = [(x, x) for x in s]
 
-        return ItemList(rows=s)
+        return ItemList(rows=res)
 
 
 class ReportData2018(BaseComplianceView):
@@ -370,6 +360,8 @@ class ReportData2018(BaseComplianceView):
         params = get_parameters(self.descriptor)
         p_codes = [p.name for p in params]
         conditions.append(t.c.Parameter.in_(p_codes))
+
+        # import pdb; pdb.set_trace()
 
         features = set([f.name for f in get_features(self.descriptor)])
 
@@ -602,7 +594,7 @@ class ReportData2018(BaseComplianceView):
 
         return ', '.join(muids)
 
-    @cache(get_reportdata_key, dependencies=['translation'])
+    # @cache(get_reportdata_key, dependencies=['translation'])
     def render_reportdata(self):
         logger.info("Quering database for 2018 report data: %s %s %s %s",
                     self.country_code, self.country_region_code, self.article,
