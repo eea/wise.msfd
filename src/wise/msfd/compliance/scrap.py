@@ -3065,3 +3065,19 @@ class Article910(BaseArticle2012):
 
         # return Descriptor(self.descriptor, descriptor.value())
         # return Descriptor(self.descriptor, descriptors[self.descriptor])
+
+        # def make_distinct(col_name, col_data):
+        #     """ Features come as a list of comma separated values, with
+        #     duplicated values among them. We make those values distinct
+        #     """
+        #
+        #     if col_name not in ('Features', ):
+        #         return col_data
+        #
+        #     if not col_data:
+        #         return ''
+        #
+        #     splitted = col_data.split(',')
+        #     distinct = ', '.join(sorted(set(splitted)))
+        #
+        #     return distinct

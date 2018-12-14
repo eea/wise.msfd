@@ -491,22 +491,6 @@ class ReportData2018(BaseComplianceView):
         """ From a set of results, create labeled list of rows
         """
 
-        # def make_distinct(col_name, col_data):
-        #     """ Features come as a list of comma separated values, with
-        #     duplicated values among them. We make those values distinct
-        #     """
-        #
-        #     if col_name not in ('Features', ):
-        #         return col_data
-        #
-        #     if not col_data:
-        #         return ''
-        #
-        #     splitted = col_data.split(',')
-        #     distinct = ', '.join(sorted(set(splitted)))
-        #
-        #     return distinct
-
         res = []
         row0 = data[0]
 
@@ -606,10 +590,7 @@ class ReportData2018(BaseComplianceView):
 
             res.append(changed)
 
-        res = sorted(res, key=lambda r: r[0])
-        # import pdb; pdb.set_trace()
-
-        return res
+        return sorted(res, key=lambda r: r[0])
 
     def get_snapshots(self):
         """ Returns all snapshots, in the chronological order they were created
@@ -674,14 +655,10 @@ class ReportData2018(BaseComplianceView):
         logger.info("Quering database for 2018 report data: %s %s %s %s",
                     self.country_code, self.country_region_code, self.article,
                     self.descriptor)
-        print "rendering data"
-
         data = self.get_data()
 
         report_date = ''
         source_file = ['To be addedd...', '.']
-
-        # TODO: check validity of data
 
         if data and data[0][1]:
             for row in data[0][1]:
