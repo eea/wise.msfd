@@ -3,13 +3,11 @@ import logging
 from lxml.etree import fromstring
 
 from Products.Five.browser.pagetemplatefile import \
-    PageTemplateFile as PageTemplate
-from Products.Five.browser.pagetemplatefile import \
     ViewPageTemplateFile as Template
 from wise.msfd import db, sql
 from wise.msfd.data import country_ges_components, get_report_data
 from wise.msfd.gescomponents import get_descriptor
-from wise.msfd.utils import Item, ItemList, Node, Row
+from wise.msfd.utils import Item, ItemLabel, ItemList, Node, Row
 
 from ..base import BaseArticle2012
 
@@ -22,7 +20,6 @@ NSMAP = {"w": "http://water.eionet.europa.eu/schemas/dir200856ec"}
 
 
 class A10Item(Item):
-    # list_tpl = PageTemplate('../../pt/list.pt')
 
     def __init__(self, criterion, targets_indicators, country_code):
         super(A10Item, self).__init__([])
@@ -147,10 +144,10 @@ class A10Item(Item):
 
         res = []
 
-        for k in sorted(m):
-            res.append('{} = {}'.format(k, m[k]))
+        # TODO: "translate" MarineUnitIds
 
-        # TODO: return a List() here
+        for k in sorted(m):
+            res.append(ItemLabel('', '{} = {}'.format(k, m[k])))
 
         return ItemList(rows=res)
 

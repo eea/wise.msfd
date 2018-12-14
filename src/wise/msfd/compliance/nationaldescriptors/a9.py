@@ -5,12 +5,10 @@ import logging
 from lxml.etree import fromstring
 
 from Products.Five.browser.pagetemplatefile import \
-    PageTemplateFile as PageTemplate
-from Products.Five.browser.pagetemplatefile import \
     ViewPageTemplateFile as ViewTemplate
 from wise.msfd.data import get_report_data
 from wise.msfd.gescomponents import get_descriptor
-from wise.msfd.utils import Item, ItemList, Node, RelaxedNode, Row
+from wise.msfd.utils import Item, ItemLabel, ItemList, Node, RelaxedNode, Row
 
 from ..base import BaseArticle2012
 
@@ -21,8 +19,6 @@ NSMAP = {"w": "http://water.eionet.europa.eu/schemas/dir200856ec"}
 
 
 class A9Item(Item):
-    # list_tpl = PageTemplate('../../pt/list.pt')
-
     def __init__(self, node, descriptors):
 
         super(A9Item, self).__init__([])
@@ -103,7 +99,8 @@ class A9Item(Item):
             muid = n['w:MarineUnitID/text()'][0]
             m[muid] = tv[0]
 
-        res = [u'{} = {}'.format(k, m[k]) for k in sorted(m)]
+        res = [ItemLabel('', u'{} = {}'.format(k, m[k]))
+               for k in sorted(m)]
 
         return ItemList(rows=res)
 
