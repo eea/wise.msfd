@@ -377,3 +377,14 @@ def get_features(descriptor_code=None):
             for f in FEATURES.values()
 
             if descriptor_code in f.descriptors]
+
+
+def get_feature_label(feature):
+    if not feature:
+        return feature
+
+    feat = FEATURES.get(feature, None)
+    if feat:
+        return feat.label
+
+    return feat

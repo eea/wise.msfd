@@ -10,7 +10,7 @@ from Products.Five.browser.pagetemplatefile import \
     ViewPageTemplateFile as ViewTemplate
 from wise.msfd.data import get_report_data
 from wise.msfd.gescomponents import get_descriptor
-from wise.msfd.utils import Item, Node, RelaxedNode, Row
+from wise.msfd.utils import Item, ItemList, Node, RelaxedNode, Row
 
 from ..base import BaseArticle2012
 
@@ -21,7 +21,7 @@ NSMAP = {"w": "http://water.eionet.europa.eu/schemas/dir200856ec"}
 
 
 class A9Item(Item):
-    list_tpl = PageTemplate('../../pt/list.pt')
+    # list_tpl = PageTemplate('../../pt/list.pt')
 
     def __init__(self, node, descriptors):
 
@@ -105,7 +105,7 @@ class A9Item(Item):
 
         res = [u'{} = {}'.format(k, m[k]) for k in sorted(m)]
 
-        return self.list_tpl(rows=res)
+        return ItemList(rows=res)
 
     def threshold_value_unit(self):
         v = self.g['w:ThresholdValueUnit/text()']

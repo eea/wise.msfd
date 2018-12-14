@@ -457,10 +457,14 @@ class ItemList(TemplateMixin):
     template = PageTemplateFile('pt/list.pt')
 
     def __init__(self, rows):
-        if isinstance(rows[0], tuple):
-            res = [LabelItemList(n, t) for n, t in rows]
+        if rows:
+            if isinstance(rows[0], tuple):
+                res = [LabelItemList(n, t) for n, t in rows]
+            else:
+                res = [LabelItemList(n, n) for n in rows]
+
         else:
-            res = [LabelItemList(n, n) for n in rows]
+            res = None
 
         self.rows = res
 

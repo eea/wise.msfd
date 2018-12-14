@@ -20,7 +20,7 @@ from wise.msfd.base import BaseUtil
 from wise.msfd.data import (get_factsheet_url, get_report_data,
                             get_report_file_url, get_report_filename)
 from wise.msfd.gescomponents import (get_descriptor, get_features,
-                                     get_parameters)
+                                     get_feature_label, get_parameters)
 from wise.msfd.utils import ItemList
 from z3c.form.button import buttonAndHandler
 from z3c.form.field import Fields
@@ -288,8 +288,8 @@ class A10Proxy(object):     # Proxy
     @property
     def Features(self):
         # TODO: label/translate the individual features
-        s = set(self.__o.Features.split(','))
-        res = [(x, x) for x in s]
+        s = sorted(set(self.__o.Features.split(',')))
+        res = [(get_feature_label(x), x) for x in s]
 
         return ItemList(rows=res)
 

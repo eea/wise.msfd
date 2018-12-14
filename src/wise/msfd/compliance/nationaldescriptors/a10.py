@@ -9,7 +9,7 @@ from Products.Five.browser.pagetemplatefile import \
 from wise.msfd import db, sql
 from wise.msfd.data import country_ges_components, get_report_data
 from wise.msfd.gescomponents import get_descriptor
-from wise.msfd.utils import Item, Node, Row
+from wise.msfd.utils import Item, ItemList, Node, Row
 
 from ..base import BaseArticle2012
 
@@ -22,7 +22,7 @@ NSMAP = {"w": "http://water.eionet.europa.eu/schemas/dir200856ec"}
 
 
 class A10Item(Item):
-    list_tpl = PageTemplate('../../pt/list.pt')
+    # list_tpl = PageTemplate('../../pt/list.pt')
 
     def __init__(self, criterion, targets_indicators, country_code):
         super(A10Item, self).__init__([])
@@ -152,7 +152,7 @@ class A10Item(Item):
 
         # TODO: return a List() here
 
-        return self.list_tpl(rows=res)
+        return ItemList(rows=res)
 
     def pick(self, xpath):
         """ For values which are repeated across all targets nodes, try to find
