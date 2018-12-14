@@ -489,6 +489,9 @@ class TableHeader(TemplateMixin):
         self.cells = values
 
 
+Label = namedtuple('Label', ['name', 'title'])
+
+
 class Item(OrderedDict):
     """ A generic data container for "columns"
     """

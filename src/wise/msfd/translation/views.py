@@ -231,12 +231,14 @@ class TranslationView(BrowserView):
                                        translation=u"",
                                        can_translate=False)
 
-        if isinstance(value, str):
+        if isinstance(value, (str, int, float)):
             value = unicode(value)      # TODO: should use decode?
         elif isinstance(value, unicode):
             pass
         else:
-            value = unicode(value)
+            return self.translate_snip(text=value,
+                                       translation=u"",
+                                       can_translate=False)
 
         is_long_text = len(value.split(' ')) > 4
         can_translate = self.can_modify() and is_long_text

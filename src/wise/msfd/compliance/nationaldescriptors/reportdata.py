@@ -21,7 +21,7 @@ from wise.msfd.data import (get_factsheet_url, get_report_data,
                             get_report_file_url, get_report_filename)
 from wise.msfd.gescomponents import (get_descriptor, get_features,
                                      get_parameters)
-# from wise.msfd.utils import ItemList
+from wise.msfd.utils import ItemList
 from z3c.form.button import buttonAndHandler
 from z3c.form.field import Fields
 from z3c.form.form import Form
@@ -274,6 +274,36 @@ class SnapshotSelectForm(Form):
         self.request.response.redirect('./@@view-report-data-2018')
 
 
+class Proxy(object):
+
+    def __init__(self, obj):
+        self.__o = obj       # original object
+
+    def __getattr__(self, name):
+        return getattr(self.__o, name)
+
+    def __iter__(self):
+        return iter(self.__o)
+
+
+class A10Proxy(object):     # Proxy
+    def __init__(self, obj):
+        self.__o = obj       # original object
+
+    def __getattr__(self, name):
+        return getattr(self.__o, name)
+
+    def __iter__(self):
+        return iter(self.__o)
+
+    @property
+    def Features(self):
+        # TODO: label/translate the individual features
+        s = set(self.__o.Features.split(','))
+
+        return ItemList(rows=s)
+
+
 class ReportData2018(BaseComplianceView):
 
     report_year = '2018'
@@ -349,6 +379,7 @@ class ReportData2018(BaseComplianceView):
             t.c.CountryCode == self.country_code,
             *conditions
         )
+
         out = []
 
         for row in res:
@@ -360,6 +391,8 @@ class ReportData2018(BaseComplianceView):
         # TODO: need a proxy here
         # for row in out:
         #     row.Features = ItemList(rows=row.Features.split(','))
+
+        # import pdb; pdb.set_trace()
 
         return out
 
@@ -388,21 +421,21 @@ class ReportData2018(BaseComplianceView):
         """ From a set of results, create labeled list of rows
         """
 
-        def make_distinct(col_name, col_data):
-            """ Features come as a list of comma separated values, with
-            duplicated values among them. We make those values distinct
-            """
-
-            if col_name not in ('Features', ):
-                return col_data
-
-            if not col_data:
-                return ''
-
-            splitted = col_data.split(',')
-            distinct = ', '.join(sorted(set(splitted)))
-
-            return distinct
+        # def make_distinct(col_name, col_data):
+        #     """ Features come as a list of comma separated values, with
+        #     duplicated values among them. We make those values distinct
+        #     """
+        #
+        #     if col_name not in ('Features', ):
+        #         return col_data
+        #
+        #     if not col_data:
+        #         return ''
+        #
+        #     splitted = col_data.split(',')
+        #     distinct = ', '.join(sorted(set(splitted)))
+        #
+        #     return distinct
 
         res = []
         row0 = data[0]
@@ -411,7 +444,8 @@ class ReportData2018(BaseComplianceView):
 
         for fname, label in sorted_fields:
             values = [
-                make_distinct(fname, getattr(row, fname))
+                getattr(row, fname)
+                # make_distinct(fname, getattr(row, fname))
 
                 for row in data
             ]
@@ -431,7 +465,10 @@ class ReportData2018(BaseComplianceView):
 
         data = get_data_method()
 
-        g = defaultdict(list)
+        if self.article == 'Art10':
+            data = [A10Proxy(row) for row in data]
+
+        grouped_data = defaultdict(list)
 
         # Ignore the following fields when hashing the rows
         ignores = {
@@ -461,21 +498,19 @@ class ReportData2018(BaseComplianceView):
 
                 continue
 
-            g[row.MarineReportingUnit].append(row)
+            grouped_data[row.MarineReportingUnit].append(row)
 
         res = []
 
         # change the orientation of the data
 
-        for mru, filtered_data in g.items():
+        for mru, filtered_data in grouped_data.items():
             changed = (mru, self.change_orientation(filtered_data))
 
             for row in changed[1]:
                 # field = db_name/title ('TargetCode', 'RelatedTargets')
                 field = row[0]
                 row_data = row[1]
-
-                # import pdb; pdb.set_trace()
 
                 if field[0] not in ignores[article]:
                     row[0] = field[1]
@@ -505,6 +540,7 @@ class ReportData2018(BaseComplianceView):
             res.append(changed)
 
         res = sorted(res, key=lambda r: r[0])
+        # import pdb; pdb.set_trace()
 
         return res
 
