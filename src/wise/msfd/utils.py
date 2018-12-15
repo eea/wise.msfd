@@ -599,35 +599,33 @@ def change_orientation(data, sorted_fields):
 
 
 def filter_duplicates(data, group_by_fields):
-    """ Greatly reduce the number of rows in data, by merging rows with
+    """ Greatly reduce the number of rows in data, by omitting rows with
     identical values
     """
-    grouped_data = defaultdict(list)
+    res = defaultdict(list)
 
     # Ignore the following fields when hashing the rows
-    ign_idx = [data[0]._fields.index(x)
-               for x in group_by_fields]
+    fieldnames = data[0]._fields
+    indexes = [fieldnames.index(f) for f in group_by_fields]
 
     seen = []
 
     for row in data:
-        # without the ignored fields, make a hash to exclude duplicate rows
+        # omitting the ignored fields, make a hash to indentify duplicate rows
 
-        hash = tuple([x
-                      for (ind, x) in enumerate(row)
+        hash = tuple([v
+                      for (i, v) in enumerate(row)
 
-                      if ind not in ign_idx])
+                      if i not in indexes])
 
         if hash in seen:
             continue
 
         seen.append(hash)
 
-        if not row.MarineReportingUnit:
-            # skip rows without muid, they can't help us
-
+        if not row.MarineReportingUnit:     # skip rows without muid
             continue
 
-        grouped_data[row.MarineReportingUnit].append(row)
+        res[row.MarineReportingUnit].append(row)
 
-    return grouped_data
+    return res

@@ -521,9 +521,7 @@ class ReportData2018(BaseComplianceView):
                     (getattr(x, fieldname) is not None)
                 ])
 
-                new_row_data = [', '.join(all_values)] * len(row_data)
-
-                row[1] = new_row_data
+                row[1] = [', '.join(all_values)] * len(row_data)
 
             res.append((mru, _data))
 
