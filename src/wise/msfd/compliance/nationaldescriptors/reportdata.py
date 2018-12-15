@@ -1,7 +1,6 @@
-import hashlib
 import logging
 import time
-from collections import defaultdict, namedtuple
+from collections import namedtuple
 from datetime import datetime
 from io import BytesIO
 
@@ -22,7 +21,8 @@ from wise.msfd.data import (get_factsheet_url, get_report_data,
                             get_report_file_url, get_report_filename)
 from wise.msfd.gescomponents import (LABELS, get_descriptor, get_features,
                                      get_parameters)
-from wise.msfd.utils import ItemLabel, ItemList
+from wise.msfd.utils import (ItemLabel, ItemList, change_orientation,
+                             filter_duplicates)
 from z3c.form.button import buttonAndHandler
 from z3c.form.field import Fields
 from z3c.form.form import Form
@@ -376,10 +376,10 @@ class A9Proxy(object):     # Proxy
 
 class ReportData2018(BaseComplianceView):
 
-    report_year = '2018'
+    report_year = '2018'        # used by cache key
     section = 'national-descriptors'
 
-    BLACKLIST = (
+    BLACKLIST = (       # used in templates to filter fields
         'CountryCode',
         'ReportingDate',
         'ReportedFileLink',
@@ -391,20 +391,19 @@ class ReportData2018(BaseComplianceView):
     Art9 = Template('pt/nat-desc-report-data-single-muid.pt')
     Art10 = Template('pt/nat-desc-report-data-multiple-muid.pt')
 
-    view_names = {
-        'Art8': 't_V_ART8_GES_2018',
-        'Art9': 't_V_ART9_GES_2018',
-        'Art10': 't_V_ART10_Targets_2018'
+    group_by_fields = {
+        'Art8': ('TargetCode', 'PressureCode'),
+        'Art9': (),
+        'Art10': ()
     }
 
     subform = None
 
-    def get_data_from_view_art8(self):
+    def get_data_from_view_Art8(self):
 
         # TODO: the data here should be filtered by muids in region
 
-        view_name = self.view_names[self.article]
-        t = getattr(sql2018, view_name)
+        t = sql2018.t_V_ART8_GES_2018
 
         descr_class = get_descriptor(self.descriptor)
         all_ids = list(descr_class.all_ids())
@@ -425,15 +424,14 @@ class ReportData2018(BaseComplianceView):
 
         return data
 
-    def get_data_from_view_art10(self):
+    def get_data_from_view_Art10(self):
         descr_class = get_descriptor(self.descriptor)
         all_ids = list(descr_class.all_ids())
 
         if self.descriptor.startswith('D1.'):
             all_ids.append('D1')
 
-        view_name = self.view_names[self.article]
-        t = getattr(sql2018, view_name)
+        t = sql2018.t_V_ART10_Targets_2018
 
         # TODO check conditions for other countries beside NL
         # conditions = [t.c.GESComponents.in_(all_ids)]
@@ -464,16 +462,18 @@ class ReportData2018(BaseComplianceView):
 
         return data
 
-    def get_data_from_view_art9(self):
+    def get_data_from_view_Art9(self):
 
-        view_name = self.view_names[self.article]
-        t = getattr(sql2018, view_name)
+        t = sql2018.t_V_ART9_GES_2018
 
         descr_class = get_descriptor(self.descriptor)
         all_ids = list(descr_class.all_ids())
 
+        # TODO: this needs to be analysed, what to do about D1?
+
         if self.descriptor.startswith('D1.'):
             all_ids.append('D1')
+
         conditions = [t.c.GESComponent.in_(all_ids)]
 
         count, r = db.get_all_records_ordered(
@@ -487,83 +487,34 @@ class ReportData2018(BaseComplianceView):
 
         return data
 
-    def change_orientation(self, data):
-        """ From a set of results, create labeled list of rows
-        """
-
-        res = []
-        row0 = data[0]
-
-        sorted_fields = get_sorted_fields_2018(row0._fields, self.article)
-
-        for fname, label in sorted_fields:
-            values = [
-                getattr(row, fname)
-                # make_distinct(fname, getattr(row, fname))
-
-                for row in data
-            ]
-
-            res.append([(fname, label), values])
-
-        return res
-
     @db.use_db_session('2018')
     def get_data_from_db(self):
-        article = self.article.lower()
-
         get_data_method = getattr(
             self,
-            'get_data_from_view_' + article
+            'get_data_from_view_' + self.article
         )
 
         data = get_data_method()
 
-        grouped_data = defaultdict(list)
-
-        # Ignore the following fields when hashing the rows
-        ignores = {
-            'art8': ('TargetCode', 'PressureCode'),
-            'art9': (),
-            'art10': ()
-        }
-        ignore = [data[0]._fields.index(x) for x in ignores[article]]
-
-        seen = []
-
-        for row in data:
-            # without the ignored fields create a hash to exclude
-            # duplicate rows
-
-            # TODO: this needs to be redone
-            as_list = [x for ind, x in enumerate(row) if ind not in ignore]
-            hash = hashlib.md5(''.join(unicode(as_list))).hexdigest()
-
-            if hash in seen:
-                continue
-
-            seen.append(hash)
-
-            if not row.MarineReportingUnit:
-                # skip rows without muid, they can't help us
-
-                continue
-
-            grouped_data[row.MarineReportingUnit].append(row)
+        # this consolidates the data, filtering duplicates
+        good_data = filter_duplicates(data, self.group_by_fields[self.article])
 
         res = []
 
         # change the orientation of the data
 
-        for mru, filtered_data in grouped_data.items():
-            changed = (mru, self.change_orientation(filtered_data))
+        for mru, filtered_data in good_data.items():
+            _fields = filtered_data[0]._fields
+            sorted_fields = get_sorted_fields_2018(_fields, self.article)
+            changed = (mru,
+                       change_orientation(filtered_data, sorted_fields))
 
             for row in changed[1]:
                 # field = db_name/title ('TargetCode', 'RelatedTargets')
                 field = row[0]
                 row_data = row[1]
 
-                if field[0] not in ignores[article]:
+                if field[0] not in self.group_by_fields[self.article]:
                     row[0] = field[1]
 
                     continue
@@ -623,7 +574,7 @@ class ReportData2018(BaseComplianceView):
 
         return self.subform
 
-    def get_data(self):
+    def get_report_data(self):
         """ Returns the data to display in the template
         """
 
@@ -635,7 +586,7 @@ class ReportData2018(BaseComplianceView):
         data = snapshots[-1][1]
 
         if date_selected:
-            print date_selected
+            # print date_selected
             filtered = [x for x in snapshots if x[0] == date_selected]
 
             if filtered:
@@ -655,7 +606,7 @@ class ReportData2018(BaseComplianceView):
         logger.info("Quering database for 2018 report data: %s %s %s %s",
                     self.country_code, self.country_region_code, self.article,
                     self.descriptor)
-        data = self.get_data()
+        data = self.get_report_data()
 
         report_date = ''
         source_file = ['To be addedd...', '.']
@@ -708,7 +659,7 @@ class ReportData2018(BaseComplianceView):
         return out
 
     def download(self):
-        xlsdata = self.get_data()
+        xlsdata = self.get_report_data()
 
         # if self.article == 'Art9':
         #     xlsdata = [

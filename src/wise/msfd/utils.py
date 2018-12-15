@@ -567,3 +567,64 @@ class RelaxedNode(Node):
             return Empty()
 
         return n
+
+
+def change_orientation(data, sorted_fields):
+    """ From a set of results, create labeled list of rows
+
+    :param data: a list of sql table rows results
+    :param sorted_fields: a list of tuples (fieldname, label)
+
+    Given a query result (a list of rows), it will return list of tuples like:
+
+    ("Features", "Features [GESComponent", [v1, v2, v3, ...])
+    """
+
+    res = []
+
+    for fname, label in sorted_fields:
+        values = [
+            getattr(row, fname)
+            # make_distinct(fname, getattr(row, fname))
+
+            for row in data
+        ]
+
+        res.append([(fname, label), values])
+
+    return res
+
+
+def filter_duplicates(data, group_by_fields):
+    """ Greatly reduce the number of rows in data, by merging rows with
+    identical values
+    """
+    grouped_data = defaultdict(list)
+
+    # Ignore the following fields when hashing the rows
+    ign_idx = [data[0]._fields.index(x)
+               for x in group_by_fields]
+
+    seen = []
+
+    for row in data:
+        # without the ignored fields, make a hash to exclude duplicate rows
+
+        hash = tuple([x
+                      for (ind, x) in enumerate(row)
+
+                      if ind not in ign_idx])
+
+        if hash in seen:
+            continue
+
+        seen.append(hash)
+
+        if not row.MarineReportingUnit:
+            # skip rows without muid, they can't help us
+
+            continue
+
+        grouped_data[row.MarineReportingUnit].append(row)
+
+    return grouped_data
