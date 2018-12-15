@@ -577,7 +577,10 @@ def change_orientation(data, sorted_fields):
 
     Given a query result (a list of rows), it will return list of tuples like:
 
-    ("Features", "Features [GESComponent", [v1, v2, v3, ...])
+    (
+        ("Features", "Features [GESComponent"),
+        [v1, v2, v3, ...]
+    )
     """
 
     res = []

@@ -494,51 +494,40 @@ class ReportData2018(BaseComplianceView):
         data = get_data_method()
 
         # this consolidates the data, filtering duplicates
+        # list of ((name, label), values)
         good_data = filter_duplicates(data, self.group_by_fields[self.article])
 
         res = []
 
-        # change the orientation of the data
-
-        for mru, filtered_data in good_data.items():
-            _fields = filtered_data[0]._fields
+        for mru, rows in good_data.items():
+            _fields = rows[0]._fields
             sorted_fields = get_sorted_fields_2018(_fields, self.article)
-            changed = (mru,
-                       change_orientation(filtered_data, sorted_fields))
+            _data = change_orientation(rows, sorted_fields)
 
-            for row in changed[1]:
-                # field = db_name/title ('TargetCode', 'RelatedTargets')
-                field = row[0]
-                row_data = row[1]
+            for row in _data:
+                (fieldname, label), row_data = row
+                row[0] = label
 
-                if field[0] not in self.group_by_fields[self.article]:
-                    row[0] = field[1]
-
+                if fieldname not in self.group_by_fields[self.article]:
                     continue
 
-                # override the values for the ignored fields
-                # with all the values from DB
-                all_values = [
-                    getattr(x, field[0])
+                # rewrite some rows with list of all possible values
+                all_values = set([
+                    getattr(x, fieldname)
 
                     for x in data
 
-                    if x.MarineReportingUnit == mru
-                ]
-                row[0] = field[1]
-
-                all_values = filter(lambda _: _ is not None, all_values)
-
-                if all_values:
-                    all_values = set(all_values)
+                    if (x.MarineReportingUnit == mru) and
+                    (getattr(x, fieldname) is not None)
+                ])
 
                 new_row_data = [', '.join(all_values)] * len(row_data)
 
                 row[1] = new_row_data
 
-            res.append(changed)
+            res.append((mru, _data))
 
-        return sorted(res, key=lambda r: r[0])
+        return sorted(res, key=lambda r: r[0])      # sort by MarineUnitiD
 
     def get_snapshots(self):
         """ Returns all snapshots, in the chronological order they were created
