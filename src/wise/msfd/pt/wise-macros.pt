@@ -56,7 +56,12 @@
 
 <metal:macro define-macro="simplify-table">
   <div class="simplify-form">
-    <input type="checkbox" name="simplify" value="" />
-    <label for="simplify">Simplify table</label>
+
+    <button type="button" class="btn btn-sm btn-toggle active"
+      data-toggle="button" aria-pressed="true" autocomplete="off">
+      <div class="handle"></div>
+    </button>
+    <label>Simplified table</label>
+
   </div>
 </metal:macro>

@@ -20,6 +20,7 @@ module.exports = {
         '<%= path.dest %>/css/compliance.css': [
           '<%= path.src %>/less/compliance.less',
           '<%= path.src %>/less/translate.less',
+          '<%= path.src %>/less/switch.less',
         ]
       }
     }

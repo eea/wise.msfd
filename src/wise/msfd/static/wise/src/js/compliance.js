@@ -445,8 +445,11 @@ if (!Array.prototype.last){
   }
 
 
-  function simplifyTable(_restore){
-    console.log("restore", _restore);
+  function simplifyTable(){
+    var $table = $(this);
+    if (!$table.data('original')) {
+      $table.data('original', $table.html());
+    }
 
     // stretch all cells to the maximum table columns;
     var max = 0;
@@ -493,9 +496,21 @@ if (!Array.prototype.last){
         }
       });
     });
+
+    $table.addClass('simplified-table');
+  }
+
+  function toggleTable(onoff) {
+    var original = $(this).data('original');
+    if (onoff) {
+      $(this).simplifyTable();
+    } else {
+      $(this).html(original);
+    }
   }
 
   $.fn.simplifyTable = simplifyTable;
+  $.fn.toggleTable = toggleTable;
 
   $(document).ready(function($){
     initStyling();
@@ -515,10 +530,12 @@ if (!Array.prototype.last){
       $(".overflow-table h5").width( $(".overflow-table table").width() );
     }
 
-    $('.simplify-form input').on('change', function(){
-      var _type = $(this).is(':checked');
-      $p = $(this).parent().parent();
-      ('table', $p).simplifyTable(_type);
+    $('.simplify-form').next().find('table').simplifyTable();
+
+    $('.simplify-form button').on('click', function(){
+      var onoff = $(this).attr('aria-pressed') == 'true';
+      $p = $(this).parent().next();
+      $('table', $p).toggleTable(!onoff);
     });
   });
 }(window, document, $));

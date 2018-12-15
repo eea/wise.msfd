@@ -1,10 +1,9 @@
 <div>
   <div tal:repeat="muid view/muids" class="report-section">
     <h4 tal:content="muid">DE_ANS</h4>
+    <metal:s metal:use-macro="context/context/wise-macros/macros/simplify-table"></metal:s>
 
     <div class="overflow-table" tal:define="muid_data view/rows/?muid">
-      <metal:s metal:use-macro="context/context/wise-macros/macros/simplify-table"></metal:s>
-
       <table tal:condition="muid_data" class='table table-bordered table-striped table-report' style='width: 100%; overflow:auto'>
         <tal:rep tal:repeat="row muid_data" >
           <tal:row replace="structure row"></tal:row>
