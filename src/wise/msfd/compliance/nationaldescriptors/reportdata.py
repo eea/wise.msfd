@@ -364,6 +364,7 @@ class A9Proxy(object):     # Proxy
     def __getattr__(self, name):
         v = getattr(self.__o, name)
         logger.info("getting attribute %s: %r", name, v)
+
         return v
 
     def __iter__(self):
