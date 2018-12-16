@@ -450,17 +450,11 @@ if (!Array.prototype.last){
     // the <td> cells, and the other way around.
     this.each(function() {
 
-      console.log("Fixing table th height", this);
-      // var $table = $(this);
-
       $("th", this).each(function() {
         var $th = $(this);
-        console.log("th height", $th.height());
-        var $next = $th.next();
-        console.log("next height", $next.height());
-
-        var mh = Math.max($th.height(), $next.height());
-        console.log("max", mh);
+        var $next = $('td', $th.parent());
+        var thh = Math.max($next.height());
+        var mh = Math.max($th.height(), thh);
 
         $th.height(mh + 1);
         $next.height(mh);
