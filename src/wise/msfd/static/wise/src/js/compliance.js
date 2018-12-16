@@ -445,8 +445,25 @@ if (!Array.prototype.last){
   }
 
 
-  function simplifyTable(){
+  $.fn.fixTableHeaderHeight = function fixTableHeaderHeight() {
+    // because the <th> are position: absolute, they don't get the height of
+    // the <td> cells, and the other way around.
     var $table = $(this);
+    $("th", $table).each(function() {
+      var $th = $(this);
+      var $next = $th.next();
+
+      var mh = Math.max($th.height(), $next.height());
+
+      $th.height(mh);
+      $next.height(mh);
+    });
+  };
+
+  $.fn.simplifyTable = function simplifyTable(){
+    var $table = $(this);
+    $table.fixTableHeaderHeight();
+
     if (!$table.data('original')) {
       $table.data('original', $table.html());
     }
@@ -496,19 +513,16 @@ if (!Array.prototype.last){
         }
       });
     });
-  }
+  };
 
-  function toggleTable(onoff) {
+  $.fn.toggleTable = function toggleTable(onoff) {
     var original = $(this).data('original');
     if (onoff) {
       $(this).simplifyTable();
     } else {
       $(this).html(original);
     }
-  }
-
-  $.fn.simplifyTable = simplifyTable;
-  $.fn.toggleTable = toggleTable;
+  };
 
   $(document).ready(function($){
     initStyling();

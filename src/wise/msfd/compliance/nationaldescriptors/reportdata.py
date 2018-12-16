@@ -28,8 +28,7 @@ from z3c.form.field import Fields
 from z3c.form.form import Form
 
 from ..base import BaseComplianceView
-from .a8 import Article8
-from .a8_new import Article8 as Article8New
+from .a8 import Article8 as Article8
 from .a9 import Article9
 from .a10 import Article10
 from .utils import get_sorted_fields_2018, row_to_dict
@@ -67,13 +66,10 @@ class ReportData2012(BaseComplianceView, BaseUtil):
     @property
     def article_implementations(self):
         res = {
-            'Art8': Article8New,
+            'Art8': Article8,
             'Art9': Article9,
             'Art10': Article10,
         }
-
-        if 'alter' in self.request.form:
-            res['Art8'] = Article8
 
         return res
 
@@ -291,20 +287,17 @@ class A8Proxy(object):
             title = LABELS.get(collection_name, value)
             setattr(self, name, ItemLabel(value, title))
 
+        # if self.__o.PressureCode:
+        #     s = self.__o.PressureCode.strip()
+        #     res = [(LABELS.get('pressure_labels', s), s)]
+        #
+        #     self.PressureCode = ItemList(rows=res)
+
     def __getattr__(self, name):
         return getattr(self.__o, name)
 
     def __iter__(self):
         return iter(self.__o)
-
-    # TODO make this work
-    # @property
-    # def PressureCode(self):
-    #     s = self.__o.PressureCode.strip()
-    #     label_name = 'pressure_labels'
-    #     res = [(LabelCollection.get_pressure_label(label_name, s), s)]
-    #
-    #     return ItemList(rows=res)
 
 
 class A10Proxy(object):     # Proxy

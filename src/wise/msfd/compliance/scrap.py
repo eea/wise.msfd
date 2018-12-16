@@ -3188,3 +3188,796 @@ def get_a9_descriptors(marine_unit_id, page=0):
 #     )
 #
 #     return res
+<div tal:repeat="muid view/muids" class="report-section">
+  <h4 tal:content="muid">DE_ANS</h4>
+  <div class="overflow-table">
+    <table class="table table-bordered table-striped table-report"
+      tal:define="topic_assessment python: view.get_topic_assessment(muid)">
+      <span tal:condition="python: not topic_assessment">Data not reported</span>
+      <tal:block tal:define="criterias python: view.context.get_criterias_list(view.descriptor);
+        colspan_base python:1;"
+        tal:condition="topic_assessment">
+        <!-- art8assesment_data python: view.get_assesment_data(muid, view.descriptor); -->
+
+        <!-- <div style="display:block"> -->
+        <!--   <h6>Article 8 topics/indicators (topic_assessment)</h6> -->
+        <!--   <div tal:replace="topic_assessment"></div> -->
+        <!-- </div> -->
+
+        <!-- <tr> -->
+        <!--   <th>MarineUnitID</th> -->
+        <!--   <td tal:attributes="colspan python: 42" -->
+        <!--     tal:content="muid">DE_ANS</td> -->
+        <!-- </tr> -->
+
+        <tr>
+          <th>CriteriaType
+            [GESComponent]</th>
+          <tal:block tal:repeat="crit criterias">
+            <td tal:attributes="colspan python: view.get_col_span_indicator(crit[0])"
+              tal:content="python: crit[1]"/>
+          </tal:block>
+        </tr>
+
+        <tr tal:define="col_name string:Topic;">
+          <th>Analysis</th>
+          <tal:block tal:repeat="crit criterias">
+            <tal:block tal:repeat="print_val python:
+              view.print_feature(crit[0], col_name, 0)">
+              <td tal:content="print_val"/>
+            </tal:block>
+          </tal:block>
+        </tr>
+
+        <tr>
+          <th>[Element]</th>
+          <td colspan="42">Row not implemented</td>
+        </tr>
+
+
+        <tr>
+          <th>[Parameter]</th>
+          <td colspan="42">Row not implemented</td>
+        </tr>
+
+        <tal:block tal:define="topic_group_index python:0;">
+          <tr tal:define="col_name string:ThresholdValue;">
+            <th>Threshold Value</th>
+            <metal:row define-macro="print_asses_ind">
+              <tal:block tal:repeat="crit criterias">
+                <tal:block tal:repeat="print_val python:
+                  view.print_asses_ind(crit[0], col_name, topic_group_index)">
+                  <td tal:content="print_val"/>
+                </tal:block>
+              </tal:block>
+            </metal:row>
+          </tr>
+
+          <tr tal:define="col_name string:SumInfo1">
+            <th>SumInfo1
+              [ValueAchieved]</th>
+            <td colspan="42">Row not implemented</td>
+          </tr>
+
+          <tr tal:define="col_name string:ThresholdValueUnit;">
+            <th>SumInfo1Unit/
+              ThresholdValueUnit [ValueUnit]</th>
+            <metal:macro use-macro="template/macros/print_asses_ind"/>
+          </tr>
+
+          <tr>
+            <th>[ProportionThresholdValue]</th>
+            <td colspan="42">Row not implemented</td>
+          </tr>
+
+          <tr tal:define="col_name string:SumInfo1">
+            <th>PressureLevelN/P/
+              Oconcentration/
+              ImpactsPressureWater/
+              Seabed: SumInfo1
+              [ProportionValueAchieved]</th>
+            <metal:row define-macro="print_base">
+              <tal:block tal:repeat="crit criterias">
+                <tal:block tal:repeat="print_val python:
+                  view.print_base(crit[0], col_name, topic_group_index)">
+                  <td tal:attributes="colspan python: colspan_base if print_val else 1"
+                    tal:content="print_val"/>
+                </tal:block>
+              </tal:block>
+            </metal:row>
+          </tr>
+
+          <!-- TODO not sure which column to show here-->
+          <!-- SumInfo1Confidence, StatusConfidence -->
+          <tr tal:define="col_name string:SumInfo1Confidence;">
+            <th>PressureLevelN/P/
+              OConcentration/
+              ImpactsPressureWater/
+              Seabed: SumInfo1Confidence</th>
+            <metal:macro use-macro="template/macros/print_base"/>
+          </tr>
+
+          <tr tal:define="col_name string:TrendsRecent;">
+            <th>PressureLevelN/P/
+              OConcentration/
+              ImpactsPressureWater/
+              Seabed: TrendRecent</th>
+            <metal:macro use-macro="template/macros/print_base"/>
+          </tr>
+
+          <tr tal:define="col_name string:TrendsFuture;">
+            <th>PressureLevelN/P/
+              OConcentration/
+              ImpactsPressureWater/
+              Seabed: TrendFuture</th>
+            <metal:macro use-macro="template/macros/print_base"/>
+          </tr>
+
+          <tr tal:define="col_name string:Description;">
+            <th>PressureLevelN/P/
+              Oconcentration/
+              ImpactsPressureWater/
+              Seabed: Description
+              [Parameter]</th>
+            <metal:macro use-macro="template/macros/print_base"/>
+          </tr>
+
+          <tr tal:define="col_name string:SumInfo2">
+            <th>ImpactsPressureWater/
+              Seabed: SumInfo2</th>
+            <!--<td colspan="42">Row not implemented</td>-->
+            <tal:block tal:repeat="crit criterias">
+              <tal:block tal:repeat="print_val python:
+                view.print_suminfo2(crit[0], topic_group_index)">
+                <td tal:content="print_val"/>
+              </tal:block>
+            </tal:block>
+          </tr>
+
+          <tr tal:define="col_name string:GESIndicators;">
+            <th>Indicator
+              [RelatedIndicator]</th>
+            <metal:macro use-macro="template/macros/print_asses_ind"/>
+          </tr>
+
+          <tr tal:define="col_name string:Status;">
+            <th>Status
+              [CriteriaStatus]</th>
+            <metal:row define-macro="print_asses">
+              <tal:block tal:repeat="crit criterias">
+                <tal:block tal:repeat="print_val python:
+                  view.print_asses(crit[0], col_name, topic_group_index)">
+                  <td tal:content="print_val"/>
+                </tal:block>
+              </tal:block>
+            </metal:row>
+          </tr>
+
+          <tr tal:define="col_name string:StatusTrend;">
+            <th>StatusTrend</th>
+            <metal:macro use-macro="template/macros/print_asses"/>
+          </tr>
+
+          <!-- TODO not sure which column to show here-->
+          <!-- SumInfo1Confidence, StatusConfidence -->
+          <tr tal:define="col_name string:StatusConfidence;">
+            <th>StatusConfidence</th>
+            <metal:macro use-macro="template/macros/print_asses"/>
+          </tr>
+
+          <tr tal:define="col_name string:StatusDescription;">
+            <th>StatusDescription
+              [DescriptionCriteria]</th>
+            <metal:macro use-macro="template/macros/print_asses"/>
+          </tr>
+
+          <tr tal:define="col_name string:Limitations;">
+            <th>Limitations
+              (DescriptionElement)</th>
+            <metal:macro use-macro="template/macros/print_asses"/>
+          </tr>
+
+          <tr tal:define="col_name_start string:RecentTimeStart;
+            col_name_end string:RecentTimeEnd">
+            <th>RecentTimeStart/
+              RecentTimeEnd/
+              AssessmentDateStart/
+              AssessmentDateEnd
+              [AssessmentPeriod</th>
+            <td colspan="42"
+              tal:define="print_val python: view.metadata_data"
+              tal:content="python: print_val[0] if print_val else ''">Row not implemented</td>
+          </tr>
+        </tal:block>
+
+
+        <tal:block tal:define="topic_group_index python:1;
+          colspan_base python: sum((len(topic_assessment['LevelPressureNConcentration']),
+          len(topic_assessment['LevelPressurePConcentration']),
+          len(topic_assessment['LevelPressureOConcentration'])));">
+          <tr tal:define="col_name string:Description;">
+            <th>LevelPressureOverall:
+              Description</th>
+            <metal:macro use-macro="template/macros/print_base"/>
+          </tr>
+
+          <tr tal:define="col_name string:SumInfo1;">
+            <th>LevelPressureOverall:
+              SumInfo1
+              [proportion of area subject
+              to nutrient enrichment]</th>
+            <metal:macro use-macro="template/macros/print_base"/>
+          </tr>
+
+          <tr tal:define="col_name string:SumInfo1Confidence;">
+            <th>LevelPressureOverall:
+              SumInfo1Confidence</th>
+            <metal:macro use-macro="template/macros/print_base"/>
+          </tr>
+        </tal:block>
+
+
+        <tal:block tal:define="topic_group_index python:2;">
+          <tr tal:define="col_name string:Description;">
+            <th>LevelPressureN/P/OLoad:
+              Desciption</th>
+            <metal:macro use-macro="template/macros/print_base"/>
+          </tr>
+
+          <tr tal:define="col_name string:SumInfo1;">
+            <th>LevelPressureN/P/
+              OLoad: SumInfo1
+              [input load of nitrogen/
+              phosphorus/organic matter]</th>
+            <metal:macro use-macro="template/macros/print_base"/>
+          </tr>
+
+          <tr tal:define="col_name string:SumInfo1Unit;">
+            <th>LevelPressureN/P/
+              OLoad: SumInfo1Unit</th>
+            <metal:macro use-macro="template/macros/print_base"/>
+          </tr>
+
+          <tr tal:define="col_name string:SumInfo1Confidence;">
+            <th>LevelPressureN/P/
+              OLoad: SumInfo1Confidence</th>
+            <metal:macro use-macro="template/macros/print_base"/>
+          </tr>
+
+          <tr tal:define="col_name string:TrendsRecent;">
+            <th>LevelPressureN/P/
+              OLoad: TrendsRecent</th>
+            <metal:macro use-macro="template/macros/print_base"/>
+          </tr>
+
+          <tr tal:define="col_name string:TrendsFuture;">
+            <th>LevelPressureN/P/
+              OLoad: TrendFuture</th>
+            <metal:macro use-macro="template/macros/print_base"/>
+          </tr>
+        </tal:block>
+
+        <tr tal:define="col_name string:Description;">
+          <th>Activities:
+            Description</th>
+          <td tal:attributes="colspan python:42"
+            tal:define="print_val python: view.activ_descr_data"
+            tal:content="python: print_val[0].Description if print_val else ''">Row not implemented</td>
+        </tr>
+
+        <tr tal:define="col_name string:ActivityType;">
+          <th>ActivityType</th>
+          <td tal:attributes="colspan python:42"
+            tal:content="python: view.activ_data">Row not implemented</td>
+        </tr>
+
+        <tr tal:define="col_name string:InfoGaps;">
+          <th>InfoGaps</th>
+          <td tal:attributes="colspan python:42"
+            tal:define="print_val python:[
+            row.Description
+
+            for row in view.base_data
+
+            if row.Topic == 'InfoGaps'];"
+            tal:content="python: print_val[0] if print_val else ''">Row not implemented</td>
+        </tr>
+
+      </tal:block>
+    </table>
+  </div>
+</div>
+from collections import defaultdict
+
+from Products.Five.browser.pagetemplatefile import \
+    ViewPageTemplateFile as Template
+from wise.msfd import db, sql
+
+from ..a8_utils import DB_MAPPER_CLASSES, DESC_DATA_MAPPING, DESCR_TOPIC_UTILS
+from ..base import BaseArticle2012
+
+
+class Article8(BaseArticle2012):
+    template = Template('pt/report-data-a8.pt')
+
+    def get_suminfo2_data(self, marine_unit_id, descriptor):
+        """ Get all data from table _SumInfo2ImpactedElement
+        for specific Marine Units and descriptor
+
+        :param marine_unit_id: ['LV-001', 'LV-002']
+        :param descriptor: 'D5'
+        :return: {u'ImpactPressureSeabedHabitats':
+                     [u'ShallRock', u'ShallSand'],
+                  u'ImpactPressureWaterColumn':
+                     [u'NutrientLevels', u'Transparency']}
+        """
+
+        results = defaultdict(list)
+        tables = DESC_DATA_MAPPING[descriptor]
+
+        for table in tables:
+            tbl_name = '{}SumInfo2ImpactedElement'.format(table.replace('_',
+                                                                        ''))
+            mc_assessment = getattr(sql, tbl_name, None)
+
+            if not mc_assessment:
+                continue
+
+            count, res = db.get_all_records(
+                mc_assessment,
+                mc_assessment.MarineUnitID == marine_unit_id
+            )
+
+            for row in res:
+                topic = row.ImpactType
+                sum_info2 = row.SumInfo2
+                results[topic].append(sum_info2)
+
+        return results
+
+    def get_metadata_data(self, marine_unit_id, descriptor):
+        """ Get all data from table _Metadata
+        for specific Marine Units and descriptor
+
+        :param marine_unit_id: ['LV-001', 'LV-002']
+        :param descriptor: 'D5'
+        :return: list [u'1973 - 2008', ...]
+        """
+
+        results = []
+
+        tables = DESC_DATA_MAPPING[descriptor]
+
+        for table in tables:
+            tbl_name = 't_{}Metadata'.format(table)
+            mc_assessment = getattr(sql, tbl_name, None)
+
+            if mc_assessment is None:
+                continue
+
+            count, res = db.get_all_records(
+                mc_assessment,
+                mc_assessment.c.MarineUnitID == marine_unit_id
+            )
+
+            for row in res:
+                start = row[2]
+                end = row[3]
+
+                if row[1].startswith('Assessment') and start and end:
+                    val = ' - '.join((start, end))
+                    results.extend([val])
+
+                    break
+
+        return results
+
+    def get_activity_descr_data(self, marine_unit_id, descriptor):
+        """ Get all data from table _ActivityDescription
+        for specific Marine Units and descriptor
+        :param marine_unit_id: ['LV-001', 'LV-002']
+        :param descriptor: 'D5'
+        :return: table results
+        """
+
+        tables = DESC_DATA_MAPPING[descriptor]
+        results = []
+
+        for table in tables:
+            tbl_name = '{}ActivityDescription'.format(table.replace("_", ""))
+            mc_assessment = getattr(sql, tbl_name, None)
+
+            if not mc_assessment:
+                continue
+
+            count, res = db.get_all_records(
+                mc_assessment,
+                mc_assessment.MarineUnitID == marine_unit_id
+            )
+            results.extend(res)
+
+        return results
+
+    def get_activity_data(self, descriptor):
+        """ Get all data from table _Activity for specific descriptor
+        :param descriptor: 'D5'
+        :return: list [u'AgricultForestry; Urban']
+        """
+
+        tables = DESC_DATA_MAPPING[descriptor]
+        results = []
+
+        for table in tables:
+            tbl_name = '{}Activity'.format(table.replace('_', ''))
+            mc_assessment = getattr(sql, tbl_name, None)
+
+            if not mc_assessment:
+                continue
+
+            d = self.activ_descr_data
+            col = '{}_ActivityDescription_ID'.format(table)
+            # _id_act_descr = getattr(d[0], col, 0) if d else 0
+            _id_act_descr = [getattr(x, col, 0) for x in d]
+
+            col_ad = '{}_ActivityDescription'.format(table)
+            count, res = db.get_all_records(
+                mc_assessment,
+                getattr(mc_assessment, col_ad).in_(_id_act_descr)
+            )
+            res = [x.Activity for x in res if x.Activity != 'NotReported']
+            results.extend(res)
+
+        results = '; '.join(sorted(set(results)))
+
+        return results
+
+    def get_assesment_ind_data(self, marine_unit_id, descriptor):
+        """ Get all data from table _AssesmentIndicator
+        for specific Marine Units and descriptor
+        :param marine_unit_id: ['LV-001', 'LV-002']
+        :param descriptor: 'D5'
+        :return: table results
+        """
+
+        tables = DESC_DATA_MAPPING[descriptor]
+        results = []
+
+        for table in tables:
+            tbl_name = '{}AssesmentIndicator'.format(table.replace('_', ''))
+            mc_assessment = getattr(sql, tbl_name, None)
+
+            if not mc_assessment:
+                continue
+
+            count, res = db.get_all_records(
+                mc_assessment,
+                mc_assessment.MarineUnitID == marine_unit_id
+            )
+            results.extend(res)
+
+        return results
+
+    def get_assesment_data(self, marine_unit_id, descriptor):
+        """ Get all data from table _Assesment
+        for specific Marine Units and descriptor
+        :param marine_unit_id: ['LV-001', 'LV-002']
+        :param descriptor: 'D5'
+        :return: table results
+        """
+
+        tables = DESC_DATA_MAPPING[descriptor]
+        results = []
+
+        for table in tables:
+            tbl_name = '{}Assesment'.format(table.replace('_', ''))
+            mc_assessment = getattr(sql, tbl_name, None)
+
+            if not mc_assessment:
+                continue
+
+            count, res = db.get_all_records(
+                mc_assessment,
+                mc_assessment.MarineUnitID == marine_unit_id
+            )
+            results.extend(res)
+
+        return results
+
+    def get_base_data(self, marine_unit_id, descriptor):
+        """ Get all data from base table
+        for specific Marine Units and descriptor
+        :param marine_unit_id: ['LV-001', 'LV-002']
+        :param descriptor: 'D5'
+        :return: table results
+        """
+
+        tables = DESC_DATA_MAPPING[descriptor]
+        results = []
+
+        for table in tables:
+            mapper_class = DB_MAPPER_CLASSES.get(table, None)
+
+            if not mapper_class:
+                continue
+
+            count, res = db.get_all_records(
+                mapper_class,
+                mapper_class.MarineUnitID == marine_unit_id
+            )
+            results.extend(res)
+
+        return results
+
+    def get_topic_assessment(self, marine_unit_id):
+        """ Get dict with topics(analisys/features) and the GESComponents
+
+        :param marine_unit_id: 'LV-001'
+        :return: {'LevelPressureOLoad': ['5.1.1'],
+            u'ImpactPressureWaterColumn': [u'5.2.1', u'5.2.1', u'5.2.2'],
+            ...}
+        """
+        self.descriptor = self.descriptor.split('.')[0]
+
+        self.base_data = self.get_base_data(marine_unit_id,
+                                            self.descriptor)
+
+        self.asses_data = self.get_assesment_data(marine_unit_id,
+                                                  self.descriptor)
+
+        self.asses_ind_data = self.get_assesment_ind_data(
+            marine_unit_id, self.descriptor)
+
+        self.activ_descr_data = self.get_activity_descr_data(
+            marine_unit_id, self.descriptor)
+
+        self.activ_data = self.get_activity_data(self.descriptor)
+
+        self.metadata_data = self.get_metadata_data(marine_unit_id,
+                                                    self.descriptor)
+
+        self.suminfo2_data = self.get_suminfo2_data(marine_unit_id,
+                                                    self.descriptor)
+
+        topic_assesment = defaultdict(list)
+
+        topic_atn = DESCR_TOPIC_UTILS['topic_assessment_to_nutrients'].get(
+            self.descriptor, {}
+        )
+        topic_ind = DESCR_TOPIC_UTILS['topic_indicators'].get(self.descriptor,
+                                                              {})
+
+        for row in self.base_data:
+            base_topic = getattr(row, 'Topic', None)
+            asses_topic = topic_atn.get(base_topic, 'NOT FOUND')
+
+            # if not asses_topic:
+            #     continue
+            topic_assesment[base_topic] = []
+
+            indicators = [
+                x.GESIndicators
+
+                for x in self.asses_ind_data
+
+                if x.Topic == asses_topic
+            ]
+
+            if not indicators:
+                indic = topic_ind.get(base_topic, 'INDICATOR EMPTY')
+                indicators = (indic, )
+
+            topic_assesment[base_topic].extend(indicators)
+
+        self.topic_assesment = topic_assesment
+
+        return topic_assesment
+
+    def get_col_span_indicator(self, indicator):
+        """ Get colspan based on the count of indicators
+        :param indicator: '5.2.1'
+        :return: integer
+        """
+
+        colspan = 0
+        topic_groups = DESCR_TOPIC_UTILS['topic_groups'].get(
+            self.descriptor, [])
+        topics_needed = self.topic_assesment.keys()
+
+        if topic_groups:
+            topics_needed = topic_groups[0]
+
+        for topic, indics in self.topic_assesment.items():
+            count = indics.count(indicator)
+
+            if topic in topics_needed:
+                colspan += count
+
+        if not colspan:
+            colspan = 1
+
+        return colspan
+
+    def print_feature(self, indicator, col_name, topic_group_index):
+        """ Get data to be printed in template
+        """
+
+        results = []
+        topic_groups = DESCR_TOPIC_UTILS['topic_groups'].get(
+            self.descriptor, [])
+        topics_needed = self.topic_assesment.keys()
+
+        if topic_groups:
+            topics_needed = topic_groups[topic_group_index]
+
+        for row in self.base_data:
+            topic = row.Topic
+
+            if topic in topics_needed:
+                nr = self.topic_assesment[topic].count(indicator)
+
+                for i in range(nr):
+                    results.append(getattr(row, col_name))
+
+        if not results:
+            return ['']
+
+        return results
+
+    def print_asses_ind(self, indicator, col_name, topic_group_index):
+        """ Get data to be printed in template
+        """
+
+        topics_needed = []
+        topic_groups = DESCR_TOPIC_UTILS['topic_groups'].get(
+            self.descriptor, [])
+
+        for topic, indics in self.topic_assesment.items():
+            if indicator in indics \
+                    and topic in topic_groups[topic_group_index]:
+                topics_needed.append(topic)
+
+        results = []
+
+        topic_atn = DESCR_TOPIC_UTILS['topic_assessment_to_nutrients'].get(
+            self.descriptor, {}
+        )
+
+        for row in self.base_data:
+            topic = row.Topic
+
+            if topic not in topics_needed:
+                continue
+
+            asses_topic = topic_atn.get(topic)
+
+            res = []
+
+            for row_asess in self.asses_ind_data:
+                if row_asess.Topic == asses_topic and \
+                        row_asess.GESIndicators == indicator:
+                    res.append(getattr(row_asess, col_name))
+
+            if not res:
+                results.append('')
+            else:
+                results.extend(res)
+
+        if not results:
+            return ['']
+
+        return results
+
+    def print_base(self, indicator, col_name, topic_group_index):
+        """ Get data to be printed in template
+        """
+
+        topics_needed = []
+        topic_groups = DESCR_TOPIC_UTILS['topic_groups'].get(
+            self.descriptor, [])
+
+        for topic, indics in self.topic_assesment.items():
+            if indicator in indics \
+                    and topic in topic_groups[topic_group_index]:
+                topics_needed.append(topic)
+
+        results = []
+
+        for row in self.base_data:
+            topic = row.Topic
+
+            if topic not in topics_needed:
+                continue
+
+            print_val = getattr(row, col_name)
+            nr_of_print = self.topic_assesment[topic].count(indicator)
+
+            for nr in range(nr_of_print):
+                results.append(print_val)
+
+        if not results:
+            return ['']
+
+        return results
+
+    def print_asses(self, indicator, col_name, topic_group_index):
+        """ Get data to be printed in template
+        """
+
+        topics_needed = []
+        topic_groups = DESCR_TOPIC_UTILS['topic_groups'].get(
+            self.descriptor, [])
+
+        for topic, indics in self.topic_assesment.items():
+            if indicator in indics \
+                    and topic in topic_groups[topic_group_index]:
+                topics_needed.append(topic)
+
+        results = []
+
+        topic_atn = DESCR_TOPIC_UTILS['topic_assessment_to_nutrients'].get(
+            self.descriptor, {}
+        )
+
+        for row in self.base_data:
+            topic = row.Topic
+
+            if topic not in topics_needed:
+                continue
+
+            asses_topic = topic_atn.get(topic)
+
+            print_val = [
+                getattr(row, col_name)
+
+                for row in self.asses_data
+
+                if row.Topic == asses_topic
+            ]
+            print_val = print_val[0] if print_val else ''
+            nr_of_print = self.topic_assesment[topic].count(indicator)
+
+            for nr in range(nr_of_print):
+                results.append(print_val)
+
+        if not results:
+            return ['']
+
+        return results
+
+    def print_suminfo2(self, indicator, topic_group_index):
+        """ Get data to be printed in template
+        """
+
+        topics_needed = []
+        topic_groups = DESCR_TOPIC_UTILS['topic_groups'].get(
+            self.descriptor, [])
+
+        for topic, indics in self.topic_assesment.items():
+            if indicator in indics \
+                    and topic in topic_groups[topic_group_index]:
+                topics_needed.append(topic)
+
+        results = []
+
+        for row in self.base_data:
+            topic = row.Topic
+
+            if topic not in topics_needed:
+                continue
+
+            print_val = ', '.join(self.suminfo2_data[topic])
+            nr_of_print = self.topic_assesment[topic].count(indicator)
+
+            for nr in range(nr_of_print):
+                results.append(print_val)
+
+        if not results:
+            return ['']
+
+        return results
+
+    def __call__(self):
+        template = self.template
+        self.content = template and template() or ""
+
+        return self.content

@@ -21,16 +21,18 @@
       <h4 tal:content="muid">LV-01</h4>
       <metal:s metal:use-macro="context/wise-macros/macros/simplify-table"></metal:s>
       <div class="overflow-table">
-        <table class="table table-bordered table-striped table-comp-translate table-report">
-          <tal:rep tal:repeat="row muid_data">
-            <tr tal:condition="python: row[0] not in view.BLACKLIST">
-              <th tal:content="python: row[0]">Element</th>
-              <tal:rep tal:repeat="r python: row[1]">
-                <td tal:replace="structure python: view.translate_value(value=r)"> </td>
-              </tal:rep>
-            </tr>
-          </tal:rep>
-        </table>
+        <div class="inner">
+          <table class="table table-bordered table-striped table-comp-translate table-report">
+            <tal:rep tal:repeat="row muid_data">
+              <tr tal:condition="python: row[0] not in view.BLACKLIST">
+                <th tal:content="python: row[0]">Element</th>
+                <tal:rep tal:repeat="r python: row[1]">
+                  <td tal:replace="structure python: view.translate_value(value=r)"> </td>
+                </tal:rep>
+              </tr>
+            </tal:rep>
+          </table>
+        </div>
       </div>
     </tal:def>
 

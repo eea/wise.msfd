@@ -20,23 +20,25 @@
         tal:define="muid_data python: data[0][1];
         muids python:view.get_muids_from_data(data)"
         >
+        <metal:s metal:use-macro="context/wise-macros/macros/simplify-table"></metal:s>
         <div class="overflow-table">
           <!--<h4 tal:content="muids">LV-01</h4>-->
-          <metal:s metal:use-macro="context/wise-macros/macros/simplify-table"></metal:s>
-          <table class="table table-bordered table-striped table-comp-translate table-report">
-            <tr>
-              <th>MarineReportingUnit</th>
-              <td colspan="50" tal:content="muids">LV-001, LV-002</td>
-            </tr>
-            <tal:rep tal:repeat="row muid_data">
-              <tr tal:condition="python: row[0] not in view.BLACKLIST">
-                <th tal:content="python: row[0]">Element</th>
-                <tal:rep tal:repeat="r python: row[1]">
-                  <div tal:replace="structure python: view.translate_value(value=r)"></div>
-                </tal:rep>
+          <div class="inner">
+            <table class="table table-bordered table-striped table-comp-translate table-report">
+              <tr>
+                <th>MarineReportingUnit</th>
+                <td colspan="50" tal:content="muids">LV-001, LV-002</td>
               </tr>
-            </tal:rep>
-          </table>
+              <tal:rep tal:repeat="row muid_data">
+                <tr tal:condition="python: row[0] not in view.BLACKLIST">
+                  <th tal:content="python: row[0]">Element</th>
+                  <tal:rep tal:repeat="r python: row[1]">
+                    <div tal:replace="structure python: view.translate_value(value=r)"></div>
+                  </tal:rep>
+                </tr>
+              </tal:rep>
+            </table>
+          </div>
         </div>
       </tal:def>
     </tal:cond>
