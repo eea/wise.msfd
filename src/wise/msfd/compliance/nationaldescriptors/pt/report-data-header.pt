@@ -63,7 +63,7 @@
     <div id="download-report-data-form">
       <form method="POST" action="" tal:attributes="action request/URL0">
         <input type="hidden" name="download" value="yes" />
-        <button class="btn btn-primary">Download report data as Excel</button>
+        <button class="btn btn-primary">View report data in Excel</button>
       </form>
     </div>
 
