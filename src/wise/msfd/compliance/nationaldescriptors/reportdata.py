@@ -328,16 +328,17 @@ class A10Proxy(object):     # Proxy
             title = LABELS.get(collection_name, value)
             setattr(self, name, ItemLabel(value, title))
 
-        s = set(self.__o.Features.split(','))
-        res = [
-            ItemLabel(
-                x,
-                LABELS.get('feature_labels', x),
-            )
+        if self.__o.Features:
+            s = set(self.__o.Features.split(','))
+            res = [
+                ItemLabel(
+                    x,
+                    LABELS.get('feature_labels', x),
+                )
 
-            for x in s
-        ]
-        self.Features = ItemList(rows=res)
+                for x in s
+            ]
+            self.Features = ItemList(rows=res)
 
     def __getattr__(self, name):
         return getattr(self.__o, name)
@@ -350,16 +351,17 @@ class A9Proxy(object):     # Proxy
     def __init__(self, obj):
         self.__o = obj       # original object
 
-        s = set(self.__o.Features.split(','))
-        res = [
-            ItemLabel(
-                x,
-                LABELS.get('feature_labels', x),
-            )
+        if self.__o.Features:
+            s = set(self.__o.Features.split(','))
+            res = [
+                ItemLabel(
+                    x,
+                    LABELS.get('feature_labels', x),
+                )
 
-            for x in s
-        ]
-        self.Features = ItemList(rows=res)
+                for x in s
+            ]
+            self.Features = ItemList(rows=res)
 
     def __getattr__(self, name):
         v = getattr(self.__o, name)
