@@ -448,16 +448,23 @@ if (!Array.prototype.last){
   $.fn.fixTableHeaderHeight = function fixTableHeaderHeight() {
     // because the <th> are position: absolute, they don't get the height of
     // the <td> cells, and the other way around.
-    console.log("Fixing table th height", this);
-    var $table = $(this);
-    $("th", $table).each(function() {
-      var $th = $(this);
-      var $next = $th.next();
+    this.each(function() {
 
-      var mh = Math.max($th.height(), $next.height());
+      console.log("Fixing table th height", this);
+      // var $table = $(this);
 
-      $th.height(mh);
-      $next.height(mh);
+      $("th", this).each(function() {
+        var $th = $(this);
+        console.log("th height", $th.height());
+        var $next = $th.next();
+        console.log("next height", $next.height());
+
+        var mh = Math.max($th.height(), $next.height());
+        console.log("max", mh);
+
+        $th.height(mh + 1);
+        $next.height(mh);
+      });
     });
   };
 

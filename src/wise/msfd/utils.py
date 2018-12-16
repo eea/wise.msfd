@@ -604,7 +604,7 @@ def filter_duplicates(data, group_by_fields):
     """
 
     if not data:
-        return data
+        return {}
 
     res = defaultdict(list)
 
