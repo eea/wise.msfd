@@ -602,9 +602,14 @@ def filter_duplicates(data, group_by_fields):
     """ Greatly reduce the number of rows in data, by omitting rows with
     identical values
     """
+
+    if not data:
+        return data
+
     res = defaultdict(list)
 
     # Ignore the following fields when hashing the rows
+
     fieldnames = data[0]._fields
     indexes = [fieldnames.index(f) for f in group_by_fields]
 

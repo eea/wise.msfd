@@ -448,6 +448,7 @@ if (!Array.prototype.last){
   $.fn.fixTableHeaderHeight = function fixTableHeaderHeight() {
     // because the <th> are position: absolute, they don't get the height of
     // the <td> cells, and the other way around.
+    console.log("Fixing table th height", this);
     var $table = $(this);
     $("th", $table).each(function() {
       var $th = $(this);
