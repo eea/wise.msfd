@@ -496,8 +496,6 @@ if (!Array.prototype.last){
         }
       });
     });
-
-    $table.addClass('simplified-table');
   }
 
   function toggleTable(onoff) {
