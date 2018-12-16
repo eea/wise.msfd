@@ -55,7 +55,7 @@
 
 
 <metal:macro define-macro="simplify-table">
-  <div class="simplify-form">
+  <div class="simplify-form" tal:condition="data">
 
     <button type="button" class="btn btn-sm btn-toggle active"
       data-toggle="button" aria-pressed="true" autocomplete="off">

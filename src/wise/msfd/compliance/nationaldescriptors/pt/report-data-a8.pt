@@ -1,19 +1,23 @@
 <div>
   <div tal:repeat="muid view/muids" class="report-section">
-    <h4 tal:content="muid">DE_ANS</h4>
+    <tal:def define="data view/rows/?muid">
 
-    <metal:s metal:use-macro="context/context/wise-macros/macros/simplify-table"></metal:s>
+      <h4 tal:content="muid">DE_ANS</h4>
 
-    <div class="overflow-table" tal:define="muid_data view/rows/?muid">
-      <div class="inner">
-        <table tal:condition="muid_data"
-          class='table table-bordered table-striped table-report'>
-          <tal:rep tal:repeat="row muid_data" >
-            <tal:row replace="structure row"></tal:row>
-          </tal:rep>
-        </table>
+      <metal:s
+        metal:use-macro="context/context/wise-macros/macros/simplify-table"></metal:s>
+
+      <div class="overflow-table">
+        <div class="inner">
+          <table tal:condition="data"
+            class='table table-bordered table-striped table-report'>
+            <tal:rep tal:repeat="row data" >
+              <tal:row replace="structure row"></tal:row>
+            </tal:rep>
+          </table>
+        </div>
       </div>
-    </div>
 
+    </tal:def>
   </div>
 </div>

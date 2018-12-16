@@ -1,4 +1,4 @@
-<div tal:define="data options/data">
+<div tal:define="alldata options/data">
 
   <div tal:replace="structure options/report_header"></div>
 
@@ -9,16 +9,16 @@
     </div>
   </div>
 
-  <div tal:condition="not: data">
+  <div tal:condition="not: alldata">
     No data reported for this Descriptor
   </div>
 
   <div style="clear: both; overflow:hidden"><!-- --></div>
 
-    <tal:cond tal:condition="data">
+    <tal:cond tal:condition="alldata">
       <tal:def
-        tal:define="muid_data python: data[0][1];
-        muids python:view.get_muids_from_data(data)"
+        tal:define="data python: alldata[0][1];
+        muids python:view.get_muids_from_data(alldata)"
         >
         <metal:s metal:use-macro="context/wise-macros/macros/simplify-table"></metal:s>
         <div class="overflow-table">
@@ -29,7 +29,7 @@
                 <th>MarineReportingUnit</th>
                 <td colspan="50" tal:content="muids">LV-001, LV-002</td>
               </tr>
-              <tal:rep tal:repeat="row muid_data">
+              <tal:rep tal:repeat="row alldata">
                 <tr tal:condition="python: row[0] not in view.BLACKLIST">
                   <th tal:content="python: row[0]">Element</th>
                   <tal:rep tal:repeat="r python: row[1]">
