@@ -31,7 +31,7 @@ from ..base import BaseComplianceView
 from .a8 import Article8 as Article8
 from .a9 import Article9
 from .a10 import Article10
-from .utils import get_sorted_fields_2018, row_to_dict
+from .utils import get_sorted_fields_2018, row_to_dict, REPORT_2018
 
 logger = logging.getLogger('wise.msfd')
 
@@ -117,7 +117,7 @@ class ReportData2012(BaseComplianceView, BaseUtil):
 
         return sorted(muids)
 
-    @cache(get_reportdata_key, dependencies=['translation'])
+    # @cache(get_reportdata_key, dependencies=['translation'])
     def get_report_data(self):
         logger.info("Rendering 2012 report for: %s %s %s %s",
                     self.country_code, self.descriptor, self.article,
@@ -260,38 +260,38 @@ class SnapshotSelectForm(Form):
         self.request.response.redirect('./@@view-report-data-2018')
 
 
-class A8Proxy(object):
-    def __init__(self, obj):
+class Proxy2018(object):
+    def __init__(self, obj, article):
         self.__o = obj       # the proxied object
+        self.nodes = REPORT_2018.get_article_childrens(article)
 
-        # we try to translate shortcodes into labels
-        simple_labels = [
-            ('Feature', 'feature_labels'),
-            ('Parameter', 'parameter_labels'),
-            ('IntegrationRuleTypeParameter', 'parameter_labels'),
-            ('ThresholdValueSource', 'threshold_sources_labels'),
-            ('ValueUnit', 'units_labels'),
-            ('ElementCodeSource', 'elementcode_sources_labels'),
-            ('Element2CodeSource', 'elementcode_sources_labels'),
-        ]
-
-        for (name, collection_name) in simple_labels:
-            value = getattr(self.__o, name)
-
-            if isinstance(value, string_types):
-                value = value.strip()
-
-            if not value:       # don't overwrite empty values
+        for node in self.nodes:
+            name = node.tag
+            value = getattr(self.__o, name, None)
+            if not value:
                 continue
 
-            title = LABELS.get(collection_name, value)
-            setattr(self, name, ItemLabel(value, title))
+            attrs = node.attrib
+            label_name = attrs.get('labelName', None)
+            if not label_name:
+                continue
 
-        # if self.__o.PressureCode:
-        #     s = self.__o.PressureCode.strip()
-        #     res = [(LABELS.get('pressure_labels', s), s)]
-        #
-        #     self.PressureCode = ItemList(rows=res)
+            as_list = attrs.get('asList', 'false')
+            if as_list == 'true':
+                vals = set(value.split(','))
+
+                res = [
+                    ItemLabel(
+                        v,
+                        LABELS.get(label_name, v),
+                    )
+                    for v in vals
+                ]
+
+                setattr(self, name, ItemList(rows=res))
+            else:
+                title = LABELS.get(label_name, value)
+                setattr(self, name, ItemLabel(value, title))
 
     def __getattr__(self, name):
         return getattr(self.__o, name)
@@ -300,70 +300,110 @@ class A8Proxy(object):
         return iter(self.__o)
 
 
-class A10Proxy(object):     # Proxy
-    def __init__(self, obj):
-        self.__o = obj       # original object
-
-        simple_labels = [
-            ('Parameter', 'parameter_labels'),
-            ('ValueUnit', 'units_labels'),
-        ]
-
-        for (name, collection_name) in simple_labels:
-            value = getattr(self.__o, name)
-
-            if isinstance(value, string_types):
-                value = value.strip()
-
-            if not value:       # don't overwrite empty values
-                continue
-
-            title = LABELS.get(collection_name, value)
-            setattr(self, name, ItemLabel(value, title))
-
-        if self.__o.Features:
-            s = set(self.__o.Features.split(','))
-            res = [
-                ItemLabel(
-                    x,
-                    LABELS.get('feature_labels', x),
-                )
-
-                for x in s
-            ]
-            self.Features = ItemList(rows=res)
-
-    def __getattr__(self, name):
-        return getattr(self.__o, name)
-
-    def __iter__(self):
-        return iter(self.__o)
-
-
-class A9Proxy(object):     # Proxy
-    def __init__(self, obj):
-        self.__o = obj       # original object
-
-        if self.__o.Features:
-            s = set(self.__o.Features.split(','))
-            res = [
-                ItemLabel(
-                    x,
-                    LABELS.get('feature_labels', x),
-                )
-
-                for x in s
-            ]
-            self.Features = ItemList(rows=res)
-
-    def __getattr__(self, name):
-        v = getattr(self.__o, name)
-        logger.info("getting attribute %s: %r", name, v)
-
-        return v
-
-    def __iter__(self):
-        return iter(self.__o)
+# class A8Proxy(object):
+#     def __init__(self, obj):
+#         self.__o = obj       # the proxied object
+#
+#         # we try to translate shortcodes into labels
+#         simple_labels = [
+#             ('Feature', 'feature_labels'),
+#             ('Parameter', 'parameter_labels'),
+#             ('IntegrationRuleTypeParameter', 'parameter_labels'),
+#             ('ThresholdValueSource', 'threshold_sources_labels'),
+#             ('ValueUnit', 'units_labels'),
+#             ('ElementCodeSource', 'elementcode_sources_labels'),
+#             ('Element2CodeSource', 'elementcode_sources_labels'),
+#         ]
+#
+#         for (name, collection_name) in simple_labels:
+#             value = getattr(self.__o, name)
+#
+#             if isinstance(value, string_types):
+#                 value = value.strip()
+#
+#             if not value:       # don't overwrite empty values
+#                 continue
+#
+#             title = LABELS.get(collection_name, value)
+#             setattr(self, name, ItemLabel(value, title))
+#
+#         # if self.__o.PressureCode:
+#         #     s = self.__o.PressureCode.strip()
+#         #     res = [(LABELS.get('pressure_labels', s), s)]
+#         #
+#         #     self.PressureCode = ItemList(rows=res)
+#
+#     def __getattr__(self, name):
+#         return getattr(self.__o, name)
+#
+#     def __iter__(self):
+#         return iter(self.__o)
+#
+#
+# class A10Proxy(object):     # Proxy
+#     def __init__(self, obj):
+#         self.__o = obj       # original object
+#
+#         simple_labels = [
+#             ('Parameter', 'parameter_labels'),
+#             ('ValueUnit', 'units_labels'),
+#         ]
+#
+#         for (name, collection_name) in simple_labels:
+#             value = getattr(self.__o, name)
+#
+#             if isinstance(value, string_types):
+#                 value = value.strip()
+#
+#             if not value:       # don't overwrite empty values
+#                 continue
+#
+#             title = LABELS.get(collection_name, value)
+#             setattr(self, name, ItemLabel(value, title))
+#
+#         if self.__o.Features:
+#             s = set(self.__o.Features.split(','))
+#             res = [
+#                 ItemLabel(
+#                     x,
+#                     LABELS.get('feature_labels', x),
+#                 )
+#
+#                 for x in s
+#             ]
+#             self.Features = ItemList(rows=res)
+#
+#     def __getattr__(self, name):
+#         return getattr(self.__o, name)
+#
+#     def __iter__(self):
+#         return iter(self.__o)
+#
+#
+# class A9Proxy(object):     # Proxy
+#     def __init__(self, obj):
+#         self.__o = obj       # original object
+#
+#         if self.__o.Features:
+#             s = set(self.__o.Features.split(','))
+#             res = [
+#                 ItemLabel(
+#                     x,
+#                     LABELS.get('feature_labels', x),
+#                 )
+#
+#                 for x in s
+#             ]
+#             self.Features = ItemList(rows=res)
+#
+#     def __getattr__(self, name):
+#         v = getattr(self.__o, name)
+#         logger.info("getting attribute %s: %r", name, v)
+#
+#         return v
+#
+#     def __iter__(self):
+#         return iter(self.__o)
 
 
 class ReportData2018(BaseComplianceView):
@@ -412,7 +452,7 @@ class ReportData2018(BaseComplianceView):
             *conditions
         )
 
-        data = [A8Proxy(row) for row in res]
+        data = [Proxy2018(row, self.article) for row in res]
 
         return data
 
@@ -450,7 +490,7 @@ class ReportData2018(BaseComplianceView):
             if feats.intersection(features):
                 out.append(row)
 
-        data = [A10Proxy(row) for row in out]
+        data = [Proxy2018(row, self.article) for row in out]
 
         return data
 
@@ -475,7 +515,7 @@ class ReportData2018(BaseComplianceView):
             *conditions
         )
 
-        data = [A9Proxy(row) for row in r]
+        data = [Proxy2018(row, self.article) for row in r]
 
         return data
 
@@ -580,7 +620,7 @@ class ReportData2018(BaseComplianceView):
 
         return ', '.join(muids)
 
-    @cache(get_reportdata_key, dependencies=['translation'])
+    # @cache(get_reportdata_key, dependencies=['translation'])
     def render_reportdata(self):
         logger.info("Quering database for 2018 report data: %s %s %s %s",
                     self.country_code, self.country_region_code, self.article,
