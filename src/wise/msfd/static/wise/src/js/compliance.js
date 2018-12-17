@@ -515,6 +515,7 @@ if (!Array.prototype.last){
         }
       });
     });
+
   };
 
   $.fn.toggleTable = function toggleTable(onoff) {
@@ -524,6 +525,7 @@ if (!Array.prototype.last){
     } else {
       $(this).html(original);
     }
+    addTranslateClickHandlers();
   };
 
   $(document).ready(function($){

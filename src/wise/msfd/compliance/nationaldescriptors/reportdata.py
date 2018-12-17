@@ -117,7 +117,7 @@ class ReportData2012(BaseComplianceView, BaseUtil):
 
         return sorted(muids)
 
-    # @cache(get_reportdata_key, dependencies=['translation'])
+    @cache(get_reportdata_key, dependencies=['translation'])
     def get_report_data(self):
         logger.info("Rendering 2012 report for: %s %s %s %s",
                     self.country_code, self.descriptor, self.article,
@@ -580,7 +580,7 @@ class ReportData2018(BaseComplianceView):
 
         return ', '.join(muids)
 
-    # @cache(get_reportdata_key, dependencies=['translation'])
+    @cache(get_reportdata_key, dependencies=['translation'])
     def render_reportdata(self):
         logger.info("Quering database for 2018 report data: %s %s %s %s",
                     self.country_code, self.country_region_code, self.article,
