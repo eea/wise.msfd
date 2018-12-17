@@ -87,10 +87,10 @@
         <GESAchieved>GESAchieved</GESAchieved>
         <DescriptionOverallStatus>DescriptionOverallStatus</DescriptionOverallStatus>
         <AssessmentsPeriod>AssessmentsPeriod</AssessmentsPeriod>
-        <PressureCode labelName="pressure_labels" asList="true">RelatedPressures</PressureCode>
+        <PressureCode labelName="pressure_labels" asList="true" exclude="true">RelatedPressures</PressureCode>
         <RelatedActivities skip="true" reason="This field is not in the DB">
             Related activities
         </RelatedActivities>
-        <TargetCode>RelatedTargets</TargetCode>
+        <TargetCode exclude="true">RelatedTargets</TargetCode>
     </Art8>
 </data>

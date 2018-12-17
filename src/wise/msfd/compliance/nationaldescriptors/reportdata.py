@@ -261,13 +261,17 @@ class SnapshotSelectForm(Form):
 
 
 class Proxy2018(object):
-    def __init__(self, obj, article):
+    def __init__(self, obj, article, extra=None):
         self.__o = obj       # the proxied object
         self.nodes = REPORT_2018.get_article_childrens(article)
+        if not extra:
+            extra = {}
+
+        self.extra = extra
 
         for node in self.nodes:
             name = node.tag
-            value = getattr(self.__o, name, None)
+            value = getattr(self.__o, name, extra.get(name, None))
             if not value:
                 continue
 
@@ -294,7 +298,7 @@ class Proxy2018(object):
                 setattr(self, name, ItemLabel(value, title))
 
     def __getattr__(self, name):
-        return getattr(self.__o, name)
+        return getattr(self.__o, name, self.extra.get(name))
 
     def __iter__(self):
         return iter(self.__o)
@@ -424,7 +428,7 @@ class ReportData2018(BaseComplianceView):
     Art10 = Template('pt/nat-desc-report-data-multiple-muid.pt')
 
     group_by_fields = {
-        'Art8': ('TargetCode', 'PressureCode'),
+        'Art8': (),  # 'TargetCode', 'PressureCode'
         'Art9': (),
         'Art10': ()
     }
@@ -432,7 +436,12 @@ class ReportData2018(BaseComplianceView):
     subform = None
 
     def get_data_from_view_Art8(self):
-
+        fields = REPORT_2018.get_article_childrens(self.article)
+        exclude = [
+            x.tag
+            for x in fields
+            if x.attrib.get('exclude', 'false') == 'true'
+        ]
         # TODO: the data here should be filtered by muids in region
 
         t = sql2018.t_V_ART8_GES_2018
@@ -445,14 +454,15 @@ class ReportData2018(BaseComplianceView):
 
         conditions = [t.c.GESComponent.in_(all_ids)]
 
-        count, res = db.get_all_records_ordered(
+        exclude_data, res = db.get_all_records_distinct_ordered(
             t,
             'Criteria',
+            exclude,
             t.c.CountryCode == self.country_code,
             *conditions
         )
 
-        data = [Proxy2018(row, self.article) for row in res]
+        data = [Proxy2018(row, self.article, exclude_data) for row in res]
 
         return data
 
@@ -531,6 +541,7 @@ class ReportData2018(BaseComplianceView):
         # this consolidates the data, filtering duplicates
         # list of ((name, label), values)
         good_data = filter_duplicates(data, self.group_by_fields[self.article])
+        # good_data = data
 
         res = []
 
@@ -543,20 +554,20 @@ class ReportData2018(BaseComplianceView):
                 (fieldname, label), row_data = row
                 row[0] = label
 
-                if fieldname not in self.group_by_fields[self.article]:
-                    continue
-
-                # rewrite some rows with list of all possible values
-                all_values = set([
-                    getattr(x, fieldname)
-
-                    for x in data
-
-                    if (x.MarineReportingUnit == mru) and
-                    (getattr(x, fieldname) is not None)
-                ])
-
-                row[1] = [', '.join(all_values)] * len(row_data)
+                # if fieldname not in self.group_by_fields[self.article]:
+                #     continue
+                #
+                # # rewrite some rows with list of all possible values
+                # all_values = set([
+                #     getattr(x, fieldname)
+                #
+                #     for x in data
+                #
+                #     if (x.MarineReportingUnit == mru) and
+                #     (getattr(x, fieldname) is not None)
+                # ])
+                #
+                # row[1] = [', '.join(all_values)] * len(row_data)
 
             res.append((mru, _data))
 
