@@ -456,7 +456,7 @@ if (!Array.prototype.last){
         var thh = Math.max($next.height());
         var mh = Math.max($th.height(), thh);
 
-        $th.height(mh + 1);
+        $th.height(mh - 1);
         $next.height(mh);
       });
     });
