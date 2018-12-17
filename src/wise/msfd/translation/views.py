@@ -33,8 +33,10 @@ logger = logging.getLogger('wise.msfd.translation')
 
 
 def decode_text(text):
+    import unicodedata
     encoding = chardet.detect(text)['encoding']
     text_encoded = text.decode(encoding)
+    text_encoded = unicodedata.normalize('NFKD', text_encoded)
 
     return text_encoded
 
@@ -53,7 +55,7 @@ class SendTranslationRequest(BrowserView):
         if (annot.get(ANNOTATION_KEY, None) and
                 annot[ANNOTATION_KEY].get(source_lang, None)):
 
-            decoded = decode_text(text)
+            decoded = text.decode('utf-8')  # decode_text(text)
 
             translation = annot[ANNOTATION_KEY][source_lang].get(decoded, '')
             translation = translation.lstrip('?')
@@ -68,7 +70,8 @@ class SendTranslationRequest(BrowserView):
 
         if (annot.get(ANNOTATION_KEY, None) and
                 annot[ANNOTATION_KEY].get(source_lang, None)):
-            decoded = decode_text(text)
+            # decoded = decode_text(text)
+            decoded = text
 
             translation = annot[ANNOTATION_KEY][source_lang].pop(decoded, '')
 
@@ -90,7 +93,8 @@ class SendTranslationRequest(BrowserView):
 
             return self.get_translation_from_annot(text, sourceLanguage)
 
-        text = self.request.form.get('text-to-translate', '')
+        orig = self.request.form.get('text-to-translate', '')
+        text = decode_text(orig)
 
         if not text:
             return ''
@@ -182,8 +186,8 @@ class TranslationCallback(BrowserView):
 
         annot_lang = annot[ANNOTATION_KEY][language]
 
-        originalText = self.request.form.get('external-reference')
-        originalText = decode_text(originalText)
+        orig = self.request.form.get('external-reference')
+        originalText = orig.decode('utf-8')     # decode_text(orig)
 
         self.request.form.pop('request-id', None)
         self.request.form.pop('target-language', None)
@@ -224,15 +228,15 @@ class TranslationView(BrowserView):
 
     def translate(self, source_lang, value):
         # TODO: implement getting the translation from annotations
-
+        orig = value
         if not value:
 
             return self.translate_snip(text=value,
                                        translation=u"",
                                        can_translate=False)
 
-        if isinstance(value, (str, int, float)):
-            value = unicode(value)      # TODO: should use decode?
+        if isinstance(value, (str, )):
+            value = decode_text(value)      # TODO: should use decode?
         elif isinstance(value, unicode):
             pass
         else:
