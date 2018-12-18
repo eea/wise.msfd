@@ -1,1 +1,2 @@
-<span tal:attributes="title options/name" tal:content="options/title">Text here</span>
+<em tal:attributes="title options/name"
+      tal:content="options/title">Text here</em>

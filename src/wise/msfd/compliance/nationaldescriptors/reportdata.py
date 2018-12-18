@@ -298,116 +298,10 @@ class Proxy2018(object):
                 setattr(self, name, ItemLabel(value, title))
 
     def __getattr__(self, name):
-        return getattr(self.__o, name, self.extra.get(name))
+        return getattr(self.__o, name, self.extra.get(name, None))
 
     def __iter__(self):
         return iter(self.__o)
-
-
-# class A8Proxy(object):
-#     def __init__(self, obj):
-#         self.__o = obj       # the proxied object
-#
-#         # we try to translate shortcodes into labels
-#         simple_labels = [
-#             ('Feature', 'feature_labels'),
-#             ('Parameter', 'parameter_labels'),
-#             ('IntegrationRuleTypeParameter', 'parameter_labels'),
-#             ('ThresholdValueSource', 'threshold_sources_labels'),
-#             ('ValueUnit', 'units_labels'),
-#             ('ElementCodeSource', 'elementcode_sources_labels'),
-#             ('Element2CodeSource', 'elementcode_sources_labels'),
-#         ]
-#
-#         for (name, collection_name) in simple_labels:
-#             value = getattr(self.__o, name)
-#
-#             if isinstance(value, string_types):
-#                 value = value.strip()
-#
-#             if not value:       # don't overwrite empty values
-#                 continue
-#
-#             title = LABELS.get(collection_name, value)
-#             setattr(self, name, ItemLabel(value, title))
-#
-#         # if self.__o.PressureCode:
-#         #     s = self.__o.PressureCode.strip()
-#         #     res = [(LABELS.get('pressure_labels', s), s)]
-#         #
-#         #     self.PressureCode = ItemList(rows=res)
-#
-#     def __getattr__(self, name):
-#         return getattr(self.__o, name)
-#
-#     def __iter__(self):
-#         return iter(self.__o)
-#
-#
-# class A10Proxy(object):     # Proxy
-#     def __init__(self, obj):
-#         self.__o = obj       # original object
-#
-#         simple_labels = [
-#             ('Parameter', 'parameter_labels'),
-#             ('ValueUnit', 'units_labels'),
-#         ]
-#
-#         for (name, collection_name) in simple_labels:
-#             value = getattr(self.__o, name)
-#
-#             if isinstance(value, string_types):
-#                 value = value.strip()
-#
-#             if not value:       # don't overwrite empty values
-#                 continue
-#
-#             title = LABELS.get(collection_name, value)
-#             setattr(self, name, ItemLabel(value, title))
-#
-#         if self.__o.Features:
-#             s = set(self.__o.Features.split(','))
-#             res = [
-#                 ItemLabel(
-#                     x,
-#                     LABELS.get('feature_labels', x),
-#                 )
-#
-#                 for x in s
-#             ]
-#             self.Features = ItemList(rows=res)
-#
-#     def __getattr__(self, name):
-#         return getattr(self.__o, name)
-#
-#     def __iter__(self):
-#         return iter(self.__o)
-#
-#
-# class A9Proxy(object):     # Proxy
-#     def __init__(self, obj):
-#         self.__o = obj       # original object
-#
-#         if self.__o.Features:
-#             s = set(self.__o.Features.split(','))
-#             res = [
-#                 ItemLabel(
-#                     x,
-#                     LABELS.get('feature_labels', x),
-#                 )
-#
-#                 for x in s
-#             ]
-#             self.Features = ItemList(rows=res)
-#
-#     def __getattr__(self, name):
-#         v = getattr(self.__o, name)
-#         logger.info("getting attribute %s: %r", name, v)
-#
-#         return v
-#
-#     def __iter__(self):
-#         return iter(self.__o)
 
 
 class ReportData2018(BaseComplianceView):
@@ -427,21 +321,11 @@ class ReportData2018(BaseComplianceView):
     Art9 = Template('pt/nat-desc-report-data-single-muid.pt')
     Art10 = Template('pt/nat-desc-report-data-multiple-muid.pt')
 
-    group_by_fields = {
-        'Art8': (),  # 'TargetCode', 'PressureCode'
-        'Art9': (),
-        'Art10': ()
-    }
-
     subform = None
 
     def get_data_from_view_Art8(self):
-        fields = REPORT_2018.get_article_childrens(self.article)
-        exclude = [
-            x.tag
-            for x in fields
-            if x.attrib.get('exclude', 'false') == 'true'
-        ]
+        # TODO this is not used
+        exclude = REPORT_2018.get_group_by_fields(self.article)
         # TODO: the data here should be filtered by muids in region
 
         t = sql2018.t_V_ART8_GES_2018
@@ -454,15 +338,15 @@ class ReportData2018(BaseComplianceView):
 
         conditions = [t.c.GESComponent.in_(all_ids)]
 
-        exclude_data, res = db.get_all_records_distinct_ordered(
+        count, res = db.get_all_records_ordered(
             t,
             'Criteria',
-            exclude,
+            # exclude,
             t.c.CountryCode == self.country_code,
             *conditions
         )
 
-        data = [Proxy2018(row, self.article, exclude_data) for row in res]
+        data = [Proxy2018(row, self.article) for row in res]
 
         return data
 
@@ -536,12 +420,13 @@ class ReportData2018(BaseComplianceView):
             'get_data_from_view_' + self.article
         )
 
+        group_by_fields = REPORT_2018.get_group_by_fields(self.article)
+
         data = get_data_method()
 
         # this consolidates the data, filtering duplicates
         # list of ((name, label), values)
-        good_data = filter_duplicates(data, self.group_by_fields[self.article])
-        # good_data = data
+        good_data = filter_duplicates(data, group_by_fields)
 
         res = []
 
@@ -554,20 +439,38 @@ class ReportData2018(BaseComplianceView):
                 (fieldname, label), row_data = row
                 row[0] = label
 
-                # if fieldname not in self.group_by_fields[self.article]:
-                #     continue
-                #
-                # # rewrite some rows with list of all possible values
-                # all_values = set([
-                #     getattr(x, fieldname)
-                #
-                #     for x in data
-                #
-                #     if (x.MarineReportingUnit == mru) and
-                #     (getattr(x, fieldname) is not None)
-                # ])
-                #
-                # row[1] = [', '.join(all_values)] * len(row_data)
+                if fieldname not in group_by_fields:
+                    continue
+
+                # rewrite some rows with list of all possible values
+                all_values = [
+                    getattr(x, fieldname)
+
+                    for x in data
+
+                    if (x.MarineReportingUnit == mru) and
+                    (getattr(x, fieldname) is not None)
+                ]
+                seen = []
+                uniques = []
+
+                # if the values are unicode
+                if isinstance(all_values[0], (unicode, str)):
+                    row[1] = [', '.join(set(all_values))] * len(row_data)
+                    continue
+
+                # if the values are ItemList types, make the values unique
+                for item in all_values:
+                    item_label_class = item.rows[0]
+                    name = item_label_class.name
+
+                    if name in seen:
+                        continue
+
+                    seen.append(name)
+                    uniques.append(item_label_class)
+
+                row[1] = [ItemList(rows=uniques)] * len(row_data)
 
             res.append((mru, _data))
 

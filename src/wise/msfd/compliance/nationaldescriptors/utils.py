@@ -21,9 +21,19 @@ class Report2018Def(object):
         self.doc = lxml.etree.parse(labels_file)
 
     def get_article_childrens(self, article):
-        node = self.doc.find(article).getchildren()
+        nodes = self.doc.find(article).getchildren()
 
-        return node
+        return nodes
+
+    def get_group_by_fields(self, article):
+        nodes = self.doc.find(article).getchildren()
+        res = [
+            x.tag
+            for x in nodes
+            if x.attrib.get('exclude', 'false') == 'true'
+        ]
+
+        return res
 
 
 REPORT_2018 = Report2018Def()

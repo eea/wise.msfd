@@ -408,6 +408,8 @@ class LabelCollection(object):
     threshold_sources_labels = _parse_labels('ThresholdSources')
     units_labels = _parse_labels('Units')
     elementcode_sources_labels = _parse_labels('ElementCodeSources')
+    ges_criterias_labels = _parse_labels('GESCriterias')
+    ges_components_labels = _parse_labels('GESComponents')
 
     def get(self, collection_name, name):
         label_dict = getattr(self, collection_name, None)
