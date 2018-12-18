@@ -530,9 +530,24 @@ class ReportData2018(BaseComplianceView):
         return data
 
     def get_muids_from_data(self, data):
-        muids = sorted(set([x[0] for x in data]))
+        if isinstance(data[0][0], (unicode, str)):
+            all_muids = sorted(set([x[0] for x in data]))
 
-        return ', '.join(muids)
+            return ', '.join(all_muids)
+
+        all_muids = [x[0] for x in data]
+        seen = []
+        muids = []
+
+        for muid in all_muids:
+            name = muid.name
+            if name in seen:
+                continue
+
+            seen.append(name)
+            muids.append(muid)
+
+        return ItemList(rows=muids)
 
     # @cache(get_reportdata_key, dependencies=['translation'])
     def render_reportdata(self):

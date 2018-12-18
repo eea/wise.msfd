@@ -32,6 +32,7 @@
         <DeterminationDate>DeterminationDate</DeterminationDate>
         <UpdateType>UpdateType</UpdateType>
     </Art9>
+    <!--<MarineReportingUnit labelName="mru_labels">MarineReportingUnit</MarineReportingUnit>-->
     <Art8>
         <Feature labelName="feature_labels">Feature</Feature>
         <GESComponent labelName="ges_components_labels">GESComponent</GESComponent>

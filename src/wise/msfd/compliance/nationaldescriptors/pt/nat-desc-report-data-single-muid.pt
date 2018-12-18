@@ -27,7 +27,7 @@
 
               <tr>
                 <th>MarineReportingUnit</th>
-                <td colspan="50" tal:content="muids">LV-001, LV-002</td>
+                <td colspan="50" tal:content="structure muids">LV-001, LV-002</td>
               </tr>
 
               <tal:rep tal:repeat="row data">

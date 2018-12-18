@@ -19,7 +19,7 @@
   <div tal:condition="alldata" tal:repeat="info alldata" class="report-section">
 
     <tal:def tal:define="muid python:info[0]; data python: info[1];" >
-      <h4 tal:content="muid">LV-01</h4>
+      <h4 tal:content="structure muid">LV-01</h4>
       <metal:s metal:use-macro="context/wise-macros/macros/simplify-table"></metal:s>
       <div class="overflow-table">
         <div class="inner">

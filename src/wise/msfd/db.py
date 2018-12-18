@@ -406,6 +406,16 @@ def get_all_records(mapper_class, *conditions, **kw):
 
 
 @cache(db_result_key)
+def get_all_specific_columns(columns, *conditions, **kw):
+    sess = session()
+    q = sess.query(*columns).filter(*conditions)
+    count = q.count()
+    q = [x for x in q]
+
+    return [count, q]
+
+
+@cache(db_result_key)
 def get_all_records_ordered(table, order_col, *conditions):
     sess = session()
 

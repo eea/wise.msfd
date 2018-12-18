@@ -384,7 +384,7 @@ def get_features(descriptor_code=None):
 
 @db.use_db_session('2018')
 def get_indicator_labels():
-    mc = sql2018.IndicatorsIndicatorAssessmentTarget
+    mc = sql2018.IndicatorsIndicatorAssessment
     count, res = db.get_all_records(
         mc
     )
@@ -393,9 +393,35 @@ def get_indicator_labels():
     for row in res:
         code = row.IndicatorCode
         label = row.IndicatorTitle
-        labels[code] = label
 
-    # import pdb; pdb.set_trace()
+        if label:
+            labels[code] = label
+
+    return labels
+
+
+@db.use_db_session('2018')
+def get_mru_labels():
+    # for faster query only get these fields
+    needed = ('MarineReportingUnitId', 'Description', 'nameTxtInt', 'nameText')
+    mc = sql2018.MarineReportingUnit
+    mc_cols = [getattr(mc, x) for x in needed]
+
+    count, res = db.get_all_specific_columns(
+        mc_cols
+    )
+    labels = {}
+
+    for row in res:
+        code = row.MarineReportingUnitId
+        label_main = row.Description
+        label_int = row.nameTxtInt
+        label_txt = row.nameText
+        label = label_main or label_int or label_txt
+
+        if label:
+            labels[code] = label
+
     return labels
 
 
@@ -431,6 +457,7 @@ class LabelCollection(object):
     ges_criterias_labels = _parse_labels('GESCriterias')
     ges_components_labels = _parse_labels('GESComponents')
     indicators_labels = get_indicator_labels()
+    mru_labels = get_mru_labels()
 
     def get(self, collection_name, name):
         label_dict = getattr(self, collection_name, None)
