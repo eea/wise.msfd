@@ -456,6 +456,8 @@ if (!Array.prototype.last){
         var thh = Math.max($next.height());
         var mh = Math.max($th.height(), thh);
 
+        // console.log("TH", $th, thh, mh)
+
         $th.height(mh - 1);
         $next.height(mh);
       });
@@ -464,7 +466,6 @@ if (!Array.prototype.last){
 
   $.fn.simplifyTable = function simplifyTable(){
     var $table = $(this);
-    $table.fixTableHeaderHeight();
 
     if (!$table.data('original')) {
       $table.data('original', $table.html());
@@ -515,6 +516,8 @@ if (!Array.prototype.last){
         }
       });
     });
+
+    $table.fixTableHeaderHeight();
 
   };
 

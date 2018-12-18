@@ -6,7 +6,7 @@ $(document).ready(function(){
         var text = $(this).siblings('p').text();
         var target_languages = ['EN'];
         var source_lang = 'ES';
-        debugger;
+        // debugger;
         $.ajax({
             type: "POST",
             url: "/request-translation",
@@ -30,7 +30,7 @@ $(document).ready(function(){
                     },
                     success: function(translation) {
                         if (translation) {
-                            debugger;
+                            // debugger;
                             $('.translated').text(translation)
                         }
                         else {
@@ -44,7 +44,7 @@ $(document).ready(function(){
                         }
                     },
                     error: function (xhr, textStatus, errorThrown) {
-                        debugger;
+                        // debugger;
                         if (textStatus == 'timeout') {
                             this.tryCount++;
                             if (this.tryCount <= this.retryLimit) {
