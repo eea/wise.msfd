@@ -6,6 +6,9 @@ from collections import namedtuple
 
 from pkg_resources import resource_filename
 
+from wise.msfd import db, sql2018
+
+
 # GES criterias have been used in 2010/2012 reports and then revamped for 2018
 # reports. As such, some exist in 2010 that didn't exist in 2018, some exist
 # for 2018 that didn't exist for 2010 and they have changed their ids between
@@ -379,6 +382,23 @@ def get_features(descriptor_code=None):
             if descriptor_code in f.descriptors]
 
 
+@db.use_db_session('2018')
+def get_indicator_labels():
+    mc = sql2018.IndicatorsIndicatorAssessmentTarget
+    count, res = db.get_all_records(
+        mc
+    )
+    labels = {}
+
+    for row in res:
+        code = row.IndicatorCode
+        label = row.IndicatorTitle
+        labels[code] = label
+
+    # import pdb; pdb.set_trace()
+    return labels
+
+
 def _parse_labels(label_name):
     res = {}
 
@@ -410,6 +430,7 @@ class LabelCollection(object):
     elementcode_sources_labels = _parse_labels('ElementCodeSources')
     ges_criterias_labels = _parse_labels('GESCriterias')
     ges_components_labels = _parse_labels('GESComponents')
+    indicators_labels = get_indicator_labels()
 
     def get(self, collection_name, name):
         label_dict = getattr(self, collection_name, None)

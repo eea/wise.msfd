@@ -21,7 +21,7 @@
         <TargetStatus>TargetStatus</TargetStatus>
         <AssessmentPeriod>AssessmentPeriod</AssessmentPeriod>
         <ProgressDescription>ProgressDescription</ProgressDescription>
-        <Indicators>Indicators</Indicators>
+        <Indicators labelName="indicators_labels" asList="true">Indicators</Indicators>
     </Art10>
     <Art9>
         <Features labelName="feature_labels" asList="true">Features</Features>
@@ -62,7 +62,7 @@
         <Trend>Trend</Trend>
         <ParameterAchieved>ParameterAchieved</ParameterAchieved>
         <DescriptionParameter>DescriptionParameter</DescriptionParameter>
-        <IndicatorCode>RelatedIndicator</IndicatorCode>
+        <IndicatorCode labelName="indicators_labels">RelatedIndicator</IndicatorCode>
         <CriteriaStatus>CriteriaStatus</CriteriaStatus>
         <DescriptionCriteria>DescriptionCriteria</DescriptionCriteria>
         <ElementStatus>ElementStatus</ElementStatus>
