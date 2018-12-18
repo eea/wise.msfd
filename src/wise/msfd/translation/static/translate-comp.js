@@ -3,14 +3,11 @@ $(document).ready(function(){
   var autoTranslation = function(e) {
     e.preventDefault();
 
-    var $text_div = $(this).parent().parent('ul').parent('div').siblings('div');
-    var text = $text_div.children('.text').text();
-
+    var text = $(this).parents('td.translatable').find('.tr.text').text();
     var target_languages = ['EN'];
     var source_lang = 'EN';
 
     $.ajax({
-      text_div: $text_div,
       type: "POST",
       url: "./request-translation2",
       dataType: 'json',
@@ -32,7 +29,6 @@ $(document).ready(function(){
           },
           success: function(translation) {
             if (translation) {
-              //text_div.children('.transl').text(translation)
               location.reload();
             }
             else {
@@ -86,18 +82,12 @@ $(document).ready(function(){
   var submitTranslation = function(e) {
     e.preventDefault();
 
-    var orig_text = $(this)
-      .parent()
-      .parent()
-      .siblings('#transl-original-text')
-      .text()
-    ;
-
-    var form = $(this).parent().parent();
-    var translation = form[0].elements['new_transl'].value
+    var orig_text = $('#transl-original-text').text();
+    var $form = $('#form-edit-translation');
+    var translation = $form[0].elements['new_transl'].value;
 
     $.ajax({
-      form: form,
+      form: $form,
       type: 'POST',
       url: './translation-callback2',
       dataType: 'json',
@@ -116,7 +106,7 @@ $(document).ready(function(){
 
   var toggleTranslations = function(e) {
     $(this).toggleClass('active');
-    $(this).siblings('.btn-translate-transl').toggleClass('active');
+    $(this).siblings('.btn-translate').toggleClass('active');
 
     var $cell = $(this).parents('td.translatable');
     $cell

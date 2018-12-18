@@ -71,7 +71,7 @@ class SendTranslationRequest(BrowserView):
         if (annot.get(ANNOTATION_KEY, None) and
                 annot[ANNOTATION_KEY].get(source_lang, None)):
             # decoded = decode_text(text)
-            decoded = text
+            decoded = text.decode('utf-8')
 
             translation = annot[ANNOTATION_KEY][source_lang].pop(decoded, '')
 
@@ -99,7 +99,7 @@ class SendTranslationRequest(BrowserView):
         if not text:
             return ''
 
-        self.delete_translation(text, sourceLanguage)
+        self.delete_translation(orig, sourceLanguage)
 
         targetLanguages = self.request.form.get('targetLanguages', ['EN'])
         externalReference = self.request.form.get('externalReference', '')
