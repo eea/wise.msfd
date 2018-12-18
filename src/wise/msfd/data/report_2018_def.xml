@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <data>
     <Art10>
-        <Features>Features</Features>
+        <Features labelName="feature_labels" asList="true">Features</Features>
         <TargetCode>TargetCode</TargetCode>
         <Description>Description</Description>
         <GESComponents>GESComponents</GESComponents>
@@ -11,12 +11,12 @@
         <Measures>Measures</Measures>
         <Element>Element</Element>
         <Element2>Element2</Element2>
-        <Parameter>Parameter</Parameter>
+        <Parameter labelName="parameter_labels">Parameter</Parameter>
         <ParameterOther>ParameterOther</ParameterOther>
         <TargetValue>TargetValue</TargetValue>
         <ValueAchievedUpper>ValueAchievedUpper</ValueAchievedUpper>
         <ValueAchievedLower>ValueAchievedLower</ValueAchievedLower>
-        <ValueUnit>ValueUnit</ValueUnit>
+        <ValueUnit labelName="units_labels">ValueUnit</ValueUnit>
         <ValueUnitOther>ValueUnitOther</ValueUnitOther>
         <TargetStatus>TargetStatus</TargetStatus>
         <AssessmentPeriod>AssessmentPeriod</AssessmentPeriod>
@@ -24,6 +24,7 @@
         <Indicators>Indicators</Indicators>
     </Art10>
     <Art9>
+        <Features labelName="feature_labels" asList="true">Features</Features>
         <GESComponent>GESComponent</GESComponent>
         <GESDescription>GESDescription</GESDescription>
         <JustificationNonUse>JustificationNonUse</JustificationNonUse>
@@ -32,26 +33,28 @@
         <UpdateType>UpdateType</UpdateType>
     </Art9>
     <Art8>
-        <Feature>Feature</Feature>
+        <Feature labelName="feature_labels">Feature</Feature>
         <GESComponent>GESComponent</GESComponent>
         <Element>Element</Element>
         <ElementCode>ElementCode</ElementCode>
-        <ElementCodeSource>ElementCodeSource</ElementCodeSource>
+        <ElementCodeSource labelName="elementcode_sources_labels">ElementCodeSource</ElementCodeSource>
         <Element2>Element2</Element2>
         <Element2Code>Element2Code</Element2Code>
-        <Element2CodeSource>Element2CodeSource</Element2CodeSource>
+        <Element2CodeSource labelName="elementcode_sources_labels">Element2CodeSource</Element2CodeSource>
         <ElementSource>ElementSource</ElementSource>
         <Criteria>Criteria</Criteria>
-        <Parameter>Parameter</Parameter>
+        <Parameter labelName="parameter_labels">Parameter</Parameter>
         <ParameterOther>ParameterOther</ParameterOther>
         <ThresholdValueUpper>ThresholdValueUpper</ThresholdValueUpper>
         <ThresholdValueLower>ThresholdValueLower</ThresholdValueLower>
         <ThresholdQualitative>ThresholdQualitative</ThresholdQualitative>
-        <ThresholdValueSource>ThresholdValueSource</ThresholdValueSource>
+        <ThresholdValueSource labelName="threshold_sources_labels">
+            ThresholdValueSource
+        </ThresholdValueSource>
         <ThresholdValueSourceOther>ThresholdValueSourceOther</ThresholdValueSourceOther>
         <ValueAchievedUpper>ValueAchievedUpper</ValueAchievedUpper>
         <ValueAchievedLower>ValueAchievedLower</ValueAchievedLower>
-        <ValueUnit>ValueUnit</ValueUnit>
+        <ValueUnit labelName="units_labels">ValueUnit</ValueUnit>
         <ValueUnitOther>ValueUnitOther</ValueUnitOther>
         <ProportionThresholdValue>ProportionThresholdValue</ProportionThresholdValue>
         <ProportionValueAchieved>ProportionValueAchieved</ProportionValueAchieved>
@@ -64,7 +67,9 @@
         <DescriptionCriteria>DescriptionCriteria</DescriptionCriteria>
         <ElementStatus>ElementStatus</ElementStatus>
         <DescriptionElement>DescriptionElement</DescriptionElement>
-        <IntegrationRuleTypeParameter>IntegrationRuleTypeParameter</IntegrationRuleTypeParameter>
+        <IntegrationRuleTypeParameter labelName="parameter_labels">
+            IntegrationRuleTypeParameter
+        </IntegrationRuleTypeParameter>
         <IntegrationRuleDescriptionParameter>IntegrationRuleDescriptionParameter</IntegrationRuleDescriptionParameter>
         <IntegrationRuleDescriptionReferenceParameter skip="true" reason="Not in the XML">
             IntegrationRuleDescriptionReferenceParameter
@@ -82,10 +87,10 @@
         <GESAchieved>GESAchieved</GESAchieved>
         <DescriptionOverallStatus>DescriptionOverallStatus</DescriptionOverallStatus>
         <AssessmentsPeriod>AssessmentsPeriod</AssessmentsPeriod>
-        <PressureCode>RelatedPressures</PressureCode>
+        <PressureCode labelName="pressure_labels" asList="true" exclude="true">RelatedPressures</PressureCode>
         <RelatedActivities skip="true" reason="This field is not in the DB">
             Related activities
         </RelatedActivities>
-        <TargetCode>RelatedTargets</TargetCode>
+        <TargetCode exclude="true">RelatedTargets</TargetCode>
     </Art8>
 </data>

@@ -9,9 +9,28 @@ def row_to_dict(table, row):
     return res
 
 
+class Report2018Def(object):
+    """ Parser class for report_2018_def.xml
+    """
+
+    def __init__(self):
+        labels_file = resource_filename(
+            'wise.msfd',
+            'data/report_2018_def.xml'
+        )
+        self.doc = lxml.etree.parse(labels_file)
+
+    def get_article_childrens(self, article):
+        node = self.doc.find(article).getchildren()
+
+        return node
+
+
+REPORT_2018 = Report2018Def()
+
+
 def get_sorted_fields_2018(fields, article):
-    """ Return field/title by parsing report_2018_def.xml
-        field = name from DB
+    """ field = name from DB
         title = title/label showed in the template
 
     :param fields: ['Feature', 'GESComponents', 'Element', 'TargetCode', ...]
@@ -21,12 +40,7 @@ def get_sorted_fields_2018(fields, article):
         ... , ('TargetCode', 'RelatedTargets')]
     """
 
-    labels_file = resource_filename(
-        'wise.msfd',
-        'data/report_2018_def.xml'
-    )
-    doc = lxml.etree.parse(labels_file)
-    elements = doc.find(article).getchildren()
+    elements = REPORT_2018.get_article_childrens(article)
 
     labels = [
         (x.tag, x.text)

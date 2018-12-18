@@ -413,10 +413,37 @@ def get_all_records_ordered(table, order_col, *conditions):
 
     q = sess.query(table).filter(*conditions).\
         order_by(table.c.MarineReportingUnit, col)
+
     count = q.count()
     q = [x for x in q]
 
     return [count, q]
+
+
+@cache(db_result_key)
+def get_all_records_distinct_ordered(table, order_col, exclude, *conditions):
+    sess = session()
+
+    col = getattr(table.c, order_col)
+    needed = set(table.columns.keys()) - set(exclude)
+    col_needed = [getattr(table.c, c) for c in needed]
+
+    # asd = sess.query(table).with_entities(*col_needed).distinct()
+
+    q = sess.query(table).filter(*conditions).\
+        order_by(table.c.MarineReportingUnit, col)
+
+    q_unique = q.with_entities(*col_needed).distinct()
+
+    q_unique = [x for x in q_unique]
+
+    exclude_data = {}
+    for field in exclude:
+        exclude_data[field] = ','.join(set([getattr(x, field) for x in q]))
+
+    # import pdb; pdb.set_trace()
+
+    return [exclude_data, q_unique]
 
 
 @cache(db_result_key)

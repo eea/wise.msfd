@@ -456,8 +456,8 @@ class ItemLabel(TemplateMixin):
     """
 
     def __init__(self, name, title):
-        self.name = name            # 'database short code', an identifier
-        self.title = title          # human readable label
+        self.name = name.strip()            # 'database short code', an identifier
+        self.title = title.strip()          # human readable label
 
     template = PageTemplateFile('pt/label.pt')
 
