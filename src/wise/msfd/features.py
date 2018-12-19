@@ -10,6 +10,8 @@ from z3c.formwidget.optgroup.widget import OptgroupTerm
 from .db import get_all_records, switch_session, threadlocals
 from .sql2018 import LFeature
 
+# TODO: is this still used?
+
 
 @switch_session
 def get_feature_terms():

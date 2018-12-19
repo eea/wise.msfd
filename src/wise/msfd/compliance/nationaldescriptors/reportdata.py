@@ -5,12 +5,10 @@ from datetime import datetime
 from io import BytesIO
 
 from lxml.etree import fromstring
-from six import string_types
 from zope.schema import Choice
 from zope.schema.vocabulary import SimpleTerm, SimpleVocabulary
 
 import xlsxwriter
-from eea.cache import cache
 from persistent.list import PersistentList
 from plone.memoize import volatile
 from Products.Five.browser.pagetemplatefile import \
@@ -31,7 +29,10 @@ from ..base import BaseComplianceView
 from .a8 import Article8 as Article8
 from .a9 import Article9
 from .a10 import Article10
-from .utils import get_sorted_fields_2018, row_to_dict, REPORT_2018
+from .utils import REPORT_2018, get_sorted_fields_2018, row_to_dict
+
+# from six import string_types
+# from eea.cache import cache
 
 logger = logging.getLogger('wise.msfd')
 
@@ -264,6 +265,7 @@ class Proxy2018(object):
     def __init__(self, obj, article, extra=None):
         self.__o = obj       # the proxied object
         self.nodes = REPORT_2018.get_article_childrens(article)
+
         if not extra:
             extra = {}
 
@@ -272,15 +274,18 @@ class Proxy2018(object):
         for node in self.nodes:
             name = node.tag
             value = getattr(self.__o, name, extra.get(name, None))
+
             if not value:
                 continue
 
             attrs = node.attrib
             label_name = attrs.get('labelName', None)
+
             if not label_name:
                 continue
 
             as_list = attrs.get('asList', 'false')
+
             if as_list == 'true':
                 vals = set(value.split(','))
 
@@ -289,6 +294,7 @@ class Proxy2018(object):
                         v,
                         LABELS.get(label_name, v),
                     )
+
                     for v in vals
                 ]
 
@@ -325,7 +331,7 @@ class ReportData2018(BaseComplianceView):
 
     def get_data_from_view_Art8(self):
         # TODO this is not used
-        exclude = REPORT_2018.get_group_by_fields(self.article)
+        # exclude = REPORT_2018.get_group_by_fields(self.article)
         # TODO: the data here should be filtered by muids in region
 
         t = sql2018.t_V_ART8_GES_2018
@@ -442,6 +448,9 @@ class ReportData2018(BaseComplianceView):
                 if fieldname not in group_by_fields:
                     continue
 
+                # TODO: this needs to be refactored into a function, to allow
+                # easier understanding of code
+
                 # rewrite some rows with list of all possible values
                 all_values = [
                     getattr(x, fieldname)
@@ -455,11 +464,14 @@ class ReportData2018(BaseComplianceView):
                 uniques = []
 
                 # if the values are unicode
+
                 if isinstance(all_values[0], (unicode, str)):
                     row[1] = [', '.join(set(all_values))] * len(row_data)
+
                     continue
 
                 # if the values are ItemList types, make the values unique
+
                 for item in all_values:
                     item_label_class = item.rows[0]
                     name = item_label_class.name
@@ -472,7 +484,12 @@ class ReportData2018(BaseComplianceView):
 
                 row[1] = [ItemList(rows=uniques)] * len(row_data)
 
-            res.append((mru, _data))
+            mru_label = LABELS.get('mrus', mru)
+
+            if mru_label != mru:
+                mru_label = u"{} ({})".format(mru_label, unicode(mru))
+
+            res.append((ItemLabel(mru, mru_label), _data))
 
         return sorted(res, key=lambda r: r[0])      # sort by MarineUnitiD
 
@@ -541,6 +558,7 @@ class ReportData2018(BaseComplianceView):
 
         for muid in all_muids:
             name = muid.name
+
             if name in seen:
                 continue
 
@@ -608,14 +626,6 @@ class ReportData2018(BaseComplianceView):
 
     def download(self):
         xlsdata = self.get_report_data()
-
-        # if self.article == 'Art9':
-        #     xlsdata = [
-        #         ('Reported Data', data),
-        #     ]
-        # else:
-        #     # use marine unit ids as worksheet titles
-        #     xlsdata = data
 
         xlsio = self.data_to_xls(xlsdata)
         sh = self.request.response.setHeader

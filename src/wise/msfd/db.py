@@ -11,8 +11,6 @@ from eea.cache import cache
 from . import sql  # , sql2018
 from .utils import db_result_key, pivot_query
 
-# import transaction
-
 env = os.environ.get
 DSN = env('MSFDURI', 'mssql+pymssql://SA:bla3311!@msdb')  # ?charset=utf8mb4
 DBS = {
@@ -448,10 +446,9 @@ def get_all_records_distinct_ordered(table, order_col, exclude, *conditions):
     q_unique = [x for x in q_unique]
 
     exclude_data = {}
+
     for field in exclude:
         exclude_data[field] = ','.join(set([getattr(x, field) for x in q]))
-
-    # import pdb; pdb.set_trace()
 
     return [exclude_data, q_unique]
 

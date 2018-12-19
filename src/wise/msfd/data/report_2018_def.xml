@@ -1,99 +1,99 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <data>
-    <Art10>
-        <Features labelName="feature_labels" asList="true">Features</Features>
-        <TargetCode>TargetCode</TargetCode>
-        <Description>Description</Description>
-        <GESComponents labelName="ges_components_labels">GESComponents</GESComponents>
-        <TimeScale>TimeScale</TimeScale>
-        <UpdateDate>UpdateDate</UpdateDate>
-        <UpdateType>UpdateType</UpdateType>
-        <Measures>Measures</Measures>
-        <Element>Element</Element>
-        <Element2>Element2</Element2>
-        <Parameter labelName="parameter_labels">Parameter</Parameter>
-        <ParameterOther>ParameterOther</ParameterOther>
-        <TargetValue>TargetValue</TargetValue>
-        <ValueAchievedUpper>ValueAchievedUpper</ValueAchievedUpper>
-        <ValueAchievedLower>ValueAchievedLower</ValueAchievedLower>
-        <ValueUnit labelName="units_labels">ValueUnit</ValueUnit>
-        <ValueUnitOther>ValueUnitOther</ValueUnitOther>
-        <TargetStatus>TargetStatus</TargetStatus>
-        <AssessmentPeriod>AssessmentPeriod</AssessmentPeriod>
-        <ProgressDescription>ProgressDescription</ProgressDescription>
-        <Indicators labelName="indicators_labels" asList="true">Indicators</Indicators>
-    </Art10>
-    <Art9>
-        <Features labelName="feature_labels" asList="true">Features</Features>
-        <GESComponent labelName="ges_components_labels">GESComponent</GESComponent>
-        <GESDescription>GESDescription</GESDescription>
-        <JustificationNonUse>JustificationNonUse</JustificationNonUse>
-        <JustificationDelay>JustificationDelay</JustificationDelay>
-        <DeterminationDate>DeterminationDate</DeterminationDate>
-        <UpdateType>UpdateType</UpdateType>
-    </Art9>
-    <!--<MarineReportingUnit labelName="mru_labels">MarineReportingUnit</MarineReportingUnit>-->
-    <Art8>
-        <Feature labelName="feature_labels">Feature</Feature>
-        <GESComponent labelName="ges_components_labels">GESComponent</GESComponent>
-        <Element>Element</Element>
-        <ElementCode>ElementCode</ElementCode>
-        <ElementCodeSource labelName="elementcode_sources_labels">ElementCodeSource</ElementCodeSource>
-        <Element2>Element2</Element2>
-        <Element2Code>Element2Code</Element2Code>
-        <Element2CodeSource labelName="elementcode_sources_labels">Element2CodeSource</Element2CodeSource>
-        <ElementSource>ElementSource</ElementSource>
-        <Criteria labelName="ges_components_labels">Criteria</Criteria>
-        <Parameter labelName="parameter_labels">Parameter</Parameter>
-        <ParameterOther>ParameterOther</ParameterOther>
-        <ThresholdValueUpper>ThresholdValueUpper</ThresholdValueUpper>
-        <ThresholdValueLower>ThresholdValueLower</ThresholdValueLower>
-        <ThresholdQualitative>ThresholdQualitative</ThresholdQualitative>
-        <ThresholdValueSource labelName="threshold_sources_labels">
-            ThresholdValueSource
-        </ThresholdValueSource>
-        <ThresholdValueSourceOther>ThresholdValueSourceOther</ThresholdValueSourceOther>
-        <ValueAchievedUpper>ValueAchievedUpper</ValueAchievedUpper>
-        <ValueAchievedLower>ValueAchievedLower</ValueAchievedLower>
-        <ValueUnit labelName="units_labels">ValueUnit</ValueUnit>
-        <ValueUnitOther>ValueUnitOther</ValueUnitOther>
-        <ProportionThresholdValue>ProportionThresholdValue</ProportionThresholdValue>
-        <ProportionValueAchieved>ProportionValueAchieved</ProportionValueAchieved>
-        <ProportionThresholdValueUnit>ProportionThresholdValueUnit</ProportionThresholdValueUnit>
-        <Trend>Trend</Trend>
-        <ParameterAchieved>ParameterAchieved</ParameterAchieved>
-        <DescriptionParameter>DescriptionParameter</DescriptionParameter>
-        <IndicatorCode labelName="indicators_labels">RelatedIndicator</IndicatorCode>
-        <CriteriaStatus>CriteriaStatus</CriteriaStatus>
-        <DescriptionCriteria>DescriptionCriteria</DescriptionCriteria>
-        <ElementStatus>ElementStatus</ElementStatus>
-        <DescriptionElement>DescriptionElement</DescriptionElement>
-        <IntegrationRuleTypeParameter labelName="parameter_labels">
-            IntegrationRuleTypeParameter
-        </IntegrationRuleTypeParameter>
-        <IntegrationRuleDescriptionParameter>IntegrationRuleDescriptionParameter</IntegrationRuleDescriptionParameter>
-        <IntegrationRuleDescriptionReferenceParameter skip="true" reason="Not in the XML">
-            IntegrationRuleDescriptionReferenceParameter
-        </IntegrationRuleDescriptionReferenceParameter>
-        <IntegrationRuleTypeCriteria labelName="parameter_labels">
-            IntegrationRuleTypeCriteria
-        </IntegrationRuleTypeCriteria>
-        <IntegrationRuleDescriptionCriteria>
-            IntegrationRuleDescriptionCriteria
-        </IntegrationRuleDescriptionCriteria>
-        <IntegrationRuleDescriptionReferenceCriteria skip="true" reason="Not in the XML">
-            IntegrationRuleDescriptionReferenceCriteria
-        </IntegrationRuleDescriptionReferenceCriteria>
-        <GESExtentThreshold>GESExtentThreshold</GESExtentThreshold>
-        <GESExtentAchieved>GESExtentAchieved</GESExtentAchieved>
-        <GESExtentUnit>GESExtentUnit</GESExtentUnit>
-        <GESAchieved>GESAchieved</GESAchieved>
-        <DescriptionOverallStatus>DescriptionOverallStatus</DescriptionOverallStatus>
-        <AssessmentsPeriod>AssessmentsPeriod</AssessmentsPeriod>
-        <PressureCode labelName="pressure_labels" asList="true" exclude="true">RelatedPressures</PressureCode>
-        <RelatedActivities skip="true" reason="This field is not in the DB">
-            Related activities
-        </RelatedActivities>
-        <TargetCode labelName="" asList="true" exclude="true">RelatedTargets</TargetCode>
-    </Art8>
+  <Art10>
+    <Features labelName="features" asList="true">Features</Features>
+    <TargetCode>TargetCode</TargetCode>
+    <Description>Description</Description>
+    <GESComponents labelName="ges_components">GESComponents</GESComponents>
+    <TimeScale>TimeScale</TimeScale>
+    <UpdateDate>UpdateDate</UpdateDate>
+    <UpdateType>UpdateType</UpdateType>
+    <Measures>Measures</Measures>
+    <Element>Element</Element>
+    <Element2>Element2</Element2>
+    <Parameter labelName="parameters">Parameter</Parameter>
+    <ParameterOther>ParameterOther</ParameterOther>
+    <TargetValue>TargetValue</TargetValue>
+    <ValueAchievedUpper>ValueAchievedUpper</ValueAchievedUpper>
+    <ValueAchievedLower>ValueAchievedLower</ValueAchievedLower>
+    <ValueUnit labelName="units">ValueUnit</ValueUnit>
+    <ValueUnitOther>ValueUnitOther</ValueUnitOther>
+    <TargetStatus>TargetStatus</TargetStatus>
+    <AssessmentPeriod>AssessmentPeriod</AssessmentPeriod>
+    <ProgressDescription>ProgressDescription</ProgressDescription>
+    <Indicators labelName="indicators" asList="true">Indicators</Indicators>
+  </Art10>
+  <Art9>
+    <Features labelName="features" asList="true">Features</Features>
+    <GESComponent labelName="ges_components">GESComponent</GESComponent>
+    <GESDescription>GESDescription</GESDescription>
+    <JustificationNonUse>JustificationNonUse</JustificationNonUse>
+    <JustificationDelay>JustificationDelay</JustificationDelay>
+    <DeterminationDate>DeterminationDate</DeterminationDate>
+    <UpdateType>UpdateType</UpdateType>
+  </Art9>
+  <!--<MarineReportingUnit labelName="mrus">MarineReportingUnit</MarineReportingUnit>-->
+  <Art8>
+    <Feature labelName="features">Feature</Feature>
+    <GESComponent labelName="ges_components">GESComponent</GESComponent>
+    <Element>Element</Element>
+    <ElementCode>ElementCode</ElementCode>
+    <ElementCodeSource labelName="elementcode_sources">ElementCodeSource</ElementCodeSource>
+    <Element2>Element2</Element2>
+    <Element2Code>Element2Code</Element2Code>
+    <Element2CodeSource labelName="elementcode_sources">Element2CodeSource</Element2CodeSource>
+    <ElementSource>ElementSource</ElementSource>
+    <Criteria labelName="ges_components">Criteria</Criteria>
+    <Parameter labelName="parameters">Parameter</Parameter>
+    <ParameterOther>ParameterOther</ParameterOther>
+    <ThresholdValueUpper>ThresholdValueUpper</ThresholdValueUpper>
+    <ThresholdValueLower>ThresholdValueLower</ThresholdValueLower>
+    <ThresholdQualitative>ThresholdQualitative</ThresholdQualitative>
+    <ThresholdValueSource labelName="threshold_sources">
+      ThresholdValueSource
+    </ThresholdValueSource>
+    <ThresholdValueSourceOther>ThresholdValueSourceOther</ThresholdValueSourceOther>
+    <ValueAchievedUpper>ValueAchievedUpper</ValueAchievedUpper>
+    <ValueAchievedLower>ValueAchievedLower</ValueAchievedLower>
+    <ValueUnit labelName="units">ValueUnit</ValueUnit>
+    <ValueUnitOther>ValueUnitOther</ValueUnitOther>
+    <ProportionThresholdValue>ProportionThresholdValue</ProportionThresholdValue>
+    <ProportionValueAchieved>ProportionValueAchieved</ProportionValueAchieved>
+    <ProportionThresholdValueUnit>ProportionThresholdValueUnit</ProportionThresholdValueUnit>
+    <Trend>Trend</Trend>
+    <ParameterAchieved>ParameterAchieved</ParameterAchieved>
+    <DescriptionParameter>DescriptionParameter</DescriptionParameter>
+    <IndicatorCode labelName="indicators">RelatedIndicator</IndicatorCode>
+    <CriteriaStatus>CriteriaStatus</CriteriaStatus>
+    <DescriptionCriteria>DescriptionCriteria</DescriptionCriteria>
+    <ElementStatus>ElementStatus</ElementStatus>
+    <DescriptionElement>DescriptionElement</DescriptionElement>
+    <IntegrationRuleTypeParameter labelName="parameters">
+      IntegrationRuleTypeParameter
+    </IntegrationRuleTypeParameter>
+    <IntegrationRuleDescriptionParameter>IntegrationRuleDescriptionParameter</IntegrationRuleDescriptionParameter>
+    <IntegrationRuleDescriptionReferenceParameter skip="true" reason="Not in the XML">
+      IntegrationRuleDescriptionReferenceParameter
+    </IntegrationRuleDescriptionReferenceParameter>
+    <IntegrationRuleTypeCriteria labelName="parameters">
+      IntegrationRuleTypeCriteria
+    </IntegrationRuleTypeCriteria>
+    <IntegrationRuleDescriptionCriteria>
+      IntegrationRuleDescriptionCriteria
+    </IntegrationRuleDescriptionCriteria>
+    <IntegrationRuleDescriptionReferenceCriteria skip="true" reason="Not in the XML">
+      IntegrationRuleDescriptionReferenceCriteria
+    </IntegrationRuleDescriptionReferenceCriteria>
+    <GESExtentThreshold>GESExtentThreshold</GESExtentThreshold>
+    <GESExtentAchieved>GESExtentAchieved</GESExtentAchieved>
+    <GESExtentUnit>GESExtentUnit</GESExtentUnit>
+    <GESAchieved>GESAchieved</GESAchieved>
+    <DescriptionOverallStatus>DescriptionOverallStatus</DescriptionOverallStatus>
+    <AssessmentsPeriod>AssessmentsPeriod</AssessmentsPeriod>
+    <PressureCode labelName="pressures" asList="true" exclude="true">RelatedPressures</PressureCode>
+    <RelatedActivities skip="true" reason="This field is not in the DB">
+      Related activities
+    </RelatedActivities>
+    <TargetCode labelName="" asList="true" exclude="true">RelatedTargets</TargetCode>
+  </Art8>
 </data>

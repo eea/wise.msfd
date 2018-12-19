@@ -8,7 +8,6 @@ from pkg_resources import resource_filename
 
 from wise.msfd import db, sql2018
 
-
 # GES criterias have been used in 2010/2012 reports and then revamped for 2018
 # reports. As such, some exist in 2010 that didn't exist in 2018, some exist
 # for 2018 that didn't exist for 2010 and they have changed their ids between
@@ -448,16 +447,16 @@ class LabelCollection(object):
     Needed because ReferenceFeature does not contain all features
     """
 
-    feature_labels = _parse_labels('Features')
-    pressure_labels = _parse_labels('Pressures')
-    parameter_labels = _parse_labels('Parameters')
-    threshold_sources_labels = _parse_labels('ThresholdSources')
-    units_labels = _parse_labels('Units')
-    elementcode_sources_labels = _parse_labels('ElementCodeSources')
-    ges_criterias_labels = _parse_labels('GESCriterias')
-    ges_components_labels = _parse_labels('GESComponents')
-    indicators_labels = get_indicator_labels()
-    mru_labels = get_mru_labels()
+    features = _parse_labels('Features')
+    pressures = _parse_labels('Pressures')
+    parameters = _parse_labels('Parameters')
+    threshold_sources = _parse_labels('ThresholdSources')
+    units = _parse_labels('Units')
+    elementcode_sources = _parse_labels('ElementCodeSources')
+    ges_criterias = _parse_labels('GESCriterias')
+    ges_components = _parse_labels('GESComponents')
+    indicators = get_indicator_labels()
+    mrus = get_mru_labels()
 
     def get(self, collection_name, name):
         label_dict = getattr(self, collection_name, None)
