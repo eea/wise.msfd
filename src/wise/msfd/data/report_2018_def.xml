@@ -40,7 +40,7 @@
     <ElementCode>ElementCode</ElementCode>
     <ElementCodeSource labelName="elementcode_sources">ElementCodeSource</ElementCodeSource>
     <Element2>Element2</Element2>
-    <Element2Code>Element2Code</Element2Code>
+    <Element2Code labelName="element_sources">Element2Code</Element2Code>
     <Element2CodeSource labelName="elementcode_sources">Element2CodeSource</Element2CodeSource>
     <ElementSource>ElementSource</ElementSource>
     <Criteria labelName="ges_components">Criteria</Criteria>

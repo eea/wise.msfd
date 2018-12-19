@@ -222,3 +222,21 @@ class BootstrapCompliance(BrowserView):
         # self.setup_regionaldescriptors(cm)
 
         return cm.absolute_url()
+
+
+class CleanupCache(BrowserView):
+    """ Remove the persistent cache that we have saved in objects
+    """
+
+    def cleanup(self, location):
+        for obj in location.contentValues():
+            for name in obj.__dict__.keys():
+                if name.startswith('_cache_'):
+                    logger.info("Cleaning up %r: %s", obj, name)
+                    delattr(obj, name)
+            self.cleanup(obj)
+
+    def __call__(self):
+        self.cleanup(self.context)
+
+        return "done"

@@ -19,7 +19,14 @@
     for="*"
     name="bootstrap-compliance"
     class=".admin.BootstrapCompliance"
-    permission="zope2.View"
+    permission="cmf.ManagePortal"
+    />
+
+  <browser:page
+    for="*"
+    name="cleanup-compliance"
+    class=".admin.CleanupCache"
+    permission="cmf.ManagePortal"
     />
 
   <browser:page

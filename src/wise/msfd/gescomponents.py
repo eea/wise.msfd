@@ -452,6 +452,7 @@ class LabelCollection(object):
     parameters = _parse_labels('Parameters')
     threshold_sources = _parse_labels('ThresholdSources')
     units = _parse_labels('Units')
+    element_sources = _parse_labels('ElementSources')
     elementcode_sources = _parse_labels('ElementCodeSources')
     ges_criterias = _parse_labels('GESCriterias')
     ges_components = _parse_labels('GESComponents')
