@@ -22,7 +22,7 @@
         <div tal:attributes="class text_class" tal:content="structure text">Original Text</div>
       </div>
 
-      <div class="lang-footer" tal:condition="translation">
+      <div class="lang-footer" tal:condition="python: translation or can_translate">
         <div class="dropdown" tal:condition="can_translate">
           <button id="dLabel" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
             <span class="fa fa-ellipsis-v fa-sm"></span>

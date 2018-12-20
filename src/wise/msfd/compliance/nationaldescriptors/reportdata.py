@@ -314,6 +314,7 @@ class Proxy2018(object):
 class ReportData2018(BaseComplianceView):
 
     report_year = '2018'        # used by cache key
+    year = '2018'       # used in report definition and translation
     section = 'national-descriptors'
 
     BLACKLIST = (       # used in templates to filter fields
@@ -329,7 +330,6 @@ class ReportData2018(BaseComplianceView):
     Art10 = Template('pt/nat-desc-report-data-multiple-muid.pt')
 
     subform = None
-    year = '2018'       # used in report definition and translation
 
     def get_data_from_view_Art8(self):
         # TODO this is not used
