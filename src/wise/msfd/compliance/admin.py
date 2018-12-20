@@ -2,6 +2,7 @@ import logging
 
 from zope.interface import alsoProvides
 
+from plone import api
 from plone.api.content import transition
 from plone.dexterity.utils import createContentInContainer as create
 from Products.CMFDynamicViewFTI.interfaces import ISelectableBrowserDefault
@@ -228,15 +229,17 @@ class CleanupCache(BrowserView):
     """ Remove the persistent cache that we have saved in objects
     """
 
-    def cleanup(self, location):
-        for obj in location.contentValues():
+    def __call__(self):
+        brains = api.content.find(context=self.context, depth=10000)
+
+        for brain in brains:
+            obj = brain.getObject()
+            print "For obj", obj
+
             for name in obj.__dict__.keys():
+
                 if name.startswith('_cache_'):
                     logger.info("Cleaning up %r: %s", obj, name)
                     delattr(obj, name)
-            self.cleanup(obj)
-
-    def __call__(self):
-        self.cleanup(self.context)
 
         return "done"
