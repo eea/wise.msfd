@@ -226,11 +226,11 @@ class TranslationView(BrowserView):
     def can_modify(self):
         return checkPermission('cmf.ModifyPortalContent', self.context)
 
-    def translate(self, source_lang, value):
+    def translate(self, source_lang, value, is_translatable):
         # TODO: implement getting the translation from annotations
-        orig = value
-        if not value:
+        # orig = value
 
+        if (not value) or (not is_translatable):
             return self.translate_snip(text=value,
                                        translation=u"",
                                        can_translate=False)

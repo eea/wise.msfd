@@ -3,7 +3,7 @@
   <Art10>
     <Features labelName="features" asList="true">Features</Features>
     <TargetCode>TargetCode</TargetCode>
-    <Description>Description</Description>
+    <Description translate='true'>Description</Description>
     <GESComponents labelName="ges_components">GESComponents</GESComponents>
     <TimeScale>TimeScale</TimeScale>
     <UpdateDate>UpdateDate</UpdateDate>
@@ -20,13 +20,13 @@
     <ValueUnitOther>ValueUnitOther</ValueUnitOther>
     <TargetStatus>TargetStatus</TargetStatus>
     <AssessmentPeriod>AssessmentPeriod</AssessmentPeriod>
-    <ProgressDescription>ProgressDescription</ProgressDescription>
+    <ProgressDescription translate='true'>ProgressDescription</ProgressDescription>
     <Indicators labelName="indicators" asList="true">Indicators</Indicators>
   </Art10>
   <Art9>
     <Features labelName="features" asList="true">Features</Features>
     <GESComponent labelName="ges_components">GESComponent</GESComponent>
-    <GESDescription>GESDescription</GESDescription>
+    <GESDescription translate='true'>GESDescription</GESDescription>
     <JustificationNonUse>JustificationNonUse</JustificationNonUse>
     <JustificationDelay>JustificationDelay</JustificationDelay>
     <DeterminationDate>DeterminationDate</DeterminationDate>
@@ -62,12 +62,12 @@
     <ProportionThresholdValueUnit>ProportionThresholdValueUnit</ProportionThresholdValueUnit>
     <Trend>Trend</Trend>
     <ParameterAchieved>ParameterAchieved</ParameterAchieved>
-    <DescriptionParameter>DescriptionParameter</DescriptionParameter>
+    <DescriptionParameter translate='true'>DescriptionParameter</DescriptionParameter>
     <IndicatorCode labelName="indicators">RelatedIndicator</IndicatorCode>
     <CriteriaStatus>CriteriaStatus</CriteriaStatus>
-    <DescriptionCriteria>DescriptionCriteria</DescriptionCriteria>
+    <DescriptionCriteria translate='true'>DescriptionCriteria</DescriptionCriteria>
     <ElementStatus>ElementStatus</ElementStatus>
-    <DescriptionElement>DescriptionElement</DescriptionElement>
+    <DescriptionElement translate='true'>DescriptionElement</DescriptionElement>
     <IntegrationRuleTypeParameter labelName="parameters">
       IntegrationRuleTypeParameter
     </IntegrationRuleTypeParameter>
@@ -88,7 +88,7 @@
     <GESExtentAchieved>GESExtentAchieved</GESExtentAchieved>
     <GESExtentUnit>GESExtentUnit</GESExtentUnit>
     <GESAchieved>GESAchieved</GESAchieved>
-    <DescriptionOverallStatus>DescriptionOverallStatus</DescriptionOverallStatus>
+    <DescriptionOverallStatus translate='true'>DescriptionOverallStatus</DescriptionOverallStatus>
     <AssessmentsPeriod>AssessmentsPeriod</AssessmentsPeriod>
     <PressureCode labelName="pressures" asList="true" exclude="true">RelatedPressures</PressureCode>
     <RelatedActivities skip="true" reason="This field is not in the DB">

@@ -15,6 +15,7 @@ from Products.Five.browser.pagetemplatefile import \
     ViewPageTemplateFile as Template
 from wise.msfd import db, sql, sql2018
 from wise.msfd.base import BaseUtil
+from wise.msfd.compliance.utils import REPORT_DEFS, get_sorted_fields
 from wise.msfd.data import (get_factsheet_url, get_report_data,
                             get_report_file_url, get_report_filename)
 from wise.msfd.gescomponents import (LABELS, get_descriptor, get_features,
@@ -29,7 +30,7 @@ from ..base import BaseComplianceView
 from .a8 import Article8 as Article8
 from .a9 import Article9
 from .a10 import Article10
-from .utils import REPORT_2018, get_sorted_fields_2018, row_to_dict
+from .utils import row_to_dict
 
 # from six import string_types
 # from eea.cache import cache
@@ -264,7 +265,7 @@ class SnapshotSelectForm(Form):
 class Proxy2018(object):
     def __init__(self, obj, article, extra=None):
         self.__o = obj       # the proxied object
-        self.nodes = REPORT_2018.get_article_childrens(article)
+        self.nodes = REPORT_DEFS['2018'][article].get_elements()
 
         if not extra:
             extra = {}
@@ -328,6 +329,7 @@ class ReportData2018(BaseComplianceView):
     Art10 = Template('pt/nat-desc-report-data-multiple-muid.pt')
 
     subform = None
+    year = '2018'       # used in report definition and translation
 
     def get_data_from_view_Art8(self):
         # TODO this is not used
@@ -426,7 +428,8 @@ class ReportData2018(BaseComplianceView):
             'get_data_from_view_' + self.article
         )
 
-        group_by_fields = REPORT_2018.get_group_by_fields(self.article)
+        definition = REPORT_DEFS['2018'][self.article]
+        group_by_fields = definition.get_group_by_fields()
 
         data = get_data_method()
 
@@ -438,7 +441,7 @@ class ReportData2018(BaseComplianceView):
 
         for mru, rows in good_data.items():
             _fields = rows[0]._fields
-            sorted_fields = get_sorted_fields_2018(_fields, self.article)
+            sorted_fields = get_sorted_fields('2018', self.article, _fields)
             _data = change_orientation(rows, sorted_fields)
 
             for row in _data:

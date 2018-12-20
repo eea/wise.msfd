@@ -20,6 +20,7 @@ from wise.msfd.utils import Tab
 
 from . import interfaces
 from .nationaldescriptors.utils import row_to_dict
+from .utils import REPORT_DEFS
 
 logger = logging.getLogger('wise.msfd')
 edw_logger = logging.getLogger('edw.logger')
@@ -90,6 +91,12 @@ class BaseComplianceView(BrowserView):
 
     tabs_type = 'tab'
     main_forms = MAIN_FORMS
+
+    @property
+    def TRANSLATABLES(self):
+        # for 2018, returns a list of field names that are translatable
+
+        return REPORT_DEFS[self.year][self.article].get_translatable_fields()
 
     report_header_template = ViewPageTemplateFile(
         'nationaldescriptors/pt/report-data-header.pt'
@@ -271,12 +278,16 @@ class BaseComplianceView(BrowserView):
         return getMultiAdapter((self.context, self.request),
                                name="translation-view")
 
-    def translate_value(self, value):
+    def translate_value(self, fieldname, value):
+        is_translatable = fieldname in self.TRANSLATABLES
+
         v = self.translate_view()
 
         source_lang = self.country_code
 
-        return v.translate(source_lang=source_lang, value=value)
+        return v.translate(source_lang=source_lang,
+                           value=value,
+                           is_translatable=is_translatable)
 
 
 def get_element_by_id(root, id):
