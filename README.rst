@@ -238,10 +238,12 @@ Long-term TODO for the Compliance module
 - Implement the Regional Descriptors compliance module. It will probably be
   similar to the National Descriptors compliance module. Main components that
   need to be implemented:
+  
   - bootstrapping and content types (partially implemented)
   - overview pages
   - data report tables (partially implemented)
   - assessment forms, with question definitions
+  
 - Implement the National Summary section. It's not clear if this section needs
   forms, but it needs to aggregate report data in 2 versions: 2012 and 2018.
 - Implement the Regional Summary section. It's not clear if this section needs
