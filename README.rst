@@ -14,7 +14,8 @@ from the various reporting exercises: Article 4, 7, 8, 9, 10, 11, 13, 14 from
 2012 and Art 8, 9 and 10 from 2018 reporting. The search engine is available
 at https://water.europa.eu/marine/data/msfd-data
 
-- Allows navigation between types of information. Main Sections:
+Allows navigation between types of information. Main Sections:
+
   - Article 7 (Competent authorities)
   - Articles 4, 8, 9, 10 - 2012
   - Article 11 - 2014
