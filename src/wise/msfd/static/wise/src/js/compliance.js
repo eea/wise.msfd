@@ -527,6 +527,7 @@ if (!Array.prototype.last){
       $(this).simplifyTable();
     } else {
       $(this).html(original);
+      $(this).fixTableHeaderHeight();
     }
     addTranslateClickHandlers();
   };
