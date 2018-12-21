@@ -93,6 +93,11 @@ report URL, Relevant Environment Targets, Links to existing policies, Spatial
 Scope Geographic Zones, KTM, Relevant GES Descriptors and Relevant Features
 from Annex 3.
 
+Articles 8, 9, 10 - 2018 version
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Here we display the recorded information from 2018 reports. We have Article 10 (Targets), the Article 8.1ab (GES Assessments), Article 8.1c (ESA assessments), Article 9 (GES Determination) and the Indicators pages. Each page allows filtering and displays relevant information.
+
 
 Compliance Assessment module
 ----------------------------
