@@ -244,8 +244,6 @@ class TranslationView(BrowserView):
                                        translation=u"",
                                        can_translate=False)
 
-        is_long_text = len(value.split(' ')) > 4
-        can_translate = self.can_modify() and is_long_text
         translation = u''
 
         site = get_portal()
@@ -262,7 +260,7 @@ class TranslationView(BrowserView):
 
         return self.translate_snip(text=value,
                                    translation=translation,
-                                   can_translate=can_translate)
+                                   can_translate=self.can_modify())
 
     def __call__(self):
         return self.translation_edit_template()

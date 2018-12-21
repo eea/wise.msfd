@@ -614,7 +614,7 @@ class ReportData2018(BaseComplianceView):
         workbook = xlsxwriter.Workbook(out, {'in_memory': True})
 
         for wtitle, wdata in data:
-            worksheet = workbook.add_worksheet(wtitle)
+            worksheet = workbook.add_worksheet(unicode(wtitle)[:30])
 
             for i, (row_label, row_values) in enumerate(wdata):
                 worksheet.write(i, 0, row_label)
