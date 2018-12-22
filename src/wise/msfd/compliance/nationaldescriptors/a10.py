@@ -141,19 +141,24 @@ class A10Item(Item):
         return ""
 
     def threshold_value(self):
-        m = {}
+        values = {}
 
         for target in self.targets:
-            m[target.marine_unit_id] = target['w:ThresholdValue/text()'][0]
+            muid = target.marine_unit_id
+            values[muid] = target['w:ThresholdValue/text()'][0]
 
-        res = []
+        rows = []
+        count, mres = db.get_marine_unit_id_names(values.keys())
+        muid_labels = dict(mres)
 
-        # TODO: "translate" MarineUnitIds
+        for muid in sorted(values.keys()):
+            name = u'{} = {}'.format(muid, values[muid])
+            title = u'{} = {}'.format(muid_labels[muid], values[muid])
 
-        for k in sorted(m):
-            res.append(ItemLabel('', '{} = {}'.format(k, m[k])))
+            label = ItemLabel(name, title)
+            rows.append(label)
 
-        return ItemList(rows=res)
+        return ItemList(rows=rows)
 
     def pick(self, xpath):
         """ For values which are repeated across all targets nodes, try to find
@@ -270,7 +275,10 @@ class Article10(BaseArticle2012):
             return node.xpath(xpath, namespaces=NSMAP)
 
         muids = xp('//w:MarineUnitID/text()')
-        muids = ', '.join(sorted(set(muids)))
+        count, res = db.get_marine_unit_id_names(list(set(muids)))
+
+        labels = [ItemLabel(m, t) for m, t in res]
+        muids = ItemList(labels)
 
         gcs = self.filtered_ges_components()
 
