@@ -111,9 +111,11 @@ def get_db_assessment(mc, db_record):
         mc,
         rel == db_record,
         raw=True,
+        order_by=mc.__mapper__.primary_key[0].desc()
     )
 
-    assert count < 2, "Multiple assessments for record? Investigate"
+    if count >= 2:
+        logger.warning("Multiple assessments for record? Investigate")
 
     if count > 0:
         return res[0]

@@ -397,6 +397,11 @@ def get_related_record_join(klass, klass_join, column, rel_id):
 def get_all_records(mapper_class, *conditions, **kw):
     sess = session()
     q = sess.query(mapper_class).filter(*conditions)
+
+    if 'order_by' in kw:
+        order_by = kw.pop('order_by')
+        q = q.order_by(order_by)
+
     count = q.count()
     q = [x for x in q]
 
