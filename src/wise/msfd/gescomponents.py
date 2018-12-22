@@ -470,4 +470,4 @@ class LabelCollection(object):
         return label
 
 
-LABELS = LabelCollection()
+GES_LABELS = LabelCollection()

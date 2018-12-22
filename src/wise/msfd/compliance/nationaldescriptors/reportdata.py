@@ -18,7 +18,7 @@ from wise.msfd.base import BaseUtil
 from wise.msfd.compliance.utils import REPORT_DEFS, get_sorted_fields
 from wise.msfd.data import (get_factsheet_url, get_report_data,
                             get_report_file_url, get_report_filename)
-from wise.msfd.gescomponents import (LABELS, get_descriptor, get_features,
+from wise.msfd.gescomponents import (GES_LABELS, get_descriptor, get_features,
                                      get_parameters)
 from wise.msfd.utils import (ItemLabel, ItemList, change_orientation,
                              filter_duplicates)
@@ -293,7 +293,7 @@ class Proxy2018(object):
                 res = [
                     ItemLabel(
                         v,
-                        LABELS.get(label_name, v),
+                        GES_LABELS.get(label_name, v),
                     )
 
                     for v in vals
@@ -301,7 +301,7 @@ class Proxy2018(object):
 
                 setattr(self, name, ItemList(rows=res))
             else:
-                title = LABELS.get(label_name, value)
+                title = GES_LABELS.get(label_name, value)
                 setattr(self, name, ItemLabel(value, title))
 
     def __getattr__(self, name):
@@ -487,7 +487,7 @@ class ReportData2018(BaseComplianceView):
 
                 row[1] = [ItemList(rows=uniques)] * len(row_data)
 
-            mru_label = LABELS.get('mrus', mru)
+            mru_label = GES_LABELS.get('mrus', mru)
 
             if mru_label != mru:
                 mru_label = u"{} ({})".format(mru_label, unicode(mru))

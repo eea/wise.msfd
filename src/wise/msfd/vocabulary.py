@@ -11,10 +11,11 @@ from zope.interface import provider
 from zope.schema.interfaces import IVocabularyFactory
 from zope.schema.vocabulary import SimpleTerm, SimpleVocabulary
 
-from eea.cache import cache
-
 from . import db, sql, sql2018
-from .utils import FORMS, FORMS_2018, FORMS_ART11, LABELS, SUBFORMS
+from .utils import COMMON_LABELS, FORMS, FORMS_2018, FORMS_ART11, SUBFORMS
+
+# from eea.cache import cache
+
 
 ART_RE = re.compile('\s(\d+\.*\d?\w?)\s')
 
@@ -68,17 +69,17 @@ def populate_labels():
 
             label, title = line.split(splitter, 1)
 
-            if label in LABELS:
+            if label in COMMON_LABELS:
                 logger = logging.getLogger('tcpserver')
                 logger.warning("Duplicate label in xsd file: %s", label)
 
             xsd_labels[label] = title
 
-    LABELS.update(csv_labels)
-    LABELS.update(xsd_labels)
+    COMMON_LABELS.update(csv_labels)
+    COMMON_LABELS.update(xsd_labels)
 
     common_labels = len(list(csv_labels.keys()) +
-                        list(xsd_labels.keys())) - len(LABELS)
+                        list(xsd_labels.keys())) - len(COMMON_LABELS)
 
     csv_nr = len(list(csv_labels.keys()))
     xsd_nr = len(list(xsd_labels.keys()))
@@ -87,7 +88,7 @@ def populate_labels():
     Total labels: %s
     Common_labels: %s
     .csv_nr: %s
-    .xsd_nr: %s""" % (len(LABELS), common_labels, csv_nr, xsd_nr))
+    .xsd_nr: %s""" % (len(COMMON_LABELS), common_labels, csv_nr, xsd_nr))
 
     return
 
@@ -96,7 +97,7 @@ populate_labels()
 
 
 def vocab_from_values(values):
-    terms = [SimpleTerm(x, x, LABELS.get(x, x)) for x in values]
+    terms = [SimpleTerm(x, x, COMMON_LABELS.get(x, x)) for x in values]
     # TODO fix UnicodeDecodeError
     # Article Indicators, country Lithuania
     try:
@@ -120,7 +121,8 @@ def vocab_from_values_with_count(values, column):
             dict_count[col] = 1
 
     terms = [
-        SimpleTerm(x, x, "{} [{}]".format(LABELS.get(x, x), dict_count[x]))
+        SimpleTerm(x, x, "{} [{}]".format(COMMON_LABELS.get(x, x),
+                                          dict_count[x]))
 
         for x in dict_count.keys()
     ]
@@ -146,7 +148,8 @@ def db_vocab(table, column, sort_helper=None):
     elif table.__tablename__ == 'MSFD11_MPTypes':
         res = db.get_all_columns_from_mapper(table, column)
         terms = [
-            SimpleTerm(x.ID, x.ID, LABELS.get(x.Description, x.Description))
+            SimpleTerm(x.ID, x.ID, COMMON_LABELS.get(x.Description,
+                                                     x.Description))
 
             for x in res
         ]
@@ -159,7 +162,7 @@ def db_vocab(table, column, sort_helper=None):
 
     res = [x.strip() for x in res]
 
-    terms = [SimpleTerm(x, x, LABELS.get(x, x)) for x in res]
+    terms = [SimpleTerm(x, x, COMMON_LABELS.get(x, x)) for x in res]
     terms.sort(key=sort_helper)
     vocab = SimpleVocabulary(terms)
 
@@ -186,7 +189,7 @@ def get_json_subform_data(json_str, field_title):
 
 
 def values_to_vocab(values):
-    terms = [SimpleTerm(x, x, LABELS.get(x, x)) for x in values]
+    terms = [SimpleTerm(x, x, COMMON_LABELS.get(x, x)) for x in values]
     terms.sort(key=lambda t: t.title)
     vocab = SimpleVocabulary(terms)
 
@@ -341,7 +344,7 @@ def art11_country(context):
     )
     res = [x.strip() for x in res]
 
-    terms = [SimpleTerm(x, x, LABELS.get(x, x)) for x in res]
+    terms = [SimpleTerm(x, x, COMMON_LABELS.get(x, x)) for x in res]
     terms.sort(key=lambda t: t.title)
     vocab = SimpleVocabulary(terms)
 
@@ -371,7 +374,7 @@ def art11_country_ms(context):
     )
     res = [x.strip() for x in res]
 
-    terms = [SimpleTerm(x, x, LABELS.get(x, x)) for x in res]
+    terms = [SimpleTerm(x, x, COMMON_LABELS.get(x, x)) for x in res]
     terms.sort(key=lambda t: t.title)
     vocab = SimpleVocabulary(terms)
 
@@ -398,7 +401,7 @@ def art11_region(context):
     )
     res = [x.strip() for x in res]
 
-    terms = [SimpleTerm(x, x, LABELS.get(x, x)) for x in res]
+    terms = [SimpleTerm(x, x, COMMON_LABELS.get(x, x)) for x in res]
     terms.sort(key=lambda t: t.title)
     vocab = SimpleVocabulary(terms)
 
@@ -426,7 +429,7 @@ def art11_region_ms(context):
     )
     res = [x.strip() for x in res]
 
-    terms = [SimpleTerm(x, x, LABELS.get(x, x)) for x in res]
+    terms = [SimpleTerm(x, x, COMMON_LABELS.get(x, x)) for x in res]
     terms.sort(key=lambda t: t.title)
     vocab = SimpleVocabulary(terms)
 
@@ -435,18 +438,18 @@ def art11_region_ms(context):
 
 @provider(IVocabularyFactory)
 def art11_marine_unit_id(context):
-    if not hasattr(context, 'subform'):
-        json_str = json.loads(context.json())
-    else:
-        json_str = json.loads(context.subform.json())
+    # if not hasattr(context, 'subform'):
+    #     json_str = json.loads(context.json())
+    # else:
+    #     json_str = json.loads(context.subform.json())
 
-    countries_form_data = [
-        field['options']
-
-        for field in json_str['fields']
-
-        if field['label'] == 'Country'
-    ]
+    # countries_form_data = [
+    #     field['options']
+    #
+    #     for field in json_str['fields']
+    #
+    #     if field['label'] == 'Country'
+    # ]
     # countries = [
     #     country['value']
     #
@@ -455,13 +458,13 @@ def art11_marine_unit_id(context):
     #     if country['checked']
     # ]
     countries = []
-    regions_form_data = [
-        field['options']
-
-        for field in json_str['fields']
-
-        if field['label'] == 'Region'
-    ]
+    # regions_form_data = [
+    #     field['options']
+    #
+    #     for field in json_str['fields']
+    #
+    #     if field['label'] == 'Region'
+    # ]
     # regions = [
     #     region['value']
     #
@@ -689,7 +692,7 @@ def articles_vocabulary_factory_2018(context):
 
 @provider(IVocabularyFactory)
 def a2018_marine_reporting_unit(context):
-    context_orig = context
+    # context_orig = context
 
     if hasattr(context, 'subform'):
         context = context.subform
@@ -1003,11 +1006,11 @@ def a2018_mru_ind(context):
 
     mc_countries = sql2018.ReportedInformation
 
-    key = (mapper_class.__name__,
-           str(countries),
-           str(ges_components),
-           str(features)
-           )
+    # key = (mapper_class.__name__,
+    #        str(countries),
+    #        str(ges_components),
+    #        str(features)
+    #        )
 
     # @cache(lambda func: key)
     def get_res():

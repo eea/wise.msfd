@@ -25,7 +25,7 @@ FORMS_ART11 = {}
 FORMS = {}                         # main chapter 1 article form classes
 SUBFORMS = defaultdict(set)        # store subform references
 ITEM_DISPLAYS = defaultdict(set)   # store registration for item displays
-LABELS = {}                        # vocabulary of labels
+COMMON_LABELS = {}                        # vocabulary of labels
 BLACKLIST = ['ID', 'Import', 'Id']
 
 logger = logging.getLogger('wise.msfd')
@@ -137,16 +137,18 @@ def print_value(value):
 
     if isinstance(value, string_types):
 
-        if value in LABELS:
+        if value in COMMON_LABELS:
             tmpl = '<span title="{}">{}</span>'
             try:
-                html = convertWebIntelligentPlainTextToHtml(LABELS[value])
+                html = convertWebIntelligentPlainTextToHtml(
+                    COMMON_LABELS[value]
+                )
                 ret = tmpl.format(value, html)
             except UnicodeEncodeError as e:
-                ret = tmpl.format(value, LABELS[value].encode('utf-8'))
+                ret = tmpl.format(value, COMMON_LABELS[value].encode('utf-8'))
             except Exception as e:
                 logger.exception("Error print_value: %r", e)
-                ret = tmpl.format(value, unicode(LABELS[value]))
+                ret = tmpl.format(value, unicode(COMMON_LABELS[value]))
 
             return ret
 

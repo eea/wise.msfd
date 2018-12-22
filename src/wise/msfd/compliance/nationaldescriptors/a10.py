@@ -7,9 +7,10 @@ from Products.Five.browser.pagetemplatefile import \
 from wise.msfd import db, sql
 from wise.msfd.data import country_ges_components, get_report_data
 from wise.msfd.gescomponents import get_descriptor
-from wise.msfd.utils import Item, ItemLabel, ItemList, Node, Row
+from wise.msfd.utils import COMMON_LABELS, Item, ItemLabel, ItemList, Node, Row
 
 from ..base import BaseArticle2012
+from .utils import to_html
 
 logger = logging.getLogger('wise.msfd')
 
@@ -34,24 +35,25 @@ class A10Item(Item):
             targets = ti.targets_for_criterion(self.criterion)
             self.targets.extend(targets)
 
-        feature_pressures = self.get_feature_pressures()
+        pick = self.pick
 
         attrs = [
             ('Description [Targets]', self.description()),
             ('Threshold value [TargetValue]', self.threshold_value()),
-            ('Reference point type',
-             self.pick('w:ReferencePointType/text()')),
-            ('Baseline', self.pick('w:Baseline/text()')),
-            ('Proportion', self.pick('w:Proportion/text()')),
-            ('AssessmentMethod', self.pick('w:AssessmentMethod/text()')),
-            ('Development status', self.pick('w:DevelopmentStatus/text()')),
-            ('Type of target/indicator', self.pick('w:Type/text()')),
-            ('Timescale', self.pick('w:TimeScale/text()')),
-            ('Interim or GES target', self.pick('w:InterimGESTarget/text()')),
+            ('Reference point type', pick('w:ReferencePointType/text()')),
+            ('Baseline', pick('w:Baseline/text()')),
+            ('Proportion', pick('w:Proportion/text()')),
+            ('AssessmentMethod', pick('w:AssessmentMethod/text()')),
+            ('Development status', pick('w:DevelopmentStatus/text()')),
+            ('Type of target/indicator', pick('w:Type/text()')),
+            ('Timescale', pick('w:TimeScale/text()')),
+            ('Interim or GES target', pick('w:InterimGESTarget/text()')),
             ('Compatibility with existing targets/indicators',
-             self.pick('w:CompatibilityExistingTargets/text()')),
+             pick('w:CompatibilityExistingTargets/text()')),
 
         ]
+
+        feature_pressures = self.get_feature_pressures()
 
         for name in [
                 'Physical/chemical features',
@@ -59,7 +61,9 @@ class A10Item(Item):
                 'Functional group',
                 'Pressures'
         ]:
-            attrs.append((name, ", ".join(feature_pressures[name])))
+            labels = [ItemLabel(k, COMMON_LABELS.get(k, k))
+                      for k in feature_pressures[name]]
+            attrs.append((name, ItemList(labels)))
 
         for title, value in attrs:
             self[title] = value
@@ -163,7 +167,7 @@ class A10Item(Item):
             v = target[xpath]
 
             if v:
-                return v[0]
+                return to_html(v[0])
 
         return ''
 
