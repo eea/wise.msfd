@@ -6,6 +6,7 @@ from lxml.etree import fromstring
 
 from Products.Five.browser.pagetemplatefile import \
     ViewPageTemplateFile as ViewTemplate
+from wise.msfd import db
 from wise.msfd.data import get_report_data
 from wise.msfd.gescomponents import get_descriptor
 from wise.msfd.utils import (COMMON_LABELS, Item, ItemLabel, ItemList, Node,
@@ -93,7 +94,7 @@ class A9Item(Item):
         return v and v[0] or ''
 
     def threshold_value(self):
-        m = {}
+        values = {}
 
         for n in self.siblings:
 
@@ -103,12 +104,20 @@ class A9Item(Item):
                 continue
 
             muid = n['w:MarineUnitID/text()'][0]
-            m[muid] = tv[0]
+            values[muid] = tv[0]
 
-        res = [ItemLabel('', u'{} = {}'.format(k, m[k]))
-               for k in sorted(m)]
+        rows = []
+        count, mres = db.get_marine_unit_id_names(values.keys())
+        muid_labels = dict(mres)
 
-        return ItemList(rows=res)
+        for muid in sorted(values.keys()):
+            name = u'{} = {}'.format(muid, values[muid])
+            title = u'{} = {}'.format(muid_labels[muid], values[muid])
+
+            label = ItemLabel(name, title)
+            rows.append(label)
+
+        return ItemList(rows=rows)
 
     def threshold_value_unit(self):
         v = self.g['w:ThresholdValueUnit/text()']
@@ -196,7 +205,11 @@ class Article9(BaseArticle2012):
             seen.append(item.id)
 
         muids = root.xpath('//w:MarineUnitID/text()', namespaces=NSMAP)
-        muids = ', '.join(set(muids))
+
+        count, res = db.get_marine_unit_id_names(list(set(muids)))
+
+        labels = [ItemLabel(m, t) for m, t in res]
+        muids = ItemList(labels)
 
         self.rows = [
             Row('Reporting area(s) [MarineUnitID]', [muids])

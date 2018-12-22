@@ -377,6 +377,8 @@ class AssessmentQuestionDefinition:
 
         self.scores = []
 
+        # TODO: why do we need scoring and options as well?
+
         for onode in sn.iterchildren('option'):
             try:
                 si = (int(onode.get('score')), onode.text.strip())

@@ -219,7 +219,7 @@ class EditAssessmentDataForm(Form, BaseComplianceView):
     @property
     def questions(self):
         qs = get_questions(
-            'compliance/nationaldescriptors/questions/data'
+            'compliance/nationaldescriptors/data'
         )
         state_id, state_label = self.process_phase()
 
