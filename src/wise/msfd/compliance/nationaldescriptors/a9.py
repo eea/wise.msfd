@@ -8,7 +8,8 @@ from Products.Five.browser.pagetemplatefile import \
     ViewPageTemplateFile as ViewTemplate
 from wise.msfd.data import get_report_data
 from wise.msfd.gescomponents import get_descriptor
-from wise.msfd.utils import Item, ItemLabel, ItemList, Node, RelaxedNode, Row
+from wise.msfd.utils import (COMMON_LABELS, Item, ItemLabel, ItemList, Node,
+                             RelaxedNode, Row)
 
 from ..base import BaseArticle2012
 
@@ -67,16 +68,21 @@ class A9Item(Item):
 
     def feature(self):
         # TODO: this needs more work, to aggregate with siblings
-        res = []
+        res = set()
 
         all_nodes = [s.node for s in self.siblings]
 
         for n in all_nodes:
             fpi = n.xpath('w:Features/w:FeaturesPressuresImpacts/text()',
                           namespaces=NSMAP)
-            res.extend(fpi)
 
-        return ', '.join(set(res))
+            for x in fpi:
+                res.add(x)
+
+        labels = [ItemLabel(k, COMMON_LABELS.get(k, k))
+                  for k in res]
+
+        return ItemList(labels)
 
     def ges_component(self):
         return self.id

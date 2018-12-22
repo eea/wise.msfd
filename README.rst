@@ -100,15 +100,15 @@ Here we display the recorded information from 2018 reports. We have Article 10 (
 
 Article 8.1ab
 ~~~~~~~~~~~~~
-Displays the GES Assessments information with related pressure and target codes, element and criteria statuses, criteria values and criteria value indicators. Allows filtering information by MarineUnitID, Country Code, Features and GES Component. 
+Displays the GES Assessments information with related pressure and target codes, element and criteria statuses, criteria values and criteria value indicators. Allows filtering information by MarineUnitID, Country Code, Features and GES Component.
 
 Artiticle 8.1c
 ~~~~~~~~~~~~~~
-Display the ESA assessments information. Filtering can be done by MarineUnitID, Country Code, Features and GES Component. 
+Display the ESA assessments information. Filtering can be done by MarineUnitID, Country Code, Features and GES Component.
 
 Article 9
 ~~~~~~~~~
-Displays GES determination information, GES description, the determination date, update type. The information here can be filtered by MarineUnitID, Country Code, GES Component, and Features. 
+Displays GES determination information, GES description, the determination date, update type. The information here can be filtered by MarineUnitID, Country Code, GES Component, and Features.
 
 Article 10
 ~~~~~~~~~~
@@ -220,6 +220,7 @@ descriptors to the 2018 data format.
 Immediate TODOs for the Compliance Module
 -----------------------------------------
 
+- format the lists in double columns if they are long
 - check the existing implementation of extracted data for the report tables for
   both 2012 and 2018 data. Make sure we filter by region.
 - automatically re-format text inserted in member state report fields.
@@ -254,12 +255,12 @@ Long-term TODO for the Compliance module
 - Implement the Regional Descriptors compliance module. It will probably be
   similar to the National Descriptors compliance module. Main components that
   need to be implemented:
-  
+
   - bootstrapping and content types (partially implemented)
   - overview pages
   - data report tables (partially implemented)
   - assessment forms, with question definitions
-  
+
 - Implement the National Summary section. It's not clear if this section needs
   forms, but it needs to aggregate report data in 2 versions: 2012 and 2018.
 - Implement the Regional Summary section. It's not clear if this section needs
