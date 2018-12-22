@@ -223,10 +223,16 @@ class A8aItem(Item):
         return self.node['c:Indicator/text()'][0]
 
     def row_threshold_value(self):
-        return self.node['c:ThresholdValue/text()'][0]
+        tv = self.node['c:ThresholdValue/text()']
+
+        if tv:
+            return tv[0]
 
     def row_threshold_value_unit(self):
-        return self.node['c:ThresholdValueUnit/text()'][0]
+        tvu = self.node['c:ThresholdValueUnit/text()']
+
+        if tvu:
+            return tvu[0]
 
     def row_threshold_value_proportion(self):
         p = self.node['c:ThresholdProportion/text()']
