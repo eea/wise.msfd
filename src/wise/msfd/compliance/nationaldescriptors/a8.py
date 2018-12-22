@@ -10,12 +10,9 @@ from wise.msfd import db, sql  # , sql2018
 from wise.msfd.data import get_report_data
 from wise.msfd.gescomponents import Criterion, get_criterion, get_descriptor
 from wise.msfd.labels import COMMON_LABELS
-from wise.msfd.utils import Item, ItemLabel, Node, Row  # RelaxedNode,
+from wise.msfd.utils import Item, ItemLabel, ItemList, Node, Row
 
 from ..base import BaseArticle2012
-
-# from wise.msfd.compliance import a8_utils
-
 
 logger = logging.getLogger('wise.msfd')
 
@@ -254,6 +251,7 @@ class A8bItem(Item):
         self.node = Node(self.node, NSMAP)
 
         self.column_type = ASSESSMENT_TOPIC_MAP.get(tn, tn)
+        label = self.value_to_label
 
         attrs = [
             ('Analysis [Feature]', self.column_type),
@@ -276,9 +274,9 @@ class A8bItem(Item):
             ('Description', self.db_record.Description),
             ('SumInfo1', self.db_record.SumInfo1),
             ('SumInfo1Unit', self.row_record_suminfo1_unit),
-            ('SumInfo1Confidence', self.db_record.SumInfo1Confidence),
-            ('TrendsRecent', self.db_record.TrendsRecent),
-            ('TrendsFuture', self.db_record.TrendsFuture),
+            ('SumInfo1Confidence', label(self.db_record.SumInfo1Confidence)),
+            ('TrendsRecent', label(self.db_record.TrendsRecent)),
+            ('TrendsFuture', label(self.db_record.TrendsFuture)),
 
             ('RecentTimeStart / RecentTimeEnd / '
              'AssessmentDateStart / AssessmentDateEnd [AssessmentPeriod]',
@@ -292,6 +290,12 @@ class A8bItem(Item):
 
         for title, value in attrs:
             self[title] = value
+
+    def value_to_label(self, value):
+        if value in COMMON_LABELS:
+            return ItemLabel(value, COMMON_LABELS[value])
+        else:
+            return value
 
     def row_record_suminfo1_unit(self):
         # PhysicalLos doesn't have SumInfo1Unit
@@ -329,7 +333,10 @@ class A8bItem(Item):
     def row_activity_types(self):
         x = 'parent::*/w:Activities/w:Activity/w:ActivityType/text()'
 
-        return ", ".join(set(self.node[x]))
+        v = set(self.node[x])
+        labels = [ItemLabel(a, COMMON_LABELS.get(a, a)) for a in v]
+
+        return ItemList(labels)
 
     def row_criteria_type(self):
         if self.indicator:

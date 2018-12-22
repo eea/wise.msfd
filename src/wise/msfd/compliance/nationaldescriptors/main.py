@@ -378,7 +378,7 @@ class NationalDescriptorArticleView(BaseComplianceView):
     def criterias(self):
         # TODO: unify descriptor handling, should also see ges_components.py
         els = get_descriptor_elements(
-            'compliance/nationaldescriptors/questions/data'
+            'compliance/nationaldescriptors/data'
         )
 
         if self.descriptor not in els:
@@ -394,7 +394,7 @@ class NationalDescriptorArticleView(BaseComplianceView):
     @property
     def questions(self):
         qs = get_questions(
-            'compliance/nationaldescriptors/questions/data'
+            'compliance/nationaldescriptors/data'
         )
 
         return qs[self.article]
