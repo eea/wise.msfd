@@ -19,13 +19,14 @@ from plone.intelligenttext.transforms import \
 from plone.memoize import volatile
 from Products.Five.browser.pagetemplatefile import PageTemplateFile
 
+from .labels import COMMON_LABELS
+
 # TODO: move this registration to search package
 FORMS_2018 = {}
 FORMS_ART11 = {}
 FORMS = {}                         # main chapter 1 article form classes
 SUBFORMS = defaultdict(set)        # store subform references
 ITEM_DISPLAYS = defaultdict(set)   # store registration for item displays
-COMMON_LABELS = {}                        # vocabulary of labels
 BLACKLIST = ['ID', 'Import', 'Id']
 
 logger = logging.getLogger('wise.msfd')
@@ -132,6 +133,8 @@ def scan(namespace):
 
 
 def print_value(value):
+    # TODO: this is only used in search package
+
     if not value:
         return value
 
@@ -332,6 +335,8 @@ def pivot_data(data, pivot):
 def pivot_query(query, pivot):
     """ Pivot results from a query over a table
     """
+
+    # TODO: this needs to be called a grouping function, it doesn't pivot
 
     cols = [x['name'] for x in query.column_descriptions]
     res = [dict(zip(cols, row)) for row in query]

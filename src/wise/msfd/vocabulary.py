@@ -1,10 +1,7 @@
-import csv
+
 import json
-import logging
 import re
 
-from lxml.etree import parse
-from pkg_resources import resource_filename
 from sqlalchemy import and_, or_
 from sqlalchemy.sql.schema import Table
 from zope.interface import provider
@@ -12,88 +9,13 @@ from zope.schema.interfaces import IVocabularyFactory
 from zope.schema.vocabulary import SimpleTerm, SimpleVocabulary
 
 from . import db, sql, sql2018
-from .utils import COMMON_LABELS, FORMS, FORMS_2018, FORMS_ART11, SUBFORMS
+from .labels import COMMON_LABELS
+from .utils import FORMS, FORMS_2018, FORMS_ART11, SUBFORMS
 
 # from eea.cache import cache
 
 
 ART_RE = re.compile('\s(\d+\.*\d?\w?)\s')
-
-
-def populate_labels():
-    csv_labels = {}
-    xsd_labels = {}
-
-    csv_f = resource_filename('wise.msfd',
-                              'data/MSFDreporting_TermLists.csv')
-
-    with open(csv_f, 'rb') as csvfile:
-        csv_file = csv.reader(csvfile, delimiter=',', quotechar='|')
-
-        for row in csv_file:
-            if row[0] in csv_labels.keys():
-                logger = logging.getLogger('tcpserver')
-                logger.warning("Duplicate label in csv file: %s", row[0])
-
-            csv_labels[row[0]] = row[1]
-
-    # """ Read XSD files and populates a vocabulary of term->label
-
-    # Note: there labels are pretty ad-hoc defined in the xsd file as
-    # documentation tags, so this method is imprecise.
-    # """
-
-    lines = []
-    xsd_f = resource_filename('wise.msfd',
-                              'data/MSCommon_1p0.xsd')
-
-    e = parse(xsd_f)
-
-    for node in e.xpath('//xs:documentation',
-                        namespaces={'xs': "http://www.w3.org/2001/XMLSchema"}):
-        text = node.text.strip()
-        lines.extend(text.split('\n'))
-
-    for line in lines:
-
-        line = line.strip()
-
-        for splitter in ['=', '\t']:
-            eqpos = line.find(splitter)
-
-            if eqpos == -1:
-                continue
-
-            if ' ' in line[:eqpos]:
-                continue
-
-            label, title = line.split(splitter, 1)
-
-            if label in COMMON_LABELS:
-                logger = logging.getLogger('tcpserver')
-                logger.warning("Duplicate label in xsd file: %s", label)
-
-            xsd_labels[label] = title
-
-    COMMON_LABELS.update(csv_labels)
-    COMMON_LABELS.update(xsd_labels)
-
-    common_labels = len(list(csv_labels.keys()) +
-                        list(xsd_labels.keys())) - len(COMMON_LABELS)
-
-    csv_nr = len(list(csv_labels.keys()))
-    xsd_nr = len(list(xsd_labels.keys()))
-
-    print("""Labels count:
-    Total labels: %s
-    Common_labels: %s
-    .csv_nr: %s
-    .xsd_nr: %s""" % (len(COMMON_LABELS), common_labels, csv_nr, xsd_nr))
-
-    return
-
-
-populate_labels()
 
 
 def vocab_from_values(values):

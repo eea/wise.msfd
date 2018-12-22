@@ -1,0 +1,3301 @@
+<xs:schema 
+  xmlns:xs="http://www.w3.org/2001/XMLSchema" 
+  xmlns="http://dd.eionet.europa.eu/schemas/MSFD13/mscommon" 
+  xmlns:dc="http://purl.org/dc/elements/1.1/" 
+  targetNamespace="http://dd.eionet.europa.eu/schemas/MSFD13/mscommon" 
+  elementFormDefault="qualified" attributeFormDefault="unqualified">
+	<xs:annotation>
+		<xs:appinfo>
+			<dc:Creator>Atkins Danmark</dc:Creator>
+			<dc:Date>2010-02-09</dc:Date>
+			<dc:Description>This schema is used to supply common enumeration lists for the Marine Strategy Framework Directive</dc:Description>
+			<dc:Format/>
+			<dc:Identifier>{http://wise.jrc.cec.eu.int}v0.3</dc:Identifier>
+			<dc:Publisher>DG Environment, European Commission</dc:Publisher>
+			<dc:Title>Marine Strategy Framework Directive Attribute Exchange Schema</dc:Title>
+		</xs:appinfo>
+		<xs:documentation>
+				This schema defines the common types used by the Marine Strategy Framework Directive reporting schemas. It is a reference schema only and does not have its own instance.
+				
+				12.09.2012: All stringtype elements have been changed to up to 100.000 characters in order to reduce the amount of errors related to reported text too long in relation to the definition of the element. The elements will still be named with the originally defined text string in order to indicate the amount of text max required for a specific element.
+		</xs:documentation>
+	</xs:annotation>
+	<xs:simpleType name="CountryCode">
+		<xs:annotation>
+			<xs:documentation>Unique 2 character ISO Code for the EU Member States</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="AT"/>
+			<xs:enumeration value="BE"/>
+			<xs:enumeration value="BG"/>
+			<xs:enumeration value="CZ"/>
+			<xs:enumeration value="CY"/>
+			<xs:enumeration value="DE"/>
+			<xs:enumeration value="DK"/>
+			<xs:enumeration value="EE"/>
+			<xs:enumeration value="EL"/>
+			<xs:enumeration value="ES"/>
+			<xs:enumeration value="FI"/>
+			<xs:enumeration value="FR"/>
+			<xs:enumeration value="HR"/>
+			<xs:enumeration value="HU"/>
+			<xs:enumeration value="IE"/>
+			<xs:enumeration value="IT"/>
+			<xs:enumeration value="LT"/>
+			<xs:enumeration value="LU"/>
+			<xs:enumeration value="LV"/>
+			<xs:enumeration value="MT"/>
+			<xs:enumeration value="NL"/>
+			<xs:enumeration value="PL"/>
+			<xs:enumeration value="PT"/>
+			<xs:enumeration value="RO"/>
+			<xs:enumeration value="SE"/>
+			<xs:enumeration value="SI"/>
+			<xs:enumeration value="SK"/>
+			<xs:enumeration value="UK"/>
+			<xs:enumeration value="NotReported"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="CountryCodeInternational">
+		<xs:annotation>
+			<xs:documentation>Unique 2 character ISO Code for the non EU Member States</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="BA"/>
+			<xs:enumeration value="CH"/>
+			<xs:enumeration value="DZ"/>
+			<xs:enumeration value="EG"/>
+			<xs:enumeration value="GE"/>
+			<xs:enumeration value="IL"/>
+			<xs:enumeration value="IS"/>
+			<xs:enumeration value="LB"/>
+			<xs:enumeration value="LY"/>
+			<xs:enumeration value="LI"/>
+			<xs:enumeration value="MA"/>
+			<xs:enumeration value="MD"/>
+			<xs:enumeration value="ME"/>
+			<xs:enumeration value="NO"/>
+			<xs:enumeration value="RU"/>
+			<xs:enumeration value="SY"/>
+			<xs:enumeration value="TN"/>
+			<xs:enumeration value="TR"/>
+			<xs:enumeration value="UA"/>
+			<xs:enumeration value="NotReported"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="CountryInternational">
+		<xs:annotation>
+			<xs:documentation>EU countries and neighboring relevant countries</xs:documentation>
+		</xs:annotation>
+		<xs:union memberTypes="CountryCode CountryCodeInternational"/>
+	</xs:simpleType>
+	<xs:simpleType name="Region">
+		<xs:annotation>
+			<xs:documentation>
+			BAL=Baltic Sea	
+			ANS=Greater North Sea, incl. Kattegat and English Channel	
+			ACS=North-east Atlantic Ocean: Celtic Seas	
+			ABI=North-east Atlantic Ocean: Bay of Biscay and Iberian Coast	
+			AMA=North-east Atlantic Ocean: Macaronesia	
+			MWE=Mediterranean Sea: Western Mediterranean Sea	
+			MAD=Mediterranean Sea: Adriatic Sea	
+			MIC=Mediterranean Sea: Ionian Sea and Central Mediterranean Sea	
+			MAL=Mediterranean Sea: Aegean-Levantine Sea	
+			BLK=Black Sea		
+			</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="BAL"/>
+			<xs:enumeration value="ANS"/>
+			<xs:enumeration value="ACS"/>
+			<xs:enumeration value="ABI"/>
+			<xs:enumeration value="AMA"/>
+			<xs:enumeration value="MWE"/>
+			<xs:enumeration value="MAD"/>
+			<xs:enumeration value="MIC"/>
+			<xs:enumeration value="MAL"/>
+			<xs:enumeration value="BLK"/>
+			<xs:enumeration value="NotReported"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="AreaType">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="RG_Region"/>
+			<xs:enumeration value="MS_MemberState"/>
+			<xs:enumeration value="SR_Subregion"/>
+			<xs:enumeration value="SD_Subdivision"/>
+			<xs:enumeration value="AA_AssessmentArea"/>
+			<xs:enumeration value="NotReported"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="LanguageCode">
+		<xs:annotation>
+			<xs:documentation>Unique 2 character ISO Code for the EU Member States language (the codes used are the ISO codes 639-1 in force, alpha-2 code)
+			
+	bg=Bulgarian
+	es=Spanish
+	cs=Czech
+	da=Danish
+	de=German
+	et=Estonian
+	el=Greek
+	en=English
+	fr=French
+	ga=Irish
+	it=Italian
+	lv=Latvian
+	lt=Lithuanian
+	hu=Hungarian
+	mt=Maltese
+	nl=Dutch
+	pl=Polish
+	pt=Portuguese
+	ro=Romanian
+	sk=Slovak
+	sl=Slovenian
+	fi=Finnish
+	sv=Swedish
+</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="bg"/>
+			<xs:enumeration value="es"/>
+			<xs:enumeration value="cs"/>
+			<xs:enumeration value="da"/>
+			<xs:enumeration value="de"/>
+			<xs:enumeration value="et"/>
+			<xs:enumeration value="el"/>
+			<xs:enumeration value="en"/>
+			<xs:enumeration value="fr"/>
+			<xs:enumeration value="ga"/>
+			<xs:enumeration value="it"/>
+			<xs:enumeration value="lv"/>
+			<xs:enumeration value="lt"/>
+			<xs:enumeration value="hu"/>
+			<xs:enumeration value="mt"/>
+			<xs:enumeration value="nl"/>
+			<xs:enumeration value="pl"/>
+			<xs:enumeration value="pt"/>
+			<xs:enumeration value="ro"/>
+			<xs:enumeration value="sk"/>
+			<xs:enumeration value="sl"/>
+			<xs:enumeration value="fi"/>
+			<xs:enumeration value="sv"/>
+			<xs:enumeration value="NotReported"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="FeatureUniqueCodeType">
+		<xs:annotation>
+			<xs:documentation>Type for unique code within the Member State for the feature</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:minLength value="1"/>
+			<xs:maxLength value="40"/>
+			<xs:whiteSpace value="collapse"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="FeatureUniqueEUCodeType">
+		<xs:annotation>
+			<xs:documentation>Type for EU code, allows up to 42 characters (unique code within MS prefixed with country ISO 2 character code</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:maxLength value="42"/>
+			<xs:minLength value="3"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="UniqueCodeType">
+		<xs:annotation>
+			<xs:documentation>Unique Code, allows up to 42 characters</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:maxLength value="42"/>
+			<xs:minLength value="1"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="UniqueCodeTypeMON">
+		<xs:annotation>
+			<xs:documentation>Unique Code, allows up to 50 characters</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:maxLength value="50"/>
+			<xs:minLength value="1"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="String50Type">
+		<xs:annotation>
+			<xs:documentation>Type to enter string of 1 to 50 characters</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:minLength value="1"/>
+			<xs:maxLength value="100000"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="String100Type">
+		<xs:annotation>
+			<xs:documentation>Type to enter string of 1 to 100 characters</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:minLength value="1"/>
+			<xs:maxLength value="100000"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="String1000Type">
+		<xs:annotation>
+			<xs:documentation>Type to enter string of 1 to 1000 characters</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:minLength value="1"/>
+			<xs:maxLength value="100000"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="String10000Type">
+		<xs:annotation>
+			<xs:documentation>Type to enter string of 1 to 10000 characters</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:minLength value="1"/>
+			<xs:maxLength value="100000"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="String250Type">
+		<xs:annotation>
+			<xs:documentation>Type to enter string of 1 to 250 characters</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:minLength value="1"/>
+			<xs:maxLength value="100000"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="String2000Type">
+		<xs:annotation>
+			<xs:documentation>Type to enter string of 1 to 2000 characters</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:minLength value="1"/>
+			<xs:maxLength value="100000"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="String2500Type">
+		<xs:annotation>
+			<xs:documentation>Type to enter string of 1 to 2500 characters</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:minLength value="1"/>
+			<xs:maxLength value="100000"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="String5000Type">
+		<xs:annotation>
+			<xs:documentation>Type to enter string of 1 to 5000 characters</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:minLength value="1"/>
+			<xs:maxLength value="100000"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="String100Type_opt">
+		<xs:annotation>
+			<xs:documentation>Type to enter string of 0 to 100 characters</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:minLength value="0"/>
+			<xs:maxLength value="100000"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="String1000Type_opt">
+		<xs:annotation>
+			<xs:documentation>Type to enter string of 0 to 1000 characters</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:minLength value="0"/>
+			<xs:maxLength value="100000"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="String10000Type_opt">
+		<xs:annotation>
+			<xs:documentation>Type to enter string of 0 to 10000 characters</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:minLength value="0"/>
+			<xs:maxLength value="100000"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="String250Type_opt">
+		<xs:annotation>
+			<xs:documentation>Type to enter string of 0 to 250 characters</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:minLength value="0"/>
+			<xs:maxLength value="100000"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="String2000Type_opt">
+		<xs:annotation>
+			<xs:documentation>Type to enter string of 0 to 2000 characters</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:minLength value="0"/>
+			<xs:maxLength value="100000"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="String2500Type_opt">
+		<xs:annotation>
+			<xs:documentation>Type to enter string of 0 to 2500 characters</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:minLength value="0"/>
+			<xs:maxLength value="100000"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="String5000Type_opt">
+		<xs:annotation>
+			<xs:documentation>Type to enter string of 0 to 5000 characters</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:minLength value="0"/>
+			<xs:maxLength value="100000"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="NumberExceptionType">
+		<xs:annotation>
+			<xs:documentation>Numerical codes for data exceptions: -9999=Unknown, -8888=Yet to be measured, -7777=Not Applicable</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="-9999"/>
+			<xs:enumeration value="-8888"/>
+			<xs:enumeration value="-7777"/>
+			<xs:enumeration value="NotReported"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="NumberPercentageBaseType">
+		<xs:annotation>
+			<xs:documentation>Percentage with 3 decimal places</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:decimal">
+			<xs:minInclusive value="0"/>
+			<xs:maxInclusive value="100"/>
+			<xs:fractionDigits value="3"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="NumberPercentageType">
+		<xs:annotation>
+			<xs:documentation>Percentage with option for exceptions</xs:documentation>
+		</xs:annotation>
+		<xs:union memberTypes="NumberPercentageBaseType NumberExceptionType"/>
+	</xs:simpleType>
+	<xs:simpleType name="DependUsesActivity">
+		<xs:union memberTypes="HabitatsAll FuncGroupAll"/>
+	</xs:simpleType>
+	<xs:simpleType name="DependEcosystemTheme">
+		<xs:union memberTypes="HabitatsAll FuncGroupAll Activities GESDescriptorCriteria"/>
+	</xs:simpleType>
+	<xs:simpleType name="DataConfidentialityClassificationCode">
+		<xs:annotation>
+			<xs:documentation>Codes for data security classification:
+				001 = Unclassified - available for general circulation
+				003 = Confidential - available for EC reporting only
+			</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="001"/>
+			<xs:enumeration value="003"/>
+			<xs:enumeration value="NotReported"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="MarineUnitID">
+		<xs:annotation>
+			<xs:documentation>Type for GB code, allows up to 42 characters (unique code within MS prefixed with country ISO 2 character code</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:maxLength value="42"/>
+			<xs:minLength value="3"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="FormESA">
+		<xs:annotation>
+			<xs:documentation>Codes for ESA Approach, FormESA, Summary1
+				A = Integrated within IA on Art 8.1a, b
+				B = Stand-alone assessment
+			</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="A"/>
+			<xs:enumeration value="B"/>
+			<xs:enumeration value="NotReported"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="ApproachESA">
+		<xs:annotation>
+			<xs:documentation>Codes for ESA Approach
+			Ecosystem=Ecosystem Services Approach
+			Other=Other (please specify)
+			</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="Ecosystem"/>
+			<xs:enumeration value="Other"/>
+			<xs:enumeration value="NotReported"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="CostDegradation">
+		<xs:annotation>
+			<xs:documentation>Codes for ESA Approach, CostDegradation, Summary1
+			Ecosystem=Ecosystem Services Approach
+			Thematic=Thematic Approach	
+			CostBased=Cost-based Approach	
+			Other=Other (please specify)
+			</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="Ecosystem"/>
+			<xs:enumeration value="Thematic"/>
+			<xs:enumeration value="CostBased"/>
+			<xs:enumeration value="Other"/>
+			<xs:enumeration value="NotReported"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="ApproachMarineSectors">
+		<xs:annotation>
+			<xs:documentation>
+			MarineWater= Marine Water Accounts (by activity/sector)
+			Ecosystem=Ecosystem Services Approach
+			Other=Other (please specify)
+			</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="MarineWater"/>
+			<xs:enumeration value="Ecosystem"/>
+			<xs:enumeration value="Other"/>
+			<xs:enumeration value="NotReported"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="Activities">
+		<xs:annotation>
+			<xs:documentation>Codes for marine activities
+		RenewableEnergy	Energy production: Marine-based renewable energy generation (wind, wave and tidal power)
+OilGas	Energy production: Marine hydrocarbon (oil and gas) extraction
+SeaweedOtherSeafood	Extraction of living resources: Seaweed and other sea-based food harvesting
+GeneticBioprospectMaerl	Extraction of living resources: Extraction of genetic resources/bioprospecting/maerl
+Fisheries	Extraction of living resources: Fisheries incl. recreational fishing (fish and shellfish)
+MiningSandGravel	Extraction of non-living resources: Marine mining (sand and gravel, rock)
+Dredging	Extraction of non-living resources: Dredging
+Desalination	Extraction of non-living resources: Desalination/water abstraction
+Aquaculture	Food production: Aquaculture (fin-fish and shellfish)
+LandClaimDefence	Man-made structures (incl. construction phase): Land/sea physical interaction: land claim, coastal defence
+Ports	Man-made structures (incl. construction phase): Port operations
+CablesPipelines	Man-made structures (incl. construction phase): Submarine cable and pipeline operations
+OffshoreStructures	Man-made structures (incl. construction phase): Placement and operation of offshore structures (other than for energy production)
+Defence	Military: Defence - recurrent defence operations
+DumpingMunitions	Military: Defence - dumping of unwanted munitions
+TourismRecreation	Recreation: Tourism and recreation incl. yachting
+ResearchSurvey	Research and survey: Marine research, survey and educational activities
+Shipping	Transport: Shipping
+SolidWasteDisposal	Waste disposal: Solid waste disposal incl. dredge material
+StorageGases	Waste disposal: Storage of gasses
+Industry	Land-based activities/industries: Coastal, riverine and atmospheric inputs from land - industrial discharges
+AgricultForestry	Land-based activities/industries: Coastal, riverine and atmospheric inputs from land - agricultural run-off, forestry and emissions
+Urban	Land-based activities/industries: Coastal, riverine and atmospheric inputs from land - municipal waste water discharge
+			</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="RenewableEnergy"/>
+			<xs:enumeration value="OilGas"/>
+			<xs:enumeration value="SeaweedOtherSeafood"/>
+			<xs:enumeration value="GeneticBioprospectMaerl"/>
+			<xs:enumeration value="Fisheries"/>
+			<xs:enumeration value="MiningSandGravel"/>
+			<xs:enumeration value="Dredging"/>
+			<xs:enumeration value="Desalination"/>
+			<xs:enumeration value="Aquaculture"/>
+			<xs:enumeration value="LandClaimDefence"/>
+			<xs:enumeration value="Ports"/>
+			<xs:enumeration value="CablesPipelines"/>
+			<xs:enumeration value="OffshoreStructures"/>
+			<xs:enumeration value="Defence"/>
+			<xs:enumeration value="DumpingMunitions"/>
+			<xs:enumeration value="TourismRecreation"/>
+			<xs:enumeration value="ResearchSurvey"/>
+			<xs:enumeration value="Shipping"/>
+			<xs:enumeration value="SolidWasteDisposal"/>
+			<xs:enumeration value="StorageGases"/>
+			<xs:enumeration value="Industry"/>
+			<xs:enumeration value="AgricultForestry"/>
+			<xs:enumeration value="Urban"/>
+			<xs:enumeration value="ActivitiesUsesAll"/>
+			<xs:enumeration value="UsesActivitiesOther"/>
+			<xs:enumeration value="NotRelevant"/>
+			<xs:enumeration value="NotReported"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="TopicESAMarine">
+		<xs:annotation>
+			<xs:documentation>Metadata topic for ESA Marine Sectors
+			</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="CharacteristicsTrendsAnalysis"/>
+			<xs:enumeration value="ProductionValue"/>
+			<xs:enumeration value="AddedValue"/>
+			<xs:enumeration value="Employment"/>
+			<xs:enumeration value="OtherSocioEconomicIndicators"/>
+			<xs:enumeration value="PressureAnalysis"/>
+			<xs:enumeration value="NotReported"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="TopicCOMChemical">
+		<xs:annotation>
+			<xs:documentation>Metadata topic for COM Chemical features
+			</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="CharacteristicsAnalysis"/>
+			<xs:enumeration value="ImpactAnalysis"/>
+			<xs:enumeration value="PressureAnalysis"/>
+			<xs:enumeration value="NotReported"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="Confidence">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="Low"/>
+			<xs:enumeration value="Moderate"/>
+			<xs:enumeration value="High"/>
+			<xs:enumeration value="NotRelevant"/>
+			<xs:enumeration value="NotReported"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="Confidence2">
+		<xs:annotation>
+			<xs:documentation>
+			Good=e.g. based on extensive surveys	
+			Moderate=e.g. Based on partial data with some extrapolation	
+			Poor=e.g. Based on very incomplete data or expert judgement	
+			</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="Good"/>
+			<xs:enumeration value="Moderate"/>
+			<xs:enumeration value="Poor"/>
+			<xs:enumeration value="NotRelevant"/>
+			<xs:enumeration value="NotReported"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="Confidence4">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="Low"/>
+			<xs:enumeration value="Moderate"/>
+			<xs:enumeration value="High"/>
+			<xs:enumeration value="90%CI"/>
+			<xs:enumeration value="NotRelevant"/>
+			<xs:enumeration value="NotReported"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="RSCode">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="0405"/>
+			<xs:enumeration value="8A01"/>
+			<xs:enumeration value="8A02"/>
+			<xs:enumeration value="8A03"/>
+			<xs:enumeration value="8A04"/>
+			<xs:enumeration value="8A05"/>
+			<xs:enumeration value="8A06"/>
+			<xs:enumeration value="8A07"/>
+			<xs:enumeration value="8B01"/>
+			<xs:enumeration value="8B02"/>
+			<xs:enumeration value="8B03"/>
+			<xs:enumeration value="8B04"/>
+			<xs:enumeration value="8B05"/>
+			<xs:enumeration value="8B06"/>
+			<xs:enumeration value="8B07"/>
+			<xs:enumeration value="8B08"/>
+			<xs:enumeration value="8B09"/>
+			<xs:enumeration value="8B10"/>
+			<xs:enumeration value="8B11"/>
+			<xs:enumeration value="8B12"/>
+			<xs:enumeration value="8C01"/>
+			<xs:enumeration value="8C02"/>
+			<xs:enumeration value="8C03"/>
+			<xs:enumeration value="0901"/>
+			<xs:enumeration value="1001"/>
+			<xs:enumeration value="8C01"/>
+			<xs:enumeration value="8C02"/>
+			<xs:enumeration value="8C03"/>
+			<xs:enumeration value="0901"/>
+			<xs:enumeration value="1001"/>
+			<xs:enumeration value="NotReported"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="YNPCode">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="Y"/>
+			<xs:enumeration value="N"/>
+			<xs:enumeration value="P"/>
+			<xs:enumeration value="NotReported"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="SourceClassification">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="MSFD Annex III"/>
+			<xs:enumeration value="WG DIKE"/>
+			<xs:enumeration value="MSFD CSWP 2011"/>
+			<xs:enumeration value="Habitats Directive"/>
+			<xs:enumeration value="OSPAR Convention"/>
+			<xs:enumeration value="Helsinki Convention"/>
+			<xs:enumeration value="Other international agreement - specify in comment"/>
+			<xs:enumeration value="EUNIS habitat classification (version 2011-11)"/>
+			<xs:enumeration value="Birds Directive"/>
+			<xs:enumeration value="Barcelona Convention"/>
+			<xs:enumeration value="Bucharest Convention"/>
+			<xs:enumeration value="Other international agreement - specify in comment"/>
+			<xs:enumeration value="MS-defined features"/>
+			<xs:enumeration value="MSFD Annex I "/>
+			<xs:enumeration value="Decision 2010"/>
+			<xs:enumeration value="NotReported"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="ReportingSection">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="Biological features - other species"/>
+			<xs:enumeration value="Cost of degradation"/>
+			<xs:enumeration value="Determination of GES"/>
+			<xs:enumeration value="Ecosystem services (if MS has used this approach)"/>
+			<xs:enumeration value="Ecosystems"/>
+			<xs:enumeration value="Environmental targets"/>
+			<xs:enumeration value="Functional groups(of highly mobile/widely dispersed species groups)"/>
+			<xs:enumeration value="Habitats in areas (e.g. intense/specific pressures, special protection)"/>
+			<xs:enumeration value="Listed species - Barcelona Convention"/>
+			<xs:enumeration value="Listed species - Birds Directive"/>
+			<xs:enumeration value="Listed species - Bucharest Convention"/>
+			<xs:enumeration value="Listed species - Habitats Directive"/>
+			<xs:enumeration value="Listed species - Helsinki Convention"/>
+			<xs:enumeration value="Listed species - OSPAR Convention"/>
+			<xs:enumeration value="Listed species - Other international agreements"/>
+			<xs:enumeration value="Marine uses and activities"/>
+			<xs:enumeration value="Other species"/>
+			<xs:enumeration value="Physical features"/>
+			<xs:enumeration value="Predominant habitats"/>
+			<xs:enumeration value="Pressure and impacts"/>
+			<xs:enumeration value="Regional coordination"/>
+			<xs:enumeration value="Reporting section"/>
+			<xs:enumeration value="Special habitat types"/>
+			<xs:enumeration value="Themes (if MS has used this approach)"/>
+			<xs:enumeration value="Typical features or characteristics"/>
+			<xs:enumeration value="NotReported"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="FeatureTypeOverview">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="Physical feature"/>
+			<xs:enumeration value="Habitat - predominant"/>
+			<xs:enumeration value="Habitat - special"/>
+			<xs:enumeration value="Habitat - other"/>
+			<xs:enumeration value="Species group"/>
+			<xs:enumeration value="Functional group"/>
+			<xs:enumeration value="Species - listed"/>
+			<xs:enumeration value="Species - other"/>
+			<xs:enumeration value="Ecosystem"/>
+			<xs:enumeration value="Species - NIS"/>
+			<xs:enumeration value="Species - genetically distinct form"/>
+			<xs:enumeration value="Area meriting particular reference"/>
+			<xs:enumeration value="Typical feature"/>
+			<xs:enumeration value="Pressure"/>
+			<xs:enumeration value="Use/activity"/>
+			<xs:enumeration value="Ecosystem service"/>
+			<xs:enumeration value="Marine theme"/>
+			<xs:enumeration value="Cost of degradation type"/>
+			<xs:enumeration value="Regional coordination"/>
+			<xs:enumeration value="GES descriptor"/>
+			<xs:enumeration value="GES criterion"/>
+			<xs:enumeration value="Target and indicator(s)"/>
+			<xs:enumeration value="NotReported"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="YearType">
+		<xs:annotation>
+			<xs:documentation>Format yyyy</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:pattern value="[1-9][0-9]{3}"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="YearMonthType">
+		<xs:annotation>
+			<xs:documentation>Format yyyy-mm</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:pattern value="[1-9][0-9]{3}-[0-1][0-9]"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="TemporalPattern">
+		<xs:annotation>
+			<xs:documentation>Codes for ESA Marine Sectors, Characteristics, Summary2
+Continuous=all year	
+Seasonal=regulary at a certain period	
+Temporary=e.g. during construction phases	
+Intermittant=e.g. occasional, depending on various factors, not regular seasonality	
+Other=please specify	
+			</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="Continuous"/>
+			<xs:enumeration value="Seasonal"/>
+			<xs:enumeration value="Temporary"/>
+			<xs:enumeration value="Intermittant"/>
+			<xs:enumeration value="Other"/>
+			<xs:enumeration value="NotReported"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="TrendRecent">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="Increasing"/>
+			<xs:enumeration value="Stable"/>
+			<xs:enumeration value="Decreasing"/>
+			<xs:enumeration value="Unknown_NotAssessed"/>
+			<xs:enumeration value="NotReported"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="TrendFuture">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="Increase"/>
+			<xs:enumeration value="BeStable"/>
+			<xs:enumeration value="Decrease"/>
+			<xs:enumeration value="Unknown_NotAssessed"/>
+			<xs:enumeration value="NotReported"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="Trend2">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="Increasing"/>
+			<xs:enumeration value="Stable"/>
+			<xs:enumeration value="Declining"/>
+			<xs:enumeration value="Unknown"/>
+			<xs:enumeration value="NotReported"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="Trend3">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="Increasing"/>
+			<xs:enumeration value="Stable"/>
+			<xs:enumeration value="Decreasing"/>
+			<xs:enumeration value="NoTrend"/>
+			<xs:enumeration value="Unknown"/>
+			<xs:enumeration value="NotRelevant"/>
+			<xs:enumeration value="NotReported"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="Trend4">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="Increasing"/>
+			<xs:enumeration value="Stable"/>
+			<xs:enumeration value="Decreasing"/>
+			<xs:enumeration value="Unknown"/>
+			<xs:enumeration value="NotReported"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="Rank">
+		<xs:annotation>
+			<xs:documentation>Rank of pressures
+			0=not known	
+			1=most important	
+			2=second important	
+			3=third	
+			</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="0"/>
+			<xs:enumeration value="1"/>
+			<xs:enumeration value="2"/>
+			<xs:enumeration value="3"/>
+			<xs:enumeration value="NotReported"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="Pressures">
+		<xs:annotation>
+			<xs:documentation>
+PhysLoss	Pressure: Physical loss
+PhysLoss_Smother	Pressure: Physical loss (smothering)
+PhysLoss_Seal	Pressure: Physical loss (sealing)
+PhysDam	Pressure: Physical damage
+PhysDam_silt	Pressure: Physical damage (changes in siltation)
+PhysDam_abrasion	Pressure: Physical damage (abrasion)
+PhysDam_extraction	Pressure: Physical damage (selective extraction)
+PhysDisturbance	Pressure: Physical disturbance (Other)
+Noise	Pressure: Underwater noise
+Litter	Pressure: Marine litter
+ChangeHydrology	Pressure: Interference with hydrological processes (Other)
+ChangeThermal	Pressure: Changes in thermal regime
+ChangeSalinity	Pressure: Changes in salinity regime
+IntroHazSubstOther	Pressure: Contamination by hazardous substances (Other)
+IntroSynthComp	Pressure: Introduction of synthetic compounds
+IntroNonSynthSubst	Pressure: Introduction of non-synthetic substances and compounds
+IntroRadioNuclides	Pressure: Introduction of radio-nuclides
+AcutePollutionEvents	Acute pollution events
+SystematicReleaseSubst	Pressure: Systematic and/or intentional release of substances (solid, liquid or gas)
+NutrientOrgEnrich	Pressure: Nutrient and organic matter enrichment (Other)
+InputN_Psubst	Pressure: Inputs of fertilisers and other N- and P-rich substances
+InputOrganics	Pressure: Inputs of organic matter
+BioDisturb_other	Pressure: Biological disturbance (Other)
+IntroMicroPath	Pressure: Introduction of microbial pathogens
+IntroNIS	Pressure: Introduction of non-indigenous species and translocations
+ExtractSpeciesAll	Pressure: Selective extraction of species, including non-target catches
+ExtractSpeciesFishShellfish	Extraction of species: fish and shellfish
+ExtractSpeciesMaerl	Extraction of species: maerl extraction
+ExtractSpeciesSeaweed	Extraction of species: seaweed harvesting
+ExtractSpeciesOther	Extraction of species: other
+Acidification	Pressure: Marine acidification
+PressureOther	Pressure: Other pressures
+			</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="PhysLoss"/>
+			<xs:enumeration value="PhysLoss_Smother"/>
+			<xs:enumeration value="PhysLoss_Seal"/>
+			<xs:enumeration value="PhysDam"/>
+			<xs:enumeration value="PhysDam_silt"/>
+			<xs:enumeration value="PhysDam_abrasion"/>
+			<xs:enumeration value="PhysDam_extraction"/>
+			<xs:enumeration value="PhysDisturbance"/>
+			<xs:enumeration value="Noise"/>
+			<xs:enumeration value="Litter"/>
+			<xs:enumeration value="ChangeHydrology"/>
+			<xs:enumeration value="ChangeThermal"/>
+			<xs:enumeration value="ChangeSalinity"/>
+			<xs:enumeration value="IntroHazSubstOther"/>
+			<xs:enumeration value="IntroSynthComp"/>
+			<xs:enumeration value="IntroNonSynthSubst"/>
+			<xs:enumeration value="IntroRadioNuclides"/>
+			<xs:enumeration value="AcutePollutionEvents"/>
+			<xs:enumeration value="SystematicReleaseSubst"/>
+			<xs:enumeration value="NutrientOrgEnrich"/>
+			<xs:enumeration value="InputN_Psubst"/>
+			<xs:enumeration value="InputOrganics"/>
+			<xs:enumeration value="BioDisturb_other"/>
+			<xs:enumeration value="IntroMicroPath"/>
+			<xs:enumeration value="IntroNIS"/>
+			<xs:enumeration value="ExtractSpeciesAll"/>
+			<xs:enumeration value="ExtractSpeciesFishShellfish"/>
+			<xs:enumeration value="ExtractSpeciesMaerl"/>
+			<xs:enumeration value="ExtractSpeciesSeaweed"/>
+			<xs:enumeration value="ExtractSpeciesOther"/>
+			<xs:enumeration value="Acidification"/>
+			<xs:enumeration value="PressureOther"/>
+			<xs:enumeration value="NotRelevant"/>
+			<xs:enumeration value="NotReported"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="GESDescriptor">
+		<xs:annotation>
+			<xs:documentation>GESDescriptor and Criterias
+			D1=Descriptor level: Biological diversity is maintained. The quality and occurrence of habitats and the 			distribution and abundance of species are in line with prevailing physiographic, geographic and climate conditions	
+			D2=Descriptor level: Non-indigenous species introduced by human activities are at levels that do not adversely alter the ecosystem	
+			D3=Descriptor level:  Populations of all commercially exploited fish and shellfish are within safe biological limits, exhibiting a population age and size distribution that is indicative of a healthy stock	
+			D4=Descriptor level: All elements of the marine food webs, to the extent that they are known, occur at normal abundance and diversity and levels capable of ensuring the long-term abundance of the species and the retention of their full reproductive capacity	
+			D5=Descriptor level: Human-induced eutrophication is minimised, especially adverse effects thereof, such as losses in biodiversity, ecosystem degradfation, harmful algae blooms and oxygen deficiency in bottom waters	
+			D6=Descriptor level: Sea-floor integrity is at a level that ensures that the structure and functions of the ecosystems are safeguarded and benthic ecosystems, in particular, are not adversely affected.	
+			D7=Descriptor level: Permanent alteration of hydrographical conditions does not adversely affect marine ecosystems	
+			D8=Descriptor level: Concentrations of contaminants are at levels not giving rise to pollution effects	
+			D9=Descriptor level: Contaminants in fish and other seafood for human consumption do not exceed levels established by Community legislation or other relevant standards	
+			D10=Descriptor level: Properties and quantities of marine litter do not cause harm to the coastal and marine environment	
+			D11=Descriptor level: Introduction of energy, including underwater noise, is at levels that do not adversely affect the marine environment	
+			Other=Descriptor level: If GES is defined but not in relation to any particular descriptor, add it  here			
+			</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="D1"/>
+			<xs:enumeration value="D2"/>
+			<xs:enumeration value="D3"/>
+			<xs:enumeration value="D4"/>
+			<xs:enumeration value="D5"/>
+			<xs:enumeration value="D6"/>
+			<xs:enumeration value="D7"/>
+			<xs:enumeration value="D8"/>
+			<xs:enumeration value="D9"/>
+			<xs:enumeration value="D10"/>
+			<xs:enumeration value="D11"/>
+			<xs:enumeration value="GESOther"/>
+			<xs:enumeration value="NotReported"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="GESDescriptorCriteria">
+		<xs:annotation>
+			<xs:documentation>GESDescriptor and Criterias
+			D1=Descriptor level: Biological diversity is maintained. The quality and occurrence of habitats and the 			distribution and abundance of species are in line with prevailing physiographic, geographic and climate conditions	
+			1.1=Criterion level: Species distribution	
+			1.2=Criterion level: Population size	
+			1.3=Criterion level: Population condition	
+			1.4=Criterion level: Habitat distribution	
+			1.5=Criterion level: Habitat extent	
+			1.6=Criterion level: Habitat condition	
+			1.7=Criterion level: Ecosystem structure
+			D2=Descriptor level: Non-indigenous species introduced by human activities are at levels that do not adversely alter the ecosystem	
+			2.1=Criterion level: Abundance and state characterissation of non-indigenous species, in particular invasive species	
+			2.2=Criterion level: Environmental impact of invasive non-indigenous species	
+			D3=Descriptor level:  Populations of all commercially exploited fish and shellfish are within safe biological limits, exhibiting a population age and size distribution that is indicative of a healthy stock	
+			3.1=Criterion level: Level of pressure of the fishing activity	
+			3.2=Criterion level: Reproductive capacity of the stock	
+			3.3=Criterion level: Population age and size distribution	
+			D4=Descriptor level: All elements of the marine food webs, to the extent that they are known, occur at normal abundance and diversity and levels capable of ensuring the long-term abundance of the species and the retention of their full reproductive capacity	
+			4.1=Criterion level: Productivity (production per unit biomass) of key species or trophic groups	
+			4.2=Criterion level: Proportion of selected species at the top of food webs	
+			4.3=Criterion level: Abundance/distributino of key trophic groups/species	
+			D5=Descriptor level: Human-induced eutrophication is minimised, especially adverse effects thereof, such as losses in biodiversity, ecosystem degradfation, harmful algae blooms and oxygen deficiency in bottom waters	
+			5.1=Criterion level: Nutrients levels	
+			5.2=Criterion level: Direct effects of nutrient enrichment	
+			5.3=Criterion level: Indirect effects of nutrient enrichment	
+			D6=Descriptor level: Sea-floor integrity is at a level that ensures that the structure and functions of the ecosystems are safeguarded and benthic ecosystems, in particular, are not adversely affected.	
+			6.1=Criterion level: Physical damage, having regard to substrate characteristics	
+			6.2=Criterion level: Condition of benthic community	
+			D7=Descriptor level: Permanent alteration of hydrographical conditions does not adversely affect marine ecosystems	
+			7.1=Criterion level: Spatial characterisation of permanent alterations	
+			7.2=Criterion level: Impact of permanent hydrographical changes	
+			D8=Descriptor level: Concentrations of contaminants are at levels not giving rise to pollution effects	
+			8.1=Criterion level: Concentration of contaminants	
+			8.2=Criterion level: Effects of contaminants	
+			D9=Descriptor level: Contaminants in fish and other seafood for human consumption do not exceed levels established by Community legislation or other relevant standards	
+			9.1=Criterion level: Levels, number and frequency of contaminants	
+			D10=Descriptor level: Properties and quantities of marine litter do not cause harm to the coastal and marine environment	
+			10.1=Criterion level: Characteristics of litter in the marine and coastal environment	
+			10.2=Criterion level: Impacts of litter on marine life	
+			D11=Descriptor level: Introduction of energy, including underwater noise, is at levels that do not adversely affect the marine environment	
+			11.1=Criterion level: Distriubtion in time and place of loud, low and mid frequency impulsive sounds	
+			11.2=Criterion level: Continuous low frequency sound	
+			Other=Descriptor level: If GES is defined but not in relation to any particular descriptor, add it  here			
+			</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="D1"/>
+			<xs:enumeration value="1.1"/>
+			<xs:enumeration value="1.2"/>
+			<xs:enumeration value="1.3"/>
+			<xs:enumeration value="1.4"/>
+			<xs:enumeration value="1.5"/>
+			<xs:enumeration value="1.6"/>
+			<xs:enumeration value="1.7"/>
+			<xs:enumeration value="D2"/>
+			<xs:enumeration value="2.1"/>
+			<xs:enumeration value="2.2"/>
+			<xs:enumeration value="D3"/>
+			<xs:enumeration value="3.1"/>
+			<xs:enumeration value="3.2"/>
+			<xs:enumeration value="3.3"/>
+			<xs:enumeration value="D4"/>
+			<xs:enumeration value="4.1"/>
+			<xs:enumeration value="4.2"/>
+			<xs:enumeration value="4.3"/>
+			<xs:enumeration value="D5"/>
+			<xs:enumeration value="5.1"/>
+			<xs:enumeration value="5.2"/>
+			<xs:enumeration value="5.3"/>
+			<xs:enumeration value="D6"/>
+			<xs:enumeration value="6.1"/>
+			<xs:enumeration value="6.2"/>
+			<xs:enumeration value="D7"/>
+			<xs:enumeration value="7.1"/>
+			<xs:enumeration value="7.2"/>
+			<xs:enumeration value="D8"/>
+			<xs:enumeration value="8.1"/>
+			<xs:enumeration value="8.2"/>
+			<xs:enumeration value="D9"/>
+			<xs:enumeration value="9.1"/>
+			<xs:enumeration value="D10"/>
+			<xs:enumeration value="10"/>
+			<xs:enumeration value="10.1"/>
+			<xs:enumeration value="10.2"/>
+			<xs:enumeration value="D11"/>
+			<xs:enumeration value="11.1"/>
+			<xs:enumeration value="11.2"/>
+			<xs:enumeration value="Other"/>
+			<xs:enumeration value="GESOther"/>
+			<xs:enumeration value="NotReported"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="GESCriteria">
+		<xs:annotation>
+			<xs:documentation>
+			1.1=Criterion level: Species distribution	
+			1.2=Criterion level: Population size	
+			1.3=Criterion level: Population condition	
+			1.4=Criterion level: Habitat distribution	
+			1.5=Criterion level: Habitat extent	
+			1.6=Criterion level: Habitat condition	
+			1.7=Criterion level: Ecosystem structure
+			2.1=Criterion level: Abundance and state characterissation of non-indigenous species, in particular invasive species	
+			2.2=Criterion level: Environmental impact of invasive non-indigenous species	
+			3.1=Criterion level: Level of pressure of the fishing activity	
+			3.2=Criterion level: Reproductive capacity of the stock	
+			3.3=Criterion level: Population age and size distribution	
+			4.1=Criterion level: Productivity (production per unit biomass) of key species or trophic groups	
+			4.2=Criterion level: Proportion of selected species at the top of food webs	
+			4.3=Criterion level: Abundance/distributino of key trophic groups/species	
+			5.1=Criterion level: Nutrients levels	
+			5.2=Criterion level: Direct effects of nutrient enrichment	
+			5.3=Criterion level: Indirect effects of nutrient enrichment	
+			6.1=Criterion level: Physical damage, having regard to substrate characteristics	
+			6.2=Criterion level: Condition of benthic community	
+			7.1=Criterion level: Spatial characterisation of permanent alterations	
+			7.2=Criterion level: Impact of permanent hydrographical changes	
+			8.1=Criterion level: Concentration of contaminants	
+			8.2=Criterion level: Effects of contaminants	
+			9.1=Criterion level: Levels, number and frequency of contaminants	
+			10.1=Criterion level: Characteristics of litter in the marine and coastal environment	
+			10.2=Criterion level: Impacts of litter on marine life	
+			11.1=Criterion level: Distriubtion in time and place of loud, low and mid frequency impulsive sounds	
+			11.2=Criterion level: Continuous low frequency sound	
+			</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="1.1"/>
+			<xs:enumeration value="1.2"/>
+			<xs:enumeration value="1.3"/>
+			<xs:enumeration value="1.4"/>
+			<xs:enumeration value="1.5"/>
+			<xs:enumeration value="1.6"/>
+			<xs:enumeration value="1.7"/>
+			<xs:enumeration value="2.1"/>
+			<xs:enumeration value="2.2"/>
+			<xs:enumeration value="3.1"/>
+			<xs:enumeration value="3.2"/>
+			<xs:enumeration value="3.3"/>
+			<xs:enumeration value="4.1"/>
+			<xs:enumeration value="4.2"/>
+			<xs:enumeration value="4.3"/>
+			<xs:enumeration value="5.1"/>
+			<xs:enumeration value="5.2"/>
+			<xs:enumeration value="5.3"/>
+			<xs:enumeration value="6.1"/>
+			<xs:enumeration value="6.2"/>
+			<xs:enumeration value="7.1"/>
+			<xs:enumeration value="7.2"/>
+			<xs:enumeration value="8.1"/>
+			<xs:enumeration value="8.2"/>
+			<xs:enumeration value="9.1"/>
+			<xs:enumeration value="10.1"/>
+			<xs:enumeration value="10.2"/>
+			<xs:enumeration value="11.1"/>
+			<xs:enumeration value="11.2"/>
+			<xs:enumeration value="GESOther"/>
+			<xs:enumeration value="NotReported"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="GESIndicator">
+		<xs:annotation>
+			<xs:documentation>
+			1.1.1=Indicator level: Distributional range	
+			1.1.2=Indicator level: Distributional pattern whin range, where appropriate	
+			1.1.3=Indicator level: Area covered by the species (for sessile/benthic species)	
+			1.2.1=Indicator level: Population abundance and/or biomass, as appropriate	
+			1.3.1=Indicator level:  Population demographic characteristics (e.g. Body size or age class structure, sex ratio, fecundity rantes, survival/mortality rates)	
+			1.3.2=Indicator level: Population genetic structure, where appropriate	
+			1.4.1=Indicator level: Distributional range	
+			1.4.2=Indicator level: Distributional pattern	
+			1.5.1=Indicator level: Habitat area	
+			1.5.2=Indicator level: Habitat volume, where relevant	
+			1.6.1=Indicator level: Condition of the typeical species and communities	
+			1.6.2=Indicator level: Relative abundance and/or biomass, as appropriate	
+			1.6.3=Indicator level: Physical, hydrological and chemical conditions	
+			1.7.1=Indicator level: Composition and reltive proportions of ecosystem components (habitats and species)	
+			2.1.1=Indicator level: Trends in abundance, temporal occurence and spatial distribution in the wild of non-indigenous species….text  abbreviated!	
+			2.2.1=Indicator level: Ratio between invasive non-indigenous species and native species in some well studied taxonomic groups….text  abbreviated!
+			2.2.2= Impacts of non-indigenous invasive species at the level of species, habitats and ecosystems, where feasible	
+			3.1.1=Indicator level: Fishing mortality	
+			3.1.2=Indicator level: Ratio between catch and biomass index	
+			3.2.1=Indicator level: Spawning stock biomass (SSB)	
+			3.2.2=Indicator level: Biomass indices	
+			3.3.1=Indicator level: Proportion of fish larger than the mean size of first sexual maturation	
+			3.3.2=Indicator level: Mean maximum length across all species found in research vessel surveys	
+			3.3.3=Indicator level: 95% percentile of the fish length distribution observed in research vessel surveys	
+			3.3.4=Indicator level: Size at first sexual maturation, which may reflect the extent of undesirable genetic effects of exploitation	
+			4.1.1=Indicator level: Performance of key predator species using their production per unit biomass (productivity)	
+			4.2.1=Indicator level: Large fish (by weight)	
+			4.3.1=Indicator level:  Abundance trends of functionally important selected groups/species	
+			5.1.1=Indicator level: Nutrients concentration in the water column	
+			5.1.2=Indicator level: Nutrient ratios (silica, nitrogen and phosphorus), where appropriate	
+			5.2.1=Indicator level: Chlorophyll concentration in the water column	
+			5.2.2=Indicator level: Water transparency relted to increase in suspended algae, where relevant	
+			5.2.3=Indicator level: Abundance of opportunistic macroalgae	
+			5.2.4=Indicator level: Species shift in florisitc composition such as diatom to flagellate ratio, benthic to pelagic shifts, as well as bloom events of nuisance/toxic algal blooms caused by human activities	
+			5.3.1=Indicator level: Abundance of perennial seaweeds and seagrasses adversely impacted by decrease in water transparency	
+			5.3.2=Indicator level: Dissolved oxygen, i.e. Changes due to increased organic matter decomposition and size of the area concerned	
+			6.1.1=Indicator level: Type, abundance, biomass and areal extent of relevant biogenic substrate	
+			6.1.2=Indicator level: Extent of the seabed significantly affected by human activities for the different substrate types	
+			6.2.1=Indicator level: Presence of particularly sensitive and/or tolerant species	
+			6.2.2=Indicator level: Multi-metric indexes assessing benthic community condition and functionality, such as species diversity and richness, proportion of opportunistic to sensitive species	
+			6.2.3=Indicator level: Proportion of biomass or number of individuals in the macrobenthos above some specified length/size	
+			6.2.4=Indicator level: Parameters describing the characteristics (shape, slope and intercept) of the size spectrum of the benthic community	
+			7.1.1=Indicator level: Extent of area affected by permanent alterations	
+			7.2.1=Indicator level: Spatial extent of habitats affected by the permanent alteration	
+			7.2.2=Indicator level: Changes in habitats, in particular the functions provided (e.g. spawning, breeding and feeding areas and migration routes of fish, birds and mammals) due to altered hydrographical conditions	
+			8.1.1=Indicator level: Concentration of the contaminants mentioned above, measured in the relevant matrix (such as biota, sediment and water) in a way that ensures comparability with the assessments under Directive 2000/60/EC	
+			8.2.1=Indicator level: Levels of pollution effects on the ecosystem components concerned, having regard to the selected biological processes and taxonomic groups where a cause/effect relationshiop has been established and needs to be monitored	
+			8.2.2=Indicator level: Occurence, origin (where possible), extent of significant acute pollution events (e.g. Slicks from oil and oil products) and their impact on biota physically afected by this pollution	
+			9.1.1=Indicator level: Actual levels of contaminants that have been detected and number of contaminants which have exceeded maximum regulatory levels	
+			9.1.2=Indicator level: Frequency of regulatory levels being exceeded	
+			10.1.1=Indicator level: Trends in the amount of litter washed ashore and/or deposited on coastlines, including analysis of its composition, spatial distrubtion and, where possible, source	
+			10.1.2=Indicator level: Trends in the amount of litter in the water column (including floating at the surface) and deposited on the sea-floor, including analysis of its composition, spatial distribution and, where possible, source	
+			10.1.3=Indicator level: Trends in the amount, distribution and, where possible, composition of micro-particles (in particular micro-plastics)	
+			10.2.1=Indicator level: Trends in the amount and composition of litter ingested by marine animas (e.g. Stomach analysis)	
+			11.1.1=Indicator level: Proportion of days and their distribution within a calendar year over areas of a determined surface, as well as their spatial distribution, in which anthropogenic sound sources exceed levels that are likely….text  abbreviated!	
+			11.2.1=Indicator level: Trends in the ambient noise level within the 1/3 octave bands 63 and 125 Hz (centre frequency) measured by observation stations and/or with the use of models as appropriate	
+			</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="1.1.1"/>
+			<xs:enumeration value="1.1.2"/>
+			<xs:enumeration value="1.1.3"/>
+			<xs:enumeration value="1.2.1"/>
+			<xs:enumeration value="1.3.1"/>
+			<xs:enumeration value="1.3.2"/>
+			<xs:enumeration value="1.4.1"/>
+			<xs:enumeration value="1.4.2"/>
+			<xs:enumeration value="1.5.1"/>
+			<xs:enumeration value="1.5.2"/>
+			<xs:enumeration value="1.6.1"/>
+			<xs:enumeration value="1.6.2"/>
+			<xs:enumeration value="1.6.3"/>
+			<xs:enumeration value="1.7.1"/>
+			<xs:enumeration value="2.1.1"/>
+			<xs:enumeration value="2.2.1"/>
+			<xs:enumeration value="2.2.2"/>
+			<xs:enumeration value="3.1.1"/>
+			<xs:enumeration value="3.1.2"/>
+			<xs:enumeration value="3.2.1"/>
+			<xs:enumeration value="3.2.2"/>
+			<xs:enumeration value="3.3.1"/>
+			<xs:enumeration value="3.3.2"/>
+			<xs:enumeration value="3.3.3"/>
+			<xs:enumeration value="3.3.4"/>
+			<xs:enumeration value="4.1.1"/>
+			<xs:enumeration value="4.2.1"/>
+			<xs:enumeration value="4.3.1"/>
+			<xs:enumeration value="5.1.1"/>
+			<xs:enumeration value="5.1.2"/>
+			<xs:enumeration value="5.2.1"/>
+			<xs:enumeration value="5.2.2"/>
+			<xs:enumeration value="5.2.3"/>
+			<xs:enumeration value="5.2.4"/>
+			<xs:enumeration value="5.3.1"/>
+			<xs:enumeration value="5.3.2"/>
+			<xs:enumeration value="6.1.1"/>
+			<xs:enumeration value="6.1.2"/>
+			<xs:enumeration value="6.2.1"/>
+			<xs:enumeration value="6.2.2"/>
+			<xs:enumeration value="6.2.3"/>
+			<xs:enumeration value="6.2.4"/>
+			<xs:enumeration value="7.1.1"/>
+			<xs:enumeration value="7.1.2"/>
+			<xs:enumeration value="7.2.1"/>
+			<xs:enumeration value="7.2.2"/>
+			<xs:enumeration value="8.1.1"/>
+			<xs:enumeration value="8.2.1"/>
+			<xs:enumeration value="8.2.2"/>
+			<xs:enumeration value="9.1.1"/>
+			<xs:enumeration value="9.1.2"/>
+			<xs:enumeration value="10.1.1"/>
+			<xs:enumeration value="10.1.2"/>
+			<xs:enumeration value="10.1.3"/>
+			<xs:enumeration value="10.2.1"/>
+			<xs:enumeration value="11.1.1"/>
+			<xs:enumeration value="11.2.1"/>
+			<xs:enumeration value="GESOther"/>
+			<xs:enumeration value="NotReported"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="GESIndicatorLitter">
+		<xs:annotation>
+			<xs:documentation>GES indicators incl special indicators for litter</xs:documentation>
+		</xs:annotation>
+		<xs:union memberTypes="GESIndicator GESLitterIndicators"/>
+	</xs:simpleType>
+	<xs:simpleType name="DescriptorCriterionIndicator">
+		<xs:annotation>
+			<xs:documentation>Choose from enumeration list of descriptors, criterias or indicators</xs:documentation>
+		</xs:annotation>
+		<xs:union memberTypes="GESDescriptorCriteria GESIndicator"/>
+	</xs:simpleType>
+	<xs:simpleType name="CostType">
+		<xs:annotation>
+			<xs:documentation>
+			Mitigation=Mitigation cost	
+			Enhancement=Enhancement cost	
+			Transistion=Transistion cost	
+			Opportunity=Opportunity cost	
+			OtherCost
+			</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="MitigationCost"/>
+			<xs:enumeration value="EnhancementCost"/>
+			<xs:enumeration value="TransistionCost"/>
+			<xs:enumeration value="OpportunityCost"/>
+			<xs:enumeration value="OtherCost"/>
+			<xs:enumeration value="NotReported"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="TopicPhysicalMetadata">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="TopographyBathymetry"/>
+			<xs:enumeration value="SeaSurfaceTemperature"/>
+			<xs:enumeration value="SeaBottomTemperature"/>
+			<xs:enumeration value="IceCoverDuration"/>
+			<xs:enumeration value="IceCoverExtent"/>
+			<xs:enumeration value="CurrentVelocity"/>
+			<xs:enumeration value="Upwelling"/>
+			<xs:enumeration value="WaveExposure"/>
+			<xs:enumeration value="Mixing"/>
+			<xs:enumeration value="Transparency"/>
+			<xs:enumeration value="Salinity"/>
+			<xs:enumeration value="ResidenceTime"/>
+			<xs:enumeration value="Turbidity"/>
+			<xs:enumeration value="NotReported"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="IceCover">
+		<xs:annotation>
+			<xs:documentation>
+			None=No ice cover
+			1-90=1-90 days
+			91-150=91-150 days
+			150=more than 150
+			</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="None"/>
+			<xs:enumeration value="1-90"/>
+			<xs:enumeration value="91-150"/>
+			<xs:enumeration value="150"/>
+			<xs:enumeration value="NotReported"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="ImpactChemical">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="IncreasingLongpH"/>
+			<xs:enumeration value="IncreasingShortpH"/>
+			<xs:enumeration value="DecreasingLongpH"/>
+			<xs:enumeration value="DecreasingShortpH"/>
+			<xs:enumeration value="Other"/>
+			<xs:enumeration value="NotReported"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="ImpactHabitats">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="Distribution"/>
+			<xs:enumeration value="Extent"/>
+			<xs:enumeration value="Condition"/>
+			<xs:enumeration value="Other"/>
+			<xs:enumeration value="NotReported"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="ImpactEcosystems">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="Structure"/>
+			<xs:enumeration value="Productivity"/>
+			<xs:enumeration value="Proportion"/>
+			<xs:enumeration value="Abundance"/>
+			<xs:enumeration value="Other"/>
+			<xs:enumeration value="NotReported"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="ImpactSpecies">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="Distribution"/>
+			<xs:enumeration value="PopulationSize"/>
+			<xs:enumeration value="PopulationCondition"/>
+			<xs:enumeration value="Habitat"/>
+			<xs:enumeration value="Other"/>
+			<xs:enumeration value="NotReported"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="TopicTargetIndicator">
+		<xs:annotation>
+			<xs:documentation>Target or indicator with option to indicator a specific indicator</xs:documentation>
+		</xs:annotation>
+		<xs:union memberTypes="String100Type TopicTargetIndicatorSimple"/>
+	</xs:simpleType>
+	<xs:simpleType name="TopicTargetIndicatorSimple">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="EnvironmentalTarget"/>
+			<xs:enumeration value="AssociatedIndicator"/>
+			<xs:enumeration value="NotReported"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="ImpactFunctionalGroup">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="Condition"/>
+			<xs:enumeration value="Relative"/>
+			<xs:enumeration value="Other"/>
+			<xs:enumeration value="NotReported"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="ConfidenceAcid">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="Low"/>
+			<xs:enumeration value="Med"/>
+			<xs:enumeration value="High"/>
+			<xs:enumeration value="90%Cl"/>
+			<xs:enumeration value="NotReported"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="Categorical">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="lessthan1%"/>
+			<xs:enumeration value="1-5%"/>
+			<xs:enumeration value="5-25%"/>
+			<xs:enumeration value="25-50%"/>
+			<xs:enumeration value="50-75%"/>
+			<xs:enumeration value="75-100%"/>
+			<xs:enumeration value="Unknown_NotAssessed"/>
+			<xs:enumeration value="NotReported"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="Habitats">
+		<xs:annotation>
+			<xs:documentation>
+			LitRock		Seabed habitats: Littoral rock and biogenic reef
+LitSed		Seabed habitats: Littoral sediment
+ShallRock		Seabed habitats: Shallow sublittoral rock and biogenic reef
+ShallCoarseSed		Seabed habitats: Shallow sublittoral coarse sediment
+ShallSand		Seabed habitats: Shallow sublittoral sand
+ShallMud		Seabed habitats: Shallow sublittoral mud
+ShallMxdSed		Seabed habitats: Shallow sublittoral mixed sediment
+ShelfRock		Seabed habitats: Shelf sublittoral rock and biogenic reef
+ShelfCoarseSed		Seabed habitats: Shelf sublittoral coarse sediment
+ShelfSand		Seabed habitats: Shelf sublittoral sand
+ShelfMud		Seabed habitats: Shelf sublittoral mud
+ShelfMxdSed		Seabed habitats: Shelf sublittoral mixed sediment
+UBathRock		Seabed habitats: Upper bathyal rock and biogenic reef
+UBathSed		Seabed habitats: Upper bathyal sediment
+LBathRock		Seabed habitats: Lower bathyal rock and biogenic reef
+LBathSed		Seabed habitats: Lower bathyal sediment
+AbysRock		Seabed habitats: Abyssal rock and biogenic reef
+AbysSed		Seabed habitats: Abyssal sediment
+RedSalinity		Water column habitats: Reduced salinity water
+VarSalinity		Water column habitats: Variable salinity (estuarine) water
+MarineCoast		Water column habitats: Marine water: coastal
+MarineShelf		Water column habitats: Marine water: shelf
+MarineOceanic		Water column habitats: Marine water: oceanic
+IceHabitat		Ice habitats: Ice-associated habitats
+HabitatsOther		Other
+
+		</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="LitRock"/>
+			<xs:enumeration value="LitSed"/>
+			<xs:enumeration value="ShallRock"/>
+			<xs:enumeration value="ShallCoarseSed"/>
+			<xs:enumeration value="ShallSand"/>
+			<xs:enumeration value="ShallMud"/>
+			<xs:enumeration value="ShallMxdSed"/>
+			<xs:enumeration value="UBathRock"/>
+			<xs:enumeration value="LBathSed"/>
+			<xs:enumeration value="ShelfRock"/>
+			<xs:enumeration value="ShelfCoarseSed"/>
+			<xs:enumeration value="ShelfSand"/>
+			<xs:enumeration value="ShelfMud"/>
+			<xs:enumeration value="ShelfMxdSed"/>
+			<xs:enumeration value="UBathRock"/>
+			<xs:enumeration value="UBathSed"/>
+			<xs:enumeration value="LBathRock"/>
+			<xs:enumeration value="LBathSed"/>
+			<xs:enumeration value="AbysRock"/>
+			<xs:enumeration value="AbysSed"/>
+			<xs:enumeration value="RedSalinity"/>
+			<xs:enumeration value="VarSalinity"/>
+			<xs:enumeration value="MarineCoast"/>
+			<xs:enumeration value="MarineShelf"/>
+			<xs:enumeration value="MarineOceanic"/>
+			<xs:enumeration value="IceHabitat"/>
+			<xs:enumeration value="HabitatsOther"/>
+			<xs:enumeration value="NotReported"/>
+			<xs:enumeration value="NotRelevant"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="HabitatSpecial">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="AnnexIhabitat"/>
+			<xs:enumeration value="NotReported"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="ReportingFeature">
+		<xs:annotation>
+			<xs:documentation>Predominant habitat types and name for a special habitat type</xs:documentation>
+		</xs:annotation>
+		<xs:union memberTypes="String100Type HabitatSpecial Habitats AllHabitats"/>
+	</xs:simpleType>
+	<xs:simpleType name="GESHabFGPressuresChemPhysSpecies">
+		<xs:annotation>
+			<xs:documentation>Habitats pressures, physical/chemical features and functional groups merged</xs:documentation>
+		</xs:annotation>
+		<xs:union memberTypes="Pressures HabitatsAll FuncGroupAll PhysicalChemicalFeatures Species"/>
+	</xs:simpleType>
+	<xs:simpleType name="ImpactTypeChemical">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="ImpactAcidificationWater"/>
+			<xs:enumeration value="ImpactAcidificationSeabed"/>
+			<xs:enumeration value="NotReported"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="TopicStatusChemical">
+		<xs:annotation>
+			<xs:documentation>
+			Chemical1=Chemical, Acidification	
+			Chemical2=Chemical, AcidificationWater	
+			Chemical3=Chemical, AcidificationSeabed	
+			</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="Chemical1"/>
+			<xs:enumeration value="Chemical2"/>
+			<xs:enumeration value="Chemical3"/>
+			<xs:enumeration value="NotReported"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="TopicStatusHabitats">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="HabitatDistribution"/>
+			<xs:enumeration value="HabitatExtent"/>
+			<xs:enumeration value="HabitatCondition"/>
+			<xs:enumeration value="HabitatOverall"/>
+			<xs:enumeration value="NotReported"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="TopicStatusEco">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="EcosystemStructure"/>
+			<xs:enumeration value="EcosystemProductivity"/>
+			<xs:enumeration value="EcosystemProportion"/>
+			<xs:enumeration value="EcosystemAbundance"/>
+			<xs:enumeration value="EcosystemOther"/>
+			<xs:enumeration value="EcosystemOverall"/>
+			<xs:enumeration value="NotReported"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="TopicStatusSpecies">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="SpeciesDistribution"/>
+			<xs:enumeration value="SpeciesPopulation"/>
+			<xs:enumeration value="SpeciesCondition"/>
+			<xs:enumeration value="SpeciesOverall"/>
+			<xs:enumeration value="NotReported"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="TopicStatusOther">
+		<xs:annotation>
+			<xs:documentation>
+			Other1=Status - Feature or characteristic typical or specific to the region or sub-region distribution
+			Other2=Status - areas which by virtue of its characteristics, location or strategic importance merit a particular reference 
+			</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="OtherFeature"/>
+			<xs:enumeration value="OtherArea"/>
+			<xs:enumeration value="NotReported"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="TopicStatusFunctionalGroup">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="FuncGroupCondition"/>
+			<xs:enumeration value="FuncGroupAbundance"/>
+			<xs:enumeration value="FuncGroupOverall"/>
+			<xs:enumeration value="NotReported"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="TopicAssessPhysicalLoss">
+		<xs:annotation>
+			<xs:documentation>
+			PhysicalLoss6_1=Assessment - physical loss (6.1)
+			PhysicalLoss6_2=Assessment - impacts of physical loss on seabed habitats (6.2)
+		</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="PhysicalLoss6_1"/>
+			<xs:enumeration value="PhysicalLoss6_2"/>
+			<xs:enumeration value="NotReported"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="TopicAssessPhysicalDamage">
+		<xs:annotation>
+			<xs:documentation>
+			PhysicalDamage6_1=Assessment - physical damage (6.1)
+			PhysicalDamage6_2=Assessment - impacts of physical damage on seabed habitats (6.2)
+			</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="PhysicalDamage6_1"/>
+			<xs:enumeration value="PhysicalDamage6_2"/>
+			<xs:enumeration value="NotReported"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="TopicAssessNoise">
+		<xs:annotation>
+			<xs:documentation>
+			NoiseImpulsive11_1=Assessment - loud, low and mid frequency impulsive sounds (11.1)
+			NoiseContinuous11_2=Assessment - continuous low frequency sound (11.2)
+			NoiseFunctionalGroupD11=Assessment - impacts of underwater noise on functional groups (D11)
+			</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="NoiseImpulsive11_1"/>
+			<xs:enumeration value="NoiseContinuous11_2"/>
+			<xs:enumeration value="NoiseFunctionalGroupD11"/>
+			<xs:enumeration value="NotReported"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="TopicAssessLitter">
+		<xs:annotation>
+			<xs:documentation>
+			LitterShores10_1=Assessment - marine litter on shores (10.1)
+			LitterWaterColumnSurface10_1=Assessment - marine litter in water column and water surface (10.1)
+			LitterSeabed10_1=Assessment -  marine litter on subtidal seabed (10.1)
+			LitterWaterColumnHabitats10_2=Assessment - impacts of marine litter on water column habitats (10.2)
+			LitterSeabedHabitats10_2=Assesment - impacts of marine litter on seabed habitats (10.2)
+			LitterFunctioanlGroups10_2=Assessment - impacts of marine litter on functional groups (10.2)
+			</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="LitterShores10_1"/>
+			<xs:enumeration value="LitterWaterColumnSurface10_1"/>
+			<xs:enumeration value="LitterSeabed10_1"/>
+			<xs:enumeration value="LitterWaterColumnHabitats10_2"/>
+			<xs:enumeration value="LitterSeabedHabitats10_2"/>
+			<xs:enumeration value="LitterFunctionalGroups10_2"/>
+			<xs:enumeration value="NotReported"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="TopicAssessHydrology">
+		<xs:annotation>
+			<xs:documentation>
+			Hydrological7_1=Assessment - interference with hydrological processes and alteration of hydrographical conditions (7.1)
+			HydrologicalWaterColumnHabitats7_2=Assessment - impacts of interference with hydrological processes and alteration of hydrographical conditions on water column habitats (7.2)
+			HydrologicalSeabedHabitats7_2=Assessment - impacts of interference with hydrological processes and alteration of hydrographical conditions on seabed habitats (7.2)
+			HydrologicalFunctioanlGroups7_2=Assessment - impacts of interference with hydrological processes and alteration of hydrographical conditions on functional groups (7.2)
+			</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="Hydrological7_1"/>
+			<xs:enumeration value="HydrologicalWaterColumnHabitats7_2"/>
+			<xs:enumeration value="HydrologicalSeabedHabitats7_2"/>
+			<xs:enumeration value="HydrologicalFunctionalGroups7_2"/>
+			<xs:enumeration value="NotReported"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="TopicAssessContamination">
+		<xs:annotation>
+			<xs:documentation>
+			HazardousSubstances8_1=Assessment of presure of hazardous substances (8.1) (in matrix used for analysis)
+			HazardousSubstancesFunctioanlGroups8_1=Assessment of pressure of hazardous substances in functional groups (8.1)
+			HazardousSubstancesSeabedHabitats8_2=Assessment - impacts of hazardous substances on seabed habitats(8.2)
+			HazardousSubstancesFunctioanlGroups8_2Assessment - impacts of hazardous substances on functional groups(8.2)
+			HazardousSubstancesFishSeafood9_1=Assessment - impacts of hazardous substances on fish and seafood (9.1) 
+			</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="HazardousSubstances8_1"/>
+			<xs:enumeration value="HazardousSubstancesFunctionalGroups8_1"/>
+			<xs:enumeration value="HazardousSubstancesSeabedHabitats8_2"/>
+			<xs:enumeration value="HazardousSubstancesFunctionalGroups8_2"/>
+			<xs:enumeration value="HazardousSubstancesFishSeafood9_1"/>
+			<xs:enumeration value="NotReported"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="TopicAssessPollution">
+		<xs:annotation>
+			<xs:documentation>
+			PollutionEvents8_2_2=Assessment of pressure from acute pollution events (8.2.2)
+			PollutionEventsSeabedHabitats8_2_2=Assessment - impacts of acute pollution events on seabed habitats (8.2.2)
+			PollutionEventsFunctioanlGroups8_2_2=Assessment - impacts of acute pollution events on functional groups (8.2.2)
+			</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="PollutionEvents8_2_2"/>
+			<xs:enumeration value="PollutionEventsSeabedHabitats8_2_2"/>
+			<xs:enumeration value="PollutionEventsFunctionalGroups8_2_2"/>
+			<xs:enumeration value="NotReported"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="TopicAssessNutrient">
+		<xs:annotation>
+			<xs:documentation>
+			NutrientsNitrogen5_1=Assessment of nitrogen (5.1)
+			NutrientsPhosphorus5_1=Assessment of phosphorus (5.1)
+			NutrientsOrganicMatter5_1=Assessment of organic matter (5.1)
+			NutrientsOrganicEnrichment5_1=Assessment of nutrient and organic enrichment (overall) (5.1)
+			NutrientsEnrichmentWaterColumn5_2or5_3=Assessment -  impacts of nutrient enrichment on water column habitats (5.2, 5.3)
+			NutrientsEnrichmentSeabedHabitats5_2or5_3=Assessment -  impacts of nutrient enrichment on seabed habitats (5.2, 5.3)
+			</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="NutrientsNitrogen5_1"/>
+			<xs:enumeration value="NutrientsPhosphorus5_1"/>
+			<xs:enumeration value="NutrientsOrganicMatter5_1"/>
+			<xs:enumeration value="NutrientsOrganicEnrichment5_1"/>
+			<xs:enumeration value="NutrientsEnrichmentWaterColumn5_2or5_3"/>
+			<xs:enumeration value="NutrientsEnrichmentSeabedHabitats5_2or5_3"/>
+			<xs:enumeration value="NotReported"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="TopicAssessMicrobial">
+		<xs:annotation>
+			<xs:documentation>
+			MicrobialPathogensBathingWater=Assessment of microbial pathogens in Bathing Waters
+			MicrobialPathogensShellfishWater=Assessment of microbial pathogens in Shellfish Waters
+			MicrobialPathogensOther=Assessment of microbial pathogens (other assessment)
+			MicrobialPathogensImpactShellfishWater=Assessment - impact of microbial pathogens in  Shellfish Waters
+			</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="MicrobialPathogensBathingWater"/>
+			<xs:enumeration value="MicrobialPathogensShellfishWater"/>
+			<xs:enumeration value="MicrobialPathogensOther"/>
+			<xs:enumeration value="MicrobialPathogensImpactShellfishWater"/>
+			<xs:enumeration value="NotReported"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="TopicAssessNonIndigenous">
+		<xs:annotation>
+			<xs:documentation>
+			NIS2_1=Assessment of non-indigenous species pressure (2.1)
+			NISWaterColumnHabitat2_2=Assessment - impact of non-indigenous species on water column habitats (2.2)
+			NISSeabedHabitats2_2=Assessment - impact of non-indigenous species on seabed habitats (2.2)
+			NISFunctioanlGroups2_2=Assessment - impact of non-indigenous species on functional groups (2.2)
+			</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="NIS2_1"/>
+			<xs:enumeration value="NISWaterColumnHabitat2_2"/>
+			<xs:enumeration value="NISSeabedHabitats2_2"/>
+			<xs:enumeration value="NISFunctionalGroups2_2"/>
+			<xs:enumeration value="NotReported"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="TopicAssessExtraction">
+		<xs:annotation>
+			<xs:documentation>
+			Extraction3_1=Assessment of fishing pressure (3.1)
+			ExtractionSeabedHabitats=Assessment - impacts of fishing pressure on seabed habitats
+			ExtractionFunctioanlGroups=Assessment - impacts of fishing pressure on functional groups
+			ExtractionCommerciallyExpFish3_2or3_3=Assessment - impacts of fishing pressure on commercially exploited fish stocks (3.2, 3.3)
+			ExtractionCommerciallyExpShellfish3_2or3_3=Assessment - impacts of fishing pressure on commercially exploited shellfish stocks (3.2, 3.3)
+			Extraction_ExtractionPressure=Assessment of species extraction pressure
+			ExtractionImpactsCommerciallyExpSpecies=Assessment - impacts of species extraction pressure on commercially exploited species
+			ExtractionImpactsSeabedHabitats=Assessment - impacts of species extraction pressure on seabed habitats
+			ExtractionImpactsFunctioanlGroups=Assessment - impacts of species extraction pressure on functional groups
+			</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="Extraction3_1"/>
+			<xs:enumeration value="ExtractionSeabedHabitats"/>
+			<xs:enumeration value="ExtractionFunctionalGroups"/>
+			<xs:enumeration value="ExtractionCommerciallyExpFish3_2or3_3"/>
+			<xs:enumeration value="ExtractionCommerciallyExpShellfish3_2or3_3"/>
+			<xs:enumeration value="Extraction_ExtractionPressure"/>
+			<xs:enumeration value="ExtractionImpactsCommerciallyExpSpecies"/>
+			<xs:enumeration value="ExtractionImpactsSeabedHabitats"/>
+			<xs:enumeration value="ExtractionImpactsFunctionalGroups"/>
+			<xs:enumeration value="NotReported"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="Status">
+		<xs:annotation>
+			<xs:documentation>
+			Good=Good (GES)	
+			OtherStatus=Other status classes (specify)	
+			Descriptive=Description of status	
+			NotAssessed=Not assessed (give reasons, e.g. Insufficient data, lack of established methods)	
+			NotGood=Not Good (GES)	
+			</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="Good"/>
+			<xs:enumeration value="OtherStatus"/>
+			<xs:enumeration value="Descriptive"/>
+			<xs:enumeration value="NotAssessed"/>
+			<xs:enumeration value="NotGood"/>
+			<xs:enumeration value="NotReported"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="TrendStatus">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="Declining"/>
+			<xs:enumeration value="Improving"/>
+			<xs:enumeration value="Stable"/>
+			<xs:enumeration value="Unknown_NotAssessed"/>
+			<xs:enumeration value="NotReported"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="TopicMetadataHabitat">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="AnalysisAll"/>
+			<xs:enumeration value="AnalysisCharactTrend"/>
+			<xs:enumeration value="AnalysisPressureImpact"/>
+			<xs:enumeration value="AnalysisActivityfromPressure"/>
+			<xs:enumeration value="AnalysisActivityFromPressure"/>
+			<xs:enumeration value="Assessment"/>
+			<xs:enumeration value="NotReported"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="HabitatClassification">
+		<xs:annotation>
+			<xs:documentation>
+			MSFD=MSFD List of predominant habitats (reference list)	
+			Habitat=Habitats Directive Annex I habitat	
+			EUNIS=EUNIS habitat	
+			Other=Other (specify)	
+			</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="MSFD"/>
+			<xs:enumeration value="Habitat"/>
+			<xs:enumeration value="EUNIS"/>
+			<xs:enumeration value="Other"/>
+			<xs:enumeration value="NotReported"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="Species">
+		<xs:annotation>
+			<xs:documentation>
+	BirdsAll	Species group: Birds
+MammalsAll	Species group: Mammals
+ReptilesAll	Species group: Reptiles
+FishAll	Species group: Fish
+CephalopodsAll	Species group: Cephalopods
+BirdsIntertidalBenthic	Functional group: Intertidal benthic-feeding birds
+BirdsInshoreSurface	Functional group: Inshore surface-feeding birds
+BirdsInshorePelagic	Functional group: Inshore pelagic-feeding birds
+BirdsInshoreBenthic	Functional group: Inshorer benthic-feeding birds
+BirdsInshoreHerbiv	Functional group: Inshore herbivorous-feeding birds
+BirdsOffshoreSurface	Functional group: Offshore surface-feeding birds
+BirdsOffshorePelagic	Functional group: Offshore pelagic-feeding birds
+BirdsIce	Functional group: Ice-associated birds
+MammalsToothedWhales	Functional group: Toothed whales
+MammalsBaleenWhales	Functional group: Baleen whales
+MammalsSeals	Functional group: Seals
+MammalsIce	Functional group: Ice-associated mammals
+ReptilesTurtles	Functional group: Turtles
+FishDiadromous	Functional group: Diadromous fish
+FishCoastal	Functional group: Coastal fish
+FishPelagic	Functional group: Pelagic fish
+FishPelagicElasmobranchs	Functional group: Pelagic elasmobranchs
+FishDemersal	Functional group: Demersal fish
+FishDemersalElasmobranchs	Functional group: Demersal elasmobranchs
+FishDeep_sea	Functional group: Deep-sea fish
+FishDeep_seaElasmobranchs	Functional group: Deep-sea elasmobranchs
+FishIce	Functional group: Ice-associated fish
+CephalopodsCoastShelf	Functional group: Coastal/shelf pelagic cephalopods
+CephalopodsDeep_sea	Functional group: Deep-sea pelagic cephalopods
+FunctionalGroupOther	Other
+AnnexII_IV_V_Species
+WildBirdSpecies
+			</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="BirdsAll"/>
+			<xs:enumeration value="MammalsAll"/>
+			<xs:enumeration value="ReptilesAll"/>
+			<xs:enumeration value="FishAll"/>
+			<xs:enumeration value="CephalopodsAll"/>
+			<xs:enumeration value="BirdsIntertidalBenthic"/>
+			<xs:enumeration value="BirdsInshoreSurface"/>
+			<xs:enumeration value="BirdsInshorePelagic"/>
+			<xs:enumeration value="BirdsInshoreBenthic"/>
+			<xs:enumeration value="BirdsInshoreHerbiv"/>
+			<xs:enumeration value="BirdsOffshoreSurface"/>
+			<xs:enumeration value="BirdsOffshorePelagic"/>
+			<xs:enumeration value="BirdsIce"/>
+			<xs:enumeration value="MammalsToothedWhales"/>
+			<xs:enumeration value="MammalsBaleenWhales"/>
+			<xs:enumeration value="MammalsSeals"/>
+			<xs:enumeration value="MammalsIce"/>
+			<xs:enumeration value="ReptilesTurtles"/>
+			<xs:enumeration value="FishDiadromous"/>
+			<xs:enumeration value="FishCoastal"/>
+			<xs:enumeration value="FishPelagic"/>
+			<xs:enumeration value="FishPelagicElasmobranchs"/>
+			<xs:enumeration value="FishDemersal"/>
+			<xs:enumeration value="FishDemersalElasmobranchs"/>
+			<xs:enumeration value="FishDeep_sea"/>
+			<xs:enumeration value="FishDeep_seaElasmobranchs"/>
+			<xs:enumeration value="FishIce"/>
+			<xs:enumeration value="CephalopodsCoastShelf"/>
+			<xs:enumeration value="CephalopodsDeep_sea"/>
+			<xs:enumeration value="FunctionalGroupOther"/>
+			<xs:enumeration value="AnnexII_IV_V_Species"/>
+			<xs:enumeration value="WildBirdSpecies"/>
+			<xs:enumeration value="NotReported"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="FunctionalGroup">
+		<xs:annotation>
+			<xs:documentation>
+BirdsIntertidalBenthic	Functional group: Intertidal benthic-feeding birds
+BirdsInshoreSurface	Functional group: Inshore surface-feeding birds
+BirdsInshorePelagic	Functional group: Inshore pelagic-feeding birds
+BirdsInshoreBenthic	Functional group: Inshorer benthic-feeding birds
+BirdsInshoreHerbiv	Functional group: Inshore herbivorous-feeding birds
+BirdsOffshoreSurface	Functional group: Offshore surface-feeding birds
+BirdsOffshorePelagic	Functional group: Offshore pelagic-feeding birds
+BirdsIce	Functional group: Ice-associated birds
+MammalsToothedWhales	Functional group: Toothed whales
+MammalsBaleenWhales	Functional group: Baleen whales
+MammalsSeals	Functional group: Seals
+MammalsIce	Functional group: Ice-associated mammals
+ReptilesTurtles	Functional group: Turtles
+FishDiadromous	Functional group: Diadromous fish
+FishCoastal	Functional group: Coastal fish
+FishPelagic	Functional group: Pelagic fish
+FishPelagicElasmobranchs	Functional group: Pelagic elasmobranchs
+FishDemersal	Functional group: Demersal fish
+FishDemersalElasmobranchs	Functional group: Demersal elasmobranchs
+FishDeep_sea	Functional group: Deep-sea fish
+FishDeep_seaElasmobranchs	Functional group: Deep-sea elasmobranchs
+FishIce	Functional group: Ice-associated fish
+CephalopodsCoastShelf	Functional group: Coastal/shelf pelagic cephalopods
+CephalopodsDeep_sea	Functional group: Deep-sea pelagic cephalopods
+FunctionalGroupOther	Other
+AnnexII_IV_V_Species
+WildBirdSpecies
+			</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="BirdsIntertidalBenthic"/>
+			<xs:enumeration value="BirdsInshoreSurface"/>
+			<xs:enumeration value="BirdsInshorePelagic"/>
+			<xs:enumeration value="BirdsInshoreBenthic"/>
+			<xs:enumeration value="BirdsInshoreHerbiv"/>
+			<xs:enumeration value="BirdsOffshoreSurface"/>
+			<xs:enumeration value="BirdsOffshorePelagic"/>
+			<xs:enumeration value="BirdsIce"/>
+			<xs:enumeration value="MammalsToothedWhales"/>
+			<xs:enumeration value="MammalsBaleenWhales"/>
+			<xs:enumeration value="MammalsSeals"/>
+			<xs:enumeration value="MammalsIce"/>
+			<xs:enumeration value="ReptilesTurtles"/>
+			<xs:enumeration value="FishDiadromous"/>
+			<xs:enumeration value="FishCoastal"/>
+			<xs:enumeration value="FishPelagic"/>
+			<xs:enumeration value="FishPelagicElasmobranchs"/>
+			<xs:enumeration value="FishDemersal"/>
+			<xs:enumeration value="FishDemersalElasmobranchs"/>
+			<xs:enumeration value="FishDeep_sea"/>
+			<xs:enumeration value="FishDeep_seaElasmobranchs"/>
+			<xs:enumeration value="FishIce"/>
+			<xs:enumeration value="CephalopodsCoastShelf"/>
+			<xs:enumeration value="CephalopodsDeep_sea"/>
+			<xs:enumeration value="FunctionalGroupOther"/>
+			<xs:enumeration value="AnnexII_IV_V_Species"/>
+			<xs:enumeration value="WildBirdSpecies"/>
+			<xs:enumeration value="NotReported"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="HabitatsSpecies">
+		<xs:annotation>
+			<xs:documentation>Habitats and Species merged into one list</xs:documentation>
+		</xs:annotation>
+		<xs:union memberTypes="Habitats Species"/>
+	</xs:simpleType>
+	<xs:simpleType name="HabitatsFuncGroup">
+		<xs:annotation>
+			<xs:documentation>Habitats and Functional Groups merged into one list</xs:documentation>
+		</xs:annotation>
+		<xs:union memberTypes="Habitats FunctionalGroup"/>
+	</xs:simpleType>
+	<xs:simpleType name="HabitatsFuncGroupAll">
+		<xs:annotation>
+			<xs:documentation>HabitatsAll and Functional Groups merged into one list</xs:documentation>
+		</xs:annotation>
+		<xs:union memberTypes="Habitats FuncGroupAll"/>
+	</xs:simpleType>
+	<xs:simpleType name="HabitatsSpeciesAll">
+		<xs:annotation>
+			<xs:documentation>HabitatsAll and Functional Groups, species merged into one list</xs:documentation>
+		</xs:annotation>
+		<xs:union memberTypes="HabitatsAll Species AllFunctional"/>
+	</xs:simpleType>
+	<xs:simpleType name="HabitatsAll">
+		<xs:annotation>
+			<xs:documentation>Habitats and AllHabitats merged into one list</xs:documentation>
+		</xs:annotation>
+		<xs:union memberTypes="Habitats AllHabitats"/>
+	</xs:simpleType>
+	<xs:simpleType name="FuncGroupAll">
+		<xs:annotation>
+			<xs:documentation>Functional Groups and FuncGroupAll merged into one list</xs:documentation>
+		</xs:annotation>
+		<xs:union memberTypes="FunctionalGroup AllFunctional"/>
+	</xs:simpleType>
+	<xs:simpleType name="InLine">
+		<xs:annotation>
+			<xs:documentation>
+			InLine=In line with natural physiographic, geographic and climatic conditions
+			Altered=altered from these conditions
+			Unknown or NotAssessed		
+			</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="InLine"/>
+			<xs:enumeration value="Altered"/>
+			<xs:enumeration value="Unknown_NotAssessed"/>
+			<xs:enumeration value="NotReported"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="AllSpecies">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="AllSpecies"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="AllHabitats">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="SeabedHabitatsAll"/>
+			<xs:enumeration value="WaterColumnHabitatsAll"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="AllFunctional">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="AllFunctional"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="AllFishing">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="AllFishing"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="ReportingFeatureSpecies">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="AnnexII_IV_Vspecies"/>
+			<xs:enumeration value="WildBirdSpecies"/>
+			<xs:enumeration value="NotReported"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="SpeciesReportingFeature">
+		<xs:annotation>
+			<xs:documentation>Choose from enumeration list of Directives or type name</xs:documentation>
+		</xs:annotation>
+		<xs:union memberTypes="ReportingFeatureSpecies String100Type"/>
+	</xs:simpleType>
+	<xs:simpleType name="SourceClassificationSpecies">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="HabitatsDirective"/>
+			<xs:enumeration value="BirdsDirective"/>
+			<xs:enumeration value="NotReported"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="SpeciesAll">
+		<xs:annotation>
+			<xs:documentation>Choose from enumeration list of species or All</xs:documentation>
+		</xs:annotation>
+		<xs:union memberTypes="Species AllSpecies String100Type"/>
+	</xs:simpleType>
+	<xs:simpleType name="HabitatType">
+		<xs:annotation>
+			<xs:documentation>Choose from enumeration list of Habitats or all habitats</xs:documentation>
+		</xs:annotation>
+		<xs:union memberTypes="Habitats AllHabitats"/>
+	</xs:simpleType>
+	<xs:simpleType name="FunctionalGroupName">
+		<xs:annotation>
+			<xs:documentation>Choose from enumeration list of Functional Groups or all FunctionalGroups</xs:documentation>
+		</xs:annotation>
+		<xs:union memberTypes="FunctionalGroup AllFunctional"/>
+	</xs:simpleType>
+	<xs:simpleType name="PhysicalChemicalFeatures">
+		<xs:annotation>
+			<xs:documentation>
+			TopographyBathymetry=Physical/chemical features: Topography/bathymetry	
+			SeaSurfaceTemperature=Physical/chemical features: Sea temperature (surface)	
+			SeaBottomTemperature=Physical/chemical features: Sea temperature (bottom)	
+			IceCover=Physical/chemical features: Ice cover	
+			Salinity=Physical/chemical features: Salinity	
+			CurrentVelocity=Physical/chemical features: Current velocity	
+			WaveExposure=Physical/chemical features: Wave exposure	
+			Upwelling=Physical/chemical features: Upwelling	
+			Mixing=Physical/chemical features: Mixing characteristics	
+			Turbidity=Physical/chemical features: Turbidity	
+			Transparency=Physical/chemical features: Transparency	
+			ResidenceTime=Physical/chemical features: Residence time	
+			NutrientLevels=Physical/chemical features: Nutrient levels	
+			OxygenLevels=Physical/chemical features: Oxygen levels	
+			pH=Physical/chemical features: pH	
+			</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="TopographyBathymetry"/>
+			<xs:enumeration value="SeaSurfaceTemperature"/>
+			<xs:enumeration value="SeaBottomTemperature"/>
+			<xs:enumeration value="IceCover"/>
+			<xs:enumeration value="Salinity"/>
+			<xs:enumeration value="CurrentVelocity"/>
+			<xs:enumeration value="WaveExposure"/>
+			<xs:enumeration value="Upwelling"/>
+			<xs:enumeration value="Mixing"/>
+			<xs:enumeration value="Turbidity"/>
+			<xs:enumeration value="Transparency"/>
+			<xs:enumeration value="ResidenceTime"/>
+			<xs:enumeration value="NutrientLevels"/>
+			<xs:enumeration value="OxygenLevels"/>
+			<xs:enumeration value="pH"/>
+			<xs:enumeration value="PhysicalChemicalOther"/>
+			<xs:enumeration value="NotRelevant"/>
+			<xs:enumeration value="NotReported"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="HabitatsSpeciesPhysicalChemicalFeatures">
+		<xs:annotation>
+			<xs:documentation>Habitats, Species and PhysicalChemicalFeatures merged into one list</xs:documentation>
+		</xs:annotation>
+		<xs:union memberTypes="Habitats Species PhysicalChemicalFeatures"/>
+	</xs:simpleType>
+	<xs:simpleType name="ImpactTypePILitter">
+		<xs:annotation>
+			<xs:documentation>
+			LitterImpact1=Physical, chemical and biological impacts of marine litter on marine life (10.2) - water column and associated communities(within assessment area) (10.2)
+			LitterImpact2=Physical, chemical and biological impacts of marine litter on marine life (10.2) - seabed (incl condition of benthic community) (within assessment area) (10.2)
+			</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="LitterImpact1"/>
+			<xs:enumeration value="LitterImpact2"/>
+			<xs:enumeration value="NotReported"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="ImpactTypePIHydrology">
+		<xs:annotation>
+			<xs:documentation>
+			HydrologyImpact1=Physical, chemical and biological impacts of interference with hydrological processes and alteration of hydrographical conditions on water column and associated communities
+			HydrologyImpact2=Physical, chemical and biological impacts of interference with hydrological processes and alteration of hydrographical conditions on seabed (incl condition of benthic community)
+			</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="HydrologyImpact1"/>
+			<xs:enumeration value="HydrologyImpact2"/>
+			<xs:enumeration value="NotReported"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="ImpactTypePIContaminants">
+		<xs:annotation>
+			<xs:documentation>
+			ContaminantsImpact1=Impacts of contaminants on seabed habitats/biota (within assessment area) (8.2)
+			ContaminantsImpact2=Physical, chemical and biological impacts of contaminants on functional groups - (within assessment area) (8.2)
+			</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="ContaminantsImpact1"/>
+			<xs:enumeration value="ContaminantsImpact2"/>
+			<xs:enumeration value="NotReported"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="ImpactTypePIPollutants">
+		<xs:annotation>
+			<xs:documentation>
+			PollutantsImpact1=Physical, chemical and biological impacts of contaminants on seabed habitats (within assessment area) (8.2.2)
+			PollutantsImpact2=Physical, chemical and biological impacts of contaminants on functional groups (within assessment area) (8.2.2)
+			</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="PollutantsImpact1"/>
+			<xs:enumeration value="PollutantsImpact2"/>
+			<xs:enumeration value="NotReported"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="ImpactTypePINutrient">
+		<xs:annotation>
+			<xs:documentation>
+			NutrientImpact1=Physical, chemical and biological impacts (Direct effects) of the pressure on water column / plankton  (within assessment area)
+			NutrientImpact2=Physical, chemical and biological impacts (Direct effects) of the pressure on seabed (incl condition of benthic community) (within assessment area)
+			</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="NutrientImpact1"/>
+			<xs:enumeration value="NutrientImpact2"/>
+			<xs:enumeration value="NotReported"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="ImpactTypePINonIndigenous">
+		<xs:annotation>
+			<xs:documentation>
+			NonIndigenousImpact1=Physical, chemical and biological impacts of non-indigenous species on seabed habitats (within assessment area) (2.2)
+			NonIndigenousImpact2=Physical, chemical and biological impacts of non-indigenous species on water column habitats (within assessment area) (2.2)
+			</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="NonIndigenousImpact1"/>
+			<xs:enumeration value="NonIndigenousImpact2"/>
+			<xs:enumeration value="NotReported"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="ImpactTypePIBiologicalFishing">
+		<xs:annotation>
+			<xs:documentation>
+			FishingImpact1=Biological impacts of the pressure on the seabed habitats and associated benthic communities
+			FishingImpact2=Biological impacts of the pressure on functional groups
+			</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="FishingImpact1"/>
+			<xs:enumeration value="FishingImpact2"/>
+			<xs:enumeration value="NotReported"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="ImpactTypePIBiologicalFishingCommercial">
+		<xs:annotation>
+			<xs:documentation>
+			FishingImpact3=Biological impacts of the pressure on commercially exploited fish  stocks (3.1, 3.2)
+			FishingImpact4=Biological impacts of the pressure on commercially exploited shellfish stocks (3.1, 3.2)
+			</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="FishingImpact3"/>
+			<xs:enumeration value="FishingImpact4"/>
+			<xs:enumeration value="NotReported"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="ImpactTypePIBiologicalOther">
+		<xs:annotation>
+			<xs:documentation>
+			OtherImpact1=Biological impacts of the pressure on target species, where applicable
+			OtherImpact2=Biological impacts of the pressure on non-target species, where applicable
+			</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="OtherImpact1"/>
+			<xs:enumeration value="OtherImpact2"/>
+			<xs:enumeration value="NotReported"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="ContaminantsGroup">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="HazardousSubstancesSynthetic"/>
+			<xs:enumeration value="HazardousSubstancesNonSynthetic"/>
+			<xs:enumeration value="HazardousSubstancesRadioNuclides"/>
+			<xs:enumeration value="NotReported"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="ExtractionSpeciesType">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="ExtractionShellfish"/>
+			<xs:enumeration value="ExtractionMaerl"/>
+			<xs:enumeration value="ExtractionSeaweed"/>
+			<xs:enumeration value="ExtractionOther"/>
+			<xs:enumeration value="NotReported"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="SpeciesTypeNonIndi">
+		<xs:annotation>
+			<xs:documentation>
+			NonIndigenousSpecies=non-indigenous species	
+			GeneticallyDistinct=genetically distinct form of native species	
+			</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="NonIndigenousSpecies"/>
+			<xs:enumeration value="GeneticallyDistinct"/>
+			<xs:enumeration value="NotReported"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="DateTypeYearType">
+		<xs:annotation>
+			<xs:documentation>Date type yyyy-mm-dd, yyyy-mm and yyyy allowed</xs:documentation>
+		</xs:annotation>
+		<xs:union memberTypes="xs:date xs:gYear xs:gYearMonth"/>
+	</xs:simpleType>
+	<xs:simpleType name="FishingCategories">
+		<xs:annotation>
+			<xs:documentation>
+			InshoreCommercial=Inshore commercial fishing (may need to define for consistency, e.g. less than 12m vessels, 0-12nm zone)
+			PelagicFishing=Pelagic fishing (beyond inshore, not deep sea)
+			DemersalBenthicTowed=Demersal and benthic towed/mobile fishing gears (beyond inshore, not deep sea)
+			DemersalBenthicStatic=Demersal and benthic static fishing gears (beyond inshore, not deep sea)
+			DeepSeaFishing=Deep sea fishing (may need to define for consistency, e.g. more than 400m depth)
+			RecreationalFishing=Recreational fishing
+			Other=Other (specify)
+			AllFishing=All fishing categories
+			</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="InshoreCommercial"/>
+			<xs:enumeration value="PelagicFishing"/>
+			<xs:enumeration value="DemersalBenthicTowed"/>
+			<xs:enumeration value="DemersalBenthicStatic"/>
+			<xs:enumeration value="DeepSeaFishing"/>
+			<xs:enumeration value="RecreationalFishing"/>
+			<xs:enumeration value="Other"/>
+			<xs:enumeration value="AllFishing"/>
+			<xs:enumeration value="NotReported"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="FishingExtraction">
+		<xs:annotation>
+			<xs:documentation>
+
+			</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="Seaweed"/>
+			<xs:enumeration value="Maerl"/>
+			<xs:enumeration value="Other"/>
+			<xs:enumeration value="NotReported"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="Justification">
+		<xs:annotation>
+			<xs:documentation>
+			NotRelevant=Not Relevant
+			Relevant=Relevant but not addressed
+			</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="NotRelevant"/>
+			<xs:enumeration value="Relevant"/>
+			<xs:enumeration value="NotReported"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="TITopic">
+		<xs:annotation>
+			<xs:documentation>
+			AdequateCoverage=Adequate coverage of elements characterising marine waters (Annex 4-1)
+			Consistency=Consistency of the set of targets, absence of conflicts between them (Annex 4-4)
+			Resources=Resources needed (Annex 4-5)
+			SocialEconomic=Social and economic considerations (Annex 4-9)
+			AdequacyMSwater=Adequacy of targets for achieving GES in MS waters (Annex 4-10)
+			AdequacyMarineEnvironment=Adequacy of targets for achieving GES in marine environment (Annex 4-12)
+			</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="AdequateCoverage"/>
+			<xs:enumeration value="Consistency"/>
+			<xs:enumeration value="Resources"/>
+			<xs:enumeration value="SocialEconomic"/>
+			<xs:enumeration value="AdequacyMSwater"/>
+			<xs:enumeration value="AdequacyMarineEnvironment"/>
+			<xs:enumeration value="NotReported"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="AreaTypeGB">
+		<xs:annotation>
+			<xs:documentation>
+MS_PartRegionSubregion
+MS_MarineWatersPartRegionSubregion
+RG_Region	Region
+SR_Subregion	Subregion
+SD_Subdivision	Subdivision
+AA_AssessmentArea	Assessment area (other)
+			</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="MS_PartRegionSubregion"/>
+			<xs:enumeration value="MS_MarineWatersPartRegionSubregion"/>
+			<xs:enumeration value="RG_Region"/>
+			<xs:enumeration value="SR_Subregion"/>
+			<xs:enumeration value="SD_Subdivision"/>
+			<xs:enumeration value="AA_AssessmentArea"/>
+			<xs:enumeration value="NotReported"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="YNPU">
+		<xs:annotation>
+			<xs:documentation>
+			Y=Yes
+			N=No
+			P=Possibly
+			U=Unknown
+			Pa=Partly
+			</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="Y"/>
+			<xs:enumeration value="N"/>
+			<xs:enumeration value="P"/>
+			<xs:enumeration value="U"/>
+			<xs:enumeration value="Pa"/>
+			<xs:enumeration value="NotReported"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="YN">
+		<xs:annotation>
+			<xs:documentation>
+			Y=Yes
+			N=No
+			</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="Y"/>
+			<xs:enumeration value="N"/>
+			<xs:enumeration value="NotReported"/>
+			<xs:enumeration value="NotRelevant"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="InterimGES">
+		<xs:annotation>
+			<xs:documentation>
+			Interim=Interim target	
+			GES=GES target	
+			</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="Interim"/>
+			<xs:enumeration value="GES"/>
+			<xs:enumeration value="NotReported"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="TargetIndicatorType">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="State"/>
+			<xs:enumeration value="Impact"/>
+			<xs:enumeration value="Pressure"/>
+			<xs:enumeration value="Operational"/>
+			<xs:enumeration value="Other"/>
+			<xs:enumeration value="NotReported"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="HabitatsSpeciesPhysicalChemicalFeaturesPressures">
+		<xs:annotation>
+			<xs:documentation>Habitats, Pressures, Species/functionalGroups and PhysicalChemicalFeatures merged into one list</xs:documentation>
+		</xs:annotation>
+		<xs:union memberTypes="Habitats Pressures Species PhysicalChemicalFeatures"/>
+	</xs:simpleType>
+	<xs:complexType name="Assessment">
+		<xs:sequence>
+			<xs:element name="Status" type="Status"/>
+			<xs:element name="StatusDescription" type="String2000Type" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>CONDITIONAL</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="StatusTrend" type="TrendStatus" minOccurs="0"/>
+			<xs:element name="StatusConfidence" type="Confidence" minOccurs="0"/>
+			<xs:element name="Criterias" minOccurs="0">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="Criteria" maxOccurs="unbounded">
+							<xs:complexType>
+								<xs:sequence>
+									<xs:element name="CriteriaType" type="GESCriteria"/>
+									<xs:element name="CriteriaOther" type="String250Type" minOccurs="0">
+										<xs:annotation>
+											<xs:documentation>CONDITIONAL</xs:documentation>
+										</xs:annotation>
+									</xs:element>
+								</xs:sequence>
+							</xs:complexType>
+						</xs:element>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="Indicators" minOccurs="0" maxOccurs="unbounded">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="Indicator" type="GESIndicatorLitter"/>
+						<xs:element name="IndicatorOther" type="String250Type" minOccurs="0">
+							<xs:annotation>
+								<xs:documentation>CONDITIONAL</xs:documentation>
+							</xs:annotation>
+						</xs:element>
+						<xs:element name="ThresholdValue" type="String250Type" minOccurs="0"/>
+						<xs:element name="ThresholdValueUnit" type="String100Type" minOccurs="0"/>
+						<xs:element name="ThresholdProportion" type="NumberPercentageType" minOccurs="0"/>
+						<xs:element name="Baseline" type="String5000Type" minOccurs="0"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="LimitationofData" type="String5000Type" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:simpleType name="Article">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="Art8"/>
+			<xs:enumeration value="Art9"/>
+			<xs:enumeration value="Art10"/>
+			<xs:enumeration value="NotReported"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="Coherence">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="Full"/>
+			<xs:enumeration value="Partial"/>
+			<xs:enumeration value="Incomplete"/>
+			<xs:enumeration value="NotReported"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="GESLitterIndicators">
+		<xs:annotation>
+			<xs:documentation>
+			LitterSpecific1=Litter: Amount of litter on the coastline per km	
+			LitterSpecific2=Litter: Percentage of floating macroscopic litter observed on water surface	
+			LitterSpecific3=Litter: Amount of litter captured from surface net trawls	
+			</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="LitterSpecific1"/>
+			<xs:enumeration value="LitterSpecific2"/>
+			<xs:enumeration value="LitterSpecific3"/>
+			<xs:enumeration value="Other"/>
+			<xs:enumeration value="NotReported"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="CharacteristicsIceCover">
+		<xs:sequence>
+			<xs:element name="Description" type="String5000Type" minOccurs="0"/>
+			<xs:element name="Summary1" type="IceCover" minOccurs="0"/>
+			<xs:element name="Sum1Confidence" type="Confidence" minOccurs="0"/>
+			<xs:element name="TrendsRecent" type="TrendRecent" minOccurs="0"/>
+			<xs:element name="RecentTimeStart" type="YearType" minOccurs="0"/>
+			<xs:element name="RecentTimeEnd" type="YearType" minOccurs="0"/>
+			<xs:element name="TrendsFuture" type="TrendFuture" minOccurs="0"/>
+			<xs:element name="FutureTimeStart" type="YearType" minOccurs="0"/>
+			<xs:element name="FutureTimeEnd" type="YearType" minOccurs="0"/>
+			<xs:element name="Limitations" type="String5000Type" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="CharacteristicsHabitat">
+		<xs:sequence>
+			<xs:element name="Description" type="String5000Type" minOccurs="0"/>
+			<xs:element name="Summary1" type="InLine"/>
+			<xs:element name="Sum1Confidence" type="Confidence"/>
+			<xs:element name="Summary2" type="Categorical"/>
+			<xs:element name="Sum2Confidence" type="Confidence"/>
+			<xs:element name="TrendsRecent" type="TrendRecent" minOccurs="0"/>
+			<xs:element name="RecentTimeStart" type="YearType" minOccurs="0"/>
+			<xs:element name="RecentTimeEnd" type="YearType" minOccurs="0"/>
+			<xs:element name="TrendsFuture" type="TrendFuture" minOccurs="0"/>
+			<xs:element name="FutureTimeStart" type="YearType" minOccurs="0"/>
+			<xs:element name="FutureTimeEnd" type="YearType" minOccurs="0"/>
+			<xs:element name="Limitations" type="String5000Type" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="Characteristics">
+		<xs:sequence>
+			<xs:element name="Description" type="String5000Type" minOccurs="0"/>
+			<xs:element name="TrendsRecent" type="TrendRecent" minOccurs="0"/>
+			<xs:element name="RecentTimeStart" type="YearType" minOccurs="0"/>
+			<xs:element name="RecentTimeEnd" type="YearType" minOccurs="0"/>
+			<xs:element name="TrendsFuture" type="TrendFuture" minOccurs="0"/>
+			<xs:element name="FutureTimeStart" type="YearType" minOccurs="0"/>
+			<xs:element name="FutureTimeEnd" type="YearType" minOccurs="0"/>
+			<xs:element name="Limitations" type="String5000Type" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="CharacteristicsSimple">
+		<xs:sequence>
+			<xs:element name="Description" type="String5000Type" minOccurs="0"/>
+			<xs:element name="Limitations" type="String5000Type" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:simpleType name="Invasive">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="Invasive"/>
+			<xs:enumeration value="NotInvasive"/>
+			<xs:enumeration value="NotReported"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="Unknown">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="Unknown"/>
+			<xs:enumeration value="NotAssessed"/>
+			<xs:enumeration value="NotReported"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="ProportionSpecial">
+		<xs:annotation>
+			<xs:documentation>Number of functional groups or not assessed, unknown</xs:documentation>
+		</xs:annotation>
+		<xs:union memberTypes="String100Type Unknown"/>
+	</xs:simpleType>
+	<xs:simpleType name="Yes">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="Y"/>
+			<xs:enumeration value="NotReported"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="FeatureType">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="Predominant"/>
+			<xs:enumeration value="HabitatsDirective"/>
+			<xs:enumeration value="OSPARConvention"/>
+			<xs:enumeration value="HelsinkiConvention"/>
+			<xs:enumeration value="OtherInternationalAgreements"/>
+			<xs:enumeration value="OtherSpecial"/>
+			<xs:enumeration value="NotReported"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="TIDevelopment">
+		<xs:annotation>
+			<xs:documentation>
+			Operational=Fully operational (in 2012)	
+			Development2014=Further development needed (expected to be operational by 2014)	
+			Development2018=Further development needed (expected to be operational by 2018 if adopted)	
+			</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="Operational"/>
+			<xs:enumeration value="Development2014"/>
+			<xs:enumeration value="Development2018"/>
+			<xs:enumeration value="NotReported"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="SpeciesReportingSection">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="HabitatsDirective"/>
+			<xs:enumeration value="BirdsDirective"/>
+			<xs:enumeration value="BucharestConvention"/>
+			<xs:enumeration value="HelsinkiConvention"/>
+			<xs:enumeration value="OSPARConvention"/>
+			<xs:enumeration value="OtherInternationalAgreements"/>
+			<xs:enumeration value="OtherSpecies"/>
+			<xs:enumeration value="NotReported"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="Impact1">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="Distribution"/>
+			<xs:enumeration value="Condition"/>
+			<xs:enumeration value="EcosystemStructure"/>
+			<xs:enumeration value="NotReported"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="Impact2">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="Extent"/>
+			<xs:enumeration value="Abundance"/>
+			<xs:enumeration value="PopulationSize"/>
+			<xs:enumeration value="EcosystemFunctionProductivity"/>
+			<xs:enumeration value="NotReported"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="Impact3">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="Condition"/>
+			<xs:enumeration value="PopulationCondition"/>
+			<xs:enumeration value="EcosystemFunctionProportion"/>
+			<xs:enumeration value="NotReported"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="Impact4">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="HabitatofSpecies"/>
+			<xs:enumeration value="EcosystemFunctionAbundance"/>
+			<xs:enumeration value="NotReported"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="Impact5">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="Other"/>
+			<xs:enumeration value="NotReported"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="InvasiveReportingFeature">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="NonIndigenous"/>
+			<xs:enumeration value="GeneticallyDistinct"/>
+			<xs:enumeration value="NotReported"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="ContaminantsSum2">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="Water"/>
+			<xs:enumeration value="Sediment"/>
+			<xs:enumeration value="SeabedBiota"/>
+			<xs:enumeration value="NotReported"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="ExtractionType">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="ExtractionSeaweed"/>
+			<xs:enumeration value="ExtractionMaerl"/>
+			<xs:enumeration value="ExtractionOther"/>
+			<xs:enumeration value="NotReported"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="ReferencePointType">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="TargetReferencePoint"/>
+			<xs:enumeration value="LimitReferencePoint"/>
+			<xs:enumeration value="NotReported"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="Directive">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="HabitatsDirective"/>
+			<xs:enumeration value="BirdsDirective"/>
+			<xs:enumeration value="BucharestConvention"/>
+			<xs:enumeration value="HelsinkiConvention"/>
+			<xs:enumeration value="OSPARConvention"/>
+			<xs:enumeration value="OtherInternationalAgreements"/>
+			<xs:enumeration value="OtherSpecies"/>
+			<xs:enumeration value="NotReported"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="ESAMetadataClean">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="AnalysisAll"/>
+			<xs:enumeration value="AnalysisCharactTrend"/>
+			<xs:enumeration value="AnalysisPressurefromActivity"/>
+			<xs:enumeration value="ESAIndicatorAll"/>
+			<xs:enumeration value="ESAIndicatorProduction"/>
+			<xs:enumeration value="ESAIndicatorValue"/>
+			<xs:enumeration value="ESAIndicatorEmployment"/>
+			<xs:enumeration value="ESAIndicatorOther"/>
+			<xs:enumeration value="AnalysisCostDegradation"/>
+			<xs:enumeration value="ESAWaterAccounts"/>
+			<xs:enumeration value="ESAEcosystemServices"/>
+			<xs:enumeration value="ESAThematic"/>
+			<xs:enumeration value="ESAOther"/>
+			<xs:enumeration value="DegradationCostBased"/>
+			<xs:enumeration value="DegradationEcoServices"/>
+			<xs:enumeration value="DegradationThematic"/>
+			<xs:enumeration value="NotReported"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="ESAMetadata">
+		<xs:annotation>
+			<xs:documentation>ESA metadata list plus addition feature</xs:documentation>
+		</xs:annotation>
+		<xs:union memberTypes="ESAMetadataClean String100Type"/>
+	</xs:simpleType>
+	<xs:simpleType name="CICESClass">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="Symbolic"/>
+			<xs:enumeration value="IntellectualAndExperimental"/>
+			<xs:enumeration value="Nutrition"/>
+			<xs:enumeration value="Materials"/>
+			<xs:enumeration value="Energy"/>
+			<xs:enumeration value="RegulationWastes"/>
+			<xs:enumeration value="FlowRegulation"/>
+			<xs:enumeration value="RegulationPhysicalEnvironment"/>
+			<xs:enumeration value="RegulationBioticEnvironment"/>
+			<xs:enumeration value="NotReported"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="NISPathway">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="Shipping"/>
+			<xs:enumeration value="Canals"/>
+			<xs:enumeration value="Fisheries"/>
+			<xs:enumeration value="Culturing"/>
+			<xs:enumeration value="AquariumLiveTrade"/>
+			<xs:enumeration value="Leisure"/>
+			<xs:enumeration value="ResearchEducation"/>
+			<xs:enumeration value="BiolControl"/>
+			<xs:enumeration value="AlteredNaturalFlow"/>
+			<xs:enumeration value="HabitatManagement"/>
+			<xs:enumeration value="NotReported"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="SpeciesStockAssessment">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="Fpa"/>
+			<xs:enumeration value="Fmsy"/>
+			<xs:enumeration value="SSB_Bpa"/>
+			<xs:enumeration value="SSB_Bmsy_trigger"/>
+			<xs:enumeration value="AssessedOther"/>
+			<xs:enumeration value="NotAssessed"/>
+			<xs:enumeration value="NotReported"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="SpeciesStockAssessment2">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="NotAssessed"/>
+			<xs:enumeration value="Assessed"/>
+			<xs:enumeration value="NotReported"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="MetadataStandard">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="CDR_Reportnet"/>
+			<xs:enumeration value="CDI"/>
+			<xs:enumeration value="EDMED"/>
+			<xs:enumeration value="Darwin"/>
+			<xs:enumeration value="ISO19115"/>
+			<xs:enumeration value="ISO19139"/>
+			<xs:enumeration value="OtherISO"/>
+			<xs:enumeration value="OGC"/>
+			<xs:enumeration value="INSPIRE"/>
+			<xs:enumeration value="OtherNonISO"/>
+			<xs:enumeration value="NotReported"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<!--Article 11 additional  TYPE DEFINITIONS
+	 These type definitions have been defined to support the monitoring reporting, MSFD, art 11
+	 -->
+	<xs:simpleType name="MonitoringCriterion">
+		<xs:annotation>
+			<xs:documentation>
+			By 2014 
+			 By 2018	In time for the next assessment due in 2018
+			 By 2020	In time for the updating of monitoring programmes due on 2020
+			After 2020	Later than 2020.
+			</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+		<xs:enumeration value="By2014"/>
+			<xs:enumeration value="By2018"/>
+			<xs:enumeration value="By2020"/>
+			<xs:enumeration value="After2020"/>
+			<xs:enumeration value="NotRelevant"/>
+			<xs:enumeration value=""/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="MonFeatures">
+		<xs:annotation>
+			<xs:documentation>Habitats, physical/chemical, pressures, species/functionalgroups, activities merged into one list</xs:documentation>
+		</xs:annotation>
+		<xs:union memberTypes="String100Type ReportingFeature Species FunctionalGroup PhysicalChemicalFeatures Pressures Activities"/>
+	</xs:simpleType>
+	<xs:simpleType name="MonitoringProgramme">
+		<xs:annotation>
+			<xs:documentation>
+			D2 NIS	Non-indigenous species
+D5 Eutrophication	Eutrophication
+D7 Hydrographical changes	Hydrographical changes
+D8 Contaminants	Contaminants
+D9 Contaminants in seafood	Contaminants in seafood
+D10 Marine litter	Litter
+D11 Energy, incl. underwater noise	Energy, including underwater noise
+D1, 4, 6 Birds	Biodiversity – birds
+D1, 4, 6 Mammals/Reptiles	Biodiversity – mammals and reptiles
+D1, 4, 6 Fish/Cephalopods	Biodiversity – fish and cephalopods
+D3 Commercial fish and shellfish	Biodiversity - commercial fish and shellfish
+D1, 4, 6 Seabed habitats	Biodiversity –seabed habitats
+D1, 4, 6 Water column habitats	Biodiversity – water column habitats
+			</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="D2"/>
+			<xs:enumeration value="D5"/>
+			<xs:enumeration value="D7"/>
+			<xs:enumeration value="D8"/>
+			<xs:enumeration value="D9"/>
+			<xs:enumeration value="D10"/>
+			<xs:enumeration value="D11"/>
+			<xs:enumeration value="D3"/>
+			<xs:enumeration value="D1_4_6_Birds"/>
+			<xs:enumeration value="D1_4_6_Mammals"/>
+			<xs:enumeration value="D1_4_6_Fish"/>
+			<xs:enumeration value="D1_4_6_SeabedHabitats"/>
+			<xs:enumeration value="D1_4_6_WaterColumnHabitats"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="MonitoringNaturalVariability">
+		<xs:annotation>
+			<xs:documentation>
+Quantiative	In a quantitative process
+Qualitative	In a qualitative process
+Expert opinion	Expert opinion
+Other	Other
+			</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="Quantiative"/>
+			<xs:enumeration value="Qualitative"/>
+			<xs:enumeration value="ExpertOpinion"/>
+			<xs:enumeration value="Other"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="MonitoringOtherDirectivesConventions">
+		<xs:annotation>
+			<xs:documentation>
+BathingWater	Bathing Water Directive
+CFP-DC-MAP	Common Fisheries Policy - Data Collection Framework
+Habitats 	Habitats Directive
+Birds	Birds Directive
+Nitrates	Nitrates Directive
+UWWTD	Urban Waste Water Treatment Directive
+WFD	Water Framework Directive
+BarCon	Barcelona Convention UNEP/MAP
+BuchCon	Bucharest Convention
+HELCOM	Helsinki Convention
+OSPAR	OSPAR Convention
+TWSC	Trilateral Wadden Sea Cooperation
+Other	Other (specify)
+			</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="BathingWater"/>
+			<xs:enumeration value="CFP-DC-MAP"/>
+			<xs:enumeration value="Habitats"/>
+			<xs:enumeration value="Birds"/>
+			<xs:enumeration value="Nitrates"/>
+			<xs:enumeration value="UWWTD"/>
+			<xs:enumeration value="WFD"/>
+			<xs:enumeration value="BarCon"/>
+			<xs:enumeration value="BuchCon"/>
+			<xs:enumeration value="HELCOM"/>
+			<xs:enumeration value="OSPAR"/>
+			<xs:enumeration value="TWSC"/>
+			<xs:enumeration value="Other"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="MonitoringZones">
+		<xs:annotation>
+			<xs:documentation>
+MS land/FW	Terrestrial part of MS
+WFD TW	Transitional waters (WFD)
+WFD CW	Coastal waters (WFD)
+Territorial waters	Territorial waters
+EEZ	EEZ (or similar)
+CS (beyond EEZ)	Continental shelf (beyond EEZ)
+Beyond MS waters	Beyond MS Marine Waters
+			</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="MSland_FW"/>
+			<xs:enumeration value="WFD_TW"/>
+			<xs:enumeration value="WFD_CW"/>
+			<xs:enumeration value="TerritorialWaters"/>
+			<xs:enumeration value="EEZ"/>
+			<xs:enumeration value="CS"/>
+			<xs:enumeration value="BeyondMSwaters"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="MonitoringPurpose">
+		<xs:annotation>
+			<xs:documentation>
+State/impact	Environmental state and impacts
+Pressurse	Pressures
+Activities	Human activities causing the pressures
+Measures	Effectiveness of measures
+			</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="StateImpact"/>
+			<xs:enumeration value="Pressurse"/>
+			<xs:enumeration value="Activities"/>
+			<xs:enumeration value="Measures"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="MonitoringParameters">
+		<xs:annotation>
+			<xs:documentation>
+Concentration	Concentration in sediment
+Population			Population size
+Intensity		Intensity of pressure
+			</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="Concentration"/>
+			<xs:enumeration value="Population"/>
+			<xs:enumeration value="Intensity"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="QA">
+		<xs:annotation>
+			<xs:documentation>
+BEQUALM	Biological Effects Quality Assurance in Monitoring Programmes
+COMBINE	Helsinki Commission Cooperative Monitoring in the Baltic Marine Environment manual of measurement protocols
+ICESDataTypeGuide	ICES Data Centre Data Type Guides
+IODE	IOC Manual of Quality Control Procedures for Validation of Oceanographic Data
+JGOFSL1	Joint Global Ocean Flux Study core measurement protocols
+QUASIMEM	Quality Assurance of Information for Marine Environmental Monitoring in Europe
+National	National standard (specify)
+Other	Other standard (specify)
+Unknown	Unknown
+			</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="BEQUALM"/>
+			<xs:enumeration value="COMBINE"/>
+			<xs:enumeration value="ICESDataTypeGuide"/>
+			<xs:enumeration value="IODE"/>
+			<xs:enumeration value="JGOFSL1"/>
+			<xs:enumeration value="QUASIMEM"/>
+			<xs:enumeration value="National"/>
+			<xs:enumeration value="Other"/>
+			<xs:enumeration value="Unknown"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="QC">
+		<xs:annotation>
+			<xs:documentation>
+DelayedValidation	Delayed mode validation on the data
+NoValidation	No validation on the data
+RealandDelayedValidation	Real-time plus delayed mode validation on the data
+RealValidation	Real-time validation on the data
+Other QC	Other type of QC (specify)
+Unknown	Unknown
+			</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="DelayedValidation"/>
+			<xs:enumeration value="NoValidation"/>
+			<xs:enumeration value="RealandDelayedValidation"/>
+			<xs:enumeration value="RealValidation"/>
+			<xs:enumeration value="OtherQC"/>
+			<xs:enumeration value="Unknown"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="MonitoringFrequency">
+		<xs:annotation>
+			<xs:documentation>
+6-yearly	Every 6 years
+3-yearly	Every 3 years
+2-yearly	Every 2 years
+Yearly	Yearly
+6-monthly	6-monthly
+3-monthly	3-monthly
+Monthly	Monthly
+2-weekly	2-weekly
+Weekly	Weekly
+Daily	Daily
+Hourly	Hourly
+Continually	Continually
+One-off	One-off
+As needed	As needed
+Other	Other (specify)
+Unknown	Unknown
+			</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="6yearly"/>
+			<xs:enumeration value="3yearly"/>
+			<xs:enumeration value="2yearly"/>
+			<xs:enumeration value="yearly"/>
+			<xs:enumeration value="6monthly"/>
+			<xs:enumeration value="3monthly"/>
+			<xs:enumeration value="monthly"/>
+			<xs:enumeration value="2weekly"/>
+			<xs:enumeration value="weekly"/>
+			<xs:enumeration value="Daily"/>
+			<xs:enumeration value="Hourly"/>
+			<xs:enumeration value="Continually"/>
+			<xs:enumeration value="Oneoff"/>
+			<xs:enumeration value="Asneeded"/>
+			<xs:enumeration value="Other"/>
+			<xs:enumeration value="Unknown"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="MonitoringAggregationScale">
+		<xs:annotation>
+			<xs:documentation>
+Subregion	Subregion
+Region 	Region 
+EU 	EU 
+Other	Other (specify)
+Unknown	Unknown
+			</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="Subregion"/>
+			<xs:enumeration value="Region"/>
+			<xs:enumeration value="EU"/>
+			<xs:enumeration value="Other"/>
+			<xs:enumeration value="Unknown"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="MonitoringDataType">
+		<xs:annotation>
+			<xs:documentation>
+UnprocessedData	Unprocessed/raw data
+ProcessedData	Processed data sets
+DataProducts	Data products
+Modelled data	Simulated (modelled) data
+			</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="UnprocessedData"/>
+			<xs:enumeration value="ProcessedData"/>
+			<xs:enumeration value="DataProducts"/>
+			<xs:enumeration value="ModelleData"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="DataAccessMechanism">
+		<xs:annotation>
+			<xs:documentation>
+URLview	Providing URL to view data
+URLdownload	Providing URL to download data
+Location national DC	Provide location of data in national data centre
+Location international DC	Provide location of data in international data centre (e.g. RSC, ICES, EEA, EMODnet)
+			</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="URLview"/>
+			<xs:enumeration value="URLdownload"/>
+			<xs:enumeration value="LocationNationalDC"/>
+			<xs:enumeration value="LocationInternationalDC"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="DataAccessRights">
+		<xs:annotation>
+			<xs:documentation>
+Open	Open access
+Moratorium	Moratorium
+RestrictedGeneral	Restricted by general licence
+RestrictedSpecific	Restricted by specific licence
+Not available	Data will not be available
+			</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="Open"/>
+			<xs:enumeration value="Moratorium"/>
+			<xs:enumeration value="RestrictedGeneral"/>
+			<xs:enumeration value="RestrictedSpecific"/>
+			<xs:enumeration value="NotAvailable"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="INSPIRESpecification">
+		<xs:annotation>
+			<xs:documentation>
+
+			</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:enumeration value=""/>
+			<xs:enumeration value=""/>
+			<xs:enumeration value=""/>
+			<xs:enumeration value=""/>
+			<xs:enumeration value="NotAvailable"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="Habitats_1d">
+		<xs:annotation>
+			<xs:documentation>
+		SeabedHabitatsAll	Seabed habitats - all
+LitRock	Littoral rock and biogenic reef
+LitSed	Littoral sediment
+ShallRock	Shallow sublittoral rock and biogenic reef
+ShallSed	Shallow sublittoral sediment (coarse, mixed, sand, mud)
+ShelfRock	Shelf sublittoral rock and biogenic reef
+ShelfSed	Shelf sublittoral sediment (coarse, mixed, sand mud)
+BathAbys	Bathyal and abyssal roack and sediment
+WaterColumnHabitatsAll	Water column habitats - all
+IceHabitat	Ice-associated habitats
+		</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="SeabedHabitatsAll"/>
+			<xs:enumeration value="LitRock"/>
+			<xs:enumeration value="LitSed"/>
+			<xs:enumeration value="ShallRock"/>
+			<xs:enumeration value="ShallSed"/>
+			<xs:enumeration value="ShelfRock"/>
+			<xs:enumeration value="ShelfSed"/>
+			<xs:enumeration value="BathAbys"/>
+			<xs:enumeration value="WaterColumnHabitatsAll"/>
+			<xs:enumeration value="IceHabitat"/>
+			<xs:enumeration value="HabitatsDirectiveAnnexI"/>
+			<xs:enumeration value="HabitatsOther"/>
+		</xs:restriction>
+	</xs:simpleType>
+
+
+  <!--
+      MSFD 13/14
+      
+      MSFD also uses CountryInternational and Region from the above.
+  -->
+  
+  <xs:simpleType name="MeasureExceptionCodeType">
+    <xs:annotation>
+      <xs:documentation>Use sub(region) code plus MS code plus MS-defined alpha-numeric code</xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:string">
+      <xs:maxLength value="50"/>
+      <xs:minLength value="1"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="MeasureExceptionNameType">
+    <xs:annotation>
+      <xs:documentation>Select one from the list of measures and exceptions in your Summary Report</xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:string">
+      <xs:maxLength value="400"/>
+      <xs:minLength value="1"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+
+  <xs:simpleType name="ReporterNameType">
+    <!-- StringType250 is not a string 250. -->
+    <xs:restriction base="xs:string">
+      <xs:maxLength value="250"/>
+      <xs:minLength value="1"/>
+    </xs:restriction>
+  </xs:simpleType>
+  
+  <xs:simpleType name="YearMonthDayType">
+    <xs:annotation>
+      <xs:documentation>Format yyyy-mm-dd</xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:string">
+      <xs:pattern value="[1-9][0-9]{3}-[0-1][0-9]-[0-3][0-9]"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="KTMType">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="WFD01"/>
+      <xs:enumeration value="WFD02"/>
+      <xs:enumeration value="WFD03"/>
+      <xs:enumeration value="WFD04"/>
+      <xs:enumeration value="WFD05"/>
+      <xs:enumeration value="WFD06"/>
+      <xs:enumeration value="WFD07"/>
+      <xs:enumeration value="WFD08"/>
+      <xs:enumeration value="WFD09"/>
+      <xs:enumeration value="WFD10"/>
+      <xs:enumeration value="WFD11"/>
+      <xs:enumeration value="WFD12"/>
+      <xs:enumeration value="WFD13"/>
+      <xs:enumeration value="WFD14"/>
+      <xs:enumeration value="WFD15"/>
+      <xs:enumeration value="WFD16"/>
+      <xs:enumeration value="WFD17"/>
+      <xs:enumeration value="WFD18"/>
+      <xs:enumeration value="WFD19"/>
+      <xs:enumeration value="WFD20"/>
+      <xs:enumeration value="WFD21"/>
+      <xs:enumeration value="WFD22"/>
+      <xs:enumeration value="WFD23"/>
+      <xs:enumeration value="WFD24"/>
+      <xs:enumeration value="WFD25"/>
+      <xs:enumeration value="MSFD26"/>
+      <xs:enumeration value="MSFD27"/>
+      <xs:enumeration value="MSFD28"/>
+      <xs:enumeration value="MSFD29"/>
+      <xs:enumeration value="MSFD30"/>
+      <xs:enumeration value="MSFD31"/>
+      <xs:enumeration value="MSFD32"/>
+      <xs:enumeration value="MSFD33"/>
+      <xs:enumeration value="MSFD34"/>
+      <xs:enumeration value="MSFD35"/>
+      <xs:enumeration value="MSFD36"/>
+      <xs:enumeration value="MSFD37"/>
+      <xs:enumeration value="MSFD38"/>
+      <xs:enumeration value="MSFD39"/>
+      <xs:enumeration value="WFD99"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+
+  <xs:simpleType name="EnvironmentalTargetsType">
+    <xs:annotation>
+      <xs:documentation>Seperated list of Relevant Environmental Targets. This is a workaround for the lack of list functionality in xForms</xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:string">
+      <xs:minLength value="0"/>
+      <xs:maxLength value="100"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="FeaturesFromMSFDAnnexIIIType">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Birds"/>
+      <xs:enumeration value="Mammals"/>
+      <xs:enumeration value="Reptiles"/>
+      <xs:enumeration value="Fish"/>
+      <xs:enumeration value="Cephalopods"/>
+      <xs:enumeration value="Water column habitats"/>
+      <xs:enumeration value="Seabed habitats"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="MarineUnitIDType">
+    <xs:annotation>
+      <xs:documentation>Type for GB code, allows up to 42 characters (unique code within MS prefixed with country ISO 2 character code</xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:string">
+      <xs:maxLength value="42"/>
+      <xs:minLength value="3"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="RBDCodeType">
+    <xs:annotation>
+      <xs:documentation>RBD code from WFD reporting</xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:string">
+      <xs:maxLength value="42"/>
+      <!--<xs:minLength value="3"/>-->
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="URLType">
+    <xs:restriction base="xs:string">
+      <xs:minLength value="0"/>
+      <xs:maxLength value="1000"/>
+    </xs:restriction>
+  </xs:simpleType>
+  
+  <xs:simpleType name="LinkToExistingPoliciesOtherType">
+    <xs:restriction base="xs:string">
+      <xs:minLength value="0"/>
+      <xs:maxLength value="4000"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="CoordinationLevel">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Local"/>
+      <xs:enumeration value="Sub-national"/>
+      <xs:enumeration value="National"/>
+      <xs:enumeration value="Bilateral"/>
+      <xs:enumeration value="Sub-regional"/>
+      <xs:enumeration value="Regional"/>
+      <xs:enumeration value="EU level"/>
+      <xs:enumeration value="International"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="ImplementationZones">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="MS land FW"/>
+      <xs:enumeration value="WFD TW"/>
+      <xs:enumeration value="WFD CW"/>
+      <xs:enumeration value="Territorial waters"/>
+      <xs:enumeration value="EEZ"/>
+      <xs:enumeration value="CS beyond EEZ"/>
+      <xs:enumeration value="Beyond MS waters"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="MSFDImplementationZones">
+    <xs:union memberTypes="CoordinationLevel ImplementationZones"/>
+  </xs:simpleType>
+
+  
+  <xs:simpleType name="LinkToExistingPoliciesType">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="BathingWater"/>
+      <xs:enumeration value="Birds"/>
+      <xs:enumeration value="DrinkingWater"/>
+      <xs:enumeration value="EIA Directive"/>
+      <xs:enumeration value="Habitats"/>
+      <xs:enumeration value="IPPC"/>
+      <xs:enumeration value="Seveso"/>
+      <xs:enumeration value="Nitrates"/>
+      <xs:enumeration value="PPPP"/>
+      <xs:enumeration value="SSD"/>
+      <xs:enumeration value="UWWTD"/>
+      <xs:enumeration value="WaterFD"/>
+      <xs:enumeration value="FD"/>
+      <xs:enumeration value="IAER"/>
+      <xs:enumeration value="WasteFD"/>
+      <xs:enumeration value="NEC"/>
+      <xs:enumeration value="REACH"/>
+      <xs:enumeration value="CFP"/>
+      <xs:enumeration value="CFP-DC-MAP"/>
+      <xs:enumeration value="EUBiodivStrategy"/>
+      <xs:enumeration value="CBD"/>
+      <xs:enumeration value="CMS"/>
+      <xs:enumeration value="LTRAP"/>
+      <xs:enumeration value="HELCOM"/>
+      <xs:enumeration value="OSPAR"/>
+      <xs:enumeration value="BarCon"/>
+      <xs:enumeration value="BuchCon"/>
+      <xs:enumeration value="TWSC"/>
+      <xs:enumeration value="GFCM"/>
+      <xs:enumeration value="ICCAT"/>
+      <xs:enumeration value="NEAFC"/>
+      <xs:enumeration value="IMO"/>
+	<xs:enumeration value="IMO-LondonCon"/>
+	<xs:enumeration value="IMO-MARPOL"/>
+	<xs:enumeration value="IMO-BallastWaterCon"/>
+	<xs:enumeration value="IMO-AntiFoulingCon"/>
+	<xs:enumeration value="IMO-OilPollutionRespCon"/>
+	<xs:enumeration value="IMO-LiabilityCompensation"/>
+      <xs:enumeration value="Other international"/>
+      <xs:enumeration value="National"/>
+      <xs:enumeration value="Other"/>
+      <xs:enumeration value="NotApplicable"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+
+</xs:schema>

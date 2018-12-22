@@ -7,7 +7,8 @@ from Products.Five.browser.pagetemplatefile import \
 from wise.msfd import db, sql
 from wise.msfd.data import country_ges_components, get_report_data
 from wise.msfd.gescomponents import get_descriptor
-from wise.msfd.utils import COMMON_LABELS, Item, ItemLabel, ItemList, Node, Row
+from wise.msfd.labels import COMMON_LABELS
+from wise.msfd.utils import Item, ItemLabel, ItemList, Node, Row
 
 from ..base import BaseArticle2012
 from .utils import to_html

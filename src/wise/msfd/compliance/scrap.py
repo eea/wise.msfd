@@ -250,13 +250,17 @@ from collections import defaultdict
 from pkg_resources import resource_filename
 
 from plone.app.textfield.widget import RichTextWidget
-from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
+from Products.Five.browser.pagetemplatefile import \
+    ViewPageTemplateFile as Template
 from wise.content.search import db, interfaces, sql2018
+from wise.msfd import db, sql
 from z3c.form.browser.text import TextFieldWidget, TextWidget
 from z3c.form.browser.textarea import TextAreaWidget
 from z3c.form.button import buttonAndHandler
 from z3c.form.field import Fields
 
+from ..a8_utils import DB_MAPPER_CLASSES, DESC_DATA_MAPPING, DESCR_TOPIC_UTILS
+from ..base import BaseArticle2012
 from .base import Leaf as L
 from .base import EmbeddedForm, ItemDisplayForm
 
@@ -3487,14 +3491,8 @@ def get_a9_descriptors(marine_unit_id, page=0):
     </table>
   </div>
 </div>
-from collections import defaultdict
 
-from Products.Five.browser.pagetemplatefile import \
-    ViewPageTemplateFile as Template
-from wise.msfd import db, sql
 
-from ..a8_utils import DB_MAPPER_CLASSES, DESC_DATA_MAPPING, DESCR_TOPIC_UTILS
-from ..base import BaseArticle2012
 
 
 class Article8(BaseArticle2012):
@@ -3981,3 +3979,21 @@ class Article8(BaseArticle2012):
         self.content = template and template() or ""
 
         return self.content
+
+
+    COMMON_LABELS.update(csv_labels)
+    COMMON_LABELS.update(xsd_labels)
+
+    common_labels = len(list(csv_labels.keys()) +
+                        list(xsd_labels.keys())) - len(COMMON_LABELS)
+
+    csv_nr = len(list(csv_labels.keys()))
+    xsd_nr = len(list(xsd_labels.keys()))
+
+    print("""Labels count:
+    Total labels: %s
+    Common_labels: %s
+    .csv_nr: %s
+    .xsd_nr: %s""" % (len(COMMON_LABELS), common_labels, csv_nr, xsd_nr))
+
+    return

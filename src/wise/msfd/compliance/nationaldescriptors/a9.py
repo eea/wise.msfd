@@ -9,8 +9,8 @@ from Products.Five.browser.pagetemplatefile import \
 from wise.msfd import db
 from wise.msfd.data import get_report_data
 from wise.msfd.gescomponents import get_descriptor
-from wise.msfd.utils import (COMMON_LABELS, Item, ItemLabel, ItemList, Node,
-                             RelaxedNode, Row)
+from wise.msfd.labels import COMMON_LABELS
+from wise.msfd.utils import Item, ItemLabel, ItemList, Node, RelaxedNode, Row
 
 from ..base import BaseArticle2012
 

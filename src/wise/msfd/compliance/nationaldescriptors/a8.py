@@ -9,7 +9,8 @@ from Products.Five.browser.pagetemplatefile import \
 from wise.msfd import db, sql  # , sql2018
 from wise.msfd.data import get_report_data
 from wise.msfd.gescomponents import Criterion, get_criterion, get_descriptor
-from wise.msfd.utils import Item, Node, Row  # RelaxedNode,
+from wise.msfd.labels import COMMON_LABELS
+from wise.msfd.utils import Item, ItemLabel, Node, Row  # RelaxedNode,
 
 from ..base import BaseArticle2012
 
@@ -359,7 +360,9 @@ class A8bItem(Item):
 
     def row_assessment_topic(self):
         if self.assessment:
-            return self.assessment.Topic
+            v = self.assessment.Topic
+
+            return ItemLabel(v, COMMON_LABELS.get(v, v))
 
     def debug(self):
         import pdb
