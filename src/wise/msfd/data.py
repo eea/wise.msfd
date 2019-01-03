@@ -220,7 +220,7 @@ def get_factsheet_url(url):
         return '{}{}&conv={}'.format(cdr, base, ids[0]['convert_id'])
 
 
-def get_report_data(filename):
+def get_report_data(filename, url_final=None):
     tmpdir = tempfile.gettempdir()
     assert '..' not in filename     # need better security?
 
@@ -233,9 +233,9 @@ def get_report_data(filename):
             text = f.read()
         logger.info("Using cached XML file: %s", fpath)
     else:
-        url = get_report_file_url(filename)
         # TODO: handle this problem:
         # https://cr.eionet.europa.eu/factsheet.action?uri=http%3A%2F%2Fcdr.eionet.europa.eu%2Fro%2Feu%2Fmsfd8910%2Fblkro%2Fenvux97qw%2FRO_MSFD10TI_20130430.xml&page1=http%3A%2F%2Fwww.w3.org%2F1999%2F02%2F22-rdf-syntax-ns%23type
+        url = url_final or get_report_file_url(filename)
         assert url, "Report URL not found: %s" % filename
         req = requests.get(url)
         text = req.content

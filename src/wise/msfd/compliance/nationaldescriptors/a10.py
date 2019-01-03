@@ -267,7 +267,6 @@ class Article10(BaseArticle2012):
         return gcs
 
     def __call__(self):
-
         filename = self.context.get_report_filename()
         text = get_report_data(filename)
         root = fromstring(text)
