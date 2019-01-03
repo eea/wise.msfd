@@ -132,32 +132,14 @@ class ReportData2012(BaseComplianceView, BaseUtil):
 
         return view()
 
-    def get_report_filename(self, article=None):
-        art = article or self.article
+    def get_report_filename(self):
         # needed in article report data implementations, to retrieve the file
 
         return get_report_filename('2012',
                                    self.country_code,
                                    self.country_region_code,
-                                   art,
+                                   self.article,
                                    self.descriptor)
-
-    def get_report_envelope_url(self):
-        articles = self.context.aq_parent.contentValues()
-        for article in articles:
-            art = article.title
-            # if art == self.article:
-            #     continue
-
-            filename = self.get_report_filename(art)
-            file_url = get_report_file_url(filename)
-            split_url = file_url.split('/')
-            envelope_url = '/'.join(split_url[:-1])
-
-            if envelope_url:
-                return envelope_url
-
-        return ''
 
     @db.use_db_session('2012')
     def __call__(self):
@@ -168,13 +150,10 @@ class ReportData2012(BaseComplianceView, BaseUtil):
 
         print "Will render report for ", self.article
         self.filename = filename = self.get_report_filename()
-        envelope_url = self.get_report_envelope_url()
-        url_alternative = '/'.join((envelope_url, filename))
         factsheet = None
 
         if filename:
-            url_primary = get_report_file_url(filename)
-            self.url_final = url = url_primary or url_alternative
+            url = get_report_file_url(filename)
             try:
                 factsheet = get_factsheet_url(url)
             except:
@@ -214,7 +193,7 @@ class ReportData2012(BaseComplianceView, BaseUtil):
         if not self.filename:
             return default
 
-        text = get_report_data(self.filename, self.url_final)
+        text = get_report_data(self.filename)
         root = fromstring(text)
 
         reporters = root.xpath('//w:ReportingInformation/w:Name/text()',
