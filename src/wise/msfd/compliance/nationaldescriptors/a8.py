@@ -190,7 +190,9 @@ class A8aItem(Item):
             self[title] = value
 
     def row_topic(self):
-        return self.assessment_status['parent::*/w:Topic/text()'][0]
+        v = self.assessment_status['parent::*/w:Topic/text()'][0]
+
+        return ItemLabel(v, COMMON_LABELS.get(v, v))
 
     def row_status(self):
         status = self.assessment_status['c:Status/text()']
@@ -241,7 +243,10 @@ class A8aItem(Item):
             return p[0]
 
     def row_baseline(self):
-        return self.node['c:Baseline/text()'][0]
+        b = self.node['c:Baseline/text()']
+
+        if b:
+            return b[0]
 
 
 class A8bItem(Item):
