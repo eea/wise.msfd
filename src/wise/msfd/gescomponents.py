@@ -424,6 +424,25 @@ def get_mru_labels():
     return labels
 
 
+@db.use_db_session('2018')
+def get_target_labels():
+    needed = ('TargetCode', 'Description')
+    mc = sql2018.ART10TargetsTarget
+    mc_cols = [getattr(mc, x) for x in needed]
+
+    count, res = db.get_all_specific_columns(
+        mc_cols
+    )
+    labels = {}
+
+    for row in res:
+        code = row.TargetCode
+        label = row.Description
+        labels[code] = label
+
+    return labels
+
+
 def _parse_labels(label_name):
     res = {}
 
@@ -458,6 +477,7 @@ class LabelCollection(object):
     ges_components = _parse_labels('GESComponents')
     indicators = get_indicator_labels()
     mrus = get_mru_labels()
+    targets = get_target_labels()
 
     def get(self, collection_name, name):
         label_dict = getattr(self, collection_name, None)
