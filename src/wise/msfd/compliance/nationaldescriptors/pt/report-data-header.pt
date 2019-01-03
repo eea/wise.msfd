@@ -23,12 +23,12 @@
       <tr>
         <td>Region(s) and subregion(s)</td>
         <td tal:attributes="colspan view/colspan"
-          tal:content="python:', '.join(view.regions)"/>
+          tal:content="view/country_region_name"/>
       </tr>
       <tr>
         <td>Article reported</td>
         <td tal:attributes="colspan view/colspan"
-          tal:content="view/article"/>
+          tal:content="view/article_name"/>
       </tr>
       <tr>
         <td>Reported by</td>

@@ -167,7 +167,7 @@ class ReportData2012(BaseComplianceView, BaseUtil):
         report_header = self.report_header_template(
             title="{}'s 2012 Member State Report for {} / {} / {}".format(
                 self.country_name,
-                self.country_region_code,
+                self.country_region_name,
                 self.descriptor,
                 self.article
             ),
@@ -591,7 +591,7 @@ class ReportData2018(BaseComplianceView):
         report_header = self.report_header_template(
             title="{}'s 2018 Member State Report for {} / {} / {}".format(
                 self.country_name,
-                self.country_region_code,
+                self.country_region_name,
                 self.descriptor,
                 self.article
             ),

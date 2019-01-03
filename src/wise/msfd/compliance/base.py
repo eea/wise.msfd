@@ -15,7 +15,7 @@ from Products.Five.browser import BrowserView
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 from wise.msfd import db, sql
 from wise.msfd.compliance.scoring import compute_score
-from wise.msfd.compliance.vocabulary import REGIONS
+from wise.msfd.compliance.vocabulary import REGIONS, ASSESSED_ARTICLES
 from wise.msfd.utils import Tab
 
 from . import interfaces
@@ -220,6 +220,14 @@ class BaseComplianceView(BrowserView):
     @property
     def country_region_name(self):
         return REGIONS[self.country_region_code]
+
+    @property
+    def article_name(self):
+        art_name = [x[1] for x in ASSESSED_ARTICLES if x[0] == self.article]
+        if art_name:
+            return art_name[0]
+
+        return self.article
 
     @property
     def _national_descriptors_folder(self):
