@@ -2,7 +2,7 @@
 <data>
   <Art10>
     <Features labelName="features" asList="true">Features</Features>
-    <TargetCode>TargetCode</TargetCode>
+    <TargetCode labelName="targets">TargetCode</TargetCode>
     <Description translate='true'>Description</Description>
     <GESComponents labelName="ges_components">GESComponents</GESComponents>
     <TimeScale>TimeScale</TimeScale>
