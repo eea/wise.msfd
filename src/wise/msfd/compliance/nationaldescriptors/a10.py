@@ -6,7 +6,7 @@ from Products.Five.browser.pagetemplatefile import \
     ViewPageTemplateFile as Template
 from wise.msfd import db, sql
 from wise.msfd.data import country_ges_components, get_report_data
-from wise.msfd.gescomponents import get_descriptor
+from wise.msfd.gescomponents import get_descriptor, sorted_by_criterion
 from wise.msfd.labels import COMMON_LABELS
 from wise.msfd.utils import Item, ItemLabel, ItemList, Node, Row
 
@@ -255,16 +255,27 @@ class Article10(BaseArticle2012):
 
     template = Template('pt/report-data-a10.pt')
 
-    # TODO: this needs to be redone using latest version of gescomponents.py
     def filtered_ges_components(self):
+        """ Returns a list of valid ges criterion indicator targets
+
+        Can be something like "1.6.2-indicator 5.2B" or "3.1" or "D1"
+        """
         descriptor = get_descriptor(self.descriptor)
-        all_ids = descriptor.all_ids()
-        gcs = country_ges_components(self.country_code)
+        country_criterions = country_ges_components(self.country_code)
 
-        gcs = set([self.descriptor] + [g for g in gcs if g in all_ids])
-        gcs = sorted(gcs, key=lambda d: d.replace('D', ''))
+        res = set([self.descriptor])
 
-        return gcs
+        for d_id in descriptor.all_ids():
+            if d_id in country_criterions:
+                res.add(d_id)
+
+        for crit in country_criterions:
+            crit_id = crit.split('-', 1)[0]
+
+            if crit_id in descriptor.all_ids():
+                res.add(crit)
+
+        return sorted_by_criterion(res)
 
     def __call__(self):
         filename = self.context.get_report_filename()
@@ -280,16 +291,16 @@ class Article10(BaseArticle2012):
         labels = [ItemLabel(m, t) for m, t in res]
         muids = ItemList(labels)
 
+        descriptor = get_descriptor(self.descriptor)
+        self.descriptor_label = descriptor.title
+
+        # reported = xp("//w:DesriptorCriterionIndicator/text()")
         gcs = self.filtered_ges_components()
 
         self.rows = [
             Row('Reporting area(s) [MarineUnitID]', [muids]),
             Row('DescriptorCriterionIndicator', gcs),
         ]
-
-        descriptor_class = get_descriptor(self.descriptor)
-        self.descriptor_label = descriptor_class.title
-        # ges_components = get_ges_criterions(self.descriptor)
 
         # wrap the target per MarineUnitID
         all_target_indicators = [TargetsIndicators(node)

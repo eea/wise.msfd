@@ -267,6 +267,7 @@ def get_report_data(filename):
 def country_ges_components(country_code):
     """ Get the assigned ges components for a country
     """
+
     t = sql.t_MSFD_19a_10DescriptiorsCriteriaIndicators
     count, res = db.get_all_records(
         t,

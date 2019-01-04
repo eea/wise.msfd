@@ -2,6 +2,7 @@
 
 import csv
 import json
+import re
 from collections import namedtuple
 
 from pkg_resources import resource_filename
@@ -491,3 +492,58 @@ class LabelCollection(object):
 
 
 GES_LABELS = LabelCollection()
+
+
+# DESC_RE = re.compile(r'^D\d\d?$')
+CRIT_2018_RE = re.compile(r'^D\d\[0,1]?C\d$')       # ex: D10C5
+CRIT_2012_RE = re.compile(r'^\d[0,1]?\.\d$')        # ex: 4.1
+INDICATOR_2012_RE = re.compile(r'^\d[0,1]?\.\d\.\d$')       # ex: 10.1.1
+
+
+def sorted_by_criterion(ids):
+    """ Sort/group a list of criterion ids
+    """
+
+    descriptors = set()         # ex: D1.1
+    criterias_2018 = set()      # ex: D1C5
+    criterias_2012 = set()      # ex: 5.1
+    indicators = set()          # ex: 5.1.1
+    criterions = set()          # ex: 1.2.1-indicator 5.2B
+    others = set()
+
+    for id in ids:
+        if id in GES_DESCRIPTORS:
+            descriptors.add(id)
+
+            continue
+
+        if CRIT_2018_RE.match(id):
+            criterias_2018.add(id)
+
+            continue
+
+        if CRIT_2012_RE.match(id):
+            criterias_2012.add(id)
+
+            continue
+
+        if INDICATOR_2012_RE.match(id):
+            indicators.add(id)
+
+        if 'indicator' in id:        # TODO: this needs to be normalized
+            criterions.add(id)
+
+            continue
+
+        others.add(id)
+
+    res = []
+    res.extend(sorted(descriptors, key=lambda d: d.replace('D', '')))
+    res.extend(sorted(criterias_2018))      # TODO: sort for double digit
+    res.extend(sorted(criterias_2012))      # TODO: sort for double digit
+    res.extend(sorted(indicators))
+    res.extend(sorted(criterions, key=lambda k: k.replace(' ', '')))
+    res.extend(sorted(others))
+    print(res)
+
+    return res

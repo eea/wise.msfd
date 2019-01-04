@@ -609,8 +609,9 @@ def change_orientation(data, sorted_fields):
 
 
 def filter_duplicates(data, group_by_fields):
-    """ Greatly reduce the number of rows in data, by omitting rows with
-    identical values
+    """ Reduce number of rows in data, by omitting rows with identical values
+
+    TODO: explain why this is needed
     """
 
     if not data:
