@@ -148,16 +148,22 @@ class ReportData2012(BaseComplianceView, BaseUtil):
             self._descriptor = 'D1'
             assert self.descriptor == 'D1'
 
-        print "Will render report for ", self.article
+        print("Will render report for: %s" % self.article)
         self.filename = filename = self.get_report_filename()
         factsheet = None
 
         if filename:
             url = get_report_file_url(filename)
-            try:
-                factsheet = get_factsheet_url(url)
-            except:
-                logger.exception("Error in getting HTML Factsheet URL %s", url)
+
+            if url:
+                try:
+                    factsheet = get_factsheet_url(url)
+                except Exception:
+                    logger.exception("Error in getting HTML Factsheet URL %s",
+                                     url)
+            else:
+                logger.warning("No factsheet url, filename is: %r", filename)
+
             source_file = (filename, url + '/manage_document')
         else:
             source_file = ('File not found', None)
