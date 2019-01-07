@@ -528,8 +528,8 @@ if (!Array.prototype.last){
     } else {
       $(this).html(original);
       $(this).fixTableHeaderHeight();
+      addTranslateClickHandlers();
     }
-    addTranslateClickHandlers();
   };
 
   $(document).ready(function($){
@@ -550,7 +550,10 @@ if (!Array.prototype.last){
       $(".overflow-table h5").width( $(".overflow-table table").width() );
     }
 
-    $('.simplify-form').next().find('table').simplifyTable();
+    //$('.simplify-form').next().find('table').simplifyTable();
+    $('.simplify-form').next().find('table').each(function(){
+    	$(this).simplifyTable();
+    });
 
     $('.simplify-form button').on('click', function(){
       var onoff = $(this).attr('aria-pressed') == 'true';
