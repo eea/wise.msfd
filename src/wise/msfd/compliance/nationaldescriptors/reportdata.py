@@ -127,8 +127,9 @@ class ReportData2012(BaseComplianceView, BaseUtil):
                     )
         klass = self.article_implementations[self.article]
 
-        view = klass(self, self.request, self.country_code, self.descriptor,
-                     self.article, self.muids)
+        view = klass(self, self.request, self.country_code,
+                     self.country_region_code, self.descriptor, self.article,
+                     self.muids)
 
         return view()
 

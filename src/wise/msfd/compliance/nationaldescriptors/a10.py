@@ -18,17 +18,17 @@ logger = logging.getLogger('wise.msfd')
 
 NSMAP = {"w": "http://water.eionet.europa.eu/schemas/dir200856ec"}
 
-# TODO: this needs to take region into account
-
 
 class A10Item(Item):
 
-    def __init__(self, criterion, targets_indicators, country_code):
+    def __init__(self,
+                 criterion, targets_indicators, country_code, region_code):
         super(A10Item, self).__init__([])
 
         self.criterion = criterion
         self.targets_indicators = targets_indicators
         self.country_code = country_code
+        self.region_code = region_code
 
         self.targets = []
 
@@ -39,6 +39,7 @@ class A10Item(Item):
         pick = self.pick
 
         attrs = [
+            ('DescriptorCriterionIndicator', self.criterion),
             ('Description [Targets]', self.description()),
             ('Threshold value [TargetValue]', self.threshold_value()),
             ('Reference point type', pick('w:ReferencePointType/text()')),
@@ -91,17 +92,19 @@ class A10Item(Item):
         t = sql.t_MSFD_19b_10PhysicalChemicalFeatures
         target = self.pick('w:Feature/text()')
 
-        # TODO: this needs to take region into account
         count, res = db.get_all_records(
             t,
             t.c.MemberState == self.country_code,
             t.c.Targets == target,
-            # TODO: region here
-            # t.c['Marine region/subregion'] == 'BAL'
+            t.c['Marine region/subregion'] == self.region_code
         )
 
         cols = t.c.keys()
-        recs = [{k: v for k, v in zip(cols, row)} for row in res]
+        recs = [
+            {k: v for k, v in zip(cols, row)}
+
+            for row in res
+        ]
 
         _types = {
             'Functional group': set(),
@@ -299,13 +302,16 @@ class Article10(BaseArticle2012):
 
         self.rows = [
             Row('Reporting area(s) [MarineUnitID]', [muids]),
-            Row('DescriptorCriterionIndicator', gcs),
         ]
 
         # wrap the target per MarineUnitID
         all_target_indicators = [TargetsIndicators(node)
                                  for node in xp('w:TargetsIndicators')]
-        cols = [A10Item(gc, all_target_indicators, self.country_code)
+        cols = [A10Item(gc,
+                        all_target_indicators,
+                        self.country_code,
+                        self.region_code)
+
                 for gc in gcs]
 
         for col in cols:

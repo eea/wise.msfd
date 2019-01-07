@@ -15,7 +15,7 @@ from Products.Five.browser import BrowserView
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 from wise.msfd import db, sql
 from wise.msfd.compliance.scoring import compute_score
-from wise.msfd.compliance.vocabulary import REGIONS, ASSESSED_ARTICLES
+from wise.msfd.compliance.vocabulary import ASSESSED_ARTICLES, REGIONS
 from wise.msfd.utils import Tab
 
 from . import interfaces
@@ -224,6 +224,7 @@ class BaseComplianceView(BrowserView):
     @property
     def article_name(self):
         art_name = [x[1] for x in ASSESSED_ARTICLES if x[0] == self.article]
+
         if art_name:
             return art_name[0]
 
@@ -478,12 +479,13 @@ def get_questions(location):
 
 class BaseArticle2012(BrowserView):
 
-    def __init__(self,
-                 context, request, country_code, descriptor, article,  muids):
+    def __init__(self, context, request, country_code, region_code,
+                 descriptor, article,  muids):
 
         BrowserView.__init__(self, context, request)
 
         self.country_code = country_code
+        self.region_code = region_code
         self.descriptor = descriptor
         self.article = article
         self.muids = muids
