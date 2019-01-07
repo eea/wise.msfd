@@ -8,7 +8,7 @@ from Products.Five.browser.pagetemplatefile import \
     ViewPageTemplateFile as ViewTemplate
 from wise.msfd import db
 from wise.msfd.data import get_report_data
-from wise.msfd.gescomponents import get_descriptor
+from wise.msfd.gescomponents import get_descriptor, sorted_by_criterion
 from wise.msfd.labels import COMMON_LABELS
 from wise.msfd.utils import Item, ItemLabel, ItemList, Node, RelaxedNode, Row
 
@@ -215,11 +215,15 @@ class Article9(BaseArticle2012):
             Row('Reporting area(s) [MarineUnitID]', [muids])
         ]
 
-        for col in cols:
+        sorted_ges_c = sorted_by_criterion([c.ges_component() for c in cols])
+        sort_func = lambda col: sorted_ges_c.index(col.ges_component())
+        sorted_cols = sorted(cols, key=sort_func)
+
+        for col in sorted_cols:
             for name in col.keys():
                 values = []
 
-                for inner in cols:
+                for inner in sorted_cols:
                     values.append(inner[name])
                 row = Row(name, values)
                 self.rows.append(row)
