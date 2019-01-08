@@ -21,7 +21,7 @@ from wise.msfd.data import (get_factsheet_url, get_report_data,
 from wise.msfd.gescomponents import (GES_LABELS, get_descriptor, get_features,
                                      get_parameters)
 from wise.msfd.utils import (ItemLabel, ItemList, change_orientation,
-                             filter_duplicates)
+                             consolidate_data)
 from z3c.form.button import buttonAndHandler
 from z3c.form.field import Fields
 from z3c.form.form import Form
@@ -269,6 +269,9 @@ class SnapshotSelectForm(Form):
 
 
 class Proxy2018(object):
+    """ A proxy wrapper that uses XML definition files to 'translate' elements
+    """
+
     def __init__(self, obj, article, extra=None):
         self.__o = obj       # the proxied object
         self.nodes = REPORT_DEFS['2018'][article].get_elements()
@@ -332,10 +335,11 @@ class ReportData2018(BaseComplianceView):
     )
 
     Art8 = Template('pt/nat-desc-report-data-multiple-muid.pt')
-    Art9 = Template('pt/nat-desc-report-data-single-muid.pt')
+    Art9 = Template('pt/nat-desc-report-data-multiple-muid.pt')
     Art10 = Template('pt/nat-desc-report-data-multiple-muid.pt')
+    # Art9 = Template('pt/nat-desc-report-data-single-muid.pt')
 
-    subform = None
+    subform = None      # used for the snapshot selection form
 
     def get_data_from_view_Art8(self):
         # TODO this is not used
@@ -406,21 +410,19 @@ class ReportData2018(BaseComplianceView):
 
         t = sql2018.t_V_ART9_GES_2018
 
-        descr_class = get_descriptor(self.descriptor)
-        all_ids = list(descr_class.all_ids())
+        descriptor = get_descriptor(self.descriptor)
+        all_ids = list(descriptor.all_ids())
 
         # TODO: this needs to be analysed, what to do about D1?
 
         if self.descriptor.startswith('D1.'):
             all_ids.append('D1')
 
-        conditions = [t.c.GESComponent.in_(all_ids)]
-
         count, r = db.get_all_records_ordered(
             t,
             'GESComponent',
             t.c.CountryCode == self.country_code,
-            *conditions
+            t.c.GESComponent.in_(all_ids)
         )
 
         data = [Proxy2018(row, self.article) for row in r]
@@ -429,19 +431,14 @@ class ReportData2018(BaseComplianceView):
 
     @db.use_db_session('2018')
     def get_data_from_db(self):
-        get_data_method = getattr(
-            self,
-            'get_data_from_view_' + self.article
-        )
+        data = getattr(self, 'get_data_from_view_' + self.article)()
 
         definition = REPORT_DEFS['2018'][self.article]
         group_by_fields = definition.get_group_by_fields()
 
-        data = get_data_method()
-
         # this consolidates the data, filtering duplicates
         # list of ((name, label), values)
-        good_data = filter_duplicates(data, group_by_fields)
+        good_data = consolidate_data(data, group_by_fields)
 
         res = []
 
@@ -505,33 +502,28 @@ class ReportData2018(BaseComplianceView):
     def get_snapshots(self):
         """ Returns all snapshots, in the chronological order they were created
         """
+        # TODO: fix this. I'm hardcoding it now to always use generated data
+        db_data = self.get_data_from_db()
+        snapshot = (datetime.now(), db_data)
+
+        return [snapshot]
 
         # snapshots = getattr(self.context, 'snapshots', None)
-        snapshots = None
-        # TODO: fix this. I'm hardcoding it now to always use generated data
-
-        if snapshots is None:
-            self.context.snapshots = PersistentList()
-
-            db_data = self.get_data_from_db()
-            snapshot = (datetime.now(), db_data)
-
-            self.context.snapshots.append(snapshot)
-            self.context.snapshots._p_changed = True
-
-            self.context._p_changed = True
-
-            return self.context.snapshots
-
-        return snapshots
-
-    def get_form(self):
-
-        if not self.subform:
-            form = SnapshotSelectForm(self, self.request)
-            self.subform = form
-
-        return self.subform
+        #
+        # if snapshots is None:
+        #     self.context.snapshots = PersistentList()
+        #
+        #     db_data = self.get_data_from_db()
+        #     snapshot = (datetime.now(), db_data)
+        #
+        #     self.context.snapshots.append(snapshot)
+        #     self.context.snapshots._p_changed = True
+        #
+        #     self.context._p_changed = True
+        #
+        #     return self.context.snapshots
+        #
+        # return snapshots
 
     def get_report_data(self):
         """ Returns the data to display in the template
@@ -543,6 +535,7 @@ class ReportData2018(BaseComplianceView):
         date_selected = fd['sd']
 
         data = snapshots[-1][1]
+        print "len data", len(data)
 
         if date_selected:
             # print date_selected
@@ -626,7 +619,7 @@ class ReportData2018(BaseComplianceView):
                 worksheet.write(i, 0, row_label)
 
                 for j, v in enumerate(row_values):
-                    worksheet.write(i, j+1, unicode(v or ''))
+                    worksheet.write(i, j + 1, unicode(v or ''))
 
         workbook.close()
         out.seek(0)
@@ -679,3 +672,11 @@ class ReportData2018(BaseComplianceView):
         self.report_html = report_html + trans_edit_html
 
         return self.index()
+
+    def get_form(self):
+
+        if not self.subform:
+            form = SnapshotSelectForm(self, self.request)
+            self.subform = form
+
+        return self.subform

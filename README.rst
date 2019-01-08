@@ -1,6 +1,6 @@
-============
+=========
 wise.msfd
-============
+=========
 
 WISE Marine Directive Strategy Framework implementation
 
@@ -235,6 +235,8 @@ Immediate TODOs for the Compliance Module
   labels, provide links, etc.
 - Check the scoring implementation
 - Make generic usability improvements according to TL feedback.
+- Create a navigation helper to navigate between all aspects of an assessment.
+- Reorder articles according to document (A8, A10, A9, I think)
 
 Immediate TODOs for the MSFD Search engine
 ------------------------------------------

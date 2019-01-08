@@ -311,7 +311,7 @@ def db_objects_to_dict(data, excluded_columns=()):
             # import pdb; pdb.set_trace()
 
             if col not in excluded_columns:
-                    d.update({col: getattr(row, col)})
+                d.update({col: getattr(row, col)})
         out.append(d)
 
     return out
@@ -469,6 +469,15 @@ class ItemLabel(TemplateMixin):
     def __str__(self):
         return self.name
 
+    def __repr__(self):
+        return "<ItemLabel '%s'>" % self.name
+
+    def __cmp__(self, other):
+        if hasattr(other, 'name'):
+            return cmp(self.name, other.name)
+
+        return cmp(self.name, other)        # this is not really ok
+
     template = PageTemplateFile('pt/label.pt')
 
 
@@ -480,6 +489,9 @@ class ItemList(TemplateMixin):
 
     def __init__(self, rows):
         self.rows = sorted(rows, key=lambda r: r.title)
+
+    def __repr__(self):
+        return "<ItemList of %s children>" % len(self.rows)
 
 
 class CompoundRow(TemplateMixin):
@@ -608,7 +620,7 @@ def change_orientation(data, sorted_fields):
     return res
 
 
-def filter_duplicates(data, group_by_fields):
+def consolidate_data(data, group_by_fields):
     """ Reduce number of rows in data, by omitting rows with identical values
 
     TODO: explain why this is needed
@@ -627,7 +639,7 @@ def filter_duplicates(data, group_by_fields):
     seen = []
 
     for row in data:
-        # omitting the ignored fields, make a hash to indentify duplicate rows
+        # omitting the ignored fields, make a hash to identify duplicate rows
 
         hash = tuple([v
                       for (i, v) in enumerate(row)
