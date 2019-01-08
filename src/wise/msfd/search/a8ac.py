@@ -3,10 +3,10 @@ from z3c.form.field import Fields
 
 from .. import db, sql
 from ..base import EmbeddedForm, MarineUnitIDSelectForm
-from ..utils import (data_to_xls, register_form, register_form_section,
-                     register_subform)
 from .base import ItemDisplay, MultiItemDisplayForm
 from .interfaces import IA81Form
+from .utils import (data_to_xls, register_form, register_form_section,
+                    register_subform)
 
 
 @register_form

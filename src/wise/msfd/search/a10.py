@@ -2,8 +2,9 @@ from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 
 from .. import db, sql
 from ..base import MarineUnitIDSelectForm
-from ..utils import data_to_xls, pivot_query, register_form
+from ..utils import group_query
 from .base import ItemDisplayForm
+from .utils import data_to_xls, register_form
 
 
 @register_form
@@ -71,14 +72,14 @@ class A10ItemDisplay(ItemDisplayForm):
             t.c.FeatureType,
             t.c.PhysicalChemicalHabitatsFunctionalPressures,
         ], t.c.MSFD10_Target == target_id)
-        ft = pivot_query(res, 'FeatureType')
+        ft = group_query(res, 'FeatureType')
 
         t = sql.t_MSFD10_DESCrit
         c, res = db.get_table_records(
             [t.c.GESDescriptorsCriteriaIndicators],
             t.c.MSFD10_Target == target_id
         )
-        fr = pivot_query(res, 'GESDescriptorsCriteriaIndicators')
+        fr = group_query(res, 'GESDescriptorsCriteriaIndicators')
 
         return [
             ('Feature Type', ft),

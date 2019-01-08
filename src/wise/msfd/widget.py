@@ -16,7 +16,12 @@ class MarineUnitIDSelectWidget(SelectWidget):
         value = super(MarineUnitIDSelectWidget, self).extract()
 
         if value is NO_VALUE:
-            available = [x['value'] for x in self.items()]
+            items = self.items
+
+            if callable(self.items):
+                items = self.items()
+
+            available = [x['value'] for x in items]
 
             if available:
                 return available[:1]

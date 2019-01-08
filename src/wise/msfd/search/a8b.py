@@ -3,10 +3,10 @@ from z3c.form.field import Fields
 
 from .. import db, sql
 from ..base import EmbeddedForm, MarineUnitIDSelectForm
-from ..utils import (data_to_xls, register_form, register_form_section,
-                     register_subform)
 from .base import ItemDisplay, MultiItemDisplayForm
 from .interfaces import IA81Form
+from .utils import (data_to_xls, register_form, register_form_section,
+                    register_subform)
 
 
 @register_form
@@ -67,21 +67,21 @@ class A81bExtractionFishSubForm(MarineUnitIDSelectForm):
         )
 
         mc_ac = sql.MSFD8bExtractionFishShellfishActivity
-        klass_join = sql.MSFD8bExtractionFishShellfishActivityDescription
+        kj = sql.MSFD8bExtractionFishShellfishActivityDescription
         count, data_ac = db.get_all_records_join(
             [
                 mc_ac.MSFD8b_ExtractionFishShellfish_Activity_ID,
                 mc_ac.Activity,
                 mc_ac.ActivityRank,
                 mc_ac.MSFD8b_ExtractionFishShellfish_ActivityDescription,
-                klass_join.MSFD8b_ExtractionFishShellfish_ActivityDescription_ID,
-                klass_join.MarineUnitID,
-                klass_join.Description,
-                klass_join.Limitations,
-                klass_join.MSFD8b_ExtractionFishShellfish
+                kj.MSFD8b_ExtractionFishShellfish_ActivityDescription_ID,
+                kj.MarineUnitID,
+                kj.Description,
+                kj.Limitations,
+                kj.MSFD8b_ExtractionFishShellfish
             ],
-            klass_join,
-            klass_join.MSFD8b_ExtractionFishShellfish.in_(extraction_ids)
+            kj,
+            kj.MSFD8b_ExtractionFishShellfish.in_(extraction_ids)
         )
 
         mc_sum = sql.MSFD8bExtractionFishShellfishSumInfo2ImpactedElement
@@ -205,22 +205,22 @@ class A81bExtractionSeaweedSubForm(MarineUnitIDSelectForm):
         )
 
         mc_ac = sql.MSFD8bExtractionSeaweedMaerlOtherActivity
-        klass_join = sql.MSFD8bExtractionSeaweedMaerlOtherActivityDescription
+        kj = sql.MSFD8bExtractionSeaweedMaerlOtherActivityDescription
         count, data_ac = db.get_all_records_join(
             [
                 mc_ac.MSFD8b_ExtractionSeaweedMaerlOther_Activity_ID,
                 mc_ac.Activity,
                 mc_ac.ActivityRank,
                 mc_ac.MSFD8b_ExtractionSeaweedMaerlOther_ActivityDescription,
-                klass_join.MSFD8b_ExtractionSeaweedMaerlOther_ActivityDescription_ID,
-                klass_join.MarineUnitID,
-                klass_join.ExtractionType,
-                klass_join.Description,
-                klass_join.Limitations,
-                klass_join.MSFD8b_ExtractionSeaweedMaerlOther
+                kj.MSFD8b_ExtractionSeaweedMaerlOther_ActivityDescription_ID,
+                kj.MarineUnitID,
+                kj.ExtractionType,
+                kj.Description,
+                kj.Limitations,
+                kj.MSFD8b_ExtractionSeaweedMaerlOther
             ],
-            klass_join,
-            klass_join.MSFD8b_ExtractionSeaweedMaerlOther.in_(base_ids)
+            kj,
+            kj.MSFD8b_ExtractionSeaweedMaerlOther.in_(base_ids)
         )
 
         mc_sum = sql.MSFD8bExtractionSeaweedMaerlOtherSumInfo2ImpactedElement

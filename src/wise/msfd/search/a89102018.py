@@ -7,14 +7,13 @@ from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 from z3c.form.browser.checkbox import CheckBoxFieldWidget
 from z3c.form.field import Fields
 
-from .. import db, sql2018
-from ..base import EmbeddedForm
-from ..sql_extra import MSFD4GeographicalAreaID
-from ..utils import (all_values_from_field, data_to_xls, db_objects_to_dict,
-                     pivot_data, register_form_2018)
-from .base import ItemDisplayForm
-from ..base import MarineUnitIDSelectForm
 from . import interfaces
+from .. import db, sql2018
+from ..base import EmbeddedForm, MarineUnitIDSelectForm
+from ..sql_extra import MSFD4GeographicalAreaID
+from ..utils import all_values_from_field, db_objects_to_dict, group_data
+from .base import ItemDisplayForm
+from .utils import data_to_xls, register_form_2018
 
 
 class Art9Display(ItemDisplayForm):
@@ -315,7 +314,7 @@ class A2018Art10Display(ItemDisplayForm):
         excluded_columns = ('Id', 'IdTarget')
 
         paremeters = db_objects_to_dict(result, excluded_columns)
-        paremeters = pivot_data(paremeters, 'Parameter')
+        paremeters = group_data(paremeters, 'Parameter')
 
         res = [
             ('Parameters', paremeters),
@@ -607,7 +606,7 @@ class A2018Art81abDisplay(ItemDisplayForm):
         id_elem_status = []
 
         if element_status:
-            element_status_pivot = pivot_data(element_status_pivot,
+            element_status_pivot = group_data(element_status_pivot,
                                               'Element / Element2')
 
             # TODO get the Id for the selected element status
@@ -629,7 +628,7 @@ class A2018Art81abDisplay(ItemDisplayForm):
         )
         criteria_status = db_objects_to_dict(criteria_status_orig,
                                              excluded_columns)
-        criteria_status = pivot_data(criteria_status, 'Criteria')
+        criteria_status = group_data(criteria_status, 'Criteria')
 
         # TODO get the Id for the selected criteria status
         id_criteria_status = [x.Id for x in criteria_status_orig]
@@ -641,7 +640,7 @@ class A2018Art81abDisplay(ItemDisplayForm):
         )
         criteria_value = db_objects_to_dict(criteria_value_orig,
                                             excluded_columns)
-        criteria_value = pivot_data(criteria_value, 'Parameter')
+        criteria_value = group_data(criteria_value, 'Parameter')
 
         # TODO get the Id for the selected criteria value
         id_criteria_value = [x.Id for x in criteria_value_orig]

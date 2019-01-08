@@ -9,7 +9,7 @@ from zope.sqlalchemy import register
 from eea.cache import cache
 
 from . import sql  # , sql2018
-from .utils import db_result_key, pivot_query
+from .utils import db_result_key, group_query
 
 env = os.environ.get
 DSN = env('MSFDURI', 'mssql+pymssql://SA:bla3311!@msdb')  # ?charset=utf8mb4
@@ -267,7 +267,7 @@ def get_collapsed_item(mapper_class, order_field, collapses, *conditions,
             cols = [k] + cs
             c_cols = [getattr(mapper_class, c) for c in cols]
             q = sess.query(*c_cols).filter(*collapse_conditions)
-            extra_data[k] = pivot_query(q, k)
+            extra_data[k] = group_query(q, k)
 
     return [total, item, extra_data]
 

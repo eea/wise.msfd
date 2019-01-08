@@ -4,8 +4,9 @@ from .. import db, sql
 from ..base import MarineUnitIDSelectForm
 from ..sql_extra import (MSFD4GeographicalAreaID,
                          MSFD4GeograpicalAreaDescription)
-from ..utils import db_objects_to_dict, pivot_data, register_form
+from ..utils import db_objects_to_dict, group_data
 from .base import ItemDisplayForm
+from .utils import register_form
 
 
 @register_form
@@ -84,7 +85,7 @@ class A4ItemDisplay(ItemDisplayForm):
 
         rows = db_objects_to_dict(coops, excluded_columns=blacklist)
 
-        regcoop = pivot_data(rows, 'RegionsSubRegions')
+        regcoop = group_data(rows, 'RegionsSubRegions')
         pivot_html = self.extra_data_pivot(extra_data=[
             ('Regional Cooperation', regcoop),
         ])

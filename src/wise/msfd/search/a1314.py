@@ -11,8 +11,9 @@ from .. import db, sql
 from ..base import EmbeddedForm
 from ..db import get_all_records
 from ..interfaces import IMarineUnitIDsSelect
-from ..utils import data_to_xls, default_value_from_field
+from ..utils import default_value_from_field
 from .base import ItemDisplayForm, MainForm
+from .utils import data_to_xls
 
 # all_values_from_field,#
 

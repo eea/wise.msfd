@@ -147,6 +147,8 @@ class A10Item(Item):
         return ""
 
     def threshold_value_a9(self):
+        # reimplementation of threshold values by looking them up in the A9
+        # report view. TODO: this needs to be explained and defended
         rows = []
         crit = self.criterion
         art9 = self.context.article9
@@ -224,6 +226,7 @@ class A10Item(Item):
 class Target(Node):
     """ Wraps a <Target> node
     """
+
     def __init__(self, marine_unit_id, node, nsmap):
         super(Target, self).__init__(node, nsmap)
         self.marine_unit_id = marine_unit_id

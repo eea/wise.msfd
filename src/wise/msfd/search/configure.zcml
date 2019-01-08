@@ -48,5 +48,24 @@
     permission="cmf.ModifyPortalContent"
     />
 
+  <utility
+    component=".vocabulary.monitoring_programme_info_types"
+    name="wise_search_monitoring_programme_info_types"
+    />
+
+  <utility
+    component=".vocabulary.a81_forms_vocab_factory"
+    name="wise_search_a81_forms"
+    />
+
+  <utility
+    component=".vocabulary.articles_vocabulary_factory_2018"
+    name="wise_search_articles_2018"
+    />
+
+  <utility
+    component=".vocabulary.articles_vocabulary_factory"
+    name="wise_search_articles"
+    />
 
 </configure>

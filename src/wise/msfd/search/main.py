@@ -9,10 +9,11 @@ from ..base import EmbeddedForm, MainFormWrapper
 from ..db import get_all_records, get_item_by_conditions
 from ..interfaces import IMarineUnitIDsSelect
 from ..sql_extra import MSCompetentAuthority
-from ..utils import data_to_xls, get_form, scan
+from ..utils import scan
 from .a11 import StartArticle11Form
 from .a1314 import StartArticle1314Form
 from .base import MAIN_FORMS, ItemDisplayForm, MainForm
+from .utils import data_to_xls, get_form
 
 
 class StartView(BrowserView):

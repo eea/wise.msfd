@@ -4,13 +4,13 @@ from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 from z3c.form.browser.checkbox import CheckBoxFieldWidget
 from z3c.form.field import Fields
 
-from .. import db, sql
-from ..interfaces import IMarineUnitIDsSelect
-from ..base import EmbeddedForm
-from ..utils import (all_values_from_field, data_to_xls, db_objects_to_dict,
-                     pivot_data, register_form_art11, register_form_section)
-from .base import ItemDisplay, ItemDisplayForm, MainForm, MultiItemDisplayForm
 from . import interfaces
+from .. import db, sql
+from ..base import EmbeddedForm
+from ..interfaces import IMarineUnitIDsSelect
+from ..utils import all_values_from_field, db_objects_to_dict, group_data
+from .base import ItemDisplay, ItemDisplayForm, MainForm, MultiItemDisplayForm
+from .utils import data_to_xls, register_form_art11, register_form_section
 
 
 class StartArticle11Form(MainForm):
@@ -271,7 +271,7 @@ class A11MonProgDisplay(ItemDisplayForm):
 
         element_names = db_objects_to_dict(result_programme_list,
                                            excluded_columns)
-        element_names = pivot_data(element_names, 'ElementName')
+        element_names = group_data(element_names, 'ElementName')
 
         res = [
             ('Element Names', element_names),

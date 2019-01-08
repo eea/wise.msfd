@@ -11,7 +11,7 @@ from . import interfaces
 from ..base import BaseEnhancedForm, BaseUtil, EmbeddedForm
 from ..db import get_item_by_conditions
 from ..interfaces import IMainForm
-from ..utils import get_registered_form_sections
+from .utils import get_registered_form_sections
 
 
 class ItemDisplayForm(EmbeddedForm):

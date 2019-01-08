@@ -1,6 +1,4 @@
-
 import json
-import re
 
 from sqlalchemy import and_, or_
 from sqlalchemy.sql.schema import Table
@@ -10,12 +8,8 @@ from zope.schema.vocabulary import SimpleTerm, SimpleVocabulary
 
 from . import db, sql, sql2018
 from .labels import COMMON_LABELS
-from .utils import FORMS, FORMS_2018, FORMS_ART11, SUBFORMS
 
 # from eea.cache import cache
-
-
-ART_RE = re.compile('\s(\d+\.*\d?\w?)\s')
 
 
 def vocab_from_values(values):
@@ -162,33 +156,6 @@ def get_area_type_vb_factory(context):
     return db_vocab(t, 'AreaType')
 
 
-def article_sort_helper(term):
-    """ Returns a float number for an article, to help with sorting
-    """
-    title = term.title
-    text = ART_RE.search(title).group().strip()
-    chars = []
-
-    for c in text:
-        if c.isdigit() or c is '.':
-            chars.append(c)
-        else:
-            chars.append(str(ord(c)))
-
-    f = ''.join(chars)
-
-    return float(f)
-
-
-@provider(IVocabularyFactory)
-def articles_vocabulary_factory(context):
-    terms = [SimpleTerm(k, k, v.title) for k, v in FORMS.items()]
-    terms.sort(key=article_sort_helper)
-    vocab = SimpleVocabulary(terms)
-
-    return vocab
-
-
 def mptypes_sort_helper(term):
     title = term.title
 
@@ -220,32 +187,6 @@ def mptypes_sort_helper(term):
 def monitoring_programme_vb_factory(context):
 
     return db_vocab(sql.MSFD11MPType, 'ID', mptypes_sort_helper)
-
-
-@provider(IVocabularyFactory)
-def monitoring_programme_info_types(context):
-    terms = [SimpleTerm(v, k, v.title) for k, v in FORMS_ART11.items()]
-    terms.sort(key=lambda t: t.title)
-    vocab = SimpleVocabulary(terms)
-
-    return vocab
-
-
-@provider(IVocabularyFactory)
-def a81_forms_vocab_factory(context):
-    klass = context.subform.__class__
-
-    terms = []
-
-    forms = SUBFORMS[klass]
-
-    for k in forms:
-        terms.append(SimpleTerm(k, k.title, k.title))
-
-    terms.sort(key=lambda t: t.title)
-    vocab = SimpleVocabulary(terms)
-
-    return vocab
 
 
 @provider(IVocabularyFactory)
@@ -599,17 +540,6 @@ def a1314_unique_codes(context):
     terms.sort(key=lambda t: t.title)
 
     return SimpleVocabulary(terms)
-
-
-# Articles 8, 9, 10
-# reporting year 2018
-@provider(IVocabularyFactory)
-def articles_vocabulary_factory_2018(context):
-    terms = [SimpleTerm(v, k, v.title) for k, v in FORMS_2018.items()]
-    terms.sort(key=lambda t: t.title)
-    vocab = SimpleVocabulary(terms)
-
-    return vocab
 
 
 @provider(IVocabularyFactory)
