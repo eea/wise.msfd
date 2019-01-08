@@ -133,13 +133,13 @@ class ReportData2012(BaseComplianceView, BaseUtil):
 
         return view()
 
-    def get_report_filename(self):
+    def get_report_filename(self, art=None):
         # needed in article report data implementations, to retrieve the file
 
         return get_report_filename('2012',
                                    self.country_code,
                                    self.country_region_code,
-                                   self.article,
+                                   art or self.article,
                                    self.descriptor)
 
     @db.use_db_session('2012')

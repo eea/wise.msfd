@@ -11,6 +11,7 @@ from wise.msfd.labels import COMMON_LABELS
 from wise.msfd.utils import Item, ItemLabel, ItemList, Node, Row
 
 from ..base import BaseArticle2012
+from .a9 import Article9
 from .utils import to_html
 
 logger = logging.getLogger('wise.msfd')
@@ -21,10 +22,11 @@ NSMAP = {"w": "http://water.eionet.europa.eu/schemas/dir200856ec"}
 
 class A10Item(Item):
 
-    def __init__(self,
+    def __init__(self, context,
                  criterion, targets_indicators, country_code, region_code):
         super(A10Item, self).__init__([])
 
+        self.context = context
         self.criterion = criterion
         self.targets_indicators = targets_indicators
         self.country_code = country_code
@@ -41,7 +43,7 @@ class A10Item(Item):
         attrs = [
             ('DescriptorCriterionIndicator', self.criterion),
             ('Description [Targets]', self.description()),
-            ('Threshold value [TargetValue]', self.threshold_value()),
+            ('Threshold value [TargetValue]', self.threshold_value_a9()),
             ('Reference point type', pick('w:ReferencePointType/text()')),
             ('Baseline', pick('w:Baseline/text()')),
             ('Proportion', pick('w:Proportion/text()')),
@@ -143,6 +145,25 @@ class A10Item(Item):
                     return desc[0]
 
         return ""
+
+    def threshold_value_a9(self):
+        rows = []
+        crit = self.criterion
+        art9 = self.context.article9
+        treshold_row_title = 'Threshold value(s)'
+        criterion_row_title = 'GES Component [Reporting feature]'
+
+        treshold_art9 = [x for x in art9.rows if x.title == treshold_row_title]
+        treshold_art9 = treshold_art9[0].cells
+        crit_art9 = [x for x in art9.rows if x.title == criterion_row_title]
+        crit_art9 = crit_art9[0].cells
+
+        if crit not in crit_art9:
+            return ItemList(rows=rows)
+
+        index = crit_art9.index(crit)
+
+        return treshold_art9[index]
 
     def threshold_value(self):
         values = {}
@@ -258,6 +279,17 @@ class Article10(BaseArticle2012):
 
     template = Template('pt/report-data-a10.pt')
 
+    def get_article9_view(self):
+        ctx = self.context
+        art = 'Art9'
+        filename = ctx.get_report_filename(art)
+        view = Article9(ctx, ctx.request, ctx.country_code,
+                        ctx.country_region_code,
+                        ctx.descriptor, art, ctx.muids)
+        view(filename=filename)
+
+        return view
+
     def filtered_ges_components(self):
         """ Returns a list of valid ges criterion indicator targets
 
@@ -281,6 +313,7 @@ class Article10(BaseArticle2012):
         return sorted_by_criterion(res)
 
     def __call__(self):
+        self.article9 = self.get_article9_view()
         filename = self.context.get_report_filename()
         text = get_report_data(filename)
         root = fromstring(text)
@@ -307,7 +340,8 @@ class Article10(BaseArticle2012):
         # wrap the target per MarineUnitID
         all_target_indicators = [TargetsIndicators(node)
                                  for node in xp('w:TargetsIndicators')]
-        cols = [A10Item(gc,
+        cols = [A10Item(self,
+                        gc,
                         all_target_indicators,
                         self.country_code,
                         self.region_code)

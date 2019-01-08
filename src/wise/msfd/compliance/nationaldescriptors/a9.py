@@ -159,8 +159,9 @@ class Article9(BaseArticle2012):
 
     template = ViewTemplate('pt/report-data-a9.pt')
 
-    def __call__(self):
-        filename = self.context.get_report_filename()
+    def __call__(self, filename=None):
+        if not filename:
+            filename = self.context.get_report_filename()
         text = get_report_data(filename)
         root = fromstring(text)
 
