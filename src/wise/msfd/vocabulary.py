@@ -1,3 +1,4 @@
+# TODO: move most of the stuff here in .search, where it belongs
 import json
 
 from sqlalchemy import and_, or_

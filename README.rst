@@ -226,17 +226,20 @@ Immediate TODOs for the Compliance Module
 - automatically re-format text inserted in member state report fields.
   Sometimes the member states use ad-hoc plain-text formatting, or import their
   reports from their own databases, which results in odd-looking long text when
-  inserted directly in HTML.
+  inserted directly in HTML. (done)
 - Improve the reporting tables usability. Allow fixing rows as headers. Improve
   spacing, improve the translation interface.
 - improve usability of 2012 report tables (add human readable labels for
-  database shortcodes, etc).
+  database shortcodes, etc). (mostly done)
 - Improve display of all metadata: translate fixed values to human readable
   labels, provide links, etc.
 - Check the scoring implementation
 - Make generic usability improvements according to TL feedback.
 - Create a navigation helper to navigate between all aspects of an assessment.
 - Reorder articles according to document (A8, A10, A9, I think)
+- Allow translation of list items
+- Allow translation of 2012 report data
+- fix download as excel
 
 Immediate TODOs for the MSFD Search engine
 ------------------------------------------
