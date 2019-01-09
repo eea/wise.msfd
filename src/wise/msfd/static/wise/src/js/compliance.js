@@ -37,7 +37,7 @@ if (!Array.prototype.last){
 
         // console.log("TH", $th, thh, mh)
 
-        $th.height(mh - 1);
+        $th.height(mh + 1);
         $next.height(mh);
       });
     });
