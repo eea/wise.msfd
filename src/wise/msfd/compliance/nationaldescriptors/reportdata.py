@@ -282,19 +282,19 @@ class Proxy2018(object):
         self.extra = extra
 
         for node in self.nodes:
-            name = node.tag
+            name = node.get('label')
             value = getattr(self.__o, name, extra.get(name, None))
 
             if not value:
                 continue
 
             attrs = node.attrib
-            label_name = attrs.get('labelName', None)
+            label_name = attrs.get('label', None)
 
             if not label_name:
                 continue
 
-            as_list = attrs.get('asList', 'false')
+            as_list = attrs.get('as-list', 'false')
 
             if as_list == 'true':
                 vals = set(value.split(','))
