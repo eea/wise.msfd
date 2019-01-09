@@ -147,22 +147,36 @@ class A10Item(Item):
         return ""
 
     def threshold_value_a9(self):
-        # reimplementation of threshold values by looking them up in the A9
-        # report view. TODO: this needs to be explained and defended
+        """ Reimplementation of threshold values by looking them up
+        in the A9 report view.
+
+        From Article 9 get the table rows. Identify the needed
+        Threshold Value by criterion
+
+        :return: empty ItemList instance, or ItemList instance from
+        Article 9
+        """
+        # TODO: this needs to be explained and defended
         rows = []
         crit = self.criterion
         art9 = self.context.article9
         treshold_row_title = 'Threshold value(s)'
         criterion_row_title = 'GES Component [Reporting feature]'
 
+        # get the row which contains the threshold values
         treshold_art9 = [x for x in art9.rows if x.title == treshold_row_title]
         treshold_art9 = treshold_art9[0].cells
+
+        # get the criterions row, this is needed to get
+        # the column index of the criterion
         crit_art9 = [x for x in art9.rows if x.title == criterion_row_title]
         crit_art9 = crit_art9[0].cells
 
         if crit not in crit_art9:
             return ItemList(rows=rows)
 
+        # get the column index of the criterion, with this we get our needed
+        # threshold value
         index = crit_art9.index(crit)
 
         return treshold_art9[index]
@@ -283,6 +297,12 @@ class Article10(BaseArticle2012):
     template = Template('pt/report-data-a10.pt')
 
     def get_article9_view(self):
+        """ Get the view for Article 9 2012, which contains the
+        table with the data. This is needed because we show
+        the Threshold values from article 9
+
+        :return: article 9 view
+        """
         ctx = self.context
         art = 'Art9'
         filename = ctx.get_report_filename(art)

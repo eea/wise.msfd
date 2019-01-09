@@ -116,6 +116,9 @@ $(document).ready(function(){
 
     $('.text', $cell).toggleClass('active');
     $('.transl', $cell).toggleClass('active');
+
+    var $tr = $(this).parents('tr');
+    $tr.fixTableHeaderHeight();
   };
 
   window.addTranslateClickHandlers = function() {
