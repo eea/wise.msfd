@@ -282,7 +282,7 @@ class Proxy2018(object):
         self.extra = extra
 
         for node in self.nodes:
-            name = node.get('label')
+            name = node.get('name')
             value = getattr(self.__o, name, extra.get(name, None))
 
             if not value:
