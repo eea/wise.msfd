@@ -208,7 +208,7 @@ class EditAssessmentDataForm(Form, BaseComplianceView):
     @property
     def criterias(self):
         els = get_descriptor_elements(
-            'compliance/nationaldescriptors/questions/data'
+            'compliance/nationaldescriptors/data'
         )
 
         desc = self.descriptor.split('.')[0]
@@ -257,7 +257,7 @@ class EditAssessmentDataForm(Form, BaseComplianceView):
 
                 # Add 'Not relevant' to choices list
                 terms.extend([
-                    SimpleTerm(token=len(terms)+1,
+                    SimpleTerm(token=len(terms) + 1,
                                value=None,
                                title=u'Not relevant')
                 ])
