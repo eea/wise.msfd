@@ -270,7 +270,7 @@ class A8bItem(Item):
             ('Analysis [Feature]', self.column_type),
             ('Assessment Topic', self.row_assessment_topic()),
             ('[Element]', 'Row not implemented'),
-            ('CriteriaType [GESComponent]', self.row_criteria_type),
+            ('CriteriaType [GESComponent]', self.row_criteria_type()),
             ('[Parameter]', 'Row not implemented'),
             ('ThresholdValue', self.row_threshold_value()),
             ('SumInfo1Unit/ThresholdValueUnit [ValueUnit]',
@@ -286,7 +286,7 @@ class A8bItem(Item):
 
             ('Description', self.db_record.Description),
             ('SumInfo1', self.db_record.SumInfo1),
-            ('SumInfo1Unit', self.row_record_suminfo1_unit),
+            ('SumInfo1Unit', self.row_record_suminfo1_unit()),
             ('SumInfo1Confidence', label(self.db_record.SumInfo1Confidence)),
             ('TrendsRecent', label(self.db_record.TrendsRecent)),
             ('TrendsFuture', label(self.db_record.TrendsFuture)),

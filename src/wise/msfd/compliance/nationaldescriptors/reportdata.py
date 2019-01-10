@@ -1,6 +1,7 @@
 import logging
 import time
-from collections import namedtuple
+from HTMLParser import HTMLParser
+from collections import namedtuple, OrderedDict
 from datetime import datetime
 from io import BytesIO
 
@@ -131,7 +132,10 @@ class ReportData2012(BaseComplianceView, BaseUtil):
                      self.country_region_code, self.descriptor, self.article,
                      self.muids)
 
-        return view()
+        rendered_view = view()
+        self.report_data_rows = view.rows
+
+        return rendered_view
 
     def get_report_filename(self, art=None):
         # needed in article report data implementations, to retrieve the file
@@ -142,9 +146,64 @@ class ReportData2012(BaseComplianceView, BaseUtil):
                                    art or self.article,
                                    self.descriptor)
 
+    def data_to_xls(self, data, report_header):
+        # Create a workbook and add a worksheet.
+        out = BytesIO()
+        workbook = xlsxwriter.Workbook(out, {'in_memory': True})
+
+        # add worksheet with report header data
+        worksheet = workbook.add_worksheet(unicode('Report header'))
+        for i, (wtitle, wdata) in enumerate(report_header.items()):
+            wtitle = wtitle.title().replace('_', ' ')
+            if isinstance(wdata, tuple):
+                wdata = wdata[1]
+
+            worksheet.write(i, 0, wtitle)
+            worksheet.write(i, 1, wdata)
+
+        # add worksheet(s) with report data
+        for wtitle, wdata in data.items():
+            if not wdata:
+                continue
+
+            worksheet = workbook.add_worksheet(unicode(wtitle)[:30])
+
+            for i, row in enumerate(wdata):
+                row_label = row.title
+                worksheet.write(i, 0, row_label)
+
+                row_values = row.cells
+                for j, v in enumerate(row_values):
+                    if isinstance(v, str):
+                        parser = HTMLParser()
+                        v = parser.unescape(v.decode('utf-8'))
+                    worksheet.write(i, j + 1, unicode(v))
+
+        workbook.close()
+        out.seek(0)
+
+        return out
+
+    def download(self, report_data, report_header):
+        if isinstance(report_data, list):
+            report_data = {'Report data', report_data}
+
+        xlsio = self.data_to_xls(report_data, report_header)
+        sh = self.request.response.setHeader
+
+        sh('Content-Type', 'application/vnd.openxmlformats-officedocument.'
+           'spreadsheetml.sheet')
+        fname = "-".join([self.country_code,
+                          self.country_region_code,
+                          self.article,
+                          self.descriptor])
+        sh('Content-Disposition',
+           'attachment; filename=%s.xlsx' % fname)
+
+        return xlsio.read()
+
     @db.use_db_session('2012')
     def __call__(self):
-
         if self.descriptor.startswith('D1.'):       # map to old descriptor
             self._descriptor = 'D1'
             assert self.descriptor == 'D1'
@@ -171,7 +230,7 @@ class ReportData2012(BaseComplianceView, BaseUtil):
 
         rep_info = self.get_reporting_information()
 
-        report_header = self.report_header_template(
+        report_header_data = OrderedDict(
             title="{}'s 2012 Member State Report for {} / {} / {}".format(
                 self.country_name,
                 self.country_region_name,
@@ -180,14 +239,18 @@ class ReportData2012(BaseComplianceView, BaseUtil):
             ),
             report_by=rep_info.reporters,
             source_file=source_file,
+            factsheet=factsheet,
             # TODO: do the report_due by a mapping with article: date
             report_due='2012-10-15',
-            report_date=rep_info.report_date,
-            factsheet=factsheet,
+            report_date=rep_info.report_date
         )
+        report_header = self.report_header_template(**report_header_data)
 
         report_data = self.get_report_data()
         self.report_html = report_header + report_data
+
+        if 'download' in self.request.form:
+            return self.download(self.report_data_rows, report_header_data)
 
         return self.index()
 
