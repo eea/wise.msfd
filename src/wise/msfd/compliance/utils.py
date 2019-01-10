@@ -25,7 +25,7 @@ class ReportDefinition(object):
 
     def get_group_by_fields(self):
         res = [
-            x.tag
+            x.get('name')
 
             for x in self.nodes
 
@@ -36,7 +36,7 @@ class ReportDefinition(object):
 
     def get_translatable_fields(self):
         res = [
-            x.tag
+            x.get('name')
 
             for x in self.nodes
 
@@ -69,7 +69,7 @@ def get_sorted_fields(year, article, fields):
     elements = REPORT_DEFS[year][article].get_elements()
 
     labels = [
-        (x.tag, x.text)
+        (x.get('name'), x.text)
 
         for x in elements
 
@@ -81,7 +81,7 @@ def get_sorted_fields(year, article, fields):
 
         return final
 
-    diff = set(fields) - set([x.tag for x in elements])
+    diff = set(fields) - set([x.get('name') for x in elements])
     final = [(x, x) for x in diff]
 
     final.extend(labels)
