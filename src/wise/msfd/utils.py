@@ -314,7 +314,8 @@ class ItemLabel(TemplateMixin):
         return self.name
 
     def __repr__(self):
-        return "<ItemLabel '%s'>" % self.name
+        return self.name
+        # return "<ItemLabel '%s'>" % self.name
 
     def __cmp__(self, other):
         if hasattr(other, 'name'):
@@ -335,7 +336,10 @@ class ItemList(TemplateMixin):
         self.rows = sorted(rows, key=lambda r: r.title)
 
     def __repr__(self):
-        return "<ItemList of %s children>" % len(self.rows)
+        v = ', '.join(map(unicode, self.rows))
+
+        return v
+        # return "<ItemList of %s children>" % len(self.rows)
 
 
 class CompoundRow(TemplateMixin):
