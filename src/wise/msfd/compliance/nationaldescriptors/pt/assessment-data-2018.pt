@@ -20,16 +20,28 @@
           <tal:rep tal:repeat="value row/values" >
             <td
               tal:attributes="class python: 'as-value as-value-{}'.format(value[1]);
-              title python: value[0];
-              colspan python: (len(assessment.gescomponents) + 1) - len(row.values);"
-              tal:content="python: value[2]">
-              D0C0
+                              colspan python: (len(assessment.gescomponents) + 1) - len(row.values);">
+
+              <label for=""
+                class="help-popover"
+                data-trigger="hover"
+                data-html="true"
+                tal:attributes="
+                  title python: value[0];
+                  data-content python: value[2]"
+                >
+                <span tal:content="python: value[2]">D0C0</span>
+                <span class="fa fa-question-circle" style="color: lightblue"></span>
+              </label>
+
             </td>
           </tal:rep>
 
           <td
             tal:attributes="class python: 'as-value as-value-{}'.format(row.conclusion_color)"
-            tal:content="row/conclusion">X</td>
+            >
+            <strong tal:content="row/conclusion">X</strong>
+          </td>
 
           <td tal:content="row/score">X</td>
         </tr>

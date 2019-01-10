@@ -220,7 +220,7 @@ descriptors to the 2018 data format.
 Immediate TODOs for the Compliance Module
 -----------------------------------------
 
-- format the lists in double columns if they are long
+- Format the lists in double columns if they are long
 - check the existing implementation of extracted data for the report tables for
   both 2012 and 2018 data. Make sure we filter by region.
 - automatically re-format text inserted in member state report fields.
@@ -239,9 +239,11 @@ Immediate TODOs for the Compliance Module
 - Reorder articles according to document (A8, A10, A9, I think)
 - Allow translation of list items
 - Allow translation of 2012 report data
-- fix download as excel
+- Allow translation by TLs
+- Redo the translation integration (use ajax to load field value)
+- Fix download as excel
 - add form unload warning for assessment editing
-- redo select2 styling and form improvements for assessment editing
+- create the notification system
 
 Immediate TODOs for the MSFD Search engine
 ------------------------------------------

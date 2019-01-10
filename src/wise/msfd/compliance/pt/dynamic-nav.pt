@@ -8,7 +8,7 @@
 
   <body metal:fill-slot="content">
     <metal:m define-macro="nav">
-      <div id="compliance-nav">bla</div>
+      <div id="compliance-nav"></div>
       <script tal:content="string: var jsonMapURL = '${view/json_map_url}';;">
         var jsonMapURL = '';
       </script>
