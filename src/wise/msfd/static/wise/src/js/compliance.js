@@ -6,6 +6,37 @@ if (!Array.prototype.last){
 
 (function(window, document, $){
 
+  var selectorFormContainer = ".wise-search-form-container";
+  var exceptVal = ["all", "none", "invert", "apply"];
+  /*
+   * SELECT2 functions
+   * */
+  function setupSelects2(selector){
+    var forbiddenIDs = [];
+    var selectorFormCont = selector || selectorFormContainer;
+
+    $(selectorFormCont + " select").each(function(ind, selectElement) {
+      var selectedElementID = $(selectElement).attr("id");
+      if(forbiddenIDs.indexOf(selectedElementID) !== -1){
+        return false;
+      }
+
+      $(selectElement).addClass("js-example-basic-single");
+      var lessOptions = $(selectElement).find("option").length < 10;
+
+      var options = {
+        placeholder: 'Select an option',
+        closeOnSelect: true,
+        dropdownAutoWidth : true,
+        width: '100%',
+        theme: "flat"
+      };
+      if (lessOptions) options.minimumResultsForSearch = Infinity;
+
+      $(selectElement).select2(options);
+    });
+  }
+
   function initStyling(){
     // TODO: is this still needed? I don't think so
     //$("#form-buttons-continue").hide("fast");
@@ -117,6 +148,7 @@ if (!Array.prototype.last){
 
   $(document).ready(function($){
     initStyling();
+    setupSelects2();
 
     if (window.matchMedia("(max-width: 768px)").matches) {
       $(".overflow-table h5").width( $(".overflow-table table").width() );

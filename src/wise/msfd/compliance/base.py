@@ -61,6 +61,7 @@ MAIN_FORMS = [Tab(*x) for x in [
 class Container(object):
     """ A container can render its children forms and views
     """
+
     def __init__(self, context, request):
         self.context = context
         self.request = request
@@ -91,6 +92,10 @@ class BaseComplianceView(BrowserView):
 
     tabs_type = 'tab'
     main_forms = MAIN_FORMS
+
+    @property
+    def json_map_url(self):
+        return self.root_url() + '/@@json-map'
 
     @property
     def TRANSLATABLES(self):
@@ -392,7 +397,8 @@ class AssessmentQuestionDefinition:
             try:
                 si = (int(onode.get('score')), onode.text.strip())
             except:
-                import pdb; pdb.set_trace()
+                import pdb
+                pdb.set_trace()
             self.scores.append(si)
 
     def calculate_score(self, descriptor, values):

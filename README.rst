@@ -240,6 +240,8 @@ Immediate TODOs for the Compliance Module
 - Allow translation of list items
 - Allow translation of 2012 report data
 - fix download as excel
+- add form unload warning for assessment editing
+- redo select2 styling and form improvements for assessment editing
 
 Immediate TODOs for the MSFD Search engine
 ------------------------------------------

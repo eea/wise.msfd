@@ -1,0 +1,18 @@
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en"
+  xmlns:tal="http://xml.zope.org/namespaces/tal"
+  xmlns:metal="http://xml.zope.org/namespaces/metal"
+  xmlns:i18n="http://xml.zope.org/namespaces/i18n"
+  lang="en"
+  metal:use-macro="context/main_template/macros/master"
+  i18n:domain="eea">
+
+  <body metal:fill-slot="content">
+    <metal:m define-macro="nav">
+      <div id="compliance-nav">bla</div>
+      <script tal:content="string: var jsonMapURL = '${view/json_map_url}';;">
+        var jsonMapURL = '';
+      </script>
+      <script src="/++resource++msfd/js/nav.js"></script>
+    </metal:m>
+  </body>
+</html>

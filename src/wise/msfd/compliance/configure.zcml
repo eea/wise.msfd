@@ -10,6 +10,21 @@
 
   <browser:page
     for="*"
+    name="compliance-nav-macros"
+    template="pt/dynamic-nav.pt"
+    permission="zope2.View"
+    class=".views.ComplianceNavMacros"
+    />
+
+  <browser:page
+    for=".interfaces.IComplianceModuleFolder"
+    name="json-map"
+    class=".views.ComplianceJSONMap"
+    permission="zope2.View"
+    />
+
+  <browser:page
+    for="*"
     name="pdb"
     class=".admin.ToPDB"
     permission="cmf.ManagePortal"
