@@ -186,7 +186,7 @@ class ReportData2012(BaseComplianceView, BaseUtil):
 
     def download(self, report_data, report_header):
         if isinstance(report_data, list):
-            report_data = {'Report data', report_data}
+            report_data = {'Report data': report_data}
 
         xlsio = self.data_to_xls(report_data, report_header)
         sh = self.request.response.setHeader
