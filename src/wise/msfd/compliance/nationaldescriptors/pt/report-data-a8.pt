@@ -4,19 +4,8 @@
 
       <h4 tal:content="muid">DE_ANS</h4>
 
-      <metal:s
-        metal:use-macro="context/context/wise-macros/macros/simplify-table"></metal:s>
-
-      <div class="overflow-table">
-        <div class="inner">
-          <table tal:condition="data"
-            class='table table-bordered table-striped table-report'>
-            <tal:rep tal:repeat="row data" >
-              <tal:row replace="structure row"></tal:row>
-            </tal:rep>
-          </table>
-        </div>
-      </div>
+      <metal:s metal:use-macro="context/context/wise-macros/macros/simplify-table"></metal:s>
+      <metal:s metal:use-macro="context/context/wise-macros/macros/overflow-table"></metal:s>
 
     </tal:def>
   </div>

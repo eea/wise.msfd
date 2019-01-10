@@ -1,12 +1,4 @@
 <div class="" tal:define="data view/rows">
   <metal:s metal:use-macro="context/context/wise-macros/macros/simplify-table"></metal:s>
-  <div class="overflow-table">
-    <div class="inner">
-      <table class='table table-bordered table-striped table-report' style='width: 100%; overflow:auto'>
-        <tal:rep tal:repeat="row data">
-          <tal:row replace="structure row"></tal:row>
-        </tal:rep>
-      </table>
-    </div>
-  </div>
+  <metal:s metal:use-macro="context/context/wise-macros/macros/overflow-table"></metal:s>
 </div>

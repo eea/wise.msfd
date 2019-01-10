@@ -65,3 +65,16 @@
 
   </div>
 </metal:macro>
+
+<metal:macro define-macro="overflow-table">
+  <div class="overflow-table">
+    <div class="inner">
+      <table tal:condition="data"
+        class='table table-bordered table-striped table-report'>
+        <tal:rep tal:repeat="row data" >
+          <tal:row replace="structure row"></tal:row>
+        </tal:rep>
+      </table>
+    </div>
+  </div>
+</metal:macro>
