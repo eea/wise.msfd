@@ -15,14 +15,14 @@ if (!Array.prototype.last){
     $(".toggle-sidebar").hide();
   }
 
-	function setupDoubleColumnsList($table){
-		$table.find('ul.cell-listing').each(function(){
-    	var length = $(this).children().length;
-    	if (length > 5){
-    		$(this).addClass('two-columns');
-    	}
+  function setupDoubleColumnsList($table){
+    $table.find('ul.cell-listing').each(function(){
+      var length = $(this).children().length;
+      if (length > 5){
+        $(this).addClass('two-columns');
+      }
     });
-	}
+  }
 
   $.fn.fixTableHeaderHeight = function fixTableHeaderHeight() {
     // because the <th> are position: absolute, they don't get the height of
@@ -37,21 +37,21 @@ if (!Array.prototype.last){
 
         // console.log("TH", $th, thh, mh)
 
-        $th.height(mh + 1);
+        $th.height(mh);
         $next.height(mh);
       });
     });
   };
 
   $.fn.simplifyTable = function simplifyTable(){
-  	var $table = $(this);
+    var $table = $(this);
 
     if (!$table.data('original')) {
       $table.data('original', $table.html());
     }
 
-		setupDoubleColumnsList($table);
-		// stretch all cells to the maximum table columns;
+    setupDoubleColumnsList($table);
+    // stretch all cells to the maximum table columns;
     var max = 0;
     var $tr = $('tr', this);
     $tr.each(function(){
@@ -97,8 +97,8 @@ if (!Array.prototype.last){
       });
     });
 
-		$table.fixTableHeaderHeight();
-		$table.data('simplified', $table.html());
+    $table.fixTableHeaderHeight();
+    $table.data('simplified', $table.html());
   };
 
   $.fn.toggleTable = function toggleTable(onoff) {
@@ -133,6 +133,6 @@ if (!Array.prototype.last){
       var onoff = $(this).attr('aria-pressed') == 'true';
       $p = $(this).parent().next();
       $('table', $p).toggleTable(!onoff);
-	  });
+    });
   });
 }(window, document, $));
