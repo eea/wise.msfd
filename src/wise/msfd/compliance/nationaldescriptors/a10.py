@@ -34,6 +34,15 @@ class A10Item(Item):
 
         self.targets = []
 
+        # Note: this cannot be done because the D1 descriptor can't be easily
+        # matched from a criterion indicator.
+        # if self.is_descriptor:
+        #     for ti in targets_indicators:
+        #         targets = ti.targets_for_descriptor(self.criterion)
+        #         self.targets.extend(targets)
+        #     print self.targets
+        # else:
+
         for ti in targets_indicators:
             targets = ti.targets_for_criterion(self.criterion)
             self.targets.extend(targets)
@@ -43,6 +52,7 @@ class A10Item(Item):
         attrs = [
             ('DescriptorCriterionIndicator', self.criterion),
             ('Description [Targets]', self.description()),
+            ('Feature [Target code]', self.target_code()),
             ('Threshold value [TargetValue]', self.threshold_value_a9()),
             ('Reference point type', pick('w:ReferencePointType/text()')),
             ('Baseline', pick('w:Baseline/text()')),
@@ -88,6 +98,9 @@ class A10Item(Item):
 
         for row in res:
             return row[0]       # there are multiple records, one for each MUID
+
+    def target_code(self):
+        return self.pick('w:Feature/text()')
 
     @db.use_db_session('2012')
     def get_feature_pressures(self):
@@ -210,9 +223,6 @@ class A10Item(Item):
         one with a positive value
         """
 
-        if not self.is_descriptor:
-            return ''
-
         for target in self.targets:
             v = target[xpath]
 
@@ -242,7 +252,7 @@ class A10Item(Item):
 
 
 class Target(Node):
-    """ Wraps a <Target> node
+    """ Wraps a <Targets> node
     """
 
     def __init__(self, marine_unit_id, node, nsmap):
@@ -251,24 +261,25 @@ class Target(Node):
 
     @property
     def descriptor(self):
-
         for dci in self['w:DesriptorCriterionIndicators/'
                         'w:DesriptorCriterionIndicator/text()']:
 
             if dci.startswith('D'):
                 return dci
 
-            if '.' in dci:
-                # this means that only D1 is supported, 1.1, etc are not
-                # supported. For 2012, I think this is fine??
-
-                return 'D' + dci.split('.', 1)[0]
+            # if '.' in dci:
+            #     return 'D' + dci.split('.', 1)[0]
 
     @property
     def criterions(self):
+        crits = set(self['w:DesriptorCriterionIndicators/'
+                         'w:DesriptorCriterionIndicator/text()'])
+        crits = set([x.split('-', 1)[0] for x in crits])
 
-        return [self.descriptor] + self['w:DesriptorCriterionIndicators/'
-                                        'w:DesriptorCriterionIndicator/text()']
+        if self.descriptor:
+            crits.add(self.descriptor)
+
+        return list(crits)
 
 
 class TargetsIndicators(Node):
@@ -288,6 +299,8 @@ class TargetsIndicators(Node):
         return [t for t in self.targets if t.descriptor == descriptor]
 
     def targets_for_criterion(self, criterion):
+        criterion = criterion.split('-', 1)[0]
+
         return [t for t in self.targets if criterion in t.criterions]
 
 

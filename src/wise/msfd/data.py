@@ -33,7 +33,7 @@ def countries_in_region(regionid):
         t,
         'MemberState',
         t.RegionSubRegions == regionid
-     )
+    )
 
 
 @db.use_db_session('2012')
@@ -188,7 +188,6 @@ LIMIT 1""" % filename
     try:
         req = service.query(q)
         rows = req.fetchall()
-        print "done"
 
         urls = []
 
@@ -207,8 +206,6 @@ LIMIT 1""" % filename
                          'filename url: %s', filename)
 
         return ''
-
-    print urls
 
     return urls[0]
 

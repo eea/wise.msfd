@@ -274,7 +274,6 @@ class BaseComplianceView(BrowserView):
     def get_transitions(self):
         wftool = get_tool('portal_workflow')
         transitions = wftool.listActionInfos(object=self.context)
-        print transitions
 
         return [t for t in transitions if t['allowed']]
 

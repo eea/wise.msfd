@@ -263,6 +263,7 @@ Immediate TODOs for the Compliance Module
 - Art10 2012 Italy D6, D8: how to get threshold value from Art9 when indicators do not match ex. 6.1(art9) vs 6.1.2(art10), 8.1 vs 8.1.1
 - Art10 2012 Latvia: description (from db) for indicators '5.1.1-indicator 5.1A' etc is not in the excel, are these needed?
 - Art10 2012 Italy (DONE): DescriptorCriterionIndicator values are repeated
+- Better D1.x differentiation for 2012 reports
 
 Immediate TODOs for the MSFD Search engine
 ------------------------------------------

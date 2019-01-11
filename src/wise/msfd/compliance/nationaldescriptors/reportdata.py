@@ -1,8 +1,8 @@
 import logging
 import time
-from HTMLParser import HTMLParser
-from collections import namedtuple, OrderedDict
+from collections import OrderedDict, namedtuple
 from datetime import datetime
+from HTMLParser import HTMLParser
 from io import BytesIO
 
 from lxml.etree import fromstring
@@ -153,8 +153,10 @@ class ReportData2012(BaseComplianceView, BaseUtil):
 
         # add worksheet with report header data
         worksheet = workbook.add_worksheet(unicode('Report header'))
+
         for i, (wtitle, wdata) in enumerate(report_header.items()):
             wtitle = wtitle.title().replace('_', ' ')
+
             if isinstance(wdata, tuple):
                 wdata = wdata[1]
 
@@ -162,6 +164,7 @@ class ReportData2012(BaseComplianceView, BaseUtil):
             worksheet.write(i, 1, wdata)
 
         # add worksheet(s) with report data
+
         for wtitle, wdata in data.items():
             if not wdata:
                 continue
@@ -173,6 +176,7 @@ class ReportData2012(BaseComplianceView, BaseUtil):
                 worksheet.write(i, 0, row_label)
 
                 row_values = row.cells
+
                 for j, v in enumerate(row_values):
                     if isinstance(v, str):
                         parser = HTMLParser()
@@ -204,9 +208,10 @@ class ReportData2012(BaseComplianceView, BaseUtil):
 
     @db.use_db_session('2012')
     def __call__(self):
-        if self.descriptor.startswith('D1.'):       # map to old descriptor
-            self._descriptor = 'D1'
-            assert self.descriptor == 'D1'
+        # if self.descriptor.startswith('D1.'):       # map to old descriptor
+        #     # self._descriptor = 'D1'               # this hardcodes D1.x
+        #                                             # descriptors to D1
+        #     assert self.descriptor == 'D1'
 
         print("Will render report for: %s" % self.article)
         self.filename = filename = self.get_report_filename()
@@ -326,7 +331,6 @@ class SnapshotSelectForm(Form):
         data = self.context.get_data_from_db()
 
         self.context.context.snapshots.append((datetime.now(), data))
-        print "harvesting data"
 
         self.request.response.redirect('./@@view-report-data-2018')
 
@@ -598,10 +602,8 @@ class ReportData2018(BaseComplianceView):
         date_selected = fd['sd']
 
         data = snapshots[-1][1]
-        print "len data", len(data)
 
         if date_selected:
-            # print date_selected
             filtered = [x for x in snapshots if x[0] == date_selected]
 
             if filtered:
