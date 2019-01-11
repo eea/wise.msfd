@@ -530,6 +530,8 @@ def sorted_by_criterion(ids):
         if INDICATOR_2012_RE.match(id):
             indicators.add(id)
 
+            continue
+
         if 'indicator' in id:        # TODO: this needs to be normalized
             criterions.add(id)
 
