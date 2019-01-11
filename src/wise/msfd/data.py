@@ -232,6 +232,9 @@ def get_factsheet_url(url):
 
 
 def get_report_data(filename):
+    if not filename:
+        return ""
+
     tmpdir = tempfile.gettempdir()
     assert '..' not in filename     # need better security?
 

@@ -372,6 +372,12 @@ class Article10(BaseArticle2012):
         self.article9 = self.get_article9_view()
         filename = self.context.get_report_filename()
         text = get_report_data(filename)
+
+        if not text:
+            self.rows = []
+
+            return self.template()
+
         root = fromstring(text)
 
         def xp(xpath, node=root):

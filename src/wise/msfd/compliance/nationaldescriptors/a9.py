@@ -163,6 +163,12 @@ class Article9(BaseArticle2012):
         if not filename:
             filename = self.context.get_report_filename()
         text = get_report_data(filename)
+
+        if not text:
+            self.rows = []
+
+            return self.template()
+
         root = fromstring(text)
 
         descriptor_class = get_descriptor(self.descriptor)
@@ -217,7 +223,8 @@ class Article9(BaseArticle2012):
         ]
 
         sorted_ges_c = sorted_by_criterion([c.ges_component() for c in cols])
-        sort_func = lambda col: sorted_ges_c.index(col.ges_component())
+
+        def sort_func(col): return sorted_ges_c.index(col.ges_component())
         sorted_cols = sorted(cols, key=sort_func)
 
         for col in sorted_cols:
