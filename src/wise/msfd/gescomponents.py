@@ -105,10 +105,15 @@ class Criterion(object):
         alter_ids = len(alter) == 0 and alter[0][0] \
             or u', '.join([a[0] for a in alter])
 
-        return u"{} ({}) {}".format(
-            self._id,
-            alter_ids,
+        # return u"{} ({}) {}".format(
+        #     self._id,
+        #     self._title,
+        #     alter_ids,
+        # )
+
+        return u"{} ({})".format(
             self._title,
+            alter_ids,
         )
 
     # def belongs_to_descriptor(self, descriptor_id):
