@@ -96,23 +96,34 @@ from Annex 3.
 Articles 8, 9, 10 - 2018 version
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Here we display the recorded information from 2018 reports. We have Article 10 (Targets), the Article 8.1ab (GES Assessments), Article 8.1c (ESA assessments), Article 9 (GES Determination) and the Indicators pages. Each page allows filtering and displays relevant information.
+Here we display the recorded information from 2018 reports. We have Article 10
+(Targets), the Article 8.1ab (GES Assessments), Article 8.1c (ESA assessments),
+Article 9 (GES Determination) and the Indicators pages. Each page allows
+filtering and displays relevant information.
 
 Article 8.1ab
 ~~~~~~~~~~~~~
-Displays the GES Assessments information with related pressure and target codes, element and criteria statuses, criteria values and criteria value indicators. Allows filtering information by MarineUnitID, Country Code, Features and GES Component.
+Displays the GES Assessments information with related pressure and target
+codes, element and criteria statuses, criteria values and criteria value
+indicators. Allows filtering information by MarineUnitID, Country Code,
+Features and GES Component.
 
 Artiticle 8.1c
 ~~~~~~~~~~~~~~
-Display the ESA assessments information. Filtering can be done by MarineUnitID, Country Code, Features and GES Component.
+Display the ESA assessments information. Filtering can be done by MarineUnitID,
+Country Code, Features and GES Component.
 
 Article 9
 ~~~~~~~~~
-Displays GES determination information, GES description, the determination date, update type. The information here can be filtered by MarineUnitID, Country Code, GES Component, and Features.
+Displays GES determination information, GES description, the determination
+date, update type. The information here can be filtered by MarineUnitID,
+Country Code, GES Component, and Features.
 
 Article 10
 ~~~~~~~~~~
-Displays the targets and associated indicators, target codes, description, time scale, update date, update type and parameters. The information can be filtered by MarineUnitID, Country Code, Features and GES Component.
+Displays the targets and associated indicators, target codes, description, time
+scale, update date, update type and parameters. The information can be filtered
+by MarineUnitID, Country Code, Features and GES Component.
 
 
 Compliance Assessment module

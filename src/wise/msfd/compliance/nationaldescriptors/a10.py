@@ -292,6 +292,20 @@ class Article10(BaseArticle2012):
 
     klass(self, self.request, self.country_code, self.descriptor,
           self.article, self.muids, self.colspan)
+
+    TODO: we should also extract DescriptorCriterionIndicators from the file
+
+    How do we show data?
+
+    - we parse the original reported XML file
+    - we filter the "DescriptorCriterionIndicator" in the file
+        - we get the assigned country criterion indicators from the database
+          (we use the MSFD_19a_10DescriptiorsCriteriaIndicators view)
+        - we use the first part of the criterion indicator to match the
+          available criterion ids for the current descriptor
+    - for each of these DescriptorCriterionIndicator we build a column in the
+      result
+
     """
 
     template = Template('pt/report-data-a10.pt')
@@ -313,7 +327,7 @@ class Article10(BaseArticle2012):
 
         return view
 
-    def filtered_ges_components(self):
+    def filtered_ges_components(self, seed):
         """ Returns a list of valid ges criterion indicator targets
 
         Can be something like "1.6.2-indicator 5.2B" or "3.1" or "D1"
@@ -327,7 +341,7 @@ class Article10(BaseArticle2012):
             if d_id in country_criterions:
                 res.add(d_id)
 
-        for crit in country_criterions:
+        for crit in set(country_criterions + seed):
             crit_id = crit.split('-', 1)[0]
 
             if crit_id in descriptor.all_ids():
@@ -353,8 +367,8 @@ class Article10(BaseArticle2012):
         descriptor = get_descriptor(self.descriptor)
         self.descriptor_label = descriptor.title
 
-        # reported = xp("//w:DesriptorCriterionIndicator/text()")
-        gcs = self.filtered_ges_components()
+        reported = xp("//w:DesriptorCriterionIndicator/text()")
+        gcs = self.filtered_ges_components(reported)
 
         self.rows = [
             Row('Reporting area(s) [MarineUnitID]', [muids]),
@@ -370,6 +384,8 @@ class Article10(BaseArticle2012):
                         self.region_code)
 
                 for gc in gcs]
+
+        # unwrap the columns into rows
 
         for col in cols:
             for name in col.keys():
