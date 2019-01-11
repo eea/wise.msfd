@@ -165,11 +165,14 @@ class A10Item(Item):
 
         # get the row which contains the threshold values
         treshold_art9 = [x for x in art9.rows if x.title == treshold_row_title]
-        treshold_art9 = treshold_art9[0].cells
 
         # get the criterions row, this is needed to get
         # the column index of the criterion
         crit_art9 = [x for x in art9.rows if x.title == criterion_row_title]
+
+        if not crit_art9:
+            return ItemList(rows=rows)
+
         crit_art9 = crit_art9[0].cells
 
         if crit not in crit_art9:
@@ -178,6 +181,7 @@ class A10Item(Item):
         # get the column index of the criterion, with this we get our needed
         # threshold value
         index = crit_art9.index(crit)
+        treshold_art9 = treshold_art9[0].cells
 
         return treshold_art9[index]
 

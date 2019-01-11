@@ -177,7 +177,7 @@ class ReportData2012(BaseComplianceView, BaseUtil):
                     if isinstance(v, str):
                         parser = HTMLParser()
                         v = parser.unescape(v.decode('utf-8'))
-                    worksheet.write(i, j + 1, unicode(v))
+                    worksheet.write(i, j + 1, unicode(v or ''))
 
         workbook.close()
         out.seek(0)
