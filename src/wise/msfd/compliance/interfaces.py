@@ -65,3 +65,8 @@ class IComment(Schema):
 class IRegionalDescriptorsFolder(Interface):
     """ A container for national descriptors assessments
     """
+
+
+class IReportDataView(Interface):
+    """ Plone pages that display report data
+    """

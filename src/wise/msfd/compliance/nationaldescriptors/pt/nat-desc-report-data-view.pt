@@ -6,6 +6,10 @@
   metal:use-macro="context/main_template/macros/master"
   i18n:domain="eea">
 
+  <title meta-fill-slot="title">
+    blabla
+  </title>
+
   <body metal:fill-slot="content">
 
     <div id="layout-contents" tal:define="text context/text | nothing" >

@@ -6,16 +6,19 @@ from HTMLParser import HTMLParser
 from io import BytesIO
 
 from lxml.etree import fromstring
+from zope.interface import implements
 from zope.schema import Choice
 from zope.schema.vocabulary import SimpleTerm, SimpleVocabulary
 
 import xlsxwriter
+from plone.app.layout.viewlets.common import TitleViewlet as BaseTitleViewlet
 # from persistent.list import PersistentList
 from plone.memoize import volatile
 from Products.Five.browser.pagetemplatefile import \
     ViewPageTemplateFile as Template
 from wise.msfd import db, sql, sql2018
 from wise.msfd.base import BaseUtil
+from wise.msfd.compliance.interfaces import IReportDataView
 from wise.msfd.compliance.utils import REPORT_DEFS, get_sorted_fields
 from wise.msfd.data import (get_factsheet_url, get_report_data,
                             get_report_file_url, get_report_filename)
@@ -62,6 +65,7 @@ def get_reportdata_key(func, self, *args, **kwargs):
 class ReportData2012(BaseComplianceView, BaseUtil):
     """ WIP on compliance tables
     """
+    implements(IReportDataView)
 
     report_year = '2012'
     section = 'national-descriptors'
@@ -388,6 +392,7 @@ class Proxy2018(object):
 
 
 class ReportData2018(BaseComplianceView):
+    implements(IReportDataView)
 
     report_year = '2018'        # used by cache key
     year = '2018'       # used in report definition and translation
@@ -745,3 +750,19 @@ class ReportData2018(BaseComplianceView):
             self.subform = form
 
         return self.subform
+
+
+class TitleViewlet(BaseTitleViewlet, BaseComplianceView):
+
+    @property
+    def page_title(self):
+        params = {
+            'country': self.country_name,
+            'region': self.country_region_code,
+            'article': self.article,
+            'descriptor': self.descriptor,
+            'year': self.view.report_year,
+        }
+
+        return (u"{article} report - {country} / {region} / {descriptor}"
+                "/ {year}".format(**params))

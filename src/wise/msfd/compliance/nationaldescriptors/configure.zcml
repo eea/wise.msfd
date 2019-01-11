@@ -68,4 +68,12 @@
     permission="zope2.View"
     />
 
+  <browser:viewlet
+    name="plone.htmlhead.title"
+    view='wise.msfd.compliance.interfaces.IReportDataView'
+    manager="plone.app.layout.viewlets.interfaces.IHtmlHead"
+    class=".reportdata.TitleViewlet"
+    permission="zope2.View"
+    />
+
 </configure>

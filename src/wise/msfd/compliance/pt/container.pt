@@ -1,6 +1,0 @@
-<div tal:define="css_class view/css_class | string:"
-  tal:attributes="class string:subform ${css_class}; id view/form_name">
-  <div tal:repeat="subform view/subforms">
-    <div tal:replace='structure subform'></div>
-  </div>
-</div>

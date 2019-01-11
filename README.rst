@@ -264,6 +264,7 @@ Immediate TODOs for the Compliance Module
 - Art10 2012 Latvia: description (from db) for indicators '5.1.1-indicator 5.1A' etc is not in the excel, are these needed?
 - Art10 2012 Italy (DONE): DescriptorCriterionIndicator values are repeated
 - Better D1.x differentiation for 2012 reports
+- Titluri la pagini (pt hinds la tab titles in browser)
 
 Immediate TODOs for the MSFD Search engine
 ------------------------------------------
