@@ -34,18 +34,17 @@ class A10Item(Item):
 
         self.targets = []
 
-        # Note: this cannot be done because the D1 descriptor can't be easily
-        # matched from a criterion indicator.
-        # if self.is_descriptor:
-        #     for ti in targets_indicators:
-        #         targets = ti.targets_for_descriptor(self.criterion)
-        #         self.targets.extend(targets)
-        #     print self.targets
-        # else:
+        # Note: the handling of D1.x indicators is not ideal
 
-        for ti in targets_indicators:
-            targets = ti.targets_for_criterion(self.criterion)
-            self.targets.extend(targets)
+        if self.is_descriptor:
+            for ti in targets_indicators:
+                targets = ti.targets_for_descriptor(self.criterion)
+                self.targets.extend(targets)
+            print self.targets
+        else:
+            for ti in targets_indicators:
+                targets = ti.targets_for_criterion(self.criterion)
+                self.targets.extend(targets)
 
         pick = self.pick
 
@@ -267,8 +266,8 @@ class Target(Node):
             if dci.startswith('D'):
                 return dci
 
-            # if '.' in dci:
-            #     return 'D' + dci.split('.', 1)[0]
+            if '.' in dci:      # this returns D1 for D1.x descriptors
+                return 'D' + dci.split('.', 1)[0]
 
     @property
     def criterions(self):
@@ -296,6 +295,9 @@ class TargetsIndicators(Node):
                         for n in self['w:Targets']]
 
     def targets_for_descriptor(self, descriptor):
+        if descriptor.startswith('D1.'):
+            descriptor = 'D1'       # fallback
+
         return [t for t in self.targets if t.descriptor == descriptor]
 
     def targets_for_criterion(self, criterion):
