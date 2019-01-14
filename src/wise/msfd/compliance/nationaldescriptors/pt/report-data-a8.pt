@@ -1,8 +1,8 @@
 <div>
   <div tal:repeat="muid view/muids" class="report-section">
-    <tal:def define="data view/rows/?muid">
+    <tal:def define="data python: view.rows.get(muid, [])">
 
-      <h4 tal:content="muid">DE_ANS</h4>
+      <h4 tal:content="structure muid">DE_ANS</h4>
 
       <metal:s metal:use-macro="context/context/wise-macros/macros/simplify-table"></metal:s>
       <metal:s metal:use-macro="context/context/wise-macros/macros/overflow-table"></metal:s>

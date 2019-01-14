@@ -87,7 +87,7 @@ Assessment = namedtuple('Assessment',
                             'recommendations',
                             'overall_score',
                             'overall_conclusion'
-                         ])
+                        ])
 AssessmentRow = namedtuple(
     'AssessmentRow',
     [
@@ -97,7 +97,7 @@ AssessmentRow = namedtuple(
         'conclusion_color',
         'score',
         'values'
-     ]
+    ]
 )
 
 
@@ -274,6 +274,8 @@ REGION_RE = re.compile('.+\s\((?P<region>.+)\)$')
 
 
 def filter_assessment_data_2012(data, region_code, descriptor_criterions):
+    """ Filters and formats the raw db data for 2012 assessment data
+    """
     gescomponents = [c.id for c in descriptor_criterions]
 
     assessments = {}
@@ -322,21 +324,20 @@ def filter_assessment_data_2012(data, region_code, descriptor_criterions):
 
 class AssessmentData(PersistentList):
 
-    data = []
+    data = []       # TODO: why is this? This needs to be migrated
 
     @property
     def assessors(self):
-        assessors = []
+        assessors = set()
 
         for data in self.data:
             assessor = data.get('assessor')
 
             if assessor is None:
                 continue
-                raise ValueError, 'No assessor in data'
+                # raise ValueError('No assessor in data')
 
-            if assessor not in assessors:
-                assessors.append(assessor)
+            assessors.add(assessor)
 
         if not assessors:
             return 'Not assessed'

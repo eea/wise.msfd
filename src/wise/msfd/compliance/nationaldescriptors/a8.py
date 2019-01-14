@@ -402,9 +402,6 @@ def get_db_record(report_type, marine_unit_id, topic):
         raw=True
     )
 
-    if count != 1:
-        import pdb
-        pdb.set_trace()
     assert count == 1, "Matching record not found"
 
     return res[0]
@@ -569,11 +566,11 @@ class Article8(BaseArticle2012):
             return node.xpath(xpath, namespaces=NSMAP)
 
         # TODO: should use declared set of marine unit ids
-        muids = sorted(set(xp('//w:MarineUnitID/text()')))
-        self.muids = muids
+        xml_muids = sorted(set(xp('//w:MarineUnitID/text()')))
 
         self.rows = [
-            Row('Reporting area(s) [MarineUnitID]', [', '.join(set(muids))]),
+            Row('Reporting area(s) [MarineUnitID]',
+                [', '.join(set(xml_muids))]),
         ]
 
         # each of the following report tags can appear multiple times, once per
@@ -585,7 +582,7 @@ class Article8(BaseArticle2012):
 
         ReportTag = None
 
-        # basic algorthim
+        # basic algorthim to detect what type of report it is
 
         if 'Nutrients' in root_tags:
             ReportTag = ReportTag8b
@@ -622,7 +619,7 @@ class Article8(BaseArticle2012):
 
         # TODO: use reported list of muids per country,from database
 
-        for muid in muids:
+        for muid in xml_muids:
             if muid not in report_map:
                 logger.warning("MarineUnitID not reported: %s, %s, Article 8",
                                muid, self.descriptor)
@@ -658,6 +655,19 @@ class Article8(BaseArticle2012):
 
             report_data[muid] = rows
 
-        self.rows = report_data
+        res = {}
+
+        # filter the data according to relevant muids for region
+        count, muids_t = db.get_marine_unit_id_names(list(set(self.muids)))
+        muid_labels = dict(muids_t)
+        # xml_muids = [for k in xml_muids]
+
+        for k, v in report_data.items():
+            if k in self.muids:
+                muid = ItemLabel(k, muid_labels[k])
+                res[muid] = v
+
+        self.muids = sorted(res.keys())
+        self.rows = res
 
         return self.template()

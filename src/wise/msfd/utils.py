@@ -318,10 +318,14 @@ class ItemLabel(TemplateMixin):
         # return "<ItemLabel '%s'>" % self.name
 
     def __cmp__(self, other):
+
         if hasattr(other, 'name'):
             return cmp(self.name, other.name)
 
         return cmp(self.name, other)        # this is not really ok
+
+    def __hash__(self):
+        return id(self)     # wonky but should work
 
     template = PageTemplateFile('pt/label.pt')
 

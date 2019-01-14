@@ -12,7 +12,6 @@ from zope.schema.vocabulary import SimpleTerm, SimpleVocabulary
 
 import xlsxwriter
 from plone.app.layout.viewlets.common import TitleViewlet as BaseTitleViewlet
-# from persistent.list import PersistentList
 from plone.memoize import volatile
 from Products.Five.browser.pagetemplatefile import \
     ViewPageTemplateFile as Template
@@ -36,6 +35,7 @@ from .a9 import Article9
 from .a10 import Article10
 from .utils import row_to_dict
 
+# from persistent.list import PersistentList
 # from six import string_types
 # from eea.cache import cache
 
