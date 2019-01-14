@@ -46,15 +46,6 @@ if (!Array.prototype.last){
     $(".toggle-sidebar").hide();
   }
 
-  function setupDoubleColumnsList($table){
-    $table.find('ul.cell-listing').each(function(){
-      var length = $(this).children().length;
-      if (length > 5){
-        $(this).addClass('two-columns');
-      }
-    });
-  }
-
   $.fn.fixTableHeaderHeight = function fixTableHeaderHeight() {
     // because the <th> are position: absolute, they don't get the height of
     // the <td> cells, and the other way around.
@@ -81,7 +72,6 @@ if (!Array.prototype.last){
       $table.data('original', $table.html());
     }
 
-    setupDoubleColumnsList($table);
     // stretch all cells to the maximum table columns;
     var max = 0;
     var $tr = $('tr', this);

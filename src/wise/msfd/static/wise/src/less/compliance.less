@@ -313,7 +313,7 @@ table.table-report {
     }
     ul {
       min-width: 16rem;
-      margin: 0em !important;
+      margin: 0em 0em 0em -1rem !important;
       li {
         list-style-type: square;
         list-style-position: inside;
@@ -321,22 +321,19 @@ table.table-report {
         padding-left: 0px;
         margin-left: 0px;
       }
-      // &.two-columns {
-        // 	columns: 2;
-        // 	-webkit-columns: 2;
-        // 	-moz-columns: 2;
-        // 	min-width: 640px;
-        // 	max-width: 960px;
-        // 	li {
-          // 		min-width: 320px;
-          // 		max-width: 640px;
-          // 		-webkit-column-break-inside: avoid;
-          // 		-moz-column-break-inside: avoid;
-          // 		-o-column-break-inside: avoid;
-          // 		-ms-column-break-inside: avoid;
-          // 		column-break-inside: avoid;
-        // 	}
-      // }
+      &.cell-listing  {
+        display: flex;
+        max-height: 30rem;
+        flex-direction: column;
+        flex-wrap: wrap;
+        li {
+          display: block !important;
+          padding-left: 1rem;
+          &::before {
+            content: '▪';
+          }
+        }
+      }
     }
   }
 }
