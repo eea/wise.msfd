@@ -305,32 +305,40 @@ div.as-table-overview blockquote {
 
 // TODO: move this in .report-page-view?
 // These are the cell "listings" ul.cell-listing
-table.table-report td ul {
-  min-width: 16rem;
-  margin: 0em !important;
-  li {
-    list-style-type: square;
-    list-style-position: inside;
-    padding: 0em;
-    padding-left: 0px;
-    margin-left: 0px;
+table.table-report {
+  td {
+    min-width: 3rem;
+    > div {
+      max-width: 30rem;
+    }
+    ul {
+      min-width: 16rem;
+      margin: 0em !important;
+      li {
+        list-style-type: square;
+        list-style-position: inside;
+        padding: 0em;
+        padding-left: 0px;
+        margin-left: 0px;
+      }
+      // &.two-columns {
+        // 	columns: 2;
+        // 	-webkit-columns: 2;
+        // 	-moz-columns: 2;
+        // 	min-width: 640px;
+        // 	max-width: 960px;
+        // 	li {
+          // 		min-width: 320px;
+          // 		max-width: 640px;
+          // 		-webkit-column-break-inside: avoid;
+          // 		-moz-column-break-inside: avoid;
+          // 		-o-column-break-inside: avoid;
+          // 		-ms-column-break-inside: avoid;
+          // 		column-break-inside: avoid;
+        // 	}
+      // }
+    }
   }
-  // &.two-columns {
-    // 	columns: 2;
-    // 	-webkit-columns: 2;
-    // 	-moz-columns: 2;
-    // 	min-width: 640px;
-    // 	max-width: 960px;
-    // 	li {
-      // 		min-width: 320px;
-      // 		max-width: 640px;
-      // 		-webkit-column-break-inside: avoid;
-      // 		-moz-column-break-inside: avoid;
-      // 		-o-column-break-inside: avoid;
-      // 		-ms-column-break-inside: avoid;
-      // 		column-break-inside: avoid;
-    // 	}
-  // }
 }
 
 em {
