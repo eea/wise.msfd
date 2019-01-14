@@ -21,10 +21,11 @@ NSMAP = {"w": "http://water.eionet.europa.eu/schemas/dir200856ec"}
 
 
 class A9Item(Item):
-    def __init__(self, node, descriptors):
+    def __init__(self, parent, node, descriptors):
 
         super(A9Item, self).__init__([])
 
+        self.parent = parent
         self.node = node
         self.g = RelaxedNode(node, NSMAP)
 
@@ -104,6 +105,12 @@ class A9Item(Item):
                 continue
 
             muid = n['w:MarineUnitID/text()'][0]
+
+            # filter values according to region's marine unit ids
+
+            if muid not in self.parent.muids:
+                continue
+
             values[muid] = tv[0]
 
         rows = []
@@ -207,7 +214,7 @@ class Article9(BaseArticle2012):
             if col_id in seen:
                 continue
 
-            item = A9Item(node, descriptors)
+            item = A9Item(self, node, descriptors)
             cols.append(item)
             seen.append(item.id)
 
@@ -215,7 +222,7 @@ class Article9(BaseArticle2012):
 
         count, res = db.get_marine_unit_id_names(list(set(muids)))
 
-        labels = [ItemLabel(m, t) for m, t in res]
+        labels = [ItemLabel(m, t) for m, t in res if m in self.muids]
         muids = ItemList(labels)
 
         self.rows = [
@@ -224,7 +231,9 @@ class Article9(BaseArticle2012):
 
         sorted_ges_c = sorted_by_criterion([c.ges_component() for c in cols])
 
-        def sort_func(col): return sorted_ges_c.index(col.ges_component())
+        def sort_func(col):
+            return sorted_ges_c.index(col.ges_component())
+
         sorted_cols = sorted(cols, key=sort_func)
 
         for col in sorted_cols:

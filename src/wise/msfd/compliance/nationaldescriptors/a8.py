@@ -657,10 +657,9 @@ class Article8(BaseArticle2012):
 
         res = {}
 
-        # filter the data according to relevant muids for region
+        # filter the results to show only region's marine unit ids
         count, muids_t = db.get_marine_unit_id_names(list(set(self.muids)))
         muid_labels = dict(muids_t)
-        # xml_muids = [for k in xml_muids]
 
         for k, v in report_data.items():
             if k in self.muids:
