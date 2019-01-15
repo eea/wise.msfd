@@ -15,11 +15,10 @@
     <element name="Development status" translate="true">Development status</element>
   </Art9>
   <Art8b>
-    <element name=""></element>
     <element name="Analysis [Feature]	">Analysis [Feature]</element>
     <element name="Assessment Topic">Assessment Topic</element>
-    <element name="[Element]">[Element]</element>
     <element name="CriteriaType [GESComponent]">CriteriaType [GESComponent]</element>
+    <element name="[Element]">[Element]</element>
     <element name="[Parameter]">[Parameter]</element>
     <element name="ThresholdValue" translate="true">ThresholdValue</element>
     <element name="SumInfo1Unit/ThresholdValueUnit [ValueUnit]" translate="true">SumInfo1Unit/ThresholdValueUnit [ValueUnit]</element>
