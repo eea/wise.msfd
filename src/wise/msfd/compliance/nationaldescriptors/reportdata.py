@@ -1,21 +1,23 @@
 import logging
 import time
-from HTMLParser import HTMLParser
-from collections import namedtuple, OrderedDict
+from collections import OrderedDict, namedtuple
 from datetime import datetime
+from HTMLParser import HTMLParser
 from io import BytesIO
 
 from lxml.etree import fromstring
+from zope.interface import implements
 from zope.schema import Choice
 from zope.schema.vocabulary import SimpleTerm, SimpleVocabulary
 
 import xlsxwriter
-# from persistent.list import PersistentList
+from plone.app.layout.viewlets.common import TitleViewlet as BaseTitleViewlet
 from plone.memoize import volatile
 from Products.Five.browser.pagetemplatefile import \
     ViewPageTemplateFile as Template
 from wise.msfd import db, sql, sql2018
 from wise.msfd.base import BaseUtil
+from wise.msfd.compliance.interfaces import IReportDataView
 from wise.msfd.compliance.utils import REPORT_DEFS, get_sorted_fields
 from wise.msfd.data import (get_factsheet_url, get_report_data,
                             get_report_file_url, get_report_filename)
@@ -33,6 +35,7 @@ from .a9 import Article9
 from .a10 import Article10
 from .utils import row_to_dict
 
+# from persistent.list import PersistentList
 # from six import string_types
 # from eea.cache import cache
 
@@ -62,6 +65,7 @@ def get_reportdata_key(func, self, *args, **kwargs):
 class ReportData2012(BaseComplianceView, BaseUtil):
     """ WIP on compliance tables
     """
+    implements(IReportDataView)
 
     report_year = '2012'
     section = 'national-descriptors'
@@ -153,8 +157,10 @@ class ReportData2012(BaseComplianceView, BaseUtil):
 
         # add worksheet with report header data
         worksheet = workbook.add_worksheet(unicode('Report header'))
+
         for i, (wtitle, wdata) in enumerate(report_header.items()):
             wtitle = wtitle.title().replace('_', ' ')
+
             if isinstance(wdata, tuple):
                 wdata = wdata[1]
 
@@ -162,6 +168,7 @@ class ReportData2012(BaseComplianceView, BaseUtil):
             worksheet.write(i, 1, wdata)
 
         # add worksheet(s) with report data
+
         for wtitle, wdata in data.items():
             if not wdata:
                 continue
@@ -173,11 +180,12 @@ class ReportData2012(BaseComplianceView, BaseUtil):
                 worksheet.write(i, 0, row_label)
 
                 row_values = row.cells
+
                 for j, v in enumerate(row_values):
                     if isinstance(v, str):
                         parser = HTMLParser()
                         v = parser.unescape(v.decode('utf-8'))
-                    worksheet.write(i, j + 1, unicode(v))
+                    worksheet.write(i, j + 1, unicode(v or ''))
 
         workbook.close()
         out.seek(0)
@@ -204,9 +212,10 @@ class ReportData2012(BaseComplianceView, BaseUtil):
 
     @db.use_db_session('2012')
     def __call__(self):
-        if self.descriptor.startswith('D1.'):       # map to old descriptor
-            self._descriptor = 'D1'
-            assert self.descriptor == 'D1'
+        # if self.descriptor.startswith('D1.'):       # map to old descriptor
+        #     # self._descriptor = 'D1'               # this hardcodes D1.x
+        #                                             # descriptors to D1
+        #     assert self.descriptor == 'D1'
 
         print("Will render report for: %s" % self.article)
         self.filename = filename = self.get_report_filename()
@@ -326,7 +335,6 @@ class SnapshotSelectForm(Form):
         data = self.context.get_data_from_db()
 
         self.context.context.snapshots.append((datetime.now(), data))
-        print "harvesting data"
 
         self.request.response.redirect('./@@view-report-data-2018')
 
@@ -384,6 +392,7 @@ class Proxy2018(object):
 
 
 class ReportData2018(BaseComplianceView):
+    implements(IReportDataView)
 
     report_year = '2018'        # used by cache key
     year = '2018'       # used in report definition and translation
@@ -598,10 +607,8 @@ class ReportData2018(BaseComplianceView):
         date_selected = fd['sd']
 
         data = snapshots[-1][1]
-        print "len data", len(data)
 
         if date_selected:
-            # print date_selected
             filtered = [x for x in snapshots if x[0] == date_selected]
 
             if filtered:
@@ -743,3 +750,19 @@ class ReportData2018(BaseComplianceView):
             self.subform = form
 
         return self.subform
+
+
+class TitleViewlet(BaseTitleViewlet, BaseComplianceView):
+
+    @property
+    def page_title(self):
+        params = {
+            'country': self.country_name,
+            'region': self.country_region_code,
+            'article': self.article,
+            'descriptor': self.descriptor,
+            'year': self.view.report_year,
+        }
+
+        return (u"{article} report - {country} / {region} / {descriptor}"
+                "/ {year}".format(**params))

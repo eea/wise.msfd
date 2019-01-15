@@ -96,23 +96,34 @@ from Annex 3.
 Articles 8, 9, 10 - 2018 version
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Here we display the recorded information from 2018 reports. We have Article 10 (Targets), the Article 8.1ab (GES Assessments), Article 8.1c (ESA assessments), Article 9 (GES Determination) and the Indicators pages. Each page allows filtering and displays relevant information.
+Here we display the recorded information from 2018 reports. We have Article 10
+(Targets), the Article 8.1ab (GES Assessments), Article 8.1c (ESA assessments),
+Article 9 (GES Determination) and the Indicators pages. Each page allows
+filtering and displays relevant information.
 
 Article 8.1ab
 ~~~~~~~~~~~~~
-Displays the GES Assessments information with related pressure and target codes, element and criteria statuses, criteria values and criteria value indicators. Allows filtering information by MarineUnitID, Country Code, Features and GES Component.
+Displays the GES Assessments information with related pressure and target
+codes, element and criteria statuses, criteria values and criteria value
+indicators. Allows filtering information by MarineUnitID, Country Code,
+Features and GES Component.
 
 Artiticle 8.1c
 ~~~~~~~~~~~~~~
-Display the ESA assessments information. Filtering can be done by MarineUnitID, Country Code, Features and GES Component.
+Display the ESA assessments information. Filtering can be done by MarineUnitID,
+Country Code, Features and GES Component.
 
 Article 9
 ~~~~~~~~~
-Displays GES determination information, GES description, the determination date, update type. The information here can be filtered by MarineUnitID, Country Code, GES Component, and Features.
+Displays GES determination information, GES description, the determination
+date, update type. The information here can be filtered by MarineUnitID,
+Country Code, GES Component, and Features.
 
 Article 10
 ~~~~~~~~~~
-Displays the targets and associated indicators, target codes, description, time scale, update date, update type and parameters. The information can be filtered by MarineUnitID, Country Code, Features and GES Component.
+Displays the targets and associated indicators, target codes, description, time
+scale, update date, update type and parameters. The information can be filtered
+by MarineUnitID, Country Code, Features and GES Component.
 
 
 Compliance Assessment module
@@ -224,15 +235,8 @@ Immediate TODOs for the Compliance Module
 - check the existing implementation of extracted data for the report tables for
   both 2012 and 2018 data. Make sure we filter by region.
 - automatically re-format text inserted in member state report fields.
-  Sometimes the member states use ad-hoc plain-text formatting, or import their
-  reports from their own databases, which results in odd-looking long text when
-  inserted directly in HTML. (done)
 - Improve the reporting tables usability. Allow fixing rows as headers. Improve
   spacing, improve the translation interface.
-- improve usability of 2012 report tables (add human readable labels for
-  database shortcodes, etc). (mostly done)
-- Improve display of all metadata: translate fixed values to human readable
-  labels, provide links, etc.
 - Check the scoring implementation
 - Make generic usability improvements according to TL feedback.
 - Create a navigation helper to navigate between all aspects of an assessment.
@@ -241,9 +245,18 @@ Immediate TODOs for the Compliance Module
 - Allow translation of 2012 report data
 - Allow translation by TLs
 - Redo the translation integration (use ajax to load field value)
-- Fix download as excel
 - add form unload warning for assessment editing
 - create the notification system
+
+- Art8 2012: missing field 'ImpactsPressureWater/Seabed: SumInfo2', 'Indicator [RelatedIndicator]'
+- Art8 2012 Italy D5(other countries, descriptors too): match nodes where there are no indicators reported, or only GESOther is reported
+- Art9 2012 ALL countries: include D1 criterions/indicators in D6??
+
+- Art10 2012 italy D6: report table almost empty, report xml has data. The implementation is wrong?
+- Art10 2012 Italy D6, D8: how to get threshold value from Art9 when indicators do not match ex. 6.1(art9) vs 6.1.2(art10), 8.1 vs 8.1.1
+- Art10 2012 Latvia: description (from db) for indicators '5.1.1-indicator 5.1A' etc is not in the excel, are these needed?
+- Better D1.x differentiation for 2012 reports
+- Always get the proper criterion title in report listings
 
 Immediate TODOs for the MSFD Search engine
 ------------------------------------------

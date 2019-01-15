@@ -34,15 +34,24 @@ class A10Item(Item):
 
         self.targets = []
 
-        for ti in targets_indicators:
-            targets = ti.targets_for_criterion(self.criterion)
-            self.targets.extend(targets)
+        # Note: the handling of D1.x indicators is not ideal
+
+        if self.is_descriptor:
+            for ti in targets_indicators:
+                targets = ti.targets_for_descriptor(self.criterion)
+                self.targets.extend(targets)
+            print self.targets
+        else:
+            for ti in targets_indicators:
+                targets = ti.targets_for_criterion(self.criterion)
+                self.targets.extend(targets)
 
         pick = self.pick
 
         attrs = [
             ('DescriptorCriterionIndicator', self.criterion),
             ('Description [Targets]', self.description()),
+            ('Feature [Target code]', self.target_code()),
             ('Threshold value [TargetValue]', self.threshold_value_a9()),
             ('Reference point type', pick('w:ReferencePointType/text()')),
             ('Baseline', pick('w:Baseline/text()')),
@@ -88,6 +97,9 @@ class A10Item(Item):
 
         for row in res:
             return row[0]       # there are multiple records, one for each MUID
+
+    def target_code(self):
+        return self.pick('w:Feature/text()')
 
     @db.use_db_session('2012')
     def get_feature_pressures(self):
@@ -165,11 +177,14 @@ class A10Item(Item):
 
         # get the row which contains the threshold values
         treshold_art9 = [x for x in art9.rows if x.title == treshold_row_title]
-        treshold_art9 = treshold_art9[0].cells
 
         # get the criterions row, this is needed to get
         # the column index of the criterion
         crit_art9 = [x for x in art9.rows if x.title == criterion_row_title]
+
+        if not crit_art9:
+            return ItemList(rows=rows)
+
         crit_art9 = crit_art9[0].cells
 
         if crit not in crit_art9:
@@ -178,6 +193,7 @@ class A10Item(Item):
         # get the column index of the criterion, with this we get our needed
         # threshold value
         index = crit_art9.index(crit)
+        treshold_art9 = treshold_art9[0].cells
 
         return treshold_art9[index]
 
@@ -205,9 +221,6 @@ class A10Item(Item):
         """ For values which are repeated across all targets nodes, try to find
         one with a positive value
         """
-
-        if not self.is_descriptor:
-            return ''
 
         for target in self.targets:
             v = target[xpath]
@@ -238,7 +251,7 @@ class A10Item(Item):
 
 
 class Target(Node):
-    """ Wraps a <Target> node
+    """ Wraps a <Targets> node
     """
 
     def __init__(self, marine_unit_id, node, nsmap):
@@ -247,24 +260,25 @@ class Target(Node):
 
     @property
     def descriptor(self):
-
         for dci in self['w:DesriptorCriterionIndicators/'
                         'w:DesriptorCriterionIndicator/text()']:
 
             if dci.startswith('D'):
                 return dci
 
-            if '.' in dci:
-                # this means that only D1 is supported, 1.1, etc are not
-                # supported. For 2012, I think this is fine??
-
+            if '.' in dci:      # this returns D1 for D1.x descriptors
                 return 'D' + dci.split('.', 1)[0]
 
     @property
     def criterions(self):
+        crits = set(self['w:DesriptorCriterionIndicators/'
+                         'w:DesriptorCriterionIndicator/text()'])
+        crits = set([x.split('-', 1)[0] for x in crits])
 
-        return [self.descriptor] + self['w:DesriptorCriterionIndicators/'
-                                        'w:DesriptorCriterionIndicator/text()']
+        if self.descriptor:
+            crits.add(self.descriptor)
+
+        return list(crits)
 
 
 class TargetsIndicators(Node):
@@ -281,9 +295,14 @@ class TargetsIndicators(Node):
                         for n in self['w:Targets']]
 
     def targets_for_descriptor(self, descriptor):
+        if descriptor.startswith('D1.'):
+            descriptor = 'D1'       # fallback
+
         return [t for t in self.targets if t.descriptor == descriptor]
 
     def targets_for_criterion(self, criterion):
+        criterion = criterion.split('-', 1)[0]
+
         return [t for t in self.targets if criterion in t.criterions]
 
 
@@ -292,6 +311,20 @@ class Article10(BaseArticle2012):
 
     klass(self, self.request, self.country_code, self.descriptor,
           self.article, self.muids, self.colspan)
+
+    TODO: we should also extract DescriptorCriterionIndicators from the file
+
+    How do we show data?
+
+    - we parse the original reported XML file
+    - we filter the "DescriptorCriterionIndicator" in the file
+        - we get the assigned country criterion indicators from the database
+          (we use the MSFD_19a_10DescriptiorsCriteriaIndicators view)
+        - we use the first part of the criterion indicator to match the
+          available criterion ids for the current descriptor
+    - for each of these DescriptorCriterionIndicator we build a column in the
+      result
+
     """
 
     template = Template('pt/report-data-a10.pt')
@@ -313,7 +346,7 @@ class Article10(BaseArticle2012):
 
         return view
 
-    def filtered_ges_components(self):
+    def filtered_ges_components(self, seed):
         """ Returns a list of valid ges criterion indicator targets
 
         Can be something like "1.6.2-indicator 5.2B" or "3.1" or "D1"
@@ -327,7 +360,7 @@ class Article10(BaseArticle2012):
             if d_id in country_criterions:
                 res.add(d_id)
 
-        for crit in country_criterions:
+        for crit in set(country_criterions + seed):
             crit_id = crit.split('-', 1)[0]
 
             if crit_id in descriptor.all_ids():
@@ -339,6 +372,12 @@ class Article10(BaseArticle2012):
         self.article9 = self.get_article9_view()
         filename = self.context.get_report_filename()
         text = get_report_data(filename)
+
+        if not text:
+            self.rows = []
+
+            return self.template()
+
         root = fromstring(text)
 
         def xp(xpath, node=root):
@@ -353,8 +392,8 @@ class Article10(BaseArticle2012):
         descriptor = get_descriptor(self.descriptor)
         self.descriptor_label = descriptor.title
 
-        # reported = xp("//w:DesriptorCriterionIndicator/text()")
-        gcs = self.filtered_ges_components()
+        reported = xp("//w:DesriptorCriterionIndicator/text()")
+        gcs = self.filtered_ges_components(reported)
 
         self.rows = [
             Row('Reporting area(s) [MarineUnitID]', [muids]),
@@ -370,6 +409,8 @@ class Article10(BaseArticle2012):
                         self.region_code)
 
                 for gc in gcs]
+
+        # unwrap the columns into rows
 
         for col in cols:
             for name in col.keys():

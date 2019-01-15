@@ -1,8 +1,4 @@
 <tr>
   <th tal:content="options/title">Subrow header</th>
-  <td tal:repeat="val options/cells">
-    <span tal:replace="structure val">
-      Value
-    </span>
-  </td>
+  <td tal:repeat="val options/cells"><div tal:content="structure val">Value</div></td>
 </tr>
