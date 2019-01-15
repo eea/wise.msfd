@@ -9,8 +9,14 @@
   </Art10>
   <Art9>
     <element name="Reporting area(s) [MarineUnitID]" translate="true">Reporting area(s) [MarineUnitID]</element>
+    <element name="Feature(s) reported [Feature]">Feature(s) reported [Feature]</element>
+    <element name="GES Component [Reporting feature]">GES Component [Reporting feature]</element>
     <element name="GES description" translate="true">GES description</element>
     <element name="Threshold value(s)" translate="true">Threshold value(s)</element>
+    <element name="Threshold value unit" translate="true">Threshold value unit</element>
+    <element name="Reference point type">Reference point type</element>
+    <element name="Baseline" translate="true">Baseline</element>
+    <element name="Proportion">Proportion</element>
     <element name="Assessment method" translate="true">Assessment method</element>
     <element name="Development status" translate="true">Development status</element>
   </Art9>
