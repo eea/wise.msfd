@@ -2,10 +2,23 @@
 <data>
   <Art10>
     <element name="Reporting area(s) [MarineUnitID]" translate="true">Reporting area(s) [MarineUnitID]</element>
+    <element name="DescriptorCriterionIndicator">DescriptorCriterionIndicator</element>
     <element name="Description [Targets]" translate="true">Description [Targets]</element>
+    <element name="Feature [Target code]">Feature [Target code]</element>
     <element name="Threshold value [TargetValue]" translate="true">Threshold value [TargetValue]</element>
+    <element name="Reference point type">Reference point type</element>
     <element name="Baseline" translate="true">Baseline</element>
+    <element name="Proportion">Proportion</element>
+    <element name="AssessmentMethod">AssessmentMethod</element>
+    <element name="Development status">Development status</element>
+    <element name="Type of target/indicator	">Type of target/indicator</element>
+    <element name="Timescale">Timescale</element>
+    <element name="Interim or GES target">Interim or GES target</element>
     <element name="Compatibility with existing targets/indicators" translate="true">Compatibility with existing targets/indicators</element>
+    <element name="Physical/chemical features	">Physical/chemical features</element>
+    <element name="Predominant habitats">Predominant habitats</element>
+    <element name="Functional group">Functional group</element>
+    <element name="Pressures">Pressures</element>
   </Art10>
   <Art9>
     <element name="Reporting area(s) [MarineUnitID]" translate="true">Reporting area(s) [MarineUnitID]</element>
