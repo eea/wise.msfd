@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<data>
+  <Art10>
+    <element name="Reporting area(s) [MarineUnitID]" translate="true">Reporting area(s) [MarineUnitID]</element>
+    <element name="Description [Targets]" translate="true">Description [Targets]</element>
+    <element name="Threshold value [TargetValue]" translate="true">Threshold value [TargetValue]</element>
+    <element name="Baseline" translate="true">Baseline</element>
+    <element name="Compatibility with existing targets/indicators" translate="true">Compatibility with existing targets/indicators</element>
+  </Art10>
+  <Art9>
+    <element name="Reporting area(s) [MarineUnitID]" translate="true">Reporting area(s) [MarineUnitID]</element>
+    <element name="Feature(s) reported [Feature]">Feature(s) reported [Feature]</element>
+    <element name="GES Component [Reporting feature]">GES Component [Reporting feature]</element>
+    <element name="GES description" translate="true">GES description</element>
+    <element name="Threshold value(s)" translate="true">Threshold value(s)</element>
+    <element name="Threshold value unit" translate="true">Threshold value unit</element>
+    <element name="Reference point type">Reference point type</element>
+    <element name="Baseline" translate="true">Baseline</element>
+    <element name="Proportion">Proportion</element>
+    <element name="Assessment method" translate="true">Assessment method</element>
+    <element name="Development status" translate="true">Development status</element>
+  </Art9>
+  <Art8b>
+    <element name="Analysis [Feature]	">Analysis [Feature]</element>
+    <element name="Assessment Topic">Assessment Topic</element>
+    <element name="[Element]">[Element]</element>
+    <element name="CriteriaType [GESComponent]">CriteriaType [GESComponent]</element>
+    <element name="[Parameter]">[Parameter]</element>
+    <element name="ThresholdValue" translate="true">ThresholdValue</element>
+    <element name="SumInfo1Unit/ThresholdValueUnit [ValueUnit]" translate="true">SumInfo1Unit/ThresholdValueUnit [ValueUnit]</element>
+    <element name="[ProportionThresholdValue]">[ProportionThresholdValue]</element>
+    <element name="Status [CriteriaStatus]">Status [CriteriaStatus]</element>
+    <element name="StatusTrend">StatusTrend</element>
+    <element name="StatusConfidence	">StatusConfidence</element>
+    <element name="StatusDescription [DescriptionCriteria]" translate="true">StatusDescription [DescriptionCriteria]</element>
+    <element name="Limitations [DescriptionElement]" translate="true">Limitations [DescriptionElement]</element>
+    <element name="Description" translate="true">Description</element>
+    <element name="SumInfo1" translate="true">SumInfo1</element>
+    <element name="SumInfo1Unit" translate="true">SumInfo1Unit</element>
+    <element name="SumInfo1Confidence">SumInfo1Confidence</element>
+    <element name="TrendsRecent">TrendsRecent</element>
+    <element name="TrendsFuture">TrendsFuture</element>
+    <element name="RecentTimeStart / RecentTimeEnd / AssessmentDateStart / AssessmentDateEnd [AssessmentPeriod]">RecentTimeStart / RecentTimeEnd / AssessmentDateStart / AssessmentDateEnd [AssessmentPeriod]</element>
+    <element name="Activities: Description" translate="true">Activities: Description</element>
+    <element name="ActivityType">ActivityType</element>
+    <element name="InfoGaps" translate="true">InfoGaps</element>
+  </Art8b>
+  <Art8a>
+    <element name="Topic">Topic</element>
+    <element name="Reporting Feature">Reporting Feature</element>
+    <element name="Indicator">Indicator</element>
+    <element name="Threshold Value" translate="true">Threshold Value</element>
+    <element name="Threshold Unit" translate="true">Threshold Unit</element>
+    <element name="Threshold Proportion">Threshold Proportion</element>
+    <element name="Baseline" translate="true">Baseline</element>
+    <element name="Status">Status</element>
+    <element name="Status Description" translate="true">Status Description</element>
+    <element name="Status Trend">Status Trend</element>
+    <element name="Status Confidence">Status Confidence</element>
+  </Art8a>
+</data>
