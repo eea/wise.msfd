@@ -718,8 +718,7 @@ class ReportData2018(BaseComplianceView):
         data = self.get_report_data()
         report_def = REPORT_DEFS[self.year][self.article]
         translatables = report_def.get_translatable_fields()
-        import pdb
-        pdb.set_trace()
+        seen = set()
 
         for table in data:
             muid, table_data = table
@@ -729,7 +728,9 @@ class ReportData2018(BaseComplianceView):
 
                 if label in translatables:
                     for value in cells:
-                        retrieve_translation(self.country_code, value)
+                        if value not in seen:
+                            retrieve_translation(self.country_code, value)
+                            seen.add(value)
 
         return ''
 

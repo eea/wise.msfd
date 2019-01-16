@@ -4,11 +4,14 @@ from pkg_resources import resource_filename
 
 definition_files = {
     '2018': 'data/report_2018_def.xml',
+    '2012': 'data/report_2012_def.xml',
 }
 
 
 class ReportDefinition(object):
-    """ Parser class for report_2018_def.xml
+    """ Parser class for a XML report definition file.
+
+    For 2018, use report_2018_def.xml, for 2012 use report_2012_def.xml
     """
 
     def __init__(self, year, article):
@@ -51,6 +54,12 @@ REPORT_DEFS = {
         'Art8': ReportDefinition('2018', 'Art8'),
         'Art9': ReportDefinition('2018', 'Art9'),
         'Art10': ReportDefinition('2018', 'Art10'),
+    },
+    '2012': {
+        'Art8a': ReportDefinition('2012', 'Art8a'),
+        'Art8b': ReportDefinition('2012', 'Art8b'),
+        'Art9': ReportDefinition('2012', 'Art9'),
+        'Art10': ReportDefinition('2012', 'Art10'),
     }
 }
 
