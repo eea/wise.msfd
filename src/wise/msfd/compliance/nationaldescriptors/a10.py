@@ -99,6 +99,10 @@ class A10Item(Item):
             return row[0]       # there are multiple records, one for each MUID
 
     def target_code(self):
+        # TODO: this needs to be redone, as there are multiple features
+        # the problem is that the records should be shown for the descriptor,
+        # not for the individual targets
+
         return self.pick('w:Feature/text()')
 
     @db.use_db_session('2012')
