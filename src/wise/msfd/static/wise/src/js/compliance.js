@@ -54,13 +54,13 @@ if (!Array.prototype.last){
       $("th", this).each(function() {
         var $th = $(this);
         var $next = $('td', $th.parent());
-        var thh = Math.max($next.height());
-        var mh = Math.max($th.height(), thh);
+        var cells_max_height = Math.max($next.height());
+        var height = Math.max($th.height(), cells_max_height);
 
         // console.log("TH", $th, thh, mh)
 
-        $th.height(mh);
-        $next.height(mh);
+        $th.height(height);
+        $next.first().height(height);
       });
     });
   };
@@ -129,8 +129,13 @@ if (!Array.prototype.last){
       //$(this).simplifyTable();
       $(this).html(simplified);
     } else {
-      $(this).html(original);
+      $(this).hide();
+      $(this).empty().html(original);
+      $(this).show();
+
+      console.log("done restoring");
       $(this).fixTableHeaderHeight();
+      //
       //addTranslateClickHandlers();
     }
     addTranslateClickHandlers();
