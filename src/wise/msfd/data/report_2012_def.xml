@@ -11,11 +11,11 @@
     <element name="Proportion">Proportion</element>
     <element name="AssessmentMethod">AssessmentMethod</element>
     <element name="Development status">Development status</element>
-    <element name="Type of target/indicator	">Type of target/indicator</element>
+    <element name="Type of target/indicator">Type of target/indicator</element>
     <element name="Timescale">Timescale</element>
     <element name="Interim or GES target">Interim or GES target</element>
     <element name="Compatibility with existing targets/indicators" translate="true">Compatibility with existing targets/indicators</element>
-    <element name="Physical/chemical features	">Physical/chemical features</element>
+    <element name="Physical/chemical features">Physical/chemical features</element>
     <element name="Predominant habitats">Predominant habitats</element>
     <element name="Functional group">Functional group</element>
     <element name="Pressures">Pressures</element>
@@ -34,7 +34,7 @@
     <element name="Development status" translate="true">Development status</element>
   </Art9>
   <Art8b>
-    <element name="Analysis [Feature]	">Analysis [Feature]</element>
+    <element name="Analysis [Feature]">Analysis [Feature]</element>
     <element name="Assessment Topic">Assessment Topic</element>
     <element name="[Element]">[Element]</element>
     <element name="CriteriaType [GESComponent]">CriteriaType [GESComponent]</element>
@@ -44,7 +44,7 @@
     <element name="[ProportionThresholdValue]">[ProportionThresholdValue]</element>
     <element name="Status [CriteriaStatus]">Status [CriteriaStatus]</element>
     <element name="StatusTrend">StatusTrend</element>
-    <element name="StatusConfidence	">StatusConfidence</element>
+    <element name="StatusConfidence">StatusConfidence</element>
     <element name="StatusDescription [DescriptionCriteria]" translate="true">StatusDescription [DescriptionCriteria]</element>
     <element name="Limitations [DescriptionElement]" translate="true">Limitations [DescriptionElement]</element>
     <element name="Description" translate="true">Description</element>
