@@ -161,5 +161,24 @@ if (!Array.prototype.last){
       $p = $(this).parent().next();
       $('table', $p).toggleTable(!onoff);
     });
+
+    // Warn user before leaving the page with unsaved changes
+    var submitted = false;
+    var modified = false;
+
+    $('#comp-national-descriptor form').submit(function() {
+      submitted = true;
+    });
+
+    $('#comp-national-descriptor').on('change', 'input, textarea, select', function(e) {
+      modified = true;
+    });
+
+    $(window).bind('beforeunload', function() {
+      if (modified && !submitted) {
+        return "You have unsaved changes. Do you want to leave this page?";
+      }
+    });
+
   });
 }(window, document, $));
