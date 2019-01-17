@@ -11,7 +11,7 @@
           <!--<span tal:replace="g">D0C0</span>-->
         </th>
         <!-- TODO: add "conclusion score" and "Weighting" as titles -->
-        <th class='as-header'>Conclusion</th>
+        <th class="as-header">Conclusion</th>
         <th class="as-th-score as-header">Score</th>
       </tr>
       <tal:rep tal:repeat="row assessment/answers">
@@ -31,7 +31,7 @@
                   data-content python: value[2]"
                 >
                 <span tal:content="python: value[2]">D0C0</span>
-                <span class="fa fa-question-circle" style="color: lightblue"></span>
+                <span class="fa fa-question-circle"></span>
               </label>
 
             </td>

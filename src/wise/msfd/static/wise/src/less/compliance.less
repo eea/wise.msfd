@@ -18,64 +18,6 @@
   display: none;
 }
 
-.wise-search-form-container div.formControls {
-  margin: 0;
-}
-
-.report-page-view {
-  .overflow-table {
-    position: relative;
-    margin-bottom: 1rem;
-    background-color: #EFEFEF;
-    border: 1px solid #CCC;
-
-    .inner {
-      overflow-x: auto;
-      overflow-y: visible;
-      margin-left: 14.4em;
-      background: white;
-      border-left: 4px solid #DDD;
-    }
-    table {
-      font-size: 80%;
-      table-layout: inherit;
-      margin-bottom: 0em;
-      th {
-        background: #EFEFEF;
-        vertical-align: top;
-        width: 18em;
-        overflow: hidden;
-        position: absolute;
-        left: 0;
-        text-align: right;
-        border: 0px;
-        borde-right: 0px;
-        border-top: 0px;
-        border-bottom: 2px solid #DDD;
-      }
-      tr:last-child th {
-        border-bottom: 0px;
-      }
-    }
-  }
-
-  .report-section {
-    margin-top: 2rem;
-    padding: 0.6rem;
-    // background-color: #EEE;
-  }
-}
-
-.table-striped {
-  tbody tr:nth-of-type(odd) {
-    background-color: #eee;
-  }
-  thead {
-    background-color: #AAA;
-    color: white;
-  }
-}
-
 .fullwidth {
   .center-section {
     width: 100%;
@@ -87,39 +29,33 @@
   }
 }
 
+.table-striped {
+  tbody tr:nth-of-type(odd) {
+    background-color: #eee;
+  }
+
+  thead {
+    background-color: #AAA;
+    color: white;
+  }
+}
+
 .visible-xs {
   clear: both;
 }
 
-div.nda-link {
-  margin-bottom: 1em;
-  top: -0.8em;
-  position: relative
+.fa-question-circle {
+  color: lightblue; // TODO: change the color
 }
 
-.process-state-phase-form {
-  background-color: #e6f7ca;
-  padding: 1rem; border: 1px solid #AAA;
-  margin-bottom: 1em;
-  line-height: 2em;
+em {
+  border-bottom: 1px dotted #CCC;
+  font-style: normal;
+  cursor: help;
 }
 
-div.phase-selector {
-  float: right;
-}
-
-div.crt-def {
-  width: 200px;
-  float: right
-}
-
-div.back-to-descr {
-  margin-bottom: 1em; top: -0.8em;
-  position: relative;
-}
-
-span.ind-title {
-  font-weight: bolder;
+div.widget {
+  display: flex;
 }
 
 div.subform-refresh {
@@ -127,34 +63,135 @@ div.subform-refresh {
   margin: 1em 0 1em 1em;
   background-color: #CCC;
   width: 20em;
-  float: right
+  float: right;
 }
 
-div.head-tpl {
-  overflow: auto
+.kssattr-formname-edit-assessment-summary,
+.wise-search-form-container {
+  .formControls {
+    margin: 0;
+  }
 }
 
-div.back-to-art {
-  margin-bottom: 2em;
+
+// Report page
+.report-page-view {
+  .report-section {
+    margin-top: 2rem;
+    padding: 0.6rem;
+
+    .simplify-form {
+      float: right;
+      position: absolute;
+      left: 100%;
+      margin-top: -1.2em;
+      margin-left: -12em;
+
+      label {
+        position: relative;
+        top: -0.5em;
+      }
+    }
+
+    .overflow-table {
+      position: relative;
+      margin-bottom: 1rem;
+      background-color: #EFEFEF;
+      border: 1px solid #CCC;
+
+      .inner {
+        overflow-x: auto;
+        overflow-y: visible;
+        margin-left: 14.4em;
+        background: white;
+        border-left: 4px solid #DDD;
+      }
+
+      table.table-report {
+        font-size: 80%;
+        table-layout: inherit;
+        margin-bottom: 0;
+
+        th {
+          background: #EFEFEF;
+          vertical-align: top;
+          width: 18em;
+          overflow: hidden;
+          position: absolute;
+          left: 0;
+          text-align: right;
+          border: 0;
+          border-bottom: 2px solid #DDD;
+        }
+
+        tr:last-child th {
+          border-bottom: 0;
+        }
+
+        td {
+          min-width: 3rem;
+          > div {
+            max-width: 50rem;
+          }
+          ul {
+            min-width: 16rem;
+            margin: 0 0 0 -1rem !important;
+            &.cell-listing  {
+              display: flex;
+              max-height: 30rem;
+              flex-direction: column;
+              flex-wrap: wrap;
+              li {
+                display: block !important;
+                padding-left: 1rem;
+                max-width: 30rem;
+                &::before {
+                  content: '▪';
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+
+  .back-to-art {
+    margin-bottom: 2em;
+  }
+
+  #download-report-data-form {
+    margin-bottom: 2em;
+  }
 }
 
-div.asts-header-data {
-  margin-bottom: 2em;
+
+// Country national descriptors overview
+.process-state-phase-form {
+  background-color: #e6f7ca;
+  padding: 1rem;
+  border: 1px solid #aaa;
+  margin-bottom: 3em;
+  line-height: 2em;
+
+  .phase-selector {
+    float: right;
+  }
 }
 
-div.ast-header-data {
-  background-color: #DDD;
-  border: 1px solid #BBB;
-  padding: 1em;
+div.as-table-overview blockquote {
+  font-size: 80%;
+  margin: 0.6em 0 0 0;
+  padding-left: 1em;
 }
 
-// copied the styling below from nat-desc-art-view.pt
 
+// Assessment overview
+// nat-desc-art-view.pt
 #nat-desc-art-menu {
-  margin-top: 1em;
   ul {
     display: flex;
-    margin-left: 0em !important;
+    margin-left: 0 !important;
     li {
       padding: 1em;
       line-height: 2em;
@@ -166,93 +203,102 @@ div.ast-header-data {
   }
 }
 
+.asts-header-data {
+  margin-bottom: 2em;
 
-table.assessment-data-table {
-  margin: 0em;
-  td {
-    min-width: 4em;
-    border: 1px solid #CCC;
-    background-color: white;
+  .ast-header-data {
+    background-color: #ddd;
+    border: 1px solid #bbb;
+    padding: 1em;
+
+    table.assessment-header {
+      margin-bottom: 1em;
+    }
+
+    table.assessment-data-table {
+      td {
+        min-width: 4em;
+        border: 1px solid #ccc;
+        background-color: #fff;
+      }
+
+      th {
+        background-color: #EEE;
+        text-align: right;
+        width: 15%;
+      }
+
+      label {
+        background-color: #eee6;
+        padding: 0 3px;
+        border-radius: 9px;
+      }
+    }
   }
-  th {
-    background-color: #EEE;
-    text-align: right;
+}
+
+.nda-link {
+  margin-bottom: 1em;
+}
+
+.assessment-data-table {
+  th.as-header {
+    background-color: #999 !important;
+    color: white;
+  }
+
+  th.as-question {
+    min-width: 22em !important;
+  }
+
+  th.as-ges-component {
+    width: 30px;
+  }
+
+  tr.overall-score th,
+  tr.overall-score td {
     width: 15%;
   }
-  label {
-    background-color: #eee6;
-    padding: 0 3px;
-    // border: 1px solid white;
-    border-radius: 9px;
+
+  td.as-score {
+    text-align: right;
   }
-}
 
+  td.as-value {
+    width: 30px;
+    height: 30px;
+  }
 
-table.assessment-header {
-  margin-bottom: 1em;
-  th { width: 15%; }
-}
+  td.as-value-0 {
+    background-color: #eee !important;
+  }
 
-tr.overall-score th,
-tr.overall-score td {
-  width: 15%;
-}
+  td.as-value-1 {
+    background-color: #9bbb59 !important;
+  }
 
-th.as-header {
-  background-color: #999 !important;
-  color: white;
-}
+  td.as-value-2 {
+    background-color: #d6e3bc !important;
+  }
 
-th.as-th-score {
-  /* display: inline-block;
-  width: 4em; */
-}
+  td.as-value-3 {
+    background-color: #ff99cc !important;
+  }
 
-td.as-score {
-  text-align: right;
-}
+  td.as-value-4 {
+    background-color: #ff3399 !important;
+  }
 
-th.as-question {
-  min-width: 22em !important;
-}
+  td.as-value-5 {
+    background-color: #ffffff !important;
+  }
 
-td.as-value {
-  width: 30px;
-  height: 30px;
-}
+  tr.assessment-summary {
+    border-bottom: solid 0.8em #ddd;
 
-th.as-ges-component {
-  width: 30px;
-}
-
-td.as-value-0 {
-  background-color: #eee !important;
-}
-
-td.as-value-1 {
-  background-color: #9bbb59 !important;
-}
-
-td.as-value-2 {
-  background-color: #d6e3bc !important;
-}
-
-td.as-value-3 {
-  background-color: #ff99cc !important;
-}
-
-td.as-value-4 {
-  background-color: #ff3399 !important;
-}
-
-td.as-value-5 {
-  background-color: #ffffff !important;
-}
-
-tr.assessment-summary {
-  border-bottom: solid 0.8em #ddd;
-  td {
-    min-height: 30px;
+    td {
+      min-height: 30px;
+    }
   }
 }
 
@@ -260,187 +306,40 @@ div.comp-discussion-track-container {
   margin: 3em 0;
   background-color: #F7F7F7;
   padding: 1em;
-}
 
-div.comp-discussion-track-container h4 {
-  margin-bottom: 2em;
-}
+  h4 {
+    margin-bottom: 2em;
+  }
 
-div.comp-discussion-track-container form {
-  margin-top: 2em;
-}
+  form {
+    margin-top: 2em;
+  }
 
-div.comp-discussion-track-container div.formControls {
-  margin: 0em;
-}
-
-td.p-phase1 {
-  background-color: white;
-  color: #8da530;
-}
-
-td.p-phase2 {
-  background-color: white;
-  color: #2d9849;
-}
-
-table.comp-c-listing {
-  width: inherit;
-}
-
-div.as-state-label {
-  font-size: 80%;
-
-  background-color: #EEE;
-  display: inline-block;
-  padding: 2px 4px;
-  border-radius: 6px;
-}
-
-div.as-table-overview blockquote {
-  font-size: 80%;
-  margin: 0.6em 0em 0em 0em;
-  padding-left: 1em;
-}
-
-// TODO: move this in .report-page-view?
-// These are the cell "listings" ul.cell-listing
-table.table-report {
-  td {
-    min-width: 3rem;
-    > div {
-      max-width: 50rem;
-    }
-    ul {
-      min-width: 16rem;
-      margin: 0em 0em 0em -1rem !important;
-      li {
-        list-style-type: square;
-        list-style-position: inside;
-        padding: 0em;
-        padding-left: 0px;
-        margin-left: 0px;
-      }
-      &.cell-listing  {
-        display: flex;
-        max-height: 30rem;
-        flex-direction: column;
-        flex-wrap: wrap;
-        li {
-          display: block !important;
-          padding-left: 1rem;
-          max-width: 30rem;
-          &::before {
-            content: '▪';
-          }
-        }
-      }
-    }
+  div.formControls {
+    margin: 0;
   }
 }
 
-em {
-  border-bottom: 1px dotted #CCC;
-  font-style: normal;
-  cursor: help;
-}
 
-div.compliance-assessment-edit-subform {
-  label {
-    display: inline-block;
-    width: 10em;
-    text-align: right;
-    padding-right: 0.7em;
-  }
-}
-
-div.widget {
-  display: flex;
-}
-
-div.assessment-form-input {
-  margin: auto;
-  width: 100%;
-}
-
-div.simplify-form {
+// National descriptor edit assessment data
+div.crt-def {
+  width: 200px;
   float: right;
-  position: absolute;
-  left: 100%;
-  margin-top: -1.2em;
-  margin-left: -12em;
-  label {
-    position: relative;
-    top: -0.5em;
-  }
 }
 
-#download-report-data-form {
-  margin-bottom: 2em;
+div.back-to-descr {
+  margin-bottom: 1em;
 }
 
 #comp-national-descriptor {
-  // TODO: all this needs to be checked and reviewed
-  padding: 1rem;
-  // opacity: 0;
-  border: 1px solid #eee;
-  border-bottom-left-radius: 10px;
-  border-bottom-right-radius: 10px;
-
-  .overflow-table {
-    overflow-x: auto;
-    overflow-y: auto;
-    width: 100%;
-    height: 800px;
-    margin-bottom: 1rem;
-  }
-
-  .table-striped tbody tr:nth-of-type(odd) {
-    background-color: #eee;
+  h3 {
+    margin-top: 0;
   }
 
   .collapsed-container {
-
-    .collapsed-header {
-      position: relative;
-      background: @dark-theme-color;
-      border-radius: 10px;
-      margin-top: 1rem;
-      cursor: pointer;
-      color: white;
-      padding: 10px;
-
-      &:after {
-        transition: content .8s;
-        content: "\f078";
-        font-family: FontAwesome;
-        font-weight: 700;
-        float: right;
-        color: white;
-      }
-
-      &.form-collapsed {
-        border-bottom-left-radius: 0;
-        border-bottom-right-radius: 0;
-        background: @grey-theme-color;
-        color: grey;
-        &:after {
-          content: "\f077";
-          color: grey;
-        }
-      }
-    }
-
-    .collapsed-content {
-      padding: 1rem;
-      border: 1px solid #eee;
-    }
-
     .subform {
-      padding:1rem;
-      padding-left: 2rem;
-      padding-right: 2rem;
-      margin-bottom: 1rem;
+      padding: 2rem;
+      margin-bottom: 2rem;
       .vendor-prefix(border-radius; 10px);
 
       &:nth-of-type(odd) {
@@ -448,21 +347,14 @@ div.simplify-form {
         border: 1px solid #ddd;
       }
 
-      &:nth-of-type(even){
+      &:nth-of-type(even) {
         background-color: rgba(255,255,255,0.6);
         border: 1px solid #ccc;
       }
 
       .field {
-        margin-bottom: 2rem;
-
-        &:first-child {
-          margin-top: 2rem;
-        }
-
-        .select2-container {
-          width: auto;
-        }
+        margin-top: 2rem;
+        margin-bottom: 0;
 
         textarea {
           background-image: -webkit-gradient(linear, 0 0, 0 100%, color-stop(1%, #EEE), color-stop(10%, #FFF));
@@ -472,10 +364,22 @@ div.simplify-form {
           background-image: -ms-linear-gradient(top, #EEE 1%, #FFF 10%);
           background-image: linear-gradient(top, #EEE 1%, #FFF 10%);
         }
-
       }
     }
+  }
 
+  .compliance-assessment-edit-subform {
+    label {
+      display: inline-block;
+      width: 10em;
+      text-align: right;
+      padding-right: 0.7em;
+    }
+
+    .assessment-form-input {
+      margin: auto;
+      width: 100%;
+    }
   }
 
   .subform {
@@ -499,8 +403,8 @@ div.simplify-form {
   }
 }
 
-.kssattr-formname-edit-assessment-summary {
-  .formControls {
-    margin: 0em;
-  }
+
+// National and Regional descriptors assessment overview
+table.comp-c-listing {
+  width: inherit;
 }
