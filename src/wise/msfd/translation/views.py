@@ -1,13 +1,9 @@
 # -*- coding: utf-8 -*-
 
-import json
 import logging
-import os
 import time
 
 import chardet
-import requests
-from requests.auth import HTTPDigestAuth
 from zope import event
 from zope.annotation.interfaces import IAnnotations
 from zope.security import checkPermission
@@ -20,14 +16,10 @@ from plone.api.portal import get as get_portal
 from Products.Five.browser import BrowserView
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile as VPTF
 
-env = os.environ.get
+from . import retrieve_translation
 
 ANNOTATION_KEY = 'translation.msfd.storage'
-MARINE_PASS = env('MARINE_PASS', '')
-SERVICE_URL = 'https://webgate.ec.europa.eu/etranslation/si/translate'
 
-# TODO: get another username?
-TRANS_USERNAME = 'ipetchesi'
 
 logger = logging.getLogger('wise.msfd.translation')
 
@@ -102,57 +94,8 @@ class SendTranslationRequest(BrowserView):
         self.delete_translation(orig, sourceLanguage)
 
         targetLanguages = self.request.form.get('targetLanguages', ['EN'])
-        externalReference = self.request.form.get('externalReference', '')
 
-        site = portal.getSite()
-        marine_url = site.Plone.marine.absolute_url()
-
-        if 'europa.eu' in marine_url:
-            dest = marine_url + \
-                '/translation-callback2?source_lang={}'.format(sourceLanguage)
-        else:
-            dest = 'http://office.pixelblaster.ro:4880/Plone/marine' + \
-                '/translation-callback2?source_lang={}'.format(sourceLanguage)
-
-        logger.info('Translate callback destination: %s', dest)
-
-        data = {
-            'priority': 5,
-            'callerInformation': {
-                'application': 'Marine_EEA_20180706',
-                'username': TRANS_USERNAME,
-            },
-            'domain': 'SPD',
-            'externalReference': externalReference,
-            'textToTranslate': text,
-            'sourceLanguage': sourceLanguage,
-            'targetLanguages': targetLanguages,
-            'destinations': {
-                'httpDestinations':
-                [dest],
-            }
-        }
-
-        dataj = json.dumps(data)
-        headers = {'Content-Type': 'application/json'}
-
-        result = requests.post(SERVICE_URL,
-                               auth=HTTPDigestAuth('Marine_EEA_20180706',
-                                                   MARINE_PASS),
-                               data=dataj,
-                               headers=headers)
-
-        self.request.response.headers.update(headers)
-        res = {
-            "transId": result.content,
-            "externalRefId": externalReference
-        }
-
-        # res = {'translation': 'Translation in progress!'}
-
-        logger.info('Translate request sent: %s', res)
-
-        return json.dumps(res)
+        return retrieve_translation(sourceLanguage, text, targetLanguages)
 
 
 class TranslationCallback(BrowserView):
@@ -215,7 +158,8 @@ class TranslationView(BrowserView):
     """
 
     translation_edit_template = VPTF('./pt/translation-edit-form.pt')
-    translate_snip = VPTF('pt/translate-snip.pt')
+    translate_tpl = VPTF('pt/translate-snip.pt')
+    cell_tpl = VPTF('pt/cell.pt')
 
     @property
     def country_code(self):
@@ -231,18 +175,14 @@ class TranslationView(BrowserView):
         # orig = value
 
         if (not value) or (not is_translatable):
-            return self.translate_snip(text=value,
-                                       translation=u"",
-                                       can_translate=False)
+            return self.cell_tpl(value=value)
 
         if isinstance(value, (str, )):
             value = decode_text(value)      # TODO: should use decode?
         elif isinstance(value, unicode):
             pass
         else:
-            return self.translate_snip(text=value,
-                                       translation=u"",
-                                       can_translate=False)
+            return self.cell_tpl(value=value,)
 
         translation = u''
 
@@ -258,9 +198,9 @@ class TranslationView(BrowserView):
                 translation = annot_lang.get(value, None)
                 translation = translation.lstrip('?')
 
-        return self.translate_snip(text=value,
-                                   translation=translation,
-                                   can_translate=self.can_modify())
+        return self.translate_tpl(text=value,
+                                  translation=translation,
+                                  can_translate=self.can_modify())
 
     def __call__(self):
         return self.translation_edit_template()

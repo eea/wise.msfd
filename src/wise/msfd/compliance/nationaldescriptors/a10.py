@@ -8,7 +8,7 @@ from wise.msfd import db, sql
 from wise.msfd.data import country_ges_components, get_report_data
 from wise.msfd.gescomponents import get_descriptor, sorted_by_criterion
 from wise.msfd.labels import COMMON_LABELS
-from wise.msfd.utils import Item, ItemLabel, ItemList, Node, Row
+from wise.msfd.utils import Item, ItemLabel, ItemList, Node, RawRow, Row
 
 from ..base import BaseArticle2012
 from .a9 import Article9
@@ -422,8 +422,9 @@ class Article10(BaseArticle2012):
 
                 for inner in cols:
                     values.append(inner[name])
-                values = [self.translate_value(name, value=v) for v in values]
-                row = Row(name, values)
+                values = [self.context.translate_value(name, value=v)
+                          for v in values]
+                row = RawRow(name, values)
                 self.rows.append(row)
 
             break       # only need the "first" row

@@ -7,10 +7,11 @@ from sqlalchemy.orm.relationships import RelationshipProperty
 from Products.Five.browser.pagetemplatefile import \
     ViewPageTemplateFile as Template
 from wise.msfd import db, sql  # , sql2018
+from wise.msfd.compliance.utils import REPORT_DEFS
 from wise.msfd.data import get_report_data
 from wise.msfd.gescomponents import Criterion, get_criterion, get_descriptor
 from wise.msfd.labels import COMMON_LABELS
-from wise.msfd.utils import Item, ItemLabel, ItemList, Node, Row
+from wise.msfd.utils import Item, ItemLabel, ItemList, Node, RawRow, Row
 
 from ..base import BaseArticle2012
 
@@ -583,18 +584,26 @@ class Article8(BaseArticle2012):
         ReportTag = None
 
         # basic algorthim to detect what type of report it is
+        article = self.article
 
         if 'Nutrients' in root_tags:
             ReportTag = ReportTag8b
+            article = 'Art8b'
 
         elif 'FunctionalGroupFeatures' in root_tags:
             ReportTag = ReportTag8a
+            article = 'Art8a'
 
         if ReportTag is None:
             logger.warning("Unhandled report type?")
             self.rows = []
 
             return self.template()
+
+        # override the default translatable
+        fields = REPORT_DEFS[self.context.year][article]\
+            .get_translatable_fields()
+        self.context.TRANSLATABLES.extend(fields)
 
         for name in root_tags:
             nodes = xp('//w:' + name)
@@ -648,7 +657,9 @@ class Article8(BaseArticle2012):
 
                         for inner in cols:
                             values.append(inner[name])
-                        row = Row(name, values)
+                        values = [self.context.translate_value(name, value=v)
+                                  for v in values]
+                        row = RawRow(name, values)
                         rows.append(row)
 
                     break       # only need the "first" row, for headers

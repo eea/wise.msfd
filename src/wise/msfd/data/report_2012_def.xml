@@ -21,7 +21,7 @@
     <element name="Pressures">Pressures</element>
   </Art10>
   <Art9>
-    <element name="Reporting area(s) [MarineUnitID]" translate="true">Reporting area(s) [MarineUnitID]</element>
+    <element name="Reporting area(s) [MarineUnitID]">Reporting area(s) [MarineUnitID]</element>
     <element name="Feature(s) reported [Feature]">Feature(s) reported [Feature]</element>
     <element name="GES Component [Reporting feature]">GES Component [Reporting feature]</element>
     <element name="GES description" translate="true">GES description</element>

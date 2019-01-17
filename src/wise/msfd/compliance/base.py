@@ -92,6 +92,7 @@ class BaseComplianceView(BrowserView):
 
     tabs_type = 'tab'
     main_forms = MAIN_FORMS
+    _translatables = None
 
     @property
     def json_map_url(self):
@@ -101,7 +102,21 @@ class BaseComplianceView(BrowserView):
     def TRANSLATABLES(self):
         # for 2018, returns a list of field names that are translatable
 
-        return REPORT_DEFS[self.year][self.article].get_translatable_fields()
+        if self._translatables:
+            return self._translatables
+
+        year = REPORT_DEFS[self.year]
+
+        if self.article in year:
+            return year[self.article].get_translatable_fields()
+
+        self._translatables = []
+
+        return self._translatables
+
+    @TRANSLATABLES.setter
+    def set_translatables(self, v):
+        self._translatables = v
 
     report_header_template = ViewPageTemplateFile(
         'nationaldescriptors/pt/report-data-header.pt'
