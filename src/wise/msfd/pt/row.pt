@@ -1,0 +1,6 @@
+<tr>
+  <th class="bla" tal:content="options/title">Subrow header</th>
+  <tal:rep tal:repeat="val options/cells">
+    <td tal:replace="structure val">Value</td>
+  </tal:rep>
+</tr>

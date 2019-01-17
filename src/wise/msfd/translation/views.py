@@ -215,7 +215,8 @@ class TranslationView(BrowserView):
     """
 
     translation_edit_template = VPTF('./pt/translation-edit-form.pt')
-    translate_snip = VPTF('pt/translate-snip.pt')
+    translate_tpl = VPTF('pt/translate-snip.pt')
+    cell_tpl = VPTF('pt/cell.pt')
 
     @property
     def country_code(self):
@@ -231,18 +232,14 @@ class TranslationView(BrowserView):
         # orig = value
 
         if (not value) or (not is_translatable):
-            return self.translate_snip(text=value,
-                                       translation=u"",
-                                       can_translate=False)
+            return self.cell_tpl(value=value)
 
         if isinstance(value, (str, )):
             value = decode_text(value)      # TODO: should use decode?
         elif isinstance(value, unicode):
             pass
         else:
-            return self.translate_snip(text=value,
-                                       translation=u"",
-                                       can_translate=False)
+            return self.cell_tpl(value=value,)
 
         translation = u''
 
@@ -258,9 +255,9 @@ class TranslationView(BrowserView):
                 translation = annot_lang.get(value, None)
                 translation = translation.lstrip('?')
 
-        return self.translate_snip(text=value,
-                                   translation=translation,
-                                   can_translate=self.can_modify())
+        return self.translate_tpl(text=value,
+                                  translation=translation,
+                                  can_translate=self.can_modify())
 
     def __call__(self):
         return self.translation_edit_template()

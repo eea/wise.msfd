@@ -68,7 +68,7 @@ class ReportData2012(BaseComplianceView, BaseUtil):
     """
     implements(IReportDataView)
 
-    report_year = '2012'
+    year = report_year = '2012'
     section = 'national-descriptors'
 
     @property
