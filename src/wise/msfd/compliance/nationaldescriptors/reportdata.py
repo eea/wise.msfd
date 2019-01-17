@@ -716,8 +716,9 @@ class ReportData2018(BaseComplianceView):
 
     def auto_translate(self):
         data = self.get_report_data()
-        report_def = REPORT_DEFS[self.year][self.article]
-        translatables = report_def.get_translatable_fields()
+        # report_def = REPORT_DEFS[self.year][self.article]
+        # translatables = report_def.get_translatable_fields()
+        translatables = self.TRANSLATABLES
         seen = set()
 
         for table in data:

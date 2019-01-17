@@ -1,13 +1,9 @@
 # -*- coding: utf-8 -*-
 
-import json
 import logging
-import os
 import time
 
 import chardet
-import requests
-from requests.auth import HTTPDigestAuth
 from zope import event
 from zope.annotation.interfaces import IAnnotations
 from zope.security import checkPermission
@@ -20,14 +16,10 @@ from plone.api.portal import get as get_portal
 from Products.Five.browser import BrowserView
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile as VPTF
 
-env = os.environ.get
+from . import retrieve_translation
 
 ANNOTATION_KEY = 'translation.msfd.storage'
-MARINE_PASS = env('MARINE_PASS', '')
-SERVICE_URL = 'https://webgate.ec.europa.eu/etranslation/si/translate'
 
-# TODO: get another username?
-TRANS_USERNAME = 'ipetchesi'
 
 logger = logging.getLogger('wise.msfd.translation')
 
@@ -102,57 +94,8 @@ class SendTranslationRequest(BrowserView):
         self.delete_translation(orig, sourceLanguage)
 
         targetLanguages = self.request.form.get('targetLanguages', ['EN'])
-        externalReference = self.request.form.get('externalReference', '')
 
-        site = portal.getSite()
-        marine_url = site.Plone.marine.absolute_url()
-
-        if 'europa.eu' in marine_url:
-            dest = marine_url + \
-                '/translation-callback2?source_lang={}'.format(sourceLanguage)
-        else:
-            dest = 'http://office.pixelblaster.ro:4880/Plone/marine' + \
-                '/translation-callback2?source_lang={}'.format(sourceLanguage)
-
-        logger.info('Translate callback destination: %s', dest)
-
-        data = {
-            'priority': 5,
-            'callerInformation': {
-                'application': 'Marine_EEA_20180706',
-                'username': TRANS_USERNAME,
-            },
-            'domain': 'SPD',
-            'externalReference': externalReference,
-            'textToTranslate': text,
-            'sourceLanguage': sourceLanguage,
-            'targetLanguages': targetLanguages,
-            'destinations': {
-                'httpDestinations':
-                [dest],
-            }
-        }
-
-        dataj = json.dumps(data)
-        headers = {'Content-Type': 'application/json'}
-
-        result = requests.post(SERVICE_URL,
-                               auth=HTTPDigestAuth('Marine_EEA_20180706',
-                                                   MARINE_PASS),
-                               data=dataj,
-                               headers=headers)
-
-        self.request.response.headers.update(headers)
-        res = {
-            "transId": result.content,
-            "externalRefId": externalReference
-        }
-
-        # res = {'translation': 'Translation in progress!'}
-
-        logger.info('Translate request sent: %s', res)
-
-        return json.dumps(res)
+        return retrieve_translation(sourceLanguage, text, targetLanguages)
 
 
 class TranslationCallback(BrowserView):
