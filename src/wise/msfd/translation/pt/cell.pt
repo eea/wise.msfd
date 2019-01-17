@@ -1,1 +1,1 @@
-<td><div tal:content="options/value"></div></td>
+<td><div tal:content="structure options/value"></div></td>
