@@ -422,6 +422,7 @@ class Article10(BaseArticle2012):
 
                 for inner in cols:
                     values.append(inner[name])
+                values = [self.translate_value(name, value=v) for v in values]
                 row = Row(name, values)
                 self.rows.append(row)
 

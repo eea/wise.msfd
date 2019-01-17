@@ -23,6 +23,7 @@ from wise.msfd.data import (get_factsheet_url, get_report_data,
                             get_report_file_url, get_report_filename)
 from wise.msfd.gescomponents import (GES_LABELS, get_descriptor, get_features,
                                      get_parameters)
+from wise.msfd.translation import retrieve_translation
 from wise.msfd.utils import (ItemLabel, ItemList, change_orientation,
                              consolidate_data)
 from z3c.form.button import buttonAndHandler
@@ -713,6 +714,26 @@ class ReportData2018(BaseComplianceView):
 
         return xlsio.read()
 
+    def auto_translate(self):
+        data = self.get_report_data()
+        report_def = REPORT_DEFS[self.year][self.article]
+        translatables = report_def.get_translatable_fields()
+        seen = set()
+
+        for table in data:
+            muid, table_data = table
+
+            for row in table_data:
+                label, cells = row
+
+                if label in translatables:
+                    for value in cells:
+                        if value not in seen:
+                            retrieve_translation(self.country_code, value)
+                            seen.add(value)
+
+        return ''
+
     def __call__(self):
 
         self.content = ''
@@ -725,6 +746,9 @@ class ReportData2018(BaseComplianceView):
 
         if 'download' in self.request.form:
             return self.download()
+
+        if 'translate' in self.request.form:
+            return self.auto_translate()
 
         trans_edit_html = self.translate_view()()
 
