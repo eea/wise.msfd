@@ -31,7 +31,7 @@
                   data-content python: value[2]"
                 >
                 <span tal:content="python: value[2]">D0C0</span>
-                <span class="fa fa-question-circle"></span>
+                <!-- <span class="fa fa-question-circle"></span> -->
               </label>
 
             </td>

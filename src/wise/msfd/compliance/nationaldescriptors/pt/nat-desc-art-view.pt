@@ -39,16 +39,13 @@
                 </a>
               </li>
 
-              <li style="background-color: #e6f7ca">
+              <li class="process-state">
               <!-- <li class="process-state-phase-form"> -->
                 <form method="GET" action='./content_status_modify'>
                   <div>
                     <i class='fa fa-exchange'></i>
                     Process state:
                     <strong tal:content="view/get_status">Phase 0</strong>
-                    &nbsp;
-                    &nbsp;
-
                     <select onchange="javascript:this.form.submit()" name="workflow_action"
                       class="pat-select2"
                       data-pat-select2="width:10em">
@@ -83,7 +80,7 @@
             </div>
           </div>
 
-          <div style="">
+          <div>
             <div tal:content="structure context/@@comments-view"></div>
           </div>
 

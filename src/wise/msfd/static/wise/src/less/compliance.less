@@ -45,7 +45,7 @@
 }
 
 .fa-question-circle {
-  color: lightblue; // TODO: change the color
+  color: #333;
 }
 
 em {
@@ -200,39 +200,44 @@ div.as-table-overview blockquote {
       margin-right: 1em;
       background-color: #d3f3f9;
     }
+    .process-state {
+      background-color: #e6f7ca;
+
+      .select2-container {
+        margin-left: 1em;
+      }
+    }
   }
 }
 
-.asts-header-data {
-  margin-bottom: 2em;
+.ast-header-data {
+  background-color: #ddd;
+  border: 1px solid #bbb;
+  padding: 1em;
 
-  .ast-header-data {
-    background-color: #ddd;
-    border: 1px solid #bbb;
-    padding: 1em;
+  table.assessment-header {
+    margin-bottom: 0;
+  }
 
-    table.assessment-header {
-      margin-bottom: 1em;
+  table.assessment-data-table {
+    margin-bottom: 0;
+
+    td {
+      min-width: 4em;
+      border: 1px solid #ccc;
+      background-color: #fff;
     }
 
-    table.assessment-data-table {
-      td {
-        min-width: 4em;
-        border: 1px solid #ccc;
-        background-color: #fff;
-      }
+    th {
+      background-color: #EEE;
+      text-align: right;
+      width: 9%;
+    }
 
-      th {
-        background-color: #EEE;
-        text-align: right;
-        width: 15%;
-      }
-
-      label {
-        background-color: #eee6;
-        padding: 0 3px;
-        border-radius: 9px;
-      }
+    label {
+      background-color: #eee6;
+      padding: 0 6px;
+      border-radius: 9px;
     }
   }
 }
@@ -294,7 +299,7 @@ div.as-table-overview blockquote {
   }
 
   tr.assessment-summary {
-    border-bottom: solid 0.8em #ddd;
+    // border-bottom: solid 0.8em #ddd;
 
     td {
       min-height: 30px;
@@ -303,16 +308,13 @@ div.as-table-overview blockquote {
 }
 
 div.comp-discussion-track-container {
-  margin: 3em 0;
+  margin: 2em 0;
   background-color: #F7F7F7;
   padding: 1em;
 
   h4 {
-    margin-bottom: 2em;
-  }
-
-  form {
-    margin-top: 2em;
+    margin-top: 0;
+    margin-bottom: 1em;
   }
 
   div.formControls {
