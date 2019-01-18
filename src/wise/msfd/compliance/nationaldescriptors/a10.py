@@ -50,8 +50,8 @@ class A10Item(Item):
 
         attrs = [
             ('DescriptorCriterionIndicator', self.criterion),
-            ('Description [Targets]', self.description()),
             ('Feature [Target code]', self.target_code()),
+            ('Description [Targets]', self.description()),
             ('Threshold value [TargetValue]', self.threshold_value_a9()),
             ('Reference point type', pick('w:ReferencePointType/text()')),
             ('Baseline', pick('w:Baseline/text()')),
