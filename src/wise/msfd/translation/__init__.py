@@ -21,7 +21,7 @@ def retrieve_translation(country_code, text, target_languages=None):
     if not target_languages:
         target_languages = ['EN']
 
-    externalReference = self.request.form.get('externalReference', '')
+    # externalReference = self.request.form.get('externalReference', '')
 
     site = portal.getSite()
     marine_url = site.Plone.marine.absolute_url()
@@ -42,10 +42,10 @@ def retrieve_translation(country_code, text, target_languages=None):
             'username': TRANS_USERNAME,
         },
         'domain': 'SPD',
-        'externalReference': externalReference,
+        'externalReference': text,          # externalReference,
         'textToTranslate': text,
-        'sourceLanguage': sourceLanguage,
-        'targetLanguages': targetLanguages,
+        'sourceLanguage': country_code,
+        'targetLanguages': target_languages,
         'destinations': {
             'httpDestinations':
             [dest],
@@ -61,10 +61,9 @@ def retrieve_translation(country_code, text, target_languages=None):
                            data=dataj,
                            headers=headers)
 
-    self.request.response.headers.update(headers)
     res = {
         "transId": result.content,
-        "externalRefId": externalReference
+        "externalRefId": text
     }
 
     # res = {'translation': 'Translation in progress!'}

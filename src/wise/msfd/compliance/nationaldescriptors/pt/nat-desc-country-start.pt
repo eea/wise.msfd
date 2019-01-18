@@ -65,6 +65,7 @@
                   <th>
                     <span tal:content="desc/title_or_id">D0</span>
                   </th>
+                  <!-- TODO: resort articles here -->
                   <td tal:repeat="assessment desc/contentValues">
                     <a class="btn btn-primary btn-xs" href="" tal:attributes="href assessment/absolute_url">
                       <span tal:content="assessment/title">Art0</span>:

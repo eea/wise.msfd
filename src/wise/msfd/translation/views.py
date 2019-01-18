@@ -95,6 +95,9 @@ class SendTranslationRequest(BrowserView):
 
         targetLanguages = self.request.form.get('targetLanguages', ['EN'])
 
+        headers = {'Content-Type': 'application/json'}
+        self.request.response.headers.update(headers)
+
         return retrieve_translation(sourceLanguage, text, targetLanguages)
 
 
