@@ -79,7 +79,7 @@
                                 >
                                 <span i18n:translate=""
                                   tal:content="widget/label">label</span>
-                                <span tal:condition="criteria" class="fa fa-question-circle" style="color: lightblue"></span>
+                                <span tal:condition="criteria" class="fa fa-question-circle"></span>
                               </label>
                             </div>
                             <div class="assessment-form-input">

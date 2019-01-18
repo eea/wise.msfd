@@ -47,7 +47,7 @@
             </form>
           </div>
 
-          <div tal:repeat="region view/get_regions" style="padding-top: 2rem">
+          <div tal:repeat="region view/get_regions">
             <h4 tal:content="region/Title">Region name</h4>
             <hr />
 
