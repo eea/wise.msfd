@@ -122,7 +122,7 @@ $(document).ready(function(){
   };
 
   window.addTranslateClickHandlers = function() {
-    $(".autoTransl").on("click", autoTranslation);
+    // $(".autoTransl").on("click", autoTranslation);
     $('.editTransl').on("click", editTranslation);
     $('.submitTransl').on("click", submitTranslation);
 
