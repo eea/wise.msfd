@@ -29,6 +29,7 @@
           <div class="process-state-phase-form">
             <form method="GET" action='./content_status_modify'>
               <div>
+                <i class='fa fa-exchange'></i>
                 Process state:
                 <strong tal:content="view/get_status">Phase 0</strong>
 

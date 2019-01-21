@@ -24,6 +24,10 @@
     border: none;
   }
 
+  .main-content {
+    box-shadow: none !important;
+  }
+
   .side-section {
     display: none;
   }
@@ -168,9 +172,9 @@ div.subform-refresh {
 
 // Country national descriptors overview
 .process-state-phase-form {
-  background-color: #e6f7ca;
-  padding: 1rem;
-  border: 1px solid #aaa;
+  background-color: #dff1c3;
+  padding: 1em;
+  // border: 1px solid #aaa;
   margin-bottom: 3em;
   line-height: 2em;
 
@@ -201,7 +205,7 @@ div.as-table-overview blockquote {
       background-color: #d3f3f9;
     }
     .process-state {
-      background-color: #e6f7ca;
+      background-color: #dff1c3;
 
       .select2-container {
         margin-left: 1em;
@@ -216,11 +220,12 @@ div.as-table-overview blockquote {
   padding: 1em;
 
   table.assessment-header {
-    margin-bottom: 0;
+    margin: 0 !important;
   }
 
   table.assessment-data-table {
     margin-bottom: 0;
+    margin-top: 1em;
 
     td {
       min-width: 4em;
@@ -230,14 +235,16 @@ div.as-table-overview blockquote {
 
     th {
       background-color: #EEE;
+      border: 1px solid #ccc;
       text-align: right;
       width: 9%;
     }
 
     label {
-      background-color: #eee6;
+      background-color: rgba(255,255,255, 0.5);
       padding: 0 6px;
       border-radius: 9px;
+      cursor: help;
     }
   }
 }
@@ -250,6 +257,7 @@ div.as-table-overview blockquote {
   th.as-header {
     background-color: #999 !important;
     color: white;
+    border: none !important;
   }
 
   th.as-question {
@@ -279,23 +287,23 @@ div.as-table-overview blockquote {
   }
 
   td.as-value-1 {
-    background-color: #9bbb59 !important;
+    background-color: #b1c587 !important;
   }
 
   td.as-value-2 {
-    background-color: #d6e3bc !important;
+    background-color: #d4dfbc !important;
   }
 
   td.as-value-3 {
-    background-color: #ff99cc !important;
+    background-color: #ffaeae !important;
   }
 
   td.as-value-4 {
-    background-color: #ff3399 !important;
+    background-color: #fd7878 !important;
   }
 
   td.as-value-5 {
-    background-color: #ffffff !important;
+    background-color: #fff !important;
   }
 
   tr.assessment-summary {
