@@ -7,7 +7,7 @@
 
   <browser:page
     for="*"
-    name="request-translation2"
+    name="translate-text"
     permission="zope2.View"
     class=".views.SendTranslationRequest"
     />
@@ -15,7 +15,7 @@
   <browser:page
     class=".views.TranslationCallback"
     for="*"
-    name="translation-callback2"
+    name="translate-callback"
     permission="zope2.View"
     />
 

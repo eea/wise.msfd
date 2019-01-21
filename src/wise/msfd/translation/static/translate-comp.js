@@ -5,23 +5,23 @@ $(document).ready(function(){
 
     var text = $(this).parents('td.translatable').find('.tr.text').text();
     var target_languages = ['EN'];
-    var source_lang = 'EN';
+    // var source_lang = 'EN';
 
     $.ajax({
       type: "POST",
-      url: "./request-translation2",
+      url: "./@@translate-text",
       dataType: 'json',
       data: {
         "text-to-translate": text,
         "targetLanguages": target_languages,
-        "sourceLanguage": source_lang,
+        // "sourceLanguage": source_lang,
         "externalReference": text, // set by us, used as identifier
         "sourceObject": window.location.href,
       },
       success: function(result) {
         $.ajax({
           type: "POST",
-          url: "./request-translation2",
+          url: "./@@translate-text",
           tryCount : 0,
           retryLimit : 20,
           data: {

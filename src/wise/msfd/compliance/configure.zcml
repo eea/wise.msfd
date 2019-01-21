@@ -8,6 +8,12 @@
   <include package='.nationaldescriptors' />
   <include package='.regionaldescriptors'/>
 
+  <adapter
+    factory=".base.TranslationContext"
+    for="*"
+    provides="wise.msfd.translation.interfaces.ITranslationContext"
+    />
+
   <browser:page
     for="*"
     name="compliance-nav-macros"

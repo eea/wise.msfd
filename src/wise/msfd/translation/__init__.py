@@ -18,22 +18,18 @@ logger = logging.getLogger('wise.msfd.translation')
 
 
 def retrieve_translation(country_code, text, target_languages=None):
+
     if not target_languages:
         target_languages = ['EN']
 
     # externalReference = self.request.form.get('externalReference', '')
 
-    site = portal.getSite()
-    marine_url = site.Plone.marine.absolute_url()
+    site_url = portal.getSite().absolute_url()
 
-    if 'europa.eu' in marine_url:
-        dest = marine_url + \
-            '/translation-callback2?source_lang={}'.format(country_code)
-    else:
-        dest = 'http://office.pixelblaster.ro:4880/Plone/marine' + \
-            '/translation-callback2?source_lang={}'.format(country_code)
+    dest = '{}/@@translate-callback?source_lang={}'.format(site_url,
+                                                           country_code)
 
-    logger.info('Translate callback destination: %s', dest)
+    logger.info('Translate callback URL: %s', dest)
 
     data = {
         'priority': 5,
@@ -55,19 +51,19 @@ def retrieve_translation(country_code, text, target_languages=None):
     dataj = json.dumps(data)
     headers = {'Content-Type': 'application/json'}
 
-    result = requests.post(SERVICE_URL,
-                           auth=HTTPDigestAuth('Marine_EEA_20180706',
-                                               MARINE_PASS),
-                           data=dataj,
-                           headers=headers)
+    resp = requests.post(SERVICE_URL,
+                         auth=HTTPDigestAuth('Marine_EEA_20180706',
+                                             MARINE_PASS),
+                         data=dataj,
+                         headers=headers)
 
     res = {
-        "transId": result.content,
+        "transId": resp.content,
         "externalRefId": text
     }
 
     # res = {'translation': 'Translation in progress!'}
 
-    logger.info('Translate request sent: %s', res)
+    logger.info('Response from translation request:', res)
 
     return json.dumps(res)

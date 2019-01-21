@@ -20,7 +20,7 @@ def _extract_from_csv():
 
         for row in csv_file:
             if row[0] in labels.keys():
-                logger.warning("Duplicate label in csv file: %s", row[0])
+                logger.debug("Duplicate label in csv file: %s", row[0])
 
             labels[row[0]] = row[1]
 

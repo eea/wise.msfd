@@ -1,12 +1,12 @@
+// Note, this is just orientative, it has no python implementation
+//
 $(document).ready(function(){
 
     $("#buton").click(function(e) {
         e.preventDefault();
-        // debugger;
         var text = $(this).siblings('p').text();
         var target_languages = ['EN'];
         var source_lang = 'ES';
-        // debugger;
         $.ajax({
             type: "POST",
             url: "/request-translation",

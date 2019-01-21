@@ -6,6 +6,7 @@ from pkg_resources import resource_filename
 from zope.component import getMultiAdapter
 # from zope.annotation.interfaces import IAnnotations
 from zope.dottedname.resolve import resolve
+from zope.interface import implements
 
 from Acquisition import aq_inner
 from plone.api.content import get_state
@@ -16,9 +17,11 @@ from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 from wise.msfd import db, sql
 from wise.msfd.compliance.scoring import compute_score
 from wise.msfd.compliance.vocabulary import ASSESSED_ARTICLES, REGIONS
+from wise.msfd.translation.interfaces import ITranslationContext
 from wise.msfd.utils import Tab
 
 from . import interfaces
+from .interfaces import ICountryDescriptorsFolder
 from .nationaldescriptors.utils import row_to_dict
 from .utils import REPORT_DEFS
 
@@ -509,3 +512,18 @@ class BaseArticle2012(BrowserView):
         self.descriptor = descriptor
         self.article = article
         self.muids = muids
+
+
+class TranslationContext(object):
+    implements(ITranslationContext)
+
+    def __init__(self, context):
+        self.context = context
+
+    @property
+    def language(self):
+        for context in self.context.REQUEST.PARENTS:
+            if ICountryDescriptorsFolder.providedBy(context):
+                return context.getId().upper()
+
+        return 'EN'

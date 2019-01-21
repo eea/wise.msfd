@@ -17,6 +17,7 @@ from Products.Five.browser import BrowserView
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile as VPTF
 
 from . import retrieve_translation
+from .interfaces import ITranslationContext
 
 ANNOTATION_KEY = 'translation.msfd.storage'
 
@@ -74,16 +75,19 @@ class SendTranslationRequest(BrowserView):
         return text
 
     def __call__(self):
-        sourceLanguage = self.context.aq_parent.aq_parent.aq_parent.id.upper()
 
-        if not sourceLanguage:
-            sourceLanguage = self.request.form.get('sourceLanguage', '')
+        source_lang = self.request.form.get('sourceLanguage', '')
+
+        if not source_lang:
+            source_lang = ITranslationContext(self.context).language
+
+        logger.info("Source lang %s", source_lang)
 
         if 'from_annot' in self.request.form.keys():
             time.sleep(0.5)
             text = self.request.form['from_annot']
 
-            return self.get_translation_from_annot(text, sourceLanguage)
+            return self.get_translation_from_annot(text, source_lang)
 
         orig = self.request.form.get('text-to-translate', '')
         text = decode_text(orig)
@@ -91,14 +95,14 @@ class SendTranslationRequest(BrowserView):
         if not text:
             return ''
 
-        self.delete_translation(orig, sourceLanguage)
+        self.delete_translation(orig, source_lang)
 
         targetLanguages = self.request.form.get('targetLanguages', ['EN'])
 
         headers = {'Content-Type': 'application/json'}
         self.request.response.headers.update(headers)
 
-        return retrieve_translation(sourceLanguage, text, targetLanguages)
+        return retrieve_translation(source_lang, text, targetLanguages)
 
 
 class TranslationCallback(BrowserView):
@@ -106,11 +110,11 @@ class TranslationCallback(BrowserView):
     """
 
     def __call__(self):
-        self.saveToAnnotation()
+        self.save_translation()
 
         return self.request.form
 
-    def saveToAnnotation(self):
+    def save_translation(self):
         # invalidate cache for translation
         deps = ['translation']
         event.notify(InvalidateMemCacheEvent(raw=True, dependencies=deps))
