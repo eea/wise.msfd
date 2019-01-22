@@ -398,7 +398,7 @@ class Article10(BaseArticle2012):
 
         return sorted_by_criterion(res)
 
-    def __call__(self):
+    def setup_data(self):
         self.article9_cols = self.get_article9_columns()
         filename = self.context.get_report_filename()
         text = get_report_data(filename)
@@ -453,5 +453,8 @@ class Article10(BaseArticle2012):
                 self.rows.append(row)
 
             break       # only need the "first" row
+
+    def __call__(self):
+        self.setup_data()
 
         return self.template()

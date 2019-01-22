@@ -558,7 +558,7 @@ class Article8(BaseArticle2012):
     template = Template('pt/report-data-a8.pt')
     help_text = ""
 
-    def __call__(self):
+    def setup_data(self):
 
         filename = self.context.get_report_filename()
         text = get_report_data(filename)
@@ -680,5 +680,8 @@ class Article8(BaseArticle2012):
 
         self.muids = sorted(res.keys())
         self.rows = res
+
+    def __call__(self):
+        self.setup_data()
 
         return self.template()

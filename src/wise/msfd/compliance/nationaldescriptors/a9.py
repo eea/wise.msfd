@@ -8,7 +8,8 @@ from Products.Five.browser.pagetemplatefile import \
     ViewPageTemplateFile as ViewTemplate
 from wise.msfd import db
 from wise.msfd.data import get_report_data
-from wise.msfd.gescomponents import get_descriptor, sorted_by_criterion
+from wise.msfd.gescomponents import (get_criterion, get_descriptor,
+                                     is_descriptor, sorted_by_criterion)
 from wise.msfd.labels import COMMON_LABELS
 from wise.msfd.utils import (Item, ItemLabel, ItemList, Node, RawRow,
                              RelaxedNode, Row)
@@ -22,7 +23,7 @@ NSMAP = {"w": "http://water.eionet.europa.eu/schemas/dir200856ec"}
 
 
 class A9Item(Item):
-    def __init__(self, parent, node, descriptors):
+    def __init__(self, parent, node, descriptors, muids):
 
         super(A9Item, self).__init__([])
 
@@ -54,6 +55,9 @@ class A9Item(Item):
             self.siblings.append(n)
 
         attrs = [
+            ('GES descriptor, criterion or indicator [GEScomponent]',
+             self.criterion),
+            ('Marine reporting unit(s)', lambda: muids),
             ('Feature(s) reported [Feature]', self.feature),
             ('GES Component [Reporting feature]', self.ges_component),
             ('GES description', self.ges_description),
@@ -68,6 +72,16 @@ class A9Item(Item):
 
         for title, getter in attrs:
             self[title] = getter()
+
+    def criterion(self):
+        crit = self.id.split('-', 1)[0]      # TODO: get title
+
+        if is_descriptor(crit):
+            return get_descriptor(crit).title
+
+        crit = get_criterion(crit)
+
+        return crit.title
 
     def feature(self):
         # TODO: this needs more work, to aggregate with siblings
@@ -166,7 +180,8 @@ class Article9(BaseArticle2012):
     """
 
     template = ViewTemplate('pt/report-data-a9.pt')
-    help_text = ""
+    help_text = """
+"""
 
     def setup_data(self, filename=None):
         if not filename:
@@ -210,16 +225,6 @@ class Article9(BaseArticle2012):
         cols = []
         seen = []
 
-        for node in descriptors:
-            col_id = node.find('w:ReportingFeature', namespaces=NSMAP).text
-
-            if col_id in seen:
-                continue
-
-            item = A9Item(self, node, descriptors)
-            cols.append(item)
-            seen.append(item.id)
-
         muids = root.xpath('//w:MarineUnitID/text()', namespaces=NSMAP)
 
         count, res = db.get_marine_unit_id_names(list(set(muids)))
@@ -227,8 +232,18 @@ class Article9(BaseArticle2012):
         labels = [ItemLabel(m, t) for m, t in res if m in self.muids]
         muids = ItemList(labels)
 
+        for node in descriptors:
+            col_id = node.find('w:ReportingFeature', namespaces=NSMAP).text
+
+            if col_id in seen:
+                continue
+
+            item = A9Item(self, node, descriptors, muids)
+            cols.append(item)
+            seen.append(item.id)
+
         self.rows = [
-            Row('Reporting area(s) [MarineUnitID]', [muids])
+            # Row('Reporting area(s) [MarineUnitID]', [muids])
         ]
 
         sorted_ges_c = sorted_by_criterion([c.ges_component() for c in cols])

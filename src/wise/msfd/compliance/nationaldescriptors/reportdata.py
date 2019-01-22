@@ -132,7 +132,7 @@ class ReportData2012(BaseComplianceView, BaseUtil):
         return sorted(muids)
 
     # @cache(get_reportdata_key, dependencies=['translation'])
-    def get_report_data(self):
+    def get_report_view(self):
         logger.info("Rendering 2012 report for: %s %s %s %s",
                     self.country_code, self.descriptor, self.article,
                     ",".join(self.muids)
@@ -143,6 +143,10 @@ class ReportData2012(BaseComplianceView, BaseUtil):
                      self.country_region_code, self.descriptor, self.article,
                      self.muids)
 
+        return view
+
+    def get_report_data(self):
+        view = self.get_report_view()
         rendered_view = view()
         self.report_data_rows = view.rows
 
@@ -269,6 +273,9 @@ class ReportData2012(BaseComplianceView, BaseUtil):
         if 'download' in self.request.form:
             return self.download(self.report_data_rows, report_header_data)
 
+        if 'translate' in self.request.form:
+            return self.view.auto_translate()
+
         return self.index()
 
     def get_reporting_information(self):
@@ -297,6 +304,15 @@ class ReportData2012(BaseComplianceView, BaseUtil):
             res = default
 
         return res
+
+    def auto_translate(self, data):
+        # report_def = REPORT_DEFS[self.year][self.article]
+        # translatables = report_def.get_translatable_fields()
+        view = self.get_report_view()
+        view.setup_data()
+        view.auto_translate()
+
+        return ''
 
 
 ReportingInformation = namedtuple('ReportingInformation',
