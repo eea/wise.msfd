@@ -28,9 +28,6 @@
             <span class="fa fa-ellipsis-v fa-sm"></span>
           </button>
           <ul class="dropdown-menu" aria-labelledby="dLabel">
-            <!-- <li> -->
-            <!--   <button class="btn btn&#45;primary btn&#45;s autoTransl">Auto&#45;translate</button> -->
-            <!-- </li> -->
             <li>
               <button
                 class="btn btn-primary btn-s editTransl"

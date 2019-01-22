@@ -6,9 +6,10 @@ from Products.Five.browser.pagetemplatefile import \
     ViewPageTemplateFile as Template
 from wise.msfd import db, sql
 from wise.msfd.data import country_ges_components, get_report_data
-from wise.msfd.gescomponents import get_descriptor, sorted_by_criterion
+from wise.msfd.gescomponents import (get_criterion, get_descriptor,
+                                     is_descriptor, sorted_by_criterion)
 from wise.msfd.labels import COMMON_LABELS
-from wise.msfd.utils import Item, ItemLabel, ItemList, Node, RawRow, Row
+from wise.msfd.utils import Item, ItemLabel, ItemList, Node, RawRow
 
 from ..base import BaseArticle2012
 from .a9 import Article9
@@ -23,7 +24,8 @@ NSMAP = {"w": "http://water.eionet.europa.eu/schemas/dir200856ec"}
 class A10Item(Item):
 
     def __init__(self, context,
-                 criterion, targets_indicators, country_code, region_code):
+                 criterion, targets_indicators, country_code, region_code,
+                 muids):
         super(A10Item, self).__init__([])
 
         self.context = context
@@ -49,8 +51,12 @@ class A10Item(Item):
         pick = self.pick
 
         attrs = [
-            ('DescriptorCriterionIndicator', self.criterion),
-            ('Feature [Target code]', self.target_code()),
+            ('GES descriptor, criterion or indicator [GEScomponent]',
+             self.ges_component()),
+            ('MarineUnitID', muids),
+            ('Method used', 'Row not implemented'),
+            ('Feature [Target or Indicator code]', self.criterion),
+            # ('Feature [Target code]', self.target_code()),
             ('Description [Targets]', self.description()),
             ('Threshold value [TargetValue]', self.threshold_value_a9()),
             ('Reference point type', pick('w:ReferencePointType/text()')),
@@ -80,6 +86,16 @@ class A10Item(Item):
 
         for title, value in attrs:
             self[title] = value
+
+    def ges_component(self):
+        crit = self.criterion.split('-', 1)[0]      # TODO: get title
+
+        if is_descriptor(crit):
+            return get_descriptor(crit).title
+
+        crit = get_criterion(crit)
+
+        return crit.title
 
     @property
     def is_descriptor(self):
@@ -172,34 +188,21 @@ class A10Item(Item):
         :return: empty ItemList instance, or ItemList instance from
         Article 9
         """
-        # TODO: this needs to be explained and defended
-        rows = []
+
         crit = self.criterion
-        art9 = self.context.article9
-        treshold_row_title = 'Threshold value(s)'
-        criterion_row_title = 'GES Component [Reporting feature]'
 
-        # get the row which contains the threshold values
-        treshold_art9 = [x for x in art9.rows if x.title == treshold_row_title]
+        column = None
 
-        # get the criterions row, this is needed to get
-        # the column index of the criterion
-        crit_art9 = [x for x in art9.rows if x.title == criterion_row_title]
+        for _c in self.context.article9_cols:
+            if _c['GES Component [Reporting feature]'] == crit:
+                column = _c
 
-        if not crit_art9:
-            return ItemList(rows=rows)
+                break
 
-        crit_art9 = crit_art9[0].cells
+        if column is None:
+            return ''
 
-        if crit not in crit_art9:
-            return ItemList(rows=rows)
-
-        # get the column index of the criterion, with this we get our needed
-        # threshold value
-        index = crit_art9.index(crit)
-        treshold_art9 = treshold_art9[0].cells
-
-        return treshold_art9[index]
+        return column['Threshold value(s)']
 
     def threshold_value(self):
         values = {}
@@ -320,20 +323,43 @@ class Article10(BaseArticle2012):
 
     How do we show data?
 
-    - we parse the original reported XML file
-    - we filter the "DescriptorCriterionIndicator" in the file
-        - we get the assigned country criterion indicators from the database
-          (we use the MSFD_19a_10DescriptiorsCriteriaIndicators view)
-        - we use the first part of the criterion indicator to match the
-          available criterion ids for the current descriptor
-    - for each of these DescriptorCriterionIndicator we build a column in the
-      result
+    """
 
+    help_text = """
+    - we identify the filename for the original XML file, by looking at the
+      MSFD10_Imports table. This is the same file that you can find in the
+      report table header on this page.
+
+    - we download this file from CDR and parse it.
+
+    - we lookup all the "<DescriptorCriterionIndicator>" tags in the file and
+      filter them according to the current descriptor. See
+
+      https://raw.githubusercontent.com/eea/wise.msfd/master/src/wise/msfd/data/ges_terms.csv
+
+      for the hierarchical definition table of descriptors to indicators and
+      criterias. To achieve this we do the following:
+
+        - we get the assigned country criterion indicators from the MarineDB
+          2012 database (we use the MSFD_19a_10DescriptiorsCriteriaIndicators
+          view)
+
+        - we use the first part of the criterion indicator to match the
+          available criterion ids for the current descriptor. This is because
+          some DescriptorCriterionIndicator are in a format like:
+          1.2.1-indicator 5.2B
+
+    - for each of these DescriptorCriterionIndicator we build a column in the
+      result table
+
+    Notes, problems: the threshold values are not included in the report XML in
+    the form that they appear in the specification. We take them from the 2012
+    A9 report, by matching the criterion id.
     """
 
     template = Template('pt/report-data-a10.pt')
 
-    def get_article9_view(self):
+    def get_article9_columns(self):
         """ Get the view for Article 9 2012, which contains the
         table with the data. This is needed because we show
         the Threshold values from article 9
@@ -346,9 +372,9 @@ class Article10(BaseArticle2012):
         view = Article9(ctx, ctx.request, ctx.country_code,
                         ctx.country_region_code,
                         ctx.descriptor, art, ctx.muids)
-        view(filename=filename)
+        view.setup_data(filename)
 
-        return view
+        return view.cols
 
     def filtered_ges_components(self, seed):
         """ Returns a list of valid ges criterion indicator targets
@@ -373,7 +399,7 @@ class Article10(BaseArticle2012):
         return sorted_by_criterion(res)
 
     def __call__(self):
-        self.article9 = self.get_article9_view()
+        self.article9_cols = self.get_article9_columns()
         filename = self.context.get_report_filename()
         text = get_report_data(filename)
 
@@ -390,7 +416,7 @@ class Article10(BaseArticle2012):
         muids = xp('//w:MarineUnitID/text()')
         count, res = db.get_marine_unit_id_names(list(set(muids)))
 
-        labels = [ItemLabel(m, t) for m, t in res]
+        labels = [ItemLabel(m, u'{} ({})'.format(t, m)) for m, t in res]
         muids = ItemList(labels)
 
         descriptor = get_descriptor(self.descriptor)
@@ -399,9 +425,7 @@ class Article10(BaseArticle2012):
         reported = xp("//w:DesriptorCriterionIndicator/text()")
         gcs = self.filtered_ges_components(reported)
 
-        self.rows = [
-            Row('Reporting area(s) [MarineUnitID]', [muids]),
-        ]
+        self.rows = []
 
         # wrap the target per MarineUnitID
         all_target_indicators = [TargetsIndicators(node)
@@ -410,7 +434,8 @@ class Article10(BaseArticle2012):
                         gc,
                         all_target_indicators,
                         self.country_code,
-                        self.region_code)
+                        self.region_code,
+                        muids)
 
                 for gc in gcs]
 

@@ -62,10 +62,12 @@ def _get_report_filename_art10_2012(country, region, article, descriptor):
     # TODO: analyse cases when it returns more then one file
 
     if count != 1:
-        logger.warning("Could not find report filename for %s %s %s",
-                       country, region, article,)
+        logger.warning("Could not find precise report (count %s) "
+                       "filename for %s %s %s", country, region, article,)
 
-        return None
+        raise ValueError
+
+        # return None
 
     return item.MSFD10_Import_FileName
 

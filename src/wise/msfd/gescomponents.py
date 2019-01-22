@@ -499,10 +499,14 @@ class LabelCollection(object):
 GES_LABELS = LabelCollection()
 
 
-# DESC_RE = re.compile(r'^D\d\d?$')
-CRIT_2018_RE = re.compile(r'^D\d\[0,1]?C\d$')       # ex: D10C5
+DESC_RE = re.compile(r'^D\d\d?$')
+CRIT_2018_RE = re.compile(r'^D\d[0,1]?C\d$')       # ex: D10C5
 CRIT_2012_RE = re.compile(r'^\d[0,1]?\.\d$')        # ex: 4.1
 INDICATOR_2012_RE = re.compile(r'^\d[0,1]?\.\d\.\d$')       # ex: 10.1.1
+
+
+def is_descriptor(value):
+    return DESC_RE.match(value)
 
 
 def sorted_by_criterion(ids):

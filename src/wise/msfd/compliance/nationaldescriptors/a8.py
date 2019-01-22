@@ -556,6 +556,7 @@ class Article8(BaseArticle2012):
     """
 
     template = Template('pt/report-data-a8.pt')
+    help_text = ""
 
     def __call__(self):
 

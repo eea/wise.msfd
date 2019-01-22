@@ -166,8 +166,9 @@ class Article9(BaseArticle2012):
     """
 
     template = ViewTemplate('pt/report-data-a9.pt')
+    help_text = ""
 
-    def __call__(self, filename=None):
+    def setup_data(self, filename=None):
         if not filename:
             filename = self.context.get_report_filename()
         text = get_report_data(filename)
@@ -236,6 +237,7 @@ class Article9(BaseArticle2012):
             return sorted_ges_c.index(col.ges_component())
 
         sorted_cols = sorted(cols, key=sort_func)
+        self.cols = list(sorted_cols)
 
         for col in sorted_cols:
             for name in col.keys():
@@ -255,5 +257,8 @@ class Article9(BaseArticle2012):
         # for item in cols:
         #     for k, v in item.items():
         #         self.rows.append(Row(k, [v]))
+
+    def __call__(self, filename=None):
+        self.setup_data(filename)
 
         return self.template()

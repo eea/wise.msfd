@@ -72,6 +72,12 @@ class ReportData2012(BaseComplianceView, BaseUtil):
     section = 'national-descriptors'
 
     @property
+    def help_text(self):
+        klass = self.article_implementations[self.article]
+
+        return klass.help_text
+
+    @property
     def article_implementations(self):
         res = {
             'Art8': Article8,
@@ -252,7 +258,8 @@ class ReportData2012(BaseComplianceView, BaseUtil):
             factsheet=factsheet,
             # TODO: do the report_due by a mapping with article: date
             report_due='2012-10-15',
-            report_date=rep_info.report_date
+            report_date=rep_info.report_date,
+            help_text=self.help_text,
         )
         report_header = self.report_header_template(**report_header_data)
 
@@ -398,6 +405,15 @@ class ReportData2018(BaseComplianceView):
     report_year = '2018'        # used by cache key
     year = '2018'       # used in report definition and translation
     section = 'national-descriptors'
+    help_texts = {
+        'Art8': '',
+        'Art9': '',
+        'Art10': '',
+    }
+
+    @property
+    def help_text(self):
+        return self.help_texts[self.article]
 
     BLACKLIST = (       # used in templates to filter fields
         'CountryCode',
@@ -671,7 +687,8 @@ class ReportData2018(BaseComplianceView):
             report_by='Member State',
             source_file=source_file,
             report_due='2018-10-15',
-            report_date=report_date
+            report_date=report_date,
+            help_text=self.help_text
         )
 
         template = getattr(self, self.article, None)
