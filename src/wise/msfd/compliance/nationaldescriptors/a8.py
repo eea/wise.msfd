@@ -556,7 +556,13 @@ class Article8(BaseArticle2012):
     """
 
     template = Template('pt/report-data-a8.pt')
-    help_text = ""
+    help_text = """
+    - we identify the filename for the original XML file, by looking at the
+        MSFD10_Imports table. This is the same file that you can find in the
+        report table header on this page.
+
+    - we download this file from CDR and parse it.
+    """
 
     def setup_data(self):
 

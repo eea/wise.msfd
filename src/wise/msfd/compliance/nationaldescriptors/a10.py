@@ -352,9 +352,20 @@ class Article10(BaseArticle2012):
     - for each of these DescriptorCriterionIndicator we build a column in the
       result table
 
-    Notes, problems: the threshold values are not included in the report XML in
+    Notes, problems:
+    ----------------
+
+    - the threshold values are not included in the report XML in
     the form that they appear in the specification. We take them from the 2012
     A9 report, by matching the criterion id.
+
+    - the Functional/Pressures/Habitats rows cannot be matched per criterion,
+      as they are in the spreadsheet, neither by using the database MarineDB or
+      the XML files. We read the database view
+      MSFD_19b_10PhysicalChemicalFeatures where we match the target id, country
+      and region and get a list of ids which we split by type (functional
+      group, pressure, habitat, etc), but there's no way of matching to the
+      criterion.
     """
 
     template = Template('pt/report-data-a10.pt')

@@ -8,8 +8,9 @@ from Products.Five.browser.pagetemplatefile import \
     ViewPageTemplateFile as ViewTemplate
 from wise.msfd import db
 from wise.msfd.data import get_report_data
-from wise.msfd.gescomponents import (get_criterion, get_descriptor,
-                                     is_descriptor, sorted_by_criterion)
+from wise.msfd.gescomponents import (criteria_from_gescomponent, get_criterion,
+                                     get_descriptor, is_descriptor,
+                                     sorted_by_criterion)
 from wise.msfd.labels import COMMON_LABELS
 from wise.msfd.utils import (Item, ItemLabel, ItemList, Node, RawRow,
                              RelaxedNode, Row)
@@ -74,7 +75,8 @@ class A9Item(Item):
             self[title] = getter()
 
     def criterion(self):
-        crit = self.id.split('-', 1)[0]      # TODO: get title
+
+        crit = criteria_from_gescomponent(self.id)
 
         if is_descriptor(crit):
             return get_descriptor(crit).title
@@ -171,6 +173,8 @@ class A9Item(Item):
 
         return v and v[0] or ''
 
+    # TODO: add MethodUsed
+
 
 class Article9(BaseArticle2012):
     """ Article 9 implementation for nation descriptors data
@@ -181,6 +185,19 @@ class Article9(BaseArticle2012):
 
     template = ViewTemplate('pt/report-data-a9.pt')
     help_text = """
+    - we identify the filename for the original XML file, by looking at the
+      MSFD10_Imports table. This is the same file that you can find in the
+      report table header on this page.
+
+    - we download this file from CDR and parse it.
+
+    - we take all the <Descriptors> tag in the file and we filter them by
+      converting the ReportingFeature to the closest criteria or indicator,
+      then matching the available criterias for the current descriptor.
+
+    - because the descriptor records are repeated (one time for each marine
+      unit id), we take only the first one for each marine unit id, for each
+      ReportingFeature tag. We build result columns from those.
 """
 
     def setup_data(self, filename=None):
@@ -203,12 +220,12 @@ class Article9(BaseArticle2012):
 
         def filter_descriptors(nodes, descriptor):
             res = []
-            m = descriptor.replace('D', '')
 
             for d in nodes:
                 rf = x('w:ReportingFeature/text()', d)[0]
+                rf = criteria_from_gescomponent(rf)
 
-                if rf == descriptor or rf.startswith(m):
+                if rf in descriptor_class.all_ids():
                     res.append(d)
 
             return res
@@ -217,7 +234,7 @@ class Article9(BaseArticle2012):
         descriptors = filter_descriptors(x('//w:Descriptors'),
                                          self.descriptor)
 
-        # the xml files is a collection of records that need to be agregated
+        # the xml file is a collection of records that need to be agregated
         # in order to "simplify" their information. For example, the
         # ThresholdValues need to be shown for all MarineUnitIds, but the
         # grouping criteria is the "GES Component"
@@ -242,9 +259,7 @@ class Article9(BaseArticle2012):
             cols.append(item)
             seen.append(item.id)
 
-        self.rows = [
-            # Row('Reporting area(s) [MarineUnitID]', [muids])
-        ]
+        self.rows = []
 
         sorted_ges_c = sorted_by_criterion([c.ges_component() for c in cols])
 

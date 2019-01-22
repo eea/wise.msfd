@@ -103,7 +103,7 @@ class Criterion(object):
             return u"{} {}".format(id, title)
 
         alter_ids = len(alter) == 0 and alter[0][0] \
-            or u', '.join([a[0] for a in alter])
+            or u', '.join(sorted([a[0] for a in alter]))
 
         # return u"{} ({}) {}".format(
         #     self._id,
@@ -558,3 +558,16 @@ def sorted_by_criterion(ids):
     print(res)
 
     return res
+
+
+def criteria_from_gescomponent(text):
+    """ Given a ges component id, such as '4.3.1.- indicators 4.3A',
+    return the matching indicator or criteria (or even descriptor, if provided
+    with a descriptor such as D1.1
+    """
+    crit = text.split('-', 1)[0]
+
+    if crit.endswith('.'):      # there is an
+        crit = crit[:-1]
+
+    return crit
