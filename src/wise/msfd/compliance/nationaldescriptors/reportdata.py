@@ -18,6 +18,7 @@ from plone.app.layout.viewlets.common import TitleViewlet as BaseTitleViewlet
 from plone.memoize import volatile
 from Products.Five.browser.pagetemplatefile import \
     ViewPageTemplateFile as Template
+from Products.statusmessages.interfaces import IStatusMessage
 from wise.msfd import db, sql, sql2018
 from wise.msfd.base import BaseUtil
 from wise.msfd.compliance.interfaces import IReportDataView
@@ -232,8 +233,11 @@ class ReportData2012(BaseComplianceView, BaseUtil):
 
         if 'translate' in self.request.form:
             report_view = self.get_report_view()
+            report_view.auto_translate()
 
-            return report_view.auto_translate()
+            messages = IStatusMessage(self.request)
+            messages.add(u"Auto-translation initiated, please refresh "
+                         u"in a couple of minutes", type=u"info")
 
         print("Will render report for: %s" % self.article)
         self.filename = filename = self.get_report_filename()

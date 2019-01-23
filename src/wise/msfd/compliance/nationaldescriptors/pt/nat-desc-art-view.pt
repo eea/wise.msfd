@@ -17,6 +17,10 @@
 
         <div class="start-page-content left-side-form">
 
+          <div metal:use-macro="context/global_statusmessage/macros/portal_message">
+            Status message
+          </div>
+
           <h1 tal:content="view/title">
             Assessment
           </h1>

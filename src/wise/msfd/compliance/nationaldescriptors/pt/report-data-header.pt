@@ -2,6 +2,9 @@
   <div class="col-md-12">
 
     <!-- <div metal:use&#45;macro="context/@@compliance&#45;nav&#45;macros/macros/nav"></div> -->
+    <div metal:use-macro="context/global_statusmessage/macros/portal_message">
+      Status message
+    </div>
 
     <h3 tal:content="options/title">201X Member State Report</h3>
 
