@@ -4,13 +4,17 @@ import os
 
 import requests
 from requests.auth import HTTPDigestAuth
+from zope.annotation.interfaces import IAnnotations
 
+import transaction
+from BTrees.OOBTree import OOBTree
 from plone.api import portal
+from plone.api.portal import get
 
 env = os.environ.get
 
-# TODO: get another username?
-TRANS_USERNAME = 'ipetchesi'
+ANNOTATION_KEY = 'translation.msfd.storage'
+TRANS_USERNAME = 'ipetchesi'        # TODO: get another username?
 MARINE_PASS = env('MARINE_PASS', '')
 SERVICE_URL = 'https://webgate.ec.europa.eu/etranslation/si/translate'
 
@@ -74,3 +78,53 @@ def retrieve_translation(country_code, text, target_languages=None):
     logger.info('Response from translation request:', res)
 
     return json.dumps(res)
+
+
+def get_translated(value, language, site=None):
+    if site is None:
+        site = get()
+
+    annot = IAnnotations(site, None)
+    storage = annot.get(ANNOTATION_KEY)
+
+    translated = storage.get(language, {}).get(value, None)
+
+    if translated:
+        return translated.lstrip('?')
+
+
+def delete_translation(self, text, source_lang):
+    site = portal.getSite()
+    annot = IAnnotations(site, None)
+    storage = annot.get(ANNOTATION_KEY, None)
+
+    if storage is None:
+        return
+
+    if (storage.get(source_lang, None)):
+        decoded = text.decode('utf-8')      # TODO: is decode() needed?
+
+        if decoded in storage[source_lang]:
+            del storage[source_lang]
+
+        transaction.commit()
+
+
+def save_translation(original, translated, source_lang):
+    site = portal.getSite()
+    annot = IAnnotations(site, None)
+
+    storage = annot.get(ANNOTATION_KEY, None)
+
+    if storage is None:
+        storage = OOBTree()
+        annot[ANNOTATION_KEY] = storage
+
+    storage_lang = storage.get(source_lang, None)
+
+    if storage_lang is None:
+        storage_lang = OOBTree()
+        storage[source_lang] = storage_lang
+
+    storage_lang[original] = translated
+    logger.info('Saving to annotation: %s', translated)

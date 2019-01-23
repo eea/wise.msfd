@@ -1,26 +1,17 @@
-# -*- coding: utf-8 -*-
-
 import logging
 import time
 
 import chardet
 from zope import event
-from zope.annotation.interfaces import IAnnotations
 from zope.security import checkPermission
 
-import transaction
-from BTrees.OOBTree import OOBTree
 from eea.cache.event import InvalidateMemCacheEvent
-from plone.api import portal
-from plone.api.portal import get as get_portal
 from Products.Five.browser import BrowserView
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile as VPTF
 
-from . import retrieve_translation
+from . import (delete_translation, get_translated, retrieve_translation,
+               save_translation)
 from .interfaces import ITranslationContext
-
-ANNOTATION_KEY = 'translation.msfd.storage'
-
 
 logger = logging.getLogger('wise.msfd.translation')
 
@@ -34,128 +25,29 @@ def decode_text(text):
     return text_encoded
 
 
-class SendTranslationRequest(BrowserView):
-    """ Sends translation request
-    """
-
-    def get_translation_from_annot(self, text, source_lang):
-        if not text:
-            return text
-
-        site = portal.getSite()
-        annot = IAnnotations(site, None)
-
-        if (annot.get(ANNOTATION_KEY, None) and
-                annot[ANNOTATION_KEY].get(source_lang, None)):
-
-            decoded = text.decode('utf-8')  # decode_text(text)
-
-            translation = annot[ANNOTATION_KEY][source_lang].get(decoded, '')
-            translation = translation.lstrip('?')
-
-            return translation
-
-        return text
-
-    def delete_translation(self, text, source_lang):
-        site = portal.getSite()
-        annot = IAnnotations(site, None)
-
-        if (annot.get(ANNOTATION_KEY, None) and
-                annot[ANNOTATION_KEY].get(source_lang, None)):
-            # decoded = decode_text(text)
-            decoded = text.decode('utf-8')
-
-            translation = annot[ANNOTATION_KEY][source_lang].pop(decoded, '')
-
-            transaction.commit()
-
-            return translation
-
-        return text
-
-    def __call__(self):
-
-        source_lang = self.request.form.get('sourceLanguage', '')
-
-        if not source_lang:
-            source_lang = ITranslationContext(self.context).language
-
-        logger.info("Source lang %s", source_lang)
-
-        if 'from_annot' in self.request.form.keys():
-            time.sleep(0.5)
-            text = self.request.form['from_annot']
-
-            return self.get_translation_from_annot(text, source_lang)
-
-        orig = self.request.form.get('text-to-translate', '')
-        text = decode_text(orig)
-
-        if not text:
-            return ''
-
-        self.delete_translation(orig, source_lang)
-
-        targetLanguages = self.request.form.get('targetLanguages', ['EN'])
-
-        headers = {'Content-Type': 'application/json'}
-        self.request.response.headers.update(headers)
-
-        return retrieve_translation(source_lang, text, targetLanguages)
-
-
 class TranslationCallback(BrowserView):
-    """ Saves the translation in Annotations
+    """ This view is called by the EC translation service.
+
+    Saves the translation in Annotations
     """
 
     def __call__(self):
-        self.save_translation()
-
-        return self.request.form
-
-    def save_translation(self):
-        # invalidate cache for translation
         deps = ['translation']
         event.notify(InvalidateMemCacheEvent(raw=True, dependencies=deps))
         logger.info('Invalidate cache for dependencies: %s', ', '.join(deps))
 
-        site = portal.getSite()
-        annot = IAnnotations(site, None)
+        form = self.request.form
 
-        language = self.request.form.pop('source_lang', None)
+        form.pop('request-id', None)
+        form.pop('target-language', None)
 
-        if not language:
-            language = self.context.aq_parent.aq_parent.aq_parent.id.upper()
+        language = form.pop('source_lang', None)
+        original = form.pop('external-reference', '').decode('utf-8')
+        translated = form.pop('translation', form.keys()[0])
 
-        if ANNOTATION_KEY not in annot.keys():
-            annot[ANNOTATION_KEY] = OOBTree()
+        save_translation(original, translated, language)
 
-        if language not in annot[ANNOTATION_KEY].keys():
-            annot[ANNOTATION_KEY][language] = OOBTree()
-
-        annot_lang = annot[ANNOTATION_KEY][language]
-
-        orig = self.request.form.get('external-reference')
-        originalText = orig.decode('utf-8')     # decode_text(orig)
-
-        self.request.form.pop('request-id', None)
-        self.request.form.pop('target-language', None)
-        self.request.form.pop('external-reference', None)
-
-        translatedText = self.request.form.pop('translation', None)
-
-        if not translatedText:
-            translatedText = self.request.form.keys()[0]
-
-        translatedText = decode_text(translatedText)
-
-        trans_entry = {originalText: translatedText}
-        annot_lang.update(trans_entry)
-
-        logger.info('Saving to annotation: %s', trans_entry)
-
-        transaction.commit()
+        return '{}'
 
 
 class TranslationView(BrowserView):
@@ -184,30 +76,54 @@ class TranslationView(BrowserView):
         if (not value) or (not is_translatable):
             return self.cell_tpl(value=value)
 
-        if isinstance(value, (str, )):
-            value = decode_text(value)      # TODO: should use decode?
-        elif isinstance(value, unicode):
-            pass
-        else:
+        if not isinstance(value, basestring):
             return self.cell_tpl(value=value,)
 
-        translation = u''
+        if isinstance(value, str):      # BBB: with older implementation
+            value = decode_text(value)      # TODO: should use decode?
 
-        site = get_portal()
-        annot = IAnnotations(site, None)
-
-        if (annot and ANNOTATION_KEY in annot and
-                source_lang in annot[ANNOTATION_KEY].keys()):
-
-            annot_lang = annot[ANNOTATION_KEY][source_lang]
-
-            if value in annot_lang:
-                translation = annot_lang.get(value, None)
-                translation = translation.lstrip('?')
+        translated = get_translated(value, source_lang)
 
         return self.translate_tpl(text=value,
-                                  translation=translation,
+                                  translation=translated,
                                   can_translate=self.can_modify())
 
     def __call__(self):
         return self.translation_edit_template()
+
+
+class SendTranslationRequest(BrowserView):
+    """ Sends translation request
+
+    TODO: this view is not used anymore, can be deleted.
+    """
+
+    def __call__(self):
+
+        source_lang = self.request.form.get('sourceLanguage', '')
+
+        if not source_lang:
+            source_lang = ITranslationContext(self.context).language
+
+        logger.info("Source lang %s", source_lang)
+
+        if 'from_annot' in self.request.form.keys():
+            time.sleep(0.5)
+            text = self.request.form['from_annot']
+
+            return get_translated(text, source_lang)
+
+        text = self.request.form.get('text-to-translate', '')
+        # text = decode_text(orig)
+
+        if not text:
+            return ''
+
+        delete_translation(text, source_lang)
+
+        targetLanguages = self.request.form.get('targetLanguages', ['EN'])
+
+        headers = {'Content-Type': 'application/json'}
+        self.request.response.headers.update(headers)
+
+        return retrieve_translation(source_lang, text, targetLanguages)
