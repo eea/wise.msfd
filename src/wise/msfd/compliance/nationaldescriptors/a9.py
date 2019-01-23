@@ -193,7 +193,10 @@ class Article9(BaseArticle2012):
 
     - we take all the <Descriptors> tag in the file and we filter them by
       converting the ReportingFeature to the closest criteria or indicator,
-      then matching the available criterias for the current descriptor.
+      then matching the available criterias for the current descriptor. We use
+      this table to match criterias to descriptors:
+
+      https://raw.githubusercontent.com/eea/wise.msfd/master/src/wise/msfd/data/ges_terms.csv
 
     - because the descriptor records are repeated (one time for each marine
       unit id), we take only the first one for each marine unit id, for each

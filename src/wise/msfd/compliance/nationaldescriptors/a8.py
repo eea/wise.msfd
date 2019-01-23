@@ -385,10 +385,6 @@ class A8bItem(Item):
 
             return ItemLabel(v, COMMON_LABELS.get(v, v))
 
-    def debug(self):
-        import pdb
-        pdb.set_trace()
-
 
 def get_db_record(report_type, marine_unit_id, topic):
     """ Locate the corresponding dbrecord for this report
@@ -562,6 +558,21 @@ class Article8(BaseArticle2012):
         report table header on this page.
 
     - we download this file from CDR and parse it.
+
+    - we try to match the type of file to one of two implementation: Article8a
+      and Article8b.
+
+    - We extract all "main" tags from the file and filter those tags that have
+      matching criterias to the current descriptor, by using theis table:
+
+      https://raw.githubusercontent.com/eea/wise.msfd/master/src/wise/msfd/data/ges_terms.csv
+
+      We use the <Indicator> tag plus the <CriteriaType> tag to determine which
+      parent main tag is ok for current descriptor.
+
+      For Article8b we lookup the imported assessment in the database MarineDB,
+      to be able to provide the related indicators. For each such indicator
+      which we generate a table column.
     """
 
     def setup_data(self):
