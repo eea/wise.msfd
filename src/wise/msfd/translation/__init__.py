@@ -1,7 +1,10 @@
+# -*- coding: utf-8 -*-
+
 import json
 import logging
 import os
 
+import chardet
 import requests
 from requests.auth import HTTPDigestAuth
 from zope.annotation.interfaces import IAnnotations
@@ -21,9 +24,20 @@ SERVICE_URL = 'https://webgate.ec.europa.eu/etranslation/si/translate'
 logger = logging.getLogger('wise.msfd.translation')
 
 
+def decode_text(text):
+    encoding = chardet.detect(text)['encoding']
+    text_encoded = text.decode(encoding)
+
+    # import unicodedata
+    # text_encoded = unicodedata.normalize('NFKD', text_encoded)
+
+    return text_encoded
+
+
 def retrieve_translation(country_code, text, target_languages=None):
 
-    # externalReference = self.request.form.get('externalReference', '')
+    if not text:
+        return
 
     site_url = portal.getSite().absolute_url()
 

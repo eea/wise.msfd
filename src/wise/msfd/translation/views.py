@@ -1,7 +1,6 @@
 import logging
 import time
 
-import chardet
 from zope import event
 from zope.security import checkPermission
 
@@ -9,20 +8,11 @@ from eea.cache.event import InvalidateMemCacheEvent
 from Products.Five.browser import BrowserView
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile as VPTF
 
-from . import (delete_translation, get_translated, retrieve_translation,
-               save_translation)
+from . import (decode_text, delete_translation, get_translated,
+               retrieve_translation, save_translation)
 from .interfaces import ITranslationContext
 
 logger = logging.getLogger('wise.msfd.translation')
-
-
-def decode_text(text):
-    import unicodedata
-    encoding = chardet.detect(text)['encoding']
-    text_encoded = text.decode(encoding)
-    text_encoded = unicodedata.normalize('NFKD', text_encoded)
-
-    return text_encoded
 
 
 class TranslationCallback(BrowserView):
@@ -43,7 +33,15 @@ class TranslationCallback(BrowserView):
 
         language = form.pop('source_lang', None)
         original = form.pop('external-reference', '').decode('utf-8')
+
         translated = form.pop('translation', form.keys()[0])
+
+        # translated = decode_text(translated)
+        # it seems the EC service sends translated text in latin-1.
+        # Please double-check, but the decode_text that automatically detects
+        # the encoding doesn't seem to do a great job
+
+        translated = translated.decode('latin-1')
 
         save_translation(original, translated, language)
 
