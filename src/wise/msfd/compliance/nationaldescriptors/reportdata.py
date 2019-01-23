@@ -11,6 +11,9 @@ from zope.schema import Choice
 from zope.schema.vocabulary import SimpleTerm, SimpleVocabulary
 
 import xlsxwriter
+# from persistent.list import PersistentList
+# from six import string_types
+from eea.cache import cache
 from plone.app.layout.viewlets.common import TitleViewlet as BaseTitleViewlet
 from plone.memoize import volatile
 from Products.Five.browser.pagetemplatefile import \
@@ -36,10 +39,6 @@ from .a9 import Article9
 from .a10 import Article10
 from .utils import row_to_dict
 
-# from persistent.list import PersistentList
-# from six import string_types
-# from eea.cache import cache
-
 logger = logging.getLogger('wise.msfd')
 
 NSMAP = {"w": "http://water.eionet.europa.eu/schemas/dir200856ec"}
@@ -55,9 +54,12 @@ def get_reportdata_key(func, self, *args, **kwargs):
     muids = ",".join(self.muids)
     region = getattr(self, 'country_region_code', ''.join(self.regions))
 
-    res = '_cache_' + '_'.join([self.report_year, self.country_code,
+    res = '_cache_' + '_'.join([self.report_year,
+                                self.country_code,
                                 region,
-                                self.descriptor, self.article, muids])
+                                self.descriptor,
+                                self.article,
+                                muids])
     res = res.replace('.', '').replace('-', '')
 
     return res
@@ -131,7 +133,6 @@ class ReportData2012(BaseComplianceView, BaseUtil):
 
         return sorted(muids)
 
-    # @cache(get_reportdata_key, dependencies=['translation'])
     def get_report_view(self):
         logger.info("Rendering 2012 report for: %s %s %s %s",
                     self.country_code, self.descriptor, self.article,
@@ -145,6 +146,7 @@ class ReportData2012(BaseComplianceView, BaseUtil):
 
         return view
 
+    @cache(get_reportdata_key, dependencies=['translation'])
     def get_report_data(self):
         view = self.get_report_view()
         rendered_view = view()
@@ -422,9 +424,37 @@ class ReportData2018(BaseComplianceView):
     year = '2018'       # used in report definition and translation
     section = 'national-descriptors'
     help_texts = {
-        'Art8': '',
-        'Art9': '',
-        'Art10': '',
+        'Art8': """
+The data is retrieved from the MSFD2018_production.V_ART8_GES_2018 database
+view, filtered by country code and ges component ids. If the current Descriptor
+starts with 'D1.', we also append the 'D1' descriptor to the GES Component ids.
+
+We use this table for the list of GES Components and the descriptor that they
+belong to:
+
+https://raw.githubusercontent.com/eea/wise.msfd/master/src/wise/msfd/data/ges_terms.csv
+""",
+        'Art9': """
+The data is retrieved from the MSFD2018_production.V_ART9_GES_2018 database
+view, filtered by country code and ges component ids. If the current Descriptor
+starts with 'D1.', we also append the 'D1' descriptor to the GES Component ids.
+
+We use this table for the list of GES Components and the descriptor that they
+belong to:
+
+https://raw.githubusercontent.com/eea/wise.msfd/master/src/wise/msfd/data/ges_terms.csv
+""",
+        'Art10': """
+The data is retrieved from the MSFD2018_production.V_ART10_Targets_2018
+database view. Because the GESComponent column is not reliable (the Netherlands
+reported using the 1.1.3 GESComponent for all their records), we filter the
+data using the Parameters and Features available for the current descriptor.
+
+We use this file for the Descriptor to Parameters and Features association
+table:
+
+https://svn.eionet.europa.eu/repositories/Reportnet/Dataflows/MarineDirective/MSFD2018/Webforms/msfd2018-codelists.json
+""",
     }
 
     @property
@@ -474,14 +504,13 @@ class ReportData2018(BaseComplianceView):
         return data
 
     def get_data_from_view_Art10(self):
-        descr_class = get_descriptor(self.descriptor)
-        all_ids = list(descr_class.all_ids())
-
-        if self.descriptor.startswith('D1.'):
-            all_ids.append('D1')
-
         t = sql2018.t_V_ART10_Targets_2018
 
+        # descr_class = get_descriptor(self.descriptor)
+        # all_ids = list(descr_class.all_ids())
+        #
+        # if self.descriptor.startswith('D1.'):
+        #     all_ids.append('D1')
         # TODO check conditions for other countries beside NL
         # conditions = [t.c.GESComponents.in_(all_ids)]
 
@@ -672,7 +701,7 @@ class ReportData2018(BaseComplianceView):
 
         return ItemList(rows=muids)
 
-    # @cache(get_reportdata_key, dependencies=['translation'])
+    @cache(get_reportdata_key, dependencies=['translation'])
     def render_reportdata(self):
         logger.info("Quering database for 2018 report data: %s %s %s %s",
                     self.country_code, self.country_region_code, self.article,
