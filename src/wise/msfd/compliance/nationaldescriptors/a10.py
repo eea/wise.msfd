@@ -95,6 +95,11 @@ class A10Item(Item):
 
         crit = get_criterion(crit)
 
+        if crit is None:
+            logger.warning("Criterion not found: %s", self.criterion)
+
+            return ''
+
         return crit.title
 
     @property
