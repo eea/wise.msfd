@@ -9,6 +9,7 @@ from wise.msfd.data import country_ges_components, get_report_data
 from wise.msfd.gescomponents import (get_criterion, get_descriptor,
                                      is_descriptor, sorted_by_criterion)
 from wise.msfd.labels import COMMON_LABELS
+from wise.msfd.translation import retrieve_translation
 from wise.msfd.utils import Item, ItemLabel, ItemList, Node, RawRow
 
 from ..base import BaseArticle2012
@@ -446,14 +447,14 @@ class Article10(BaseArticle2012):
         # wrap the target per MarineUnitID
         all_target_indicators = [TargetsIndicators(node)
                                  for node in xp('w:TargetsIndicators')]
-        cols = [A10Item(self,
-                        gc,
-                        all_target_indicators,
-                        self.country_code,
-                        self.region_code,
-                        muids)
+        self.cols = cols = [A10Item(self,
+                                    gc,
+                                    all_target_indicators,
+                                    self.country_code,
+                                    self.region_code,
+                                    muids)
 
-                for gc in gcs]
+                            for gc in gcs]
 
         # unwrap the columns into rows
 
@@ -474,3 +475,24 @@ class Article10(BaseArticle2012):
         self.setup_data()
 
         return self.template()
+
+    def auto_translate(self):
+        # report_def = REPORT_DEFS[self.year][self.article]
+        # translatables = report_def.get_translatable_fields()
+
+        self.setup_data()
+
+        translatables = self.context.TRANSLATABLES
+        seen = set()
+
+        for item in self.cols:
+            for k in translatables:
+                value = item[k]
+                if not isinstance(value, basestring):
+                    continue
+
+                if value not in seen:
+                    retrieve_translation(self.country_code, value)
+                    seen.add(value)
+
+        return ''

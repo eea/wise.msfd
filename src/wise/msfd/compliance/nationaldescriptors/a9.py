@@ -12,8 +12,9 @@ from wise.msfd.gescomponents import (criteria_from_gescomponent, get_criterion,
                                      get_descriptor, is_descriptor,
                                      sorted_by_criterion)
 from wise.msfd.labels import COMMON_LABELS
+from wise.msfd.translation import retrieve_translation
 from wise.msfd.utils import (Item, ItemLabel, ItemList, Node, RawRow,
-                             RelaxedNode, Row)
+                             RelaxedNode)
 
 from ..base import BaseArticle2012
 
@@ -306,3 +307,24 @@ class Article9(BaseArticle2012):
         self.setup_data(filename)
 
         return self.template()
+
+    def auto_translate(self):
+        # report_def = REPORT_DEFS[self.year][self.article]
+        # translatables = report_def.get_translatable_fields()
+
+        self.setup_data()
+
+        translatables = self.context.TRANSLATABLES
+        seen = set()
+
+        for item in self.cols:
+            for k in translatables:
+                value = item[k]
+                if not isinstance(value, basestring):
+                    continue
+
+                if value not in seen:
+                    retrieve_translation(self.country_code, value)
+                    seen.add(value)
+
+        return ''

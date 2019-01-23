@@ -11,6 +11,7 @@ from wise.msfd.compliance.utils import REPORT_DEFS
 from wise.msfd.data import get_report_data
 from wise.msfd.gescomponents import Criterion, get_criterion, get_descriptor
 from wise.msfd.labels import COMMON_LABELS
+from wise.msfd.translation import retrieve_translation
 from wise.msfd.utils import Item, ItemLabel, ItemList, Node, RawRow, Row
 
 from ..base import BaseArticle2012
@@ -664,8 +665,8 @@ class Article8(BaseArticle2012):
 
             for i, report in enumerate(m_reps):
 
-                if i > 0:       # add a splitter row, to separate reports
-                    rows.append(Row('', ''))
+                # if i > 0:       # add a splitter row, to separate reports
+                #     rows.append(Row('', ''))
 
                 cols = report.columns(ges_crits)
 
@@ -675,9 +676,11 @@ class Article8(BaseArticle2012):
 
                         for inner in cols:
                             values.append(inner[name])
-                        values = [self.context.translate_value(name, value=v)
-                                  for v in values]
-                        row = RawRow(name, values)
+                        translated_values = [
+                            self.context.translate_value(name, value=v)
+                            for v in values
+                        ]
+                        row = RawRow(name, translated_values, values)
                         rows.append(row)
 
                     break       # only need the "first" row, for headers
@@ -702,3 +705,26 @@ class Article8(BaseArticle2012):
         self.setup_data()
 
         return self.template()
+
+    def auto_translate(self):
+        self.setup_data()
+        translatables = self.context.TRANSLATABLES
+        seen = set()
+
+        for table in self.rows.items():
+            muid, table_data = table
+
+            for row in table_data:
+                if not row:
+                    continue
+                if row.title not in translatables:
+                    continue
+
+                for value in row.raw_values:
+                    if not isinstance(value, basestring):
+                        continue
+                    if value not in seen:
+                        retrieve_translation(self.country_code, value)
+                        seen.add(value)
+
+        return ''

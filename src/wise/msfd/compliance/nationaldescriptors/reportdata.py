@@ -230,6 +230,11 @@ class ReportData2012(BaseComplianceView, BaseUtil):
         #                                             # descriptors to D1
         #     assert self.descriptor == 'D1'
 
+        if 'translate' in self.request.form:
+            report_view = self.get_report_view()
+
+            return report_view.auto_translate()
+
         print("Will render report for: %s" % self.article)
         self.filename = filename = self.get_report_filename()
         factsheet = None
@@ -273,10 +278,9 @@ class ReportData2012(BaseComplianceView, BaseUtil):
         self.report_html = report_header + report_data
 
         if 'download' in self.request.form:
-            return self.download(self.report_data_rows, report_header_data)
+            # todo: check implementation if cached
 
-        if 'translate' in self.request.form:
-            return self.view.auto_translate()
+            return self.download(self.report_data_rows, report_header_data)
 
         return self.index()
 
@@ -306,15 +310,6 @@ class ReportData2012(BaseComplianceView, BaseUtil):
             res = default
 
         return res
-
-    def auto_translate(self, data):
-        # report_def = REPORT_DEFS[self.year][self.article]
-        # translatables = report_def.get_translatable_fields()
-        view = self.get_report_view()
-        view.setup_data()
-        view.auto_translate()
-
-        return ''
 
 
 ReportingInformation = namedtuple('ReportingInformation',

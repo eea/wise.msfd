@@ -374,9 +374,10 @@ class Row(TemplateMixin):
 class RawRow(TemplateMixin):
     template = PageTemplateFile('pt/row.pt')
 
-    def __init__(self, title, values):
+    def __init__(self, title, values, raw_values=None):
         self.title = title
         self.cells = values
+        self.raw_values = raw_values
 
 
 class TableHeader(TemplateMixin):

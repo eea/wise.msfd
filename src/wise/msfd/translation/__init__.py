@@ -19,12 +19,19 @@ logger = logging.getLogger('wise.msfd.translation')
 
 def retrieve_translation(country_code, text, target_languages=None):
 
-    if not target_languages:
-        target_languages = ['EN']
-
     # externalReference = self.request.form.get('externalReference', '')
 
     site_url = portal.getSite().absolute_url()
+
+    if 'localhost' in site_url:
+        logger.warning("Using localhost, won't retrieve translation for: %s",
+                       text
+                       )
+
+        return '{}'
+
+    if not target_languages:
+        target_languages = ['EN']
 
     dest = '{}/@@translate-callback?source_lang={}'.format(site_url,
                                                            country_code)
