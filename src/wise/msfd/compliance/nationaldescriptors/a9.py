@@ -216,6 +216,10 @@ class Article9(BaseArticle2012):
         root = fromstring(text)
 
         descriptor_class = get_descriptor(self.descriptor)
+        all_ids = descriptor_class.all_ids()
+        if self.descriptor.startswith('D1.'):
+            all_ids.add('D1')
+
         self.descriptor_label = descriptor_class.title
 
         def x(xpath, node=root):
@@ -228,7 +232,7 @@ class Article9(BaseArticle2012):
                 rf = x('w:ReportingFeature/text()', d)[0]
                 rf = criteria_from_gescomponent(rf)
 
-                if rf in descriptor_class.all_ids():
+                if rf in all_ids:
                     res.append(d)
 
             return res
