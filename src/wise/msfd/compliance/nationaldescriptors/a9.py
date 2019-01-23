@@ -58,9 +58,10 @@ class A9Item(Item):
         attrs = [
             ('GES descriptor, criterion or indicator [GEScomponent]',
              self.criterion),
+            ('Method used', self.method_used),
             ('Marine reporting unit(s)', lambda: muids),
-            ('Feature(s) reported [Feature]', self.feature),
             ('GES Component [Reporting feature]', self.ges_component),
+            ('Feature(s) reported [Feature]', self.feature),
             ('GES description', self.ges_description),
             ('Threshold value(s)', self.threshold_value),
             ('Threshold value unit', self.threshold_value_unit),
@@ -73,6 +74,12 @@ class A9Item(Item):
 
         for title, getter in attrs:
             self[title] = getter()
+
+    def method_used(self):
+        root = self.node.getroottree()
+        method_node = root.find('w:Metadata/w:MethodUsed', namespaces=NSMAP)
+
+        return method_node.text
 
     def criterion(self):
 
