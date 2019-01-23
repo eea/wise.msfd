@@ -103,7 +103,7 @@ class Criterion(object):
             return u"{} {}".format(id, title)
 
         alter_ids = len(alter) == 0 and alter[0][0] \
-            or u', '.join(sorted([a[0] for a in alter]))
+            or u', '.join(set(sorted([a[0] for a in alter])))
 
         # return u"{} ({}) {}".format(
         #     self._id,
