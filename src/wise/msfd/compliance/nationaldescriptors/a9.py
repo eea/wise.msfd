@@ -78,8 +78,9 @@ class A9Item(Item):
     def method_used(self):
         root = self.node.getroottree()
         method_node = root.find('w:Metadata/w:MethodUsed', namespaces=NSMAP)
+        text = getattr(method_node, 'text', '')
 
-        return method_node.text
+        return text
 
     def criterion(self):
 

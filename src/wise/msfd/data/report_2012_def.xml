@@ -2,6 +2,7 @@
 <data>
   <Art10>
     <element name="Reporting area(s) [MarineUnitID]" translate="true">Reporting area(s) [MarineUnitID]</element>
+    <element name="Method used" translate="true">Method used</element>
     <element name="DescriptorCriterionIndicator">DescriptorCriterionIndicator</element>
     <element name="Description [Targets]" translate="true">Description [Targets]</element>
     <element name="Feature [Target code]">Feature [Target code]</element>

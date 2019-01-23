@@ -24,8 +24,8 @@
     <element name="Indicators" label="indicators" as-list="true">Indicators</element>
   </Art10>
   <Art9>
-    <element name="Features" label="features" as-list="true">Features</element>
     <element name="GESComponent" label="ges_components">GESComponent</element>
+    <element name="Features" label="features" as-list="true">Features</element>
     <element name="GESDescription" translate="true">GESDescription</element>
     <element name="JustificationNonUse">JustificationNonUse</element>
     <element name="JustificationDelay">JustificationDelay</element>

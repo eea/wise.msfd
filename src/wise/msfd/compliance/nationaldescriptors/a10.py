@@ -54,7 +54,7 @@ class A10Item(Item):
             ('GES descriptor, criterion or indicator [GEScomponent]',
              self.ges_component()),
             ('MarineUnitID', muids),
-            ('Method used', 'Row not implemented'),
+            ('Method used', self.method_used),
             ('Feature [Target or Indicator code]', self.criterion),
             # ('Feature [Target code]', self.target_code()),
             ('Description [Targets]', self.description()),
@@ -86,6 +86,16 @@ class A10Item(Item):
 
         for title, value in attrs:
             self[title] = value
+
+    def method_used(self):
+        if not self.targets:
+            return ''
+
+        root = self.targets[0].node.getroottree()
+        method_node = root.find('//w:Metadata/w:MethodUsed', namespaces=NSMAP)
+        text = getattr(method_node, 'text', '')
+
+        return text
 
     def ges_component(self):
         crit = self.criterion.split('-', 1)[0]      # TODO: get title
