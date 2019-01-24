@@ -10,11 +10,10 @@ from wise.msfd.gescomponents import (get_criterion, get_descriptor,
                                      is_descriptor, sorted_by_criterion)
 from wise.msfd.labels import COMMON_LABELS
 from wise.msfd.translation import retrieve_translation
-from wise.msfd.utils import Item, ItemLabel, ItemList, Node, RawRow
+from wise.msfd.utils import Item, ItemLabel, ItemList, Node, RawRow, to_html
 
 from ..base import BaseArticle2012
 from .a9 import Article9
-from .utils import to_html
 
 logger = logging.getLogger('wise.msfd')
 

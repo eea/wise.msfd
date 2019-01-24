@@ -14,7 +14,7 @@ from wise.msfd.gescomponents import (criteria_from_gescomponent, get_criterion,
 from wise.msfd.labels import COMMON_LABELS
 from wise.msfd.translation import retrieve_translation
 from wise.msfd.utils import (Item, ItemLabel, ItemList, Node, RawRow,
-                             RelaxedNode)
+                             RelaxedNode, to_html)
 
 from ..base import BaseArticle2012
 
@@ -81,18 +81,16 @@ class A9Item(Item):
         method_node = root.find('w:Metadata/w:MethodUsed', namespaces=NSMAP)
         text = getattr(method_node, 'text', '')
 
-        return text
+        return to_html(text)
 
     def criterion(self):
 
         crit = criteria_from_gescomponent(self.id)
 
         if is_descriptor(crit):
-            return get_descriptor(crit).title
+            return get_descriptor(crit)
 
-        crit = get_criterion(crit)
-
-        return crit.title
+        return get_criterion(crit)
 
     def feature(self):
         # TODO: this needs more work, to aggregate with siblings

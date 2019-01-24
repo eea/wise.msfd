@@ -9,6 +9,8 @@ from pkg_resources import resource_filename
 
 from wise.msfd import db, sql2018
 
+from .utils import ItemLabel
+
 # GES criterias have been used in 2010/2012 reports and then revamped for 2018
 # reports. As such, some exist in 2010 that didn't exist in 2018, some exist
 # for 2018 that didn't exist for 2010 and they have changed their ids between
@@ -19,12 +21,12 @@ Feature = namedtuple('Feature', ['name', 'label', 'descriptors'])
 Parameter = namedtuple('Parameter', ['name', 'unit', 'criterias'])
 
 
-class Descriptor:
+class Descriptor(ItemLabel):
     """ A descriptor representation
     """
 
     def __init__(self, id=None, title=None, criterions=None):
-        self.id = id
+        self.name = self.id = id
         self.title = title
         self.criterions = criterions or []
 
@@ -48,7 +50,7 @@ class Descriptor:
         return res
 
 
-class Criterion(object):
+class Criterion(ItemLabel):
     """ A container for a GES criterion information
 
     A criterion is a somewhat confusing concept. In 2012 reporting, the
@@ -70,6 +72,8 @@ class Criterion(object):
         self._id = id
         self._title = title
         self.alternatives = alternatives or []  # Criterion2012 objects
+        self.id = self.name = self._id or self.alternatives[0][0]
+        self.title = self._title
 
         # self.descriptors = descriptors or []
         # # belongs to these descriptors
@@ -87,11 +91,7 @@ class Criterion(object):
         return not self._id
 
     @property
-    def id(self):
-        return self._id or self.alternatives[0][0]
-
-    @property
-    def title(self):
+    def _title(self):
         alter = self.alternatives
 
         if not alter:

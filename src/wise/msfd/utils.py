@@ -518,3 +518,13 @@ def consolidate_data(data, group_by_fields):
         res[row.MarineReportingUnit].append(row)
 
     return res
+
+
+def to_html(text):
+    if not text:
+        return text
+
+    if len(text.split(' ')) < 10:
+        return text
+
+    return convertWebIntelligentPlainTextToHtml(text)
