@@ -26,8 +26,9 @@ class Descriptor(ItemLabel):
     """
 
     def __init__(self, id=None, title=None, criterions=None):
-        self.name = self.id = id
+        self.id = id
         self.title = title
+        self.name = self.title
         self.criterions = criterions or []
 
     def all_ids(self):
@@ -67,16 +68,27 @@ class Criterion(ItemLabel):
     _id = None      # id for the 2018 version
     _title = None   # title for the 2018 version
     _alternatives = None
+    _main_id = None
+
+    @property
+    def template_vars(self):
+        # ItemLabel support
+        title = self._title or self.id
+
+        if self._main_id and self._main_id != self.id:
+            title = "{} ({})".format(title, self._main_id)
+
+        return {
+            'title': title,
+            'name': self.title,
+        }
 
     def __init__(self, id, title, alternatives=None):
-        self._id = id
-        self._title = title
         self.alternatives = alternatives or []  # Criterion2012 objects
-        self.id = self.name = self._id or self.alternatives[0][0]
-        self.title = self._title
 
-        # self.descriptors = descriptors or []
-        # # belongs to these descriptors
+        self._id = id
+        self.id = self._id or self.alternatives[0][0]
+        self._title = title
 
     def __repr__(self):
         title = self.title.encode('ascii', 'replace')
@@ -91,7 +103,7 @@ class Criterion(ItemLabel):
         return not self._id
 
     @property
-    def _title(self):
+    def title(self):
         alter = self.alternatives
 
         if not alter:
@@ -103,13 +115,13 @@ class Criterion(ItemLabel):
             return u"{} {}".format(id, title)
 
         alter_ids = len(alter) == 0 and alter[0][0] \
-            or u', '.join(set(sorted([a[0] for a in alter])))
+            or u', '.join(sorted(set([a[0] for a in alter])))
 
-        # return u"{} ({}) {}".format(
-        #     self._id,
-        #     self._title,
-        #     alter_ids,
-        # )
+        # if self._main_id and self._main_id != self.id:
+        #     return u"{} ({})".format(
+        #         self._title,
+        #         alter_ids,
+        #     )
 
         return u"{} ({})".format(
             self._title,
@@ -273,6 +285,8 @@ def get_criterion(ges_id):
 
     for c in GES_CRITERIONS.values():
         if ges_id in c.all_ids():
+            c._main_id = ges_id
+
             return c
 
 

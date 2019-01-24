@@ -297,7 +297,12 @@ class TemplateMixin:
     template = None
 
     def __call__(self):
-        return self.template(**self.__dict__)
+        if hasattr(self, "template_vars"):
+            values = self.template_vars
+        else:
+            values = self.__dict__
+
+        return self.template(**values)
 
 
 class ItemLabel(TemplateMixin):
