@@ -141,48 +141,20 @@ if (!Array.prototype.last){
     addTranslateClickHandlers();
   };
 
-  $(document).ready(function($){
-    initStyling();
-    setupSelects2();
-
-    if (window.matchMedia("(max-width: 768px)").matches) {
-      $(".overflow-table h5").width( $(".overflow-table table").width() );
-    }
-
-    //$('.simplify-form').next().find('table').simplifyTable();
-
-    // tibi
-    $('.simplify-form').next().find('table').each(function(){
-      $(this).simplifyTable();
+  function setupReportNavigation() {
+    var $reportnav = $('#report-data-navigation');
+    $('button', $reportnav).on('click', function() {
+      $('.nav-body', $reportnav).toggle();
+      return false;
     });
+    $('.nav-body', $reportnav).hide();
+  }
 
-    $('.simplify-form button').on('click', function(){
-      var onoff = $(this).attr('aria-pressed') == 'true';
-      $p = $(this).parent().next();
-      $('table', $p).toggleTable(!onoff);
-    });
-
-    // Warn user before leaving the page with unsaved changes
-    var submitted = false;
-    var modified = false;
-
-    $('#comp-national-descriptor form').submit(function() {
-      submitted = true;
-    });
-
-    $('#comp-national-descriptor').on('change', 'input, textarea, select', function(e) {
-      modified = true;
-    });
-
-    $(window).bind('beforeunload', function() {
-      if (modified && !submitted) {
-        // most browsers ignores custom messages,
-        // in that case the browser default message will be used
-        return "You have unsaved changes. Do you want to leave this page?";
-      }
-    });
-
+  function setupTableScrolling() {
     var $td = $('.table-report td');
+
+    if (!$td.length) { return; }
+
     $td.children('div').wrapInner('<span class="td-text"/>');
 
     // get table header cell right position
@@ -225,6 +197,51 @@ if (!Array.prototype.last){
 
       });
     });
+  }
+
+  $(document).ready(function($){
+    initStyling();
+    setupSelects2();
+    setupReportNavigation();
+    setupTableScrolling();
+
+    if (window.matchMedia("(max-width: 768px)").matches) {
+      $(".overflow-table h5").width( $(".overflow-table table").width() );
+    }
+
+    //$('.simplify-form').next().find('table').simplifyTable();
+
+    // tibi
+    $('.simplify-form').next().find('table').each(function(){
+      $(this).simplifyTable();
+    });
+
+    $('.simplify-form button').on('click', function(){
+      var onoff = $(this).attr('aria-pressed') == 'true';
+      $p = $(this).parent().next();
+      $('table', $p).toggleTable(!onoff);
+    });
+
+    // Warn user before leaving the page with unsaved changes
+    var submitted = false;
+    var modified = false;
+
+    $('#comp-national-descriptor form').submit(function() {
+      submitted = true;
+    });
+
+    $('#comp-national-descriptor').on('change', 'input, textarea, select', function(e) {
+      modified = true;
+    });
+
+    $(window).bind('beforeunload', function() {
+      if (modified && !submitted) {
+        // most browsers ignores custom messages,
+        // in that case the browser default message will be used
+        return "You have unsaved changes. Do you want to leave this page?";
+      }
+    });
+
 
   });
 }(window, document, $));

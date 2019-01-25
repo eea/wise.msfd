@@ -101,5 +101,28 @@
 
     </div>
 
+    <div id="report-data-navigation">
+
+      <div class="nav-header">
+        <button id="report-nav-toggle">
+          <i class="fa fa-bars"></i>
+        </button>
+      </div>
+
+      <div class="nav-body">
+        <div tal:repeat="art view/_descriptor_folder/contentValues" class="art">
+          <div class="art-title">
+            <a tal:content="art/title_or_id" tal:attributes="href art/absolute_url">
+              Article 9
+            </a>
+          </div>
+          <div class="art-links">
+            <a tal:attributes="href string:${art/absolute_url}/@@view-report-data-2012">2012</a>
+            <a tal:attributes="href string:${art/absolute_url}/@@view-report-data-2018">2018</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
   </div>
 </div>

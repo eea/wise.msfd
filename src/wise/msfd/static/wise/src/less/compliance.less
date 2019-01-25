@@ -177,6 +177,53 @@ div.subform-refresh {
   #download-report-data-form {
     margin-bottom: 2em;
   }
+
+  #report-data-navigation {
+    right: 1rem;
+    top: 1rem;
+    position: absolute;
+
+    .nav-header {
+      width: 4rem;
+      font-size: 200%;
+      text-align: right;
+      padding-right: 1rem;
+      i {
+        // line-height: 6rem;
+      }
+    }
+    .nav-body {
+      width: 80rem;
+      left: -76rem;
+      border-radius: 8px;
+      display: flex;
+      position: absolute;
+      box-shadow: 4px 4px 0px #8888884d;
+      background: #EEE;
+      // display: none;
+      .art {
+        flex-grow: 1;
+        margin-right: 1rem;
+        padding: 1rem;
+        .art-title {
+          text-align: center;
+          font-weight: bold;
+          font-size: 120%;
+          border-bottom: 1px solid #CCC;
+        }
+        .art-links {
+          a {
+            display: inline-block;
+            width: 48%;
+            text-align: center;
+            &:nth-child(2) {
+              border-left: 1px solid #CCC;
+            }
+          }
+        }
+      }
+    }
+  }
 }
 
 
