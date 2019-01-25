@@ -51,13 +51,13 @@
     <element name="Status confidence">Status confidence</element>
     <element name="Description (status of criteria/indicator)" translate="true">Description (status of criteria/indicator)</element>
     <element name="Limitations" translate="true">Limitations</element>
+    <element name="Assessment period">Assessment period</element>
     <element name="Description" translate="true">Description</element>
     <element name="Input load" translate="true">Input load</element>
     <element name="Load unit" translate="true">Load unit</element>
     <element name="Confidence">Confidence</element>
     <element name="Trends (recent)">Trends (recent)</element>
     <element name="Trends (future)">Trends (future)</element>
-    <element name="RecentTimeStart / RecentTimeEnd / AssessmentDateStart / AssessmentDateEnd [AssessmentPeriod]">RecentTimeStart / RecentTimeEnd / AssessmentDateStart / AssessmentDateEnd [AssessmentPeriod]</element>
     <element name="Description (activities)" translate="true">Description (activities)</element>
     <element name="Activity type">Activity type</element>
     <element name="Information gaps" translate="true">Information gaps</element>

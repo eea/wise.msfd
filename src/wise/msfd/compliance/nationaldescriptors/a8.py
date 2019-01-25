@@ -272,15 +272,16 @@ class A8bItem(Item):
             ('GES component', self.row_criteria_type()),
             ('Feature', self.column_type),
             ('Assessment Topic', self.row_assessment_topic()),
-            ('Element', 'Row not implemented'),
-            ('Element 2', 'Row not implemented'),
+            ('Element', self.row_element()),
+            ('Element 2', self.row_element2()),
             ('ImpactType [Parameter]', 'Row not implemented'),
             ('ThresholdValue', self.row_threshold_value()),
             ('Value achieved', 'Row not implemented'),
             ('Threshold value/Value unit',
              self.row_threshold_value_unit()),
-            ('Proportion threshold value', 'Row not implemented'),
-            ('Proportion value achieved', 'Row not implemented'),
+            ('Proportion threshold value', self.row_proportion_threshold()),
+            ('Proportion value achieved', 'Row not implemented'
+                                          '(same values as Input load)'),
 
             ('Status of criteria/indicator', self.row_assessment_status()),
             ('Status trend', self.row_assessment_status_trend()),
@@ -288,6 +289,7 @@ class A8bItem(Item):
             ('Description (status of criteria/indicator)',
              self.row_status_description()),
             ('Limitations', self.db_record.Limitations),
+            ('Assessment period', self.assessment_period()),
 
             ('Description', self.db_record.Description),
             ('Input load', self.db_record.SumInfo1),
@@ -295,10 +297,6 @@ class A8bItem(Item):
             ('Confidence', label(self.db_record.SumInfo1Confidence)),
             ('Trends (recent)', label(self.db_record.TrendsRecent)),
             ('Trends (future)', label(self.db_record.TrendsFuture)),
-
-            ('RecentTimeStart / RecentTimeEnd / '
-             'AssessmentDateStart / AssessmentDateEnd [AssessmentPeriod]',
-             'Row not implemented'),
 
             ('Description (activities)', self.row_activity_description()),
             ('Activity type', self.row_activity_types()),
@@ -308,6 +306,43 @@ class A8bItem(Item):
 
         for title, value in attrs:
             self[title] = value
+
+    def assessment_period(self):
+        xpath = "parent::*/preceding-sibling::w:Metadata" \
+                "[w:Topic/text() = 'AnalysisCharactTrend']"
+        meta = self.node[xpath]
+        if not meta:
+            return ''
+
+        metadata_node = Node(meta[0], NSMAP)
+
+        start = metadata_node['w:AssessmentStartDate/text()']
+        end = metadata_node['w:AssessmentEndDate/text()']
+
+        if start and end:
+            res = '-'.join((start[0], end[0]))
+
+            return res
+
+    def row_proportion_threshold(self):
+        if self.indicator:
+            return self.indicator.ThresholdProportion
+
+    def row_element(self):
+        suminfo2 = self.node['w:SumInformation2/w:SumInfo2']
+        if not suminfo2:
+            return ''
+
+        res = ', '.join([x.text for x in suminfo2])
+
+        return res
+
+    def row_element2(self):
+        other = self.node['w:SumInformation2/w:Other']
+        if not other:
+            return ''
+
+        return other.text
 
     def value_to_label(self, value):
         if value in COMMON_LABELS:
