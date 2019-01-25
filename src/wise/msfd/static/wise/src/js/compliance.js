@@ -176,8 +176,54 @@ if (!Array.prototype.last){
 
     $(window).bind('beforeunload', function() {
       if (modified && !submitted) {
+        // most browsers ignores custom messages,
+        // in that case the browser default message will be used
         return "You have unsaved changes. Do you want to leave this page?";
       }
+    });
+
+    var $td = $('.table-report td');
+    $td.children('div').wrapInner('<span class="td-text"/>');
+
+    // get table header cell right position
+    var $th = $('.table-report th');
+    var thRight = $th.position().left + $th.outerWidth();
+
+    $('.report-page-view .overflow-table .inner').scroll(function() {
+      $td.each(function() {
+        var $this = $(this);
+
+        if ($this.attr('colspan') > 1) {
+          var tdText = $this.find('.td-text');
+          var tdHeight = $this.height();
+          var tdLeft = $this.position().left;
+          var tdRight = tdLeft + $this.outerWidth(); // get table data cell right position
+
+          var tdTextWidth = $this.find('.td-text').width();
+          var thAndCellWidth = tdTextWidth + thRight;
+
+          if (tdLeft < thRight) {
+            $this.height(tdHeight);
+            tdText.addClass('table-scrolled');
+            tdText.css('left', thRight + 5);
+          } else {
+            tdText.removeClass('table-scrolled');
+            tdText.css('left', 'auto');
+          }
+
+          if (thAndCellWidth >= tdRight) {
+            $this.css('position', 'relative');
+            tdText.css({
+              'left': 'auto',
+              'right':'15px',
+            });
+          } else {
+            $this.css('position', 'unset');
+            tdText.css('right','auto');
+          }
+        }
+
+      });
     });
 
   });
