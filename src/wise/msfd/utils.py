@@ -297,6 +297,9 @@ class TemplateMixin:
     template = None
 
     def __call__(self):
+        # sometimes the values come from properties, so we need a way to map
+        # them
+
         if hasattr(self, "template_vars"):
             values = self.template_vars
         else:

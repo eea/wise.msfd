@@ -6,7 +6,7 @@ from Products.Five.browser.pagetemplatefile import \
     ViewPageTemplateFile as Template
 from wise.msfd import db, sql
 from wise.msfd.data import country_ges_components, get_report_data
-from wise.msfd.gescomponents import (get_criterion, get_descriptor,
+from wise.msfd.gescomponents import (get_descriptor, get_ges_component,
                                      is_descriptor, sorted_by_criterion)
 from wise.msfd.labels import COMMON_LABELS
 from wise.msfd.translation import retrieve_translation
@@ -100,17 +100,7 @@ class A10Item(Item):
     def ges_component(self):
         crit = self.criterion.split('-', 1)[0]      # TODO: get title
 
-        if is_descriptor(crit):
-            return get_descriptor(crit).title
-
-        crit = get_criterion(crit)
-
-        if crit is None:
-            logger.warning("Criterion not found: %s", self.criterion)
-
-            return ''
-
-        return crit.title
+        return get_ges_component(crit)
 
     @property
     def is_descriptor(self):

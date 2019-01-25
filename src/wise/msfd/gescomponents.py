@@ -2,6 +2,7 @@
 
 import csv
 import json
+import logging
 import re
 from collections import namedtuple
 
@@ -10,6 +11,8 @@ from pkg_resources import resource_filename
 from wise.msfd import db, sql2018
 
 from .utils import ItemLabel
+
+logger = logging.getLogger('wise.msfd')
 
 # GES criterias have been used in 2010/2012 reports and then revamped for 2018
 # reports. As such, some exist in 2010 that didn't exist in 2018, some exist
@@ -76,7 +79,7 @@ class Criterion(ItemLabel):
         title = self._title or self.id
 
         if self._main_id and self._main_id != self.id:
-            title = "{} ({})".format(title, self._main_id)
+            title = u"{} ({})".format(title, self._main_id)
 
         return {
             'title': title,
@@ -288,6 +291,20 @@ def get_criterion(ges_id):
             c._main_id = ges_id
 
             return c
+
+
+def get_ges_component(ges_id):
+    if is_descriptor(ges_id):
+        return get_descriptor(ges_id)
+
+    crit = get_criterion(ges_id)
+
+    if crit is None:
+        logger.warning("Criterion not found: %s", ges_id)
+
+        return None
+
+    return crit
 
 
 def parse_codelists_file():
