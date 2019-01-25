@@ -8,9 +8,9 @@ from Products.Five.browser.pagetemplatefile import \
     ViewPageTemplateFile as ViewTemplate
 from wise.msfd import db
 from wise.msfd.data import get_report_data
-from wise.msfd.gescomponents import (criteria_from_gescomponent, get_criterion,
-                                     get_descriptor, is_descriptor,
-                                     sorted_by_criterion)
+from wise.msfd.gescomponents import (criteria_from_gescomponent,
+                                     get_descriptor, get_ges_component,
+                                     is_descriptor, sorted_by_criterion)
 from wise.msfd.labels import COMMON_LABELS
 from wise.msfd.translation import retrieve_translation
 from wise.msfd.utils import (Item, ItemLabel, ItemList, Node, RawRow,
@@ -61,8 +61,8 @@ class A9Item(Item):
              self.criterion),
             ('Method used', self.method_used),
             ('Marine reporting unit(s)', lambda: muids),
-            ('GES Component [Reporting feature]', self.ges_component),
-            ('Feature(s) reported [Feature]', self.feature),
+            ('GES component', self.ges_component),
+            ('Feature(s) reported', self.feature),
             ('GES description', self.ges_description),
             ('Threshold value(s)', self.threshold_value),
             ('Threshold value unit', self.threshold_value_unit),
@@ -87,10 +87,7 @@ class A9Item(Item):
 
         crit = criteria_from_gescomponent(self.id)
 
-        if is_descriptor(crit):
-            return get_descriptor(crit)
-
-        return get_criterion(crit)
+        return get_ges_component(crit)
 
     def feature(self):
         # TODO: this needs more work, to aggregate with siblings

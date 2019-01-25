@@ -6,7 +6,7 @@ from Products.Five.browser.pagetemplatefile import \
     ViewPageTemplateFile as Template
 from wise.msfd import db, sql
 from wise.msfd.data import country_ges_components, get_report_data
-from wise.msfd.gescomponents import (get_criterion, get_descriptor,
+from wise.msfd.gescomponents import (get_descriptor, get_ges_component,
                                      is_descriptor, sorted_by_criterion)
 from wise.msfd.labels import COMMON_LABELS
 from wise.msfd.translation import retrieve_translation
@@ -62,7 +62,7 @@ class A10Item(Item):
             ('Reference point type', pick('w:ReferencePointType/text()')),
             ('Baseline', pick('w:Baseline/text()')),
             ('Proportion', pick('w:Proportion/text()')),
-            ('AssessmentMethod', pick('w:AssessmentMethod/text()')),
+            ('Assessment method', pick('w:AssessmentMethod/text()')),
             ('Development status', pick('w:DevelopmentStatus/text()')),
             ('Type of target/indicator', pick('w:Type/text()')),
             ('Timescale', pick('w:TimeScale/text()')),
@@ -100,17 +100,7 @@ class A10Item(Item):
     def ges_component(self):
         crit = self.criterion.split('-', 1)[0]      # TODO: get title
 
-        if is_descriptor(crit):
-            return get_descriptor(crit).title
-
-        crit = get_criterion(crit)
-
-        if crit is None:
-            logger.warning("Criterion not found: %s", self.criterion)
-
-            return ''
-
-        return crit.title
+        return get_ges_component(crit)
 
     @property
     def is_descriptor(self):
@@ -209,7 +199,7 @@ class A10Item(Item):
         column = None
 
         for _c in self.context.article9_cols:
-            if _c['GES Component [Reporting feature]'] == crit:
+            if _c['GES component'] == crit:
                 column = _c
 
                 break

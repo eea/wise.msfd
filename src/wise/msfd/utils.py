@@ -297,7 +297,15 @@ class TemplateMixin:
     template = None
 
     def __call__(self):
-        return self.template(**self.__dict__)
+        # sometimes the values come from properties, so we need a way to map
+        # them
+
+        if hasattr(self, "template_vars"):
+            values = self.template_vars
+        else:
+            values = self.__dict__
+
+        return self.template(**values)
 
 
 class ItemLabel(TemplateMixin):

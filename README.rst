@@ -242,7 +242,6 @@ Immediate TODOs for the Compliance Module
 - Create a navigation helper to navigate between all aspects of an assessment.
 - Reorder articles according to document (A8, A10, A9, I think)
 - Allow translation of list items
-- Allow translation of 2012 report data
 - Allow translation by TLs
 - Redo the translation integration (use ajax to load field value)
 - add form unload warning for assessment editing
