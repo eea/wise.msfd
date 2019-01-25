@@ -246,6 +246,7 @@ Immediate TODOs for the Compliance Module
 - Redo the translation integration (use ajax to load field value)
 - add form unload warning for assessment editing
 - create the notification system
+- better interface for assessment edit
 
 - Art8 2012: missing field 'ImpactsPressureWater/Seabed: SumInfo2', 'Indicator [RelatedIndicator]'
 - Art8 2012 Italy D5(other countries, descriptors too): match nodes where there are no indicators reported, or only GESOther is reported
@@ -254,8 +255,6 @@ Immediate TODOs for the Compliance Module
 - Art10 2012 italy D6: report table almost empty, report xml has data. The implementation is wrong?
 - Art10 2012 Italy D6, D8: how to get threshold value from Art9 when indicators do not match ex. 6.1(art9) vs 6.1.2(art10), 8.1 vs 8.1.1
 - Art10 2012 Latvia: description (from db) for indicators '5.1.1-indicator 5.1A' etc is not in the excel, are these needed?
-- Better D1.x differentiation for 2012 reports (done)
-- Always get the proper criterion title in report listings (done)
 
 Immediate TODOs for the MSFD Search engine
 ------------------------------------------

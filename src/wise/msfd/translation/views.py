@@ -32,9 +32,13 @@ class TranslationCallback(BrowserView):
         form.pop('target-language', None)
 
         language = form.pop('source_lang', None)
-        original = form.pop('external-reference', '').decode('utf-8')
 
-        translated = form.pop('translation', form.keys()[0])
+        if language is None:
+            language = ITranslationContext(self.context).language
+
+        original = form.pop('external-reference', '').decode('utf-8').strip()
+
+        translated = form.pop('translation', form.keys()[0]).strip()
 
         # translated = decode_text(translated)
         # it seems the EC service sends translated text in latin-1.

@@ -89,7 +89,7 @@ $(document).ready(function(){
     $.ajax({
       form: $form,
       type: 'POST',
-      url: './translation-callback2',
+      url: './translate-callback',
       dataType: 'json',
       data: {
         'external-reference': orig_text,
