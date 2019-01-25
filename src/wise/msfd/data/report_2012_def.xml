@@ -10,7 +10,7 @@
     <element name="Reference point type">Reference point type</element>
     <element name="Baseline" translate="true">Baseline</element>
     <element name="Proportion">Proportion</element>
-    <element name="AssessmentMethod">AssessmentMethod</element>
+    <element name="Assessment method">Assessment method</element>
     <element name="Development status">Development status</element>
     <element name="Type of target/indicator">Type of target/indicator</element>
     <element name="Timescale">Timescale</element>
@@ -24,8 +24,8 @@
   <Art9>
     <element name="Method used" translate="true">Method used</element>
     <element name="Marine reporting unit(s)">Marine reporting unit(s)</element>
-    <element name="GES Component [Reporting feature]">GES Component [Reporting feature]</element>
-    <element name="Feature(s) reported [Feature]">Feature(s) reported [Feature]</element>
+    <element name="GES component">GES component</element>
+    <element name="Feature(s) reported">Feature(s) reported</element>
     <element name="GES description" translate="true">GES description</element>
     <element name="Threshold value(s)" translate="true">Threshold value(s)</element>
     <element name="Threshold value unit" translate="true">Threshold value unit</element>
@@ -36,29 +36,31 @@
     <element name="Development status" translate="true">Development status</element>
   </Art9>
   <Art8b>
-    <element name="Analysis [Feature]">Analysis [Feature]</element>
+    <element name="GES component">GES component</element>
+    <element name="Feature">Feature</element>
     <element name="Assessment Topic">Assessment Topic</element>
-    <element name="[Element]">[Element]</element>
-    <element name="CriteriaType [GESComponent]">CriteriaType [GESComponent]</element>
-    <element name="[Parameter]">[Parameter]</element>
+    <element name="Element">Element</element>
+    <element name="Element 2">Element 2</element>
+    <element name="ImpactType [Parameter]">ImpactType [Parameter]</element>
     <element name="ThresholdValue" translate="true">ThresholdValue</element>
-    <element name="SumInfo1Unit/ThresholdValueUnit [ValueUnit]" translate="true">SumInfo1Unit/ThresholdValueUnit [ValueUnit]</element>
-    <element name="[ProportionThresholdValue]">[ProportionThresholdValue]</element>
-    <element name="Status [CriteriaStatus]">Status [CriteriaStatus]</element>
-    <element name="StatusTrend">StatusTrend</element>
-    <element name="StatusConfidence">StatusConfidence</element>
-    <element name="StatusDescription [DescriptionCriteria]" translate="true">StatusDescription [DescriptionCriteria]</element>
-    <element name="Limitations [DescriptionElement]" translate="true">Limitations [DescriptionElement]</element>
+    <element name="Threshold value/Value unit" translate="true">Threshold value/Value unit</element>
+    <element name="Proportion threshold value">Proportion threshold value</element>
+    <element name="Proportion value achieved">Proportion value achieved</element>
+    <element name="Status of criteria/indicator">Status of criteria/indicator</element>
+    <element name="Status trend">Status trend</element>
+    <element name="Status confidence">Status confidence</element>
+    <element name="Description (status of criteria/indicator)" translate="true">Description (status of criteria/indicator)</element>
+    <element name="Limitations" translate="true">Limitations</element>
     <element name="Description" translate="true">Description</element>
-    <element name="SumInfo1" translate="true">SumInfo1</element>
-    <element name="SumInfo1Unit" translate="true">SumInfo1Unit</element>
-    <element name="SumInfo1Confidence">SumInfo1Confidence</element>
-    <element name="TrendsRecent">TrendsRecent</element>
-    <element name="TrendsFuture">TrendsFuture</element>
+    <element name="Input load" translate="true">Input load</element>
+    <element name="Load unit" translate="true">Load unit</element>
+    <element name="Confidence">Confidence</element>
+    <element name="Trends (recent)">Trends (recent)</element>
+    <element name="Trends (future)">Trends (future)</element>
     <element name="RecentTimeStart / RecentTimeEnd / AssessmentDateStart / AssessmentDateEnd [AssessmentPeriod]">RecentTimeStart / RecentTimeEnd / AssessmentDateStart / AssessmentDateEnd [AssessmentPeriod]</element>
-    <element name="Activities: Description" translate="true">Activities: Description</element>
-    <element name="ActivityType">ActivityType</element>
-    <element name="InfoGaps" translate="true">InfoGaps</element>
+    <element name="Description (activities)" translate="true">Description (activities)</element>
+    <element name="Activity type">Activity type</element>
+    <element name="Information gaps" translate="true">Information gaps</element>
   </Art8b>
   <Art8a>
     <element name="Topic">Topic</element>

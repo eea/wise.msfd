@@ -62,7 +62,7 @@ class A10Item(Item):
             ('Reference point type', pick('w:ReferencePointType/text()')),
             ('Baseline', pick('w:Baseline/text()')),
             ('Proportion', pick('w:Proportion/text()')),
-            ('AssessmentMethod', pick('w:AssessmentMethod/text()')),
+            ('Assessment method', pick('w:AssessmentMethod/text()')),
             ('Development status', pick('w:DevelopmentStatus/text()')),
             ('Type of target/indicator', pick('w:Type/text()')),
             ('Timescale', pick('w:TimeScale/text()')),
@@ -199,7 +199,7 @@ class A10Item(Item):
         column = None
 
         for _c in self.context.article9_cols:
-            if _c['GES Component [Reporting feature]'] == crit:
+            if _c['GES component'] == crit:
                 column = _c
 
                 break
