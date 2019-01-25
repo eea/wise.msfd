@@ -7,12 +7,16 @@ import os
 import chardet
 import requests
 from requests.auth import HTTPDigestAuth
-from zope.annotation.interfaces import IAnnotations
 
 import transaction
 from BTrees.OOBTree import OOBTree
 from plone.api import portal
 from plone.api.portal import get
+
+from .interfaces import ITranslationsStorage
+
+# from zope.annotation.interfaces import IAnnotations
+
 
 env = os.environ.get
 
@@ -98,8 +102,7 @@ def get_translated(value, language, site=None):
     if site is None:
         site = get()
 
-    annot = IAnnotations(site, None)
-    storage = annot.get(ANNOTATION_KEY)
+    storage = ITranslationsStorage(site)
 
     translated = storage.get(language, {}).get(value, None)
 
@@ -109,11 +112,8 @@ def get_translated(value, language, site=None):
 
 def delete_translation(self, text, source_lang):
     site = portal.getSite()
-    annot = IAnnotations(site, None)
-    storage = annot.get(ANNOTATION_KEY, None)
 
-    if storage is None:
-        return
+    storage = ITranslationsStorage(site)
 
     if (storage.get(source_lang, None)):
         decoded = text.decode('utf-8')      # TODO: is decode() needed?
@@ -126,13 +126,8 @@ def delete_translation(self, text, source_lang):
 
 def save_translation(original, translated, source_lang):
     site = portal.getSite()
-    annot = IAnnotations(site, None)
 
-    storage = annot.get(ANNOTATION_KEY, None)
-
-    if storage is None:
-        storage = OOBTree()
-        annot[ANNOTATION_KEY] = storage
+    storage = ITranslationsStorage(site)
 
     storage_lang = storage.get(source_lang, None)
 

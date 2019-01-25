@@ -19,6 +19,7 @@
     permission="zope2.View"
     />
 
+
   <browser:page
     class=".views.TranslationView"
     for="*"
@@ -29,6 +30,26 @@
   <browser:resourceDirectory
     name="msfd.trans"
     directory="./static/"
+    />
+
+  <browser:page
+    class=".admin.TranslationsOverview"
+    for="Products.CMFPlone.interfaces.siteroot.IPloneSiteRoot"
+    name="translations-overview"
+    permission="cmf.ManagePortal"
+    template="pt/translations-overview.pt"
+    />
+
+  <browser:page
+    name="edit-translation"
+    class=".admin.TranslationsOverview"
+    attribute="edit_translation"
+    for="Products.CMFPlone.interfaces.siteroot.IPloneSiteRoot"
+    permission="cmf.ManagePortal"
+    />
+
+  <adapter
+    factory=".app.annotfactory"
     />
 
 </configure>

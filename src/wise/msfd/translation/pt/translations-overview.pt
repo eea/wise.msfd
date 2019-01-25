@@ -1,0 +1,108 @@
+<html metal:use-macro="context/main_template/macros/master">
+
+  <body
+    metal:fill-slot="content"
+    tal:define="translations view/available_translations">
+
+    <div id="edit-translation" class="modal fade" tabindex="-1" role="dialog">
+      <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h3>Edit translation</h3>
+          </div>
+          <div class="modal-body">
+            <h4 class="modal-translate-header">Original text</h4>
+            <div class="modal-translate-section" id="transl-original-text">Original text</div>
+            <h4 class="modal-translate-header">Current translation</h4>
+            <div class="modal-translate-section" id="transl-old-translation">Current translation</div>
+            <form id="form-edit-translation" method="POST" action="./@@edit-translation">
+              <input type="hidden" name="language" tal:attributes="value request/form/language | nothing"/>
+              <div class="form-group">
+                <h4 class="modal-translate-header">New translation</h4>
+                <textarea class="form-control" style="height: 10em;" type="text" id="new_transl" name="new_transl"></textarea>
+                <input class="submitTransl btn btn-primary btn-s" type="submit" value="Save">
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+
+
+
+      <button type="button" class="btn btn-primary btn-small btn-success" data-toggle="modal" data-target="#edit-translation">
+        Show dialog
+      </button>
+
+
+      <h1>Manage translations</h1>
+
+      <h4 tal:condition="request/form/language | nothing">
+        Selected language: <span tal:content="request/form/language">EN</span>
+      </h4>
+
+      <script>
+        jQuery(document).ready(function(){
+        $('#edit-table button').click(function(){
+        var tds =$(this).parent().parent().children();
+        var original = $(tds[0]).text();
+        var translated = $(tds[1]).text();
+
+        $('#transl-original-text').text(original);
+        $('#transl-old-translation').text(translated);
+        $('#new_transl').text(original);
+        });
+        });
+      </script>
+
+      <div tal:condition="not: translations">
+        Please select a language from the right side menu
+      </div>
+
+      <table id="edit-table" class="table table-listing" tal:condition="translations">
+        <thead>
+          <tr>
+            <th>
+              Original text
+            </th>
+            <th>Translation</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr tal:repeat="kv translations/items">
+            <td tal:content="python: kv[0]"></td>
+            <td tal:content="python: kv[1]"></td>
+            <td>
+              <button class="btn btn-sm btn-primary"
+                data-toggle="modal"
+                data-target="#edit-translation" href="">
+                <i class="fa fa-edit"></i>
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+    </body>
+
+    <div
+      id="portal-column-one"
+      metal:fill-slot="column_one_slot"
+      tal:define="languages view/languages"
+      >
+
+      <ul>
+        <tal:rep tal:repeat="lang languages">
+          <li tal:condition="lang" >
+            <a
+              href="" tal:attributes="href string:./@@translations-overview?language=${lang}">
+              <span tal:replace="lang">EN</span>
+            </a>
+          </li>
+        </tal:rep>
+      </ul>
+    </div>
+
+  </html>
