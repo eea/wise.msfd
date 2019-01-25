@@ -248,7 +248,6 @@ Immediate TODOs for the Compliance Module
 - create the notification system
 - better interface for assessment edit
 
-- Art8 2012: missing field 'ImpactsPressureWater/Seabed: SumInfo2', 'Indicator [RelatedIndicator]'
 - Art8 2012 Italy D5(other countries, descriptors too): match nodes where there are no indicators reported, or only GESOther is reported
 - Art9 2012 ALL countries: include D1 criterions/indicators in D6??
 
