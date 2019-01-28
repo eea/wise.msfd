@@ -338,11 +338,11 @@ class A8bItem(Item):
         return res
 
     def row_element2(self):
-        other = self.node['w:SumInformation2/w:Other']
+        other = self.node['w:SumInformation2/w:Other/text()']
         if not other:
             return ''
 
-        return other.text
+        return other[0]
 
     def value_to_label(self, value):
         if value in COMMON_LABELS:

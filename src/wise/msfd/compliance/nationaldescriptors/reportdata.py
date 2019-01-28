@@ -193,7 +193,8 @@ class ReportData2012(BaseComplianceView, BaseUtil):
                 row_label = row.title
                 worksheet.write(i, 0, row_label)
 
-                row_values = row.cells
+                # row_values = row.cells
+                row_values = row.raw_values
 
                 for j, v in enumerate(row_values):
                     if isinstance(v, str):
