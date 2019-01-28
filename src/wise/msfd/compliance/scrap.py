@@ -3997,3 +3997,72 @@ class Article8(BaseArticle2012):
     .xsd_nr: %s""" % (len(COMMON_LABELS), common_labels, csv_nr, xsd_nr))
 
     return
+
+
+
+
+
+  var autoTranslation = function(e) {
+    e.preventDefault();
+
+    var text = $(this).parents('td.translatable').find('.tr.text').text();
+    var target_languages = ['EN'];
+    // var source_lang = 'EN';
+
+    $.ajax({
+      type: "POST",
+      url: "./@@translate-text",
+      dataType: 'json',
+      data: {
+        "text-to-translate": text,
+        "targetLanguages": target_languages,
+        // "sourceLanguage": source_lang,
+        "externalReference": text, // set by us, used as identifier
+        "sourceObject": window.location.href,
+      },
+      success: function(result) {
+        $.ajax({
+          type: "POST",
+          url: "./@@translate-text",
+          tryCount : 0,
+          retryLimit : 20,
+          data: {
+            "from_annot": result.externalRefId,
+          },
+          success: function(translation) {
+            if (translation) {
+              location.reload();
+            }
+            else {
+              this.tryCount++;
+              if (this.tryCount <= this.retryLimit) {
+                //try again
+                $.ajax(this);
+                return;
+              }
+              return;
+            }
+          },
+          error: function (xhr, textStatus, errorThrown) {
+            if (textStatus == 'timeout') {
+              this.tryCount++;
+              if (this.tryCount <= this.retryLimit) {
+                //try again
+                $.ajax(this);
+                return;
+              }
+              return;
+            }
+            if (xhr.status == 500) {
+              //handle error
+            } else {
+              //handle error
+            }
+          }});
+      },
+      error: function(result) {
+        alert('error');
+      }
+    });
+  };
+

@@ -1,5 +1,6 @@
 from Products.Five.browser import BrowserView
 
+from . import save_translation
 from .interfaces import ITranslationsStorage
 
 
@@ -19,7 +20,17 @@ class TranslationsOverview(BrowserView):
         return langstore
 
     def edit_translation(self):
-        import pdb; pdb.set_trace()
-        pass
+        form = self.request.form
 
-    # def edit_translation(self, original, translation, language):
+        language = form.get('language')
+
+        original = form.get('original').decode('utf-8')
+        translated = form.get('tr-new').decode('utf-8')
+
+        save_translation(original, translated, language)
+        url = '{}/@@translations-overview?language={}'.format(
+            self.context.absolute_url(),
+            language
+        )
+
+        return self.request.response.redirect(url)

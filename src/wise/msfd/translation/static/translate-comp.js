@@ -1,68 +1,7 @@
 $(document).ready(function(){
 
-  var autoTranslation = function(e) {
-    e.preventDefault();
-
-    var text = $(this).parents('td.translatable').find('.tr.text').text();
-    var target_languages = ['EN'];
-    // var source_lang = 'EN';
-
-    $.ajax({
-      type: "POST",
-      url: "./@@translate-text",
-      dataType: 'json',
-      data: {
-        "text-to-translate": text,
-        "targetLanguages": target_languages,
-        // "sourceLanguage": source_lang,
-        "externalReference": text, // set by us, used as identifier
-        "sourceObject": window.location.href,
-      },
-      success: function(result) {
-        $.ajax({
-          type: "POST",
-          url: "./@@translate-text",
-          tryCount : 0,
-          retryLimit : 20,
-          data: {
-            "from_annot": result.externalRefId,
-          },
-          success: function(translation) {
-            if (translation) {
-              location.reload();
-            }
-            else {
-              this.tryCount++;
-              if (this.tryCount <= this.retryLimit) {
-                //try again
-                $.ajax(this);
-                return;
-              }
-              return;
-            }
-          },
-          error: function (xhr, textStatus, errorThrown) {
-            if (textStatus == 'timeout') {
-              this.tryCount++;
-              if (this.tryCount <= this.retryLimit) {
-                //try again
-                $.ajax(this);
-                return;
-              }
-              return;
-            }
-            if (xhr.status == 500) {
-              //handle error
-            } else {
-              //handle error
-            }
-          }});
-      },
-      error: function(result) {
-        alert('error');
-      }
-    });
-  };
+  var $original = $('#transl-original-text');
+  var $old = $('#transl-old-translation');
 
   var editTranslation = function(e) {
     //e.preventDefault();
@@ -72,19 +11,19 @@ $(document).ready(function(){
     var old_translation = $('.transl', $text_div).text();
     var orig_text = $('.text', $text_div).text();
 
-    $('#transl-original-text').text(orig_text);
-    $('#transl-old-translation').text(old_translation);
+    $original.text(orig_text);
+    $old.text(old_translation);
 
-    $('#form-edit-translation')[0].elements['new_transl'].value = old_translation;
+    $('#form-edit-translation #new_transl').html(old_translation);
 
   };
 
   var submitTranslation = function(e) {
     e.preventDefault();
 
-    var orig_text = $('#transl-original-text').text();
+    var orig_text = $original.text();
     var $form = $('#form-edit-translation');
-    var translation = $form[0].elements['new_transl'].value;
+    var translation = $("#new_transl", form).html();
 
     $.ajax({
       form: $form,
@@ -105,6 +44,7 @@ $(document).ready(function(){
   };
 
   var toggleTranslations = function(e) {
+    // setup the translations in the report data view screens
     $(this).toggleClass('active');
     $(this).siblings('.btn-translate').toggleClass('active');
 
@@ -121,7 +61,7 @@ $(document).ready(function(){
     $tr.fixTableHeaderHeight();
   };
 
-  window.addTranslateClickHandlers = function() {
+  window.setupTranslateClickHandlers = function() {
     // $(".autoTransl").on("click", autoTranslation);
     $('.editTransl').on("click", editTranslation);
     $('.submitTransl').on("click", submitTranslation);
@@ -131,6 +71,6 @@ $(document).ready(function(){
     $('.btn-translate-transl').on("click", toggleTranslations);
   };
 
-  addTranslateClickHandlers();
+  // setupTranslateClickHandlers();
 
 });
