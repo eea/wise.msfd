@@ -66,6 +66,43 @@ def get_reportdata_key(func, self, *args, **kwargs):
     return res
 
 
+def serialize_rows(rows):
+    """ Return a cacheable result of rows, this is used when
+    downloading the report data as excel
+
+    :param rows: view.rows
+    :return: dict in format {mru : data, ...} where
+        'mru': marine unit id, representing the worksheet title
+        'data': list of tuples in format [(row_title, raw_data), ...]
+        'raw_data' list of unicode values [u'GES 5.1', u'GES 5.2', ...]
+    """
+
+    if isinstance(rows, list):
+        rows = {'Report data': rows}
+
+    res = {}
+
+    for mru, data in rows.items():
+        raw_data = []
+        for row in data:
+            title = row.title
+            raw_values = []
+
+            for v in row.raw_values:
+                if isinstance(v, str):
+                    parser = HTMLParser()
+                    v = parser.unescape(v.decode('utf-8'))
+
+                v = unicode(v or '')
+                raw_values.append(v)
+
+            raw_data.append((title, raw_values))
+
+        res[mru] = raw_data
+
+    return res
+
+
 class ReportData2012(BaseComplianceView, BaseUtil):
     """ WIP on compliance tables
     """
@@ -151,9 +188,11 @@ class ReportData2012(BaseComplianceView, BaseUtil):
     def get_report_data(self):
         view = self.get_report_view()
         rendered_view = view()
-        self.report_data_rows = view.rows
 
-        return rendered_view
+        # get cacheable raw values
+        rows = serialize_rows(view.rows)
+
+        return rendered_view, rows
 
     def get_report_filename(self, art=None):
         # needed in article report data implementations, to retrieve the file
@@ -190,17 +229,12 @@ class ReportData2012(BaseComplianceView, BaseUtil):
             worksheet = workbook.add_worksheet(unicode(wtitle)[:30])
 
             for i, row in enumerate(wdata):
-                row_label = row.title
+                row_label = row[0]
                 worksheet.write(i, 0, row_label)
-
-                # row_values = row.cells
-                row_values = row.raw_values
+                row_values = row[1]
 
                 for j, v in enumerate(row_values):
-                    if isinstance(v, str):
-                        parser = HTMLParser()
-                        v = parser.unescape(v.decode('utf-8'))
-                    worksheet.write(i, j + 1, unicode(v or ''))
+                    worksheet.write(i, j + 1, v)
 
         workbook.close()
         out.seek(0)
@@ -208,9 +242,6 @@ class ReportData2012(BaseComplianceView, BaseUtil):
         return out
 
     def download(self, report_data, report_header):
-        if isinstance(report_data, list):
-            report_data = {'Report data': report_data}
-
         xlsio = self.data_to_xls(report_data, report_header)
         sh = self.request.response.setHeader
 
@@ -279,13 +310,12 @@ class ReportData2012(BaseComplianceView, BaseUtil):
         )
         report_header = self.report_header_template(**report_header_data)
 
-        report_data = self.get_report_data()
+        report_data, report_data_rows = self.get_report_data()
         self.report_html = report_header + report_data
 
         if 'download' in self.request.form:
-            # todo: check implementation if cached
 
-            return self.download(self.report_data_rows, report_header_data)
+            return self.download(report_data_rows, report_header_data)
 
         return self.index()
 
