@@ -13,7 +13,7 @@
         <form id="form-edit-translation">
           <div class="form-group">
             <h4 class="modal-translate-header">New translation</h4>
-            <textarea class="form-control" style="height: 10em;" type="text" name="new_transl"></textarea>
+            <textarea class="form-control" style="height: 10em;" type="text" id="new_transl" name="new_transl"></textarea>
             <input class="submitTransl btn btn-primary btn-s" type="submit" value="Save">
           </div>
         </form>
