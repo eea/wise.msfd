@@ -18,9 +18,12 @@
             <div class="modal-translate-section" id="tr-original">Original text</div>
 
             <h4 class="modal-translate-header">Current translation</h4>
-            <div class="modal-translate-section" id="tr-old">Current translation</div>
+            <div class="modal-translate-section" id="tr-current">Current translation</div>
 
-            <form id="form-edit-translation" method="POST" action="./@@edit-translation">
+            <form id="form-edit-translation"
+              method="POST"
+              action="./@@edit-translation"
+              tal:attributes="action string:${context/absolute_url}/@@edit-translation">
 
               <input type="hidden" name="language" tal:attributes="value request/form/language | nothing" />
               <textarea style="display:none" type="hidden" name="original" ></textarea>
@@ -46,21 +49,50 @@
     <script>
       // <![CDATA[
       jQuery(document).ready(function(){
-      $('#edit-table button').click(function(){
-      var cells = $(this).parent().parent().children();
+        var $form = $('#form-edit-translation');
+        var $modal = $('#edit-translation');
 
-      var original = $(cells[0]).text();
-      var translated = $(cells[1]).text();
+        $modal.on('show.bs.modal', function(event) {
 
-      $('#tr-original').text(original);
-      $('#form-edit-translation textarea[name="original"]').text(original);
+          $form.off('submit');
 
-      $('#tr-old').text(translated);
-      $('#tr-new').text(translated);
+          // setup the modal to show proper values
+          var $btn = $(event.relatedTarget);
+          var cells = $btn.parent().parent().children();
+
+          var original = $(cells[0]).text();
+          var translated = $(cells[1]).text();
+
+          $('#tr-original').text(original);   // show original text
+          $('textarea[name="original"]', $form).val(original);   // form input
+
+          $('#tr-current').text(translated);    // show current translation
+          $('#tr-new').val(translated);    // textarea for new translation
+
+          $form.on('submit', function() {
+            var url = $form.attr('action');
+            var data = {};
+
+            $('textarea,input', $form).each(function(){
+              var name = $(this).attr('name');
+              if (!name) return;
+              data[name] = $(this).val();
+            });
+
+            $.post(url, data, function(resp) {
+              $modal.modal('hide');
+              var $cell = $(cells[1]);
+              $cell.hide();
+              $cell.text(resp['text']);
+              $cell.fadeIn(1000);
+            });
+
+            return false;
+          });
 
       });
-      });
-      // ]]>
+    });
+    // ]]>
     </script>
 
     <div tal:condition="not: translations">

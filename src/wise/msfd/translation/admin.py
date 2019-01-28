@@ -1,3 +1,5 @@
+import json
+
 from Products.Five.browser import BrowserView
 
 from . import save_translation
@@ -21,6 +23,7 @@ class TranslationsOverview(BrowserView):
 
     def edit_translation(self):
         form = self.request.form
+        print form
 
         language = form.get('language')
 
@@ -28,9 +31,12 @@ class TranslationsOverview(BrowserView):
         translated = form.get('tr-new').decode('utf-8')
 
         save_translation(original, translated, language)
-        url = '{}/@@translations-overview?language={}'.format(
-            self.context.absolute_url(),
-            language
-        )
+        # url = '{}/@@translations-overview?language={}'.format(
+        #     self.context.absolute_url(),
+        #     language
+        # )
 
-        return self.request.response.redirect(url)
+        response = self.request.response
+        response.addHeader('Content-Type', 'application/json')
+
+        return json.dumps({'text': translated})

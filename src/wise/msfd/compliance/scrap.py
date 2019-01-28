@@ -4066,3 +4066,47 @@ class Article8(BaseArticle2012):
     });
   };
 
+
+  var editTranslation = function(e) {
+    //e.preventDefault();
+    var $cell = $(this).parents('td.translatable');
+
+    var $text_div = $('.tr-text', $cell);
+    var old_translation = $('.transl', $text_div).text();
+    var orig_text = $('.text', $text_div).text();
+
+    $original.text(orig_text);
+    $old.text(old_translation);
+
+    $('#form-edit-translation #new_transl').html(old_translation);
+
+  };
+
+  var submitTranslation = function(e) {
+    e.preventDefault();
+
+    var orig_text = $original.text();
+    var $form = $('#form-edit-translation');
+    var translation = $("#new_transl", form).html();
+
+    $.ajax({
+      form: $form,
+      type: 'POST',
+      url: './translate-callback',
+      dataType: 'json',
+      data: {
+        'external-reference': orig_text,
+        'translation': translation
+      },
+      success: function(result) {
+        location.reload();
+      },
+      error: function(result) {
+        alert('ERROR saving translation!');
+      }
+    });
+  };
+    // $(".autoTransl").on("click", autoTranslation);
+    // $('.editTransl').on("click", editTranslation);
+    // $('.submitTransl').on("click", submitTranslation);
+
