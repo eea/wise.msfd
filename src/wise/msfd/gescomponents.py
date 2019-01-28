@@ -93,6 +93,9 @@ class Criterion(ItemLabel):
         self.id = self._id or self.alternatives[0][0]
         self._title = title
 
+    def __str__(self):
+        return self.title
+
     def __repr__(self):
         title = self.title.encode('ascii', 'replace')
         title = title.replace('?', '-')

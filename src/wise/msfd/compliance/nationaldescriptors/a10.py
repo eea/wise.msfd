@@ -54,7 +54,7 @@ class A10Item(Item):
             ('GES descriptor, criterion or indicator [GEScomponent]',
              self.ges_component()),
             ('MarineUnitID', muids),
-            ('Method used', self.method_used),
+            ('Method used', self.method_used()),
             ('Feature [Target or Indicator code]', self.criterion),
             # ('Feature [Target code]', self.target_code()),
             ('Description [Targets]', self.description()),
@@ -463,9 +463,14 @@ class Article10(BaseArticle2012):
 
                 for inner in cols:
                     values.append(inner[name])
-                values = [self.context.translate_value(name, value=v)
-                          for v in values]
-                row = RawRow(name, values)
+
+                raw_values = []
+                vals = []
+                for v in values:
+                    raw_values.append(v)
+                    vals.append(self.context.translate_value(name, value=v))
+
+                row = RawRow(name, vals, raw_values)
                 self.rows.append(row)
 
             break       # only need the "first" row

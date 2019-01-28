@@ -287,9 +287,16 @@ class Article9(BaseArticle2012):
                 for inner in sorted_cols:
                     values.append(inner[name])
 
-                values = [self.context.translate_value(name, value=v)
-                          for v in values]
-                row = RawRow(name, values)
+                raw_values = []
+                vals = []
+                for v in values:
+                    raw_values.append(v)
+                    vals.append(self.context.translate_value(name, value=v))
+                    
+                # values = [self.context.translate_value(name, value=v)
+                #           for v in values]
+
+                row = RawRow(name, vals, raw_values)
                 self.rows.append(row)
 
             break       # only need the "first" row
