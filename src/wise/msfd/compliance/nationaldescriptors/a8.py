@@ -181,11 +181,11 @@ class A8aItem(Item):
             ('Threshold Value', self.row_threshold_value()),
             ('Threshold Unit', self.row_threshold_value_unit()),
             ('Threshold Proportion', self.row_threshold_value_proportion()),
-            ('Baseline', self.row_baseline),
-            ('Status', self.row_status),
-            ('Status Description', self.row_status_description),
-            ('Status Trend', self.row_status_trend),
-            ('Status Confidence', self.row_status_confidence),
+            ('Baseline', self.row_baseline()),
+            ('Status', self.row_status()),
+            ('Status Description', self.row_status_description()),
+            ('Status Trend', self.row_status_trend()),
+            ('Status Confidence', self.row_status_confidence()),
         ]
 
         for title, value in attrs:
