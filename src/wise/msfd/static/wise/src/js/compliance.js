@@ -57,10 +57,11 @@ if (!Array.prototype.last){
         var cells_max_height = Math.max($next.height());
         var height = Math.max($th.height(), cells_max_height);
 
-        // console.log("TH", $th, thh, mh)
-
         $th.height(height);
-        $next.first().height(height);
+
+        if ($th.height() > cells_max_height) {
+          $next.height($th.height());
+        }
       });
     });
   };
@@ -135,7 +136,7 @@ if (!Array.prototype.last){
 
       console.log("done restoring");
       $(this).fixTableHeaderHeight();
-      //
+
       //addTranslateClickHandlers();
     }
     addTranslateClickHandlers();
@@ -161,41 +162,56 @@ if (!Array.prototype.last){
     var $th = $('.table-report th');
     var thRight = $th.position().left + $th.outerWidth();
 
-    $('.report-page-view .overflow-table .inner').scroll(function() {
-      $td.each(function() {
-        var $this = $(this);
+    $td.each(function() {
+      var $this = $(this);
+      var scrollTimer;
+
+      $('.report-page-view .overflow-table .inner').scroll(function() {
+        clearTimeout(scrollTimer);
 
         if ($this.attr('colspan') > 1) {
           var tdText = $this.find('.td-text');
-          var tdHeight = $this.height();
           var tdLeft = $this.position().left;
-          var tdRight = tdLeft + $this.outerWidth(); // get table data cell right position
+          var tdRight = tdLeft + $this.outerWidth(); // get table cell right position
 
           var tdTextWidth = $this.find('.td-text').width();
           var thAndCellWidth = tdTextWidth + thRight;
 
+          $this.css('height', $this.outerHeight());
+
+          scrollTimer = setTimeout(function() {
+            afterScroll()}, 1);
+
           if (tdLeft < thRight) {
-            $this.height(tdHeight);
-            tdText.addClass('table-scrolled');
-            tdText.css('left', thRight + 5);
+            tdText.addClass('td-scrolled').css('left', thRight + 5);
           } else {
-            tdText.removeClass('table-scrolled');
-            tdText.css('left', 'auto');
+            $this.css('height', '');
+            tdText.removeClass('td-scrolled').addClass('td-text-scrolled');
           }
 
           if (thAndCellWidth >= tdRight) {
-            $this.css('position', 'relative');
-            tdText.css({
-              'left': 'auto',
-              'right':'15px',
-            });
+            $this.addClass('td-relative');
           } else {
-            $this.css('position', 'unset');
-            tdText.css('right','auto');
+            $this.removeClass('td-relative');
           }
         }
 
       });
+
+      function afterScroll() {
+        $('.btn-translate').on('click', function() {
+          var $btn = $(this);
+          var transTextHeight = $btn.closest('.td-text').outerHeight();
+          var $td = $btn.closest('td.translatable');
+          var $th = $td.siblings('th');
+          $td.css({
+            'height': transTextHeight,
+            'padding': '0'
+          });
+          $btn.closest('.td-text').css('padding', '8px');
+          $th.css('height', transTextHeight);
+        });
+      }
     });
   }
 
