@@ -75,14 +75,14 @@ class TranslationView(BrowserView):
         # TODO: implement getting the translation from annotations
         # orig = value
 
+        if isinstance(value, str):      # BBB: with older implementation
+            value = value.decode('utf-8')      # TODO: should use decode?
+
         if (not value) or (not is_translatable):
             return self.cell_tpl(value=value)
 
         if not isinstance(value, basestring):
-            return self.cell_tpl(value=value,)
-
-        if isinstance(value, str):      # BBB: with older implementation
-            value = decode_text(value)      # TODO: should use decode?
+            return self.cell_tpl(value=value)
 
         translated = get_translated(value, source_lang)
 

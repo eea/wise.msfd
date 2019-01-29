@@ -84,6 +84,7 @@ def serialize_rows(rows):
 
     for mru, data in rows.items():
         raw_data = []
+
         for row in data:
             title = row.title
             raw_values = []
@@ -93,7 +94,11 @@ def serialize_rows(rows):
                     parser = HTMLParser()
                     v = parser.unescape(v.decode('utf-8'))
 
-                v = unicode(v or '')
+                if not isinstance(v, basestring):
+                    if not v:
+                        v = ''
+                    else:
+                        v = str(v).decode('utf-8')
                 raw_values.append(v)
 
             raw_data.append((title, raw_values))

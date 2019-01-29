@@ -335,6 +335,31 @@ class ItemLabel(TemplateMixin):
     def __hash__(self):
         return id(self)     # wonky but should work
 
+    def __call__(self):
+        # sometimes the values come from properties, so we need a way to map
+        # them
+
+        if hasattr(self, "template_vars"):
+            values = self.template_vars
+        else:
+            values = self.__dict__
+
+        out = {}
+
+        for k, v in values.items():
+            if isinstance(v, unicode):
+                pass
+            elif v is None:
+                v = u''
+            elif isinstance(v, str):
+                v = v.decode('utf-8')
+            else:
+                v = repr(v).decode('utf-8')     # support ItemLabels
+
+            out[k] = v
+
+        return self.template(**out)
+
     template = PageTemplateFile('pt/label.pt')
 
 
