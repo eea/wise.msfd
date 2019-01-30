@@ -78,7 +78,7 @@ def get_sorted_fields(year, article, fields):
     elements = REPORT_DEFS[year][article].get_elements()
 
     labels = [
-        (x.get('name'), x.text)
+        (x.get('name'), x.text.strip())
 
         for x in elements
 

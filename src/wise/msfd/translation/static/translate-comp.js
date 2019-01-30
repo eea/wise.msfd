@@ -60,8 +60,16 @@ $(document).ready(function(){
     $('.text', $cell).toggleClass('active');
     $('.transl', $cell).toggleClass('active');
 
-    var $tr = $(this).parents('tr');
-    $tr.fixTableHeaderHeight();
+    var $th = $(this).parents('tr').find('th');
+    // $tr.fixTableHeaderHeight();
+
+    $th.each(function() {
+      var $th = $(this);
+      var $next = $('td', $th.parent());
+      var cells_max_height = Math.max($next.height());
+
+      $th.height(cells_max_height);
+    });
   };
 
   window.setupTranslateClickHandlers = function() {
