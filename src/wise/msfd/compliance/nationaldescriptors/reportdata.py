@@ -98,7 +98,7 @@ def serialize_rows(rows):
                     if not v:
                         v = ''
                     else:
-                        v = str(v).decode('utf-8')
+                        v = v.__repr__().decode('utf-8')
                 raw_values.append(v)
 
             raw_data.append((title, raw_values))
