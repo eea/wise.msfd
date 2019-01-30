@@ -1,99 +1,109 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <data>
   <Art10>
-    <element name="Features" label="features" as-list="true">Features</element>
-    <element name="TargetCode" label="targets">TargetCode</element>
-    <element name="Description" translate="true">Description</element>
-    <element name="GESComponents" label="ges_components">GESComponents</element>
-    <element name="TimeScale">TimeScale</element>
-    <element name="UpdateDate">UpdateDate</element>
-    <element name="UpdateType">UpdateType</element>
-    <element name="Measures">Measures</element>
+    <element name="Features" label="features" as-list="true">Feature(s) reported</element>
+    <element name="TargetCode" label="targets">Target code</element>
+    <element name="Description" translate="true">Description target</element>
+    <element name="GESComponents" label="ges_components">GES components</element>
+    <element name="TimeScale">Time scale</element>
+    <element name="UpdateDate">Update date</element>
+    <element name="UpdateType">Update type</element>
+    <element name="Measures">Related measures</element>
     <element name="Element">Element</element>
-    <element name="Element2">Element2</element>
+    <element name="Element2">Element 2</element>
     <element name="Parameter" label="parameters">Parameter</element>
-    <element name="ParameterOther">ParameterOther</element>
-    <element name="TargetValue">TargetValue</element>
-    <element name="ValueAchievedUpper">ValueAchievedUpper</element>
-    <element name="ValueAchievedLower">ValueAchievedLower</element>
-    <element name="ValueUnit" label="units">ValueUnit</element>
-    <element name="ValueUnitOther">ValueUnitOther</element>
-    <element name="TargetStatus">TargetStatus</element>
-    <element name="AssessmentPeriod">AssessmentPeriod</element>
-    <element name="ProgressDescription" translate="true">ProgressDescription</element>
-    <element name="Indicators" label="indicators" as-list="true">Indicators</element>
+    <element name="ParameterOther">Parameter other</element>
+    <element name="TargetValue">Target value</element>
+    <element name="ValueAchievedUpper">Value achieved upper</element>
+    <element name="ValueAchievedLower">Value achieved lower</element>
+    <element name="ValueUnit" label="units">Value unit</element>
+    <element name="ValueUnitOther">Value unit other</element>
+    <element name="TargetStatus">Target status</element>
+    <element name="AssessmentPeriod">Assessment period</element>
+    <element name="ProgressDescription" translate="true">Description target assessment</element>
+    <element name="Indicators" label="indicators" as-list="true">Related indicator</element>
   </Art10>
   <Art9>
-    <element name="GESComponent" label="ges_components">GESComponent</element>
+    <element name="GESComponent" label="ges_components">GES component</element>
     <element name="Features" label="features" as-list="true">Features</element>
-    <element name="GESDescription" translate="true">GESDescription</element>
-    <element name="JustificationNonUse">JustificationNonUse</element>
-    <element name="JustificationDelay">JustificationDelay</element>
-    <element name="DeterminationDate">DeterminationDate</element>
-    <element name="UpdateType">UpdateType</element>
+    <element name="GESDescription" translate="true">GES description</element>
+    <element name="JustificationNonUse">Justification for non-use of criterion</element>
+    <element name="JustificationDelay">
+      Justification for delay in setting EU/regional requirements
+    </element>
+    <element name="DeterminationDate">Determination date</element>
+    <element name="UpdateType">Update type</element>
   </Art9>
   <!--<MarineReportingUnit labelName="mrus">MarineReportingUnit</MarineReportingUnit>-->
   <Art8>
+    <element name="GESComponent" label="ges_components">GES component</element>
     <element name="Feature" label="features">Feature</element>
-    <element name="GESComponent" label="ges_components">GESComponent</element>
     <element name="Element">Element</element>
-    <element name="ElementCode">ElementCode</element>
-    <element name="ElementCodeSource" label="elementcode_sources">ElementCodeSource</element>
-    <element name="Element2">Element2</element>
-    <element name="Element2Code" label="element_sources">Element2Code</element>
-    <element name="Element2CodeSource" label="elementcode_sources">Element2CodeSource</element>
-    <element name="ElementSource">ElementSource</element>
-    <element name="Criteria" label="ges_components">Criteria</element>
+    <element name="ElementCode">Element code</element>
+    <element name="ElementCodeSource" label="elementcode_sources">Element code source</element>
+    <element name="Element2">Element 2</element>
+    <element name="Element2Code" label="element_sources">Element 2 code</element>
+    <element name="Element2CodeSource" label="elementcode_sources">Element 2 code source</element>
+    <element name="ElementSource">Element source</element>
+    <element name="Criteria" label="ges_components">Criterion</element>
     <element name="Parameter" label="parameters">Parameter</element>
-    <element name="ParameterOther">ParameterOther</element>
-    <element name="ThresholdValueUpper">ThresholdValueUpper</element>
-    <element name="ThresholdValueLower">ThresholdValueLower</element>
-    <element name="ThresholdQualitative">ThresholdQualitative</element>
+    <element name="ParameterOther">Parameter other</element>
+    <element name="ThresholdValueUpper">Threshold value upper</element>
+    <element name="ThresholdValueLower">Threshold value lower</element>
+    <element name="ThresholdQualitative">Threshold qualitative</element>
     <element name="ThresholdValueSource" label="threshold_sources">
-      ThresholdValueSource
+      Threshold value source
     </element>
-    <element name="ThresholdValueSourceOther">ThresholdValueSourceOther</element>
-    <element name="ValueAchievedUpper">ValueAchievedUpper</element>
-    <element name="ValueAchievedLower">ValueAchievedLower</element>
-    <element name="ValueUnit" label="units">ValueUnit</element>
-    <element name="ValueUnitOther">ValueUnitOther</element>
-    <element name="ProportionThresholdValue">ProportionThresholdValue</element>
-    <element name="ProportionValueAchieved">ProportionValueAchieved</element>
-    <element name="ProportionThresholdValueUnit">ProportionThresholdValueUnit</element>
+    <element name="ThresholdValueSourceOther">Threshold value source other</element>
+    <element name="ValueAchievedUpper">Value achieved upper</element>
+    <element name="ValueAchievedLower">Value achieved lower</element>
+    <element name="ValueUnit" label="units">Value unit</element>
+    <element name="ValueUnitOther">Value unit other</element>
+    <element name="ProportionThresholdValue">Proportion threshold value</element>
+    <element name="ProportionValueAchieved">Proportion value achieved</element>
+    <element name="ProportionThresholdValueUnit">Proportion threshold value unit</element>
     <element name="Trend">Trend</element>
-    <element name="ParameterAchieved">ParameterAchieved</element>
-    <element name="DescriptionParameter" translate="true">DescriptionParameter</element>
-    <element name="IndicatorCode" label="indicators">RelatedIndicator</element>
-    <element name="CriteriaStatus">CriteriaStatus</element>
-    <element name="DescriptionCriteria" translate="true">DescriptionCriteria</element>
-    <element name="ElementStatus">ElementStatus</element>
-    <element name="DescriptionElement" translate="true">DescriptionElement</element>
+    <element name="ParameterAchieved">Parameter achieved</element>
+    <element name="DescriptionParameter" translate="true">Description parameter</element>
+    <element name="IndicatorCode" label="indicators">Related indicator</element>
+    <element name="CriteriaStatus">Criteria status</element>
+    <element name="DescriptionCriteria" translate="true">Description criteria</element>
+    <element name="ElementStatus">Element status</element>
+    <element name="DescriptionElement" translate="true">Description element</element>
     <element name="IntegrationRuleTypeParameter" label="parameters">
-      IntegrationRuleTypeParameter
+      Integration rule type parameter
     </element>
-    <element name="IntegrationRuleDescriptionParameter">IntegrationRuleDescriptionParameter</element>
+    <element name="IntegrationRuleDescriptionParameter">
+      Integration rule description parameter
+    </element>
     <element name="IntegrationRuleDescriptionReferenceParameter" skip="true" reason="Not in the XML">
-      IntegrationRuleDescriptionReferenceParameter
+      Integration rule description reference parameter
     </element>
     <element name="IntegrationRuleTypeCriteria" label="parameters">
-      IntegrationRuleTypeCriteria
+      Integration rule type criteria
     </element>
     <element name="IntegrationRuleDescriptionCriteria">
-      IntegrationRuleDescriptionCriteria
+      Integration rule description criteria
     </element>
     <element name="IntegrationRuleDescriptionReferenceCriteria" skip="true" reason="Not in the XML">
-      IntegrationRuleDescriptionReferenceCriteria
+      Integration rule description reference criteria
     </element>
-    <element name="GESExtentThreshold">GESExtentThreshold</element>
-    <element name="GESExtentAchieved">GESExtentAchieved</element>
-    <element name="GESExtentUnit">GESExtentUnit</element>
-    <element name="GESAchieved">GESAchieved</element>
-    <element name="DescriptionOverallStatus" translate="true">DescriptionOverallStatus</element>
-    <element name="AssessmentsPeriod">AssessmentsPeriod</element>
-    <element name="PressureCode" label="pressures" as-list="true" exclude="true">RelatedPressures</element>
+    <element name="GESExtentThreshold">GES extent threshold</element>
+    <element name="GESExtentAchieved">GES extent achieved</element>
+    <element name="GESExtentUnit">GES extent unit</element>
+    <element name="GESAchieved">GES achieved</element>
+    <element name="DescriptionOverallStatus" translate="true">
+      Description overall status
+    </element>
+    <element name="AssessmentsPeriod">Assessments period</element>
+    <element name="PressureCode" label="pressures" as-list="true" exclude="true">
+      Related pressures
+    </element>
     <element name="RelatedActivities" skip="true" reason="This field is not in the DB">
       Related activities
     </element>
-    <element name="TargetCode" label="targets" as-list="true" exclude="true">RelatedTargets</element>
+    <element name="TargetCode" label="targets" as-list="true" exclude="true">
+      Related targets
+    </element>
   </Art8>
 </data>
