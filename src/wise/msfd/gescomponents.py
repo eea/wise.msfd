@@ -9,8 +9,8 @@ from collections import namedtuple
 from pkg_resources import resource_filename
 
 from wise.msfd import db, sql2018
-
-from .utils import ItemLabel
+from wise.msfd.labels import COMMON_LABELS
+from wise.msfd.utils import ItemLabel
 
 logger = logging.getLogger('wise.msfd')
 
@@ -531,6 +531,19 @@ class LabelCollection(object):
 
 
 GES_LABELS = LabelCollection()
+
+
+# TODO: move all label related code to labels.py
+def get_label(value, label_collection):
+    """ Get the human version of a database 'shortcode' (a string id) """
+
+    if label_collection:
+        trans = GES_LABELS.get(label_collection, value)
+
+        if trans != value:
+            return trans
+
+    return COMMON_LABELS.get(value, value)
 
 
 DESC_RE = re.compile(r'^D\d(\.\d|\d)?$')

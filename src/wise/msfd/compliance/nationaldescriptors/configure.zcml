@@ -62,6 +62,14 @@
 
   <browser:page
     for="..interfaces.INationalDescriptorAssessment"
+    name="view-report-data-2012-like-2018"
+    class=".reportdata.ReportData2012Like2018"
+    template="./pt/nat-desc-report-data-view.pt"
+    permission="zope2.View"
+    />
+
+  <browser:page
+    for="..interfaces.INationalDescriptorAssessment"
     name="view-report-data-2018"
     class=".reportdata.ReportData2018"
     template="./pt/nat-desc-report-data-view.pt"

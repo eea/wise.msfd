@@ -402,6 +402,7 @@ class Row(TemplateMixin):
     def __init__(self, title, values):
         self.title = title
         self.cells = values
+        self.raw_values = values
 
 
 class RawRow(TemplateMixin):

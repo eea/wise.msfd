@@ -251,6 +251,7 @@ Immediate TODOs for the Compliance Module
   with their answers, but disabled. Also show the phase.
 - Show comments next to each question, in the assessment edit
 - implement a different translation storage, for list items? (or context?)
+- Bring back the snapshots feature
 
 - Art8 2012 Italy D5(other countries, descriptors too): match nodes where there are no indicators reported, or only GESOther is reported
 - Art9 2012 ALL countries: include D1 criterions/indicators in D6??

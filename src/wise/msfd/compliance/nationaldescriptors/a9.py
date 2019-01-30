@@ -1,20 +1,21 @@
 # from collections import defaultdict
 
 import logging
+from collections import defaultdict
 
 from lxml.etree import fromstring
 
 from Products.Five.browser.pagetemplatefile import \
     ViewPageTemplateFile as ViewTemplate
-from wise.msfd import db
+from wise.msfd import db, sql
 from wise.msfd.data import get_report_data
 from wise.msfd.gescomponents import (criteria_from_gescomponent,
                                      get_descriptor, get_ges_component,
-                                     is_descriptor, sorted_by_criterion)
+                                     get_label, sorted_by_criterion)
 from wise.msfd.labels import COMMON_LABELS
 from wise.msfd.translation import retrieve_translation
 from wise.msfd.utils import (Item, ItemLabel, ItemList, Node, RawRow,
-                             RelaxedNode, to_html)
+                             RelaxedNode, Row, to_html)
 
 from ..base import BaseArticle2012
 
@@ -189,7 +190,7 @@ class Article9(BaseArticle2012):
 
     template = ViewTemplate('pt/report-data-a9.pt')
     help_text = """
-    - we identify the filename for the original XML file, by looking at the
+- we identify the filename for the original XML file, by looking at the
       MSFD10_Imports table. This is the same file that you can find in the
       report table header on this page.
 
@@ -205,7 +206,7 @@ class Article9(BaseArticle2012):
     - because the descriptor records are repeated (one time for each marine
       unit id), we take only the first one for each marine unit id, for each
       ReportingFeature tag. We build result columns from those.
-"""
+    """
 
     def setup_data(self, filename=None):
         if not filename:
@@ -292,7 +293,7 @@ class Article9(BaseArticle2012):
                 for v in values:
                     raw_values.append(v)
                     vals.append(self.context.translate_value(name, value=v))
-                    
+
                 # values = [self.context.translate_value(name, value=v)
                 #           for v in values]
 
@@ -331,3 +332,84 @@ class Article9(BaseArticle2012):
                     seen.add(value)
 
         return ''
+
+
+class A9AlternateItem(Item):
+    """
+    """
+
+    def __init__(self, descriptor_item):
+        super(A9AlternateItem, self).__init__()
+        di = self.descriptor_item = descriptor_item
+
+        attrs = [
+            ('GEScomponent', di.ReportingFeature),
+            ('Proportion', di.Proportion),
+            ('Features', self.features()),
+            ('GES description', di.DescriptionGES),
+            ('Determination date', 'Row not implemented'),
+            ('Update type', 'Row not implemented'),
+        ]
+
+        for title, value in attrs:
+            self[title] = value
+
+    def features(self):
+        t = sql.t_MSFD9_Features
+        count, res = db.get_all_records(
+            t,
+            t.c.MSFD9_Descriptor == self.descriptor_item.MSFD9_Descriptor_ID
+        )
+        vals = list(set([x.FeatureType for x in res] +
+                        [x.FeaturesPressuresImpacts for x in res]))
+        # return vals       # remove code below when properly integrated
+
+        rows = [ItemLabel(v, get_label(v, 'features')) for v in vals]
+        return ItemList(rows=rows)
+
+
+class Article9Alternate(BaseArticle2012):
+    """
+    """
+    template = ViewTemplate('pt/report-data-a8.pt')
+    help_text = """ """
+
+    @db.use_db_session('2012')
+    def setup_data(self):
+        t = sql.MSFD9Descriptor
+        count, res = db.get_all_records(
+            t,
+            t.MarineUnitID.in_(self.muids),
+        )
+
+        by_muid = defaultdict(list)
+        descriptor = get_descriptor(self.descriptor)
+        ok_ges_ids = descriptor.all_ids()
+
+        for desc_item in res:
+            ges_id = criteria_from_gescomponent(desc_item.ReportingFeature)
+
+            if ges_id not in ok_ges_ids:
+                continue
+            item = A9AlternateItem(desc_item)
+            by_muid[desc_item.MarineUnitID].append(item)
+
+        self.rows = {}
+
+        for muid, cols in by_muid.items():
+            rows = []
+
+            if not cols:
+                continue
+
+            for name in cols[0].keys():
+                values = [c[name] for c in cols]
+                row = Row(name, values)
+                rows.append(row)
+
+            self.rows[muid] = rows
+
+    def __call__(self):
+        self.setup_data()
+
+        return self.template()

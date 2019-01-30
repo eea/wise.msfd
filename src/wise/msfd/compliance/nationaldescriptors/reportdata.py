@@ -36,7 +36,7 @@ from z3c.form.form import Form
 
 from ..base import BaseComplianceView
 from .a8 import Article8 as Article8
-from .a9 import Article9
+from .a9 import Article9, Article9Alternate
 from .a10 import Article10
 from .utils import row_to_dict
 
@@ -185,6 +185,7 @@ class ReportData2012(BaseComplianceView, BaseUtil):
                     self.country_code, self.descriptor, self.article,
                     ",".join(self.muids)
                     )
+
         klass = self.article_implementations[self.article]
 
         view = klass(self, self.request, self.country_code,
@@ -358,6 +359,20 @@ class ReportData2012(BaseComplianceView, BaseUtil):
 
 ReportingInformation = namedtuple('ReportingInformation',
                                   ['report_date', 'reporters'])
+
+
+class ReportData2012Like2018(ReportData2012):
+    """ An alternative implementation, mapping data like the 2018 views
+    """
+    @property
+    def article_implementations(self):
+        res = {
+            'Art8': Article8,
+            'Art9': Article9Alternate,
+            'Art10': Article10,
+        }
+
+        return res
 
 
 class SnapshotSelectForm(Form):
