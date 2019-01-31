@@ -20,10 +20,11 @@ from ..base import BaseComplianceView
 
 logger = logging.getLogger('wise.msfd')
 
+# TODO which question type belongs to which phase?
 phase_mapping = {
-    'phase1': 'adequacy',
-    'phase2': 'coherence',
-    'phase3': 'consistency',
+    'phase1': ('adequacy', 'consistency'),
+    'phase2': ('coherence', ),
+    'phase3': (),
 }
 
 # mapping of title: field_name
@@ -213,7 +214,7 @@ class EditAssessmentDataForm(Form, BaseComplianceView):
 
     def is_disabled(self, question):
         state, _ = self.current_phase
-        disabled = phase_mapping.get(state, 'not found') != question.klass
+        disabled = question.klass not in phase_mapping.get(state, ())
 
         return disabled
 
@@ -263,7 +264,7 @@ class EditAssessmentDataForm(Form, BaseComplianceView):
             question_phase = [
                 k
                 for k, v in phase_mapping.items()
-                if v == question.klass
+                if question.klass in v
             ][0]
             criterias = filtered_criterias(self.criterias, question)
 
