@@ -37,7 +37,7 @@ from z3c.form.form import Form
 from ..base import BaseComplianceView
 from .a8 import Article8 as Article8
 from .a9 import Article9, Article9Alternate
-from .a10 import Article10
+from .a10 import Article10, Article10Alternate
 from .utils import row_to_dict
 
 logger = logging.getLogger('wise.msfd')
@@ -369,7 +369,7 @@ class ReportData2012Like2018(ReportData2012):
         res = {
             'Art8': Article8,
             'Art9': Article9Alternate,
-            'Art10': Article10,
+            'Art10': Article10Alternate,
         }
 
         return res

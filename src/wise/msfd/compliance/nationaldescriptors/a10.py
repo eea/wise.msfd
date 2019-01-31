@@ -1,4 +1,5 @@
 import logging
+from collections import defaultdict
 
 from lxml.etree import fromstring
 
@@ -10,7 +11,8 @@ from wise.msfd.gescomponents import (get_descriptor, get_ges_component,
                                      sorted_by_criterion)
 from wise.msfd.labels import COMMON_LABELS
 from wise.msfd.translation import retrieve_translation
-from wise.msfd.utils import Item, ItemLabel, ItemList, Node, RawRow, to_html
+from wise.msfd.utils import (Item, ItemLabel, ItemList, Node, RawRow, Row,
+                             to_html)
 
 from ..base import BaseArticle2012
 from .a9 import Article9
@@ -500,3 +502,91 @@ class Article10(BaseArticle2012):
                     seen.add(value)
 
         return ''
+
+
+class A10AlternateItem(Item):
+    def __init__(self, target_item):
+        super(A10AlternateItem, self).__init__()
+        self.ti = ti = target_item
+        t = sql.t_MSFD10_DESCrit
+        count, res = db.get_all_records(
+            t,
+            t.c.MSFD10_Target == self.ti.MSFD10_Target_ID
+        )
+        self.desc_crits = res
+
+        attrs = [
+            # ("Features", self.features()),
+            ("TargetCode", ti.ReportingFeature),
+            # "Description"
+            ("GESComponents", self.ges_components()),
+            # "TimeScale"
+            # "UpdateDate"
+            # "UpdateType"
+            # "Measures"
+            # "Element"
+            # "Element2"
+            # "Parameter"
+            # "ParameterOther"
+            # "TargetValue"
+            # "ValueAchievedUpper"
+            # "ValueAchievedLower"
+            # "ValueUnit"
+            # "ValueUnitOther"
+            # "TargetStatus"
+            # "AssessmentPeriod"
+            # "ProgressDescription"
+            # "Indicators"
+        ]
+
+        for title, value in attrs:
+            self[title] = value
+
+    def ges_components(self):
+        return ItemList(rows=[x.GESDescriptorsCriteriaIndicators
+                              for x in self.desc_crits])
+
+    def features(self):
+
+        import pdb
+        pdb.set_trace()
+
+
+class Article10Alternate(BaseArticle2012):
+    template = Template('pt/report-data-a8.pt')
+    help_text = """ """
+
+    @db.use_db_session('2012')
+    def setup_data(self):
+        t = sql.MSFD10Target
+
+        count, res = db.get_all_records(
+            t,
+            t.MarineUnitID.in_(self.muids),
+            t.Topic == 'EnvironmentalTarget',
+        )
+        by_muid = defaultdict(list)
+
+        for target_item in res:
+            item = A10AlternateItem(target_item)
+            by_muid[target_item.MarineUnitID].append(item)
+
+        self.rows = {}
+
+        for muid, cols in by_muid.items():
+            rows = []
+
+            if not cols:
+                continue
+
+            for name in cols[0].keys():
+                values = [c[name] for c in cols]
+                row = Row(name, values)
+                rows.append(row)
+
+            self.rows[muid] = rows
+
+    def __call__(self):
+        self.setup_data()
+
+        return self.template()
