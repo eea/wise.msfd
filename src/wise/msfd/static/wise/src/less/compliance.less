@@ -75,6 +75,11 @@ div.subform-refresh {
   .formControls {
     margin: 0;
   }
+
+  .process-phase-title {
+    margin-top: 0;
+    font-style: italic;
+  }
 }
 
 
@@ -421,15 +426,26 @@ div.back-to-descr {
       padding: 2rem;
       margin-bottom: 2rem;
       .vendor-prefix(border-radius; 10px);
+      background-color: lightblue;
+      border: 1px solid #ccc;
 
-      &:nth-of-type(odd) {
-        background-color: #eee;
+//      &:nth-of-type(odd) {
+//        background-color: #eee;
+//        border: 1px solid #ddd;
+//      }
+//
+//      &:nth-of-type(even) {
+//        background-color: rgba(255,255,255,0.6);
+//        border: 1px solid #ccc;
+//      }
+
+      &.disabled {
+        background-color: lightgrey;
         border: 1px solid #ddd;
-      }
 
-      &:nth-of-type(even) {
-        background-color: rgba(255,255,255,0.6);
-        border: 1px solid #ccc;
+        .select2-chosen, textarea {
+          cursor: not-allowed !important;
+        }
       }
 
       .field {

@@ -215,11 +215,31 @@ if (!Array.prototype.last){
     });
   }
 
+  // used in edit assessment form
+  // add the disabled attribute for select/textarea elements
+  // if the question type does not match the process phase
+  function disableAssessmentForms(){
+    $('div.subform.compliance-assessment-edit-subform.disabled')
+      .find('select, textarea').each(function(){
+        $(this).attr('disabled', true);
+    });
+  }
+
   $(document).ready(function($){
     initStyling();
     setupSelects2();
     setupReportNavigation();
     setupTableScrolling();
+    disableAssessmentForms();
+
+    // used in edit assessment form
+    // remove the disabled attribute when submitting the form
+    // data from disabled attributes is not submitted
+    $('.kssattr-formname-edit-assessment-data-2018').submit(function(){
+      $(':disabled').each(function(){
+        $(this).removeAttr('disabled');
+      });
+    });
 
     if (window.matchMedia("(max-width: 768px)").matches) {
       $(".overflow-table h5").width( $(".overflow-table table").width() );
