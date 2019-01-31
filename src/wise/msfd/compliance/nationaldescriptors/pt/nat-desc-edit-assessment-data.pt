@@ -26,6 +26,7 @@
         </button>
       </div>
       <h2 tal:content="view/title">Title here</h2>
+      <h3 class="process-phase-title" tal:content="view/process_phase_title">Process phase title</h3>
       <!-- <div style="margin-bottom: 1em; top: -0.8em; position: relative"> -->
       <div class="back-to-descr">
         <a href="./">
@@ -45,8 +46,19 @@
 
               <tal:subform repeat='subform view/subforms'>
                 <!-- <div tal:content="nocall: subform"></div> -->
-                <div class="subform compliance-assessment-edit-subform">
-                  <h3 tal:content="subform/title">Question here</h3>
+                <div tal:define="subform_extra python:subform._disabled and ' disabled' or ''"
+                    tal:attributes="class python:'subform compliance-assessment-edit-subform' + subform_extra">
+                  <span></span>
+                  <h3>
+                    <span class="help-popover fa fa-info-circle fa-s"
+                      data-trigger="hover"
+                      data-html="true"
+                      tal:condition="subform/subtitle"
+                      tal:attributes="title string:Useful informations for this question;
+                      data-content subform/subtitle">
+                    </span>
+                    <span tal:content="subform/title">Question here</span>
+                  </h3>
 
                   <div class="fields-container">
                     <div tal:repeat="fieldname subform/fields" class="fields-container-row">
@@ -122,3 +134,4 @@
     </div>
   </div>
 </div>
+

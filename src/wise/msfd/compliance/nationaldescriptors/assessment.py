@@ -11,6 +11,7 @@ from Products.Five.browser.pagetemplatefile import (PageTemplateFile,
                                                     ViewPageTemplateFile)
 from wise.msfd.base import EmbeddedForm, MainFormWrapper
 from wise.msfd.compliance.base import get_descriptor_elements, get_questions
+from wise.msfd.compliance.interfaces import ICountryDescriptorsFolder
 from z3c.form.button import buttonAndHandler
 from z3c.form.field import Fields
 from z3c.form.form import Form
@@ -19,6 +20,11 @@ from ..base import BaseComplianceView
 
 logger = logging.getLogger('wise.msfd')
 
+phase_mapping = {
+    'phase1': 'adequacy',
+    'phase2': 'coherence',
+    'phase3': 'consistency',
+}
 
 # mapping of title: field_name
 additional_fields = {
@@ -124,8 +130,14 @@ class EditAssessmentDataForm(Form, BaseComplianceView):
             self.country_title,
             self.descriptor,
             self.country_region_code,
-            self.article
+            self.article,
         )
+
+    @property
+    def process_phase_title(self):
+        _, title = self.current_phase
+
+        return 'Current process phase: {}'.format(title)
 
     @buttonAndHandler(u'Save', name='save')
     def handle_save(self, action):
@@ -193,6 +205,19 @@ class EditAssessmentDataForm(Form, BaseComplianceView):
             self.context.saved_assessment_data.append(last)
 
     @property
+    def current_phase(self):
+        country_folder = self.get_parent_by_iface(ICountryDescriptorsFolder)
+        state, title = self.process_phase(country_folder)
+
+        return state, title
+
+    def is_disabled(self, question):
+        state, _ = self.current_phase
+        disabled = phase_mapping.get(state, 'not found') != question.klass
+
+        return disabled
+
+    @property
     def fields(self):
         if not self.subforms:
             self.subforms = self.get_subforms()
@@ -221,9 +246,11 @@ class EditAssessmentDataForm(Form, BaseComplianceView):
         qs = get_questions(
             'compliance/nationaldescriptors/data'
         )
-        state_id, state_label = self.process_phase()
+        # state_id, state_label = self.process_phase()
 
-        return filtered_questions(qs[self.article], state_id)
+        # return filtered_questions(qs[self.article], state_id)
+
+        return qs[self.article]
 
     def get_subforms(self):
         """ Build a form of options from a tree of options
@@ -233,16 +260,22 @@ class EditAssessmentDataForm(Form, BaseComplianceView):
         forms = []
 
         for question in self.questions:
+            question_phase = [
+                k
+                for k, v in phase_mapping.items()
+                if v == question.klass
+            ][0]
             criterias = filtered_criterias(self.criterias, question)
 
             form = EmbeddedForm(self, self.request)
-
             form.title = question.definition
+            form.subtitle = '<p>Type: {}<p>'\
+                '<p>Phase: {}<p>'\
+                .format(question.klass, question_phase)
 
             form._question = question
-
             form._criterias = criterias
-
+            form._disabled = self.is_disabled(question)
             fields = []
 
             # when use-criteria == 'none'
@@ -309,11 +342,12 @@ class EditAssessmentDataForm(Form, BaseComplianceView):
                 fields.append(_field)
 
             form.fields = Fields(*fields)
-
             forms.append(form)
 
         assessment_summary_form = EmbeddedForm(self, self.request)
         assessment_summary_form.title = u"Assessment summary"
+        assessment_summary_form.subtitle = u''
+        assessment_summary_form._disabled = False
         asf_fields = []
 
         for name, title in summary_fields:
