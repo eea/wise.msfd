@@ -7,7 +7,8 @@ from Products.Five.browser.pagetemplatefile import \
     ViewPageTemplateFile as Template
 from wise.msfd import db, sql
 from wise.msfd.data import country_ges_components, get_report_data
-from wise.msfd.gescomponents import (get_descriptor, get_ges_component,
+from wise.msfd.gescomponents import (criteria_from_gescomponent,
+                                     get_descriptor, get_ges_component,
                                      sorted_by_criterion)
 from wise.msfd.labels import COMMON_LABELS
 from wise.msfd.translation import retrieve_translation
@@ -505,22 +506,27 @@ class Article10(BaseArticle2012):
 
 
 class A10AlternateItem(Item):
-    def __init__(self, target_item):
+    def __init__(self, target_item, desc_item):
         super(A10AlternateItem, self).__init__()
         self.ti = ti = target_item
-        t = sql.t_MSFD10_DESCrit
-        count, res = db.get_all_records(
+        self.di = di = desc_item
+        # t = sql.t_MSFD10_DESCrit
+        # count, res = db.get_all_records(
+        #     t,
+        #     t.c.MSFD10_Target == self.ti.MSFD10_Target_ID
+        # )
+        # self.desc_crits = res
+        t = sql.t_MSFD10_FeaturesPressures
+        _count, self.fps = db.get_all_records(
             t,
-            t.c.MSFD10_Target == self.ti.MSFD10_Target_ID
+            t.c.MSFD10_Target == ti.MSFD10_Target_ID
         )
-        self.desc_crits = res
-
         attrs = [
-            # ("Features", self.features()),
+            ("Features", self.features()),
             ("TargetCode", ti.ReportingFeature),
-            # "Description"
-            ("GESComponents", self.ges_components()),
-            # "TimeScale"
+            ("Description", ti.Description),
+            ("GESComponents", di.GESDescriptorsCriteriaIndicators),
+            ("TimeScale", ti.TimeScale),
             # "UpdateDate"
             # "UpdateType"
             # "Measures"
@@ -542,14 +548,13 @@ class A10AlternateItem(Item):
         for title, value in attrs:
             self[title] = value
 
-    def ges_components(self):
-        return ItemList(rows=[x.GESDescriptorsCriteriaIndicators
-                              for x in self.desc_crits])
-
     def features(self):
-
-        import pdb
-        pdb.set_trace()
+        res = set()
+        for fp in self.fps:
+            res.add(fp.PhysicalChemicalHabitatsFunctionalPressures)
+            if fp.Other:
+                res.add(fp.Other)
+        return ItemList(rows=res)
 
 
 class Article10Alternate(BaseArticle2012):
@@ -558,18 +563,37 @@ class Article10Alternate(BaseArticle2012):
 
     @db.use_db_session('2012')
     def setup_data(self):
-        t = sql.MSFD10Target
+        descriptor = get_descriptor(self.descriptor)
+        ok_ges_ids = descriptor.all_ids()
 
-        count, res = db.get_all_records(
+        t = sql.MSFD10Target
+        _count, _db_targets = db.get_all_records(
             t,
             t.MarineUnitID.in_(self.muids),
             t.Topic == 'EnvironmentalTarget',
         )
+        _all_target_ids = [x.MSFD10_Target_ID for x in _db_targets]
+
+        dt = sql.t_MSFD10_DESCrit
+        count, _db_descs = db.get_all_records(
+            dt,
+            dt.c.MSFD10_Target.in_(_all_target_ids)
+        )
+
         by_muid = defaultdict(list)
 
-        for target_item in res:
-            item = A10AlternateItem(target_item)
-            by_muid[target_item.MarineUnitID].append(item)
+        for target_item in _db_targets:
+            descs = [x for x in _db_descs
+                     if x.MSFD10_Target == target_item.MSFD10_Target_ID]
+
+            for desc_item in descs:
+                crit_id = criteria_from_gescomponent(
+                    desc_item.GESDescriptorsCriteriaIndicators)
+
+                if crit_id not in ok_ges_ids:
+                    continue
+                item = A10AlternateItem(target_item, desc_item)
+                by_muid[target_item.MarineUnitID].append(item)
 
         self.rows = {}
 

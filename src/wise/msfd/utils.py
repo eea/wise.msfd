@@ -370,7 +370,12 @@ class ItemList(TemplateMixin):
     template = PageTemplateFile('pt/list.pt')
 
     def __init__(self, rows):
-        self.rows = sorted(rows, key=lambda r: r.title)
+        rows = list(rows)
+
+        if rows and (not isinstance(rows[0], basestring)):
+            self.rows = sorted(rows, key=lambda r: r.title)
+        else:
+            self.rows = sorted(rows)
 
     def __repr__(self):
         v = ', '.join(map(unicode, self.rows))
