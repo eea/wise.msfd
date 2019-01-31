@@ -35,7 +35,7 @@ from z3c.form.field import Fields
 from z3c.form.form import Form
 
 from ..base import BaseComplianceView
-from .a8 import Article8 as Article8
+from .a8 import Article8, Article8Alternate
 from .a9 import Article9, Article9Alternate
 from .a10 import Article10, Article10Alternate
 from .utils import row_to_dict
@@ -367,7 +367,7 @@ class ReportData2012Like2018(ReportData2012):
     @property
     def article_implementations(self):
         res = {
-            'Art8': Article8,
+            'Art8': Article8Alternate,
             'Art9': Article9Alternate,
             'Art10': Article10Alternate,
         }

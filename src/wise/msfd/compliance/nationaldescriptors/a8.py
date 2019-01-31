@@ -311,6 +311,7 @@ class A8bItem(Item):
         xpath = "parent::*/preceding-sibling::w:Metadata" \
                 "[w:Topic/text() = 'AnalysisCharactTrend']"
         meta = self.node[xpath]
+
         if not meta:
             return ''
 
@@ -330,6 +331,7 @@ class A8bItem(Item):
 
     def row_element(self):
         suminfo2 = self.node['w:SumInformation2/w:SumInfo2']
+
         if not suminfo2:
             return ''
 
@@ -339,6 +341,7 @@ class A8bItem(Item):
 
     def row_element2(self):
         other = self.node['w:SumInformation2/w:Other/text()']
+
         if not other:
             return ''
 
@@ -766,3 +769,81 @@ class Article8(BaseArticle2012):
                         seen.add(value)
 
         return ''
+
+
+class A8AlternateItem(Item):
+    """
+    """
+
+    def __init__(self, db_record):
+        super(A8AlternateItem, self).__init__()
+
+        self.db_record = rec = db_record
+
+        attrs = [
+            ('MarineUnitID', rec.MarineUnitID),
+        ]
+
+        for title, value in attrs:
+            self[title] = value
+
+
+class Article8Alternate(BaseArticle2012):
+    template = Template('pt/report-data-a8.pt')
+    help_text = """ """
+
+    descriptor_map = {
+        'D1': [
+            (
+                sql.MSFD8aSpecy,    # main mapper
+            ),
+        ],
+        'D1/D6': [],
+        'D2': [],
+        'D3': [],
+        'D4': [],
+    }
+
+    def setup_data(self):
+        # descriptor = get_descriptor(self.descriptor)
+        # ok_ges_ids = descriptor.all_ids()
+        descriptor = self.descriptor
+
+        if descriptor.startswith('D1.'):
+            descriptor = 'D1'       # TODO: handle other cases
+
+        self.rows = []
+
+        # TODO: compute list for all types
+        t = self.descriptor_map[descriptor][0][0]
+
+        count, res = db.get_all_records(
+            t,
+            t.MarineUnitID.in_(self.muids)
+        )
+
+        by_muid = defaultdict(list)
+
+        for rec_item in res:
+            item = A8AlternateItem(rec_item)
+            by_muid[rec_item.MarineUnitID].append(item)
+
+        self.rows = {}
+
+        for muid, cols in by_muid.items():
+            rows = []
+
+            if not cols:
+                continue
+
+            for name in cols[0].keys():
+                values = [c[name] for c in cols]
+                row = Row(name, values)
+                rows.append(row)
+
+            self.rows[muid] = rows
+
+    def __call__(self):
+        self.setup_data()
+
+        return self.template()
