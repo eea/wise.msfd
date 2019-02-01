@@ -343,12 +343,19 @@ class A9AlternateItem(Item):
         di = self.descriptor_item = descriptor_item
 
         attrs = [
-            ('GEScomponent', di.ReportingFeature),
-            ('Proportion', di.Proportion),
+            ('GES component', di.ReportingFeature),
+            # Proportion not needed in 2018
+            # ('Proportion', di.Proportion),
             ('Features', self.features()),
             ('GES description', di.DescriptionGES),
-            ('Determination date', 'Row not implemented'),
-            ('Update type', 'Row not implemented'),
+            # ('Justification for non-use of criterion',
+            #     'Row not implemented (not mapped to 2012)'),
+            # ('Justification for delay in setting EU/regional requirements',
+            #     'Row not implemented (not mapped to 2012)'),
+            # ('Determination date',
+            #     'Row not implemented (not mapped to 2012)'),
+            # ('Update type',
+            #     'Row not implemented (not mapped to 2012)'),
         ]
 
         for title, value in attrs:

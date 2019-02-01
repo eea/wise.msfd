@@ -7,9 +7,8 @@ from Products.Five.browser.pagetemplatefile import \
     ViewPageTemplateFile as Template
 from wise.msfd import db, sql
 from wise.msfd.data import country_ges_components, get_report_data
-from wise.msfd.gescomponents import (criteria_from_gescomponent,
-                                     get_descriptor, get_ges_component,
-                                     sorted_by_criterion)
+from wise.msfd.gescomponents import (get_descriptor, get_ges_component,
+                                     get_label, sorted_by_criterion)
 from wise.msfd.labels import COMMON_LABELS
 from wise.msfd.translation import retrieve_translation
 from wise.msfd.utils import (Item, ItemLabel, ItemList, Node, RawRow, Row,
@@ -506,55 +505,124 @@ class Article10(BaseArticle2012):
 
 
 class A10AlternateItem(Item):
-    def __init__(self, target_item, desc_item):
+    def __init__(self, target_item, ok_ges_ids):
         super(A10AlternateItem, self).__init__()
         self.ti = ti = target_item
-        self.di = di = desc_item
-        # t = sql.t_MSFD10_DESCrit
-        # count, res = db.get_all_records(
-        #     t,
-        #     t.c.MSFD10_Target == self.ti.MSFD10_Target_ID
-        # )
-        # self.desc_crits = res
-        t = sql.t_MSFD10_FeaturesPressures
-        _count, self.fps = db.get_all_records(
+        self.ok_ges_ids = ok_ges_ids
+
+        t = sql.t_MSFD10_DESCrit
+        count, resdc = db.get_all_records(
             t,
-            t.c.MSFD10_Target == ti.MSFD10_Target_ID
+            t.c.MSFD10_Target == self.ti.MSFD10_Target_ID
         )
-        attrs = [
-            ("Features", self.features()),
-            ("TargetCode", ti.ReportingFeature),
-            ("Description", ti.Description),
-            ("GESComponents", di.GESDescriptorsCriteriaIndicators),
-            ("TimeScale", ti.TimeScale),
-            # "UpdateDate"
-            # "UpdateType"
-            # "Measures"
-            # "Element"
-            # "Element2"
-            # "Parameter"
-            # "ParameterOther"
-            # "TargetValue"
-            # "ValueAchievedUpper"
-            # "ValueAchievedLower"
-            # "ValueUnit"
-            # "ValueUnitOther"
-            # "TargetStatus"
-            # "AssessmentPeriod"
-            # "ProgressDescription"
-            # "Indicators"
-        ]
+        self.desc_crits = resdc
+
+        t = sql.t_MSFD10_FeaturesPressures
+        count, resft = db.get_all_records(
+            t,
+            t.c.MSFD10_Target == self.ti.MSFD10_Target_ID
+        )
+        self.feat_pres = resft
+
+        self.needed = False
+        ges_components = self.get_ges_components()
+
+        if ges_components:
+            self.needed = True
+            attrs = [
+                ("Features", self.features()),
+                ("Target code", self.target_code()),
+                # ("Description target", "Row not implemented"),
+                ("GES components", ges_components),
+                ("Time scale", ti.TimeScale),
+                # ("Update date", "Row not implemented (not mapped to 2012)"),
+                # ("Update type", "Row not implemented (not mapped to 2012)"),
+                # ("Related measures",
+                #     "Row not implemented (not mapped to 2012)"),
+                # ("Element", "Row not implemented (not mapped to 2012)"),
+                # ("Element 2", "Row not implemented (not mapped to 2012)"),
+                # ("Parameter", "Row not implemented (not mapped to 2012)"),
+                # ("Parameter other",
+                #     "Row not implemented (not mapped to 2012)"),
+                ("Target value", ti.ThresholdValue),
+                # ("Value achieved upper",
+                #     "Row not implemented (not mapped to 2012)"),
+                # ("Value achieved lower",
+                #     "Row not implemented (not mapped to 2012)"),
+                # ("Value unit",
+                #     "Row not implemented (not mapped to 2012)"),
+                # ("Value unit other",
+                #     "Row not implemented (not mapped to 2012)"),
+                # ("Target status",
+                #     "Row not implemented (not mapped to 2012)"),
+                # ("Assessment period",
+                #     "Row not implemented (not mapped to 2012)"),
+                ("Description target assessment", ti.Description),
+                ("Related indicators", self.related_indicator()),
+            ]
+        else:
+            attrs = []
 
         for title, value in attrs:
             self[title] = value
 
     def features(self):
-        res = set()
-        for fp in self.fps:
-            res.add(fp.PhysicalChemicalHabitatsFunctionalPressures)
-            if fp.Other:
-                res.add(fp.Other)
-        return ItemList(rows=res)
+        features = []
+        for row in self.feat_pres:
+            v = row.FeatureType
+            if v:
+                features.append(v)
+
+            v = row.PhysicalChemicalHabitatsFunctionalPressures
+            features.append(v)
+
+            if 'Other' in v and row.Other:
+                o = row.Other
+                features.append(o)
+
+        res = [ItemLabel(v, get_label(v, 'features')) for v in set(features)]
+
+        return ItemList(res)
+
+    def target_code(self):
+        codes = []
+
+        ti_code = self.ti.ReportingFeature
+        codes.append(ti_code)
+
+        dc_codes = [
+            x.ReportingFeature
+            for x in self.desc_crits
+            if x.Topic == 'EnvironmentalTarget'
+        ]
+        codes.extend(dc_codes)
+
+        return ItemList(set(codes))
+
+    def get_ges_components(self):
+        ges_descriptors = set(x.GESDescriptorsCriteriaIndicators
+                              for x in self.desc_crits)
+        ges_needed = self.ok_ges_ids & ges_descriptors
+        res = []
+
+        # TODO return raw values or labels?
+        if ges_needed:
+            # for ges in ges_needed:
+            #     g = get_ges_component(ges)
+            #     il = ItemLabel(ges, g.title)
+            #     res.append(il)
+
+            return ItemList(rows=ges_needed)
+
+        return ()
+
+    def related_indicator(self):
+        topic = self.ti.Topic
+
+        if topic == 'AssociatedIndicator':
+            return self.ti.ReportingFeature
+
+        return ''
 
 
 class Article10Alternate(BaseArticle2012):
@@ -564,35 +632,21 @@ class Article10Alternate(BaseArticle2012):
     @db.use_db_session('2012')
     def setup_data(self):
         descriptor = get_descriptor(self.descriptor)
-        ok_ges_ids = descriptor.all_ids()
+        ok_ges_ids = set(descriptor.all_ids())
 
         t = sql.MSFD10Target
-        _count, _db_targets = db.get_all_records(
+
+        count, res = db.get_all_records(
             t,
             t.MarineUnitID.in_(self.muids),
             t.Topic == 'EnvironmentalTarget',
         )
-        _all_target_ids = [x.MSFD10_Target_ID for x in _db_targets]
-
-        dt = sql.t_MSFD10_DESCrit
-        count, _db_descs = db.get_all_records(
-            dt,
-            dt.c.MSFD10_Target.in_(_all_target_ids)
-        )
-
         by_muid = defaultdict(list)
 
-        for target_item in _db_targets:
-            descs = [x for x in _db_descs
-                     if x.MSFD10_Target == target_item.MSFD10_Target_ID]
+        for target_item in res:
+            item = A10AlternateItem(target_item, ok_ges_ids)
 
-            for desc_item in descs:
-                crit_id = criteria_from_gescomponent(
-                    desc_item.GESDescriptorsCriteriaIndicators)
-
-                if crit_id not in ok_ges_ids:
-                    continue
-                item = A10AlternateItem(target_item, desc_item)
+            if item.needed:
                 by_muid[target_item.MarineUnitID].append(item)
 
         self.rows = {}
