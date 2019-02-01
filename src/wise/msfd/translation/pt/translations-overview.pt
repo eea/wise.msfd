@@ -24,7 +24,6 @@
               method="POST"
               action="./@@edit-translation"
               tal:attributes="action string:${context/absolute_url}/@@edit-translation">
-
               <input type="hidden" name="language" tal:attributes="value request/form/language | nothing" />
               <textarea style="display:none" type="hidden" name="original" ></textarea>
 

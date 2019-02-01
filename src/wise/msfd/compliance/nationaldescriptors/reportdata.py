@@ -321,7 +321,8 @@ class ReportData2012(BaseComplianceView, BaseUtil):
         report_header = self.report_header_template(**report_header_data)
 
         report_data, report_data_rows = self.get_report_data()
-        self.report_html = report_header + report_data
+        trans_edit_html = self.translate_view()()
+        self.report_html = report_header + report_data + trans_edit_html
 
         if 'download' in self.request.form:
 

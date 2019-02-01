@@ -31,7 +31,6 @@
     name="msfd.trans"
     directory="./static/"
     />
-
   <browser:page
     class=".admin.TranslationsOverview"
     for="Products.CMFPlone.interfaces.siteroot.IPloneSiteRoot"
@@ -44,7 +43,7 @@
     name="edit-translation"
     class=".admin.TranslationsOverview"
     attribute="edit_translation"
-    for="Products.CMFPlone.interfaces.siteroot.IPloneSiteRoot"
+    for="Products.CMFCore.interfaces.ISiteRoot" 
     permission="cmf.ManagePortal"
     />
 
