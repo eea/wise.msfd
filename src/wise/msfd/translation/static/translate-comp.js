@@ -29,12 +29,13 @@ $(document).ready(function () {
       // inline editing in report data view page
       e.preventDefault();
 
-      var orig_text = $original.text();
+      var orig_text = $original.text().trim();
       var $form = $('#form-edit-translation');
       var translation = $("#new_transl", $form).val();
       var url = $('.form-group').attr('portal_url') + '/@@edit-translation';
+      var language = $form.children('input').attr('value');
       console.log(':', translation);
-
+      
       $.ajax({
         form: $form,
         type: 'POST',
@@ -43,6 +44,7 @@ $(document).ready(function () {
         data: {
           'original': orig_text,
           'tr-new': translation,
+          'language': language,
         },
         success: function (result) {
           location.reload();

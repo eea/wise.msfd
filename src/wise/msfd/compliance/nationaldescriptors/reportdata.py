@@ -638,7 +638,7 @@ https://svn.eionet.europa.eu/repositories/Reportnet/Dataflows/MarineDirective/MS
 
             for row in _data:
                 (fieldname, label), row_data = row
-                row[0] = label
+                row[0] = (fieldname, label)
 
                 if fieldname not in group_by_fields:
                     continue
@@ -842,9 +842,8 @@ https://svn.eionet.europa.eu/repositories/Reportnet/Dataflows/MarineDirective/MS
             muid, table_data = table
 
             for row in table_data:
-                label, cells = row
-
-                if label in translatables:
+                (name, label), cells = row
+                if name in translatables:
                     for value in cells:
                         if value not in seen:
                             retrieve_translation(self.country_code, value)

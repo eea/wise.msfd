@@ -13,6 +13,7 @@
         <h4 class="modal-translate-header">Current translation</h4>
         <div class="modal-translate-section" id="transl-old-translation">Current translation</div>
         <form id="form-edit-translation">
+          <input type="hidden" name="language" tal:attributes="value view/country_code | nothing" />
           <div class="form-group" tal:attributes="portal_url context/portal_url">
             <h4 class="modal-translate-header">New translation</h4>
             <textarea class="form-control" style="height: 10em;" type="text" id="new_transl" name="new_transl"></textarea>
