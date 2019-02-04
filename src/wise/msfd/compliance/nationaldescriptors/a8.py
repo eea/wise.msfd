@@ -775,17 +775,99 @@ class A8AlternateItem(Item):
     """
     """
 
-    def __init__(self, db_record):
+    def __init__(self, descriptor, *args):
         super(A8AlternateItem, self).__init__()
 
-        self.db_record = rec = db_record
+        self.descriptor = descriptor
+        self._args = args
 
-        attrs = [
-            ('MarineUnitID', rec.MarineUnitID),
-        ]
-
-        for title, value in attrs:
+        for title, value in self.get_values():
             self[title] = value
+
+
+class A8bNutrient(A8AlternateItem):
+
+    @classmethod
+    def items(cls, descriptor, muids):
+        sess = db.session()
+
+        I = sql.MSFD8bNutrientsAssesmentIndicator
+        A = sql.MSFD8bNutrientsAssesment
+        AC = sql.MSFD8bNutrientsAssesmentCriterion
+        N = sql.MSFD8bNutrient
+
+        q = sess.query(N, A, I, AC)\
+            .select_from(N)\
+            .filter(N.MarineUnitID.in_(muids))\
+            .outerjoin(A)\
+            .outerjoin(I)\
+            .outerjoin(AC)\
+            .order_by(N.MSFD8b_Nutrients_ID)
+
+        print q.count()
+        for tup in q:
+            yield cls(descriptor, *tup)
+
+    def get_values(self):
+
+        rec, assessment, indic, crit = self._args
+        self.MarineUnitID = rec.MarineUnitID
+
+        t = sql.t_MSFD8b_NutrientsMetadata
+        _count, _res = db.get_all_records(
+            t,
+            t.c.MSFD8b_Nutrients_ID == rec.MSFD8b_Nutrients_ID,
+            t.c.Topic == 'Assessment',
+        )
+        meta = None
+        if _res:
+            meta = _res[0]
+
+        sess = db.session()     # TODO: concurent ongoing sessions
+        # will be a problem?
+
+        A = sql.MSFD8bNutrientsActivity
+        AD = sql.MSFD8bNutrientsActivityDescription
+        res = sess\
+            .query(A.Activity)\
+            .join(AD)\
+            .filter(AD.MSFD8b_Nutrients == rec.MSFD8b_Nutrients_ID)\
+            .distinct()\
+            .all()
+        related_activities = res and res[0] or []
+
+        return [
+            ('MarineReportingUnit', rec.MarineUnitID),
+            ('GEScomponent', 'D5'),
+            ('Feature', 'PresEnvEutrophi'),
+
+            ('AssessmentPeriod',
+             meta and meta.AssessmentDateStart or rec.RecentTimeStart),
+            ('AssessmentPeriod2',
+             meta and meta.AssessmentDateEnd or rec.RecentTimeEnd),
+
+            ('MethodUsed', meta and meta.MethodUsed),
+            ('MethodSources', meta and meta.Sources),
+
+            ('RelatedActivities', ItemList(rows=related_activities)),
+
+            ('Criteria', crit and crit.CriteriaType),
+            ('CriteriaStatus',
+             crit and crit.MSFD8b_Nutrients_Assesment1.Status),
+            ('DescriptionCriteria',
+             crit and crit.MSFD8b_Nutrients_Assesment1.StatusDescription),
+            ('Element', 'N/A'),
+            ('ElementStatus', 'N/A'),
+            ('Parameter', rec.Topic),
+
+            ('ThresholdQualitative', indic and indic.ThresholdValue),
+            ('ValueUnit', indic and indic.ThresholdValueUnit),
+            ('ProportionThresholdValue', indic and indic.ThresholdProportion),
+
+            ('ProportionValueAchieved', rec.SumInfo1),
+            ('ParameterAchieved', 'N/A'),
+            ('DescriptionParameter', rec.Description),
+        ]
 
 
 class Article8Alternate(BaseArticle2012):
@@ -794,14 +876,15 @@ class Article8Alternate(BaseArticle2012):
 
     descriptor_map = {
         'D1': [
-            (
-                sql.MSFD8aSpecy,    # main mapper
-            ),
+            sql.MSFD8aSpecy,    # main mapper
         ],
         'D1/D6': [],
         'D2': [],
         'D3': [],
         'D4': [],
+        'D5': [
+            A8bNutrient,
+        ]
     }
 
     def setup_data(self):
@@ -814,19 +897,17 @@ class Article8Alternate(BaseArticle2012):
 
         self.rows = []
 
-        # TODO: compute list for all types
-        t = self.descriptor_map[descriptor][0][0]
+        Impl = self.descriptor_map[descriptor][0]
 
-        count, res = db.get_all_records(
-            t,
-            t.MarineUnitID.in_(self.muids)
-        )
+        # count, res = db.get_all_records(
+        #     Impl.mapper,
+        #     Impl.mapper.MarineUnitID.in_(self.muids)
+        # )
 
         by_muid = defaultdict(list)
 
-        for rec_item in res:
-            item = A8AlternateItem(rec_item)
-            by_muid[rec_item.MarineUnitID].append(item)
+        for item in Impl.items(self.descriptor, self.muids):
+            by_muid[item.MarineUnitID].append(item)
 
         self.rows = {}
 

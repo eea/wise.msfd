@@ -5,14 +5,15 @@
       To what extent are the 2017 Decision primary criteria used?
     </definition>
     <answers>
-      <option>Primary criterion with 2017 code used</option>
-      <option>Primary criterion with 2010 code used</option>
-      <option>Primary criterion not used</option>
-      <option>Primary criterion replaced with secondary criterion (with grounded justification)</option>
+      <option>Primary criterion used with 2017 code</option>
+      <option>Primary criterion used with 2010 code</option>
+      <option>Primary criterion replaced with secondary criterion (with adequate justification)</option>
+      <option>Primary criterion not used (with adequate justification)</option>
+      <option>Primary criterion not used (with inadequate justification)</option>
       <!--<option>Not relevant</option>-->
       <option>Not reported</option>
     </answers>
-    <scoring determination-method="wise.msfd.compliance.scoring.alternative_based" determination-method-args="0 1 3">
+    <scoring determination-method="wise.msfd.compliance.scoring.alternative_based" determination-method-args="0 1 2">
       <option score="4">76-100% of primary criteria used (or replaced with secondary with grounded justification)</option>
       <option score="3">51-75% of primary criteria used (or replaced with secondary with grounded justification)</option>
       <option score="2">26-50% of primary criteria used (or replaced with secondary with grounded justification)</option>
@@ -24,11 +25,11 @@
 
   <assessment-question id="q2-a" class="adequacy" use-criteria='secondary'>
     <definition>
-      To what extent does the Member State report beyond the minimum requirements of the 2017 Decision by using the secondary criteria?
+      To what extent does the Member State report beyond the minimum requirements of the 2017 Decision, using secondary criteria?
     </definition>
     <answers>
-      <option>Secondary criterion with 2017 code used</option>
-      <option>Secondary criterion with 2010 code used</option>
+      <option>Secondary criterion used with 2017 code</option>
+      <option>Secondary criterion used with 2010 code</option>
       <option>Secondary criteria not used</option>
       <!--<option>Not relevant</option>-->
       <option>Not reported</option>
@@ -46,10 +47,11 @@
 
   <assessment-question id="q3-a" class="adequacy" use-criteria='all'>
     <definition>
-      To what extent is the qualitative GES determination adequate? (I)
+      To what extent is the qualitative GES determination (elements and parameters) adequate?
     </definition>
     <answers>
       <option>Elements and parameters specified for this criterion</option>
+      <option>Elements and parameters partially specified for this criterion</option>
       <option>Elements and parameters not specified for this criterion</option>
       <!--<option>Not relevant</option>-->
       <option>Not reported</option>
@@ -66,11 +68,12 @@
 
   <assessment-question id="q4-a" class="adequacy" use-criteria='all'>
     <definition>
-      To what extent is the qualitative GES determination adequate? (II)
+      To what extent is the qualitative GES determination (objectives) adequate?
     </definition>
     <answers>
-      <option>Clear objectives are included in the definition of this criterion</option>
-      <option>Clear objectives are not included in the definition of this criterion</option>
+      <option>Clear objectives included in definition of this criterion</option>
+      <option>Partially clear objectives included in definition of this criterion</option>
+      <option>Clear objectives not included in definition of this criterion</option>
       <!--<option>Not relevant</option>-->
       <option>Not reported</option>
     </answers>
@@ -86,11 +89,12 @@
 
   <assessment-question id="q5-a" class="adequacy" use-criteria='all'>
     <definition>
-      To what extent is the quantitative determination of GES adequate?
+      To what extent is there a quantitative determination of GES (threshold values)?
     </definition>
     <answers>
-      <option>Threshold values are defined for this criterion</option>
-      <option>Threshold values are not defined for this criterion</option>
+      <option>Threshold values defined for this criterion</option>
+      <option>Threshold values partially defined for this criterion</option>
+      <option>Threshold values not defined for this criterion</option>
       <!--<option>Not relevant</option>-->
       <option>Not reported</option>
     </answers>
@@ -104,9 +108,29 @@
     <score-weight descriptor="D5" value="6" />
   </assessment-question>
 
-  <assessment-question id="q6-a" class="adequacy" use-criteria='none'>
+  <assessment-question id="q6-a" class="adequacy" use-criteria='all'>
     <definition>
-      To what extent are levels of ambition defined for GES adequate? (I)
+      To what extent is there a quantitative determination of GES (proportion values)?
+    </definition>
+    <answers>
+      <option>Proportion value set for this criterion</option>
+      <option>Proportion value not set for this criterion</option>
+    </answers>
+
+    <scoring determination-method="wise.msfd.compliance.scoring.alternative_based" determination-method-args="0">
+      <option score="4">GES extent threshold defined</option>
+      <option score="3">GES extent threshold defined</option>
+      <option score="2">GES extent threshold defined</option>
+      <option score="1">GES extent threshold not defined</option>
+      <option score="0">Not reported</option>
+    </scoring>
+    <score-weight descriptor="D5" value="6" />
+  </assessment-question>
+
+  TODO this question has alternative options
+  <assessment-question id="q7-a" class="adequacy" use-criteria='none'>
+    <definition>
+      To what extent are levels of ambition defined for GES adequate (GES extent threshold)?
     </definition>
     <answers>
       <option>GES extent threshold defined for 76-100% of elements</option>
@@ -126,28 +150,10 @@
     <score-weight descriptor="D5" value="6" />
   </assessment-question>
 
-  <assessment-question id="q7-a" class="adequacy" use-criteria='all'>
-    <definition>
-      To what extent are levels of ambition defined for GES adequate? (II)
-    </definition>
-    <answers>
-      <option>The proportion value is set for this criterion</option>
-      <option>The proportion value is not set for this criterion</option>
-    </answers>
-
-    <scoring determination-method="wise.msfd.compliance.scoring.alternative_based" determination-method-args="0">
-      <option score="4">GES extent threshold defined</option>
-      <option score="3">GES extent threshold defined</option>
-      <option score="2">GES extent threshold defined</option>
-      <option score="1">GES extent threshold not defined</option>
-      <option score="0">Not reported</option>
-    </scoring>
-    <score-weight descriptor="D5" value="6" />
-  </assessment-question>
-
+  TODO this question has alternative options
   <assessment-question id="q1-c" class="coherence" use-criteria='all'>
     <definition>
-      To what extent does the Member State in a marine region use the same primary/secondary criteria as the other MS in this region?
+      To what extent does the Member State use the same primary/secondary criteria as the other MS in this region?
     </definition>
     <answers>
       <option>The MS uses the same criteria as most (76%-100%) of the MS in the region</option>
