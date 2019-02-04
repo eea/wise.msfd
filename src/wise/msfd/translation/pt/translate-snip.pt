@@ -19,16 +19,20 @@
 
       <div class="tr-text">
         <div tal:attributes="class trans_class">
-          <span tal:content="structure translation">
+          <span class="text-trans" tal:content="structure translation">
             Translated Text
           </span>
         </div>
         <div tal:attributes="class text_class">
-          <span tal:content="structure text">
+          <span class="text-trans" tal:content="structure text">
             Original Text
           </span>
         </div>
       </div>
+
+      <button type="button" class="read-more-btn" data-toggle="modal" data-target="#read-more-modal">
+        Read more
+      </button>
 
       <div class="lang-footer" tal:condition="python: translation or can_translate">
         <div class="dropdown" tal:condition="can_translate">

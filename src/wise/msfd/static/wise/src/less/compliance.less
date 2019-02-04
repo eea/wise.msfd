@@ -151,10 +151,10 @@ div.subform-refresh {
             min-width: 16rem;
             margin: 0 0 0 -1rem !important;
             &.cell-listing  {
-              display: flex;
-              max-height: 30rem;
-              flex-direction: column;
-              flex-wrap: wrap;
+              // display: flex;
+              // max-height: 30rem;
+              // flex-direction: column;
+              // flex-wrap: wrap;
               li {
                 display: block !important;
                 padding-left: 1rem;
@@ -171,6 +171,7 @@ div.subform-refresh {
           position: absolute;
           padding-left: 7px;
         }
+
         .td-relative {
           position: relative;
 
@@ -179,6 +180,54 @@ div.subform-refresh {
             right: 10px;
           }
         }
+
+        .tr-text span {
+          display: inline-block;
+        }
+
+        .read-more-btn {
+          padding: 1px 5px;
+          border-radius: 4px;
+          border: 1px solid #808080;
+          cursor: pointer;
+          margin: 0.5em 0;
+          display: none;
+        }
+
+        .read-more-btn:hover {
+          background-color: #fff;
+        }
+
+        .read-more-wrapper {
+          .active .text-trans {
+            display: none;
+          }
+
+          .short-intro,
+          .read-more-btn {
+            display: block !important;
+          }
+        }
+      }
+    }
+  }
+
+  #read-more-modal {
+    .modal-dialog {
+      overflow-y: initial;
+    }
+
+    .modal-body {
+      height: 400px;
+      overflow-y: auto;
+    }
+
+    .modal-content-wrapper {
+      .short-intro {
+        display: none !important;
+      }
+      .active .text-trans {
+        display: block !important;
       }
     }
   }

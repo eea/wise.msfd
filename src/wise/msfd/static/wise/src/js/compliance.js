@@ -46,7 +46,7 @@ if (!Array.prototype.last){
     $(".toggle-sidebar").hide();
   }
 
-  $.fn.fixTableHeaderHeight = function fixTableHeaderHeight() {
+  $.fn.fixTableHeaderAndCellsHeight = function fixTableHeaderAndCellsHeight() {
     // because the <th> are position: absolute, they don't get the height of
     // the <td> cells, and the other way around.
     this.each(function() {
@@ -63,6 +63,20 @@ if (!Array.prototype.last){
           $next.height($th.height());
         }
       });
+    });
+  };
+
+  $.fn.fixTableHeaderHeight = function fixTableHeaderHeight() {
+    this.each(function() {
+
+      $("th", this).each(function() {
+        var $th = $(this);
+        var $next = $('td', $th.parent());
+        var cells_max_height = Math.max($next.height());
+
+        $th.height(cells_max_height);
+      });
+
     });
   };
 
@@ -135,12 +149,54 @@ if (!Array.prototype.last){
       $(this).show();
 
       console.log("done restoring");
-      $(this).fixTableHeaderHeight();
+      $(this).fixTableHeaderAndCellsHeight();
 
       //addTranslateClickHandlers();
     }
-    addTranslateClickHandlers();
+    readMoreModal();
+    // addTranslateClickHandlers();
   };
+
+  // used in report data table
+  // create a 'read more' modal
+  // if the cell content is too long
+  function readMoreModal() {
+    var $table = $('.table-report');
+    var $td = $table.find('td');
+    var maxchars = 500;
+    var seperator = '...';
+
+    $td.each(function() {
+      var $this = $(this);
+      var $text = $this.find('.active').children('.text-trans');
+      var $si = $('<span class="short-intro"/>');
+
+      if ($text.text().length > (maxchars - seperator.length)) {
+        $this.addClass('read-more-wrapper');
+        $si.insertBefore($text);
+
+        var $intro = $this.find('.active').children('.short-intro');
+
+        if ($this.find('.short-intro').length > 1) {
+          $intro.eq(0).remove();
+        }
+
+        $intro.text($text.text().substr(0, maxchars-seperator.length) + seperator);
+
+        $this.find('.read-more-btn').click(function() {
+          $text.clone().appendTo($('.modal-content-wrapper'));
+        });
+      } else {
+        $this.removeClass('read-more-wrapper');
+      }
+    });
+
+    $('.btn-close').click(function() {
+      $('.modal-content-wrapper').empty();
+    });
+
+    $table.fixTableHeaderAndCellsHeight();
+  }
 
   function setupReportNavigation() {
     var $reportnav = $('#report-data-navigation');
@@ -156,7 +212,7 @@ if (!Array.prototype.last){
 
     if (!$td.length) { return; }
 
-    $td.children('div').wrapInner('<span class="td-text"/>');
+    $td.children('div').wrapInner('<span class="td-content"/>');
 
     // get table header cell right position
     var $th = $('.table-report th');
@@ -170,11 +226,10 @@ if (!Array.prototype.last){
         clearTimeout(scrollTimer);
 
         if ($this.attr('colspan') > 1) {
-          var tdText = $this.find('.td-text');
+          var tdText = $this.find('.td-content');
           var tdLeft = $this.position().left;
           var tdRight = tdLeft + $this.outerWidth(); // get table cell right position
-
-          var tdTextWidth = $this.find('.td-text').width();
+          var tdTextWidth = $this.find('.td-content').width();
           var thAndCellWidth = tdTextWidth + thRight;
 
           $this.css('height', $this.outerHeight());
@@ -186,7 +241,7 @@ if (!Array.prototype.last){
             tdText.addClass('td-scrolled').css('left', thRight + 5);
           } else {
             $this.css('height', '');
-            tdText.removeClass('td-scrolled').addClass('td-text-scrolled');
+            tdText.removeClass('td-scrolled').addClass('td-content-scrolled');
           }
 
           if (thAndCellWidth >= tdRight) {
@@ -201,14 +256,14 @@ if (!Array.prototype.last){
       function afterScroll() {
         $('.btn-translate').on('click', function() {
           var $btn = $(this);
-          var transTextHeight = $btn.closest('.td-text').outerHeight();
+          var transTextHeight = $btn.closest('.td-content').outerHeight();
           var $td = $btn.closest('td.translatable');
           var $th = $td.siblings('th');
           $td.css({
             'height': transTextHeight,
             'padding': '0'
           });
-          $btn.closest('.td-text').css('padding', '8px');
+          $btn.closest('.td-content').css('padding', '8px');
           $th.css('height', transTextHeight);
         });
       }
@@ -231,6 +286,7 @@ if (!Array.prototype.last){
     setupReportNavigation();
     setupTableScrolling();
     disableAssessmentForms();
+    readMoreModal();
 
     // used in edit assessment form
     // remove the disabled attribute when submitting the form
@@ -251,6 +307,17 @@ if (!Array.prototype.last){
     $('.simplify-form').next().find('table').each(function(){
       $(this).simplifyTable();
     });
+
+    // fire resize event after the browser window resizing it's completed
+    var resizeTimer;
+    $(window).resize(function() {
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(doneResizing, 500);
+    });
+
+    function doneResizing() {
+      $('.table-report').fixTableHeaderHeight();
+    }
 
     $('.simplify-form button').on('click', function(){
       var onoff = $(this).attr('aria-pressed') == 'true';
@@ -277,7 +344,6 @@ if (!Array.prototype.last){
         return "You have unsaved changes. Do you want to leave this page?";
       }
     });
-
 
   });
 }(window, document, $));

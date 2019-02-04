@@ -21,9 +21,9 @@ $(document).ready(function () {
       $textarea.val(old_translation.trim());
 
     };
-    
+
     // console.log("reportTranslation");
-    
+
     var submitTranslation = function (e) {
 
       // inline editing in report data view page
@@ -69,21 +69,12 @@ $(document).ready(function () {
       $('.transl', $cell).toggleClass('active');
 
       var $th = $(this).parents('tr').find('th');
-      // $tr.fixTableHeaderHeight();
-
-      $th.each(function () {
-        var $th = $(this);
-        var $next = $('td', $th.parent());
-        var cells_max_height = Math.max($next.height());
-
-        $th.height(cells_max_height);
-      });
+      $th.fixTableHeaderHeight();
     };
 
     window.setupTranslateClickHandlers = function () {
       // $(".autoTransl").on("click", autoTranslation);
-      // todo: toggle clickability of buttons?      
-      
+      // todo: toggle clickability of buttons?
       $('.editTransl').on("click", editTranslation);
       $('.submitTransl').on("click", submitTranslation);
       $('.btn-translate-orig').on("click", toggleTranslations);
@@ -112,7 +103,7 @@ $(document).ready(function () {
 
       $('#tr-new').val(translated);    // textarea for new translation
 
-      $('#tr-current').text(translated);    // show current translation    
+      $('#tr-current').text(translated);    // show current translation
       $form.on('submit', function () {
         var url = $form.attr('action');
         var data = {};
