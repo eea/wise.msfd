@@ -813,19 +813,44 @@ class A8bNutrient(A8AlternateItem):
         rec, assessment, indic, crit = self._args
         self.MarineUnitID = rec.MarineUnitID
 
-        # t = sql.t_MSFD8b_NutrientsMetadata
-        # _count, _res = db.get_all_records(
-        #     t,
-        #     t.c.MSFD8b_Nutrients_ID == rec.MSFD8b_Nutrients_ID
-        # )
-        # print "Metadatas"
-        # print _res
-        #
+        t = sql.t_MSFD8b_NutrientsMetadata
+        _count, _res = db.get_all_records(
+            t,
+            t.c.MSFD8b_Nutrients_ID == rec.MSFD8b_Nutrients_ID,
+            t.c.Topic == 'Assessment',
+        )
+        meta = None
+        if _res:
+            meta = _res[0]
+
+        sess = db.session()     # TODO: concurent ongoing sessions
+        # will be a problem?
+
+        A = sql.MSFD8bNutrientsActivity
+        AD = sql.MSFD8bNutrientsActivityDescription
+        res = sess\
+            .query(A.Activity)\
+            .join(AD)\
+            .filter(AD.MSFD8b_Nutrients == rec.MSFD8b_Nutrients_ID)\
+            .distinct()\
+            .all()
+        related_activities = res and res[0] or []
 
         return [
             ('MarineReportingUnit', rec.MarineUnitID),
             ('GEScomponent', 'D5'),
             ('Feature', 'PresEnvEutrophi'),
+
+            ('AssessmentPeriod',
+             meta and meta.AssessmentDateStart or rec.RecentTimeStart),
+            ('AssessmentPeriod2',
+             meta and meta.AssessmentDateEnd or rec.RecentTimeEnd),
+
+            ('MethodUsed', meta and meta.MethodUsed),
+            ('MethodSources', meta and meta.Sources),
+
+            ('RelatedActivities', ItemList(rows=related_activities)),
+
             ('Criteria', crit and crit.CriteriaType),
             ('CriteriaStatus',
              crit and crit.MSFD8b_Nutrients_Assesment1.Status),
