@@ -785,6 +785,125 @@ class A8AlternateItem(Item):
             self[title] = value
 
 
+class A8aSpecies(A8AlternateItem):
+    primary_mapper = sql.MSFD8aSpecy
+    pres_mapper = sql.MSFD8aSpeciesPressuresImpact
+    metadata_table = sql.t_MSFD8a_SpeciesMetadata
+
+    @property
+    def pk(self):
+        N = self.primary_mapper
+        pk = N.__table__.primary_key.columns.values()[0]
+        return pk.name
+
+    @classmethod
+    def items(cls, descriptor, muids):
+        sess = db.session()
+
+        N = cls.primary_mapper
+        P = cls.pres_mapper
+        pk = N.__table__.primary_key.columns.values()[0]
+
+        q = sess.query(N, P)\
+            .select_from(N)\
+            .filter(N.MarineUnitID.in_(muids))\
+            .outerjoin(P)\
+            .order_by(pk)\
+            .all()
+
+        for item in q:
+            yield cls(descriptor, *item)
+
+        # I = sql.MSFD8bNutrientsAssesmentIndicator
+        # A = sql.MSFD8bNutrientsAssesment
+        # AC = sql.MSFD8bNutrientsAssesmentCriterion
+        #
+        # q = sess.query(N, A, I, AC)\
+        #     .select_from(N)\
+        #     .filter(N.MarineUnitID.in_(muids))\
+        #     .outerjoin(A)\
+        #     .outerjoin(I)\
+        #     .outerjoin(AC)\
+        #     .order_by(N.MSFD8b_Nutrients_ID)
+        #
+        # for tup in q:
+        #     yield cls(descriptor, *tup)
+
+    def _get_metadata(self, rec):
+        t = self.metadata_table
+        pk = getattr(rec, self.pk)
+        fk = self._get_table_fk(t)
+
+        _count, _res = db.get_all_records(
+            t,
+            fk == pk,
+            t.c.Topic == 'Assessment',
+        )
+
+        if _res:
+            return _res[0]
+
+    def _get_table_fk(self, table):
+        for col in table.c:
+            for fk in col.foreign_keys:
+                return fk
+
+    def get_pressures(self, rec):
+        if rec is None:
+            return []
+        res = set()
+
+        for name in ['Pressure1', 'Pressure2', 'Pressure3']:
+            v = getattr(rec, name)
+            res.add(v)
+
+        return list(sorted(res))
+
+    def get_values(self):
+        rec, pres = self._args
+        self.MarineUnitID = rec.MarineUnitID
+        # meta = self._get_metadata(rec)
+
+        return [
+            ('MarineReportingUnit', rec.MarineUnitID),
+
+            ('GEScomponent', 'D1'),
+            ('Feature', 'SppAll'),
+
+            ('GESachieved', 'N/A'),
+
+            # ('AssessmentPeriod',
+            #  meta and meta.AssessmentDateStart or rec.RecentTimeStart),
+            # ('AssessmentPeriod2',
+            #  meta and meta.AssessmentDateEnd or rec.RecentTimeEnd),
+            # ('MethodUsed', meta and meta.MethodUsed),
+            # ('MethodSources', meta and meta.Sources),
+
+            ('RelatedPressures', ItemList(rows=self.get_pressures(pres))),
+            # ('RelatedActivities', ItemList(rows=related_activities)),
+            #
+            # ('Criteria', crit and crit.CriteriaType),
+            # ('CriteriaStatus',
+            #  crit and crit.MSFD8b_Nutrients_Assesment1.Status),
+            # ('DescriptionCriteria',
+            #  crit and crit.MSFD8b_Nutrients_Assesment1.StatusDescription),
+            # ('Element', 'N/A'),
+            # ('ElementStatus', 'N/A'),
+            # ('Parameter', rec.Topic),
+            #
+            # ('ThresholdQualitative', indic and indic.ThresholdValue),
+            # ('ValueUnit', indic and indic.ThresholdValueUnit),
+            # ('ProportionThresholdValue', indic and indic.ThresholdProportion),
+            #
+            # ('ProportionValueAchieved', rec.SumInfo1),
+            # ('ParameterAchieved', 'N/A'),
+            # ('DescriptionParameter', rec.Description),
+        ]
+
+        # rec, assessment, indic, crit = self._args
+        # self.MarineUnitID = rec.MarineUnitID
+
+
 class A8bNutrient(A8AlternateItem):
 
     @classmethod
@@ -804,7 +923,6 @@ class A8bNutrient(A8AlternateItem):
             .outerjoin(AC)\
             .order_by(N.MSFD8b_Nutrients_ID)
 
-        print q.count()
         for tup in q:
             yield cls(descriptor, *tup)
 
@@ -876,7 +994,7 @@ class Article8Alternate(BaseArticle2012):
 
     descriptor_map = {
         'D1': [
-            sql.MSFD8aSpecy,    # main mapper
+            A8aSpecies,    # main mapper
         ],
         'D1/D6': [],
         'D2': [],
