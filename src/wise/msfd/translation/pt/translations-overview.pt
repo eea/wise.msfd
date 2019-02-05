@@ -49,7 +49,7 @@
       Please select a language from the right side menu
     </div>
 
-    <table id="edit-table" class="table table-listing" tal:condition="translations">
+    <table id="edit-table" class="table table-listing" style="word-break: break-word" tal:condition="translations">
       <thead>
         <tr>
           <th>
