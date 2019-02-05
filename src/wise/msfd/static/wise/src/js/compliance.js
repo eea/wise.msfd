@@ -325,15 +325,17 @@ if (!Array.prototype.last){
       $('table', $p).toggleTable(!onoff);
     });
 
+    // National descriptor edit assessment data
     // Warn user before leaving the page with unsaved changes
     var submitted = false;
     var modified = false;
+    var $nd = $('#comp-national-descriptor');
 
     $('#comp-national-descriptor form').submit(function() {
       submitted = true;
     });
 
-    $('#comp-national-descriptor').on('change', 'input, textarea, select', function(e) {
+    $nd.on('change', 'input, textarea, select', function(e) {
       modified = true;
     });
 
@@ -344,6 +346,11 @@ if (!Array.prototype.last){
         return "You have unsaved changes. Do you want to leave this page?";
       }
     });
+
+    var $select = $nd.find('.select2-container');
+    var $textarea = $nd.find('textarea');
+    $select.closest('.fields-container-row').addClass('flex-select');
+    $textarea.closest('.fields-container-row').addClass('flex-textarea');
 
   });
 }(window, document, $));

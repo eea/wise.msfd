@@ -462,21 +462,61 @@ div.crt-def {
 }
 
 div.back-to-descr {
-  margin-bottom: 1em;
+  margin-top: 20px;
+  margin-bottom: 10px;
 }
 
-#comp-national-descriptor {
-  h3 {
-    margin-top: 0;
-  }
+// .nat-edit-form {
+//   margin: 0 auto;
+//   max-width: 1170px;
+//   position: relative;
+//   width: 100%;
+// }
 
+#comp-national-descriptor {
   .collapsed-container {
+    .fields-container {
+      display: flex;
+      flex-wrap: wrap;
+
+      .flex-select {
+        flex: 0 50%;
+        margin-top: 1em;
+      }
+
+      .flex-select:nth-child(odd) {
+        padding-right: 1em;
+      }
+
+      .flex-textarea {
+        flex: 0 100%;
+        margin-top: 1em;
+      }
+
+      div.widget {
+        display: block;
+      }
+
+      label {
+        text-align: left;
+        width: auto;
+      }
+
+      .subform .assessment-form-input {
+        width: 100%;
+      }
+    }
+
+    .assessment-form-input {
+      width: 80%;
+    }
+
     .subform {
       padding: 2rem;
       margin-bottom: 2rem;
       .vendor-prefix(border-radius; 10px);
       background-color: lightblue;
-      border: 1px solid #ccc;
+      // border: 1px solid #ccc;
 
 //      &:nth-of-type(odd) {
 //        background-color: #eee;
@@ -498,8 +538,6 @@ div.back-to-descr {
       }
 
       .field {
-        margin-top: 2rem;
-        margin-bottom: 0;
 
         textarea {
           background-image: -webkit-gradient(linear, 0 0, 0 100%, color-stop(1%, #EEE), color-stop(10%, #FFF));

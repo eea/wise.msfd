@@ -2,7 +2,7 @@
   tal:attributes="id view/form_id | string:wise-compliance-form">
   <script>
     jQuery(document).ready(function() {
-    $('.help-popover').popover();
+      $('.help-popover').popover();
     });
   </script>
 
@@ -15,7 +15,7 @@
   <div class="wise-search-form-container"
     tal:attributes="id view/form_container_class | string:wise-search-form-container">
 
-    <div class="left-side-form">
+    <div class="left-side-form nat-edit-form">
 
       <!-- <div style="width: 200px; float: right"> -->
       <div class="crt-def">
@@ -134,4 +134,3 @@
     </div>
   </div>
 </div>
-
