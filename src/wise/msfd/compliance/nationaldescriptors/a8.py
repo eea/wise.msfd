@@ -2,6 +2,7 @@ import logging
 from collections import defaultdict
 
 from lxml.etree import fromstring
+from sqlalchemy.orm import aliased
 from sqlalchemy.orm.relationships import RelationshipProperty
 
 from Products.Five.browser.pagetemplatefile import \
@@ -669,7 +670,11 @@ class Article8(BaseArticle2012):
             nodes = xp('//w:' + name)
 
             for node in nodes:
-                rep = ReportTag(node, NSMAP)
+                try:
+                    rep = ReportTag(node, NSMAP)
+                except:
+                    import pdb
+                    pdb.set_trace()
 
                 # import pdb; pdb.set_trace()
                 # TODO for D7(maybe for other descriptors too)
@@ -788,6 +793,11 @@ class A8AlternateItem(Item):
 class A8aSpecies(A8AlternateItem):
     primary_mapper = sql.MSFD8aSpecy
     pres_mapper = sql.MSFD8aSpeciesPressuresImpact
+    ast_mapper = sql.MSFD8aSpeciesStatusAssessment
+    ast_topic = 'SpeciesOverall'     # Overall
+    indic_mapper = sql.MSFD8aSpeciesStatusIndicator
+    crit_mapper = sql.MSFD8aSpeciesStatusCriterion
+    criteria_types = ['Distribution', 'Population', 'Condition']
     metadata_table = sql.t_MSFD8a_SpeciesMetadata
 
     @property
@@ -802,32 +812,32 @@ class A8aSpecies(A8AlternateItem):
 
         N = cls.primary_mapper
         P = cls.pres_mapper
+        A = cls.ast_mapper
+        C = cls.crit_mapper
+        I = cls.indic_mapper
+
         pk = N.__table__.primary_key.columns.values()[0]
 
-        q = sess.query(N, P)\
+        a_q = sess.query(A).filter(A.Topic == cls.ast_topic).subquery()
+        a_A = aliased(A, alias=a_q, adapt_on_names=True)
+
+        c_q = sess.query(C).filter(
+            C.CriteriaType.in_(cls.criteria_types)).subquery()
+        c_A = aliased(C, alias=c_q, adapt_on_names=True)
+
+        q = sess.query(N, P, a_A, I, c_A)\
             .select_from(N)\
             .filter(N.MarineUnitID.in_(muids))\
+            .outerjoin(a_A)\
+            .outerjoin(I)\
+            .outerjoin(c_A)\
             .outerjoin(P)\
-            .order_by(pk)\
-            .all()
+            .order_by(pk)
+
+        print q.count()
 
         for item in q:
             yield cls(descriptor, *item)
-
-        # I = sql.MSFD8bNutrientsAssesmentIndicator
-        # A = sql.MSFD8bNutrientsAssesment
-        # AC = sql.MSFD8bNutrientsAssesmentCriterion
-        #
-        # q = sess.query(N, A, I, AC)\
-        #     .select_from(N)\
-        #     .filter(N.MarineUnitID.in_(muids))\
-        #     .outerjoin(A)\
-        #     .outerjoin(I)\
-        #     .outerjoin(AC)\
-        #     .order_by(N.MSFD8b_Nutrients_ID)
-        #
-        # for tup in q:
-        #     yield cls(descriptor, *tup)
 
     def _get_metadata(self, rec):
         t = self.metadata_table
@@ -860,9 +870,13 @@ class A8aSpecies(A8AlternateItem):
         return list(sorted(res))
 
     def get_values(self):
-        rec, pres = self._args
+        rec, pres, ast, indic, crit = self._args
         self.MarineUnitID = rec.MarineUnitID
-        # meta = self._get_metadata(rec)
+        meta = self._get_metadata(rec)
+
+        if crit:
+            import pdb
+            pdb.set_trace()
 
         return [
             ('MarineReportingUnit', rec.MarineUnitID),
@@ -872,31 +886,32 @@ class A8aSpecies(A8AlternateItem):
 
             ('GESachieved', 'N/A'),
 
-            # ('AssessmentPeriod',
-            #  meta and meta.AssessmentDateStart or rec.RecentTimeStart),
-            # ('AssessmentPeriod2',
-            #  meta and meta.AssessmentDateEnd or rec.RecentTimeEnd),
-            # ('MethodUsed', meta and meta.MethodUsed),
-            # ('MethodSources', meta and meta.Sources),
+            ('AssessmentPeriod',
+             meta and meta.AssessmentDateStart or rec.RecentTimeStart),
+            ('AssessmentPeriod2',
+             meta and meta.AssessmentDateEnd or rec.RecentTimeEnd),
+            ('MethodUsed', meta and meta.MethodUsed),
+            ('MethodSources', meta and meta.Sources),
 
             ('RelatedPressures', ItemList(rows=self.get_pressures(pres))),
             # ('RelatedActivities', ItemList(rows=related_activities)),
             #
-            # ('Criteria', crit and crit.CriteriaType),
-            # ('CriteriaStatus',
-            #  crit and crit.MSFD8b_Nutrients_Assesment1.Status),
-            # ('DescriptionCriteria',
-            #  crit and crit.MSFD8b_Nutrients_Assesment1.StatusDescription),
-            # ('Element', 'N/A'),
-            # ('ElementStatus', 'N/A'),
-            # ('Parameter', rec.Topic),
-            #
-            # ('ThresholdQualitative', indic and indic.ThresholdValue),
-            # ('ValueUnit', indic and indic.ThresholdValueUnit),
-            # ('ProportionThresholdValue', indic and indic.ThresholdProportion),
-            #
+            ('Criteria', crit and crit.CriteriaType),
+            ('CriteriaStatus', ast and ast.Status),     # TODO? ????
+            ('DescriptionCriteria', ast and ast.StatusDescription),
+            ('Element', rec.ReportingFeature),
+            ('ElementSource', rec.SourceClassificationListAuthority),
+            ('DescriptionElement', ast and ast.StatusDescription),
+            ('ElementStatus', ast and ast.Status),
+            ('Parameter', rec.Topic),
+
+            ('ThresholdQualitative', indic and indic.ThresholdValue),
+            ('ValueUnit', indic and indic.ThresholdValueUnit),
+            ('ProportionThresholdValue', indic and indic.ThresholdProportion),
+
             # ('ProportionValueAchieved', rec.SumInfo1),
-            # ('ParameterAchieved', 'N/A'),
+            ('Trend', ast and ast.TrendStatus),
+            ('ParameterAchieved', 'N/A'),
             # ('DescriptionParameter', rec.Description),
         ]
 
