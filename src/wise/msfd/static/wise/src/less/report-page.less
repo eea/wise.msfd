@@ -1,3 +1,6 @@
+@import "bootstrap/variables.less";
+@import "variables.less";
+
 // Report page
 .report-page-view {
   .report-section {
@@ -148,7 +151,8 @@
   }
 
   .back-to-art {
-    margin-bottom: 2em;
+    margin-bottom: 1em;
+    display: inline-block;
   }
 
   #download-report-data-form {
@@ -156,46 +160,83 @@
   }
 
   #report-data-navigation {
-    right: 1rem;
-    top: 1rem;
-    position: absolute;
+    // right: 1rem;
+    // top: 1rem;
+    // position: absolute;
+    margin-bottom: 1em;
+    position: relative;
 
     .nav-header {
-      width: 4rem;
-      font-size: 200%;
-      text-align: right;
+      // width: 4rem;
+      // text-align: right;
       padding-right: 1rem;
+      float: right;
+      margin-bottom: 1em;
+
+      .nav-toggle {
+        background-color: transparent;
+        border: none;
+      }
+      .nav-toggle:focus {
+        outline: none;
+      }
+
       i {
-        // line-height: 6rem;
+        font-size: 30px;
+        color: @main-dark-blue;
       }
     }
     .nav-body {
-      width: 80rem;
-      left: -76rem;
+      // width: 80rem;
+      // left: -120px;
       border-radius: 8px;
       display: flex;
       position: absolute;
-      box-shadow: 4px 4px 0px #8888884d;
-      background: #EEE;
+      right: 50px;
+      top: -32px;
+      box-shadow: 0 2px 3px #3e3d3d;
+      background: @main-dark-blue;
       // display: none;
+      // padding: 1rem;
+      clear: both;
       .art {
         flex-grow: 1;
-        margin-right: 1rem;
-        padding: 1rem;
+        margin: 0 1rem;
+        a {
+          color: #fff;
+          padding: 0.5em 1em;
+          display: inline-block;
+        }
+        a:hover {
+          text-decoration: none;
+          // background-color: #fff;
+          // color: @main-dark-blue;
+        }
         .art-title {
           text-align: center;
           font-weight: bold;
           font-size: 120%;
           border-bottom: 1px solid #CCC;
         }
+        // .art-title:hover {
+        //   background-color: #fff;
+        //   a {
+        //     color: @main-dark-blue;
+        //   }
+        // }
         .art-links {
+          text-align: center;
           a {
             display: inline-block;
-            width: 48%;
+            // width: 48%;
             text-align: center;
             &:nth-child(2) {
               border-left: 1px solid #CCC;
             }
+          }
+          a:hover {
+            background-color: #fff;
+            color: @main-dark-blue;
           }
         }
       }

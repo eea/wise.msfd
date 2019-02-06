@@ -163,36 +163,41 @@ if (!Array.prototype.last){
   function readMoreModal() {
     var $table = $('.table-report');
     var $td = $table.find('td');
+    var $modalContent = $('.modal-content-wrapper');
     var maxchars = 500;
     var seperator = '...';
 
     $td.each(function() {
       var $this = $(this);
-      var $text = $this.find('.active').children('.text-trans');
-      var $si = $('<span class="short-intro"/>');
+      var $tw = $this.find('.tr');
 
-      if ($text.text().length > (maxchars - seperator.length)) {
-        $this.addClass('read-more-wrapper');
-        $si.insertBefore($text);
+      $tw.each(function() {
+        var $thw = $(this);
+        var $text = $thw.find('.text-trans');
+        var $si = $('<span class="short-intro"/>');
 
-        var $intro = $this.find('.active').children('.short-intro');
+        if ($text.text().length > (maxchars - seperator.length)) {
+          $this.addClass('read-more-wrapper');
+          $si.insertBefore($text);
 
-        if ($this.find('.short-intro').length > 1) {
-          $intro.eq(0).remove();
+          var $intro = $thw.children('.short-intro');
+          if ($thw.find('.short-intro').length > 1) {
+            $intro.eq(0).remove();
+          }
+          $intro.text($text.text().substr(0, maxchars-seperator.length) + seperator);
+
+          $this.find('.read-more-btn').click(function() {
+            $this.find('.active').children('.text-trans').clone().appendTo($modalContent);
+          });
+        } else {
+          $this.removeClass('read-more-wrapper');
         }
+      });
 
-        $intro.text($text.text().substr(0, maxchars-seperator.length) + seperator);
-
-        $this.find('.read-more-btn').click(function() {
-          $text.clone().appendTo($('.modal-content-wrapper'));
-        });
-      } else {
-        $this.removeClass('read-more-wrapper');
-      }
     });
 
     $('.btn-close').click(function() {
-      $('.modal-content-wrapper').empty();
+      $modalContent.empty();
     });
 
     $table.fixTableHeaderAndCellsHeight();
@@ -202,6 +207,7 @@ if (!Array.prototype.last){
     var $reportnav = $('#report-data-navigation');
     $('button', $reportnav).on('click', function() {
       $('.nav-body', $reportnav).toggle();
+      $(this).children().toggleClass('fa-bars fa-times');
       return false;
     });
     $('.nav-body', $reportnav).hide();
