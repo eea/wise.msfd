@@ -580,7 +580,7 @@ class A10AlternateItem(Item):
                 o = row.Other
                 features.append(o)
 
-        res = [ItemLabel(v, get_label(v, 'features')) for v in set(features)]
+        res = [ItemLabel(r, get_label(r, 'features')) for r in set(features)]
 
         return ItemList(res)
 
@@ -603,7 +603,6 @@ class A10AlternateItem(Item):
         ges_descriptors = set(x.GESDescriptorsCriteriaIndicators
                               for x in self.desc_crits)
         ges_needed = self.ok_ges_ids & ges_descriptors
-        res = []
 
         # TODO return raw values or labels?
         if ges_needed:

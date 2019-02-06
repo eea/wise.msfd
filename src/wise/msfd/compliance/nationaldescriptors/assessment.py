@@ -115,11 +115,11 @@ class EditAssessmentSummaryForm(Form, BaseComplianceView):
 class EditAssessmentDataForm(Form, BaseComplianceView):
     """ Edit the assessment for a national descriptor, for a specific article
     """
-    name = 'nat-desc-art-view'
+    name = 'art-view'
 
     subforms = None
     session_name = '2018'
-    template = ViewPageTemplateFile("./pt/nat-desc-edit-assessment-data.pt")
+    template = ViewPageTemplateFile("./pt/edit-assessment-data.pt")
 
     @property
     def help(self):
@@ -263,7 +263,9 @@ class EditAssessmentDataForm(Form, BaseComplianceView):
         for question in self.questions:
             question_phase = [
                 k
+
                 for k, v in phase_mapping.items()
+
                 if question.klass in v
             ][0]
             criterias = filtered_criterias(self.criterias, question)

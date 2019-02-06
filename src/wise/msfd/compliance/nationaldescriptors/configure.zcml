@@ -9,7 +9,7 @@
     for="..interfaces.INationalDescriptorsFolder"
     name="nat-desc-start"
     class=".main.NationalDescriptorsOverview"
-    template="./pt/nat-desc-start.pt"
+    template="./pt/start.pt"
     permission="zope2.View"
     />
 
@@ -17,7 +17,7 @@
     for="..interfaces.ICountryDescriptorsFolder"
     name="view"
     class=".main.NationalDescriptorCountryOverview"
-    template="./pt/nat-desc-country-start.pt"
+    template="./pt/country-start.pt"
     permission="zope2.View"
     />
     name="nat-desc-country-start"
@@ -25,7 +25,7 @@
   <browser:page
     for="..interfaces.INationalDescriptorAssessment"
     name="nat-desc-art-view"
-    template="./pt/nat-desc-art-view.pt"
+    template="./pt/art-view.pt"
     class=".main.NationalDescriptorArticleView"
     permission="zope2.View"
     />
@@ -40,7 +40,7 @@
   <browser:page
     for="..interfaces.INationalRegionDescriptorFolder"
     name="nat-desc-reg-view"
-    template="./pt/nat-desc-reg-view.pt"
+    template="./pt/reg-view.pt"
     class=".main.NationalDescriptorRegionView"
     permission="zope2.View"
     />
@@ -56,7 +56,7 @@
     for="..interfaces.INationalDescriptorAssessment"
     name="view-report-data-2012"
     class=".reportdata.ReportData2012"
-    template="./pt/nat-desc-report-data-view.pt"
+    template="./pt/report-data-view.pt"
     permission="zope2.View"
     />
 
@@ -64,7 +64,7 @@
     for="..interfaces.INationalDescriptorAssessment"
     name="view-report-data-2012-like-2018"
     class=".reportdata.ReportData2012Like2018"
-    template="./pt/nat-desc-report-data-view.pt"
+    template="./pt/report-data-view.pt"
     permission="zope2.View"
     />
 
@@ -72,7 +72,7 @@
     for="..interfaces.INationalDescriptorAssessment"
     name="view-report-data-2018"
     class=".reportdata.ReportData2018"
-    template="./pt/nat-desc-report-data-view.pt"
+    template="./pt/report-data-view.pt"
     permission="zope2.View"
     />
 

@@ -524,10 +524,10 @@ https://svn.eionet.europa.eu/repositories/Reportnet/Dataflows/MarineDirective/MS
         'MarineReportingUnit'
     )
 
-    Art8 = Template('pt/nat-desc-report-data-multiple-muid.pt')
-    Art9 = Template('pt/nat-desc-report-data-multiple-muid.pt')
-    Art10 = Template('pt/nat-desc-report-data-multiple-muid.pt')
-    # Art9 = Template('pt/nat-desc-report-data-single-muid.pt')
+    Art8 = Template('pt/report-data-multiple-muid.pt')
+    Art9 = Template('pt/report-data-multiple-muid.pt')
+    Art10 = Template('pt/report-data-multiple-muid.pt')
+    # Art9 = Template('pt/report-data-single-muid.pt')
 
     subform = None      # used for the snapshot selection form
 
