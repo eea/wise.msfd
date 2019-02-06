@@ -1,0 +1,204 @@
+// Report page
+.report-page-view {
+  .report-section {
+    margin-top: 2rem;
+    padding: 0.6rem;
+    position: relative;
+
+    .simplify-form {
+      float: right;
+      position: absolute;
+      left: 100%;
+      margin-top: -1.2em;
+      margin-left: -12em;
+
+      label {
+        position: relative;
+        top: -0.5em;
+      }
+    }
+
+    .overflow-table {
+      position: relative;
+      margin-bottom: 1rem;
+      background-color: #EFEFEF;
+      border: 1px solid #ddd;
+
+      .inner {
+        overflow-x: auto;
+        overflow-y: visible;
+        margin-left: 14.4em;
+        background: white;
+        border-left: 4px solid #DDD;
+      }
+
+      table.table-report {
+        font-size: 80%;
+        table-layout: inherit;
+        margin-bottom: 0;
+        border: 0;
+        border-collapse: initial;
+
+        th {
+          background: #EFEFEF;
+          vertical-align: top;
+          width: 18em;
+          overflow: hidden;
+          position: absolute;
+          left: 0;
+          text-align: right;
+          border: 0;
+          border-bottom: 1px solid #ddd;
+        }
+
+        tr:last-child th {
+          border-bottom: 0;
+        }
+
+        td {
+          min-width: 3rem;
+          border-top: none;
+          border-left: none;
+          > div {
+            max-width: 50rem;
+          }
+          ul {
+            min-width: 16rem;
+            margin: 0 0 0 -1rem !important;
+            &.cell-listing  {
+              // display: flex;
+              // max-height: 30rem;
+              // flex-direction: column;
+              // flex-wrap: wrap;
+              li {
+                display: block !important;
+                padding-left: 1rem;
+                max-width: 30rem;
+                &::before {
+                  content: '▪';
+                }
+              }
+            }
+          }
+        }
+
+        .td-scrolled {
+          position: absolute;
+          padding-left: 7px;
+        }
+
+        .td-relative {
+          position: relative;
+
+          .td-text-scrolled {
+            left: auto !important;
+            right: 10px;
+          }
+        }
+
+        .tr-text span {
+          display: inline-block;
+        }
+
+        .read-more-btn {
+          padding: 1px 5px;
+          border-radius: 4px;
+          border: 1px solid #808080;
+          cursor: pointer;
+          margin: 0.5em 0;
+          display: none;
+        }
+
+        .read-more-btn:hover {
+          background-color: #fff;
+        }
+
+        .read-more-wrapper {
+          .active .text-trans {
+            display: none;
+          }
+
+          .short-intro,
+          .read-more-btn {
+            display: block !important;
+          }
+        }
+      }
+    }
+  }
+
+  #read-more-modal {
+    .modal-dialog {
+      overflow-y: initial;
+    }
+
+    .modal-body {
+      height: 400px;
+      overflow-y: auto;
+    }
+
+    .modal-content-wrapper {
+      .short-intro {
+        display: none !important;
+      }
+      .active .text-trans {
+        display: block !important;
+      }
+    }
+  }
+
+  .back-to-art {
+    margin-bottom: 2em;
+  }
+
+  #download-report-data-form {
+    margin-bottom: 2em;
+  }
+
+  #report-data-navigation {
+    right: 1rem;
+    top: 1rem;
+    position: absolute;
+
+    .nav-header {
+      width: 4rem;
+      font-size: 200%;
+      text-align: right;
+      padding-right: 1rem;
+      i {
+        // line-height: 6rem;
+      }
+    }
+    .nav-body {
+      width: 80rem;
+      left: -76rem;
+      border-radius: 8px;
+      display: flex;
+      position: absolute;
+      box-shadow: 4px 4px 0px #8888884d;
+      background: #EEE;
+      // display: none;
+      .art {
+        flex-grow: 1;
+        margin-right: 1rem;
+        padding: 1rem;
+        .art-title {
+          text-align: center;
+          font-weight: bold;
+          font-size: 120%;
+          border-bottom: 1px solid #CCC;
+        }
+        .art-links {
+          a {
+            display: inline-block;
+            width: 48%;
+            text-align: center;
+            &:nth-child(2) {
+              border-left: 1px solid #CCC;
+            }
+          }
+        }
+      }
+    }
+  }
+}

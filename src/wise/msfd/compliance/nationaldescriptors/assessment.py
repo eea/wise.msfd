@@ -272,10 +272,8 @@ class EditAssessmentDataForm(Form, BaseComplianceView):
 
             form = EmbeddedForm(self, self.request)
             form.title = question.definition
-            form.subtitle = '<p>Type: {}<p>'\
-                '<p>Phase: {}<p>'\
-                .format(question.klass, question_phase)
-
+            form._question_type = question.klass
+            form._question_phase = question_phase
             form._question = question
             form._criterias = criterias
             form._disabled = self.is_disabled(question)

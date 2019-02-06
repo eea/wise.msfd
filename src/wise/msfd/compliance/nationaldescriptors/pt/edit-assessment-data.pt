@@ -49,16 +49,19 @@
                 <div tal:define="subform_extra python:subform._disabled and ' disabled' or ''"
                     tal:attributes="class python:'subform compliance-assessment-edit-subform' + subform_extra">
                   <span></span>
-                  <h3>
-                    <span class="help-popover fa fa-info-circle fa-s"
+                  <h4>
+                    <span
+                      tal:on-error="nothing"
+                      class="help-popover fa fa-info-circle fa-s"
                       data-trigger="hover"
                       data-html="true"
-                      tal:condition="subform/subtitle"
-                      tal:attributes="title string:Useful informations for this question;
-                      data-content subform/subtitle">
+                      tal:condition="subform/_question_type/title"
+                      tal:attributes="title string: Type: ${subform/_question_type/title};
+                      data-content string: Phase: ${subform/_question_phase}"
+                      >
                     </span>
                     <span tal:content="subform/title">Question here</span>
-                  </h3>
+                  </h4>
 
                   <div class="fields-container">
                     <div tal:repeat="fieldname subform/fields" class="fields-container-row">

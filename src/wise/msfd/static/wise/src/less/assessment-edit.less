@@ -1,0 +1,120 @@
+.vendor-prefix(@prop; @val) {
+  @{prop}: @val;
+  -ms-@{prop}: @val;
+  -moz-@{prop}: @val;
+  -webkit-@{prop}: @val;
+  -o-@{prop}: @val;
+}
+
+// National descriptor edit assessment data
+div.crt-def {
+  width: 200px;
+  float: right;
+}
+
+#comp-national-descriptor {
+
+  .assessment-form-input {
+    width: 80%;
+  }
+
+  .subform {
+    margin-bottom: 2rem;
+    .vendor-prefix(border-radius; 4px);
+    background-color: #a6e1fb;
+
+    &.disabled {
+      background-color: #ddd;
+      border: 1px solid #ddd;
+
+      .select2-chosen, textarea {
+        cursor: not-allowed !important;
+      }
+      h4 {
+        background-color: lightgray;
+      }
+    }
+
+    label {
+      display: inline-block;
+      width: 10em;
+      text-align: right;
+      padding-right: 0.7em;
+    }
+
+    .assessment-form-input {
+      margin: auto;
+      width: 100%;
+    }
+
+    h4 {
+      font-weight: 600;
+      padding: 1rem;
+      color: white;
+      margin: 0;
+      background-color: #60bce4;
+      // .vendor-prefix(text-shadow; 1px 1px 2px #aaa);
+      .help-popover {
+        font-size: 80%;
+        padding-right: 1rem;
+        color: white;
+      }
+      .popover {
+        color: black;
+      }
+    }
+
+    h5 {
+      font-weight: 600;
+      background: #ccc;
+      padding: 1rem;
+      color: white;
+      margin-bottom: 0;
+      .vendor-prefix(text-shadow; 1px 1px 2px #aaa);
+    }
+
+    .fields-container {
+      padding: 1rem;
+      display: flex;
+      flex-wrap: wrap;
+
+      .flex-select {
+        flex: 0 50%;
+        margin-top: 1em;
+      }
+
+      .flex-select:nth-child(odd) {
+        padding-right: 1em;
+      }
+
+      .flex-textarea {
+        flex: 0 100%;
+        margin-top: 1em;
+      }
+
+      div.widget {
+        display: block;
+      }
+
+      label {
+        text-align: left;
+        width: auto;
+      }
+
+      .assessment-form-input {
+        width: 100%;
+      }
+
+      .field {
+        textarea {
+          // background-image: -webkit-gradient(linear, 0 0, 0 100%, color-stop(1%, #EEE), color-stop(10%, #FFF));
+          // background-image: -webkit-linear-gradient(top, #EEE 1%, #FFF 10%);
+          // background-image: -moz-linear-gradient(top, #EEE 1%, #FFF 10%);
+          // background-image: -o-linear-gradient(top, #EEE 1%, #FFF 10%);
+          // background-image: -ms-linear-gradient(top, #EEE 1%, #FFF 10%);
+          // background-image: linear-gradient(top, #EEE 1%, #FFF 10%);
+        }
+      }
+    }
+  }
+}
