@@ -26,7 +26,10 @@
         </button>
       </div>
       <h2 tal:content="view/title">Title here</h2>
-      <h3 class="process-phase-title" tal:content="view/process_phase_title">Process phase title</h3>
+      <h4 class="process-phase-title" >
+        Current phase:
+        <span tal:content="python: view.current_phase[1]">Adequacy</span>
+      </h4>
       <!-- <div style="margin-bottom: 1em; top: -0.8em; position: relative"> -->
       <div class="back-to-descr">
         <a href="./">

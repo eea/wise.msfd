@@ -134,11 +134,11 @@ class EditAssessmentDataForm(Form, BaseComplianceView):
             self.article,
         )
 
-    @property
-    def process_phase_title(self):
-        _, title = self.current_phase
-
-        return 'Current process phase: {}'.format(title)
+    # @property
+    # def process_phase_title(self):
+    #     _, title = self.current_phase
+    #
+    #     return 'Current process phase: {}'.format(title)
 
     @buttonAndHandler(u'Save', name='save')
     def handle_save(self, action):
