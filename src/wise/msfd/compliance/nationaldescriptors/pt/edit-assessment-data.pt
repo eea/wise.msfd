@@ -2,7 +2,7 @@
   tal:attributes="id view/form_id | string:wise-compliance-form">
   <script>
     jQuery(document).ready(function() {
-      $('.help-popover').popover();
+    $('.help-popover').popover();
     });
   </script>
 
@@ -17,20 +17,16 @@
 
     <div class="left-side-form nat-edit-form">
 
-      <!-- <div style="width: 200px; float: right"> -->
       <div class="crt-def">
-        <button type="button"
-          class="btn btn-primary btn-lg"
+        <button type="button" class="btn btn-primary btn-lg"
           data-toggle="modal" data-target="#assessment-help">
           Criteria definition
         </button>
       </div>
       <h2 tal:content="view/title">Title here</h2>
       <h4 class="process-phase-title" >
-        Current phase:
-        <span tal:content="python: view.current_phase[1]">Adequacy</span>
+        Current phase: <span tal:content="python: view.current_phase[1]">Adequacy</span>
       </h4>
-      <!-- <div style="margin-bottom: 1em; top: -0.8em; position: relative"> -->
       <div class="back-to-descr">
         <a href="./">
           <i class='fa fa-level-up'></i>
@@ -45,85 +41,93 @@
         <metal:form use-macro="context/@@ploneform-macros/titlelessform">
 
           <metal:fields fill-slot="fields">
-            <div class="collapsed-container">
+            <tal:rep tal:repeat='subform view/subforms'>
 
-              <tal:subform repeat='subform view/subforms'>
-                <!-- <div tal:content="nocall: subform"></div> -->
-                <div tal:define="subform_extra python:subform._disabled and ' disabled' or ''"
-                    tal:attributes="class python:'subform compliance-assessment-edit-subform' + subform_extra">
-                  <span></span>
-                  <h4>
-                    <span
-                      tal:on-error="nothing"
-                      class="help-popover fa fa-info-circle fa-s"
-                      data-trigger="hover"
-                      data-html="true"
-                      tal:condition="subform/_question_type/title"
-                      tal:attributes="title string: Type: ${subform/_question_type/title};
-                      data-content string: Phase: ${subform/_question_phase}"
-                      >
-                    </span>
-                    <span tal:content="subform/title">Question here</span>
-                  </h4>
+              <div class="subform" tal:define="disabled python:subform._disabled and ' disabled' or ''"
+                tal:attributes="class string:subform $disabled">
 
-                  <div class="fields-container">
-                    <div tal:repeat="fieldname subform/fields" class="fields-container-row">
-                      <tal:def define="widget python: view.widgets[fieldname]">
+                <div class="body">
+                  <div class="left">
+                    <h4>
+                      <span
+                        tal:on-error="nothing"
+                        class="help-popover fa fa-info-circle fa-s"
+                        data-trigger="hover"
+                        data-html="true"
+                        tal:condition="subform/_question_type/title"
+                        tal:attributes="title string: Type: ${subform/_question_type/title};
+                        data-content string: Phase: ${subform/_question_phase}"
+                        >
+                      </span>
+                      <span tal:content="subform/title">Question here</span>
+                    </h4>
 
-                        <div class="field"
-                          tal:define="error widget/error;
-                          hidden python:widget.mode == 'hidden';
-                          criteria nocall: widget/field/_criteria | nothing;
-                          "
-                          tal:attributes="class python:'field' + (error and ' error' or '')">
+                    <div class="fields-container">
+                      <div tal:repeat="fieldname subform/fields" class="fields-container-row">
+                        <tal:def define="widget python: view.widgets[fieldname]">
 
-                          <span class="fieldRequired" title="Required"
-                            tal:condition="python:widget.required and not hidden"
-                            i18n:translate="label_required"
-                            i18n:attributes="title title_required;">
-                            (Required)
-                          </span>
+                          <div class="field"
+                            tal:define="error widget/error;
+                            hidden python:widget.mode == 'hidden';
+                            criteria nocall: widget/field/_criteria | nothing;
+                            "
+                            tal:attributes="class python:'field' + (error and ' error' or '')">
 
-                          <div class="widget">
-                            <div>
-                              <label for=""
-                                tal:condition="not:hidden"
-                                class="help-popover"
-                                data-trigger="hover"
-                                data-html="true"
-                                tal:attributes="for widget/id;
-                                title python: criteria and criteria.title or '';
-                                data-content python: criteria and criteria.definition or ''"
-                                >
-                                <span i18n:translate=""
-                                  tal:content="widget/label">label</span>
-                                <!-- <span tal:condition="criteria" class="fa fa-question-circle"></span> -->
-                              </label>
+                            <span class="fieldRequired" title="Required"
+                              tal:condition="python:widget.required and not hidden"
+                              i18n:translate="label_required"
+                              i18n:attributes="title title_required;">
+                              (Required)
+                            </span>
+
+                            <div class="widget">
+                              <div>
+                                <label for=""
+                                  tal:condition="not:hidden"
+                                  class="help-popover"
+                                  data-trigger="hover"
+                                  data-html="true"
+                                  tal:attributes="for widget/id;
+                                  title python: criteria and criteria.title or '';
+                                  data-content python: criteria and criteria.definition or ''" >
+                                  <span i18n:translate="" tal:content="widget/label">label</span>
+                                  <!-- <span tal:condition="criteria" class="fa fa-question-circle"></span> -->
+                                </label>
+                              </div>
+                              <div class="assessment-form-input">
+                                <input type="text" tal:replace="structure widget/render" />
+                              </div>
                             </div>
-                            <div class="assessment-form-input">
-                              <input type="text" tal:replace="structure widget/render" />
+
+                            <div class="formHelp"
+                              tal:define="description widget/field/description"
+                              i18n:translate=""
+                              tal:content="description"
+                              tal:condition="python:description and not hidden">
+                              field description
+                            </div>
+
+                            <div tal:condition="error" tal:content="structure error/render">
+                              Error
                             </div>
                           </div>
 
-                          <div class="formHelp"
-                            tal:define="description widget/field/description"
-                            i18n:translate=""
-                            tal:content="description"
-                            tal:condition="python:description and not hidden"
-                            >field description</div>
-
-                          <div tal:condition="error"
-                            tal:content="structure error/render">
-                            Error
-                          </div>
-                        </div>
-
-                      </tal:def>
+                        </tal:def>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="right">
+                    <div class="comments">
+                      comments here
+                    </div>
+                    <div class="textline">
+                      <textarea name="comment-text"></textarea>
+                      <button>Post</button>
                     </div>
                   </div>
                 </div>
-              </tal:subform>
-            </div>
+              </div>
+            </tal:rep>
           </metal:fields>
 
           <metal:slot fill-slot="actions">

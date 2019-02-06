@@ -280,7 +280,7 @@ if (!Array.prototype.last){
   // add the disabled attribute for select/textarea elements
   // if the question type does not match the process phase
   function disableAssessmentForms(){
-    $('div.subform.compliance-assessment-edit-subform.disabled')
+    $('#comp-national-descriptor div.subform.disabled')
       .find('select, textarea').each(function(){
         $(this).attr('disabled', true);
     });
