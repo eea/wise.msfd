@@ -285,6 +285,8 @@ class ReportData2012(BaseComplianceView, BaseUtil):
         self.filename = filename = self.get_report_filename()
         factsheet = None
 
+        source_file = ('File not found', None)
+
         if filename:
             url = get_report_file_url(filename)
 
@@ -298,8 +300,6 @@ class ReportData2012(BaseComplianceView, BaseUtil):
                 logger.warning("No factsheet url, filename is: %r", filename)
 
             source_file = (filename, url + '/manage_document')
-        else:
-            source_file = ('File not found', None)
 
         rep_info = self.get_reporting_information()
 
