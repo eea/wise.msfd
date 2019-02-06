@@ -790,15 +790,9 @@ class A8AlternateItem(Item):
             self[title] = value
 
 
-class A8aSpecies(A8AlternateItem):
-    primary_mapper = sql.MSFD8aSpecy
-    pres_mapper = sql.MSFD8aSpeciesPressuresImpact
-    ast_mapper = sql.MSFD8aSpeciesStatusAssessment
-    ast_topic = 'SpeciesOverall'     # Overall
-    indic_mapper = sql.MSFD8aSpeciesStatusIndicator
-    crit_mapper = sql.MSFD8aSpeciesStatusCriterion
-    criteria_types = ['Distribution', 'Population', 'Condition']
-    metadata_table = sql.t_MSFD8a_SpeciesMetadata
+class A8aGeneric(A8AlternateItem):
+    """ Generic alternate implementation for Article 8a items
+    """
 
     @property
     def pk(self):
@@ -915,8 +909,18 @@ class A8aSpecies(A8AlternateItem):
             # ('DescriptionParameter', rec.Description),
         ]
 
-        # rec, assessment, indic, crit = self._args
-        # self.MarineUnitID = rec.MarineUnitID
+
+class A8aSpecies(A8aGeneric):
+    primary_mapper = sql.MSFD8aSpecy
+    pres_mapper = sql.MSFD8aSpeciesPressuresImpact
+    ast_mapper = sql.MSFD8aSpeciesStatusAssessment
+    indic_mapper = sql.MSFD8aSpeciesStatusIndicator
+    crit_mapper = sql.MSFD8aSpeciesStatusCriterion
+
+    metadata_table = sql.t_MSFD8a_SpeciesMetadata
+
+    criteria_types = ['Distribution', 'Population', 'Condition']
+    ast_topic = 'SpeciesOverall'     # Overall
 
 
 class A8bNutrient(A8AlternateItem):
@@ -1007,9 +1011,9 @@ class Article8Alternate(BaseArticle2012):
     template = Template('pt/report-data-a8.pt')
     help_text = """ """
 
-    descriptor_map = {
+    implementations = {
         'D1': [
-            A8aSpecies,    # main mapper
+            A8aSpecies,
         ],
         'D1/D6': [],
         'D2': [],
@@ -1030,7 +1034,7 @@ class Article8Alternate(BaseArticle2012):
 
         self.rows = []
 
-        Impl = self.descriptor_map[descriptor][0]
+        Klass = self.implementations[descriptor][0]
 
         # count, res = db.get_all_records(
         #     Impl.mapper,
@@ -1039,7 +1043,7 @@ class Article8Alternate(BaseArticle2012):
 
         by_muid = defaultdict(list)
 
-        for item in Impl.items(self.descriptor, self.muids):
+        for item in Klass.items(self.descriptor, self.muids):
             by_muid[item.MarineUnitID].append(item)
 
         self.rows = {}
