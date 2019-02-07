@@ -184,9 +184,6 @@
           top: 58px;
           box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 
-          .art-links {
-            display: inline-block;
-          }
         }
       }
     }
@@ -205,7 +202,8 @@
         top: -32px;
 
         .art:first-child {
-          .art-title {
+          .art-title,
+          .art-title a {
             border-top-left-radius: 8px;
           }
           .art-links {
@@ -215,7 +213,8 @@
           }
         }
         .art:last-child {
-          .art-title {
+          .art-title,
+          .art-title a {
             border-top-right-radius: 8px;
           }
           a:last-child {
@@ -256,7 +255,10 @@
         a {
           color: #fff;
           padding: 0.5em 1em;
-          display: inline-block;
+          display: flex;
+          flex-grow: 1;
+          flex-shrink: 1;
+          justify-content: center;
         }
         a:hover {
           background-color: #fff;
@@ -277,8 +279,8 @@
         }
 
         .art-links {
+          display: flex;
           a {
-            float: left;
             &:not(:last-child) {
               border-right: 1px solid #fff;
             }
