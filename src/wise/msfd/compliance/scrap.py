@@ -4110,3 +4110,12 @@ class Article8(BaseArticle2012):
     // $('.editTransl').on("click", editTranslation);
     // $('.submitTransl').on("click", submitTranslation);
 
+//
+// var queue = [];
+// $('.subform .right .comments').each(function(){
+//   queue.push(this);
+// });
+//
+// function processQueue() {
+// }
+// setTimeout(processQueue, 1000);

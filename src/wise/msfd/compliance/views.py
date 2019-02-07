@@ -2,7 +2,10 @@ import json
 from collections import deque
 
 from eea.cache import cache
+from plone.api.content import transition
+from plone.dexterity.utils import createContentInContainer as create
 from Products.Five.browser import BrowserView
+from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 
 from .base import BaseComplianceView
 
@@ -49,3 +52,43 @@ class ComplianceJSONMap(BrowserView):
 class ComplianceNavMacros(BaseComplianceView):
     """ Just a dummy class to enable testing
     """
+
+
+class CommentsList(BrowserView):
+    """ Renders a list of comments, to be loaded with Ajax in assessment edit
+    """
+    template = ViewPageTemplateFile('pt/comments-list.pt')
+
+    def add_comment(self):
+        form = self.request.form
+        question_id = form.get('q')
+        text = form.get('text')
+
+        tl_folder = self.context['tl']
+
+        if question_id in tl_folder.contentIds():
+            q_folder = tl_folder[question_id]
+        else:       # initially create the question folder for comments
+            q_folder = create(tl_folder,
+                              'wise.msfd.commentsfolder',
+                              id=question_id,
+                              title='Comments for question ' + question_id)
+            transition(obj=q_folder, transition='open_for_tl')
+
+        create(q_folder, 'wise.msfd.comment', text=text)
+
+        return self.template()
+
+    def __call__(self):
+        return self.template()
+
+    def comments(self):
+        tl_folder = self.context['tl']
+        question_id = self.request.form.get('q')
+
+        if question_id not in tl_folder.contentIds():
+            return []
+
+        q_folder = tl_folder[question_id]
+
+        return q_folder.contentValues()
