@@ -1,8 +1,6 @@
 import logging
-import os
 
 import lxml.etree
-from pkg_resources import resource_filename
 from zope.component import getMultiAdapter
 # from zope.annotation.interfaces import IAnnotations
 from zope.dottedname.resolve import resolve
@@ -18,7 +16,7 @@ from wise.msfd import db, sql
 from wise.msfd.compliance.scoring import compute_score
 from wise.msfd.compliance.vocabulary import ASSESSED_ARTICLES, REGIONS
 from wise.msfd.translation.interfaces import ITranslationContext
-from wise.msfd.utils import Tab
+from wise.msfd.utils import Tab, _parse_files_in_location
 
 from . import interfaces
 from .interfaces import ICountryDescriptorsFolder
@@ -321,61 +319,6 @@ class BaseComplianceView(BrowserView):
                            is_translatable=is_translatable)
 
 
-def get_element_by_id(root, id):
-    if id.startswith('#'):
-        id = id[1:]
-
-    el = root.xpath('//*[@id = "' + id + '"]')[0]
-
-    return el
-
-
-class ElementDefinition:
-    def __init__(self, node, root):
-        self.id = node.get('id')
-        self.definition = node.text.strip()
-
-
-class MetodologicalStandardDefinition:
-    def __init__(self, node, root):
-        self.id = node.get('id')
-        self.definition = node.text.strip()
-
-
-class CriteriaAssessmentDefinition:
-    def __init__(self, node, root):
-        self.id = node.get('id')
-        defn = node.find('definition')
-        self.definition = defn.text.strip()
-
-        # TODO: there are some edge cases. Handle them?
-        prim = node.get('primary', 'false')
-
-        if 'error' in prim:     # this is an error marker, for cases we need to
-                                # handle
-            logger.warning("Please debug this node: %s", node)
-            prim = 'false'
-
-        self.is_primary = bool(['false', 'true'].index(prim))
-
-        self.elements = []
-
-        for eid in node.xpath('uses-element/@href'):
-            el = get_element_by_id(root, eid)
-            self.elements.append(ElementDefinition(el, root))
-
-        msid = node.xpath('uses-methodological-standard/@href')[0]
-        mel = get_element_by_id(root, msid)
-        self.methodological_standard = MetodologicalStandardDefinition(
-            mel, root
-        )
-
-    @property
-    def title(self):
-        return u"{} - {}".format(self.id,
-                                 self.is_primary and 'Primary' or 'Secondary')
-
-
 class AssessmentQuestionDefinition:
     """ A definition for a single assessment question.
 
@@ -420,63 +363,6 @@ class AssessmentQuestionDefinition:
 
     def calculate_score(self, descriptor, values):
         return compute_score(self, descriptor, values)
-
-
-def parse_elements_file(fpath):
-    # Note: this parsing is pretty optimistic that there's a single descriptor
-    # in the file. Keep that true
-    res = []
-
-    try:
-        root = lxml.etree.parse(fpath).getroot()
-    except:
-        logger.exception('Could not parse file: %s', fpath)
-
-        return
-
-    desc_id = root.get('id')
-
-    for critn in root.iterchildren('criteria'):
-
-        crit = CriteriaAssessmentDefinition(critn, root)
-        res.append(crit)
-
-    return desc_id, res
-
-
-def _parse_files_in_location(location, check_filename, parser):
-    dirpath = resource_filename('wise.msfd', location)
-    out = {}
-
-    for fname in os.listdir(dirpath):
-        if check_filename(fname):
-            fpath = os.path.join(dirpath, fname)
-            logger.info("Parsing file: %s", fname)
-            try:
-                res = parser(fpath)
-            except:
-                logger.exception('Could not parse file: %s', fpath)
-
-                continue
-
-            if res:
-                desc, elements = res
-                out[desc] = elements
-
-    return out
-
-
-def get_descriptor_elements(location):
-    """ Parse the descriptor elements in a location and build a mapping struct
-
-    The location argument should be a path relative to wise.msfd package.
-    The return data is used to build the automatic forms.
-    """
-    def check_filename(fname):
-        return fname.endswith('_elements.xml')
-
-    return _parse_files_in_location(location,
-                                    check_filename, parse_elements_file)
 
 
 def parse_question_file(fpath):
