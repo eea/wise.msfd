@@ -16,7 +16,7 @@
         </a>
       </div>
 
-      <div class="report-nav">
+      <div class="report-nav fixed">
         <div class="nav-wrapper">
           <div class="nav-header">
             <button id="report-nav-toggle" class="nav-toggle">
