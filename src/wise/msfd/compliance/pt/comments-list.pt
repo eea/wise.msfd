@@ -1,0 +1,9 @@
+<ul tal:define="comments view/comments; plone nocall:context/@@plone">
+  <li class="comms" tal:repeat="comment comments">
+    <div tal:content="comment/text">Comment here</div>
+    <em class="comm-crtr">
+      <span tal:content="comment/Creator">Creator</span>, at
+      <span tal:content="python: plone.toLocalizedTime(comment.created(), long_format=True)">Creator</span>
+    </em>
+  </li>
+</ul>
