@@ -125,8 +125,8 @@
                       comments here
                     </div>
                     <div class="textline">
-                      <textarea name="comment-text"></textarea>
-                      <button>Post</button>
+                      <textarea name="comment-text" placeholder="Write a comment"></textarea>
+                      <button class="btn btn-primary">Post</button>
                     </div>
                   </div>
                 </div>
