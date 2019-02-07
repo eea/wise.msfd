@@ -55,6 +55,17 @@
   $(document).ready(function() {
     setupCommentsListing();
     setupPostComments();
+
+    // set comment section height for overflow
+    var $sf = $('.subform');
+    $sf.each(function() {
+      var $this = $(this);
+      var $com = $this.find('.right');
+      var formHeight = $this.find('.left').height();
+
+      $com.height(formHeight);
+    });
+
   });
 
 }(jQuery));
