@@ -358,5 +358,19 @@ if (!Array.prototype.last){
     $select.closest('.fields-container-row').addClass('flex-select');
     $textarea.closest('.fields-container-row').addClass('flex-textarea');
 
+    var stickyOffset = $('.report-nav').offset().top;
+    console.log(stickyOffset);
+
+    $(window).scroll(function(){
+      var sticky = $('.report-nav');
+      var scroll = $(window).scrollTop();
+
+      if (scroll >= stickyOffset) {
+        sticky.addClass('sticky').removeClass('fixed');
+      } else {
+        sticky.removeClass('sticky').addClass('fixed');
+      }
+    });
+
   });
 }(window, document, $));
