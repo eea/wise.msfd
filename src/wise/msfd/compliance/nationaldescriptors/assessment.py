@@ -257,18 +257,26 @@ class EditAssessmentDataForm(Form, BaseComplianceView):
     def get_subforms(self):
         """ Build a form of options from a tree of options
         """
-        assessment_data = self.context.saved_assessment_data.last()
+
+        assessment_data = {}
+
+        if hasattr(self.context, 'saved_assessment_data'):
+            assessment_data = self.context.saved_assessment_data.last()
 
         forms = []
 
         for question in self.questions:
-            question_phase = [
-                k
+            try:
+                question_phase = [
+                    k
 
-                for k, v in phase_mapping.items()
+                    for k, v in phase_mapping.items()
 
-                if question.klass in v
-            ][0]
+                    if question.klass in v
+                ][0]
+            except:
+                import pdb
+                pdb.set_trace()
             criterias = filtered_criterias(self.criterias, question)
 
             form = EmbeddedForm(self, self.request)

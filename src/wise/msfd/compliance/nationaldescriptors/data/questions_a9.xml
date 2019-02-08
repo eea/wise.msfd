@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <questions article='Art9'>
-  <assessment-question id="A09Ad1" class="AdequacyCriteriaPrimary" use-criteria='primary'>
+  <assessment-question id="A09Ad1" class="adequacy" use-criteria='primary'>
     <definition>
       To what extent are the 2017 Decision primary criteria used?
     </definition>
@@ -34,7 +34,7 @@
     <score-weight descriptor="D11" value="10" />
   </assessment-question>
 
-  <assessment-question id="A09Ad2" class="AdequacyCriteriaSecondary" use-criteria='secondary'>
+  <assessment-question id="A09Ad2" class="adequacy" use-criteria='secondary'>
     <definition>
       To what extent does the Member State report beyond the minimum requirements of the 2017 Decision, using secondary criteria?
     </definition>
@@ -67,7 +67,7 @@
     <score-weight descriptor="D11" value="0" />
   </assessment-question>
 
-  <assessment-question id="A09Ad3" class="AdequacyGESQualObjective" use-criteria='all'>
+  <assessment-question id="A09Ad3" class="adequacy" use-criteria='all'>
     <definition>
       To what extent is the qualitative GES determination (elements and parameters) adequate?
     </definition>
@@ -99,7 +99,7 @@
     <score-weight descriptor="D11" value="6" />
   </assessment-question>
 
-  <assessment-question id="A09Ad4" class="AdequacyGESQuantThreshold" use-criteria='all'>
+  <assessment-question id="A09Ad4" class="adequacy" use-criteria='all'>
     <definition>
       To what extent is the qualitative GES determination (objectives) adequate?
     </definition>
@@ -120,7 +120,7 @@
     <score-weight descriptor="D5" value="6" />
   </assessment-question>
 
-  <assessment-question id="A09Ad5" class="AdequacyGESQuantGESextent" use-criteria='all'>
+  <assessment-question id="A09Ad5" class="adequacy" use-criteria='all'>
     <definition>
       To what extent is there a quantitative determination of GES (threshold values)?
     </definition>
@@ -152,7 +152,7 @@
     <score-weight descriptor="D11" value="6" />
   </assessment-question>
 
-  <assessment-question id="A09Ad6" class="AdequacyGESQuantProportion" use-criteria='all'>
+  <assessment-question id="A09Ad6" class="adequacy" use-criteria='all'>
     <definition>
       To what extent is there a quantitative determination of GES (proportion values)?
     </definition>
@@ -174,7 +174,7 @@
   </assessment-question>
 
   TODO this question has alternative options
-  <assessment-question id="A09Ad7" class="AdequacyGESQuantGESextent" use-criteria='none'>
+  <assessment-question id="A09Ad7" class="adequacy" use-criteria='none'>
     <definition>
       To what extent are levels of ambition defined for GES adequate (GES extent threshold)?
     </definition>
@@ -208,7 +208,7 @@
   </assessment-question>
 
   TODO this question has alternative options
-  <assessment-question id="A09Co1" class="CoherenceCriteriaUsed" use-criteria='all'>
+  <assessment-question id="A09Co1" class="coherence" use-criteria='all'>
     <definition>
       To what extent does the Member State use the same primary/ secondary criteria as the other MS in this region?
     </definition>
@@ -239,7 +239,7 @@
     <score-weight descriptor="D11" value="6" />
   </assessment-question>
 
-  <assessment-question id="A09Co2" class="CoherenceGESQualEleParam" use-criteria='all'>
+  <assessment-question id="A09Co2" class="coherence" use-criteria='all'>
     <definition>
       To what extent does the Member State use GES determinations (elements and parameters) that are similar to other MS in the region?
     </definition>
@@ -273,7 +273,7 @@
     <score-weight descriptor="D11" value="6" />
   </assessment-question>
 
-  <assessment-question id="A09Co3" class="CoherenceGESQualObjective" use-criteria='all'>
+  <assessment-question id="A09Co3" class="coherence" use-criteria='all'>
     <definition>
       To what extent does the Member State use GES determinations (objectives) that are the same or similar to other MS in the region?
     </definition>
@@ -307,7 +307,7 @@
     <score-weight descriptor="D11" value="6" />
   </assessment-question>
 
-  <assessment-question id="A09Co4" class="CoherenceGESQuantThreshold" use-criteria='none'>
+  <assessment-question id="A09Co4" class="coherence" use-criteria='none'>
     <definition>
       To what extent does the Member State use threshold values agreed at EU or regional level?
     </definition>
@@ -341,7 +341,7 @@
     <score-weight descriptor="D11" value="8" />
   </assessment-question>
 
-  <assessment-question id="A09Co5" class="CoherenceGESQuantProportion" use-criteria='none'>
+  <assessment-question id="A09Co5" class="coherence" use-criteria='none'>
     <definition>
       To what extent is the Member State’s level of ambition for GES (proportion thresholds) the same or similar to other MS in the region?
     </definition>
@@ -375,9 +375,9 @@
     <score-weight descriptor="D11" value="8" />
   </assessment-question>
 
-  <assessment-question id="A09Co6" class="CoherenceGESQuantGESextent" use-criteria='none'>
+  <assessment-question id="A09Co6" class="coherence" use-criteria='none'>
     <definition>
-      To what extent is the Member State’s level of ambition for GES (GES extent threshold) the same or similar to other MS in the region? 
+      To what extent is the Member State’s level of ambition for GES (GES extent threshold) the same or similar to other MS in the region?
     </definition>
     <answers>
       <option>GES extent thresholds are the same or similar to most (76-100%) MS in the region</option>
@@ -409,9 +409,9 @@
     <score-weight descriptor="D11" value="8" />
   </assessment-question>
 
-   <!-- <assessment-question id="A09Co7" class="CoherenceGESSubregion" use-criteria='none'>
+   <!-- <assessment-question id="A09Co7" class="coherence" use-criteria='none'>
     <definition>
-      To what extent is the Member State’s determination of GES the same or similar to other MS in the subregion? 
+      To what extent is the Member State’s determination of GES the same or similar to other MS in the subregion?
     </definition>
     <answers>
       <option>The MS uses similar date for achieving GES as most (76%-100%) of the MS in the region</option>
@@ -441,6 +441,5 @@
     <score-weight descriptor="D10" value="18" />
     <score-weight descriptor="D11" value="18" />
   </assessment-question>  -->
-
 
 </questions>
