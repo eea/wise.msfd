@@ -58,6 +58,8 @@
     setupCommentsListing();
     setupPostComments();
 
+    var $win = $(window);
+
     // set comment section height for overflow
     var $sf = $('.subform');
     $sf.each(function() {
@@ -68,7 +70,7 @@
       $com.innerHeight(formHeight);
 
       var resizeTimer;
-      $(window).resize(function() {
+      $win.resize(function() {
         clearTimeout(resizeTimer);
         resizeTimer = setTimeout(function(){
           $com = $this.find('.right');
@@ -76,6 +78,24 @@
           $com.innerHeight(formHeight);
         }, 100)
       });
+    });
+
+    // sticky save button
+    var $sfw = $('.form-right-side');
+    var btnPos = $sfw.offset().top;
+    var scroll, space;
+
+    $sfw.find('.btn').addClass('btn-primary');
+    space = $win.height() - $sfw.height() * 2;
+
+    $win.scroll(function() {
+      scroll = $win.scrollTop();
+
+      if (scroll + space < btnPos) {
+        $sfw.addClass('fixed-save-form');
+      } else {
+        $sfw.removeClass('fixed-save-form');
+      }
     });
 
   });
