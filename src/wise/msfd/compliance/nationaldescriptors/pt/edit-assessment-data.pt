@@ -119,13 +119,9 @@
                   </div>
                   <div class="right" tal:define="question_id subform/_question/id | string: summary">
                     <div class="comments"
-                      tal:attributes="data-question-id question_id"
-                      tal:content="question_id"
-                      >
-                      comments here
-                    </div>
+                      tal:attributes="data-question-id question_id"></div>
                     <div class="textline">
-                      <textarea name="comment-text" placeholder="Write a comment"></textarea>
+                      <textarea name="comment-text" placeholder="Write a comment..."></textarea>
                       <button class="btn btn-primary">Post</button>
                     </div>
                   </div>

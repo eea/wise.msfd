@@ -86,12 +86,11 @@ div.crt-def {
       .right {
         // background-image: linear-gradient(to right, #999, #DDD 1.2%);
         background: #ECECEC;
-        // border-left: 2px solid white;
         width: 40%;
-        // margin-left: 0.5%;
         padding: 1rem;
         display: flex;
         flex-direction: column;
+
         .comments {
           background-color: white;
           flex-grow: 2;
@@ -101,9 +100,12 @@ div.crt-def {
           display: flex;
           flex-direction: column-reverse;
         }
+
         .textline {
           padding-top: 0.4rem;
           display: flex;
+          flex-shrink: 0;
+
           textarea {
             margin-right: 0.4rem;
             font-family: inherit;
@@ -112,53 +114,86 @@ div.crt-def {
 
         .comments-history {
           margin-left: 0;
+          position: relative;
+
           li {
             list-style-type: none;
           }
+
+          li:not(:last-child) {
+            margin-bottom: 1em;
+          }
+
           .comment {
             color: #fff;
             background: #86BB71;
             padding: 10px 15px;
             font-size: 14px;
             border-radius: 7px;
-            margin: 0.5em 0 1em 0;
+            margin-top: 0.5em;
             display: inline-block;
             position: relative;
           }
+
           .comment:after {
-              bottom: 100%;
-              left: 1.5em;
-              border: solid #0000;
-              content: " ";
-              height: 0;
-              width: 0;
-              position: absolute;
-              pointer-events: none;
-              border-bottom-color: #86BB71;
-              border-width: 10px;
-              margin-left: -10px;
+            bottom: 100%;
+            left: 1.5em;
+            border: solid #0000;
+            content: " ";
+            height: 0;
+            width: 0;
+            position: absolute;
+            pointer-events: none;
+            border-bottom-color: #86BB71;
+            border-width: 10px;
+            margin-left: -10px;
           }
+
           .comment-name {
             margin-bottom: 0.5em;
             display: inline-block;
           }
+
           .comment-time {
             color: #a8aab1;
             padding-left: 6px;
           }
 
+          .no-comments {
+            position: absolute;
+            bottom: 2em;
+            left: 50%;
+            transform: translate(-50%,-50%);
+            font-style: italic;
+            color: #a8aab1;
+            text-align: center;
+
+            i {
+              display: block;
+              font-size: 25px;
+            }
+          }
+
         }
         .textline {
           textarea {
-            height: 50px;
+            height: 40px;
             resize: none;
             overflow: auto;
-            border-radius: 15px;
+            border-radius: 25px;
             outline: none;
             padding: 10px;
             font-size: 1em;
             color: #676767;
             border: solid 1px #a6e1fb;
+            flex-grow: 1;
+            margin-top: 5px;
+          }
+
+          textarea:focus {
+            outline: none !important;
+            border: solid 1px #29a2d9;
+            background-color: #fff;
           }
 
           .btn {
@@ -172,15 +207,14 @@ div.crt-def {
       .left {
         flex-grow: 2;
         background-color: #a6e1fb;
+
         .fields-container {
-          padding: 1rem;
+          padding: 1rem 1rem 0 1rem;
           display: flex;
-          // width: 70%;
           flex-wrap: wrap;
 
           .flex-select {
             flex: 0 50%;
-            // margin-top: 1em;
           }
 
           .flex-select:nth-child(odd) {
@@ -203,18 +237,6 @@ div.crt-def {
 
           .assessment-form-input {
             width: 100%;
-          }
-
-          .field {
-            margin-bottom: 0rem;
-            textarea {
-              // background-image: -webkit-gradient(linear, 0 0, 0 100%, color-stop(1%, #EEE), color-stop(10%, #FFF));
-              // background-image: -webkit-linear-gradient(top, #EEE 1%, #FFF 10%);
-              // background-image: -moz-linear-gradient(top, #EEE 1%, #FFF 10%);
-              // background-image: -o-linear-gradient(top, #EEE 1%, #FFF 10%);
-              // background-image: -ms-linear-gradient(top, #EEE 1%, #FFF 10%);
-              // background-image: linear-gradient(top, #EEE 1%, #FFF 10%);
-            }
           }
         }
       }
