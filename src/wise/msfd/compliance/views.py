@@ -64,7 +64,7 @@ class CommentsList(BrowserView):
 
     def add_comment(self):
         form = self.request.form
-        question_id = form.get('q')
+        question_id = form.get('q').lower()
         text = form.get('text')
 
         tl_folder = self.context['tl']
