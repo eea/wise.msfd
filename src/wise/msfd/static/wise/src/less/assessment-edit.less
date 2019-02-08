@@ -79,17 +79,20 @@ div.crt-def {
     }
 
     .body {
-      display: flex;
-      align-item: stretch;
+      // display: flex;
+      // align-item: stretch;
       margin-bottom: 1%;
+      // clear: both;
 
       .right {
         // background-image: linear-gradient(to right, #999, #DDD 1.2%);
         background: #ECECEC;
         width: 40%;
-        padding: 1rem;
+        float: right;
+        padding: 10px;
         display: flex;
         flex-direction: column;
+        clear: right;
 
         .comments {
           background-color: white;
@@ -206,6 +209,8 @@ div.crt-def {
 
       .left {
         flex-grow: 2;
+        width: 60%;
+        float: left;
         background-color: #a6e1fb;
 
         .fields-container {
@@ -240,7 +245,13 @@ div.crt-def {
           }
         }
       }
-
+    }
+    .body:after {
+      content: '';
+      visibility: hidden;
+      display: block;
+      height: 0;
+      clear: both;
     }
 
   }
