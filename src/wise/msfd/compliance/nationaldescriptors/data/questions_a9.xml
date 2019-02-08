@@ -227,6 +227,8 @@
       <option score="1">The MS uses the same criteria as only few (1-25%) MS in the region</option>
       <option score="0">Not reported\the information is provided in different formats across MS and it is impossible to compare</option>
     </scoring>
+    <score-weight descriptor="D1Species" value="6" />
+    <score-weight descriptor="D1Pelagic habitats" value="6" />
     <score-weight descriptor="D2" value="6" />
     <score-weight descriptor="D3" value="6" />
     <score-weight descriptor="D4" value="6" />
