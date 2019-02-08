@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <questions article='Art10'>
 
-  <assessment-question id="A10Ad1" class="AdequacyTargetAssessed" use-criteria='none'>
+  <assessment-question id="A10Ad1" class="adequacy" use-criteria='none'>
     <definition>
      Do the targets address the achievement of GES by focusing on reducing relevant pressures and impacts? 
     </definition>
@@ -36,7 +36,7 @@
     <score-weight descriptor="D11" value="20" />
   </assessment-question>
 
-  <assessment-question id="A10Ad2" class="AdequacyTargetAssessed" use-criteria='none'>
+  <assessment-question id="A10Ad2" class="adequacy" use-criteria='none'>
     <definition>
       To what extent are the targets measurable?
     </definition>
@@ -68,7 +68,7 @@
     <score-weight descriptor="D11" value="15" />
   </assessment-question>
 
-  <assessment-question id="A10Ad3" class="AdequacyTargetAssessed" use-criteria='none'>
+  <assessment-question id="A10Ad3" class="adequacy" use-criteria='none'>
     <definition>
       Has an assessment of progress with the target since 2012 been made?
     </definition>
@@ -102,7 +102,7 @@
   </assessment-question>
 
 
-  <assessment-question id="A10Co1" class="CoherenceTargetinRegion" use-criteria='none'>
+  <assessment-question id="A10Co1" class="coherence" use-criteria='none'>
     <definition>
       To what extent does the Member State define similar targets to other MS in the region?
     </definition>
@@ -136,7 +136,7 @@
     <score-weight descriptor="D11" value="15" />
   </assessment-question>
 
-  <assessment-question id="A0810Cy1" class="ConsistencyAssessmentTargets" use-criteria='none'>
+  <assessment-question id="A0810Cy1" class="consistency" use-criteria='none'>
     <definition>
      To what extent do targets adequately reflect the gap between current (2018) state and GES? 
     </definition>
@@ -170,7 +170,7 @@
     <score-weight descriptor="D11" value="25" />
   </assessment-question>
 
-  <assessment-question id="A1013Cy2" class="ConsistencyTargetMeasures" use-criteria='none'>
+  <assessment-question id="A1013Cy2" class="consistency" use-criteria='none'>
     <definition>
      To what extent are targets clearly linked to measures (reported under Art. 13 in 2016) which aim to reduce the related pressures and impacts? 
     </definition>

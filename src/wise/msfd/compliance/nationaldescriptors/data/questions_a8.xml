@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <questions article='Art8'>
 
-  <assessment-question id="A08Ad1" class="AdequacyElements" use-criteria='none'>
+  <assessment-question id="A08Ad1" class="adequacy" use-criteria='none'>
     <definition>
       To what extent does the Member State report the criteria elements required by the 2017 Decision? 
     </definition>
@@ -34,7 +34,7 @@
     <score-weight descriptor="D11" value="12" />
   </assessment-question>
 
-  <assessment-question id="A08Ad2" class="AdequacyMethods" use-criteria='none'>
+  <assessment-question id="A08Ad2" class="adequacy" use-criteria='none'>
     <definition>
       To what extent does the Member State report key aspects of its assessment methodology?
     </definition>
@@ -68,7 +68,7 @@
     <score-weight descriptor="D11" value="10" />
   </assessment-question>
 
-  <assessment-question id="A08Ad3" class="AdequacyStatusAssessment" use-criteria='none'>
+  <assessment-question id="A08Ad3" class="adequacy" use-criteria='none'>
     <definition>
       Does the assessment provide a conclusion on the current status? 
     </definition>
@@ -101,7 +101,7 @@
     <score-weight descriptor="D11" value="20" />
   </assessment-question>
 
-  <assessment-question id="A08Ad4" class="AdequacyExtentPressureImpact" use-criteria='all'>
+  <assessment-question id="A08Ad4" class="adequacy" use-criteria='all'>
     <definition>
      Is an assessment of the extent of pressure, impacts or good state reported? 
     </definition>
@@ -136,7 +136,7 @@
     <score-weight descriptor="D11" value="12" />
   </assessment-question>
 
-  <assessment-question id="A08Co1" class="CoherenceElements" use-criteria='all'>
+  <assessment-question id="A08Co1" class="coherence" use-criteria='all'>
     <definition>
      To what extent does the Member State report the same elements as other MS in the region? 
     </definition>
@@ -169,7 +169,7 @@
     <score-weight descriptor="D11" value="12" />
   </assessment-question>
 
-  <assessment-question id="A08Co2" class="CoherenceParameters" use-criteria='all'>
+  <assessment-question id="A08Co2" class="coherence" use-criteria='all'>
     <definition>
       To what extent does the Member State report the same parameters as the other MS in the region?
     </definition>
@@ -202,7 +202,7 @@
     <score-weight descriptor="D11" value="8" />
   </assessment-question>
 
-  <assessment-question id="A08Co3" class="CoherenceGESachievementDate" use-criteria='none'>
+  <assessment-question id="A08Co3" class="coherence" use-criteria='none'>
     <definition>
       Does the Member State report a similar date for achieving GES as other MS in the region?
     </definition>
@@ -235,7 +235,7 @@
     <score-weight descriptor="D11" value="10" />
   </assessment-question>
 
-  <assessment-question id="A08Co4" class="CoherencePressures" use-criteria='all'>
+  <assessment-question id="A08Co4" class="coherence" use-criteria='all'>
     <definition>
       Does the Member State report the same pressures as other MS in the marine region?
     </definition>
@@ -268,7 +268,7 @@
     <score-weight descriptor="D11" value="6" />
   </assessment-question>
 
-  <assessment-question id="A0809Cy1" class="ConsistencyDeterminationAssessment" use-criteria='all'>
+  <assessment-question id="A0809Cy1" class="consistency" use-criteria='all'>
     <definition>
       Is the assessment under Art. 8 based on the latest (2018) determination of GES under Art. 9?
     </definition>
