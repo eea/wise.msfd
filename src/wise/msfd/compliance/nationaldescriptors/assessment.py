@@ -10,8 +10,9 @@ from plone.z3cform.layout import wrap_form
 from Products.Five.browser.pagetemplatefile import (PageTemplateFile,
                                                     ViewPageTemplateFile)
 from wise.msfd.base import EmbeddedForm, MainFormWrapper
-from wise.msfd.compliance.base import get_descriptor_elements, get_questions
+from wise.msfd.compliance.base import get_questions
 from wise.msfd.compliance.interfaces import ICountryDescriptorsFolder
+from wise.msfd.gescomponents import get_descriptor_elements
 from z3c.form.button import buttonAndHandler
 from z3c.form.field import Fields
 from z3c.form.form import Form
