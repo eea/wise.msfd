@@ -63,9 +63,19 @@
     $sf.each(function() {
       var $this = $(this);
       var $com = $this.find('.right');
-      var formHeight = $this.find('.left').height();
+      var formHeight = $this.find('.left').innerHeight();
 
-      $com.height(formHeight);
+      $com.innerHeight(formHeight);
+
+      var resizeTimer;
+      $(window).resize(function() {
+        clearTimeout(resizeTimer);
+        resizeTimer = setTimeout(function(){
+          $com = $this.find('.right');
+          formHeight = $this.find('.left').innerHeight();
+          $com.innerHeight(formHeight);
+        }, 100)
+      });
     });
 
   });
