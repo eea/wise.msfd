@@ -11,7 +11,7 @@ from persistent.list import PersistentList
 from Products.Five.browser.pagetemplatefile import \
     ViewPageTemplateFile as Template
 from wise.msfd import db, sql2018
-from wise.msfd.compliance.base import get_descriptor_elements, get_questions
+from wise.msfd.compliance.base import get_questions
 from wise.msfd.compliance.scoring import get_overall_conclusion
 from wise.msfd.compliance.vocabulary import SUBREGIONS_TO_REGIONS
 from wise.msfd.gescomponents import get_descriptor
@@ -72,11 +72,21 @@ class NationalDescriptorsOverview(BaseComplianceView):
 class NationalDescriptorCountryOverview(BaseComplianceView):
     section = 'national-descriptors'
 
-    def get_articles(self):
-        return ['Art8', 'Art9', 'Art10']
-
     def get_regions(self):
         return self.context.contentValues()
+
+    def get_descriptors(self, region):
+        order = [
+            'd1.1', 'd1.2', 'd1.3', 'd1.4', 'd1.5', 'd1.6', 'd2', 'd3', 'd4',
+            'd5', 'd6', 'd7', 'd8', 'd9', 'd10', 'd11',
+        ]
+
+        return [region[d] for d in order]
+
+    def get_articles(self, desc):
+        order = ['art9', 'art8', 'art10']
+
+        return [desc[a] for a in order]
 
 
 Assessment = namedtuple('Assessment',
@@ -98,6 +108,8 @@ AssessmentRow = namedtuple(
         'score',
         'values'
     ]
+
+
 )
 
 
@@ -136,10 +148,11 @@ def get_assessment_data(article, criterias, questions, data):
     """ Builds a data structure suitable for display in a template
 
     This is used to generate the assessment data overview table for 2018
+
+    TODO: this is doing too much. Need to be simplified and refactored.
     """
 
     answers = []
-    gescomponents = [c.id for c in criterias]
     overall_score = 0
 
     for question in questions:
@@ -190,7 +203,8 @@ def get_assessment_data(article, criterias, questions, data):
 
         cn = '{}_{}_Conclusion'.format(article, question.id)
         conclusion = data.get(cn, '')
-        conclusion_color = 5 - data.get(
+        conclusion_color = 5 - data.get(        # TODO: explain this,
+                                                # I believe it's wrong
             '{}_{}_RawScore'.format(article, question.id), 5
         )
         overall_score += score     # use raw score or score?
@@ -199,10 +213,9 @@ def get_assessment_data(article, criterias, questions, data):
                            conclusion_color, score, values)
         answers.append(qr)
 
-    # Add to answers 2 more rows: assessment summary and recommendations
-    assess_sum = data.get('{}_assessment_summary'.format(article), '-') or '-'
-    recommendations = data.get(
-        '{}_recommendations'.format(article), '-') or '-'
+    # assessment summary and recommendations
+    assess_sum = data.get('%s_assessment_summary' % article)
+    recommend = data.get('%s_recommendations' % article)
 
     # overall_score = overall_score * 100 / len(questions)
     try:
@@ -212,10 +225,10 @@ def get_assessment_data(article, criterias, questions, data):
         overall_conclusion = (1, 'error')
 
     assessment = Assessment(
-        gescomponents,
+        criterias,
         answers,
-        assess_sum,
-        recommendations,
+        assess_sum or '-',
+        recommend or '-',
         overall_score,
         overall_conclusion
     )
@@ -368,29 +381,20 @@ class NationalDescriptorArticleView(BaseComplianceView):
 
     @property
     def title(self):
-        return "{}'s assessment overview for {}/{}/{}".format(
+        return "Commision assessment: {} / {} / {} / {} / 2018".format(
             self.country_title,
+            self.country_region_name,
             self.descriptor,
-            self.country_region_code,
-            self.article
+            self.article,
         )
 
     @property
     def criterias(self):
-        # TODO: unify descriptor handling, should also see ges_components.py
-        els = get_descriptor_elements(
-            'compliance/nationaldescriptors/data'
-        )
+        return self.descriptor_obj.criterions
 
-        if self.descriptor not in els:
-            logger.warning("Descriptor elements not defined: %s",
-                           self.descriptor)
-
-            desc = self.descriptor.split('.')[0]
-
-            return els[desc]
-
-        return els[self.descriptor]
+    @property       # TODO: memoize
+    def descriptor_obj(self):
+        return get_descriptor(self.descriptor)
 
     @property
     def questions(self):
@@ -455,6 +459,8 @@ class NationalDescriptorArticleView(BaseComplianceView):
         # Assessment data 2018
         data = self.context.saved_assessment_data.last()
 
+        import pdb
+        pdb.set_trace()
         assessment = get_assessment_data(
             self.article,
             self.criterias,
@@ -462,7 +468,7 @@ class NationalDescriptorArticleView(BaseComplianceView):
             data
         )
 
-        self.assessment_data_2018 = self.assessment_data_2018_tpl(
+        self.assessment_data_2018_html = self.assessment_data_2018_tpl(
             assessment=assessment,
             score_2012=score_2012
         )
@@ -473,7 +479,7 @@ class NationalDescriptorArticleView(BaseComplianceView):
         assess_date_2018 = data.get('assess_date', u'Not assessed')
         source_file_2018 = ('To be addedd...', '.')
 
-        self.assessment_header_2018 = self.assessment_header_template(
+        self.assessment_header_2018_html = self.assessment_header_template(
             report_by=report_by_2018,
             assessors=assessors_2018,
             assess_date=assess_date_2018,

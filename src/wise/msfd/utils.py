@@ -1,10 +1,12 @@
 import datetime
 import logging
+import os
 from collections import OrderedDict, defaultdict, namedtuple
 from cPickle import dumps
 from hashlib import md5
 from inspect import getsource, isclass
 
+from pkg_resources import resource_filename
 from six import string_types
 from sqlalchemy import inspect
 from zope.component import getUtility
@@ -288,6 +290,37 @@ def t2rt(text):
     text = data.getData().strip()
 
     return text
+
+
+def _parse_files_in_location(location, check_filename, parser):
+    dirpath = resource_filename('wise.msfd', location)
+    out = {}
+
+    for fname in os.listdir(dirpath):
+        if check_filename(fname):
+            fpath = os.path.join(dirpath, fname)
+            logger.info("Parsing file: %s", fname)
+            try:
+                res = parser(fpath)
+            except:
+                logger.exception('Could not parse file: %s', fpath)
+
+                continue
+
+            if res:
+                desc, elements = res
+                out[desc] = elements
+
+    return out
+
+
+def get_element_by_id(root, id):
+    if id.startswith('#'):
+        id = id[1:]
+
+    el = root.xpath('//*[@id = "' + id + '"]')[0]
+
+    return el
 
 
 class TemplateMixin:

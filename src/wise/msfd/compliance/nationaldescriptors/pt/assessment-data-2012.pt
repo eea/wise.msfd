@@ -9,12 +9,6 @@
         <!--<div tal:content="assessments/?country">asd</div>-->
         <tal:def tal:define="assessment assessments/?country;
           colspan python: len(assessment.gescomponents)">
-          <tr>
-            <th>GEScomponent</th>
-            <tal:rep tal:repeat="ges assessment/gescomponents">
-              <td tal:content="ges">D0C0</td>
-            </tal:rep>
-          </tr>
           <tal:rep tal:repeat="crit assessment/criteria">
             <tr>
               <th tal:content="crit/crit_name">

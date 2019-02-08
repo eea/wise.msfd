@@ -73,8 +73,8 @@
             <h3>2018 Assessment</h3>
             <!-- <div style="background-color: #DDD; border-color: 1px solid #BBB; padding: 1em;"> -->
             <div class="ast-header-data">
-              <div tal:replace="structure view/assessment_header_2018"></div>
-              <div tal:replace="structure view/assessment_data_2018"></div>
+              <div tal:replace="structure view/assessment_header_2018_html"></div>
+              <div tal:replace="structure view/assessment_data_2018_html"></div>
             </div>
 
             <!-- <div class="" tal:content="structure view/progress_edit_form"></div> -->

@@ -17,7 +17,7 @@
 
         <div class="start-page-content left-side-form">
 
-          <h1>National descriptors overview for <span tal:content="context/title"></span></h1>
+          <h1>Descriptor assessments - national overview: <span tal:content="context/title"></span></h1>
 
           <div class="nda-link">
             <a href="./../">
@@ -56,18 +56,18 @@
               <thead>
                 <tr>
                   <th>Descriptor</th>
-                  <th tal:repeat='art view/get_articles'>
-                    <!-- <span tal:replace="art">Art0</span> -->
-                  </th>
+                  <th></th>
+                  <th></th>
+                  <th></th>
                 </tr>
               </thead>
               <tbody>
-                <tr tal:repeat="desc region/contentValues">
+                <tr tal:repeat="desc python: view.get_descriptors(region)">
                   <th>
                     <span tal:content="desc/title_or_id">D0</span>
                   </th>
                   <!-- TODO: resort articles here -->
-                  <td tal:repeat="assessment desc/contentValues">
+                  <td tal:repeat="assessment python: view.get_articles(desc)">
                     <a class="btn btn-primary btn-xs" href="" tal:attributes="href assessment/absolute_url">
                       <span tal:content="assessment/title">Art0</span>:
                       <span class="as-state-label" tal:content="python: view.get_status(assessment)">State</span>

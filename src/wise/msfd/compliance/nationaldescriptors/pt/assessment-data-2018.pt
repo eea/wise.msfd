@@ -1,34 +1,35 @@
-<div tal:define="assessment options/assessment;
-                score_2012 python: int(options['score_2012'])">
+<div tal:define="assessment options/assessment; score_2012 python: int(options['score_2012'])">
 
   <table class="table table-condensed assessment-data-table">
     <tbody>
+
       <tr>
-        <th class="as-question as-header">Question / GESComponent</th>
+        <th class="as-question as-header" tal:content="structure view/descriptor_obj"></th>
         <th class="as-header" tal:condition="not: assessment/gescomponents">
         </th>
         <th tal:repeat="g assessment/gescomponents" class="as-ges-component as-header">
-          <!--<span tal:replace="g">D0C0</span>-->
+          <span tal:replace="structure g">D0C0</span>
         </th>
         <!-- TODO: add "conclusion score" and "Weighting" as titles -->
         <th class="as-header">Conclusion</th>
         <th class="as-th-score as-header">Score</th>
       </tr>
+
       <tal:rep tal:repeat="row assessment/answers">
         <tr>
           <th rowspan="2" tal:content="row/question">Question</th>
           <tal:rep tal:repeat="value row/values" >
             <td
               tal:attributes="class python: 'as-value as-value-{}'.format(value[1]);
-                              colspan python: (len(assessment.gescomponents) + 1) - len(row.values);">
+              colspan python: (len(assessment.gescomponents) + 1) - len(row.values);">
 
               <label for=""
                 class="help-popover"
                 data-trigger="hover"
                 data-html="true"
                 tal:attributes="
-                  title python: value[0];
-                  data-content python: value[2]"
+                title python: value[0];
+                data-content python: value[2]"
                 >
                 <span tal:content="python: value[2]">D0C0</span>
                 <!-- <span class="fa fa-question-circle"></span> -->
@@ -37,9 +38,7 @@
             </td>
           </tal:rep>
 
-          <td
-            tal:attributes="class python: 'as-value as-value-{}'.format(row.conclusion_color)"
-            >
+          <td tal:attributes="class python: 'as-value as-value-{}'.format(row.conclusion_color)">
             <strong tal:content="row/conclusion">X</strong>
           </td>
 

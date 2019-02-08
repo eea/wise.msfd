@@ -6,11 +6,13 @@ import logging
 import re
 from collections import namedtuple
 
+import lxml.etree
 from pkg_resources import resource_filename
 
 from wise.msfd import db, sql2018
 from wise.msfd.labels import COMMON_LABELS
-from wise.msfd.utils import ItemLabel
+from wise.msfd.utils import (ItemLabel, _parse_files_in_location,
+                             get_element_by_id)
 
 logger = logging.getLogger('wise.msfd')
 
@@ -22,6 +24,92 @@ logger = logging.getLogger('wise.msfd')
 Criterion2012 = namedtuple('Criterion2012', ['id', 'title'])
 Feature = namedtuple('Feature', ['name', 'label', 'descriptors'])
 Parameter = namedtuple('Parameter', ['name', 'unit', 'criterias'])
+
+
+class ElementDefinition:
+    def __init__(self, node, root):
+        self.id = node.get('id')
+        self.definition = node.text.strip()
+
+
+class MetodologicalStandardDefinition:
+    def __init__(self, node, root):
+        self.id = node.get('id')
+        self.definition = node.text.strip()
+
+
+class CriteriaAssessmentDefinition:
+    def __init__(self, node, root):
+        self.id = node.get('id')
+        defn = node.find('definition')
+        self.definition = defn.text.strip()
+
+        # TODO: there are some edge cases. Handle them?
+        prim = node.get('primary', 'false')
+
+        if 'error' in prim:     # this is an error marker, for cases we need to
+                                # handle
+            logger.warning("Please debug this node: %s", node)
+            prim = 'false'
+
+        self.is_primary = bool(['false', 'true'].index(prim))
+
+        self.elements = []
+
+        for eid in node.xpath('uses-element/@href'):
+            el = get_element_by_id(root, eid)
+            self.elements.append(ElementDefinition(el, root))
+
+        msid = node.xpath('uses-methodological-standard/@href')[0]
+        mel = get_element_by_id(root, msid)
+        self.methodological_standard = MetodologicalStandardDefinition(
+            mel, root
+        )
+
+    @property
+    def title(self):
+        return u"{} - {}".format(self.id,
+                                 self.is_primary and 'Primary' or 'Secondary')
+
+
+def parse_elements_file(fpath):
+    # Note: this parsing is pretty optimistic that there's a single descriptor
+    # in the file. Keep that true
+    res = []
+
+    try:
+        root = lxml.etree.parse(fpath).getroot()
+    except:
+        logger.exception('Could not parse file: %s', fpath)
+
+        return
+
+    desc_id = root.get('id')
+
+    for critn in root.iterchildren('criteria'):
+
+        crit = CriteriaAssessmentDefinition(critn, root)
+        res.append(crit)
+
+    return desc_id, res
+
+
+def get_descriptor_elements(location):
+    """ Parse the descriptor elements in a location and build a mapping struct
+
+    The location argument should be a path relative to wise.msfd package.
+    The return data is used to build the automatic forms.
+    """
+    def check_filename(fname):
+        return fname.endswith('_elements.xml')
+
+    return _parse_files_in_location(location,
+                                    check_filename, parse_elements_file)
+
+
+DESCRIPTOR_ELEMENTS = get_descriptor_elements(
+    'compliance/nationaldescriptors/data'
+)
 
 
 class Descriptor(ItemLabel):
@@ -86,12 +174,26 @@ class Criterion(ItemLabel):
             'name': self.title,
         }
 
-    def __init__(self, id, title, alternatives=None):
-        self.alternatives = alternatives or []  # Criterion2012 objects
+    def __init__(self, id, title, descriptor):
+        self.alternatives = []  # Criterion2012 objects
 
         self._id = id
         self.id = self._id or self.alternatives[0][0]
         self._title = title
+        self.descriptor = descriptor
+
+        crit_defs = [x
+                     for x in DESCRIPTOR_ELEMENTS[self.descriptor]
+
+                     if x.id == self.id]
+
+        if crit_defs:
+            self.__dict__.update(crit_defs[0].__dict__)
+        else:
+            self.elements = []
+            self.definition = ''
+            self.methodological_standard = ''
+            self.is_primary = False
 
     def __str__(self):
         return self.title
@@ -149,47 +251,6 @@ class Criterion(ItemLabel):
         return any([x.id == id for x in self.alternatives])
 
 
-def parse_ges_components():
-    # Node: this method is not used, it doesn't offer a way to map old
-    # criterias to new criterias
-    # {
-    #   "code": "1.1.3",
-    #   "label": "(Indicator(old)) Area covered by the species (for
-    #   sessile/benthic species)",
-    #   "descriptor": "D1"
-    # },
-    gcomps = TERMSLIST['GESComponents']
-
-    # {
-    #   "code": "5.2",
-    #   "label": "(Criteria(old)) Direct effects of nutrient enrichment",
-    #   "descriptor": "D5"
-    # },
-    gcrits = TERMSLIST['GESCriterias']
-
-    # {
-    #   "code": "D1.1",
-    #   "label": "(Descriptor) D1 - Biodiversity - birds"
-    # },
-    gdescs = TERMSLIST['GESDescriptors']
-
-    descriptors = {d['label']: Descriptor(d['code'], d['label'])
-                   for d in gdescs}
-    descriptors['D1'] = Descriptor('D1', 'D1 - Biodiversity')
-    criterions = {}
-
-    for c in (gcomps + gcrits):
-        if c['code'] not in criterions:
-            c = Criterion(c['code'], c['label'], [])
-            descriptors[c['descriptor']].criterions.add(c)
-            criterions[c['code']] = c
-        else:
-            c = criterions[c['code']]
-            descriptors[c['descriptor']].criterions.add(c)
-
-    return descriptors, criterions
-
-
 def parse_ges_extended_format():
     csv_f = resource_filename('wise.msfd',
                               'data/ges_terms.csv')
@@ -232,7 +293,7 @@ def parse_ges_extended_format():
             criterion = criterions[b1]
             descriptors[descriptor.id].criterions.append(criterion)
         else:
-            criterion = Criterion(id=b1, title=b2)
+            criterion = Criterion(id=b1, title=b2, descriptor=descriptor.id)
 
             criterions[criterion.id] = criterion
             descriptors[descriptor.id].criterions.append(criterion)
