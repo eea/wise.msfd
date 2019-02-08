@@ -14,7 +14,7 @@
     var qid = $el.data('question-id');
     var url = './@@ast-comments?q=' + qid;
     $.get(url, function(text){
-      console.log('getting comments from url', url);
+      // console.log('getting comments from url', url);
       $el.html(text);
     });
   }
@@ -39,13 +39,15 @@
     $('.subform .right .textline button').on('click', function() {
       var $btn = $(this);
       var $comel = $('.comments', $btn.closest('.right'));
+      var $textarea = $('textarea', $btn.closest('.textline'));
 
       var qid = $comel.data('question-id');
-      var text = $('textarea', $btn.closest('.textline')).val();
+      var text = $textarea.val();
 
       var url = './@@add_comment';
       $.post(url, {text:text, q: qid}, function(text){
         $comel.html(text);
+        $textarea.val('');
       });
       // console.log(qid, text);
       return false;
