@@ -1,4 +1,5 @@
 import json
+import logging
 from collections import deque
 
 from eea.cache import cache
@@ -8,6 +9,8 @@ from Products.Five.browser import BrowserView
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 
 from .base import BaseComplianceView
+
+logger = logging.getLogger('wise.msfd')
 
 
 class ComplianceJSONMap(BrowserView):
@@ -75,7 +78,8 @@ class CommentsList(BrowserView):
                               title='Comments for question ' + question_id)
             transition(obj=q_folder, transition='open_for_tl')
 
-        create(q_folder, 'wise.msfd.comment', text=text)
+        comment = create(q_folder, 'wise.msfd.comment', text=text)
+        logger.info('Added comment %r in %r:, %r', q_folder, comment, text)
 
         return self.template()
 
@@ -84,7 +88,7 @@ class CommentsList(BrowserView):
 
     def comments(self):
         tl_folder = self.context['tl']
-        question_id = self.request.form.get('q')
+        question_id = self.request.form.get('q', 'missing-id').lower()
 
         if question_id not in tl_folder.contentIds():
             return []

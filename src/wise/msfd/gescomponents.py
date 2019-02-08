@@ -120,7 +120,7 @@ class Descriptor(ItemLabel):
         self.id = id
         self.title = title
         self.name = self.title
-        self.criterions = criterions or []
+        self.criterions = criterions or set()
 
     def all_ids(self):
         res = set()
@@ -291,12 +291,12 @@ def parse_ges_extended_format():
 
         if b1 in criterions:
             criterion = criterions[b1]
-            descriptors[descriptor.id].criterions.append(criterion)
+            descriptors[descriptor.id].criterions.add(criterion)
         else:
             criterion = Criterion(id=b1, title=b2, descriptor=descriptor.id)
 
             criterions[criterion.id] = criterion
-            descriptors[descriptor.id].criterions.append(criterion)
+            descriptors[descriptor.id].criterions.add(criterion)
 
         if b3 and (not criterion.has_alternative(b3)):
             crit = Criterion2012(*b3.split(' ', 1))

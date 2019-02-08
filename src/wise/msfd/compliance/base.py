@@ -15,6 +15,7 @@ from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 from wise.msfd import db, sql
 from wise.msfd.compliance.scoring import compute_score
 from wise.msfd.compliance.vocabulary import ASSESSED_ARTICLES, REGIONS
+from wise.msfd.gescomponents import get_descriptor
 from wise.msfd.translation.interfaces import ITranslationContext
 from wise.msfd.utils import Tab, _parse_files_in_location
 
@@ -250,6 +251,10 @@ class BaseComplianceView(BrowserView):
             return art_name[0]
 
         return self.article
+
+    @property       # TODO: memoize
+    def descriptor_obj(self):
+        return get_descriptor(self.descriptor)
 
     @property
     def _national_descriptors_folder(self):
