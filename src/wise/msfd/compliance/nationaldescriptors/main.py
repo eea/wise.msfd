@@ -459,8 +459,8 @@ class NationalDescriptorArticleView(BaseComplianceView):
         # Assessment data 2018
         data = self.context.saved_assessment_data.last()
 
-        import pdb
-        pdb.set_trace()
+        # import pdb
+        # pdb.set_trace()
         assessment = get_assessment_data(
             self.article,
             self.criterias,
