@@ -12,6 +12,7 @@ from Products.Five.browser.pagetemplatefile import \
     ViewPageTemplateFile as Template
 from wise.msfd import db, sql2018
 from wise.msfd.compliance.base import get_questions
+from wise.msfd.compliance.content import AssessmentData
 from wise.msfd.compliance.scoring import get_overall_conclusion
 from wise.msfd.compliance.vocabulary import SUBREGIONS_TO_REGIONS
 from wise.msfd.gescomponents import get_descriptor
@@ -333,40 +334,6 @@ def filter_assessment_data_2012(data, region_code, descriptor_criterions):
             assessments[country].criteria.append(criteria)
 
     return assessments
-
-
-class AssessmentData(PersistentList):
-
-    data = []       # TODO: why is this? This needs to be migrated
-
-    @property
-    def assessors(self):
-        assessors = set()
-
-        for data in self.data:
-            assessor = data.get('assessor')
-
-            if assessor is None:
-                continue
-                # raise ValueError('No assessor in data')
-
-            assessors.add(assessor)
-
-        if not assessors:
-            return 'Not assessed'
-
-        return ', '.join(assessors)
-
-    def append(self, data):
-        self.data.append(data)
-
-        self._p_changed = True
-
-    def last(self):
-        if not self.data:
-            return {}
-
-        return self.data[-1]
 
 
 class NationalDescriptorRegionView(BaseComplianceView):

@@ -5,12 +5,14 @@ from collections import namedtuple
 from zope.schema import Choice, Text
 from zope.schema.vocabulary import SimpleTerm, SimpleVocabulary
 
+from persistent.list import PersistentList
 from plone.api import user
 from plone.z3cform.layout import wrap_form
 from Products.Five.browser.pagetemplatefile import (PageTemplateFile,
                                                     ViewPageTemplateFile)
 from wise.msfd.base import EmbeddedForm, MainFormWrapper
 from wise.msfd.compliance.base import get_questions
+from wise.msfd.compliance.content import AssessmentData
 from wise.msfd.compliance.interfaces import ICountryDescriptorsFolder
 from wise.msfd.gescomponents import get_descriptor, get_descriptor_elements
 from z3c.form.button import buttonAndHandler
@@ -79,6 +81,14 @@ class EditAssessmentSummaryForm(Form, BaseComplianceView):
 
         if errors:
             return
+
+        context = self.context
+
+        # BBB code, useful in development
+
+        if not hasattr(context, 'saved_assessment_data') or \
+                not isinstance(context.saved_assessment_data, PersistentList):
+            context.saved_assessment_data = AssessmentData()
 
         saved_data = self.context.saved_assessment_data.last()
 
@@ -199,6 +209,13 @@ class EditAssessmentDataForm(Form, BaseComplianceView):
             data['assessor'] = 'system'
 
         data['assess_date'] = datetime.date.today()
+
+        # BBB code, useful for development
+        context = self.context
+
+        if not hasattr(context, 'saved_assessment_data') or \
+                not isinstance(context.saved_assessment_data, PersistentList):
+            context.saved_assessment_data = AssessmentData()
         last = self.context.saved_assessment_data.last()
 
         if last != data:

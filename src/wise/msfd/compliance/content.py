@@ -1,5 +1,6 @@
 from zope.interface import implements
 
+from persistent.list import PersistentList
 from plone.dexterity.content import Container
 
 from .interfaces import (ICountryDescriptorsFolder,
@@ -40,3 +41,37 @@ class NationalDescriptorAssessment(Container):
         data = self.assessment_data
 
         return data.get('{}_assessment_summary'.format(art), '')
+
+
+class AssessmentData(PersistentList):
+
+    data = []       # TODO: why is this? This needs to be migrated
+
+    @property
+    def assessors(self):
+        assessors = set()
+
+        for data in self.data:
+            assessor = data.get('assessor')
+
+            if assessor is None:
+                continue
+                # raise ValueError('No assessor in data')
+
+            assessors.add(assessor)
+
+        if not assessors:
+            return 'Not assessed'
+
+        return ', '.join(assessors)
+
+    def append(self, data):
+        self.data.append(data)
+
+        self._p_changed = True
+
+    def last(self):
+        if not self.data:
+            return {}
+
+        return self.data[-1]
