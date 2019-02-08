@@ -22,8 +22,12 @@
       <option score="1">1-25% of target relevant for this descriptor refers to reductions of pressures and/or impacts</option>
       <option score="0">Not reported</option>
     </scoring>
-    <score-weight descriptor="D1Species" value="20" />
-    <score-weight descriptor="D1Pelagic habitats" value="20" />
+    <score-weight descriptor="D1.1" value="20" />
+    <score-weight descriptor="D1.2" value="20" />
+    <score-weight descriptor="D1.3" value="20" />
+    <score-weight descriptor="D1.4" value="20" />
+    <score-weight descriptor="D1.5" value="20" />
+    <score-weight descriptor="D1.6" value="20" />
     <score-weight descriptor="D2" value="20" />
     <score-weight descriptor="D3" value="20" />
     <score-weight descriptor="D4" value="20" />
@@ -54,8 +58,12 @@
       <option score="1">1-25% of targets relevant for this descriptor are measurable</option>
       <option score="0">Not reported</option>
     </scoring>
-    <score-weight descriptor="D1Species" value="15" />
-    <score-weight descriptor="D1Pelagic habitats" value="15" />
+    <score-weight descriptor="D1.1" value="15" />
+    <score-weight descriptor="D1.2" value="15" />
+    <score-weight descriptor="D1.3" value="15" />
+    <score-weight descriptor="D1.4" value="15" />
+    <score-weight descriptor="D1.5" value="15" />
+    <score-weight descriptor="D1.6" value="15" />
     <score-weight descriptor="D2" value="15" />
     <score-weight descriptor="D3" value="15" />
     <score-weight descriptor="D4" value="15" />
@@ -87,8 +95,12 @@
       <option score="1">1-25% of targets relevant for this descriptor are measurable</option>
       <option score="0">Not reported</option>
     </scoring>
-    <score-weight descriptor="D1Species" value="15" />
-      <score-weight descriptor="D1Pelagic habitats" value="15" />
+      <score-weight descriptor="D1.1" value="15" />
+      <score-weight descriptor="D1.2" value="15" />
+      <score-weight descriptor="D1.3" value="15" />
+      <score-weight descriptor="D1.4" value="15" />
+      <score-weight descriptor="D1.5" value="15" />
+      <score-weight descriptor="D1.6" value="15" />
       <score-weight descriptor="D2" value="15" />
       <score-weight descriptor="D3" value="15" />
       <score-weight descriptor="D4" value="15" />
@@ -122,8 +134,12 @@
       <option score="1">The MS uses the same targets as a few (1-25%) MS in the region</option>
       <option score="0">The MS uses targets which are not similar to other MS in the region/Not reported\the information is provided in different formats across MS and it is impossible to compare</option>
     </scoring>
-    <score-weight descriptor="D1Species" value="15" />
-    <score-weight descriptor="D1Pelagic habitats" value="15" />
+    <score-weight descriptor="D1.1" value="15" />
+    <score-weight descriptor="D1.2" value="15" />
+    <score-weight descriptor="D1.3" value="15" />
+    <score-weight descriptor="D1.4" value="15" />
+    <score-weight descriptor="D1.5" value="15" />
+    <score-weight descriptor="D1.6" value="15" />
     <score-weight descriptor="D2" value="15" />
     <score-weight descriptor="D3" value="15" />
     <score-weight descriptor="D4" value="15" />
@@ -156,8 +172,12 @@
       <option score="1">Targets for this descriptor will contribute a bit (1-25%) to gap between current state and GES</option>
       <option score="0">Unclear whether targets will contribute to gap between current state and GES. Targets will not contribute to gap between current state and GES</option>
     </scoring>
-    <score-weight descriptor="D1Species" value="25" />
-    <score-weight descriptor="D1Pelagic habitats" value="25" />
+    <score-weight descriptor="D1.1" value="25" />
+    <score-weight descriptor="D1.2" value="25" />
+    <score-weight descriptor="D1.3" value="25" />
+    <score-weight descriptor="D1.4" value="25" />
+    <score-weight descriptor="D1.5" value="25" />
+    <score-weight descriptor="D1.6" value="25" />
     <score-weight descriptor="D2" value="25" />
     <score-weight descriptor="D3" value="25" />
     <score-weight descriptor="D4" value="25" />
@@ -191,8 +211,12 @@
       <option score="1">0-25% of targets are linked to measures aimed at reducing relevant pressures/impacts for this descriptor</option>
       <option score="0">Not reported</option>
     </scoring>
-    <score-weight descriptor="D1Species" value="10" />
-    <score-weight descriptor="D1Pelagic habitats" value="10" />
+    <score-weight descriptor="D1.1" value="10" />
+    <score-weight descriptor="D1.2" value="10" />
+    <score-weight descriptor="D1.3" value="10" />
+    <score-weight descriptor="D1.4" value="10" />
+    <score-weight descriptor="D1.5" value="10" />
+    <score-weight descriptor="D1.6" value="10" />
     <score-weight descriptor="D2" value="10" />
     <score-weight descriptor="D3" value="10" />
     <score-weight descriptor="D4" value="10" />

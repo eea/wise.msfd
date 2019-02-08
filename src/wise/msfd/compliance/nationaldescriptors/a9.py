@@ -258,7 +258,7 @@ class Article9(BaseArticle2012):
 
         count, res = db.get_marine_unit_id_names(list(set(muids)))
 
-        labels = [ItemLabel(m, t) for m, t in res if m in self.muids]
+        labels = [ItemLabel(m, t or m) for m, t in res if m in self.muids]
         muids = ItemList(labels)
 
         for node in descriptors:

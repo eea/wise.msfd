@@ -32,6 +32,12 @@ class ElementDefinition:
         self.definition = node.text.strip()
 
 
+class DummyMSD:
+    def __init__(self):
+        self.id = object()
+        self.definition = ''
+
+
 class MetodologicalStandardDefinition:
     def __init__(self, node, root):
         self.id = node.get('id')
@@ -192,7 +198,7 @@ class Criterion(ItemLabel):
         else:
             self.elements = []
             self.definition = ''
-            self.methodological_standard = ''
+            self.methodological_standard = DummyMSD()
             self.is_primary = False
 
     def __str__(self):
@@ -284,7 +290,7 @@ def parse_ges_extended_format():
 
         if b1.startswith('D') and ('C' not in b1):
             # it's a descriptor label
-            descriptor = Descriptor(b1, b2, [])
+            descriptor = Descriptor(b1, b2)
             descriptors[descriptor.id] = descriptor
 
             continue

@@ -141,14 +141,6 @@ class EditAssessmentDataForm(Form, BaseComplianceView):
     #
     #     return 'Current process phase: {}'.format(title)
 
-    @property       # TODO: memoize
-    def descriptor_obj(self):
-        return get_descriptor(self.descriptor)
-
-    # @property
-    # def criterias(self):
-    #     return self.descriptor_obj.criterions
-
     @buttonAndHandler(u'Save', name='save')
     def handle_save(self, action):
         data, errors = self.extractData()
@@ -173,7 +165,6 @@ class EditAssessmentDataForm(Form, BaseComplianceView):
 
             # TODO update the score if all fields have been answered
             # score is updated if one of the fields has been answered
-            # import pdb; pdb.set_trace()
             values = [x for x in values if x is not None]
 
             if values:
@@ -239,10 +230,18 @@ class EditAssessmentDataForm(Form, BaseComplianceView):
 
         return Fields(*fields)
 
+    @property       # TODO: memoize
+    def descriptor_obj(self):
+        return get_descriptor(self.descriptor)
+
+    # @property
+    # def criterias(self):
+    #     return self.descriptor_obj.criterions
+
     # TODO: use memoize
     @property
     def criterias(self):
-        # return self.descriptor_obj.criterions
+        return self.descriptor_obj.criterions
         els = get_descriptor_elements(
             'compliance/nationaldescriptors/data'
         )
@@ -283,6 +282,7 @@ class EditAssessmentDataForm(Form, BaseComplianceView):
             ][0]
 
             criterias = filtered_criterias(self.criterias, question)
+            print criterias
 
             form = EmbeddedForm(self, self.request)
             form.title = question.definition
@@ -293,9 +293,7 @@ class EditAssessmentDataForm(Form, BaseComplianceView):
             form._disabled = self.is_disabled(question)
             fields = []
 
-            # when use-criteria == 'none'
-
-            if not criterias:
+            if not criterias:       # when use-criteria == 'none'
                 field_title = u'All criterias'
                 field_name = '{}_{}'.format(self.article, question.id)
                 choices = question.answers
@@ -441,6 +439,11 @@ def render_assessment_help(criterias):
 
     for c in criterias:
         row = []
+
+        if not c.elements:
+            logger.info("Skipping %r from help rendering", c)
+
+            continue
         cel = c.elements[0]     # TODO: also support multiple elements
 
         if cel.id not in seen:

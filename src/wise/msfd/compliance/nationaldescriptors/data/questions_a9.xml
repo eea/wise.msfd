@@ -20,8 +20,12 @@
       <option score="1">1-25% of primary criteria used (or replaced with secondary with adequate justification)</option>
       <option score="0">Not reported</option>
     </scoring>
-    <score-weight descriptor="D1Species" value="6" />
-    <score-weight descriptor="D1Pelagic habitats" value="10" />
+    <score-weight descriptor="D1.1" value="6" />
+    <score-weight descriptor="D1.2" value="6" />
+    <score-weight descriptor="D1.3" value="6" />
+    <score-weight descriptor="D1.4" value="6" />
+    <score-weight descriptor="D1.5" value="6" />    
+    <score-weight descriptor="D1.6" value="10" />
     <score-weight descriptor="D2" value="6" />
     <score-weight descriptor="D3" value="10" />
     <score-weight descriptor="D4" value="6" />
@@ -53,8 +57,12 @@
       <option score="1">1-25% of secondary criteria used </option>
       <option score="0">Not reported</option>
     </scoring>
-    <score-weight descriptor="D1Species" value="4" />
-    <score-weight descriptor="D1Pelagic habitats" value="0" />
+    <score-weight descriptor="D1.1" value="4" />
+    <score-weight descriptor="D1.2" value="4" />
+    <score-weight descriptor="D1.3" value="4" />
+    <score-weight descriptor="D1.4" value="4" />
+    <score-weight descriptor="D1.5" value="4" />
+    <score-weight descriptor="D1.6" value="0" />
     <score-weight descriptor="D2" value="4" />
     <score-weight descriptor="D3" value="0" />
     <score-weight descriptor="D4" value="4" />
@@ -85,8 +93,12 @@
       <option score="1">Elements and parameters are specified for 1-25% of criteria</option>
       <option score="0">Not reported / No assessment aspects satisfied</option>
     </scoring>
-    <score-weight descriptor="D1Species" value="6" />
-    <score-weight descriptor="D1Pelagic habitats" value="6" />
+    <score-weight descriptor="D1.1" value="6" />
+    <score-weight descriptor="D1.2" value="6" />
+    <score-weight descriptor="D1.3" value="6" />
+    <score-weight descriptor="D1.4" value="6" />
+    <score-weight descriptor="D1.5" value="6" />
+    <score-weight descriptor="D1.6" value="6" />
     <score-weight descriptor="D2" value="6" />
     <score-weight descriptor="D3" value="6" />
     <score-weight descriptor="D4" value="6" />
@@ -138,8 +150,12 @@
       <option score="1">Threshold values defined for 1-25% criteria</option>
       <option score="0">Not reported / No assessment aspects satisfied</option>
     </scoring>
-    <score-weight descriptor="D1Species" value="6" />
-    <score-weight descriptor="D1Pelagic habitats" value="6" />
+    <score-weight descriptor="D1.1" value="6" />
+    <score-weight descriptor="D1.2" value="6" />
+    <score-weight descriptor="D1.3" value="6" />
+    <score-weight descriptor="D1.4" value="6" />
+    <score-weight descriptor="D1.5" value="6" />
+    <score-weight descriptor="D1.6" value="6" />
     <score-weight descriptor="D2" value="6" />
     <score-weight descriptor="D3" value="6" />
     <score-weight descriptor="D4" value="6" />
@@ -193,8 +209,12 @@
       <option score="1">GES extent threshold defined for 1-25% of elements</option>
       <option score="0">Not reported/ No assessment aspects satisfied</option>
     </scoring>
-    <score-weight descriptor="D1Species" value="6" />
-    <score-weight descriptor="D1Pelagic habitats" value="6" />
+    <score-weight descriptor="D1.1" value="6" />
+    <score-weight descriptor="D1.2" value="6" />
+    <score-weight descriptor="D1.3" value="6" />
+    <score-weight descriptor="D1.4" value="6" />
+    <score-weight descriptor="D1.5" value="6" />
+    <score-weight descriptor="D1.6" value="6" />
     <score-weight descriptor="D2" value="6" />
     <score-weight descriptor="D3" value="6" />
     <score-weight descriptor="D4" value="6" />
@@ -227,8 +247,12 @@
       <option score="1">The MS uses the same criteria as only few (1-25%) MS in the region</option>
       <option score="0">Not reported\the information is provided in different formats across MS and it is impossible to compare</option>
     </scoring>
-    <score-weight descriptor="D1Species" value="6" />
-    <score-weight descriptor="D1Pelagic habitats" value="6" />
+    <score-weight descriptor="D1.1" value="6" />
+    <score-weight descriptor="D1.2" value="6" />
+    <score-weight descriptor="D1.3" value="6" />
+    <score-weight descriptor="D1.4" value="6" />
+    <score-weight descriptor="D1.5" value="6" />
+    <score-weight descriptor="D1.6" value="6" />
     <score-weight descriptor="D2" value="6" />
     <score-weight descriptor="D3" value="6" />
     <score-weight descriptor="D4" value="6" />
@@ -261,8 +285,12 @@
       <option score="1">Few elements and parameters (1-25% across criteria) are the same or similar as other MS in the region</option>
       <option score="0">Not reported/elements and parameters are not the same as other MS in the region/the information is provided in different formats across MS and it is not possible to compare</option>
     </scoring>
-    <score-weight descriptor="D1Species" value="6" />
-    <score-weight descriptor="D1Pelagic habitats" value="6" />
+    <score-weight descriptor="D1.1" value="6" />
+    <score-weight descriptor="D1.2" value="6" />
+    <score-weight descriptor="D1.3" value="6" />
+    <score-weight descriptor="D1.4" value="6" />
+    <score-weight descriptor="D1.5" value="6" />
+    <score-weight descriptor="D1.6" value="6" />
     <score-weight descriptor="D2" value="6" />
     <score-weight descriptor="D3" value="6" />
     <score-weight descriptor="D4" value="6" />
@@ -295,8 +323,12 @@
       <option score="1">Few objectives (1-25% across criteria) are the same or similar as other MS in the region</option>
       <option score="0">Not reported/objectives are not the same as other MS in the region/the information is provided in different formats across MS and it is not possible to compare</option>
     </scoring>
-    <score-weight descriptor="D1Species" value="6" />
-    <score-weight descriptor="D1Pelagic habitats" value="6" />
+    <score-weight descriptor="D1.1" value="6" />
+    <score-weight descriptor="D1.2" value="6" />
+    <score-weight descriptor="D1.3" value="6" />
+    <score-weight descriptor="D1.4" value="6" />
+    <score-weight descriptor="D1.5" value="6" />
+    <score-weight descriptor="D1.6" value="6" />
     <score-weight descriptor="D2" value="6" />
     <score-weight descriptor="D3" value="6" />
     <score-weight descriptor="D4" value="6" />
@@ -329,8 +361,12 @@
       <option score="1">Few threshold values (1-25% across criteria) are the same or similar to other MS in the region</option>
       <option score="0">Not reported/threshold values are not the same as other MS in the region/the information is provided in different formats across MS and it is impossible to compare</option>
     </scoring>
-    <score-weight descriptor="D1Species" value="8" />
-    <score-weight descriptor="D1Pelagic habitats" value="8" />
+    <score-weight descriptor="D1.1" value="8" />
+    <score-weight descriptor="D1.2" value="8" />
+    <score-weight descriptor="D1.3" value="8" />
+    <score-weight descriptor="D1.4" value="8" />
+    <score-weight descriptor="D1.5" value="8" />
+    <score-weight descriptor="D1.6" value="8" />
     <score-weight descriptor="D2" value="8" />
     <score-weight descriptor="D3" value="8" />
     <score-weight descriptor="D4" value="8" />
@@ -363,8 +399,12 @@
       <option score="1">Few proportion values (1-25% across criteria) are the same or similar to other MS in the region</option>
       <option score="0">Not reported/proportion values are not the same or similar to other MS/the information is provided in different formats across MS and it is impossible to compare</option>
     </scoring>
-    <score-weight descriptor="D1Species" value="8" />
-    <score-weight descriptor="D1Pelagic habitats" value="8" />
+    <score-weight descriptor="D1.1" value="8" />
+    <score-weight descriptor="D1.2" value="8" />
+    <score-weight descriptor="D1.3" value="8" />
+    <score-weight descriptor="D1.4" value="8" />
+    <score-weight descriptor="D1.5" value="8" />
+    <score-weight descriptor="D1.6" value="8" />
     <score-weight descriptor="D2" value="8" />
     <score-weight descriptor="D3" value="8" />
     <score-weight descriptor="D4" value="8" />
@@ -397,8 +437,12 @@
       <option score="1">Few GES extent thresholds (1-25% across criteria) are the same or similar to other MS in the region</option>
       <option score="0">Not reported GES extent thresholds are not the same or similar to other MS /the information is provided in different formats across MS and it is impossible to compare</option>
     </scoring>
-    <score-weight descriptor="D1Species" value="8" />
-    <score-weight descriptor="D1Pelagic habitats" value="8" />
+    <score-weight descriptor="D1.1" value="8" />
+    <score-weight descriptor="D1.2" value="8" />
+    <score-weight descriptor="D1.3" value="8" />
+    <score-weight descriptor="D1.4" value="8" />
+    <score-weight descriptor="D1.5" value="8" />
+    <score-weight descriptor="D1.6" value="8" />
     <score-weight descriptor="D2" value="8" />
     <score-weight descriptor="D3" value="8" />
     <score-weight descriptor="D4" value="8" />
