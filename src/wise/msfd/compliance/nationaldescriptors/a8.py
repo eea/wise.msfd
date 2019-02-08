@@ -741,7 +741,7 @@ class Article8(BaseArticle2012):
 
         for k, v in report_data.items():
             if k in self.muids:
-                muid = ItemLabel(k, muid_labels[k])
+                muid = ItemLabel(k, muid_labels[k] or k)
                 res[muid] = v
 
         self.muids = sorted(res.keys())
@@ -807,26 +807,30 @@ class A8aGeneric(A8AlternateItem):
         N = cls.primary_mapper
         P = cls.pres_mapper
         A = cls.ast_mapper
-        C = cls.crit_mapper
         I = cls.indic_mapper
+        C = cls.crit_mapper
 
         pk = N.__table__.primary_key.columns.values()[0]
 
-        a_q = sess.query(A).filter(A.Topic == cls.ast_topic).subquery()
+        # .filter(A.Topic == cls.ast_topic)
+        a_q = sess.query(A).join(N).subquery()
         a_A = aliased(A, alias=a_q, adapt_on_names=True)
 
-        c_q = sess.query(C).filter(
-            C.CriteriaType.in_(cls.criteria_types)).subquery()
+        # .filter(A.Topic.in_(cls.criteria_types))\
+        c_q = sess.query(C).join(A).subquery()
         c_A = aliased(C, alias=c_q, adapt_on_names=True)
 
+        # TODO how to filter by topics
+        # .filter(N.Topic.in_(cls.ast_topic + cls.criteria_types))\
         q = sess.query(N, P, a_A, I, c_A)\
-            .select_from(N)\
+            .select_from(N) \
+            .filter(N.Topic != 'InfoGaps')\
             .filter(N.MarineUnitID.in_(muids))\
             .outerjoin(a_A)\
             .outerjoin(I)\
             .outerjoin(c_A)\
             .outerjoin(P)\
-            .order_by(pk)
+            .order_by(N.ReportingFeature, pk)
 
         print q.count()
 
@@ -863,23 +867,33 @@ class A8aGeneric(A8AlternateItem):
 
         return list(sorted(res))
 
+    def get_conditional_value(self, method_name, default_val):
+        topic = self._args[0].Topic
+        get_method = getattr(self, method_name, None)
+        if get_method:
+            return get_method(topic, default_val)
+
+        return default_val
+
     def get_values(self):
         rec, pres, ast, indic, crit = self._args
         self.MarineUnitID = rec.MarineUnitID
         meta = self._get_metadata(rec)
 
-        if crit:
-            import pdb
-            pdb.set_trace()
+        # if crit:
+        #     import pdb
+        #     pdb.set_trace()
 
         return [
             ('MarineReportingUnit', rec.MarineUnitID),
 
             ('GEScomponent', 'D1'),
-            ('Feature', 'SppAll'),
-
-            ('GESachieved', 'N/A'),
-
+            ('Feature', self.get_conditional_value(
+                'feature', getattr(rec, 'ReportingFeature', None))
+             ),
+            ('GESachieved', self.get_conditional_value(
+                'ges_achiev', getattr(rec, 'Summary1', None))
+             ),
             ('AssessmentPeriod',
              meta and meta.AssessmentDateStart or rec.RecentTimeStart),
             ('AssessmentPeriod2',
@@ -890,15 +904,28 @@ class A8aGeneric(A8AlternateItem):
             ('RelatedPressures', ItemList(rows=self.get_pressures(pres))),
             # ('RelatedActivities', ItemList(rows=related_activities)),
             #
-            ('Criteria', crit and crit.CriteriaType),
-            ('CriteriaStatus', ast and ast.Status),     # TODO? ????
-            ('DescriptionCriteria', ast and ast.StatusDescription),
+            ('Criteria', self.get_conditional_value(
+                'criteria', getattr(crit, 'CriteriaType', None))
+             ),
+            # TODO? ????
+            ('CriteriaStatus', self.get_conditional_value(
+                'crit_status', getattr(ast, 'Status', None))
+             ),
+            ('DescriptionCriteria', self.get_conditional_value(
+                'desc_crit', getattr(ast, 'StatusDescription', None))
+             ),
             ('Element', rec.ReportingFeature),
-            ('ElementSource', rec.SourceClassificationListAuthority),
-            ('DescriptionElement', ast and ast.StatusDescription),
-            ('ElementStatus', ast and ast.Status),
-            ('Parameter', rec.Topic),
-
+            ('ElementSource', self.get_conditional_value(
+                'elem_source',
+                getattr(rec, 'SourceClassificationListAuthority', None))
+             ),
+            ('DescriptionElement', self.get_conditional_value(
+                'descr_elem', getattr(ast, 'StatusDescription', None))
+             ),
+            ('ElementStatus', self.get_conditional_value(
+                'elem_status', getattr(ast, 'Status', None))
+             ),
+            ('Parameter', self.get_conditional_value('param', rec.Topic)),
             ('ThresholdQualitative', indic and indic.ThresholdValue),
             ('ValueUnit', indic and indic.ThresholdValueUnit),
             ('ProportionThresholdValue', indic and indic.ThresholdProportion),
@@ -920,7 +947,106 @@ class A8aSpecies(A8aGeneric):
     metadata_table = sql.t_MSFD8a_SpeciesMetadata
 
     criteria_types = ['Distribution', 'Population', 'Condition']
-    ast_topic = 'SpeciesOverall'     # Overall
+    ast_topic = ['SpeciesOverall', ]     # Overall
+
+    # crit_fields = ('criteria', 'crit_status', 'desc_crit', 'param')
+    # ast_fields = ('descr_elem', 'elem_status')
+    #
+    # def __init__(self, descriptor, *args):
+    #     super(A8aSpecies, self).__init__(descriptor, *args)
+    #
+    #     for field in self.crit_fields:
+    #         setattr(self, field, self._criteria_types)
+    #
+    #     for field in self.ast_fields:
+    #         setattr(self, field, self._ast_topic)
+
+    def _ast_topic(self, *args):
+        topic, value = args
+        if topic in A8aSpecies.ast_topic:
+            return value
+
+        return None
+
+    def _criteria_types(self, *args):
+        topic, value = args
+        if topic in A8aSpecies.criteria_types:
+            return value
+
+        return None
+
+    def feature(self, *args):
+        return 'SppAll'
+
+    def ges_achiev(self, *args):
+        return 'N/A'
+
+    def descr_elem(self, *args):
+        return self._ast_topic(*args)
+
+    def elem_status(self, *args):
+        return self._ast_topic(*args)
+
+    def criteria(self, *args):
+        return self._criteria_types(*args)
+
+    def crit_status(self, *args):
+        return self._criteria_types(*args)
+
+    def desc_crit(self, *args):
+        return self._criteria_types(*args)
+
+    def param(self, *args):
+        return self._criteria_types(*args)
+
+
+class A8aFunctional(A8aGeneric):
+    primary_mapper = sql.MSFD8aFunctional
+    pres_mapper = sql.MSFD8aFunctionalPressuresImpact
+    ast_mapper = sql.MSFD8aFunctionalStatusAssessment
+    indic_mapper = sql.MSFD8aFunctionalStatusIndicator
+    crit_mapper = sql.MSFD8aFunctionalStatusCriterion
+
+    metadata_table = sql.t_MSFD8a_FunctionalMetadata
+
+    criteria_types = ['SpeciesComposition', 'Abundance']
+    summary_topics = ['FuncGroupOverall']
+    ast_topic = []     # Overall
+
+    def _summary_topics(self, *args):
+        topic, value = args
+        if topic in A8aFunctional.summary_topics:
+            return value
+
+        return None
+
+    def _criteria_types(self, *args):
+        topic, value = args
+        if topic in A8aFunctional.criteria_types:
+            return value
+
+        return None
+
+    def elem_source(self, *args):
+        return None
+
+    def elem_status(self, *args):
+        return 'N/A'
+
+    def ges_achiev(self, *args):
+        return self._summary_topics(*args)
+
+    def criteria(self, *args):
+        return self._criteria_types(*args)
+
+    def crit_status(self, *args):
+        return self._criteria_types(*args)
+
+    def desc_crit(self, *args):
+        return self._criteria_types(*args)
+
+    def param(self, *args):
+        return self._criteria_types(*args)
 
 
 class A8bNutrient(A8AlternateItem):
@@ -1014,6 +1140,7 @@ class Article8Alternate(BaseArticle2012):
     implementations = {
         'D1': [
             A8aSpecies,
+            # A8aFunctional
         ],
         'D1/D6': [],
         'D2': [],
@@ -1032,34 +1159,33 @@ class Article8Alternate(BaseArticle2012):
         if descriptor.startswith('D1.'):
             descriptor = 'D1'       # TODO: handle other cases
 
-        self.rows = []
-
-        Klass = self.implementations[descriptor][0]
-
-        # count, res = db.get_all_records(
-        #     Impl.mapper,
-        #     Impl.mapper.MarineUnitID.in_(self.muids)
-        # )
-
-        by_muid = defaultdict(list)
-
-        for item in Klass.items(self.descriptor, self.muids):
-            by_muid[item.MarineUnitID].append(item)
-
         self.rows = {}
 
-        for muid, cols in by_muid.items():
-            rows = []
+        for Klass in self.implementations[descriptor]:
+            # Klass = self.implementations[descriptor][0]
 
-            if not cols:
-                continue
+            # count, res = db.get_all_records(
+            #     Impl.mapper,
+            #     Impl.mapper.MarineUnitID.in_(self.muids)
+            # )
 
-            for name in cols[0].keys():
-                values = [c[name] for c in cols]
-                row = Row(name, values)
-                rows.append(row)
+            by_muid = defaultdict(list)
 
-            self.rows[muid] = rows
+            for item in Klass.items(self.descriptor, self.muids):
+                by_muid[item.MarineUnitID].append(item)
+
+            for muid, cols in by_muid.items():
+                rows = []
+
+                if not cols:
+                    continue
+
+                for name in cols[0].keys():
+                    values = [c[name] for c in cols]
+                    row = Row(name, values)
+                    rows.append(row)
+
+                self.rows[muid] = rows
 
     def __call__(self):
         self.setup_data()
