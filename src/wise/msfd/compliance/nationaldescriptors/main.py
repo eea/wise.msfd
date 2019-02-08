@@ -392,10 +392,6 @@ class NationalDescriptorArticleView(BaseComplianceView):
     def criterias(self):
         return self.descriptor_obj.criterions
 
-    @property       # TODO: memoize
-    def descriptor_obj(self):
-        return get_descriptor(self.descriptor)
-
     @property
     def questions(self):
         qs = get_questions(
