@@ -900,10 +900,6 @@ class A8aGeneric(A8AlternateItem):
         self.MarineUnitID = rec.MarineUnitID
         meta = self._get_metadata(rec)
 
-        # if crit:
-        #     import pdb
-        #     pdb.set_trace()
-
         return [
             ('MarineReportingUnit', rec.MarineUnitID),
 
@@ -919,7 +915,7 @@ class A8aGeneric(A8AlternateItem):
             ('AssessmentPeriod', meta and meta.AssessmentDateStart
                 or getattr(rec, 'RecentTimeStart', None)),
             ('AssessmentPeriod2', meta and meta.AssessmentDateEnd
-                or getattr(rec , 'RecentTimeEnd', None)),
+                or getattr(rec, 'RecentTimeEnd', None)),
             ('MethodUsed', meta and meta.MethodUsed),
             ('MethodSources', meta and meta.Sources),
 
@@ -976,18 +972,6 @@ class A8aSpecies(A8aGeneric):
 
     criteria_types = ['Distribution', 'Population', 'Condition']
     ast_topic = ['SpeciesOverall', ]     # Overall
-
-    # crit_fields = ('criteria', 'crit_status', 'desc_crit', 'param')
-    # ast_fields = ('descr_elem', 'elem_status')
-    #
-    # def __init__(self, descriptor, *args):
-    #     super(A8aSpecies, self).__init__(descriptor, *args)
-    #
-    #     for field in self.crit_fields:
-    #         setattr(self, field, self._criteria_types)
-    #
-    #     for field in self.ast_fields:
-    #         setattr(self, field, self._ast_topic)
 
     def feature(self, *args):
         return 'SppAll'
@@ -1272,7 +1256,13 @@ class Article8Alternate(BaseArticle2012):
         'D4': [],
         'D5': [
             A8bNutrient,
-        ]
+        ],
+        'D6': [],
+        'D7': [],
+        'D8': [],
+        'D9': [],
+        'D10': [],
+        'D11': [],
     }
 
     def setup_data(self):

@@ -4,7 +4,10 @@
     <tbody>
 
       <tr>
-        <th class="as-question as-header" tal:content="structure view/descriptor_obj"></th>
+        <th class="as-question as-header" >
+          Question / assessed elements
+
+        </th>
         <th class="as-header" tal:condition="not: assessment/gescomponents">
         </th>
         <th tal:repeat="g assessment/gescomponents" class="as-ges-component as-header">

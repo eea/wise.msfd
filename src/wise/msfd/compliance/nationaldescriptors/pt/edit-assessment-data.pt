@@ -37,7 +37,8 @@
 
       <div id="comp-national-descriptor">
 
-        <div tal:replace="structure view/help">Subform help here</div>
+        <div tal:replace="structure view/help"
+          tal:on-error="string:Error in help">Subform help here</div>
 
         <metal:form use-macro="context/@@ploneform-macros/titlelessform">
 

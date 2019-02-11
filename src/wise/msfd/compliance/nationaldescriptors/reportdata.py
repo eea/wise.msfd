@@ -162,24 +162,6 @@ class ReportData2012(BaseComplianceView, BaseUtil):
 
         return result
 
-    @property
-    def muids(self):
-        """ Get all Marine Units for a country
-
-        :return: ['BAL- LV- AA- 001', 'BAL- LV- AA- 002', ...]
-        """
-        t = sql.t_MSFD4_GegraphicalAreasID
-        count, res = db.get_all_records(
-            t,
-            t.c.MemberState == self.country_code,
-            t.c.RegionSubRegions == self.country_region_code,
-        )
-
-        res = [row_to_dict(t, r) for r in res]
-        muids = set([x['MarineUnitID'] for x in res])
-
-        return sorted(muids)
-
     def get_report_view(self):
         logger.info("Rendering 2012 report for: %s %s %s %s",
                     self.country_code, self.descriptor, self.article,

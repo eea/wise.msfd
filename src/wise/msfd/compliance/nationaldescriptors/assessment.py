@@ -145,12 +145,6 @@ class EditAssessmentDataForm(Form, BaseComplianceView):
             self.article,
         )
 
-    # @property
-    # def process_phase_title(self):
-    #     _, title = self.current_phase
-    #
-    #     return 'Current process phase: {}'.format(title)
-
     @buttonAndHandler(u'Save', name='save')
     def handle_save(self, action):
         data, errors = self.extractData()
@@ -158,8 +152,8 @@ class EditAssessmentDataForm(Form, BaseComplianceView):
         # TODO: check for errors
 
         for question in self.questions:
-            # criterias = filtered_criterias(self.criterias, question)
-            elements = question.get_assessed_elements(self.descriptor_obj)
+            elements = question.get_assessed_elements(self.descriptor_obj,
+                                                      muids=self.muids)
 
             values = []
 
@@ -251,10 +245,6 @@ class EditAssessmentDataForm(Form, BaseComplianceView):
     def descriptor_obj(self):
         return get_descriptor(self.descriptor)
 
-    # @property
-    # def criterias(self):
-    #     return self.descriptor_obj.criterions
-
     # TODO: use memoize
     @property
     def questions(self):
@@ -269,7 +259,6 @@ class EditAssessmentDataForm(Form, BaseComplianceView):
 
         TODO: this method does too much, should be refactored
         """
-
         assessment_data = {}
 
         if hasattr(self.context, 'saved_assessment_data'):
@@ -287,7 +276,7 @@ class EditAssessmentDataForm(Form, BaseComplianceView):
             ][0]
 
             elements = question.get_assessed_elements(
-                self.descriptor_obj
+                self.descriptor_obj, muids=self.muids
             )
 
             form = EmbeddedForm(self, self.request)

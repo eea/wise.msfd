@@ -128,10 +128,14 @@ COLOR_TABLE = {
 
 
 # get the criteria value to be shown in the assessment data 2018 table
-def get_crit_val(question, criteria):
+def get_crit_val(question, element):
     use_crit = question.use_criteria
-    is_prim = criteria.is_primary
-    crit = criteria.id
+
+    if use_crit == 'targets':
+        return element.title
+
+    is_prim = element.is_primary
+    crit = element.id
 
     if use_crit == 'all':
         return crit
@@ -145,7 +149,7 @@ def get_crit_val(question, criteria):
     return ''
 
 
-def format_assessment_data(article, elements, questions, data):
+def format_assessment_data(article, elements, questions, muids, data):
     """ Builds a data structure suitable for display in a template
 
     This is used to generate the assessment data overview table for 2018
@@ -186,7 +190,7 @@ def format_assessment_data(article, elements, questions, data):
                         color_index = COLOR_TABLE[len(choices)][v]
                     except Exception:
                         logger.exception('Invalid color table')
-                        color_index = 0
+                        color_index = len(COLOR_TABLE)
                         # label = 'Invalid color table'
 
                 else:
@@ -426,11 +430,15 @@ class NationalDescriptorArticleView(BaseComplianceView):
 
         # Assessment data 2018
         data = self.context.saved_assessment_data.last()
+        elements = self.questions[0].get_all_assessed_elements(
+            self.descriptor_obj, muids=self.muids
+        )
 
         assessment = format_assessment_data(
             self.article,
-            self.criterias,
+            elements,
             self.questions,
+            self.muids,
             data
         )
 

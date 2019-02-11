@@ -1,6 +1,8 @@
 import logging
+from collections import namedtuple
 
 import lxml.etree
+from sqlalchemy.orm import aliased
 from zope.component import getMultiAdapter
 # from zope.annotation.interfaces import IAnnotations
 from zope.dottedname.resolve import resolve
@@ -9,6 +11,7 @@ from zope.interface import implements
 from Acquisition import aq_inner
 from plone.api.content import get_state
 from plone.api.portal import get_tool
+from plone.memoize import ram
 from plone.memoize.view import memoize
 from Products.Five.browser import BrowserView
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
@@ -180,6 +183,25 @@ class BaseComplianceView(BrowserView):
 
         return regions
 
+    @property
+    @db.use_db_session('2012')
+    def muids(self):
+        """ Get all Marine Units for a country
+
+        :return: ['BAL- LV- AA- 001', 'BAL- LV- AA- 002', ...]
+        """
+        t = sql.t_MSFD4_GegraphicalAreasID
+        count, res = db.get_all_records(
+            t,
+            t.c.MemberState == self.country_code,
+            t.c.RegionSubRegions == self.country_region_code,
+        )
+
+        res = [row_to_dict(t, r) for r in res]
+        muids = set([x['MarineUnitID'] for x in res])
+
+        return sorted(muids)
+
     def get_parent_by_iface(self, iface):
         for parent in self.request.other['PARENTS']:
             if iface.providedBy(parent):
@@ -324,6 +346,13 @@ class BaseComplianceView(BrowserView):
                            is_translatable=is_translatable)
 
 
+Target = namedtuple('Target', ['id', 'title', 'definition'])
+
+
+def _a10_ids_cachekey(method, self, descriptor, **kwargs):
+    return '{}-{}'.format(descriptor.id, ','.join(kwargs['muids']))
+
+
 class AssessmentQuestionDefinition:
     """ A definition for a single assessment question.
 
@@ -371,24 +400,56 @@ class AssessmentQuestionDefinition:
         return compute_score(self, descriptor, values)
 
     def _art_89_ids(self, descriptor, **kwargs):
-        criterias = descriptor.criterions
+        return descriptor.criterions
 
-        return filtered_criterias(criterias, self)
-
+    @ram.cache(_a10_ids_cachekey)
+    @db.use_db_session('2012')
     def _art_10_ids(self, descriptor, **kwargs):
-        criterias = descriptor.criterions
+        muids = kwargs['muids']
+        ok_ges_ids = descriptor.all_ids()
 
-        return filtered_criterias(criterias, self)
+        sess = db.session()
+        T = sql.MSFD10Target
+        dt = sql.t_MSFD10_DESCrit
+
+        D_q = sess.query(dt).join(T)
+        D_a = aliased(dt, alias=D_q.subquery())
+
+        targets = sess\
+            .query(T)\
+            .order_by(T.ReportingFeature)\
+            .filter(T.MarineUnitID.in_(muids))\
+            .filter(T.Topic == 'EnvironmentalTarget')\
+            .join(D_a)\
+            .filter(D_a.c.GESDescriptorsCriteriaIndicators.in_(ok_ges_ids))\
+            .distinct()\
+            .all()
+        print len(targets)
+
+        # TODO: also get 2012 targets here
+
+        return [Target(r.ReportingFeature.replace(' ', '_').lower(),
+                       r.ReportingFeature,
+                       r.Description) for r in targets]
 
     def get_assessed_elements(self, descriptor, **kwargs):
-        """ Get a list of assessed elements for this question.
+        """ Get a list of filtered assessed elements for this question.
+        """
+
+        res = self.get_all_assessed_elements(descriptor, **kwargs)
+
+        if self.article in ['Art8', 'Art9']:
+            res = filtered_criterias(res, self)
+
+        return res
+
+    def get_all_assessed_elements(self, descriptor, **kwargs):
+        """ Get a list of unfiltered assessed elements for this question.
 
         For Articles 8, 9 it returns a list of criteria elements
         For Article 10 it returns a list of targets
 
         Return a list of identifiable elements that need to be assessed.
-
-        Each element is a tuple of
         """
         impl = {
             'Art8': self._art_89_ids,
