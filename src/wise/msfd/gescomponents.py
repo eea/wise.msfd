@@ -25,6 +25,11 @@ Criterion2012 = namedtuple('Criterion2012', ['id', 'title'])
 Feature = namedtuple('Feature', ['name', 'label', 'descriptors'])
 Parameter = namedtuple('Parameter', ['name', 'unit', 'criterias'])
 
+DESC_RE = re.compile(r'^D\d(\.\d|\d)?$')
+CRIT_2018_RE = re.compile(r'^D\d[0,1]?C\d$')       # ex: D10C5
+CRIT_2012_RE = re.compile(r'^\d[0,1]?\.\d$')        # ex: 4.1
+INDICATOR_2012_RE = re.compile(r'^\d[0,1]?\.\d\.\d$')       # ex: 10.1.1
+
 
 class ElementDefinition:
     def __init__(self, node, root):
@@ -146,6 +151,14 @@ class Descriptor(ItemLabel):
                 res.add(cid)
 
         return res
+
+    def sorted_criterions(self):
+        crits = {c.id: c for c in self.criterions}
+        # ids = crits.keys()
+
+        s = sorted_by_criterion(crits.keys())
+
+        return [crits[x] for x in s]
 
 
 class Criterion(ItemLabel):
@@ -613,12 +626,6 @@ def get_label(value, label_collection):
     return COMMON_LABELS.get(value, value)
 
 
-DESC_RE = re.compile(r'^D\d(\.\d|\d)?$')
-CRIT_2018_RE = re.compile(r'^D\d[0,1]?C\d$')       # ex: D10C5
-CRIT_2012_RE = re.compile(r'^\d[0,1]?\.\d$')        # ex: 4.1
-INDICATOR_2012_RE = re.compile(r'^\d[0,1]?\.\d\.\d$')       # ex: 10.1.1
-
-
 def is_descriptor(value):
     return bool(DESC_RE.match(value))
 
@@ -665,10 +672,13 @@ def sorted_by_criterion(ids):
     res = []
     res.extend(sorted(descriptors, key=lambda d: d.replace('D', '')))
     res.extend(sorted(criterias_2018))      # TODO: sort for double digit
-    res.extend(sorted(criterias_2012))      # TODO: sort for double digit
-    res.extend(sorted(indicators))
+
+    criterions_2012 = criterias_2012.union(indicators)
+    res.extend(sorted(criterions_2012))
+
     res.extend(sorted(criterions, key=lambda k: k.replace(' ', '')))
     res.extend(sorted(others))
+
     print(res)
 
     return res

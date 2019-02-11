@@ -145,7 +145,7 @@ def get_crit_val(question, criteria):
     return ''
 
 
-def get_assessment_data(article, criterias, questions, data):
+def format_assessment_data(article, criterias, questions, data):
     """ Builds a data structure suitable for display in a template
 
     This is used to generate the assessment data overview table for 2018
@@ -175,9 +175,17 @@ def get_assessment_data(article, criterias, questions, data):
             values.append(value)
         else:
             for criteria in criterias:
-                for element in criteria.elements:
+                elements = [x.id for x in criteria.elements]
+
+                if not elements:
+                    elements = ['el0']
+
+                # There's one element per criteria, but we try to support
+                # multiples
+
+                for element in elements:
                     field_name = '{}_{}_{}_{}'.format(
-                        article, question.id, criteria.id, element.id
+                        article, question.id, criteria.id, element
                     )
                     v = data.get(field_name, None)
 
@@ -357,7 +365,7 @@ class NationalDescriptorArticleView(BaseComplianceView):
 
     @property
     def criterias(self):
-        return self.descriptor_obj.criterions
+        return self.descriptor_obj.sorted_criterions()      # criterions
 
     @property
     def questions(self):
@@ -422,9 +430,7 @@ class NationalDescriptorArticleView(BaseComplianceView):
         # Assessment data 2018
         data = self.context.saved_assessment_data.last()
 
-        # import pdb
-        # pdb.set_trace()
-        assessment = get_assessment_data(
+        assessment = format_assessment_data(
             self.article,
             self.criterias,
             self.questions,

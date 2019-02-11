@@ -167,9 +167,14 @@ class EditAssessmentDataForm(Form, BaseComplianceView):
                 values.append(data.get(field_name, None))
 
             for criteria in criterias:
-                for element in criteria.elements:
+                elements = [x.id for x in criteria.elements]
+
+                if not elements:
+                    elements = ['el0']
+
+                for element in elements:
                     field_name = '{}_{}_{}_{}'.format(
-                        self.article, question.id, criteria.id, element.id
+                        self.article, question.id, criteria.id, element
                     )
                     values.append(data.get(field_name, None))
 
@@ -259,13 +264,13 @@ class EditAssessmentDataForm(Form, BaseComplianceView):
     @property
     def criterias(self):
         return self.descriptor_obj.criterions
-        els = get_descriptor_elements(
-            'compliance/nationaldescriptors/data'
-        )
-
-        desc = self.descriptor.split('.')[0]
-
-        return els[desc]
+        # els = get_descriptor_elements(
+        #     'compliance/nationaldescriptors/data'
+        # )
+        #
+        # desc = self.descriptor.split('.')[0]
+        #
+        # return els[desc]
 
     # TODO: use memoize
     @property
@@ -337,10 +342,15 @@ class EditAssessmentDataForm(Form, BaseComplianceView):
                 fields.append(field)
 
             for criteria in criterias:
-                for element in criteria.elements:
+                elements = [x.id for x in criteria.elements]
+
+                if not elements:
+                    elements = ['el0']
+
+                for element in elements:
                     field_title = criteria.title
                     field_name = '{}_{}_{}_{}'.format(
-                        self.article, question.id, criteria.id, element.id
+                        self.article, question.id, criteria.id, element
                     )
                     choices = question.answers
                     terms = [SimpleTerm(token=i, value=i, title=c)

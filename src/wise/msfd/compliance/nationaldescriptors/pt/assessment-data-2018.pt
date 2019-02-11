@@ -8,7 +8,7 @@
         <th class="as-header" tal:condition="not: assessment/gescomponents">
         </th>
         <th tal:repeat="g assessment/gescomponents" class="as-ges-component as-header">
-          <span tal:replace="structure g">D0C0</span>
+          <!-- <span tal:replace="structure g">D0C0</span> -->
         </th>
         <!-- TODO: add "conclusion score" and "Weighting" as titles -->
         <th class="as-header">Conclusion</th>
