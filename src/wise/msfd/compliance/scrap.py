@@ -58,7 +58,6 @@
 #         return AssessmentDisplayForm(self, self.request)
 
 
-
 # class AssessmentDisplayForm(EmbeddedForm):
 #     """
 #     """
@@ -149,8 +148,6 @@ REPORTING_DEADLINES = [
 # ]
 
 
-
-
 # from pprint import pprint
 
 
@@ -212,8 +209,6 @@ def compliance_countries(context):
 @provider(IVocabularyFactory)
 def compliance_report_types(context):
     return vocab_from_values([])
-
-
 
   # older pages
   <!-- <browser:page -->
@@ -4035,6 +4030,7 @@ class Article8(BaseArticle2012):
             }
             else {
               this.tryCount++;
+
               if (this.tryCount <= this.retryLimit) {
                 //try again
                 $.ajax(this);
@@ -4046,6 +4042,7 @@ class Article8(BaseArticle2012):
           error: function (xhr, textStatus, errorThrown) {
             if (textStatus == 'timeout') {
               this.tryCount++;
+
               if (this.tryCount <= this.retryLimit) {
                 //try again
                 $.ajax(this);
@@ -4053,6 +4050,7 @@ class Article8(BaseArticle2012):
               }
               return;
             }
+
             if (xhr.status == 500) {
               //handle error
             } else {
@@ -4160,3 +4158,15 @@ def parse_ges_components():
     return descriptors, criterions
 
 
+    # @property
+    # def criterias(self):
+    #     return self.descriptor_obj.criterions
+
+    # TODO: use memoize
+        # els = get_descriptor_elements(
+        #     'compliance/nationaldescriptors/data'
+        # )
+        #
+        # desc = self.descriptor.split('.')[0]
+        #
+        # return els[desc]

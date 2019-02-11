@@ -145,7 +145,7 @@ def get_crit_val(question, criteria):
     return ''
 
 
-def format_assessment_data(article, criterias, questions, data):
+def format_assessment_data(article, elements, questions, data):
     """ Builds a data structure suitable for display in a template
 
     This is used to generate the assessment data overview table for 2018
@@ -174,35 +174,32 @@ def format_assessment_data(article, criterias, questions, data):
             value = (label, color_index, u'All criterias')
             values.append(value)
         else:
-            for criteria in criterias:
-                elements = [x.id for x in criteria.elements]
+            for element in elements:
+                field_name = '{}_{}_{}'.format(
+                    article, question.id, element.id
+                )
+                v = data.get(field_name, None)
 
-                if not elements:
-                    elements = ['el0']
-
-                # There's one element per criteria, but we try to support
-                # multiples
-
-                for element in elements:
-                    field_name = '{}_{}_{}_{}'.format(
-                        article, question.id, criteria.id, element
-                    )
-                    v = data.get(field_name, None)
-
-                    if v is not None:
-                        label = choices[v]
+                if v is not None:
+                    label = choices[v]
+                    try:
                         color_index = COLOR_TABLE[len(choices)][v]
-                    else:
+                    except Exception:
+                        logger.exception('Invalid color table')
                         color_index = 0
-                        label = 'Not filled in'
+                        # label = 'Invalid color table'
 
-                    value = (
-                        label,
-                        color_index,
-                        get_crit_val(question, criteria)
-                    )
+                else:
+                    color_index = 0
+                    label = 'Not filled in'
 
-                    values.append(value)
+                value = (
+                    label,
+                    color_index,
+                    get_crit_val(question, element)
+                )
+
+                values.append(value)
 
         summary_title = '{}_{}_Summary'.format(article, question.id)
         summary = data.get(summary_title) or ''
@@ -234,7 +231,7 @@ def format_assessment_data(article, criterias, questions, data):
         overall_conclusion = (1, 'error')
 
     assessment = Assessment(
-        criterias,
+        elements,
         answers,
         assess_sum or '-',
         recommend or '-',

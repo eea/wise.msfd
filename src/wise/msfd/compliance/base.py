@@ -330,7 +330,8 @@ class AssessmentQuestionDefinition:
     Pass an <assessment-question> node to initialize it
     """
 
-    def __init__(self, node, root, position):
+    def __init__(self, article, node, root, position):
+        self.article = article
         self.id = node.get('id')
         self.klass = node.get('class')
         self.use_criteria = node.get('use-criteria')
@@ -369,6 +370,62 @@ class AssessmentQuestionDefinition:
     def calculate_score(self, descriptor, values):
         return compute_score(self, descriptor, values)
 
+    def _art_89_ids(self, descriptor, **kwargs):
+        criterias = descriptor.criterions
+
+        return filtered_criterias(criterias, self)
+
+    def _art_10_ids(self, descriptor, **kwargs):
+        criterias = descriptor.criterions
+
+        return filtered_criterias(criterias, self)
+
+    def get_assessed_elements(self, descriptor, **kwargs):
+        """ Get a list of assessed elements for this question.
+
+        For Articles 8, 9 it returns a list of criteria elements
+        For Article 10 it returns a list of targets
+
+        Return a list of identifiable elements that need to be assessed.
+
+        Each element is a tuple of
+        """
+        impl = {
+            'Art8': self._art_89_ids,
+            'Art9': self._art_89_ids,
+            'Art10': self._art_10_ids,
+        }
+
+        return impl[self.article](descriptor, **kwargs)
+
+
+def filtered_questions(questions, phase):
+    """ Get the questions appropriate for the phase
+    """
+
+    if phase == 'phase3':
+        res = [q for q in questions if q.klass == 'coherence']
+    else:
+        res = [q for q in questions if q.klass != 'coherence']
+
+    return res
+
+
+def filtered_criterias(criterias, question):
+
+    if question.use_criteria == 'primary':
+        return [c for c in criterias if c.is_primary is True]
+
+    if question.use_criteria == 'secondary':
+        return [c for c in criterias if c.is_primary is False]
+
+    # TODO what to return
+
+    if question.use_criteria == 'none':
+        return []
+
+    return criterias
+
 
 def parse_question_file(fpath):
     res = []
@@ -377,7 +434,7 @@ def parse_question_file(fpath):
     article_id = root.get('article')
 
     for i, qn in enumerate(root.iterchildren('assessment-question')):
-        q = AssessmentQuestionDefinition(qn, root, i)
+        q = AssessmentQuestionDefinition(article_id, qn, root, i)
         res.append(q)
 
     return article_id, res
