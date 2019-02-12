@@ -185,7 +185,7 @@ def format_assessment_data(article, elements, questions, muids, data):
                 v = data.get(field_name, None)
 
                 if v is not None:
-                    label = choices[v]
+                    label = '{}: {}'.format(element.title, choices[v])
                     try:
                         color_index = COLOR_TABLE[len(choices)][v]
                     except Exception:
@@ -195,7 +195,7 @@ def format_assessment_data(article, elements, questions, muids, data):
 
                 else:
                     color_index = 0
-                    label = 'Not filled in'
+                    label = '{}: Not filled in'.format(element.title)
 
                 value = (
                     label,

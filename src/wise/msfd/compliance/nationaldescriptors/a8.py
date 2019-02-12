@@ -685,7 +685,7 @@ class Article8(BaseArticle2012):
                     report_map[rep.marine_unit_id].append(rep)
 
         descriptor = get_descriptor(self.descriptor)
-        ges_crits = [descriptor] + descriptor.criterions
+        ges_crits = [descriptor] + list(descriptor.criterions)
 
         # a bit confusing code, we have multiple sets of rows, grouped in
         # report_data under the marine unit id key.

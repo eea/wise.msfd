@@ -854,7 +854,7 @@ https://svn.eionet.europa.eu/repositories/Reportnet/Dataflows/MarineDirective/MS
         t = time.time()
         logger.debug("Started rendering of report data")
 
-        self.muids = []
+        # self.muids = []
         report_html = self.render_reportdata()
 
         delta = time.time() - t

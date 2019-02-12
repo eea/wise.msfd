@@ -24,7 +24,7 @@
           <tal:rep tal:repeat="value row/values" >
             <td
               tal:attributes="class python: 'as-value as-value-{}'.format(value[1]);
-              colspan python: (len(assessment.gescomponents) + 1) - len(row.values);">
+              colspan python: len(assessment.gescomponents) - len(row.values) + 1;">
 
               <label for=""
                 class="help-popover"

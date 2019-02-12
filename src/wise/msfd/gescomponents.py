@@ -234,12 +234,13 @@ class Criterion(ItemLabel):
         alter = self.alternatives
 
         if not alter:
-            return u"{} {}".format(self._id, self._title)
+            return self._title
+            # return u"{} {}".format(self._id, self._title)
 
         if not self._id:
-            id, title = alter[0]
+            # id, title = alter[0]
 
-            return u"{} {}".format(id, title)
+            return alter[0][1]      # u"{} {}".format(id, title)
 
         alter_ids = len(alter) == 0 and alter[0][0] \
             or u', '.join(sorted(set([a[0] for a in alter])))
