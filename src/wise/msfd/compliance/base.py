@@ -4,7 +4,6 @@ from collections import namedtuple
 import lxml.etree
 from sqlalchemy.orm import aliased
 from zope.component import getMultiAdapter
-# from zope.annotation.interfaces import IAnnotations
 from zope.dottedname.resolve import resolve
 from zope.interface import implements
 
@@ -18,7 +17,7 @@ from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 from wise.msfd import db, sql
 from wise.msfd.compliance.scoring import compute_score
 from wise.msfd.compliance.vocabulary import ASSESSED_ARTICLES, REGIONS
-from wise.msfd.gescomponents import get_descriptor
+from wise.msfd.gescomponents import get_descriptor, sorted_criterions
 from wise.msfd.translation.interfaces import ITranslationContext
 from wise.msfd.utils import Tab, _parse_files_in_location
 
@@ -26,6 +25,8 @@ from . import interfaces
 from .interfaces import ICountryDescriptorsFolder
 from .nationaldescriptors.utils import row_to_dict
 from .utils import REPORT_DEFS
+
+# from zope.annotation.interfaces import IAnnotations
 
 logger = logging.getLogger('wise.msfd')
 edw_logger = logging.getLogger('edw.logger')
@@ -400,7 +401,7 @@ class AssessmentQuestionDefinition:
         return compute_score(self, descriptor, values)
 
     def _art_89_ids(self, descriptor, **kwargs):
-        return descriptor.criterions
+        return sorted_criterions(descriptor.criterions)
 
     @ram.cache(_a10_ids_cachekey)
     @db.use_db_session('2012')
@@ -441,7 +442,7 @@ class AssessmentQuestionDefinition:
         if self.article in ['Art8', 'Art9']:
             res = filtered_criterias(res, self)
 
-        return res
+        return sorted_criterions(res)
 
     def get_all_assessed_elements(self, descriptor, **kwargs):
         """ Get a list of unfiltered assessed elements for this question.
@@ -475,17 +476,17 @@ def filtered_questions(questions, phase):
 def filtered_criterias(criterias, question):
 
     if question.use_criteria == 'primary':
-        return [c for c in criterias if c.is_primary is True]
+        crits = [c for c in criterias if c.is_primary is True]
 
     if question.use_criteria == 'secondary':
-        return [c for c in criterias if c.is_primary is False]
+        crits = [c for c in criterias if c.is_primary is False]
 
     # TODO what to return
 
     if question.use_criteria == 'none':
-        return []
+        crits = []
 
-    return criterias
+    return sorted_criterions(crits)
 
 
 def parse_question_file(fpath):

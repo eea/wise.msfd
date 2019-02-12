@@ -684,6 +684,16 @@ def sorted_by_criterion(ids):
     return res
 
 
+def sorted_criterions(crits):
+    """ Given a list of criterias, returns the same list, sorted by criteria id
+    """
+
+    cm = {c.id: c for c in crits}
+    s = sorted_by_criterion(cm.keys())
+
+    return [cm[k] for k in s]
+
+
 def criteria_from_gescomponent(text):
     """ Given a ges component id, such as '4.3.1.- indicators 4.3A',
     return the matching indicator or criteria (or even descriptor, if provided
