@@ -10,8 +10,8 @@
       <option>51-75% of criteria elements are reported</option>
       <option>26-50% of criteria elements are reported</option>
       <option>1-25% of criteria elements are reported</option>
-      <!--<option>Not relevant</option>-->
-      <option>Not reported</option>
+      <option>Not criteria element reported</option>
+      <option>Not relevant</option>
     </answers>
     <scoring determination-method="wise.msfd.compliance.scoring.percentage_based" determination-method-args="0 2">
       <option score="4">76-100% of criteria elements are reported</option>
@@ -43,13 +43,12 @@
       To what extent does the Member State report key aspects of its assessment methodology?
     </definition>
     <answers>
-      <option>No key aspects of methodology not reported</option>
-      <option>One key aspect of methodology not reported</option>
-      <option>Two key aspects of methodology not reported</option>
-      <option>Three key aspects of methodology not reported</option>
-      <option>No key aspects of methodology reported</option>
+      <option>All key aspects of methodology reported for this criterion</option>
+      <option>Three key aspect of methodology  reported for this criterion</option>
+      <option>Two key aspects of methodology reported for this criterion</option>
+      <option>One key aspect of methodology not reported for this criterion</option>
+      <option>No key aspects of methodology reported for this criterion</option>
       <option>Not relevant</option>
-      <!-- <option>Not reported</option> -->
     </answers>
     <scoring determination-method="wise.msfd.compliance.scoring.percentage_based" determination-method-args="0 2">
       <option score="4">Most (76-100% across criteria) key aspects of methodology are reported</option>
@@ -81,12 +80,11 @@
       Does the assessment provide a conclusion on the current status? 
     </definition>
     <answers>
-      <option>All (of parameter, criterion and elements) reported with status assessment</option>
-      <option>Two (of parameter, criterion and elements) reported with status assessment</option>
-      <option>One (of parameter, criterion and elements) reported with status assessment</option>
-      <option>None (of parameter, criterion and elements) reported with status assessment</option>
+      <option>All (of parameter, criterion and elements) reported with status assessment for this criterion)</option>
+      <option>Two (of parameter, criterion and elements) reported with status assessment for this criterion</option>
+      <option>One (of parameter, criterion and elements) reported with status assessment for this criterion</option>
+      <option>None (of parameter, criterion and elements) reported with status assessment for this criterion</option>
       <option>Not relevant</option>
-      <option>Not reported</option>
     </answers>
     <scoring determination-method="wise.msfd.compliance.scoring.percentage_based" determination-method-args="0 2">
       <option score="4">Most (76-100% across criteria) of parameters, criteria and elements reported with status assessment</option>
@@ -154,7 +152,7 @@
 
   <assessment-question id="A08Co1" class="coherence" use-criteria='all'>
     <definition>
-     To what extent does the Member State report the same elements as other MS in the region? 
+     To what extent does the Member State report the same elements as other MS in the region?
     </definition>
     <answers>
       <option>Element(s) used for this criterion is/are the same as most (76-100%) MS in the region</option>
@@ -162,7 +160,7 @@
       <option>Element(s) used for this criterion is/are the same as some (26-50%) MS in the region</option>
       <option>Element(s) used for this criterion is/are the same as a few (1-25%) MS in the region</option>
       <option>Not relevant</option>
-      <option>Not reported</option>
+      <option>Not comparable</option>
     </answers>
     <scoring determination-method="wise.msfd.compliance.scoring.percentage_based" determination-method-args="0 2">
       <option score="4">The MS uses the same elements as most (76-100%) MS in the region</option>
@@ -198,8 +196,8 @@
       <option>Parameter(s) used for this criterion is/are the same as in more than half (51-75%) of MS in the region</option>
       <option>Parameter(s) used for this criterion is/are the same as in less than half (26-50%) of MS in the region</option>
       <option>Parameter(s) used for this criterion is/are the same as in few (1-25%) of MS in the region</option>
-      <!--<option>Not relevant</option>-->
-      <option>Not reported</option>
+      <option>Not relevant</option>
+      <option>Not comparable</option>
     </answers>
     <scoring determination-method="wise.msfd.compliance.scoring.percentage_based" determination-method-args="0 2">
       <option score="4">The MS uses the same parameters as most (76%-100%) of the MS in the region</option>
@@ -236,7 +234,7 @@
       <option>The MS uses similar date for achieving GES as some (26-50%) MS in the region</option>
       <option>The MS uses similar date for achieving GES as a few (1-25%) MS in the region</option>
       <option>Not relevant</option>
-      <option>Not reported</option>
+      <option>Not comparable</option>
     </answers>
     <scoring determination-method="wise.msfd.compliance.scoring.percentage_based" determination-method-args="0 2">
       <option score="4">The MS uses similar date (by 2020/after 2020) for achieving GES as most (76-100%) MS in the region</option>
@@ -273,7 +271,7 @@
       <option>The MS reports the same pressures as some (26-50%) MS in the region</option>
       <option>The MS reports the same pressures as a few (1-25%) MS in the region</option>
       <option>Not reported</option>
-      <option>Not relevant</option>
+      <option>Not comparable</option>
     </answers>
     <scoring determination-method="wise.msfd.compliance.scoring.alternative_based" determination-method-args="0">
       <option score="4">The MS reports the same pressures as most (76-100%) MS in the region</option>
@@ -308,7 +306,7 @@
       <option>Status assessed against the latest GES determination (2018) for this criterion</option>
       <option>Status partially assessed against the latest GES determination (2018) for this criterion</option>
       <option>Status not assessed against the latest GES determination for this criterion</option>
-      <option>Not reported</option>
+      <!-- <option>Not reported</option> -->
       <option>Not relevant</option>
     </answers>
     <scoring determination-method="wise.msfd.compliance.scoring.alternative_based" determination-method-args="0">

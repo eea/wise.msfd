@@ -13,7 +13,7 @@
       <option>Target refers to the desired state of an ecosystem component in the sea</option>
       <option>Target refers to another topic</option>
       <option>Not relevant</option>
-      <option>Not reported</option>
+      <option>2012 target not reported in 2018 (no explanation provided)</option>
     </answers>
     <scoring determination-method="wise.msfd.compliance.scoring.percentage_based" determination-method-args="0 2">
       <option score="4">76-100% of targets relevant for this descriptor refers to reductions of pressures and/or impacts</option>
@@ -49,7 +49,7 @@
       <option>Target is partially measurable</option>
       <option>Target is not measurable</option>
       <option>Not relevant</option>
-      <option>Not reported</option>
+      <!-- <option>Not reported</option> -->
     </answers>
     <scoring determination-method="wise.msfd.compliance.scoring.percentage_based" determination-method-args="0 2">
       <option score="4">76-100% of targets relevant for this descriptor are measurable</option>
@@ -84,9 +84,8 @@
       <option>Progress with target assessed</option>
       <option>Progress with target partially assessed</option>
       <option>Progress with target not assessed</option>
-      <option>1-25% of targets relevant for this descriptor are measurable</option>
-      <option>Not reported</option>
       <option>Not relevant</option>
+      <!-- <option>Not reported</option> -->
     </answers>
     <scoring determination-method="wise.msfd.compliance.scoring.percentage_based" determination-method-args="0 2">
       <option score="4">76-100% of targets relevant for this descriptor are measurable</option>
@@ -125,7 +124,7 @@
       <option>Target is similar to a few (1-25%) MS in the region</option>
       <option>Target is not similar to other MS targets in the region</option>
       <option>Not relevant</option>
-      <option>Not reported</option>
+      <option>Not comparable</option>
     </answers>
     <scoring determination-method="wise.msfd.compliance.scoring.percentage_based" determination-method-args="0 2">
       <option score="4">The MS uses the same targets as most (76-100%) MS in the region</option>
@@ -195,14 +194,13 @@
      To what extent are targets clearly linked to measures (reported under Art. 13 in 2016) which aim to reduce the related pressures and impacts?
     </definition>
     <answers>
-      <option>Target is linked to measures aimed at directly reducing relevant pressures/impacts for this descriptor</option>
+      <option>Target is linked to measures directly aimed at reducing relevant pressures/impacts for this descriptor</option>
       <option>Target is linked to measures partly aimed at directly reducing relevant pressures/impacts for this descriptor</option>
-      <option>Target is linked to measures which do not aim at directly reducing relevant pressures/impacts for this descriptor</option>
-      <option>Target is linked to measures aimed at indirectly reducing relevant pressures/impacts for this descriptor</option>
+      <option>Target is linked to measures indirectly aimed at reducing relevant pressures/impacts for this descriptor</option>
       <option>Target is linked to measures which are not aimed at reducing relevant pressures/impacts for this descriptor</option>
       <option>Target is not linked to measures</option>
       <option>Not relevant</option>
-      <option>Not reported</option>
+      <!-- <option>Not reported</option> -->
     </answers>
     <scoring determination-method="wise.msfd.compliance.scoring.percentage_based" determination-method-args="0 2">
       <option score="4">76-100% of targets are linked to measures aimed at reducing relevant pressures/impacts for this descriptor</option>
