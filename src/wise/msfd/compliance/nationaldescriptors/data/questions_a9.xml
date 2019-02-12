@@ -11,7 +11,7 @@
       <option>Primary criterion not used (with adequate justification)</option>
       <option>Primary criterion not used (with inadequate justification)</option>
       <option>Not relevant</option>
-      <option>Not reported</option>
+      <!-- <option>Not reported</option> -->
     </answers>
     <scoring determination-method="wise.msfd.compliance.scoring.alternative_based" determination-method-args="0 1 2">
       <option score="4">76-100% of primary criteria used (or replaced with secondary with adequate justification)</option>
@@ -47,7 +47,7 @@
       <option>Secondary criterion used with 2010 code</option>
       <option>Secondary criteria not used</option>
       <option>Not relevant</option>
-      <option>Not reported</option>
+      <!-- <option>Not reported</option> -->
     </answers>
     TODO: need to redo method here
     <scoring determination-method="wise.msfd.compliance.scoring.alternative_based" determination-method-args="0 1">
@@ -84,7 +84,7 @@
       <option>Elements and parameters partially specified for this criterion</option>
       <option>Elements and parameters not specified for this criterion</option>
       <option>Not relevant</option>
-      <option>Not reported</option>
+      <!-- <option>Not reported</option> -->
     </answers>
     <scoring determination-method="wise.msfd.compliance.scoring.alternative_based" determination-method-args="0">
       <option score="4">Elements and parameters are specified for 76-100% of criteria</option>
@@ -120,7 +120,7 @@
       <option>Partially clear objectives included in definition of this criterion</option>
       <option>Clear objectives not included in definition of this criterion</option>
       <option>Not relevant</option>
-      <option>Not reported</option>
+      <!-- <option>Not reported</option> -->
     </answers>
     <scoring determination-method="wise.msfd.compliance.scoring.alternative_based" determination-method-args="0">
       <option score="4">Clear objectives are included for 76-100% of the criteria</option>
@@ -141,7 +141,7 @@
       <option>Threshold values partially defined for this criterion</option>
       <option>Threshold values not defined for this criterion</option>
       <option>Not relevant</option>
-      <option>Not reported</option>
+      <!-- <option>Not reported</option> -->
     </answers>
     <scoring determination-method="wise.msfd.compliance.scoring.alternative_based" determination-method-args="0">
       <option score="4">Threshold values defined for 76-100% criteria</option>
@@ -173,10 +173,12 @@
       To what extent is there a quantitative determination of GES (proportion values)?
     </definition>
     <answers>
-      <option>Proportion value set for this criterion</option>
+      <option>Proportion value set for this criterion is sufficient</option>
+      <option>Proportion value set for this criterion is partially sufficient</option>
+      <option>Proportion value set for this criterion is not sufficient</option>
       <option>Proportion value not set for this criterion</option>
       <option>Not relevant</option>
-      <option>Not reported</option>
+      <!-- <option>Not reported</option> -->
     </answers>
 
     <scoring determination-method="wise.msfd.compliance.scoring.alternative_based" determination-method-args="0">
@@ -195,12 +197,12 @@
       To what extent are levels of ambition defined for GES adequate (GES extent threshold)?
     </definition>
     <answers>
-      <option>GES extent threshold defined for 76-100% of elements</option>
-      <option>GES extent threshold defined for 51-75% of elements</option>
-      <option>GES extent threshold defined for 26-50% of elements</option>
-      <option>GES extent threshold defined for 1-25% of elements</option>
+      <option>Good level of ambition for all elements and features</option>
+      <option>Good level of ambition for some elements and features (poor or not defined for others)</option>
+      <option>Poor level of ambition for all elements and features</option>
+      <option>Level of ambition not defined</option>
       <option>Not relevant</option>
-      <option>Not reported</option>
+      <!-- <option>Not reported</option> -->
     </answers>
     <scoring determination-method="wise.msfd.compliance.scoring.percentage_based" determination-method-args="0 2">
       <option score="4">GES extent threshold defined for 76-100% of elements</option>
@@ -233,12 +235,16 @@
       To what extent does the Member State use the same primary/ secondary criteria as the other MS in this region?
     </definition>
     <answers>
-      <option>The MS uses the same criteria as most (76%-100%) of the MS in the region</option>
-      <option>The MS uses the same criteria as more than half (51-75%) of MS in the region</option>
-      <option>The MS uses the same criteria as less than half (26-50%) of MS in the region</option>
-      <option>The MS uses the same criteria as only few (1-25%) MS in the region</option>
+      <option>Criterion used by most (76-100%) MS in the region, including this MS</option>
+      <option>Criterion used by many (51-75%) MS in the region, including this MS</option>
+      <option>Criterion used by some (26-50%) MS in the region, including this MS</option>
+      <option>Criterion used by only a few MS (1-25%) in the region, including this MS</option>
+      <option>Criterion used by only a few (1-25%) MS in the region, excluding this MS</option>
+      <option>Criterion used by some (26-50%) MS in the region, excluding this MS</option>
+      <option>Criterion used by many (51-75%) MS in the region, excluding this MS</option>
+      <option>Criterion used by most (76%-100%) MS in the region, excluding this MS</option>
       <option>Not relevant</option>
-      <option>Not reported</option>
+      <option>Not comparable</option>
     </answers>
     <scoring determination-method="wise.msfd.compliance.scoring.percentage_based" determination-method-args="0 2">
       <option score="4">The MS uses the same criteria as most (76%-100%) of the MS in the region</option>
@@ -314,7 +320,7 @@
       <option>Objectives for this criterion are the same or similar as only a few (1-25%) MS in the region.</option>
       <option>Objectives for this criterion are not the same or similar to other MS in the region</option>
       <option>Not relevant</option>
-      <option>Not reported</option>
+      <option>Not comparable</option>
     </answers>
     <scoring determination-method="wise.msfd.compliance.scoring.percentage_based" determination-method-args="0 2">
       <option score="4">Most objectives (76%-100% across criteria) are the same or similar as other MS in the region</option>
@@ -352,7 +358,7 @@
       <option>Threshold values are the same or similar as in only a few (1-25%) MS in the region</option>
       <option>Threshold values are not the same or similar as other MS in the region</option>
       <option>Not relevant</option>
-      <option>Not reported</option>
+      <option>Not comparable</option>
     </answers>
     <scoring determination-method="wise.msfd.compliance.scoring.percentage_based" determination-method-args="0 2">
       <option score="4">Most threshold values (76-100% across criteria) are the same or similar to other MS in the region</option>
@@ -390,7 +396,7 @@
       <option>Proportion value is the same or similar to a few (1-25%) MS in the region</option>
       <option>Proportion value is markedly lower than other MS in the region</option>
       <option>Not relevant</option>
-      <option>Not reported</option>
+      <option>Not comparable</option>
     </answers>
     <scoring determination-method="wise.msfd.compliance.scoring.percentage_based" determination-method-args="0 2">
       <option score="4">Most proportion values (76-100% across criteria) are the same or similar to other MS in the region</option>
@@ -419,7 +425,7 @@
 
   <assessment-question id="A09Co6" class="coherence" use-criteria='none'>
     <definition>
-      To what extent is the Member State’s level of ambition for GES (GES extent threshold) the same or similar to other MS in the region?
+      To what extent is the Member State's level of ambition for GES (GES extent threshold) the same or similar to other MS in the region?
     </definition>
     <answers>
       <option>GES extent thresholds are the same or similar to most (76-100%) MS in the region</option>
@@ -428,7 +434,7 @@
       <option>GES extent thresholds are the same or similar to a few (1-25%) MS in the region</option>
       <option>GES extent thresholds are markedly lower than other MS in the region</option>
       <option>Not relevant</option>
-      <option>Not reported</option>
+      <option>Not comparable</option>
     </answers>
     <scoring determination-method="wise.msfd.compliance.scoring.percentage_based" determination-method-args="0 2">
       <option score="4">Most GES extent thresholds (76-100% across criteria) are the same or similar to other MS in the region</option>
