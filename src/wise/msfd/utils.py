@@ -600,3 +600,11 @@ def to_html(text):
         return text
 
     return convertWebIntelligentPlainTextToHtml(text)
+
+
+def row_to_dict(table, row):
+    # TODO: couldn't we use row.keys(), so that we don't need table?
+    cols = table.c.keys()
+    res = {k: v for k, v in zip(cols, row)}
+
+    return res

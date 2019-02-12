@@ -352,6 +352,8 @@ class NationalDescriptorArticleView(BaseComplianceView):
     assessment_data_2012_tpl = Template('./pt/assessment-data-2012.pt')
     assessment_data_2018_tpl = Template('./pt/assessment-data-2018.pt')
 
+    year = '2018'       # used by self.muids
+
     @property
     def title(self):
         return "Commision assessment: {} / {} / {} / {} / 2018".format(
@@ -375,6 +377,8 @@ class NationalDescriptorArticleView(BaseComplianceView):
 
     def __init__(self, context, request):
         super(NationalDescriptorArticleView, self).__init__(context, request)
+
+        # BBB:
 
         if not hasattr(context, 'saved_assessment_data') or \
                 not isinstance(context.saved_assessment_data, PersistentList):

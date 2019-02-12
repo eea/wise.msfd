@@ -736,7 +736,8 @@ class Article8(BaseArticle2012):
         res = {}
 
         # filter the results to show only region's marine unit ids
-        count, muids_t = db.get_marine_unit_id_names(list(set(self.muids)))
+        # TODO: this should use self.context.muids
+        count, muids_t = db.get_marine_unit_id_names(self.muids)
         muid_labels = dict(muids_t)
 
         for k, v in report_data.items():
@@ -1277,18 +1278,13 @@ class Article8Alternate(BaseArticle2012):
 
         # {muid: {field_name: [values, ...], ...}
         res = defaultdict(lambda: defaultdict(list))
+        muids = [x.id for x in self.muids]
 
         for Klass in self.implementations[descriptor]:
-            # Klass = self.implementations[descriptor][0]
-
-            # count, res = db.get_all_records(
-            #     Impl.mapper,
-            #     Impl.mapper.MarineUnitID.in_(self.muids)
-            # )
 
             by_muid = defaultdict(list)
 
-            for item in Klass.items(self.descriptor, self.muids):
+            for item in Klass.items(self.descriptor, muids):
                 by_muid[item.MarineUnitID].append(item)
 
             for muid, cols in by_muid.items():

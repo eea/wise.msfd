@@ -4170,3 +4170,32 @@ def parse_ges_components():
         # desc = self.descriptor.split('.')[0]
         #
         # return els[desc]
+
+
+# def parse_features():
+#     res = {}
+#
+#     FEATURES = TERMSLIST['ReferenceFeature']        # FeaturesSmart
+#
+#     for fr in FEATURES:
+#         feature = fr['Feature']
+#
+#         if feature in res:
+#             continue
+#
+#         descs = set([f['GEScomponent']
+#                      .replace('D6/D1', 'D6').replace('D4/D1', 'D4')
+#
+#                      for f in FEATURES
+#
+#                      if f['Feature'] == feature])
+#
+#         res[feature] = Feature(feature, descs)
+#
+#     return res
+            # Klass = self.implementations[descriptor][0]
+
+            # count, res = db.get_all_records(
+            #     Impl.mapper,
+            #     Impl.mapper.MarineUnitID.in_(self.muids)
+            # )

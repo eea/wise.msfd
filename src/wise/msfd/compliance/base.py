@@ -17,13 +17,13 @@ from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 from wise.msfd import db, sql
 from wise.msfd.compliance.scoring import compute_score
 from wise.msfd.compliance.vocabulary import ASSESSED_ARTICLES, REGIONS
-from wise.msfd.gescomponents import get_descriptor, sorted_criterions
+from wise.msfd.gescomponents import (get_descriptor, get_marine_units,
+                                     sorted_criterions)
 from wise.msfd.translation.interfaces import ITranslationContext
-from wise.msfd.utils import Tab, _parse_files_in_location
+from wise.msfd.utils import Tab, _parse_files_in_location, row_to_dict
 
 from . import interfaces
 from .interfaces import ICountryDescriptorsFolder
-from .nationaldescriptors.utils import row_to_dict
 from .utils import REPORT_DEFS
 
 # from zope.annotation.interfaces import IAnnotations
@@ -185,23 +185,15 @@ class BaseComplianceView(BrowserView):
         return regions
 
     @property
-    @db.use_db_session('2012')
     def muids(self):
         """ Get all Marine Units for a country
 
         :return: ['BAL- LV- AA- 001', 'BAL- LV- AA- 002', ...]
         """
-        t = sql.t_MSFD4_GegraphicalAreasID
-        count, res = db.get_all_records(
-            t,
-            t.c.MemberState == self.country_code,
-            t.c.RegionSubRegions == self.country_region_code,
-        )
 
-        res = [row_to_dict(t, r) for r in res]
-        muids = set([x['MarineUnitID'] for x in res])
-
-        return sorted(muids)
+        return get_marine_units(self.country_code,
+                                self.country_region_code,
+                                self.year)
 
     def get_parent_by_iface(self, iface):
         for parent in self.request.other['PARENTS']:
@@ -351,7 +343,9 @@ Target = namedtuple('Target', ['id', 'title', 'definition'])
 
 
 def _a10_ids_cachekey(method, self, descriptor, **kwargs):
-    return '{}-{}'.format(descriptor.id, ','.join(kwargs['muids']))
+    muids = [m.id for m in kwargs['muids']]
+
+    return '{}-{}'.format(descriptor.id, ','.join(muids))
 
 
 class AssessmentQuestionDefinition:
@@ -406,7 +400,7 @@ class AssessmentQuestionDefinition:
     @ram.cache(_a10_ids_cachekey)
     @db.use_db_session('2012')
     def _art_10_ids(self, descriptor, **kwargs):
-        muids = kwargs['muids']
+        muids = [x.id for x in kwargs['muids']]
         ok_ges_ids = descriptor.all_ids()
 
         sess = db.session()
@@ -425,7 +419,7 @@ class AssessmentQuestionDefinition:
             .filter(D_a.c.GESDescriptorsCriteriaIndicators.in_(ok_ges_ids))\
             .distinct()\
             .all()
-        print len(targets)
+        print 'Resulting targets: ', len(targets)
 
         # TODO: also get 2012 targets here
 

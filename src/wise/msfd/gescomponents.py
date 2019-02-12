@@ -9,10 +9,10 @@ from collections import namedtuple
 import lxml.etree
 from pkg_resources import resource_filename
 
-from wise.msfd import db, sql2018
+from wise.msfd import db, sql, sql2018
 from wise.msfd.labels import COMMON_LABELS
 from wise.msfd.utils import (ItemLabel, _parse_files_in_location,
-                             get_element_by_id)
+                             get_element_by_id, row_to_dict)
 
 logger = logging.getLogger('wise.msfd')
 
@@ -442,29 +442,6 @@ def get_parameters(descriptor_code=None):
     return res
 
 
-# def parse_features():
-#     res = {}
-#
-#     FEATURES = TERMSLIST['ReferenceFeature']        # FeaturesSmart
-#
-#     for fr in FEATURES:
-#         feature = fr['Feature']
-#
-#         if feature in res:
-#             continue
-#
-#         descs = set([f['GEScomponent']
-#                      .replace('D6/D1', 'D6').replace('D4/D1', 'D4')
-#
-#                      for f in FEATURES
-#
-#                      if f['Feature'] == feature])
-#
-#         res[feature] = Feature(feature, descs)
-#
-#     return res
-
-
 def parse_features():
     res = {}
 
@@ -706,3 +683,56 @@ def criteria_from_gescomponent(text):
         crit = crit[:-1]
 
     return crit
+
+
+class MarineReportingUnit(ItemLabel):
+    """ A labeled MarineReportingUnit container
+    """
+
+    def __init__(self, id, title):
+        self.name = self.id = id
+        self.title = title
+
+
+@db.use_db_session('2012')
+def _muids_2012(country, region):
+    t = sql.t_MSFD4_GegraphicalAreasID
+    count, res = db.get_all_records(
+        (t.c.MarineReportingUnit,
+         t.c.MarineUnits_ReportingAreas),
+        t.c.MemberState == country,
+        t.c.RegionSubRegions == region,
+        t.c.MarineUnits_ReportingAreas.isnot(None),
+    )
+    res = [MarineReportingUnit(*r) for r in res]
+
+    return sorted(res)
+
+
+@db.use_db_session('2018')
+def _muids_2018(country, region):
+    t = sql2018.MarineReportingUnit
+    count, res = db.get_all_records(
+        t,
+        t.CountryCode == country,
+        t.Region == region,
+        t.localId.isnot(None),      # TODO: this suits NL, check others
+    )
+    res = [MarineReportingUnit(m.MarineReportingUnitId,
+                               m.nameTxtInt or m.Description)
+
+           for m in res]
+
+    return sorted(res)
+
+
+def get_marine_units(country, region, year):
+    """ Get a list of ``MarineReportingUnit`` objects
+    """
+
+    if year == '2012':
+        return _muids_2012(country, region)
+    elif year == '2018':
+        return _muids_2018(country, region)
+
+    raise NotImplementedError

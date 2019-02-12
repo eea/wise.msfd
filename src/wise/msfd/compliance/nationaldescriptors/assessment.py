@@ -129,7 +129,7 @@ class EditAssessmentDataForm(Form, BaseComplianceView):
     name = 'art-view'
 
     subforms = None
-    session_name = '2018'
+    year = session_name = '2018'
     template = ViewPageTemplateFile("./pt/edit-assessment-data.pt")
 
     @property
