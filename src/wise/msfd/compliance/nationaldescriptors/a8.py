@@ -1277,13 +1277,13 @@ class Article8Alternate(BaseArticle2012):
 
         # {muid: {field_name: [values, ...], ...}
         res = defaultdict(lambda: defaultdict(list))
-        muids = [x.id for x in self.muids]
+        muids = {m.id: m for m in self.muids}
 
         for Klass in self.implementations[descriptor]:
 
             by_muid = defaultdict(list)
 
-            for item in Klass.items(self.descriptor, muids):
+            for item in Klass.items(self.descriptor, muids.keys()):
                 by_muid[item.MarineUnitID].append(item)
 
             for muid, cols in by_muid.items():
@@ -1295,13 +1295,11 @@ class Article8Alternate(BaseArticle2012):
                 for name in cols[0].keys():
                     values = [c[name] for c in cols]
                     res[muid][name].extend(values)
-                    # row = Row(name, values)
-                    # rows.append(row)
 
         for muid, rows in res.items():
             for name, values in rows.items():
                 row = Row(name, values)
-                self.rows[muid].append(row)
+                self.rows[muids[muid]].append(row)
 
     def __call__(self):
         self.setup_data()

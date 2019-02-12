@@ -634,11 +634,12 @@ class Article10Alternate(BaseArticle2012):
         ok_ges_ids = set(descriptor.all_ids())
 
         t = sql.MSFD10Target
-        muids = [x.id for x in self.muids]
+        # muids = [x.id for x in self.muids]
+        muids = {m.id: m for m in self.muids}
 
         count, res = db.get_all_records(
             t,
-            t.MarineUnitID.in_(muids),
+            t.MarineUnitID.in_(muids.keys()),
             t.Topic == 'EnvironmentalTarget',
         )
         by_muid = defaultdict(list)
@@ -662,7 +663,7 @@ class Article10Alternate(BaseArticle2012):
                 row = Row(name, values)
                 rows.append(row)
 
-            self.rows[muid] = rows
+            self.rows[muids[muid]] = rows
 
     def __call__(self):
         self.setup_data()
