@@ -634,10 +634,11 @@ class Article10Alternate(BaseArticle2012):
         ok_ges_ids = set(descriptor.all_ids())
 
         t = sql.MSFD10Target
+        muids = [x.id for x in self.muids]
 
         count, res = db.get_all_records(
             t,
-            t.MarineUnitID.in_(self.muids),
+            t.MarineUnitID.in_(muids),
             t.Topic == 'EnvironmentalTarget',
         )
         by_muid = defaultdict(list)

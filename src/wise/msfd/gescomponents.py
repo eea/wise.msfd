@@ -698,7 +698,7 @@ class MarineReportingUnit(ItemLabel):
 def _muids_2012(country, region):
     t = sql.t_MSFD4_GegraphicalAreasID
     count, res = db.get_all_records(
-        (t.c.MarineReportingUnit,
+        (t.c.MarineUnitID,
          t.c.MarineUnits_ReportingAreas),
         t.c.MemberState == country,
         t.c.RegionSubRegions == region,

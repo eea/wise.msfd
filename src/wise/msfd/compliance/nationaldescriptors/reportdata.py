@@ -170,8 +170,7 @@ class ReportData2012(BaseComplianceView, BaseUtil):
     def get_report_view(self):
         logger.info("Rendering 2012 report for: %s %s %s %s",
                     self.country_code, self.descriptor, self.article,
-                    ",".join(self.muids)
-                    )
+                    ",".join([x.id for x in self.muids]))
 
         klass = self.article_implementations[self.article]
 

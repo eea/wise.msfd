@@ -737,15 +737,14 @@ class Article8(BaseArticle2012):
 
         # filter the results to show only region's marine unit ids
         # TODO: this should use self.context.muids
-        count, muids_t = db.get_marine_unit_id_names(self.muids)
-        muid_labels = dict(muids_t)
+        # count, muids_t = db.get_marine_unit_id_names(self.muids)
+        # muid_labels = dict(muids_t)
+        muids = {m.id: m for m in self.muids}
 
         for k, v in report_data.items():
-            if k in self.muids:
-                muid = ItemLabel(k, muid_labels[k] or k)
-                res[muid] = v
+            res[muids[k]] = v
 
-        self.muids = sorted(res.keys())
+        # self.muids = sorted(res.keys())
         self.rows = res
 
     def __call__(self):
