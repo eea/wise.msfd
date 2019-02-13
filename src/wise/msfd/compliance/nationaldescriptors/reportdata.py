@@ -538,8 +538,6 @@ https://svn.eionet.europa.eu/repositories/Reportnet/Dataflows/MarineDirective/MS
             *conditions
         )
         print "Res count", count
-        # import pdb
-        # pdb.set_trace()
 
         data = [Proxy2018(row, self.article) for row in res]
 

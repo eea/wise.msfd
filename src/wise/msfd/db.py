@@ -433,8 +433,9 @@ def get_all_records_ordered(table, order_col, *conditions):
     col = getattr(table.c, order_col)
 
     q = sess.query(table).filter(*conditions).\
-        order_by(table.c.MarineReportingUnit, col)
+        order_by(table.c.MarineReportingUnit, col).distinct()
 
+    print q
     count = q.count()
     q = [x for x in q]
 
