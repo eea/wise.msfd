@@ -267,3 +267,140 @@ div.back-to-descr {
 table.comp-c-listing {
   width: inherit;
 }
+
+#report-data-navigation {
+  position: relative;
+  margin-bottom: 1em;
+
+  div.back-to-descr {
+    margin-bottom: 1em;
+    display: inline-block;
+  }
+
+  .sticky {
+    position: fixed;
+    top: 0;
+    right: 0;
+    left: 0;
+    width: 100%;
+    z-index: 999;
+    background-color: #fff;
+    padding: 1em 2em;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    transition: top .2s ease-in-out;
+
+    .nav-wrapper {
+      float: right;
+
+      .nav-body {
+        left: 0;
+        right: 0;
+        top: 58px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+
+      }
+    }
+  }
+
+  .fixed {
+    float: right;
+
+    i {
+      position: relative;
+      bottom: 11px;
+    }
+
+    .nav-body {
+      border-radius: 8px;
+      right: 30px;
+      top: -32px;
+
+      .art:first-child {
+        .art-title,
+        .art-title a {
+          border-top-left-radius: 8px;
+        }
+        .art-links {
+          a:first-child {
+            border-bottom-left-radius: 8px;
+          }
+        }
+      }
+      .art:last-child {
+        .art-title,
+        .art-title a {
+          border-top-right-radius: 8px;
+        }
+        a:last-child {
+          border-bottom-right-radius: 8px;
+        }
+      }
+    }
+  }
+
+  .nav-header {
+    .nav-toggle {
+      background-color: transparent;
+      border: none;
+    }
+    .nav-toggle:focus {
+      outline: none;
+    }
+    i {
+      font-size: 30px;
+      color: @main-dark-blue;
+    }
+  }
+
+  .nav-body {
+    display: flex;
+    position: absolute;
+    box-shadow: 0 0 2px #3e3d3d;
+    background: @main-dark-blue;
+    text-align: center;
+
+    .art:not(:last-child) {
+      border-right: 3px solid #fff;
+    }
+
+    .art {
+      flex-grow: 1;
+
+      a {
+        color: #fff;
+        padding: 0.5em 1em;
+        display: flex;
+        flex-grow: 1;
+        flex-shrink: 1;
+        justify-content: center;
+      }
+      a:hover {
+        background-color: #fff;
+        color: @main-dark-blue;
+        text-decoration: none;
+      }
+
+      .art-title {
+        font-weight: bold;
+        font-size: 16px;
+        border-bottom: 1px solid #fff;
+      }
+      .art-title:hover {
+        background-color: #fff;
+        a {
+          color: @main-dark-blue;
+        }
+      }
+
+      .art-links {
+        display: flex;
+        a {
+          &:not(:last-child) {
+            border-right: 1px solid #fff;
+          }
+        }
+      }
+    }
+  }
+
+}

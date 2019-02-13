@@ -276,6 +276,29 @@ if (!Array.prototype.last){
     });
   }
 
+  function customScroll() {
+    var $ot = $('.overflow-table');
+
+    $ot.each(function() {
+      $this = $(this);
+      var topScroll = $this.find('.top-scroll');
+      var topInner = topScroll.find('.top-scroll-inner');
+      var tableScroll = $this.find('.inner');
+      var tableWidth = $this.find('table').width();
+      var tableHeaderWidth = $this.find('th').width();
+
+      topInner.width(tableWidth - tableHeaderWidth - 101);
+
+      topScroll.on("scroll", function() {
+        tableScroll.scrollLeft($(this).scrollLeft());
+      });
+
+      tableScroll.on("scroll", function() {
+        topScroll.scrollLeft($(this).scrollLeft());
+      });
+    });
+  }
+
   // used in edit assessment form
   // add the disabled attribute for select/textarea elements
   // if the question type does not match the process phase
@@ -293,6 +316,7 @@ if (!Array.prototype.last){
     setupTableScrolling();
     disableAssessmentForms();
     readMoreModal();
+    customScroll();
 
     // used in edit assessment form
     // remove the disabled attribute when submitting the form
