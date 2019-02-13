@@ -1,7 +1,8 @@
 import logging
-from collections import defaultdict
+from collections import defaultdict, OrderedDict
 
 from lxml.etree import fromstring
+from sqlalchemy import and_
 from sqlalchemy.orm import aliased
 from sqlalchemy.orm.relationships import RelationshipProperty
 
@@ -75,6 +76,14 @@ ASSESSMENT_TOPIC_MAP = {
     "ImpactspressureWater": "ImpactPressureWaterColumn",
     "ImpactspressureSeabed": "ImpactPressureSeabedHabitats",
 }
+
+
+class OrderedDefaultDict(OrderedDict):
+    factory = list
+
+    def __missing__(self, key):
+        self[key] = value = self.factory()
+        return value
 
 
 def tag_name(node):
@@ -789,16 +798,28 @@ class A8AlternateItem(Item):
         for title, value in self.get_values():
             self[title] = value
 
+    @staticmethod
+    def _get_mapper_pk(mapper):
+        pk = mapper.__table__.primary_key.columns.values()[0]
+
+        return pk
+
+    @staticmethod
+    def _get_table_fk(table):
+        for col in table.c:
+            if col.foreign_keys:
+                return col
+
+    @staticmethod
+    def _get_mapper_fk(mapper):
+        for col in mapper.__table__.columns.values():
+            if col.foreign_keys:
+                return col
+
 
 class A8aGeneric(A8AlternateItem):
     """ Generic alternate implementation for Article 8a items
     """
-
-    @property
-    def pk(self):
-        N = self.primary_mapper
-        pk = N.__table__.primary_key.columns.values()[0]
-        return pk.name
 
     @classmethod
     def items(cls, descriptor, muids):
@@ -809,9 +830,18 @@ class A8aGeneric(A8AlternateItem):
         A = cls.ast_mapper
         I = cls.indic_mapper
         C = cls.crit_mapper
+        M = cls.metadata_table
 
-        pk = N.__table__.primary_key.columns.values()[0]
+        pk = cls._get_mapper_pk(N)
+        # fk = cls._get_table_fk(M)
 
+        # m_q = sess.query(M) \
+        #     .join(N, pk == fk) \
+        #     .filter(M.c.Topic == 'Assessment',
+        #             M.c.MarineUnitID.in_(muids))\
+        #     .distinct()
+
+        print 'Started to query data!'
         if P:
             # .filter(A.Topic == cls.ast_topic)
             a_q = sess.query(A).join(N).subquery()
@@ -826,14 +856,19 @@ class A8aGeneric(A8AlternateItem):
             q = sess.query(N, P, a_A, I, c_A)\
                 .select_from(N) \
                 .filter(N.Topic != 'InfoGaps')\
-                .filter(N.MarineUnitID.in_(muids))\
+                .filter(N.MarineUnitID.in_(muids)) \
                 .outerjoin(a_A)\
                 .outerjoin(I)\
                 .outerjoin(c_A)\
-                .outerjoin(P)\
+                .outerjoin(P) \
+                .distinct()\
                 .order_by(N.ReportingFeature, pk)
+            # asd = q.statement.compile(compile_kwargs={"literal_binds": True})
+
+            print 'Started to setup data!'
 
             for item in q:
+                print 'Will yield one item!'
                 yield cls(descriptor, *item)
 
         # A8aPhysical only has the primary mapper, needs different query
@@ -841,7 +876,7 @@ class A8aGeneric(A8AlternateItem):
             q = sess.query(N)\
                 .select_from(N)\
                 .filter(N.Topic != 'InfoGaps')\
-                .filter(N.MarineUnitID.in_(muids))\
+                .filter(N.MarineUnitID.in_(muids)) \
                 .order_by(N.Topic, pk)
 
             for item in q:
@@ -850,8 +885,9 @@ class A8aGeneric(A8AlternateItem):
         print q.count()
 
     def _get_metadata(self, rec):
+        return None
         t = self.metadata_table
-        pk = getattr(rec, self.pk)
+        pk = getattr(rec, self._get_mapper_pk(rec))
         fk = self._get_table_fk(t)
 
         _count, _res = db.get_all_records(
@@ -862,11 +898,6 @@ class A8aGeneric(A8AlternateItem):
 
         if _res:
             return _res[0]
-
-    def _get_table_fk(self, table):
-        for col in table.c:
-            for fk in col.foreign_keys:
-                return fk
 
     def get_pressures(self, rec):
         if rec is None:
@@ -1154,37 +1185,70 @@ class A8aPhysical(A8aGeneric):
         return self._args[0].Description
 
 
-class A8bNutrient(A8AlternateItem):
+class A8bGeneric(A8AlternateItem):
 
     @classmethod
     def items(cls, descriptor, muids):
         sess = db.session()
 
-        I = sql.MSFD8bNutrientsAssesmentIndicator
-        A = sql.MSFD8bNutrientsAssesment
-        AC = sql.MSFD8bNutrientsAssesmentCriterion
-        N = sql.MSFD8bNutrient
+        N = cls.primary_mapper
+        A = cls.asses_mapper
+        AI = cls.asses_ind_mapper
+        AC = cls.assess_crit_mapper
 
-        q = sess.query(N, A, I, AC)\
-            .select_from(N)\
-            .filter(N.MarineUnitID.in_(muids))\
-            .outerjoin(A)\
-            .outerjoin(I)\
-            .outerjoin(AC)\
-            .order_by(N.MSFD8b_Nutrients_ID)
+        pk = cls._get_mapper_pk(N)
 
-        for tup in q:
-            yield cls(descriptor, *tup)
+        print 'Started to query data!'
+
+        filters = []
+        filters.append(N.MarineUnitID.in_(muids))
+        # TODO should we filter by cls.topics?
+        if cls.topics:
+            filters.append(N.Topic != 'InfoGaps')
+
+        # TODO Acidification does not have 'assessments' tables
+        if A:
+            q = sess.query(N, A, AI, AC)\
+                .select_from(N)\
+                .filter(*filters)\
+                .outerjoin(A)\
+                .outerjoin(AI)\
+                .outerjoin(AC)\
+                .order_by(pk)
+
+            print 'Started to setup data!'
+            print q.count()
+
+            for tup in q:
+                print 'Will yield one item!'
+                yield cls(descriptor, *tup)
+
+        else:
+            q = sess.query(N) \
+                .select_from(N) \
+                .filter(*filters) \
+                .order_by(pk)
+
+            print 'Started to setup data!'
+            print q.count()
+
+            for tup in q:
+                print 'Will yield one item!'
+                yield cls(descriptor, *(tup, None, None, None))
 
     def get_values(self):
-
-        rec, assessment, indic, crit = self._args
+        rec, asses, indic, crit = self._args
         self.MarineUnitID = rec.MarineUnitID
 
-        t = sql.t_MSFD8b_NutrientsMetadata
+        t = self.metadata_table
+        pk = self._get_mapper_pk(rec)
+        fk = self._get_table_fk(t)
+
+        # import pdb; pdb.set_trace()
+
         _count, _res = db.get_all_records(
             t,
-            t.c.MSFD8b_Nutrients_ID == rec.MSFD8b_Nutrients_ID,
+            fk == pk,
             t.c.Topic == 'Assessment',
         )
         meta = None
@@ -1194,21 +1258,25 @@ class A8bNutrient(A8AlternateItem):
         sess = db.session()     # TODO: concurent ongoing sessions
         # will be a problem?
 
-        A = sql.MSFD8bNutrientsActivity
-        AD = sql.MSFD8bNutrientsActivityDescription
-        res = sess\
-            .query(A.Activity)\
+        A = self.activity_mapper
+        AD = self.act_descr_mapper
+
+        fk = self._get_mapper_fk(AD)
+        pk = self._get_mapper_pk(rec)
+
+        res = sess.query(A.Activity)\
             .join(AD)\
-            .filter(AD.MSFD8b_Nutrients == rec.MSFD8b_Nutrients_ID)\
+            .filter(fk == pk)\
             .distinct()\
             .all()
         related_activities = res and res[0] or []
 
         return [
             ('MarineReportingUnit', rec.MarineUnitID),
-            ('GEScomponent', 'D5'),
-            ('Feature', 'PresEnvEutrophi'),
+            ('GEScomponent', getattr(self, 'ges_comp', 'D5')),
+            ('Feature', getattr(self, 'feature', 'N/A')),
 
+            ('GESAchieved', getattr(self, 'ges_achiev', 'N/A')),
             ('AssessmentPeriod',
              meta and meta.AssessmentDateStart or rec.RecentTimeStart),
             ('AssessmentPeriod2',
@@ -1219,23 +1287,188 @@ class A8bNutrient(A8AlternateItem):
 
             ('RelatedActivities', ItemList(rows=related_activities)),
 
-            ('Criteria', crit and crit.CriteriaType),
+            ('Criteria',
+                getattr(self, 'criteria', crit and crit.CriteriaType)),
             ('CriteriaStatus',
-             crit and crit.MSFD8b_Nutrients_Assesment1.Status),
+                getattr(self, 'crit_stat', asses and asses.Status)),
             ('DescriptionCriteria',
-             crit and crit.MSFD8b_Nutrients_Assesment1.StatusDescription),
-            ('Element', 'N/A'),
-            ('ElementStatus', 'N/A'),
-            ('Parameter', rec.Topic),
+                getattr(self, 'desc_crit', asses and asses.StatusDescription)),
+            ('Element', getattr(self, 'element', 'N/A')),
+            ('ElementStatus', getattr(self, 'elem_status', 'N/A')),
+            ('Parameter', getattr(self, 'parameter', rec.Topic)),
 
             ('ThresholdQualitative', indic and indic.ThresholdValue),
             ('ValueUnit', indic and indic.ThresholdValueUnit),
             ('ProportionThresholdValue', indic and indic.ThresholdProportion),
-
             ('ProportionValueAchieved', rec.SumInfo1),
+            ('Trend', getattr(self, 'trend', asses and asses.StatusTrend)),
             ('ParameterAchieved', 'N/A'),
             ('DescriptionParameter', rec.Description),
         ]
+
+
+class A8bNutrient(A8bGeneric):
+    primary_mapper = sql.MSFD8bNutrient
+    asses_mapper = sql.MSFD8bNutrientsAssesment
+    asses_ind_mapper = sql.MSFD8bNutrientsAssesmentIndicator
+    assess_crit_mapper = sql.MSFD8bNutrientsAssesmentCriterion
+    metadata_table = sql.t_MSFD8b_NutrientsMetadata
+
+    activity_mapper = sql.MSFD8bNutrientsActivity
+    act_descr_mapper = sql.MSFD8bNutrientsActivityDescription
+    topics = [
+        'LevelPressureNConcentration', 'LevelPressureNLoad',
+        'LevelPressureOConcentration', 'LevelPressureOLoad',
+        'LevelPressurePConcentration', 'LevelPressurePLoad',
+        'ImpactPressureSeabedHabitats','ImpactPressureWaterColumn'
+    ]
+
+    @property
+    def ges_comp(self):
+        return 'D5'
+
+    @property
+    def feature(self):
+        return 'PresEnvEutrophi'
+
+
+class A8bAcidification(A8bGeneric):
+    primary_mapper = sql.MSFD8bAcidification
+    asses_mapper = None
+    asses_ind_mapper = None
+    assess_crit_mapper = None
+    metadata_table = sql.t_MSFD8b_AcidificationMetadata
+
+    activity_mapper = sql.MSFD8bAcidificationActivity
+    act_descr_mapper = sql.MSFD8bAcidificationActivityDescription
+    topics = []
+
+    @property
+    def ges_comp(self):
+        return 'D4'
+
+    @property
+    def feature(self):
+        return 'Acidification'
+
+    @property
+    def criteria(self):
+        return 'No criteria associated'
+
+    @property
+    def crit_stat(self):
+        return 'N/A'
+
+    @property
+    def desc_crit(self):
+        return None
+
+    @property
+    def trend(self):
+        rec = self._args[0]
+        value = getattr(rec, 'TrendsRecent', None)
+
+        return value
+
+
+class A8bNIS(A8bGeneric):
+    primary_mapper = sql.MSFD8bNI
+    asses_mapper = sql.MSFD8bNISAssesment
+    asses_ind_mapper = sql.MSFD8bNISAssesmentIndicator
+    assess_crit_mapper = sql.MSFD8bNISAssesmentCriterion
+    metadata_table = sql.t_MSFD8b_NISMetadata
+
+    activity_mapper = sql.MSFD8bNISActivity
+    act_descr_mapper = sql.MSFD8bNISActivityDescription
+    topics = ['LevelPressureEnvironment', 'ImpactPressureSeabedHabitats',
+              'ImpactPressureWaterColumn', 'ImpactPressureFunctionalGroup']
+
+    @property
+    def ges_comp(self):
+        return 'D2'
+
+    @property
+    def feature(self):
+        return 'PresBioIntroNIS'
+
+    @property
+    def element(self):
+        m = sql.MSFD8aNISInventory
+        _count, _res = db.get_all_records(
+            m.ScientificName,
+            m.MarineUnitID == self.MarineUnitID,
+        )
+        if _count:
+            elements = ', '.join([x[0] for x in _res])
+
+            return elements
+
+        return None
+
+
+class A8bExtractionFishShellfish(A8bGeneric):
+    primary_mapper = sql.MSFD8bExtractionFishShellfish
+    asses_mapper = sql.MSFD8bExtractionFishShellfishAssesment
+    asses_ind_mapper = sql.MSFD8bExtractionFishShellfishAssesmentIndicator
+    assess_crit_mapper = sql.MSFD8bExtractionFishShellfishAssesmentCriterion
+    metadata_table = sql.t_MSFD8b_ExtractionFishShellfishMetadata
+    activity_mapper = sql.MSFD8bExtractionFishShellfishActivity
+    act_descr_mapper = sql.MSFD8bExtractionFishShellfishActivityDescription
+
+    topics = ['Extraction3_1', 'ExtractionCommerciallyExpFish3_2or3_3',
+              'ExtractionCommerciallyExpShellfish3_2or3_3']
+
+    @property
+    def ges_comp(self):
+        return 'D3'
+
+    @property
+    def feature(self):
+        return 'FishCommercial'
+
+    @property
+    def element(self):
+        return 'All commercial stocks'
+
+    @property
+    def parameter(self):
+        indic = self._args[2]
+        value = getattr(indic, 'GESIndicators', None)
+
+        return value
+
+    @property
+    def desc_crit(self):
+        return None
+
+
+class A8bExtractionSeaweedMaerlOther(A8bGeneric):
+    primary_mapper = sql.MSFD8bExtractionSeaweedMaerlOther
+    asses_mapper = sql.MSFD8bExtractionSeaweedMaerlOtherAssesment
+    asses_ind_mapper = sql.MSFD8bExtractionSeaweedMaerlOtherAssesmentIndicator
+    assess_crit_mapper = sql.MSFD8bExtractionSeaweedMaerlOtherAssesmentCriterion
+    metadata_table = sql.t_MSFD8b_ExtractionSeaweedMaerlOtherMetadata
+    activity_mapper = sql.MSFD8bExtractionSeaweedMaerlOtherActivity
+    act_descr_mapper = sql.MSFD8bExtractionSeaweedMaerlOtherActivityDescription
+
+    topics = ['LevelPressureOther', 'ImpactPressureExploitedSpecies',
+              'ImpactPressureFunctionalGroup', 'ImpactPressureSeabedHabitats']
+
+    @property
+    def ges_comp(self):
+        return 'D3'
+
+    @property
+    def feature(self):
+        return 'SeaweedMaerlOther'
+
+    @property
+    def element(self):
+        return 'N/A'
+
+    @property
+    def desc_crit(self):
+        return None
 
 
 class Article8Alternate(BaseArticle2012):
@@ -1247,13 +1480,20 @@ class Article8Alternate(BaseArticle2012):
             A8aSpecies,
             A8aFunctional,
             A8aHabitat,
-            A8aEcosystem,
-            A8aPhysical
-        ],
+            ],
         'D1/D6': [],
-        'D2': [],
-        'D3': [],
-        'D4': [],
+        'D2': [
+            A8bNIS,
+        ],
+        'D3': [
+            A8bExtractionFishShellfish,
+            A8bExtractionSeaweedMaerlOther,
+        ],
+        'D4': [
+            A8aEcosystem,
+            A8aPhysical,
+            A8bAcidification,
+        ],
         'D5': [
             A8bNutrient,
         ],
@@ -1276,10 +1516,18 @@ class Article8Alternate(BaseArticle2012):
         self.rows = defaultdict(list)
 
         # {muid: {field_name: [values, ...], ...}
-        res = defaultdict(lambda: defaultdict(list))
+        res = defaultdict(lambda: OrderedDefaultDict())
         muids = {m.id: m for m in self.muids}
 
         for Klass in self.implementations[descriptor]:
+            print 'Started Klass: %s' % (Klass.__name__)
+
+            # Klass = self.implementations[descriptor][0]
+
+            # count, res = db.get_all_records(
+            #     Impl.mapper,
+            #     Impl.mapper.MarineUnitID.in_(self.muids)
+            # )
 
             by_muid = defaultdict(list)
 
