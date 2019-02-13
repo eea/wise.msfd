@@ -85,7 +85,7 @@
     var btnPos = $sfw.offset().top;
     var scroll, space;
 
-    $sfw.find('.btn').addClass('btn-primary');
+    $sfw.find('.btn').addClass('btn-primary btn-lg');
     space = $win.height() - $sfw.height() * 2;
 
     $win.scroll(function() {
