@@ -8,7 +8,7 @@ from eea.cache.event import InvalidateMemCacheEvent
 from Products.Five.browser import BrowserView
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile as VPTF
 
-from . import (decode_text, delete_translation, get_translated,
+from . import (delete_translation, get_translated,  # decode_text,
                retrieve_translation, save_translation)
 from .interfaces import ITranslationContext
 

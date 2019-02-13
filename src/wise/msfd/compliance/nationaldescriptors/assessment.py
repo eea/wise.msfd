@@ -19,7 +19,7 @@ from z3c.form.button import buttonAndHandler
 from z3c.form.field import Fields
 from z3c.form.form import Form
 
-from ..base import BaseComplianceView
+from .base import BaseView
 
 logger = logging.getLogger('wise.msfd')
 
@@ -45,7 +45,7 @@ progress_fields = (
 )
 
 
-class EditAssessmentSummaryForm(Form, BaseComplianceView):
+class EditAssessmentSummaryForm(Form, BaseView):
     """ Edit the assessment summary
 
     Fields are: summary, recommendations, progress assessment
@@ -123,7 +123,7 @@ class EditAssessmentSummaryForm(Form, BaseComplianceView):
         return Form.render(self)
 
 
-class EditAssessmentDataForm(Form, BaseComplianceView):
+class EditAssessmentDataForm(Form, BaseView):
     """ Edit the assessment for a national descriptor, for a specific article
     """
     name = 'art-view'

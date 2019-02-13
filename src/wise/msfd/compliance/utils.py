@@ -1,11 +1,4 @@
 import lxml.etree
-from pkg_resources import resource_filename
-
-
-definition_files = {
-    '2018': 'data/report_2018_def.xml',
-    '2012': 'data/report_2012_def.xml',
-}
 
 
 class ReportDefinition(object):
@@ -14,13 +7,9 @@ class ReportDefinition(object):
     For 2018, use report_2018_def.xml, for 2012 use report_2012_def.xml
     """
 
-    def __init__(self, year, article):
-        labels_file = resource_filename(
-            'wise.msfd',
-            definition_files[year]
-        )
+    def __init__(self, fpath, article):
         self.article = article
-        self.doc = lxml.etree.parse(labels_file)
+        self.doc = lxml.etree.parse(fpath)
         self.nodes = self.doc.find(self.article).getchildren()
 
     def get_elements(self):
@@ -49,22 +38,7 @@ class ReportDefinition(object):
         return res
 
 
-REPORT_DEFS = {
-    '2018': {
-        'Art8': ReportDefinition('2018', 'Art8'),
-        'Art9': ReportDefinition('2018', 'Art9'),
-        'Art10': ReportDefinition('2018', 'Art10'),
-    },
-    '2012': {
-        'Art8a': ReportDefinition('2012', 'Art8a'),
-        'Art8b': ReportDefinition('2012', 'Art8b'),
-        'Art9': ReportDefinition('2012', 'Art9'),
-        'Art10': ReportDefinition('2012', 'Art10'),
-    }
-}
-
-
-def get_sorted_fields(year, article, fields):
+def _get_sorted_fields(reportdef, fields):
     """ field = name from DB
         title = title/label showed in the template
 
@@ -74,8 +48,7 @@ def get_sorted_fields(year, article, fields):
               ('Feature', 'Feature'), ('GESComponents', ''GESComponents),
         ... , ('TargetCode', 'RelatedTargets')]
     """
-
-    elements = REPORT_DEFS[year][article].get_elements()
+    elements = reportdef.get_elements()
 
     labels = [
         (x.get('name'), x.text.strip())

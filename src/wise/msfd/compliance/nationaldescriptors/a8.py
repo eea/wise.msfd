@@ -8,7 +8,7 @@ from sqlalchemy.orm.relationships import RelationshipProperty
 from Products.Five.browser.pagetemplatefile import \
     ViewPageTemplateFile as Template
 from wise.msfd import db, sql  # , sql2018
-from wise.msfd.compliance.utils import REPORT_DEFS
+from .data import REPORT_DEFS
 from wise.msfd.data import get_report_data
 from wise.msfd.gescomponents import Criterion, get_criterion, get_descriptor
 from wise.msfd.labels import COMMON_LABELS

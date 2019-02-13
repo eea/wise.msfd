@@ -13,7 +13,6 @@ from plone.api.portal import get_tool
 from plone.memoize import ram
 from plone.memoize.view import memoize
 from Products.Five.browser import BrowserView
-from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 from wise.msfd import db, sql
 from wise.msfd.compliance.scoring import compute_score
 from wise.msfd.compliance.vocabulary import ASSESSED_ARTICLES, REGIONS
@@ -24,8 +23,8 @@ from wise.msfd.utils import Tab, _parse_files_in_location, row_to_dict
 
 from . import interfaces
 from .interfaces import ICountryDescriptorsFolder
-from .utils import REPORT_DEFS
 
+# from .utils import REPORT_DEFS
 # from zope.annotation.interfaces import IAnnotations
 
 logger = logging.getLogger('wise.msfd')
@@ -104,33 +103,6 @@ class BaseComplianceView(BrowserView):
     def json_map_url(self):
         return self.root_url() + '/@@json-map'
 
-    @property
-    def TRANSLATABLES(self):
-        # for 2018, returns a list of field names that are translatable
-
-        if self._translatables:
-            return self._translatables
-
-        year = REPORT_DEFS[self.year]
-
-        if self.article in year:
-            return year[self.article].get_translatable_fields()
-
-        self._translatables = []
-
-        return self._translatables
-
-    @TRANSLATABLES.setter
-    def set_translatables(self, v):
-        self._translatables = v
-
-    report_header_template = ViewPageTemplateFile(
-        'nationaldescriptors/pt/report-data-header.pt'
-    )
-
-    assessment_header_template = ViewPageTemplateFile(
-        'nationaldescriptors/pt/assessment-header.pt'
-    )
     _descriptor = None      # can be overriden
 
     @property

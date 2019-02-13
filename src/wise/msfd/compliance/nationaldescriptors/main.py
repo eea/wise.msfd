@@ -18,7 +18,7 @@ from wise.msfd.compliance.vocabulary import SUBREGIONS_TO_REGIONS
 from wise.msfd.gescomponents import get_descriptor
 from wise.msfd.utils import t2rt
 
-from ..base import BaseComplianceView
+from .base import BaseView
 
 logger = getLogger('wise.msfd')
 
@@ -130,7 +130,7 @@ def get_assessment_head_data_2012(data):
     return ['Not found'] * 3 + [('Not found', '')]
 
 
-class NationalDescriptorsOverview(BaseComplianceView):
+class NationalDescriptorsOverview(BaseView):
     section = 'national-descriptors'
 
     def countries(self):
@@ -147,7 +147,7 @@ class NationalDescriptorsOverview(BaseComplianceView):
         return res
 
 
-class NationalDescriptorCountryOverview(BaseComplianceView):
+class NationalDescriptorCountryOverview(BaseView):
     section = 'national-descriptors'
 
     def get_regions(self):
@@ -342,11 +342,11 @@ def filter_assessment_data_2012(data, region_code, descriptor_criterions):
     return assessments
 
 
-class NationalDescriptorRegionView(BaseComplianceView):
+class NationalDescriptorRegionView(BaseView):
     section = 'national-descriptors'
 
 
-class NationalDescriptorArticleView(BaseComplianceView):
+class NationalDescriptorArticleView(BaseView):
     section = 'national-descriptors'
 
     assessment_data_2012_tpl = Template('./pt/assessment-data-2012.pt')

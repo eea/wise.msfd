@@ -20,7 +20,6 @@ from Products.statusmessages.interfaces import IStatusMessage
 from wise.msfd import db, sql2018  # sql,
 from wise.msfd.base import BaseUtil
 from wise.msfd.compliance.interfaces import IReportDataView
-from wise.msfd.compliance.utils import REPORT_DEFS, get_sorted_fields
 from wise.msfd.data import (get_factsheet_url, get_report_data,
                             get_report_file_url, get_report_filename)
 from wise.msfd.gescomponents import (GES_LABELS, get_descriptor, get_features,
@@ -32,10 +31,11 @@ from z3c.form.button import buttonAndHandler
 from z3c.form.field import Fields
 from z3c.form.form import Form
 
-from ..base import BaseComplianceView
 from .a8 import Article8, Article8Alternate
 from .a9 import Article9, Article9Alternate
 from .a10 import Article10, Article10Alternate
+from .base import BaseView
+from .data import REPORT_DEFS, get_sorted_fields
 
 # from persistent.list import PersistentList
 # from six import string_types
@@ -117,7 +117,7 @@ def serialize_rows(rows):
     return res
 
 
-class ReportData2012(BaseComplianceView, BaseUtil):
+class ReportData2012(BaseView, BaseUtil):
     """ WIP on compliance tables
     """
     implements(IReportDataView)
@@ -452,7 +452,7 @@ class Proxy2018(object):
         return iter(self.__o)
 
 
-class ReportData2018(BaseComplianceView):
+class ReportData2018(BaseView):
     implements(IReportDataView)
 
     report_year = '2018'        # used by cache key
@@ -559,7 +559,7 @@ https://svn.eionet.europa.eu/repositories/Reportnet/Dataflows/MarineDirective/MS
         p_codes = [p.name for p in params]
         conditions.append(t.c.Parameter.in_(p_codes))
 
-        features = set([f.name for f in get_features(self.descriptor)])
+        ok_features = set([f.name for f in get_features(self.descriptor)])
 
         count, res = db.get_all_records_ordered(
             t,
@@ -573,7 +573,7 @@ https://svn.eionet.europa.eu/repositories/Reportnet/Dataflows/MarineDirective/MS
         for row in res:
             feats = set(row.Features.split(','))
 
-            if feats.intersection(features):
+            if feats.intersection(ok_features):
                 out.append(row)
 
         data = [Proxy2018(row, self.article) for row in out]
@@ -599,6 +599,13 @@ https://svn.eionet.europa.eu/repositories/Reportnet/Dataflows/MarineDirective/MS
             t.c.GESComponent.in_(all_ids)
         )
 
+        # for Art9 we want to show a row for all possible GESComponents,
+        # regardless if the MS has reported on that or not
+        # mapped_data = []
+        desc = self.descriptor_obj
+        criterions = [desc] + desc.criterions
+        rep_map = []
+
         data = [Proxy2018(row, self.article) for row in r]
 
         return data
@@ -618,8 +625,9 @@ https://svn.eionet.europa.eu/repositories/Reportnet/Dataflows/MarineDirective/MS
 
         for mru, rows in good_data.items():
             _fields = rows[0]._fields
-            sorted_fields = get_sorted_fields('2018', self.article, _fields)
-            _data = change_orientation(rows, sorted_fields)
+            fields_defs = get_sorted_fields('nationaldescriptors', '2018',
+                                            self.article, _fields)
+            _data = change_orientation(rows, fields_defs)
 
             for row in _data:
                 (fieldname, label), row_data = row
@@ -897,7 +905,7 @@ https://svn.eionet.europa.eu/repositories/Reportnet/Dataflows/MarineDirective/MS
         return self.subform
 
 
-class TitleViewlet(BaseTitleViewlet, BaseComplianceView):
+class TitleViewlet(BaseTitleViewlet, BaseView):
 
     @property
     def page_title(self):
