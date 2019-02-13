@@ -779,6 +779,7 @@ https://svn.eionet.europa.eu/repositories/Reportnet/Dataflows/MarineDirective/MS
             report.ContactName,
             report.ContactMail,
         )
+        link = report.ReportedFileLink
 
         report_header = self.report_header_template(
             title="{}'s 2018 Member State Report for {} / {} / {}".format(
@@ -790,7 +791,7 @@ https://svn.eionet.europa.eu/repositories/Reportnet/Dataflows/MarineDirective/MS
             factsheet=None,
             # TODO: find out how to get info about who reported
             report_by=report_by,
-            source_file=report.ReportedFileLink,
+            source_file=(link.rsplit('/', 1)[1], link),
             report_due='2018-10-15',
             report_date=report.ReportingDate,
             help_text=self.help_text
