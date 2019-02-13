@@ -34,15 +34,15 @@
                 </a>
               </div>
               <div class="art-links">
+                <a tal:attributes="href string:${art/absolute_url}/@@view-report-data-2018"
+                   target="_blank">
+                  2018</a>
                 <a tal:attributes="href string:${art/absolute_url}/@@view-report-data-2012"
                    target="_blank">
                   2012</a>
                 <a tal:attributes="href string:${art/absolute_url}/@@view-report-data-2012-like-2018"
                    target="_blank">
                   2012 (II)</a>
-                <a tal:attributes="href string:${art/absolute_url}/@@view-report-data-2018"
-                   target="_blank">
-                  2018</a>
               </div>
             </div>
           </div>

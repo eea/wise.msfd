@@ -538,6 +538,8 @@ https://svn.eionet.europa.eu/repositories/Reportnet/Dataflows/MarineDirective/MS
             *conditions
         )
         print "Res count", count
+        # import pdb
+        # pdb.set_trace()
 
         data = [Proxy2018(row, self.article) for row in res]
 
@@ -703,6 +705,8 @@ https://svn.eionet.europa.eu/repositories/Reportnet/Dataflows/MarineDirective/MS
 
     def get_report_data(self):
         """ Returns the data to display in the template
+
+        Returns a list of "rows (tuples of label: data)"
         """
 
         snapshots = self.get_snapshots()
@@ -743,24 +747,38 @@ https://svn.eionet.europa.eu/repositories/Reportnet/Dataflows/MarineDirective/MS
 
         return ItemList(rows=muids)
 
+    @db.use_db_session('2018')
+    def get_report_metadata(self):
+        """ Returns metadata about the reported information
+        """
+        t = sql2018.ReportedInformation
+        schema = {
+            'Art8': 'ART8_GES',
+            'Art9': 'ART9_GES',
+            'Art10': 'ART10_Targets',
+        }[self.article]
+        count, item = db.get_item_by_conditions(
+            t,
+            'ReportingDate',
+            t.CountryCode == self.country_code,
+            t.Schema == schema,
+            reverse=True,
+        )
+        return item
+
     @cache(get_reportdata_key, dependencies=['translation'])
     def render_reportdata(self):
         logger.info("Quering database for 2018 report data: %s %s %s %s",
                     self.country_code, self.country_region_code, self.article,
                     self.descriptor)
+
         data = self.get_report_data()
-
-        report_date = ''
-        source_file = ['To be addedd...', '.']
-
-        if data and data[0][1]:
-            for row in data[0][1]:
-                if row[0] == 'ReportingDate':
-                    report_date = row[1][0]
-
-                if row[0] == 'ReportedFileLink':
-                    source_file[1] = row[1][0] + '/manage_document'
-                    source_file[0] = row[1][0].split('/')[-1]
+        report = self.get_report_metadata()
+        report_by = u"{} / {} / {}".format(
+            report.ContactOrganisation,
+            report.ContactName,
+            report.ContactMail,
+        )
 
         report_header = self.report_header_template(
             title="{}'s 2018 Member State Report for {} / {} / {}".format(
@@ -771,10 +789,10 @@ https://svn.eionet.europa.eu/repositories/Reportnet/Dataflows/MarineDirective/MS
             ),
             factsheet=None,
             # TODO: find out how to get info about who reported
-            report_by='Member State',
-            source_file=source_file,
+            report_by=report_by,
+            source_file=report.ReportedFileLink,
             report_due='2018-10-15',
-            report_date=report_date,
+            report_date=report.ReportingDate,
             help_text=self.help_text
         )
 

@@ -280,6 +280,10 @@ def get_item_by_conditions(mapper_class, order_field, *conditions, **kwargs):
     page = kwargs.get('page', 0)
     sess = session()
     order_field = getattr(mapper_class, order_field)
+
+    if kwargs.get('reverse', False) is True:
+        order_field = order_field.desc()
+
     q = sess.query(mapper_class).filter(
         *conditions
     ).order_by(order_field)
