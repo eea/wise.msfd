@@ -54,51 +54,41 @@
     <table class="table table-bordered table-striped table-condensed">
       <tr>
         <td>Member State</td>
-        <td tal:attributes="colspan view/colspan"
-          tal:content="python:view.country_name"/>
-      </tr>
-      <tr>
-        <td>Descriptor</td>
-        <td tal:attributes="colspan view/colspan"
-          tal:content="python:view.desc_label"/>
+        <td tal:attributes="colspan view/colspan" tal:content="python:view.country_name"/>
       </tr>
       <tr>
         <td>Region(s) and subregion(s)</td>
-        <td tal:attributes="colspan view/colspan"
-          tal:content="view/country_region_name"/>
+        <td tal:attributes="colspan view/colspan" tal:content="view/country_region_name"/>
       </tr>
       <tr>
         <td>Article reported</td>
-        <td tal:attributes="colspan view/colspan"
-          tal:content="view/article_name"/>
-      </tr>
-      <tr>
-        <td>Reported by</td>
-        <td tal:attributes="colspan view/colspan"
-          tal:content="options/report_by"/>
+        <td tal:attributes="colspan view/colspan" tal:content="view/article_name"/>
       </tr>
       <tr>
         <td>Source file of Member State</td>
         <td tal:attributes="colspan view/colspan">
-
           <a tal:attributes="href python: options['source_file'][1]"
             tal:content="python: options['source_file'][0]">Filename</a>
-
           <div tal:condition="options/factsheet">
             <a tal:attributes="href options/factsheet">HTML Factsheet</a>
           </div>
-
         </td>
       </tr>
       <tr>
+        <td>Reported by</td>
+        <td tal:attributes="colspan view/colspan" tal:content="options/report_by"/>
+      </tr>
+      <tr>
         <td>Date report due</td>
-        <td tal:attributes="colspan view/colspan"
-          tal:content="options/report_due"/>
+        <td tal:attributes="colspan view/colspan" tal:content="options/report_due"/>
       </tr>
       <tr>
         <td>Date reported by Member State</td>
-        <td tal:attributes="colspan view/colspan"
-          tal:content="options/report_date"/>
+        <td tal:attributes="colspan view/colspan" tal:content="options/report_date"/>
+      </tr>
+      <tr>
+        <td>Descriptor</td>
+        <td tal:attributes="colspan view/colspan" tal:content="python:view.desc_label"/>
       </tr>
     </table>
 
