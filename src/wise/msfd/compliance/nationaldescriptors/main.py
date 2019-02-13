@@ -20,15 +20,64 @@ from wise.msfd.utils import t2rt
 
 from ..base import BaseComplianceView
 
+logger = getLogger('wise.msfd')
+
+REGION_RE = re.compile('.+\s\((?P<region>.+)\)$')
+
+
+# This somehow translates the real value in a color, to be able to compress the
+# displayed information in the assessment table
+
+# TODO: this needs to be redone, according to new scoring rules
+COLOR_TABLE = {
+    2: [1, 4],
+    3: [1, 3, 4],
+    4: [1, 2, 3, 4],
+    5: [1, 2, 3, 4, 5],
+    6: [1, 2, 3, 4, 5, 0]      # TODO: this needs to be removed
+}
+
 CountryStatus = namedtuple('CountryStatus',
                            ['name', 'status', 'state_id', 'url'])
 
-logger = getLogger('wise.msfd')
+Assessment2012 = namedtuple(
+    'Assessment2012', [
+        'gescomponents',
+        'criteria',
+        'summary',
+        'overall_ass',
+        'score'
+    ]
+)
+
+Criteria = namedtuple(
+    'Criteria', ['crit_name', 'answer']
+)
+
+
+Assessment = namedtuple('Assessment',
+                        [
+                            'gescomponents',
+                            'answers',
+                            'assessment_summary',
+                            'recommendations',
+                            'overall_score',
+                            'overall_conclusion'
+                        ])
+AssessmentRow = namedtuple('AssessmentRow',
+                           [
+                               'question',
+                               'summary',
+                               'conclusion',
+                               'conclusion_color',
+                               'score',
+                               'values'
+                           ])
 
 
 @db.use_db_session('2018')
 def get_assessment_data_2012_db(*args):
-    """ Returns the 2012 assessment data, from COM_Assessments_2012 table
+    """ Returns the assessment for 2012, from COM_Assessments_2012 table
     """
 
     articles = {
@@ -51,6 +100,34 @@ def get_assessment_data_2012_db(*args):
     )
 
     return res
+
+
+@db.use_db_session('2018')
+def get_assessment_head_data_2012(data):
+    if not data:
+        return ['Not found'] * 3 + [('Not found', '')]
+
+    ids = [x.COM_General_Id for x in data]
+    ids = tuple(set(ids))
+
+    t = sql2018.COMGeneral
+    count, res = db.get_all_records(
+        t,
+        t.Id.in_(ids)
+    )
+
+    if count:
+        report_by = res[0].ReportBy
+        assessors = res[0].Assessors
+        assess_date = res[0].DateAssessed
+        com_report = res[0].CommissionReport
+
+        return (report_by,
+                assessors,
+                assess_date,
+                (com_report.split('/')[-1], com_report))
+
+    return ['Not found'] * 3 + [('Not found', '')]
 
 
 class NationalDescriptorsOverview(BaseComplianceView):
@@ -90,48 +167,16 @@ class NationalDescriptorCountryOverview(BaseComplianceView):
         return [desc[a] for a in order]
 
 
-Assessment = namedtuple('Assessment',
-                        [
-                            'gescomponents',
-                            'answers',
-                            'assessment_summary',
-                            'recommendations',
-                            'overall_score',
-                            'overall_conclusion'
-                        ])
-AssessmentRow = namedtuple(
-    'AssessmentRow',
-    [
-        'question',
-        'summary',
-        'conclusion',
-        'conclusion_color',
-        'score',
-        'values'
-    ]
-
-
-)
-
-
-# This somehow translates the real value in a color, to be able to compress the
-# displayed information in the assessment table
-
-# TODO: this needs to be redone, according to new scoring rules
-COLOR_TABLE = {
-    2: [1, 4],
-    3: [1, 3, 4],
-    4: [1, 2, 3, 4],
-    5: [1, 2, 3, 4, 5],
-    6: [1, 2, 3, 4, 5, 0]      # TODO: this needs to be removed
-}
-
-
-# get the criteria value to be shown in the assessment data 2018 table
-def get_crit_val(question, criteria):
+def get_crit_val(question, element):
+    """ Get the criteria value to be shown in the assessment data 2018 table
+    """
     use_crit = question.use_criteria
-    is_prim = criteria.is_primary
-    crit = criteria.id
+
+    if use_crit == 'targets':
+        return element.title
+
+    is_prim = element.is_primary
+    crit = element.id
 
     if use_crit == 'all':
         return crit
@@ -145,7 +190,7 @@ def get_crit_val(question, criteria):
     return ''
 
 
-def get_assessment_data(article, criterias, questions, data):
+def format_assessment_data(article, elements, questions, muids, data):
     """ Builds a data structure suitable for display in a template
 
     This is used to generate the assessment data overview table for 2018
@@ -174,27 +219,32 @@ def get_assessment_data(article, criterias, questions, data):
             value = (label, color_index, u'All criterias')
             values.append(value)
         else:
-            for criteria in criterias:
-                for element in criteria.elements:
-                    field_name = '{}_{}_{}_{}'.format(
-                        article, question.id, criteria.id, element.id
-                    )
-                    v = data.get(field_name, None)
+            for element in elements:
+                field_name = '{}_{}_{}'.format(
+                    article, question.id, element.id
+                )
+                v = data.get(field_name, None)
 
-                    if v is not None:
-                        label = choices[v]
+                if v is not None:
+                    label = '{}: {}'.format(element.title, choices[v])
+                    try:
                         color_index = COLOR_TABLE[len(choices)][v]
-                    else:
-                        color_index = 0
-                        label = 'Not filled in'
+                    except Exception:
+                        logger.exception('Invalid color table')
+                        color_index = len(COLOR_TABLE)
+                        # label = 'Invalid color table'
 
-                    value = (
-                        label,
-                        color_index,
-                        get_crit_val(question, criteria)
-                    )
+                else:
+                    color_index = 0
+                    label = '{}: Not filled in'.format(element.title)
 
-                    values.append(value)
+                value = (
+                    label,
+                    color_index,
+                    get_crit_val(question, element)
+                )
+
+                values.append(value)
 
         summary_title = '{}_{}_Summary'.format(article, question.id)
         summary = data.get(summary_title) or ''
@@ -226,7 +276,7 @@ def get_assessment_data(article, criterias, questions, data):
         overall_conclusion = (1, 'error')
 
     assessment = Assessment(
-        criterias,
+        elements,
         answers,
         assess_sum or '-',
         recommend or '-',
@@ -237,54 +287,10 @@ def get_assessment_data(article, criterias, questions, data):
     return assessment
 
 
-@db.use_db_session('2018')
-def get_assessment_head_data_2012(data):
-    if not data:
-        return ['Not found'] * 3 + [('Not found', '')]
-
-    ids = [x.COM_General_Id for x in data]
-    ids = tuple(set(ids))
-
-    t = sql2018.COMGeneral
-    count, res = db.get_all_records(
-        t,
-        t.Id.in_(ids)
-    )
-
-    if count:
-        report_by = res[0].ReportBy
-        assessors = res[0].Assessors
-        assess_date = res[0].DateAssessed
-        com_report = res[0].CommissionReport
-
-        return (report_by,
-                assessors,
-                assess_date,
-                (com_report.split('/')[-1], com_report))
-
-    return ['Not found'] * 3 + [('Not found', '')]
-
-
 # TODO: use memoization for old data, needs to be called again to get the
 # score, to allow delta compute for 2018
 #
 # @memoize
-
-Assessment2012 = namedtuple(
-    'Assessment2012', [
-        'gescomponents',
-        'criteria',
-        'summary',
-        'overall_ass',
-        'score'
-    ]
-)
-
-Criteria = namedtuple(
-    'Criteria', ['crit_name', 'answer']
-)
-
-REGION_RE = re.compile('.+\s\((?P<region>.+)\)$')
 
 
 def filter_assessment_data_2012(data, region_code, descriptor_criterions):
@@ -346,6 +352,8 @@ class NationalDescriptorArticleView(BaseComplianceView):
     assessment_data_2012_tpl = Template('./pt/assessment-data-2012.pt')
     assessment_data_2018_tpl = Template('./pt/assessment-data-2018.pt')
 
+    year = '2018'       # used by self.muids
+
     @property
     def title(self):
         return "Commision assessment: {} / {} / {} / {} / 2018".format(
@@ -357,7 +365,7 @@ class NationalDescriptorArticleView(BaseComplianceView):
 
     @property
     def criterias(self):
-        return self.descriptor_obj.criterions
+        return self.descriptor_obj.sorted_criterions()      # criterions
 
     @property
     def questions(self):
@@ -369,6 +377,8 @@ class NationalDescriptorArticleView(BaseComplianceView):
 
     def __init__(self, context, request):
         super(NationalDescriptorArticleView, self).__init__(context, request)
+
+        # BBB:
 
         if not hasattr(context, 'saved_assessment_data') or \
                 not isinstance(context.saved_assessment_data, PersistentList):
@@ -421,13 +431,15 @@ class NationalDescriptorArticleView(BaseComplianceView):
 
         # Assessment data 2018
         data = self.context.saved_assessment_data.last()
+        elements = self.questions[0].get_all_assessed_elements(
+            self.descriptor_obj, muids=self.muids
+        )
 
-        # import pdb
-        # pdb.set_trace()
-        assessment = get_assessment_data(
+        assessment = format_assessment_data(
             self.article,
-            self.criterias,
+            elements,
             self.questions,
+            self.muids,
             data
         )
 

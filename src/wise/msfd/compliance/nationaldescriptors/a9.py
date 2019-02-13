@@ -384,9 +384,10 @@ class Article9Alternate(BaseArticle2012):
     @db.use_db_session('2012')
     def setup_data(self):
         t = sql.MSFD9Descriptor
+        muids = {m.id: m for m in self.muids}
         count, res = db.get_all_records(
             t,
-            t.MarineUnitID.in_(self.muids),
+            t.MarineUnitID.in_(muids.keys()),
         )
 
         by_muid = defaultdict(list)
@@ -414,7 +415,7 @@ class Article9Alternate(BaseArticle2012):
                 row = Row(name, values)
                 rows.append(row)
 
-            self.rows[muid] = rows
+            self.rows[muids[muid]] = rows
 
     def __call__(self):
         self.setup_data()

@@ -14,7 +14,7 @@ from wise.msfd.base import EmbeddedForm, MainFormWrapper
 from wise.msfd.compliance.base import get_questions
 from wise.msfd.compliance.content import AssessmentData
 from wise.msfd.compliance.interfaces import ICountryDescriptorsFolder
-from wise.msfd.gescomponents import get_descriptor, get_descriptor_elements
+from wise.msfd.gescomponents import get_descriptor  # , get_descriptor_elements
 from z3c.form.button import buttonAndHandler
 from z3c.form.field import Fields
 from z3c.form.form import Form
@@ -129,7 +129,7 @@ class EditAssessmentDataForm(Form, BaseComplianceView):
     name = 'art-view'
 
     subforms = None
-    session_name = '2018'
+    year = session_name = '2018'
     template = ViewPageTemplateFile("./pt/edit-assessment-data.pt")
 
     @property
@@ -145,12 +145,6 @@ class EditAssessmentDataForm(Form, BaseComplianceView):
             self.article,
         )
 
-    # @property
-    # def process_phase_title(self):
-    #     _, title = self.current_phase
-    #
-    #     return 'Current process phase: {}'.format(title)
-
     @buttonAndHandler(u'Save', name='save')
     def handle_save(self, action):
         data, errors = self.extractData()
@@ -158,7 +152,8 @@ class EditAssessmentDataForm(Form, BaseComplianceView):
         # TODO: check for errors
 
         for question in self.questions:
-            criterias = filtered_criterias(self.criterias, question)
+            elements = question.get_assessed_elements(self.descriptor_obj,
+                                                      muids=self.muids)
 
             values = []
 
@@ -166,12 +161,11 @@ class EditAssessmentDataForm(Form, BaseComplianceView):
                 field_name = '{}_{}'.format(self.article, question.id)
                 values.append(data.get(field_name, None))
 
-            for criteria in criterias:
-                for element in criteria.elements:
-                    field_name = '{}_{}_{}_{}'.format(
-                        self.article, question.id, criteria.id, element.id
-                    )
-                    values.append(data.get(field_name, None))
+            for element in elements:
+                field_name = '{}_{}_{}'.format(
+                    self.article, question.id, element.id
+                )
+                values.append(data.get(field_name, None))
 
             # TODO update the score if all fields have been answered
             # score is updated if one of the fields has been answered
@@ -251,22 +245,6 @@ class EditAssessmentDataForm(Form, BaseComplianceView):
     def descriptor_obj(self):
         return get_descriptor(self.descriptor)
 
-    # @property
-    # def criterias(self):
-    #     return self.descriptor_obj.criterions
-
-    # TODO: use memoize
-    @property
-    def criterias(self):
-        return self.descriptor_obj.criterions
-        els = get_descriptor_elements(
-            'compliance/nationaldescriptors/data'
-        )
-
-        desc = self.descriptor.split('.')[0]
-
-        return els[desc]
-
     # TODO: use memoize
     @property
     def questions(self):
@@ -281,7 +259,6 @@ class EditAssessmentDataForm(Form, BaseComplianceView):
 
         TODO: this method does too much, should be refactored
         """
-
         assessment_data = {}
 
         if hasattr(self.context, 'saved_assessment_data'):
@@ -298,19 +275,20 @@ class EditAssessmentDataForm(Form, BaseComplianceView):
                 if question.klass in v
             ][0]
 
-            criterias = filtered_criterias(self.criterias, question)
-            print criterias
+            elements = question.get_assessed_elements(
+                self.descriptor_obj, muids=self.muids
+            )
 
             form = EmbeddedForm(self, self.request)
             form.title = question.definition
             form._question_type = question.klass
             form._question_phase = phase
             form._question = question
-            form._criterias = criterias
+            form._elements = elements
             form._disabled = self.is_disabled(question)
             fields = []
 
-            if not criterias:       # when use-criteria == 'none'
+            if not elements:       # when use-criteria == 'none'
                 field_title = u'All criterias'
                 field_name = '{}_{}'.format(self.article, question.id)
                 choices = question.answers
@@ -336,31 +314,30 @@ class EditAssessmentDataForm(Form, BaseComplianceView):
                 # field._criteria = criteria
                 fields.append(field)
 
-            for criteria in criterias:
-                for element in criteria.elements:
-                    field_title = criteria.title
-                    field_name = '{}_{}_{}_{}'.format(
-                        self.article, question.id, criteria.id, element.id
-                    )
-                    choices = question.answers
-                    terms = [SimpleTerm(token=i, value=i, title=c)
-                             for i, c in enumerate(choices)]
-                    # Add 'Not relevant' to choices list
-                    terms.extend([
-                        SimpleTerm(token=len(terms) + 1,
-                                   value=None,
-                                   title=u'Not relevant')
-                    ])
-                    default = assessment_data.get(field_name, None)
-                    field = Choice(
-                        title=field_title,
-                        __name__=field_name,
-                        vocabulary=SimpleVocabulary(terms),
-                        required=False,
-                        default=default,
-                    )
-                    field._criteria = criteria
-                    fields.append(field)
+            for element in elements:
+                field_title = element.title
+                field_name = '{}_{}_{}'.format(
+                    self.article, question.id, element.id       # , element
+                )
+                choices = question.answers
+                terms = [SimpleTerm(token=i, value=i, title=c)
+                         for i, c in enumerate(choices)]
+                # Add 'Not relevant' to choices list
+                terms.extend([
+                    SimpleTerm(token=len(terms) + 1,
+                               value=None,
+                               title=u'Not relevant')
+                ])
+                default = assessment_data.get(field_name, None)
+                field = Choice(
+                    title=field_title,
+                    __name__=field_name,
+                    vocabulary=SimpleVocabulary(terms),
+                    required=False,
+                    default=default,
+                )
+                field._element = element
+                fields.append(field)
 
             for name, title in additional_fields.items():
                 _name = '{}_{}_{}'.format(self.article, question.id, name)
@@ -395,34 +372,6 @@ class EditAssessmentDataForm(Form, BaseComplianceView):
         forms.append(assessment_summary_form)
 
         return forms
-
-
-def filtered_questions(questions, phase):
-    """ Get the questions appropriate for the phase
-    """
-
-    if phase == 'phase3':
-        res = [q for q in questions if q.klass == 'coherence']
-    else:
-        res = [q for q in questions if q.klass != 'coherence']
-
-    return res
-
-
-def filtered_criterias(criterias, question):
-
-    if question.use_criteria == 'primary':
-        return [c for c in criterias if c.is_primary is True]
-
-    if question.use_criteria == 'secondary':
-        return [c for c in criterias if c.is_primary is False]
-
-    # TODO what to return
-
-    if question.use_criteria == 'none':
-        return []
-
-    return criterias
 
 
 EditAssessmentDataView = wrap_form(EditAssessmentDataForm, MainFormWrapper)

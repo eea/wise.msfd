@@ -394,9 +394,13 @@ def get_related_record_join(klass, klass_join, column, rel_id):
 
 
 @cache(db_result_key)
-def get_all_records(mapper_class, *conditions, **kw):
+def get_all_records(mapper, *conditions, **kw):
     sess = session()
-    q = sess.query(mapper_class).filter(*conditions)
+
+    if isinstance(mapper, (list, tuple)):
+        q = sess.query(*mapper).filter(*conditions)
+    else:
+        q = sess.query(mapper).filter(*conditions)
 
     if 'order_by' in kw:
         order_by = kw.pop('order_by')

@@ -11,15 +11,13 @@ from zope.schema import Choice
 from zope.schema.vocabulary import SimpleTerm, SimpleVocabulary
 
 import xlsxwriter
-# from persistent.list import PersistentList
-# from six import string_types
 from eea.cache import cache
 from plone.app.layout.viewlets.common import TitleViewlet as BaseTitleViewlet
 from plone.memoize import volatile
 from Products.Five.browser.pagetemplatefile import \
     ViewPageTemplateFile as Template
 from Products.statusmessages.interfaces import IStatusMessage
-from wise.msfd import db, sql, sql2018
+from wise.msfd import db, sql2018  # sql,
 from wise.msfd.base import BaseUtil
 from wise.msfd.compliance.interfaces import IReportDataView
 from wise.msfd.compliance.utils import REPORT_DEFS, get_sorted_fields
@@ -38,11 +36,18 @@ from ..base import BaseComplianceView
 from .a8 import Article8, Article8Alternate
 from .a9 import Article9, Article9Alternate
 from .a10 import Article10, Article10Alternate
-from .utils import row_to_dict
+
+# from persistent.list import PersistentList
+# from six import string_types
+# from .utils import row_to_dict
 
 logger = logging.getLogger('wise.msfd')
 
 NSMAP = {"w": "http://water.eionet.europa.eu/schemas/dir200856ec"}
+
+
+ReportingInformation = namedtuple('ReportingInformation',
+                                  ['report_date', 'reporters'])
 
 
 def get_reportdata_key(func, self, *args, **kwargs):
@@ -52,7 +57,7 @@ def get_reportdata_key(func, self, *args, **kwargs):
     if 'nocache' in self.request.form:
         raise volatile.DontCache
 
-    muids = ",".join(self.muids)
+    muids = ",".join([m.id for m in self.muids])
     region = getattr(self, 'country_region_code', ''.join(self.regions))
 
     res = '_cache_' + '_'.join([self.report_year,
@@ -162,29 +167,10 @@ class ReportData2012(BaseComplianceView, BaseUtil):
 
         return result
 
-    @property
-    def muids(self):
-        """ Get all Marine Units for a country
-
-        :return: ['BAL- LV- AA- 001', 'BAL- LV- AA- 002', ...]
-        """
-        t = sql.t_MSFD4_GegraphicalAreasID
-        count, res = db.get_all_records(
-            t,
-            t.c.MemberState == self.country_code,
-            t.c.RegionSubRegions == self.country_region_code,
-        )
-
-        res = [row_to_dict(t, r) for r in res]
-        muids = set([x['MarineUnitID'] for x in res])
-
-        return sorted(muids)
-
     def get_report_view(self):
         logger.info("Rendering 2012 report for: %s %s %s %s",
                     self.country_code, self.descriptor, self.article,
-                    ",".join(self.muids)
-                    )
+                    ",".join([x.id for x in self.muids]))
 
         klass = self.article_implementations[self.article]
 
@@ -230,9 +216,7 @@ class ReportData2012(BaseComplianceView, BaseUtil):
             worksheet.write(i, 0, wtitle)
             worksheet.write(i, 1, wdata)
 
-        # add worksheet(s) with report data
-
-        for wtitle, wdata in data.items():
+        for wtitle, wdata in data.items():  # add worksheet(s) with report data
             if not wdata:
                 continue
 
@@ -356,10 +340,6 @@ class ReportData2012(BaseComplianceView, BaseUtil):
             res = default
 
         return res
-
-
-ReportingInformation = namedtuple('ReportingInformation',
-                                  ['report_date', 'reporters'])
 
 
 class ReportData2012Like2018(ReportData2012):
@@ -534,7 +514,7 @@ https://svn.eionet.europa.eu/repositories/Reportnet/Dataflows/MarineDirective/MS
     def get_data_from_view_Art8(self):
         # TODO this is not used
         # exclude = REPORT_2018.get_group_by_fields(self.article)
-        # TODO: the data here should be filtered by muids in region
+        # exclude,
 
         t = sql2018.t_V_ART8_GES_2018
 
@@ -544,15 +524,20 @@ https://svn.eionet.europa.eu/repositories/Reportnet/Dataflows/MarineDirective/MS
         if self.descriptor.startswith('D1.'):
             all_ids.append('D1')
 
-        conditions = [t.c.GESComponent.in_(all_ids)]
+        muids = [x.id for x in self.muids]
+        conditions = [
+            t.c.CountryCode == self.country_code,
+            t.c.GESComponent.in_(all_ids),
+            t.c.Element.isnot(None),
+            t.c.MarineReportingUnit.in_(muids),
+        ]
 
         count, res = db.get_all_records_ordered(
             t,
             'Criteria',
-            # exclude,
-            t.c.CountryCode == self.country_code,
             *conditions
         )
+        print "Res count", count
 
         data = [Proxy2018(row, self.article) for row in res]
 
@@ -679,6 +664,8 @@ https://svn.eionet.europa.eu/repositories/Reportnet/Dataflows/MarineDirective/MS
 
                 row[1] = [ItemList(rows=uniques)] * len(row_data)
 
+            # TODO: this needs to be redone to take advantage of smart
+            # self.muids
             mru_label = GES_LABELS.get('mrus', mru)
 
             if mru_label != mru:
@@ -872,7 +859,7 @@ https://svn.eionet.europa.eu/repositories/Reportnet/Dataflows/MarineDirective/MS
         t = time.time()
         logger.debug("Started rendering of report data")
 
-        self.muids = []
+        # self.muids = []
         report_html = self.render_reportdata()
 
         delta = time.time() - t

@@ -9,10 +9,10 @@ from collections import namedtuple
 import lxml.etree
 from pkg_resources import resource_filename
 
-from wise.msfd import db, sql2018
+from wise.msfd import db, sql, sql2018
 from wise.msfd.labels import COMMON_LABELS
 from wise.msfd.utils import (ItemLabel, _parse_files_in_location,
-                             get_element_by_id)
+                             get_element_by_id, row_to_dict)
 
 logger = logging.getLogger('wise.msfd')
 
@@ -24,6 +24,11 @@ logger = logging.getLogger('wise.msfd')
 Criterion2012 = namedtuple('Criterion2012', ['id', 'title'])
 Feature = namedtuple('Feature', ['name', 'label', 'descriptors'])
 Parameter = namedtuple('Parameter', ['name', 'unit', 'criterias'])
+
+DESC_RE = re.compile(r'^D\d(\.\d|\d)?$')
+CRIT_2018_RE = re.compile(r'^D\d[0,1]?C\d$')       # ex: D10C5
+CRIT_2012_RE = re.compile(r'^\d[0,1]?\.\d$')        # ex: 4.1
+INDICATOR_2012_RE = re.compile(r'^\d[0,1]?\.\d\.\d$')       # ex: 10.1.1
 
 
 class ElementDefinition:
@@ -147,6 +152,14 @@ class Descriptor(ItemLabel):
 
         return res
 
+    def sorted_criterions(self):
+        crits = {c.id: c for c in self.criterions}
+        # ids = crits.keys()
+
+        s = sorted_by_criterion(crits.keys())
+
+        return [crits[x] for x in s]
+
 
 class Criterion(ItemLabel):
     """ A container for a GES criterion information
@@ -221,12 +234,13 @@ class Criterion(ItemLabel):
         alter = self.alternatives
 
         if not alter:
-            return u"{} {}".format(self._id, self._title)
+            return self._title
+            # return u"{} {}".format(self._id, self._title)
 
         if not self._id:
-            id, title = alter[0]
+            # id, title = alter[0]
 
-            return u"{} {}".format(id, title)
+            return alter[0][1]      # u"{} {}".format(id, title)
 
         alter_ids = len(alter) == 0 and alter[0][0] \
             or u', '.join(sorted(set([a[0] for a in alter])))
@@ -428,29 +442,6 @@ def get_parameters(descriptor_code=None):
     return res
 
 
-# def parse_features():
-#     res = {}
-#
-#     FEATURES = TERMSLIST['ReferenceFeature']        # FeaturesSmart
-#
-#     for fr in FEATURES:
-#         feature = fr['Feature']
-#
-#         if feature in res:
-#             continue
-#
-#         descs = set([f['GEScomponent']
-#                      .replace('D6/D1', 'D6').replace('D4/D1', 'D4')
-#
-#                      for f in FEATURES
-#
-#                      if f['Feature'] == feature])
-#
-#         res[feature] = Feature(feature, descs)
-#
-#     return res
-
-
 def parse_features():
     res = {}
 
@@ -613,12 +604,6 @@ def get_label(value, label_collection):
     return COMMON_LABELS.get(value, value)
 
 
-DESC_RE = re.compile(r'^D\d(\.\d|\d)?$')
-CRIT_2018_RE = re.compile(r'^D\d[0,1]?C\d$')       # ex: D10C5
-CRIT_2012_RE = re.compile(r'^\d[0,1]?\.\d$')        # ex: 4.1
-INDICATOR_2012_RE = re.compile(r'^\d[0,1]?\.\d\.\d$')       # ex: 10.1.1
-
-
 def is_descriptor(value):
     return bool(DESC_RE.match(value))
 
@@ -665,13 +650,26 @@ def sorted_by_criterion(ids):
     res = []
     res.extend(sorted(descriptors, key=lambda d: d.replace('D', '')))
     res.extend(sorted(criterias_2018))      # TODO: sort for double digit
-    res.extend(sorted(criterias_2012))      # TODO: sort for double digit
-    res.extend(sorted(indicators))
+
+    criterions_2012 = criterias_2012.union(indicators)
+    res.extend(sorted(criterions_2012))
+
     res.extend(sorted(criterions, key=lambda k: k.replace(' ', '')))
     res.extend(sorted(others))
+
     print(res)
 
     return res
+
+
+def sorted_criterions(crits):
+    """ Given a list of criterias, returns the same list, sorted by criteria id
+    """
+
+    cm = {c.id: c for c in crits}
+    s = sorted_by_criterion(cm.keys())
+
+    return [cm[k] for k in s]
 
 
 def criteria_from_gescomponent(text):
@@ -685,3 +683,56 @@ def criteria_from_gescomponent(text):
         crit = crit[:-1]
 
     return crit
+
+
+class MarineReportingUnit(ItemLabel):
+    """ A labeled MarineReportingUnit container
+    """
+
+    def __init__(self, id, title):
+        self.name = self.id = id
+        self.title = title
+
+
+@db.use_db_session('2012')
+def _muids_2012(country, region):
+    t = sql.t_MSFD4_GegraphicalAreasID
+    count, res = db.get_all_records(
+        (t.c.MarineUnitID,
+         t.c.MarineUnits_ReportingAreas),
+        t.c.MemberState == country,
+        t.c.RegionSubRegions == region,
+        t.c.MarineUnits_ReportingAreas.isnot(None),
+    )
+    res = [MarineReportingUnit(*r) for r in res]
+
+    return sorted(res)
+
+
+@db.use_db_session('2018')
+def _muids_2018(country, region):
+    t = sql2018.MarineReportingUnit
+    count, res = db.get_all_records(
+        t,
+        t.CountryCode == country,
+        t.Region == region,
+        t.localId.isnot(None),      # TODO: this suits NL, check others
+    )
+    res = [MarineReportingUnit(m.MarineReportingUnitId,
+                               m.nameTxtInt or m.Description)
+
+           for m in res]
+
+    return sorted(res)
+
+
+def get_marine_units(country, region, year):
+    """ Get a list of ``MarineReportingUnit`` objects
+    """
+
+    if year == '2012':
+        return _muids_2012(country, region)
+    elif year == '2018':
+        return _muids_2018(country, region)
+
+    raise NotImplementedError

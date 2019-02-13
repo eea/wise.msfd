@@ -4,11 +4,14 @@
     <tbody>
 
       <tr>
-        <th class="as-question as-header" tal:content="structure view/descriptor_obj"></th>
+        <th class="as-question as-header" >
+          Question / assessed elements
+
+        </th>
         <th class="as-header" tal:condition="not: assessment/gescomponents">
         </th>
         <th tal:repeat="g assessment/gescomponents" class="as-ges-component as-header">
-          <span tal:replace="structure g">D0C0</span>
+          <!-- <span tal:replace="structure g">D0C0</span> -->
         </th>
         <!-- TODO: add "conclusion score" and "Weighting" as titles -->
         <th class="as-header">Conclusion</th>
@@ -21,7 +24,7 @@
           <tal:rep tal:repeat="value row/values" >
             <td
               tal:attributes="class python: 'as-value as-value-{}'.format(value[1]);
-              colspan python: (len(assessment.gescomponents) + 1) - len(row.values);">
+              colspan python: len(assessment.gescomponents) - len(row.values) + 1;">
 
               <label for=""
                 class="help-popover"

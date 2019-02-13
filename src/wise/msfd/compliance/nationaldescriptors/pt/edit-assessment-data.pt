@@ -71,7 +71,8 @@
 
       <div id="comp-national-descriptor">
 
-        <div tal:replace="structure view/help">Subform help here</div>
+        <div tal:replace="structure view/help"
+          tal:on-error="string:Error in help">Subform help here</div>
 
         <metal:form use-macro="context/@@ploneform-macros/titlelessform">
 
@@ -104,7 +105,7 @@
                           <div class="field"
                             tal:define="error widget/error;
                             hidden python:widget.mode == 'hidden';
-                            criteria nocall: widget/field/_criteria | nothing;
+                            element nocall: widget/field/_element | nothing;
                             "
                             tal:attributes="class python:'field' + (error and ' error' or '')">
 
@@ -123,10 +124,10 @@
                                   data-trigger="hover"
                                   data-html="true"
                                   tal:attributes="for widget/id;
-                                  title python: criteria and criteria.title or '';
-                                  data-content python: criteria and criteria.definition or ''" >
+                                  title python: element and element.title or '';
+                                  data-content python: element and element.definition or ''" >
                                   <span i18n:translate="" tal:content="widget/label">label</span>
-                                  <!-- <span tal:condition="criteria" class="fa fa-question-circle"></span> -->
+                                  <!-- <span tal:condition="element" class="fa fa-question-circle"></span> -->
                                 </label>
                               </div>
                               <div class="assessment-form-input">

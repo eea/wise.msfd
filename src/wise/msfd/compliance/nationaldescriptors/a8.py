@@ -685,7 +685,7 @@ class Article8(BaseArticle2012):
                     report_map[rep.marine_unit_id].append(rep)
 
         descriptor = get_descriptor(self.descriptor)
-        ges_crits = [descriptor] + descriptor.criterions
+        ges_crits = [descriptor] + list(descriptor.criterions)
 
         # a bit confusing code, we have multiple sets of rows, grouped in
         # report_data under the marine unit id key.
@@ -736,15 +736,15 @@ class Article8(BaseArticle2012):
         res = {}
 
         # filter the results to show only region's marine unit ids
-        count, muids_t = db.get_marine_unit_id_names(list(set(self.muids)))
-        muid_labels = dict(muids_t)
+        # TODO: this should use self.context.muids
+        # count, muids_t = db.get_marine_unit_id_names(self.muids)
+        # muid_labels = dict(muids_t)
+        muids = {m.id: m for m in self.muids}
 
         for k, v in report_data.items():
-            if k in self.muids:
-                muid = ItemLabel(k, muid_labels[k] or k)
-                res[muid] = v
+            res[muids[k]] = v
 
-        self.muids = sorted(res.keys())
+        # self.muids = sorted(res.keys())
         self.rows = res
 
     def __call__(self):
@@ -812,30 +812,42 @@ class A8aGeneric(A8AlternateItem):
 
         pk = N.__table__.primary_key.columns.values()[0]
 
-        # .filter(A.Topic == cls.ast_topic)
-        a_q = sess.query(A).join(N).subquery()
-        a_A = aliased(A, alias=a_q, adapt_on_names=True)
+        if P:
+            # .filter(A.Topic == cls.ast_topic)
+            a_q = sess.query(A).join(N).subquery()
+            a_A = aliased(A, alias=a_q, adapt_on_names=True)
 
-        # .filter(A.Topic.in_(cls.criteria_types))\
-        c_q = sess.query(C).join(A).subquery()
-        c_A = aliased(C, alias=c_q, adapt_on_names=True)
+            # .filter(A.Topic.in_(cls.criteria_types))\
+            c_q = sess.query(C).join(A).subquery()
+            c_A = aliased(C, alias=c_q, adapt_on_names=True)
 
-        # TODO how to filter by topics
-        # .filter(N.Topic.in_(cls.ast_topic + cls.criteria_types))\
-        q = sess.query(N, P, a_A, I, c_A)\
-            .select_from(N) \
-            .filter(N.Topic != 'InfoGaps')\
-            .filter(N.MarineUnitID.in_(muids))\
-            .outerjoin(a_A)\
-            .outerjoin(I)\
-            .outerjoin(c_A)\
-            .outerjoin(P)\
-            .order_by(N.ReportingFeature, pk)
+            # TODO how to filter by topics
+            # .filter(N.Topic.in_(cls.ast_topic + cls.criteria_types))\
+            q = sess.query(N, P, a_A, I, c_A)\
+                .select_from(N) \
+                .filter(N.Topic != 'InfoGaps')\
+                .filter(N.MarineUnitID.in_(muids))\
+                .outerjoin(a_A)\
+                .outerjoin(I)\
+                .outerjoin(c_A)\
+                .outerjoin(P)\
+                .order_by(N.ReportingFeature, pk)
+
+            for item in q:
+                yield cls(descriptor, *item)
+
+        # A8aPhysical only has the primary mapper, needs different query
+        else:
+            q = sess.query(N)\
+                .select_from(N)\
+                .filter(N.Topic != 'InfoGaps')\
+                .filter(N.MarineUnitID.in_(muids))\
+                .order_by(N.Topic, pk)
+
+            for item in q:
+                yield cls(descriptor, *(item, None, None, None, None))
 
         print q.count()
-
-        for item in q:
-            yield cls(descriptor, *item)
 
     def _get_metadata(self, rec):
         t = self.metadata_table
@@ -867,6 +879,14 @@ class A8aGeneric(A8AlternateItem):
 
         return list(sorted(res))
 
+    def _filter_by_topics(self, topic_type, *args):
+        topic, value = args
+        topics = getattr(self, topic_type)
+        if topic in topics:
+            return value
+
+        return None
+
     def get_conditional_value(self, method_name, default_val):
         topic = self._args[0].Topic
         get_method = getattr(self, method_name, None)
@@ -880,24 +900,22 @@ class A8aGeneric(A8AlternateItem):
         self.MarineUnitID = rec.MarineUnitID
         meta = self._get_metadata(rec)
 
-        # if crit:
-        #     import pdb
-        #     pdb.set_trace()
-
         return [
             ('MarineReportingUnit', rec.MarineUnitID),
 
-            ('GEScomponent', 'D1'),
+            ('GEScomponent', self.get_conditional_value(
+                'ges_comp', 'D1')
+             ),
             ('Feature', self.get_conditional_value(
                 'feature', getattr(rec, 'ReportingFeature', None))
              ),
             ('GESachieved', self.get_conditional_value(
                 'ges_achiev', getattr(rec, 'Summary1', None))
              ),
-            ('AssessmentPeriod',
-             meta and meta.AssessmentDateStart or rec.RecentTimeStart),
-            ('AssessmentPeriod2',
-             meta and meta.AssessmentDateEnd or rec.RecentTimeEnd),
+            ('AssessmentPeriod', meta and meta.AssessmentDateStart
+                or getattr(rec, 'RecentTimeStart', None)),
+            ('AssessmentPeriod2', meta and meta.AssessmentDateEnd
+                or getattr(rec, 'RecentTimeEnd', None)),
             ('MethodUsed', meta and meta.MethodUsed),
             ('MethodSources', meta and meta.Sources),
 
@@ -914,7 +932,9 @@ class A8aGeneric(A8AlternateItem):
             ('DescriptionCriteria', self.get_conditional_value(
                 'desc_crit', getattr(ast, 'StatusDescription', None))
              ),
-            ('Element', rec.ReportingFeature),
+            ('Element', self.get_conditional_value(
+                'element', getattr(rec, 'ReportingFeature', None))
+             ),
             ('ElementSource', self.get_conditional_value(
                 'elem_source',
                 getattr(rec, 'SourceClassificationListAuthority', None))
@@ -931,9 +951,13 @@ class A8aGeneric(A8AlternateItem):
             ('ProportionThresholdValue', indic and indic.ThresholdProportion),
 
             # ('ProportionValueAchieved', rec.SumInfo1),
-            ('Trend', ast and ast.TrendStatus),
+            ('Trend', self.get_conditional_value(
+                'trend', getattr(ast, 'TrendStatus', None))
+             ),
             ('ParameterAchieved', 'N/A'),
-            # ('DescriptionParameter', rec.Description),
+            ('DescriptionParameter', self.get_conditional_value(
+                'desc_param', None)
+             ),
         ]
 
 
@@ -949,32 +973,6 @@ class A8aSpecies(A8aGeneric):
     criteria_types = ['Distribution', 'Population', 'Condition']
     ast_topic = ['SpeciesOverall', ]     # Overall
 
-    # crit_fields = ('criteria', 'crit_status', 'desc_crit', 'param')
-    # ast_fields = ('descr_elem', 'elem_status')
-    #
-    # def __init__(self, descriptor, *args):
-    #     super(A8aSpecies, self).__init__(descriptor, *args)
-    #
-    #     for field in self.crit_fields:
-    #         setattr(self, field, self._criteria_types)
-    #
-    #     for field in self.ast_fields:
-    #         setattr(self, field, self._ast_topic)
-
-    def _ast_topic(self, *args):
-        topic, value = args
-        if topic in A8aSpecies.ast_topic:
-            return value
-
-        return None
-
-    def _criteria_types(self, *args):
-        topic, value = args
-        if topic in A8aSpecies.criteria_types:
-            return value
-
-        return None
-
     def feature(self, *args):
         return 'SppAll'
 
@@ -982,22 +980,22 @@ class A8aSpecies(A8aGeneric):
         return 'N/A'
 
     def descr_elem(self, *args):
-        return self._ast_topic(*args)
+        return self._filter_by_topics('ast_topic', *args)
 
     def elem_status(self, *args):
-        return self._ast_topic(*args)
+        return self._filter_by_topics('ast_topic', *args)
 
     def criteria(self, *args):
-        return self._criteria_types(*args)
+        return self._filter_by_topics('criteria_types', *args)
 
     def crit_status(self, *args):
-        return self._criteria_types(*args)
+        return self._filter_by_topics('criteria_types', *args)
 
     def desc_crit(self, *args):
-        return self._criteria_types(*args)
+        return self._filter_by_topics('criteria_types', *args)
 
     def param(self, *args):
-        return self._criteria_types(*args)
+        return self._filter_by_topics('criteria_types', *args)
 
 
 class A8aFunctional(A8aGeneric):
@@ -1011,21 +1009,9 @@ class A8aFunctional(A8aGeneric):
 
     criteria_types = ['SpeciesComposition', 'Abundance']
     summary_topics = ['FuncGroupOverall']
-    ast_topic = []     # Overall
 
-    def _summary_topics(self, *args):
-        topic, value = args
-        if topic in A8aFunctional.summary_topics:
-            return value
-
-        return None
-
-    def _criteria_types(self, *args):
-        topic, value = args
-        if topic in A8aFunctional.criteria_types:
-            return value
-
-        return None
+    def element(self, *args):
+        return 'N/A'
 
     def elem_source(self, *args):
         return None
@@ -1034,19 +1020,138 @@ class A8aFunctional(A8aGeneric):
         return 'N/A'
 
     def ges_achiev(self, *args):
-        return self._summary_topics(*args)
+        return self._filter_by_topics('summary_topics', *args)
 
     def criteria(self, *args):
-        return self._criteria_types(*args)
+        return self._filter_by_topics('criteria_types', *args)
 
     def crit_status(self, *args):
-        return self._criteria_types(*args)
+        return self._filter_by_topics('criteria_types', *args)
 
     def desc_crit(self, *args):
-        return self._criteria_types(*args)
+        return self._filter_by_topics('criteria_types', *args)
 
     def param(self, *args):
-        return self._criteria_types(*args)
+        return self._filter_by_topics('criteria_types', *args)
+
+
+class A8aHabitat(A8aGeneric):
+    primary_mapper = sql.MSFD8aHabitat
+    pres_mapper = sql.MSFD8aHabitatPressuresImpact
+    ast_mapper = sql.MSFD8aHabitatStatusAssessment
+    indic_mapper = sql.MSFD8aHabitatStatusIndicator
+    crit_mapper = sql.MSFD8aHabitatStatusCriterion
+
+    metadata_table = sql.t_MSFD8a_HabitatMetadata
+
+    element_topics = ('HabitatOverall',)
+    criteria_topics = ('Distribution', 'Extent', 'Condition')
+    param_topics = ('Distribution', 'Extent', 'Condition')
+
+    def ges_comp(self, *args):
+        return 'D1/D6'
+
+    def feature(self, *args):
+        return 'HabAll'
+
+    def descr_elem(self, *args):
+        return self._args[0].Description
+
+    def elem_status(self, *args):
+        return self._filter_by_topics('element_topics', *args)
+
+    def criteria(self, *args):
+        return self._filter_by_topics('criteria_topics', *args)
+
+    def crit_status(self, *args):
+        return self._filter_by_topics('criteria_topics', *args)
+
+    def desc_crit(self, *args):
+        return self._filter_by_topics('criteria_topics', *args)
+
+    def param(self, *args):
+        return self._filter_by_topics('param_topics', *args)
+
+
+class A8aEcosystem(A8aGeneric):
+    primary_mapper = sql.MSFD8aEcosystem
+    pres_mapper = sql.MSFD8aEcosystemPressuresImpact
+    ast_mapper = sql.MSFD8aEcosystemStatusAssessment
+    indic_mapper = sql.MSFD8aEcosystemStatusIndicator
+    crit_mapper = sql.MSFD8aEcosystemStatusCriterion
+
+    metadata_table = sql.t_MSFD8a_EcosystemMetadata
+
+    elem_status_topics = ('EcosystemOverall',)
+    criteria_topics = ('Structure', 'Productivity', 'Proportion', 'Abundance')
+
+    def ges_comp(self, *args):
+        return 'D4'
+
+    def feature(self, *args):
+        return 'EcosystemFoodWeb'
+
+    def ges_achiev(self, *args):
+        return 'N/A'
+
+    def elem_source(self, *args):
+        return None
+
+    def descr_elem(self, *args):
+        return self._args[0].Description
+
+    def elem_status(self, *args):
+        return self._filter_by_topics('elem_status_topics', *args)
+
+    def criteria(self, *args):
+        return self._filter_by_topics('criteria_topics', *args)
+
+    def crit_status(self, *args):
+        return self._filter_by_topics('criteria_topics', *args)
+
+    def desc_crit(self, *args):
+        return self._filter_by_topics('criteria_topics', *args)
+
+    def param(self, *args):
+        return self._filter_by_topics('criteria_topics', *args)
+
+
+class A8aPhysical(A8aGeneric):
+    # this type only has primary table and metadata
+    primary_mapper = sql.MSFD8aPhysical
+    pres_mapper = None
+    ast_mapper = None
+    indic_mapper = None
+    crit_mapper = None
+
+    metadata_table = sql.t_MSFD8a_PhysicalMetadata
+
+    def ges_comp(self, *args):
+        return 'D4'
+
+    def feature(self, *args):
+        return 'PhyHydroCharacAll'
+
+    def ges_achiev(self, *args):
+        return 'N/A'
+
+    def element(self, *args):
+        return 'N/A'
+
+    def elem_status(self, *args):
+        return 'N/A'
+
+    def criteria(self, *args):
+        return 'No criteria associated'
+
+    def crit_status(self, *args):
+        return 'N/A'
+
+    def trend(self, *args):
+        return self._args[0].TrendsRecent
+
+    def desc_param(self, *args):
+        return self._args[0].Description
 
 
 class A8bNutrient(A8AlternateItem):
@@ -1140,7 +1245,10 @@ class Article8Alternate(BaseArticle2012):
     implementations = {
         'D1': [
             A8aSpecies,
-            # A8aFunctional
+            A8aFunctional,
+            A8aHabitat,
+            A8aEcosystem,
+            A8aPhysical
         ],
         'D1/D6': [],
         'D2': [],
@@ -1148,7 +1256,13 @@ class Article8Alternate(BaseArticle2012):
         'D4': [],
         'D5': [
             A8bNutrient,
-        ]
+        ],
+        'D6': [],
+        'D7': [],
+        'D8': [],
+        'D9': [],
+        'D10': [],
+        'D11': [],
     }
 
     def setup_data(self):
@@ -1159,19 +1273,17 @@ class Article8Alternate(BaseArticle2012):
         if descriptor.startswith('D1.'):
             descriptor = 'D1'       # TODO: handle other cases
 
-        self.rows = {}
+        self.rows = defaultdict(list)
+
+        # {muid: {field_name: [values, ...], ...}
+        res = defaultdict(lambda: defaultdict(list))
+        muids = {m.id: m for m in self.muids}
 
         for Klass in self.implementations[descriptor]:
-            # Klass = self.implementations[descriptor][0]
-
-            # count, res = db.get_all_records(
-            #     Impl.mapper,
-            #     Impl.mapper.MarineUnitID.in_(self.muids)
-            # )
 
             by_muid = defaultdict(list)
 
-            for item in Klass.items(self.descriptor, self.muids):
+            for item in Klass.items(self.descriptor, muids.keys()):
                 by_muid[item.MarineUnitID].append(item)
 
             for muid, cols in by_muid.items():
@@ -1182,10 +1294,12 @@ class Article8Alternate(BaseArticle2012):
 
                 for name in cols[0].keys():
                     values = [c[name] for c in cols]
-                    row = Row(name, values)
-                    rows.append(row)
+                    res[muid][name].extend(values)
 
-                self.rows[muid] = rows
+        for muid, rows in res.items():
+            for name, values in rows.items():
+                row = Row(name, values)
+                self.rows[muids[muid]].append(row)
 
     def __call__(self):
         self.setup_data()

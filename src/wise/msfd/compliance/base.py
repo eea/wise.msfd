@@ -1,28 +1,32 @@
 import logging
+from collections import namedtuple
 
 import lxml.etree
+from sqlalchemy.orm import aliased
 from zope.component import getMultiAdapter
-# from zope.annotation.interfaces import IAnnotations
 from zope.dottedname.resolve import resolve
 from zope.interface import implements
 
 from Acquisition import aq_inner
 from plone.api.content import get_state
 from plone.api.portal import get_tool
+from plone.memoize import ram
 from plone.memoize.view import memoize
 from Products.Five.browser import BrowserView
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 from wise.msfd import db, sql
 from wise.msfd.compliance.scoring import compute_score
 from wise.msfd.compliance.vocabulary import ASSESSED_ARTICLES, REGIONS
-from wise.msfd.gescomponents import get_descriptor
+from wise.msfd.gescomponents import (get_descriptor, get_marine_units,
+                                     sorted_criterions)
 from wise.msfd.translation.interfaces import ITranslationContext
-from wise.msfd.utils import Tab, _parse_files_in_location
+from wise.msfd.utils import Tab, _parse_files_in_location, row_to_dict
 
 from . import interfaces
 from .interfaces import ICountryDescriptorsFolder
-from .nationaldescriptors.utils import row_to_dict
 from .utils import REPORT_DEFS
+
+# from zope.annotation.interfaces import IAnnotations
 
 logger = logging.getLogger('wise.msfd')
 edw_logger = logging.getLogger('edw.logger')
@@ -180,6 +184,17 @@ class BaseComplianceView(BrowserView):
 
         return regions
 
+    @property
+    def muids(self):
+        """ Get all Marine Units for a country
+
+        :return: ['BAL- LV- AA- 001', 'BAL- LV- AA- 002', ...]
+        """
+
+        return get_marine_units(self.country_code,
+                                self.country_region_code,
+                                self.year)
+
     def get_parent_by_iface(self, iface):
         for parent in self.request.other['PARENTS']:
             if iface.providedBy(parent):
@@ -324,13 +339,23 @@ class BaseComplianceView(BrowserView):
                            is_translatable=is_translatable)
 
 
+Target = namedtuple('Target', ['id', 'title', 'definition'])
+
+
+def _a10_ids_cachekey(method, self, descriptor, **kwargs):
+    muids = [m.id for m in kwargs['muids']]
+
+    return '{}-{}'.format(descriptor.id, ','.join(muids))
+
+
 class AssessmentQuestionDefinition:
     """ A definition for a single assessment question.
 
     Pass an <assessment-question> node to initialize it
     """
 
-    def __init__(self, node, root, position):
+    def __init__(self, article, node, root, position):
+        self.article = article
         self.id = node.get('id')
         self.klass = node.get('class')
         self.use_criteria = node.get('use-criteria')
@@ -369,6 +394,94 @@ class AssessmentQuestionDefinition:
     def calculate_score(self, descriptor, values):
         return compute_score(self, descriptor, values)
 
+    def _art_89_ids(self, descriptor, **kwargs):
+        return sorted_criterions(descriptor.criterions)
+
+    @ram.cache(_a10_ids_cachekey)
+    @db.use_db_session('2012')
+    def _art_10_ids(self, descriptor, **kwargs):
+        muids = [x.id for x in kwargs['muids']]
+        ok_ges_ids = descriptor.all_ids()
+
+        sess = db.session()
+        T = sql.MSFD10Target
+        dt = sql.t_MSFD10_DESCrit
+
+        D_q = sess.query(dt).join(T)
+        D_a = aliased(dt, alias=D_q.subquery())
+
+        targets = sess\
+            .query(T)\
+            .order_by(T.ReportingFeature)\
+            .filter(T.MarineUnitID.in_(muids))\
+            .filter(T.Topic == 'EnvironmentalTarget')\
+            .join(D_a)\
+            .filter(D_a.c.GESDescriptorsCriteriaIndicators.in_(ok_ges_ids))\
+            .distinct()\
+            .all()
+        print 'Resulting targets: ', len(targets)
+
+        # TODO: also get 2012 targets here
+
+        return [Target(r.ReportingFeature.replace(' ', '_').lower(),
+                       r.ReportingFeature,
+                       r.Description) for r in targets]
+
+    def get_assessed_elements(self, descriptor, **kwargs):
+        """ Get a list of filtered assessed elements for this question.
+        """
+
+        res = self.get_all_assessed_elements(descriptor, **kwargs)
+
+        if self.article in ['Art8', 'Art9']:
+            res = filtered_criterias(res, self)
+
+        return sorted_criterions(res)
+
+    def get_all_assessed_elements(self, descriptor, **kwargs):
+        """ Get a list of unfiltered assessed elements for this question.
+
+        For Articles 8, 9 it returns a list of criteria elements
+        For Article 10 it returns a list of targets
+
+        Return a list of identifiable elements that need to be assessed.
+        """
+        impl = {
+            'Art8': self._art_89_ids,
+            'Art9': self._art_89_ids,
+            'Art10': self._art_10_ids,
+        }
+
+        return impl[self.article](descriptor, **kwargs)
+
+
+def filtered_questions(questions, phase):
+    """ Get the questions appropriate for the phase
+    """
+
+    if phase == 'phase3':
+        res = [q for q in questions if q.klass == 'coherence']
+    else:
+        res = [q for q in questions if q.klass != 'coherence']
+
+    return res
+
+
+def filtered_criterias(criterias, question):
+
+    if question.use_criteria == 'primary':
+        crits = [c for c in criterias if c.is_primary is True]
+
+    if question.use_criteria == 'secondary':
+        crits = [c for c in criterias if c.is_primary is False]
+
+    # TODO what to return
+
+    if question.use_criteria == 'none':
+        crits = []
+
+    return sorted_criterions(crits)
+
 
 def parse_question_file(fpath):
     res = []
@@ -377,7 +490,7 @@ def parse_question_file(fpath):
     article_id = root.get('article')
 
     for i, qn in enumerate(root.iterchildren('assessment-question')):
-        q = AssessmentQuestionDefinition(qn, root, i)
+        q = AssessmentQuestionDefinition(article_id, qn, root, i)
         res.append(q)
 
     return article_id, res
