@@ -19,6 +19,7 @@ from Products.Five.browser.pagetemplatefile import \
 from Products.statusmessages.interfaces import IStatusMessage
 from wise.msfd import db, sql2018  # sql,
 from wise.msfd.base import BaseUtil
+from wise.msfd.compliance import convert
 from wise.msfd.compliance.interfaces import IReportDataView
 from wise.msfd.compliance.utils import insert_missing_criterions
 from wise.msfd.data import (get_factsheet_url, get_report_data,
@@ -421,30 +422,21 @@ class Proxy2018(object):
             if not value:
                 continue
 
-            attrs = node.attrib
-            label_name = attrs.get('label', None)
+            label_name = node.get('label', None)
+            converter = node.get('convert', None)
 
-            if not label_name:
+            if not (label_name or converter):      # we
                 continue
 
-            as_list = attrs.get('as-list', 'false')
-
-            if as_list == 'true':
-                vals = set(value.split(','))
-
-                res = [
-                    ItemLabel(
-                        v,
-                        GES_LABELS.get(label_name, v),
-                    )
-
-                    for v in vals
-                ]
-
-                setattr(self, name, ItemList(rows=res))
+            if converter:
+                assert '.' not in converter
+                converter = getattr(convert, converter)
+                value = converter(node, value)
             else:
                 title = GES_LABELS.get(label_name, value)
-                setattr(self, name, ItemLabel(value, title))
+                value = ItemLabel(value, title)
+
+            setattr(self, name, value)
 
     def __getattr__(self, name):
         return getattr(self.__o, name, self.extra.get(name, None))

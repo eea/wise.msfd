@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <data>
+
   <Art10>
-    <element name="Features" label="features" as-list="true">Feature(s) reported</element>
+    <element name="Features" label="features" convert="ges_labels_list">Feature(s) reported</element>
     <element name="TargetCode" label="targets">Target code</element>
     <element name="Description" translate="true">Description target</element>
-    <element name="GESComponents">GES components</element>
+    <element name="GESComponents" convert="ges_component">GES components</element>
     <element name="TimeScale">Time scale</element>
     <element name="UpdateDate">Update date</element>
     <element name="UpdateType">Update type</element>
@@ -21,11 +22,12 @@
     <element name="TargetStatus">Target status</element>
     <element name="AssessmentPeriod">Assessment period</element>
     <element name="ProgressDescription" translate="true">Description target assessment</element>
-    <element name="Indicators" label="indicators" as-list="true">Related indicator</element>
+    <element name="Indicators" label="indicators" convert="ges_labels_list">Related indicator</element>
   </Art10>
+
   <Art9>
     <element name="GESComponent" label="ges_components">GES component</element>
-    <element name="Features" label="features" as-list="true">Features</element>
+    <element name="Features" label="features" convert="ges_labels_list">Features</element>
     <element name="GESDescription" translate="true">GES description</element>
     <element name="JustificationNonUse">Justification for non-use of criterion</element>
     <element name="JustificationDelay">
@@ -34,6 +36,7 @@
     <element name="DeterminationDate">Determination date</element>
     <element name="UpdateType">Update type</element>
   </Art9>
+
   <!--<MarineReportingUnit labelName="mrus">MarineReportingUnit</MarineReportingUnit>-->
   <Art8>
     <element name="GESComponent" label="ges_components">GES component</element>
@@ -96,14 +99,15 @@
       Description overall status
     </element>
     <element name="AssessmentsPeriod">Assessments period</element>
-    <element name="PressureCode" label="pressures" as-list="true" exclude="true">
+    <element name="PressureCode" label="pressures" convert="ges_labels_list" exclude="true">
       Related pressures
     </element>
     <element name="RelatedActivities" skip="true" reason="This field is not in the DB">
       Related activities
     </element>
-    <element name="TargetCode" label="targets" as-list="true" exclude="true">
+    <element name="TargetCode" label="targets" convert="ges_labels_list" exclude="true">
       Related targets
     </element>
   </Art8>
+
 </data>
