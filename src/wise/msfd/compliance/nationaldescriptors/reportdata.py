@@ -32,7 +32,8 @@ from z3c.form.button import buttonAndHandler
 from z3c.form.field import Fields
 from z3c.form.form import Form
 
-from .a8 import Article8, Article8Alternate
+from .a8 import Article8
+from .a8alternate import Article8Alternate
 from .a9 import Article9, Article9Alternate
 from .a10 import Article10, Article10Alternate
 from .base import BaseView
