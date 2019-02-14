@@ -20,6 +20,7 @@ from Products.statusmessages.interfaces import IStatusMessage
 from wise.msfd import db, sql2018  # sql,
 from wise.msfd.base import BaseUtil
 from wise.msfd.compliance.interfaces import IReportDataView
+from wise.msfd.compliance.utils import insert_missing_criterions
 from wise.msfd.data import (get_factsheet_url, get_report_data,
                             get_report_file_url, get_report_filename)
 from wise.msfd.gescomponents import (GES_LABELS, get_descriptor, get_features,
@@ -451,6 +452,21 @@ class Proxy2018(object):
     def __iter__(self):
         return iter(self.__o)
 
+    def clone(self, **kwargs):
+        cls = self.__class__
+        obj = cls.__new__(cls)
+
+        for k, v in vars(self).items():
+            setattr(obj, k, None)
+
+        obj.__o = []
+        obj.extra = {}      # compatibility with __getattr__ from above
+
+        for k, v in kwargs.items():
+            setattr(obj, k, v)
+
+        return obj
+
 
 class ReportData2018(BaseView):
     implements(IReportDataView)
@@ -592,23 +608,17 @@ https://svn.eionet.europa.eu/repositories/Reportnet/Dataflows/MarineDirective/MS
         if self.descriptor.startswith('D1.'):
             all_ids.append('D1')
 
-        count, r = db.get_all_records_ordered(
+        count, dbrecs = db.get_all_records_ordered(
             t,
             'GESComponent',
             t.c.CountryCode == self.country_code,
             t.c.GESComponent.in_(all_ids)
         )
 
-        # for Art9 we want to show a row for all possible GESComponents,
-        # regardless if the MS has reported on that or not
-        # mapped_data = []
-        desc = self.descriptor_obj
-        criterions = [desc] + desc.criterions
-        rep_map = []
+        if count == 0:
+            return []
 
-        data = [Proxy2018(row, self.article) for row in r]
-
-        return data
+        return [Proxy2018(row, self.article) for row in dbrecs]
 
     @db.use_db_session('2018')
     def get_data_from_db(self):
@@ -620,13 +630,25 @@ https://svn.eionet.europa.eu/repositories/Reportnet/Dataflows/MarineDirective/MS
         # this consolidates the data, filtering duplicates
         # list of ((name, label), values)
         good_data = consolidate_data(data, group_by_fields)
+        if self.article == 'Art9':
+            insert_missing_criterions(good_data, self.descriptor_obj)
 
         res = []
 
+        # get the available fields by looking into the reported data, then
+        # get a list of resorted fields
+
+        _fields, fields_defs = None, None
+        for dataset in good_data.values():
+            if _fields:
+                break
+            for row in dataset:
+                if row._fields is not None:
+                    _fields = row._fields
+                    fields_defs = get_sorted_fields('2018',
+                                                    self.article, _fields)
+
         for mru, rows in good_data.items():
-            _fields = rows[0]._fields
-            fields_defs = get_sorted_fields('nationaldescriptors', '2018',
-                                            self.article, _fields)
             _data = change_orientation(rows, fields_defs)
 
             for row in _data:

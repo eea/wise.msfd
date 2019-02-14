@@ -160,6 +160,12 @@ class Descriptor(ItemLabel):
 
         return [crits[x] for x in s]
 
+    def __getitem__(self, crit_id):
+        for crit in self.criterions:
+            if crit.id == crit_id:
+                return crit
+        raise KeyError
+
 
 class Criterion(ItemLabel):
     """ A container for a GES criterion information

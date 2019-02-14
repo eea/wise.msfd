@@ -4,7 +4,7 @@
     <element name="Features" label="features" as-list="true">Feature(s) reported</element>
     <element name="TargetCode" label="targets">Target code</element>
     <element name="Description" translate="true">Description target</element>
-    <element name="GESComponents" label="ges_components">GES components</element>
+    <element name="GESComponents">GES components</element>
     <element name="TimeScale">Time scale</element>
     <element name="UpdateDate">Update date</element>
     <element name="UpdateType">Update type</element>

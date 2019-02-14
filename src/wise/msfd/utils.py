@@ -567,7 +567,7 @@ def consolidate_data(data, group_by_fields):
     # Ignore the following fields when hashing the rows
 
     fieldnames = data[0]._fields
-    indexes = [fieldnames.index(f) for f in group_by_fields]
+    ignored_idx = [fieldnames.index(f) for f in group_by_fields]
 
     seen = []
 
@@ -577,7 +577,7 @@ def consolidate_data(data, group_by_fields):
         hash = tuple([v
                       for (i, v) in enumerate(row)
 
-                      if i not in indexes])
+                      if i not in ignored_idx])
 
         if hash in seen:
             continue
