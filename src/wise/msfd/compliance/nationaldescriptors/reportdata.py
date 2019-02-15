@@ -291,7 +291,7 @@ class ReportData2012(BaseView, BaseUtil):
         rep_info = self.get_reporting_information()
 
         report_header_data = OrderedDict(
-            title="{}'s 2012 Member State Report for {} / {} / {}".format(
+            title="Member State report: {}/{}/{}/{}/2018".format(
                 self.country_name,
                 self.country_region_name,
                 self.descriptor,
@@ -803,10 +803,10 @@ https://svn.eionet.europa.eu/repositories/Reportnet/Dataflows/MarineDirective/MS
         link = report.ReportedFileLink
 
         report_header = self.report_header_template(
-            title="{}'s 2018 Member State Report for {} / {} / {}".format(
+            title="Member State report: {}/{}/{}/{}/2018".format(
                 self.country_name,
                 self.country_region_name,
-                self.descriptor,
+                self.descriptor_obj.title,
                 self.article
             ),
             factsheet=None,
