@@ -795,11 +795,12 @@ https://svn.eionet.europa.eu/repositories/Reportnet/Dataflows/MarineDirective/MS
 
         data = self.get_report_data()
         report = self.get_report_metadata()
-        report_by = u"{} / {} / {}".format(
-            report.ContactOrganisation,
-            report.ContactName,
-            report.ContactMail,
-        )
+        # report_by = u"{} / {} / {}".format(
+        #     report.ContactOrganisation,
+        #     report.ContactName,
+        #     report.ContactMail,
+        # )
+        report_by = report.ContactOrganisation
         link = report.ReportedFileLink
 
         report_header = self.report_header_template(
