@@ -3,7 +3,7 @@
 
   <Art10>
     <element name="Features" label="features" convert="ges_labels_list">Feature(s) reported</element>
-    <element name="TargetCode" label="targets">Target code</element>
+    <element name="TargetCode" convert="target_code_to_description">Target code</element>
     <element name="Description" translate="true">Description target</element>
     <element name="GESComponents" convert="ges_component">GES components</element>
     <element name="TimeScale">Time scale</element>

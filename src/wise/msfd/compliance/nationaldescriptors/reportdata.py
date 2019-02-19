@@ -1,5 +1,4 @@
 import logging
-import time
 from collections import OrderedDict, namedtuple
 from datetime import datetime
 from HTMLParser import HTMLParser
@@ -423,17 +422,21 @@ class Proxy2018(object):
             if not value:
                 continue
 
+            drop = node.get('drop', None)
+
+            if drop and drop == 'true':
+                continue
+
             label_name = node.get('label', None)
             converter = node.get('convert', None)
 
-            if not (label_name or converter):      # we
-                continue
+            # assert (label_name or converter), 'Field should be dropped'
 
             if converter:
                 assert '.' not in converter
                 converter = getattr(convert, converter)
                 value = converter(node, value)
-            else:
+            elif label_name:
                 title = GES_LABELS.get(label_name, value)
                 value = ItemLabel(value, title)
 

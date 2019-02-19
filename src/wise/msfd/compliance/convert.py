@@ -29,3 +29,13 @@ def ges_component(node, value):
         return value
 
     return criterion
+
+
+def target_code_to_description(node, value):
+    """
+    """
+
+    # TODO: this doesn't work properly, to fix
+    title = GES_LABELS.get('features', value)
+
+    return ItemLabel(title, value)
