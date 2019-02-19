@@ -36,6 +36,6 @@ def target_code_to_description(node, value):
     """
 
     # TODO: this doesn't work properly, to fix
-    title = GES_LABELS.get('features', value)
+    title = GES_LABELS.get('targets', value)
 
     return ItemLabel(title, value)
