@@ -8,7 +8,7 @@ from lxml.etree import fromstring
 from Products.Five.browser.pagetemplatefile import \
     ViewPageTemplateFile as ViewTemplate
 from wise.msfd import db, sql
-from wise.msfd.data import get_report_data
+from wise.msfd.data import get_xml_report_data
 from wise.msfd.gescomponents import (criteria_from_gescomponent,
                                      get_descriptor, get_ges_component,
                                      get_label, sorted_by_criterion)
@@ -211,7 +211,7 @@ class Article9(BaseArticle2012):
     def setup_data(self, filename=None):
         if not filename:
             filename = self.context.get_report_filename()
-        text = get_report_data(filename)
+        text = get_xml_report_data(filename)
 
         if not text:
             self.rows = []

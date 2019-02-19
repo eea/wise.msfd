@@ -19,7 +19,7 @@ from wise.msfd.compliance.vocabulary import ASSESSED_ARTICLES, REGIONS
 from wise.msfd.gescomponents import (get_descriptor, get_marine_units,
                                      sorted_criterions)
 from wise.msfd.translation.interfaces import ITranslationContext
-from wise.msfd.utils import Tab, _parse_files_in_location, row_to_dict
+from wise.msfd.utils import Tab, _parse_files_in_location, row_to_dict, timeit
 
 from . import interfaces
 from .interfaces import ICountryDescriptorsFolder
@@ -157,6 +157,7 @@ class BaseComplianceView(BrowserView):
         return regions
 
     @property
+    @timeit
     def muids(self):
         """ Get all Marine Units for a country
 

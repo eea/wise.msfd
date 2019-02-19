@@ -1,5 +1,5 @@
 import logging
-from collections import defaultdict, OrderedDict
+from collections import OrderedDict, defaultdict
 
 from sqlalchemy.orm import aliased
 
@@ -18,6 +18,7 @@ class OrderedDefaultDict(OrderedDict):
 
     def __missing__(self, key):
         self[key] = value = self.factory()
+
         return value
 
 
@@ -66,7 +67,7 @@ class A8aGeneric(A8AlternateItem):
         A = cls.ast_mapper
         I = cls.indic_mapper
         C = cls.crit_mapper
-        M = cls.metadata_table
+        # M = cls.metadata_table
 
         pk = cls._get_mapper_pk(N)
         # fk = cls._get_table_fk(M)
@@ -78,6 +79,7 @@ class A8aGeneric(A8AlternateItem):
         #     .distinct()
 
         print 'Started to query data!'
+
         if P:
             # .filter(A.Topic == cls.ast_topic)
             a_q = sess.query(A).join(N).subquery()
@@ -117,6 +119,7 @@ class A8aGeneric(A8AlternateItem):
                 .order_by(N.Topic, pk)
 
             print q.count()
+
             for item in q:
                 yield cls(descriptor, *(item, None, None, None, None))
 
@@ -148,6 +151,7 @@ class A8aGeneric(A8AlternateItem):
     def _filter_by_topics(self, topic_type, *args):
         topic, value = args
         topics = getattr(self, topic_type)
+
         if topic in topics:
             return value
 
@@ -156,6 +160,7 @@ class A8aGeneric(A8AlternateItem):
     def get_conditional_value(self, method_name, default_val):
         topic = self._args[0].Topic
         get_method = getattr(self, method_name, None)
+
         if get_method:
             return get_method(topic, default_val)
 
@@ -442,10 +447,12 @@ class A8bGeneric(A8AlternateItem):
 
         # TODO should we filter by crit_topics?
         crit_topics = getattr(cls, 'crit_topics', None)
+
         if crit_topics:
             filters.append(A.Topic.in_(crit_topics))
 
         # Acidification does not have '_Assessment' tables
+
         if A:
             q = sess.query(N, A, AI, AC)\
                 .select_from(N)\
@@ -504,6 +511,7 @@ class A8bGeneric(A8AlternateItem):
             t.c.Topic == 'Assessment',
         )
         meta = None
+
         if _res:
             meta = _res[0]
 
@@ -620,7 +628,7 @@ class A8bNIS(A8bGeneric):
     activity_mapper = sql.MSFD8bNISActivity
     act_descr_mapper = sql.MSFD8bNISActivityDescription
     param_topics = ['LevelPressureEnvironment', 'ImpactPressureSeabedHabitats',
-              'ImpactPressureWaterColumn', 'ImpactPressureFunctionalGroup']
+                    'ImpactPressureWaterColumn', 'ImpactPressureFunctionalGroup']
 
     @property
     def ges_comp(self):
@@ -637,6 +645,7 @@ class A8bNIS(A8bGeneric):
             m.ScientificName,
             m.MarineUnitID == self.MarineUnitID,
         )
+
         if _count:
             elements = ', '.join([x[0] for x in _res])
 
@@ -709,7 +718,7 @@ class A8bExtractionSeaweedMaerlOther(A8bGeneric):
     act_descr_mapper = sql.MSFD8bExtractionSeaweedMaerlOtherActivityDescription
 
     param_topics = ['LevelPressureOther', 'ImpactPressureExploitedSpecies',
-              'ImpactPressureFunctionalGroup', 'ImpactPressureSeabedHabitats']
+                    'ImpactPressureFunctionalGroup', 'ImpactPressureSeabedHabitats']
 
     @property
     def ges_comp(self):
@@ -741,7 +750,7 @@ class A8bNutrient(A8bGeneric):
         'LevelPressureNConcentration', 'LevelPressureNLoad',
         'LevelPressureOConcentration', 'LevelPressureOLoad',
         'LevelPressurePConcentration', 'LevelPressurePLoad',
-        'ImpactPressureSeabedHabitats','ImpactPressureWaterColumn'
+        'ImpactPressureSeabedHabitats', 'ImpactPressureWaterColumn'
     ]
 
     @property
@@ -1082,7 +1091,7 @@ class Article8Alternate(BaseArticle2012):
         ],
         'D1/D6': [
             A8aHabitat
-         ],
+        ],
         'D2': [
             A8bNIS,
         ],

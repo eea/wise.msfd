@@ -435,7 +435,7 @@ def get_all_records_ordered(table, order_col, *conditions):
     q = sess.query(table).filter(*conditions).\
         order_by(table.c.MarineReportingUnit, col).distinct()
 
-    print q
+    # print q
     count = q.count()
     q = [x for x in q]
 

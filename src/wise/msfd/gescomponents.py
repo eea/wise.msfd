@@ -12,7 +12,7 @@ from pkg_resources import resource_filename
 from wise.msfd import db, sql, sql2018
 from wise.msfd.labels import COMMON_LABELS
 from wise.msfd.utils import (ItemLabel, _parse_files_in_location,
-                             get_element_by_id, row_to_dict)
+                             get_element_by_id, timeit)
 
 logger = logging.getLogger('wise.msfd')
 
@@ -717,21 +717,27 @@ def _muids_2012(country, region):
 
 @db.use_db_session('2018')
 def _muids_2018(country, region):
+    # this method needs "raw" access because the shapefile column slows things
     t = sql2018.MarineReportingUnit
-    count, res = db.get_all_records(
-        t,
-        t.CountryCode == country,
-        t.Region == region,
-        t.localId.isnot(None),      # TODO: this suits NL, check others
-    )
+
+    sess = db.session()
+    q = sess\
+        .query(t.MarineReportingUnitId, t.nameTxtInt, t.Description)\
+        .filter(
+            t.CountryCode == country,
+            t.Region == region,
+            t.localId.isnot(None),      # TODO: this suits NL, check others
+        )
+
     res = [MarineReportingUnit(m.MarineReportingUnitId,
                                m.nameTxtInt or m.Description)
 
-           for m in res]
+           for m in q]
 
     return sorted(res)
 
 
+@timeit
 def get_marine_units(country, region, year):
     """ Get a list of ``MarineReportingUnit`` objects
     """

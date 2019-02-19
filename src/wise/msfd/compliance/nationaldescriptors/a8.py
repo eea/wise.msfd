@@ -7,14 +7,14 @@ from sqlalchemy.orm.relationships import RelationshipProperty
 from Products.Five.browser.pagetemplatefile import \
     ViewPageTemplateFile as Template
 from wise.msfd import db, sql  # , sql2018
-from .data import REPORT_DEFS
-from wise.msfd.data import get_report_data
+from wise.msfd.data import get_xml_report_data
 from wise.msfd.gescomponents import Criterion, get_criterion, get_descriptor
 from wise.msfd.labels import COMMON_LABELS
 from wise.msfd.translation import retrieve_translation
 from wise.msfd.utils import Item, ItemLabel, ItemList, Node, RawRow, Row
 
 from ..base import BaseArticle2012
+from .data import REPORT_DEFS
 
 logger = logging.getLogger('wise.msfd')
 
@@ -620,7 +620,7 @@ class Article8(BaseArticle2012):
     def setup_data(self):
 
         filename = self.context.get_report_filename()
-        text = get_report_data(filename)
+        text = get_xml_report_data(filename)
         root = fromstring(text)
 
         def xp(xpath, node=root):
@@ -773,4 +773,3 @@ class Article8(BaseArticle2012):
                         seen.add(value)
 
         return ''
-

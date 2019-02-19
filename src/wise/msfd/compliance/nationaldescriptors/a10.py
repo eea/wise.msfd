@@ -6,7 +6,7 @@ from lxml.etree import fromstring
 from Products.Five.browser.pagetemplatefile import \
     ViewPageTemplateFile as Template
 from wise.msfd import db, sql
-from wise.msfd.data import country_ges_components, get_report_data
+from wise.msfd.data import country_ges_components, get_xml_report_data
 from wise.msfd.gescomponents import (get_descriptor, get_ges_component,
                                      get_label, sorted_by_criterion)
 from wise.msfd.labels import COMMON_LABELS
@@ -419,7 +419,7 @@ class Article10(BaseArticle2012):
     def setup_data(self):
         self.article9_cols = self.get_article9_columns()
         filename = self.context.get_report_filename()
-        text = get_report_data(filename)
+        text = get_xml_report_data(filename)
 
         if not text:
             self.rows = []

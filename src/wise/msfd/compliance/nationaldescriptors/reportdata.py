@@ -22,13 +22,13 @@ from wise.msfd.base import BaseUtil
 from wise.msfd.compliance import convert
 from wise.msfd.compliance.interfaces import IReportDataView
 from wise.msfd.compliance.utils import insert_missing_criterions
-from wise.msfd.data import (get_factsheet_url, get_report_data,
-                            get_report_file_url, get_report_filename)
+from wise.msfd.data import (get_factsheet_url, get_report_file_url,
+                            get_report_filename, get_xml_report_data)
 from wise.msfd.gescomponents import (GES_LABELS, get_descriptor, get_features,
                                      get_parameters)
 from wise.msfd.translation import retrieve_translation
 from wise.msfd.utils import (ItemLabel, ItemList, change_orientation,
-                             consolidate_data)
+                             consolidate_data, timeit)
 from z3c.form.button import buttonAndHandler
 from z3c.form.field import Fields
 from z3c.form.form import Form
@@ -326,7 +326,7 @@ class ReportData2012(BaseView, BaseUtil):
         if not self.filename:
             return default
 
-        text = get_report_data(self.filename)
+        text = get_xml_report_data(self.filename)
         root = fromstring(text)
 
         reporters = root.xpath('//w:ReportingInformation/w:Name/text()',
@@ -614,6 +614,7 @@ https://svn.eionet.europa.eu/repositories/Reportnet/Dataflows/MarineDirective/MS
         return [Proxy2018(row, self.article) for row in dbrecs]
 
     @db.use_db_session('2018')
+    @timeit
     def get_data_from_db(self):
         data = getattr(self, 'get_data_from_view_' + self.article)()
 
@@ -769,6 +770,7 @@ https://svn.eionet.europa.eu/repositories/Reportnet/Dataflows/MarineDirective/MS
         return ItemList(rows=muids)
 
     @db.use_db_session('2018')
+    @timeit
     def get_report_metadata(self):
         """ Returns metadata about the reported information
         """
@@ -795,12 +797,6 @@ https://svn.eionet.europa.eu/repositories/Reportnet/Dataflows/MarineDirective/MS
 
         data = self.get_report_data()
         report = self.get_report_metadata()
-        # report_by = u"{} / {} / {}".format(
-        #     report.ContactOrganisation,
-        #     report.ContactName,
-        #     report.ContactMail,
-        # )
-        report_by = report.ContactOrganisation
         link = report.ReportedFileLink
 
         report_header = self.report_header_template(
@@ -812,7 +808,7 @@ https://svn.eionet.europa.eu/repositories/Reportnet/Dataflows/MarineDirective/MS
             ),
             factsheet=None,
             # TODO: find out how to get info about who reported
-            report_by=report_by,
+            report_by=report.ContactOrganisation,
             source_file=(link.rsplit('/', 1)[1], link),
             report_due='2018-10-15',
             report_date=report.ReportingDate,
@@ -879,6 +875,7 @@ https://svn.eionet.europa.eu/repositories/Reportnet/Dataflows/MarineDirective/MS
 
         return ''
 
+    @timeit
     def __call__(self):
 
         self.content = ''
@@ -897,20 +894,15 @@ https://svn.eionet.europa.eu/repositories/Reportnet/Dataflows/MarineDirective/MS
 
         trans_edit_html = self.translate_view()()
 
-        t = time.time()
-        logger.debug("Started rendering of report data")
-
-        # self.muids = []
+        print "will render report"
         report_html = self.render_reportdata()
-
-        delta = time.time() - t
-        logger.info("Rendering report data took: %s, %s/%s/%s/%s",
-                    delta, self.article, self.descriptor,
-                    self.country_region_code, self.country_code)
-
         self.report_html = report_html + trans_edit_html
 
-        return self.index()
+        @timeit
+        def render_html():
+            return self.index()
+
+        return render_html()
 
     def get_form(self):
 

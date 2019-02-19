@@ -9,6 +9,8 @@ import sparql
 from eea.cache import cache
 from wise.msfd import db, sql, sql_extra
 
+from .utils import timeit
+
 logger = logging.getLogger('wise.msfd')
 
 
@@ -152,6 +154,7 @@ def get_report_filename(report_version,
 
 
 @cache(lambda func, filename: filename)
+@timeit
 def get_report_file_url(filename):
     """ Retrieve the CDR url based on query in ContentRegistry
     """
@@ -233,7 +236,8 @@ def get_factsheet_url(url):
         return '{}{}&conv={}'.format(cdr, base, ids[0]['convert_id'])
 
 
-def get_report_data(filename):
+@timeit
+def get_xml_report_data(filename):
     if not filename:
         return ""
 

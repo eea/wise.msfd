@@ -1,6 +1,7 @@
 import datetime
 import logging
 import os
+import time
 from collections import OrderedDict, defaultdict, namedtuple
 from cPickle import dumps
 from hashlib import md5
@@ -608,3 +609,20 @@ def row_to_dict(table, row):
     res = {k: v for k, v in zip(cols, row)}
 
     return res
+
+
+def timeit(func):
+    """ A decorator to log time spend in a function
+
+    Use it as @timeit
+    """
+    def wrapped(*args, **kw):
+        ts = time.time()
+        res = func(*args, **kw)
+        te = time.time()
+
+        logger.info("%r %2.2f ms" % (func.__name__, (te - ts) * 1000))
+
+        return res
+
+    return wrapped
