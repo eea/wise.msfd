@@ -68,12 +68,12 @@ class TranslationView(BrowserView):
 
         return code
 
-    def can_modify(self):
-        return checkPermission('cmf.ModifyPortalContent', self.context)
-
     def translate(self, source_lang, value, is_translatable):
-        # TODO: implement getting the translation from annotations
-        # orig = value
+        """ Renders a translated cell based on lang and original value
+
+        We have a special template for not-translatable values, to be
+        integrated in the general format that is required by the styling
+        """
 
         if isinstance(value, str):      # BBB: with older implementation
             value = value.decode('utf-8')      # TODO: should use decode?
@@ -86,9 +86,11 @@ class TranslationView(BrowserView):
 
         translated = get_translated(value, source_lang)
 
+        can_edit = checkPermission('wise.EditTranslations', self.context)
+
         return self.translate_tpl(text=value,
                                   translation=translated,
-                                  can_translate=self.can_modify())
+                                  can_translate=can_edit)
 
     def __call__(self):
         return self.translation_edit_template()
