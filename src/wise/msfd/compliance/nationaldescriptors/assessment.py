@@ -330,7 +330,7 @@ class EditAssessmentDataForm(Form, BaseView):
                 ])
                 default = assessment_data.get(field_name, None)
                 field = Choice(
-                    title=field_title,
+                    title=unicode(field_title),
                     __name__=field_name,
                     vocabulary=SimpleVocabulary(terms),
                     required=False,

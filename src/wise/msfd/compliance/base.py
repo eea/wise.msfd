@@ -452,6 +452,7 @@ def filtered_questions(questions, phase):
 
 
 def filtered_criterias(criterias, question):
+    crits = []
 
     if question.use_criteria == 'primary':
         crits = [c for c in criterias if c.is_primary is True]
@@ -459,10 +460,14 @@ def filtered_criterias(criterias, question):
     if question.use_criteria == 'secondary':
         crits = [c for c in criterias if c.is_primary is False]
 
-    # TODO what to return
+    if question.use_criteria == 'all':
+        crits = criterias
 
     if question.use_criteria == 'none':
         crits = []
+
+    # if not crits:
+    #     import pdb; pdb.set_trace()
 
     return sorted_criterions(crits)
 

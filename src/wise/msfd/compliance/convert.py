@@ -10,14 +10,12 @@ def ges_labels_list(node, value):
     vals = set(value.split(','))
     label_name = node.get('label')
 
-    res = [
-        ItemLabel(
-            v,
-            GES_LABELS.get(label_name, v),
-        )
+    res = []
 
-        for v in vals
-    ]
+    for v in vals:
+        title = GES_LABELS.get(label_name, v)
+        i = ItemLabel(v, title)
+        res.append(i)
 
     return ItemList(rows=res)
 
@@ -31,11 +29,25 @@ def ges_component(node, value):
     return criterion
 
 
-def target_code_to_description(node, value):
-    """
-    """
+def ges_labels_inverse_list(node, value):
+    vals = set(value.split(','))
+    label_name = node.get('label')
 
-    # TODO: this doesn't work properly, to fix
-    title = GES_LABELS.get('targets', value)
+    res = []
 
-    return ItemLabel(title, value)
+    for v in vals:
+        title = GES_LABELS.get(label_name, v)
+        i = ItemLabel(title, v)
+        res.append(i)
+
+    return ItemList(rows=res)
+
+
+# def target_code_to_description(node, value):
+#     """
+#     """
+#
+#     # TODO: this doesn't work properly, to fix
+#     title = GES_LABELS.get('targets', value)
+#
+#     return ItemLabel(title, value)

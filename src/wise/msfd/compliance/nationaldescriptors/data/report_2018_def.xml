@@ -3,7 +3,7 @@
 
   <Art10>
     <element name="Features" label="features" convert="ges_labels_list">Feature(s) reported</element>
-    <element name="TargetCode" convert="target_code_to_description">Target code</element>
+    <element name="TargetCode" label="targets" convert="ges_labels_inverse_list">Target code</element>
     <element name="Description" translate="true">Description target</element>
     <element name="GESComponents" convert="ges_component">GES components</element>
     <element name="TimeScale">Time scale</element>
@@ -22,7 +22,7 @@
     <element name="TargetStatus">Target status</element>
     <element name="AssessmentPeriod">Assessment period</element>
     <element name="ProgressDescription" translate="true">Description target assessment</element>
-    <element name="Indicators" label="indicators" convert="ges_labels_list">Related indicator</element>
+    <element name="Indicators" label="indicators" convert="ges_labels_inverse_list">Related indicator</element>
   </Art10>
 
   <Art9>

@@ -254,8 +254,9 @@ def format_assessment_data(article, elements, questions, muids, data):
 
         cn = '{}_{}_Conclusion'.format(article, question.id)
         conclusion = data.get(cn, '')
-        conclusion_color = 5 - data.get(        # TODO: explain this,
-                                                # I believe it's wrong
+
+        # TODO: explain this, I believe it's wrong
+        conclusion_color = 5 - data.get(
             '{}_{}_RawScore'.format(article, question.id), 5
         )
         overall_score += score     # use raw score or score?
