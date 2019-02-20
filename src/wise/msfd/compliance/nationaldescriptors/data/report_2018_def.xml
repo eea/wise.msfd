@@ -105,7 +105,7 @@
     <element name="RelatedActivities" skip="true" reason="This field is not in the DB">
       Related activities
     </element>
-    <element name="TargetCode" label="targets" convert="ges_labels_list" exclude="true">
+    <element name="TargetCode" label="targets" convert="ges_labels_inverse_list" exclude="true">
       Related targets
     </element>
   </Art8>
