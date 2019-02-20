@@ -876,7 +876,12 @@ https://svn.eionet.europa.eu/repositories/Reportnet/Dataflows/MarineDirective/MS
                             retrieve_translation(self.country_code, value)
                             seen.add(value)
 
-        return ''
+        messages = IStatusMessage(self.request)
+        messages.add(u"Auto-translation initiated, please refresh "
+                     u"in a couple of minutes", type=u"info")
+
+        url = self.context.absolute_url() + '/@@view-report-data-2018'
+        return self.request.response.redirect(url)
 
     @timeit
     def __call__(self):
