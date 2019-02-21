@@ -34,3 +34,18 @@ def get_sorted_fields(year, article, fields):
     repdef = REPORT_DEFS[year][article]
 
     return _get_sorted_fields(repdef, fields)
+
+
+def get_field_definitions_from_data(data, article):
+    _fields, fields_defs = None, None
+
+    for dataset in data.values():
+        if _fields:
+            break
+
+        for row in dataset:
+            if row._fields is not None:
+                _fields = row._fields
+                fields_defs = get_sorted_fields('2018', article, _fields)
+
+    return fields_defs

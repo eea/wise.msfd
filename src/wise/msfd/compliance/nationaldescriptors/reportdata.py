@@ -18,16 +18,16 @@ from Products.Five.browser.pagetemplatefile import \
 from Products.statusmessages.interfaces import IStatusMessage
 from wise.msfd import db, sql2018  # sql,
 from wise.msfd.base import BaseUtil
-from wise.msfd.compliance import convert
 from wise.msfd.compliance.interfaces import IReportDataView
-from wise.msfd.compliance.utils import insert_missing_criterions
+from wise.msfd.compliance.nationaldescriptors.data import \
+    get_field_definitions_from_data
+from wise.msfd.compliance.utils import group_by_mru, insert_missing_criterions
 from wise.msfd.data import (get_factsheet_url, get_report_file_url,
                             get_report_filename, get_xml_report_data)
-from wise.msfd.gescomponents import (GES_LABELS, get_descriptor, get_features,
+from wise.msfd.gescomponents import (get_descriptor, get_features,
                                      get_parameters)
 from wise.msfd.translation import retrieve_translation
-from wise.msfd.utils import (ItemLabel, ItemList, change_orientation,
-                             consolidate_data, timeit)
+from wise.msfd.utils import ItemList, change_orientation, timeit
 from z3c.form.button import buttonAndHandler
 from z3c.form.field import Fields
 from z3c.form.form import Form
@@ -37,7 +37,7 @@ from .a8alternate import Article8Alternate
 from .a9 import Article9, Article9Alternate
 from .a10 import Article10, Article10Alternate
 from .base import BaseView
-from .data import REPORT_DEFS, get_sorted_fields
+from .proxy import Proxy2018
 
 # from persistent.list import PersistentList
 # from six import string_types
@@ -402,68 +402,6 @@ class SnapshotSelectForm(Form):
         self.request.response.redirect('./@@view-report-data-2018')
 
 
-class Proxy2018(object):
-    """ A proxy wrapper that uses XML definition files to 'translate' elements
-    """
-
-    def __init__(self, obj, article, extra=None):
-        self.__o = obj       # the proxied object
-        self.nodes = REPORT_DEFS['2018'][article].get_elements()
-
-        if not extra:
-            extra = {}
-
-        self.extra = extra
-
-        for node in self.nodes:
-            name = node.get('name')
-            value = getattr(self.__o, name, extra.get(name, None))
-
-            if not value:
-                continue
-
-            drop = node.get('drop', None)
-
-            if drop and drop == 'true':
-                continue
-
-            label_name = node.get('label', None)
-            converter = node.get('convert', None)
-
-            # assert (label_name or converter), 'Field should be dropped'
-
-            if converter:
-                assert '.' not in converter
-                converter = getattr(convert, converter)
-                value = converter(node, value)
-            elif label_name:
-                title = GES_LABELS.get(label_name, value)
-                value = ItemLabel(value, title)
-
-            setattr(self, name, value)
-
-    def __getattr__(self, name):
-        return getattr(self.__o, name, self.extra.get(name, None))
-
-    def __iter__(self):
-        return iter(self.__o)
-
-    def clone(self, **kwargs):
-        cls = self.__class__
-        obj = cls.__new__(cls)
-
-        for k, v in vars(self).items():
-            setattr(obj, k, None)
-
-        obj.__o = []
-        obj.extra = {}      # compatibility with __getattr__ from above
-
-        for k, v in kwargs.items():
-            setattr(obj, k, v)
-
-        return obj
-
-
 class ReportData2018(BaseView):
     implements(IReportDataView)
 
@@ -507,14 +445,6 @@ https://svn.eionet.europa.eu/repositories/Reportnet/Dataflows/MarineDirective/MS
     @property
     def help_text(self):
         return self.help_texts[self.article]
-
-    BLACKLIST = (       # used in templates to filter fields
-        'CountryCode',
-        'ReportingDate',
-        'ReportedFileLink',
-        'Region',
-        'MarineReportingUnit'
-    )
 
     Art8 = Template('pt/report-data-multiple-muid.pt')
     Art9 = Template('pt/report-data-multiple-muid.pt')
@@ -621,84 +551,26 @@ https://svn.eionet.europa.eu/repositories/Reportnet/Dataflows/MarineDirective/MS
     def get_data_from_db(self):
         data = getattr(self, 'get_data_from_view_' + self.article)()
 
-        definition = REPORT_DEFS['2018'][self.article]
-        group_by_fields = definition.get_group_by_fields()
+        data_by_mru = group_by_mru(data)
 
-        # this consolidates the data, filtering duplicates
-        # list of ((name, label), values)
-        good_data = consolidate_data(data, group_by_fields)
         if self.article == 'Art9':
-            insert_missing_criterions(good_data, self.descriptor_obj)
+            insert_missing_criterions(data_by_mru, self.descriptor_obj)
 
         res = []
 
         # get the available fields by looking into the reported data, then
         # get a list of resorted fields
+        fields_defs = get_field_definitions_from_data(data_by_mru,
+                                                      self.article)
 
-        _fields, fields_defs = None, None
-        for dataset in good_data.values():
-            if _fields:
-                break
-            for row in dataset:
-                if row._fields is not None:
-                    _fields = row._fields
-                    fields_defs = get_sorted_fields('2018',
-                                                    self.article, _fields)
+        for mru, rows in data_by_mru.items():
+            _rows = change_orientation(rows, fields_defs)
 
-        for mru, rows in good_data.items():
-            _data = change_orientation(rows, fields_defs)
-
-            for row in _data:
+            for row in _rows:
                 (fieldname, label), row_data = row
                 row[0] = (fieldname, label)
 
-                if fieldname not in group_by_fields:
-                    continue
-
-                # TODO: this needs to be refactored into a function, to allow
-                # easier understanding of code
-
-                # rewrite some rows with list of all possible values
-                all_values = [
-                    getattr(x, fieldname)
-
-                    for x in data
-
-                    if (x.MarineReportingUnit == mru) and
-                    (getattr(x, fieldname) is not None)
-                ]
-                seen = []
-                uniques = []
-
-                # if the values are unicode
-
-                if isinstance(all_values[0], (unicode, str)):
-                    row[1] = [', '.join(set(all_values))] * len(row_data)
-
-                    continue
-
-                # if the values are ItemList types, make the values unique
-
-                for item in all_values:
-                    item_label_class = item.rows[0]
-                    name = item_label_class.name
-
-                    if name in seen:
-                        continue
-
-                    seen.append(name)
-                    uniques.append(item_label_class)
-
-                row[1] = [ItemList(rows=uniques)] * len(row_data)
-
-            # TODO: this needs to be redone to take advantage of smart
-            # self.muids
-            mru_label = GES_LABELS.get('mrus', mru)
-
-            if mru_label != mru:
-                mru_label = u"{} ({})".format(mru_label, unicode(mru))
-
-            res.append((ItemLabel(mru, mru_label), _data))
+            res.append((mru, _rows))
 
         return sorted(res, key=lambda r: r[0])      # sort by MarineUnitiD
 

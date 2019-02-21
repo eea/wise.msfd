@@ -6,7 +6,7 @@ from wise.msfd.gescomponents import GES_LABELS, get_ges_component
 from wise.msfd.utils import ItemLabel, ItemList
 
 
-def ges_labels_list(node, value):
+def csv_ges_labels_list(node, value):
     vals = set(value.split(','))
     label_name = node.get('label')
 
@@ -29,7 +29,7 @@ def ges_component(node, value):
     return criterion
 
 
-def ges_labels_inverse_list(node, value):
+def csv_ges_labels_inverse_list(node, value):
     vals = set(value.split(','))
     label_name = node.get('label')
 

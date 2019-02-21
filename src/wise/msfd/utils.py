@@ -544,9 +544,8 @@ def change_orientation(data, sorted_fields):
     for fname, label in sorted_fields:
         values = [
             getattr(row, fname)
-            # make_distinct(fname, getattr(row, fname))
 
-            for row in data
+            for row in data     # make_distinct(fname, getattr(row, fname))
         ]
 
         res.append([(fname, label), values])
@@ -557,7 +556,9 @@ def change_orientation(data, sorted_fields):
 def consolidate_data(data, group_by_fields):
     """ Reduce number of rows in data, by omitting rows with identical values
 
-    TODO: explain why this is needed
+    The problem is that the view query is a union, where the rows are repeated
+    multiple times, ones for each combination of TargetCode or PressureCode.
+    We filter them by only including those rows that haven't been seen
     """
 
     if not data:
@@ -569,6 +570,7 @@ def consolidate_data(data, group_by_fields):
 
     fieldnames = data[0]._fields
     ignored_idx = [fieldnames.index(f) for f in group_by_fields]
+    # ignored_idx = []
 
     seen = []
 

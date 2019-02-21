@@ -25,7 +25,7 @@
         <div class="inner">
           <table class="table table-bordered table-striped table-comp-translate table-report">
             <tal:rep tal:repeat="row data">
-              <tr tal:condition="python: row[0][0] not in view.BLACKLIST">
+              <tr >
                 <th tal:content="python: row[0][1]">Element</th>
                 <tal:rep tal:repeat="r python: row[1]">
                   <td tal:replace="structure python: view.translate_value(row[0][0], value=r)"></td>
