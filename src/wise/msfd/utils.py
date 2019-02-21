@@ -525,11 +525,11 @@ class RelaxedNode(Node):
         return n
 
 
-def change_orientation(data, sorted_fields):
+def items_to_rows(data, fields):
     """ From a set of results, create labeled list of rows
 
     :param data: a list of sql table rows results
-    :param sorted_fields: a list of tuples (fieldname, label)
+    :param fields: a list of ``ReportField`` objects
 
     Given a query result (a list of rows), it will return list of tuples like:
 
@@ -541,56 +541,14 @@ def change_orientation(data, sorted_fields):
 
     res = []
 
-    for fname, label in sorted_fields:
+    for field in fields:        # this guarantees sorting of data
         values = [
-            getattr(row, fname)
+            getattr(row, field.name)
 
             for row in data     # make_distinct(fname, getattr(row, fname))
         ]
 
-        res.append([(fname, label), values])
-
-    return res
-
-
-def consolidate_data(data, group_by_fields):
-    """ Reduce number of rows in data, by omitting rows with identical values
-
-    The problem is that the view query is a union, where the rows are repeated
-    multiple times, ones for each combination of TargetCode or PressureCode.
-    We filter them by only including those rows that haven't been seen
-    """
-
-    if not data:
-        return {}
-
-    res = defaultdict(list)
-
-    # Ignore the following fields when hashing the rows
-
-    fieldnames = data[0]._fields
-    ignored_idx = [fieldnames.index(f) for f in group_by_fields]
-    # ignored_idx = []
-
-    seen = []
-
-    for row in data:
-        # omitting the ignored fields, make a hash to identify duplicate rows
-
-        hash = tuple([v
-                      for (i, v) in enumerate(row)
-
-                      if i not in ignored_idx])
-
-        if hash in seen:
-            continue
-
-        seen.append(hash)
-
-        if not row.MarineReportingUnit:     # skip rows without muid
-            continue
-
-        res[row.MarineReportingUnit].append(row)
+        res.append([field, values])
 
     return res
 

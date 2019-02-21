@@ -4246,3 +4246,80 @@ def parse_ges_components():
             # if mru_label != mru:
             #     mru_label = u"{} ({})".format(mru_label, unicode(mru))
             #
+def consolidate_data(data, group_by_fields):
+    """ Reduce number of rows in data, by omitting rows with identical values
+
+    The problem is that the view query is a union, where the rows are repeated
+    multiple times, ones for each combination of TargetCode or PressureCode.
+    We filter them by only including those rows that haven't been seen
+    """
+
+    if not data:
+        return {}
+
+    res = defaultdict(list)
+
+    # Ignore the following fields when hashing the rows
+
+    fieldnames = data[0]._fields
+    ignored_idx = [fieldnames.index(f) for f in group_by_fields]
+    # ignored_idx = []
+
+    seen = []
+
+    for row in data:
+        # omitting the ignored fields, make a hash to identify duplicate rows
+
+        hash = tuple([v
+                      for (i, v) in enumerate(row)
+
+                      if i not in ignored_idx])
+
+        if hash in seen:
+            continue
+
+        seen.append(hash)
+
+        if not row.MarineReportingUnit:     # skip rows without muid
+            continue
+
+        res[row.MarineReportingUnit].append(row)
+
+    return res
+
+
+    # def get_group_by_fields(self):
+    #     res = [
+    #         x.get('name')
+    #
+    #         for x in self.nodes
+    #
+    #         if x.attrib.get('exclude', 'false') == 'true'
+    #     ]
+    #
+    #     return res
+
+
+# def get_sorted_fields(year, article, fields):
+#     """ Sorts a list of fields according to report definition for given year
+#     """
+#
+#     repdef = REPORT_DEFS[year][article]
+#
+#     return _resort_fields(repdef, fields)
+#
+#
+# def get_field_definitions_from_data(data, article):
+#     _fields, fields_defs = None, None
+#
+#     for dataset in data.values():
+#         if _fields:
+#             break
+#
+#         for row in dataset:
+#             if row._fields is not None:
+#                 _fields = row._fields
+#                 fields_defs = get_sorted_fields('2018', article, _fields)
+#
+#     return fields_defs
+

@@ -6,21 +6,20 @@ from wise.msfd.gescomponents import GES_LABELS, get_ges_component
 from wise.msfd.utils import ItemLabel, ItemList
 
 
-def csv_ges_labels_list(node, value):
+def csv_ges_labels_list(field, value):
     vals = set(value.split(','))
-    label_name = node.get('label')
 
     res = []
 
     for v in vals:
-        title = GES_LABELS.get(label_name, v)
+        title = GES_LABELS.get(field.label_collection, v)
         i = ItemLabel(v, title)
         res.append(i)
 
     return ItemList(rows=res)
 
 
-def ges_component(node, value):
+def ges_component(field, value):
     criterion = get_ges_component(value)
 
     if criterion is None:
@@ -29,14 +28,13 @@ def ges_component(node, value):
     return criterion
 
 
-def csv_ges_labels_inverse_list(node, value):
+def csv_ges_labels_inverse_list(field, value):
     vals = set(value.split(','))
-    label_name = node.get('label')
 
     res = []
 
     for v in vals:
-        title = GES_LABELS.get(label_name, v)
+        title = GES_LABELS.get(field.label_collection, v)
         i = ItemLabel(title, v)
         res.append(i)
 

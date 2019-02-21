@@ -19,15 +19,14 @@ from Products.statusmessages.interfaces import IStatusMessage
 from wise.msfd import db, sql2018  # sql,
 from wise.msfd.base import BaseUtil
 from wise.msfd.compliance.interfaces import IReportDataView
-from wise.msfd.compliance.nationaldescriptors.data import \
-    get_field_definitions_from_data
+from wise.msfd.compliance.nationaldescriptors.data import get_report_definition
 from wise.msfd.compliance.utils import group_by_mru, insert_missing_criterions
 from wise.msfd.data import (get_factsheet_url, get_report_file_url,
                             get_report_filename, get_xml_report_data)
 from wise.msfd.gescomponents import (get_descriptor, get_features,
                                      get_parameters)
 from wise.msfd.translation import retrieve_translation
-from wise.msfd.utils import ItemList, change_orientation, timeit
+from wise.msfd.utils import ItemList, items_to_rows, timeit
 from z3c.form.button import buttonAndHandler
 from z3c.form.field import Fields
 from z3c.form.form import Form
@@ -560,15 +559,10 @@ https://svn.eionet.europa.eu/repositories/Reportnet/Dataflows/MarineDirective/MS
 
         # get the available fields by looking into the reported data, then
         # get a list of resorted fields
-        fields_defs = get_field_definitions_from_data(data_by_mru,
-                                                      self.article)
+        fields = get_report_definition(self.article).get_fields()
 
         for mru, rows in data_by_mru.items():
-            _rows = change_orientation(rows, fields_defs)
-
-            for row in _rows:
-                (fieldname, label), row_data = row
-                row[0] = (fieldname, label)
+            _rows = items_to_rows(rows, fields)
 
             res.append((mru, _rows))
 

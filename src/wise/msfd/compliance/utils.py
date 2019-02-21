@@ -2,8 +2,25 @@ from collections import defaultdict
 
 import lxml.etree
 
+from Products.Five.browser.pagetemplatefile import PageTemplateFile
 from wise.msfd.gescomponents import GES_LABELS
-from wise.msfd.utils import ItemLabel
+from wise.msfd.utils import ItemLabel, TemplateMixin
+
+
+class ReportField(TemplateMixin):
+    """ An object reprezenting the field (row) definition in a report table
+    """
+    template = PageTemplateFile('pt/report_field_header.pt')
+
+    def __init__(self, node):
+        self.title = node.text
+        self.name = node.get('name')
+
+        self.label_collection = node.get('label')
+        self.converter = node.get('convert')
+
+        self.group = node.get('group')
+        self.drop = (node.get('drop') == 'true')
 
 
 class ReportDefinition(object):
@@ -16,20 +33,10 @@ class ReportDefinition(object):
         self.article = article
         self.doc = lxml.etree.parse(fpath)
         self.nodes = self.doc.find(self.article).getchildren()
+        self._fields = [ReportField(n) for n in self.nodes]
 
-    def get_elements(self):
-        return self.nodes
-
-    def get_group_by_fields(self):
-        res = [
-            x.get('name')
-
-            for x in self.nodes
-
-            if x.attrib.get('exclude', 'false') == 'true'
-        ]
-
-        return res
+    def get_fields(self):
+        return self._fields
 
     def get_translatable_fields(self):
         res = [
@@ -43,7 +50,7 @@ class ReportDefinition(object):
         return res
 
 
-def _get_sorted_fields(reportdef, fields):
+def _resort_fields(reportdef, fields):
     """ field = name from DB
         title = title/label showed in the template
 
@@ -55,13 +62,16 @@ def _get_sorted_fields(reportdef, fields):
     """
     elements = reportdef.get_elements()
 
-    labels = [
-        (x.get('name'), x.text.strip())
+    labels = []
 
-        for x in elements
+    for x in elements:
+        if x.attrib.get('skip', 'false') == 'true':
+            continue
 
-        if x.attrib.get('skip', 'false') == 'false'
-    ]
+        name = x.get('name')
+        label = x.text.strip()
+
+        labels.append((name, label))
 
     if not labels:
         final = [(x, x) for x in fields]

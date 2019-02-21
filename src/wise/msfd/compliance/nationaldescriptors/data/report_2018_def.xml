@@ -10,6 +10,7 @@
 
     <element group="ges" name="Features" label="features" convert="csv_ges_labels_list">Feature(s) reported</element>
     <element group="ges" name="TargetCode" label="targets" convert="csv_ges_labels_inverse_list">Target code</element>
+
     <element name="Description" translate="true">Description target</element>
     <element name="GESComponents" convert="ges_component">GES components</element>
     <element name="TimeScale">Time scale</element>
@@ -59,6 +60,7 @@
 
     <element group="ges" name="GESComponent" label="ges_components">GES component</element>
     <element group="ges" name="Feature" label="features">Feature</element>
+
     <element group="element" name="Element">Element</element>
     <element group="element" name="ElementCode">Element code</element>
     <element group="element" name="ElementCodeSource" label="elementcode_sources">Element code source</element>
@@ -66,6 +68,7 @@
     <element group="element" name="Element2Code" label="element_sources">Element 2 code</element>
     <element group="element" name="Element2CodeSource" label="elementcode_sources">Element 2 code source</element>
     <element group="element" name="ElementSource">Element source</element>
+
     <element group="criteria" name="Criteria" label="ges_components">Criterion</element>
     <element group="criteria" name="Parameter" label="parameters">Parameter</element>
     <element group="criteria" name="ParameterOther">Parameter other</element>
@@ -87,10 +90,13 @@
     <element group="criteria" name="ParameterAchieved">Parameter achieved</element>
     <element group="criteria" name="DescriptionParameter" translate="true">Description parameter</element>
     <element group="criteria" name="IndicatorCode" label="indicators">Related indicator</element>
+
     <element group="criteriastatus" name="CriteriaStatus">Criteria status</element>
     <element group="criteriastatus" name="DescriptionCriteria" translate="true">Description criteria</element>
+
     <element group="elementstatus" name="ElementStatus">Element status</element>
     <element group="elementstatus" name="DescriptionElement" translate="true">Description element</element>
+
     <element group="overallstatus" name="IntegrationRuleTypeParameter" label="parameters">
       Integration rule type parameter
     </element>

@@ -20,36 +20,34 @@ class Proxy2018(object):
     def __init__(self, obj, article, extra=None):
         self.__o = obj       # the proxied object
 
-        self.nodes = REPORT_DEFS['2018'][article].get_elements()
+        self.fields = REPORT_DEFS['2018'][article].get_fields()
 
         if not extra:
             extra = {}
 
         self.extra = extra
 
-        for node in self.nodes:
-            name = node.get('name')
+        for field in self.fields:
+            if field.drop:
+                continue
+
+            name = field.name
             value = getattr(self.__o, name, extra.get(name, None))
 
             if not value:
                 continue
 
-            drop = node.get('drop', None)
-
-            if drop and drop == 'true':
-                continue
-
-            label_name = node.get('label', None)
-            converter = node.get('convert', None)
+            label_collection = field.label_collection
+            converter = field.converter
 
             # assert (label_name or converter), 'Field should be dropped'
 
             if converter:
                 assert '.' not in converter
                 converter = getattr(convert, converter)
-                value = converter(node, value)
-            elif label_name:
-                title = GES_LABELS.get(label_name, value)
+                value = converter(field, value)
+            elif label_collection:
+                title = GES_LABELS.get(label_collection, value)
                 value = ItemLabel(value, title)
 
             setattr(self, name, value)

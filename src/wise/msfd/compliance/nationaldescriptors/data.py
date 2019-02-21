@@ -1,6 +1,6 @@
 from pkg_resources import resource_filename
 
-from wise.msfd.compliance.utils import ReportDefinition, _get_sorted_fields
+from wise.msfd.compliance.utils import ReportDefinition
 
 
 definition_files = {
@@ -27,25 +27,5 @@ REPORT_DEFS = {
 }
 
 
-def get_sorted_fields(year, article, fields):
-    """ Sorts a list of fields according to report definition for given year
-    """
-
-    repdef = REPORT_DEFS[year][article]
-
-    return _get_sorted_fields(repdef, fields)
-
-
-def get_field_definitions_from_data(data, article):
-    _fields, fields_defs = None, None
-
-    for dataset in data.values():
-        if _fields:
-            break
-
-        for row in dataset:
-            if row._fields is not None:
-                _fields = row._fields
-                fields_defs = get_sorted_fields('2018', article, _fields)
-
-    return fields_defs
+def get_report_definition(article):
+    return REPORT_DEFS['2018'][article]

@@ -15,33 +15,33 @@
 
   <div style="clear: both; overflow:hidden"><!-- --></div>
 
-    <tal:cond tal:condition="alldata">
-      <tal:def
-        tal:define="data python: alldata[0][1];
-                    muids python:view.get_muids_from_data(alldata)"
-        >
-        <metal:s metal:use-macro="context/wise-macros/macros/simplify-table"></metal:s>
-        <div class="overflow-table">
-          <div class="inner">
-            <table class="table table-bordered table-striped table-comp-translate table-report">
+  <tal:cond tal:condition="alldata">
+    <tal:def
+      tal:define="data python: alldata[0][1];
+      muids python:view.get_muids_from_data(alldata)"
+      >
+      <metal:s metal:use-macro="context/wise-macros/macros/simplify-table"></metal:s>
+      <div class="overflow-table">
+        <div class="inner">
+          <table class="table table-bordered table-striped table-comp-translate table-report">
 
+            <tr>
+              <th>MarineReportingUnit</th>
+              <td colspan="50" tal:content="structure muids">LV-001, LV-002</td>
+            </tr>
+
+            <tal:rep tal:repeat="row data">
               <tr>
-                <th>MarineReportingUnit</th>
-                <td colspan="50" tal:content="structure muids">LV-001, LV-002</td>
+                <th tal:content="python: row[0]">Element</th>
+                <tal:rep tal:repeat="r python: row[1]">
+                  <div tal:replace="structure python: view.translate_value(row[0], value=r)"></div>
+                </tal:rep>
               </tr>
-
-              <tal:rep tal:repeat="row data">
-                <tr>
-                  <th tal:content="python: row[0]">Element</th>
-                  <tal:rep tal:repeat="r python: row[1]">
-                    <div tal:replace="structure python: view.translate_value(row[0], value=r)"></div>
-                  </tal:rep>
-                </tr>
-              </tal:rep>
-            </table>
-          </div>
+            </tal:rep>
+          </table>
         </div>
-      </tal:def>
-    </tal:cond>
+      </div>
+    </tal:def>
+  </tal:cond>
 
 </div>
