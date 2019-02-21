@@ -35,19 +35,12 @@
       </button>
 
       <div class="lang-footer" tal:condition="python: translation or can_translate">
-        <div class="dropdown" tal:condition="can_translate">
-          <button id="dLabel" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-            <span class="fa fa-ellipsis-v fa-sm"></span>
-          </button>
-          <ul class="dropdown-menu" aria-labelledby="dLabel">
-            <li>
-              <button
-                class="btn btn-primary btn-s editTransl"
-                data-toggle="modal"
-                data-target="#edit-translation">Edit translation</button>
-            </li>
-          </ul>
-        </div>
+
+        <button
+          tal:condition="can_translate"
+          class="btn btn-light btn-xs editTransl"
+          data-toggle="modal"
+          data-target="#edit-translation"><span class="fa fa-edit"></span></button>
 
         <tal:cond tal:condition="translation">
           <button tal:attributes="class btn_trans_class" >EN</button>

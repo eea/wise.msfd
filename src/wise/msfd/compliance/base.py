@@ -8,6 +8,7 @@ from zope.dottedname.resolve import resolve
 from zope.interface import implements
 
 from Acquisition import aq_inner
+from eea.cache import cache
 from plone.api.content import get_state
 from plone.api.portal import get_tool
 from plone.memoize import ram
@@ -91,6 +92,15 @@ class Container(object):
         return u'\n'.join(lines)
 
 
+def report_data_cache_key(func, self, *args, **kwargs):
+    region = getattr(self, 'country_region_code', ''.join(self.regions))
+
+    res = '_cache_' + '_'.join([self.country_code, region])
+    res = res.replace('.', '').replace('-', '')
+
+    return res
+
+
 class BaseComplianceView(BrowserView):
     """ Base class for compliance views
     """
@@ -158,6 +168,7 @@ class BaseComplianceView(BrowserView):
 
     @property
     @timeit
+    @cache(report_data_cache_key)
     def muids(self):
         """ Get all Marine Units for a country
 
@@ -441,6 +452,7 @@ def filtered_questions(questions, phase):
 
 
 def filtered_criterias(criterias, question):
+    crits = []
 
     if question.use_criteria == 'primary':
         crits = [c for c in criterias if c.is_primary is True]
@@ -448,10 +460,14 @@ def filtered_criterias(criterias, question):
     if question.use_criteria == 'secondary':
         crits = [c for c in criterias if c.is_primary is False]
 
-    # TODO what to return
+    if question.use_criteria == 'all':
+        crits = criterias
 
     if question.use_criteria == 'none':
         crits = []
+
+    # if not crits:
+    #     import pdb; pdb.set_trace()
 
     return sorted_criterions(crits)
 

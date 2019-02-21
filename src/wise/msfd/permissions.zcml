@@ -11,4 +11,10 @@
     description="Edit a Compliance Assessment"
     />
 
+  <permission
+    id="wise.EditTranslations"
+    title="wise.msfd: Edit Translations"
+    description="Edit automatically generated translations"
+    />
+
 </configure>

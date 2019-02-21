@@ -4199,3 +4199,50 @@ def parse_ges_components():
             #     Impl.mapper,
             #     Impl.mapper.MarineUnitID.in_(self.muids)
             # )
+
+                # if fieldname not in group_by_fields:
+                #     continue
+
+                # # TODO: this needs to be refactored into a function, to allow
+                # # easier understanding of code
+                #
+                # # rewrite some rows with list of all possible values
+                # all_values = [
+                #     getattr(x, fieldname)
+                #
+                #     for x in data
+                #
+                #     if (x.MarineReportingUnit == mru) and
+                #     (getattr(x, fieldname) is not None)
+                # ]
+                # seen = []
+                # uniques = []
+                #
+                # # if the values are unicode
+                #
+                # if isinstance(all_values[0], (unicode, str)):
+                #     row[1] = [', '.join(set(all_values))] * len(row_data)
+                #
+                #     continue
+                #
+                # # if the values are ItemList types, make the values unique
+                #
+                # for item in all_values:
+                #     item_label_class = item.rows[0]
+                #     name = item_label_class.name
+                #
+                #     if name in seen:
+                #         continue
+                #
+                #     seen.append(name)
+                #     uniques.append(item_label_class)
+                #
+                # row[1] = [ItemList(rows=uniques)] * len(row_data)
+
+            # TODO: this needs to be redone to take advantage of smart
+            # self.muids
+            # mru_label = GES_LABELS.get('mrus', mru)
+            #
+            # if mru_label != mru:
+            #     mru_label = u"{} ({})".format(mru_label, unicode(mru))
+            #

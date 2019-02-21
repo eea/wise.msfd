@@ -1,4 +1,9 @@
+from collections import defaultdict
+
 import lxml.etree
+
+from wise.msfd.gescomponents import GES_LABELS
+from wise.msfd.utils import ItemLabel
 
 
 class ReportDefinition(object):
@@ -109,3 +114,39 @@ def insert_missing_criterions(data, descriptor):
             new.append(col)
 
         data[muid] = new
+
+
+def group_by_mru(data):
+    """ Group data by mru
+
+    It returns a dict where the keys are ItemLabels of the MRU and values are
+    list of rows for that mru
+    """
+
+    if not data:
+        return {}
+
+    res = defaultdict(list)
+
+    mrus = {}
+
+    for row in data:
+        if not row.MarineReportingUnit:     # skip rows without muid
+            continue
+
+        mru = row.MarineReportingUnit
+
+        if mru not in mrus:
+            mru_label = GES_LABELS.get('mrus', mru)
+
+            if mru_label != mru:
+                mru_label = u"{} ({})".format(mru_label, unicode(mru))
+
+            mru_item = ItemLabel(mru, mru_label)
+            mrus[mru] = mru_item
+        else:
+            mru_item = mrus[mru]
+
+        res[mru_item].append(row)
+
+    return res

@@ -297,11 +297,11 @@ class EditAssessmentDataForm(Form, BaseView):
                          for i, c in enumerate(choices)]
 
                 # Add 'Not relevant' to choices list
-                terms.extend([
-                    SimpleTerm(token=len(terms) + 1,
-                               value=None,
-                               title=u'Not relevant')
-                ])
+                # terms.extend([
+                #     SimpleTerm(token=len(terms) + 1,
+                #                value=None,
+                #                title=u'Not relevant')
+                # ])
 
                 default = assessment_data.get(field_name, None)
                 field = Choice(
@@ -323,14 +323,14 @@ class EditAssessmentDataForm(Form, BaseView):
                 terms = [SimpleTerm(token=i, value=i, title=c)
                          for i, c in enumerate(choices)]
                 # Add 'Not relevant' to choices list
-                terms.extend([
-                    SimpleTerm(token=len(terms) + 1,
-                               value=None,
-                               title=u'Not relevant')
-                ])
+                # terms.extend([
+                #     SimpleTerm(token=len(terms) + 1,
+                #                value=None,
+                #                title=u'Not relevant')
+                # ])
                 default = assessment_data.get(field_name, None)
                 field = Choice(
-                    title=field_title,
+                    title=unicode(field_title),
                     __name__=field_name,
                     vocabulary=SimpleVocabulary(terms),
                     required=False,

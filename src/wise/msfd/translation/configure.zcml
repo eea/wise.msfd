@@ -8,7 +8,7 @@
   <browser:page
     for="*"
     name="translate-text"
-    permission="zope2.View"
+    permission="wise.EditTranslations"
     class=".views.SendTranslationRequest"
     />
 
@@ -27,15 +27,11 @@
     permission="zope2.View"
     />
 
-  <browser:resourceDirectory
-    name="msfd.trans"
-    directory="./static/"
-    />
   <browser:page
     class=".admin.TranslationsOverview"
     for="Products.CMFPlone.interfaces.siteroot.IPloneSiteRoot"
     name="translations-overview"
-    permission="cmf.ManagePortal"
+    permission="wise.EditTranslations"
     template="pt/translations-overview.pt"
     />
 
@@ -43,12 +39,15 @@
     name="edit-translation"
     class=".admin.TranslationsOverview"
     attribute="edit_translation"
-    for="Products.CMFCore.interfaces.ISiteRoot" 
-    permission="cmf.ManagePortal"
+    for="Products.CMFCore.interfaces.ISiteRoot"
+    permission="wise.EditTranslations"
     />
 
-  <adapter
-    factory=".app.annotfactory"
+  <adapter factory=".app.annotfactory" />
+
+  <browser:resourceDirectory
+    name="msfd.trans"
+    directory="./static/"
     />
 
 </configure>
