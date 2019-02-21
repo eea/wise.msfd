@@ -20,7 +20,7 @@ class ReportField(TemplateMixin):
         self.converter = node.get('convert')
 
         self.group = node.get('group')
-        self.drop = (node.get('drop') == 'true')
+        self.drop = (node.get('skip') == 'true')
 
 
 class ReportDefinition(object):

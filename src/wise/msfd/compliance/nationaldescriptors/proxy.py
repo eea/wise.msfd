@@ -53,6 +53,8 @@ class Proxy2018(object):
             setattr(self, name, value)
 
     def __getattr__(self, name):
+        print name
+
         return getattr(self.__o, name, self.extra.get(name, None))
 
     def __iter__(self):
@@ -60,6 +62,8 @@ class Proxy2018(object):
         """
         keys = [k for k in self.__o.keys() if k not in BLACKLIST]
         res = [getattr(self.__o, k) for k in keys]
+        import pdb
+        pdb.set_trace()
 
         return iter(res)      # self.__o
 

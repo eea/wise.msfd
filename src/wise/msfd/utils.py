@@ -157,8 +157,6 @@ def db_objects_to_dict(data, excluded_columns=()):
         d = OrderedDict()
 
         for col in columns:
-            # import pdb; pdb.set_trace()
-
             if col not in excluded_columns:
                 d.update({col: getattr(row, col)})
         out.append(d)
@@ -542,6 +540,11 @@ def items_to_rows(data, fields):
     res = []
 
     for field in fields:        # this guarantees sorting of data
+        if field.drop:
+            print "Droppping field", field.name
+
+            continue
+
         values = [
             getattr(row, field.name)
 
