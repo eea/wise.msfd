@@ -278,16 +278,32 @@ if (!Array.prototype.last){
 
   function customScroll() {
     var $ot = $('.overflow-table');
+    var $win = $(window);
+    var scroll, space;
+
+    // check if element is in viewport
+    $.fn.isInViewport = function() {
+      var elementTop = $(this).offset().top;
+      var elementBottom = elementTop + $(this).height();
+
+      var viewportTop = $win.scrollTop();
+      var viewportBottom = viewportTop + $win.height();
+
+      return elementBottom > viewportTop && elementTop < viewportBottom;
+    };
 
     $ot.each(function() {
-      $this = $(this);
-      var topScroll = $this.find('.top-scroll');
+      var $t = $(this);
+      var topScroll = $t.find('.top-scroll');
       var topInner = topScroll.find('.top-scroll-inner');
-      var tableScroll = $this.find('.inner');
-      var tableWidth = $this.find('table').width();
-      var tableHeaderWidth = $this.find('th').width();
+      var tableScroll = $t.find('.inner');
+      var tableWidth = $t.find('table').outerWidth(true);
+      var tableHeaderWidth = $t.find('th').outerWidth(true);
 
-      topInner.width(tableWidth - tableHeaderWidth - 101);
+      topInner.width(tableWidth - tableHeaderWidth - 107);
+
+      console.log($t.find('table'), tableWidth);
+      console.log(topInner.width());
 
       topScroll.on("scroll", function() {
         tableScroll.scrollLeft($(this).scrollLeft());
@@ -296,6 +312,28 @@ if (!Array.prototype.last){
       tableScroll.on("scroll", function() {
         topScroll.scrollLeft($(this).scrollLeft());
       });
+
+      var customScrollBar = $t.find('.scroll-wrapper');
+      var scrollPos = $t.find('.scroll-wrapper').offset().top;
+      space = $win.height() - customScrollBar.height() * 2;
+
+      $win.on('resize scroll', function() {
+        scroll = $win.scrollTop();
+
+        if ($t.isInViewport()) {
+          customScrollBar.addClass('table-fixed-scroll');
+        } else {
+          customScrollBar.removeClass('table-fixed-scroll');
+        }
+
+        if ($('.footer').isInViewport()) {
+          customScrollBar.hide();
+        } else {
+          customScrollBar.show();
+        }
+
+      });
+
     });
   }
 
