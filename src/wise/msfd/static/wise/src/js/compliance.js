@@ -279,7 +279,6 @@ if (!Array.prototype.last){
   function customScroll() {
     var $ot = $('.overflow-table');
     var $win = $(window);
-    var scroll, space;
 
     // check if element is in viewport
     $.fn.isInViewport = function() {
@@ -302,8 +301,8 @@ if (!Array.prototype.last){
 
       topInner.width(tableWidth - tableHeaderWidth - 107);
 
-      console.log($t.find('table'), tableWidth);
-      console.log(topInner.width());
+      // console.log($t.find('table'), tableWidth);
+      // console.log(topInner.width());
 
       topScroll.on("scroll", function() {
         tableScroll.scrollLeft($(this).scrollLeft());
@@ -314,11 +313,8 @@ if (!Array.prototype.last){
       });
 
       var customScrollBar = $t.find('.scroll-wrapper');
-      // var scrollPos = $t.find('.scroll-wrapper').offset().top;
-      space = $win.height() - customScrollBar.height() * 2;
 
       $win.on('resize scroll', function() {
-        scroll = $win.scrollTop();
 
         if ($t.isInViewport()) {
           customScrollBar.addClass('table-fixed-scroll');
