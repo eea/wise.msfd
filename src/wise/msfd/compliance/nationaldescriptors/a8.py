@@ -8,7 +8,8 @@ from Products.Five.browser.pagetemplatefile import \
     ViewPageTemplateFile as Template
 from wise.msfd import db, sql  # , sql2018
 from wise.msfd.data import get_xml_report_data
-from wise.msfd.gescomponents import Criterion, get_criterion, get_descriptor
+from wise.msfd.gescomponents import (Criterion, MarineReportingUnit,
+                                     get_criterion, get_descriptor)
 from wise.msfd.labels import COMMON_LABELS
 from wise.msfd.translation import retrieve_translation
 from wise.msfd.utils import Item, ItemLabel, ItemList, Node, RawRow, Row
@@ -734,14 +735,15 @@ class Article8(BaseArticle2012):
 
         res = {}
 
-        # filter the results to show only region's marine unit ids
-        # TODO: this should use self.context.muids
-        # count, muids_t = db.get_marine_unit_id_names(self.muids)
-        # muid_labels = dict(muids_t)
         muids = {m.id: m for m in self.muids}
 
-        for k, v in report_data.items():
-            res[muids[k]] = v
+        for mid, v in report_data.items():
+            mlabel = muids.get(mid)
+            if mlabel is None:
+                logger.warning("Report for non-defined muids: %s", mid)
+                mid = unicode(mid)
+                mlabel = MarineReportingUnit(mid, mid)
+            res[mlabel] = v
 
         # self.muids = sorted(res.keys())
         self.rows = res

@@ -616,6 +616,7 @@ https://svn.eionet.europa.eu/repositories/Reportnet/Dataflows/MarineDirective/MS
         return data
 
     def get_muids_from_data(self, data):
+        # TODO: this shouldn't exist anymore
         if isinstance(data[0][0], (unicode, str)):
             all_muids = sorted(set([x[0] for x in data]))
 

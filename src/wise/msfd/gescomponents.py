@@ -741,6 +741,7 @@ def _muids_2018(country, region):
 def get_marine_units(country, region, year):
     """ Get a list of ``MarineReportingUnit`` objects
     """
+    print "Get marine units for year: ", year
 
     if year == '2012':
         return _muids_2012(country, region)
