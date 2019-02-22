@@ -39,15 +39,16 @@
     <element skip='true' name='MarineReportingUnit'></element>
     <element skip='true' name='CountryCode'></element>
 
-    <element name="GESComponent" label="ges_components">GES component</element>
-    <element name="Features" label="features" convert="csv_ges_labels_list">Features</element>
-    <element name="GESDescription" translate="true">GES description</element>
-    <element name="JustificationNonUse">Justification for non-use of criterion</element>
-    <element name="JustificationDelay">
+    <element group="ges" name="GESComponent" label="ges_components">GES component</element>
+    <element group="ges" name="JustificationNonUse">Justification for non-use of criterion</element>
+    <element group="ges" name="JustificationDelay">
       Justification for delay in setting EU/regional requirements
     </element>
-    <element name="DeterminationDate">Determination date</element>
-    <element name="UpdateType">Update type</element>
+
+    <element group="gesdetermination" name="Features" label="features" convert="csv_ges_labels_list">Features</element>
+    <element group="gesdetermination" name="GESDescription" translate="true">GES description</element>
+    <element group="gesdetermination" name="DeterminationDate">Determination date</element>
+    <element group="gesdetermination" name="UpdateType">Update type</element>
   </Art9>
 
   <!--<MarineReportingUnit labelName="mrus">MarineReportingUnit</MarineReportingUnit>-->
