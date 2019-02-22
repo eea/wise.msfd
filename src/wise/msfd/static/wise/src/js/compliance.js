@@ -314,7 +314,7 @@ if (!Array.prototype.last){
       });
 
       var customScrollBar = $t.find('.scroll-wrapper');
-      var scrollPos = $t.find('.scroll-wrapper').offset().top;
+      // var scrollPos = $t.find('.scroll-wrapper').offset().top;
       space = $win.height() - customScrollBar.height() * 2;
 
       $win.on('resize scroll', function() {

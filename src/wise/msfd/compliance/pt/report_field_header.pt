@@ -1,1 +1,1 @@
-<th tal:content="options/title" tal:attributes="class string:f_${options/group}">Field title here</th>
+<th tal:content="options/title">Field title here</th>

@@ -70,18 +70,25 @@
         border: 0;
         border-collapse: initial;
 
-        th {
-          background: #EFEFEF;
-          vertical-align: top;
-          // width: 18em;
-          width: 202px;
-          overflow: hidden;
-          position: absolute;
-          left: 0;
-          text-align: right;
-          border: 0;
-          border-bottom: 1px solid #ddd;
-          padding: 0;
+        tr {
+          &:last-child th {
+            border-bottom: 0;
+          }
+
+          th {
+            background: #EFEFEF;
+            vertical-align: top;
+            // width: 18em;
+            width: 202px;
+            overflow: hidden;
+            position: absolute;
+            left: 0;
+            text-align: right;
+            border: 0;
+            border-bottom: 1px solid #ddd;
+            padding: 0;
+          }
+
           &.f_ges {
             background-color: #f4b183;
           }
@@ -100,33 +107,29 @@
           &.f_overallstatus {
             background-color: #f4b183;
           }
-        }
 
-        tr:last-child th {
-          border-bottom: 0;
-        }
-
-        td {
-          min-width: 3rem;
-          border-top: none;
-          border-left: none;
-          > div {
-            max-width: 50rem;
-          }
-          ul {
-            min-width: 16rem;
-            margin: 0 0 0 -1rem !important;
-            &.cell-listing  {
-              // display: flex;
-              // max-height: 30rem;
-              // flex-direction: column;
-              // flex-wrap: wrap;
-              li {
-                display: block !important;
-                padding-left: 1rem;
-                max-width: 30rem;
-                &::before {
-                  content: '▪';
+          td {
+            min-width: 3rem;
+            border-top: none;
+            border-left: none;
+            > div {
+              max-width: 50rem;
+            }
+            ul {
+              min-width: 16rem;
+              margin: 0 0 0 -1rem !important;
+              &.cell-listing  {
+                // display: flex;
+                // max-height: 30rem;
+                // flex-direction: column;
+                // flex-wrap: wrap;
+                li {
+                  display: block !important;
+                  padding-left: 1rem;
+                  max-width: 30rem;
+                  &::before {
+                    content: '▪';
+                  }
                 }
               }
             }

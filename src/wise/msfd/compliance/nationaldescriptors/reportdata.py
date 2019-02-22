@@ -557,8 +557,6 @@ https://svn.eionet.europa.eu/repositories/Reportnet/Dataflows/MarineDirective/MS
 
         res = []
 
-        # get the available fields by looking into the reported data, then
-        # get a list of resorted fields
         fields = get_report_definition(self.article).get_fields()
 
         for mru, rows in data_by_mru.items():
