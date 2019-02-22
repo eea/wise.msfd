@@ -70,7 +70,7 @@
     <element group="element" merge="true" name="Element2CodeSource" label="elementcode_sources">Element 2 code source</element>
     <element group="element" merge="true" name="ElementSource">Element source</element>
 
-    <element group="criteria" name="Criteria" label="ges_components">Criterion</element>
+    <element group="criteria" name="Criteria" merge="true" label="ges_components">Criterion</element>
     <element group="criteria" name="Parameter" label="parameters">Parameter</element>
     <element group="criteria" name="ParameterOther">Parameter other</element>
     <element group="criteria" name="ThresholdValueUpper">Threshold value upper</element>

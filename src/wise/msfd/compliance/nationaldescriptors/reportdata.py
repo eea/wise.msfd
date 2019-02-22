@@ -472,15 +472,22 @@ https://svn.eionet.europa.eu/repositories/Reportnet/Dataflows/MarineDirective/MS
             t.c.Element.isnot(None),
             t.c.MarineReportingUnit.in_(muids),
         ]
+        orderby = [
+            t.c.MarineReportingUnit,
+            t.c.GESComponent,
+            t.c.Element,
+            t.c.IntegrationRuleTypeParameter,
+        ]
 
-        count, res = db.get_all_records_ordered(
-            t,
-            'Criteria',
-            *conditions
-        )
-        print "Res count", count
+        sess = db.session()
 
-        data = [Proxy2018(row, self.article) for row in res]
+        q = sess\
+            .query(t)\
+            .filter(*conditions).\
+            order_by(*orderby)\
+            .distinct()
+
+        data = [Proxy2018(row, self.article) for row in q]
 
         return data
 
