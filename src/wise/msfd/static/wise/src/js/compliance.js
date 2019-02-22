@@ -300,6 +300,7 @@ if (!Array.prototype.last){
   function customScroll() {
     var $ot = $('.overflow-table');
     var $win = $(window);
+    var winHeight = $win.height();
 
     // check if element is in viewport
     $.fn.isInViewport = function() {
@@ -317,41 +318,41 @@ if (!Array.prototype.last){
       var topScroll = $t.find('.top-scroll');
       var topInner = topScroll.find('.top-scroll-inner');
       var tableScroll = $t.find('.inner');
-      var tableWidth = $t.find('table').outerWidth(true);
-      var tableHeaderWidth = $t.find('th').outerWidth(true);
+      var tableHeaderWidth = $t.find('th').width();
+      var tableWidth = $t.find('table').width() + tableHeaderWidth;
+      var customScroll = $t.find('.scroll-wrapper');
+      var lastTable = $('.overflow-table:last');
 
-      topInner.width(tableWidth - tableHeaderWidth - 107);
+      topInner.innerWidth($t.find('table').width());
 
-      // console.log($t.find('table'), tableWidth);
-      // console.log(topInner.width());
-
-      topScroll.on("scroll", function() {
+      topScroll.on('scroll', function() {
         tableScroll.scrollLeft($(this).scrollLeft());
       });
 
-      tableScroll.on("scroll", function() {
+      tableScroll.on('scroll', function() {
         topScroll.scrollLeft($(this).scrollLeft());
       });
 
-      var customScrollBar = $t.find('.scroll-wrapper');
+      if ($t.height() > winHeight && tableWidth > $t.width()) {
+        $win.on('resize scroll', function() {
+          var scroll = $win.scrollTop();
 
-      $win.on('resize scroll', function() {
+          if ($t.isInViewport()) {
+            customScroll.addClass('fixed-scroll');
+          } else {
+            customScroll.removeClass('fixed-scroll');
+          }
 
-        if ($t.isInViewport()) {
-          customScrollBar.addClass('table-fixed-scroll');
-        } else {
-          customScrollBar.removeClass('table-fixed-scroll');
-        }
-
-        if ($('.footer').isInViewport()) {
-          customScrollBar.hide();
-        } else {
-          customScrollBar.show();
-        }
-
-      });
+          if (scroll >= lastTable.offset().top + lastTable.outerHeight() - window.innerHeight) {
+            customScroll.hide();
+          } else {
+            customScroll.show();
+          }
+        });
+      }
 
     });
+
   }
 
   function setupResponsiveness() {
