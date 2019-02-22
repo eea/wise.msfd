@@ -24,7 +24,10 @@
         <div class="inner">
           <table class="table table-bordered table-striped table-comp-translate table-report">
             <tal:rep tal:repeat="row data">
-              <tr tal:define="field python:row[0]; values python: row[1]" tal:attributes="class string:f_${field/group}">
+              <tr
+                tal:define="field python:row[0]; values python: row[1]; merge_class python:field.merge and 'merge' or ''"
+                tal:attributes="class string:f_${field/group} ${merge_class};"
+                >
                 <th tal:content="field/title">Element</th>
                 <tal:rep tal:repeat="r values">
                   <td tal:replace="structure python: view.translate_value(field.name, value=r)"></td>

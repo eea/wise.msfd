@@ -54,9 +54,60 @@
     });
   }
 
+
+  function setupDisableAssessmentForms(){
+    // used in edit assessment form
+    // add the disabled attribute for select/textarea elements
+    // if the question type does not match the process phase
+    $('#comp-national-descriptor div.subform.disabled')
+      .find('select, textarea').each(function(){
+        $(this).attr('disabled', true);
+    });
+
+    // used in edit assessment form
+    // remove the disabled attribute when submitting the form
+    // data from disabled attributes is not submitted
+    $('.kssattr-formname-edit-assessment-data-2018').submit(function(){
+      $(':disabled').each(function(){
+        $(this).removeAttr('disabled');
+      });
+    });
+  }
+
+  function setupUnloadWarning() {
+    // National descriptor edit assessment data
+    // Warn user before leaving the page with unsaved changes
+    var submitted = false;
+    var modified = false;
+    var $nd = $('#comp-national-descriptor');
+
+    $('#comp-national-descriptor form').submit(function() {
+      submitted = true;
+    });
+
+    $nd.on('change', 'input, textarea, select', function(e) {
+      modified = true;
+    });
+
+    $(window).bind('beforeunload', function() {
+      if (modified && !submitted) {
+        // most browsers ignores custom messages,
+        // in that case the browser default message will be used
+        return "You have unsaved changes. Do you want to leave this page?";
+      }
+    });
+
+    var $select = $nd.find('.select2-container');
+    var $textarea = $nd.find('textarea');
+    $select.closest('.fields-container-row').addClass('flex-select');
+    $textarea.closest('.fields-container-row').addClass('flex-textarea');
+  }
+
   $(document).ready(function() {
     setupCommentsListing();
     setupPostComments();
+    setupDisableAssessmentForms();
+    setupUnloadWarning();
 
     var $win = $(window);
 

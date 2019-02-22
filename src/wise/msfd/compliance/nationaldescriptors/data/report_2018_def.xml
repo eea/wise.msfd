@@ -58,16 +58,16 @@
     <element skip='true' name='MarineReportingUnit'></element>
     <element skip='true' name='CountryCode'></element>
 
-    <element group="ges" name="GESComponent" label="ges_components">GES component</element>
-    <element group="ges" name="Feature" label="features">Feature</element>
+    <element group="ges" merge="true" name="GESComponent" label="ges_components">GES component</element>
+    <element group="ges" merge="true" name="Feature" label="features">Feature</element>
 
-    <element group="element" name="Element">Element</element>
-    <element group="element" name="ElementCode">Element code</element>
-    <element group="element" name="ElementCodeSource" label="elementcode_sources">Element code source</element>
-    <element group="element" name="Element2">Element 2</element>
-    <element group="element" name="Element2Code" label="element_sources">Element 2 code</element>
-    <element group="element" name="Element2CodeSource" label="elementcode_sources">Element 2 code source</element>
-    <element group="element" name="ElementSource">Element source</element>
+    <element group="element" merge="true" name="Element">Element</element>
+    <element group="element" merge="true" name="ElementCode">Element code</element>
+    <element group="element" merge="true" name="ElementCodeSource" label="elementcode_sources">Element code source</element>
+    <element group="element" merge="true" name="Element2">Element 2</element>
+    <element group="element" merge="true" name="Element2Code" label="element_sources">Element 2 code</element>
+    <element group="element" merge="true" name="Element2CodeSource" label="elementcode_sources">Element 2 code source</element>
+    <element group="element" merge="true" name="ElementSource">Element source</element>
 
     <element group="criteria" name="Criteria" label="ges_components">Criterion</element>
     <element group="criteria" name="Parameter" label="parameters">Parameter</element>
@@ -97,39 +97,39 @@
     <element group="elementstatus" name="ElementStatus">Element status</element>
     <element group="elementstatus" name="DescriptionElement" translate="true">Description element</element>
 
-    <element group="overallstatus" name="IntegrationRuleTypeParameter" label="parameters">
+    <element group="overallstatus" merge="true" name="IntegrationRuleTypeParameter" label="parameters">
       Integration rule type parameter
     </element>
-    <element group="overallstatus" name="IntegrationRuleDescriptionParameter">
+    <element group="overallstatus" merge="true" name="IntegrationRuleDescriptionParameter">
       Integration rule description parameter
     </element>
-    <element group="overallstatus" name="IntegrationRuleDescriptionReferenceParameter" skip="true" reason="Not in the XML">
+    <element group="overallstatus" merge="true" name="IntegrationRuleDescriptionReferenceParameter" skip="true" reason="Not in the XML">
       Integration rule description reference parameter
     </element>
-    <element group="overallstatus" name="IntegrationRuleTypeCriteria" label="parameters">
+    <element group="overallstatus" merge="true" name="IntegrationRuleTypeCriteria" label="parameters">
       Integration rule type criteria
     </element>
-    <element group="overallstatus" name="IntegrationRuleDescriptionCriteria">
+    <element group="overallstatus" merge="true" name="IntegrationRuleDescriptionCriteria">
       Integration rule description criteria
     </element>
-    <element group="overallstatus" name="IntegrationRuleDescriptionReferenceCriteria" skip="true" reason="Not in the XML">
+    <element group="overallstatus" merge="true" name="IntegrationRuleDescriptionReferenceCriteria" skip="true" reason="Not in the XML">
       Integration rule description reference criteria
     </element>
-    <element group="overallstatus" name="GESExtentThreshold">GES extent threshold</element>
-    <element group="overallstatus" name="GESExtentAchieved">GES extent achieved</element>
-    <element group="overallstatus" name="GESExtentUnit">GES extent unit</element>
-    <element group="overallstatus" name="GESAchieved">GES achieved</element>
-    <element group="overallstatus" name="DescriptionOverallStatus" translate="true">
+    <element group="overallstatus" merge="true" name="GESExtentThreshold">GES extent threshold</element>
+    <element group="overallstatus" merge="true" name="GESExtentAchieved">GES extent achieved</element>
+    <element group="overallstatus" merge="true" name="GESExtentUnit">GES extent unit</element>
+    <element group="overallstatus" merge="true" name="GESAchieved">GES achieved</element>
+    <element group="overallstatus" merge="true" name="DescriptionOverallStatus" translate="true">
       Description overall status
     </element>
-    <element group="overallstatus" name="AssessmentsPeriod">Assessments period</element>
-    <element group="overallstatus" name="PressureCodes" label="pressures" convert="csv_ges_labels_list">
+    <element group="overallstatus" merge="true" name="AssessmentsPeriod">Assessments period</element>
+    <element group="overallstatus" merge="true" name="PressureCodes" label="pressures" convert="csv_ges_labels_list">
       Related pressures
     </element>
-    <element group="overallstatus" name="RelatedActivities" skip="true" reason="This field is not in the DB">
+    <element group="overallstatus" merge="true" name="RelatedActivities" skip="true" reason="This field is not in the DB">
       Related activities
     </element>
-    <element group="overallstatus" name="TargetCodes" label="targets" convert="csv_ges_labels_inverse_list">
+    <element group="overallstatus" merge="true" name="TargetCodes" label="targets" convert="csv_ges_labels_inverse_list">
       Related targets
     </element>
   </Art8>

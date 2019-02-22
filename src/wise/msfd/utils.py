@@ -541,8 +541,6 @@ def items_to_rows(data, fields):
 
     for field in fields:        # this guarantees sorting of data
         if field.drop:
-            print "Droppping field", field.name
-
             continue
 
         values = [

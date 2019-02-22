@@ -11,6 +11,7 @@ if (!Array.prototype.last){
   /*
    * SELECT2 functions
    * */
+  // TODO: please explain what this does and why it's needed
   function setupSelects2(selector){
     var forbiddenIDs = [];
     var selectorFormCont = selector || selectorFormContainer;
@@ -89,7 +90,7 @@ if (!Array.prototype.last){
 
     // stretch all cells to the maximum table columns;
     var max = 0;
-    var $tr = $('tr', this);
+    var $tr = $('tr.merge', this);
     $tr.each(function(){
       $tds = $('td', this);
       if ($tds.length > max) {
@@ -153,14 +154,14 @@ if (!Array.prototype.last){
 
       //addTranslateClickHandlers();
     }
-    readMoreModal();
+    setupReadMoreModal();
     // addTranslateClickHandlers();
   };
 
-  // used in report data table
-  // create a 'read more' modal
-  // if the cell content is too long
-  function readMoreModal() {
+  /* Used in report data table create a 'read more' modal if the cell content
+   * is too long
+   */
+  function setupReadMoreModal() {
     var $table = $('.table-report');
     var $td = $table.find('td');
     var $modalContent = $('.modal-content-wrapper');
@@ -196,7 +197,7 @@ if (!Array.prototype.last){
 
     });
 
-    $('.btn-close').click(function() {
+    $('.btn-close').click(function() { // TODO: make selector more specific
       $modalContent.empty();
     });
 
@@ -204,6 +205,8 @@ if (!Array.prototype.last){
   }
 
   function setupReportNavigation() {
+    // This is a menu that is triggered from a button. When scrolling down, it
+    // sticks to the top. Allows navigation between articles/years
     var $reportnav = $('#report-data-navigation');
     $('button', $reportnav).on('click', function() {
       $('.nav-body', $reportnav).toggle();
@@ -211,9 +214,27 @@ if (!Array.prototype.last){
       return false;
     });
     $('.nav-body', $reportnav).hide();
+
+    // sticky report data navigation
+    var $rn = $('.report-nav');
+    if ($rn.length > 0) {
+      var stickyOffset = $rn.offset().top;
+
+      $(window).scroll(function() {
+        var scroll = $(window).scrollTop();
+
+        if (scroll >= stickyOffset) {
+          $rn.addClass('sticky').removeClass('fixed');
+        } else {
+          $rn.removeClass('sticky').addClass('fixed');
+        }
+      });
+    }
   }
 
   function setupTableScrolling() {
+    // When dealing with a really wide table, with wide cells, we want to keep
+    // the text relatively narrow, but always keep in view that cell content
     var $td = $('.table-report td');
 
     if (!$td.length) { return; }
@@ -333,45 +354,7 @@ if (!Array.prototype.last){
     });
   }
 
-  // used in edit assessment form
-  // add the disabled attribute for select/textarea elements
-  // if the question type does not match the process phase
-  function disableAssessmentForms(){
-    $('#comp-national-descriptor div.subform.disabled')
-      .find('select, textarea').each(function(){
-        $(this).attr('disabled', true);
-    });
-  }
-
-  $(document).ready(function($){
-    initStyling();
-    setupSelects2();
-    setupReportNavigation();
-    setupTableScrolling();
-    disableAssessmentForms();
-    readMoreModal();
-    customScroll();
-
-    // used in edit assessment form
-    // remove the disabled attribute when submitting the form
-    // data from disabled attributes is not submitted
-    $('.kssattr-formname-edit-assessment-data-2018').submit(function(){
-      $(':disabled').each(function(){
-        $(this).removeAttr('disabled');
-      });
-    });
-
-    if (window.matchMedia("(max-width: 768px)").matches) {
-      $(".overflow-table h5").width( $(".overflow-table table").width() );
-    }
-
-    //$('.simplify-form').next().find('table').simplifyTable();
-
-    // tibi
-    $('.simplify-form').next().find('table').each(function(){
-      $(this).simplifyTable();
-    });
-
+  function setupResponsiveness() {
     // fire resize event after the browser window resizing it's completed
     var resizeTimer;
     $(window).resize(function() {
@@ -383,54 +366,33 @@ if (!Array.prototype.last){
       $('.table-report').fixTableHeaderHeight();
     }
 
+    if (window.matchMedia("(max-width: 768px)").matches) {
+      $(".overflow-table h5").width( $(".overflow-table table").width() );
+    }
+  }
+
+  function setupSimplifiedTables() {
+    //$('.simplify-form').next().find('table').simplifyTable();
+
+    $('.simplify-form').next().find('table').each(function(){
+      $(this).simplifyTable();
+    });
+
     $('.simplify-form button').on('click', function(){
       var onoff = $(this).attr('aria-pressed') == 'true';
       $p = $(this).parent().next();
       $('table', $p).toggleTable(!onoff);
     });
+  }
 
-    // National descriptor edit assessment data
-    // Warn user before leaving the page with unsaved changes
-    var submitted = false;
-    var modified = false;
-    var $nd = $('#comp-national-descriptor');
-
-    $('#comp-national-descriptor form').submit(function() {
-      submitted = true;
-    });
-
-    $nd.on('change', 'input, textarea, select', function(e) {
-      modified = true;
-    });
-
-    $(window).bind('beforeunload', function() {
-      if (modified && !submitted) {
-        // most browsers ignores custom messages,
-        // in that case the browser default message will be used
-        return "You have unsaved changes. Do you want to leave this page?";
-      }
-    });
-
-    var $select = $nd.find('.select2-container');
-    var $textarea = $nd.find('textarea');
-    $select.closest('.fields-container-row').addClass('flex-select');
-    $textarea.closest('.fields-container-row').addClass('flex-textarea');
-
-    // sticky report data navigation
-    var $rn = $('.report-nav');
-    if ($rn.length > 0) {
-      var stickyOffset = $rn.offset().top;
-
-      $(window).scroll(function() {
-        var scroll = $(window).scrollTop();
-
-        if (scroll >= stickyOffset) {
-          $rn.addClass('sticky').removeClass('fixed');
-        } else {
-          $rn.removeClass('sticky').addClass('fixed');
-        }
-      });
-    }
-
+  $(document).ready(function($){
+    initStyling();
+    setupSelects2();
+    setupReportNavigation();
+    setupTableScrolling();
+    setupReadMoreModal();
+    customScroll();
+    setupResponsiveness();
+    setupSimplifiedTables();
   });
 }(window, document, $));
