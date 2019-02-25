@@ -298,9 +298,19 @@ if (!Array.prototype.last){
   }
 
   function customScroll() {
+    // A fixed scrollbar at the bottom of the window for tables
     var $ot = $('.overflow-table');
     var $win = $(window);
-    var winHeight = $win.height();
+    // var winHeight = $win.height();
+
+    var $cs = $('<div class="scroll-wrapper">' +
+      '<i class="fa fa-table"></i>' +
+      '<div class="top-scroll">' +
+        '<div class="top-scroll-inner"></div>' +
+      '</div>' +
+    '</div>');
+
+    $cs.insertAfter($('.overflow-table').find('.inner'));
 
     // check if element is in viewport
     $.fn.isInViewport = function() {
@@ -312,6 +322,7 @@ if (!Array.prototype.last){
 
       return elementBottom > viewportTop && elementTop < viewportBottom;
     };
+
 
     $ot.each(function() {
       var $t = $(this);
@@ -333,7 +344,7 @@ if (!Array.prototype.last){
         topScroll.scrollLeft($(this).scrollLeft());
       });
 
-      if ($t.height() > winHeight && tableWidth > $t.width()) {
+      if (tableWidth > $t.width()) {
         $win.on('resize scroll', function() {
           var scroll = $win.scrollTop();
 
@@ -343,6 +354,7 @@ if (!Array.prototype.last){
             customScroll.removeClass('fixed-scroll');
           }
 
+          // hide custom scrollbar when it reaches the bottom of the last table
           if (scroll >= lastTable.offset().top + lastTable.outerHeight() - window.innerHeight) {
             customScroll.hide();
           } else {
@@ -350,9 +362,38 @@ if (!Array.prototype.last){
           }
         });
       }
+    });
+  }
+
+  function fixedTableRows() {
+    // WIP
+    var $ot = $('.overflow-table');
+    var $ft = $(
+      '<div class="fixed-table-wrapper">' +
+        '<table class="table table-bordered table-striped table-report fixed-table">' +
+        '</table>' +
+      '</div>'
+    );
+
+    $ft.insertBefore($('.overflow-table').find('.inner'));
+    $ot.each(function() {
+      var $t = $(this);
+      var tdWidth = $t.find('.inner').find('td').outerWidth();
+
+      var $cb = $('<input type="checkbox" class="row-check"/>');
+      $t.find('th').append($cb);
+
+      var checkBox = $t.find('.row-check');
+      checkBox.click(function(e) {
+        var $this = $(this);
+
+        if ($this.is(':checked')) {
+          console.log("true", $this.closest('tr'), fixedTable);
+          $this.closest('tr').clone().appendTo(fixedTable);
+        }
+      });
 
     });
-
   }
 
   function setupResponsiveness() {
@@ -395,5 +436,6 @@ if (!Array.prototype.last){
     customScroll();
     setupResponsiveness();
     setupSimplifiedTables();
+    // fixedTableRows();
   });
 }(window, document, $));
