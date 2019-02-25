@@ -203,7 +203,7 @@ class Criterion(ItemLabel):
         self.alternatives = []  # Criterion2012 objects
 
         self._id = id
-        self.id = self._id or self.alternatives[0][0]
+        self.id = self.name = self._id or self.alternatives[0][0]
         self._title = title
         self.descriptor = descriptor
 

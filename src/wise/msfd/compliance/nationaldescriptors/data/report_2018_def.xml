@@ -39,7 +39,7 @@
     <element skip='true' name='MarineReportingUnit'></element>
     <element skip='true' name='CountryCode'></element>
 
-    <element group="ges" merge="true" name="GESComponent" label="ges_components">GES component</element>
+    <element group="ges" merge="true" name="GESComponent" convert="ges_component">GES component</element>
     <element group="ges" merge="true" name="JustificationNonUse">Justification for non-use of criterion</element>
     <element group="ges" merge="true" name="JustificationDelay">
       Justification for delay in setting EU/regional requirements
@@ -59,7 +59,7 @@
     <element skip='true' name='MarineReportingUnit'></element>
     <element skip='true' name='CountryCode'></element>
 
-    <element group="ges" merge="true" name="GESComponent" label="ges_components">GES component</element>
+    <element group="ges" merge="true" name="GESComponent" convert="ges_components">GES component</element>
     <element group="ges" merge="true" name="Feature" label="features">Feature</element>
 
     <element group="element" merge="true" name="Element">Element</element>
