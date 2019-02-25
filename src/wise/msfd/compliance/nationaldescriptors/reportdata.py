@@ -662,6 +662,8 @@ https://svn.eionet.europa.eu/repositories/Reportnet/Dataflows/MarineDirective/MS
             t.Schema == schema,
             reverse=True,
         )
+        # if item is None:
+        #     import pdb; pdb.set_trace()
         return item
 
     @cache(get_reportdata_key, dependencies=['translation'])
@@ -672,7 +674,13 @@ https://svn.eionet.europa.eu/repositories/Reportnet/Dataflows/MarineDirective/MS
 
         data = self.get_report_data()
         report = self.get_report_metadata()
-        link = report.ReportedFileLink
+
+        link = report_by = report_date = None
+        if report:
+            link = report.ReportedFileLink
+            link = (link.rsplit('/', 1)[1], link)
+            report_by = report.ContactOrganisation
+            report_date = report.ReportingDate
 
         report_header = self.report_header_template(
             title="Member State report: {}/{}/{}/{}/2018".format(
@@ -683,10 +691,10 @@ https://svn.eionet.europa.eu/repositories/Reportnet/Dataflows/MarineDirective/MS
             ),
             factsheet=None,
             # TODO: find out how to get info about who reported
-            report_by=report.ContactOrganisation,
-            source_file=(link.rsplit('/', 1)[1], link),
+            report_by=report_by,
+            source_file=link,
             report_due='2018-10-15',
-            report_date=report.ReportingDate,
+            report_date=report_date,
             help_text=self.help_text
         )
 

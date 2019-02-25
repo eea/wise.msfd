@@ -64,7 +64,7 @@
         <td>Article reported</td>
         <td tal:attributes="colspan view/colspan" tal:content="view/article_name"/>
       </tr>
-      <tr>
+      <tr tal:condition="options/source_file">
         <td>Source file of Member State</td>
         <td tal:attributes="colspan view/colspan">
           <a tal:attributes="href python: options['source_file'][1]"
@@ -74,7 +74,7 @@
           </div>
         </td>
       </tr>
-      <tr>
+      <tr tal:condition="options/report_by">
         <td>Reported by</td>
         <td tal:attributes="colspan view/colspan" tal:content="options/report_by"/>
       </tr>
@@ -82,7 +82,7 @@
         <td>Date report due</td>
         <td tal:attributes="colspan view/colspan" tal:content="options/report_due"/>
       </tr>
-      <tr>
+      <tr tal:condition="options/report_date">
         <td>Date reported by Member State</td>
         <td tal:attributes="colspan view/colspan" tal:content="options/report_date"/>
       </tr>
