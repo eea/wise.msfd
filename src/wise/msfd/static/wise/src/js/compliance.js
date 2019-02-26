@@ -217,6 +217,8 @@ if (!Array.prototype.last){
 
     // sticky report data navigation
     var $rn = $('.report-nav');
+    var $title = $rn.closest('#report-data-navigation').siblings('.report-title');
+
     if ($rn.length > 0) {
       var stickyOffset = $rn.offset().top;
 
@@ -225,8 +227,10 @@ if (!Array.prototype.last){
 
         if (scroll >= stickyOffset) {
           $rn.addClass('sticky').removeClass('fixed');
+          $title.addClass('fixed-title');
         } else {
           $rn.removeClass('sticky').addClass('fixed');
+          $title.removeClass('fixed-title');
         }
       });
     }
@@ -326,6 +330,7 @@ if (!Array.prototype.last){
 
     $ot.each(function() {
       var $t = $(this);
+      // var tableWrapWidth = $t.width();
       var topScroll = $t.find('.top-scroll');
       var topInner = topScroll.find('.top-scroll-inner');
       var tableScroll = $t.find('.inner');
@@ -335,6 +340,7 @@ if (!Array.prototype.last){
       var lastTable = $('.overflow-table:last');
 
       topInner.innerWidth($t.find('table').width());
+      // console.log(tableHeaderWidth,tableWrapWidth, $t.find('table').width(), topInner.width());
 
       topScroll.on('scroll', function() {
         tableScroll.scrollLeft($(this).scrollLeft());

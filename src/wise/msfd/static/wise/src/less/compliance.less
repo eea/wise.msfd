@@ -268,6 +268,13 @@ table.comp-c-listing {
   width: inherit;
 }
 
+.fixed-title {
+  position: fixed;
+  top: 0px;
+  z-index: 9999;
+  font-size: 18px;
+}
+
 #report-data-navigation {
   position: relative;
   margin-bottom: 1em;
@@ -331,8 +338,10 @@ table.comp-c-listing {
         .art-title a {
           border-top-right-radius: 8px;
         }
-        a:last-child {
-          border-bottom-right-radius: 8px;
+        .art-links {
+          a:last-child {
+            border-bottom-right-radius: 8px;
+          }
         }
       }
     }
@@ -353,11 +362,34 @@ table.comp-c-listing {
   }
 
   .nav-body {
-    display: flex;
+    // display: flex;
     position: absolute;
     box-shadow: 0 0 2px #3e3d3d;
     background: @main-dark-blue;
     text-align: center;
+
+    .nav-articles {
+      display: flex;
+      border-top: 2px solid #fff;
+    }
+
+    .art-middle {
+      a {
+        font-weight: bold;
+        font-size: 16px;
+        border-bottom: 1px solid #fff;
+      }
+    }
+
+    .art-title {
+      a {
+        color: #fff;
+        font-size: 20px;
+      }
+      a:hover {
+        text-decoration: none;
+      }
+    }
 
     .art:not(:last-child) {
       border-right: 3px solid #fff;
