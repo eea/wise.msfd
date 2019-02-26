@@ -88,7 +88,7 @@
       </tr>
       <tr>
         <td>Descriptor</td>
-        <td tal:attributes="colspan view/colspan" tal:content="python:view.desc_label"/>
+        <td tal:attributes="colspan view/colspan" tal:content="python:view.descriptor_obj.title"/>
       </tr>
     </table>
 

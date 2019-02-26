@@ -686,7 +686,7 @@ https://svn.eionet.europa.eu/repositories/Reportnet/Dataflows/MarineDirective/MS
             title="Member State report: {}/{}/{}/{}/2018".format(
                 self.country_name,
                 self.country_region_name,
-                self.descriptor_obj.title,
+                self.descriptor_obj.id,
                 self.article
             ),
             factsheet=None,

@@ -64,7 +64,7 @@
               <tbody>
                 <tr tal:repeat="desc python: view.get_descriptors(region)">
                   <th>
-                    <span tal:content="desc/title_or_id">D0</span>
+                    <span tal:content="python: view.descriptor_for_code(desc.id).title">D0</span>
                   </th>
                   <!-- TODO: resort articles here -->
                   <td tal:repeat="assessment python: view.get_articles(desc)">

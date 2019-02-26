@@ -3119,7 +3119,7 @@
     },
     {
       "code": "D4/D1",
-      "label": "(Descriptor) D4 Food webs/D1 Biodiversity - ecosystems",
+      "label": "(Descriptor) D4 - Food webs/D1 Biodiversity - ecosystems",
       "descriptor": "D4/D1"
     },
     {
@@ -3189,7 +3189,7 @@
     },
     {
       "code": "D6/D1",
-      "label": "(Descriptor) D6 Sea-floor integrity/D1 Biodiversity - benthic habitats",
+      "label": "(Descriptor) D6 - Sea-floor integrity/D1 Biodiversity - benthic habitats",
       "descriptor": "D6/D1"
     },
     {
@@ -3663,7 +3663,7 @@
     },
     {
       "code": "D4/D1",
-      "label": "(Descriptor) D4 Food webs/D1 Biodiversity - ecosystems"
+      "label": "(Descriptor) D4 - Food webs/D1 Biodiversity - ecosystems"
     },
     {
       "code": "D5",
@@ -3671,7 +3671,7 @@
     },
     {
       "code": "D6/D1",
-      "label": "(Descriptor) D6 Sea-floor integrity/D1 Biodiversity - benthic habitats"
+      "label": "(Descriptor) D6 - Sea-floor integrity/D1 Biodiversity - benthic habitats"
     },
     {
       "code": "D7",

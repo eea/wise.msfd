@@ -161,6 +161,11 @@ class NationalDescriptorCountryOverview(BaseView):
 
         return [region[d] for d in order]
 
+    def descriptor_for_code(self, code):
+        desc = get_descriptor(code.upper())
+
+        return desc
+
     def get_articles(self, desc):
         order = ['art9', 'art8', 'art10']
 

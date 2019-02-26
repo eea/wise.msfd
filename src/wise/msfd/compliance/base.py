@@ -130,16 +130,16 @@ class BaseComplianceView(BrowserView):
 
         return name
 
-    @property
-    def desc_label(self):
-        """ Get the label(text) for a descriptor
-
-        :return: 'D5 Eutrophication'
-        """
-
-        res = self._descriptor_folder.Title()
-
-        return res
+    # @property
+    # def desc_label(self):
+    #     """ Get the label(text) for a descriptor
+    #
+    #     :return: 'D5 Eutrophication'
+    #     """
+    #
+    #     res = self._descriptor_folder.Title()
+    #
+    #     return res
 
     @property
     def descriptor_label(self):
