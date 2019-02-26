@@ -59,7 +59,7 @@
     <element skip='true' name='MarineReportingUnit'></element>
     <element skip='true' name='CountryCode'></element>
 
-    <element group="ges" merge="true" name="GESComponent" convert="ges_components">GES component</element>
+    <element group="ges" merge="true" name="GESComponent" convert="ges_component">GES component</element>
     <element group="ges" merge="true" name="Feature" label="features">Feature</element>
 
     <element group="element" merge="true" name="Element">Element</element>
@@ -70,7 +70,7 @@
     <element group="element" merge="true" name="Element2CodeSource" label="elementcode_sources">Element 2 code source</element>
     <element group="element" merge="true" name="ElementSource">Element source</element>
 
-    <element group="criteria" merge="true" name="Criteria" label="ges_components">Criterion</element>
+    <element group="criteria" merge="true" name="Criteria" convert="ges_component">Criterion</element>
     <element group="criteria" merge="false" name="Parameter" label="parameters">Parameter</element>
     <element group="criteria" merge="false" name="ParameterOther">Parameter other</element>
     <element group="criteria" merge="false" name="ThresholdValueUpper">Threshold value upper</element>

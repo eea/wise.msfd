@@ -133,6 +133,15 @@ class Descriptor(ItemLabel):
         self.name = self.title
         self.criterions = criterions or set()
 
+    @property
+    def template_vars(self):
+        # ItemLabel support
+
+        return {
+            'title': self.id,
+            'name': self.title,
+        }
+
     def all_ids(self):
         res = set()
         res.add(self.id)
@@ -189,13 +198,13 @@ class Criterion(ItemLabel):
     @property
     def template_vars(self):
         # ItemLabel support
-        title = self._title or self.id
-
-        if self._main_id and self._main_id != self.id:
-            title = u"{} ({})".format(title, self._main_id)
+        # title = self._title or self.id
+        #
+        # if self._main_id and self._main_id != self.id:
+        #     title = u"{} ({})".format(title, self._main_id)
 
         return {
-            'title': title,
+            'title': self.id,
             'name': self.title,
         }
 
