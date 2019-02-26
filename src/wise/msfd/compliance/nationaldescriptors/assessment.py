@@ -289,7 +289,7 @@ class EditAssessmentDataForm(Form, BaseView):
             fields = []
 
             if not elements:       # when use-criteria == 'none'
-                field_title = u'All criterias'
+                field_title = u'All criteria'
                 field_name = '{}_{}'.format(self.article, question.id)
                 choices = question.answers
 

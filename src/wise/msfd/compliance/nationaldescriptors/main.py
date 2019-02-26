@@ -221,7 +221,7 @@ def format_assessment_data(article, elements, questions, muids, data):
                 color_index = 0
                 label = 'Not filled in'
 
-            value = (label, color_index, u'All criterias')
+            value = (label, color_index, u'All criteria')
             values.append(value)
         else:
             for element in elements:
