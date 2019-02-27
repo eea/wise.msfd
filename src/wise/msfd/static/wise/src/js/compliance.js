@@ -350,7 +350,6 @@ if (!Array.prototype.last){
       if (tableAndHeaderWidth > $t.width()) {
         $win.on('resize scroll', function() {
           var scroll = $win.scrollTop();
-          console.log('true');
 
           if ($t.isInViewport()) {
             customScroll.addClass('fixed-scroll');
