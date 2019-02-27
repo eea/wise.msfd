@@ -301,11 +301,10 @@ if (!Array.prototype.last){
     });
   }
 
-  function customScroll() {
+  function setupCustomScroll() {
     // A fixed scrollbar at the bottom of the window for tables
     var $ot = $('.overflow-table');
     var $win = $(window);
-    // var winHeight = $win.height();
 
     var $cs = $('<div class="scroll-wrapper">' +
       '<i class="fa fa-table"></i>' +
@@ -327,20 +326,18 @@ if (!Array.prototype.last){
       return elementBottom > viewportTop && elementTop < viewportBottom;
     };
 
-
     $ot.each(function() {
       var $t = $(this);
-      // var tableWrapWidth = $t.width();
       var topScroll = $t.find('.top-scroll');
-      var topInner = topScroll.find('.top-scroll-inner');
+      var topScrollInner = topScroll.find('.top-scroll-inner');
       var tableScroll = $t.find('.inner');
+      var tableWidth = $t.find('table').width();
       var tableHeaderWidth = $t.find('th').width();
-      var tableWidth = $t.find('table').width() + tableHeaderWidth;
+      var tableAndHeaderWidth = tableWidth + tableHeaderWidth;
       var customScroll = $t.find('.scroll-wrapper');
       var lastTable = $('.overflow-table:last');
 
-      topInner.innerWidth($t.find('table').width());
-      // console.log(tableHeaderWidth,tableWrapWidth, $t.find('table').width(), topInner.width());
+      topScrollInner.width(tableWidth);
 
       topScroll.on('scroll', function() {
         tableScroll.scrollLeft($(this).scrollLeft());
@@ -350,9 +347,10 @@ if (!Array.prototype.last){
         topScroll.scrollLeft($(this).scrollLeft());
       });
 
-      if (tableWidth > $t.width()) {
+      if (tableAndHeaderWidth > $t.width()) {
         $win.on('resize scroll', function() {
           var scroll = $win.scrollTop();
+          console.log('true');
 
           if ($t.isInViewport()) {
             customScroll.addClass('fixed-scroll');
@@ -371,8 +369,9 @@ if (!Array.prototype.last){
     });
   }
 
-  function fixedTableRows() {
+  function setupFixedTableRows() {
     // WIP
+    // Allows report table rows to be fixed while scrolling
     var $ot = $('.overflow-table');
     var $ft = $(
       '<div class="fixed-table-wrapper">' +
@@ -424,12 +423,14 @@ if (!Array.prototype.last){
 
     $('.simplify-form').next().find('table').each(function(){
       $(this).simplifyTable();
+      setupCustomScroll();
     });
 
     $('.simplify-form button').on('click', function(){
       var onoff = $(this).attr('aria-pressed') == 'true';
       $p = $(this).parent().next();
       $('table', $p).toggleTable(!onoff);
+      setupCustomScroll();
     });
   }
 
@@ -439,9 +440,8 @@ if (!Array.prototype.last){
     setupReportNavigation();
     setupTableScrolling();
     setupReadMoreModal();
-    customScroll();
     setupResponsiveness();
     setupSimplifiedTables();
-    // fixedTableRows();
+    // setupFixedTableRows();
   });
 }(window, document, $));
