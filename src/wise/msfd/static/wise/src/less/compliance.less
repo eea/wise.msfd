@@ -172,6 +172,10 @@ div.as-table-overview blockquote {
   margin-bottom: 1em;
 }
 
+.as-table-overview {
+  margin-top: 1em;
+}
+
 .assessment-data-table {
   th.as-header {
     background-color: #999 !important;
@@ -318,29 +322,36 @@ table.comp-c-listing {
     }
 
     .nav-body {
-      border-radius: 8px;
+      border-radius: 10px;
       right: 30px;
       top: -32px;
+
+      .art-title {
+        a {
+          border-top-right-radius: 10px;
+          border-top-left-radius: 10px;
+        }
+      }
 
       .art:first-child {
         .art-title,
         .art-title a {
-          border-top-left-radius: 8px;
+          border-top-left-radius: 10px;
         }
         .art-links {
           a:first-child {
-            border-bottom-left-radius: 8px;
+            border-bottom-left-radius: 10px;
           }
         }
       }
       .art:last-child {
         .art-title,
         .art-title a {
-          border-top-right-radius: 8px;
+          border-top-right-radius: 10px;
         }
         .art-links {
           a:last-child {
-            border-bottom-right-radius: 8px;
+            border-bottom-right-radius: 10px;
           }
         }
       }
@@ -362,7 +373,6 @@ table.comp-c-listing {
   }
 
   .nav-body {
-    // display: flex;
     position: absolute;
     box-shadow: 0 0 2px #3e3d3d;
     background: @main-dark-blue;
@@ -384,15 +394,23 @@ table.comp-c-listing {
     .art-title {
       a {
         color: #fff;
-        font-size: 20px;
+        font-size: 17px;
+        font-weight: bold;
+        padding: 0.5em;
+        display: flex;
+        flex-grow: 1;
+        flex-shrink: 1;
+        justify-content: center;
       }
       a:hover {
         text-decoration: none;
+        background-color: #fff;
+        color: #0071b3;
       }
     }
 
     .art:not(:last-child) {
-      border-right: 3px solid #fff;
+      border-right: 2px solid #fff;
     }
 
     .art {

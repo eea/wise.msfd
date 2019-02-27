@@ -28,7 +28,8 @@
 
             <div class="art-title">
               <a href="" tal:attributes="href view/_country_folder/absolute_url"
-                tal:content="view/country_name">EU</a>
+                tal:content="view/country_name"
+                target="_blank">EU</a>
             </div>
 
             <div class="nav-articles">
@@ -42,18 +43,18 @@
                   </a>
                 </div>
                 <div class="art-links">
-                  <a href="" tal:attributes="href string:${art/absolute_url}/@@edit-assessment-data-2018">Edit</a>
+                  <a href="" tal:attributes="href string:${art/absolute_url}/@@edit-assessment-data-2018" target="_blank">Edit</a>
                   <a tal:attributes="href string:${art/absolute_url}/@@view-report-data-2018"
                     target="_blank">
                     2018</a>
-                    <a tal:attributes="href string:${art/absolute_url}/@@view-report-data-2012"
-                      target="_blank">
-                      2012</a>
-                      <a tal:attributes="href string:${art/absolute_url}/@@view-report-data-2012-like-2018"
-                        target="_blank">
-                        2012 (II)</a>
-                      </div>
-                    </div>
+                  <a tal:attributes="href string:${art/absolute_url}/@@view-report-data-2012"
+                    target="_blank">
+                    2012</a>
+                  <a tal:attributes="href string:${art/absolute_url}/@@view-report-data-2012-like-2018"
+                    target="_blank">
+                    2012 (II)</a>
+                  </div>
+                </div>
 
             </div>
           </div>
