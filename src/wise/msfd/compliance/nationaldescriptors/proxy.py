@@ -31,6 +31,12 @@ class Proxy2018(object):
             if field.drop:
                 continue
 
+            print field.name, self.__o
+            # if (field.name == 'JustificationDelay') and
+            #                               (self.__o is not None):
+            #     import pdbJustificationDelay
+            #     pdb.set_trace()
+
             name = field.name
             value = getattr(self.__o, name, extra.get(name, None))
 

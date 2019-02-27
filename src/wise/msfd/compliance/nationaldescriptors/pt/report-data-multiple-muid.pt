@@ -3,17 +3,17 @@
   <div tal:replace="structure options/report_header"></div>
 
   <!-- TODO: re&#45;enable the harvest subform -->
-  <div class="subform-refresh" tal:define="form nocall:view/subform" tal:replace="nothing">
-    <div tal:replace="structure form">
+  <div class="subform-refresh" tal:replace="nothing">
+    <div tal:replace="structure view/subform">
       refresh
     </div>
   </div>
 
+  <div style="clear: both"><!-- --></div>
+
   <div tal:condition="not: alldata">
     No data reported for this Descriptor
   </div>
-
-  <div style="clear: both"><!-- --></div>
 
   <div tal:condition="alldata" tal:repeat="info alldata" class="report-section">
 

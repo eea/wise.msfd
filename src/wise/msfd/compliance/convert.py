@@ -28,6 +28,13 @@ def ges_component(field, value):
     return criterion
 
 
+def ges_component_list(field, value):
+    values = value.split(',')
+    rows = [ges_component(None, v) for v in values]
+
+    return ItemList(rows=rows)
+
+
 def csv_ges_labels_inverse_list(field, value):
     vals = set(value.split(','))
 

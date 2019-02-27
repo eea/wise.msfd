@@ -9,11 +9,11 @@
     </div>
   </div>
 
+  <div style="clear: both; overflow:hidden"><!-- --></div>
+
   <div tal:condition="not: alldata">
     No data reported for this Descriptor
   </div>
-
-  <div style="clear: both; overflow:hidden"><!-- --></div>
 
   <tal:cond tal:condition="alldata">
     <tal:def

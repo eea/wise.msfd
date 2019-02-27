@@ -162,3 +162,23 @@ def group_by_mru(data):
         res[mru_item].append(row)
 
     return res
+
+
+def consolidate_date_by_mru(data):
+    """ Takes data (proxies of data) organized by mru and groups them according
+    to similarity of data (and ignoring the mru of that proxied row)
+    """
+    # import pdb
+    # pdb.set_trace()
+
+    return data
+
+    mrus = data.keys()
+    res = {}
+    acc = []
+
+    for dataset in data.values():
+        for row in dataset:
+            values = [k for k in vars(row)]
+
+    return data

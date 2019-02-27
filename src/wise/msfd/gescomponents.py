@@ -393,6 +393,11 @@ def get_criterion(ges_id):
 
 
 def get_ges_component(ges_id):
+    if ges_id.upper() == 'D6/D1':
+        ges_id = 'D6'
+    elif ges_id.upper() == 'D4/D1':
+        ges_id = 'D4'
+
     if is_descriptor(ges_id):
         return get_descriptor(ges_id)
 
