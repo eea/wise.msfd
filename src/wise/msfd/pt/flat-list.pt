@@ -1,0 +1,3 @@
+<div class="flat-cell-listing" tal:condition="options/rows">
+  <span tal:content="python: u', '.join(options['rows'])"></span>
+</div>

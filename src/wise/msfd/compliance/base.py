@@ -123,12 +123,10 @@ class BaseComplianceView(BrowserView):
     def country_name(self):
         """ Get country name based on country code
 
-        :return: 'Latvia'
+        :return: ex: 'Latvia'
         """
 
-        name = self._country_folder.Title()
-
-        return name
+        return self._country_folder.Title()
 
     # @property
     # def desc_label(self):
@@ -153,6 +151,8 @@ class BaseComplianceView(BrowserView):
         """ Get all regions and subregions for a country
 
         :return: ['BAL', 'ANS']
+
+        TODO: do we need a 2018 compatible version?
         """
 
         t = sql.t_MSFD4_GegraphicalAreasID

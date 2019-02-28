@@ -12,7 +12,7 @@
     <element group="ges" merge="true" name="TargetCode" label="targets" convert="csv_ges_labels_inverse_list">Target code</element>
 
     <element merge="true" name="Description" translate="true">Description target</element>
-    <element merge="true" name="GESComponents" convert="ges_component">GES components</element>
+    <element merge="true" name="GESComponents" convert="ges_component_list">GES components</element>
     <element merge="true" name="TimeScale">Time scale</element>
     <element merge="true" name="UpdateDate">Update date</element>
     <element merge="true" name="UpdateType">Update type</element>

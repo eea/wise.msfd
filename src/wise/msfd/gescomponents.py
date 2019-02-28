@@ -393,6 +393,11 @@ def get_criterion(ges_id):
 
 
 def get_ges_component(ges_id):
+    if ges_id.upper() == 'D6/D1':
+        ges_id = 'D6'
+    elif ges_id.upper() == 'D4/D1':
+        ges_id = 'D4'
+
     if is_descriptor(ges_id):
         return get_descriptor(ges_id)
 
@@ -672,7 +677,7 @@ def sorted_by_criterion(ids):
     res.extend(sorted(criterions, key=lambda k: k.replace(' ', '')))
     res.extend(sorted(others))
 
-    print(res)
+    # print(res)
 
     return res
 
@@ -747,7 +752,7 @@ def _muids_2018(country, region):
 
 
 @timeit
-def get_marine_units(country, region, year):
+def get_marine_units(country, region, year=None):
     """ Get a list of ``MarineReportingUnit`` objects
     """
     print "Get marine units for year: ", year

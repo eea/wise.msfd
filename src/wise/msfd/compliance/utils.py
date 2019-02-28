@@ -100,7 +100,7 @@ def insert_missing_criterions(data, descriptor):
 
     criterions = [descriptor] + descriptor.sorted_criterions()
 
-    for muid, dataset in data.items():
+    for muidlist, dataset in data.items():
         # build a map of existing criterions, so that we detect missing ones
 
         # this proxy object will serve as template for new cloned columns,
@@ -125,7 +125,7 @@ def insert_missing_criterions(data, descriptor):
                 col = tplobj.clone(GESComponent=c)
             new.append(col)
 
-        data[muid] = new
+        data[muidlist] = new
 
 
 def group_by_mru(data):
