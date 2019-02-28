@@ -1,5 +1,3 @@
 <div class="flat-cell-listing" tal:condition="options/rows">
-  <div tal:repeat="row options/rows">
-    <em tal:replace="structure row"></em>
-  </div>
+  <span tal:content="python: u', '.join(options['rows'])"></span>
 </div>
