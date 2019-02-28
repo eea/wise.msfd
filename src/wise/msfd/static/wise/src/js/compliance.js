@@ -481,6 +481,6 @@ if (!Array.prototype.last){
     setupReadMoreModal();
     setupResponsiveness();
     setupSimplifiedTables();
-    setupFixedTableRows();
+    // setupFixedTableRows();
   });
 }(window, document, $));
