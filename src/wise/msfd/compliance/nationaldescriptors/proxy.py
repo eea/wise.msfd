@@ -31,12 +31,6 @@ class Proxy2018(object):
             if field.drop:
                 continue
 
-            print field.name, self.__o
-            # if (field.name == 'JustificationDelay') and
-            #                               (self.__o is not None):
-            #     import pdbJustificationDelay
-            #     pdb.set_trace()
-
             name = field.name
             value = getattr(self.__o, name, extra.get(name, None))
 
@@ -67,8 +61,6 @@ class Proxy2018(object):
         # TODO: is this needed?
         keys = [k for k in self.__o.keys() if k not in BLACKLIST]
         res = [getattr(self.__o, k) for k in keys]
-        import pdb
-        pdb.set_trace()
 
         return iter(res)      # self.__o
 
@@ -86,3 +78,22 @@ class Proxy2018(object):
             setattr(obj, k, v)
 
         return obj
+
+
+def proxy_cmp(self, other):
+    """ Compare two proxy objects but only look at reported value, not MRU
+
+    Could be implemented in Proxy2018, but take care, need to return integers
+    """
+
+    fieldnames = [field.name for field in self.fields
+                  if field.name != 'MarineReportingUnit']
+
+    for name in fieldnames:
+        a = getattr(self, name)
+        b = getattr(other, name)
+
+        if a != b:
+            return False
+
+    return True

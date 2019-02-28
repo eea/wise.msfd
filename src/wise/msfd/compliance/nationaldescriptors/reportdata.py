@@ -21,8 +21,7 @@ from wise.msfd.base import BaseUtil
 from wise.msfd.compliance.interfaces import IReportDataView
 from wise.msfd.compliance.nationaldescriptors.data import get_report_definition
 from wise.msfd.compliance.utils import (group_by_mru,
-                                        insert_missing_criterions,
-                                        consolidate_date_by_mru)
+                                        insert_missing_criterions)
 from wise.msfd.data import (get_factsheet_url, get_report_file_url,
                             get_report_filename, get_xml_report_data)
 from wise.msfd.gescomponents import (get_descriptor, get_features,
@@ -39,6 +38,7 @@ from .a9 import Article9, Article9Alternate
 from .a10 import Article10, Article10Alternate
 from .base import BaseView
 from .proxy import Proxy2018
+from .utils import consolidate_date_by_mru
 
 # from persistent.list import PersistentList
 # from six import string_types
@@ -467,12 +467,13 @@ https://svn.eionet.europa.eu/repositories/Reportnet/Dataflows/MarineDirective/MS
         if self.descriptor.startswith('D1.'):
             all_ids.append('D1')
 
-        muids = [x.id for x in self.muids]
+        # muids = [x.id for x in self.muids]
         conditions = [
             t.c.CountryCode == self.country_code,
+            t.c.Region == self.country_region_code,
             t.c.GESComponent.in_(all_ids),
             t.c.Element.isnot(None),
-            t.c.MarineReportingUnit.in_(muids),
+            # t.c.MarineReportingUnit.in_(muids),     #
         ]
         orderby = [
             t.c.MarineReportingUnit,
@@ -513,6 +514,7 @@ https://svn.eionet.europa.eu/repositories/Reportnet/Dataflows/MarineDirective/MS
             t,
             'GESComponents',
             t.c.CountryCode == self.country_code,
+            t.c.Region == self.country_region_code,
             *conditions
         )
 
@@ -542,7 +544,8 @@ https://svn.eionet.europa.eu/repositories/Reportnet/Dataflows/MarineDirective/MS
             t,
             'GESComponent',
             t.c.CountryCode == self.country_code,
-            t.c.GESComponent.in_(all_ids)
+            t.c.Region == self.country_region_code,
+            t.c.GESComponent.in_(all_ids),
         )
 
         return q
@@ -557,7 +560,7 @@ https://svn.eionet.europa.eu/repositories/Reportnet/Dataflows/MarineDirective/MS
 
         if self.article == 'Art9':
             data_by_mru = consolidate_date_by_mru(data_by_mru)
-            # insert_missing_criterions(data_by_mru, self.descriptor_obj)
+            insert_missing_criterions(data_by_mru, self.descriptor_obj)
 
         res = []
 

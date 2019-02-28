@@ -358,11 +358,16 @@ class ItemLabel(TemplateMixin):
         # return "<ItemLabel '%s'>" % self.name
 
     def __cmp__(self, other):
+        # see https://rszalski.github.io/magicmethods/
 
         if hasattr(other, 'name'):
-            return cmp(self.name, other.name)
+            if self.name == other.name:
+                return 0
 
-        return cmp(self.name, other)        # this is not really ok
+        if self.name == other:        # this is not really ok
+            return 0
+
+        return -1
 
     def __hash__(self):
         return id(self)     # wonky but should work
@@ -414,6 +419,27 @@ class ItemList(TemplateMixin):
 
         return v
         # return "<ItemList of %s children>" % len(self.rows)
+
+    def __cmp__(self, other):
+
+        if len(self.rows) != len(other.rows):
+            return -1
+
+        for v1, v2 in zip(self.rows, other.rows):
+            if v1 != v2:
+                return -1
+
+        return 0
+
+    def __hash__(self):
+        # this is needed to be able to set a list of marineunitids as group
+        # for Art9 2018
+
+        return id(self)     # wonky but should work
+
+
+class FlatItemList(ItemList):
+    template = PageTemplateFile('pt/flat-list.pt')
 
 
 class CompoundRow(TemplateMixin):

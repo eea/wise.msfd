@@ -1,0 +1,5 @@
+<div class="flat-cell-listing" tal:condition="options/rows">
+  <div tal:repeat="row options/rows">
+    <em tal:replace="structure row"></em>
+  </div>
+</div>
