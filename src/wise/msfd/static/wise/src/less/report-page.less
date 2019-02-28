@@ -67,13 +67,30 @@
       }
 
       .inner,
-      .fixed-table-wrapper {
+      .fixed-table-inner {
         overflow-x: auto;
         overflow-y: visible;
         // margin-left: 14.4em;
         margin-left: 202px;
         background: white;
         border-left: 4px solid #DDD;
+      }
+
+      .fixed-table-wrapper {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        padding: 0 24px;
+        overflow-x: auto;
+        z-index: 999;
+        background-color: #fff;
+        // box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        // border: 1px solid #ddd;
+
+        th {
+          left: 24px !important;
+        }
       }
 
       table.table-report {

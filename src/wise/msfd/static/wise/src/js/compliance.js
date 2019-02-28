@@ -197,7 +197,7 @@ if (!Array.prototype.last){
 
     });
 
-    $('.btn-close').click(function() { // TODO: make selector more specific
+    $('.btn-close-modal').click(function() {
       $modalContent.empty();
     });
 
@@ -301,6 +301,17 @@ if (!Array.prototype.last){
     });
   }
 
+  // check if element is in viewport
+  $.fn.isInViewport = function() {
+    var elementTop = $(this).offset().top;
+    var elementBottom = elementTop + $(this).height();
+
+    var viewportTop = $(window).scrollTop();
+    var viewportBottom = viewportTop + $(window).height();
+
+    return elementBottom > viewportTop && elementTop < viewportBottom;
+  };
+
   function setupCustomScroll() {
     // A fixed scrollbar at the bottom of the window for tables
     var $ot = $('.overflow-table');
@@ -315,26 +326,15 @@ if (!Array.prototype.last){
 
     $cs.insertAfter($('.overflow-table').find('.inner'));
 
-    // check if element is in viewport
-    $.fn.isInViewport = function() {
-      var elementTop = $(this).offset().top;
-      var elementBottom = elementTop + $(this).height();
-
-      var viewportTop = $win.scrollTop();
-      var viewportBottom = viewportTop + $win.height();
-
-      return elementBottom > viewportTop && elementTop < viewportBottom;
-    };
-
     $ot.each(function() {
       var $t = $(this);
-      var topScroll = $t.find('.top-scroll');
+      var topScroll = $('.top-scroll', $t.parent());
       var topScrollInner = topScroll.find('.top-scroll-inner');
-      var tableScroll = $t.find('.inner');
-      var tableWidth = $t.find('table').width();
-      var tableHeaderWidth = $t.find('th').width();
+      var tableScroll = $('.inner', $t.parent());
+      var tableWidth = $('table', $t.parent()).width();
+      var tableHeaderWidth = $('th', $t.parent()).width();
       var tableAndHeaderWidth = tableWidth + tableHeaderWidth;
-      var customScroll = $t.find('.scroll-wrapper');
+      var customScroll = $('.scroll-wrapper', $t.parent());
       var lastTable = $('.overflow-table:last');
 
       topScrollInner.width(tableWidth);
@@ -369,34 +369,74 @@ if (!Array.prototype.last){
   }
 
   function setupFixedTableRows() {
-    // WIP
     // Allows report table rows to be fixed while scrolling
     var $ot = $('.overflow-table');
     var $ft = $(
       '<div class="fixed-table-wrapper">' +
-        '<table class="table table-bordered table-striped table-report fixed-table">' +
-        '</table>' +
+        '<div class="fixed-table-inner">' +
+          '<table class="table table-bordered table-striped table-report fixed-table">' +
+          '</table>' +
+        '</div>' +
       '</div>'
     );
 
-    $ft.insertBefore($('.overflow-table').find('.inner'));
+    $ft.insertBefore($ot.find('.inner'));
+    var $fixedTable = $('.fixed-table-wrapper');
+
     $ot.each(function() {
       var $t = $(this);
-      var tdWidth = $t.find('.inner').find('td').outerWidth();
+      var $th = $('th', $t.parent());
+      var tableScroll = $('.inner', $t.parent());
+      var fixedTableInner = $('.fixed-table-inner', $t.parent());
 
-      var $cb = $('<input type="checkbox" class="row-check"/>');
-      $t.find('th').append($cb);
-
-      var checkBox = $t.find('.row-check');
-      checkBox.click(function(e) {
-        var $this = $(this);
-
-        if ($this.is(':checked')) {
-          console.log("true", $this.closest('tr'), fixedTable);
-          $this.closest('tr').clone().appendTo(fixedTable);
-        }
+      fixedTableInner.on('scroll', function() {
+        tableScroll.scrollLeft($(this).scrollLeft());
+      });
+      tableScroll.on('scroll', function() {
+        fixedTableInner.scrollLeft($(this).scrollLeft());
       });
 
+      var $cb = $('<input type="checkbox" class="fix-row"/>');
+      $t.find('th').append($cb);
+
+      $th.each(function(i) {
+        var val = "cb" + i++;
+        var checkBox = $(this).find('.fix-row');
+        checkBox.val(val);
+      });
+
+      var checkBox = $t.find('.fix-row');
+      checkBox.change(function() {
+        var $this = $(this);
+        var value = $this.val();
+        var table = $this.closest('.overflow-table').find('.fixed-table');
+
+        if ($this.is(':checked')) {
+          $this.closest('tr').clone().appendTo(table).attr('data-row', value);
+          $t.find('.table').fixTableHeaderAndCellsHeight();
+        } else {
+          $fixedTable.find('tr[data-row="' + value + '"]').slideUp('fast', function() {
+            $(this).remove();
+          });
+        }
+
+        var $fcb = $fixedTable.find('.fix-row');
+        $fcb.change(function() {
+          var $this = $(this);
+          var value = $this.val();
+          $this.closest('tr').remove();
+          $('.fix-row[value="' + value + '"]').prop('checked', false);
+        });
+      });
+
+    });
+
+    $(window).on('resize scroll', function() {
+      if ($('.report-nav.sticky').length > 0) {
+        $fixedTable.css('top', '58px');
+      } else {
+        $fixedTable.css('top', '0');
+      }
     });
   }
 
@@ -441,6 +481,6 @@ if (!Array.prototype.last){
     setupReadMoreModal();
     setupResponsiveness();
     setupSimplifiedTables();
-    // setupFixedTableRows();
+    setupFixedTableRows();
   });
 }(window, document, $));
