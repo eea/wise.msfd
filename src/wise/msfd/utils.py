@@ -355,7 +355,6 @@ class ItemLabel(TemplateMixin):
 
     def __repr__(self):
         return self.name
-        # return "<ItemLabel '%s'>" % self.name
 
     def __cmp__(self, other):
         # see https://rszalski.github.io/magicmethods/

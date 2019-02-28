@@ -6,6 +6,8 @@ from collections import defaultdict
 def consolidate_date_by_mru(data):
     """ Takes data (proxies of data) organized by mru and groups them according
     to similarity of data (while ignoring the mru of that proxied row)
+
+    This is used by the A9 2018 report.
     """
 
     groups = []
@@ -29,8 +31,8 @@ def consolidate_date_by_mru(data):
 
     for batch in groups:
         # TODO: get a proper MarineUnitID object
-        mrus = tuple(sorted([r.MarineReportingUnit for r in batch]))
-        regroup[mrus].extend(batch)
+        mrus = tuple(sorted(set([r.MarineReportingUnit for r in batch])))
+        regroup[mrus].append(batch[0])
 
     out = {}
 
