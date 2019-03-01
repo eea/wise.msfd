@@ -239,65 +239,68 @@ if (!Array.prototype.last){
   function setupTableScrolling() {
     // When dealing with a really wide table, with wide cells, we want to keep
     // the text relatively narrow, but always keep in view that cell content
-    var $td = $('.table-report td');
+    var $ot = $('.overflow-table table');
 
-    if (!$td.length) { return; }
+    $ot.each(function() {
+      var $tw = $(this);
+      var $td = $tw.find('td');
 
-    $td.children('div').wrapInner('<span class="td-content"/>');
+      if (!$td.length) { return; }
 
-    // get table header cell right position
-    var $th = $('.table-report th');
-    var thRight = $th.position().left + $th.outerWidth();
+      // get table header cell right position
+      var $th = $tw.find('th');
+      var thRight = $th.position().left + $th.outerWidth();
 
-    $td.each(function() {
-      var $this = $(this);
-      var scrollTimer;
+      $td.each(function() {
+        var $this = $(this);
+        var scrollTimer;
 
-      $('.report-page-view .overflow-table .inner').scroll(function() {
-        clearTimeout(scrollTimer);
+        $('.report-page-view .overflow-table .inner').scroll(function() {
+          clearTimeout(scrollTimer);
 
-        if ($this.attr('colspan') > 1) {
-          var tdText = $this.find('.td-content');
-          var tdLeft = $this.position().left;
-          var tdRight = tdLeft + $this.outerWidth(); // get table cell right position
-          var tdTextWidth = $this.find('.td-content').width();
-          var thAndCellWidth = tdTextWidth + thRight;
+          if ($this.attr('colspan') > 1) {
+            var tdText = $this.find('.td-content');
+            var tdLeft = $this.position().left;
+            var tdRight = tdLeft + $this.outerWidth(); // get table cell right position
+            var tdTextWidth = $this.find('.td-content').width();
+            var thAndCellWidth = tdTextWidth + thRight;
 
-          $this.css('height', $this.outerHeight());
+            $this.css('height', $this.outerHeight());
 
-          scrollTimer = setTimeout(function() {
-            afterScroll()}, 1);
+            scrollTimer = setTimeout(function() {
+              afterScroll()}, 1);
 
-          if (tdLeft < thRight) {
-            tdText.addClass('td-scrolled').css('left', thRight + 5);
-          } else {
-            $this.css('height', '');
-            tdText.removeClass('td-scrolled').addClass('td-content-scrolled');
-          }
+              if (tdLeft < thRight) {
+                tdText.addClass('td-scrolled').css('left', thRight + 5);
+              } else {
+                $this.css('height', '');
+                tdText.removeClass('td-scrolled');
+              }
 
-          if (thAndCellWidth >= tdRight) {
-            $this.addClass('td-relative');
-          } else {
-            $this.removeClass('td-relative');
-          }
-        }
+              if (thAndCellWidth >= tdRight) {
+                $this.addClass('td-relative');
+              } else {
+                $this.removeClass('td-relative');
+              }
+            }
 
-      });
-
-      function afterScroll() {
-        $('.btn-translate').on('click', function() {
-          var $btn = $(this);
-          var transTextHeight = $btn.closest('.td-content').outerHeight();
-          var $td = $btn.closest('td.translatable');
-          var $th = $td.siblings('th');
-          $td.css({
-            'height': transTextHeight,
-            'padding': '0'
           });
-          $btn.closest('.td-content').css('padding', '8px');
-          $th.css('height', transTextHeight);
+
+          function afterScroll() {
+            $('.btn-translate').on('click', function() {
+              var $btn = $(this);
+              var transTextHeight = $btn.closest('.td-content').outerHeight();
+              var $td = $btn.closest('td.translatable');
+              var $th = $td.siblings('th');
+              $td.css({
+                'height': transTextHeight,
+                'padding': '0'
+              });
+              $btn.closest('.td-content').css('padding', '8px');
+              $th.css('height', transTextHeight);
+            });
+          }
         });
-      }
     });
   }
 
@@ -424,7 +427,7 @@ if (!Array.prototype.last){
           tableWrapper.addClass('sticky-table');
           $this.closest('tr').clone().appendTo(table).attr('data-row', value);
           $t.find('.table').fixTableHeaderAndCellsHeight();
-          // setupTableScrolling();
+          setupTableScrolling();
         } else {
           $fixedTable.find('tr[data-row="' + value + '"]').slideUp('fast', function() {
             $(this).remove();
@@ -475,6 +478,9 @@ if (!Array.prototype.last){
     if (window.matchMedia("(max-width: 768px)").matches) {
       $(".overflow-table h5").width( $(".overflow-table table").width() );
     }
+
+    var $td = $('.overflow-table table td');
+    $td.children('div').wrapInner('<span class="td-content"/>');
   }
 
   function setupSimplifiedTables() {
@@ -505,5 +511,6 @@ if (!Array.prototype.last){
     addFixedTable();
     setupSimplifiedTables();
     setupFixedTableRows();
+
   });
 }(window, document, $));
