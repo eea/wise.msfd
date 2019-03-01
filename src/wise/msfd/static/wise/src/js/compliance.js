@@ -312,11 +312,7 @@ if (!Array.prototype.last){
     return elementBottom > viewportTop && elementTop < viewportBottom;
   };
 
-  function setupCustomScroll() {
-    // A fixed scrollbar at the bottom of the window for tables
-    var $ot = $('.overflow-table');
-    var $win = $(window);
-
+  function addCustomScroll() {
     var $cs = $('<div class="scroll-wrapper">' +
       '<i class="fa fa-table"></i>' +
       '<div class="top-scroll">' +
@@ -325,13 +321,19 @@ if (!Array.prototype.last){
     '</div>');
 
     $cs.insertAfter($('.overflow-table').find('.inner'));
+  }
+
+  function setupCustomScroll() {
+    // A fixed scrollbar at the bottom of the window for tables
+    var $ot = $('.overflow-table');
+    var $win = $(window);
 
     $ot.each(function() {
       var $t = $(this);
       var topScroll = $('.top-scroll', $t.parent());
       var topScrollInner = topScroll.find('.top-scroll-inner');
       var tableScroll = $('.inner', $t.parent());
-      var tableWidth = $('table', $t.parent()).width();
+      var tableWidth = $('.table-report', $t.parent()).width();
       var tableHeaderWidth = $('th', $t.parent()).width();
       var tableAndHeaderWidth = tableWidth + tableHeaderWidth;
       var customScroll = $('.scroll-wrapper', $t.parent());
@@ -368,24 +370,32 @@ if (!Array.prototype.last){
     });
   }
 
-  function setupFixedTableRows() {
-    // Allows report table rows to be fixed while scrolling
+  function addFixedTable() {
     var $ot = $('.overflow-table');
+    var $table = $ot.find('table');
+    var $cb = $('<input type="checkbox" class="fix-row"/>');
     var $ft = $(
       '<div class="fixed-table-wrapper">' +
         '<div class="fixed-table-inner">' +
-          '<table class="table table-bordered table-striped table-report fixed-table">' +
+          '<table class="table table-bordered table-striped fixed-table">' +
           '</table>' +
         '</div>' +
       '</div>'
     );
 
+    $table.find('th').append($cb);
     $ft.insertBefore($ot.find('.inner'));
+  }
+
+  function setupFixedTableRows() {
+    // Allows report table rows to be fixed while scrolling
+    var $ot = $('.overflow-table');
     var $fixedTable = $('.fixed-table-wrapper');
 
     $ot.each(function() {
       var $t = $(this);
       var $th = $('th', $t.parent());
+      var tableW = $('.table-report', $t.parent()).width();
       var tableScroll = $('.inner', $t.parent());
       var fixedTableInner = $('.fixed-table-inner', $t.parent());
 
@@ -395,9 +405,6 @@ if (!Array.prototype.last){
       tableScroll.on('scroll', function() {
         fixedTableInner.scrollLeft($(this).scrollLeft());
       });
-
-      var $cb = $('<input type="checkbox" class="fix-row"/>');
-      $t.find('th').append($cb);
 
       $th.each(function(i) {
         var val = "cb" + i++;
@@ -410,20 +417,33 @@ if (!Array.prototype.last){
         var $this = $(this);
         var value = $this.val();
         var table = $this.closest('.overflow-table').find('.fixed-table');
+        var tableWrapper = $this.closest('.overflow-table').find('.fixed-table-wrapper');
+        $('.fixed-table').width(tableW);
 
         if ($this.is(':checked')) {
+          tableWrapper.addClass('sticky-table');
           $this.closest('tr').clone().appendTo(table).attr('data-row', value);
           $t.find('.table').fixTableHeaderAndCellsHeight();
+          // setupTableScrolling();
         } else {
           $fixedTable.find('tr[data-row="' + value + '"]').slideUp('fast', function() {
             $(this).remove();
           });
+
+          if (table.find('tr').length === 1) {
+            tableWrapper.removeClass('sticky-table');
+          }
         }
 
-        var $fcb = $fixedTable.find('.fix-row');
-        $fcb.change(function() {
+        var $cb = $fixedTable.find('.fix-row');
+        $cb.change(function() {
           var $this = $(this);
           var value = $this.val();
+
+          if ($this.closest('tr').siblings().length === 0) {
+            $this.closest('.fixed-table-wrapper').removeClass('sticky-table');
+          }
+
           $this.closest('tr').remove();
           $('.fix-row[value="' + value + '"]').prop('checked', false);
         });
@@ -468,8 +488,9 @@ if (!Array.prototype.last){
     $('.simplify-form button').on('click', function(){
       var onoff = $(this).attr('aria-pressed') == 'true';
       $p = $(this).parent().next();
-      $('table', $p).toggleTable(!onoff);
+      $('.table-report', $p).toggleTable(!onoff);
       setupCustomScroll();
+      setupFixedTableRows();
     });
   }
 
@@ -480,7 +501,9 @@ if (!Array.prototype.last){
     setupTableScrolling();
     setupReadMoreModal();
     setupResponsiveness();
+    addCustomScroll();
+    addFixedTable();
     setupSimplifiedTables();
-    // setupFixedTableRows();
+    setupFixedTableRows();
   });
 }(window, document, $));

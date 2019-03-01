@@ -76,7 +76,7 @@
         border-left: 4px solid #DDD;
       }
 
-      .fixed-table-wrapper {
+      .fixed-table-wrapper.sticky-table {
         position: fixed;
         top: 0;
         left: 0;
@@ -85,15 +85,18 @@
         overflow-x: auto;
         z-index: 999;
         background-color: #fff;
-        // box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-        // border: 1px solid #ddd;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        border: 1px solid #ddd;
+      }
 
+      .fixed-table-wrapper {
         th {
           left: 24px !important;
         }
       }
 
-      table.table-report {
+      table.table-report,
+      table.fixed-table {
         font-size: 80%;
         table-layout: inherit;
         margin-bottom: 0;
@@ -138,6 +141,12 @@
             text-align: right;
             border: 0;
             border-bottom: 1px solid #ddd;
+
+            .fix-row {
+              position: relative;
+              top: 0.3em;
+              margin-left: 0.8em;
+            }
           }
 
           td {
