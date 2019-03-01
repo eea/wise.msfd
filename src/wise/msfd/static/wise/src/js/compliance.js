@@ -427,7 +427,7 @@ if (!Array.prototype.last){
           tableWrapper.addClass('sticky-table');
           $this.closest('tr').clone().appendTo(table).attr('data-row', value);
           $t.find('.table').fixTableHeaderAndCellsHeight();
-          setupTableScrolling();
+          // setupTableScrolling();
         } else {
           $fixedTable.find('tr[data-row="' + value + '"]').slideUp('fast', function() {
             $(this).remove();
@@ -504,7 +504,7 @@ if (!Array.prototype.last){
     initStyling();
     setupSelects2();
     setupReportNavigation();
-    setupTableScrolling();
+    // setupTableScrolling();
     setupReadMoreModal();
     setupResponsiveness();
     addCustomScroll();
