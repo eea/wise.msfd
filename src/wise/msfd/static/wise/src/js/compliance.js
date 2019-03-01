@@ -425,7 +425,16 @@ if (!Array.prototype.last){
 
         if ($this.is(':checked')) {
           tableWrapper.addClass('sticky-table');
-          $this.closest('tr').clone().appendTo(table).attr('data-row', value);
+
+          // clone table row, but keep the width of the original table cells
+          var target = $this.closest('tr');
+          var target_children = target.children('td');
+          var clone = target.clone();
+          clone.children('td').width(function(i,val) {
+            return target_children.eq(i).outerWidth();
+          });
+          clone.appendTo(table).attr('data-row', value);
+
           $t.find('.table').fixTableHeaderAndCellsHeight();
           // setupTableScrolling();
         } else {
