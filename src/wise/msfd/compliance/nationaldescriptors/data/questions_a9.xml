@@ -345,7 +345,7 @@
     <score-weight descriptor="D11" value="6" />
   </assessment-question>
 
-  <assessment-question id="A09Co4" class="coherence" use-criteria='none'>
+  <assessment-question id="A09Co4" class="coherence" use-criteria='all'>
     <definition>
       To what extent does the Member State use threshold values agreed at EU or regional level?
     </definition>
@@ -387,7 +387,7 @@
     <score-weight descriptor="D11" value="8" />
   </assessment-question>
 
-  <assessment-question id="A09Co5" class="coherence" use-criteria='none'>
+  <assessment-question id="A09Co5" class="coherence" use-criteria='all'>
     <definition>
       To what extent is the Member State’s level of ambition for GES (proportion thresholds) the same or similar to other MS in the region?
     </definition>
@@ -471,7 +471,7 @@
     <score-weight descriptor="D11" value="8" />
   </assessment-question>
 
-   <assessment-question id="A09Co7" class="coherence" use-criteria='none'>
+   <assessment-question id="A09Co7" class="coherence" use-criteria='all'>
     <definition>
       To what extent is the Member State’s determination of GES the same or similar to other MS in the subregion?
     </definition>

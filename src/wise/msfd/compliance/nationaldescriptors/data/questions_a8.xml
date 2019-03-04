@@ -75,7 +75,7 @@
     <score-weight descriptor="D11" value="10" />
   </assessment-question>
 
-  <assessment-question id="A08Ad3" class="adequacy" use-criteria='none'>
+  <assessment-question id="A08Ad3" class="adequacy" use-criteria='all'>
     <definition>
       Does the assessment provide a conclusion on the current status? 
     </definition>
