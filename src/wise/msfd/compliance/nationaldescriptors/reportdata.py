@@ -509,6 +509,7 @@ https://svn.eionet.europa.eu/repositories/Reportnet/Dataflows/MarineDirective/MS
             t.c.Region == self.country_region_code,
             *conditions
         )
+        return res
 
         # conditions = []
         # params = get_parameters(self.descriptor)
