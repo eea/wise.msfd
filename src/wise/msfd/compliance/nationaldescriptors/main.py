@@ -362,10 +362,11 @@ class NationalDescriptorArticleView(BaseView):
 
     @property
     def title(self):
+
         return "Commission assessment: {} / {} / {} / {} / 2018".format(
             self.country_title,
             self.country_region_name,
-            self.descriptor,
+            self.descriptor_obj,
             self.article,
         )
 
