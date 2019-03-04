@@ -340,7 +340,6 @@ if (!Array.prototype.last){
       var tableHeaderWidth = $('th', $t.parent()).width();
       var tableAndHeaderWidth = tableWidth + tableHeaderWidth;
       var customScroll = $('.scroll-wrapper', $t.parent());
-      var lastTable = $('.overflow-table:last');
 
       topScrollInner.width(tableWidth);
 
@@ -362,8 +361,8 @@ if (!Array.prototype.last){
             customScroll.removeClass('fixed-scroll');
           }
 
-          // hide custom scrollbar when it reaches the bottom of the last table
-          if (scroll >= lastTable.offset().top + lastTable.outerHeight() - window.innerHeight) {
+          // hide custom scrollbar when it reaches the bottom of the table
+          if (scroll >= $t.offset().top + $t.outerHeight() - window.innerHeight) {
             customScroll.hide();
           } else {
             customScroll.show();
@@ -495,9 +494,8 @@ if (!Array.prototype.last){
   function setupSimplifiedTables() {
     //$('.simplify-form').next().find('table').simplifyTable();
 
-    $('.simplify-form').next().find('table').each(function(){
+    $('.simplify-form').next().find('.table-report').each(function(){
       $(this).simplifyTable();
-      setupCustomScroll();
     });
 
     $('.simplify-form button').on('click', function(){
@@ -518,8 +516,11 @@ if (!Array.prototype.last){
     setupResponsiveness();
     addCustomScroll();
     addFixedTable();
-    setupSimplifiedTables();
-    setupFixedTableRows();
 
+    $(window).on('load', function() {
+      setupSimplifiedTables();
+      setupCustomScroll();
+      setupFixedTableRows();
+    });
   });
 }(window, document, $));
