@@ -20,8 +20,7 @@ from wise.msfd import db, sql2018  # sql,
 from wise.msfd.base import BaseUtil
 from wise.msfd.compliance.interfaces import IReportDataView
 from wise.msfd.compliance.nationaldescriptors.data import get_report_definition
-from wise.msfd.compliance.utils import (group_by_mru,
-                                        insert_missing_criterions)
+from wise.msfd.compliance.utils import group_by_mru, insert_missing_criterions
 from wise.msfd.data import (get_factsheet_url, get_report_file_url,
                             get_report_filename, get_xml_report_data)
 from wise.msfd.gescomponents import (get_descriptor, get_features,
@@ -495,20 +494,13 @@ https://svn.eionet.europa.eu/repositories/Reportnet/Dataflows/MarineDirective/MS
     def get_data_from_view_Art10(self):
         t = sql2018.t_V_ART10_Targets_2018
 
-        # descr_class = get_descriptor(self.descriptor)
-        # all_ids = list(descr_class.all_ids())
-        #
-        # if self.descriptor.startswith('D1.'):
-        #     all_ids.append('D1')
+        descr_class = get_descriptor(self.descriptor)
+        all_ids = list(descr_class.all_ids())
+
+        if self.descriptor.startswith('D1.'):
+            all_ids.append('D1')
         # TODO check conditions for other countries beside NL
-        # conditions = [t.c.GESComponents.in_(all_ids)]
-
-        conditions = []
-        params = get_parameters(self.descriptor)
-        p_codes = [p.name for p in params]
-        conditions.append(t.c.Parameter.in_(p_codes))
-
-        ok_features = set([f.name for f in get_features(self.descriptor)])
+        conditions = [t.c.GESComponents.in_(all_ids)]
 
         count, res = db.get_all_records_ordered(
             t,
@@ -518,15 +510,20 @@ https://svn.eionet.europa.eu/repositories/Reportnet/Dataflows/MarineDirective/MS
             *conditions
         )
 
-        out = []
-
-        for row in res:
-            feats = set(row.Features.split(','))
-
-            if feats.intersection(ok_features):
-                out.append(row)
-
-        return out
+        # conditions = []
+        # params = get_parameters(self.descriptor)
+        # p_codes = [p.name for p in params]
+        # conditions.append(t.c.Parameter.in_(p_codes))
+        # ok_features = set([f.name for f in get_features(self.descriptor)])
+        # out = []
+        #
+        # for row in res:
+        #     feats = set(row.Features.split(','))
+        #
+        #     if feats.intersection(ok_features):
+        #         out.append(row)
+        #
+        # return out
 
     def get_data_from_view_Art9(self):
 
@@ -548,7 +545,16 @@ https://svn.eionet.europa.eu/repositories/Reportnet/Dataflows/MarineDirective/MS
             t.c.GESComponent.in_(all_ids),
         )
 
-        return q
+        ok_features = set([f.name for f in get_features(self.descriptor)])
+        out = []
+
+        for row in q:
+            feats = set(row.Features.split(','))
+
+            if feats.intersection(ok_features):
+                out.append(row)
+
+        return out
 
     @db.use_db_session('2018')
     @timeit

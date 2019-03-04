@@ -48,16 +48,6 @@ def csv_ges_labels_inverse_list(field, value):
     return ItemList(rows=res)
 
 
-# def target_code_to_description(node, value):
-#     """
-#     """
-#
-#     # TODO: this doesn't work properly, to fix
-#     title = GES_LABELS.get('targets', value)
-#
-#     return ItemLabel(title, value)
-
-
 def format_nr(field, value):
     if value:
         return "%.2f" % value
