@@ -137,9 +137,17 @@ class Descriptor(ItemLabel):
     @property
     def template_vars(self):
         # ItemLabel support
+        title = self.id
+
+        if title.startswith('D1.'):
+            # if D1.1, return "D1-B"
+            bits = self.title.split('Biodiversity')
+            b2 = bits[1].strip()
+            major = b2[1:].strip()
+            title = u"D1-" + major[0].upper()
 
         return {
-            'title': self.id,
+            'title': title,
             'name': self.title,
         }
 
