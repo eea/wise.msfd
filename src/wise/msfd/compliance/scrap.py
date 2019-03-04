@@ -4323,3 +4323,27 @@ def consolidate_data(data, group_by_fields):
 #
 #     return fields_defs
 
+        # sess = db.session()
+        # T = sql.MSFD10Target
+        # dt = sql.t_MSFD10_DESCrit
+        #
+        # D_q = sess.query(dt).join(T)
+        # D_a = aliased(dt, alias=D_q.subquery())
+        #
+        # targets = sess\
+        #     .query(T)\
+        #     .order_by(T.ReportingFeature)\
+        #     .filter(T.MarineUnitID.in_(muids))\
+        #     .filter(T.Topic == 'EnvironmentalTarget')\
+        #     .join(D_a)\
+        #     .filter(D_a.c.GESDescriptorsCriteriaIndicators.in_(ok_ges_ids))\
+        #     .distinct()\
+        #     .all()
+        # print 'Resulting targets: ', len(targets)
+        #
+        # # TODO: also get 2012 targets here
+        #
+        # return [Target(r.ReportingFeature.replace(' ', '_').lower(),
+        #                r.ReportingFeature,
+        #                r.Description) for r in targets]
+

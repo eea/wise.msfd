@@ -14,7 +14,7 @@ from plone.api.portal import get_tool
 from plone.memoize import ram
 from plone.memoize.view import memoize
 from Products.Five.browser import BrowserView
-from wise.msfd import db, sql
+from wise.msfd import db, sql, sql2018
 from wise.msfd.compliance.scoring import compute_score
 from wise.msfd.compliance.vocabulary import ASSESSED_ARTICLES, REGIONS
 from wise.msfd.gescomponents import (get_descriptor, get_marine_units,
@@ -382,34 +382,29 @@ class AssessmentQuestionDefinition:
         return sorted_criterions(descriptor.criterions)
 
     @ram.cache(_a10_ids_cachekey)
-    @db.use_db_session('2012')
+    @db.use_db_session('2018')
     def _art_10_ids(self, descriptor, **kwargs):
         muids = [x.id for x in kwargs['muids']]
+
         ok_ges_ids = descriptor.all_ids()
 
+        T = sql2018.ART10TargetsTarget
+        MU = sql2018.ART10TargetsMarineUnit
+        t_MRU = T.ART10_Targets_MarineUnit
+        G = sql2018.ART10TargetsTargetGESComponent
         sess = db.session()
-        T = sql.MSFD10Target
-        dt = sql.t_MSFD10_DESCrit
 
-        D_q = sess.query(dt).join(T)
-        D_a = aliased(dt, alias=D_q.subquery())
-
-        targets = sess\
+        q = sess\
             .query(T)\
-            .order_by(T.ReportingFeature)\
-            .filter(T.MarineUnitID.in_(muids))\
-            .filter(T.Topic == 'EnvironmentalTarget')\
-            .join(D_a)\
-            .filter(D_a.c.GESDescriptorsCriteriaIndicators.in_(ok_ges_ids))\
-            .distinct()\
-            .all()
-        print 'Resulting targets: ', len(targets)
+            .filter(t_MRU.has(MU.MarineReportingUnit.in_(muids)))\
+            .join(G)\
+            .filter(G.GESComponent.in_(ok_ges_ids))
 
-        # TODO: also get 2012 targets here
+        return [Target(t.TargetCode.encode('ascii', errors='ignore'),
+                       t.TargetCode,
+                       t.Description)
 
-        return [Target(r.ReportingFeature.replace(' ', '_').lower(),
-                       r.ReportingFeature,
-                       r.Description) for r in targets]
+                for t in q]
 
     def get_assessed_elements(self, descriptor, **kwargs):
         """ Get a list of filtered assessed elements for this question.

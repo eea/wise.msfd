@@ -241,7 +241,7 @@ def format_assessment_data(article, elements, questions, muids, data):
 
                 else:
                     color_index = 0
-                    label = '{}: Not filled in'.format(element.title)
+                    label = u'{}: Not filled in'.format(element.title)
 
                 value = (
                     label,

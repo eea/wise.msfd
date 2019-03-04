@@ -71,8 +71,6 @@ class EditAssessmentSummaryForm(Form, BaseView):
                           __name__=_name, required=False, default=default)
             _fields.append(_field)
 
-        print "fields"
-
         return Fields(*_fields)
 
     @buttonAndHandler(u'Save', name='save')
@@ -98,25 +96,17 @@ class EditAssessmentSummaryForm(Form, BaseView):
             saved_data.update(data)
         self.context.saved_assessment_data._p_changed = True
 
-        print "handle save"
-
     def nextURL(self):
-        print 'nexturl'
-
         return self.context.absolute_url()
 
     @property
     def action(self):
-
-        print 'action'
-
         return self.context.absolute_url() + '/@@edit-assessment-summary'
 
     def render(self):
 
         if self.request.method == 'POST':
             Form.render(self)
-            print "Done render"
 
             return self.request.response.redirect(self.nextURL())
 

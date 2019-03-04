@@ -116,8 +116,8 @@
     <element group="overallstatus" merge="true" name="IntegrationRuleDescriptionReferenceCriteria" skip="true" reason="Not in the XML">
       Integration rule description reference criteria
     </element>
-    <element group="overallstatus" merge="true" name="GESExtentThreshold">GES extent threshold</element>
-    <element group="overallstatus" merge="true" name="GESExtentAchieved">GES extent achieved</element>
+    <element group="overallstatus" merge="true" convert="format_nr" name="GESExtentThreshold">GES extent threshold</element>
+    <element group="overallstatus" merge="true" convert="format_nr" name="GESExtentAchieved">GES extent achieved</element>
     <element group="overallstatus" merge="true" name="GESExtentUnit">GES extent unit</element>
     <element group="overallstatus" merge="true" name="GESAchieved">GES achieved</element>
     <element group="overallstatus" merge="true" name="DescriptionOverallStatus" translate="true">
