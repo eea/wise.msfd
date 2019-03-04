@@ -130,6 +130,7 @@ class Descriptor(ItemLabel):
     def __init__(self, id=None, title=None, criterions=None):
         self.id = id
         self.title = title
+        assert isinstance(self.title, unicode)
         self.name = self.title
         self.criterions = criterions or set()
 
@@ -319,7 +320,7 @@ def parse_ges_extended_format():
 
         if b1.startswith('D') and ('C' not in b1):
             # it's a descriptor label
-            descriptor = Descriptor(b1, b2)
+            descriptor = Descriptor(b1, b2.decode('utf-8'))
             descriptors[descriptor.id] = descriptor
 
             continue
