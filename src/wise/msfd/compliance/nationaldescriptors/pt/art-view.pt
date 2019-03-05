@@ -21,9 +21,7 @@
             Status message
           </div>
 
-          <h1 tal:content="view/title">
-            Assessment
-          </h1>
+          <h1 tal:content="view/title">Assessment</h1>
 
           <div class="nda-link">
             <a href="./../../"
@@ -46,7 +44,6 @@
               </li>
 
               <li class="process-state">
-              <!-- <li class="process-state-phase-form"> -->
                 <form method="GET" action='./content_status_modify'>
                   <div>
                     <i class='fa fa-exchange'></i>
@@ -68,16 +65,12 @@
             </ul>
           </div>
 
-          <!-- <div style="margin-bottom: 2em"> -->
           <div class="asts-header-data">
             <h3>2018 Assessment</h3>
-            <!-- <div style="background-color: #DDD; border-color: 1px solid #BBB; padding: 1em;"> -->
             <div class="ast-header-data">
               <div tal:replace="structure view/assessment_header_2018_html"></div>
               <div tal:replace="structure view/assessment_data_2018_html"></div>
             </div>
-
-            <!-- <div class="" tal:content="structure view/progress_edit_form"></div> -->
 
             <h3>2012 Assessment</h3>
             <div class="ast-header-data">
