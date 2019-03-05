@@ -145,10 +145,37 @@ div.as-table-overview blockquote {
     margin-bottom: 0;
     margin-top: 1em;
 
+
+    tr.overall-score th,
+    tr.overall-score td {
+      width: 15%;
+    }
+
+    tr.assessment-summary {
+      td {
+        min-height: 30px;
+      }
+    }
+
     td {
       min-width: 4em;
+      height: 2rem;
       border: 1px solid #ccc;
       background-color: #fff;
+
+      &.as-value {
+        width: 30px;
+        height: 30px;
+      }
+
+      &.as-score { text-align: right; }
+
+      &.as-value-0 { background-color: #eee !important; }
+      &.as-value-1 { background-color: #b1c587 !important; }
+      &.as-value-2 { background-color: #d4dfbc !important; }
+      &.as-value-3 { background-color: #ffaeae !important; }
+      &.as-value-4 { background-color: #fd7878 !important; }
+      &.as-value-5 { background-color: #fff !important; }
     }
 
     th {
@@ -156,7 +183,17 @@ div.as-table-overview blockquote {
       border: 1px solid #ccc;
       text-align: right;
       width: 9%;
-      height: 65px;
+
+      &.as-header {
+        background-color: #0071b3 !important;
+        color: white;
+        // min-height: 65px;
+      }
+
+      &.as-question {
+        min-width: 22em !important;
+      }
+      &.as-ges-component { width: 30px; }
     }
 
     label {
@@ -174,68 +211,6 @@ div.as-table-overview blockquote {
 
 .as-table-overview {
   margin-top: 1em;
-}
-
-.assessment-data-table {
-  th.as-header {
-    background-color: #999 !important;
-    color: white;
-    border: none !important;
-  }
-
-  th.as-question {
-    min-width: 22em !important;
-  }
-
-  th.as-ges-component {
-    width: 30px;
-  }
-
-  tr.overall-score th,
-  tr.overall-score td {
-    width: 15%;
-  }
-
-  td.as-score {
-    text-align: right;
-  }
-
-  td.as-value {
-    width: 30px;
-    height: 30px;
-  }
-
-  td.as-value-0 {
-    background-color: #eee !important;
-  }
-
-  td.as-value-1 {
-    background-color: #b1c587 !important;
-  }
-
-  td.as-value-2 {
-    background-color: #d4dfbc !important;
-  }
-
-  td.as-value-3 {
-    background-color: #ffaeae !important;
-  }
-
-  td.as-value-4 {
-    background-color: #fd7878 !important;
-  }
-
-  td.as-value-5 {
-    background-color: #fff !important;
-  }
-
-  tr.assessment-summary {
-    // border-bottom: solid 0.8em #ddd;
-
-    td {
-      min-height: 30px;
-    }
-  }
 }
 
 div.comp-discussion-track-container {
@@ -260,10 +235,10 @@ div.back-to-descr {
 }
 
 // .nat-edit-form {
-//   margin: 0 auto;
-//   max-width: 1170px;
-//   position: relative;
-//   width: 100%;
+  //   margin: 0 auto;
+  //   max-width: 1170px;
+  //   position: relative;
+  //   width: 100%;
 // }
 
 

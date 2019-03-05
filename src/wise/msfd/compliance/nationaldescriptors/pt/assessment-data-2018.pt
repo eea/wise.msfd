@@ -4,18 +4,12 @@
     <tbody>
 
       <tr>
-        <th class="as-question as-header" >
-          Question / assessed elements
-
-        </th>
-        <th class="as-header" tal:condition="not: assessment/gescomponents">
-        </th>
-        <th tal:repeat="g assessment/gescomponents" class="as-ges-component as-header">
-          <!-- <span tal:replace="structure g">D0C0</span> -->
-        </th>
-        <!-- TODO: add "conclusion score" and "Weighting" as titles -->
+        <th class="as-question as-header">Question / assessed elements</th>
+        <th class="as-header" tal:condition="not: assessment/gescomponents"></th>
+        <th tal:repeat="g assessment/gescomponents" class="as-ges-component as-header"></th>
         <th class="as-header">Conclusion</th>
         <th class="as-th-score as-header">Score</th>
+        <!-- TODO: add "conclusion score" and "Weighting" as titles -->
       </tr>
 
       <tal:rep tal:repeat="row assessment/answers">
@@ -68,20 +62,8 @@
       </tr>
 
       <tr>
-        <th rowspan="1">Recommendations</th>
-        <td colspan="50"
-          tal:attributes="colspan python: len(assessment.gescomponents)"
-          tal:content="assessment/recommendations">Recomendation text</td>
-        <th>Change since 2012</th>
-        <td tal:content="python: assessment.overall_conclusion[0] - score_2012">+1</td>
-      </tr>
-
-      <tr>
         <th rowspan="1">Progress assessment</th>
-        <td colspan="7"
-          tal:attributes="colspan python: max(len(assessment.gescomponents), 1) + 1"
-          >
-
+        <td tal:attributes="colspan python: len(assessment.gescomponents)">
           <form
             method="POST"
             action="./@@edit-assessment-summary"
@@ -89,9 +71,17 @@
             <textarea></textarea>
             <button name="save_progres" >Save</button>
           </form>
-
         </td>
-        <th colspan="1"></th>
+        <th>Change since 2012</th>
+        <td tal:content="python: assessment.overall_conclusion[0] - score_2012">+1</td>
+      </tr>
+
+      <tr tal:define="colspan python: max(len(assessment.gescomponents), 1) - 1">
+        <th rowspan="1">Recommendations</th>
+        <td tal:attributes="colspan colspan"
+          tal:content="assessment/recommendations">Recomendation text</td>
+        <th></th>
+        <td></td>
       </tr>
 
     </tbody>
