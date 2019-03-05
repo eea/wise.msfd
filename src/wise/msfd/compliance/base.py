@@ -347,7 +347,8 @@ class AssessmentQuestionDefinition:
             position + 1, node.find('definition').text.strip())
         self.answers = [x.strip()
                         for x in node.xpath('answers/option/text()')]
-
+        self.scores = [s.strip()
+                       for s in node.xpath('answers/option/@score')]
         self.score_weights = {}
 
         for wn in node.iterchildren('score-weight'):
@@ -356,24 +357,7 @@ class AssessmentQuestionDefinition:
             self.score_weights[desc] = weight
 
         sn = node.find('scoring')
-        self.score_method_factory = resolve(sn.get('determination-method'))
-        self.score_method_args = sn.get('determination-method-args')
-
-        factory_method = self.score_method_factory
-        method = factory_method(self.score_method_args)
-        self.score_method = method
-
-        self.scores = []
-
-        # TODO: why do we need scoring and options as well?
-
-        for onode in sn.iterchildren('option'):
-            try:
-                si = (int(onode.get('score')), onode.text.strip())
-            except:
-                import pdb
-                pdb.set_trace()
-            self.scores.append(si)
+        self.score_method = resolve(sn.get('determination-method'))
 
     def calculate_score(self, descriptor, values):
         return compute_score(self, descriptor, values)

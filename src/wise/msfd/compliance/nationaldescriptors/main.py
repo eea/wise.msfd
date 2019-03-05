@@ -27,14 +27,14 @@ REGION_RE = re.compile('.+\s\((?P<region>.+)\)$')
 
 # This somehow translates the real value in a color, to be able to compress the
 # displayed information in the assessment table
-
-# TODO: this needs to be redone, according to new scoring rules
+# New color table with score as keys, color as value
 COLOR_TABLE = {
-    2: [1, 4],
-    3: [1, 3, 4],
-    4: [1, 2, 3, 4],
-    5: [1, 2, 3, 4, 5],
-    6: [1, 2, 3, 4, 5, 0]      # TODO: this needs to be removed
+    '1': 1,
+    '0.75': 2,
+    '0.5': 3,
+    '0.25': 4,
+    '0': 4,
+    '/': 5
 }
 
 CountryStatus = namedtuple('CountryStatus',
@@ -209,6 +209,7 @@ def format_assessment_data(article, elements, questions, muids, data):
     for question in questions:
         values = []
         choices = dict(enumerate(question.answers))
+        q_scores = question.scores
 
         if question.use_criteria == 'none':
             field_name = '{}_{}'.format(article, question.id)
@@ -216,7 +217,7 @@ def format_assessment_data(article, elements, questions, muids, data):
 
             if v is not None:
                 label = choices[v]
-                color_index = COLOR_TABLE[len(choices)][v]
+                color_index = COLOR_TABLE[q_scores[v]]
             else:
                 color_index = 0
                 label = 'Not filled in'
@@ -231,12 +232,12 @@ def format_assessment_data(article, elements, questions, muids, data):
                 v = data.get(field_name, None)
 
                 if v is not None:
-                    label = '{}: {}'.format(element.title, choices[v])
+                    label = u'{}: {}'.format(element.title, choices[v])
                     try:
-                        color_index = COLOR_TABLE[len(choices)][v]
+                        color_index = COLOR_TABLE[q_scores[v]]
                     except Exception:
                         logger.exception('Invalid color table')
-                        color_index = len(COLOR_TABLE)
+                        color_index = 0
                         # label = 'Invalid color table'
 
                 else:
