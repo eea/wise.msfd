@@ -11,10 +11,13 @@
         <th class="as-th-score as-header">Score</th>
         <!-- TODO: add "conclusion score" and "Weighting" as titles -->
       </tr>
-
+      
       <tal:rep tal:repeat="row assessment/answers">
-        <tr>
-          <th rowspan="2" tal:content="row/question">Question</th>
+        <tr class="questions">        
+          <th rowspan="2">
+              <div class="question_id" tal:content="python: row.question.split(':')[0] + ':'">Question Id</div>
+              <div tal:content="python: row.question.split(':', 1)[1]">Question text</div>
+          </th>
           <tal:rep tal:repeat="value row/values" >
             <td
               tal:attributes="class python: 'as-value as-value-{}'.format(value[1]);
