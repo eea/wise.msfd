@@ -25,7 +25,7 @@ class TranslationsOverview(BrowserView):
         form = self.request.form
         print form
 
-        language = form.get('language')     
+        language = form.get('language')
         original = form.get('original').decode('utf-8')
         translated = form.get('tr-new').decode('utf-8')
 

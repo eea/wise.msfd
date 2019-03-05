@@ -39,9 +39,23 @@ def decode_text(text):
 
 
 def retrieve_translation(country_code, text, target_languages=None):
+    """ Send a call to automatic translation service, to translate a string
+    """
 
     if not text:
         return
+
+    translation = get_translated(text, country_code)
+
+    if translation and ('....' not in translation):
+        # don't translate already translated strings, it overrides the
+        # translation
+        res = {
+            'transId': translation,
+            'externalRefId': text,
+        }
+
+        return json.dumps(res)
 
     site_url = portal.getSite().absolute_url()
 
@@ -50,7 +64,7 @@ def retrieve_translation(country_code, text, target_languages=None):
                        text
                        )
 
-        return '{}'
+        return
 
     if not target_languages:
         target_languages = ['EN']
