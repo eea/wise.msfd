@@ -86,10 +86,6 @@
             </div>
           </div>
 
-          <div>
-            <div tal:content="structure context/@@comments-view"></div>
-          </div>
-
         </div>
       </div>
     </div>
