@@ -28,6 +28,7 @@ REGION_RE = re.compile('.+\s\((?P<region>.+)\)$')
 # This somehow translates the real value in a color, to be able to compress the
 # displayed information in the assessment table
 # New color table with score as keys, color as value
+# TODO add a new color for score '0' if needed?
 COLOR_TABLE = {
     '1': 1,
     '0.75': 2,
@@ -306,6 +307,7 @@ def filter_assessment_data_2012(data, region_code, descriptor_criterions):
     gescomponents = [c.id for c in descriptor_criterions]
 
     assessments = {}
+    criterias = []
 
     for row in data:
         fields = row._fields
@@ -323,7 +325,7 @@ def filter_assessment_data_2012(data, region_code, descriptor_criterions):
         if '(' in country:
             region = REGION_RE.match(country).groupdict()['region']
 
-            if SUBREGIONS_TO_REGIONS[region_code] != region:
+            if region not in SUBREGIONS_TO_REGIONS[region_code]:
                 continue
 
         summary = col('Conclusions')
@@ -334,10 +336,13 @@ def filter_assessment_data_2012(data, region_code, descriptor_criterions):
             t2rt(col('Assessment'))
         )
 
-        if country not in assessments:
+        if not score:
+            criterias.append(criteria)
+        elif country not in assessments:
+            criterias.insert(0, criteria)
             assessment = Assessment2012(
                 gescomponents,
-                [criteria],
+                criterias,
                 summary,
                 overall_ass,
                 score,
@@ -345,6 +350,18 @@ def filter_assessment_data_2012(data, region_code, descriptor_criterions):
             assessments[country] = assessment
         else:
             assessments[country].criteria.append(criteria)
+
+        # if country not in assessments:
+        #     assessment = Assessment2012(
+        #         gescomponents,
+        #         [criteria],
+        #         summary,
+        #         overall_ass,
+        #         score,
+        #     )
+        #     assessments[country] = assessment
+        # else:
+        #     assessments[country].criteria.append(criteria)
 
     return assessments
 
@@ -408,11 +425,10 @@ class NationalDescriptorArticleView(BaseView):
                 self.country_region_code,       # TODO: this will need refactor
                 descriptor_criterions,
             )
-
             self.assessment_data_2012 = self.assessment_data_2012_tpl(
                 data=assessments_2012
             )
-
+            
             if assessments_2012.get(country_name):
                 score_2012 = assessments_2012[country_name].score
             else:       # fallback

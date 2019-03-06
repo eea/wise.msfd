@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-
+from collections import defaultdict
 from zope.schema.vocabulary import SimpleTerm, SimpleVocabulary
 
 ASSESSED_ARTICLES = (
@@ -77,7 +77,7 @@ REGIONS = {
 
 
 REGIONS_SIMPLIFIED = {
-    'North East Atlantic': ('ABI', 'ACS', 'AMA'),     # 'ANS'
+    'North East Atlantic': ('ABI', 'ACS', 'AMA', 'ANS'),
     'West Mediterranean': ('MWE',),
     'Mediterranean': ('MAD', 'MAL', 'MIC'),           # 'MWE'
     'Baltic Sea': ('BAL',),
@@ -94,11 +94,11 @@ def make_subregions(d):
     }
     """
 
-    r = {}
+    r = defaultdict(list)
 
     for k, vs in d.items():
         for v in vs:
-            r[v] = k
+            r[v].append(k)
 
     return r
 

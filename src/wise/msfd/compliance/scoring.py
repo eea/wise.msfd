@@ -130,6 +130,7 @@ def compute_score(question, descriptor, values):
     score_value = get_range_index(percentage)
 
     weight = float(question.score_weights.get(descriptor, 10.0))
+    # TODO find a proper algorithm to calculate wighted score
     weighted_score = score_value * weight / 4
     conclusion = list(reversed(CONCLUSIONS))[score_value]
 
