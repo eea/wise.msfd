@@ -145,7 +145,6 @@ div.as-table-overview blockquote {
     margin-bottom: 0;
     margin-top: 1em;
 
-
     tr.overall-score th,
     tr.overall-score td {
       width: 15%;
@@ -181,8 +180,24 @@ div.as-table-overview blockquote {
     th {
       background-color: #EEE;
       border: 1px solid #ccc;
+      padding: 0 1rem 0 0;
       text-align: right;
       width: 9%;
+
+      .q-wrap {
+        display: flex;
+        width: 100%;
+      }
+      .q-id {
+        background-color: #999; 
+        color: white; 
+        width: 4rem; 
+        padding: 9px;
+        text-align: center;
+      }
+      .q-title {
+        width: 100%;
+      }
 
       &.as-header {
         background-color: #0071b3 !important;
@@ -193,6 +208,7 @@ div.as-table-overview blockquote {
       &.as-question {
         min-width: 22em !important;
       }
+
       &.as-ges-component { width: 30px; }
     }
 
@@ -429,24 +445,6 @@ table.comp-c-listing {
             border-right: 1px solid #fff;
           }
         }
-      }
-    }
-  }
-}
-
-.asts-header-data {
-  .questions{
-    th {
-      padding: 0 1rem 0 0;
-
-      .question_id {
-        float:left; 
-        background-color: #999; 
-        color: white; 
-        height: 100%; 
-        display: table-cell;
-        width: 4rem; 
-        text-align: center;
       }
     }
   }

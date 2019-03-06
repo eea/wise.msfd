@@ -13,10 +13,12 @@
       </tr>
       
       <tal:rep tal:repeat="row assessment/answers">
-        <tr class="questions">        
+        <tr>        
           <th rowspan="2">
-              <div class="question_id" tal:content="python: row.question.split(':')[0] + ':'">Question Id</div>
-              <div tal:content="python: row.question.split(':', 1)[1]">Question text</div>
+          <div class="q-wrap">
+              <div class="q-id" tal:content="python: row.question.split(':')[0] + ':'">Question Id</div>
+              <div class="q-title" tal:content="python: row.question.split(':', 1)[1]">Question text</div>
+              </div>
           </th>
           <tal:rep tal:repeat="value row/values" >
             <td
