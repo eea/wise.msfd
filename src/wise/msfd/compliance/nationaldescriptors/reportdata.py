@@ -3,6 +3,7 @@ from collections import OrderedDict, namedtuple
 from datetime import datetime
 from HTMLParser import HTMLParser
 from io import BytesIO
+from sqlalchemy import or_
 
 from lxml.etree import fromstring
 from zope.interface import implements
@@ -542,14 +543,23 @@ https://svn.eionet.europa.eu/repositories/Reportnet/Dataflows/MarineDirective/MS
             t,
             'GESComponent',
             t.c.CountryCode == self.country_code,
-            t.c.Region == self.country_region_code,
+            or_(t.c.Region == self.country_region_code,
+                t.c.Region.is_(None)),
             t.c.GESComponent.in_(all_ids),
         )
 
         ok_features = set([f.name for f in get_features(self.descriptor)])
         out = []
-
+        
+        # There are cases when justification for delay is reported
+        # for a ges component. In these cases region, mru, features and
+        # other fields are empty. Justification for delay should be showed
+        # for all regions, mrus
         for row in q:
+            if not row.Features:
+                out.append(row)
+                continue
+
             feats = set(row.Features.split(','))
 
             if feats.intersection(ok_features):
