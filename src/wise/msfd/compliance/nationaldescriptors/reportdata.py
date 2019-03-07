@@ -500,17 +500,32 @@ https://svn.eionet.europa.eu/repositories/Reportnet/Dataflows/MarineDirective/MS
 
         if self.descriptor.startswith('D1.'):
             all_ids.append('D1')
+
+        all_ids = set(all_ids)
+
         # TODO check conditions for other countries beside NL
-        conditions = [t.c.GESComponents.in_(all_ids)]
+        # conditions = [t.c.GESComponents.in_(all_ids)]
 
         count, res = db.get_all_records_ordered(
             t,
             'GESComponents',
             t.c.CountryCode == self.country_code,
             t.c.Region == self.country_region_code,
-            *conditions
+            # *conditions
         )
-        return res
+
+        out = []
+
+        # GESComponents contains multiple values separated by comma
+        # filter rows by splitting GESComponents
+        for row in res:
+            ges_comps = getattr(row, 'GESComponents', ())
+            ges_comps = set([g.strip() for g in ges_comps.split(',')])
+
+            if ges_comps.intersection(all_ids):
+                out.append(row)
+
+        return out
 
         # conditions = []
         # params = get_parameters(self.descriptor)
