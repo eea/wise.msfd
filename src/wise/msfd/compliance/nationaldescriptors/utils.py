@@ -11,6 +11,9 @@ def consolidate_date_by_mru(data):
     """
 
     groups = []
+    # Rows without MRU reported
+    # This case applies for Art9, when justification for delay is reported
+    rows_without_mru = []
 
     for dataset in data.values():
 
@@ -32,6 +35,10 @@ def consolidate_date_by_mru(data):
     for batch in groups:
         # TODO: get a proper MarineUnitID object
         mrus = tuple(sorted(set([r.MarineReportingUnit for r in batch])))
+        if mrus[0] is None:
+            rows_without_mru.append(batch[0])
+            continue
+
         regroup[mrus].append(batch[0])
 
     out = {}
@@ -40,6 +47,11 @@ def consolidate_date_by_mru(data):
 
     for mrus, rows in regroup.items():
         label = FlatItemList(rows=mrus)
+        rows.extend(rows_without_mru)
         out[label] = rows
+
+    if not regroup and rows_without_mru:
+        label = 'No Marine unit ID reported'
+        out[label] = rows_without_mru
 
     return out

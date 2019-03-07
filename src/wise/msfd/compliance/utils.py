@@ -158,9 +158,13 @@ def group_by_mru(data):
     res = defaultdict(list)
 
     mrus = {}
+    # rows with empty MRU field are added to all MRUs
+    # This case applies for Art9, when justification for delay is reported
+    rows_extra = []
 
     for row in data:
         if not row.MarineReportingUnit:     # skip rows without muid
+            rows_extra.append(row)
             continue
 
         mru = row.MarineReportingUnit
@@ -177,5 +181,14 @@ def group_by_mru(data):
             mru_item = mrus[mru]
 
         res[mru_item].append(row)
+
+    for mru in res.keys():
+        for row in rows_extra:
+            res[mru].append(row)
+
+    # Special case for Art9, when no real data is reported besides
+    # justification for delay
+    if not res and rows_extra:
+        res['No MRUs'].extend(rows_extra)
 
     return res

@@ -3,6 +3,7 @@ from collections import OrderedDict, namedtuple
 from datetime import datetime
 from HTMLParser import HTMLParser
 from io import BytesIO
+from sqlalchemy import or_
 
 from lxml.etree import fromstring
 from zope.interface import implements
@@ -500,17 +501,32 @@ https://svn.eionet.europa.eu/repositories/Reportnet/Dataflows/MarineDirective/MS
 
         if self.descriptor.startswith('D1.'):
             all_ids.append('D1')
+
+        all_ids = set(all_ids)
+
         # TODO check conditions for other countries beside NL
-        conditions = [t.c.GESComponents.in_(all_ids)]
+        # conditions = [t.c.GESComponents.in_(all_ids)]
 
         count, res = db.get_all_records_ordered(
             t,
             'GESComponents',
             t.c.CountryCode == self.country_code,
             t.c.Region == self.country_region_code,
-            *conditions
+            # *conditions
         )
-        return res
+
+        out = []
+
+        # GESComponents contains multiple values separated by comma
+        # filter rows by splitting GESComponents
+        for row in res:
+            ges_comps = getattr(row, 'GESComponents', ())
+            ges_comps = set([g.strip() for g in ges_comps.split(',')])
+
+            if ges_comps.intersection(all_ids):
+                out.append(row)
+
+        return out
 
         # conditions = []
         # params = get_parameters(self.descriptor)
@@ -543,14 +559,23 @@ https://svn.eionet.europa.eu/repositories/Reportnet/Dataflows/MarineDirective/MS
             t,
             'GESComponent',
             t.c.CountryCode == self.country_code,
-            t.c.Region == self.country_region_code,
+            or_(t.c.Region == self.country_region_code,
+                t.c.Region.is_(None)),
             t.c.GESComponent.in_(all_ids),
         )
 
         ok_features = set([f.name for f in get_features(self.descriptor)])
         out = []
-
+        
+        # There are cases when justification for delay is reported
+        # for a ges component. In these cases region, mru, features and
+        # other fields are empty. Justification for delay should be showed
+        # for all regions, mrus
         for row in q:
+            if not row.Features:
+                out.append(row)
+                continue
+
             feats = set(row.Features.split(','))
 
             if feats.intersection(ok_features):
