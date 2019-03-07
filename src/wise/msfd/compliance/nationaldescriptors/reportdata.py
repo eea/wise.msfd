@@ -477,6 +477,7 @@ https://svn.eionet.europa.eu/repositories/Reportnet/Dataflows/MarineDirective/MS
         orderby = [
             t.c.MarineReportingUnit,
             t.c.GESComponent,
+            t.c.Feature,
             t.c.Element,
             t.c.IntegrationRuleTypeParameter,
         ]

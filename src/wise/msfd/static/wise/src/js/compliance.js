@@ -81,6 +81,72 @@ if (!Array.prototype.last){
     });
   };
 
+  function mergeCellsInRow(row, limits) {
+    // join adjacent cells with identical text
+
+    var sets = [];
+    // var text = $('th', row).text()
+    // console.log(text.trim());
+    // if (text.trim() == 'Element code source') {
+    //   debugger;
+    // }
+
+    // console.log('limits', limits);
+    // group cells by similarity
+    $('td', row).each(function(ix) {
+      if ((sets.length == 0) || limits.includes(ix)) {   // start of processing
+        sets.push([this]);
+      } else {
+        var thisText = $(this).text().trim();
+        var lastText = $(sets.last().last()).text().trim();
+
+        if ((thisText.length > 0) && (thisText == lastText)) {
+          sets.last().push(this);
+        } else {
+          sets.push([this]);
+        }
+      }
+    });
+    // console.log('sets', sets);
+
+    // // merge cells that are duplicated
+    $(sets).each(function(){
+      if (this.length > 1) {
+        var colspan = this.length;
+        $(this[0]).attr('colspan', colspan);
+        $(this.slice(1)).each(function(){
+          $(this).remove();
+        });
+      }
+    });
+
+    // compute new group limits
+    if ($(row).hasClass('group')) {
+      limits = [];
+      $(sets).each(function() {
+        var l = this.length;
+        if (limits.length) {
+          l += limits[limits.length - 1];
+        }
+        limits.push(l);
+      });
+    }
+
+    // console.log('limits', limits);
+    // apply special class to group end cells
+    var cursor = 0;
+    $('td', row).each(function(iy) {
+      var c = parseInt($(this).attr('colspan') || '1');
+      cursor += c;
+      // console.log('cursor', cursor, this);
+      // console.log('iy+c', iy + c, 'iy', iy, 'c', c, this);
+      if (limits.includes(cursor)) {
+        $(this).addClass('endgroup');
+      }
+    });
+    return limits;
+  }
+
   $.fn.simplifyTable = function simplifyTable(){
     var $table = $(this);
 
@@ -88,50 +154,11 @@ if (!Array.prototype.last){
       $table.data('original', $table.html());
     }
 
-    // stretch all cells to the maximum table columns;
-    var max = 0;
-    var $tr = $('tr.merge', this);
-    $tr.each(function(){
-      $tds = $('td', this);
-      if ($tds.length > max) {
-        max = $tds.length;
-      }
-    });
-
-    $tr.each(function(){
-      $tds = $('td', this);
-      if ($tds.length) {
-        var td = $tds[$tds.length - 1];
-        $(td).attr('colspan', max - $tds.length + 1);
-      }
-    });
-
-    // join adjacent cells with identical text
-    $tr.each(function(){
-      var sets = [];
-      $('td', this).each(function() {
-        if (sets.length == 0) {   // start of processing
-          sets.push([this]);
-        } else {
-          var thisText = $(this).text().trim();
-          var lastText = $(sets.last().last()).text().trim();
-
-          if ((thisText.length > 0) && (thisText == lastText)) {
-            sets.last().push(this);
-          } else {
-            sets.push([this]);
-          }
-        }
-      });
-      $(sets).each(function(){
-        if (this.length > 1) {
-          var colspan = this.length;
-          $(this[0]).attr('colspan', colspan);
-          $(this.slice(1)).each(function(){
-            $(this).remove();
-          });
-        }
-      });
+    $groups = $('tr', this);
+    var limits = [];
+    $groups.each(function(){
+      limits = mergeCellsInRow(this, limits);
+      // console.log('limits', limits);
     });
 
     $table.fixTableHeaderHeight();

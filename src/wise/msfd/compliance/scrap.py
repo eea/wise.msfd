@@ -4356,3 +4356,21 @@ def consolidate_data(data, group_by_fields):
 #     title = GES_LABELS.get('targets', value)
 #
 #     return ItemLabel(title, value)
+    // // stretch all cells to the maximum table columns;
+    // var max = 0;
+    // var $tr = $('tr.merge', this);
+    // $tr.each(function(){
+    //   $tds = $('td', this);
+    //   if ($tds.length > max) {
+    //     max = $tds.length;
+    //   }
+    // });
+    //
+    // $tr.each(function(){
+    //   $tds = $('td', this);
+    //   if ($tds.length) {
+    //     var td = $tds[$tds.length - 1];
+    //     $(td).attr('colspan', max - $tds.length + 1);
+    //   }
+    // });
+    //

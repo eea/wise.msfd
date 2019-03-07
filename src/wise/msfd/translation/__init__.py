@@ -47,7 +47,7 @@ def retrieve_translation(country_code, text, target_languages=None):
 
     translation = get_translated(text, country_code)
 
-    if translation and ('....' not in translation):
+    if translation and (u'....' not in translation):
         # don't translate already translated strings, it overrides the
         # translation
         res = {

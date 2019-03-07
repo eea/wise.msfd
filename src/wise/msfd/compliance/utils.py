@@ -1,15 +1,30 @@
 from collections import defaultdict
 
 import lxml.etree
+from zope.interface import Attribute, Interface, implements
 
 from Products.Five.browser.pagetemplatefile import PageTemplateFile
 from wise.msfd.gescomponents import GES_LABELS
 from wise.msfd.utils import ItemLabel, TemplateMixin
 
 
+class IReportField(Interface):
+    """ A field definition for displaying a report table
+    """
+
+    converter = Attribute(u'Function to convert value for display')
+    label_collection = Attribute(u'If value is a id, where to find label')
+    section = Attribute(u"The section that the field belongs to")
+    drop = Attribute(u'Should the field be dropped from displayed report?')
+    merge = Attribute(u'Merge this field with identical values')
+    startgroup = Attribute(u'This field starts a new column group')
+
+
 class ReportField(TemplateMixin):
     """ An object reprezenting the field (row) definition in a report table
     """
+    implements(IReportField)
+
     template = PageTemplateFile('pt/report_field_header.pt')
 
     def __init__(self, node):
@@ -19,10 +34,12 @@ class ReportField(TemplateMixin):
         self.label_collection = node.get('label')
         self.converter = node.get('convert')
 
-        self.group = node.get('group')
+        self.section = node.get('section')
 
         self.drop = node.get('skip') == 'true'
         self.merge = node.get('merge') == 'true'
+
+        self.startgroup = node.get('startgroup') == 'true'
 
 
 class ReportDefinition(object):
