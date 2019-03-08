@@ -34,7 +34,7 @@
 
   <assessment-question id="A09Ad2" class="adequacy" use-criteria='secondary'>
     <definition>
-      To what extent does the Member State report beyond the minimum requirements of the 2017 Decision, using secondary criteria?
+      To what extent does the Member State use secondary criteria?
     </definition>
     <answers>
       <option score="1">Secondary criterion used with 2017 code</option>
@@ -148,6 +148,7 @@
       <option score="1">Proportion value set for this criterion is sufficient</option>
       <option score="0.75">Proportion value set for this criterion is partially sufficient</option>
       <option score="0.5">Proportion value set for this criterion is not sufficient</option>
+      <option score="0.25">Proportion value set for this criterion is not sufficient</option>
       <option score="0">Proportion value not set for this criterion</option>
       <option score="0.250">Not clear</option>
       <option score="/">Not relevant</option>
@@ -160,7 +161,7 @@
 
   <assessment-question id="A09Ad7" class="adequacy" use-criteria='none'>
     <definition>
-      To what extent are levels of ambition defined for GES adequate (GES extent threshold)?
+      To what extent are levels of ambition defined for GES (GES extent threshold) adequate?
     </definition>
     <answers>
       <option score="1">Good level of ambition for all elements and features</option>
@@ -199,7 +200,7 @@
       <option score="0.75">The MS uses this criterion as more than half (51-75%) of MS in the region</option>
       <option score="0.5">The MS uses this criterion as less than half (26-50%) of MS in the region</option>
       <option score="0.25">The MS uses this criterion as only few (1-25%) MS in the region</option>
-      <option score="0">The MS use a different criterion than other MS in the region</option>
+      <option score="0">The MS uses this criterion, but it is not used by any other MS in the region</option>
       <option score="/">Not relevant</option>
     </answers>
     <scoring determination-method="wise.msfd.compliance.scoring.scoring_based">
@@ -227,14 +228,13 @@
       To what extent does the Member State use GES determinations (elements and parameters) that are similar to other MS in the region?
     </definition>
     <answers>
-      <option score="1">All elements and parameters for this criterion are the same or similar as in most (76-100%) MS in the region</option>
-      <option score="0.75">All elements and parameters for this criterion are the same or similar as many (51-75%) MS in the region</option>
-      <option score="0.5">All elements and parameters for this criterion are the same or similar as in some (26-50%) MS in the region</option>
-      <option score="0.25">All elements and parameters for this criterion are the same or similar as only a few (1-25%) MS in the region</option>
-      <option score="0.75">Some elements and parameters for this criterion are the same or similar as in most (76-100%) MS in the region</option>
-      <option score="0.5">Some elements and parameters for this criterion are the same or similar as many (51-75%) MS in the region</option>
-      <option score="0.25">Some elements and parameters for this criterion are the same or similar as in some (26-50%) MS in the region</option>
-      <option score="0.25">Some elements and parameters for this criterion are the same or similar as only a few (1-25%) MS in the region</option>
+      <option score="1">All elements and parameters for this criterion are the same or similar to most MS (76-100%) in the region</option>
+      <option score="0.75">All elements and parameters for this criterion are the same or similar to many MS (51-75%) in the region</option>
+      <option score="0.5">All elements and parameters for this criterion are the same or similar to some MS (26-50%) in the region</option>
+      <option score="0.25">All elements and parameters for this criterion are the same or similar to only a few MS (1-25%) in the region</option>
+      <option score="0.75">Some elements and parameters for this criterion are the same or similar to most MS (76-100%) in the region</option>
+      <option score="0.5">Some elements and parameters for this criterion are the same or similar to many MS (51-75%) in the region</option>
+      <option score="0.25">Some elements and parameters for this criterion are the same or similar to some / few MS (1-50%) in the region</option>
       <option score="0">No elements and parameters for this criterion are the same or similar to other MS in the region</option>
       <option score="0.250">Not clear</option>
       <option score="/">Not relevant</option>
@@ -264,10 +264,10 @@
       To what extent does the Member State use GES determinations (objectives) that are the same or similar to other MS in the region?
     </definition>
     <answers>
-      <option score="1">Objectives for this criterion are the same or similar as most (76-100%) MS in the region</option>
-      <option score="0.75">Objectives for this criterion are the same or similar as many (51-75%) MS in the region</option>
-      <option score="0.5">Objectives for this criterion are the same or similar as some (26-50%) MS in the region</option>
-      <option score="0.25">Objectives for this criterion are the same or similar as only a few (1-25%) MS in the region.</option>
+      <option score="1">Objectives for this criterion are the same or similar to most MS (76-100%) in the region</option>
+      <option score="0.75">Objectives for this criterion are the same or similar to many MS (51-75%) in the region</option>
+      <option score="0.5">Objectives for this criterion are the same or similar to some MS (26-50%) in the region</option>
+      <option score="0.25">Objectives for this criterion are the same or similar to only a few MS (1-25%) in the region</option>
       <option score="0">Objectives for this criterion are not the same or similar to other MS in the region</option>
       <option score="0.250">Not clear</option>
       <option score="/">Not relevant</option>
@@ -297,15 +297,14 @@
       To what extent does the Member State use threshold values agreed at EU or regional level?
     </definition>
     <answers>
-      <option score="1">All threshold values for this criterion are the same or similar as in most (76-100%) MS in the region</option>
-      <option score="0.75">All threshold values for this criterion are the same or similar as in many (51-75%) MS in the region</option>
-      <option score="0.5">All threshold values for this criterion are the same or similar as in some (26-50%) MS in the region</option>
-      <option score="0.25">All threshold values for this criterion are the same or similar as in only a few (1-25%) MS in the region</option>
-      <option score="0.75">Some threshold values for this criterion are the same or similar as in most (76-100%) MS in the region</option>
-      <option score="0.5">Some threshold values for this criterion are the same or similar as in many (51-75%) MS in the region</option>
-      <option score="0.25">Some threshold values for this criterion are the same or similar as in some (26-50%) MS in the region</option>
-      <option score="0.25">Some threshold values for this criterion are the same or similar as in only a few (1-25%) MS in the region</option>
-      <option score="0">Threshold values for this criterion are not the same or similar as other MS in the region</option>
+      <option score="1">All threshold values for this criterion are the same or similar to most MS (76-100%) in the region</option>
+      <option score="0.75">All threshold values for this criterion are the same or similar to many MS (51-75%) in the region</option>
+      <option score="0.5">All threshold values for this criterion are the same or similar to some MS (26-50%) in the region</option>
+      <option score="0.25">All threshold values for this criterion are the same or similar to only a few MS (1-25%) in the region</option>
+      <option score="0.75">Some threshold values for this criterion are the same or similar to most MS (76-100%) in the region</option>
+      <option score="0.5">Some threshold values for this criterion are the same or similar to many MS (51-75%) in the region</option>
+      <option score="0.25">Some threshold values for this criterion are the same or similar to some / few MS (1-50%) in the region</option>
+      <option score="0">Threshold values for this criterion are not the same or similar to other MS in the region</option>
       <option score="0.250">Not clear</option>
       <option score="/">Not relevant</option>
     </answers>
@@ -334,14 +333,13 @@
       To what extent is the Member State’s level of ambition for GES (proportion thresholds) the same or similar to other MS in the region?
     </definition>
     <answers>
-      <option score="1">All proportion values for this criterion are the same or similar to most (76-100%) MS in the region</option>
-      <option score="0.75">All proportion values for this criterion are the same or similar to many (51-75%) MS in the region</option>
-      <option score="0.5">All proportion values for this criterion are the same or similar to some (26-50%) MS in the region</option>
-      <option score="0.25">All proportion values for this criterion are the same or similar to a few (1-25%) MS in the region</option>
-      <option score="0.75">Some proportion values for this criterion are the same or similar to most (76-100%) MS in the region</option>
-      <option score="0.5">Some proportion values for this criterion are the same or similar to many (51-75%) MS in the region</option>
-      <option score="0.25">Some proportion values for this criterion are the same or similar to some (26-50%) MS in the region</option>
-      <option score="0.25">Some proportion values for this criterion are the same or similar to a few (1-25%) MS in the region</option>
+      <option score="1">All proportion values for this criterion are the same or similar to most MS (76-100%) in the region</option>
+      <option score="0.75">All proportion values for this criterion are the same or similar to many MS (51-75%) in the region</option>
+      <option score="0.5">All proportion values for this criterion are the same or similar to some MS (26-50%) in the region</option>
+      <option score="0.25">All proportion values for this criterion are the same or similar to only a few MS (1-25%) in the region</option>
+      <option score="0.75">Some proportion values for this criterion are the same or similar to most MS (76-100%) in the region</option>
+      <option score="0.5">Some proportion values for this criterion are the same or similar to many MS (51-75%) in the region</option>
+      <option score="0.25">Some proportion values for this criterion are the same or similar to some / few MS (1-50%) in the region</option>
       <option score="0">Proportion values for this criterion are markedly lower than other MS in the region</option>
       <option score="0.250">Not clear</option>
       <option score="/">Not relevant</option>
@@ -371,14 +369,13 @@
       To what extent is the Member State's level of ambition for GES (GES extent threshold) the same or similar to other MS in the region?
     </definition>
     <answers>
-      <option score="1">All GES extent thresholds are the same or similar to most (76-100%) MS in the region</option>
-      <option score="0.75">All GES extent thresholds are the same or similar to many (51-75%) MS in the region</option>
-      <option score="0.5">All GES extent thresholds are the same or similar to some (26-50%) MS in the region</option>
-      <option score="0.25">All GES extent thresholds are the same or similar to a few (1-25%) MS in the region</option>
-      <option score="0.75">Some GES extent thresholds are the same or similar to most (76-100%) MS in the region</option>
-      <option score="0.5">Some GES extent thresholds are the same or similar to many (51-75%) MS in the region</option>
-      <option score="0.25">Some GES extent thresholds are the same or similar to some (26-50%) MS in the region</option>
-      <option score="0.25">Some GES extent thresholds are the same or similar to a few (1-25%) MS in the region</option>
+      <option score="1">All GES extent thresholds are the same or similar to most MS (76-100%) in the region</option>
+      <option score="0.75">All GES extent thresholds are the same or similar to many MS (51-75%) in the region</option>
+      <option score="0.5">All GES extent thresholds are the same or similar to some MS (26-50%) in the region</option>
+      <option score="0.25">All GES extent thresholds are the same or similar to only a few MS (1-25%) in the region</option>
+      <option score="0.75">Some GES extent thresholds are the same or similar to most MS (76-100%) in the region</option>
+      <option score="0.5">Some GES extent thresholds are the same or similar to many MS (51-75%) in the region</option>
+      <option score="0.25">Some GES extent thresholds are the same or similar to some / few MS (1-50%) in the region</option>
       <option score="0">GES extent thresholds are markedly lower than other MS in the region</option>
       <option score="0.250">Not clear</option>
       <option score="/">Not relevant</option>
@@ -408,15 +405,14 @@
       To what extent is the Member State’s determination of GES the same or similar to other MS in the subregion?
     </definition>
     <answers>
-      <option score="1">GES determination for this criterion is same or similar to most (76-100%) MS in the sub-region</option>
-      <option score="0.75">GES determination for this criterion is the same or similar to many (51-75%) MS in the sub-region</option>
-      <option score="0.5">GES determination for this criterion is the same or similar to some (26-50%) MS in the sub-region</option>
-      <option score="0.25">GES determination for this criterion is the same or similar to a few (1-25%) MS in the sub-region</option>
-      <option score="0.75">GES determination for this criterion is partially the same or similar to most (76-100%) MS in the sub-region</option>
-      <option score="0.5">GES determination for this criterion is partially the same or similar to many (51-75%) MS in the sub-region</option>
-      <option score="0.25">GES determination for this criterion is partially the same or similar to some (26-50%) MS in the sub-region</option>
-      <option score="0.25">GES determination for this criterion is partially the same or similar to a few (1-25%) MS in the sub-region</option>
-      <option score="0">GES determination for this criterion is not the same or similar to other MS in the sub-region</option>
+      <option score="1">GES determination for this criterion is same or similar to most MS (76-100%) in the subregion</option>
+      <option score="0.75">GES determination for this criterion is the same or similar to many MS (51-75%) in the subregion</option>
+      <option score="0.5">GES determination for this criterion is the same or similar to some MS (26-50%) in the subregion</option>
+      <option score="0.25">GES determination for this criterion is the same or similar to only a few MS (1-25%) in the subregion</option>
+      <option score="0.75">GES determination for this criterion is partially the same or similar to most MS (76-100%) in the subregion</option>
+      <option score="0.5">GES determination for this criterion is partially the same or similar to many MS (51-75%) in the subregion</option>
+      <option score="0.25">GES determination for this criterion is partially the same or similar to some / few MS (1-50%) in the subregion</option>
+      <option score="0">GES determination for this criterion is not the same or similar to other MS in the subregion</option>
       <option score="0.250">Not clear</option>
       <option score="/">Not relevant</option>
     </answers>

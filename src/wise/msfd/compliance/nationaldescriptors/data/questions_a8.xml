@@ -70,11 +70,11 @@
       Does the assessment provide a conclusion on the current status? 
     </definition>
     <answers>
-      <option score="1">76-100% of parameter, criterion and elements reported with status assessment for this criterion)</option>
-      <option score="0.75">51-75% of parameter, criterion and elements reported with status assessment for this criterion</option>
-      <option score="0.5">26-50% of parameter, criterion and elements) reported with status assessment for this criterion</option>
-      <option score="0.25">1-25% of parameter, criterion and elements) reported with status assessment for this criterion</option>
-      <option score="0">No parameters, criterion and elements reported with status assessment for this criterion</option>
+      <option score="1">76-100% of parameters, criteria and elements reported with status assessments</option>
+      <option score="0.75">51-75% of parameters, criteria and elements reported with status assessments</option>
+      <option score="0.5">26-50% of parameters, criteria and elements reported with status assessments</option>
+      <option score="0.25">1-25% of parameters, criteria and elements reported with status assessments</option>
+      <option score="0">No parameters, criteria and elements reported with status assessments</option>
       <option score="/">Not relevant</option>
     </answers>
     <scoring determination-method="wise.msfd.compliance.scoring.scoring_based">
@@ -135,14 +135,13 @@
      To what extent does the Member State report the same elements as other MS in the region?
     </definition>
     <answers>
-      <option score="1">All element(s) used for this criterion is/are the same as most (76-100%) MS in the region</option>
-      <option score="0.75">All element(s) used for this criterion is/are the same as many (51-75%) MS in the region</option>
-      <option score="0.5">All element(s) used for this criterion is/are the same as some (26-50%) MS in the region</option>
-      <option score="0.25">All element(s) used for this criterion is/are the same as a few (1-25%) MS in the region</option>
-      <option score="0.75">Some element(s) used for this criterion is/are the same as most (76-100%) MS in the region</option>
-      <option score="0.5">Some element(s) used for this criterion is/are the same as many (51-75%) MS in the region</option>
-      <option score="0.25">Some element(s) used for this criterion is/are the same as some (26-50%) MS in the region</option>
-      <option score="0.25">Some element(s) used for this criterion is/are the same as a few (1-25%) MS in the region</option>
+      <option score="1">All element(s) used for this criterion is/are the same as most MS (76-100%) in the region</option>
+      <option score="0.75">All element(s) used for this criterion is/are the same as MS many (51-75%) in the region</option>
+      <option score="0.5">All element(s) used for this criterion is/are the same as some MS (26-50%) in the region</option>
+      <option score="0.25">All element(s) used for this criterion is/are the same as a few MS (1-25%) in the region</option>
+      <option score="0.75">Some element(s) used for this criterion is/are the same as most MS (76-100%) in the region</option>
+      <option score="0.5">Some element(s) used for this criterion is/are the same as many MS (51-75%) in the region</option>
+      <option score="0.25">Some element(s) used for this criterion is/are the same as some / few MS (1-50%) in the region</option>
       <option score="0">Element(s) used for this criterion is/are not the same as other MS in the region</option>
       <option score="0.250">Not clear</option>
       <option score="/">Not relevant</option>
@@ -172,16 +171,15 @@
       To what extent does the Member State report the same parameters as the other MS in the region?
     </definition>
     <answers>
-      <option score="1">All parameter(s) used for this criterion is/are the same as in most (76%-100%) of the MS in the region</option>
-      <option score="0.75">All parameter(s) used for this criterion is/are the same as in more than half (51-75%) of MS in the region</option>
-      <option score="0.5">All parameter(s) used for this criterion is/are the same as in less than half (26-50%) of MS in the region</option>
-      <option score="0.25">All parameter(s) used for this criterion is/are the same as in few (1-25%) of MS in the region</option>
-      <option score="0.75">Some parameter(s) used for this criterion is/are the same as most (76-100%) MS in the region</option>
-      <option score="0.5">Some parameter(s) used for this criterion is/are the same as many (51-75%) MS in the region</option>
-      <option score="0.25">Some parameter(s) used for this criterion is/are the same as some (26-50%) MS in the region</option>
-      <option score="0.25">Some parameter(s) used for this criterion is/are the same as a few (1-25%) MS in the region</option>
+      <option score="1">All parameter(s) used for this criterion is/are the same as most MS (76-100%) in the region</option>
+      <option score="0.75">All parameter(s) used for this criterion is/are the same as many MS (51-75%) in the region</option>
+      <option score="0.5">All parameter(s) used for this criterion is/are the same as some MS (26-50%) in the region</option>
+      <option score="0.25">All parameter(s) used for this criterion is/are the same as a few MS (1-25%) in the region</option>
+      <option score="0.75">Some parameter(s) used for this criterion is/are the same as most MS (76-100%) in the region</option>
+      <option score="0.5">Some parameter(s) used for this criterion is/are the same as many MS (51-75%) in the region</option>
+      <option score="0.25">Some parameter(s) used for this criterion is/are the same as some / few MS (1-50%) in the region</option>
       <option score="0">Parameter(s) used for this criterion is/are not the same as other MS in the region</option>
-      <option score="0.25">Not comparable</option>
+      <option score="0.250">Not clear</option>
       <option score="/">Not relevant</option>
     </answers>
     <scoring determination-method="wise.msfd.compliance.scoring.scoring_based">
