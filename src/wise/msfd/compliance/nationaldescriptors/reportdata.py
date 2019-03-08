@@ -3,9 +3,9 @@ from collections import OrderedDict, namedtuple
 from datetime import datetime
 from HTMLParser import HTMLParser
 from io import BytesIO
-from sqlalchemy import or_
 
 from lxml.etree import fromstring
+from sqlalchemy import or_
 from zope.interface import implements
 from zope.schema import Choice
 from zope.schema.vocabulary import SimpleTerm, SimpleVocabulary
@@ -477,9 +477,9 @@ https://svn.eionet.europa.eu/repositories/Reportnet/Dataflows/MarineDirective/MS
         ]
         orderby = [
             t.c.MarineReportingUnit,
-            t.c.GESComponent,
             t.c.Feature,
             t.c.Element,
+            t.c.GESComponent,
             t.c.IntegrationRuleTypeParameter,
         ]
 
@@ -566,7 +566,7 @@ https://svn.eionet.europa.eu/repositories/Reportnet/Dataflows/MarineDirective/MS
 
         ok_features = set([f.name for f in get_features(self.descriptor)])
         out = []
-        
+
         # There are cases when justification for delay is reported
         # for a ges component. In these cases region, mru, features and
         # other fields are empty. Justification for delay should be showed
