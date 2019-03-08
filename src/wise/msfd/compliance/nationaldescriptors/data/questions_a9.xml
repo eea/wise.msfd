@@ -377,7 +377,7 @@
       <option score="0.5">Some GES extent thresholds are the same or similar to many MS (51-75%) in the region</option>
       <option score="0.25">Some GES extent thresholds are the same or similar to some / few MS (1-50%) in the region</option>
       <option score="0">GES extent thresholds are markedly lower than other MS in the region</option>
-      <option score="0.250">Not clear</option>
+      <option score="0.25">Not clear</option>
       <option score="/">Not relevant</option>
     </answers>
     <scoring determination-method="wise.msfd.compliance.scoring.scoring_based">
@@ -405,7 +405,6 @@
       To what extent is the Member State’s determination of GES the same or similar to other MS in the subregion?
     </definition>
     <answers>
-<<<<<<< HEAD
       <option score="1">GES determination for this criterion is same or similar to most MS (76-100%) in the subregion</option>
       <option score="0.75">GES determination for this criterion is the same or similar to many MS (51-75%) in the subregion</option>
       <option score="0.5">GES determination for this criterion is the same or similar to some MS (26-50%) in the subregion</option>
@@ -415,18 +414,6 @@
       <option score="0.25">GES determination for this criterion is partially the same or similar to some / few MS (1-50%) in the subregion</option>
       <option score="0">GES determination for this criterion is not the same or similar to other MS in the subregion</option>
       <option score="0.25">Not clear</option>
-=======
-      <option score="1">GES determination for this criterion is same or similar to most (76-100%) MS in the sub-region</option>
-      <option score="0.75">GES determination for this criterion is the same or similar to many (51-75%) MS in the sub-region</option>
-      <option score="0.5">GES determination for this criterion is the same or similar to some (26-50%) MS in the sub-region</option>
-      <option score="0.25">GES determination for this criterion is the same or similar to a few (1-25%) MS in the sub-region</option>
-      <option score="0.75">GES determination for this criterion is partially the same or similar to most (76-100%) MS in the sub-region</option>
-      <option score="0.5">GES determination for this criterion is partially the same or similar to many (51-75%) MS in the sub-region</option>
-      <option score="0.25">GES determination for this criterion is partially the same or similar to some (26-50%) MS in the sub-region</option>
-      <option score="0.25">GES determination for this criterion is partially the same or similar to a few (1-25%) MS in the sub-region</option>
-      <option score="0">GES determination for this criterion is not the same or similar to other MS in the sub-region</option>
-      <option score="0.250">Not clear</option>
->>>>>>> bd9d4f30bf9df2f02e0b510c7803381c2c875d2b
       <option score="/">Not relevant</option>
     </answers>
     <scoring determination-method="wise.msfd.compliance.scoring.scoring_based">

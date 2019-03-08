@@ -139,7 +139,7 @@
       <option score="1">Target contributes to gap between current state and GES</option>
       <option score="0.5">Target contributes partially to gap between current state and GES</option>
       <option score="0">Target does not contribute to gap between current state and GES</option>
-      <option score="0.250">Not clear</option>
+      <option score="0.25">Not clear</option>
       <option score="/">Not relevant</option>
     </answers>
     <scoring determination-method="wise.msfd.compliance.scoring.scoring_based">
@@ -171,7 +171,7 @@
       <option score="0.5">Target is linked to some measures aimed at reducing relevant pressures/impacts for this descriptor</option>
       <option score="0.25">Target is linked to measures which are not aimed at reducing relevant pressures/impacts for this descriptor</option>
       <option score="0">Target is not linked to measures</option>
-      <option score="0.250">Not clear</option>
+      <option score="0.25">Not clear</option>
       <option score="/">Not relevant</option>
     </answers>
     <scoring determination-method="wise.msfd.compliance.scoring.scoring_based">
