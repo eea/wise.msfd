@@ -27,10 +27,11 @@
               <tr
                 tal:define="field python:row[0];
                 values python: row[1];
-                merge_class python:field.merge and 'merge' or '';
-                group_class python: field.startgroup and 'group' or ''
+                merge_c python:field.merge and 'merge' or '';
+                group_c python: field.startgroup and 'group' or '';
+                klass string:f_${field/section} n_${field/name} ${merge_c} ${group_c};
                 "
-                tal:attributes="class string:f_${field/section} ${merge_class} ${group_class};"
+                tal:attributes="class klass"
                 >
                 <th tal:content="field/title">Element</th>
                 <tal:rep tal:repeat="r values">
