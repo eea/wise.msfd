@@ -144,7 +144,7 @@
       <option score="0.25">Some element(s) used for this criterion is/are the same as some (26-50%) MS in the region</option>
       <option score="0.25">Some element(s) used for this criterion is/are the same as a few (1-25%) MS in the region</option>
       <option score="0">Element(s) used for this criterion is/are not the same as other MS in the region</option>
-      <option score="0.25">Not clear</option>
+      <option score="0.250">Not clear</option>
       <option score="/">Not relevant</option>
     </answers>
     <scoring determination-method="wise.msfd.compliance.scoring.scoring_based">
@@ -276,7 +276,7 @@
       <option score="1">Status for this criterion assessed against the latest GES determination (2018) for this criterion</option>
       <option score="0.5">Status  for this criterion partially assessed against the latest GES determination (2018) for this criterion</option>
       <option score="0">Status not assessed against the latest GES determination for this criterion</option>
-      <option score="0.25">Not clear</option>
+      <option score="0.250">Not clear</option>
       <option score="/">Not relevant</option>
     </answers>
     <scoring determination-method="wise.msfd.compliance.scoring.scoring_based">

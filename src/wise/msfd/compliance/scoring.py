@@ -123,13 +123,16 @@ def get_overall_conclusion(concl_score):
 
 
 def compute_score(question, descriptor, values):
+    weight = float(question.score_weights.get(descriptor, 10.0))
     scores = question.scores
     raw_score, max_score = question.score_method(values, scores)
 
-    percentage = calculate_percentage(raw_score, max_score)
-    score_value = get_range_index(percentage)
+    if max_score == 0:
+        score_value = 4
+    else:
+        percentage = calculate_percentage(raw_score, max_score)
+        score_value = get_range_index(percentage)
 
-    weight = float(question.score_weights.get(descriptor, 10.0))
     # TODO find a proper algorithm to calculate wighted score
     weighted_score = score_value * weight / 4
     conclusion = list(reversed(CONCLUSIONS))[score_value]
