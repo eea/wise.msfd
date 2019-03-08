@@ -113,7 +113,7 @@ if (!Array.prototype.last){
     $(sets).each(function(){
       if (this.length > 1) {
         var colspan = this.length;
-        $(this[0]).attr('colspan', colspan);
+        $(this[0]).attr('colspan', colspan).addClass('merged');
         $(this.slice(1)).each(function(){
           $(this).remove();
         });
@@ -132,14 +132,11 @@ if (!Array.prototype.last){
       });
     }
 
-    // console.log('limits', limits);
     // apply special class to group end cells
     var cursor = 0;
     $('td', row).each(function(iy) {
       var c = parseInt($(this).attr('colspan') || '1');
       cursor += c;
-      // console.log('cursor', cursor, this);
-      // console.log('iy+c', iy + c, 'iy', iy, 'c', c, this);
       if (limits.includes(cursor)) {
         $(this).addClass('endgroup');
       }
