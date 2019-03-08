@@ -108,7 +108,7 @@
       <option score="0.5">Target is similar to some (26-50%) MS in the region</option>
       <option score="0.25">Target is similar to a few (1-25%) MS in the region</option>
       <option score="1">Target is not similar to other MS targets in the region</option>
-      <option score="0.250">Not clear</option>
+      <option score="0.25">Not clear</option>
       <option score="/">Not relevant</option>
     </answers>
     <scoring determination-method="wise.msfd.compliance.scoring.scoring_based">
