@@ -27,16 +27,27 @@ REGION_RE = re.compile('.+\s\((?P<region>.+)\)$')
 
 # This somehow translates the real value in a color, to be able to compress the
 # displayed information in the assessment table
-# New color table with score as keys, color as value
+# New color table with answer score as keys, color as value
 # TODO add a new color for score '0' if needed?
-COLOR_TABLE = {
-    '1': 1,
-    '0.75': 2,
-    '0.5': 3,
-    '0.25': 4,
-    '0': 4,
-    '/': 5
+ANSWERS_COLOR_TABLE = {
+    '1': 1,      # very good
+    '0.75': 2,   # good
+    '0.5': 3,    # partial
+    '0.25': 4,   # poor
+    '0': 5,      # very poor
+    '0.250': 6,  # not clear
+    '/': 7       # not relevant
 }
+
+# score_value as key, color as value
+CONCLUSION_COLOR_TABLE = {
+    4: 1,       # very good
+    3: 2,       # good
+    2: 4,       # poor
+    1: 5,       # very poor
+    0: 0        # not filled in
+}
+
 
 CountryStatus = namedtuple('CountryStatus',
                            ['name', 'status', 'state_id', 'url'])
@@ -218,7 +229,7 @@ def format_assessment_data(article, elements, questions, muids, data):
 
             if v is not None:
                 label = choices[v]
-                color_index = COLOR_TABLE[q_scores[v]]
+                color_index = ANSWERS_COLOR_TABLE[q_scores[v]]
             else:
                 color_index = 0
                 label = 'Not filled in'
@@ -235,7 +246,7 @@ def format_assessment_data(article, elements, questions, muids, data):
                 if v is not None:
                     label = u'{}: {}'.format(element.title, choices[v])
                     try:
-                        color_index = COLOR_TABLE[q_scores[v]]
+                        color_index = ANSWERS_COLOR_TABLE[q_scores[v]]
                     except Exception:
                         logger.exception('Invalid color table')
                         color_index = 0
@@ -262,10 +273,11 @@ def format_assessment_data(article, elements, questions, muids, data):
         cn = '{}_{}_Conclusion'.format(article, question.id)
         conclusion = data.get(cn, '')
 
-        # TODO: explain this, I believe it's wrong
-        conclusion_color = 5 - data.get(
-            '{}_{}_RawScore'.format(article, question.id), 5
+        score_value = data.get(
+            '{}_{}_RawScore'.format(article, question.id), 0
         )
+
+        conclusion_color = CONCLUSION_COLOR_TABLE[score_value]
         overall_score += score     # use raw score or score?
 
         qr = AssessmentRow(question.definition, summary, conclusion,
@@ -428,7 +440,7 @@ class NationalDescriptorArticleView(BaseView):
             self.assessment_data_2012 = self.assessment_data_2012_tpl(
                 data=assessments_2012
             )
-            
+
             if assessments_2012.get(country_name):
                 score_2012 = assessments_2012[country_name].score
             else:       # fallback
