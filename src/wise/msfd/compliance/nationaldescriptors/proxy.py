@@ -17,9 +17,10 @@ class Proxy2018(object):
     """ A proxy wrapper that uses XML definition files to 'translate' elements
     """
 
-    def __init__(self, obj, article, extra=None):
+    def __init__(self, obj, report_class, extra=None):
         self.__o = obj       # the proxied object
 
+        article = report_class.article
         self.fields = REPORT_DEFS['2018'][article].get_fields()
 
         if not extra:
@@ -39,8 +40,16 @@ class Proxy2018(object):
 
             label_collection = field.label_collection
             converter = field.converter
+            filter_values = field.filter_values
 
             # assert (label_name or converter), 'Field should be dropped'
+
+            if filter_values:
+                ok_values = getattr(report_class, filter_values)
+                if ok_values:
+                    values = set(value.split(','))
+                    filtered = values.intersection(ok_values)
+                    value = u','.join(filtered)
 
             if converter:
                 assert '.' not in converter

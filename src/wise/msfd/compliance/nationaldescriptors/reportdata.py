@@ -454,6 +454,18 @@ https://svn.eionet.europa.eu/repositories/Reportnet/Dataflows/MarineDirective/MS
 
     subform = None      # used for the snapshot selection form
 
+    @property
+    def all_descriptor_ids(self):
+        descr_class = get_descriptor(self.descriptor)
+        all_ids = list(descr_class.all_ids())
+
+        if self.descriptor.startswith('D1.'):
+            all_ids.append('D1')
+
+        all_ids = set(all_ids)
+
+        return all_ids
+
     def get_data_from_view_Art8(self):
         # TODO this is not used
         # exclude = REPORT_2018.get_group_by_fields(self.article)
@@ -502,14 +514,6 @@ https://svn.eionet.europa.eu/repositories/Reportnet/Dataflows/MarineDirective/MS
     def get_data_from_view_Art10(self):
         t = sql2018.t_V_ART10_Targets_2018
 
-        descr_class = get_descriptor(self.descriptor)
-        all_ids = list(descr_class.all_ids())
-
-        if self.descriptor.startswith('D1.'):
-            all_ids.append('D1')
-
-        all_ids = set(all_ids)
-
         # TODO check conditions for other countries beside NL
         # conditions = [t.c.GESComponents.in_(all_ids)]
 
@@ -529,7 +533,7 @@ https://svn.eionet.europa.eu/repositories/Reportnet/Dataflows/MarineDirective/MS
             ges_comps = getattr(row, 'GESComponents', ())
             ges_comps = set([g.strip() for g in ges_comps.split(',')])
 
-            if ges_comps.intersection(all_ids):
+            if ges_comps.intersection(self.all_descriptor_ids):
                 out.append(row)
 
         return out
@@ -593,7 +597,7 @@ https://svn.eionet.europa.eu/repositories/Reportnet/Dataflows/MarineDirective/MS
     @timeit
     def get_data_from_db(self):
         data = getattr(self, 'get_data_from_view_' + self.article)()
-        data = [Proxy2018(row, self.article) for row in data]
+        data = [Proxy2018(row, self) for row in data]
 
         data_by_mru = group_by_mru(data)
 

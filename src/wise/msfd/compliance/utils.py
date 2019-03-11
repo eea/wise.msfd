@@ -33,6 +33,7 @@ class ReportField(TemplateMixin):
 
         self.label_collection = node.get('label')
         self.converter = node.get('convert')
+        self.filter_values = node.get('filter')
 
         self.section = node.get('section')
 
