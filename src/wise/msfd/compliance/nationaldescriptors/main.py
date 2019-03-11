@@ -28,7 +28,6 @@ REGION_RE = re.compile('.+\s\((?P<region>.+)\)$')
 # This somehow translates the real value in a color, to be able to compress the
 # displayed information in the assessment table
 # New color table with answer score as keys, color as value
-# TODO add a new color for score '0' if needed?
 ANSWERS_COLOR_TABLE = {
     '1': 1,      # very good
     '0.75': 2,   # good

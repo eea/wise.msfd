@@ -472,7 +472,13 @@ https://svn.eionet.europa.eu/repositories/Reportnet/Dataflows/MarineDirective/MS
             t.c.CountryCode == self.country_code,
             t.c.Region == self.country_region_code,
             t.c.GESComponent.in_(all_ids),
-            t.c.Element.isnot(None),
+            # TODO needs more testing for countries beside FI, SE, NL
+            # the purpose of this condition is to filter "empty" rows
+            # these rows usually have few data, and they are duplicates
+            or_(t.c.Element.isnot(None),
+                t.c.Criteria.isnot(None)),
+            # TODO filter by element is needed?
+            # t.c.Element.isnot(None),
             # t.c.MarineReportingUnit.in_(muids),     #
         ]
         orderby = [
