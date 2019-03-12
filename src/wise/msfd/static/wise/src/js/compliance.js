@@ -85,13 +85,7 @@ if (!Array.prototype.last){
     // join adjacent cells with identical text
 
     var sets = [];
-    // var text = $('th', row).text()
-    // console.log(text.trim());
-    // if (text.trim() == 'Element code source') {
-    //   debugger;
-    // }
 
-    // console.log('limits', limits);
     // group cells by similarity
     $('td', row).each(function(ix) {
       if ((sets.length == 0) || limits.includes(ix)) {   // start of processing
@@ -107,9 +101,8 @@ if (!Array.prototype.last){
         }
       }
     });
-    // console.log('sets', sets);
 
-    // // merge cells that are duplicated
+    // merge cells that are duplicated
     $(sets).each(function(){
       if (this.length > 1) {
         var colspan = this.length;
@@ -155,7 +148,6 @@ if (!Array.prototype.last){
     var limits = [];
     $groups.each(function(){
       limits = mergeCellsInRow(this, limits);
-      // console.log('limits', limits);
     });
 
     $table.fixTableHeaderHeight();
@@ -173,7 +165,6 @@ if (!Array.prototype.last){
       $(this).empty().html(original);
       $(this).show();
 
-      console.log("done restoring");
       $(this).fixTableHeaderAndCellsHeight();
 
       //addTranslateClickHandlers();
@@ -512,7 +503,7 @@ if (!Array.prototype.last){
     }
 
     var $td = $('.overflow-table table td');
-    $td.children('div').wrapInner('<span class="td-content"/>');
+    $td.children('div').wrapInner('<div class="td-content" />');
   }
 
   function setupSimplifiedTables() {

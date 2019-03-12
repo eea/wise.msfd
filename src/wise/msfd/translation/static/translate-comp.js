@@ -3,11 +3,12 @@ $(document).ready(function () {
   var $original = $('#transl-original-text');
   var $old = $('#transl-old-translation');
 
-  var reportTranslation = function () {
-
-    var editTranslation = function (e) {
-      // inline editing in report data view page
-      // e.preventDefault();
+  var setupTranslationsInReportPage = function () {
+    /*
+     * Triggered by the translation edit button. Sets proper text in modal edit
+     * dialog
+     */
+    function setupEditTranslationDialog () {
       var $cell = $(this).parents('td.translatable');
 
       var $text_div = $('.tr-text', $cell);
@@ -19,12 +20,12 @@ $(document).ready(function () {
 
       var $textarea = $('#form-edit-translation #new_transl');
       $textarea.val(old_translation.trim());
-
     };
 
-    // console.log("reportTranslation");
-
-    var submitTranslation = function (e) {
+    /*
+     * Handles clicking on save translation in the edit translation dialog
+     */
+    function handleTranslationSave (e) {
 
       // inline editing in report data view page
       e.preventDefault();
@@ -34,8 +35,7 @@ $(document).ready(function () {
       var translation = $("#new_transl", $form).val();
       var url = $('.form-group').attr('portal_url') + '/@@edit-translation';
       var language = $form.children('input').attr('value');
-      console.log(':', translation);
-      
+
       $.ajax({
         form: $form,
         type: 'POST',
@@ -48,7 +48,6 @@ $(document).ready(function () {
         },
         success: function (result) {
           location.reload();
-
         },
         error: function (result) {
           alert('ERROR saving translation!');
@@ -56,7 +55,7 @@ $(document).ready(function () {
       });
     };
 
-    var toggleTranslations = function (e) {
+    function toggleTranslations () {
       // setup the translations in the report data view screens
       $(this).toggleClass('active');
       $(this).siblings('.btn-translate').toggleClass('active');
@@ -74,11 +73,38 @@ $(document).ready(function () {
       $th.fixTableHeaderHeight();
     };
 
+    function setupTranslatedCells() {
+      $('.translatable').hover(
+        function() {
+          var $t = $('.w-t', this);
+          var p = $t.position();
+          var $f = $('.lang-footer', this);
+          $f.css({
+            display: 'table-cell',
+            width: $t.width() + 20,
+            height: $t.height() + 20 ,
+            top: p.top - 10,
+            left: p.left - 10,
+            'text-align': 'center',
+            'vertical-align': 'middle'
+          });
+
+          $f.show();
+        },
+        function() {
+          $('.lang-footer', this).hide();
+        }
+      );
+    }
+
     window.setupTranslateClickHandlers = function () {
       // $(".autoTransl").on("click", autoTranslation);
       // todo: toggle clickability of buttons?
-      $('.editTransl').on("click", editTranslation);
-      $('.submitTransl').on("click", submitTranslation);
+      setupTranslatedCells();
+
+      $('.editTransl').on("click", setupEditTranslationDialog);
+      $('.submitTransl').on("click", handleTranslationSave);
+
       $('.btn-translate-orig').on("click", toggleTranslations);
       $('.btn-translate-transl').on("click", toggleTranslations);
     };
@@ -87,7 +113,7 @@ $(document).ready(function () {
 
   };
 
-  var setupOverviewTranslation = function () {
+  var setupTranslationsInOverviewPage = function () {
     var $form = $('#form-edit-translation');
     var $modal = $('#edit-translation');
 
@@ -116,15 +142,6 @@ $(document).ready(function () {
           data[name] = $(this).val();
         });
 
-        // $.post(url, data, function(resp) {
-        //   $modal.modal('hide');
-        //   var $cell = $(cells[1]);
-        //   $cell.hide();
-        //   $cell.text(resp['text']);
-        //   $cell.fadeIn(1000);
-        // });
-
-
         $.ajax({
           form: $form,
           type: 'POST',
@@ -147,9 +164,8 @@ $(document).ready(function () {
   var onReport = $('.report-page-view ').length;
 
   if (onReport) {
-    reportTranslation();
-  }
-  else {
-    setupOverviewTranslation();
+    setupTranslationsInReportPage();
+  } else {
+    setupTranslationsInOverviewPage();
   }
 });

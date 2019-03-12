@@ -35,18 +35,21 @@
       </button>
 
       <div class="lang-footer" tal:condition="python: translation or can_translate">
+        <div class="l-w">
+          <tal:cond tal:condition="translation">
+            <button tal:attributes="class btn_trans_class" >EN</button>
+            <button tal:attributes="class btn_text_class" tal:content="view/country_code">LV</button>
+          </tal:cond>
 
-        <button
-          tal:condition="can_translate"
-          class="btn btn-light btn-xs editTransl"
-          data-toggle="modal"
-          data-target="#edit-translation"><span class="fa fa-edit"></span></button>
+          <span style="padding-left: 2rem;">
+            <button
+              tal:condition="can_translate"
+              class="btn btn-light btn-xs editTransl"
+              data-toggle="modal"
+              data-target="#edit-translation"><span class="fa fa-edit"></span>Edit</button>
+          </span>
 
-        <tal:cond tal:condition="translation">
-          <button tal:attributes="class btn_trans_class" >EN</button>
-          <button tal:attributes="class btn_text_class" tal:content="view/country_code">LV</button>
-        </tal:cond>
-
+        </div>
       </div>
 
     </div>
