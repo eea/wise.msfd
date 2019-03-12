@@ -167,10 +167,10 @@ if (!Array.prototype.last){
 
       $(this).fixTableHeaderAndCellsHeight();
 
-      //addTranslateClickHandlers();
+      setupTranslateClickHandlers();
     }
     setupReadMoreModal();
-    // addTranslateClickHandlers();
+    setupTranslateClickHandlers();
   };
 
   /* Used in report data table create a 'read more' modal if the cell content
@@ -507,8 +507,6 @@ if (!Array.prototype.last){
   }
 
   function setupSimplifiedTables() {
-    //$('.simplify-form').next().find('table').simplifyTable();
-
     $('.simplify-form').next().find('.table-report').each(function(){
       $(this).simplifyTable();
     });
