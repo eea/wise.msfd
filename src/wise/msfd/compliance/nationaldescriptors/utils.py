@@ -1,6 +1,8 @@
-from wise.msfd.utils import FlatItemList
-from .proxy import proxy_cmp
 from collections import defaultdict
+
+from wise.msfd.utils import FlatItemList, ItemList
+
+from .proxy import proxy_cmp
 
 
 def consolidate_date_by_mru(data):
@@ -35,8 +37,10 @@ def consolidate_date_by_mru(data):
     for batch in groups:
         # TODO: get a proper MarineUnitID object
         mrus = tuple(sorted(set([r.MarineReportingUnit for r in batch])))
+
         if mrus[0] is None:
             rows_without_mru.append(batch[0])
+
             continue
 
         regroup[mrus].append(batch[0])
@@ -55,3 +59,39 @@ def consolidate_date_by_mru(data):
         out[label] = rows_without_mru
 
     return out
+
+
+def consolidate_singlevalue_to_list(proxies, fieldname):
+    """ Given a list of proxies where one of the fields needs to be a list, but
+    is spread across different similar proxies, consolidate the single values
+    to a list and return only one object for that list of similar objects
+    """
+    map_ = []
+
+    for o in proxies:
+        if not map_:
+            map_.append([o])
+
+            continue
+
+        found = False
+
+        for set_ in map_:
+            if proxy_cmp(set_[0], o, fieldname):
+                set_.append(o)
+                found = True
+
+                break
+
+        if not found:
+            map_.append([o])
+
+    res = []
+
+    for set_ in map_:
+        o = set_[0]
+        l = ItemList(rows=[getattr(xo, fieldname) for xo in set_])
+        setattr(o, fieldname, l)
+        res.append(o)
+
+    return res

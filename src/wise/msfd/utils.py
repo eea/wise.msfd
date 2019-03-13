@@ -408,6 +408,8 @@ class ItemList(TemplateMixin):
     def __init__(self, rows):
         rows = list(rows)
 
+        # the rows may be ItemLabel instances
+
         if rows and (not isinstance(rows[0], basestring)):
             self.rows = sorted(rows, key=lambda r: r.title)
         else:
@@ -438,6 +440,8 @@ class ItemList(TemplateMixin):
 
 
 class FlatItemList(ItemList):
+    """ List that renders using <div> instead of <ul>
+    """
     template = PageTemplateFile('pt/flat-list.pt')
 
 

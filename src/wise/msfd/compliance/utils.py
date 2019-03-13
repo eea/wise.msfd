@@ -18,6 +18,7 @@ class IReportField(Interface):
     drop = Attribute(u'Should the field be dropped from displayed report?')
     merge = Attribute(u'Merge this field with identical values')
     startgroup = Attribute(u'This field starts a new column group')
+    filter_values = Attribute(u'???')
 
 
 class ReportField(TemplateMixin):
@@ -166,6 +167,7 @@ def group_by_mru(data):
     for row in data:
         if not row.MarineReportingUnit:     # skip rows without muid
             rows_extra.append(row)
+
             continue
 
         mru = row.MarineReportingUnit
@@ -189,6 +191,7 @@ def group_by_mru(data):
 
     # Special case for Art9, when no real data is reported besides
     # justification for delay
+
     if not res and rows_extra:
         res['No MRUs'].extend(rows_extra)
 

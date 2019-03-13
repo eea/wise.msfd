@@ -38,7 +38,7 @@ from .a9 import Article9, Article9Alternate
 from .a10 import Article10, Article10Alternate
 from .base import BaseView
 from .proxy import Proxy2018
-from .utils import consolidate_date_by_mru
+from .utils import consolidate_date_by_mru, consolidate_singlevalue_to_list
 
 # from persistent.list import PersistentList
 # from six import string_types
@@ -491,6 +491,7 @@ https://svn.eionet.europa.eu/repositories/Reportnet/Dataflows/MarineDirective/MS
                 t.c.Criteria.isnot(None)),
             # TODO filter by element is needed?
             # t.c.Element.isnot(None),
+            # Element is None for the OverallStatus
             # t.c.MarineReportingUnit.in_(muids),     #
         ]
         orderby = [
@@ -503,6 +504,7 @@ https://svn.eionet.europa.eu/repositories/Reportnet/Dataflows/MarineDirective/MS
 
         sess = db.session()
 
+        # groupby IndicatorCode
         q = sess\
             .query(t)\
             .filter(*conditions).\
@@ -598,6 +600,8 @@ https://svn.eionet.europa.eu/repositories/Reportnet/Dataflows/MarineDirective/MS
     def get_data_from_db(self):
         data = getattr(self, 'get_data_from_view_' + self.article)()
         data = [Proxy2018(row, self) for row in data]
+        if self.article == 'Art8':
+            data = consolidate_singlevalue_to_list(data, 'IndicatorCode')
 
         data_by_mru = group_by_mru(data)
 
