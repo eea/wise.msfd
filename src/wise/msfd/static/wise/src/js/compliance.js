@@ -68,6 +68,10 @@ if (!Array.prototype.last){
   };
 
   $.fn.fixTableHeaderHeight = function fixTableHeaderHeight() {
+    // Because of the way the <th> cells are positioned absolute, to be able to
+    // keep them fixed, they are "disconnected" from the regular box sizing
+    // layout algorithm. For this reason we have to recompute their height (to
+    // make either the <td> or the <th> match same height
     this.each(function() {
 
       $("th", this).each(function() {
@@ -343,6 +347,7 @@ if (!Array.prototype.last){
 
   function setupCustomScroll() {
     // A fixed scrollbar at the bottom of the window for tables
+
     var $ot = $('.overflow-table');
     var $win = $(window);
 
@@ -416,12 +421,22 @@ if (!Array.prototype.last){
       var tableScroll = $('.inner', $t.parent());
       var fixedTableInner = $('.fixed-table-inner', $t.parent());
 
-      fixedTableInner.on('scroll', function() {
-        tableScroll.scrollLeft($(this).scrollLeft());
-      });
-      tableScroll.on('scroll', function() {
-        fixedTableInner.scrollLeft($(this).scrollLeft());
-      });
+      function toggleSyncScrolls(onoff) {
+        function f1 () {
+          tableScroll.scrollLeft($(this).scrollLeft());
+        }
+        function f2 () {
+          fixedTableInner.scrollLeft($(this).scrollLeft());
+        }
+        if (onoff) {
+          fixedTableInner.on('scroll', f1);
+          tableScroll.on('scroll', f2);
+        } else {
+          fixedTableInner.off('scroll', f1);
+          tableScroll.off('scroll', f2);
+        }
+      }
+      toggleSyncScrolls(true);
 
       $th.each(function(i) {
         var val = "cb" + i++;
@@ -473,6 +488,11 @@ if (!Array.prototype.last){
           $this.closest('tr').remove();
           $('.fix-row[value="' + value + '"]').prop('checked', false);
         });
+
+        toggleSyncScrolls(false);
+        fixedTableInner.scrollLeft(tableScroll.scrollLeft());
+        toggleSyncScrolls(true);
+
       });
 
     });
