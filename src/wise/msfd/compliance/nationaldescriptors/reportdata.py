@@ -483,6 +483,7 @@ https://svn.eionet.europa.eu/repositories/Reportnet/Dataflows/MarineDirective/MS
         conditions = [
             t.c.CountryCode == self.country_code,
             t.c.Region == self.country_region_code,
+            # t.c.MarineReportingUnit.in_(muids),     #
             t.c.GESComponent.in_(all_ids),
             # TODO needs more testing for countries beside FI, SE, NL
             # the purpose of this condition is to filter "empty" rows
@@ -492,13 +493,13 @@ https://svn.eionet.europa.eu/repositories/Reportnet/Dataflows/MarineDirective/MS
             # TODO filter by element is needed?
             # t.c.Element.isnot(None),
             # Element is None for the OverallStatus
-            # t.c.MarineReportingUnit.in_(muids),     #
         ]
         orderby = [
             t.c.MarineReportingUnit,
-            t.c.Feature,
-            t.c.Element,
             t.c.GESComponent,
+            t.c.Feature,
+            t.c.Criteria,
+            t.c.Element,
             t.c.IntegrationRuleTypeParameter,
         ]
 
@@ -507,8 +508,8 @@ https://svn.eionet.europa.eu/repositories/Reportnet/Dataflows/MarineDirective/MS
         # groupby IndicatorCode
         q = sess\
             .query(t)\
-            .filter(*conditions).\
-            order_by(*orderby)\
+            .filter(*conditions)\
+            .order_by(*orderby)\
             .distinct()
 
         return q
