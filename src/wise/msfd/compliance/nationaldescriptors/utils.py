@@ -90,8 +90,12 @@ def consolidate_singlevalue_to_list(proxies, fieldname):
 
     for set_ in map_:
         o = set_[0]
-        l = ItemList(rows=[getattr(xo, fieldname) for xo in set_])
-        setattr(o, fieldname, l)
+        values = [getattr(xo, fieldname) for xo in set_]
+
+        if any(values):
+            l = ItemList(rows=values)
+            setattr(o, fieldname, l)
+
         res.append(o)
 
     return res

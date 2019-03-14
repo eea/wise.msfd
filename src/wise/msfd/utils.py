@@ -411,7 +411,8 @@ class ItemList(TemplateMixin):
         # the rows may be ItemLabel instances
 
         if rows and (not isinstance(rows[0], basestring)):
-            self.rows = sorted(rows, key=lambda r: r.title)
+            self.rows = sorted(rows,
+                               key=lambda r: (r is not None) and r.title or '')
         else:
             self.rows = sorted(rows)
 
