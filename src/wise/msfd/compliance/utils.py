@@ -28,9 +28,10 @@ class ReportField(TemplateMixin):
 
     template = PageTemplateFile('pt/report_field_header.pt')
 
-    def __init__(self, node):
+    def __init__(self, node, article):
         self.title = node.text
         self.name = node.get('name')
+        self.article = article
 
         self.label_collection = node.get('label')
         self.converter = node.get('convert')
@@ -54,7 +55,7 @@ class ReportDefinition(object):
         self.article = article
         self.doc = lxml.etree.parse(fpath)
         self.nodes = self.doc.find(self.article).getchildren()
-        self._fields = [ReportField(n) for n in self.nodes]
+        self._fields = [ReportField(n, article) for n in self.nodes]
 
     def get_fields(self):
         return self._fields
