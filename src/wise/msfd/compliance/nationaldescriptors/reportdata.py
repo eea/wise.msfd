@@ -797,8 +797,8 @@ https://svn.eionet.europa.eu/repositories/Reportnet/Dataflows/MarineDirective/MS
             muid, table_data = table
 
             for row in table_data:
-                (name, label), cells = row
-                if name in translatables:
+                field, cells = row
+                if field.name in translatables:
                     for value in cells:
                         if value not in seen:
                             retrieve_translation(self.country_code, value)
