@@ -55,7 +55,7 @@
                     2012 (II)</a>
                   </div>
                 </div>
-
+                
             </div>
           </div>
         </div>
@@ -113,7 +113,7 @@
         </button>
       </div>
 
-      <form method="POST" action="" tal:attributes="action request/URL0">
+      <form method="POST" action="" tal:attributes="action request/getURL">
         <button name="download" class="btn btn-primary">View report data in Excel</button>
         <button name="translate" class="btn btn-secondary">Auto-translate</button>
       </form>

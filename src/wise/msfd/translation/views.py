@@ -46,7 +46,7 @@ class TranslationCallback(BrowserView):
         # the encoding doesn't seem to do a great job
 
         translated = translated.decode('latin-1')
-
+        
         save_translation(original, translated, language)
 
         return '{}'
