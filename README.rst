@@ -231,31 +231,14 @@ descriptors to the 2018 data format.
 Immediate TODOs for the Compliance Module
 -----------------------------------------
 
-- Format the lists in double columns if they are long
-- check the existing implementation of extracted data for the report tables for
-  both 2012 and 2018 data. Make sure we filter by region.
-- automatically re-format text inserted in member state report fields.
-- Improve the reporting tables usability. Allow fixing rows as headers. Improve
-  spacing, improve the translation interface.
-- Check the scoring implementation
-- Make generic usability improvements according to TL feedback.
-- Create a navigation helper to navigate between all aspects of an assessment.
-- Reorder articles according to document (A8, A10, A9, I think)
 - Allow translation of list items
-- Allow translation by TLs
-- Redo the translation integration (use ajax to load field value)
-- add form unload warning for assessment editing
-- create the notification system
-- better interface for assessment edit
-- Show, in the assessment edit module, the questions for the "other" phase,
-  with their answers, but disabled. Also show the phase.
-- Show comments next to each question, in the assessment edit
 - implement a different translation storage, for list items? (or context?)
+- Allow translation by TLs
+- create the notification system
 - Bring back the snapshots feature
 
 - Art8 2012 Italy D5(other countries, descriptors too): match nodes where there are no indicators reported, or only GESOther is reported
 - Art9 2012 ALL countries: include D1 criterions/indicators in D6??
-
 - Art10 2012 italy D6: report table almost empty, report xml has data. The implementation is wrong?
 - Art10 2012 Italy D6, D8: how to get threshold value from Art9 when indicators do not match ex. 6.1(art9) vs 6.1.2(art10), 8.1 vs 8.1.1
 - Art10 2012 Latvia: description (from db) for indicators '5.1.1-indicator 5.1A' etc is not in the excel, are these needed?
