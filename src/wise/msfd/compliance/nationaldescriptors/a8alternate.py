@@ -6,7 +6,7 @@ from sqlalchemy.orm import aliased
 from Products.Five.browser.pagetemplatefile import \
     ViewPageTemplateFile as Template
 from wise.msfd import db, sql  # , sql2018
-from wise.msfd.utils import Item, ItemLabel, ItemList, Node, RawRow, Row
+from wise.msfd.utils import Item, ItemList, Row
 
 from ..base import BaseArticle2012
 
@@ -628,7 +628,8 @@ class A8bNIS(A8bGeneric):
     activity_mapper = sql.MSFD8bNISActivity
     act_descr_mapper = sql.MSFD8bNISActivityDescription
     param_topics = ['LevelPressureEnvironment', 'ImpactPressureSeabedHabitats',
-                    'ImpactPressureWaterColumn', 'ImpactPressureFunctionalGroup']
+                    'ImpactPressureWaterColumn',
+                    'ImpactPressureFunctionalGroup']
 
     @property
     def ges_comp(self):
@@ -718,7 +719,8 @@ class A8bExtractionSeaweedMaerlOther(A8bGeneric):
     act_descr_mapper = sql.MSFD8bExtractionSeaweedMaerlOtherActivityDescription
 
     param_topics = ['LevelPressureOther', 'ImpactPressureExploitedSpecies',
-                    'ImpactPressureFunctionalGroup', 'ImpactPressureSeabedHabitats']
+                    'ImpactPressureFunctionalGroup',
+                    'ImpactPressureSeabedHabitats']
 
     @property
     def ges_comp(self):
