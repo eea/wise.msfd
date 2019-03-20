@@ -471,7 +471,7 @@ https://svn.eionet.europa.eu/repositories/Reportnet/Dataflows/MarineDirective/MS
         # exclude = REPORT_2018.get_group_by_fields(self.article)
         # exclude,
 
-        # sess = db.session()
+        sess = db.session()
         #
         # os = sql2018.ART8GESOverallStatu
         # cs = sql2018.ART8GESCriteriaStatu
