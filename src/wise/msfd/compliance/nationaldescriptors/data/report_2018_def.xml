@@ -51,7 +51,6 @@
     <element section="gesdetermination" merge="true" name="UpdateType">Update type</element>
   </Art9>
 
-  <!--<MarineReportingUnit labelName="mrus">MarineReportingUnit</MarineReportingUnit>-->
   <Art8>
     <element skip='true' name='Region'></element>
     <element skip='true' name='ReportedFileLink'></element>
@@ -62,7 +61,7 @@
     <element section="ges" merge="true" name="GESComponent" convert="ges_component">GES component</element>
     <element section="ges" startgroup="true" merge="true" name="Feature" label="features">Feature</element>
 
-    <element section="element" merge="true" name="Element">Element</element>
+    <element section="element" startgroup="true" merge="true" name="Element">Element</element>
     <element section="element" merge="true" name="ElementCode">Element code</element>
     <element section="element" merge="true" name="ElementCodeSource" label="elementcode_sources">Element code source</element>
     <element section="element" merge="true" name="Element2">Element 2</element>

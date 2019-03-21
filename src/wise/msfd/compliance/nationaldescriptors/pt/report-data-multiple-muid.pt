@@ -28,7 +28,7 @@
                 tal:define="field python:row[0];
                 values python: row[1];
                 merge_c python:field.merge and 'merge' or '';
-                group_c python: field.startgroup and 'group' or '';
+                group_c python: field.startgroup and 'startgroup' or '';
                 klass string:f_${field/section} n_${field/name} ${merge_c} ${group_c};
                 "
                 tal:attributes="class klass"

@@ -85,9 +85,13 @@ if (!Array.prototype.last){
     });
   };
 
-  function mergeCellsInRow(row, limits) {
-    // join adjacent cells with identical text
+  function mergeCellsInRow(row, limits, level) {
+    /* This function visually groups and merges cells in table, to optimize
+     * for reading information
+     *
+     */
 
+    // join adjacent cells with identical text
     var sets = [];
 
     // group cells by similarity
@@ -118,8 +122,9 @@ if (!Array.prototype.last){
     });
 
     // compute new group limits
-    if ($(row).hasClass('group')) {
+    if ($(row).hasClass('startgroup')) {
       limits = [];
+      level += 1;
       $(sets).each(function() {
         var l = this.length;
         if (limits.length) {
@@ -135,10 +140,10 @@ if (!Array.prototype.last){
       var c = parseInt($(this).attr('colspan') || '1');
       cursor += c;
       if (limits.includes(cursor)) {
-        $(this).addClass('endgroup');
+        $(this).addClass('endgroup_' + level);
       }
     });
-    return limits;
+    return [limits, level];
   }
 
   $.fn.simplifyTable = function simplifyTable(){
@@ -150,8 +155,11 @@ if (!Array.prototype.last){
 
     $groups = $('tr', this);
     var limits = [];
+    var level = 0;
     $groups.each(function(){
-      limits = mergeCellsInRow(this, limits);
+      var res = mergeCellsInRow(this, limits, level);
+      limits = res[0];
+      level = res[1];
     });
 
     $table.fixTableHeaderHeight();
