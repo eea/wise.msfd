@@ -17,7 +17,6 @@ logger = logging.getLogger('wise.msfd.translation')
 
 class TranslationCallback(BrowserView):
     """ This view is called by the EC translation service.
-
     Saves the translation in Annotations
     """
 

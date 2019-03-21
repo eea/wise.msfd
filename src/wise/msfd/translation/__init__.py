@@ -63,7 +63,6 @@ def retrieve_translation(country_code, text, target_languages=None):
         logger.warning("Using localhost, won't retrieve translation for: %s",
                        text
                        )
-
         return
 
     if not target_languages:

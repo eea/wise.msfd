@@ -70,3 +70,16 @@ class IRegionalDescriptorsFolder(Interface):
 class IReportDataView(Interface):
     """ Plone pages that display report data
     """
+
+
+class IEditAssessmentSettingsForm(Interface):
+    """ Interface for assessment settings form
+
+    Ex: /compliance-module/national-descriptors-assessments/assessment-settings
+    """
+
+    assessed_by = Text(
+        title=u'Edit assessors list',
+        required=False,
+        default=u'Assessor1\r\nAssessor2'
+    )
