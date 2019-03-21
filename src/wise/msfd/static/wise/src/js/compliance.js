@@ -85,18 +85,19 @@ if (!Array.prototype.last){
     });
   };
 
-  function mergeCellsInRow(row, limits, level) {
+  function mergeCellsInRow(row, cache) {
     /* This function visually groups and merges cells in table, to optimize
      * for reading information
-     *
      */
+
+    var limits = cache.setlimits[cache.setlimits.length - 1];   // get last set
 
     // join adjacent cells with identical text
     var sets = [];
 
     // group cells by similarity
     $('td', row).each(function(ix) {
-      if ((sets.length == 0) || limits.includes(ix)) {   // start of processing
+      if ((sets.length == 0) || limits.includes(ix)) {
         sets.push([this]);
       } else {
         var thisText = $(this).text().trim();
@@ -124,7 +125,7 @@ if (!Array.prototype.last){
     // compute new group limits
     if ($(row).hasClass('startgroup')) {
       limits = [];
-      level += 1;
+      cache.level += 1;   // we don't reall need level, can use len setlimits
       $(sets).each(function() {
         var l = this.length;
         if (limits.length) {
@@ -132,6 +133,7 @@ if (!Array.prototype.last){
         }
         limits.push(l);
       });
+      cache.setlimits.push(limits);
     }
 
     // apply special class to group end cells
@@ -140,10 +142,17 @@ if (!Array.prototype.last){
       var c = parseInt($(this).attr('colspan') || '1');
       cursor += c;
       if (limits.includes(cursor)) {
+        var level = cache.level;
+        // test if previous limit includes this cursor
+        if (level > 0) {
+          var prevset = cache.setlimits[cache.setlimits.length - 2];
+          if (prevset.includes(cursor)) {
+            level -= 1;
+          }
+        }
         $(this).addClass('endgroup_' + level);
       }
     });
-    return [limits, level];
   }
 
   $.fn.simplifyTable = function simplifyTable(){
@@ -153,13 +162,12 @@ if (!Array.prototype.last){
       $table.data('original', $table.html());
     }
 
-    $groups = $('tr', this);
-    var limits = [];
-    var level = 0;
-    $groups.each(function(){
-      var res = mergeCellsInRow(this, limits, level);
-      limits = res[0];
-      level = res[1];
+    var cache = {
+      level: 0,
+      setlimits: [[]]
+    };
+    $('tr', this).each(function(){
+      mergeCellsInRow(this, cache);
     });
 
     $table.fixTableHeaderHeight();
