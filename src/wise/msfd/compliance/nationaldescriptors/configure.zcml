@@ -76,6 +76,14 @@
     permission="zope2.View"
     />
 
+  <browser:page
+    for="..interfaces.INationalDescriptorsFolder"
+    name="assessment-settings"
+    class=".assessment.EditAssessmentSettingsForm"
+    template="./pt/assessment-settings.pt"
+    permission="zope2.View"
+    />
+
   <browser:viewlet
     name="plone.htmlhead.title"
     view='wise.msfd.compliance.interfaces.IReportDataView'

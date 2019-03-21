@@ -2,6 +2,7 @@ import datetime
 import logging
 from collections import namedtuple
 
+from zope.annotation.interfaces import IAnnotations
 from zope.schema import Choice, Text
 from zope.schema.vocabulary import SimpleTerm, SimpleVocabulary
 
@@ -13,13 +14,15 @@ from Products.Five.browser.pagetemplatefile import (PageTemplateFile,
 from wise.msfd.base import EmbeddedForm, MainFormWrapper
 from wise.msfd.compliance.base import get_questions
 from wise.msfd.compliance.content import AssessmentData
-from wise.msfd.compliance.interfaces import ICountryDescriptorsFolder
+from wise.msfd.compliance.interfaces import (ICountryDescriptorsFolder,
+                                             IEditAssessmentSettingsForm)
 from wise.msfd.gescomponents import get_descriptor  # , get_descriptor_elements
 from z3c.form.button import buttonAndHandler
 from z3c.form.field import Fields
 from z3c.form.form import Form
 
 from .base import BaseView
+
 
 logger = logging.getLogger('wise.msfd')
 
@@ -43,6 +46,60 @@ summary_fields = (
 progress_fields = (
     ('progress', u'Progress assessment'),
 )
+
+ASSESSORS_ANNOT_KEY = 'wise.msfd.assessors'
+
+
+def get_annot(self):
+    site = self.context.Plone
+    annot = IAnnotations(site, {})
+
+    return annot
+
+
+def get_assessors(self):
+    annot = get_annot(self)
+    value = annot.get(ASSESSORS_ANNOT_KEY, '')
+
+    return value
+
+
+def set_assessors(self, value):
+    annot = get_annot(self)
+    annot[ASSESSORS_ANNOT_KEY] = value
+
+
+class EditAssessmentSettingsForm(Form, BaseView):
+    """ Assessment settings form, used to edit the assessors list
+
+    /compliance-module/national-descriptors-assessments/assessment-settings
+    """
+
+    ignoreContext = True
+    name = 'assessment-settings'
+    title = u'Edit assessed by'
+    fields = Fields(IEditAssessmentSettingsForm)
+    template = ViewPageTemplateFile('./pt/assessment-settings.pt')
+
+    @buttonAndHandler(u'Save', name='Save')
+    def hande_save(self, action):
+        data, errors = self.extractData()
+
+        if not errors:
+            value = data.get('assessed_by', '')
+            value = ', '.join(value.split('\r\n'))
+            set_assessors(self, value)
+
+    def updateWidgets(self):
+        super(EditAssessmentSettingsForm, self).updateWidgets()
+        assessed_by_field = self.fields['assessed_by'].field
+        default = assessed_by_field.default
+        annot_assessors = get_assessors(self)
+        annot_assessors = '\r\n'.join(annot_assessors.split(', '))
+
+        if annot_assessors and default != annot_assessors:
+            assessed_by_field.default = annot_assessors
+            self.update()
 
 
 class EditAssessmentSummaryForm(Form, BaseView):

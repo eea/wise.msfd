@@ -19,6 +19,8 @@ from wise.msfd.gescomponents import get_descriptor
 from wise.msfd.utils import t2rt
 
 from .base import BaseView
+from .assessment import get_assessors
+
 
 logger = getLogger('wise.msfd')
 
@@ -374,6 +376,16 @@ def filter_assessment_data_2012(data, region_code, descriptor_criterions):
         # else:
         #     assessments[country].criteria.append(criteria)
 
+    if not assessments:
+        assessment = Assessment2012(
+            gescomponents,
+            criterias,
+            summary,
+            overall_ass,
+            score,
+        )
+        assessments[country] = assessment
+
     return assessments
 
 
@@ -388,6 +400,18 @@ class NationalDescriptorArticleView(BaseView):
     assessment_data_2018_tpl = Template('./pt/assessment-data-2018.pt')
 
     year = '2018'       # used by self.muids
+
+    @property
+    def assessor_list(self):
+        assessors = get_assessors(self)
+        if not assessors:
+            return []
+
+        assessors_list = [x.strip() for x in assessors.split(',')]
+
+        return assessors_list
+
+        # return ['Milieu', 'Commission', 'President', 'Topic lead']
 
     @property
     def title(self):
@@ -413,6 +437,12 @@ class NationalDescriptorArticleView(BaseView):
 
     def __init__(self, context, request):
         super(NationalDescriptorArticleView, self).__init__(context, request)
+
+        if 'assessor' in self.request.form:
+            assessors = self.request.form['assessor']
+            if isinstance(assessors, list):
+                assessors = ', '.join(assessors)
+            self.context.saved_assessment_data.ass_new = assessors
 
         # BBB:
 
@@ -459,6 +489,7 @@ class NationalDescriptorArticleView(BaseView):
 
         self.assessment_header_2012 = self.assessment_header_template(
             report_by=report_by,
+            assessor_list=[],
             assessors=assessors,
             assess_date=assess_date,
             source_file=source_file
@@ -485,12 +516,16 @@ class NationalDescriptorArticleView(BaseView):
 
         # Assessment header 2018
         report_by_2018 = u'Commission'
-        assessors_2018 = self.context.saved_assessment_data.assessors
+        # assessors_2018 = self.context.saved_assessment_data.assessors
+        assessors_2018 = getattr(
+            self.context.saved_assessment_data, 'ass_new', 'Not assessed'
+        )
         assess_date_2018 = data.get('assess_date', u'Not assessed')
         source_file_2018 = ('To be addedd...', '.')
 
         self.assessment_header_2018_html = self.assessment_header_template(
             report_by=report_by_2018,
+            assessor_list=self.assessor_list,
             assessors=assessors_2018,
             assess_date=assess_date_2018,
             source_file=source_file_2018,
