@@ -785,7 +785,8 @@ https://svn.eionet.europa.eu/repositories/Reportnet/Dataflows/MarineDirective/MS
             worksheet = workbook.add_worksheet(unicode(wtitle)[:30])
 
             for i, (row_label, row_values) in enumerate(wdata):
-                worksheet.write(i, 0, row_label)
+                # worksheet.write(i, 0, row_label)
+                worksheet.write(i, 0, row_label.title)
 
                 for j, v in enumerate(row_values):
                     worksheet.write(i, j + 1, unicode(v or ''))
