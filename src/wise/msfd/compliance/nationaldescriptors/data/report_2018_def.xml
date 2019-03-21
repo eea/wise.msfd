@@ -69,6 +69,7 @@
     <element section="element" merge="true" name="Element2CodeSource" label="elementcode_sources">Element 2 code source</element>
     <element section="element" merge="true" name="ElementSource">Element source</element>
 
+    <element section="criteriastatus" merge="true" name="Criteria" convert="ges_component">Criterion</element>
     <element section="criteria" merge="false" name="Parameter" label="parameters">Parameter</element>
     <element section="criteria" merge="false" name="ParameterOther">Parameter other</element>
     <element section="criteria" merge="false" name="ThresholdValueUpper">Threshold value upper</element>
@@ -90,7 +91,6 @@
     <element section="criteria" merge="false" name="DescriptionParameter" translate="true">Description parameter</element>
     <element section="criteria" merge="false" name="IndicatorCode" label="indicators">Related indicator</element>
 
-    <element section="criteriastatus" merge="true" name="Criteria" convert="ges_component">Criterion</element>
     <element section="criteriastatus" merge="false" name="CriteriaStatus">Criteria status</element>
     <element section="criteriastatus" merge="false" name="DescriptionCriteria" translate="true">Description criteria</element>
 
