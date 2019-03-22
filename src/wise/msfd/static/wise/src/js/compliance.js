@@ -151,7 +151,7 @@ if (!Array.prototype.last){
       cursor += c;
 
       if (limits.includes(cursor)) {
-        if (level > 0) {  // test if previous limit includes this cursor
+        if (level > 0) {
           // traverse all previous limits to see which major one includes
           // this limit
           for (l=0; l < cache.setlimits.length; l++) {
