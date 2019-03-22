@@ -81,12 +81,10 @@
         <td tal:content="python: assessment.overall_conclusion[0] - score_2012">+1</td>
       </tr>
 
-      <tr tal:define="colspan python: max(len(assessment.gescomponents), 1) - 1">
+      <tr tal:define="colspan python: max(len(assessment.gescomponents), 1) + 2">
         <th rowspan="1">Recommendations</th>
         <td tal:attributes="colspan colspan"
           tal:content="assessment/recommendations">Recomendation text</td>
-        <th></th>
-        <td></td>
       </tr>
 
     </tbody>
