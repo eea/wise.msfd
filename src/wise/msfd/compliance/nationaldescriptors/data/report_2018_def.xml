@@ -64,7 +64,7 @@
     <element section="element" startgroup="true" merge="true" name="Element">Element</element>
     <element section="element" merge="true" name="ElementCode">Element code</element>
     <element section="element" merge="true" name="ElementCodeSource" label="elementcode_sources">Element code source</element>
-    <element section="element" merge="true" name="Element2">Element 2</element>
+    <element section="element" startgroup="true" merge="true" name="Element2">Element 2</element>
     <element section="element" merge="true" name="Element2Code" label="element_sources">Element 2 code</element>
     <element section="element" merge="true" name="Element2CodeSource" label="elementcode_sources">Element 2 code source</element>
     <element section="element" merge="true" name="ElementSource">Element source</element>

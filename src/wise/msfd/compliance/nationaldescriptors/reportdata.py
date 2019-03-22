@@ -527,6 +527,7 @@ https://svn.eionet.europa.eu/repositories/Reportnet/Dataflows/MarineDirective/MS
             t.c.GESComponent,
             t.c.Feature,
             t.c.Element,
+            t.c.Element2,
             t.c.Criteria,
             t.c.IntegrationRuleTypeParameter,
         ]

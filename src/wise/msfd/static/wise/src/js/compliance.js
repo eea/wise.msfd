@@ -87,12 +87,16 @@ if (!Array.prototype.last){
 
   function mergeCellsInRow(row, cache) {
     /* This function visually groups and merges cells in table, to optimize
-     * for reading information
+     * for reading information.
+     *
+     * It joins adjacent cells that have identical text, but uses group
+     * definitions to establish "limits" on what it can merge. Finally, those
+     * "groups" end cells are marked with special classes, to distinguish them
+     * visually.
      */
 
     var limits = cache.setlimits[cache.setlimits.length - 1];   // get last set
 
-    // join adjacent cells with identical text
     var sets = [];
 
     // group cells by similarity
@@ -139,15 +143,23 @@ if (!Array.prototype.last){
     // apply special class to group end cells
     var cursor = 0;
     $('td', row).each(function(iy) {
+      var level = cache.level;
+      var l;
+      var prevset;
+
       var c = parseInt($(this).attr('colspan') || '1');
       cursor += c;
+
       if (limits.includes(cursor)) {
-        var level = cache.level;
-        // test if previous limit includes this cursor
-        if (level > 0) {
-          var prevset = cache.setlimits[cache.setlimits.length - 2];
-          if (prevset.includes(cursor)) {
-            level -= 1;
+        if (level > 0) {  // test if previous limit includes this cursor
+          // traverse all previous limits to see which major one includes
+          // this limit
+          for (l=0; l < cache.setlimits.length; l++) {
+            prevset = cache.setlimits[l];
+            if (prevset.includes(cursor)) {
+              level = l;
+              break;
+            }
           }
         }
         $(this).addClass('endgroup_' + level);
