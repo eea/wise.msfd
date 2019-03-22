@@ -14,8 +14,7 @@ from Products.Five.browser.pagetemplatefile import (PageTemplateFile,
 from wise.msfd.base import EmbeddedForm, MainFormWrapper
 from wise.msfd.compliance.base import get_questions
 from wise.msfd.compliance.content import AssessmentData
-from wise.msfd.compliance.interfaces import (ICountryDescriptorsFolder,
-                                             IEditAssessmentSettingsForm)
+from wise.msfd.compliance.interfaces import IEditAssessmentSettingsForm
 from wise.msfd.gescomponents import get_descriptor  # , get_descriptor_elements
 from z3c.form.button import buttonAndHandler
 from z3c.form.field import Fields
@@ -262,13 +261,6 @@ class EditAssessmentDataForm(Form, BaseView):
         if last != data:
             last.update(data)
             self.context.saved_assessment_data.append(last)
-
-    @property
-    def current_phase(self):
-        country_folder = self.get_parent_by_iface(ICountryDescriptorsFolder)
-        state, title = self.process_phase(country_folder)
-
-        return state, title
 
     def is_disabled(self, question):
         state, _ = self.current_phase

@@ -22,7 +22,9 @@
           </div>
 
           <h1 tal:content="view/title">Assessment</h1>
-
+          <h4 class="process-phase-title" >
+            Current phase: <span tal:content="python: view.current_phase[1]">Adequacy</span>
+          </h4>
           <div class="nda-link">
             <a href="./../../"
               tal:attributes="href python:view._country_folder.absolute_url()">
