@@ -193,7 +193,7 @@
 
   <assessment-question id="A09Co1" class="coherence" use-criteria='all'>
     <definition>
-      To what extent does the Member State use the same primary/ secondary criteria as the other MS in this region?
+      To what extent does the Member State use the same primary/ secondary criteria as other MS in this region?
     </definition>
     <answers>
       <option score="1">The MS uses this criterion as most (76%-100%) of the MS in the region</option>
@@ -364,7 +364,7 @@
     <score-weight descriptor="D11" value="8" />
   </assessment-question>
 
-  <assessment-question id="A09Co6" class="coherence" use-criteria='none'>
+  <assessment-question id="A09Co6" class="coherence" use-criteria='all'>
     <definition>
       To what extent is the Member State's level of ambition for GES (GES extent threshold) the same or similar to other MS in the region?
     </definition>

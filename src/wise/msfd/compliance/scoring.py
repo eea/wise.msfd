@@ -104,7 +104,7 @@ CONCLUSIONS = [
     'Not reported',
 ]
 
-
+# 2012 old conclusions, not used
 OVERALL_CONCLUSIONS = [
     'Good practice',
     'Adequate',
@@ -117,7 +117,7 @@ OVERALL_CONCLUSIONS = [
 def get_overall_conclusion(concl_score):
     score = get_range_index(concl_score)
 
-    conclusion = list(reversed(OVERALL_CONCLUSIONS))[score]
+    conclusion = list(reversed(CONCLUSIONS))[score]
 
     return score, conclusion
 
