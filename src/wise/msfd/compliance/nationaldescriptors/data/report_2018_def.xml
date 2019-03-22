@@ -59,12 +59,12 @@
     <element skip='true' name='CountryCode'></element>
 
     <element section="ges" name="GESComponent" convert="ges_component">GES component</element>
-    <element section="ges" startgroup="true" name="Feature" label="features">Feature</element>
+    <element section="ges" setlevel="0" name="Feature" label="features">Feature</element>
 
-    <element section="element" startgroup="true" name="Element">Element</element>
+    <element section="element" setlevel="1" name="Element">Element</element>
     <element section="element" name="ElementCode">Element code</element>
     <element section="element" name="ElementCodeSource" label="elementcode_sources">Element code source</element>
-    <element section="element" startgroup="true" name="Element2">Element 2</element>
+    <element section="element" setlevel="2" name="Element2">Element 2</element>
     <element section="element" name="Element2Code" label="element_sources">Element 2 code</element>
     <element section="element" name="Element2CodeSource" label="elementcode_sources">Element 2 code source</element>
     <element section="element" name="ElementSource">Element source</element>
@@ -97,7 +97,7 @@
     <element section="elementstatus" name="ElementStatus">Element status</element>
     <element section="elementstatus" name="DescriptionElement" translate="true">Description element</element>
 
-    <element section="overallstatus" name="IntegrationRuleTypeParameter" label="parameters">
+    <element section="overallstatus" setlevel="0" name="IntegrationRuleTypeParameter" label="parameters">
       Integration rule type parameter
     </element>
     <element section="overallstatus" name="IntegrationRuleDescriptionParameter">

@@ -20,8 +20,6 @@ from plone.intelligenttext.transforms import \
 from plone.memoize import volatile
 from Products.Five.browser.pagetemplatefile import PageTemplateFile
 
-from .labels import COMMON_LABELS
-
 # TODO: move this registration to search package
 BLACKLIST = ['ID', 'Import', 'Id']
 
@@ -48,6 +46,8 @@ def scan(namespace):
 
 
 def print_value(value):
+    from .labels import COMMON_LABELS
+
     # TODO: this is only used in search package
 
     if not value:

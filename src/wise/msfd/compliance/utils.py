@@ -39,9 +39,11 @@ class ReportField(TemplateMixin):
         self.section = node.get('section', '')
 
         self.drop = node.get('skip') == 'true'
-        self.merge = node.get('merge') == 'true'
 
-        self.startgroup = node.get('startgroup') == 'true'
+        self.setlevel = node.get('setlevel')
+
+        if self.setlevel:
+            self.setlevel = int(self.setlevel)
 
 
 class ReportDefinition(object):

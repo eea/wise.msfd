@@ -95,9 +95,10 @@ if (!Array.prototype.last){
      * visually.
      */
 
-    var limits = cache.setlimits[cache.setlimits.length - 1];   // get last set
-
     var sets = [];
+
+    // get last set of limits from the cache.
+    var limits = cache.setlimits[cache.setlimits.length - 1].limits;
 
     // group cells by similarity
     $('td', row).each(function(ix) {
@@ -119,7 +120,7 @@ if (!Array.prototype.last){
     $(sets).each(function(){
       if (this.length > 1) {
         var colspan = this.length;
-        $(this[0]).attr('colspan', colspan).addClass('merged');
+        $(this[0]).attr('colspan', colspan);  // .addClass('merged');
         $(this.slice(1)).each(function(){
           $(this).remove();
         });
@@ -127,9 +128,13 @@ if (!Array.prototype.last){
     });
 
     // compute new group limits
-    if ($(row).hasClass('startgroup')) {
+    var row_level = $(row).data('level');
+    console.log("row_level", row_level);
+
+    if (row_level != undefined) {
       limits = [];
-      cache.level += 1;   // we don't reall need level, can use len setlimits
+      cache.curent_level = parseInt($(row).data('level'));
+
       $(sets).each(function() {
         var l = this.length;
         if (limits.length) {
@@ -137,13 +142,16 @@ if (!Array.prototype.last){
         }
         limits.push(l);
       });
-      cache.setlimits.push(limits);
+      cache.setlimits.push({
+        level: cache.curent_level,
+        limits: limits.slice(0)   // makes a copy
+      });
     }
 
     // apply special class to group end cells
     var cursor = 0;
     $('td', row).each(function(iy) {
-      var level = cache.level;
+      var level = cache.curent_level;
       var l;
       var prevset;
 
@@ -155,9 +163,9 @@ if (!Array.prototype.last){
           // traverse all previous limits to see which major one includes
           // this limit
           for (l=0; l < cache.setlimits.length; l++) {
-            prevset = cache.setlimits[l];
+            prevset = cache.setlimits[l].limits;
             if (prevset.includes(cursor)) {
-              level = l;
+              level = cache.setlimits[l].level;
               break;
             }
           }
@@ -175,12 +183,19 @@ if (!Array.prototype.last){
     }
 
     var cache = {
-      level: 0,
-      setlimits: [[]]
+      curent_level: 0,
+      setlimits: [
+        {
+          level: 0,
+          limits: []
+        }  // level, list of limits
+      ]
     };
     $('tr', this).each(function(){
       mergeCellsInRow(this, cache);
     });
+
+    console.log(cache);
 
     $table.fixTableHeaderHeight();
     $table.data('simplified', $table.html());
