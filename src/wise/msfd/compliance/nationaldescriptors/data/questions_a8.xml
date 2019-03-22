@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <questions article='Art8'>
 
-  <assessment-question id="A08Ad1" class="adequacy" use-criteria='none'>
+  <assessment-question id="A08Ad1" class="adequacy" use-criteria='all'>
     <definition>
       To what extent does the Member State report the criteria elements required by the 2017 Decision? 
     </definition>
@@ -10,7 +10,7 @@
       <option score="0.75">51-75% of criteria elements are reported</option>
       <option score="0.5">26-50% of criteria elements are reported</option>
       <option score="0.25">1-25% of criteria elements are reported</option>
-      <option score="0">Not criteria element reported</option>
+      <option score="0">No criteria elements reported</option>
       <option score="/">Not relevant</option>
     </answers>
     <scoring determination-method="wise.msfd.compliance.scoring.scoring_based">
@@ -65,7 +65,7 @@
     <score-weight descriptor="D11" value="10" />
   </assessment-question>
 
-  <assessment-question id="A08Ad3" class="adequacy" use-criteria='all'>
+  <assessment-question id="A08Ad3" class="adequacy" use-criteria='none'>
     <definition>
       Does the assessment provide a conclusion on the current status? 
     </definition>

@@ -1,5 +1,6 @@
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 from wise.msfd.compliance.base import BaseComplianceView
+from wise.msfd.compliance.interfaces import ICountryDescriptorsFolder
 
 from .data import REPORT_DEFS
 
@@ -15,6 +16,13 @@ class BaseView(BaseComplianceView):
     assessment_header_template = ViewPageTemplateFile(
         'pt/assessment-header.pt'
     )
+
+    @property
+    def current_phase(self):
+        country_folder = self.get_parent_by_iface(ICountryDescriptorsFolder)
+        state, title = self.process_phase(country_folder)
+
+        return state, title
 
     @property
     def TRANSLATABLES(self):
