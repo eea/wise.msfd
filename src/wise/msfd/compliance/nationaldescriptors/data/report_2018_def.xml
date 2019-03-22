@@ -8,28 +8,28 @@
     <element skip='true' name='MarineReportingUnit'></element>
     <element skip='true' name='CountryCode'></element>
 
-    <element section="ges" merge="true" name="Features" label="features" convert="csv_ges_labels_list">Feature(s) reported</element>
-    <element section="ges" merge="true" name="TargetCode" label="targets" convert="csv_ges_labels_inverse_list">Target code</element>
+    <element section="ges" name="Features" label="features" convert="csv_ges_labels_list">Feature(s) reported</element>
+    <element section="ges" name="TargetCode" label="targets" convert="csv_ges_labels_inverse_list">Target code</element>
 
-    <element merge="true" name="Description" translate="true">Description target</element>
-    <element merge="true" name="GESComponents" convert="ges_component_list" filter="all_descriptor_ids">GES components</element>
-    <element merge="true" name="TimeScale">Time scale</element>
-    <element merge="true" name="UpdateDate">Update date</element>
-    <element merge="true" name="UpdateType">Update type</element>
-    <element merge="true" name="Measures">Related measures</element>
-    <element merge="true" name="Element">Element</element>
-    <element merge="true" name="Element2">Element 2</element>
-    <element merge="true" name="Parameter" label="parameters">Parameter</element>
-    <element merge="true" name="ParameterOther">Parameter other</element>
-    <element merge="true" name="TargetValue">Target value</element>
-    <element merge="true" name="ValueAchievedUpper">Value achieved upper</element>
-    <element merge="true" name="ValueAchievedLower">Value achieved lower</element>
-    <element merge="true" name="ValueUnit" label="units">Value unit</element>
-    <element merge="true" name="ValueUnitOther">Value unit other</element>
-    <element merge="true" name="TargetStatus">Target status</element>
-    <element merge="true" name="AssessmentPeriod">Assessment period</element>
-    <element merge="true" name="ProgressDescription" translate="true">Description target assessment</element>
-    <element merge="true" name="Indicators" label="indicators" convert="csv_ges_labels_inverse_list">Related indicator</element>
+    <element name="Description" translate="true">Description target</element>
+    <element name="GESComponents" convert="ges_component_list" filter="all_descriptor_ids">GES components</element>
+    <element name="TimeScale">Time scale</element>
+    <element name="UpdateDate">Update date</element>
+    <element name="UpdateType">Update type</element>
+    <element name="Measures">Related measures</element>
+    <element name="Element">Element</element>
+    <element name="Element2">Element 2</element>
+    <element name="Parameter" label="parameters">Parameter</element>
+    <element name="ParameterOther">Parameter other</element>
+    <element name="TargetValue">Target value</element>
+    <element name="ValueAchievedUpper">Value achieved upper</element>
+    <element name="ValueAchievedLower">Value achieved lower</element>
+    <element name="ValueUnit" label="units">Value unit</element>
+    <element name="ValueUnitOther">Value unit other</element>
+    <element name="TargetStatus">Target status</element>
+    <element name="AssessmentPeriod">Assessment period</element>
+    <element name="ProgressDescription" translate="true">Description target assessment</element>
+    <element name="Indicators" label="indicators" convert="csv_ges_labels_inverse_list">Related indicator</element>
   </Art10>
 
   <Art9>
@@ -39,16 +39,16 @@
     <element skip='true' name='MarineReportingUnit'></element>
     <element skip='true' name='CountryCode'></element>
 
-    <element section="ges" merge="true" name="GESComponent" convert="ges_component">GES component</element>
-    <element section="ges" merge="true" name="JustificationNonUse">Justification for non-use of criterion</element>
-    <element section="ges" merge="true" name="JustificationDelay">
+    <element section="ges" name="GESComponent" convert="ges_component">GES component</element>
+    <element section="ges" name="JustificationNonUse">Justification for non-use of criterion</element>
+    <element section="ges" name="JustificationDelay">
       Justification for delay in setting EU/regional requirements
     </element>
 
-    <element section="gesdetermination" merge="true" name="Features" label="features" convert="csv_ges_labels_list">Features</element>
-    <element section="gesdetermination" merge="true" name="GESDescription" translate="true">GES description</element>
-    <element section="gesdetermination" merge="true" name="DeterminationDate">Determination date</element>
-    <element section="gesdetermination" merge="true" name="UpdateType">Update type</element>
+    <element section="gesdetermination" name="Features" label="features" convert="csv_ges_labels_list">Features</element>
+    <element section="gesdetermination" name="GESDescription" translate="true">GES description</element>
+    <element section="gesdetermination" name="DeterminationDate">Determination date</element>
+    <element section="gesdetermination" name="UpdateType">Update type</element>
   </Art9>
 
   <Art8>
@@ -58,78 +58,78 @@
     <element skip='true' name='MarineReportingUnit'></element>
     <element skip='true' name='CountryCode'></element>
 
-    <element section="ges" merge="true" name="GESComponent" convert="ges_component">GES component</element>
-    <element section="ges" startgroup="true" merge="true" name="Feature" label="features">Feature</element>
+    <element section="ges" name="GESComponent" convert="ges_component">GES component</element>
+    <element section="ges" startgroup="true" name="Feature" label="features">Feature</element>
 
-    <element section="element" startgroup="true" merge="true" name="Element">Element</element>
-    <element section="element" merge="true" name="ElementCode">Element code</element>
-    <element section="element" merge="true" name="ElementCodeSource" label="elementcode_sources">Element code source</element>
-    <element section="element" startgroup="true" merge="true" name="Element2">Element 2</element>
-    <element section="element" merge="true" name="Element2Code" label="element_sources">Element 2 code</element>
-    <element section="element" merge="true" name="Element2CodeSource" label="elementcode_sources">Element 2 code source</element>
-    <element section="element" merge="true" name="ElementSource">Element source</element>
+    <element section="element" startgroup="true" name="Element">Element</element>
+    <element section="element" name="ElementCode">Element code</element>
+    <element section="element" name="ElementCodeSource" label="elementcode_sources">Element code source</element>
+    <element section="element" startgroup="true" name="Element2">Element 2</element>
+    <element section="element" name="Element2Code" label="element_sources">Element 2 code</element>
+    <element section="element" name="Element2CodeSource" label="elementcode_sources">Element 2 code source</element>
+    <element section="element" name="ElementSource">Element source</element>
 
-    <element section="criteriastatus" merge="true" name="Criteria" convert="ges_component">Criterion</element>
-    <element section="criteria" merge="false" name="Parameter" label="parameters">Parameter</element>
-    <element section="criteria" merge="false" name="ParameterOther">Parameter other</element>
-    <element section="criteria" merge="false" name="ThresholdValueUpper">Threshold value upper</element>
-    <element section="criteria" merge="false" name="ThresholdValueLower">Threshold value lower</element>
-    <element section="criteria" merge="false" name="ThresholdQualitative">Threshold qualitative</element>
-    <element section="criteria" merge="false" name="ThresholdValueSource" label="threshold_sources">
+    <element section="criteriastatus" name="Criteria" convert="ges_component">Criterion</element>
+    <element section="criteria" name="Parameter" label="parameters">Parameter</element>
+    <element section="criteria" name="ParameterOther">Parameter other</element>
+    <element section="criteria" name="ThresholdValueUpper">Threshold value upper</element>
+    <element section="criteria" name="ThresholdValueLower">Threshold value lower</element>
+    <element section="criteria" name="ThresholdQualitative">Threshold qualitative</element>
+    <element section="criteria" name="ThresholdValueSource" label="threshold_sources">
       Threshold value source
     </element>
-    <element section="criteria" merge="false" name="ThresholdValueSourceOther">Threshold value source other</element>
-    <element section="criteria" merge="false" name="ValueAchievedUpper">Value achieved upper</element>
-    <element section="criteria" merge="false" name="ValueAchievedLower">Value achieved lower</element>
-    <element section="criteria" merge="false" name="ValueUnit" label="units">Value unit</element>
-    <element section="criteria" merge="false" name="ValueUnitOther">Value unit other</element>
-    <element section="criteria" merge="false" name="ProportionThresholdValue">Proportion threshold value</element>
-    <element section="criteria" merge="false" name="ProportionValueAchieved">Proportion value achieved</element>
-    <element section="criteria" merge="false" name="ProportionThresholdValueUnit">Proportion threshold value unit</element>
-    <element section="criteria" merge="false" name="Trend">Trend</element>
-    <element section="criteria" merge="false" name="ParameterAchieved">Parameter achieved</element>
-    <element section="criteria" merge="false" name="DescriptionParameter" translate="true">Description parameter</element>
-    <element section="criteria" merge="false" name="IndicatorCode" label="indicators">Related indicator</element>
+    <element section="criteria" name="ThresholdValueSourceOther">Threshold value source other</element>
+    <element section="criteria" name="ValueAchievedUpper">Value achieved upper</element>
+    <element section="criteria" name="ValueAchievedLower">Value achieved lower</element>
+    <element section="criteria" name="ValueUnit" label="units">Value unit</element>
+    <element section="criteria" name="ValueUnitOther">Value unit other</element>
+    <element section="criteria" name="ProportionThresholdValue">Proportion threshold value</element>
+    <element section="criteria" name="ProportionValueAchieved">Proportion value achieved</element>
+    <element section="criteria" name="ProportionThresholdValueUnit">Proportion threshold value unit</element>
+    <element section="criteria" name="Trend">Trend</element>
+    <element section="criteria" name="ParameterAchieved">Parameter achieved</element>
+    <element section="criteria" name="DescriptionParameter" translate="true">Description parameter</element>
+    <element section="criteria" name="IndicatorCode" label="indicators">Related indicator</element>
 
-    <element section="criteriastatus" merge="false" name="CriteriaStatus">Criteria status</element>
-    <element section="criteriastatus" merge="false" name="DescriptionCriteria" translate="true">Description criteria</element>
+    <element section="criteriastatus" name="CriteriaStatus">Criteria status</element>
+    <element section="criteriastatus" name="DescriptionCriteria" translate="true">Description criteria</element>
 
-    <element section="elementstatus" merge="false" name="ElementStatus">Element status</element>
-    <element section="elementstatus" merge="false" name="DescriptionElement" translate="true">Description element</element>
+    <element section="elementstatus" name="ElementStatus">Element status</element>
+    <element section="elementstatus" name="DescriptionElement" translate="true">Description element</element>
 
-    <element section="overallstatus" merge="true" name="IntegrationRuleTypeParameter" label="parameters">
+    <element section="overallstatus" name="IntegrationRuleTypeParameter" label="parameters">
       Integration rule type parameter
     </element>
-    <element section="overallstatus" merge="true" name="IntegrationRuleDescriptionParameter">
+    <element section="overallstatus" name="IntegrationRuleDescriptionParameter">
       Integration rule description parameter
     </element>
-    <element section="overallstatus" merge="true" name="IntegrationRuleDescriptionReferenceParameter" skip="true" reason="Not in the XML">
+    <element section="overallstatus" name="IntegrationRuleDescriptionReferenceParameter" skip="true" reason="Not in the XML">
       Integration rule description reference parameter
     </element>
-    <element section="overallstatus" merge="true" name="IntegrationRuleTypeCriteria" label="parameters">
+    <element section="overallstatus" name="IntegrationRuleTypeCriteria" label="parameters">
       Integration rule type criteria
     </element>
-    <element section="overallstatus" merge="true" name="IntegrationRuleDescriptionCriteria">
+    <element section="overallstatus" name="IntegrationRuleDescriptionCriteria">
       Integration rule description criteria
     </element>
-    <element section="overallstatus" merge="true" name="IntegrationRuleDescriptionReferenceCriteria" skip="true" reason="Not in the XML">
+    <element section="overallstatus" name="IntegrationRuleDescriptionReferenceCriteria" skip="true" reason="Not in the XML">
       Integration rule description reference criteria
     </element>
-    <element section="overallstatus" merge="true" convert="format_nr" name="GESExtentThreshold">GES extent threshold</element>
-    <element section="overallstatus" merge="true" convert="format_nr" name="GESExtentAchieved">GES extent achieved</element>
-    <element section="overallstatus" merge="true" name="GESExtentUnit">GES extent unit</element>
-    <element section="overallstatus" merge="true" name="GESAchieved">GES achieved</element>
-    <element section="overallstatus" merge="true" name="DescriptionOverallStatus" translate="true">
+    <element section="overallstatus" convert="format_nr" name="GESExtentThreshold">GES extent threshold</element>
+    <element section="overallstatus" convert="format_nr" name="GESExtentAchieved">GES extent achieved</element>
+    <element section="overallstatus" name="GESExtentUnit">GES extent unit</element>
+    <element section="overallstatus" name="GESAchieved">GES achieved</element>
+    <element section="overallstatus" name="DescriptionOverallStatus" translate="true">
       Description overall status
     </element>
-    <element section="overallstatus" merge="true" name="AssessmentsPeriod">Assessments period</element>
-    <element section="overallstatus" merge="true" name="PressureCodes" label="pressures" convert="csv_ges_labels_list">
+    <element section="overallstatus" name="AssessmentsPeriod">Assessments period</element>
+    <element section="overallstatus" name="PressureCodes" label="pressures" convert="csv_ges_labels_list">
       Related pressures
     </element>
-    <element section="overallstatus" merge="true" name="RelatedActivities" skip="true" reason="This field is not in the DB">
+    <element section="overallstatus" name="RelatedActivities" skip="true" reason="This field is not in the DB">
       Related activities
     </element>
-    <element section="overallstatus" merge="true" name="TargetCodes" label="targets" convert="csv_ges_labels_inverse_list">
+    <element section="overallstatus" name="TargetCodes" label="targets" convert="csv_ges_labels_inverse_list">
       Related targets
     </element>
   </Art8>
