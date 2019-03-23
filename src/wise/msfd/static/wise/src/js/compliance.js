@@ -97,8 +97,24 @@ if (!Array.prototype.last){
 
     var sets = [];
 
-    // get last set of limits from the cache.
-    var limits = cache.setlimits[cache.setlimits.length - 1].limits;
+    // get the appropriate limits from the cache, based on the current level
+
+    var limits = [];
+
+    var rowLevel = $(row).data('level');
+    rowLevel = (rowLevel != undefined) ? parseInt(rowLevel) : -1;
+    $(cache.setlimits).each(function() {
+      if (this.level == rowLevel) {
+        limits = this.limits;
+        return false;
+      }
+    });
+    if (limits.length == 0) {
+      limits = cache.setlimits[cache.setlimits.length - 1].limits;
+    }
+    // TODO: need to do a fallback on first run
+    // altfel lista ramane goala, in loc sa ia lista precedenta
+    // var limits = cache.setlimits[cache.setlimits.length - 1].limits;
 
     // group cells by similarity
     $('td', row).each(function(ix) {
@@ -128,12 +144,9 @@ if (!Array.prototype.last){
     });
 
     // compute new group limits
-    var row_level = $(row).data('level');
-    console.log("row_level", row_level);
-
-    if (row_level != undefined) {
+    if (rowLevel != -1) {
       limits = [];
-      cache.curent_level = parseInt($(row).data('level'));
+      cache.curentLevel = rowLevel;
 
       $(sets).each(function() {
         var l = this.length;
@@ -143,7 +156,7 @@ if (!Array.prototype.last){
         limits.push(l);
       });
       cache.setlimits.push({
-        level: cache.curent_level,
+        level: cache.curentLevel,
         limits: limits.slice(0)   // makes a copy
       });
     }
@@ -151,7 +164,7 @@ if (!Array.prototype.last){
     // apply special class to group end cells
     var cursor = 0;
     $('td', row).each(function(iy) {
-      var level = cache.curent_level;
+      var level = cache.curentLevel;
       var l;
       var prevset;
 
@@ -183,10 +196,10 @@ if (!Array.prototype.last){
     }
 
     var cache = {
-      curent_level: 0,
+      curentLevel: 0,
       setlimits: [
         {
-          level: 0,
+          level: -1,
           limits: []
         }  // level, list of limits
       ]
