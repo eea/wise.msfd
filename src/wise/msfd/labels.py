@@ -1,6 +1,7 @@
 import csv
 import logging
 
+from . import db, sql
 from lxml.etree import parse
 from pkg_resources import resource_filename
 
@@ -69,12 +70,27 @@ def _extract_from_xsd(fpath):
 
     return labels
 
+@db.use_db_session('2012')
+def get_human_labels():
+
+    t = sql.t_MSFDCommon
+    human_labels = {}
+    count, rows = db.get_all_records(t)
+    for row in rows:
+        for i in range(len(row)-1):
+            if row[i] is None:
+                pass 
+            elif row[i].isalpha():
+                human_labels[row[i]] = row[i+1]
+
+    return human_labels
 
 def get_common_labels():
     labels = {}
     labels.update(_extract_from_csv())
     labels.update(_extract_from_xsd('data/MSCommon_1p0.xsd'))
     labels.update(_extract_from_xsd('data/MSCommon_1p1.xsd'))
+    labels.update(get_human_labels())
 
     return labels
 

@@ -138,7 +138,6 @@ def get_member_states_vb_factory(context):
 
     return values_to_vocab(set(x[1] for x in rows))
 
-
 @provider(IVocabularyFactory)
 def get_area_type_vb_factory(context):
 
