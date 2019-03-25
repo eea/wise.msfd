@@ -98,9 +98,7 @@ if (!Array.prototype.last){
     var sets = [];
 
     // get the appropriate limits from the cache, based on the current level
-
     var limits = [];
-
     var rowLevel = $(row).data('level');
     rowLevel = (rowLevel != undefined) ? parseInt(rowLevel) : -1;
     $(cache.setlimits).each(function() {
@@ -112,9 +110,6 @@ if (!Array.prototype.last){
     if (limits.length == 0) {
       limits = cache.setlimits[cache.setlimits.length - 1].limits;
     }
-    // TODO: need to do a fallback on first run
-    // altfel lista ramane goala, in loc sa ia lista precedenta
-    // var limits = cache.setlimits[cache.setlimits.length - 1].limits;
 
     // group cells by similarity
     $('td', row).each(function(ix) {
@@ -197,18 +192,14 @@ if (!Array.prototype.last){
 
     var cache = {
       curentLevel: 0,
-      setlimits: [
-        {
-          level: -1,
-          limits: []
-        }  // level, list of limits
-      ]
+      setlimits: [{
+        level: -1,
+        limits: []
+      }]
     };
     $('tr', this).each(function(){
       mergeCellsInRow(this, cache);
     });
-
-    console.log(cache);
 
     $table.fixTableHeaderHeight();
     $table.data('simplified', $table.html());
