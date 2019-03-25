@@ -112,7 +112,35 @@ def get_assessment_data_2012_db(*args):
             t.c.MSFDArticle.is_(None))
     )
 
-    return res
+    # look for rows where OverallAssessment looks like 'see D1'
+    # replace these rows with data for the descriptor mentioned in the
+    # OverallAssessment
+    res_final = []
+    descr_reg = re.compile('see\s(d\d{1,2})', flags=re.I)
+    for row in res:
+        overall_text = row.OverallAssessment
+        if not overall_text:
+            res_final.append(row)
+            continue
+
+        if 'see' in overall_text.lower():
+            descr_match = descr_reg.match(overall_text)
+            descriptor = descr_match.groups()[0]
+
+            _, r = db.get_all_records(
+                t,
+                t.c.Country == row.Country,
+                t.c.Descriptor == descriptor,
+                t.c.AssessmentCriteria == row.AssessmentCriteria,
+                t.c.MSFDArticle == row.MSFDArticle
+            )
+
+            res_final.append(r[0])
+            continue
+
+        res_final.append(row)
+
+    return res_final
 
 
 @db.use_db_session('2018')
@@ -517,6 +545,10 @@ class NationalDescriptorArticleView(BaseView):
         # Assessment header 2018
         report_by_2018 = u'Commission'
         # assessors_2018 = self.context.saved_assessment_data.assessors
+        # from plone.api import user
+        # aa = user.get_current()
+        # can_edit = self.check_permission('wise.msfd: Edit Assessment')
+        # import pdb; pdb.set_trace()
         assessors_2018 = getattr(
             self.context.saved_assessment_data, 'ass_new', 'Not assessed'
         )
