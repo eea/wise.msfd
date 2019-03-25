@@ -2,6 +2,7 @@ import logging
 from collections import namedtuple
 
 import lxml.etree
+from natsort import natsorted
 from sqlalchemy.orm import aliased
 from zope.component import getMultiAdapter
 from zope.dottedname.resolve import resolve
@@ -384,11 +385,16 @@ class AssessmentQuestionDefinition:
             .join(G)\
             .filter(G.GESComponent.in_(ok_ges_ids))
 
-        return [Target(t.TargetCode.encode('ascii', errors='ignore'),
-                       t.TargetCode,
-                       t.Description)
+        res = [Target(t.TargetCode.encode('ascii', errors='ignore'),
+                      t.TargetCode,
+                      t.Description)
 
-                for t in q]
+               for t in q]
+
+        # sort Targets and make them distinct
+        res_sorted = natsorted(set(res), key=lambda _x: _x.id)
+
+        return res_sorted
 
     def get_assessed_elements(self, descriptor, **kwargs):
         """ Get a list of filtered assessed elements for this question.

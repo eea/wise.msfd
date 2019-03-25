@@ -43,6 +43,7 @@ setup(
         'zope.sqlalchemy',
         'pymssql',
         'xlsxwriter',
+        'natsort',  # used to sort targets in Art10
         # 'pyodbc',
 
         'z3c.formwidget.optgroup',  # used in compliance select lists
