@@ -2,7 +2,6 @@ import logging
 from collections import namedtuple
 
 import lxml.etree
-from natsort import natsorted
 from sqlalchemy.orm import aliased
 from zope.component import getMultiAdapter
 from zope.dottedname.resolve import resolve
@@ -366,7 +365,7 @@ class AssessmentQuestionDefinition:
     def _art_89_ids(self, descriptor, **kwargs):
         return sorted_criterions(descriptor.criterions)
 
-    @ram.cache(_a10_ids_cachekey)
+    # @ram.cache(_a10_ids_cachekey)
     @db.use_db_session('2018')
     def _art_10_ids(self, descriptor, **kwargs):
         muids = [x.id for x in kwargs['muids']]
@@ -392,7 +391,8 @@ class AssessmentQuestionDefinition:
                for t in q]
 
         # sort Targets and make them distinct
-        res_sorted = natsorted(set(res), key=lambda _x: _x.id)
+        # import pdb; pdb.set_trace()
+        res_sorted = sorted(set(res), key=lambda _x: _x.id)
 
         return res_sorted
 
