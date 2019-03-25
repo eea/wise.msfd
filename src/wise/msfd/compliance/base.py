@@ -20,7 +20,8 @@ from wise.msfd.compliance.vocabulary import ASSESSED_ARTICLES, REGIONS
 from wise.msfd.gescomponents import (get_descriptor, get_marine_units,
                                      sorted_criterions)
 from wise.msfd.translation.interfaces import ITranslationContext
-from wise.msfd.utils import Tab, _parse_files_in_location, row_to_dict, timeit
+from wise.msfd.utils import (Tab, _parse_files_in_location, row_to_dict,
+                             timeit, natural_sort_key)
 
 from . import interfaces
 from .interfaces import ICountryDescriptorsFolder
@@ -391,8 +392,7 @@ class AssessmentQuestionDefinition:
                for t in q]
 
         # sort Targets and make them distinct
-        # import pdb; pdb.set_trace()
-        res_sorted = sorted(set(res), key=lambda _x: _x.id)
+        res_sorted = sorted(set(res), key=lambda _x: natural_sort_key(_x.id))
 
         return res_sorted
 

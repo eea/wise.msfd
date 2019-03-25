@@ -1,6 +1,7 @@
 import datetime
 import logging
 import os
+import re
 import time
 from collections import OrderedDict, defaultdict, namedtuple
 from cPickle import dumps
@@ -617,3 +618,12 @@ def timeit(func):
         return res
 
     return wrapped
+
+
+def natural_sort_key(s, _nsre=re.compile('([0-9]+)')):
+    """ Natural sorting key, used for alphanumeric sorting
+
+    """
+
+    return [text.isdigit() and int(text) or text.lower()
+            for text in _nsre.split(s)]
