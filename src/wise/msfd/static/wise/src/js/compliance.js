@@ -229,39 +229,40 @@ if (!Array.prototype.last){
    */
   function setupReadMoreModal() {
     var $table = $('.table-report');
-    var $td = $table.find('td');
+    var $cells = $table.find('td .tr');
     var $modalContent = $('.modal-content-wrapper');
-    var maxchars = 500;
-    var seperator = '...';
+    var maxchars = 50;
+    var sep = '...';
+    console.log('cells', $cells);
 
-    $td.each(function() {
-      var $this = $(this);
-      var $tw = $this.find('.tr');
-
-      $tw.each(function() {
-        var $thw = $(this);
-        var $text = $thw.find('.text-trans');
-        var $si = $('<span class="short-intro"/>');
-
-        if ($text.text().length > (maxchars - seperator.length)) {
-          $this.addClass('read-more-wrapper');
-          $si.insertBefore($text);
-
-          var $intro = $thw.children('.short-intro');
-          if ($thw.find('.short-intro').length > 1) {
-            $intro.eq(0).remove();
-          }
-          $intro.text($text.text().substr(0, maxchars-seperator.length) + seperator);
-
-          $this.find('.read-more-btn').click(function() {
-            $this.find('.active').children('.text-trans').clone().appendTo($modalContent);
-          });
-        } else {
-          $this.removeClass('read-more-wrapper');
-        }
-      });
-
-    });
+    // $td.each(function() {
+    //   var $this = $(this);
+    //   var $tw = $this.find('.tr');
+    //
+    //   $tw.each(function() {
+    //     var $thw = $(this);
+    //     var $text = $thw.find('.text-trans');
+    //     var t = $text.text()
+    //
+    //     if (t.length <= (maxchars - sep.length)) {
+    //       $this.removeClass('read-more-wrapper');
+    //       return;
+    //     }
+    //
+    //     $this.addClass('read-more-wrapper');
+    //     $('<span class="short-intro"/>').insertBefore($text);
+    //
+    //     var $intro = $thw.children('.short-intro');
+    //     if ($thw.find('.short-intro').length > 1) {
+    //       $intro.eq(0).remove();
+    //     }
+    //     $intro.text(t.substr(0, maxchars-sep.length) + sep);
+    //
+    //     $this.find('.read-more-btn').click(function() {
+    //       $this.find('.active').children('.text-trans').clone().appendTo($modalContent);
+    //     });
+    //   });
+    // });
 
     $('.btn-close-modal').click(function() {
       $modalContent.empty();
@@ -333,38 +334,38 @@ if (!Array.prototype.last){
 
             $this.css('height', $this.outerHeight());
 
-            scrollTimer = setTimeout(function() {
-              afterScroll()}, 1);
+            scrollTimer = setTimeout(afterScroll, 1);
 
-              if (tdLeft < thRight) {
-                tdText.addClass('td-scrolled').css('left', thRight + 5);
-              } else {
-                $this.css('height', '');
-                tdText.removeClass('td-scrolled');
-              }
-
-              if (thAndCellWidth >= tdRight) {
-                $this.addClass('td-relative');
-              } else {
-                $this.removeClass('td-relative');
-              }
+            if (tdLeft < thRight) {
+              tdText.addClass('td-scrolled').css('left', thRight + 5);
+            } else {
+              $this.css('height', '');
+              tdText.removeClass('td-scrolled');
             }
+
+            if (thAndCellWidth >= tdRight) {
+              $this.addClass('td-relative');
+            } else {
+              $this.removeClass('td-relative');
+            }
+          }
 
           });
 
           function afterScroll() {
-            $('.btn-translate').on('click', function() {
-              var $btn = $(this);
-              var transTextHeight = $btn.closest('.td-content').outerHeight();
-              var $td = $btn.closest('td.translatable');
-              var $th = $td.siblings('th');
-              $td.css({
-                'height': transTextHeight,
-                'padding': '0'
-              });
-              $btn.closest('.td-content').css('padding', '8px');
-              $th.css('height', transTextHeight);
-            });
+            // Tibi: temporarily disabled
+            // $('.btn-translate').on('click', function() {
+            //   var $btn = $(this);
+            //   var transTextHeight = $btn.closest('.td-content').outerHeight();
+            //   var $td = $btn.closest('td.translatable');
+            //   var $th = $td.siblings('th');
+            //   $td.css({
+            //     'height': transTextHeight,
+            //     'padding': '0'
+            //   });
+            //   $btn.closest('.td-content').css('padding', '8px');
+            //   $th.css('height', transTextHeight);
+            // });
           }
         });
     });
@@ -569,8 +570,9 @@ if (!Array.prototype.last){
       $(".overflow-table h5").width( $(".overflow-table table").width() );
     }
 
-    var $td = $('.overflow-table table td');
-    $td.children('div').wrapInner('<div class="td-content" />');
+    // tibi: temporarily disabled. I don't know what td-content does
+    // var $td = $('.overflow-table table td');
+    // $td.children('div').wrapInner('<div class="td-content" />');
   }
 
   function setupSimplifiedTables() {

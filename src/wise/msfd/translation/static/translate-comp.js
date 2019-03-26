@@ -53,6 +53,11 @@ $(document).ready(function () {
           alert('ERROR saving translation!');
         }
       });
+
+      $('.submitTransl')
+        .attr('disabled', true)
+        .attr('value', 'Please wait...')
+      ;
     };
 
     function toggleTranslations () {
@@ -64,49 +69,69 @@ $(document).ready(function () {
       $cell
         .toggleClass('blue')
         .toggleClass('green')
-        ;
+      ;
 
       $('.text', $cell).toggleClass('active');
       $('.transl', $cell).toggleClass('active');
 
-      var $th = $(this).parents('tr').find('th');
-      $th.fixTableHeaderHeight();
+      // fix height of <th> on this row
+      var $th = $(this).parents('tr').find('th').each(function(){
+        var $th = $(this);
+        var $next = $('td', $th.parent());
+        var cells_max_height = Math.max($next.height());
+
+        $th.height(cells_max_height);
+      });
+      // $th.fixTableHeaderHeight();
+
+      // fix height of lang-toolbar on this row
+      $(this).parents('tr').find('.lang-toolbar').each(function(){
+        var $this = $(this);
+        $this.css('height', $this.parent().height());
+      });
     };
 
     function setupTranslatedCells() {
-      $('.translatable').hover(
-        function() {
-          var $t = $('.w-t', this);
-          var p = $t.position();
-          var $f = $('.lang-footer', this);
-          $f.css({
-            display: 'table-cell',
-            width: $t.width() + 20,
-            height: $t.height() + 20 ,
-            top: p.top - 10,
-            left: p.left - 10,
-            'text-align': 'center',
-            'vertical-align': 'middle'
-          });
+      $('.lang-toolbar').each(function(){
+        var $this = $(this),
+          $p = $this.parent(),
+          h = $p.height();
 
-          $f.show();
-        },
-        function() {
-          $('.lang-footer', this).hide();
-        }
-      );
+        var $c = $this
+          .css('height', h)
+          .children()
+          .hide();
+        ;
+
+        $this.hover(function(){
+          $this
+            .css('width', '160px')
+            .children()
+            .show()
+          ;
+        }, function() {
+          $this
+            .css('width', '0px')
+            .children()
+            .hide()
+          ;
+        });
+      });
+    }
+
+    function autoTranslation() {
     }
 
     window.setupTranslateClickHandlers = function () {
-      // $(".autoTransl").on("click", autoTranslation);
+      $(".autoTransl").on("click", autoTranslation);
       // todo: toggle clickability of buttons?
       setupTranslatedCells();
 
       $('.editTransl').on("click", setupEditTranslationDialog);
       $('.submitTransl').on("click", handleTranslationSave);
 
-      $('.btn-translate-orig').on("click", toggleTranslations);
-      $('.btn-translate-transl').on("click", toggleTranslations);
+      $('.lang-orig').on("click", toggleTranslations);
+      $('.lang-transl').on("click", toggleTranslations);
     };
 
     setupTranslateClickHandlers();

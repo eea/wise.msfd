@@ -1,12 +1,6 @@
-.translatable  {
+td.translatable  {
   background-clip: padding-box;
-
-  &.blue {
-    border-left: 4px solid #d3f3f9 !important;
-  }
-  &.green {
-    border-left: 4px solid #dff1c3 !important;
-  }
+  padding: 0px !important;
 
   .w-t {    // wrapper for translations
     width: 100%;
@@ -14,12 +8,11 @@
 
     .tr-text {
       display: block;
-      // flex-grow: 1;    // grow as big as possible
+      padding: 8px 8px 8px 12px;
 
       .tr {
         display: none;
 
-        // TODO: use rem instead of em;
         &.active {
           display: block;
           min-width: 10rem;
@@ -28,27 +21,41 @@
       }
     }
 
-    .lang-footer {
+    .lang-toolbar {
       position: absolute;
-      display: none;
-      background: rgba(255, 255, 255, 0.8);
+      width: 0px;
+      padding: 4px;
 
-      .l-w {
-        top: 50%;
-        margin-top: -1rem;
-        position: relative;
+      &.blue {
+        background-color: #d3f3f9;
+      }
+      &.green {
+        background-color: #dff1c3;
+      }
 
-        .btn-translate {}
-        .btn-translate-orig {
-          &.active {
-            background-color: #91d4e0;
-          }
+      button {
+        display: inline-block;
+        float: left;
+        margin-left: 3px
+      }
+
+      // buttons styling
+      .fa {
+        font-size: initial;
+        line-height: 18px;
+      }
+      .lang-orig {
+        &.active {
+          background-color: #91d4e0;
         }
-        .btn-translate-transl {
-          &.active {
-            background-color: #b4c8a0;
-          }
+      }
+      .lang-transl {
+        &.active {
+          background-color: #b4c8a0;
         }
+      }
+      .editTransl {
+        margin-left: 20px;
       }
     }
   }
