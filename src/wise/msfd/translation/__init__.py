@@ -38,8 +38,11 @@ def decode_text(text):
     return text_encoded
 
 
-def retrieve_translation(country_code, text, target_languages=None):
+def retrieve_translation(country_code,
+                         text, target_languages=None, force=False):
     """ Send a call to automatic translation service, to translate a string
+
+    Returns a json formatted string
     """
 
     if not text:
@@ -47,23 +50,24 @@ def retrieve_translation(country_code, text, target_languages=None):
 
     translation = get_translated(text, country_code)
 
-    if translation and (u'....' not in translation):
-        # don't translate already translated strings, it overrides the
-        # translation
-        res = {
-            'transId': translation,
-            'externalRefId': text,
-        }
+    if translation:
+        if not(force or (u'....' in translation)):
+            # don't translate already translated strings, it overrides the
+            # translation
+            res = {
+                'transId': translation,
+                'externalRefId': text,
+            }
 
-        return json.dumps(res)
+            return res
 
     site_url = portal.getSite().absolute_url()
 
     if 'localhost' in site_url:
-        logger.warning("Using localhost, won't retrieve translation for: %s",
-                       text
-                       )
-        return
+        logger.warning(
+            "Using localhost, won't retrieve translation for: %s", text)
+
+        return {}
 
     if not target_languages:
         target_languages = ['EN']
@@ -90,25 +94,20 @@ def retrieve_translation(country_code, text, target_languages=None):
         }
     }
 
-    dataj = json.dumps(data)
-    headers = {'Content-Type': 'application/json'}
-
-    resp = requests.post(SERVICE_URL,
-                         auth=HTTPDigestAuth('Marine_EEA_20180706',
-                                             MARINE_PASS),
-                         data=dataj,
-                         headers=headers)
+    resp = requests.post(
+        SERVICE_URL,
+        auth=HTTPDigestAuth('Marine_EEA_20180706', MARINE_PASS),
+        data=json.dumps(data),
+        headers={'Content-Type': 'application/json'}
+    )
+    logger.info('Response from translation request:', resp.content)
 
     res = {
         "transId": resp.content,
         "externalRefId": text
     }
 
-    # res = {'translation': 'Translation in progress!'}
-
-    logger.info('Response from translation request:', res)
-
-    return json.dumps(res)
+    return res
 
 
 def get_translated(value, language, site=None):

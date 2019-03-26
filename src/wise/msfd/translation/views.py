@@ -1,5 +1,5 @@
+import json
 import logging
-import time
 
 from zope import event
 from zope.security import checkPermission
@@ -45,7 +45,7 @@ class TranslationCallback(BrowserView):
         # the encoding doesn't seem to do a great job
 
         translated = translated.decode('latin-1')
-        
+
         save_translation(original, translated, language)
 
         return '{}'
@@ -96,9 +96,7 @@ class TranslationView(BrowserView):
 
 
 class SendTranslationRequest(BrowserView):
-    """ Sends translation request
-
-    TODO: this view is not used anymore, can be deleted.
+    """ Sends (re)translation request
     """
 
     def __call__(self):
@@ -110,14 +108,7 @@ class SendTranslationRequest(BrowserView):
 
         logger.info("Source lang %s", source_lang)
 
-        if 'from_annot' in self.request.form.keys():
-            time.sleep(0.5)
-            text = self.request.form['from_annot']
-
-            return get_translated(text, source_lang)
-
         text = self.request.form.get('text-to-translate', '')
-        # text = decode_text(orig)
 
         if not text:
             return ''
@@ -126,7 +117,8 @@ class SendTranslationRequest(BrowserView):
 
         targetLanguages = self.request.form.get('targetLanguages', ['EN'])
 
-        headers = {'Content-Type': 'application/json'}
-        self.request.response.headers.update(headers)
+        res = retrieve_translation(source_lang, text, targetLanguages,
+                                   force=True)
+        self.request.response.setHeader('Content-Type', 'application/json')
 
-        return retrieve_translation(source_lang, text, targetLanguages)
+        return json.dumps(res)

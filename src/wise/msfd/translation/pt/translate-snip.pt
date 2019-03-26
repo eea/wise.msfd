@@ -36,9 +36,9 @@
           <button data-toggle="modal" data-target="#edit-translation" class="btn btn-light btn-xs editTransl">
             <span class="fa fa-edit" />
           </button>
-          <button class="btn btn-light btn-xs autoTransl">
-            <span class="fa fa-refresh fa-sync" />
-          </button>
+          <!-- <button class="btn btn&#45;light btn&#45;xs autoTransl"> -->
+          <!--   <span class="fa fa&#45;refresh fa&#45;sync" /> -->
+          <!-- </button> -->
         </tal:cond>
       </div>
 

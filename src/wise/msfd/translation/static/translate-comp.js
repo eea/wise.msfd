@@ -4,9 +4,9 @@ $(document).ready(function () {
   var $old = $('#transl-old-translation');
 
   var setupTranslationsInReportPage = function () {
+
     /*
-     * Triggered by the translation edit button. Sets proper text in modal edit
-     * dialog
+     * Triggered by translation edit btn. Sets proper text in modal edit dialog
      */
     function setupEditTranslationDialog () {
       var $cell = $(this).parents('td.translatable');
@@ -60,8 +60,11 @@ $(document).ready(function () {
       ;
     };
 
+    /*
+     * Setup the translations in the report data view screens
+     */
     function toggleTranslations () {
-      // setup the translations in the report data view screens
+      //
       $(this).toggleClass('active');
       $(this).siblings('.btn-translate').toggleClass('active');
 
@@ -91,7 +94,7 @@ $(document).ready(function () {
       });
     };
 
-    function setupTranslatedCells() {
+    function setupUITranslatedCells() {
       $('.lang-toolbar').each(function(){
         var $this = $(this),
           $p = $this.parent(),
@@ -125,7 +128,7 @@ $(document).ready(function () {
     window.setupTranslateClickHandlers = function () {
       $(".autoTransl").on("click", autoTranslation);
       // todo: toggle clickability of buttons?
-      setupTranslatedCells();
+      setupUITranslatedCells();
 
       $('.editTransl').on("click", setupEditTranslationDialog);
       $('.submitTransl').on("click", handleTranslationSave);
