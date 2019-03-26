@@ -49,8 +49,8 @@
               </div>
             </tal:rep>
             <div>
-              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
               <input type="submit" class="btn btn-primary" value="Save">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
             </div>
           </form>
         </div>

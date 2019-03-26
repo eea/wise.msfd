@@ -103,7 +103,7 @@ class A9Item(Item):
             for x in fpi:
                 res.add(x)
 
-        labels = [ItemLabel(k, COMMON_LABELS.get(k, k))
+        labels = [ItemLabel(k, COMMON_LABELS.get(k, k) or k)
                   for k in res]
 
         return ItemList(labels)
