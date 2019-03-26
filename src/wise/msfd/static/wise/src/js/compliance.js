@@ -188,7 +188,6 @@ if (!Array.prototype.last){
 
     if (!$table.data('original')) {
       $table.data('original', $table.html());
-      debugger
     }
 
     var cache = {
