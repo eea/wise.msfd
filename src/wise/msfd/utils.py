@@ -623,6 +623,7 @@ def timeit(func):
 def natural_sort_key(s, _nsre=re.compile('([0-9]+)')):
     """ Natural sorting key, used for alphanumeric sorting
 
+    usage: sorted(list, key=natural_sort_key)
     """
 
     return [text.isdigit() and int(text) or text.lower()

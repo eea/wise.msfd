@@ -8,28 +8,29 @@
     <element skip='true' name='MarineReportingUnit'></element>
     <element skip='true' name='CountryCode'></element>
 
-    <element section="ges" name="Features" label="features" convert="csv_ges_labels_list">Feature(s) reported</element>
-    <element section="ges" name="TargetCode" label="targets" convert="csv_ges_labels_inverse_list">Target code</element>
+    <element section="target" name="Features" label="features" convert="csv_ges_labels_list">Feature(s) reported</element>
+    <element section="target" name="TargetCode" label="targets" convert="csv_ges_labels_inverse_list">Target code</element>
 
-    <element name="Description" translate="true">Description target</element>
-    <element name="GESComponents" convert="ges_component_list" filter="all_descriptor_ids">GES components</element>
-    <element name="TimeScale">Time scale</element>
-    <element name="UpdateDate">Update date</element>
-    <element name="UpdateType">Update type</element>
-    <element name="Measures">Related measures</element>
-    <element name="Element">Element</element>
-    <element name="Element2">Element 2</element>
-    <element name="Parameter" label="parameters">Parameter</element>
-    <element name="ParameterOther">Parameter other</element>
-    <element name="TargetValue">Target value</element>
-    <element name="ValueAchievedUpper">Value achieved upper</element>
-    <element name="ValueAchievedLower">Value achieved lower</element>
-    <element name="ValueUnit" label="units">Value unit</element>
-    <element name="ValueUnitOther">Value unit other</element>
-    <element name="TargetStatus">Target status</element>
-    <element name="AssessmentPeriod">Assessment period</element>
-    <element name="ProgressDescription" translate="true">Description target assessment</element>
-    <element name="Indicators" label="indicators" convert="csv_ges_labels_inverse_list">Related indicator</element>
+    <element section="target" name="Description" translate="true">Description target</element>
+    <element section="target" name="GESComponents" convert="ges_component_list" filter="all_descriptor_ids">GES components</element>
+    <element section="target" name="TimeScale">Time scale</element>
+    <element section="target" name="UpdateDate">Update date</element>
+    <element section="target" name="UpdateType">Update type</element>
+    <element section="target" name="Measures">Related measures</element>
+    
+    <element section="progressassessment" name="Element">Element</element>
+    <element section="progressassessment" name="Element2">Element 2</element>
+    <element section="progressassessment" name="Parameter" label="parameters">Parameter</element>
+    <element section="progressassessment" name="ParameterOther">Parameter other</element>
+    <element section="progressassessment" name="TargetValue">Target value</element>
+    <element section="progressassessment" name="ValueAchievedUpper">Value achieved upper</element>
+    <element section="progressassessment" name="ValueAchievedLower">Value achieved lower</element>
+    <element section="progressassessment" name="ValueUnit" label="units">Value unit</element>
+    <element section="progressassessment" name="ValueUnitOther">Value unit other</element>
+    <element section="progressassessment" name="TargetStatus">Target status</element>
+    <element section="progressassessment" name="AssessmentPeriod">Assessment period</element>
+    <element section="progressassessment" name="ProgressDescription" translate="true">Description target assessment</element>
+    <element section="progressassessment" name="Indicators" label="indicators" convert="csv_ges_labels_inverse_list">Related indicator</element>
   </Art10>
 
   <Art9>
