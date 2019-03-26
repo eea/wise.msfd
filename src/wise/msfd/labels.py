@@ -77,11 +77,7 @@ def get_human_labels():
     human_labels = {}
     count, rows = db.get_all_records(t)
     for row in rows:
-        for i in range(len(row)-1):
-            if row[i] is None:
-                pass 
-            elif row[i].isalpha():
-                human_labels[row[i]] = row[i+1]
+        human_labels[row.Description] = row.value
 
     return human_labels
 
