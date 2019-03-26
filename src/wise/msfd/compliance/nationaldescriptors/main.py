@@ -18,9 +18,8 @@ from wise.msfd.compliance.vocabulary import SUBREGIONS_TO_REGIONS
 from wise.msfd.gescomponents import get_descriptor
 from wise.msfd.utils import t2rt
 
-from .base import BaseView
 from .assessment import get_assessors
-
+from .base import BaseView
 
 logger = getLogger('wise.msfd')
 
@@ -117,10 +116,13 @@ def get_assessment_data_2012_db(*args):
     # OverallAssessment
     res_final = []
     descr_reg = re.compile('see\s(d\d{1,2})', flags=re.I)
+
     for row in res:
         overall_text = row.OverallAssessment
+
         if not overall_text:
             res_final.append(row)
+
             continue
 
         if 'see' in overall_text.lower():
@@ -136,6 +138,7 @@ def get_assessment_data_2012_db(*args):
             )
 
             res_final.append(r[0])
+
             continue
 
         res_final.append(row)
@@ -432,6 +435,7 @@ class NationalDescriptorArticleView(BaseView):
     @property
     def assessor_list(self):
         assessors = get_assessors(self)
+
         if not assessors:
             return []
 
@@ -463,16 +467,18 @@ class NationalDescriptorArticleView(BaseView):
 
         return qs[self.article]
 
-    def __init__(self, context, request):
-        super(NationalDescriptorArticleView, self).__init__(context, request)
+    def __call__(self):
 
         if 'assessor' in self.request.form:
             assessors = self.request.form['assessor']
+
             if isinstance(assessors, list):
                 assessors = ', '.join(assessors)
             self.context.saved_assessment_data.ass_new = assessors
 
         # BBB:
+
+        context = self.context
 
         if not hasattr(context, 'saved_assessment_data') or \
                 not isinstance(context.saved_assessment_data, PersistentList):
@@ -520,7 +526,8 @@ class NationalDescriptorArticleView(BaseView):
             assessor_list=[],
             assessors=assessors,
             assess_date=assess_date,
-            source_file=source_file
+            source_file=source_file,
+            show_edit_assessors=False,
         )
 
         # Assessment data 2018
@@ -528,7 +535,6 @@ class NationalDescriptorArticleView(BaseView):
         elements = self.questions[0].get_all_assessed_elements(
             self.descriptor_obj, muids=self.muids
         )
-
         assessment = format_assessment_data(
             self.article,
             elements,
@@ -545,15 +551,14 @@ class NationalDescriptorArticleView(BaseView):
         # Assessment header 2018
         report_by_2018 = u'Commission'
         # assessors_2018 = self.context.saved_assessment_data.assessors
-        # from plone.api import user
-        # aa = user.get_current()
-        # can_edit = self.check_permission('wise.msfd: Edit Assessment')
-        # import pdb; pdb.set_trace()
         assessors_2018 = getattr(
             self.context.saved_assessment_data, 'ass_new', 'Not assessed'
         )
         assess_date_2018 = data.get('assess_date', u'Not assessed')
         source_file_2018 = ('To be addedd...', '.')
+
+        can_edit = self.check_permission('wise.msfd: Edit Assessment')
+        show_edit_assessors = self.assessor_list and can_edit
 
         self.assessment_header_2018_html = self.assessment_header_template(
             report_by=report_by_2018,
@@ -561,4 +566,7 @@ class NationalDescriptorArticleView(BaseView):
             assessors=assessors_2018,
             assess_date=assess_date_2018,
             source_file=source_file_2018,
+            show_edit_assessors=show_edit_assessors,
         )
+
+        return self.index()

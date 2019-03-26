@@ -11,7 +11,7 @@
         <td tal:attributes="colspan view/colspan">
           <span tal:content="structure options/assessors">Milieu</span>
           <button data-toggle="modal" data-target="#edit-assessors"
-            tal:condition="python: options['assessor_list']">Edit</button>
+            tal:condition="options/show_edit_assessors">Edit</button>
         </td>
       </tr>
       <tr>
@@ -41,7 +41,7 @@
           <h3 class="modal-title">Select assessors</h3>
         </div>
         <div class="modal-body">
-          <form method="POST" name="assessors">
+          <form method="POST" name="assessors" tal:condition="options/show_edit_assessors">
             <tal:rep tal:repeat="assess options/assessor_list">
               <div>
                 <input type="checkbox" tal:attributes="id assess; name string:assessor; value assess">
