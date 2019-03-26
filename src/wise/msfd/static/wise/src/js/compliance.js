@@ -119,7 +119,7 @@ if (!Array.prototype.last){
         var thisText = $(this).text().trim();
         var lastText = $(sets.last().last()).text().trim();
 
-        if ((thisText.length > 0) && (thisText == lastText)) {
+        if  (thisText == lastText) {
           sets.last().push(this);
         } else {
           sets.push([this]);
@@ -188,6 +188,7 @@ if (!Array.prototype.last){
 
     if (!$table.data('original')) {
       $table.data('original', $table.html());
+      debugger
     }
 
     var cache = {
