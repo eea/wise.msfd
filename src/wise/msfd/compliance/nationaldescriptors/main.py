@@ -221,8 +221,13 @@ def get_crit_val(question, element):
     """
     use_crit = question.use_criteria
 
-    if use_crit == 'targets':
-        return element.title
+    if 'targets' in use_crit:
+        if use_crit == 'all-targets':
+            return element.title
+        if use_crit == '2018-targets' and element.year == '2018':
+            return element.title
+
+        return ''
 
     is_prim = element.is_primary
     crit = element.id

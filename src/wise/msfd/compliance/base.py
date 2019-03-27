@@ -324,7 +324,7 @@ class BaseComplianceView(BrowserView):
                            is_translatable=is_translatable)
 
 
-Target = namedtuple('Target', ['id', 'title', 'definition'])
+Target = namedtuple('Target', ['id', 'title', 'definition', 'year'])
 
 
 def _a10_ids_cachekey(method, self, descriptor, **kwargs):
@@ -366,28 +366,56 @@ class AssessmentQuestionDefinition:
     def _art_89_ids(self, descriptor, **kwargs):
         return sorted_criterions(descriptor.criterions)
 
-    # @ram.cache(_a10_ids_cachekey)
+    @db.use_db_session('2012')
+    def __get_a10_2012_targets(self, ok_ges_ids, muids):
+        sess = db.session()
+
+        T = sql.MSFD10Target
+        dt = sql.t_MSFD10_DESCrit
+
+        D_q = sess.query(dt).join(T)
+        D_a = aliased(dt, alias=D_q.subquery())
+
+        targets = sess\
+            .query(T)\
+            .order_by(T.ReportingFeature)\
+            .filter(T.MarineUnitID.in_(muids))\
+            .filter(T.Topic == 'EnvironmentalTarget')\
+            .join(D_a)\
+            .filter(D_a.c.GESDescriptorsCriteriaIndicators.in_(ok_ges_ids))\
+            .distinct()\
+            .all()
+
+        res = [Target(r.ReportingFeature.replace(' ', '_').lower(),
+                      r.ReportingFeature,
+                      r.Description,
+                      '2012')
+
+               for r in targets]
+
+        # sort Targets and make them distinct
+        res_sorted = sorted(set(res), key=lambda _x: natural_sort_key(_x.id))
+
+        return res_sorted
+
     @db.use_db_session('2018')
-    def _art_10_ids(self, descriptor, **kwargs):
-        muids = [x.id for x in kwargs['muids']]
-
-        ok_ges_ids = descriptor.all_ids()
-
+    def __get_a10_2018_targets(self, ok_ges_ids, muids):
         T = sql2018.ART10TargetsTarget
         MU = sql2018.ART10TargetsMarineUnit
         t_MRU = T.ART10_Targets_MarineUnit
         G = sql2018.ART10TargetsTargetGESComponent
         sess = db.session()
 
-        q = sess\
-            .query(T)\
-            .filter(t_MRU.has(MU.MarineReportingUnit.in_(muids)))\
-            .join(G)\
+        q = sess \
+            .query(T) \
+            .filter(t_MRU.has(MU.MarineReportingUnit.in_(muids))) \
+            .join(G) \
             .filter(G.GESComponent.in_(ok_ges_ids))
 
         res = [Target(t.TargetCode.encode('ascii', errors='ignore'),
                       t.TargetCode,
-                      t.Description)
+                      t.Description,
+                      '2018')
 
                for t in q]
 
@@ -395,6 +423,17 @@ class AssessmentQuestionDefinition:
         res_sorted = sorted(set(res), key=lambda _x: natural_sort_key(_x.id))
 
         return res_sorted
+
+    @ram.cache(_a10_ids_cachekey)
+    def _art_10_ids(self, descriptor, **kwargs):
+        muids = [x.id for x in kwargs['muids']]
+        ok_ges_ids = descriptor.all_ids()
+
+        targets_2018 = self.__get_a10_2018_targets(ok_ges_ids, muids)
+        targets_2012 = self.__get_a10_2012_targets(ok_ges_ids, muids)
+        targets_all = targets_2012 + targets_2018
+
+        return targets_all
 
     def get_assessed_elements(self, descriptor, **kwargs):
         """ Get a list of filtered assessed elements for this question.
@@ -404,6 +443,8 @@ class AssessmentQuestionDefinition:
 
         if self.article in ['Art8', 'Art9']:
             res = filtered_criterias(res, self)
+        else:
+            res = filtered_targets(res, self)
 
         return sorted_criterions(res)
 
@@ -455,6 +496,18 @@ def filtered_criterias(criterias, question):
     #     import pdb; pdb.set_trace()
 
     return sorted_criterions(crits)
+
+
+def filtered_targets(targets, question):
+    _targets = []
+
+    if question.use_criteria == 'all-targets':
+        _targets = targets
+
+    if question.use_criteria == '2018-targets':
+        _targets = [t for t in targets if t.year == '2018']
+
+    return _targets
 
 
 def parse_question_file(fpath):

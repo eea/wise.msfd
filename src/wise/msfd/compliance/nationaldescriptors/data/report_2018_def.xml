@@ -17,7 +17,7 @@
     <element section="target" name="UpdateDate">Update date</element>
     <element section="target" name="UpdateType">Update type</element>
     <element section="target" name="Measures">Related measures</element>
-    
+
     <element section="progressassessment" name="Element">Element</element>
     <element section="progressassessment" name="Element2">Element 2</element>
     <element section="progressassessment" name="Parameter" label="parameters">Parameter</element>
