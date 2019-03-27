@@ -307,15 +307,18 @@ def format_assessment_data(article, elements, questions, muids, data):
         sn = '{}_{}_Score'.format(article, question.id)
         score = data.get(sn, 0)
 
-        cn = '{}_{}_Conclusion'.format(article, question.id)
-        conclusion = data.get(cn, '')
+        # cn = '{}_{}_Conclusion'.format(article, question.id)
+        # conclusion = data.get(cn, '')
+        #
+        # score_value = data.get(
+        #     '{}_{}_RawScore'.format(article, question.id), 0
+        # )
 
-        score_value = data.get(
-            '{}_{}_RawScore'.format(article, question.id), 0
-        )
+        conclusion = getattr(score, 'conclusion', '')
+        score_value = getattr(score, 'score_value', 0)
 
         conclusion_color = CONCLUSION_COLOR_TABLE[score_value]
-        overall_score += score     # use raw score or score?
+        overall_score += getattr(score, 'weighted_score', 0)
 
         qr = AssessmentRow(question.definition, summary, conclusion,
                            conclusion_color, score, values)

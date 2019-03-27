@@ -54,6 +54,32 @@
 #
 #     return (trues * 100.0) / len(values)
 
+# def compute_score(question, descriptor, values):
+#     weight = float(question.score_weights.get(descriptor, 10.0))
+#     scores = question.scores
+#     raw_scores = question.score_method(values, scores)
+#
+#     if not raw_scores:
+#         score_value = 4
+#     else:
+#         percentage = calculate_percentage(raw_scores)
+#         score_value = get_range_index(percentage)
+#
+#     # TODO find a proper algorithm to calculate wighted score
+#     weighted_score = score_value * weight / 4
+#     conclusion = list(reversed(CONCLUSIONS))[score_value]
+#
+#     return conclusion, score_value, weighted_score
+
+# 2012 old conclusions, not used
+# OVERALL_CONCLUSIONS = [
+#     'Good practice',
+#     'Adequate',
+#     'Partially adequate',
+#     'Inadequate',
+#     'Not reported',
+# ]
+
 
 DEFAULT_RANGES = [
     [76, 100],
@@ -63,9 +89,12 @@ DEFAULT_RANGES = [
 ]
 
 
-def calculate_percentage(raw_score, max_score):
+def calculate_percentage(raw_scores):
     # max_score ... 100%
     # raw_score ... x
+
+    raw_score = sum(raw_scores)
+    max_score = len(raw_scores)
 
     percentage = (raw_score * 100) / max_score
 
@@ -83,17 +112,15 @@ def get_range_index(percentage):
 
 
 def scoring_based(answers, scores):
-    raw_score = 0.0
-    max_score = 0
+    raw_scores = []
     for answ in answers:
         score = scores[answ]
         if score == '/':
             continue
 
-        raw_score += float(score)
-        max_score += 1
+        raw_scores.append(float(score))
 
-    return raw_score, max_score
+    return raw_scores
 
 
 CONCLUSIONS = [
@@ -101,15 +128,6 @@ CONCLUSIONS = [
     'Good',
     'Poor',
     'Very poor',
-    'Not reported',
-]
-
-# 2012 old conclusions, not used
-OVERALL_CONCLUSIONS = [
-    'Good practice',
-    'Adequate',
-    'Partially adequate',
-    'Inadequate',
     'Not reported',
 ]
 
@@ -122,19 +140,88 @@ def get_overall_conclusion(concl_score):
     return score, conclusion
 
 
-def compute_score(question, descriptor, values):
-    weight = float(question.score_weights.get(descriptor, 10.0))
-    scores = question.scores
-    raw_score, max_score = question.score_method(values, scores)
+class Score(object):
+    def __init__(self, question, descriptor, values):
+        self.question = question
+        self.weight = float(question.score_weights.get(descriptor, 10.0))
+        self.values = values
+        self.scores = question.scores
 
-    if max_score == 0:
-        score_value = 4
-    else:
-        percentage = calculate_percentage(raw_score, max_score)
-        score_value = get_range_index(percentage)
+    @property
+    def raw_scores(self):
+        """ Currently calls scoring_based function, and returns the raw scores
+        based on the options selected for the question
+
+        :return: list of floats [1.0, 0.25, 0, 0.75]
+        """
+        rs = self.question.score_method(self.values, self.scores)
+
+        return rs
+
+    @property
+    def max_score(self):
+        return len(self.raw_scores)
+
+    @property
+    def percentage(self):
+        """ Calculate the percentage from raw scores
+
+        :return: float 53.25
+        """
+        p = calculate_percentage(self.raw_scores)
+
+        return p
+
+    @property
+    def score_value(self):
+        """ Get the score value from percentage
+
+        :return: integer from range 1-4
+        """
+        sv = get_range_index(self.percentage)
+
+        return sv
+
+    @property
+    def conclusion(self):
+        """ Get the conclusion text from score_value
+
+        :return: string 'Very good'
+        """
+        concl = list(reversed(CONCLUSIONS))[self.score_value]
+
+        return concl
 
     # TODO find a proper algorithm to calculate wighted score
-    weighted_score = score_value * weight / 4
-    conclusion = list(reversed(CONCLUSIONS))[score_value]
+    @property
+    def weighted_score(self):
+        """ Calculate the weighted score
 
-    return conclusion, score_value, weighted_score
+        :return: float 7.5
+        """
+        ws = self.score_value * self.weight / 4
+
+        return ws
+
+    @property
+    def score_tooltip(self):
+        raw_score = ' + '.join(str(x) for x in self.raw_scores)
+
+        percentage = '(({}) / {}) * 100 = {}%'\
+            .format(raw_score, self.max_score, self.percentage)
+
+        score_value = '{}% percentage translates to score value {} (out of 4)' \
+                      ' meaning "{}"'\
+            .format(self.percentage, self.score_value, self.conclusion)
+
+        weighted_score = '({} * {}) / 4 = {}'\
+            .format(self.score_value, self.weight, self.weighted_score)
+
+        return '<b>Percentage calculation</b></br>' \
+               '(sum of raw_scores / max_score) * 100</br>' \
+               '{}</br></br>' \
+               '{}</br></br>' \
+               '<b>Weighted score calculation</b></br>' \
+               '(score_value * weight) / 4<br>' \
+               '{}' \
+            .format(percentage, score_value, weighted_score)

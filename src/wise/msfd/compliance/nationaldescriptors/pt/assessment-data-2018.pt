@@ -1,4 +1,9 @@
 <div tal:define="assessment options/assessment; score_2012 python: int(options['score_2012'])">
+  <script>
+    jQuery(document).ready(function() {
+      $('.help-popover').popover();
+    });
+  </script>
 
   <table class="table table-condensed assessment-data-table">
     <tbody>
@@ -26,7 +31,6 @@
               colspan python: len(assessment.gescomponents) - len(row.values) + 1;">
 
               <label for=""
-                class="help-popover"
                 data-trigger="hover"
                 data-html="true"
                 tal:attributes="
@@ -34,7 +38,7 @@
                 data-content python: value[2]"
                 >
                 <span tal:content="python: value[2]">D0C0</span>
-                <!-- <span class="fa fa-question-circle"></span> -->
+                <!--<span class="fa fa-question-circle"></span>-->
               </label>
 
             </td>
@@ -44,7 +48,18 @@
             <strong tal:content="row/conclusion">X</strong>
           </td>
 
-          <td tal:content="row/score">X</td>
+          <td>
+            <span tal:content="python: getattr(row.score, 'weighted_score', 0)">0</span>
+            <span tal:condition="row/score"
+                class="score help-popover fa fa-info-circle fa-s"
+                data-trigger="hover"
+                data-html="true"
+                data-placement="left"
+                tal:attributes="title python: 'Score calculation algorithm';
+                  data-content python: getattr(row.score, 'score_tooltip', '');">
+            </span>
+
+          </td>
         </tr>
         <tr class="assessment-summary">
           <td colspan="50" tal:content="row/summary">Summary</td>
