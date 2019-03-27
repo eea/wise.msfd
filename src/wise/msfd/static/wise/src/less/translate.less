@@ -22,9 +22,10 @@ td.translatable  {
     }
 
     .lang-toolbar {
-      position: absolute;
+      // position: absolute;
       width: 0px;
       padding: 4px;
+      float: left;
 
       &.blue {
         background-color: #d3f3f9;
@@ -48,15 +49,14 @@ td.translatable  {
         &.active {
           background-color: #91d4e0;
         }
+        margin-right: 20px;
       }
       .lang-transl {
         &.active {
           background-color: #b4c8a0;
         }
       }
-      .editTransl {
-        margin-left: 20px;
-      }
+      .editTransl {}
     }
   }
 }

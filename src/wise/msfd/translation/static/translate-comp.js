@@ -105,24 +105,45 @@ $(document).ready(function () {
           .children()
           .hide();
         ;
+        console.log();
 
-        $this.hover(function(){
+        function inhover(){
+          var p = $p.position();
           $this
-            .css('width', '160px')
+            .css({
+              width: 'unset',
+              position: 'absolute',
+              float: 'none',
+              top: p.top,
+              left: p.left
+            })
             .children()
             .show()
           ;
-        }, function() {
+        }
+        function outhover() {
           $this
-            .css('width', '0px')
+            .css({
+              width: '0px',
+              float: 'left',
+              position: 'initial'
+            })
             .children()
             .hide()
           ;
-        });
+        }
+
+        $this.hover(inhover, outhover);
       });
     }
 
     function autoTranslation() {
+      var $form = $("#form-refresh-translation");
+      var $cell = $(this).parents('td.translatable');
+      var text = $('.tr-text .text', $cell).text();
+
+      $form.find('textarea').val(text);
+      $form.submit();
     }
 
     window.setupTranslateClickHandlers = function () {

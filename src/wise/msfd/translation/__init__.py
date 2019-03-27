@@ -122,7 +122,7 @@ def get_translated(value, language, site=None):
         return translated.lstrip('?')
 
 
-def delete_translation(self, text, source_lang):
+def delete_translation(text, source_lang):
     site = portal.getSite()
 
     storage = ITranslationsStorage(site)

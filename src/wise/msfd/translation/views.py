@@ -1,4 +1,3 @@
-import json
 import logging
 
 from zope import event
@@ -7,6 +6,7 @@ from zope.security import checkPermission
 from eea.cache.event import InvalidateMemCacheEvent
 from Products.Five.browser import BrowserView
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile as VPTF
+from Products.statusmessages.interfaces import IStatusMessage
 
 from . import (delete_translation, get_translated,  # decode_text,
                retrieve_translation, save_translation)
@@ -101,24 +101,33 @@ class SendTranslationRequest(BrowserView):
 
     def __call__(self):
 
-        source_lang = self.request.form.get('sourceLanguage', '')
+        form = self.request.form
+        source_lang = form.get('language', '')
+        url = form.get('redirect_url')
+        text = form.get('text', '')
 
         if not source_lang:
             source_lang = ITranslationContext(self.context).language
 
         logger.info("Source lang %s", source_lang)
 
-        text = self.request.form.get('text-to-translate', '')
-
         if not text:
-            return ''
+            return self.request.response.redirect(url)
 
         delete_translation(text, source_lang)
 
         targetLanguages = self.request.form.get('targetLanguages', ['EN'])
 
-        res = retrieve_translation(source_lang, text, targetLanguages,
-                                   force=True)
-        self.request.response.setHeader('Content-Type', 'application/json')
+        retrieve_translation(source_lang, text, targetLanguages, force=True)
+        deps = ['translation']
+        event.notify(InvalidateMemCacheEvent(raw=True, dependencies=deps))
+        logger.info('Invalidate cache for dependencies: %s', ', '.join(deps))
 
-        return json.dumps(res)
+        # import json
+        # self.request.response.setHeader('Content-Type', 'application/json')
+        # return json.dumps(res)
+        messages = IStatusMessage(self.request)
+        messages.add(u"Auto-translation initiated, please refresh "
+                     u"in a couple of minutes", type=u"info")
+
+        return self.request.response.redirect(url)

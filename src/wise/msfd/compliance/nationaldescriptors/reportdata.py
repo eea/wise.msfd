@@ -24,8 +24,7 @@ from wise.msfd.compliance.nationaldescriptors.data import get_report_definition
 from wise.msfd.compliance.utils import group_by_mru, insert_missing_criterions
 from wise.msfd.data import (get_factsheet_url, get_report_file_url,
                             get_report_filename, get_xml_report_data)
-from wise.msfd.gescomponents import (get_descriptor, get_features,
-                                     get_parameters)
+from wise.msfd.gescomponents import get_descriptor, get_features
 from wise.msfd.translation import retrieve_translation
 from wise.msfd.utils import ItemList, items_to_rows, timeit
 from z3c.form.button import buttonAndHandler
@@ -889,5 +888,5 @@ class TitleViewlet(BaseTitleViewlet, BaseView):
             'year': self.view.report_year,
         }
 
-        return (u"{article} report - {country} / {region} / {descriptor}"
-                "/ {year}".format(**params))
+        return (u"{article} report - {country} "
+                u"/ {region} / {descriptor} / {year}".format(**params))
