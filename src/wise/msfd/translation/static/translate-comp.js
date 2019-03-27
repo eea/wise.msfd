@@ -12,8 +12,8 @@ $(document).ready(function () {
       var $cell = $(this).parents('td.translatable');
 
       var $text_div = $('.tr-text', $cell);
-      var old_translation = $('.transl', $text_div).text();
-      var orig_text = $('.text', $text_div).text();
+      var old_translation = $('.transl.system', $text_div).text();
+      var orig_text = $('.text.system', $text_div).text();
 
       $original.text(orig_text);
       $old.text(old_translation);
@@ -140,7 +140,7 @@ $(document).ready(function () {
     function autoTranslation() {
       var $form = $("#form-refresh-translation");
       var $cell = $(this).parents('td.translatable');
-      var text = $('.tr-text .text', $cell).text();
+      var text = $('.tr-text .text.system', $cell).text();
 
       $form.find('textarea').val(text);
       $form.submit();

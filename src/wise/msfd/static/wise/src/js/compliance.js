@@ -229,40 +229,29 @@ if (!Array.prototype.last){
    */
   function setupReadMoreModal() {
     var $table = $('.table-report');
-    var $cells = $table.find('td .tr');
-    var $modalContent = $('.modal-content-wrapper');
-    var maxchars = 50;
-    var sep = '...';
-    console.log('cells', $cells);
 
-    // $td.each(function() {
-    //   var $this = $(this);
-    //   var $tw = $this.find('.tr');
-    //
-    //   $tw.each(function() {
-    //     var $thw = $(this);
-    //     var $text = $thw.find('.text-trans');
-    //     var t = $text.text()
-    //
-    //     if (t.length <= (maxchars - sep.length)) {
-    //       $this.removeClass('read-more-wrapper');
-    //       return;
-    //     }
-    //
-    //     $this.addClass('read-more-wrapper');
-    //     $('<span class="short-intro"/>').insertBefore($text);
-    //
-    //     var $intro = $thw.children('.short-intro');
-    //     if ($thw.find('.short-intro').length > 1) {
-    //       $intro.eq(0).remove();
-    //     }
-    //     $intro.text(t.substr(0, maxchars-sep.length) + sep);
-    //
-    //     $this.find('.read-more-btn').click(function() {
-    //       $this.find('.active').children('.text-trans').clone().appendTo($modalContent);
-    //     });
-    //   });
-    // });
+    var $modal = $("#read-more-modal");
+    var $modalContent = $('.modal-content-wrapper');
+    var maxchars = 27;
+    var sep = '...';
+
+    var $bigCells = $table.find('td .tr.big');
+
+    $bigCells.each(function() {
+      var $text = $(this);
+      var $clone = $text.clone().removeClass('system').addClass('short');
+
+      var t = $text.text();
+      var sh = t.substr(0, maxchars) + sep ;
+      $text.hide();
+      $clone.html(sh);
+      $text.parent().append($clone);
+
+      $clone.on('click', function() {
+        $modalContent.html(t);
+        $modal.modal('show');
+      });
+    });
 
     $('.btn-close-modal').click(function() {
       $modalContent.empty();

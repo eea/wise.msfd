@@ -4405,3 +4405,35 @@ def consolidate_data(data, group_by_fields):
         # import pdb
         # pdb.set_trace()
 
+    console.log('cells', $bigCells);
+
+
+
+    // $td.each(function() {
+    //   var $this = $(this);
+    //   var $tw = $this.find('.tr');
+    //
+    //   $tw.each(function() {
+    //     var $thw = $(this);
+    //     var $text = $thw.find('.text-trans');
+    //     var t = $text.text()
+    //
+    //     if (t.length <= (maxchars - sep.length)) {
+    //       $this.removeClass('read-more-wrapper');
+    //       return;
+    //     }
+    //
+    //     $this.addClass('read-more-wrapper');
+    //     $('<span class="short-intro"/>').insertBefore($text);
+    //
+    //     var $intro = $thw.children('.short-intro');
+    //     if ($thw.find('.short-intro').length > 1) {
+    //       $intro.eq(0).remove();
+    //     }
+    //     $intro.text(t.substr(0, maxchars-sep.length) + sep);
+    //
+    //     $this.find('.read-more-btn').click(function() {
+    //       $this.find('.active').children('.text-trans').clone().appendTo($modalContent);
+    //     });
+    //   });
+    // });
