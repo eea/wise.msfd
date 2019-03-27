@@ -512,25 +512,31 @@ https://svn.eionet.europa.eu/repositories/Reportnet/Dataflows/MarineDirective/MS
             t.c.Region == self.country_region_code,
             # t.c.MarineReportingUnit.in_(muids),     #
             t.c.GESComponent.in_(all_ids),
-            # TODO needs more testing for countries beside FI, SE, NL
-            # the purpose of this condition is to filter "empty" rows
-            # these rows usually have few data, and they are duplicates
             or_(t.c.Element.isnot(None),
                 t.c.Criteria.isnot(None)),
-            # TODO filter by element is needed?
-            # t.c.Element.isnot(None),
-            # Element is None for the OverallStatus
         ]
-        orderby = [
-            t.c.MarineReportingUnit,
-            t.c.GESComponent,
-            t.c.Feature,
-            t.c.Element,
-            t.c.Element2Code,
-            t.c.Element2,
-            t.c.Criteria,
-            t.c.IntegrationRuleTypeParameter,
-        ]
+        if self.descriptor == 'D5':
+            orderby = [
+                t.c.MarineReportingUnit,
+                t.c.GESComponent,
+                t.c.Feature,
+                t.c.Criteria,
+                t.c.Element,
+                t.c.Element2Code,
+                t.c.Element2,
+                t.c.IntegrationRuleTypeParameter,
+            ]
+        else:
+            orderby = [
+                t.c.MarineReportingUnit,
+                t.c.GESComponent,
+                t.c.Feature,
+                t.c.Element,
+                t.c.Element2Code,
+                t.c.Element2,
+                t.c.Criteria,
+                t.c.IntegrationRuleTypeParameter,
+            ]
 
         # groupby IndicatorCode
         q = sess\
