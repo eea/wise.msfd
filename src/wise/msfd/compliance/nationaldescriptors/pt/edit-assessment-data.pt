@@ -1,4 +1,6 @@
 <div id="wise-compliance-form" class="full-width-marker"
+  tal:define="can_comment_tl view/can_comment_tl; can_comment_ec view/can_comment_ec;"
+
   tal:attributes="id view/form_id | string:wise-compliance-form">
   <script>
     jQuery(document).ready(function() {
@@ -152,14 +154,25 @@
                       </div>
                     </div>
                   </div>
-                  <div class="right" tal:define="question_id subform/_question/id | string: summary">
+
+                  <div class="right disc-tl" tal:define="question_id subform/_question/id | string: summary" tal:condition="can_comment_tl">
                     <div class="comments"
-                      tal:attributes="data-question-id question_id"></div>
+                      tal:attributes="data-question-id question_id; data-thread-id string:tl"></div>
                     <div class="textline">
                       <textarea name="comment-text" placeholder="Write a comment..."></textarea>
                       <button class="btn btn-primary">Post</button>
                     </div>
                   </div>
+
+                  <div class="right disc-ec" tal:define="question_id subform/_question/id | string: summary" tal:condition="can_comment_ec">
+                    <div class="comments"
+                      tal:attributes="data-question-id question_id; data-thread-id string:ec"></div>
+                    <div class="textline">
+                      <textarea name="comment-text" placeholder="Write a comment..."></textarea>
+                      <button class="btn btn-primary">Post</button>
+                    </div>
+                  </div>
+
                 </div>
               </div>
             </tal:rep>
