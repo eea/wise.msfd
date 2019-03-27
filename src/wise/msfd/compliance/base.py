@@ -15,7 +15,7 @@ from plone.memoize import ram
 from plone.memoize.view import memoize
 from Products.Five.browser import BrowserView
 from wise.msfd import db, sql, sql2018
-from wise.msfd.compliance.scoring import compute_score
+from wise.msfd.compliance.scoring import Score  # , compute_score
 from wise.msfd.compliance.vocabulary import ASSESSED_ARTICLES, REGIONS
 from wise.msfd.gescomponents import (get_descriptor, get_marine_units,
                                      sorted_criterions)
@@ -361,7 +361,8 @@ class AssessmentQuestionDefinition:
         self.score_method = resolve(sn.get('determination-method'))
 
     def calculate_score(self, descriptor, values):
-        return compute_score(self, descriptor, values)
+        # return compute_score(self, descriptor, values)
+        return Score(self, descriptor, values)
 
     def _art_89_ids(self, descriptor, **kwargs):
         return sorted_criterions(descriptor.criterions)
