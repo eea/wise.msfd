@@ -430,8 +430,8 @@ class AssessmentQuestionDefinition:
         ok_ges_ids = descriptor.all_ids()
 
         targets_2018 = self.__get_a10_2018_targets(ok_ges_ids, muids)
-        targets_2012 = self.__get_a10_2012_targets(ok_ges_ids, muids)
-        targets_all = targets_2012 + targets_2018
+        # targets_2012 = self.__get_a10_2012_targets(ok_ges_ids, muids)
+        targets_all = targets_2018
 
         return targets_all
 
