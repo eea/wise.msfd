@@ -4374,3 +4374,34 @@ def consolidate_data(data, group_by_fields):
     //   }
     // });
     //
+        # TODO this is not used
+        # exclude = REPORT_2018.get_group_by_fields(self.article)
+        # exclude,
+
+        #
+        # os = sql2018.ART8GESOverallStatu
+        # cs = sql2018.ART8GESCriteriaStatu
+        # es = sql2018.ART8GESElementStatu
+        # mu = sql2018.ART8GESMarineUnit
+        #
+        # # muids = [m.id for m in self.muids]
+        #
+        # qu = sess\
+        #     .query(cs, os, es, mu)\
+        #     .outerjoin(os)\
+        #     .outerjoin(es)\
+        #     .outerjoin(mu)\
+        #     .filter(mu.MarineReportingUnit == u'L1.2')
+        # # .filter(cs.Criteria == 'D1C3')\
+        # # .filter(mu.MarineReportingUnit.in_(muids))
+        #
+        # xx = [(c.Criteria, o and o.Feature, e
+        # and e.Element, m.MarineReportingUnit)
+        #       for (c, o, e, m) in qu]
+        #
+        # # xx = [(e.Criteria, e.IdElementStatus,
+        # e.ART8_GES_OverallStatu.Feature)
+        # #       for e in qu]
+        # import pdb
+        # pdb.set_trace()
+

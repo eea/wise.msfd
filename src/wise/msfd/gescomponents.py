@@ -492,6 +492,9 @@ def parse_features():
 
         res[code] = Feature(code, label, descs)
 
+    # this is missing from FeaturesSmart
+    res['FishAll'] = Feature('FishAll', 'All fish', set(['D1.4']))
+
     return res
 
 

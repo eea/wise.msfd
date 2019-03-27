@@ -466,38 +466,7 @@ https://svn.eionet.europa.eu/repositories/Reportnet/Dataflows/MarineDirective/MS
         return all_ids
 
     def get_data_from_view_Art8(self):
-        # TODO this is not used
-        # exclude = REPORT_2018.get_group_by_fields(self.article)
-        # exclude,
-
         sess = db.session()
-        #
-        # os = sql2018.ART8GESOverallStatu
-        # cs = sql2018.ART8GESCriteriaStatu
-        # es = sql2018.ART8GESElementStatu
-        # mu = sql2018.ART8GESMarineUnit
-        #
-        # # muids = [m.id for m in self.muids]
-        #
-        # qu = sess\
-        #     .query(cs, os, es, mu)\
-        #     .outerjoin(os)\
-        #     .outerjoin(es)\
-        #     .outerjoin(mu)\
-        #     .filter(mu.MarineReportingUnit == u'L1.2')
-        # # .filter(cs.Criteria == 'D1C3')\
-        # # .filter(mu.MarineReportingUnit.in_(muids))
-        #
-        # xx = [(c.Criteria, o and o.Feature, e
-        # and e.Element, m.MarineReportingUnit)
-        #       for (c, o, e, m) in qu]
-        #
-        # # xx = [(e.Criteria, e.IdElementStatus,
-        # e.ART8_GES_OverallStatu.Feature)
-        # #       for e in qu]
-        # import pdb
-        # pdb.set_trace()
-
         t = sql2018.t_V_ART8_GES_2018
 
         descr_class = get_descriptor(self.descriptor)
@@ -596,6 +565,8 @@ https://svn.eionet.europa.eu/repositories/Reportnet/Dataflows/MarineDirective/MS
         descriptor = get_descriptor(self.descriptor)
         all_ids = list(descriptor.all_ids())
 
+        # import pdb
+        # pdb.set_trace()
         # TODO: this needs to be analysed, what to do about D1?
 
         if self.descriptor.startswith('D1.'):
