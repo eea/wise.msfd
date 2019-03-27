@@ -81,6 +81,17 @@
 # ]
 
 
+# def calculate_percentage(raw_scores):
+#     # max_score ... 100%
+#     # raw_score ... x
+#
+#     raw_score = sum(raw_scores)
+#     max_score = len(raw_scores)
+#
+#     percentage = (raw_score * 100) / max_score
+#
+#     return float(percentage)
+
 DEFAULT_RANGES = [
     [76, 100],
     [51, 75],
@@ -89,16 +100,13 @@ DEFAULT_RANGES = [
 ]
 
 
-def calculate_percentage(raw_scores):
-    # max_score ... 100%
-    # raw_score ... x
-
-    raw_score = sum(raw_scores)
-    max_score = len(raw_scores)
-
-    percentage = (raw_score * 100) / max_score
-
-    return float(percentage)
+CONCLUSIONS = [
+    'Very good',
+    'Good',
+    'Poor',
+    'Very poor',
+    'Not reported',
+]
 
 
 def get_range_index(percentage):
@@ -121,15 +129,6 @@ def scoring_based(answers, scores):
         raw_scores.append(float(score))
 
     return raw_scores
-
-
-CONCLUSIONS = [
-    'Very good',
-    'Good',
-    'Poor',
-    'Very poor',
-    'Not reported',
-]
 
 
 def get_overall_conclusion(concl_score):
@@ -166,11 +165,16 @@ class Score(object):
     def percentage(self):
         """ Calculate the percentage from raw scores
 
+        # max_score ... 100%
+        # raw_score ... x
+
         :return: float 53.25
         """
-        p = calculate_percentage(self.raw_scores)
+        
+        raw_score = sum(self.raw_scores)
+        percentage = (raw_score * 100) / self.max_score
 
-        return p
+        return float(percentage)
 
     @property
     def score_value(self):
