@@ -1,6 +1,6 @@
 <tal:block
   tal:define="
-  big python: 100;
+  big python: 200;
   text python: options['text'] or '';
   translation python: options['translation'] or '';
   is_big_tr python: len(translation) > big and 'big' or '';
