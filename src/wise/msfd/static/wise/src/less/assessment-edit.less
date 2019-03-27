@@ -80,16 +80,22 @@ div.crt-def {
 
     .body {
       margin-bottom: 1%;
+      display:flex;
 
       .right {
         // background-image: linear-gradient(to right, #999, #DDD 1.2%);
-        background: #ECECEC;
-        width: 40%;
-        float: right;
+        background: #ebf5e0;
+        // width: 40%;
+        // float: right;
+        flex-grow: 2;
         padding: 10px;
         display: flex;
         flex-direction: column;
         clear: right;
+
+        &.disc-ec {
+          background-color: #debdcb;
+        }
 
         .comments {
           background-color: white;
@@ -133,6 +139,9 @@ div.crt-def {
             margin-top: 0.5em;
             display: inline-block;
             position: relative;
+            max-width: 12em;
+            font-size: smaller;
+            overflow: auto;
           }
 
           .comment:after {
@@ -205,7 +214,7 @@ div.crt-def {
       }
 
       .left {
-        flex-grow: 2;
+        // flex-grow: 2;
         width: 60%;
         float: left;
         background-color: #a6e1fb;

@@ -12,7 +12,8 @@
 
   function loadComments($el) {
     var qid = $el.data('question-id');
-    var url = './@@ast-comments?q=' + qid;
+    var threadId = $el.data('thread-id');
+    var url = './@@ast-comments?q=' + qid + '&thread_id=' + threadId;
     $.get(url, function(text){
       // console.log('getting comments from url', url);
       $el.html(text);
@@ -42,10 +43,18 @@
       var $textarea = $('textarea', $btn.closest('.textline'));
 
       var qid = $comel.data('question-id');
+      var threadId = $comel.data('thread-id');
       var text = $textarea.val();
 
+      if (!text) return false;
+
       var url = './@@add_comment';
-      $.post(url, {text:text, q: qid}, function(text){
+      var data = {
+        text:text,
+        q: qid,
+        thread_id: threadId
+      };
+      $.post(url, data, function(text){
         $comel.html(text);
         $textarea.val('');
       });

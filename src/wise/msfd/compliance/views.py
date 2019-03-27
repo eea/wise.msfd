@@ -65,14 +65,16 @@ class CommentsList(BrowserView):
     def add_comment(self):
         form = self.request.form
         question_id = form.get('q').lower()
+        thread_id = form.get('thread_id')
+
         text = form.get('text')
 
-        tl_folder = self.context['tl']
+        folder = self.context[thread_id]
 
-        if question_id in tl_folder.contentIds():
-            q_folder = tl_folder[question_id]
+        if question_id in folder.contentIds():
+            q_folder = folder[question_id]
         else:       # initially create the question folder for comments
-            q_folder = create(tl_folder,
+            q_folder = create(folder,
                               'wise.msfd.commentsfolder',
                               id=question_id,
                               title='Comments for question ' + question_id)
@@ -87,12 +89,13 @@ class CommentsList(BrowserView):
         return self.template()
 
     def comments(self):
-        tl_folder = self.context['tl']
+        thread_id = self.request.form.get('thread_id')
+        folder = self.context[thread_id]
         question_id = self.request.form.get('q', 'missing-id').lower()
 
-        if question_id not in tl_folder.contentIds():
+        if question_id not in folder.contentIds():
             return []
 
-        q_folder = tl_folder[question_id]
+        q_folder = folder[question_id]
 
         return q_folder.contentValues()

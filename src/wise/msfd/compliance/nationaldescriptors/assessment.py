@@ -5,6 +5,7 @@ from collections import namedtuple
 from zope.annotation.interfaces import IAnnotations
 from zope.schema import Choice, Text
 from zope.schema.vocabulary import SimpleTerm, SimpleVocabulary
+from zope.security import checkPermission
 
 from persistent.list import PersistentList
 from plone.api import user
@@ -21,7 +22,6 @@ from z3c.form.field import Fields
 from z3c.form.form import Form
 
 from .base import BaseView
-
 
 logger = logging.getLogger('wise.msfd')
 
@@ -190,6 +190,19 @@ class EditAssessmentDataForm(Form, BaseView):
             self.country_region_code,
             self.article,
         )
+
+    def _can_comment(self, folder_id):
+        folder = self.context[folder_id]
+
+        return checkPermission('zope2.View', folder)
+
+    @property
+    def can_comment_tl(self):
+        return self._can_comment('tl')
+
+    @property
+    def can_comment_ec(self):
+        return self._can_comment('ec')
 
     @buttonAndHandler(u'Save', name='save')
     def handle_save(self, action):
