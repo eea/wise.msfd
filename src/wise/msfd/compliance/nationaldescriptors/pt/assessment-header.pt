@@ -10,7 +10,8 @@
         <th>Assessment by</th>
         <td tal:attributes="colspan view/colspan">
           <span tal:content="structure options/assessors">Milieu</span>
-          <button data-toggle="modal" data-target="#edit-assessors"
+          <button class="btn btn-primary btn-xs btn-light"
+            data-toggle="modal" data-target="#edit-assessors"
             tal:condition="options/show_edit_assessors">Edit</button>
         </td>
       </tr>
