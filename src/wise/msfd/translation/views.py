@@ -119,13 +119,11 @@ class SendTranslationRequest(BrowserView):
         targetLanguages = self.request.form.get('targetLanguages', ['EN'])
 
         retrieve_translation(source_lang, text, targetLanguages, force=True)
+
         deps = ['translation']
         event.notify(InvalidateMemCacheEvent(raw=True, dependencies=deps))
         logger.info('Invalidate cache for dependencies: %s', ', '.join(deps))
 
-        # import json
-        # self.request.response.setHeader('Content-Type', 'application/json')
-        # return json.dumps(res)
         messages = IStatusMessage(self.request)
         messages.add(u"Auto-translation initiated, please refresh "
                      u"in a couple of minutes", type=u"info")

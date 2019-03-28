@@ -565,10 +565,6 @@ https://svn.eionet.europa.eu/repositories/Reportnet/Dataflows/MarineDirective/MS
         descriptor = get_descriptor(self.descriptor)
         all_ids = list(descriptor.all_ids())
 
-        # import pdb
-        # pdb.set_trace()
-        # TODO: this needs to be analysed, what to do about D1?
-
         if self.descriptor.startswith('D1.'):
             all_ids.append('D1')
 

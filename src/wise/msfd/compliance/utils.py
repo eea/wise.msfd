@@ -133,8 +133,12 @@ def insert_missing_criterions(data, descriptor):
         for col in dataset:
             # rewrite the GESComponent feature. TODO: move this functionality
             # to the Proxy2018 and XML file, with a getter
-            col.GESComponent = descriptor[col.GESComponent]
-            colmap[col.GESComponent] = col
+
+            if col.GESComponent.is_descriptor():
+                colmap[col.GESComponent] = col
+            else:
+                col.GESComponent = descriptor[col.GESComponent.id]
+                colmap[col.GESComponent] = col
 
             if tplobj is None:
                 tplobj = col

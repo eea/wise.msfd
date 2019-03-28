@@ -134,6 +134,9 @@ class Descriptor(ItemLabel):
         self.name = self.title
         self.criterions = criterions or set()
 
+    def is_descriptor(self):
+        return True
+
     @property
     def template_vars(self):
         # ItemLabel support
@@ -216,6 +219,9 @@ class Criterion(ItemLabel):
             'title': self.id,
             'name': self.title,
         }
+
+    def is_descriptor(self):
+        return False
 
     def __init__(self, id, title, descriptor):
         self.alternatives = []  # Criterion2012 objects
