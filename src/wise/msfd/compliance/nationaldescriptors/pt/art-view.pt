@@ -21,7 +21,7 @@
             Status message
           </div>
 
-          <h1 tal:content="view/title">Assessment</h1>
+          <h1 tal:content="structure view/title">Assessment</h1>
           <h4 class="process-phase-title" >
             Current phase: <span tal:content="python: view.current_phase[1]">Adequacy</span>
           </h4>
