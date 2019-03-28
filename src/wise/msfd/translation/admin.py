@@ -6,7 +6,7 @@ from zope import event
 from eea.cache.event import InvalidateMemCacheEvent
 from Products.Five.browser import BrowserView
 
-from . import save_translation
+from . import normalize, save_translation
 from .interfaces import ITranslationsStorage
 
 logger = logging.getLogger('wise.msfd.translation')
@@ -31,7 +31,8 @@ class TranslationsOverview(BrowserView):
         form = self.request.form
 
         language = form.get('language')
-        original = form.get('original').decode('utf-8')
+        original = form.get('original')  # .decode('utf-8')
+        original = normalize(original)
         translated = form.get('tr-new').decode('utf-8')
 
         save_translation(original, translated, language)

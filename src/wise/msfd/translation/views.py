@@ -8,7 +8,7 @@ from Products.Five.browser import BrowserView
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile as VPTF
 from Products.statusmessages.interfaces import IStatusMessage
 
-from . import (delete_translation, get_translated,  # decode_text,
+from . import (delete_translation, get_translated, normalize,  # decode_text,
                retrieve_translation, save_translation)
 from .interfaces import ITranslationContext
 
@@ -35,7 +35,8 @@ class TranslationCallback(BrowserView):
         if language is None:
             language = ITranslationContext(self.context).language
 
-        original = form.pop('external-reference', '').decode('utf-8').strip()
+        original = form.pop('external-reference', '')
+        original = normalize(original)
 
         translated = form.pop('translation', form.keys()[0]).strip()
 
@@ -74,8 +75,9 @@ class TranslationView(BrowserView):
         integrated in the general format that is required by the styling
         """
 
-        if isinstance(value, str):      # BBB: with older implementation
-            value = value.decode('utf-8')      # TODO: should use decode?
+        value = normalize(value)
+        # if isinstance(value, str):      # BBB: with older implementation
+        #     value = value.decode('utf-8')      # TODO: should use decode?
 
         if (not value) or (not is_translatable):
             return self.cell_tpl(value=value)
@@ -113,6 +115,8 @@ class SendTranslationRequest(BrowserView):
 
         if not text:
             return self.request.response.redirect(url)
+
+        text = normalize(text)
 
         delete_translation(text, source_lang)
 

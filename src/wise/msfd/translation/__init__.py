@@ -100,7 +100,7 @@ def retrieve_translation(country_code,
         data=json.dumps(data),
         headers={'Content-Type': 'application/json'}
     )
-    logger.info('Response from translation request:', resp.content)
+    logger.info('Response from translation request: %r', resp.content)
 
     res = {
         "transId": resp.content,
@@ -122,18 +122,35 @@ def get_translated(value, language, site=None):
         return translated.lstrip('?')
 
 
+def normalize(text):
+    if not isinstance(text, basestring):
+        return text
+
+    if isinstance(text, str):
+        text = text.decode('utf-8')
+
+    if not text:
+        return text
+
+    text = text.strip().replace(u'\r\n', u'\n').replace(u'\r', u'\n')
+
+    return text
+
+
 def delete_translation(text, source_lang):
     site = portal.getSite()
 
     storage = ITranslationsStorage(site)
 
     if (storage.get(source_lang, None)):
-        decoded = text.decode('utf-8')      # TODO: is decode() needed?
+        decoded = normalize(text)
 
         if decoded in storage[source_lang]:
-            del storage[source_lang]
+            del storage[source_lang][decoded]
 
-        transaction.commit()
+            # I don't think this is needed
+            storage[source_lang]._p_changed = True
+            transaction.commit()
 
 
 def save_translation(original, translated, source_lang):

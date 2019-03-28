@@ -1,14 +1,15 @@
 (function(window, document, $){
 
-  var $original = $('#transl-original-text');
-  var $old = $('#transl-old-translation');
-
   var setupTranslationsInReportPage = function () {
 
     /*
      * Triggered by translation edit btn. Sets proper text in modal edit dialog
      */
     function setupEditTranslationDialog () {
+
+      var $original = $('#transl-original-text');
+      var $old = $('#transl-old-translation');
+
       var $cell = $(this).parents('td.translatable');
 
       var $text_div = $('.tr-text', $cell);
@@ -29,6 +30,9 @@
 
       // inline editing in report data view page
       e.preventDefault();
+
+      var $original = $('#transl-original-text');
+      var $old = $('#transl-old-translation');
 
       var orig_text = $original.text().trim();
       var $form = $('#form-edit-translation');
