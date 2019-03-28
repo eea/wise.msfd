@@ -55,15 +55,15 @@ class CriteriaAssessmentDefinition:
         defn = node.find('definition')
         self.definition = defn.text.strip()
 
-        # TODO: there are some edge cases. Handle them?
         prim = node.get('primary', 'false')
 
-        if 'error' in prim:     # this is an error marker, for cases we need to
-                                # handle
-            logger.warning("Please debug this node: %s", node)
-            prim = 'false'
-
-        self.is_primary = bool(['false', 'true'].index(prim))
+        if prim.lower() in ['false', 'true']:
+            # acts as a star
+            self._primary_for_descriptors = bool(['false', 'true'].index(prim))
+        else:
+            # parse the primary definition to identify descriptors
+            descriptors = prim.split(' ')
+            self._primary_for_descriptors = descriptors
 
         self.elements = []
 
@@ -79,8 +79,13 @@ class CriteriaAssessmentDefinition:
 
     @property
     def title(self):
+        if self._primary_for_descriptors:
+            primary = True
+        else:
+            primary = False
+
         return u"{} - {}".format(self.id,
-                                 self.is_primary and 'Primary' or 'Secondary')
+                                 primary and 'Primary' or 'Secondary')
 
 
 def parse_elements_file(fpath):
@@ -301,8 +306,11 @@ class Criterion(ItemLabel):
         return any([x.id == id for x in self.alternatives])
 
     def is_primary(self, descriptor):
-        if hasattr(self, '_primary'):
-            return self._primary
+        if self._primary_for_descriptors in [True, False]:
+            return self._primary_for_descriptors
+        else:
+            return descriptor.id.lower() in \
+                [d.lower() for d in self._primary_for_descriptors]
 
 
 def parse_ges_extended_format():

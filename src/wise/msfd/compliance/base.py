@@ -498,9 +498,6 @@ def filtered_criterias(criterias, question, descriptor):
     if question.use_criteria == 'none':
         crits = []
 
-    # if not crits:
-    #     import pdb; pdb.set_trace()
-
     return sorted_criterions(crits)
 
 

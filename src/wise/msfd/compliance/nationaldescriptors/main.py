@@ -216,7 +216,7 @@ class NationalDescriptorCountryOverview(BaseView):
         return [desc[a] for a in order]
 
 
-def get_crit_val(question, element):
+def get_crit_val(question, element, descriptor):
     """ Get the criteria value to be shown in the assessment data 2018 table
     """
     use_crit = question.use_criteria
@@ -230,7 +230,7 @@ def get_crit_val(question, element):
 
         return ''
 
-    is_prim = element.is_primary
+    is_prim = element.is_primary(descriptor)
     crit = element.id
 
     if use_crit == 'all':
@@ -245,7 +245,8 @@ def get_crit_val(question, element):
     return ''
 
 
-def format_assessment_data(article, elements, questions, muids, data):
+def format_assessment_data(article, elements, questions, muids, data,
+                           descriptor):
     """ Builds a data structure suitable for display in a template
 
     This is used to generate the assessment data overview table for 2018
@@ -296,7 +297,7 @@ def format_assessment_data(article, elements, questions, muids, data):
                 value = (
                     label,
                     color_index,
-                    get_crit_val(question, element)
+                    get_crit_val(question, element, descriptor)
                 )
 
                 values.append(value)
@@ -306,13 +307,6 @@ def format_assessment_data(article, elements, questions, muids, data):
 
         sn = '{}_{}_Score'.format(article, question.id)
         score = data.get(sn, 0)
-
-        # cn = '{}_{}_Conclusion'.format(article, question.id)
-        # conclusion = data.get(cn, '')
-        #
-        # score_value = data.get(
-        #     '{}_{}_RawScore'.format(article, question.id), 0
-        # )
 
         conclusion = getattr(score, 'conclusion', '')
         score_value = getattr(score, 'score_value', 0)
@@ -546,7 +540,8 @@ class NationalDescriptorArticleView(BaseView):
             elements,
             self.questions,
             self.muids,
-            data
+            data,
+            self.descriptor_obj
         )
 
         self.assessment_data_2018_html = self.assessment_data_2018_tpl(

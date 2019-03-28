@@ -40,7 +40,7 @@
   Primary for commercially exploited fish(D1.4) and cephalopods(D1.5).
   Secondary for other species
   -->
-  <criteria primary='raise error' id='D1C3' title='Population demographic characteristics'>
+  <criteria primary='D1.4 D1.5' id='D1C3' title='Population demographic characteristics'>
     <definition>
       <![CDATA[
         <p>
@@ -65,7 +65,7 @@
     - FISH (D1.4)
   and secondary for other species
   -->
-  <criteria primary='raise error' id='D1C4' title='Population distributional range and pattern'>
+  <criteria primary='D1.2 D1.3 D1.4' id='D1C4' title='Population distributional range and pattern'>
     <definition>
       <![CDATA[
         <p>
@@ -89,7 +89,7 @@
     - FISH (D1.4)
   and secondary for other species
   -->
-  <criteria primary='raise error' id='D1C5' title='Habitat for the species'>
+  <criteria primary='D1.2 D1.3 D1.4' id='D1C5' title='Habitat for the species'>
     <definition>
       <![CDATA[
         <p>

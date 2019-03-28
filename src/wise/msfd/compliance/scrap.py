@@ -4437,3 +4437,10 @@ def consolidate_data(data, group_by_fields):
     //     });
     //   });
     // });
+        # cn = '{}_{}_Conclusion'.format(article, question.id)
+        # conclusion = data.get(cn, '')
+        #
+        # score_value = data.get(
+        #     '{}_{}_RawScore'.format(article, question.id), 0
+        # )
+
