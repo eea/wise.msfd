@@ -490,7 +490,8 @@ def parse_features():
             continue
 
         descs = set([f['descriptor']
-                     .replace('D6/D1', 'D6').replace('D4/D1', 'D4')
+                     .replace('D6/D1', 'D6')
+                     .replace('D4/D1', 'D4')
 
                      for f in FEATURES
 
@@ -500,6 +501,8 @@ def parse_features():
 
     # this is missing from FeaturesSmart
     res['FishAll'] = Feature('FishAll', 'All fish', set(['D1.4']))
+    res['HabPelagAll'] = Feature('HabPelagAll',
+                                 'Pelagic habitats', set(['D1.6']))
 
     return res
 
