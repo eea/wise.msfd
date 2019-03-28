@@ -224,6 +224,7 @@ def get_crit_val(question, element):
     if 'targets' in use_crit:
         if use_crit == 'all-targets':
             return element.title
+
         if use_crit == '2018-targets' and element.year == '2018':
             return element.title
 
@@ -455,11 +456,10 @@ class NationalDescriptorArticleView(BaseView):
 
     @property
     def title(self):
-
         return u"Commission assessment: {} / {} / {} / {} / 2018".format(
             self.country_title,
             self.country_region_name,
-            self.descriptor_obj,
+            self.descriptor_obj.template_vars['title'],
             self.article,
         )
 
