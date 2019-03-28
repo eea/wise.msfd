@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from collections import defaultdict
+
 from zope.schema.vocabulary import SimpleTerm, SimpleVocabulary
 
 ASSESSED_ARTICLES = (
@@ -66,7 +67,8 @@ REGIONS = {
     "ABI": "NE Atlantic: Bay of Biscay & Iberian Coast",
     "ACS": "NE Atlantic: Celtic Seas",
     "AMA": "NE Atlantic: Macaronesia",
-    "ANS": "NE Atlantic: Greater North Sea",  # , incl. Kattegat & English Channel
+    "ANS": "NE Atlantic: Greater North Sea",
+    # , incl. Kattegat & English Channel
     "BAL": "Baltic Sea",
     "BLK": "Black Sea",
     "MAD": "Mediterranean: Adriatic Sea",
