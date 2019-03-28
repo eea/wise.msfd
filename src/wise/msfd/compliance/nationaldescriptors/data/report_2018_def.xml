@@ -21,12 +21,12 @@
     <element section="progressassessment" name="Element">Element</element>
     <element section="progressassessment" name="Element2">Element 2</element>
     <element section="progressassessment" name="Parameter" label="parameters">Parameter</element>
-    <element section="progressassessment" name="ParameterOther">Parameter other</element>
+    <element section="progressassessment" name="ParameterOther" translate="true">Parameter other</element>
     <element section="progressassessment" name="TargetValue">Target value</element>
     <element section="progressassessment" name="ValueAchievedUpper">Value achieved upper</element>
     <element section="progressassessment" name="ValueAchievedLower">Value achieved lower</element>
     <element section="progressassessment" name="ValueUnit" label="units">Value unit</element>
-    <element section="progressassessment" name="ValueUnitOther">Value unit other</element>
+    <element section="progressassessment" name="ValueUnitOther" translate="true">Value unit other</element>
     <element section="progressassessment" name="TargetStatus">Target status</element>
     <element section="progressassessment" name="AssessmentPeriod">Assessment period</element>
     <element section="progressassessment" name="ProgressDescription" translate="true">Description target assessment</element>
@@ -41,8 +41,8 @@
     <element skip='true' name='CountryCode'></element>
 
     <element section="ges" name="GESComponent" convert="ges_component">GES component</element>
-    <element section="ges" name="JustificationNonUse">Justification for non-use of criterion</element>
-    <element section="ges" name="JustificationDelay">
+    <element section="ges" name="JustificationNonUse" translate="true">Justification for non-use of criterion</element>
+    <element section="ges" name="JustificationDelay" translate="true">
       Justification for delay in setting EU/regional requirements
     </element>
 
@@ -62,28 +62,28 @@
     <element section="ges" name="GESComponent" convert="ges_component">GES component</element>
     <element section="ges" setlevel="0" name="Feature" label="features">Feature</element>
 
-    <element section="element" setlevel="1" name="Element">Element</element>
+    <element section="element" setlevel="1" name="Element" translate="true">Element</element>
     <element section="element" name="ElementCode">Element code</element>
     <element section="element" name="ElementCodeSource" label="elementcode_sources">Element code source</element>
-    <element section="element" setlevel="2" name="Element2">Element 2</element>
+    <element section="element" setlevel="2" name="Element2" translate="true">Element 2</element>
     <element section="element" name="Element2Code" label="element_sources">Element 2 code</element>
     <element section="element" name="Element2CodeSource" label="elementcode_sources">Element 2 code source</element>
     <element section="element" name="ElementSource">Element source</element>
 
     <element section="criteriastatus" name="Criteria" convert="ges_component">Criterion</element>
     <element section="criteria" name="Parameter" label="parameters">Parameter</element>
-    <element section="criteria" name="ParameterOther">Parameter other</element>
+    <element section="criteria" name="ParameterOther" translate="true">Parameter other</element>
     <element section="criteria" name="ThresholdValueUpper">Threshold value upper</element>
     <element section="criteria" name="ThresholdValueLower">Threshold value lower</element>
-    <element section="criteria" name="ThresholdQualitative">Threshold qualitative</element>
+    <element section="criteria" name="ThresholdQualitative" translate="true">Threshold qualitative</element>
     <element section="criteria" name="ThresholdValueSource" label="threshold_sources">
       Threshold value source
     </element>
-    <element section="criteria" name="ThresholdValueSourceOther">Threshold value source other</element>
+    <element section="criteria" name="ThresholdValueSourceOther" translate="True">Threshold value source other</element>
     <element section="criteria" name="ValueAchievedUpper">Value achieved upper</element>
     <element section="criteria" name="ValueAchievedLower">Value achieved lower</element>
     <element section="criteria" name="ValueUnit" label="units">Value unit</element>
-    <element section="criteria" name="ValueUnitOther">Value unit other</element>
+    <element section="criteria" name="ValueUnitOther" translate="True">Value unit other</element>
     <element section="criteria" name="ProportionThresholdValue">Proportion threshold value</element>
     <element section="criteria" name="ProportionValueAchieved">Proportion value achieved</element>
     <element section="criteria" name="ProportionThresholdValueUnit">Proportion threshold value unit</element>
@@ -110,7 +110,7 @@
     <element section="overallstatus" name="IntegrationRuleTypeCriteria" label="parameters">
       Integration rule type criteria
     </element>
-    <element section="overallstatus" name="IntegrationRuleDescriptionCriteria">
+    <element section="overallstatus" name="IntegrationRuleDescriptionCriteria" translate="True">
       Integration rule description criteria
     </element>
     <element section="overallstatus" name="IntegrationRuleDescriptionReferenceCriteria" skip="true" reason="Not in the XML">
