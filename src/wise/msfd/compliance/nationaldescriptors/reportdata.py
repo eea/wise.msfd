@@ -698,20 +698,18 @@ https://svn.eionet.europa.eu/repositories/Reportnet/Dataflows/MarineDirective/MS
         """ Returns metadata about the reported information
         """
         t = sql2018.ReportedInformation
-        schema = {
+        schemas = {
             'Art8': 'ART8_GES',
             'Art9': 'ART9_GES',
             'Art10': 'ART10_Targets',
-        }[self.article]
+        }
         count, item = db.get_item_by_conditions(
             t,
             'ReportingDate',
             t.CountryCode == self.country_code,
-            t.Schema == schema,
+            t.Schema == schemas[self.article],
             reverse=True,
         )
-        # if item is None:
-        #     import pdb; pdb.set_trace()
         return item
 
     @cache(get_reportdata_key, dependencies=['translation'])

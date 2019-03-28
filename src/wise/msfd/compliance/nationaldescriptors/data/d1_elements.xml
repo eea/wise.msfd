@@ -36,8 +36,9 @@
     <uses-methodological-standard href="#m-2"/>
   </criteria>
 
-  <!-- D1C3 — Primary for commercially exploited fish(D1.4)
-  and cephalopods(D1.5) and secondary for other species
+  <!-- D1C3 —
+  Primary for commercially exploited fish(D1.4) and cephalopods(D1.5).
+  Secondary for other species
   -->
   <criteria primary='raise error' id='D1C3' title='Population demographic characteristics'>
     <definition>

@@ -122,6 +122,7 @@ class SendTranslationRequest(BrowserView):
 
         deps = ['translation']
         event.notify(InvalidateMemCacheEvent(raw=True, dependencies=deps))
+
         logger.info('Invalidate cache for dependencies: %s', ', '.join(deps))
 
         messages = IStatusMessage(self.request)

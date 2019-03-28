@@ -1,9 +1,15 @@
 import json
+import logging
 
+from zope import event
+
+from eea.cache.event import InvalidateMemCacheEvent
 from Products.Five.browser import BrowserView
 
 from . import save_translation
 from .interfaces import ITranslationsStorage
+
+logger = logging.getLogger('wise.msfd.translation')
 
 
 class TranslationsOverview(BrowserView):
@@ -23,17 +29,17 @@ class TranslationsOverview(BrowserView):
 
     def edit_translation(self):
         form = self.request.form
-        print form
 
         language = form.get('language')
         original = form.get('original').decode('utf-8')
         translated = form.get('tr-new').decode('utf-8')
 
         save_translation(original, translated, language)
-        # url = '{}/@@translations-overview?language={}'.format(
-        #     self.context.absolute_url(),
-        #     language
-        # )
+
+        deps = ['translation']
+        event.notify(InvalidateMemCacheEvent(raw=True, dependencies=deps))
+
+        logger.info('Invalidate cache for dependencies: %s', ', '.join(deps))
 
         response = self.request.response
         response.addHeader('Content-Type', 'application/json')

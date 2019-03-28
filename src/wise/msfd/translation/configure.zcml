@@ -13,6 +13,14 @@
     />
 
   <browser:page
+    name="edit-translation"
+    class=".admin.TranslationsOverview"
+    attribute="edit_translation"
+    for="Products.CMFCore.interfaces.ISiteRoot"
+    permission="wise.EditTranslations"
+    />
+
+  <browser:page
     class=".views.TranslationCallback"
     for="*"
     name="translate-callback"
@@ -33,14 +41,6 @@
     name="translations-overview"
     permission="wise.EditTranslations"
     template="pt/translations-overview.pt"
-    />
-
-  <browser:page
-    name="edit-translation"
-    class=".admin.TranslationsOverview"
-    attribute="edit_translation"
-    for="Products.CMFCore.interfaces.ISiteRoot"
-    permission="wise.EditTranslations"
     />
 
   <adapter factory=".app.annotfactory" />
