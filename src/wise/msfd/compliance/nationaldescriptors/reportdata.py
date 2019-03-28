@@ -731,7 +731,7 @@ https://svn.eionet.europa.eu/repositories/Reportnet/Dataflows/MarineDirective/MS
             report_date = report.ReportingDate
 
         report_header = self.report_header_template(
-            title="Member State report: {}/{}/{}/{}/2018".format(
+            title="Member State report: {} / {} / {} / {} / 2018".format(
                 self.country_name,
                 self.country_region_name,
                 self.descriptor_title,
@@ -857,7 +857,7 @@ class TitleViewlet(BaseTitleViewlet, BaseView):
             'country': self.country_name,
             'region': self.country_region_code,
             'article': self.article,
-            'descriptor': self.descriptor,
+            'descriptor': self.descriptor_title,
             'year': self.view.report_year,
         }
 
