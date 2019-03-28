@@ -459,7 +459,7 @@ class NationalDescriptorArticleView(BaseView):
         return u"Commission assessment: {} / {} / {} / {} / 2018".format(
             self.country_title,
             self.country_region_name,
-            self.descriptor_obj.template_vars['title'],
+            self.descriptor_title,
             self.article,
         )
 

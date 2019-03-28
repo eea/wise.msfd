@@ -293,7 +293,7 @@ class ReportData2012(BaseView, BaseUtil):
             title="Member State report: {}/{}/{}/{}/2018".format(
                 self.country_name,
                 self.country_region_name,
-                self.descriptor,
+                self.descriptor_title,
                 self.article
             ),
             report_by=rep_info.reporters,
@@ -734,7 +734,7 @@ https://svn.eionet.europa.eu/repositories/Reportnet/Dataflows/MarineDirective/MS
             title="Member State report: {}/{}/{}/{}/2018".format(
                 self.country_name,
                 self.country_region_name,
-                self.descriptor_obj.id,
+                self.descriptor_title,
                 self.article
             ),
             factsheet=None,

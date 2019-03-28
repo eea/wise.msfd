@@ -20,8 +20,8 @@ from wise.msfd.compliance.vocabulary import ASSESSED_ARTICLES, REGIONS
 from wise.msfd.gescomponents import (get_descriptor, get_marine_units,
                                      sorted_criterions)
 from wise.msfd.translation.interfaces import ITranslationContext
-from wise.msfd.utils import (Tab, _parse_files_in_location, row_to_dict,
-                             timeit, natural_sort_key)
+from wise.msfd.utils import (Tab, _parse_files_in_location, natural_sort_key,
+                             row_to_dict, timeit)
 
 from . import interfaces
 from .interfaces import ICountryDescriptorsFolder
@@ -257,6 +257,10 @@ class BaseComplianceView(BrowserView):
         return get_descriptor(self.descriptor)
 
     @property
+    def descriptor_title(self):
+        return self.descriptor_obj.template_vars['title']
+
+    @property
     def _national_descriptors_folder(self):
         return self.get_parent_by_iface(
             interfaces.INationalDescriptorsFolder
@@ -362,6 +366,7 @@ class AssessmentQuestionDefinition:
 
     def calculate_score(self, descriptor, values):
         # return compute_score(self, descriptor, values)
+
         return Score(self, descriptor, values)
 
     def _art_89_ids(self, descriptor, **kwargs):
