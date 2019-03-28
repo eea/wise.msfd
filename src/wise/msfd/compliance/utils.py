@@ -134,6 +134,9 @@ def insert_missing_criterions(data, descriptor):
             # rewrite the GESComponent feature. TODO: move this functionality
             # to the Proxy2018 and XML file, with a getter
 
+            if col.GESComponent in colmap:
+                continue
+
             if col.GESComponent.is_descriptor():
                 colmap[col.GESComponent] = col
             else:
