@@ -263,14 +263,13 @@ def format_assessment_data(article, elements, questions, muids, data):
 
         if question.use_criteria == 'none':
             field_name = '{}_{}'.format(article, question.id)
+            color_index = 0
+            label = 'Not filled in'
             v = data.get(field_name, None)
 
             if v is not None:
                 label = choices[v]
                 color_index = ANSWERS_COLOR_TABLE[q_scores[v]]
-            else:
-                color_index = 0
-                label = 'Not filled in'
 
             value = (label, color_index, u'All criteria')
             values.append(value)
@@ -279,6 +278,10 @@ def format_assessment_data(article, elements, questions, muids, data):
                 field_name = '{}_{}_{}'.format(
                     article, question.id, element.id
                 )
+
+                color_index = 0
+                label = u'{}: Not filled in'.format(element.title)
+
                 v = data.get(field_name, None)
 
                 if v is not None:
@@ -289,10 +292,6 @@ def format_assessment_data(article, elements, questions, muids, data):
                         logger.exception('Invalid color table')
                         color_index = 0
                         # label = 'Invalid color table'
-
-                else:
-                    color_index = 0
-                    label = u'{}: Not filled in'.format(element.title)
 
                 value = (
                     label,
@@ -469,9 +468,7 @@ class NationalDescriptorArticleView(BaseView):
 
     @property
     def questions(self):
-        qs = get_questions(
-            'compliance/nationaldescriptors/data'
-        )
+        qs = get_questions('compliance/nationaldescriptors/data')
 
         return qs[self.article]
 
@@ -541,7 +538,8 @@ class NationalDescriptorArticleView(BaseView):
         # Assessment data 2018
         data = self.context.saved_assessment_data.last()
         elements = self.questions[0].get_all_assessed_elements(
-            self.descriptor_obj, muids=self.muids
+            self.descriptor_obj,
+            muids=self.muids
         )
         assessment = format_assessment_data(
             self.article,

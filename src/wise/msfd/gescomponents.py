@@ -242,7 +242,7 @@ class Criterion(ItemLabel):
             self.elements = []
             self.definition = ''
             self.methodological_standard = DummyMSD()
-            self.is_primary = False
+            self._primary = False
 
     def __str__(self):
         return self.title
@@ -299,6 +299,10 @@ class Criterion(ItemLabel):
 
     def has_alternative(self, id):
         return any([x.id == id for x in self.alternatives])
+
+    def is_primary(self, descriptor):
+        if hasattr(self, '_primary'):
+            return self._primary
 
 
 def parse_ges_extended_format():

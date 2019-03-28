@@ -1,4 +1,4 @@
-$(document).ready(function () {
+(function(window, document, $){
 
   var $original = $('#transl-original-text');
   var $old = $('#transl-old-translation');
@@ -90,8 +90,10 @@ $(document).ready(function () {
       // fix height of lang-toolbar on this row
       $(this).parents('tr').find('.lang-toolbar').each(function(){
         var $this = $(this);
-        $this.css('height', $this.parent().height());
+        $this.css('height', $this.parents('tr').height());
       });
+
+      // setupReadMoreModal();
     };
 
     function setupUITranslatedCells() {
@@ -101,7 +103,7 @@ $(document).ready(function () {
           h = $p.height();
 
         var $c = $this
-          .css('height', h)
+          // .css('height', h)
           .children()
           .hide();
         ;
@@ -210,11 +212,15 @@ $(document).ready(function () {
     });
   };
 
-  var onReport = $('.report-page-view ').length;
+  $(document).ready(function(){
+    console.log('are you ready?');
+    var onReport = $('.report-page-view ').length;
 
-  if (onReport) {
-    setupTranslationsInReportPage();
-  } else {
-    setupTranslationsInOverviewPage();
-  }
-});
+    if (onReport) {
+      setupTranslationsInReportPage();
+    } else {
+      setupTranslationsInOverviewPage();
+    }
+  });
+
+})(window, document, jQuery);

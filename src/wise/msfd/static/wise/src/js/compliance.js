@@ -47,9 +47,10 @@ if (!Array.prototype.last){
     $(".toggle-sidebar").hide();
   }
 
-  $.fn.fixTableHeaderAndCellsHeight = function fixTableHeaderAndCellsHeight() {
+  $.fn.fixTableHeaderAndCellsHeight = function() {
     // because the <th> are position: absolute, they don't get the height of
     // the <td> cells, and the other way around.
+
     this.each(function() {
 
       $("th", this).each(function() {
@@ -63,8 +64,17 @@ if (!Array.prototype.last){
         if ($th.height() > cells_max_height) {
           $next.height($th.height());
         }
+
       });
     });
+
+    $('tr .lang-toolbar', this).each(function() {
+      console.log('fixing', this);
+      var $this = $(this);
+      var height = $this.parents('tr').height();
+      $this.css('height', height);
+    });
+
   };
 
   $.fn.fixTableHeaderHeight = function fixTableHeaderHeight() {
@@ -208,6 +218,7 @@ if (!Array.prototype.last){
   $.fn.toggleTable = function toggleTable(onoff) {
     var original = $(this).data('original');
     var simplified = $(this).data('simplified');
+
     if (onoff) {
       //$(this).simplifyTable();
       $(this).html(simplified);
@@ -565,6 +576,9 @@ if (!Array.prototype.last){
   }
 
   function setupSimplifiedTables() {
+
+    setupReadMoreModal();
+
     $('.simplify-form').next().find('.table-report').each(function(){
       $(this).simplifyTable();
     });
@@ -583,7 +597,6 @@ if (!Array.prototype.last){
     setupSelects2();
     setupReportNavigation();
     // setupTableScrolling();
-    setupReadMoreModal();
     setupResponsiveness();
     addCustomScroll();
     addFixedTable();

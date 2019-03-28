@@ -448,7 +448,7 @@ class AssessmentQuestionDefinition:
         res = self.get_all_assessed_elements(descriptor, **kwargs)
 
         if self.article in ['Art8', 'Art9']:
-            res = filtered_criterias(res, self)
+            res = filtered_criterias(res, self, descriptor)
         else:
             res = filtered_targets(res, self)
 
@@ -483,14 +483,14 @@ def filtered_questions(questions, phase):
     return res
 
 
-def filtered_criterias(criterias, question):
+def filtered_criterias(criterias, question, descriptor):
     crits = []
 
     if question.use_criteria == 'primary':
-        crits = [c for c in criterias if c.is_primary is True]
+        crits = [c for c in criterias if c.is_primary(descriptor) is True]
 
     if question.use_criteria == 'secondary':
-        crits = [c for c in criterias if c.is_primary is False]
+        crits = [c for c in criterias if c.is_primary(descriptor) is False]
 
     if question.use_criteria == 'all':
         crits = criterias
