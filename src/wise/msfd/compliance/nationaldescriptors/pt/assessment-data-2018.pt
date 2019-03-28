@@ -43,7 +43,6 @@
           </td>
 
           <td>
-            <span tal:content="python: getattr(row.score, 'weighted_score', 0)">0</span>
             <span tal:condition="row/score"
                 class="score help-popover fa fa-info-circle fa-s"
                 data-trigger="hover"
@@ -52,6 +51,7 @@
                 tal:attributes="title python: 'Score calculation algorithm';
                   data-content python: getattr(row.score, 'score_tooltip', '');">
             </span>
+            <span tal:content="python: getattr(row.score, 'weighted_score', 0)">0</span>
           </td>
         </tr>
         <tr class="assessment-summary">
