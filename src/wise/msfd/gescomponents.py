@@ -248,6 +248,7 @@ class Criterion(ItemLabel):
             self.definition = ''
             self.methodological_standard = DummyMSD()
             self._primary = False
+            # self._primary_for_descriptors = []
 
     def __str__(self):
         return self.title
@@ -306,6 +307,9 @@ class Criterion(ItemLabel):
         return any([x.id == id for x in self.alternatives])
 
     def is_primary(self, descriptor):
+        if hasattr(self, '_primary'):
+            return self._primary
+
         if self._primary_for_descriptors in [True, False]:
             return self._primary_for_descriptors
         else:
