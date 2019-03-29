@@ -589,6 +589,10 @@ https://svn.eionet.europa.eu/repositories/Reportnet/Dataflows/MarineDirective/MS
                 out.append(row)
                 continue
 
+            if not self.descriptor.startswith('D1.'):
+                out.append(row)
+                continue
+
             feats = set(row.Features.split(','))
 
             if feats.intersection(ok_features):
