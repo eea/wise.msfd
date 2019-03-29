@@ -70,7 +70,7 @@
     <element section="element" name="Element2CodeSource" label="elementcode_sources">Element 2 code source</element>
     <element section="element" name="ElementSource">Element source</element>
 
-    <element section="criteriastatus" name="Criteria" convert="ges_component">Criterion</element>
+    <element section="criteriastatus" setlevel="3" name="Criteria" convert="ges_component">Criterion</element>
     <element section="criteria" name="Parameter" label="parameters">Parameter</element>
     <element section="criteria" name="ParameterOther" translate="true">Parameter other</element>
     <element section="criteria" name="ThresholdValueUpper">Threshold value upper</element>
@@ -95,7 +95,7 @@
     <element section="criteriastatus" name="CriteriaStatus">Criteria status</element>
     <element section="criteriastatus" name="DescriptionCriteria" translate="true">Description criteria</element>
 
-    <element section="elementstatus" name="ElementStatus">Element status</element>
+    <element section="elementstatus" setlevel="2" name="ElementStatus">Element status</element>
     <element section="elementstatus" name="DescriptionElement" translate="true">Description element</element>
 
     <element section="overallstatus" setlevel="0" name="IntegrationRuleTypeParameter" label="parameters">
