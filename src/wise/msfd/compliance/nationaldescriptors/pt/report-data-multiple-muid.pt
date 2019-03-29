@@ -31,7 +31,7 @@
                 "
                 tal:attributes="class klass; data-level field/setlevel;"
                 >
-                <th tal:content="field/title">Element</th>
+                <th><div tal:content="field/title">Element</div></th>
                 <tal:rep tal:repeat="r values">
                   <td tal:replace="structure python: view.translate_value(field.name, value=r)"></td>
                 </tal:rep>

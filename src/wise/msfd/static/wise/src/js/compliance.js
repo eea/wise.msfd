@@ -65,15 +65,17 @@ if (!Array.prototype.last){
           $next.height($th.height());
         }
 
+        $('div', this).css('margin-top', '-4px');
+
       });
     });
 
-    $('tr .lang-toolbar', this).each(function() {
-      console.log('fixing', this);
-      var $this = $(this);
-      var height = $this.parents('tr').height();
-      $this.css('height', height);
-    });
+    // $('tr .lang-toolbar', this).each(function() {
+    //   console.log('fixing', this);
+    //   var $this = $(this);
+    //   var height = $this.parents('tr').height();
+    //   $this.css('height', height);
+    // });
 
   };
 
@@ -248,22 +250,22 @@ if (!Array.prototype.last){
 
     var $bigCells = $table.find('td .tr.big');
 
-    $bigCells.each(function() {
-      var $text = $(this);
-      var $clone = $text.clone().removeClass('system').addClass('short');
-
-      var t = $text.text();
-      var sh = t.substr(0, maxchars) + sep ;
-      $text.hide();
-      $clone.html(sh);
-      $text.parent().append($clone);
-
-      $clone.on('click', function() {
-        $modalContent.html(t);
-        $modal.modal('show');
-      });
-    });
-
+    // $bigCells.each(function() {
+    //   var $text = $(this);
+    //   var $clone = $text.clone().removeClass('system').addClass('short');
+    //
+    //   var t = $text.text();
+    //   var sh = t.substr(0, maxchars) + sep ;
+    //   $text.hide();
+    //   $clone.html(sh);
+    //   $text.parent().append($clone);
+    //
+    //   $clone.on('click', function() {
+    //     $modalContent.html(t);
+    //     $modal.modal('show');
+    //   });
+    // });
+    //
     $('.btn-close-modal').click(function() {
       $modalContent.empty();
     });
@@ -453,7 +455,7 @@ if (!Array.prototype.last){
       '</div>'
     );
 
-    $table.find('th').append($cb);
+    $table.find('th div').append($cb);
     $ft.insertBefore($ot.find('.inner'));
   }
 
@@ -577,8 +579,6 @@ if (!Array.prototype.last){
 
   function setupSimplifiedTables() {
 
-    setupReadMoreModal();
-
     $('.simplify-form').next().find('.table-report').each(function(){
       $(this).simplifyTable();
     });
@@ -593,6 +593,9 @@ if (!Array.prototype.last){
   }
 
   $(document).ready(function($){
+
+    setupReadMoreModal();
+
     initStyling();
     setupSelects2();
     setupReportNavigation();
@@ -601,10 +604,10 @@ if (!Array.prototype.last){
     addCustomScroll();
     addFixedTable();
 
-    $(window).on('load', function() {
+    // $(window).on('load', function() {
       setupSimplifiedTables();
       setupCustomScroll();
       setupFixedTableRows();
-    });
+    // });
   });
 }(window, document, $));

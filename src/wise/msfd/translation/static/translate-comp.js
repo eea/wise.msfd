@@ -92,10 +92,10 @@
       // $th.fixTableHeaderHeight();
 
       // fix height of lang-toolbar on this row
-      $(this).parents('tr').find('.lang-toolbar').each(function(){
-        var $this = $(this);
-        $this.css('height', $this.parents('tr').height());
-      });
+      // $(this).parents('tr').find('.lang-toolbar').each(function(){
+      //   var $this = $(this);
+      //   $this.css('height', $this.parents('tr').height());
+      // });
 
       // setupReadMoreModal();
     };
@@ -103,8 +103,7 @@
     function setupUITranslatedCells() {
       $('.lang-toolbar').each(function(){
         var $this = $(this),
-          $p = $this.parent(),
-          h = $p.height();
+          $p = $this.parent();
 
         var $c = $this
           // .css('height', h)
@@ -117,7 +116,8 @@
           var p = $p.position();
           $this
             .css({
-              width: 'unset',
+              width: 'initial',
+              height: '6em',
               position: 'absolute',
               float: 'none',
               top: p.top,
@@ -132,7 +132,8 @@
             .css({
               width: '0px',
               float: 'left',
-              position: 'initial'
+              position: 'initial',
+              height: 'initial'
             })
             .children()
             .hide()

@@ -72,7 +72,7 @@
         overflow-x: auto;
         overflow-y: visible;
         // margin-left: 14.4em;
-        margin-left: 202px;
+        margin-left: 212px;
         background: white;
         border-left: 4px solid #DDD;
       }
@@ -172,24 +172,31 @@
             background: #EFEFEF;
             vertical-align: top;
             // width: 18em;
-            width: 202px;
+            width: 212px;
             overflow: hidden;
             position: absolute;
             left: 0;
             text-align: right;
             border: 0;
             border-bottom: 1px solid #ddd;
+            padding: 6px 6px 6px 6px;
 
-            .fix-row {
-              position: relative;
-              top: 0.3em;
-              margin-left: 0.8em;
+            div {
+              // margin-top: -5px;
+              // white-space: nowrap;
+              input.fix-row {
+                // position: relative;
+                // top: 0.3em;
+                display: inline-block;
+                margin-left: 0.6em;
+              }
             }
           }
           td {
             min-width: 3rem;
             border-top: none;
             border-left: none;
+            padding: 6px;
             // &.merged {}
             &.endgroup {
               &_0 {
