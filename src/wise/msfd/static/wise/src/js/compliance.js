@@ -243,7 +243,7 @@ if (!Array.prototype.last){
 
     var $modal = $("#read-more-modal");
     var $modalContent = $('.modal-content-wrapper');
-    var maxchars = 197;
+    var maxchars = 397;
     var sep = '...';
 
     var $bigCells = $table.find('td .tr.big');
