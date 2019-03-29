@@ -348,8 +348,8 @@ class AssessmentQuestionDefinition:
         self.id = node.get('id')
         self.klass = node.get('class')
         self.use_criteria = node.get('use-criteria')
-        self.definition = u"Q{}: {}".format(
-            position + 1, node.find('definition').text.strip())
+        self.definition = u"{}: {}".format(
+            self.id, node.find('definition').text.strip())
         self.answers = [x.strip()
                         for x in node.xpath('answers/option/text()')]
         self.scores = [s.strip()
