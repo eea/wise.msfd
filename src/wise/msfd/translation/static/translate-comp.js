@@ -9,9 +9,9 @@
 
       var $original = $('#transl-original-text');
       var $old = $('#transl-old-translation');
-      
+
       var $cell = $(this).parents('td.translatable');
-      
+
       var $trText = $('.tr-text', $cell);
       var old_translation = $trText.data('translation');
       var orig_text = $trText.data('original');
@@ -33,7 +33,7 @@
 
       var $original = $('#transl-original-text');
       var $old = $('#transl-old-translation');
-      
+
       var orig_text = $original.text().trim();
       var $form = $('#form-edit-translation');
       var translation = $("#new_transl", $form).val();
@@ -76,7 +76,7 @@
       var $trText = $langToolbar.siblings('.tr-text');
       $langToolbar
       .toggleClass('blue green');
-      
+
       // var $cell = $(this).parents('td.translatable');
       // $('.text', $cell).toggleClass('blue');
       // $('.transl', $cell).toggleClass('green');
@@ -86,7 +86,7 @@
       } else if ($langToolbar.hasClass('green'))  {
         $trText.text($trText.data('translation'))
       }
-      
+
       // fix height of <th> on this row
       var $th = $(this).parents('tr').find('th').each(function(){
         var $th = $(this);
@@ -123,7 +123,7 @@
           $this
             .css({
               width: 'initial',
-              height: '6em',
+              height: '2.7em',
               position: 'absolute',
               float: 'none',
               top: p.top,
@@ -136,10 +136,10 @@
         function outhover() {
           $this
             .css({
-              width: '0px',
+              width: '4px',
               float: 'left',
               position: 'initial',
-              height: 'initial'
+              height: '10px'
             })
             .children()
             .hide()

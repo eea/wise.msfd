@@ -2,6 +2,7 @@
   tal:define="
   text python: options['text'] or '';
   translation python: options['translation'] or '';
+  active_text python: translation or text;
 
   can_translate options/can_translate;
   show_toolbar python: translation or can_translate;
@@ -35,8 +36,9 @@
           </button>
         </tal:cond>
       </div>
-      
-      <div class="tr-text" tal:content='structure text' tal:attributes= "data-original text; data-translation translation">
+
+      <div class="tr-text" tal:content='structure active_text'
+        tal:attributes= "data-original text; data-translation translation;">
       </div>
 
     </div>
