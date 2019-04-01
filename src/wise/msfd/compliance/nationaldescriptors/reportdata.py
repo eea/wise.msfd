@@ -465,6 +465,34 @@ https://svn.eionet.europa.eu/repositories/Reportnet/Dataflows/MarineDirective/MS
 
         return all_ids
 
+    def _get_order_cols(self, descr):
+        descr = descr.split('.')[0]
+        order_by = {
+            'D5': ('MarineReportingUnit', 'GESComponent', 'Feature',
+                   'Criteria', 'Element', 'Element2Code', 'Element2',
+                   'IntegrationRuleTypeParameter',
+                   ),
+            'D6': ('MarineReportingUnit', 'GESComponent', 'Criteria',
+                   'Feature', 'Element', 'Element2Code', 'Element2',
+                   'IntegrationRuleTypeParameter',
+                   ),
+            'D8': ('MarineReportingUnit', 'GESComponent', 'Criteria',
+                   'Feature', 'Element', 'Element2Code', 'Element2',
+                   'IntegrationRuleTypeParameter',
+                   ),
+            'D11': ('MarineReportingUnit', 'GESComponent', 'Criteria',
+                    'Feature', 'Element', 'Element2Code', 'Element2',
+                    'IntegrationRuleTypeParameter',
+                    ),
+            'default': ('MarineReportingUnit', 'GESComponent', 'Feature',
+                        'Element', 'Element2Code', 'Element2', 'Criteria',
+                        'IntegrationRuleTypeParameter',)
+        }
+        if descr in order_by:
+            return order_by[descr]
+
+        return order_by['default']
+
     def get_data_from_view_Art8(self):
         sess = db.session()
         t = sql2018.t_V_ART8_GES_2018
@@ -484,28 +512,9 @@ https://svn.eionet.europa.eu/repositories/Reportnet/Dataflows/MarineDirective/MS
             or_(t.c.Element.isnot(None),
                 t.c.Criteria.isnot(None)),
         ]
-        if self.descriptor == 'D5':
-            orderby = [
-                t.c.MarineReportingUnit,
-                t.c.GESComponent,
-                t.c.Feature,
-                t.c.Criteria,
-                t.c.Element,
-                t.c.Element2Code,
-                t.c.Element2,
-                t.c.IntegrationRuleTypeParameter,
-            ]
-        else:
-            orderby = [
-                t.c.MarineReportingUnit,
-                t.c.GESComponent,
-                t.c.Feature,
-                t.c.Element,
-                t.c.Element2Code,
-                t.c.Element2,
-                t.c.Criteria,
-                t.c.IntegrationRuleTypeParameter,
-            ]
+        orderby = [
+            getattr(t.c, x) for x in self._get_order_cols(self.descriptor)
+        ]
 
         # groupby IndicatorCode
         q = sess\

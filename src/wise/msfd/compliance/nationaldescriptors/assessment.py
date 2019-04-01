@@ -76,6 +76,7 @@ class EditAssessmentSettingsForm(Form, BaseView):
 
     ignoreContext = True
     name = 'assessment-settings'
+    section = 'national-descriptors'
     title = u'Edit assessed by'
     fields = Fields(IEditAssessmentSettingsForm)
     template = ViewPageTemplateFile('./pt/assessment-settings.pt')

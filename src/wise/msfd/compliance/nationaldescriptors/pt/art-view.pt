@@ -36,7 +36,7 @@
           <div id="nat-desc-art-menu">
             <ul>
               <!-- tal:condition="python: view.check_permission('wise.msfd: Edit Assessment')" -->
-              <li >
+              <li>
                 <a href="./@@edit-assessment-data-2018">
                   <i class='fa fa-edit'></i> Assessment
                 </a>
