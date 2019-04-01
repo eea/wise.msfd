@@ -34,6 +34,7 @@ class TranslationsOverview(BrowserView):
         original = form.get('original')  # .decode('utf-8')
         original = normalize(original)
         translated = form.get('tr-new').decode('utf-8')
+        import pdb;pdb.set_trace()
 
         save_translation(original, translated, language)
 

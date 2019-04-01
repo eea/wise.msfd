@@ -1,10 +1,7 @@
 <tal:block
   tal:define="
-  big python: 400;
   text python: options['text'] or '';
   translation python: options['translation'] or '';
-  is_big_tr python: len(translation) > big and 'big' or '';
-  is_big_or python: len(text) > big and 'big' or '';
 
   can_translate options/can_translate;
   show_toolbar python: translation or can_translate;
@@ -12,12 +9,12 @@
   tbar_class string:lang-toolbar $bg_active;
 
   active_orig python:'active' if not translation else '';
-  text_class string:tr text $active_orig $is_big_or system;
+  text_class string:tr text $active_orig system;
   btn_basic string:btn btn-light btn-xs btn-translate;
   btn_text_class string:lang-orig $btn_basic $active_orig;
 
   active_trans python:'active' if translation else '';
-  trans_class string:tr transl $active_trans $is_big_tr system;
+  trans_class string:tr transl $active_trans system;
   btn_trans_class string:lang-transl $btn_basic $active_trans;
   ">
   <td class="translatable" >
@@ -29,12 +26,6 @@
           <button tal:attributes="class btn_text_class" tal:content="view/country_code">LV</button>
         </tal:cond>
 
-        <!-- <button type="button" class="read&#45;more&#45;btn" -->
-        <!--   tal:condition="" -->
-        <!--   data&#45;toggle="modal" data&#45;target="#read&#45;more&#45;modal"> -->
-        <!--   Read more -->
-        <!-- </button> -->
-
         <tal:cond condition="can_translate">
           <button data-toggle="modal" data-target="#edit-translation" class="btn btn-light btn-xs editTransl">
             <span class="fa fa-edit" />
@@ -44,16 +35,29 @@
           </button>
         </tal:cond>
       </div>
-
-      <div class="tr-text">
-        <div tal:attributes="class trans_class" tal:content="translation">
-          Translated Text
-        </div>
-        <div tal:attributes="class text_class" tal:content="structure text">
-          Original Text
-        </div>
+      
+      <div class="tr-text" tal:content='structure text' tal:attributes= "data-original text; data-translation translation">
       </div>
 
     </div>
   </td>
 </tal:block>
+
+<!-- big python: 400;
+is_big_tr python: len(translation) > big and 'big' or '';
+is_big_or python: len(text) > big and 'big' or '';
+$is_big_or
+$is_big_tr
+
+<button type="button" class="read&#45;more&#45;btn"
+  tal:condition=""
+  data&#45;toggle="modal" data&#45;target="#read&#45;more&#45;modal">
+  Read more
+</button>
+
+<div tal:attributes="class trans_class" tal:content="translation">
+  Translated Text
+</div>
+<div tal:attributes="class text_class" tal:content="structure text">
+  Original Text
+</div> -->

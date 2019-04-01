@@ -9,12 +9,12 @@
 
       var $original = $('#transl-original-text');
       var $old = $('#transl-old-translation');
-
+      
       var $cell = $(this).parents('td.translatable');
-
-      var $text_div = $('.tr-text', $cell);
-      var old_translation = $('.transl.system', $text_div).text();
-      var orig_text = $('.text.system', $text_div).text();
+      
+      var $trText = $('.tr-text', $cell);
+      var old_translation = $trText.data('translation');
+      var orig_text = $trText.data('original');
 
       $original.text(orig_text);
       $old.text(old_translation);
@@ -33,7 +33,7 @@
 
       var $original = $('#transl-original-text');
       var $old = $('#transl-old-translation');
-
+      
       var orig_text = $original.text().trim();
       var $form = $('#form-edit-translation');
       var translation = $("#new_transl", $form).val();
@@ -72,15 +72,21 @@
       $(this).toggleClass('active');
       $(this).siblings('.btn-translate').toggleClass('active');
 
-      var $cell = $(this).parents('td.translatable');
-      $cell
-        .toggleClass('blue')
-        .toggleClass('green')
-      ;
+      var $langToolbar = $(this).parents('.lang-toolbar');
+      var $trText = $langToolbar.siblings('.tr-text');
+      $langToolbar
+      .toggleClass('blue green');
+      
+      // var $cell = $(this).parents('td.translatable');
+      // $('.text', $cell).toggleClass('blue');
+      // $('.transl', $cell).toggleClass('green');
 
-      $('.text', $cell).toggleClass('active');
-      $('.transl', $cell).toggleClass('active');
-
+      if ($langToolbar.hasClass('blue')) {
+        $trText.text($trText.data('original'))
+      } else if ($langToolbar.hasClass('green'))  {
+        $trText.text($trText.data('translation'))
+      }
+      
       // fix height of <th> on this row
       var $th = $(this).parents('tr').find('th').each(function(){
         var $th = $(this);
@@ -218,7 +224,6 @@
   };
 
   $(document).ready(function(){
-    console.log('are you ready?');
     var onReport = $('.report-page-view ').length;
 
     if (onReport) {
