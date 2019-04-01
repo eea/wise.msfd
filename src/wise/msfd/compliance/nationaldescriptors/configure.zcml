@@ -84,6 +84,14 @@
     permission="zope2.View"
     />
 
+  <browser:page
+    for="*"
+    name="management"
+    class=".management.Management"
+    template="./pt/management.pt"
+    permission="zope2.View"
+  />
+
   <browser:viewlet
     name="plone.htmlhead.title"
     view='wise.msfd.compliance.interfaces.IReportDataView'
