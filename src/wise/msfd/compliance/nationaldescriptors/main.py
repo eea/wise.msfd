@@ -147,19 +147,18 @@ def get_assessment_data_2012_db(*args):
 
 
 @db.use_db_session('2018')
-def get_assessment_head_data_2012(data):
-    if not data:
-        return ['Not found'] * 3 + [('Not found', '')]
-
-    ids = [x.COM_General_Id for x in data]
-    ids = tuple(set(ids))
+def get_assessment_head_data_2012(article, region, country_code):
 
     t = sql2018.COMGeneral
     count, res = db.get_all_records(
         t,
-        t.Id.in_(ids)
+        t.CountryCode == country_code,
+        t.MSFDArticle == article,
+        t.RegionSubregion == region + country_code,
+        t.AssessmentTopic == 'GES Descriptor'
     )
 
+    assert count == 1
     if count:
         report_by = res[0].ReportBy
         assessors = res[0].Assessors
@@ -510,7 +509,9 @@ class NationalDescriptorArticleView(BaseView):
                 score_2012 = assessments_2012[ctry].score
 
             report_by, assessors, assess_date, source_file = \
-                get_assessment_head_data_2012(db_data_2012)
+                get_assessment_head_data_2012(self.article,
+                                              self.country_region_code,
+                                              self._country_folder.id)
         except:
             logger.exception("Could not get assessment data for 2012")
             self.assessment_data_2012 = ''
