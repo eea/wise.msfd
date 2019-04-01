@@ -86,7 +86,7 @@
       <tal:rep tal:repeat="lang languages">
         <li tal:condition="lang" >
           <a
-            href="" tal:attributes="href string:./@@translations-overview?language=${lang}">
+            class="btn btn-xs btn-primary" href="" tal:attributes="href string:./@@translations-overview?language=${lang}" style="width: 3rem; margin-bottom: 0.5rem">
             <span tal:replace="lang">EN</span>
           </a>
         </li>
