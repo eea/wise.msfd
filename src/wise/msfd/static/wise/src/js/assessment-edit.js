@@ -68,7 +68,7 @@
     // used in edit assessment form
     // add the disabled attribute for select/textarea elements
     // if the question type does not match the process phase
-    $('#comp-national-descriptor div.subform.disabled')
+    $('#comp-national-descriptor div.subform.disabled div.left')
       .find('select, textarea').each(function(){
         $(this).attr('disabled', true);
     });
@@ -142,7 +142,11 @@
 
     // sticky save button
     var $sfw = $('.form-right-side');
-    var btnPos = $sfw.offset().top;
+    var btnPos = 0;
+    if ($sfw.offset()){
+      btnPos = $sfw.offset().top;
+    }
+
     var scroll, space;
 
     $sfw.find('.btn').addClass('btn-primary btn-lg');

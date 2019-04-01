@@ -179,7 +179,8 @@
           </metal:fields>
 
           <metal:slot fill-slot="actions">
-            <div class="form-right-side">
+            <div tal:condition="view/can_comment_tl"
+                class="form-right-side">
               <metal:block use-macro="context/@@ploneform-macros/actions" />
             </div>
           </metal:slot>

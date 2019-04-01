@@ -30,11 +30,12 @@ div.crt-def {
     &.disabled {
       .body .left {
         background-color: #ddd;
+
+        .select2-chosen, textarea {
+          cursor: not-allowed !important;
+        }
       }
 
-      .select2-chosen, textarea {
-        cursor: not-allowed !important;
-      }
       h4 {
         background-color: #AAA;
       }

@@ -336,7 +336,9 @@ class EditAssessmentDataForm(Form, BaseView):
             form._question_phase = phase
             form._question = question
             form._elements = elements
-            form._disabled = self.is_disabled(question)
+            form._disabled = self.is_disabled(question)\
+                or not self.can_comment_tl
+
             fields = []
 
             if not elements:       # when use-criteria == 'none'
@@ -405,7 +407,7 @@ class EditAssessmentDataForm(Form, BaseView):
         assessment_summary_form = EmbeddedForm(self, self.request)
         assessment_summary_form.title = u"Assessment summary"
         assessment_summary_form.subtitle = u''
-        assessment_summary_form._disabled = False
+        assessment_summary_form._disabled = not self.can_comment_tl
         asf_fields = []
 
         for name, title in summary_fields:

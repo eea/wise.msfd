@@ -49,7 +49,7 @@
     for="*"
     name="edit-assessment-data-2018"
     class=".assessment.EditAssessmentDataView"
-    permission="wise.EditAssessment"
+    permission="zope2.View"
     />
 
   <browser:page
