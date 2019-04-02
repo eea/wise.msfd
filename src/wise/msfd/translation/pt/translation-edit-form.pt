@@ -25,11 +25,12 @@
       </div>
     </div>
   </div>
-
-  <form id="form-refresh-translation" method="POST" action="./@@translate-text" style="display: none">
-    <input type="hiden" name="redirect_url" tal:attributes="value request/URL0"/>
+  
+  <form class="form-refresh-translation" method="POST" action="./@@translate-text" style="display: none">
+    <input type="hidden" name="redirect_url" tal:attributes="value request/URL0"/>
     <input type="hidden" name="language" tal:attributes="value view/country_code | nothing" />
     <textarea name="text"></textarea>
     <input type="submit" name="save" />
   </form>
+
 </tal:block>

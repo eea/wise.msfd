@@ -151,16 +151,16 @@
     }
 
     function autoTranslation() {
-      var $form = $("#form-refresh-translation");
+      var $form = $(".form-refresh-translation");
       var $cell = $(this).parents('td.translatable');
-      var text = $('.tr-text .text.system', $cell).text();
+      var text = $('.tr-text', $cell).text();
 
       $form.find('textarea').val(text);
       $form.submit();
     }
 
     window.setupTranslateClickHandlers = function () {
-      $(".autoTransl").on("click", autoTranslation);
+      $(".autoTransl").on("click", autoTranslation);    
       // todo: toggle clickability of buttons?
       setupUITranslatedCells();
 

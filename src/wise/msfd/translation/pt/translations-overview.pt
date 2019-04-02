@@ -26,7 +26,6 @@
               tal:attributes="action string:${context/absolute_url}/@@edit-translation">
               <input type="hidden" name="language" tal:attributes="value request/form/language | nothing" />
               <textarea style="display:none" type="hidden" name="original" ></textarea>
-
               <div class="form-group">
                 <h4 class="modal-translate-header">New translation</h4>
                 <textarea class="form-control" style="height: 10em;" type="text" id="tr-new" name="tr-new"></textarea>
@@ -73,15 +72,11 @@
         </tr>
       </tbody>
     </table>
-
   </div>
-
   <div
     id="portal-column-one"
     metal:fill-slot="column_one_slot"
-    tal:define="languages view/languages"
-    >
-
+    tal:define="languages view/languages">
     <ul>
       <tal:rep tal:repeat="lang languages" tal:define="selected_lang request/form/language | nothing">
         <li tal:condition="python: selected_lang == lang" >
@@ -99,5 +94,4 @@
       </tal:rep>
     </ul>
   </div>
-
 </html>
