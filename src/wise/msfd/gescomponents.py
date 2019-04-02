@@ -516,9 +516,24 @@ def parse_features():
         res[code] = Feature(code, label, descs)
 
     # this is missing from FeaturesSmart
+    res['BirdsAll'] = Feature('BirdsAll', 'All birds', set(['D1.1']))
+    res['MamAll'] = Feature('MamAll', 'All mammals', set(['D1.2']))
     res['FishAll'] = Feature('FishAll', 'All fish', set(['D1.4', 'D3']))
+    res['CephaAll'] = Feature('CephaAll', 'All cephalopods', set(['D1.5']))
     res['HabPelagAll'] = Feature('HabPelagAll',
                                  'Pelagic habitats', set(['D1.6']))
+    res['HabPelagVarSalinity'] = Feature('HabPelagVarSalinity',
+                                         'Variable salinity', set(['D1.6']))
+    res['HabPelagCoastal'] = Feature('HabPelagCoastal',
+                                     'Coastal', set(['D1.6']))
+    res['HabPelagShelf'] = Feature('HabPelagShelf',
+                                   'Shelf', set(['D1.6']))
+    res['HabPelagOcean'] = Feature('HabPelagOcean',
+                                   'Oceanic/beyond shelf', set(['D1.6']))
+    res['HabOther'] = Feature('HabOther',
+                              'Other habitat types ', set(['D1.6', 'D6']))
+    res['HabAll'] = Feature('HabAll',
+                            'All habitats ', set(['D1.6', 'D6']))
 
     return res
 

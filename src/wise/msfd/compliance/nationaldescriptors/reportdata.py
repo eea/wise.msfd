@@ -24,7 +24,8 @@ from wise.msfd.compliance.nationaldescriptors.data import get_report_definition
 from wise.msfd.compliance.utils import group_by_mru, insert_missing_criterions
 from wise.msfd.data import (get_factsheet_url, get_report_file_url,
                             get_report_filename, get_xml_report_data)
-from wise.msfd.gescomponents import get_descriptor, get_features
+from wise.msfd.gescomponents import (get_descriptor, get_features,
+                                     get_parameters)
 from wise.msfd.translation import retrieve_translation
 from wise.msfd.utils import ItemList, items_to_rows, timeit
 from z3c.form.button import buttonAndHandler
@@ -547,22 +548,23 @@ https://svn.eionet.europa.eu/repositories/Reportnet/Dataflows/MarineDirective/MS
             if ges_comps.intersection(self.all_descriptor_ids):
                 out.append(row)
 
-        return out
+        if not self.descriptor.startswith('D1.'):
+            return out
 
-        # conditions = []
-        # params = get_parameters(self.descriptor)
-        # p_codes = [p.name for p in params]
-        # conditions.append(t.c.Parameter.in_(p_codes))
-        # ok_features = set([f.name for f in get_features(self.descriptor)])
-        # out = []
-        #
-        # for row in res:
-        #     feats = set(row.Features.split(','))
-        #
-        #     if feats.intersection(ok_features):
-        #         out.append(row)
-        #
-        # return out
+        conditions = []
+        params = get_parameters(self.descriptor)
+        p_codes = [p.name for p in params]
+        conditions.append(t.c.Parameter.in_(p_codes))
+        ok_features = set([f.name for f in get_features(self.descriptor)])
+        out_filtered = []
+
+        for row in out:
+            feats = set(row.Features.split(','))
+
+            if feats.intersection(ok_features):
+                out_filtered.append(row)
+
+        return out_filtered
 
     def get_data_from_view_Art9(self):
 
