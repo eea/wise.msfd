@@ -465,7 +465,7 @@ https://svn.eionet.europa.eu/repositories/Reportnet/Dataflows/MarineDirective/MS
 
         return all_ids
 
-    def _get_order_cols(self, descr):
+    def _get_order_cols_Art8(self, descr):
         descr = descr.split('.')[0]
         order_by = {
             'D5': ('MarineReportingUnit', 'GESComponent', 'Feature',
@@ -510,7 +510,7 @@ https://svn.eionet.europa.eu/repositories/Reportnet/Dataflows/MarineDirective/MS
                 t.c.Criteria.isnot(None)),
         ]
         orderby = [
-            getattr(t.c, x) for x in self._get_order_cols(self.descriptor)
+            getattr(t.c, x) for x in self._get_order_cols_Art8(self.descriptor)
         ]
 
         # groupby IndicatorCode

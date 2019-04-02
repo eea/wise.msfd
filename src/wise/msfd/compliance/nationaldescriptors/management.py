@@ -1,3 +1,4 @@
+from Products.CMFCore.utils import getToolByName
 from wise.msfd.gescomponents import get_all_descriptors
 
 from .base import BaseView
@@ -19,10 +20,9 @@ class Management(BaseView):
         descriptor = descriptor.split('.')[0]
         group_id = 'extranet-wisemarine-msfd-tl-{}'.format(descriptor.lower())
 
-        from Products.CMFCore.utils import getToolByName
-        acl_users = getToolByName(self.context, 'acl_users')
+        # acl_users = getToolByName(self.context, 'acl_users')
         groups_tool = getToolByName(self.context, 'portal_groups')
-        groups = acl_users.source_groups.getGroupIds()
+        # groups = acl_users.source_groups.getGroupIds()
 
         g = groups_tool.getGroupById(group_id)
         g_members = g.getGroupMembers()
