@@ -488,10 +488,7 @@ https://svn.eionet.europa.eu/repositories/Reportnet/Dataflows/MarineDirective/MS
                         'Element', 'Element2Code', 'Element2', 'Criteria',
                         'IntegrationRuleTypeParameter',)
         }
-        if descr in order_by:
-            return order_by[descr]
-
-        return order_by['default']
+        return order_by.get(descr, order_by['default'])
 
     def get_data_from_view_Art8(self):
         sess = db.session()
