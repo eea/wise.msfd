@@ -17,4 +17,10 @@
     description="Edit automatically generated translations"
     />
 
+  <permission
+    id="wise.ManageCompliance"
+    title="wise.msfd: Manage Compliance"
+    description="Manage compliance admin page"
+  />
+
 </configure>
