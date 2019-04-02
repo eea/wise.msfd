@@ -83,7 +83,7 @@
     >
 
     <ul>
-      <tal:rep tal:repeat="lang languages" tal:define="selected_lang request/form/language">
+      <tal:rep tal:repeat="lang languages" tal:define="selected_lang request/form/language | nothing">
         <li tal:condition="python: selected_lang == lang" >
           <a
             class="btn btn-xs btn-primary" href="" tal:attributes="href string:./@@translations-overview?language=${lang}" style="width: 3rem; margin-bottom: 0.5rem">
