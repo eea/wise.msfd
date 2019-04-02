@@ -46,7 +46,49 @@
                       <strong tal:content="user/fullname">Fullname</strong>
                       (<span tal:content="user/username">Username</span>)
                     </a>
-                </div>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+
+          <h3>Compliance Reviewers (EC)</h3>
+          <table class="table as-table-overview table-striped">
+            <thead>
+              <tr>
+                <th>Assigned users</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>
+                  <div tal:repeat="user python: view.get_reviewers">
+                    <a href="" tal:attributes="href string:mailto:${user/email}">
+                      <strong tal:content="user/fullname">Fullname</strong>
+                      (<span tal:content="user/username">Username</span>)
+                    </a>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+
+          <h3>Compliance Editors (Milieu)</h3>
+          <table class="table as-table-overview table-striped">
+            <thead>
+              <tr>
+                <th>Assigned users</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>
+                  <div tal:repeat="user python: view.get_editors">
+                    <a href="" tal:attributes="href string:mailto:${user/email}">
+                      <strong tal:content="user/fullname">Fullname</strong>
+                      (<span tal:content="user/username">Username</span>)
+                    </a>
+                  </div>
                 </td>
               </tr>
             </tbody>

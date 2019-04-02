@@ -20,6 +20,10 @@ from .base import BaseComplianceView
 
 logger = logging.getLogger('wise.msfd')
 
+CONTRIBUTOR_GROUP_ID = 'extranet-wisemarine-msfd-tl'
+REVIEWER_GROUP_ID = 'extranet-wisemarine-msfd-reviewers'
+EDITOR_GROUP_ID = 'extranet-wisemarine-msfd-editors'
+
 
 class ToPDB(BrowserView):
     def __call__(self):
@@ -107,7 +111,7 @@ class BootstrapCompliance(BrowserView):
             code = 'd1'
         code = code.lower()
 
-        return "extranet-wisemarine-msfd-tl-" + code
+        return "{}-{}".format(CONTRIBUTOR_GROUP_ID, code)
 
     def make_country(self, parent, country_code, name):
 
@@ -215,8 +219,8 @@ class BootstrapCompliance(BrowserView):
             alsoProvides(cm, interfaces.IComplianceModuleFolder)
 
             lr = cm.__ac_local_roles__
-            lr['extranet-wisemarine-msfd-reviewers'] = [u'Reviewer']
-            lr['extranet-wisemarine-msfd-editors'] = [u'Editor']
+            lr[REVIEWER_GROUP_ID] = [u'Reviewer']
+            lr[EDITOR_GROUP_ID] = [u'Editor']
 
         # Contributor: TL
         # Reviewer: EC
@@ -263,14 +267,8 @@ class ComplianceAdmin(BaseComplianceView):
 
         return descriptors
 
-    # @cache      #TODO
-    def get_groups_for_desc(self, descriptor):
-        descriptor = descriptor.split('.')[0]
-        group_id = 'extranet-wisemarine-msfd-tl-{}'.format(descriptor.lower())
-
-        # acl_users = getToolByName(self.context, 'acl_users')
+    def get_users_by_group_id(self, group_id):
         groups_tool = getToolByName(self.context, 'portal_groups')
-        # groups = acl_users.source_groups.getGroupIds()
 
         g = groups_tool.getGroupById(group_id)
         members = g.getGroupMembers()
@@ -283,7 +281,26 @@ class ComplianceAdmin(BaseComplianceView):
         for x in members:
             user = User(x.getProperty('id'),
                         x.getProperty('fullname'),
-                        x.getProperty('email'),)
+                        x.getProperty('email'), )
             res.append(user)
 
         return res
+
+    # @cache      #TODO
+    def get_groups_for_desc(self, descriptor):
+        descriptor = descriptor.split('.')[0]
+        group_id = '{}-{}'.format(CONTRIBUTOR_GROUP_ID, descriptor.lower())
+
+        return self.get_users_by_group_id(group_id)
+
+    @property
+    def get_reviewers(self):
+        group_id = REVIEWER_GROUP_ID
+
+        return self.get_users_by_group_id(group_id)
+
+    @property
+    def get_editors(self):
+        group_id = EDITOR_GROUP_ID
+
+        return self.get_users_by_group_id(group_id)
