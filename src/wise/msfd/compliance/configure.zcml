@@ -67,6 +67,14 @@
     />
 
   <browser:page
+    for="*"
+    name="compliance-admin"
+    class=".admin.ComplianceAdmin"
+    template="./pt/admin.pt"
+    permission="zope2.View"
+  />
+
+  <browser:page
     for=".interfaces.IComplianceModuleFolder"
     name="comp-start"
     class=".main.StartComplianceView"

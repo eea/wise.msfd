@@ -10,20 +10,22 @@
 
     <div id="layout-contents" tal:define="text context/text | nothing" >
       <div id="wise-search-form" class="full-width-marker">
-        <!--<div id="wise-search-form-top">-->
-          <!--<metal:tabs-->
-            <!--metal:use-macro="context/wise-macros/macros/tabs"></metal:tabs>-->
-        <!--</div>-->
+        <div id="wise-search-form-top">
+          <metal:tabs metal:use-macro="context/wise-macros/macros/tabs"></metal:tabs>
+        </div>
 
         <div class="start-page-content left-side-form">
 
           <h1>Management page</h1>
 
-          <a href ="/@@translations-overview"
-             target="_blank"
-             class="btn btn-primary btn-small btn-success">
-            Translations overview
-          </a>
+          <div class="nda-link">
+            <a href="./">
+              <i class='fa fa-level-up'></i>
+              Go to the Compliance Assessment Module
+            </a>
+          </div>
+
+          <h3>Assigned Topic Leads overview</h3>
 
           <table class="table as-table-overview table-striped">
             <thead>
@@ -38,10 +40,24 @@
                   <span tal:content="python: desc[1]">D0</span>
                 </th>
 
-                <td tal:content="python: view.get_groups_for_desc(desc[0])">Users here</td>
+                <td>
+                  <div tal:repeat="user python: view.get_groups_for_desc(desc[0])">
+                    <a href="" tal:attributes="href string:mailto:${user/email}">
+                      <strong tal:content="user/fullname">Fullname</strong>
+                      (<span tal:content="user/username">Username</span>)
+                    </a>
+                </div>
+                </td>
               </tr>
             </tbody>
           </table>
+
+          <a href ="/@@translations-overview"
+            tal:attributes="href string:${view/_compliance_folder/portal_url}/@@translations-overview"
+            target="_blank"
+            class="btn btn-primary btn-small btn-success">
+            Translations overview
+          </a>
 
         </div>
       </div>

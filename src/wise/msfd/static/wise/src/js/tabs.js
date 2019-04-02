@@ -92,6 +92,9 @@ window.setupTabs = function (tabswrapper) {
                 $( ".topnav li:last-child").css({
                    "margin-right" : "0"
                 });
+                $( ".topnav li.manage-users").css({
+                    "width": "initial",
+                });
             }
 
         };

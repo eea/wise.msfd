@@ -16,10 +16,13 @@
           </a>
         </li>
       </tal:rep>
-      <li class="manage-users">
+      <li class="manage-users" tal:condition="view/can_admin">
         <a href="/@@management"
-           target="_blank"
-           class="fa fa-users fa-lg"></a>
+          tal:attributes="href string:${view/_compliance_folder/absolute_url}/@@compliance-admin"
+          target="_blank">
+          <span class="fa fa-cogs fa-lg"></span>
+          <span>&nbsp;</span>
+         </a>
       </li>
     </ul>
     <!-- <div class="visible-xs" style="clear: both;"> -->

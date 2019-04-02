@@ -1,10 +1,12 @@
 import logging
+from collections import namedtuple
 
 from zope.interface import alsoProvides
 
 from plone import api
 from plone.api.content import transition
 from plone.dexterity.utils import createContentInContainer as create
+from Products.CMFCore.utils import getToolByName
 from Products.CMFDynamicViewFTI.interfaces import ISelectableBrowserDefault
 from Products.CMFPlacefulWorkflow.WorkflowPolicyConfig import \
     WorkflowPolicyConfig
@@ -14,6 +16,7 @@ from wise.msfd.compliance.vocabulary import REGIONS
 from wise.msfd.gescomponents import get_all_descriptors
 
 from . import interfaces
+from .base import BaseComplianceView
 
 logger = logging.getLogger('wise.msfd')
 
@@ -243,3 +246,44 @@ class CleanupCache(BrowserView):
                     delattr(obj, name)
 
         return "done"
+
+
+User = namedtuple('User', ['username', 'fullname', 'email'])
+
+
+class ComplianceAdmin(BaseComplianceView):
+    """"""
+
+    name = 'admin'
+    section = 'national-descriptors'
+
+    @property
+    def get_descriptors(self):
+        descriptors = get_all_descriptors()
+
+        return descriptors
+
+    # @cache      #TODO
+    def get_groups_for_desc(self, descriptor):
+        descriptor = descriptor.split('.')[0]
+        group_id = 'extranet-wisemarine-msfd-tl-{}'.format(descriptor.lower())
+
+        # acl_users = getToolByName(self.context, 'acl_users')
+        groups_tool = getToolByName(self.context, 'portal_groups')
+        # groups = acl_users.source_groups.getGroupIds()
+
+        g = groups_tool.getGroupById(group_id)
+        members = g.getGroupMembers()
+
+        if not members:
+            return []
+
+        res = []
+
+        for x in members:
+            user = User(x.getProperty('id'),
+                        x.getProperty('fullname'),
+                        x.getProperty('email'),)
+            res.append(user)
+
+        return res
