@@ -328,10 +328,9 @@ class BaseComplianceView(BrowserView):
                            is_translatable=is_translatable)
 
     def can_admin(self):
-        # TODO: check for some permission that should grant people admin
-        # probably "Modify portal content" on self._compliance_folder
+        perm = 'Modify portal content'
 
-        return True
+        return self.check_permission(perm, self._compliance_folder)
 
 
 Target = namedtuple('Target', ['id', 'title', 'definition', 'year'])
