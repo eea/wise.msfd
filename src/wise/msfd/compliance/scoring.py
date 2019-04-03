@@ -172,12 +172,11 @@ class Score(object):
         """
         if self.max_score == 0:
             return 100
-        
-        raw_score = sum(self.raw_scores)
 
+        raw_score = sum(self.raw_scores)
         percentage = (raw_score * 100) / self.max_score
 
-        return float(percentage)
+        return float("{0:.1f}".format(percentage))
 
     @property
     def score_value(self):
@@ -214,10 +213,15 @@ class Score(object):
     def score_tooltip(self):
         raw_score = ' + '.join(str(x) for x in self.raw_scores)
 
-        percentage = '(({}) / {}) * 100 = {}%'\
+        percentage = '(sum of raw_scores / max_score) * 100</br>' \
+                     '(({}) / {}) * 100 = {}%' \
             .format(raw_score, self.max_score, self.percentage)
 
-        score_value = '{}% percentage translates to score value {} (out of 4)' \
+        if self.max_score == 0:
+            percentage = "All selected options are 'Not relevant', therefore "\
+                         "100% percentage is accorded"
+
+        score_value = '{}% percentage translates to score value {} (out of 4)'\
                       ' meaning "{}"'\
             .format(self.percentage, self.score_value, self.conclusion)
 
@@ -225,7 +229,6 @@ class Score(object):
             .format(self.score_value, self.weight, self.weighted_score)
 
         return '<b>Percentage calculation</b></br>' \
-               '(sum of raw_scores / max_score) * 100</br>' \
                '{}</br></br>' \
                '{}</br></br>' \
                '<b>Weighted score calculation</b></br>' \
