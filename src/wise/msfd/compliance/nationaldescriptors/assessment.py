@@ -18,7 +18,8 @@ from wise.msfd.base import EmbeddedForm, MainFormWrapper
 from wise.msfd.compliance.base import get_questions
 from wise.msfd.compliance.content import AssessmentData
 from wise.msfd.compliance.interfaces import IEditAssessmentSettingsForm
-from wise.msfd.gescomponents import get_descriptor  # , get_descriptor_elements
+from wise.msfd.gescomponents import (DESCRIPTOR_ELEMENTS,
+                                     get_descriptor)  # get_descriptor_elements
 from z3c.form.button import buttonAndHandler
 from z3c.form.field import Fields
 from z3c.form.form import Form
@@ -182,6 +183,10 @@ class EditAssessmentDataForm(Form, BaseView):
     template = ViewPageTemplateFile("./pt/edit-assessment-data.pt")
 
     @property
+    def criterias(self):
+        return self.descriptor_obj.sorted_criterions()      # criterions
+
+    @property
     def help(self):
         return render_assessment_help(self.criterias)
 
@@ -235,11 +240,8 @@ class EditAssessmentDataForm(Form, BaseView):
                 )
                 values.append(data.get(field_name, None))
 
-            # TODO update the score if all fields have been answered
-            # score is updated if one of the fields has been answered
-            values = [x for x in values if x is not None]
-
-            if values:
+            # score is updated if ALL of the fields have been answered
+            if values and None not in values:
                 score = question.calculate_score(self.descriptor, values)
 
                 name = '{}_{}_Score'.format(self.article, question.id)
@@ -353,7 +355,8 @@ class EditAssessmentDataForm(Form, BaseView):
 
             fields = []
 
-            if not elements:       # when use-criteria == 'none'
+
+            if not elements:  # and question.use_criteria == 'none'
                 field_title = u'All criteria'
                 field_name = '{}_{}'.format(self.article, question.id)
                 choices = question.answers
