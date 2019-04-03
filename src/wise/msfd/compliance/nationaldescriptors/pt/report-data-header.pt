@@ -25,7 +25,7 @@
           </div>
 
           <div class="nav-body">
-
+          
             <div class="art-title">
               <a href="" tal:attributes="href view/_country_folder/absolute_url"
                 tal:content="view/country_name"
