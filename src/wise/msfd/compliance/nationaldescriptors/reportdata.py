@@ -63,8 +63,10 @@ def get_reportdata_key(func, self, *args, **kwargs):
     muids = ",".join([m.id for m in self.muids])
     region = getattr(self, 'country_region_code', ''.join(self.regions))
 
+    cache_key_extra = getattr(self, 'cache_key_extra', '')
+
     res = '_cache_' + '_'.join([self.report_year,
-                                self.cache_key_extra,
+                                cache_key_extra,
                                 self.country_code,
                                 region,
                                 self.descriptor,
