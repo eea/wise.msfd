@@ -7,8 +7,10 @@ from zope.schema import Choice, Text
 from zope.schema.vocabulary import SimpleTerm, SimpleVocabulary
 from zope.security import checkPermission
 
+from AccessControl import Unauthorized
 from persistent.list import PersistentList
 from plone.api import user
+from plone.api.user import get_roles
 from plone.z3cform.layout import wrap_form
 from Products.Five.browser.pagetemplatefile import (PageTemplateFile,
                                                     ViewPageTemplateFile)
@@ -207,6 +209,12 @@ class EditAssessmentDataForm(Form, BaseView):
 
     @buttonAndHandler(u'Save', name='save')
     def handle_save(self, action):
+
+        roles = get_roles(obj=self.context)
+
+        if 'Contributor' not in roles:
+            raise Unauthorized
+
         data, errors = self.extractData()
         # if not errors:
         # TODO: check for errors
@@ -318,6 +326,9 @@ class EditAssessmentDataForm(Form, BaseView):
 
         forms = []
 
+        is_ec_user = not self.can_comment_tl
+        is_other_tl = not (self.can_comment_tl or self.can_comment_tl)
+
         for question in self.questions:
             phase = [
                 k
@@ -337,8 +348,8 @@ class EditAssessmentDataForm(Form, BaseView):
             form._question_phase = phase
             form._question = question
             form._elements = elements
-            form._disabled = self.is_disabled(question)\
-                or not self.can_comment_tl
+            form._disabled = self.is_disabled(
+                question) or is_other_tl or is_ec_user
 
             fields = []
 
