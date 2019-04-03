@@ -52,7 +52,6 @@ if (!Array.prototype.last){
     // the <td> cells, and the other way around.
 
     this.each(function() {
-
       $("th", this).each(function() {
         var $th = $(this);
         var $next = $('td', $th.parent());
@@ -85,7 +84,6 @@ if (!Array.prototype.last){
     // layout algorithm. For this reason we have to recompute their height (to
     // make either the <td> or the <th> match same height
     this.each(function() {
-
       $("th", this).each(function() {
         var $th = $(this);
         var $next = $('td', $th.parent());
@@ -228,10 +226,9 @@ if (!Array.prototype.last){
       $(this).hide();
       $(this).empty().html(original);
       $(this).show();
-
       $(this).fixTableHeaderAndCellsHeight();
-
       setupTranslateClickHandlers();
+      setupReadMoreModal();
     }
     setupReadMoreModal();
     setupTranslateClickHandlers();
@@ -240,32 +237,26 @@ if (!Array.prototype.last){
   /* Used in report data table create a 'read more' modal if the cell content
    * is too long
    */
-  function setupReadMoreModal() {
+  window.setupReadMoreModal = function() {
     var $table = $('.table-report');
-
     var $modal = $("#read-more-modal");
     var $modalContent = $('.modal-content-wrapper');
     var maxchars = 397;
     var sep = '...';
+    var $cells = $table.find('.tr-text');
+    $cells.each(function() {
+      var t = $(this).text()
+      if (t.length > maxchars) {
+        $(this).addClass('short');
+        var sh = t.substr(0, 0.75*maxchars) + sep;
+        $(this).text(sh);
+        $(this).on('click', function() {
+          $modalContent.html(t);
+          $modal.modal('show');
+        });
+      };
+    })
 
-    var $bigCells = $table.find('td .tr.big');
-
-    // $bigCells.each(function() {
-    //   var $text = $(this);
-    //   var $clone = $text.clone().removeClass('system').addClass('short');
-    //
-    //   var t = $text.text();
-    //   var sh = t.substr(0, maxchars) + sep ;
-    //   $text.hide();
-    //   $clone.html(sh);
-    //   $text.parent().append($clone);
-    //
-    //   $clone.on('click', function() {
-    //     $modalContent.html(t);
-    //     $modal.modal('show');
-    //   });
-    // });
-    //
     $('.btn-close-modal').click(function() {
       $modalContent.empty();
     });
@@ -578,7 +569,6 @@ if (!Array.prototype.last){
   }
 
   function setupSimplifiedTables() {
-
     $('.simplify-form').next().find('.table-report').each(function(){
       $(this).simplifyTable();
     });
@@ -595,7 +585,6 @@ if (!Array.prototype.last){
   $(document).ready(function($){
 
     setupReadMoreModal();
-
     initStyling();
     setupSelects2();
     setupReportNavigation();
@@ -604,10 +593,11 @@ if (!Array.prototype.last){
     addCustomScroll();
     addFixedTable();
 
-    // $(window).on('load', function() {
-      setupSimplifiedTables();
+    $(window).on('load', function() {
       setupCustomScroll();
+      // setupReadMoreModal();
       setupFixedTableRows();
-    // });
+      setupSimplifiedTables();
+    });
   });
 }(window, document, $));

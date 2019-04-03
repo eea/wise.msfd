@@ -5,28 +5,24 @@ td.translatable  {
   .w-t {    // wrapper for translations
     width: 100%;
     height: 100%;
-
+    
     .tr-text {
       display: block;
       padding: 6px 6px 6px 8px;
-
-      .tr {
-        display: none;
-
-        &.active {
-          display: block;
-          min-width: 10rem;
-          max-width: 50rem;
-        }
-        &.short:after {
-          content: "\f0da";
-          font: normal normal normal 14px/1 FontAwesome;
-          color: #DDD;
-          transform: rotate(45deg);
-          position: absolute;
-          margin: 0 0.6em;
-        }
+            
+      &.active {
+        display: block;
+        min-width: 10rem;
+        max-width: 50rem;
       }
+      &.short:after {
+        content: "\f0da";
+        font: normal normal normal 14px/1 FontAwesome;
+        color: #DDD;
+        transform: rotate(45deg);
+        position: absolute;
+        margin: 0 0.6em;
+      }    
     }
 
     .lang-toolbar {
