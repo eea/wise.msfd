@@ -64,6 +64,7 @@ def get_reportdata_key(func, self, *args, **kwargs):
     region = getattr(self, 'country_region_code', ''.join(self.regions))
 
     res = '_cache_' + '_'.join([self.report_year,
+                                self.cache_key_extra,
                                 self.country_code,
                                 region,
                                 self.descriptor,
@@ -127,6 +128,7 @@ class ReportData2012(BaseView, BaseUtil):
 
     year = report_year = '2012'
     section = 'national-descriptors'
+    cache_key_extra = 'base'
 
     @property
     def help_text(self):
@@ -348,6 +350,9 @@ class ReportData2012(BaseView, BaseUtil):
 class ReportData2012Like2018(ReportData2012):
     """ An alternative implementation, mapping data like the 2018 views
     """
+
+    cache_key_extra = 'like2018'
+
     @property
     def article_implementations(self):
         res = {
