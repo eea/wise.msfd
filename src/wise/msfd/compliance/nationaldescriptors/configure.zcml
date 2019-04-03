@@ -78,9 +78,9 @@
 
   <browser:page
     for="..interfaces.INationalDescriptorsFolder"
-    name="assessment-settings"
-    class=".assessment.EditAssessmentSettingsForm"
-    template="./pt/assessment-settings.pt"
+    name="edit-assessors"
+    class=".assessment.EditAssessorsForm"
+    template="./pt/edit-assessors.pt"
     permission="zope2.View"
     />
 

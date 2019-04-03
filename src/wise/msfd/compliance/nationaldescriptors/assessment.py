@@ -17,9 +17,8 @@ from Products.Five.browser.pagetemplatefile import (PageTemplateFile,
 from wise.msfd.base import EmbeddedForm, MainFormWrapper
 from wise.msfd.compliance.base import get_questions
 from wise.msfd.compliance.content import AssessmentData
-from wise.msfd.compliance.interfaces import IEditAssessmentSettingsForm
-from wise.msfd.gescomponents import (DESCRIPTOR_ELEMENTS,
-                                     get_descriptor)  # get_descriptor_elements
+from wise.msfd.compliance.interfaces import IEditAssessorsForm
+from wise.msfd.gescomponents import get_descriptor  # get_descriptor_elements
 from z3c.form.button import buttonAndHandler
 from z3c.form.field import Fields
 from z3c.form.form import Form
@@ -71,18 +70,18 @@ def set_assessors(self, value):
     annot[ASSESSORS_ANNOT_KEY] = value
 
 
-class EditAssessmentSettingsForm(Form, BaseView):
+class EditAssessorsForm(Form, BaseView):
     """ Assessment settings form, used to edit the assessors list
 
-    /compliance-module/national-descriptors-assessments/assessment-settings
+    /compliance-module/national-descriptors-assessments/edit-assessors
     """
 
     ignoreContext = True
-    name = 'assessment-settings'
+    name = 'edit-assessors'
     section = 'national-descriptors'
     title = u'Edit assessed by'
-    fields = Fields(IEditAssessmentSettingsForm)
-    template = ViewPageTemplateFile('./pt/assessment-settings.pt')
+    fields = Fields(IEditAssessorsForm)
+    template = ViewPageTemplateFile('./pt/edit-assessors.pt')
 
     @buttonAndHandler(u'Save', name='Save')
     def hande_save(self, action):
@@ -94,7 +93,7 @@ class EditAssessmentSettingsForm(Form, BaseView):
             set_assessors(self, value)
 
     def updateWidgets(self):
-        super(EditAssessmentSettingsForm, self).updateWidgets()
+        super(EditAssessorsForm, self).updateWidgets()
         assessed_by_field = self.fields['assessed_by'].field
         default = assessed_by_field.default
         annot_assessors = get_assessors(self)
@@ -354,7 +353,6 @@ class EditAssessmentDataForm(Form, BaseView):
                 question) or is_other_tl or is_ec_user
 
             fields = []
-
 
             if not elements:  # and question.use_criteria == 'none'
                 field_title = u'All criteria'

@@ -72,10 +72,10 @@ class IReportDataView(Interface):
     """
 
 
-class IEditAssessmentSettingsForm(Interface):
+class IEditAssessorsForm(Interface):
     """ Interface for assessment settings form
 
-    Ex: /compliance-module/national-descriptors-assessments/assessment-settings
+    Ex: /compliance-module/national-descriptors-assessments/edit-assessors
     """
 
     assessed_by = Text(

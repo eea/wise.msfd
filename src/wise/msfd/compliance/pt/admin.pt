@@ -94,11 +94,16 @@
             </tbody>
           </table>
 
-          <a href ="/@@translations-overview"
+          <a class="btn btn-primary btn-small btn-success"
             tal:attributes="href string:${view/_compliance_folder/portal_url}/@@translations-overview"
-            target="_blank"
-            class="btn btn-primary btn-small btn-success">
+            target="_blank">
             Translations overview
+          </a>
+
+          <a class="btn btn-primary btn-small btn-success"
+            tal:attributes="href string:${view/_compliance_folder/absolute_url}/national-descriptors-assessments/@@edit-assessors"
+            target="_blank">
+            Edit assessors
           </a>
 
         </div>
