@@ -228,6 +228,7 @@ class EditAssessmentDataForm(Form, BaseView):
                                                       muids=self.muids)
 
             values = []
+            score = None
 
             if question.use_criteria == 'none':
                 field_name = '{}_{}'.format(self.article, question.id)
@@ -243,16 +244,16 @@ class EditAssessmentDataForm(Form, BaseView):
             if values and None not in values:
                 score = question.calculate_score(self.descriptor, values)
 
-                name = '{}_{}_Score'.format(self.article, question.id)
-                logger.info("Set score: %s - %s", name, score)
-                data[name] = score
+            name = '{}_{}_Score'.format(self.article, question.id)
+            logger.info("Set score: %s - %s", name, score)
+            data[name] = score
 
-                # name = '{}_{}_RawScore'.format(self.article, question.id)
-                # data[name] = raw_score
+            # name = '{}_{}_RawScore'.format(self.article, question.id)
+            # data[name] = raw_score
 
-                # name = '{}_{}_Conclusion'.format(self.article, question.id)
-                # logger.info("Set conclusion: %s - %s", name, conclusion)
-                # data[name] = conclusion
+            # name = '{}_{}_Conclusion'.format(self.article, question.id)
+            # logger.info("Set conclusion: %s - %s", name, conclusion)
+            # data[name] = conclusion
 
         # TODO: update the overall score
         overall_score = 0
@@ -261,7 +262,7 @@ class EditAssessmentDataForm(Form, BaseView):
             if not k.endswith('_Score'):
                 continue
             else:
-                overall_score += v.weighted_score
+                overall_score += getattr(v, 'weighted_score', 0)
 
         data['OverallScore'] = overall_score
 
