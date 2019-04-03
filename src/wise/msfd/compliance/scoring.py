@@ -170,8 +170,11 @@ class Score(object):
 
         :return: float 53.25
         """
+        if self.max_score == 0:
+            return 100
         
         raw_score = sum(self.raw_scores)
+
         percentage = (raw_score * 100) / self.max_score
 
         return float(percentage)
