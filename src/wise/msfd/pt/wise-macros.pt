@@ -16,10 +16,9 @@
           </a>
         </li>
       </tal:rep>
-      <li class="manage-users" tal:condition="view/can_admin">
-        <a href="/@@management"
-          tal:attributes="href string:${view/_compliance_folder/absolute_url}/@@compliance-admin"
-          target="_blank">
+      <li class="manage-users" tal:condition="python: view.check_permission('wise.msfd: Manage Compliance')">
+        <a target="_blank"
+          tal:attributes="href string:${view/_compliance_folder/absolute_url}/@@compliance-admin">
           <span class="fa fa-cogs fa-lg"></span>
           <span>&nbsp;</span>
          </a>
