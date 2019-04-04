@@ -47,7 +47,7 @@
     </element>
 
     <element section="gesdetermination" setlevel="1" name="Features" label="features" convert="csv_ges_labels_list">Features</element>
-    <element section="gesdetermination" name="GESDescription" translate="true">GES description</element>
+    <element section="gesdetermination" setlevel="2" name="GESDescription" translate="true">GES description</element>
     <element section="gesdetermination" name="DeterminationDate">Determination date</element>
     <element section="gesdetermination" name="UpdateType">Update type</element>
   </Art9>

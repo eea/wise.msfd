@@ -127,21 +127,23 @@ def insert_missing_criterions(data, descriptor):
         # this proxy object will serve as template for new cloned columns,
         # to be able to show an empty column
         tplobj = None
-        colmap = {}
+
+        # colmap = {}
+        colmap = defaultdict(list)
         new = []
 
         for col in dataset:
             # rewrite the GESComponent feature. TODO: move this functionality
             # to the Proxy2018 and XML file, with a getter
 
-            if col.GESComponent in colmap:
-                continue
+            # if col.GESComponent in colmap:
+            #     continue
 
             if col.GESComponent.is_descriptor():
-                colmap[col.GESComponent] = col
+                colmap[col.GESComponent].append(col)
             else:
                 col.GESComponent = descriptor[col.GESComponent.id]
-                colmap[col.GESComponent] = col
+                colmap[col.GESComponent].append(col)
 
             if tplobj is None:
                 tplobj = col
@@ -150,8 +152,8 @@ def insert_missing_criterions(data, descriptor):
             if c in colmap:
                 col = colmap[c]
             else:
-                col = tplobj.clone(GESComponent=c)
-            new.append(col)
+                col = [tplobj.clone(GESComponent=c)]
+            new.extend(col)
 
         data[muidlist] = new
 
