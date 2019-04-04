@@ -64,6 +64,7 @@
       ;
     };
 
+
     /*
      * Setup the translations in the report data view screens
      */
@@ -85,7 +86,7 @@
         $trText.text($trText.data('original'))
       } else if ($langToolbar.hasClass('green'))  {
         $trText.text($trText.data('translation'))
-      }
+      }      
 
       // fix height of <th> on this row
       var $th = $(this).parents('tr').find('th').each(function(){
@@ -95,6 +96,7 @@
 
         $th.height(cells_max_height);
       });
+      setupReadMoreModal();
       // $th.fixTableHeaderHeight();
 
       // fix height of lang-toolbar on this row
@@ -102,8 +104,7 @@
       //   var $this = $(this);
       //   $this.css('height', $this.parents('tr').height());
       // });
-
-      // setupReadMoreModal();
+      
     };
 
     function setupUITranslatedCells() {
@@ -158,7 +159,7 @@
       $form.find('textarea').val(text);
       $form.submit();
     }
-
+    
     window.setupTranslateClickHandlers = function () {
       $(".autoTransl").on("click", autoTranslation);    
       // todo: toggle clickability of buttons?
