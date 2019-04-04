@@ -142,24 +142,21 @@
 
     // sticky save button
     var $sfw = $('.form-right-side');
+    var $rn = $('.report-nav');
     var btnPos = 0;
-    if ($sfw.offset()){
-      btnPos = $sfw.offset().top;
-    }
-
+    var $rnOffset = 0;
     var scroll, space;
 
-    $sfw.find('.btn').addClass('btn-primary btn-lg');
+    if ($sfw.offset()) btnPos = $sfw.offset().top;
+    if ($rn.length > 0) rnOffset = $rn.offset().top;
+
     space = $win.height() - $sfw.height() * 2;
 
+    $sfw.find('.btn').addClass('btn-success');
     $win.scroll(function() {
       scroll = $win.scrollTop();
-
-      if (scroll + space < btnPos) {
-        $sfw.addClass('fixed-save-form');
-      } else {
-        $sfw.removeClass('fixed-save-form');
-      }
+      var fixElement = (scroll + space < btnPos) && (scroll >= rnOffset);
+      $sfw.toggleClass('fixed-save-btn', fixElement);
     });
 
   });

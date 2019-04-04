@@ -26,7 +26,7 @@
           Criteria definition
         </button>
       </div>
-      <h2 tal:content="view/title">Title here</h2>
+      <h2 tal:content="view/title" class="report-title">Title here</h2>
       <h4 class="process-phase-title" >
         Current phase: <span tal:content="python: view.current_phase[1]">Adequacy</span>
       </h4>
@@ -48,7 +48,7 @@
             </div>
 
             <div class="nav-body">
-          
+
             <div class="art-title">
               <a href="" tal:attributes="href view/_country_folder/absolute_url"
                 tal:content="view/country_name"

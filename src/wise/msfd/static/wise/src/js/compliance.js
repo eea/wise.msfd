@@ -277,21 +277,16 @@ if (!Array.prototype.last){
 
     // sticky report data navigation
     var $rn = $('.report-nav');
-    var $title = $rn.closest('#report-data-navigation').siblings('.report-title');
+    var $title = $('.report-title');
 
     if ($rn.length > 0) {
       var stickyOffset = $rn.offset().top;
 
       $(window).scroll(function() {
         var scroll = $(window).scrollTop();
-
-        if (scroll >= stickyOffset) {
-          $rn.addClass('sticky').removeClass('fixed');
-          $title.addClass('fixed-title');
-        } else {
-          $rn.removeClass('sticky').addClass('fixed');
-          $title.removeClass('fixed-title');
-        }
+        var fixElement = scroll >= stickyOffset;
+        $rn.toggleClass('sticky', fixElement);
+        $title.toggleClass('fixed-title', fixElement);
       });
     }
   }
