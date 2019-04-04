@@ -27,7 +27,7 @@ from wise.msfd.data import (get_factsheet_url, get_report_file_url,
 from wise.msfd.gescomponents import (get_descriptor, get_features,
                                      get_parameters)
 from wise.msfd.translation import retrieve_translation
-from wise.msfd.utils import ItemList, items_to_rows, timeit
+from wise.msfd.utils import ItemList, items_to_rows, timeit, natural_sort_key
 from z3c.form.button import buttonAndHandler
 from z3c.form.field import Fields
 from z3c.form.form import Form
@@ -538,7 +538,7 @@ https://svn.eionet.europa.eu/repositories/Reportnet/Dataflows/MarineDirective/MS
 
         count, res = db.get_all_records_ordered(
             t,
-            'GESComponents',
+            ('Features', 'TargetCode', 'Element'),
             t.c.CountryCode == self.country_code,
             t.c.Region == self.country_region_code,
             # *conditions
@@ -585,7 +585,7 @@ https://svn.eionet.europa.eu/repositories/Reportnet/Dataflows/MarineDirective/MS
 
         count, q = db.get_all_records_ordered(
             t,
-            'GESComponent',
+            ('GESComponent', ),
             t.c.CountryCode == self.country_code,
             or_(t.c.Region == self.country_region_code,
                 t.c.Region.is_(None)),
@@ -638,7 +638,9 @@ https://svn.eionet.europa.eu/repositories/Reportnet/Dataflows/MarineDirective/MS
 
             res.append((mru, _rows))
 
-        return sorted(res, key=lambda r: r[0])      # sort by MarineUnitiD
+        res_sorted = sorted(res, key=lambda r: natural_sort_key(r[0].__repr__()))
+
+        return res_sorted
 
     def get_snapshots(self):
         """ Returns all snapshots, in the chronological order they were created

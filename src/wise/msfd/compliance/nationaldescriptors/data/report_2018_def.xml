@@ -8,8 +8,8 @@
     <element skip='true' name='MarineReportingUnit'></element>
     <element skip='true' name='CountryCode'></element>
 
-    <element section="target" name="Features" label="features" convert="csv_ges_labels_list">Feature(s) reported</element>
-    <element section="target" name="TargetCode" label="targets" convert="csv_ges_labels_inverse_list">Target code</element>
+    <element section="target" setlevel="0" name="Features" label="features" convert="csv_ges_labels_list">Feature(s) reported</element>
+    <element section="target" setlevel="1" name="TargetCode" label="targets" convert="csv_ges_labels_inverse_list">Target code</element>
 
     <element section="target" name="Description" translate="true">Description target</element>
     <element section="target" name="GESComponents" convert="ges_component_list" filter="all_descriptor_ids">GES components</element>
@@ -18,7 +18,7 @@
     <element section="target" name="UpdateType">Update type</element>
     <element section="target" name="Measures">Related measures</element>
 
-    <element section="progressassessment" name="Element">Element</element>
+    <element section="progressassessment" setlevel="2" name="Element">Element</element>
     <element section="progressassessment" name="Element2">Element 2</element>
     <element section="progressassessment" name="Parameter" label="parameters">Parameter</element>
     <element section="progressassessment" name="ParameterOther" translate="true">Parameter other</element>
@@ -40,13 +40,13 @@
     <element skip='true' name='MarineReportingUnit'></element>
     <element skip='true' name='CountryCode'></element>
 
-    <element section="ges" name="GESComponent" convert="ges_component">GES component</element>
+    <element section="ges" setlevel="0" name="GESComponent" convert="ges_component">GES component</element>
     <element section="ges" name="JustificationNonUse" translate="true">Justification for non-use of criterion</element>
     <element section="ges" name="JustificationDelay" translate="true">
       Justification for delay in setting EU/regional requirements
     </element>
 
-    <element section="gesdetermination" name="Features" label="features" convert="csv_ges_labels_list">Features</element>
+    <element section="gesdetermination" setlevel="1" name="Features" label="features" convert="csv_ges_labels_list">Features</element>
     <element section="gesdetermination" name="GESDescription" translate="true">GES description</element>
     <element section="gesdetermination" name="DeterminationDate">Determination date</element>
     <element section="gesdetermination" name="UpdateType">Update type</element>

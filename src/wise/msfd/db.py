@@ -427,13 +427,14 @@ def get_all_specific_columns(columns, *conditions, **kw):
 
 
 @cache(db_result_key)
-def get_all_records_ordered(table, order_col, *conditions):
+def get_all_records_ordered(table, order_cols, *conditions):
     sess = session()
 
-    col = getattr(table.c, order_col)
+    order_by = [table.c.MarineReportingUnit] + \
+               [getattr(table.c, c)for c in order_cols]
 
     q = sess.query(table).filter(*conditions).\
-        order_by(table.c.MarineReportingUnit, col).distinct()
+        order_by(*order_by).distinct()
 
     # print q
     count = q.count()
