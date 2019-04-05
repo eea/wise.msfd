@@ -1,6 +1,7 @@
 from collections import defaultdict
 
-from wise.msfd.utils import FlatItemList, ItemList
+from wise.msfd.gescomponents import GES_LABELS
+from wise.msfd.utils import LabeledItemList, ItemList, ItemLabel
 
 from .proxy import proxy_cmp
 
@@ -50,12 +51,19 @@ def consolidate_date_by_mru(data):
     # rewrite the result keys to list of MRUs
 
     for mrus, rows in regroup.items():
-        label = FlatItemList(rows=mrus)
+        mrus_labeled = tuple([
+            ItemLabel(row, GES_LABELS.get('mrus', row))
+
+            for row in mrus
+        ])
+        label = LabeledItemList(rows=mrus_labeled)
         rows.extend(rows_without_mru)
         out[label] = rows
 
     if not regroup and rows_without_mru:
-        label = 'No Marine unit ID reported'
+        rows = ItemLabel('No Marine unit ID reported',
+                         'No Marine unit ID reported')
+        label = LabeledItemList(rows=(rows, ))
         out[label] = rows_without_mru
 
     return out

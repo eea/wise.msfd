@@ -21,6 +21,7 @@ from plone.intelligenttext.transforms import \
 from plone.memoize import volatile
 from Products.Five.browser.pagetemplatefile import PageTemplateFile
 
+
 # TODO: move this registration to search package
 BLACKLIST = ['ID', 'Import', 'Id']
 
@@ -441,10 +442,17 @@ class ItemList(TemplateMixin):
         return id(self)     # wonky but should work
 
 
-class FlatItemList(ItemList):
+class LabeledItemList(ItemList):
     """ List that renders using <div> instead of <ul>
     """
-    template = PageTemplateFile('pt/flat-list.pt')
+    template = PageTemplateFile('pt/labeled-list.pt')
+
+    def __init__(self, rows):
+        self.rows = rows
+
+    def __call__(self):
+
+        return self.template(rows=self.rows)
 
 
 class CompoundRow(TemplateMixin):

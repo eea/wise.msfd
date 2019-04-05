@@ -204,6 +204,7 @@ def group_by_mru(data):
     # justification for delay
 
     if not res and rows_extra:
-        res['No MRUs'].extend(rows_extra)
+        _mru = ItemLabel('No MRUs', 'No MRUs')
+        res[_mru].extend(rows_extra)
 
     return res

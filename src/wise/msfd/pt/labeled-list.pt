@@ -1,0 +1,9 @@
+<div class="flat-cell-listing" tal:condition="options/rows"
+  tal:define="rows options/rows">
+  <!--<span tal:content="python: u', '.join(options['rows'])"></span>-->
+  <tal:rep tal:repeat="item python: rows[:-1]">
+    <em tal:attributes="title python: item.title" tal:content="python: item.name"></em>,
+  </tal:rep>
+  <em tal:attributes="title python: rows[-1].title"
+      tal:content="python: rows[-1].name"></em>
+</div>
