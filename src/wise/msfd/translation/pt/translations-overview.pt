@@ -79,13 +79,13 @@
     tal:define="languages view/languages">
     <ul>
       <tal:rep tal:repeat="lang languages" tal:define="selected_lang request/form/language | nothing">
-        <li tal:condition="python: selected_lang == lang" >
+        <li tal:condition="python: selected_lang == lang and selected_lang">
           <a
             class="btn btn-xs btn-primary" href="" tal:attributes="href string:./@@translations-overview?language=${lang}" style="width: 3rem; margin-bottom: 0.5rem">
             <span tal:replace="lang">EN</span>
           </a>
         </li>
-        <li tal:condition="python: selected_lang != lang" >
+        <li tal:condition="python: selected_lang != lang">
           <a
             class="btn btn-xs btn-secondary" href="" tal:attributes="href string:./@@translations-overview?language=${lang}" style="width: 3rem; margin-bottom: 0.5rem">
             <span tal:replace="lang">EN</span>
