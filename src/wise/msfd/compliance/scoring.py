@@ -89,7 +89,6 @@
 #     return float(percentage)
 
 # from wise.msfd.compliance.base import BaseComplianceView
-from wise.msfd.utils import get_weight_from_annot
 
 
 DEFAULT_RANGES = [
@@ -132,8 +131,10 @@ def scoring_based(answers, scores):
 
 
 def get_overall_conclusion(concl_score):
-    score = get_range_index(concl_score)
+    if concl_score > 100:
+        return 1, 'Error'
 
+    score = get_range_index(concl_score)
     conclusion = list(reversed(CONCLUSIONS))[score]
 
     return score, conclusion
@@ -143,9 +144,7 @@ class Score(object):
     def __init__(self, question, descriptor, values):
         self.descriptor = descriptor
         self.question = question
-        weight = get_weight_from_annot(question.id, descriptor)\
-            or question.score_weights.get(descriptor)
-        self.weight = float(weight)
+        self.weight = float(question.score_weights.get(descriptor, 10.0))
         self.values = values
         self.scores = question.scores
 

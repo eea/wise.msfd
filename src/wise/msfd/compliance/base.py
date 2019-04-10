@@ -345,7 +345,7 @@ def _a10_ids_cachekey(method, self, descriptor, **kwargs):
     return '{}-{}'.format(descriptor.id, ','.join(muids))
 
 
-def get_weights_from_xml(question_id, node):
+def get_weights_from_xml(node):
     """ Initialize with values from questions xml
     """
 
@@ -365,6 +365,7 @@ class AssessmentQuestionDefinition:
     """
 
     def __init__(self, article, node, root, position):
+        # self.node = node
         self.article = article
         self.id = node.get('id')
         self.klass = node.get('class')
@@ -375,7 +376,7 @@ class AssessmentQuestionDefinition:
                         for x in node.xpath('answers/option/text()')]
         self.scores = [s.strip()
                        for s in node.xpath('answers/option/@score')]
-        self.score_weights = get_weights_from_xml(self.id, node)
+        self.score_weights = get_weights_from_xml(node)
 
         sn = node.find('scoring')
         self.score_method = resolve(sn.get('determination-method'))
@@ -582,23 +583,6 @@ class EditScoring(BaseComplianceView):
     section = 'national-descriptors'
     questions = get_questions()
 
-    def init__annot(self):
-        annot = get_annot()
-        if WEIGHTS_ANNOT_KEY in annot:
-            return
-
-        annot[WEIGHTS_ANNOT_KEY] = OOBTree()
-        for article, questions in self.questions.items():
-            for question in questions:
-                if question.id not in annot[WEIGHTS_ANNOT_KEY]:
-                    annot[WEIGHTS_ANNOT_KEY][question.id] = OOBTree()
-
-                score_weights = OOBTree(question.score_weights)
-                annot[WEIGHTS_ANNOT_KEY][question.id] = score_weights
-
-    def get_weight_from_annot(self, q_id, desc):
-        return get_weight_from_annot(q_id, desc)
-
     @property
     def get_descriptors(self):
         """Exclude first item, D1 """
@@ -649,6 +633,15 @@ class EditScoring(BaseComplianceView):
                           if '_Score' in k and v is not None}
 
                 for q_id, score in scores.items():
+                    id_ = score.question.id
+                    article = score.question.article
+                    new_score_weight = [
+                        x.score_weights
+                        for x in self.questions[article]
+                        if x.id == id_
+                    ]
+                    score.question.score_weights = new_score_weight[0]
+
                     values = score.values
                     descriptor = score.descriptor
                     new_score = score.question.calculate_score(descriptor,
@@ -658,45 +651,11 @@ class EditScoring(BaseComplianceView):
                     new_overall_score += new_score.weighted_score
 
                 data['OverallScore'] = new_overall_score
+                content.saved_assessment_data._p_changed = True
 
             self.recalculate_scores(content)
 
-    def list_questions(self):
-        res = []
-        for art, questions in self.questions.items():
-            for question in questions:
-                for desc, weight in question.score_weights.items():
-                    weight = self.get_weight_from_annot(question.id, desc)
-                    res.append(
-                        '{}{}{}{}{}'.format(
-                            question.id,
-                            ' '*(10 - len(question.id)),
-                            desc,
-                            ' '*(8 - len(desc)),
-                            str(weight)
-                        )
-                    )
-
-        res_sorted = sorted(res, key=natural_sort_key)
-
-        return '\r\n'.join(res_sorted)
-
-    def save_weights(self, raw_text):
-        annot = get_annot()
-
-        rows = raw_text.split('\r\n')
-        reg_split = re.compile('\s+')
-
-        for row in rows:
-            question_id, descr, weight = reg_split.split(row)
-            annot[WEIGHTS_ANNOT_KEY][question_id][descr] = weight
-
-    def clear_annot(self):
-        annot = get_annot()
-        annot.pop(WEIGHTS_ANNOT_KEY)
-
     def __call__(self):
-        self.init__annot()
         message = ''
         level = 'info'
         if 'weights' in self.request.form:
@@ -712,10 +671,6 @@ class EditScoring(BaseComplianceView):
             self.recalculate_scores(self.context)
             message = 'Scores recalculated successfully!'
             print 'Recalculating score finished!'
-
-        if 'clear-annot' in self.request.form:
-            self.clear_annot()
-            self.init__annot()
 
         return self.index(message=message, level=level)
 
