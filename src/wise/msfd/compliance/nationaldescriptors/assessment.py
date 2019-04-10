@@ -2,7 +2,6 @@ import datetime
 import logging
 from collections import namedtuple
 
-from zope.annotation.interfaces import IAnnotations
 from zope.schema import Choice, Text
 from zope.schema.vocabulary import SimpleTerm, SimpleVocabulary
 from zope.security import checkPermission
@@ -19,6 +18,7 @@ from wise.msfd.compliance.base import get_questions
 from wise.msfd.compliance.content import AssessmentData
 from wise.msfd.compliance.interfaces import IEditAssessorsForm
 from wise.msfd.gescomponents import get_descriptor  # get_descriptor_elements
+from wise.msfd.utils import get_annot
 from z3c.form.button import buttonAndHandler
 from z3c.form.field import Fields
 from z3c.form.form import Form
@@ -51,22 +51,15 @@ progress_fields = (
 ASSESSORS_ANNOT_KEY = 'wise.msfd.assessors'
 
 
-def get_annot(self):
-    site = self.context.Plone
-    annot = IAnnotations(site, {})
-
-    return annot
-
-
-def get_assessors(self):
-    annot = get_annot(self)
+def get_assessors():
+    annot = get_annot()
     value = annot.get(ASSESSORS_ANNOT_KEY, '')
 
     return value
 
 
-def set_assessors(self, value):
-    annot = get_annot(self)
+def set_assessors(value):
+    annot = get_annot()
     annot[ASSESSORS_ANNOT_KEY] = value
 
 
@@ -90,13 +83,13 @@ class EditAssessorsForm(Form, BaseView):
         if not errors:
             value = data.get('assessed_by', '')
             value = ', '.join(value.split('\r\n'))
-            set_assessors(self, value)
+            set_assessors(value)
 
     def updateWidgets(self):
         super(EditAssessorsForm, self).updateWidgets()
         assessed_by_field = self.fields['assessed_by'].field
         default = assessed_by_field.default
-        annot_assessors = get_assessors(self)
+        annot_assessors = get_assessors()
         annot_assessors = '\r\n'.join(annot_assessors.split(', '))
 
         if annot_assessors and default != annot_assessors:
@@ -180,6 +173,7 @@ class EditAssessmentDataForm(Form, BaseView):
     subforms = None
     year = session_name = '2018'
     template = ViewPageTemplateFile("./pt/edit-assessment-data.pt")
+    _questions = get_questions()
 
     @property
     def criterias(self):
@@ -310,11 +304,9 @@ class EditAssessmentDataForm(Form, BaseView):
     # TODO: use memoize
     @property
     def questions(self):
-        qs = get_questions(
-            'compliance/nationaldescriptors/data'
-        )
+        qs = self._questions[self.article]
 
-        return qs[self.article]
+        return qs
 
     def get_subforms(self):
         """ Build a form of options from a tree of options

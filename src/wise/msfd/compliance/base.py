@@ -1,4 +1,5 @@
 import logging
+import re
 from collections import namedtuple
 
 import lxml.etree
@@ -17,11 +18,13 @@ from Products.Five.browser import BrowserView
 from wise.msfd import db, sql, sql2018
 from wise.msfd.compliance.scoring import Score  # , compute_score
 from wise.msfd.compliance.vocabulary import ASSESSED_ARTICLES, REGIONS
-from wise.msfd.gescomponents import (get_descriptor, get_marine_units,
-                                     sorted_criterions)
+from wise.msfd.gescomponents import (get_all_descriptors, get_descriptor,
+                                     get_marine_units, sorted_criterions)
 from wise.msfd.translation.interfaces import ITranslationContext
-from wise.msfd.utils import (Tab, _parse_files_in_location, natural_sort_key,
-                             row_to_dict, timeit)
+from wise.msfd.utils import (WEIGHTS_ANNOT_KEY, Tab, _parse_files_in_location,
+                             get_annot, get_weight_from_annot,
+                             natural_sort_key, row_to_dict, timeit)
+from BTrees.OOBTree import OOBTree
 
 from . import interfaces
 from .interfaces import ICountryDescriptorsFolder
@@ -342,6 +345,19 @@ def _a10_ids_cachekey(method, self, descriptor, **kwargs):
     return '{}-{}'.format(descriptor.id, ','.join(muids))
 
 
+def get_weights_from_xml(question_id, node):
+    """ Initialize with values from questions xml
+    """
+
+    score_weights = {}
+    for wn in node.iterchildren('score-weight'):
+        desc = wn.get('descriptor')
+        weight = wn.get('value')
+        score_weights[desc] = weight
+
+    return score_weights
+
+
 class AssessmentQuestionDefinition:
     """ A definition for a single assessment question.
 
@@ -359,19 +375,12 @@ class AssessmentQuestionDefinition:
                         for x in node.xpath('answers/option/text()')]
         self.scores = [s.strip()
                        for s in node.xpath('answers/option/@score')]
-        self.score_weights = {}
-
-        for wn in node.iterchildren('score-weight'):
-            desc = wn.get('descriptor')
-            weight = wn.get('value')
-            self.score_weights[desc] = weight
+        self.score_weights = get_weights_from_xml(self.id, node)
 
         sn = node.find('scoring')
         self.score_method = resolve(sn.get('determination-method'))
 
     def calculate_score(self, descriptor, values):
-        # return compute_score(self, descriptor, values)
-
         return Score(self, descriptor, values)
 
     def _art_89_ids(self, descriptor, **kwargs):
@@ -531,7 +540,7 @@ def parse_question_file(fpath):
     return article_id, res
 
 
-def get_questions(location):
+def get_questions(location='compliance/nationaldescriptors/data'):
     def check_filename(fname):
         return fname.startswith('questions_')
 
@@ -566,3 +575,147 @@ class TranslationContext(object):
                 return context.getId().upper()
 
         return 'EN'
+
+
+class EditScoring(BaseComplianceView):
+    name = 'edit-scoring'
+    section = 'national-descriptors'
+    questions = get_questions()
+
+    def init__annot(self):
+        annot = get_annot()
+        if WEIGHTS_ANNOT_KEY in annot:
+            return
+
+        annot[WEIGHTS_ANNOT_KEY] = OOBTree()
+        for article, questions in self.questions.items():
+            for question in questions:
+                if question.id not in annot[WEIGHTS_ANNOT_KEY]:
+                    annot[WEIGHTS_ANNOT_KEY][question.id] = OOBTree()
+
+                score_weights = OOBTree(question.score_weights)
+                annot[WEIGHTS_ANNOT_KEY][question.id] = score_weights
+
+    def get_weight_from_annot(self, q_id, desc):
+        return get_weight_from_annot(q_id, desc)
+
+    @property
+    def get_descriptors(self):
+        """Exclude first item, D1 """
+        descriptors = get_all_descriptors()
+
+        return descriptors[1:]
+
+    def reset_assessment_data(self, ctx):
+        """ Recursively traverse all contents starting from context
+        and delete the 'saved_assessment_data' attribute from each,
+        which holds the scoring data
+        """
+
+        cv = ctx.contentValues()
+
+        if not cv:
+            return
+
+        for content in cv:
+            if hasattr(content, 'saved_assessment_data') \
+                    and content.saved_assessment_data \
+                    and content.__class__.__name__ \
+                    == 'NationalDescriptorAssessment':
+
+                print 'deleting assessment data for ' + content.__repr__()
+
+                del content.saved_assessment_data
+
+            self.reset_assessment_data(content)
+
+    def recalculate_scores(self, ctx):
+        cv = ctx.contentValues()
+
+        if not cv:
+            return
+
+        for content in cv:
+            if hasattr(content, 'saved_assessment_data') \
+                    and content.saved_assessment_data \
+                    and content.__class__.__name__ \
+                    == 'NationalDescriptorAssessment':
+
+                print 'recalculating scores for ' + content.__repr__()
+
+                data = content.saved_assessment_data.last()
+                new_overall_score = 0
+                scores = {k: v for k, v in data.items()
+                          if '_Score' in k and v is not None}
+
+                for q_id, score in scores.items():
+                    values = score.values
+                    descriptor = score.descriptor
+                    new_score = score.question.calculate_score(descriptor,
+                                                               values)
+
+                    data[q_id] = new_score
+                    new_overall_score += new_score.weighted_score
+
+                data['OverallScore'] = new_overall_score
+
+            self.recalculate_scores(content)
+
+    def list_questions(self):
+        res = []
+        for art, questions in self.questions.items():
+            for question in questions:
+                for desc, weight in question.score_weights.items():
+                    weight = self.get_weight_from_annot(question.id, desc)
+                    res.append(
+                        '{}{}{}{}{}'.format(
+                            question.id,
+                            ' '*(10 - len(question.id)),
+                            desc,
+                            ' '*(8 - len(desc)),
+                            str(weight)
+                        )
+                    )
+
+        res_sorted = sorted(res, key=natural_sort_key)
+
+        return '\r\n'.join(res_sorted)
+
+    def save_weights(self, raw_text):
+        annot = get_annot()
+
+        rows = raw_text.split('\r\n')
+        reg_split = re.compile('\s+')
+
+        for row in rows:
+            question_id, descr, weight = reg_split.split(row)
+            annot[WEIGHTS_ANNOT_KEY][question_id][descr] = weight
+
+    def clear_annot(self):
+        annot = get_annot()
+        annot.pop(WEIGHTS_ANNOT_KEY)
+
+    def __call__(self):
+        self.init__annot()
+        message = ''
+        level = 'info'
+        if 'weights' in self.request.form:
+            message = 'Weights saved successfully!'
+            self.save_weights(self.request.form['weights'])
+
+        if 'reset-assessments' in self.request.form:
+            self.reset_assessment_data(self.context)
+            message = 'Assessments reseted successfully!'
+            print 'Reset score finished!'
+
+        if 'recalculate-scores' in self.request.form:
+            self.recalculate_scores(self.context)
+            message = 'Scores recalculated successfully!'
+            print 'Recalculating score finished!'
+
+        if 'clear-annot' in self.request.form:
+            self.clear_annot()
+            self.init__annot()
+
+        return self.index(message=message, level=level)
+

@@ -432,10 +432,11 @@ class NationalDescriptorArticleView(BaseView):
     assessment_data_2018_tpl = Template('./pt/assessment-data-2018.pt')
 
     year = '2018'       # used by self.muids
+    _questions = get_questions('compliance/nationaldescriptors/data')
 
     @property
     def assessor_list(self):
-        assessors = get_assessors(self)
+        assessors = get_assessors()
 
         if not assessors:
             return []
@@ -461,9 +462,9 @@ class NationalDescriptorArticleView(BaseView):
 
     @property
     def questions(self):
-        qs = get_questions('compliance/nationaldescriptors/data')
+        qs = self._questions[self.article]
 
-        return qs[self.article]
+        return qs
 
     def __call__(self):
 

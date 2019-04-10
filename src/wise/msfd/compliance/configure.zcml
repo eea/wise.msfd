@@ -75,6 +75,14 @@
   />
 
   <browser:page
+    for="*"
+    name="edit-scoring"
+    class=".base.EditScoring"
+    template="./pt/edit-scoring.pt"
+    permission="zope2.View"
+  />
+
+  <browser:page
     for=".interfaces.IComplianceModuleFolder"
     name="comp-start"
     class=".main.StartComplianceView"

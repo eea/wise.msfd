@@ -19,9 +19,7 @@
 #
 #     return calculate
 
-
 # scores = [4, 3, 2, 1, 0]
-
 
 # def percentage_based(args):
 #     def calculate(value):
@@ -41,7 +39,6 @@
 #         return len(DEFAULT_RANGES) + 1
 #
 #     return calculate
-
 
 # def get_percentage(values):
 #     """ Compute percentage of True values in the list
@@ -80,7 +77,6 @@
 #     'Not reported',
 # ]
 
-
 # def calculate_percentage(raw_scores):
 #     # max_score ... 100%
 #     # raw_score ... x
@@ -91,6 +87,10 @@
 #     percentage = (raw_score * 100) / max_score
 #
 #     return float(percentage)
+
+# from wise.msfd.compliance.base import BaseComplianceView
+from wise.msfd.utils import get_weight_from_annot
+
 
 DEFAULT_RANGES = [
     [76, 100],
@@ -141,8 +141,11 @@ def get_overall_conclusion(concl_score):
 
 class Score(object):
     def __init__(self, question, descriptor, values):
+        self.descriptor = descriptor
         self.question = question
-        self.weight = float(question.score_weights.get(descriptor, 10.0))
+        weight = get_weight_from_annot(question.id, descriptor)\
+            or question.score_weights.get(descriptor)
+        self.weight = float(weight)
         self.values = values
         self.scores = question.scores
 

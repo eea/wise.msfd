@@ -106,6 +106,12 @@
             Edit assessors
           </a>
 
+          <a class="btn btn-primary btn-small btn-success"
+            tal:attributes="href string:${view/_compliance_folder/absolute_url}/national-descriptors-assessments/@@edit-scoring"
+            target="_blank">
+            Edit scoring
+          </a>
+
         </div>
       </div>
     </div>

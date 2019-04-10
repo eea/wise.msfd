@@ -11,11 +11,12 @@ from inspect import getsource, isclass
 from pkg_resources import resource_filename
 from six import string_types
 from sqlalchemy import inspect
+from zope.annotation.interfaces import IAnnotations
 from zope.component import getUtility
 from zope.schema import Choice, List
 from zope.schema.interfaces import IVocabularyFactory
 
-from plone.api.portal import get_tool
+from plone.api.portal import get_tool, getSite
 from plone.intelligenttext.transforms import \
     convertWebIntelligentPlainTextToHtml
 from plone.memoize import volatile
@@ -26,6 +27,8 @@ from Products.Five.browser.pagetemplatefile import PageTemplateFile
 BLACKLIST = ['ID', 'Import', 'Id']
 
 logger = logging.getLogger('wise.msfd')
+
+WEIGHTS_ANNOT_KEY = 'wise.msfd.weights'
 
 
 def class_id(obj):
@@ -636,3 +639,22 @@ def natural_sort_key(s, _nsre=re.compile('([0-9]+)')):
 
     return [text.isdigit() and int(text) or text.lower()
             for text in _nsre.split(s)]
+
+
+def get_annot():
+    site = getSite()
+    annot = IAnnotations(site, {})
+
+    return annot
+
+
+def get_weight_from_annot(q_id, descr):
+    annot = get_annot()
+    aw = annot.get(WEIGHTS_ANNOT_KEY, {})
+
+    try:
+        x = aw[str(q_id)].get(descr, '')
+    except:
+        x = ''
+
+    return x

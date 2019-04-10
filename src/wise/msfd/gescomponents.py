@@ -12,7 +12,7 @@ from pkg_resources import resource_filename
 from wise.msfd import db, sql, sql2018
 from wise.msfd.labels import COMMON_LABELS
 from wise.msfd.utils import (ItemLabel, _parse_files_in_location,
-                             get_element_by_id, timeit)
+                             get_element_by_id, natural_sort_key, timeit)
 
 logger = logging.getLogger('wise.msfd')
 
@@ -385,7 +385,7 @@ def get_all_descriptors():
     """
 
     descriptors = [(v.id, v.title) for k, v in GES_DESCRIPTORS.items()]
-    d_sorted = sorted(descriptors, key=lambda d: float(d[0].replace('D', '')))
+    d_sorted = sorted(descriptors, key=lambda d: natural_sort_key(d[0]))
 
     return d_sorted
 
