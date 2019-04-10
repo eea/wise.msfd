@@ -1,8 +1,10 @@
 import logging
-import re
 from collections import namedtuple
+from datetime import datetime
+from io import BytesIO
 
 import lxml.etree
+import xlsxwriter
 from sqlalchemy.orm import aliased
 from zope.component import getMultiAdapter
 from zope.dottedname.resolve import resolve
@@ -24,8 +26,6 @@ from wise.msfd.translation.interfaces import ITranslationContext
 from wise.msfd.utils import (WEIGHTS_ANNOT_KEY, Tab, _parse_files_in_location,
                              get_annot, get_weight_from_annot,
                              natural_sort_key, row_to_dict, timeit)
-from BTrees.OOBTree import OOBTree
-
 from . import interfaces
 from .interfaces import ICountryDescriptorsFolder
 
@@ -97,9 +97,18 @@ class Container(object):
 
 
 def report_data_cache_key(func, self, *args, **kwargs):
-    region = getattr(self, 'country_region_code', ''.join(self.regions))
+    _args = args
 
-    res = '_cache_' + '_'.join([self.country_code, region])
+    if not _args:
+        region = getattr(self, 'country_region_code',
+                         ''.join(getattr(self, 'regions', '')))
+
+        country = self.country_code
+    else:
+        country = _args[0]
+        region = _args[1]
+
+    res = '_cache_' + '_'.join([country, region])
     res = res.replace('.', '').replace('-', '')
 
     return res
@@ -329,11 +338,6 @@ class BaseComplianceView(BrowserView):
         return v.translate(source_lang=source_lang,
                            value=value,
                            is_translatable=is_translatable)
-
-    # def can_admin(self):
-    #     perm = 'Modify portal content'
-    #
-    #     return self.check_permission(perm, self._compliance_folder)
 
 
 Target = namedtuple('Target', ['id', 'title', 'definition', 'year'])
@@ -583,6 +587,20 @@ class EditScoring(BaseComplianceView):
     section = 'national-descriptors'
     questions = get_questions()
 
+    def descriptor_obj(self, descriptor):
+        return get_descriptor(descriptor)
+
+    @cache(report_data_cache_key)
+    def muids(self, country_code, country_region_code, year):
+        """ Get all Marine Units for a country
+
+        :return: ['BAL- LV- AA- 001', 'BAL- LV- AA- 002', ...]
+        """
+
+        return get_marine_units(country_code,
+                                country_region_code,
+                                year)
+
     @property
     def get_descriptors(self):
         """Exclude first item, D1 """
@@ -655,12 +673,97 @@ class EditScoring(BaseComplianceView):
 
             self.recalculate_scores(content)
 
+    def get_contents(self, content):
+        for content in content.contentValues():
+            yield content
+
+    def get_data(self, content):
+        if hasattr(content, 'saved_assessment_data') \
+                and content.saved_assessment_data \
+                and content.__class__.__name__ \
+                == 'NationalDescriptorAssessment':
+
+            article = content
+            descr = content.aq_parent
+            region = content.aq_parent.aq_parent
+            country = content.aq_parent.aq_parent.aq_parent
+            data = content.saved_assessment_data.last()
+            scores = {k: v for k, v in data.items()
+                      if '_Score' in k and v is not None}
+
+            d_obj = self.descriptor_obj(descr.id.upper())
+            muids = self.muids(country.id.upper(), region.id.upper(), '2018')
+            for _id, score in scores.items():
+                options = score.question.get_assessed_elements(d_obj,
+                                                               muids=muids)
+                answers = score.question.answers
+                values = score.values
+
+                result = [
+                    '{} - {}'.format(options[i], answers[v])
+                    for i, v in enumerate(values)
+                ]
+
+                yield (country.title, region.title, descr.title,
+                       article.title, score.question.id, '\n'.join(result))
+
+    def get_scores_data(self, context):
+        for data in self.get_data(context):
+            yield data
+        for contents in self.get_contents(context):
+            for content in self.get_scores_data(contents):
+                yield content
+
+    def data_to_xls(self, data):
+        out = BytesIO()
+        workbook = xlsxwriter.Workbook(out, {'in_memory': True})
+
+        for wtitle, wdata in data:
+            worksheet = workbook.add_worksheet(unicode(wtitle)[:30])
+
+            labels = wdata[0]
+            rows = wdata[1]
+            for i, label in enumerate(labels):
+                worksheet.write(0, i, label)
+
+            for row_ind, row in enumerate(rows):
+                for val_ind, value in enumerate(row):
+                    worksheet.write(row_ind + 1, val_ind, value)
+
+        workbook.close()
+        out.seek(0)
+
+        return out
+
+    def export_scores(self, context):
+        xlsdata = self.get_scores_data(context)
+        all_data = [
+            ('assessments',
+             (
+                 ('Country', 'Region', 'Descriptor',
+                  'Article', 'Question', 'Options - Answers'),
+                 [x for x in xlsdata]
+             )
+        )
+        ]
+
+        xlsio = self.data_to_xls(all_data)
+        sh = self.request.response.setHeader
+
+        sh('Content-Type', 'application/vnd.openxmlformats-officedocument.'
+                           'spreadsheetml.sheet')
+        fname = "-".join(['Assessment_Scores',
+                          str(datetime.now().replace(microsecond=0))])
+        sh('Content-Disposition',
+           'attachment; filename=%s.xlsx' % fname)
+
+        return xlsio.read()
+
     def __call__(self):
         message = ''
         level = 'info'
-        if 'weights' in self.request.form:
-            message = 'Weights saved successfully!'
-            self.save_weights(self.request.form['weights'])
+        if 'export-scores' in self.request.form:
+            return self.export_scores(self.context)
 
         if 'reset-assessments' in self.request.form:
             self.reset_assessment_data(self.context)
