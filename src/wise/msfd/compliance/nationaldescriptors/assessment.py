@@ -181,7 +181,7 @@ class EditAssessmentDataForm(Form, BaseView):
 
     @property
     def help(self):
-        return render_assessment_help(self.criterias)
+        return render_assessment_help(self.criterias, self.descriptor)
 
     @property
     def title(self):
@@ -441,7 +441,7 @@ Cell = namedtuple('Cell', ['text', 'rowspan'])
 help_template = PageTemplateFile('./pt/assessment-question-help.pt')
 
 
-def render_assessment_help(criterias):
+def render_assessment_help(criterias, descriptor):
     elements = []
     methods = []
 
@@ -476,8 +476,8 @@ def render_assessment_help(criterias):
             rowspan = element_count[cel.id]
             cell = Cell(cel.definition, rowspan)
             row.append(cell)
-
-        prim_label = c.is_primary and 'primary' or 'secondary'
+        
+        prim_label = c.is_primary(descriptor) and 'primary' or 'secondary'
         cdef = u"<strong>{} ({})</strong><br/>{}".format(
             c.id, prim_label, c.definition
         )
