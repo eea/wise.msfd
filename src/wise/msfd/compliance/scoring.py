@@ -100,10 +100,10 @@ DEFAULT_RANGES = [
 
 
 CONCLUSIONS = [
-    'Very good',
-    'Good',
-    'Poor',
-    'Very poor',
+    'Very good (4)',
+    'Good (3)',
+    'Poor (2)',
+    'Very poor (1)',
     'Not reported',
 ]
 

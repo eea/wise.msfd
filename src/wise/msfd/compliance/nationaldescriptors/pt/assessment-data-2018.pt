@@ -1,4 +1,6 @@
-<div tal:define="assessment options/assessment; score_2012 python: int(options['score_2012'])">
+<div tal:define="assessment options/assessment;
+    score_2012 python: int(options['score_2012']);
+    conclusion_2012 python: '{} ({})'.format(options['conclusion_2012'], score_2012)">
 
   <table class="table table-condensed assessment-data-table">
     <tbody>
@@ -75,8 +77,8 @@
       </tr>
 
       <tr>
-        <th rowspan="1">Progress assessment</th>
-        <td tal:attributes="colspan python: len(assessment.gescomponents)">
+        <th rowspan="2">Progress assessment</th>
+        <td tal:attributes="colspan python: len(assessment.gescomponents); rowspan string:2">
           <form
             method="POST"
             action="./@@edit-assessment-summary"
@@ -85,6 +87,11 @@
             <button name="save_progres" >Save</button>
           </form>
         </td>
+        <th>Overall conclusion: 2012</th>
+        <td tal:content="conclusion_2012">124</td>
+      </tr>
+
+      <tr>
         <th>Change since 2012</th>
         <td tal:content="python: assessment.overall_conclusion[0] - score_2012">+1</td>
       </tr>

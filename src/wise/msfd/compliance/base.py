@@ -696,6 +696,7 @@ class EditScoring(BaseComplianceView):
             for _id, score in scores.items():
                 options = score.question.get_assessed_elements(d_obj,
                                                                muids=muids)
+                options = options or ['All criteria']
                 answers = score.question.answers
                 values = score.values
 

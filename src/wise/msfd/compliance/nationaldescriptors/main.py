@@ -505,9 +505,11 @@ class NationalDescriptorArticleView(BaseView):
 
             if assessments_2012.get(country_name):
                 score_2012 = assessments_2012[country_name].score
+                conclusion_2012 = assessments_2012[country_name].overall_ass
             else:       # fallback
                 ctry = assessments_2012.keys()[0]
                 score_2012 = assessments_2012[ctry].score
+                conclusion_2012 = assessments_2012[ctry].overall_ass
 
             report_by, assessors, assess_date, source_file = \
                 get_assessment_head_data_2012(self.article,
@@ -517,6 +519,7 @@ class NationalDescriptorArticleView(BaseView):
             logger.exception("Could not get assessment data for 2012")
             self.assessment_data_2012 = ''
             score_2012 = 100
+            conclusion_2012 = 'Not found'
             report_by, assessors, assess_date, source_file = [
                 'Not found'] * 3 + [('Not found', '')]
 
@@ -548,7 +551,8 @@ class NationalDescriptorArticleView(BaseView):
 
         self.assessment_data_2018_html = self.assessment_data_2018_tpl(
             assessment=assessment,
-            score_2012=score_2012
+            score_2012=score_2012,
+            conclusion_2012=conclusion_2012
         )
 
         # Assessment header 2018
