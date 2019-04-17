@@ -696,17 +696,20 @@ class EditScoring(BaseComplianceView):
             for _id, score in scores.items():
                 options = score.question.get_assessed_elements(d_obj,
                                                                muids=muids)
+                if article.title == 'Art10':
+                    options = [o.title for o in options]
                 options = options or ['All criteria']
+
                 answers = score.question.answers
                 values = score.values
 
                 result = [
-                    '{} - {}'.format(options[i], answers[v])
+                    u'{} - {}'.format(options[i], answers[v])
                     for i, v in enumerate(values)
                 ]
 
                 yield (country.title, region.title, descr.title,
-                       article.title, score.question.id, '\n'.join(result))
+                       article.title, score.question.id, u'\n'.join(result))
 
     def get_scores_data(self, context):
         for data in self.get_data(context):
