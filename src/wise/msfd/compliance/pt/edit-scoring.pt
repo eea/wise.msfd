@@ -73,12 +73,14 @@
             <i style="position: relative; left: -28px; top: 1px;"
                 class="fa fa-download" aria-hidden="true"></i>
 
-            <input style="padding-right:32px;"
-                 type="submit" class="btn btn-primary btn-small btn-danger"
-                 value="Reset assessments"
-                 name="reset-assessments"/>
-            <i style="position: relative; left: -28px; top: 1px;"
-                  class="fa fa-exclamation-triangle" aria-hidden="true"></i>
+            <tal:cond tal:condition="python: view.check_permission('wise.ManageCompliance')">
+              <input style="padding-right:32px;"
+                   type="submit" class="btn btn-primary btn-small btn-danger"
+                   value="Reset assessments"
+                   name="reset-assessments"/>
+              <i style="position: relative; left: -28px; top: 1px;"
+                    class="fa fa-exclamation-triangle" aria-hidden="true"></i>
+            </tal:cond>
           </form>
 
         </div>
