@@ -4,12 +4,12 @@ from datetime import datetime
 from io import BytesIO
 
 import lxml.etree
-import xlsxwriter
 from sqlalchemy.orm import aliased
 from zope.component import getMultiAdapter
 from zope.dottedname.resolve import resolve
 from zope.interface import implements
 
+import xlsxwriter
 from Acquisition import aq_inner
 from eea.cache import cache
 from plone.api.content import get_state
@@ -23,9 +23,9 @@ from wise.msfd.compliance.vocabulary import ASSESSED_ARTICLES, REGIONS
 from wise.msfd.gescomponents import (get_all_descriptors, get_descriptor,
                                      get_marine_units, sorted_criterions)
 from wise.msfd.translation.interfaces import ITranslationContext
-from wise.msfd.utils import (WEIGHTS_ANNOT_KEY, Tab, _parse_files_in_location,
-                             get_annot, get_weight_from_annot,
-                             natural_sort_key, row_to_dict, timeit)
+from wise.msfd.utils import (Tab, _parse_files_in_location, natural_sort_key,
+                             row_to_dict, timeit)
+
 from . import interfaces
 from .interfaces import ICountryDescriptorsFolder
 
@@ -354,6 +354,7 @@ def get_weights_from_xml(node):
     """
 
     score_weights = {}
+
     for wn in node.iterchildren('score-weight'):
         desc = wn.get('descriptor')
         weight = wn.get('value')
@@ -655,7 +656,9 @@ class EditScoring(BaseComplianceView):
                     article = score.question.article
                     new_score_weight = [
                         x.score_weights
+
                         for x in self.questions[article]
+
                         if x.id == id_
                     ]
                     score.question.score_weights = new_score_weight[0]
@@ -693,9 +696,11 @@ class EditScoring(BaseComplianceView):
 
             d_obj = self.descriptor_obj(descr.id.upper())
             muids = self.muids(country.id.upper(), region.id.upper(), '2018')
+
             for _id, score in scores.items():
                 options = score.question.get_assessed_elements(d_obj,
                                                                muids=muids)
+
                 if article.title == 'Art10':
                     options = [o.title for o in options]
                 options = options or ['All criteria']
@@ -705,6 +710,7 @@ class EditScoring(BaseComplianceView):
 
                 result = [
                     u'{} - {}'.format(options[i], answers[v])
+
                     for i, v in enumerate(values)
                 ]
 
@@ -714,6 +720,7 @@ class EditScoring(BaseComplianceView):
     def get_scores_data(self, context):
         for data in self.get_data(context):
             yield data
+
         for contents in self.get_contents(context):
             for content in self.get_scores_data(contents):
                 yield content
@@ -727,6 +734,7 @@ class EditScoring(BaseComplianceView):
 
             labels = wdata[0]
             rows = wdata[1]
+
             for i, label in enumerate(labels):
                 worksheet.write(0, i, label)
 
@@ -748,7 +756,7 @@ class EditScoring(BaseComplianceView):
                   'Article', 'Question', 'Options - Answers'),
                  [x for x in xlsdata]
              )
-        )
+             )
         ]
 
         xlsio = self.data_to_xls(all_data)
@@ -766,6 +774,7 @@ class EditScoring(BaseComplianceView):
     def __call__(self):
         message = ''
         level = 'info'
+
         if 'export-scores' in self.request.form:
             return self.export_scores(self.context)
 
@@ -780,4 +789,3 @@ class EditScoring(BaseComplianceView):
             print 'Recalculating score finished!'
 
         return self.index(message=message, level=level)
-
