@@ -1,7 +1,5 @@
 import logging
 from collections import namedtuple
-from datetime import datetime
-from io import BytesIO
 
 import lxml.etree
 from sqlalchemy.orm import aliased
@@ -9,7 +7,6 @@ from zope.component import getMultiAdapter
 from zope.dottedname.resolve import resolve
 from zope.interface import implements
 
-import xlsxwriter
 from eea.cache import cache
 from plone.api.content import get_state
 from plone.api.portal import get_tool
@@ -20,8 +17,8 @@ from wise.msfd import db, sql, sql2018
 from wise.msfd.base import BasePublicPage
 from wise.msfd.compliance.scoring import Score  # , compute_score
 from wise.msfd.compliance.vocabulary import ASSESSED_ARTICLES, REGIONS
-from wise.msfd.gescomponents import (get_all_descriptors, get_descriptor,
-                                     get_marine_units, sorted_criterions)
+from wise.msfd.gescomponents import (get_descriptor, get_marine_units,
+                                     sorted_criterions)
 from wise.msfd.translation.interfaces import ITranslationContext
 from wise.msfd.utils import (Tab, _parse_files_in_location, natural_sort_key,
                              row_to_dict, timeit)
@@ -569,213 +566,3 @@ class TranslationContext(object):
                 return context.getId().upper()
 
         return 'EN'
-
-
-class EditScoring(BaseComplianceView):
-    name = 'edit-scoring'
-    section = 'national-descriptors'
-    questions = get_questions()
-
-    def descriptor_obj(self, descriptor):
-        return get_descriptor(descriptor)
-
-    @cache(report_data_cache_key)
-    def muids(self, country_code, country_region_code, year):
-        """ Get all Marine Units for a country
-
-        :return: ['BAL- LV- AA- 001', 'BAL- LV- AA- 002', ...]
-        """
-
-        return get_marine_units(country_code,
-                                country_region_code,
-                                year)
-
-    @property
-    def get_descriptors(self):
-        """Exclude first item, D1 """
-        descriptors = get_all_descriptors()
-
-        return descriptors[1:]
-
-    def reset_assessment_data(self, ctx):
-        """ Recursively traverse all contents starting from context
-        and delete the 'saved_assessment_data' attribute from each,
-        which holds the scoring data
-        """
-
-        cv = ctx.contentValues()
-
-        if not cv:
-            return
-
-        for content in cv:
-            if hasattr(content, 'saved_assessment_data') \
-                    and content.saved_assessment_data \
-                    and content.__class__.__name__ \
-                    == 'NationalDescriptorAssessment':
-
-                print 'deleting assessment data for ' + content.__repr__()
-
-                del content.saved_assessment_data
-
-            self.reset_assessment_data(content)
-
-    def recalculate_scores(self, ctx):
-        cv = ctx.contentValues()
-
-        if not cv:
-            return
-
-        for content in cv:
-            if hasattr(content, 'saved_assessment_data') \
-                    and content.saved_assessment_data \
-                    and content.__class__.__name__ \
-                    == 'NationalDescriptorAssessment':
-
-                print 'recalculating scores for ' + content.__repr__()
-
-                data = content.saved_assessment_data.last()
-                new_overall_score = 0
-                scores = {k: v for k, v in data.items()
-                          if '_Score' in k and v is not None}
-
-                for q_id, score in scores.items():
-                    id_ = score.question.id
-                    article = score.question.article
-                    new_score_weight = [
-                        x.score_weights
-
-                        for x in self.questions[article]
-
-                        if x.id == id_
-                    ]
-                    score.question.score_weights = new_score_weight[0]
-
-                    values = score.values
-                    descriptor = score.descriptor
-                    new_score = score.question.calculate_score(descriptor,
-                                                               values)
-
-                    data[q_id] = new_score
-                    new_overall_score += new_score.weighted_score
-
-                data['OverallScore'] = new_overall_score
-                content.saved_assessment_data._p_changed = True
-
-            self.recalculate_scores(content)
-
-    def get_contents(self, content):
-        for content in content.contentValues():
-            yield content
-
-    def get_data(self, content):
-        if hasattr(content, 'saved_assessment_data') \
-                and content.saved_assessment_data \
-                and content.__class__.__name__ \
-                == 'NationalDescriptorAssessment':
-
-            article = content
-            descr = content.aq_parent
-            region = content.aq_parent.aq_parent
-            country = content.aq_parent.aq_parent.aq_parent
-            data = content.saved_assessment_data.last()
-            scores = {k: v for k, v in data.items()
-                      if '_Score' in k and v is not None}
-
-            d_obj = self.descriptor_obj(descr.id.upper())
-            muids = self.muids(country.id.upper(), region.id.upper(), '2018')
-
-            for _id, score in scores.items():
-                if not hasattr(score, 'question'):
-                    logger.warning(
-                        "This score is invalid, the assessment needs to "
-                        "be resaved: %s", content.absolute_url())
-
-                    continue
-                options = score.question.get_assessed_elements(d_obj,
-                                                               muids=muids)
-                options = [o.title for o in options]
-                options = options or ['All criteria']
-
-                answers = score.question.answers
-                values = score.values
-
-                for i, v in enumerate(values):
-                    option = options[i]
-                    answer = answers[v]
-
-                    yield (country.title, region.title, d_obj.id,
-                           article.title, score.question.id, option, answer)
-
-    def get_scores_data(self, context):
-        for data in self.get_data(context):
-            yield data
-
-        for contents in self.get_contents(context):
-            for content in self.get_scores_data(contents):
-                yield content
-
-    def data_to_xls(self, data):
-        out = BytesIO()
-        workbook = xlsxwriter.Workbook(out, {'in_memory': True})
-
-        for wtitle, wdata in data:
-            worksheet = workbook.add_worksheet(unicode(wtitle)[:30])
-
-            labels = wdata[0]
-            rows = wdata[1]
-
-            for i, label in enumerate(labels):
-                worksheet.write(0, i, label)
-
-            for row_ind, row in enumerate(rows):
-                for val_ind, value in enumerate(row):
-                    worksheet.write(row_ind + 1, val_ind, value)
-
-        workbook.close()
-        out.seek(0)
-
-        return out
-
-    def export_scores(self, context):
-        xlsdata = self.get_scores_data(context)
-        all_data = [
-            ('assessments',
-             (
-                 ('Country', 'Region', 'Descriptor',
-                  'Article', 'Question', 'Option', 'Answer'),
-                 [x for x in xlsdata]
-             )
-             )
-        ]
-
-        xlsio = self.data_to_xls(all_data)
-        sh = self.request.response.setHeader
-
-        sh('Content-Type', 'application/vnd.openxmlformats-officedocument.'
-                           'spreadsheetml.sheet')
-        fname = "-".join(['Assessment_Scores',
-                          str(datetime.now().replace(microsecond=0))])
-        sh('Content-Disposition',
-           'attachment; filename=%s.xlsx' % fname)
-
-        return xlsio.read()
-
-    def __call__(self):
-        message = ''
-        level = 'info'
-
-        if 'export-scores' in self.request.form:
-            return self.export_scores(self.context)
-
-        if 'reset-assessments' in self.request.form:
-            self.reset_assessment_data(self.context)
-            message = 'Assessments reseted successfully!'
-            print 'Reset score finished!'
-
-        if 'recalculate-scores' in self.request.form:
-            self.recalculate_scores(self.context)
-            message = 'Scores recalculated successfully!'
-            print 'Recalculating score finished!'
-
-        return self.index(message=message, level=level)

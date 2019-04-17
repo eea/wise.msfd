@@ -1,22 +1,29 @@
 import logging
 from collections import namedtuple
+from datetime import datetime
+from io import BytesIO
 
 from zope.interface import alsoProvides
 
+import xlsxwriter
+from eea.cache import cache
 from plone import api
 from plone.api.content import transition
+from plone.api.portal import get_tool
 from plone.dexterity.utils import createContentInContainer as create
 from Products.CMFCore.utils import getToolByName
 from Products.CMFDynamicViewFTI.interfaces import ISelectableBrowserDefault
 from Products.CMFPlacefulWorkflow.WorkflowPolicyConfig import \
     WorkflowPolicyConfig
 from Products.Five.browser import BrowserView
+from Products.statusmessages.interfaces import IStatusMessage
 from wise.msfd import db, sql2018
 from wise.msfd.compliance.vocabulary import REGIONS
-from wise.msfd.gescomponents import get_all_descriptors
+from wise.msfd.gescomponents import (get_all_descriptors, get_descriptor,
+                                     get_marine_units)
 
 from . import interfaces
-from .base import BaseComplianceView
+from .base import BaseComplianceView, get_questions, report_data_cache_key
 
 logger = logging.getLogger('wise.msfd')
 
@@ -304,3 +311,189 @@ class ComplianceAdmin(BaseComplianceView):
         group_id = EDITOR_GROUP_ID
 
         return self.get_users_by_group_id(group_id)
+
+
+class AdminScoring(BaseComplianceView):
+    name = 'admin-scoring'
+    section = 'national-descriptors'
+
+    questions = get_questions()
+
+    def descriptor_obj(self, descriptor):
+        return get_descriptor(descriptor)
+
+    @cache(report_data_cache_key)
+    def muids(self, country_code, country_region_code, year):
+        """ Get all Marine Units for a country
+
+        :return: ['BAL- LV- AA- 001', 'BAL- LV- AA- 002', ...]
+        """
+
+        return get_marine_units(country_code,
+                                country_region_code,
+                                year)
+
+    @property
+    def get_descriptors(self):
+        """Exclude first item, D1 """
+        descriptors = get_all_descriptors()
+
+        return descriptors[1:]
+
+    @property
+    def ndas(self):
+        catalog = get_tool('portal_catalog')
+        brains = catalog.searchResults(
+            portal_type='wise.msfd.nationaldescriptorassessment',
+        )
+
+        for brain in brains:
+            obj = brain.getObject()
+            yield obj
+
+    def reset_assessment_data(self):
+        """ Completely erase the assessment data from the system
+
+        TODO: when implementing the regional descriptors, make sure to adjust
+        """
+
+        for obj in self.ndas:
+            logger.info('Reset assessment data for %s', obj.absolute_url())
+
+            if hasattr(obj, 'saved_assessment_data'):
+                del obj.saved_assessment_data
+                obj._p_changed = True
+
+    def recalculate_scores(self):
+        for obj in self.ndas:
+            if hasattr(obj, 'saved_assessment_data') \
+                    and obj.saved_assessment_data:
+
+                logger.info('recalculating scores for %r', obj)
+
+                data = obj.saved_assessment_data.last()
+                new_overall_score = 0
+                scores = {k: v for k, v in data.items()
+                          if '_Score' in k and v is not None}
+
+                for q_id, score in scores.items():
+                    id_ = score.question.id
+                    article = score.question.article
+                    new_score_weight = [
+                        x.score_weights
+
+                        for x in self.questions[article]
+
+                        if x.id == id_
+                    ]
+                    score.question.score_weights = new_score_weight[0]
+
+                    values = score.values
+                    descriptor = score.descriptor
+                    new_score = score.question.calculate_score(descriptor,
+                                                               values)
+
+                    data[q_id] = new_score
+                    new_overall_score += new_score.weighted_score
+
+                data['OverallScore'] = new_overall_score
+                obj.saved_assessment_data._p_changed = True
+
+    def get_data(self, obj):
+        if not (hasattr(obj, 'saved_assessment_data')
+                and obj.saved_assessment_data):
+
+            return
+
+        article = obj
+        descr = obj.aq_parent
+        region = obj.aq_parent.aq_parent
+        country = obj.aq_parent.aq_parent.aq_parent
+
+        data = obj.saved_assessment_data.last()
+        scores = {k: v for k, v in data.items()
+                  if '_Score' in k and v is not None}
+
+        d_obj = self.descriptor_obj(descr.id.upper())
+        muids = self.muids(country.id.upper(), region.id.upper(), '2018')
+
+        for _id, score in scores.items():
+            if not hasattr(score, 'question'):
+                logger.warning(
+                    "This score is invalid, the assessment needs to "
+                    "be resaved: %s", obj.absolute_url())
+
+                continue
+            options = score.question.get_assessed_elements(d_obj, muids=muids)
+            options = [o.title for o in options]
+            options = options or ['All criteria']
+
+            answers = score.question.answers
+            values = score.values
+
+            for i, v in enumerate(values):
+                option = options[i]
+                answer = answers[v]
+
+                yield (country.title, region.title, d_obj.id,
+                       article.title, score.question.id, option, answer)
+
+    def data_to_xls(self, labels, data):
+        out = BytesIO()
+        workbook = xlsxwriter.Workbook(out, {'in_memory': True})
+
+        worksheet = workbook.add_worksheet('Export')
+
+        for i, label in enumerate(labels):
+            worksheet.write(0, i, label)
+
+        x = 0
+
+        for objdata in data:
+            for row in objdata:
+                x += 1
+
+                for iv, value in enumerate(row):
+                    worksheet.write(x, iv, value)
+
+        workbook.close()
+        out.seek(0)
+
+        return out
+
+    def export_scores(self, context):
+        xlsdata = (self.get_data(nda) for nda in self.ndas)
+
+        labels = ('Country', 'Region', 'Descriptor', 'Article', 'Question',
+                  'Option', 'Answer')
+
+        xlsio = self.data_to_xls(labels, xlsdata)
+        sh = self.request.response.setHeader
+
+        sh('Content-Type', 'application/vnd.openxmlformats-officedocument.'
+                           'spreadsheetml.sheet')
+        fname = "-".join(['Assessment_Scores',
+                          str(datetime.now().replace(microsecond=0))])
+        sh('Content-Disposition',
+           'attachment; filename=%s.xlsx' % fname)
+
+        return xlsio.read()
+
+    def __call__(self):
+
+        msgs = IStatusMessage(self.request)
+
+        if 'export-scores' in self.request.form:
+            return self.export_scores(self.context)
+
+        if 'reset-assessments' in self.request.form:
+            self.reset_assessment_data()
+            msgs.add('Assessments reseted successfully!', type='warning')
+            logger.info('Reset score finished!')
+
+        if 'recalculate-scores' in self.request.form:
+            self.recalculate_scores()
+            msgs.add('Scores recalculated successfully!', type='info')
+            logger.info('Recalculating score finished!')
+
+        return self.index()

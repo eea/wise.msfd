@@ -17,7 +17,11 @@
         <div class="start-page-content left-side-form"
           tal:define="descriptors python: view.get_descriptors">
 
-          <h1>Edit scoring</h1>
+          <h1>Scoring Administration and Overview</h1>
+
+          <div metal:use-macro="context/global_statusmessage/macros/portal_message">
+            Status message
+          </div>
 
           <div class="nda-link">
             <a href="./">
@@ -26,15 +30,28 @@
             </a>
           </div>
 
-          <div role="alert"
-               tal:attributes="class string:alert alert-${options/level}"
-               tal:condition="options/message">
-            <strong tal:content="options/message">Message</strong>
-            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-              <span aria-hidden="true">&times;</span>
-            </button>
-          </div>
+          <form method="post"
+            tal:attributes="action string:${context/absolute_url}/@@admin-scoring">
+            <input type="submit" class="btn btn-primary btn-small btn-success"
+              value="Recalculate scores"
+              name="recalculate-scores"/>
 
+            <input style="padding-right:32px;"
+              type="submit" class="btn btn-primary btn-small btn-success"
+              value="Export scores as excel"
+              name="export-scores"/>
+            <i style="position: relative; left: -28px; top: 1px;"
+              class="fa fa-download" aria-hidden="true"></i>
+
+            <tal:cond tal:condition="python: view.check_permission('wise.ManageCompliance')">
+              <input style="padding-right:32px;"
+                type="submit" class="btn btn-primary btn-small btn-danger"
+                value="Reset assessments"
+                name="reset-assessments"/>
+              <i style="position: relative; left: -28px; top: 1px;"
+                class="fa fa-exclamation-triangle" aria-hidden="true"></i>
+            </tal:cond>
+          </form>
 
           <h3>Question weights per descriptor</h3>
 
@@ -44,7 +61,7 @@
               <tr>
                 <th tal:content="python: art[0]">Artx</th>
                 <th tal:repeat="desc descriptors"
-                    tal:content="python: desc[0]">Descriptor</th>
+                  tal:content="python: desc[0]">Descriptor</th>
               </tr>
             </thead>
             <tbody>
@@ -60,28 +77,6 @@
               </tr>
             </tbody>
           </table>
-
-          <form method="Post">
-            <input type="submit" class="btn btn-primary btn-small btn-success"
-                   value="Recalculate scores"
-                   name="recalculate-scores"/>
-
-            <input style="padding-right:32px;"
-                type="submit" class="btn btn-primary btn-small btn-success"
-                value="Export scores as excel"
-                name="export-scores"/>
-            <i style="position: relative; left: -28px; top: 1px;"
-                class="fa fa-download" aria-hidden="true"></i>
-
-            <tal:cond tal:condition="python: view.check_permission('wise.ManageCompliance')">
-              <input style="padding-right:32px;"
-                   type="submit" class="btn btn-primary btn-small btn-danger"
-                   value="Reset assessments"
-                   name="reset-assessments"/>
-              <i style="position: relative; left: -28px; top: 1px;"
-                    class="fa fa-exclamation-triangle" aria-hidden="true"></i>
-            </tal:cond>
-          </form>
 
         </div>
       </div>

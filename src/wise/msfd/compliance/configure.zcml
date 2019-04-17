@@ -76,9 +76,9 @@
 
   <browser:page
     for="*"
-    name="edit-scoring"
-    class=".base.EditScoring"
-    template="./pt/edit-scoring.pt"
+    name="admin-scoring"
+    class=".admin.AdminScoring"
+    template="./pt/admin-scoring.pt"
     permission="zope2.View"
   />
 
