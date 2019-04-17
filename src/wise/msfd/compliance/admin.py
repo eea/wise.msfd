@@ -438,6 +438,15 @@ class AdminScoring(BaseComplianceView):
                 yield (country.title, region.title, d_obj.id,
                        article.title, score.question.id, option, answer)
 
+        summaries = {k: v for k, v in data.items()
+                     if '_Summary' in k and v is not None}
+
+        for _id, text in summaries.items():
+            # _id = 'Art10_A10Ad3_Summary'
+            article_id, question_id, _ = _id.split('_')
+            yield (country.title, region.title, d_obj.id,
+                   article_id, question_id, 'Summary', text)
+
     def data_to_xls(self, labels, data):
         out = BytesIO()
         workbook = xlsxwriter.Workbook(out, {'in_memory': True})
