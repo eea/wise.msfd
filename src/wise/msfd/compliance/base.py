@@ -10,7 +10,6 @@ from zope.dottedname.resolve import resolve
 from zope.interface import implements
 
 import xlsxwriter
-from Acquisition import aq_inner
 from eea.cache import cache
 from plone.api.content import get_state
 from plone.api.portal import get_tool
@@ -18,6 +17,7 @@ from plone.memoize import ram
 from plone.memoize.view import memoize
 from Products.Five.browser import BrowserView
 from wise.msfd import db, sql, sql2018
+from wise.msfd.base import BasePublicPage
 from wise.msfd.compliance.scoring import Score  # , compute_score
 from wise.msfd.compliance.vocabulary import ASSESSED_ARTICLES, REGIONS
 from wise.msfd.gescomponents import (get_all_descriptors, get_descriptor,
@@ -28,9 +28,6 @@ from wise.msfd.utils import (Tab, _parse_files_in_location, natural_sort_key,
 
 from . import interfaces
 from .interfaces import ICountryDescriptorsFolder
-
-# from .utils import REPORT_DEFS
-# from zope.annotation.interfaces import IAnnotations
 
 logger = logging.getLogger('wise.msfd')
 edw_logger = logging.getLogger('edw.logger')
@@ -114,7 +111,7 @@ def report_data_cache_key(func, self, *args, **kwargs):
     return res
 
 
-class BaseComplianceView(BrowserView):
+class BaseComplianceView(BrowserView, BasePublicPage):
     """ Base class for compliance views
     """
 
@@ -313,15 +310,6 @@ class BaseComplianceView(BrowserView):
         transitions = wftool.listActionInfos(object=self.context)
 
         return [t for t in transitions if t['allowed']]
-
-    def check_permission(self, permission, context=None):
-
-        tool = get_tool('portal_membership')
-
-        if context is None:
-            context = self.context
-
-        return bool(tool.checkPermission(permission, aq_inner(context)))
 
     @memoize
     def translate_view(self):
@@ -698,6 +686,12 @@ class EditScoring(BaseComplianceView):
             muids = self.muids(country.id.upper(), region.id.upper(), '2018')
 
             for _id, score in scores.items():
+                if not hasattr(score, 'question'):
+                    logger.warning(
+                        "This score is invalid, the assessment needs to "
+                        "be resaved: %s", content.absolute_url())
+
+                    continue
                 options = score.question.get_assessed_elements(d_obj,
                                                                muids=muids)
 

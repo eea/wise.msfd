@@ -2,6 +2,7 @@ from zope.interface import implements
 
 from Products.Five.browser import BrowserView
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
+from wise.msfd.base import BasePublicPage
 from wise.msfd.utils import Tab
 from z3c.form.button import buttonAndHandler
 from z3c.form.field import Fields
@@ -171,7 +172,7 @@ MAIN_FORMS = (
 )
 
 
-class MainForm(BaseEnhancedForm, Form):
+class MainForm(BaseEnhancedForm, BasePublicPage, Form):
     """ The main forms need to inherit from this clas
     """
 

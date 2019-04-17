@@ -3,6 +3,8 @@ from zope.browserpage.viewpagetemplatefile import \
 from zope.component import queryMultiAdapter
 from zope.interface import implements
 
+from Acquisition import aq_inner
+from plone.api.portal import get_tool
 from plone.z3cform.layout import FormWrapper
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 from z3c.form.field import Fields
@@ -312,3 +314,21 @@ class MarineUnitIDSelectForm(EmbeddedForm):
         )
 
         return (count, [x[0] for x in res])
+
+
+class BasePublicPage(object):
+    """
+    """
+
+    def check_permission(self, permission, context=None):
+
+        tool = get_tool('portal_membership')
+
+        if context is None:
+            context = self.context
+
+        return bool(tool.checkPermission(permission, aq_inner(context)))
+
+    @property
+    def is_search(self):
+        return hasattr(self, '_compliance_folder')

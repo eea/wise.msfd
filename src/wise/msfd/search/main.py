@@ -5,7 +5,7 @@ from z3c.form.field import Fields
 
 from . import interfaces
 from .. import db
-from ..base import EmbeddedForm, MainFormWrapper
+from ..base import BasePublicPage, EmbeddedForm, MainFormWrapper
 from ..db import get_all_records, get_item_by_conditions
 from ..interfaces import IMarineUnitIDsSelect
 from ..sql_extra import MSCompetentAuthority
@@ -16,7 +16,7 @@ from .base import MAIN_FORMS, ItemDisplayForm, MainForm
 from .utils import data_to_xls, get_form
 
 
-class StartView(BrowserView):
+class StartView(BrowserView, BasePublicPage):
     main_forms = MAIN_FORMS
     name = 'msfd-start'
 
