@@ -79,11 +79,11 @@
     <element section="criteria" name="ThresholdValueSource" label="threshold_sources">
       Threshold value source
     </element>
-    <element section="criteria" name="ThresholdValueSourceOther" translate="True">Threshold value source other</element>
+    <element section="criteria" name="ThresholdValueSourceOther" translate="true">Threshold value source other</element>
     <element section="criteria" name="ValueAchievedUpper">Value achieved upper</element>
     <element section="criteria" name="ValueAchievedLower">Value achieved lower</element>
     <element section="criteria" name="ValueUnit" label="units">Value unit</element>
-    <element section="criteria" name="ValueUnitOther" translate="True">Value unit other</element>
+    <element section="criteria" name="ValueUnitOther" translate="true">Value unit other</element>
     <element section="criteria" name="ProportionThresholdValue">Proportion threshold value</element>
     <element section="criteria" name="ProportionValueAchieved">Proportion value achieved</element>
     <element section="criteria" name="ProportionThresholdValueUnit">Proportion threshold value unit</element>
@@ -110,7 +110,7 @@
     <element section="overallstatus" name="IntegrationRuleTypeCriteria" label="parameters">
       Integration rule type criteria
     </element>
-    <element section="overallstatus" name="IntegrationRuleDescriptionCriteria" translate="True">
+    <element section="overallstatus" name="IntegrationRuleDescriptionCriteria" translate="true">
       Integration rule description criteria
     </element>
     <element section="overallstatus" name="IntegrationRuleDescriptionReferenceCriteria" skip="true" reason="Not in the XML">
