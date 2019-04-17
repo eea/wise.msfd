@@ -18,6 +18,7 @@ from wise.msfd.compliance.base import get_questions
 from wise.msfd.compliance.content import AssessmentData
 from wise.msfd.compliance.interfaces import IEditAssessorsForm
 from wise.msfd.gescomponents import get_descriptor  # get_descriptor_elements
+# from wise.msfd.gescomponents import DESCRIPTOR_ELEMENTS
 from wise.msfd.utils import get_annot
 from z3c.form.button import buttonAndHandler
 from z3c.form.field import Fields
@@ -210,7 +211,7 @@ class EditAssessmentDataForm(Form, BaseView):
 
         roles = get_roles(obj=self.context)
 
-        if 'Contributor' not in roles:
+        if 'Contributor' not in roles and ('Manager' not in roles):
             raise Unauthorized
 
         data, errors = self.extractData()
@@ -235,6 +236,7 @@ class EditAssessmentDataForm(Form, BaseView):
                 values.append(data.get(field_name, None))
 
             # score is updated if ALL of the fields have been answered
+
             if values and None not in values:
                 score = question.calculate_score(self.descriptor, values)
 
@@ -476,7 +478,7 @@ def render_assessment_help(criterias, descriptor):
             rowspan = element_count[cel.id]
             cell = Cell(cel.definition, rowspan)
             row.append(cell)
-        
+
         prim_label = c.is_primary(descriptor) and 'primary' or 'secondary'
         cdef = u"<strong>{} ({})</strong><br/>{}".format(
             c.id, prim_label, c.definition
