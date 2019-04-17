@@ -694,22 +694,18 @@ class EditScoring(BaseComplianceView):
                     continue
                 options = score.question.get_assessed_elements(d_obj,
                                                                muids=muids)
-
-                if article.title == 'Art10':
-                    options = [o.title for o in options]
+                options = [o.title for o in options]
                 options = options or ['All criteria']
 
                 answers = score.question.answers
                 values = score.values
 
-                result = [
-                    u'{} - {}'.format(options[i], answers[v])
+                for i, v in enumerate(values):
+                    option = options[i]
+                    answer = answers[v]
 
-                    for i, v in enumerate(values)
-                ]
-
-                yield (country.title, region.title, descr.title,
-                       article.title, score.question.id, u'\n'.join(result))
+                    yield (country.title, region.title, d_obj.id,
+                           article.title, score.question.id, option, answer)
 
     def get_scores_data(self, context):
         for data in self.get_data(context):
@@ -747,7 +743,7 @@ class EditScoring(BaseComplianceView):
             ('assessments',
              (
                  ('Country', 'Region', 'Descriptor',
-                  'Article', 'Question', 'Options - Answers'),
+                  'Article', 'Question', 'Option', 'Answer'),
                  [x for x in xlsdata]
              )
              )
