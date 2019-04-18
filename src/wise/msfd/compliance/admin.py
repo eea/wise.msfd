@@ -443,37 +443,36 @@ class AdminScoring(BaseComplianceView):
 
         for _id, text in summaries.items():
             article_id, question_id, _ = _id.split('_')
+
             yield (country.title, region.title, d_obj.id,
                    article_id, question_id, 'Summary', text)
-        
-        assessment_summaries = {k: v for k, v in data.items()
-                if '_assessment_summary' in k and v is not None}
+
+        assessment_summaries = {
+            k: v for k, v in data.items()
+
+            if '_assessment_summary' in k and v is not None
+        }
 
         for _id, text in assessment_summaries.items():
             article_id, _, __ = _id.split('_')
-            yield (country.title, region.title, d_obj.id, article_id, 
-                    ' ', 'Assessment Summary', text)
-        
+            yield (country.title, region.title, d_obj.id, article_id,
+                   ' ', 'Assessment Summary', text)
+
         recommendations = {k: v for k, v in data.items()
-                if '_recommendations' in k and v is not None}
+                           if '_recommendations' in k and v is not None}
 
         for _id, text in recommendations.items():
             article_id, _ = _id.split('_')
-            yield (country.title, region.title, d_obj.id, article_id, 
-                    ' ', 'Recommendations', text)
-
+            yield (country.title, region.title, d_obj.id, article_id,
+                   ' ', 'Recommendations', text)
 
         progress_assessment = {k: v for k, v in data.items()
-                if '_progress' in k and v is not None}
-        
+                               if '_progress' in k and v is not None}
+
         for _id, text in progress_assessment.items():
             article_id, _ = _id.split('_')
-            yield (country.title, region.title, d_obj.id, article_id, 
-                ' ', 'Progress', text)
-
- 
-    def data_to_xls(self, labels, data):
-         out = BytesIO()
+            yield (country.title, region.title, d_obj.id, article_id,
+                   ' ', 'Progress', text)
 
     def data_to_xls(self, labels, data):
         out = BytesIO()
