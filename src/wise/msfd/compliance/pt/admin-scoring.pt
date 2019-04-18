@@ -32,14 +32,13 @@
 
           <form method="post"
             tal:attributes="action string:${context/absolute_url}/@@admin-scoring">
-            <input type="submit" class="btn btn-primary btn-small btn-success"
-              value="Recalculate scores"
-              name="recalculate-scores"/>
+            <input type="submit"
+              class="btn btn-primary btn-small btn-success"
+              value="Recalculate scores" name="recalculate-scores"/>
 
             <input style="padding-right:32px;"
               type="submit" class="btn btn-primary btn-small btn-success"
-              value="Export scores as excel"
-              name="export-scores"/>
+              value="Export scores as excel" name="export-scores"/>
             <i style="position: relative; left: -28px; top: 1px;"
               class="fa fa-download" aria-hidden="true"></i>
 
@@ -47,6 +46,7 @@
               <input style="padding-right:32px;"
                 type="submit" class="btn btn-primary btn-small btn-danger"
                 value="Reset assessments"
+                onclick="javascript:return confirm('Are you sure you want to reinitialize the assessment module?')"
                 name="reset-assessments"/>
               <i style="position: relative; left: -28px; top: 1px;"
                 class="fa fa-exclamation-triangle" aria-hidden="true"></i>
