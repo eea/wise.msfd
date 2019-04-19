@@ -475,23 +475,20 @@ https://svn.eionet.europa.eu/repositories/Reportnet/Dataflows/MarineDirective/MS
 
     def _get_order_cols_Art8(self, descr):
         descr = descr.split('.')[0]
+        criteria_priority = ('MarineReportingUnit', 'GESComponent', 'Criteria',
+                             'Feature', 'Element', 'Element2Code', 'Element2',
+                             'IntegrationRuleTypeParameter')
+
         order_by = {
+            'D2': criteria_priority,
             'D5': ('MarineReportingUnit', 'GESComponent', 'Feature',
                    'Criteria', 'Element', 'Element2Code', 'Element2',
                    'IntegrationRuleTypeParameter',
                    ),
-            'D6': ('MarineReportingUnit', 'GESComponent', 'Criteria',
-                   'Feature', 'Element', 'Element2Code', 'Element2',
-                   'IntegrationRuleTypeParameter',
-                   ),
-            'D8': ('MarineReportingUnit', 'GESComponent', 'Criteria',
-                   'Feature', 'Element', 'Element2Code', 'Element2',
-                   'IntegrationRuleTypeParameter',
-                   ),
-            'D11': ('MarineReportingUnit', 'GESComponent', 'Criteria',
-                    'Feature', 'Element', 'Element2Code', 'Element2',
-                    'IntegrationRuleTypeParameter',
-                    ),
+            'D6': criteria_priority,
+            'D7': criteria_priority,
+            'D8': criteria_priority,
+            'D11': criteria_priority,
             'default': ('MarineReportingUnit', 'GESComponent', 'Feature',
                         'Element', 'Element2Code', 'Element2', 'Criteria',
                         'IntegrationRuleTypeParameter',)
