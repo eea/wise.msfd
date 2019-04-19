@@ -409,70 +409,44 @@ class AdminScoring(BaseComplianceView):
         descr = obj.aq_parent
         region = obj.aq_parent.aq_parent
         country = obj.aq_parent.aq_parent.aq_parent
-
-        data = obj.saved_assessment_data.last()
-        scores = {k: v for k, v in data.items()
-                  if '_Score' in k and v is not None}
-
         d_obj = self.descriptor_obj(descr.id.upper())
         muids = self.muids(country.id.upper(), region.id.upper(), '2018')
+        data = obj.saved_assessment_data.last()
+        
+        for k, val in data.items():
+            if not val:
+                continue        
+            
+            if '_Score' in k:                
+                for i, v in enumerate(val.values):
+                    option = ([o.title 
+                                for o in val.question.get_assessed_elements(
+                                    d_obj, muids=muids)] or ['All criteria'])[i]
+                    answer = val.question.answers[v]
 
-        for _id, score in scores.items():
-            if not hasattr(score, 'question'):
-                logger.warning(
-                    "This score is invalid, the assessment needs to "
-                    "be resaved: %s", obj.absolute_url())
+                    yield (country.title, region.title, d_obj.id,
+                        article.title, val.question.id, option, answer)
 
-                continue
-            options = score.question.get_assessed_elements(d_obj, muids=muids)
-            options = [o.title for o in options]
-            options = options or ['All criteria']
-
-            answers = score.question.answers
-            values = score.values
-
-            for i, v in enumerate(values):
-                option = options[i]
-                answer = answers[v]
-
+            elif '_Summary' in k:
+                article_id, question_id, _ = k.split('_')
                 yield (country.title, region.title, d_obj.id,
-                       article.title, score.question.id, option, answer)
+                        article_id, question_id, 'Summary', val)
 
-        summaries = {k: v for k, v in data.items()
-                     if '_Summary' in k and v is not None}
+            elif '_assessment_summary' in k:
+                article_id, _, __ = k.split('_')
+                yield (country.title, region.title, d_obj.id, article_id,
+                    ' ', 'Assessment Summary', val)
+            
+            elif '_recommendations' in k:
+                article_id, _ = k.split('_')
+                yield (country.title, region.title, d_obj.id, article_id,
+                    ' ', 'Recommendations', val)
 
-        for _id, text in summaries.items():
-            article_id, question_id, _ = _id.split('_')
-
-            yield (country.title, region.title, d_obj.id,
-                   article_id, question_id, 'Summary', text)
-
-        assessment_summaries = {
-            k: v for k, v in data.items()
-
-            if '_assessment_summary' in k and v is not None
-        }
-
-        for _id, text in assessment_summaries.items():
-            article_id, _, __ = _id.split('_')
-            yield (country.title, region.title, d_obj.id, article_id,
-                   ' ', 'Assessment Summary', text)
-
-        recommendations = {k: v for k, v in data.items()
-                           if '_recommendations' in k and v is not None}
-
-        for _id, text in recommendations.items():
-            article_id, _ = _id.split('_')
-            yield (country.title, region.title, d_obj.id, article_id,
-                   ' ', 'Recommendations', text)
-
-        progress_assessment = {k: v for k, v in data.items()
-                               if '_progress' in k and v is not None}
-
-        for _id, text in progress_assessment.items():
-            article_id, _ = _id.split('_')
-            yield (country.title, region.title, d_obj.id, article_id,
-                   ' ', 'Progress', text)
+            elif '_progress' in k:
+                article_id, _ = k.split('_')
+                yield (country.title, region.title, d_obj.id, article_id,
+                    ' ', 'Progress', val)                       
+                
 
     def data_to_xls(self, labels, data):
         out = BytesIO()
