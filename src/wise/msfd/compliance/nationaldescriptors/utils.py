@@ -57,7 +57,23 @@ def consolidate_date_by_mru(data):
             for row in mrus
         ])
         label = LabeledItemList(rows=mrus_labeled)
-        rows.extend(rows_without_mru)
+
+        # TODO how to explain better?
+        # Skip rows from rows_without_mru if the GESComponent exists
+        # in rows (we do not insert justification delay/non-use
+        # if the GESComponent has reported data)
+        # example: ges component D6C3, D6C4
+        # .../fi/bal/d6/art9/@@view-report-data-2018
+
+        ges_comps_with_data = set(x.GESComponent.id for x in rows)
+        for row_extra in rows_without_mru:
+            ges_comp = row_extra.GESComponent.id
+            if ges_comp in ges_comps_with_data:
+                continue
+
+            rows.append(row_extra)
+
+        # rows.extend(rows_without_mru)
         out[label] = rows
 
     if not regroup and rows_without_mru:
