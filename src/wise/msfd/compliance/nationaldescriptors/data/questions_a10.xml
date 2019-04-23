@@ -12,7 +12,7 @@
       <option score="0">Target refers to a desired level of an impact in the sea</option>
       <option score="0">Target refers to the desired state of an ecosystem component in the sea</option>
       <option score="0.5">Target refers to another topic</option>
-      <option score="0">2012 target not reported in 2018 (no explanation provided)</option>
+      <!--<option score="0">2012 target not reported in 2018 (no explanation provided)</option>-->
       <option score="0.250">Not clear</option>
       <option score="/">Not relevant</option>
     </answers>

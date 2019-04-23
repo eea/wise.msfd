@@ -295,7 +295,7 @@ class ReportData2012(BaseView, BaseUtil):
         rep_info = self.get_reporting_information()
 
         report_header_data = OrderedDict(
-            title="Member State report: {}/{}/{}/{}/2018".format(
+            title="Member State report: {}/{}/{}/{}/2012".format(
                 self.country_name,
                 self.country_region_name,
                 self.descriptor_title,
@@ -333,13 +333,15 @@ class ReportData2012(BaseView, BaseUtil):
         text = get_xml_report_data(self.filename)
         root = fromstring(text)
 
-        reporters = root.xpath('//w:ReportingInformation/w:Name/text()',
-                               namespaces=NSMAP)
+        reporters = root.xpath(
+            '//w:ReportingInformation/w:Organisation/text()', namespaces=NSMAP
+        )
         date = root.xpath('//w:ReportingInformation/w:ReportingDate/text()',
                           namespaces=NSMAP)
-
         try:
-            res = ReportingInformation(date[0], ', '.join(set(reporters)))
+            date_obj = datetime.strptime(date[0], '%d-%m-%Y')
+            date_final = date_obj.date().isoformat()
+            res = ReportingInformation(date_final, ', '.join(set(reporters)))
         except Exception:
             logger.exception('Could not get reporting info for %s, %s, %s',
                              self.article, self.descriptor, self.country_code
