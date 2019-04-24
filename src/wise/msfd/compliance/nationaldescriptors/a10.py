@@ -53,11 +53,11 @@ class A10Item(Item):
         pick = self.pick
 
         attrs = [
+            ('Feature [Target or Indicator code]', self.criterion),
             ('GES descriptor, criterion or indicator [GEScomponent]',
              self.ges_component()),
             ('MarineUnitID', muids),
             ('Method used', self.method_used()),
-            ('Feature [Target or Indicator code]', self.criterion),
             # ('Feature [Target code]', self.target_code()),
             ('Description [Targets]', self.description()),
             ('Threshold value [TargetValue]', self.threshold_value_a9()),

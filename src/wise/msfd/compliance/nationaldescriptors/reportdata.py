@@ -325,7 +325,7 @@ class ReportData2012(BaseView, BaseUtil):
         # The MSFD<ArtN>_ReportingInformation tables are not reliable (8b is
         # empty), so we try to get the information from the reported XML files.
 
-        default = ReportingInformation('Member State', '2013-04-30')
+        default = ReportingInformation('2013-04-30', 'Member State')
 
         if not self.filename:
             return default
@@ -346,7 +346,8 @@ class ReportData2012(BaseView, BaseUtil):
             logger.exception('Could not get reporting info for %s, %s, %s',
                              self.article, self.descriptor, self.country_code
                              )
-            res = default
+
+            res = ReportingInformation(date[0], ', '.join(set(reporters)))
 
         return res
 
