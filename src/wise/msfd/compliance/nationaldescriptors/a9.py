@@ -9,7 +9,8 @@ from Products.Five.browser.pagetemplatefile import \
     ViewPageTemplateFile as ViewTemplate
 from wise.msfd import db, sql
 from wise.msfd.data import get_xml_report_data
-from wise.msfd.gescomponents import (criteria_from_gescomponent,
+from wise.msfd.gescomponents import (MarineReportingUnit,
+                                     criteria_from_gescomponent,
                                      get_descriptor, get_ges_component,
                                      get_label, sorted_by_criterion)
 from wise.msfd.labels import COMMON_LABELS
@@ -23,6 +24,20 @@ logger = logging.getLogger('wise.msfd')
 
 
 NSMAP = {"w": "http://water.eionet.europa.eu/schemas/dir200856ec"}
+
+
+class DummyNode(object):
+    def __init__(self, crit):
+        # <MarineUnitID>{}</MarineUnitID>
+
+        self.node = """
+            <Descriptors xmlns="http://water.eionet.europa.eu/schemas/dir200856ec">
+                <ReportingFeature>{}</ReportingFeature>
+            </Descriptors>
+        """.format(crit)
+
+    def __call__(self):
+        return self.node
 
 
 class A9Item(Item):
@@ -178,8 +193,6 @@ class A9Item(Item):
 
         return v and v[0] or ''
 
-    # TODO: add MethodUsed
-
 
 class Article9(BaseArticle2012):
     """ Article 9 implementation for nation descriptors data
@@ -271,8 +284,10 @@ class Article9(BaseArticle2012):
             cols.append(item)
             seen.append(item.id)
 
-        self.rows = []
+        # insert missing criterions
+        self.insert_missing_criterions(descriptor_class, cols, muids)
 
+        self.rows = []
         sorted_ges_c = sorted_by_criterion([c.ges_component() for c in cols])
 
         def sort_func(col):
@@ -307,11 +322,6 @@ class Article9(BaseArticle2012):
         #     for k, v in item.items():
         #         self.rows.append(Row(k, [v]))
 
-    def __call__(self, filename=None):
-        self.setup_data(filename)
-
-        return self.template()
-
     def auto_translate(self):
         # report_def = REPORT_DEFS[self.year][self.article]
         # translatables = report_def.get_translatable_fields()
@@ -332,6 +342,34 @@ class Article9(BaseArticle2012):
                     seen.add(value)
 
         return ''
+
+    def insert_missing_criterions(self, descriptor_class, cols, muids):
+        criterions = descriptor_class.criterions
+        reported_crits = [
+            # needs split by '-' because of LV criterions
+            x.ges_component().split('-')[0]
+            for x in cols
+        ]
+
+        for crit in criterions:
+            if crit.is_2018_exclusive():
+                continue
+
+            for crit2012 in crit.alternatives:
+                crit_id = crit2012.id
+                if crit_id in reported_crits:
+                    continue
+
+                dn = DummyNode(crit2012.id)
+                dummy_node = fromstring(dn())
+
+                item = A9Item(self, dummy_node, [], muids)
+                cols.append(item)
+
+    def __call__(self, filename=None):
+        self.setup_data(filename)
+
+        return self.template()
 
 
 class A9AlternateItem(Item):
