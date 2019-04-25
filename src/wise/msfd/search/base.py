@@ -163,9 +163,11 @@ class ItemDisplay(BrowserView, BaseUtil):
 
 MAIN_FORMS = (
     Tab('msfd-start', 'msfd-start', 'Start', 'About search engine'),
+    Tab('msfd-mru', 'msfd-mru', 'Article 4', 'Marine Unit IDs'),
+    Tab('msfd-rc', 'msfd-rc', 'Article 6', 'Regional cooperation'),
     Tab('msfd-ca', 'msfd-ca', 'Article 7', 'Competent Authorities'),
     Tab('msfd-c1', 'msfd-c1',
-        'Articles 4, 8, 9 & 10', '2012 reporting exercise'),
+        'Articles 8, 9 & 10', '2012 reporting exercise'),
     Tab('msfd-c2', 'msfd-c2', 'Article 11', '2014 reporting exercise'),
     Tab('msfd-c3', 'msfd-c3', 'Articles 13 & 14', '2015 reporting exercise'),
     Tab('msfd-c4', 'msfd-c4', 'Articles 8, 9 & 10', '2018 reporting exercise'),

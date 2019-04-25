@@ -1,8 +1,9 @@
 <dl tal:define="item options/item | view/item;
   blacklist options/blacklist | view/blacklist | python: [];
+  use_blacklist view/use_blacklist | python: True
   ">
   <tal:cond tal:condition="item">
-    <tal:def define="fields python:view.get_obj_fields(item);
+    <tal:def define="fields python:view.get_obj_fields(item, use_blacklist=use_blacklist);
       fields python: [x for x in fields if x not in blacklist]">
 
       <tal:rep repeat="key fields" >

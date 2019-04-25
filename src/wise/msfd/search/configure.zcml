@@ -22,6 +22,20 @@
 
   <browser:page
     for="*"
+    name="msfd-mru"
+    class=".main.StartArticle4View"
+    permission="zope2.View"
+    />
+
+  <browser:page
+    for="*"
+    name="msfd-rc"
+    class=".main.StartRegionalCoopView"
+    permission="zope2.View"
+    />
+
+  <browser:page
+    for="*"
     name="msfd-c1"
     class=".main.StartArticle8910View"
     permission="zope2.View"

@@ -1,17 +1,20 @@
 from plone.z3cform.layout import wrap_form
 from Products.Five.browser import BrowserView
+from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 from z3c.form.browser.checkbox import CheckBoxFieldWidget
 from z3c.form.field import Fields
 
 from . import interfaces
+from .. import sql
 from .. import db
 from ..base import BasePublicPage, EmbeddedForm, MainFormWrapper
 from ..db import get_all_records, get_item_by_conditions
 from ..interfaces import IMarineUnitIDsSelect
 from ..sql_extra import MSCompetentAuthority
-from ..utils import scan
+from ..utils import scan, db_objects_to_dict, group_data
 from .a11 import StartArticle11Form
 from .a1314 import StartArticle1314Form
+from .a4 import A4Form
 from .base import MAIN_FORMS, ItemDisplayForm, MainForm
 from .utils import data_to_xls, get_form
 
@@ -72,6 +75,123 @@ class CompetentAuthorityItemDisplay(ItemDisplayForm):
         return res
 
 
+class StartA4Form(MainForm):
+    name = 'msfd-mru'
+    session_name = '2012'
+
+    fields = Fields(interfaces.IStartArticles8910)
+    fields['region_subregions'].widgetFactory = CheckBoxFieldWidget
+
+    def get_subform(self):
+        return MemberStatesForm(self, self.request)
+
+
+StartArticle4View = wrap_form(StartA4Form, MainFormWrapper)
+
+
+class StartRegionalCoopForm(MainForm):
+    name = 'msfd-rc'
+
+    record_title = title = 'Regional cooperation'
+    fields = Fields(interfaces.IMemberStates)
+    fields['member_states'].widgetFactory = CheckBoxFieldWidget
+    session_name = '2012'
+
+    def get_subform(self):
+        return RegionalCoopItemDisplay(self, self.request)
+
+    def download_results(self):
+        mc = sql.MSFD4RegionalCooperation
+        c_codes = self.data.get('member_states')
+        import_ids = db.get_unique_from_mapper(
+            sql.MSFD4Import,
+            'MSFD4_Import_ID',
+            sql.MSFD4Import.MSFD4_Import_ReportingCountry.in_(c_codes)
+        )
+
+        count, data = get_all_records(
+            mc,
+            mc.MSFD4_RegionalCooperation_Import.in_(import_ids)
+        )
+
+        xlsdata = [
+            ('RegionalCooperation', data),
+        ]
+
+        return data_to_xls(xlsdata)
+
+
+StartRegionalCoopView = wrap_form(StartRegionalCoopForm,
+                                  MainFormWrapper)
+
+
+class RegionalCoopItemDisplay(ItemDisplayForm):
+    """ The implementation for the Article 9 (GES determination) form
+    """
+    mc = sql.MSFD4RegionalCooperation
+    order_field = 'MSFD4_RegionalCooperation_ID'
+    css_class = "left-side-form"
+
+    extra_data_template = ViewPageTemplateFile('pt/extra-data-simple.pt')
+    extra_data_pivot = ViewPageTemplateFile('pt/extra-data-pivot.pt')
+    blacklist = ('MSFD4_Import_ID', 'MSFD4_Import_Time',
+                 'MSFD4_Import_FileName')
+
+    use_blacklist = False
+
+    def get_db_results(self):
+        page = self.get_page()
+
+        # args = [self.mc, self.order_field]
+        # c_codes = self.context.data.get('member_states')
+        #
+        # import_ids = db.get_unique_from_mapper(
+        #     sql.MSFD4Import,
+        #     'MSFD4_Import_ID',
+        #     sql.MSFD4Import.MSFD4_Import_ReportingCountry.in_(c_codes)
+        # )
+        #
+        # if import_ids:
+        #     args.append(self.mc.MSFD4_RegionalCooperation_Import
+        #                 .in_(import_ids))
+        #
+        # res = get_item_by_conditions(*args, page=page)
+
+        args = [sql.MSFD4Import, 'MSFD4_Import_ID']
+        c_codes = self.context.data.get('member_states')
+
+        if c_codes:
+            args.append(sql.MSFD4Import.MSFD4_Import_ReportingCountry
+                        .in_(c_codes))
+
+        res = get_item_by_conditions(*args, page=page)
+
+        return res
+
+    def get_extra_data(self):
+        m = sql.MSFD4RegionalCooperation
+        blacklist = ('MSFD4_RegionalCooperation_Import',
+                     'MSFD4_RegionalCooperation_ID')
+
+        coops = db.get_all_columns_from_mapper(
+            m,
+            'MSFD4_RegionalCooperation_ID',
+            m.MSFD4_RegionalCooperation_Import == self.item.MSFD4_Import_ID
+        )
+
+        rows = db_objects_to_dict(coops, excluded_columns=blacklist)
+
+        regcoop = group_data(rows, 'RegionsSubRegions')
+        pivot_html = self.extra_data_pivot(extra_data=[
+            ('Regional Cooperation', regcoop),
+        ])
+
+        return [
+            ('', pivot_html)
+        ]
+
+
+
 class StartArticle8910Form(MainForm):
     """ Select one of the article: 8(a,b,c,d)/9/10
     """
@@ -113,16 +233,18 @@ class AreaTypesForm(EmbeddedForm):
     def get_subform(self):
         # needed for marine unit ids vocabulary
         # TODO: is this still needed?
-        self.data['member_states'] = self.context.data['member_states']
-        self.data['region_subregions'] = \
-            self.context.context.data['region_subregions']
+        # self.data['member_states'] = self.context.data['member_states']
+        # self.data['region_subregions'] = \
+        #     self.context.context.data['region_subregions']
 
-        data = self.get_main_form().data
+        # data = self.get_main_form().data
+        # if data['article'] == 'a4form':
+        #     klass = get_form(data['article'])
+        #
+        #     return klass(self, self.request)
 
-        if data['article'] == 'a4form':
-            klass = get_form(data['article'])
-
-            return klass(self, self.request)
+        if self.get_main_form().name == 'msfd-mru':
+            return A4Form(self, self.request)
 
         return MarineUnitIDsForm(self, self.request)
 

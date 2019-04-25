@@ -6,17 +6,16 @@ from ..sql_extra import (MSFD4GeographicalAreaID,
                          MSFD4GeograpicalAreaDescription)
 from ..utils import db_objects_to_dict, group_data
 from .base import ItemDisplayForm
-from .utils import register_form
 
 
-@register_form
 class A4Form(MarineUnitIDSelectForm):
     """ Main form for A4.
     """
 
-    record_title = title = \
-        'Article 4 (Geographic areas & regional cooperation)'
+    # Geographic areas & regional cooperation
+    record_title = title = 'Article 4 (Marine Unit IDs and Area description)'
     mapper_class = MSFD4GeographicalAreaID
+    session_name = '2012'
 
     def get_subform(self):
         return A4ItemDisplay(self, self.request)
@@ -76,21 +75,22 @@ class A4ItemDisplay(ItemDisplayForm):
         )
         assert total == 1
 
-        m = sql.MSFD4RegionalCooperation
-        coops = db.get_all_columns_from_mapper(
-            m,
-            'MSFD4_RegionalCooperation_ID',
-            m.MSFD4_Import == imported
-        )
-
-        rows = db_objects_to_dict(coops, excluded_columns=blacklist)
-
-        regcoop = group_data(rows, 'RegionsSubRegions')
-        pivot_html = self.extra_data_pivot(extra_data=[
-            ('Regional Cooperation', regcoop),
-        ])
+        # m = sql.MSFD4RegionalCooperation
+        # coops = db.get_all_columns_from_mapper(
+        #     m,
+        #     'MSFD4_RegionalCooperation_ID',
+        #     m.MSFD4_Import == imported
+        # )
+        #
+        # rows = db_objects_to_dict(coops, excluded_columns=blacklist)
+        #
+        # regcoop = group_data(rows, 'RegionsSubRegions')
+        # pivot_html = self.extra_data_pivot(extra_data=[
+        #     ('Regional Cooperation', regcoop),
+        # ])
 
         return [
             ('Area description', desc_html),
-            ('', pivot_html)
+            # ('', pivot_html)
         ]
+

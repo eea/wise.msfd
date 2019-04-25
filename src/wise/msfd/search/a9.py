@@ -61,7 +61,7 @@ class A9ItemDisplay(ItemDisplayForm):
             [t.c.FeatureType, t.c.FeaturesPressuresImpacts],
             t.c.MSFD9_Descriptor == desc_id
         )
-        res = pivot_query(res, 'FeatureType')
+        res = group_query(res, 'FeatureType')
 
         return [
             ('Feature Types', res)

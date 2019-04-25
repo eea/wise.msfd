@@ -3,7 +3,8 @@
     <div tal:repeat="info data">
       <tal:block tal:condition="python: len(info) > 1">
         <tal:section define="section python: info[1]; section_title python: info[0]">
-          <h4 tal:content="section_title">Section Label</h4>
+          <h4 tal:condition="section_title"
+              tal:content="section_title">Section Label</h4>
           <tal:cont replace="structure section"></tal:cont>
         </tal:section>
       </tal:block>

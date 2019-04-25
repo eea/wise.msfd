@@ -83,11 +83,11 @@ class BaseUtil(object):
 
         return mid
 
-    def get_obj_fields(self, obj):
+    def get_obj_fields(self, obj, use_blacklist=True):
         """ Inspect an SA object and return its field names
         """
 
-        return get_obj_fields(obj)
+        return get_obj_fields(obj, use_blacklist=use_blacklist)
 
     def print_value(self, value):
         return print_value(value)
