@@ -12,7 +12,7 @@ from wise.msfd.gescomponents import (get_descriptor, get_ges_component,
 from wise.msfd.labels import COMMON_LABELS
 from wise.msfd.translation import retrieve_translation
 from wise.msfd.utils import (Item, ItemLabel, ItemList, Node, RawRow, Row,
-                             to_html)
+                             natural_sort_key, to_html)
 
 from ..base import BaseArticle2012
 from .a9 import Article9
@@ -435,6 +435,9 @@ class Article10(BaseArticle2012):
         count, res = db.get_marine_unit_id_names(list(set(muids)))
 
         labels = [ItemLabel(m, u'{} ({})'.format(t, m)) for m, t in res]
+        self.muids_labeled = sorted(
+            labels, key=lambda l: natural_sort_key(l.name)
+        )
         muids = ItemList(labels)
 
         descriptor = get_descriptor(self.descriptor)
