@@ -181,8 +181,39 @@ class BootstrapCompliance(BrowserView):
         return cf
 
     def make_region(self, parent, code, name):
-        rf = create(parent, 'wise.msfd.countrydescriptorsfolder',
-                    title=name, id=code)
+        if code.lower() in parent.contentIds():
+            rf = parent[code.lower()]
+        else:
+            rf = create(parent,
+                        'Folder',
+                        # 'wise.msfd.countrydescriptorsfolder',
+                        title=name,
+                        id=code)
+
+            self.set_layout(rf, '@@reg-region-start')
+            alsoProvides(rf, interfaces.IRegionalDescriptorRegionsFolder)
+
+        for desc_code, description in self._get_descriptors():
+            if desc_code.lower() in rf.contentIds():
+                df = rf[desc_code.lower()]
+            else:
+                df = create(rf, 'Folder', title=description, id=desc_code)
+                alsoProvides(df, interfaces.IDescriptorFolder)
+
+            for art in self._get_articles():
+                if art.lower() in df.contentIds():
+                    rda = df[art.lower()]
+                else:
+                    rda = create(df,
+                                 'Folder',
+                                 # 'wise.msfd.nationaldescriptorassessment',
+                                 title=art)
+
+                    logger.info("Created RegionalDescriptorArticle %s",
+                                rda.absolute_url())
+
+                    self.set_layout(rda, '@@reg-desc-art-view')
+                    alsoProvides(rda, interfaces.IRegionalDescriptorAssessment)
 
         return rf
 
@@ -202,10 +233,13 @@ class BootstrapCompliance(BrowserView):
 
     def setup_regionaldescriptors(self, parent):
         # Regional Descriptors Assessments
-        rda = create(parent,
-                     'Folder', title=u'Regional Descriptors Assessments')
-        self.set_layout(rda, '@@reg-desc-start')
-        alsoProvides(rda, interfaces.IRegionalDescriptorsFolder)
+        if 'regional-descriptors-assessments' in parent.contentIds():
+            rda = parent['regional-descriptors-assessments']
+        else:
+            rda = create(parent,
+                         'Folder', title=u'Regional Descriptors Assessments')
+            self.set_layout(rda, '@@reg-desc-start')
+            alsoProvides(rda, interfaces.IRegionalDescriptorsFolder)
 
         for rcode, region in REGIONS.items():
             self.make_region(rda, rcode, region)
@@ -233,8 +267,8 @@ class BootstrapCompliance(BrowserView):
         # Reviewer: EC
         # Editor: Milieu
 
-        self.setup_nationaldescriptors(cm)
-        # self.setup_regionaldescriptors(cm)
+        # self.setup_nationaldescriptors(cm)
+        self.setup_regionaldescriptors(cm)
 
         return cm.absolute_url()
 
@@ -266,7 +300,7 @@ class ComplianceAdmin(BaseComplianceView):
     """"""
 
     name = 'admin'
-    section = 'national-descriptors'
+    section = 'compliance-admin'
 
     @property
     def get_descriptors(self):
@@ -315,7 +349,7 @@ class ComplianceAdmin(BaseComplianceView):
 
 class AdminScoring(BaseComplianceView):
     name = 'admin-scoring'
-    section = 'national-descriptors'
+    section = 'compliance-admin'
 
     questions = get_questions()
 

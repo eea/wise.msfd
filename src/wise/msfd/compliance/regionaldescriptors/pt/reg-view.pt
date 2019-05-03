@@ -1,0 +1,89 @@
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en"
+  xmlns:tal="http://xml.zope.org/namespaces/tal"
+  xmlns:metal="http://xml.zope.org/namespaces/metal"
+  xmlns:i18n="http://xml.zope.org/namespaces/i18n"
+  lang="en"
+  metal:use-macro="context/main_template/macros/master"
+  i18n:domain="eea">
+
+  <body metal:fill-slot="content">
+
+    <div id="layout-contents" tal:define="text context/text | nothing" >
+      <div id="wise-search-form" class="full-width-marker">
+        <div id="wise-search-form-top">
+          <metal:tabs
+            metal:use-macro="context/wise-macros/macros/tabs"></metal:tabs>
+        </div>
+
+        <div class="start-page-content left-side-form">
+
+          <div metal:use-macro="context/global_statusmessage/macros/portal_message">
+            Status message
+          </div>
+
+          <h1 tal:content="structure view/title">Assessment</h1>
+          <!--<h4 class="process-phase-title" >-->
+            <!--Current phase: <span tal:content="python: view.current_phase[1]">Adequacy</span>-->
+          <!--</h4>-->
+          <div class="nda-link">
+            <a href="./../../">
+              <!--tal:attributes="href python:view._country_folder.absolute_url()"-->
+              <i class='fa fa-level-up'></i>
+              Go to Regional Descriptor Assessment
+            </a>
+          </div>
+
+          <div id="nat-desc-art-menu">
+            <ul>
+              <!-- tal:condition="python: view.check_permission('wise.msfd: Edit Assessment')" -->
+              <li>
+                <a href=".">
+                  <i class='fa fa-edit'></i> Assessment
+                </a>
+              </li>
+              <li><a href="."><i class='fa fa-table'></i> 2018 Report</a></li>
+              <li><a href="."><i class='fa fa-table'></i> 2012 Report</a></li>
+              <!--<li class="process-state">-->
+                <!--<form method="GET" action='./content_status_modify'>-->
+                  <!--<div>-->
+                    <!--<i class='fa fa-exchange'></i>-->
+                    <!--Process state:-->
+                    <!--<strong tal:content="view/get_status">Phase 0</strong>-->
+                    <!--<select onchange="javascript:this.form.submit()" name="workflow_action"-->
+                      <!--class="pat-select2"-->
+                      <!--data-pat-select2="width:10em">-->
+                      <!--<option value=''>Choose action...</option>-->
+                      <!--<tal:rep repeat="trans view/get_transitions">-->
+                        <!--<option tal:content="trans/title"-->
+                          <!--tal:attributes="value trans/id">Send to Phase 0</option>-->
+                      <!--</tal:rep>-->
+                    <!--</select>-->
+                  <!--</div>-->
+                <!--</form>-->
+              <!--</li>-->
+
+            </ul>
+          </div>
+
+          <div class="asts-header-data">
+            <h3>2018 Assessment</h3>
+            <div class="ast-header-data">
+              <i>Data here</i>
+              <!--<div tal:replace="structure view/assessment_header_2018_html"></div>-->
+              <!--<div tal:replace="structure view/assessment_data_2018_html"></div>-->
+            </div>
+
+            <h3>2012 Assessment</h3>
+            <div class="ast-header-data">
+              <i>Data here</i>
+              <!--<div tal:replace="structure view/assessment_header_2012"></div>-->
+              <!--<div tal:replace="structure view/assessment_data_2012"></div>-->
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+  </body>
+</html>

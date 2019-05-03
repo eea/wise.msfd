@@ -676,7 +676,6 @@ class Article8(BaseArticle2012):
                     import pdb
                     pdb.set_trace()
 
-                # import pdb; pdb.set_trace()
                 # TODO for D7(maybe for other descriptors too)
                 # find a way to match the node with the descriptor
                 # because all reported criterias and indicators are GESOther

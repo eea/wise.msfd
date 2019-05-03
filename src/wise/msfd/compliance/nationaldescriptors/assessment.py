@@ -72,7 +72,7 @@ class EditAssessorsForm(Form, BaseView):
 
     ignoreContext = True
     name = 'edit-assessors'
-    section = 'national-descriptors'
+    section = 'compliance-admin'
     title = u'Edit assessed by'
     fields = Fields(IEditAssessorsForm)
     template = ViewPageTemplateFile('./pt/edit-assessors.pt')

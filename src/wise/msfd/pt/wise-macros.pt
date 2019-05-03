@@ -16,7 +16,11 @@
           </a>
         </li>
       </tal:rep>
-      <li class="manage-users" tal:condition="python: view.is_search and view.check_permission('wise.msfd: Manage Compliance')">
+      <li tal:define="
+          section view/section | nothing;
+          active python: section == 'compliance-admin'"
+          tal:attributes="class python: active and 'manage-users tab-active' or 'manage-users'"
+          tal:condition="python: view.is_search and view.check_permission('wise.msfd: Manage Compliance')">
         <a target="_blank"
           tal:attributes="href string:${view/_compliance_folder/absolute_url}/@@compliance-admin">
           <span class="fa fa-cogs fa-lg"></span>

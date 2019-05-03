@@ -1,5 +1,6 @@
 
 from eea.cache import cache
+from Products.Five.browser import BrowserView
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 from wise.msfd import db, sql, sql_extra
 from wise.msfd.data import countries_in_region, muids_by_country
@@ -14,7 +15,7 @@ def get_key(func, self):
     return self.descriptor + ':' + self.region
 
 
-class RegDescA9(BaseComplianceView):
+class RegDescA9(BrowserView):
     session_name = '2012'
     template = ViewPageTemplateFile('pt/report-data-table.pt')
 

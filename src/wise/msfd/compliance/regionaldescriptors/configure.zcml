@@ -14,6 +14,22 @@
     />
 
   <browser:page
+    for="..interfaces.IRegionalDescriptorRegionsFolder"
+    name="reg-region-start"
+    class=".main.RegionalDescriptorRegionsOverview"
+    template="./pt/reg-region-start.pt"
+    permission="zope2.View"
+    />
+
+  <browser:page
+    for="..interfaces.IRegionalDescriptorAssessment"
+    name="reg-desc-art-view"
+    template="./pt/reg-view.pt"
+    class=".main.RegionalDescriptorArticleView"
+    permission="zope2.View"
+    />
+
+  <browser:page
     for="*"
     name="reg-desc-a9"
     class=".a9.RegDescA9"

@@ -62,11 +62,6 @@ class IComment(Schema):
     text = Text(title=u'Comment text', required=True)
 
 
-class IRegionalDescriptorsFolder(Interface):
-    """ A container for national descriptors assessments
-    """
-
-
 class IReportDataView(Interface):
     """ Plone pages that display report data
     """
@@ -83,3 +78,26 @@ class IEditAssessorsForm(Interface):
         required=False,
         default=u'Assessor1\r\nAssessor2'
     )
+
+
+# Interfaces for Regional descriptors section
+
+class IRegionalDescriptorsFolder(Interface):
+    """ A container for regional descriptors
+
+    Ex: /compliance-module/regional-descriptors-assessments
+    """
+
+
+class IRegionalDescriptorRegionsFolder(Interface):
+    """ A container for a regions descriptors
+
+    Ex: /compliance-module/regional-descriptors-assessments/bal
+    """
+
+
+class IRegionalDescriptorAssessment(Schema):
+    """ A Region > Descriptor > Article assessment
+
+    Ex: /compliance-module/regional-descriptors-assessments/bal/d5/art8
+    """
