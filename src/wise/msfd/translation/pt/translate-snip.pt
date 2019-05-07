@@ -45,22 +45,3 @@
 
   </td>
 </tal:block>
-
-<!-- big python: 400;
-is_big_tr python: len(translation) > big and 'big' or '';
-is_big_or python: len(text) > big and 'big' or '';
-$is_big_or
-$is_big_tr
-
-<button type="button" class="read&#45;more&#45;btn"
-  tal:condition=""
-  data&#45;toggle="modal" data&#45;target="#read&#45;more&#45;modal">
-  Read more
-</button>
-
-<div tal:attributes="class trans_class" tal:content="translation">
-  Translated Text
-</div>
-<div tal:attributes="class text_class" tal:content="structure text">
-  Original Text
-</div> -->
