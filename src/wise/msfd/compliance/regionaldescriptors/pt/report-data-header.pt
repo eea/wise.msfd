@@ -1,0 +1,121 @@
+<div class="row">
+  <div class="col-md-12">
+
+    <!-- <div metal:use&#45;macro="context/@@compliance&#45;nav&#45;macros/macros/nav"></div> -->
+    <div metal:use-macro="context/global_statusmessage/macros/portal_message">
+      Status message
+    </div>
+
+    <h3 class="report-title" tal:content="structure options/title">201X Member State Report</h3>
+
+    <div id="report-data-navigation">
+      <div class="back-to-art">
+        <a href="./">
+          <i class='fa fa-level-up'></i>
+          Back to Assessment overview
+        </a>
+      </div>
+
+      <div class="report-nav fixed">
+        <div class="nav-wrapper">
+          <div class="nav-header">
+            <button id="report-nav-toggle" class="nav-toggle">
+              <i class="fa fa-bars"></i>
+            </button>
+          </div>
+
+          <div class="nav-body">
+
+            <div class="art-title">
+              <a href="" tal:attributes="href view/_countryregion_folder/absolute_url"
+                tal:content="view/region_name"
+                target="_blank">EU</a>
+            </div>
+
+            <div class="nav-articles">
+              <div tal:repeat="art view/_descriptor_folder/contentValues" class="art">
+
+                <div class="art-middle">
+                  <a tal:content="art/title_or_id"
+                    tal:attributes="href art/absolute_url"
+                    target="_blank">
+                    Article 9
+                  </a>
+                </div>
+                <div class="art-links">
+                  <a href="" tal:attributes="href string:${art/absolute_url}/@@edit-assessment-data-2018" target="_blank">Edit</a>
+                  <a tal:attributes="href string:${art/absolute_url}/@@view-report-data-2018"
+                    target="_blank">
+                    2018</a>
+                  <a tal:attributes="href string:${art/absolute_url}/@@view-report-data-2012"
+                    target="_blank">
+                    2012</a>
+                  </div>
+                </div>
+
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <table class="table table-bordered table-striped table-condensed">
+      <tr>
+        <td>Region</td>
+        <td tal:content="view/country_region_name"/>
+      </tr>
+      <tr>
+        <td>Descriptor</td>
+        <td tal:content="python:view.descriptor_obj.title"/>
+      </tr>
+      <tr>
+        <td>Article reported</td>
+        <td tal:content="view/article_name"/>
+      </tr>
+      <tr tal:condition="options/report_by">
+        <td>Reported by</td>
+        <td tal:content="options/report_by"/>
+      </tr>
+      <tr>
+        <td>Date report due</td>
+        <td tal:content="options/report_due"/>
+      </tr>
+    </table>
+
+    <div id="download-report-data-form">
+      <div class="crt-def">
+        <button type="button"
+          class="btn btn-primary btn-small btn-success"
+          data-toggle="modal" data-target="#reportdata-help">
+          Harvesting details
+        </button>
+      </div>
+
+      <form method="POST" action="" tal:attributes="action request/getURL">
+        <button name="download" class="btn btn-primary">View report data in Excel</button>
+      </form>
+
+      <div class="modal fade" id="reportdata-help" tabindex="-1" role="dialog">
+        <div class="modal-dialog modal-lg" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+              <h4 class="modal-title">Report data harvesting</h4>
+            </div>
+
+            <div class="modal-body">
+              <pre tal:content="options/help_text | nothing"></pre>
+            </div>
+
+            <div class="modal-footer">
+              <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+</div>

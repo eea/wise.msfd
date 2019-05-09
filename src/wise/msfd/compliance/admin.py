@@ -63,6 +63,24 @@ class BootstrapCompliance(BrowserView):
 
         return countries
 
+    @db.use_db_session('2018')
+    def _get_countries_for_region(self, region_code):
+        t = sql2018.MarineReportingUnit
+
+        country_codes = db.get_unique_from_mapper(
+            t,
+            'CountryCode',
+            t.Region == region_code
+        )
+
+        result = []
+        all_countries = self._get_countries()
+
+        for code in country_codes:
+            result.extend([x for x in all_countries if x[0] == code])
+
+        return result
+
     def _get_descriptors(self):
         """ Get a list of (code, description) descriptors
         """
@@ -190,6 +208,7 @@ class BootstrapCompliance(BrowserView):
                         title=name,
                         id=code)
 
+            rf._countries_for_region = self._get_countries_for_region(code)
             self.set_layout(rf, '@@reg-region-start')
             alsoProvides(rf, interfaces.IRegionalDescriptorRegionsFolder)
 

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<data>
+    <Art9>
+        <element name="MarineReportingUnit" getrowdata="get_mru_row">MarineReportingUnit</element>
+        <element name="Feature" getrowdata="get_feature_row">Feature</element>
+        <element name="GESComponent" getrowdata="get_gescomp_row">GES component [Reporting feature]</element>
+        <element name="JustificationNonUse" getrowdata="get_justif_nonuse_row">JustificationNonUse</element>
+        <element name="JustificationDelay" getrowdata="get_justif_delay_row">JustificationDelay</element>
+    </Art9>
+    <Art8></Art8>
+    <Art10></Art10>
+</data>

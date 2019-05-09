@@ -2,15 +2,14 @@ from collections import namedtuple
 
 from wise.msfd.gescomponents import get_descriptor
 
-from ..base import BaseComplianceView
-from .. import interfaces
+from .base import BaseRegComplianceView
 
 
 RegionStatus = namedtuple('CountryStatus',
-                          ['name', 'status', 'state_id', 'url'])
+                          ['name', 'countries', 'status', 'state_id', 'url'])
 
 
-class RegionalDescriptorsOverview(BaseComplianceView):
+class RegionalDescriptorsOverview(BaseRegComplianceView):
     section = 'regional-descriptors'
 
     def regions(self):
@@ -18,8 +17,10 @@ class RegionalDescriptorsOverview(BaseComplianceView):
         res = []
 
         for region in regions:
+            countries = sorted([x[1] for x in region._countries_for_region])
             state_id, state_label = self.process_phase(region)
-            info = RegionStatus(region.Title(), state_label, state_id,
+            info = RegionStatus(region.Title(), ", ".join(countries),
+                                state_label, state_id,
                                 region.absolute_url())
 
             res.append(info)
@@ -27,7 +28,7 @@ class RegionalDescriptorsOverview(BaseComplianceView):
         return res
 
 
-class RegionalDescriptorRegionsOverview(BaseComplianceView):
+class RegionalDescriptorRegionsOverview(BaseRegComplianceView):
     section = 'regional-descriptors'
 
     def get_regions(self):
@@ -52,7 +53,7 @@ class RegionalDescriptorRegionsOverview(BaseComplianceView):
         return [desc[a] for a in order]
 
 
-class RegionalDescriptorArticleView(BaseComplianceView):
+class RegionalDescriptorArticleView(BaseRegComplianceView):
     section = 'regional-descriptors'
 
     @property
@@ -61,18 +62,6 @@ class RegionalDescriptorArticleView(BaseComplianceView):
             self.country_region_name,
             self.descriptor_title,
             self.article,
-        )
-
-    @property
-    def _countryregion_folder(self):
-        return self.get_parent_by_iface(
-            interfaces.IRegionalDescriptorRegionsFolder
-        )
-
-    @property
-    def _article_assessment(self):
-        return self.get_parent_by_iface(
-            interfaces.IRegionalDescriptorAssessment
         )
 
     # @property

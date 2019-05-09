@@ -45,6 +45,9 @@ class ReportField(TemplateMixin):
         if self.setlevel:
             self.setlevel = int(self.setlevel)
 
+        # Regional descriptors
+        self.getrowdata = node.get('getrowdata')
+
 
 class ReportDefinition(object):
     """ Parser class for a XML report definition file.

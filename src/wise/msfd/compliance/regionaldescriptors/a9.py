@@ -15,6 +15,120 @@ def get_key(func, self):
     return self.descriptor + ':' + self.region
 
 
+class RegDescA92018Row(object):
+    not_rep = u""
+    rep = u"Reported"
+
+    def __init__(self, db_data, descriptor_obj, region, countries, field):
+        self.db_data = db_data
+        self.descriptor_obj = descriptor_obj
+        self.region = region
+        self.countries = countries
+        self.field = field
+
+    def get_mru_row(self):
+        values = []
+        for country_code, country_name in self.countries:
+            value = set([
+                row.MarineReportingUnit
+                for row in self.db_data
+                if row.CountryCode == country_code
+            ])
+            values.append(len(value))
+
+        row = Row('Number used', values)
+
+        return CompoundRow(self.field.title, [row])
+
+    def get_feature_row(self):
+        rows = []
+        features = ("Get feature!", )
+
+        for feature in features:
+            values = []
+            for country_code, country_name in self.countries:
+                exists = [
+                    row
+                    for row in self.db_data
+                    if row.CountryCode == country_code
+                ]
+                value = self.not_rep
+                if exists:
+                    value = self.rep
+
+                values.append(value)
+
+            row = Row(feature, values)
+            rows.append(row)
+
+        return CompoundRow(self.field.title, rows)
+
+    def get_gescomp_row(self):
+        rows = []
+        descriptor = self.descriptor_obj
+        criterions = [descriptor] + descriptor.sorted_criterions()
+
+        for crit in criterions:
+            values = []
+            for country_code, country_name in self.countries:
+                exists = [
+                    row
+                    for row in self.db_data
+                    if row.CountryCode == country_code
+                       and (row.GESComponent == crit.id
+                            or row.GESComponent.split('/')[0] == crit.id)
+                       and row.Features
+                ]
+                value = self.not_rep
+                if exists:
+                    value = self.rep
+
+                values.append(value)
+
+            row = Row(crit.title, values)
+            rows.append(row)
+
+        return CompoundRow(self.field.title, rows)
+
+    def get_justif_nonuse_row(self):
+        values = []
+        for country_code, country_name in self.countries:
+            data = set([
+                ": ".join((row.GESComponent, row.JustificationNonUse))
+                for row in self.db_data
+                if row.CountryCode == country_code
+                   and row.JustificationNonUse
+            ])
+            value = ""
+            if data:
+                value = ItemList(data)
+
+            values.append(value)
+
+        row = Row('', values)
+
+        return CompoundRow(self.field.title, [row])
+
+    def get_justif_delay_row(self):
+        values = []
+        for country_code, country_name in self.countries:
+            data = set([
+                ": ".join((row.GESComponent, row.JustificationDelay))
+                for row in self.db_data
+                if row.CountryCode == country_code
+                    and row.JustificationDelay
+            ])
+            value = ""
+            if data:
+                value = ItemList(data)
+
+            values.append(value)
+
+        row = Row('', values)
+
+        return CompoundRow(self.field.title, [row])
+
+
 class RegDescA9(BrowserView):
     session_name = '2012'
     template = ViewPageTemplateFile('pt/report-data-table.pt')

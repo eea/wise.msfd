@@ -1,0 +1,32 @@
+<div tal:define="allrows options/data">
+
+  <div tal:replace="structure options/report_header"></div>
+
+  <!-- TODO: re&#45;enable the harvest subform -->
+  <div class="subform-refresh" tal:replace="nothing">
+    <div tal:replace="structure view/subform">
+      refresh
+    </div>
+  </div>
+
+  <div style="clear: both"><!-- --></div>
+
+  <div tal:condition="not: allrows">
+    No data reported for this Descriptor
+  </div>
+
+  <div tal:condition="allrows" class="report-section">
+
+    <!--<metal:s metal:use-macro="context/wise-macros/macros/simplify-table"></metal:s>-->
+    <div class="overflow-table">
+      <div class="inner">
+        <table class="table table-bordered table-striped table-comp-translate table-report">
+          <tal:rep tal:repeat="row allrows">
+            <tal:row replace="structure row"></tal:row>
+          </tal:rep>
+        </table>
+      </div>
+    </div>
+
+  </div>
+</div>

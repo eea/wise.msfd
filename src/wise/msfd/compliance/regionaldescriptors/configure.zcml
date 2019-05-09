@@ -30,7 +30,15 @@
     />
 
   <browser:page
-    for="*"
+    for="..interfaces.IRegionalDescriptorAssessment"
+    name="view-report-data-2018"
+    class=".reportdata.RegReportData2018"
+    template="./pt/report-data-view.pt"
+    permission="zope2.View"
+    />
+
+  <browser:page
+    for="..interfaces.IRegionalDescriptorAssessment"
     name="reg-desc-a9"
     class=".a9.RegDescA9"
     permission="zope2.View"

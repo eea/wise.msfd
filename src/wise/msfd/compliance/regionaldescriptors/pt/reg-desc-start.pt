@@ -33,7 +33,7 @@
                   <a href="" tal:attributes="href region/url"
                     tal:content="region/name">Germany</a>
                 </td>
-                <td><i>Countries for this region here</i></td>
+                <td><i tal:content="python: region.countries">Countries for this region here</i></td>
                 <!--<td>-->
                   <!--Phase -1-->
                 <!--</td>-->
