@@ -7,61 +7,15 @@ from wise.msfd.data import countries_in_region, muids_by_country
 from wise.msfd.gescomponents import get_descriptor
 from wise.msfd.utils import CompoundRow, ItemList, Row, TableHeader
 
-from ..base import BaseComplianceView
 from .utils import get_percentage
+from .base import BaseRegDescRow
 
 
 def get_key(func, self):
     return self.descriptor + ':' + self.region
 
 
-class RegDescA92018Row(object):
-    not_rep = u""
-    rep = u"Reported"
-
-    def __init__(self, db_data, descriptor_obj, region, countries, field):
-        self.db_data = db_data
-        self.descriptor_obj = descriptor_obj
-        self.region = region
-        self.countries = countries
-        self.field = field
-
-    def get_mru_row(self):
-        values = []
-        for country_code, country_name in self.countries:
-            value = set([
-                row.MarineReportingUnit
-                for row in self.db_data
-                if row.CountryCode == country_code
-            ])
-            values.append(len(value))
-
-        row = Row('Number used', values)
-
-        return CompoundRow(self.field.title, [row])
-
-    def get_feature_row(self):
-        rows = []
-        features = ("Get feature!", )
-
-        for feature in features:
-            values = []
-            for country_code, country_name in self.countries:
-                exists = [
-                    row
-                    for row in self.db_data
-                    if row.CountryCode == country_code
-                ]
-                value = self.not_rep
-                if exists:
-                    value = self.rep
-
-                values.append(value)
-
-            row = Row(feature, values)
-            rows.append(row)
-
-        return CompoundRow(self.field.title, rows)
+class RegDescA92018Row(BaseRegDescRow):
 
     def get_gescomp_row(self):
         rows = []
@@ -99,7 +53,7 @@ class RegDescA92018Row(object):
                 if row.CountryCode == country_code
                    and row.JustificationNonUse
             ])
-            value = ""
+            value = self.not_rep
             if data:
                 value = ItemList(data)
 
@@ -118,7 +72,7 @@ class RegDescA92018Row(object):
                 if row.CountryCode == country_code
                     and row.JustificationDelay
             ])
-            value = ""
+            value = self.not_rep
             if data:
                 value = ItemList(data)
 

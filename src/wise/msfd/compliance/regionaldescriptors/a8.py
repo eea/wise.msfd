@@ -1,11 +1,559 @@
 
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 from wise.msfd import db, sql  # , sql_extra
-from wise.msfd.utils import CompoundRow, Row, TableHeader
+from wise.msfd.data import countries_in_region, muids_by_country
+from wise.msfd.gescomponents import get_label
+from wise.msfd.utils import CompoundRow, ItemLabel, ItemList, Row, TableHeader
 
 from ..a8_utils import UtilsArticle8
 from ..base import BaseComplianceView
-from .utils import countries_in_region, muids_by_country
+from .base import BaseRegDescRow
+
+
+def compoundrow(func):
+    def inner(*args, **kwargs):
+        rows = func(*args, **kwargs)
+        self = args[0]
+
+        return CompoundRow(self.field.title, rows)
+
+    return inner
+
+
+class RegDescA82018Row(BaseRegDescRow):
+    """"""
+
+    def get_unique_values(self, field):
+        values = set([
+            getattr(row, field)
+            for row in self.db_data
+            if getattr(row, field)
+        ])
+
+        return sorted(values)
+
+    @compoundrow
+    def get_element_row(self):
+        rows = []
+        elements = self.get_unique_values('Element')
+
+        for element in elements:
+            values = []
+            for country_code, country_name in self.countries:
+                exists = [
+                    row
+                    for row in self.db_data
+                    if row.CountryCode == country_code
+                       and row.Element == element
+                ]
+                value = self.not_rep
+                if exists:
+                    value = self.rep
+
+                values.append(value)
+
+            row = Row(element, values)
+            rows.append(row)
+
+        return rows
+
+    @compoundrow
+    def get_element_source_row(self):
+        rows = []
+        element_sources = self.get_unique_values('ElementSource')
+
+        for elem_source in element_sources:
+            values = []
+            for country_code, country_name in self.countries:
+                data = [
+                    row.Element
+                    for row in self.db_data
+                    if row.CountryCode == country_code
+                       and row.ElementSource == elem_source
+                ]
+                value = self.not_rep
+                if data:
+                    value = "{} elements".format(len(set(data)))
+
+                values.append(value)
+
+            row = Row(elem_source, values)
+            rows.append(row)
+
+        return rows
+
+    @compoundrow
+    def get_crit_param_row(self):
+        rows = []
+        descriptor = self.descriptor_obj
+        criterions = [descriptor] + descriptor.sorted_criterions()
+
+        for crit in criterions:
+            values = []
+            for country_code, country_name in self.countries:
+                data = set([
+                    row.Parameter
+                    for row in self.db_data
+                    if row.CountryCode == country_code
+                       and row.Criteria == crit.id
+                            # or row.GESComponent.split('/')[0] == crit.id)
+                       and row.Parameter
+                ])
+                value = self.not_rep
+                if data:
+                    value = ItemList(
+                        ItemLabel(d, get_label(d, self.field.label_collection))
+                        for d in data
+                    )
+
+                values.append(value)
+
+            row = Row(crit.title, values)
+            rows.append(row)
+
+        return rows
+
+    @compoundrow
+    def get_threshold_value_row(self):
+        rows = []
+        values = []
+        parameters = self.get_unique_values('Parameter')
+
+        for country_code, country_name in self.countries:
+            provided = 0
+            for param in parameters:
+                data = set([
+                    row
+                    for row in self.db_data
+                    if row.CountryCode == country_code
+                       and row.Parameter == param
+                       and (row.ThresholdValueUpper or row.ThresholdValueLower)
+                ])
+                if data:
+                    provided += 1
+
+            value = self.not_rep
+            if provided:
+                value = "Provided for {} (of {}) parameters" \
+                    .format(provided, len(parameters))
+            values.append(value)
+
+        row = Row('Quantitative values provided', values)
+        rows.append(row)
+
+        return rows
+
+    @compoundrow
+    def get_threshold_source_row(self):
+        rows = []
+        threshs = self.get_unique_values('ThresholdValueSource')
+
+        for threshold_source in threshs:
+            values = []
+            for country_code, country_name in self.countries:
+                data = set([
+                    row.Parameter
+                    for row in self.db_data
+                    if row.CountryCode == country_code
+                       and row.ThresholdValueSource == threshold_source
+                ])
+                value = self.not_rep
+                if data:
+                    value = "{} parameters".format(len(set(data)))
+
+                values.append(value)
+
+            rowlabel = get_label(threshold_source, self.field.label_collection)
+            row = Row(ItemLabel(threshold_source, rowlabel), values)
+            rows.append(row)
+
+        return rows
+
+    @compoundrow
+    def get_proportion_threshold_row(self):
+        rows = []
+        values = []
+        params = self.get_unique_values('Parameter')
+
+        for country_code, country_name in self.countries:
+            data = set([
+                (row.Parameter, row.ProportionThresholdValue)
+                for row in self.db_data
+                if row.CountryCode == country_code
+                   and row.ProportionThresholdValue
+            ])
+
+            value = self.not_rep
+            if data:
+                country_params = set([x[0] for x in data])
+                proportion_vals = set([x[1] for x in data])
+
+                value = "Range: {}-{}% ({} of {} parameters)".format(
+                    int(min(proportion_vals)), int(max(proportion_vals)),
+                    len(country_params), len(params)
+                )
+
+            values.append(value)
+
+        row = Row('Quantitative values provided', values)
+        rows.append(row)
+
+        return rows
+
+    @compoundrow
+    def get_proportion_threshold_unit_row(self):
+        rows = []
+        values = []
+
+        for country_code, country_name in self.countries:
+            data = set([
+                row.ProportionThresholdValueUnit
+                for row in self.db_data
+                if row.CountryCode == country_code
+                   and row.ProportionThresholdValueUnit
+            ])
+
+            value = self.not_rep
+            if data:
+                value = ItemList(data)
+
+            values.append(value)
+
+        row = Row('', values)
+        rows.append(row)
+
+        return rows
+
+    @compoundrow
+    def get_param_achieved_row(self):
+        rows = []
+        values = []
+
+        for country_code, country_name in self.countries:
+            param_achievs = self.get_unique_values('ParameterAchieved')
+
+            value = []
+            for param in param_achievs:
+                data = set([
+                    row.Parameter
+                    for row in self.db_data
+                    if row.CountryCode == country_code
+                       and row.ParameterAchieved == param
+                ])
+
+                if data:
+                    text = "{} - {}".format(param, len(data))
+                    value.append(text)
+
+            values.append(ItemList(value))
+
+        row = Row('', values)
+        rows.append(row)
+
+        return rows
+
+    @compoundrow
+    def get_crit_status_row(self):
+        rows = []
+        values = []
+
+        for country_code, country_name in self.countries:
+            crit_stats = self.get_unique_values('CriteriaStatus')
+
+            value = []
+            for crit_stat in crit_stats:
+                data = set([
+                    row.Criteria
+                    for row in self.db_data
+                    if row.CountryCode == country_code
+                       and row.CriteriaStatus == crit_stat
+                ])
+
+                if data:
+                    text = "{} - {}".format(crit_stat, len(data))
+                    value.append(text)
+
+            values.append(ItemList(value))
+
+        row = Row('', values)
+        rows.append(row)
+
+        return rows
+
+    @compoundrow
+    def get_elem_status_row(self):
+        rows = []
+        values = []
+
+        for country_code, country_name in self.countries:
+            elem_stats = self.get_unique_values('ElementStatus')
+
+            value = []
+            for elem in elem_stats:
+                data = set([
+                    row.Element
+                    for row in self.db_data
+                    if row.CountryCode == country_code
+                       and row.ElementStatus == elem
+                ])
+
+                if data:
+                    text = "{} - {}".format(elem, len(data))
+                    value.append(text)
+
+            values.append(ItemList(value))
+
+        row = Row('', values)
+        rows.append(row)
+
+        return rows
+
+    @compoundrow
+    def get_integration_type_param_row(self):
+        rows = []
+        values = []
+
+        for country_code, country_name in self.countries:
+            data = set([
+                row.IntegrationRuleTypeParameter
+                for row in self.db_data
+                if row.CountryCode == country_code
+                   and row.IntegrationRuleTypeParameter
+            ])
+
+            value = self.not_rep
+            if data:
+                value = ItemList(data)
+
+            values.append(value)
+
+        row = Row('', values)
+        rows.append(row)
+
+        return rows
+
+    @compoundrow
+    def get_integration_desc_param_row(self):
+        rows = []
+        values = []
+
+        for country_code, country_name in self.countries:
+            data = set([
+                (row.Criteria, row.IntegrationRuleDescriptionParameter)
+                for row in self.db_data
+                if row.CountryCode == country_code
+                   and row.IntegrationRuleDescriptionParameter
+            ])
+
+            value = self.not_rep
+            if data:
+                value = ItemList(["{}: {}".format(x[0], x[1]) for x in data])
+
+            values.append(value)
+
+        row = Row('', values)
+        rows.append(row)
+
+        return rows
+
+    @compoundrow
+    def get_integration_type_crit_row(self):
+        rows = []
+        values = []
+
+        for country_code, country_name in self.countries:
+            data = set([
+                row.IntegrationRuleTypeCriteria
+                for row in self.db_data
+                if row.CountryCode == country_code
+                   and row.IntegrationRuleTypeCriteria
+            ])
+
+            value = self.not_rep
+            if data:
+                value = ItemList(data)
+
+            values.append(value)
+
+        row = Row('', values)
+        rows.append(row)
+
+        return rows
+
+    @compoundrow
+    def get_integration_desc_crit_row(self):
+        rows = []
+        values = []
+
+        for country_code, country_name in self.countries:
+            data = set([
+                row.IntegrationRuleDescriptionCriteria
+                for row in self.db_data
+                if row.CountryCode == country_code
+                   and row.IntegrationRuleDescriptionCriteria
+            ])
+
+            value = self.not_rep
+            if data:
+                value = ItemList(data)
+
+            values.append(value)
+
+        row = Row('', values)
+        rows.append(row)
+
+        return rows
+
+    @compoundrow
+    def get_ges_extent_thresh_row(self):
+        rows = []
+        values = []
+
+        for country_code, country_name in self.countries:
+            data = set([
+                str(row.GESExtentThreshold)
+                for row in self.db_data
+                if row.CountryCode == country_code
+                   and row.GESExtentThreshold
+            ])
+
+            value = self.not_rep
+            if data:
+                value = ItemList(data)
+
+            values.append(value)
+
+        row = Row('', values)
+        rows.append(row)
+
+        return rows
+
+    @compoundrow
+    def get_ges_extent_achiev_row(self):
+        rows = []
+        values = []
+
+        for country_code, country_name in self.countries:
+            data = set([
+                str(row.GESExtentAchieved)
+                for row in self.db_data
+                if row.CountryCode == country_code
+                   and row.GESExtentAchieved
+            ])
+
+            value = self.not_rep
+            if data:
+                value = ItemList(data)
+
+            values.append(value)
+
+        row = Row('', values)
+        rows.append(row)
+
+        return rows
+
+    @compoundrow
+    def get_ges_extent_unit_row(self):
+        rows = []
+        values = []
+
+        for country_code, country_name in self.countries:
+            data = set([
+                str(row.GESExtentUnit)
+                for row in self.db_data
+                if row.CountryCode == country_code
+                   and row.GESExtentUnit
+            ])
+
+            value = self.not_rep
+            if data:
+                value = ItemList(data)
+
+            values.append(value)
+
+        row = Row('', values)
+        rows.append(row)
+
+        return rows
+
+    @compoundrow
+    def get_ges_achiev_row(self):
+        rows = []
+        values = []
+
+        for country_code, country_name in self.countries:
+            data = set([
+                str(row.GESAchieved)
+                for row in self.db_data
+                if row.CountryCode == country_code
+                   and row.GESAchieved
+            ])
+
+            value = self.not_rep
+            if data:
+                value = ItemList(data)
+
+            values.append(value)
+
+        row = Row('', values)
+        rows.append(row)
+
+        return rows
+
+    @compoundrow
+    def get_assess_period_row(self):
+        rows = []
+        values = []
+
+        for country_code, country_name in self.countries:
+            data = set([
+                str(row.AssessmentsPeriod)
+                for row in self.db_data
+                if row.CountryCode == country_code
+                   and row.AssessmentsPeriod
+            ])
+
+            value = self.not_rep
+            if data:
+                value = ItemList(data)
+
+            values.append(value)
+
+        row = Row('', values)
+        rows.append(row)
+
+        return rows
+
+    @compoundrow
+    def get_related_press_row(self):
+        rows = []
+        pressures = self.get_unique_values("PressureCodes")
+        all_pressures = []
+        for pres in pressures:
+            all_pressures.extend(pres.split(','))
+
+        for pressure in all_pressures:
+            values = []
+            for country_code, country_name in self.countries:
+                data = set([
+                    row
+                    for row in self.db_data
+                    if row.CountryCode == country_code
+                       and pressure in row.PressureCodes.split(',')
+                ])
+
+                value = self.not_rep
+                if data:
+                    value = self.rep
+
+                values.append(value)
+
+            row_label = ItemLabel(pressure,
+                                  get_label(pressure, self.field.label_collection))
+            row = Row(row_label, values)
+            rows.append(row)
+
+        return rows
 
 
 class RegDescA8(BaseComplianceView):

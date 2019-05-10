@@ -7,6 +7,31 @@
         <element name="JustificationNonUse" getrowdata="get_justif_nonuse_row">JustificationNonUse</element>
         <element name="JustificationDelay" getrowdata="get_justif_delay_row">JustificationDelay</element>
     </Art9>
-    <Art8></Art8>
-    <Art10></Art10>
+    <Art8>
+        <element name="MarineReportingUnit" getrowdata="get_mru_row">MarineReportingUnit</element>
+        <element name="Feature" getrowdata="get_feature_row">Feature</element>
+        <element name="Element" getrowdata="get_element_row">Element</element>
+        <element name="ElementSource" getrowdata="get_element_source_row">ElementSource</element>
+        <element name="CriteriaParameters" getrowdata="get_crit_param_row" label="parameters">Criteria and parameters used</element>
+        <element name="ThresholdValue" getrowdata="get_threshold_value_row">ThresholdValueUpper/Lower</element>
+        <element name="ThresholdValueSource" getrowdata="get_threshold_source_row" label="threshold_sources">ThresholdValueSource</element>
+        <element name="ProportionThresholdValue" getrowdata="get_proportion_threshold_row">Proportion ThresholdValue</element>
+        <element name="ProportionThresholdValueUnit" getrowdata="get_proportion_threshold_unit_row">Proportion ThresholdValue Unit</element>
+        <element name="ParameterAchieved" getrowdata="get_param_achieved_row">ParameterAchieved</element>
+        <element name="CriteriaStatus" getrowdata="get_crit_status_row">CriteriaStatus</element>
+        <element name="ElementStatus" getrowdata="get_elem_status_row">ElementStatus</element>
+        <element name="IntegrationRuleTypeParameter" getrowdata="get_integration_type_param_row">IntegrationRuleTypeParameter</element>
+        <element name="IntegrationRuleDescriptionParameter" getrowdata="get_integration_desc_param_row">IntegrationRuleDescriptionParameter</element>
+        <element name="IntegrationRuleTypeCriteria" getrowdata="get_integration_type_crit_row">IntegrationRuleTypeCriteria</element>
+        <element name="IntegrationRuleDescriptionCriteria" getrowdata="get_integration_desc_crit_row">IntegrationRuleDescriptionCriteria</element>
+        <element name="GESextentThreshold" getrowdata="get_ges_extent_thresh_row">GESextentThreshold</element>
+        <element name="GESextentAchieved" getrowdata="get_ges_extent_achiev_row">GESextentAchieved</element>
+        <element name="GESextentUnit" getrowdata="get_ges_extent_unit_row">GESextentUnit</element>
+        <element name="GESachieved" getrowdata="get_ges_achiev_row">GESachieved</element>
+        <element name="AssessmentPeriod" getrowdata="get_assess_period_row">AssessmentPeriod</element>
+        <element name="RelatedPressures" getrowdata="get_related_press_row" label="pressures">RelatedPressures</element>
+    </Art8>
+    <Art10>
+        <element name="MarineReportingUnit" getrowdata="get_mru_row">MarineReportingUnit</element>
+    </Art10>
 </data>

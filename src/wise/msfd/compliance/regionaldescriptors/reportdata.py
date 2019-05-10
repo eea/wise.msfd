@@ -8,6 +8,7 @@ from wise.msfd.compliance.interfaces import IReportDataView
 from wise.msfd.utils import (CompoundRow, ItemList, items_to_rows, timeit,
                              natural_sort_key, Row)
 
+from .a8 import RegDescA82018Row
 from .a9 import RegDescA92018Row
 from .base import BaseRegComplianceView
 from .data import get_report_definition
@@ -19,10 +20,15 @@ class RegReportData2018(BaseRegComplianceView):
     # implements(IReportDataView)
 
     help_text = "HELP TEXT"
+    template = ViewPageTemplateFile('pt/report-data.pt')
 
-    Art8 = ViewPageTemplateFile('pt/report-data.pt')
-    Art9 = ViewPageTemplateFile('pt/report-data.pt')
-    Art10 = ViewPageTemplateFile('pt/report-data.pt')
+    # Art8 = ViewPageTemplateFile('pt/report-data.pt')
+    # Art9 = ViewPageTemplateFile('pt/report-data.pt')
+    # Art10 = ViewPageTemplateFile('pt/report-data.pt')
+
+    Art8 = RegDescA82018Row
+    Art9 = RegDescA92018Row
+    # Art10 = ViewPageTemplateFile('pt/report-data.pt')
 
     def get_countries_row(self):
         country_names = [x[1] for x in self.available_countries]
@@ -49,6 +55,35 @@ class RegReportData2018(BaseRegComplianceView):
 
         return q
 
+    @property
+    def get_data_from_view_Art8(self):
+        sess = db.session()
+        t = sql2018.t_V_ART8_GES_2018
+
+        descr_class = self.descriptor_obj
+        all_ids = list(descr_class.all_ids())
+
+        if self.descriptor.startswith('D1.'):
+            all_ids.append('D1')
+
+        # muids = [x.id for x in self.muids]
+        conditions = [
+            t.c.Region == self.country_region_code,
+            t.c.GESComponent.in_(all_ids),
+            or_(t.c.Element.isnot(None),
+                t.c.Criteria.isnot(None)),
+        ]
+
+        # groupby IndicatorCode
+        q = sess\
+            .query(t)\
+            .filter(*conditions)\
+            .distinct()
+
+        res = [row for row in q]
+
+        return res
+
     @db.use_db_session('2018')
     def get_report_data(self):
         db_data = getattr(self, 'get_data_from_view_' + self.article, None)
@@ -60,15 +95,16 @@ class RegReportData2018(BaseRegComplianceView):
         fields = get_report_definition('2018', self.article).get_fields()
 
         result = [self.get_countries_row()]
+        impl_class = getattr(self, self.article)
 
         for field in fields:
-            if not field.getrowdata:
+            row_class = impl_class(db_data, descriptor_obj, region,
+                                   countries, field)
+            field_data_method = getattr(row_class, field.getrowdata, None)
+            if not field_data_method:
                 continue
 
-            row_class = RegDescA92018Row(db_data, descriptor_obj, region,
-                                         countries, field)
-            field_data = getattr(row_class, field.getrowdata)()
-            result.append(field_data)
+            result.append(field_data_method())
 
         return result
 
@@ -93,7 +129,8 @@ class RegReportData2018(BaseRegComplianceView):
             help_text=self.help_text
         )
 
-        template = getattr(self, self.article, None)
+        # template = getattr(self, self.article, None)
+        template = self.template
 
         return template(data=data, report_header=report_header)
 
