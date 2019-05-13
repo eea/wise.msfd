@@ -42,11 +42,12 @@ additional_fields = {
 
 summary_fields = (
     ('assessment_summary', u'Assessment summary'),
-    ('recommendations', u'Recommendations for Member State'),
+    # ('recommendations', u'Recommendations for Member State'),
 )
 
 progress_fields = (
     ('progress', u'Progress assessment'),
+    ('recommendations', u'Recommendations for Member State'),
 )
 
 ASSESSORS_ANNOT_KEY = 'wise.msfd.assessors'
@@ -120,7 +121,7 @@ class EditAssessmentSummaryForm(Form, BaseView):
             )
 
             default = saved_data.get(_name, None)
-            _field = Text(title=u'',
+            _field = Text(title=title,
                           __name__=_name, required=False, default=default)
             _fields.append(_field)
 
