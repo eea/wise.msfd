@@ -472,33 +472,34 @@ class AdminScoring(BaseComplianceView):
             
             if '_Score' in k:                
                 for i, v in enumerate(val.values):
-                    option = ([o.title 
-                                for o in val.question.get_assessed_elements(
-                                    d_obj, muids=muids)] or ['All criteria'])[i]
+                    option = ([o.title
+                               for o in val.question.get_assessed_elements(
+                                d_obj, muids=muids)] or ['All criteria'])[i]
                     answer = val.question.answers[v]
 
                     yield (country.title, region.title, d_obj.id,
-                        article.title, val.question.id, option, answer)
+                           article.title, val.question.id, option, answer,
+                           val.question.scores[v])
 
             elif '_Summary' in k:
                 article_id, question_id, _ = k.split('_')
                 yield (country.title, region.title, d_obj.id,
-                        article_id, question_id, 'Summary', val)
+                       article_id, question_id, 'Summary', val, ' ')
 
             elif '_assessment_summary' in k:
                 article_id, _, __ = k.split('_')
-                yield (country.title, region.title, d_obj.id, article_id,
-                    ' ', 'Assessment Summary', val)
+                yield (country.title, region.title, d_obj.id,
+                       article_id, ' ', 'Assessment Summary', val, '')
             
             elif '_recommendations' in k:
                 article_id, _ = k.split('_')
-                yield (country.title, region.title, d_obj.id, article_id,
-                    ' ', 'Recommendations', val)
+                yield (country.title, region.title, d_obj.id,
+                       article_id, ' ', 'Recommendations', val, '')
 
             elif '_progress' in k:
                 article_id, _ = k.split('_')
-                yield (country.title, region.title, d_obj.id, article_id,
-                    ' ', 'Progress', val)                       
+                yield (country.title, region.title, d_obj.id,
+                       article_id, ' ', 'Progress', val, '')
                 
 
     def data_to_xls(self, labels, data):
@@ -528,7 +529,7 @@ class AdminScoring(BaseComplianceView):
         xlsdata = (self.get_data(nda) for nda in self.ndas)
 
         labels = ('Country', 'Region', 'Descriptor', 'Article', 'Question',
-                  'Option', 'Answer')
+                  'Option', 'Answer', 'Score')
 
         xlsio = self.data_to_xls(labels, xlsdata)
         sh = self.request.response.setHeader
