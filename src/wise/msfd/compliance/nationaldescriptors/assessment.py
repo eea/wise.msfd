@@ -171,6 +171,7 @@ class EditAssessmentDataForm(Form, BaseView):
     """ Edit the assessment for a national descriptor, for a specific article
     """
     name = 'art-view'
+    section = 'national-descriptors'
 
     subforms = None
     year = session_name = '2018'

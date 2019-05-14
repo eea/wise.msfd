@@ -83,6 +83,16 @@
     });
   }
 
+  function setupFormSelectOptions() {
+    // used in edit assessment form
+    // override plone's default 'No value' option with '-'
+    $('#comp-national-descriptor div.subform div.left div.assessment-form-input')
+      .find("option:contains('No value'), span.select2-chosen:contains('No value')").each(function(){
+        $(this).text('-');
+    });
+
+  }
+
   function setupUnloadWarning() {
     // National descriptor edit assessment data
     // Warn user before leaving the page with unsaved changes
@@ -116,6 +126,7 @@
     setupCommentsListing();
     setupPostComments();
     setupDisableAssessmentForms();
+    setupFormSelectOptions();
     setupUnloadWarning();
 
     var $win = $(window);
