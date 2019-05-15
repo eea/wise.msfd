@@ -8,29 +8,11 @@ from wise.msfd.utils import CompoundRow, ItemLabel, ItemList, Row, TableHeader
 from ..a8_utils import UtilsArticle8
 from ..base import BaseComplianceView
 from .base import BaseRegDescRow
-
-
-def compoundrow(func):
-    def inner(*args, **kwargs):
-        rows = func(*args, **kwargs)
-        self = args[0]
-
-        return CompoundRow(self.field.title, rows)
-
-    return inner
+from .utils import compoundrow
 
 
 class RegDescA82018Row(BaseRegDescRow):
     """"""
-
-    def get_unique_values(self, field):
-        values = set([
-            getattr(row, field)
-            for row in self.db_data
-            if getattr(row, field)
-        ])
-
-        return sorted(values)
 
     @compoundrow
     def get_element_row(self):
@@ -52,8 +34,7 @@ class RegDescA82018Row(BaseRegDescRow):
 
                 values.append(value)
 
-            row = Row(element, values)
-            rows.append(row)
+            rows.append((element, values))
 
         return rows
 
@@ -77,8 +58,7 @@ class RegDescA82018Row(BaseRegDescRow):
 
                 values.append(value)
 
-            row = Row(elem_source, values)
-            rows.append(row)
+            rows.append((elem_source, values))
 
         return rows
 
@@ -108,8 +88,7 @@ class RegDescA82018Row(BaseRegDescRow):
 
                 values.append(value)
 
-            row = Row(crit.title, values)
-            rows.append(row)
+            rows.append((crit.title, values))
 
         return rows
 
@@ -138,8 +117,7 @@ class RegDescA82018Row(BaseRegDescRow):
                     .format(provided, len(parameters))
             values.append(value)
 
-        row = Row('Quantitative values provided', values)
-        rows.append(row)
+        rows.append(('Quantitative values provided', values))
 
         return rows
 
@@ -164,8 +142,7 @@ class RegDescA82018Row(BaseRegDescRow):
                 values.append(value)
 
             rowlabel = get_label(threshold_source, self.field.label_collection)
-            row = Row(ItemLabel(threshold_source, rowlabel), values)
-            rows.append(row)
+            rows.append((ItemLabel(threshold_source, rowlabel), values))
 
         return rows
 
@@ -195,8 +172,7 @@ class RegDescA82018Row(BaseRegDescRow):
 
             values.append(value)
 
-        row = Row('Quantitative values provided', values)
-        rows.append(row)
+        rows.append(('Quantitative values provided', values))
 
         return rows
 
@@ -219,8 +195,7 @@ class RegDescA82018Row(BaseRegDescRow):
 
             values.append(value)
 
-        row = Row('', values)
-        rows.append(row)
+        rows.append(('', values))
 
         return rows
 
@@ -247,8 +222,7 @@ class RegDescA82018Row(BaseRegDescRow):
 
             values.append(ItemList(value))
 
-        row = Row('', values)
-        rows.append(row)
+        rows.append(('', values))
 
         return rows
 
@@ -275,8 +249,7 @@ class RegDescA82018Row(BaseRegDescRow):
 
             values.append(ItemList(value))
 
-        row = Row('', values)
-        rows.append(row)
+        rows.append(('', values))
 
         return rows
 
@@ -303,8 +276,7 @@ class RegDescA82018Row(BaseRegDescRow):
 
             values.append(ItemList(value))
 
-        row = Row('', values)
-        rows.append(row)
+        rows.append(('', values))
 
         return rows
 
@@ -327,8 +299,7 @@ class RegDescA82018Row(BaseRegDescRow):
 
             values.append(value)
 
-        row = Row('', values)
-        rows.append(row)
+        rows.append(('', values))
 
         return rows
 
@@ -351,8 +322,7 @@ class RegDescA82018Row(BaseRegDescRow):
 
             values.append(value)
 
-        row = Row('', values)
-        rows.append(row)
+        rows.append(('', values))
 
         return rows
 
@@ -375,8 +345,7 @@ class RegDescA82018Row(BaseRegDescRow):
 
             values.append(value)
 
-        row = Row('', values)
-        rows.append(row)
+        rows.append(('', values))
 
         return rows
 
@@ -399,8 +368,7 @@ class RegDescA82018Row(BaseRegDescRow):
 
             values.append(value)
 
-        row = Row('', values)
-        rows.append(row)
+        rows.append(('', values))
 
         return rows
 
@@ -423,8 +391,7 @@ class RegDescA82018Row(BaseRegDescRow):
 
             values.append(value)
 
-        row = Row('', values)
-        rows.append(row)
+        rows.append(('', values))
 
         return rows
 
@@ -447,8 +414,7 @@ class RegDescA82018Row(BaseRegDescRow):
 
             values.append(value)
 
-        row = Row('', values)
-        rows.append(row)
+        rows.append(('', values))
 
         return rows
 
@@ -471,8 +437,7 @@ class RegDescA82018Row(BaseRegDescRow):
 
             values.append(value)
 
-        row = Row('', values)
-        rows.append(row)
+        rows.append(('', values))
 
         return rows
 
@@ -495,8 +460,7 @@ class RegDescA82018Row(BaseRegDescRow):
 
             values.append(value)
 
-        row = Row('', values)
-        rows.append(row)
+        rows.append(('', values))
 
         return rows
 
@@ -519,8 +483,7 @@ class RegDescA82018Row(BaseRegDescRow):
 
             values.append(value)
 
-        row = Row('', values)
-        rows.append(row)
+        rows.append(('', values))
 
         return rows
 
@@ -550,8 +513,7 @@ class RegDescA82018Row(BaseRegDescRow):
 
             row_label = ItemLabel(pressure,
                                   get_label(pressure, self.field.label_collection))
-            row = Row(row_label, values)
-            rows.append(row)
+            rows.append((row_label, values))
 
         return rows
 

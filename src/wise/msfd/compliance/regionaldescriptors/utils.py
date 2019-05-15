@@ -1,11 +1,24 @@
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 from wise.msfd import db, sql, utils
 from wise.msfd.data import countries_in_region, muids_by_country
+from wise.msfd.utils import TemplateMixin
 
 from ..base import BaseComplianceView
 
 # TODO: AreaType for each record can be AA_AssessmentArea, SR_SubRegion and
 # so on. Which one we use?
+
+
+def compoundrow(func):
+    """ Decorator """
+    def inner(*args, **kwargs):
+        rows = func(*args, **kwargs)
+        self = args[0]
+
+        return RegionalCompoundRow(self.context, self.request,
+                                   self.field.title, rows)
+
+    return inner
 
 
 def get_percentage(values):
@@ -15,6 +28,18 @@ def get_percentage(values):
     trues = len([x for x in values if x])
 
     return (trues * 100.0) / len(values)
+
+
+class RegionalCompoundRow(TemplateMixin):
+    template = ViewPageTemplateFile('pt/regional-compound-row.pt')
+
+    def __init__(self, context, request, title, rows):
+        self.context = context
+        self.request = request
+        self.title = title
+        self.rows = rows
+        self.rowspan = len(rows)
+
 
 
 class RegDescA11(BaseComplianceView):

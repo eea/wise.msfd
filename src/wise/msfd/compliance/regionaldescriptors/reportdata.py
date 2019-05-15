@@ -10,8 +10,10 @@ from wise.msfd.utils import (CompoundRow, ItemList, items_to_rows, timeit,
 
 from .a8 import RegDescA82018Row
 from .a9 import RegDescA92018Row
+from .a10 import RegDescA102018Row
 from .base import BaseRegComplianceView
 from .data import get_report_definition
+from .utils import compoundrow, RegionalCompoundRow
 
 logger = logging.getLogger('wise.msfd')
 
@@ -28,29 +30,29 @@ class RegReportData2018(BaseRegComplianceView):
 
     Art8 = RegDescA82018Row
     Art9 = RegDescA92018Row
-    # Art10 = ViewPageTemplateFile('pt/report-data.pt')
+    Art10 = RegDescA102018Row
 
-    def get_countries_row(self):
-        country_names = [x[1] for x in self.available_countries]
+    @property
+    def all_descriptor_ids(self):
+        all_ids = list(self.descriptor_obj.all_ids())
 
-        # return TableHeader('Member state', country_names)
-        return CompoundRow("Member state", [Row("", country_names)])
+        if self.descriptor.startswith('D1.'):
+            all_ids.append('D1')
+
+        all_ids = set(all_ids)
+
+        return all_ids
 
     @property
     def get_data_from_view_Art9(self):
         t = sql2018.t_V_ART9_GES_2018
-        descriptor = self.descriptor_obj
-        all_ids = list(descriptor.all_ids())
-
-        if self.descriptor.startswith('D1.'):
-            all_ids.append('D1')
 
         count, q = db.get_all_records_ordered(
             t,
             ('GESComponent',),
             or_(t.c.Region == self.country_region_code,
                 t.c.Region.is_(None)),
-            t.c.GESComponent.in_(all_ids),
+            t.c.GESComponent.in_(self.all_descriptor_ids),
         )
 
         return q
@@ -60,16 +62,9 @@ class RegReportData2018(BaseRegComplianceView):
         sess = db.session()
         t = sql2018.t_V_ART8_GES_2018
 
-        descr_class = self.descriptor_obj
-        all_ids = list(descr_class.all_ids())
-
-        if self.descriptor.startswith('D1.'):
-            all_ids.append('D1')
-
-        # muids = [x.id for x in self.muids]
         conditions = [
             t.c.Region == self.country_region_code,
-            t.c.GESComponent.in_(all_ids),
+            t.c.GESComponent.in_(self.all_descriptor_ids),
             or_(t.c.Element.isnot(None),
                 t.c.Criteria.isnot(None)),
         ]
@@ -84,6 +79,33 @@ class RegReportData2018(BaseRegComplianceView):
 
         return res
 
+    @property
+    def get_data_from_view_Art10(self):
+        t = sql2018.t_V_ART10_Targets_2018
+
+        # TODO check conditions for other countries beside NL
+        # conditions = [t.c.GESComponents.in_(all_ids)]
+
+        count, res = db.get_all_records_ordered(
+            t,
+            ('Features', 'TargetCode', 'Element'),
+            t.c.Region == self.country_region_code,
+            # *conditions
+        )
+
+        out = []
+
+        # GESComponents contains multiple values separated by comma
+        # filter rows by splitting GESComponents
+        for row in res:
+            ges_comps = getattr(row, 'GESComponents', ())
+            ges_comps = set([g.strip() for g in ges_comps.split(',')])
+
+            if ges_comps.intersection(self.all_descriptor_ids):
+                out.append(row)
+
+        return out
+
     @db.use_db_session('2018')
     def get_report_data(self):
         db_data = getattr(self, 'get_data_from_view_' + self.article, None)
@@ -94,12 +116,12 @@ class RegReportData2018(BaseRegComplianceView):
 
         fields = get_report_definition('2018', self.article).get_fields()
 
-        result = [self.get_countries_row()]
         impl_class = getattr(self, self.article)
+        result = []
 
         for field in fields:
-            row_class = impl_class(db_data, descriptor_obj, region,
-                                   countries, field)
+            row_class = impl_class(self, self.request, db_data, descriptor_obj,
+                                   region, countries, field)
             field_data_method = getattr(row_class, field.getrowdata, None)
             if not field_data_method:
                 continue

@@ -5,6 +5,7 @@ from wise.msfd.utils import CompoundRow, Row
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 
 from .. import interfaces
+from .utils import compoundrow
 
 
 class BaseRegComplianceView(BaseComplianceView):
@@ -43,14 +44,36 @@ class BaseRegDescRow(object):
     not_rep = u""
     rep = u"Reported"
 
-    def __init__(self, db_data, descriptor_obj, region, countries, field):
+    def __init__(self, context, request, db_data, descriptor_obj,
+                 region, countries, field):
+        self.context = context
+        self.request = request
         self.db_data = db_data
         self.descriptor_obj = descriptor_obj
         self.region = region
         self.countries = countries
         self.field = field
 
+    def get_unique_values(self, field):
+        values = set([
+            getattr(row, field)
+            for row in self.db_data
+            if getattr(row, field)
+        ])
+
+        return sorted(values)
+
+    @compoundrow
+    def get_countries_row(self):
+        rows = []
+        country_names = [x[1] for x in self.context.available_countries]
+        rows.append(('', country_names))
+
+        return rows
+
+    @compoundrow
     def get_mru_row(self):
+        rows = []
         values = []
         for country_code, country_name in self.countries:
             value = set([
@@ -60,13 +83,14 @@ class BaseRegDescRow(object):
             ])
             values.append(len(value))
 
-        row = Row('Number used', values)
+        rows.append((u'Number used', values))
 
-        return CompoundRow(self.field.title, [row])
+        return rows
 
+    @compoundrow
     def get_feature_row(self):
         rows = []
-        features = ("Get feature!", )
+        features = (u"Get feature!", )
 
         for feature in features:
             values = []
@@ -82,7 +106,6 @@ class BaseRegDescRow(object):
 
                 values.append(value)
 
-            row = Row(feature, values)
-            rows.append(row)
+            rows.append((feature, values))
 
-        return CompoundRow(self.field.title, rows)
+        return rows

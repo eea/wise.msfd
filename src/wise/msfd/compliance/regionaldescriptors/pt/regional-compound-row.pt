@@ -1,0 +1,10 @@
+<tal:rep tal:repeat="row options/rows">
+  <tr>
+    <th tal:content="options/title">First header</th>
+    <th class="bla" tal:content="structure python: row[0]">Subrow header</th>
+    <td tal:repeat="val python: row[1]">
+      <div tal:content="structure val">Value</div>
+    </td>
+  </tr>
+</tal:rep>
+

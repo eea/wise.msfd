@@ -1,11 +1,243 @@
+from collections import defaultdict
 from sqlalchemy import or_
 
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 from wise.msfd import db, sql, sql_extra
-from wise.msfd.utils import CompoundRow, Row, TableHeader
+from wise.msfd.data import countries_in_region, muids_by_country
+from wise.msfd.utils import CompoundRow, ItemList, Row, TableHeader
 
 from ..base import BaseComplianceView
-from .utils import countries_in_region, muids_by_country
+from .base import BaseRegDescRow
+from .utils import compoundrow
+
+
+class RegDescA102018Row(BaseRegDescRow):
+    """"""
+    @compoundrow
+    def get_target_row(self):
+        rows = []
+        values = []
+        for country_code, country_name in self.countries:
+            data = set([
+                row.TargetCode
+                for row in self.db_data
+                if row.CountryCode == country_code
+                   and row.TargetCode
+            ])
+            value = self.not_rep
+            if data:
+                value = len(data)
+
+            values.append(value)
+
+        rows.append(('Number defined', values))
+
+        return rows
+
+    @compoundrow
+    def get_indicators_row(self):
+        rows = []
+        values = []
+        for country_code, country_name in self.countries:
+            data = set([
+                row.Indicators
+                for row in self.db_data
+                if row.CountryCode == country_code
+                   and row.Indicators
+            ])
+            value = self.not_rep
+            if data:
+                value = len(data)
+
+            values.append(value)
+
+        rows.append(('Number defined', values))
+
+        return rows
+
+    @compoundrow
+    def get_timescale_row(self):
+        rows = []
+        values = []
+        for country_code, country_name in self.countries:
+            data = set([
+                row.TimeScale
+                for row in self.db_data
+                if row.CountryCode == country_code
+                   and row.TimeScale
+            ])
+            value = self.not_rep
+            if data:
+                value = self.rep
+
+            values.append(value)
+
+        rows.append(('', values))
+
+        return rows
+
+    @compoundrow
+    def get_updatedate_row(self):
+        rows = []
+        values = []
+        for country_code, country_name in self.countries:
+            data = set([
+                row.UpdateDate
+                for row in self.db_data
+                if row.CountryCode == country_code
+                   and row.UpdateDate
+            ])
+            value = self.not_rep
+            if data:
+                value = max(data)
+
+            values.append(value)
+
+        rows.append(('', values))
+
+        return rows
+
+    @compoundrow
+    def get_updatetype_row(self):
+        rows = []
+        values = []
+        for country_code, country_name in self.countries:
+            data = set([
+                row.UpdateType
+                for row in self.db_data
+                if row.CountryCode == country_code
+                   and row.UpdateType
+            ])
+            value = self.not_rep
+            if data:
+                value = self.rep
+
+            values.append(value)
+
+        rows.append(('', values))
+
+        return rows
+
+    @compoundrow
+    def get_measures_row(self):
+        rows = []
+        values = []
+        for country_code, country_name in self.countries:
+            data = set([
+                row.Measures
+                for row in self.db_data
+                if row.CountryCode == country_code
+                   and row.Measures
+            ])
+            value = self.not_rep
+            if data:
+                value = len(data)
+
+            values.append(value)
+
+        rows.append(('Number reported', values))
+
+        return rows
+
+    # TODO needs to be finished
+    @compoundrow
+    def get_targetvalue_row(self):
+        rows = []
+        values = []
+
+        indics = self.get_unique_values('Indicators')
+
+        for country_code, country_name in self.countries:
+            count_target_values = len(set([
+                row.TargetCode
+                for row in self.db_data
+                if row.CountryCode == country_code
+                   and row.TargetCode
+                   and row.TargetValue
+            ]))
+            count_total_targets = len(set([
+                row.TargetCode
+                for row in self.db_data
+                if row.CountryCode == country_code
+                   and row.TargetCode
+            ]))
+            value_target = "Targets ({} of {})".format(count_target_values,
+                                                       count_total_targets)
+
+            count_indics_values = len(set([
+                row.Indicators
+                for row in self.db_data
+                if row.CountryCode == country_code
+                   and row.Indicators
+                   and row.TargetValue
+            ]))
+            count_total_indics = len(set([
+                row.Indicators
+                for row in self.db_data
+                if row.CountryCode == country_code
+                   and row.Indicators
+            ]))
+            value_indic = "Indicators ({} of {})".format(count_indics_values,
+                                                         count_total_indics)
+
+            values.append("; ".join((value_target, value_indic)))
+
+        rows.append(('Quantitative values provided', values))
+
+        return rows
+
+    @compoundrow
+    def get_targetstatus_row(self):
+        rows = []
+        values = []
+
+        for country_code, country_name in self.countries:
+            tar_status_counter = defaultdict(int)
+
+            data = set([
+                (row.TargetCode, row.TargetStatus)
+                for row in self.db_data
+                if row.CountryCode == country_code
+            ])
+            for item in data:
+                target_status = item[1]
+                if not target_status:
+                    tar_status_counter['Status not reported'] += 1
+                    continue
+
+                tar_status_counter[target_status] += 1
+
+            count_vals = [
+                "{} - {}".format(k, v)
+                for k, v in sorted(tar_status_counter.items(),
+                                   key=lambda i: i[1], reverse=True)
+            ]
+            values.append("; ".join(count_vals))
+
+        rows.append(('', values))
+
+        return rows
+
+    @compoundrow
+    def get_assessmentperiod_row(self):
+        rows = []
+        values = []
+        for country_code, country_name in self.countries:
+            data = set([
+                row.AssessmentPeriod
+                for row in self.db_data
+                if row.CountryCode == country_code
+                   and row.AssessmentPeriod
+            ])
+            value = self.not_rep
+            if data:
+                value = max(data)
+
+            values.append(value)
+
+        rows.append(('', values))
+
+        return rows
 
 
 class RegDescA10(BaseComplianceView):

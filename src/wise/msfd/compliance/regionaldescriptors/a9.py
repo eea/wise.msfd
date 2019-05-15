@@ -7,7 +7,7 @@ from wise.msfd.data import countries_in_region, muids_by_country
 from wise.msfd.gescomponents import get_descriptor
 from wise.msfd.utils import CompoundRow, ItemList, Row, TableHeader
 
-from .utils import get_percentage
+from .utils import get_percentage, compoundrow
 from .base import BaseRegDescRow
 
 
@@ -16,7 +16,8 @@ def get_key(func, self):
 
 
 class RegDescA92018Row(BaseRegDescRow):
-
+    """"""
+    @compoundrow
     def get_gescomp_row(self):
         rows = []
         descriptor = self.descriptor_obj
@@ -39,16 +40,17 @@ class RegDescA92018Row(BaseRegDescRow):
 
                 values.append(value)
 
-            row = Row(crit.title, values)
-            rows.append(row)
+            rows.append((crit.title, values))
 
-        return CompoundRow(self.field.title, rows)
+        return rows
 
+    @compoundrow
     def get_justif_nonuse_row(self):
+        rows = []
         values = []
         for country_code, country_name in self.countries:
             data = set([
-                ": ".join((row.GESComponent, row.JustificationNonUse))
+                u": ".join((row.GESComponent, row.JustificationNonUse))
                 for row in self.db_data
                 if row.CountryCode == country_code
                    and row.JustificationNonUse
@@ -59,15 +61,17 @@ class RegDescA92018Row(BaseRegDescRow):
 
             values.append(value)
 
-        row = Row('', values)
+        rows.append((u'', values))
 
-        return CompoundRow(self.field.title, [row])
+        return rows
 
+    @compoundrow
     def get_justif_delay_row(self):
+        rows = []
         values = []
         for country_code, country_name in self.countries:
             data = set([
-                ": ".join((row.GESComponent, row.JustificationDelay))
+                u": ".join((row.GESComponent, row.JustificationDelay))
                 for row in self.db_data
                 if row.CountryCode == country_code
                     and row.JustificationDelay
@@ -78,9 +82,9 @@ class RegDescA92018Row(BaseRegDescRow):
 
             values.append(value)
 
-        row = Row('', values)
+        rows.append((u'', values))
 
-        return CompoundRow(self.field.title, [row])
+        return rows
 
 
 class RegDescA9(BrowserView):
