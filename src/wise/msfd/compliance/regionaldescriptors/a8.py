@@ -88,7 +88,7 @@ class RegDescA82018Row(BaseRegDescRow):
 
                 values.append(value)
 
-            rows.append((crit.title, values))
+            rows.append((ItemLabel(crit.title, crit.name), values))
 
         return rows
 
@@ -495,7 +495,7 @@ class RegDescA82018Row(BaseRegDescRow):
         for pres in pressures:
             all_pressures.extend(pres.split(','))
 
-        for pressure in all_pressures:
+        for pressure in set(all_pressures):
             values = []
             for country_code, country_name in self.countries:
                 data = set([

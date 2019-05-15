@@ -18,9 +18,9 @@
   <div tal:condition="allrows" class="report-section">
 
     <!--<metal:s metal:use-macro="context/wise-macros/macros/simplify-table"></metal:s>-->
-    <div class="overflow-tableZ">
+    <div class="overflow-table regional-descriptors">
       <div class="inner">
-        <table class="table table-bordered table-striped table-comp-translate table-report">
+        <table class="table table-bordered table-striped table-comp-translate table-report table-regional-desc">
           <tal:rep tal:repeat="row allrows">
             <tal:row replace="structure row"></tal:row>
           </tal:rep>

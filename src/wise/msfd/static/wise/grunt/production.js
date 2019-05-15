@@ -23,6 +23,7 @@ module.exports = {
           '<%= path.src %>/less/assessment-edit.less',
           '<%= path.src %>/less/translate.less',
           '<%= path.src %>/less/switch.less',
+          '<%= path.src %>/less/regional-descriptors.less',
         ]
       }
     }

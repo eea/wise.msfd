@@ -17,8 +17,8 @@
         <element name="CriteriaParameters" getrowdata="get_crit_param_row" label="parameters">Criteria and parameters used</element>
         <element name="ThresholdValue" getrowdata="get_threshold_value_row">ThresholdValueUpper/Lower</element>
         <element name="ThresholdValueSource" getrowdata="get_threshold_source_row" label="threshold_sources">ThresholdValueSource</element>
-        <element name="ProportionThresholdValue" getrowdata="get_proportion_threshold_row">Proportion ThresholdValue</element>
-        <element name="ProportionThresholdValueUnit" getrowdata="get_proportion_threshold_unit_row">Proportion ThresholdValue Unit</element>
+        <element name="ProportionThresholdValue" getrowdata="get_proportion_threshold_row">ProportionThresholdValue</element>
+        <element name="ProportionThresholdValueUnit" getrowdata="get_proportion_threshold_unit_row">ProportionThresholdValueUnit</element>
         <element name="ParameterAchieved" getrowdata="get_param_achieved_row">ParameterAchieved</element>
         <element name="CriteriaStatus" getrowdata="get_crit_status_row">CriteriaStatus</element>
         <element name="ElementStatus" getrowdata="get_elem_status_row">ElementStatus</element>
