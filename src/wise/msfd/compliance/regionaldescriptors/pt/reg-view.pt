@@ -37,7 +37,7 @@
             <ul>
               <!-- tal:condition="python: view.check_permission('wise.msfd: Edit Assessment')" -->
               <li>
-                <a href=".">
+                <a href="./@@edit-assessment-data-2018">
                   <i class='fa fa-edit'></i> Assessment
                 </a>
               </li>
@@ -68,15 +68,13 @@
           <div class="asts-header-data">
             <h3>2018 Assessment</h3>
             <div class="ast-header-data">
-              <i>Data here</i>
-              <!--<div tal:replace="structure view/assessment_header_2018_html"></div>-->
-              <!--<div tal:replace="structure view/assessment_data_2018_html"></div>-->
+              <div tal:replace="structure view/assessment_header_2018_html"></div>
+              <div tal:replace="structure view/assessment_data_2018_html"></div>
             </div>
 
             <h3>2012 Assessment</h3>
             <div class="ast-header-data">
-              <i>Data here</i>
-              <!--<div tal:replace="structure view/assessment_header_2012"></div>-->
+              <div tal:replace="structure view/assessment_header_2012"></div>
               <!--<div tal:replace="structure view/assessment_data_2012"></div>-->
             </div>
           </div>

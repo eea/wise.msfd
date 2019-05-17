@@ -108,6 +108,7 @@ class RegReportData2018(BaseRegComplianceView):
 
     @db.use_db_session('2018')
     def get_report_data(self):
+        # TODO check if data is filtered by features for D1
         db_data = getattr(self, 'get_data_from_view_' + self.article, None)
 
         countries = self.available_countries

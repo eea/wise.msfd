@@ -15,6 +15,30 @@ class RegDescA82018Row(BaseRegDescRow):
     """"""
 
     @compoundrow
+    def get_feature_row(self):
+        rows = []
+        features = self.get_unique_values("Feature")
+
+        for feature in features:
+            values = []
+            for country_code, country_name in self.countries:
+                exists = [
+                    row
+                    for row in self.db_data
+                    if row.CountryCode == country_code
+                        and feature == row.Feature
+                ]
+                value = self.not_rep
+                if exists:
+                    value = self.rep
+
+                values.append(value)
+
+            rows.append((feature, values))
+
+        return rows
+
+    @compoundrow
     def get_element_row(self):
         rows = []
         elements = self.get_unique_values('Element')
@@ -54,7 +78,7 @@ class RegDescA82018Row(BaseRegDescRow):
                 ]
                 value = self.not_rep
                 if data:
-                    value = "{} elements".format(len(set(data)))
+                    value = u"{} elements".format(len(set(data)))
 
                 values.append(value)
 
@@ -113,7 +137,7 @@ class RegDescA82018Row(BaseRegDescRow):
 
             value = self.not_rep
             if provided:
-                value = "Provided for {} (of {}) parameters" \
+                value = u"Provided for {} (of {}) parameters" \
                     .format(provided, len(parameters))
             values.append(value)
 
@@ -137,7 +161,7 @@ class RegDescA82018Row(BaseRegDescRow):
                 ])
                 value = self.not_rep
                 if data:
-                    value = "{} parameters".format(len(set(data)))
+                    value = u"{} parameters".format(len(set(data)))
 
                 values.append(value)
 
@@ -165,7 +189,7 @@ class RegDescA82018Row(BaseRegDescRow):
                 country_params = set([x[0] for x in data])
                 proportion_vals = set([x[1] for x in data])
 
-                value = "Range: {}-{}% ({} of {} parameters)".format(
+                value = u"Range: {}-{}% ({} of {} parameters)".format(
                     int(min(proportion_vals)), int(max(proportion_vals)),
                     len(country_params), len(params)
                 )
@@ -217,7 +241,7 @@ class RegDescA82018Row(BaseRegDescRow):
                 ])
 
                 if data:
-                    text = "{} - {}".format(param, len(data))
+                    text = u"{} - {}".format(param, len(data))
                     value.append(text)
 
             values.append(ItemList(value))
@@ -244,7 +268,7 @@ class RegDescA82018Row(BaseRegDescRow):
                 ])
 
                 if data:
-                    text = "{} - {}".format(crit_stat, len(data))
+                    text = u"{} - {}".format(crit_stat, len(data))
                     value.append(text)
 
             values.append(ItemList(value))
@@ -271,7 +295,7 @@ class RegDescA82018Row(BaseRegDescRow):
                 ])
 
                 if data:
-                    text = "{} - {}".format(elem, len(data))
+                    text = u"{} - {}".format(elem, len(data))
                     value.append(text)
 
             values.append(ItemList(value))
@@ -318,7 +342,7 @@ class RegDescA82018Row(BaseRegDescRow):
 
             value = self.not_rep
             if data:
-                value = ItemList(["{}: {}".format(x[0], x[1]) for x in data])
+                value = ItemList([u"{}: {}".format(x[0], x[1]) for x in data])
 
             values.append(value)
 

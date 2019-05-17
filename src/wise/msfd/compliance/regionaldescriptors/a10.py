@@ -161,7 +161,7 @@ class RegDescA102018Row(BaseRegDescRow):
                 if row.CountryCode == country_code
                    and row.TargetCode
             ]))
-            value_target = "Targets ({} of {})".format(count_target_values,
+            value_target = u"Targets ({} of {})".format(count_target_values,
                                                        count_total_targets)
 
             count_indics_values = len(set([
@@ -177,7 +177,7 @@ class RegDescA102018Row(BaseRegDescRow):
                 if row.CountryCode == country_code
                    and row.Indicators
             ]))
-            value_indic = "Indicators ({} of {})".format(count_indics_values,
+            value_indic = u"Indicators ({} of {})".format(count_indics_values,
                                                          count_total_indics)
 
             values.append("; ".join((value_target, value_indic)))
@@ -208,7 +208,7 @@ class RegDescA102018Row(BaseRegDescRow):
                 tar_status_counter[target_status] += 1
 
             count_vals = [
-                "{} - {}".format(k, v)
+                u"{} - {}".format(k, v)
                 for k, v in sorted(tar_status_counter.items(),
                                    key=lambda i: i[1], reverse=True)
             ]

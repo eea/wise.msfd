@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<questions article='Art8'>
+
+  <assessment-question id="A08Ad1" class="adequacy" use-criteria='all'>
+    <definition>
+      Adequacy of status assessment: proportion of parameters/ criteria/elements with clear outcomes
+    </definition>
+    <answers>
+      <option score="1">Good practice</option>
+      <option score="0.75">Adequate</option>
+      <option score="0.5">Partially adequate</option>
+      <option score="0">Inadequate</option>
+      <option score="/">Not relevant</option>
+    </answers>
+    <scoring determination-method="wise.msfd.compliance.scoring.scoring_based">
+    </scoring>
+    <score-weight descriptor="D1.1" value="12" />
+    <score-weight descriptor="D1.2" value="12" />
+    <score-weight descriptor="D1.3" value="12" />
+    <score-weight descriptor="D1.4" value="12" />
+    <score-weight descriptor="D1.5" value="12" />
+    <score-weight descriptor="D1.6" value="12" />
+    <score-weight descriptor="D2" value="12" />
+    <score-weight descriptor="D3" value="12" />
+    <score-weight descriptor="D4" value="12" />
+    <score-weight descriptor="D5" value="12" />
+    <score-weight descriptor="D6" value="12" />
+    <score-weight descriptor="D7" value="12" />
+    <score-weight descriptor="D8" value="12" />
+    <score-weight descriptor="D9" value="12" />
+    <score-weight descriptor="D10" value="12" />
+    <score-weight descriptor="D11" value="12" />
+  </assessment-question>
+
+</questions>

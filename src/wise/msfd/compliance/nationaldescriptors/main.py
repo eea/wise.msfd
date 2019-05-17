@@ -18,7 +18,6 @@ from wise.msfd.compliance.vocabulary import SUBREGIONS_TO_REGIONS
 from wise.msfd.gescomponents import get_descriptor
 from wise.msfd.utils import t2rt
 
-from .assessment import get_assessors
 from .base import BaseView
 
 logger = getLogger('wise.msfd')
@@ -433,19 +432,6 @@ class NationalDescriptorArticleView(BaseView):
 
     year = '2018'       # used by self.muids
     _questions = get_questions('compliance/nationaldescriptors/data')
-
-    @property
-    def assessor_list(self):
-        assessors = get_assessors()
-
-        if not assessors:
-            return []
-
-        assessors_list = [x.strip() for x in assessors.split(',')]
-
-        return assessors_list
-
-        # return ['Milieu', 'Commission', 'President', 'Topic lead']
 
     @property
     def title(self):

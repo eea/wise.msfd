@@ -5,7 +5,7 @@ from zope.interface import Attribute, Interface, implements
 
 from Products.Five.browser.pagetemplatefile import PageTemplateFile
 from wise.msfd.gescomponents import GES_LABELS
-from wise.msfd.utils import ItemLabel, TemplateMixin
+from wise.msfd.utils import get_annot, ItemLabel, TemplateMixin
 
 
 class IReportField(Interface):
@@ -211,3 +211,18 @@ def group_by_mru(data):
         res[_mru].extend(rows_extra)
 
     return res
+
+
+ASSESSORS_ANNOT_KEY = 'wise.msfd.assessors'
+
+
+def get_assessors():
+    annot = get_annot()
+    value = annot.get(ASSESSORS_ANNOT_KEY, '')
+
+    return value
+
+
+def set_assessors(value):
+    annot = get_annot()
+    annot[ASSESSORS_ANNOT_KEY] = value

@@ -1,20 +1,24 @@
+from collections import namedtuple
+
 from wise.msfd.compliance.base import BaseComplianceView
 from wise.msfd.compliance.vocabulary import REGIONS
-from wise.msfd.utils import CompoundRow, Row
 
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 
 from .. import interfaces
 from .utils import compoundrow
 
+COUNTRY = namedtuple("Country", ["id", "title", "definition", "is_primary"])
+
 
 class BaseRegComplianceView(BaseComplianceView):
+    # TODO is this used? delete if not
     report_header_template = ViewPageTemplateFile(
         'pt/report-data-header.pt'
     )
 
     assessment_header_template = ViewPageTemplateFile(
-        'pt/assessment-header.pt'
+        '../pt/assessment-header.pt'
     )
 
     section = 'regional-descriptors'
@@ -38,6 +42,14 @@ class BaseRegComplianceView(BaseComplianceView):
     @property
     def available_countries(self):
         return self._countryregion_folder._countries_for_region
+
+    def get_available_countries(self):
+        res = [
+            COUNTRY(x[0], x[1], "", lambda _: True)
+            for x in self.available_countries
+        ]
+
+        return res
 
 
 class BaseRegDescRow(object):
@@ -90,15 +102,20 @@ class BaseRegDescRow(object):
     @compoundrow
     def get_feature_row(self):
         rows = []
-        features = (u"Get feature!", )
+        features = self.get_unique_values("Features")
+        all_features = []
+        for feat in features:
+            all_features.extend(feat.split(','))
 
-        for feature in features:
+        for feature in set(all_features):
             values = []
             for country_code, country_name in self.countries:
                 exists = [
                     row
                     for row in self.db_data
                     if row.CountryCode == country_code
+                        and row.Features
+                        and feature in row.Features.split(',')
                 ]
                 value = self.not_rep
                 if exists:

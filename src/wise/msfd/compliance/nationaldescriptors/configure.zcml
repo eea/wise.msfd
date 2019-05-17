@@ -33,7 +33,7 @@
   <browser:page
     for="..interfaces.INationalDescriptorAssessment"
     name="edit-assessment-summary"
-    class=".assessment.EditAssessmentSummaryForm"
+    class="..assessment.EditAssessmentSummaryForm"
     permission="zope2.View"
     />
 
@@ -79,8 +79,8 @@
   <browser:page
     for="..interfaces.INationalDescriptorsFolder"
     name="edit-assessors"
-    class=".assessment.EditAssessorsForm"
-    template="./pt/edit-assessors.pt"
+    class="..assessment.EditAssessorsForm"
+    template="../pt/edit-assessors.pt"
     permission="zope2.View"
     />
 

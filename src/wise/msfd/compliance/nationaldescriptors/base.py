@@ -14,7 +14,7 @@ class BaseView(BaseComplianceView):
     )
 
     assessment_header_template = ViewPageTemplateFile(
-        'pt/assessment-header.pt'
+        '../pt/assessment-header.pt'
     )
 
     @property

@@ -1,5 +1,11 @@
 from collections import namedtuple
 
+from persistent.list import PersistentList
+from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile as VPTF
+
+from wise.msfd.compliance.base import get_questions
+from wise.msfd.compliance.content import AssessmentData
+from wise.msfd.compliance.nationaldescriptors.main import format_assessment_data
 from wise.msfd.gescomponents import get_descriptor
 
 from .base import BaseRegComplianceView
@@ -56,6 +62,18 @@ class RegionalDescriptorRegionsOverview(BaseRegComplianceView):
 class RegionalDescriptorArticleView(BaseRegComplianceView):
     section = 'regional-descriptors'
 
+    # assessment_data_2012_tpl = VPTF('pt/assessment-data-2012.pt')
+    assessment_data_2018_tpl = VPTF(
+        '../nationaldescriptors/pt/assessment-data-2018.pt'
+    )
+    _questions = get_questions("compliance/regionaldescriptors/data")
+
+    @property
+    def questions(self):
+        qs = self._questions[self.article]
+
+        return qs
+
     @property
     def title(self):
         return u"Regional descriptor: {} / {} / {} / 2018".format(
@@ -69,5 +87,46 @@ class RegionalDescriptorArticleView(BaseRegComplianceView):
     #     return self.descriptor_obj.sorted_criterions()      # criterions
 
     def __call__(self):
+        # BBB:
+
+        context = self.context
+
+        if not hasattr(context, 'saved_assessment_data') or \
+                not isinstance(context.saved_assessment_data, PersistentList):
+            context.saved_assessment_data = AssessmentData()
+
+        self.assessment_header_2018_html = self.assessment_header_template(
+            report_by="Report by 2018",
+            assessor_list=self.assessor_list,
+            assessors="Assessors 2018",
+            assess_date="Date 2018",
+            source_file=["File 2018", ""],
+            show_edit_assessors=True,
+        )
+        data = self.context.saved_assessment_data.last()
+        muids = None
+        assessment = format_assessment_data(
+            self.article,
+            self.get_available_countries(),
+            self.questions,
+            muids,
+            data,
+            self.descriptor_obj
+        )
+        self.assessment_data_2018_html = self.assessment_data_2018_tpl(
+            assessment=assessment,
+            score_2012="-99",
+            conclusion_2012="Get conclusion 2012"
+        )
+
+        self.assessment_header_2012 = self.assessment_header_template(
+            report_by="Report by 2012",
+            assessor_list=self.assessor_list,
+            assessors="Assessors 2012",
+            assess_date="Date 2012",
+            source_file=["File 2012", ""],
+            show_edit_assessors=False,
+        )
+        self.assessment_data_2012 = None
 
         return self.index()

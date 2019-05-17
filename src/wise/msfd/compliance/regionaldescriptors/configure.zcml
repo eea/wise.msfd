@@ -39,6 +39,29 @@
 
   <browser:page
     for="..interfaces.IRegionalDescriptorAssessment"
+    name="edit-assessment-data-2018"
+    class=".assessment.RegDescEditAssessmentDataView"
+    permission="zope2.View"
+    />
+
+  <browser:page
+    for="..interfaces.IRegionalDescriptorAssessment"
+    name="edit-assessment-summary"
+    class=".assessment.RegDescEditAssessmentSummaryForm"
+    permission="zope2.View"
+    />
+
+  <browser:page
+    for="..interfaces.IRegionalDescriptorsFolder"
+    name="edit-assessors"
+    class="..assessment.EditAssessorsForm"
+    template="../pt/edit-assessors.pt"
+    permission="zope2.View"
+    />
+
+  <!-- Views 2012 data -->
+  <browser:page
+    for="..interfaces.IRegionalDescriptorAssessment"
     name="reg-desc-a9"
     class=".a9.RegDescA9"
     permission="zope2.View"

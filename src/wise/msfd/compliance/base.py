@@ -16,6 +16,7 @@ from Products.Five.browser import BrowserView
 from wise.msfd import db, sql, sql2018
 from wise.msfd.base import BasePublicPage
 from wise.msfd.compliance.scoring import Score  # , compute_score
+from wise.msfd.compliance.utils import get_assessors
 from wise.msfd.compliance.vocabulary import ASSESSED_ARTICLES, REGIONS
 from wise.msfd.gescomponents import (get_descriptor, get_marine_units,
                                      sorted_criterions)
@@ -25,6 +26,7 @@ from wise.msfd.utils import (Tab, _parse_files_in_location, natural_sort_key,
 
 from . import interfaces
 from .interfaces import ICountryDescriptorsFolder
+
 
 logger = logging.getLogger('wise.msfd')
 edw_logger = logging.getLogger('edw.logger')
@@ -115,6 +117,17 @@ class BaseComplianceView(BrowserView, BasePublicPage):
     tabs_type = 'tab'
     main_forms = MAIN_FORMS
     _translatables = None
+
+    @property
+    def assessor_list(self):
+        assessors = get_assessors()
+
+        if not assessors:
+            return []
+
+        assessors_list = [x.strip() for x in assessors.split(',')]
+
+        return assessors_list
 
     @property
     def json_map_url(self):

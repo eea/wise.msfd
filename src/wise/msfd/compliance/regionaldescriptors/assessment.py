@@ -1,5 +1,6 @@
 import datetime
 import logging
+from collections import namedtuple
 
 from zope.schema import Choice, Text
 from zope.schema.vocabulary import SimpleTerm, SimpleVocabulary
@@ -13,50 +14,53 @@ from plone.z3cform.layout import wrap_form
 from Products.Five.browser.pagetemplatefile import (PageTemplateFile,
                                                     ViewPageTemplateFile)
 from wise.msfd.base import EmbeddedForm, MainFormWrapper
-from wise.msfd.compliance.assessment import (additional_fields, summary_fields,
-                                             render_assessment_help, PHASES)
+from wise.msfd.compliance.assessment import (additional_fields,
+                                             EditAssessmentSummaryForm,
+                                             PHASES, summary_fields)
 from wise.msfd.compliance.base import get_questions
 from wise.msfd.compliance.content import AssessmentData
 from wise.msfd.gescomponents import get_descriptor  # get_descriptor_elements
+# from wise.msfd.gescomponents import DESCRIPTOR_ELEMENTS
 
 from z3c.form.button import buttonAndHandler
 from z3c.form.field import Fields
 from z3c.form.form import Form
 
-from .base import BaseView
+from .base import BaseRegComplianceView
 
 logger = logging.getLogger('wise.msfd')
 
 
-class EditAssessmentDataForm(Form, BaseView):
-    """ Edit the assessment for a national descriptor, for a specific article
+# TODO find a better way
+class RegDescEditAssessmentSummaryForm(BaseRegComplianceView,
+                                       EditAssessmentSummaryForm):
+    """ Needed to override EditAssessmentSummaryForm's methods """
+
+
+class RegDescEditAssessmentDataForm(Form, BaseRegComplianceView):
+    """ Edit the assessment for a regional descriptor, for a specific article
     """
-    name = 'art-view'
-    section = 'national-descriptors'
 
     subforms = None
     year = session_name = '2018'
-    template = ViewPageTemplateFile("./pt/edit-assessment-data.pt")
-    _questions = get_questions()
-
-    @property
-    def criterias(self):
-        return self.descriptor_obj.sorted_criterions()      # criterions
+    template = ViewPageTemplateFile("pt/edit-assessment-data.pt")
+    _questions = get_questions("compliance/regionaldescriptors/data")
 
     @property
     def help(self):
+        return "Help text"
         return render_assessment_help(self.criterias, self.descriptor)
 
     @property
     def title(self):
-        return "Edit {}'s Assessment for {}/{}/{}".format(
-            self.country_title,
-            self.descriptor,
+        return "Edit {}'s Assessment for {}/{}".format(
             self.country_region_code,
+            self.descriptor,
             self.article,
         )
 
     def _can_comment(self, folder_id):
+        return True
         folder = self.context[folder_id]
 
         return checkPermission('zope2.View', folder)
@@ -82,19 +86,14 @@ class EditAssessmentDataForm(Form, BaseView):
         # TODO: check for errors
 
         for question in self.questions:
-            elements = question.get_assessed_elements(self.descriptor_obj,
-                                                      muids=self.muids)
+            countries = self.get_available_countries()
 
             values = []
             score = None
 
-            if question.use_criteria == 'none':
-                field_name = '{}_{}'.format(self.article, question.id)
-                values.append(data.get(field_name, None))
-
-            for element in elements:
+            for country in countries:
                 field_name = '{}_{}_{}'.format(
-                    self.article, question.id, element.id
+                    self.article, question.id, country.id
                 )
                 values.append(data.get(field_name, None))
 
@@ -107,14 +106,6 @@ class EditAssessmentDataForm(Form, BaseView):
             logger.info("Set score: %s - %s", name, score)
             data[name] = score
 
-            # name = '{}_{}_RawScore'.format(self.article, question.id)
-            # data[name] = raw_score
-
-            # name = '{}_{}_Conclusion'.format(self.article, question.id)
-            # logger.info("Set conclusion: %s - %s", name, conclusion)
-            # data[name] = conclusion
-
-        # TODO: update the overall score
         overall_score = 0
 
         for k, v in data.items():
@@ -145,6 +136,7 @@ class EditAssessmentDataForm(Form, BaseView):
             self.context.saved_assessment_data.append(last)
 
     def is_disabled(self, question):
+        return False
         state, _ = self.current_phase
         disabled = question.klass not in PHASES.get(state, ())
 
@@ -197,61 +189,28 @@ class EditAssessmentDataForm(Form, BaseView):
                 if question.klass in v
             ][0]
 
-            elements = question.get_assessed_elements(
-                self.descriptor_obj, muids=self.muids
-            )
+            countries = self.get_available_countries()
 
             form = EmbeddedForm(self, self.request)
             form.title = question.definition
             form._question_type = question.klass
             form._question_phase = phase
             form._question = question
-            form._elements = elements
+            form._elements = countries
             form._disabled = self.is_disabled(
                 question) or is_other_tl or is_ec_user
 
             fields = []
 
-            if not elements:  # and question.use_criteria == 'none'
-                field_title = u'All criteria'
-                field_name = '{}_{}'.format(self.article, question.id)
-                choices = question.answers
-
-                terms = [SimpleTerm(token=i, value=i, title=c)
-                         for i, c in enumerate(choices)]
-
-                # Add 'Not relevant' to choices list
-                # terms.extend([
-                #     SimpleTerm(token=len(terms) + 1,
-                #                value=None,
-                #                title=u'Not relevant')
-                # ])
-
-                default = assessment_data.get(field_name, None)
-                field = Choice(
-                    title=field_title,
-                    __name__=field_name,
-                    vocabulary=SimpleVocabulary(terms),
-                    required=False,
-                    default=default,
-                )
-                # field._criteria = criteria
-                fields.append(field)
-
-            for element in elements:
-                field_title = element.title
+            for country in countries:
+                field_title = country.title
                 field_name = '{}_{}_{}'.format(
-                    self.article, question.id, element.id       # , element
+                    self.article, question.id, country.id       # , element
                 )
                 choices = question.answers
                 terms = [SimpleTerm(token=i, value=i, title=c)
                          for i, c in enumerate(choices)]
-                # Add 'Not relevant' to choices list
-                # terms.extend([
-                #     SimpleTerm(token=len(terms) + 1,
-                #                value=None,
-                #                title=u'Not relevant')
-                # ])
+
                 default = assessment_data.get(field_name, None)
                 field = Choice(
                     title=unicode(field_title),
@@ -260,7 +219,7 @@ class EditAssessmentDataForm(Form, BaseView):
                     required=False,
                     default=default,
                 )
-                field._element = element
+                field._element = country
                 fields.append(field)
 
             for name, title in additional_fields.items():
@@ -298,4 +257,4 @@ class EditAssessmentDataForm(Form, BaseView):
         return forms
 
 
-EditAssessmentDataView = wrap_form(EditAssessmentDataForm, MainFormWrapper)
+RegDescEditAssessmentDataView = wrap_form(RegDescEditAssessmentDataForm, MainFormWrapper)

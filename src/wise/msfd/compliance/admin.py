@@ -223,9 +223,11 @@ class BootstrapCompliance(BrowserView):
                 if art.lower() in df.contentIds():
                     rda = df[art.lower()]
                 else:
+                    # TODO create content for regional descriptor assessment
+                    # wise.msfd.regionaldescriptorassessment
+                    # instead of "Folder"
                     rda = create(df,
                                  'Folder',
-                                 # 'wise.msfd.nationaldescriptorassessment',
                                  title=art)
 
                     logger.info("Created RegionalDescriptorArticle %s",
