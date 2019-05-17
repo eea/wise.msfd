@@ -4,7 +4,9 @@ from persistent.list import PersistentList
 from plone.dexterity.content import Container
 
 from .interfaces import (ICountryDescriptorsFolder,
-                         INationalDescriptorAssessment)
+                         INationalDescriptorAssessment,
+                         IRegionalDescriptorAssessment,
+                         IRegionalDescriptorRegionsFolder)
 
 
 class CountryDescriptorsFolder(Container):
@@ -13,10 +15,12 @@ class CountryDescriptorsFolder(Container):
     implements(ICountryDescriptorsFolder)
 
 
-# class NationalRegionFolder(Container):
-#     """
-#     """
-#     implements(INationalRegionFolder)
+class RegionDescriptorsFolder(Container):
+    """ Assessment implementation for national descriptor assessments
+    """
+    implements(IRegionalDescriptorRegionsFolder)
+
+
 
 
 class NationalDescriptorAssessment(Container):
@@ -24,6 +28,30 @@ class NationalDescriptorAssessment(Container):
     """
 
     implements(INationalDescriptorAssessment)
+    _data = None
+
+    def _get_assessment_data(self):
+        return self._data or {}
+
+    def _set_assessment_data(self, value):
+        self._data = value
+        self._p_changed = True
+
+    assessment_data = property(_get_assessment_data, _set_assessment_data)
+
+    @property
+    def assessment_summary(self):
+        art = self.getId().capitalize()
+        data = self.assessment_data
+
+        return data.get('{}_assessment_summary'.format(art), '')
+
+
+class RegionalDescriptorAssessment(Container):
+    """ Assessment implementation for regional descriptor assessments
+    """
+
+    implements(IRegionalDescriptorAssessment)
     _data = None
 
     def _get_assessment_data(self):

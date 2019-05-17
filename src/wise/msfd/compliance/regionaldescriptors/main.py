@@ -87,38 +87,21 @@ class RegionalDescriptorArticleView(BaseRegComplianceView):
     #     return self.descriptor_obj.sorted_criterions()      # criterions
 
     def __call__(self):
-        # BBB:
+        if 'assessor' in self.request.form:
+            assessors = self.request.form['assessor']
 
+            if isinstance(assessors, list):
+                assessors = ', '.join(assessors)
+            self.context.saved_assessment_data.ass_new = assessors
+
+        # BBB:
         context = self.context
 
         if not hasattr(context, 'saved_assessment_data') or \
                 not isinstance(context.saved_assessment_data, PersistentList):
             context.saved_assessment_data = AssessmentData()
 
-        self.assessment_header_2018_html = self.assessment_header_template(
-            report_by="Report by 2018",
-            assessor_list=self.assessor_list,
-            assessors="Assessors 2018",
-            assess_date="Date 2018",
-            source_file=["File 2018", ""],
-            show_edit_assessors=True,
-        )
-        data = self.context.saved_assessment_data.last()
-        muids = None
-        assessment = format_assessment_data(
-            self.article,
-            self.get_available_countries(),
-            self.questions,
-            muids,
-            data,
-            self.descriptor_obj
-        )
-        self.assessment_data_2018_html = self.assessment_data_2018_tpl(
-            assessment=assessment,
-            score_2012="-99",
-            conclusion_2012="Get conclusion 2012"
-        )
-
+        # Assessment 2012
         self.assessment_header_2012 = self.assessment_header_template(
             report_by="Report by 2012",
             assessor_list=self.assessor_list,
@@ -129,4 +112,41 @@ class RegionalDescriptorArticleView(BaseRegComplianceView):
         )
         self.assessment_data_2012 = None
 
+        score_2012 = 0
+        conclusion_2012 = "Get conclusion 2012"
+
+        # Assessment 2018
+        assessors_2018 = getattr(
+            self.context.saved_assessment_data, 'ass_new', 'Not assessed'
+        )
+        data = self.context.saved_assessment_data.last()
+        assess_date_2018 = data.get('assess_date', u'Not assessed')
+        source_file_2018 = ('To be addedd...', '.')
+        muids = None
+        assessment = format_assessment_data(
+            self.article,
+            self.get_available_countries(),
+            self.questions,
+            muids,
+            data,
+            self.descriptor_obj
+        )
+        can_edit = self.check_permission('wise.msfd: Edit Assessment')
+        show_edit_assessors = self.assessor_list and can_edit
+
+        self.assessment_header_2018_html = self.assessment_header_template(
+            report_by="Report by 2018",
+            assessor_list=self.assessor_list,
+            assessors=assessors_2018,
+            assess_date=assess_date_2018,
+            source_file=source_file_2018,
+            show_edit_assessors=show_edit_assessors,
+        )
+        self.assessment_data_2018_html = self.assessment_data_2018_tpl(
+            assessment=assessment,
+            score_2012=score_2012,
+            conclusion_2012=conclusion_2012
+        )
+
         return self.index()
+

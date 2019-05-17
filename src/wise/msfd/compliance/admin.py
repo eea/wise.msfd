@@ -138,6 +138,18 @@ class BootstrapCompliance(BrowserView):
 
         return "{}-{}".format(CONTRIBUTOR_GROUP_ID, code)
 
+    def create_comments_folder(self, content):
+        for id, title, trans in [
+            (u'tl', 'Discussion track with Topic Leads', 'open_for_tl'),
+            (u'ec', 'Discussion track with EC', 'open_for_ec'),
+        ]:
+            if id not in content.contentIds():
+                dt = create(content,
+                            'wise.msfd.commentsfolder',
+                            id=id,
+                            title=title)
+                transition(obj=dt, transition=trans)
+
     def make_country(self, parent, country_code, name):
 
         if country_code.lower() in parent.contentIds():
@@ -184,17 +196,7 @@ class BootstrapCompliance(BrowserView):
 
                         self.set_layout(nda, '@@nat-desc-art-view')
 
-                    for id, title, trans in [
-                            (u'tl', 'Discussion track with Topic Leads',
-                             'open_for_tl'),
-                            (u'ec', 'Discussion track with EC', 'open_for_ec'),
-                    ]:
-                        if id not in nda.contentIds():
-                            dt = create(nda,
-                                        'wise.msfd.commentsfolder',
-                                        id=id,
-                                        title=title)
-                            transition(obj=dt, transition=trans)
+                    self.create_comments_folder(nda)
 
         return cf
 
@@ -203,8 +205,7 @@ class BootstrapCompliance(BrowserView):
             rf = parent[code.lower()]
         else:
             rf = create(parent,
-                        'Folder',
-                        # 'wise.msfd.countrydescriptorsfolder',
+                        'wise.msfd.regiondescriptorsfolder',
                         title=name,
                         id=code)
 
@@ -223,11 +224,8 @@ class BootstrapCompliance(BrowserView):
                 if art.lower() in df.contentIds():
                     rda = df[art.lower()]
                 else:
-                    # TODO create content for regional descriptor assessment
-                    # wise.msfd.regionaldescriptorassessment
-                    # instead of "Folder"
                     rda = create(df,
-                                 'Folder',
+                                 'wise.msfd.regionaldescriptorassessment',
                                  title=art)
 
                     logger.info("Created RegionalDescriptorArticle %s",
@@ -235,6 +233,8 @@ class BootstrapCompliance(BrowserView):
 
                     self.set_layout(rda, '@@reg-desc-art-view')
                     alsoProvides(rda, interfaces.IRegionalDescriptorAssessment)
+
+                self.create_comments_folder(rda)
 
         return rf
 

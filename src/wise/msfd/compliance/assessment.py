@@ -115,7 +115,6 @@ class EditAssessmentSummaryForm(Form, BaseComplianceView):
         context = self.context
 
         # BBB code, useful in development
-
         if not hasattr(context, 'saved_assessment_data') or \
                 not isinstance(context.saved_assessment_data, PersistentList):
             context.saved_assessment_data = AssessmentData()
