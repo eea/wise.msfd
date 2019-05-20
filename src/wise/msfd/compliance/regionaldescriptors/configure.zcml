@@ -39,6 +39,14 @@
 
   <browser:page
     for="..interfaces.IRegionalDescriptorAssessment"
+    name="view-report-data-2012"
+    class=".reportdata.RegReportData2012"
+    template="./pt/report-data-view.pt"
+    permission="zope2.View"
+    />
+
+  <browser:page
+    for="..interfaces.IRegionalDescriptorAssessment"
     name="edit-assessment-data-2018"
     class=".assessment.RegDescEditAssessmentDataView"
     permission="zope2.View"
@@ -59,11 +67,11 @@
     permission="zope2.View"
     />
 
-  <!-- Views 2012 data -->
+
   <browser:page
-    for="..interfaces.IRegionalDescriptorAssessment"
+    for="*"
     name="reg-desc-a9"
-    class=".a9.RegDescA9"
+    class=".a9.RegDescA92012"
     permission="zope2.View"
     />
 
@@ -77,14 +85,14 @@
   <browser:page
     for="*"
     name="reg-desc-a10"
-    class=".a10.RegDescA10"
+    class=".a10.RegDescA102012"
     permission="zope2.View"
     />
 
   <browser:page
     for="*"
     name="reg-desc-a8"
-    class=".a8.RegDescA8"
+    class=".a8.RegDescA82012"
     permission="zope2.View"
     />
 

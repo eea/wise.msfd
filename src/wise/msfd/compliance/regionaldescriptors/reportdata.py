@@ -8,14 +8,67 @@ from wise.msfd.compliance.interfaces import IReportDataView
 from wise.msfd.utils import (CompoundRow, ItemList, items_to_rows, timeit,
                              natural_sort_key, Row)
 
-from .a8 import RegDescA82018Row
-from .a9 import RegDescA92018Row
-from .a10 import RegDescA102018Row
+from .a8 import RegDescA82018Row, RegDescA82012
+from .a9 import RegDescA92018Row, RegDescA92012
+from .a10 import RegDescA102018Row, RegDescA102012
 from .base import BaseRegComplianceView
 from .data import get_report_definition
 from .utils import compoundrow, RegionalCompoundRow
 
 logger = logging.getLogger('wise.msfd')
+
+
+class RegReportData2012(BaseRegComplianceView):
+    help_text = "HELP TEXT"
+    template = ViewPageTemplateFile('pt/report-data.pt')
+
+    Art8 = RegDescA82012
+    Art9 = RegDescA92012
+    Art10 = RegDescA102012
+
+    @db.use_db_session('2012')
+    def get_report_data(self):
+        impl_class = getattr(self, self.article)
+        result = impl_class(self, self.request)
+
+        # import pdb; pdb.set_trace()
+
+        return result.allrows
+
+    # @cache(get_reportdata_key, dependencies=['translation'])
+    def render_reportdata(self):
+        logger.info("Quering database for 2012 report data: %s %s %s",
+                    self.country_region_code, self.article,
+                    self.descriptor)
+
+        data = self.get_report_data()
+
+        report_header = self.report_header_template(
+            title="Member State report: {} / {} / {} / 2012".format(
+                self.country_region_name,
+                self.descriptor_title,
+                self.article
+            ),
+            factsheet=None,
+            # TODO: find out how to get info about who reported
+            report_by='Report by',
+            report_due='2018-10-15',
+            help_text=self.help_text
+        )
+
+        template = self.template
+
+        return template(data=data, report_header=report_header)
+
+    def __call__(self):
+        report_html = self.render_reportdata()
+        self.report_html = report_html
+
+        @timeit
+        def render_html():
+            return self.index()
+
+        return render_html()
 
 
 class RegReportData2018(BaseRegComplianceView):

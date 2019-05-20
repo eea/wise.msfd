@@ -7,7 +7,7 @@ from wise.msfd.utils import CompoundRow, ItemLabel, ItemList, Row, TableHeader
 from ..a8_utils import UtilsArticle8
 from ..base import BaseComplianceView
 from .base import BaseRegDescRow
-from .utils import compoundrow
+from .utils import compoundrow, RegionalCompoundRow
 
 
 class RegDescA82018Row(BaseRegDescRow):
@@ -538,18 +538,14 @@ class RegDescA82018Row(BaseRegDescRow):
         return rows
 
 
-class RegDescA8(BaseComplianceView):
+class RegDescA82012(BaseComplianceView):
     session_name = '2012'
     template = ViewPageTemplateFile('pt/report-data-table.pt')
 
-    @property
-    def descriptor(self):
-        return 'D5'
-
-    def __call__(self):
+    def __init__(self, context, request):
+        super(RegDescA82012, self).__init__(context, request)
+        self.region = context.country_region_code
         db.threadlocals.session_name = self.session_name
-
-        self.region = 'BAL'
 
         self.countries = countries_in_region(self.region)
         self.all_countries = muids_by_country()
@@ -564,18 +560,35 @@ class RegDescA8(BaseComplianceView):
         self.activity_data = self.get_activity_data()
         self.metadata_data = self.get_metadata_data()
 
-        allrows = [
-            self.get_countries(),
-            self.get_marine_unit_id_nrs(),
+        self.allrows = [
+            self.compoundrow('Member state', self.get_countries()),
+            self.compoundrow('MarineUnitID [Reporting area]',
+                             self.get_marine_unit_id_nrs()),
             # TODO show the reported value, or Reported/Not reported ??
-            self.get_suminfo1_row(),
-            self.get_suminfo2_row(),
-            self.get_criteria_status_row(),
-            self.get_activity_type_row(),
-            self.get_assessment_date_row()
+            self.compoundrow(
+                'PressureLevelN/P/Oconcentration/ '
+                'ImpactsPressureWater/Seabed: '
+                'SumInfo1 [ProportionValueAchieved]',
+                self.get_suminfo1_row()
+            ),
+            self.compoundrow('ImpactsPressureWater/Seabed: SumInfo2',
+                             self.get_suminfo2_row()),
+            self.compoundrow('Status [CriteriaStatus]',
+                             self.get_criteria_status_row()),
+            self.compoundrow('ActivityType', self.get_activity_type_row()),
+            self.compoundrow(
+                'RecentTimeStart/RecentTimeEnd/'
+                'AssessmentDateStart/AssessmentDateEnd '
+                '[AssessmentPeriod]',
+                self.get_assessment_date_row()
+            ),
         ]
 
-        return self.template(rows=allrows)
+    def compoundrow(self, title, rows):
+        return RegionalCompoundRow(self.context, self.request, title, rows)
+
+    def __call__(self):
+        return self.template(rows=self.allrows)
 
     def get_metadata_data(self):
         tables = self.base_data.keys()
@@ -756,7 +769,7 @@ class RegDescA8(BaseComplianceView):
 
             result.extend(topics)
 
-        result = sorted(result)
+        result = sorted(set(result))
 
         return result
 
@@ -795,13 +808,19 @@ class RegDescA8(BaseComplianceView):
         return ''
 
     def get_countries(self):
-        return TableHeader('Member state', self.countries)
+        rows = [('', self.countries)]
+
+        return rows
+        # return TableHeader('Member state', self.countries)
 
     def get_marine_unit_id_nrs(self):
-        row = Row('Number used',
-                  [len(self.all_countries[c]) for c in self.countries])
+        rows = [
+            ('Number used',
+             [len(self.all_countries[c]) for c in self.countries])
+        ]
 
-        return CompoundRow('MarineUnitID [Reporting area]', [row])
+        return rows
+        # return CompoundRow('MarineUnitID [Reporting area]', [row])
 
     def get_suminfo1_row(self):
         col_name = 'SumInfo1'
@@ -815,7 +834,7 @@ class RegDescA8(BaseComplianceView):
                 value = self.get_base_value(country, topic, col_name)
                 results.append(value)
 
-            row = Row(topic, results)
+            row = (topic, results)
             rows.append(row)
 
         label = 'PressureLevelN/P/Oconcentration/' \
@@ -823,7 +842,8 @@ class RegDescA8(BaseComplianceView):
                 'SumInfo1 ' \
                 '[ProportionValueAchieved]'
 
-        return CompoundRow(label, rows)
+        return rows
+        # return CompoundRow(label, rows)
 
     def get_suminfo2_row(self):
         rows = []
@@ -872,13 +892,14 @@ class RegDescA8(BaseComplianceView):
 
                 results.append(value)
 
-            row = Row(element, results)
+            row = (element, results)
             rows.append(row)
 
         label = 'ImpactsPressureWater/Seabed: ' \
                 'SumInfo2'
 
-        return CompoundRow(label, rows)
+        return rows
+        # return CompoundRow(label, rows)
 
     def get_criteria_status_row(self):
         # MSFD8b_Nutrients_Assesment
@@ -930,12 +951,13 @@ class RegDescA8(BaseComplianceView):
 
                 results.append(value)
 
-            row = Row(topic, results)
+            row = (topic, results)
             rows.append(row)
 
         label = 'Status [CriteriaStatus]'
 
-        return CompoundRow(label, rows)
+        return rows
+        # return CompoundRow(label, rows)
 
     def get_activity_type_row(self):
         tables = self.base_data.keys()
@@ -973,11 +995,12 @@ class RegDescA8(BaseComplianceView):
 
             results.append(value)
 
-        row = Row('', results)
+        rows = [('', results)]
 
         label = 'ActivityType'
 
-        return CompoundRow(label, [row])
+        return rows
+        # return CompoundRow(label, [row])
 
     def get_assessment_date_row(self):
         tables = self.base_data.keys()
@@ -1027,10 +1050,11 @@ class RegDescA8(BaseComplianceView):
 
             results.append(value)
 
-        row = Row('', results)
+        rows = [('', results)]
 
         label = 'RecentTimeStart/RecentTimeEnd/' \
                 'AssessmentDateStart/AssessmentDateEnd ' \
                 '[AssessmentPeriod]'
 
-        return CompoundRow(label, [row])
+        return rows
+        # return CompoundRow(label, [row])

@@ -7,7 +7,7 @@ from wise.msfd.data import countries_in_region, muids_by_country
 from wise.msfd.gescomponents import get_descriptor
 from wise.msfd.utils import CompoundRow, ItemLabel, ItemList, Row, TableHeader
 
-from .utils import get_percentage, compoundrow
+from .utils import get_percentage, compoundrow, RegionalCompoundRow
 from .base import BaseRegDescRow
 
 
@@ -87,18 +87,16 @@ class RegDescA92018Row(BaseRegDescRow):
         return rows
 
 
-class RegDescA9(BrowserView):
+class RegDescA92012(BrowserView):
     session_name = '2012'
     template = ViewPageTemplateFile('pt/report-data-table.pt')
 
-    @property
-    def descriptor(self):
-        return 'D5'
+    def __init__(self, context, request):
+        super(RegDescA92012, self).__init__(context, request)
+        self.region = context.country_region_code
+        self.descriptor = context.descriptor
 
-    def __call__(self):
         db.threadlocals.session_name = self.session_name
-
-        self.region = 'BAL'
 
         self.countries = countries_in_region(self.region)
         self.all_countries = muids_by_country()
@@ -107,16 +105,24 @@ class RegDescA9(BrowserView):
         for c in self.countries:
             self.muids_in_region.extend(self.all_countries[c])
 
-        allrows = [
-            self.get_countries_row(),
-            self.get_reporting_area_row(),
-            self.get_features_reported_row(),
-            self.get_gescomponents_row(),
-            self.get_threshold_values(),
-            self.get_proportion_values(),
+        self.allrows = [
+            self.compoundrow('Member state', self.get_countries_row()),
+            self.compoundrow('Reporting area(s)[MarineUnitID]',
+                             self.get_reporting_area_row()),
+            self.compoundrow('Feature(s) reported [Feature]',
+                             self.get_features_reported_row()),
+            self.compoundrow('GES component [Reporting feature]',
+                             self.get_gescomponents_row()),
+            self.compoundrow('Threshold value(s)',
+                             self.get_threshold_values()),
+            self.compoundrow('Proportion', self.get_proportion_values()),
         ]
 
-        return self.template(rows=allrows)
+    def __call__(self):
+        return self.template(rows=self.allrows)
+
+    def compoundrow(self, title, rows):
+        return RegionalCompoundRow(self.context, self.request, title, rows)
 
     @cache(get_key)
     def get_proportion_values(self):
@@ -137,9 +143,10 @@ class RegDescA9(BrowserView):
             values.append(v)
             # ItemList(props)
 
-        row = Row('Quantitative values reported', values)
+        rows = [('Quantitative values reported', values)]
 
-        return CompoundRow('Proportion', [row])
+        return rows
+        # return RegionalCompoundRow('Proportion', rows)
 
     @cache(get_key)
     def get_threshold_values(self):
@@ -148,7 +155,6 @@ class RegDescA9(BrowserView):
         values = []
 
         # TODO: filter by descriptor
-
         for c in self.countries:
             muids = self.all_countries[c]
             threshs = db.get_unique_from_mapper(
@@ -159,12 +165,16 @@ class RegDescA9(BrowserView):
             # TODO: needs to interpret values, instead of listing
             values.append(ItemList(threshs))
 
-        row = Row('Quantitative values reported', values)
+        rows = [('Quantitative values reported', values)]
 
-        return CompoundRow('Threshold value(s)', [row])
+        return rows
+        # return RegionalCompoundRow('Threshold value(s)', rows)
 
     def get_countries_row(self):
-        return TableHeader('Member state', self.countries)
+        rows = [('', self.countries)]
+
+        return rows
+        # return RegionalCompoundRow('Member state', rows)
 
     @cache(get_key)
     def get_gescomponents_row(self):
@@ -187,20 +197,21 @@ class RegDescA9(BrowserView):
                 has = bool(count)
                 values.append(has and 'Reported' or '')
 
-            row = Row(crit.title, values)
+            row = (crit.title, values)
             rows.append(row)
 
-        return CompoundRow(
-            'GES component [Reporting feature]',
-            rows
-        )
+        return rows
+        # return RegionalCompoundRow('GES component [Reporting feature]', rows)
 
     @cache(get_key)
     def get_reporting_area_row(self):
-        row = Row('Number of MRUs used',
-                  [len(self.all_countries[c]) for c in self.countries])
+        rows = [
+            ('Number of MRUs used',
+             [len(self.all_countries[c]) for c in self.countries])
+        ]
 
-        return CompoundRow('Reporting area(s)[MarineUnitID]', [row])
+        return rows
+        # return RegionalCompoundRow('Reporting area(s)[MarineUnitID]', rows)
 
     # TODO: this takes a long time to generate, it needs caching
     @cache(get_key)
@@ -227,7 +238,8 @@ class RegDescA9(BrowserView):
                 has = bool(count)
                 values.append(has and 'Reported' or '')
 
-            row = Row(feature, values)
+            row = (feature, values)
             rows.append(row)
 
-        return CompoundRow('Feature(s) reported [Feature]', rows)
+            return rows
+            # return RegionalCompoundRow('Feature(s) reported [Feature]', rows)

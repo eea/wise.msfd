@@ -41,7 +41,6 @@ class RegionalCompoundRow(TemplateMixin):
         self.rowspan = len(rows)
 
 
-
 class RegDescA11(BaseComplianceView):
     session_name = '2012'
     template = ViewPageTemplateFile('pt/report-data-table.pt')

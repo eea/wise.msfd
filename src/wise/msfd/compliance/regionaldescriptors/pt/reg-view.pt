@@ -42,7 +42,7 @@
                 </a>
               </li>
               <li><a href="./@@view-report-data-2018"><i class='fa fa-table'></i> 2018 Report</a></li>
-              <li><a href="."><i class='fa fa-table'></i> 2012 Report</a></li>
+              <li><a href="./@@view-report-data-2012"><i class='fa fa-table'></i> 2012 Report</a></li>
               <!--<li class="process-state">-->
                 <!--<form method="GET" action='./content_status_modify'>-->
                   <!--<div>-->
