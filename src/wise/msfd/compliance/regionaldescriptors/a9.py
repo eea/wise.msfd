@@ -5,7 +5,7 @@ from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 from wise.msfd import db, sql, sql_extra
 from wise.msfd.data import countries_in_region, muids_by_country
 from wise.msfd.gescomponents import get_descriptor
-from wise.msfd.utils import CompoundRow, ItemList, Row, TableHeader
+from wise.msfd.utils import CompoundRow, ItemLabel, ItemList, Row, TableHeader
 
 from .utils import get_percentage, compoundrow
 from .base import BaseRegDescRow
@@ -40,7 +40,7 @@ class RegDescA92018Row(BaseRegDescRow):
 
                 values.append(value)
 
-            rows.append((crit.title, values))
+            rows.append((ItemLabel(crit.id, crit.title), values))
 
         return rows
 

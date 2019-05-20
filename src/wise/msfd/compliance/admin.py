@@ -228,6 +228,10 @@ class BootstrapCompliance(BrowserView):
                                  'wise.msfd.regionaldescriptorassessment',
                                  title=art)
 
+                    lr = rda.__ac_local_roles__
+                    group = self.get_group(desc_code)
+                    lr[group] = ['Contributor']
+
                     logger.info("Created RegionalDescriptorArticle %s",
                                 rda.absolute_url())
 

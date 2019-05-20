@@ -2,6 +2,8 @@ from collections import namedtuple
 
 from wise.msfd.compliance.base import BaseComplianceView
 from wise.msfd.compliance.vocabulary import REGIONS
+from wise.msfd.gescomponents import get_label
+from wise.msfd.utils import ItemLabel
 
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 
@@ -75,6 +77,9 @@ class BaseRegDescRow(object):
 
         return sorted(values)
 
+    def make_item_label(self, value):
+        return ItemLabel(value, get_label(value, self.field.label_collection))
+
     @compoundrow
     def get_countries_row(self):
         rows = []
@@ -123,6 +128,6 @@ class BaseRegDescRow(object):
 
                 values.append(value)
 
-            rows.append((feature, values))
+            rows.append((self.make_item_label(feature), values))
 
         return rows

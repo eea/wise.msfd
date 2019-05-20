@@ -2,7 +2,6 @@
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 from wise.msfd import db, sql  # , sql_extra
 from wise.msfd.data import countries_in_region, muids_by_country
-from wise.msfd.gescomponents import get_label
 from wise.msfd.utils import CompoundRow, ItemLabel, ItemList, Row, TableHeader
 
 from ..a8_utils import UtilsArticle8
@@ -34,7 +33,7 @@ class RegDescA82018Row(BaseRegDescRow):
 
                 values.append(value)
 
-            rows.append((feature, values))
+            rows.append((self.make_item_label(feature), values))
 
         return rows
 
@@ -106,7 +105,7 @@ class RegDescA82018Row(BaseRegDescRow):
                 value = self.not_rep
                 if data:
                     value = ItemList(
-                        ItemLabel(d, get_label(d, self.field.label_collection))
+                        self.make_item_label(d)
                         for d in data
                     )
 
@@ -165,8 +164,7 @@ class RegDescA82018Row(BaseRegDescRow):
 
                 values.append(value)
 
-            rowlabel = get_label(threshold_source, self.field.label_collection)
-            rows.append((ItemLabel(threshold_source, rowlabel), values))
+            rows.append((self.make_item_label(threshold_source), values))
 
         return rows
 
@@ -535,9 +533,7 @@ class RegDescA82018Row(BaseRegDescRow):
 
                 values.append(value)
 
-            row_label = ItemLabel(pressure,
-                                  get_label(pressure, self.field.label_collection))
-            rows.append((row_label, values))
+            rows.append((self.make_item_label(pressure), values))
 
         return rows
 
