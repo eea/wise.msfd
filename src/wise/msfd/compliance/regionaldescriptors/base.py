@@ -17,7 +17,6 @@ COUNTRY = namedtuple("Country", ["id", "title", "definition", "is_primary"])
 
 
 class BaseRegComplianceView(BaseComplianceView):
-    # TODO is this used? delete if not
     report_header_template = ViewPageTemplateFile(
         'pt/report-data-header.pt'
     )

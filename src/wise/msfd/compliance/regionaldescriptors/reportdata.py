@@ -1,10 +1,10 @@
 import logging
 from sqlalchemy import or_
 
-from zope.interface import implements
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
+from Products.statusmessages.interfaces import IStatusMessage
 from wise.msfd import db, sql2018
-from wise.msfd.compliance.interfaces import IReportDataView
+from wise.msfd.translation import retrieve_translation
 from wise.msfd.utils import (CompoundRow, ItemList, items_to_rows, timeit,
                              natural_sort_key, Row)
 
@@ -13,7 +13,6 @@ from .a9 import RegDescA92018Row, RegDescA92012
 from .a10 import RegDescA102018Row, RegDescA102012
 from .base import BaseRegComplianceView
 from .data import get_report_definition
-from .utils import compoundrow, RegionalCompoundRow
 
 logger = logging.getLogger('wise.msfd')
 
@@ -21,6 +20,7 @@ logger = logging.getLogger('wise.msfd')
 class RegReportData2012(BaseRegComplianceView):
     help_text = "HELP TEXT"
     template = ViewPageTemplateFile('pt/report-data.pt')
+    year = "2012"
 
     Art8 = RegDescA82012
     Art9 = RegDescA92012
@@ -53,7 +53,8 @@ class RegReportData2012(BaseRegComplianceView):
             # TODO: find out how to get info about who reported
             report_by='Report by',
             report_due='2018-10-15',
-            help_text=self.help_text
+            help_text=self.help_text,
+            use_translation=False
         )
 
         template = self.template
@@ -76,6 +77,7 @@ class RegReportData2018(BaseRegComplianceView):
 
     help_text = "HELP TEXT"
     template = ViewPageTemplateFile('pt/report-data.pt')
+    year = "2018"
 
     # Art8 = ViewPageTemplateFile('pt/report-data.pt')
     # Art9 = ViewPageTemplateFile('pt/report-data.pt')
@@ -184,6 +186,33 @@ class RegReportData2018(BaseRegComplianceView):
 
         return result
 
+    def auto_translate(self):
+        data = self.get_report_data()
+        translatables = self.TRANSLATABLES
+        seen = set()
+
+        for compoundrow in data:
+            rows =  compoundrow.rows
+
+            for row in rows:
+                sub_title, values = row
+                if compoundrow.field.name in translatables:
+                    for indx, value in enumerate(values):
+                        if not value:
+                            continue
+
+                        if value not in seen:
+                            country_code = self.available_countries[indx][0]
+                            retrieve_translation(country_code, value)
+                            seen.add(value)
+
+        messages = IStatusMessage(self.request)
+        messages.add(u"Auto-translation initiated, please refresh "
+                     u"in a couple of minutes", type=u"info")
+
+        url = self.context.absolute_url() + '/@@view-report-data-2018'
+        return self.request.response.redirect(url)
+
     # @cache(get_reportdata_key, dependencies=['translation'])
     def render_reportdata(self):
         logger.info("Quering database for 2018 report data: %s %s %s",
@@ -202,7 +231,8 @@ class RegReportData2018(BaseRegComplianceView):
             # TODO: find out how to get info about who reported
             report_by='Report by',
             report_due='2018-10-15',
-            help_text=self.help_text
+            help_text=self.help_text,
+            use_translation=True
         )
 
         # template = getattr(self, self.article, None)
@@ -211,6 +241,9 @@ class RegReportData2018(BaseRegComplianceView):
         return template(data=data, report_header=report_header)
 
     def __call__(self):
+        if 'translate' in self.request.form:
+            return self.auto_translate()
+
         report_html = self.render_reportdata()
         trans_edit_html = self.translate_view()()
         self.report_html = report_html + trans_edit_html
