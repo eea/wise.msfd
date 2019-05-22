@@ -212,7 +212,8 @@ class RegReportData2018(BaseRegComplianceView):
 
     def __call__(self):
         report_html = self.render_reportdata()
-        self.report_html = report_html
+        trans_edit_html = self.translate_view()()
+        self.report_html = report_html + trans_edit_html
 
         @timeit
         def render_html():

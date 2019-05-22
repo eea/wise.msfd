@@ -158,6 +158,9 @@ DESCR_TOPIC_UTILS = {
 
 class UtilsArticle8(object):
     def __init__(self, descriptor):
+        if descriptor.startswith("D1."):
+            descriptor = "D1"
+
         self.descriptor = descriptor
         self.tables = DESC_DATA_MAPPING[descriptor]
 

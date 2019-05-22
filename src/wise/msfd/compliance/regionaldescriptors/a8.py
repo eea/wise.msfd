@@ -5,13 +5,12 @@ from wise.msfd.data import countries_in_region, muids_by_country
 from wise.msfd.utils import CompoundRow, ItemLabel, ItemList, Row, TableHeader
 
 from ..a8_utils import UtilsArticle8
-from ..base import BaseComplianceView
-from .base import BaseRegDescRow
-from .utils import compoundrow, RegionalCompoundRow
+from .base import BaseRegDescRow, BaseRegComplianceView
+from .utils import compoundrow, compoundrow2012
 
 
 class RegDescA82018Row(BaseRegDescRow):
-    """"""
+    year = '2018'
 
     @compoundrow
     def get_feature_row(self):
@@ -386,7 +385,8 @@ class RegDescA82018Row(BaseRegDescRow):
 
             value = self.not_rep
             if data:
-                value = ItemList(data)
+                # value = ItemList(data)
+                value = list(data)[0]
 
             values.append(value)
 
@@ -524,7 +524,8 @@ class RegDescA82018Row(BaseRegDescRow):
                     row
                     for row in self.db_data
                     if row.CountryCode == country_code
-                       and pressure in row.PressureCodes.split(',')
+                        and row.PressureCodes
+                        and pressure in row.PressureCodes.split(',')
                 ])
 
                 value = self.not_rep
@@ -538,8 +539,9 @@ class RegDescA82018Row(BaseRegDescRow):
         return rows
 
 
-class RegDescA82012(BaseComplianceView):
+class RegDescA82012(BaseRegComplianceView):
     session_name = '2012'
+    year = "2012"
     template = ViewPageTemplateFile('pt/report-data-table.pt')
 
     def __init__(self, context, request):
@@ -561,22 +563,22 @@ class RegDescA82012(BaseComplianceView):
         self.metadata_data = self.get_metadata_data()
 
         self.allrows = [
-            self.compoundrow('Member state', self.get_countries()),
-            self.compoundrow('MarineUnitID [Reporting area]',
-                             self.get_marine_unit_id_nrs()),
+            self.compoundrow2012('Member state', self.get_countries()),
+            self.compoundrow2012('MarineUnitID [Reporting area]',
+                                 self.get_marine_unit_id_nrs()),
             # TODO show the reported value, or Reported/Not reported ??
-            self.compoundrow(
+            self.compoundrow2012(
                 'PressureLevelN/P/Oconcentration/ '
                 'ImpactsPressureWater/Seabed: '
                 'SumInfo1 [ProportionValueAchieved]',
                 self.get_suminfo1_row()
             ),
-            self.compoundrow('ImpactsPressureWater/Seabed: SumInfo2',
-                             self.get_suminfo2_row()),
-            self.compoundrow('Status [CriteriaStatus]',
-                             self.get_criteria_status_row()),
-            self.compoundrow('ActivityType', self.get_activity_type_row()),
-            self.compoundrow(
+            self.compoundrow2012('ImpactsPressureWater/Seabed: SumInfo2',
+                                 self.get_suminfo2_row()),
+            self.compoundrow2012('Status [CriteriaStatus]',
+                                 self.get_criteria_status_row()),
+            self.compoundrow2012('ActivityType', self.get_activity_type_row()),
+            self.compoundrow2012(
                 'RecentTimeStart/RecentTimeEnd/'
                 'AssessmentDateStart/AssessmentDateEnd '
                 '[AssessmentPeriod]',
@@ -584,11 +586,15 @@ class RegDescA82012(BaseComplianceView):
             ),
         ]
 
-    def compoundrow(self, title, rows):
-        return RegionalCompoundRow(self.context, self.request, title, rows)
-
     def __call__(self):
         return self.template(rows=self.allrows)
+
+    @property
+    def available_countries(self):
+        return [(x, x) for x in self.countries]
+
+    def compoundrow2012(self, title, rows):
+        return compoundrow2012(self, title, rows)
 
     def get_metadata_data(self):
         tables = self.base_data.keys()

@@ -1,3 +1,5 @@
+from collections import namedtuple
+
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 from wise.msfd import db, sql, utils
 from wise.msfd.data import countries_in_region, muids_by_country
@@ -10,15 +12,25 @@ from ..base import BaseComplianceView
 
 
 def compoundrow(func):
-    """ Decorator """
+    """ Decorator to return a compound row for 2018 reports"""
+
     def inner(*args, **kwargs):
         rows = func(*args, **kwargs)
         self = args[0]
 
-        return RegionalCompoundRow(self.context, self.request,
-                                   self.field.title, rows)
+        return RegionalCompoundRow(self, self.request,
+                                   self.field, rows)
 
     return inner
+
+
+def compoundrow2012(self, title, rows):
+    """ Function to return a compound row for 2012 report"""
+
+    FIELD = namedtuple("Field", ["name", "title"])
+    field = FIELD(title, title)
+
+    return RegionalCompoundRow(self, self.request, field, rows)
 
 
 def get_percentage(values):
@@ -33,10 +45,10 @@ def get_percentage(values):
 class RegionalCompoundRow(TemplateMixin):
     template = ViewPageTemplateFile('pt/regional-compound-row.pt')
 
-    def __init__(self, context, request, title, rows):
+    def __init__(self, context, request, field, rows):
         self.context = context
         self.request = request
-        self.title = title
+        self.field = field
         self.rows = rows
         self.rowspan = len(rows)
 

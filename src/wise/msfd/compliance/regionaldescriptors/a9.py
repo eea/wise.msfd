@@ -1,14 +1,14 @@
+from collections import namedtuple
 
 from eea.cache import cache
-from Products.Five.browser import BrowserView
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 from wise.msfd import db, sql, sql_extra
 from wise.msfd.data import countries_in_region, muids_by_country
 from wise.msfd.gescomponents import get_descriptor
 from wise.msfd.utils import CompoundRow, ItemLabel, ItemList, Row, TableHeader
 
-from .utils import get_percentage, compoundrow, RegionalCompoundRow
-from .base import BaseRegDescRow
+from .utils import get_percentage, compoundrow, compoundrow2012
+from .base import BaseRegDescRow, BaseRegComplianceView
 
 
 def get_key(func, self):
@@ -16,7 +16,8 @@ def get_key(func, self):
 
 
 class RegDescA92018Row(BaseRegDescRow):
-    """"""
+    year = '2018'
+
     @compoundrow
     def get_gescomp_row(self):
         rows = []
@@ -87,14 +88,15 @@ class RegDescA92018Row(BaseRegDescRow):
         return rows
 
 
-class RegDescA92012(BrowserView):
+class RegDescA92012(BaseRegComplianceView):
     session_name = '2012'
+    year = "2012"
     template = ViewPageTemplateFile('pt/report-data-table.pt')
 
     def __init__(self, context, request):
         super(RegDescA92012, self).__init__(context, request)
         self.region = context.country_region_code
-        self.descriptor = context.descriptor
+        self._descriptor = context.descriptor
 
         db.threadlocals.session_name = self.session_name
 
@@ -106,23 +108,35 @@ class RegDescA92012(BrowserView):
             self.muids_in_region.extend(self.all_countries[c])
 
         self.allrows = [
-            self.compoundrow('Member state', self.get_countries_row()),
-            self.compoundrow('Reporting area(s)[MarineUnitID]',
-                             self.get_reporting_area_row()),
-            self.compoundrow('Feature(s) reported [Feature]',
-                             self.get_features_reported_row()),
-            self.compoundrow('GES component [Reporting feature]',
-                             self.get_gescomponents_row()),
-            self.compoundrow('Threshold value(s)',
-                             self.get_threshold_values()),
-            self.compoundrow('Proportion', self.get_proportion_values()),
+            self.compoundrow2012('Member state', self.get_countries_row()),
+            self.compoundrow2012('Reporting area(s)[MarineUnitID]',
+                                 self.get_reporting_area_row()),
+            self.compoundrow2012('Feature(s) reported [Feature]',
+                                 self.get_features_reported_row()),
+            self.compoundrow2012('GES component [Reporting feature]',
+                                 self.get_gescomponents_row()),
+            self.compoundrow2012('Threshold value(s)',
+                                 self.get_threshold_values()),
+            self.compoundrow2012('Proportion', self.get_proportion_values()),
         ]
 
     def __call__(self):
         return self.template(rows=self.allrows)
 
-    def compoundrow(self, title, rows):
-        return RegionalCompoundRow(self.context, self.request, title, rows)
+    @property
+    def descriptor(self):
+        descriptor = self._descriptor
+        if descriptor.startswith("D1."):
+            descriptor = "D1"
+
+        return descriptor
+
+    @property
+    def available_countries(self):
+        return [(x, x) for x in self.countries]
+
+    def compoundrow2012(self, title, rows):
+        return compoundrow2012(self, title, rows)
 
     @cache(get_key)
     def get_proportion_values(self):

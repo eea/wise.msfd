@@ -34,7 +34,7 @@
               <tr>
                 <th tal:content="python: row[0]">Element</th>
                 <tal:rep tal:repeat="r python: row[1]">
-                  <div tal:replace="structure python: view.translate_value(row[0], value=r)"></div>
+                  <div tal:replace="structure python: view.translate_value(row[0], r, view.country_code)"></div>
                 </tal:rep>
               </tr>
             </tal:rep>

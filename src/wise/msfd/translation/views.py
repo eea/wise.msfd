@@ -91,7 +91,8 @@ class TranslationView(BrowserView):
 
         return self.translate_tpl(text=value,
                                   translation=translated,
-                                  can_translate=can_edit)
+                                  can_translate=can_edit,
+                                  source_lang=source_lang)
 
     def __call__(self):
         return self.translation_edit_template()

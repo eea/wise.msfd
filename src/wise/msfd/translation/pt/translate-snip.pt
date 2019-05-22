@@ -18,13 +18,15 @@
   trans_class string:tr transl $active_trans system;
   btn_trans_class string:lang-transl $btn_basic $active_trans;
   ">
-  <td class="translatable" >
+  <td class="translatable" tal:attributes="source-lang options/source_lang">
     <div class="w-t" tal:condition="python: text">
 
-      <div class="lang-toolbar" tal:attributes="class tbar_class" tal:condition="show_toolbar">
+      <div class="lang-toolbar"
+           tal:attributes="class tbar_class"
+           tal:condition="show_toolbar">
         <tal:cond tal:condition="translation">
           <button tal:attributes="class btn_trans_class">EN</button>
-          <button tal:attributes="class btn_text_class" tal:content="view/country_code">LV</button>
+          <button tal:attributes="class btn_text_class" tal:content="options/source_lang">LV</button>
         </tal:cond>
 
         <tal:cond condition="can_translate">

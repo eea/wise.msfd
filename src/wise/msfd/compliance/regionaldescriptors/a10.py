@@ -4,15 +4,14 @@ from sqlalchemy import or_
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 from wise.msfd import db, sql, sql_extra
 from wise.msfd.data import countries_in_region, muids_by_country
-from wise.msfd.utils import CompoundRow, ItemList, Row, TableHeader
 
-from ..base import BaseComplianceView
-from .base import BaseRegDescRow
-from .utils import compoundrow, RegionalCompoundRow
+from .base import BaseRegDescRow, BaseRegComplianceView
+from .utils import compoundrow, compoundrow2012
 
 
 class RegDescA102018Row(BaseRegDescRow):
-    """"""
+    year = '2018'
+
     @compoundrow
     def get_target_row(self):
         rows = []
@@ -240,17 +239,18 @@ class RegDescA102018Row(BaseRegDescRow):
         return rows
 
 
-class RegDescA102012(BaseComplianceView):
+class RegDescA102012(BaseRegComplianceView):
     # TODO: this is hard to implement
     session_name = '2012'
+    year = "2012"
     template = ViewPageTemplateFile('pt/report-data-table.pt')
 
     def __init__(self, context, request):
         super(RegDescA102012, self).__init__(context, request)
         self.region = context.country_region_code
-        # self.descriptor = context.descriptor
         db.threadlocals.session_name = self.session_name
 
+        self._descriptor = context.descriptor
         self.countries = countries_in_region(self.region)
         self.all_countries = muids_by_country()
         self.muids_in_region = []
@@ -262,10 +262,10 @@ class RegDescA102012(BaseComplianceView):
         self.features_data = self.get_features_data()
 
         self.allrows = [
-            self.compoundrow('Member state', self.get_countries_row()),
-            self.compoundrow('MarineUnitID', self.get_marine_unit_id_nrs()),
-            self.compoundrow('Threshold value [TargetValue]',
-                             self.get_threshold_value()),
+            self.compoundrow2012('Member state', self.get_countries_row()),
+            self.compoundrow2012('MarineUnitID', self.get_marine_unit_id_nrs()),
+            self.compoundrow2012('Threshold value [TargetValue]',
+                                 self.get_threshold_value()),
             self.get_reference_point_type(),
             self.get_baseline(),
             self.get_proportion(),
@@ -282,8 +282,20 @@ class RegDescA102012(BaseComplianceView):
     def __call__(self):
         return self.template(rows=self.allrows)
 
-    def compoundrow(self, title, rows):
-        return RegionalCompoundRow(self.context, self.request, title, rows)
+    @property
+    def descriptor(self):
+        descriptor = self._descriptor
+        if descriptor.startswith("D1."):
+            descriptor = "D1"
+
+        return descriptor
+
+    @property
+    def available_countries(self):
+        return [(x, x) for x in self.countries]
+
+    def compoundrow2012(self, title, rows):
+        return compoundrow2012(self, title, rows)
 
     def get_import_id(self, country):
         for imp in self.import_data:
@@ -344,7 +356,7 @@ class RegDescA102012(BaseComplianceView):
 
         rows = [('', results)]
 
-        return self.compoundrow(label_name, rows)
+        return self.compoundrow2012(label_name, rows)
 
     def get_features_data(self):
         feat = sql_extra.MSFD10FeaturePressures
@@ -412,7 +424,7 @@ class RegDescA102012(BaseComplianceView):
             row = (feature, results)
             rows.append(row)
 
-        return self.compoundrow(label_name, rows)
+        return self.compoundrow2012(label_name, rows)
 
     def get_countries_row(self):
         rows = [('', self.countries)]

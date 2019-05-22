@@ -326,12 +326,12 @@ class BaseComplianceView(BrowserView, BasePublicPage):
         return getMultiAdapter((self.context, self.request),
                                name="translation-view")
 
-    def translate_value(self, fieldname, value):
+    def translate_value(self, fieldname, value, source_lang):
         is_translatable = fieldname in self.TRANSLATABLES
 
         v = self.translate_view()
 
-        source_lang = self.country_code
+        # source_lang = self.country_code
 
         return v.translate(source_lang=source_lang,
                            value=value,

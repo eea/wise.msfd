@@ -93,6 +93,7 @@
 
       <form method="POST" action="" tal:attributes="action request/getURL">
         <button name="download" class="btn btn-primary">View report data in Excel</button>
+        <button name="translate" class="btn btn-secondary">Auto-translate</button>
       </form>
 
       <div class="modal fade" id="reportdata-help" tabindex="-1" role="dialog">

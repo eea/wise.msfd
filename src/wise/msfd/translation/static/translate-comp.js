@@ -21,6 +21,14 @@
 
       var $textarea = $('#form-edit-translation #new_transl');
       $textarea.val(old_translation.trim());
+
+      /*
+       * For regional descriptors update the Edit translation form's source language
+       * with the cell's languge
+       */
+      var source_lang = $cell.attr('source-lang');
+      var $form = $('#form-edit-translation');
+      $form.children('input').attr('value', source_lang);
     };
 
     /*
@@ -154,7 +162,15 @@
     function autoTranslation() {
       var $form = $(".form-refresh-translation");
       var $cell = $(this).parents('td.translatable');
-      var text = $('.tr-text', $cell).text();
+      // var text = $('.tr-text', $cell).text();
+      var text = $('.tr-text', $cell).attr("data-original");
+
+      /*
+       * For regional descriptors
+       * update the form's language with the cell's language
+       */
+      var source_lang = $cell.attr('source-lang');
+      $form.children("input[name=language]").attr("value", source_lang);
 
       $form.find('textarea').val(text);
       $form.submit();

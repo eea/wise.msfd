@@ -25,7 +25,7 @@
         <element name="IntegrationRuleTypeParameter" getrowdata="get_integration_type_param_row">IntegrationRuleTypeParameter</element>
         <element name="IntegrationRuleDescriptionParameter" getrowdata="get_integration_desc_param_row">IntegrationRuleDescriptionParameter</element>
         <element name="IntegrationRuleTypeCriteria" getrowdata="get_integration_type_crit_row">IntegrationRuleTypeCriteria</element>
-        <element name="IntegrationRuleDescriptionCriteria" getrowdata="get_integration_desc_crit_row">IntegrationRuleDescriptionCriteria</element>
+        <element name="IntegrationRuleDescriptionCriteria" getrowdata="get_integration_desc_crit_row" translate="true">IntegrationRuleDescriptionCriteria</element>
         <element name="GESextentThreshold" getrowdata="get_ges_extent_thresh_row">GESextentThreshold</element>
         <element name="GESextentAchieved" getrowdata="get_ges_extent_achiev_row">GESextentAchieved</element>
         <element name="GESextentUnit" getrowdata="get_ges_extent_unit_row">GESextentUnit</element>
