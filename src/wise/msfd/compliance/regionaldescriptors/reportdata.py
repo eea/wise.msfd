@@ -1,6 +1,9 @@
 import logging
 from sqlalchemy import or_
 
+from io import BytesIO
+
+import xlsxwriter
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 from Products.statusmessages.interfaces import IStatusMessage
 from wise.msfd import db, sql2018
@@ -35,6 +38,51 @@ class RegReportData2012(BaseRegComplianceView):
 
         return result.allrows
 
+    def data_to_xls(self, data):
+        # Create a workbook and add a worksheet.
+        out = BytesIO()
+        workbook = xlsxwriter.Workbook(out, {'in_memory': True})
+
+        wtitle = self.country_region_code
+        worksheet = workbook.add_worksheet(unicode(wtitle)[:30])
+
+        row_index = 0
+        for compoundrow in data:
+            title = compoundrow.field.title
+            rows = compoundrow.rows
+            for row in rows:
+                sub_title, values = row
+                worksheet.write(row_index, 0, title)
+                worksheet.write(row_index, 1, unicode(sub_title or ''))
+
+                for j, value in enumerate(values):
+                    worksheet.write(row_index, j + 2, unicode(value or ''))
+
+                row_index += 1
+
+        workbook.close()
+        out.seek(0)
+
+        return out
+
+    def download(self):
+        xlsdata = self.get_report_data()
+
+        xlsio = self.data_to_xls(xlsdata)
+        sh = self.request.response.setHeader
+
+        sh('Content-Type', 'application/vnd.openxmlformats-officedocument.'
+           'spreadsheetml.sheet')
+        fname = "-".join(["RegionalDescriptors",
+                          self.country_region_code,
+                          self.descriptor,
+                          self.article,
+                          self.year])
+        sh('Content-Disposition',
+           'attachment; filename=%s.xlsx' % fname)
+
+        return xlsio.read()
+
     # @cache(get_reportdata_key, dependencies=['translation'])
     def render_reportdata(self):
         logger.info("Quering database for 2012 report data: %s %s %s",
@@ -62,6 +110,9 @@ class RegReportData2012(BaseRegComplianceView):
         return template(data=data, report_header=report_header)
 
     def __call__(self):
+        if 'download' in self.request.form:
+            return self.download()
+
         report_html = self.render_reportdata()
         self.report_html = report_html
 
@@ -186,6 +237,51 @@ class RegReportData2018(BaseRegComplianceView):
 
         return result
 
+    def data_to_xls(self, data):
+        # Create a workbook and add a worksheet.
+        out = BytesIO()
+        workbook = xlsxwriter.Workbook(out, {'in_memory': True})
+
+        wtitle = self.country_region_code
+        worksheet = workbook.add_worksheet(unicode(wtitle)[:30])
+
+        row_index = 0
+        for compoundrow in data:
+            title = compoundrow.field.title
+            rows = compoundrow.rows
+            for row in rows:
+                sub_title, values = row
+                worksheet.write(row_index, 0, title)
+                worksheet.write(row_index, 1, unicode(sub_title or ''))
+
+                for j, value in enumerate(values):
+                    worksheet.write(row_index, j + 2, unicode(value or ''))
+
+                row_index += 1
+
+        workbook.close()
+        out.seek(0)
+
+        return out
+
+    def download(self):
+        xlsdata = self.get_report_data()
+
+        xlsio = self.data_to_xls(xlsdata)
+        sh = self.request.response.setHeader
+
+        sh('Content-Type', 'application/vnd.openxmlformats-officedocument.'
+           'spreadsheetml.sheet')
+        fname = "-".join(["RegionalDescriptors",
+                          self.country_region_code,
+                          self.descriptor,
+                          self.article,
+                          self.year])
+        sh('Content-Disposition',
+           'attachment; filename=%s.xlsx' % fname)
+
+        return xlsio.read()
+
     def auto_translate(self):
         data = self.get_report_data()
         translatables = self.TRANSLATABLES
@@ -241,6 +337,9 @@ class RegReportData2018(BaseRegComplianceView):
         return template(data=data, report_header=report_header)
 
     def __call__(self):
+        if 'download' in self.request.form:
+            return self.download()
+
         if 'translate' in self.request.form:
             return self.auto_translate()
 
