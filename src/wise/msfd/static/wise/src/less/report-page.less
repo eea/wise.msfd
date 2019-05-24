@@ -88,12 +88,21 @@
         background-color: #fff;
         box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 
+        button.reset-pins {
+          display: block;
+        }
         .fixed-table-inner{
           border: 1px solid #ddd;
         }
       }
 
       .fixed-table-wrapper {
+        button.reset-pins {
+          display: none;
+          position: fixed;
+          z-index: inherit;
+          left: 0px;
+        }
         th {
           left: 24px !important;
         }

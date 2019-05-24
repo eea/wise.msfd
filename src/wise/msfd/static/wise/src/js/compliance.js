@@ -434,12 +434,25 @@ if (!Array.prototype.last){
     var $cb = $('<input type="checkbox" class="fix-row"/>');
     var $ft = $(
       '<div class="fixed-table-wrapper">' +
+        '<button class="btn btn-primary btn-xs reset-pins">' +
+          '<i class="fa fa-times" title="Clear filters" aria-hidden="true"></i>' +
+        '</button>' +
         '<div class="fixed-table-inner">' +
           '<table class="table table-bordered table-striped fixed-table">' +
           '</table>' +
         '</div>' +
       '</div>'
     );
+
+    // Register click event for button to clear all pinned rows for the current table
+    $ft.find('button.reset-pins').click(function(){
+      $ftw = $(this).closest('.fixed-table-wrapper');
+      $ftw.removeClass('sticky-table');
+      $ftw.find('tr').remove();
+
+      $innerTable = $ftw.siblings('.inner');
+      $innerTable.find('tr input').prop('checked', false);
+    });
 
     $table.find('th div').append($cb);
     $ft.insertBefore($ot.find('.inner'));
@@ -490,6 +503,14 @@ if (!Array.prototype.last){
 
         if ($this.is(':checked')) {
           tableWrapper.addClass('sticky-table');
+
+          //for other tables find the reset button and trigger the click event
+          var $parentReportSection = $this.closest('.report-section');
+          var $otherReportSections = $parentReportSection.siblings('.report-section');
+          $otherReportSections.each(function(){
+            $ftw = $(this).find('.fixed-table-wrapper');
+            $ftw.find('button.reset-pins').click();
+          });
 
           // clone table row, but keep the width of the original table cells
           var target = $this.closest('tr');
