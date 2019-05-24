@@ -11,7 +11,6 @@
 
     <tal:rep tal:repeat="indx python: range(len(countries))">
       <td tal:replace="structure python: view.context.translate_value(field.name, row[1][indx], countries[indx][0])"></td>
-      <!--<td><div tal:content="structure val">Value</div></td>-->
     </tal:rep>
 
   </tr>

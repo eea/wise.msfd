@@ -26,8 +26,8 @@
             <!--Current phase: <span tal:content="python: view.current_phase[1]">Adequacy</span>-->
           <!--</h4>-->
           <div class="nda-link">
-            <a href="./../../">
-              <!--tal:attributes="href python:view._country_folder.absolute_url()"-->
+            <a href="./../../"
+              tal:attributes="href python:view._countryregion_folder.absolute_url()">
               <i class='fa fa-level-up'></i>
               Go to Regional Descriptor Assessment
             </a>
@@ -35,8 +35,7 @@
 
           <div id="nat-desc-art-menu">
             <ul>
-              <!-- tal:condition="python: view.check_permission('wise.msfd: Edit Assessment')" -->
-              <li>
+              <li tal:condition="python: view.check_permission('wise.msfd: Edit Assessment')">
                 <a href="./@@edit-assessment-data-2018">
                   <i class='fa fa-edit'></i> Assessment
                 </a>
