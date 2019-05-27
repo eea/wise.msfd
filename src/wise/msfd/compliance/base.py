@@ -32,6 +32,18 @@ logger = logging.getLogger('wise.msfd')
 edw_logger = logging.getLogger('edw.logger')
 edw_logger.setLevel('WARNING')
 
+STATUS_COLORS = {
+    "approved": "success",
+    "in_work": "danger",
+    "in_draft_review": "warning",
+    "in_final_review": "primary",
+}
+
+PROCESS_STATUS_COLORS = {
+    "phase1": "warning",
+    "phase2": "primary",
+    "phase3": "success",
+}
 
 MAIN_FORMS = [Tab(*x) for x in [
     # view name, (title, explanation)
@@ -117,6 +129,8 @@ class BaseComplianceView(BrowserView, BasePublicPage):
     tabs_type = 'tab'
     main_forms = MAIN_FORMS
     _translatables = None
+    status_colors = STATUS_COLORS
+    process_status_colors = PROCESS_STATUS_COLORS
 
     @property
     def assessor_list(self):
@@ -313,14 +327,7 @@ class BaseComplianceView(BrowserView, BasePublicPage):
         wf_state = wf.states[state]
         wf_state_id = wf_state.id or state
 
-        color_classes = {
-            "approved": "success",
-            "in_work": "danger",
-            "in_draft_review": "warning",
-            "in_final_review": "primary",
-        }
-
-        return color_classes.get(wf_state_id, "secondary")
+        return self.status_colors.get(wf_state_id, "secondary")
 
     def get_status(self, context=None):
         if context is None:

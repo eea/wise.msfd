@@ -29,15 +29,17 @@
             </thead>
             <tbody>
               <tr tal:repeat="country view/countries">
+                <th tal:content="country/name">
+                  Germany
+                </th>
                 <td>
-                  <a href="" tal:attributes="href country/url"
-                    tal:content="country/name">Germany</a>
-                </td>
-                <td
-                  tal:content="country/status"
-                  tal:attributes="class string:p-${country/state_id}"
-                  >
-                  Phase -1
+                  <a href=""
+                     class="class string:p-${country/state_id}"
+                     tal:content="country/status"
+                     tal:attributes="class python:'process-status btn btn-xs btn-' + view.process_status_colors.get(country.state_id, 'secondary');
+                        href country/url">
+                    Phase -1
+                  </a>
                 </td>
               </tr>
             </tbody>
