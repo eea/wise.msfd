@@ -303,6 +303,25 @@ class BaseComplianceView(BrowserView, BasePublicPage):
 
         return state, title
 
+    def get_status_color(self, context=None):
+        if context is None:
+            context = self.context
+
+        state = get_state(context)
+        wftool = get_tool('portal_workflow')
+        wf = wftool.getWorkflowsFor(context)[0]        # assumes one wf
+        wf_state = wf.states[state]
+        wf_state_id = wf_state.id or state
+
+        color_classes = {
+            "approved": "success",
+            "in_work": "danger",
+            "in_draft_review": "warning",
+            "in_final_review": "primary",
+        }
+
+        return color_classes.get(wf_state_id, "secondary")
+
     def get_status(self, context=None):
         if context is None:
             context = self.context

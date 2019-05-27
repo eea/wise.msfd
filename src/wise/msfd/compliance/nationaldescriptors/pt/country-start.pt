@@ -67,7 +67,9 @@
                   </th>
                   <!-- TODO: resort articles here -->
                   <td tal:repeat="assessment python: view.get_articles(desc)">
-                    <a class="btn btn-primary btn-xs" href="" tal:attributes="href assessment/absolute_url">
+                    <a class="btn btn-primary btn-xs" href=""
+                       tal:attributes="href assessment/absolute_url;
+                          class python:'btn btn-xs btn-' + view.get_status_color(assessment)">
                       <span tal:content="assessment/title">Art0</span>:
                       <span class="as-state-label" tal:content="python: view.get_status(assessment)">State</span>
                     </a>
