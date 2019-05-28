@@ -78,12 +78,14 @@
       }
 
       .fixed-table-wrapper.sticky-table {
+        max-height: 50%;
         position: fixed;
         top: 0;
         left: 0;
         right: 0;
         padding: 0 24px;
         overflow-x: auto;
+        overflow-y: overlay;
         z-index: 999;
         background-color: #fff;
         box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
@@ -93,6 +95,7 @@
         }
         .fixed-table-inner{
           border: 1px solid #ddd;
+          overflow-x: hidden !important;
         }
       }
 
