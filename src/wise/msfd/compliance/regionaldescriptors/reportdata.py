@@ -7,6 +7,7 @@ import xlsxwriter
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 from Products.statusmessages.interfaces import IStatusMessage
 from wise.msfd import db, sql2018
+from wise.msfd.gescomponents import get_features, get_parameters
 from wise.msfd.translation import retrieve_translation
 from wise.msfd.utils import (CompoundRow, ItemList, items_to_rows, timeit,
                              natural_sort_key, Row)
@@ -99,8 +100,8 @@ class RegReportData2012(BaseRegComplianceView):
             ),
             factsheet=None,
             # TODO: find out how to get info about who reported
-            report_by='Report by',
-            report_due='2018-10-15',
+            report_by='Member state',
+            report_due='2012-10-15',
             help_text=self.help_text,
             use_translation=False
         )
@@ -210,7 +211,23 @@ class RegReportData2018(BaseRegComplianceView):
             if ges_comps.intersection(self.all_descriptor_ids):
                 out.append(row)
 
-        return out
+        if not self.descriptor.startswith('D1.'):
+            return out
+
+        conditions = []
+        params = get_parameters(self.descriptor)
+        p_codes = [p.name for p in params]
+        conditions.append(t.c.Parameter.in_(p_codes))
+        ok_features = set([f.name for f in get_features(self.descriptor)])
+        out_filtered = []
+
+        for row in out:
+            feats = set(row.Features.split(','))
+
+            if feats.intersection(ok_features):
+                out_filtered.append(row)
+
+        return out_filtered
 
     @db.use_db_session('2018')
     def get_report_data(self):
@@ -325,7 +342,7 @@ class RegReportData2018(BaseRegComplianceView):
             ),
             factsheet=None,
             # TODO: find out how to get info about who reported
-            report_by='Report by',
+            report_by='Member state',
             report_due='2018-10-15',
             help_text=self.help_text,
             use_translation=True

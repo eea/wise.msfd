@@ -135,7 +135,7 @@ class RegionalDescriptorArticleView(BaseRegComplianceView):
         show_edit_assessors = self.assessor_list and can_edit
 
         self.assessment_header_2018_html = self.assessment_header_template(
-            report_by="Report by 2018",
+            report_by="Member state",
             assessor_list=self.assessor_list,
             assessors=assessors_2018,
             assess_date=assess_date_2018,
