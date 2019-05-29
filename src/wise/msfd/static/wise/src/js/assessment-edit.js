@@ -63,6 +63,26 @@
     });
   }
 
+  function setupToggleComments() {
+    var $discTl = $('.right.disc-tl')
+    var $discEc = $('.right.disc-ec')
+    var existsDiscTl = $discTl.length
+    var existsDiscEc = $discEc.length
+
+    if(existsDiscTl && existsDiscEc) {
+      $discEc.addClass('inactive');
+    }
+
+    $('.right.discussion .comments').click(function(){
+      $thisComm = $(this).closest('.right');
+
+      if($thisComm.hasClass('inactive')){
+        $otherComm = $thisComm.siblings('.right');
+        $thisComm.toggleClass('inactive');
+        $otherComm.toggleClass('inactive');
+      }
+    });
+  }
 
   function setupDisableAssessmentForms(){
     // used in edit assessment form
@@ -125,6 +145,7 @@
   $(document).ready(function() {
     setupCommentsListing();
     setupPostComments();
+    setupToggleComments();
     setupDisableAssessmentForms();
     setupFormSelectOptions();
     setupUnloadWarning();

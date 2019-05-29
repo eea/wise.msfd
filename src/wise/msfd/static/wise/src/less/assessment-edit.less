@@ -15,6 +15,10 @@ div.crt-def {
   float: right;
 }
 
+#translate-targets-form {
+  margin-bottom: 28px;
+}
+
 #comp-national-descriptor {
 
   .assessment-form-input {
@@ -83,16 +87,48 @@ div.crt-def {
       margin-bottom: 1%;
       display:flex;
 
+      .right.discussion:hover {
+        position: relative;
+
+        .textline {
+          position: absolute;
+          display: flex;
+        }
+      }
+
       .right {
-        // background-image: linear-gradient(to right, #999, #DDD 1.2%);
         background: #ebf5e0;
-        // width: 40%;
+        padding: 10px;
+      }
+
+      .right.discussion {
+        // background-image: linear-gradient(to right, #999, #DDD 1.2%);
+        width: 20%;
         // float: right;
         flex-grow: 2;
-        padding: 10px;
         display: flex;
         flex-direction: column;
         clear: right;
+
+        &.inactive {
+          max-width: 50px;
+
+          .comments:hover{
+            background-color: #EEE;
+            cursor: pointer;
+          }
+
+          .comments {
+            background-color: #DDD;
+
+            * {
+              display: none;
+            }
+          }
+          .textline {
+            display: none;
+          }
+        }
 
         &.disc-ec {
           background-color: #debdcb;
@@ -109,9 +145,13 @@ div.crt-def {
         }
 
         .textline {
+          position: initial;
+          right: 3px;
+          bottom: 0px;
           padding-top: 0.4rem;
-          display: flex;
+          display: none;
           flex-shrink: 0;
+          width: 99%;
 
           textarea {
             margin-right: 0.4rem;
@@ -140,7 +180,7 @@ div.crt-def {
             margin-top: 0.5em;
             display: inline-block;
             position: relative;
-            max-width: 12em;
+            //max-width: 12em;
             font-size: smaller;
             overflow: auto;
           }

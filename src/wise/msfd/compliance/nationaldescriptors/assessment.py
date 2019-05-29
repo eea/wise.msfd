@@ -12,12 +12,14 @@ from plone.api.user import get_roles
 from plone.z3cform.layout import wrap_form
 from Products.Five.browser.pagetemplatefile import (PageTemplateFile,
                                                     ViewPageTemplateFile)
+from Products.statusmessages.interfaces import IStatusMessage
 from wise.msfd.base import EmbeddedForm, MainFormWrapper
 from wise.msfd.compliance.assessment import (additional_fields, summary_fields,
                                              render_assessment_help, PHASES)
 from wise.msfd.compliance.base import get_questions
 from wise.msfd.compliance.content import AssessmentData
 from wise.msfd.gescomponents import get_descriptor  # get_descriptor_elements
+from wise.msfd.translation import retrieve_translation
 
 from z3c.form.button import buttonAndHandler
 from z3c.form.field import Fields
@@ -81,6 +83,8 @@ class EditAssessmentDataForm(Form, BaseView):
         # if not errors:
         # TODO: check for errors
 
+        datetime_now = datetime.datetime.now().replace(microsecond=0)
+
         for question in self.questions:
             elements = question.get_assessed_elements(self.descriptor_obj,
                                                       muids=self.muids)
@@ -104,17 +108,18 @@ class EditAssessmentDataForm(Form, BaseView):
                 score = question.calculate_score(self.descriptor, values)
 
             name = '{}_{}_Score'.format(self.article, question.id)
+            last_upd = '{}_{}_Last_update'.format(self.article, question.id)
             logger.info("Set score: %s - %s", name, score)
             data[name] = score
+            # TODO only set the last update if a question's answer was changed
+            data[last_upd] = datetime_now
 
-            # name = '{}_{}_RawScore'.format(self.article, question.id)
-            # data[name] = raw_score
+        assess_summary_last_upd = "{}_assessment_summary_last_upd".format(
+            self.article
+        )
+        # TODO only set the last update if a question's answer was changed
+        data[assess_summary_last_upd] = datetime_now
 
-            # name = '{}_{}_Conclusion'.format(self.article, question.id)
-            # logger.info("Set conclusion: %s - %s", name, conclusion)
-            # data[name] = conclusion
-
-        # TODO: update the overall score
         overall_score = 0
 
         for k, v in data.items():
@@ -143,6 +148,10 @@ class EditAssessmentDataForm(Form, BaseView):
         if last != data:
             last.update(data)
             self.context.saved_assessment_data.append(last)
+
+        url = self.context.absolute_url() + '/@@edit-assessment-data-2018'
+        self.request.response.setHeader('Content-Type', 'text/html')
+        return self.request.response.redirect(url)
 
     def is_disabled(self, question):
         state, _ = self.current_phase
@@ -203,6 +212,8 @@ class EditAssessmentDataForm(Form, BaseView):
 
             form = EmbeddedForm(self, self.request)
             form.title = question.definition
+            last_upd = '{}_{}_Last_update'.format(self.article, question.id)
+            form._last_update = assessment_data.get(last_upd, '-')
             form._question_type = question.klass
             form._question_phase = phase
             form._question = question
@@ -246,12 +257,7 @@ class EditAssessmentDataForm(Form, BaseView):
                 choices = question.answers
                 terms = [SimpleTerm(token=i, value=i, title=c)
                          for i, c in enumerate(choices)]
-                # Add 'Not relevant' to choices list
-                # terms.extend([
-                #     SimpleTerm(token=len(terms) + 1,
-                #                value=None,
-                #                title=u'Not relevant')
-                # ])
+
                 default = assessment_data.get(field_name, None)
                 field = Choice(
                     title=unicode(field_title),
@@ -277,6 +283,10 @@ class EditAssessmentDataForm(Form, BaseView):
 
         assessment_summary_form = EmbeddedForm(self, self.request)
         assessment_summary_form.title = u"Assessment summary"
+        last_upd = '{}_assessment_summary_last_upd'.format(self.article)
+        assessment_summary_form._last_update = assessment_data.get(
+            last_upd, '-'
+        )
         assessment_summary_form.subtitle = u''
         assessment_summary_form._disabled = not self.can_comment_tl
         asf_fields = []
@@ -296,6 +306,36 @@ class EditAssessmentDataForm(Form, BaseView):
         forms.append(assessment_summary_form)
 
         return forms
+
+    def auto_translate(self):
+        data = []
+        translatables = []
+        seen = set()
+
+        for table in data:
+            muid, table_data = table
+
+            for row in table_data:
+                field, cells = row
+                if field.name in translatables:
+                    for value in cells:
+                        if value not in seen:
+                            retrieve_translation(self.country_code, value)
+                            seen.add(value)
+
+        messages = IStatusMessage(self.request)
+        messages.add(u"Auto-translation initiated, please refresh "
+                     u"in a couple of minutes", type=u"info")
+
+        url = self.context.absolute_url() + '/@@view-report-data-2018'
+        # return self.request.response.redirect(url)
+
+    def __call__(self):
+        if 'translate' in self.request.form:
+            return self.auto_translate()
+
+        return super(Form, self).__call__()
+        # import pdb; pdb.set_trace()
 
 
 EditAssessmentDataView = wrap_form(EditAssessmentDataForm, MainFormWrapper)
