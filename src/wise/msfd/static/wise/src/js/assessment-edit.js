@@ -184,7 +184,13 @@
 
     space = $win.height() - $sfw.height() * 2;
 
-    $sfw.find('.btn').addClass('btn-success');
+    $sfw.find('#form-buttons-save').addClass('btn-success');
+    // Button to translate targets only displayed for art10
+    var $btnTranslate = $sfw.find('#form-buttons-translate');
+    $btnTranslate.addClass('btn-secondary');
+    if(window.location.pathname.indexOf('art10') == -1){
+      $btnTranslate.css('display', 'none');
+    }
     $win.scroll(function() {
       scroll = $win.scrollTop();
       var fixElement = (scroll + space < btnPos) && (scroll >= rnOffset);

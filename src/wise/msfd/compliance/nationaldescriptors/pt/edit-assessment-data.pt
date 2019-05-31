@@ -83,13 +83,6 @@
         </div>
       </div>
 
-      <div id="translate-targets-form"
-          tal:condition="python: view.article == 'ArtX'">
-        <form method="POST" action="" tal:attributes="action request/getURL">
-          <button type="button" name="translate" class="btn btn-secondary">Translate targets</button>
-        </form>
-      </div>
-
       <div id="comp-national-descriptor">
 
         <div tal:replace="structure view/help"
@@ -117,7 +110,7 @@
                         >
                       </span>
                       <span tal:content="subform/title">Question here</span>
-                      <span style="float:right;" tal:content="string:Last update: ${subform/_last_update}">Last update</span>
+                      <span style="float:right;" tal:content="string:Last change: ${subform/_last_update}">Last update</span>
                     </h4>
 
                     <div class="fields-container">
@@ -147,7 +140,7 @@
                                   data-html="true"
                                   tal:attributes="for widget/id;
                                   title python: element and element.title or '';
-                                  data-content python: element and element.definition or ''" >
+                                  data-content python: element and view.get_translated(element.definition) or ''" >
                                   <span i18n:translate="" tal:content="widget/label">label</span>
                                   <!-- <span tal:condition="element" class="fa fa-question-circle"></span> -->
                                 </label>

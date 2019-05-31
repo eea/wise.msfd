@@ -19,7 +19,7 @@ from wise.msfd.compliance.assessment import (additional_fields, summary_fields,
 from wise.msfd.compliance.base import get_questions
 from wise.msfd.compliance.content import AssessmentData
 from wise.msfd.gescomponents import get_descriptor  # get_descriptor_elements
-from wise.msfd.translation import retrieve_translation
+from wise.msfd.translation import get_translated, retrieve_translation
 
 from z3c.form.button import buttonAndHandler
 from z3c.form.field import Fields
@@ -71,8 +71,38 @@ class EditAssessmentDataForm(Form, BaseView):
     def can_comment_ec(self):
         return self._can_comment('ec')
 
+    @buttonAndHandler(u'Translate targets', name='translate')
+    def handle_translate(self, action):
+        seen = set()
+
+        for question in self.questions:
+            elements = question.get_assessed_elements(
+                self.descriptor_obj, muids=self.muids
+            )
+
+            for element in elements:
+                value = element.definition
+                if value not in seen:
+                    retrieve_translation(self.country_code, value)
+                    seen.add(value)
+
+        messages = IStatusMessage(self.request)
+        messages.add(u"Auto-translation initiated, please refresh "
+                     u"in a couple of minutes", type=u"info")
+
+        url = self.context.absolute_url() + '/@@edit-assessment-data-2018'
+        self.request.response.setHeader('Content-Type', 'text/html')
+        return self.request.response.redirect(url)
+
     @buttonAndHandler(u'Save', name='save')
     def handle_save(self, action):
+        # BBB code, useful for development
+        context = self.context
+
+        if not hasattr(context, 'saved_assessment_data') or \
+                not isinstance(context.saved_assessment_data, PersistentList):
+            context.saved_assessment_data = AssessmentData()
+        last = self.context.saved_assessment_data.last()
 
         roles = get_roles(obj=self.context)
 
@@ -111,14 +141,16 @@ class EditAssessmentDataForm(Form, BaseView):
             last_upd = '{}_{}_Last_update'.format(self.article, question.id)
             logger.info("Set score: %s - %s", name, score)
             data[name] = score
-            # TODO only set the last update if a question's answer was changed
-            data[last_upd] = datetime_now
 
-        assess_summary_last_upd = "{}_assessment_summary_last_upd".format(
+            if score and last[name].values != score.values:
+                data[last_upd] = datetime_now
+
+        last_upd = "{}_assess_summary_last_upd".format(
             self.article
         )
-        # TODO only set the last update if a question's answer was changed
-        data[assess_summary_last_upd] = datetime_now
+        name = "{}_assessment_summary".format(self.article)
+        if last[name] != data[name]:
+            data[last_upd] = datetime_now
 
         overall_score = 0
 
@@ -136,14 +168,6 @@ class EditAssessmentDataForm(Form, BaseView):
             data['assessor'] = 'system'
 
         data['assess_date'] = datetime.date.today()
-
-        # BBB code, useful for development
-        context = self.context
-
-        if not hasattr(context, 'saved_assessment_data') or \
-                not isinstance(context.saved_assessment_data, PersistentList):
-            context.saved_assessment_data = AssessmentData()
-        last = self.context.saved_assessment_data.last()
 
         if last != data:
             last.update(data)
@@ -283,7 +307,7 @@ class EditAssessmentDataForm(Form, BaseView):
 
         assessment_summary_form = EmbeddedForm(self, self.request)
         assessment_summary_form.title = u"Assessment summary"
-        last_upd = '{}_assessment_summary_last_upd'.format(self.article)
+        last_upd = '{}_assess_summary_last_upd'.format(self.article)
         assessment_summary_form._last_update = assessment_data.get(
             last_upd, '-'
         )
@@ -307,35 +331,12 @@ class EditAssessmentDataForm(Form, BaseView):
 
         return forms
 
-    def auto_translate(self):
-        data = []
-        translatables = []
-        seen = set()
+    def get_translated(self, value):
+        translated = get_translated(value, self.country_code)
+        if translated:
+            return translated
 
-        for table in data:
-            muid, table_data = table
-
-            for row in table_data:
-                field, cells = row
-                if field.name in translatables:
-                    for value in cells:
-                        if value not in seen:
-                            retrieve_translation(self.country_code, value)
-                            seen.add(value)
-
-        messages = IStatusMessage(self.request)
-        messages.add(u"Auto-translation initiated, please refresh "
-                     u"in a couple of minutes", type=u"info")
-
-        url = self.context.absolute_url() + '/@@view-report-data-2018'
-        # return self.request.response.redirect(url)
-
-    def __call__(self):
-        if 'translate' in self.request.form:
-            return self.auto_translate()
-
-        return super(Form, self).__call__()
-        # import pdb; pdb.set_trace()
+        return value
 
 
 EditAssessmentDataView = wrap_form(EditAssessmentDataForm, MainFormWrapper)
