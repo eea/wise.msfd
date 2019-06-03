@@ -28,7 +28,7 @@
         return;
       }
       $this.data('click-event-setup', 'true');
-      console.log("setup delete comments");
+      //console.log("setup delete comments");
 
       $this.on('click', function(){
         var $this = $(this);
@@ -187,11 +187,10 @@
     setupUnloadWarning();
 
     // When hovering over the comments section add delete comment event for each comment
-    $('.subform .right .comments').hover(
+    $('.subform .right .comments').mouseenter(
       function(){
         setupDeleteComments($(this));
-      },
-      function(){}
+      }
     );
 
     var $win = $(window);
