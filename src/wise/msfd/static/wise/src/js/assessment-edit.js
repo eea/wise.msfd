@@ -20,6 +20,42 @@
     });
   }
 
+  function setupDeleteComments($el) {
+    $el.find('.comms .comm-del').each(function(){
+      var $this = $(this);
+      clickEventExists = $this.data('click-event-setup');
+      if(clickEventExists === 'true'){
+        return;
+      }
+      $this.data('click-event-setup', 'true');
+      console.log("setup delete comments");
+
+      $this.on('click', function(){
+        var $this = $(this);
+        var $comel = $('.comments', $this.closest('.right'));
+        var commentName = $this.siblings('.comm-crtr').find('.comment-name').text();
+        var commentTime = $this.siblings('.comm-crtr').find('.comment-time').text();
+        var text = $this.siblings('.comment').text();
+        var qid = $el.data('question-id');
+        var threadId = $el.data('thread-id');
+
+        if (confirm("Are you sure you want to delete the comment '" + text + "'?")) {
+          var url = './@@del_comment';
+          var data = {
+            comm_name: commentName,
+            comm_time: commentTime,
+            text: text,
+            q: qid,
+            thread_id: threadId,
+          };
+          $.post(url, data, function(text){
+            $comel.html(text);
+          });
+        }
+      });
+    });
+  }
+
   function setupCommentsListing() {
     $(window).on('resize scroll', function() {
       $('.subform .right .comments').each(function(){
@@ -149,6 +185,14 @@
     setupDisableAssessmentForms();
     setupFormSelectOptions();
     setupUnloadWarning();
+
+    // When hovering over the comments section add delete comment event for each comment
+    $('.subform .right .comments').hover(
+      function(){
+        setupDeleteComments($(this));
+      },
+      function(){}
+    );
 
     var $win = $(window);
 

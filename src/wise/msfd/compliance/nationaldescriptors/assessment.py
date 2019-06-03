@@ -142,14 +142,15 @@ class EditAssessmentDataForm(Form, BaseView):
             logger.info("Set score: %s - %s", name, score)
             data[name] = score
 
-            if score and last[name].values != score.values:
+            last_values = last.get(name, [])
+            if score and last_values and last_values.values != score.values:
                 data[last_upd] = datetime_now
 
         last_upd = "{}_assess_summary_last_upd".format(
             self.article
         )
         name = "{}_assessment_summary".format(self.article)
-        if last[name] != data[name]:
+        if last.get(name, '') != data.get(name, ''):
             data[last_upd] = datetime_now
 
         overall_score = 0

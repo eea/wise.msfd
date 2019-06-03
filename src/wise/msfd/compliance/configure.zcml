@@ -39,6 +39,14 @@
     />
 
   <browser:page
+    for="*"
+    name="del_comment"
+    permission="zope2.View"
+    class=".views.CommentsList"
+    attribute="del_comment"
+    />
+
+  <browser:page
     for=".interfaces.IComplianceModuleFolder"
     name="json-map"
     class=".views.ComplianceJSONMap"

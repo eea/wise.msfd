@@ -1,5 +1,5 @@
 <div id="wise-compliance-form" class="full-width-marker"
-  tal:define="can_comment_tl view/can_comment_tl; can_comment_ec view/can_comment_ec;"
+  tal:define="can_comment_tl view/can_comment_tl; can_comment_ec view/can_comment_ec; plone nocall:context/@@plone"
 
   tal:attributes="id view/form_id | string:wise-compliance-form">
   <script>
@@ -110,7 +110,9 @@
                         >
                       </span>
                       <span tal:content="subform/title">Question here</span>
-                      <span style="float:right;" tal:content="string:Last change: ${subform/_last_update}">Last update</span>
+                      <span style="float:right;"
+                            tal:define="last_change python: plone.toLocalizedTime(subform._last_update, long_format=True)"
+                            tal:content="string:Last change: ${last_change}">Last update</span>
                     </h4>
 
                     <div class="fields-container">

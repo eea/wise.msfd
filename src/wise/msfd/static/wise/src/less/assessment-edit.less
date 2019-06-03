@@ -135,9 +135,19 @@ div.crt-def {
           flex-grow: 2;
           overflow: auto;
           border: 1px solid #CCC;
-          padding: 1em;
+          padding: 1em 0.5em;
           display: flex;
           flex-direction: column-reverse;
+
+          .comms {
+            position: relative;
+          }
+          .comm-del {
+            position: absolute;
+            top: 5px;
+            right: 0;
+            cursor: pointer;
+          }
         }
 
         .textline {
@@ -170,7 +180,7 @@ div.crt-def {
           .comment {
             color: #fff;
             background: #86BB71;
-            padding: 10px 15px;
+            padding: 10px 20px 10px 15px;
             font-size: 14px;
             border-radius: 7px;
             margin-top: 0.5em;

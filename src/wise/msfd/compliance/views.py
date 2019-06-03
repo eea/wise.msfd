@@ -85,6 +85,31 @@ class CommentsList(BrowserView):
 
         return self.template()
 
+    def del_comment(self):
+        to_local_time = self.context.Plone.toLocalizedTime
+
+        form = self.request.form
+
+        question_id = form.get('q').lower()
+        thread_id = form.get('thread_id')
+        text = form.get('text')
+        comm_time = form.get('comm_time')
+        comm_name = form.get('comm_name')
+
+        folder = self.context[thread_id]
+        q_folder = folder[question_id]
+        comments = q_folder.contentValues()
+
+        for comment in comments:
+            if comment.text != text or comment.Creator() != comm_name:
+                continue
+            if to_local_time(comment.created(), long_format=True) != comm_time:
+                continue
+
+            del q_folder[comment.id]
+
+        return self.template()
+
     def __call__(self):
         return self.template()
 
