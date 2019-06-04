@@ -3,6 +3,7 @@ import logging
 from collections import deque
 
 from eea.cache import cache
+from plone import api
 from plone.api.content import transition
 from plone.dexterity.utils import createContentInContainer as create
 from Products.Five.browser import BrowserView
@@ -62,6 +63,12 @@ class CommentsList(BrowserView):
     """
     template = ViewPageTemplateFile('pt/comments-list.pt')
 
+    @property
+    def current_user(self):
+        user = api.user.get_current()
+
+        return user.id
+
     def add_comment(self):
         form = self.request.form
         question_id = form.get('q').lower()
@@ -80,8 +87,13 @@ class CommentsList(BrowserView):
                               title='Comments for question ' + question_id)
             transition(obj=q_folder, transition='open_for_tl')
 
-        comment = create(q_folder, 'wise.msfd.comment', text=text)
-        logger.info('Added comment %r in %r:, %r', q_folder, comment, text)
+        # TODO Reviewer is not authorized to add comments?
+        # hide textbox and post button for reviewers?
+        try:
+            comment = create(q_folder, 'wise.msfd.comment', text=text)
+            logger.info('Added comment %r in %r:, %r', q_folder, comment, text)
+        except:
+            pass
 
         return self.template()
 

@@ -15,7 +15,9 @@
       </span>
     </div>
     <div tal:content="comment/text" class="comment">Comment here</div>
-    <i class="comm-del fa fa-times fa-1"></i>
+    <i tal:condition="python: view.current_user == comment.Creator()"
+       class="comm-del fa fa-times fa-1"
+        title="Remove comment"></i>
   </li>
 
 </ul>
