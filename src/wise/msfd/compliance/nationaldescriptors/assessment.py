@@ -143,7 +143,9 @@ class EditAssessmentDataForm(Form, BaseView):
             data[name] = score
 
             last_values = last.get(name, [])
-            if score and last_values and last_values.values != score.values:
+            last_values = getattr(last_values, 'values', '')
+            score_values = getattr(score, 'values', '')
+            if last_values != score_values:
                 data[last_upd] = datetime_now
 
         last_upd = "{}_assess_summary_last_upd".format(

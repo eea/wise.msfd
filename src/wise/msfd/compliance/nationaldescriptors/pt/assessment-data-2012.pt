@@ -8,7 +8,7 @@
       <tbody>
         <!--<div tal:content="assessments/?country">asd</div>-->
         <tal:def tal:define="assessment assessments/?country;
-          colspan python: len(assessment.gescomponents)">
+          colspan python:3">
           <tal:rep tal:repeat="crit assessment/criteria">
             <tr>
               <th tal:content="crit/crit_name">

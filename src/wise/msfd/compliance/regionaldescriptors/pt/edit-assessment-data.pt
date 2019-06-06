@@ -166,7 +166,7 @@
                     </div>
                   </div>
 
-                  <div class="right disc-tl" tal:define="question_id subform/_question/id | string:summary" tal:condition="can_comment_tl">
+                  <div class="right discussion disc-tl" tal:define="question_id subform/_question/id | string:summary" tal:condition="can_comment_tl">
                     <div class="comments"
                       tal:attributes="data-question-id question_id; data-thread-id string:tl"></div>
                     <div class="textline">
@@ -175,7 +175,7 @@
                     </div>
                   </div>
 
-                  <div class="right disc-ec" tal:define="question_id subform/_question/id | string:summary" tal:condition="can_comment_ec">
+                  <div class="right discussion disc-ec" tal:define="question_id subform/_question/id | string:summary" tal:condition="can_comment_ec">
                     <div class="comments"
                       tal:attributes="data-question-id question_id; data-thread-id string:ec"></div>
                     <div class="textline">

@@ -111,7 +111,7 @@
                       </span>
                       <span tal:content="subform/title">Question here</span>
                       <span style="float:right;"
-                            tal:define="last_change python: plone.toLocalizedTime(subform._last_update, long_format=True)"
+                            tal:define="last_change python: plone.toLocalizedTime(subform._last_update, long_format=True) or '-'"
                             tal:content="string:Last change: ${last_change}">Last update</span>
                     </h4>
 
