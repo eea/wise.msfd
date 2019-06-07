@@ -4,7 +4,7 @@ from collections import deque
 
 from eea.cache import cache
 from plone import api
-from plone.api.content import transition
+from plone.api.content import transition, get_state
 from plone.dexterity.utils import createContentInContainer as create
 from Products.Five.browser import BrowserView
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
@@ -73,6 +73,7 @@ class CommentsList(BrowserView):
         form = self.request.form
         question_id = form.get('q').lower()
         thread_id = form.get('thread_id')
+        transition_id = 'open_for_{}'.format(thread_id)
 
         text = form.get('text')
 
@@ -80,20 +81,25 @@ class CommentsList(BrowserView):
 
         if question_id in folder.contentIds():
             q_folder = folder[question_id]
+
+            # Due to a bug, For 'EC' the wrong state was given (opened_for_tl)
+            # transition to the correct state if necessary
+            current_state = get_state(q_folder)
+            correct_state = 'opened_for_{}'.format(thread_id)
+
+            if current_state != 'closed' and current_state != correct_state:
+                transition(obj=q_folder, transition='close')
+                transition(obj=q_folder, transition=transition_id)
+
         else:       # initially create the question folder for comments
             q_folder = create(folder,
                               'wise.msfd.commentsfolder',
                               id=question_id,
                               title='Comments for question ' + question_id)
-            transition(obj=q_folder, transition='open_for_tl')
+            transition(obj=q_folder, transition=transition_id)
 
-        # TODO Reviewer is not authorized to add comments?
-        # hide textbox and post button for reviewers?
-        try:
-            comment = create(q_folder, 'wise.msfd.comment', text=text)
-            logger.info('Added comment %r in %r:, %r', q_folder, comment, text)
-        except:
-            pass
+        comment = create(q_folder, 'wise.msfd.comment', text=text)
+        logger.info('Added comment %r in %r:, %r', q_folder, comment, text)
 
         return self.template()
 
