@@ -8,8 +8,10 @@ from zope.dottedname.resolve import resolve
 from zope.interface import implements
 
 from eea.cache import cache
+from plone.api import user
 from plone.api.content import get_state
 from plone.api.portal import get_tool
+from plone.api.user import get_roles
 from plone.memoize import ram
 from plone.memoize.view import memoize
 from Products.Five.browser import BrowserView
@@ -131,6 +133,16 @@ class BaseComplianceView(BrowserView, BasePublicPage):
     _translatables = None
     status_colors = STATUS_COLORS
     process_status_colors = PROCESS_STATUS_COLORS
+
+    @property
+    def read_only_access(self):
+        current_user = user.get_current().getId()
+        roles = get_roles(username=current_user)
+
+        if 'Reader' in roles:
+            return True
+
+        return False
 
     @property
     def assessor_list(self):

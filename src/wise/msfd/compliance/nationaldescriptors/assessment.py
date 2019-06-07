@@ -183,8 +183,8 @@ class EditAssessmentDataForm(Form, BaseView):
     def is_disabled(self, question):
         state, _ = self.current_phase
         disabled = question.klass not in PHASES.get(state, ())
-
-        return disabled
+        
+        return self.read_only_access or disabled
 
     @property
     def fields(self):
@@ -315,7 +315,8 @@ class EditAssessmentDataForm(Form, BaseView):
             last_upd, '-'
         )
         assessment_summary_form.subtitle = u''
-        assessment_summary_form._disabled = not self.can_comment_tl
+        assessment_summary_form._disabled = (not self.can_comment_tl
+                                             or self.read_only_access)
         asf_fields = []
 
         for name, title in summary_fields:

@@ -33,7 +33,8 @@
                 Process state:
                 <strong tal:content="view/get_status">Phase 0</strong>
 
-                <div class="phase-selector">
+                <div class="phase-selector"
+                  tal:condition="python: not(view.read_only_access)">
                   <select onchange="javascript:this.form.submit()"
                     name="workflow_action"
                     class="pat-select2"

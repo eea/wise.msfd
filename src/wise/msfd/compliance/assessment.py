@@ -1,6 +1,8 @@
 import logging
 from collections import namedtuple
 
+from AccessControl import Unauthorized
+
 from zope.interface import implements
 from zope.schema import Choice, Text
 
@@ -107,6 +109,9 @@ class EditAssessmentSummaryForm(Form, BaseComplianceView):
 
     @buttonAndHandler(u'Save', name='save')
     def handle_save(self, action):
+        if self.read_only_access:
+            raise Unauthorized
+
         data, errors = self.extractData()
 
         if errors:

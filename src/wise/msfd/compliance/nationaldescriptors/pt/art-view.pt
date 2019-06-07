@@ -50,9 +50,10 @@
                     <i class='fa fa-exchange'></i>
                     Process state:
                     <strong tal:content="view/get_status">Phase 0</strong>
-                    <select onchange="javascript:this.form.submit()" name="workflow_action"
-                      class="pat-select2"
-                      data-pat-select2="width:10em">
+                    <select tal:condition="python: not(view.read_only_access)"
+                        onchange="javascript:this.form.submit()" name="workflow_action"
+                        class="pat-select2"
+                        data-pat-select2="width:10em">
                       <option value=''>Choose action...</option>
                       <tal:rep repeat="trans view/get_transitions">
                         <option tal:content="trans/title"
