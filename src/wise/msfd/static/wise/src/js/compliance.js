@@ -292,6 +292,7 @@ if (!Array.prototype.last){
   }
 
   function setupTableScrolling() {
+    // TODO not used
     // When dealing with a really wide table, with wide cells, we want to keep
     // the text relatively narrow, but always keep in view that cell content
     var $ot = $('.overflow-table table');
@@ -593,8 +594,8 @@ if (!Array.prototype.last){
       var onoff = $(this).attr('aria-pressed') == 'true';
       $p = $(this).parent().next();
       $('.table-report', $p).toggleTable(!onoff);
-      setupCustomScroll();
       setupFixedTableRows();
+      setupCustomScroll();
     });
   }
 
@@ -610,10 +611,10 @@ if (!Array.prototype.last){
     addFixedTable();
 
     $(window).on('load', function() {
-      setupCustomScroll();
       // setupReadMoreModal();
-      setupFixedTableRows();
       setupSimplifiedTables();
+      setupFixedTableRows();
+      setupCustomScroll();
     });
   });
 }(window, document, $));
