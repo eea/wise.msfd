@@ -478,9 +478,21 @@ class AdminScoring(BaseComplianceView):
             
             if '_Score' in k:                
                 for i, v in enumerate(val.values):
-                    option = ([o.title
+                    options = ([o.title
                                for o in val.question.get_assessed_elements(
-                                d_obj, muids=muids)] or ['All criteria'])[i]
+                                d_obj, muids=muids)] or ['All criteria'])
+
+                    # TODO IndexError: list index out of range
+                    # investigate this
+                    # Possible cause of error: D9C2 was removed and some old
+                    # questions have answered it
+                    try:
+                        option = options[i]
+                    except IndexError:
+                        option = 'ERROR with options: {} / index: {}'.format(
+                            ', '.join(options), i
+                        )
+
                     answer = val.question.answers[v]
 
                     yield (country.title, region.title, d_obj.id,
