@@ -473,7 +473,8 @@ class Article10(BaseArticle2012):
                 vals = []
                 for v in values:
                     raw_values.append(v)
-                    vals.append(self.context.translate_value(name, value=v))
+                    vals.append(self.context.translate_value(
+                        name, v, self.country_code))
 
                 row = RawRow(name, vals, raw_values)
                 self.rows.append(row)

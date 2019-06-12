@@ -309,7 +309,8 @@ class Article9(BaseArticle2012):
                 vals = []
                 for v in values:
                     raw_values.append(v)
-                    vals.append(self.context.translate_value(name, value=v))
+                    vals.append(self.context.translate_value(
+                        name, v, self.country_code))
 
                 # values = [self.context.translate_value(name, value=v)
                 #           for v in values]

@@ -722,7 +722,9 @@ class Article8(BaseArticle2012):
                         for inner in cols:
                             values.append(inner[name])
                         translated_values = [
-                            self.context.translate_value(name, value=v)
+                            self.context.translate_value(
+                                name, v, self.country_code
+                            )
                             for v in values
                         ]
                         row = RawRow(name, translated_values, values)
