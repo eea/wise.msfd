@@ -90,6 +90,10 @@ div.crt-def {
           position: absolute;
           display: flex;
         }
+        .comm-hide {
+          position: absolute;
+          display:flex;
+        }
       }
 
       .right {
@@ -124,12 +128,25 @@ div.crt-def {
           .textline {
             display: none;
           }
+          .comm-hide {
+            display: none;
+          }
         }
 
         &.disc-ec {
           background-color: #debdcb;
         }
 
+        .comm-hide {
+          background-color: white;
+          color: #29a2d9;
+          cursor: pointer;
+          font-size: 22px;
+          position: initial;
+          display: none;
+          right: 0;
+          top: 0;
+        }
         .comments {
           background-color: white;
           flex-grow: 2;

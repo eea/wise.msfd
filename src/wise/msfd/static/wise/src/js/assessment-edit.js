@@ -105,17 +105,21 @@
     var existsDiscTl = $discTl.length
     var existsDiscEc = $discEc.length
 
-    if(existsDiscTl && existsDiscEc) {
-      $discEc.addClass('inactive');
-    }
+    //if(existsDiscTl && existsDiscEc) {
+    //  $discEc.addClass('inactive');
+    //}
+
+    $('.comm-hide').click(function(){
+      $(this).closest('.right').addClass('inactive');
+    });
 
     $('.right.discussion .comments').click(function(){
       $thisComm = $(this).closest('.right');
 
       if($thisComm.hasClass('inactive')){
-        $otherComm = $thisComm.siblings('.right');
+        //$otherComm = $thisComm.siblings('.right');
         $thisComm.toggleClass('inactive');
-        $otherComm.toggleClass('inactive');
+        //$otherComm.toggleClass('inactive');
       }
     });
   }
