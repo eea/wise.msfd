@@ -434,7 +434,10 @@ class Article10(BaseArticle2012):
         muids = xp('//w:MarineUnitID/text()')
         count, res = db.get_marine_unit_id_names(list(set(muids)))
 
-        labels = [ItemLabel(m, u'{} ({})'.format(t, m)) for m, t in res]
+        labels = [
+            ItemLabel(m, u'{} ({})'.format(t, m))
+            for m, t in res
+        ]
         self.muids_labeled = sorted(
             labels, key=lambda l: natural_sort_key(l.name)
         )

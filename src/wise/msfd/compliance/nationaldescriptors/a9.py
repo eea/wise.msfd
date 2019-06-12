@@ -269,8 +269,12 @@ class Article9(BaseArticle2012):
         muids = root.xpath('//w:MarineUnitID/text()', namespaces=NSMAP)
 
         count, res = db.get_marine_unit_id_names(list(set(muids)))
-
-        labels = [ItemLabel(m, t or m) for m, t in res if m in self.muids]
+        muid_ids = [x.id for x in self.muids]
+        labels = [
+            ItemLabel(m, t or m)
+            for m, t in res
+            if m in muid_ids
+        ]
         self.muids_labeled = sorted(
             labels, key=lambda l: natural_sort_key(l.name)
         )
