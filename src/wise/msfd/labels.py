@@ -88,7 +88,10 @@ def get_common_labels():
     labels.update(_extract_from_xsd('data/MSCommon_1p1.xsd'))
     labels.update(get_human_labels())
 
-    return labels
+    # TODO there are keys with empty values, find out from where it comes
+    filtered = {k: v for k, v in labels.items() if k}
+
+    return filtered
 
 
 COMMON_LABELS = get_common_labels()
