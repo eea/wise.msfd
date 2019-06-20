@@ -6,6 +6,7 @@ from sqlalchemy.orm import aliased
 from zope.component import getMultiAdapter
 from zope.dottedname.resolve import resolve
 from zope.interface import implements
+from zope.security import checkPermission
 
 from eea.cache import cache
 from plone.api import user
@@ -143,6 +144,19 @@ class BaseComplianceView(BrowserView, BasePublicPage):
             return True
 
         return False
+
+    def _can_comment(self, folder_id):
+        folder = self.context[folder_id]
+
+        return checkPermission('zope2.View', folder)
+
+    @property
+    def can_comment_tl(self):
+        return self._can_comment('tl')
+
+    @property
+    def can_comment_ec(self):
+        return self._can_comment('ec')
 
     @property
     def assessor_list(self):

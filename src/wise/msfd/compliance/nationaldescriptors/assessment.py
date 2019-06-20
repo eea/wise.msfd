@@ -58,19 +58,6 @@ class EditAssessmentDataForm(Form, BaseView):
             self.article,
         )
 
-    def _can_comment(self, folder_id):
-        folder = self.context[folder_id]
-
-        return checkPermission('zope2.View', folder)
-
-    @property
-    def can_comment_tl(self):
-        return self._can_comment('tl')
-
-    @property
-    def can_comment_ec(self):
-        return self._can_comment('ec')
-
     @buttonAndHandler(u'Translate targets', name='translate')
     def handle_translate(self, action):
         seen = set()
@@ -148,13 +135,6 @@ class EditAssessmentDataForm(Form, BaseView):
             if last_values != score_values:
                 data[last_upd] = datetime_now
 
-        last_upd = "{}_assess_summary_last_upd".format(
-            self.article
-        )
-        name = "{}_assessment_summary".format(self.article)
-        if last.get(name, '') != data.get(name, ''):
-            data[last_upd] = datetime_now
-
         overall_score = 0
 
         for k, v in data.items():
@@ -218,6 +198,10 @@ class EditAssessmentDataForm(Form, BaseView):
 
         if hasattr(self.context, 'saved_assessment_data'):
             assessment_data = self.context.saved_assessment_data.last()
+        # assess_date = assessment_data.get('assess_date')
+        # assess_date = hasattr(assess_date, 'strftime') \
+        #     and assess_date.strftime('%d %b %Y') or '-'
+        assess_date = '-'
 
         forms = []
 
@@ -240,7 +224,7 @@ class EditAssessmentDataForm(Form, BaseView):
             form = EmbeddedForm(self, self.request)
             form.title = question.definition
             last_upd = '{}_{}_Last_update'.format(self.article, question.id)
-            form._last_update = assessment_data.get(last_upd, '-')
+            form._last_update = assessment_data.get(last_upd, assess_date)
             form._question_type = question.klass
             form._question_phase = phase
             form._question = question
@@ -308,30 +292,31 @@ class EditAssessmentDataForm(Form, BaseView):
             form.fields = Fields(*fields)
             forms.append(form)
 
-        assessment_summary_form = EmbeddedForm(self, self.request)
-        assessment_summary_form.title = u"Assessment summary"
-        last_upd = '{}_assess_summary_last_upd'.format(self.article)
-        assessment_summary_form._last_update = assessment_data.get(
-            last_upd, '-'
-        )
-        assessment_summary_form.subtitle = u''
-        assessment_summary_form._disabled = (not self.can_comment_tl
-                                             or self.read_only_access)
-        asf_fields = []
-
-        for name, title in summary_fields:
-            _name = '{}_{}'.format(
-                self.article, name
-            )
-
-            default = assessment_data.get(_name, None)
-            _field = Text(title=title,
-                          __name__=_name, required=False, default=default)
-            asf_fields.append(_field)
-
-        assessment_summary_form.fields = Fields(*asf_fields)
-
-        forms.append(assessment_summary_form)
+        # TODO assessment summary form moved to assesment overview page
+        # assessment_summary_form = EmbeddedForm(self, self.request)
+        # assessment_summary_form.title = u"Assessment summary"
+        # last_upd = '{}_assess_summary_last_upd'.format(self.article)
+        # assessment_summary_form._last_update = assessment_data.get(
+        #     last_upd, assess_date
+        # )
+        # assessment_summary_form.subtitle = u''
+        # assessment_summary_form._disabled = (not self.can_comment_tl
+        #                                      or self.read_only_access)
+        # asf_fields = []
+        #
+        # for name, title in summary_fields:
+        #     _name = '{}_{}'.format(
+        #         self.article, name
+        #     )
+        #
+        #     default = assessment_data.get(_name, None)
+        #     _field = Text(title=title,
+        #                   __name__=_name, required=False, default=default)
+        #     asf_fields.append(_field)
+        #
+        # assessment_summary_form.fields = Fields(*asf_fields)
+        #
+        # forms.append(assessment_summary_form)
 
         return forms
 

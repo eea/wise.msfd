@@ -538,7 +538,9 @@ class NationalDescriptorArticleView(BaseView):
         self.assessment_data_2018_html = self.assessment_data_2018_tpl(
             assessment=assessment,
             score_2012=score_2012,
-            conclusion_2012=conclusion_2012
+            conclusion_2012=conclusion_2012,
+            can_comment_tl=self.can_comment_tl,
+            can_comment_ec=self.can_comment_ec
         )
 
         # Assessment header 2018

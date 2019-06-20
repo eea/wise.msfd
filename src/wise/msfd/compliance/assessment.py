@@ -35,11 +35,12 @@ additional_fields = {
 }
 
 summary_fields = (
-    ('assessment_summary', u'Assessment summary'),
+    # ('assessment_summary', u'Assessment summary'),
     # ('recommendations', u'Recommendations for Member State'),
 )
 
 progress_fields = (
+    ('assessment_summary', u'Assessment summary'),
     ('progress', u'Progress assessment'),
     ('recommendations', u'Recommendations for Member State'),
 )
