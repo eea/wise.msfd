@@ -135,6 +135,13 @@ class EditAssessmentDataForm(Form, BaseView):
             if last_values != score_values:
                 data[last_upd] = datetime_now
 
+        last_upd = "{}_assess_summary_last_upd".format(
+            self.article
+        )
+        name = "{}_assessment_summary".format(self.article)
+        if last.get(name, '') != data.get(name, ''):
+            data[last_upd] = datetime_now
+
         overall_score = 0
 
         for k, v in data.items():
@@ -293,30 +300,30 @@ class EditAssessmentDataForm(Form, BaseView):
             forms.append(form)
 
         # TODO assessment summary form moved to assesment overview page
-        # assessment_summary_form = EmbeddedForm(self, self.request)
-        # assessment_summary_form.title = u"Assessment summary"
-        # last_upd = '{}_assess_summary_last_upd'.format(self.article)
-        # assessment_summary_form._last_update = assessment_data.get(
-        #     last_upd, assess_date
-        # )
-        # assessment_summary_form.subtitle = u''
-        # assessment_summary_form._disabled = (not self.can_comment_tl
-        #                                      or self.read_only_access)
-        # asf_fields = []
-        #
-        # for name, title in summary_fields:
-        #     _name = '{}_{}'.format(
-        #         self.article, name
-        #     )
-        #
-        #     default = assessment_data.get(_name, None)
-        #     _field = Text(title=title,
-        #                   __name__=_name, required=False, default=default)
-        #     asf_fields.append(_field)
-        #
-        # assessment_summary_form.fields = Fields(*asf_fields)
-        #
-        # forms.append(assessment_summary_form)
+        assessment_summary_form = EmbeddedForm(self, self.request)
+        assessment_summary_form.title = u"Assessment summary"
+        last_upd = '{}_assess_summary_last_upd'.format(self.article)
+        assessment_summary_form._last_update = assessment_data.get(
+            last_upd, assess_date
+        )
+        assessment_summary_form.subtitle = u''
+        assessment_summary_form._disabled = (not self.can_comment_tl
+                                             or self.read_only_access)
+        asf_fields = []
+
+        for name, title in summary_fields:
+            _name = '{}_{}'.format(
+                self.article, name
+            )
+
+            default = assessment_data.get(_name, None)
+            _field = Text(title=title,
+                          __name__=_name, required=False, default=default)
+            asf_fields.append(_field)
+
+        assessment_summary_form.fields = Fields(*asf_fields)
+
+        forms.append(assessment_summary_form)
 
         return forms
 
