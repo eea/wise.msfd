@@ -792,7 +792,8 @@ def _muids_2018(country, region):
         .filter(
             t.CountryCode == country,
             t.Region == region,
-            t.localId.isnot(None),      # TODO: this suits NL, check others
+            t.MarineReportingUnitId.isnot(None),
+            # t.localId.isnot(None),      # TODO: this suits NL, check others
         )
 
     res = [MarineReportingUnit(m.MarineReportingUnitId,

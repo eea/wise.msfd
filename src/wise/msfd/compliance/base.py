@@ -21,12 +21,11 @@ from wise.msfd.base import BasePublicPage
 from wise.msfd.compliance.scoring import Score  # , compute_score
 from wise.msfd.compliance.utils import get_assessors
 from wise.msfd.compliance.vocabulary import ASSESSED_ARTICLES, REGIONS
-from wise.msfd.gescomponents import (get_descriptor, get_marine_units,
-                                     sorted_criterions)
+from wise.msfd.gescomponents import (get_descriptor, get_features,
+                                     get_marine_units, sorted_criterions)
 from wise.msfd.translation.interfaces import ITranslationContext
 from wise.msfd.utils import (Tab, _parse_files_in_location, natural_sort_key,
                              row_to_dict, timeit)
-
 from . import interfaces
 from .interfaces import ICountryDescriptorsFolder
 
@@ -474,8 +473,26 @@ class AssessmentQuestionDefinition:
 
         return res_sorted
 
+    def __get_a10_2018_targets(self, descr_obj, ok_ges_ids, muids):
+        targets = self.__get_a10_2018_targets_from_table(ok_ges_ids, muids)
+        # targets = self.__get_a10_2018_targets_from_view(
+        #     descr_obj, ok_ges_ids,muids
+        # )
+
+        res = [Target(t.TargetCode.encode('ascii', errors='ignore'),
+                      t.TargetCode,
+                      t.Description,
+                      '2018')
+
+               for t in targets]
+
+        # sort Targets and make them distinct
+        res_sorted = sorted(set(res), key=lambda _x: natural_sort_key(_x.id))
+
+        return res_sorted
+
     @db.use_db_session('2018')
-    def __get_a10_2018_targets(self, ok_ges_ids, muids):
+    def __get_a10_2018_targets_from_table(self, ok_ges_ids, muids):
         T = sql2018.ART10TargetsTarget
         MU = sql2018.ART10TargetsMarineUnit
         t_MRU = T.ART10_Targets_MarineUnit
@@ -488,24 +505,48 @@ class AssessmentQuestionDefinition:
             .join(G) \
             .filter(G.GESComponent.in_(ok_ges_ids))
 
-        res = [Target(t.TargetCode.encode('ascii', errors='ignore'),
-                      t.TargetCode,
-                      t.Description,
-                      '2018')
+        res = [x for x in q]
 
-               for t in q]
+        return res
 
-        # sort Targets and make them distinct
-        res_sorted = sorted(set(res), key=lambda _x: natural_sort_key(_x.id))
+    @db.use_db_session('2018')
+    def __get_a10_2018_targets_from_view(self, descr_obj, ok_ges_ids, muids):
+        t = sql2018.t_V_ART10_Targets_2018
+        descriptor = descr_obj.id
+        sess = db.session()
 
-        return res_sorted
+        q = sess.query(t).filter(t.c.MarineReportingUnit.in_(muids))
+
+        ges_filtered = []
+
+        for row in q:
+            ges_comps = getattr(row, 'GESComponents', ())
+            ges_comps = set([g.strip() for g in ges_comps.split(',')])
+
+            if ges_comps.intersection(ok_ges_ids):
+                ges_filtered.append(row)
+
+        if descriptor.startswith('D1.'):
+            feature_filtered = []
+            ok_features = set([f.name for f in get_features(descriptor)])
+
+            for row in ges_filtered:
+                feats = set(row.Features.split(','))
+
+                if feats.intersection(ok_features):
+                    feature_filtered.append(row)
+
+            ges_filtered = feature_filtered
+
+        return ges_filtered
 
     @ram.cache(_a10_ids_cachekey)
     def _art_10_ids(self, descriptor, **kwargs):
         muids = [x.id for x in kwargs['muids']]
         ok_ges_ids = descriptor.all_ids()
 
-        targets_2018 = self.__get_a10_2018_targets(ok_ges_ids, muids)
+        targets_2018 = self.__get_a10_2018_targets(descriptor, ok_ges_ids,
+                                                   muids)
         # targets_2012 = self.__get_a10_2012_targets(ok_ges_ids, muids)
         targets_all = targets_2018
 
