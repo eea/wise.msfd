@@ -13,8 +13,6 @@ def consolidate_date_by_mru(data):
 
     This is used by the A9 2018 report.
     """
-    import pdb
-    pdb.set_trace()
 
     groups = []
 
@@ -23,7 +21,6 @@ def consolidate_date_by_mru(data):
     rows_without_mru = []
 
     for obj in chain(*data.values()):
-        # print "looking for duplicates of ", id(obj)
         found = False
 
         for group in groups:
@@ -31,30 +28,11 @@ def consolidate_date_by_mru(data):
             # all objects from a group should contain the same data
             first_from_group = group[0]
             if proxy_cmp(obj, first_from_group):
-                # print("Found duplicate")
                 group.append(obj)
                 found = True
 
         if not found:
             groups.append([obj])
-
-    # i = 0
-    # for dataset in data.values():
-    #
-    #     for row in dataset:
-    #         found = False
-    #
-    #         for group in groups[:]:
-    #             for g_row in group[:]:
-    #                 i += 1
-    #                 print i
-    #
-    #                 if proxy_cmp(g_row, row):
-    #                     group.append(row)
-    #                     found = True
-    #
-    #         if not found:   # create a new group
-    #             groups.append([row])
 
     # regroup the data by mru, now that we found identical rows
     regroup = defaultdict(list)
