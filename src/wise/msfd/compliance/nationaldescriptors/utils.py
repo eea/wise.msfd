@@ -22,27 +22,23 @@ def consolidate_date_by_mru(data):
     # This case applies for Art9, when justification for delay is reported
     rows_without_mru = []
 
-    i = 0
-
     for obj in chain(*data.values()):
-        print "looking for duplicates of ", id(obj)
+        # print "looking for duplicates of ", id(obj)
         found = False
 
         for group in groups:
-            copy = group[:]
-
-            for seen in copy:
-                i += 1
-                # print i
-
-                if proxy_cmp(obj, seen):
-                    print("Found duplicate")
-                    group.append(obj)
-                    found = True
+            # compare only with the first object from a group because
+            # all objects from a group should contain the same data
+            first_from_group = group[0]
+            if proxy_cmp(obj, first_from_group):
+                # print("Found duplicate")
+                group.append(obj)
+                found = True
 
         if not found:
             groups.append([obj])
 
+    # i = 0
     # for dataset in data.values():
     #
     #     for row in dataset:
