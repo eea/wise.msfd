@@ -5,6 +5,8 @@
   xmlns:z3c="http://namespaces.zope.org/z3c"
   i18n_domain="wise.msfd">
 
+  <include package="Products.CMFCore" file="permissions.zcml" />
+
   <permission
     id="wise.EditAssessment"
     title="wise.msfd: Edit Assessment"
