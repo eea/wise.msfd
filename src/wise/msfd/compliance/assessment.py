@@ -3,10 +3,10 @@ from collections import namedtuple
 
 from AccessControl import Unauthorized
 
-from zope.interface import implements
 from zope.schema import Choice, Text
 
 from persistent.list import PersistentList
+from Products.Five.browser import BrowserView
 from Products.Five.browser.pagetemplatefile import (PageTemplateFile,
                                                     ViewPageTemplateFile)
 from wise.msfd.compliance.content import AssessmentData
@@ -35,10 +35,12 @@ additional_fields = {
 }
 
 summary_fields = (
-    # ('assessment_summary', u'Assessment summary'),
-    # ('recommendations', u'Recommendations for Member State'),
+    ('assessment_summary', u'Assessment summary'),
+    ('progress', u'Progress assessment'),
+    ('recommendations', u'Recommendations for Member State'),
 )
 
+# TODO not used
 progress_fields = (
     ('assessment_summary', u'Assessment summary'),
     ('progress', u'Progress assessment'),
@@ -80,7 +82,39 @@ class EditAssessorsForm(Form, BaseComplianceView):
             self.update()
 
 
+class ViewAssessmentSummaryForm(BaseComplianceView):
+    """ Render the assessment summary, progress assessment
+    and recommendations for member state for view
+
+    """
+
+    template = ViewPageTemplateFile("pt/assessment-summary-form-view.pt")
+
+    @property
+    def summary_data(self):
+        saved_data = self.context.saved_assessment_data.last()
+
+        _fields = []
+
+        for name, title in summary_fields:
+            _name = '{}_{}'.format(
+                self.article, name
+            )
+
+            text = saved_data.get(_name, None)
+
+            _fields.append((title, text))
+
+        return _fields
+
+    def __call__(self):
+        fields = self.summary_data
+
+        return self.template(fields=fields)
+
+
 class EditAssessmentSummaryForm(Form, BaseComplianceView):
+    # TODO unused
     """ Edit the assessment summary
 
     Fields are: summary, recommendations, progress assessment
@@ -141,7 +175,6 @@ class EditAssessmentSummaryForm(Form, BaseComplianceView):
         return self.context.absolute_url() + '/@@edit-assessment-summary'
 
     def render(self):
-
         if self.request.method == 'POST':
             Form.render(self)
 

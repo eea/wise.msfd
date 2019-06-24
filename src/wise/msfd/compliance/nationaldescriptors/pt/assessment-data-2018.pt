@@ -63,46 +63,13 @@
 
       <tr id="asssessment-overview-form-comments">
         <script src="/++resource++msfd/js/assessment-edit.js"></script>
-        <!--<th rowspan="5">Progress assessment, recommendations and summary</th>-->
+        <th rowspan="5">Assessment summary, progress assessment and recommendations</th>
         <td class="subform"
-            tal:attributes="colspan python: len(assessment.gescomponents) + 1; rowspan string:5">
+            tal:attributes="colspan python: len(assessment.gescomponents); rowspan string:5">
           <div class="body">
             <div class="form-assessment-summary">
-              <form
-                method="POST"
-                action="./@@edit-assessment-summary"
-                tal:replace="structure context/@@edit-assessment-summary">
-                <textarea></textarea>
-                <button name="save_progres" >Save</button>
-              </form>
+              <div tal:replace="structure context/@@view-assessment-summary"></div>
             </div>
-
-            <div class="right discussion disc-tl"
-                 tal:define="question_id string:summary"
-                 tal:condition="options/can_comment_tl">
-              <i class="comm-hide fa fa-window-close fa-1" title="Hide"></i>
-              <div class="comments"
-                tal:attributes="data-question-id question_id; data-thread-id string:tl"></div>
-              <div tal:condition="python: not(view.read_only_access)"
-                  class="textline">
-                <textarea name="comment-text" placeholder="Write a comment..."></textarea>
-                <button class="btn btn-primary">Post</button>
-              </div>
-            </div>
-
-            <div class="right discussion disc-ec"
-                 tal:define="question_id string:summary"
-                 tal:condition="options/can_comment_ec">
-              <i class="comm-hide fa fa-window-close fa-1" title="Hide"></i>
-              <div class="comments"
-                tal:attributes="data-question-id question_id; data-thread-id string:ec"></div>
-              <div tal:condition="python: not(view.read_only_access)"
-                  class="textline">
-                <textarea name="comment-text" placeholder="Write a comment..."></textarea>
-                <button class="btn btn-primary">Post</button>
-              </div>
-            </div>
-
           </div>
         </td>
       </tr>

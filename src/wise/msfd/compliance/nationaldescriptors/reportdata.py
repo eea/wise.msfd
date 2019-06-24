@@ -4,13 +4,13 @@ from datetime import datetime
 from HTMLParser import HTMLParser
 from io import BytesIO
 
+import xlsxwriter
 from lxml.etree import fromstring
 from sqlalchemy import or_
 from zope.interface import implements
 from zope.schema import Choice
 from zope.schema.vocabulary import SimpleTerm, SimpleVocabulary
 
-import xlsxwriter
 from eea.cache import cache
 from plone.app.layout.viewlets.common import TitleViewlet as BaseTitleViewlet
 from plone.memoize import volatile
@@ -27,7 +27,7 @@ from wise.msfd.data import (get_factsheet_url, get_report_file_url,
 from wise.msfd.gescomponents import (get_descriptor, get_features,
                                      get_parameters)
 from wise.msfd.translation import retrieve_translation
-from wise.msfd.utils import ItemList, items_to_rows, timeit, natural_sort_key
+from wise.msfd.utils import ItemList, items_to_rows, natural_sort_key, timeit
 from z3c.form.button import buttonAndHandler
 from z3c.form.field import Fields
 from z3c.form.form import Form
@@ -638,7 +638,8 @@ https://svn.eionet.europa.eu/repositories/Reportnet/Dataflows/MarineDirective/MS
 
             res.append((mru, _rows))
 
-        res_sorted = sorted(res, key=lambda r: natural_sort_key(r[0].__repr__()))
+        res_sorted = sorted(
+            res, key=lambda r: natural_sort_key(r[0].__repr__()))
 
         return res_sorted
 

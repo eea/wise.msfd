@@ -1,7 +1,8 @@
 from collections import defaultdict
+from itertools import chain
 
 from wise.msfd.gescomponents import GES_LABELS
-from wise.msfd.utils import LabeledItemList, ItemList, ItemLabel
+from wise.msfd.utils import ItemLabel, ItemList, LabeledItemList
 
 from .proxy import proxy_cmp
 
@@ -14,23 +15,24 @@ def consolidate_date_by_mru(data):
     """
 
     groups = []
+
     # Rows without MRU reported
     # This case applies for Art9, when justification for delay is reported
     rows_without_mru = []
 
-    for dataset in data.values():
+    for obj in chain(*data.values()):
+        found = False
 
-        for row in dataset:
-            found = False
+        for group in groups:
+            # compare only with the first object from a group because
+            # all objects from a group should contain the same data
+            first_from_group = group[0]
+            if proxy_cmp(obj, first_from_group):
+                group.append(obj)
+                found = True
 
-            for group in groups:
-                for g_row in group[:]:
-                    if proxy_cmp(g_row, row):
-                        group.append(row)
-                        found = True
-
-            if not found:   # create a new group
-                groups.append([row])
+        if not found:
+            groups.append([obj])
 
     # regroup the data by mru, now that we found identical rows
     regroup = defaultdict(list)
@@ -66,8 +68,10 @@ def consolidate_date_by_mru(data):
         # .../fi/bal/d6/art9/@@view-report-data-2018
 
         ges_comps_with_data = set(x.GESComponent.id for x in rows)
+
         for row_extra in rows_without_mru:
             ges_comp = row_extra.GESComponent.id
+
             if ges_comp in ges_comps_with_data:
                 continue
 

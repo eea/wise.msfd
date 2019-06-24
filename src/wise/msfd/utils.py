@@ -22,7 +22,6 @@ from plone.intelligenttext.transforms import \
 from plone.memoize import volatile
 from Products.Five.browser.pagetemplatefile import PageTemplateFile
 
-
 # TODO: move this registration to search package
 BLACKLIST = ['ID', 'Import', 'Id']
 
@@ -619,12 +618,14 @@ def timeit(func):
 
     Use it as @timeit
     """
+    func_name = "{}.{}".format(func.__module__, func.__name__)
+
     def wrapped(*args, **kw):
         ts = time.time()
         res = func(*args, **kw)
         te = time.time()
 
-        logger.info("%r %2.2f ms" % (func.__name__, (te - ts) * 1000))
+        logger.info("%r %2.2f ms" % (func_name, (te - ts) * 1000))
 
         return res
 

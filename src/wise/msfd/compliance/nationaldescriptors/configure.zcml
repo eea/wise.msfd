@@ -38,6 +38,13 @@
     />
 
   <browser:page
+    for="..interfaces.INationalDescriptorAssessment"
+    name="view-assessment-summary"
+    class="..assessment.ViewAssessmentSummaryForm"
+    permission="zope2.View"
+    />
+
+  <browser:page
     for="..interfaces.INationalRegionDescriptorFolder"
     name="nat-desc-reg-view"
     template="./pt/reg-view.pt"

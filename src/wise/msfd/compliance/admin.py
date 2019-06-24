@@ -489,6 +489,7 @@ class AdminScoring(BaseComplianceView):
                     try:
                         option = options[i]
                     except IndexError:
+                        continue
                         option = 'ERROR with options: {} / index: {}'.format(
                             ', '.join(options), i
                         )
