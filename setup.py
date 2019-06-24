@@ -43,6 +43,7 @@ setup(
         'zope.sqlalchemy',
         'pymssql',
         'xlsxwriter',
+        'sparql-client',
         # 'pyodbc',
 
         'z3c.formwidget.optgroup',  # used in compliance select lists

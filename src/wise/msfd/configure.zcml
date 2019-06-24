@@ -6,7 +6,7 @@
   i18n_domain="wise.msfd">
 
   <include file="permissions.zcml" />
-  <include package="z3c.formwidget.optgroup" />
+  <!--include package="z3c.formwidget.optgroup" / -->
 
   <include package=".search" />
   <include package=".compliance" />
