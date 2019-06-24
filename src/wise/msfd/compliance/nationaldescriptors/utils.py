@@ -1,7 +1,8 @@
 from collections import defaultdict
+from itertools import chain
 
 from wise.msfd.gescomponents import GES_LABELS
-from wise.msfd.utils import LabeledItemList, ItemList, ItemLabel
+from wise.msfd.utils import ItemLabel, ItemList, LabeledItemList
 
 from .proxy import proxy_cmp
 
@@ -12,25 +13,52 @@ def consolidate_date_by_mru(data):
 
     This is used by the A9 2018 report.
     """
+    import pdb
+    pdb.set_trace()
 
     groups = []
+
     # Rows without MRU reported
     # This case applies for Art9, when justification for delay is reported
     rows_without_mru = []
 
-    for dataset in data.values():
+    i = 0
 
-        for row in dataset:
-            found = False
+    for obj in chain(*data.values()):
+        print "looking for duplicates of ", id(obj)
+        found = False
 
-            for group in groups:
-                for g_row in group[:]:
-                    if proxy_cmp(g_row, row):
-                        group.append(row)
-                        found = True
+        for group in groups:
+            copy = group[:]
 
-            if not found:   # create a new group
-                groups.append([row])
+            for seen in copy:
+                i += 1
+                # print i
+
+                if proxy_cmp(obj, seen):
+                    print("Found duplicate")
+                    group.append(obj)
+                    found = True
+
+        if not found:
+            groups.append([obj])
+
+    # for dataset in data.values():
+    #
+    #     for row in dataset:
+    #         found = False
+    #
+    #         for group in groups[:]:
+    #             for g_row in group[:]:
+    #                 i += 1
+    #                 print i
+    #
+    #                 if proxy_cmp(g_row, row):
+    #                     group.append(row)
+    #                     found = True
+    #
+    #         if not found:   # create a new group
+    #             groups.append([row])
 
     # regroup the data by mru, now that we found identical rows
     regroup = defaultdict(list)
@@ -66,8 +94,10 @@ def consolidate_date_by_mru(data):
         # .../fi/bal/d6/art9/@@view-report-data-2018
 
         ges_comps_with_data = set(x.GESComponent.id for x in rows)
+
         for row_extra in rows_without_mru:
             ges_comp = row_extra.GESComponent.id
+
             if ges_comp in ges_comps_with_data:
                 continue
 
