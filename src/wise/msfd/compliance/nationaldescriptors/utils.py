@@ -2,7 +2,7 @@ from collections import defaultdict
 from itertools import chain
 
 from wise.msfd.gescomponents import GES_LABELS
-from wise.msfd.utils import ItemLabel, ItemList, LabeledItemList
+from wise.msfd.utils import ItemLabel, ItemList, LabeledItemList, timeit
 
 from .proxy import proxy_cmp
 
@@ -27,6 +27,7 @@ def consolidate_date_by_mru(data):
             # compare only with the first object from a group because
             # all objects from a group should contain the same data
             first_from_group = group[0]
+
             if proxy_cmp(obj, first_from_group):
                 group.append(obj)
                 found = True
@@ -89,14 +90,18 @@ def consolidate_date_by_mru(data):
     return out
 
 
+@timeit
 def consolidate_singlevalue_to_list(proxies, fieldname):
     """ Given a list of proxies where one of the fields needs to be a list, but
     is spread across different similar proxies, consolidate the single values
     to a list and return only one object for that list of similar objects
     """
+
     map_ = []
 
     for o in proxies:
+        o_mru = getattr(o, 'MarineReportingUnit', '')
+
         if not map_:
             map_.append([o])
 
@@ -105,7 +110,13 @@ def consolidate_singlevalue_to_list(proxies, fieldname):
         found = False
 
         for set_ in map_:
-            if proxy_cmp(set_[0], o, fieldname):
+            first = set_[0]
+            f_mru = getattr(first, 'MarineReportingUnit', '')
+
+            if o_mru != f_mru:
+                continue
+
+            if proxy_cmp(first, o, fieldname):
                 set_.append(o)
                 found = True
 

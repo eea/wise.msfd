@@ -61,6 +61,7 @@ class Proxy2018(object):
 
     def __init__(self, obj, report_class, extra=None):
         self.__o = obj       # the proxied object
+        self._hash = {}
 
         self.report_class = report_class
         self.article = report_class.article
@@ -84,6 +85,9 @@ class Proxy2018(object):
             self.set_value(name, value)
 
     def __getattr__(self, name):
+        if name == '__o':
+            return self.__o
+
         return getattr(self.__o, name, self.extra.get(name, None))
 
     def __iter__(self):
@@ -110,6 +114,19 @@ class Proxy2018(object):
 
         return obj
 
+    def hash(self, ignore=None):
+        if ignore not in self._hash:
+            keys = sorted([k for k in self.__o.keys() if k != ignore])
+            vals = []
+
+            for v in [getattr(self.__o, k) for k in keys]:
+                if isinstance(v, list):
+                    v = tuple(v)
+                vals.append(v)
+            self._hash[ignore] = hash(tuple(vals))
+
+        return self._hash[ignore]
+
 
 def proxy_cmp(self, other, ignore_field='MarineReportingUnit'):
     """ Compare two proxy objects but only look at reported value, not MRU
@@ -117,14 +134,16 @@ def proxy_cmp(self, other, ignore_field='MarineReportingUnit'):
     Could be implemented in Proxy2018, but take care, need to return integers
     """
 
-    fieldnames = [field.name for field in self.fields
-                  if field.name != ignore_field]
+    return self.hash(ignore_field) == other.hash(ignore_field)
 
-    for name in fieldnames:
-        a = getattr(self, name)
-        b = getattr(other, name)
-
-        if a != b:
-            return False
-
-    return True
+    # fieldnames = [field.name for field in self.fields
+    #               if field.name != ignore_field]
+    #
+    # for name in fieldnames:
+    #     a = getattr(self, name)
+    #     b = getattr(other, name)
+    #
+    #     if a != b:
+    #         return False
+    #
+    # return True
