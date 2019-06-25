@@ -91,6 +91,13 @@
   />
 
   <browser:page
+    for="*"
+    name="setup-workflow-states"
+    class=".admin.SetupAssessmentWorkflowStates"
+    permission="cmf.ManagePortal"
+  />
+
+  <browser:page
     for=".interfaces.IComplianceModuleFolder"
     name="comp-start"
     class=".main.StartComplianceView"

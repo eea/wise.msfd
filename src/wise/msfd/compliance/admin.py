@@ -8,7 +8,7 @@ from zope.interface import alsoProvides
 import xlsxwriter
 from eea.cache import cache
 from plone import api
-from plone.api.content import transition
+from plone.api.content import get_state, transition
 from plone.api.portal import get_tool
 from plone.dexterity.utils import createContentInContainer as create
 from Products.CMFCore.utils import getToolByName
@@ -580,3 +580,53 @@ class AdminScoring(BaseComplianceView):
             logger.info('Recalculating score finished!')
 
         return self.index()
+
+
+class SetupAssessmentWorkflowStates(BaseComplianceView):
+
+    @property
+    def ndas(self):
+        catalog = get_tool('portal_catalog')
+        brains = catalog.searchResults(
+            portal_type='wise.msfd.nationaldescriptorassessment',
+        )
+
+        for brain in brains:
+            obj = brain.getObject()
+            yield obj
+
+    def get_wf_state_id(self, context):
+        state = get_state(context)
+        wftool = get_tool('portal_workflow')
+        wf = wftool.getWorkflowsFor(context)[0]  # assumes one wf
+        wf_state = wf.states[state]
+        wf_state_id = wf_state.id or state
+
+        return wf_state_id
+
+    def __call__(self):
+        changed = 0
+        not_changed = 0
+
+        logger.info("Changing workflow states to not_started...")
+
+        for nda in self.ndas:
+            state = self.get_wf_state_id(nda)
+
+            if hasattr(nda, 'saved_assessment_data'):
+                data = nda.saved_assessment_data.last()
+                if data:
+                    not_changed += 1
+
+                    continue
+
+            if state == 'in_work':
+                changed += 1
+                logger.info("State changing for {}".format(nda.__repr__()))
+                transition(obj=nda, to_state='not_started')
+
+        logger.info("States changed: {}, Not changed: {}".format(
+            changed, not_changed)
+        )
+
+        return "Done"
