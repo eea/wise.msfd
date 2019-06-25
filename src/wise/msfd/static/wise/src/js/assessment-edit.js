@@ -11,12 +11,32 @@
   };
 
   function loadComments($el) {
+    color_palette_tl = ["lightblue", "lightgreen", "lightseagreen", "lightsalmon"]
+    color_palette_ec = ["darkgreen", "darkblue", "darkgoldenrod", "darkmagenta"]
+
     var qid = $el.data('question-id');
     var threadId = $el.data('thread-id');
     var url = './@@ast-comments?q=' + qid + '&thread_id=' + threadId;
     $.get(url, function(text){
-      // console.log('getting comments from url', url);
+      //console.log('getting comments from url', url);
       $el.html(text);
+
+      console.log('setup colored chat');
+      // setup colored chat depending on user
+      usernames = [];
+      $el.find('.comment-name').each(function(){
+        usernames.push($(this).text());
+      });
+      usernames = $.unique(usernames)
+
+      $el.find('.comms').each(function(){
+        var commenter = $(this).find('.comment-name').text();
+        indx = usernames.indexOf(commenter)
+        color = color_palette_tl[indx]
+
+        //debugger;
+      });
+
     });
   }
 
@@ -129,7 +149,7 @@
     // add the disabled attribute for select/textarea elements
     // if the question type does not match the process phase
     $('#comp-national-descriptor div.subform.disabled div.left')
-      .find('select, textarea').each(function(){
+      .find('textarea').each(function(){
         $(this).attr('disabled', true);
     });
 
