@@ -36,12 +36,16 @@ edw_logger.setLevel('WARNING')
 
 STATUS_COLORS = {
     "approved": "success",
+    "not_started": "default",
     "in_work": "danger",
     "in_draft_review": "warning",
+    "in_draft_review_com": "warning-2",
     "in_final_review": "primary",
+    "in_final_review_com": "success-2",
 }
 
 PROCESS_STATUS_COLORS = {
+    "notstarted": "default",
     "phase1": "warning",
     "phase2": "primary",
     "phase3": "success",

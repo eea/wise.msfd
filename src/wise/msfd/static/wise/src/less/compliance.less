@@ -106,6 +106,31 @@ div.as-table-overview blockquote {
   padding-left: 1em;
 }
 
+// Custom colored buttons for process states
+.btn-warning-2 {
+  @bg-color: #ffca00;
+  color: #fff;
+  background-color: @bg-color;
+  border: solid 1px darken(@bg-color, 5%);
+
+  &:hover {
+    color: #fff !important;
+    background-color: darken(@bg-color, 5%);
+  }
+}
+.btn-success-2 {
+  @bg-color: #2d826e;
+  color: #fff;
+  background-color: @bg-color;
+  border: solid 1px darken(@bg-color, 5%);
+
+  &:hover {
+    color: #fff !important;
+    background-color: darken(@bg-color, 5%);
+  }
+
+}
+
 
 // Assessment overview
 // nat-desc-art-view.pt
@@ -462,4 +487,3 @@ table.comp-c-listing {
     }
   }
 }
-

@@ -1,8 +1,12 @@
 <?xml version="1.0"?>
-<dc-workflow workflow_id="compliance_nationaldescriptor_workflow" title="Compliance National descriptors workflow" description="To be used for MSFD Compliance module, for the national descriptors folders." state_variable="review_state" initial_state="phase1" manager_bypass="True">
+<dc-workflow workflow_id="compliance_nationaldescriptor_workflow" title="Compliance National descriptors workflow" description="To be used for MSFD Compliance module, for the national descriptors folders." state_variable="review_state" initial_state="notstarted" manager_bypass="True">
  <state state_id="final" title="Final state">
  </state>
- <state state_id="phase1" title="Phase 1: Assessment consistency">
+ <state state_id="notstarted" title="Not started">
+  <exit-transition transition_id="to_phase1"/>
+ </state>
+ <state state_id="phase1" title="Phase 1: Assessment adequacy and consistency">
+  <exit-transition transition_id="to_notstarted"/>
   <exit-transition transition_id="to_phase2"/>
  </state>
  <state state_id="phase2" title="Phase 2">
@@ -18,8 +22,14 @@
    <guard-permission>Review portal content</guard-permission>
   </guard>
  </transition>
+ <transition transition_id="to_notstarted" title="To not started" new_state="notstarted" trigger="USER" before_script="" after_script="">
+  <action url="" category="workflow" icon="">Back to not started</action>
+  <guard>
+   <guard-permission>Review portal content</guard-permission>
+  </guard>
+ </transition>
  <transition transition_id="to_phase1" title="To Phase1" new_state="phase1" trigger="USER" before_script="" after_script="">
-  <action url="%(content_url)s/content_status_modify?workflow_action=to_phase1" category="workflow" icon="">Back to Phase 1</action>
+  <action url="%(content_url)s/content_status_modify?workflow_action=to_phase1" category="workflow" icon="">Send to Phase 1</action>
   <guard>
    <guard-permission>Review portal content</guard-permission>
   </guard>

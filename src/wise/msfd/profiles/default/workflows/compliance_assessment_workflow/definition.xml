@@ -1,11 +1,11 @@
 <?xml version="1.0"?>
-<dc-workflow workflow_id="compliance_assessment_workflow" title="Compliance Asessment workflow" description="Workflow to be used for Assessments on Articles/Descriptors, in National Descriptors Assessment" state_variable="review_state" initial_state="in_work" manager_bypass="False">
+<dc-workflow workflow_id="compliance_assessment_workflow" title="Compliance Asessment workflow" description="Workflow to be used for Assessments on Articles/Descriptors, in National Descriptors Assessment" state_variable="review_state" initial_state="not_started" manager_bypass="False">
+ <permission>Modify portal content</permission>
  <permission>View</permission>
  <permission>wise.msfd: Edit Assessment</permission>
- <permission>Modify portal content</permission>
  <state state_id="approved" title="Approved">
+  <exit-transition transition_id="send_back_to_draft"/>
   <exit-transition transition_id="send_back_to_final_review"/>
-  <exit-transition transition_id="send_for_draft_review"/>
   <permission-map name="Modify portal content" acquired="False">
    <permission-role>Manager</permission-role>
   </permission-map>
@@ -19,9 +19,9 @@
   <permission-map name="wise.msfd: Edit Assessment" acquired="False">
   </permission-map>
  </state>
- <state state_id="in_draft_review" title="In draft review">
+ <state state_id="in_draft_review" title="In draft review by Milieu">
   <exit-transition transition_id="send_back_to_work"/>
-  <exit-transition transition_id="send_for_final_review"/>
+  <exit-transition transition_id="send_for_draft_review_com"/>
   <permission-map name="Modify portal content" acquired="False">
    <permission-role>Editor</permission-role>
    <permission-role>Manager</permission-role>
@@ -36,9 +36,13 @@
   <permission-map name="wise.msfd: Edit Assessment" acquired="False">
   </permission-map>
  </state>
- <state state_id="in_final_review" title="In final review">
+ <state state_id="in_draft_review_com" title="In draft review by COM">
   <exit-transition transition_id="approve"/>
-  <exit-transition transition_id="send_for_draft_review"/>
+  <exit-transition transition_id="send_for_final_review"/>
+ </state>
+ <state state_id="in_final_review" title="In final review by Milieu">
+  <exit-transition transition_id="send_back_to_work"/>
+  <exit-transition transition_id="send_for_final_review_com"/>
   <permission-map name="Modify portal content" acquired="False">
    <permission-role>Manager</permission-role>
   </permission-map>
@@ -51,9 +55,14 @@
   </permission-map>
   <permission-map name="wise.msfd: Edit Assessment" acquired="False">
   </permission-map>
+ </state>
+ <state state_id="in_final_review_com" title="In final review by COM">
+  <exit-transition transition_id="approve"/>
+  <exit-transition transition_id="send_back_to_final_review"/>
  </state>
  <state state_id="in_work" title="In work by Topic Lead">
   <exit-transition transition_id="send_for_draft_review"/>
+  <exit-transition transition_id="send_to_not_started"/>
   <permission-map name="Modify portal content" acquired="False">
    <permission-role>Editor</permission-role>
    <permission-role>Manager</permission-role>
@@ -69,6 +78,9 @@
    <permission-role>Contributor</permission-role>
    <permission-role>Manager</permission-role>
   </permission-map>
+ </state>
+ <state state_id="not_started" title="Not started">
+  <exit-transition transition_id="send_for_work"/>
  </state>
  <transition transition_id="approve" title="Approve assessment" new_state="approved" trigger="USER" before_script="" after_script="">
   <action url="%(content_url)s/content_status_modify?workflow_action=approve" category="workflow" icon="">Approve assessment</action>
@@ -76,32 +88,56 @@
    <guard-role>Reviewer</guard-role>
   </guard>
  </transition>
- <transition transition_id="send_back_to_draft" title="Send back to draft review" new_state="in_draft_review" trigger="USER" before_script="" after_script="">
-  <action url="%(content_url)s/content_status_modify?workflow_action=send_back_to_draft" category="workflow" icon="">Send back to draft review</action>
+ <transition transition_id="send_back_to_draft" title="Send back to draft review by Milieu" new_state="in_draft_review" trigger="USER" before_script="" after_script="">
+  <action url="%(content_url)s/content_status_modify?workflow_action=send_back_to_draft" category="workflow" icon="">Send back to draft review by Milieu</action>
   <guard>
    <guard-role>Reviewer</guard-role>
   </guard>
  </transition>
- <transition transition_id="send_back_to_final_review" title="Send back to final review" new_state="in_final_review" trigger="USER" before_script="" after_script="">
-  <action url="%(content_url)s/content_status_modify?workflow_action=send_back_to_final_review" category="workflow" icon="">Send back to final review</action>
+ <transition transition_id="send_back_to_final_review" title="Send back to final review by Milieu" new_state="in_final_review" trigger="USER" before_script="" after_script="">
+  <action url="%(content_url)s/content_status_modify?workflow_action=send_back_to_final_review" category="workflow" icon="">Send back to final review by Milieu</action>
   <guard>
    <guard-role>Reviewer</guard-role>
   </guard>
  </transition>
- <transition transition_id="send_back_to_work" title="Send back to work" new_state="in_work" trigger="USER" before_script="" after_script="">
-  <action url="%(content_url)s/content_status_modify?workflow_action=send_back_to_work" category="workflow" icon="">Send back to work</action>
+ <transition transition_id="send_back_to_work" title="Send back to work by Topic Leads" new_state="in_work" trigger="USER" before_script="" after_script="">
+  <action url="%(content_url)s/content_status_modify?workflow_action=send_back_to_work" category="workflow" icon="">Send back to work by Topic Leads</action>
   <guard>
    <guard-role>Editor</guard-role>
   </guard>
  </transition>
- <transition transition_id="send_for_draft_review" title="Send for draft review" new_state="in_draft_review" trigger="USER" before_script="" after_script="">
-  <action url="%(content_url)s/content_status_modify?workflow_action=send_for_draft_review" category="workflow" icon="">Send for draft review</action>
+ <transition transition_id="send_for_draft_review" title="Send for draft review by Milieu" new_state="in_draft_review" trigger="USER" before_script="" after_script="">
+  <action url="%(content_url)s/content_status_modify?workflow_action=send_for_draft_review" category="workflow" icon="">Send for draft review by Milieu</action>
   <guard>
    <guard-role>Contributor</guard-role>
   </guard>
  </transition>
- <transition transition_id="send_for_final_review" title="Send for final review" new_state="in_final_review" trigger="USER" before_script="" after_script="">
-  <action url="%(content_url)s/content_status_modify?workflow_action=send_for_final_review" category="workflow" icon="">Send for final review</action>
+ <transition transition_id="send_for_draft_review_com" title="Send for draft review by COM" new_state="in_draft_review_com" trigger="USER" before_script="" after_script="">
+  <action url="" category="workflow" icon="">Send for draft review by COM</action>
+  <guard>
+   <guard-role>Editor</guard-role>
+  </guard>
+ </transition>
+ <transition transition_id="send_for_final_review" title="Send for final review by Milieu" new_state="in_final_review" trigger="USER" before_script="" after_script="">
+  <action url="%(content_url)s/content_status_modify?workflow_action=send_for_final_review" category="workflow" icon="">Send for final review by Milieu</action>
+  <guard>
+   <guard-role>Reviewer</guard-role>
+  </guard>
+ </transition>
+ <transition transition_id="send_for_final_review_com" title="Send for final review by COM" new_state="in_final_review_com" trigger="USER" before_script="" after_script="">
+  <action url="" category="workflow" icon="">Send for final review by COM</action>
+  <guard>
+   <guard-role>Editor</guard-role>
+  </guard>
+ </transition>
+ <transition transition_id="send_for_work" title="Send for work by Topic Leads" new_state="in_work" trigger="USER" before_script="" after_script="">
+  <action url="" category="workflow" icon="">Send for work by Topic Leads</action>
+  <guard>
+   <guard-role>Editor</guard-role>
+  </guard>
+ </transition>
+ <transition transition_id="send_to_not_started" title="Send back to not started" new_state="not_started" trigger="USER" before_script="" after_script="">
+  <action url="" category="workflow" icon="">Send back to not started</action>
   <guard>
    <guard-role>Editor</guard-role>
   </guard>
