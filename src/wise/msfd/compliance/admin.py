@@ -32,6 +32,16 @@ REVIEWER_GROUP_ID = 'extranet-wisemarine-msfd-reviewers'
 EDITOR_GROUP_ID = 'extranet-wisemarine-msfd-editors'
 
 
+def get_wf_state_id(context):
+    state = get_state(context)
+    wftool = get_tool('portal_workflow')
+    wf = wftool.getWorkflowsFor(context)[0]  # assumes one wf
+    wf_state = wf.states[state]
+    wf_state_id = wf_state.id or state
+
+    return wf_state_id
+
+
 class ToPDB(BrowserView):
     def __call__(self):
         import pdb
@@ -464,6 +474,7 @@ class AdminScoring(BaseComplianceView):
 
             return
 
+        state = get_wf_state_id(obj)
         article = obj
         descr = obj.aq_parent
         region = obj.aq_parent.aq_parent
@@ -498,27 +509,27 @@ class AdminScoring(BaseComplianceView):
 
                     yield (country.title, region.title, d_obj.id,
                            article.title, val.question.id, option, answer,
-                           val.question.scores[v])
+                           val.question.scores[v], state)
 
             elif '_Summary' in k:
                 article_id, question_id, _ = k.split('_')
                 yield (country.title, region.title, d_obj.id,
-                       article_id, question_id, 'Summary', val, ' ')
+                       article_id, question_id, 'Summary', val, ' ', state)
 
             elif '_assessment_summary' in k:
                 article_id, _, __ = k.split('_')
                 yield (country.title, region.title, d_obj.id,
-                       article_id, ' ', 'Assessment Summary', val, '')
+                       article_id, ' ', 'Assessment Summary', val, '', state)
             
             elif '_recommendations' in k:
                 article_id, _ = k.split('_')
                 yield (country.title, region.title, d_obj.id,
-                       article_id, ' ', 'Recommendations', val, '')
+                       article_id, ' ', 'Recommendations', val, '', state)
 
             elif '_progress' in k:
                 article_id, _ = k.split('_')
                 yield (country.title, region.title, d_obj.id,
-                       article_id, ' ', 'Progress', val, '')
+                       article_id, ' ', 'Progress', val, '', state)
                 
 
     def data_to_xls(self, labels, data):
@@ -548,7 +559,7 @@ class AdminScoring(BaseComplianceView):
         xlsdata = (self.get_data(nda) for nda in self.ndas)
 
         labels = ('Country', 'Region', 'Descriptor', 'Article', 'Question',
-                  'Option', 'Answer', 'Score')
+                  'Option', 'Answer', 'Score', 'State')
 
         xlsio = self.data_to_xls(labels, xlsdata)
         sh = self.request.response.setHeader
@@ -595,15 +606,6 @@ class SetupAssessmentWorkflowStates(BaseComplianceView):
             obj = brain.getObject()
             yield obj
 
-    def get_wf_state_id(self, context):
-        state = get_state(context)
-        wftool = get_tool('portal_workflow')
-        wf = wftool.getWorkflowsFor(context)[0]  # assumes one wf
-        wf_state = wf.states[state]
-        wf_state_id = wf_state.id or state
-
-        return wf_state_id
-
     def __call__(self):
         changed = 0
         not_changed = 0
@@ -611,7 +613,7 @@ class SetupAssessmentWorkflowStates(BaseComplianceView):
         logger.info("Changing workflow states to not_started...")
 
         for nda in self.ndas:
-            state = self.get_wf_state_id(nda)
+            state = get_wf_state_id(nda)
 
             if hasattr(nda, 'saved_assessment_data'):
                 data = nda.saved_assessment_data.last()
