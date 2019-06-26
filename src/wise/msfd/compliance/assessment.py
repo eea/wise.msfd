@@ -6,7 +6,6 @@ from AccessControl import Unauthorized
 from zope.schema import Choice, Text
 
 from persistent.list import PersistentList
-from Products.Five.browser import BrowserView
 from Products.Five.browser.pagetemplatefile import (PageTemplateFile,
                                                     ViewPageTemplateFile)
 from wise.msfd.compliance.content import AssessmentData

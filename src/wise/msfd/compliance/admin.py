@@ -530,7 +530,6 @@ class AdminScoring(BaseComplianceView):
                 article_id, _ = k.split('_')
                 yield (country.title, region.title, d_obj.id,
                        article_id, ' ', 'Progress', val, '', state)
-                
 
     def data_to_xls(self, labels, data):
         out = BytesIO()
