@@ -8,7 +8,9 @@
   <li class="comms" tal:repeat="comment comments">
     <div class="comm-crtr">
       <i class="fa fa-user" aria-hidden="true"></i>
-      <span tal:content="comment/Creator" class="comment-name">Creator</span>
+      <span tal:content="comment/Creator"
+            tal:attributes="group-id python: view._get_user_group(comment.Creator())"
+            class="comment-name">Creator</span>
       <span tal:content="python: plone.toLocalizedTime(comment.created(), long_format=True)"
             class="comment-time">
             Creator

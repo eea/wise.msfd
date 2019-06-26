@@ -12,24 +12,40 @@
 
   function colorComments() {
     // setup colored chat depending on user
-    color_palette_tl = ["lightblue", "lightgreen", "lightseagreen", "lightsalmon"]
-    color_palette_ec = ["darkgreen", "darkblue", "darkgoldenrod", "darkmagenta"]
+    colorPalette = {
+      'tl': ["lightgreen", "lightblue", "lightgoldenrodyellow", "lightgrey"],
+      'ec': ["darkgreen", "darkblue", "darkmagenta", "darkred"]
+    }
 
-    console.log('setup colored chat');
+    usernames = {
+      'ec': [],
+      'tl': []
+    };
 
-    usernames = [];
     $('.comment-name').each(function(){
-      usernames.push($(this).text());
+      var groupId = $(this).attr('group-id');
+      var username = $(this).text();
+
+      if (usernames[groupId].indexOf(username) === -1) {
+        usernames[groupId].push(username);
+      }
+
     });
-    usernames = $.unique(usernames)
 
     $('.comms').each(function(){
-      var commenter = $(this).find('.comment-name').text();
-      indx = usernames.indexOf(commenter);
-      color = color_palette_tl[indx];
+      var $commentName = $(this).find('.comment-name');
+      var commenter = $commentName.text();
+      var groupId = $commentName.attr('group-id');
+      var colorP = colorPalette[groupId];
 
-      //debugger;
-      $(this).find('.comment').css('background-color', color);
+      indx = usernames[groupId].indexOf(commenter);
+      color = colorP[indx % colorP.length];
+
+      $comment = $(this).find('.comment');
+      $comment.css('background-color', color);
+      if (groupId === 'tl'){
+        $comment.css('color', 'black');
+      }
     });
   }
 

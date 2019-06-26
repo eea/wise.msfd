@@ -148,6 +148,14 @@ class BaseComplianceView(BrowserView, BasePublicPage):
 
         return False
 
+    def _get_user_group(self, user):
+        """ Returns the group of the user, either returns EC or TL """
+        roles = get_roles(username=user)
+        if 'Reviewer' in roles:
+            return 'ec'
+
+        return 'tl'
+
     def _can_comment(self, folder_id):
         folder = self.context[folder_id]
 
