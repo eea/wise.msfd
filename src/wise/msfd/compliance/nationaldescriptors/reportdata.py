@@ -620,6 +620,7 @@ https://svn.eionet.europa.eu/repositories/Reportnet/Dataflows/MarineDirective/MS
     def get_data_from_db(self):
         data = getattr(self, 'get_data_from_view_' + self.article)()
         data = [Proxy2018(row, self) for row in data]
+
         if self.article == 'Art8':
             data = consolidate_singlevalue_to_list(data, 'IndicatorCode')
 

@@ -1,5 +1,6 @@
 <?xml version="1.0"?>
 <dc-workflow workflow_id="compliance_nationaldescriptor_workflow" title="Compliance National descriptors workflow" description="To be used for MSFD Compliance module, for the national descriptors folders." state_variable="review_state" initial_state="notstarted" manager_bypass="True">
+
  <state state_id="final" title="Final state">
  </state>
  <state state_id="notstarted" title="Not started">
@@ -16,6 +17,7 @@
  <state state_id="phase3" title="Phase 3">
   <exit-transition transition_id="to_final"/>
  </state>
+
  <transition transition_id="to_final" title="To final state" new_state="final" trigger="USER" before_script="" after_script="">
   <action url="%(content_url)s/content_status_modify?workflow_action=to_final" category="workflow" icon="">To final state</action>
   <guard>
@@ -23,7 +25,7 @@
   </guard>
  </transition>
  <transition transition_id="to_notstarted" title="To not started" new_state="notstarted" trigger="USER" before_script="" after_script="">
-  <action url="" category="workflow" icon="">Back to not started</action>
+  <action url="%(content_url)s/content_status_modify?workflow_action=to_notstarted" category="workflow" icon="">Back to not started</action>
   <guard>
    <guard-permission>Review portal content</guard-permission>
   </guard>
@@ -46,10 +48,11 @@
    <guard-permission>Review portal content</guard-permission>
   </guard>
  </transition>
+
  <variable variable_id="action" for_catalog="False" for_status="True" update_always="True">
   <description>Previous transition</description>
   <default>
-   
+
    <expression>transition/getId|nothing</expression>
   </default>
   <guard>
@@ -58,7 +61,7 @@
  <variable variable_id="actor" for_catalog="False" for_status="True" update_always="True">
   <description>The ID of the user who performed the last transition</description>
   <default>
-   
+
    <expression>user/getId</expression>
   </default>
   <guard>
@@ -67,7 +70,7 @@
  <variable variable_id="comments" for_catalog="False" for_status="True" update_always="True">
   <description>Comment about the last transition</description>
   <default>
-   
+
    <expression>python:state_change.kwargs.get('comment', '')</expression>
   </default>
   <guard>
@@ -76,7 +79,7 @@
  <variable variable_id="review_history" for_catalog="False" for_status="False" update_always="False">
   <description>Provides access to workflow history</description>
   <default>
-   
+
    <expression>state_change/getHistory</expression>
   </default>
   <guard>
@@ -87,7 +90,7 @@
  <variable variable_id="time" for_catalog="False" for_status="True" update_always="True">
   <description>When the previous transition was performed</description>
   <default>
-   
+
    <expression>state_change/getDateTime</expression>
   </default>
   <guard>

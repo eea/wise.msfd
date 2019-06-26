@@ -3,6 +3,7 @@
  <permission>Modify portal content</permission>
  <permission>View</permission>
  <permission>wise.msfd: Edit Assessment</permission>
+
  <state state_id="approved" title="Approved">
   <exit-transition transition_id="send_back_to_draft"/>
   <exit-transition transition_id="send_back_to_final_review"/>
@@ -19,6 +20,7 @@
   <permission-map name="wise.msfd: Edit Assessment" acquired="False">
   </permission-map>
  </state>
+
  <state state_id="in_draft_review" title="In draft review by Milieu">
   <exit-transition transition_id="send_back_to_work"/>
   <exit-transition transition_id="send_for_draft_review_com"/>
@@ -36,6 +38,7 @@
   <permission-map name="wise.msfd: Edit Assessment" acquired="False">
   </permission-map>
  </state>
+
  <state state_id="in_draft_review_com" title="In draft review by COM">
   <exit-transition transition_id="approve"/>
   <exit-transition transition_id="send_for_final_review"/>
@@ -56,10 +59,12 @@
   <permission-map name="wise.msfd: Edit Assessment" acquired="False">
   </permission-map>
  </state>
+
  <state state_id="in_final_review_com" title="In final review by COM">
   <exit-transition transition_id="approve"/>
   <exit-transition transition_id="send_back_to_final_review"/>
  </state>
+
  <state state_id="in_work" title="In work by Topic Lead">
   <exit-transition transition_id="send_for_draft_review"/>
   <exit-transition transition_id="send_to_not_started"/>
@@ -79,9 +84,11 @@
    <permission-role>Manager</permission-role>
   </permission-map>
  </state>
+
  <state state_id="not_started" title="Not started">
   <exit-transition transition_id="send_for_work"/>
  </state>
+
  <transition transition_id="approve" title="Approve assessment" new_state="approved" trigger="USER" before_script="" after_script="">
   <action url="%(content_url)s/content_status_modify?workflow_action=approve" category="workflow" icon="">Approve assessment</action>
   <guard>
@@ -139,13 +146,14 @@
  <transition transition_id="send_to_not_started" title="Send back to not started" new_state="not_started" trigger="USER" before_script="" after_script="">
   <action url="" category="workflow" icon="">Send back to not started</action>
   <guard>
+   <guard-role>Manager</guard-role>
    <guard-role>Editor</guard-role>
   </guard>
  </transition>
+
  <variable variable_id="action" for_catalog="False" for_status="True" update_always="True">
   <description>Previous transition</description>
   <default>
-   
    <expression>transition/getId|nothing</expression>
   </default>
   <guard>
@@ -154,7 +162,6 @@
  <variable variable_id="actor" for_catalog="False" for_status="True" update_always="True">
   <description>The ID of the user who performed the last transition</description>
   <default>
-   
    <expression>user/getId</expression>
   </default>
   <guard>
@@ -163,7 +170,6 @@
  <variable variable_id="comments" for_catalog="False" for_status="True" update_always="True">
   <description>Comment about the last transition</description>
   <default>
-   
    <expression>python:state_change.kwargs.get('comment', '')</expression>
   </default>
   <guard>
@@ -172,7 +178,6 @@
  <variable variable_id="review_history" for_catalog="False" for_status="False" update_always="False">
   <description>Provides access to workflow history</description>
   <default>
-   
    <expression>state_change/getHistory</expression>
   </default>
   <guard>
@@ -183,7 +188,6 @@
  <variable variable_id="time" for_catalog="False" for_status="True" update_always="True">
   <description>When the previous transition was performed</description>
   <default>
-   
    <expression>state_change/getDateTime</expression>
   </default>
   <guard>

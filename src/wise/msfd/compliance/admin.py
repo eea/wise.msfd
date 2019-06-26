@@ -3,9 +3,9 @@ from collections import namedtuple
 from datetime import datetime
 from io import BytesIO
 
+import xlsxwriter
 from zope.interface import alsoProvides
 
-import xlsxwriter
 from eea.cache import cache
 from plone import api
 from plone.api.content import get_state, transition
@@ -268,6 +268,7 @@ class BootstrapCompliance(BrowserView):
 
     def setup_regionaldescriptors(self, parent):
         # Regional Descriptors Assessments
+
         if 'regional-descriptors-assessments' in parent.contentIds():
             rda = parent['regional-descriptors-assessments']
         else:
@@ -469,6 +470,9 @@ class AdminScoring(BaseComplianceView):
                 obj.saved_assessment_data._p_changed = True
 
     def get_data(self, obj):
+        """ Get assessment data for a country assessment object
+        """
+
         if not (hasattr(obj, 'saved_assessment_data')
                 and obj.saved_assessment_data):
 
@@ -482,16 +486,16 @@ class AdminScoring(BaseComplianceView):
         d_obj = self.descriptor_obj(descr.id.upper())
         muids = self.muids(country.id.upper(), region.id.upper(), '2018')
         data = obj.saved_assessment_data.last()
-        
+
         for k, val in data.items():
             if not val:
-                continue        
-            
-            if '_Score' in k:                
+                continue
+
+            if '_Score' in k:
                 for i, v in enumerate(val.values):
                     options = ([o.title
-                               for o in val.question.get_assessed_elements(
-                                d_obj, muids=muids)] or ['All criteria'])
+                                for o in val.question.get_assessed_elements(
+                                    d_obj, muids=muids)] or ['All criteria'])
 
                     # TODO IndexError: list index out of range
                     # investigate this
@@ -520,7 +524,7 @@ class AdminScoring(BaseComplianceView):
                 article_id, _, __ = k.split('_')
                 yield (country.title, region.title, d_obj.id,
                        article_id, ' ', 'Assessment Summary', val, '', state)
-            
+
             elif '_recommendations' in k:
                 article_id, _ = k.split('_')
                 yield (country.title, region.title, d_obj.id,
@@ -616,6 +620,7 @@ class SetupAssessmentWorkflowStates(BaseComplianceView):
 
             if hasattr(nda, 'saved_assessment_data'):
                 data = nda.saved_assessment_data.last()
+
                 if data:
                     not_changed += 1
 

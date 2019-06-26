@@ -97,37 +97,14 @@ def consolidate_singlevalue_to_list(proxies, fieldname):
     to a list and return only one object for that list of similar objects
     """
 
-    map_ = []
+    map_ = defaultdict(list)
 
     for o in proxies:
-        o_mru = getattr(o, 'MarineReportingUnit', '')
-
-        if not map_:
-            map_.append([o])
-
-            continue
-
-        found = False
-
-        for set_ in map_:
-            first = set_[0]
-            f_mru = getattr(first, 'MarineReportingUnit', '')
-
-            if o_mru != f_mru:
-                continue
-
-            if proxy_cmp(first, o, fieldname):
-                set_.append(o)
-                found = True
-
-                break
-
-        if not found:
-            map_.append([o])
+        map_[o.hash(fieldname)].append(o)
 
     res = []
 
-    for set_ in map_:
+    for set_ in map_.values():
         o = set_[0]
         values = [getattr(xo, fieldname) for xo in set_]
 
