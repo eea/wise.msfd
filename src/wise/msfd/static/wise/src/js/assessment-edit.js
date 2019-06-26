@@ -10,33 +10,37 @@
     return elementBottom > viewportTop && elementTop < viewportBottom;
   };
 
-  function loadComments($el) {
+  function colorComments() {
+    // setup colored chat depending on user
     color_palette_tl = ["lightblue", "lightgreen", "lightseagreen", "lightsalmon"]
     color_palette_ec = ["darkgreen", "darkblue", "darkgoldenrod", "darkmagenta"]
 
+    console.log('setup colored chat');
+
+    usernames = [];
+    $('.comment-name').each(function(){
+      usernames.push($(this).text());
+    });
+    usernames = $.unique(usernames)
+
+    $('.comms').each(function(){
+      var commenter = $(this).find('.comment-name').text();
+      indx = usernames.indexOf(commenter);
+      color = color_palette_tl[indx];
+
+      //debugger;
+      $(this).find('.comment').css('background-color', color);
+    });
+  }
+
+  function loadComments($el) {
     var qid = $el.data('question-id');
     var threadId = $el.data('thread-id');
     var url = './@@ast-comments?q=' + qid + '&thread_id=' + threadId;
     $.get(url, function(text){
       //console.log('getting comments from url', url);
       $el.html(text);
-
-      console.log('setup colored chat');
-      // setup colored chat depending on user
-      usernames = [];
-      $el.find('.comment-name').each(function(){
-        usernames.push($(this).text());
-      });
-      usernames = $.unique(usernames)
-
-      $el.find('.comms').each(function(){
-        var commenter = $(this).find('.comment-name').text();
-        indx = usernames.indexOf(commenter)
-        color = color_palette_tl[indx]
-
-        //debugger;
-      });
-
+      colorComments();
     });
   }
 
@@ -113,6 +117,7 @@
       $.post(url, data, function(text){
         $comel.html(text);
         $textarea.val('');
+        colorComments();
       });
       // console.log(qid, text);
       return false;
@@ -125,10 +130,6 @@
     var existsDiscTl = $discTl.length
     var existsDiscEc = $discEc.length
 
-    //if(existsDiscTl && existsDiscEc) {
-    //  $discEc.addClass('inactive');
-    //}
-
     $('.comm-hide').click(function(){
       $(this).closest('.right').addClass('inactive');
     });
@@ -137,9 +138,7 @@
       $thisComm = $(this).closest('.right');
 
       if($thisComm.hasClass('inactive')){
-        //$otherComm = $thisComm.siblings('.right');
         $thisComm.toggleClass('inactive');
-        //$otherComm.toggleClass('inactive');
       }
     });
   }
