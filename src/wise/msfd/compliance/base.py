@@ -151,10 +151,10 @@ class BaseComplianceView(BrowserView, BasePublicPage):
     def _get_user_group(self, user):
         """ Returns the group of the user, either returns EC or TL """
         roles = get_roles(username=user)
-        if 'Reviewer' in roles:
-            return 'ec'
+        if 'Editor' in roles:
+            return 'dark'
 
-        return 'tl'
+        return 'light'
 
     def _can_comment(self, folder_id):
         folder = self.context[folder_id]

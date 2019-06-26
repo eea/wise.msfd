@@ -13,13 +13,13 @@
   function colorComments() {
     // setup colored chat depending on user
     colorPalette = {
-      'tl': ["lightgreen", "lightblue", "lightgoldenrodyellow", "lightgrey"],
-      'ec': ["darkgreen", "darkblue", "darkmagenta", "darkred"]
+      'light': ["lightgreen", "lightblue", "lightgoldenrodyellow", "lightgrey"],
+      'dark': ["darkgreen", "darkblue", "darkmagenta", "darkred"]
     }
 
     usernames = {
-      'ec': [],
-      'tl': []
+      'light': [],
+      'dark': []
     };
 
     $('.comment-name').each(function(){
@@ -43,7 +43,7 @@
 
       $comment = $(this).find('.comment');
       $comment.css('background-color', color);
-      if (groupId === 'tl'){
+      if (groupId === 'light'){
         $comment.css('color', 'black');
       }
     });

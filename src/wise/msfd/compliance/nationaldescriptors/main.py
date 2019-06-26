@@ -47,6 +47,14 @@ CONCLUSION_COLOR_TABLE = {
     0: 0        # not filled in
 }
 
+CHANGE_COLOR_TABLE = {
+    -2: 5,
+    -1: 4,
+    0: 6,
+    1: 3,
+    2: 2,
+    3: 1,
+}
 
 CountryStatus = namedtuple('CountryStatus',
                            ['name', 'status', 'state_id', 'url'])
@@ -73,7 +81,8 @@ Assessment = namedtuple('Assessment',
                             'assessment_summary',
                             'recommendations',
                             'overall_score',
-                            'overall_conclusion'
+                            'overall_conclusion',
+                            'overall_conclusion_color'
                         ])
 AssessmentRow = namedtuple('AssessmentRow',
                            [
@@ -327,13 +336,16 @@ def format_assessment_data(article, elements, questions, muids, data,
         logger.exception("Error in getting overall conclusion")
         overall_conclusion = (1, 'error')
 
+    overall_conclusion_color = CONCLUSION_COLOR_TABLE[overall_conclusion[0]]
+
     assessment = Assessment(
         elements,
         answers,
         assess_sum or '-',
         recommend or '-',
         overall_score,
-        overall_conclusion
+        overall_conclusion,
+        overall_conclusion_color
     )
 
     return assessment
@@ -535,10 +547,15 @@ class NationalDescriptorArticleView(BaseView):
             self.descriptor_obj
         )
 
+        conclusion_2012_color = CONCLUSION_COLOR_TABLE[score_2012]
+        change = assessment.overall_conclusion[0] - score_2012
+
         self.assessment_data_2018_html = self.assessment_data_2018_tpl(
             assessment=assessment,
             score_2012=score_2012,
             conclusion_2012=conclusion_2012,
+            conclusion_2012_color=conclusion_2012_color,
+            change_since_2012=change,
             can_comment_tl=self.can_comment_tl,
             can_comment_ec=self.can_comment_ec
         )

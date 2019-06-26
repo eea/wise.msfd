@@ -75,19 +75,22 @@
       </tr>
       <tr>
         <th>Overall score (%)</th>
-        <td tal:content="assessment/overall_score">123</td>
+        <td tal:attributes="class python: 'as-value as-value-{}'.format(assessment.overall_conclusion_color)"
+            tal:content="assessment/overall_score">123</td>
       </tr>
       <tr>
         <th>Overall conclusion: 2018</th>
-        <td tal:content="python:assessment.overall_conclusion[1]">124</td>
+        <td tal:attributes="class python: 'as-value as-value-{}'.format(assessment.overall_conclusion_color)"
+            tal:content="python:assessment.overall_conclusion[1]">124</td>
       </tr>
       <tr>
         <th>Overall conclusion: 2012</th>
-        <td tal:content="conclusion_2012">124</td>
+        <td tal:attributes="class python: 'as-value as-value-{}'.format(options['conclusion_2012_color'])"
+            tal:content="conclusion_2012">124</td>
       </tr>
       <tr>
         <th>Change since 2012</th>
-        <td tal:content="python: assessment.overall_conclusion[0] - score_2012">+1</td>
+        <td tal:content="options/change_since_2012">+1</td>
       </tr>
 
       <tr tal:condition="python: False"
