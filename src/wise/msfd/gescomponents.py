@@ -313,7 +313,7 @@ class Criterion(ItemLabel):
         if self._primary_for_descriptors in [True, False]:
             return self._primary_for_descriptors
         else:
-            return descriptor.id.lower() in \
+            return getattr(descriptor, 'id', descriptor).lower() in \
                 [d.lower() for d in self._primary_for_descriptors]
 
 
