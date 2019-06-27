@@ -7,6 +7,7 @@ from Acquisition import aq_inner
 from plone.api.portal import get_tool
 from plone.z3cform.layout import FormWrapper
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
+from wise.msfd.compliance.interfaces import IEditAssessmentForm
 from z3c.form.field import Fields
 from z3c.form.form import Form
 
@@ -223,6 +224,14 @@ class MainFormWrapper(FormWrapper):
             return self.contents
 
         return super(MainFormWrapper, self).render()
+
+
+class EditAssessmentFormWrapper(MainFormWrapper):
+    """ Wrapper for EditAssessmentDataForm
+
+    Needed to override the page title """
+
+    implements(IEditAssessmentForm)
 
 
 class EmbeddedForm(BaseEnhancedForm, Form, BaseUtil):

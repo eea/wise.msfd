@@ -62,6 +62,12 @@ class IComment(Schema):
     text = Text(title=u'Comment text', required=True)
 
 
+class IEditAssessmentForm(Interface):
+    """ Interface for assessment edit form
+
+    """
+
+
 class IReportDataView(Interface):
     """ Plone pages that display report data
     """

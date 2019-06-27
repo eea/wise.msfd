@@ -13,7 +13,9 @@ from plone.z3cform.layout import wrap_form
 from Products.Five.browser.pagetemplatefile import (PageTemplateFile,
                                                     ViewPageTemplateFile)
 from Products.statusmessages.interfaces import IStatusMessage
-from wise.msfd.base import EmbeddedForm, MainFormWrapper
+from wise.msfd.base import (
+    EmbeddedForm, EditAssessmentFormWrapper as MainFormWrapper
+)
 from wise.msfd.compliance.assessment import (additional_fields, summary_fields,
                                              render_assessment_help, PHASES)
 from wise.msfd.compliance.base import get_questions

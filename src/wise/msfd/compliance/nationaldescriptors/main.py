@@ -548,7 +548,7 @@ class NationalDescriptorArticleView(BaseView):
         )
 
         conclusion_2012_color = CONCLUSION_COLOR_TABLE[score_2012]
-        change = assessment.overall_conclusion[0] - score_2012
+        change = int(assessment.overall_conclusion[0] - score_2012)
 
         self.assessment_data_2018_html = self.assessment_data_2018_tpl(
             assessment=assessment,

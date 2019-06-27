@@ -5,6 +5,8 @@
   xmlns:z3c="http://namespaces.zope.org/z3c"
   i18n_domain="wise.msfd">
 
+  <include file="viewlets.zcml"/>
+
   <browser:page
     for="..interfaces.INationalDescriptorsFolder"
     name="nat-desc-start"
@@ -88,14 +90,6 @@
     name="edit-assessors"
     class="..assessment.EditAssessorsForm"
     template="../pt/edit-assessors.pt"
-    permission="zope2.View"
-    />
-
-  <browser:viewlet
-    name="plone.htmlhead.title"
-    view='wise.msfd.compliance.interfaces.IReportDataView'
-    manager="plone.app.layout.viewlets.interfaces.IHtmlHead"
-    class=".reportdata.TitleViewlet"
     permission="zope2.View"
     />
 

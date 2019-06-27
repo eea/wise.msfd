@@ -12,7 +12,6 @@ from zope.schema import Choice
 from zope.schema.vocabulary import SimpleTerm, SimpleVocabulary
 
 from eea.cache import cache
-from plone.app.layout.viewlets.common import TitleViewlet as BaseTitleViewlet
 from plone.memoize import volatile
 from Products.Five.browser.pagetemplatefile import \
     ViewPageTemplateFile as Template
@@ -868,19 +867,3 @@ https://svn.eionet.europa.eu/repositories/Reportnet/Dataflows/MarineDirective/MS
             self.subform = form
 
         return self.subform
-
-
-class TitleViewlet(BaseTitleViewlet, BaseView):
-
-    @property
-    def page_title(self):
-        params = {
-            'country': self.country_name,
-            'region': self.country_region_code,
-            'article': self.article,
-            'descriptor': self.descriptor_title,
-            'year': self.view.report_year,
-        }
-
-        return (u"{article} report - {country} "
-                u"/ {region} / {descriptor} / {year}".format(**params))
