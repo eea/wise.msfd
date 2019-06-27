@@ -83,6 +83,13 @@
         </div>
       </div>
 
+      <div id="assessment-edit-infobox">
+        <div class="alert alert-warning" role="alert">
+          <ul>
+          </ul>
+        </div>
+      </div>
+
       <div id="comp-national-descriptor">
 
         <div tal:replace="structure view/help"

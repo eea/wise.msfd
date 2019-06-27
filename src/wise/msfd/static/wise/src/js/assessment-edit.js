@@ -217,6 +217,42 @@
     $textarea.closest('.fields-container-row').addClass('flex-textarea');
   }
 
+  function _addGescompsToInfobox() {
+    var gesComps = [];
+    var $infobox = $('div#assessment-edit-infobox');
+    var $infoboxList = $('#assessment-edit-infobox ul');
+    var message = " has 'Not relevant' option selected!";
+    $infobox.show();
+    $infoboxList.empty();
+
+    $('.subform .left select option:selected').each(function(){
+      var value = $(this).text();
+      _idGescomp = $(this).parent().attr('id').split('_').last();
+
+      if(value == 'Not relevant' && gesComps.indexOf(_idGescomp) === -1) {
+        gesComps.push(_idGescomp);
+      }
+    });
+
+    gesComps.forEach(function(value, index, array) {
+      $infoboxList.append($('<li>').attr('class', value).append(
+        $('<span style="font-weight: bold;">').append(value)
+      ).append(message));
+    });
+
+    if(gesComps.length === 0) {
+      $infobox.hide();
+    }
+  }
+
+  function setupAssessmentInfobox() {
+    _addGescompsToInfobox();
+
+    $('select').change(function(){
+      _addGescompsToInfobox();
+    });
+  }
+
   $(document).ready(function() {
     setupCommentsListing();
     setupPostComments();
@@ -224,6 +260,7 @@
     setupDisableAssessmentForms();
     setupFormSelectOptions();
     setupUnloadWarning();
+    setupAssessmentInfobox();
 
     // When hovering over the comments section add delete comment event for each comment
     $('.subform .right .comments').mouseenter(

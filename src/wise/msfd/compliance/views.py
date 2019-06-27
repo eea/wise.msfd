@@ -58,7 +58,7 @@ class ComplianceNavMacros(BaseComplianceView):
     """
 
 
-class CommentsList(BrowserView):
+class CommentsList(BaseComplianceView):
     """ Renders a list of comments, to be loaded with Ajax in assessment edit
     """
     template = ViewPageTemplateFile('pt/comments-list.pt')
