@@ -1,5 +1,6 @@
 import logging
 from collections import namedtuple
+from datetime import datetime
 
 import lxml.etree
 from sqlalchemy.orm import aliased
@@ -26,9 +27,9 @@ from wise.msfd.gescomponents import (get_descriptor, get_features,
 from wise.msfd.translation.interfaces import ITranslationContext
 from wise.msfd.utils import (Tab, _parse_files_in_location, natural_sort_key,
                              row_to_dict, timeit)
+
 from . import interfaces
 from .interfaces import ICountryDescriptorsFolder
-
 
 logger = logging.getLogger('wise.msfd')
 edw_logger = logging.getLogger('edw.logger')
@@ -151,15 +152,17 @@ class BaseComplianceView(BrowserView, BasePublicPage):
     def _get_user_group(self, user):
         """ Returns the group of the user, either returns EC or TL """
         roles = get_roles(username=user)
+
         if 'Editor' in roles:
             return 'dark'
 
         return 'light'
 
-    def _can_comment(self, folder_id):
-        folder = self.context[folder_id]
+    def _can_comment(self, folder_id, context=None):
+        if context is None:
+            context = self.context
 
-        return checkPermission('zope2.View', folder)
+        return checkPermission('zope2.View', context[folder_id])
 
     @property
     def can_comment_tl(self):
@@ -377,6 +380,49 @@ class BaseComplianceView(BrowserView, BasePublicPage):
         title = wf_state.title.strip() or state
 
         return title
+
+    # @cache(key=lambda ast: '/'.join(ast.getPhysicalPath()),
+    #        dependencies='')
+    def has_new_comments(self, assessment):
+        """ Returns True/False/None if assessment has new comments.
+
+        True: has new comments
+        False: doesn't have new comments
+        None: this assessment has never been seen
+        """
+
+        token = '-'.join(assessment.getPhysicalPath())
+
+        last_seen = self.request.cookies.get('s-' + token)
+
+        if not last_seen:
+            return None
+
+        last_seen = float(last_seen[:10] + '.' + last_seen[10:])
+        dt = datetime.utcfromtimestamp(last_seen)
+
+        latest = None
+
+        if self._can_comment('tl', assessment):
+            if assessment['tl'].contentValues():
+                import pdb
+                pdb.set_trace()
+
+                # TODO: we rely on ordered folders, not sure if correct
+                latest = assessment['tl'].contentValues().modification_date
+
+        if self._can_comment('ec', assessment):
+            if assessment['ec'].contentValues():
+                # TODO: we rely on ordered folders, not sure if correct
+                import pdb
+                pdb.set_trace()
+                d = assessment['ec'].contentValues().modification_date
+                latest = max(d, latest)
+
+        if not latest:
+            return None
+
+        return latest <= dt
 
     def get_transitions(self):
         wftool = get_tool('portal_workflow')

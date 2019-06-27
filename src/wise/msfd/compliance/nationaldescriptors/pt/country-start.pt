@@ -73,6 +73,8 @@
                           class python:'process-status btn btn-xs btn-' + view.get_status_color(assessment)">
                       <span tal:content="assessment/title">Art0</span>:
                       <span class="as-state-label" tal:content="python: view.get_status(assessment)">State</span>
+                      <span class="fa fa-exclamation-circle"
+                        tal:condition="python: view.has_new_comments(assessment)"></span>
                     </a>
                     <div>
                       <blockquote tal:condition="assessment/assessment_summary">

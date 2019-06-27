@@ -3,31 +3,31 @@ import logging
 
 from zope.schema import Choice, Text
 from zope.schema.vocabulary import SimpleTerm, SimpleVocabulary
-from zope.security import checkPermission
 
 from AccessControl import Unauthorized
 from persistent.list import PersistentList
 from plone.api import user
 from plone.api.user import get_roles
 from plone.z3cform.layout import wrap_form
-from Products.Five.browser.pagetemplatefile import (PageTemplateFile,
-                                                    ViewPageTemplateFile)
+from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 from Products.statusmessages.interfaces import IStatusMessage
-from wise.msfd.base import (
-    EmbeddedForm, EditAssessmentFormWrapper as MainFormWrapper
-)
-from wise.msfd.compliance.assessment import (additional_fields, summary_fields,
-                                             render_assessment_help, PHASES)
+from wise.msfd.base import EditAssessmentFormWrapper as MainFormWrapper
+from wise.msfd.base import EmbeddedForm
+from wise.msfd.compliance.assessment import (PHASES, additional_fields,
+                                             render_assessment_help,
+                                             summary_fields)
 from wise.msfd.compliance.base import get_questions
 from wise.msfd.compliance.content import AssessmentData
 from wise.msfd.gescomponents import get_descriptor  # get_descriptor_elements
 from wise.msfd.translation import get_translated, retrieve_translation
-
 from z3c.form.button import buttonAndHandler
 from z3c.form.field import Fields
 from z3c.form.form import Form
 
 from .base import BaseView
+
+# from zope.security import checkPermission
+# PageTemplateFile,
 
 logger = logging.getLogger('wise.msfd')
 
@@ -71,6 +71,7 @@ class EditAssessmentDataForm(Form, BaseView):
 
             for element in elements:
                 value = element.definition
+
                 if value not in seen:
                     retrieve_translation(self.country_code, value)
                     seen.add(value)
@@ -81,6 +82,7 @@ class EditAssessmentDataForm(Form, BaseView):
 
         url = self.context.absolute_url() + '/@@edit-assessment-data-2018'
         self.request.response.setHeader('Content-Type', 'text/html')
+
         return self.request.response.redirect(url)
 
     @buttonAndHandler(u'Save', name='save')
@@ -134,6 +136,7 @@ class EditAssessmentDataForm(Form, BaseView):
             last_values = last.get(name, [])
             last_values = getattr(last_values, 'values', '')
             score_values = getattr(score, 'values', '')
+
             if last_values != score_values:
                 data[last_upd] = datetime_now
 
@@ -141,6 +144,7 @@ class EditAssessmentDataForm(Form, BaseView):
             self.article
         )
         name = "{}_assessment_summary".format(self.article)
+
         if last.get(name, '') != data.get(name, ''):
             data[last_upd] = datetime_now
 
@@ -167,12 +171,13 @@ class EditAssessmentDataForm(Form, BaseView):
 
         url = self.context.absolute_url() + '/@@edit-assessment-data-2018'
         self.request.response.setHeader('Content-Type', 'text/html')
+
         return self.request.response.redirect(url)
 
     def is_disabled(self, question):
         state, _ = self.current_phase
         disabled = question.klass not in PHASES.get(state, ())
-        
+
         return self.read_only_access or disabled
 
     @property
@@ -331,6 +336,7 @@ class EditAssessmentDataForm(Form, BaseView):
 
     def get_translated(self, value):
         translated = get_translated(value, self.country_code)
+
         if translated:
             return translated
 
