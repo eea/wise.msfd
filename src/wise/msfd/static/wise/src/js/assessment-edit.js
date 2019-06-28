@@ -217,38 +217,79 @@
     $textarea.closest('.fields-container-row').addClass('flex-textarea');
   }
 
+  function adjustInfoboxPosition() {
+    var $repNav = $('.report-nav.sticky');
+    var $infobox = $('#assessment-edit-infobox');
+    var $ff = $('.form-right-side.fixed-save-btn');
+
+    if ($ff.length){
+      $infobox.show().css('display', 'inline-box');
+      leftPos = $ff.position().left - $infobox.width();
+      $infobox.css('left', leftPos  + 'px');
+    }
+    else {
+      $infobox.hide();
+    }
+
+    if($infobox.children().length === 0){
+      $repNav.removeClass('has-infobox');
+    }
+    else {
+      $repNav.addClass('has-infobox');
+    }
+  }
+
   function setupAssessmentInfobox() {
+    // add the infobox to the top sticky bar
+    // the infobox will show all ges components/targets with 'Not relevant' option selected
     function _addGescompsToInfobox() {
       var gesComps = [];
+      var $allQuestions = $('<div>');
       var $infobox = $('div#assessment-edit-infobox');
-      var $infoboxList = $('#assessment-edit-infobox ul');
-      var message = " has 'Not relevant' option selected!";
-      $infobox.show();
-      $infoboxList.empty();
+      var message = "'Not relevant' option selected for the following questions:";
+      $infobox.empty();
 
       $('.subform .left select option:selected').each(function(){
         var value = $(this).text();
-        _idGescomp = $(this).parent().attr('id').split('_').last();
+        var _id = $(this).parent().attr('id').split('_').slice(-2);
+        var questionId = _id[0];
+        var _idGescomp = _id[1];
 
-        if(value == 'Not relevant' && gesComps.indexOf(_idGescomp) === -1) {
-          gesComps.push(_idGescomp);
+        if (_idGescomp.match('[^a-zA-Z]')) _idGescomp = _idGescomp.split('-').join('.');
+
+        if(value == 'Not relevant') {
+          $allQuestions.append("<p>").append(questionId + ": " + _idGescomp);
+
+          if (gesComps.indexOf(_idGescomp) === -1) gesComps.push(_idGescomp);
         }
       });
 
       gesComps.forEach(function(value, index, array) {
-        $infoboxList.append($('<li>').attr('class', value).append(
-          $('<span style="font-weight: bold;">').append(value)
-        ).append(message));
+        $infobox.append($('<span>').attr('class', 'info-item').append(value)
+        );
       });
+
+      $infobox.attr('class', 'help-popover')
+          .attr('data-trigger', 'hover')
+          .attr('data-html', 'true')
+          .attr('data-placement', 'left')
+          .attr('data-content', $allQuestions.html())
+          .attr('data-original-title', message).popover();
 
       if(gesComps.length === 0) {
         $infobox.hide();
+        return;
       }
+
+      $infobox.append($('<span>').attr('class', 'fa fa-exclamation')
+        .css('font-size', '20px')
+      );
     }
     _addGescompsToInfobox();
 
     $('select').change(function(){
       _addGescompsToInfobox();
+      adjustInfoboxPosition();
     });
   }
 
@@ -309,10 +350,12 @@
     if(window.location.pathname.indexOf('art10') == -1){
       $btnTranslate.css('display', 'none');
     }
+
     $win.scroll(function() {
       scroll = $win.scrollTop();
       var fixElement = (scroll + space < btnPos) && (scroll >= rnOffset);
       $sfw.toggleClass('fixed-save-btn', fixElement);
+      adjustInfoboxPosition();
     });
 
   });
