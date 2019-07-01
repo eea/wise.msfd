@@ -392,8 +392,10 @@ class BaseComplianceView(BrowserView, BasePublicPage):
         """
 
         token = '-'.join(assessment.getPhysicalPath())
+        token = 's-' + token
+        # self.request.response.setCookie(token, '1561725320601776')
 
-        last_seen = self.request.cookies.get('s-' + token)
+        last_seen = self.request.cookies.get(token)
 
         if not last_seen:
             return None
@@ -404,20 +406,28 @@ class BaseComplianceView(BrowserView, BasePublicPage):
         latest = None
 
         if self._can_comment('tl', assessment):
-            if assessment['tl'].contentValues():
-                import pdb
-                pdb.set_trace()
-
+            q_folders = assessment['tl'].contentValues()
+            if q_folders:
                 # TODO: we rely on ordered folders, not sure if correct
-                latest = assessment['tl'].contentValues().modification_date
+                latest = [
+                    folder.contentValues()[-1].modification_date.utcdatetime()
+                    for folder in q_folders
+                    if folder.contentValues()
+                ]
+                latest = max(latest)
 
         if self._can_comment('ec', assessment):
-            if assessment['ec'].contentValues():
+            q_folders = assessment['ec'].contentValues()
+            if q_folders:
                 # TODO: we rely on ordered folders, not sure if correct
-                import pdb
-                pdb.set_trace()
-                d = assessment['ec'].contentValues().modification_date
-                latest = max(d, latest)
+                ec_latest = [
+                    folder.contentValues()[-1].modification_date.utcdatetime()
+                    for folder in q_folders
+                    if folder.contentValues()
+                ]
+                ec_latest = ec_latest and max(ec_latest) or None
+
+                latest = latest and max(ec_latest, latest) or ec_latest
 
         if not latest:
             return None
