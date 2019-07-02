@@ -62,7 +62,7 @@
     <element section="ges" name="GESComponent" convert="ges_component">GES component</element>
     <element section="ges" setlevel="0" name="Feature" label="features">Feature</element>
 
-    <element section="element" setlevel="1" name="Element" translate="true">Element</element>
+    <element section="element" setlevel="1" name="Element">Element</element>
     <element section="element" name="ElementCode">Element code</element>
     <element section="element" name="ElementCodeSource" label="elementcode_sources">Element code source</element>
     <element section="element" setlevel="2" name="Element2" translate="true">Element 2</element>
