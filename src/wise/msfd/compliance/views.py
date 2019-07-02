@@ -10,8 +10,6 @@ from plone.dexterity.utils import createContentInContainer as create
 from Products.Five.browser import BrowserView
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 
-from wise.msfd.utils import set_comments_cookie
-
 from .base import BaseComplianceView
 
 logger = logging.getLogger('wise.msfd')
@@ -73,8 +71,6 @@ class CommentsList(BaseComplianceView):
         return user.id
 
     def add_comment(self):
-        # token = set_comments_cookie(self)
-        # self.request.response.setCookie(token, time.time())
 
         form = self.request.form
         question_id = form.get('q').lower()
@@ -110,9 +106,6 @@ class CommentsList(BaseComplianceView):
         return self.template()
 
     def del_comment(self):
-        # token = set_comments_cookie(self)
-        # self.request.response.setCookie(token, time.time())
-
         to_local_time = self.context.Plone.toLocalizedTime
 
         form = self.request.form

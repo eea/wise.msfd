@@ -15,8 +15,7 @@ from z3c.form.form import Form
 
 from .db import get_available_marine_unit_ids, threadlocals
 from .interfaces import IEmbeddedForm, IMainForm, IMarineUnitIDSelect
-from .utils import (all_values_from_field, get_obj_fields, print_value,
-                    set_comments_cookie)
+from .utils import all_values_from_field, get_obj_fields, print_value
 from .widget import MarineUnitIDSelectFieldWidget
 
 
@@ -235,12 +234,6 @@ class EditAssessmentFormWrapper(MainFormWrapper):
     Needed to override the page title """
 
     implements(IEditAssessmentForm)
-
-    def render(self):
-        # token = set_comments_cookie(self)
-        # self.request.response.setCookie(token, str(time.time()))
-
-        return super(MainFormWrapper, self).render()
 
 
 class EmbeddedForm(BaseEnhancedForm, Form, BaseUtil):
