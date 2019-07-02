@@ -1,5 +1,6 @@
 import json
 import logging
+import time
 from collections import deque
 
 from eea.cache import cache
@@ -8,6 +9,8 @@ from plone.api.content import transition, get_state
 from plone.dexterity.utils import createContentInContainer as create
 from Products.Five.browser import BrowserView
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
+
+from wise.msfd.utils import set_comments_cookie
 
 from .base import BaseComplianceView
 
@@ -70,6 +73,9 @@ class CommentsList(BaseComplianceView):
         return user.id
 
     def add_comment(self):
+        # token = set_comments_cookie(self)
+        # self.request.response.setCookie(token, time.time())
+
         form = self.request.form
         question_id = form.get('q').lower()
         thread_id = form.get('thread_id')
@@ -104,6 +110,9 @@ class CommentsList(BaseComplianceView):
         return self.template()
 
     def del_comment(self):
+        # token = set_comments_cookie(self)
+        # self.request.response.setCookie(token, time.time())
+
         to_local_time = self.context.Plone.toLocalizedTime
 
         form = self.request.form

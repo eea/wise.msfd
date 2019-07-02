@@ -659,3 +659,11 @@ def get_weight_from_annot(q_id, descr):
         x = ''
 
     return x
+
+
+def set_comments_cookie(self):
+    token = '-'.join(self.context.getPhysicalPath())
+    token = 's-' + token
+    self.request.response.setCookie(token, str(time.time()), path='/')
+
+    return token

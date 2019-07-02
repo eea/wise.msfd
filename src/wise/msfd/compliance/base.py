@@ -1,6 +1,7 @@
 import logging
 from collections import namedtuple
 from datetime import datetime
+from time import time
 
 import lxml.etree
 from sqlalchemy.orm import aliased
@@ -393,7 +394,7 @@ class BaseComplianceView(BrowserView, BasePublicPage):
 
         token = '-'.join(assessment.getPhysicalPath())
         token = 's-' + token
-        # self.request.response.setCookie(token, '1561725320601776')
+        # self.request.response.setCookie(token, time())
 
         last_seen = self.request.cookies.get(token)
 
@@ -429,10 +430,13 @@ class BaseComplianceView(BrowserView, BasePublicPage):
 
                 latest = latest and max(ec_latest, latest) or ec_latest
 
+        # if 'd5' in token:
+        #     import pdb; pdb.set_trace()
+
         if not latest:
             return None
 
-        return latest <= dt
+        return latest > dt
 
     def get_transitions(self):
         wftool = get_tool('portal_workflow')

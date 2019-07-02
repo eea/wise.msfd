@@ -10,6 +10,11 @@
     return elementBottom > viewportTop && elementTop < viewportBottom;
   };
 
+  function setCommentCookie() {
+    var token = 's--Plone' + window.location.pathname.split('/').slice(0,-1).join('-');
+    document.cookie = token + "=" + Date.now() + ";path=/";
+  }
+
   function colorComments() {
     // setup colored chat depending on user
     colorPalette = {
@@ -89,7 +94,9 @@
             thread_id: threadId,
           };
           $.post(url, data, function(text){
+            setCommentCookie();
             $comel.html(text);
+            colorComments();
           });
         }
       });
@@ -131,6 +138,7 @@
         thread_id: threadId
       };
       $.post(url, data, function(text){
+        setCommentCookie();
         $comel.html(text);
         $textarea.val('');
         colorComments();
@@ -294,6 +302,7 @@
   }
 
   $(document).ready(function() {
+    setCommentCookie();
     setupCommentsListing();
     setupPostComments();
     setupToggleComments();
