@@ -226,24 +226,25 @@
   }
 
   function adjustInfoboxPosition() {
+    var $repNavToggle = $('#report-nav-toggle');
     var $repNav = $('.report-nav.sticky');
     var $infobox = $('#assessment-edit-infobox');
+    var infoboxLength = $infobox.children().length;
     var $ff = $('.form-right-side.fixed-save-btn');
 
-    if ($ff.length){
-      $infobox.show().css('display', 'inline-box');
-      leftPos = $ff.position().left - $infobox.width();
-      $infobox.css('left', leftPos  + 'px');
-    }
-    else {
-      $infobox.hide();
-    }
-
-    if($infobox.children().length === 0){
-      $repNav.removeClass('has-infobox');
-    }
-    else {
+    if (infoboxLength > 0 && $repNav.length){
       $repNav.addClass('has-infobox');
+      $infobox.show().css('display', 'inline-box');
+      var leftPos = $repNavToggle.position().left - 16;
+
+      if ($ff.length) leftPos = $ff.position().left;
+
+      leftPos = leftPos - $infobox.width();
+      $infobox.css('left', leftPos + 'px');
+    }
+    else {
+      $repNav.removeClass('has-infobox');
+      $infobox.hide();
     }
   }
 
