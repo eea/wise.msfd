@@ -162,6 +162,79 @@ span.has-new-comments {
   }
 }
 
+.table.table-condensed.assessment-data-table.clone {
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  pointer-events: none;
+
+  .fixed-left {
+    visibility: visible;
+  }
+  .fixed-center {
+    width: 0px;
+    visibility: hidden;
+
+    .gescomp:not(:first-child) {
+      display: none !important;
+    }
+    &.subform {
+      visibility: visible;
+    }
+  }
+  .fixed-right {
+    visibility: visible;
+  }
+}
+
+#container-assessment-data-2018 {
+  position: relative;
+
+  .table-wrap {
+    overflow: auto;
+    overflow-y: hidden;
+  }
+
+  td {
+    &.fixed-center {
+      padding: 0px;
+      border: none;
+
+      div.assessment-summary {
+        min-height: 20px;
+      }
+
+      div.gescomp {
+        display: table-cell;
+        min-width: 100px;
+        padding: 5px;
+        width: 2000px;
+      }
+    }
+    &.fixed-right {
+      min-width: 150px;
+    }
+  }
+
+  .form-assessment-summary {
+    padding: 5px;
+    border-top: 1px solid #ddd;
+  }
+
+  .overall-headers, .overall-values {
+    padding: 0px;
+
+    div {
+      padding: 1px 5px;
+      height: 25%;
+      border: 1px solid #ddd;
+      //margin: -1px;
+      overflow: hidden;
+      width: 100%;
+    }
+  }
+}
+
 .ast-header-data {
   background-color: #ddd;
   border: 1px solid #bbb;
@@ -190,7 +263,7 @@ span.has-new-comments {
       }
     }
 
-    td {
+    td, div.gescomp, .overall-values div {
       min-width: 4em;
       height: 2rem;
       border: 1px solid #ccc;

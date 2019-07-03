@@ -1,108 +1,107 @@
-<div tal:define="assessment options/assessment;
+<div id="container-assessment-data-2018"
+    tal:define="assessment options/assessment;
     score_2012 python: int(options['score_2012']);
     conclusion_2012 python: '{} ({})'.format(options['conclusion_2012'], score_2012)">
+  <div class="table-wrap">
+    <table class="table table-condensed assessment-data-table">
+      <tbody>
 
-  <table class="table table-condensed assessment-data-table">
-    <tbody>
-
-      <tr>
-        <th class="as-question as-header">Question / assessed elements</th>
-        <th class="as-header" tal:condition="not: assessment/gescomponents"></th>
-        <th tal:repeat="g assessment/gescomponents" class="as-ges-component as-header"></th>
-        <th class="as-header">Conclusion</th>
-        <th class="as-th-score as-header">Score</th>
-        <!-- TODO: add "conclusion score" and "Weighting" as titles -->
-      </tr>
-
-      <tal:rep tal:repeat="row assessment/answers">
         <tr>
-          <th rowspan="2">
-          <div class="q-wrap">
-              <div class="q-id" tal:content="python: row.question.split(':')[0]">Question Id</div>
-              <div class="q-title" tal:content="python: row.question.split(':', 1)[1]">Question text</div>
-              </div>
-          </th>
-          <tal:rep tal:repeat="value row/values" >
-            <td
-              tal:attributes="class python: 'as-value as-value-{}'.format(value[1]);
-              colspan python: len(assessment.gescomponents) - len(row.values) + 1;">
+          <th class="fixed-left as-question as-header">Question / assessed elements</th>
+          <th class="fixed-left as-header" tal:condition="not: assessment/gescomponents"></th>
+          <!--<th tal:repeat="g assessment/gescomponents" class="as-ges-component as-header"></th>-->
+          <th class="fixed-center as-ges-component as-header"></th>
+          <th class="fixed-right as-header">Conclusion</th>
+          <th class="fixed-right as-th-score as-header">Score</th>
+          <!-- TODO: add "conclusion score" and "Weighting" as titles -->
+        </tr>
 
-              <label for=""
-                data-trigger="hover"
-                data-html="true"
-                tal:attributes="
-                title python: value[0];
-                data-content python: value[2]"
-                >
-                <span tal:content="python: value[2]">D0C0</span>
-              </label>
+        <tal:rep tal:repeat="row assessment/answers">
+          <tr>
+            <th class="fixed-left">
+            <div class="q-wrap">
+                <div class="q-id" tal:content="python: row.question.split(':')[0]">Question Id</div>
+                <div class="q-title" tal:content="python: row.question.split(':', 1)[1]">Question text</div>
+                </div>
+            </th>
+            <td class="fixed-center">
+              <tal:rep tal:repeat="value row/values" >
+                <div
+                  tal:attributes="class python: 'gescomp as-value as-value-{}'.format(value[1]);
+                  colspanX python: len(assessment.gescomponents) - len(row.values) + 1;">
 
+                  <label for=""
+                    data-trigger="hover"
+                    data-html="true"
+                    tal:attributes="
+                    title python: value[0];
+                    data-content python: value[2]"
+                    >
+                    <span tal:content="python: value[2]">D0C0</span>
+                  </label>
+
+                </div>
+              </tal:rep>
+              <div class="assessment-summary"
+                  tal:content="row/summary">Summary</div>
             </td>
-          </tal:rep>
 
-          <td tal:attributes="class python: 'as-value as-value-{}'.format(row.conclusion_color)">
-            <strong tal:content="row/conclusion">X</strong>
-          </td>
+            <td tal:attributes="class python: 'fixed-right as-value as-value-{}'.format(row.conclusion_color)">
+              <strong tal:content="row/conclusion">Very poor</strong>
+            </td>
 
-          <td>
-            <span tal:condition="row/score"
-                class="score help-popover fa fa-info-circle fa-s"
-                data-trigger="hover"
-                data-html="true"
-                data-placement="left"
-                tal:attributes="title python: 'Score calculation algorithm';
-                  data-content python: getattr(row.score, 'score_tooltip', '');">
-            </span>
-            <span tal:content="python: getattr(row.score, 'weighted_score', 0)">0</span>
-          </td>
-        </tr>
-        <tr class="assessment-summary">
-          <td colspan="50" tal:content="row/summary">Summary</td>
-        </tr>
-      </tal:rep>
+            <td class="fixed-right">
+              <span tal:condition="row/score"
+                  class="score help-popover fa fa-info-circle fa-s"
+                  data-trigger="hover"
+                  data-html="true"
+                  data-placement="left"
+                  tal:attributes="title python: 'Score calculation algorithm';
+                    data-content python: getattr(row.score, 'score_tooltip', '');">
+              </span>
+              <span tal:content="python: getattr(row.score, 'weighted_score', 0)">0</span>
+            </td>
 
-      <tr id="asssessment-overview-form-comments">
-        <script src="/++resource++msfd/js/assessment-edit.js"></script>
-        <th rowspan="5">Assessment summary, progress assessment and recommendations</th>
-        <td class="subform"
-            tal:attributes="colspan python: len(assessment.gescomponents); rowspan string:5">
-          <div class="body">
+          </tr>
+          <tr tal:condition="python:False"
+              class="assessment-summary">
+            <!-- This tr is removed-->
+            <td colspan="50" tal:content="row/summary">Summary</td>
+          </tr>
+        </tal:rep>
+
+
+        <tr id="asssessment-overview-form-comments">
+          <script src="/++resource++msfd/js/assessment-edit.js"></script>
+
+          <th class="fixed-left">Assessment summary, progress assessment and recommendations</th>
+
+          <td class="fixed-center subform">
             <div class="form-assessment-summary">
-              <div tal:replace="structure context/@@view-assessment-summary"></div>
+                <div tal:replace="structure context/@@view-assessment-summary"></div>
             </div>
-          </div>
-        </td>
-      </tr>
-      <tr>
-        <th>Overall score (%)</th>
-        <td tal:attributes="class python: 'as-value as-value-{}'.format(assessment.overall_conclusion_color)"
-            tal:content="assessment/overall_score">123</td>
-      </tr>
-      <tr>
-        <th>Overall conclusion: 2018</th>
-        <td tal:attributes="class python: 'as-value as-value-{}'.format(assessment.overall_conclusion_color)"
-            tal:content="python:assessment.overall_conclusion[1]">124</td>
-      </tr>
-      <tr>
-        <th>Overall conclusion: 2012</th>
-        <td tal:attributes="class python: 'as-value as-value-{}'.format(options['conclusion_2012_color'])"
-            tal:content="conclusion_2012">124</td>
-      </tr>
-      <tr>
-        <th>Change since 2012</th>
-        <td tal:content="options/change_since_2012">+1</td>
-      </tr>
+          </td>
 
-      <tr tal:condition="python: False"
-          tal:define="colspan python: max(len(assessment.gescomponents), 1) + 2">
-          <!-- Removed -->
-        <th rowspan="1">Recommendations</th>
-        <td tal:attributes="colspan colspan"
-          tal:content="assessment/recommendations">Recomendation text</td>
-      </tr>
+          <td class="overall-headers fixed-right">
+            <div>Overall score (%)</div>
+            <div>Overall conclusion: 2018</div>
+            <div>Overall conclusion: 2012</div>
+            <div>Change since 2012</div>
+          </td>
+          <td class="overall-values fixed-right">
+            <div tal:attributes="class python: 'as-value as-value-{}'.format(assessment.overall_conclusion_color)"
+              tal:content="assessment/overall_score">65.5</div>
+            <div tal:attributes="class python: 'as-value as-value-{}'.format(assessment.overall_conclusion_color)"
+              tal:content="python:assessment.overall_conclusion[1]">Very poor (1)</div>
+            <div tal:attributes="class python: 'as-value as-value-{}'.format(options['conclusion_2012_color'])"
+              tal:content="conclusion_2012">Partially adequate (2)</div>
+            <div tal:content="options/change_since_2012">-1</div>
+          </td>
+        </tr>
 
-    </tbody>
-  </table>
+      </tbody>
+    </table>
+  </div>
 
   <script>
     jQuery(document).ready(function() {

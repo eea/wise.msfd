@@ -1,9 +1,7 @@
-<div>
-  <tal:rep tal:repeat="field options/fields">
-    <div>
-      <label tal:content="python: field[0]">Assessment summary</label>
-      <div style="border: 1px solid #CCC; padding: 0px 5px; margin-bottom: 5px; min-height: 20px;"
-          tal:content="python: field[1]">Long text</div>
-    </div>
-  </tal:rep>
-</div>
+<tal:rep tal:repeat="field options/fields">
+  <div>
+    <label tal:content="python: field[0]">Assessment summary</label>
+    <div style="border: 1px solid #CCC; padding: 0px 5px; margin-bottom: 5px; min-height: 20px;"
+        tal:content="python: field[1]">Long text</div>
+  </div>
+</tal:rep>

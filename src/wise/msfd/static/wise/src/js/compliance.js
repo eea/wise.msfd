@@ -615,6 +615,29 @@ if (!Array.prototype.last){
       setupSimplifiedTables();
       setupFixedTableRows();
       setupCustomScroll();
+
+      // create a clone of the assessment data 2018 table and overlap the original table
+      // with fixed question and score columns
+      $('#container-assessment-data-2018 .table.table-condensed.assessment-data-table')
+        .clone(true).appendTo('#container-assessment-data-2018').addClass('clone');
+
+      var $orig = $('.table-wrap .table.table-condensed.assessment-data-table');
+      var $clone = $('.table.table-condensed.assessment-data-table.clone');
+      var origLength = $orig.find('tr').length;
+      var origHeight, cloneHeight;
+
+      for(var i=0; i < origLength; i++){
+        var x = $clone.find('tr')[i]
+        cloneHeight = $(x).find('.fixed-center').innerHeight();
+        origHeight = $($orig.find('tr')[i]).innerHeight();
+
+        if(origHeight > cloneHeight) {
+          $(x).css('height', origHeight + 'px');
+        }
+        else {
+          $($orig.find('tr')[i]).css('height', cloneHeight + 'px');
+        }
+      }
     });
   });
 }(window, document, $));
