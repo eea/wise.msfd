@@ -547,7 +547,8 @@ class NationalDescriptorArticleView(BaseView):
             self.descriptor_obj
         )
 
-        conclusion_2012_color = CONCLUSION_COLOR_TABLE[score_2012]
+        score_2012 = int(round(score_2012))
+        conclusion_2012_color = CONCLUSION_COLOR_TABLE.get(score_2012, 0)
         change = int(assessment.overall_conclusion[0] - score_2012)
 
         self.assessment_data_2018_html = self.assessment_data_2018_tpl(
