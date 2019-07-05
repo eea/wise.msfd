@@ -64,7 +64,7 @@ class RegionalDescriptorArticleView(BaseRegComplianceView):
 
     # assessment_data_2012_tpl = VPTF('pt/assessment-data-2012.pt')
     assessment_data_2018_tpl = VPTF(
-        '../nationaldescriptors/pt/assessment-data-2018.pt'
+        'pt/assessment-data-2018.pt'
     )
     _questions = get_questions("compliance/regionaldescriptors/data")
 
@@ -145,7 +145,8 @@ class RegionalDescriptorArticleView(BaseRegComplianceView):
         self.assessment_data_2018_html = self.assessment_data_2018_tpl(
             assessment=assessment,
             score_2012=score_2012,
-            conclusion_2012=conclusion_2012
+            conclusion_2012=conclusion_2012,
+            change_since_2012='-1'
         )
 
         return self.index()

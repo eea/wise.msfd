@@ -1,3 +1,4 @@
+from itertools import chain
 
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 from wise.msfd import db, sql  # , sql_extra
@@ -6,7 +7,7 @@ from wise.msfd.utils import CompoundRow, ItemLabel, ItemList, Row, TableHeader
 
 from ..a8_utils import UtilsArticle8
 from .base import BaseRegDescRow, BaseRegComplianceView
-from .utils import compoundrow, compoundrow2012
+from .utils import compoundrow, compoundrow2012, newline_separated_itemlist
 
 
 class RegDescA82018Row(BaseRegDescRow):
@@ -63,24 +64,29 @@ class RegDescA82018Row(BaseRegDescRow):
     @compoundrow
     def get_element_source_row(self):
         rows = []
+        values = []
         element_sources = self.get_unique_values('ElementSource')
 
-        for elem_source in element_sources:
-            values = []
-            for country_code, country_name in self.countries:
-                data = [
-                    row.Element
-                    for row in self.db_data
-                    if row.CountryCode == country_code
-                       and row.ElementSource == elem_source
-                ]
-                value = self.not_rep
-                if data:
-                    value = u"{} elements".format(len(set(data)))
+        for country_code, country_name in self.countries:
+            value = []
+            data = [
+                row.ElementSource
+                for row in self.db_data
+                if row.CountryCode == country_code
+                   and row.Element
+            ]
 
-                values.append(value)
+            if not data:
+                values.append(self.not_rep)
+                continue
 
-            rows.append((elem_source, values))
+            for elem_source in element_sources:
+                found = [x for x in data if x == elem_source]
+                value.append(u"{} ({})".format(elem_source, len(found)))
+
+            values.append(newline_separated_itemlist(value))
+
+        rows.append((u"No. of elements per level", values))
 
         return rows
 
@@ -93,24 +99,27 @@ class RegDescA82018Row(BaseRegDescRow):
         for crit in criterions:
             values = []
             for country_code, country_name in self.countries:
-                data = set([
-                    row.Parameter
+                data = [
+                    row
                     for row in self.db_data
                     if row.CountryCode == country_code
                        and row.Criteria == crit.id
                             # or row.GESComponent.split('/')[0] == crit.id)
                        and row.Parameter
-                ])
+                ]
                 value = self.not_rep
+
                 if data:
-                    value = ItemList(
-                        self.make_item_label(d)
+                    value = newline_separated_itemlist(
+                        u"{} ({})".format(
+                            self.get_label_for_value(d.Parameter), len(data)
+                        )
                         for d in data
                     )
 
                 values.append(value)
 
-            rows.append((ItemLabel(crit.title, crit.name), values))
+            rows.append((ItemLabel(crit.name, crit.title), values))
 
         return rows
 
@@ -118,28 +127,31 @@ class RegDescA82018Row(BaseRegDescRow):
     def get_threshold_value_row(self):
         rows = []
         values = []
-        parameters = self.get_unique_values('Parameter')
 
         for country_code, country_name in self.countries:
-            provided = 0
-            for param in parameters:
-                data = set([
-                    row
-                    for row in self.db_data
-                    if row.CountryCode == country_code
-                       and row.Parameter == param
-                       and (row.ThresholdValueUpper or row.ThresholdValueLower)
-                ])
-                if data:
-                    provided += 1
+            data = [
+                row
+                for row in self.db_data
+                if row.CountryCode == country_code
+                    and row.Parameter
+            ]
 
-            value = self.not_rep
-            if provided:
-                value = u"Provided for {} (of {}) parameters" \
-                    .format(provided, len(parameters))
+            if not data:
+                values.append(self.not_rep)
+                continue
+
+            total = len(data)
+            thresholds = len([
+                row for row in data
+                if row.ThresholdValueUpper or row.ThresholdValueLower
+            ])
+
+            percentage = total and int((thresholds / float(total)) * 100) or 0
+
+            value = u"{}% ({})".format(percentage, total)
             values.append(value)
 
-        rows.append(('Quantitative values provided', values))
+        rows.append(('% of parameters with values (no. of parameters)', values))
 
         return rows
 
@@ -148,22 +160,26 @@ class RegDescA82018Row(BaseRegDescRow):
         rows = []
         threshs = self.get_unique_values('ThresholdValueSource')
 
-        for threshold_source in threshs:
-            values = []
-            for country_code, country_name in self.countries:
-                data = set([
-                    row.Parameter
-                    for row in self.db_data
-                    if row.CountryCode == country_code
-                       and row.ThresholdValueSource == threshold_source
-                ])
-                value = self.not_rep
-                if data:
-                    value = u"{} parameters".format(len(set(data)))
+        values = []
+        for country_code, country_name in self.countries:
+            value = []
+            data = [
+                row.ThresholdValueSource
+                for row in self.db_data
+                if row.CountryCode == country_code
+                   and row.Parameter
+            ]
+            if not data:
+                values.append(self.not_rep)
+                continue
 
-                values.append(value)
+            for threshold_source in threshs:
+                found = [x for x in data if x == threshold_source]
+                value.append(u"{} ({})".format(threshold_source, len(found)))
 
-            rows.append((self.make_item_label(threshold_source), values))
+            values.append(newline_separated_itemlist(value))
+
+        rows.append((u'No. of parameters per level', values))
 
         return rows
 
@@ -171,29 +187,55 @@ class RegDescA82018Row(BaseRegDescRow):
     def get_proportion_threshold_row(self):
         rows = []
         values = []
-        params = self.get_unique_values('Parameter')
 
         for country_code, country_name in self.countries:
-            data = set([
-                (row.Parameter, row.ProportionThresholdValue)
+            data = [
+                row.ProportionThresholdValue
                 for row in self.db_data
                 if row.CountryCode == country_code
-                   and row.ProportionThresholdValue
-            ])
+                   and row.Parameter
+            ]
 
             value = self.not_rep
-            if data:
-                country_params = set([x[0] for x in data])
-                proportion_vals = set([x[1] for x in data])
+            proportion_vals = [x for x in data if x]
 
+            if proportion_vals:
                 value = u"Range: {}-{}% ({} of {} parameters)".format(
                     int(min(proportion_vals)), int(max(proportion_vals)),
-                    len(country_params), len(params)
+                    len(proportion_vals), len(data)
                 )
 
             values.append(value)
 
-        rows.append(('Quantitative values provided', values))
+        rows.append(('Range of % values (no. of parameters)', values))
+
+        return rows
+
+    @compoundrow
+    def get_proportion_value_achieved_row(self):
+        rows = []
+        values = []
+
+        for country_code, country_name in self.countries:
+            data = [
+                row.ProportionValueAchieved
+                for row in self.db_data
+                if row.CountryCode == country_code
+                   and row.Parameter #row.ProportionValueAchieved
+            ]
+
+            value = self.not_rep
+            proportion_vals = [x for x in data if x]
+
+            if proportion_vals:
+                value = u"Range: {}-{}% ({} of {} parameters)".format(
+                    int(min(proportion_vals)), int(max(proportion_vals)),
+                    len(proportion_vals), len(data)
+                )
+
+            values.append(value)
+
+        rows.append(('Range of % values (no. of parameters)', values))
 
         return rows
 
@@ -212,7 +254,7 @@ class RegDescA82018Row(BaseRegDescRow):
 
             value = self.not_rep
             if data:
-                value = ItemList(data)
+                value = newline_separated_itemlist(data)
 
             values.append(value)
 
@@ -221,29 +263,94 @@ class RegDescA82018Row(BaseRegDescRow):
         return rows
 
     @compoundrow
+    def get_trend_row(self):
+        rows = []
+        values = []
+        trends = self.get_unique_values('Trend')
+
+        for country_code, country_name in self.countries:
+            value = []
+            data = [
+                row.Trend
+                for row in self.db_data
+                if row.CountryCode == country_code
+                   and row.Parameter
+            ]
+            if not data:
+                values.append(self.not_rep)
+                continue
+
+            for trend in trends:
+                found = len([x for x in data if x == trend])
+
+                percent = data and (float(found) / len(data) * 100) or 0
+                value.append(
+                    u"{0} ({1} or {2:.1f}%)".format(trend, found, percent)
+                )
+
+            values.append(newline_separated_itemlist(value))
+
+        rows.append((u'No. of trends per category', values))
+
+        return rows
+
+    @compoundrow
     def get_param_achieved_row(self):
+        rows = []
+        values = []
+        param_achievs = self.get_unique_values('ParameterAchieved')
+
+        for country_code, country_name in self.countries:
+            value = []
+            data = [
+                row.ParameterAchieved
+                for row in self.db_data
+                if row.CountryCode == country_code
+                   and row.Parameter
+            ]
+            if not data:
+                values.append(self.not_rep)
+                continue
+
+            for param in param_achievs:
+                found = len([x for x in data if x == param])
+
+                percent = data and (float(found) / len(data) * 100) or 0
+                value.append(
+                    u"{0} ({1} or {2:.1f}%)".format(param, found, percent)
+                )
+
+            values.append(newline_separated_itemlist(value))
+
+        rows.append(('No. of parameters per category', values))
+
+        return rows
+
+    @compoundrow
+    def get_related_indicators_row(self):
         rows = []
         values = []
 
         for country_code, country_name in self.countries:
-            param_achievs = self.get_unique_values('ParameterAchieved')
+            indicators = []
+            data = [
+                row.IndicatorCode
+                for row in self.db_data
+                if row.CountryCode == country_code
+                   and row.IndicatorCode
+            ]
 
-            value = []
-            for param in param_achievs:
-                data = set([
-                    row.Parameter
-                    for row in self.db_data
-                    if row.CountryCode == country_code
-                       and row.ParameterAchieved == param
-                ])
+            if not data:
+                values.append(self.not_rep)
+                continue
 
-                if data:
-                    text = u"{} - {}".format(param, len(data))
-                    value.append(text)
+            for indic in data:
+                splitted = indic.split(',')
+                indicators.extend(splitted)
 
-            values.append(ItemList(value))
+            values.append(newline_separated_itemlist(set(indicators)))
 
-        rows.append(('', values))
+        rows.append((u'No. of trends per category', values))
 
         return rows
 
@@ -251,26 +358,34 @@ class RegDescA82018Row(BaseRegDescRow):
     def get_crit_status_row(self):
         rows = []
         values = []
+        crit_stats = self.get_unique_values('CriteriaStatus')
 
         for country_code, country_name in self.countries:
-            crit_stats = self.get_unique_values('CriteriaStatus')
-
             value = []
+            data = [
+                row.CriteriaStatus
+                for row in self.db_data
+                if row.CountryCode == country_code
+                   and row.CriteriaStatus
+            ]
+
+            if not data:
+                values.append(self.not_rep)
+                continue
+
             for crit_stat in crit_stats:
-                data = set([
-                    row.Criteria
-                    for row in self.db_data
-                    if row.CountryCode == country_code
-                       and row.CriteriaStatus == crit_stat
-                ])
+                found = len([x for x in data if x == crit_stat])
+                total = len(data)
+                percentage = total and (found / float(total)) * 100 or 0
 
-                if data:
-                    text = u"{} - {}".format(crit_stat, len(data))
-                    value.append(text)
+                text = u"{0} ({1} or {2:0.1f}%)".format(
+                    crit_stat, found, percentage
+                )
+                value.append(text)
 
-            values.append(ItemList(value))
+            values.append(newline_separated_itemlist(value))
 
-        rows.append(('', values))
+        rows.append(('No. of criteria per category', values))
 
         return rows
 
@@ -278,26 +393,34 @@ class RegDescA82018Row(BaseRegDescRow):
     def get_elem_status_row(self):
         rows = []
         values = []
+        elem_stats = self.get_unique_values('ElementStatus')
 
         for country_code, country_name in self.countries:
-            elem_stats = self.get_unique_values('ElementStatus')
-
             value = []
+            data = [
+                row.ElementStatus
+                for row in self.db_data
+                if row.CountryCode == country_code
+                   and row.ElementStatus
+            ]
+
+            if not data:
+                values.append(self.not_rep)
+                continue
+
             for elem in elem_stats:
-                data = set([
-                    row.Element
-                    for row in self.db_data
-                    if row.CountryCode == country_code
-                       and row.ElementStatus == elem
-                ])
+                found = len([x for x in data if x == elem])
+                total = len(data)
+                percentage = total and (found / float(total)) * 100 or 0
 
-                if data:
-                    text = u"{} - {}".format(elem, len(data))
-                    value.append(text)
+                text = u"{0} ({1} or {2:0.1f}%)".format(
+                    elem, found, percentage
+                )
+                value.append(text)
 
-            values.append(ItemList(value))
+            values.append(newline_separated_itemlist(value))
 
-        rows.append(('', values))
+        rows.append(('No. of elements per category', values))
 
         return rows
 
@@ -316,7 +439,7 @@ class RegDescA82018Row(BaseRegDescRow):
 
             value = self.not_rep
             if data:
-                value = ItemList(data)
+                value = newline_separated_itemlist(data)
 
             values.append(value)
 
@@ -331,7 +454,7 @@ class RegDescA82018Row(BaseRegDescRow):
 
         for country_code, country_name in self.countries:
             data = set([
-                (row.Criteria, row.IntegrationRuleDescriptionParameter)
+                row.IntegrationRuleDescriptionParameter
                 for row in self.db_data
                 if row.CountryCode == country_code
                    and row.IntegrationRuleDescriptionParameter
@@ -339,7 +462,7 @@ class RegDescA82018Row(BaseRegDescRow):
 
             value = self.not_rep
             if data:
-                value = ItemList([u"{}: {}".format(x[0], x[1]) for x in data])
+                value = newline_separated_itemlist(data)
 
             values.append(value)
 
@@ -362,7 +485,7 @@ class RegDescA82018Row(BaseRegDescRow):
 
             value = self.not_rep
             if data:
-                value = ItemList(data)
+                value = newline_separated_itemlist(data)
 
             values.append(value)
 
@@ -385,8 +508,8 @@ class RegDescA82018Row(BaseRegDescRow):
 
             value = self.not_rep
             if data:
-                # value = ItemList(data)
-                value = list(data)[0]
+                value = newline_separated_itemlist(data)
+                # value = list(data)[0]
 
             values.append(value)
 
@@ -409,7 +532,7 @@ class RegDescA82018Row(BaseRegDescRow):
 
             value = self.not_rep
             if data:
-                value = ItemList(data)
+                value = newline_separated_itemlist(data)
 
             values.append(value)
 
@@ -432,7 +555,7 @@ class RegDescA82018Row(BaseRegDescRow):
 
             value = self.not_rep
             if data:
-                value = ItemList(data)
+                value = newline_separated_itemlist(data)
 
             values.append(value)
 
@@ -455,7 +578,7 @@ class RegDescA82018Row(BaseRegDescRow):
 
             value = self.not_rep
             if data:
-                value = ItemList(data)
+                value = newline_separated_itemlist(data)
 
             values.append(value)
 
@@ -478,7 +601,7 @@ class RegDescA82018Row(BaseRegDescRow):
 
             value = self.not_rep
             if data:
-                value = ItemList(data)
+                value = newline_separated_itemlist(data)
 
             values.append(value)
 
@@ -501,7 +624,7 @@ class RegDescA82018Row(BaseRegDescRow):
 
             value = self.not_rep
             if data:
-                value = ItemList(data)
+                value = newline_separated_itemlist(data)
 
             values.append(value)
 
@@ -512,29 +635,50 @@ class RegDescA82018Row(BaseRegDescRow):
     @compoundrow
     def get_related_press_row(self):
         rows = []
-        pressures = self.get_unique_values("PressureCodes")
-        all_pressures = []
-        for pres in pressures:
-            all_pressures.extend(pres.split(','))
+        values = []
 
-        for pressure in set(all_pressures):
-            values = []
-            for country_code, country_name in self.countries:
-                data = set([
-                    row
-                    for row in self.db_data
-                    if row.CountryCode == country_code
-                        and row.PressureCodes
-                        and pressure in row.PressureCodes.split(',')
-                ])
+        for country_code, country_name in self.countries:
+            data = [
+                row.PressureCodes.split(',')
+                for row in self.db_data
+                if row.CountryCode == country_code
+                    and row.PressureCodes
+            ]
 
-                value = self.not_rep
-                if data:
-                    value = self.rep
+            pressures = set([x for x in chain(*data)])
 
-                values.append(value)
+            value = self.not_rep
+            if pressures:
+                value = newline_separated_itemlist(pressures)
 
-            rows.append((self.make_item_label(pressure), values))
+            values.append(value)
+
+        rows.append(('', values))
+
+        return rows
+
+    @compoundrow
+    def get_related_targets_row(self):
+        rows = []
+        values = []
+
+        for country_code, country_name in self.countries:
+            data = [
+                row.TargetCodes.split(',')
+                for row in self.db_data
+                if row.CountryCode == country_code
+                    and row.TargetCodes
+            ]
+
+            targets = set([x for x in chain(*data)])
+
+            value = self.not_rep
+            if targets:
+                value = len(targets)
+
+            values.append(value)
+
+        rows.append(('', values))
 
         return rows
 

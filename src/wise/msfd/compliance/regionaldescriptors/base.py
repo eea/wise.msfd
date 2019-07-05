@@ -115,7 +115,8 @@ class BaseRegDescRow(BaseRegComplianceView):
         super(BaseRegDescRow, self).__init__(context, request)
         # self.context = context
         # self.request = request
-        self.db_data = db_data
+        self.db_data = [x._Proxy2018__o for x in db_data]
+        self.db_data_proxy = db_data
         # self.descriptor_obj = descriptor_obj
         self.region = region
         self.countries = countries
@@ -130,8 +131,14 @@ class BaseRegDescRow(BaseRegComplianceView):
 
         return sorted(values)
 
+    def get_label_for_value(self, value):
+        label = get_label(value, self.field.label_collection)
+
+        return label
+
     def make_item_label(self, value):
-        return ItemLabel(value, get_label(value, self.field.label_collection))
+        return value
+        return ItemLabel(value, self.get_label_for_value(value))
 
     @compoundrow
     def get_countries_row(self):

@@ -1,4 +1,3 @@
-from collections import namedtuple
 
 from eea.cache import cache
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
@@ -7,7 +6,8 @@ from wise.msfd.data import countries_in_region, muids_by_country
 from wise.msfd.gescomponents import get_descriptor
 from wise.msfd.utils import CompoundRow, ItemLabel, ItemList, Row, TableHeader
 
-from .utils import get_percentage, compoundrow, compoundrow2012
+from .utils import (compoundrow, compoundrow2012, emptyline_separated_itemlist,
+                    get_percentage)
 from .base import BaseRegDescRow, BaseRegComplianceView
 
 
@@ -27,8 +27,8 @@ class RegDescA92018Row(BaseRegDescRow):
         for crit in criterions:
             values = []
             for country_code, country_name in self.countries:
-                exists = [
-                    row
+                data = [
+                    row.GESDescription
                     for row in self.db_data
                     if row.CountryCode == country_code
                        and (row.GESComponent == crit.id
@@ -36,8 +36,9 @@ class RegDescA92018Row(BaseRegDescRow):
                        and row.Features
                 ]
                 value = self.not_rep
-                if exists:
-                    value = self.rep
+                if data:
+                    # value = ItemList(set(data))
+                    value = emptyline_separated_itemlist(data)
 
                 values.append(value)
 
@@ -58,7 +59,9 @@ class RegDescA92018Row(BaseRegDescRow):
             ])
             value = self.not_rep
             if data:
-                value = ItemList(data)
+                # value = NewlineSeparatedItemList(data)
+                value = emptyline_separated_itemlist(data)
+                # value = u"".join(set(data))
 
             values.append(value)
 
@@ -79,7 +82,7 @@ class RegDescA92018Row(BaseRegDescRow):
             ])
             value = self.not_rep
             if data:
-                value = ItemList(data)
+                value = emptyline_separated_itemlist(data)
 
             values.append(value)
 

@@ -2,36 +2,40 @@
 <data>
     <Art9>
         <element name="MemberState" getrowdata="get_countries_row">Member state</element>
-        <element name="MarineReportingUnit" getrowdata="get_mru_row">MarineReportingUnit</element>
-        <element name="Feature" getrowdata="get_feature_row" label="features">Feature</element>
-        <element name="GESComponent" getrowdata="get_gescomp_row">GES component [Reporting feature]</element>
-        <element name="JustificationNonUse" getrowdata="get_justif_nonuse_row">JustificationNonUse</element>
-        <element name="JustificationDelay" getrowdata="get_justif_delay_row">JustificationDelay</element>
+        <element name="MarineReportingUnit" getrowdata="get_mru_row">Marine reporting units</element>
+        <element name="Feature" getrowdata="get_feature_row" label="features">Features (no. of times reported)</element>
+        <element name="GESComponent" getrowdata="get_gescomp_row">GES description</element>
+        <element name="JustificationNonUse" getrowdata="get_justif_nonuse_row" translate="true">Justification for non-use of criterion</element>
+        <element name="JustificationDelay" getrowdata="get_justif_delay_row" translate="true">Justification for delay in setting EU/regional requirements</element>
     </Art9>
     <Art8>
         <element name="MemberState" getrowdata="get_countries_row">Member state</element>
-        <element name="MarineReportingUnit" getrowdata="get_mru_row">MarineReportingUnit</element>
-        <element name="Feature" getrowdata="get_feature_row" label="features">Feature</element>
+        <element name="MarineReportingUnit" getrowdata="get_mru_row">Marine reporting units</element>
+        <element name="Feature" getrowdata="get_feature_row" label="features">Features (no. of times reported)</element>
         <element name="Element" getrowdata="get_element_row">Element</element>
-        <element name="ElementSource" getrowdata="get_element_source_row">ElementSource</element>
-        <element name="CriteriaParameters" getrowdata="get_crit_param_row" label="parameters">Criteria and parameters used</element>
-        <element name="ThresholdValue" getrowdata="get_threshold_value_row">ThresholdValueUpper/Lower</element>
-        <element name="ThresholdValueSource" getrowdata="get_threshold_source_row" label="threshold_sources">ThresholdValueSource</element>
-        <element name="ProportionThresholdValue" getrowdata="get_proportion_threshold_row">ProportionThresholdValue</element>
-        <element name="ProportionThresholdValueUnit" getrowdata="get_proportion_threshold_unit_row">ProportionThresholdValueUnit</element>
-        <element name="ParameterAchieved" getrowdata="get_param_achieved_row">ParameterAchieved</element>
-        <element name="CriteriaStatus" getrowdata="get_crit_status_row">CriteriaStatus</element>
-        <element name="ElementStatus" getrowdata="get_elem_status_row">ElementStatus</element>
-        <element name="IntegrationRuleTypeParameter" getrowdata="get_integration_type_param_row">IntegrationRuleTypeParameter</element>
-        <element name="IntegrationRuleDescriptionParameter" getrowdata="get_integration_desc_param_row">IntegrationRuleDescriptionParameter</element>
-        <element name="IntegrationRuleTypeCriteria" getrowdata="get_integration_type_crit_row">IntegrationRuleTypeCriteria</element>
-        <element name="IntegrationRuleDescriptionCriteria" getrowdata="get_integration_desc_crit_row" translate="true">IntegrationRuleDescriptionCriteria</element>
-        <element name="GESextentThreshold" getrowdata="get_ges_extent_thresh_row">GESextentThreshold</element>
-        <element name="GESextentAchieved" getrowdata="get_ges_extent_achiev_row">GESextentAchieved</element>
-        <element name="GESextentUnit" getrowdata="get_ges_extent_unit_row">GESextentUnit</element>
-        <element name="GESachieved" getrowdata="get_ges_achiev_row">GESachieved</element>
-        <element name="AssessmentPeriod" getrowdata="get_assess_period_row">AssessmentPeriod</element>
-        <element name="RelatedPressures" getrowdata="get_related_press_row" label="pressures">RelatedPressures</element>
+        <element name="ElementSource" getrowdata="get_element_source_row">Element sources</element>
+        <element name="CriteriaParameters" getrowdata="get_crit_param_row" label="parameters">Criteria and parameters used (number of parameters)</element>
+        <element name="ThresholdValue" getrowdata="get_threshold_value_row">Threshold values</element>
+        <element name="ThresholdValueSource" getrowdata="get_threshold_source_row" label="threshold_sources">Threshold value sources</element>
+        <element name="ProportionThresholdValue" getrowdata="get_proportion_threshold_row">Proportion threshold values</element>
+        <element name="ProportionValueAchieved" getrowdata="get_proportion_value_achieved_row">Proportion values achieved</element>
+        <element name="ProportionThresholdValueUnit" getrowdata="get_proportion_threshold_unit_row">Proportion threshold value units</element>
+        <element name="Trend" getrowdata="get_trend_row">Trends</element>
+        <element name="ParameterAchieved" getrowdata="get_param_achieved_row">Parameters achieved</element>
+        <element name="RelatedIndicators" getrowdata="get_related_indicators_row">Related indicators</element>
+        <element name="CriteriaStatus" getrowdata="get_crit_status_row">Criteria status</element>
+        <element name="ElementStatus" getrowdata="get_elem_status_row">Element status</element>
+        <element name="IntegrationRuleTypeParameter" getrowdata="get_integration_type_param_row">Integration rule type for parameters</element>
+        <element name="IntegrationRuleDescriptionParameter" getrowdata="get_integration_desc_param_row">Integration rule description for parameters</element>
+        <element name="IntegrationRuleTypeCriteria" getrowdata="get_integration_type_crit_row">Integration rule type for criteria</element>
+        <element name="IntegrationRuleDescriptionCriteria" getrowdata="get_integration_desc_crit_row" translate="true">Integration rule description for criteria</element>
+        <element name="GESextentThreshold" getrowdata="get_ges_extent_thresh_row">GES extent threshold</element>
+        <element name="GESextentAchieved" getrowdata="get_ges_extent_achiev_row">GES extent achieved</element>
+        <element name="GESextentUnit" getrowdata="get_ges_extent_unit_row">GES extent unit</element>
+        <element name="GESachieved" getrowdata="get_ges_achiev_row">GES achieved</element>
+        <element name="AssessmentPeriod" getrowdata="get_assess_period_row">Assessment period</element>
+        <element name="RelatedPressures" getrowdata="get_related_press_row" label="pressures">Related pressures</element>
+        <element name="RelatedTargets" getrowdata="get_related_targets_row">Related targets</element>
     </Art8>
     <Art10>
         <element name="MemberState" getrowdata="get_countries_row">Member state</element>

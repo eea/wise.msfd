@@ -1,5 +1,8 @@
 from collections import namedtuple
 
+from plone.intelligenttext.transforms import \
+    convertWebIntelligentPlainTextToHtml as convertWIPT
+
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 from wise.msfd import db, sql, utils
 from wise.msfd.data import countries_in_region, muids_by_country
@@ -9,6 +12,24 @@ from ..base import BaseComplianceView
 
 # TODO: AreaType for each record can be AA_AssessmentArea, SR_SubRegion and
 # so on. Which one we use?
+
+
+def _separated_itemlist(values, separator):
+    _sorted = sorted(set(values))
+
+    return convertWIPT(separator.join(_sorted))
+
+
+def newline_separated_itemlist(values):
+    separator = u"\n"
+
+    return _separated_itemlist(values, separator)
+
+
+def emptyline_separated_itemlist(values):
+    separator = u"\n\n\n"
+
+    return _separated_itemlist(values, separator)
 
 
 def compoundrow(func):

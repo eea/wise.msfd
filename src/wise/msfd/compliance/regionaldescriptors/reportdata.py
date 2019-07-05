@@ -12,6 +12,8 @@ from wise.msfd.translation import retrieve_translation
 from wise.msfd.utils import (CompoundRow, ItemList, items_to_rows, timeit,
                              natural_sort_key, Row)
 
+from ..nationaldescriptors.proxy import Proxy2018
+from ..nationaldescriptors.utils import consolidate_singlevalue_to_list
 from .a8 import RegDescA82018Row, RegDescA82012
 from .a9 import RegDescA92018Row, RegDescA92012
 from .a10 import RegDescA102018Row, RegDescA102012
@@ -233,6 +235,10 @@ class RegReportData2018(BaseRegComplianceView):
     def get_report_data(self):
         # TODO check if data is filtered by features for D1
         db_data = getattr(self, 'get_data_from_view_' + self.article, None)
+        db_data = [Proxy2018(row, self) for row in db_data]
+
+        if self.article == 'Art8':
+            db_data = consolidate_singlevalue_to_list(db_data, 'IndicatorCode')
 
         countries = self.available_countries
         region = self.country_region_code
