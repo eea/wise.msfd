@@ -97,7 +97,8 @@ class EditAssessmentDataForm(Form, BaseView):
 
         roles = get_roles(obj=self.context)
 
-        if 'Contributor' not in roles and ('Manager' not in roles):
+        if 'Contributor' not in roles and ('Manager' not in roles)\
+                and 'Editor' not in roles:
             raise Unauthorized
 
         data, errors = self.extractData()
