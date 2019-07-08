@@ -1,28 +1,59 @@
 from collections import defaultdict
+from itertools import chain
 from sqlalchemy import or_
 
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 from wise.msfd import db, sql, sql_extra
 from wise.msfd.data import countries_in_region, muids_by_country
+from wise.msfd.gescomponents import get_ges_component
+from wise.msfd.utils import ItemLabel, ItemList
 
 from .base import BaseRegDescRow, BaseRegComplianceView
-from .utils import compoundrow, compoundrow2012
+from .utils import compoundrow, compoundrow2012, newline_separated_itemlist
 
 
 class RegDescA102018Row(BaseRegDescRow):
     year = '2018'
 
     @compoundrow
+    def get_gescomp_row(self):
+        rows = []
+        values = []
+
+        for country_code, country_name in self.countries:
+            data = [
+                row.GESComponents.split(',')
+                for row in self.db_data
+                if row.CountryCode == country_code
+                   and row.GESComponents
+            ]
+            value = self.not_rep
+            if data:
+                vals = set([x for x in chain(*data)])
+                crits = [
+                    get_ges_component(c).title
+                    for c in vals
+                ]
+                value = newline_separated_itemlist(crits)
+
+            values.append(value)
+
+        rows.append(('', values))
+
+        return rows
+
+    @compoundrow
     def get_target_row(self):
         rows = []
         values = []
+
         for country_code, country_name in self.countries:
-            data = set([
+            data = [
                 row.TargetCode
                 for row in self.db_data
                 if row.CountryCode == country_code
                    and row.TargetCode
-            ])
+            ]
             value = self.not_rep
             if data:
                 value = len(data)
@@ -30,6 +61,212 @@ class RegDescA102018Row(BaseRegDescRow):
             values.append(value)
 
         rows.append(('Number defined', values))
+
+        return rows
+
+    @compoundrow
+    def get_target_value_row(self):
+        rows = []
+        values = []
+
+        for country_code, country_name in self.countries:
+            reports = {'Reported': 0, 'Not reported': 0}
+            value = []
+            data = [
+                row.TargetValue
+                for row in self.db_data
+                if row.CountryCode == country_code
+                    and (row.Parameter or row.Element)
+            ]
+            total = len(data)
+
+            if not data:
+                values.append(self.not_rep)
+                continue
+
+            for target_val in data:
+                if target_val:
+                    reports['Reported'] += 1
+                    continue
+
+                reports['Not reported'] += 1
+
+            for k, v in reports.items():
+                percentage = total and (v / float(total)) * 100 or 0
+
+                value.append(u"{0} ({1} - {2:0.1f}%)".format(
+                    k, v, percentage
+                ))
+
+            values.append(newline_separated_itemlist(value))
+
+        rows.append(('No. of parameters/elements with quantitative values',
+                     values))
+
+        return rows
+
+    @compoundrow
+    def get_targetstatus_row(self):
+        rows = []
+        values = []
+
+        for country_code, country_name in self.countries:
+            tar_status_counter = defaultdict(int)
+            value = []
+
+            data = [
+                row.TargetStatus
+                for row in self.db_data
+                if row.CountryCode == country_code
+                   and (row.Parameter or row.Element)
+            ]
+            total = len(data)
+
+            if not data:
+                values.append(self.not_rep)
+                continue
+
+            for target_status in data:
+                if not target_status:
+                    tar_status_counter['Status not reported'] += 1
+                    continue
+
+                tar_status_counter[target_status] += 1
+
+            for k, v in tar_status_counter.items():
+                percentage = total and (v / float(total)) * 100 or 0
+                value.append(u"{0} ({1} - {2:0.1f}%)".format(k, v, percentage))
+
+            values.append(newline_separated_itemlist(value))
+
+        rows.append(('No. of assessments per category', values))
+
+        return rows
+
+    @compoundrow
+    def get_assessmentperiod_row(self):
+        rows = []
+        values = []
+
+        for country_code, country_name in self.countries:
+            value = []
+            data = [
+                row.AssessmentPeriod
+                for row in self.db_data
+                if row.CountryCode == country_code
+                   and row.AssessmentPeriod
+            ]
+            total = len(data)
+
+            if not total:
+                values.append(self.not_rep)
+                continue
+
+            for period in set(data):
+                found = len([x for x in data if x == period])
+                percentage = total and (found / float(total)) * 100 or 0
+                value.append(u"{0} ({1} - {2:0.1f}%)".format(
+                    period, found, percentage
+                ))
+
+            values.append(newline_separated_itemlist(value))
+
+        rows.append(('No. of targets per period', values))
+
+        return rows
+
+    @compoundrow
+    def get_timescale_row(self):
+        rows = []
+        values = []
+
+        for country_code, country_name in self.countries:
+            value = []
+            data = [
+                row.TimeScale
+                for row in self.db_data
+                if row.CountryCode == country_code
+                   and row.TimeScale
+            ]
+            total = len(data)
+            if not total:
+                values.append(self.not_rep)
+                continue
+
+            for timescale in set(data):
+                found = len([x for x in data if x == timescale])
+                percentage = total and (found / float(total)) * 100 or 0
+                value.append(u"{0} ({1} - {2:0.1f}%)".format(
+                    timescale, found, percentage
+                ))
+
+            values.append(newline_separated_itemlist(value))
+
+        rows.append(('No. of targets per date', values))
+
+        return rows
+
+    @compoundrow
+    def get_updatedate_row(self):
+        rows = []
+        values = []
+
+        for country_code, country_name in self.countries:
+            value = []
+            data = [
+                row.UpdateDate
+                for row in self.db_data
+                if row.CountryCode == country_code
+                   and row.UpdateDate
+            ]
+            total = len(data)
+
+            if not total:
+                values.append(self.not_rep)
+                continue
+
+            for updatedate in set(data):
+                found = len([x for x in data if x == updatedate])
+                percentage = total and (found / float(total)) * 100 or 0
+                value.append(u"{0} ({1} - {2:0.1f}%)".format(
+                    updatedate, found, percentage
+                ))
+
+            values.append(newline_separated_itemlist(value))
+
+        rows.append(('No. of targets per date', values))
+
+        return rows
+
+    @compoundrow
+    def get_updatetype_row(self):
+        rows = []
+        values = []
+
+        for country_code, country_name in self.countries:
+            value = []
+            data = [
+                row.UpdateType
+                for row in self.db_data
+                if row.CountryCode == country_code
+                   and row.UpdateType
+            ]
+            total = len(data)
+
+            if not total:
+                values.append(self.not_rep)
+                continue
+
+            for updatetype in set(data):
+                found = len([x for x in data if x == updatetype])
+                percentage = total and (found / float(total)) * 100 or 0
+                value.append(u"{0} ({1} - {2:0.1f}%)".format(
+                    updatetype, found, percentage
+                ))
+
+            values.append(newline_separated_itemlist(value))
+
+        rows.append(('No. of targets per category', values))
 
         return rows
 
@@ -50,70 +287,7 @@ class RegDescA102018Row(BaseRegDescRow):
 
             values.append(value)
 
-        rows.append(('Number defined', values))
-
-        return rows
-
-    @compoundrow
-    def get_timescale_row(self):
-        rows = []
-        values = []
-        for country_code, country_name in self.countries:
-            data = set([
-                row.TimeScale
-                for row in self.db_data
-                if row.CountryCode == country_code
-                   and row.TimeScale
-            ])
-            value = self.not_rep
-            if data:
-                value = self.rep
-
-            values.append(value)
-
-        rows.append(('', values))
-
-        return rows
-
-    @compoundrow
-    def get_updatedate_row(self):
-        rows = []
-        values = []
-        for country_code, country_name in self.countries:
-            data = set([
-                row.UpdateDate
-                for row in self.db_data
-                if row.CountryCode == country_code
-                   and row.UpdateDate
-            ])
-            value = self.not_rep
-            if data:
-                value = max(data)
-
-            values.append(value)
-
-        rows.append(('', values))
-
-        return rows
-
-    @compoundrow
-    def get_updatetype_row(self):
-        rows = []
-        values = []
-        for country_code, country_name in self.countries:
-            data = set([
-                row.UpdateType
-                for row in self.db_data
-                if row.CountryCode == country_code
-                   and row.UpdateType
-            ])
-            value = self.not_rep
-            if data:
-                value = self.rep
-
-            values.append(value)
-
-        rows.append(('', values))
+        rows.append(('No. of different indicators reported', values))
 
         return rows
 
@@ -134,107 +308,7 @@ class RegDescA102018Row(BaseRegDescRow):
 
             values.append(value)
 
-        rows.append(('Number reported', values))
-
-        return rows
-
-    # TODO needs to be finished
-    @compoundrow
-    def get_targetvalue_row(self):
-        rows = []
-        values = []
-
-        indics = self.get_unique_values('Indicators')
-
-        for country_code, country_name in self.countries:
-            count_target_values = len(set([
-                row.TargetCode
-                for row in self.db_data
-                if row.CountryCode == country_code
-                   and row.TargetCode
-                   and row.TargetValue
-            ]))
-            count_total_targets = len(set([
-                row.TargetCode
-                for row in self.db_data
-                if row.CountryCode == country_code
-                   and row.TargetCode
-            ]))
-            value_target = u"Targets ({} of {})".format(count_target_values,
-                                                       count_total_targets)
-
-            count_indics_values = len(set([
-                row.Indicators
-                for row in self.db_data
-                if row.CountryCode == country_code
-                   and row.Indicators
-                   and row.TargetValue
-            ]))
-            count_total_indics = len(set([
-                row.Indicators
-                for row in self.db_data
-                if row.CountryCode == country_code
-                   and row.Indicators
-            ]))
-            value_indic = u"Indicators ({} of {})".format(count_indics_values,
-                                                         count_total_indics)
-
-            values.append("; ".join((value_target, value_indic)))
-
-        rows.append(('Quantitative values provided', values))
-
-        return rows
-
-    @compoundrow
-    def get_targetstatus_row(self):
-        rows = []
-        values = []
-
-        for country_code, country_name in self.countries:
-            tar_status_counter = defaultdict(int)
-
-            data = set([
-                (row.TargetCode, row.TargetStatus)
-                for row in self.db_data
-                if row.CountryCode == country_code
-            ])
-            for item in data:
-                target_status = item[1]
-                if not target_status:
-                    tar_status_counter['Status not reported'] += 1
-                    continue
-
-                tar_status_counter[target_status] += 1
-
-            count_vals = [
-                u"{} - {}".format(k, v)
-                for k, v in sorted(tar_status_counter.items(),
-                                   key=lambda i: i[1], reverse=True)
-            ]
-            values.append("; ".join(count_vals))
-
-        rows.append(('', values))
-
-        return rows
-
-    @compoundrow
-    def get_assessmentperiod_row(self):
-        rows = []
-        values = []
-        for country_code, country_name in self.countries:
-            data = set([
-                row.AssessmentPeriod
-                for row in self.db_data
-                if row.CountryCode == country_code
-                   and row.AssessmentPeriod
-            ])
-            value = self.not_rep
-            if data:
-                value = max(data)
-
-            values.append(value)
-
-        rows.append(('', values))
+        rows.append(('No. of different measures reported', values))
 
         return rows
 

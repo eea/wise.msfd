@@ -41,15 +41,16 @@
         <element name="MemberState" getrowdata="get_countries_row">Member state</element>
         <element name="MarineReportingUnit" getrowdata="get_mru_row">Reporting area(s)</element>
         <element name="Feature" getrowdata="get_feature_row" label="features">Feature(s) reported</element>
+        <element name="GESComponent" getrowdata="get_gescomp_row">GES components</element>
         <element name="Target" getrowdata="get_target_row">Target</element>
-        <element name="Indicators" getrowdata="get_indicators_row">Indicators</element>
-        <element name="Timescale" getrowdata="get_timescale_row">Timescale</element>
-        <element name="UpdateDate" getrowdata="get_updatedate_row">Update date</element>
-        <element name="UpdateType" getrowdata="get_updatetype_row">Update type</element>
-        <element name="RelatedMeasures" getrowdata="get_measures_row">Related measures</element>
-        <element name="TargetValue" getrowdata="get_targetvalue_row">TargetValue</element>
+        <element name="TargetValue" getrowdata="get_target_value_row">Target value</element>
         <element name="TargetStatus" getrowdata="get_targetstatus_row">Target status</element>
         <element name="Assessment period" getrowdata="get_assessmentperiod_row">Assessment period</element>
+        <element name="Timescale" getrowdata="get_timescale_row">Timescale to achieve targets</element>
+        <element name="UpdateDate" getrowdata="get_updatedate_row">Update date</element>
+        <element name="UpdateType" getrowdata="get_updatetype_row">Update type</element>
+        <element name="Indicators" getrowdata="get_indicators_row">Related indicators</element>
+        <element name="RelatedMeasures" getrowdata="get_measures_row">Related measures</element>
     </Art10>
 </data>
 
