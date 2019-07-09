@@ -112,7 +112,7 @@ class RegDescA92012(BaseRegComplianceView):
 
         self.allrows = [
             self.compoundrow2012('Member state', self.get_countries_row()),
-            self.compoundrow2012('Reporting area(s)[MarineUnitID]',
+            self.compoundrow2012('Marine reporting units',
                                  self.get_reporting_area_row()),
             self.compoundrow2012('Feature(s) reported [Feature]',
                                  self.get_features_reported_row()),
@@ -223,7 +223,7 @@ class RegDescA92012(BaseRegComplianceView):
     @cache(get_key)
     def get_reporting_area_row(self):
         rows = [
-            ('Number of MRUs used',
+            ('Number used',
              [len(self.all_countries[c]) for c in self.countries])
         ]
 

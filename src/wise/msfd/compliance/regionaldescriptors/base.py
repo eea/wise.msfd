@@ -1,17 +1,18 @@
-from collections import namedtuple
+from collections import Counter, defaultdict, namedtuple
+from itertools import chain
 
 from plone.api.content import get_state
 from plone.api.portal import get_tool
 from wise.msfd.compliance.base import BaseComplianceView
 from wise.msfd.compliance.vocabulary import REGIONS
-from wise.msfd.gescomponents import get_label
+from wise.msfd.gescomponents import get_label, FEATURES_DB
 from wise.msfd.utils import ItemLabel
 
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 
 from .. import interfaces
 from .data import REPORT_DEFS
-from .utils import compoundrow
+from .utils import compoundrow, newline_separated_itemlist
 
 COUNTRY = namedtuple("Country", ["id", "title", "definition", "is_primary"])
 
@@ -166,28 +167,49 @@ class BaseRegDescRow(BaseRegComplianceView):
 
     @compoundrow
     def get_feature_row(self):
-        rows = []
-        features = self.get_unique_values("Features")
-        all_features = []
-        for feat in features:
-            all_features.extend(feat.split(','))
+        all_features_reported = self.get_unique_values("Features")
+        themes_fromdb = FEATURES_DB
 
-        for feature in set(all_features):
+        rows = []
+        all_features = []
+        all_themes = defaultdict(list)
+
+        for feat in all_features_reported:
+            all_features.extend(feat.split(','))
+        all_features = set(all_features)
+
+        for feature in all_features:
+            if feature not in themes_fromdb:
+                # TODO treat if not in features
+                continue
+
+            theme = themes_fromdb[feature].theme
+            all_themes[theme].append(feature)
+
+        for theme, feats in all_themes.items():
             values = []
+
             for country_code, country_name in self.countries:
-                exists = [
-                    row
+                value = []
+                data = [
+                    row.Features.split(',')
                     for row in self.db_data
                     if row.CountryCode == country_code
-                        and row.Features
-                        and feature in row.Features.split(',')
+                       and row.Features
                 ]
-                value = self.not_rep
-                if exists:
-                    value = self.rep
+                all_features_rep = [x for x in chain(*data)]
+                count_features = Counter(all_features_rep)
 
-                values.append(value)
+                for feature in feats:
+                    cnt = count_features.get(feature, 0)
+                    if not cnt:
+                        continue
 
-            rows.append((self.make_item_label(feature), values))
+                    val = u"{} ({})".format(feature, cnt)
+                    value.append(val)
+
+                values.append(newline_separated_itemlist(value))
+
+            rows.append((theme, values))
 
         return rows

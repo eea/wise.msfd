@@ -1,8 +1,10 @@
+from collections import Counter, defaultdict
 from itertools import chain
 
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 from wise.msfd import db, sql  # , sql_extra
 from wise.msfd.data import countries_in_region, muids_by_country
+from wise.msfd.gescomponents import FEATURES_DB
 from wise.msfd.utils import CompoundRow, ItemLabel, ItemList, Row, TableHeader
 
 from ..a8_utils import UtilsArticle8
@@ -15,25 +17,44 @@ class RegDescA82018Row(BaseRegDescRow):
 
     @compoundrow
     def get_feature_row(self):
-        rows = []
-        features = self.get_unique_values("Feature")
+        all_features = self.get_unique_values("Feature")
+        themes_fromdb = FEATURES_DB
 
-        for feature in features:
+        rows = []
+        all_themes = defaultdict(list)
+
+        for feature in all_features:
+            if feature not in themes_fromdb:
+                # TODO treat if not in features
+                continue
+
+            theme = themes_fromdb[feature].theme
+            all_themes[theme].append(feature)
+
+        for theme, feats in all_themes.items():
             values = []
+
             for country_code, country_name in self.countries:
-                exists = [
-                    row
+                value = []
+                data = [
+                    row.Feature
                     for row in self.db_data
                     if row.CountryCode == country_code
-                        and feature == row.Feature
+                       and row.Feature
                 ]
-                value = self.not_rep
-                if exists:
-                    value = self.rep
+                count_features = Counter(data)
 
-                values.append(value)
+                for feature in feats:
+                    cnt = count_features.get(feature, 0)
+                    if not cnt:
+                        continue
 
-            rows.append((self.make_item_label(feature), values))
+                    val = u"{} ({})".format(feature, cnt)
+                    value.append(val)
+
+                values.append(newline_separated_itemlist(value))
+
+            rows.append((theme, values))
 
         return rows
 

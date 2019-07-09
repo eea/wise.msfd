@@ -22,13 +22,14 @@ logger = logging.getLogger('wise.msfd')
 # the two reporting exercises.
 
 Criterion2012 = namedtuple('Criterion2012', ['id', 'title'])
-Feature = namedtuple('Feature', ['name', 'label', 'descriptors'])
+Feature = namedtuple('Feature', ['name', 'label', 'descriptors', 'theme'])
 Parameter = namedtuple('Parameter', ['name', 'unit', 'criterias'])
 
 DESC_RE = re.compile(r'^D\d(\.\d|\d)?$')
 CRIT_2018_RE = re.compile(r'^D\d[0,1]?C\d$')       # ex: D10C5
 CRIT_2012_RE = re.compile(r'^\d[0,1]?\.\d$')        # ex: 4.1
 INDICATOR_2012_RE = re.compile(r'^\d[0,1]?\.\d\.\d$')       # ex: 10.1.1
+NOTHEME = u'No theme'
 
 
 class ElementDefinition:
@@ -493,6 +494,26 @@ def get_parameters(descriptor_code=None):
     return res
 
 
+@db.use_db_session('2018')
+def parse_features_from_db():
+    res = {}
+
+    mc = sql2018.LFeature
+    count, data = db.get_all_records(mc)
+
+    for row in data:
+        code = row.Code
+        label = row.Feature
+        theme = row.Theme or NOTHEME
+
+        res[code] = Feature(code, label, '', theme)
+
+    return res
+
+
+FEATURES_DB = parse_features_from_db()
+
+
 def parse_features():
     res = {}
 
@@ -513,27 +534,34 @@ def parse_features():
 
                      if f['code'] == code])
 
-        res[code] = Feature(code, label, descs)
+        theme = FEATURES_DB[code].theme
+
+        res[code] = Feature(code, label, descs, theme)
 
     # this is missing from FeaturesSmart
-    res['BirdsAll'] = Feature('BirdsAll', 'All birds', set(['D1.1']))
-    res['MamAll'] = Feature('MamAll', 'All mammals', set(['D1.2']))
-    res['FishAll'] = Feature('FishAll', 'All fish', set(['D1.4', 'D3']))
-    res['CephaAll'] = Feature('CephaAll', 'All cephalopods', set(['D1.5']))
+    res['BirdsAll'] = Feature('BirdsAll', 'All birds', set(['D1.1']), NOTHEME)
+    res['MamAll'] = Feature('MamAll', 'All mammals', set(['D1.2']), NOTHEME)
+    res['FishAll'] = Feature('FishAll', 'All fish', set(['D1.4', 'D3']),
+                             NOTHEME)
+    res['CephaAll'] = Feature('CephaAll', 'All cephalopods', set(['D1.5']),
+                              NOTHEME)
     res['HabPelagAll'] = Feature('HabPelagAll',
-                                 'Pelagic habitats', set(['D1.6']))
+                                 'Pelagic habitats', set(['D1.6']), NOTHEME)
     res['HabPelagVarSalinity'] = Feature('HabPelagVarSalinity',
-                                         'Variable salinity', set(['D1.6']))
+                                         'Variable salinity', set(['D1.6']),
+                                         NOTHEME)
     res['HabPelagCoastal'] = Feature('HabPelagCoastal',
-                                     'Coastal', set(['D1.6']))
+                                     'Coastal', set(['D1.6']), NOTHEME)
     res['HabPelagShelf'] = Feature('HabPelagShelf',
-                                   'Shelf', set(['D1.6']))
+                                   'Shelf', set(['D1.6']), NOTHEME)
     res['HabPelagOcean'] = Feature('HabPelagOcean',
-                                   'Oceanic/beyond shelf', set(['D1.6']))
+                                   'Oceanic/beyond shelf', set(['D1.6']),
+                                   NOTHEME)
     res['HabOther'] = Feature('HabOther',
-                              'Other habitat types ', set(['D1.6', 'D6']))
+                              'Other habitat types ', set(['D1.6', 'D6']),
+                              NOTHEME)
     res['HabAll'] = Feature('HabAll',
-                            'All habitats ', set(['D1.6', 'D6']))
+                            'All habitats ', set(['D1.6', 'D6']), NOTHEME)
 
     return res
 

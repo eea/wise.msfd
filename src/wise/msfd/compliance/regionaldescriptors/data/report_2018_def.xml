@@ -3,7 +3,7 @@
     <Art9>
         <element name="MemberState" getrowdata="get_countries_row">Member state</element>
         <element name="MarineReportingUnit" getrowdata="get_mru_row">Marine reporting units</element>
-        <element name="Feature" getrowdata="get_feature_row" label="features">Features (no. of times reported)</element>
+        <element name="Feature" getrowdata="get_feature_row" label="features">Features</element>
         <element name="GESComponent" getrowdata="get_gescomp_row">GES description</element>
         <element name="JustificationNonUse" getrowdata="get_justif_nonuse_row" translate="true">Justification for non-use of criterion</element>
         <element name="JustificationDelay" getrowdata="get_justif_delay_row" translate="true">Justification for delay in setting EU/regional requirements</element>
@@ -11,7 +11,7 @@
     <Art8>
         <element name="MemberState" getrowdata="get_countries_row">Member state</element>
         <element name="MarineReportingUnit" getrowdata="get_mru_row">Marine reporting units</element>
-        <element name="Feature" getrowdata="get_feature_row" label="features">Features (no. of times reported)</element>
+        <element name="Feature" getrowdata="get_feature_row" label="features">Features</element>
         <element name="Element" getrowdata="get_element_row">Element</element>
         <element name="ElementSource" getrowdata="get_element_source_row">Element sources</element>
         <element name="CriteriaParameters" getrowdata="get_crit_param_row" label="parameters">Criteria and parameters used (number of parameters)</element>
@@ -40,7 +40,7 @@
     <Art10>
         <element name="MemberState" getrowdata="get_countries_row">Member state</element>
         <element name="MarineReportingUnit" getrowdata="get_mru_row">Reporting area(s)</element>
-        <element name="Feature" getrowdata="get_feature_row" label="features">Feature(s) reported</element>
+        <element name="Feature" getrowdata="get_feature_row" label="features">Features</element>
         <element name="GESComponent" getrowdata="get_gescomp_row">GES components</element>
         <element name="Target" getrowdata="get_target_row">Target</element>
         <element name="TargetValue" getrowdata="get_target_value_row">Target value</element>
