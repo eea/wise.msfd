@@ -1,13 +1,15 @@
 
+from collections import defaultdict
+
 from eea.cache import cache
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 from wise.msfd import db, sql, sql_extra
 from wise.msfd.data import countries_in_region, muids_by_country
-from wise.msfd.gescomponents import get_descriptor
+from wise.msfd.gescomponents import get_descriptor, FEATURES_DB
 from wise.msfd.utils import CompoundRow, ItemLabel, ItemList, Row, TableHeader
 
 from .utils import (compoundrow, compoundrow2012, emptyline_separated_itemlist,
-                    get_percentage)
+                    newline_separated_itemlist, get_percentage)
 from .base import BaseRegDescRow, BaseRegComplianceView
 
 
@@ -114,13 +116,16 @@ class RegDescA92012(BaseRegComplianceView):
             self.compoundrow2012('Member state', self.get_countries_row()),
             self.compoundrow2012('Marine reporting units',
                                  self.get_reporting_area_row()),
-            self.compoundrow2012('Feature(s) reported [Feature]',
+            self.compoundrow2012('Features',
                                  self.get_features_reported_row()),
-            self.compoundrow2012('GES component [Reporting feature]',
+            self.compoundrow2012('GES description',
                                  self.get_gescomponents_row()),
-            self.compoundrow2012('Threshold value(s)',
+            self.compoundrow2012('Threshold values',
                                  self.get_threshold_values()),
-            self.compoundrow2012('Proportion', self.get_proportion_values()),
+            self.compoundrow2012(
+                'Proportion of area to achieve threshold values',
+                self.get_proportion_values()
+            ),
         ]
 
     def __call__(self):
@@ -144,23 +149,30 @@ class RegDescA92012(BaseRegComplianceView):
     @cache(get_key)
     def get_proportion_values(self):
         t = sql.MSFD9Descriptor
+        descriptor = self.descriptor_obj
+        criterions = descriptor.all_ids()
 
         values = []
 
         for c in self.countries:
             muids = self.all_countries[c]
-            count, props = db.get_all_records(
+            count, data = db.get_all_records(
                 t,
                 t.MarineUnitID.in_(muids),
-                raw=True
+                t.ReportingFeature.in_(criterions)
+                # raw=True
             )
-            vs = [x.Proportion for x in props]
-            v = '{:.2f}%'.format(get_percentage(vs))
-            # TODO: need to change the percentage to labels based on ranges
-            values.append(v)
-            # ItemList(props)
 
-        rows = [('Quantitative values reported', values)]
+            props = [x.Proportion for x in data if x.Proportion]
+            percentage = count and (len(props) / float(count)) * 100 or 0.0
+            min_ = props and min(props) or 0
+            max_ = props and max(props) or 0
+            value = u"{:0.1f}% ({} - {})".format(percentage, min_, max_)
+
+            values.append(value)
+
+        rows = [('% of criteria with values (range of values reported)',
+                 values)]
 
         return rows
         # return RegionalCompoundRow('Proportion', rows)
@@ -168,21 +180,26 @@ class RegDescA92012(BaseRegComplianceView):
     @cache(get_key)
     def get_threshold_values(self):
         t = sql.MSFD9Descriptor
+        descriptor = self.descriptor_obj
+        criterions = descriptor.all_ids()
 
         values = []
 
-        # TODO: filter by descriptor
         for c in self.countries:
             muids = self.all_countries[c]
-            threshs = db.get_unique_from_mapper(
+            count, data = db.get_all_records(
                 t,
-                'ThresholdValue',
                 t.MarineUnitID.in_(muids),
+                t.ReportingFeature.in_(criterions)
             )
-            # TODO: needs to interpret values, instead of listing
-            values.append(ItemList(threshs))
 
-        rows = [('Quantitative values reported', values)]
+            threshs = len([x for x in data if x.ThresholdValue])
+            percentage = count and (threshs / float(count)) * 100 or 0.0
+            value = u"{:0.1f}% ({})".format(percentage, count)
+
+            values.append(value)
+
+        rows = [('% of criteria with values (no. of criteria)', values)]
 
         return rows
         # return RegionalCompoundRow('Threshold value(s)', rows)
@@ -195,24 +212,34 @@ class RegDescA92012(BaseRegComplianceView):
 
     @cache(get_key)
     def get_gescomponents_row(self):
-        t = sql_extra.MSFD9Feature
-        criterions = get_descriptor(self.descriptor).criterions
+        t = sql.MSFD9Descriptor
+
+        descriptor = self.descriptor_obj
+        criterions = [descriptor] + descriptor.sorted_criterions()
 
         rows = []
 
         for crit in criterions:
             crit_ids = crit.all_ids()
+
+            if crit.is_descriptor():
+                crit_ids = [crit.id]
+
             values = []
 
             for country in self.countries:
                 muids = self.all_countries[country]
-                count = db.count_items(
-                    t.ReportingFeature,
+                data = db.get_unique_from_mapper(
+                    t,
+                    'DescriptionGES',
                     t.ReportingFeature.in_(crit_ids),
                     t.MarineUnitID.in_(muids)
                 )
-                has = bool(count)
-                values.append(has and 'Reported' or '')
+                value = self.not_rep
+                if data:
+                    value = emptyline_separated_itemlist(data)
+
+                values.append(value)
 
             row = (crit.title, values)
             rows.append(row)
@@ -233,6 +260,8 @@ class RegDescA92012(BaseRegComplianceView):
     # TODO: this takes a long time to generate, it needs caching
     @cache(get_key)
     def get_features_reported_row(self):
+        themes_fromdb = FEATURES_DB
+
         t = sql_extra.MSFD9Feature
         all_features = sorted(db.get_unique_from_mapper(
             t,
@@ -241,22 +270,37 @@ class RegDescA92012(BaseRegComplianceView):
         ))
 
         rows = []
-
+        all_themes = defaultdict(list)
         for feature in all_features:
+            if feature not in themes_fromdb:
+                # TODO treat if not in features
+                continue
+
+            theme = themes_fromdb[feature].theme
+            all_themes[theme].append(feature)
+
+        for theme, feats in all_themes.items():
             values = []
 
             for country in self.countries:
+                value = []
                 muids = self.all_countries[country]
-                count = db.count_items(
-                    t.FeaturesPressuresImpacts,
-                    t.FeaturesPressuresImpacts == feature,
-                    t.MarineUnitID.in_(muids)
-                )
-                has = bool(count)
-                values.append(has and 'Reported' or '')
 
-            row = (feature, values)
-            rows.append(row)
+                for feature in feats:
+                    count = db.count_items(
+                        t.FeaturesPressuresImpacts,
+                        t.FeaturesPressuresImpacts == feature,
+                        t.MarineUnitID.in_(muids)
+                    )
+                    if not count:
+                        continue
+
+                    val = u"{} ({})".format(feature, count)
+                    value.append(val)
+
+                values.append(newline_separated_itemlist(value))
+
+            rows.append((theme, values))
 
             return rows
             # return RegionalCompoundRow('Feature(s) reported [Feature]', rows)

@@ -29,6 +29,9 @@ class BaseRegComplianceView(BaseComplianceView):
     section = 'regional-descriptors'
     _translatables = None
 
+    not_rep = u""
+    rep = u"Reported"
+
     @property
     def current_phase(self):
         region_folder = self._countryregion_folder
@@ -108,9 +111,6 @@ class BaseRegComplianceView(BaseComplianceView):
 
 
 class BaseRegDescRow(BaseRegComplianceView):
-    not_rep = u""
-    rep = u"Reported"
-
     def __init__(self, context, request, db_data, descriptor_obj,
                  region, countries, field):
         super(BaseRegDescRow, self).__init__(context, request)

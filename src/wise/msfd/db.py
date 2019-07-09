@@ -349,7 +349,7 @@ def count_items(primary, *conditions):
     """
 
     sess = session()
-    fc = func.count(distinct(primary))
+    fc = func.count(primary)
     count = sess.query(fc).filter(*conditions)[0][0]
 
     return count
