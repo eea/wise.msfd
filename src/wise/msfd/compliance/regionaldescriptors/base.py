@@ -5,7 +5,7 @@ from plone.api.content import get_state
 from plone.api.portal import get_tool
 from wise.msfd.compliance.base import BaseComplianceView
 from wise.msfd.compliance.vocabulary import REGIONS
-from wise.msfd.gescomponents import get_label, FEATURES_DB
+from wise.msfd.gescomponents import get_label, FEATURES_DB_2018
 from wise.msfd.utils import ItemLabel
 
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
@@ -168,7 +168,7 @@ class BaseRegDescRow(BaseRegComplianceView):
     @compoundrow
     def get_feature_row(self):
         all_features_reported = self.get_unique_values("Features")
-        themes_fromdb = FEATURES_DB
+        themes_fromdb = FEATURES_DB_2018
 
         rows = []
         all_features = []

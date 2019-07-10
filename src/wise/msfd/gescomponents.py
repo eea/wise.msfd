@@ -9,7 +9,7 @@ from collections import namedtuple
 import lxml.etree
 from pkg_resources import resource_filename
 
-from wise.msfd import db, sql, sql2018
+from wise.msfd import db, sql, sql2018, sql_extra
 from wise.msfd.labels import COMMON_LABELS
 from wise.msfd.utils import (ItemLabel, _parse_files_in_location,
                              get_element_by_id, natural_sort_key, timeit)
@@ -494,8 +494,28 @@ def get_parameters(descriptor_code=None):
     return res
 
 
+@db.use_db_session('2012')
+def parse_features_from_db_2012():
+    res = {}
+
+    mc = sql_extra.MSFD9Feature
+    count, data = db.get_all_records(mc)
+
+    for row in data:
+        code = row.FeaturesPressuresImpacts
+        label = ''
+        theme = row.FeatureType or NOTHEME
+
+        res[code] = Feature(code, label, '', theme)
+
+    return res
+
+
+FEATURES_DB_2012 = parse_features_from_db_2012()
+
+
 @db.use_db_session('2018')
-def parse_features_from_db():
+def parse_features_from_db_2018():
     res = {}
 
     mc = sql2018.LFeature
@@ -511,7 +531,7 @@ def parse_features_from_db():
     return res
 
 
-FEATURES_DB = parse_features_from_db()
+FEATURES_DB_2018 = parse_features_from_db_2018()
 
 
 def parse_features():
@@ -534,7 +554,7 @@ def parse_features():
 
                      if f['code'] == code])
 
-        theme = FEATURES_DB[code].theme
+        theme = FEATURES_DB_2018[code].theme
 
         res[code] = Feature(code, label, descs, theme)
 

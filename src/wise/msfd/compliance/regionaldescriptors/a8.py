@@ -4,7 +4,7 @@ from itertools import chain
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 from wise.msfd import db, sql  # , sql_extra
 from wise.msfd.data import countries_in_region, muids_by_country
-from wise.msfd.gescomponents import FEATURES_DB
+from wise.msfd.gescomponents import FEATURES_DB_2018
 from wise.msfd.utils import CompoundRow, ItemLabel, ItemList, Row, TableHeader
 
 from ..a8_utils import UtilsArticle8
@@ -18,7 +18,7 @@ class RegDescA82018Row(BaseRegDescRow):
     @compoundrow
     def get_feature_row(self):
         all_features = self.get_unique_values("Feature")
-        themes_fromdb = FEATURES_DB
+        themes_fromdb = FEATURES_DB_2018
 
         rows = []
         all_themes = defaultdict(list)
@@ -729,13 +729,11 @@ class RegDescA82012(BaseRegComplianceView):
 
         self.allrows = [
             self.compoundrow2012('Member state', self.get_countries()),
-            self.compoundrow2012('MarineUnitID [Reporting area]',
+            self.compoundrow2012('Marine reporting units',
                                  self.get_marine_unit_id_nrs()),
-            # TODO show the reported value, or Reported/Not reported ??
+
             self.compoundrow2012(
-                'PressureLevelN/P/Oconcentration/ '
-                'ImpactsPressureWater/Seabed: '
-                'SumInfo1 [ProportionValueAchieved]',
+                'Features',
                 self.get_suminfo1_row()
             ),
             self.compoundrow2012('ImpactsPressureWater/Seabed: SumInfo2',
@@ -1007,11 +1005,6 @@ class RegDescA82012(BaseRegComplianceView):
 
             row = (topic, results)
             rows.append(row)
-
-        label = 'PressureLevelN/P/Oconcentration/' \
-                'ImpactsPressureWater/Seabed: ' \
-                'SumInfo1 ' \
-                '[ProportionValueAchieved]'
 
         return rows
         # return CompoundRow(label, rows)

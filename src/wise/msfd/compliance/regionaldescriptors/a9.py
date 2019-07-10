@@ -5,7 +5,8 @@ from eea.cache import cache
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 from wise.msfd import db, sql, sql_extra
 from wise.msfd.data import countries_in_region, muids_by_country
-from wise.msfd.gescomponents import get_descriptor, FEATURES_DB
+from wise.msfd.gescomponents import (get_descriptor, FEATURES_DB_2012,
+                                     FEATURES_DB_2018)
 from wise.msfd.utils import CompoundRow, ItemLabel, ItemList, Row, TableHeader
 
 from .utils import (compoundrow, compoundrow2012, emptyline_separated_itemlist,
@@ -257,10 +258,9 @@ class RegDescA92012(BaseRegComplianceView):
         return rows
         # return RegionalCompoundRow('Reporting area(s)[MarineUnitID]', rows)
 
-    # TODO: this takes a long time to generate, it needs caching
     @cache(get_key)
     def get_features_reported_row(self):
-        themes_fromdb = FEATURES_DB
+        themes_fromdb = FEATURES_DB_2012
 
         t = sql_extra.MSFD9Feature
         all_features = sorted(db.get_unique_from_mapper(
@@ -273,7 +273,7 @@ class RegDescA92012(BaseRegComplianceView):
         all_themes = defaultdict(list)
         for feature in all_features:
             if feature not in themes_fromdb:
-                # TODO treat if not in features
+                all_themes['No theme/Unknown'].append(feature)
                 continue
 
             theme = themes_fromdb[feature].theme
