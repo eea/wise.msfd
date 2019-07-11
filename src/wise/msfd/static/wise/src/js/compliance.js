@@ -47,6 +47,32 @@ if (!Array.prototype.last){
     $(".toggle-sidebar").hide();
   }
 
+  function setupScrollableTargets() {
+    // create a clone of the assessment data 2018 table and overlap the original table
+    // with fixed question and score columns
+    console.log('setupScrollableTargets');
+    $('#container-assessment-data-2018 .table.table-condensed.assessment-data-table')
+      .clone(true).appendTo('#container-assessment-data-2018').addClass('clone');
+
+    var $orig = $('.table-wrap .table.table-condensed.assessment-data-table');
+    var $clone = $('.table.table-condensed.assessment-data-table.clone');
+    var origLength = $orig.find('tr').length;
+    var origHeight, cloneHeight;
+
+    for(var i=0; i < origLength; i++){
+      var x = $clone.find('tr')[i]
+      cloneHeight = $(x).find('.fixed-center').innerHeight();
+      origHeight = $($orig.find('tr')[i]).innerHeight();
+
+      if(origHeight > cloneHeight) {
+        $(x).css('height', origHeight + 'px');
+      }
+      else {
+        $($orig.find('tr')[i]).css('height', cloneHeight + 'px');
+      }
+    }
+  }
+
   $.fn.fixTableHeaderAndCellsHeight = function() {
     // because the <th> are position: absolute, they don't get the height of
     // the <td> cells, and the other way around.
@@ -610,34 +636,17 @@ if (!Array.prototype.last){
     addCustomScroll();
     addFixedTable();
 
+//    $(window).on('resize', function(){
+//      setupScrollableTargets();
+//    });
+
     $(window).on('load', function() {
       // setupReadMoreModal();
       setupSimplifiedTables();
       setupFixedTableRows();
       setupCustomScroll();
 
-      // create a clone of the assessment data 2018 table and overlap the original table
-      // with fixed question and score columns
-      $('#container-assessment-data-2018 .table.table-condensed.assessment-data-table')
-        .clone(true).appendTo('#container-assessment-data-2018').addClass('clone');
-
-      var $orig = $('.table-wrap .table.table-condensed.assessment-data-table');
-      var $clone = $('.table.table-condensed.assessment-data-table.clone');
-      var origLength = $orig.find('tr').length;
-      var origHeight, cloneHeight;
-
-      for(var i=0; i < origLength; i++){
-        var x = $clone.find('tr')[i]
-        cloneHeight = $(x).find('.fixed-center').innerHeight();
-        origHeight = $($orig.find('tr')[i]).innerHeight();
-
-        if(origHeight > cloneHeight) {
-          $(x).css('height', origHeight + 'px');
-        }
-        else {
-          $($orig.find('tr')[i]).css('height', cloneHeight + 'px');
-        }
-      }
+      setupScrollableTargets();
     });
   });
 }(window, document, $));

@@ -234,7 +234,7 @@
 
     if (infoboxLength > 0 && $repNav.length){
       $repNav.addClass('has-infobox');
-      $infobox.show().css('display', 'inline-box');
+      $infobox.show().css('display', 'inline-block');
       var leftPos = $repNavToggle.position().left - 16;
 
       if ($ff.length) leftPos = $ff.position().left;
@@ -267,7 +267,8 @@
         if (_idGescomp.match('[^a-zA-Z]')) _idGescomp = _idGescomp.split('-').join('.');
 
         if(value == 'Not relevant') {
-          $allQuestions.append("<p>").append(questionId + ": " + _idGescomp);
+          $allQuestions.append($("<span>").addClass('infobox-popover')
+            .append(questionId + ": " + _idGescomp));
 
           if (gesComps.indexOf(_idGescomp) === -1) gesComps.push(_idGescomp);
         }
@@ -281,7 +282,7 @@
       $infobox.attr('class', 'help-popover')
           .attr('data-trigger', 'hover')
           .attr('data-html', 'true')
-          .attr('data-placement', 'left')
+          .attr('data-placement', 'bottom')
           .attr('data-content', $allQuestions.html())
           .attr('data-original-title', message).popover();
 
@@ -291,7 +292,7 @@
       }
 
       $infobox.append($('<span>').attr('class', 'fa fa-exclamation')
-        .css('font-size', '20px')
+        .css({'font-size': '26px', 'float': 'right', 'display': 'block'})
       );
     }
     _addGescompsToInfobox();

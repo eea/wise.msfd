@@ -90,8 +90,18 @@ h4.process-phase-title {
   margin-bottom: 3em;
   line-height: 2em;
 
-  .phase-selector {
-    float: right;
+  .process-state {
+    display: inline-block;
+
+    .phase-selector {
+      margin-left: 3em;
+      float: right;
+    }
+  }
+
+  .send-to-tl {
+    display: inline-block;
+    //float: right;
   }
 }
 
@@ -396,6 +406,10 @@ table.comp-c-listing {
   div.back-to-descr {
     margin-bottom: 1em;
     display: inline-block;
+  }
+
+  div.popover.bottom {
+   min-width: 500px !important;
   }
 
   .sticky {

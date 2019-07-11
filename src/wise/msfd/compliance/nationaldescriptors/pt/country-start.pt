@@ -27,7 +27,8 @@
           </div>
 
           <div class="process-state-phase-form">
-            <form method="GET" action='./content_status_modify'>
+            <form class="process-state"
+                method="GET" action='./content_status_modify'>
               <div>
                 <i class='fa fa-exchange'></i>
                 Process state:
@@ -46,6 +47,12 @@
                   </select>
                 </div>
               </div>
+            </form>
+            <form class="send-to-tl"
+                method="POST" action="."
+                tal:condition="view/ready_phase2">
+              <input class="btn btn-success"
+                  type="Submit" name="send_to_tl" value="Send all to TL"/>
             </form>
           </div>
 

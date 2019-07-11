@@ -7,6 +7,8 @@ from logging import getLogger
 
 from sqlalchemy import or_
 
+from plone.api.content import transition
+
 from persistent.list import PersistentList
 from Products.Five.browser.pagetemplatefile import \
     ViewPageTemplateFile as Template
@@ -204,6 +206,38 @@ class NationalDescriptorCountryOverview(BaseView):
     def get_regions(self):
         return self.context.contentValues()
 
+    def send_to_tl(self):
+        regions = self.get_regions()
+
+        for region in regions:
+            descriptors = self.get_descriptors(region)
+
+            for desc in descriptors:
+                assessments = self.get_articles(desc)
+
+                for assessment in assessments:
+                    state_id = self.get_wf_state_id(assessment)
+
+                    if state_id == 'approved':
+                        transition(obj=assessment, to_state='in_work')
+
+    def ready_phase2(self):
+        regions = self.get_regions()
+
+        for region in regions:
+            descriptors = self.get_descriptors(region)
+
+            for desc in descriptors:
+                assessments = self.get_articles(desc)
+
+                for assessment in assessments:
+                    state_id = self.get_wf_state_id(assessment)
+
+                    if state_id != 'approved':
+                        return False
+
+        return True
+
     def get_descriptors(self, region):
         order = [
             'd1.1', 'd1.2', 'd1.3', 'd1.4', 'd1.5', 'd1.6', 'd2', 'd3', 'd4',
@@ -221,6 +255,12 @@ class NationalDescriptorCountryOverview(BaseView):
         order = ['art9', 'art8', 'art10']
 
         return [desc[a] for a in order]
+
+    def __call__(self):
+        if 'send_to_tl' in self.request.form:
+            self.send_to_tl()
+
+        return super(BaseView, self).__call__()
 
 
 def get_crit_val(question, element, descriptor):

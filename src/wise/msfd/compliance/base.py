@@ -346,6 +346,15 @@ class BaseComplianceView(BrowserView, BasePublicPage):
             interfaces.IComplianceModuleFolder
         )
 
+    def get_wf_state_id(self, context):
+        state = get_state(context)
+        wftool = get_tool('portal_workflow')
+        wf = wftool.getWorkflowsFor(context)[0]  # assumes one wf
+        wf_state = wf.states[state]
+        wf_state_id = wf_state.id or state
+
+        return wf_state_id
+
     def process_phase(self, context=None):
         if context is None:
             context = self.context
@@ -415,7 +424,7 @@ class BaseComplianceView(BrowserView, BasePublicPage):
                     for folder in q_folders
                     if folder.contentValues()
                 ]
-                latest = max(latest)
+                latest = latest and max(latest) or None
 
         if self._can_comment('ec', assessment):
             q_folders = assessment['ec'].contentValues()
