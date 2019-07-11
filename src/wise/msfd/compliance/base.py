@@ -141,9 +141,15 @@ class BaseComplianceView(BrowserView, BasePublicPage):
     process_status_colors = PROCESS_STATUS_COLORS
 
     @property
-    def read_only_access(self):
+    def get_current_user_roles(self):
         current_user = user.get_current().getId()
         roles = get_roles(username=current_user)
+
+        return roles
+
+    @property
+    def read_only_access(self):
+        roles = self.get_current_user_roles
 
         if 'Reader' in roles:
             return True

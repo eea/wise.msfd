@@ -105,7 +105,8 @@
     </table>
 
     <div id="download-report-data-form">
-      <div class="crt-def">
+      <div tal:condition="python:False" class="crt-def">
+        <!-- Removed -->
         <button type="button"
           class="btn btn-primary btn-small btn-success"
           data-toggle="modal" data-target="#reportdata-help">
@@ -118,7 +119,8 @@
         <button name="translate" class="btn btn-secondary">Auto-translate</button>
       </form>
 
-      <div class="modal fade" id="reportdata-help" tabindex="-1" role="dialog">
+      <div tal:condition="python:False" class="modal fade" id="reportdata-help" tabindex="-1" role="dialog">
+        <!-- Removed -->
         <div class="modal-dialog modal-lg" role="document">
           <div class="modal-content">
             <div class="modal-header">

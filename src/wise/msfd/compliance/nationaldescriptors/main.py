@@ -222,6 +222,10 @@ class NationalDescriptorCountryOverview(BaseView):
                         transition(obj=assessment, to_state='in_work')
 
     def ready_phase2(self):
+        roles = self.get_current_user_roles
+        if 'Editor' not in roles:
+            return False
+
         regions = self.get_regions()
 
         for region in regions:
