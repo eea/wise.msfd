@@ -25,7 +25,7 @@ class RegDescA82018Row(BaseRegDescRow):
 
         for feature in all_features:
             if feature not in themes_fromdb:
-                # TODO treat if not in features
+                all_themes['No theme/Unknown'].append(feature)
                 continue
 
             theme = themes_fromdb[feature].theme
@@ -60,25 +60,44 @@ class RegDescA82018Row(BaseRegDescRow):
 
     @compoundrow
     def get_element_row(self):
-        rows = []
-        elements = self.get_unique_values('Element')
+        all_features = self.get_unique_values("Feature")
+        themes_fromdb = FEATURES_DB_2018
 
-        for element in elements:
+        rows = []
+        all_themes = defaultdict(list)
+
+        for feature in all_features:
+            if feature not in themes_fromdb:
+                all_themes['No theme/Unknown'].append(feature)
+                continue
+
+            theme = themes_fromdb[feature].theme
+            all_themes[theme].append(feature)
+
+        for theme, feats in all_themes.items():
             values = []
+
             for country_code, country_name in self.countries:
-                exists = [
+                value = []
+                data = [
                     row
                     for row in self.db_data
                     if row.CountryCode == country_code
-                       and row.Element == element
+                       and row.Feature
                 ]
-                value = self.not_rep
-                if exists:
-                    value = self.rep
 
-                values.append(value)
+                for feature in feats:
+                    elements = [
+                        row.Element
+                        for row in data
+                        if row.Feature == feature
+                    ]
 
-            rows.append((element, values))
+                    value.extend(elements)
+
+                values.append(newline_separated_itemlist(set(value)))
+
+            rows.append((theme, values))
 
         return rows
 

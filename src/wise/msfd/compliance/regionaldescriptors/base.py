@@ -180,7 +180,7 @@ class BaseRegDescRow(BaseRegComplianceView):
 
         for feature in all_features:
             if feature not in themes_fromdb:
-                # TODO treat if not in features
+                all_themes['No theme/Unknown'].append(feature)
                 continue
 
             theme = themes_fromdb[feature].theme
