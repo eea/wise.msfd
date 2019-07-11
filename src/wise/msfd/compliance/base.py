@@ -616,6 +616,8 @@ class AssessmentQuestionDefinition:
     def _art_10_ids(self, descriptor, **kwargs):
         muids = [x.id for x in kwargs['muids']]
         ok_ges_ids = descriptor.all_ids()
+        if descriptor.id.startswith('D1.'):
+            ok_ges_ids.add('D1')
 
         targets_2018 = self.__get_a10_2018_targets(descriptor, ok_ges_ids,
                                                    muids)

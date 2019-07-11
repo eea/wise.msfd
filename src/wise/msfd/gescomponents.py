@@ -163,13 +163,14 @@ class Descriptor(ItemLabel):
     def all_ids(self):
         res = set()
         res.add(self.id)
-
+        
         if self.id == 'D6':
             res.add('D6/D1')
 
         if self.id == 'D4':
             res.add('D4/D1')
 
+        # TODO why it is commented
         # if self.id.startswith('D1.'):
         #     res.add('D1')
 

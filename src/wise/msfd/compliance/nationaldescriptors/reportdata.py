@@ -572,6 +572,11 @@ https://svn.eionet.europa.eu/repositories/Reportnet/Dataflows/MarineDirective/MS
         out_filtered = []
 
         for row in out:
+            ges_comps = getattr(row, 'GESComponents', ())
+            if 'D1' in ges_comps:
+                out_filtered.append(row)
+                continue
+                
             feats = set(row.Features.split(','))
 
             if feats.intersection(ok_features):
