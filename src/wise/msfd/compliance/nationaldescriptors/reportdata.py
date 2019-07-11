@@ -4,13 +4,13 @@ from datetime import datetime
 from HTMLParser import HTMLParser
 from io import BytesIO
 
-import xlsxwriter
 from lxml.etree import fromstring
 from sqlalchemy import or_
 from zope.interface import implements
 from zope.schema import Choice
 from zope.schema.vocabulary import SimpleTerm, SimpleVocabulary
 
+import xlsxwriter
 from eea.cache import cache
 from plone.memoize import volatile
 from Products.Five.browser.pagetemplatefile import \
@@ -557,10 +557,17 @@ https://svn.eionet.europa.eu/repositories/Reportnet/Dataflows/MarineDirective/MS
         if not self.descriptor.startswith('D1.'):
             return out
 
-        conditions = []
-        params = get_parameters(self.descriptor)
-        p_codes = [p.name for p in params]
-        conditions.append(t.c.Parameter.in_(p_codes))
+        # conditions = []
+        # params = get_parameters(self.descriptor)
+        # p_codes = [p.name for p in params]
+        # conditions.append(t.c.Parameter.in_(p_codes))
+
+        # Filtering results based on FeaturesSmart and other conditions
+        # I don't think this code should be kept. Probably the edge case should
+        # be documented. It makes it fragile and dependent on correct
+        # definitions in FeaturesSmart. I think it's trying to avoid showing
+        # too many results when the GESComponent has been incorectly reported
+        # on the <Target> records.
         ok_features = set([f.name for f in get_features(self.descriptor)])
         out_filtered = []
 
