@@ -409,7 +409,6 @@ class BaseComplianceView(BrowserView, BasePublicPage):
 
         token = '-'.join(assessment.getPhysicalPath())
         token = 's-' + token
-        # self.request.response.setCookie(token, time())
 
         last_seen = self.request.cookies.get(token)
 
@@ -419,10 +418,10 @@ class BaseComplianceView(BrowserView, BasePublicPage):
         last_seen = float(last_seen[:10] + '.' + last_seen[10:])
         dt = datetime.utcfromtimestamp(last_seen)
 
-        latest = None
+        latest_from_folders = []
 
-        if self._can_comment('tl', assessment):
-            q_folders = assessment['tl'].contentValues()
+        for folder_id in ('tl', 'ec'):
+            q_folders = assessment[folder_id].contentValues()
             if q_folders:
                 # TODO: we rely on ordered folders, not sure if correct
                 latest = [
@@ -431,19 +430,36 @@ class BaseComplianceView(BrowserView, BasePublicPage):
                     if folder.contentValues()
                 ]
                 latest = latest and max(latest) or None
+                latest_from_folders.append(latest)
 
-        if self._can_comment('ec', assessment):
-            q_folders = assessment['ec'].contentValues()
-            if q_folders:
-                # TODO: we rely on ordered folders, not sure if correct
-                ec_latest = [
-                    folder.contentValues()[-1].modification_date.utcdatetime()
-                    for folder in q_folders
-                    if folder.contentValues()
-                ]
-                ec_latest = ec_latest and max(ec_latest) or None
+        latest = max(latest_from_folders)
 
-                latest = latest and max(ec_latest, latest) or ec_latest
+        # TODO old code, we no longer check for _can_comment permission
+        # because both comment sections can be seen by users
+
+        # if self._can_comment('tl', assessment):
+        #     q_folders = assessment['tl'].contentValues()
+        #     if q_folders:
+        #         # TODO: we rely on ordered folders, not sure if correct
+        #         latest = [
+        #             folder.contentValues()[-1].modification_date.utcdatetime()
+        #             for folder in q_folders
+        #             if folder.contentValues()
+        #         ]
+        #         latest = latest and max(latest) or None
+        #
+        # if self._can_comment('ec', assessment):
+        #     q_folders = assessment['ec'].contentValues()
+        #     if q_folders:
+        #         # TODO: we rely on ordered folders, not sure if correct
+        #         ec_latest = [
+        #             folder.contentValues()[-1].modification_date.utcdatetime()
+        #             for folder in q_folders
+        #             if folder.contentValues()
+        #         ]
+        #         ec_latest = ec_latest and max(ec_latest) or None
+        #
+        #         latest = latest and max(ec_latest, latest) or ec_latest
 
         # if 'd5' in token:
         #     import pdb; pdb.set_trace()

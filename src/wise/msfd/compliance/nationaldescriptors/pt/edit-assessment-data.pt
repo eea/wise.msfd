@@ -172,12 +172,11 @@
                   </div>
 
                   <div class="right discussion disc-tl"
-                       tal:define="question_id subform/_question/id | string:summary"
-                       tal:condition="can_comment_tl">
+                       tal:define="question_id subform/_question/id | string:summary">
                     <i class="comm-hide fa fa-window-close fa-1" title="Hide"></i>
                     <div class="comments"
                       tal:attributes="data-question-id question_id; data-thread-id string:tl"></div>
-                    <div tal:condition="python: not(view.read_only_access)"
+                    <div tal:condition="python: not(view.read_only_access) and can_comment_tl"
                         class="textline">
                       <textarea name="comment-text" placeholder="Write a comment..."></textarea>
                       <button class="btn btn-primary">Post</button>
