@@ -673,6 +673,8 @@ class Article8(BaseArticle2012):
                 try:
                     rep = ReportTag(node, NSMAP)
                 except:
+                    # TODO why is this needed
+                    continue
                     import pdb
                     pdb.set_trace()
 
