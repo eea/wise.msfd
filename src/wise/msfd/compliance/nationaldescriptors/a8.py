@@ -673,7 +673,11 @@ class Article8(BaseArticle2012):
                 try:
                     rep = ReportTag(node, NSMAP)
                 except:
-                    # TODO why is this needed
+                    # There are some cases when an empty node is reported
+                    # and the ReportTag class cannot be initialized because
+                    # MarineUnitID element is not present in the node
+                    # see ../fi/bal/d5/art8/@@view-report-data-2012
+                    # search for node MicrobialPathogens
                     continue
                     import pdb
                     pdb.set_trace()
