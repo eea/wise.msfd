@@ -6,7 +6,7 @@
   metal:use-macro="context/main_template/macros/master"
   i18n:domain="eea">
 
-  <body metal:fill-slot="content">
+  <body metal:fill-slot="main">
 
     <div id="layout-contents" tal:define="text context/text | nothing" >
       <div id="wise-search-form">
