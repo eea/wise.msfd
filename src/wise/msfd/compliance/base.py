@@ -150,8 +150,10 @@ class BaseComplianceView(BrowserView, BasePublicPage):
     @property
     def read_only_access(self):
         roles = self.get_current_user_roles
+        is_reader = 'Reader' in roles
+        can_edit = self.check_permission('wise.msfd: Edit Assessment')
 
-        if 'Reader' in roles:
+        if is_reader and not can_edit:
             return True
 
         return False
