@@ -434,7 +434,7 @@ class BaseComplianceView(BrowserView, BasePublicPage):
                 latest = latest and max(latest) or None
                 latest_from_folders.append(latest)
 
-        latest = max(latest_from_folders)
+        latest = latest_from_folders and max(latest_from_folders) or None
 
         # TODO old code, we no longer check for _can_comment permission
         # because both comment sections can be seen by users
