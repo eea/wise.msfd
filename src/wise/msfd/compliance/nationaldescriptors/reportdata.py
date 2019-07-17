@@ -60,17 +60,23 @@ def get_reportdata_key(func, self, *args, **kwargs):
 
     muids = ",".join([m.id for m in self.muids])
     region = getattr(self, 'country_region_code', ''.join(self.regions))
+    focus_muid = getattr(self, 'focus_muid', '')
 
     cache_key_extra = getattr(self, 'cache_key_extra', '')
 
-    res = '_cache_' + '_'.join([self.report_year,
-                                cache_key_extra,
-                                self.country_code,
-                                region,
-                                self.descriptor,
-                                self.article,
-                                muids])
+    res = '_cache_' + '_'.join([
+        func.__name__,
+        self.report_year,
+        cache_key_extra,
+        self.country_code,
+        region,
+        self.descriptor,
+        self.article,
+        muids,
+        focus_muid,
+    ])
     res = res.replace('.', '').replace('-', '')
+    print("Cache key", res)
 
     return res
 
@@ -634,6 +640,13 @@ https://svn.eionet.europa.eu/repositories/Reportnet/Dataflows/MarineDirective/MS
         data = getattr(self, 'get_data_from_view_' + self.article)()
         data = [Proxy2018(row, self) for row in data]
 
+        if len(data) > 2000:
+            if self.muids:
+                if getattr(self, 'focus_muid', None) is None:
+                    self.focus_muid = self.muids[0].name
+
+                self.focus_muids = self._get_muids_from_data(data)
+
         if self.article == 'Art8':
             data = consolidate_singlevalue_to_list(data, 'IndicatorCode')
 
@@ -696,6 +709,11 @@ https://svn.eionet.europa.eu/repositories/Reportnet/Dataflows/MarineDirective/MS
 
         data = snapshots[-1][1]
 
+        if self.focus_muid:
+            # filter the data based on selected muid
+            # this is used to optmize display of really long data
+            data = [t for t in data if t[0].name == self.focus_muid]
+
         if date_selected:
             filtered = [x for x in snapshots if x[0] == date_selected]
 
@@ -706,27 +724,36 @@ https://svn.eionet.europa.eu/repositories/Reportnet/Dataflows/MarineDirective/MS
 
         return data
 
-    def get_muids_from_data(self, data):
-        # TODO: this shouldn't exist anymore
-        if isinstance(data[0][0], (unicode, str)):
-            all_muids = sorted(set([x[0] for x in data]))
+    def _get_muids_from_data(self, data):
+        muids = set()
+        for row in data:
+            o = getattr(row, '__o')
+            muid = o.MarineReportingUnit
+            muids.add(muid)
 
-            return ', '.join(all_muids)
+        return list(sorted(muids))
 
-        all_muids = [x[0] for x in data]
-        seen = []
-        muids = []
-
-        for muid in all_muids:
-            name = muid.name
-
-            if name in seen:
-                continue
-
-            seen.append(name)
-            muids.append(muid)
-
-        return ItemList(rows=muids)
+    # def get_muids_from_data(self, data):
+    #     # TODO: this shouldn't exist anymore
+    #     if isinstance(data[0][0], (unicode, str)):
+    #         all_muids = sorted(set([x[0] for x in data]))
+    #
+    #         return ', '.join(all_muids)
+    #
+    #     all_muids = [x[0] for x in data]
+    #     seen = []
+    #     muids = []
+    #
+    #     for muid in all_muids:
+    #         name = muid.name
+    #
+    #         if name in seen:
+    #             continue
+    #
+    #         seen.append(name)
+    #         muids.append(muid)
+    #
+    #     return ItemList(rows=muids)
 
     @db.use_db_session('2018')
     @timeit
@@ -847,6 +874,11 @@ https://svn.eionet.europa.eu/repositories/Reportnet/Dataflows/MarineDirective/MS
 
     @timeit
     def __call__(self):
+
+        # allow focusing on a single muid if the data is too big
+        if 'focus_muid' in self.request.form:
+            self.focus_muid = self.request.form['focus_muid'].strip()
+        # self.focus_muid = 'BAL-AS-EE-ICES_SD_29'
 
         self.content = ''
         template = getattr(self, self.article, None)

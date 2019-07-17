@@ -15,6 +15,20 @@
     No data reported for this Descriptor
   </div>
 
+  <div tal:condition="view/focus_muid">
+    <form method="GET" action="" tal:attributes="action request/URL0">
+      <label>Marine Unit ID</label>
+      <select name="focus_muid" class="pat-select2" data-pat-select2="width:10em">
+        <option value="">---</option>
+        <tal:rep tal:repeat="m view/focus_muids">
+          <option tal:content="m"
+            tal:attributes="value m; selected python: view.focus_muid == m">M ID</option>
+        </tal:rep>
+      </select>
+      <input type="submit" value="Submit" class="btn btn-success"/>
+    </form>
+  </div>
+
   <div tal:condition="alldata" tal:repeat="info alldata" class="report-section">
 
     <tal:def tal:define="muid python:info[0]; data python: info[1];" >
