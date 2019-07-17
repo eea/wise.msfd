@@ -23,8 +23,7 @@ from wise.msfd.compliance.nationaldescriptors.data import get_report_definition
 from wise.msfd.compliance.utils import group_by_mru, insert_missing_criterions
 from wise.msfd.data import (get_factsheet_url, get_report_file_url,
                             get_report_filename, get_xml_report_data)
-from wise.msfd.gescomponents import (get_descriptor, get_features,
-                                     get_parameters)
+from wise.msfd.gescomponents import get_descriptor, get_features
 from wise.msfd.translation import retrieve_translation
 from wise.msfd.utils import ItemList, items_to_rows, natural_sort_key, timeit
 from z3c.form.button import buttonAndHandler
@@ -579,7 +578,7 @@ https://svn.eionet.europa.eu/repositories/Reportnet/Dataflows/MarineDirective/MS
             if 'D1' in ges_comps:
                 out_filtered.append(row)
                 continue
-                
+
             feats = set(row.Features.split(','))
 
             if feats.intersection(ok_features):

@@ -30,10 +30,9 @@ class DummyNode(object):
         # <MarineUnitID>{}</MarineUnitID>
 
         self.node = """
-            <Descriptors xmlns="http://water.eionet.europa.eu/schemas/dir200856ec">
-                <ReportingFeature>{}</ReportingFeature>
-            </Descriptors>
-        """.format(crit)
+<Descriptors xmlns="http://water.eionet.europa.eu/schemas/dir200856ec">
+    <ReportingFeature>{}</ReportingFeature>
+</Descriptors>""".format(crit)
 
     def __call__(self):
         return self.node
@@ -269,7 +268,7 @@ class Article9(BaseArticle2012):
         muids = root.xpath('//w:MarineUnitID/text()', namespaces=NSMAP)
 
         count, res = db.get_marine_unit_id_names(list(set(muids)))
-        muid_ids = [x.id for x in self.muids]
+        muid_ids = [y.id for y in self.muids]
         labels = [
             ItemLabel(m, t or m)
             for m, t in res
@@ -292,7 +291,7 @@ class Article9(BaseArticle2012):
 
         # insert missing criterions
         self.insert_missing_criterions(descriptor_class, cols, muids)
-        
+
         self.rows = []
         sorted_ges_c = sorted_by_criterion([c.ges_component() for c in cols])
 

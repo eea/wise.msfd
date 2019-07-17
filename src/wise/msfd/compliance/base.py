@@ -1,7 +1,6 @@
 import logging
 from collections import namedtuple
 from datetime import datetime
-from time import time
 
 import lxml.etree
 from sqlalchemy.orm import aliased
@@ -31,6 +30,9 @@ from wise.msfd.utils import (Tab, _parse_files_in_location, natural_sort_key,
 
 from . import interfaces
 from .interfaces import ICountryDescriptorsFolder
+
+# from time import time
+
 
 logger = logging.getLogger('wise.msfd')
 edw_logger = logging.getLogger('edw.logger')
@@ -120,11 +122,13 @@ def report_data_cache_key(func, self, *args, **kwargs):
                          ''.join(getattr(self, 'regions', '')))
 
         country = self.country_code
+        year = self.year
     else:
         country = _args[0]
         region = _args[1]
+        year = _args[2]
 
-    res = '_cache_' + '_'.join([country, region])
+    res = '_cache_' + func.__name__ + '_'.join([country, region, year])
     res = res.replace('.', '').replace('-', '')
 
     return res
@@ -424,11 +428,14 @@ class BaseComplianceView(BrowserView, BasePublicPage):
 
         for folder_id in ('tl', 'ec'):
             q_folders = assessment[folder_id].contentValues()
+
             if q_folders:
                 # TODO: we rely on ordered folders, not sure if correct
                 latest = [
                     folder.contentValues()[-1].modification_date.utcdatetime()
+
                     for folder in q_folders
+
                     if folder.contentValues()
                 ]
                 latest = latest and max(latest) or None
@@ -649,6 +656,7 @@ class AssessmentQuestionDefinition:
     def _art_10_ids(self, descriptor, **kwargs):
         muids = [x.id for x in kwargs['muids']]
         ok_ges_ids = descriptor.all_ids()
+
         if descriptor.id.startswith('D1.'):
             ok_ges_ids.add('D1')
 

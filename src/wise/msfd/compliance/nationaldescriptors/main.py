@@ -7,9 +7,8 @@ from logging import getLogger
 
 from sqlalchemy import or_
 
-from plone.api.content import transition
-
 from persistent.list import PersistentList
+from plone.api.content import transition
 from Products.Five.browser.pagetemplatefile import \
     ViewPageTemplateFile as Template
 from wise.msfd import db, sql2018
@@ -169,6 +168,7 @@ def get_assessment_head_data_2012(article, region, country_code):
     )
 
     assert count == 1
+
     if count:
         report_by = res[0].ReportBy
         assessors = res[0].Assessors
@@ -223,6 +223,7 @@ class NationalDescriptorCountryOverview(BaseView):
 
     def ready_phase2(self):
         roles = self.get_current_user_roles
+
         if 'Editor' not in roles:
             return False
 
