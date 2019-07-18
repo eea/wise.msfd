@@ -709,7 +709,7 @@ https://svn.eionet.europa.eu/repositories/Reportnet/Dataflows/MarineDirective/MS
 
         data = snapshots[-1][1]
 
-        if self.focus_muid:
+        if hasattr(self, 'focus_muid'):
             # filter the data based on selected muid
             # this is used to optmize display of really long data
             data = [t for t in data if t[0].name == self.focus_muid]
