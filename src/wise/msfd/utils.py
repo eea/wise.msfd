@@ -364,8 +364,7 @@ class ItemLabel(TemplateMixin):
         # see https://rszalski.github.io/magicmethods/
 
         if hasattr(other, 'name'):
-            if self.name == other.name:
-                return 0
+            return cmp(self.name, other.name)
 
         if self.name == other:        # this is not really ok
             return 0

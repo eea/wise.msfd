@@ -163,7 +163,7 @@ class Descriptor(ItemLabel):
     def all_ids(self):
         res = set()
         res.add(self.id)
-        
+
         if self.id == 'D6':
             res.add('D6/D1')
 
