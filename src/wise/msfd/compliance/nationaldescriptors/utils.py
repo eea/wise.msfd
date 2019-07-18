@@ -1,5 +1,6 @@
 from collections import defaultdict
 from itertools import chain
+from operator import attrgetter
 
 from wise.msfd.gescomponents import GES_LABELS
 from wise.msfd.utils import ItemLabel, ItemList, LabeledItemList, timeit
@@ -91,7 +92,7 @@ def consolidate_date_by_mru(data):
 
 
 @timeit
-def consolidate_singlevalue_to_list(proxies, fieldname):
+def consolidate_singlevalue_to_list(proxies, fieldname, order):
     """ Given a list of proxies where one of the fields needs to be a list, but
     is spread across different similar proxies, consolidate the single values
     to a list and return only one object for that list of similar objects
@@ -113,5 +114,7 @@ def consolidate_singlevalue_to_list(proxies, fieldname):
             setattr(o, fieldname, l)
 
         res.append(o)
+
+    res = list(sorted(res, key=attrgetter(*order)))
 
     return res

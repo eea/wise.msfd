@@ -25,7 +25,7 @@ from wise.msfd.data import (get_factsheet_url, get_report_file_url,
                             get_report_filename, get_xml_report_data)
 from wise.msfd.gescomponents import get_descriptor, get_features
 from wise.msfd.translation import retrieve_translation
-from wise.msfd.utils import ItemList, items_to_rows, natural_sort_key, timeit
+from wise.msfd.utils import items_to_rows, natural_sort_key, timeit
 from z3c.form.button import buttonAndHandler
 from z3c.form.field import Fields
 from z3c.form.form import Form
@@ -648,7 +648,11 @@ https://svn.eionet.europa.eu/repositories/Reportnet/Dataflows/MarineDirective/MS
                 self.focus_muids = self._get_muids_from_data(data)
 
         if self.article == 'Art8':
-            data = consolidate_singlevalue_to_list(data, 'IndicatorCode')
+            order = self._get_order_cols_Art8(self.descriptor)
+            data = consolidate_singlevalue_to_list(data,
+                                                   'IndicatorCode',
+                                                   order,
+                                                   )
 
         data_by_mru = group_by_mru(data)
 
@@ -665,6 +669,7 @@ https://svn.eionet.europa.eu/repositories/Reportnet/Dataflows/MarineDirective/MS
 
             res.append((mru, _rows))
 
+        # resort the results by marine reporting unit
         res_sorted = sorted(
             res, key=lambda r: natural_sort_key(r[0].__repr__()))
 
