@@ -506,8 +506,11 @@ Target = namedtuple('Target', ['id', 'title', 'definition', 'year'])
 
 def _a10_ids_cachekey(method, self, descriptor, **kwargs):
     muids = [m.id for m in kwargs['muids']]
+    key = '{}-{}-{}'.format(
+        method.__name__, descriptor.id, ','.join(muids)
+    )
 
-    return '{}-{}'.format(descriptor.id, ','.join(muids))
+    return key
 
 
 def get_weights_from_xml(node):

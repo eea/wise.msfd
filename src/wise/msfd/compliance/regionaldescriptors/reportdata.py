@@ -27,6 +27,7 @@ class RegReportData2012(BaseRegComplianceView):
     help_text = "HELP TEXT"
     template = ViewPageTemplateFile('pt/report-data.pt')
     year = "2012"
+    cache_key_extra = 'reg-desc-2012'
 
     Art8 = RegDescA82012
     Art9 = RegDescA92012
@@ -132,6 +133,7 @@ class RegReportData2018(BaseRegComplianceView):
     help_text = "HELP TEXT"
     template = ViewPageTemplateFile('pt/report-data.pt')
     year = "2018"
+    cache_key_extra = "reg-desc-2018"
 
     # Art8 = ViewPageTemplateFile('pt/report-data.pt')
     # Art9 = ViewPageTemplateFile('pt/report-data.pt')

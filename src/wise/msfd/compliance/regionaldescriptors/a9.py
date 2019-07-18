@@ -15,7 +15,15 @@ from .base import BaseRegDescRow, BaseRegComplianceView
 
 
 def get_key(func, self):
-    return self.descriptor + ':' + self.region
+    key = ":".join((
+        func.__name__,
+        'reg-desc',
+        self.descriptor,
+        self.region,
+        self.article
+    ))
+
+    return key
 
 
 class RegDescA92018Row(BaseRegDescRow):

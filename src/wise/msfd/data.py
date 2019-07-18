@@ -153,7 +153,7 @@ def get_report_filename(report_version,
     return handler(country, region, article, descriptor)
 
 
-@cache(lambda func, filename: filename)
+@cache(lambda func, filename: func.__name__ + filename)
 @timeit
 def get_report_file_url(filename):
     """ Retrieve the CDR url based on query in ContentRegistry
@@ -215,7 +215,7 @@ LIMIT 1""" % filename
     return urls[0]
 
 
-@cache(lambda func, url: url)
+@cache(lambda func, url: func.__name__ + url)
 def get_factsheet_url(url):
     """ Returns the URL for the conversion that gets the "HTML Factsheet"
     """
