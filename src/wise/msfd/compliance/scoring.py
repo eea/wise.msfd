@@ -109,7 +109,7 @@ CONCLUSIONS = [
 
 
 def get_range_index(percentage):
-    p = percentage
+    p = int(percentage)
 
     for x, r in enumerate(reversed(DEFAULT_RANGES)):
         if (p >= r[0]) and (p <= r[1]):
