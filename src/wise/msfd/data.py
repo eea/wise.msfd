@@ -210,7 +210,7 @@ LIMIT 1""" % filename
         logger.exception('Got an error in querying SPARQL endpoint for '
                          'filename url: %s', filename)
 
-        return ''
+        raise
 
     return urls[0]
 
@@ -241,30 +241,35 @@ def get_xml_report_data(filename):
     if not filename:
         return ""
 
-    tmpdir = tempfile.gettempdir()
+    xmldir = os.environ.get("MSFDXML")
+
+    if not xmldir:
+        xmldir = tempfile.gettempdir()
+
     assert '..' not in filename     # need better security?
 
-    fpath = os.path.join(tmpdir, filename)
+    fpath = os.path.join(xmldir, filename)
 
     text = ''
 
-    if filename in os.listdir(tmpdir):
+    if filename in os.listdir(xmldir):
         with open(fpath) as f:
             text = f.read()
-        logger.info("Using cached XML file: %s", fpath)
-    else:
+
+    if not text:
         # TODO: handle this problem:
         # https://cr.eionet.europa.eu/factsheet.action?uri=http%3A%2F%2Fcdr.eionet.europa.eu%2Fro%2Feu%2Fmsfd8910%2Fblkro%2Fenvux97qw%2FRO_MSFD10TI_20130430.xml&page1=http%3A%2F%2Fwww.w3.org%2F1999%2F02%2F22-rdf-syntax-ns%23type
         url = get_report_file_url(filename)
-        assert url, "Report URL not found: %s" % filename
         req = requests.get(url)
         text = req.content
         logger.info("Requesting XML file: %s", fpath)
 
         with open(fpath, 'wb') as f:
             f.write(text)
+    else:
+        logger.info("Using cached XML file: %s", fpath)
 
-    assert text, "Report data could not be fetched"
+    assert text, "Report data could not be fetched %s" % url
 
     return text
 
