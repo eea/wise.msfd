@@ -92,7 +92,7 @@ def consolidate_date_by_mru(data):
 
 
 @timeit
-def consolidate_singlevalue_to_list(proxies, fieldname, order):
+def consolidate_singlevalue_to_list(proxies, fieldname, order=None):
     """ Given a list of proxies where one of the fields needs to be a list, but
     is spread across different similar proxies, consolidate the single values
     to a list and return only one object for that list of similar objects
@@ -115,6 +115,9 @@ def consolidate_singlevalue_to_list(proxies, fieldname, order):
 
         res.append(o)
 
-    res = list(sorted(res, key=attrgetter(*order)))
+    # consolidate_singlevalue_to_list is used in regional descriptor too
+    # where we do not order the results
+    if order:
+        res = list(sorted(res, key=attrgetter(*order)))
 
     return res

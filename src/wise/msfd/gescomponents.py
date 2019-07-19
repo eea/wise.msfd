@@ -823,9 +823,13 @@ def _muids_2012(country, region):
          t.c.MarineUnits_ReportingAreas),
         t.c.MemberState == country,
         t.c.RegionSubRegions == region,
-        t.c.MarineUnits_ReportingAreas.isnot(None),
+        # There are some MRUs with empty MarineUnits_ReportingAreas
+        # we should not exclude these, they are used in the reports
+        # ex: ../se/ans/d2/art9/@@view-report-data-2012 ANS-SE-SR-Nordsjon
+        # t.c.MarineUnits_ReportingAreas.isnot(None),
     )
-    res = [MarineReportingUnit(*r) for r in res]
+    # r[0] = MarineUnitID, r[1] = MarineUnits_ReportingAreas
+    res = [MarineReportingUnit(r[0], r[1] or r[0]) for r in res]
 
     return sorted(res)
 
