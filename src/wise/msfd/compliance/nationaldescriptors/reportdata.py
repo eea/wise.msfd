@@ -347,7 +347,7 @@ class ReportData2012(BaseView, BaseUtil):
             date_final = date_obj.date().isoformat()
             res = ReportingInformation(date_final, ', '.join(set(reporters)))
         except Exception:
-            logger.exception('Could not get reporting info for %s, %s, %s',
+            logger.exception('Could not parse date for %s, %s, %s',
                              self.article, self.descriptor, self.country_code
                              )
 

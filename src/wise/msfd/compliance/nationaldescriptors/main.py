@@ -163,7 +163,8 @@ def get_assessment_head_data_2012(article, region, country_code):
         t,
         t.CountryCode == country_code,
         t.MSFDArticle == article,
-        t.RegionSubregion == region + country_code,
+        t.RegionSubregion.startswith(region),
+        # t.RegionSubregion == region + country_code,
         t.AssessmentTopic == 'GES Descriptor'
     )
 
@@ -437,7 +438,11 @@ def filter_assessment_data_2012(data, region_code, descriptor_criterions):
             t2rt(col('Assessment'))
         )
 
-        if not score:
+        # TODO test for other countries beside LV
+        # Condition changed because of LV report, where score is 0
+
+        # if not score:
+        if score is None:
             criterias.append(criteria)
         elif country not in assessments:
             criterias.insert(0, criteria)
