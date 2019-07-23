@@ -144,16 +144,21 @@ class BaseComplianceView(BrowserView, BasePublicPage):
     status_colors = STATUS_COLORS
     process_status_colors = PROCESS_STATUS_COLORS
 
-    @property
-    def get_current_user_roles(self):
+    def get_current_user_roles(self, context=None):
         current_user = user.get_current().getId()
-        roles = get_roles(username=current_user)
+        params = {
+            "username": current_user
+        }
+        if context:
+            params['obj'] = context
+        
+        roles = get_roles(**params)
 
         return roles
 
     @property
     def read_only_access(self):
-        roles = self.get_current_user_roles
+        roles = self.get_current_user_roles()
         is_reader = 'Reader' in roles
         can_edit = self.check_permission('wise.msfd: Edit Assessment')
 
