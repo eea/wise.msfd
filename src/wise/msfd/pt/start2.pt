@@ -1,0 +1,76 @@
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en"
+  xmlns:tal="http://xml.zope.org/namespaces/tal"
+  xmlns:metal="http://xml.zope.org/namespaces/metal"
+  xmlns:i18n="http://xml.zope.org/namespaces/i18n"
+  lang="en"
+  metal:use-macro="context/main_template/macros/master"
+  i18n:domain="eea">
+
+  <body metal:fill-slot="content">
+
+    <div id="layout-contents" tal:define="text context/text | nothing" >
+      <div id="wise-search-form">
+        <div id="wise-search-form-top">
+          <metal:tabs
+             metal:use-macro="context/wise-macros/macros/tabs"></metal:tabs>
+        </div>
+
+        <div class="start-page-content left-side-form">
+          <table class="table table-striped table-condensed">
+            <thead>
+              <tr>
+                <th></th>
+                <th>Member state reports</th>
+                <th>Commission assessments</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tal:rep tal:repeat="folder view/regional_descriptors_folders">
+                <tr>
+                  <td tal:content="folder/title">Baltic</td>
+                  <td>
+                    <a class="btn btn-xs btn-primary disabled">Regional overview</a>
+                    <a class="btn btn-xs btn-primary"
+                       tal:attributes="href python:'./{}/{}'.format(folder.aq_parent.id, folder.id)">
+                      Regional descriptor
+                    </a>
+                  </td>
+                  <td>
+                    <a class="btn btn-xs btn-primary disabled">Regional overview</a>
+                    <a class="btn btn-xs btn-primary"
+                       tal:attributes="href python:'./{}/{}'.format(folder.aq_parent.id, folder.id)">
+                      Regional descriptor
+                    </a>
+                  </td>
+                </tr>
+              </tal:rep>
+            </tbody>
+            <tbody>
+              <tal:rep tal:repeat="folder view/national_descriptors_folders">
+                <tr>
+                  <td tal:content="folder/title">Baltic</td>
+                  <td>
+                    <a class="btn btn-xs btn-success disabled">National overview</a>
+                    <a class="btn btn-xs btn-success"
+                       tal:attributes="href python:'./{}/{}/reports'.format(folder.aq_parent.id, folder.id)">
+                      National descriptor
+                    </a>
+                  </td>
+                  <td>
+                    <a class="btn btn-xs btn-success disabled">National overview</a>
+                    <a class="btn btn-xs btn-success"
+                       tal:attributes="href python:'./{}/{}/assessments'.format(folder.aq_parent.id, folder.id)">
+                      National descriptor
+                    </a>
+                  </td>
+                </tr>
+              </tal:rep>
+            </tbody>
+
+          </table>
+        </div>
+      </div>
+    </div>
+
+  </body>
+</html>

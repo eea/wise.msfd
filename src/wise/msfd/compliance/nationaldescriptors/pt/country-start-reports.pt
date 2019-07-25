@@ -1,0 +1,62 @@
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en"
+  xmlns:tal="http://xml.zope.org/namespaces/tal"
+  xmlns:metal="http://xml.zope.org/namespaces/metal"
+  xmlns:i18n="http://xml.zope.org/namespaces/i18n"
+  lang="en"
+  metal:use-macro="context/main_template/macros/master"
+  i18n:domain="eea">
+
+  <body metal:fill-slot="content">
+
+    <div id="layout-contents" tal:define="text context/text | nothing" >
+      <div id="wise-search-form" class="full-width-marker">
+        <div id="wise-search-form-top">
+          <metal:tabs
+            metal:use-macro="context/wise-macros/macros/tabs"></metal:tabs>
+        </div>
+
+        <div class="start-page-content left-side-form">
+
+          <h1>Descriptor assessments - national overview: <span tal:content="context/title"></span></h1>
+
+          <div class="nda-link">
+            <a href="./../">
+              <i class='fa fa-level-up'></i>
+              Go to all National Descriptor Assessments
+            </a>
+          </div>
+
+          <div tal:repeat="region view/get_regions">
+            <h4 tal:content="region/Title">Region name</h4>
+
+            <table class="table as-table-overview table-striped">
+              <thead>
+                <tr>
+                  <th>Descriptor</th>
+                  <th>Art 9</th>
+                  <th>Art 8</th>
+                  <th>Art 10</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr tal:repeat="desc python: view.get_descriptors(region)">
+                  <th>
+                    <span tal:content="python: view.descriptor_for_code(desc.id).title">D0</span>
+                  </th>
+                  <td tal:repeat="assessment python: view.get_articles(desc)">
+                    <a tal:attributes="href python: assessment.absolute_url() + '/@@view-report-data-2012';
+                        class python: 'btn btn-xs btn-primary'">2012</a>
+                    <a tal:attributes="href python: assessment.absolute_url() + '/@@view-report-data-2018';
+                        class python: 'btn btn-xs btn-success'">2018</a>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+  </body>
+</html>

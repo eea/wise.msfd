@@ -128,4 +128,13 @@
     permission="zope2.View"
     />
 
+  <!-- Temporary pages -->
+  <browser:page
+    for=".interfaces.IComplianceModuleFolder"
+    name="comp-start2"
+    class=".main.StartComplianceView2"
+    template="../pt/start2.pt"
+    permission="zope2.View"
+    />
+
 </configure>

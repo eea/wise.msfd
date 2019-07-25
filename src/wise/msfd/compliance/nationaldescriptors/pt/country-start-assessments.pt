@@ -1,0 +1,100 @@
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en"
+  xmlns:tal="http://xml.zope.org/namespaces/tal"
+  xmlns:metal="http://xml.zope.org/namespaces/metal"
+  xmlns:i18n="http://xml.zope.org/namespaces/i18n"
+  lang="en"
+  metal:use-macro="context/main_template/macros/master"
+  i18n:domain="eea">
+
+  <body metal:fill-slot="content">
+
+    <div id="layout-contents" tal:define="text context/text | nothing" >
+      <div id="wise-search-form" class="full-width-marker">
+        <div id="wise-search-form-top">
+          <metal:tabs
+            metal:use-macro="context/wise-macros/macros/tabs"></metal:tabs>
+        </div>
+
+        <div class="start-page-content left-side-form">
+
+          <h1>Descriptor assessments - national overview: <span tal:content="context/title"></span></h1>
+
+          <div class="nda-link">
+            <a href="./../">
+              <i class='fa fa-level-up'></i>
+              Go to all National Descriptor Assessments
+            </a>
+          </div>
+
+          <div class="process-state-phase-form">
+            <form class="process-state"
+                method="GET" action='./content_status_modify'>
+              <div>
+                <i class='fa fa-exchange'></i>
+                Process state:
+                <strong tal:content="view/get_status">Phase 0</strong>
+
+                <div class="phase-selector"
+                  tal:condition="python: not(view.read_only_access)">
+                  <select onchange="javascript:this.form.submit()"
+                    name="workflow_action"
+                    class="pat-select2"
+                    data-pat-select2="width:10em">
+                    <option value=''>Choose action...</option>
+                    <tal:rep repeat="trans view/get_transitions">
+                      <option tal:content="trans/title" tal:attributes="value trans/id">Send to Phase 0</option>
+                    </tal:rep>
+                  </select>
+                </div>
+              </div>
+            </form>
+            <form class="send-to-tl"
+                method="POST" action="."
+                tal:condition="view/ready_phase2">
+              <input class="btn btn-success"
+                  type="Submit" name="send_to_tl" value="Send all to TL"/>
+            </form>
+          </div>
+
+          <div tal:repeat="region view/get_regions">
+            <h4 tal:content="region/Title">Region name</h4>
+
+            <table class="table as-table-overview table-striped">
+              <thead>
+                <tr>
+                  <th>Descriptor</th>
+                  <th>Art 9</th>
+                  <th>Art 8</th>
+                  <th>Art 10</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr tal:repeat="desc python: view.get_descriptors(region)">
+                  <th>
+                    <span tal:content="python: view.descriptor_for_code(desc.id).title">D0</span>
+                  </th>
+                  <td tal:repeat="assessment python: view.get_articles(desc)">
+                    <tal:block tal:define="css_class python:'btn btn-xs btn-' + view.get_status_color(assessment)">
+                      <a tal:attributes="href python: assessment.absolute_url() + '/@@edit-assessment-data-2018';
+                          class python: css_class">
+                        Assessment:
+                        <span class="as-state-label" tal:content="python: view.get_status(assessment)">State</span>
+                        <span title="New comments"
+                            class="has-new-comments fa fa-exclamation-circle"
+                            tal:condition="python: view.has_new_comments(assessment)"></span>
+                      </a>
+                      <a tal:attributes="href assessment/absolute_url;
+                            class css_class">Overview</a>
+                    </tal:block>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+  </body>
+</html>
