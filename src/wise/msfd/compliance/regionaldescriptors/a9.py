@@ -19,7 +19,7 @@ def get_key(func, self):
         func.__name__,
         'reg-desc',
         self.descriptor,
-        self.region,
+        ''.join(self.region),
         self.article
     ))
 
@@ -109,17 +109,19 @@ class RegDescA92012(BaseRegComplianceView):
 
     def __init__(self, context, request):
         super(RegDescA92012, self).__init__(context, request)
-        self.region = context.country_region_code
+        self.region = context._countryregion_folder._subregions
         self._descriptor = context.descriptor
 
         db.threadlocals.session_name = self.session_name
 
-        self.countries = countries_in_region(self.region)
-        self.all_countries = muids_by_country()
+        self.countries = [
+            x[0] for x in context._countryregion_folder._countries_for_region
+        ]
+        self.all_countries = muids_by_country(self.region)
         self.muids_in_region = []
 
         for c in self.countries:
-            self.muids_in_region.extend(self.all_countries[c])
+            self.muids_in_region.extend(self.all_countries.get(c, []))
 
         self.allrows = [
             self.compoundrow2012('Member state', self.get_countries_row()),
@@ -164,7 +166,7 @@ class RegDescA92012(BaseRegComplianceView):
         values = []
 
         for c in self.countries:
-            muids = self.all_countries[c]
+            muids = self.all_countries.get(c, [])
             count, data = db.get_all_records(
                 t,
                 t.MarineUnitID.in_(muids),
@@ -195,7 +197,7 @@ class RegDescA92012(BaseRegComplianceView):
         values = []
 
         for c in self.countries:
-            muids = self.all_countries[c]
+            muids = self.all_countries.get(c, [])
             count, data = db.get_all_records(
                 t,
                 t.MarineUnitID.in_(muids),
@@ -237,7 +239,7 @@ class RegDescA92012(BaseRegComplianceView):
             values = []
 
             for country in self.countries:
-                muids = self.all_countries[country]
+                muids = self.all_countries.get(country, [])
                 data = db.get_unique_from_mapper(
                     t,
                     'DescriptionGES',
@@ -260,7 +262,7 @@ class RegDescA92012(BaseRegComplianceView):
     def get_reporting_area_row(self):
         rows = [
             ('Number used',
-             [len(self.all_countries[c]) for c in self.countries])
+             [len(self.all_countries.get(c, [])) for c in self.countries])
         ]
 
         return rows
@@ -292,7 +294,7 @@ class RegDescA92012(BaseRegComplianceView):
 
             for country in self.countries:
                 value = []
-                muids = self.all_countries[country]
+                muids = self.all_countries.get(country, [])
 
                 for feature in feats:
                     count = db.count_items(

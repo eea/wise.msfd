@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from collections import defaultdict
+from collections import defaultdict, namedtuple
 
 from zope.schema.vocabulary import SimpleTerm, SimpleVocabulary
 
@@ -86,6 +86,18 @@ REGIONS_SIMPLIFIED = {
     'North Sea': ('ANS',),
     'Black Sea': ('BLK',),
 }
+
+Region = namedtuple('Region', ['code', 'title', 'subregions', 'countries'])
+
+REGIONAL_DESCRIPTORS_REGIONS = [
+    Region('BAL', 'Baltic', ('BAL',),
+           ('FI', 'EE', 'LV', 'LT', 'PL', 'DE', 'DK', 'SE')),
+    Region('ATL', 'North East Atlantic', ('ABI', 'ACS', 'AMA', 'ANS',),
+           ('SE', 'DK', 'DE', 'NL', 'BE', 'FR', 'UK', 'IE', 'ES', 'PT')),
+    Region('MED', 'Mediterranean', ('MAD', 'MAL', 'MIC', 'MWE'),
+           ('UK', 'ES', 'FR', 'IT', 'MT', 'SI', 'HR', 'EL', 'CY')),
+    Region('BLK', 'Black Sea', ('BLK',), ('BG', 'RO')),
+]
 
 
 def make_subregions(d):

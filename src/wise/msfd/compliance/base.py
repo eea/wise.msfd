@@ -332,7 +332,8 @@ class BaseComplianceView(BrowserView, BasePublicPage):
 
     @property
     def country_region_name(self):
-        return REGIONS[self.country_region_code]
+        # return REGIONS[self.country_region_code]
+        return self._countryregion_folder.title
 
     @property
     def article_name(self):

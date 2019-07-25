@@ -39,12 +39,16 @@ def countries_in_region(regionid):
 
 
 @db.use_db_session('2012')
-def muids_by_country():
+def muids_by_country(regions=None):
     t = sql_extra.MSFD4GeographicalAreaID
     count, records = db.get_all_records(t)
     res = defaultdict(list)
 
     for rec in records:
+        # filter MUIDs by region, used in regional descriptors A9 2012
+        if regions and rec.RegionSubRegions not in regions:
+            continue
+
         res[rec.MemberState].append(rec.MarineUnitID)
 
     return dict(**res)

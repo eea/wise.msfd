@@ -321,16 +321,18 @@ class RegDescA102012(BaseRegComplianceView):
 
     def __init__(self, context, request):
         super(RegDescA102012, self).__init__(context, request)
-        self.region = context.country_region_code
+        self.region = context._countryregion_folder._subregions
         db.threadlocals.session_name = self.session_name
 
         self._descriptor = context.descriptor
-        self.countries = countries_in_region(self.region)
+        self.countries = [
+            x[0] for x in context._countryregion_folder._countries_for_region
+        ]
         self.all_countries = muids_by_country()
         self.muids_in_region = []
 
         for c in self.countries:
-            self.muids_in_region.extend(self.all_countries[c])
+            self.muids_in_region.extend(self.all_countries.get(c, []))
 
         self.import_data, self.target_data = self.get_base_data()
         self.features_data = self.get_features_data()
@@ -370,7 +372,7 @@ class RegDescA102012(BaseRegComplianceView):
     def get_marine_unit_id_nrs(self):
         rows = [
             ('Number used',
-             [len(self.all_countries[c]) for c in self.countries])
+             [len(self.all_countries.get(c, [])) for c in self.countries])
         ]
 
         return rows
@@ -400,7 +402,7 @@ class RegDescA102012(BaseRegComplianceView):
 
             for country in self.countries:
                 value = []
-                muids = self.all_countries[country]
+                muids = self.all_countries.get(country, [])
 
                 for feature in feats:
                     data = [
@@ -426,7 +428,7 @@ class RegDescA102012(BaseRegComplianceView):
         values = []
 
         for country in self.countries:
-            muids = self.all_countries[country]
+            muids = self.all_countries.get(country, [])
             value = len([
                 row.ReportingFeature
                 for row in self.target_data
@@ -448,7 +450,7 @@ class RegDescA102012(BaseRegComplianceView):
         values = []
 
         for country in self.countries:
-            muids = self.all_countries[country]
+            muids = self.all_countries.get(country, [])
             value = len([
                 row.ReportingFeature
                 for row in self.target_data
@@ -475,7 +477,7 @@ class RegDescA102012(BaseRegComplianceView):
         ]
 
         for country in self.countries:
-            muids = self.all_countries[country]
+            muids = self.all_countries.get(country, [])
             value = []
 
             for label, topic in types:
@@ -507,7 +509,7 @@ class RegDescA102012(BaseRegComplianceView):
         ]
 
         for country in self.countries:
-            muids = self.all_countries[country]
+            muids = self.all_countries.get(country, [])
             value = []
 
             for label, topic in types:
@@ -578,7 +580,7 @@ class RegDescA102012(BaseRegComplianceView):
         ]
 
         for country in self.countries:
-            muids = self.all_countries[country]
+            muids = self.all_countries.get(country, [])
             value = []
 
             for label, topic in types:
@@ -635,7 +637,7 @@ class RegDescA102012(BaseRegComplianceView):
         count, import_data = db.get_all_records(
             imp,
             imp.MSFD10_Import_ReportingCountry.in_(self.countries),
-            imp.MSFD10_Import_ReportingRegion == self.region
+            imp.MSFD10_Import_ReportingRegion.in_(self.region)
         )
         import_ids = [x.MSFD10_Import_ID for x in import_data]
 

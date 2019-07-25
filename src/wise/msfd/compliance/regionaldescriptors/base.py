@@ -73,7 +73,8 @@ class BaseRegComplianceView(BaseComplianceView):
 
     @property
     def region_name(self):
-        return REGIONS[self.country_region_code]
+        # return REGIONS[self.country_region_code]
+        return self._countryregion_folder.title
 
     @property
     def available_countries(self):
@@ -112,14 +113,14 @@ class BaseRegComplianceView(BaseComplianceView):
 
 class BaseRegDescRow(BaseRegComplianceView):
     def __init__(self, context, request, db_data, descriptor_obj,
-                 region, countries, field):
+                 regions, countries, field):
         super(BaseRegDescRow, self).__init__(context, request)
         # self.context = context
         # self.request = request
         self.db_data = [x._Proxy2018__o for x in db_data]
         self.db_data_proxy = db_data
         # self.descriptor_obj = descriptor_obj
-        self.region = region
+        self.region = regions
         self.countries = countries
         self.field = field
 

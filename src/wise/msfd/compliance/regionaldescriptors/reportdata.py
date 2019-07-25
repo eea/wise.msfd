@@ -161,7 +161,7 @@ class RegReportData2018(BaseRegComplianceView):
         count, q = db.get_all_records_ordered(
             t,
             ('GESComponent',),
-            or_(t.c.Region == self.country_region_code,
+            or_(t.c.Region.in_(self._countryregion_folder._subregions),
                 t.c.Region.is_(None)),
             t.c.GESComponent.in_(self.all_descriptor_ids),
         )
@@ -174,7 +174,7 @@ class RegReportData2018(BaseRegComplianceView):
         t = sql2018.t_V_ART8_GES_2018
 
         conditions = [
-            t.c.Region == self.country_region_code,
+            t.c.Region.in_(self._countryregion_folder._subregions),
             t.c.GESComponent.in_(self.all_descriptor_ids),
             or_(t.c.Element.isnot(None),
                 t.c.Criteria.isnot(None)),
@@ -200,7 +200,7 @@ class RegReportData2018(BaseRegComplianceView):
         count, res = db.get_all_records_ordered(
             t,
             ('Features', 'TargetCode', 'Element'),
-            t.c.Region == self.country_region_code,
+            t.c.Region.in_(self._countryregion_folder._subregions),
             # *conditions
         )
 
@@ -243,7 +243,7 @@ class RegReportData2018(BaseRegComplianceView):
             db_data = consolidate_singlevalue_to_list(db_data, 'IndicatorCode')
 
         countries = self.available_countries
-        region = self.country_region_code
+        regions = self._countryregion_folder._subregions
         descriptor_obj = self.descriptor_obj
 
         fields = get_report_definition('2018', self.article).get_fields()
@@ -253,7 +253,7 @@ class RegReportData2018(BaseRegComplianceView):
 
         for field in fields:
             row_class = impl_class(self, self.request, db_data, descriptor_obj,
-                                   region, countries, field)
+                                   regions, countries, field)
             field_data_method = getattr(row_class, field.getrowdata, None)
             if not field_data_method:
                 continue

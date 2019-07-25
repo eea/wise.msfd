@@ -23,7 +23,7 @@ class RegionalDescriptorsOverview(BaseRegComplianceView):
         res = []
 
         for region in regions:
-            countries = sorted([x[1] for x in region._countries_for_region])
+            countries = [x[1] for x in region._countries_for_region]
             state_id, state_label = self.process_phase(region)
             info = RegionStatus(region.Title(), ", ".join(countries),
                                 state_label, state_id,

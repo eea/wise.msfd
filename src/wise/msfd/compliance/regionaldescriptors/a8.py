@@ -730,10 +730,13 @@ class RegDescA82012(BaseRegComplianceView):
 
     def __init__(self, context, request):
         super(RegDescA82012, self).__init__(context, request)
-        self.region = context.country_region_code
+        self.region = context._countryregion_folder._subregions
         db.threadlocals.session_name = self.session_name
 
-        self.countries = countries_in_region(self.region)
+        # self.countries = countries_in_region(self.region)
+        self.countries = [
+            x[0] for x in context._countryregion_folder._countries_for_region
+        ]
         self.all_countries = muids_by_country()
 
         self.utils_art8 = UtilsArticle8(self.descriptor)
@@ -746,7 +749,7 @@ class RegDescA82012(BaseRegComplianceView):
         self.assessment_criteria_data = {}
         self.assessment_indicator_data = {}
         for country in self.countries:
-            muids = self.all_countries[country]
+            muids = self.all_countries.get(country, [])
             assess_data = self.get_assessment_data(muids)
             self.assessment_data[country] = assess_data
 
@@ -800,7 +803,7 @@ class RegDescA82012(BaseRegComplianceView):
     def get_marine_unit_id_nrs(self):
         rows = [
             ('Number used',
-             [len(self.all_countries[c]) for c in self.countries])
+             [len(self.all_countries.get(c, [])) for c in self.countries])
         ]
 
         return rows
@@ -831,7 +834,7 @@ class RegDescA82012(BaseRegComplianceView):
 
             for country in self.countries:
                 value = []
-                muids = self.all_countries[country]
+                muids = self.all_countries.get(country, [])
 
                 for feature in feats:
                     data = [
@@ -886,7 +889,7 @@ class RegDescA82012(BaseRegComplianceView):
 
             for country in self.countries:
                 value = []
-                muids = self.all_countries[country]
+                muids = self.all_countries.get(country, [])
 
                 for feature in feats:
                     data = [
@@ -1026,7 +1029,7 @@ class RegDescA82012(BaseRegComplianceView):
 
         for country in self.countries:
             value = []
-            muids = self.all_countries[country]
+            muids = self.all_countries.get(country, [])
 
             data = [
                 get_suminfo(x)
@@ -1120,7 +1123,7 @@ class RegDescA82012(BaseRegComplianceView):
 
         for country in self.countries:
             value = []
-            muids = self.all_countries[country]
+            muids = self.all_countries.get(country, [])
 
             data = [
                 x
@@ -1144,7 +1147,7 @@ class RegDescA82012(BaseRegComplianceView):
         values = []
 
         for country in self.countries:
-            muids = self.all_countries[country]
+            muids = self.all_countries.get(country, [])
 
             data = [
                 x.Activity
@@ -1348,7 +1351,7 @@ class RegDescA82012(BaseRegComplianceView):
             col_region = getattr(mc, region)
             count, res = db.get_all_records(
                 mc,
-                col_region == self.region
+                col_region.in_(self.region)
             )
 
             result = {}

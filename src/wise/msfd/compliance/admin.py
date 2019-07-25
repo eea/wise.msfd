@@ -18,7 +18,8 @@ from Products.CMFPlacefulWorkflow.WorkflowPolicyConfig import \
 from Products.Five.browser import BrowserView
 from Products.statusmessages.interfaces import IStatusMessage
 from wise.msfd import db, sql2018
-from wise.msfd.compliance.vocabulary import REGIONS
+from wise.msfd.compliance.vocabulary import (REGIONS,
+                                             REGIONAL_DESCRIPTORS_REGIONS)
 from wise.msfd.gescomponents import (get_all_descriptors, get_descriptor,
                                      get_marine_units)
 
@@ -74,15 +75,7 @@ class BootstrapCompliance(BrowserView):
         return countries
 
     @db.use_db_session('2018')
-    def _get_countries_for_region(self, region_code):
-        t = sql2018.MarineReportingUnit
-
-        country_codes = db.get_unique_from_mapper(
-            t,
-            'CountryCode',
-            t.Region == region_code
-        )
-
+    def _get_countries_names(self, country_codes):
         result = []
         all_countries = self._get_countries()
 
@@ -210,7 +203,9 @@ class BootstrapCompliance(BrowserView):
 
         return cf
 
-    def make_region(self, parent, code, name):
+    def make_region(self, parent, region):
+        code, name = region.code.lower(), region.title
+
         if code.lower() in parent.contentIds():
             rf = parent[code.lower()]
         else:
@@ -219,7 +214,10 @@ class BootstrapCompliance(BrowserView):
                         title=name,
                         id=code)
 
-            rf._countries_for_region = self._get_countries_for_region(code)
+            rf._subregions = region.subregions
+            rf._countries_for_region = self._get_countries_names(
+                region.countries
+            )
             self.set_layout(rf, '@@reg-region-start')
             alsoProvides(rf, interfaces.IRegionalDescriptorRegionsFolder)
 
@@ -277,8 +275,8 @@ class BootstrapCompliance(BrowserView):
             self.set_layout(rda, '@@reg-desc-start')
             alsoProvides(rda, interfaces.IRegionalDescriptorsFolder)
 
-        for rcode, region in REGIONS.items():
-            self.make_region(rda, rcode, region)
+        for region in REGIONAL_DESCRIPTORS_REGIONS:
+            self.make_region(rda, region)
 
     def __call__(self):
 
