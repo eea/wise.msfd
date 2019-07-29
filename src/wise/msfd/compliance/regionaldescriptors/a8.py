@@ -15,6 +15,11 @@ from .utils import compoundrow, compoundrow2012, newline_separated_itemlist
 class RegDescA82018Row(BaseRegDescRow):
     year = '2018'
 
+    def _sortkey(self, value, order):
+        key = value in order and order.index(value) + 1 or len(order) + 2
+
+        return key
+
     @compoundrow
     def get_feature_row(self):
         all_features = self.get_unique_values("Feature")
@@ -49,7 +54,8 @@ class RegDescA82018Row(BaseRegDescRow):
                     if not cnt:
                         continue
 
-                    val = u"{} ({})".format(feature, cnt)
+                    label = self.get_label_for_value(feature)
+                    val = u"{} ({})".format(label, cnt)
                     value.append(val)
 
                 values.append(newline_separated_itemlist(value))
@@ -307,6 +313,10 @@ class RegDescA82018Row(BaseRegDescRow):
         rows = []
         values = []
         trends = self.get_unique_values('Trend')
+        order = ['Improving', 'Stable', 'Deteriorating', 'Unknown',
+                 'Not relevant']
+
+        trends = sorted(trends, key=lambda t: self._sortkey(t, order))
 
         for country_code, country_name in self.countries:
             value = []
@@ -328,7 +338,7 @@ class RegDescA82018Row(BaseRegDescRow):
                     u"{0} ({1} or {2:.1f}%)".format(trend, found, percent)
                 )
 
-            values.append(newline_separated_itemlist(value))
+            values.append(newline_separated_itemlist(value, sort=False))
 
         rows.append((u'No. of trends per category', values))
 
@@ -339,6 +349,10 @@ class RegDescA82018Row(BaseRegDescRow):
         rows = []
         values = []
         param_achievs = self.get_unique_values('ParameterAchieved')
+        order = ['Yes', 'Yes, based on low risk', 'No', 'Unknown',
+                 'Not assessed']
+        param_achievs = sorted(param_achievs,
+                               key=lambda t: self._sortkey(t, order))
 
         for country_code, country_name in self.countries:
             value = []
@@ -360,7 +374,7 @@ class RegDescA82018Row(BaseRegDescRow):
                     u"{0} ({1} or {2:.1f}%)".format(param, found, percent)
                 )
 
-            values.append(newline_separated_itemlist(value))
+            values.append(newline_separated_itemlist(value, sort=False))
 
         rows.append(('No. of parameters per category', values))
 
@@ -399,6 +413,11 @@ class RegDescA82018Row(BaseRegDescRow):
         rows = []
         values = []
         crit_stats = self.get_unique_values('CriteriaStatus')
+        order = ['Good', 'Good, based on low risk',
+                 'Contributes to assessment of another criterion / ele',
+                 'Not good', 'Unknown', 'Not assessed']
+
+        crit_stats = sorted(crit_stats, key=lambda t: self._sortkey(t, order))
 
         for country_code, country_name in self.countries:
             value = []
@@ -423,7 +442,7 @@ class RegDescA82018Row(BaseRegDescRow):
                 )
                 value.append(text)
 
-            values.append(newline_separated_itemlist(value))
+            values.append(newline_separated_itemlist(value, sort=False))
 
         rows.append(('No. of criteria per category', values))
 
@@ -434,6 +453,10 @@ class RegDescA82018Row(BaseRegDescRow):
         rows = []
         values = []
         elem_stats = self.get_unique_values('ElementStatus')
+        order = ['Good', 'Good, based on low risk',
+                 'Not good', 'Unknown', 'Not assessed']
+
+        elem_stats = sorted(elem_stats, key=lambda t: self._sortkey(t, order))
 
         for country_code, country_name in self.countries:
             value = []
@@ -458,7 +481,7 @@ class RegDescA82018Row(BaseRegDescRow):
                 )
                 value.append(text)
 
-            values.append(newline_separated_itemlist(value))
+            values.append(newline_separated_itemlist(value, sort=False))
 
         rows.append(('No. of elements per category', values))
 
@@ -685,7 +708,7 @@ class RegDescA82018Row(BaseRegDescRow):
                     and row.PressureCodes
             ]
 
-            pressures = set([x for x in chain(*data)])
+            pressures = set([self.get_label_for_value(x) for x in chain(*data)])
 
             value = self.not_rep
             if pressures:

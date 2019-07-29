@@ -14,22 +14,25 @@ from ..base import BaseComplianceView
 # so on. Which one we use?
 
 
-def _separated_itemlist(values, separator):
-    _sorted = sorted(set(values))
+def _separated_itemlist(values, separator, sort):
+    _sorted = values
+
+    if sort:
+        _sorted = sorted(set(values))
 
     return convertWIPT(separator.join(_sorted))
 
 
-def newline_separated_itemlist(values):
+def newline_separated_itemlist(values, sort=True):
     separator = u"\n"
 
-    return _separated_itemlist(values, separator)
+    return _separated_itemlist(values, separator, sort)
 
 
-def emptyline_separated_itemlist(values):
+def emptyline_separated_itemlist(values, sort=True):
     separator = u"\n\n\n"
 
-    return _separated_itemlist(values, separator)
+    return _separated_itemlist(values, separator, sort)
 
 
 def compoundrow(func):

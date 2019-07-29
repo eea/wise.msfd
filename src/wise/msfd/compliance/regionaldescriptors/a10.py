@@ -194,10 +194,12 @@ class RegDescA102018Row(BaseRegDescRow):
                 continue
 
             for timescale in set(data):
+                ts_formatted = "{}-{}".format(timescale[0:4], timescale[4:])
                 found = len([x for x in data if x == timescale])
                 percentage = total and (found / float(total)) * 100 or 0
+
                 value.append(u"{0} ({1} - {2:0.1f}%)".format(
-                    timescale, found, percentage
+                    ts_formatted, found, percentage
                 ))
 
             values.append(newline_separated_itemlist(value))

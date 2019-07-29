@@ -144,8 +144,19 @@ class BaseRegDescRow(BaseRegComplianceView):
 
     @compoundrow
     def get_countries_row(self):
+        url = self.request['URL0']
+
+        def country(code, name):
+            href = url.replace(
+                'regional-descriptors-assessments',
+                'national-descriptors-assessments/{}'.format(code.lower())
+            )
+
+            return "<a href='{}'>{}</a>".format(href, name)
+
         rows = []
-        country_names = [x[1] for x in self.context.available_countries]
+        country_names = [country(x[0], x[1])
+                         for x in self.context.available_countries]
         rows.append(('', country_names))
 
         return rows
@@ -206,7 +217,8 @@ class BaseRegDescRow(BaseRegComplianceView):
                     if not cnt:
                         continue
 
-                    val = u"{} ({})".format(feature, cnt)
+                    label = self.get_label_for_value(feature)
+                    val = u"{} ({})".format(label, cnt)
                     value.append(val)
 
                 values.append(newline_separated_itemlist(value))
