@@ -45,6 +45,7 @@ STATUS_COLORS = {
     "in_draft_review": "warning",
     "in_draft_review_com": "warning-2",
     "in_final_review": "primary",
+    "in_final_review_tl": "primary",
     "in_final_review_com": "success-2",
 }
 
