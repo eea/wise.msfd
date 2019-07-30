@@ -515,12 +515,26 @@ https://svn.eionet.europa.eu/repositories/Reportnet/Dataflows/MarineDirective/MS
         # muids = [x.id for x in self.muids]
         conditions = [
             t.c.CountryCode == self.country_code,
-            t.c.Region == self.country_region_code,
+            # t.c.Region == self.country_region_code,
             # t.c.MarineReportingUnit.in_(muids),     #
             t.c.GESComponent.in_(all_ids),
             or_(t.c.Element.isnot(None),
                 t.c.Criteria.isnot(None)),
         ]
+        if self.country_code != 'DK':
+            conditions.insert(
+                1, t.c.Region == self.country_region_code
+            )
+        else:
+            # Handle the case of Denmark that have submitted a lot of
+            # information under the DK-TOTAL MRU, which doesn't have a region
+            # attached.
+            conditions.insert(1,
+                              or_(t.c.Region == 'NotReported',
+                                  t.c.Region == self.country_region_code
+                                  )
+                              )
+
         orderby = [
             getattr(t.c, x) for x in self._get_order_cols_Art8(self.descriptor)
         ]
