@@ -21,7 +21,7 @@ from wise.msfd import db, sql, sql2018
 from wise.msfd.base import BasePublicPage
 from wise.msfd.compliance.scoring import Score  # , compute_score
 from wise.msfd.compliance.utils import get_assessors
-from wise.msfd.compliance.vocabulary import ASSESSED_ARTICLES, REGIONS
+from wise.msfd.compliance.vocabulary import ASSESSED_ARTICLES  # , REGIONS
 from wise.msfd.gescomponents import (get_descriptor, get_features,
                                      get_marine_units, sorted_criterions)
 from wise.msfd.translation.interfaces import ITranslationContext
@@ -150,9 +150,10 @@ class BaseComplianceView(BrowserView, BasePublicPage):
         params = {
             "username": current_user
         }
+
         if context:
             params['obj'] = context
-        
+
         roles = get_roles(**params)
 
         return roles
@@ -334,6 +335,7 @@ class BaseComplianceView(BrowserView, BasePublicPage):
     @property
     def country_region_name(self):
         # return REGIONS[self.country_region_code]
+
         return self._countryregion_folder.title
 
     @property
@@ -448,7 +450,11 @@ class BaseComplianceView(BrowserView, BasePublicPage):
                 latest = latest and max(latest) or None
                 latest_from_folders.append(latest)
 
-        latest = latest_from_folders and max(latest_from_folders) or None
+        try:
+            latest = latest_from_folders and max(latest_from_folders) or None
+        except:
+            logger.exception("Error in getting latest seen")
+            latest = None
 
         # TODO old code, we no longer check for _can_comment permission
         # because both comment sections can be seen by users
