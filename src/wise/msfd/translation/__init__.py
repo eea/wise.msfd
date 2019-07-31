@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import json
+from langdetect import detect
 import logging
 import os
 
@@ -68,6 +69,15 @@ def retrieve_translation(country_code,
             "Using localhost, won't retrieve translation for: %s", text)
 
         return {}
+
+    # if detected language is english skip translation
+    if get_detected_lang(text) == 'en':
+        logger.info(
+            "English language detected, won't retrive translation for: %s",
+            text
+        )
+
+        return
 
     if not target_languages:
         target_languages = ['EN']
@@ -166,3 +176,14 @@ def save_translation(original, translated, source_lang):
 
     storage_lang[original] = translated
     logger.info('Saving to annotation: %s', translated)
+
+
+def get_detected_lang(text):
+    """ Detect the language of the text, return None for short texts """
+
+    if len(text) < 50:
+        return None
+
+    detect_lang = detect(text)
+
+    return detect_lang

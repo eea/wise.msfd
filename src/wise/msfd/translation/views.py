@@ -1,3 +1,4 @@
+
 import logging
 
 from zope import event
@@ -8,8 +9,8 @@ from Products.Five.browser import BrowserView
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile as VPTF
 from Products.statusmessages.interfaces import IStatusMessage
 
-from . import (delete_translation, get_translated, normalize,  # decode_text,
-               retrieve_translation, save_translation)
+from . import (delete_translation, get_detected_lang, get_translated,
+               normalize, retrieve_translation, save_translation)
 from .interfaces import ITranslationContext
 
 logger = logging.getLogger('wise.msfd.translation')
@@ -83,6 +84,10 @@ class TranslationView(BrowserView):
             return self.cell_tpl(value=value)
 
         if not isinstance(value, basestring):
+            return self.cell_tpl(value=value)
+
+        # if detected language is english render cell template
+        if get_detected_lang(value) == 'en':
             return self.cell_tpl(value=value)
 
         translated = get_translated(value, source_lang)

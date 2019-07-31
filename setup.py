@@ -45,6 +45,7 @@ setup(
         'xlsxwriter',
         'sparql-client',
         # 'pyodbc',
+        'langdetect',  # used in translations
 
         'z3c.formwidget.optgroup',  # used in compliance select lists
     ],
