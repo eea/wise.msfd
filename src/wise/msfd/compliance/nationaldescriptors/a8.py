@@ -86,6 +86,11 @@ ASSESSMENT_TOPIC_MAP = {
     # DK special case
     "LevelPressureContamination": "LevelPressureContaminant",
     "ImpactspressureFunctionalGroup": "ImpactPressureFunctionalGroup",
+
+    # SE special case
+    "ImpactsPressureWater": "ImpactPressureWaterColumn",
+    "ImpactsPressureSeabed": "ImpactPressureSeabedHabitats",
+    "ImpactsPressureFunctionalGroup": "ImpactPressureFunctionalGroup",
 }
 
 
@@ -453,6 +458,9 @@ def get_db_record(report_type, marine_unit_id, topic):
         mc.Topic == topic,
         raw=True
     )
+
+    # if not count:
+    #     import pdb; pdb.set_trace()
 
     assert count == 1, "Matching record not found"
 
