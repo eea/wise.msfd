@@ -16,6 +16,15 @@ class RegDescA82018Row(BaseRegDescRow):
     year = '2018'
 
     def _sortkey(self, value, order):
+        """ Used to sort a list by a specific order of values
+        If the value is not in the order list, it will be added to the end of
+        the list
+
+        :param value: 'Not good'
+        :param order: ['Good', 'Not good', 'Unknown', 'not reported']
+        :return: index on the value from the order list
+        """
+
         key = value in order and order.index(value) + 1 or len(order) + 2
 
         return key

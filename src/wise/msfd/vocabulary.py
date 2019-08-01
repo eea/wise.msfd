@@ -119,6 +119,11 @@ def get_region_subregions_vb_factory(context):
 
 
 @provider(IVocabularyFactory)
+def get_region_subregions_vb_factory_art6(context):
+    return db_vocab(sql.MSFD4RegionalCooperation, 'RegionsSubRegions')
+
+
+@provider(IVocabularyFactory)
 @db.use_db_session('2012')
 def get_member_states_vb_factory(context):
     conditions = []
@@ -137,6 +142,34 @@ def get_member_states_vb_factory(context):
     )
 
     return values_to_vocab(set(x[1] for x in rows))
+
+
+@provider(IVocabularyFactory)
+@db.use_db_session('2012')
+def get_member_states_vb_factory_art6(context):
+    conditions = []
+
+    mci = sql.MSFD4Import
+    mcr = sql.MSFD4RegionalCooperation
+
+    if hasattr(context, 'get_selected_region_subregions'):
+        regions = context.get_selected_region_subregions()
+
+        if regions:
+            conditions.append(mcr.RegionsSubRegions.in_(regions))
+
+    count, rows = db.get_all_records_join(
+        [mci.MSFD4_Import_ReportingCountry],
+        mcr,
+        *conditions
+    )
+    rows = [x[0] for x in rows]
+
+    if conditions and ('ANS' in regions or 'BAL' in regions):
+        rows.append('SE')
+
+    return values_to_vocab(set(rows))
+
 
 @provider(IVocabularyFactory)
 def get_area_type_vb_factory(context):

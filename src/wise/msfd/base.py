@@ -88,7 +88,14 @@ class BaseUtil(object):
 
     def get_obj_fields(self, obj, use_blacklist=True):
         """ Inspect an SA object and return its field names
+
+        Some objects have _field attribute (Article 6 Regional Cooperation),
+        where we do not need to order the fields or use blacklist,
+        because the columns and order are specified manually
         """
+
+        if hasattr(obj, '_fields'):
+            return obj._fields
 
         return get_obj_fields(obj, use_blacklist=use_blacklist)
 

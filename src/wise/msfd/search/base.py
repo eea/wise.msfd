@@ -163,7 +163,7 @@ class ItemDisplay(BrowserView, BaseUtil):
 
 MAIN_FORMS = (
     Tab('msfd-start', 'msfd-start', 'Start', 'About search engine'),
-    Tab('msfd-mru', 'msfd-mru', 'Article 4', 'Marine Unit IDs'),
+    Tab('msfd-mru', 'msfd-mru', 'Article 4', 'Marine Units'),
     Tab('msfd-rc', 'msfd-rc', 'Article 6', 'Regional cooperation'),
     Tab('msfd-ca', 'msfd-ca', 'Article 7', 'Competent Authorities'),
     Tab('msfd-c1', 'msfd-c1',
@@ -235,7 +235,10 @@ class MainForm(BaseEnhancedForm, BasePublicPage, Form):
 
             sh('Content-Type', 'application/vnd.openxmlformats-officedocument.'
                'spreadsheetml.sheet')
-            sh('Content-Disposition', 'attachment; filename=marinedb.xlsx')
+
+            # fname = self.subform.get_record_title(cntx='subform') or 'marinedb'
+            fname = self.find_record_title() or 'marinedb'
+            sh('Content-Disposition', 'attachment; filename=%s.xlsx' % fname)
 
             return data.read()
 
@@ -256,3 +259,17 @@ class MainForm(BaseEnhancedForm, BasePublicPage, Form):
 
         if hasattr(ctx, 'download_results'):
             return ctx.download_results
+
+    def find_record_title(self):
+
+        ctx = self
+
+        while hasattr(ctx, 'subform'):
+
+            if hasattr(ctx, 'record_title'):
+                return ctx.record_title
+
+            ctx = ctx.subform
+
+        if hasattr(ctx, 'record_title'):
+            return ctx.record_title

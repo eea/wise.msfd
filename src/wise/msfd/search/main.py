@@ -8,7 +8,8 @@ from . import interfaces
 from .. import sql
 from .. import db
 from ..base import BasePublicPage, EmbeddedForm, MainFormWrapper
-from ..db import get_all_records, get_item_by_conditions
+from ..db import (get_all_records, get_item_by_conditions,
+                  get_item_by_conditions_art_6)
 from ..interfaces import IMarineUnitIDsSelect
 from ..sql_extra import MSCompetentAuthority
 from ..utils import scan, db_objects_to_dict, group_data
@@ -92,10 +93,22 @@ StartArticle4View = wrap_form(StartA4Form, MainFormWrapper)
 class StartRegionalCoopForm(MainForm):
     name = 'msfd-rc'
 
-    record_title = title = 'Regional cooperation'
-    fields = Fields(interfaces.IMemberStates)
-    fields['member_states'].widgetFactory = CheckBoxFieldWidget
+    record_title = title = 'Article 6 (Regional cooperation)'
+    fields = Fields(interfaces.IRegionSubregionsArt6)
+    fields['region_subregions'].widgetFactory = CheckBoxFieldWidget
     session_name = '2012'
+
+    def get_subform(self):
+        return RegionalCoopForm(self, self.request)
+
+
+StartRegionalCoopView = wrap_form(StartRegionalCoopForm,
+                                  MainFormWrapper)
+
+
+class RegionalCoopForm(EmbeddedForm):
+    fields = Fields(interfaces.IMemberStatesArt6)
+    fields['member_states'].widgetFactory = CheckBoxFieldWidget
 
     def get_subform(self):
         return RegionalCoopItemDisplay(self, self.request)
@@ -121,10 +134,6 @@ class StartRegionalCoopForm(MainForm):
         return data_to_xls(xlsdata)
 
 
-StartRegionalCoopView = wrap_form(StartRegionalCoopForm,
-                                  MainFormWrapper)
-
-
 class RegionalCoopItemDisplay(ItemDisplayForm):
     """ The implementation for the Article 9 (GES determination) form
     """
@@ -141,45 +150,52 @@ class RegionalCoopItemDisplay(ItemDisplayForm):
 
     def get_db_results(self):
         page = self.get_page()
+        mci = sql.MSFD4Import
+        mcr = sql.MSFD4RegionalCooperation
+        conditions = []
 
-        # args = [self.mc, self.order_field]
-        # c_codes = self.context.data.get('member_states')
-        #
-        # import_ids = db.get_unique_from_mapper(
-        #     sql.MSFD4Import,
-        #     'MSFD4_Import_ID',
-        #     sql.MSFD4Import.MSFD4_Import_ReportingCountry.in_(c_codes)
-        # )
-        #
-        # if import_ids:
-        #     args.append(self.mc.MSFD4_RegionalCooperation_Import
-        #                 .in_(import_ids))
-        #
-        # res = get_item_by_conditions(*args, page=page)
-
-        args = [sql.MSFD4Import, 'MSFD4_Import_ID']
-        c_codes = self.context.data.get('member_states')
+        c_codes = self.get_form_data_by_key(self.context, 'member_states')
+        r_codes = self.get_form_data_by_key(self.context, 'region_subregions')
 
         if c_codes:
-            args.append(sql.MSFD4Import.MSFD4_Import_ReportingCountry
-                        .in_(c_codes))
+            conditions.append(mci.MSFD4_Import_ReportingCountry.in_(c_codes))
 
-        res = get_item_by_conditions(*args, page=page)
+        res = get_item_by_conditions_art_6(
+            [mci.MSFD4_Import_ReportingCountry,
+             mcr.RegionsSubRegions,mcr.Topic,
+             mcr.NatureCoordination, mcr.RegionalCoherence,
+             mcr.RegionalCoordinationProblems],
+            mcr,
+            mci.MSFD4_Import_ID,
+            *conditions,
+            page=page,
+            r_codes=r_codes
+        )
 
         return res
 
     def get_extra_data(self):
+        return
         m = sql.MSFD4RegionalCooperation
         blacklist = ('MSFD4_RegionalCooperation_Import',
                      'MSFD4_RegionalCooperation_ID')
 
+        r_codes = self.get_form_data_by_key(self.context, 'region_subregions')
+
         coops = db.get_all_columns_from_mapper(
             m,
             'MSFD4_RegionalCooperation_ID',
-            m.MSFD4_RegionalCooperation_Import == self.item.MSFD4_Import_ID
+            m.MSFD4_RegionalCooperation_Import == self.item.MSFD4_Import_ID,
+            # m.RegionsSubRegions.in_(r_codes)
         )
 
-        rows = db_objects_to_dict(coops, excluded_columns=blacklist)
+        # filter results by regions
+        filtered_coops = []
+        for row in coops:
+            if any(region in row.RegionsSubRegions for region in r_codes):
+                filtered_coops.append(row)
+
+        rows = db_objects_to_dict(filtered_coops, excluded_columns=blacklist)
 
         regcoop = group_data(rows, 'RegionsSubRegions')
         pivot_html = self.extra_data_pivot(extra_data=[

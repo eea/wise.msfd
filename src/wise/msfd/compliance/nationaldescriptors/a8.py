@@ -47,6 +47,7 @@ MAPPER_CLASSES = {
     'PollutantEvents': sql.MSFD8bPollutantEvent,
 
     # TODO why does DK have different node name in report xml
+    # ../dk/bal/d8/art8/@@view-report-data-2012
     # http://cdr.eionet.europa.eu/dk/eu/msfd8910/baldk/envux926a/BALDK_MSFD8bPressures_20130430.xml
     # PollutionEvents instead of PollutantEvents
     'PollutionEvents': sql.MSFD8bPollutantEvent,
@@ -87,7 +88,8 @@ ASSESSMENT_TOPIC_MAP = {
     "LevelPressureContamination": "LevelPressureContaminant",
     "ImpactspressureFunctionalGroup": "ImpactPressureFunctionalGroup",
 
-    # SE special case
+    # SE special case, ../se/ans/d10/art8/@@view-report-data-2012
+    # http://cdr.eionet.europa.eu/se/eu/msfd8910/ansse/envuwxfng/ANSSE_MSFD8bPressures_20130430.xml
     "ImpactsPressureWater": "ImpactPressureWaterColumn",
     "ImpactsPressureSeabed": "ImpactPressureSeabedHabitats",
     "ImpactsPressureFunctionalGroup": "ImpactPressureFunctionalGroup",

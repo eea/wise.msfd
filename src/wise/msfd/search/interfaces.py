@@ -51,6 +51,14 @@ class IMemberStates(Interface):
     )
 
 
+class IMemberStatesArt6(Interface):
+    member_states = List(
+        title=u"Countries",
+        value_type=Choice(vocabulary="wise_search_member_states_art6"),
+        required=False,
+    )
+
+
 class IAreaTypes(Interface):
     area_types = List(
         title=u"Area Type",
@@ -213,4 +221,12 @@ class IMonitoringSubprogramme(Interface):
         title=u"Marine Unit IDs",
         value_type=Choice(vocabulary="wise_search_art11_marine_unit_id_ms"),
         required=False
+    )
+
+
+class IRegionSubregionsArt6(Interface):
+    region_subregions = List(
+        title=u"Region and Subregions",
+        value_type=Choice(vocabulary="wise_search_region_subregions_art6"),
+        required=False,
     )

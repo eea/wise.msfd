@@ -315,6 +315,34 @@ def get_item_by_conditions_joined(
     return [total, item]
 
 
+def get_item_by_conditions_art_6(
+        columns,
+        klass_join,
+        order_field,
+        *conditions,
+        **kwargs):
+    # Paged retrieval of items based on conditions with joining two tables
+    page = kwargs.get('page', 0)
+    r_codes = kwargs.get('r_codes', [])
+    sess = session()
+    q = sess.query(*columns).join(klass_join).filter(
+        *conditions
+    ).order_by(order_field)
+    q = [x for x in q]
+
+    filtered_coops = []
+
+    for row in q:
+        if any(region in row.RegionsSubRegions for region in r_codes):
+            filtered_coops.append(row)
+
+    # item = q.offset(page).limit(1).first()
+    item = filtered_coops[page]
+    total = len(filtered_coops)
+
+    return [total, item]
+
+
 # @cache(db_result_key)
 def get_table_records(columns, *conditions, **kwargs):
     order_by = kwargs.get('order_by')

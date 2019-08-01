@@ -17,7 +17,7 @@
 
         <div class="start-page-content left-side-form">
 
-          <h1>Descriptor assessments - national overview: <span tal:content="context/title"></span></h1>
+          <h1>Member state reports - national overview: <span tal:content="context/title"></span></h1>
 
           <div class="nda-link">
             <a href="./../">

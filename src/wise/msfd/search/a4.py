@@ -6,6 +6,7 @@ from ..sql_extra import (MSFD4GeographicalAreaID,
                          MSFD4GeograpicalAreaDescription)
 from ..utils import db_objects_to_dict, group_data
 from .base import ItemDisplayForm
+from .utils import data_to_xls
 
 
 class A4Form(MarineUnitIDSelectForm):
@@ -13,7 +14,7 @@ class A4Form(MarineUnitIDSelectForm):
     """
 
     # Geographic areas & regional cooperation
-    record_title = title = 'Article 4 (Marine Unit IDs and Area description)'
+    record_title = title = 'Article 4 (Marine Units and Area description)'
     mapper_class = MSFD4GeographicalAreaID
     session_name = '2012'
 
@@ -36,6 +37,29 @@ class A4Form(MarineUnitIDSelectForm):
             parent = parent.context
 
         return db.get_marine_unit_ids(**data)
+
+    def download_results(self):
+        mc = MSFD4GeographicalAreaID
+        _, muids = self.get_marine_unit_ids()
+
+        count, data = db.get_all_records(
+            mc,
+            mc.MarineUnitID.in_(muids)
+        )
+        import_ids = [x.MSFD4_GegraphicalAreasID_Import for x in data]
+
+        md = MSFD4GeograpicalAreaDescription
+        count, data_descr = db.get_all_records(
+            md,
+            md.MSFD4_GeograpicalAreasDescription_Import.in_(import_ids)
+        )
+
+        xlsdata = [
+            ('MSFD4GeographicalAreaID', data),
+            ('MSFD4GeograpicalAreaDescription', data_descr)
+        ]
+
+        return data_to_xls(xlsdata)
 
 
 class A4ItemDisplay(ItemDisplayForm):
@@ -68,12 +92,12 @@ class A4ItemDisplay(ItemDisplayForm):
         )
         desc_html = self.data_template(item=desc, blacklist=blacklist)
 
-        total, imported = db.get_item_by_conditions(
-            sql.MSFD4Import,
-            'MSFD4_Import_ID',
-            sql.MSFD4Import.MSFD4_Import_ID == import_id
-        )
-        assert total == 1
+        # total, imported = db.get_item_by_conditions(
+        #     sql.MSFD4Import,
+        #     'MSFD4_Import_ID',
+        #     sql.MSFD4Import.MSFD4_Import_ID == import_id
+        # )
+        # assert total == 1
 
         # m = sql.MSFD4RegionalCooperation
         # coops = db.get_all_columns_from_mapper(
