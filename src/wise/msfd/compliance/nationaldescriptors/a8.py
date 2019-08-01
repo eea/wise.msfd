@@ -45,6 +45,11 @@ MAPPER_CLASSES = {
     'PhysicalDamage': sql.MSFD8bPhysicalDamage,
     'PhysicalLoss': sql.MSFD8bPhysicalLos,
     'PollutantEvents': sql.MSFD8bPollutantEvent,
+
+    # TODO why does DK have different node name in report xml
+    # http://cdr.eionet.europa.eu/dk/eu/msfd8910/baldk/envux926a/BALDK_MSFD8bPressures_20130430.xml
+    # PollutionEvents instead of PollutantEvents
+    'PollutionEvents': sql.MSFD8bPollutantEvent,
 }
 
 ASSESSMENT_MAPPER_CLASSES = {
@@ -68,12 +73,19 @@ ASSESSMENT_MAPPER_CLASSES = {
     'PhysicalDamage': sql.MSFD8bPhysicalDamageAssesment,
     'PhysicalLoss': sql.MSFD8bPhysicalLossAssesment,
     'PollutantEvents': sql.MSFD8bPollutantEventsAssesment,
+
+    # DK special case see MAPPER_CLASSES
+    'PollutionEvents': sql.MSFD8bPollutantEventsAssesment,
 }
 
 # map from XML Analysis/<X> node name to DB column topic string
 ASSESSMENT_TOPIC_MAP = {
     "ImpactspressureWater": "ImpactPressureWaterColumn",
     "ImpactspressureSeabed": "ImpactPressureSeabedHabitats",
+
+    # DK special case
+    "LevelPressureContamination": "LevelPressureContaminant",
+    "ImpactspressureFunctionalGroup": "ImpactPressureFunctionalGroup",
 }
 
 

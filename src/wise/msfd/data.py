@@ -216,6 +216,8 @@ LIMIT 1""" % filename
 
         raise
 
+    logger.info("Got file with url: %s", urls[0])
+
     return urls[0]
 
 
