@@ -29,7 +29,7 @@ def ges_component(field, value, lang):
     return criterion
 
 
-def ges_component_list(field, value):
+def ges_component_list(field, value, lang):
     values = value.split(',')
     rows = [ges_component(None, v) for v in values]
 
@@ -54,6 +54,7 @@ def format_nr(field, value, lang):
         return "%.2f" % value
 
     return value
+
 
 def get_indicators(field, value, lang):
     title = GES_LABELS.get('indicators', value)
