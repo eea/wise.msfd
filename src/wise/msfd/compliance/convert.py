@@ -31,7 +31,7 @@ def ges_component(field, value, lang):
 
 def ges_component_list(field, value, lang):
     values = value.split(',')
-    rows = [ges_component(None, v) for v in values]
+    rows = [ges_component(None, v, lang) for v in values]
 
     return ItemList(rows=rows)
 
