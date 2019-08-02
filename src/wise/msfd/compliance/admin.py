@@ -23,9 +23,9 @@ from wise.msfd.compliance.vocabulary import (REGIONAL_DESCRIPTORS_REGIONS,
                                              REGIONS)
 from wise.msfd.gescomponents import (get_all_descriptors, get_descriptor,
                                      get_indicator_labels, get_marine_units)
-
 from wise.msfd.translation import Translation, get_detected_lang
 from wise.msfd.translation.interfaces import ITranslationsStorage
+
 from . import interfaces
 from .base import BaseComplianceView, get_questions, report_data_cache_key
 
@@ -638,6 +638,7 @@ class SetupAssessmentWorkflowStates(BaseComplianceView):
 
         return "Done"
 
+
 class TranslateIndicators(BrowserView):
 
     def __call__(self):
@@ -664,12 +665,13 @@ class TranslateIndicators(BrowserView):
                 langstore[label] = u''
                 logger.info('Added %r to translation store for lang %s',
                             label, lang)
-                count = 1
+                count = +1
 
         return "Added %s labels" % count
 
+
 class MigrateTranslationStorage(BrowserView):
- 
+
     def __call__(self):
         site = portal.get()
         storage = ITranslationsStorage(site)
@@ -677,7 +679,10 @@ class MigrateTranslationStorage(BrowserView):
 
         for langstore in storage.values():
             for original, translated in langstore.items():
-                count = 1
+                count = +1
+
+                if hasattr(translated, 'text'):
+                    translated = translated.text
                 translated = Translation(translated, 'original')
 
                 if not translated.text.startswith('?'):
