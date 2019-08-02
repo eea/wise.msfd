@@ -81,6 +81,9 @@ Assessment = namedtuple('Assessment',
                             'answers',
                             'assessment_summary',
                             'recommendations',
+                            'phase1_score',
+                            'phase1_conclusion',
+                            'phase1_conclusion_color',
                             'overall_score',
                             'overall_conclusion',
                             'overall_conclusion_color'
@@ -309,6 +312,8 @@ def format_assessment_data(article, elements, questions, muids, data,
 
     answers = []
     overall_score = 0
+    phase1_score = 0
+    max_phase1_score = 0
 
     for question in questions:
         values = []
@@ -367,6 +372,10 @@ def format_assessment_data(article, elements, questions, muids, data,
         conclusion_color = CONCLUSION_COLOR_TABLE[score_value]
         overall_score += getattr(score, 'weighted_score', 0)
 
+        if question.klass != 'coherence':
+            phase1_score += getattr(score, 'weighted_score', 0)
+            max_phase1_score += getattr(score, 'weight', 0)
+
         qr = AssessmentRow(question.definition, summary, conclusion,
                            conclusion_color, score, values)
         answers.append(qr)
@@ -375,20 +384,30 @@ def format_assessment_data(article, elements, questions, muids, data,
     assess_sum = data.get('%s_assessment_summary' % article)
     recommend = data.get('%s_recommendations' % article)
 
-    # overall_score = overall_score * 100 / len(questions)
+    # max_phase1_score ............. 100%
+    # phase1_score ................. x%
+    phase1_score = max_phase1_score and \
+        (phase1_score * 100) / max_phase1_score or 0
+
     try:
+        phase1_conclusion = get_overall_conclusion(phase1_score)
         overall_conclusion = get_overall_conclusion(overall_score)
     except:
         logger.exception("Error in getting overall conclusion")
         overall_conclusion = (1, 'error')
+        phase1_conclusion = (1, 'error')
 
     overall_conclusion_color = CONCLUSION_COLOR_TABLE[overall_conclusion[0]]
+    phase1_conclusion_color = CONCLUSION_COLOR_TABLE[phase1_conclusion[0]]
 
     assessment = Assessment(
         elements,
         answers,
         assess_sum or '-',
         recommend or '-',
+        phase1_score,
+        phase1_conclusion,
+        phase1_conclusion_color,
         overall_score,
         overall_conclusion,
         overall_conclusion_color
@@ -599,7 +618,7 @@ class NationalDescriptorArticleView(BaseView):
 
         score_2012 = int(round(score_2012))
         conclusion_2012_color = CONCLUSION_COLOR_TABLE.get(score_2012, 0)
-        change = int(assessment.overall_conclusion[0] - score_2012)
+        change = int(assessment.phase1_conclusion[0] - score_2012)
 
         self.assessment_data_2018_html = self.assessment_data_2018_tpl(
             assessment=assessment,
