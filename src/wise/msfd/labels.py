@@ -1,9 +1,10 @@
 import csv
 import logging
 
-from . import db, sql
 from lxml.etree import parse
 from pkg_resources import resource_filename
+
+from . import db, sql
 
 COMMON_LABELS = {}                        # vocabulary of labels
 
@@ -70,6 +71,7 @@ def _extract_from_xsd(fpath):
 
     return labels
 
+
 @db.use_db_session('2012')
 def get_human_labels():
 
@@ -80,6 +82,7 @@ def get_human_labels():
         human_labels[row.Description] = row.value
 
     return human_labels
+
 
 def get_common_labels():
     labels = {}

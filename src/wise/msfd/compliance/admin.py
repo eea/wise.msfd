@@ -3,11 +3,12 @@ from collections import namedtuple
 from datetime import datetime
 from io import BytesIO
 
-import xlsxwriter
 from zope.interface import alsoProvides
 
+import xlsxwriter
 from eea.cache import cache
 from plone import api
+from plone.api import portal
 from plone.api.content import get_state, transition
 from plone.api.portal import get_tool
 from plone.dexterity.utils import createContentInContainer as create
@@ -18,11 +19,13 @@ from Products.CMFPlacefulWorkflow.WorkflowPolicyConfig import \
 from Products.Five.browser import BrowserView
 from Products.statusmessages.interfaces import IStatusMessage
 from wise.msfd import db, sql2018
-from wise.msfd.compliance.vocabulary import (REGIONS,
-                                             REGIONAL_DESCRIPTORS_REGIONS)
+from wise.msfd.compliance.vocabulary import (REGIONAL_DESCRIPTORS_REGIONS,
+                                             REGIONS)
 from wise.msfd.gescomponents import (get_all_descriptors, get_descriptor,
-                                     get_marine_units)
+                                     get_indicator_labels, get_marine_units)
 
+from wise.msfd.translation import Translation, get_detected_lang
+from wise.msfd.translation.interfaces import ITranslationsStorage
 from . import interfaces
 from .base import BaseComplianceView, get_questions, report_data_cache_key
 
@@ -634,3 +637,52 @@ class SetupAssessmentWorkflowStates(BaseComplianceView):
         )
 
         return "Done"
+
+class TranslateIndicators(BrowserView):
+
+    def __call__(self):
+        labels = get_indicator_labels().values()
+        site = portal.get()
+        storage = ITranslationsStorage(site)
+
+        count = 0
+
+        for label in labels:
+            lang = get_detected_lang(label)
+
+            if (not lang) or (lang == 'en'):
+                continue
+
+            lang = lang.upper()
+
+            langstore = storage.get(lang, None)
+
+            if langstore is None:
+                continue
+
+            if label not in langstore:
+                langstore[label] = u''
+                logger.info('Added %r to translation store for lang %s',
+                            label, lang)
+                count = 1
+
+        return "Added %s labels" % count
+
+class MigrateTranslationStorage(BrowserView):
+ 
+    def __call__(self):
+        site = portal.get()
+        storage = ITranslationsStorage(site)
+        count = 0
+
+        for langstore in storage.values():
+            for original, translated in langstore.items():
+                count = 1
+                translated = Translation(translated, 'original')
+
+                if not translated.text.startswith('?'):
+                    translated.approved = True
+
+                langstore[original] = translated
+
+        return "Migrated {} strings".format(count)

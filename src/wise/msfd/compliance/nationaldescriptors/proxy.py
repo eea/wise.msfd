@@ -52,11 +52,11 @@ class Proxy2018(object):
         if converter:
             assert '.' not in converter
             converter = getattr(convert, converter)
-            value = converter(field, value)
+            value = converter(field, value, self.report_class.country_code)
+            
         elif label_collection:
             title = GES_LABELS.get(label_collection, value)
             value = ItemLabel(value, title)
-
         setattr(self, fieldname, value)
 
     def __init__(self, obj, report_class, extra=None):

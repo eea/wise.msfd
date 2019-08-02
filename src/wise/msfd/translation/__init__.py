@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 
 import json
-from langdetect import detect
 import logging
 import os
+from datetime import datetime
 
 import chardet
 import requests
@@ -11,13 +11,11 @@ from requests.auth import HTTPDigestAuth
 
 import transaction
 from BTrees.OOBTree import OOBTree
+from langdetect import detect
+from persistent import Persistent
 from plone.api import portal
-from plone.api.portal import get
 
 from .interfaces import ITranslationsStorage
-
-# from zope.annotation.interfaces import IAnnotations
-
 
 env = os.environ.get
 
@@ -37,6 +35,20 @@ def decode_text(text):
     # text_encoded = unicodedata.normalize('NFKD', text_encoded)
 
     return text_encoded
+
+
+class Translation(Persistent):
+    def __init__(self, text, source=None):
+        self.text = text
+        self.source = source
+        self.approved = False
+        self.modified = datetime.now()
+
+    def __str__(self):
+        return self.text
+
+    def __repr__(self):
+        return self.text
 
 
 def retrieve_translation(country_code,
@@ -62,7 +74,7 @@ def retrieve_translation(country_code,
 
             return res
 
-    site_url = portal.getSite().absolute_url()
+    site_url = portal.get().absolute_url()
 
     if 'localhost' in site_url:
         logger.warning(
@@ -71,6 +83,7 @@ def retrieve_translation(country_code,
         return {}
 
     # if detected language is english skip translation
+    
     if get_detected_lang(text) == 'en':
         logger.info(
             "English language detected, won't retrive translation for: %s",
@@ -122,14 +135,14 @@ def retrieve_translation(country_code,
 
 def get_translated(value, language, site=None):
     if site is None:
-        site = get()
+        site = portal.get()
 
     storage = ITranslationsStorage(site)
 
     translated = storage.get(language, {}).get(value, None)
 
     if translated:
-        return translated.lstrip('?')
+        return translated.text.lstrip('?')
 
 
 def normalize(text):
@@ -148,7 +161,7 @@ def normalize(text):
 
 
 def delete_translation(text, source_lang):
-    site = portal.getSite()
+    site = portal.get()
 
     storage = ITranslationsStorage(site)
 
@@ -162,10 +175,9 @@ def delete_translation(text, source_lang):
             storage[source_lang]._p_changed = True
             transaction.commit()
 
-
-def save_translation(original, translated, source_lang):
-    site = portal.getSite()
-
+def save_translation(original, translated, source_lang, approved=False):
+    site = portal.get()
+    
     storage = ITranslationsStorage(site)
 
     storage_lang = storage.get(source_lang, None)
@@ -173,7 +185,11 @@ def save_translation(original, translated, source_lang):
     if storage_lang is None:
         storage_lang = OOBTree()
         storage[source_lang] = storage_lang
+    
+    translated = Translation(translated)
 
+    if approved:
+        translated.approved = True
     storage_lang[original] = translated
     logger.info('Saving to annotation: %s', translated)
 

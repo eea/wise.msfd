@@ -7,6 +7,7 @@
 
   <include package='.nationaldescriptors' />
   <include package='.regionaldescriptors'/>
+  <include file='admin.zcml' />
 
   <adapter
     factory=".base.TranslationContext"
@@ -52,50 +53,6 @@
     class=".views.ComplianceJSONMap"
     permission="zope2.View"
     />
-
-  <browser:page
-    for="*"
-    name="pdb"
-    class=".admin.ToPDB"
-    permission="cmf.ManagePortal"
-    />
-
-  <browser:page
-    for="*"
-    name="bootstrap-compliance"
-    class=".admin.BootstrapCompliance"
-    permission="cmf.ManagePortal"
-    />
-
-  <browser:page
-    for="*"
-    name="cleanup-compliance"
-    class=".admin.CleanupCache"
-    permission="cmf.ManagePortal"
-    />
-
-  <browser:page
-    for="*"
-    name="compliance-admin"
-    class=".admin.ComplianceAdmin"
-    template="./pt/admin.pt"
-    permission="zope2.View"
-  />
-
-  <browser:page
-    for="*"
-    name="admin-scoring"
-    class=".admin.AdminScoring"
-    template="./pt/admin-scoring.pt"
-    permission="zope2.View"
-  />
-
-  <browser:page
-    for="*"
-    name="setup-workflow-states"
-    class=".admin.SetupAssessmentWorkflowStates"
-    permission="cmf.ManagePortal"
-  />
 
   <browser:page
     for=".interfaces.IComplianceModuleFolder"

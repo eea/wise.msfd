@@ -90,7 +90,7 @@
     <element section="criteria" name="Trend">Trend</element>
     <element section="criteria" name="ParameterAchieved">Parameter achieved</element>
     <element section="criteria" name="DescriptionParameter" translate="true">Description parameter</element>
-    <element section="criteria" name="IndicatorCode" label="indicators">Related indicator</element>
+    <element section="criteria" name="IndicatorCode" convert="get_indicators">Related indicator</element>
 
     <element section="criteriastatus" name="CriteriaStatus">Criteria status</element>
     <element section="criteriastatus" name="DescriptionCriteria" translate="true">Description criteria</element>

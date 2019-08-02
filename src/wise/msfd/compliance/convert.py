@@ -3,10 +3,11 @@ some other useful formats. Used when displaying data.
 """
 
 from wise.msfd.gescomponents import GES_LABELS, get_ges_component
+from wise.msfd.translation import get_translated
 from wise.msfd.utils import ItemLabel, ItemList
 
 
-def csv_ges_labels_list(field, value):
+def csv_ges_labels_list(field, value, lang):
     vals = set(value.split(','))
 
     res = []
@@ -19,7 +20,7 @@ def csv_ges_labels_list(field, value):
     return ItemList(rows=res)
 
 
-def ges_component(field, value):
+def ges_component(field, value, lang):
     criterion = get_ges_component(value)
 
     if criterion is None:
@@ -35,7 +36,7 @@ def ges_component_list(field, value):
     return ItemList(rows=rows)
 
 
-def csv_ges_labels_inverse_list(field, value):
+def csv_ges_labels_inverse_list(field, value, lang):
     vals = set(value.split(','))
 
     res = []
@@ -48,8 +49,19 @@ def csv_ges_labels_inverse_list(field, value):
     return ItemList(rows=res)
 
 
-def format_nr(field, value):
+def format_nr(field, value, lang):
     if value:
         return "%.2f" % value
 
     return value
+
+def get_indicators(field, value, lang):
+    title = GES_LABELS.get('indicators', value)
+    tr = get_translated(title, lang)
+
+    if tr:
+        value = u"{} ({})".format(value, title)
+
+        return ItemLabel(value, tr)
+    else:
+        return ItemLabel(value, title)
