@@ -79,7 +79,18 @@ def db_vocab(table, column, sort_helper=None):
 
     res = [x.strip() for x in res]
 
-    terms = [SimpleTerm(x, x, COMMON_LABELS.get(x, x)) for x in res]
+    terms = []
+    for x in res:
+        try:
+            simple_term = SimpleTerm(x, x, COMMON_LABELS.get(x, x))
+        except:
+            continue
+            x = x.encode('utf-8')
+            simple_term = SimpleTerm(x, x, COMMON_LABELS.get(x, x))
+
+        terms.append(simple_term)
+
+    # terms = [SimpleTerm(x, x, COMMON_LABELS.get(x, x)) for x in res]
     terms.sort(key=sort_helper)
     vocab = SimpleVocabulary(terms)
 
