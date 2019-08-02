@@ -1,0 +1,92 @@
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en"
+  xmlns:tal="http://xml.zope.org/namespaces/tal"
+  xmlns:metal="http://xml.zope.org/namespaces/metal"
+  xmlns:i18n="http://xml.zope.org/namespaces/i18n"
+  lang="en"
+  metal:use-macro="context/main_template/macros/master"
+  i18n:domain="eea">
+
+  <body metal:fill-slot="content">
+
+    <div id="layout-contents" tal:define="text context/text | nothing" >
+      <div id="wise-search-form" class="full-width-marker">
+        <div id="wise-search-form-top">
+          <metal:tabs metal:use-macro="context/wise-macros/macros/tabs"></metal:tabs>
+        </div>
+
+        <div class="start-page-content left-side-form">
+
+          <h3>Assigned Topic Leads overview</h3>
+
+          <table class="table as-table-overview table-striped">
+            <thead>
+              <tr>
+                <th>Descriptor</th>
+                <th>Assigned users</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr tal:repeat="desc python: view.get_descriptors">
+                <th>
+                  <span tal:content="python: desc[1]">D0</span>
+                </th>
+
+                <td>
+                  <div tal:repeat="user python: view.get_groups_for_desc(desc[0])">
+                    <a href="" tal:attributes="href string:mailto:${user/email}">
+                      <strong tal:content="user/fullname">Fullname</strong>
+                      (<span tal:content="user/username">Username</span>)
+                    </a>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+
+          <h3>Compliance Reviewers (EC)</h3>
+          <table class="table as-table-overview table-striped">
+            <thead>
+              <tr>
+                <th>Assigned users</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>
+                  <div tal:repeat="user python: view.get_reviewers">
+                    <a href="" tal:attributes="href string:mailto:${user/email}">
+                      <strong tal:content="user/fullname">Fullname</strong>
+                      (<span tal:content="user/username">Username</span>)
+                    </a>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+
+          <h3>Compliance Editors (Milieu)</h3>
+          <table class="table as-table-overview table-striped">
+            <thead>
+              <tr>
+                <th>Assigned users</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>
+                  <div tal:repeat="user python: view.get_editors">
+                    <a href="" tal:attributes="href string:mailto:${user/email}">
+                      <strong tal:content="user/fullname">Fullname</strong>
+                      (<span tal:content="user/username">Username</span>)
+                    </a>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+  </body>
+</html>

@@ -36,6 +36,14 @@
 
   <browser:page
     for="*"
+    name="compliance-users"
+    class=".admin.ComplianceAdmin"
+    template="./pt/admin-users.pt"
+    permission="zope2.View"
+  />
+
+  <browser:page
+    for="*"
     name="admin-scoring"
     class=".admin.AdminScoring"
     template="./pt/admin-scoring.pt"
