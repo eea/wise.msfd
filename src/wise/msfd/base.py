@@ -13,10 +13,13 @@ from wise.msfd.compliance.interfaces import IEditAssessmentForm
 from z3c.form.field import Fields
 from z3c.form.form import Form
 
-from .db import get_available_marine_unit_ids, threadlocals
+from .db import (get_all_specific_columns, get_available_marine_unit_ids,
+                 threadlocals)
 from .interfaces import IEmbeddedForm, IMainForm, IMarineUnitIDSelect
+from .labels import DISPLAY_LABELS
 from .utils import all_values_from_field, get_obj_fields, print_value
 from .widget import MarineUnitIDSelectFieldWidget
+from . import sql
 
 
 class BaseUtil(object):
@@ -37,6 +40,9 @@ class BaseUtil(object):
 
         This is used to transform the database column names to usable labels
         """
+        if text in DISPLAY_LABELS:
+            return DISPLAY_LABELS[text]
+
         text = text.replace('_', ' ')
 
         for l in range(len(text) - 1):
@@ -85,6 +91,27 @@ class BaseUtil(object):
                 parent = parent.context
 
         return mid
+
+    def get_current_country(self):
+        """ Get the country for the current selected MarineUnitID
+
+        :return: Germany
+        """
+
+        mc = sql.t_MSFD4_GegraphicalAreasID
+        try:
+            mru = self.get_marine_unit_id()
+        except:
+            return ''
+
+        count, data = get_all_specific_columns(
+            [mc.c.MemberState],
+            mc.c.MarineUnitID == mru
+        )
+        country_code = data[0]
+        print_value = self.print_value(country_code.MemberState)
+
+        return print_value
 
     def get_obj_fields(self, obj, use_blacklist=True):
         """ Inspect an SA object and return its field names

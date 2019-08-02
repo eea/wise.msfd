@@ -8,6 +8,11 @@ from . import db, sql
 
 COMMON_LABELS = {}                        # vocabulary of labels
 
+# Labels used to override the default db column name into a
+# user friendly text
+DISPLAY_LABELS = {
+    'MSFD4_Import_ReportingCountry': "Country"
+}
 
 logger = logging.getLogger('wise.msfd')
 

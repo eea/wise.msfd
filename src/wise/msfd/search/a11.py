@@ -169,6 +169,10 @@ class A11MonProgDisplay(ItemDisplayForm):
     order_field = 'ID'
     css_class = 'left-side-form'
 
+    blacklist = ['Q5d_AdequacyForAssessmentGES',
+                 'Q6b_AdequacyForAssessmentTargets']
+    use_blacklist = True
+
     def download_results(self):
         mp_type_ids = self.context.context.context.context.get_mp_type_ids()
         mon_prog_ids = self.context.context.context\
@@ -242,6 +246,8 @@ class A11MonProgDisplay(ItemDisplayForm):
         if not self.item:
             return {}
 
+        res = []
+
         monitoring_programme_id = self.item.ID
 
         excluded_columns = ('MonitoringProgramme', 'ID')
@@ -273,9 +279,25 @@ class A11MonProgDisplay(ItemDisplayForm):
                                            excluded_columns)
         element_names = group_data(element_names, 'ElementName')
 
-        res = [
-            ('Element Names', element_names),
-        ]
+        q5d_adequacy_id = self.item.Q5d_AdequacyForAssessmentGES
+        count, q5d_adequacy = db.get_all_records(
+            sql.MSFD11Q5dAdequacyForAssessmentGE,
+            sql.MSFD11Q5dAdequacyForAssessmentGE.ID == q5d_adequacy_id
+        )
+        q5d_adequacy = db_objects_to_dict(q5d_adequacy, excluded_columns)
+        if q5d_adequacy:
+            res.append(('Q5dAdequacyForAssessmentGES', {'': q5d_adequacy})),
+
+        q6b_adequacy_id = self.item.Q6b_AdequacyForAssessmentTargets
+        count, q6b_adequacy = db.get_all_records(
+            sql.MSFD11Q6bAdequacyForAssessmentTarget,
+            sql.MSFD11Q6bAdequacyForAssessmentTarget.ID == q6b_adequacy_id
+        )
+        q6b_adequacy = db_objects_to_dict(q6b_adequacy, excluded_columns)
+        if q6b_adequacy:
+            res.append(('Q6bAdequacyForAssessmentTargets', {'': q6b_adequacy})),
+
+        res.append(('Other information', element_names))
 
         if marine_units:
             res.append(

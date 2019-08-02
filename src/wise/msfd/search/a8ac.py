@@ -188,6 +188,9 @@ class A81aFunctItemDisplay(MultiItemDisplayForm):
 class A81aFunctionalGroupPressures(ItemDisplay):
     title = 'Pressures and impacts'
 
+    blacklist = ['MSFD8a_Functional']
+    use_blacklist = True
+
     def get_db_results(self):
         if self.context.item:
             return db.get_related_record(
@@ -288,6 +291,9 @@ class A81aHabitatItemDisplay(MultiItemDisplayForm):
 class A81aHabitatPressures(ItemDisplay):
     title = 'Pressures and impacts'
 
+    blacklist = ['MSFD8a_Habitat']
+    use_blacklist = True
+
     def get_db_results(self):
         if self.context.item:
             return db.get_related_record(
@@ -387,6 +393,9 @@ class A81aSpeciesItemDisplay(MultiItemDisplayForm):
 @register_form_section(A81aSpeciesItemDisplay)
 class A81aSpeciesPressures(ItemDisplay):
     title = 'Pressures and impacts'
+
+    blacklist = ['MSFD8a_Species']
+    use_blacklist = True
 
     def get_db_results(self):
         if self.context.item:

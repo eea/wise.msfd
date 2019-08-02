@@ -1698,6 +1698,9 @@ class A81bAcidificationSubForm(MarineUnitIDSelectForm):
 class A81bAcidificationActivities(ItemDisplay):
     title = 'Activities producing acidification'
 
+    blacklist = ['MSFD8b_Acidification_ActivityDescription']
+    use_blacklist = True
+
     def get_db_results(self):
         if self.context.item:
             return db.get_related_record_join(
