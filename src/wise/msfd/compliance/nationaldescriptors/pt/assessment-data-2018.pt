@@ -83,12 +83,18 @@
           </td>
 
           <td class="overall-headers fixed-right">
+            <div>Phase1 score (%)</div>
+            <div>Phase1 conclusion</div>
             <div>Overall score (%)</div>
             <div>Overall conclusion: 2018</div>
             <div>Overall conclusion: 2012</div>
             <div>Change since 2012</div>
           </td>
           <td class="overall-values fixed-right">
+            <div tal:attributes="class python: 'as-value as-value-{}'.format(assessment.phase1_conclusion_color)"
+              tal:content="assessment/phase1_score">65.5</div>
+            <div tal:attributes="class python: 'as-value as-value-{}'.format(assessment.phase1_conclusion_color)"
+              tal:content="python:assessment.phase1_conclusion[1]">Very poor (1)</div>
             <div tal:attributes="class python: 'as-value as-value-{}'.format(assessment.overall_conclusion_color)"
               tal:content="assessment/overall_score">65.5</div>
             <div tal:attributes="class python: 'as-value as-value-{}'.format(assessment.overall_conclusion_color)"
