@@ -4,6 +4,11 @@ from zope.schema import Text, TextLine
 from plone.supermodel.model import Schema
 
 
+class IComplianceModuleMarker(Interface):
+    """ A marker interface for request that happens inside compliance folder
+    """
+
+
 class IComplianceModuleFolder(Interface):
     """ A container that implements the compliance module functionality
 

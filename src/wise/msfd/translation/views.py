@@ -1,10 +1,10 @@
-
 import logging
 
 from zope import event
 from zope.security import checkPermission
 
 from eea.cache.event import InvalidateMemCacheEvent
+from langdetect.detector import LangDetectException
 from Products.Five.browser import BrowserView
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile as VPTF
 from Products.statusmessages.interfaces import IStatusMessage
@@ -87,7 +87,13 @@ class TranslationView(BrowserView):
             return self.cell_tpl(value=value)
 
         # if detected language is english render cell template
-        if get_detected_lang(value) == 'en':
+        lang = None
+        try:
+            lang = get_detected_lang(value)
+        except LangDetectException:
+            lang = 'en'
+
+        if lang == 'en':
             return self.cell_tpl(value=value)
 
         translated = get_translated(value, source_lang)

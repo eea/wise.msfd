@@ -8,6 +8,7 @@
   <include package='.nationaldescriptors' />
   <include package='.regionaldescriptors'/>
   <include file='admin.zcml' />
+  <include file='viewlets.zcml' />
 
   <adapter
     factory=".base.TranslationContext"
@@ -93,5 +94,10 @@
     template="../pt/start2.pt"
     permission="zope2.View"
     />
+
+  <!-- <subscriber -->
+  <!--   for="ZPublisher.interfaces.IPubAfterTraversal" -->
+  <!--   handler=".handle_traverse" -->
+  <!--   /> -->
 
 </configure>

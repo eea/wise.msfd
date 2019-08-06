@@ -277,7 +277,14 @@ def db_result_key(func, *argss, **kwargs):
 
 
 # To be used as data container when defining tabs for navigation
-Tab = namedtuple('Tab', ['view', 'section', 'title', 'subtitle'])
+Tab = namedtuple('Tab', [
+    'path',
+    'section',
+    'title',
+    'subtitle',
+    'cssclass',
+    'condition',
+])
 
 
 def t2rt(text):

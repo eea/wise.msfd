@@ -1,32 +1,27 @@
 <metal:macro define-macro="tabs">
   <div id="mainform-tabs" tal:define="tab_type view/tabs_type | string:article">
+
     <ul class="nav nav-pills topnav hidden-xs"
       tal:define="root_url view/root_url | string:.">
       <tal:rep tal:repeat="tab view/main_forms">
-        <li tal:define="
+        <li
+          tal:condition="python: tab.condition(view)"
+          tal:define="
           section view/section | nothing;
-          active python: section and (view.section == tab.section) or (not section and (view.name in request.URL0))"
-          tal:attributes="class python: active and 'tab-active' or ''"
+          active python: section and (view.section == tab.section) or (not section and (tab.path in request.URL0));
+          cssclass tab/cssclass | string:;
+          klass python: (active and 'tab-active') or '';
+          "
+          tal:attributes="class string:$klass $cssclass"
           >
           <a href=""
-            tal:attributes="href string:${root_url}/${tab/view}"
+            tal:attributes="href string:${root_url}/${tab/path}"
             >
-            <span tal:content="tab/title">Article X</span>
-            <span tal:content="tab/subtitle">Subtitle here</span>
+            <span tal:content="structure tab/title">Article X</span>
+            <span tal:content="structure tab/subtitle">Subtitle here</span>
           </a>
         </li>
       </tal:rep>
-      <li tal:define="
-          section view/section | nothing;
-          active python: section == 'compliance-admin'"
-          tal:attributes="class python: active and 'manage-users tab-active' or 'manage-users'"
-          tal:condition="python: view.is_search and view.check_permission('wise.msfd: Manage Compliance')">
-        <a target="_blank"
-          tal:attributes="href string:${view/_compliance_folder/absolute_url}/@@compliance-admin">
-          <span class="fa fa-cogs fa-lg"></span>
-          <span>&nbsp;</span>
-         </a>
-      </li>
     </ul>
     <!-- <div class="visible-xs" style="clear: both;"> -->
     <div class="visible-xs">
@@ -38,7 +33,7 @@
           <tal:block tal:define="
             section view/section | nothing;
             active python: section and (view.section == tab.section) or (not section and (view.name in request.URL0))">
-            <option tal:attributes="value string:./${tab/view}; data-maintitle tab/title;
+            <option tal:attributes="value string:./${tab/path}; data-maintitle tab/title;
               data-subtitle tab/subtitle;
               selected python: active and 'selected'">
               <span tal:replace="tab/title"></span> <span tal:replace="tab/subtitle"></span>

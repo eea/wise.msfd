@@ -1,0 +1,16 @@
+<configure
+  xmlns="http://namespaces.zope.org/zope"
+  xmlns:browser="http://namespaces.zope.org/browser"
+  xmlns:i18n="http://namespaces.zope.org/i18n"
+  xmlns:z3c="http://namespaces.zope.org/z3c"
+  i18n_domain="wise.msfd">
+
+  <!-- <browser:viewlet -->
+  <!--   name="wise.msfd.compliance.tabs" -->
+  <!--   layer=".interfaces.IComplianceModuleMarker" -->
+  <!--   manager="plone.app.layout.viewlets.interfaces.IAboveContentTitle" -->
+  <!--   class=".viewlets.TabsViewlet" -->
+  <!--   permission="zope2.View" -->
+  <!--   /> -->
+
+</configure>

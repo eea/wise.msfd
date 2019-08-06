@@ -161,16 +161,23 @@ class ItemDisplay(BrowserView, BaseUtil):
         return self.extra_data_template()
 
 
+def true(view):
+    return True
+
+
 MAIN_FORMS = (
-    Tab('msfd-start', 'msfd-start', 'Start', 'About search engine'),
-    Tab('msfd-mru', 'msfd-mru', 'Article 4', 'Marine Units'),
-    Tab('msfd-rc', 'msfd-rc', 'Article 6', 'Regional cooperation'),
-    Tab('msfd-ca', 'msfd-ca', 'Article 7', 'Competent Authorities'),
+    Tab('msfd-start', 'msfd-start', 'Start', 'About search engine', '', true),
+    Tab('msfd-mru', 'msfd-mru', 'Article 4', 'Marine Units', '', true),
+    Tab('msfd-rc', 'msfd-rc', 'Article 6', 'Regional cooperation', '', true),
+    Tab('msfd-ca', 'msfd-ca', 'Article 7', 'Competent Authorities', '', true),
     Tab('msfd-c1', 'msfd-c1',
-        'Articles 8, 9 & 10', '2012 reporting exercise'),
-    Tab('msfd-c2', 'msfd-c2', 'Article 11', '2014 reporting exercise'),
-    Tab('msfd-c3', 'msfd-c3', 'Articles 13 & 14', '2015 reporting exercise'),
-    Tab('msfd-c4', 'msfd-c4', 'Articles 8, 9 & 10', '2018 reporting exercise'),
+        'Articles 8, 9 & 10', '2012 reporting exercise', '', true),
+    Tab('msfd-c2', 'msfd-c2', 'Article 11', '2014 reporting exercise',
+        '', true),
+    Tab('msfd-c3', 'msfd-c3', 'Articles 13 & 14', '2015 reporting exercise',
+        '', true),
+    Tab('msfd-c4', 'msfd-c4', 'Articles 8, 9 & 10', '2018 reporting exercise',
+        '', true),
 )
 
 
