@@ -142,7 +142,10 @@ def get_translated(value, language, site=None):
     translated = storage.get(language, {}).get(value, None)
 
     if translated:
-        return translated.text.lstrip('?')
+        if hasattr(translated, 'text'):
+            return translated.text.lstrip('?')
+
+        return translated.lstrip('?')
 
 
 def normalize(text):
@@ -175,6 +178,7 @@ def delete_translation(text, source_lang):
             storage[source_lang]._p_changed = True
             transaction.commit()
 
+
 def save_translation(original, translated, source_lang, approved=False):
     site = portal.get()
     
@@ -200,6 +204,11 @@ def get_detected_lang(text):
     if len(text) < 50:
         return None
 
-    detect_lang = detect(text)
+    try:
+        detect_lang = detect(text)
+    except:
+        # Can't detect language if text is an url
+        # it throws LangDetectException
+        return None
 
     return detect_lang
