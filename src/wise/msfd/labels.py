@@ -1,17 +1,19 @@
 import csv
+import json
 import logging
 
 from lxml.etree import parse
 from pkg_resources import resource_filename
 
-from . import db, sql
+from . import db, sql, sql2018, sql_extra
 
 COMMON_LABELS = {}                        # vocabulary of labels
 
 # Labels used to override the default db column name into a
 # user friendly text
 DISPLAY_LABELS = {
-    'MSFD4_Import_ReportingCountry': "Country"
+    'MSFD4_Import_ReportingCountry': "Country",
+    'AssessmentsPeriod': 'Assessment Period',
 }
 
 logger = logging.getLogger('wise.msfd')
@@ -89,12 +91,161 @@ def get_human_labels():
     return human_labels
 
 
+####################################
+# CODE MOVED FROM gescomponents.py #
+####################################
+
+
+def parse_codelists_file():
+    """ Parse the msfd2018-codelists.json file
+    """
+    jsonf = resource_filename('wise.msfd',
+                              'data/msfd2018-codelists.json')
+    with open(jsonf) as f:
+        d = json.load(f)
+
+    return d
+
+
+TERMSLIST = parse_codelists_file()
+
+
+def get_label(value, label_collection):
+    """ Get the human version of a database 'shortcode' (a string id) """
+
+    if label_collection:
+        trans = GES_LABELS.get(label_collection, value)
+
+        if trans != value:
+            return trans
+
+    return COMMON_LABELS.get(value, value)
+
+
+def _parse_labels(label_name):
+    res = {}
+
+    features = TERMSLIST[label_name]
+
+    for fr in features:
+        code = fr['code']
+        label = fr['label']
+
+        if code in res:
+            continue
+
+        res[code] = label
+
+    return res
+
+
+@db.use_db_session('2018')
+def get_indicator_labels():
+    mc = sql2018.IndicatorsIndicatorAssessment
+    count, res = db.get_all_records(
+        mc
+    )
+    labels = {}
+
+    for row in res:
+        code = row.IndicatorCode
+        label = row.IndicatorTitle
+
+        if label:
+            labels[code] = label
+
+    return labels
+
+
+@db.use_db_session('2018')
+def get_mru_labels():
+    # for faster query only get these fields
+    needed = ('MarineReportingUnitId', 'Description', 'nameTxtInt', 'nameText')
+    mc = sql2018.MarineReportingUnit
+    mc_cols = [getattr(mc, x) for x in needed]
+
+    count, res = db.get_all_specific_columns(
+        mc_cols
+    )
+    labels = {}
+
+    for row in res:
+        code = row.MarineReportingUnitId
+        label_main = row.Description
+        label_int = row.nameTxtInt
+        label_txt = row.nameText
+        label = label_main or label_int or label_txt
+
+        if label:
+            labels[code] = label
+
+    return labels
+
+
+@db.use_db_session('2018')
+def get_target_labels():
+    needed = ('TargetCode', 'Description')
+    mc = sql2018.ART10TargetsTarget
+    mc_cols = [getattr(mc, x) for x in needed]
+
+    count, res = db.get_all_specific_columns(
+        mc_cols
+    )
+    labels = {}
+
+    for row in res:
+        code = row.TargetCode
+        label = row.Description
+        labels[code] = label
+
+    return labels
+
+
+class LabelCollection(object):
+    """ A convenience wrapper over multiple structures with labels
+
+    Needed because ReferenceFeature does not contain all features
+    """
+
+    features = _parse_labels('Features')
+    pressures = _parse_labels('Pressures')
+    parameters = _parse_labels('Parameters')
+    threshold_sources = _parse_labels('ThresholdSources')
+    units = _parse_labels('Units')
+    element_sources = _parse_labels('ElementSources')
+    elementcode_sources = _parse_labels('ElementCodeSources')
+    ges_criterias = _parse_labels('GESCriterias')
+    ges_components = _parse_labels('GESComponents')
+    indicators = get_indicator_labels()
+    mrus = get_mru_labels()
+    targets = get_target_labels()
+
+    def get(self, collection_name, name):
+        label_dict = getattr(self, collection_name, None)
+
+        if not label_dict:
+            return name
+
+        label = label_dict.get(name, name)
+
+        return label
+
+
+GES_LABELS = LabelCollection()
+
+
 def get_common_labels():
     labels = {}
     labels.update(_extract_from_csv())
     labels.update(_extract_from_xsd('data/MSCommon_1p0.xsd'))
     labels.update(_extract_from_xsd('data/MSCommon_1p1.xsd'))
     labels.update(get_human_labels())
+
+    # We should use the labels from msfd2018-codelists.json
+    # they look better and there are more labels
+    labels.update(getattr(GES_LABELS, 'features'))
+    labels.update(getattr(GES_LABELS, 'ges_components'))
+    labels.update(getattr(GES_LABELS, 'ges_criterias'))
 
     # TODO there are keys with empty values, find out from where it comes
     filtered = {k: v for k, v in labels.items() if k}
