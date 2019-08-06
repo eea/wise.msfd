@@ -2,7 +2,8 @@
 some other useful formats. Used when displaying data.
 """
 
-from wise.msfd.gescomponents import GES_LABELS, get_ges_component
+from wise.msfd.gescomponents import get_ges_component
+from wise.msfd.labels import GES_LABELS
 from wise.msfd.translation import get_translated
 from wise.msfd.utils import ItemLabel, ItemList
 

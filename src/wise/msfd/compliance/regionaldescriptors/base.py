@@ -4,8 +4,8 @@ from itertools import chain
 from plone.api.content import get_state
 from plone.api.portal import get_tool
 from wise.msfd.compliance.base import BaseComplianceView
-from wise.msfd.compliance.vocabulary import REGIONS
-from wise.msfd.gescomponents import get_label, FEATURES_DB_2018
+from wise.msfd.gescomponents import FEATURES_DB_2018
+from wise.msfd.labels import get_label
 from wise.msfd.utils import ItemLabel
 
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile

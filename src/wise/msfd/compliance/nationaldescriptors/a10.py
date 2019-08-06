@@ -8,8 +8,8 @@ from Products.Five.browser.pagetemplatefile import \
 from wise.msfd import db, sql
 from wise.msfd.data import country_ges_components, get_xml_report_data
 from wise.msfd.gescomponents import (get_descriptor, get_ges_component,
-                                     get_label, sorted_by_criterion)
-from wise.msfd.labels import COMMON_LABELS
+                                     sorted_by_criterion)
+from wise.msfd.labels import COMMON_LABELS, get_label
 from wise.msfd.translation import retrieve_translation
 from wise.msfd.utils import (Item, ItemLabel, ItemList, Node, RawRow, Row,
                              natural_sort_key, to_html)

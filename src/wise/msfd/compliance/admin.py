@@ -22,7 +22,8 @@ from wise.msfd import db, sql2018
 from wise.msfd.compliance.vocabulary import (REGIONAL_DESCRIPTORS_REGIONS,
                                              REGIONS)
 from wise.msfd.gescomponents import (get_all_descriptors, get_descriptor,
-                                     get_indicator_labels, get_marine_units)
+                                     get_marine_units)
+from wise.msfd.labels import get_indicator_labels
 from wise.msfd.translation import Translation, get_detected_lang
 from wise.msfd.translation.interfaces import ITranslationsStorage
 

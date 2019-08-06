@@ -58,6 +58,7 @@ def print_value(value):
         return value
 
     if isinstance(value, string_types):
+        value = value.strip()
 
         if value in COMMON_LABELS:
             tmpl = '<span title="{}">{}</span>'

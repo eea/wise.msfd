@@ -9,8 +9,9 @@ from z3c.form.field import Fields
 from . import interfaces
 from .. import db, sql
 from ..base import EmbeddedForm
-from ..db import get_all_records
+from ..db import get_all_records, get_all_records_join
 from ..interfaces import IMarineUnitIDsSelect
+from .. labels import COMMON_LABELS
 from ..utils import default_value_from_field
 from .base import ItemDisplayForm, MainForm
 from .utils import data_to_xls
@@ -119,12 +120,36 @@ class A1314ItemDisplay(ItemDisplayForm):
     mapper_class = sql.MSFD13MeasuresInfo
     order_field = 'ID'
 
-    def download_results(self):
-        muids = self.context.data.get('unique_codes', [])
+    def get_current_country(self):
+        if not self.item:
+            return
+
+        mc = sql.MSFD13ReportingInfoMemberState
+        report_id = self.item.ReportID
+
         count, data = get_all_records(
-            self.mapper_class,
-            self.mapper_class.UniqueCode.in_(muids)
+            mc,
+            mc.ReportID == report_id
         )
+        country_code = data[0].MemberState
+        print_value = self.print_value(country_code)
+
+        return print_value
+
+    def download_results(self):
+        mc_join = sql.MSFD13ReportingInfoMemberState
+
+        mc_fields = self.get_obj_fields(self.mapper_class, False)
+        fields = [mc_join.MemberState] + \
+                 [getattr(self.mapper_class, field) for field in mc_fields]
+
+        muids = self.context.data.get('unique_codes', [])
+
+        sess = db.session()
+        q = sess.query(*fields).\
+            join(mc_join, self.mapper_class.ReportID == mc_join.ReportID).\
+            filter(self.mapper_class.UniqueCode.in_(muids))
+        data = [x for x in q]
 
         report_ids = [row.ReportID for row in data]
         mc_report = sql.MSFD13ReportInfoFurtherInfo
@@ -134,7 +159,7 @@ class A1314ItemDisplay(ItemDisplayForm):
         )
 
         xlsdata = [
-            ('MSFD11ReferenceSubProgramme', data),  # worksheet title, row data
+            ('MSFD13MeasuresInfo', data),  # worksheet title, row data
             ('MSFD13ReportInfoFurtherInfo', data_report),
         ]
 
@@ -170,3 +195,14 @@ class A1314ItemDisplay(ItemDisplayForm):
         html = self.pivot_template(extra_data=self.extra_data)
 
         return self.extra_data_template() + html
+
+    def custom_print_value(self, row_label, val):
+        row_labels = ('RelevantGESDescriptors', )
+
+        if row_label in row_labels:
+            label = COMMON_LABELS.get(val, val)
+            value = '<span title="{0}">({0}) {1}</span>'.format(val, label)
+
+            return value
+
+        return self.print_value(val)

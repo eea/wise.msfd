@@ -11,8 +11,8 @@ from wise.msfd import db, sql
 from wise.msfd.data import get_xml_report_data
 from wise.msfd.gescomponents import (criteria_from_gescomponent,
                                      get_descriptor, get_ges_component,
-                                     get_label, sorted_by_criterion)
-from wise.msfd.labels import COMMON_LABELS
+                                     sorted_by_criterion)
+from wise.msfd.labels import COMMON_LABELS, get_label
 from wise.msfd.translation import retrieve_translation
 from wise.msfd.utils import (Item, ItemLabel, ItemList, Node, RawRow,
                              RelaxedNode, Row, natural_sort_key, to_html)

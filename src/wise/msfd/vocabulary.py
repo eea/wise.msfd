@@ -626,15 +626,16 @@ def a2018_marine_reporting_unit(context):
 
 @provider(IVocabularyFactory)
 def a2018_ges_component_art9(context):
-    mapper_class = context.mapper_class
-
-    countries = context.data.get('member_states')
+    mapper_class = context.subform.mapper_class
 
     mc_countries = sql2018.ReportedInformation
     conditions = []
 
-    if countries:
-        conditions.append(mc_countries.CountryCode.in_(countries))
+    # This became the first form for Art9, we no longer filter the values
+
+    # countries = context.data.get('member_states')
+    # if countries:
+    #     conditions.append(mc_countries.CountryCode.in_(countries))
 
     count, res = db.get_all_records_outerjoin(
         mapper_class,
@@ -653,8 +654,8 @@ def a2018_feature_art9(context):
     features_mc = parent.features_mc
     determination_mc = parent.determination_mc
 
-    countries = parent.data.get('member_states')
-    ges_components = context.data.get('ges_component')
+    countries = context.data.get('member_states')
+    ges_components = parent.data.get('ges_component')
 
     mc_countries = sql2018.ReportedInformation
     conditions = list()
@@ -961,6 +962,28 @@ def a2018_country(context):
     count, res = db.get_all_records_outerjoin(
         sql2018.ReportedInformation,
         mapper_class
+    )
+
+    res = [x.CountryCode for x in res]
+    res = list(set(res))
+
+    return vocab_from_values(res)
+
+
+@provider(IVocabularyFactory)
+def a2018_country_art9(context):
+    mapper_class = context.mapper_class
+    mc_countries = sql2018.ReportedInformation
+    conditions = []
+
+    ges_components = context.data.get('ges_component')
+    if ges_components:
+        conditions.append(mapper_class.GESComponent.in_(ges_components))
+
+    count, res = db.get_all_records_join(
+        [mapper_class.GESComponent, mc_countries.CountryCode],
+        mc_countries,
+        *conditions
     )
 
     res = [x.CountryCode for x in res]

@@ -14,7 +14,7 @@ from z3c.form.field import Fields
 from z3c.form.form import Form
 
 from .db import (get_all_specific_columns, get_available_marine_unit_ids,
-                 threadlocals)
+                 threadlocals, use_db_session)
 from .interfaces import IEmbeddedForm, IMainForm, IMarineUnitIDSelect
 from .labels import DISPLAY_LABELS
 from .utils import all_values_from_field, get_obj_fields, print_value
@@ -92,6 +92,7 @@ class BaseUtil(object):
 
         return mid
 
+    @use_db_session('2012')
     def get_current_country(self):
         """ Get the country for the current selected MarineUnitID
 
@@ -108,6 +109,9 @@ class BaseUtil(object):
             [mc.c.MemberState],
             mc.c.MarineUnitID == mru
         )
+        if not count:
+            return ''
+
         country_code = data[0]
         print_value = self.print_value(country_code.MemberState)
 
