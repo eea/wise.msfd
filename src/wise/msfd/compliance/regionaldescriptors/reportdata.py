@@ -12,13 +12,13 @@ from wise.msfd.translation import retrieve_translation
 from wise.msfd.utils import (CompoundRow, ItemList, items_to_rows, timeit,
                              natural_sort_key, Row)
 
-from ..nationaldescriptors.proxy import Proxy2018
 from ..nationaldescriptors.utils import consolidate_singlevalue_to_list
 from .a8 import RegDescA82018Row, RegDescA82012
 from .a9 import RegDescA92018Row, RegDescA92012
 from .a10 import RegDescA102018Row, RegDescA102012
 from .base import BaseRegComplianceView
 from .data import get_report_definition
+from .proxy import Proxy2018
 
 logger = logging.getLogger('wise.msfd')
 
