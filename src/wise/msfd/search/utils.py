@@ -1,5 +1,6 @@
 import re
 from collections import defaultdict
+from datetime import datetime
 from io import BytesIO
 
 from six import string_types
@@ -137,7 +138,8 @@ def data_to_xls(data):
                 field_val = getattr(wdata[j], f)
 
                 if not isinstance(field_val,
-                                  string_types + (float, int, type(None))):
+                                  string_types + (datetime, float,
+                                                  int, type(None))):
                     field_needed = False
 
                     break
@@ -152,6 +154,9 @@ def data_to_xls(data):
                     value = getattr(row, f)
                 else:
                     value = row[i]
+
+                if isinstance(value, datetime):
+                    value = value.isoformat()
 
                 worksheet.write(j + 1, i, value)
 

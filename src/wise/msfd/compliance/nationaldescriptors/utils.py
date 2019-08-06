@@ -2,7 +2,7 @@ from collections import defaultdict
 from itertools import chain
 from operator import attrgetter
 
-from wise.msfd.gescomponents import GES_LABELS
+from wise.msfd.labels import GES_LABELS
 from wise.msfd.utils import ItemLabel, ItemList, LabeledItemList, timeit
 
 from .proxy import proxy_cmp

@@ -4,7 +4,7 @@ import lxml.etree
 from zope.interface import Attribute, Interface, implements
 
 from Products.Five.browser.pagetemplatefile import PageTemplateFile
-from wise.msfd.gescomponents import GES_LABELS
+from wise.msfd.labels import GES_LABELS
 from wise.msfd.utils import get_annot, ItemLabel, TemplateMixin
 
 

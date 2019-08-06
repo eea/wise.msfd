@@ -142,6 +142,14 @@ class ICountryCode(Interface):
     )
 
 
+class ICountryCode2018Art9(Interface):
+    member_states = List(
+        title=u"Country Code",
+        required=False,
+        value_type=Choice(vocabulary="wise_search_a2018_country_art9")
+    )
+
+
 class IGESComponentsA9(Interface):
     ges_component = List(
         title=u"GES Component",

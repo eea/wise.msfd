@@ -1,5 +1,5 @@
 from wise.msfd.compliance import convert
-from wise.msfd.gescomponents import GES_LABELS
+from wise.msfd.labels import GES_LABELS
 from wise.msfd.utils import ItemLabel
 
 from .data import REPORT_DEFS

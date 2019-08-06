@@ -104,6 +104,11 @@
     />
 
   <utility
+    component=".vocabulary.a2018_country_art9"
+    name="wise_search_a2018_country_art9"
+    />
+
+  <utility
     component=".vocabulary.a2018_marine_reporting_unit"
     name="wise_search_a2018_marine_reporting_unit"
     />

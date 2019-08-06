@@ -7,6 +7,8 @@
 
   <tal:block tal:condition="python: view.item ">
       <h3 tal:content="view/get_record_title">Article title here</h3>
+      <h3 tal:condition="view/get_current_country"
+          tal:content="structure view/get_current_country">Germany</h3>
       <div class="prev-next-row"
                tal:define="actions view/actions;
                       next actions/next | nothing;

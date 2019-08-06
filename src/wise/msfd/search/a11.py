@@ -17,7 +17,7 @@ class StartArticle11Form(MainForm):
     """
     """
 
-    record_title = 'Article 11'
+    # record_title = 'Article 11'
     name = 'msfd-c2'
     session_name = '2012'
 
@@ -179,12 +179,26 @@ class A11MonProgDisplay(ItemDisplayForm):
             .get_monitoring_programme_ids()
 
         klass_join_mp = sql.MSFD11MP
-        count_mp, data_mp = db.get_all_records_outerjoin(
-            self.mapper_class,
-            klass_join_mp,
-            and_(klass_join_mp.MPType.in_(mp_type_ids),
-                 klass_join_mp.MonitoringProgramme.in_(mon_prog_ids)),
-        )
+        klass_join_mon = sql.MSFD11MON
+        # count_mp, data_mp = db.get_all_records_outerjoin(
+        #     self.mapper_class,
+        #     klass_join_mp,
+        #     and_(klass_join_mp.MPType.in_(mp_type_ids),
+        #          klass_join_mp.MonitoringProgramme.in_(mon_prog_ids)),
+        # )
+        mc_fields = self.get_obj_fields(self.mapper_class, False)
+        fields = [klass_join_mon.MemberState] + \
+                 [getattr(self.mapper_class, field) for field in mc_fields]
+
+        sess = db.session()
+        res = sess.query(*fields). \
+            join(klass_join_mp,
+                 self.mapper_class.ID == klass_join_mp.MonitoringProgramme). \
+            join(klass_join_mon, klass_join_mp.MON == klass_join_mon.ID). \
+            filter(and_(klass_join_mp.MPType.in_(mp_type_ids),
+                        klass_join_mp.MonitoringProgramme.in_(mon_prog_ids)),
+                   )
+        data_mp = [x for x in res]
 
         mp_ids = [row.ID for row in data_mp]
 
@@ -316,6 +330,7 @@ class A11MonProgDisplay(ItemDisplayForm):
 
 @register_form_art11
 class A11MonitoringProgrammeForm(EmbeddedForm):
+    record_title = 'Article 11 (Monitoring Programmes)'
     title = "Monitoring Programmes"
     mru_class = A11MProgMarineUnitIdForm
 
@@ -368,6 +383,7 @@ class A11MonitoringProgrammeForm(EmbeddedForm):
 
 @register_form_art11
 class A11MonitorSubprogrammeForm(EmbeddedForm):
+    record_title = 'Article 11 (Monitoring Subprogrammes)'
     title = "Monitoring Subprogrammes"
     mru_class = A11MSubMarineUnitIdForm
 
@@ -494,17 +510,38 @@ class A11MonSubDisplay(MultiItemDisplayForm):
         )
 
         klass_join_mp = sql.MSFD11MP
-        count_rsp, data_rsp = db.get_all_records_outerjoin(
-            self.mapper_class,
-            klass_join_mp,
+        klass_join_mon = sql.MSFD11MON
+        # count_rsp, data_rsp = db.get_all_records_outerjoin(
+        #     self.mapper_class,
+        #     klass_join_mp,
+        #     and_(klass_join_mp.MPType.in_(mp_type_ids),
+        #          self.mapper_class.MP.in_(mp_ids),
+        #          or_(self.mapper_class.SubMonitoringProgrammeID.in_(
+        #              q4g_subprogids_1),
+        #              self.mapper_class.SubMonitoringProgrammeID.in_(
+        #                  q4g_subprogids_2))
+        #          ),
+        # )
+
+        mc_fields = self.get_obj_fields(self.mapper_class, False)
+        fields = [klass_join_mon.MemberState] + \
+                 [getattr(self.mapper_class, field) for field in mc_fields]
+
+        sess = db.session()
+        res = sess.query(*fields). \
+            join(klass_join_mp,
+                 self.mapper_class.MP == klass_join_mp.ID). \
+            join(klass_join_mon, klass_join_mp.MON == klass_join_mon.ID). \
+            filter(
             and_(klass_join_mp.MPType.in_(mp_type_ids),
                  self.mapper_class.MP.in_(mp_ids),
                  or_(self.mapper_class.SubMonitoringProgrammeID.in_(
                      q4g_subprogids_1),
                      self.mapper_class.SubMonitoringProgrammeID.in_(
                          q4g_subprogids_2))
-                 ),
-        )
+                 )
+            )
+        data_rsp = [x for x in res]
 
         submonitor_programme_ids = [row.SubMonitoringProgrammeID
                                     for row in data_rsp]

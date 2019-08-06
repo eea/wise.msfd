@@ -150,16 +150,16 @@ class A2018Article9(EmbeddedForm):
     features_mc = sql2018.ART9GESGESDeterminationFeature
     determination_mc = sql2018.ART9GESGESDetermination
 
-    fields = Fields(interfaces.ICountryCode)
-    fields['member_states'].widgetFactory = CheckBoxFieldWidget
-
-    def get_subform(self):
-        return A2018GesComponentA9(self, self.request)
-
-
-class A2018GesComponentA9(EmbeddedForm):
     fields = Fields(interfaces.IGESComponentsA9)
     fields['ges_component'].widgetFactory = CheckBoxFieldWidget
+
+    def get_subform(self):
+        return A2018MemberStateA9(self, self.request)
+
+
+class A2018MemberStateA9(EmbeddedForm):
+    fields = Fields(interfaces.ICountryCode2018Art9)
+    fields['member_states'].widgetFactory = CheckBoxFieldWidget
 
     def get_subform(self):
         return A2018FeatureA9(self, self.request)
