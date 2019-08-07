@@ -95,6 +95,14 @@
     permission="zope2.View"
     />
 
+  <browser:page
+    name="compliance-tabs"
+    class=".views.TabsView"
+    template="./pt/tabs.pt"
+    permission="zope2.View"
+    for="*"
+    />
+
   <!-- <subscriber -->
   <!--   for="ZPublisher.interfaces.IPubAfterTraversal" -->
   <!--   handler=".handle_traverse" -->

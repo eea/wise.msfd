@@ -5,7 +5,7 @@ from collections import deque
 
 from eea.cache import cache
 from plone import api
-from plone.api.content import transition, get_state
+from plone.api.content import get_state, transition
 from plone.dexterity.utils import createContentInContainer as create
 from Products.Five.browser import BrowserView
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
@@ -123,6 +123,7 @@ class CommentsList(BaseComplianceView):
         for comment in comments:
             if comment.text != text or comment.Creator() != comm_name:
                 continue
+
             if to_local_time(comment.created(), long_format=True) != comm_time:
                 continue
 
@@ -144,3 +145,10 @@ class CommentsList(BaseComplianceView):
         q_folder = folder[question_id]
 
         return q_folder.contentValues()
+
+
+class TabsView(BaseComplianceView):
+    """ A view to render the compliance navigation tabs
+    """
+
+    name = '/help'
