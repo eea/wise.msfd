@@ -172,11 +172,11 @@ def db_objects_to_dict(data, excluded_columns=()):
 def group_data(data, pivot):
     out = defaultdict(list)
 
-    count_distinct_values = len(set(row.get(pivot, '') for row in data))
+    # count_distinct_values = len(set(row.get(pivot, '') for row in data))
 
     for row in data:
         d = OrderedDict(row)
-        p = d.pop(pivot) if count_distinct_values > 1 else d[pivot]
+        p = d.pop(pivot) # if count_distinct_values > 1 else d[pivot]
 
         if any(d.values()):
             out[p].append(d)
