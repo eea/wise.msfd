@@ -50,7 +50,7 @@ if (!Array.prototype.last){
   function setupScrollableTargets() {
     // create a clone of the assessment data 2018 table and overlap the original table
     // with fixed question and score columns
-    console.log('setupScrollableTargets');
+    // console.log('setupScrollableTargets');
     $('#container-assessment-data-2018 .table.table-condensed.assessment-data-table')
       .clone(true).appendTo('#container-assessment-data-2018').addClass('clone');
 
@@ -481,7 +481,14 @@ if (!Array.prototype.last){
       $innerTable.find('tr input').prop('checked', false);
     });
 
-    $table.find('th div').append($cb);
+    if($table.find('td.sub-header').length){
+      // Regional descriptors
+      $table.find('td.sub-header').append($cb);
+    } else {
+      // National descriptors
+      $table.find('th div').append($cb);
+    }
+
     $ft.insertBefore($ot.find('.inner'));
   }
 
@@ -514,9 +521,10 @@ if (!Array.prototype.last){
       }
       toggleSyncScrolls(true);
 
-      $th.each(function(i) {
+      $('.fix-row').each(function(i) {
         var val = "cb" + i++;
-        var checkBox = $(this).find('.fix-row');
+//        var checkBox = $(this).find('.fix-row');
+        var checkBox = $(this);
         checkBox.val(val);
       });
 
@@ -625,6 +633,28 @@ if (!Array.prototype.last){
     });
   }
 
+  function regionalDescriptorsGroupTableHeaders() {
+    // console.log('regionalDescriptorsGroupTableHeaders');
+    var $headers = $('.first-header');
+    var compareText = '';
+    var currentText = '';
+
+    compareText = $headers[0].firstElementChild.innerText;
+
+    for (i=1; i < $headers.length - 1; i++) {
+      currentText = $headers[i].firstElementChild.innerText;
+
+      if(compareText === currentText) {
+          $headers[i].firstElementChild.innerText = '';
+          $($headers[i-1]).css('border-bottom', '0px');
+      } else {
+        compareText = currentText;
+      }
+
+      //debugger;
+    }
+  }
+
   $(document).ready(function($){
 
     setupReadMoreModal();
@@ -635,6 +665,7 @@ if (!Array.prototype.last){
     setupResponsiveness();
     addCustomScroll();
     addFixedTable();
+    regionalDescriptorsGroupTableHeaders();
 
 //    $(window).on('resize', function(){
 //      setupScrollableTargets();

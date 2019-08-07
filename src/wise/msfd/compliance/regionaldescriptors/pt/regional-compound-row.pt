@@ -3,11 +3,12 @@
     field nocall:options/field">
   <tr>
     <th class="first-header">
-      <div tal:content="field/title">First header</div>
+      <span tal:content="field/title">First header</span>
     </th>
     <td class="sub-header"
-        tal:define="val python: row[0]"
-        tal:content="structure val">Subrow header</td>
+        tal:define="val python: row[0]">
+      <span tal:content="structure val">Subrow header</span>
+    </td>
 
     <tal:rep tal:repeat="indx python: range(len(countries))">
       <td tal:replace="structure python: view.context.translate_value(field.name, row[1][indx], countries[indx][0])"></td>

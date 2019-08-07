@@ -197,6 +197,15 @@ class A1314ItemDisplay(ItemDisplayForm):
         return self.extra_data_template() + html
 
     def custom_print_value(self, row_label, val):
+        """ Used to create a customized print value, like adding the
+            descriptor code into the label
+            for a specific data section(row_label)
+
+        :param row_label: 'RelevantGESDescriptors'
+        :param val: 'D5'
+        :return:
+        """
+
         row_labels = ('RelevantGESDescriptors', )
 
         if row_label in row_labels:

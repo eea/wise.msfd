@@ -597,8 +597,8 @@ class A2018Art81abDisplay(ItemDisplayForm):
         element_status_pivot = list()
 
         for x in element_status:
-            element = x.pop('Element', '') or ''
-            element2 = x.pop('Element2', '') or ''
+            element = x.get('Element', '') or ''
+            element2 = x.get('Element2', '') or ''
 
             x['Element / Element2'] = ' / '.join((element, element2))
             element_status_pivot.append(x)
