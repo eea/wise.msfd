@@ -202,7 +202,7 @@ class MainForm(BaseEnhancedForm, BasePublicPage, Form):
     def handle_continue(self, action):
         self.reset_page = True
 
-    @buttonAndHandler(u'Download as XLS', name='download')
+    @buttonAndHandler(u'Download as spreadsheet', name='download')
     def handle_download(self, action):
         self.should_download = True
 

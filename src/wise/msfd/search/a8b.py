@@ -37,7 +37,7 @@ class A81bExtractionFishItemDisplay(MultiItemDisplayForm):
 class A81bExtractionFishSubForm(MarineUnitIDSelectForm):
     """ Select the MarineUnitID for the Article 8.1b form
     """
-    title = 'Extraction of fish and shellfish'
+    title = 'D6/D3 - Extraction of fish and shellfish'
     mapper_class = sql.MSFD8bExtractionFishShellfish
 
     def get_subform(self):
@@ -175,7 +175,7 @@ class A81bExtractionSeaweedItemDisplay(MultiItemDisplayForm):
 class A81bExtractionSeaweedSubForm(MarineUnitIDSelectForm):
     """ Select the MarineUnitID for the Article 8.1b form
     """
-    title = 'Extraction of seaweed, maerl and other'
+    title = 'D6/D3 - Extraction of seaweed, maerl and other'
     mapper_class = sql.MSFD8bExtractionSeaweedMaerlOther
 
     def get_subform(self):
@@ -314,7 +314,7 @@ class A81bHazardousItemDisplay(MultiItemDisplayForm):
 class A81bHazardousSubForm(MarineUnitIDSelectForm):
     """ Select the MarineUnitID for the Article 8.1b form
     """
-    title = 'Hazardous substances'
+    title = 'D8/D9 - Hazardous substances'
     mapper_class = sql.MSFD8bHazardousSubstance
 
     def get_subform(self):
@@ -451,7 +451,7 @@ class A81bHydroItemDisplay(MultiItemDisplayForm):
 class A81bHydroSubForm(MarineUnitIDSelectForm):
     """ Select the MarineUnitID for the Article 8.1b form
     """
-    title = 'Hydrological processes'
+    title = 'D7 - Hydrological processes'
     mapper_class = sql.MSFD8bHydrologicalProcess
 
     def get_subform(self):
@@ -587,7 +587,7 @@ class A81bMarineLitterItemDisplay(MultiItemDisplayForm):
 class A81bMarineLitterSubForm(MarineUnitIDSelectForm):
     """ Select the MarineUnitID for the Article 8.1b form
     """
-    title = 'Marine litter'
+    title = 'D10 - Marine litter'
     mapper_class = sql.MSFD8bLitter
 
     def get_subform(self):
@@ -721,7 +721,7 @@ class A81bMicrobialItemDisplay(MultiItemDisplayForm):
 class A81bMicrobialSubForm(MarineUnitIDSelectForm):
     """ Select the MarineUnitID for the Article 8.1b form
     """
-    title = 'Microbial pathogens'
+    title = 'D8 - Microbial pathogens'
     mapper_class = sql.MSFD8bMicrobialPathogen
 
     def get_subform(self):
@@ -860,7 +860,7 @@ class A81bNonIndigenousItemDisplay(MultiItemDisplayForm):
 class A81bNonIndigenousSubForm(MarineUnitIDSelectForm):
     """ Select the MarineUnitID for the Article 8.1b form
     """
-    title = 'Non-indigenous species'
+    title = 'D2 - Non-indigenous species'
     mapper_class = sql.MSFD8bNI
 
     def get_subform(self):
@@ -994,7 +994,7 @@ class A81bNoiseItemDisplay(MultiItemDisplayForm):
 class A81bNoiseSubForm(MarineUnitIDSelectForm):
     """ Select the MarineUnitID for the Article 8.1b form
     """
-    title = 'Underwater noise'
+    title = 'D11 - Underwater noise'
     mapper_class = sql.MSFD8bNoise
 
     def get_subform(self):
@@ -1125,7 +1125,7 @@ class A81bNutrientItemDisplay(MultiItemDisplayForm):
 class A81bNutrientSubForm(MarineUnitIDSelectForm):
     """ Select the MarineUnitID for the Article 8.1b form
     """
-    title = 'Nutrients'
+    title = 'D5 - Nutrients'
     mapper_class = sql.MSFD8bNutrient
 
     def get_subform(self):
@@ -1256,7 +1256,7 @@ class A81bPhysicalDamageItemDisplay(MultiItemDisplayForm):
 class A81bPhysicalDamageSubForm(MarineUnitIDSelectForm):
     """ Select the MarineUnitID for the Article 8.1b form
     """
-    title = 'Physical damage'
+    title = 'D6 - Physical damage'
     mapper_class = sql.MSFD8bPhysicalDamage
 
     def get_subform(self):
@@ -1388,7 +1388,7 @@ class A81bPhysicalLosItemDisplay(MultiItemDisplayForm):
 class A81bPhysicalLosSubForm(MarineUnitIDSelectForm):
     """ Select the MarineUnitID for the Article 8.1b form
     """
-    title = 'Physical loss'
+    title = 'D6 - Physical loss'
     mapper_class = sql.MSFD8bPhysicalLos
 
     def get_subform(self):
@@ -1520,7 +1520,7 @@ class A81bPollutantEventItemDisplay(MultiItemDisplayForm):
 class A81bPollutantEventSubForm(MarineUnitIDSelectForm):
     """ Select the MarineUnitID for the Article 8.1b form
     """
-    title = 'Pollutant events'
+    title = 'D8 - Pollutant events'
     mapper_class = sql.MSFD8bPollutantEvent
 
     def get_subform(self):
@@ -1652,7 +1652,7 @@ class A81bAcidificationItemDisplay(MultiItemDisplayForm):
 class A81bAcidificationSubForm(MarineUnitIDSelectForm):
     """ Select the MarineUnitID for the Article 8.1b form
     """
-    title = 'Acidification'
+    title = 'D4 - Acidification'
     mapper_class = sql.MSFD8bAcidification
 
     def get_subform(self):

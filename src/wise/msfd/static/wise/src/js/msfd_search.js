@@ -88,13 +88,13 @@
         var fbDownload = $("#form-buttons-download");
         if( fbDownload.length > 0){
             var dBtn = fbDownload.prop('outerHTML').replace("input","button")
-                + ' <span style="margin-left:0.4rem;">Download as XLS</span>';
+                + ' <span style="margin-left:0.4rem;">Download as spreadsheet</span>';
             var btnForm = fbDownload.parent();
 
             fbDownload.remove();
 
             btnForm.append( $(dBtn) );
-            $("#form-buttons-download").val("&#xf019; Download as XLS").addClass("fa").addClass("fa-download");
+            $("#form-buttons-download").val("&#xf019; Download as spreadsheet").addClass("fa").addClass("fa-download");
         }
     }
 
