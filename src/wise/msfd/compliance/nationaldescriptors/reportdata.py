@@ -551,15 +551,26 @@ https://svn.eionet.europa.eu/repositories/Reportnet/Dataflows/MarineDirective/MS
     def get_data_from_view_Art10(self):
         t = sql2018.t_V_ART10_Targets_2018
 
-        # TODO check conditions for other countries beside NL
-        # conditions = [t.c.GESComponents.in_(all_ids)]
+        conditions = [t.c.CountryCode == self.country_code]
+
+        if self.country_code != 'DK':
+            conditions.insert(
+                1, t.c.Region == self.country_region_code
+            )
+        else:
+            # Handle the case of Denmark that have submitted a lot of
+            # information under the DK-TOTAL MRU, which doesn't have a region
+            # attached.
+            conditions.insert(1,
+                              or_(t.c.Region == 'NotReported',
+                                  t.c.Region == self.country_region_code
+                                  )
+                              )
 
         count, res = db.get_all_records_ordered(
             t,
             ('Features', 'TargetCode', 'Element'),
-            t.c.CountryCode == self.country_code,
-            t.c.Region == self.country_region_code,
-            # *conditions
+            *conditions
         )
 
         out = []
@@ -616,13 +627,31 @@ https://svn.eionet.europa.eu/repositories/Reportnet/Dataflows/MarineDirective/MS
         if self.descriptor.startswith('D1.'):
             all_ids.append('D1')
 
+        conditions = [
+            t.c.CountryCode == self.country_code,
+            t.c.GESComponent.in_(all_ids)
+        ]
+
+        if self.country_code != 'DK':
+            conditions.insert(
+                1, or_(t.c.Region == self.country_region_code,
+                       t.c.Region.is_(None))
+            )
+        else:
+            # Handle the case of Denmark that have submitted a lot of
+            # information under the DK-TOTAL MRU, which doesn't have a region
+            # attached.
+            conditions.insert(1,
+                              or_(t.c.Region == 'NotReported',
+                                  t.c.Region == self.country_region_code,
+                                  t.c.Region.is_(None)
+                                  )
+                              )
+
         count, q = db.get_all_records_ordered(
             t,
             ('GESComponent', ),
-            t.c.CountryCode == self.country_code,
-            or_(t.c.Region == self.country_region_code,
-                t.c.Region.is_(None)),
-            t.c.GESComponent.in_(all_ids),
+            *conditions
         )
 
         ok_features = set([f.name for f in get_features(self.descriptor)])
