@@ -315,7 +315,10 @@ class ReportData2012(BaseView, BaseUtil):
         )
         report_header = self.report_header_template(**report_header_data)
 
-        report_data, report_data_rows = self.get_report_data()
+        try:
+            report_data, report_data_rows = self.get_report_data()
+        except:
+            report_data, report_data_rows = 'Error in rendering report', []
         trans_edit_html = self.translate_view()()
         self.report_html = report_header + report_data + trans_edit_html
 
@@ -936,7 +939,7 @@ https://svn.eionet.europa.eu/repositories/Reportnet/Dataflows/MarineDirective/MS
 
         self.subform = self.get_form()
 
-        if 'download' in self.request.form:
+        if ('download' in self.request.form) and report_data:
             return self.download()
 
         if 'translate' in self.request.form:
