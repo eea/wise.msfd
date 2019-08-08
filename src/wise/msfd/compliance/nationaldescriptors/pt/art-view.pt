@@ -59,7 +59,10 @@
                   </div>
                 </form>
               </li>
-
+              <li class="contentHistory" id="content-history" style="display: flex; justify-content: center;
+                flex-direction: column; text-align: center;">
+                <a href="./@@historyview" class="link-overlay fa fa-history" style="cursor: pointer"></a>
+              </li>
             </ul>
           </div>
 
