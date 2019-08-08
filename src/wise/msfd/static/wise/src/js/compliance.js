@@ -636,6 +636,9 @@ if (!Array.prototype.last){
   function regionalDescriptorsGroupTableHeaders() {
     // console.log('regionalDescriptorsGroupTableHeaders');
     var $headers = $('.first-header');
+    if($headers.length === 0){
+      return
+    }
     var compareText = '';
     var currentText = '';
 
