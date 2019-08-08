@@ -990,3 +990,44 @@ def a2018_country_art9(context):
     res = list(set(res))
 
     return vocab_from_values(res)
+
+
+@provider(IVocabularyFactory)
+def a2012_ges_components_art9(context):
+    mc = sql.MSFD9Descriptor
+    conditions = []
+
+    mrus = context.get_form_data_by_key(context, 'marine_unit_ids')
+
+    if mrus:
+        conditions.append(mc.MarineUnitID.in_(mrus))
+
+    res = db.get_unique_from_mapper(
+        mc,
+        'ReportingFeature',
+        *conditions
+    )
+
+    return vocab_from_values(res)
+
+
+@provider(IVocabularyFactory)
+def a2012_ges_components_art10(context):
+    t = sql.t_MSFD10_DESCrit
+    mc = sql.MSFD10Target
+
+    conditions = []
+
+    mrus = context.get_form_data_by_key(context, 'marine_unit_ids')
+
+    if mrus:
+        conditions.append(mc.MarineUnitID.in_(mrus))
+
+    sess = db.session()
+    q = sess.query(t.c.GESDescriptorsCriteriaIndicators).\
+        join(mc, mc.MSFD10_Target_ID == t.c.MSFD10_Target).\
+        filter(*conditions)
+
+    res = set([x[0] for x in q])
+
+    return vocab_from_values(res)

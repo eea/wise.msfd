@@ -1,29 +1,36 @@
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
+from z3c.form.browser.checkbox import CheckBoxFieldWidget
+from z3c.form.field import Fields
 
 from .. import db, sql
-from ..base import MarineUnitIDSelectForm
+from ..base import EmbeddedForm, MarineUnitIDSelectForm
 from ..db import get_all_records
 from ..utils import group_query
 from .base import ItemDisplayForm
+from .interfaces import IA2012GesComponentsArt9
 from .utils import data_to_xls, register_form
 
 
 @register_form
-class A9Form(MarineUnitIDSelectForm):
+class A9Form(EmbeddedForm):
     """ Select the MarineUnitID for the Article 9 form
     """
-
     record_title = title = 'Article 9 (GES determination)'
-    mapper_class = sql.MSFD9Descriptor
+
+    fields = Fields(IA2012GesComponentsArt9)
+    fields['ges_components'].widgetFactory = CheckBoxFieldWidget
 
     def get_subform(self):
-        return A9ItemDisplay(self, self.request)
+        return A9MRUForm(self, self.request)
 
     def download_results(self):
         muids = self.get_marine_unit_ids()
+        ges_comps = self.get_form_data_by_key(self.context, 'ges_components')
+
         count, data = get_all_records(
             self.mapper_class,
-            self.mapper_class.MarineUnitID.in_(muids)
+            self.mapper_class.MarineUnitID.in_(muids),
+            self.mapper_class.ReportingFeature.in_(ges_comps)
         )
 
         descriptor_ids = [row.MSFD9_Descriptor_ID for row in data]
@@ -42,6 +49,13 @@ class A9Form(MarineUnitIDSelectForm):
         return data_to_xls(xlsdata)
 
 
+class A9MRUForm(MarineUnitIDSelectForm):
+    mapper_class = sql.MSFD9Descriptor
+
+    def get_subform(self):
+        return A9ItemDisplay(self, self.request)
+
+
 class A9ItemDisplay(ItemDisplayForm):
     """ The implementation for the Article 9 (GES determination) form
     """
@@ -49,6 +63,24 @@ class A9ItemDisplay(ItemDisplayForm):
 
     mapper_class = sql.MSFD9Descriptor
     order_field = 'MSFD9_Descriptor_ID'
+
+    def get_db_results(self):
+        page = self.get_page()
+        muid = self.get_marine_unit_id()
+
+        args = [self.mapper_class, self.order_field]
+
+        if muid:
+            args.append(self.mapper_class.MarineUnitID == muid)
+
+        ges_comps = self.get_form_data_by_key(self.context, 'ges_components')
+
+        if ges_comps:
+            args.append(self.mapper_class.ReportingFeature.in_(ges_comps))
+
+        res = db.get_item_by_conditions(*args, page=page)
+
+        return res
 
     def get_extra_data(self):
         if not self.item:

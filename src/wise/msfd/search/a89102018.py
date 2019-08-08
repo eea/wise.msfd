@@ -16,6 +16,10 @@ from .base import ItemDisplayForm
 from .utils import data_to_xls, register_form_2018
 
 
+#########################
+#       Article 9       #
+#########################
+
 class Art9Display(ItemDisplayForm):
     css_class = 'left-side-form'
     extra_data_template = ViewPageTemplateFile('pt/extra-data-pivot.pt')
@@ -172,6 +176,10 @@ class A2018FeatureA9(EmbeddedForm):
     def get_subform(self):
         return Art9Display(self, self.request)
 
+
+#########################
+#       Article 10      #
+#########################
 
 class A2018Art10Display(ItemDisplayForm):
     extra_data_template = ViewPageTemplateFile('pt/extra-data-pivot.pt')
@@ -424,7 +432,9 @@ class A2018Article10(EmbeddedForm):
         pass
 
 
-###############################################################################
+#########################
+#     Article 8.1ab     #
+#########################
 
 class A2018Art81abDisplay(ItemDisplayForm):
     extra_data_template = ViewPageTemplateFile('pt/extra-data-pivot.pt')
@@ -768,8 +778,10 @@ class A2018Art81abMarineUnitID(MarineUnitIDSelectForm):
 
         return len(res), sorted_
 
-###############################################################################
 
+#########################
+#     Article 8.1c      #
+#########################
 
 class A2018Art81cDisplay(ItemDisplayForm):
     extra_data_template = ViewPageTemplateFile('pt/extra-data-pivot.pt')
@@ -1097,8 +1109,9 @@ class A2018Article81c(EmbeddedForm):
                                      self.fields['marine_unit_id'])
 
 
-##############################################################################
-
+#########################
+#      Indicators       #
+#########################
 
 class A2018IndicatorsGesComponent(EmbeddedForm):
     fields = Fields(interfaces.IIndicatorsGesComponent)
