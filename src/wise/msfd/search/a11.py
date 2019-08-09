@@ -629,6 +629,8 @@ class A11MonSubDisplay(MultiItemDisplayForm):
                 klass_join,
                 self.order_field,
                 and_(klass_join.MPType.in_(needed_ids),
+                     # Filter duplicate imports by ObsoleteDate
+                     klass_join.ObsoleteDate.like('%2019%'),
                      self.mapper_class.MP.in_(mp_ids),
                      or_(
                          self.mapper_class.SubMonitoringProgrammeID.in_(
