@@ -242,13 +242,17 @@ class A11MonProgDisplay(ItemDisplayForm):
         ggp = self.context.context.context
         mon_prog_ids = ggp.get_monitoring_programme_ids()
 
+        # TODO filter duplicate reports somehow
+        # condition klass_join.ObsoleteDate.like('%2019%') added to filter
+        # duplicates with same data, but different ObsoleteDate
         if needed_ID:
             [count, item] = db.get_item_by_conditions_joined(
                 self.mapper_class,
                 klass_join,
                 self.order_field,
                 and_(klass_join.MPType.in_(needed_ID),
-                     klass_join.MonitoringProgramme.in_(mon_prog_ids)),
+                     klass_join.MonitoringProgramme.in_(mon_prog_ids),
+                     klass_join.ObsoleteDate.like('%2019%')),
                 page=page
             )
 
