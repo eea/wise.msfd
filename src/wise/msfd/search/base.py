@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from zope.interface import implements
 
 from Products.Five.browser import BrowserView
@@ -244,7 +246,10 @@ class MainForm(BaseEnhancedForm, BasePublicPage, Form):
                'spreadsheetml.sheet')
 
             # fname = self.subform.get_record_title(cntx='subform') or 'marinedb'
-            fname = self.find_record_title() or 'marinedb'
+            fname = self.find_spreadsheet_title() or 'marinedb'
+            fname = fname + str(datetime.now().replace(microsecond=0))
+            fname = fname.replace(' ', '_').replace('(', '').replace(')', '')\
+                .replace('&', '_')
             sh('Content-Disposition', 'attachment; filename=%s.xlsx' % fname)
 
             return data.read()
@@ -267,16 +272,16 @@ class MainForm(BaseEnhancedForm, BasePublicPage, Form):
         if hasattr(ctx, 'download_results'):
             return ctx.download_results
 
-    def find_record_title(self):
+    def find_spreadsheet_title(self):
 
         ctx = self
 
         while hasattr(ctx, 'subform'):
 
-            if hasattr(ctx, 'record_title'):
+            if hasattr(ctx, 'spreadsheet_title'):
                 return ctx.record_title
 
             ctx = ctx.subform
 
-        if hasattr(ctx, 'record_title'):
+        if hasattr(ctx, 'spreadsheet_title'):
             return ctx.record_title

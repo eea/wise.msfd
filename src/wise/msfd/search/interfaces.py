@@ -140,6 +140,7 @@ class IA2012GesComponentsArt10(Interface):
         value_type=Choice(vocabulary="wise_search_a2012_ges_components_art10")
     )
 
+
 # Articles 8, 9, 10
 # 2018 reporting year
 class IArticleSelect2018(Interface):

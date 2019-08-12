@@ -23,7 +23,7 @@ class IMarineUnitIDSelect(Interface):
         title=u"MarineUnitID",
         # description=u"Select one or more MarineUnitIDs that you're
         # interested",
-        required=False,
+        required=True,
         vocabulary="wise_search_marine_unit_id"
     )
 
