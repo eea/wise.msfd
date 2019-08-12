@@ -964,6 +964,8 @@
         }*/
 
         initPageElems();
+        removeNoValues();
+
 
         $("[name='form.buttons.prev']").prop("disabled" , false);
         $("[name='form.buttons.next']").prop("disabled" , false);
@@ -1437,10 +1439,8 @@
     function removeNoValues() {
     /* Remove 'No value' options from all select elements
     */
-      // console.log('removeNoValues');
       var $select = $('.form-right-side .select-widget')
       $select.find("option:contains('No value')").each(function(){
-          // console.log('removed');
           $(this).remove();
       });
     }
