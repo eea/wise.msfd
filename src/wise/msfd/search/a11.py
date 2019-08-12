@@ -473,6 +473,9 @@ class A11MonSubDisplay(MultiItemDisplayForm):
     order_field = "ID"
     css_class = 'left-side-form'
 
+    blacklist = ['MP']
+    use_blacklist = True
+
     def download_results(self):
         mp_type_ids = self.context.context.context.context.get_mp_type_ids()
         regions = self.context.context.context.data.get('region_subregions',

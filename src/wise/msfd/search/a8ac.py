@@ -87,6 +87,8 @@ class A81aEcoItemDisplay(MultiItemDisplayForm):
 class A81aEcosystemPressures(ItemDisplay):
     title = 'Pressures and impacts'
 
+    blacklist = ['MSFD8a_Ecosystem']
+
     def get_db_results(self):
         if self.context.item:
             return db.get_related_record(
@@ -101,6 +103,8 @@ class A81aEcosystemAsessment(ItemDisplay):
     title = 'Status Asessment'
 
     extra_data_template = ViewPageTemplateFile('pt/extra-data-item.pt')
+
+    blacklist = ['MSFD8a_Ecosystem', 'MSFD8a_Ecosystem_StatusAssessment']
 
     def get_db_results(self):
         if self.context.item:
@@ -206,6 +210,8 @@ class A81aFunctionalGroupAsessment(ItemDisplay):
 
     extra_data_template = ViewPageTemplateFile('pt/extra-data-item.pt')
 
+    blacklist = ['MSFD8a_Functional', 'MSFD8a_Functional_StatusAssessment']
+
     def get_db_results(self):
         if self.context.item:
             return db.get_related_record(
@@ -308,6 +314,8 @@ class A81aHabitatAsessment(ItemDisplay):
     title = 'Status Asessment'
 
     extra_data_template = ViewPageTemplateFile('pt/extra-data-item.pt')
+
+    blacklist = ['MSFD8a_Habitat', 'MSFD8a_Habitat_StatusAssessment']
 
     def get_db_results(self):
         if self.context.item:
@@ -412,6 +420,8 @@ class A81aSpeciesAsessment(ItemDisplay):
 
     extra_data_template = ViewPageTemplateFile('pt/extra-data-item.pt')
 
+    blacklist = ['MSFD8a_Species', 'MSFD8a_Species_StatusAssessment']
+
     def get_db_results(self):
         if self.context.item:
             return db.get_related_record(
@@ -506,6 +516,8 @@ class A81aOtherAsessment(ItemDisplay):
     title = 'Status Asessment'
 
     extra_data_template = ViewPageTemplateFile('pt/extra-data-item.pt')
+
+    blacklist = ['MSFD8a_Other', 'MSFD8a_Other_StatusAssessment']
 
     def get_db_results(self):
         if self.context.item:

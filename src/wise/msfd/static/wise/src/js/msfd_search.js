@@ -1439,7 +1439,7 @@
     function removeNoValues() {
     /* Remove 'No value' options from all select elements
     */
-      var $select = $('.form-right-side .select-widget')
+      var $select = $('.select-widget')
       $select.find("option:contains('No value')").each(function(){
           $(this).remove();
       });

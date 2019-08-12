@@ -104,9 +104,12 @@ class A81bExtractionFishSubForm(MarineUnitIDSelectForm):
 
 @register_form_section(A81bExtractionFishItemDisplay)
 class A81bExtractionFishAssessment(ItemDisplay):
-    title = 'Asessment of extraction of fish and shellfish'
+    title = 'Assessment of extraction of fish and shellfish'
 
     extra_data_template = ViewPageTemplateFile('pt/extra-data-item.pt')
+
+    blacklist = ['MSFD8b_ExtractionFishShellfish',
+                 'MSFD8b_ExtractionFishShellfish_Assesment']
 
     def get_db_results(self):
         if self.context.item:
@@ -139,6 +142,8 @@ class A81bExtractionFishAssessment(ItemDisplay):
 class A81bExtractionFishActivities(ItemDisplay):
     title = 'Activities producing extraction of fish and shellfish'
 
+    blacklist = ['MSFD8b_ExtractionFishShellfish_ActivityDescription']
+
     def get_db_results(self):
         if self.context.item:
             return db.get_related_record_join(
@@ -152,6 +157,8 @@ class A81bExtractionFishActivities(ItemDisplay):
 @register_form_section(A81bExtractionFishItemDisplay)
 class A81bExtractionFishImpacts(ItemDisplay):
     title = 'Impacts produced by the extraction of fish and shellfish'
+
+    blacklist = ['MSFD8b_ExtractionFishShellfish']
 
     def get_db_results(self):
         if self.context.item:
@@ -243,9 +250,12 @@ class A81bExtractionSeaweedSubForm(MarineUnitIDSelectForm):
 
 @register_form_section(A81bExtractionSeaweedItemDisplay)
 class A81bExtractionSeaweedAssessment(ItemDisplay):
-    title = 'Asessment of extraction of seaweed, maerl and other'
+    title = 'Assessment of extraction of seaweed, maerl and other'
 
     extra_data_template = ViewPageTemplateFile('pt/extra-data-item.pt')
+
+    blacklist = ['MSFD8b_ExtractionSeaweedMaerlOther',
+                 'MSFD8b_ExtractionSeaweedMaerlOther_Assesment']
 
     def get_db_results(self):
         if self.context.item:
@@ -278,6 +288,8 @@ class A81bExtractionSeaweedAssessment(ItemDisplay):
 class A81bExtractionSeaweedActivities(ItemDisplay):
     title = 'Activities producing extraction of seaweed, maerl and other'
 
+    blacklist = ['MSFD8b_ExtractionSeaweedMaerlOther_ActivityDescription']
+
     def get_db_results(self):
         if self.context.item:
             return db.get_related_record_join(
@@ -291,6 +303,8 @@ class A81bExtractionSeaweedActivities(ItemDisplay):
 @register_form_section(A81bExtractionSeaweedItemDisplay)
 class A81bExtractionSeaweedImpacts(ItemDisplay):
     title = 'Impacts produced by the extraction of seaweed, maerl and other'
+
+    blacklist = ['MSFD8b_ExtractionSeaweedMaerlOther']
 
     def get_db_results(self):
         if self.context.item:
@@ -380,9 +394,12 @@ class A81bHazardousSubForm(MarineUnitIDSelectForm):
 
 @register_form_section(A81bHazardousItemDisplay)
 class A81bHazardousAssessment(ItemDisplay):
-    title = 'Asessment of hazardous substances'
+    title = 'Assessment of hazardous substances'
 
     extra_data_template = ViewPageTemplateFile('pt/extra-data-item.pt')
+
+    blacklist = ['MSFD8b_HazardousSubstances',
+                 'MSFD8b_HazardousSubstances_Assesment']
 
     def get_db_results(self):
         if self.context.item:
@@ -415,6 +432,8 @@ class A81bHazardousAssessment(ItemDisplay):
 class A81bHazardousActivities(ItemDisplay):
     title = 'Activities producing hazardous substances'
 
+    blacklist = ['MSFD8b_HazardousSubstances_ActivityDescription']
+
     def get_db_results(self):
         if self.context.item:
             return db.get_related_record_join(
@@ -428,6 +447,8 @@ class A81bHazardousActivities(ItemDisplay):
 @register_form_section(A81bHazardousItemDisplay)
 class A81bHazardousImpacts(ItemDisplay):
     title = 'Impacts produced by the hazardous substances'
+
+    blacklist = ['MSFD8b_HazardousSubstances']
 
     def get_db_results(self):
         if self.context.item:
@@ -516,9 +537,12 @@ class A81bHydroSubForm(MarineUnitIDSelectForm):
 
 @register_form_section(A81bHydroItemDisplay)
 class A81bHydroAssessment(ItemDisplay):
-    title = 'Asessment of hydrological processes'
+    title = 'Assessment of hydrological processes'
 
     extra_data_template = ViewPageTemplateFile('pt/extra-data-item.pt')
+
+    blacklist = ['MSFD8b_HydrologicalProcesses',
+                 'MSFD8b_HydrologicalProcesses_Assesment']
 
     def get_db_results(self):
         if self.context.item:
@@ -551,6 +575,8 @@ class A81bHydroAssessment(ItemDisplay):
 class A81bHydroActivities(ItemDisplay):
     title = 'Activities producing hydrological processes'
 
+    blacklist = ['MSFD8b_HydrologicalProcesses_ActivityDescription']
+
     def get_db_results(self):
         if self.context.item:
             return db.get_related_record_join(
@@ -564,6 +590,8 @@ class A81bHydroActivities(ItemDisplay):
 @register_form_section(A81bHydroItemDisplay)
 class A81bHydroImpacts(ItemDisplay):
     title = 'Impacts produced by the hydrological processes'
+
+    blacklist = ['MSFD8b_HydrologicalProcesses']
 
     def get_db_results(self):
         if self.context.item:
@@ -651,9 +679,12 @@ class A81bMarineLitterSubForm(MarineUnitIDSelectForm):
 
 @register_form_section(A81bMarineLitterItemDisplay)
 class A81bMarineLitterAssessment(ItemDisplay):
-    title = 'Asessment of marine litter'
+    title = 'Assessment of marine litter'
 
     extra_data_template = ViewPageTemplateFile('pt/extra-data-item.pt')
+
+    use_blacklist = True
+    blacklist = ['MSFD8b_Litter', 'MSFD8b_Litter_Assesment']
 
     def get_db_results(self):
         if self.context.item:
@@ -685,6 +716,9 @@ class A81bMarineLitterAssessment(ItemDisplay):
 class A81bMarineLitterActivities(ItemDisplay):
     title = 'Activities producing marine litter'
 
+    blacklist = ['MSFD8b_Litter_ActivityDescription']
+    use_blacklist = True
+
     def get_db_results(self):
         if self.context.item:
             return db.get_related_record_join(
@@ -698,6 +732,8 @@ class A81bMarineLitterActivities(ItemDisplay):
 @register_form_section(A81bMarineLitterItemDisplay)
 class A81bMarineLitterImpacts(ItemDisplay):
     title = 'Impacts produced by the marine litter'
+
+    blacklist = ['MSFD8b_Litter']
 
     def get_db_results(self):
         if self.context.item:
@@ -787,9 +823,12 @@ class A81bMicrobialSubForm(MarineUnitIDSelectForm):
 
 @register_form_section(A81bMicrobialItemDisplay)
 class A81bMicrobialAssessment(ItemDisplay):
-    title = 'Asessment of microbial pathogens'
+    title = 'Assessment of microbial pathogens'
 
     extra_data_template = ViewPageTemplateFile('pt/extra-data-item.pt')
+
+    blacklist = ['MSFD8b_MicrobialPathogens',
+                 'MSFD8b_MicrobialPathogens_Assesment']
 
     def get_db_results(self):
         if self.context.item:
@@ -821,6 +860,8 @@ class A81bMicrobialAssessment(ItemDisplay):
 @register_form_section(A81bMicrobialItemDisplay)
 class A81bMicrobialActivities(ItemDisplay):
     title = 'Activities producing microbial pathogens'
+
+    blacklist = ['MSFD8b_MicrobialPathogens_ActivityDescription']
 
     def get_db_results(self):
         if self.context.item:
@@ -924,9 +965,11 @@ class A81bNonIndigenousSubForm(MarineUnitIDSelectForm):
 
 @register_form_section(A81bNonIndigenousItemDisplay)
 class A81bNonIndigenousAssessment(ItemDisplay):
-    title = 'Asessment of non-indigenous species'
+    title = 'Assessment of non-indigenous species'
 
     extra_data_template = ViewPageTemplateFile('pt/extra-data-item.pt')
+
+    blacklist = ['MSFD8b_NIS', 'MSFD8b_NIS_Assesment']
 
     def get_db_results(self):
         if self.context.item:
@@ -958,6 +1001,8 @@ class A81bNonIndigenousAssessment(ItemDisplay):
 class A81bNonIndigenousActivities(ItemDisplay):
     title = 'Activities producing non-indigenous species'
 
+    blacklist = ['MSFD8b_NIS_ActivityDescription']
+
     def get_db_results(self):
         if self.context.item:
             return db.get_related_record_join(
@@ -971,6 +1016,8 @@ class A81bNonIndigenousActivities(ItemDisplay):
 @register_form_section(A81bNonIndigenousItemDisplay)
 class A81bNonIndigenousImpacts(ItemDisplay):
     title = 'Impacts produced by non-indigenous species'
+
+    blacklist = ['MSFD8b_NIS']
 
     def get_db_results(self):
         if self.context.item:
@@ -1058,9 +1105,11 @@ class A81bNoiseSubForm(MarineUnitIDSelectForm):
 
 @register_form_section(A81bNoiseItemDisplay)
 class A81bNoiseAssessment(ItemDisplay):
-    title = 'Asessment of underwater noise'
+    title = 'Assessment of underwater noise'
 
     extra_data_template = ViewPageTemplateFile('pt/extra-data-item.pt')
+
+    blacklist = ['MSFD8b_Noise', 'MSFD8b_Noise_Assesment']
 
     def get_db_results(self):
         if self.context.item:
@@ -1089,6 +1138,8 @@ class A81bNoiseAssessment(ItemDisplay):
 class A81bNoiseActivities(ItemDisplay):
     title = 'Activities producing underwater noise'
 
+    blacklist = ['MSFD8b_Noise_ActivityDescription']
+
     def get_db_results(self):
         if self.context.item:
             return db.get_related_record_join(
@@ -1102,6 +1153,8 @@ class A81bNoiseActivities(ItemDisplay):
 @register_form_section(A81bNoiseItemDisplay)
 class A81bNoiseImpacts(ItemDisplay):
     title = 'Impacts produced by underwater noise'
+
+    blacklist = ['MSFD8b_Noise']
 
     def get_db_results(self):
         if self.context.item:
@@ -1189,9 +1242,11 @@ class A81bNutrientSubForm(MarineUnitIDSelectForm):
 
 @register_form_section(A81bNutrientItemDisplay)
 class A81bNutrientAssessment(ItemDisplay):
-    title = 'Asessment of nutrients'
+    title = 'Assessment of nutrients'
 
     extra_data_template = ViewPageTemplateFile('pt/extra-data-item.pt')
+
+    blacklist = ['MSFD8b_Nutrients', 'MSFD8b_Nutrients_Assesment']
 
     def get_db_results(self):
         if self.context.item:
@@ -1220,6 +1275,8 @@ class A81bNutrientAssessment(ItemDisplay):
 class A81bNutrientActivities(ItemDisplay):
     title = 'Activities producing nutrients'
 
+    blacklist = ['MSFD8b_Nutrients_ActivityDescription']
+
     def get_db_results(self):
         if self.context.item:
             return db.get_related_record_join(
@@ -1233,6 +1290,8 @@ class A81bNutrientActivities(ItemDisplay):
 @register_form_section(A81bNutrientItemDisplay)
 class A81bNutrientImpacts(ItemDisplay):
     title = 'Impacts produced by the nutrients'
+
+    blacklist = ['MSFD8b_Nutrients']
 
     def get_db_results(self):
         if self.context.item:
@@ -1321,9 +1380,11 @@ class A81bPhysicalDamageSubForm(MarineUnitIDSelectForm):
 
 @register_form_section(A81bPhysicalDamageItemDisplay)
 class A81bPhysicalDamageAssessment(ItemDisplay):
-    title = 'Asessment of physical damage'
+    title = 'Assessment of physical damage'
 
     extra_data_template = ViewPageTemplateFile('pt/extra-data-item.pt')
+
+    blacklist = ['MSFD8b_PhysicalDamage', 'MSFD8b_PhysicalDamage_Assesment']
 
     def get_db_results(self):
         if self.context.item:
@@ -1352,6 +1413,8 @@ class A81bPhysicalDamageAssessment(ItemDisplay):
 class A81bPhysicalDamageActivities(ItemDisplay):
     title = 'Activities producing physical damage'
 
+    blacklist = ['MSFD8b_PhysicalDamage_ActivityDescription']
+
     def get_db_results(self):
         if self.context.item:
             return db.get_related_record_join(
@@ -1365,6 +1428,8 @@ class A81bPhysicalDamageActivities(ItemDisplay):
 @register_form_section(A81bPhysicalDamageItemDisplay)
 class A81bPhysicalDamageImpacts(ItemDisplay):
     title = 'Impacts produced by the physical damage'
+
+    blacklist = ['MSFD8b_PhysicalDamage']
 
     def get_db_results(self):
         if self.context.item:
@@ -1453,9 +1518,11 @@ class A81bPhysicalLosSubForm(MarineUnitIDSelectForm):
 
 @register_form_section(A81bPhysicalLosItemDisplay)
 class A81bPhysicalLosAssessment(ItemDisplay):
-    title = 'Asessment of physical loss'
+    title = 'Assessment of physical loss'
 
     extra_data_template = ViewPageTemplateFile('pt/extra-data-item.pt')
+
+    blacklist = ['MSFD8b_PhysicalLoss', 'MSFD8b_PhysicalLoss_Assesment']
 
     def get_db_results(self):
         if self.context.item:
@@ -1484,6 +1551,8 @@ class A81bPhysicalLosAssessment(ItemDisplay):
 class A81bPhysicalLosActivities(ItemDisplay):
     title = 'Activities producing physical loss'
 
+    blacklist = ['MSFD8b_PhysicalLoss_ActivityDescription']
+
     def get_db_results(self):
         if self.context.item:
             return db.get_related_record_join(
@@ -1497,6 +1566,8 @@ class A81bPhysicalLosActivities(ItemDisplay):
 @register_form_section(A81bPhysicalLosItemDisplay)
 class A81bPhysicalLosImpacts(ItemDisplay):
     title = 'Impacts produced by the physical loss'
+
+    blacklist = ['MSFD8b_PhysicalLoss']
 
     def get_db_results(self):
         if self.context.item:
@@ -1585,9 +1656,11 @@ class A81bPollutantEventSubForm(MarineUnitIDSelectForm):
 
 @register_form_section(A81bPollutantEventItemDisplay)
 class A81bPollutantEventAssessment(ItemDisplay):
-    title = 'Asessment of pollutant events'
+    title = 'Assessment of pollutant events'
 
     extra_data_template = ViewPageTemplateFile('pt/extra-data-item.pt')
+
+    blacklist = ['MSFD8b_PollutantEvents', 'MSFD8b_PollutantEvents_Assesment']
 
     def get_db_results(self):
         if self.context.item:
@@ -1616,6 +1689,8 @@ class A81bPollutantEventAssessment(ItemDisplay):
 class A81bPollutantEventActivities(ItemDisplay):
     title = 'Activities producing pollutant events'
 
+    blacklist = ['MSFD8b_PollutantEvents_ActivityDescription']
+
     def get_db_results(self):
         if self.context.item:
             return db.get_related_record_join(
@@ -1629,6 +1704,8 @@ class A81bPollutantEventActivities(ItemDisplay):
 @register_form_section(A81bPollutantEventItemDisplay)
 class A81bPollutantEventImpacts(ItemDisplay):
     title = 'Impacts produced by the pollutant event'
+
+    blacklist = ['MSFD8b_PollutantEvents']
 
     def get_db_results(self):
         if self.context.item:
