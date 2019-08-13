@@ -87,16 +87,35 @@ REGIONS_SIMPLIFIED = {
     'Black Sea': ('BLK',),
 }
 
-Region = namedtuple('Region', ['code', 'title', 'subregions', 'countries'])
+Region = namedtuple('Region', ['code', 'title', 'subregions',
+                               'countries', 'is_main'])
 
 REGIONAL_DESCRIPTORS_REGIONS = [
+    # Main regions
     Region('BAL', 'Baltic', ('BAL',),
-           ('FI', 'EE', 'LV', 'LT', 'PL', 'DE', 'DK', 'SE')),
+           ('FI', 'EE', 'LV', 'LT', 'PL', 'DE', 'DK', 'SE'), True),
     Region('ATL', 'North East Atlantic', ('ABI', 'ACS', 'AMA', 'ANS',),
-           ('SE', 'DK', 'DE', 'NL', 'BE', 'FR', 'UK', 'IE', 'ES', 'PT')),
+           ('SE', 'DK', 'DE', 'NL', 'BE', 'FR', 'UK', 'IE', 'ES', 'PT'), True),
     Region('MED', 'Mediterranean', ('MAD', 'MAL', 'MIC', 'MWE'),
-           ('UK', 'ES', 'FR', 'IT', 'MT', 'SI', 'HR', 'EL', 'CY')),
-    Region('BLK', 'Black Sea', ('BLK',), ('BG', 'RO')),
+           ('UK', 'ES', 'FR', 'IT', 'MT', 'SI', 'HR', 'EL', 'CY'), True),
+    Region('BLK', 'Black Sea', ('BLK',), ('BG', 'RO'), True),
+    # Sub regions
+    Region('ANS', 'NE Atlantic: Greater North Sea', ('ANS',),
+           ('SE', 'DK', 'DE', 'NL', 'BE', 'FR', 'UK'), False),
+    Region('ACS', 'NE Atlantic: Celtic Seas', ('ACS',),
+           ('UK', 'IE', 'FR'), False),
+    Region('ABI', 'NE Atlantic: Bay of Biscay & Iberian Coast', ('ABI',),
+           ('FR', 'ES', 'PT'), False),
+    Region('AMA', 'NE Atlantic: Macaronesia', ('AMA',),
+           ('ES', 'PT'), False),
+    Region('MWE', 'Mediterranean: Western Mediterranean Sea', ('MWE',),
+           ('UK', 'ES', 'FR', 'IT'), False),
+    Region('MAD', 'Mediterranean: Adriatic Sea', ('MAD',),
+           ('IT', 'SI', 'HR', 'EL'), False),
+    Region('MIC', 'Mediterranean: Ionian Sea & Central Mediterranean Sea',
+           ('MIC',), ('IT', 'MT', 'EL'), False),
+    Region('MAL', 'Mediterranean: Aegean-Levantine Sea', ('MAL',),
+           ('EL', 'CY'), False),
 ]
 
 

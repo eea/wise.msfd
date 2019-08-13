@@ -4,6 +4,7 @@ from itertools import chain
 from plone.api.content import get_state
 from plone.api.portal import get_tool
 from wise.msfd.compliance.base import BaseComplianceView
+from wise.msfd.compliance.vocabulary import REGIONAL_DESCRIPTORS_REGIONS
 from wise.msfd.gescomponents import FEATURES_DB_2018
 from wise.msfd.labels import get_label
 from wise.msfd.utils import ItemLabel
@@ -146,17 +147,34 @@ class BaseRegDescRow(BaseRegComplianceView):
     def get_countries_row(self):
         url = self.request['URL0']
 
-        def country(code, name):
+        reg_main = self._countryregion_folder.id.upper()
+        subregions = [r.subregions for r in REGIONAL_DESCRIPTORS_REGIONS
+                      if reg_main in r.code]
+
+        def get_country_url(c_code, r_code):
             href = url.replace(
-                'regional-descriptors-assessments',
-                'national-descriptors-assessments/{}'.format(code.lower())
+                'regional-descriptors-assessments/{}'.format(reg_main.lower()),
+                'national-descriptors-assessments/{}/{}'.format(
+                    c_code.lower(), r_code.lower())
             )
 
-            return "<a href='{}'>{}</a>".format(href, name)
+            return "<a href='{}'>{}</a>".format(href, r_code)
 
         rows = []
-        country_names = [country(x[0], x[1])
-                         for x in self.context.available_countries]
+        country_names = []
+        for country in self.context.available_countries:
+            value = []
+            c_code = country[0]
+            c_name = country[1]
+            regions = [r.code for r in REGIONAL_DESCRIPTORS_REGIONS
+                       if len(r.subregions) == 1 and c_code in r.countries
+                       and r.code in subregions[0]]
+            for r in regions:
+                value.append(get_country_url(c_code, r))
+
+            final = '{} ({})'.format(c_name, ', '.join(value))
+            country_names.append(final)
+
         rows.append(('', country_names))
 
         return rows

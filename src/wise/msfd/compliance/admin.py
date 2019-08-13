@@ -280,6 +280,9 @@ class BootstrapCompliance(BrowserView):
             alsoProvides(rda, interfaces.IRegionalDescriptorsFolder)
 
         for region in REGIONAL_DESCRIPTORS_REGIONS:
+            if not region.is_main:
+                continue
+
             self.make_region(rda, region)
 
     def __call__(self):
