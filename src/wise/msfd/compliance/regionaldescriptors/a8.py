@@ -5,7 +5,8 @@ from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 from wise.msfd import db, sql  # , sql_extra
 from wise.msfd.data import countries_in_region, muids_by_country
 from wise.msfd.gescomponents import FEATURES_DB_2018, FEATURES_DB_2012
-from wise.msfd.utils import CompoundRow, ItemLabel, ItemList, Row, TableHeader
+from wise.msfd.utils import (fixedorder_sortkey, CompoundRow, ItemLabel,
+                             ItemList, Row, TableHeader)
 
 from ..a8_utils import UtilsArticle8
 from .base import BaseRegDescRow, BaseRegComplianceView
@@ -16,18 +17,8 @@ class RegDescA82018Row(BaseRegDescRow):
     year = '2018'
 
     def _sortkey(self, value, order):
-        """ Used to sort a list by a specific order of values
-        If the value is not in the order list, it will be added to the end of
-        the list
 
-        :param value: 'Not good'
-        :param order: ['Good', 'Not good', 'Unknown', 'not reported']
-        :return: index on the value from the order list
-        """
-
-        key = value in order and order.index(value) + 1 or len(order) + 2
-
-        return key
+        return fixedorder_sortkey(value, order)
 
     @compoundrow
     def get_feature_row(self):
@@ -502,18 +493,29 @@ class RegDescA82018Row(BaseRegDescRow):
         values = []
 
         for country_code, country_name in self.countries:
-            data = set([
+            value = []
+            data = [
                 row.IntegrationRuleTypeParameter
                 for row in self.db_data
                 if row.CountryCode == country_code
                    and row.IntegrationRuleTypeParameter
-            ])
+            ]
 
-            value = self.not_rep
-            if data:
-                value = newline_separated_itemlist(data)
+            if not data:
+                values.append(self.not_rep)
+                continue
 
-            values.append(value)
+            for param in set(data):
+                found = len([x for x in data if x == param])
+                total = len(data)
+                percentage = total and (found / float(total)) * 100 or 0
+
+                text = u"{0} ({1} or {2:0.1f}%)".format(
+                    param, found, percentage
+                )
+                value.append(text)
+
+            values.append(newline_separated_itemlist(value))
 
         rows.append(('', values))
 
@@ -548,18 +550,29 @@ class RegDescA82018Row(BaseRegDescRow):
         values = []
 
         for country_code, country_name in self.countries:
-            data = set([
+            value = []
+            data = [
                 row.IntegrationRuleTypeCriteria
                 for row in self.db_data
                 if row.CountryCode == country_code
                    and row.IntegrationRuleTypeCriteria
-            ])
+            ]
 
-            value = self.not_rep
-            if data:
-                value = newline_separated_itemlist(data)
+            if not data:
+                values.append(self.not_rep)
+                continue
 
-            values.append(value)
+            for crit in set(data):
+                found = len([x for x in data if x == crit])
+                total = len(data)
+                percentage = total and (found / float(total)) * 100 or 0
+
+                text = u"{0} ({1} or {2:0.1f}%)".format(
+                    crit, found, percentage
+                )
+                value.append(text)
+
+            values.append(newline_separated_itemlist(value))
 
         rows.append(('', values))
 
@@ -664,18 +677,29 @@ class RegDescA82018Row(BaseRegDescRow):
         values = []
 
         for country_code, country_name in self.countries:
-            data = set([
+            value = []
+            data = [
                 str(row.GESAchieved)
                 for row in self.db_data
                 if row.CountryCode == country_code
                    and row.GESAchieved
-            ])
+            ]
 
-            value = self.not_rep
-            if data:
-                value = newline_separated_itemlist(data)
+            if not data:
+                values.append(self.not_rep)
+                continue
 
-            values.append(value)
+            for achiev in set(data):
+                found = len([x for x in data if x == achiev])
+                total = len(data)
+                percentage = total and (found / float(total)) * 100 or 0
+
+                text = u"{0} ({1} or {2:0.1f}%)".format(
+                    achiev, found, percentage
+                )
+                value.append(text)
+
+            values.append(newline_separated_itemlist(value))
 
         rows.append(('', values))
 
@@ -687,18 +711,29 @@ class RegDescA82018Row(BaseRegDescRow):
         values = []
 
         for country_code, country_name in self.countries:
-            data = set([
+            value = []
+            data = [
                 str(row.AssessmentsPeriod)
                 for row in self.db_data
                 if row.CountryCode == country_code
                    and row.AssessmentsPeriod
-            ])
+            ]
 
-            value = self.not_rep
-            if data:
-                value = newline_separated_itemlist(data)
+            if not data:
+                values.append(self.not_rep)
+                continue
 
-            values.append(value)
+            for period in set(data):
+                found = len([x for x in data if x == period])
+                total = len(data)
+                percentage = total and (found / float(total)) * 100 or 0
+
+                text = u"{0} ({1} or {2:0.1f}%)".format(
+                    period, found, percentage
+                )
+                value.append(text)
+
+            values.append(newline_separated_itemlist(value))
 
         rows.append(('', values))
 
@@ -710,6 +745,7 @@ class RegDescA82018Row(BaseRegDescRow):
         values = []
 
         for country_code, country_name in self.countries:
+            value = []
             data = [
                 row.PressureCodes.split(',')
                 for row in self.db_data
@@ -717,13 +753,23 @@ class RegDescA82018Row(BaseRegDescRow):
                     and row.PressureCodes
             ]
 
-            pressures = set([self.get_label_for_value(x) for x in chain(*data)])
+            pressures = [self.get_label_for_value(x) for x in chain(*data)]
 
-            value = self.not_rep
-            if pressures:
-                value = newline_separated_itemlist(pressures)
+            if not pressures:
+                values.append(self.not_rep)
+                continue
 
-            values.append(value)
+            for pressure in set(pressures):
+                found = len([x for x in pressures if x == pressure])
+                total = len(pressures)
+                percentage = total and (found / float(total)) * 100 or 0
+
+                text = u"{0} ({1} or {2:0.1f}%)".format(
+                    pressure, found, percentage
+                )
+                value.append(text)
+
+            values.append(newline_separated_itemlist(value))
 
         rows.append(('', values))
 
