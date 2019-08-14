@@ -53,10 +53,10 @@ class EditAssessmentDataForm(Form, BaseView):
 
     @property
     def title(self):
-        return "Edit {}'s Assessment for {}/{}/{}".format(
+        return "Edit Comission assessment: {}/ {}/ {}/ {}/ 2018".format(
             self.country_title,
+            self.country_region_name,
             self.descriptor,
-            self.country_region_code,
             self.article,
         )
 
