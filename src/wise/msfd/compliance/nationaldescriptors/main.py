@@ -386,8 +386,8 @@ def format_assessment_data(article, elements, questions, muids, data,
 
     # max_phase1_score ............. 100%
     # phase1_score ................. x%
-    phase1_score = max_phase1_score and \
-        (phase1_score * 100) / max_phase1_score or 0
+    phase1_score = int(round(max_phase1_score and
+                             (phase1_score * 100) / max_phase1_score or 0))
 
     try:
         phase1_conclusion = get_overall_conclusion(phase1_score)

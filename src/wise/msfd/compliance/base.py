@@ -591,7 +591,14 @@ class AssessmentQuestionDefinition:
         self.score_method = resolve(sn.get('determination-method'))
 
     def calculate_score(self, descriptor, values):
-        return Score(self, descriptor, values)
+        score_obj = Score(self, descriptor, values)
+
+        # if all options are 'Not relevant' return None, so the question will
+        # behave like not answered and it will not count towards overall score
+        # if score_obj.max_score == 0:
+        #     return None
+
+        return score_obj
 
     def _art_89_ids(self, descriptor, **kwargs):
         return sorted_criterions(descriptor.criterions)

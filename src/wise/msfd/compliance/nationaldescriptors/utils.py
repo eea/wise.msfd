@@ -56,7 +56,7 @@ def consolidate_date_by_mru(data):
 
     for mrus, rows in regroup.items():
         mrus_labeled = tuple([
-            ItemLabel(row, GES_LABELS.get('mrus', row))
+            ItemLabel(row, u'{} ({})'.format(GES_LABELS.get('mrus', row), row))
 
             for row in mrus
         ])

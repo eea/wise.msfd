@@ -469,7 +469,8 @@ class AdminScoring(BaseComplianceView):
                                                                values)
 
                     data[q_id] = new_score
-                    new_overall_score += new_score.weighted_score
+                    new_overall_score += getattr(new_score,
+                                                 'weighted_score', 0)
 
                 data['OverallScore'] = new_overall_score
                 obj.saved_assessment_data._p_changed = True
