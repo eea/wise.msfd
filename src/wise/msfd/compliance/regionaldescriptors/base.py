@@ -158,7 +158,7 @@ class BaseRegDescRow(BaseRegComplianceView):
                     c_code.lower(), r_code.lower())
             )
 
-            return "<a href='{}'>{}</a>".format(href, r_code)
+            return "<a target='_blank' href='{}'>{}</a>".format(href, r_code)
 
         rows = []
         country_names = []

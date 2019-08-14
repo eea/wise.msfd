@@ -1,10 +1,11 @@
-from collections import defaultdict
+from collections import defaultdict, OrderedDict
 from itertools import chain
 from sqlalchemy import or_
 
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 from wise.msfd import db, sql, sql_extra
 from wise.msfd.data import countries_in_region, muids_by_country
+from wise.msfd.utils import fixedorder_sortkey
 from wise.msfd.gescomponents import (get_ges_component, FEATURES_DB_2012,
                                      FEATURES_DB_2018)
 
@@ -65,12 +66,43 @@ class RegDescA102018Row(BaseRegDescRow):
         return rows
 
     @compoundrow
-    def get_target_value_row(self):
+    def get_targetcode_row(self):
         rows = []
         values = []
 
         for country_code, country_name in self.countries:
-            reports = {'Reported': 0, 'Not reported': 0}
+            value = []
+            data = [
+                (row.TargetCode, row.Description)
+                for row in self.db_data
+                if row.CountryCode == country_code
+                   and row.TargetCode
+            ]
+            if not data:
+                values.append(self.not_rep)
+                continue
+
+            for row in set(data):
+                target_code = row[0]
+                description = row[1]
+
+                value.append(u"<b>{}</b>: {}".format(target_code, description))
+
+            values.append('<br>'.join(value))
+
+        rows.append(('', values))
+
+        return rows
+
+    @compoundrow
+    def get_target_value_row(self):
+        rows = []
+        values = []
+
+        display_options = ['Reported', 'Not reported']
+
+        for country_code, country_name in self.countries:
+            reports = {k: 0 for k in display_options}
             value = []
             data = [
                 row.TargetValue
@@ -91,14 +123,15 @@ class RegDescA102018Row(BaseRegDescRow):
 
                 reports['Not reported'] += 1
 
-            for k, v in reports.items():
+            for k in display_options:
+                v = reports[k]
                 percentage = total and (v / float(total)) * 100 or 0
 
                 value.append(u"{0} ({1} - {2:0.1f}%)".format(
                     k, v, percentage
                 ))
 
-            values.append(newline_separated_itemlist(value))
+            values.append(newline_separated_itemlist(value, sort=False))
 
         rows.append(('No. of parameters/elements with quantitative values',
                      values))
@@ -228,10 +261,11 @@ class RegDescA102018Row(BaseRegDescRow):
                 continue
 
             for updatedate in set(data):
+                upd_formatted = "{}-{}".format(updatedate[0:4], updatedate[4:])
                 found = len([x for x in data if x == updatedate])
                 percentage = total and (found / float(total)) * 100 or 0
                 value.append(u"{0} ({1} - {2:0.1f}%)".format(
-                    updatedate, found, percentage
+                    upd_formatted, found, percentage
                 ))
 
             values.append(newline_separated_itemlist(value))
@@ -244,6 +278,9 @@ class RegDescA102018Row(BaseRegDescRow):
     def get_updatetype_row(self):
         rows = []
         values = []
+
+        order = ['Same as 2012 definition', 'Modified from 2012 definition',
+                 'New target']
 
         for country_code, country_name in self.countries:
             value = []
@@ -259,14 +296,17 @@ class RegDescA102018Row(BaseRegDescRow):
                 values.append(self.not_rep)
                 continue
 
-            for updatetype in set(data):
+            updatetypes = sorted(set(data),
+                                 key=lambda t: fixedorder_sortkey(t, order))
+
+            for updatetype in updatetypes:
                 found = len([x for x in data if x == updatetype])
                 percentage = total and (found / float(total)) * 100 or 0
                 value.append(u"{0} ({1} - {2:0.1f}%)".format(
                     updatetype, found, percentage
                 ))
 
-            values.append(newline_separated_itemlist(value))
+            values.append(newline_separated_itemlist(value, sort=False))
 
         rows.append(('No. of targets per category', values))
 
@@ -443,7 +483,7 @@ class RegDescA102012(BaseRegComplianceView):
 
             values.append(value)
 
-        rows.append(('Number user', values))
+        rows.append(('Number used', values))
 
         return rows
 
@@ -465,7 +505,7 @@ class RegDescA102012(BaseRegComplianceView):
 
             values.append(value)
 
-        rows.append(('Number user', values))
+        rows.append(('Number used', values))
 
         return rows
 

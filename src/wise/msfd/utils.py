@@ -649,6 +649,21 @@ def natural_sort_key(s, _nsre=re.compile('([0-9]+)')):
             for text in _nsre.split(s)]
 
 
+def fixedorder_sortkey(value, order):
+    """ Used to sort a list by a specific order of values
+    If the value is not in the order list, it will be added to the end of
+    the list
+
+    :param value: 'Not good'
+    :param order: ['Good', 'Not good', 'Unknown', 'not reported']
+    :return: index on the value from the order list
+    """
+
+    key = value in order and order.index(value) + 1 or len(order) + 2
+
+    return key
+
+
 def get_annot():
     site = getSite()
     annot = IAnnotations(site, {})
