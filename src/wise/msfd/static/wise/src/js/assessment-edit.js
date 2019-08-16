@@ -201,7 +201,7 @@
     // Warn user before leaving the page with unsaved changes
     var submitted = false;
     var modified = false;
-    var $nd = $('#comp-national-descriptor');
+    var $nd = $('.fields-container');
 
     $('#comp-national-descriptor form').submit(function() {
       submitted = true;
