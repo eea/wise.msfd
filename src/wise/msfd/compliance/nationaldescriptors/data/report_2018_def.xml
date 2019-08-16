@@ -101,7 +101,7 @@
     <element section="overallstatus" setlevel="0" name="IntegrationRuleTypeParameter" label="parameters">
       Integration rule type parameter
     </element>
-    <element section="overallstatus" name="IntegrationRuleDescriptionParameter">
+    <element section="overallstatus" name="IntegrationRuleDescriptionParameter" translate="true">
       Integration rule description parameter
     </element>
     <element section="overallstatus" name="IntegrationRuleDescriptionReferenceParameter" skip="true" reason="Not in the XML">

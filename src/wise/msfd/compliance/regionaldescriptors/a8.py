@@ -5,6 +5,7 @@ from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 from wise.msfd import db, sql  # , sql_extra
 from wise.msfd.data import countries_in_region, muids_by_country
 from wise.msfd.gescomponents import FEATURES_DB_2018, FEATURES_DB_2012
+from wise.msfd.translation import get_translated
 from wise.msfd.utils import (fixedorder_sortkey, CompoundRow, ItemLabel,
                              ItemList, Row, TableHeader)
 
@@ -527,16 +528,26 @@ class RegDescA82018Row(BaseRegDescRow):
         values = []
 
         for country_code, country_name in self.countries:
+            orig = []
+            translated = []
             data = set([
                 row.IntegrationRuleDescriptionParameter
                 for row in self.db_data
                 if row.CountryCode == country_code
                    and row.IntegrationRuleDescriptionParameter
             ])
+            if not data:
+                values.append(self.not_rep)
+                continue
 
-            value = self.not_rep
-            if data:
-                value = newline_separated_itemlist(data)
+            for description in data:
+                transl = get_translated(description, country_code) or ''
+
+                orig.append(description)
+                translated.append(transl)
+
+            value = (newline_separated_itemlist(orig),
+                     newline_separated_itemlist(translated))
 
             values.append(value)
 
@@ -584,6 +595,9 @@ class RegDescA82018Row(BaseRegDescRow):
         values = []
 
         for country_code, country_name in self.countries:
+            orig = []
+            translated = []
+
             data = set([
                 row.IntegrationRuleDescriptionCriteria
                 for row in self.db_data
@@ -591,10 +605,18 @@ class RegDescA82018Row(BaseRegDescRow):
                    and row.IntegrationRuleDescriptionCriteria
             ])
 
-            value = self.not_rep
-            if data:
-                value = newline_separated_itemlist(data)
-                # value = list(data)[0]
+            if not data:
+                values.append(self.not_rep)
+                continue
+
+            for description in data:
+                transl = get_translated(description, country_code) or ''
+
+                orig.append(description)
+                translated.append(transl)
+
+            value = (newline_separated_itemlist(orig),
+                     newline_separated_itemlist(translated))
 
             values.append(value)
 

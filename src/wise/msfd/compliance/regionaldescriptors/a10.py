@@ -49,12 +49,12 @@ class RegDescA102018Row(BaseRegDescRow):
         values = []
 
         for country_code, country_name in self.countries:
-            data = [
+            data = set([
                 row.TargetCode
                 for row in self.db_data
                 if row.CountryCode == country_code
                    and row.TargetCode
-            ]
+            ])
             value = self.not_rep
             if data:
                 value = len(data)
