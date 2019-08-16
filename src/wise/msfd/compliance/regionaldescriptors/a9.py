@@ -7,6 +7,7 @@ from wise.msfd import db, sql, sql_extra
 from wise.msfd.data import countries_in_region, muids_by_country
 from wise.msfd.gescomponents import (get_descriptor, FEATURES_DB_2012,
                                      FEATURES_DB_2018)
+from wise.msfd.translation import get_translated
 from wise.msfd.utils import CompoundRow, ItemLabel, ItemList, Row, TableHeader
 
 from .utils import (compoundrow, compoundrow2012, emptyline_separated_itemlist,
@@ -38,18 +39,28 @@ class RegDescA92018Row(BaseRegDescRow):
         for crit in criterions:
             values = []
             for country_code, country_name in self.countries:
-                data = [
+                orig = []
+                translated = []
+                data = set([
                     row.GESDescription
                     for row in self.db_data
                     if row.CountryCode == country_code
                        and (row.GESComponent == crit.id
                             or row.GESComponent.split('/')[0] == crit.id)
                        and row.Features
-                ]
-                value = self.not_rep
-                if data:
-                    # value = ItemList(set(data))
-                    value = emptyline_separated_itemlist(data)
+                ])
+                if not data:
+                    values.append(self.not_rep)
+                    continue
+
+                for ges_descr in data:
+                    transl = get_translated(ges_descr, country_code) or ''
+
+                    orig.append(ges_descr)
+                    translated.append(transl)
+
+                value = (emptyline_separated_itemlist(orig),
+                         emptyline_separated_itemlist(translated))
 
                 values.append(value)
 
@@ -62,17 +73,28 @@ class RegDescA92018Row(BaseRegDescRow):
         rows = []
         values = []
         for country_code, country_name in self.countries:
+            orig = []
+            translated = []
             data = set([
-                u": ".join((row.GESComponent, row.JustificationNonUse))
+                (row.GESComponent, row.JustificationNonUse)
                 for row in self.db_data
                 if row.CountryCode == country_code
                    and row.JustificationNonUse
             ])
-            value = self.not_rep
-            if data:
-                # value = NewlineSeparatedItemList(data)
-                value = emptyline_separated_itemlist(data)
-                # value = u"".join(set(data))
+            if not data:
+                values.append(self.not_rep)
+                continue
+
+            for row in data:
+                ges_comp = row[0]
+                justification = row[1]
+                transl = get_translated(justification, country_code)
+
+                orig.append(u'{}: {}'.format(ges_comp, justification))
+                translated.append(u'{}: {}'.format(ges_comp, transl))
+
+            value = (emptyline_separated_itemlist(orig),
+                     emptyline_separated_itemlist(translated))
 
             values.append(value)
 
@@ -85,15 +107,28 @@ class RegDescA92018Row(BaseRegDescRow):
         rows = []
         values = []
         for country_code, country_name in self.countries:
+            orig = []
+            translated = []
             data = set([
-                u": ".join((row.GESComponent, row.JustificationDelay))
+                (row.GESComponent, row.JustificationDelay)
                 for row in self.db_data
                 if row.CountryCode == country_code
                     and row.JustificationDelay
             ])
-            value = self.not_rep
-            if data:
-                value = emptyline_separated_itemlist(data)
+            if not data:
+                values.append(self.not_rep)
+                continue
+
+            for row in data:
+                ges_comp = row[0]
+                justification = row[1]
+                transl = get_translated(justification, country_code)
+
+                orig.append(u'{}: {}'.format(ges_comp, justification))
+                translated.append(u'{}: {}'.format(ges_comp, transl))
+
+            value = (emptyline_separated_itemlist(orig),
+                     emptyline_separated_itemlist(translated))
 
             values.append(value)
 

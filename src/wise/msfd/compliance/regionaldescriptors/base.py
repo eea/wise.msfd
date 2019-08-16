@@ -7,6 +7,7 @@ from wise.msfd.compliance.base import BaseComplianceView
 from wise.msfd.compliance.vocabulary import REGIONAL_DESCRIPTORS_REGIONS
 from wise.msfd.gescomponents import FEATURES_DB_2018
 from wise.msfd.labels import get_label
+from wise.msfd.translation import get_detected_lang
 from wise.msfd.utils import ItemLabel
 
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
@@ -106,10 +107,27 @@ class BaseRegComplianceView(BaseComplianceView):
         is_translatable = fieldname in self.TRANSLATABLES
 
         v = self.translate_view()
+        
+        if not is_translatable:
+            return v.cell_tpl(value=value)
 
-        return v.translate(source_lang=source_lang,
-                           value=value,
-                           is_translatable=is_translatable)
+        if not value:
+            return v.cell_tpl(value=value)
+
+        text = value[0]
+        translation = value[1] or ''
+
+        if get_detected_lang(text) == 'en' or not translation:
+            return v.cell_tpl(value=text)
+
+        return v.translate_tpl(text=text,
+                               translation=translation,
+                               can_translate=False,
+                               source_lang=source_lang)
+
+        # return v.translate(source_lang=source_lang,
+        #                    value=value,
+        #                    is_translatable=is_translatable)
 
 
 class BaseRegDescRow(BaseRegComplianceView):
