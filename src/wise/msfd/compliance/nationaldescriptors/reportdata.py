@@ -939,7 +939,7 @@ https://svn.eionet.europa.eu/repositories/Reportnet/Dataflows/MarineDirective/MS
 
         self.subform = self.get_form()
 
-        if ('download' in self.request.form) and report_data:
+        if ('download' in self.request.form):  # and report_data
             return self.download()
 
         if 'translate' in self.request.form:
