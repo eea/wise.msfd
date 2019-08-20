@@ -1,3 +1,4 @@
+from collections import defaultdict
 from sqlalchemy import and_, or_
 
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
@@ -37,6 +38,29 @@ class StartArticle11Form(MainForm):
 
         return [int(x) for x in all_values_from_field(self, field)]
 
+    def get_latest_import_ids(self):
+        mp = sql.MSFD11Import
+
+        count, res = db.get_all_records(
+            mp
+        )
+
+        uniques = defaultdict(dict)
+
+        for row in res:
+            id = row.ID
+            time = row.Time
+
+            key = "-".join((row.MemberState, row.Region,
+                            row.SubProgrammeID or '', row.FileName))
+
+            if id >= uniques.get(key, {}).get('id', id):
+                uniques[key] = {'id': id, 'time': time}
+
+        result = [d['id'] for d in uniques.values()]
+
+        return result
+
 
 class A11MProgMemberStateForm(EmbeddedForm):
     fields = Fields(interfaces.IMemberStates)
@@ -54,8 +78,12 @@ class A11MProgMemberStateForm(EmbeddedForm):
         mon_ids = db.get_unique_from_mapper(
             sql.MSFD11MON,
             'ID',
-            sql.MSFD11MON.MemberState.in_(ms)
+            sql.MSFD11MON.MemberState.in_(ms),
+            # sql.MSFD11MON.Import.in_(
+            #     self.context.context.get_latest_import_ids()
+            # )
         )
+
         mon_ids = [str(x).strip() for x in mon_ids]
 
         mon_prog_ids = db.get_unique_from_mapper(
@@ -252,7 +280,8 @@ class A11MonProgDisplay(ItemDisplayForm):
                 self.order_field,
                 and_(klass_join.MPType.in_(needed_ID),
                      klass_join.MonitoringProgramme.in_(mon_prog_ids),
-                     klass_join.ObsoleteDate.like('%2019%')),
+                     # klass_join.ObsoleteDate.like('%2019%')
+                     ),
                 page=page
             )
 
@@ -354,7 +383,8 @@ class A11MonitoringProgrammeForm(EmbeddedForm):
             sql.MSFD11MON,
             'ID',
             and_(sql.MSFD11MON.MemberState.in_(countries),
-                 sql.MSFD11MON.Region.in_(regions))
+                 sql.MSFD11MON.Region.in_(regions),
+                 sql.MSFD11MON.Import.in_(self.context.get_latest_import_ids()))
         )
         mon_prog_ids_from_MP = db.get_unique_from_mapper(
             sql.MSFD11MP,
@@ -372,10 +402,12 @@ class A11MonitoringProgrammeForm(EmbeddedForm):
         )
         mon_prog_ids = [row.MonitoringProgramme for row in mon_prog_ids]
 
-        result = tuple(set(mon_prog_ids_from_MP) & set(mon_prog_ids))
+        # result = tuple(set(mon_prog_ids_from_MP) & set(mon_prog_ids))
+        result = tuple(set(mon_prog_ids_from_MP))
 
         if not result:
-            result = tuple(mon_prog_ids_from_MP + mon_prog_ids)
+            # result = tuple(mon_prog_ids_from_MP + mon_prog_ids)
+            result = tuple(mon_prog_ids_from_MP)
 
         return result
 
