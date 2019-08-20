@@ -38,7 +38,36 @@ class StartArticle11Form(MainForm):
 
         return [int(x) for x in all_values_from_field(self, field)]
 
-    def get_latest_import_ids(self):
+    def get_latest_import_ids_mon(self):
+        mp = sql.MSFD11Import
+
+        count, res = db.get_all_records(
+            mp,
+            # rows with higher ID than 710 do not have data in MSFD11_MP table
+            mp.ID < 710
+        )
+
+        uniques = defaultdict(dict)
+
+        for row in res:
+            id = row.ID
+            time = row.Time
+
+            key = "-".join((
+                row.MemberState,
+                row.Region,
+                row.SubProgrammeID or '',
+                # row.FileName
+            ))
+
+            if id >= uniques.get(key, {}).get('id', id):
+                uniques[key] = {'id': id, 'time': time}
+
+        result = [d['id'] for d in uniques.values()]
+
+        return result
+
+    def get_latest_import_ids_mon_sub(self):
         mp = sql.MSFD11Import
 
         count, res = db.get_all_records(
@@ -51,8 +80,12 @@ class StartArticle11Form(MainForm):
             id = row.ID
             time = row.Time
 
-            key = "-".join((row.MemberState, row.Region,
-                            row.SubProgrammeID or '', row.FileName))
+            key = "-".join((
+                row.MemberState,
+                row.Region,
+                row.SubProgrammeID or '',
+                # row.FileName
+            ))
 
             if id >= uniques.get(key, {}).get('id', id):
                 uniques[key] = {'id': id, 'time': time}
@@ -79,9 +112,6 @@ class A11MProgMemberStateForm(EmbeddedForm):
             sql.MSFD11MON,
             'ID',
             sql.MSFD11MON.MemberState.in_(ms),
-            # sql.MSFD11MON.Import.in_(
-            #     self.context.context.get_latest_import_ids()
-            # )
         )
 
         mon_ids = [str(x).strip() for x in mon_ids]
@@ -384,7 +414,9 @@ class A11MonitoringProgrammeForm(EmbeddedForm):
             'ID',
             and_(sql.MSFD11MON.MemberState.in_(countries),
                  sql.MSFD11MON.Region.in_(regions),
-                 sql.MSFD11MON.Import.in_(self.context.get_latest_import_ids()))
+                 sql.MSFD11MON.Import.in_(
+                     self.context.get_latest_import_ids_mon()
+                 ))
         )
         mon_prog_ids_from_MP = db.get_unique_from_mapper(
             sql.MSFD11MP,
@@ -607,8 +639,8 @@ class A11MonSubDisplay(MultiItemDisplayForm):
 
         xlsdata = [
             # worksheet title, row data
-            ('MSFD11ReferenceSubProgramme', data_rsp),
             ('MSFD11SubProgramme', data_sp),
+            ('MSFD11ReferenceSubProgramme', data_rsp),
             ('MSFD11Q9aElementMonitored', data_em),
             ('MSFD11Q9bMeasurementParameter', data_mp),
         ]
@@ -641,7 +673,11 @@ class A11MonSubDisplay(MultiItemDisplayForm):
             sql.MSFD11MONSub,
             'SubProgramme',
             and_(sql.MSFD11MONSub.MemberState.in_(countries),
-                 sql.MSFD11MONSub.Region.in_(regions))
+                 sql.MSFD11MONSub.Region.in_(regions),
+                 sql.MSFD11MONSub.Import.in_(
+                     self.context.context.context.context.
+                         get_latest_import_ids_mon_sub())
+                 )
         )
         subprogramme_ids = [int(i) for i in subprogramme_ids]
 
@@ -665,7 +701,7 @@ class A11MonSubDisplay(MultiItemDisplayForm):
                 self.order_field,
                 and_(klass_join.MPType.in_(needed_ids),
                      # Filter duplicate imports by ObsoleteDate
-                     klass_join.ObsoleteDate.like('%2019%'),
+                     # klass_join.ObsoleteDate.like('%2019%'),
                      self.mapper_class.MP.in_(mp_ids),
                      or_(
                          self.mapper_class.SubMonitoringProgrammeID.in_(
@@ -684,7 +720,7 @@ class A11MonSubDisplay(MultiItemDisplayForm):
 
 @register_form_section(A11MonSubDisplay)
 class A11MPExtraInfo(ItemDisplay):
-    title = "SubProgramme Info"
+    title = "Reference SubProgramme"
 
     extra_data_template = ViewPageTemplateFile('pt/extra-data-pivot.pt')
 
