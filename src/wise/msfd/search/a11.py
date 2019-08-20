@@ -582,17 +582,6 @@ class A11MonSubDisplay(MultiItemDisplayForm):
 
         klass_join_mp = sql.MSFD11MP
         klass_join_mon = sql.MSFD11MON
-        # count_rsp, data_rsp = db.get_all_records_outerjoin(
-        #     self.mapper_class,
-        #     klass_join_mp,
-        #     and_(klass_join_mp.MPType.in_(mp_type_ids),
-        #          self.mapper_class.MP.in_(mp_ids),
-        #          or_(self.mapper_class.SubMonitoringProgrammeID.in_(
-        #              q4g_subprogids_1),
-        #              self.mapper_class.SubMonitoringProgrammeID.in_(
-        #                  q4g_subprogids_2))
-        #          ),
-        # )
 
         mc_fields = self.get_obj_fields(self.mapper_class, False)
         fields = [klass_join_mon.MemberState] + \
@@ -693,27 +682,19 @@ class A11MonSubDisplay(MultiItemDisplayForm):
                 q4g_subprogids_1
             )
         )
-
         if needed_ids:
-            [count, item] = db.get_item_by_conditions_joined(
-                self.mapper_class,
-                klass_join,
-                self.order_field,
-                and_(klass_join.MPType.in_(needed_ids),
-                     # Filter duplicate imports by ObsoleteDate
-                     # klass_join.ObsoleteDate.like('%2019%'),
-                     self.mapper_class.MP.in_(mp_ids),
-                     or_(
-                         self.mapper_class.SubMonitoringProgrammeID.in_(
-                             q4g_subprogids_1
-                         ),
-                         self.mapper_class.SubMonitoringProgrammeID.in_(
-                             q4g_subprogids_2
-                         )
-                )),
+            mc = sql.MSFD11SubProgramme
+
+            count, item = db.get_item_by_conditions(
+                mc,
+                'Q4g_SubProgrammeID',
+                mc.ID.in_(subprogramme_ids),
+                or_(mc.Q4g_SubProgrammeID.in_(q4g_subprogids_1),
+                    mc.Q4g_SubProgrammeID.in_(q4g_subprogids_2)),
                 page=page
             )
-            item.whitelist = ['SubMonitoringProgrammeID']
+
+            item.whitelist = ['Q4g_SubProgrammeID']
 
             return [count, item]
 
@@ -724,17 +705,20 @@ class A11MPExtraInfo(ItemDisplay):
 
     extra_data_template = ViewPageTemplateFile('pt/extra-data-pivot.pt')
 
+    blacklist = ['MP']
+    use_blacklist = True
+
     # TODO data from columns SubMonitoringProgrammeID and Q4g_SubProgrammeID
     # do not match, SubMonitoringProgrammeID contains spaces
     def get_db_results(self):
         if not self.context.item:
             return {}
 
-        subprogramme_id = self.context.item.SubMonitoringProgrammeID
-        mc = sql.MSFD11SubProgramme
+        subprogramme_id = self.context.item.Q4g_SubProgrammeID
+        mc = sql.MSFD11ReferenceSubProgramme
 
         count, item = db.get_related_record(
-            mc, 'Q4g_SubProgrammeID', subprogramme_id)
+            mc, 'SubMonitoringProgrammeID', subprogramme_id)
 
         mps = sql.MSFD11SubProgrammeIDMatch.MP_ReferenceSubProgramme
 
@@ -744,11 +728,14 @@ class A11MPExtraInfo(ItemDisplay):
                 'Q4g_SubProgrammeID',
                 mps == subprogramme_id
             )
-            count, item = db.get_related_record(
-                mc, 'Q4g_SubProgrammeID', subprogramme_id)
+            item = None
+            if subprogramme_id:
+                count, item = db.get_related_record(
+                    mc, 'SubMonitoringProgrammeID', subprogramme_id)
 
         if item:
-            self.subprogramme = getattr(item, 'ID')
+            self.subprogramme = getattr(self.context.item, 'ID')
+            item.whitelist = ['SubMonitoringProgrammeID']
         else:
             self.subprogramme = 0
 
