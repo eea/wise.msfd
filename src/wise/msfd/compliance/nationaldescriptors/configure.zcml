@@ -33,6 +33,14 @@
     />
 
   <browser:page
+    for="*"
+    name="edit-history"
+    template="./pt/edit-history.pt"
+    class=".assessment.EditAssessmentHistory"
+    permission="zope2.View"
+  />
+
+  <browser:page
     for="..interfaces.INationalDescriptorAssessment"
     name="edit-assessment-summary"
     class="..assessment.EditAssessmentSummaryForm"

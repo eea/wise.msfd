@@ -1,7 +1,7 @@
 import datetime
 import logging
-
 from zope.schema import Choice, Text
+from Products.Five.browser import BrowserView
 from zope.schema.vocabulary import SimpleTerm, SimpleVocabulary
 
 from AccessControl import Unauthorized
@@ -31,6 +31,21 @@ from .base import BaseView
 
 logger = logging.getLogger('wise.msfd')
 
+class EditAssessmentHistory(BaseView, BrowserView):
+    def report_assessment(self):
+        saved_assessment_data = self.context.saved_assessment_data
+        sorted_tables = []
+        for table_pair in saved_assessment_data:
+            sorted_tables.append(sorted(table_pair.items(), key=lambda x:x[0]))
+        return sorted_tables[::-1]
+    
+    @property
+    def title(self):
+        return "Edit Assessment History for: {}/ {}/ {}".format(
+            self.country_region_name,
+            self.descriptor,
+            self.article,
+        )
 
 class EditAssessmentDataForm(Form, BaseView):
     """ Edit the assessment for a national descriptor, for a specific article

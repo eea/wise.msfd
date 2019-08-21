@@ -1,0 +1,16 @@
+<div id="edit-history">
+    <h2 tal:content="structure view/title">Edit History</h2>
+    <tal:def tal:define="sorted_tables view/report_assessment">
+        <tal:rep tal:repeat="table_pairs sorted_tables">
+            <h3 tal:content="python: repeat['table_pairs'].index + 1"></h3>
+            <table style=" width:100%; margin-bottom:5rem" border="1">
+                <tal:rep tal:repeat="pair table_pairs">
+                    <tr tal:condition="python: pair[1]" style="text-align:center">
+                        <td tal:content="python: pair[0]"></td>
+                        <td tal:content="python: pair[1]"></td>
+                    </tr>
+                </tal:rep>
+            </table>
+        </tal:rep>
+    </tal:def>
+</div>

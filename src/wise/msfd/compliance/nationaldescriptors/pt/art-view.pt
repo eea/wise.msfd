@@ -63,6 +63,10 @@
                 flex-direction: column; text-align: center;">
                 <a href="./@@historyview" class="link-overlay fa fa-history" style="cursor: pointer"></a>
               </li>
+              <li class="editHistory" id="edit-history" style="display: flex; justify-content: center; flex-direction: column; text-align: center;">
+                <a href="./@@edit-history" class="fa fa-edit pat-plone-modal"
+                  data-pat-plone-modal="height: 600px; content:#edit-history; width: 80%"></a>
+              </li>              
             </ul>
           </div>
 
