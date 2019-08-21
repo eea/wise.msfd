@@ -5,10 +5,10 @@ from plone.api.content import get_state
 from plone.api.portal import get_tool
 from wise.msfd.compliance.base import BaseComplianceView
 from wise.msfd.compliance.vocabulary import REGIONAL_DESCRIPTORS_REGIONS
-from wise.msfd.gescomponents import FEATURES_DB_2018
+from wise.msfd.gescomponents import FEATURES_DB_2018, THEMES_2018_ORDER
 from wise.msfd.labels import get_label
 from wise.msfd.translation import get_detected_lang
-from wise.msfd.utils import ItemLabel
+from wise.msfd.utils import fixedorder_sortkey, ItemLabel
 
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 
@@ -161,6 +161,15 @@ class BaseRegDescRow(BaseRegComplianceView):
         return value
         return ItemLabel(value, self.get_label_for_value(value))
 
+    def _get_nat_desc_country_url(self, url, reg_main, c_code, r_code):
+        href = url.replace(
+            'regional-descriptors-assessments/{}'.format(reg_main.lower()),
+            'national-descriptors-assessments/{}/{}'.format(
+                c_code.lower(), r_code.lower())
+        )
+
+        return "<a target='_blank' href='{}'>{}</a>".format(href, r_code)
+
     @compoundrow
     def get_countries_row(self):
         url = self.request['URL0']
@@ -168,15 +177,6 @@ class BaseRegDescRow(BaseRegComplianceView):
         reg_main = self._countryregion_folder.id.upper()
         subregions = [r.subregions for r in REGIONAL_DESCRIPTORS_REGIONS
                       if reg_main in r.code]
-
-        def get_country_url(c_code, r_code):
-            href = url.replace(
-                'regional-descriptors-assessments/{}'.format(reg_main.lower()),
-                'national-descriptors-assessments/{}/{}'.format(
-                    c_code.lower(), r_code.lower())
-            )
-
-            return "<a target='_blank' href='{}'>{}</a>".format(href, r_code)
 
         rows = []
         country_names = []
@@ -188,7 +188,8 @@ class BaseRegDescRow(BaseRegComplianceView):
                        if len(r.subregions) == 1 and c_code in r.countries
                        and r.code in subregions[0]]
             for r in regions:
-                value.append(get_country_url(c_code, r))
+                value.append(self._get_nat_desc_country_url(url, reg_main,
+                                                            c_code, r))
 
             final = '{} ({})'.format(c_name, ', '.join(value))
             country_names.append(final)
@@ -228,13 +229,18 @@ class BaseRegDescRow(BaseRegComplianceView):
 
         for feature in all_features:
             if feature not in themes_fromdb:
-                all_themes['No theme/Unknown'].append(feature)
+                all_themes['No theme'].append(feature)
                 continue
 
             theme = themes_fromdb[feature].theme
             all_themes[theme].append(feature)
 
-        for theme, feats in all_themes.items():
+        all_themes = sorted(
+            all_themes.items(),
+            key=lambda t: fixedorder_sortkey(t[0], THEMES_2018_ORDER)
+        )
+
+        for theme, feats in all_themes:
             values = []
 
             for country_code, country_name in self.countries:

@@ -201,7 +201,7 @@
           </metal:fields>
 
           <metal:slot fill-slot="actions">
-            <div tal:condition="python: not(view.read_only_access) and view.can_comment_tl"
+            <div tal:condition="python: not(view.read_only_access)"
                 class="form-right-side">
               <metal:block use-macro="context/@@ploneform-macros/actions" />
             </div>

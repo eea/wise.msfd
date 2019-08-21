@@ -1,3 +1,4 @@
+from collections import defaultdict
 from sqlalchemy import and_, or_
 
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
@@ -37,6 +38,62 @@ class StartArticle11Form(MainForm):
 
         return [int(x) for x in all_values_from_field(self, field)]
 
+    def get_latest_import_ids_mon(self):
+        mp = sql.MSFD11Import
+
+        count, res = db.get_all_records(
+            mp,
+            # rows with higher ID than 710 do not have data in MSFD11_MP table
+            mp.ID < 710
+        )
+
+        uniques = defaultdict(dict)
+
+        for row in res:
+            id = row.ID
+            time = row.Time
+
+            key = "-".join((
+                row.MemberState,
+                row.Region,
+                row.SubProgrammeID or '',
+                # row.FileName
+            ))
+
+            if id >= uniques.get(key, {}).get('id', id):
+                uniques[key] = {'id': id, 'time': time}
+
+        result = [d['id'] for d in uniques.values()]
+
+        return result
+
+    def get_latest_import_ids_mon_sub(self):
+        mp = sql.MSFD11Import
+
+        count, res = db.get_all_records(
+            mp
+        )
+
+        uniques = defaultdict(dict)
+
+        for row in res:
+            id = row.ID
+            time = row.Time
+
+            key = "-".join((
+                row.MemberState,
+                row.Region,
+                row.SubProgrammeID or '',
+                # row.FileName
+            ))
+
+            if id >= uniques.get(key, {}).get('id', id):
+                uniques[key] = {'id': id, 'time': time}
+
+        result = [d['id'] for d in uniques.values()]
+
+        return result
+
 
 class A11MProgMemberStateForm(EmbeddedForm):
     fields = Fields(interfaces.IMemberStates)
@@ -54,8 +111,9 @@ class A11MProgMemberStateForm(EmbeddedForm):
         mon_ids = db.get_unique_from_mapper(
             sql.MSFD11MON,
             'ID',
-            sql.MSFD11MON.MemberState.in_(ms)
+            sql.MSFD11MON.MemberState.in_(ms),
         )
+
         mon_ids = [str(x).strip() for x in mon_ids]
 
         mon_prog_ids = db.get_unique_from_mapper(
@@ -252,7 +310,8 @@ class A11MonProgDisplay(ItemDisplayForm):
                 self.order_field,
                 and_(klass_join.MPType.in_(needed_ID),
                      klass_join.MonitoringProgramme.in_(mon_prog_ids),
-                     klass_join.ObsoleteDate.like('%2019%')),
+                     # klass_join.ObsoleteDate.like('%2019%')
+                     ),
                 page=page
             )
 
@@ -354,7 +413,10 @@ class A11MonitoringProgrammeForm(EmbeddedForm):
             sql.MSFD11MON,
             'ID',
             and_(sql.MSFD11MON.MemberState.in_(countries),
-                 sql.MSFD11MON.Region.in_(regions))
+                 sql.MSFD11MON.Region.in_(regions),
+                 sql.MSFD11MON.Import.in_(
+                     self.context.get_latest_import_ids_mon()
+                 ))
         )
         mon_prog_ids_from_MP = db.get_unique_from_mapper(
             sql.MSFD11MP,
@@ -372,10 +434,12 @@ class A11MonitoringProgrammeForm(EmbeddedForm):
         )
         mon_prog_ids = [row.MonitoringProgramme for row in mon_prog_ids]
 
-        result = tuple(set(mon_prog_ids_from_MP) & set(mon_prog_ids))
+        # result = tuple(set(mon_prog_ids_from_MP) & set(mon_prog_ids))
+        result = tuple(set(mon_prog_ids_from_MP))
 
         if not result:
-            result = tuple(mon_prog_ids_from_MP + mon_prog_ids)
+            # result = tuple(mon_prog_ids_from_MP + mon_prog_ids)
+            result = tuple(mon_prog_ids_from_MP)
 
         return result
 
@@ -518,17 +582,6 @@ class A11MonSubDisplay(MultiItemDisplayForm):
 
         klass_join_mp = sql.MSFD11MP
         klass_join_mon = sql.MSFD11MON
-        # count_rsp, data_rsp = db.get_all_records_outerjoin(
-        #     self.mapper_class,
-        #     klass_join_mp,
-        #     and_(klass_join_mp.MPType.in_(mp_type_ids),
-        #          self.mapper_class.MP.in_(mp_ids),
-        #          or_(self.mapper_class.SubMonitoringProgrammeID.in_(
-        #              q4g_subprogids_1),
-        #              self.mapper_class.SubMonitoringProgrammeID.in_(
-        #                  q4g_subprogids_2))
-        #          ),
-        # )
 
         mc_fields = self.get_obj_fields(self.mapper_class, False)
         fields = [klass_join_mon.MemberState] + \
@@ -575,8 +628,8 @@ class A11MonSubDisplay(MultiItemDisplayForm):
 
         xlsdata = [
             # worksheet title, row data
-            ('MSFD11ReferenceSubProgramme', data_rsp),
             ('MSFD11SubProgramme', data_sp),
+            ('MSFD11ReferenceSubProgramme', data_rsp),
             ('MSFD11Q9aElementMonitored', data_em),
             ('MSFD11Q9bMeasurementParameter', data_mp),
         ]
@@ -609,7 +662,11 @@ class A11MonSubDisplay(MultiItemDisplayForm):
             sql.MSFD11MONSub,
             'SubProgramme',
             and_(sql.MSFD11MONSub.MemberState.in_(countries),
-                 sql.MSFD11MONSub.Region.in_(regions))
+                 sql.MSFD11MONSub.Region.in_(regions),
+                 sql.MSFD11MONSub.Import.in_(
+                     self.context.context.context.context.
+                         get_latest_import_ids_mon_sub())
+                 )
         )
         subprogramme_ids = [int(i) for i in subprogramme_ids]
 
@@ -625,36 +682,31 @@ class A11MonSubDisplay(MultiItemDisplayForm):
                 q4g_subprogids_1
             )
         )
-
         if needed_ids:
-            [count, item] = db.get_item_by_conditions_joined(
-                self.mapper_class,
-                klass_join,
-                self.order_field,
-                and_(klass_join.MPType.in_(needed_ids),
-                     # Filter duplicate imports by ObsoleteDate
-                     klass_join.ObsoleteDate.like('%2019%'),
-                     self.mapper_class.MP.in_(mp_ids),
-                     or_(
-                         self.mapper_class.SubMonitoringProgrammeID.in_(
-                             q4g_subprogids_1
-                         ),
-                         self.mapper_class.SubMonitoringProgrammeID.in_(
-                             q4g_subprogids_2
-                         )
-                )),
+            mc = sql.MSFD11SubProgramme
+
+            count, item = db.get_item_by_conditions(
+                mc,
+                'Q4g_SubProgrammeID',
+                mc.ID.in_(subprogramme_ids),
+                or_(mc.Q4g_SubProgrammeID.in_(q4g_subprogids_1),
+                    mc.Q4g_SubProgrammeID.in_(q4g_subprogids_2)),
                 page=page
             )
-            item.whitelist = ['SubMonitoringProgrammeID']
+
+            item.whitelist = ['Q4g_SubProgrammeID']
 
             return [count, item]
 
 
 @register_form_section(A11MonSubDisplay)
 class A11MPExtraInfo(ItemDisplay):
-    title = "SubProgramme Info"
+    title = "Reference SubProgramme"
 
     extra_data_template = ViewPageTemplateFile('pt/extra-data-pivot.pt')
+
+    blacklist = ['MP']
+    use_blacklist = True
 
     # TODO data from columns SubMonitoringProgrammeID and Q4g_SubProgrammeID
     # do not match, SubMonitoringProgrammeID contains spaces
@@ -662,11 +714,11 @@ class A11MPExtraInfo(ItemDisplay):
         if not self.context.item:
             return {}
 
-        subprogramme_id = self.context.item.SubMonitoringProgrammeID
-        mc = sql.MSFD11SubProgramme
+        subprogramme_id = self.context.item.Q4g_SubProgrammeID
+        mc = sql.MSFD11ReferenceSubProgramme
 
         count, item = db.get_related_record(
-            mc, 'Q4g_SubProgrammeID', subprogramme_id)
+            mc, 'SubMonitoringProgrammeID', subprogramme_id)
 
         mps = sql.MSFD11SubProgrammeIDMatch.MP_ReferenceSubProgramme
 
@@ -676,11 +728,14 @@ class A11MPExtraInfo(ItemDisplay):
                 'Q4g_SubProgrammeID',
                 mps == subprogramme_id
             )
-            count, item = db.get_related_record(
-                mc, 'Q4g_SubProgrammeID', subprogramme_id)
+            item = None
+            if subprogramme_id:
+                count, item = db.get_related_record(
+                    mc, 'SubMonitoringProgrammeID', subprogramme_id)
 
         if item:
-            self.subprogramme = getattr(item, 'ID')
+            self.subprogramme = getattr(self.context.item, 'ID')
+            item.whitelist = ['SubMonitoringProgrammeID']
         else:
             self.subprogramme = 0
 

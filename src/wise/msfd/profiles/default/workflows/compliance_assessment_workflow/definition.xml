@@ -82,6 +82,8 @@
   <permission-map name="wise.msfd: Edit Assessment" acquired="False">
    <permission-role>Contributor</permission-role>
    <permission-role>Manager</permission-role>
+   <permission-role>Editor</permission-role>
+   <permission-role>Reviewer</permission-role>
   </permission-map>
  </state>
 
@@ -101,6 +103,8 @@
   <permission-map name="wise.msfd: Edit Assessment" acquired="False">
    <permission-role>Contributor</permission-role>
    <permission-role>Manager</permission-role>
+   <permission-role>Editor</permission-role>
+   <permission-role>Reviewer</permission-role>
   </permission-map>
  </state>
 
