@@ -5,10 +5,10 @@ from plone.api.content import get_state
 from plone.api.portal import get_tool
 from wise.msfd.compliance.base import BaseComplianceView
 from wise.msfd.compliance.vocabulary import REGIONAL_DESCRIPTORS_REGIONS
-from wise.msfd.gescomponents import FEATURES_DB_2018
+from wise.msfd.gescomponents import FEATURES_DB_2018, THEMES_2018_ORDER
 from wise.msfd.labels import get_label
 from wise.msfd.translation import get_detected_lang
-from wise.msfd.utils import ItemLabel
+from wise.msfd.utils import fixedorder_sortkey, ItemLabel
 
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 
@@ -229,13 +229,18 @@ class BaseRegDescRow(BaseRegComplianceView):
 
         for feature in all_features:
             if feature not in themes_fromdb:
-                all_themes['No theme/Unknown'].append(feature)
+                all_themes['No theme'].append(feature)
                 continue
 
             theme = themes_fromdb[feature].theme
             all_themes[theme].append(feature)
 
-        for theme, feats in all_themes.items():
+        all_themes = sorted(
+            all_themes.items(),
+            key=lambda t: fixedorder_sortkey(t[0], THEMES_2018_ORDER)
+        )
+
+        for theme, feats in all_themes:
             values = []
 
             for country_code, country_name in self.countries:

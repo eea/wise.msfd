@@ -4,7 +4,8 @@ from itertools import chain
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 from wise.msfd import db, sql  # , sql_extra
 from wise.msfd.data import countries_in_region, muids_by_country
-from wise.msfd.gescomponents import FEATURES_DB_2018, FEATURES_DB_2012
+from wise.msfd.gescomponents import (FEATURES_DB_2018, FEATURES_DB_2012,
+                                     THEMES_2018_ORDER)
 from wise.msfd.translation import get_translated
 from wise.msfd.utils import (fixedorder_sortkey, CompoundRow, ItemLabel,
                              ItemList, Row, TableHeader)
@@ -31,13 +32,18 @@ class RegDescA82018Row(BaseRegDescRow):
 
         for feature in all_features:
             if feature not in themes_fromdb:
-                all_themes['No theme/Unknown'].append(feature)
+                all_themes['No theme'].append(feature)
                 continue
 
             theme = themes_fromdb[feature].theme
             all_themes[theme].append(feature)
 
-        for theme, feats in all_themes.items():
+        all_themes = sorted(
+            all_themes.items(),
+            key=lambda t: fixedorder_sortkey(t[0], THEMES_2018_ORDER)
+        )
+
+        for theme, feats in all_themes:
             values = []
 
             for country_code, country_name in self.countries:
@@ -75,13 +81,18 @@ class RegDescA82018Row(BaseRegDescRow):
 
         for feature in all_features:
             if feature not in themes_fromdb:
-                all_themes['No theme/Unknown'].append(feature)
+                all_themes['No theme'].append(feature)
                 continue
 
             theme = themes_fromdb[feature].theme
             all_themes[theme].append(feature)
 
-        for theme, feats in all_themes.items():
+        all_themes = sorted(
+            all_themes.items(),
+            key=lambda t: fixedorder_sortkey(t[0], THEMES_2018_ORDER)
+        )
+
+        for theme, feats in all_themes:
             values = []
 
             for country_code, country_name in self.countries:
@@ -923,7 +934,7 @@ class RegDescA82012(BaseRegComplianceView):
         all_themes = defaultdict(list)
         for feature in all_features:
             if feature not in themes_fromdb:
-                all_themes['No theme/Unknown'].append(feature)
+                all_themes['No theme'].append(feature)
                 continue
 
             theme = themes_fromdb[feature].theme
@@ -978,7 +989,7 @@ class RegDescA82012(BaseRegComplianceView):
         all_themes = defaultdict(list)
         for feature in all_features:
             if feature not in themes_fromdb:
-                all_themes['No theme/Unknown'].append(feature)
+                all_themes['No theme'].append(feature)
                 continue
 
             theme = themes_fromdb[feature].theme

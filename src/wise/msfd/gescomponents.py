@@ -521,6 +521,37 @@ def parse_features_from_db_2018():
 FEATURES_DB_2018 = parse_features_from_db_2018()
 
 
+THEMES_2018_ORDER = [
+    'Species',
+    'Habitats',
+    'Ecosystems, including food webs',
+    'Biological',
+    'Physical',
+    'Physical and hydrological',
+    'Chemical',
+    'Substances, litter and energy',
+    'Nutrition',
+    'Materials',
+    'Energy',
+    'Mediation of waste, toxics and other nuisances',
+    'Mediation of flows',
+    'Maintenance of physical, chemical, biological conditions',
+    'Underpinning and/or enhancing physical and intellectual interactions',
+    'Underpinning and/or enhancing spiritual, symbolic and other interactions',
+    'Physical restructuring of rivers, coastline or seabed (water management)',
+    'Extraction of non-living resources',
+    'Production of energy',
+    'Extraction of living resources',
+    'Cultivation of living resources',
+    'Transport',
+    'Urban and industrial uses',
+    'Tourism and leisure',
+    'Security/defence',
+    'Education and research',
+    'No theme',
+]
+
+
 def parse_features():
     res = {}
 
