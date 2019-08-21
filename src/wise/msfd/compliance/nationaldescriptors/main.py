@@ -174,7 +174,8 @@ def get_assessment_head_data_2012(article, region, country_code):
     assert count == 1
 
     if count:
-        report_by = res[0].ReportBy
+        # report_by = res[0].ReportBy
+        report_by = 'Commission'
         assessors = res[0].Assessors
         assess_date = res[0].DateAssessed
         com_report = res[0].CommissionReport

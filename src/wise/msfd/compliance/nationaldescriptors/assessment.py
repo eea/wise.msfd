@@ -95,10 +95,10 @@ class EditAssessmentDataForm(Form, BaseView):
             context.saved_assessment_data = AssessmentData()
         last = self.context.saved_assessment_data.last()
 
-        roles = get_roles(obj=self.context)
-
-        if 'Contributor' not in roles and ('Manager' not in roles)\
-                and 'Editor' not in roles:
+        # roles = get_roles(obj=self.context)
+        # if 'Contributor' not in roles and ('Manager' not in roles)\
+        #         and 'Editor' not in roles:
+        if self.read_only_access:
             raise Unauthorized
 
         data, errors = self.extractData()
@@ -244,8 +244,8 @@ class EditAssessmentDataForm(Form, BaseView):
             form._question_phase = phase
             form._question = question
             form._elements = elements
-            form._disabled = self.is_disabled(
-                question) or is_other_tl or is_ec_user
+            form._disabled = self.is_disabled(question)
+            # or is_other_tl or is_ec_user
 
             fields = []
 
@@ -315,8 +315,9 @@ class EditAssessmentDataForm(Form, BaseView):
             last_upd, assess_date
         )
         assessment_summary_form.subtitle = u''
-        assessment_summary_form._disabled = (not self.can_comment_tl
-                                             or self.read_only_access)
+        assessment_summary_form._disabled = (
+            self.read_only_access  # or not self.can_comment_tl
+        )
         asf_fields = []
 
         for name, title in summary_fields:
