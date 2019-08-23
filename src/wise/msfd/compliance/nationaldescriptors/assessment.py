@@ -1,14 +1,15 @@
 import datetime
 import logging
+
 from zope.schema import Choice, Text
-from Products.Five.browser import BrowserView
 from zope.schema.vocabulary import SimpleTerm, SimpleVocabulary
 
 from AccessControl import Unauthorized
 from persistent.list import PersistentList
 from plone.api import user
-from plone.api.user import get_roles
+# from plone.api.user import get_roles
 from plone.z3cform.layout import wrap_form
+from Products.Five.browser import BrowserView
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 from Products.statusmessages.interfaces import IStatusMessage
 from wise.msfd.base import EditAssessmentFormWrapper as MainFormWrapper
@@ -31,14 +32,18 @@ from .base import BaseView
 
 logger = logging.getLogger('wise.msfd')
 
+
 class EditAssessmentHistory(BaseView, BrowserView):
     def report_assessment(self):
         saved_assessment_data = self.context.saved_assessment_data
         sorted_tables = []
+
         for table_pair in saved_assessment_data:
-            sorted_tables.append(sorted(table_pair.items(), key=lambda x:x[0]))
+            sorted_tables.append(
+                sorted(table_pair.items(), key=lambda x: x[0]))
+
         return sorted_tables[::-1]
-    
+
     @property
     def title(self):
         return "Edit Assessment History for: {}/ {}/ {}".format(
@@ -46,6 +51,7 @@ class EditAssessmentHistory(BaseView, BrowserView):
             self.descriptor,
             self.article,
         )
+
 
 class EditAssessmentDataForm(Form, BaseView):
     """ Edit the assessment for a national descriptor, for a specific article
@@ -113,6 +119,7 @@ class EditAssessmentDataForm(Form, BaseView):
         # roles = get_roles(obj=self.context)
         # if 'Contributor' not in roles and ('Manager' not in roles)\
         #         and 'Editor' not in roles:
+
         if self.read_only_access:
             raise Unauthorized
 
@@ -191,10 +198,16 @@ class EditAssessmentDataForm(Form, BaseView):
         return self.request.response.redirect(url)
 
     def is_disabled(self, question):
-        state, _ = self.current_phase
-        disabled = question.klass not in PHASES.get(state, ())
+        """ Returns True if question is not editable
+        """
 
-        return self.read_only_access or disabled
+        if self.read_only_access:
+            return True
+
+        state, _ = self.current_phase
+        is_disabled = question.klass not in PHASES.get(state, ())
+
+        return is_disabled
 
     @property
     def fields(self):
@@ -235,8 +248,8 @@ class EditAssessmentDataForm(Form, BaseView):
 
         forms = []
 
-        is_ec_user = not self.can_comment_tl
-        is_other_tl = not (self.can_comment_tl or self.can_comment_tl)
+        # is_ec_user = not self.can_comment_tl
+        # is_other_tl = not (self.can_comment_tl or self.can_comment_tl)
 
         for question in self.questions:
             phase = [

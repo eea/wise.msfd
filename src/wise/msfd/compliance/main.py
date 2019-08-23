@@ -25,9 +25,11 @@ class StartComplianceView2(BaseComplianceView):
     def get_folder_by_id(self, id):
         folders = [
             x.contentValues()
+
             for x in self.context.contentValues()
+
             if x.portal_type == 'Folder'
-               and x.id == id
+            and x.id == id
         ]
         folders = [f for f in chain(*folders)]
 

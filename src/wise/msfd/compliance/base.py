@@ -187,17 +187,21 @@ class BaseComplianceView(BrowserView, BasePublicPage):
 
     @property
     def read_only_access(self):
-        roles = self.get_current_user_roles(self.context)
-        is_reader = 'Reader' in roles
+        # roles = self.get_current_user_roles(self.context)
+        # is_reader = 'Reader' in roles
+        # if not is_reader and can_edit:
+        #     return False
+        #
+        # return True
+
         can_edit = self.check_permission('wise.msfd: Edit Assessment')
 
-        if not is_reader and can_edit:
-            return False
-
-        return True
+        return not can_edit
 
     def _get_user_group(self, user):
-        """ Returns the group of the user, either returns EC or TL """
+        """ Returns the color according to the role of the user, EC or TL
+        """
+
         roles = get_roles(username=user)
 
         if 'Editor' in roles:
