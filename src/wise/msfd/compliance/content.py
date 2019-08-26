@@ -96,7 +96,7 @@ class AssessmentData(PersistentList):
 
         return ', '.join(assessors)
 
-    def append(self, data):
+    def _append(self, data):
         # self.data.append(data)
         self.append(data)
 

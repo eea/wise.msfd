@@ -135,7 +135,7 @@ class ViewSavedAssessmentData(BrowserView):
             portal_type='wise.msfd.nationaldescriptorassessment',
             path={
                 "query": "/Plone/marine/compliance-module"
-                         "/national-descriptors-assessments"
+                         "/national-descriptors-assessments/lv"
             }
         )
 
@@ -163,12 +163,14 @@ class ViewSavedAssessmentData(BrowserView):
             last = data.last().copy()
 
             new_data = AssessmentData()
-            new_data.append(last)
+            new_data._append(last)
 
             data = new_data
 
     def __call__(self):
         if 'fix' in self.request.form:
             self.fix_assessment_data()
+
+            return 'Done'
 
         return self.index()
