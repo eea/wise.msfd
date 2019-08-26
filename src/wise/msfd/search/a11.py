@@ -38,40 +38,13 @@ class StartArticle11Form(MainForm):
 
         return [int(x) for x in all_values_from_field(self, field)]
 
-    def get_latest_import_ids_mon(self):
+    def get_latest_import_ids(self):
         mp = sql.MSFD11Import
 
         count, res = db.get_all_records(
             mp,
             # rows with higher ID than 710 do not have data in MSFD11_MP table
-            mp.ID < 710
-        )
-
-        uniques = defaultdict(dict)
-
-        for row in res:
-            id = row.ID
-            time = row.Time
-
-            key = "-".join((
-                row.MemberState,
-                row.Region,
-                row.SubProgrammeID or '',
-                # row.FileName
-            ))
-
-            if id >= uniques.get(key, {}).get('id', id):
-                uniques[key] = {'id': id, 'time': time}
-
-        result = [d['id'] for d in uniques.values()]
-
-        return result
-
-    def get_latest_import_ids_mon_sub(self):
-        mp = sql.MSFD11Import
-
-        count, res = db.get_all_records(
-            mp
+            # mp.ID < 710
         )
 
         uniques = defaultdict(dict)
@@ -119,9 +92,10 @@ class A11MProgMemberStateForm(EmbeddedForm):
         mon_prog_ids = db.get_unique_from_mapper(
             sql.MSFD11MP,
             'MonitoringProgramme',
-            and_(sql.MSFD11MP.MON.in_(mon_ids))
+            and_(sql.MSFD11MP.MON.in_(mon_ids),
+                 sql.MSFD11MP.MonitoringProgramme.isnot(None))
         )
-        mon_prog_ids = [x.strip() for x in mon_prog_ids]
+        mon_prog_ids = [x.strip() for x in mon_prog_ids if x]
 
         s = sql.MSFD11MonitoringProgrammeMarineUnitID
         count, marine_units = db.get_all_records_outerjoin(
@@ -189,7 +163,8 @@ class A11MSubMemberStateForm(EmbeddedForm):
         mon_prog_ids = db.get_unique_from_mapper(
             sql.MSFD11MP,
             'MonitoringProgramme',
-            sql.MSFD11MP.ID.in_(mp_from_ref_sub)
+            sql.MSFD11MP.ID.in_(mp_from_ref_sub),
+            sql.MSFD11MP.MonitoringProgramme.isnot(None)
         )
 
         mc_ = sql.MSFD11MonitoringProgrammeMarineUnitID
@@ -238,12 +213,7 @@ class A11MonProgDisplay(ItemDisplayForm):
 
         klass_join_mp = sql.MSFD11MP
         klass_join_mon = sql.MSFD11MON
-        # count_mp, data_mp = db.get_all_records_outerjoin(
-        #     self.mapper_class,
-        #     klass_join_mp,
-        #     and_(klass_join_mp.MPType.in_(mp_type_ids),
-        #          klass_join_mp.MonitoringProgramme.in_(mon_prog_ids)),
-        # )
+
         mc_fields = self.get_obj_fields(self.mapper_class, False)
         fields = [klass_join_mon.MemberState] + \
                  [getattr(self.mapper_class, field) for field in mc_fields]
@@ -254,7 +224,11 @@ class A11MonProgDisplay(ItemDisplayForm):
                  self.mapper_class.ID == klass_join_mp.MonitoringProgramme). \
             join(klass_join_mon, klass_join_mp.MON == klass_join_mon.ID). \
             filter(and_(klass_join_mp.MPType.in_(mp_type_ids),
-                        klass_join_mp.MonitoringProgramme.in_(mon_prog_ids)),
+                        klass_join_mp.MonitoringProgramme.in_(mon_prog_ids),
+                        klass_join_mon.Import.in_(
+                            self.context.context.context.context
+                                .get_latest_import_ids())
+                        ),
                    )
         data_mp = [x for x in res]
 
@@ -415,14 +389,15 @@ class A11MonitoringProgrammeForm(EmbeddedForm):
             and_(sql.MSFD11MON.MemberState.in_(countries),
                  sql.MSFD11MON.Region.in_(regions),
                  sql.MSFD11MON.Import.in_(
-                     self.context.get_latest_import_ids_mon()
+                     self.context.get_latest_import_ids()
                  ))
         )
         mon_prog_ids_from_MP = db.get_unique_from_mapper(
             sql.MSFD11MP,
             'MonitoringProgramme',
             and_(sql.MSFD11MP.MON.in_(mon_ids),
-                 sql.MSFD11MP.MPType.in_(mp_type_ids)
+                 sql.MSFD11MP.MPType.in_(mp_type_ids),
+                 sql.MSFD11MP.MonitoringProgramme.isnot(None)
                  )
         )
         mon_prog_ids_from_MP = [int(elem) for elem in mon_prog_ids_from_MP]
@@ -563,7 +538,10 @@ class A11MonSubDisplay(MultiItemDisplayForm):
             sql.MSFD11MONSub,
             'SubProgramme',
             and_(sql.MSFD11MONSub.MemberState.in_(countries),
-                 sql.MSFD11MONSub.Region.in_(regions))
+                 sql.MSFD11MONSub.Region.in_(regions),
+                 sql.MSFD11MONSub.Import.in_(self.context.context.context
+                                             .context.get_latest_import_ids())
+                 )
         )
         subprogramme_ids = [int(i) for i in subprogramme_ids]
 
@@ -639,24 +617,24 @@ class A11MonSubDisplay(MultiItemDisplayForm):
     def get_db_results(self):
         page = self.get_page()
         needed_ids = self.context.context.context.context.get_mp_type_ids()
-        klass_join = sql.MSFD11MP
+        # klass_join = sql.MSFD11MP
 
         regions = self.context.context.context.data.get('region_subregions',
                                                         [])
         countries = self.context.context.data.get('member_states', [])
-        marine_unit_id = self.context.data.get('marine_unit_ids', [])
+        # marine_unit_id = self.context.data.get('marine_unit_ids', [])
 
-        count, mon_prog_ids = db.get_all_records_outerjoin(
-            sql.MSFD11MonitoringProgrammeMarineUnitID,
-            sql.MSFD11MarineUnitID,
-            sql.MSFD11MarineUnitID.MarineUnitID.in_(marine_unit_id)
-        )
-        mon_prog_ids = [row.MonitoringProgramme for row in mon_prog_ids]
-        mp_ids = db.get_unique_from_mapper(
-            sql.MSFD11MP,
-            'ID',
-            sql.MSFD11MP.MonitoringProgramme.in_(mon_prog_ids)
-        )
+        # count, mon_prog_ids = db.get_all_records_outerjoin(
+        #     sql.MSFD11MonitoringProgrammeMarineUnitID,
+        #     sql.MSFD11MarineUnitID,
+        #     sql.MSFD11MarineUnitID.MarineUnitID.in_(marine_unit_id)
+        # )
+        # mon_prog_ids = [row.MonitoringProgramme for row in mon_prog_ids]
+        # mp_ids = db.get_unique_from_mapper(
+        #     sql.MSFD11MP,
+        #     'ID',
+        #     sql.MSFD11MP.MonitoringProgramme.in_(mon_prog_ids)
+        # )
 
         subprogramme_ids = db.get_unique_from_mapper(
             sql.MSFD11MONSub,
@@ -665,7 +643,7 @@ class A11MonSubDisplay(MultiItemDisplayForm):
                  sql.MSFD11MONSub.Region.in_(regions),
                  sql.MSFD11MONSub.Import.in_(
                      self.context.context.context.context.
-                         get_latest_import_ids_mon_sub())
+                         get_latest_import_ids())
                  )
         )
         subprogramme_ids = [int(i) for i in subprogramme_ids]
