@@ -135,7 +135,7 @@ class ViewSavedAssessmentData(BrowserView):
             portal_type='wise.msfd.nationaldescriptorassessment',
             path={
                 "query": "/Plone/marine/compliance-module"
-                         "/national-descriptors-assessments/lv"
+                         "/national-descriptors-assessments"
             }
         )
 
@@ -146,9 +146,12 @@ class ViewSavedAssessmentData(BrowserView):
             if not hasattr(obj, 'saved_assessment_data'):
                 continue
 
-            x = obj.saved_assessment_data
+            sad = obj.saved_assessment_data
 
-            if not obj.saved_assessment_data:
+            if not sad:
+                continue
+
+            if len(sad) == 1:
                 continue
 
             # import pdb; pdb.set_trace()
@@ -165,7 +168,7 @@ class ViewSavedAssessmentData(BrowserView):
             new_data = AssessmentData()
             new_data._append(last)
 
-            data = new_data
+            obj.saved_assessment_data = new_data
 
     def __call__(self):
         if 'fix' in self.request.form:
