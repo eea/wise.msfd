@@ -2,6 +2,7 @@ from collections import defaultdict
 from itertools import chain
 from operator import attrgetter
 
+from Products.Five.browser import BrowserView
 from wise.msfd.labels import GES_LABELS
 from wise.msfd.utils import ItemLabel, ItemList, LabeledItemList, timeit
 
@@ -121,3 +122,53 @@ def consolidate_singlevalue_to_list(proxies, fieldname, order=None):
         res = list(sorted(res, key=attrgetter(*order)))
 
     return res
+
+
+class ViewSavedAssessmentData(BrowserView):
+    """ Temporary class for viewing saved assessment data
+    """
+
+    def get_saved_assessment_data(self):
+        catalog = self.context.portal_catalog
+
+        brains = catalog.searchResults(
+            portal_type='wise.msfd.nationaldescriptorassessment',
+            path={
+                "query": "/Plone/marine/compliance-module"
+                         "/national-descriptors-assessments"
+            }
+        )
+
+        res = []
+
+        for brain in brains:
+            obj = brain.getObject()
+            if not hasattr(obj, 'saved_assessment_data'):
+                continue
+
+            x = obj.saved_assessment_data
+
+            if not obj.saved_assessment_data:
+                continue
+
+            # import pdb; pdb.set_trace()
+            res.append((obj, obj.saved_assessment_data))
+
+        return res
+
+    def fix_assessment_data(self):
+        from wise.msfd.compliance.content import AssessmentData
+
+        for obj, data in self.get_saved_assessment_data():
+            last = data.last().copy()
+
+            new_data = AssessmentData()
+            new_data.append(last)
+
+            data = new_data
+
+    def __call__(self):
+        if 'fix' in self.request.form:
+            self.fix_assessment_data()
+
+        return self.index()

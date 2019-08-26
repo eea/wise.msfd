@@ -114,7 +114,8 @@ class EditAssessmentDataForm(Form, BaseView):
         if not hasattr(context, 'saved_assessment_data') or \
                 not isinstance(context.saved_assessment_data, PersistentList):
             context.saved_assessment_data = AssessmentData()
-        last = self.context.saved_assessment_data.last()
+
+        last = self.context.saved_assessment_data.last().copy()
 
         # roles = get_roles(obj=self.context)
         # if 'Contributor' not in roles and ('Manager' not in roles)\

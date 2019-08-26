@@ -118,4 +118,12 @@
     permission="zope2.View"
     />
 
+  <browser:page
+    for="*"
+    name="view_saved_assessment_data"
+    class=".utils.ViewSavedAssessmentData"
+    template="./pt/view_saved_assessment_data.pt"
+    permission="zope2.View"
+    />
+
 </configure>
