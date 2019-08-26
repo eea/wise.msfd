@@ -176,7 +176,7 @@
                     <i class="comm-hide fa fa-window-close fa-1" title="Hide"></i>
                     <div class="comments"
                       tal:attributes="data-question-id question_id; data-thread-id string:tl"></div>
-                    <div tal:condition="python: not(view.read_only_access) and can_comment_tl"
+                    <div tal:condition="python: can_comment_tl"
                         class="textline">
                       <textarea name="comment-text" placeholder="Write a comment..."></textarea>
                       <button class="btn btn-primary">Post</button>
@@ -188,7 +188,7 @@
                     <i class="comm-hide fa fa-window-close fa-1" title="Hide"></i>
                     <div class="comments"
                       tal:attributes="data-question-id question_id; data-thread-id string:ec"></div>
-                    <div tal:condition="python: not(view.read_only_access) and can_comment_ec"
+                    <div tal:condition="python: can_comment_ec"
                         class="textline">
                       <textarea name="comment-text" placeholder="Write a comment..."></textarea>
                       <button class="btn btn-primary">Post</button>

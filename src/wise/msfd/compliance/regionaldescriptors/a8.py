@@ -108,12 +108,13 @@ class RegDescA82018Row(BaseRegDescRow):
                     elements = [
                         row.Element
                         for row in data
-                        if row.Feature == feature
+                        if row.Feature == feature and row.Element
                     ]
 
                     value.extend(elements)
 
-                values.append(newline_separated_itemlist(set(value)))
+                value = set(value) or self.not_rep
+                values.append(newline_separated_itemlist(value))
 
             rows.append((theme, values))
 

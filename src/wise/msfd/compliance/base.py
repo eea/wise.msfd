@@ -217,10 +217,12 @@ class BaseComplianceView(BrowserView, BasePublicPage):
 
     @property
     def can_comment_tl(self):
+        return self.check_permission('wise.msfd: Can Comment TL', self.context)
         return self._can_comment('tl')
 
     @property
     def can_comment_ec(self):
+        return self.check_permission('wise.msfd: Can Comment EC', self.context)
         return self._can_comment('ec')
 
     @property

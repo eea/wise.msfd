@@ -79,7 +79,7 @@ class CommentsList(BaseComplianceView):
 
         text = form.get('text')
 
-        folder = self.context[thread_id]
+        folder = self.context
 
         if question_id in folder.contentIds():
             q_folder = folder[question_id]
@@ -101,24 +101,16 @@ class CommentsList(BaseComplianceView):
             transition(obj=q_folder, transition=transition_id)
 
         comment = create(q_folder, 'wise.msfd.comment', text=text)
+        comment.thread_id = thread_id
         logger.info('Added comment %r in %r:, %r', q_folder, comment, text)
 
         return self.template()
 
-    def del_comment(self):
+    def _del_comments_from_q_folder(self, form, q_folder, comments):
         to_local_time = self.context.Plone.toLocalizedTime
-
-        form = self.request.form
-
-        question_id = form.get('q').lower()
-        thread_id = form.get('thread_id')
         text = form.get('text')
         comm_time = form.get('comm_time')
         comm_name = form.get('comm_name')
-
-        folder = self.context[thread_id]
-        q_folder = folder[question_id]
-        comments = q_folder.contentValues()
 
         for comment in comments:
             if comment.text != text or comment.Creator() != comm_name:
@@ -129,15 +121,63 @@ class CommentsList(BaseComplianceView):
 
             del q_folder[comment.id]
 
+    def del_comment(self):
+        form = self.request.form
+
+        question_id = form.get('q').lower()
+        thread_id = form.get('thread_id')
+
+        # old comments
+        folder = self.context.get(thread_id, {})
+        q_folder = folder.get(question_id, {})
+        if q_folder:
+            old_comments = q_folder.contentValues()
+            self._del_comments_from_q_folder(form, q_folder, old_comments)
+
+        # new comments
+        folder = self.context
+        q_folder = folder[question_id]
+        new_comments = [
+            c
+            for c in q_folder.contentValues()
+            if getattr(c, 'thread_id', 'missing-thread-id') == thread_id
+        ]
+        self._del_comments_from_q_folder(form, q_folder, new_comments)
+
         return self.template()
 
     def __call__(self):
         return self.template()
 
     def comments(self):
+        """ Return all comments
+
+        Comments are no longer stored in ec/tl folders, instead on national
+        descriptor assessment folder (../fi/bal/d5/art9)
+        """
+        folder = self.context
         thread_id = self.request.form.get('thread_id')
-        folder = self.context[thread_id]
         question_id = self.request.form.get('q', 'missing-id').lower()
+        old_comments = self.old_comments(thread_id, question_id)
+
+        if question_id not in folder.contentIds():
+            return old_comments
+
+        q_folder = folder[question_id]
+        comments = [
+            c
+            for c in q_folder.contentValues()
+            if getattr(c, 'thread_id', 'missing-thread-id') == thread_id
+        ]
+        all_comments = old_comments + comments
+
+        return all_comments
+
+    def old_comments(self, thread_id, question_id):
+        """ Return comments from the old comment folders: ec and tl
+        """
+
+        folder = self.context[thread_id]
 
         if question_id not in folder.contentIds():
             return []
