@@ -1,6 +1,6 @@
 import datetime
 import logging
-
+import collections
 from zope.schema import Choice, Text
 from zope.schema.vocabulary import SimpleTerm, SimpleVocabulary
 
@@ -32,17 +32,30 @@ from .base import BaseView
 
 logger = logging.getLogger('wise.msfd')
 
-
 class EditAssessmentHistory(BaseView, BrowserView):
     def report_assessment(self):
-        saved_assessment_data = self.context.saved_assessment_data
-        sorted_tables = []
+        fields = []
+        records_table = collections.OrderedDict()
+        timestamps = []
 
-        for table_pair in saved_assessment_data:
-            sorted_tables.append(
-                sorted(table_pair.items(), key=lambda x: x[0]))
+        records = self.context.saved_assessment_data
+        fields = sorted(records[0].keys())
 
-        return sorted_tables[::-1]
+        for record in records[::-1]:
+            record_timestamps = []
+            
+            for field in fields:
+                if type(record[field]) == datetime.datetime:
+                    record_timestamps.append(record[field])
+                elif field in records_table.keys():
+                    records_table[field] += [record[field]]
+                else:
+                    records_table[field] = [record[field]]
+                
+            timestamps.append(max(record_timestamps))
+
+        records_table.timestamps = timestamps
+        return records_table
 
     @property
     def title(self):
