@@ -1,0 +1,11 @@
+<table>
+  <tr tal:repeat="b view/get_saved_assessment_data">
+    <td tal:define="obj python:b[0]">
+      <a tal:content="obj/absolute_url"
+         tal:attributes="href obj/absolute_url">X</a>
+    </td>
+    <td tal:content="python: b[1]"></td>
+    <td tal:content="python: b[1] == b[1].data"></td>
+    <td tal:content="python: b[1].last()"></td>
+  </tr>
+</table>
