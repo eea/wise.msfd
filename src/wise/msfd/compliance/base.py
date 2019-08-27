@@ -202,7 +202,7 @@ class BaseComplianceView(BrowserView, BasePublicPage):
         """ Returns the color according to the role of the user, EC or TL
         """
 
-        roles = get_roles(username=user)
+        roles = get_roles(username=user, obj=self.context)
 
         if 'Editor' in roles:
             return 'dark'
