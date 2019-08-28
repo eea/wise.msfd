@@ -18,6 +18,7 @@
   <div tal:condition="python: hasattr(view, 'focus_muid')">
     <form method="GET" action="" tal:attributes="action request/URL0">
       <label>Marine Unit ID</label>
+      <input type="hidden" name="split-mru" value="true" />
       <select name="focus_muid" class="pat-select2" data-pat-select2="width:10em">
         <option value="">---</option>
         <tal:rep tal:repeat="m view/focus_muids">
