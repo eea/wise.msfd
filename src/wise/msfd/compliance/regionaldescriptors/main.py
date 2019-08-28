@@ -58,6 +58,9 @@ class RegionalDescriptorRegionsOverview(BaseRegComplianceView):
 
         return [desc[a] for a in order]
 
+    def ready_phase2(self):
+        return False
+
 
 class RegionalDescriptorArticleView(BaseRegComplianceView):
     section = 'regional-descriptors'

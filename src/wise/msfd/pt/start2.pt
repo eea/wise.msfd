@@ -33,14 +33,14 @@
                   <td>
                     <a class="btn btn-xs btn-primary disabled">Regional overview</a>
                     <a class="btn btn-xs btn-primary"
-                       tal:attributes="href python:'./{}/{}'.format(folder.aq_parent.id, folder.id)">
+                       tal:attributes="href python:'./{}/{}/reports'.format(folder.aq_parent.id, folder.id)">
                       Regional descriptor
                     </a>
                   </td>
                   <td>
                     <a class="btn btn-xs btn-primary disabled">Regional overview</a>
                     <a class="btn btn-xs btn-primary"
-                       tal:attributes="href python:'./{}/{}'.format(folder.aq_parent.id, folder.id)">
+                       tal:attributes="href python:'./{}/{}/assessments'.format(folder.aq_parent.id, folder.id)">
                       Regional descriptor
                     </a>
                   </td>
