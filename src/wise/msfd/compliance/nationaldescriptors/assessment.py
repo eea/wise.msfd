@@ -34,27 +34,19 @@ logger = logging.getLogger('wise.msfd')
 
 class EditAssessmentHistory(BaseView, BrowserView):
     def report_assessment(self):
-        fields = []
-        records_table = collections.OrderedDict()
-        timestamps = []
-
+        records_table, records_table.timestamps = collections.OrderedDict(), []
         records = self.context.saved_assessment_data
-        fields = sorted(records[0].keys())
 
         for record in records[::-1]:
-            record_timestamps = []
-            
-            for field in fields:
-                if type(record[field]) == datetime.datetime:
-                    record_timestamps.append(record[field])
+            timestamps_r = []
+            for field in sorted(record.keys()):
+                if isinstance(record[field], datetime.datetime):
+                    timestamps_r.append(record[field])
                 elif field in records_table.keys():
                     records_table[field] += [record[field]]
                 else:
                     records_table[field] = [record[field]]
-                
-            timestamps.append(max(record_timestamps))
-
-        records_table.timestamps = timestamps
+            records_table.timestamps.append(max(timestamps_r))
         return records_table
 
     @property
