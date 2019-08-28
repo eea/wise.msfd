@@ -686,12 +686,12 @@ https://svn.eionet.europa.eu/repositories/Reportnet/Dataflows/MarineDirective/MS
         data = getattr(self, 'get_data_from_view_' + self.article)()
         data = [Proxy2018(row, self) for row in data]
 
-        if len(data) > 2000:
-            if self.muids:
-                if getattr(self, 'focus_muid', None) is None:
-                    self.focus_muid = self.muids[0].name
-
-                self.focus_muids = self._get_muids_from_data(data)
+        # if len(data) > 2000:
+        #     if self.muids:
+        #         if getattr(self, 'focus_muid', None) is None:
+        #             self.focus_muid = self.muids[0].name
+        #
+        #         self.focus_muids = self._get_muids_from_data(data)
 
         if self.article == 'Art8':
             order = self._get_order_cols_Art8(self.descriptor)
