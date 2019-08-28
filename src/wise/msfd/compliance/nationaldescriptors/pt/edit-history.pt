@@ -1,7 +1,9 @@
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" 
+        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 <div id="edit-history" tal:on-error="string: Edit History is empty"
                         tal:define="records_table view/report_assessment">
     <h2 tal:content="structure view/title">Edit History</h2>
-    <table class="table table-listing" style="width:100%; margin-bottom:5rem; border: solid black;"
+    <table class="table table-bordered" style="width:100%; margin-bottom:5rem;"
             tal:define="timestamps records_table/timestamps">
         <th>Fields / Records</th>
         <th tal:repeat="timestamp timestamps"
