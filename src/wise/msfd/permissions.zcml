@@ -14,18 +14,6 @@
     />
 
   <permission
-    id="wise.CanCommentEC"
-    title="wise:msfd: Can Comment EC"
-    description="Comment on assessment questions"
-  />
-
-  <permission
-    id="wise.CanCommentTL"
-    title="wise:msfd: Can Comment TL"
-    description="Comment on assessment questions"
-  />
-
-  <permission
     id="wise.EditTranslations"
     title="wise.msfd: Edit Translations"
     description="Edit automatically generated translations"

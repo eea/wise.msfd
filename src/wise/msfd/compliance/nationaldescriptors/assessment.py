@@ -262,9 +262,6 @@ class EditAssessmentDataForm(Form, BaseView):
 
         forms = []
 
-        # is_ec_user = not self.can_comment_tl
-        # is_other_tl = not (self.can_comment_tl or self.can_comment_tl)
-
         for question in self.questions:
             phase = [
                 k
@@ -357,9 +354,7 @@ class EditAssessmentDataForm(Form, BaseView):
             last_upd, assess_date
         )
         assessment_summary_form.subtitle = u''
-        assessment_summary_form._disabled = (
-            self.read_only_access  # or not self.can_comment_tl
-        )
+        assessment_summary_form._disabled = self.read_only_access
         asf_fields = []
 
         for name, title in summary_fields:

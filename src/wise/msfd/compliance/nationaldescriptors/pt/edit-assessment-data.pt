@@ -1,5 +1,5 @@
 <div id="wise-compliance-form" class="full-width-marker"
-  tal:define="can_comment_tl view/can_comment_tl; can_comment_ec view/can_comment_ec; plone nocall:context/@@plone"
+  tal:define="can_comment view/can_comment; plone nocall:context/@@plone"
 
   tal:attributes="id view/form_id | string:wise-compliance-form">
   <script>
@@ -176,19 +176,7 @@
                     <i class="comm-hide fa fa-window-close fa-1" title="Hide"></i>
                     <div class="comments"
                       tal:attributes="data-question-id question_id; data-thread-id string:tl"></div>
-                    <div tal:condition="python: can_comment_tl"
-                        class="textline">
-                      <textarea name="comment-text" placeholder="Write a comment..."></textarea>
-                      <button class="btn btn-primary">Post</button>
-                    </div>
-                  </div>
-
-                  <div class="right discussion disc-ec"
-                       tal:define="question_id subform/_question/id | string:summary">
-                    <i class="comm-hide fa fa-window-close fa-1" title="Hide"></i>
-                    <div class="comments"
-                      tal:attributes="data-question-id question_id; data-thread-id string:ec"></div>
-                    <div tal:condition="python: can_comment_ec"
+                    <div tal:condition="python: can_comment"
                         class="textline">
                       <textarea name="comment-text" placeholder="Write a comment..."></textarea>
                       <button class="btn btn-primary">Post</button>

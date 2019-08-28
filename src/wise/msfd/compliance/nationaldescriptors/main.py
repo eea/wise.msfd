@@ -627,8 +627,7 @@ class NationalDescriptorArticleView(BaseView):
             conclusion_2012=conclusion_2012,
             conclusion_2012_color=conclusion_2012_color,
             change_since_2012=change,
-            can_comment_tl=self.can_comment_tl,
-            can_comment_ec=self.can_comment_ec
+            can_comment=self.can_comment
         )
 
         # Assessment header 2018

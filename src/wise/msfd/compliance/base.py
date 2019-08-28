@@ -209,21 +209,9 @@ class BaseComplianceView(BrowserView, BasePublicPage):
 
         return 'light'
 
-    def _can_comment(self, folder_id, context=None):
-        if context is None:
-            context = self.context
-
-        return checkPermission('zope2.View', context[folder_id])
-
     @property
-    def can_comment_tl(self):
-        return self.check_permission('wise.msfd: Can Comment TL', self.context)
-        return self._can_comment('tl')
-
-    @property
-    def can_comment_ec(self):
-        return self.check_permission('wise.msfd: Can Comment EC', self.context)
-        return self._can_comment('ec')
+    def can_comment(self):
+        return self.check_permission('Add portal content', self.context)
 
     @property
     def assessor_list(self):
@@ -488,36 +476,6 @@ class BaseComplianceView(BrowserView, BasePublicPage):
         except:
             logger.exception("Error in getting latest seen")
             latest = None
-
-        # TODO old code, we no longer check for _can_comment permission
-        # because both comment sections can be seen by users
-
-        # if self._can_comment('tl', assessment):
-        #     q_folders = assessment['tl'].contentValues()
-        #     if q_folders:
-        #         # TODO: we rely on ordered folders, not sure if correct
-        #         latest = [
-        #             folder.contentValues()[-1].modification_date.utcdatetime()
-        #             for folder in q_folders
-        #             if folder.contentValues()
-        #         ]
-        #         latest = latest and max(latest) or None
-        #
-        # if self._can_comment('ec', assessment):
-        #     q_folders = assessment['ec'].contentValues()
-        #     if q_folders:
-        #         # TODO: we rely on ordered folders, not sure if correct
-        #         ec_latest = [
-        #             folder.contentValues()[-1].modification_date.utcdatetime()
-        #             for folder in q_folders
-        #             if folder.contentValues()
-        #         ]
-        #         ec_latest = ec_latest and max(ec_latest) or None
-        #
-        #         latest = latest and max(ec_latest, latest) or ec_latest
-
-        # if 'd5' in token:
-        #     import pdb; pdb.set_trace()
 
         if not latest:
             return None

@@ -71,7 +71,6 @@ class CommentsList(BaseComplianceView):
         return user.id
 
     def add_comment(self):
-
         form = self.request.form
         question_id = form.get('q').lower()
         thread_id = form.get('thread_id')
@@ -101,7 +100,6 @@ class CommentsList(BaseComplianceView):
             transition(obj=q_folder, transition=transition_id)
 
         comment = create(q_folder, 'wise.msfd.comment', text=text)
-        comment.thread_id = thread_id
         logger.info('Added comment %r in %r:, %r', q_folder, comment, text)
 
         return self.template()
@@ -125,23 +123,19 @@ class CommentsList(BaseComplianceView):
         form = self.request.form
 
         question_id = form.get('q').lower()
-        thread_id = form.get('thread_id')
 
         # old comments
-        folder = self.context.get(thread_id, {})
-        q_folder = folder.get(question_id, {})
-        if q_folder:
-            old_comments = q_folder.contentValues()
-            self._del_comments_from_q_folder(form, q_folder, old_comments)
+        for thread_id in ('ec', 'tl'):
+            folder = self.context.get(thread_id, {})
+            q_folder = folder.get(question_id, {})
+            if q_folder:
+                old_comments = q_folder.contentValues()
+                self._del_comments_from_q_folder(form, q_folder, old_comments)
 
         # new comments
         folder = self.context
         q_folder = folder[question_id]
-        new_comments = [
-            c
-            for c in q_folder.contentValues()
-            if getattr(c, 'thread_id', 'missing-thread-id') == thread_id
-        ]
+        new_comments = q_folder.contentValues()
         self._del_comments_from_q_folder(form, q_folder, new_comments)
 
         return self.template()
@@ -155,36 +149,43 @@ class CommentsList(BaseComplianceView):
         Comments are no longer stored in ec/tl folders, instead on national
         descriptor assessment folder (../fi/bal/d5/art9)
         """
+
         folder = self.context
-        thread_id = self.request.form.get('thread_id')
         question_id = self.request.form.get('q', 'missing-id').lower()
-        old_comments = self.old_comments(thread_id, question_id)
+        old_comments = self.old_comments(question_id)
 
         if question_id not in folder.contentIds():
             return old_comments
 
         q_folder = folder[question_id]
-        comments = [
-            c
-            for c in q_folder.contentValues()
-            if getattr(c, 'thread_id', 'missing-thread-id') == thread_id
-        ]
+        comments = q_folder.contentValues()
         all_comments = old_comments + comments
 
-        return all_comments
+        sorted_all_comments = sorted(all_comments, key=lambda c: c.created())
 
-    def old_comments(self, thread_id, question_id):
+        return sorted_all_comments
+
+    def old_comments(self, question_id):
         """ Return comments from the old comment folders: ec and tl
         """
 
-        folder = self.context[thread_id]
+        thread_ids = ['ec', 'tl']
+        all_comments = []
 
-        if question_id not in folder.contentIds():
-            return []
+        for thread_id in thread_ids:
+            folder = self.context.get(thread_id, None)
 
-        q_folder = folder[question_id]
+            if not folder:
+                continue
 
-        return q_folder.contentValues()
+            if question_id not in folder.contentIds():
+                continue
+
+            q_folder = folder[question_id]
+
+            all_comments.extend(q_folder.contentValues())
+
+        return all_comments
 
 
 class TabsView(BaseComplianceView):

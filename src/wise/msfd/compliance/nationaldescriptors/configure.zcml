@@ -101,7 +101,7 @@
     permission="zope2.View"
     />
 
-  <!-- Temp pages-->
+  <!-- comp-start2 -->
   <browser:page
     for="..interfaces.ICountryDescriptorsFolder"
     name="reports"
@@ -118,6 +118,7 @@
     permission="zope2.View"
     />
 
+  <!-- Temp pages-->
   <browser:page
     for="*"
     name="view_saved_assessment_data"

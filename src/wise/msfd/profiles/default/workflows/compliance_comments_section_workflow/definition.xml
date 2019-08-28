@@ -39,13 +39,14 @@
    <permission-role>Contributor</permission-role>
    <permission-role>Editor</permission-role>
    <permission-role>Manager</permission-role>
-   <permission-role>Reader</permission-role>
+   <permission-role>Reviewer</permission-role>
   </permission-map>
   <permission-map name="View" acquired="False">
    <permission-role>Contributor</permission-role>
    <permission-role>Editor</permission-role>
    <permission-role>Manager</permission-role>
    <permission-role>Reader</permission-role>
+   <permission-role>Reviewer</permission-role>
   </permission-map>
  </state>
  <transition transition_id="close" title="Close discussions" new_state="closed" trigger="USER" before_script="" after_script="">
