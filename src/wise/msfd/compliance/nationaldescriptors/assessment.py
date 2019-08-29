@@ -169,6 +169,11 @@ class EditAssessmentDataForm(Form, BaseView):
             if last_values != score_values:
                 data[last_upd] = datetime_now
 
+            # check if _Summary text is changed, and update _Last_update field
+            summary = '{}_{}_Summary'.format(self.article, question.id)
+            if last.get(summary, '') != data.get(summary, ''):
+                data[last_upd] = datetime_now
+
         last_upd = "{}_assess_summary_last_upd".format(
             self.article
         )
