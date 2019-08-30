@@ -158,6 +158,24 @@ def get_indicator_labels():
 
 
 @db.use_db_session('2018')
+def get_indicator_urls():
+    mc = sql2018.IndicatorsIndicatorAssessment
+    count, res = db.get_all_records(
+        mc
+    )
+    urls = {}
+
+    for row in res:
+        code = row.IndicatorCode
+        url = row.UniqueReference
+
+        if url:
+            urls[code] = url
+
+    return urls
+
+
+@db.use_db_session('2018')
 def get_mru_labels():
     # for faster query only get these fields
     needed = ('MarineReportingUnitId', 'Description', 'nameTxtInt', 'nameText')
@@ -217,6 +235,7 @@ class LabelCollection(object):
     ges_criterias = _parse_labels('GESCriterias')
     ges_components = _parse_labels('GESComponents')
     indicators = get_indicator_labels()
+    indicators_url = get_indicator_urls()
     mrus = get_mru_labels()
     targets = get_target_labels()
 

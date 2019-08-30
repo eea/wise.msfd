@@ -58,12 +58,23 @@ def format_nr(field, value, lang):
 
 
 def get_indicators(field, value, lang):
+    value_orig = value
     title = GES_LABELS.get('indicators', value)
+    url = GES_LABELS.get('indicators_url', value)
     tr = get_translated(title, lang)
 
     if tr:
         value = u"{} ({})".format(value, title)
+        title = tr
 
-        return ItemLabel(value, tr)
+    if url != value_orig:
+        template = u'<a style="cursor: help;" target="_blank" href="{}">{}</a>'
+
+        return ItemLabel(value, template.format(url, title))
+
+    # if tr:
+    #     value = u"{} ({})".format(value, title)
+    #
+    #     return ItemLabel(value, tr)
     else:
         return ItemLabel(value, title)
