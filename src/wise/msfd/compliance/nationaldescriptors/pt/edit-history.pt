@@ -1,18 +1,13 @@
-<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" 
-        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-<div id="edit-history" tal:on-error="string: Edit History is empty"
-                        tal:define="records_table view/report_assessment">
+<div id="edit-history"  tal:define="records view/report_assessment">
     <h2 tal:content="structure view/title">Edit History</h2>
-    <table class="table table-bordered" style="width:100%; margin-bottom:5rem;"
-            tal:define="timestamps records_table/timestamps">
+    <table class="table table-bordered" style="max-width:20em; overflow: auto"
+            tal:define="ts records/ts">
         <th>Fields / Records</th>
-        <th tal:repeat="timestamp timestamps"
+        <th tal:repeat="timestamp ts"
             tal:content="timestamp"></th>
-        <tr tal:repeat="field python: records_table.keys()">
+        <tr tal:repeat="field python: records.keys()">
             <td tal:content="field"></td>
-            <tal:rep tal:repeat="value python: records_table[field]">
-                <td tal:content="value"></td>
-            </tal:rep>
+            <td tal:repeat="value python: records[field]" tal:content="value"></td>
         </tr>
     </table>
 </div>

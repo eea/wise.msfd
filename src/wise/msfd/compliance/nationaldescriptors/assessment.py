@@ -2,6 +2,7 @@ import datetime
 import logging
 import collections
 from zope.schema import Choice, Text
+from wise.msfd.compliance.scoring import Score
 from zope.schema.vocabulary import SimpleTerm, SimpleVocabulary
 
 from AccessControl import Unauthorized
@@ -34,20 +35,23 @@ logger = logging.getLogger('wise.msfd')
 
 class EditAssessmentHistory(BaseView, BrowserView):
     def report_assessment(self):
-        records_table, records_table.timestamps = collections.OrderedDict(), []
-        records = self.context.saved_assessment_data
-
-        for record in records[::-1]:
-            timestamps_r = []
+        res, res.ts = collections.OrderedDict(), []
+        for record in reversed(list(self.context.saved_assessment_data)):
+            tsr = []
             for field in sorted(record.keys()):
                 if isinstance(record[field], datetime.datetime):
-                    timestamps_r.append(record[field])
-                elif field in records_table.keys():
-                    records_table[field] += [record[field]]
+                    tsr.append(record[field])
+                elif isinstance(record[field], Score):
+                    if field in res.keys():
+                        res[field] += [record[field].conclusion]
+                    else:
+                        res[field] = [record[field].conclusion]
+                elif field in res.keys():
+                    res[field] += [record[field]]
                 else:
-                    records_table[field] = [record[field]]
-            records_table.timestamps.append(max(timestamps_r))
-        return records_table
+                    res[field] = [record[field]]
+            res.ts.append(max(tsr))
+        return res
 
     @property
     def title(self):

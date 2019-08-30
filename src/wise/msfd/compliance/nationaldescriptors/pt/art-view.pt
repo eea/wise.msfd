@@ -22,7 +22,7 @@
           </div>
 
           <h1 tal:content="structure view/title">Assessment</h1>
-          <h4 class="process-phase-title" >
+          <h4 class="process-phase-title">
             Current phase: <span tal:content="python: view.current_phase[1]">Adequacy</span>
           </h4>
           <div class="nda-link">
@@ -35,12 +35,14 @@
 
           <div id="nat-desc-art-menu">
             <ul>
-              <!-- tal:condition="python: view.check_permission('wise.msfd: Edit Assessment')" -->
-              <li><a href="./@@edit-assessment-data-2018" target="_blank"><i class='fa fa-edit'></i> Assessment</a></li>
+              <li><a href="./@@edit-assessment-data-2018" target="_blank"><i class='fa fa-edit'></i> Assessment</a>
+                  <a href="./@@edit-history" class="fa fa-table pat-plone-modal"
+                      data-pat-plone-modal="height: 600px; content:#edit-history; width: 80%"></a>
+              </li>
               <li><a href="./@@view-report-data-2018" target="_blank"><i class='fa fa-table'></i> 2018 Report</a></li>
               <li><a href="./@@view-report-data-2012" target="_blank"><i class='fa fa-table'></i> 2012 Report</a></li>
-              <li tal:condition="python:False"><!--Removed--><a href="./@@view-report-data-2012-like-2018" target="_blank"><i class='fa fa-table'></i> 2012 Report (II)</a></li>
-              <li class="process-state">
+              <li tal:condition="python:False"><!--Removed--><a href="./@@view-report-data-2012-like-2018" target="_blank"><i class='fa fa-table'></i>2012 Report (II)</a></li>
+              <li class="process-state" style="display:flex; align-items: center">
                 <form method="GET" action='./content_status_modify'>
                   <div>
                     <i class='fa fa-exchange'></i>
@@ -58,15 +60,8 @@
                     </select>
                   </div>
                 </form>
+                <a href="./@@historyview" class="link-overlay contentHistory fa fa-history" id="content-history" style="margin-left: 2rem"></a>
               </li>
-              <li class="contentHistory" id="content-history" style="display: flex; justify-content: center;
-                flex-direction: column; text-align: center;">
-                <a href="./@@historyview" class="link-overlay fa fa-history" style="cursor: pointer"></a>
-              </li>
-              <li class="editHistory" id="edit-history" style="display: flex; justify-content: center; flex-direction: column; text-align: center;">
-                <a href="./@@edit-history" class="fa fa-edit pat-plone-modal"
-                  data-pat-plone-modal="height: 600px; content:#edit-history; width: 80%"></a>
-              </li>              
             </ul>
           </div>
 
