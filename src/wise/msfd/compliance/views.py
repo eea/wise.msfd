@@ -134,9 +134,10 @@ class CommentsList(BaseComplianceView):
 
         # new comments
         folder = self.context
-        q_folder = folder[question_id]
-        new_comments = q_folder.contentValues()
-        self._del_comments_from_q_folder(form, q_folder, new_comments)
+        q_folder = folder.get(question_id, {})
+        if q_folder:
+            new_comments = q_folder.contentValues()
+            self._del_comments_from_q_folder(form, q_folder, new_comments)
 
         return self.template()
 
