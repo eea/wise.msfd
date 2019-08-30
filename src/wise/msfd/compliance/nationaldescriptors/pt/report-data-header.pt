@@ -50,12 +50,8 @@
                   <a tal:attributes="href string:${art/absolute_url}/@@view-report-data-2012"
                     target="_blank">
                     2012</a>
-                  <a tal:attributes="href string:${art/absolute_url}/@@view-report-data-2012-like-2018"
-                    target="_blank">
-                    2012 (II)</a>
-                  </div>
                 </div>
-
+              </div>
             </div>
           </div>
         </div>
