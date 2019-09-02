@@ -50,6 +50,18 @@ def csv_ges_labels_inverse_list(field, value, lang):
     return ItemList(rows=res)
 
 
+def csv_ges_labels_inverse_list_indicators(field, value, lang):
+    vals = set(value.split(','))
+
+    res = []
+
+    for v in vals:
+        i = get_indicators(field, v, lang)
+        res.append(i)
+
+    return ItemList(rows=res)
+
+
 def format_nr(field, value, lang):
     if value:
         return "%.2f" % value
