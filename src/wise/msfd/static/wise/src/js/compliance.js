@@ -275,14 +275,7 @@ if (!Array.prototype.last){
       if (t.length > maxchars) {
         $(this).addClass('short');
         var sh = t.substr(0, 0.75*maxchars) + sep;
-        try {
-          sh = decodeURI(sh);
-        } catch(err) {
-          sh = encodeURIComponent(sh);
-          sh = decodeURI(sh);
-        }
-
-        $(this).text(sh).html();
+        $(this).text(sh);
         $(this).on('click', function() {
           $modalContent.html(t);
           $modal.modal('show');
