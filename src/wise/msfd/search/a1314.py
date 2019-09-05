@@ -91,10 +91,13 @@ class MarineUnitIDsForm(EmbeddedForm):
             mc,
             mc.ReportID.in_(self.data['report_ids'])
         )
-        res = set([(x.UniqueCode, x.Name) for x in set(res)])
+        # res = set([(x.UniqueCode, x.Name) for x in set(res)])
+        res = set([x.UniqueCode for x in set(res)])
         self.data['unique_codes'] = sorted(res)
 
-        return UniqueCodesForm(self, self.request)
+        return A1314ItemDisplay(self, self.request)
+
+        # return UniqueCodesForm(self, self.request)
 
 
 class UniqueCodesForm(EmbeddedForm):
@@ -119,6 +122,9 @@ class A1314ItemDisplay(ItemDisplayForm):
 
     mapper_class = sql.MSFD13MeasuresInfo
     order_field = 'ID'
+    
+    blacklist = ['ReportID', 'MeasureID']
+    use_blacklist = True
 
     def get_current_country(self):
         if not self.item:
@@ -143,12 +149,12 @@ class A1314ItemDisplay(ItemDisplayForm):
         fields = [mc_join.MemberState] + \
                  [getattr(self.mapper_class, field) for field in mc_fields]
 
-        muids = self.context.data.get('unique_codes', [])
+        codes = self.context.data.get('unique_codes', [])
 
         sess = db.session()
         q = sess.query(*fields).\
             join(mc_join, self.mapper_class.ReportID == mc_join.ReportID).\
-            filter(self.mapper_class.UniqueCode.in_(muids))
+            filter(self.mapper_class.UniqueCode.in_(codes))
         data = [x for x in q]
 
         report_ids = [row.ReportID for row in data]
@@ -168,13 +174,16 @@ class A1314ItemDisplay(ItemDisplayForm):
     def get_db_results(self):
         page = self.get_page()
         mc = self.mapper_class
+        mc_join = sql.MSFD13Measure
 
         count, item, extra_data = db.get_collapsed_item(
             mc,
+            mc_join,
             self.order_field,
             [{'InfoType': ['InfoText']}],
             mc.UniqueCode.in_(self.context.data.get('unique_codes', [])),
             page=page,
+            mc_join_cols=['Name']
         )
         self.extra_data = extra_data.items()
 
@@ -188,6 +197,9 @@ class A1314ItemDisplay(ItemDisplayForm):
         mc = sql.MSFD13ReportInfoFurtherInfo
 
         count, item = db.get_related_record(mc, 'ReportID', report_id)
+
+        if not item:
+            return {}
 
         return ('Report info', item)
 

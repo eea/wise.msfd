@@ -1,7 +1,7 @@
 import os
 import threading
 
-from sqlalchemy import create_engine, distinct, func
+from sqlalchemy import create_engine, distinct, func, inspect
 from sqlalchemy.orm import scoped_session, sessionmaker
 from sqlalchemy.orm.relationships import RelationshipProperty
 from zope.sqlalchemy import register
@@ -215,11 +215,12 @@ def get_marine_unit_ids(**data):
 
 
 # @cache(db_result_key)
-def get_collapsed_item(mapper_class, order_field, collapses, *conditions,
-                       **kwargs):
+def get_collapsed_item(mapper_class, klass_join, order_field, collapses,
+                       *conditions, **kwargs):
     """ Group items
     """
     page = kwargs.get('page', 0)
+    mc_join_cols = kwargs.get('mc_join_cols', [])
     sess = session()
 
     order_field = getattr(mapper_class, order_field)
@@ -248,8 +249,11 @@ def get_collapsed_item(mapper_class, order_field, collapses, *conditions,
 
         cols.append(name)
 
+    mapped_cols_join = [getattr(klass_join, n) for n in mc_join_cols]
     mapped_cols = [getattr(mapper_class, n) for n in cols]
-    q = sess.query(*mapped_cols).filter(*conditions).distinct()
+    all_cols = mapped_cols + mapped_cols_join
+
+    q = sess.query(*all_cols).join(klass_join).filter(*conditions).distinct()
     all_items = q.all()
     total = len(all_items)
     item_values = all_items[page]
@@ -258,7 +262,8 @@ def get_collapsed_item(mapper_class, order_field, collapses, *conditions,
     # total = q.count()
 
     collapse_conditions = [mc == v for mc, v in zip(mapped_cols, item_values)]
-    item = mapper_class(**{c: v for c, v in zip(cols, item_values)})
+    # item = mapper_class(**{c: v for c, v in zip(cols, item_values)})
+    item = item_values
 
     extra_data = {}
 

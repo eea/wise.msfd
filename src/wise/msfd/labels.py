@@ -9,11 +9,13 @@ from . import db, sql, sql2018, sql_extra
 
 COMMON_LABELS = {}                        # vocabulary of labels
 
+# MSFD Search engine
 # Labels used to override the default db column name into a
 # user friendly text
 DISPLAY_LABELS = {
     'MSFD4_Import_ReportingCountry': "Country",
     'AssessmentsPeriod': 'Assessment Period',
+    'UniqueCode': 'Measure code',
 }
 
 logger = logging.getLogger('wise.msfd')

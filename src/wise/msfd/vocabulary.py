@@ -546,6 +546,14 @@ def marine_unit_id_vocab_factory(context):
 
 @provider(IVocabularyFactory)
 def a1314_report_types(context):
+    table = sql.MSFD13ReportingInfo
+    column = 'ReportType'
+    values = db.get_unique_from_mapper(table, column)
+    terms = [SimpleTerm(x, x, x) for x in values]
+    vocab = SimpleVocabulary(terms)
+
+    return vocab
+
     return db_vocab(sql.MSFD13ReportingInfo, 'ReportType')
 
 

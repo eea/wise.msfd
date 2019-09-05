@@ -5,7 +5,7 @@
   item python: info[1]">
 
   <h4 tal:content="section_title">Section title</h4>
-  <dl >
+  <dl tal:condition="python: item">
     <tal:def tal:define="fields python:view.get_obj_fields(item);
       fields python: [x for x in fields if x not in blacklist]">
 
