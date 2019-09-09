@@ -492,11 +492,13 @@ if (!Array.prototype.last){
     $ft.insertBefore($ot.find('.inner'));
   }
 
-  function setupFixedTableRows() {
+  $.fn.setupFixedTableRows = function() {
     // Allows report table rows to be fixed while scrolling
-    var $ot = $('.overflow-table');
+    // var $ot = $('.overflow-table');
+    var $ot = $(this)
     var $fixedTable = $('.fixed-table-wrapper');
 
+    // The .each is unnecesary, because we always fix only one table
     $ot.each(function() {
       var $t = $(this);
       var $th = $('th', $t.parent());
@@ -523,7 +525,7 @@ if (!Array.prototype.last){
 
       $('.fix-row').each(function(i) {
         var val = "cb" + i++;
-//        var checkBox = $(this).find('.fix-row');
+        // var checkBox = $(this).find('.fix-row');
         var checkBox = $(this);
         checkBox.val(val);
       });
@@ -628,7 +630,7 @@ if (!Array.prototype.last){
       var onoff = $(this).attr('aria-pressed') == 'true';
       $p = $(this).parent().next();
       $('.table-report', $p).toggleTable(!onoff);
-      setupFixedTableRows();
+      $p.setupFixedTableRows();
       setupCustomScroll();
     });
   }
@@ -677,7 +679,10 @@ if (!Array.prototype.last){
     $(window).on('load', function() {
       // setupReadMoreModal();
       setupSimplifiedTables();
-      setupFixedTableRows();
+      var $ot = $('.overflow-table');
+      $ot.each(function(){
+        $(this).setupFixedTableRows();
+      });
       setupCustomScroll();
 
       setupScrollableTargets();
