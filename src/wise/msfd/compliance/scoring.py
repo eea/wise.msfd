@@ -104,7 +104,7 @@ CONCLUSIONS = [
     'Good (3)',
     'Poor (2)',
     'Very poor (1)',
-    'Not reported',
+    'Not relevant',
 ]
 
 
@@ -149,6 +149,19 @@ class Score(object):
         self.scores = question.scores
 
     @property
+    def is_not_relevant(self):
+        """ If all options selected are 'Not relevant' return True
+
+        :return: True or False
+        """
+        if not self.values:
+            return False
+
+        answers = [self.scores[answ] for answ in self.values]
+
+        return answers.count('/') == len(self.values)
+
+    @property
     def raw_scores(self):
         """ Currently calls scoring_based function, and returns the raw scores
         based on the options selected for the question
@@ -172,8 +185,10 @@ class Score(object):
 
         :return: float 53.25
         """
+
+        # All answers are 'Not relevant'
         if self.max_score == 0:
-            return 100
+            return -1
 
         raw_score = sum(self.raw_scores)
         percentage = (raw_score * 100) / self.max_score
@@ -186,6 +201,11 @@ class Score(object):
 
         :return: integer from range 1-4
         """
+
+        # All answers are 'Not relevant'
+        if self.percentage == -1:
+            return 0
+
         sv = get_range_index(self.percentage)
 
         return sv
@@ -213,15 +233,16 @@ class Score(object):
 
     @property
     def score_tooltip(self):
+        if self.is_not_relevant:
+            return "All selected options are 'Not relevant', therefore " \
+                   "the question is not accounted when calculating the " \
+                   "Phase1 and the Overall scores"
+
         raw_score = ' + '.join(str(x) for x in self.raw_scores)
 
         percentage = '(sum of raw_scores / max_score) * 100</br>' \
                      '(({}) / {}) * 100 = {}%' \
             .format(raw_score, self.max_score, self.percentage)
-
-        if self.max_score == 0:
-            percentage = "All selected options are 'Not relevant', therefore "\
-                         "100% percentage is accorded"
 
         score_value = '{}% percentage translates to score value {} (out of 4)'\
                       ' meaning "{}"'\

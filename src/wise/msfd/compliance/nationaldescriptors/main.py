@@ -313,6 +313,7 @@ def format_assessment_data(article, elements, questions, muids, data,
 
     answers = []
     overall_score = 0
+    max_overall_score = 0
     phase1_score = 0
     max_phase1_score = 0
 
@@ -371,11 +372,21 @@ def format_assessment_data(article, elements, questions, muids, data,
         score_value = getattr(score, 'score_value', 0)
 
         conclusion_color = CONCLUSION_COLOR_TABLE[score_value]
-        overall_score += getattr(score, 'weighted_score', 0)
+
+        weighted_score = getattr(score, 'weighted_score', 0)
+        is_not_relevant = getattr(score, 'is_not_relevant', False)
+        q_weight = float(question.score_weights.get(descriptor.id, 10.0))
+
+        # is_not_relevant is True if all answered options are 'Not relevant'
+        # maximum overall score is incremented if the is_not_relevant is False
+        if not is_not_relevant:
+            overall_score += weighted_score
+            max_overall_score += q_weight
 
         if question.klass != 'coherence':
-            phase1_score += getattr(score, 'weighted_score', 0)
-            max_phase1_score += getattr(score, 'weight', 0)
+            if not is_not_relevant:
+                phase1_score += getattr(score, 'weighted_score', 0)
+                max_phase1_score += q_weight
 
         qr = AssessmentRow(question.definition, summary, conclusion,
                            conclusion_color, score, values)
@@ -389,6 +400,9 @@ def format_assessment_data(article, elements, questions, muids, data,
     # phase1_score ................. x%
     phase1_score = int(round(max_phase1_score and
                              (phase1_score * 100) / max_phase1_score or 0))
+
+    overall_score = int(round(max_overall_score and
+                              (overall_score * 100) / max_overall_score or 0))
 
     try:
         phase1_conclusion = get_overall_conclusion(phase1_score)
