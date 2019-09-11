@@ -47,7 +47,31 @@ if (!Array.prototype.last){
     $(".toggle-sidebar").hide();
   }
 
+  function setupTargetsWidth() {
+    // Make targets extend on multiple rows when there are many targets
+    // and the assessment-data-table is scrollable
+    var $tableWrap = $('.table-wrap');
+    var $assessmentTable = $('#container-assessment-data-2018 .assessment-data-table');
+    if($assessmentTable.width() > $tableWrap.width()) {
+      $('div.gescomp', $tableWrap).css({'display': 'inline-table', 'min-width': 'inherit', 'width': 'inherit'});
+      return
+    }
+
+    var maxGescompWidth = 0;
+    $('div.gescomp', $tableWrap).each(function(){
+      var width = $(this).width();
+      if (width > maxGescompWidth){
+        maxGescompWidth = width;
+      }
+    });
+
+    $('div.gescomp', $tableWrap).css({'width': maxGescompWidth});
+
+    $(window).on('resize', adjustTargetsWidth);
+  }
+
   function setupScrollableTargets() {
+    // NOT USED
     // create a clone of the assessment data 2018 table and overlap the original table
     // with fixed question and score columns
     // console.log('setupScrollableTargets');
@@ -672,10 +696,6 @@ if (!Array.prototype.last){
     addFixedTable();
     regionalDescriptorsGroupTableHeaders();
 
-//    $(window).on('resize', function(){
-//      setupScrollableTargets();
-//    });
-
     $(window).on('load', function() {
       // setupReadMoreModal();
       setupSimplifiedTables();
@@ -685,7 +705,9 @@ if (!Array.prototype.last){
       });
       setupCustomScroll();
 
-      setupScrollableTargets();
+      // setupScrollableTargets();
+      setupTargetsWidth();
     });
+
   });
 }(window, document, $));
