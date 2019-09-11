@@ -52,10 +52,11 @@ if (!Array.prototype.last){
     // and the assessment-data-table is scrollable
     var $tableWrap = $('.table-wrap');
     var $assessmentTable = $('#container-assessment-data-2018 .assessment-data-table');
-    if($assessmentTable.width() > $tableWrap.width()) {
-      $('div.gescomp', $tableWrap).css({'display': 'inline-table', 'min-width': 'inherit', 'width': 'inherit'});
+    if($assessmentTable.width() <= $tableWrap.width()) {
       return
     }
+
+    $('div.gescomp', $tableWrap).css({'display': 'inline-table', 'min-width': 'inherit', 'width': 'inherit'});
 
     var maxGescompWidth = 0;
     $('div.gescomp', $tableWrap).each(function(){
