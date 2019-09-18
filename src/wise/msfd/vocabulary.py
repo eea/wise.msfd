@@ -1039,3 +1039,10 @@ def a2012_ges_components_art10(context):
     res = set([x[0] for x in q])
 
     return vocab_from_values(res)
+
+
+@provider(IVocabularyFactory)
+def a18_ges_component(context):
+    mc = sql2018.ART18MeasureProgressDescriptor
+
+    return db_vocab(mc, 'DescriptorCode')

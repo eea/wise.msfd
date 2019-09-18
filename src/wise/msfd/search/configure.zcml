@@ -62,6 +62,13 @@
     permission="cmf.ModifyPortalContent"
     />
 
+  <browser:page
+    for="*"
+    name="msfd-c5"
+    class=".main.StartArticle18View"
+    permission="zope2.View"
+  />
+
   <utility
     component=".vocabulary.monitoring_programme_info_types"
     name="wise_search_monitoring_programme_info_types"
@@ -80,6 +87,11 @@
   <utility
     component=".vocabulary.articles_vocabulary_factory"
     name="wise_search_articles"
+    />
+
+  <utility
+    component=".vocabulary.a18_data_type"
+    name="wise_search_a18_data_type"
     />
 
 </configure>

@@ -15,6 +15,7 @@ from ..sql_extra import MSCompetentAuthority
 from ..utils import scan, db_objects_to_dict, group_data
 from .a11 import StartArticle11Form
 from .a1314 import StartArticle1314Form
+from .a18 import StartArticle18Form
 from .a4 import A4Form
 from .base import MAIN_FORMS, ItemDisplayForm, MainForm
 from .utils import data_to_xls, get_form
@@ -330,6 +331,8 @@ class StartArticle89102018Form(MainForm):
 
 
 StartArticle89102018View = wrap_form(StartArticle89102018Form, MainFormWrapper)
+
+StartArticle18View = wrap_form(StartArticle18Form, MainFormWrapper)
 
 # discover and register associated views
 

@@ -141,6 +141,14 @@ class IA2012GesComponentsArt10(Interface):
     )
 
 
+class IStartArticle18(Interface):
+    data_type = Choice(
+        title=u"Data type",
+        vocabulary='wise_search_a18_data_type',
+        required=False
+    )
+
+
 # Articles 8, 9, 10
 # 2018 reporting year
 class IArticleSelect2018(Interface):
@@ -253,4 +261,12 @@ class IRegionSubregionsArt6(Interface):
         title=u"Region and Subregions",
         value_type=Choice(vocabulary="wise_search_region_subregions_art6"),
         required=False,
+    )
+
+
+class IGESComponentsA18(Interface):
+    ges_component = List(
+        title=u"GES Component",
+        required=False,
+        value_type=Choice(vocabulary="wise_search_a18_ges_component")
     )

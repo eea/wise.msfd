@@ -180,6 +180,8 @@ MAIN_FORMS = (
         '', true),
     Tab('msfd-c4', 'msfd-c4', 'Articles 8, 9 & 10', '2018 reporting exercise',
         '', true),
+    Tab('msfd-c5', 'msfd-c5', 'Article 18', '2019 reporting exercise',
+        '', true),
 )
 
 
