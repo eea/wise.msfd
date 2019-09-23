@@ -1,18 +1,15 @@
 import logging
 from collections import namedtuple
 
+from zope.schema import Text
+
 from AccessControl import Unauthorized
-
-from zope.schema import Choice, Text
-
 from persistent.list import PersistentList
 from Products.Five.browser.pagetemplatefile import (PageTemplateFile,
                                                     ViewPageTemplateFile)
 from wise.msfd.compliance.content import AssessmentData
-from wise.msfd.compliance.interfaces import (IEditAssessorsForm,
-                                             IRegionalDescriptorAssessment)
+from wise.msfd.compliance.interfaces import IEditAssessorsForm
 from wise.msfd.compliance.utils import get_assessors, set_assessors
-
 from z3c.form.button import buttonAndHandler
 from z3c.form.field import Fields
 from z3c.form.form import Form
@@ -113,11 +110,11 @@ class ViewAssessmentSummaryForm(BaseComplianceView):
 
 
 class EditAssessmentSummaryForm(Form, BaseComplianceView):
-    # TODO unused
     """ Edit the assessment summary
 
     Fields are: summary, recommendations, progress assessment
     """
+    # TODO unused
 
     title = u"Edit progress assessment"
     template = ViewPageTemplateFile("pt/inline-form.pt")
@@ -154,6 +151,7 @@ class EditAssessmentSummaryForm(Form, BaseComplianceView):
         context = self.context
 
         # BBB code, useful in development
+
         if not hasattr(context, 'saved_assessment_data') or \
                 not isinstance(context.saved_assessment_data, PersistentList):
             context.saved_assessment_data = AssessmentData()

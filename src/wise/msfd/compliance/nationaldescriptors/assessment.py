@@ -35,7 +35,10 @@ from .base import BaseView
 logger = logging.getLogger('wise.msfd')
 
 
-class EditAssessmentHistory(BaseView, BrowserView):
+class ViewAssessmentEditHistory(BaseView, BrowserView):
+    """ View the history of edits made on the assessment
+    """
+
     def report_assessment(self):
         res, res.ts = collections.OrderedDict(), []
 

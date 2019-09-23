@@ -55,11 +55,19 @@
     permission="zope2.View"
     />
 
+  <!-- <browser:page -->
+  <!--   for=".interfaces.IComplianceModuleFolder" -->
+  <!--   name="comp&#45;start" -->
+  <!--   class=".main.StartComplianceView" -->
+  <!--   template="../pt/start.pt" -->
+  <!--   permission="zope2.View" -->
+  <!--   /> -->
+
   <browser:page
     for=".interfaces.IComplianceModuleFolder"
-    name="comp-start"
-    class=".main.StartComplianceView"
-    template="../pt/start.pt"
+    name="view"
+    class=".main.ViewComplianceModule"
+    template="./pt/compliance-overview.pt"
     permission="zope2.View"
     />
 
@@ -83,15 +91,6 @@
     for=".interfaces.IComment"
     name="comment-view"
     class=".comments.CommentView"
-    permission="zope2.View"
-    />
-
-  <!-- Temporary pages -->
-  <browser:page
-    for=".interfaces.IComplianceModuleFolder"
-    name="comp-start2"
-    class=".main.StartComplianceView2"
-    template="../pt/start2.pt"
     permission="zope2.View"
     />
 

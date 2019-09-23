@@ -1,0 +1,61 @@
+<configure
+  xmlns="http://namespaces.zope.org/zope"
+  xmlns:browser="http://namespaces.zope.org/browser"
+  xmlns:i18n="http://namespaces.zope.org/i18n"
+  xmlns:z3c="http://namespaces.zope.org/z3c"
+  i18n_domain="wise.msfd">
+
+  <!-- Main page for National Descriptors section  -->
+  <browser:page
+    for="..interfaces.INationalDescriptorsFolder"
+    name="nat-desc-start"
+    class=".main.NationalDescriptorsOverview"
+    template="./pt/start.pt"
+    permission="zope2.View"
+    />
+
+  <!-- An empty page, to serve as main page of a "/be/ans" region folder -->
+  <browser:page
+    for="..interfaces.INationalRegionDescriptorFolder"
+    name="nat-desc-reg-view"
+    template="./pt/reg-view.pt"
+    class=".main.NationalDescriptorRegionView"
+    permission="zope2.View"
+    />
+
+  <!-- Main page for a country -->
+  <browser:page
+    for="..interfaces.ICountryDescriptorsFolder"
+    name="view"
+    class=".main.NationalDescriptorCountryOverview"
+    template="./pt/country-start-assessments.pt"
+    permission="zope2.View"
+    />
+
+  <!-- All country reports on a page, for the MS Reporters -->
+  <!-- <browser:page -->
+  <!--   for="..interfaces.ICountryDescriptorsFolder" -->
+  <!--   name="reports" -->
+  <!--   class=".main.NationalDescriptorCountryOverview" -->
+  <!--   template="./pt/country&#45;start&#45;reports.pt" -->
+  <!--   permission="zope2.View" -->
+  <!--   /> -->
+
+  <!-- Renders assessment data, for member states to view -->
+  <browser:page
+    for="..interfaces.INationalDescriptorAssessment"
+    name="view-assessment-summary"
+    class="..assessment.ViewAssessmentSummaryForm"
+    permission="wise.ViewAssessmentData"
+    />
+
+  <!-- The "Commission assessments - national overview" page -->
+  <!-- <browser:page -->
+  <!--   for="..interfaces.ICountryDescriptorsFolder" -->
+  <!--   name="assessments" -->
+  <!--   class=".main.NationalDescriptorCountryOverview" -->
+  <!--   template="./pt/country&#45;start&#45;assessments.pt" -->
+  <!--   permission="zope2.View" -->
+  <!--   /> -->
+
+</configure>

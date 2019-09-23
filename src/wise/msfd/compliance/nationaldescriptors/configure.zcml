@@ -6,77 +6,70 @@
   i18n_domain="wise.msfd">
 
   <include file="viewlets.zcml"/>
+  <include file="overview.zcml"/>
 
-  <browser:page
-    for="..interfaces.INationalDescriptorsFolder"
-    name="nat-desc-start"
-    class=".main.NationalDescriptorsOverview"
-    template="./pt/start.pt"
-    permission="zope2.View"
-    />
 
   <browser:page
     for="..interfaces.ICountryDescriptorsFolder"
-    name="view"
+    name="send_to_tl"
     class=".main.NationalDescriptorCountryOverview"
-    template="./pt/country-start.pt"
-    permission="zope2.View"
+    attribute="send_to_tl"
+    permission="wise.ManageCompliance"
     />
-    name="nat-desc-country-start"
 
+  <!-- Main page for an assessment: summary, overview, etc -->
   <browser:page
     for="..interfaces.INationalDescriptorAssessment"
     name="nat-desc-art-view"
     template="./pt/art-view.pt"
     class=".main.NationalDescriptorArticleView"
-    permission="zope2.View"
+    permission="wise.ViewAssessmentData"
     />
 
+  <!-- Mini-view to see edit history for an assessment -->
   <browser:page
     for="*"
-    name="edit-history"
-    template="./pt/edit-history.pt"
-    class=".assessment.EditAssessmentHistory"
-    permission="zope2.View"
+    name="view-edit-history"
+    template="./pt/view-edit-history.pt"
+    class=".assessment.ViewAssessmentEditHistory"
+    permission="wise.ViewAssessmentData"
   />
 
+  <!-- Form to edit the assessment history -->
   <browser:page
     for="..interfaces.INationalDescriptorAssessment"
     name="edit-assessment-summary"
     class="..assessment.EditAssessmentSummaryForm"
-    permission="zope2.View"
+    permission="wise.EditAssessment"
     />
 
-  <browser:page
-    for="..interfaces.INationalDescriptorAssessment"
-    name="view-assessment-summary"
-    class="..assessment.ViewAssessmentSummaryForm"
-    permission="zope2.View"
-    />
-
-  <browser:page
-    for="..interfaces.INationalRegionDescriptorFolder"
-    name="nat-desc-reg-view"
-    template="./pt/reg-view.pt"
-    class=".main.NationalDescriptorRegionView"
-    permission="zope2.View"
-    />
-
+  <!-- Edit the assessment data -->
   <browser:page
     for="*"
     name="edit-assessment-data-2018"
     class=".assessment.EditAssessmentDataView"
-    permission="zope2.View"
+    permission="wise.EditAssessment"
     />
 
+  <!-- Edit the assessors information, in the assessment overview page -->
+  <browser:page
+    for="..interfaces.INationalDescriptorsFolder"
+    name="edit-assessors"
+    class="..assessment.EditAssessorsForm"
+    template="../pt/edit-assessors.pt"
+    permission="wise.ManageCompliance"
+    />
+
+  <!-- View report data for 2012 -->
   <browser:page
     for="..interfaces.INationalDescriptorAssessment"
     name="view-report-data-2012"
     class=".reportdata.ReportData2012"
     template="./pt/report-data-view.pt"
-    permission="zope2.View"
+    permission="wise.ViewAssessmentData"
     />
 
+  <!-- View report data for 2012, second version -->
   <browser:page
     for="..interfaces.INationalDescriptorAssessment"
     name="view-report-data-2012-like-2018"
@@ -85,6 +78,7 @@
     permission="zope2.View"
     />
 
+  <!-- view report data for 2018 -->
   <browser:page
     for="..interfaces.INationalDescriptorAssessment"
     name="view-report-data-2018"
@@ -93,38 +87,13 @@
     permission="zope2.View"
     />
 
-  <browser:page
-    for="..interfaces.INationalDescriptorsFolder"
-    name="edit-assessors"
-    class="..assessment.EditAssessorsForm"
-    template="../pt/edit-assessors.pt"
-    permission="zope2.View"
-    />
-
-  <!-- comp-start2 -->
-  <browser:page
-    for="..interfaces.ICountryDescriptorsFolder"
-    name="reports"
-    class=".main.NationalDescriptorCountryOverview"
-    template="./pt/country-start-reports.pt"
-    permission="zope2.View"
-    />
-
-  <browser:page
-    for="..interfaces.ICountryDescriptorsFolder"
-    name="assessments"
-    class=".main.NationalDescriptorCountryOverview"
-    template="./pt/country-start-assessments.pt"
-    permission="zope2.View"
-    />
-
   <!-- Temp pages-->
-  <browser:page
-    for="*"
-    name="view_saved_assessment_data"
-    class=".utils.ViewSavedAssessmentData"
-    template="./pt/view_saved_assessment_data.pt"
-    permission="zope2.View"
-    />
+  <!-- <browser:page -->
+  <!--   for="*" -->
+  <!--   name="view_saved_assessment_data" -->
+  <!--   class=".utils.ViewSavedAssessmentData" -->
+  <!--   template="./pt/view_saved_assessment_data.pt" -->
+  <!--   permission="cmf.ManagePortal" -->
+  <!--   /> -->
 
 </configure>

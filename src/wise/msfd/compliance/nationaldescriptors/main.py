@@ -9,8 +9,10 @@ from sqlalchemy import or_
 
 from persistent.list import PersistentList
 from plone.api.content import transition
+from plone.protect import CheckAuthenticator, protect
 from Products.Five.browser.pagetemplatefile import \
     ViewPageTemplateFile as Template
+from Products.statusmessages.interfaces import IStatusMessage
 from wise.msfd import db, sql2018
 from wise.msfd.compliance.base import get_questions
 from wise.msfd.compliance.content import AssessmentData
@@ -211,6 +213,7 @@ class NationalDescriptorCountryOverview(BaseView):
     def get_regions(self):
         return self.context.contentValues()
 
+    # @protect(CheckAuthenticator)
     def send_to_tl(self):
         regions = self.get_regions()
 
@@ -225,6 +228,12 @@ class NationalDescriptorCountryOverview(BaseView):
 
                     if state_id == 'approved':
                         transition(obj=assessment, to_state='in_work')
+
+        IStatusMessage(self.request).add(u'Sent to TL', type='info')
+
+        url = self.context.absolute_url()
+
+        return self.request.response.redirect(url)
 
     def ready_phase2(self):
         roles = self.get_current_user_roles(self.context)
@@ -267,10 +276,8 @@ class NationalDescriptorCountryOverview(BaseView):
         return [desc[a] for a in order]
 
     def __call__(self):
-        if 'send_to_tl' in self.request.form:
-            self.send_to_tl()
 
-        return super(BaseView, self).__call__()
+        return self.index()
 
 
 def get_crit_val(question, element, descriptor):
@@ -379,6 +386,7 @@ def format_assessment_data(article, elements, questions, muids, data,
 
         # is_not_relevant is True if all answered options are 'Not relevant'
         # maximum overall score is incremented if the is_not_relevant is False
+
         if not is_not_relevant:
             overall_score += weighted_score
             max_overall_score += q_weight
@@ -476,6 +484,7 @@ def filter_assessment_data_2012(data, region_code, descriptor_criterions):
         # Condition changed because of LV report, where score is 0
 
         # if not score:
+
         if score is None:
             criterias.append(criteria)
         elif country not in assessments:

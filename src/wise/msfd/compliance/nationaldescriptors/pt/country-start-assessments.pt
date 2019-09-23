@@ -26,9 +26,9 @@
             </a>
           </div>
 
-          <div class="process-state-phase-form">
+          <div class="process-state-phase-form" tal:condition="view/can_manage">
             <form class="process-state"
-                method="GET" action='./content_status_modify'>
+              method="GET" action='./content_status_modify'>
               <div>
                 <i class='fa fa-exchange'></i>
                 Process state:
@@ -49,10 +49,12 @@
               </div>
             </form>
             <form class="send-to-tl"
-                method="POST" action="."
-                tal:condition="view/ready_phase2">
+              method="POST" action="."
+              tal:condition="view/ready_phase2">
+
+              <span tal:replace="structure context/@@authenticator/authenticator"/>
               <input class="btn btn-success"
-                  type="Submit" name="send_to_tl" value="Send all to TL"/>
+                type="Submit" name="send_to_tl" value="Send all to TL"/>
             </form>
           </div>
 
@@ -74,17 +76,25 @@
                     <span tal:content="python: view.descriptor_for_code(desc.id).title">D0</span>
                   </th>
                   <td tal:repeat="assessment python: view.get_articles(desc)">
-                    <tal:block tal:define="css_class python:'btn btn-xs btn-' + view.get_status_color(assessment)">
-                      <a tal:attributes="href python: assessment.absolute_url() + '/@@edit-assessment-data-2018';
-                          class python: css_class">
-                        Assessment:
+                    <tal:block tal:define="css_class python:'btn btn-xs btn-' + view.get_status_color(assessment);
+                      url assessment/absolute_url;
+                      can_view_data python:view.can_view_assessment_data(assessment);
+                      can_edit_data python:view.can_edit_assessment_data(assessment)">
+
+                      <a tal:attributes="class css_class; href string:${url}/@@edit-assessment-data-2018;"
+                        tal:condition="can_edit_data">
+                        <span class="fa fa-edit"></span>Assessment:
                         <span class="as-state-label" tal:content="python: view.get_status(assessment)">State</span>
                         <span title="New comments"
-                            class="has-new-comments fa fa-exclamation-circle"
-                            tal:condition="python: view.has_new_comments(assessment)"></span>
+                          class="has-new-comments fa fa-exclamation-circle"
+                          tal:condition="python: view.has_new_comments(assessment)"></span>
                       </a>
-                      <a tal:attributes="href assessment/absolute_url;
-                            class css_class">Overview</a>
+                      <a tal:attributes="href url; class css_class" tal:condition="can_view_data">Overview</a>
+
+                      <a tal:attributes="href string:${url}/@@view-report-data-2012;
+                        class python: 'btn btn-xs btn-primary'">2012</a>
+                      <a tal:attributes="href string:${url}/@@view-report-data-2018;
+                        class python: 'btn btn-xs btn-success'">2018</a>
                     </tal:block>
                   </td>
                 </tr>
