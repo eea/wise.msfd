@@ -7,8 +7,8 @@ from .base import BaseComplianceView
 # from itertools import chain
 
 
-# class StartComplianceView(BaseComplianceView):
-#     name = 'comp-start'
+class StartComplianceView(BaseComplianceView):
+    name = 'comp-start'
 
 
 class DescriptorsView(BaseComplianceView):
