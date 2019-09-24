@@ -55,13 +55,13 @@
     permission="zope2.View"
     />
 
-  <!-- <browser:page -->
-  <!--   for=".interfaces.IComplianceModuleFolder" -->
-  <!--   name="comp&#45;start" -->
-  <!--   class=".main.StartComplianceView" -->
-  <!--   template="../pt/start.pt" -->
-  <!--   permission="zope2.View" -->
-  <!--   /> -->
+  <browser:page
+    for=".interfaces.IComplianceModuleFolder"
+    name="comp-start"
+    class=".main.StartComplianceView"
+    template="../pt/start.pt"
+    permission="zope2.View"
+    />
 
   <browser:page
     for=".interfaces.IComplianceModuleFolder"
