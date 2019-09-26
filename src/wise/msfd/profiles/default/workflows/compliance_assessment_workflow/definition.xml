@@ -5,6 +5,8 @@
  <permission>View</permission>
  <permission>wise.msfd: Edit Assessment</permission>
  <permission>wise.msfd: View Assessment Data</permission>
+ <permission>Review portal content</permission>
+ <permission>wise.msfd: View Assessment Edit Page</permission>
  <state state_id="approved" title="Approved">
   <exit-transition transition_id="send_back_to_draft"/>
   <exit-transition transition_id="send_back_to_final_review"/>
@@ -16,19 +18,34 @@
   <permission-map name="Modify portal content" acquired="False">
    <permission-role>Manager</permission-role>
   </permission-map>
+  <permission-map name="Review portal content" acquired="False">
+   <permission-role>Editor</permission-role>
+   <permission-role>Manager</permission-role>
+   <permission-role>Reviewer</permission-role>
+  </permission-map>
   <permission-map name="View" acquired="False">
    <permission-role>Contributor</permission-role>
    <permission-role>Editor</permission-role>
+   <permission-role>JRC</permission-role>
    <permission-role>Manager</permission-role>
    <permission-role>Reader</permission-role>
    <permission-role>Reviewer</permission-role>
   </permission-map>
   <permission-map name="wise.msfd: Edit Assessment" acquired="False">
+   <permission-role>Editor</permission-role>
+   <permission-role>Reviewer</permission-role>
   </permission-map>
   <permission-map name="wise.msfd: View Assessment Data" acquired="False">
    <permission-role>Contributor</permission-role>
    <permission-role>Editor</permission-role>
+   <permission-role>JRC</permission-role>
    <permission-role>Manager</permission-role>
+   <permission-role>Reviewer</permission-role>
+  </permission-map>
+  <permission-map name="wise.msfd: View Assessment Edit Page" acquired="False">
+   <permission-role>Contributor</permission-role>
+   <permission-role>Editor</permission-role>
+   <permission-role>JRC</permission-role>
    <permission-role>Reviewer</permission-role>
   </permission-map>
  </state>
@@ -44,9 +61,15 @@
    <permission-role>Editor</permission-role>
    <permission-role>Manager</permission-role>
   </permission-map>
+  <permission-map name="Review portal content" acquired="False">
+   <permission-role>Editor</permission-role>
+   <permission-role>Manager</permission-role>
+   <permission-role>Reviewer</permission-role>
+  </permission-map>
   <permission-map name="View" acquired="False">
    <permission-role>Contributor</permission-role>
    <permission-role>Editor</permission-role>
+   <permission-role>JRC</permission-role>
    <permission-role>Manager</permission-role>
    <permission-role>Reader</permission-role>
    <permission-role>Reviewer</permission-role>
@@ -57,7 +80,14 @@
   <permission-map name="wise.msfd: View Assessment Data" acquired="False">
    <permission-role>Contributor</permission-role>
    <permission-role>Editor</permission-role>
+   <permission-role>JRC</permission-role>
    <permission-role>Manager</permission-role>
+   <permission-role>Reviewer</permission-role>
+  </permission-map>
+  <permission-map name="wise.msfd: View Assessment Edit Page" acquired="False">
+   <permission-role>Contributor</permission-role>
+   <permission-role>Editor</permission-role>
+   <permission-role>JRC</permission-role>
    <permission-role>Reviewer</permission-role>
   </permission-map>
  </state>
@@ -74,9 +104,15 @@
    <permission-role>Manager</permission-role>
    <permission-role>Reviewer</permission-role>
   </permission-map>
+  <permission-map name="Review portal content" acquired="False">
+   <permission-role>Editor</permission-role>
+   <permission-role>Manager</permission-role>
+   <permission-role>Reviewer</permission-role>
+  </permission-map>
   <permission-map name="View" acquired="False">
    <permission-role>Contributor</permission-role>
    <permission-role>Editor</permission-role>
+   <permission-role>JRC</permission-role>
    <permission-role>Manager</permission-role>
    <permission-role>Reader</permission-role>
    <permission-role>Reviewer</permission-role>
@@ -88,6 +124,14 @@
   <permission-map name="wise.msfd: View Assessment Data" acquired="False">
    <permission-role>Contributor</permission-role>
    <permission-role>Editor</permission-role>
+   <permission-role>JRC</permission-role>
+   <permission-role>Manager</permission-role>
+   <permission-role>Reviewer</permission-role>
+  </permission-map>
+  <permission-map name="wise.msfd: View Assessment Edit Page" acquired="False">
+   <permission-role>Contributor</permission-role>
+   <permission-role>Editor</permission-role>
+   <permission-role>JRC</permission-role>
    <permission-role>Manager</permission-role>
    <permission-role>Reviewer</permission-role>
   </permission-map>
@@ -103,19 +147,34 @@
   <permission-map name="Modify portal content" acquired="False">
    <permission-role>Manager</permission-role>
   </permission-map>
+  <permission-map name="Review portal content" acquired="False">
+   <permission-role>Editor</permission-role>
+   <permission-role>Manager</permission-role>
+   <permission-role>Reviewer</permission-role>
+  </permission-map>
   <permission-map name="View" acquired="False">
    <permission-role>Contributor</permission-role>
    <permission-role>Editor</permission-role>
+   <permission-role>JRC</permission-role>
    <permission-role>Manager</permission-role>
    <permission-role>Reader</permission-role>
    <permission-role>Reviewer</permission-role>
   </permission-map>
   <permission-map name="wise.msfd: Edit Assessment" acquired="False">
    <permission-role>Editor</permission-role>
+   <permission-role>Manager</permission-role>
   </permission-map>
   <permission-map name="wise.msfd: View Assessment Data" acquired="False">
    <permission-role>Contributor</permission-role>
    <permission-role>Editor</permission-role>
+   <permission-role>JRC</permission-role>
+   <permission-role>Manager</permission-role>
+   <permission-role>Reviewer</permission-role>
+  </permission-map>
+  <permission-map name="wise.msfd: View Assessment Edit Page" acquired="False">
+   <permission-role>Contributor</permission-role>
+   <permission-role>Editor</permission-role>
+   <permission-role>JRC</permission-role>
    <permission-role>Manager</permission-role>
    <permission-role>Reviewer</permission-role>
   </permission-map>
@@ -133,9 +192,15 @@
    <permission-role>Manager</permission-role>
    <permission-role>Reviewer</permission-role>
   </permission-map>
+  <permission-map name="Review portal content" acquired="False">
+   <permission-role>Editor</permission-role>
+   <permission-role>Manager</permission-role>
+   <permission-role>Reviewer</permission-role>
+  </permission-map>
   <permission-map name="View" acquired="False">
    <permission-role>Contributor</permission-role>
    <permission-role>Editor</permission-role>
+   <permission-role>JRC</permission-role>
    <permission-role>Manager</permission-role>
    <permission-role>Reader</permission-role>
    <permission-role>Reviewer</permission-role>
@@ -147,6 +212,14 @@
   <permission-map name="wise.msfd: View Assessment Data" acquired="False">
    <permission-role>Contributor</permission-role>
    <permission-role>Editor</permission-role>
+   <permission-role>JRC</permission-role>
+   <permission-role>Manager</permission-role>
+   <permission-role>Reviewer</permission-role>
+  </permission-map>
+  <permission-map name="wise.msfd: View Assessment Edit Page" acquired="False">
+   <permission-role>Contributor</permission-role>
+   <permission-role>Editor</permission-role>
+   <permission-role>JRC</permission-role>
    <permission-role>Manager</permission-role>
    <permission-role>Reviewer</permission-role>
   </permission-map>
@@ -162,9 +235,16 @@
    <permission-role>Editor</permission-role>
    <permission-role>Manager</permission-role>
   </permission-map>
+  <permission-map name="Review portal content" acquired="False">
+   <permission-role>Contributor</permission-role>
+   <permission-role>Editor</permission-role>
+   <permission-role>Manager</permission-role>
+   <permission-role>Reviewer</permission-role>
+  </permission-map>
   <permission-map name="View" acquired="False">
    <permission-role>Contributor</permission-role>
    <permission-role>Editor</permission-role>
+   <permission-role>JRC</permission-role>
    <permission-role>Manager</permission-role>
    <permission-role>Reader</permission-role>
    <permission-role>Reviewer</permission-role>
@@ -178,6 +258,14 @@
   <permission-map name="wise.msfd: View Assessment Data" acquired="False">
    <permission-role>Contributor</permission-role>
    <permission-role>Editor</permission-role>
+   <permission-role>JRC</permission-role>
+   <permission-role>Manager</permission-role>
+   <permission-role>Reviewer</permission-role>
+  </permission-map>
+  <permission-map name="wise.msfd: View Assessment Edit Page" acquired="False">
+   <permission-role>Contributor</permission-role>
+   <permission-role>Editor</permission-role>
+   <permission-role>JRC</permission-role>
    <permission-role>Manager</permission-role>
    <permission-role>Reviewer</permission-role>
   </permission-map>
@@ -194,9 +282,16 @@
    <permission-role>Editor</permission-role>
    <permission-role>Manager</permission-role>
   </permission-map>
+  <permission-map name="Review portal content" acquired="False">
+   <permission-role>Contributor</permission-role>
+   <permission-role>Editor</permission-role>
+   <permission-role>Manager</permission-role>
+   <permission-role>Reviewer</permission-role>
+  </permission-map>
   <permission-map name="View" acquired="False">
    <permission-role>Contributor</permission-role>
    <permission-role>Editor</permission-role>
+   <permission-role>JRC</permission-role>
    <permission-role>Manager</permission-role>
    <permission-role>Reader</permission-role>
    <permission-role>Reviewer</permission-role>
@@ -210,6 +305,14 @@
   <permission-map name="wise.msfd: View Assessment Data" acquired="False">
    <permission-role>Contributor</permission-role>
    <permission-role>Editor</permission-role>
+   <permission-role>JRC</permission-role>
+   <permission-role>Manager</permission-role>
+   <permission-role>Reviewer</permission-role>
+  </permission-map>
+  <permission-map name="wise.msfd: View Assessment Edit Page" acquired="False">
+   <permission-role>Contributor</permission-role>
+   <permission-role>Editor</permission-role>
+   <permission-role>JRC</permission-role>
    <permission-role>Manager</permission-role>
    <permission-role>Reviewer</permission-role>
   </permission-map>
@@ -218,18 +321,31 @@
   <exit-transition transition_id="send_for_work"/>
   <permission-map name="Add portal content" acquired="False">
    <permission-role>Editor</permission-role>
+   <permission-role>Manager</permission-role>
   </permission-map>
   <permission-map name="Modify portal content" acquired="False">
    <permission-role>Editor</permission-role>
+   <permission-role>Manager</permission-role>
+  </permission-map>
+  <permission-map name="Review portal content" acquired="False">
+   <permission-role>Editor</permission-role>
+   <permission-role>Manager</permission-role>
   </permission-map>
   <permission-map name="View" acquired="False">
    <permission-role>Editor</permission-role>
+   <permission-role>Manager</permission-role>
   </permission-map>
   <permission-map name="wise.msfd: Edit Assessment" acquired="False">
    <permission-role>Editor</permission-role>
+   <permission-role>Manager</permission-role>
   </permission-map>
   <permission-map name="wise.msfd: View Assessment Data" acquired="False">
    <permission-role>Editor</permission-role>
+   <permission-role>Manager</permission-role>
+  </permission-map>
+  <permission-map name="wise.msfd: View Assessment Edit Page" acquired="False">
+   <permission-role>Editor</permission-role>
+   <permission-role>Manager</permission-role>
   </permission-map>
  </state>
  <transition transition_id="approve" title="Approve assessment" new_state="approved" trigger="USER" before_script="" after_script="">
