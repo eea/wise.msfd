@@ -79,7 +79,7 @@
                     <tal:block tal:define="css_class python:'btn btn-xs btn-' + view.get_status_color(assessment);
                       url assessment/absolute_url;
                       can_view_data python:view.can_view_assessment_data(assessment);
-                      can_edit_data python:view.can_edit_assessment_data(assessment)">
+                      can_edit_data python:view.can_view_edit_assessment_data(assessment)">
 
                       <a tal:attributes="class css_class; href string:${url}/@@edit-assessment-data-2018;"
                         tal:condition="can_edit_data">

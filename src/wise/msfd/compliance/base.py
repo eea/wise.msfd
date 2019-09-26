@@ -190,6 +190,10 @@ class SecurityMixin:
     def can_edit_assessment_data(self, context=None):
         return self.check_permission('wise.msfd: Edit Assessment', context)
 
+    def can_view_edit_assessment_data(self, context=None):
+        return self.check_permission('wise.msfd: View Assessment Edit Page',
+                                     context)
+
 
 class BaseComplianceView(BrowserView, BasePublicPage, SecurityMixin):
     """ Base class for compliance views
