@@ -6,10 +6,11 @@ from collections import namedtuple
 from logging import getLogger
 
 from sqlalchemy import or_
+from zope.interface import implements
 
 from persistent.list import PersistentList
 from plone.api.content import transition
-from plone.protect import CheckAuthenticator, protect
+from plone.protect import CheckAuthenticator  # , protect
 from Products.Five.browser.pagetemplatefile import \
     ViewPageTemplateFile as Template
 from Products.statusmessages.interfaces import IStatusMessage
@@ -22,6 +23,7 @@ from wise.msfd.gescomponents import get_descriptor
 from wise.msfd.utils import t2rt
 
 from .base import BaseView
+from .interfaces import INationaldescriptorArticleView
 
 logger = getLogger('wise.msfd')
 
@@ -530,6 +532,7 @@ class NationalDescriptorRegionView(BaseView):
 
 
 class NationalDescriptorArticleView(BaseView):
+    implements(INationaldescriptorArticleView)
     section = 'national-descriptors'
 
     assessment_data_2012_tpl = Template('./pt/assessment-data-2012.pt')
