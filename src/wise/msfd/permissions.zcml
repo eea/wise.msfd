@@ -16,6 +16,12 @@
     />
 
   <permission
+    id="wise.ViewAssessmentEditPage"
+    title="wise.msfd: View Assessment Edit Page"
+    description="Allows access to the assessment edit page, but not save"
+    />
+
+  <permission
     id="wise.ViewAssessmentData"
     title="wise.msfd: View Assessment Data"
     description="View the assessement data (summary, conclusion)"

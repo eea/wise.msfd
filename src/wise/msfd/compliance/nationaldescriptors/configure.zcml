@@ -48,7 +48,7 @@
     for="*"
     name="edit-assessment-data-2018"
     class=".assessment.EditAssessmentDataView"
-    permission="wise.EditAssessment"
+    permission="wise.ViewAssessmentEditPage"
     />
 
   <!-- Edit the assessors information, in the assessment overview page -->

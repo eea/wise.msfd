@@ -125,7 +125,12 @@ class EditAssessmentDataForm(Form, BaseView):
 
     @buttonAndHandler(u'Save', name='save')
     def handle_save(self, action):
-        # BBB code, useful for development
+        """ Handles the save action
+        """
+
+        if self.read_only_access:
+            raise Unauthorized
+
         context = self.context
 
         if not hasattr(context, 'saved_assessment_data') or \
@@ -137,9 +142,6 @@ class EditAssessmentDataForm(Form, BaseView):
         # roles = get_roles(obj=self.context)
         # if 'Contributor' not in roles and ('Manager' not in roles)\
         #         and 'Editor' not in roles:
-
-        if self.read_only_access:
-            raise Unauthorized
 
         data, errors = self.extractData()
         # if not errors:
