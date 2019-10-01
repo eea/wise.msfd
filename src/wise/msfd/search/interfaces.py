@@ -45,7 +45,7 @@ class IRegionSubregions(Interface):
 
 class IMemberStates(Interface):
     member_states = List(
-        title=u"Countries",
+        title=u"Country",
         value_type=Choice(vocabulary="wise_search_member_states"),
         required=False,
     )
@@ -53,7 +53,7 @@ class IMemberStates(Interface):
 
 class IMemberStatesArt6(Interface):
     member_states = List(
-        title=u"Countries",
+        title=u"Country",
         value_type=Choice(vocabulary="wise_search_member_states_art6"),
         required=False,
     )
@@ -95,13 +95,6 @@ class IStartArticles1314(Interface):
 
 
 class IStartArticle11(Interface):
-    monitoring_programme_types = List(
-        title=u"Monitoring programme Type",
-        value_type=Choice(
-            vocabulary="wise_search_monitoring_programme_vb_factory"),
-        required=False
-    )
-
     monitoring_programme_info_type = Choice(
         title=u"Information Type",
         vocabulary="wise_search_monitoring_programme_info_types",
@@ -109,9 +102,18 @@ class IStartArticle11(Interface):
     )
 
 
+class IArticle11MonitoringProgrammeType(Interface):
+    monitoring_programme_types = List(
+        title=u"Monitoring programme Type",
+        value_type=Choice(
+            vocabulary="wise_search_monitoring_programme_vb_factory"),
+        required=False
+    )
+
+
 class IA1314MemberStates(Interface):
     member_states = List(
-        title=u"Countries",
+        title=u"Country",
         value_type=Choice(vocabulary="wise_search_a1314_member_states"),
         required=False,
     )
@@ -160,7 +162,7 @@ class IArticleSelect2018(Interface):
 
 class ICountryCode(Interface):
     member_states = List(
-        title=u"Country Code",
+        title=u"Country",
         required=False,
         value_type=Choice(vocabulary="wise_search_a2018_country")
     )
@@ -168,7 +170,7 @@ class ICountryCode(Interface):
 
 class ICountryCode2018Art9(Interface):
     member_states = List(
-        title=u"Country Code",
+        title=u"Country",
         required=False,
         value_type=Choice(vocabulary="wise_search_a2018_country_art9")
     )
