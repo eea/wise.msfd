@@ -154,16 +154,16 @@ class A2018Article9(EmbeddedForm):
     features_mc = sql2018.ART9GESGESDeterminationFeature
     determination_mc = sql2018.ART9GESGESDetermination
 
-    fields = Fields(interfaces.IGESComponentsA9)
-    fields['ges_component'].widgetFactory = CheckBoxFieldWidget
-
-    def get_subform(self):
-        return A2018MemberStateA9(self, self.request)
-
-
-class A2018MemberStateA9(EmbeddedForm):
     fields = Fields(interfaces.ICountryCode2018Art9)
     fields['member_states'].widgetFactory = CheckBoxFieldWidget
+
+    def get_subform(self):
+        return A2018GesComponentA9(self, self.request)
+
+
+class A2018GesComponentA9(EmbeddedForm):
+    fields = Fields(interfaces.IGESComponentsA9)
+    fields['ges_component'].widgetFactory = CheckBoxFieldWidget
 
     def get_subform(self):
         return A2018FeatureA9(self, self.request)
@@ -312,17 +312,21 @@ class A2018Art10Display(ItemDisplayForm):
 
         target_id = self.item.Id
         mc = sql2018.ART10TargetsProgressAssessment
-        column = 'IdTarget'
-        result = db.get_all_columns_from_mapper(
-            mc,
-            column,
-            getattr(mc, column) == target_id
+        mc_join = sql2018.ART10TargetsProgressAssessmentIndicator
+
+        cols = [getattr(mc, c) for c in mc.__table__.c.keys()] + \
+            [getattr(mc_join, c) for c in mc_join.__table__.c.keys()]
+
+        count, result = db.get_all_records_join(
+            cols,
+            mc_join,
+            getattr(mc, 'IdTarget') == target_id
         )
 
-        excluded_columns = ('Id', 'IdTarget')
+        excluded_columns = ('Id', 'IdTarget', 'IdProgressAssessment')
 
         paremeters = db_objects_to_dict(result, excluded_columns)
-        paremeters = group_data(paremeters, 'Parameter')
+        paremeters = group_data(paremeters, 'Parameter', remove_pivot=False)
 
         res = [
             ('Parameters', paremeters),
@@ -665,12 +669,12 @@ class A2018Art81abDisplay(ItemDisplayForm):
         res = []
 
         res.append(
-            ('Pressure code(s)', {
+            ('Related pressure(s)', {
                 '': [{'PressureCode': x} for x in pressure_codes]
             }))
 
         res.append(
-            ('Target code(s)', {
+            ('Related target(s)', {
                 '': [{'TargetCode': x} for x in target_codes]
             }))
 
@@ -994,12 +998,12 @@ class A2018Art81cDisplay(ItemDisplayForm):
         res = list()
 
         res.append(
-            ('NACEcode(s)', {
+            ('NACE code(s)', {
                 '': [{'NACECode': x} for x in nace_codes]
             }))
 
         res.append(
-            ('GEScomponent(s)', {
+            ('GES component(s)', {
                 '': [{'GESComponent': x} for x in ges_components]
             }))
 
@@ -1126,10 +1130,12 @@ class A2018IndicatorsFeature(EmbeddedForm):
     fields['feature'].widgetFactory = CheckBoxFieldWidget
 
     def get_subform(self):
-        return A2018IndicatorsMarineUnitId(self, self.request)
+        return A2018IndicatorsDisplay(self, self.request)
 
 
 class A2018IndicatorsMarineUnitId(MarineUnitIDSelectForm):
+    """ TODO Not used
+    """
 
     def get_subform(self):
         return A2018IndicatorsDisplay(self, self.request)
@@ -1201,8 +1207,10 @@ class A2018IndicatorsDisplay(ItemDisplayForm):
 
     conditions_ind_assess = list()
 
+    css_class = "left-side-form"
+
     def download_results(self):
-        parent = self.context.context.context.context
+        parent = self.context.context.context
 
         mapper_class = parent.mapper_class
         features_mc = parent.features_mc
@@ -1253,12 +1261,12 @@ class A2018IndicatorsDisplay(ItemDisplayForm):
     def get_db_results(self):
         page = self.get_page()
         data = self.get_flattened_data(self)
-        parent = self.context.context.context.context
+        parent = self.context.context.context
 
         countries = data.get('member_states', ())
         ges_components = data.get('ges_component', ())
         features = data.get('feature', ())
-        mrus = (data.get('marine_unit_id', ()), )
+        # mrus = (data.get('marine_unit_id', ()), )
 
         mapper_class = parent.mapper_class
         features_mc = parent.features_mc
@@ -1296,7 +1304,7 @@ class A2018IndicatorsDisplay(ItemDisplayForm):
         ids_ind_ass_marine = db.get_unique_from_mapper(
             marine_mc,
             'IdIndicatorAssessment',
-            marine_mc.MarineReportingUnit.in_(mrus)
+            # marine_mc.MarineReportingUnit.in_(mrus)
         )
         ids_ind_ass_marine = [int(x) for x in ids_ind_ass_marine]
 
@@ -1327,7 +1335,9 @@ class A2018IndicatorsDisplay(ItemDisplayForm):
         if not self.item:
             return {}
 
+        parent = self.context.context.context
         mc = sql2018.IndicatorsDataset
+        marine_mc = parent.marine_mc
         id_indicator_assessment = self.item.Id
 
         indicators_dataset = db.get_all_columns_from_mapper(
@@ -1347,12 +1357,24 @@ class A2018IndicatorsDisplay(ItemDisplayForm):
                 ('Indicators Dataset', {'': indicators_dataset})
             )
 
+        count, marine_unit = db.get_all_records(
+            marine_mc,
+            marine_mc.IdIndicatorAssessment == id_indicator_assessment
+        )
+        marine_unit_ids = db_objects_to_dict(marine_unit,
+                                             excluded_columns)
+
+        if marine_unit_ids:
+            res.append(
+                ('MarineUnitID(s)', {'': marine_unit_ids})
+            )
+
         return res
 
 
 @register_form_2018
 class A2018ArticleIndicators(EmbeddedForm):
-    record_title = title = 'Indicators'
+    record_title = title = 'Indicators (Article 8 & 10)'
     mapper_class = sql2018.IndicatorsIndicatorAssessment
     features_mc = sql2018.IndicatorsFeatureFeature
     ges_components_mc = sql2018.IndicatorsFeatureGESComponent

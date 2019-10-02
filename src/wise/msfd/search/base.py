@@ -1,3 +1,4 @@
+import logging
 import re
 from datetime import datetime
 
@@ -16,6 +17,9 @@ from ..base import BaseEnhancedForm, BaseUtil, EmbeddedForm
 from ..db import get_item_by_conditions
 from ..interfaces import IMainForm
 from .utils import get_registered_form_sections
+
+
+logger = logging.getLogger('wise.msfd')
 
 
 class ItemDisplayForm(EmbeddedForm):
@@ -261,6 +265,7 @@ class MainForm(BaseEnhancedForm, BasePublicPage, Form):
                'spreadsheetml.sheet')
 
             # fname = self.subform.get_record_title(cntx='subform') or 'marinedb'
+            logger.info("Spreadsheet title: %s", self.spreadsheet_title)
             fname = self.spreadsheet_title or 'marinedb'
             fname = fname + '_' + str(datetime.now().replace(microsecond=0))
             fname = fname.replace(' ', '_').replace('(', '').replace(')', '')\
