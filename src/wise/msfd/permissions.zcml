@@ -41,4 +41,10 @@
     description="Manage compliance admin page"
   />
 
+  <permission
+    id="wise.ViewReports"
+    title="wise.msfd: View Reports"
+    description="View MSFD Search Reports"
+    />
+
 </configure>

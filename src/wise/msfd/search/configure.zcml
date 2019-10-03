@@ -59,7 +59,7 @@
     for="*"
     name="msfd-c4"
     class=".main.StartArticle89102018View"
-    permission="cmf.ModifyPortalContent"
+    permission="wise.ViewReports"
     />
 
   <browser:page
