@@ -1,0 +1,41 @@
+WFD01,WFD01 Waste water treatment plants ,Construction or upgrades of wastewater treatment plants
+WFD02,WFD02 Nutrients from agriculture,Reduce nutrient pollution from agriculture 
+WFD03,WFD03 Pesticides from agriculture,Reduce pesticides pollution from agriculture. 
+WFD04,WFD04 Historical contamination,"Remediation of contaminated sites (historical pollution including sediments, groundwater, soil). "
+WFD05,WFD05 Longitudinal continuity,"Improving longitudinal continuity (e.g. establishing fish passes, demolishing old dams). "
+WFD06,WFD06 Hydromorphology,"Improving hydromorphological conditions of water bodies other than longitudinal continuity (e.g. river restoration, improvement of riparian areas, removal of hard embankments, reconnecting rivers to floodplains, improvement of hydromorphological condition of transitional and coastal waters, etc.). "
+WFD07,WFD07 Flow regime,Improvements in flow regime and/or establishment of ecological flows. 
+WFD08,WFD08 Water efficiency,"Water efficiency technical measures for irrigation, industry, energy and  households"
+WFD09,WFD09 Water pricing households,Water pricing policy measures for the implementation of the recovery of cost of water services from households
+WFD10,WFD10 Water pricing industry,Water pricing policy measures for the implementation of the recovery of cost of water services from industry
+WFD11,WFD11 Water pricing agriculture,Water pricing policy measures for the implementation of the recovery of cost of water services from agriculture
+WFD12,WFD12 Advice agriculture,Advisory services for agriculture
+WFD13,WFD13 Drinking water,"Drinking water protection measures (e.g. establishment of safeguard zones, buffer zones etc.)"
+WFD14,WFD14 Research & knowledge,"Research, improvement of knowledge base reducing uncertainty. "
+WFD15,WFD15 Phase out priority substances,"Measures for the phasing-out of emissions, discharges and losses of priority hazardous substances or for the reduction of emissions, discharges and losses of priority substances.  "
+WFD16,WFD16 Industrial waste water treatment,Upgrades or improvements of industrial wastewater treatment plants (including farms) 
+WFD17,WFD17 Soil erosion,Measures to reduce sediment from soil erosion and surface run-off  
+WFD18,WFD18 Invasive alien species,Measures to prevent or control the adverse impacts of invasive alien species and introduced diseases
+WFD19,WFD19 Recreation & angling,Measures to prevent or control the adverse impacts of recreation including angling
+WFD20,WFD20 Fishing & other exploitation,Measures to prevent or control the adverse impacts of fishing and other exploitation/removal of animal and plants
+WFD21,WFD21 Urban & transport pollution,"Measures to prevent or control the input of pollution from urban areas, transport and built infrastructure"
+WFD22,WFD22 Forestry pollution,Measures to prevent or control the input of pollution from forestry
+WFD23,WFD23 Water retention,Natural water retention measures
+WFD24,WFD24 Climate change adaptation,Adaptation to climate change
+WFD25,WFD25 Freshwater acidification,Measures to counteract acidification (in freshwater systems)
+MSFD26,MSFD26 Physical loss,Measures to reduce physical loss of seabed habitats in the marine environment (beyond WFD coastal waters)
+MSFD 2,MSFD 27 Physical damage,Measures to reduce physical damage to the marine environment (beyond WFD Coastal waters)
+MSFD28,MSFD28 Energy inputs,"Measures to reduce inputs of energy to the marine environment, including underwater noise"
+MSFD29,MSFD29 Litter,Measures to reduce marine litter 
+MSFD30,MSFD30 Hydrological processes,Measures to reduce interferences with hydrological processes in the marine environment (beyond WFD Coastal waters)
+MSFD31,MSFD31 Contamination,"Measures to reduce contamination by hazardous substances (synthetic substances, non-synthetic substances, radio-nuclides) and the systematic and/or intentional release of substances in the marine environment from sea-based or air-based sources"
+MSFD32,MSFD32 Accidental pollution,Measures to reduce sea-based accidental pollution
+MSFD33,MSFD33 Nutrient enrichment,Measures to reduce nutrient and organic matter inputs to the marine environment from sea-based or air-based sources
+MSFD34,MSFD34 Climate change adaptation/acidification,"Measures to adapt to climate change impacts on the marine environment , including marine acidification"
+MSFD35,MSFD35 Non-indigenous species,Measures to reduce the introduction and spread of non-indigenous species in the marine environment and for their control
+MSFD36,MSFD36 Extraction of species,Measures to reduce biological disturbances in the marine environment from the extraction of species including incidental non-target catches
+MSFD37,MSFD37 Other biological disturbance,"Measures to reduce other types of biological disturbance, including death, injury, disturbance and translocation of marine species, and the introduction of genetically-modified individuals"
+MSFD38,MSFD38 Microbial pathogens,Measures to address the introduction of microbial pathogens
+MSFD39,MSFD39 Restore & conserve marine ecosystems,"Measures to restore and conserve marine ecosystems, including habitats and species"
+MSFD40,MSFD40 Spatial protection,Measures related to Spatial Protection Measures for the marine environment (addressing multiple pressures)
+MSFD41,MSFD41 Marine research & knowledge,Complementary activities on research and improvement of the knowledge base to facilitate the devising of measures
