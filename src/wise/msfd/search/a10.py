@@ -16,7 +16,7 @@ class A10Form(EmbeddedForm):
     """
 
     record_title = title = 'Article 10 (Targets)'
-
+    mapper_class = sql.MSFD10Target
     fields = Fields(IA2012GesComponentsArt10)
     fields['ges_components'].widgetFactory = CheckBoxFieldWidget
 
