@@ -17,7 +17,8 @@ from Products.statusmessages.interfaces import IStatusMessage
 from wise.msfd import db, sql2018
 from wise.msfd.compliance.base import get_questions
 from wise.msfd.compliance.content import AssessmentData
-from wise.msfd.compliance.scoring import get_overall_conclusion
+from wise.msfd.compliance.scoring import (get_overall_conclusion,
+                                          get_range_index, OverallScores)
 from wise.msfd.compliance.vocabulary import SUBREGIONS_TO_REGIONS
 from wise.msfd.gescomponents import get_descriptor
 from wise.msfd.utils import t2rt
@@ -85,9 +86,7 @@ Assessment = namedtuple('Assessment',
                             'answers',
                             'assessment_summary',
                             'recommendations',
-                            'phase1_score',
-                            'phase1_conclusion',
-                            'phase1_conclusion_color',
+                            'phase_overall_scores',
                             'overall_score',
                             'overall_conclusion',
                             'overall_conclusion_color'
@@ -321,15 +320,14 @@ def format_assessment_data(article, elements, questions, muids, data,
     """
 
     answers = []
-    overall_score = 0
-    max_overall_score = 0
-    phase1_score = 0
-    max_phase1_score = 0
+    phases = ['adequacy', 'consistency', 'coherence']
+    phase_overall_scores = OverallScores(phases)
 
     for question in questions:
         values = []
         choices = dict(enumerate(question.answers))
         q_scores = question.scores
+        q_klass = question.klass
 
         if question.use_criteria == 'none':
             field_name = '{}_{}'.format(article, question.id)
@@ -375,7 +373,7 @@ def format_assessment_data(article, elements, questions, muids, data,
         summary = data.get(summary_title) or ''
 
         sn = '{}_{}_Score'.format(article, question.id)
-        score = data.get(sn, 0)
+        score = data.get(sn, {})
 
         conclusion = getattr(score, 'conclusion', '')
         score_value = getattr(score, 'score_value', 0)
@@ -383,20 +381,25 @@ def format_assessment_data(article, elements, questions, muids, data,
         conclusion_color = CONCLUSION_COLOR_TABLE[score_value]
 
         weighted_score = getattr(score, 'weighted_score', 0)
+        max_weighted_score = getattr(score, 'max_weighted_score', 0)
         is_not_relevant = getattr(score, 'is_not_relevant', False)
-        q_weight = float(question.score_weights.get(descriptor.id, 10.0))
+        # q_weight = float(question.score_weights.get(descriptor.id, 10.0))
 
         # is_not_relevant is True if all answered options are 'Not relevant'
         # maximum overall score is incremented if the is_not_relevant is False
 
         if not is_not_relevant:
-            overall_score += weighted_score
-            max_overall_score += q_weight
+            p_score = getattr(phase_overall_scores, q_klass)
+            p_score['score'] += weighted_score
+            p_score['max_score'] += max_weighted_score
 
-        if question.klass != 'coherence':
-            if not is_not_relevant:
-                phase1_score += getattr(score, 'weighted_score', 0)
-                max_phase1_score += q_weight
+            # print(q_klass, p_score)
+            # print(
+            #     score.raw_scores,
+            #     score.score_achieved,
+            #     score.weighted_score,
+            #     score.max_weighted_score
+            # )
 
         qr = AssessmentRow(question.definition, summary, conclusion,
                            conclusion_color, score, values)
@@ -406,35 +409,27 @@ def format_assessment_data(article, elements, questions, muids, data,
     assess_sum = data.get('%s_assessment_summary' % article)
     recommend = data.get('%s_recommendations' % article)
 
-    # max_phase1_score ............. 100%
-    # phase1_score ................. x%
-    phase1_score = int(round(max_phase1_score and
-                             (phase1_score * 100) / max_phase1_score or 0))
+    for phase in phases:
+        # set the conclusion and color based on the score for each phase
+        phase_scores = getattr(phase_overall_scores, phase)
+        phase_score = phase_overall_scores.get_score_for_phase(phase)
+        phase_scores['conclusion'] = get_overall_conclusion(phase_score)
+        phase_scores['color'] = \
+            CONCLUSION_COLOR_TABLE[get_range_index(phase_score)]
 
-    overall_score = int(round(max_overall_score and
-                              (overall_score * 100) / max_overall_score or 0))
-
-    try:
-        phase1_conclusion = get_overall_conclusion(phase1_score)
-        overall_conclusion = get_overall_conclusion(overall_score)
-    except:
-        logger.exception("Error in getting overall conclusion")
-        overall_conclusion = (1, 'error')
-        phase1_conclusion = (1, 'error')
-
-    overall_conclusion_color = CONCLUSION_COLOR_TABLE[overall_conclusion[0]]
-    phase1_conclusion_color = CONCLUSION_COLOR_TABLE[phase1_conclusion[0]]
+    # the overall score and conclusion for the whole article 2018
+    overall_score = phase_overall_scores.get_overall_score()
+    overall_conclusion = get_overall_conclusion(overall_score)
+    overall_conclusion_color = CONCLUSION_COLOR_TABLE[overall_score]
 
     assessment = Assessment(
         elements,
         answers,
         assess_sum or '-',
         recommend or '-',
-        phase1_score,
-        phase1_conclusion,
-        phase1_conclusion_color,
+        phase_overall_scores,
         overall_score,
-        overall_conclusion,
+        overall_conclusion[1],
         overall_conclusion_color
     )
 
@@ -645,7 +640,8 @@ class NationalDescriptorArticleView(BaseView):
 
         score_2012 = int(round(score_2012))
         conclusion_2012_color = CONCLUSION_COLOR_TABLE.get(score_2012, 0)
-        change = int(assessment.phase1_conclusion[0] - score_2012)
+        # TODO
+        change = int(assessment.phase_overall_scores.adequacy['score'] - score_2012)
 
         self.assessment_data_2018_html = self.assessment_data_2018_tpl(
             assessment=assessment,
