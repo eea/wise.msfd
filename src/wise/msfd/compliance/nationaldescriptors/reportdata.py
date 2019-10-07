@@ -75,8 +75,9 @@ def get_reportdata_key(func, self, *args, **kwargs):
         muids,
         focus_muid,
     ])
-    res = res.replace('.', '').replace('-', '')
-    print("Cache key", res)
+    # TODO why replace '.', makes D1.1 the same as D11
+    # res = res.replace('.', '').replace('-', '')
+    logger.info("Report data cache key: ", res)
 
     return res
 
