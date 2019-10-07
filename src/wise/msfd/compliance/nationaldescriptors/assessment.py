@@ -1,8 +1,8 @@
+import collections
 import datetime
 import logging
-import collections
+
 from zope.schema import Choice, Text
-from wise.msfd.compliance.scoring import Score
 from zope.schema.vocabulary import SimpleTerm, SimpleVocabulary
 
 from AccessControl import Unauthorized
@@ -20,6 +20,7 @@ from wise.msfd.compliance.assessment import (PHASES, additional_fields,
                                              summary_fields)
 from wise.msfd.compliance.base import get_questions
 from wise.msfd.compliance.content import AssessmentData
+from wise.msfd.compliance.scoring import Score
 from wise.msfd.gescomponents import get_descriptor  # get_descriptor_elements
 from wise.msfd.translation import get_translated, retrieve_translation
 from z3c.form.button import buttonAndHandler
@@ -33,11 +34,17 @@ from .base import BaseView
 
 logger = logging.getLogger('wise.msfd')
 
-class EditAssessmentHistory(BaseView, BrowserView):
+
+class ViewAssessmentEditHistory(BaseView, BrowserView):
+    """ View the history of edits made on the assessment
+    """
+
     def report_assessment(self):
         res, res.ts = collections.OrderedDict(), []
+
         for record in reversed(list(self.context.saved_assessment_data)):
             tsr = []
+
             for field in sorted(record.keys()):
                 if isinstance(record[field], datetime.datetime):
                     tsr.append(record[field])
@@ -51,6 +58,7 @@ class EditAssessmentHistory(BaseView, BrowserView):
                 else:
                     res[field] = [record[field]]
             res.ts.append(max(tsr))
+
         return res
 
     @property
@@ -117,7 +125,12 @@ class EditAssessmentDataForm(Form, BaseView):
 
     @buttonAndHandler(u'Save', name='save')
     def handle_save(self, action):
-        # BBB code, useful for development
+        """ Handles the save action
+        """
+
+        if self.read_only_access:
+            raise Unauthorized
+
         context = self.context
 
         if not hasattr(context, 'saved_assessment_data') or \
@@ -129,9 +142,6 @@ class EditAssessmentDataForm(Form, BaseView):
         # roles = get_roles(obj=self.context)
         # if 'Contributor' not in roles and ('Manager' not in roles)\
         #         and 'Editor' not in roles:
-
-        if self.read_only_access:
-            raise Unauthorized
 
         data, errors = self.extractData()
         # if not errors:
@@ -175,6 +185,7 @@ class EditAssessmentDataForm(Form, BaseView):
 
             # check if _Summary text is changed, and update _Last_update field
             summary = '{}_{}_Summary'.format(self.article, question.id)
+
             if last.get(summary, '') != data.get(summary, ''):
                 data[last_upd] = datetime_now
 

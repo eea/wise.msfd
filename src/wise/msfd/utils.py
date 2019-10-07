@@ -50,9 +50,16 @@ def scan(namespace):
 
 
 def print_value(value):
-    from .labels import COMMON_LABELS
+    from .labels import COMMON_LABELS, GES_LABELS
 
     # TODO: this is only used in search package
+
+    common_labels = {}
+    common_labels.update(COMMON_LABELS)
+    common_labels.update(getattr(GES_LABELS, 'indicators'))
+    common_labels.update(getattr(GES_LABELS, 'targets'))
+    common_labels.update(getattr(GES_LABELS, 'mrus'))
+    common_labels.update(getattr(GES_LABELS, 'ktms'))
 
     if not value:
         return value
@@ -60,18 +67,23 @@ def print_value(value):
     if isinstance(value, string_types):
         value = value.strip()
 
-        if value in COMMON_LABELS:
+        if value in common_labels:
             tmpl = '<span title="{}">{}</span>'
             try:
                 html = convertWebIntelligentPlainTextToHtml(
-                    COMMON_LABELS[value]
+                    common_labels[value]
                 )
                 ret = tmpl.format(value, html)
             except UnicodeEncodeError as e:
-                ret = tmpl.format(value, COMMON_LABELS[value].encode('utf-8'))
+                try:
+                    ret = tmpl.format(value,
+                                      common_labels[value].encode('utf-8'))
+                except UnicodeEncodeError as e:
+                    ret = tmpl.format(value.encode('utf-8'),
+                                      common_labels[value].encode('utf-8'))
             except Exception as e:
                 logger.exception("Error print_value: %r", e)
-                ret = tmpl.format(value, unicode(COMMON_LABELS[value]))
+                ret = tmpl.format(value, unicode(common_labels[value]))
 
             return ret
 
@@ -158,7 +170,11 @@ def db_objects_to_dict(data, excluded_columns=()):
     out = []
 
     for row in data:
-        columns = row.__table__.columns.keys()
+        if hasattr(row, '__table__'):
+            columns = row.__table__.columns.keys()
+        else:
+            columns = row._fields
+
         d = OrderedDict()
 
         for col in columns:
@@ -169,14 +185,20 @@ def db_objects_to_dict(data, excluded_columns=()):
     return out
 
 
-def group_data(data, pivot):
+def group_data(data, pivot, remove_pivot=True):
     out = defaultdict(list)
 
     # count_distinct_values = len(set(row.get(pivot, '') for row in data))
 
     for row in data:
         d = OrderedDict(row)
-        p = d.pop(pivot) # if count_distinct_values > 1 else d[pivot]
+
+        # Remove the pivot column from the rows, so it will not be showed
+        # In some edge cases (Art10 2018) we don't want to remove the pivot
+        if remove_pivot:
+            p = d.pop(pivot)  # if count_distinct_values > 1 else d[pivot]
+        else:
+            p = d.get(pivot)
 
         if any(d.values()):
             out[p].append(d)
@@ -184,7 +206,7 @@ def group_data(data, pivot):
     return out
 
 
-def group_query(query, pivot):
+def group_query(query, pivot, remove_pivot=True):
     """ Group results from a query over a table
     """
 
@@ -194,7 +216,7 @@ def group_query(query, pivot):
     if len(cols) == 1:
         return {pivot: res}
 
-    return group_data(res, pivot)
+    return group_data(res, pivot, remove_pivot)
 
 
 def default_value_from_field(context, field):

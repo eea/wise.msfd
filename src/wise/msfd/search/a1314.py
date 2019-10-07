@@ -199,7 +199,7 @@ class A1314ItemDisplay(ItemDisplayForm):
         count, item = db.get_related_record(mc, 'ReportID', report_id)
 
         if not item:
-            return {}
+            return '', {}
 
         return ('Report info', item)
 

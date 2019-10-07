@@ -13,13 +13,13 @@ from wise.msfd.compliance.interfaces import IEditAssessmentForm
 from z3c.form.field import Fields
 from z3c.form.form import Form
 
+from . import sql
 from .db import (get_all_specific_columns, get_available_marine_unit_ids,
                  threadlocals, use_db_session)
 from .interfaces import IEmbeddedForm, IMainForm, IMarineUnitIDSelect
 from .labels import DISPLAY_LABELS
 from .utils import all_values_from_field, get_obj_fields, print_value
 from .widget import MarineUnitIDSelectFieldWidget
-from . import sql
 
 
 class BaseUtil(object):
@@ -40,6 +40,7 @@ class BaseUtil(object):
 
         This is used to transform the database column names to usable labels
         """
+
         if text in DISPLAY_LABELS:
             return DISPLAY_LABELS[text]
 
@@ -109,6 +110,7 @@ class BaseUtil(object):
             [mc.c.MemberState],
             mc.c.MarineUnitID == mru
         )
+
         if not count:
             return ''
 
@@ -366,7 +368,7 @@ class MarineUnitIDSelectForm(EmbeddedForm):
 
 
 class BasePublicPage(object):
-    """
+    """ TODO: explain purpose of this page
     """
 
     def check_permission(self, permission, context=None):

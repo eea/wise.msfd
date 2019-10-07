@@ -100,10 +100,10 @@ DEFAULT_RANGES = [
 
 
 CONCLUSIONS = [
-    'Very good (4)',
-    'Good (3)',
-    'Poor (2)',
-    'Very poor (1)',
+    'Very good',
+    'Good',
+    'Poor',
+    'Very poor',
     'Not relevant',
 ]
 
@@ -140,14 +140,76 @@ def get_overall_conclusion(concl_score):
     return score, conclusion
 
 
+class OverallScores(object):
+    """ Class used to store the score for each phase
+    """
+
+    def __init__(self, phases):
+        _init = {
+            'score': 0,
+            'max_score': 0,
+            'conclusion': '',
+            'color': 0,
+        }
+
+        for phase in phases:
+            d = {}
+            d.update(_init)
+            setattr(self, phase, d)
+
+    def get_overall_score(self):
+        """ Overall conclusion art. XX: 2018
+
+        :return: 80
+        """
+        # TODO how to calculate this
+
+        return 1
+
+    def get_score_for_phase(self, phase):
+        # max_score ............. 100%
+        # score ................. x%
+
+        score = getattr(self, phase)['score']
+        max_score = getattr(self, phase)['max_score']
+
+        return int(round(max_score and (score * 100) / max_score or 0))
+
+    def score_tooltip(self, phase):
+        """ TODO not used """
+
+        score = getattr(self, phase)['score']
+        max_score = getattr(self, phase)['max_score']
+        final_score = self.get_score_for_phase(phase)
+
+        text = \
+            "<b>Score achieved</b>: {} (Sum of the final scores " \
+            "from each questions)" \
+            "</br><b>Max score</b>: {} (Maximum possible score)" \
+            "</br><b>Final score</b>: {} (Final calculated score " \
+            "(<b>Score achieved</b> / <b>Max score</b>) * 100)" \
+            .format(score, max_score, final_score)
+
+        return text
+
+
 class Score(object):
+    """ Class used to store scores for each question
+    """
+
     def __init__(self, question, descriptor, values):
+        """
+        :param question: instance of AssessmentQuestionDefinition
+        :param descriptor: 'D5'
+        :param values: index of the options selected for the question
+            ex. [3, 0, 5, 2]
+        """
         self.descriptor = descriptor
         self.question = question
         self.weight = float(question.score_weights.get(descriptor, 10.0))
         self.values = values
         self.scores = question.scores
-
+    
     @property
     def is_not_relevant(self):
         """ If all options selected are 'Not relevant' return True
@@ -173,7 +235,21 @@ class Score(object):
         return rs
 
     @property
+    def score_achieved(self):
+        """ Sum of all raw scores
+
+        :return: 1.5
+        """
+
+        return sum(self.raw_scores)
+
+    @property
     def max_score(self):
+        """ Maximum possible score
+
+        :return: 5
+        """
+
         return len(self.raw_scores)
 
     @property
@@ -188,22 +264,21 @@ class Score(object):
 
         # All answers are 'Not relevant'
         if self.max_score == 0:
-            return -1
+            return '-'
 
-        raw_score = sum(self.raw_scores)
-        percentage = (raw_score * 100) / self.max_score
+        percentage = (self.score_achieved * 100) / self.max_score
 
         return float("{0:.1f}".format(percentage))
 
     @property
     def score_value(self):
-        """ Get the score value from percentage
+        """ Get the score value from percentage, only used to get conclusion
 
         :return: integer from range 1-4
         """
 
         # All answers are 'Not relevant'
-        if self.percentage == -1:
+        if self.percentage == '-':
             return 0
 
         sv = get_range_index(self.percentage)
@@ -220,19 +295,52 @@ class Score(object):
 
         return concl
 
-    # TODO find a proper algorithm to calculate wighted score
     @property
     def weighted_score(self):
         """ Calculate the weighted score
 
         :return: float 7.5
         """
-        ws = self.score_value * self.weight / 4
+        ws = self.score_achieved * self.weight
+
+        return ws
+
+    @property
+    def max_weighted_score(self):
+        """ Calculate the maximum possible weighted score
+
+        :return: float 7.5
+        """
+        ws = len(self.raw_scores) * self.weight
 
         return ws
 
     @property
     def score_tooltip(self):
+        if self.is_not_relevant:
+            return "All selected options are 'Not relevant', therefore " \
+                   "the question is not accounted when calculating the " \
+                   "overall scores"
+
+        raw_score = ' + '.join(str(x) for x in self.raw_scores)
+
+        text = \
+            '<b>Weight</b>: {}' \
+            '</br><b>Max score</b>: {} (number of answered criterias/targets ' \
+            'excluding answers where option selected is "Not relevant")' \
+            '</br><b>Score achieved</b>: {} (Sum of the scores {})' \
+            '</br><b>Max weighted score</b>: {} (Maximum possible weighted ' \
+            'score <b>Weight</b> * <b>Max score</b>)' \
+            '</br><b>Weighted score</b>: {} (Final calculated score ' \
+            '<b>Score achieved</b> * <b>Weight</b>)' \
+            .format(self.weight, self.max_score, self.score_achieved,
+                    raw_score, self.max_weighted_score, self.weighted_score)
+
+        return text
+
+
+    @property
+    def score_tooltip_old(self):
         if self.is_not_relevant:
             return "All selected options are 'Not relevant', therefore " \
                    "the question is not accounted when calculating the " \

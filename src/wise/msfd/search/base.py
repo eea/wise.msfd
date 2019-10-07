@@ -1,3 +1,5 @@
+import logging
+import re
 from datetime import datetime
 
 from zope.interface import implements
@@ -15,6 +17,9 @@ from ..base import BaseEnhancedForm, BaseUtil, EmbeddedForm
 from ..db import get_item_by_conditions
 from ..interfaces import IMainForm
 from .utils import get_registered_form_sections
+
+
+logger = logging.getLogger('wise.msfd')
 
 
 class ItemDisplayForm(EmbeddedForm):
@@ -180,6 +185,8 @@ MAIN_FORMS = (
         '', true),
     Tab('msfd-c4', 'msfd-c4', 'Articles 8, 9 & 10', '2018 reporting exercise',
         '', true),
+    Tab('msfd-c5', 'msfd-c5', 'Article 18', '2019 reporting exercise',
+        '', true),
 )
 
 
@@ -211,6 +218,18 @@ class MainForm(BaseEnhancedForm, BasePublicPage, Form):
     @property
     def title(self):
         return [x[1] for x in self.main_forms if x[0] == self.name][0]
+
+    @property
+    def spreadsheet_title(self):
+        title = [x[2] for x in self.main_forms if x[0] == self.name][0]
+
+        title_from_subforms = self.find_spreadsheet_title()
+        if title_from_subforms:
+            title = title_from_subforms
+
+        title = re.sub(r"[^a-zA-Z0-9]+", "_", title)
+
+        return title
 
     def update(self):
         super(MainForm, self).update()
@@ -246,8 +265,9 @@ class MainForm(BaseEnhancedForm, BasePublicPage, Form):
                'spreadsheetml.sheet')
 
             # fname = self.subform.get_record_title(cntx='subform') or 'marinedb'
-            fname = self.find_spreadsheet_title() or 'marinedb'
-            fname = fname + str(datetime.now().replace(microsecond=0))
+            logger.info("Spreadsheet title: %s", self.spreadsheet_title)
+            fname = self.spreadsheet_title or 'marinedb'
+            fname = fname + '_' + str(datetime.now().replace(microsecond=0))
             fname = fname.replace(' ', '_').replace('(', '').replace(')', '')\
                 .replace('&', '_')
             sh('Content-Disposition', 'attachment; filename=%s.xlsx' % fname)
@@ -273,15 +293,18 @@ class MainForm(BaseEnhancedForm, BasePublicPage, Form):
             return ctx.download_results
 
     def find_spreadsheet_title(self):
+        """ Not used, just an experiment to provide custom spreadsheet titles
+            across all articles
 
-        ctx = self
+        """
+        ctx = self.subform
 
         while hasattr(ctx, 'subform'):
 
-            if hasattr(ctx, 'spreadsheet_title'):
+            if hasattr(ctx, 'record_title'):
                 return ctx.record_title
 
             ctx = ctx.subform
 
-        if hasattr(ctx, 'spreadsheet_title'):
+        if hasattr(ctx, 'record_title'):
             return ctx.record_title

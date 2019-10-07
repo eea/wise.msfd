@@ -163,9 +163,9 @@
     name="wise_search_a2018_mru_ind"
     />
 
-  <!-- <utility -->
-  <!--   component=".vocabulary.wise_search_compliance" -->
-  <!--   name="wise_search_compliance_factory" -->
-  <!--   /> -->
+  <utility
+    component=".vocabulary.a18_ges_component"
+    name="wise_search_a18_ges_component"
+    />
 
 </configure>

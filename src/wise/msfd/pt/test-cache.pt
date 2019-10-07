@@ -1,0 +1,3 @@
+<div tal:content="cache: view/cache_key | default">
+  <div tal:content="view/test_meth">nothing</div>
+</div>

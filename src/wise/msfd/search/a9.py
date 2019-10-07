@@ -16,6 +16,7 @@ class A9Form(EmbeddedForm):
     """ Select the MarineUnitID for the Article 9 form
     """
     record_title = title = 'Article 9 (GES determination)'
+    mapper_class = sql.MSFD9Descriptor
 
     fields = Fields(IA2012GesComponentsArt9)
     fields['ges_components'].widgetFactory = CheckBoxFieldWidget
@@ -25,7 +26,7 @@ class A9Form(EmbeddedForm):
 
     def download_results(self):
         muids = self.get_marine_unit_ids()
-        ges_comps = self.get_form_data_by_key(self.context, 'ges_components')
+        ges_comps = self.get_form_data_by_key(self, 'ges_components')
 
         count, data = get_all_records(
             self.mapper_class,

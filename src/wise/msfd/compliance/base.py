@@ -9,6 +9,7 @@ from zope.dottedname.resolve import resolve
 from zope.interface import implements
 from zope.security import checkPermission
 
+from Acquisition import aq_inner
 from eea.cache import cache
 from plone.api import user
 from plone.api.content import get_state
@@ -162,7 +163,39 @@ def report_data_cache_key(func, self, *args, **kwargs):
     return res
 
 
-class BaseComplianceView(BrowserView, BasePublicPage):
+class SecurityMixin:
+
+    def check_permission(self, permission, context=None):
+
+        tool = get_tool('portal_membership')
+
+        if context is None:
+            context = self.context
+
+        return bool(tool.checkPermission(permission, aq_inner(context)))
+
+    @property
+    def read_only_access(self):
+        can_edit = self.check_permission('wise.msfd: Edit Assessment')
+
+        return not can_edit
+
+    def can_manage(self):
+        return self.check_permission('wise.msfd: Manage Compliance')
+
+    def can_view_assessment_data(self, context=None):
+        return self.check_permission('wise.msfd: View Assessment Data',
+                                     context)
+
+    def can_edit_assessment_data(self, context=None):
+        return self.check_permission('wise.msfd: Edit Assessment', context)
+
+    def can_view_edit_assessment_data(self, context=None):
+        return self.check_permission('wise.msfd: View Assessment Edit Page',
+                                     context)
+
+
+class BaseComplianceView(BrowserView, BasePublicPage, SecurityMixin):
     """ Base class for compliance views
     """
 
@@ -184,19 +217,6 @@ class BaseComplianceView(BrowserView, BasePublicPage):
         roles = get_roles(**params)
 
         return roles
-
-    @property
-    def read_only_access(self):
-        # roles = self.get_current_user_roles(self.context)
-        # is_reader = 'Reader' in roles
-        # if not is_reader and can_edit:
-        #     return False
-        #
-        # return True
-
-        can_edit = self.check_permission('wise.msfd: Edit Assessment')
-
-        return not can_edit
 
     def _get_user_group(self, user):
         """ Returns the color according to the role of the user, EC or TL

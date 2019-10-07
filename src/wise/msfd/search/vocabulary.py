@@ -4,7 +4,7 @@ from zope.interface import provider
 from zope.schema.interfaces import IVocabularyFactory
 from zope.schema.vocabulary import SimpleTerm, SimpleVocabulary
 
-from .utils import (FORMS, FORMS_2018, FORMS_ART11, SUBFORMS,
+from .utils import (FORMS, FORMS_2018, FORMS_ART11, FORMS_ART18, SUBFORMS,
                     article_sort_helper)
 
 
@@ -49,6 +49,16 @@ def articles_vocabulary_factory_2018(context):
 def articles_vocabulary_factory(context):
     terms = [SimpleTerm(k, k, v.title) for k, v in FORMS.items()]
     terms.sort(key=article_sort_helper)
+    vocab = SimpleVocabulary(terms)
+
+    return vocab
+
+
+# Article 18
+@provider(IVocabularyFactory)
+def a18_data_type(context):
+    terms = [SimpleTerm(v, k, v.title) for k, v in FORMS_ART18.items()]
+    terms.sort(key=lambda t: t.title)
     vocab = SimpleVocabulary(terms)
 
     return vocab

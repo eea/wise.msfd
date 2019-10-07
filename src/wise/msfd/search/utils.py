@@ -10,6 +10,7 @@ from wise.msfd.utils import class_id, get_obj_fields
 
 FORMS_2018 = {}
 FORMS_ART11 = {}
+FORMS_ART18 = {}
 FORMS = {}                         # main chapter 1 article form classes
 SUBFORMS = defaultdict(set)        # store subform references
 ITEM_DISPLAYS = defaultdict(set)   # store registration for item displays
@@ -32,6 +33,16 @@ def register_form_art11(klass):
     """
 
     FORMS_ART11[class_id(klass)] = klass
+
+    return klass
+
+
+def register_form_art18(klass):
+    """ Registers a form class for article 18
+
+    """
+
+    FORMS_ART18[class_id(klass)] = klass
 
     return klass
 

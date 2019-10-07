@@ -23,7 +23,8 @@
               </button>
           </div>
 
-          <span class="pagination-text bottom">Result <span tal:content="python: int(view.data.get('page', '0')) + 1">1</span> of <span tal:content="view/count"></span>
+          <span tal:condition="python: view.count > 1"
+              class="pagination-text bottom">Result <span tal:content="python: int(view.data.get('page', '0')) + 1">1</span> of <span tal:content="view/count"></span>
       </span>
 
           <div tal:condition="next" class="form-buttons-next-row" >
@@ -53,7 +54,8 @@
           </button>
       </div>
 
-      <span class="pagination-text bottom">Result <span tal:content="python: int(view.data.get('page', '0')) + 1">1</span> of <span tal:content="view/count"></span>
+      <span tal:condition="python: view.count > 1"
+          class="pagination-text bottom">Result <span tal:content="python: int(view.data.get('page', '0')) + 1">1</span> of <span tal:content="view/count"></span>
       </span>
 
       <div tal:condition="next" class="form-buttons-next-row">

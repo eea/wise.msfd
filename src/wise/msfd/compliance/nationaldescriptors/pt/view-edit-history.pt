@@ -1,0 +1,13 @@
+<div id="edit-history"  tal:define="records view/report_assessment">
+  <h2 tal:content="structure view/title">Edit History</h2>
+  <table class="table table-bordered" style="max-width:20em; overflow: auto"
+    tal:define="ts records/ts">
+    <th>Fields / Records</th>
+    <th tal:repeat="timestamp ts"
+      tal:content="timestamp"></th>
+    <tr tal:repeat="field python: records.keys()">
+      <td tal:content="field"></td>
+      <td tal:repeat="value python: records[field]" tal:content="value"></td>
+    </tr>
+  </table>
+</div>

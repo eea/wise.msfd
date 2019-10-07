@@ -942,7 +942,7 @@ https://svn.eionet.europa.eu/repositories/Reportnet/Dataflows/MarineDirective/MS
         if ('download' in self.request.form):  # and report_data
             return self.download()
 
-        if 'translate' in self.request.form:
+        if 'translate' in self.request.form and self.can_view_assessment_data:
             return self.auto_translate()
 
         trans_edit_html = self.translate_view()()

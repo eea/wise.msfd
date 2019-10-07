@@ -38,6 +38,23 @@ def _extract_from_csv():
     return labels
 
 
+def _extract_ktm():
+    labels = {}
+    csv_f = resource_filename('wise.msfd',
+                              'data/KTM.csv')
+
+    with open(csv_f, 'rb') as csvfile:
+        csv_file = csv.reader(csvfile, delimiter=',', quotechar='|')
+
+        for row in csv_file:
+            if row[0] in labels.keys():
+                logger.debug("Duplicate label in csv file: %s", row[0])
+
+            labels[row[0]] = row[2]
+
+    return labels
+
+
 def _extract_from_xsd(fpath):
     labels = {}
 
@@ -240,6 +257,7 @@ class LabelCollection(object):
     indicators_url = get_indicator_urls()
     mrus = get_mru_labels()
     targets = get_target_labels()
+    ktms = _extract_ktm()
 
     def get(self, collection_name, name):
         label_dict = getattr(self, collection_name, None)
