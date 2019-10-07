@@ -11,7 +11,7 @@ from .. import db, sql
 from ..base import EmbeddedForm
 from ..db import get_all_records, get_all_records_join
 from ..interfaces import IMarineUnitIDsSelect
-from .. labels import COMMON_LABELS
+from .. labels import COMMON_LABELS, GES_LABELS
 from ..utils import default_value_from_field
 from .base import ItemDisplayForm, MainForm
 from .utils import data_to_xls
@@ -175,6 +175,7 @@ class A1314ItemDisplay(ItemDisplayForm):
         page = self.get_page()
         mc = self.mapper_class
         mc_join = sql.MSFD13Measure
+        mc_import = sql.MSFD13ReportingInfo
 
         count, item, extra_data = db.get_collapsed_item(
             mc,
@@ -185,6 +186,21 @@ class A1314ItemDisplay(ItemDisplayForm):
             page=page,
             mc_join_cols=['Name']
         )
+
+        report_id = item.ReportID
+        _, mru = db.get_related_record(mc_import, 'ID', report_id)
+
+        mru = mru.MarineUnitID
+
+        env_target_labels = getattr(GES_LABELS, 'env_targets')
+
+        env_targets = extra_data.items()[0][1]["RelevantEnvironmentalTargets"]
+
+        for row in env_targets:
+            label = env_target_labels[mru].get(row['InfoText'], '')
+            if label:
+                row['InfoText'] = label
+
         self.extra_data = extra_data.items()
 
         return [count, item]

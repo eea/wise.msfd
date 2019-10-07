@@ -1,3 +1,6 @@
+
+from collections import defaultdict
+
 import csv
 import json
 import logging
@@ -238,6 +241,31 @@ def get_target_labels():
     return labels
 
 
+@db.use_db_session('2012')
+def get_environmental_targets():
+    mc = sql.MSFD10Target
+    mc_join = sql.MSFD10Import
+    count, res = db.get_all_records_join(
+        [mc.ReportingFeature, mc.Description,
+         mc.MarineUnitID,
+         mc_join.MSFD10_Import_ReportingCountry],
+        mc_join,
+        mc.Topic == 'EnvironmentalTarget'
+    )
+    labels = defaultdict(dict)
+
+    for row in res:
+        code = row.ReportingFeature
+        label = row.Description
+        # country_code = row.MSFD10_Import_ReportingCountry
+        mru = row.MarineUnitID
+
+        mru_labels = labels[mru]
+        mru_labels[code] = label
+
+    return labels
+
+
 class LabelCollection(object):
     """ A convenience wrapper over multiple structures with labels
 
@@ -258,6 +286,7 @@ class LabelCollection(object):
     mrus = get_mru_labels()
     targets = get_target_labels()
     ktms = _extract_ktm()
+    env_targets = get_environmental_targets()
 
     def get(self, collection_name, name):
         label_dict = getattr(self, collection_name, None)
