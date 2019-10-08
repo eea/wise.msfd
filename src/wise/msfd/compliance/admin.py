@@ -454,19 +454,22 @@ class AdminScoring(BaseComplianceView):
                 for q_id, score in scores.items():
                     id_ = score.question.id
                     article = score.question.article
-                    new_score_weight = [
-                        x.score_weights
+                    _question = [
+                        x
 
                         for x in self.questions[article]
 
                         if x.id == id_
-                    ]
-                    score.question.score_weights = new_score_weight[0]
+                    ][0]
+
+                    # new_score_weight = _question.score_weights
+                    # _question.score_weights = new_score_weight
 
                     values = score.values
                     descriptor = score.descriptor
-                    new_score = score.question.calculate_score(descriptor,
-                                                               values)
+
+                    new_score = _question.calculate_score(descriptor,
+                                                          values)
 
                     data[q_id] = new_score
                     new_overall_score += getattr(new_score,
