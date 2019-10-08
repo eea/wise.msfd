@@ -418,9 +418,9 @@ def format_assessment_data(article, elements, questions, muids, data,
             CONCLUSION_COLOR_TABLE[get_range_index(phase_score)]
 
     # the overall score and conclusion for the whole article 2018
-    overall_score = phase_overall_scores.get_overall_score()
+    overall_score_val, overall_score = phase_overall_scores.get_overall_score()
     overall_conclusion = get_overall_conclusion(overall_score)
-    overall_conclusion_color = CONCLUSION_COLOR_TABLE[overall_score]
+    overall_conclusion_color = CONCLUSION_COLOR_TABLE[overall_score_val]
 
     assessment = Assessment(
         elements,
@@ -640,8 +640,10 @@ class NationalDescriptorArticleView(BaseView):
 
         score_2012 = int(round(score_2012))
         conclusion_2012_color = CONCLUSION_COLOR_TABLE.get(score_2012, 0)
-        # TODO
-        change = int(assessment.phase_overall_scores.adequacy['score'] - score_2012)
+        change = int(
+            assessment.phase_overall_scores
+            .get_range_index_for_phase('adequacy') - score_2012
+        )
 
         self.assessment_data_2018_html = self.assessment_data_2018_tpl(
             assessment=assessment,

@@ -162,9 +162,21 @@ class OverallScores(object):
 
         :return: 80
         """
-        # TODO how to calculate this
+        weights = {
+            'adequacy': 3/5.0,
+            'consistency': 1/5.0,
+            'coherence': 1/5.0
+        }
 
-        return 1
+        overall_score = 0
+
+        for phase in weights:
+            score = self.get_score_for_phase(phase)
+            overall_score += score * weights[phase]
+
+        overall_score = int(overall_score)
+
+        return get_range_index(overall_score), overall_score
 
     def get_score_for_phase(self, phase):
         # max_score ............. 100%
@@ -174,6 +186,11 @@ class OverallScores(object):
         max_score = getattr(self, phase)['max_score']
 
         return int(round(max_score and (score * 100) / max_score or 0))
+
+    def get_range_index_for_phase(self, phase):
+        score = self.get_score_for_phase(phase)
+
+        return get_range_index(score)
 
     def score_tooltip(self, phase):
         """ TODO not used """
@@ -338,31 +355,4 @@ class Score(object):
 
         return text
 
-
-    @property
-    def score_tooltip_old(self):
-        if self.is_not_relevant:
-            return "All selected options are 'Not relevant', therefore " \
-                   "the question is not accounted when calculating the " \
-                   "Phase1 and the Overall scores"
-
-        raw_score = ' + '.join(str(x) for x in self.raw_scores)
-
-        percentage = '(sum of raw_scores / max_score) * 100</br>' \
-                     '(({}) / {}) * 100 = {}%' \
-            .format(raw_score, self.max_score, self.percentage)
-
-        score_value = '{}% percentage translates to score value {} (out of 4)'\
-                      ' meaning "{}"'\
-            .format(self.percentage, self.score_value, self.conclusion)
-
-        weighted_score = '({} * {}) / 4 = {}'\
-            .format(self.score_value, self.weight, self.weighted_score)
-
-        return '<b>Percentage calculation</b></br>' \
-               '{}</br></br>' \
-               '{}</br></br>' \
-               '<b>Weighted score calculation</b></br>' \
-               '(score_value * weight) / 4<br>' \
-               '{}' \
-            .format(percentage, score_value, weighted_score)
+# A10Ad1 A0810Cy1 A08Ad4 A09Ad1 A09Ad2
