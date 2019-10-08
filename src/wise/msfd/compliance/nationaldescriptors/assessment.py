@@ -57,7 +57,8 @@ class ViewAssessmentEditHistory(BaseView, BrowserView):
                     res[field] += [record[field]]
                 else:
                     res[field] = [record[field]]
-            res.ts.append(max(tsr))
+                    
+            res.ts.append(tsr and max(tsr) or record['assess_date'])
 
         return res
 
@@ -291,6 +292,7 @@ class EditAssessmentDataForm(Form, BaseView):
             form.title = question.definition
             last_upd = '{}_{}_Last_update'.format(self.article, question.id)
             form._last_update = assessment_data.get(last_upd, assess_date)
+            form._assessor = assessment_data.get('assessor', '-')
             form._question_type = question.klass
             form._question_phase = phase
             form._question = question
@@ -364,6 +366,9 @@ class EditAssessmentDataForm(Form, BaseView):
         last_upd = '{}_assess_summary_last_upd'.format(self.article)
         assessment_summary_form._last_update = assessment_data.get(
             last_upd, assess_date
+        )
+        assessment_summary_form._assessor = assessment_data.get(
+            'assessor', '-'
         )
         assessment_summary_form.subtitle = u''
         assessment_summary_form._disabled = self.read_only_access

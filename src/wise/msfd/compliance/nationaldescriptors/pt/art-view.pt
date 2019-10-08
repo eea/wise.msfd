@@ -81,7 +81,7 @@
           <div id="nat-desc-art-menu">
             <ul>
               <li><a href="./@@edit-assessment-data-2018" target="_blank"><i class='fa fa-edit'></i> Assessment</a>
-                  <a href="./@@edit-history" class="fa fa-table pat-plone-modal"
+                  <a href="./@@view-edit-history" class="fa fa-table pat-plone-modal"
                       data-pat-plone-modal="height: 600px; content:#edit-history; width: 80%"></a>
               </li>
               <li><a href="./@@view-report-data-2018" target="_blank"><i class='fa fa-table'></i> 2018 Report</a></li>

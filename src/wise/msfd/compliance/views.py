@@ -142,7 +142,19 @@ class CommentsList(BaseComplianceView):
         return self.template()
 
     def __call__(self):
+        # question_id = self.request.form.get('q', 'missing-id').lower()
+        # if question_id == 'a0809cy1':
+        #     import pdb; pdb.set_trace()
+
         return self.template()
+
+    def sort_comments(self, comments):
+        """ Sort the comments by creation date
+        For some reason in 'comments' method sorting is not always working
+        so we call this again in the template
+        """
+
+        return sorted(comments, key=lambda c: c.created())
 
     def comments(self):
         """ Return all comments
@@ -162,9 +174,7 @@ class CommentsList(BaseComplianceView):
         comments = q_folder.contentValues()
         all_comments = old_comments + comments
 
-        sorted_all_comments = sorted(all_comments, key=lambda c: c.created())
-
-        return sorted_all_comments
+        return self.sort_comments(all_comments)
 
     def old_comments(self, question_id):
         """ Return comments from the old comment folders: ec and tl

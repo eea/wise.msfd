@@ -109,8 +109,15 @@
                       </span>
                       <span tal:content="subform/title">Question here</span>
                       <span style="float:right;"
-                            tal:define="last_change python: plone.toLocalizedTime(subform._last_update, long_format=True) or '-'"
-                            tal:content="string:Last change: ${last_change}">Last update</span>
+                          tal:define="last_change python: plone.toLocalizedTime(subform._last_update, long_format=True) or '-'"
+                          class="help-popover"
+                          data-trigger="hover"
+                          data-html="true"
+                          tal:attributes="title python: '';
+                          data-content python: last_change">
+                        <span tal:content="string:Last change">Last change</span>
+                        <i class="fa fa-calendar"></i>
+                      </span>
                     </h4>
 
                     <div class="fields-container">
