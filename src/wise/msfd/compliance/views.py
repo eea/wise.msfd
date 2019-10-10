@@ -83,17 +83,17 @@ class CommentsList(BaseComplianceView):
                 if (history[ind]['time'] <= comm.created()
                     < history[ind + 1]['time'])
             ]
-            state_title = history[ind]['state_title']
+            state = history[ind]
 
-            res.append((state_title, phase_comments))
+            res.append((state, phase_comments))
 
         last_phase_comms = [
             comm
             for comm in comments
             if comm.created() >= history[-1]['time']
         ]
-        state_title = history[-1]['state_title']
-        res.append((state_title, last_phase_comms))
+        state = history[-1]
+        res.append((state, last_phase_comms))
 
         # logger.info('comments: %s', comments)
         # logger.info('grouped: %s', res)

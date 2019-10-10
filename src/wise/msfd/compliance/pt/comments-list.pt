@@ -10,10 +10,11 @@
 
   <tal:rep tal:repeat="comm_group grouped_comments">
     <li tal:condition="python:comm_group[1]"
-        class="accordion active btn" tal:content="python:comm_group[0]">
-      In work by Topic Lead
+        class="accordion btn">
+      <span tal:content="python:comm_group[0]['state_title']">In work by Topic Lead</span> -
+      <span tal:content="python:plone.toLocalizedTime(comm_group[0]['time'], long_format=True)"></span>
     </li>
-    <li class="comms active" tal:repeat="comment python:view.sort_comments(comm_group[1])">
+    <li class="comms" tal:repeat="comment python:view.sort_comments(comm_group[1])">
       <div class="comm-crtr">
         <i class="fa fa-user" aria-hidden="true"></i>
         <span tal:content="comment/Creator"

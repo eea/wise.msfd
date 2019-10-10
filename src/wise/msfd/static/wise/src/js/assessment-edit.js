@@ -66,6 +66,14 @@
           this.classList.toggle("active");
         });
       });
+
+      if(i == $acc.length -1) {
+        $acc[i].classList.toggle("active");
+        var $comments = $($acc[i]).nextUntil('li.accordion');
+        $comments.each(function(){
+          this.classList.toggle("active");
+        });
+      }
     }
   }
 
@@ -113,6 +121,7 @@
             setCommentCookie();
             $comel.html(text);
             colorComments();
+            setupAccordions($el);
           });
         }
       });
@@ -158,6 +167,7 @@
         $comel.html(text);
         $textarea.val('');
         colorComments();
+        setupAccordions($comel);
       });
       // console.log(qid, text);
       return false;
