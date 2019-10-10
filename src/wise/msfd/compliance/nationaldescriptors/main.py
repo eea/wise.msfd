@@ -46,11 +46,12 @@ ANSWERS_COLOR_TABLE = {
 
 # score_value as key, color as value
 CONCLUSION_COLOR_TABLE = {
+    5: 0,       # not relevant
     4: 1,       # very good
     3: 2,       # good
     2: 4,       # poor
     1: 5,       # very poor
-    0: 0        # not filled in
+    0: 3        # not filled in
 }
 
 CHANGE_COLOR_TABLE = {
