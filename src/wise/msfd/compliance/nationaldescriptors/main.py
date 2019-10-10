@@ -37,9 +37,9 @@ REGION_RE = re.compile('.+\s\((?P<region>.+)\)$')
 ANSWERS_COLOR_TABLE = {
     '1': 1,      # very good
     '0.75': 2,   # good
-    '0.5': 3,    # partial
-    '0.25': 4,   # poor
-    '0': 5,      # very poor
+    '0.5': 4,    # poor
+    '0.25': 5,   # very poor
+    '0': 3,      # not reported
     '0.250': 6,  # not clear
     '/': 7       # not relevant
 }
@@ -418,7 +418,8 @@ def format_assessment_data(article, elements, questions, muids, data,
             CONCLUSION_COLOR_TABLE[get_range_index(phase_score)]
 
     # the overall score and conclusion for the whole article 2018
-    overall_score_val, overall_score = phase_overall_scores.get_overall_score()
+    overall_score_val, overall_score = phase_overall_scores.\
+        get_overall_score(article)
     overall_conclusion = get_overall_conclusion(overall_score)
     overall_conclusion_color = CONCLUSION_COLOR_TABLE[overall_score_val]
 

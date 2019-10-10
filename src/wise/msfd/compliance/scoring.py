@@ -108,6 +108,24 @@ CONCLUSIONS = [
 ]
 
 
+ARTICLE_WEIGHTS = {
+            'Art9': {
+                'adequacy': 3/5.0,
+                'coherence': 2/5.0
+            },
+            'Art8': {
+                'adequacy': 3/5.0,
+                'consistency': 1/5.0,
+                'coherence': 1/5.0
+            },
+            'Art10': {
+                'adequacy': 3/5.0,
+                'consistency': 1/5.0,
+                'coherence': 1/5.0
+            }
+        }
+
+
 def get_range_index(percentage):
     p = int(percentage)
 
@@ -157,18 +175,14 @@ class OverallScores(object):
             d.update(_init)
             setattr(self, phase, d)
 
-    def get_overall_score(self):
+    def get_overall_score(self, article):
         """ Overall conclusion art. XX: 2018
 
         :return: 80
         """
-        weights = {
-            'adequacy': 3/5.0,
-            'consistency': 1/5.0,
-            'coherence': 1/5.0
-        }
 
         overall_score = 0
+        weights = ARTICLE_WEIGHTS[article]
 
         for phase in weights:
             score = self.get_score_for_phase(phase)
