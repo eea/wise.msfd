@@ -6,11 +6,12 @@ from collections import deque
 from eea.cache import cache
 from plone import api
 from plone.api.content import get_state, transition
+from plone.app.layout.viewlets.content import ContentHistoryView
 from plone.dexterity.utils import createContentInContainer as create
 from Products.Five.browser import BrowserView
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 
-from .base import BaseComplianceView
+from .base import BaseComplianceView, STATUS_COLORS
 
 logger = logging.getLogger('wise.msfd')
 
@@ -63,6 +64,48 @@ class CommentsList(BaseComplianceView):
     """ Renders a list of comments, to be loaded with Ajax in assessment edit
     """
     template = ViewPageTemplateFile('pt/comments-list.pt')
+
+    @property
+    def content_history(self):
+        h = ContentHistoryView(self.context, self.request).fullHistory()
+
+        return h
+
+    def group_comments_by_phase(self, comments):
+        history = self.content_history
+        history = [x for x in reversed(history)]
+
+        res = []
+        for ind in range(len(history) - 1):
+            phase_comments = [
+                comm
+                for comm in comments
+                if (history[ind]['time'] <= comm.created()
+                    < history[ind + 1]['time'])
+            ]
+            state_title = history[ind]['state_title']
+
+            res.append((state_title, phase_comments))
+
+        last_phase_comms = [
+            comm
+            for comm in comments
+            if comm.created() >= history[-1]['time']
+        ]
+        state_title = history[-1]['state_title']
+        res.append((state_title, last_phase_comms))
+
+        # logger.info('comments: %s', comments)
+        # logger.info('grouped: %s', res)
+
+        return res
+
+    def can_delete_comment(self, user):
+        if self.current_user == user:
+            return True
+
+        return False
+        return self.check_permission('wise.msfd: Delete Comment')
 
     @property
     def current_user(self):

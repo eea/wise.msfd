@@ -1,25 +1,33 @@
-<ul tal:define="comments view/comments; plone nocall:context/@@plone" class="comments-history">
+<ul tal:define="comments view/comments;
+      plone nocall:context/@@plone;
+      grouped_comments python:view.group_comments_by_phase(comments)"
+    class="comments-history">
 
-  <span tal:condition="not:view/comments" class="no-comments">
+  <span tal:condition="not:comments" class="no-comments">
     <i class="fa fa-comments-o" aria-hidden="true"></i>
     <span>No discussions yet</span>
   </span>
 
-  <li class="comms" tal:repeat="comment python:view.sort_comments(comments)">
-    <div class="comm-crtr">
-      <i class="fa fa-user" aria-hidden="true"></i>
-      <span tal:content="comment/Creator"
-            tal:attributes="group-id python: view._get_user_group(comment.Creator())"
-            class="comment-name">Creator</span>
-      <span tal:content="python: plone.toLocalizedTime(comment.created(), long_format=True)"
-            class="comment-time">
-            Creator
-      </span>
-    </div>
-    <div tal:content="comment/text" class="comment">Comment here</div>
-    <i tal:condition="python: view.current_user == comment.Creator()"
-       class="comm-del fa fa-times fa-1"
-        title="Remove comment"></i>
-  </li>
-
+  <tal:rep tal:repeat="comm_group grouped_comments">
+    <li tal:condition="python:comm_group[1]"
+        class="accordion active btn" tal:content="python:comm_group[0]">
+      In work by Topic Lead
+    </li>
+    <li class="comms active" tal:repeat="comment python:view.sort_comments(comm_group[1])">
+      <div class="comm-crtr">
+        <i class="fa fa-user" aria-hidden="true"></i>
+        <span tal:content="comment/Creator"
+              tal:attributes="group-id python: view._get_user_group(comment.Creator())"
+              class="comment-name">Creator</span>
+        <span tal:content="python: plone.toLocalizedTime(comment.created(), long_format=True)"
+              class="comment-time">
+              Creator
+        </span>
+      </div>
+      <div tal:content="comment/text" class="comment">Comment here</div>
+      <i tal:condition="python: view.can_delete_comment(comment.Creator())"
+         class="comm-del fa fa-times fa-1"
+          title="Remove comment"></i>
+    </li>
+  </tal:rep>
 </ul>

@@ -47,4 +47,10 @@
     description="View MSFD Search Reports"
     />
 
+  <permission
+    id="wise.DeleteComment"
+    title="wise.msfd: Delete Comment"
+    description="Delete assessment comment"
+    />
+
 </configure>

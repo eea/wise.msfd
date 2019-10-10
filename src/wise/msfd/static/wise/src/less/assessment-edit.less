@@ -185,6 +185,11 @@ span.infobox-popover {
 
           .comms {
             position: relative;
+            display: none;
+
+            &.active {
+              display: list-item;
+            }
           }
           .comm-del {
             position: absolute;
@@ -215,11 +220,39 @@ span.infobox-popover {
 
           li {
             list-style-type: none;
+            margin-top: 1em;
           }
 
-          li:not(:last-child) {
+          li.accordion:last-child {
             margin-bottom: 1em;
           }
+
+          .accordion {
+            background-color: #eee;
+            color: #444;
+            cursor: pointer;
+            padding: 0.5em;
+            width: 100%;
+            border: none;
+            text-align: left;
+            outline: none;
+            font-size: 15px;
+            transition: 0.4s;
+
+            &.active:after {
+              content: "\2212";
+            }
+          }
+
+          .accordion:after {
+            content: '\002B';
+            color: #777;
+            font-weight: bold;
+            float: right;
+            margin-left: 5px;
+          }
+
+
 
           .comment {
             color: #fff;
@@ -277,7 +310,7 @@ span.infobox-popover {
         }
         .textline {
           textarea {
-            height: 5em;
+            height: 3em;
             resize: none;
             overflow: auto;
             border-radius: 25px;
@@ -291,6 +324,7 @@ span.infobox-popover {
           }
 
           textarea:focus {
+            height: 6em;
             outline: none !important;
             border: solid 1px #29a2d9;
             background-color: #fff;
