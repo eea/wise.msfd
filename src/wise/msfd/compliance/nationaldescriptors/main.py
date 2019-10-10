@@ -414,9 +414,13 @@ def format_assessment_data(article, elements, questions, muids, data,
         # set the conclusion and color based on the score for each phase
         phase_scores = getattr(phase_overall_scores, phase)
         phase_score = phase_overall_scores.get_score_for_phase(phase)
-        phase_scores['conclusion'] = get_overall_conclusion(phase_score)
-        phase_scores['color'] = \
-            CONCLUSION_COLOR_TABLE[get_range_index(phase_score)]
+        if phase == 'consistency' and article == 'Art9':
+            phase_scores['conclusion'] = ('-', 'Not relevant')
+            phase_scores['color'] = 0
+        else:
+            phase_scores['conclusion'] = get_overall_conclusion(phase_score)
+            phase_scores['color'] = \
+                CONCLUSION_COLOR_TABLE[get_range_index(phase_score)]
 
     # the overall score and conclusion for the whole article 2018
     overall_score_val, overall_score = phase_overall_scores.\
