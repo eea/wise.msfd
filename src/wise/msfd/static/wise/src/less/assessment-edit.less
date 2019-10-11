@@ -183,6 +183,14 @@ span.infobox-popover {
           display: flex;
           flex-direction: column-reverse;
 
+          .process-state {
+            display: none;
+
+            &.active {
+              display: list-item;
+            }
+          }
+
           .comms {
             position: relative;
             display: none;

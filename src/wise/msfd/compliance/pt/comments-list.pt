@@ -1,6 +1,10 @@
 <ul tal:define="comments view/comments;
       plone nocall:context/@@plone;
-      grouped_comments python:view.group_comments_by_phase(comments)"
+      grouped_comments python:view.group_comments_by_phase(comments);
+      old_comments python: grouped_comments[0];
+      latest_comments python: grouped_comments[1];
+      has_old_comments python: [x for x in old_comments if x[1]];
+      has_latest_comments python: latest_comments[1];"
     class="comments-history">
 
   <span tal:condition="not:comments" class="no-comments">
@@ -8,9 +12,14 @@
     <span>No discussions yet</span>
   </span>
 
-  <tal:rep tal:repeat="comm_group grouped_comments">
-    <li tal:condition="python:comm_group[1]"
-        class="accordion btn">
+  <!-- old comments -->
+  <li tal:condition="has_old_comments"
+      class="accordion btn">
+    <span tal:content="python:plone.toLocalizedTime(old_comments[0][0]['time'], long_format=True)">Jul 10, 2019 01:42 PM</span> -
+    <span tal:content="python:plone.toLocalizedTime(latest_comments[0]['time'], long_format=True)">Oct 10, 2019 01:42 PM</span>
+  </li>
+  <tal:rep tal:repeat="comm_group old_comments">
+    <li class="process-state" tal:condition="python:comm_group[1]">
       <span tal:content="python:comm_group[0]['state_title']">In work by Topic Lead</span> -
       <span tal:content="python:plone.toLocalizedTime(comm_group[0]['time'], long_format=True)"></span>
     </li>
@@ -31,4 +40,31 @@
           title="Remove comment"></i>
     </li>
   </tal:rep>
+
+  <!-- latest comments -->
+  <li class="accordion btn"
+      tal:condition="has_latest_comments">
+    <span tal:content="python:plone.toLocalizedTime(latest_comments[0]['time'], long_format=True)">Jul 10, 2019 01:42 PM</span> - Today
+  </li>
+  <li class="process-state"
+      tal:condition="has_latest_comments">
+    <span tal:content="python:latest_comments[0]['state_title']">In work by Topic Lead</span> -
+    <span tal:content="python:plone.toLocalizedTime(latest_comments[0]['time'], long_format=True)"></span>
+  </li>
+  <li class="comms" tal:repeat="comment python:view.sort_comments(latest_comments[1])">
+    <div class="comm-crtr">
+      <i class="fa fa-user" aria-hidden="true"></i>
+      <span tal:content="comment/Creator"
+            tal:attributes="group-id python: view._get_user_group(comment.Creator())"
+            class="comment-name">Creator</span>
+      <span tal:content="python: plone.toLocalizedTime(comment.created(), long_format=True)"
+            class="comment-time">
+            Creator
+      </span>
+    </div>
+    <div tal:content="comment/text" class="comment">Comment here</div>
+    <i tal:condition="python: view.can_delete_comment(comment.Creator())"
+       class="comm-del fa fa-times fa-1"
+        title="Remove comment"></i>
+  </li>
 </ul>

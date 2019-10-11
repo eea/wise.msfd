@@ -72,10 +72,13 @@ class CommentsList(BaseComplianceView):
         return h
 
     def group_comments_by_phase(self, comments):
+        if not comments:
+            return [], (None, [])
+
         history = self.content_history
         history = [x for x in reversed(history)]
 
-        res = []
+        comms = []
         for ind in range(len(history) - 1):
             phase_comments = [
                 comm
@@ -83,22 +86,29 @@ class CommentsList(BaseComplianceView):
                 if (history[ind]['time'] <= comm.created()
                     < history[ind + 1]['time'])
             ]
-            state = history[ind]
-
-            res.append((state, phase_comments))
+            if phase_comments:
+                state = history[ind]
+                comms.append((state, phase_comments))
 
         last_phase_comms = [
             comm
             for comm in comments
             if comm.created() >= history[-1]['time']
         ]
-        state = history[-1]
-        res.append((state, last_phase_comms))
+        if last_phase_comms:
+            state = history[-1]
+            comms.append((state, last_phase_comms))
 
         # logger.info('comments: %s', comments)
         # logger.info('grouped: %s', res)
 
-        return res
+        if len(comms) > 1:
+            old_comms = comms[:-1]
+            latest_comms = comms[-1]
+
+            return old_comms, latest_comms
+
+        return [], comms[0]
 
     def can_delete_comment(self, user):
         if self.current_user == user:
