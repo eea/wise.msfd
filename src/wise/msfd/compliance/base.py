@@ -758,6 +758,13 @@ def filtered_criterias(criterias, question, descriptor):
     if question.use_criteria == 'none':
         crits = []
 
+    # we would need to have the criteria D1C1, D1C3, D1C4 and D1C5
+    # listed under both question A09Ad1. And A09Ad2.
+    # C1-C3 are primary for commercial fish species;
+    # C4-C5 are primary for HD fish
+    if descriptor.id == 'D1.4' and question.id == 'A09Ad2':
+        crits = [c for c in criterias if c.id != 'D1C2']
+
     return sorted_criterions(crits)
 
 
