@@ -1,34 +1,276 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <questions article='Art9'>
-  <assessment-question id="A09Ad1" class="adequacy" use-criteria='primary'>
+  <assessment-question id="A09Co1" class="adequacy" use-criteria="primary">
     <definition>
-      Adequacy of status assessment: proportion of parameters/ criteria/elements with clear outcomes
+      To what extent do the Member States in the region use the same [primary] criteria?
     </definition>
     <answers>
-      <option score="1">Good practice</option>
-      <option score="0.75">Adequate</option>
-      <option score="0.5">Partially adequate</option>
-      <option score="0">Inadequate</option>
+      <option score="1">76-100% of MS in the region use this criterion, or do not use it with adequate justification</option>
+      <option score="0.75">51-75% of MS in the region use this criterion, or do not use it with adequate justification</option>
+      <option score="0.5">26-50% of MS in the region use this criterion, or do not use it with adequate justification</option>
+      <option score="0.25">1-25% of MS in the region use this criterion, or do not use it with adequate justification</option>
+      <option score="0.250">Not clear</option>
       <option score="/">Not relevant</option>
     </answers>
     <scoring determination-method="wise.msfd.compliance.scoring.scoring_based">
     </scoring>
-    <score-weight descriptor="D1.1" value="6" />
-    <score-weight descriptor="D1.2" value="6" />
-    <score-weight descriptor="D1.3" value="6" />
-    <score-weight descriptor="D1.4" value="6" />
-    <score-weight descriptor="D1.5" value="6" />
+    <score-weight descriptor="D1.1" value="20" />
+    <score-weight descriptor="D1.2" value="20" />
+    <score-weight descriptor="D1.3" value="20" />
+    <score-weight descriptor="D1.4" value="20" />
+    <score-weight descriptor="D1.5" value="20" />
+    <score-weight descriptor="D1.6" value="20" />
+    <score-weight descriptor="D2" value="20" />
+    <score-weight descriptor="D3" value="20" />
+    <score-weight descriptor="D4" value="20" />
+    <score-weight descriptor="D5" value="20" />
+    <score-weight descriptor="D6" value="20" />
+    <score-weight descriptor="D7" value="20" />
+    <score-weight descriptor="D8" value="20" />
+    <score-weight descriptor="D9" value="20" />
+    <score-weight descriptor="D10" value="20" />
+    <score-weight descriptor="D11" value="20" />
+  </assessment-question>
+  
+  <assessment-question id="A09Co2" class="adequacy" use-criteria="secondary">
+    <definition>
+      To what extent do the Member States in the region use the same secondary criteria?
+    </definition>
+    <answers>
+      <option score="1">76-100% of MS in the region use this criterion</option>
+      <option score="0.75">51-75% of MS in the region use this criterion</option>
+      <option score="0.5">26-50% of MS in the region use this criterion</option>
+      <option score="0.25"1-25% of MS in the region use this criterion></option>
+      <option score="0.250">Not clear</option>
+      <option score="/">Not relevant</option>
+    </answers>
+    <scoring determination-method="wise.msfd.compliance.scoring.scoring_based">
+    </scoring>
+    <score-weight descriptor="D1.1" value="" />
+    <score-weight descriptor="D1.2" value="" />
+    <score-weight descriptor="D1.3" value="" />
+    <score-weight descriptor="D1.4" value="" />
+    <score-weight descriptor="D1.5" value="" />
+    <score-weight descriptor="D1.6" value="" />
+    <score-weight descriptor="D2" value="" />
+    <score-weight descriptor="D3" value="" />
+    <score-weight descriptor="D4" value="" />
+    <score-weight descriptor="D5" value="" />
+    <score-weight descriptor="D6" value="" />
+    <score-weight descriptor="D7" value="" />
+    <score-weight descriptor="D8" value="" />
+    <score-weight descriptor="D9" value="" />
+    <score-weight descriptor="D10" value="" />
+    <score-weight descriptor="D11" value="" />
+  </assessment-question>
+
+  <assessment-question id="A09Co3" class="adequacy" use-criteria="all">
+    <definition>
+      To what extent do the Member States in the region use GES determinations (elements and parameters) that are the same or similar?
+    </definition>
+    <answers>
+      <option score="1">All elements and parameters for this criterion are the same or similar for most MS (76-100%) in the region</option>
+      <option score="0.75">All elements and parameters for this criterion are the same or similar for many MS (51-75%) in the region</option>
+      <option score="0.5">All elements and parameters for this criterion are the same or similar for some MS (26-50%) in the region</option>
+      <option score="0.25">All elements and parameters for this criterion are the same or similar for only a few MS (1-25%) in the region</option>
+      <options score="0.75">Some elements and parameters for this criterion are the same or similar for most MS (76-100%) in the region</option>
+      <options score="0.5">Some elements and parameters for this criterion are the same or similar for many MS (51-75%) in the region</option>
+      <options score="0.25">Some elements and parameters for this criterion are the same or similar for some (1-50%) in the region</option>
+      <options score="0">All elements and parameters for this criterion are different in all MS in the region</option>
+      <option score="0.250">Not clear</option>
+      <option score="/">Not relevant</option>
+    </answers>
+    <scoring determination-method="wise.msfd.compliance.scoring.scoring_based">
+    </scoring>
+    <score-weight descriptor="D1.1" value="15" />
+    <score-weight descriptor="D1.2" value="15" />
+    <score-weight descriptor="D1.3" value="15" />
+    <score-weight descriptor="D1.4" value="15" />
+    <score-weight descriptor="D1.5" value="15" />
+    <score-weight descriptor="D1.6" value="15" />
+    <score-weight descriptor="D2" value="15" />
+    <score-weight descriptor="D3" value="15" />
+    <score-weight descriptor="D4" value="15" />
+    <score-weight descriptor="D5" value="15" />
+    <score-weight descriptor="D6" value="15" />
+    <score-weight descriptor="D7" value="15" />
+    <score-weight descriptor="D8" value="15" />
+    <score-weight descriptor="D9" value="15" />
+    <score-weight descriptor="D10" value="15" />
+    <score-weight descriptor="D11" value="15" />
+  </assessment-question>
+  
+  <assessment-question id="A09Co4" class="adequacy" use-criteria="all">
+    <definition>
+      To what extent does the Member States in the marine region use GES determinations (objectives) that are the same or similar?
+    </definition>
+    <answers>
+      <option score="1">Objectives for this criterion are the same or similar for most MS (76-100%) in the region</option>
+      <option score="0.75">Objectives for this criterion are the same or similar for many MS (51-75%) in the region</option>
+      <option score="0.5">Objectives for this criterion are the same or similar for some MS (26-50%) in the region</option>
+      <option score="0.25">Objectives for this criterion are the same or similar for only a few MS (1-25%) in the region</option>
+      <options score="0">All MS in the region use different objectives for this criterion</option>
+      <option score="0.250">Not clear</option>
+      <option score="/">Not relevant</option>
+    </answers>
+    <scoring determination-method="wise.msfd.compliance.scoring.scoring_based">
+    </scoring>
+    <score-weight descriptor="D1.1" value="10" />
+    <score-weight descriptor="D1.2" value="10" />
+    <score-weight descriptor="D1.3" value="10" />
+    <score-weight descriptor="D1.4" value="10" />
+    <score-weight descriptor="D1.5" value="10" />
     <score-weight descriptor="D1.6" value="10" />
-    <score-weight descriptor="D2" value="6" />
+    <score-weight descriptor="D2" value="10" />
     <score-weight descriptor="D3" value="10" />
-    <score-weight descriptor="D4" value="6" />
-    <score-weight descriptor="D5" value="6" />
+    <score-weight descriptor="D4" value="10" />
+    <score-weight descriptor="D5" value="10" />
     <score-weight descriptor="D6" value="10" />
-    <score-weight descriptor="D7" value="0" />
-    <score-weight descriptor="D8" value="6" />
+    <score-weight descriptor="D7" value="10" />
+    <score-weight descriptor="D8" value="10" />
     <score-weight descriptor="D9" value="10" />
-    <score-weight descriptor="D10" value="6" />
+    <score-weight descriptor="D10" value="10" />
     <score-weight descriptor="D11" value="10" />
   </assessment-question>
 
+  <assessment-question id="A09Co5" class="adequacy" use-criteria="all">
+    <definition>
+      To what extent do the Member States use threshold values agreed at EU or regional level?
+    </definition>
+    <answers>
+      <option score="1">All threshold values for this criterion are agreed at EU or regional level for most MS (76-100%) in the region</option>
+      <option score="0.75">All threshold values for this criterion are agreed at EU or regional level for many MS (51-75%) in the region</option>
+      <option score="0.5">All threshold values for this criterion are agreed at EU or regional level for some MS (26-50%) in the region</option>
+      <option score="0.25">All threshold values for this criterion are agreed at EU or regional level for only a few MS (1-25%) in the region</option>
+      <options score="0.75">Some threshold values for this criterion are agreed at EU or regional level for most MS (76-100%) in the region</option>
+      <options score="0.5">Some threshold values for this criterion are agreed at EU or regional level for many MS (51-75%) in the region</option>
+      <options score="0.25">Some threshold values for this criterion agreed at EU or regional level for some / few MS (1-50%) in the region</option>
+      <options score="0">All MS in the region use threshold values that are not agreed at EU or regional level for this criterion</option>
+      <option score="0.250">Not clear</option>
+      <option score="/">Not relevant</option>
+    </answers>
+    <scoring determination-method="wise.msfd.compliance.scoring.scoring_based">
+    </scoring>
+    <score-weight descriptor="D1.1" value="15" />
+    <score-weight descriptor="D1.2" value="15" />
+    <score-weight descriptor="D1.3" value="15" />
+    <score-weight descriptor="D1.4" value="15" />
+    <score-weight descriptor="D1.5" value="15" />
+    <score-weight descriptor="D1.6" value="15" />
+    <score-weight descriptor="D2" value="15" />
+    <score-weight descriptor="D3" value="15" />
+    <score-weight descriptor="D4" value="15" />
+    <score-weight descriptor="D5" value="15" />
+    <score-weight descriptor="D6" value="15" />
+    <score-weight descriptor="D7" value="15" />
+    <score-weight descriptor="D8" value="15" />
+    <score-weight descriptor="D9" value="15" />
+    <score-weight descriptor="D10" value="15" />
+    <score-weight descriptor="D11" value="15" />
+  </assessment-question>
+  
+  <assessment-question id="A09Co6" class="adequacy" use-criteria="all">
+    <definition>
+      To what extent are the Member States’ level of ambition for GES (proportion thresholds) the same or similar?
+    </definition>
+    <answers>
+      <option score="1">All proportion values for this criterion are the same or similar for most MS (76-100%) in the region</option>
+      <option score="0.75">All proportion values for this criterion are the same or similar for many MS (51-75%) in the region</option>
+      <option score="0.5">All proportion values for this criterion are the same or similar for some MS (26-50%) in the region</option>
+      <option score="0.25">All proportion values for this criterion are the same or similar for only a few MS (1-25%) in the region</option>
+      <options score="0.75">Some proportion values for this criterion are the same or similar for most MS (76-100%) in the region</option>
+      <options score="0.5">Some proportion values for this criterion are the same or similar for many MS (51-75%) in the region</option>
+      <options score="0.25">Some proportion values for this criterion are the same or similar for some / few MS (1-50%) in the region</option>
+      <options score="0">All MS in the region use different proportion values for this criterion</option>
+      <option score="0.250">Not clear</option>
+      <option score="/">Not relevant</option>
+    </answers>
+    <scoring determination-method="wise.msfd.compliance.scoring.scoring_based">
+    </scoring>
+    <score-weight descriptor="D1.1" value="15" />
+    <score-weight descriptor="D1.2" value="15" />
+    <score-weight descriptor="D1.3" value="15" />
+    <score-weight descriptor="D1.4" value="15" />
+    <score-weight descriptor="D1.5" value="15" />
+    <score-weight descriptor="D1.6" value="15" />
+    <score-weight descriptor="D2" value="15" />
+    <score-weight descriptor="D3" value="15" />
+    <score-weight descriptor="D4" value="15" />
+    <score-weight descriptor="D5" value="15" />
+    <score-weight descriptor="D6" value="15" />
+    <score-weight descriptor="D7" value="15" />
+    <score-weight descriptor="D8" value="15" />
+    <score-weight descriptor="D9" value="15" />
+    <score-weight descriptor="D10" value="15" />
+    <score-weight descriptor="D11" value="15" />
+  </assessment-question>
+
+  <assessment-question id="A09Co7" class="adequacy" use-criteria="all">
+    <definition>
+      To what extent is the Member States’ level of ambition for GES (GES extent threshold) the same or similar?
+    </definition>
+    <answers>
+      <option score="1">All GES extent thresholds are the same or similar in most MS (76-100%) in the region</option>
+      <option score="0.75">All GES extent thresholds are the same or similar in many MS (51-75%) in the region</option>
+      <option score="0.5">All GES extent thresholds are the same or similar in some MS (26-50%) in the region</option>
+      <option score="0.25">All GES extent thresholds are the same or similar in only a few MS (1-25%) in the region</option>
+      <options score="0.75">Some GES extent thresholds are the same or similar in most MS (76-100%) in the region</option>
+      <options score="0.5">Some GES extent thresholds are the same or similar in many MS (51-75%) in the region</option>
+      <options score="0.25">Some GES extent thresholds are the same or similar in some / few MS (1-50%) in the region</option>
+      <options score="0">All MS in the region use different GES extent thresholds</option>
+      <option score="0.250">Not clear</option>
+      <option score="/">Not relevant</option>
+    </answers>
+    <scoring determination-method="wise.msfd.compliance.scoring.scoring_based">
+    </scoring>
+    <score-weight descriptor="D1.1" value="15" />
+    <score-weight descriptor="D1.2" value="15" />
+    <score-weight descriptor="D1.3" value="15" />
+    <score-weight descriptor="D1.4" value="15" />
+    <score-weight descriptor="D1.5" value="15" />
+    <score-weight descriptor="D1.6" value="15" />
+    <score-weight descriptor="D2" value="15" />
+    <score-weight descriptor="D3" value="15" />
+    <score-weight descriptor="D4" value="15" />
+    <score-weight descriptor="D5" value="15" />
+    <score-weight descriptor="D6" value="15" />
+    <score-weight descriptor="D7" value="15" />
+    <score-weight descriptor="D8" value="15" />
+    <score-weight descriptor="D9" value="15" />
+    <score-weight descriptor="D10" value="15" />
+    <score-weight descriptor="D11" value="15" />
+  </assessment-question>
+
+  <assessment-question id="A09Co8" class="adequacy" use-criteria="all">
+    <definition>
+      To what extent is the Member State’s determination of GES the same or similar to other MS in the subregion?
+    </definition>
+    <answers>
+      <option score="1">Most (76-100%) aspects of the determination of GES for this criterion are the same in all MS in the subregion</option>
+      <option score="0.75">Many (51-75%) aspects of the determination of GES for this criterion are the same in all MS in the subregion</option>
+      <option score="0.5">Some (26-50%) aspects of the determination of GES for this criterion are the same in all MS in the subregion</option>
+      <option score="0.25">A few (1-25%) aspects of the determination of GES for this criterion are the same in all MS in the subregion</option>
+      <options score="0">All MS in the region use different determinations of GES for this criterion</option>
+      <option score="0.250">Not clear</option>
+      <option score="/">Not relevant</option>
+    </answers>
+    <scoring determination-method="wise.msfd.compliance.scoring.scoring_based">
+    </scoring>
+    <score-weight descriptor="D1.1" value="10" />
+    <score-weight descriptor="D1.2" value="10" />
+    <score-weight descriptor="D1.3" value="10" />
+    <score-weight descriptor="D1.4" value="10" />
+    <score-weight descriptor="D1.5" value="10" />
+    <score-weight descriptor="D1.6" value="10" />
+    <score-weight descriptor="D2" value="10" />
+    <score-weight descriptor="D3" value="10" />
+    <score-weight descriptor="D4" value="10" />
+    <score-weight descriptor="D5" value="10" />
+    <score-weight descriptor="D6" value="10" />
+    <score-weight descriptor="D7" value="10" />
+    <score-weight descriptor="D8" value="10" />
+    <score-weight descriptor="D9" value="10" />
+    <score-weight descriptor="D10" value="10" />
+    <score-weight descriptor="D11" value="10" />
+  </assessment-question>
 </questions>

@@ -1,35 +1,38 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <questions article='Art10'>
-
-  <assessment-question id="A10Ad1" class="adequacy" use-criteria='all-targets'>
+  <assessment-question id="A10Co1" class="adequacy" use-criteria="all">
     <definition>
-      Adequacy of status assessment: proportion of parameters/ criteria/elements with clear outcomes
+      To what extent do the Member States in the region define similar targets?
     </definition>
     <answers>
-      <option score="1">Good practice</option>
-      <option score="0.75">Adequate</option>
-      <option score="0.5">Partially adequate</option>
-      <option score="0">Inadequate</option>
+      <option score="1">All targets defined are the same/similar in most MS (76-100%) in the region</option>
+      <option score="0.75">All targets defined are the same/similar in many MS (51-75%) in the region</option>
+      <option score="0.5">All targets defined are the same/similar in some MS (26-50%) in the region</option>
+      <option score="0.25">All targets defined are the same/similar a few MS (1-25%) in the region</option>
+      <option score="0.75">Some targets defined are the same/similar in most MS (76-100%) in the region</option>
+      <option score="0.5">Some targets defined are the same/similar in many MS (51-75%) in the region</option>
+      <option score="0.25">Some targets defined are the same/similar in some / few MS (1-50%) in the region</option>
+      <option score="0">All targets are different in all MS in the region</option>
+      <option score="0.250">Not clear</option>
       <option score="/">Not relevant</option>
     </answers>
     <scoring determination-method="wise.msfd.compliance.scoring.scoring_based">
     </scoring>
-    <score-weight descriptor="D1.1" value="20" />
-    <score-weight descriptor="D1.2" value="20" />
-    <score-weight descriptor="D1.3" value="20" />
-    <score-weight descriptor="D1.4" value="20" />
-    <score-weight descriptor="D1.5" value="20" />
-    <score-weight descriptor="D1.6" value="20" />
-    <score-weight descriptor="D2" value="20" />
-    <score-weight descriptor="D3" value="20" />
-    <score-weight descriptor="D4" value="20" />
-    <score-weight descriptor="D5" value="20" />
-    <score-weight descriptor="D6" value="20" />
-    <score-weight descriptor="D7" value="20" />
-    <score-weight descriptor="D8" value="20" />
-    <score-weight descriptor="D9" value="20" />
-    <score-weight descriptor="D10" value="20" />
-    <score-weight descriptor="D11" value="20" />
+    <score-weight descriptor="D1.1" value="100" />
+    <score-weight descriptor="D1.2" value="100" />
+    <score-weight descriptor="D1.3" value="100" />
+    <score-weight descriptor="D1.4" value="100" />
+    <score-weight descriptor="D1.5" value="100" />
+    <score-weight descriptor="D1.6" value="100" />
+    <score-weight descriptor="D2" value="100" />
+    <score-weight descriptor="D3" value="100" />
+    <score-weight descriptor="D4" value="100" />
+    <score-weight descriptor="D5" value="100" />
+    <score-weight descriptor="D6" value="100" />
+    <score-weight descriptor="D7" value="100" />
+    <score-weight descriptor="D8" value="100" />
+    <score-weight descriptor="D9" value="100" />
+    <score-weight descriptor="D10" value="100" />
+    <score-weight descriptor="D11" value="100" />
   </assessment-question>
-
 </questions>
