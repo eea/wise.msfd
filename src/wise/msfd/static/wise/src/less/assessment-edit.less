@@ -183,8 +183,21 @@ span.infobox-popover {
           display: flex;
           flex-direction: column-reverse;
 
+          .process-state {
+            display: none;
+
+            &.active {
+              display: list-item;
+            }
+          }
+
           .comms {
             position: relative;
+            display: none;
+
+            &.active {
+              display: list-item;
+            }
           }
           .comm-del {
             position: absolute;
@@ -215,11 +228,39 @@ span.infobox-popover {
 
           li {
             list-style-type: none;
+            margin-top: 1em;
           }
 
-          li:not(:last-child) {
+          li.accordion:last-child {
             margin-bottom: 1em;
           }
+
+          .accordion {
+            background-color: #eee;
+            color: #444;
+            cursor: pointer;
+            padding: 0.5em;
+            width: 100%;
+            border: none;
+            text-align: left;
+            outline: none;
+            font-size: 15px;
+            transition: 0.4s;
+
+            &.active:after {
+              content: "\2212";
+            }
+          }
+
+          .accordion:after {
+            content: '\002B';
+            color: #777;
+            font-weight: bold;
+            float: right;
+            margin-left: 5px;
+          }
+
+
 
           .comment {
             color: #fff;

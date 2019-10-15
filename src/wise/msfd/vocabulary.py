@@ -1043,6 +1043,9 @@ def a2012_ges_components_art10(context):
 
 @provider(IVocabularyFactory)
 def a18_ges_component(context):
-    mc = sql2018.ART18MeasureProgressDescriptor
+    """ Vocabulary for article 18 Ges components
+    """
 
-    return db_vocab(mc, 'DescriptorCode')
+    ges_components = context.get_ges_components()
+
+    return vocab_from_values(ges_components)

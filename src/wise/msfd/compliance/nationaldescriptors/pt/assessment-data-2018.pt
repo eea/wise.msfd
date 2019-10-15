@@ -86,13 +86,20 @@
             <div>Overall adequacy conclusion 2012</div>
             <div>Adequacy change since 2012</div>
           </td>
-          <td class="overall-values fixed-right">
-            <div tal:attributes="class python: 'as-value as-value-{}'.format(assessment.phase_overall_scores.adequacy['color'])"
-              tal:content="python: assessment.phase_overall_scores.get_score_for_phase('adequacy')">65.5</div>
-            <div tal:attributes="class python: 'as-value as-value-{}'.format(assessment.phase_overall_scores.consistency['color'])"
-              tal:content="python: assessment.phase_overall_scores.get_score_for_phase('consistency')">65.5</div>
-            <div tal:attributes="class python: 'as-value as-value-{}'.format(assessment.phase_overall_scores.coherence['color'])"
-              tal:content="python: assessment.phase_overall_scores.get_score_for_phase('coherence')">65.5</div>
+          <td class="overall-values fixed-right"
+            tal:define="phase_score python: assessment.phase_overall_scores">
+            <div tal:attributes="class python: 'as-value as-value-{}'.format(phase_score.adequacy['color'])"
+                 tal:define="score python: phase_score.get_score_for_phase('adequacy');
+                    conclusion python: phase_score.adequacy['conclusion'][1]"
+              tal:content="python: '{} ({})'.format(score, conclusion)">65.5</div>
+            <div tal:attributes="class python: 'as-value as-value-{}'.format(phase_score.consistency['color'])"
+                 tal:define="score python: phase_score.get_score_for_phase('consistency');
+                    conclusion python: phase_score.consistency['conclusion'][1]"
+              tal:content="python: '{} ({})'.format(score, conclusion)">65.5</div>
+            <div tal:attributes="class python: 'as-value as-value-{}'.format(phase_score.coherence['color'])"
+                 tal:define="score python: phase_score.get_score_for_phase('coherence');
+                    conclusion python: phase_score.coherence['conclusion'][1]"
+              tal:content="python: '{} ({})'.format(score, conclusion)">65.5</div>
             <div tal:attributes="class python: 'as-value as-value-{}'.format(assessment.overall_conclusion_color)"
               tal:content="python: '{} ({})'.format(assessment.overall_score, assessment.overall_conclusion)">Very poor (1)</div>
             <div tal:attributes="class python: 'as-value as-value-{}'.format(options['conclusion_2012_color'])"

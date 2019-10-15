@@ -37,20 +37,21 @@ REGION_RE = re.compile('.+\s\((?P<region>.+)\)$')
 ANSWERS_COLOR_TABLE = {
     '1': 1,      # very good
     '0.75': 2,   # good
-    '0.5': 3,    # partial
-    '0.25': 4,   # poor
-    '0': 5,      # very poor
+    '0.5': 4,    # poor
+    '0.25': 5,   # very poor
+    '0': 3,      # not reported
     '0.250': 6,  # not clear
     '/': 7       # not relevant
 }
 
 # score_value as key, color as value
 CONCLUSION_COLOR_TABLE = {
+    5: 0,       # not relevant
     4: 1,       # very good
     3: 2,       # good
     2: 4,       # poor
     1: 5,       # very poor
-    0: 0        # not filled in
+    0: 3        # not filled in
 }
 
 CHANGE_COLOR_TABLE = {
@@ -413,12 +414,17 @@ def format_assessment_data(article, elements, questions, muids, data,
         # set the conclusion and color based on the score for each phase
         phase_scores = getattr(phase_overall_scores, phase)
         phase_score = phase_overall_scores.get_score_for_phase(phase)
-        phase_scores['conclusion'] = get_overall_conclusion(phase_score)
-        phase_scores['color'] = \
-            CONCLUSION_COLOR_TABLE[get_range_index(phase_score)]
+        if phase == 'consistency' and article == 'Art9':
+            phase_scores['conclusion'] = ('-', 'Not relevant')
+            phase_scores['color'] = 0
+        else:
+            phase_scores['conclusion'] = get_overall_conclusion(phase_score)
+            phase_scores['color'] = \
+                CONCLUSION_COLOR_TABLE[get_range_index(phase_score)]
 
     # the overall score and conclusion for the whole article 2018
-    overall_score_val, overall_score = phase_overall_scores.get_overall_score()
+    overall_score_val, overall_score = phase_overall_scores.\
+        get_overall_score(article)
     overall_conclusion = get_overall_conclusion(overall_score)
     overall_conclusion_color = CONCLUSION_COLOR_TABLE[overall_score_val]
 

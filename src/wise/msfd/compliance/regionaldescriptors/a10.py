@@ -1,4 +1,4 @@
-from collections import defaultdict, OrderedDict
+from collections import Counter, defaultdict, OrderedDict
 from itertools import chain
 from sqlalchemy import or_
 
@@ -30,11 +30,10 @@ class RegDescA102018Row(BaseRegDescRow):
             ]
             value = self.not_rep
             if data:
-                vals = set([x for x in chain(*data)])
-                crits = [
-                    get_ges_component(c).title
-                    for c in vals
-                ]
+                vals = [get_ges_component(x).title for x in chain(*data)]
+                counted = Counter(vals)
+                crits = [u'{} ({})'.format(k, v) for k, v in counted.items()]
+
                 value = newline_separated_itemlist(crits)
 
             values.append(value)

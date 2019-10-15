@@ -121,6 +121,26 @@ class RegDescA82018Row(BaseRegDescRow):
         return rows
 
     @compoundrow
+    def get_element2_row(self):
+        rows = []
+        values = []
+
+        for country_code, country_name in self.countries:
+            data = [
+                row.Element2
+                for row in self.db_data
+                if row.CountryCode == country_code
+                   and row.Element2
+            ]
+
+            value = set(data) or self.not_rep
+            values.append(newline_separated_itemlist(value))
+
+        rows.append(('', values))
+
+        return rows
+
+    @compoundrow
     def get_element_source_row(self):
         rows = []
         values = []
@@ -219,26 +239,39 @@ class RegDescA82018Row(BaseRegDescRow):
         rows = []
         threshs = self.get_unique_values('ThresholdValueSource')
 
-        values = []
-        for country_code, country_name in self.countries:
-            value = []
-            data = [
-                row.ThresholdValueSource
-                for row in self.db_data
-                if row.CountryCode == country_code
-                   and row.Parameter
-            ]
-            if not data:
-                values.append(self.not_rep)
-                continue
+        descriptor = self.descriptor_obj
+        criterions = [descriptor] + descriptor.sorted_criterions()
 
-            for threshold_source in threshs:
-                found = [x for x in data if x == threshold_source]
-                value.append(u"{} ({})".format(threshold_source, len(found)))
+        for crit in criterions:
+            values = []
 
-            values.append(newline_separated_itemlist(value))
+            for country_code, country_name in self.countries:
+                value = []
+                data = [
+                    row
+                    for row in self.db_data
+                    if row.CountryCode == country_code
+                       and row.Parameter
+                ]
+                for threshold_source in threshs:
+                    found = [
+                        x.ThresholdValueSource
+                        for x in data
+                        if x.ThresholdValueSource == threshold_source
+                           and x.Criteria == crit.id
+                    ]
+                    if found:
+                        value.append(u"{} ({})".format(
+                            threshold_source, len(found))
+                        )
 
-        rows.append((u'No. of parameters per level', values))
+                if not value:
+                    values.append(self.not_rep)
+                    continue
+
+                values.append(newline_separated_itemlist(value))
+
+            rows.append((ItemLabel(crit.name, crit.title), values))
 
         return rows
 

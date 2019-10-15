@@ -13,6 +13,7 @@
         <element name="MarineReportingUnit" getrowdata="get_mru_row">Marine reporting units</element>
         <element name="Feature" getrowdata="get_feature_row" label="features">Features</element>
         <element name="Element" getrowdata="get_element_row">Element</element>
+        <element name="Element2" getrowdata="get_element2_row">Element2</element>
         <element name="ElementSource" getrowdata="get_element_source_row">Element sources</element>
         <element name="CriteriaParameters" getrowdata="get_crit_param_row" label="parameters">Criteria and parameters used (number of parameters)</element>
         <element name="ThresholdValue" getrowdata="get_threshold_value_row">Threshold values</element>

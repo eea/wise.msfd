@@ -1,111 +1,39 @@
 
-# def alternative_based(args):
-#     true_values = map(int, filter(None, args.strip().split(' ')))
-#
-#     def calculate(values):
-#         acc = []
-#
-#         for v in values:
-#             if v in true_values:
-#                 acc.append(True)
-#             else:
-#                 acc.append(False)
-#
-#         p = get_percentage(acc)
-#
-#         range_index = get_range_index(p)
-#
-#         return range_index
-#
-#     return calculate
-
-# scores = [4, 3, 2, 1, 0]
-
-# def percentage_based(args):
-#     def calculate(value):
-#         if value:
-#             max_score = len(value) * scores[0]
-#             current_score = sum([scores[x] for x in value])
-#
-#             # max ...... 100%
-#             # curent ... x%
-#
-#             p = (current_score * 100) / max_score
-#
-#             range_index = get_range_index(p)
-#
-#             return range_index
-#
-#         return len(DEFAULT_RANGES) + 1
-#
-#     return calculate
-
-# def get_percentage(values):
-#     """ Compute percentage of True values in the list
-#     """
-#
-#     if not values:
-#         return 0
-#
-#     trues = len([x for x in values if x is True])
-#
-#     return (trues * 100.0) / len(values)
-
-# def compute_score(question, descriptor, values):
-#     weight = float(question.score_weights.get(descriptor, 10.0))
-#     scores = question.scores
-#     raw_scores = question.score_method(values, scores)
-#
-#     if not raw_scores:
-#         score_value = 4
-#     else:
-#         percentage = calculate_percentage(raw_scores)
-#         score_value = get_range_index(percentage)
-#
-#     # TODO find a proper algorithm to calculate wighted score
-#     weighted_score = score_value * weight / 4
-#     conclusion = list(reversed(CONCLUSIONS))[score_value]
-#
-#     return conclusion, score_value, weighted_score
-
-# 2012 old conclusions, not used
-# OVERALL_CONCLUSIONS = [
-#     'Good practice',
-#     'Adequate',
-#     'Partially adequate',
-#     'Inadequate',
-#     'Not reported',
-# ]
-
-# def calculate_percentage(raw_scores):
-#     # max_score ... 100%
-#     # raw_score ... x
-#
-#     raw_score = sum(raw_scores)
-#     max_score = len(raw_scores)
-#
-#     percentage = (raw_score * 100) / max_score
-#
-#     return float(percentage)
-
-# from wise.msfd.compliance.base import BaseComplianceView
-
-
 DEFAULT_RANGES = [
     [76, 100],
     [51, 75],
     [26, 50],
-    [0, 25],
+    [1, 25],
+    [0, 0]
 ]
 
 
 CONCLUSIONS = [
+    'Not relevant',
     'Very good',
     'Good',
     'Poor',
     'Very poor',
-    'Not relevant',
+    'Not reported',
 ]
+
+
+ARTICLE_WEIGHTS = {
+            'Art9': {
+                'adequacy': 3/5.0,
+                'coherence': 2/5.0
+            },
+            'Art8': {
+                'adequacy': 3/5.0,
+                'consistency': 1/5.0,
+                'coherence': 1/5.0
+            },
+            'Art10': {
+                'adequacy': 3/5.0,
+                'consistency': 1/5.0,
+                'coherence': 1/5.0
+            }
+        }
 
 
 def get_range_index(percentage):
@@ -113,9 +41,9 @@ def get_range_index(percentage):
 
     for x, r in enumerate(reversed(DEFAULT_RANGES)):
         if (p >= r[0]) and (p <= r[1]):
-            return x + 1
+            return x
 
-    return len(DEFAULT_RANGES) + 1
+    return len(DEFAULT_RANGES)
 
 
 def scoring_based(answers, scores):
@@ -157,18 +85,14 @@ class OverallScores(object):
             d.update(_init)
             setattr(self, phase, d)
 
-    def get_overall_score(self):
+    def get_overall_score(self, article):
         """ Overall conclusion art. XX: 2018
 
         :return: 80
         """
-        weights = {
-            'adequacy': 3/5.0,
-            'consistency': 1/5.0,
-            'coherence': 1/5.0
-        }
 
         overall_score = 0
+        weights = ARTICLE_WEIGHTS[article]
 
         for phase in weights:
             score = self.get_score_for_phase(phase)
@@ -296,7 +220,7 @@ class Score(object):
 
         # All answers are 'Not relevant'
         if self.percentage == '-':
-            return 0
+            return 5
 
         sv = get_range_index(self.percentage)
 
