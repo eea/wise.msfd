@@ -51,7 +51,7 @@ CONCLUSION_COLOR_TABLE = {
     3: 2,       # good
     2: 4,       # poor
     1: 5,       # very poor
-    0: 3        # not filled in
+    0: 3        # not reported
 }
 
 CHANGE_COLOR_TABLE = {
@@ -299,6 +299,10 @@ def get_crit_val(question, element, descriptor):
     is_prim = element.is_primary(descriptor)
     crit = element.id
 
+    # special case for D1.4 A09Ad2 we need to show all crits excluding D1C2
+    if descriptor.id == 'D1.4' and question.id == 'A09Ad2' and crit != 'D1C2':
+        return crit
+
     if use_crit == 'all':
         return crit
 
@@ -319,7 +323,6 @@ def format_assessment_data(article, elements, questions, muids, data,
 
     TODO: this is doing too much. Need to be simplified and refactored.
     """
-
     answers = []
     phases = ['adequacy', 'consistency', 'coherence']
     phase_overall_scores = OverallScores(phases)
@@ -435,7 +438,7 @@ def format_assessment_data(article, elements, questions, muids, data,
         recommend or '-',
         phase_overall_scores,
         overall_score,
-        overall_conclusion[1],
+        overall_conclusion,
         overall_conclusion_color
     )
 

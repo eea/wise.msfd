@@ -3,8 +3,8 @@ DEFAULT_RANGES = [
     [76, 100],
     [51, 75],
     [26, 50],
-    [1, 25],
-    [0, 0]
+    [0, 25],
+    # [0, 0]
 ]
 
 
@@ -41,9 +41,9 @@ def get_range_index(percentage):
 
     for x, r in enumerate(reversed(DEFAULT_RANGES)):
         if (p >= r[0]) and (p <= r[1]):
-            return x
+            return x + 1
 
-    return len(DEFAULT_RANGES)
+    return len(DEFAULT_RANGES) + 1
 
 
 def scoring_based(answers, scores):

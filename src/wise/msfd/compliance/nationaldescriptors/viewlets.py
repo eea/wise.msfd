@@ -26,7 +26,7 @@ class AssessmentEditTitleViewlet(BaseTitleViewlet, BaseView):
         params = {
             'article': self.article,
             'country': self.country_code,
-            'descriptor': self.descriptor,
+            'descriptor': self.descriptor_title,
             'region': self.country_region_code,
         }
 
@@ -41,7 +41,7 @@ class ArticleTitleViewlet(BaseTitleViewlet, BaseView):
         params = {
             'article': self.article,
             'country': self.country_code,
-            'descriptor': self.descriptor,
+            'descriptor': self.descriptor_title,
             'region': self.country_region_code,
         }
 
