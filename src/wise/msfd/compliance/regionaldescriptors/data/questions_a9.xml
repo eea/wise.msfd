@@ -40,7 +40,7 @@
       <option score="1">76-100% of MS in the region use this criterion</option>
       <option score="0.75">51-75% of MS in the region use this criterion</option>
       <option score="0.5">26-50% of MS in the region use this criterion</option>
-      <option score="0.25"1-25% of MS in the region use this criterion></option>
+      <option score="0.25">1-25% of MS in the region use this criterion</option>
       <option score="0.250">Not clear</option>
       <option score="/">Not relevant</option>
     </answers>
@@ -73,10 +73,10 @@
       <option score="0.75">All elements and parameters for this criterion are the same or similar for many MS (51-75%) in the region</option>
       <option score="0.5">All elements and parameters for this criterion are the same or similar for some MS (26-50%) in the region</option>
       <option score="0.25">All elements and parameters for this criterion are the same or similar for only a few MS (1-25%) in the region</option>
-      <options score="0.75">Some elements and parameters for this criterion are the same or similar for most MS (76-100%) in the region</option>
-      <options score="0.5">Some elements and parameters for this criterion are the same or similar for many MS (51-75%) in the region</option>
-      <options score="0.25">Some elements and parameters for this criterion are the same or similar for some (1-50%) in the region</option>
-      <options score="0">All elements and parameters for this criterion are different in all MS in the region</option>
+      <option score="0.75">Some elements and parameters for this criterion are the same or similar for most MS (76-100%) in the region</option>
+      <option score="0.5">Some elements and parameters for this criterion are the same or similar for many MS (51-75%) in the region</option>
+      <option score="0.25">Some elements and parameters for this criterion are the same or similar for some (1-50%) in the region</option>
+      <option score="0">All elements and parameters for this criterion are different in all MS in the region</option>
       <option score="0.250">Not clear</option>
       <option score="/">Not relevant</option>
     </answers>
@@ -109,7 +109,7 @@
       <option score="0.75">Objectives for this criterion are the same or similar for many MS (51-75%) in the region</option>
       <option score="0.5">Objectives for this criterion are the same or similar for some MS (26-50%) in the region</option>
       <option score="0.25">Objectives for this criterion are the same or similar for only a few MS (1-25%) in the region</option>
-      <options score="0">All MS in the region use different objectives for this criterion</option>
+      <option score="0">All MS in the region use different objectives for this criterion</option>
       <option score="0.250">Not clear</option>
       <option score="/">Not relevant</option>
     </answers>
@@ -142,10 +142,10 @@
       <option score="0.75">All threshold values for this criterion are agreed at EU or regional level for many MS (51-75%) in the region</option>
       <option score="0.5">All threshold values for this criterion are agreed at EU or regional level for some MS (26-50%) in the region</option>
       <option score="0.25">All threshold values for this criterion are agreed at EU or regional level for only a few MS (1-25%) in the region</option>
-      <options score="0.75">Some threshold values for this criterion are agreed at EU or regional level for most MS (76-100%) in the region</option>
-      <options score="0.5">Some threshold values for this criterion are agreed at EU or regional level for many MS (51-75%) in the region</option>
-      <options score="0.25">Some threshold values for this criterion agreed at EU or regional level for some / few MS (1-50%) in the region</option>
-      <options score="0">All MS in the region use threshold values that are not agreed at EU or regional level for this criterion</option>
+      <option score="0.75">Some threshold values for this criterion are agreed at EU or regional level for most MS (76-100%) in the region</option>
+      <option score="0.5">Some threshold values for this criterion are agreed at EU or regional level for many MS (51-75%) in the region</option>
+      <option score="0.25">Some threshold values for this criterion agreed at EU or regional level for some / few MS (1-50%) in the region</option>
+      <option score="0">All MS in the region use threshold values that are not agreed at EU or regional level for this criterion</option>
       <option score="0.250">Not clear</option>
       <option score="/">Not relevant</option>
     </answers>
@@ -178,10 +178,10 @@
       <option score="0.75">All proportion values for this criterion are the same or similar for many MS (51-75%) in the region</option>
       <option score="0.5">All proportion values for this criterion are the same or similar for some MS (26-50%) in the region</option>
       <option score="0.25">All proportion values for this criterion are the same or similar for only a few MS (1-25%) in the region</option>
-      <options score="0.75">Some proportion values for this criterion are the same or similar for most MS (76-100%) in the region</option>
-      <options score="0.5">Some proportion values for this criterion are the same or similar for many MS (51-75%) in the region</option>
-      <options score="0.25">Some proportion values for this criterion are the same or similar for some / few MS (1-50%) in the region</option>
-      <options score="0">All MS in the region use different proportion values for this criterion</option>
+      <option score="0.75">Some proportion values for this criterion are the same or similar for most MS (76-100%) in the region</option>
+      <option score="0.5">Some proportion values for this criterion are the same or similar for many MS (51-75%) in the region</option>
+      <option score="0.25">Some proportion values for this criterion are the same or similar for some / few MS (1-50%) in the region</option>
+      <option score="0">All MS in the region use different proportion values for this criterion</option>
       <option score="0.250">Not clear</option>
       <option score="/">Not relevant</option>
     </answers>
@@ -214,10 +214,10 @@
       <option score="0.75">All GES extent thresholds are the same or similar in many MS (51-75%) in the region</option>
       <option score="0.5">All GES extent thresholds are the same or similar in some MS (26-50%) in the region</option>
       <option score="0.25">All GES extent thresholds are the same or similar in only a few MS (1-25%) in the region</option>
-      <options score="0.75">Some GES extent thresholds are the same or similar in most MS (76-100%) in the region</option>
-      <options score="0.5">Some GES extent thresholds are the same or similar in many MS (51-75%) in the region</option>
-      <options score="0.25">Some GES extent thresholds are the same or similar in some / few MS (1-50%) in the region</option>
-      <options score="0">All MS in the region use different GES extent thresholds</option>
+      <option score="0.75">Some GES extent thresholds are the same or similar in most MS (76-100%) in the region</option>
+      <option score="0.5">Some GES extent thresholds are the same or similar in many MS (51-75%) in the region</option>
+      <option score="0.25">Some GES extent thresholds are the same or similar in some / few MS (1-50%) in the region</option>
+      <option score="0">All MS in the region use different GES extent thresholds</option>
       <option score="0.250">Not clear</option>
       <option score="/">Not relevant</option>
     </answers>
@@ -250,7 +250,7 @@
       <option score="0.75">Many (51-75%) aspects of the determination of GES for this criterion are the same in all MS in the subregion</option>
       <option score="0.5">Some (26-50%) aspects of the determination of GES for this criterion are the same in all MS in the subregion</option>
       <option score="0.25">A few (1-25%) aspects of the determination of GES for this criterion are the same in all MS in the subregion</option>
-      <options score="0">All MS in the region use different determinations of GES for this criterion</option>
+      <option score="0">All MS in the region use different determinations of GES for this criterion</option>
       <option score="0.250">Not clear</option>
       <option score="/">Not relevant</option>
     </answers>
