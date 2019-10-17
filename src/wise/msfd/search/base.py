@@ -18,7 +18,6 @@ from ..db import get_item_by_conditions
 from ..interfaces import IMainForm
 from .utils import get_registered_form_sections
 
-
 logger = logging.getLogger('wise.msfd')
 
 
@@ -173,18 +172,19 @@ def true(view):
 
 
 MAIN_FORMS = (
-    Tab('msfd-start', 'msfd-start', 'Start', 'About search engine', '', true),
+    Tab('msfd-start', 'msfd-start', 'Start',
+        'About <br/>search engine', '', true),
     Tab('msfd-mru', 'msfd-mru', 'Article 4', 'Marine Units', '', true),
     Tab('msfd-rc', 'msfd-rc', 'Article 6', 'Regional cooperation', '', true),
     Tab('msfd-ca', 'msfd-ca', 'Article 7', 'Competent Authorities', '', true),
     Tab('msfd-c1', 'msfd-c1',
-        'Articles 8, 9 & 10', '2012 reporting exercise', '', true),
+        'Articles <br/>8, 9 & 10', '2012 reporting exercise', '', true),
     Tab('msfd-c2', 'msfd-c2', 'Article 11', '2014 reporting exercise',
         '', true),
-    Tab('msfd-c3', 'msfd-c3', 'Articles 13 & 14', '2016 reporting exercise',
-        '', true),
-    Tab('msfd-c4', 'msfd-c4', 'Articles 8, 9 & 10', '2018 reporting exercise',
-        '', true),
+    Tab('msfd-c3', 'msfd-c3', 'Articles <br/>13 & 14',
+        '2016 reporting exercise', '', true),
+    Tab('msfd-c4', 'msfd-c4', 'Articles <br/>8, 9 & 10',
+        '2018 reporting exercise', '', true),
     Tab('msfd-c5', 'msfd-c5', 'Article 18', '2019 reporting exercise',
         '', true),
 )
@@ -224,6 +224,7 @@ class MainForm(BaseEnhancedForm, BasePublicPage, Form):
         title = [x[2] for x in self.main_forms if x[0] == self.name][0]
 
         title_from_subforms = self.find_spreadsheet_title()
+
         if title_from_subforms:
             title = title_from_subforms
 
