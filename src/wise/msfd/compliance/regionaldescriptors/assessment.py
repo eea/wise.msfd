@@ -175,10 +175,8 @@ class RegDescEditAssessmentDataForm(Form, BaseRegComplianceView):
         if hasattr(self.context, 'saved_assessment_data'):
             assessment_data = self.context.saved_assessment_data.last()
 
+        assess_date = '-'
         forms = []
-
-        is_ec_user = not self.can_comment_tl
-        is_other_tl = not (self.can_comment_tl or self.can_comment_tl)
 
         for question in self.questions:
             phase = [
@@ -189,16 +187,19 @@ class RegDescEditAssessmentDataForm(Form, BaseRegComplianceView):
                 if question.klass in v
             ][0]
 
+            # elements
             countries = self.get_available_countries()
 
             form = EmbeddedForm(self, self.request)
             form.title = question.definition
+            last_upd = '{}_{}_Last_update'.format(self.article, question.id)
+            form._last_update = assessment_data.get(last_upd, assess_date)
+            form._assessor = assessment_data.get('assessor', '-')
             form._question_type = question.klass
             form._question_phase = phase
             form._question = question
             form._elements = countries
-            form._disabled = self.is_disabled(
-                question) or is_other_tl or is_ec_user
+            form._disabled = self.is_disabled(question)
 
             fields = []
 
@@ -236,8 +237,15 @@ class RegDescEditAssessmentDataForm(Form, BaseRegComplianceView):
 
         assessment_summary_form = EmbeddedForm(self, self.request)
         assessment_summary_form.title = u"Assessment summary"
+        last_upd = '{}_assess_summary_last_upd'.format(self.article)
+        assessment_summary_form._last_update = assessment_data.get(
+            last_upd, assess_date
+        )
+        assessment_summary_form._assessor = assessment_data.get(
+            'assessor', '-'
+        )
         assessment_summary_form.subtitle = u''
-        assessment_summary_form._disabled = not self.can_comment_tl
+        assessment_summary_form._disabled = self.read_only_access
         asf_fields = []
 
         for name, title in summary_fields:

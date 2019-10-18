@@ -1,5 +1,5 @@
 <div id="wise-compliance-form" class="full-width-marker"
-  tal:define="can_comment_tl view/can_comment_tl; can_comment_ec view/can_comment_ec;"
+  tal:define="can_comment view/can_comment; plone nocall:context/@@plone"
 
   tal:attributes="id view/form_id | string:wise-compliance-form">
   <script>
@@ -26,9 +26,9 @@
           Criteria definition
         </button>
       </div>
-      <h2 tal:content="view/title" class="report-title">Title here</h2>
+      <h2 tal:content="structure view/title" class="report-title">Title here</h2>
       <h4 class="process-phase-title" >
-        Current phase: <!--<span tal:content="python: view.current_phase[1]">Adequacy</span>-->
+        Current phase: <span tal:content="python: view.current_phase[1]">Adequacy</span>
       </h4>
 
       <div id="report-data-navigation">
@@ -39,6 +39,8 @@
           </a>
         </div>
 
+        <div id="assessment-edit-infobox"></div>
+
         <div class="report-nav fixed">
           <div class="nav-wrapper">
             <div class="nav-header">
@@ -48,7 +50,6 @@
             </div>
 
             <div class="nav-body">
-
               <div class="art-title">
                 <a href="" tal:attributes="href view/_countryregion_folder/absolute_url"
                   tal:content="view/region_name"
@@ -57,7 +58,6 @@
 
               <div class="nav-articles">
                 <div tal:repeat="art view/_descriptor_folder/contentValues" class="art">
-
                   <div class="art-middle">
                     <a tal:content="art/title_or_id"
                       tal:attributes="href art/absolute_url"
@@ -79,7 +79,6 @@
             </div>
           </div>
         </div>
-
       </div>
 
       <div id="comp-national-descriptor">
@@ -109,6 +108,16 @@
                         >
                       </span>
                       <span tal:content="subform/title">Question here</span>
+                      <span style="float:right;"
+                          tal:define="last_change python: plone.toLocalizedTime(subform._last_update, long_format=True) or '-'"
+                          class="help-popover"
+                          data-trigger="hover"
+                          data-html="true"
+                          tal:attributes="title python: '';
+                          data-content python: last_change">
+                        <span tal:content="string:Last change">Last change</span>
+                        <i class="fa fa-calendar"></i>
+                      </span>
                     </h4>
 
                     <div class="fields-container">
@@ -166,21 +175,13 @@
                     </div>
                   </div>
 
-                  <div class="right discussion disc-tl" tal:define="question_id subform/_question/id | string:summary" tal:condition="can_comment_tl">
+                  <div class="right discussion disc-tl"
+                       tal:define="question_id subform/_question/id | string:summary">
                     <i class="comm-hide fa fa-window-close fa-1" title="Hide"></i>
                     <div class="comments"
                       tal:attributes="data-question-id question_id; data-thread-id string:tl"></div>
-                    <div class="textline">
-                      <textarea name="comment-text" placeholder="Write a comment..."></textarea>
-                      <button class="btn btn-primary">Post</button>
-                    </div>
-                  </div>
-
-                  <div class="right discussion disc-ec" tal:define="question_id subform/_question/id | string:summary" tal:condition="can_comment_ec">
-                    <i class="comm-hide fa fa-window-close fa-1" title="Hide"></i>
-                    <div class="comments"
-                      tal:attributes="data-question-id question_id; data-thread-id string:ec"></div>
-                    <div class="textline">
+                    <div tal:condition="python: can_comment"
+                        class="textline">
                       <textarea name="comment-text" placeholder="Write a comment..."></textarea>
                       <button class="btn btn-primary">Post</button>
                     </div>
@@ -192,7 +193,7 @@
           </metal:fields>
 
           <metal:slot fill-slot="actions">
-            <div tal:condition="view/can_comment_tl"
+            <div tal:condition="python: not(view.read_only_access)"
                 class="form-right-side">
               <metal:block use-macro="context/@@ploneform-macros/actions" />
             </div>

@@ -92,11 +92,11 @@
                       <a class="btn btn-xs btn-light" tal:attributes="href url" tal:condition="can_view_data">Overview</a>
 
                       <div style='margin-top: 0.3rem'>
-                      <a tal:attributes="href string:${url}/@@view-report-data-2012;"
-                        class="btn btn-xs btn-light" >2012 report</a>
-                      <a tal:attributes="href string:${url}/@@view-report-data-2018;"
-                        class="btn btn-xs btn-light">2018 report</a>
-                    </div>
+                        <a tal:attributes="href string:${url}/@@view-report-data-2012;"
+                          class="btn btn-xs btn-light" >2012 report</a>
+                        <a tal:attributes="href string:${url}/@@view-report-data-2018;"
+                          class="btn btn-xs btn-light">2018 report</a>
+                      </div>
                     </tal:block>
                   </td>
                 </tr>
