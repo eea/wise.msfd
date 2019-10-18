@@ -11,7 +11,13 @@
     <type type_id="wise.msfd.nationaldescriptorassessment">
       <bound-workflow workflow_id="compliance_assessment_workflow"/>
     </type>
+    <type type_id="wise.msfd.regionaldescriptorassessment">
+      <bound-workflow workflow_id="compliance_assessment_workflow"/>
+    </type>
     <type type_id="wise.msfd.countrydescriptorsfolder">
+      <bound-workflow workflow_id="compliance_nationaldescriptor_workflow"/>
+    </type>
+    <type type_id="wise.msfd.regiondescriptorsfolder">
       <bound-workflow workflow_id="compliance_nationaldescriptor_workflow"/>
     </type>
     <type type_id="wise.msfd.commentsfolder">
