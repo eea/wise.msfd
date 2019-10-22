@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <questions article='Art10'>
-  <assessment-question id="A10Co1" class="adequacy" use-criteria="all">
+  <assessment-question id="A10Co1" class="coherence" use-criteria="all">
     <definition>
       To what extent do the Member States in the region define similar targets?
     </definition>

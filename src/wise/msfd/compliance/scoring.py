@@ -18,24 +18,6 @@ CONCLUSIONS = [
 ]
 
 
-ARTICLE_WEIGHTS = {
-            'Art9': {
-                'adequacy': 3/5.0,
-                'coherence': 2/5.0
-            },
-            'Art8': {
-                'adequacy': 3/5.0,
-                'consistency': 1/5.0,
-                'coherence': 1/5.0
-            },
-            'Art10': {
-                'adequacy': 3/5.0,
-                'consistency': 1/5.0,
-                'coherence': 1/5.0
-            }
-        }
-
-
 def get_range_index(percentage):
     p = int(percentage)
 
@@ -72,7 +54,8 @@ class OverallScores(object):
     """ Class used to store the score for each phase
     """
 
-    def __init__(self, phases):
+    def __init__(self, article_weights):
+        self.article_weights = article_weights
         _init = {
             'score': 0,
             'max_score': 0,
@@ -80,7 +63,7 @@ class OverallScores(object):
             'color': 0,
         }
 
-        for phase in phases:
+        for phase in article_weights.values()[0].keys():
             d = {}
             d.update(_init)
             setattr(self, phase, d)
@@ -92,7 +75,7 @@ class OverallScores(object):
         """
 
         overall_score = 0
-        weights = ARTICLE_WEIGHTS[article]
+        weights = self.article_weights[article]
 
         for phase in weights:
             score = self.get_score_for_phase(phase)

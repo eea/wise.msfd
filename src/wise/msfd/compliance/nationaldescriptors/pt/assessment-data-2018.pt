@@ -13,7 +13,6 @@
           <th colspan="2" class="fixed-center as-ges-component as-header"></th>
           <th class="fixed-right as-header">Conclusion</th>
           <!--<th class="fixed-right as-th-score as-header">Score</th>-->
-          <!-- TODO: add "conclusion score" and "Weighting" as titles -->
         </tr>
 
         <tal:rep tal:repeat="row assessment/answers">
@@ -27,8 +26,7 @@
             <td colspan="2" class="fixed-center">
               <tal:rep tal:repeat="value row/values" >
                 <div
-                  tal:attributes="class python: 'gescomp as-value as-value-{}'.format(value[1]);
-                  colspanX python: len(assessment.gescomponents) - len(row.values) + 1;">
+                  tal:attributes="class python: 'gescomp as-value as-value-{}'.format(value[1]);">
 
                   <label for=""
                     data-trigger="hover"

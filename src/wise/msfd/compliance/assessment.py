@@ -9,6 +9,7 @@ from Products.Five.browser.pagetemplatefile import (PageTemplateFile,
                                                     ViewPageTemplateFile)
 from wise.msfd.compliance.content import AssessmentData
 from wise.msfd.compliance.interfaces import IEditAssessorsForm
+from wise.msfd.compliance.regionaldescriptors.base import BaseRegComplianceView
 from wise.msfd.compliance.utils import get_assessors, set_assessors
 from z3c.form.button import buttonAndHandler
 from z3c.form.field import Fields
@@ -107,6 +108,15 @@ class ViewAssessmentSummaryForm(BaseComplianceView):
         fields = self.summary_data
 
         return self.template(fields=fields)
+
+
+class ViewAssessmentSummaryFormRegional(BaseRegComplianceView,
+                                        ViewAssessmentSummaryForm):
+    """ Render the assessment summary, progress assessment
+    and recommendations for member state for view
+
+        Wrapper class for regional descriptors
+    """
 
 
 class EditAssessmentSummaryForm(Form, BaseComplianceView):

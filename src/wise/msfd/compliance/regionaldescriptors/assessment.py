@@ -16,7 +16,8 @@ from Products.Five.browser.pagetemplatefile import (PageTemplateFile,
 from wise.msfd.base import EmbeddedForm, MainFormWrapper
 from wise.msfd.compliance.assessment import (additional_fields,
                                              EditAssessmentSummaryForm,
-                                             PHASES, summary_fields)
+                                             PHASES, render_assessment_help,
+                                             summary_fields)
 from wise.msfd.compliance.base import get_questions
 from wise.msfd.compliance.content import AssessmentData
 from wise.msfd.gescomponents import get_descriptor  # get_descriptor_elements
@@ -47,9 +48,14 @@ class RegDescEditAssessmentDataForm(Form, BaseRegComplianceView):
     _questions = get_questions("compliance/regionaldescriptors/data")
 
     @property
+    def criterias(self):
+        return self.descriptor_obj.sorted_criterions()      # criterions
+
+    @property
     def help(self):
-        return "Help text"
-        return render_assessment_help(self.criterias, self.descriptor)
+        help_text = render_assessment_help(self.criterias, self.descriptor)
+
+        return help_text
 
     @property
     def title(self):

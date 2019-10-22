@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <questions article='Art8'>
-  <assessment-question id="A08Co1" class="adequacy" use-criteria="all">
+  <assessment-question id="A08Co1" class="coherence" use-criteria="all">
     <definition>
       To what extent do the Member States in the region report the same elements?
     </definition>
@@ -36,7 +36,7 @@
     <score-weight descriptor="D11" value="20" />
   </assessment-question>
 
-  <assessment-question id="A08Co2" class="adequacy" use-criteria="all">
+  <assessment-question id="A08Co2" class="coherence" use-criteria="all">
     <definition>
       To what extent do the Member States in the region report the same parameters?
     </definition>
@@ -72,7 +72,7 @@
     <score-weight descriptor="D11" value="15" />
   </assessment-question>
 
-  <assessment-question id="A08Co3" class="adequacy" use-criteria="all">
+  <assessment-question id="A08Co3" class="coherence" use-criteria="all">
     <definition>
       Do the Member States in the region report a similar date for achieving GES?      
     </definition>
@@ -105,7 +105,7 @@
     <score-weight descriptor="D11" value="10" />
   </assessment-question>
 
-  <assessment-question id="A08Co4" class="adequacy" use-criteria="all">
+  <assessment-question id="A08Co4" class="coherence" use-criteria="all">
     <definition>
       Do the Member States in the region report the same pressures?
     </definition>

@@ -67,6 +67,13 @@
     permission="zope2.View"
     />
 
+  <browser:page
+    for="..interfaces.IRegionalDescriptorAssessment"
+    name="view-assessment-summary"
+    class="..assessment.ViewAssessmentSummaryFormRegional"
+    permission="wise.ViewAssessmentData"
+    />
+
   <!-- comp-start2 -->
   <browser:page
     for="..interfaces.IRegionalDescriptorRegionsFolder"

@@ -63,6 +63,24 @@ CHANGE_COLOR_TABLE = {
     3: 1,
 }
 
+ARTICLE_WEIGHTS = {
+    'Art9': {
+        'adequacy': 3/5.0,
+        'consistency': 0.0,
+        'coherence': 2/5.0
+    },
+    'Art8': {
+        'adequacy': 3/5.0,
+        'consistency': 1/5.0,
+        'coherence': 1/5.0
+    },
+    'Art10': {
+        'adequacy': 3/5.0,
+        'consistency': 1/5.0,
+        'coherence': 1/5.0
+    }
+}
+
 CountryStatus = namedtuple('CountryStatus',
                            ['name', 'status', 'state_id', 'url'])
 
@@ -316,7 +334,7 @@ def get_crit_val(question, element, descriptor):
 
 
 def format_assessment_data(article, elements, questions, muids, data,
-                           descriptor):
+                           descriptor, article_weights):
     """ Builds a data structure suitable for display in a template
 
     This is used to generate the assessment data overview table for 2018
@@ -324,8 +342,8 @@ def format_assessment_data(article, elements, questions, muids, data,
     TODO: this is doing too much. Need to be simplified and refactored.
     """
     answers = []
-    phases = ['adequacy', 'consistency', 'coherence']
-    phase_overall_scores = OverallScores(phases)
+    phases = article_weights.values()[0].keys()
+    phase_overall_scores = OverallScores(article_weights)
 
     for question in questions:
         values = []
@@ -638,13 +656,15 @@ class NationalDescriptorArticleView(BaseView):
             self.descriptor_obj,
             muids=self.muids
         )
+        article_weights = ARTICLE_WEIGHTS
         assessment = format_assessment_data(
             self.article,
             elements,
             self.questions,
             self.muids,
             data,
-            self.descriptor_obj
+            self.descriptor_obj,
+            article_weights
         )
 
         score_2012 = int(round(score_2012))

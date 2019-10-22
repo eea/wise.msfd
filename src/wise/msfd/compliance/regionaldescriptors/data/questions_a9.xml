@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <questions article='Art9'>
-  <assessment-question id="A09Co1" class="adequacy" use-criteria="primary">
+  <assessment-question id="A09Co1" class="coherence" use-criteria="primary">
     <definition>
       To what extent do the Member States in the region use the same [primary] criteria?
     </definition>
@@ -32,7 +32,7 @@
     <score-weight descriptor="D11" value="20" />
   </assessment-question>
   
-  <assessment-question id="A09Co2" class="adequacy" use-criteria="secondary">
+  <assessment-question id="A09Co2" class="coherence" use-criteria="secondary">
     <definition>
       To what extent do the Member States in the region use the same secondary criteria?
     </definition>
@@ -46,25 +46,25 @@
     </answers>
     <scoring determination-method="wise.msfd.compliance.scoring.scoring_based">
     </scoring>
-    <score-weight descriptor="D1.1" value="" />
-    <score-weight descriptor="D1.2" value="" />
-    <score-weight descriptor="D1.3" value="" />
-    <score-weight descriptor="D1.4" value="" />
-    <score-weight descriptor="D1.5" value="" />
-    <score-weight descriptor="D1.6" value="" />
-    <score-weight descriptor="D2" value="" />
-    <score-weight descriptor="D3" value="" />
-    <score-weight descriptor="D4" value="" />
-    <score-weight descriptor="D5" value="" />
-    <score-weight descriptor="D6" value="" />
-    <score-weight descriptor="D7" value="" />
-    <score-weight descriptor="D8" value="" />
-    <score-weight descriptor="D9" value="" />
-    <score-weight descriptor="D10" value="" />
-    <score-weight descriptor="D11" value="" />
+    <score-weight descriptor="D1.1" value="0" />
+    <score-weight descriptor="D1.2" value="0" />
+    <score-weight descriptor="D1.3" value="0" />
+    <score-weight descriptor="D1.4" value="0" />
+    <score-weight descriptor="D1.5" value="0" />
+    <score-weight descriptor="D1.6" value="0" />
+    <score-weight descriptor="D2" value="0" />
+    <score-weight descriptor="D3" value="0" />
+    <score-weight descriptor="D4" value="0" />
+    <score-weight descriptor="D5" value="0" />
+    <score-weight descriptor="D6" value="0" />
+    <score-weight descriptor="D7" value="0" />
+    <score-weight descriptor="D8" value="0" />
+    <score-weight descriptor="D9" value="0" />
+    <score-weight descriptor="D10" value="0" />
+    <score-weight descriptor="D11" value="0" />
   </assessment-question>
 
-  <assessment-question id="A09Co3" class="adequacy" use-criteria="all">
+  <assessment-question id="A09Co3" class="coherence" use-criteria="all">
     <definition>
       To what extent do the Member States in the region use GES determinations (elements and parameters) that are the same or similar?
     </definition>
@@ -100,7 +100,7 @@
     <score-weight descriptor="D11" value="15" />
   </assessment-question>
   
-  <assessment-question id="A09Co4" class="adequacy" use-criteria="all">
+  <assessment-question id="A09Co4" class="coherence" use-criteria="all">
     <definition>
       To what extent does the Member States in the marine region use GES determinations (objectives) that are the same or similar?
     </definition>
@@ -133,7 +133,7 @@
     <score-weight descriptor="D11" value="10" />
   </assessment-question>
 
-  <assessment-question id="A09Co5" class="adequacy" use-criteria="all">
+  <assessment-question id="A09Co5" class="coherence" use-criteria="all">
     <definition>
       To what extent do the Member States use threshold values agreed at EU or regional level?
     </definition>
@@ -169,7 +169,7 @@
     <score-weight descriptor="D11" value="15" />
   </assessment-question>
   
-  <assessment-question id="A09Co6" class="adequacy" use-criteria="all">
+  <assessment-question id="A09Co6" class="coherence" use-criteria="all">
     <definition>
       To what extent are the Member States’ level of ambition for GES (proportion thresholds) the same or similar?
     </definition>
@@ -205,7 +205,7 @@
     <score-weight descriptor="D11" value="15" />
   </assessment-question>
 
-  <assessment-question id="A09Co7" class="adequacy" use-criteria="all">
+  <assessment-question id="A09Co7" class="coherence" use-criteria="all">
     <definition>
       To what extent is the Member States’ level of ambition for GES (GES extent threshold) the same or similar?
     </definition>
@@ -241,7 +241,7 @@
     <score-weight descriptor="D11" value="15" />
   </assessment-question>
 
-  <assessment-question id="A09Co8" class="adequacy" use-criteria="all">
+  <assessment-question id="A09Co8" class="coherence" use-criteria="all">
     <definition>
       To what extent is the Member State’s determination of GES the same or similar to other MS in the subregion?
     </definition>
