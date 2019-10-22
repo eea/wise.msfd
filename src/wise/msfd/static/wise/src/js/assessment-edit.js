@@ -180,8 +180,12 @@
     var existsDiscTl = $discTl.length
     var existsDiscEc = $discEc.length
 
-    $('.comm-hide').click(function(){
-      $(this).closest('.right').addClass('inactive');
+    $('.comm-hide').click(function() {
+      // Close button transformed into a 'show all comments' button
+      // $(this).closest('.right').addClass('inactive');
+      $(this).siblings('.comments').find('li').each(function(){
+        $(this).addClass('active');
+      });
     });
 
     $('.right.discussion .comments').click(function(){
