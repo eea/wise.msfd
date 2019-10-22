@@ -487,23 +487,27 @@ https://svn.eionet.europa.eu/repositories/Reportnet/Dataflows/MarineDirective/MS
     def _get_order_cols_Art8(self, descr):
         descr = descr.split('.')[0]
         criteria_priority = ('MarineReportingUnit', 'GESComponent', 'Criteria',
-                             'Feature', 'Element', 'Element2Code', 'Element2',
+                             'Feature', 'Element', 'Element2', 'Element2Code',
                              'IntegrationRuleTypeParameter')
+
+        default = ('MarineReportingUnit', 'GESComponent', 'Feature',
+                   'Element', 'Element2', 'Element2Code', 'Criteria',
+                   'IntegrationRuleTypeParameter',)
 
         order_by = {
             'D2': criteria_priority,
+            'D4': criteria_priority,
             'D5': ('MarineReportingUnit', 'GESComponent', 'Feature',
-                   'Criteria', 'Element', 'Element2Code', 'Element2',
+                   'Criteria', 'Element', 'Element2', 'Element2Code',
                    'IntegrationRuleTypeParameter',
                    ),
-            'D6': criteria_priority,
+            'D6': default,
             'D7': criteria_priority,
             'D8': criteria_priority,
             'D11': criteria_priority,
-            'default': ('MarineReportingUnit', 'GESComponent', 'Feature',
-                        'Element', 'Element2Code', 'Element2', 'Criteria',
-                        'IntegrationRuleTypeParameter',)
+            'default': default
         }
+
         return order_by.get(descr, order_by['default'])
 
     def get_data_from_view_Art8(self):
@@ -573,7 +577,7 @@ https://svn.eionet.europa.eu/repositories/Reportnet/Dataflows/MarineDirective/MS
 
         count, res = db.get_all_records_ordered(
             t,
-            ('Features', 'TargetCode', 'Element'),
+            ('TargetCode', 'Features', 'Element'),
             *conditions
         )
 
