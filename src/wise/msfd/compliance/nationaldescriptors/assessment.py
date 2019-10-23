@@ -15,17 +15,16 @@ from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 from Products.statusmessages.interfaces import IStatusMessage
 from wise.msfd.base import EditAssessmentFormWrapper as MainFormWrapper
 from wise.msfd.base import EmbeddedForm
-from wise.msfd.compliance.assessment import (PHASES, additional_fields,
+from wise.msfd.compliance.assessment import (EditAssessmentDataFormMain,
+                                             PHASES, additional_fields,
                                              render_assessment_help,
                                              summary_fields)
 from wise.msfd.compliance.base import get_questions
 from wise.msfd.compliance.content import AssessmentData
 from wise.msfd.compliance.scoring import Score
-from wise.msfd.gescomponents import get_descriptor  # get_descriptor_elements
 from wise.msfd.translation import get_translated, retrieve_translation
 from z3c.form.button import buttonAndHandler
 from z3c.form.field import Fields
-from z3c.form.form import Form
 
 from .base import BaseView
 
@@ -71,7 +70,7 @@ class ViewAssessmentEditHistory(BaseView, BrowserView):
         )
 
 
-class EditAssessmentDataForm(Form, BaseView):
+class EditAssessmentDataForm(BaseView, EditAssessmentDataFormMain):
     """ Edit the assessment for a national descriptor, for a specific article
     """
     name = 'art-view'
@@ -81,14 +80,6 @@ class EditAssessmentDataForm(Form, BaseView):
     year = session_name = '2018'
     template = ViewPageTemplateFile("./pt/edit-assessment-data.pt")
     _questions = get_questions()
-
-    @property
-    def criterias(self):
-        return self.descriptor_obj.sorted_criterions()      # criterions
-
-    @property
-    def help(self):
-        return render_assessment_help(self.criterias, self.descriptor)
 
     @property
     def title(self):
@@ -223,41 +214,6 @@ class EditAssessmentDataForm(Form, BaseView):
         self.request.response.setHeader('Content-Type', 'text/html')
 
         return self.request.response.redirect(url)
-
-    def is_disabled(self, question):
-        """ Returns True if question is not editable
-        """
-
-        if self.read_only_access:
-            return True
-
-        state, _ = self.current_phase
-        is_disabled = question.klass not in PHASES.get(state, ())
-
-        return is_disabled
-
-    @property
-    def fields(self):
-        if not self.subforms:
-            self.subforms = self.get_subforms()
-
-        fields = []
-
-        for subform in self.subforms:
-            fields.extend(subform.fields._data_values)
-
-        return Fields(*fields)
-
-    @property       # TODO: memoize
-    def descriptor_obj(self):
-        return get_descriptor(self.descriptor)
-
-    # TODO: use memoize
-    @property
-    def questions(self):
-        qs = self._questions[self.article]
-
-        return qs
 
     def get_subforms(self):
         """ Build a form of options from a tree of options

@@ -11,6 +11,7 @@ from wise.msfd.compliance.content import AssessmentData
 from wise.msfd.compliance.interfaces import IEditAssessorsForm
 from wise.msfd.compliance.regionaldescriptors.base import BaseRegComplianceView
 from wise.msfd.compliance.utils import get_assessors, set_assessors
+from wise.msfd.gescomponents import get_descriptor  # get_descriptor_elements
 from z3c.form.button import buttonAndHandler
 from z3c.form.field import Fields
 from z3c.form.form import Form
@@ -189,6 +190,51 @@ class EditAssessmentSummaryForm(Form, BaseComplianceView):
 
         return Form.render(self)
 
+
+class EditAssessmentDataFormMain(Form):
+
+    @property
+    def criterias(self):
+        return self.descriptor_obj.sorted_criterions()      # criterions
+
+    @property
+    def help(self):
+        return render_assessment_help(self.criterias, self.descriptor)
+
+    def is_disabled(self, question):
+        """ Returns True if question is not editable
+        """
+
+        if self.read_only_access:
+            return True
+
+        state, _ = self.current_phase
+        is_disabled = question.klass not in PHASES.get(state, ())
+
+        return is_disabled
+
+    @property
+    def fields(self):
+        if not self.subforms:
+            self.subforms = self.get_subforms()
+
+        fields = []
+
+        for subform in self.subforms:
+            fields.extend(subform.fields._data_values)
+
+        return Fields(*fields)
+
+    @property       # TODO: memoize
+    def descriptor_obj(self):
+        return get_descriptor(self.descriptor)
+
+    # TODO: use memoize
+    @property
+    def questions(self):
+        qs = self._questions[self.article]
+
+        return qs
 
 Cell = namedtuple('Cell', ['text', 'rowspan'])
 

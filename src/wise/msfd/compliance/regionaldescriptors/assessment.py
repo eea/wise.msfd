@@ -15,6 +15,7 @@ from Products.Five.browser.pagetemplatefile import (PageTemplateFile,
                                                     ViewPageTemplateFile)
 from wise.msfd.base import EmbeddedForm, MainFormWrapper
 from wise.msfd.compliance.assessment import (additional_fields,
+                                             EditAssessmentDataFormMain,
                                              EditAssessmentSummaryForm,
                                              PHASES, render_assessment_help,
                                              summary_fields)
@@ -32,13 +33,13 @@ from .base import BaseRegComplianceView
 logger = logging.getLogger('wise.msfd')
 
 
-# TODO find a better way
 class RegDescEditAssessmentSummaryForm(BaseRegComplianceView,
                                        EditAssessmentSummaryForm):
     """ Needed to override EditAssessmentSummaryForm's methods """
 
 
-class RegDescEditAssessmentDataForm(Form, BaseRegComplianceView):
+class RegDescEditAssessmentDataForm(BaseRegComplianceView,
+                                    EditAssessmentDataFormMain):
     """ Edit the assessment for a regional descriptor, for a specific article
     """
 
@@ -48,36 +49,12 @@ class RegDescEditAssessmentDataForm(Form, BaseRegComplianceView):
     _questions = get_questions("compliance/regionaldescriptors/data")
 
     @property
-    def criterias(self):
-        return self.descriptor_obj.sorted_criterions()      # criterions
-
-    @property
-    def help(self):
-        help_text = render_assessment_help(self.criterias, self.descriptor)
-
-        return help_text
-
-    @property
     def title(self):
         return "Edit {}'s Assessment for {}/{}".format(
             self.country_region_code,
             self.descriptor,
             self.article,
         )
-
-    def _can_comment(self, folder_id):
-        return True
-        folder = self.context[folder_id]
-
-        return checkPermission('zope2.View', folder)
-
-    @property
-    def can_comment_tl(self):
-        return self._can_comment('tl')
-
-    @property
-    def can_comment_ec(self):
-        return self._can_comment('ec')
 
     @buttonAndHandler(u'Save', name='save')
     def handle_save(self, action):
@@ -147,29 +124,6 @@ class RegDescEditAssessmentDataForm(Form, BaseRegComplianceView):
         disabled = question.klass not in PHASES.get(state, ())
 
         return disabled
-
-    @property
-    def fields(self):
-        if not self.subforms:
-            self.subforms = self.get_subforms()
-
-        fields = []
-
-        for subform in self.subforms:
-            fields.extend(subform.fields._data_values)
-
-        return Fields(*fields)
-
-    @property       # TODO: memoize
-    def descriptor_obj(self):
-        return get_descriptor(self.descriptor)
-
-    # TODO: use memoize
-    @property
-    def questions(self):
-        qs = self._questions[self.article]
-
-        return qs
 
     def get_subforms(self):
         """ Build a form of options from a tree of options

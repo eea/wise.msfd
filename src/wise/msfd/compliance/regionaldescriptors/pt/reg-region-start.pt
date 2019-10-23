@@ -70,7 +70,8 @@
                       can_view_data python:view.can_view_assessment_data(assessment);
                       can_edit_data python:view.can_view_edit_assessment_data(assessment)">
 
-                    <a tal:attributes="class css_class; href string:${url}/@@edit-assessment-data-2018;">
+                    <a tal:attributes="class css_class; href string:${url}/@@edit-assessment-data-2018;"
+                      tal:condition="can_edit_data">
                       <span class="fa fa-edit"></span>Assessment:
                       <span class="as-state-label" tal:content="python: view.get_status(assessment)">State</span>
                       <span title="New comments"
