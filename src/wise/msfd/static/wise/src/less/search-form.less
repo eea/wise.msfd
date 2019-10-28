@@ -45,23 +45,24 @@
     // margin-top: 30px;
     h3#article-id {
       font-size: 14px;
-      /* text-align: right; */
       background: #52616f;
       padding: 0.6em 1rem;
-      /* margin-top: -1.4rem; */
       color: white;
       font-weight: bolder;
-      float: right;
-      margin-bottom: 0;
+      margin: 0px;
+      //margin-bottom: 0;
       /* text-decoration: underline; */
+      /* text-align: right; */
     }
     h3#article-item-id {
-      padding: 2rem 1rem 2rem 2rem;
+      margin-top: 1rem;
+      padding: 1rem 1rem 1rem 2rem;
       background: #0071b3;
       margin: 0;
       font-weight: 900;
       color: white;
-      margin-top: -1.4rem;
+      border-top-left-radius: 1rem;
+      border-top-right-radius: 1rem;
     }
   }
 
@@ -74,10 +75,10 @@
   }
 
   .pagination-text {
-    display: block;
+    display: inline-block;
     margin-bottom: 2rem;
     margin-top: 2rem;
-    text-align: center;
+    //text-align: center;
 
     & > span {
       color: #444;
@@ -86,7 +87,7 @@
 
     &.bottom {
       margin: 0;
-      padding: 1rem;
+      padding: 0.2rem 1rem;
     }
 
     .pagination-input {
@@ -99,6 +100,7 @@
     }
 
     .pagination-result {
+      background-color: white;
       text-decoration: underline;
       cursor: pointer;
       display: inline-block;
@@ -468,15 +470,24 @@
     float: left;
   }
 
+  div#item-title-wrapper {
+    text-align: center;
+    display: inline-block;
+    width: 80%;
+    margin: 0 8.3rem auto;
+  }
+
+  #form-data-primary {
+    border-top: solid 1px #EEE;
+  }
+
   #marine-widget-top {
     // margin-top: 10px;
     // margin-bottom: 16px;
     position: relative;
-    padding: 0.3rem 2rem;
+    padding: 0.2rem 1rem;
     margin: 0;
     background-color: #EEE;
-    border-bottom-left-radius: 1rem;
-    border-bottom-right-radius: 1rem;
 
     #form-buttons-prev-top {
       /*width: 30%;*/
@@ -491,6 +502,12 @@
       /*margin-left: 20px;*/
       /*position:absolute;
       right: 0;*/
+    }
+
+    #marine-unit-trigger {
+      .text-trigger {
+        background-color: white;
+      }
     }
 
     .widget {
@@ -518,9 +535,9 @@
 
       > h4 {
         margin-bottom: 2px;
-        vertical-align: bottom;
-        display: block;
-        float: left;
+        //vertical-align: bottom;
+        display: inline-block;
+        //float: left;
         margin-top: 5px;
         margin-right: 0.5em;
         font-size: 1em;
@@ -533,7 +550,7 @@
       display: block;
       width: 100%;
       // margin-top: 1.5rem;
-      text-align: justify;
+      text-align: center;
 
     }
 
@@ -600,10 +617,10 @@
 }
 
 .form-buttons-next-row {
-  position: absolute;
-  margin: 0;
-  top: 0;
-  right: 0;
+  //position: absolute;
+  //margin: 0;
+  //top: 0;
+  //right: 0;
   display: inline-block;
 
   .label {
@@ -612,9 +629,9 @@
 }
 
 .form-buttons-prev-row {
-  position: absolute;
-
-  margin: 0 0 5px;
+  //position: absolute;
+  //margin: 0 0 5px;
+  display: inline-block;
 
   .label {
     padding: 0;
@@ -623,13 +640,13 @@
 }
 
 .prev-next-row {
-  margin: 0;
+  background-color: #EEE;
+  padding: 0.2rem 1rem;
   text-align: center;
   position: relative;
-  display: block;
   height: auto;
-  padding-bottom: 20px;
-  margin-top: 15px;
+  //padding-bottom: 20px;
+  //margin-top: 15px;
 
   > span {
     display: block;

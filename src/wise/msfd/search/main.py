@@ -66,6 +66,16 @@ class CompetentAuthorityItemDisplay(ItemDisplayForm):
     blacklist = ('Import_Time', 'Import_FileName')
     use_blacklist = False
 
+    def get_current_country(self):
+        country_code = self.item.C_CD
+
+        if not country_code:
+            return ''
+
+        country = self.print_value(country_code)
+
+        return country
+
     def get_db_results(self):
         page = self.get_page()
 
@@ -154,6 +164,16 @@ class RegionalCoopItemDisplay(ItemDisplayForm):
     # blacklist = ('MSFD4_Import_ID', 'MSFD4_Import_Time',
     #              'MSFD4_Import_FileName')
     # use_blacklist = False
+
+    def get_current_country(self):
+        country_code = self.item.MSFD4_Import_ReportingCountry
+
+        if not country_code:
+            return ''
+
+        country = self.print_value(country_code)
+
+        return country
 
     def get_db_results(self):
         page = self.get_page()

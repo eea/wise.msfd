@@ -13,7 +13,7 @@ from wise.msfd.compliance.interfaces import IEditAssessmentForm
 from z3c.form.field import Fields
 from z3c.form.form import Form
 
-from . import sql
+from . import sql, sql2018
 from .db import (get_all_specific_columns, get_available_marine_unit_ids,
                  threadlocals, use_db_session)
 from .interfaces import IEmbeddedForm, IMainForm, IMarineUnitIDSelect
@@ -93,8 +93,42 @@ class BaseUtil(object):
 
         return mid
 
-    @use_db_session('2012')
     def get_current_country(self):
+        country_2012 = self.get_current_country_2012()
+
+        if country_2012:
+            return country_2012
+
+        country_2018 = self.get_current_country_2018()
+
+        if country_2018:
+            return country_2018
+
+        return ''
+
+    @use_db_session('2018')
+    def get_current_country_2018(self):
+        mc = sql2018.MarineReportingUnit
+        try:
+            mru = self.get_marine_unit_id()
+        except:
+            return ''
+
+        count, data = get_all_specific_columns(
+            [mc.CountryCode],
+            mc.MarineReportingUnitId == mru
+        )
+
+        if not count:
+            return ''
+
+        country_code = data[0]
+        print_value = self.print_value(country_code.CountryCode)
+
+        return print_value
+
+    @use_db_session('2012')
+    def get_current_country_2012(self):
         """ Get the country for the current selected MarineUnitID
 
         :return: Germany

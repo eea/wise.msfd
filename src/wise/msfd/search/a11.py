@@ -9,7 +9,7 @@ from z3c.form.field import Fields
 
 from . import interfaces
 from .. import db, sql
-from ..base import EmbeddedForm
+from ..base import EmbeddedForm, MarineUnitIDSelectForm
 from ..interfaces import IMarineUnitIDsSelect
 from ..utils import all_values_from_field, db_objects_to_dict, group_data
 from .base import ItemDisplay, ItemDisplayForm, MainForm, MultiItemDisplayForm
@@ -210,17 +210,23 @@ class A11MSubMemberStateForm(EmbeddedForm):
         return [count, mrus]
 
 
-class A11MProgMarineUnitIdForm(EmbeddedForm):
-    fields = Fields(IMarineUnitIDsSelect)
-    fields['marine_unit_ids'].widgetFactory = CheckBoxFieldWidget
+class A11MProgMarineUnitIdForm(MarineUnitIDSelectForm):
+    # fields = Fields(IMarineUnitIDsSelect)
+    # fields['marine_unit_ids'].widgetFactory = CheckBoxFieldWidget
+
+    def get_available_marine_unit_ids(self):
+        return self.context.get_available_marine_unit_ids()
 
     def get_subform(self):
         return A11MonProgDisplay(self, self.request)
 
 
-class A11MSubMarineUnitIdForm(EmbeddedForm):
-    fields = Fields(IMarineUnitIDsSelect)
-    fields['marine_unit_ids'].widgetFactory = CheckBoxFieldWidget
+class A11MSubMarineUnitIdForm(MarineUnitIDSelectForm):
+    # fields = Fields(IMarineUnitIDsSelect)
+    # fields['marine_unit_ids'].widgetFactory = CheckBoxFieldWidget
+
+    def get_available_marine_unit_ids(self):
+        return self.context.get_available_marine_unit_ids()
 
     def get_subform(self):
         return A11MonSubDisplay(self, self.request)
@@ -232,11 +238,37 @@ class A11MonProgDisplay(ItemDisplayForm):
     extra_data_template = ViewPageTemplateFile('pt/extra-data-pivot.pt')
     mapper_class = sql.MSFD11MonitoringProgramme
     order_field = 'ID'
-    css_class = 'left-side-form'
+    # css_class = 'left-side-form'
 
     blacklist = ['Q5d_AdequacyForAssessmentGES',
                  'Q6b_AdequacyForAssessmentTargets']
     use_blacklist = True
+
+    def get_current_country(self):
+        """ Calls the get_current_country from super class (BaseUtil)
+            which is a general implementation for getting the country.
+            Some MRUs are missing from the t_MSFD4_GegraphicalAreasID,
+            and we need an alternative way to retrieve the country
+        """
+
+        country = super(A11MonProgDisplay, self).get_current_country()
+
+        if country:
+            return country
+
+        monitoring_programme = self.item.ID
+        mc = sql.MSFD11MON
+        mc_join = sql.MSFD11MP
+
+        _, res = db.get_all_records_outerjoin(
+            mc,
+            mc_join,
+            mc_join.MonitoringProgramme == monitoring_programme
+        )
+
+        country = self.print_value(res[0].MemberState)
+
+        return country
 
     def download_results(self):
         mp_type_ids = self.context.context.get_mp_type_ids()
@@ -305,7 +337,7 @@ class A11MonProgDisplay(ItemDisplayForm):
         ggp = self.context.context.context
         needed_ID = self.context.context.get_mp_type_ids()
         mon_prog_ids = ggp.context.get_monitoring_programme_ids()
-        muids = self.get_form_data_by_key(self, 'marine_unit_ids')
+        muids = [self.get_form_data_by_key(self, 'marine_unit_id')]
 
         s = sql.MSFD11MonitoringProgrammeMarineUnitID
         count, marine_units = db.get_all_records_outerjoin(
@@ -553,16 +585,41 @@ class A11MonSubDisplay(MultiItemDisplayForm):
 
     mapper_class = sql.MSFD11ReferenceSubProgramme
     order_field = "ID"
-    css_class = 'left-side-form'
+    # css_class = 'left-side-form'
 
     blacklist = ['MP']
     use_blacklist = True
+
+    def get_current_country(self):
+        """ Calls the get_current_country from super class (BaseUtil)
+            which is a general implementation for getting the country.
+            Some MRUs are missing from the t_MSFD4_GegraphicalAreasID,
+            and we need an alternative way to retrieve the country
+        """
+
+        country = super(A11MonSubDisplay, self).get_current_country()
+
+        if country:
+            return country
+
+        sub_programme = self.item.ID
+        mc = sql.MSFD11MONSub
+
+        _, res = db.get_related_record(
+            mc,
+            'SubProgramme',
+            sub_programme
+        )
+
+        country = self.print_value(res.MemberState)
+
+        return country
 
     def download_results(self):
         mp_type_ids = self.context.context.get_mp_type_ids()
         regions = self.get_form_data_by_key(self, 'region_subregions')
         countries = self.get_form_data_by_key(self, 'member_states')
-        marine_unit_ids = self.get_form_data_by_key(self, 'marine_unit_ids')
+        marine_unit_ids = [self.get_form_data_by_key(self, 'marine_unit_id')]
         mptypes_subprog = self.context.context.context.context. \
             get_mptypes_subprog()
 
@@ -675,14 +732,7 @@ class A11MonSubDisplay(MultiItemDisplayForm):
 
         regions = self.get_form_data_by_key(self, 'region_subregions')
         countries = self.get_form_data_by_key(self, 'member_states')
-        marine_unit_id = self.get_form_data_by_key(self, 'marine_unit_ids')
-
-        # logger.info('\n\nregions: %s - %s', len(regions), regions)
-        # logger.info('countries: %s - %s', len(countries), countries)
-        # logger.info('mp_types: %s - %s', len(needed_ids), needed_ids)
-        # logger.info('marine_unit_id: %s - %s',
-        #             len(marine_unit_id), marine_unit_id)
-        # logger.info('mptypes_subprog: %s', mptypes_subprog)
+        marine_unit_id = [self.get_form_data_by_key(self, 'marine_unit_id')]
 
         count, mon_prog_ids = db.get_all_records_outerjoin(
             sql.MSFD11MonitoringProgrammeMarineUnitID,

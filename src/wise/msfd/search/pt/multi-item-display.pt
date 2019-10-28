@@ -6,38 +6,41 @@
   <metal:block use-macro="context/@@ploneform-macros/fields" />
 
   <tal:block tal:condition="python: view.item ">
+    <div id="item-title-wrapper">
+      <h3 id="article-item-id" tal:condition="view/get_current_country"
+          tal:content="structure view/get_current_country">Country</h3>
       <h3 id="article-id" tal:content="view/get_record_title">Article title here</h3>
-      <h3 id="article-item-id" tal:content="structure view/get_current_country">Country</h3>
       <div class="prev-next-row"
                tal:define="actions view/actions;
                       next actions/next | nothing;
                               prev actions/prev | nothing">
 
-          <div tal:condition="prev"  class="form-buttons-prev-row">
+          <div tal:condition="prev" class="form-buttons-prev-row">
               <button
                       type="submit"
                       name="form.buttons.prev"
-                      class="form-buttons-prev submit-widget button-field btn btn-default pagination-prev fa fa-angle-left"
+                      class="form-buttons-prev submit-widget button-field btn btn-default btn-sm pagination-prev fa fa-angle-left"
                       value="">
               </button>
           </div>
 
           <span tal:condition="python: view.count > 1"
               class="pagination-text bottom">Result <span tal:content="python: int(view.data.get('page', '0')) + 1">1</span> of <span tal:content="view/count"></span>
-      </span>
+          </span>
 
           <div tal:condition="next" class="form-buttons-next-row">
               <button
                       type="submit"
                       name="form.buttons.next"
-                      class="form-buttons-next submit-widget button-field btn btn-default fa fa-angle-right" value="">
+                      class="form-buttons-next submit-widget button-field btn btn-default btn-sm fa fa-angle-right" value="">
               </button>
           </div>
       </div>
+    </div>
   </tal:block>
 
-  <div tal:content="structure view/data_template | nothing"></div>
-  <div tal:content="structure view/extras | nothing"></div>
+  <div id="form-data-primary" tal:content="structure view/data_template | nothing"></div>
+  <div id="form-data-extras" tal:content="structure view/extras | nothing"></div>
 
   <tal:block tal:define="sections view/get_sections | nothing">
 
@@ -77,19 +80,20 @@
        tal:define="actions view/actions; next actions/next | nothing; prev actions/prev | nothing">
         <div tal:condition="prev" class="form-buttons-prev-row">
           <div class="widget">
-            <button type="submit"  name="form.buttons.prev" class="form-buttons-prev submit-widget button-field btn btn-default pagination-prev fa fa-angle-left" value="">
+            <button type="submit"  name="form.buttons.prev" class="form-buttons-prev submit-widget button-field btn btn-default btn-sm pagination-prev fa fa-angle-left" value="">
             </button>
           </div>
         </div>
 
-          <span tal:condition="python: view.count > 1"
-              class="pagination-text bottom">Result <span tal:content="python: int(view.data.get('page', '0')) + 1">1</span> of <span tal:content="view/count"></span></span>
+        <span tal:condition="python: view.count > 1"
+            class="pagination-text bottom">Result <span tal:content="python: int(view.data.get('page', '0')) + 1">1</span> of <span tal:content="view/count"></span>
+        </span>
 
         <div tal:condition="next" class="form-buttons-next-row">
           <div class="widget">
             <button type="submit"
               name="form.buttons.next"
-              class="form-buttons-next submit-widget button-field btn btn-default fa fa-angle-right"
+              class="form-buttons-next submit-widget button-field btn btn-default btn-sm fa fa-angle-right"
               value="">
             </button>
           </div>

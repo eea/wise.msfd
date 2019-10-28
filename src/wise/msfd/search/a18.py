@@ -37,6 +37,19 @@ class A18MeasureProgressDisplay(ItemDisplayForm):
     mapper_class = sql2018.ART18MeasureProgres
     css_class = 'left-side-form'
 
+    def get_current_country(self):
+        report_id = self.item.IdReportedInformation
+
+        _, res = db.get_related_record(
+            sql2018.ReportedInformation,
+            'Id',
+            report_id
+        )
+
+        country = self.print_value(res.CountryCode)
+
+        return country
+
     def download_results(self):
         mc_descr = sql2018.ART18MeasureProgressDescriptor
         mc_countries = sql2018.ReportedInformation
@@ -155,6 +168,19 @@ class A18CategoryDisplay(ItemDisplayForm):
     extra_data_template = ViewPageTemplateFile('pt/extra-data-pivot.pt')
     mapper_class = sql2018.ART18Category1bNotWFD
     css_class = 'left-side-form'
+
+    def get_current_country(self):
+        report_id = self.item.IdReportedInformation
+
+        _, res = db.get_related_record(
+            sql2018.ReportedInformation,
+            'Id',
+            report_id
+        )
+
+        country = self.print_value(res.CountryCode)
+
+        return country
 
     def download_results(self):
         mc_countries = sql2018.ReportedInformation

@@ -8,7 +8,7 @@ from z3c.form.browser.checkbox import CheckBoxFieldWidget
 from z3c.form.field import Fields
 
 from . import interfaces
-from .. import db, sql2018
+from .. import db, sql, sql2018
 from ..base import EmbeddedForm, MarineUnitIDSelectForm
 from ..sql_extra import MSFD4GeographicalAreaID
 from ..utils import all_values_from_field, db_objects_to_dict, group_data
@@ -24,6 +24,24 @@ class Art9Display(ItemDisplayForm):
     css_class = 'left-side-form'
     extra_data_template = ViewPageTemplateFile('pt/extra-data-pivot.pt')
     show_extra_data = True
+
+    def get_current_country(self):
+        id_ges_comp = getattr(self.item, 'IdGESComponent', None)
+        if not id_ges_comp:
+            id_ges_comp = self.item.Id
+
+        mc = sql2018.ReportedInformation
+        mc_join = sql2018.ART9GESGESComponent
+
+        _, res = db.get_all_records_join(
+            [mc.CountryCode],
+            mc_join,
+            mc_join.Id == id_ges_comp
+        )
+
+        country = self.print_value(res[0].CountryCode)
+
+        return country
 
     def download_results(self):
         parent = self.context.context.context
@@ -184,6 +202,32 @@ class A2018FeatureA9(EmbeddedForm):
 class A2018Art10Display(ItemDisplayForm):
     extra_data_template = ViewPageTemplateFile('pt/extra-data-pivot.pt')
     target_ids = tuple()
+
+    def get_current_country(self):
+        """ Calls the get_current_country from super class (BaseUtil)
+            which is a general implementation for getting the country.
+            Some MRUs are missing from the t_MSFD4_GegraphicalAreasID,
+            and we need an alternative way to retrieve the country
+        """
+
+        country = super(A2018Art10Display, self).get_current_country()
+
+        if country:
+            return country
+
+        monitoring_programme = self.item.ID
+        mc = sql.MSFD11MON
+        mc_join = sql.MSFD11MP
+
+        _, res = db.get_all_records_outerjoin(
+            mc,
+            mc_join,
+            mc_join.MonitoringProgramme == monitoring_programme
+        )
+
+        country = self.print_value(res[0].MemberState)
+
+        return country
 
     def download_results(self):
         data = self.get_flattened_data(self)
@@ -1208,6 +1252,19 @@ class A2018IndicatorsDisplay(ItemDisplayForm):
     conditions_ind_assess = list()
 
     css_class = "left-side-form"
+
+    def get_current_country(self):
+        report_id = self.item.IdReportedInformation
+
+        _, res = db.get_related_record(
+            sql2018.ReportedInformation,
+            'Id',
+            report_id
+        )
+
+        country = self.print_value(res.CountryCode)
+
+        return country
 
     def download_results(self):
         parent = self.context.context.context

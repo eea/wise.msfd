@@ -6,10 +6,11 @@
   <metal:block use-macro="context/@@ploneform-macros/fields" />
 
   <tal:block tal:condition="python: view.item ">
-      <h3 id="article-id" tal:content="view/get_record_title">Article title here</h3>
+    <div id="item-title-wrapper">
       <h3 id="article-item-id" tal:condition="view/get_current_country"
-          tal:content="structure view/get_current_country">Germany</h3>
-        <div class="clear-break"><!-- --></div>
+          tal:content="structure view/get_current_country">Country</h3>
+      <h3 id="article-id" tal:content="view/get_record_title">Article title here</h3>
+      <div class="clear-break"><!-- --></div>
       <div class="prev-next-row"
                tal:define="actions view/actions;
                       next actions/next | nothing;
@@ -36,10 +37,11 @@
               </button>
           </div>
       </div>
+    </div>
   </tal:block>
 
-  <div tal:content="structure view/data_template | nothing"></div>
-  <div tal:content="structure view/extras | nothing"></div>
+  <div id="form-data-primary" tal:content="structure view/data_template | nothing"></div>
+  <div id="form-data-extras" tal:content="structure view/extras | nothing"></div>
 
   <div class="prev-next-row"
            tal:define="actions view/actions;

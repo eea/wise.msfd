@@ -8,7 +8,7 @@ from z3c.form.field import Fields
 
 from . import interfaces
 from .. import db, sql
-from ..base import EmbeddedForm
+from ..base import EmbeddedForm, MarineUnitIDSelectForm
 from ..db import get_all_records, get_all_records_join
 from ..interfaces import IMarineUnitIDsSelect
 from .. labels import COMMON_LABELS, GES_LABELS
@@ -66,13 +66,16 @@ class MemberStatesForm(EmbeddedForm):
         return [count, [x[0] for x in res]]
 
 
-class MarineUnitIDsForm(EmbeddedForm):
+class MarineUnitIDsForm(MarineUnitIDSelectForm):
     """ Select the MarineUnitID based on MemberState, Region and Area
     """
 
     # TODO: properly show only available marine unit ids
-    fields = Fields(IMarineUnitIDsSelect)
-    fields['marine_unit_ids'].widgetFactory = CheckBoxFieldWidget
+    # fields = Fields(IMarineUnitIDsSelect)
+    # fields['marine_unit_ids'].widgetFactory = CheckBoxFieldWidget
+
+    def get_available_marine_unit_ids(self):
+        return self.context.get_available_marine_unit_ids()
 
     def get_subform(self):
         mc = sql.MSFD13ReportingInfo
@@ -80,8 +83,8 @@ class MarineUnitIDsForm(EmbeddedForm):
 
         count, res = db.get_all_records(
             mc.ID,
-            and_(mc.MarineUnitID.in_(self.data.get('marine_unit_ids', [])),
-                 mc.ReportType == report_type)
+            mc.MarineUnitID == self.data.get('marine_unit_id', ''),
+            mc.ReportType == report_type
         )
         self.data['report_ids'] = [x[0] for x in res]
 
@@ -117,8 +120,6 @@ class A1314ItemDisplay(ItemDisplayForm):
     """
     extra_data_template = ViewPageTemplateFile('pt/extra-data-item.pt')
     pivot_template = ViewPageTemplateFile('pt/extra-data-pivot-notselect.pt')
-
-    css_class = "left-side-form"
 
     mapper_class = sql.MSFD13MeasuresInfo
     order_field = 'ID'
