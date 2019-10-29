@@ -186,7 +186,7 @@ SELECT ?file
 WHERE {
 ?file terms:date ?date .
 ?file cr:mediaType 'text/xml'.
-FILTER regex(str(?file), '%s')
+FILTER regex(str(?file), '/%s')
 }
 ORDER BY DESC(?date)
 LIMIT 1""" % filename
