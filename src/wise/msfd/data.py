@@ -14,6 +14,15 @@ from .utils import timeit
 logger = logging.getLogger('wise.msfd')
 
 
+FILENAMES_MISSING_DB = {
+    'PL': (
+        ('BAL', 'Art8', 'MSFD8aFeatures_20150225_135158.xml'),
+        ('BAL', 'Art9', 'MSFD9GES_20150130_111719.xml'),
+        ('BAL', 'Art10', 'MSFD10TI_20160226_150132.xml')
+    )
+}
+
+
 @db.use_db_session('2012')
 def all_regions():
     """ Return a list of region ids
@@ -142,6 +151,15 @@ def get_report_filename(report_version,
     :param article: article code, like: 'art9'
     :param descriptor: descriptor code, like: 'D5'
     """
+
+    if country in FILENAMES_MISSING_DB:
+        filename = [
+            x[2]
+            for x in FILENAMES_MISSING_DB[country]
+            if x[0] == region and x[1] == article
+        ]
+
+        return filename[0]
 
     # 'Art8': '8b',       # TODO: this needs to be redone for descriptor
     mapping = {

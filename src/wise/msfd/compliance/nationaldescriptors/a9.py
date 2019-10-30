@@ -43,6 +43,7 @@ class A9Item(Item):
 
         super(A9Item, self).__init__([])
 
+        self._muids = muids.rows
         self.parent = parent
         self.node = node
         self.g = RelaxedNode(node, NSMAP)
@@ -269,11 +270,18 @@ class Article9(BaseArticle2012):
 
         count, res = db.get_marine_unit_id_names(list(set(muids)))
         muid_ids = [y.id for y in self.muids]
+
         labels = [
             ItemLabel(m, t or m)
             for m, t in res
             if m in muid_ids
         ]
+
+        # special case for PL where marine_unit_ids are not imported into DB
+        # therefore we cannot get the labels for them
+        if muids and not labels:
+            labels = [ItemLabel(m, m) for m in set(muids)]
+
         self.muids_labeled = sorted(
             labels, key=lambda l: natural_sort_key(l.name)
         )

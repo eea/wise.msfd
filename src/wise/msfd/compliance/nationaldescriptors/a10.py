@@ -438,6 +438,12 @@ class Article10(BaseArticle2012):
             ItemLabel(m, u'{} ({})'.format(t, m))
             for m, t in res
         ]
+
+        # special case for PL where marine_unit_ids are not imported into DB
+        # therefore we cannot get the labels for them
+        if muids and not labels:
+            labels = [ItemLabel(m, m) for m in set(muids)]
+
         self.muids_labeled = sorted(
             labels, key=lambda l: natural_sort_key(l.name)
         )
