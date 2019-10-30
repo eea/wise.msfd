@@ -2,7 +2,7 @@ from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 from z3c.form.field import Fields
 
 from .. import db, sql
-from ..base import EmbeddedForm, MarineUnitIDSelectForm
+from ..base import EmbeddedForm, MarineUnitIDSelectForm2012
 from .base import ItemDisplay, MultiItemDisplayForm
 from .interfaces import IA81Form
 from .utils import (data_to_xls, register_form, register_form_section,
@@ -34,7 +34,7 @@ class A81bExtractionFishItemDisplay(MultiItemDisplayForm):
 
 
 @register_subform(A81bForm)
-class A81bExtractionFishSubForm(MarineUnitIDSelectForm):
+class A81bExtractionFishSubForm(MarineUnitIDSelectForm2012):
     """ Select the MarineUnitID for the Article 8.1b form
     """
     title = 'D6/D3 - Extraction of fish and shellfish'
@@ -44,7 +44,7 @@ class A81bExtractionFishSubForm(MarineUnitIDSelectForm):
         return A81bExtractionFishItemDisplay(self, self.request)
 
     def download_results(self):
-        muids = self.get_marine_unit_ids()
+        muids = [self.get_marine_unit_id()]
         count, data = db.get_all_records(
             self.mapper_class,
             self.mapper_class.MarineUnitID.in_(muids)
@@ -179,7 +179,7 @@ class A81bExtractionSeaweedItemDisplay(MultiItemDisplayForm):
 
 
 @register_subform(A81bForm)
-class A81bExtractionSeaweedSubForm(MarineUnitIDSelectForm):
+class A81bExtractionSeaweedSubForm(MarineUnitIDSelectForm2012):
     """ Select the MarineUnitID for the Article 8.1b form
     """
     title = 'D6/D3 - Extraction of seaweed, maerl and other'
@@ -189,7 +189,7 @@ class A81bExtractionSeaweedSubForm(MarineUnitIDSelectForm):
         return A81bExtractionSeaweedItemDisplay(self, self.request)
 
     def download_results(self):
-        muids = self.get_marine_unit_ids()
+        muids = [self.get_marine_unit_id()]
         count, data = db.get_all_records(
             self.mapper_class,
             self.mapper_class.MarineUnitID.in_(muids)
@@ -325,7 +325,7 @@ class A81bHazardousItemDisplay(MultiItemDisplayForm):
 
 
 @register_subform(A81bForm)
-class A81bHazardousSubForm(MarineUnitIDSelectForm):
+class A81bHazardousSubForm(MarineUnitIDSelectForm2012):
     """ Select the MarineUnitID for the Article 8.1b form
     """
     title = 'D8/D9 - Hazardous substances'
@@ -335,7 +335,7 @@ class A81bHazardousSubForm(MarineUnitIDSelectForm):
         return A81bHazardousItemDisplay(self, self.request)
 
     def download_results(self):
-        muids = self.get_marine_unit_ids()
+        muids = [self.get_marine_unit_id()]
         count, data = db.get_all_records(
             self.mapper_class, self.mapper_class.MarineUnitID.in_(muids)
         )
@@ -469,7 +469,7 @@ class A81bHydroItemDisplay(MultiItemDisplayForm):
 
 
 @register_subform(A81bForm)
-class A81bHydroSubForm(MarineUnitIDSelectForm):
+class A81bHydroSubForm(MarineUnitIDSelectForm2012):
     """ Select the MarineUnitID for the Article 8.1b form
     """
     title = 'D7 - Hydrological processes'
@@ -479,7 +479,7 @@ class A81bHydroSubForm(MarineUnitIDSelectForm):
         return A81bHydroItemDisplay(self, self.request)
 
     def download_results(self):
-        muids = self.get_marine_unit_ids()
+        muids = [self.get_marine_unit_id()]
         count, data = db.get_all_records(
             self.mapper_class, self.mapper_class.MarineUnitID.in_(muids)
         )
@@ -612,7 +612,7 @@ class A81bMarineLitterItemDisplay(MultiItemDisplayForm):
 
 
 @register_subform(A81bForm)
-class A81bMarineLitterSubForm(MarineUnitIDSelectForm):
+class A81bMarineLitterSubForm(MarineUnitIDSelectForm2012):
     """ Select the MarineUnitID for the Article 8.1b form
     """
     title = 'D10 - Marine litter'
@@ -622,7 +622,7 @@ class A81bMarineLitterSubForm(MarineUnitIDSelectForm):
         return A81bMarineLitterItemDisplay(self, self.request)
 
     def download_results(self):
-        muids = self.get_marine_unit_ids()
+        muids = [self.get_marine_unit_id()]
         count, data = db.get_all_records(
             self.mapper_class, self.mapper_class.MarineUnitID.in_(muids)
         )
@@ -754,7 +754,7 @@ class A81bMicrobialItemDisplay(MultiItemDisplayForm):
 
 
 @register_subform(A81bForm)
-class A81bMicrobialSubForm(MarineUnitIDSelectForm):
+class A81bMicrobialSubForm(MarineUnitIDSelectForm2012):
     """ Select the MarineUnitID for the Article 8.1b form
     """
     title = 'D8 - Microbial pathogens'
@@ -764,7 +764,7 @@ class A81bMicrobialSubForm(MarineUnitIDSelectForm):
         return A81bMicrobialItemDisplay(self, self.request)
 
     def download_results(self):
-        muids = self.get_marine_unit_ids()
+        muids = [self.get_marine_unit_id()]
         count, data = db.get_all_records(
             self.mapper_class, self.mapper_class.MarineUnitID.in_(muids)
         )
@@ -898,7 +898,7 @@ class A81bNonIndigenousItemDisplay(MultiItemDisplayForm):
 
 
 @register_subform(A81bForm)
-class A81bNonIndigenousSubForm(MarineUnitIDSelectForm):
+class A81bNonIndigenousSubForm(MarineUnitIDSelectForm2012):
     """ Select the MarineUnitID for the Article 8.1b form
     """
     title = 'D2 - Non-indigenous species'
@@ -908,7 +908,7 @@ class A81bNonIndigenousSubForm(MarineUnitIDSelectForm):
         return A81bNonIndigenousItemDisplay(self, self.request)
 
     def download_results(self):
-        muids = self.get_marine_unit_ids()
+        muids = [self.get_marine_unit_id()]
         count, data = db.get_all_records(
             self.mapper_class, self.mapper_class.MarineUnitID.in_(muids)
         )
@@ -1038,7 +1038,7 @@ class A81bNoiseItemDisplay(MultiItemDisplayForm):
 
 
 @register_subform(A81bForm)
-class A81bNoiseSubForm(MarineUnitIDSelectForm):
+class A81bNoiseSubForm(MarineUnitIDSelectForm2012):
     """ Select the MarineUnitID for the Article 8.1b form
     """
     title = 'D11 - Underwater noise'
@@ -1048,7 +1048,7 @@ class A81bNoiseSubForm(MarineUnitIDSelectForm):
         return A81bNoiseItemDisplay(self, self.request)
 
     def download_results(self):
-        muids = self.get_marine_unit_ids()
+        muids = [self.get_marine_unit_id()]
         count, data = db.get_all_records(
             self.mapper_class, self.mapper_class.MarineUnitID.in_(muids)
         )
@@ -1175,7 +1175,7 @@ class A81bNutrientItemDisplay(MultiItemDisplayForm):
 
 
 @register_subform(A81bForm)
-class A81bNutrientSubForm(MarineUnitIDSelectForm):
+class A81bNutrientSubForm(MarineUnitIDSelectForm2012):
     """ Select the MarineUnitID for the Article 8.1b form
     """
     title = 'D5 - Nutrients'
@@ -1185,7 +1185,7 @@ class A81bNutrientSubForm(MarineUnitIDSelectForm):
         return A81bNutrientItemDisplay(self, self.request)
 
     def download_results(self):
-        muids = self.get_marine_unit_ids()
+        muids = [self.get_marine_unit_id()]
         count, data = db.get_all_records(
             self.mapper_class, self.mapper_class.MarineUnitID.in_(muids)
         )
@@ -1312,7 +1312,7 @@ class A81bPhysicalDamageItemDisplay(MultiItemDisplayForm):
 
 
 @register_subform(A81bForm)
-class A81bPhysicalDamageSubForm(MarineUnitIDSelectForm):
+class A81bPhysicalDamageSubForm(MarineUnitIDSelectForm2012):
     """ Select the MarineUnitID for the Article 8.1b form
     """
     title = 'D6 - Physical damage'
@@ -1322,7 +1322,7 @@ class A81bPhysicalDamageSubForm(MarineUnitIDSelectForm):
         return A81bPhysicalDamageItemDisplay(self, self.request)
 
     def download_results(self):
-        muids = self.get_marine_unit_ids()
+        muids = [self.get_marine_unit_id()]
         count, data = db.get_all_records(
             self.mapper_class, self.mapper_class.MarineUnitID.in_(muids)
         )
@@ -1450,7 +1450,7 @@ class A81bPhysicalLosItemDisplay(MultiItemDisplayForm):
 
 
 @register_subform(A81bForm)
-class A81bPhysicalLosSubForm(MarineUnitIDSelectForm):
+class A81bPhysicalLosSubForm(MarineUnitIDSelectForm2012):
     """ Select the MarineUnitID for the Article 8.1b form
     """
     title = 'D6 - Physical loss'
@@ -1460,7 +1460,7 @@ class A81bPhysicalLosSubForm(MarineUnitIDSelectForm):
         return A81bPhysicalLosItemDisplay(self, self.request)
 
     def download_results(self):
-        muids = self.get_marine_unit_ids()
+        muids = [self.get_marine_unit_id()]
         count, data = db.get_all_records(
             self.mapper_class, self.mapper_class.MarineUnitID.in_(muids)
         )
@@ -1588,7 +1588,7 @@ class A81bPollutantEventItemDisplay(MultiItemDisplayForm):
 
 
 @register_subform(A81bForm)
-class A81bPollutantEventSubForm(MarineUnitIDSelectForm):
+class A81bPollutantEventSubForm(MarineUnitIDSelectForm2012):
     """ Select the MarineUnitID for the Article 8.1b form
     """
     title = 'D8 - Pollutant events'
@@ -1598,7 +1598,7 @@ class A81bPollutantEventSubForm(MarineUnitIDSelectForm):
         return A81bPollutantEventItemDisplay(self, self.request)
 
     def download_results(self):
-        muids = self.get_marine_unit_ids()
+        muids = [self.get_marine_unit_id()]
         count, data = db.get_all_records(
             self.mapper_class, self.mapper_class.MarineUnitID.in_(muids)
         )
@@ -1726,7 +1726,7 @@ class A81bAcidificationItemDisplay(MultiItemDisplayForm):
 
 
 @register_subform(A81bForm)
-class A81bAcidificationSubForm(MarineUnitIDSelectForm):
+class A81bAcidificationSubForm(MarineUnitIDSelectForm2012):
     """ Select the MarineUnitID for the Article 8.1b form
     """
     title = 'D4 - Acidification'
@@ -1736,7 +1736,7 @@ class A81bAcidificationSubForm(MarineUnitIDSelectForm):
         return A81bAcidificationItemDisplay(self, self.request)
 
     def download_results(self):
-        muids = self.get_marine_unit_ids()
+        muids = [self.get_marine_unit_id()]
         count, data = db.get_all_records(
             self.mapper_class, self.mapper_class.MarineUnitID.in_(muids)
         )

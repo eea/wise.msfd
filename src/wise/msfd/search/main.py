@@ -287,7 +287,12 @@ class AreaTypesForm(EmbeddedForm):
         if self.get_main_form().name == 'msfd-mru':
             return A4Form(self, self.request)
 
-        return MarineUnitIDsForm(self, self.request)
+        data = self.get_main_form().data
+        klass = get_form(data['article'])
+
+        return super(AreaTypesForm, self).get_subform(klass)
+
+        # return MarineUnitIDsForm(self, self.request)
 
     def get_available_marine_unit_ids(self):
         return self.subform.get_available_marine_unit_ids()

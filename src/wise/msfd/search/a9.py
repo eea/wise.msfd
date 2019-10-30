@@ -3,7 +3,7 @@ from z3c.form.browser.checkbox import CheckBoxFieldWidget
 from z3c.form.field import Fields
 
 from .. import db, sql
-from ..base import EmbeddedForm, MarineUnitIDSelectForm
+from ..base import EmbeddedForm, MarineUnitIDSelectForm2012
 from ..db import get_all_records
 from ..utils import group_query
 from .base import ItemDisplayForm
@@ -50,8 +50,13 @@ class A9Form(EmbeddedForm):
         return data_to_xls(xlsdata)
 
 
-class A9MRUForm(MarineUnitIDSelectForm):
+class A9MRUForm(MarineUnitIDSelectForm2012):
     mapper_class = sql.MSFD9Descriptor
+
+    # def get_available_marine_unit_ids(self):
+    #     return super(A9MRUForm, self).get_available_marine_unit_ids(
+    #         parent=self.context
+    #     )
 
     def get_subform(self):
         return A9ItemDisplay(self, self.request)

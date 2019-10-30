@@ -2,7 +2,8 @@ from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 from z3c.form.field import Fields
 
 from .. import db, sql
-from ..base import EmbeddedForm, MarineUnitIDSelectForm
+from ..base import (EmbeddedForm, MarineUnitIDSelectForm,
+                    MarineUnitIDSelectForm2012)
 from .base import ItemDisplay, MultiItemDisplayForm
 from .interfaces import IA81Form
 from .utils import (data_to_xls, register_form, register_form_section,
@@ -28,7 +29,7 @@ class A81aForm(EmbeddedForm):
 
 # region Ecosystem(s)
 @register_subform(A81aForm)
-class A81aEcoSubForm(MarineUnitIDSelectForm):
+class A81aEcoSubForm(MarineUnitIDSelectForm2012):
     """ Select the MarineUnitID for the Article 8.1a form
     """
     title = 'D4 - Ecosystem(s)'
@@ -38,7 +39,7 @@ class A81aEcoSubForm(MarineUnitIDSelectForm):
         return A81aEcoItemDisplay(self, self.request)
 
     def download_results(self):
-        muids = self.get_marine_unit_ids()
+        muids = [self.get_marine_unit_id()]
         count, data = db.get_all_records(
             self.mapper_class,
             self.mapper_class.MarineUnitID.in_(muids)
@@ -133,7 +134,7 @@ class A81aEcosystemAsessment(ItemDisplay):
 
 # region Functional Group(s)
 @register_subform(A81aForm)
-class A81aFunctSubForm(MarineUnitIDSelectForm):
+class A81aFunctSubForm(MarineUnitIDSelectForm2012):
     """ Select the MarineUnitID for the Article 8.1a form
     """
     title = 'D1 - Functional group(s)'
@@ -143,7 +144,7 @@ class A81aFunctSubForm(MarineUnitIDSelectForm):
         return A81aFunctItemDisplay(self, self.request)
 
     def download_results(self):
-        muids = self.get_marine_unit_ids()
+        muids = [self.get_marine_unit_id()]
         count, data = db.get_all_records(
             self.mapper_class,
             self.mapper_class.MarineUnitID.in_(muids)
@@ -238,7 +239,7 @@ class A81aFunctionalGroupAsessment(ItemDisplay):
 
 # region Habitat(s)
 @register_subform(A81aForm)
-class A81aHabitatSubForm(MarineUnitIDSelectForm):
+class A81aHabitatSubForm(MarineUnitIDSelectForm2012):
     """ Select the MarineUnitID for the Article 8.1a form
     """
     title = 'D6 - Habitat(s)'
@@ -248,7 +249,7 @@ class A81aHabitatSubForm(MarineUnitIDSelectForm):
         return A81aHabitatItemDisplay(self, self.request)
 
     def download_results(self):
-        muids = self.get_marine_unit_ids()
+        muids = [self.get_marine_unit_id()]
         count, data = db.get_all_records(
             self.mapper_class,
             self.mapper_class.MarineUnitID.in_(muids)
@@ -343,7 +344,7 @@ class A81aHabitatAsessment(ItemDisplay):
 
 # region Species(s)
 @register_subform(A81aForm)
-class A81aSpeciesSubForm(MarineUnitIDSelectForm):
+class A81aSpeciesSubForm(MarineUnitIDSelectForm2012):
     """ Select the MarineUnitID for the Article 8.1a form
     """
     title = 'D1 - Species(s)'
@@ -353,7 +354,7 @@ class A81aSpeciesSubForm(MarineUnitIDSelectForm):
         return A81aSpeciesItemDisplay(self, self.request)
 
     def download_results(self):
-        muids = self.get_marine_unit_ids()
+        muids = [self.get_marine_unit_id()]
         count, data = db.get_all_records(
             self.mapper_class,
             self.mapper_class.MarineUnitID.in_(muids)
@@ -448,7 +449,7 @@ class A81aSpeciesAsessment(ItemDisplay):
 
 # region Other(s)
 @register_subform(A81aForm)
-class A81aOtherSubForm(MarineUnitIDSelectForm):
+class A81aOtherSubForm(MarineUnitIDSelectForm2012):
     """ Select the MarineUnitID for the Article 8.1a form
     """
     title = 'D4 - Other(s)'
@@ -459,7 +460,7 @@ class A81aOtherSubForm(MarineUnitIDSelectForm):
 
     # TODO MSFD8aOtherPressuresImpact table is missing
     def download_results(self):
-        muids = self.get_marine_unit_ids()
+        muids = [self.get_marine_unit_id()]
         count, data = db.get_all_records(
             self.mapper_class,
             self.mapper_class.MarineUnitID.in_(muids)
@@ -549,7 +550,7 @@ class A81aOtherAsessment(ItemDisplay):
 
 # region Nis Inventory(s)
 @register_subform(A81aForm)
-class A81aNisSubForm(MarineUnitIDSelectForm):
+class A81aNisSubForm(MarineUnitIDSelectForm2012):
     """ Select the MarineUnitID for the Article 8.1a form
     """
     title = 'D2 - NIS Inventory'
@@ -559,7 +560,7 @@ class A81aNisSubForm(MarineUnitIDSelectForm):
         return A81aNisItemDisplay(self, self.request)
 
     def download_results(self):
-        muids = self.get_marine_unit_ids()
+        muids = [self.get_marine_unit_id()]
         count, data = db.get_all_records(
             self.mapper_class, self.mapper_class.MarineUnitID.in_(muids)
         )
@@ -591,7 +592,7 @@ class A81aNisItemDisplay(MultiItemDisplayForm):
 
 # region Physical
 @register_subform(A81aForm)
-class A81aPhysicalSubForm(MarineUnitIDSelectForm):
+class A81aPhysicalSubForm(MarineUnitIDSelectForm2012):
     """ Select the MarineUnitID for the Article 8.1a form
     """
     title = 'D4 - Physical'
@@ -601,7 +602,7 @@ class A81aPhysicalSubForm(MarineUnitIDSelectForm):
         return A81aPhysicalItemDisplay(self, self.request)
 
     def download_results(self):
-        muids = self.get_marine_unit_ids()
+        muids = [self.get_marine_unit_id()]
         count, data = db.get_all_records(
             self.mapper_class,
             self.mapper_class.MarineUnitID.in_(muids)
@@ -634,7 +635,7 @@ class A81aPhysicalItemDisplay(MultiItemDisplayForm):
 
 # Article 8.1c
 @register_form
-class A81cForm(MarineUnitIDSelectForm):
+class A81cForm(MarineUnitIDSelectForm2012):
     """ Main form for A81c.
 
     Class for Article 8.1c Economic and social analysis
@@ -642,6 +643,11 @@ class A81cForm(MarineUnitIDSelectForm):
 
     record_title = title = 'Article 8.1c (Economic and social analysis)'
     mapper_class = sql.MSFD8cUs
+
+    def get_available_marine_unit_ids(self):
+        return super(A81cForm, self).get_available_marine_unit_ids(
+            parent=self.context
+        )
 
     def get_subform(self):
         return A81cEconomicItemDisplay(self, self.request)
@@ -656,7 +662,7 @@ class A81cEconomicItemDisplay(MultiItemDisplayForm):
     # TODO: need to filter on topic
 
     def download_results(self):
-        muids = self.get_marine_unit_ids()
+        muids = [self.get_marine_unit_id()]
 
         count, data = db.get_all_records(
             self.mapper_class,

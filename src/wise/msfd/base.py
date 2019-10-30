@@ -15,7 +15,7 @@ from z3c.form.form import Form
 
 from . import sql, sql2018
 from .db import (get_all_specific_columns, get_available_marine_unit_ids,
-                 threadlocals, use_db_session)
+                 get_marine_unit_ids, threadlocals, use_db_session)
 from .interfaces import IEmbeddedForm, IMainForm, IMarineUnitIDSelect
 from .labels import DISPLAY_LABELS
 from .utils import all_values_from_field, get_obj_fields, print_value
@@ -399,6 +399,32 @@ class MarineUnitIDSelectForm(EmbeddedForm):
         )
 
         return (count, [x[0] for x in res])
+
+
+class MarineUnitIDSelectForm2012(MarineUnitIDSelectForm):
+    """ Something like a subclass for MarineUnitIDSelectForm
+        needed for Art 8, 9, 10 year 2012
+        to override the 'get_available_marine_unit_ids' method
+    """
+
+    def get_available_marine_unit_ids(self, parent=None):
+        data = {}
+        if not parent:
+            parent = self.context.context
+
+        # lookup values in the inheritance tree
+
+        for crit in ['area_types', 'member_states', 'region_subregions']:
+            data[crit] = getattr(parent, 'get_selected_' + crit)()
+            parent = parent.context
+
+        _, all_mrus = get_marine_unit_ids(**data)
+
+        count, res = get_available_marine_unit_ids(
+            all_mrus, self.mapper_class
+        )
+
+        return count, [x[0] for x in res]
 
 
 class BasePublicPage(object):

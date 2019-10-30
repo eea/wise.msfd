@@ -3,7 +3,7 @@ from z3c.form.browser.checkbox import CheckBoxFieldWidget
 from z3c.form.field import Fields
 
 from .. import db, sql
-from ..base import EmbeddedForm, MarineUnitIDSelectForm
+from ..base import EmbeddedForm, MarineUnitIDSelectForm2012
 from ..utils import group_query
 from .base import ItemDisplayForm
 from .interfaces import IA2012GesComponentsArt10
@@ -54,7 +54,7 @@ class A10Form(EmbeddedForm):
         return data_to_xls(xlsdata)
 
 
-class A10MRUForm(MarineUnitIDSelectForm):
+class A10MRUForm(MarineUnitIDSelectForm2012):
     mapper_class = sql.MSFD10Target
 
     def get_subform(self):
