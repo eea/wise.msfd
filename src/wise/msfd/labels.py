@@ -217,10 +217,19 @@ def get_mru_labels():
 
     for row in res:
         code = row.MarineReportingUnitId
-        label_main = row.Description
-        label_int = row.nameTxtInt
-        label_txt = row.nameText
-        label = label_main or label_int or label_txt
+        description = row.Description
+        text_int = row.nameTxtInt
+        text = row.nameText
+
+        # check if text is empty string or 'NULL'(as string)
+        if text in ('NULL', '', ' '):
+            text = None
+
+        # 'text' has the most readable label
+        # 'text_int' second option when text is empty,
+        # in most cases text_int is the same as 'text'
+        # description last option, most of the time same as the MRU code
+        label = text or text_int or description
 
         if label:
             labels[code] = label

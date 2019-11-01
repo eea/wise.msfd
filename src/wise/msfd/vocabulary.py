@@ -8,7 +8,7 @@ from zope.schema.interfaces import IVocabularyFactory
 from zope.schema.vocabulary import SimpleTerm, SimpleVocabulary
 
 from . import db, sql, sql2018
-from .labels import COMMON_LABELS
+from .labels import COMMON_LABELS, GES_LABELS
 
 # from eea.cache import cache
 
@@ -535,7 +535,14 @@ def marine_unit_id_vocab(ids):
     terms_to_append = list(set(ids) - set(terms_found))
 
     for term in terms_to_append:
-        terms.append(SimpleTerm(term, term, term))
+        label = GES_LABELS.get('mrus', term)
+
+        if label != term:
+            label = u'%s (%s)' % (label, term)
+        else:
+            label = term
+
+        terms.append(SimpleTerm(term, term, label))
 
     terms.sort(key=lambda t: t.title)
 
