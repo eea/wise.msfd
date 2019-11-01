@@ -94,4 +94,9 @@
     name="wise_search_a18_data_type"
     />
 
+  <utility
+    component=".vocabulary.a4_mru_reporting_cycle_factory"
+    name="wise_search_a4_mru_reporting_cycle_factory"
+    />
+
 </configure>

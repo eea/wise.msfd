@@ -6,12 +6,11 @@ from z3c.form.browser.checkbox import CheckBoxFieldWidget
 from z3c.form.field import Fields
 
 from . import interfaces
-from .. import db, sql, sql2018
+from .. import db, sql2018
 from ..base import EmbeddedForm
-from ..interfaces import IMarineUnitIDsSelect
-from ..utils import all_values_from_field, db_objects_to_dict, group_data
-from .base import ItemDisplay, ItemDisplayForm, MainForm, MultiItemDisplayForm
-from .utils import data_to_xls, register_form_art18, register_form_section
+from ..utils import db_objects_to_dict
+from .base import ItemDisplayForm, MainForm
+from .utils import data_to_xls, register_form_art18
 
 
 class StartArticle18Form(MainForm):
@@ -321,7 +320,7 @@ class A18MeasureProgressForm(EmbeddedForm):
 class A18CategoryForm(EmbeddedForm):
     """"""
     record_title = "Article 18 (Category)"
-    title = "Category"
+    title = "Category 1b not WFD"
     display_klass = A18CategoryDisplay
     mapper_class = sql2018.ART18Category1bNotWFD
 

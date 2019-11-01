@@ -1,6 +1,5 @@
 from plone.z3cform.layout import wrap_form
 from Products.Five.browser import BrowserView
-from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 from z3c.form.browser.checkbox import CheckBoxFieldWidget
 from z3c.form.field import Fields
 
@@ -12,13 +11,13 @@ from ..db import (get_all_records, get_all_records_join,
                   get_item_by_conditions, get_item_by_conditions_art_6)
 from ..interfaces import IMarineUnitIDsSelect
 from ..sql_extra import MSCompetentAuthority
-from ..utils import scan, db_objects_to_dict, group_data
+from ..utils import scan
 from .a11 import StartArticle11Form
 from .a1314 import StartArticle1314Form
 from .a18 import StartArticle18Form
-from .a4 import A4Form
+from .a4 import A4Form, A4MemberStatesForm
 from .base import MAIN_FORMS, ItemDisplayForm, MainForm
-from .utils import data_to_xls, get_form
+from .utils import data_to_xls, get_form, register_form_art4
 
 
 class StartView(BrowserView, BasePublicPage):
@@ -90,15 +89,38 @@ class CompetentAuthorityItemDisplay(ItemDisplayForm):
         return res
 
 
-class StartA4Form(MainForm):
-    name = 'msfd-mru'
-    session_name = '2012'
+@register_form_art4
+class A4Form2012to2018(EmbeddedForm):
+    title = "2012-2018 reporting cycle"
 
     fields = Fields(interfaces.IStartArticles8910)
     fields['region_subregions'].widgetFactory = CheckBoxFieldWidget
 
     def get_subform(self):
         return MemberStatesForm(self, self.request)
+
+
+@register_form_art4
+class A4Form2018to2024(EmbeddedForm):
+    title = "2018-2024 reporting cycle"
+
+    fields = Fields(interfaces.IStartArticles8910)
+    fields['region_subregions'].widgetFactory = CheckBoxFieldWidget
+
+    def get_subform(self):
+        return A4MemberStatesForm(self, self.request)
+
+
+class StartA4Form(MainForm):
+    name = 'msfd-mru'
+    session_name = '2012'
+
+    fields = Fields(interfaces.IStartArticle4)
+
+    def get_subform(self):
+        klass = self.data.get('reporting_cycle')
+
+        return klass(self, self.request)
 
 
 StartArticle4View = wrap_form(StartA4Form, MainFormWrapper)
@@ -159,12 +181,6 @@ class RegionalCoopItemDisplay(ItemDisplayForm):
     order_field = 'MSFD4_RegionalCooperation_ID'
     css_class = "left-side-form"
 
-    # extra_data_template = ViewPageTemplateFile('pt/extra-data-simple.pt')
-    # extra_data_pivot = ViewPageTemplateFile('pt/extra-data-pivot.pt')
-    # blacklist = ('MSFD4_Import_ID', 'MSFD4_Import_Time',
-    #              'MSFD4_Import_FileName')
-    # use_blacklist = False
-
     def get_current_country(self):
         country_code = self.item.MSFD4_Import_ReportingCountry
 
@@ -201,37 +217,6 @@ class RegionalCoopItemDisplay(ItemDisplayForm):
 
         return res
 
-    # def get_extra_data(self):
-    #     m = sql.MSFD4RegionalCooperation
-    #     blacklist = ('MSFD4_RegionalCooperation_Import',
-    #                  'MSFD4_RegionalCooperation_ID')
-    #
-    #     r_codes = self.get_form_data_by_key(self.context, 'region_subregions')
-    #
-    #     coops = db.get_all_columns_from_mapper(
-    #         m,
-    #         'MSFD4_RegionalCooperation_ID',
-    #         m.MSFD4_RegionalCooperation_Import == self.item.MSFD4_Import_ID,
-    #         # m.RegionsSubRegions.in_(r_codes)
-    #     )
-    #
-    #     # filter results by regions
-    #     filtered_coops = []
-    #     for row in coops:
-    #         if any(region in row.RegionsSubRegions for region in r_codes):
-    #             filtered_coops.append(row)
-    #
-    #     rows = db_objects_to_dict(filtered_coops, excluded_columns=blacklist)
-    #
-    #     regcoop = group_data(rows, 'RegionsSubRegions')
-    #     pivot_html = self.extra_data_pivot(extra_data=[
-    #         ('Regional Cooperation', regcoop),
-    #     ])
-    #
-    #     return [
-    #         ('', pivot_html)
-    #     ]
-
 
 class StartArticle8910Form(MainForm):
     """ Select one of the article: 8(a,b,c,d)/9/10
@@ -256,6 +241,12 @@ class RegionForm(EmbeddedForm):
 
     def get_subform(self):
         return MemberStatesForm(self, self.request)
+
+    # if hasattr(context, 'get_selected_region_subregions'):
+    #     regions = context.get_selected_region_subregions()
+    #
+    #     if regions:
+    #         conditions.append(t.c.RegionSubRegions.in_(regions))
 
 
 class MemberStatesForm(EmbeddedForm):

@@ -9,6 +9,7 @@ import xlsxwriter
 from wise.msfd.utils import class_id, get_obj_fields
 
 FORMS_2018 = {}
+FORMS_ART4 = {}
 FORMS_ART11 = {}
 FORMS_ART18 = {}
 FORMS = {}                         # main chapter 1 article form classes
@@ -23,6 +24,16 @@ def register_form_2018(klass):
     """
 
     FORMS_2018[class_id(klass)] = klass
+
+    return klass
+
+
+def register_form_art4(klass):
+    """ Registers a form for article 4
+
+    """
+
+    FORMS_ART4[class_id(klass)] = klass
 
     return klass
 
@@ -178,6 +189,7 @@ def data_to_xls(data):
 
 
 ART_RE = re.compile('\s(\d+\.*\d?\w?)\s')
+ART_RE_2018 = re.compile('\s\d+((\.\d\w+)|(\s&\s\d+))?')
 
 
 def article_sort_helper(term):
@@ -196,3 +208,20 @@ def article_sort_helper(term):
     f = ''.join(chars)
 
     return float(f)
+
+
+def article_sort_helper_2018(term):
+    title = term.title
+    text = ART_RE_2018.search(title).group().strip()
+    chars = []
+
+    for c in text:
+        if c.isdigit() or c is '.':
+            chars.append(c)
+        else:
+            chars.append(str(ord(c)))
+
+    f = ''.join(chars)
+
+    return float(f)
+

@@ -156,6 +156,28 @@ def get_member_states_vb_factory(context):
 
 
 @provider(IVocabularyFactory)
+@db.use_db_session('2018')
+def get_member_states_vb_factory_art4(context):
+    conditions = []
+
+    t = sql2018.MRUsPublication
+
+    if hasattr(context, 'get_selected_region_subregions'):
+        regions = context.get_selected_region_subregions()
+
+        if regions:
+            conditions.append(t.Region.in_(regions))
+
+    rows = db.get_unique_from_mapper(
+        t,
+        'Country',
+        *conditions
+    )
+
+    return values_to_vocab(rows)
+
+
+@provider(IVocabularyFactory)
 @db.use_db_session('2012')
 def get_member_states_vb_factory_art6(context):
     conditions = []
@@ -494,6 +516,7 @@ def art11_marine_unit_id_ms(context):
 
 
 def marine_unit_id_vocab(ids):
+    # Marine Unit Ids 2012
     count, res = db.get_marine_unit_id_names(ids)
 
     terms = []

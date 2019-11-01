@@ -768,6 +768,39 @@ class MRUAnalysi(Base):
     SHAPE = Column(NullType)
 
 
+class MRUsPublication(Base):
+    __tablename__ = 'MRUs_Publication'
+
+    OBJECTID = Column(Integer, primary_key=True)
+    localId = Column(Unicode(254))
+    namespace = Column(Unicode(254))
+    versionId = Column(Unicode(50))
+    thematicId = Column(Unicode(50))
+    nameTxtInt = Column(Unicode(254))
+    nameText = Column(Unicode(254))
+    nameTxtLan = Column(Unicode(254))
+    desigBegin = Column(Unicode(254))
+    desigEnd = Column(Unicode(254))
+    themaIdSch = Column(Unicode(25))
+    beginLife = Column(Unicode(10))
+    envDomain = Column(Unicode(5))
+    zoneType = Column(Unicode(15))
+    spZoneType = Column(Unicode(25))
+    legisSName = Column(Unicode(350))
+    legisName = Column(Unicode(350))
+    legisDate = Column(Unicode(10))
+    legisDateType = Column(Unicode(15))
+    legisLink = Column(Unicode(350))
+    legisLevel = Column(Unicode(15))
+    rZoneId = Column(Unicode(3))
+    rZoneIdSch = Column(Unicode(20))
+    Country = Column(Unicode(50))
+    Type = Column(Unicode(50))
+    Area = Column(Float(24))
+    Region = Column(Unicode(20))
+    GEOM = Column(NullType)
+
+
 class MarineRegion(Base):
     __tablename__ = 'MarineRegion'
 

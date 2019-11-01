@@ -11,6 +11,11 @@
     />
 
   <utility
+    component=".vocabulary.get_member_states_vb_factory_art4"
+    name="wise_search_member_states_art4"
+    />
+
+  <utility
     component=".vocabulary.get_member_states_vb_factory_art6"
     name="wise_search_member_states_art6"
     />

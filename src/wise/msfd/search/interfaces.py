@@ -51,6 +51,14 @@ class IMemberStates(Interface):
     )
 
 
+class IMemberStatesArt4(Interface):
+    member_states = List(
+        title=u"Country",
+        value_type=Choice(vocabulary="wise_search_member_states_art4"),
+        required=False,
+    )
+
+
 class IMemberStatesArt6(Interface):
     member_states = List(
         title=u"Country",
@@ -147,6 +155,14 @@ class IStartArticle18(Interface):
     data_type = Choice(
         title=u"Data type",
         vocabulary='wise_search_a18_data_type',
+        required=False
+    )
+
+
+class IStartArticle4(Interface):
+    reporting_cycle = Choice(
+        title=u"Reporting cycle",
+        vocabulary='wise_search_a4_mru_reporting_cycle_factory',
         required=False
     )
 

@@ -19,6 +19,12 @@ DISPLAY_LABELS = {
     'MSFD4_Import_ReportingCountry': "Country",
     'AssessmentsPeriod': 'Assessment Period',
     'UniqueCode': 'Measure code',
+    # Article 4
+    'thematicId': 'Identifier',
+    'nameTxtInt': 'Name in English',
+    'nameText': 'Name in the national language',
+    'spZoneType': 'Zone type',
+    'legisSName': 'Legislation short name'
 }
 
 logger = logging.getLogger('wise.msfd')
