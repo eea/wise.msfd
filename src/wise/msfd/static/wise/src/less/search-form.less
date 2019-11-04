@@ -42,27 +42,28 @@
   opacity: 0;
 
   .subform {
-    // margin-top: 30px;
+    margin-top: 3rem;
     h3#article-id {
-      font-size: 14px;
-      background: #52616f;
-      padding: 0.6em 1rem;
-      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 1.8rem;
+      padding: 0.2em 1rem;
       font-weight: bolder;
       margin: 0px;
-      //margin-bottom: 0;
-      /* text-decoration: underline; */
-      /* text-align: right; */
+      border-bottom: 2px solid #52616f;
+
+      .article-id-country {
+        font-size: 2.2rem;
+      }
+      .article-id-article {
+      }
     }
-    h3#article-item-id {
-      margin-top: 1rem;
-      padding: 1rem 1rem 1rem 2rem;
-      background: #0071b3;
-      margin: 0;
-      font-weight: 900;
-      color: white;
-      border-top-left-radius: 1rem;
-      border-top-right-radius: 1rem;
+    #mru-select-prev-next-wrapper {
+      background-color: #EEE;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
     }
   }
 
@@ -473,17 +474,15 @@
   div#item-title-wrapper {
     text-align: center;
     display: inline-block;
-    width: 80%;
-    margin: 0 8.3rem auto;
+    width: 100%;
   }
 
   #form-data-primary {
-    border-top: solid 1px #EEE;
+    margin-top: 2rem;
+    border-top: solid 0.6rem #EEE;
   }
 
   #marine-widget-top {
-    // margin-top: 10px;
-    // margin-bottom: 16px;
     position: relative;
     padding: 0.2rem 1rem;
     margin: 0;
@@ -506,7 +505,7 @@
 
     #marine-unit-trigger {
       .text-trigger {
-        background-color: white;
+        border: none;
       }
     }
 
@@ -540,7 +539,7 @@
         //float: left;
         margin-top: 5px;
         margin-right: 0.5em;
-        font-size: 1em;
+        font-size: 1.2em;
         font-weight: bold;
 
       }
@@ -550,7 +549,7 @@
       display: block;
       width: 100%;
       // margin-top: 1.5rem;
-      text-align: center;
+      text-align: left;
 
     }
 
@@ -645,8 +644,7 @@
   text-align: center;
   position: relative;
   height: auto;
-  //padding-bottom: 20px;
-  //margin-top: 15px;
+  min-width: 200px;
 
   > span {
     display: block;
@@ -668,10 +666,9 @@
     width: 30%;
   }
 
-  .select-article {
-    width: 80% !important;
+  #marine-widget-top {
+    max-width: 60%;
   }
-
 }
 
 //tablet
@@ -734,12 +731,14 @@
   }
 
   #marine-widget-top {
+    max-width: 50%;
+
     .select-article {
       float: none;
       clear: none;
 
       .field {
-        text-align: center !important;
+        text-align: left !important;
 
         .widget {
           /*padding-bottom: 2px;*/
