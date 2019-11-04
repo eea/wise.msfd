@@ -77,7 +77,7 @@ def get_reportdata_key(func, self, *args, **kwargs):
     ])
     # TODO why replace '.', makes D1.1 the same as D11
     # res = res.replace('.', '').replace('-', '')
-    logger.info("Report data cache key: ", res)
+    logger.info("Report data cache key: %s", res)
 
     return res
 
@@ -872,8 +872,12 @@ https://svn.eionet.europa.eu/repositories/Reportnet/Dataflows/MarineDirective/MS
         out = BytesIO()
         workbook = xlsxwriter.Workbook(out, {'in_memory': True})
 
-        for wtitle, wdata in data:
-            worksheet = workbook.add_worksheet(unicode(wtitle)[:30])
+        for index, (wtitle, wdata) in enumerate(data):
+            _wtitle = '{}_{}'.format(index + 1, unicode(wtitle)[:28])
+
+            worksheet = workbook.add_worksheet(_wtitle)
+
+            import pdb; pdb.set_trace()
 
             for i, (row_label, row_values) in enumerate(wdata):
                 worksheet.write(i, 0, row_label.title)
