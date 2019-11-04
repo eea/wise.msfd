@@ -877,8 +877,6 @@ https://svn.eionet.europa.eu/repositories/Reportnet/Dataflows/MarineDirective/MS
 
             worksheet = workbook.add_worksheet(_wtitle)
 
-            import pdb; pdb.set_trace()
-
             for i, (row_label, row_values) in enumerate(wdata):
                 worksheet.write(i, 0, row_label.title)
 
