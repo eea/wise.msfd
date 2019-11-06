@@ -9,7 +9,9 @@
     <div id="item-title-wrapper">
       <h3 id="article-id">
         <span class="article-id-country"
-            tal:content="structure view/get_current_country">Germany</span> - <span tal:replace="view/get_record_title">Article title here</span>
+              tal:content="structure view/get_current_country">Germany</span>
+        <span class="article-id-article"
+              tal:content="view/get_record_title">Article title here</span>
       </h3>
       <div id="mru-select-prev-next-wrapper">
         <div class="prev-next-row"
