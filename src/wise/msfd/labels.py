@@ -96,13 +96,13 @@ def _extract_from_xsd(fpath):
             if ' ' in line[:eqpos]:
                 continue
 
-            label, title = line.split(splitter, 1)
+            code, label = line.split(splitter, 1)
 
             # if label in COMMON_LABELS:
             #     logger = logging.getLogger('tcpserver')
             #     logger.warning("Duplicate label in xsd file: %s", label)
 
-            labels[label] = title
+            labels[code] = label
 
     return labels
 
@@ -114,7 +114,13 @@ def get_human_labels():
     human_labels = {}
     count, rows = db.get_all_records(t)
     for row in rows:
-        human_labels[row.Description] = row.value
+        label = row.Description
+        code = row.value
+
+        if not label:
+            continue
+
+        human_labels[code] = label
 
     return human_labels
 
@@ -319,9 +325,9 @@ GES_LABELS = LabelCollection()
 
 def get_common_labels():
     labels = {}
-    labels.update(_extract_from_csv())
     labels.update(_extract_from_xsd('data/MSCommon_1p0.xsd'))
     labels.update(_extract_from_xsd('data/MSCommon_1p1.xsd'))
+    labels.update(_extract_from_csv())
     labels.update(get_human_labels())
 
     # We should use the labels from msfd2018-codelists.json

@@ -686,7 +686,9 @@ class A2018Art81abDisplay(ItemDisplayForm):
         )
         criteria_status = db_objects_to_dict(criteria_status_orig,
                                              excluded_columns)
-        criteria_status = group_data(criteria_status, 'Criteria')
+        criteria_status = group_data(
+            criteria_status, 'Criteria', remove_pivot=False
+        )
 
         # TODO get the Id for the selected criteria status
         id_criteria_status = [x.Id for x in criteria_status_orig]
@@ -698,7 +700,9 @@ class A2018Art81abDisplay(ItemDisplayForm):
         )
         criteria_value = db_objects_to_dict(criteria_value_orig,
                                             excluded_columns)
-        criteria_value = group_data(criteria_value, 'Parameter')
+        criteria_value = group_data(
+            criteria_value, 'Parameter', remove_pivot=False
+        )
 
         # TODO get the Id for the selected criteria value
         id_criteria_value = [x.Id for x in criteria_value_orig]
@@ -731,7 +735,7 @@ class A2018Art81abDisplay(ItemDisplayForm):
         )
 
         res.append(
-            ('Criteria Value', criteria_value)
+            ('Parameter assessments', criteria_value)
         )
 
         res.append(

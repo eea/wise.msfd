@@ -319,7 +319,7 @@ class A18MeasureProgressForm(EmbeddedForm):
 @register_form_art18
 class A18CategoryForm(EmbeddedForm):
     """"""
-    record_title = "Article 18 (Category)"
+    record_title = "Article 18 (Category1bNotWFDMeasure)"
     title = "Category1bNotWFDMeasure"
     display_klass = A18CategoryDisplay
     mapper_class = sql2018.ART18Category1bNotWFD
