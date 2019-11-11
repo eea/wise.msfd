@@ -2,10 +2,11 @@ from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 from z3c.form.browser.checkbox import CheckBoxFieldWidget
 from z3c.form.field import Fields
 
-from .. import db, sql2018
+from .. import db, sql, sql2018
 from ..base import EmbeddedForm, MarineUnitIDSelectForm
 from ..sql_extra import (MSFD4GeographicalAreaID,
                          MSFD4GeograpicalAreaDescription)
+from ..utils import db_objects_to_dict, group_data
 from . import interfaces
 from .base import ItemDisplayForm
 from .utils import data_to_xls
@@ -16,7 +17,7 @@ class A4MemberStatesForm(EmbeddedForm):
     fields['member_states'].widgetFactory = CheckBoxFieldWidget
 
     def get_subform(self):
-        return A4Form2018to2024(self, self.request)
+        return A4ItemDisplay2018to2024(self, self.request)
 
 
 class A4Form2018to2024(MarineUnitIDSelectForm):
@@ -54,32 +55,80 @@ class A4Form2018to2024(MarineUnitIDSelectForm):
         return A4ItemDisplay2018to2024(self, self.request)
 
 
-class A4Form(MarineUnitIDSelectForm):
+class A4Form(ItemDisplayForm):
     """ MRU form for reporting cycle 2012-2018
     """
 
     # Geographic areas & regional cooperation
     record_title = title = 'Article 4 (Reporting cycle 2012-2018)'
-    mapper_class = MSFD4GeographicalAreaID
+    mapper_class = MSFD4GeograpicalAreaDescription
     session_name = '2012'
+    order_field = 'MSFD4_GeograpicalAreasDescription_Import'
+    css_class = "left-side-form"
 
-    # @property
-    # def display_klass(self):
-    #     ctx = self.context
-    #
-    #     while ctx:
-    #         if hasattr(ctx, 'display_klass'):
-    #             return ctx.display_klass
-    #
-    #         ctx = getattr(ctx, 'context', None)
-    #
-    #     return None
+    extra_data_template = ViewPageTemplateFile('pt/extra-data-pivot.pt')
+    # extra_data_template = ViewPageTemplateFile('pt/extra-data-simple.pt')
+    blacklist = ('MSFD4_GeograpicalAreasDescription_Import',)
 
-    def get_subform(self):
-        return A4ItemDisplay2012to2018(self, self.request)
-        # display_klass = self.display_klass
+    def get_current_country(self):
+        import_id = self.item.MSFD4_GeograpicalAreasDescription_Import
 
-        # return display_klass(self, self.request)
+        _, country_code = db.get_related_record(
+            sql.MSFD4Import,
+            'MSFD4_Import_ID',
+            import_id
+        )
+        country_code = country_code.MSFD4_Import_ReportingCountry
+
+        return self.print_value(country_code)
+
+    def get_db_results(self):
+        klass_join = sql.MSFD4Import
+        page = self.get_page()
+        countries = self.get_form_data_by_key(self, 'member_states')
+
+        args = [
+            self.mapper_class,
+            klass_join,
+            self.order_field
+        ]
+
+        if countries:
+            args.append(klass_join.MSFD4_Import_ReportingCountry.in_(
+                countries))
+
+        res = db.get_item_by_conditions_joined(
+            *args,
+            page=page
+        )
+
+        return res
+
+    def get_extra_data(self):
+        if not self.item:
+            return {}
+
+        mc = MSFD4GeographicalAreaID
+        excluded_columns = ('MSFD4_GegraphicalAreasID_Import', )
+        id_import = self.item.MSFD4_GeograpicalAreasDescription_Import
+
+        res = []
+        conditions = []
+
+        area_types = self.get_form_data_by_key(self, 'area_types')
+        if area_types:
+            conditions.append(mc.AreaType.in_(area_types))
+
+        count, data = db.get_all_records(
+            mc,
+            mc.MSFD4_GegraphicalAreasID_Import == id_import,
+            *conditions
+        )
+
+        data = db_objects_to_dict(data, excluded_columns)
+        res.append(('MSFD4 GegraphicalAreasID', {'': data}))
+
+        return res
 
     def get_marine_unit_ids(self):
         return self.get_available_marine_unit_ids()
@@ -122,72 +171,55 @@ class A4Form(MarineUnitIDSelectForm):
         return data_to_xls(xlsdata)
 
 
-class A4ItemDisplay2012to2018(ItemDisplayForm):
-
-    mapper_class = MSFD4GeographicalAreaID
-    order_field = 'MarineUnitID'
-
-    extra_data_template = ViewPageTemplateFile('pt/extra-data-simple.pt')
-    extra_data_pivot = ViewPageTemplateFile('pt/extra-data-pivot.pt')
-    blacklist = ('MSFD4_GegraphicalAreasID_Import',)
-
-    # TODO: add to blacklist MSFD4 Gegraphical Areas ID Import
-    def get_extra_data(self):
-        if not self.item:
-            return []
-
-        blacklist = ['MSFD4_RegionalCooperation_ID',
-                     'MSFD4_RegionalCooperation_Import',
-                     'MSFD4_GeograpicalAreasDescription_Import',
-                     ]
-
-        import_id = self.item.MSFD4_GegraphicalAreasID_Import
-        m = MSFD4GeograpicalAreaDescription
-        [desc] = db.get_all_columns_from_mapper(
-            m,
-            'MSFD4_GeograpicalAreasDescription_Import',
-            m.MSFD4_GeograpicalAreasDescription_Import == import_id
-        )
-        desc_html = self.data_template(item=desc, blacklist=blacklist)
-
-        return [
-            ('Area description', desc_html),
-            # ('', pivot_html)
-        ]
-
-
 class A4ItemDisplay2018to2024(ItemDisplayForm):
+    record_title = title = 'Article 4 (Reporting cycle 2018-2024)'
+    session_name = '2018'
+    css_class = "left-side-form"
 
     mapper_class = sql2018.MRUsPublication
     order_field = 'thematicId'
 
+    data_template = ViewPageTemplateFile('pt/item-display-rows.pt')
+
     def get_current_country(self):
-        country_code = self.item.Country
+        country_code = self.item[0]['Country']
 
         return self.print_value(country_code)
 
     @db.use_db_session('2018')
     def get_db_results(self):
         page = self.get_page()
-        muid = self.get_marine_unit_id()
+        data = self.get_flattened_data(self)
+        regions = data['region_subregions']
+        countries = data['member_states']
 
         col_names = ('Country', 'Region', 'thematicId', 'nameTxtInt',
                      'nameText', 'spZoneType', 'legisSName', 'Area')
         columns = [getattr(self.mapper_class, name) for name in col_names]
 
+        mapper_class = sql2018.MRUsPublication
         conditions = []
-        if muid:
-            conditions.append(self.mapper_class.thematicId == muid)
+
+        if regions:
+            conditions.append(mapper_class.Region.in_(regions))
+
+        if countries:
+            conditions.append(mapper_class.Country.in_(countries))
 
         sess = db.session()
 
-        q = sess.query(*columns).filter(
+        data = sess.query(*columns).filter(
             *conditions
         ).order_by(getattr(self.mapper_class, self.order_field))
 
-        count = q.count()
+        data = db_objects_to_dict(data)
+        data_grouped = group_data(data, 'Country', remove_pivot=False)
 
-        item = q.offset(page).limit(1).first()
+        pages = sorted(data_grouped.keys())
+        count = len(pages)
+        current_country = pages[page]
 
-        return count, item
+        items = data_grouped[current_country]
+
+        return count, items
 
