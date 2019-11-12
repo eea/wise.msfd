@@ -115,6 +115,10 @@ class A4Form(ItemDisplayForm):
         res = []
         conditions = []
 
+        regions = self.get_form_data_by_key(self, 'region_subregions')
+        if regions:
+            conditions.append(mc.RegionSubRegions.in_(regions))
+
         area_types = self.get_form_data_by_key(self, 'area_types')
         if area_types:
             conditions.append(mc.AreaType.in_(area_types))
