@@ -10,6 +10,7 @@ from wise.msfd.utils import class_id, get_obj_fields
 
 FORMS_2018 = {}
 FORMS_ART4 = {}
+FORMS_ART8910 = {}
 FORMS_ART11 = {}
 FORMS_ART18 = {}
 FORMS = {}                         # main chapter 1 article form classes
@@ -34,6 +35,16 @@ def register_form_art4(klass):
     """
 
     FORMS_ART4[class_id(klass)] = klass
+
+    return klass
+
+
+def register_form_art8910(klass):
+    """ Registers the 2012 and 2018 main form for articles 8, 9, 10
+
+    """
+
+    FORMS_ART8910[class_id(klass)] = klass
 
     return klass
 

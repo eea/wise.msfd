@@ -28,6 +28,12 @@ class IArticleSelect(Interface):
                      vocabulary="wise_search_articles")
 
 
+class IReportingPeriodSelect(Interface):
+    reporting_period = Choice(title=u"Reporting period",
+                              required=False,
+                              vocabulary="wise_search_reporting_period")
+
+
 class IRecordSelect(Interface):
     """ We use a pagination based record selection
     """

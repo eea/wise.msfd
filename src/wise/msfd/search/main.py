@@ -8,7 +8,8 @@ from .. import sql
 from .. import db
 from ..base import BasePublicPage, EmbeddedForm, MainFormWrapper
 from ..db import (get_all_records, get_all_records_join,
-                  get_item_by_conditions, get_item_by_conditions_art_6)
+                  get_item_by_conditions, get_item_by_conditions_art_6,
+                  threadlocals)
 from ..interfaces import IMarineUnitIDsSelect
 from ..sql_extra import MSCompetentAuthority
 from ..utils import scan
@@ -17,7 +18,8 @@ from .a1314 import StartArticle1314Form
 from .a18 import StartArticle18Form
 from .a4 import A4Form, A4MemberStatesForm
 from .base import MAIN_FORMS, ItemDisplayForm, MainForm
-from .utils import data_to_xls, get_form, register_form_art4
+from .utils import (data_to_xls, get_form, register_form_art4,
+                    register_form_art8910)
 
 
 class StartView(BrowserView, BasePublicPage):
@@ -219,10 +221,28 @@ class RegionalCoopItemDisplay(ItemDisplayForm):
 
 
 class StartArticle8910Form(MainForm):
-    """ Select one of the article: 8(a,b,c,d)/9/10
+    """ Select one of the articles: 8(a,b,c,d)/9/10
     """
 
-    name = 'msfd-c1'
+    name = 'msfd-c14'
+    session_name = '2012'
+
+    fields = Fields(interfaces.IReportingPeriodSelect)
+
+    def get_subform(self):
+        klass = self.data.get('reporting_period')
+        session_name = klass.session_name
+        threadlocals.session_name = session_name
+
+        return klass(self, self.request)
+
+
+@register_form_art8910
+class StartArticle89102012Form(EmbeddedForm):
+    """ Select one of the article: 8(a,b,c,d)/9/10
+    """
+    title = "2012 reporting exercise"
+    # name = 'msfd-c1'
 
     fields = Fields(interfaces.IArticleSelect)
     session_name = '2012'
@@ -278,8 +298,11 @@ class AreaTypesForm(EmbeddedForm):
         if self.get_main_form().name == 'msfd-mru':
             return A4Form(self, self.request)
 
-        data = self.get_main_form().data
-        klass = get_form(data['article'])
+        # data = self.get_main_form().data
+        # klass = get_form(data['article'])
+
+        article = self.get_form_data_by_key(self, 'article')
+        klass = get_form(article)
 
         return super(AreaTypesForm, self).get_subform(klass)
 
@@ -327,9 +350,11 @@ StartArticle11View = wrap_form(StartArticle11Form, MainFormWrapper)
 StartArticle1314View = wrap_form(StartArticle1314Form, MainFormWrapper)
 
 
-class StartArticle89102018Form(MainForm):
+@register_form_art8910
+class StartArticle89102018Form(EmbeddedForm):
+    title = "2018 reporting exercise"
     record_title = 'Articles 8, 9, 10'
-    name = 'msfd-c4'
+    # name = 'msfd-c4'
 
     fields = Fields(interfaces.IArticleSelect2018)
     session_name = '2018'
@@ -346,7 +371,7 @@ class StartArticle89102018Form(MainForm):
             return klass(self, self.request)
 
 
-StartArticle89102018View = wrap_form(StartArticle89102018Form, MainFormWrapper)
+# StartArticle89102018View = wrap_form(StartArticle89102018Form, MainFormWrapper)
 
 StartArticle18View = wrap_form(StartArticle18Form, MainFormWrapper)
 
