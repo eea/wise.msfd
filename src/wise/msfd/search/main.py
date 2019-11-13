@@ -246,6 +246,7 @@ class StartArticle89102012Form(EmbeddedForm):
 
     fields = Fields(interfaces.IArticleSelect)
     session_name = '2012'
+    permission = 'zope2.View'
 
     def get_subform(self):
         if self.data['article']:
@@ -358,6 +359,7 @@ class StartArticle89102018Form(EmbeddedForm):
 
     fields = Fields(interfaces.IArticleSelect2018)
     session_name = '2018'
+    permission = 'wise.ViewReports'
 
     def get_subform(self):
         article = self.data['article']

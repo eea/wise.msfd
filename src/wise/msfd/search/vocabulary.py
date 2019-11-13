@@ -1,6 +1,7 @@
 # TODO: move rest of vocabularies from wise.msfd.vocabulary, they're not ok
 # in that location
 from zope.interface import provider
+from zope.security import checkPermission
 from zope.schema.interfaces import IVocabularyFactory
 from zope.schema.vocabulary import SimpleTerm, SimpleVocabulary
 
@@ -20,7 +21,15 @@ def monitoring_programme_info_types(context):
 
 @provider(IVocabularyFactory)
 def a8910_reporting_period(context):
-    terms = [SimpleTerm(v, k, v.title) for k, v in FORMS_ART8910.items()]
+    terms = []
+    for k, v in FORMS_ART8910.items():
+        term = SimpleTerm(v, k, v.title)
+        permission = v.permission
+        can_view = checkPermission(permission, context)
+
+        if can_view:
+            terms.append(term)
+
     terms.sort(key=lambda t: t.title)
     vocab = SimpleVocabulary(terms)
 
