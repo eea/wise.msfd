@@ -1,0 +1,29 @@
+<div
+  tal:define="extra_data options/extra_data | view/get_extra_data"
+  class="extra-details">
+
+    <div class="extra-details-section" tal:repeat="info extra_data" >
+      <h4 class="section-title" tal:content="python: info[0]"></h4>
+      <div style="overflow: auto;"
+          class="section-select" tal:condition="python: len(info[1])>0">
+        <tal:section
+          define="data python: info[1];">
+          <div>
+            <table class="listing table-report" tal:condition="data">
+              <thead></thead>
+              <tbody>
+                <tal:rep tal:repeat="row data">
+                  <tr tal:condition="python:row[0] not in view.blacklist">
+                    <th class="fixed-position"
+                        tal:content="python:view.name_as_title(row[0])">Label</th>
+                    <td tal:repeat="v python:row[1]"
+                        tal:content="structure python: view.print_value(v)">Value</td>
+                  </tr>
+                </tal:rep>
+              </tbody>
+            </table>
+          </div>
+        </tal:section>
+      </div>
+    </div>
+</div>
