@@ -91,7 +91,10 @@ def print_value(value):
 
         return html
 
-    base_values = string_types + (int, datetime.datetime, list)
+    if isinstance(value, ItemList):
+        return value()
+
+    base_values = string_types + (int, float, datetime.datetime, list)
 
     if not isinstance(value, base_values):
 
@@ -181,6 +184,29 @@ def db_objects_to_dict(data, excluded_columns=()):
             if col not in excluded_columns:
                 d.update({col: getattr(row, col)})
         out.append(d)
+
+    return out
+
+
+def change_orientation(data):
+    """ Change the orientation of data, from rows to columns
+    """
+    out = []
+    max = 0
+
+    for row in data:
+        nr_of_keys = len(row.keys())
+
+        if nr_of_keys > max:
+            max = nr_of_keys
+            fields = row.keys()
+
+    for field in fields:
+        field_data = []
+        for row in data:
+            field_data.append(row.get(field, ''))
+
+        out.append((field, field_data))
 
     return out
 

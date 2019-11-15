@@ -37,12 +37,16 @@
   background: rgba(255,255,255, 0.3);
 }
 
+#wise-search-form-top {
+  margin-bottom: 5rem;
+}
+
 .wise-search-form-container,
 #wise-search-form {
   opacity: 0;
 
   .subform {
-    margin-top: 3rem;
+    margin-top: 0rem;
     h3#article-id {
       display: flex;
       align-items: center;
@@ -74,6 +78,18 @@
     }
     th, td {
       padding: 0.5em;
+
+      &.fixed-position {
+        position: absolute;
+        width: 15rem;
+        margin-left: -15.1rem;
+        border-right: 2px solid #AAA;
+        color: #333;
+      }
+    }
+
+    &.table-report {
+       margin-left: 15rem;
     }
   }
 
@@ -477,6 +493,7 @@
     text-align: center;
     display: inline-block;
     width: 100%;
+    margin-bottom: 1rem;
   }
 
   #form-data-primary {

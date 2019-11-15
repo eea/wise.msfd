@@ -965,6 +965,7 @@
 
         initPageElems();
         removeNoValues();
+        fixTableHeaderAndCellsHeight();
 
 
         $("[name='form.buttons.prev']").prop("disabled" , false);
@@ -1445,6 +1446,34 @@
       });
     }
 
+    $.fn.fixTableHeaderAndCellsHeight = function() {
+      // because the <th> are position: absolute, they don't get the height of
+      // the <td> cells, and the other way around.
+
+      this.each(function() {
+        $("th", this).each(function() {
+          var $th = $(this);
+          var $next = $('td', $th.parent());
+          var cells_max_height = Math.max($next.height());
+          var height = Math.max($th.height(), cells_max_height);
+
+          $th.height(height);
+
+          if ($th.height() > cells_max_height) {
+            $next.height($th.height());
+          }
+
+          $('div', this).css('margin-top', '-4px');
+
+        });
+      });
+    };
+
+    function fixTableHeaderAndCellsHeight() {
+      var $table = $('.table-report');
+      $table.fixTableHeaderAndCellsHeight();
+    }
+
     jQuery(document).ready(function($){
         initPageElems();
 
@@ -1499,6 +1528,7 @@
         $(".topnav a").on("click", resetStorageForPage);
 
         removeNoValues();
+        fixTableHeaderAndCellsHeight();
     });
 
 }(window, document, jQuery));

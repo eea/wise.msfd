@@ -1,6 +1,7 @@
 # TODO: we need to check behavior of this module after modifications to
 # extractData() in EmbeddedForm
 
+from collections import OrderedDict
 from sqlalchemy import and_, or_
 
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
@@ -11,7 +12,8 @@ from . import interfaces
 from .. import db, sql, sql2018
 from ..base import EmbeddedForm, MarineUnitIDSelectForm
 from ..sql_extra import MSFD4GeographicalAreaID
-from ..utils import all_values_from_field, db_objects_to_dict, group_data
+from ..utils import (all_values_from_field, change_orientation,
+                     db_objects_to_dict, group_data, ItemLabel, ItemList)
 from .base import ItemDisplayForm
 from .utils import data_to_xls, register_form_2018
 
@@ -487,6 +489,10 @@ class A2018Article10(EmbeddedForm):
 class A2018Art81abDisplay(ItemDisplayForm):
     extra_data_template = ViewPageTemplateFile('pt/extra-data-pivot.pt')
 
+    secondary_extra_template = ViewPageTemplateFile(
+        'pt/extra-data-pivot-8ab.pt'
+    )
+
     def download_results(self):
         data = self.get_flattened_data(self)
         parent = self.context.context.context.context
@@ -624,7 +630,7 @@ class A2018Art81abDisplay(ItemDisplayForm):
 
         return res
 
-    def get_extra_data(self):
+    def get_extra_data_old(self):
         if not self.item:
             return {}
 
@@ -657,8 +663,9 @@ class A2018Art81abDisplay(ItemDisplayForm):
         for x in element_status:
             element = x.get('Element', '') or ''
             element2 = x.get('Element2', '') or ''
+            elements = [el for el in (element, element2) if el]
 
-            x['Element / Element2'] = ' / '.join((element, element2))
+            x['Element / Element2'] = ' / '.join(elements)
             element_status_pivot.append(x)
 
         id_elem_status = []
@@ -739,11 +746,138 @@ class A2018Art81abDisplay(ItemDisplayForm):
         )
 
         res.append(
-            ('Criteria Value Indicator', {
+            ('Related indicator', {
                 '': [{'IndicatorCode': x} for x in criteria_value_ind]
             }))
 
         return res
+
+    def get_extra_data(self):
+        if not self.item:
+            return {}
+
+        id_overall = self.item.Id
+
+        self.blacklist = ('Id', 'IdOverallStatus', 'IdElementStatus',
+                          'IdCriteriaStatus', 'IdCriteriaValues')
+        excluded_columns = ()
+
+        pressure_codes = db.get_unique_from_mapper(
+            sql2018.ART8GESOverallStatusPressure,
+            'PressureCode',
+            sql2018.ART8GESOverallStatusPressure.IdOverallStatus == id_overall
+        )
+
+        target_codes = db.get_unique_from_mapper(
+            sql2018.ART8GESOverallStatusTarget,
+            'TargetCode',
+            sql2018.ART8GESOverallStatusTarget.IdOverallStatus == id_overall
+        )
+
+        element_status_orig = db.get_all_columns_from_mapper(
+            sql2018.ART8GESElementStatu,
+            'Id',
+            sql2018.ART8GESElementStatu.IdOverallStatus == id_overall
+        )
+        element_status = db_objects_to_dict(element_status_orig,
+                                            excluded_columns)
+
+        final_rows = []
+
+        for row in element_status:
+            _row = OrderedDict()
+            _row.update(row)
+
+            id_elem_status = row['Id']
+            s = sql2018.ART8GESCriteriaStatu
+
+            criteria_status_orig = db.get_all_columns_from_mapper(
+                s,
+                'Id',
+                or_(s.IdOverallStatus == id_overall,
+                    s.IdElementStatus == id_elem_status)
+            )
+
+            criteria_statuses = db_objects_to_dict(criteria_status_orig,
+                                                   excluded_columns)
+
+            if not criteria_statuses:
+                final_rows.append(_row.copy())
+                continue
+
+            for criteria_status in criteria_statuses:
+                _row.update(criteria_status)
+                id_criteria_status = criteria_status['Id']
+
+                s = sql2018.ART8GESCriteriaValue
+                criteria_value_orig = db.get_all_columns_from_mapper(
+                    s,
+                    'Id',
+                    s.IdCriteriaStatus == id_criteria_status
+                )
+                criteria_values = db_objects_to_dict(criteria_value_orig,
+                                                     excluded_columns)
+
+                if not criteria_values:
+                    final_rows.append(_row.copy())
+                    continue
+
+                for criteria_value in criteria_values:
+                    _row.update(criteria_value)
+                    id_criteria_value = criteria_value['Id']
+
+                    s = sql2018.ART8GESCriteriaValuesIndicator
+                    criteria_value_ind = db.get_unique_from_mapper(
+                        s,
+                        'IndicatorCode',
+                        s.IdCriteriaValues == id_criteria_value
+                    )
+
+                    if not criteria_value_ind:
+                        final_rows.append(_row.copy())
+                        continue
+
+                    values = [
+                        ItemLabel(v, self.print_value(v))
+                        for v in criteria_value_ind
+                    ]
+
+                    _row.update(
+                        {'IndicatorCode': ItemList(values)}
+                    )
+
+                    final_rows.append(_row.copy())
+
+        _sorted_rows = sorted(final_rows, key=lambda d: d['Element'])
+        extra_final = change_orientation(_sorted_rows)
+
+        res = []
+        res_extra = []
+
+        res.append(
+            ('Related pressure(s)', {
+                '': [{'PressureCode': x} for x in pressure_codes]
+            }))
+
+        res.append(
+            ('Related target(s)', {
+                '': [{'TargetCode': x} for x in target_codes]
+            }))
+
+        res_extra.append(
+            ('Element Status, Criteria Status, '
+             'Parameter assessments and Related indicator', extra_final)
+        )
+
+        self.extra_data = res_extra
+
+        return res
+
+    def extras(self):
+        html = self.extra_data_template(extra_data=self.get_extra_data())
+        extra_html = self.secondary_extra_template(extra_data=self.extra_data)
+
+        return html + extra_html
 
 
 @register_form_2018
