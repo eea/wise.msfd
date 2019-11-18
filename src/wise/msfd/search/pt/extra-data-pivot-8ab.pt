@@ -2,13 +2,13 @@
   tal:define="extra_data options/extra_data | view/get_extra_data"
   class="extra-details">
 
-    <div class="extra-details-section" tal:repeat="info extra_data" >
+    <div style="overflow: initial;"
+        class="extra-details-section" tal:repeat="info extra_data" >
       <h4 class="section-title" tal:content="python: info[0]"></h4>
-      <div style="overflow: auto;"
-          class="section-select" tal:condition="python: len(info[1])>0">
+      <div class="section-select" tal:condition="python: len(info[1])>0">
         <tal:section
           define="data python: info[1];">
-          <div>
+          <div class="double-scroll">
             <table class="listing table-report" tal:condition="data">
               <thead></thead>
               <tbody>

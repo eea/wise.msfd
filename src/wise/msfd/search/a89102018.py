@@ -375,7 +375,7 @@ class A2018Art10Display(ItemDisplayForm):
         paremeters = group_data(paremeters, 'Parameter', remove_pivot=False)
 
         res = [
-            ('Parameters', paremeters),
+            ('Progress assessment', paremeters),
         ]
 
         return res

@@ -23,8 +23,9 @@
 
         </div>
         <p tal:condition="python: not section">No data</p>
+
         <div class="tabs-wrapper" >
-          <div class="tab-content">
+          <div class="tab-content double-scroll">
             <tal:section tal:repeat="tab_title section">
               <div
                 tal:define="utitle python:tab_title or section_title;"

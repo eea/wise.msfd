@@ -966,6 +966,7 @@
         initPageElems();
         removeNoValues();
         fixTableHeaderAndCellsHeight();
+        addDoubleScroll();
 
 
         $("[name='form.buttons.prev']").prop("disabled" , false);
@@ -1474,6 +1475,40 @@
       $table.fixTableHeaderAndCellsHeight();
     }
 
+    function addDoubleScroll() {
+      var secondScroll = '<div class="cloned-scroll-top" style="overflow-x: auto;">' +
+          '<div style="height: 1px;"></div>' +
+        '</div>'
+
+      $(".double-scroll").each(function(){
+        var $doubleScroll = $(this)
+        var tableWidth = $doubleScroll.find('table').outerWidth(includeMargin=true);
+
+        if (tableWidth == null) {
+          return
+        }
+
+        $doubleScroll.parent().before(secondScroll);
+        var $clonedScrollTop = $doubleScroll.parent().siblings('.cloned-scroll-top').first();
+
+        $clonedScrollTop.on('scroll', function(){
+          $doubleScroll.scrollLeft($clonedScrollTop.scrollLeft());
+        });
+
+        $doubleScroll.scroll(function(){
+          $clonedScrollTop.scrollLeft($doubleScroll.scrollLeft());
+        });
+
+        if(tableWidth == $doubleScroll.find('table').outerWidth()
+            && tableWidth > $doubleScroll.outerWidth()){
+          tableWidth = tableWidth + 85;
+        }
+
+        $clonedScrollTop.children().width(tableWidth);
+
+      });
+    }
+
     jQuery(document).ready(function($){
         initPageElems();
 
@@ -1529,6 +1564,7 @@
 
         removeNoValues();
         fixTableHeaderAndCellsHeight();
+        addDoubleScroll();
     });
 
 }(window, document, jQuery));
