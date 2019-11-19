@@ -525,10 +525,21 @@ https://svn.eionet.europa.eu/repositories/Reportnet/Dataflows/MarineDirective/MS
             t.c.CountryCode == self.country_code,
             # t.c.Region == self.country_region_code,
             # t.c.MarineReportingUnit.in_(muids),     #
-            t.c.GESComponent.in_(all_ids),
-            or_(t.c.Element.isnot(None),
-                t.c.Criteria.isnot(None)),
+            t.c.GESComponent.in_(all_ids)
         ]
+
+        # Handle the case of Romania that submitted duplicate data,
+        # where Element is empty, but Criteria has data
+        if self.country_code != 'RO':
+            conditions.append(
+                or_(t.c.Element.isnot(None),
+                    t.c.Criteria.isnot(None))
+            )
+        else:
+            conditions.append(
+                t.c.Element.isnot(None)
+            )
+
         if self.country_code != 'DK':
             conditions.insert(
                 1, t.c.Region == self.country_region_code
@@ -613,8 +624,9 @@ https://svn.eionet.europa.eu/repositories/Reportnet/Dataflows/MarineDirective/MS
             # Because some Features are missing from FeaturesSmart
             # we consider 'D1' descriptor valid for all 'D1.x'
             # and we keep the data if 'D1' is present in the GESComponents
+            # For D1 Romania filter by features
             ges_comps = getattr(row, 'GESComponents', ())
-            if 'D1' in ges_comps:
+            if 'D1' in ges_comps and self.country_code != 'RO':
                 out_filtered.append(row)
                 continue
 
