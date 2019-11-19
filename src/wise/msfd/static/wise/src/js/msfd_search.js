@@ -966,8 +966,7 @@
         initPageElems();
         removeNoValues();
         fixTableHeaderAndCellsHeight();
-        addDoubleScroll();
-
+        //addDoubleScroll();
 
         $("[name='form.buttons.prev']").prop("disabled" , false);
         $("[name='form.buttons.next']").prop("disabled" , false);
@@ -1110,6 +1109,8 @@
         $('table.listing:not(.nosort) tbody').each(setoddeven);
 
         if ( typeof scanforlinks !== "undefined") jQuery(scanforlinks);
+
+        addDoubleScroll();
     }
 
     function formAjaxError(req, status, error){
@@ -1499,13 +1500,7 @@
           $clonedScrollTop.scrollLeft($doubleScroll.scrollLeft());
         });
 
-        if(tableWidth == $doubleScroll.find('table').outerWidth()
-            && tableWidth > $doubleScroll.outerWidth()){
-          tableWidth = tableWidth + 85;
-        }
-
         $clonedScrollTop.children().width(tableWidth);
-
       });
     }
 
