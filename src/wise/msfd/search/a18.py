@@ -36,6 +36,8 @@ class A18MeasureProgressDisplay(ItemDisplayForm):
     mapper_class = sql2018.ART18MeasureProgres
     css_class = 'left-side-form'
 
+    blacklist_labels = ('MeasureCode', )
+
     def get_current_country(self):
         report_id = self.item.IdReportedInformation
 

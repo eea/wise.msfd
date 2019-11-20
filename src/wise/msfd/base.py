@@ -173,9 +173,9 @@ class BaseUtil(object):
         # if 'Code' in field_name:
         #     return value
 
-        # 'no_label_fields' is a list of field names, for these fields
+        # 'blacklist_labels' is a list of field names, for these fields
         # we will print the original value
-        if field_name in getattr(self, 'no_label_fields', []):
+        if field_name in getattr(self, 'blacklist_labels', []):
             return value
 
         return print_value(value)
