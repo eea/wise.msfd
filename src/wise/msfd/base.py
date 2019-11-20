@@ -166,7 +166,18 @@ class BaseUtil(object):
 
         return get_obj_fields(obj, use_blacklist=use_blacklist)
 
-    def print_value(self, value):
+    def print_value(self, value, field_name=None):
+        if not field_name:
+            return print_value(value)
+
+        # if 'Code' in field_name:
+        #     return value
+
+        # 'no_label_fields' is a list of field names, for these fields
+        # we will print the original value
+        if field_name in getattr(self, 'no_label_fields', []):
+            return value
+
         return print_value(value)
 
     def get_main_form(self):

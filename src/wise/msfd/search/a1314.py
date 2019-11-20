@@ -47,7 +47,31 @@ class MemberStatesForm(EmbeddedForm):
     fields['member_states'].widgetFactory = CheckBoxFieldWidget
 
     def get_subform(self):
-        return MarineUnitIDsForm(self, self.request)
+        mc = sql.MSFD13ReportingInfo
+        report_type = self.get_form_data_by_key(self, 'report_type')
+        count, mrus = self.get_available_marine_unit_ids()
+
+        count, res = db.get_all_records(
+            mc.ID,
+            mc.MarineUnitID.in_(mrus),
+            mc.ReportType == report_type
+        )
+        self.data['report_ids'] = [x[0] for x in res]
+
+        mc = sql.MSFD13Measure
+
+        count, res = db.get_all_records(
+            mc,
+            mc.ReportID.in_(self.data['report_ids'])
+        )
+        # res = set([(x.UniqueCode, x.Name) for x in set(res)])
+        res = set([x.UniqueCode for x in set(res)])
+        self.data['unique_codes'] = sorted(res)
+
+        return A1314ItemDisplay(self, self.request)
+
+        # return UniqueCodesForm(self, self.request)
+        # return MarineUnitIDsForm(self, self.request)
 
     def get_available_marine_unit_ids(self):
         # TODO: use available marine unit ids from t_MSFD4_GegraphicalAreasID
@@ -123,6 +147,7 @@ class A1314ItemDisplay(ItemDisplayForm):
 
     mapper_class = sql.MSFD13MeasuresInfo
     order_field = 'ID'
+    css_class = 'left-side-form'
     
     blacklist = ['ReportID', 'MeasureID']
     use_blacklist = True
@@ -222,8 +247,35 @@ class A1314ItemDisplay(ItemDisplayForm):
 
     def extras(self):
         html = self.pivot_template(extra_data=self.extra_data)
+        extra_data_template = ViewPageTemplateFile('pt/extra-data-pivot.pt')
 
-        return self.extra_data_template() + html
+        report_id = self.item.ReportID
+        mc = sql.MSFD13ReportingInfo
+
+        count, marine_units = db.get_all_records(
+            mc,
+            mc.ID == report_id
+        )
+
+        marine_units = [x.MarineUnitID for x in marine_units]
+
+        marine_units_labeled = []
+        for mru in marine_units:
+            mru_label = GES_LABELS.get('mrus', mru)
+
+            if mru_label != mru:
+                mru_label = u"{} ({})".format(mru_label, unicode(mru))
+
+            marine_units_labeled.append(mru_label)
+
+        mrus_extra = [
+            ('Marine Unit(s)', {
+                '': [{'MarineUnitID': x} for x in marine_units_labeled]
+            })
+        ]
+
+        return (self.extra_data_template() + html +
+                extra_data_template(self, extra_data=mrus_extra))
 
     def custom_print_value(self, row_label, val):
         """ Used to create a customized print value, like adding the

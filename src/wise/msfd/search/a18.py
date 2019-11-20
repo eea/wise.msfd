@@ -156,7 +156,7 @@ class A18MeasureProgressDisplay(ItemDisplayForm):
         )
 
         data = db_objects_to_dict(data, excluded_columns)
-        res.append(('MeasureProgress Descriptor', {'': data}))
+        res.append(('Descriptor', {'': data}))
 
         return res
 

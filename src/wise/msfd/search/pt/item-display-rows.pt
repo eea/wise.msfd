@@ -1,6 +1,6 @@
 <tal:def tal:define="items options/item | view/item;
   blacklist options/blacklist | view/blacklist | python: [];
-  use_blacklist view/use_blacklist | python: True
+  use_blacklist view/use_blacklist | python: True;
   ">
   <tal:cond tal:condition="items">
     <div tal:define="fields python:items[0].keys();
@@ -18,7 +18,7 @@
               <tr>
                 <tal:rep tal:repeat="field fields">
                   <td tal:define="value python: item.get(field, None)"
-                      tal:content="structure python: view.print_value(value)">Value</td>
+                      tal:content="structure python: view.print_value(value, field)">Value</td>
                 </tal:rep>
               </tr>
             </tal:rep>

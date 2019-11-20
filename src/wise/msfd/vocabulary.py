@@ -579,6 +579,7 @@ def a1314_report_types(context):
     table = sql.MSFD13ReportingInfo
     column = 'ReportType'
     values = db.get_unique_from_mapper(table, column)
+    values = reversed(values)
     terms = [SimpleTerm(x, x, x) for x in values]
     vocab = SimpleVocabulary(terms)
 
@@ -595,6 +596,7 @@ def a1314_regions(context):
 @provider(IVocabularyFactory)
 def a1314_member_states(context):
     regions = context.get_selected_region_subregions()
+    report_type = context.data['report_type']
 
     mc = sql.MSFD13ReportingInfo
 
@@ -603,7 +605,8 @@ def a1314_member_states(context):
         count, rows = db.get_all_records_join(
             [mc_join.MemberState],
             mc,
-            mc.Region.in_(regions)
+            mc.Region.in_(regions),
+            mc.ReportType == report_type
         )
 
         return values_to_vocab(set(x[0].strip() for x in rows))

@@ -17,7 +17,7 @@
                     <th class="fixed-position"
                         tal:content="python:view.name_as_title(row[0])">Label</th>
                     <td tal:repeat="v python:row[1]"
-                        tal:content="structure python: view.print_value(v)">Value</td>
+                        tal:content="structure python: view.print_value(v, row[0])">Value</td>
                   </tr>
                 </tal:rep>
               </tbody>

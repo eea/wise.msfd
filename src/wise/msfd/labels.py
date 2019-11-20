@@ -59,7 +59,8 @@ def _extract_ktm():
             if row[0] in labels.keys():
                 logger.debug("Duplicate label in csv file: %s", row[0])
 
-            labels[row[0]] = row[2]
+            label = row[2].strip('"')
+            labels[row[0]] = label
 
     return labels
 

@@ -66,6 +66,8 @@ class A4Form(ItemDisplayForm):
     order_field = 'MSFD4_GeograpicalAreasDescription_Import'
     css_class = "left-side-form"
 
+    no_label_fields = ('MarineUnitID', )
+
     extra_data_template = ViewPageTemplateFile('pt/extra-data-pivot.pt')
     # extra_data_template = ViewPageTemplateFile('pt/extra-data-simple.pt')
     blacklist = ('MSFD4_GeograpicalAreasDescription_Import',)
@@ -184,6 +186,7 @@ class A4ItemDisplay2018to2024(ItemDisplayForm):
     order_field = 'thematicId'
 
     data_template = ViewPageTemplateFile('pt/item-display-rows.pt')
+    no_label_fields = ('thematicId', )
 
     def get_current_country(self):
         country_code = self.item[0]['Country']

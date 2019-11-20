@@ -86,7 +86,7 @@ def a4_mru_reporting_cycle_factory(context):
 @provider(IVocabularyFactory)
 def a18_data_type(context):
     terms = [SimpleTerm(v, k, v.title) for k, v in FORMS_ART18.items()]
-    terms.sort(key=lambda t: t.title)
+    terms.sort(key=lambda t: t.title, reverse=True)
     vocab = SimpleVocabulary(terms)
 
     return vocab

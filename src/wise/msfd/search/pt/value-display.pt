@@ -13,7 +13,7 @@
   <tbody>
     <tr>
       <td tal:repeat="key python:view.get_obj_fields(item)">
-        <span tal:define="value item/?key; value python: view.print_value(value)">
+        <span tal:define="value item/?key; value python: view.print_value(value, key)">
           <span tal:content="structure value">Some value here</span>
           <em tal:condition="not: value">No value</em>
         </span>
