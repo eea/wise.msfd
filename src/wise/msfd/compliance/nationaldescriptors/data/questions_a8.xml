@@ -112,6 +112,7 @@
       <option score="0">Extent of pressure is not reported for this criterion</option>
       <option score="0">Extent of impact is not reported for this criterion</option>
       <option score="0">Extent of good state is not reported for this criterion</option>
+      <option score="0.250">Not clear</option>
       <option score="/">Not relevant</option>
     </answers>
     <scoring determination-method="wise.msfd.compliance.scoring.scoring_based">
