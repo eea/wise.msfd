@@ -15,6 +15,14 @@
 
   <browser:viewlet
     name="plone.htmlhead.title"
+    view='wise.msfd.compliance.interfaces.IReportDataViewSecondary'
+    manager="plone.app.layout.viewlets.interfaces.IHtmlHead"
+    class=".viewlets.SecondaryReportTitleViewlet"
+    permission="zope2.View"
+    />
+
+  <browser:viewlet
+    name="plone.htmlhead.title"
     view='wise.msfd.compliance.interfaces.IEditAssessmentForm'
     manager="plone.app.layout.viewlets.interfaces.IHtmlHead"
     class=".viewlets.AssessmentEditTitleViewlet"
@@ -26,6 +34,14 @@
     view='.interfaces.INationaldescriptorArticleView'
     manager="plone.app.layout.viewlets.interfaces.IHtmlHead"
     class=".viewlets.ArticleTitleViewlet"
+    permission="zope2.View"
+    />
+
+  <browser:viewlet
+    name="plone.htmlhead.title"
+    view='.interfaces.INationaldescriptorSecondaryArticleView'
+    manager="plone.app.layout.viewlets.interfaces.IHtmlHead"
+    class=".viewlets.SecondaryArticleTitleViewlet"
     permission="zope2.View"
     />
 

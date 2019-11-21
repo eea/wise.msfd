@@ -88,6 +88,46 @@ def _get_report_filename_art10_2012(country, region, article, descriptor):
 
 
 @db.use_db_session('2012')
+def _get_report_filename_art8esa_2012(country, region, article):
+    mc = sql.MSFD8cImport
+
+    count, item = db.get_item_by_conditions(
+        mc,
+        'MSFD8c_Import_ID',
+        mc.MSFD8c_Import_ReportingCountry == country,
+        mc.MSFD8c_Import_ReportingRegion == region
+    )
+
+    if count != 1:
+        logger.warning("Could not find report filename for %s %s %s",
+                       country, region, article,)
+
+        return None
+
+    return item.MSFD8c_Import_FileName
+
+
+@db.use_db_session('2012')
+def _get_report_filename_art3_4_2012(country, region, article, descriptor):
+    mc = sql.MSFD4Import
+
+    count, item = db.get_item_by_conditions(
+        mc,
+        'MSFD4_Import_ID',
+        mc.MSFD4_Import_ReportingCountry == country,
+        # mc.MSFD8c_Import_ReportingRegion == region
+    )
+
+    if count != 1:
+        logger.warning("Could not find report filename for %s %s %s",
+                       country, region, article,)
+
+        return None
+
+    return item.MSFD4_Import_FileName
+
+
+@db.use_db_session('2012')
 def _get_report_filename_art9_2012(country, region, article, descriptor):
     mc = sql.MSFD9Import
 
@@ -164,6 +204,8 @@ def get_report_filename(report_version,
     # 'Art8': '8b',       # TODO: this needs to be redone for descriptor
     mapping = {
         '2012': {
+            'Art3-4': _get_report_filename_art3_4_2012,
+            'Art8ESA': _get_report_filename_art8esa_2012,
             'Art8': _get_report_filename_art8_2012,
             'Art9': _get_report_filename_art9_2012,
             'Art10': _get_report_filename_art10_2012,

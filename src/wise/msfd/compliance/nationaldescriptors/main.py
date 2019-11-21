@@ -24,7 +24,8 @@ from wise.msfd.gescomponents import get_descriptor
 from wise.msfd.utils import t2rt
 
 from .base import BaseView
-from .interfaces import INationaldescriptorArticleView
+from .interfaces import (INationaldescriptorArticleView,
+                         INationaldescriptorSecondaryArticleView)
 
 logger = getLogger('wise.msfd')
 
@@ -578,7 +579,7 @@ class NationalDescriptorArticleView(BaseView):
 
     @property
     def questions(self):
-        qs = self._questions[self.article]
+        qs = self._questions.get(self.article, [])
 
         return qs
 
@@ -705,3 +706,147 @@ class NationalDescriptorArticleView(BaseView):
         )
 
         return self.index()
+
+
+class NationalDescriptorSecondaryArticleView(NationalDescriptorArticleView):
+    """"""
+
+    implements(INationaldescriptorSecondaryArticleView)
+    _descriptor = 'Not linked'
+
+    def __call__(self):
+
+        if 'assessor' in self.request.form:
+            assessors = self.request.form['assessor']
+
+            if isinstance(assessors, list):
+                assessors = ', '.join(assessors)
+            self.context.saved_assessment_data.ass_new = assessors
+
+        # BBB:
+
+        context = self.context
+
+        if not hasattr(context, 'saved_assessment_data') or \
+                not isinstance(context.saved_assessment_data, PersistentList):
+            context.saved_assessment_data = AssessmentData()
+
+        # Assessment data 2012
+        # descriptor_criterions = get_descriptor(self.descriptor).criterions
+        descriptor_criterions = []
+
+        country_name = self._country_folder.title
+
+        try:
+            db_data_2012 = get_assessment_data_2012_db(
+                country_name,
+                self.descriptor,
+                self.article
+            )
+            assessments_2012 = filter_assessment_data_2012(
+                db_data_2012,
+                self.country_region_code,
+                descriptor_criterions,
+            )
+            self.assessment_data_2012 = self.assessment_data_2012_tpl(
+                data=assessments_2012
+            )
+
+            if assessments_2012.get(country_name):
+                score_2012 = assessments_2012[country_name].score
+                conclusion_2012 = assessments_2012[country_name].overall_ass
+            else:       # fallback
+                ctry = assessments_2012.keys()[0]
+                score_2012 = assessments_2012[ctry].score
+                conclusion_2012 = assessments_2012[ctry].overall_ass
+
+            report_by, assessors, assess_date, source_file = \
+                get_assessment_head_data_2012(self.article,
+                                              self.country_region_code,
+                                              self._country_folder.id)
+        except:
+            logger.exception("Could not get assessment data for 2012")
+            self.assessment_data_2012 = ''
+            score_2012 = 100
+            conclusion_2012 = 'Not found'
+            report_by, assessors, assess_date, source_file = [
+                'Not found'] * 3 + [('Not found', '')]
+
+        # Assessment header 2012
+
+        self.assessment_header_2012 = self.assessment_header_template(
+            report_by=report_by,
+            assessor_list=[],
+            assessors=assessors,
+            assess_date=assess_date,
+            source_file=source_file,
+            show_edit_assessors=False,
+        )
+
+        # Assessment data 2018
+        data = self.context.saved_assessment_data.last()
+        elements = []
+        # elements = self.questions[0].get_all_assessed_elements(
+        #     self.descriptor_obj,
+        #     muids=self.muids
+        # )
+        article_weights = ARTICLE_WEIGHTS
+        # assessment = format_assessment_data(
+        #     self.article,
+        #     elements,
+        #     self.questions,
+        #     self.muids,
+        #     data,
+        #     self.descriptor_obj,
+        #     article_weights
+        # )
+        assessment = []
+
+        score_2012 = int(round(score_2012))
+        conclusion_2012_color = CONCLUSION_COLOR_TABLE.get(score_2012, 0)
+        # change = int(
+        #     assessment.phase_overall_scores
+        #     .get_range_index_for_phase('adequacy') - score_2012
+        # )
+        change = 1
+
+        # self.assessment_data_2018_html = self.assessment_data_2018_tpl(
+        #     assessment=assessment,
+        #     score_2012=score_2012,
+        #     conclusion_2012=conclusion_2012,
+        #     conclusion_2012_color=conclusion_2012_color,
+        #     change_since_2012=change,
+        #     can_comment=self.can_comment
+        # )
+        self.assessment_data_2018_html = ''
+
+        # Assessment header 2018
+        report_by_2018 = u'Commission'
+        # assessors_2018 = self.context.saved_assessment_data.assessors
+        assessors_2018 = getattr(
+            self.context.saved_assessment_data, 'ass_new', 'Not assessed'
+        )
+        assess_date_2018 = data.get('assess_date', u'Not assessed')
+        source_file_2018 = ('To be addedd...', '.')
+
+        can_edit = self.check_permission('wise.msfd: Edit Assessment')
+        show_edit_assessors = self.assessor_list and can_edit
+
+        self.assessment_header_2018_html = self.assessment_header_template(
+            report_by=report_by_2018,
+            assessor_list=self.assessor_list,
+            assessors=assessors_2018,
+            assess_date=assess_date_2018,
+            source_file=source_file_2018,
+            show_edit_assessors=show_edit_assessors,
+        )
+
+        return self.index()
+
+    @property
+    def title(self):
+        return u"Commission assessment: {} / {} / {} / 2018".format(
+            self.country_title,
+            self.country_region_name,
+            self.article,
+        )

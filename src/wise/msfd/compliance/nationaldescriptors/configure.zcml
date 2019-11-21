@@ -26,6 +26,14 @@
     permission="wise.ViewAssessmentData"
     />
 
+  <browser:page
+    for="..interfaces.INationalDescriptorAssessmentSecondary"
+    name="nat-desc-art-view-secondary"
+    template="./pt/art-view-secondary.pt"
+    class=".main.NationalDescriptorSecondaryArticleView"
+    permission="cmf.ManagePortal"
+    />
+
   <!-- Mini-view to see edit history for an assessment -->
   <browser:page
     for="*"
@@ -65,6 +73,14 @@
     for="..interfaces.INationalDescriptorAssessment"
     name="view-report-data-2012"
     class=".reportdata.ReportData2012"
+    template="./pt/report-data-view.pt"
+    permission="wise.ViewAssessmentData"
+    />
+
+  <browser:page
+    for="..interfaces.INationalDescriptorAssessmentSecondary"
+    name="view-report-data-2012"
+    class=".reportdata.ReportData2012Secondary"
     template="./pt/report-data-view.pt"
     permission="wise.ViewAssessmentData"
     />

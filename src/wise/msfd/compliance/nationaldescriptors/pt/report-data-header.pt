@@ -32,7 +32,8 @@
                 target="_blank">EU</a>
             </div>
 
-            <div class="nav-articles">
+            <div class="nav-articles"
+                tal:condition="view/is_primary_article">
               <div tal:repeat="art view/_descriptor_folder/contentValues" class="art">
 
                 <div class="art-middle">
@@ -68,7 +69,7 @@
         <td>Region(s) and subregion(s)</td>
         <td tal:content="view/country_region_name"/>
       </tr>
-      <tr>
+      <tr tal:condition="view/is_primary_article">
         <td>Descriptor</td>
         <td tal:content="python:view.descriptor_obj.title"/>
       </tr>

@@ -111,6 +111,15 @@ class BootstrapCompliance(BrowserView):
 
         return ['Art8', 'Art9', 'Art10']
 
+    def _get_secondary_articles(self):
+        articles = [
+            'Art3-4',
+            # 'Art7',
+            # 'Art8ESA'
+        ]
+
+        return articles
+
     def set_layout(self, obj, name):
         ISelectableBrowserDefault(obj).setLayout(name)
 
@@ -285,6 +294,39 @@ class BootstrapCompliance(BrowserView):
 
             self.make_region(rda, region)
 
+    def setup_secondary_articles(self, parent):
+        if 'national-descriptors-assessments' not in parent.contentIds():
+            return
+
+        nda_parent = parent['national-descriptors-assessments']
+        country_ids = nda_parent.contentIds()
+
+        for country in country_ids:
+            country_folder = nda_parent[country]
+            region_codes = country_folder.contentIds()
+
+            for region in region_codes:
+                region_folder = country_folder[region]
+
+                for article in self._get_secondary_articles():
+                    if article.lower() in region_folder.contentIds():
+                        nda = region_folder[article.lower()]
+                    else:
+                        nda = create(region_folder,
+                                     'wise.msfd.nationaldescriptorassessment',
+                                     title=article)
+
+                        logger.info("Created NationalDescriptorAssessment %s",
+                                    nda.absolute_url())
+
+                    alsoProvides(
+                        nda,
+                        interfaces.INationalDescriptorAssessmentSecondary
+                    )
+                    self.set_layout(nda, '@@nat-desc-art-view-secondary')
+
+                    self.create_comments_folder(nda)
+
     def __call__(self):
 
         # if 'compliance-module' in self.context.contentIds():
@@ -309,7 +351,8 @@ class BootstrapCompliance(BrowserView):
         # Editor: Milieu
 
         # self.setup_nationaldescriptors(cm)
-        self.setup_regionaldescriptors(cm)
+        # self.setup_regionaldescriptors(cm)
+        self.setup_secondary_articles(cm)
 
         return cm.absolute_url()
 

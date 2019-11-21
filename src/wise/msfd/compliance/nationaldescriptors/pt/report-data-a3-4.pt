@@ -1,0 +1,7 @@
+<div>
+  <tal:def define="data python: view.rows">
+    <metal:s metal:use-macro="context/context/wise-macros/macros/simplify-table"></metal:s>
+    <metal:s metal:use-macro="context/context/wise-macros/macros/overflow-table"></metal:s>
+
+  </tal:def>
+</div>

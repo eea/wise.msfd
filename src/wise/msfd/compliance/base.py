@@ -337,6 +337,22 @@ class BaseComplianceView(BrowserView, BasePublicPage, SecurityMixin):
         return self._article_assessment.getId().capitalize()
 
     @property
+    def is_primary_article(self):
+        """ Check if the assessment has IDescriptorFolder as parent,
+            if does not have it means the assessment belongs to
+            a "secondary" article (Art 3-4, 7, 8ESA)
+
+        :return: True or False
+        """
+        iface = interfaces.IDescriptorFolder
+
+        for parent in self.request.other['PARENTS']:
+            if iface.providedBy(parent):
+                return True
+
+        return False
+
+    @property
     def _descriptor_folder(self):
         return self.get_parent_by_iface(
             interfaces.IDescriptorFolder

@@ -59,6 +59,16 @@
           </div>
 
           <div tal:repeat="region view/get_regions">
+            <tal:block tal:define="region_url region/absolute_url"
+              tal:condition="python: view.check_permission('cmf.ManagePortal')">
+              <a class="btn btn-sm btn-primary"
+                  tal:attributes="href python: '{}/art3-4'.format(region_url)">Articles 3 & 4</a>
+              <a class="btn btn-sm btn-primary"
+                  tal:attributes="href python: '{}/art7'.format(region_url)">Article 7</a>
+              <a class="btn btn-sm btn-primary"
+                  tal:attributes="href python: '{}/art8esa'.format(region_url)">Article 8 ESA</a>
+            </tal:block>
+
             <h4 tal:content="region/Title">Region name</h4>
 
             <table class="table as-table-overview table-striped">

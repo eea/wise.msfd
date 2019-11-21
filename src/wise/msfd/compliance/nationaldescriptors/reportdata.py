@@ -18,7 +18,8 @@ from Products.Five.browser.pagetemplatefile import \
 from Products.statusmessages.interfaces import IStatusMessage
 from wise.msfd import db, sql2018  # sql,
 from wise.msfd.base import BaseUtil
-from wise.msfd.compliance.interfaces import IReportDataView
+from wise.msfd.compliance.interfaces import (IReportDataView,
+                                             IReportDataViewSecondary)
 from wise.msfd.compliance.nationaldescriptors.data import get_report_definition
 from wise.msfd.compliance.utils import group_by_mru, insert_missing_criterions
 from wise.msfd.data import (get_factsheet_url, get_report_file_url,
@@ -30,8 +31,10 @@ from z3c.form.button import buttonAndHandler
 from z3c.form.field import Fields
 from z3c.form.form import Form
 
+from .a34 import Article34
 from .a8 import Article8
 from .a8alternate import Article8Alternate
+from .a8esa import Article8ESA
 from .a9 import Article9, Article9Alternate
 from .a10 import Article10, Article10Alternate
 from .base import BaseView
@@ -146,6 +149,8 @@ class ReportData2012(BaseView, BaseUtil):
     @property
     def article_implementations(self):
         res = {
+            'Art3-4': Article34,
+            'Art8ESA': Article8ESA,
             'Art8': Article8,
             'Art9': Article9,
             'Art10': Article10,
@@ -210,6 +215,17 @@ class ReportData2012(BaseView, BaseUtil):
                                    self.country_region_code,
                                    art or self.article,
                                    self.descriptor)
+
+    @property
+    def report_title(self):
+        title = "Member State report: {}/{}/{}/{}/2012".format(
+            self.country_name,
+            self.country_region_name,
+            self.descriptor_title,
+            self.article
+        )
+
+        return title
 
     def data_to_xls(self, data, report_header):
         # Create a workbook and add a worksheet.
@@ -300,12 +316,7 @@ class ReportData2012(BaseView, BaseUtil):
         rep_info = self.get_reporting_information()
 
         report_header_data = OrderedDict(
-            title="Member State report: {}/{}/{}/{}/2012".format(
-                self.country_name,
-                self.country_region_name,
-                self.descriptor_title,
-                self.article
-            ),
+            title=self.report_title,
             report_by=rep_info.reporters,
             source_file=source_file,
             factsheet=factsheet,
@@ -329,6 +340,15 @@ class ReportData2012(BaseView, BaseUtil):
 
         return self.index()
 
+    def _get_reporting_info(self, root):
+        reporters = root.xpath(
+            '//w:ReportingInformation/w:Organisation/text()', namespaces=NSMAP
+        )
+        date = root.xpath('//w:ReportingInformation/w:ReportingDate/text()',
+                          namespaces=NSMAP)
+
+        return reporters, date
+
     def get_reporting_information(self):
         # The MSFD<ArtN>_ReportingInformation tables are not reliable (8b is
         # empty), so we try to get the information from the reported XML files.
@@ -341,11 +361,8 @@ class ReportData2012(BaseView, BaseUtil):
         text = get_xml_report_data(self.filename)
         root = fromstring(text)
 
-        reporters = root.xpath(
-            '//w:ReportingInformation/w:Organisation/text()', namespaces=NSMAP
-        )
-        date = root.xpath('//w:ReportingInformation/w:ReportingDate/text()',
-                          namespaces=NSMAP)
+        reporters, date = self._get_reporting_info(root)
+
         try:
             date_obj = datetime.strptime(date[0], '%d-%m-%Y')
             date_final = date_obj.date().isoformat()
@@ -358,6 +375,31 @@ class ReportData2012(BaseView, BaseUtil):
             res = ReportingInformation(date[0], ', '.join(set(reporters)))
 
         return res
+
+
+class ReportData2012Secondary(ReportData2012):
+    """ Class implementation for Article 8 ESA
+    """
+
+    implements(IReportDataViewSecondary)
+
+    descriptor = 'Not linked'
+
+    @property
+    def report_title(self):
+        title = "Member State report: {}/{}/{}/2012".format(
+            self.country_name,
+            self.country_region_name,
+            self.article
+        )
+
+        return title
+
+    def _get_reporting_info(self, root):
+        reporter = [root.attrib['Organisation']]
+        date = [root.attrib['ReportingDate']]
+
+        return reporter, date
 
 
 class ReportData2012Like2018(ReportData2012):

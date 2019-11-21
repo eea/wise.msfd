@@ -19,6 +19,21 @@ class ReportTitleViewlet(BaseTitleViewlet, BaseView):
                 u'{article}/{year}-Report'.format(**params))
 
 
+class SecondaryReportTitleViewlet(BaseTitleViewlet, BaseView):
+
+    @property
+    def page_title(self):
+        params = {
+            'article': self.article,
+            'country': self.country_code,
+            'region': self.country_region_code,
+            'year': self.view.report_year,
+        }
+
+        return (u'{country}/{region}/'
+                u'{article}/{year}-Report'.format(**params))
+
+
 class AssessmentEditTitleViewlet(BaseTitleViewlet, BaseView):
 
     @property
@@ -47,3 +62,15 @@ class ArticleTitleViewlet(BaseTitleViewlet, BaseView):
 
         return (u'{country}/{region}/'
                 u'{descriptor}/{article}-Overview'.format(**params))
+
+
+class SecondaryArticleTitleViewlet(BaseTitleViewlet, BaseView):
+    @property
+    def page_title(self):
+        params = {
+            'article': self.article,
+            'country': self.country_code,
+            'region': self.country_region_code,
+        }
+
+        return u'{country}/{region}/{article}-Overview'.format(**params)

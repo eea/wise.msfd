@@ -47,9 +47,17 @@ class IDescriptorFolder(Interface):
 
 
 class INationalDescriptorAssessment(Schema):
-    """ A Country > Descriptor > Article assessment
+    """ A Country > Region > Descriptor > Article assessment
 
     Ex: /compliance-module/national-descriptors-assessments/lv/bal/d5/art8
+    """
+
+
+class INationalDescriptorAssessmentSecondary(Schema):
+    """ A Country > Region > Article assessment, used for "secondary"
+        articles like Article 3-4, Article 7, Article8ESA
+
+    Ex: /compliance-module/national-descriptors-assessments/lv/bal/art3-4
     """
 
 
@@ -74,6 +82,11 @@ class IEditAssessmentForm(Interface):
 
 
 class IReportDataView(Interface):
+    """ Plone pages that display report data
+    """
+
+
+class IReportDataViewSecondary(Interface):
     """ Plone pages that display report data
     """
 
