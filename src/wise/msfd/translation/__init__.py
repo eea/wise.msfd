@@ -27,6 +27,42 @@ SERVICE_URL = 'https://webgate.ec.europa.eu/etranslation/si/translate'
 logger = logging.getLogger('wise.msfd.translation')
 
 
+def get_detected_lang(text):
+    """ Detect the language of the text, return None for short texts """
+
+    if len(text) < 50:
+        return None
+
+    try:
+        detect_lang = detect(text)
+    except:
+        # Can't detect language if text is an url
+        # it throws LangDetectException
+        return None
+
+    return detect_lang
+
+
+# Detect the source language for countries which have more official languages
+TRANS_LANGUAGE_MAPPING = {
+    # 'DE': lambda text: 'DE'
+    'BE': get_detected_lang,
+    'SE': get_detected_lang,
+}
+
+
+def get_mapped_language(country_code, text):
+    detected_lang = get_detected_lang(text)
+
+    if not detected_lang:
+        return country_code
+
+    if detected_lang == 'en':
+        return country_code
+
+    return detected_lang.upper()
+
+
 def decode_text(text):
     encoding = chardet.detect(text)['encoding']
     text_encoded = text.decode(encoding)
@@ -57,6 +93,9 @@ def retrieve_translation(country_code,
 
     Returns a json formatted string
     """
+
+    if country_code in TRANS_LANGUAGE_MAPPING:
+        country_code = get_mapped_language(country_code, text)
 
     if not text:
         return
@@ -134,6 +173,9 @@ def retrieve_translation(country_code,
 
 
 def get_translated(value, language, site=None):
+    if language in TRANS_LANGUAGE_MAPPING:
+        language = get_mapped_language(language, value)
+
     if site is None:
         site = portal.get()
 
@@ -164,6 +206,9 @@ def normalize(text):
 
 
 def delete_translation(text, source_lang):
+    if source_lang in TRANS_LANGUAGE_MAPPING:
+        source_lang = get_mapped_language(source_lang, text)
+
     site = portal.get()
 
     storage = ITranslationsStorage(site)
@@ -180,6 +225,9 @@ def delete_translation(text, source_lang):
 
 
 def save_translation(original, translated, source_lang, approved=False):
+    if source_lang in TRANS_LANGUAGE_MAPPING:
+        source_lang = get_mapped_language(source_lang, original)
+
     site = portal.get()
     
     storage = ITranslationsStorage(site)
@@ -196,19 +244,3 @@ def save_translation(original, translated, source_lang, approved=False):
         translated.approved = True
     storage_lang[original] = translated
     logger.info('Saving to annotation: %s', translated)
-
-
-def get_detected_lang(text):
-    """ Detect the language of the text, return None for short texts """
-
-    if len(text) < 50:
-        return None
-
-    try:
-        detect_lang = detect(text)
-    except:
-        # Can't detect language if text is an url
-        # it throws LangDetectException
-        return None
-
-    return detect_lang

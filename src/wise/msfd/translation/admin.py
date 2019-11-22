@@ -1,5 +1,6 @@
 import json
 import logging
+from datetime import datetime
 
 from zope import event
 
@@ -47,7 +48,6 @@ class TranslationsOverview(BrowserView):
 
         return json.dumps({'text': translated})
 
-
     def add_translation(self):
 
         form = self.request.form
@@ -74,7 +74,7 @@ class TranslationsOverview(BrowserView):
         if not approved:
             return self.request.response.redirect(url)
 
-        if isinstance(approved, str):
+        if isinstance(approved, basestring):
             approved = [approved]
 
         storage = ITranslationsStorage(self.context)
@@ -83,6 +83,7 @@ class TranslationsOverview(BrowserView):
         langstore = storage.get(selected_lang, {})
 
         for label in approved:
+            label = label.decode('utf-8')
             translation = langstore[label]
 
             if translation.text.startswith('?'):

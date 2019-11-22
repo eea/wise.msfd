@@ -66,7 +66,7 @@
             <tr tal:repeat="kv translations/items">
               <td tal:content="python: kv[0]"></td>
               <td tal:content="python: kv[1]"></td>
-              <td tal:define="approved python: kv[1].approved">
+              <td tal:define="approved python: hasattr(kv[1], 'approved') and kv[1].approved">
                 <input type="checkbox" name="approved:multiple"
                   tal:condition="not: approved"
                   tal:attributes="value python: kv[0]"/>
