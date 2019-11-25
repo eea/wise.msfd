@@ -117,7 +117,6 @@ def retrieve_translation(country_code,
     site_url = portal.get().absolute_url()
 
     if 'localhost' in site_url:
-        # site_url = 'http://office.pixelblaster.ro:4880/Plone/marine'
         logger.warning(
             "Using localhost, won't retrieve translation for: %s", text)
 
