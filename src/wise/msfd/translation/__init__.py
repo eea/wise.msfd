@@ -52,7 +52,8 @@ TRANS_LANGUAGE_MAPPING = {
 
 
 def get_mapped_language(country_code, text):
-    detected_lang = get_detected_lang(text)
+    detect_func = TRANS_LANGUAGE_MAPPING[country_code]
+    detected_lang = detect_func(text)
 
     if not detected_lang:
         return country_code
@@ -116,6 +117,7 @@ def retrieve_translation(country_code,
     site_url = portal.get().absolute_url()
 
     if 'localhost' in site_url:
+        # site_url = 'http://office.pixelblaster.ro:4880/Plone/marine'
         logger.warning(
             "Using localhost, won't retrieve translation for: %s", text)
 
