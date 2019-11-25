@@ -178,15 +178,16 @@ MAIN_FORMS = (
     Tab('msfd-rc', 'msfd-rc', 'Article 6', 'Regional cooperation', '', true),
     Tab('msfd-ca', 'msfd-ca', 'Article 7', 'Competent Authorities', '', true),
     Tab('msfd-c14', 'msfd-c14',
-        'Articles <br/>8, 9 & 10', '2012/2018 reporting exercise', '', true),
-    Tab('msfd-c2', 'msfd-c2', 'Article 11', '2014 reporting exercise',
+        'Articles <br/>8, 9 & 10', 'GES determinations, assessments & targets',
+        '', true),
+    Tab('msfd-c2', 'msfd-c2', 'Article 11', 'Monitoring programmes',
         '', true),
     Tab('msfd-c3', 'msfd-c3', 'Articles <br/>13 & 14',
-        '2016 reporting exercise', '', true),
+        'Programmes of measures (PoM) & exceptions', '', true),
     # Tab('msfd-c4', 'msfd-c4', 'Articles <br/>8, 9 & 10',
     #     '2018 reporting exercise', '', true),
-    Tab('msfd-c5', 'msfd-c5', 'Article 18', '2019 reporting exercise',
-        '', true),
+    Tab('msfd-c5', 'msfd-c5', 'Article 18',
+        'Progress on the implementation of PoM', '', true),
 )
 
 

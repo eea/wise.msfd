@@ -60,7 +60,7 @@ class A4Form(ItemDisplayForm):
     """
 
     # Geographic areas & regional cooperation
-    record_title = title = 'Article 4 (Reporting cycle 2012-2018)'
+    record_title = title = 'Article 4 (Marine Units)'
     mapper_class = MSFD4GeograpicalAreaDescription
     session_name = '2012'
     order_field = 'MSFD4_GeograpicalAreasDescription_Import'
@@ -178,7 +178,7 @@ class A4Form(ItemDisplayForm):
 
 
 class A4ItemDisplay2018to2024(ItemDisplayForm):
-    record_title = title = 'Article 4 (Reporting cycle 2018-2024)'
+    record_title = title = 'Article 4 (Marine Units)'
     session_name = '2018'
     css_class = "left-side-form"
 

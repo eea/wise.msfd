@@ -576,16 +576,19 @@ def marine_unit_id_vocab_factory(context):
 
 @provider(IVocabularyFactory)
 def a1314_report_types(context):
-    table = sql.MSFD13ReportingInfo
-    column = 'ReportType'
-    values = db.get_unique_from_mapper(table, column)
-    values = reversed(values)
-    terms = [SimpleTerm(x, x, x) for x in values]
+    # table = sql.MSFD13ReportingInfo
+    # column = 'ReportType'
+    # values = db.get_unique_from_mapper(table, column)
+    # values = reversed(values)
+    values = (
+        ("Measures", 'Article 13 - Measures'),
+        ("Exceptions", 'Article 14 - Exceptions')
+    )
+
+    terms = [SimpleTerm(x, x, t) for x, t in values]
     vocab = SimpleVocabulary(terms)
 
     return vocab
-
-    return db_vocab(sql.MSFD13ReportingInfo, 'ReportType')
 
 
 @provider(IVocabularyFactory)

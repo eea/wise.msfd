@@ -26,7 +26,7 @@ class StartArticle1314Form(MainForm):
     fields['region_subregions'].widgetFactory = CheckBoxFieldWidget
 
     name = 'msfd-c3'
-    record_title = 'Articles 13 & 14'
+    # record_title = 'Articles 13 & 14'
     session_name = '2012'
 
     def get_subform(self):
@@ -151,6 +151,18 @@ class A1314ItemDisplay(ItemDisplayForm):
     
     blacklist = ['ReportID', 'MeasureID']
     use_blacklist = True
+
+    def get_record_title(self):
+        values = {
+            "Measures" : 'Article 13 - Measures',
+            "Exceptions" : 'Article 14 - Exceptions'
+        }
+
+        report_type = self.get_form_data_by_key(self, 'report_type')
+
+        record_title = values[report_type]
+
+        return record_title
 
     def get_current_country(self):
         if not self.item:
