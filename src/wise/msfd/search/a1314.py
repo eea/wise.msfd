@@ -152,10 +152,29 @@ class A1314ItemDisplay(ItemDisplayForm):
     blacklist = ['ReportID', 'MeasureID']
     use_blacklist = True
 
+    reported_date_info = {
+        'mapper_class': sql.MSFD13Import,
+        'col_import_id': 'ID',
+        'col_import_time': 'Time'
+    }
+
+    def get_import_id(self):
+        report_id = self.item.ReportID
+
+        _, res = db.get_related_record(
+            sql.MSFD13ReportingInfo,
+            'ID',
+            report_id
+        )
+
+        import_id = res.Import
+
+        return import_id
+
     def get_record_title(self):
         values = {
-            "Measures" : 'Article 13 - Measures',
-            "Exceptions" : 'Article 14 - Exceptions'
+            "Measures": 'Article 13 - Measures',
+            "Exceptions": 'Article 14 - Exceptions'
         }
 
         report_type = self.get_form_data_by_key(self, 'report_type')

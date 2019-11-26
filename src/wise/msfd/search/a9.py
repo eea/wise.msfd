@@ -70,6 +70,17 @@ class A9ItemDisplay(ItemDisplayForm):
     mapper_class = sql.MSFD9Descriptor
     order_field = 'MSFD9_Descriptor_ID'
 
+    reported_date_info = {
+        'mapper_class': sql.MSFD9Import,
+        'col_import_id': 'MSFD9_Import_ID',
+        'col_import_time': 'MSFD9_Import_Time'
+    }
+
+    def get_import_id(self):
+        import_id = self.item.MSFD9_Descriptors_Import
+
+        return import_id
+
     def get_db_results(self):
         page = self.get_page()
         muid = self.get_marine_unit_id()

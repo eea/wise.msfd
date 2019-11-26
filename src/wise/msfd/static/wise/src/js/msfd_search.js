@@ -842,7 +842,7 @@
         // other article tabs
         var pagination = $('.prev-next-row').eq(0);
         if (pagination.length) {
-            $("#marine-widget-top").detach().insertBefore(pagination);
+            $("#marine-widget-top").detach().insertAfter(pagination);
         }
 
         initStyling();

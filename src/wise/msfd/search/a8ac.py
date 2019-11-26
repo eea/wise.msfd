@@ -21,6 +21,12 @@ class A81aForm(EmbeddedForm):
         'Article 8.1a (Analysis of the environmental status)'
     fields = Fields(IA81Form)
 
+    reported_date_info = {
+        'mapper_class': sql.MSFD8aImport,
+        'col_import_id': 'MSFD8a_Import_ID',
+        'col_import_time': 'MSFD8a_Import_Time'
+    }
+
     def get_subform(self):
         klass = self.data.get('theme')
 
@@ -82,6 +88,11 @@ class A81aEcoItemDisplay(MultiItemDisplayForm):
     """
     mapper_class = sql.MSFD8aEcosystem
     order_field = 'MSFD8a_Ecosystem_ID'
+
+    def get_import_id(self):
+        import_id = self.item.MSFD8a_Ecosystem_Import
+
+        return import_id
 
 
 @register_form_section(A81aEcoItemDisplay)
@@ -188,6 +199,11 @@ class A81aFunctItemDisplay(MultiItemDisplayForm):
     mapper_class = sql.MSFD8aFunctional
     order_field = 'MSFD8a_Functional_ID'
 
+    def get_import_id(self):
+        import_id = self.item.MSFD8a_Functional_Import
+
+        return import_id
+
 
 @register_form_section(A81aFunctItemDisplay)
 class A81aFunctionalGroupPressures(ItemDisplay):
@@ -292,6 +308,11 @@ class A81aHabitatItemDisplay(MultiItemDisplayForm):
     """
     mapper_class = sql.MSFD8aHabitat
     order_field = 'MSFD8a_Habitat_ID'
+
+    def get_import_id(self):
+        import_id = self.item.MSFD8a_Habitat_Import
+
+        return import_id
 
 
 @register_form_section(A81aHabitatItemDisplay)
@@ -398,6 +419,11 @@ class A81aSpeciesItemDisplay(MultiItemDisplayForm):
     mapper_class = sql.MSFD8aSpecy
     order_field = 'MSFD8a_Species_ID'
 
+    def get_import_id(self):
+        import_id = self.item.MSFD8a_Species_Import
+
+        return import_id
+
 
 @register_form_section(A81aSpeciesItemDisplay)
 class A81aSpeciesPressures(ItemDisplay):
@@ -497,6 +523,11 @@ class A81aOtherItemDisplay(MultiItemDisplayForm):
     mapper_class = sql.MSFD8aOther
     order_field = 'MSFD8a_Other_ID'
 
+    def get_import_id(self):
+        import_id = self.item.MSFD8a_Other_Import
+
+        return import_id
+
 # TODO
 # MSFD8aOtherPressuresImpact table is missing?
 # @register_form_section(A81aOtherItemDisplay)
@@ -579,6 +610,11 @@ class A81aNisItemDisplay(MultiItemDisplayForm):
     mapper_class = sql.MSFD8aNISInventory
     order_field = 'MSFD8a_NISInventory_ID'
 
+    def get_import_id(self):
+        import_id = self.item.MSFD8a_NISInventory_Import
+
+        return import_id
+
     # def get_db_results(self):
     #     # if self.context.item:
     #         return db.get_related_record(
@@ -622,6 +658,11 @@ class A81aPhysicalItemDisplay(MultiItemDisplayForm):
     mapper_class = sql.MSFD8aPhysical
     order_field = 'MSFD8a_Physical_ID'
 
+    def get_import_id(self):
+        import_id = self.item.MSFD8a_Physical_Import
+
+        return import_id
+
     # def get_db_results(self):
     #     # if self.context.item:
     #         return db.get_related_record(
@@ -660,6 +701,17 @@ class A81cEconomicItemDisplay(MultiItemDisplayForm):
     order_field = 'MSFD8c_Uses_ID'
 
     # TODO: need to filter on topic
+
+    reported_date_info = {
+        'mapper_class': sql.MSFD8cImport,
+        'col_import_id': 'MSFD8c_Import_ID',
+        'col_import_time': 'MSFD8c_Import_Time'
+    }
+
+    def get_import_id(self):
+        import_id = self.item.MSFD8c_Uses_Import
+
+        return import_id
 
     def download_results(self):
         muids = [self.get_marine_unit_id()]

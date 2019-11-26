@@ -19,6 +19,12 @@ class A81bForm(EmbeddedForm):
     record_title = title = 'Article 8.1b (Analysis of pressure impacts)'
     fields = Fields(IA81Form)
 
+    reported_date_info = {
+        'mapper_class': sql.MSFD8bImport,
+        'col_import_id': 'MSFD8b_Import_ID',
+        'col_import_time': 'MSFD8b_Import_Time'
+    }
+
     def get_subform(self):
         klass = self.data.get('theme')
 
@@ -31,6 +37,11 @@ class A81bExtractionFishItemDisplay(MultiItemDisplayForm):
     """
     mapper_class = sql.MSFD8bExtractionFishShellfish
     order_field = 'MSFD8b_ExtractionFishShellfish_ID'
+
+    def get_import_id(self):
+        import_id = self.item.MSFD8b_ExtractionFishShellfish_Import
+
+        return import_id
 
 
 @register_subform(A81bForm)
@@ -176,6 +187,11 @@ class A81bExtractionSeaweedItemDisplay(MultiItemDisplayForm):
     """
     mapper_class = sql.MSFD8bExtractionSeaweedMaerlOther
     order_field = 'MSFD8b_ExtractionSeaweedMaerlOther_ID'
+
+    def get_import_id(self):
+        import_id = self.item.MSFD8b_ExtractionSeaweedMaerlOther_Import
+
+        return import_id
 
 
 @register_subform(A81bForm)
@@ -323,6 +339,11 @@ class A81bHazardousItemDisplay(MultiItemDisplayForm):
     mapper_class = sql.MSFD8bHazardousSubstance
     order_field = 'MSFD8b_HazardousSubstances_ID'
 
+    def get_import_id(self):
+        import_id = self.item.MSFD8b_HazardousSubstances_Import
+
+        return import_id
+
 
 @register_subform(A81bForm)
 class A81bHazardousSubForm(MarineUnitIDSelectForm2012):
@@ -467,6 +488,11 @@ class A81bHydroItemDisplay(MultiItemDisplayForm):
     mapper_class = sql.MSFD8bHydrologicalProcess
     order_field = 'MSFD8b_HydrologicalProcesses_ID'
 
+    def get_import_id(self):
+        import_id = self.item.MSFD8b_HydrologicalProcesses_Import
+
+        return import_id
+
 
 @register_subform(A81bForm)
 class A81bHydroSubForm(MarineUnitIDSelectForm2012):
@@ -610,6 +636,11 @@ class A81bMarineLitterItemDisplay(MultiItemDisplayForm):
     mapper_class = sql.MSFD8bLitter
     order_field = 'MSFD8b_Litter_ID'
 
+    def get_import_id(self):
+        import_id = self.item.MSFD8b_Litter_Import
+
+        return import_id
+
 
 @register_subform(A81bForm)
 class A81bMarineLitterSubForm(MarineUnitIDSelectForm2012):
@@ -751,6 +782,11 @@ class A81bMicrobialItemDisplay(MultiItemDisplayForm):
     """
     mapper_class = sql.MSFD8bMicrobialPathogen
     order_field = 'MSFD8b_MicrobialPathogens_ID'
+
+    def get_import_id(self):
+        import_id = self.item.MSFD8b_MicrobialPathogens_Import
+
+        return import_id
 
 
 @register_subform(A81bForm)
@@ -896,6 +932,11 @@ class A81bNonIndigenousItemDisplay(MultiItemDisplayForm):
     mapper_class = sql.MSFD8bNI
     order_field = 'MSFD8b_NIS_ID'
 
+    def get_import_id(self):
+        import_id = self.item.MSFD8b_NIS_Import
+
+        return import_id
+
 
 @register_subform(A81bForm)
 class A81bNonIndigenousSubForm(MarineUnitIDSelectForm2012):
@@ -1036,6 +1077,11 @@ class A81bNoiseItemDisplay(MultiItemDisplayForm):
     mapper_class = sql.MSFD8bNoise
     order_field = 'MSFD8b_Noise_ID'
 
+    def get_import_id(self):
+        import_id = self.item.MSFD8b_Noise_Import
+
+        return import_id
+
 
 @register_subform(A81bForm)
 class A81bNoiseSubForm(MarineUnitIDSelectForm2012):
@@ -1173,6 +1219,11 @@ class A81bNutrientItemDisplay(MultiItemDisplayForm):
     mapper_class = sql.MSFD8bNutrient
     order_field = 'MSFD8b_Nutrients_ID'
 
+    def get_import_id(self):
+        import_id = self.item.MSFD8b_Nutrients_Import
+
+        return import_id
+
 
 @register_subform(A81bForm)
 class A81bNutrientSubForm(MarineUnitIDSelectForm2012):
@@ -1309,6 +1360,11 @@ class A81bPhysicalDamageItemDisplay(MultiItemDisplayForm):
     """
     mapper_class = sql.MSFD8bPhysicalDamage
     order_field = 'MSFD8b_PhysicalDamage_ID'
+
+    def get_import_id(self):
+        import_id = self.item.MSFD8b_PhysicalDamage_Import
+
+        return import_id
 
 
 @register_subform(A81bForm)
@@ -1448,6 +1504,11 @@ class A81bPhysicalLosItemDisplay(MultiItemDisplayForm):
     mapper_class = sql.MSFD8bPhysicalLos
     order_field = 'MSFD8b_PhysicalLoss_ID'
 
+    def get_import_id(self):
+        import_id = self.item.MSFD8b_PhysicalLoss_Import
+
+        return import_id
+
 
 @register_subform(A81bForm)
 class A81bPhysicalLosSubForm(MarineUnitIDSelectForm2012):
@@ -1586,6 +1647,11 @@ class A81bPollutantEventItemDisplay(MultiItemDisplayForm):
     mapper_class = sql.MSFD8bPollutantEvent
     order_field = 'MSFD8b_PollutantEvents_ID'
 
+    def get_import_id(self):
+        import_id = self.item.MSFD8b_PollutantEvents_Import
+
+        return import_id
+
 
 @register_subform(A81bForm)
 class A81bPollutantEventSubForm(MarineUnitIDSelectForm2012):
@@ -1723,6 +1789,11 @@ class A81bAcidificationItemDisplay(MultiItemDisplayForm):
     """
     mapper_class = sql.MSFD8bAcidification
     order_field = 'MSFD8b_Acidification_ID'
+
+    def get_import_id(self):
+        import_id = self.item.MSFD8b_Acidification_Import
+
+        return import_id
 
 
 @register_subform(A81bForm)

@@ -72,6 +72,17 @@ class A4Form(ItemDisplayForm):
     # extra_data_template = ViewPageTemplateFile('pt/extra-data-simple.pt')
     blacklist = ('MSFD4_GeograpicalAreasDescription_Import',)
 
+    reported_date_info = {
+        'mapper_class': sql.MSFD4Import,
+        'col_import_id': 'MSFD4_Import_ID',
+        'col_import_time': 'MSFD4_Import_Time'
+    }
+
+    def get_import_id(self):
+        import_id = self.item.MSFD4_GeograpicalAreasDescription_Import
+
+        return import_id
+
     def get_current_country(self):
         import_id = self.item.MSFD4_GeograpicalAreasDescription_Import
 
@@ -186,7 +197,24 @@ class A4ItemDisplay2018to2024(ItemDisplayForm):
     order_field = 'thematicId'
 
     data_template = ViewPageTemplateFile('pt/item-display-rows.pt')
-    blacklist_labels = ('thematicId', )
+    blacklist_labels = ('thematicId', 'legisSName', 'nameText')
+
+    @db.use_db_session('2018')
+    def get_reported_date(self):
+        country_code = self.item[0]['Country']
+
+        mc = sql2018.ReportingHistory
+        data = db.get_all_columns_from_mapper(
+            mc,
+            'DateReceived',
+            mc.CountryCode == country_code,
+            mc.ReportingObligation == 'MSFD - Article 4 - Spatial data'
+        )
+
+        if not len(data):
+            return 'Not available'
+
+        return data[0].DateReceived
 
     def get_current_country(self):
         country_code = self.item[0]['Country']

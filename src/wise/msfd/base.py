@@ -93,6 +93,57 @@ class BaseUtil(object):
 
         return mid
 
+    def get_import_id(self):
+        """ This method needs to be overridden, to return the import ID
+        of the displayed item
+        """
+
+        return 0
+
+    def _find_reported_date_info(self):
+        context = self
+
+        while hasattr(context, 'context'):
+            if hasattr(context, 'reported_date_info'):
+                return context.reported_date_info
+
+            context = context.context
+
+        if hasattr(context, 'reported_date_info'):
+            return context.reported_date_info
+
+        return {}
+
+    def get_reported_date(self):
+        not_available = 'Not available'
+        reported_date_info = self._find_reported_date_info()
+
+        if not reported_date_info:
+            return not_available
+
+        import_id = self.get_import_id()
+        mc = reported_date_info['mapper_class']
+        col_import_id = reported_date_info['col_import_id']
+        col_import_time = reported_date_info['col_import_time']
+
+        count, data = get_all_specific_columns(
+            [getattr(mc, col_import_time)],
+            getattr(mc, col_import_id) == import_id
+        )
+
+        if not count:
+            return not_available
+
+        reported_date = data[0]
+        reported_date = getattr(reported_date, col_import_time)
+
+        try:
+            reported_date = reported_date.replace(microsecond=0)
+        except:
+            pass
+
+        return reported_date
+
     def get_current_country(self):
         country_2012 = self.get_current_country_2012()
 

@@ -245,6 +245,30 @@ class A11MonProgDisplay(ItemDisplayForm):
                  'Q6b_AdequacyForAssessmentTargets']
     use_blacklist = True
 
+    reported_date_info = {
+        'mapper_class': sql.MSFD11Import,
+        'col_import_id': 'ID',
+        'col_import_time': 'Time'
+    }
+
+    def get_import_id(self):
+        if hasattr(self, '_import_id'):
+            return self._import_id
+
+        monitoring_programme = self.item.ID
+        mc = sql.MSFD11MON
+        mc_join = sql.MSFD11MP
+
+        _, res = db.get_all_records_outerjoin(
+            mc,
+            mc_join,
+            mc_join.MonitoringProgramme == monitoring_programme
+        )
+
+        import_id = res.Import
+
+        return import_id
+
     def get_current_country(self):
         """ Calls the get_current_country from super class (BaseUtil)
             which is a general implementation for getting the country.
@@ -268,6 +292,8 @@ class A11MonProgDisplay(ItemDisplayForm):
         )
 
         country = self.print_value(res[0].MemberState)
+
+        self._import_id = res[0].Import
 
         return country
 
@@ -516,6 +542,29 @@ class A11MonSubDisplay(MultiItemDisplayForm):
     blacklist = ['MP']
     use_blacklist = True
 
+    reported_date_info = {
+        'mapper_class': sql.MSFD11Import,
+        'col_import_id': 'ID',
+        'col_import_time': 'Time'
+    }
+
+    def get_import_id(self):
+        if hasattr(self, '_import_id'):
+            return self._import_id
+
+        sub_programme = self.item.ID
+        mc = sql.MSFD11MONSub
+
+        _, res = db.get_related_record(
+            mc,
+            'SubProgramme',
+            sub_programme
+        )
+
+        import_id = res.Import
+
+        return import_id
+
     def get_current_country(self):
         """ Calls the get_current_country from super class (BaseUtil)
             which is a general implementation for getting the country.
@@ -538,6 +587,8 @@ class A11MonSubDisplay(MultiItemDisplayForm):
         )
 
         country = self.print_value(res.MemberState)
+
+        self._import_id = res.Import
 
         return country
 

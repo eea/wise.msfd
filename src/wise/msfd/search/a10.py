@@ -74,6 +74,17 @@ class A10ItemDisplay(ItemDisplayForm):
     # this query is not finished!!!!
     # 8 aug 2019: looks finished?
 
+    reported_date_info = {
+        'mapper_class': sql.MSFD10Import,
+        'col_import_id': 'MSFD10_Import_ID',
+        'col_import_time': 'MSFD10_Import_Time'
+    }
+
+    def get_import_id(self):
+        import_id = self.item.MSFD10_Targets_Import
+
+        return import_id
+
     def get_db_results(self):
         page = self.get_page()
         muid = self.get_marine_unit_id()

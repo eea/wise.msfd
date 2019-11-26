@@ -30,7 +30,7 @@ class StartView(BrowserView, BasePublicPage):
 class StartMSCompetentAuthoritiesForm(MainForm):
     name = 'msfd-ca'
 
-    record_title = title = 'Article 7 (Member States - Competent Authorities)'
+    record_title = title = 'Article 7 (Competent Authorities)'
     fields = Fields(interfaces.IMemberStates)
     fields['member_states'].widgetFactory = CheckBoxFieldWidget
     session_name = '2012'
@@ -66,6 +66,11 @@ class CompetentAuthorityItemDisplay(ItemDisplayForm):
 
     blacklist = ('Import_Time', 'Import_FileName')
     use_blacklist = False
+
+    def get_reported_date(self):
+        import_time = self.item.Import_Time
+
+        return import_time
 
     def get_current_country(self):
         country_code = self.item.C_CD
@@ -177,11 +182,26 @@ class RegionalCoopForm(EmbeddedForm):
 
 
 class RegionalCoopItemDisplay(ItemDisplayForm):
-    """ The implementation for the Article 9 (GES determination) form
+    """ The implementation for the Article 6 display form
     """
+
     mc = sql.MSFD4RegionalCooperation
     order_field = 'MSFD4_RegionalCooperation_ID'
     css_class = "left-side-form"
+
+    reported_date_info = {
+        'mapper_class': sql.MSFD4Import,
+        'col_import_id': 'MSFD4_Import_ID',
+        'col_import_time': 'MSFD4_Import_Time'
+    }
+
+    blacklist = ('MSFD4_Import_ID', )
+    blacklist_labels = ('Topic', )
+
+    def get_import_id(self):
+        import_id = self.item.MSFD4_Import_ID
+
+        return import_id
 
     def get_current_country(self):
         country_code = self.item.MSFD4_Import_ReportingCountry
@@ -206,8 +226,9 @@ class RegionalCoopItemDisplay(ItemDisplayForm):
             conditions.append(mci.MSFD4_Import_ReportingCountry.in_(c_codes))
 
         res = get_item_by_conditions_art_6(
-            [mci.MSFD4_Import_ReportingCountry,
-             mcr.RegionsSubRegions,mcr.Topic,
+            [mci.MSFD4_Import_ID,
+             mci.MSFD4_Import_ReportingCountry,
+             mcr.RegionsSubRegions, mcr.Topic,
              mcr.NatureCoordination, mcr.RegionalCoherence,
              mcr.RegionalCoordinationProblems],
             mcr,

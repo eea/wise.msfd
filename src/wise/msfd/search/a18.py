@@ -38,6 +38,17 @@ class A18MeasureProgressDisplay(ItemDisplayForm):
 
     blacklist_labels = ('MeasureCode', )
 
+    reported_date_info = {
+        'mapper_class': sql2018.ReportedInformation,
+        'col_import_id': 'Id',
+        'col_import_time': 'ReportingDate'
+    }
+
+    def get_import_id(self):
+        import_id = self.item.IdReportedInformation
+
+        return import_id
+
     def get_current_country(self):
         report_id = self.item.IdReportedInformation
 
@@ -169,6 +180,17 @@ class A18CategoryDisplay(ItemDisplayForm):
     extra_data_template = ViewPageTemplateFile('pt/extra-data-pivot.pt')
     mapper_class = sql2018.ART18Category1bNotWFD
     css_class = 'left-side-form'
+
+    reported_date_info = {
+        'mapper_class': sql2018.ReportedInformation,
+        'col_import_id': 'Id',
+        'col_import_time': 'ReportingDate'
+    }
+
+    def get_import_id(self):
+        import_id = self.item.IdReportedInformation
+
+        return import_id
 
     def get_current_country(self):
         report_id = self.item.IdReportedInformation

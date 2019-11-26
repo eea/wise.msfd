@@ -27,6 +27,28 @@ class Art9Display(ItemDisplayForm):
     extra_data_template = ViewPageTemplateFile('pt/extra-data-pivot.pt')
     show_extra_data = True
 
+    reported_date_info = {
+        'mapper_class': sql2018.ReportedInformation,
+        'col_import_id': 'Id',
+        'col_import_time': 'ReportingDate'
+    }
+
+    def get_import_id(self):
+        if hasattr(self.item, 'IdReportedInformation'):
+            return self.item.IdReportedInformation
+
+        id_ges = self.item.IdGESComponent
+
+        _, res = db.get_related_record(
+            sql2018.ART9GESGESComponent,
+            'Id',
+            id_ges
+        )
+
+        import_id = res.IdReportedInformation
+
+        return import_id
+
     def get_current_country(self):
         id_ges_comp = getattr(self.item, 'IdGESComponent', None)
         if not id_ges_comp:
@@ -204,6 +226,25 @@ class A2018FeatureA9(EmbeddedForm):
 class A2018Art10Display(ItemDisplayForm):
     extra_data_template = ViewPageTemplateFile('pt/extra-data-pivot.pt')
     target_ids = tuple()
+
+    reported_date_info = {
+        'mapper_class': sql2018.ReportedInformation,
+        'col_import_id': 'Id',
+        'col_import_time': 'ReportingDate'
+    }
+
+    def get_import_id(self):
+        id_mru = self.item.IdMarineUnit
+
+        _, res = db.get_related_record(
+            sql2018.ART10TargetsMarineUnit,
+            'Id',
+            id_mru
+        )
+
+        import_id = res.IdReportedInformation
+
+        return import_id
 
     def get_current_country(self):
         """ Calls the get_current_country from super class (BaseUtil)
@@ -492,6 +533,25 @@ class A2018Art81abDisplay(ItemDisplayForm):
     secondary_extra_template = ViewPageTemplateFile(
         'pt/extra-data-pivot-8ab.pt'
     )
+
+    reported_date_info = {
+        'mapper_class': sql2018.ReportedInformation,
+        'col_import_id': 'Id',
+        'col_import_time': 'ReportingDate'
+    }
+
+    def get_import_id(self):
+        id_mru = self.item.IdMarineUnit
+
+        _, res = db.get_related_record(
+            sql2018.ART8GESMarineUnit,
+            'Id',
+            id_mru
+        )
+
+        import_id = res.IdReportedInformation
+
+        return import_id
 
     def download_results(self):
         data = self.get_flattened_data(self)
@@ -973,6 +1033,25 @@ class A2018Art81cDisplay(ItemDisplayForm):
     extra_data_template = ViewPageTemplateFile('pt/extra-data-pivot.pt')
     id_marine_units = list()
 
+    reported_date_info = {
+        'mapper_class': sql2018.ReportedInformation,
+        'col_import_id': 'Id',
+        'col_import_time': 'ReportingDate'
+    }
+
+    def get_import_id(self):
+        id_mru = self.item.IdMarineUnit
+
+        _, res = db.get_related_record(
+            sql2018.ART8ESAMarineUnit,
+            'Id',
+            id_mru
+        )
+
+        import_id = res.IdReportedInformation
+
+        return import_id
+
     def download_results(self):
         data = self.get_flattened_data(self)
         parent = self.context.context.context
@@ -1390,6 +1469,17 @@ class A2018IndicatorsDisplay(ItemDisplayForm):
     conditions_ind_assess = list()
 
     css_class = "left-side-form"
+
+    reported_date_info = {
+        'mapper_class': sql2018.ReportedInformation,
+        'col_import_id': 'Id',
+        'col_import_time': 'ReportingDate'
+    }
+
+    def get_import_id(self):
+        import_id = self.item.IdReportedInformation
+
+        return import_id
 
     def get_current_country(self):
         report_id = self.item.IdReportedInformation
