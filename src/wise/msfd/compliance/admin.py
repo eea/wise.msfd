@@ -351,7 +351,7 @@ class BootstrapCompliance(BrowserView):
         # Editor: Milieu
 
         # self.setup_nationaldescriptors(cm)
-        # self.setup_regionaldescriptors(cm)
+        self.setup_regionaldescriptors(cm)
         self.setup_secondary_articles(cm)
 
         return cm.absolute_url()
