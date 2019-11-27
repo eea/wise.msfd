@@ -128,6 +128,26 @@ def _get_report_filename_art3_4_2012(country, region, article, descriptor):
 
 
 @db.use_db_session('2012')
+def _get_report_filename_art7_2012(country, region, article, descriptor):
+    mc = sql_extra.MSCompetentAuthority
+
+    count, item = db.get_item_by_conditions(
+        mc,
+        'Import_Time',
+        mc.C_CD == country,
+        reverse=True
+    )
+
+    if count < 1:
+        logger.warning("Could not find report filename for %s %s %s",
+                       country, region, article,)
+
+        return None
+
+    return item.Import_FileName
+
+
+@db.use_db_session('2012')
 def _get_report_filename_art9_2012(country, region, article, descriptor):
     mc = sql.MSFD9Import
 
@@ -205,6 +225,7 @@ def get_report_filename(report_version,
     mapping = {
         '2012': {
             'Art3-4': _get_report_filename_art3_4_2012,
+            'Art7': _get_report_filename_art7_2012,
             'Art8esa': _get_report_filename_art8esa_2012,
             'Art8': _get_report_filename_art8_2012,
             'Art9': _get_report_filename_art9_2012,

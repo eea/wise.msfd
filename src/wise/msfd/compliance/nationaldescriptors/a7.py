@@ -25,80 +25,101 @@ def xp(xpath, node):
     return node.xpath(xpath, namespaces=NSMAP)
 
 
-class A34Item(Item):
-    def __init__(self, parent, node, description):
+class RelaxedNodeA7(RelaxedNode):
+    """ If no results, return empty string instead of empty list
+    """
 
-        super(A34Item, self).__init__([])
+    def __getitem__(self, name):
+        val = super(RelaxedNodeA7, self).__getitem__(name)
+
+        if not val:
+            return ['']
+
+        return val
+
+
+class A7Item(Item):
+    def __init__(self, parent, node):
+
+        super(A7Item, self).__init__([])
 
         self.parent = parent
         self.node = node
-        self.description = description
-        self.g = RelaxedNode(node, NSMAP)
-
-        # self.id = node.find('w:ReportingFeature', namespaces=NSMAP).text
+        self.g = RelaxedNodeA7(node, NSMAP)
 
         attrs = [
-            ('Member state description', self.member_state_descr),
-            ('Region / subregion description', self.region_subregion),
-            ('Subdivisions', self.subdivisions),
-            ('Marine reporting units description', self.assessment_areas),
-            ('Region or subregion', self.region_or_subregion),
-            ('Member state', self.member_state),
-            ('Area type', self.area_type),
-            ('MRU ID', self.mru_id),
-            ('Marine reporting unit', self.marine_reporting_unit),
+            ('CA code (EU, national)', self.ca_code),
+            ('Acronym, Name (national)', self.acronym_name),
+            ('Address', self.address),
+            ('URL', self.url),
+            ('Legal status', self.legal_status),
+            ('Responsibilities', self.responsibilities),
+            ('Reference', self.reference),
+            ('Membership', self.membership),
+            ('Regional coordination', self.regional_coord),
         ]
 
         for title, getter in attrs:
             self[title] = getter()
 
-    def member_state_descr(self):
-        text = xp('w:MemberState/text()', self.description)
-
-        return text and text[0] or ''
-
-    def region_subregion(self):
-        text = xp('w:RegionSubregion/text()', self.description)
-
-        return text and text[0] or ''
-
-    def subdivisions(self):
-        text = xp('w:Subdivisions/text()', self.description)
-
-        return text and text[0] or ''
-
-    def assessment_areas(self):
-        text = xp('w:AssessmentAreas/text()', self.description)
-
-        return text and text[0] or ''
-
-    def region_or_subregion(self):
-        v = self.g['w:RegionSubRegions/text()']
+    def ca_code(self):
+        v = self.g['w:MSCACode/text()']
 
         return v and v[0] or ''
 
-    def member_state(self):
-        v = self.g['w:MemberState/text()']
+    def acronym_name(self):
+        acronym = self.g['w:Acronym/text()'][0]
+        comp_auth_name = self.g['w:CompetentAuthorityName/text()'][0]
+        comp_auth_name_nl = self.g['w:CompetentAuthorityNameNL/text()'][0]
+
+        comp_auth = u"{} ({})".format(comp_auth_name, comp_auth_name_nl)
+        v = acronym and "{}: {}".format(acronym, comp_auth) or comp_auth
+
+        return v or ''
+
+    def address(self):
+        street = self.g['w:Street/text()'][0]
+        city = self.g['w:City/text()'][0]
+        city_nl = self.g['w:CityNL/text()'][0]
+        country = self.g['w:Country/text()'][0]
+        postcode = self.g['w:Postcode/text()'][0]
+
+        v = u", ".join((street, "/".join((city, city_nl)), country, postcode))
+
+        return v or ''
+
+    def url(self):
+        v = self.g['w:URL/text()']
 
         return v and v[0] or ''
 
-    def area_type(self):
-        v = self.g['w:AreaType/text()']
+    def legal_status(self):
+        v = self.g['w:LegalStatus/text()']
 
         return v and v[0] or ''
 
-    def mru_id(self):
-        v = self.g['w:MarineUnitID/text()']
+    def responsibilities(self):
+        v = self.g['w:Responsibilities/text()']
 
         return v and v[0] or ''
 
-    def marine_reporting_unit(self):
-        v = self.g['w:MarineUnits_ReportingAreas/text()']
+    def reference(self):
+        v = self.g['w:Reference/text()']
+
+        return v and v[0] or ''
+
+    def membership(self):
+        v = self.g['w:Membership/text()']
+
+        return v and v[0] or ''
+
+    def regional_coord(self):
+        v = self.g['w:RegionalCoordination/text()']
 
         return v and v[0] or ''
 
 
-class Article34(BaseArticle2012):
+class Article7(BaseArticle2012):
     # TODO not implemented, copy of Article 8
     """ Article 3 & 4 implementation
 
@@ -123,12 +144,10 @@ class Article34(BaseArticle2012):
         self.context.TRANSLATABLES.extend(fields)
 
         cols = []
-        # TODO get nodes from XML
-        nodes = xp('//w:GeographicalBoundariesID', root)
-        description = xp('//w:Description', root)[0]
+        nodes = xp('//w:CompetentAuthority', root)
 
         for node in nodes:
-            item = A34Item(self, node, description)
+            item = A7Item(self, node)
             cols.append(item)
 
         self.rows = []

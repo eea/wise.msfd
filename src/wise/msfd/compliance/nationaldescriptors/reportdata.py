@@ -32,6 +32,7 @@ from z3c.form.field import Fields
 from z3c.form.form import Form
 
 from .a34 import Article34
+from .a7 import Article7
 from .a8 import Article8
 from .a8alternate import Article8Alternate
 from .a8esa import Article8ESA
@@ -150,6 +151,7 @@ class ReportData2012(BaseView, BaseUtil):
     def article_implementations(self):
         res = {
             'Art3-4': Article34,
+            'Art7': Article7,
             'Art8esa': Article8ESA,
             'Art8': Article8,
             'Art9': Article9,
@@ -395,11 +397,26 @@ class ReportData2012Secondary(ReportData2012):
 
         return title
 
-    def _get_reporting_info(self, root):
+    def _get_reporting_info_art_34(self, root):
         reporter = [root.attrib['Organisation']]
         date = [root.attrib['ReportingDate']]
 
         return reporter, date
+
+    def _get_reporting_info_art_7(self, root):
+        reporter = [root.attrib['GeneratedBy']]
+        date = [root.attrib['CreationDate']]
+
+        return reporter, date
+
+    def _get_reporting_info(self, root):
+        impl = {
+            'Art3-4': self._get_reporting_info_art_34,
+            'Art7': self._get_reporting_info_art_7,
+            'Art8esa': self._get_reporting_info_art_34,
+        }
+
+        return impl[self.article](root)
 
 
 class ReportData2012Like2018(ReportData2012):
