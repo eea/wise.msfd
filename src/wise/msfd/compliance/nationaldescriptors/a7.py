@@ -65,7 +65,7 @@ class A7Item(Item):
     def ca_code(self):
         v = self.g['w:MSCACode/text()']
 
-        return v and v[0] or ''
+        return v[0]
 
     def acronym_name(self):
         acronym = self.g['w:Acronym/text()'][0]
@@ -73,7 +73,7 @@ class A7Item(Item):
         comp_auth_name_nl = self.g['w:CompetentAuthorityNameNL/text()'][0]
 
         comp_auth = u"{} ({})".format(comp_auth_name, comp_auth_name_nl)
-        v = acronym and "{}: {}".format(acronym, comp_auth) or comp_auth
+        v = acronym and u"{}: {}".format(acronym, comp_auth) or comp_auth
 
         return v or ''
 
@@ -91,32 +91,32 @@ class A7Item(Item):
     def url(self):
         v = self.g['w:URL/text()']
 
-        return v and v[0] or ''
+        return v[0]
 
     def legal_status(self):
         v = self.g['w:LegalStatus/text()']
 
-        return v and v[0] or ''
+        return v[0]
 
     def responsibilities(self):
         v = self.g['w:Responsibilities/text()']
 
-        return v and v[0] or ''
+        return v[0]
 
     def reference(self):
         v = self.g['w:Reference/text()']
 
-        return v and v[0] or ''
+        return v[0]
 
     def membership(self):
         v = self.g['w:Membership/text()']
 
-        return v and v[0] or ''
+        return v[0]
 
     def regional_coord(self):
         v = self.g['w:RegionalCoordination/text()']
 
-        return v and v[0] or ''
+        return v[0]
 
 
 class Article7(BaseArticle2012):
