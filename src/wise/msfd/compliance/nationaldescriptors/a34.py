@@ -27,13 +27,18 @@ NSMAP = {
 }
 
 
+def xp(xpath, node):
+    return node.xpath(xpath, namespaces=NSMAP)
+
+
 class A34Item(Item):
-    def __init__(self, parent, node):
+    def __init__(self, parent, node, description):
 
         super(A34Item, self).__init__([])
 
         self.parent = parent
         self.node = node
+        self.description = description
         self.g = RelaxedNode(node, NSMAP)
 
         # self.id = node.find('w:ReportingFeature', namespaces=NSMAP).text
@@ -41,111 +46,62 @@ class A34Item(Item):
         self.siblings = []
 
         attrs = [
-            ('Member state description', lambda: 'No data'),
-            ('Region / subregion', lambda: 'No data'),
-            ('Subdivisions', lambda: 'No data'),
-            ('Marine reporting units description', lambda: 'No data'),
-            ('Member state', lambda: 'No data'),
-            ('Area type', lambda: 'No data'),
-            ('MRU ID', lambda: 'No data'),
-            ('Marine reporting unit,', lambda: 'No data'),
+            ('Member state description', self.member_state_descr),
+            ('Region / subregion', self.region_subregion),
+            ('Subdivisions', self.subdivisions),
+            ('Marine reporting units description', self.assessment_areas),
+            ('Region or subregion', self.region_or_subregion),
+            ('Member state', self.member_state),
+            ('Area type', self.area_type),
+            ('MRU ID', self.mru_id),
+            ('Marine reporting unit', self.marine_reporting_unit),
         ]
 
         for title, getter in attrs:
             self[title] = getter()
 
-    def method_used(self):
-        root = self.node.getroottree()
-        method_node = root.find('w:Metadata/w:MethodUsed', namespaces=NSMAP)
-        text = getattr(method_node, 'text', '')
+    def member_state_descr(self):
+        text = xp('w:MemberState/text()', self.description)
 
-        return to_html(text)
+        return text and text[0] or ''
 
-    def feature(self):
-        # TODO: this needs more work, to aggregate with siblings
-        res = set()
+    def region_subregion(self):
+        text = xp('w:RegionSubregion/text()', self.description)
 
-        all_nodes = [s.node for s in self.siblings]
+        return text and text[0] or ''
 
-        for n in all_nodes:
-            fpi = n.xpath('w:Features/w:FeaturesPressuresImpacts/text()',
-                          namespaces=NSMAP)
+    def subdivisions(self):
+        text = xp('w:Subdivisions/text()', self.description)
 
-            for x in fpi:
-                res.add(x)
+        return text and text[0] or ''
 
-        labels = [ItemLabel(k, COMMON_LABELS.get(k, k) or k)
-                  for k in res]
+    def assessment_areas(self):
+        text = xp('w:AssessmentAreas/text()', self.description)
 
-        return ItemList(labels)
+        return text and text[0] or ''
 
-    def ges_component(self):
-        return self.id
-
-    def ges_description(self):
-        v = self.g['w:DescriptionGES/text()']
+    def region_or_subregion(self):
+        v = self.g['w:RegionSubRegions/text()']
 
         return v and v[0] or ''
 
-    def threshold_value(self):
-        values = {}
-
-        for n in self.siblings:
-
-            tv = n['w:ThresholdValue/text()']
-
-            if not tv:
-                continue
-
-            muid = n['w:MarineUnitID/text()'][0]
-
-            # filter values according to region's marine unit ids
-
-            if muid not in self.parent.muids:
-                continue
-
-            values[muid] = tv[0]
-
-        rows = []
-        count, mres = db.get_marine_unit_id_names(values.keys())
-        muid_labels = dict(mres)
-
-        for muid in sorted(values.keys()):
-            name = u'{} = {}'.format(muid, values[muid])
-            title = u'{} = {}'.format(muid_labels[muid], values[muid])
-
-            label = ItemLabel(name, title)
-            rows.append(label)
-
-        return ItemList(rows=rows)
-
-    def threshold_value_unit(self):
-        v = self.g['w:ThresholdValueUnit/text()']
+    def member_state(self):
+        v = self.g['w:MemberState/text()']
 
         return v and v[0] or ''
 
-    def reference_point_type(self):
-        v = self.g['w:ReferencePointType/text()']
+    def area_type(self):
+        v = self.g['w:AreaType/text()']
 
         return v and v[0] or ''
 
-    def baseline(self):
-        v = self.g['w:Baseline/text()']
+    def mru_id(self):
+        v = self.g['w:MarineUnitID/text()']
 
         return v and v[0] or ''
 
-    def proportion(self):
-        v = self.g['w:Proportion/text()']
-
-        return v and v[0] or ''
-
-    def assessment_method(self):
-        v = self.g['w:AssessmentMethod/text()']
-
-        return v and v[0] or ''
-
-    def development_status(self):
-        v = self.g['w:DevelopmentStatus/text()']
+    def marine_reporting_unit(self):
+        v = self.g['w:MarineUnits_ReportingAreas/text()']
 
         return v and v[0] or ''
 
@@ -166,9 +122,6 @@ class Article34(BaseArticle2012):
         text = get_xml_report_data(filename)
         root = fromstring(text)
 
-        def xp(xpath, node=root):
-            return node.xpath(xpath, namespaces=NSMAP)
-
         # basic algorthim to detect what type of report it is
         article = self.article
 
@@ -179,10 +132,11 @@ class Article34(BaseArticle2012):
 
         cols = []
         # TODO get nodes from XML
-        nodes = [1, 2, 3]
+        nodes = xp('//w:GeographicalBoundariesID', root)
+        description = xp('//w:Description', root)[0]
 
         for node in nodes:
-            item = A34Item(self, node)
+            item = A34Item(self, node, description)
             cols.append(item)
 
         self.rows = []

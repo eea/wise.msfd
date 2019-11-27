@@ -76,13 +76,13 @@
     <element name="Status Confidence">Status Confidence</element>
   </Art8a>
   <Art3-4>
-    <element name="Member state description">Member state description</element>
-    <element name="Region/subregion">Region/subregion</element>
+    <element name="Member state description" translate="true">Member state description</element>
+    <element name="Region/subregion" translate="true">Region/subregion</element>
     <element name="Subdivisions">Subdivisions</element>
-    <element name="Marine reporting units description">Marine reporting units description (AreaType)</element>
+    <element name="Marine reporting units description" translate="true">Marine reporting units description (AreaType)</element>
     <element name="Member state">Member state</element>
     <element name="Area type">Area type</element>
     <element name="MRU ID">MRU ID</element>
-    <element name="Marine reporting unit">Marine reporting unit</element>
+    <element name="Marine reporting unit" translate="true">Marine reporting unit</element>
   </Art3-4>
 </data>
