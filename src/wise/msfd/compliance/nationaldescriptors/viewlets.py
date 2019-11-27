@@ -49,6 +49,20 @@ class AssessmentEditTitleViewlet(BaseTitleViewlet, BaseView):
                 u'{descriptor}/{article}-Assessment'.format(**params))
 
 
+class AssessmentEditTitleViewletSecondary(BaseTitleViewlet, BaseView):
+
+    @property
+    def page_title(self):
+        params = {
+            'article': self.article,
+            'country': self.country_code,
+            'region': self.country_region_code,
+        }
+
+        return (u'{country}/{region}/'
+                u'{article}-Assessment'.format(**params))
+
+
 class ArticleTitleViewlet(BaseTitleViewlet, BaseView):
 
     @property

@@ -717,6 +717,14 @@ class AssessmentQuestionDefinition:
 
         return targets_all
 
+    def _art_34_ids(self, descriptor, **kwargs):
+        # TODO what to return here
+        country_name = kwargs.get('country_name', 'Country')
+        country_code = kwargs.get('country_code', '')
+        res = Target(country_name, country_code, '', '2012')
+
+        return [res]
+
     def get_assessed_elements(self, descriptor, **kwargs):
         """ Get a list of filtered assessed elements for this question.
         """
@@ -742,6 +750,9 @@ class AssessmentQuestionDefinition:
             'Art8': self._art_89_ids,
             'Art9': self._art_89_ids,
             'Art10': self._art_10_ids,
+            'Art3-4': self._art_34_ids,
+            'Art7': self._art_34_ids,
+            'Art8esa': self._art_34_ids
         }
 
         return impl[self.article](descriptor, **kwargs)

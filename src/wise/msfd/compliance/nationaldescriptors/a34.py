@@ -12,7 +12,8 @@ from wise.msfd.gescomponents import (Criterion, MarineReportingUnit,
                                      get_criterion, get_descriptor)
 from wise.msfd.labels import COMMON_LABELS
 from wise.msfd.translation import retrieve_translation
-from wise.msfd.utils import Item, ItemLabel, ItemList, Node, RawRow, Row
+from wise.msfd.utils import (Item, ItemLabel, ItemList, Node, RawRow,
+                             RelaxedNode, Row, natural_sort_key, to_html)
 
 from ..base import BaseArticle2012
 from .data import REPORT_DEFS
@@ -26,19 +27,132 @@ NSMAP = {
 }
 
 
-class Descriptor(Criterion):
-    """ Override the default Criterion to offer a nicer title
-    (doesn't duplicate code)
-    """
+class A34Item(Item):
+    def __init__(self, parent, node):
 
-    @property
-    def title(self):
-        return self._title
+        super(A34Item, self).__init__([])
+
+        self.parent = parent
+        self.node = node
+        self.g = RelaxedNode(node, NSMAP)
+
+        # self.id = node.find('w:ReportingFeature', namespaces=NSMAP).text
+
+        self.siblings = []
+
+        attrs = [
+            ('Member state description', lambda: 'No data'),
+            ('Region / subregion', lambda: 'No data'),
+            ('Subdivisions', lambda: 'No data'),
+            ('Marine reporting units description', lambda: 'No data'),
+            ('Member state', lambda: 'No data'),
+            ('Area type', lambda: 'No data'),
+            ('MRU ID', lambda: 'No data'),
+            ('Marine reporting unit,', lambda: 'No data'),
+        ]
+
+        for title, getter in attrs:
+            self[title] = getter()
+
+    def method_used(self):
+        root = self.node.getroottree()
+        method_node = root.find('w:Metadata/w:MethodUsed', namespaces=NSMAP)
+        text = getattr(method_node, 'text', '')
+
+        return to_html(text)
+
+    def feature(self):
+        # TODO: this needs more work, to aggregate with siblings
+        res = set()
+
+        all_nodes = [s.node for s in self.siblings]
+
+        for n in all_nodes:
+            fpi = n.xpath('w:Features/w:FeaturesPressuresImpacts/text()',
+                          namespaces=NSMAP)
+
+            for x in fpi:
+                res.add(x)
+
+        labels = [ItemLabel(k, COMMON_LABELS.get(k, k) or k)
+                  for k in res]
+
+        return ItemList(labels)
+
+    def ges_component(self):
+        return self.id
+
+    def ges_description(self):
+        v = self.g['w:DescriptionGES/text()']
+
+        return v and v[0] or ''
+
+    def threshold_value(self):
+        values = {}
+
+        for n in self.siblings:
+
+            tv = n['w:ThresholdValue/text()']
+
+            if not tv:
+                continue
+
+            muid = n['w:MarineUnitID/text()'][0]
+
+            # filter values according to region's marine unit ids
+
+            if muid not in self.parent.muids:
+                continue
+
+            values[muid] = tv[0]
+
+        rows = []
+        count, mres = db.get_marine_unit_id_names(values.keys())
+        muid_labels = dict(mres)
+
+        for muid in sorted(values.keys()):
+            name = u'{} = {}'.format(muid, values[muid])
+            title = u'{} = {}'.format(muid_labels[muid], values[muid])
+
+            label = ItemLabel(name, title)
+            rows.append(label)
+
+        return ItemList(rows=rows)
+
+    def threshold_value_unit(self):
+        v = self.g['w:ThresholdValueUnit/text()']
+
+        return v and v[0] or ''
+
+    def reference_point_type(self):
+        v = self.g['w:ReferencePointType/text()']
+
+        return v and v[0] or ''
+
+    def baseline(self):
+        v = self.g['w:Baseline/text()']
+
+        return v and v[0] or ''
+
+    def proportion(self):
+        v = self.g['w:Proportion/text()']
+
+        return v and v[0] or ''
+
+    def assessment_method(self):
+        v = self.g['w:AssessmentMethod/text()']
+
+        return v and v[0] or ''
+
+    def development_status(self):
+        v = self.g['w:DevelopmentStatus/text()']
+
+        return v and v[0] or ''
 
 
 class Article34(BaseArticle2012):
     # TODO not implemented, copy of Article 8
-    """ Article 8 implementation for nation descriptors data
+    """ Article 3 & 4 implementation
 
     klass(self, self.request, self.country_code, self.descriptor,
           self.article, self.muids, self.colspan)
@@ -48,7 +162,6 @@ class Article34(BaseArticle2012):
     help_text = ""
 
     def setup_data(self):
-
         filename = self.context.get_report_filename()
         text = get_xml_report_data(filename)
         root = fromstring(text)
@@ -59,99 +172,44 @@ class Article34(BaseArticle2012):
         # basic algorthim to detect what type of report it is
         article = self.article
 
-         # override the default translatable
+        # override the default translatable
         fields = REPORT_DEFS[self.context.year][article]\
             .get_translatable_fields()
         self.context.TRANSLATABLES.extend(fields)
 
-        for name in root_tags:
-            nodes = xp('//w:' + name)
+        cols = []
+        # TODO get nodes from XML
+        nodes = [1, 2, 3]
 
-            for node in nodes:
-                try:
-                    rep = ReportTag(node, NSMAP)
-                except:
-                    # There are some cases when an empty node is reported
-                    # and the ReportTag class cannot be initialized because
-                    # MarineUnitID element is not present in the node
-                    # see ../fi/bal/d5/art8/@@view-report-data-2012
-                    # search for node MicrobialPathogens
-                    continue
-                    import pdb
-                    pdb.set_trace()
+        for node in nodes:
+            item = A34Item(self, node)
+            cols.append(item)
 
-                # TODO for D7(maybe for other descriptors too)
-                # find a way to match the node with the descriptor
-                # because all reported criterias and indicators are GESOther
+        self.rows = []
 
-                if rep.matches_descriptor(self.descriptor):
-                    report_map[rep.marine_unit_id].append(rep)
+        for col in cols:
+            for name in col.keys():
+                values = []
 
-        descriptor = get_descriptor(self.descriptor)
-        ges_crits = [descriptor] + list(descriptor.criterions)
+                for inner in cols:
+                    values.append(inner[name])
 
-        # a bit confusing code, we have multiple sets of rows, grouped in
-        # report_data under the marine unit id key.
-        report_data = {}
+                raw_values = []
+                vals = []
+                for v in values:
+                    raw_values.append(v)
+                    vals.append(self.context.translate_value(
+                        name, v, self.country_code))
 
-        # TODO: use reported list of muids per country,from database
+                # values = [self.context.translate_value(name, value=v)
+                #           for v in values]
 
-        for muid in xml_muids:
-            if muid not in report_map:
-                logger.warning("MarineUnitID not reported: %s, %s, Article 8",
-                               muid, self.descriptor)
-                report_data[muid] = []
+                row = RawRow(name, vals, raw_values)
+                self.rows.append(row)
 
-                continue
+            break       # only need the "first" row
 
-            m_reps = report_map[muid]
-
-            if len(m_reps) > 1:
-                logger.warning("Multiple report tags for this "
-                               "marine unit id: %r", m_reps)
-
-            rows = []
-
-            for i, report in enumerate(m_reps):
-
-                # if i > 0:       # add a splitter row, to separate reports
-                #     rows.append(Row('', ''))
-
-                cols = report.columns(ges_crits)
-
-                for col in cols:
-                    for name in col.keys():
-                        values = []
-
-                        for inner in cols:
-                            values.append(inner[name])
-                        translated_values = [
-                            self.context.translate_value(
-                                name, v, self.country_code
-                            )
-                            for v in values
-                        ]
-                        row = RawRow(name, translated_values, values)
-                        rows.append(row)
-
-                    break       # only need the "first" row, for headers
-
-            report_data[muid] = rows
-
-        res = {}
-
-        muids = {m.id: m for m in self.muids}
-
-        for mid, v in report_data.items():
-            mlabel = muids.get(mid)
-            if mlabel is None:
-                logger.warning("Report for non-defined muids: %s", mid)
-                mid = unicode(mid)
-                mlabel = MarineReportingUnit(mid, mid)
-            res[mlabel] = v
-
-        # self.muids = sorted(res.keys())
-        self.rows = res
+        self.cols = cols
 
     def __call__(self):
         self.setup_data()

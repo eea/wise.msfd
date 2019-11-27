@@ -13,7 +13,8 @@ from plone.z3cform.layout import wrap_form
 from Products.Five.browser import BrowserView
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 from Products.statusmessages.interfaces import IStatusMessage
-from wise.msfd.base import EditAssessmentFormWrapper as MainFormWrapper
+from wise.msfd.base import (EditAssessmentFormWrapper as MainFormWrapper,
+                            EditAssessmentFormWrapperSecondary)
 from wise.msfd.base import EmbeddedForm
 from wise.msfd.compliance.assessment import (EditAssessmentDataFormMain,
                                              PHASES, additional_fields,
@@ -355,4 +356,29 @@ class EditAssessmentDataForm(BaseView, EditAssessmentDataFormMain):
         return value
 
 
+class EditAssessmentDataFormSecondary(EditAssessmentDataForm):
+    """ Implementation for secondary articles (A3-4, A7, A8ESA)
+    """
+
+    template = ViewPageTemplateFile("./pt/edit-assessment-data-secondary.pt")
+
+    @property
+    def descriptor_obj(self):
+        return None
+
+    @property
+    def descriptor(self):
+        return 'Not linked'
+
+    @property
+    def title(self):
+        return u"Edit Comission assessment: {}/ {}/ {}/ 2018".format(
+            self.country_title,
+            self.country_region_name,
+            self.article,
+        )
+
+
 EditAssessmentDataView = wrap_form(EditAssessmentDataForm, MainFormWrapper)
+EditAssessmentDataViewSecondary = wrap_form(EditAssessmentDataFormSecondary,
+                                            EditAssessmentFormWrapperSecondary)

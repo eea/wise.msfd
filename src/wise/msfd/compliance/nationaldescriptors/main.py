@@ -79,6 +79,21 @@ ARTICLE_WEIGHTS = {
         'adequacy': 3/5.0,
         'consistency': 1/5.0,
         'coherence': 1/5.0
+    },
+    'Art3-4': {
+        'adequacy': 1.0,
+        'consistency': 0,
+        'coherence': 0
+    },
+    'Art7': {
+        'adequacy': 1.0,
+        'consistency': 0,
+        'coherence': 0
+    },
+    'Art8esa': {
+        'adequacy': 1.0,
+        'consistency': 0,
+        'coherence': 0
     }
 }
 
@@ -714,6 +729,10 @@ class NationalDescriptorSecondaryArticleView(NationalDescriptorArticleView):
     implements(INationaldescriptorSecondaryArticleView)
     _descriptor = 'Not linked'
 
+    @property
+    def descriptor_obj(self):
+        return 'Not linked'
+
     def __call__(self):
 
         if 'assessor' in self.request.form:
@@ -785,22 +804,21 @@ class NationalDescriptorSecondaryArticleView(NationalDescriptorArticleView):
 
         # Assessment data 2018
         data = self.context.saved_assessment_data.last()
-        elements = []
-        # elements = self.questions[0].get_all_assessed_elements(
-        #     self.descriptor_obj,
-        #     muids=self.muids
-        # )
+        elements = self.questions[0].get_all_assessed_elements(
+            self.descriptor_obj,
+            country_name=self.country_name,
+            country_code=self.country_code
+        )
         article_weights = ARTICLE_WEIGHTS
-        # assessment = format_assessment_data(
-        #     self.article,
-        #     elements,
-        #     self.questions,
-        #     self.muids,
-        #     data,
-        #     self.descriptor_obj,
-        #     article_weights
-        # )
-        assessment = []
+        assessment = format_assessment_data(
+            self.article,
+            elements,
+            self.questions,
+            self.muids,
+            data,
+            self.descriptor_obj,
+            article_weights
+        )
 
         score_2012 = int(round(score_2012))
         conclusion_2012_color = CONCLUSION_COLOR_TABLE.get(score_2012, 0)
@@ -810,15 +828,15 @@ class NationalDescriptorSecondaryArticleView(NationalDescriptorArticleView):
         # )
         change = 1
 
-        # self.assessment_data_2018_html = self.assessment_data_2018_tpl(
-        #     assessment=assessment,
-        #     score_2012=score_2012,
-        #     conclusion_2012=conclusion_2012,
-        #     conclusion_2012_color=conclusion_2012_color,
-        #     change_since_2012=change,
-        #     can_comment=self.can_comment
-        # )
-        self.assessment_data_2018_html = ''
+        self.assessment_data_2018_html = self.assessment_data_2018_tpl(
+            assessment=assessment,
+            score_2012=score_2012,
+            conclusion_2012=conclusion_2012,
+            conclusion_2012_color=conclusion_2012_color,
+            change_since_2012=change,
+            can_comment=self.can_comment
+        )
+        # self.assessment_data_2018_html = ''
 
         # Assessment header 2018
         report_by_2018 = u'Commission'

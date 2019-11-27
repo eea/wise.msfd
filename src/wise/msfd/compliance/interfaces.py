@@ -81,6 +81,12 @@ class IEditAssessmentForm(Interface):
     """
 
 
+class IEditAssessmentFormSecondary(Interface):
+    """ Interface for assessment edit form
+
+    """
+
+
 class IReportDataView(Interface):
     """ Plone pages that display report data
     """

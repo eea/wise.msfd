@@ -114,8 +114,8 @@ class BootstrapCompliance(BrowserView):
     def _get_secondary_articles(self):
         articles = [
             'Art3-4',
-            # 'Art7',
-            # 'Art8ESA'
+            'Art7',
+            'Art8esa'
         ]
 
         return articles

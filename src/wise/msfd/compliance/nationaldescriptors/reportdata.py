@@ -150,7 +150,7 @@ class ReportData2012(BaseView, BaseUtil):
     def article_implementations(self):
         res = {
             'Art3-4': Article34,
-            'Art8ESA': Article8ESA,
+            'Art8esa': Article8ESA,
             'Art8': Article8,
             'Art9': Article9,
             'Art10': Article10,

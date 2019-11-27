@@ -59,6 +59,13 @@
     permission="wise.ViewAssessmentEditPage"
     />
 
+  <browser:page
+    for="..interfaces.INationalDescriptorAssessmentSecondary"
+    name="edit-assessment-data-2018"
+    class=".assessment.EditAssessmentDataViewSecondary"
+    permission="wise.ViewAssessmentEditPage"
+    />
+
   <!-- Edit the assessors information, in the assessment overview page -->
   <browser:page
     for="..interfaces.INationalDescriptorsFolder"

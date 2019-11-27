@@ -205,7 +205,7 @@ def get_report_filename(report_version,
     mapping = {
         '2012': {
             'Art3-4': _get_report_filename_art3_4_2012,
-            'Art8ESA': _get_report_filename_art8esa_2012,
+            'Art8esa': _get_report_filename_art8esa_2012,
             'Art8': _get_report_filename_art8_2012,
             'Art9': _get_report_filename_art9_2012,
             'Art10': _get_report_filename_art10_2012,
