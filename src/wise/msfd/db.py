@@ -186,13 +186,11 @@ def get_marine_unit_ids(**data):
     if 'marine_unit_ids' in data:
         return len(data['marine_unit_ids']), data['marine_unit_ids']
 
-    # if 'region_subregions' in data:
-    #     conditions.append(table.c.RegionSubRegions.in_(
-    #         data['region_subregions']))
-    #
-    # if 'region_subregions' in data:
-    #     conditions.append(table.c.RegionSubRegions.in_(
-    #         data['region_subregions']))
+    # This condition was commented, but it should be active
+    # we need to filter by regions
+    if 'region_subregions' in data:
+        conditions.append(table.c.RegionSubRegions.in_(
+            data['region_subregions']))
 
     query = sess.query(col).filter(
         *conditions

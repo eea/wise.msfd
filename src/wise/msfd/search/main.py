@@ -57,7 +57,7 @@ StartMSCompetentAuthoritiesView = wrap_form(StartMSCompetentAuthoritiesForm,
 
 
 class CompetentAuthorityItemDisplay(ItemDisplayForm):
-    """ The implementation for the Article 9 (GES determination) form
+    """ The implementation for the Article 7
     """
 
     mapper_class = MSCompetentAuthority
@@ -68,9 +68,15 @@ class CompetentAuthorityItemDisplay(ItemDisplayForm):
     use_blacklist = False
 
     def get_reported_date(self):
-        import_time = self.item.Import_Time
+        not_available = 'Not available'
+        filename = self.item.Import_FileName
 
-        return import_time
+        reported_date = self.get_reported_date_from_db(filename)
+
+        if not reported_date:
+            return not_available
+
+        return reported_date
 
     def get_current_country(self):
         country_code = self.item.C_CD
@@ -192,7 +198,8 @@ class RegionalCoopItemDisplay(ItemDisplayForm):
     reported_date_info = {
         'mapper_class': sql.MSFD4Import,
         'col_import_id': 'MSFD4_Import_ID',
-        'col_import_time': 'MSFD4_Import_Time'
+        'col_import_time': 'MSFD4_Import_Time',
+        'col_filename': 'MSFD4_Import_FileName'
     }
 
     blacklist = ('MSFD4_Import_ID', )

@@ -41,9 +41,6 @@
             </div>
         </div>
       </div>
-      <div class="reported-date">
-        <b>Reported on </b><span tal:content="view/get_reported_date">2013-02-18 11:40:04</span>
-      </div>
     </div>
   </tal:block>
 
@@ -83,6 +80,10 @@
       </div>
     </div>
   </tal:block>
+
+  <div class="reported-date">
+    <b>Reported on </b><span tal:content="view/get_reported_date">2013-02-18 11:40:04</span>
+  </div>
 
   <div class="prev-next-row prev-next-row-bottom"
        tal:define="actions view/actions; next actions/next | nothing; prev actions/prev | nothing">

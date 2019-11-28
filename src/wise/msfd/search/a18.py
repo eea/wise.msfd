@@ -44,6 +44,9 @@ class A18MeasureProgressDisplay(ItemDisplayForm):
         'col_import_time': 'ReportingDate'
     }
 
+    def get_reported_date(self):
+        return self.get_reported_date_2018()
+
     def get_import_id(self):
         import_id = self.item.IdReportedInformation
 

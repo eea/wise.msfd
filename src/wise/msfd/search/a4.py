@@ -75,7 +75,8 @@ class A4Form(ItemDisplayForm):
     reported_date_info = {
         'mapper_class': sql.MSFD4Import,
         'col_import_id': 'MSFD4_Import_ID',
-        'col_import_time': 'MSFD4_Import_Time'
+        'col_import_time': 'MSFD4_Import_Time',
+        'col_filename': 'MSFD4_Import_FileName'
     }
 
     def get_import_id(self):

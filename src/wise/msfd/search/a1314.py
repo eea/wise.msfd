@@ -155,7 +155,8 @@ class A1314ItemDisplay(ItemDisplayForm):
     reported_date_info = {
         'mapper_class': sql.MSFD13Import,
         'col_import_id': 'ID',
-        'col_import_time': 'Time'
+        'col_import_time': 'Time',
+        'col_filename': 'FileName'
     }
 
     def get_import_id(self):

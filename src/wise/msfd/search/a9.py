@@ -73,7 +73,8 @@ class A9ItemDisplay(ItemDisplayForm):
     reported_date_info = {
         'mapper_class': sql.MSFD9Import,
         'col_import_id': 'MSFD9_Import_ID',
-        'col_import_time': 'MSFD9_Import_Time'
+        'col_import_time': 'MSFD9_Import_Time',
+        'col_filename': 'MSFD9_Import_FileName'
     }
 
     def get_import_id(self):

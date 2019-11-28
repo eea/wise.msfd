@@ -49,6 +49,9 @@ class Art9Display(ItemDisplayForm):
 
         return import_id
 
+    def get_reported_date(self):
+        return self.get_reported_date_2018()
+
     def get_current_country(self):
         id_ges_comp = getattr(self.item, 'IdGESComponent', None)
         if not id_ges_comp:
@@ -232,6 +235,9 @@ class A2018Art10Display(ItemDisplayForm):
         'col_import_id': 'Id',
         'col_import_time': 'ReportingDate'
     }
+
+    def get_reported_date(self):
+        return self.get_reported_date_2018()
 
     def get_import_id(self):
         id_mru = self.item.IdMarineUnit
@@ -539,6 +545,9 @@ class A2018Art81abDisplay(ItemDisplayForm):
         'col_import_id': 'Id',
         'col_import_time': 'ReportingDate'
     }
+
+    def get_reported_date(self):
+        return self.get_reported_date_2018()
 
     def get_import_id(self):
         id_mru = self.item.IdMarineUnit
@@ -1039,6 +1048,9 @@ class A2018Art81cDisplay(ItemDisplayForm):
         'col_import_time': 'ReportingDate'
     }
 
+    def get_reported_date(self):
+        return self.get_reported_date_2018()
+
     def get_import_id(self):
         id_mru = self.item.IdMarineUnit
 
@@ -1475,6 +1487,9 @@ class A2018IndicatorsDisplay(ItemDisplayForm):
         'col_import_id': 'Id',
         'col_import_time': 'ReportingDate'
     }
+
+    def get_reported_date(self):
+        return self.get_reported_date_2018()
 
     def get_import_id(self):
         import_id = self.item.IdReportedInformation

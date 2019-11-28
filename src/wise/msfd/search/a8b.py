@@ -22,7 +22,8 @@ class A81bForm(EmbeddedForm):
     reported_date_info = {
         'mapper_class': sql.MSFD8bImport,
         'col_import_id': 'MSFD8b_Import_ID',
-        'col_import_time': 'MSFD8b_Import_Time'
+        'col_import_time': 'MSFD8b_Import_Time',
+        'col_filename': 'MSFD8b_Import_FileName'
     }
 
     def get_subform(self):

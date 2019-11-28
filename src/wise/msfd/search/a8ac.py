@@ -24,7 +24,8 @@ class A81aForm(EmbeddedForm):
     reported_date_info = {
         'mapper_class': sql.MSFD8aImport,
         'col_import_id': 'MSFD8a_Import_ID',
-        'col_import_time': 'MSFD8a_Import_Time'
+        'col_import_time': 'MSFD8a_Import_Time',
+        'col_filename': 'MSFD8a_Import_FileName'
     }
 
     def get_subform(self):
@@ -705,7 +706,8 @@ class A81cEconomicItemDisplay(MultiItemDisplayForm):
     reported_date_info = {
         'mapper_class': sql.MSFD8cImport,
         'col_import_id': 'MSFD8c_Import_ID',
-        'col_import_time': 'MSFD8c_Import_Time'
+        'col_import_time': 'MSFD8c_Import_Time',
+        'col_filename': 'MSFD8c_Import_FileName'
     }
 
     def get_import_id(self):

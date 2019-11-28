@@ -115,7 +115,24 @@ class BaseUtil(object):
 
         return {}
 
-    def get_reported_date(self):
+    @use_db_session('2018')
+    def get_reported_date_from_db(self, filename):
+        mc = sql2018.ReportingHistory
+
+        count, data = get_all_specific_columns(
+            [mc.DateReceived],
+            mc.FileName == filename
+        )
+
+        if not count:
+            return None
+
+        date = data[0].DateReceived
+
+        return date
+
+    @use_db_session('2018')
+    def get_reported_date_2018(self):
         not_available = 'Not available'
         reported_date_info = self._find_reported_date_info()
 
@@ -139,7 +156,45 @@ class BaseUtil(object):
         reported_date = getattr(reported_date, col_import_time)
 
         try:
-            reported_date = reported_date.replace(microsecond=0)
+            reported_date = reported_date.strftime('%Y %b %d')
+        except:
+            pass
+
+        return reported_date
+
+    def get_reported_date(self):
+        not_available = 'Not available'
+        reported_date_info = self._find_reported_date_info()
+
+        if not reported_date_info:
+            return not_available
+
+        import_id = self.get_import_id()
+        mc = reported_date_info['mapper_class']
+        col_import_id = reported_date_info['col_import_id']
+        col_import_time = reported_date_info['col_import_time']
+        col_filename = reported_date_info['col_filename']
+
+        count, data = get_all_specific_columns(
+            [getattr(mc, col_filename)],
+            getattr(mc, col_import_id) == import_id
+        )
+
+        if not count:
+            return not_available
+
+        filename = getattr(data[0], col_filename)
+
+        reported_date = self.get_reported_date_from_db(filename)
+
+        # reported_date = data[0]
+        # reported_date = getattr(reported_date, col_import_time)
+
+        if not reported_date:
+            return not_available
+
+        try:
+            reported_date = reported_date.strftime('%Y %b %d')
         except:
             pass
 
