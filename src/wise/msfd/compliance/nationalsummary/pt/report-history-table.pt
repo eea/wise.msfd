@@ -1,0 +1,6 @@
+<div class="report-section">
+  <tal:def define="data options/data">
+    <metal:s metal:use-macro="context/context/wise-macros/macros/simplify-table"></metal:s>
+    <metal:s metal:use-macro="context/context/wise-macros/macros/overflow-table"></metal:s>
+  </tal:def>
+</div>

@@ -4,14 +4,15 @@ from collections import defaultdict
 from eea.cache import cache
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 from wise.msfd import db, sql, sql_extra
+from wise.msfd.compliance.vocabulary import REGIONAL_DESCRIPTORS_REGIONS
 from wise.msfd.data import countries_in_region, muids_by_country
 from wise.msfd.gescomponents import (get_descriptor, FEATURES_DB_2012,
                                      FEATURES_DB_2018)
 from wise.msfd.translation import get_translated
 from wise.msfd.utils import CompoundRow, ItemLabel, ItemList, Row, TableHeader
 
-from .utils import (compoundrow, compoundrow2012, emptyline_separated_itemlist,
-                    newline_separated_itemlist, get_percentage)
+from .utils import (compoundrow, compoundrow2012, get_nat_desc_country_url,
+                    emptyline_separated_itemlist, newline_separated_itemlist)
 from .base import BaseRegDescRow, BaseRegComplianceView
 
 
@@ -144,6 +145,7 @@ class RegDescA92012(BaseRegComplianceView):
 
     def __init__(self, context, request):
         super(RegDescA92012, self).__init__(context, request)
+        # confusing naming, self.region is a list of regions
         self.region = context._countryregion_folder._subregions
         self._descriptor = context.descriptor
 
@@ -174,6 +176,12 @@ class RegDescA92012(BaseRegComplianceView):
             ),
         ]
 
+        _translatables = [
+            'GES description'
+        ]
+
+        self.TRANSLATABLES.extend(_translatables)
+
     def __call__(self):
         return self.template(rows=self.allrows)
 
@@ -192,7 +200,7 @@ class RegDescA92012(BaseRegComplianceView):
     def compoundrow2012(self, title, rows):
         return compoundrow2012(self, title, rows)
 
-    @cache(get_key)
+    @cache(get_key, dependencies=['translation'])
     def get_proportion_values(self):
         t = sql.MSFD9Descriptor
         descriptor = self.descriptor_obj
@@ -223,7 +231,7 @@ class RegDescA92012(BaseRegComplianceView):
         return rows
         # return RegionalCompoundRow('Proportion', rows)
 
-    @cache(get_key)
+    @cache(get_key, dependencies=['translation'])
     def get_threshold_values(self):
         t = sql.MSFD9Descriptor
         descriptor = self.descriptor_obj
@@ -251,12 +259,36 @@ class RegDescA92012(BaseRegComplianceView):
         # return RegionalCompoundRow('Threshold value(s)', rows)
 
     def get_countries_row(self):
-        rows = [('', self.countries)]
+        url = self.request['URL0']
+
+        reg_main = self._countryregion_folder.id.upper()
+        subregions = [r.subregions for r in REGIONAL_DESCRIPTORS_REGIONS
+                      if reg_main in r.code]
+
+        rows = []
+        country_names = []
+
+        # rows = [('', self.countries)]
+
+        for country in self.countries:
+            value = []
+            regions = [r.code for r in REGIONAL_DESCRIPTORS_REGIONS
+                       if len(r.subregions) == 1 and country in r.countries
+                       and r.code in subregions[0]]
+
+            for r in regions:
+                value.append(get_nat_desc_country_url(url, reg_main,
+                                                      country, r))
+
+            final = '{} ({})'.format(country, ', '.join(value))
+            country_names.append(final)
+
+        rows.append(('', country_names))
 
         return rows
         # return RegionalCompoundRow('Member state', rows)
 
-    @cache(get_key)
+    @cache(get_key, dependencies=['translation'])
     def get_gescomponents_row(self):
         t = sql.MSFD9Descriptor
 
@@ -274,6 +306,9 @@ class RegDescA92012(BaseRegComplianceView):
             values = []
 
             for country in self.countries:
+                orig = []
+                translated = []
+
                 muids = self.all_countries.get(country, [])
                 data = db.get_unique_from_mapper(
                     t,
@@ -282,8 +317,15 @@ class RegDescA92012(BaseRegComplianceView):
                     t.MarineUnitID.in_(muids)
                 )
                 value = self.not_rep
+                for _d in data:
+                    transl = get_translated(_d, country) or ''
+
+                    orig.append(_d)
+                    translated.append(transl)
+
                 if data:
-                    value = emptyline_separated_itemlist(data)
+                    value = (emptyline_separated_itemlist(orig),
+                             emptyline_separated_itemlist(translated))
 
                 values.append(value)
 
@@ -293,7 +335,7 @@ class RegDescA92012(BaseRegComplianceView):
         return rows
         # return RegionalCompoundRow('GES component [Reporting feature]', rows)
 
-    @cache(get_key)
+    @cache(get_key, dependencies=['translation'])
     def get_reporting_area_row(self):
         rows = [
             ('Number used',
@@ -303,7 +345,7 @@ class RegDescA92012(BaseRegComplianceView):
         return rows
         # return RegionalCompoundRow('Reporting area(s)[MarineUnitID]', rows)
 
-    @cache(get_key)
+    @cache(get_key, dependencies=['translation'])
     def get_features_reported_row(self):
         themes_fromdb = FEATURES_DB_2012
 

@@ -294,6 +294,28 @@ class BootstrapCompliance(BrowserView):
 
             self.make_region(rda, region)
 
+    def setup_nationalsummaries(self, parent):
+        if 'national-summaries' in parent.contentIds():
+            ns = parent['national-summaries']
+        else:
+            ns = create(parent,
+                        'Folder', title=u'National summaries')
+            self.set_layout(ns, '@@nat-summary-start')
+            alsoProvides(ns, interfaces.INationalSummaryFolder)
+
+        for code, country in self._get_countries():
+            if code.lower() in ns.contentIds():
+                cf = ns[code.lower()]
+            else:
+                cf = create(ns,
+                            'wise.msfd.countrydescriptorsfolder',
+                            title=country,
+                            id=code)
+
+                self.set_layout(cf, '@@sum-country-start')
+                alsoProvides(cf, interfaces.INationalSummaryCountryFolder)
+                # self.create_comments_folder(cf)
+
     def setup_secondary_articles(self, parent):
         if 'national-descriptors-assessments' not in parent.contentIds():
             return
@@ -352,6 +374,7 @@ class BootstrapCompliance(BrowserView):
 
         # self.setup_nationaldescriptors(cm)
         self.setup_regionaldescriptors(cm)
+        self.setup_nationalsummaries(cm)
         self.setup_secondary_articles(cm)
 
         return cm.absolute_url()

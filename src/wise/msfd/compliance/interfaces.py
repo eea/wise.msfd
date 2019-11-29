@@ -131,3 +131,19 @@ class IRegionalDescriptorAssessment(Schema):
 
     Ex: /compliance-module/regional-descriptors-assessments/bal/d5/art8
     """
+
+
+# Interfaces for National summaries section
+
+class INationalSummaryFolder(Interface):
+    """ A container for national summaries
+
+    Ex: /compliance-module/national-summaries
+    """
+
+
+class INationalSummaryCountryFolder(Interface):
+    """ A container for national summaries countries
+
+    Ex: /compliance-module/national-summaries/lv
+    """

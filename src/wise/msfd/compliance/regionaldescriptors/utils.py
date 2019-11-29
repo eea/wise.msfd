@@ -135,3 +135,13 @@ def get_monitored_elements(countryids):
         .filter(MS.MemberState.in_(countryids))
 
     return q.all()
+
+
+def get_nat_desc_country_url(url, reg_main, c_code, r_code):
+    href = url.replace(
+        'regional-descriptors-assessments/{}'.format(reg_main.lower()),
+        'national-descriptors-assessments/{}/{}'.format(
+            c_code.lower(), r_code.lower())
+    )
+
+    return "<a target='_blank' href='{}'>{}</a>".format(href, r_code)

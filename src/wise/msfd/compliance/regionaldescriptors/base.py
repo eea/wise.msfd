@@ -14,7 +14,8 @@ from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 
 from .. import interfaces
 from .data import REPORT_DEFS
-from .utils import compoundrow, newline_separated_itemlist
+from .utils import (compoundrow, get_nat_desc_country_url,
+                    newline_separated_itemlist)
 
 COUNTRY = namedtuple("Country", ["id", "title", "definition", "is_primary"])
 
@@ -161,15 +162,6 @@ class BaseRegDescRow(BaseRegComplianceView):
         return value
         return ItemLabel(value, self.get_label_for_value(value))
 
-    def _get_nat_desc_country_url(self, url, reg_main, c_code, r_code):
-        href = url.replace(
-            'regional-descriptors-assessments/{}'.format(reg_main.lower()),
-            'national-descriptors-assessments/{}/{}'.format(
-                c_code.lower(), r_code.lower())
-        )
-
-        return "<a target='_blank' href='{}'>{}</a>".format(href, r_code)
-
     @compoundrow
     def get_countries_row(self):
         url = self.request['URL0']
@@ -188,8 +180,8 @@ class BaseRegDescRow(BaseRegComplianceView):
                        if len(r.subregions) == 1 and c_code in r.countries
                        and r.code in subregions[0]]
             for r in regions:
-                value.append(self._get_nat_desc_country_url(url, reg_main,
-                                                            c_code, r))
+                value.append(get_nat_desc_country_url(url, reg_main,
+                                                      c_code, r))
 
             final = '{} ({})'.format(c_name, ', '.join(value))
             country_names.append(final)

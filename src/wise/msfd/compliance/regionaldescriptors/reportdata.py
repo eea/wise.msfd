@@ -313,7 +313,7 @@ class RegReportData2018(BaseRegComplianceView):
         seen = set()
 
         for compoundrow in data:
-            rows =  compoundrow.rows
+            rows = compoundrow.rows
 
             for row in rows:
                 sub_title, values = row
