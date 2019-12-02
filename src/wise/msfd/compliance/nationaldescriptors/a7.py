@@ -120,8 +120,7 @@ class A7Item(Item):
 
 
 class Article7(BaseArticle2012):
-    # TODO not implemented, copy of Article 8
-    """ Article 3 & 4 implementation
+    """ Article 7 implementation
 
     klass(self, self.request, self.country_code, self.descriptor,
           self.article, self.muids, self.colspan)

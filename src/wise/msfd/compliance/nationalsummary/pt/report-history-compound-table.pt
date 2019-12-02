@@ -1,7 +1,6 @@
 <div>
   <h4>Reporting history and performance</h4>
-  <div tal:define="allrows options/rows" class="report-section"
-    style="margin-top: initial;">
+  <div tal:define="allrows options/rows" class="report-section">
 
     <div class="overflow-table">
       <div class="inner">

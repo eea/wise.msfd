@@ -1,22 +1,17 @@
 from collections import defaultdict, namedtuple
 
 import logging
-from sqlalchemy import or_
-
-from io import BytesIO
-
-import xlsxwriter
-from Products.Five.browser import BrowserView
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
-from Products.statusmessages.interfaces import IStatusMessage
 from wise.msfd import db, sql2018
+from wise.msfd.compliance.base import BaseComplianceView
 from wise.msfd.data import get_report_filename
-from wise.msfd.gescomponents import get_features, get_parameters
-from wise.msfd.translation import retrieve_translation
 from wise.msfd.utils import (db_objects_to_dict, ItemList, RawRow,
                              TemplateMixin, timeit)
 
 from .base import BaseNatSummaryView
+from ..nationaldescriptors.a34 import Article34
+from ..nationaldescriptors.a7 import Article7
+from ..nationaldescriptors.base import BaseView
 
 logger = logging.getLogger('wise.msfd')
 
@@ -43,6 +38,75 @@ class CompoundRow(TemplateMixin):
 
 class NatSummaryTable(BaseNatSummaryView):
     """ Base class for tables """
+
+
+class Article34Copy(Article34):
+    """ Class to override the template """
+    template = ViewPageTemplateFile('pt/report-data-secondary.pt')
+    title = "Articles 3 & 4 Marine regions"
+
+
+class Article7Copy(Article7):
+    """ Class to override the template """
+    template = ViewPageTemplateFile('pt/report-data-secondary.pt')
+    title = "Article 7 Competent authorities"
+
+
+class ArticleTable(BaseView):
+    impl = {
+        'Art3-4': Article34Copy,
+        'Art7': Article7Copy,
+    }
+
+    def __init__(self, context, request, article):
+        super(ArticleTable, self).__init__(context, request)
+
+        self._article = article
+
+    year = '2012'
+
+    @property
+    def article(self):
+        return self._article
+
+    @property
+    def descriptor(self):
+        return 'Not linked'
+
+    @property
+    def muids(self):
+        return []
+
+    @property
+    def country_region_code(self):
+        return 'No region'
+
+    def get_article_title(self, klass):
+        tmpl = u"<h4>{}</h4>"
+        title = klass.title
+
+        return tmpl.format(title)
+
+    def get_report_filename(self, art=None):
+        # needed in article report data implementations, to retrieve the file
+
+        return get_report_filename(
+            self.year, self.country_code, self.country_region_code,
+            art or self.article, self.descriptor
+        )
+
+    def __call__(self):
+        klass = self.impl[self.article]
+        try:
+            view = klass(
+                self, self.request, self.country_code,
+                self.country_region_code, self.descriptor, self.article, self.muids
+            )
+            rendered_view = view()
+        except:
+            rendered_view = 'Error getting report'
+
+        return self.get_article_title(klass) + rendered_view
 
 
 class ReportingHistoryTable(BaseNatSummaryView):
@@ -159,6 +223,8 @@ class NationalSummaryView(BaseNatSummaryView):
 
         tables = [
             report_header,
+            ArticleTable(self, self.request, 'Art7'),
+            ArticleTable(self, self.request, 'Art3-4'),
             ReportingHistoryTable(self, self.request),
         ]
 
