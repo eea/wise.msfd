@@ -133,11 +133,17 @@ class Article34(BaseArticle2012):
 
         self.rows = []
 
-        for col in cols:
+        sorted_cols = sorted(
+            cols, key=lambda _r: (
+                _r['Region or subregion'], _r['Area type'], _r['MRU ID']
+            )
+        )
+
+        for col in sorted_cols:
             for name in col.keys():
                 values = []
 
-                for inner in cols:
+                for inner in sorted_cols:
                     values.append(inner[name])
 
                 raw_values = []
@@ -155,7 +161,7 @@ class Article34(BaseArticle2012):
 
             break       # only need the "first" row
 
-        self.cols = cols
+        self.cols = sorted_cols
 
     def __call__(self):
         self.setup_data()

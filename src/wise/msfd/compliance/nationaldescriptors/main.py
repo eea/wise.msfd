@@ -247,7 +247,12 @@ class NationalDescriptorCountryOverview(BaseView):
     section = 'national-descriptors'
 
     def get_regions(self):
-        return self.context.contentValues()
+        regions = [
+            x for x in self.context.contentValues()
+            if x.portal_type == 'Folder'
+        ]
+
+        return regions
 
     # @protect(CheckAuthenticator)
     def send_to_tl(self):
@@ -728,6 +733,10 @@ class NationalDescriptorSecondaryArticleView(NationalDescriptorArticleView):
 
     implements(INationaldescriptorSecondaryArticleView)
     _descriptor = 'Not linked'
+
+    @property
+    def country_region_code(self):
+        return 'No region'
 
     @property
     def descriptor_obj(self):

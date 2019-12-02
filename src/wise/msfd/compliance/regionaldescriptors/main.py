@@ -57,7 +57,12 @@ class RegionalDescriptorRegionsOverview(BaseRegComplianceView):
     section = 'regional-descriptors'
 
     def get_regions(self):
-        return self.context.contentValues()
+        regions = [
+            x for x in self.context.contentValues()
+            if x.portal_type == 'Folder'
+        ]
+
+        return regions
 
     def get_descriptors(self, region):
         order = [

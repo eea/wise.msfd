@@ -325,29 +325,25 @@ class BootstrapCompliance(BrowserView):
 
         for country in country_ids:
             country_folder = nda_parent[country]
-            region_codes = country_folder.contentIds()
 
-            for region in region_codes:
-                region_folder = country_folder[region]
+            for article in self._get_secondary_articles():
+                if article.lower() in country_folder.contentIds():
+                    nda = country_folder[article.lower()]
+                else:
+                    nda = create(country_folder,
+                                 'wise.msfd.nationaldescriptorassessment',
+                                 title=article)
 
-                for article in self._get_secondary_articles():
-                    if article.lower() in region_folder.contentIds():
-                        nda = region_folder[article.lower()]
-                    else:
-                        nda = create(region_folder,
-                                     'wise.msfd.nationaldescriptorassessment',
-                                     title=article)
+                    logger.info("Created NationalDescriptorAssessment %s",
+                                nda.absolute_url())
 
-                        logger.info("Created NationalDescriptorAssessment %s",
-                                    nda.absolute_url())
+                alsoProvides(
+                    nda,
+                    interfaces.INationalDescriptorAssessmentSecondary
+                )
+                self.set_layout(nda, '@@nat-desc-art-view-secondary')
 
-                    alsoProvides(
-                        nda,
-                        interfaces.INationalDescriptorAssessmentSecondary
-                    )
-                    self.set_layout(nda, '@@nat-desc-art-view-secondary')
-
-                    self.create_comments_folder(nda)
+                self.create_comments_folder(nda)
 
     def __call__(self):
 

@@ -26,11 +26,10 @@ class SecondaryReportTitleViewlet(BaseTitleViewlet, BaseView):
         params = {
             'article': self.article,
             'country': self.country_code,
-            'region': self.country_region_code,
             'year': self.view.report_year,
         }
 
-        return (u'{country}/{region}/'
+        return (u'{country}/'
                 u'{article}/{year}-Report'.format(**params))
 
 
@@ -56,10 +55,9 @@ class AssessmentEditTitleViewletSecondary(BaseTitleViewlet, BaseView):
         params = {
             'article': self.article,
             'country': self.country_code,
-            'region': self.country_region_code,
         }
 
-        return (u'{country}/{region}/'
+        return (u'{country}/'
                 u'{article}-Assessment'.format(**params))
 
 
@@ -84,7 +82,6 @@ class SecondaryArticleTitleViewlet(BaseTitleViewlet, BaseView):
         params = {
             'article': self.article,
             'country': self.country_code,
-            'region': self.country_region_code,
         }
 
-        return u'{country}/{region}/{article}-Overview'.format(**params)
+        return u'{country}/{article}-Overview'.format(**params)
