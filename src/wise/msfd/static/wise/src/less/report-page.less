@@ -185,6 +185,10 @@
           }
 
           th {
+            &.summary {
+              min-width: 10rem;
+            }
+
             background: #EFEFEF;
             vertical-align: top;
             // width: 18em;
@@ -209,6 +213,20 @@
             }
           }
           td {
+            &.summary {
+              min-width: 10rem;
+
+              &.column-header {
+                background-color: #efefef;
+                font-weight: bold;
+              }
+
+              ul.cell-listing li {
+                max-width: inherit;
+              }
+
+            }
+
             min-width: 3rem;
             border-top: none;
             border-left: none;

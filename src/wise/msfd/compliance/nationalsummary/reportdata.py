@@ -1,3 +1,5 @@
+from collections import defaultdict, namedtuple
+
 import logging
 from sqlalchemy import or_
 
@@ -11,11 +13,32 @@ from wise.msfd import db, sql2018
 from wise.msfd.data import get_report_filename
 from wise.msfd.gescomponents import get_features, get_parameters
 from wise.msfd.translation import retrieve_translation
-from wise.msfd.utils import db_objects_to_dict, RawRow, timeit
+from wise.msfd.utils import (db_objects_to_dict, ItemList, RawRow,
+                             TemplateMixin, timeit)
 
 from .base import BaseNatSummaryView
 
 logger = logging.getLogger('wise.msfd')
+
+
+def compoundrow(self, title, rows):
+    """ Function to return a compound row for 2012 report"""
+
+    FIELD = namedtuple("Field", ["name", "title"])
+    field = FIELD(title, title)
+
+    return CompoundRow(self, self.request, field, rows)
+
+
+class CompoundRow(TemplateMixin):
+    template = ViewPageTemplateFile('pt/compound-row.pt')
+
+    def __init__(self, context, request, field, rows):
+        self.context = context
+        self.request = request
+        self.field = field
+        self.rows = rows
+        self.rowspan = len(rows)
 
 
 class NatSummaryTable(BaseNatSummaryView):
@@ -26,13 +49,11 @@ class ReportingHistoryTable(BaseNatSummaryView):
     """ Reporting history and performance
     """
 
-    template = ViewPageTemplateFile('pt/report-history-table.pt')
+    template = ViewPageTemplateFile('pt/report-history-compound-table.pt')
 
     def __init__(self, context, request):
         super(ReportingHistoryTable, self).__init__(context, request)
 
-        # self.country_code = context.country_code
-        # self.translate_value = context.translate_value
         self.data = self.get_reporting_history_data()
 
     @db.use_db_session('2018')
@@ -48,33 +69,79 @@ class ReportingHistoryTable(BaseNatSummaryView):
 
         return res
 
-    def __call__(self):
-        data = self.data
+    def location_url(self, location, filename):
+        tmpl = "<a href={} target='_blank'>{}</a>"
+        location = location.replace(filename, '')
+
+        return tmpl.format(location, location)
+
+    def format_date(self, date):
+        if not date:
+            return date
+
+        # formatted = date.strftime('%m/%d/%Y')
+        formatted = date.date()
+
+        return formatted
+
+    def headers(self):
+        headers = (
+            'Report format', 'Files available', 'Access to reports',
+            'Report due', 'Report received', 'Reporting delay (days)'
+        )
+
+        return headers
+
+    def get_article_row(self, obligation):
+        # Group the data by report type, envelope, report due, report date
+        # and report delay
+        data = [
+            row for row in self.data
+            if row.get('ReportingObligation') == obligation
+
+        ]
         rows = []
 
-        for item in data:
-            for name in item.keys():
-                values = []
+        groups = defaultdict(list)
 
-                for inner in data:
-                    values.append(inner[name])
+        for row in data:
+            filename = row.get('FileName')
+            report_type = row.get('ReportType')
+            envelope = self.location_url(row.get('LocationURL'), filename)
+            report_due = self.format_date(row.get('DateDue'))
+            report_date = self.format_date(row.get('DateReceived'))
+            report_delay = row.get('ReportingDelay')
+            k = (report_type, envelope, report_due, report_date, report_delay)
 
-                raw_values = []
-                vals = []
-                for v in values:
-                    raw_values.append(v)
-                    vals.append(self.context.translate_value(
-                        name, v, self.country_code))
+            groups[k].append(filename)
 
-                # values = [self.context.translate_value(name, value=v)
-                #           for v in values]
+        for _k, filenames in groups.items():
+            values = [
+                _k[0],
+                ItemList(rows=filenames),
+                # ", ".join(filenames),
+                _k[1],
+                _k[2],
+                _k[3],
+                _k[4]
+            ]
+            rows.append(values)
 
-                row = RawRow(name, vals, raw_values)
-                rows.append(row)
+        sorted_rows = sorted(rows, key=lambda _row: _row[4], reverse=True)
 
-            break       # only need the "first" row
+        return sorted_rows
 
-        return self.template(data=rows)
+    def __call__(self):
+        data = self.data
+
+        obligations = set([x.get('ReportingObligation') for x in data])
+
+        self.allrows = [
+            compoundrow(self, obligation, self.get_article_row(obligation))
+            for obligation in obligations
+        ]
+
+        return self.template(rows=self.allrows)
 
 
 class NationalSummaryView(BaseNatSummaryView):

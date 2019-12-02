@@ -1,0 +1,21 @@
+<div>
+  <h4>Reporting history and performance</h4>
+  <div tal:define="allrows options/rows" class="report-section"
+    style="margin-top: initial;">
+
+    <div class="overflow-table">
+      <div class="inner">
+        <table class="table table-bordered table-striped table-comp-translate table-report">
+          <tr>
+            <th class="first-header summary"><span>MSFD Article</span></th>
+            <td class="summary column-header" tal:repeat="title view/headers" tal:content="title">Column header</td>
+          </tr>
+          <tal:rep tal:repeat="row allrows">
+            <tal:row replace="structure row"></tal:row>
+          </tal:rep>
+        </table>
+      </div>
+    </div>
+
+  </div>
+</div>

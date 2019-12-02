@@ -671,7 +671,7 @@ if (!Array.prototype.last){
 
     compareText = $headers[0].firstElementChild.innerText;
 
-    for (i=1; i < $headers.length - 1; i++) {
+    for (i=1; i < $headers.length; i++) {
       currentText = $headers[i].firstElementChild.innerText;
 
       if(compareText === currentText) {

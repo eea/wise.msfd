@@ -94,7 +94,7 @@ class BootstrapCompliance(BrowserView):
 
         descriptors = get_all_descriptors()
 
-        debug_descriptors = ('D1', 'D1.1', 'D4', 'D5', 'D6')
+        debug_descriptors = ('D1.1', 'D4', 'D5', 'D6')
 
         if self.debug:
             descriptors = [x for x in descriptors if x[0] in debug_descriptors]
