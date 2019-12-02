@@ -1,17 +1,17 @@
+import logging
 from collections import defaultdict, namedtuple
 
-import logging
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 from wise.msfd import db, sql2018
-from wise.msfd.compliance.base import BaseComplianceView
+# from wise.msfd.compliance.base import BaseComplianceView
 from wise.msfd.data import get_report_filename
-from wise.msfd.utils import (db_objects_to_dict, ItemList, RawRow,
-                             TemplateMixin, timeit)
+from wise.msfd.utils import (ItemList, TemplateMixin,  # RawRow,
+                             db_objects_to_dict, timeit)
 
-from .base import BaseNatSummaryView
-from ..nationaldescriptors.a34 import Article34
 from ..nationaldescriptors.a7 import Article7
+from ..nationaldescriptors.a34 import Article34
 from ..nationaldescriptors.base import BaseView
+from .base import BaseNatSummaryView
 
 logger = logging.getLogger('wise.msfd')
 
@@ -100,7 +100,8 @@ class ArticleTable(BaseView):
         try:
             view = klass(
                 self, self.request, self.country_code,
-                self.country_region_code, self.descriptor, self.article, self.muids
+                self.country_region_code, self.descriptor, self.article,
+                self.muids
             )
             rendered_view = view()
         except:
@@ -161,6 +162,7 @@ class ReportingHistoryTable(BaseNatSummaryView):
         # and report delay
         data = [
             row for row in self.data
+
             if row.get('ReportingObligation') == obligation
 
         ]
@@ -202,6 +204,7 @@ class ReportingHistoryTable(BaseNatSummaryView):
 
         self.allrows = [
             compoundrow(self, obligation, self.get_article_row(obligation))
+
             for obligation in obligations
         ]
 

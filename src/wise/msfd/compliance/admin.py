@@ -369,9 +369,22 @@ class BootstrapCompliance(BrowserView):
         # Editor: Milieu
 
         # self.setup_nationaldescriptors(cm)
-        self.setup_regionaldescriptors(cm)
-        self.setup_nationalsummaries(cm)
-        self.setup_secondary_articles(cm)
+        DEFAULT = 'regional,nationalsummary,secondary'
+        targets = self.request.form.get('setup', DEFAULT)
+
+        if targets:
+            targets = targets.split(',')
+        else:
+            targets = DEFAULT
+
+        if "regional" in targets:
+            self.setup_regionaldescriptors(cm)
+
+        if "nationalsummary" in targets:
+            self.setup_nationalsummaries(cm)
+
+        if "secondary" in targets:
+            self.setup_secondary_articles(cm)
 
         return cm.absolute_url()
 
