@@ -872,8 +872,7 @@ class NationalDescriptorSecondaryArticleView(NationalDescriptorArticleView):
 
     @property
     def title(self):
-        return u"Commission assessment: {} / {} / {} / 2018".format(
+        return u"Commission assessment: {} / {} / 2018".format(
             self.country_title,
-            self.country_region_name,
             self.article,
         )
