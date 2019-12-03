@@ -11,8 +11,8 @@ from wise.msfd import db, sql
 from wise.msfd.data import get_xml_report_data
 from wise.msfd.gescomponents import (criteria_from_gescomponent,
                                      get_descriptor, get_ges_component,
-                                     get_label, sorted_by_criterion)
-from wise.msfd.labels import COMMON_LABELS
+                                     sorted_by_criterion)
+from wise.msfd.labels import COMMON_LABELS, get_label
 from wise.msfd.translation import retrieve_translation
 from wise.msfd.utils import (Item, ItemLabel, ItemList, Node, RawRow,
                              RelaxedNode, Row, natural_sort_key, to_html)
@@ -30,10 +30,9 @@ class DummyNode(object):
         # <MarineUnitID>{}</MarineUnitID>
 
         self.node = """
-            <Descriptors xmlns="http://water.eionet.europa.eu/schemas/dir200856ec">
-                <ReportingFeature>{}</ReportingFeature>
-            </Descriptors>
-        """.format(crit)
+<Descriptors xmlns="http://water.eionet.europa.eu/schemas/dir200856ec">
+    <ReportingFeature>{}</ReportingFeature>
+</Descriptors>""".format(crit)
 
     def __call__(self):
         return self.node
@@ -44,6 +43,7 @@ class A9Item(Item):
 
         super(A9Item, self).__init__([])
 
+        self._muids = muids.rows
         self.parent = parent
         self.node = node
         self.g = RelaxedNode(node, NSMAP)
@@ -269,12 +269,19 @@ class Article9(BaseArticle2012):
         muids = root.xpath('//w:MarineUnitID/text()', namespaces=NSMAP)
 
         count, res = db.get_marine_unit_id_names(list(set(muids)))
-        muid_ids = [x.id for x in self.muids]
+        muid_ids = [y.id for y in self.muids]
+
         labels = [
             ItemLabel(m, t or m)
             for m, t in res
             if m in muid_ids
         ]
+
+        # special case for PL where marine_unit_ids are not imported into DB
+        # therefore we cannot get the labels for them
+        if muids and not labels:
+            labels = [ItemLabel(m, m) for m in set(muids)]
+
         self.muids_labeled = sorted(
             labels, key=lambda l: natural_sort_key(l.name)
         )
@@ -292,7 +299,7 @@ class Article9(BaseArticle2012):
 
         # insert missing criterions
         self.insert_missing_criterions(descriptor_class, cols, muids)
-        
+
         self.rows = []
         sorted_ges_c = sorted_by_criterion([c.ges_component() for c in cols])
 

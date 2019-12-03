@@ -36,7 +36,7 @@
 
   <browser:page
     for="*"
-    name="msfd-c1"
+    name="msfd-c14"
     class=".main.StartArticle8910View"
     permission="zope2.View"
     />
@@ -57,10 +57,10 @@
 
   <browser:page
     for="*"
-    name="msfd-c4"
-    class=".main.StartArticle89102018View"
-    permission="cmf.ModifyPortalContent"
-    />
+    name="msfd-c5"
+    class=".main.StartArticle18View"
+    permission="zope2.View"
+  />
 
   <utility
     component=".vocabulary.monitoring_programme_info_types"
@@ -80,6 +80,21 @@
   <utility
     component=".vocabulary.articles_vocabulary_factory"
     name="wise_search_articles"
+    />
+
+  <utility
+    component=".vocabulary.a8910_reporting_period"
+    name="wise_search_reporting_period"
+    />
+
+  <utility
+    component=".vocabulary.a18_data_type"
+    name="wise_search_a18_data_type"
+    />
+
+  <utility
+    component=".vocabulary.a4_mru_reporting_cycle_factory"
+    name="wise_search_a4_mru_reporting_cycle_factory"
     />
 
 </configure>

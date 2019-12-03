@@ -10,7 +10,7 @@
       <tr>
         <td>Source file of Member State</td>
         <td tal:define="source_file string:http://cdr.eionet.europa.eu/lv/eu/msfd8910/ballv/envuxvsq/MSFD9GES_20130430_215711.xml/manage_document">
-          <a tal:attributes="href source_file" tal:content="source_file"/>
+          <a tal:attributes="href source_file" tal:content="source_file" target="_blank"/>
         </td>
       </tr>
       <tr>

@@ -1,6 +1,7 @@
 # TODO: we need to check behavior of this module after modifications to
 # extractData() in EmbeddedForm
 
+from collections import OrderedDict
 from sqlalchemy import and_, or_
 
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
@@ -8,18 +9,66 @@ from z3c.form.browser.checkbox import CheckBoxFieldWidget
 from z3c.form.field import Fields
 
 from . import interfaces
-from .. import db, sql2018
+from .. import db, sql, sql2018
 from ..base import EmbeddedForm, MarineUnitIDSelectForm
 from ..sql_extra import MSFD4GeographicalAreaID
-from ..utils import all_values_from_field, db_objects_to_dict, group_data
+from ..utils import (all_values_from_field, change_orientation,
+                     db_objects_to_dict, group_data, ItemLabel, ItemList)
 from .base import ItemDisplayForm
 from .utils import data_to_xls, register_form_2018
 
+
+#########################
+#       Article 9       #
+#########################
 
 class Art9Display(ItemDisplayForm):
     css_class = 'left-side-form'
     extra_data_template = ViewPageTemplateFile('pt/extra-data-pivot.pt')
     show_extra_data = True
+
+    reported_date_info = {
+        'mapper_class': sql2018.ReportedInformation,
+        'col_import_id': 'Id',
+        'col_import_time': 'ReportingDate'
+    }
+
+    def get_import_id(self):
+        if hasattr(self.item, 'IdReportedInformation'):
+            return self.item.IdReportedInformation
+
+        id_ges = self.item.IdGESComponent
+
+        _, res = db.get_related_record(
+            sql2018.ART9GESGESComponent,
+            'Id',
+            id_ges
+        )
+
+        import_id = res.IdReportedInformation
+
+        return import_id
+
+    def get_reported_date(self):
+        return self.get_reported_date_2018()
+
+    def get_current_country(self):
+        id_ges_comp = getattr(self.item, 'IdGESComponent', None)
+        if not id_ges_comp:
+            id_ges_comp = self.item.Id
+
+        mc = sql2018.ReportedInformation
+        mc_join = sql2018.ART9GESGESComponent
+
+        _, res = db.get_all_records_join(
+            [mc.CountryCode],
+            mc_join,
+            mc_join.Id == id_ges_comp
+        )
+
+        country = self.print_value(res[0].CountryCode)
+
+        return country
 
     def download_results(self):
         parent = self.context.context.context
@@ -150,7 +199,7 @@ class A2018Article9(EmbeddedForm):
     features_mc = sql2018.ART9GESGESDeterminationFeature
     determination_mc = sql2018.ART9GESGESDetermination
 
-    fields = Fields(interfaces.ICountryCode)
+    fields = Fields(interfaces.ICountryCode2018Art9)
     fields['member_states'].widgetFactory = CheckBoxFieldWidget
 
     def get_subform(self):
@@ -173,9 +222,61 @@ class A2018FeatureA9(EmbeddedForm):
         return Art9Display(self, self.request)
 
 
+#########################
+#       Article 10      #
+#########################
+
 class A2018Art10Display(ItemDisplayForm):
     extra_data_template = ViewPageTemplateFile('pt/extra-data-pivot.pt')
     target_ids = tuple()
+
+    reported_date_info = {
+        'mapper_class': sql2018.ReportedInformation,
+        'col_import_id': 'Id',
+        'col_import_time': 'ReportingDate'
+    }
+
+    def get_reported_date(self):
+        return self.get_reported_date_2018()
+
+    def get_import_id(self):
+        id_mru = self.item.IdMarineUnit
+
+        _, res = db.get_related_record(
+            sql2018.ART10TargetsMarineUnit,
+            'Id',
+            id_mru
+        )
+
+        import_id = res.IdReportedInformation
+
+        return import_id
+
+    def get_current_country(self):
+        """ Calls the get_current_country from super class (BaseUtil)
+            which is a general implementation for getting the country.
+            Some MRUs are missing from the t_MSFD4_GegraphicalAreasID,
+            and we need an alternative way to retrieve the country
+        """
+
+        country = super(A2018Art10Display, self).get_current_country()
+
+        if country:
+            return country
+
+        monitoring_programme = self.item.ID
+        mc = sql.MSFD11MON
+        mc_join = sql.MSFD11MP
+
+        _, res = db.get_all_records_outerjoin(
+            mc,
+            mc_join,
+            mc_join.MonitoringProgramme == monitoring_programme
+        )
+
+        country = self.print_value(res[0].MemberState)
+
+        return country
 
     def download_results(self):
         data = self.get_flattened_data(self)
@@ -304,20 +405,24 @@ class A2018Art10Display(ItemDisplayForm):
 
         target_id = self.item.Id
         mc = sql2018.ART10TargetsProgressAssessment
-        column = 'IdTarget'
-        result = db.get_all_columns_from_mapper(
-            mc,
-            column,
-            getattr(mc, column) == target_id
+        mc_join = sql2018.ART10TargetsProgressAssessmentIndicator
+
+        cols = [getattr(mc, c) for c in mc.__table__.c.keys()] + \
+            [getattr(mc_join, c) for c in mc_join.__table__.c.keys()]
+
+        count, result = db.get_all_records_join(
+            cols,
+            mc_join,
+            getattr(mc, 'IdTarget') == target_id
         )
 
-        excluded_columns = ('Id', 'IdTarget')
+        excluded_columns = ('Id', 'IdTarget', 'IdProgressAssessment')
 
         paremeters = db_objects_to_dict(result, excluded_columns)
-        paremeters = group_data(paremeters, 'Parameter')
+        paremeters = group_data(paremeters, 'Parameter', remove_pivot=False)
 
         res = [
-            ('Parameters', paremeters),
+            ('Progress assessment', paremeters),
         ]
 
         return res
@@ -424,10 +529,38 @@ class A2018Article10(EmbeddedForm):
         pass
 
 
-###############################################################################
+#########################
+#     Article 8.1ab     #
+#########################
 
 class A2018Art81abDisplay(ItemDisplayForm):
     extra_data_template = ViewPageTemplateFile('pt/extra-data-pivot.pt')
+
+    secondary_extra_template = ViewPageTemplateFile(
+        'pt/extra-data-pivot-8ab.pt'
+    )
+
+    reported_date_info = {
+        'mapper_class': sql2018.ReportedInformation,
+        'col_import_id': 'Id',
+        'col_import_time': 'ReportingDate'
+    }
+
+    def get_reported_date(self):
+        return self.get_reported_date_2018()
+
+    def get_import_id(self):
+        id_mru = self.item.IdMarineUnit
+
+        _, res = db.get_related_record(
+            sql2018.ART8GESMarineUnit,
+            'Id',
+            id_mru
+        )
+
+        import_id = res.IdReportedInformation
+
+        return import_id
 
     def download_results(self):
         data = self.get_flattened_data(self)
@@ -566,7 +699,7 @@ class A2018Art81abDisplay(ItemDisplayForm):
 
         return res
 
-    def get_extra_data(self):
+    def get_extra_data_old(self):
         if not self.item:
             return {}
 
@@ -597,10 +730,11 @@ class A2018Art81abDisplay(ItemDisplayForm):
         element_status_pivot = list()
 
         for x in element_status:
-            element = x.pop('Element', '') or ''
-            element2 = x.pop('Element2', '') or ''
+            element = x.get('Element', '') or ''
+            element2 = x.get('Element2', '') or ''
+            elements = [el for el in (element, element2) if el]
 
-            x['Element / Element2'] = ' / '.join((element, element2))
+            x['Element / Element2'] = ' / '.join(elements)
             element_status_pivot.append(x)
 
         id_elem_status = []
@@ -628,7 +762,9 @@ class A2018Art81abDisplay(ItemDisplayForm):
         )
         criteria_status = db_objects_to_dict(criteria_status_orig,
                                              excluded_columns)
-        criteria_status = group_data(criteria_status, 'Criteria')
+        criteria_status = group_data(
+            criteria_status, 'Criteria', remove_pivot=False
+        )
 
         # TODO get the Id for the selected criteria status
         id_criteria_status = [x.Id for x in criteria_status_orig]
@@ -640,7 +776,9 @@ class A2018Art81abDisplay(ItemDisplayForm):
         )
         criteria_value = db_objects_to_dict(criteria_value_orig,
                                             excluded_columns)
-        criteria_value = group_data(criteria_value, 'Parameter')
+        criteria_value = group_data(
+            criteria_value, 'Parameter', remove_pivot=False
+        )
 
         # TODO get the Id for the selected criteria value
         id_criteria_value = [x.Id for x in criteria_value_orig]
@@ -655,12 +793,12 @@ class A2018Art81abDisplay(ItemDisplayForm):
         res = []
 
         res.append(
-            ('Pressure code(s)', {
+            ('Related pressure(s)', {
                 '': [{'PressureCode': x} for x in pressure_codes]
             }))
 
         res.append(
-            ('Target code(s)', {
+            ('Related target(s)', {
                 '': [{'TargetCode': x} for x in target_codes]
             }))
 
@@ -673,15 +811,142 @@ class A2018Art81abDisplay(ItemDisplayForm):
         )
 
         res.append(
-            ('Criteria Value', criteria_value)
+            ('Parameter assessments', criteria_value)
         )
 
         res.append(
-            ('Criteria Value Indicator', {
+            ('Related indicator', {
                 '': [{'IndicatorCode': x} for x in criteria_value_ind]
             }))
 
         return res
+
+    def get_extra_data(self):
+        if not self.item:
+            return {}
+
+        id_overall = self.item.Id
+
+        self.blacklist = ('Id', 'IdOverallStatus', 'IdElementStatus',
+                          'IdCriteriaStatus', 'IdCriteriaValues')
+        excluded_columns = ()
+
+        pressure_codes = db.get_unique_from_mapper(
+            sql2018.ART8GESOverallStatusPressure,
+            'PressureCode',
+            sql2018.ART8GESOverallStatusPressure.IdOverallStatus == id_overall
+        )
+
+        target_codes = db.get_unique_from_mapper(
+            sql2018.ART8GESOverallStatusTarget,
+            'TargetCode',
+            sql2018.ART8GESOverallStatusTarget.IdOverallStatus == id_overall
+        )
+
+        element_status_orig = db.get_all_columns_from_mapper(
+            sql2018.ART8GESElementStatu,
+            'Id',
+            sql2018.ART8GESElementStatu.IdOverallStatus == id_overall
+        )
+        element_status = db_objects_to_dict(element_status_orig,
+                                            excluded_columns)
+
+        final_rows = []
+
+        for row in element_status:
+            _row = OrderedDict()
+            _row.update(row)
+
+            id_elem_status = row['Id']
+            s = sql2018.ART8GESCriteriaStatu
+
+            criteria_status_orig = db.get_all_columns_from_mapper(
+                s,
+                'Id',
+                or_(s.IdOverallStatus == id_overall,
+                    s.IdElementStatus == id_elem_status)
+            )
+
+            criteria_statuses = db_objects_to_dict(criteria_status_orig,
+                                                   excluded_columns)
+
+            if not criteria_statuses:
+                final_rows.append(_row.copy())
+                continue
+
+            for criteria_status in criteria_statuses:
+                _row.update(criteria_status)
+                id_criteria_status = criteria_status['Id']
+
+                s = sql2018.ART8GESCriteriaValue
+                criteria_value_orig = db.get_all_columns_from_mapper(
+                    s,
+                    'Id',
+                    s.IdCriteriaStatus == id_criteria_status
+                )
+                criteria_values = db_objects_to_dict(criteria_value_orig,
+                                                     excluded_columns)
+
+                if not criteria_values:
+                    final_rows.append(_row.copy())
+                    continue
+
+                for criteria_value in criteria_values:
+                    _row.update(criteria_value)
+                    id_criteria_value = criteria_value['Id']
+
+                    s = sql2018.ART8GESCriteriaValuesIndicator
+                    criteria_value_ind = db.get_unique_from_mapper(
+                        s,
+                        'IndicatorCode',
+                        s.IdCriteriaValues == id_criteria_value
+                    )
+
+                    if not criteria_value_ind:
+                        final_rows.append(_row.copy())
+                        continue
+
+                    values = [
+                        ItemLabel(v, self.print_value(v))
+                        for v in criteria_value_ind
+                    ]
+
+                    _row.update(
+                        {'IndicatorCode': ItemList(values)}
+                    )
+
+                    final_rows.append(_row.copy())
+
+        _sorted_rows = sorted(final_rows, key=lambda d: d['Element'])
+        extra_final = change_orientation(_sorted_rows)
+
+        res = []
+        res_extra = []
+
+        res.append(
+            ('Related pressure(s)', {
+                '': [{'PressureCode': x} for x in pressure_codes]
+            }))
+
+        res.append(
+            ('Related target(s)', {
+                '': [{'TargetCode': x} for x in target_codes]
+            }))
+
+        res_extra.append(
+            ('Element Status, Criteria Status, '
+             'Parameter assessments and Related indicator', extra_final)
+        )
+
+        self.extra_data = res_extra
+
+        return res
+
+    def extras(self):
+        html = self.extra_data_template(extra_data=self.get_extra_data())
+        extra_html = self.secondary_extra_template(extra_data=self.extra_data)
+
+        return html + extra_html
 
 
 @register_form_2018
@@ -768,12 +1033,36 @@ class A2018Art81abMarineUnitID(MarineUnitIDSelectForm):
 
         return len(res), sorted_
 
-###############################################################################
 
+#########################
+#     Article 8.1c      #
+#########################
 
 class A2018Art81cDisplay(ItemDisplayForm):
     extra_data_template = ViewPageTemplateFile('pt/extra-data-pivot.pt')
     id_marine_units = list()
+
+    reported_date_info = {
+        'mapper_class': sql2018.ReportedInformation,
+        'col_import_id': 'Id',
+        'col_import_time': 'ReportingDate'
+    }
+
+    def get_reported_date(self):
+        return self.get_reported_date_2018()
+
+    def get_import_id(self):
+        id_mru = self.item.IdMarineUnit
+
+        _, res = db.get_related_record(
+            sql2018.ART8ESAMarineUnit,
+            'Id',
+            id_mru
+        )
+
+        import_id = res.IdReportedInformation
+
+        return import_id
 
     def download_results(self):
         data = self.get_flattened_data(self)
@@ -982,12 +1271,12 @@ class A2018Art81cDisplay(ItemDisplayForm):
         res = list()
 
         res.append(
-            ('NACEcode(s)', {
+            ('NACE code(s)', {
                 '': [{'NACECode': x} for x in nace_codes]
             }))
 
         res.append(
-            ('GEScomponent(s)', {
+            ('GES component(s)', {
                 '': [{'GESComponent': x} for x in ges_components]
             }))
 
@@ -1097,8 +1386,9 @@ class A2018Article81c(EmbeddedForm):
                                      self.fields['marine_unit_id'])
 
 
-##############################################################################
-
+#########################
+#      Indicators       #
+#########################
 
 class A2018IndicatorsGesComponent(EmbeddedForm):
     fields = Fields(interfaces.IIndicatorsGesComponent)
@@ -1113,10 +1403,12 @@ class A2018IndicatorsFeature(EmbeddedForm):
     fields['feature'].widgetFactory = CheckBoxFieldWidget
 
     def get_subform(self):
-        return A2018IndicatorsMarineUnitId(self, self.request)
+        return A2018IndicatorsDisplay(self, self.request)
 
 
 class A2018IndicatorsMarineUnitId(MarineUnitIDSelectForm):
+    """ TODO Not used
+    """
 
     def get_subform(self):
         return A2018IndicatorsDisplay(self, self.request)
@@ -1188,8 +1480,37 @@ class A2018IndicatorsDisplay(ItemDisplayForm):
 
     conditions_ind_assess = list()
 
+    css_class = "left-side-form"
+
+    reported_date_info = {
+        'mapper_class': sql2018.ReportedInformation,
+        'col_import_id': 'Id',
+        'col_import_time': 'ReportingDate'
+    }
+
+    def get_reported_date(self):
+        return self.get_reported_date_2018()
+
+    def get_import_id(self):
+        import_id = self.item.IdReportedInformation
+
+        return import_id
+
+    def get_current_country(self):
+        report_id = self.item.IdReportedInformation
+
+        _, res = db.get_related_record(
+            sql2018.ReportedInformation,
+            'Id',
+            report_id
+        )
+
+        country = self.print_value(res.CountryCode)
+
+        return country
+
     def download_results(self):
-        parent = self.context.context.context.context
+        parent = self.context.context.context
 
         mapper_class = parent.mapper_class
         features_mc = parent.features_mc
@@ -1240,12 +1561,12 @@ class A2018IndicatorsDisplay(ItemDisplayForm):
     def get_db_results(self):
         page = self.get_page()
         data = self.get_flattened_data(self)
-        parent = self.context.context.context.context
+        parent = self.context.context.context
 
         countries = data.get('member_states', ())
         ges_components = data.get('ges_component', ())
         features = data.get('feature', ())
-        mrus = (data.get('marine_unit_id', ()), )
+        # mrus = (data.get('marine_unit_id', ()), )
 
         mapper_class = parent.mapper_class
         features_mc = parent.features_mc
@@ -1283,7 +1604,7 @@ class A2018IndicatorsDisplay(ItemDisplayForm):
         ids_ind_ass_marine = db.get_unique_from_mapper(
             marine_mc,
             'IdIndicatorAssessment',
-            marine_mc.MarineReportingUnit.in_(mrus)
+            # marine_mc.MarineReportingUnit.in_(mrus)
         )
         ids_ind_ass_marine = [int(x) for x in ids_ind_ass_marine]
 
@@ -1314,7 +1635,9 @@ class A2018IndicatorsDisplay(ItemDisplayForm):
         if not self.item:
             return {}
 
+        parent = self.context.context.context
         mc = sql2018.IndicatorsDataset
+        marine_mc = parent.marine_mc
         id_indicator_assessment = self.item.Id
 
         indicators_dataset = db.get_all_columns_from_mapper(
@@ -1334,12 +1657,24 @@ class A2018IndicatorsDisplay(ItemDisplayForm):
                 ('Indicators Dataset', {'': indicators_dataset})
             )
 
+        count, marine_unit = db.get_all_records(
+            marine_mc,
+            marine_mc.IdIndicatorAssessment == id_indicator_assessment
+        )
+        marine_unit_ids = db_objects_to_dict(marine_unit,
+                                             excluded_columns)
+
+        if marine_unit_ids:
+            res.append(
+                ('MarineUnitID(s)', {'': marine_unit_ids})
+            )
+
         return res
 
 
 @register_form_2018
 class A2018ArticleIndicators(EmbeddedForm):
-    record_title = title = 'Indicators'
+    record_title = title = 'Indicators (Article 8 & 10)'
     mapper_class = sql2018.IndicatorsIndicatorAssessment
     features_mc = sql2018.IndicatorsFeatureFeature
     ges_components_mc = sql2018.IndicatorsFeatureGESComponent

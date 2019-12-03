@@ -1,10 +1,11 @@
-from collections import defaultdict
+from collections import Counter, defaultdict, OrderedDict
 from itertools import chain
 from sqlalchemy import or_
 
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 from wise.msfd import db, sql, sql_extra
 from wise.msfd.data import countries_in_region, muids_by_country
+from wise.msfd.utils import fixedorder_sortkey
 from wise.msfd.gescomponents import (get_ges_component, FEATURES_DB_2012,
                                      FEATURES_DB_2018)
 
@@ -29,11 +30,10 @@ class RegDescA102018Row(BaseRegDescRow):
             ]
             value = self.not_rep
             if data:
-                vals = set([x for x in chain(*data)])
-                crits = [
-                    get_ges_component(c).title
-                    for c in vals
-                ]
+                vals = [get_ges_component(x).title for x in chain(*data)]
+                counted = Counter(vals)
+                crits = [u'{} ({})'.format(k, v) for k, v in counted.items()]
+
                 value = newline_separated_itemlist(crits)
 
             values.append(value)
@@ -48,12 +48,12 @@ class RegDescA102018Row(BaseRegDescRow):
         values = []
 
         for country_code, country_name in self.countries:
-            data = [
+            data = set([
                 row.TargetCode
                 for row in self.db_data
                 if row.CountryCode == country_code
                    and row.TargetCode
-            ]
+            ])
             value = self.not_rep
             if data:
                 value = len(data)
@@ -65,12 +65,43 @@ class RegDescA102018Row(BaseRegDescRow):
         return rows
 
     @compoundrow
-    def get_target_value_row(self):
+    def get_targetcode_row(self):
         rows = []
         values = []
 
         for country_code, country_name in self.countries:
-            reports = {'Reported': 0, 'Not reported': 0}
+            value = []
+            data = [
+                (row.TargetCode, row.Description)
+                for row in self.db_data
+                if row.CountryCode == country_code
+                   and row.TargetCode
+            ]
+            if not data:
+                values.append(self.not_rep)
+                continue
+
+            for row in set(data):
+                target_code = row[0]
+                description = row[1]
+
+                value.append(u"<b>{}</b>: {}".format(target_code, description))
+
+            values.append('<br>'.join(value))
+
+        rows.append(('', values))
+
+        return rows
+
+    @compoundrow
+    def get_target_value_row(self):
+        rows = []
+        values = []
+
+        display_options = ['Reported', 'Not reported']
+
+        for country_code, country_name in self.countries:
+            reports = {k: 0 for k in display_options}
             value = []
             data = [
                 row.TargetValue
@@ -91,14 +122,15 @@ class RegDescA102018Row(BaseRegDescRow):
 
                 reports['Not reported'] += 1
 
-            for k, v in reports.items():
+            for k in display_options:
+                v = reports[k]
                 percentage = total and (v / float(total)) * 100 or 0
 
                 value.append(u"{0} ({1} - {2:0.1f}%)".format(
                     k, v, percentage
                 ))
 
-            values.append(newline_separated_itemlist(value))
+            values.append(newline_separated_itemlist(value, sort=False))
 
         rows.append(('No. of parameters/elements with quantitative values',
                      values))
@@ -194,10 +226,12 @@ class RegDescA102018Row(BaseRegDescRow):
                 continue
 
             for timescale in set(data):
+                ts_formatted = "{}-{}".format(timescale[0:4], timescale[4:])
                 found = len([x for x in data if x == timescale])
                 percentage = total and (found / float(total)) * 100 or 0
+
                 value.append(u"{0} ({1} - {2:0.1f}%)".format(
-                    timescale, found, percentage
+                    ts_formatted, found, percentage
                 ))
 
             values.append(newline_separated_itemlist(value))
@@ -226,10 +260,11 @@ class RegDescA102018Row(BaseRegDescRow):
                 continue
 
             for updatedate in set(data):
+                upd_formatted = "{}-{}".format(updatedate[0:4], updatedate[4:])
                 found = len([x for x in data if x == updatedate])
                 percentage = total and (found / float(total)) * 100 or 0
                 value.append(u"{0} ({1} - {2:0.1f}%)".format(
-                    updatedate, found, percentage
+                    upd_formatted, found, percentage
                 ))
 
             values.append(newline_separated_itemlist(value))
@@ -242,6 +277,9 @@ class RegDescA102018Row(BaseRegDescRow):
     def get_updatetype_row(self):
         rows = []
         values = []
+
+        order = ['Same as 2012 definition', 'Modified from 2012 definition',
+                 'New target']
 
         for country_code, country_name in self.countries:
             value = []
@@ -257,14 +295,17 @@ class RegDescA102018Row(BaseRegDescRow):
                 values.append(self.not_rep)
                 continue
 
-            for updatetype in set(data):
+            updatetypes = sorted(set(data),
+                                 key=lambda t: fixedorder_sortkey(t, order))
+
+            for updatetype in updatetypes:
                 found = len([x for x in data if x == updatetype])
                 percentage = total and (found / float(total)) * 100 or 0
                 value.append(u"{0} ({1} - {2:0.1f}%)".format(
                     updatetype, found, percentage
                 ))
 
-            values.append(newline_separated_itemlist(value))
+            values.append(newline_separated_itemlist(value, sort=False))
 
         rows.append(('No. of targets per category', values))
 
@@ -321,16 +362,18 @@ class RegDescA102012(BaseRegComplianceView):
 
     def __init__(self, context, request):
         super(RegDescA102012, self).__init__(context, request)
-        self.region = context.country_region_code
+        self.region = context._countryregion_folder._subregions
         db.threadlocals.session_name = self.session_name
 
         self._descriptor = context.descriptor
-        self.countries = countries_in_region(self.region)
+        self.countries = [
+            x[0] for x in context._countryregion_folder._countries_for_region
+        ]
         self.all_countries = muids_by_country()
         self.muids_in_region = []
 
         for c in self.countries:
-            self.muids_in_region.extend(self.all_countries[c])
+            self.muids_in_region.extend(self.all_countries.get(c, []))
 
         self.import_data, self.target_data = self.get_base_data()
         self.features_data = self.get_features_data()
@@ -370,7 +413,7 @@ class RegDescA102012(BaseRegComplianceView):
     def get_marine_unit_id_nrs(self):
         rows = [
             ('Number used',
-             [len(self.all_countries[c]) for c in self.countries])
+             [len(self.all_countries.get(c, [])) for c in self.countries])
         ]
 
         return rows
@@ -389,7 +432,7 @@ class RegDescA102012(BaseRegComplianceView):
         all_themes = defaultdict(list)
         for feature in all_features:
             if feature not in themes_fromdb:
-                all_themes['No theme/Unknown'].append(feature)
+                all_themes['No theme'].append(feature)
                 continue
 
             theme = themes_fromdb[feature].theme
@@ -400,7 +443,7 @@ class RegDescA102012(BaseRegComplianceView):
 
             for country in self.countries:
                 value = []
-                muids = self.all_countries[country]
+                muids = self.all_countries.get(country, [])
 
                 for feature in feats:
                     data = [
@@ -426,7 +469,7 @@ class RegDescA102012(BaseRegComplianceView):
         values = []
 
         for country in self.countries:
-            muids = self.all_countries[country]
+            muids = self.all_countries.get(country, [])
             value = len([
                 row.ReportingFeature
                 for row in self.target_data
@@ -439,7 +482,7 @@ class RegDescA102012(BaseRegComplianceView):
 
             values.append(value)
 
-        rows.append(('Number user', values))
+        rows.append(('Number used', values))
 
         return rows
 
@@ -448,7 +491,7 @@ class RegDescA102012(BaseRegComplianceView):
         values = []
 
         for country in self.countries:
-            muids = self.all_countries[country]
+            muids = self.all_countries.get(country, [])
             value = len([
                 row.ReportingFeature
                 for row in self.target_data
@@ -461,7 +504,7 @@ class RegDescA102012(BaseRegComplianceView):
 
             values.append(value)
 
-        rows.append(('Number user', values))
+        rows.append(('Number used', values))
 
         return rows
 
@@ -475,7 +518,7 @@ class RegDescA102012(BaseRegComplianceView):
         ]
 
         for country in self.countries:
-            muids = self.all_countries[country]
+            muids = self.all_countries.get(country, [])
             value = []
 
             for label, topic in types:
@@ -507,7 +550,7 @@ class RegDescA102012(BaseRegComplianceView):
         ]
 
         for country in self.countries:
-            muids = self.all_countries[country]
+            muids = self.all_countries.get(country, [])
             value = []
 
             for label, topic in types:
@@ -578,7 +621,7 @@ class RegDescA102012(BaseRegComplianceView):
         ]
 
         for country in self.countries:
-            muids = self.all_countries[country]
+            muids = self.all_countries.get(country, [])
             value = []
 
             for label, topic in types:
@@ -635,7 +678,7 @@ class RegDescA102012(BaseRegComplianceView):
         count, import_data = db.get_all_records(
             imp,
             imp.MSFD10_Import_ReportingCountry.in_(self.countries),
-            imp.MSFD10_Import_ReportingRegion == self.region
+            imp.MSFD10_Import_ReportingRegion.in_(self.region)
         )
         import_ids = [x.MSFD10_Import_ID for x in import_data]
 

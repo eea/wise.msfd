@@ -1,0 +1,26 @@
+<configure
+  xmlns="http://namespaces.zope.org/zope"
+  xmlns:browser="http://namespaces.zope.org/browser"
+  xmlns:i18n="http://namespaces.zope.org/i18n"
+  xmlns:z3c="http://namespaces.zope.org/z3c"
+  i18n_domain="wise.msfd">
+
+  <!-- Main page for National Summary section  -->
+  <browser:page
+    for="..interfaces.INationalSummaryFolder"
+    name="nat-summary-start"
+    class=".main.NationalSummaryOverview"
+    template="./pt/nat-sum-start.pt"
+    permission="zope2.View"
+    />
+
+  <!-- View for a country -->
+  <browser:page
+    for="..interfaces.INationalSummaryCountryFolder"
+    name="sum-country-start"
+    class=".reportdata.NationalSummaryView"
+    template="./pt/report-data-view.pt"
+    permission="wise.ViewAssessmentData"
+    />
+
+</configure>

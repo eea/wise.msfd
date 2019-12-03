@@ -1,0 +1,209 @@
+<div id="wise-compliance-form" class="full-width-marker"
+  tal:define="can_comment view/can_comment; plone nocall:context/@@plone"
+
+  tal:attributes="id view/form_id | string:wise-compliance-form">
+  <script>
+    jQuery(document).ready(function() {
+      $('.help-popover').popover();
+    });
+  </script>
+  <script src="/++resource++msfd/js/assessment-edit.js"></script>
+
+  <div id="wise-compliance-form-top"
+    tal:attributes="id view/form_id_top | string:wise-compliance-form-top">
+    <metal:tabs
+      metal:use-macro="context/wise-macros/macros/tabs"></metal:tabs>
+  </div>
+
+  <div class="wise-search-form-container"
+    tal:attributes="id view/form_container_class | string:wise-search-form-container">
+
+    <div class="left-side-form nat-edit-form">
+
+      <div class="crt-def">
+        <button type="button" class="btn btn-primary btn-lg"
+          data-toggle="modal" data-target="#assessment-help">
+          Criteria definition
+        </button>
+      </div>
+      <h2 tal:content="structure view/title" class="report-title">Title here</h2>
+      <h4 class="process-phase-title" >
+        Current phase: <span tal:content="python: view.current_phase[1]">Adequacy</span>
+      </h4>
+
+      <div id="report-data-navigation">
+        <div class="back-to-descr">
+          <a href="./">
+            <i class='fa fa-level-up'></i>
+            Back to Descriptor
+          </a>
+        </div>
+
+        <div id="assessment-edit-infobox"></div>
+
+        <div class="report-nav fixed">
+          <div class="nav-wrapper">
+            <div class="nav-header">
+              <button id="report-nav-toggle" class="nav-toggle">
+                <i class="fa fa-bars"></i>
+              </button>
+            </div>
+
+            <div class="nav-body">
+              <div class="art-title">
+                <a href="" tal:attributes="href view/_country_folder/absolute_url"
+                  tal:content="view/country_name"
+                  target="_blank">EU</a>
+              </div>
+
+              <div class="nav-articles">
+                <div tal:repeat="art view/_countryregion_folder/contentValues" class="art">
+                  <div class="art-middle">
+                    <a tal:content="art/title_or_id"
+                      tal:attributes="href art/absolute_url"
+                      target="_blank">
+                      Article 9
+                    </a>
+                  </div>
+                  <div class="art-links">
+                    <a href="" tal:attributes="href string:${art/absolute_url}/@@edit-assessment-data-2018" target="_blank">Edit</a>
+                    <a tal:attributes="href string:${art/absolute_url}/@@view-report-data-2018"
+                      target="_blank">
+                      2018</a>
+                    <a tal:attributes="href string:${art/absolute_url}/@@view-report-data-2012"
+                      target="_blank">
+                      2012</a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div id="comp-national-descriptor">
+
+        <div tal:replace="structure view/help"
+          tal:on-error="string:Error in help">Subform help here</div>
+
+        <metal:form use-macro="context/@@ploneform-macros/titlelessform">
+
+          <metal:fields fill-slot="fields">
+            <tal:rep tal:repeat='subform view/subforms'>
+
+              <div class="subform" tal:define="disabled python:subform._disabled and ' disabled' or ''"
+                tal:attributes="class string:subform $disabled">
+
+                <div class="body">
+                  <div class="left">
+                    <h4>
+                      <span
+                        tal:on-error="nothing"
+                        class="help-popover fa fa-info-circle fa-s"
+                        data-trigger="hover"
+                        data-html="true"
+                        tal:condition="subform/_question_type/title"
+                        tal:attributes="title string: Type: ${subform/_question_type/title};
+                        data-content string: Phase: ${subform/_question_phase}"
+                        >
+                      </span>
+                      <span tal:content="subform/title">Question here</span>
+                      <span style="float:right;"
+                          tal:define="last_change python: plone.toLocalizedTime(subform._last_update, long_format=True) or '-'"
+                          class="help-popover"
+                          data-trigger="hover"
+                          data-html="true"
+                          tal:attributes="title python: '';
+                          data-content python: last_change">
+                        <span tal:content="string:Last change">Last change</span>
+                        <i class="fa fa-calendar"></i>
+                      </span>
+                    </h4>
+
+                    <div class="fields-container">
+                      <div tal:repeat="fieldname subform/fields" class="fields-container-row">
+                        <tal:def define="widget python: view.widgets[fieldname]">
+
+                          <div class="field"
+                            tal:define="error widget/error;
+                            hidden python:widget.mode == 'hidden';
+                            element nocall: widget/field/_element | nothing;
+                            "
+                            tal:attributes="class python:'field' + (error and ' error' or '')">
+
+                            <span class="fieldRequired" title="Required"
+                              tal:condition="python:widget.required and not hidden"
+                              i18n:translate="label_required"
+                              i18n:attributes="title title_required;">
+                              (Required)
+                            </span>
+
+                            <div class="widget">
+                              <div>
+                                <label for=""
+                                  tal:condition="not:hidden"
+                                  class="help-popover"
+                                  data-trigger="hover"
+                                  data-html="true"
+                                  tal:attributes="for widget/id;
+                                  title python: element and element.title or '';
+                                  data-content python: element and view.get_translated(element.definition) or ''" >
+                                  <span i18n:translate="" tal:content="widget/label">label</span>
+                                  <!-- <span tal:condition="element" class="fa fa-question-circle"></span> -->
+                                </label>
+                              </div>
+                              <div class="assessment-form-input">
+                                <input type="text" tal:replace="structure widget/render" />
+                              </div>
+                            </div>
+
+                            <div class="formHelp"
+                              tal:define="description widget/field/description"
+                              i18n:translate=""
+                              tal:content="description"
+                              tal:condition="python:description and not hidden">
+                              field description
+                            </div>
+
+                            <div tal:condition="error" tal:content="structure error/render">
+                              Error
+                            </div>
+                          </div>
+
+                        </tal:def>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="right discussion disc-tl"
+                       tal:define="question_id subform/_question/id | string:summary">
+                    <i class="comm-hide fa fa-plus-square fa-1" title="Show all comments"></i>
+                    <div class="comments"
+                      tal:attributes="data-question-id question_id; data-thread-id string:tl"></div>
+                    <div tal:condition="python: can_comment"
+                        class="textline">
+                      <textarea name="comment-text" placeholder="Write a comment..."></textarea>
+                      <button class="btn btn-primary">Post</button>
+                    </div>
+                  </div>
+
+                </div>
+              </div>
+            </tal:rep>
+          </metal:fields>
+
+          <metal:slot fill-slot="actions">
+            <div tal:condition="python: not(view.read_only_access)"
+                class="form-right-side">
+              <metal:block use-macro="context/@@ploneform-macros/actions" />
+            </div>
+          </metal:slot>
+
+          <metal:css fill-slot="formtop">
+          </metal:css>
+
+        </metal:form>
+      </div>
+    </div>
+  </div>
+</div>

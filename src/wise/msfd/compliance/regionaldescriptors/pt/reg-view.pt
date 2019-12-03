@@ -22,9 +22,9 @@
           </div>
 
           <h1 tal:content="structure view/title">Assessment</h1>
-          <!--<h4 class="process-phase-title" >-->
-            <!--Current phase: <span tal:content="python: view.current_phase[1]">Adequacy</span>-->
-          <!--</h4>-->
+          <h4 class="process-phase-title" >
+            Current phase: <span tal:content="python: view.current_phase[1]">Adequacy</span>
+          </h4>
           <div class="nda-link">
             <a href="./../../"
               tal:attributes="href python:view._countryregion_folder.absolute_url()">
@@ -42,24 +42,24 @@
               </li>
               <li><a href="./@@view-report-data-2018"><i class='fa fa-table'></i> 2018 Report</a></li>
               <li><a href="./@@view-report-data-2012"><i class='fa fa-table'></i> 2012 Report</a></li>
-              <!--<li class="process-state">-->
-                <!--<form method="GET" action='./content_status_modify'>-->
-                  <!--<div>-->
-                    <!--<i class='fa fa-exchange'></i>-->
-                    <!--Process state:-->
-                    <!--<strong tal:content="view/get_status">Phase 0</strong>-->
-                    <!--<select onchange="javascript:this.form.submit()" name="workflow_action"-->
-                      <!--class="pat-select2"-->
-                      <!--data-pat-select2="width:10em">-->
-                      <!--<option value=''>Choose action...</option>-->
-                      <!--<tal:rep repeat="trans view/get_transitions">-->
-                        <!--<option tal:content="trans/title"-->
-                          <!--tal:attributes="value trans/id">Send to Phase 0</option>-->
-                      <!--</tal:rep>-->
-                    <!--</select>-->
-                  <!--</div>-->
-                <!--</form>-->
-              <!--</li>-->
+              <li class="process-state">
+                <form method="GET" action='./content_status_modify'>
+                  <div>
+                    <i class='fa fa-exchange'></i>
+                    Process state:
+                    <strong tal:content="view/get_status">Phase 0</strong>
+                    <select onchange="javascript:this.form.submit()" name="workflow_action"
+                      class="pat-select2"
+                      data-pat-select2="width:10em">
+                      <option value=''>Choose action...</option>
+                      <tal:rep repeat="trans view/get_transitions">
+                        <option tal:content="trans/title"
+                          tal:attributes="value trans/id">Send to Phase 0</option>
+                      </tal:rep>
+                    </select>
+                  </div>
+                </form>
+              </li>
 
             </ul>
           </div>

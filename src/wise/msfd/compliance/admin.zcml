@@ -1,0 +1,74 @@
+<configure
+  xmlns="http://namespaces.zope.org/zope"
+  xmlns:browser="http://namespaces.zope.org/browser"
+  xmlns:i18n="http://namespaces.zope.org/i18n"
+  xmlns:z3c="http://namespaces.zope.org/z3c"
+  i18n_domain="wise.msfd">
+
+  <browser:page
+    for="*"
+    name="pdb"
+    class=".admin.ToPDB"
+    permission="cmf.ManagePortal"
+    />
+
+  <browser:page
+    for="*"
+    name="bootstrap-compliance"
+    class=".admin.BootstrapCompliance"
+    permission="cmf.ManagePortal"
+    />
+
+  <browser:page
+    for="*"
+    name="cleanup-compliance"
+    class=".admin.CleanupCache"
+    permission="cmf.ManagePortal"
+    />
+
+  <browser:page
+    for="*"
+    name="compliance-admin"
+    class=".admin.ComplianceAdmin"
+    template="./pt/admin.pt"
+    permission="zope2.View"
+  />
+
+  <browser:page
+    for="*"
+    name="compliance-users"
+    class=".admin.ComplianceAdmin"
+    template="./pt/admin-users.pt"
+    permission="zope2.View"
+  />
+
+  <browser:page
+    for="*"
+    name="admin-scoring"
+    class=".admin.AdminScoring"
+    template="./pt/admin-scoring.pt"
+    permission="zope2.View"
+  />
+
+  <browser:page
+    for="*"
+    name="setup-workflow-states"
+    class=".admin.SetupAssessmentWorkflowStates"
+    permission="cmf.ManagePortal"
+  />
+
+  <browser:page
+    for="*"
+    name="translate-indicators"
+    class=".admin.TranslateIndicators"
+    permission="cmf.ManagePortal"
+  />
+
+  <browser:page
+    for="*"
+    name="migrate-translations"
+    class=".admin.MigrateTranslationStorage"
+    permission="cmf.ManagePortal"
+  />
+
+</configure>

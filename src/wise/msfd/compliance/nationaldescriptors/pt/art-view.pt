@@ -21,26 +21,73 @@
             Status message
           </div>
 
-          <h1 tal:content="structure view/title">Assessment</h1>
+          <h1 class="report-title"
+              tal:content="structure view/title">Assessment</h1>
           <h4 class="process-phase-title" >
             Current phase: <span tal:content="python: view.current_phase[1]">Adequacy</span>
           </h4>
-          <div class="nda-link">
-            <a href="./../../"
-              tal:attributes="href python:view._country_folder.absolute_url()">
-              <i class='fa fa-level-up'></i>
-              Go to National Descriptor Assessment
-            </a>
+
+          <div id="report-data-navigation">
+            <div class="nda-link">
+              <a href="./../../"
+                tal:attributes="href python:view._country_folder.absolute_url()">
+                <i class='fa fa-level-up'></i>
+                Go to National Descriptor Assessment
+              </a>
+            </div>
+
+            <div id="assessment-edit-infobox"></div>
+
+            <div class="report-nav fixed">
+              <div class="nav-wrapper">
+                <div class="nav-header">
+                  <button id="report-nav-toggle" class="nav-toggle">
+                    <i class="fa fa-bars"></i>
+                  </button>
+                </div>
+
+                <div class="nav-body">
+                  <div class="art-title">
+                    <a href="" tal:attributes="href view/_country_folder/absolute_url"
+                      tal:content="view/country_name"
+                      target="_blank">EU</a>
+                  </div>
+
+                  <div class="nav-articles">
+                    <div tal:repeat="art view/_descriptor_folder/contentValues" class="art">
+                      <div class="art-middle">
+                        <a tal:content="art/title_or_id"
+                          tal:attributes="href art/absolute_url"
+                          target="_blank">
+                          Article 9
+                        </a>
+                      </div>
+                      <div class="art-links">
+                        <a href="" tal:attributes="href string:${art/absolute_url}/@@edit-assessment-data-2018" target="_blank">Edit</a>
+                        <a tal:attributes="href string:${art/absolute_url}/@@view-report-data-2018"
+                          target="_blank">
+                          2018</a>
+                        <a tal:attributes="href string:${art/absolute_url}/@@view-report-data-2012"
+                          target="_blank">
+                          2012</a>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
 
           <div id="nat-desc-art-menu">
             <ul>
-              <!-- tal:condition="python: view.check_permission('wise.msfd: Edit Assessment')" -->
-              <li><a href="./@@edit-assessment-data-2018" target="_blank"><i class='fa fa-edit'></i> Assessment</a></li>
+              <li><a href="./@@edit-assessment-data-2018" target="_blank"><i class='fa fa-edit'></i> Assessment</a>
+                  <a href="./@@view-edit-history" class="fa fa-table pat-plone-modal"
+                      data-pat-plone-modal="height: 600px; content:#edit-history; width: 80%"></a>
+              </li>
               <li><a href="./@@view-report-data-2018" target="_blank"><i class='fa fa-table'></i> 2018 Report</a></li>
               <li><a href="./@@view-report-data-2012" target="_blank"><i class='fa fa-table'></i> 2012 Report</a></li>
-              <li tal:condition="python:False"><!--Removed--><a href="./@@view-report-data-2012-like-2018" target="_blank"><i class='fa fa-table'></i> 2012 Report (II)</a></li>
-              <li class="process-state">
+              <li tal:condition="python:False"><!--Removed--><a href="./@@view-report-data-2012-like-2018" target="_blank"><i class='fa fa-table'></i>2012 Report (II)</a></li>
+              <li class="process-state" style="display:flex; align-items: center">
                 <form method="GET" action='./content_status_modify'>
                   <div>
                     <i class='fa fa-exchange'></i>
@@ -58,8 +105,8 @@
                     </select>
                   </div>
                 </form>
+                <a href="./@@historyview" class="link-overlay contentHistory fa fa-history" id="content-history" style="margin-left: 2rem"></a>
               </li>
-
             </ul>
           </div>
 

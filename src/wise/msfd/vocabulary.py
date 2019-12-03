@@ -8,7 +8,7 @@ from zope.schema.interfaces import IVocabularyFactory
 from zope.schema.vocabulary import SimpleTerm, SimpleVocabulary
 
 from . import db, sql, sql2018
-from .labels import COMMON_LABELS
+from .labels import COMMON_LABELS, GES_LABELS
 
 # from eea.cache import cache
 
@@ -79,7 +79,18 @@ def db_vocab(table, column, sort_helper=None):
 
     res = [x.strip() for x in res]
 
-    terms = [SimpleTerm(x, x, COMMON_LABELS.get(x, x)) for x in res]
+    terms = []
+    for x in res:
+        try:
+            simple_term = SimpleTerm(x, x, COMMON_LABELS.get(x, x))
+        except:
+            continue
+            x = x.encode('utf-8')
+            simple_term = SimpleTerm(x, x, COMMON_LABELS.get(x, x))
+
+        terms.append(simple_term)
+
+    # terms = [SimpleTerm(x, x, COMMON_LABELS.get(x, x)) for x in res]
     terms.sort(key=sort_helper)
     vocab = SimpleVocabulary(terms)
 
@@ -119,6 +130,11 @@ def get_region_subregions_vb_factory(context):
 
 
 @provider(IVocabularyFactory)
+def get_region_subregions_vb_factory_art6(context):
+    return db_vocab(sql.MSFD4RegionalCooperation, 'RegionsSubRegions')
+
+
+@provider(IVocabularyFactory)
 @db.use_db_session('2012')
 def get_member_states_vb_factory(context):
     conditions = []
@@ -137,6 +153,56 @@ def get_member_states_vb_factory(context):
     )
 
     return values_to_vocab(set(x[1] for x in rows))
+
+
+@provider(IVocabularyFactory)
+@db.use_db_session('2018')
+def get_member_states_vb_factory_art4(context):
+    conditions = []
+
+    t = sql2018.MRUsPublication
+
+    if hasattr(context, 'get_selected_region_subregions'):
+        regions = context.get_selected_region_subregions()
+
+        if regions:
+            conditions.append(t.Region.in_(regions))
+
+    rows = db.get_unique_from_mapper(
+        t,
+        'Country',
+        *conditions
+    )
+
+    return values_to_vocab(rows)
+
+
+@provider(IVocabularyFactory)
+@db.use_db_session('2012')
+def get_member_states_vb_factory_art6(context):
+    conditions = []
+
+    mci = sql.MSFD4Import
+    mcr = sql.MSFD4RegionalCooperation
+
+    if hasattr(context, 'get_selected_region_subregions'):
+        regions = context.get_selected_region_subregions()
+
+        if regions:
+            conditions.append(mcr.RegionsSubRegions.in_(regions))
+
+    count, rows = db.get_all_records_join(
+        [mci.MSFD4_Import_ReportingCountry],
+        mcr,
+        *conditions
+    )
+    rows = [x[0] for x in rows]
+
+    if conditions and ('ANS' in regions or 'BAL' in regions):
+        rows.append('SE')
+
+    return values_to_vocab(set(rows))
+
 
 @provider(IVocabularyFactory)
 def get_area_type_vb_factory(context):
@@ -450,6 +516,7 @@ def art11_marine_unit_id_ms(context):
 
 
 def marine_unit_id_vocab(ids):
+    # Marine Unit Ids 2012
     count, res = db.get_marine_unit_id_names(ids)
 
     terms = []
@@ -468,7 +535,14 @@ def marine_unit_id_vocab(ids):
     terms_to_append = list(set(ids) - set(terms_found))
 
     for term in terms_to_append:
-        terms.append(SimpleTerm(term, term, term))
+        label = GES_LABELS.get('mrus', term)
+
+        if label != term:
+            label = u'%s (%s)' % (label, term)
+        else:
+            label = term
+
+        terms.append(SimpleTerm(term, term, label))
 
     terms.sort(key=lambda t: t.title)
 
@@ -502,7 +576,19 @@ def marine_unit_id_vocab_factory(context):
 
 @provider(IVocabularyFactory)
 def a1314_report_types(context):
-    return db_vocab(sql.MSFD13ReportingInfo, 'ReportType')
+    # table = sql.MSFD13ReportingInfo
+    # column = 'ReportType'
+    # values = db.get_unique_from_mapper(table, column)
+    # values = reversed(values)
+    values = (
+        ("Measures", 'Article 13 - Measures'),
+        ("Exceptions", 'Article 14 - Exceptions')
+    )
+
+    terms = [SimpleTerm(x, x, t) for x, t in values]
+    vocab = SimpleVocabulary(terms)
+
+    return vocab
 
 
 @provider(IVocabularyFactory)
@@ -513,6 +599,7 @@ def a1314_regions(context):
 @provider(IVocabularyFactory)
 def a1314_member_states(context):
     regions = context.get_selected_region_subregions()
+    report_type = context.data['report_type']
 
     mc = sql.MSFD13ReportingInfo
 
@@ -521,7 +608,8 @@ def a1314_member_states(context):
         count, rows = db.get_all_records_join(
             [mc_join.MemberState],
             mc,
-            mc.Region.in_(regions)
+            mc.Region.in_(regions),
+            mc.ReportType == report_type
         )
 
         return values_to_vocab(set(x[0].strip() for x in rows))
@@ -551,7 +639,7 @@ def a2018_marine_reporting_unit(context):
 
     try:
         json_str = json.loads(context.json())
-        countries = get_json_subform_data(json_str, 'Country Code')
+        countries = get_json_subform_data(json_str, 'Country')  # Country Code
     except Exception:
         countries = []
 
@@ -584,11 +672,10 @@ def a2018_marine_reporting_unit(context):
 def a2018_ges_component_art9(context):
     mapper_class = context.mapper_class
 
-    countries = context.data.get('member_states')
-
     mc_countries = sql2018.ReportedInformation
     conditions = []
 
+    countries = context.data.get('member_states')
     if countries:
         conditions.append(mc_countries.CountryCode.in_(countries))
 
@@ -852,9 +939,9 @@ def a2018_mru_ind(context):
     features_mc = context.features_mc
     marine_mc = context.marine_mc
 
-    countries = get_json_subform_data(json_str, 'Country Code')
+    countries = get_json_subform_data(json_str, 'Country')  # Country Code
     ges_components = get_json_subform_data(json_str_subform, 'GES Component')
-    features = get_json_subform_data(json_str_subform, 'Features')
+    features = get_json_subform_data(json_str_subform, 'Feature')  # Feature
 
     mc_countries = sql2018.ReportedInformation
 
@@ -923,3 +1010,78 @@ def a2018_country(context):
     res = list(set(res))
 
     return vocab_from_values(res)
+
+
+@provider(IVocabularyFactory)
+def a2018_country_art9(context):
+    mapper_class = sql2018.ART9GESGESComponent
+    mc_countries = sql2018.ReportedInformation
+    conditions = []
+
+    # This became the first form in the chain, we no longer filter
+
+    # ges_components = context.data.get('ges_component')
+    # if ges_components:
+    #     conditions.append(mapper_class.GESComponent.in_(ges_components))
+
+    count, res = db.get_all_records_join(
+        [mapper_class.GESComponent, mc_countries.CountryCode],
+        mc_countries,
+        *conditions
+    )
+
+    res = [x.CountryCode for x in res]
+    res = list(set(res))
+
+    return vocab_from_values(res)
+
+
+@provider(IVocabularyFactory)
+def a2012_ges_components_art9(context):
+    mc = sql.MSFD9Descriptor
+    conditions = []
+
+    mrus = context.get_form_data_by_key(context, 'marine_unit_ids')
+
+    if mrus:
+        conditions.append(mc.MarineUnitID.in_(mrus))
+
+    res = db.get_unique_from_mapper(
+        mc,
+        'ReportingFeature',
+        *conditions
+    )
+
+    return vocab_from_values(res)
+
+
+@provider(IVocabularyFactory)
+def a2012_ges_components_art10(context):
+    t = sql.t_MSFD10_DESCrit
+    mc = sql.MSFD10Target
+
+    conditions = []
+
+    mrus = context.get_form_data_by_key(context, 'marine_unit_ids')
+
+    if mrus:
+        conditions.append(mc.MarineUnitID.in_(mrus))
+
+    sess = db.session()
+    q = sess.query(t.c.GESDescriptorsCriteriaIndicators).\
+        join(mc, mc.MSFD10_Target_ID == t.c.MSFD10_Target).\
+        filter(*conditions)
+
+    res = set([x[0] for x in q])
+
+    return vocab_from_values(res)
+
+
+@provider(IVocabularyFactory)
+def a18_ges_component(context):
+    """ Vocabulary for article 18 Ges components
+    """
+
+    ges_components = context.get_ges_components()
+
+    return vocab_from_values(ges_components)

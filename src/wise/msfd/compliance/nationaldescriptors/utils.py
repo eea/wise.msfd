@@ -1,7 +1,9 @@
 from collections import defaultdict
 from itertools import chain
+from operator import attrgetter
 
-from wise.msfd.gescomponents import GES_LABELS
+from Products.Five.browser import BrowserView
+from wise.msfd.labels import GES_LABELS
 from wise.msfd.utils import ItemLabel, ItemList, LabeledItemList, timeit
 
 from .proxy import proxy_cmp
@@ -55,7 +57,7 @@ def consolidate_date_by_mru(data):
 
     for mrus, rows in regroup.items():
         mrus_labeled = tuple([
-            ItemLabel(row, GES_LABELS.get('mrus', row))
+            ItemLabel(row, u'{} ({})'.format(GES_LABELS.get('mrus', row), row))
 
             for row in mrus
         ])
@@ -91,7 +93,7 @@ def consolidate_date_by_mru(data):
 
 
 @timeit
-def consolidate_singlevalue_to_list(proxies, fieldname):
+def consolidate_singlevalue_to_list(proxies, fieldname, order=None):
     """ Given a list of proxies where one of the fields needs to be a list, but
     is spread across different similar proxies, consolidate the single values
     to a list and return only one object for that list of similar objects
@@ -114,4 +116,64 @@ def consolidate_singlevalue_to_list(proxies, fieldname):
 
         res.append(o)
 
+    # consolidate_singlevalue_to_list is used in regional descriptor too
+    # where we do not order the results
+    if order:
+        res = list(sorted(res, key=attrgetter(*order)))
+
     return res
+
+
+class ViewSavedAssessmentData(BrowserView):
+    """ Temporary class for viewing saved assessment data
+    """
+
+    def get_saved_assessment_data(self):
+        catalog = self.context.portal_catalog
+
+        brains = catalog.searchResults(
+            portal_type='wise.msfd.nationaldescriptorassessment',
+            path={
+                "query": "/Plone/marine/compliance-module"
+                         "/national-descriptors-assessments"
+            }
+        )
+
+        res = []
+
+        for brain in brains:
+            obj = brain.getObject()
+            if not hasattr(obj, 'saved_assessment_data'):
+                continue
+
+            sad = obj.saved_assessment_data
+
+            if not sad:
+                continue
+
+            if len(sad) == 1:
+                continue
+
+            # import pdb; pdb.set_trace()
+            res.append((obj, obj.saved_assessment_data))
+
+        return res
+
+    def fix_assessment_data(self):
+        from wise.msfd.compliance.content import AssessmentData
+
+        for obj, data in self.get_saved_assessment_data():
+            last = data.last().copy()
+
+            new_data = AssessmentData()
+            new_data._append(last)
+
+            obj.saved_assessment_data = new_data
+
+    def __call__(self):
+        if 'fix' in self.request.form:
+            self.fix_assessment_data()
+
+            return 'Done'
+
+        return self.index()

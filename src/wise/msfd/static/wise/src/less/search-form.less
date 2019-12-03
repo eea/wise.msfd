@@ -37,12 +37,37 @@
   background: rgba(255,255,255, 0.3);
 }
 
+#wise-search-form-top {
+  margin-bottom: 5rem;
+}
+
 .wise-search-form-container,
 #wise-search-form {
   opacity: 0;
 
   .subform {
-    margin-top: 30px;
+    margin-top: 0rem;
+    h3#article-id {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 1.8rem;
+      padding: 0.2em 1rem;
+      font-weight: bolder;
+      margin: 0px;
+      border-bottom: 2px solid #52616f;
+
+      .article-id-country {
+        font-size: 2.2rem;
+      }
+      .article-id-article {
+      }
+    }
+    #mru-select-prev-next-wrapper {
+      background-color: #EEE;
+      display: flex;
+      align-items: center;
+    }
   }
 
   table.listing {
@@ -51,13 +76,29 @@
     tr:nth-child(odd) {
       background-color: #EEE;
     }
+    th, td {
+      padding: 0.5em;
+      min-width: 10em;
+
+      &.fixed-position {
+        position: absolute;
+        width: 15rem;
+        margin-left: -15.1rem;
+        border-right: 2px solid #AAA;
+        color: #333;
+      }
+    }
+
+    &.table-report {
+       margin-left: 15rem;
+    }
   }
 
   .pagination-text {
-    display: block;
+    display: inline-block;
     margin-bottom: 2rem;
     margin-top: 2rem;
-    text-align: center;
+    //text-align: center;
 
     & > span {
       color: #444;
@@ -66,7 +107,7 @@
 
     &.bottom {
       margin: 0;
-      padding: 1rem;
+      padding: 0.2rem 1rem;
     }
 
     .pagination-input {
@@ -79,6 +120,7 @@
     }
 
     .pagination-result {
+      background-color: white;
       text-decoration: underline;
       cursor: pointer;
       display: inline-block;
@@ -385,7 +427,7 @@
 
   }
 
-  margin-bottom: 20px;
+  // margin-bottom: 20px;
 
   & > span {
     max-height: 150px;
@@ -448,10 +490,29 @@
     float: left;
   }
 
+  div#item-title-wrapper {
+    text-align: center;
+    display: inline-block;
+    width: 100%;
+    margin-bottom: 1rem;
+  }
+
+  .reported-date {
+    padding: 0.2rem 1rem;
+    text-align: right;
+    color: #666;
+    font-size: small;
+  }
+
+  #form-data-primary {
+    margin-top: 2rem;
+  }
+
   #marine-widget-top {
-    margin-top: 10px;
-    margin-bottom: 16px;
     position: relative;
+    padding: 0.2rem 1rem;
+    margin: 0;
+    background-color: #EEE;
 
     #form-buttons-prev-top {
       /*width: 30%;*/
@@ -466,6 +527,13 @@
       /*margin-left: 20px;*/
       /*position:absolute;
       right: 0;*/
+    }
+
+    #marine-unit-trigger {
+      .text-trigger {
+        border: none;
+        text-decoration: underline;
+      }
     }
 
     .widget {
@@ -493,9 +561,7 @@
 
       > h4 {
         margin-bottom: 2px;
-        vertical-align: bottom;
-        display: block;
-        float: left;
+        display: inline-block;
         margin-top: 5px;
         margin-right: 0.5em;
         font-size: 1em;
@@ -507,8 +573,8 @@
     .select-article {
       display: block;
       width: 100%;
-      margin-top: 1.5rem;
-      text-align: justify;
+      // margin-top: 1.5rem;
+      text-align: left;
 
     }
 
@@ -516,12 +582,18 @@
 
 }
 
-.extra-details {
+.item-subform {
+  .double-scroll {
+    overflow: auto;
+    padding: 0px !important;
+  }
+}
 
+.extra-details {
   padding-top: 0.7rem;
 
   h4 {
-    padding-top: 1.7rem;
+    //padding-top: 1.7rem;
   }
 
   .extra-details-section {
@@ -575,36 +647,47 @@
 }
 
 .form-buttons-next-row {
-  position: absolute;
-  margin: 0;
-  top: 0;
-  right: 0;
   display: inline-block;
 
   .label {
     padding: 0;
   }
+  .form-buttons-next {
+    color: white;
+    background-color: #29a2d9;
+
+    &:hover {
+      color: white;
+      background-color: #0071b3;
+    }
+  }
 }
 
 .form-buttons-prev-row {
-  position: absolute;
-
-  margin: 0 0 5px;
+  display: inline-block;
 
   .label {
     padding: 0;
   }
+  .form-buttons-prev {
+    color: white;
+    background-color: #29a2d9;
 
+    &:hover {
+      color: white;
+      background-color: #0071b3;
+    }
+  }
 }
 
 .prev-next-row {
-  margin: 0;
+  background-color: #EEE;
+  padding: 0.2rem 1rem;
   text-align: center;
   position: relative;
-  display: block;
   height: auto;
-  padding-bottom: 20px;
-  margin-top: 15px;
+  min-width: 200px;
+  margin-left: auto;
 
   > span {
     display: block;
@@ -612,6 +695,10 @@
     /*display: block;
     margin-left: 50%;
     .vendor-prefix(transform, translate3d(-50%, 0, 0));*/
+  }
+
+  &.prev-next-row-bottom {
+    background-color: white;
   }
 }
 
@@ -622,10 +709,9 @@
     width: 30%;
   }
 
-  .select-article {
-    width: 80% !important;
+  #marine-widget-top {
+    max-width: 60%;
   }
-
 }
 
 //tablet
@@ -688,12 +774,14 @@
   }
 
   #marine-widget-top {
+    max-width: 50%;
+
     .select-article {
       float: none;
       clear: none;
 
       .field {
-        text-align: center !important;
+        text-align: left !important;
 
         .widget {
           /*padding-bottom: 2px;*/
@@ -783,4 +871,8 @@
     }
   }
 
+}
+.clear-break {
+  overflow: hidden;
+  clear: both;
 }

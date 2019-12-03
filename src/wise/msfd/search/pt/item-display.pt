@@ -7,7 +7,7 @@
       fields python: [x for x in fields if x not in blacklist]">
 
       <tal:rep repeat="key fields" >
-        <tal:def tal:define="value item/?key; value python: view.print_value(value)">
+        <tal:def tal:define="value item/?key; value python: view.print_value(value, key)">
           <dt tal:condition="value">
             <span tal:content="python: view.name_as_title(key)"
               tal:attributes="title key">Label</span>

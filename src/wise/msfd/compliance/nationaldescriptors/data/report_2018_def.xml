@@ -30,7 +30,7 @@
     <element section="progressassessment" name="TargetStatus">Target status</element>
     <element section="progressassessment" name="AssessmentPeriod">Assessment period</element>
     <element section="progressassessment" name="ProgressDescription" translate="true">Description target assessment</element>
-    <element section="progressassessment" name="Indicators" label="indicators" convert="csv_ges_labels_inverse_list">Related indicator</element>
+    <element section="progressassessment" name="Indicators" label="indicators" convert="csv_ges_labels_inverse_list_indicators">Related indicator</element>
   </Art10>
 
   <Art9>
@@ -90,7 +90,7 @@
     <element section="criteria" name="Trend">Trend</element>
     <element section="criteria" name="ParameterAchieved">Parameter achieved</element>
     <element section="criteria" name="DescriptionParameter" translate="true">Description parameter</element>
-    <element section="criteria" name="IndicatorCode" label="indicators">Related indicator</element>
+    <element section="criteria" name="IndicatorCode" convert="get_indicators">Related indicator</element>
 
     <element section="criteriastatus" name="CriteriaStatus">Criteria status</element>
     <element section="criteriastatus" name="DescriptionCriteria" translate="true">Description criteria</element>
@@ -101,7 +101,7 @@
     <element section="overallstatus" setlevel="0" name="IntegrationRuleTypeParameter" label="parameters">
       Integration rule type parameter
     </element>
-    <element section="overallstatus" name="IntegrationRuleDescriptionParameter">
+    <element section="overallstatus" name="IntegrationRuleDescriptionParameter" translate="true">
       Integration rule description parameter
     </element>
     <element section="overallstatus" name="IntegrationRuleDescriptionReferenceParameter" skip="true" reason="Not in the XML">

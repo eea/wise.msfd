@@ -75,4 +75,28 @@
     <element name="Status Trend">Status Trend</element>
     <element name="Status Confidence">Status Confidence</element>
   </Art8a>
+  <Art3-4>
+    <element name="Member state description" translate="true">Member state description</element>
+    <element name="Region/subregion" translate="true">Region/subregion</element>
+    <element name="Subdivisions">Subdivisions</element>
+    <element name="Marine reporting units description" translate="true">Marine reporting units description (AreaType)</element>
+    <element name="Member state">Member state</element>
+    <element name="Area type">Area type</element>
+    <element name="MRU ID">MRU ID</element>
+    <element name="Marine reporting unit" translate="true">Marine reporting unit</element>
+  </Art3-4>
+  <Art7>
+    <element name="CA code (EU, national)">CA code (EU, national)</element>
+    <element name="Acronym, Name (national)">Acronym, Name (national)</element>
+    <element name="Address">Address</element>
+    <element name="URL">URL</element>
+    <element name="Legal status" translate="true">Legal status</element>
+    <element name="Responsibilities" translate="true">Responsibilities</element>
+    <element name="Reference">Reference</element>
+    <element name="Membership" translate="true">Membership</element>
+    <element name="Regional coordination" translate="true">Regional coordination</element>
+  </Art7>
+  <Art8esa>
+    <element name="Test">Test</element>
+  </Art8esa>
 </data>

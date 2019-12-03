@@ -23,14 +23,14 @@ class IMarineUnitIDSelect(Interface):
         title=u"MarineUnitID",
         # description=u"Select one or more MarineUnitIDs that you're
         # interested",
-        required=False,
+        required=True,
         vocabulary="wise_search_marine_unit_id"
     )
 
 
 class IMarineUnitIDsSelect(Interface):
     marine_unit_ids = List(
-        title=u"MarineUnitIDs",
+        title=u"MarineUnitID",
         # description=u"Select one or more MarineUnitIDs that you're
         # interested",
         value_type=Choice(vocabulary="wise_search_marine_unit_ids"),

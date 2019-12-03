@@ -14,6 +14,12 @@
   margin-top: 4em !important;
 }
 
+.start-page-content {
+  img {
+    width: 95%;
+  }
+}
+
 .breadcrumbs {
   display: none;
 }
@@ -48,9 +54,9 @@
   clear: both;
 }
 
-.fa-question-circle {
-  color: #333;
-}
+// .fa-question-circle {
+//   color: #333;
+// }
 
 em {
   border-bottom: 1px dotted #CCC;
@@ -120,6 +126,7 @@ span.has-new-comments {
   cursor: help;
   float: right;
   font-size: 18px;
+  margin-left: 5px;
 }
 
 // Custom colored buttons for process states
@@ -147,6 +154,9 @@ span.has-new-comments {
 
 }
 
+.btn-light {
+  border: 1px solid #DDD;
+}
 
 // Assessment overview
 // nat-desc-art-view.pt
@@ -193,6 +203,7 @@ span.has-new-comments {
     }
   }
   .fixed-right {
+    z-index: 999;
     visibility: visible;
   }
 }
@@ -201,6 +212,7 @@ span.has-new-comments {
   position: relative;
 
   .table-wrap {
+    z-index: 0;
     overflow: auto;
     overflow-y: hidden;
   }
@@ -219,11 +231,13 @@ span.has-new-comments {
         display: table-cell;
         min-width: 100px;
         padding: 5px;
+        margin-right: -3px;
         width: 2000px;
       }
     }
     &.fixed-right {
       min-width: 150px;
+      width: 150px;
     }
   }
 
@@ -238,7 +252,7 @@ span.has-new-comments {
 
     div {
       padding: 1px 5px;
-      height: 25%;
+      height: 45px;
       border: 1px solid #ddd;
       //margin: -1px;
       overflow: hidden;
@@ -291,7 +305,8 @@ span.has-new-comments {
       &.as-value-0 { background-color: #eee !important; }     // not completed
       &.as-value-1 { background-color: #b1c587 !important; }  // very good
       &.as-value-2 { background-color: #d4dfbc !important; }  // good
-      &.as-value-3 { background-color: #ffeeae !important; }  // partial
+      //&.as-value-3 { background-color: #ffeeae !important; }  // partial
+      &.as-value-3 { background-color: #ddd !important; }  // not reported
       &.as-value-4 { background-color: #ffaeae !important; }  // poor
       &.as-value-5 { background-color: #fd7878 !important; }  // very poor
       &.as-value-6 { background-color: #b8d1e0 !important; }  // not clear
@@ -352,6 +367,7 @@ span.has-new-comments {
 
 .nda-link {
   margin-bottom: 1em;
+  display: inline;
 }
 
 .as-table-overview {
@@ -453,6 +469,7 @@ table.comp-c-listing {
       border-radius: 10px;
       right: 30px;
       top: -32px;
+      z-index: 99;
 
       .art-title {
         a {

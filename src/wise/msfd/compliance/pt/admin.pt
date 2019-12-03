@@ -25,92 +25,38 @@
             </a>
           </div>
 
-          <h3>Assigned Topic Leads overview</h3>
+          <div class="form-group">
+            <a class="btn btn-primary btn-small btn-success"
+              tal:attributes="href string:${view/_compliance_folder/absolute_url}/@@compliance-users"
+              target="_blank">Compliance Users
+            </a>
 
-          <table class="table as-table-overview table-striped">
-            <thead>
-              <tr>
-                <th>Descriptor</th>
-                <th>Assigned users</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr tal:repeat="desc python: view.get_descriptors">
-                <th>
-                  <span tal:content="python: desc[1]">D0</span>
-                </th>
+            <a class="btn btn-primary btn-small btn-success"
+              tal:attributes="href string:${view/_compliance_folder/portal_url}/@@translations-overview"
+              target="_blank">
+              Translations overview
+            </a>
 
-                <td>
-                  <div tal:repeat="user python: view.get_groups_for_desc(desc[0])">
-                    <a href="" tal:attributes="href string:mailto:${user/email}">
-                      <strong tal:content="user/fullname">Fullname</strong>
-                      (<span tal:content="user/username">Username</span>)
-                    </a>
-                  </div>
-                </td>
-              </tr>
-            </tbody>
-          </table>
+            <a class="btn btn-primary btn-small btn-success"
+              tal:attributes="href string:${view/_compliance_folder/absolute_url}/national-descriptors-assessments/@@edit-assessors"
+              target="_blank">
+              Edit assessors
+            </a>
 
-          <h3>Compliance Reviewers (EC)</h3>
-          <table class="table as-table-overview table-striped">
-            <thead>
-              <tr>
-                <th>Assigned users</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>
-                  <div tal:repeat="user python: view.get_reviewers">
-                    <a href="" tal:attributes="href string:mailto:${user/email}">
-                      <strong tal:content="user/fullname">Fullname</strong>
-                      (<span tal:content="user/username">Username</span>)
-                    </a>
-                  </div>
-                </td>
-              </tr>
-            </tbody>
-          </table>
+            <a class="btn btn-primary btn-small btn-success"
+              tal:attributes="href string:${view/_compliance_folder/absolute_url}/national-descriptors-assessments/@@admin-scoring"
+              target="_blank">
+              Scoring operations
+            </a>
 
-          <h3>Compliance Editors (Milieu)</h3>
-          <table class="table as-table-overview table-striped">
-            <thead>
-              <tr>
-                <th>Assigned users</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>
-                  <div tal:repeat="user python: view.get_editors">
-                    <a href="" tal:attributes="href string:mailto:${user/email}">
-                      <strong tal:content="user/fullname">Fullname</strong>
-                      (<span tal:content="user/username">Username</span>)
-                    </a>
-                  </div>
-                </td>
-              </tr>
-            </tbody>
-          </table>
+            <a class="btn btn-primary btn-small btn-success"
+              tal:attributes="href string:${view/_compliance_folder/absolute_url}/national-descriptors-assessments/@@admin-scoring?export-scores=1"
+              target="_blank">
+              <i class="fa fa-download" aria-hidden="true"></i>
+              Export Compliance Data
+            </a>
 
-          <a class="btn btn-primary btn-small btn-success"
-            tal:attributes="href string:${view/_compliance_folder/portal_url}/@@translations-overview"
-            target="_blank">
-            Translations overview
-          </a>
-
-          <a class="btn btn-primary btn-small btn-success"
-            tal:attributes="href string:${view/_compliance_folder/absolute_url}/national-descriptors-assessments/@@edit-assessors"
-            target="_blank">
-            Edit assessors
-          </a>
-
-          <a class="btn btn-primary btn-small btn-success"
-            tal:attributes="href string:${view/_compliance_folder/absolute_url}/national-descriptors-assessments/@@admin-scoring"
-            target="_blank">
-            Scoring operations
-          </a>
+          </div>
 
         </div>
       </div>

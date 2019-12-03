@@ -34,10 +34,10 @@
                 </th>
                 <td>
                   <a href=""
-                     class="class string:p-${country/state_id}"
-                     tal:content="country/status"
-                     tal:attributes="class python:'process-status btn btn-xs btn-' + view.process_status_colors.get(country.state_id, 'secondary');
-                        href country/url">
+                    class="class string:p-${country/state_id}"
+                    tal:content="country/status"
+                    tal:define="color python:view.process_status_colors.get(country.state_id, 'secondary')"
+                    tal:attributes="class string:process-status btn btn-xs btn-${color}; href country/url">
                     Phase -1
                   </a>
                 </td>

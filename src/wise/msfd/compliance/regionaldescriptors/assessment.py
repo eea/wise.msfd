@@ -15,8 +15,10 @@ from Products.Five.browser.pagetemplatefile import (PageTemplateFile,
                                                     ViewPageTemplateFile)
 from wise.msfd.base import EmbeddedForm, MainFormWrapper
 from wise.msfd.compliance.assessment import (additional_fields,
+                                             EditAssessmentDataFormMain,
                                              EditAssessmentSummaryForm,
-                                             PHASES, summary_fields)
+                                             PHASES, render_assessment_help,
+                                             summary_fields)
 from wise.msfd.compliance.base import get_questions
 from wise.msfd.compliance.content import AssessmentData
 from wise.msfd.gescomponents import get_descriptor  # get_descriptor_elements
@@ -31,13 +33,13 @@ from .base import BaseRegComplianceView
 logger = logging.getLogger('wise.msfd')
 
 
-# TODO find a better way
 class RegDescEditAssessmentSummaryForm(BaseRegComplianceView,
                                        EditAssessmentSummaryForm):
     """ Needed to override EditAssessmentSummaryForm's methods """
 
 
-class RegDescEditAssessmentDataForm(Form, BaseRegComplianceView):
+class RegDescEditAssessmentDataForm(BaseRegComplianceView,
+                                    EditAssessmentDataFormMain):
     """ Edit the assessment for a regional descriptor, for a specific article
     """
 
@@ -47,31 +49,12 @@ class RegDescEditAssessmentDataForm(Form, BaseRegComplianceView):
     _questions = get_questions("compliance/regionaldescriptors/data")
 
     @property
-    def help(self):
-        return "Help text"
-        return render_assessment_help(self.criterias, self.descriptor)
-
-    @property
     def title(self):
         return "Edit {}'s Assessment for {}/{}".format(
             self.country_region_code,
             self.descriptor,
             self.article,
         )
-
-    def _can_comment(self, folder_id):
-        return True
-        folder = self.context[folder_id]
-
-        return checkPermission('zope2.View', folder)
-
-    @property
-    def can_comment_tl(self):
-        return self._can_comment('tl')
-
-    @property
-    def can_comment_ec(self):
-        return self._can_comment('ec')
 
     @buttonAndHandler(u'Save', name='save')
     def handle_save(self, action):
@@ -142,29 +125,6 @@ class RegDescEditAssessmentDataForm(Form, BaseRegComplianceView):
 
         return disabled
 
-    @property
-    def fields(self):
-        if not self.subforms:
-            self.subforms = self.get_subforms()
-
-        fields = []
-
-        for subform in self.subforms:
-            fields.extend(subform.fields._data_values)
-
-        return Fields(*fields)
-
-    @property       # TODO: memoize
-    def descriptor_obj(self):
-        return get_descriptor(self.descriptor)
-
-    # TODO: use memoize
-    @property
-    def questions(self):
-        qs = self._questions[self.article]
-
-        return qs
-
     def get_subforms(self):
         """ Build a form of options from a tree of options
 
@@ -175,10 +135,8 @@ class RegDescEditAssessmentDataForm(Form, BaseRegComplianceView):
         if hasattr(self.context, 'saved_assessment_data'):
             assessment_data = self.context.saved_assessment_data.last()
 
+        assess_date = '-'
         forms = []
-
-        is_ec_user = not self.can_comment_tl
-        is_other_tl = not (self.can_comment_tl or self.can_comment_tl)
 
         for question in self.questions:
             phase = [
@@ -189,16 +147,19 @@ class RegDescEditAssessmentDataForm(Form, BaseRegComplianceView):
                 if question.klass in v
             ][0]
 
+            # elements
             countries = self.get_available_countries()
 
             form = EmbeddedForm(self, self.request)
             form.title = question.definition
+            last_upd = '{}_{}_Last_update'.format(self.article, question.id)
+            form._last_update = assessment_data.get(last_upd, assess_date)
+            form._assessor = assessment_data.get('assessor', '-')
             form._question_type = question.klass
             form._question_phase = phase
             form._question = question
             form._elements = countries
-            form._disabled = self.is_disabled(
-                question) or is_other_tl or is_ec_user
+            form._disabled = self.is_disabled(question)
 
             fields = []
 
@@ -236,8 +197,15 @@ class RegDescEditAssessmentDataForm(Form, BaseRegComplianceView):
 
         assessment_summary_form = EmbeddedForm(self, self.request)
         assessment_summary_form.title = u"Assessment summary"
+        last_upd = '{}_assess_summary_last_upd'.format(self.article)
+        assessment_summary_form._last_update = assessment_data.get(
+            last_upd, assess_date
+        )
+        assessment_summary_form._assessor = assessment_data.get(
+            'assessor', '-'
+        )
         assessment_summary_form.subtitle = u''
-        assessment_summary_form._disabled = not self.can_comment_tl
+        assessment_summary_form._disabled = self.read_only_access
         asf_fields = []
 
         for name, title in summary_fields:

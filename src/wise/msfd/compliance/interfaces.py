@@ -4,6 +4,11 @@ from zope.schema import Text, TextLine
 from plone.supermodel.model import Schema
 
 
+class IComplianceModuleMarker(Interface):
+    """ A marker interface for request that happens inside compliance folder
+    """
+
+
 class IComplianceModuleFolder(Interface):
     """ A container that implements the compliance module functionality
 
@@ -42,9 +47,17 @@ class IDescriptorFolder(Interface):
 
 
 class INationalDescriptorAssessment(Schema):
-    """ A Country > Descriptor > Article assessment
+    """ A Country > Region > Descriptor > Article assessment
 
     Ex: /compliance-module/national-descriptors-assessments/lv/bal/d5/art8
+    """
+
+
+class INationalDescriptorAssessmentSecondary(Schema):
+    """ A Country > Region > Article assessment, used for "secondary"
+        articles like Article 3-4, Article 7, Article8ESA
+
+    Ex: /compliance-module/national-descriptors-assessments/lv/bal/art3-4
     """
 
 
@@ -68,7 +81,18 @@ class IEditAssessmentForm(Interface):
     """
 
 
+class IEditAssessmentFormSecondary(Interface):
+    """ Interface for assessment edit form
+
+    """
+
+
 class IReportDataView(Interface):
+    """ Plone pages that display report data
+    """
+
+
+class IReportDataViewSecondary(Interface):
     """ Plone pages that display report data
     """
 
@@ -106,4 +130,20 @@ class IRegionalDescriptorAssessment(Schema):
     """ A Region > Descriptor > Article assessment
 
     Ex: /compliance-module/regional-descriptors-assessments/bal/d5/art8
+    """
+
+
+# Interfaces for National summaries section
+
+class INationalSummaryFolder(Interface):
+    """ A container for national summaries
+
+    Ex: /compliance-module/national-summaries
+    """
+
+
+class INationalSummaryCountryFolder(Interface):
+    """ A container for national summaries countries
+
+    Ex: /compliance-module/national-summaries/lv
     """

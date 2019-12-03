@@ -28,6 +28,12 @@ class IArticleSelect(Interface):
                      vocabulary="wise_search_articles")
 
 
+class IReportingPeriodSelect(Interface):
+    reporting_period = Choice(title=u"Reporting period",
+                              required=False,
+                              vocabulary="wise_search_reporting_period")
+
+
 class IRecordSelect(Interface):
     """ We use a pagination based record selection
     """
@@ -37,7 +43,7 @@ class IRecordSelect(Interface):
 
 class IRegionSubregions(Interface):
     region_subregions = List(
-        title=u"Region and Subregions",
+        title=u"Region and Subregion",
         value_type=Choice(vocabulary="wise_search_region_subregions"),
         required=False,
     )
@@ -45,8 +51,24 @@ class IRegionSubregions(Interface):
 
 class IMemberStates(Interface):
     member_states = List(
-        title=u"Countries",
+        title=u"Country",
         value_type=Choice(vocabulary="wise_search_member_states"),
+        required=False,
+    )
+
+
+class IMemberStatesArt4(Interface):
+    member_states = List(
+        title=u"Country",
+        value_type=Choice(vocabulary="wise_search_member_states_art4"),
+        required=False,
+    )
+
+
+class IMemberStatesArt6(Interface):
+    member_states = List(
+        title=u"Country",
+        value_type=Choice(vocabulary="wise_search_member_states_art6"),
         required=False,
     )
 
@@ -80,20 +102,13 @@ class IStartArticles1314(Interface):
     )
 
     region_subregions = List(
-        title=u"Region and Subregions",
+        title=u"Region and Subregion",
         value_type=Choice(vocabulary="wise_search_a1314_regions"),
         required=False,
     )
 
 
 class IStartArticle11(Interface):
-    monitoring_programme_types = List(
-        title=u"Monitoring programme Type",
-        value_type=Choice(
-            vocabulary="wise_search_monitoring_programme_vb_factory"),
-        required=False
-    )
-
     monitoring_programme_info_type = Choice(
         title=u"Information Type",
         vocabulary="wise_search_monitoring_programme_info_types",
@@ -101,9 +116,18 @@ class IStartArticle11(Interface):
     )
 
 
+class IArticle11MonitoringProgrammeType(Interface):
+    monitoring_programme_types = List(
+        title=u"Monitoring programme Type",
+        value_type=Choice(
+            vocabulary="wise_search_monitoring_programme_vb_factory"),
+        required=False
+    )
+
+
 class IA1314MemberStates(Interface):
     member_states = List(
-        title=u"Countries",
+        title=u"Country",
         value_type=Choice(vocabulary="wise_search_a1314_member_states"),
         required=False,
     )
@@ -114,6 +138,38 @@ class IA1314UniqueCodes(Interface):
         title=u"Unique Codes",
         required=False,
         value_type=Choice(vocabulary="wise_search_a1314_unique_codes")
+    )
+
+
+class IA2012GesComponentsArt9(Interface):
+    ges_components = List(
+        title=u"GES Component",
+        required=False,
+        value_type=Choice(vocabulary="wise_search_a2012_ges_components_art9")
+    )
+
+
+class IA2012GesComponentsArt10(Interface):
+    ges_components = List(
+        title=u"GES Component",
+        required=False,
+        value_type=Choice(vocabulary="wise_search_a2012_ges_components_art10")
+    )
+
+
+class IStartArticle18(Interface):
+    data_type = Choice(
+        title=u"Data type",
+        vocabulary='wise_search_a18_data_type',
+        required=False
+    )
+
+
+class IStartArticle4(Interface):
+    reporting_cycle = Choice(
+        title=u"Reporting cycle",
+        vocabulary='wise_search_a4_mru_reporting_cycle_factory',
+        required=False
     )
 
 
@@ -128,9 +184,17 @@ class IArticleSelect2018(Interface):
 
 class ICountryCode(Interface):
     member_states = List(
-        title=u"Country Code",
+        title=u"Country",
         required=False,
         value_type=Choice(vocabulary="wise_search_a2018_country")
+    )
+
+
+class ICountryCode2018Art9(Interface):
+    member_states = List(
+        title=u"Country",
+        required=False,
+        value_type=Choice(vocabulary="wise_search_a2018_country_art9")
     )
 
 
@@ -144,7 +208,7 @@ class IGESComponentsA9(Interface):
 
 class IFeatures(Interface):
     feature = List(
-        title=u"Features",
+        title=u"Feature",
         required=False,
         value_type=Choice(vocabulary="wise_search_a2018_feature")
     )
@@ -160,7 +224,7 @@ class IGESComponents(Interface):
 
 class IFeaturesA9(Interface):
     feature = List(
-        title=u"Features",
+        title=u"Feature",
         required=False,
         value_type=Choice(vocabulary="wise_search_a2018_feature_art9")
     )
@@ -168,7 +232,7 @@ class IFeaturesA9(Interface):
 
 class IFeatures81c(Interface):
     feature = List(
-        title=u"Features",
+        title=u"Feature",
         required=False,
         value_type=Choice(vocabulary="wise_search_a2018_feature_art81c")
     )
@@ -176,7 +240,7 @@ class IFeatures81c(Interface):
 
 class IIndicatorsFeature(Interface):
     feature = List(
-        title=u"Features",
+        title=u"Feature",
         required=False,
         value_type=Choice(vocabulary="wise_search_a2018_feature_ind")
     )
@@ -213,4 +277,20 @@ class IMonitoringSubprogramme(Interface):
         title=u"Marine Unit IDs",
         value_type=Choice(vocabulary="wise_search_art11_marine_unit_id_ms"),
         required=False
+    )
+
+
+class IRegionSubregionsArt6(Interface):
+    region_subregions = List(
+        title=u"Region and Subregion",
+        value_type=Choice(vocabulary="wise_search_region_subregions_art6"),
+        required=False,
+    )
+
+
+class IGESComponentsA18(Interface):
+    ges_component = List(
+        title=u"GES Component",
+        required=False,
+        value_type=Choice(vocabulary="wise_search_a18_ges_component")
     )

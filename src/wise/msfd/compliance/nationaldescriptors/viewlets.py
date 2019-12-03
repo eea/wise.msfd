@@ -3,15 +3,15 @@ from plone.app.layout.viewlets.common import TitleViewlet as BaseTitleViewlet
 from .base import BaseView
 
 
-class TitleViewlet(BaseTitleViewlet, BaseView):
+class ReportTitleViewlet(BaseTitleViewlet, BaseView):
 
     @property
     def page_title(self):
         params = {
-            'country': self.country_code,
-            'region': self.country_region_code,
             'article': self.article,
+            'country': self.country_code,
             'descriptor': self.descriptor_title,
+            'region': self.country_region_code,
             'year': self.view.report_year,
         }
 
@@ -19,16 +19,69 @@ class TitleViewlet(BaseTitleViewlet, BaseView):
                 u'{article}/{year}-Report'.format(**params))
 
 
-class EditAssessmentTitleViewlet(BaseTitleViewlet, BaseView):
+class SecondaryReportTitleViewlet(BaseTitleViewlet, BaseView):
 
     @property
     def page_title(self):
         params = {
-            'country': self.country_code,
-            'region': self.country_region_code,
-            'descriptor': self.descriptor,
             'article': self.article,
+            'country': self.country_code,
+            'year': self.view.report_year,
+        }
+
+        return (u'{country}/'
+                u'{article}/{year}-Report'.format(**params))
+
+
+class AssessmentEditTitleViewlet(BaseTitleViewlet, BaseView):
+
+    @property
+    def page_title(self):
+        params = {
+            'article': self.article,
+            'country': self.country_code,
+            'descriptor': self.descriptor_title,
+            'region': self.country_region_code,
         }
 
         return (u'{country}/{region}/'
                 u'{descriptor}/{article}-Assessment'.format(**params))
+
+
+class AssessmentEditTitleViewletSecondary(BaseTitleViewlet, BaseView):
+
+    @property
+    def page_title(self):
+        params = {
+            'article': self.article,
+            'country': self.country_code,
+        }
+
+        return (u'{country}/'
+                u'{article}-Assessment'.format(**params))
+
+
+class ArticleTitleViewlet(BaseTitleViewlet, BaseView):
+
+    @property
+    def page_title(self):
+        params = {
+            'article': self.article,
+            'country': self.country_code,
+            'descriptor': self.descriptor_title,
+            'region': self.country_region_code,
+        }
+
+        return (u'{country}/{region}/'
+                u'{descriptor}/{article}-Overview'.format(**params))
+
+
+class SecondaryArticleTitleViewlet(BaseTitleViewlet, BaseView):
+    @property
+    def page_title(self):
+        params = {
+            'article': self.article,
+            'country': self.country_code,
+        }
+
+        return u'{country}/{article}-Overview'.format(**params)

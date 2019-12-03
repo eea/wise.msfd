@@ -1,18 +1,17 @@
 import logging
 from collections import namedtuple
 
+from zope.schema import Text
+
 from AccessControl import Unauthorized
-
-from zope.schema import Choice, Text
-
 from persistent.list import PersistentList
 from Products.Five.browser.pagetemplatefile import (PageTemplateFile,
                                                     ViewPageTemplateFile)
 from wise.msfd.compliance.content import AssessmentData
-from wise.msfd.compliance.interfaces import (IEditAssessorsForm,
-                                             IRegionalDescriptorAssessment)
+from wise.msfd.compliance.interfaces import IEditAssessorsForm
+from wise.msfd.compliance.regionaldescriptors.base import BaseRegComplianceView
 from wise.msfd.compliance.utils import get_assessors, set_assessors
-
+from wise.msfd.gescomponents import get_descriptor  # get_descriptor_elements
 from z3c.form.button import buttonAndHandler
 from z3c.form.field import Fields
 from z3c.form.form import Form
@@ -112,12 +111,21 @@ class ViewAssessmentSummaryForm(BaseComplianceView):
         return self.template(fields=fields)
 
 
+class ViewAssessmentSummaryFormRegional(BaseRegComplianceView,
+                                        ViewAssessmentSummaryForm):
+    """ Render the assessment summary, progress assessment
+    and recommendations for member state for view
+
+        Wrapper class for regional descriptors
+    """
+
+
 class EditAssessmentSummaryForm(Form, BaseComplianceView):
-    # TODO unused
     """ Edit the assessment summary
 
     Fields are: summary, recommendations, progress assessment
     """
+    # TODO unused
 
     title = u"Edit progress assessment"
     template = ViewPageTemplateFile("pt/inline-form.pt")
@@ -154,6 +162,7 @@ class EditAssessmentSummaryForm(Form, BaseComplianceView):
         context = self.context
 
         # BBB code, useful in development
+
         if not hasattr(context, 'saved_assessment_data') or \
                 not isinstance(context.saved_assessment_data, PersistentList):
             context.saved_assessment_data = AssessmentData()
@@ -181,6 +190,51 @@ class EditAssessmentSummaryForm(Form, BaseComplianceView):
 
         return Form.render(self)
 
+
+class EditAssessmentDataFormMain(Form):
+
+    @property
+    def criterias(self):
+        return self.descriptor_obj.sorted_criterions()      # criterions
+
+    @property
+    def help(self):
+        return render_assessment_help(self.criterias, self.descriptor)
+
+    def is_disabled(self, question):
+        """ Returns True if question is not editable
+        """
+
+        if self.read_only_access:
+            return True
+
+        state, _ = self.current_phase
+        is_disabled = question.klass not in PHASES.get(state, ())
+
+        return is_disabled
+
+    @property
+    def fields(self):
+        if not self.subforms:
+            self.subforms = self.get_subforms()
+
+        fields = []
+
+        for subform in self.subforms:
+            fields.extend(subform.fields._data_values)
+
+        return Fields(*fields)
+
+    @property       # TODO: memoize
+    def descriptor_obj(self):
+        return get_descriptor(self.descriptor)
+
+    # TODO: use memoize
+    @property
+    def questions(self):
+        qs = self._questions[self.article]
+
+        return qs
 
 Cell = namedtuple('Cell', ['text', 'rowspan'])
 

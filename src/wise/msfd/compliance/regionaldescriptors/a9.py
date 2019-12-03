@@ -4,18 +4,28 @@ from collections import defaultdict
 from eea.cache import cache
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 from wise.msfd import db, sql, sql_extra
+from wise.msfd.compliance.vocabulary import REGIONAL_DESCRIPTORS_REGIONS
 from wise.msfd.data import countries_in_region, muids_by_country
 from wise.msfd.gescomponents import (get_descriptor, FEATURES_DB_2012,
                                      FEATURES_DB_2018)
+from wise.msfd.translation import get_translated
 from wise.msfd.utils import CompoundRow, ItemLabel, ItemList, Row, TableHeader
 
-from .utils import (compoundrow, compoundrow2012, emptyline_separated_itemlist,
-                    newline_separated_itemlist, get_percentage)
+from .utils import (compoundrow, compoundrow2012, get_nat_desc_country_url,
+                    emptyline_separated_itemlist, newline_separated_itemlist)
 from .base import BaseRegDescRow, BaseRegComplianceView
 
 
 def get_key(func, self):
-    return self.descriptor + ':' + self.region
+    key = ":".join((
+        func.__name__,
+        'reg-desc',
+        self.descriptor,
+        ''.join(self.region),
+        self.article
+    ))
+
+    return key
 
 
 class RegDescA92018Row(BaseRegDescRow):
@@ -30,18 +40,28 @@ class RegDescA92018Row(BaseRegDescRow):
         for crit in criterions:
             values = []
             for country_code, country_name in self.countries:
-                data = [
+                orig = []
+                translated = []
+                data = set([
                     row.GESDescription
                     for row in self.db_data
                     if row.CountryCode == country_code
                        and (row.GESComponent == crit.id
                             or row.GESComponent.split('/')[0] == crit.id)
                        and row.Features
-                ]
-                value = self.not_rep
-                if data:
-                    # value = ItemList(set(data))
-                    value = emptyline_separated_itemlist(data)
+                ])
+                if not data:
+                    values.append(self.not_rep)
+                    continue
+
+                for ges_descr in data:
+                    transl = get_translated(ges_descr, country_code) or ''
+
+                    orig.append(ges_descr)
+                    translated.append(transl)
+
+                value = (emptyline_separated_itemlist(orig),
+                         emptyline_separated_itemlist(translated))
 
                 values.append(value)
 
@@ -54,17 +74,28 @@ class RegDescA92018Row(BaseRegDescRow):
         rows = []
         values = []
         for country_code, country_name in self.countries:
+            orig = []
+            translated = []
             data = set([
-                u": ".join((row.GESComponent, row.JustificationNonUse))
+                (row.GESComponent, row.JustificationNonUse)
                 for row in self.db_data
                 if row.CountryCode == country_code
                    and row.JustificationNonUse
             ])
-            value = self.not_rep
-            if data:
-                # value = NewlineSeparatedItemList(data)
-                value = emptyline_separated_itemlist(data)
-                # value = u"".join(set(data))
+            if not data:
+                values.append(self.not_rep)
+                continue
+
+            for row in data:
+                ges_comp = row[0]
+                justification = row[1]
+                transl = get_translated(justification, country_code)
+
+                orig.append(u'{}: {}'.format(ges_comp, justification))
+                translated.append(u'{}: {}'.format(ges_comp, transl))
+
+            value = (emptyline_separated_itemlist(orig),
+                     emptyline_separated_itemlist(translated))
 
             values.append(value)
 
@@ -77,15 +108,28 @@ class RegDescA92018Row(BaseRegDescRow):
         rows = []
         values = []
         for country_code, country_name in self.countries:
+            orig = []
+            translated = []
             data = set([
-                u": ".join((row.GESComponent, row.JustificationDelay))
+                (row.GESComponent, row.JustificationDelay)
                 for row in self.db_data
                 if row.CountryCode == country_code
                     and row.JustificationDelay
             ])
-            value = self.not_rep
-            if data:
-                value = emptyline_separated_itemlist(data)
+            if not data:
+                values.append(self.not_rep)
+                continue
+
+            for row in data:
+                ges_comp = row[0]
+                justification = row[1]
+                transl = get_translated(justification, country_code)
+
+                orig.append(u'{}: {}'.format(ges_comp, justification))
+                translated.append(u'{}: {}'.format(ges_comp, transl))
+
+            value = (emptyline_separated_itemlist(orig),
+                     emptyline_separated_itemlist(translated))
 
             values.append(value)
 
@@ -101,17 +145,20 @@ class RegDescA92012(BaseRegComplianceView):
 
     def __init__(self, context, request):
         super(RegDescA92012, self).__init__(context, request)
-        self.region = context.country_region_code
+        # confusing naming, self.region is a list of regions
+        self.region = context._countryregion_folder._subregions
         self._descriptor = context.descriptor
 
         db.threadlocals.session_name = self.session_name
 
-        self.countries = countries_in_region(self.region)
-        self.all_countries = muids_by_country()
+        self.countries = [
+            x[0] for x in context._countryregion_folder._countries_for_region
+        ]
+        self.all_countries = muids_by_country(self.region)
         self.muids_in_region = []
 
         for c in self.countries:
-            self.muids_in_region.extend(self.all_countries[c])
+            self.muids_in_region.extend(self.all_countries.get(c, []))
 
         self.allrows = [
             self.compoundrow2012('Member state', self.get_countries_row()),
@@ -128,6 +175,12 @@ class RegDescA92012(BaseRegComplianceView):
                 self.get_proportion_values()
             ),
         ]
+
+        _translatables = [
+            'GES description'
+        ]
+
+        self.TRANSLATABLES.extend(_translatables)
 
     def __call__(self):
         return self.template(rows=self.allrows)
@@ -147,7 +200,7 @@ class RegDescA92012(BaseRegComplianceView):
     def compoundrow2012(self, title, rows):
         return compoundrow2012(self, title, rows)
 
-    @cache(get_key)
+    @cache(get_key, dependencies=['translation'])
     def get_proportion_values(self):
         t = sql.MSFD9Descriptor
         descriptor = self.descriptor_obj
@@ -156,7 +209,7 @@ class RegDescA92012(BaseRegComplianceView):
         values = []
 
         for c in self.countries:
-            muids = self.all_countries[c]
+            muids = self.all_countries.get(c, [])
             count, data = db.get_all_records(
                 t,
                 t.MarineUnitID.in_(muids),
@@ -178,7 +231,7 @@ class RegDescA92012(BaseRegComplianceView):
         return rows
         # return RegionalCompoundRow('Proportion', rows)
 
-    @cache(get_key)
+    @cache(get_key, dependencies=['translation'])
     def get_threshold_values(self):
         t = sql.MSFD9Descriptor
         descriptor = self.descriptor_obj
@@ -187,7 +240,7 @@ class RegDescA92012(BaseRegComplianceView):
         values = []
 
         for c in self.countries:
-            muids = self.all_countries[c]
+            muids = self.all_countries.get(c, [])
             count, data = db.get_all_records(
                 t,
                 t.MarineUnitID.in_(muids),
@@ -206,12 +259,36 @@ class RegDescA92012(BaseRegComplianceView):
         # return RegionalCompoundRow('Threshold value(s)', rows)
 
     def get_countries_row(self):
-        rows = [('', self.countries)]
+        url = self.request['URL0']
+
+        reg_main = self._countryregion_folder.id.upper()
+        subregions = [r.subregions for r in REGIONAL_DESCRIPTORS_REGIONS
+                      if reg_main in r.code]
+
+        rows = []
+        country_names = []
+
+        # rows = [('', self.countries)]
+
+        for country in self.countries:
+            value = []
+            regions = [r.code for r in REGIONAL_DESCRIPTORS_REGIONS
+                       if len(r.subregions) == 1 and country in r.countries
+                       and r.code in subregions[0]]
+
+            for r in regions:
+                value.append(get_nat_desc_country_url(url, reg_main,
+                                                      country, r))
+
+            final = '{} ({})'.format(country, ', '.join(value))
+            country_names.append(final)
+
+        rows.append(('', country_names))
 
         return rows
         # return RegionalCompoundRow('Member state', rows)
 
-    @cache(get_key)
+    @cache(get_key, dependencies=['translation'])
     def get_gescomponents_row(self):
         t = sql.MSFD9Descriptor
 
@@ -229,7 +306,10 @@ class RegDescA92012(BaseRegComplianceView):
             values = []
 
             for country in self.countries:
-                muids = self.all_countries[country]
+                orig = []
+                translated = []
+
+                muids = self.all_countries.get(country, [])
                 data = db.get_unique_from_mapper(
                     t,
                     'DescriptionGES',
@@ -237,8 +317,15 @@ class RegDescA92012(BaseRegComplianceView):
                     t.MarineUnitID.in_(muids)
                 )
                 value = self.not_rep
+                for _d in data:
+                    transl = get_translated(_d, country) or ''
+
+                    orig.append(_d)
+                    translated.append(transl)
+
                 if data:
-                    value = emptyline_separated_itemlist(data)
+                    value = (emptyline_separated_itemlist(orig),
+                             emptyline_separated_itemlist(translated))
 
                 values.append(value)
 
@@ -248,17 +335,17 @@ class RegDescA92012(BaseRegComplianceView):
         return rows
         # return RegionalCompoundRow('GES component [Reporting feature]', rows)
 
-    @cache(get_key)
+    @cache(get_key, dependencies=['translation'])
     def get_reporting_area_row(self):
         rows = [
             ('Number used',
-             [len(self.all_countries[c]) for c in self.countries])
+             [len(self.all_countries.get(c, [])) for c in self.countries])
         ]
 
         return rows
         # return RegionalCompoundRow('Reporting area(s)[MarineUnitID]', rows)
 
-    @cache(get_key)
+    @cache(get_key, dependencies=['translation'])
     def get_features_reported_row(self):
         themes_fromdb = FEATURES_DB_2012
 
@@ -273,7 +360,7 @@ class RegDescA92012(BaseRegComplianceView):
         all_themes = defaultdict(list)
         for feature in all_features:
             if feature not in themes_fromdb:
-                all_themes['No theme/Unknown'].append(feature)
+                all_themes['No theme'].append(feature)
                 continue
 
             theme = themes_fromdb[feature].theme
@@ -284,7 +371,7 @@ class RegDescA92012(BaseRegComplianceView):
 
             for country in self.countries:
                 value = []
-                muids = self.all_countries[country]
+                muids = self.all_countries.get(country, [])
 
                 for feature in feats:
                     count = db.count_items(

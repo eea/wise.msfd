@@ -14,6 +14,15 @@ from .utils import timeit
 logger = logging.getLogger('wise.msfd')
 
 
+FILENAMES_MISSING_DB = {
+    'PL': (
+        ('BAL', 'Art8', 'MSFD8aFeatures_20150225_135158.xml'),
+        ('BAL', 'Art9', 'MSFD9GES_20150130_111719.xml'),
+        ('BAL', 'Art10', 'MSFD10TI_20160226_150132.xml')
+    )
+}
+
+
 @db.use_db_session('2012')
 def all_regions():
     """ Return a list of region ids
@@ -39,12 +48,16 @@ def countries_in_region(regionid):
 
 
 @db.use_db_session('2012')
-def muids_by_country():
+def muids_by_country(regions=None):
     t = sql_extra.MSFD4GeographicalAreaID
     count, records = db.get_all_records(t)
     res = defaultdict(list)
 
     for rec in records:
+        # filter MUIDs by region, used in regional descriptors A9 2012
+        if regions and rec.RegionSubRegions not in regions:
+            continue
+
         res[rec.MemberState].append(rec.MarineUnitID)
 
     return dict(**res)
@@ -72,6 +85,66 @@ def _get_report_filename_art10_2012(country, region, article, descriptor):
         # return None
 
     return item.MSFD10_Import_FileName
+
+
+@db.use_db_session('2012')
+def _get_report_filename_art8esa_2012(country, region, article):
+    mc = sql.MSFD8cImport
+
+    count, item = db.get_item_by_conditions(
+        mc,
+        'MSFD8c_Import_ID',
+        mc.MSFD8c_Import_ReportingCountry == country,
+        mc.MSFD8c_Import_ReportingRegion == region
+    )
+
+    if count != 1:
+        logger.warning("Could not find report filename for %s %s %s",
+                       country, region, article,)
+
+        return None
+
+    return item.MSFD8c_Import_FileName
+
+
+@db.use_db_session('2012')
+def _get_report_filename_art3_4_2012(country, region, article, descriptor):
+    mc = sql.MSFD4Import
+
+    count, item = db.get_item_by_conditions(
+        mc,
+        'MSFD4_Import_ID',
+        mc.MSFD4_Import_ReportingCountry == country,
+        # mc.MSFD8c_Import_ReportingRegion == region
+    )
+
+    if count != 1:
+        logger.warning("Could not find report filename for %s %s %s",
+                       country, region, article,)
+
+        return None
+
+    return item.MSFD4_Import_FileName
+
+
+@db.use_db_session('2012')
+def _get_report_filename_art7_2012(country, region, article, descriptor):
+    mc = sql_extra.MSCompetentAuthority
+
+    count, item = db.get_item_by_conditions(
+        mc,
+        'Import_Time',
+        mc.C_CD == country,
+        reverse=True
+    )
+
+    if count < 1:
+        logger.warning("Could not find report filename for %s %s %s",
+                       country, region, article,)
+
+        return None
+
+    return item.Import_FileName
 
 
 @db.use_db_session('2012')
@@ -139,9 +212,21 @@ def get_report_filename(report_version,
     :param descriptor: descriptor code, like: 'D5'
     """
 
+    if country in FILENAMES_MISSING_DB:
+        filename = [
+            x[2]
+            for x in FILENAMES_MISSING_DB[country]
+            if x[0] == region and x[1] == article
+        ]
+
+        return filename[0]
+
     # 'Art8': '8b',       # TODO: this needs to be redone for descriptor
     mapping = {
         '2012': {
+            'Art3-4': _get_report_filename_art3_4_2012,
+            'Art7': _get_report_filename_art7_2012,
+            'Art8esa': _get_report_filename_art8esa_2012,
             'Art8': _get_report_filename_art8_2012,
             'Art9': _get_report_filename_art9_2012,
             'Art10': _get_report_filename_art10_2012,
@@ -153,7 +238,7 @@ def get_report_filename(report_version,
     return handler(country, region, article, descriptor)
 
 
-@cache(lambda func, filename: filename)
+@cache(lambda func, filename: func.__name__ + filename)
 @timeit
 def get_report_file_url(filename):
     """ Retrieve the CDR url based on query in ContentRegistry
@@ -182,7 +267,7 @@ SELECT ?file
 WHERE {
 ?file terms:date ?date .
 ?file cr:mediaType 'text/xml'.
-FILTER regex(str(?file), '%s')
+FILTER regex(str(?file), '/%s')
 }
 ORDER BY DESC(?date)
 LIMIT 1""" % filename
@@ -210,12 +295,14 @@ LIMIT 1""" % filename
         logger.exception('Got an error in querying SPARQL endpoint for '
                          'filename url: %s', filename)
 
-        return ''
+        raise
+
+    logger.info("Got file with url: %s", urls[0])
 
     return urls[0]
 
 
-@cache(lambda func, url: url)
+@cache(lambda func, url: func.__name__ + url)
 def get_factsheet_url(url):
     """ Returns the URL for the conversion that gets the "HTML Factsheet"
     """
@@ -241,30 +328,35 @@ def get_xml_report_data(filename):
     if not filename:
         return ""
 
-    tmpdir = tempfile.gettempdir()
+    xmldir = os.environ.get("MSFDXML")
+
+    if not xmldir:
+        xmldir = tempfile.gettempdir()
+
     assert '..' not in filename     # need better security?
 
-    fpath = os.path.join(tmpdir, filename)
+    fpath = os.path.join(xmldir, filename)
 
     text = ''
 
-    if filename in os.listdir(tmpdir):
+    if filename in os.listdir(xmldir):
         with open(fpath) as f:
             text = f.read()
-        logger.info("Using cached XML file: %s", fpath)
-    else:
+
+    if not text:
         # TODO: handle this problem:
         # https://cr.eionet.europa.eu/factsheet.action?uri=http%3A%2F%2Fcdr.eionet.europa.eu%2Fro%2Feu%2Fmsfd8910%2Fblkro%2Fenvux97qw%2FRO_MSFD10TI_20130430.xml&page1=http%3A%2F%2Fwww.w3.org%2F1999%2F02%2F22-rdf-syntax-ns%23type
         url = get_report_file_url(filename)
-        assert url, "Report URL not found: %s" % filename
         req = requests.get(url)
         text = req.content
         logger.info("Requesting XML file: %s", fpath)
 
         with open(fpath, 'wb') as f:
             f.write(text)
+    else:
+        logger.info("Using cached XML file: %s", fpath)
 
-    assert text, "Report data could not be fetched"
+    assert text, "Report data could not be fetched %s" % url
 
     return text
 

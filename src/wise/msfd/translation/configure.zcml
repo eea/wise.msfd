@@ -5,6 +5,13 @@
   xmlns:z3c="http://namespaces.zope.org/z3c"
   i18n_domain="wise.msfd">
 
+  <adapter factory=".app.annotfactory" />
+
+  <browser:resourceDirectory
+    name="msfd.trans"
+    directory="./static/"
+    />
+
   <browser:page
     for="*"
     name="translate-text"
@@ -21,12 +28,27 @@
     />
 
   <browser:page
+    name="add-translation"
+    class=".admin.TranslationsOverview"
+    attribute="add_translation"
+    for="Products.CMFCore.interfaces.ISiteRoot"
+    permission="wise.EditTranslations"
+    />
+
+  <browser:page
+    name="approve-translations"
+    class=".admin.TranslationsOverview"
+    attribute="approve_translations"
+    for="Products.CMFCore.interfaces.ISiteRoot"
+    permission="wise.EditTranslations"
+    />
+
+  <browser:page
     class=".views.TranslationCallback"
     for="*"
     name="translate-callback"
     permission="zope2.View"
     />
-
 
   <browser:page
     class=".views.TranslationView"
@@ -41,13 +63,6 @@
     name="translations-overview"
     permission="wise.EditTranslations"
     template="pt/translations-overview.pt"
-    />
-
-  <adapter factory=".app.annotfactory" />
-
-  <browser:resourceDirectory
-    name="msfd.trans"
-    directory="./static/"
     />
 
 </configure>

@@ -54,6 +54,29 @@
     });
   }
 
+  function setupAccordions($el) {
+    var $acc = $el.find('.accordion');
+    var i;
+
+    for (i = 0; i < $acc.length; i++) {
+      $acc[i].addEventListener("click", function() {
+        this.classList.toggle("active");
+        var $comments = $(this).nextUntil('li.accordion');
+        $comments.each(function(){
+          this.classList.toggle("active");
+        });
+      });
+
+      if(i == $acc.length -1) {
+        $acc[i].classList.toggle("active");
+        var $comments = $($acc[i]).nextUntil('li.accordion');
+        $comments.each(function(){
+          this.classList.toggle("active");
+        });
+      }
+    }
+  }
+
   function loadComments($el) {
     var qid = $el.data('question-id');
     var threadId = $el.data('thread-id');
@@ -62,6 +85,7 @@
       //console.log('getting comments from url', url);
       $el.html(text);
       colorComments();
+      setupAccordions($el);
     });
   }
 
@@ -97,6 +121,7 @@
             setCommentCookie();
             $comel.html(text);
             colorComments();
+            setupAccordions($el);
           });
         }
       });
@@ -142,6 +167,7 @@
         $comel.html(text);
         $textarea.val('');
         colorComments();
+        setupAccordions($comel);
       });
       // console.log(qid, text);
       return false;
@@ -154,8 +180,12 @@
     var existsDiscTl = $discTl.length
     var existsDiscEc = $discEc.length
 
-    $('.comm-hide').click(function(){
-      $(this).closest('.right').addClass('inactive');
+    $('.comm-hide').click(function() {
+      // Close button transformed into a 'show all comments' button
+      // $(this).closest('.right').addClass('inactive');
+      $(this).siblings('.comments').find('li').each(function(){
+        $(this).addClass('active');
+      });
     });
 
     $('.right.discussion .comments').click(function(){
@@ -201,7 +231,7 @@
     // Warn user before leaving the page with unsaved changes
     var submitted = false;
     var modified = false;
-    var $nd = $('#comp-national-descriptor');
+    var $nd = $('.fields-container');
 
     $('#comp-national-descriptor form').submit(function() {
       submitted = true;

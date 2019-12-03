@@ -9,7 +9,7 @@
           <div tal:repeat="section_label section">
             <h4 tal:content="string: $section_title: $section_label">SubSection Label</h4>
             <tal:def define="section_data python:section[section_label]">
-              <tal:cont replace="structure python: view.print_value(section_data)"></tal:cont>
+              <tal:cont replace="structure python: view.print_value(section_data, section_label)"></tal:cont>
             </tal:def>
           </div>
 

@@ -9,7 +9,15 @@
     name="plone.htmlhead.title"
     view='wise.msfd.compliance.interfaces.IReportDataView'
     manager="plone.app.layout.viewlets.interfaces.IHtmlHead"
-    class=".viewlets.TitleViewlet"
+    class=".viewlets.ReportTitleViewlet"
+    permission="zope2.View"
+    />
+
+  <browser:viewlet
+    name="plone.htmlhead.title"
+    view='wise.msfd.compliance.interfaces.IReportDataViewSecondary'
+    manager="plone.app.layout.viewlets.interfaces.IHtmlHead"
+    class=".viewlets.SecondaryReportTitleViewlet"
     permission="zope2.View"
     />
 
@@ -17,7 +25,31 @@
     name="plone.htmlhead.title"
     view='wise.msfd.compliance.interfaces.IEditAssessmentForm'
     manager="plone.app.layout.viewlets.interfaces.IHtmlHead"
-    class=".viewlets.EditAssessmentTitleViewlet"
+    class=".viewlets.AssessmentEditTitleViewlet"
+    permission="zope2.View"
+    />
+
+  <browser:viewlet
+    name="plone.htmlhead.title"
+    view='wise.msfd.compliance.interfaces.IEditAssessmentFormSecondary'
+    manager="plone.app.layout.viewlets.interfaces.IHtmlHead"
+    class=".viewlets.AssessmentEditTitleViewletSecondary"
+    permission="zope2.View"
+    />
+
+  <browser:viewlet
+    name="plone.htmlhead.title"
+    view='.interfaces.INationaldescriptorArticleView'
+    manager="plone.app.layout.viewlets.interfaces.IHtmlHead"
+    class=".viewlets.ArticleTitleViewlet"
+    permission="zope2.View"
+    />
+
+  <browser:viewlet
+    name="plone.htmlhead.title"
+    view='.interfaces.INationaldescriptorSecondaryArticleView'
+    manager="plone.app.layout.viewlets.interfaces.IHtmlHead"
+    class=".viewlets.SecondaryArticleTitleViewlet"
     permission="zope2.View"
     />
 

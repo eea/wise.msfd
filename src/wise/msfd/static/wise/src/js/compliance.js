@@ -47,10 +47,35 @@ if (!Array.prototype.last){
     $(".toggle-sidebar").hide();
   }
 
+  function setupTargetsWidth() {
+    // Make targets extend on multiple rows when there are many targets
+    // and the assessment-data-table is scrollable
+    var $tableWrap = $('.table-wrap');
+    var $assessmentTable = $('#container-assessment-data-2018 .assessment-data-table');
+    if($assessmentTable.width() <= $tableWrap.width()) {
+      return
+    }
+
+    $('div.gescomp', $tableWrap).css({'display': 'inline-table', 'min-width': 'inherit', 'width': 'inherit'});
+
+    var maxGescompWidth = 0;
+    $('div.gescomp', $tableWrap).each(function(){
+      var width = $(this).width();
+      if (width > maxGescompWidth){
+        maxGescompWidth = width;
+      }
+    });
+
+    $('div.gescomp', $tableWrap).css({'width': maxGescompWidth});
+
+    $(window).on('resize', adjustTargetsWidth);
+  }
+
   function setupScrollableTargets() {
+    // NOT USED
     // create a clone of the assessment data 2018 table and overlap the original table
     // with fixed question and score columns
-    console.log('setupScrollableTargets');
+    // console.log('setupScrollableTargets');
     $('#container-assessment-data-2018 .table.table-condensed.assessment-data-table')
       .clone(true).appendTo('#container-assessment-data-2018').addClass('clone');
 
@@ -481,15 +506,24 @@ if (!Array.prototype.last){
       $innerTable.find('tr input').prop('checked', false);
     });
 
-    $table.find('th div').append($cb);
+    if($table.find('td.sub-header').length){
+      // Regional descriptors
+      $table.find('td.sub-header').append($cb);
+    } else {
+      // National descriptors
+      $table.find('th div').append($cb);
+    }
+
     $ft.insertBefore($ot.find('.inner'));
   }
 
-  function setupFixedTableRows() {
+  $.fn.setupFixedTableRows = function() {
     // Allows report table rows to be fixed while scrolling
-    var $ot = $('.overflow-table');
+    // var $ot = $('.overflow-table');
+    var $ot = $(this)
     var $fixedTable = $('.fixed-table-wrapper');
 
+    // The .each is unnecesary, because we always fix only one table
     $ot.each(function() {
       var $t = $(this);
       var $th = $('th', $t.parent());
@@ -514,9 +548,10 @@ if (!Array.prototype.last){
       }
       toggleSyncScrolls(true);
 
-      $th.each(function(i) {
+      $('.fix-row').each(function(i) {
         var val = "cb" + i++;
-        var checkBox = $(this).find('.fix-row');
+        // var checkBox = $(this).find('.fix-row');
+        var checkBox = $(this);
         checkBox.val(val);
       });
 
@@ -620,9 +655,34 @@ if (!Array.prototype.last){
       var onoff = $(this).attr('aria-pressed') == 'true';
       $p = $(this).parent().next();
       $('.table-report', $p).toggleTable(!onoff);
-      setupFixedTableRows();
+      $p.setupFixedTableRows();
       setupCustomScroll();
     });
+  }
+
+  function regionalDescriptorsGroupTableHeaders() {
+    // console.log('regionalDescriptorsGroupTableHeaders');
+    var $headers = $('.first-header');
+    if($headers.length === 0){
+      return
+    }
+    var compareText = '';
+    var currentText = '';
+
+    compareText = $headers[0].firstElementChild.innerText;
+
+    for (i=1; i < $headers.length; i++) {
+      currentText = $headers[i].firstElementChild.innerText;
+
+      if(compareText === currentText) {
+          $headers[i].firstElementChild.innerText = '';
+          $($headers[i-1]).css('border-bottom', '0px');
+      } else {
+        compareText = currentText;
+      }
+
+      //debugger;
+    }
   }
 
   $(document).ready(function($){
@@ -635,18 +695,20 @@ if (!Array.prototype.last){
     setupResponsiveness();
     addCustomScroll();
     addFixedTable();
-
-//    $(window).on('resize', function(){
-//      setupScrollableTargets();
-//    });
+    regionalDescriptorsGroupTableHeaders();
 
     $(window).on('load', function() {
       // setupReadMoreModal();
       setupSimplifiedTables();
-      setupFixedTableRows();
+      var $ot = $('.overflow-table');
+      $ot.each(function(){
+        $(this).setupFixedTableRows();
+      });
       setupCustomScroll();
 
-      setupScrollableTargets();
+      // setupScrollableTargets();
+      setupTargetsWidth();
     });
+
   });
 }(window, document, $));

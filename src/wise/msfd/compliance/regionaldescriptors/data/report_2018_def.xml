@@ -4,7 +4,7 @@
         <element name="MemberState" getrowdata="get_countries_row">Member state</element>
         <element name="MarineReportingUnit" getrowdata="get_mru_row">Marine reporting units</element>
         <element name="Feature" getrowdata="get_feature_row" label="features">Features</element>
-        <element name="GESComponent" getrowdata="get_gescomp_row">GES description</element>
+        <element name="GESComponent" getrowdata="get_gescomp_row" translate="true">GES description</element>
         <element name="JustificationNonUse" getrowdata="get_justif_nonuse_row" translate="true">Justification for non-use of criterion</element>
         <element name="JustificationDelay" getrowdata="get_justif_delay_row" translate="true">Justification for delay in setting EU/regional requirements</element>
     </Art9>
@@ -13,6 +13,7 @@
         <element name="MarineReportingUnit" getrowdata="get_mru_row">Marine reporting units</element>
         <element name="Feature" getrowdata="get_feature_row" label="features">Features</element>
         <element name="Element" getrowdata="get_element_row">Element</element>
+        <element name="Element2" getrowdata="get_element2_row">Element2</element>
         <element name="ElementSource" getrowdata="get_element_source_row">Element sources</element>
         <element name="CriteriaParameters" getrowdata="get_crit_param_row" label="parameters">Criteria and parameters used (number of parameters)</element>
         <element name="ThresholdValue" getrowdata="get_threshold_value_row">Threshold values</element>
@@ -26,7 +27,7 @@
         <element name="CriteriaStatus" getrowdata="get_crit_status_row">Criteria status</element>
         <element name="ElementStatus" getrowdata="get_elem_status_row">Element status</element>
         <element name="IntegrationRuleTypeParameter" getrowdata="get_integration_type_param_row">Integration rule type for parameters</element>
-        <element name="IntegrationRuleDescriptionParameter" getrowdata="get_integration_desc_param_row">Integration rule description for parameters</element>
+        <element name="IntegrationRuleDescriptionParameter" getrowdata="get_integration_desc_param_row" translate="true">Integration rule description for parameters</element>
         <element name="IntegrationRuleTypeCriteria" getrowdata="get_integration_type_crit_row">Integration rule type for criteria</element>
         <element name="IntegrationRuleDescriptionCriteria" getrowdata="get_integration_desc_crit_row" translate="true">Integration rule description for criteria</element>
         <element name="GESextentThreshold" getrowdata="get_ges_extent_thresh_row">GES extent threshold</element>
@@ -43,6 +44,7 @@
         <element name="Feature" getrowdata="get_feature_row" label="features">Features</element>
         <element name="GESComponent" getrowdata="get_gescomp_row">GES components</element>
         <element name="Target" getrowdata="get_target_row">Target</element>
+        <element name="TargetCode" getrowdata="get_targetcode_row">Target code/description</element>
         <element name="TargetValue" getrowdata="get_target_value_row">Target value</element>
         <element name="TargetStatus" getrowdata="get_targetstatus_row">Target status</element>
         <element name="Assessment period" getrowdata="get_assessmentperiod_row">Assessment period</element>

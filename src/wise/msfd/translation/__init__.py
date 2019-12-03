@@ -3,6 +3,7 @@
 import json
 import logging
 import os
+from datetime import datetime
 
 import chardet
 import requests
@@ -10,13 +11,11 @@ from requests.auth import HTTPDigestAuth
 
 import transaction
 from BTrees.OOBTree import OOBTree
+from langdetect import detect
+from persistent import Persistent
 from plone.api import portal
-from plone.api.portal import get
 
 from .interfaces import ITranslationsStorage
-
-# from zope.annotation.interfaces import IAnnotations
-
 
 env = os.environ.get
 
@@ -26,6 +25,43 @@ MARINE_PASS = env('MARINE_PASS', '')
 SERVICE_URL = 'https://webgate.ec.europa.eu/etranslation/si/translate'
 
 logger = logging.getLogger('wise.msfd.translation')
+
+
+def get_detected_lang(text):
+    """ Detect the language of the text, return None for short texts """
+
+    if len(text) < 50:
+        return None
+
+    try:
+        detect_lang = detect(text)
+    except:
+        # Can't detect language if text is an url
+        # it throws LangDetectException
+        return None
+
+    return detect_lang
+
+
+# Detect the source language for countries which have more official languages
+TRANS_LANGUAGE_MAPPING = {
+    # 'DE': lambda text: 'DE'
+    'BE': get_detected_lang,
+    'SE': get_detected_lang,
+}
+
+
+def get_mapped_language(country_code, text):
+    detect_func = TRANS_LANGUAGE_MAPPING[country_code]
+    detected_lang = detect_func(text)
+
+    if not detected_lang:
+        return country_code
+
+    if detected_lang == 'en':
+        return country_code
+
+    return detected_lang.upper()
 
 
 def decode_text(text):
@@ -38,12 +74,29 @@ def decode_text(text):
     return text_encoded
 
 
+class Translation(Persistent):
+    def __init__(self, text, source=None):
+        self.text = text
+        self.source = source
+        self.approved = False
+        self.modified = datetime.now()
+
+    def __str__(self):
+        return self.text
+
+    def __repr__(self):
+        return self.text
+
+
 def retrieve_translation(country_code,
                          text, target_languages=None, force=False):
     """ Send a call to automatic translation service, to translate a string
 
     Returns a json formatted string
     """
+
+    if country_code in TRANS_LANGUAGE_MAPPING:
+        country_code = get_mapped_language(country_code, text)
 
     if not text:
         return
@@ -61,13 +114,23 @@ def retrieve_translation(country_code,
 
             return res
 
-    site_url = portal.getSite().absolute_url()
+    site_url = portal.get().absolute_url()
 
     if 'localhost' in site_url:
         logger.warning(
             "Using localhost, won't retrieve translation for: %s", text)
 
         return {}
+
+    # if detected language is english skip translation
+    
+    if get_detected_lang(text) == 'en':
+        logger.info(
+            "English language detected, won't retrive translation for: %s",
+            text
+        )
+
+        return
 
     if not target_languages:
         target_languages = ['EN']
@@ -111,14 +174,20 @@ def retrieve_translation(country_code,
 
 
 def get_translated(value, language, site=None):
+    if language in TRANS_LANGUAGE_MAPPING:
+        language = get_mapped_language(language, value)
+
     if site is None:
-        site = get()
+        site = portal.get()
 
     storage = ITranslationsStorage(site)
 
     translated = storage.get(language, {}).get(value, None)
 
     if translated:
+        if hasattr(translated, 'text'):
+            return translated.text.lstrip('?')
+
         return translated.lstrip('?')
 
 
@@ -138,7 +207,10 @@ def normalize(text):
 
 
 def delete_translation(text, source_lang):
-    site = portal.getSite()
+    if source_lang in TRANS_LANGUAGE_MAPPING:
+        source_lang = get_mapped_language(source_lang, text)
+
+    site = portal.get()
 
     storage = ITranslationsStorage(site)
 
@@ -153,9 +225,12 @@ def delete_translation(text, source_lang):
             transaction.commit()
 
 
-def save_translation(original, translated, source_lang):
-    site = portal.getSite()
+def save_translation(original, translated, source_lang, approved=False):
+    if source_lang in TRANS_LANGUAGE_MAPPING:
+        source_lang = get_mapped_language(source_lang, original)
 
+    site = portal.get()
+    
     storage = ITranslationsStorage(site)
 
     storage_lang = storage.get(source_lang, None)
@@ -163,6 +238,10 @@ def save_translation(original, translated, source_lang):
     if storage_lang is None:
         storage_lang = OOBTree()
         storage[source_lang] = storage_lang
+    
+    translated = Translation(translated)
 
+    if approved:
+        translated.approved = True
     storage_lang[original] = translated
     logger.info('Saving to annotation: %s', translated)

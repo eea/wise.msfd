@@ -1,3 +1,4 @@
+import collections
 import datetime
 import logging
 
@@ -7,22 +8,24 @@ from zope.schema.vocabulary import SimpleTerm, SimpleVocabulary
 from AccessControl import Unauthorized
 from persistent.list import PersistentList
 from plone.api import user
-from plone.api.user import get_roles
+# from plone.api.user import get_roles
 from plone.z3cform.layout import wrap_form
+from Products.Five.browser import BrowserView
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 from Products.statusmessages.interfaces import IStatusMessage
-from wise.msfd.base import EditAssessmentFormWrapper as MainFormWrapper
+from wise.msfd.base import (EditAssessmentFormWrapper as MainFormWrapper,
+                            EditAssessmentFormWrapperSecondary)
 from wise.msfd.base import EmbeddedForm
-from wise.msfd.compliance.assessment import (PHASES, additional_fields,
+from wise.msfd.compliance.assessment import (EditAssessmentDataFormMain,
+                                             PHASES, additional_fields,
                                              render_assessment_help,
                                              summary_fields)
 from wise.msfd.compliance.base import get_questions
 from wise.msfd.compliance.content import AssessmentData
-from wise.msfd.gescomponents import get_descriptor  # get_descriptor_elements
+from wise.msfd.compliance.scoring import Score
 from wise.msfd.translation import get_translated, retrieve_translation
 from z3c.form.button import buttonAndHandler
 from z3c.form.field import Fields
-from z3c.form.form import Form
 
 from .base import BaseView
 
@@ -32,7 +35,43 @@ from .base import BaseView
 logger = logging.getLogger('wise.msfd')
 
 
-class EditAssessmentDataForm(Form, BaseView):
+class ViewAssessmentEditHistory(BaseView, BrowserView):
+    """ View the history of edits made on the assessment
+    """
+
+    def report_assessment(self):
+        res, res.ts = collections.OrderedDict(), []
+
+        for record in reversed(list(self.context.saved_assessment_data)):
+            tsr = []
+
+            for field in sorted(record.keys()):
+                if isinstance(record[field], datetime.datetime):
+                    tsr.append(record[field])
+                elif isinstance(record[field], Score):
+                    if field in res.keys():
+                        res[field] += [record[field].conclusion]
+                    else:
+                        res[field] = [record[field].conclusion]
+                elif field in res.keys():
+                    res[field] += [record[field]]
+                else:
+                    res[field] = [record[field]]
+                    
+            res.ts.append(tsr and max(tsr) or record['assess_date'])
+
+        return res
+
+    @property
+    def title(self):
+        return "Edit Assessment History for: {}/ {}/ {}".format(
+            self.country_region_name,
+            self.descriptor,
+            self.article,
+        )
+
+
+class EditAssessmentDataForm(BaseView, EditAssessmentDataFormMain):
     """ Edit the assessment for a national descriptor, for a specific article
     """
     name = 'art-view'
@@ -44,19 +83,11 @@ class EditAssessmentDataForm(Form, BaseView):
     _questions = get_questions()
 
     @property
-    def criterias(self):
-        return self.descriptor_obj.sorted_criterions()      # criterions
-
-    @property
-    def help(self):
-        return render_assessment_help(self.criterias, self.descriptor)
-
-    @property
     def title(self):
-        return "Edit {}'s Assessment for {}/{}/{}".format(
+        return u"Edit Comission assessment: {}/ {}/ {}/ {}/ 2018".format(
             self.country_title,
-            self.descriptor,
-            self.country_region_code,
+            self.country_region_name,
+            self.descriptor_title,
             self.article,
         )
 
@@ -87,19 +118,23 @@ class EditAssessmentDataForm(Form, BaseView):
 
     @buttonAndHandler(u'Save', name='save')
     def handle_save(self, action):
-        # BBB code, useful for development
+        """ Handles the save action
+        """
+
+        if self.read_only_access:
+            raise Unauthorized
+
         context = self.context
 
         if not hasattr(context, 'saved_assessment_data') or \
                 not isinstance(context.saved_assessment_data, PersistentList):
             context.saved_assessment_data = AssessmentData()
-        last = self.context.saved_assessment_data.last()
 
-        roles = get_roles(obj=self.context)
+        last = self.context.saved_assessment_data.last().copy()
 
-        if 'Contributor' not in roles and ('Manager' not in roles)\
-                and 'Editor' not in roles:
-            raise Unauthorized
+        # roles = get_roles(obj=self.context)
+        # if 'Contributor' not in roles and ('Manager' not in roles)\
+        #         and 'Editor' not in roles:
 
         data, errors = self.extractData()
         # if not errors:
@@ -141,6 +176,12 @@ class EditAssessmentDataForm(Form, BaseView):
             if last_values != score_values:
                 data[last_upd] = datetime_now
 
+            # check if _Summary text is changed, and update _Last_update field
+            summary = '{}_{}_Summary'.format(self.article, question.id)
+
+            if last.get(summary, '') != data.get(summary, ''):
+                data[last_upd] = datetime_now
+
         last_upd = "{}_assess_summary_last_upd".format(
             self.article
         )
@@ -175,35 +216,6 @@ class EditAssessmentDataForm(Form, BaseView):
 
         return self.request.response.redirect(url)
 
-    def is_disabled(self, question):
-        state, _ = self.current_phase
-        disabled = question.klass not in PHASES.get(state, ())
-
-        return self.read_only_access or disabled
-
-    @property
-    def fields(self):
-        if not self.subforms:
-            self.subforms = self.get_subforms()
-
-        fields = []
-
-        for subform in self.subforms:
-            fields.extend(subform.fields._data_values)
-
-        return Fields(*fields)
-
-    @property       # TODO: memoize
-    def descriptor_obj(self):
-        return get_descriptor(self.descriptor)
-
-    # TODO: use memoize
-    @property
-    def questions(self):
-        qs = self._questions[self.article]
-
-        return qs
-
     def get_subforms(self):
         """ Build a form of options from a tree of options
 
@@ -219,9 +231,6 @@ class EditAssessmentDataForm(Form, BaseView):
         assess_date = '-'
 
         forms = []
-
-        is_ec_user = not self.can_comment_tl
-        is_other_tl = not (self.can_comment_tl or self.can_comment_tl)
 
         for question in self.questions:
             phase = [
@@ -240,12 +249,13 @@ class EditAssessmentDataForm(Form, BaseView):
             form.title = question.definition
             last_upd = '{}_{}_Last_update'.format(self.article, question.id)
             form._last_update = assessment_data.get(last_upd, assess_date)
+            form._assessor = assessment_data.get('assessor', '-')
             form._question_type = question.klass
             form._question_phase = phase
             form._question = question
             form._elements = elements
-            form._disabled = self.is_disabled(
-                question) or is_other_tl or is_ec_user
+            form._disabled = self.is_disabled(question)
+            # or is_other_tl or is_ec_user
 
             fields = []
 
@@ -314,9 +324,11 @@ class EditAssessmentDataForm(Form, BaseView):
         assessment_summary_form._last_update = assessment_data.get(
             last_upd, assess_date
         )
+        assessment_summary_form._assessor = assessment_data.get(
+            'assessor', '-'
+        )
         assessment_summary_form.subtitle = u''
-        assessment_summary_form._disabled = (not self.can_comment_tl
-                                             or self.read_only_access)
+        assessment_summary_form._disabled = self.read_only_access
         asf_fields = []
 
         for name, title in summary_fields:
@@ -344,4 +356,29 @@ class EditAssessmentDataForm(Form, BaseView):
         return value
 
 
+class EditAssessmentDataFormSecondary(EditAssessmentDataForm):
+    """ Implementation for secondary articles (A3-4, A7, A8ESA)
+    """
+
+    template = ViewPageTemplateFile("./pt/edit-assessment-data-secondary.pt")
+
+    @property
+    def descriptor_obj(self):
+        return None
+
+    @property
+    def descriptor(self):
+        return 'Not linked'
+
+    @property
+    def title(self):
+        return u"Edit Comission assessment: {}/ {}/ {}/ 2018".format(
+            self.country_title,
+            self.country_region_name,
+            self.article,
+        )
+
+
 EditAssessmentDataView = wrap_form(EditAssessmentDataForm, MainFormWrapper)
+EditAssessmentDataViewSecondary = wrap_form(EditAssessmentDataFormSecondary,
+                                            EditAssessmentFormWrapperSecondary)

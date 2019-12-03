@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 
 import csv
-import json
 import logging
 import re
 from collections import namedtuple
@@ -10,7 +9,7 @@ import lxml.etree
 from pkg_resources import resource_filename
 
 from wise.msfd import db, sql, sql2018, sql_extra
-from wise.msfd.labels import COMMON_LABELS
+from wise.msfd.labels import COMMON_LABELS, TERMSLIST
 from wise.msfd.utils import (ItemLabel, _parse_files_in_location,
                              get_element_by_id, natural_sort_key, timeit)
 
@@ -163,7 +162,7 @@ class Descriptor(ItemLabel):
     def all_ids(self):
         res = set()
         res.add(self.id)
-        
+
         if self.id == 'D6':
             res.add('D6/D1')
 
@@ -444,20 +443,6 @@ def get_ges_component(ges_id):
     return crit
 
 
-def parse_codelists_file():
-    """ Parse the msfd2018-codelists.json file
-    """
-    jsonf = resource_filename('wise.msfd',
-                              'data/msfd2018-codelists.json')
-    with open(jsonf) as f:
-        d = json.load(f)
-
-    return d
-
-
-TERMSLIST = parse_codelists_file()
-
-
 def parse_parameters():
     res = {}
 
@@ -495,6 +480,7 @@ def get_parameters(descriptor_code=None):
     return res
 
 
+# TODO: move all label related code to labels.py
 @db.use_db_session('2012')
 def parse_features_from_db_2012():
     res = {}
@@ -533,6 +519,37 @@ def parse_features_from_db_2018():
 
 
 FEATURES_DB_2018 = parse_features_from_db_2018()
+
+
+THEMES_2018_ORDER = [
+    'Species',
+    'Habitats',
+    'Ecosystems, including food webs',
+    'Biological',
+    'Physical',
+    'Physical and hydrological',
+    'Chemical',
+    'Substances, litter and energy',
+    'Nutrition',
+    'Materials',
+    'Energy',
+    'Mediation of waste, toxics and other nuisances',
+    'Mediation of flows',
+    'Maintenance of physical, chemical, biological conditions',
+    'Underpinning and/or enhancing physical and intellectual interactions',
+    'Underpinning and/or enhancing spiritual, symbolic and other interactions',
+    'Physical restructuring of rivers, coastline or seabed (water management)',
+    'Extraction of non-living resources',
+    'Production of energy',
+    'Extraction of living resources',
+    'Cultivation of living resources',
+    'Transport',
+    'Urban and industrial uses',
+    'Tourism and leisure',
+    'Security/defence',
+    'Education and research',
+    'No theme',
+]
 
 
 def parse_features():
@@ -598,131 +615,6 @@ def get_features(descriptor_code=None):
             for f in FEATURES.values()
 
             if descriptor_code in f.descriptors]
-
-
-@db.use_db_session('2018')
-def get_indicator_labels():
-    mc = sql2018.IndicatorsIndicatorAssessment
-    count, res = db.get_all_records(
-        mc
-    )
-    labels = {}
-
-    for row in res:
-        code = row.IndicatorCode
-        label = row.IndicatorTitle
-
-        if label:
-            labels[code] = label
-
-    return labels
-
-
-@db.use_db_session('2018')
-def get_mru_labels():
-    # for faster query only get these fields
-    needed = ('MarineReportingUnitId', 'Description', 'nameTxtInt', 'nameText')
-    mc = sql2018.MarineReportingUnit
-    mc_cols = [getattr(mc, x) for x in needed]
-
-    count, res = db.get_all_specific_columns(
-        mc_cols
-    )
-    labels = {}
-
-    for row in res:
-        code = row.MarineReportingUnitId
-        label_main = row.Description
-        label_int = row.nameTxtInt
-        label_txt = row.nameText
-        label = label_main or label_int or label_txt
-
-        if label:
-            labels[code] = label
-
-    return labels
-
-
-@db.use_db_session('2018')
-def get_target_labels():
-    needed = ('TargetCode', 'Description')
-    mc = sql2018.ART10TargetsTarget
-    mc_cols = [getattr(mc, x) for x in needed]
-
-    count, res = db.get_all_specific_columns(
-        mc_cols
-    )
-    labels = {}
-
-    for row in res:
-        code = row.TargetCode
-        label = row.Description
-        labels[code] = label
-
-    return labels
-
-
-def _parse_labels(label_name):
-    res = {}
-
-    features = TERMSLIST[label_name]
-
-    for fr in features:
-        code = fr['code']
-        label = fr['label']
-
-        if code in res:
-            continue
-
-        res[code] = label
-
-    return res
-
-
-class LabelCollection(object):
-    """ A convenience wrapper over multiple structures with labels
-
-    Needed because ReferenceFeature does not contain all features
-    """
-
-    features = _parse_labels('Features')
-    pressures = _parse_labels('Pressures')
-    parameters = _parse_labels('Parameters')
-    threshold_sources = _parse_labels('ThresholdSources')
-    units = _parse_labels('Units')
-    element_sources = _parse_labels('ElementSources')
-    elementcode_sources = _parse_labels('ElementCodeSources')
-    ges_criterias = _parse_labels('GESCriterias')
-    ges_components = _parse_labels('GESComponents')
-    indicators = get_indicator_labels()
-    mrus = get_mru_labels()
-    targets = get_target_labels()
-
-    def get(self, collection_name, name):
-        label_dict = getattr(self, collection_name, None)
-
-        if not label_dict:
-            return name
-
-        label = label_dict.get(name, name)
-
-        return label
-
-
-GES_LABELS = LabelCollection()
-
-
-# TODO: move all label related code to labels.py
-def get_label(value, label_collection):
-    """ Get the human version of a database 'shortcode' (a string id) """
-
-    if label_collection:
-        trans = GES_LABELS.get(label_collection, value)
-
-        if trans != value:
-            return trans
-
-    return COMMON_LABELS.get(value, value)
 
 
 def is_descriptor(value):
@@ -823,9 +715,13 @@ def _muids_2012(country, region):
          t.c.MarineUnits_ReportingAreas),
         t.c.MemberState == country,
         t.c.RegionSubRegions == region,
-        t.c.MarineUnits_ReportingAreas.isnot(None),
+        # There are some MRUs with empty MarineUnits_ReportingAreas
+        # we should not exclude these, they are used in the reports
+        # ex: ../se/ans/d2/art9/@@view-report-data-2012 ANS-SE-SR-Nordsjon
+        # t.c.MarineUnits_ReportingAreas.isnot(None),
     )
-    res = [MarineReportingUnit(*r) for r in res]
+    # r[0] = MarineUnitID, r[1] = MarineUnits_ReportingAreas
+    res = [MarineReportingUnit(r[0], r[1] or r[0]) for r in res]
 
     return sorted(res)
 

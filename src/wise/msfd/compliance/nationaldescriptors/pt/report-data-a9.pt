@@ -1,11 +1,11 @@
 <div class="report-section" tal:define="data view/rows">
   <h4>
     <tal:rep tal:repeat="muid python: view.muids_labeled[:-1]">
-      <em tal:attributes="title python:muid.title"
-          tal:content="python: muid.name">DE_ANS</em>,
+      <em tal:attributes="title python:muid.name"
+          tal:content="python: muid.title">DE_ANS</em>,
     </tal:rep>
-      <em tal:attributes="title python:view.muids_labeled[-1].title"
-          tal:content="python: view.muids_labeled[-1].name">DE_ANS</em>
+    <em tal:attributes="title python:view.muids_labeled[-1].name"
+        tal:content="python: view.muids_labeled[-1].title">DE_ANS</em>
   </h4>
   <metal:s metal:use-macro="context/context/wise-macros/macros/simplify-table"></metal:s>
   <metal:s metal:use-macro="context/context/wise-macros/macros/overflow-table"></metal:s>

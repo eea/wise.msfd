@@ -9,12 +9,16 @@ from Acquisition import aq_inner
 from plone.api.portal import get_tool
 from plone.z3cform.layout import FormWrapper
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
-from wise.msfd.compliance.interfaces import IEditAssessmentForm
+from wise.msfd.compliance.interfaces import (IEditAssessmentForm,
+                                             IEditAssessmentFormSecondary)
 from z3c.form.field import Fields
 from z3c.form.form import Form
 
-from .db import get_available_marine_unit_ids, threadlocals
+from . import sql, sql2018
+from .db import (get_all_specific_columns, get_available_marine_unit_ids,
+                 get_marine_unit_ids, threadlocals, use_db_session)
 from .interfaces import IEmbeddedForm, IMainForm, IMarineUnitIDSelect
+from .labels import DISPLAY_LABELS
 from .utils import all_values_from_field, get_obj_fields, print_value
 from .widget import MarineUnitIDSelectFieldWidget
 
@@ -37,6 +41,10 @@ class BaseUtil(object):
 
         This is used to transform the database column names to usable labels
         """
+
+        if text in DISPLAY_LABELS:
+            return DISPLAY_LABELS[text]
+
         text = text.replace('_', ' ')
 
         for l in range(len(text) - 1):
@@ -86,13 +94,197 @@ class BaseUtil(object):
 
         return mid
 
+    def get_import_id(self):
+        """ This method needs to be overridden, to return the import ID
+        of the displayed item
+        """
+
+        return 0
+
+    def _find_reported_date_info(self):
+        context = self
+
+        while hasattr(context, 'context'):
+            if hasattr(context, 'reported_date_info'):
+                return context.reported_date_info
+
+            context = context.context
+
+        if hasattr(context, 'reported_date_info'):
+            return context.reported_date_info
+
+        return {}
+
+    @use_db_session('2018')
+    def get_reported_date_from_db(self, filename):
+        mc = sql2018.ReportingHistory
+
+        count, data = get_all_specific_columns(
+            [mc.DateReceived],
+            mc.FileName == filename
+        )
+
+        if not count:
+            return None
+
+        date = data[0].DateReceived
+
+        return date
+
+    @use_db_session('2018')
+    def get_reported_date_2018(self):
+        not_available = 'Not available'
+        reported_date_info = self._find_reported_date_info()
+
+        if not reported_date_info:
+            return not_available
+
+        import_id = self.get_import_id()
+        mc = reported_date_info['mapper_class']
+        col_import_id = reported_date_info['col_import_id']
+        col_import_time = reported_date_info['col_import_time']
+
+        count, data = get_all_specific_columns(
+            [getattr(mc, col_import_time)],
+            getattr(mc, col_import_id) == import_id
+        )
+
+        if not count:
+            return not_available
+
+        reported_date = data[0]
+        reported_date = getattr(reported_date, col_import_time)
+
+        try:
+            reported_date = reported_date.strftime('%Y %b %d')
+        except:
+            pass
+
+        return reported_date
+
+    def get_reported_date(self):
+        not_available = 'Not available'
+        reported_date_info = self._find_reported_date_info()
+
+        if not reported_date_info:
+            return not_available
+
+        import_id = self.get_import_id()
+        mc = reported_date_info['mapper_class']
+        col_import_id = reported_date_info['col_import_id']
+        col_import_time = reported_date_info['col_import_time']
+        col_filename = reported_date_info['col_filename']
+
+        count, data = get_all_specific_columns(
+            [getattr(mc, col_filename)],
+            getattr(mc, col_import_id) == import_id
+        )
+
+        if not count:
+            return not_available
+
+        filename = getattr(data[0], col_filename)
+
+        reported_date = self.get_reported_date_from_db(filename)
+
+        # reported_date = data[0]
+        # reported_date = getattr(reported_date, col_import_time)
+
+        if not reported_date:
+            return not_available
+
+        try:
+            reported_date = reported_date.strftime('%Y %b %d')
+        except:
+            pass
+
+        return reported_date
+
+    def get_current_country(self):
+        country_2012 = self.get_current_country_2012()
+
+        if country_2012:
+            return country_2012
+
+        country_2018 = self.get_current_country_2018()
+
+        if country_2018:
+            return country_2018
+
+        return ''
+
+    @use_db_session('2018')
+    def get_current_country_2018(self):
+        mc = sql2018.MarineReportingUnit
+        try:
+            mru = self.get_marine_unit_id()
+        except:
+            return ''
+
+        count, data = get_all_specific_columns(
+            [mc.CountryCode],
+            mc.MarineReportingUnitId == mru
+        )
+
+        if not count:
+            return ''
+
+        country_code = data[0]
+        print_value = self.print_value(country_code.CountryCode)
+
+        return print_value
+
+    @use_db_session('2012')
+    def get_current_country_2012(self):
+        """ Get the country for the current selected MarineUnitID
+
+        :return: Germany
+        """
+
+        mc = sql.t_MSFD4_GegraphicalAreasID
+        try:
+            mru = self.get_marine_unit_id()
+        except:
+            return ''
+
+        count, data = get_all_specific_columns(
+            [mc.c.MemberState],
+            mc.c.MarineUnitID == mru
+        )
+
+        if not count:
+            return ''
+
+        country_code = data[0]
+        print_value = self.print_value(country_code.MemberState)
+
+        return print_value
+
     def get_obj_fields(self, obj, use_blacklist=True):
         """ Inspect an SA object and return its field names
+
+        Some objects have _field attribute (Article 6 Regional Cooperation),
+        where we do not need to order the fields or use blacklist,
+        because the columns and order are specified manually
         """
+
+        if hasattr(obj, '_fields'):
+            return obj._fields
 
         return get_obj_fields(obj, use_blacklist=use_blacklist)
 
-    def print_value(self, value):
+    def print_value(self, value, field_name=None):
+        if not field_name:
+            return print_value(value)
+
+        # if 'Code' in field_name:
+        #     return value
+
+        # 'blacklist_labels' is a list of field names, for these fields
+        # we will print the original value
+        if field_name in getattr(self, 'blacklist_labels', []):
+            return value
+
         return print_value(value)
 
     def get_main_form(self):
@@ -236,6 +428,14 @@ class EditAssessmentFormWrapper(MainFormWrapper):
     implements(IEditAssessmentForm)
 
 
+class EditAssessmentFormWrapperSecondary(MainFormWrapper):
+    """ Wrapper for EditAssessmentDataForm
+
+    Needed to override the page title """
+
+    implements(IEditAssessmentFormSecondary)
+
+
 class EmbeddedForm(BaseEnhancedForm, Form, BaseUtil):
     """ Our most basic super-smart-superclass for forms
 
@@ -327,8 +527,34 @@ class MarineUnitIDSelectForm(EmbeddedForm):
         return (count, [x[0] for x in res])
 
 
-class BasePublicPage(object):
+class MarineUnitIDSelectForm2012(MarineUnitIDSelectForm):
+    """ Something like a subclass for MarineUnitIDSelectForm
+        needed for Art 8, 9, 10 year 2012
+        to override the 'get_available_marine_unit_ids' method
     """
+
+    def get_available_marine_unit_ids(self, parent=None):
+        data = {}
+        if not parent:
+            parent = self.context.context
+
+        # lookup values in the inheritance tree
+
+        for crit in ['area_types', 'member_states', 'region_subregions']:
+            data[crit] = getattr(parent, 'get_selected_' + crit)()
+            parent = parent.context
+
+        _, all_mrus = get_marine_unit_ids(**data)
+
+        count, res = get_available_marine_unit_ids(
+            all_mrus, self.mapper_class
+        )
+
+        return count, [x[0] for x in res]
+
+
+class BasePublicPage(object):
+    """ TODO: explain purpose of this page
     """
 
     def check_permission(self, permission, context=None):

@@ -88,13 +88,13 @@
         var fbDownload = $("#form-buttons-download");
         if( fbDownload.length > 0){
             var dBtn = fbDownload.prop('outerHTML').replace("input","button")
-                + ' <span style="margin-left:0.4rem;">Download as XLS</span>';
+                + ' <span style="margin-left:0.4rem;">Download as spreadsheet</span>';
             var btnForm = fbDownload.parent();
 
             fbDownload.remove();
 
             btnForm.append( $(dBtn) );
-            $("#form-buttons-download").val("&#xf019; Download as XLS").addClass("fa").addClass("fa-download");
+            $("#form-buttons-download").val("&#xf019; Download as spreadsheet").addClass("fa").addClass("fa-download");
         }
     }
 
@@ -964,6 +964,9 @@
         }*/
 
         initPageElems();
+        removeNoValues();
+        fixTableHeaderAndCellsHeight();
+        //addDoubleScroll();
 
         $("[name='form.buttons.prev']").prop("disabled" , false);
         $("[name='form.buttons.next']").prop("disabled" , false);
@@ -1106,6 +1109,8 @@
         $('table.listing:not(.nosort) tbody').each(setoddeven);
 
         if ( typeof scanforlinks !== "undefined") jQuery(scanforlinks);
+
+        addDoubleScroll();
     }
 
     function formAjaxError(req, status, error){
@@ -1434,6 +1439,70 @@
         }
     }
 
+    function removeNoValues() {
+    /* Remove 'No value' options from all select elements
+    */
+      var $select = $('.select-widget')
+      $select.find("option:contains('No value')").each(function(){
+          $(this).remove();
+      });
+    }
+
+    $.fn.fixTableHeaderAndCellsHeight = function() {
+      // because the <th> are position: absolute, they don't get the height of
+      // the <td> cells, and the other way around.
+
+      this.each(function() {
+        $("th", this).each(function() {
+          var $th = $(this);
+          var $next = $('td', $th.parent());
+          var cells_max_height = Math.max($next.height());
+          var height = Math.max($th.height(), cells_max_height);
+
+          $th.height(height);
+
+          if ($th.height() > cells_max_height) {
+            $next.height($th.height());
+          }
+
+          $('div', this).css('margin-top', '-4px');
+
+        });
+      });
+    };
+
+    function fixTableHeaderAndCellsHeight() {
+      var $table = $('.table-report');
+      $table.fixTableHeaderAndCellsHeight();
+    }
+
+    function addDoubleScroll() {
+      var secondScroll = '<div class="cloned-scroll-top" style="overflow-x: auto;">' +
+          '<div style="height: 1px;"></div>' +
+        '</div>'
+
+      $(".double-scroll").each(function(){
+        var $doubleScroll = $(this)
+        var tableWidth = $doubleScroll.find('table').outerWidth(includeMargin=true);
+
+        if (tableWidth == null) {
+          return
+        }
+
+        $doubleScroll.parent().before(secondScroll);
+        var $clonedScrollTop = $doubleScroll.parent().siblings('.cloned-scroll-top').first();
+
+        $clonedScrollTop.on('scroll', function(){
+          $doubleScroll.scrollLeft($clonedScrollTop.scrollLeft());
+        });
+
+        $doubleScroll.scroll(function(){
+          $clonedScrollTop.scrollLeft($doubleScroll.scrollLeft());
+        });
+
+        $clonedScrollTop.children().width(tableWidth);
+      });
+    }
 
     jQuery(document).ready(function($){
         initPageElems();
@@ -1488,6 +1557,9 @@
 
         $(".topnav a").on("click", resetStorageForPage);
 
+        removeNoValues();
+        fixTableHeaderAndCellsHeight();
+        addDoubleScroll();
     });
 
 }(window, document, jQuery));

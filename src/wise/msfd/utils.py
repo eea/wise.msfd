@@ -50,27 +50,40 @@ def scan(namespace):
 
 
 def print_value(value):
-    from .labels import COMMON_LABELS
+    from .labels import COMMON_LABELS, GES_LABELS
 
     # TODO: this is only used in search package
+
+    common_labels = {}
+    common_labels.update(COMMON_LABELS)
+    common_labels.update(getattr(GES_LABELS, 'indicators'))
+    common_labels.update(getattr(GES_LABELS, 'targets'))
+    common_labels.update(getattr(GES_LABELS, 'mrus'))
+    common_labels.update(getattr(GES_LABELS, 'ktms'))
 
     if not value:
         return value
 
     if isinstance(value, string_types):
+        value = value.strip()
 
-        if value in COMMON_LABELS:
+        if value in common_labels:
             tmpl = '<span title="{}">{}</span>'
             try:
                 html = convertWebIntelligentPlainTextToHtml(
-                    COMMON_LABELS[value]
+                    common_labels[value]
                 )
                 ret = tmpl.format(value, html)
             except UnicodeEncodeError as e:
-                ret = tmpl.format(value, COMMON_LABELS[value].encode('utf-8'))
+                try:
+                    ret = tmpl.format(value,
+                                      common_labels[value].encode('utf-8'))
+                except UnicodeEncodeError as e:
+                    ret = tmpl.format(value.encode('utf-8'),
+                                      common_labels[value].encode('utf-8'))
             except Exception as e:
                 logger.exception("Error print_value: %r", e)
-                ret = tmpl.format(value, unicode(COMMON_LABELS[value]))
+                ret = tmpl.format(value, unicode(common_labels[value]))
 
             return ret
 
@@ -78,7 +91,10 @@ def print_value(value):
 
         return html
 
-    base_values = string_types + (int, datetime.datetime, list)
+    if isinstance(value, ItemList):
+        return value()
+
+    base_values = string_types + (int, float, datetime.datetime, list)
 
     if not isinstance(value, base_values):
 
@@ -157,7 +173,11 @@ def db_objects_to_dict(data, excluded_columns=()):
     out = []
 
     for row in data:
-        columns = row.__table__.columns.keys()
+        if hasattr(row, '__table__'):
+            columns = row.__table__.columns.keys()
+        else:
+            columns = row._fields
+
         d = OrderedDict()
 
         for col in columns:
@@ -168,14 +188,43 @@ def db_objects_to_dict(data, excluded_columns=()):
     return out
 
 
-def group_data(data, pivot):
+def change_orientation(data):
+    """ Change the orientation of data, from rows to columns
+    """
+    out = []
+    max = 0
+
+    for row in data:
+        nr_of_keys = len(row.keys())
+
+        if nr_of_keys > max:
+            max = nr_of_keys
+            fields = row.keys()
+
+    for field in fields:
+        field_data = []
+        for row in data:
+            field_data.append(row.get(field, ''))
+
+        out.append((field, field_data))
+
+    return out
+
+
+def group_data(data, pivot, remove_pivot=True):
     out = defaultdict(list)
 
-    count_distinct_values = len(set(row.get(pivot, '') for row in data))
+    # count_distinct_values = len(set(row.get(pivot, '') for row in data))
 
     for row in data:
         d = OrderedDict(row)
-        p = d.pop(pivot) if count_distinct_values > 1 else d[pivot]
+
+        # Remove the pivot column from the rows, so it will not be showed
+        # In some edge cases (Art10 2018) we don't want to remove the pivot
+        if remove_pivot:
+            p = d.pop(pivot)  # if count_distinct_values > 1 else d[pivot]
+        else:
+            p = d.get(pivot)
 
         if any(d.values()):
             out[p].append(d)
@@ -183,7 +232,7 @@ def group_data(data, pivot):
     return out
 
 
-def group_query(query, pivot):
+def group_query(query, pivot, remove_pivot=True):
     """ Group results from a query over a table
     """
 
@@ -193,7 +242,7 @@ def group_query(query, pivot):
     if len(cols) == 1:
         return {pivot: res}
 
-    return group_data(res, pivot)
+    return group_data(res, pivot, remove_pivot)
 
 
 def default_value_from_field(context, field):
@@ -277,7 +326,14 @@ def db_result_key(func, *argss, **kwargs):
 
 
 # To be used as data container when defining tabs for navigation
-Tab = namedtuple('Tab', ['view', 'section', 'title', 'subtitle'])
+Tab = namedtuple('Tab', [
+    'path',
+    'section',
+    'title',
+    'subtitle',
+    'cssclass',
+    'condition',
+])
 
 
 def t2rt(text):
@@ -364,8 +420,7 @@ class ItemLabel(TemplateMixin):
         # see https://rszalski.github.io/magicmethods/
 
         if hasattr(other, 'name'):
-            if self.name == other.name:
-                return 0
+            return cmp(self.name, other.name)
 
         if self.name == other:        # this is not really ok
             return 0
@@ -640,6 +695,21 @@ def natural_sort_key(s, _nsre=re.compile('([0-9]+)')):
 
     return [text.isdigit() and int(text) or text.lower()
             for text in _nsre.split(s)]
+
+
+def fixedorder_sortkey(value, order):
+    """ Used to sort a list by a specific order of values
+    If the value is not in the order list, it will be added to the end of
+    the list
+
+    :param value: 'Not good'
+    :param order: ['Good', 'Not good', 'Unknown', 'not reported']
+    :return: index on the value from the order list
+    """
+
+    key = value in order and order.index(value) + 1 or len(order) + 2
+
+    return key
 
 
 def get_annot():

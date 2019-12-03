@@ -1,5 +1,5 @@
-<div>
-  <div tal:repeat="muid view/muids" class="report-section">
+<div tal:define="muids python: view.muids or view.rows.keys()">
+  <div tal:repeat="muid muids" class="report-section">
     <tal:def define="data python: view.rows.get(muid, [])">
 
       <h4 tal:content="structure muid">DE_ANS</h4>

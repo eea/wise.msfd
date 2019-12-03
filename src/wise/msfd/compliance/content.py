@@ -73,13 +73,16 @@ class RegionalDescriptorAssessment(Container):
 
 class AssessmentData(PersistentList):
 
-    data = []       # TODO: why is this? This needs to be migrated
+    # data = []       # TODO: why is this? This needs to be migrated
 
     @property
     def assessors(self):
+        if not self:
+            return 'Not assessed'
+
         assessors = set()
 
-        for data in self.data:
+        for data in self:
             assessor = data.get('assessor')
 
             if assessor is None:
@@ -93,13 +96,20 @@ class AssessmentData(PersistentList):
 
         return ', '.join(assessors)
 
-    def append(self, data):
-        self.data.append(data)
+    def _append(self, data):
+        # self.data.append(data)
+        self.append(data)
 
         self._p_changed = True
 
+    # def last(self):
+    #     if not self.data:
+    #         return {}
+    #
+    #     return self.data[-1]
+
     def last(self):
-        if not self.data:
+        if not self:
             return {}
 
-        return self.data[-1]
+        return self[-1]

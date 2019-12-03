@@ -5,7 +5,8 @@ from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile as VPTF
 
 from wise.msfd.compliance.base import get_questions
 from wise.msfd.compliance.content import AssessmentData
-from wise.msfd.compliance.nationaldescriptors.main import format_assessment_data
+from wise.msfd.compliance.nationaldescriptors.main import (
+    CONCLUSION_COLOR_TABLE, format_assessment_data)
 from wise.msfd.gescomponents import get_descriptor
 
 from .base import BaseRegComplianceView
@@ -13,6 +14,24 @@ from .base import BaseRegComplianceView
 
 RegionStatus = namedtuple('CountryStatus',
                           ['name', 'countries', 'status', 'state_id', 'url'])
+
+ARTICLE_WEIGHTS = {
+    'Art9': {
+        'adequacy': 0.0,
+        'consistency': 0.0,
+        'coherence': 1.0
+    },
+    'Art8': {
+        'adequacy': 0.0,
+        'consistency': 0.0,
+        'coherence': 1.0
+    },
+    'Art10': {
+        'adequacy': 0.0,
+        'consistency': 0.0,
+        'coherence': 1.0
+    }
+}
 
 
 class RegionalDescriptorsOverview(BaseRegComplianceView):
@@ -23,7 +42,7 @@ class RegionalDescriptorsOverview(BaseRegComplianceView):
         res = []
 
         for region in regions:
-            countries = sorted([x[1] for x in region._countries_for_region])
+            countries = [x[1] for x in region._countries_for_region]
             state_id, state_label = self.process_phase(region)
             info = RegionStatus(region.Title(), ", ".join(countries),
                                 state_label, state_id,
@@ -38,7 +57,12 @@ class RegionalDescriptorRegionsOverview(BaseRegComplianceView):
     section = 'regional-descriptors'
 
     def get_regions(self):
-        return self.context.contentValues()
+        regions = [
+            x for x in self.context.contentValues()
+            if x.portal_type == 'Folder'
+        ]
+
+        return regions
 
     def get_descriptors(self, region):
         order = [
@@ -57,6 +81,9 @@ class RegionalDescriptorRegionsOverview(BaseRegComplianceView):
         order = ['art9', 'art8', 'art10']
 
         return [desc[a] for a in order]
+
+    def ready_phase2(self):
+        return False
 
 
 class RegionalDescriptorArticleView(BaseRegComplianceView):
@@ -114,6 +141,7 @@ class RegionalDescriptorArticleView(BaseRegComplianceView):
 
         score_2012 = 0
         conclusion_2012 = "Get conclusion 2012"
+        conclusion_2012_color = CONCLUSION_COLOR_TABLE.get(score_2012, 0)
 
         # Assessment 2018
         assessors_2018 = getattr(
@@ -123,13 +151,15 @@ class RegionalDescriptorArticleView(BaseRegComplianceView):
         assess_date_2018 = data.get('assess_date', u'Not assessed')
         source_file_2018 = ('To be addedd...', '.')
         muids = None
+        article_weights = ARTICLE_WEIGHTS
         assessment = format_assessment_data(
             self.article,
             self.get_available_countries(),
             self.questions,
             muids,
             data,
-            self.descriptor_obj
+            self.descriptor_obj,
+            article_weights
         )
         can_edit = self.check_permission('wise.msfd: Edit Assessment')
         show_edit_assessors = self.assessor_list and can_edit
@@ -146,7 +176,9 @@ class RegionalDescriptorArticleView(BaseRegComplianceView):
             assessment=assessment,
             score_2012=score_2012,
             conclusion_2012=conclusion_2012,
-            change_since_2012='-1'
+            conclusion_2012_color=conclusion_2012_color,
+            change_since_2012='-1',
+            can_comment=self.can_comment
         )
 
         return self.index()

@@ -3,11 +3,12 @@ from collections import namedtuple
 from datetime import datetime
 from io import BytesIO
 
-import xlsxwriter
 from zope.interface import alsoProvides
 
+import xlsxwriter
 from eea.cache import cache
 from plone import api
+from plone.api import portal
 from plone.api.content import get_state, transition
 from plone.api.portal import get_tool
 from plone.dexterity.utils import createContentInContainer as create
@@ -18,9 +19,13 @@ from Products.CMFPlacefulWorkflow.WorkflowPolicyConfig import \
 from Products.Five.browser import BrowserView
 from Products.statusmessages.interfaces import IStatusMessage
 from wise.msfd import db, sql2018
-from wise.msfd.compliance.vocabulary import REGIONS
+from wise.msfd.compliance.vocabulary import (REGIONAL_DESCRIPTORS_REGIONS,
+                                             REGIONS)
 from wise.msfd.gescomponents import (get_all_descriptors, get_descriptor,
                                      get_marine_units)
+from wise.msfd.labels import get_indicator_labels
+from wise.msfd.translation import Translation, get_detected_lang
+from wise.msfd.translation.interfaces import ITranslationsStorage
 
 from . import interfaces
 from .base import BaseComplianceView, get_questions, report_data_cache_key
@@ -74,15 +79,7 @@ class BootstrapCompliance(BrowserView):
         return countries
 
     @db.use_db_session('2018')
-    def _get_countries_for_region(self, region_code):
-        t = sql2018.MarineReportingUnit
-
-        country_codes = db.get_unique_from_mapper(
-            t,
-            'CountryCode',
-            t.Region == region_code
-        )
-
+    def _get_countries_names(self, country_codes):
         result = []
         all_countries = self._get_countries()
 
@@ -97,7 +94,7 @@ class BootstrapCompliance(BrowserView):
 
         descriptors = get_all_descriptors()
 
-        debug_descriptors = ('D1', 'D1.1', 'D4', 'D5', 'D6')
+        debug_descriptors = ('D1.1', 'D4', 'D5', 'D6')
 
         if self.debug:
             descriptors = [x for x in descriptors if x[0] in debug_descriptors]
@@ -113,6 +110,15 @@ class BootstrapCompliance(BrowserView):
         # return articles
 
         return ['Art8', 'Art9', 'Art10']
+
+    def _get_secondary_articles(self):
+        articles = [
+            'Art3-4',
+            'Art7',
+            'Art8esa'
+        ]
+
+        return articles
 
     def set_layout(self, obj, name):
         ISelectableBrowserDefault(obj).setLayout(name)
@@ -210,7 +216,9 @@ class BootstrapCompliance(BrowserView):
 
         return cf
 
-    def make_region(self, parent, code, name):
+    def make_region(self, parent, region):
+        code, name = region.code.lower(), region.title
+
         if code.lower() in parent.contentIds():
             rf = parent[code.lower()]
         else:
@@ -219,7 +227,10 @@ class BootstrapCompliance(BrowserView):
                         title=name,
                         id=code)
 
-            rf._countries_for_region = self._get_countries_for_region(code)
+            rf._subregions = region.subregions
+            rf._countries_for_region = self._get_countries_names(
+                region.countries
+            )
             self.set_layout(rf, '@@reg-region-start')
             alsoProvides(rf, interfaces.IRegionalDescriptorRegionsFolder)
 
@@ -277,8 +288,62 @@ class BootstrapCompliance(BrowserView):
             self.set_layout(rda, '@@reg-desc-start')
             alsoProvides(rda, interfaces.IRegionalDescriptorsFolder)
 
-        for rcode, region in REGIONS.items():
-            self.make_region(rda, rcode, region)
+        for region in REGIONAL_DESCRIPTORS_REGIONS:
+            if not region.is_main:
+                continue
+
+            self.make_region(rda, region)
+
+    def setup_nationalsummaries(self, parent):
+        if 'national-summaries' in parent.contentIds():
+            ns = parent['national-summaries']
+        else:
+            ns = create(parent,
+                        'Folder', title=u'National summaries')
+            self.set_layout(ns, '@@nat-summary-start')
+            alsoProvides(ns, interfaces.INationalSummaryFolder)
+
+        for code, country in self._get_countries():
+            if code.lower() in ns.contentIds():
+                cf = ns[code.lower()]
+            else:
+                cf = create(ns,
+                            'wise.msfd.countrydescriptorsfolder',
+                            title=country,
+                            id=code)
+
+                self.set_layout(cf, '@@sum-country-start')
+                alsoProvides(cf, interfaces.INationalSummaryCountryFolder)
+                # self.create_comments_folder(cf)
+
+    def setup_secondary_articles(self, parent):
+        if 'national-descriptors-assessments' not in parent.contentIds():
+            return
+
+        nda_parent = parent['national-descriptors-assessments']
+        country_ids = nda_parent.contentIds()
+
+        for country in country_ids:
+            country_folder = nda_parent[country]
+
+            for article in self._get_secondary_articles():
+                if article.lower() in country_folder.contentIds():
+                    nda = country_folder[article.lower()]
+                else:
+                    nda = create(country_folder,
+                                 'wise.msfd.nationaldescriptorassessment',
+                                 title=article)
+
+                    logger.info("Created NationalDescriptorAssessment %s",
+                                nda.absolute_url())
+
+                alsoProvides(
+                    nda,
+                    interfaces.INationalDescriptorAssessmentSecondary
+                )
+                self.set_layout(nda, '@@nat-desc-art-view-secondary')
+
+                self.create_comments_folder(nda)
 
     def __call__(self):
 
@@ -304,7 +369,22 @@ class BootstrapCompliance(BrowserView):
         # Editor: Milieu
 
         # self.setup_nationaldescriptors(cm)
-        self.setup_regionaldescriptors(cm)
+        DEFAULT = 'regional,nationalsummary,secondary'
+        targets = self.request.form.get('setup', DEFAULT)
+
+        if targets:
+            targets = targets.split(',')
+        else:
+            targets = DEFAULT
+
+        if "regional" in targets:
+            self.setup_regionaldescriptors(cm)
+
+        if "nationalsummary" in targets:
+            self.setup_nationalsummaries(cm)
+
+        if "secondary" in targets:
+            self.setup_secondary_articles(cm)
 
         return cm.absolute_url()
 
@@ -449,22 +529,26 @@ class AdminScoring(BaseComplianceView):
                 for q_id, score in scores.items():
                     id_ = score.question.id
                     article = score.question.article
-                    new_score_weight = [
-                        x.score_weights
+                    _question = [
+                        x
 
                         for x in self.questions[article]
 
                         if x.id == id_
-                    ]
-                    score.question.score_weights = new_score_weight[0]
+                    ][0]
+
+                    # new_score_weight = _question.score_weights
+                    # _question.score_weights = new_score_weight
 
                     values = score.values
                     descriptor = score.descriptor
-                    new_score = score.question.calculate_score(descriptor,
-                                                               values)
+
+                    new_score = _question.calculate_score(descriptor,
+                                                          values)
 
                     data[q_id] = new_score
-                    new_overall_score += new_score.weighted_score
+                    new_overall_score += getattr(new_score,
+                                                 'weighted_score', 0)
 
                 data['OverallScore'] = new_overall_score
                 obj.saved_assessment_data._p_changed = True
@@ -636,3 +720,57 @@ class SetupAssessmentWorkflowStates(BaseComplianceView):
         )
 
         return "Done"
+
+
+class TranslateIndicators(BrowserView):
+
+    def __call__(self):
+        labels = get_indicator_labels().values()
+        site = portal.get()
+        storage = ITranslationsStorage(site)
+
+        count = 0
+
+        for label in labels:
+            lang = get_detected_lang(label)
+
+            if (not lang) or (lang == 'en'):
+                continue
+
+            lang = lang.upper()
+
+            langstore = storage.get(lang, None)
+
+            if langstore is None:
+                continue
+
+            if label not in langstore:
+                langstore[label] = u''
+                logger.info('Added %r to translation store for lang %s',
+                            label, lang)
+                count = +1
+
+        return "Added %s labels" % count
+
+
+class MigrateTranslationStorage(BrowserView):
+
+    def __call__(self):
+        site = portal.get()
+        storage = ITranslationsStorage(site)
+        count = 0
+
+        for langstore in storage.values():
+            for original, translated in langstore.items():
+                count = +1
+
+                if hasattr(translated, 'text'):
+                    translated = translated.text
+                translated = Translation(translated, 'original')
+
+                if not translated.text.startswith('?'):
+                    translated.approved = True
+
+                langstore[original] = translated
+
+        return "Migrated {} strings".format(count)

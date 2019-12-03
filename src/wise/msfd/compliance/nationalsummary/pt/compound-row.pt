@@ -1,0 +1,14 @@
+<tal:rep tal:repeat="row options/rows"
+  tal:define="field nocall:options/field">
+  <tr>
+    <th class="first-header summary">
+      <span tal:content="field/title">First header</span>
+    </th>
+
+    <tal:rep tal:repeat="value row">
+      <td tal:content="structure value" class="summary"></td>
+    </tal:rep>
+
+  </tr>
+</tal:rep>
+

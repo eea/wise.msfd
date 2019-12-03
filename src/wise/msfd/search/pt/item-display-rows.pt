@@ -1,0 +1,32 @@
+<tal:def tal:define="items options/item | view/item;
+  blacklist options/blacklist | view/blacklist | python: [];
+  use_blacklist view/use_blacklist | python: True;
+  ">
+  <tal:cond tal:condition="items">
+    <div tal:define="fields python:items[0].keys();
+            fields python: [x for x in fields if x not in blacklist]">
+      <div class="double-scroll">
+        <table class="listing" tal:condition="items">
+          <thead>
+            <tr>
+              <th tal:repeat="l fields"
+                  tal:content="python:view.name_as_title(l)">Label</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tal:rep repeat="item items">
+              <tr>
+                <tal:rep tal:repeat="field fields">
+                  <td tal:define="value python: item.get(field, None)"
+                      tal:content="structure python: view.print_value(value, field)">Value</td>
+                </tal:rep>
+              </tr>
+            </tal:rep>
+
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </tal:cond>
+
+</tal:def>

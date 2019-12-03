@@ -45,6 +45,12 @@ MAPPER_CLASSES = {
     'PhysicalDamage': sql.MSFD8bPhysicalDamage,
     'PhysicalLoss': sql.MSFD8bPhysicalLos,
     'PollutantEvents': sql.MSFD8bPollutantEvent,
+
+    # TODO why does DK have different node name in report xml
+    # ../dk/bal/d8/art8/@@view-report-data-2012
+    # http://cdr.eionet.europa.eu/dk/eu/msfd8910/baldk/envux926a/BALDK_MSFD8bPressures_20130430.xml
+    # PollutionEvents instead of PollutantEvents
+    'PollutionEvents': sql.MSFD8bPollutantEvent,
 }
 
 ASSESSMENT_MAPPER_CLASSES = {
@@ -68,12 +74,25 @@ ASSESSMENT_MAPPER_CLASSES = {
     'PhysicalDamage': sql.MSFD8bPhysicalDamageAssesment,
     'PhysicalLoss': sql.MSFD8bPhysicalLossAssesment,
     'PollutantEvents': sql.MSFD8bPollutantEventsAssesment,
+
+    # DK special case see MAPPER_CLASSES
+    'PollutionEvents': sql.MSFD8bPollutantEventsAssesment,
 }
 
 # map from XML Analysis/<X> node name to DB column topic string
 ASSESSMENT_TOPIC_MAP = {
     "ImpactspressureWater": "ImpactPressureWaterColumn",
     "ImpactspressureSeabed": "ImpactPressureSeabedHabitats",
+
+    # DK special case
+    "LevelPressureContamination": "LevelPressureContaminant",
+    "ImpactspressureFunctionalGroup": "ImpactPressureFunctionalGroup",
+
+    # SE special case, ../se/ans/d10/art8/@@view-report-data-2012
+    # http://cdr.eionet.europa.eu/se/eu/msfd8910/ansse/envuwxfng/ANSSE_MSFD8bPressures_20130430.xml
+    "ImpactsPressureWater": "ImpactPressureWaterColumn",
+    "ImpactsPressureSeabed": "ImpactPressureSeabedHabitats",
+    "ImpactsPressureFunctionalGroup": "ImpactPressureFunctionalGroup",
 }
 
 
@@ -441,6 +460,9 @@ def get_db_record(report_type, marine_unit_id, topic):
         mc.Topic == topic,
         raw=True
     )
+
+    # if not count:
+    #     import pdb; pdb.set_trace()
 
     assert count == 1, "Matching record not found"
 

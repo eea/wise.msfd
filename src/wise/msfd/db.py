@@ -1,7 +1,7 @@
 import os
 import threading
 
-from sqlalchemy import create_engine, distinct, func
+from sqlalchemy import create_engine, distinct, func, inspect
 from sqlalchemy.orm import scoped_session, sessionmaker
 from sqlalchemy.orm.relationships import RelationshipProperty
 from zope.sqlalchemy import register
@@ -186,13 +186,11 @@ def get_marine_unit_ids(**data):
     if 'marine_unit_ids' in data:
         return len(data['marine_unit_ids']), data['marine_unit_ids']
 
-    # if 'region_subregions' in data:
-    #     conditions.append(table.c.RegionSubRegions.in_(
-    #         data['region_subregions']))
-    #
-    # if 'region_subregions' in data:
-    #     conditions.append(table.c.RegionSubRegions.in_(
-    #         data['region_subregions']))
+    # This condition was commented, but it should be active
+    # we need to filter by regions
+    if 'region_subregions' in data:
+        conditions.append(table.c.RegionSubRegions.in_(
+            data['region_subregions']))
 
     query = sess.query(col).filter(
         *conditions
@@ -215,11 +213,12 @@ def get_marine_unit_ids(**data):
 
 
 # @cache(db_result_key)
-def get_collapsed_item(mapper_class, order_field, collapses, *conditions,
-                       **kwargs):
+def get_collapsed_item(mapper_class, klass_join, order_field, collapses,
+                       *conditions, **kwargs):
     """ Group items
     """
     page = kwargs.get('page', 0)
+    mc_join_cols = kwargs.get('mc_join_cols', [])
     sess = session()
 
     order_field = getattr(mapper_class, order_field)
@@ -248,8 +247,11 @@ def get_collapsed_item(mapper_class, order_field, collapses, *conditions,
 
         cols.append(name)
 
+    mapped_cols_join = [getattr(klass_join, n) for n in mc_join_cols]
     mapped_cols = [getattr(mapper_class, n) for n in cols]
-    q = sess.query(*mapped_cols).filter(*conditions).distinct()
+    all_cols = mapped_cols + mapped_cols_join
+
+    q = sess.query(*all_cols).join(klass_join).filter(*conditions).distinct()
     all_items = q.all()
     total = len(all_items)
     item_values = all_items[page]
@@ -258,7 +260,8 @@ def get_collapsed_item(mapper_class, order_field, collapses, *conditions,
     # total = q.count()
 
     collapse_conditions = [mc == v for mc, v in zip(mapped_cols, item_values)]
-    item = mapper_class(**{c: v for c, v in zip(cols, item_values)})
+    # item = mapper_class(**{c: v for c, v in zip(cols, item_values)})
+    item = item_values
 
     extra_data = {}
 
@@ -311,6 +314,34 @@ def get_item_by_conditions_joined(
 
     total = q.count()
     item = q.offset(page).limit(1).first()
+
+    return [total, item]
+
+
+def get_item_by_conditions_art_6(
+        columns,
+        klass_join,
+        order_field,
+        *conditions,
+        **kwargs):
+    # Paged retrieval of items based on conditions with joining two tables
+    page = kwargs.get('page', 0)
+    r_codes = kwargs.get('r_codes', [])
+    sess = session()
+    q = sess.query(*columns).join(klass_join).filter(
+        *conditions
+    ).order_by(order_field)
+    q = [x for x in q]
+
+    filtered_coops = []
+
+    for row in q:
+        if any(region in row.RegionsSubRegions for region in r_codes):
+            filtered_coops.append(row)
+
+    # item = q.offset(page).limit(1).first()
+    item = filtered_coops[page]
+    total = len(filtered_coops)
 
     return [total, item]
 

@@ -11,8 +11,23 @@
     />
 
   <utility
+    component=".vocabulary.get_member_states_vb_factory_art4"
+    name="wise_search_member_states_art4"
+    />
+
+  <utility
+    component=".vocabulary.get_member_states_vb_factory_art6"
+    name="wise_search_member_states_art6"
+    />
+
+  <utility
     component=".vocabulary.get_region_subregions_vb_factory"
     name="wise_search_region_subregions"
+    />
+
+  <utility
+    component=".vocabulary.get_region_subregions_vb_factory_art6"
+    name="wise_search_region_subregions_art6"
     />
 
   <utility
@@ -85,12 +100,27 @@
     name="wise_search_monitoring_programme_vb_factory"
     />
 
+  <utility
+    component=".vocabulary.a2012_ges_components_art9"
+    name="wise_search_a2012_ges_components_art9"
+    />
+
+  <utility
+    component=".vocabulary.a2012_ges_components_art10"
+    name="wise_search_a2012_ges_components_art10"
+    />
+
   <!--
     Articles 8, 9, 10 reporting year 2018
   -->
   <utility
     component=".vocabulary.a2018_country"
     name="wise_search_a2018_country"
+    />
+
+  <utility
+    component=".vocabulary.a2018_country_art9"
+    name="wise_search_a2018_country_art9"
     />
 
   <utility
@@ -138,9 +168,9 @@
     name="wise_search_a2018_mru_ind"
     />
 
-  <!-- <utility -->
-  <!--   component=".vocabulary.wise_search_compliance" -->
-  <!--   name="wise_search_compliance_factory" -->
-  <!--   /> -->
+  <utility
+    component=".vocabulary.a18_ges_component"
+    name="wise_search_a18_ges_component"
+    />
 
 </configure>

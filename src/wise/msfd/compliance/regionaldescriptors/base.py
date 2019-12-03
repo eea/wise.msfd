@@ -4,15 +4,18 @@ from itertools import chain
 from plone.api.content import get_state
 from plone.api.portal import get_tool
 from wise.msfd.compliance.base import BaseComplianceView
-from wise.msfd.compliance.vocabulary import REGIONS
-from wise.msfd.gescomponents import get_label, FEATURES_DB_2018
-from wise.msfd.utils import ItemLabel
+from wise.msfd.compliance.vocabulary import REGIONAL_DESCRIPTORS_REGIONS
+from wise.msfd.gescomponents import FEATURES_DB_2018, THEMES_2018_ORDER
+from wise.msfd.labels import get_label
+from wise.msfd.translation import get_detected_lang
+from wise.msfd.utils import fixedorder_sortkey, ItemLabel
 
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 
 from .. import interfaces
 from .data import REPORT_DEFS
-from .utils import compoundrow, newline_separated_itemlist
+from .utils import (compoundrow, get_nat_desc_country_url,
+                    newline_separated_itemlist)
 
 COUNTRY = namedtuple("Country", ["id", "title", "definition", "is_primary"])
 
@@ -73,7 +76,8 @@ class BaseRegComplianceView(BaseComplianceView):
 
     @property
     def region_name(self):
-        return REGIONS[self.country_region_code]
+        # return REGIONS[self.country_region_code]
+        return self._countryregion_folder.title
 
     @property
     def available_countries(self):
@@ -104,22 +108,39 @@ class BaseRegComplianceView(BaseComplianceView):
         is_translatable = fieldname in self.TRANSLATABLES
 
         v = self.translate_view()
+        
+        if not is_translatable:
+            return v.cell_tpl(value=value)
 
-        return v.translate(source_lang=source_lang,
-                           value=value,
-                           is_translatable=is_translatable)
+        if not value:
+            return v.cell_tpl(value=value)
+
+        text = value[0]
+        translation = value[1] or ''
+
+        if get_detected_lang(text) == 'en' or not translation:
+            return v.cell_tpl(value=text)
+
+        return v.translate_tpl(text=text,
+                               translation=translation,
+                               can_translate=False,
+                               source_lang=source_lang)
+
+        # return v.translate(source_lang=source_lang,
+        #                    value=value,
+        #                    is_translatable=is_translatable)
 
 
 class BaseRegDescRow(BaseRegComplianceView):
     def __init__(self, context, request, db_data, descriptor_obj,
-                 region, countries, field):
+                 regions, countries, field):
         super(BaseRegDescRow, self).__init__(context, request)
         # self.context = context
         # self.request = request
         self.db_data = [x._Proxy2018__o for x in db_data]
         self.db_data_proxy = db_data
         # self.descriptor_obj = descriptor_obj
-        self.region = region
+        self.region = regions
         self.countries = countries
         self.field = field
 
@@ -143,8 +164,28 @@ class BaseRegDescRow(BaseRegComplianceView):
 
     @compoundrow
     def get_countries_row(self):
+        url = self.request['URL0']
+
+        reg_main = self._countryregion_folder.id.upper()
+        subregions = [r.subregions for r in REGIONAL_DESCRIPTORS_REGIONS
+                      if reg_main in r.code]
+
         rows = []
-        country_names = [x[1] for x in self.context.available_countries]
+        country_names = []
+        for country in self.context.available_countries:
+            value = []
+            c_code = country[0]
+            c_name = country[1]
+            regions = [r.code for r in REGIONAL_DESCRIPTORS_REGIONS
+                       if len(r.subregions) == 1 and c_code in r.countries
+                       and r.code in subregions[0]]
+            for r in regions:
+                value.append(get_nat_desc_country_url(url, reg_main,
+                                                      c_code, r))
+
+            final = '{} ({})'.format(c_name, ', '.join(value))
+            country_names.append(final)
+
         rows.append(('', country_names))
 
         return rows
@@ -180,13 +221,18 @@ class BaseRegDescRow(BaseRegComplianceView):
 
         for feature in all_features:
             if feature not in themes_fromdb:
-                all_themes['No theme/Unknown'].append(feature)
+                all_themes['No theme'].append(feature)
                 continue
 
             theme = themes_fromdb[feature].theme
             all_themes[theme].append(feature)
 
-        for theme, feats in all_themes.items():
+        all_themes = sorted(
+            all_themes.items(),
+            key=lambda t: fixedorder_sortkey(t[0], THEMES_2018_ORDER)
+        )
+
+        for theme, feats in all_themes:
             values = []
 
             for country_code, country_name in self.countries:
@@ -205,7 +251,8 @@ class BaseRegDescRow(BaseRegComplianceView):
                     if not cnt:
                         continue
 
-                    val = u"{} ({})".format(feature, cnt)
+                    label = self.get_label_for_value(feature)
+                    val = u"{} ({})".format(label, cnt)
                     value.append(val)
 
                 values.append(newline_separated_itemlist(value))

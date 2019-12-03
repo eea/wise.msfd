@@ -21,8 +21,8 @@
                 </thead>
                 <tbody>
                   <tr tal:repeat="row section_data" >
-                    <td tal:repeat="v row/values"
-                        tal:content="structure python: view.print_value(v)">Value</td>
+                    <td tal:repeat="item row/items"
+                        tal:content="structure python: view.print_value(item[1], item[0])">Value</td>
                   </tr>
                 </tbody>
               </table>

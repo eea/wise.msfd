@@ -7,11 +7,27 @@
 
   <include package="Products.CMFCore" file="permissions.zcml" />
 
+  <!-- Allows editing an assessment data. Switchable by workflow,
+  changes according to the status of the assessment -->
   <permission
     id="wise.EditAssessment"
     title="wise.msfd: Edit Assessment"
     description="Edit a Compliance Assessment"
     />
+
+  <permission
+    id="wise.ViewAssessmentEditPage"
+    title="wise.msfd: View Assessment Edit Page"
+    description="Allows access to the assessment edit page, but not save"
+    />
+
+  <permission
+    id="wise.ViewAssessmentData"
+    title="wise.msfd: View Assessment Data"
+    description="View the assessement data (summary, conclusion)"
+    />
+
+  <!-- "zope2.View" permission is used as "view report" permission -->
 
   <permission
     id="wise.EditTranslations"
@@ -24,5 +40,17 @@
     title="wise.msfd: Manage Compliance"
     description="Manage compliance admin page"
   />
+
+  <permission
+    id="wise.ViewReports"
+    title="wise.msfd: View Reports"
+    description="View MSFD Search Reports"
+    />
+
+  <permission
+    id="wise.DeleteComment"
+    title="wise.msfd: Delete Comment"
+    description="Delete assessment comment"
+    />
 
 </configure>

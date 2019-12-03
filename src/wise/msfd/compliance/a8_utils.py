@@ -85,7 +85,7 @@ TOPIC_ASSESSMENT = {
     'LevelPressureOConcentration': 'LevelPressureOLoad',
 }
 
-# used in national descriptors
+# TODO not used
 DESCR_TOPIC_UTILS = {
     # if the Topic is not assessed, therefore the indicator is missing, get
     # the default indicator for that topic

@@ -8,8 +8,8 @@
 
     <h3 class="report-title" tal:content="structure options/title">201X Member State Report</h3>
 
-    <div id="report-data-navigation">
-      <div class="back-to-art">
+    <div id="report-data-navigation" tal:condition="view/can_view_assessment_data">
+      <div class="back-to-art" >
         <a href="./">
           <i class='fa fa-level-up'></i>
           Back to Assessment overview
@@ -25,14 +25,15 @@
           </div>
 
           <div class="nav-body">
-          
+
             <div class="art-title">
               <a href="" tal:attributes="href view/_country_folder/absolute_url"
                 tal:content="view/country_name"
                 target="_blank">EU</a>
             </div>
 
-            <div class="nav-articles">
+            <div class="nav-articles"
+                tal:condition="view/is_primary_article">
               <div tal:repeat="art view/_descriptor_folder/contentValues" class="art">
 
                 <div class="art-middle">
@@ -50,12 +51,8 @@
                   <a tal:attributes="href string:${art/absolute_url}/@@view-report-data-2012"
                     target="_blank">
                     2012</a>
-                  <a tal:attributes="href string:${art/absolute_url}/@@view-report-data-2012-like-2018"
-                    target="_blank">
-                    2012 (II)</a>
-                  </div>
                 </div>
-
+              </div>
             </div>
           </div>
         </div>
@@ -68,11 +65,11 @@
         <td>Member State</td>
         <td tal:content="python:view.country_name"/>
       </tr>
-      <tr>
+      <tr tal:condition="view/is_primary_article">
         <td>Region(s) and subregion(s)</td>
         <td tal:content="view/country_region_name"/>
       </tr>
-      <tr>
+      <tr tal:condition="view/is_primary_article">
         <td>Descriptor</td>
         <td tal:content="python:view.descriptor_obj.title"/>
       </tr>
@@ -82,11 +79,12 @@
       </tr>
       <tr tal:condition="options/source_file">
         <td>Source file of Member State</td>
-        <td >
+        <td>
           <a tal:attributes="href python: options['source_file'][1]"
-            tal:content="python: options['source_file'][0]">Filename</a>
+            tal:content="python: options['source_file'][0]"
+            target="_blank">Filename</a>
           <div tal:condition="options/factsheet">
-            <a tal:attributes="href options/factsheet">HTML Factsheet</a>
+            <a tal:attributes="href options/factsheet" target="_blank">HTML Factsheet</a>
           </div>
         </td>
       </tr>
@@ -105,39 +103,40 @@
     </table>
 
     <div id="download-report-data-form">
-      <div tal:condition="python:False" class="crt-def">
-        <!-- Removed -->
-        <button type="button"
-          class="btn btn-primary btn-small btn-success"
-          data-toggle="modal" data-target="#reportdata-help">
-          Harvesting details
-        </button>
-      </div>
+      <!-- <div tal:condition="python:False" class="crt&#45;def"> -->
+      <!--   <!&#45;&#45; Removed &#45;&#45;> -->
+      <!--   <button type="button" -->
+      <!--     class="btn btn&#45;primary btn&#45;small btn&#45;success" -->
+      <!--     data&#45;toggle="modal" data&#45;target="#reportdata&#45;help"> -->
+      <!--     Harvesting details -->
+      <!--   </button> -->
+      <!-- </div> -->
 
       <form method="POST" action="" tal:attributes="action request/getURL">
         <button name="download" class="btn btn-primary">View report data in Excel</button>
-        <button name="translate" class="btn btn-secondary">Auto-translate</button>
+        <button name="translate" class="btn btn-secondary"
+          tal:condition="view/can_view_assessment_data">Auto-translate</button>
       </form>
 
-      <div tal:condition="python:False" class="modal fade" id="reportdata-help" tabindex="-1" role="dialog">
-        <!-- Removed -->
-        <div class="modal-dialog modal-lg" role="document">
-          <div class="modal-content">
-            <div class="modal-header">
-              <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-              <h4 class="modal-title">Report data harvesting</h4>
-            </div>
-
-            <div class="modal-body">
-              <pre tal:content="options/help_text | nothing"></pre>
-            </div>
-
-            <div class="modal-footer">
-              <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-            </div>
-          </div>
-        </div>
-      </div>
+      <!-- <div tal:condition="nothing" class="modal fade" id="reportdata&#45;help" tabindex="&#45;1" role="dialog"> -->
+      <!--   <!&#45;&#45; Removed &#45;&#45;> -->
+      <!--   <div class="modal&#45;dialog modal&#45;lg" role="document"> -->
+      <!--     <div class="modal&#45;content"> -->
+      <!--       <div class="modal&#45;header"> -->
+      <!--         <button type="button" class="close" data&#45;dismiss="modal" aria&#45;label="Close"><span aria&#45;hidden="true">&#38;times;</span></button> -->
+      <!--         <h4 class="modal&#45;title">Report data harvesting</h4> -->
+      <!--       </div> -->
+      <!--  -->
+      <!--       <div class="modal&#45;body"> -->
+      <!--         <pre tal:content="options/help_text | nothing"></pre> -->
+      <!--       </div> -->
+      <!--  -->
+      <!--       <div class="modal&#45;footer"> -->
+      <!--         <button type="button" class="btn btn&#45;default" data&#45;dismiss="modal">Close</button> -->
+      <!--       </div> -->
+      <!--     </div> -->
+      <!--   </div> -->
+      <!-- </div> -->
 
     </div>
 

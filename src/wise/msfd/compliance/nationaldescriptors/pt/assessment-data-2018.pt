@@ -10,10 +10,9 @@
           <th class="fixed-left as-question as-header">Question / assessed elements</th>
           <th class="fixed-left as-header" tal:condition="not: assessment/gescomponents"></th>
           <!--<th tal:repeat="g assessment/gescomponents" class="as-ges-component as-header"></th>-->
-          <th class="fixed-center as-ges-component as-header"></th>
+          <th colspan="2" class="fixed-center as-ges-component as-header"></th>
           <th class="fixed-right as-header">Conclusion</th>
-          <th class="fixed-right as-th-score as-header">Score</th>
-          <!-- TODO: add "conclusion score" and "Weighting" as titles -->
+          <!--<th class="fixed-right as-th-score as-header">Score</th>-->
         </tr>
 
         <tal:rep tal:repeat="row assessment/answers">
@@ -24,11 +23,10 @@
                 <div class="q-title" tal:content="python: row.question.split(':', 1)[1]">Question text</div>
                 </div>
             </th>
-            <td class="fixed-center">
+            <td colspan="2" class="fixed-center">
               <tal:rep tal:repeat="value row/values" >
                 <div
-                  tal:attributes="class python: 'gescomp as-value as-value-{}'.format(value[1]);
-                  colspanX python: len(assessment.gescomponents) - len(row.values) + 1;">
+                  tal:attributes="class python: 'gescomp as-value as-value-{}'.format(value[1]);">
 
                   <label for=""
                     data-trigger="hover"
@@ -46,11 +44,23 @@
                   tal:content="row/summary">Summary</div>
             </td>
 
-            <td tal:attributes="class python: 'fixed-right as-value as-value-{}'.format(row.conclusion_color)">
-              <strong tal:content="row/conclusion">Very poor</strong>
+            <td tal:attributes="class python: 'fixed-right as-value as-value-{}'.format(row.conclusion_color)"
+              colspan="1">
+              <span tal:condition="row/score"
+                  class="score help-popover fa fa-info-circle fa-s"
+                  data-trigger="hover"
+                  data-html="true"
+                  data-placement="left"
+                  tal:attributes="title python: 'Score calculation algorithm';
+                    data-content python: getattr(row.score, 'score_tooltip', '');">
+              </span>
+              <strong tal:condition="row/score"
+                  tal:content="python: '{} ({}%)'.format(row.conclusion, getattr(row.score, 'percentage'))">Very poor</strong>
             </td>
 
-            <td class="fixed-right">
+            <td class="fixed-right"
+              tal:condition="python: False">
+              <!-- Not showed -->
               <span tal:condition="row/score"
                   class="score help-popover fa fa-info-circle fa-s"
                   data-trigger="hover"
@@ -62,11 +72,6 @@
               <span tal:content="python: getattr(row.score, 'weighted_score', 0)">0</span>
             </td>
 
-          </tr>
-          <tr tal:condition="python:False"
-              class="assessment-summary">
-            <!-- This tr is removed-->
-            <td colspan="50" tal:content="row/summary">Summary</td>
           </tr>
         </tal:rep>
 
@@ -83,16 +88,34 @@
           </td>
 
           <td class="overall-headers fixed-right">
-            <div>Overall score (%)</div>
-            <div>Overall conclusion: 2018</div>
-            <div>Overall conclusion: 2012</div>
-            <div>Change since 2012</div>
+            <div>Adequacy score (%)</div>
+            <div>Consistency score (%)</div>
+            <div>Coherence score (%)</div>
+            <div>Overall conclusion 2018</div>
+            <div>Overall adequacy conclusion 2012</div>
+            <div>Adequacy change since 2012</div>
           </td>
-          <td class="overall-values fixed-right">
+          <td class="overall-values fixed-right"
+            tal:define="phase_score python: assessment.phase_overall_scores">
+            <div tal:attributes="class python: 'as-value as-value-{}'.format(phase_score.adequacy['color'])"
+                 tal:define="score python: phase_score.get_score_for_phase('adequacy');
+                    conclusion python: phase_score.adequacy['conclusion'][1];
+                    score_value python: phase_score.adequacy['conclusion'][0]"
+              tal:content="python: '{} ({}, {})'.format(score, conclusion, score_value)">65.5</div>
+            <div tal:attributes="class python: 'as-value as-value-{}'.format(phase_score.consistency['color'])"
+                 tal:define="score python: phase_score.get_score_for_phase('consistency');
+                    conclusion python: phase_score.consistency['conclusion'][1];
+                    score_value python: phase_score.consistency['conclusion'][0]"
+              tal:content="python: '{} ({}, {})'.format(score, conclusion, score_value)">65.5</div>
+            <div tal:attributes="class python: 'as-value as-value-{}'.format(phase_score.coherence['color'])"
+                 tal:define="score python: phase_score.get_score_for_phase('coherence');
+                    conclusion python: phase_score.coherence['conclusion'][1];
+                    score_value python: phase_score.coherence['conclusion'][0]"
+              tal:content="python: '{} ({}, {})'.format(score, conclusion, score_value)">65.5</div>
             <div tal:attributes="class python: 'as-value as-value-{}'.format(assessment.overall_conclusion_color)"
-              tal:content="assessment/overall_score">65.5</div>
-            <div tal:attributes="class python: 'as-value as-value-{}'.format(assessment.overall_conclusion_color)"
-              tal:content="python:assessment.overall_conclusion[1]">Very poor (1)</div>
+              tal:content="python: '{} ({}, {})'.format(
+                assessment.overall_score, assessment.overall_conclusion[1], assessment.overall_conclusion[0]
+              )">Very poor (1)</div>
             <div tal:attributes="class python: 'as-value as-value-{}'.format(options['conclusion_2012_color'])"
               tal:content="conclusion_2012">Partially adequate (2)</div>
             <div tal:content="options/change_since_2012">-1</div>

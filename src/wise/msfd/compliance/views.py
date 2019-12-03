@@ -5,12 +5,13 @@ from collections import deque
 
 from eea.cache import cache
 from plone import api
-from plone.api.content import transition, get_state
+from plone.api.content import get_state, transition
+from plone.app.layout.viewlets.content import ContentHistoryView
 from plone.dexterity.utils import createContentInContainer as create
 from Products.Five.browser import BrowserView
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 
-from .base import BaseComplianceView
+from .base import BaseComplianceView, STATUS_COLORS
 
 logger = logging.getLogger('wise.msfd')
 
@@ -65,13 +66,64 @@ class CommentsList(BaseComplianceView):
     template = ViewPageTemplateFile('pt/comments-list.pt')
 
     @property
+    def content_history(self):
+        h = ContentHistoryView(self.context, self.request).fullHistory()
+
+        return h
+
+    def group_comments_by_phase(self, comments):
+        if not comments:
+            return [], (None, [])
+
+        history = self.content_history
+        history = [x for x in reversed(history)]
+
+        comms = []
+        for ind in range(len(history) - 1):
+            phase_comments = [
+                comm
+                for comm in comments
+                if (history[ind]['time'] <= comm.created()
+                    < history[ind + 1]['time'])
+            ]
+            if phase_comments:
+                state = history[ind]
+                comms.append((state, phase_comments))
+
+        last_phase_comms = [
+            comm
+            for comm in comments
+            if comm.created() >= history[-1]['time']
+        ]
+        if last_phase_comms:
+            state = history[-1]
+            comms.append((state, last_phase_comms))
+
+        # logger.info('comments: %s', comments)
+        # logger.info('grouped: %s', res)
+
+        if len(comms) > 1:
+            old_comms = comms[:-1]
+            latest_comms = comms[-1]
+
+            return old_comms, latest_comms
+
+        return [], comms[0]
+
+    def can_delete_comment(self, user):
+        if self.current_user == user:
+            return True
+
+        return False
+        return self.check_permission('wise.msfd: Delete Comment')
+
+    @property
     def current_user(self):
         user = api.user.get_current()
 
         return user.id
 
     def add_comment(self):
-
         form = self.request.form
         question_id = form.get('q').lower()
         thread_id = form.get('thread_id')
@@ -79,7 +131,7 @@ class CommentsList(BaseComplianceView):
 
         text = form.get('text')
 
-        folder = self.context[thread_id]
+        folder = self.context
 
         if question_id in folder.contentIds():
             q_folder = folder[question_id]
@@ -105,42 +157,103 @@ class CommentsList(BaseComplianceView):
 
         return self.template()
 
-    def del_comment(self):
+    def _del_comments_from_q_folder(self, form, q_folder, comments):
         to_local_time = self.context.Plone.toLocalizedTime
-
-        form = self.request.form
-
-        question_id = form.get('q').lower()
-        thread_id = form.get('thread_id')
         text = form.get('text')
         comm_time = form.get('comm_time')
         comm_name = form.get('comm_name')
 
-        folder = self.context[thread_id]
-        q_folder = folder[question_id]
-        comments = q_folder.contentValues()
-
         for comment in comments:
             if comment.text != text or comment.Creator() != comm_name:
                 continue
+
             if to_local_time(comment.created(), long_format=True) != comm_time:
                 continue
 
             del q_folder[comment.id]
 
+    def del_comment(self):
+        form = self.request.form
+
+        question_id = form.get('q').lower()
+
+        # old comments
+        for thread_id in ('ec', 'tl'):
+            folder = self.context.get(thread_id, {})
+            q_folder = folder.get(question_id, {})
+            if q_folder:
+                old_comments = q_folder.contentValues()
+                self._del_comments_from_q_folder(form, q_folder, old_comments)
+
+        # new comments
+        folder = self.context
+        q_folder = folder.get(question_id, {})
+        if q_folder:
+            new_comments = q_folder.contentValues()
+            self._del_comments_from_q_folder(form, q_folder, new_comments)
+
         return self.template()
 
     def __call__(self):
+        # question_id = self.request.form.get('q', 'missing-id').lower()
+        # if question_id == 'a0809cy1':
+        #     import pdb; pdb.set_trace()
+
         return self.template()
 
+    def sort_comments(self, comments):
+        """ Sort the comments by creation date
+        For some reason in 'comments' method sorting is not always working
+        so we call this again in the template
+        """
+
+        return sorted(comments, key=lambda c: c.created())
+
     def comments(self):
-        thread_id = self.request.form.get('thread_id')
-        folder = self.context[thread_id]
+        """ Return all comments
+
+        Comments are no longer stored in ec/tl folders, instead on national
+        descriptor assessment folder (../fi/bal/d5/art9)
+        """
+
+        folder = self.context
         question_id = self.request.form.get('q', 'missing-id').lower()
+        old_comments = self.old_comments(question_id)
 
         if question_id not in folder.contentIds():
-            return []
+            return old_comments
 
         q_folder = folder[question_id]
+        comments = q_folder.contentValues()
+        all_comments = old_comments + comments
 
-        return q_folder.contentValues()
+        return self.sort_comments(all_comments)
+
+    def old_comments(self, question_id):
+        """ Return comments from the old comment folders: ec and tl
+        """
+
+        thread_ids = ['ec', 'tl']
+        all_comments = []
+
+        for thread_id in thread_ids:
+            folder = self.context.get(thread_id, None)
+
+            if not folder:
+                continue
+
+            if question_id not in folder.contentIds():
+                continue
+
+            q_folder = folder[question_id]
+
+            all_comments.extend(q_folder.contentValues())
+
+        return all_comments
+
+
+class TabsView(BaseComplianceView):
+    """ A view to render the compliance navigation tabs
+    """
+
+    name = '/help'

@@ -2,7 +2,7 @@ from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 from z3c.form.field import Fields
 
 from .. import db, sql
-from ..base import EmbeddedForm, MarineUnitIDSelectForm
+from ..base import EmbeddedForm, MarineUnitIDSelectForm2012
 from .base import ItemDisplay, MultiItemDisplayForm
 from .interfaces import IA81Form
 from .utils import (data_to_xls, register_form, register_form_section,
@@ -19,6 +19,13 @@ class A81bForm(EmbeddedForm):
     record_title = title = 'Article 8.1b (Analysis of pressure impacts)'
     fields = Fields(IA81Form)
 
+    reported_date_info = {
+        'mapper_class': sql.MSFD8bImport,
+        'col_import_id': 'MSFD8b_Import_ID',
+        'col_import_time': 'MSFD8b_Import_Time',
+        'col_filename': 'MSFD8b_Import_FileName'
+    }
+
     def get_subform(self):
         klass = self.data.get('theme')
 
@@ -32,19 +39,24 @@ class A81bExtractionFishItemDisplay(MultiItemDisplayForm):
     mapper_class = sql.MSFD8bExtractionFishShellfish
     order_field = 'MSFD8b_ExtractionFishShellfish_ID'
 
+    def get_import_id(self):
+        import_id = self.item.MSFD8b_ExtractionFishShellfish_Import
+
+        return import_id
+
 
 @register_subform(A81bForm)
-class A81bExtractionFishSubForm(MarineUnitIDSelectForm):
+class A81bExtractionFishSubForm(MarineUnitIDSelectForm2012):
     """ Select the MarineUnitID for the Article 8.1b form
     """
-    title = 'Extraction of fish and shellfish'
+    title = 'D6/D3 - Extraction of fish and shellfish'
     mapper_class = sql.MSFD8bExtractionFishShellfish
 
     def get_subform(self):
         return A81bExtractionFishItemDisplay(self, self.request)
 
     def download_results(self):
-        muids = self.get_marine_unit_ids()
+        muids = [self.get_marine_unit_id()]
         count, data = db.get_all_records(
             self.mapper_class,
             self.mapper_class.MarineUnitID.in_(muids)
@@ -104,9 +116,12 @@ class A81bExtractionFishSubForm(MarineUnitIDSelectForm):
 
 @register_form_section(A81bExtractionFishItemDisplay)
 class A81bExtractionFishAssessment(ItemDisplay):
-    title = 'Asessment of extraction of fish and shellfish'
+    title = 'Assessment of extraction of fish and shellfish'
 
     extra_data_template = ViewPageTemplateFile('pt/extra-data-item.pt')
+
+    blacklist = ['MSFD8b_ExtractionFishShellfish',
+                 'MSFD8b_ExtractionFishShellfish_Assesment']
 
     def get_db_results(self):
         if self.context.item:
@@ -139,6 +154,8 @@ class A81bExtractionFishAssessment(ItemDisplay):
 class A81bExtractionFishActivities(ItemDisplay):
     title = 'Activities producing extraction of fish and shellfish'
 
+    blacklist = ['MSFD8b_ExtractionFishShellfish_ActivityDescription']
+
     def get_db_results(self):
         if self.context.item:
             return db.get_related_record_join(
@@ -152,6 +169,8 @@ class A81bExtractionFishActivities(ItemDisplay):
 @register_form_section(A81bExtractionFishItemDisplay)
 class A81bExtractionFishImpacts(ItemDisplay):
     title = 'Impacts produced by the extraction of fish and shellfish'
+
+    blacklist = ['MSFD8b_ExtractionFishShellfish']
 
     def get_db_results(self):
         if self.context.item:
@@ -170,19 +189,24 @@ class A81bExtractionSeaweedItemDisplay(MultiItemDisplayForm):
     mapper_class = sql.MSFD8bExtractionSeaweedMaerlOther
     order_field = 'MSFD8b_ExtractionSeaweedMaerlOther_ID'
 
+    def get_import_id(self):
+        import_id = self.item.MSFD8b_ExtractionSeaweedMaerlOther_Import
+
+        return import_id
+
 
 @register_subform(A81bForm)
-class A81bExtractionSeaweedSubForm(MarineUnitIDSelectForm):
+class A81bExtractionSeaweedSubForm(MarineUnitIDSelectForm2012):
     """ Select the MarineUnitID for the Article 8.1b form
     """
-    title = 'Extraction of seaweed, maerl and other'
+    title = 'D6/D3 - Extraction of seaweed, maerl and other'
     mapper_class = sql.MSFD8bExtractionSeaweedMaerlOther
 
     def get_subform(self):
         return A81bExtractionSeaweedItemDisplay(self, self.request)
 
     def download_results(self):
-        muids = self.get_marine_unit_ids()
+        muids = [self.get_marine_unit_id()]
         count, data = db.get_all_records(
             self.mapper_class,
             self.mapper_class.MarineUnitID.in_(muids)
@@ -243,9 +267,12 @@ class A81bExtractionSeaweedSubForm(MarineUnitIDSelectForm):
 
 @register_form_section(A81bExtractionSeaweedItemDisplay)
 class A81bExtractionSeaweedAssessment(ItemDisplay):
-    title = 'Asessment of extraction of seaweed, maerl and other'
+    title = 'Assessment of extraction of seaweed, maerl and other'
 
     extra_data_template = ViewPageTemplateFile('pt/extra-data-item.pt')
+
+    blacklist = ['MSFD8b_ExtractionSeaweedMaerlOther',
+                 'MSFD8b_ExtractionSeaweedMaerlOther_Assesment']
 
     def get_db_results(self):
         if self.context.item:
@@ -278,6 +305,8 @@ class A81bExtractionSeaweedAssessment(ItemDisplay):
 class A81bExtractionSeaweedActivities(ItemDisplay):
     title = 'Activities producing extraction of seaweed, maerl and other'
 
+    blacklist = ['MSFD8b_ExtractionSeaweedMaerlOther_ActivityDescription']
+
     def get_db_results(self):
         if self.context.item:
             return db.get_related_record_join(
@@ -291,6 +320,8 @@ class A81bExtractionSeaweedActivities(ItemDisplay):
 @register_form_section(A81bExtractionSeaweedItemDisplay)
 class A81bExtractionSeaweedImpacts(ItemDisplay):
     title = 'Impacts produced by the extraction of seaweed, maerl and other'
+
+    blacklist = ['MSFD8b_ExtractionSeaweedMaerlOther']
 
     def get_db_results(self):
         if self.context.item:
@@ -309,19 +340,24 @@ class A81bHazardousItemDisplay(MultiItemDisplayForm):
     mapper_class = sql.MSFD8bHazardousSubstance
     order_field = 'MSFD8b_HazardousSubstances_ID'
 
+    def get_import_id(self):
+        import_id = self.item.MSFD8b_HazardousSubstances_Import
+
+        return import_id
+
 
 @register_subform(A81bForm)
-class A81bHazardousSubForm(MarineUnitIDSelectForm):
+class A81bHazardousSubForm(MarineUnitIDSelectForm2012):
     """ Select the MarineUnitID for the Article 8.1b form
     """
-    title = 'Hazardous substances'
+    title = 'D8/D9 - Hazardous substances'
     mapper_class = sql.MSFD8bHazardousSubstance
 
     def get_subform(self):
         return A81bHazardousItemDisplay(self, self.request)
 
     def download_results(self):
-        muids = self.get_marine_unit_ids()
+        muids = [self.get_marine_unit_id()]
         count, data = db.get_all_records(
             self.mapper_class, self.mapper_class.MarineUnitID.in_(muids)
         )
@@ -380,9 +416,12 @@ class A81bHazardousSubForm(MarineUnitIDSelectForm):
 
 @register_form_section(A81bHazardousItemDisplay)
 class A81bHazardousAssessment(ItemDisplay):
-    title = 'Asessment of hazardous substances'
+    title = 'Assessment of hazardous substances'
 
     extra_data_template = ViewPageTemplateFile('pt/extra-data-item.pt')
+
+    blacklist = ['MSFD8b_HazardousSubstances',
+                 'MSFD8b_HazardousSubstances_Assesment']
 
     def get_db_results(self):
         if self.context.item:
@@ -415,6 +454,8 @@ class A81bHazardousAssessment(ItemDisplay):
 class A81bHazardousActivities(ItemDisplay):
     title = 'Activities producing hazardous substances'
 
+    blacklist = ['MSFD8b_HazardousSubstances_ActivityDescription']
+
     def get_db_results(self):
         if self.context.item:
             return db.get_related_record_join(
@@ -428,6 +469,8 @@ class A81bHazardousActivities(ItemDisplay):
 @register_form_section(A81bHazardousItemDisplay)
 class A81bHazardousImpacts(ItemDisplay):
     title = 'Impacts produced by the hazardous substances'
+
+    blacklist = ['MSFD8b_HazardousSubstances']
 
     def get_db_results(self):
         if self.context.item:
@@ -446,19 +489,24 @@ class A81bHydroItemDisplay(MultiItemDisplayForm):
     mapper_class = sql.MSFD8bHydrologicalProcess
     order_field = 'MSFD8b_HydrologicalProcesses_ID'
 
+    def get_import_id(self):
+        import_id = self.item.MSFD8b_HydrologicalProcesses_Import
+
+        return import_id
+
 
 @register_subform(A81bForm)
-class A81bHydroSubForm(MarineUnitIDSelectForm):
+class A81bHydroSubForm(MarineUnitIDSelectForm2012):
     """ Select the MarineUnitID for the Article 8.1b form
     """
-    title = 'Hydrological processes'
+    title = 'D7 - Hydrological processes'
     mapper_class = sql.MSFD8bHydrologicalProcess
 
     def get_subform(self):
         return A81bHydroItemDisplay(self, self.request)
 
     def download_results(self):
-        muids = self.get_marine_unit_ids()
+        muids = [self.get_marine_unit_id()]
         count, data = db.get_all_records(
             self.mapper_class, self.mapper_class.MarineUnitID.in_(muids)
         )
@@ -516,9 +564,12 @@ class A81bHydroSubForm(MarineUnitIDSelectForm):
 
 @register_form_section(A81bHydroItemDisplay)
 class A81bHydroAssessment(ItemDisplay):
-    title = 'Asessment of hydrological processes'
+    title = 'Assessment of hydrological processes'
 
     extra_data_template = ViewPageTemplateFile('pt/extra-data-item.pt')
+
+    blacklist = ['MSFD8b_HydrologicalProcesses',
+                 'MSFD8b_HydrologicalProcesses_Assesment']
 
     def get_db_results(self):
         if self.context.item:
@@ -551,6 +602,8 @@ class A81bHydroAssessment(ItemDisplay):
 class A81bHydroActivities(ItemDisplay):
     title = 'Activities producing hydrological processes'
 
+    blacklist = ['MSFD8b_HydrologicalProcesses_ActivityDescription']
+
     def get_db_results(self):
         if self.context.item:
             return db.get_related_record_join(
@@ -564,6 +617,8 @@ class A81bHydroActivities(ItemDisplay):
 @register_form_section(A81bHydroItemDisplay)
 class A81bHydroImpacts(ItemDisplay):
     title = 'Impacts produced by the hydrological processes'
+
+    blacklist = ['MSFD8b_HydrologicalProcesses']
 
     def get_db_results(self):
         if self.context.item:
@@ -582,19 +637,24 @@ class A81bMarineLitterItemDisplay(MultiItemDisplayForm):
     mapper_class = sql.MSFD8bLitter
     order_field = 'MSFD8b_Litter_ID'
 
+    def get_import_id(self):
+        import_id = self.item.MSFD8b_Litter_Import
+
+        return import_id
+
 
 @register_subform(A81bForm)
-class A81bMarineLitterSubForm(MarineUnitIDSelectForm):
+class A81bMarineLitterSubForm(MarineUnitIDSelectForm2012):
     """ Select the MarineUnitID for the Article 8.1b form
     """
-    title = 'Marine litter'
+    title = 'D10 - Marine litter'
     mapper_class = sql.MSFD8bLitter
 
     def get_subform(self):
         return A81bMarineLitterItemDisplay(self, self.request)
 
     def download_results(self):
-        muids = self.get_marine_unit_ids()
+        muids = [self.get_marine_unit_id()]
         count, data = db.get_all_records(
             self.mapper_class, self.mapper_class.MarineUnitID.in_(muids)
         )
@@ -651,9 +711,12 @@ class A81bMarineLitterSubForm(MarineUnitIDSelectForm):
 
 @register_form_section(A81bMarineLitterItemDisplay)
 class A81bMarineLitterAssessment(ItemDisplay):
-    title = 'Asessment of marine litter'
+    title = 'Assessment of marine litter'
 
     extra_data_template = ViewPageTemplateFile('pt/extra-data-item.pt')
+
+    use_blacklist = True
+    blacklist = ['MSFD8b_Litter', 'MSFD8b_Litter_Assesment']
 
     def get_db_results(self):
         if self.context.item:
@@ -685,6 +748,9 @@ class A81bMarineLitterAssessment(ItemDisplay):
 class A81bMarineLitterActivities(ItemDisplay):
     title = 'Activities producing marine litter'
 
+    blacklist = ['MSFD8b_Litter_ActivityDescription']
+    use_blacklist = True
+
     def get_db_results(self):
         if self.context.item:
             return db.get_related_record_join(
@@ -698,6 +764,8 @@ class A81bMarineLitterActivities(ItemDisplay):
 @register_form_section(A81bMarineLitterItemDisplay)
 class A81bMarineLitterImpacts(ItemDisplay):
     title = 'Impacts produced by the marine litter'
+
+    blacklist = ['MSFD8b_Litter']
 
     def get_db_results(self):
         if self.context.item:
@@ -716,19 +784,24 @@ class A81bMicrobialItemDisplay(MultiItemDisplayForm):
     mapper_class = sql.MSFD8bMicrobialPathogen
     order_field = 'MSFD8b_MicrobialPathogens_ID'
 
+    def get_import_id(self):
+        import_id = self.item.MSFD8b_MicrobialPathogens_Import
+
+        return import_id
+
 
 @register_subform(A81bForm)
-class A81bMicrobialSubForm(MarineUnitIDSelectForm):
+class A81bMicrobialSubForm(MarineUnitIDSelectForm2012):
     """ Select the MarineUnitID for the Article 8.1b form
     """
-    title = 'Microbial pathogens'
+    title = 'D8 - Microbial pathogens'
     mapper_class = sql.MSFD8bMicrobialPathogen
 
     def get_subform(self):
         return A81bMicrobialItemDisplay(self, self.request)
 
     def download_results(self):
-        muids = self.get_marine_unit_ids()
+        muids = [self.get_marine_unit_id()]
         count, data = db.get_all_records(
             self.mapper_class, self.mapper_class.MarineUnitID.in_(muids)
         )
@@ -787,9 +860,12 @@ class A81bMicrobialSubForm(MarineUnitIDSelectForm):
 
 @register_form_section(A81bMicrobialItemDisplay)
 class A81bMicrobialAssessment(ItemDisplay):
-    title = 'Asessment of microbial pathogens'
+    title = 'Assessment of microbial pathogens'
 
     extra_data_template = ViewPageTemplateFile('pt/extra-data-item.pt')
+
+    blacklist = ['MSFD8b_MicrobialPathogens',
+                 'MSFD8b_MicrobialPathogens_Assesment']
 
     def get_db_results(self):
         if self.context.item:
@@ -821,6 +897,8 @@ class A81bMicrobialAssessment(ItemDisplay):
 @register_form_section(A81bMicrobialItemDisplay)
 class A81bMicrobialActivities(ItemDisplay):
     title = 'Activities producing microbial pathogens'
+
+    blacklist = ['MSFD8b_MicrobialPathogens_ActivityDescription']
 
     def get_db_results(self):
         if self.context.item:
@@ -855,19 +933,24 @@ class A81bNonIndigenousItemDisplay(MultiItemDisplayForm):
     mapper_class = sql.MSFD8bNI
     order_field = 'MSFD8b_NIS_ID'
 
+    def get_import_id(self):
+        import_id = self.item.MSFD8b_NIS_Import
+
+        return import_id
+
 
 @register_subform(A81bForm)
-class A81bNonIndigenousSubForm(MarineUnitIDSelectForm):
+class A81bNonIndigenousSubForm(MarineUnitIDSelectForm2012):
     """ Select the MarineUnitID for the Article 8.1b form
     """
-    title = 'Non-indigenous species'
+    title = 'D2 - Non-indigenous species'
     mapper_class = sql.MSFD8bNI
 
     def get_subform(self):
         return A81bNonIndigenousItemDisplay(self, self.request)
 
     def download_results(self):
-        muids = self.get_marine_unit_ids()
+        muids = [self.get_marine_unit_id()]
         count, data = db.get_all_records(
             self.mapper_class, self.mapper_class.MarineUnitID.in_(muids)
         )
@@ -924,9 +1007,11 @@ class A81bNonIndigenousSubForm(MarineUnitIDSelectForm):
 
 @register_form_section(A81bNonIndigenousItemDisplay)
 class A81bNonIndigenousAssessment(ItemDisplay):
-    title = 'Asessment of non-indigenous species'
+    title = 'Assessment of non-indigenous species'
 
     extra_data_template = ViewPageTemplateFile('pt/extra-data-item.pt')
+
+    blacklist = ['MSFD8b_NIS', 'MSFD8b_NIS_Assesment']
 
     def get_db_results(self):
         if self.context.item:
@@ -958,6 +1043,8 @@ class A81bNonIndigenousAssessment(ItemDisplay):
 class A81bNonIndigenousActivities(ItemDisplay):
     title = 'Activities producing non-indigenous species'
 
+    blacklist = ['MSFD8b_NIS_ActivityDescription']
+
     def get_db_results(self):
         if self.context.item:
             return db.get_related_record_join(
@@ -971,6 +1058,8 @@ class A81bNonIndigenousActivities(ItemDisplay):
 @register_form_section(A81bNonIndigenousItemDisplay)
 class A81bNonIndigenousImpacts(ItemDisplay):
     title = 'Impacts produced by non-indigenous species'
+
+    blacklist = ['MSFD8b_NIS']
 
     def get_db_results(self):
         if self.context.item:
@@ -989,19 +1078,24 @@ class A81bNoiseItemDisplay(MultiItemDisplayForm):
     mapper_class = sql.MSFD8bNoise
     order_field = 'MSFD8b_Noise_ID'
 
+    def get_import_id(self):
+        import_id = self.item.MSFD8b_Noise_Import
+
+        return import_id
+
 
 @register_subform(A81bForm)
-class A81bNoiseSubForm(MarineUnitIDSelectForm):
+class A81bNoiseSubForm(MarineUnitIDSelectForm2012):
     """ Select the MarineUnitID for the Article 8.1b form
     """
-    title = 'Underwater noise'
+    title = 'D11 - Underwater noise'
     mapper_class = sql.MSFD8bNoise
 
     def get_subform(self):
         return A81bNoiseItemDisplay(self, self.request)
 
     def download_results(self):
-        muids = self.get_marine_unit_ids()
+        muids = [self.get_marine_unit_id()]
         count, data = db.get_all_records(
             self.mapper_class, self.mapper_class.MarineUnitID.in_(muids)
         )
@@ -1058,9 +1152,11 @@ class A81bNoiseSubForm(MarineUnitIDSelectForm):
 
 @register_form_section(A81bNoiseItemDisplay)
 class A81bNoiseAssessment(ItemDisplay):
-    title = 'Asessment of underwater noise'
+    title = 'Assessment of underwater noise'
 
     extra_data_template = ViewPageTemplateFile('pt/extra-data-item.pt')
+
+    blacklist = ['MSFD8b_Noise', 'MSFD8b_Noise_Assesment']
 
     def get_db_results(self):
         if self.context.item:
@@ -1089,6 +1185,8 @@ class A81bNoiseAssessment(ItemDisplay):
 class A81bNoiseActivities(ItemDisplay):
     title = 'Activities producing underwater noise'
 
+    blacklist = ['MSFD8b_Noise_ActivityDescription']
+
     def get_db_results(self):
         if self.context.item:
             return db.get_related_record_join(
@@ -1102,6 +1200,8 @@ class A81bNoiseActivities(ItemDisplay):
 @register_form_section(A81bNoiseItemDisplay)
 class A81bNoiseImpacts(ItemDisplay):
     title = 'Impacts produced by underwater noise'
+
+    blacklist = ['MSFD8b_Noise']
 
     def get_db_results(self):
         if self.context.item:
@@ -1120,19 +1220,24 @@ class A81bNutrientItemDisplay(MultiItemDisplayForm):
     mapper_class = sql.MSFD8bNutrient
     order_field = 'MSFD8b_Nutrients_ID'
 
+    def get_import_id(self):
+        import_id = self.item.MSFD8b_Nutrients_Import
+
+        return import_id
+
 
 @register_subform(A81bForm)
-class A81bNutrientSubForm(MarineUnitIDSelectForm):
+class A81bNutrientSubForm(MarineUnitIDSelectForm2012):
     """ Select the MarineUnitID for the Article 8.1b form
     """
-    title = 'Nutrients'
+    title = 'D5 - Nutrients'
     mapper_class = sql.MSFD8bNutrient
 
     def get_subform(self):
         return A81bNutrientItemDisplay(self, self.request)
 
     def download_results(self):
-        muids = self.get_marine_unit_ids()
+        muids = [self.get_marine_unit_id()]
         count, data = db.get_all_records(
             self.mapper_class, self.mapper_class.MarineUnitID.in_(muids)
         )
@@ -1189,9 +1294,11 @@ class A81bNutrientSubForm(MarineUnitIDSelectForm):
 
 @register_form_section(A81bNutrientItemDisplay)
 class A81bNutrientAssessment(ItemDisplay):
-    title = 'Asessment of nutrients'
+    title = 'Assessment of nutrients'
 
     extra_data_template = ViewPageTemplateFile('pt/extra-data-item.pt')
+
+    blacklist = ['MSFD8b_Nutrients', 'MSFD8b_Nutrients_Assesment']
 
     def get_db_results(self):
         if self.context.item:
@@ -1220,6 +1327,8 @@ class A81bNutrientAssessment(ItemDisplay):
 class A81bNutrientActivities(ItemDisplay):
     title = 'Activities producing nutrients'
 
+    blacklist = ['MSFD8b_Nutrients_ActivityDescription']
+
     def get_db_results(self):
         if self.context.item:
             return db.get_related_record_join(
@@ -1233,6 +1342,8 @@ class A81bNutrientActivities(ItemDisplay):
 @register_form_section(A81bNutrientItemDisplay)
 class A81bNutrientImpacts(ItemDisplay):
     title = 'Impacts produced by the nutrients'
+
+    blacklist = ['MSFD8b_Nutrients']
 
     def get_db_results(self):
         if self.context.item:
@@ -1251,19 +1362,24 @@ class A81bPhysicalDamageItemDisplay(MultiItemDisplayForm):
     mapper_class = sql.MSFD8bPhysicalDamage
     order_field = 'MSFD8b_PhysicalDamage_ID'
 
+    def get_import_id(self):
+        import_id = self.item.MSFD8b_PhysicalDamage_Import
+
+        return import_id
+
 
 @register_subform(A81bForm)
-class A81bPhysicalDamageSubForm(MarineUnitIDSelectForm):
+class A81bPhysicalDamageSubForm(MarineUnitIDSelectForm2012):
     """ Select the MarineUnitID for the Article 8.1b form
     """
-    title = 'Physical damage'
+    title = 'D6 - Physical damage'
     mapper_class = sql.MSFD8bPhysicalDamage
 
     def get_subform(self):
         return A81bPhysicalDamageItemDisplay(self, self.request)
 
     def download_results(self):
-        muids = self.get_marine_unit_ids()
+        muids = [self.get_marine_unit_id()]
         count, data = db.get_all_records(
             self.mapper_class, self.mapper_class.MarineUnitID.in_(muids)
         )
@@ -1321,9 +1437,11 @@ class A81bPhysicalDamageSubForm(MarineUnitIDSelectForm):
 
 @register_form_section(A81bPhysicalDamageItemDisplay)
 class A81bPhysicalDamageAssessment(ItemDisplay):
-    title = 'Asessment of physical damage'
+    title = 'Assessment of physical damage'
 
     extra_data_template = ViewPageTemplateFile('pt/extra-data-item.pt')
+
+    blacklist = ['MSFD8b_PhysicalDamage', 'MSFD8b_PhysicalDamage_Assesment']
 
     def get_db_results(self):
         if self.context.item:
@@ -1352,6 +1470,8 @@ class A81bPhysicalDamageAssessment(ItemDisplay):
 class A81bPhysicalDamageActivities(ItemDisplay):
     title = 'Activities producing physical damage'
 
+    blacklist = ['MSFD8b_PhysicalDamage_ActivityDescription']
+
     def get_db_results(self):
         if self.context.item:
             return db.get_related_record_join(
@@ -1365,6 +1485,8 @@ class A81bPhysicalDamageActivities(ItemDisplay):
 @register_form_section(A81bPhysicalDamageItemDisplay)
 class A81bPhysicalDamageImpacts(ItemDisplay):
     title = 'Impacts produced by the physical damage'
+
+    blacklist = ['MSFD8b_PhysicalDamage']
 
     def get_db_results(self):
         if self.context.item:
@@ -1383,19 +1505,24 @@ class A81bPhysicalLosItemDisplay(MultiItemDisplayForm):
     mapper_class = sql.MSFD8bPhysicalLos
     order_field = 'MSFD8b_PhysicalLoss_ID'
 
+    def get_import_id(self):
+        import_id = self.item.MSFD8b_PhysicalLoss_Import
+
+        return import_id
+
 
 @register_subform(A81bForm)
-class A81bPhysicalLosSubForm(MarineUnitIDSelectForm):
+class A81bPhysicalLosSubForm(MarineUnitIDSelectForm2012):
     """ Select the MarineUnitID for the Article 8.1b form
     """
-    title = 'Physical loss'
+    title = 'D6 - Physical loss'
     mapper_class = sql.MSFD8bPhysicalLos
 
     def get_subform(self):
         return A81bPhysicalLosItemDisplay(self, self.request)
 
     def download_results(self):
-        muids = self.get_marine_unit_ids()
+        muids = [self.get_marine_unit_id()]
         count, data = db.get_all_records(
             self.mapper_class, self.mapper_class.MarineUnitID.in_(muids)
         )
@@ -1453,9 +1580,11 @@ class A81bPhysicalLosSubForm(MarineUnitIDSelectForm):
 
 @register_form_section(A81bPhysicalLosItemDisplay)
 class A81bPhysicalLosAssessment(ItemDisplay):
-    title = 'Asessment of physical loss'
+    title = 'Assessment of physical loss'
 
     extra_data_template = ViewPageTemplateFile('pt/extra-data-item.pt')
+
+    blacklist = ['MSFD8b_PhysicalLoss', 'MSFD8b_PhysicalLoss_Assesment']
 
     def get_db_results(self):
         if self.context.item:
@@ -1484,6 +1613,8 @@ class A81bPhysicalLosAssessment(ItemDisplay):
 class A81bPhysicalLosActivities(ItemDisplay):
     title = 'Activities producing physical loss'
 
+    blacklist = ['MSFD8b_PhysicalLoss_ActivityDescription']
+
     def get_db_results(self):
         if self.context.item:
             return db.get_related_record_join(
@@ -1497,6 +1628,8 @@ class A81bPhysicalLosActivities(ItemDisplay):
 @register_form_section(A81bPhysicalLosItemDisplay)
 class A81bPhysicalLosImpacts(ItemDisplay):
     title = 'Impacts produced by the physical loss'
+
+    blacklist = ['MSFD8b_PhysicalLoss']
 
     def get_db_results(self):
         if self.context.item:
@@ -1515,19 +1648,24 @@ class A81bPollutantEventItemDisplay(MultiItemDisplayForm):
     mapper_class = sql.MSFD8bPollutantEvent
     order_field = 'MSFD8b_PollutantEvents_ID'
 
+    def get_import_id(self):
+        import_id = self.item.MSFD8b_PollutantEvents_Import
+
+        return import_id
+
 
 @register_subform(A81bForm)
-class A81bPollutantEventSubForm(MarineUnitIDSelectForm):
+class A81bPollutantEventSubForm(MarineUnitIDSelectForm2012):
     """ Select the MarineUnitID for the Article 8.1b form
     """
-    title = 'Pollutant events'
+    title = 'D8 - Pollutant events'
     mapper_class = sql.MSFD8bPollutantEvent
 
     def get_subform(self):
         return A81bPollutantEventItemDisplay(self, self.request)
 
     def download_results(self):
-        muids = self.get_marine_unit_ids()
+        muids = [self.get_marine_unit_id()]
         count, data = db.get_all_records(
             self.mapper_class, self.mapper_class.MarineUnitID.in_(muids)
         )
@@ -1585,9 +1723,11 @@ class A81bPollutantEventSubForm(MarineUnitIDSelectForm):
 
 @register_form_section(A81bPollutantEventItemDisplay)
 class A81bPollutantEventAssessment(ItemDisplay):
-    title = 'Asessment of pollutant events'
+    title = 'Assessment of pollutant events'
 
     extra_data_template = ViewPageTemplateFile('pt/extra-data-item.pt')
+
+    blacklist = ['MSFD8b_PollutantEvents', 'MSFD8b_PollutantEvents_Assesment']
 
     def get_db_results(self):
         if self.context.item:
@@ -1616,6 +1756,8 @@ class A81bPollutantEventAssessment(ItemDisplay):
 class A81bPollutantEventActivities(ItemDisplay):
     title = 'Activities producing pollutant events'
 
+    blacklist = ['MSFD8b_PollutantEvents_ActivityDescription']
+
     def get_db_results(self):
         if self.context.item:
             return db.get_related_record_join(
@@ -1629,6 +1771,8 @@ class A81bPollutantEventActivities(ItemDisplay):
 @register_form_section(A81bPollutantEventItemDisplay)
 class A81bPollutantEventImpacts(ItemDisplay):
     title = 'Impacts produced by the pollutant event'
+
+    blacklist = ['MSFD8b_PollutantEvents']
 
     def get_db_results(self):
         if self.context.item:
@@ -1647,19 +1791,24 @@ class A81bAcidificationItemDisplay(MultiItemDisplayForm):
     mapper_class = sql.MSFD8bAcidification
     order_field = 'MSFD8b_Acidification_ID'
 
+    def get_import_id(self):
+        import_id = self.item.MSFD8b_Acidification_Import
+
+        return import_id
+
 
 @register_subform(A81bForm)
-class A81bAcidificationSubForm(MarineUnitIDSelectForm):
+class A81bAcidificationSubForm(MarineUnitIDSelectForm2012):
     """ Select the MarineUnitID for the Article 8.1b form
     """
-    title = 'Acidification'
+    title = 'D4 - Acidification'
     mapper_class = sql.MSFD8bAcidification
 
     def get_subform(self):
         return A81bAcidificationItemDisplay(self, self.request)
 
     def download_results(self):
-        muids = self.get_marine_unit_ids()
+        muids = [self.get_marine_unit_id()]
         count, data = db.get_all_records(
             self.mapper_class, self.mapper_class.MarineUnitID.in_(muids)
         )
@@ -1697,6 +1846,9 @@ class A81bAcidificationSubForm(MarineUnitIDSelectForm):
 @register_form_section(A81bAcidificationItemDisplay)
 class A81bAcidificationActivities(ItemDisplay):
     title = 'Activities producing acidification'
+
+    blacklist = ['MSFD8b_Acidification_ActivityDescription']
+    use_blacklist = True
 
     def get_db_results(self):
         if self.context.item:

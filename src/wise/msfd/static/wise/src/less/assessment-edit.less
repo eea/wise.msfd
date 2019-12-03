@@ -114,7 +114,7 @@ span.infobox-popover {
         position: relative;
 
         .textline {
-          position: absolute;
+          //position: absolute;
           display: flex;
         }
         .comm-hide {
@@ -183,8 +183,21 @@ span.infobox-popover {
           display: flex;
           flex-direction: column-reverse;
 
+          .process-state {
+            display: none;
+
+            &.active {
+              display: list-item;
+            }
+          }
+
           .comms {
             position: relative;
+            display: none;
+
+            &.active {
+              display: list-item;
+            }
           }
           .comm-del {
             position: absolute;
@@ -201,7 +214,7 @@ span.infobox-popover {
           padding-top: 0.4rem;
           display: none;
           flex-shrink: 0;
-          width: 99%;
+          //width: 99%;
 
           textarea {
             margin-right: 0.4rem;
@@ -215,11 +228,39 @@ span.infobox-popover {
 
           li {
             list-style-type: none;
+            margin-top: 1em;
           }
 
-          li:not(:last-child) {
+          li.accordion:last-child {
             margin-bottom: 1em;
           }
+
+          .accordion {
+            background-color: #eee;
+            color: #444;
+            cursor: pointer;
+            padding: 0.5em;
+            width: 100%;
+            border: none;
+            text-align: left;
+            outline: none;
+            font-size: 15px;
+            transition: 0.4s;
+
+            &.active:after {
+              content: "\2212";
+            }
+          }
+
+          .accordion:after {
+            content: '\002B';
+            color: #777;
+            font-weight: bold;
+            float: right;
+            margin-left: 5px;
+          }
+
+
 
           .comment {
             color: #fff;
@@ -280,9 +321,9 @@ span.infobox-popover {
             height: 5em;
             resize: none;
             overflow: auto;
-            border-radius: 25px;
+            //border-radius: 25px;
             outline: none;
-            padding: 10px;
+            padding: 0.2em 0.5em;
             font-size: 1em;
             color: #676767;
             border: solid 1px #a6e1fb;
@@ -307,7 +348,7 @@ span.infobox-popover {
 
       .left {
         // flex-grow: 2;
-        width: 50%;
+        width: 60%;
         float: left;
         background-color: #a6e1fb;
 

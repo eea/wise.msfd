@@ -15,6 +15,7 @@
  <property name="filter_content_types">True</property>
  <property name="allowed_content_types">
   <element value="Folder"/>
+  <element value="wise.msfd.nationaldescriptorassessment"/>
  </property>
  <property name="allow_discussion">True</property>
  <property name="default_view">view</property>

@@ -60,4 +60,11 @@
     file="./static/wise/dist/js/lz-string.js"
     />
 
+  <!-- <browser:page -->
+  <!--   name="test&#45;tpl&#45;cache" -->
+  <!--   for="*" -->
+  <!--   class=".cache.CacheTestView" -->
+  <!--   permission="zope.Public" -->
+  <!--   /> -->
+
 </configure>

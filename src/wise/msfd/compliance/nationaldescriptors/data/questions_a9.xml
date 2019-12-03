@@ -9,27 +9,28 @@
       <option score="1">Primary criterion used with 2010 code</option>
       <option score="1">Primary criterion replaced with secondary criterion (with adequate justification)</option>
       <option score="1">Primary criterion not used (with adequate justification)</option>
+      <option score="0.250">Not clear </option>
       <option score="0">Primary criterion not used (with inadequate justification)</option>
       <option score="/">Not relevant</option>
     </answers>
     <scoring determination-method="wise.msfd.compliance.scoring.scoring_based">
     </scoring>
-    <score-weight descriptor="D1.1" value="6" />
-    <score-weight descriptor="D1.2" value="6" />
-    <score-weight descriptor="D1.3" value="6" />
-    <score-weight descriptor="D1.4" value="6" />
-    <score-weight descriptor="D1.5" value="6" />
-    <score-weight descriptor="D1.6" value="10" />
-    <score-weight descriptor="D2" value="6" />
-    <score-weight descriptor="D3" value="10" />
-    <score-weight descriptor="D4" value="6" />
-    <score-weight descriptor="D5" value="6" />
-    <score-weight descriptor="D6" value="10" />
+    <score-weight descriptor="D1.1" value="15" />
+    <score-weight descriptor="D1.2" value="15" />
+    <score-weight descriptor="D1.3" value="15" />
+    <score-weight descriptor="D1.4" value="15" />
+    <score-weight descriptor="D1.5" value="15" />
+    <score-weight descriptor="D1.6" value="25" />
+    <score-weight descriptor="D2" value="15" />
+    <score-weight descriptor="D3" value="25" />
+    <score-weight descriptor="D4" value="15" />
+    <score-weight descriptor="D5" value="15" />
+    <score-weight descriptor="D6" value="25" />
     <score-weight descriptor="D7" value="0" />
-    <score-weight descriptor="D8" value="6" />
-    <score-weight descriptor="D9" value="10" />
-    <score-weight descriptor="D10" value="6" />
-    <score-weight descriptor="D11" value="10" />
+    <score-weight descriptor="D8" value="15" />
+    <score-weight descriptor="D9" value="25" />
+    <score-weight descriptor="D10" value="15" />
+    <score-weight descriptor="D11" value="25" />
   </assessment-question>
 
   <assessment-question id="A09Ad2" class="adequacy" use-criteria='secondary'>
@@ -39,26 +40,27 @@
     <answers>
       <option score="1">Secondary criterion used with 2017 code</option>
       <option score="1">Secondary criterion used with 2010 code</option>
+      <option score="0.250">Not clear</option>
       <option score="0">Secondary criteria not used</option>
       <option score="/">Not relevant</option>
     </answers>
     <scoring determination-method="wise.msfd.compliance.scoring.scoring_based">
     </scoring>
-    <score-weight descriptor="D1.1" value="4" />
-    <score-weight descriptor="D1.2" value="4" />
-    <score-weight descriptor="D1.3" value="4" />
-    <score-weight descriptor="D1.4" value="4" />
-    <score-weight descriptor="D1.5" value="4" />
+    <score-weight descriptor="D1.1" value="10" />
+    <score-weight descriptor="D1.2" value="0" />
+    <score-weight descriptor="D1.3" value="10" />
+    <score-weight descriptor="D1.4" value="10" />
+    <score-weight descriptor="D1.5" value="10" />
     <score-weight descriptor="D1.6" value="0" />
-    <score-weight descriptor="D2" value="4" />
+    <score-weight descriptor="D2" value="10" />
     <score-weight descriptor="D3" value="0" />
-    <score-weight descriptor="D4" value="4" />
-    <score-weight descriptor="D5" value="4" />
+    <score-weight descriptor="D4" value="10" />
+    <score-weight descriptor="D5" value="10" />
     <score-weight descriptor="D6" value="0" />
-    <score-weight descriptor="D7" value="10" />
-    <score-weight descriptor="D8" value="4" />
+    <score-weight descriptor="D7" value="25" />
+    <score-weight descriptor="D8" value="10" />
     <score-weight descriptor="D9" value="0" />
-    <score-weight descriptor="D10" value="4" />
+    <score-weight descriptor="D10" value="10" />
     <score-weight descriptor="D11" value="0" />
   </assessment-question>
 
@@ -75,22 +77,22 @@
     </answers>
     <scoring determination-method="wise.msfd.compliance.scoring.scoring_based">
     </scoring>
-    <score-weight descriptor="D1.1" value="6" />
-    <score-weight descriptor="D1.2" value="6" />
-    <score-weight descriptor="D1.3" value="6" />
-    <score-weight descriptor="D1.4" value="6" />
-    <score-weight descriptor="D1.5" value="6" />
-    <score-weight descriptor="D1.6" value="6" />
-    <score-weight descriptor="D2" value="6" />
-    <score-weight descriptor="D3" value="6" />
-    <score-weight descriptor="D4" value="6" />
-    <score-weight descriptor="D5" value="6" />
-    <score-weight descriptor="D6" value="6" />
-    <score-weight descriptor="D7" value="6" />
-    <score-weight descriptor="D8" value="6" />
-    <score-weight descriptor="D9" value="6" />
-    <score-weight descriptor="D10" value="6" />
-    <score-weight descriptor="D11" value="6" />
+    <score-weight descriptor="D1.1" value="15" />
+    <score-weight descriptor="D1.2" value="15" />
+    <score-weight descriptor="D1.3" value="15" />
+    <score-weight descriptor="D1.4" value="15" />
+    <score-weight descriptor="D1.5" value="15" />
+    <score-weight descriptor="D1.6" value="15" />
+    <score-weight descriptor="D2" value="15" />
+    <score-weight descriptor="D3" value="15" />
+    <score-weight descriptor="D4" value="15" />
+    <score-weight descriptor="D5" value="15" />
+    <score-weight descriptor="D6" value="15" />
+    <score-weight descriptor="D7" value="15" />
+    <score-weight descriptor="D8" value="15" />
+    <score-weight descriptor="D9" value="15" />
+    <score-weight descriptor="D10" value="15" />
+    <score-weight descriptor="D11" value="15" />
   </assessment-question>
 
   <assessment-question id="A09Ad4" class="adequacy" use-criteria='all'>
@@ -106,22 +108,22 @@
     </answers>
     <scoring determination-method="wise.msfd.compliance.scoring.scoring_based">
     </scoring>
-    <score-weight descriptor="D1.1" value="6" />
-    <score-weight descriptor="D1.2" value="6" />
-    <score-weight descriptor="D1.3" value="6" />
-    <score-weight descriptor="D1.4" value="6" />
-    <score-weight descriptor="D1.5" value="6" />
-    <score-weight descriptor="D1.6" value="6" />
-    <score-weight descriptor="D2" value="6" />
-    <score-weight descriptor="D3" value="6" />
-    <score-weight descriptor="D4" value="6" />
-    <score-weight descriptor="D5" value="6" />
-    <score-weight descriptor="D6" value="6" />
-    <score-weight descriptor="D7" value="6" />
-    <score-weight descriptor="D8" value="6" />
-    <score-weight descriptor="D9" value="6" />
-    <score-weight descriptor="D10" value="6" />
-    <score-weight descriptor="D11" value="6" />
+    <score-weight descriptor="D1.1" value="15" />
+    <score-weight descriptor="D1.2" value="15" />
+    <score-weight descriptor="D1.3" value="15" />
+    <score-weight descriptor="D1.4" value="15" />
+    <score-weight descriptor="D1.5" value="15" />
+    <score-weight descriptor="D1.6" value="15" />
+    <score-weight descriptor="D2" value="15" />
+    <score-weight descriptor="D3" value="15" />
+    <score-weight descriptor="D4" value="15" />
+    <score-weight descriptor="D5" value="15" />
+    <score-weight descriptor="D6" value="15" />
+    <score-weight descriptor="D7" value="15" />
+    <score-weight descriptor="D8" value="15" />
+    <score-weight descriptor="D9" value="15" />
+    <score-weight descriptor="D10" value="15" />
+    <score-weight descriptor="D11" value="15" />
   </assessment-question>
 
   <assessment-question id="A09Ad5" class="adequacy" use-criteria='all'>
@@ -137,22 +139,22 @@
     </answers>
     <scoring determination-method="wise.msfd.compliance.scoring.scoring_based">
     </scoring>
-    <score-weight descriptor="D1.1" value="6" />
-    <score-weight descriptor="D1.2" value="6" />
-    <score-weight descriptor="D1.3" value="6" />
-    <score-weight descriptor="D1.4" value="6" />
-    <score-weight descriptor="D1.5" value="6" />
-    <score-weight descriptor="D1.6" value="6" />
-    <score-weight descriptor="D2" value="6" />
-    <score-weight descriptor="D3" value="6" />
-    <score-weight descriptor="D4" value="6" />
-    <score-weight descriptor="D5" value="6" />
-    <score-weight descriptor="D6" value="6" />
-    <score-weight descriptor="D7" value="6" />
-    <score-weight descriptor="D8" value="6" />
-    <score-weight descriptor="D9" value="6" />
-    <score-weight descriptor="D10" value="6" />
-    <score-weight descriptor="D11" value="6" />
+    <score-weight descriptor="D1.1" value="15" />
+    <score-weight descriptor="D1.2" value="15" />
+    <score-weight descriptor="D1.3" value="15" />
+    <score-weight descriptor="D1.4" value="15" />
+    <score-weight descriptor="D1.5" value="15" />
+    <score-weight descriptor="D1.6" value="15" />
+    <score-weight descriptor="D2" value="15" />
+    <score-weight descriptor="D3" value="15" />
+    <score-weight descriptor="D4" value="15" />
+    <score-weight descriptor="D5" value="15" />
+    <score-weight descriptor="D6" value="15" />
+    <score-weight descriptor="D7" value="15" />
+    <score-weight descriptor="D8" value="15" />
+    <score-weight descriptor="D9" value="15" />
+    <score-weight descriptor="D10" value="15" />
+    <score-weight descriptor="D11" value="15" />
   </assessment-question>
 
   <assessment-question id="A09Ad6" class="adequacy" use-criteria='all'>
@@ -171,22 +173,22 @@
 
     <scoring determination-method="wise.msfd.compliance.scoring.scoring_based">
     </scoring>
-    <score-weight descriptor="D1.1" value="6" />
-    <score-weight descriptor="D1.2" value="6" />
-    <score-weight descriptor="D1.3" value="6" />
-    <score-weight descriptor="D1.4" value="6" />
-    <score-weight descriptor="D1.5" value="6" />
-    <score-weight descriptor="D1.6" value="6" />
-    <score-weight descriptor="D2" value="6" />
-    <score-weight descriptor="D3" value="6" />
-    <score-weight descriptor="D4" value="6" />
-    <score-weight descriptor="D5" value="6" />
-    <score-weight descriptor="D6" value="6" />
-    <score-weight descriptor="D7" value="6" />
-    <score-weight descriptor="D8" value="6" />
-    <score-weight descriptor="D9" value="6" />
-    <score-weight descriptor="D10" value="6" />
-    <score-weight descriptor="D11" value="6" />
+    <score-weight descriptor="D1.1" value="15" />
+    <score-weight descriptor="D1.2" value="15" />
+    <score-weight descriptor="D1.3" value="15" />
+    <score-weight descriptor="D1.4" value="15" />
+    <score-weight descriptor="D1.5" value="15" />
+    <score-weight descriptor="D1.6" value="15" />
+    <score-weight descriptor="D2" value="15" />
+    <score-weight descriptor="D3" value="15" />
+    <score-weight descriptor="D4" value="15" />
+    <score-weight descriptor="D5" value="15" />
+    <score-weight descriptor="D6" value="15" />
+    <score-weight descriptor="D7" value="15" />
+    <score-weight descriptor="D8" value="15" />
+    <score-weight descriptor="D9" value="15" />
+    <score-weight descriptor="D10" value="15" />
+    <score-weight descriptor="D11" value="15" />
 
   </assessment-question>
 
@@ -204,22 +206,22 @@
     </answers>
     <scoring determination-method="wise.msfd.compliance.scoring.scoring_based">
     </scoring>
-    <score-weight descriptor="D1.1" value="6" />
-    <score-weight descriptor="D1.2" value="6" />
-    <score-weight descriptor="D1.3" value="6" />
-    <score-weight descriptor="D1.4" value="6" />
-    <score-weight descriptor="D1.5" value="6" />
-    <score-weight descriptor="D1.6" value="6" />
-    <score-weight descriptor="D2" value="6" />
-    <score-weight descriptor="D3" value="6" />
-    <score-weight descriptor="D4" value="6" />
-    <score-weight descriptor="D5" value="6" />
-    <score-weight descriptor="D6" value="6" />
-    <score-weight descriptor="D7" value="6" />
-    <score-weight descriptor="D8" value="6" />
-    <score-weight descriptor="D9" value="6" />
-    <score-weight descriptor="D10" value="6" />
-    <score-weight descriptor="D11" value="6" />
+    <score-weight descriptor="D1.1" value="15" />
+    <score-weight descriptor="D1.2" value="15" />
+    <score-weight descriptor="D1.3" value="15" />
+    <score-weight descriptor="D1.4" value="15" />
+    <score-weight descriptor="D1.5" value="15" />
+    <score-weight descriptor="D1.6" value="15" />
+    <score-weight descriptor="D2" value="15" />
+    <score-weight descriptor="D3" value="15" />
+    <score-weight descriptor="D4" value="15" />
+    <score-weight descriptor="D5" value="15" />
+    <score-weight descriptor="D6" value="15" />
+    <score-weight descriptor="D7" value="15" />
+    <score-weight descriptor="D8" value="15" />
+    <score-weight descriptor="D9" value="15" />
+    <score-weight descriptor="D10" value="15" />
+    <score-weight descriptor="D11" value="15" />
   </assessment-question>
 
   <assessment-question id="A09Co1" class="coherence" use-criteria='all'>
@@ -236,22 +238,22 @@
     </answers>
     <scoring determination-method="wise.msfd.compliance.scoring.scoring_based">
     </scoring>
-    <score-weight descriptor="D1.1" value="6" />
-    <score-weight descriptor="D1.2" value="6" />
-    <score-weight descriptor="D1.3" value="6" />
-    <score-weight descriptor="D1.4" value="6" />
-    <score-weight descriptor="D1.5" value="6" />
-    <score-weight descriptor="D1.6" value="6" />
-    <score-weight descriptor="D2" value="6" />
-    <score-weight descriptor="D3" value="6" />
-    <score-weight descriptor="D4" value="6" />
-    <score-weight descriptor="D5" value="6" />
-    <score-weight descriptor="D6" value="6" />
-    <score-weight descriptor="D7" value="6" />
-    <score-weight descriptor="D8" value="6" />
-    <score-weight descriptor="D9" value="6" />
-    <score-weight descriptor="D10" value="6" />
-    <score-weight descriptor="D11" value="6" />
+    <score-weight descriptor="D1.1" value="15" />
+    <score-weight descriptor="D1.2" value="15" />
+    <score-weight descriptor="D1.3" value="15" />
+    <score-weight descriptor="D1.4" value="15" />
+    <score-weight descriptor="D1.5" value="15" />
+    <score-weight descriptor="D1.6" value="25" />
+    <score-weight descriptor="D2" value="15" />
+    <score-weight descriptor="D3" value="25" />
+    <score-weight descriptor="D4" value="15" />
+    <score-weight descriptor="D5" value="15" />
+    <score-weight descriptor="D6" value="25" />
+    <score-weight descriptor="D7" value="0" />
+    <score-weight descriptor="D8" value="15" />
+    <score-weight descriptor="D9" value="25" />
+    <score-weight descriptor="D10" value="15" />
+    <score-weight descriptor="D11" value="15" />
   </assessment-question>
 
   <assessment-question id="A09Co2" class="coherence" use-criteria='all'>
@@ -272,22 +274,22 @@
     </answers>
     <scoring determination-method="wise.msfd.compliance.scoring.scoring_based">
     </scoring>
-    <score-weight descriptor="D1.1" value="6" />
-    <score-weight descriptor="D1.2" value="6" />
-    <score-weight descriptor="D1.3" value="6" />
-    <score-weight descriptor="D1.4" value="6" />
-    <score-weight descriptor="D1.5" value="6" />
-    <score-weight descriptor="D1.6" value="6" />
-    <score-weight descriptor="D2" value="6" />
-    <score-weight descriptor="D3" value="6" />
-    <score-weight descriptor="D4" value="6" />
-    <score-weight descriptor="D5" value="6" />
-    <score-weight descriptor="D6" value="6" />
-    <score-weight descriptor="D7" value="6" />
-    <score-weight descriptor="D8" value="6" />
-    <score-weight descriptor="D9" value="6" />
-    <score-weight descriptor="D10" value="6" />
-    <score-weight descriptor="D11" value="6" />
+    <score-weight descriptor="D1.1" value="10" />
+    <score-weight descriptor="D1.2" value="10" />
+    <score-weight descriptor="D1.3" value="10" />
+    <score-weight descriptor="D1.4" value="10" />
+    <score-weight descriptor="D1.5" value="10" />
+    <score-weight descriptor="D1.6" value="0" />
+    <score-weight descriptor="D2" value="10" />
+    <score-weight descriptor="D3" value="0" />
+    <score-weight descriptor="D4" value="10" />
+    <score-weight descriptor="D5" value="10" />
+    <score-weight descriptor="D6" value="0" />
+    <score-weight descriptor="D7" value="25" />
+    <score-weight descriptor="D8" value="10" />
+    <score-weight descriptor="D9" value="0" />
+    <score-weight descriptor="D10" value="10" />
+    <score-weight descriptor="D11" value="10" />
   </assessment-question>
 
   <assessment-question id="A09Co3" class="coherence" use-criteria='all'>
@@ -305,22 +307,22 @@
     </answers>
     <scoring determination-method="wise.msfd.compliance.scoring.scoring_based">
     </scoring>
-    <score-weight descriptor="D1.1" value="6" />
-    <score-weight descriptor="D1.2" value="6" />
-    <score-weight descriptor="D1.3" value="6" />
-    <score-weight descriptor="D1.4" value="6" />
-    <score-weight descriptor="D1.5" value="6" />
-    <score-weight descriptor="D1.6" value="6" />
-    <score-weight descriptor="D2" value="6" />
-    <score-weight descriptor="D3" value="6" />
-    <score-weight descriptor="D4" value="6" />
-    <score-weight descriptor="D5" value="6" />
-    <score-weight descriptor="D6" value="6" />
-    <score-weight descriptor="D7" value="6" />
-    <score-weight descriptor="D8" value="6" />
-    <score-weight descriptor="D9" value="6" />
-    <score-weight descriptor="D10" value="6" />
-    <score-weight descriptor="D11" value="6" />
+    <score-weight descriptor="D1.1" value="15" />
+    <score-weight descriptor="D1.2" value="15" />
+    <score-weight descriptor="D1.3" value="15" />
+    <score-weight descriptor="D1.4" value="15" />
+    <score-weight descriptor="D1.5" value="15" />
+    <score-weight descriptor="D1.6" value="15" />
+    <score-weight descriptor="D2" value="15" />
+    <score-weight descriptor="D3" value="15" />
+    <score-weight descriptor="D4" value="15" />
+    <score-weight descriptor="D5" value="15" />
+    <score-weight descriptor="D6" value="15" />
+    <score-weight descriptor="D7" value="15" />
+    <score-weight descriptor="D8" value="15" />
+    <score-weight descriptor="D9" value="15" />
+    <score-weight descriptor="D10" value="15" />
+    <score-weight descriptor="D11" value="15" />
   </assessment-question>
 
   <assessment-question id="A09Co4" class="coherence" use-criteria='all'>
@@ -341,22 +343,22 @@
     </answers>
     <scoring determination-method="wise.msfd.compliance.scoring.scoring_based">
     </scoring>
-    <score-weight descriptor="D1.1" value="8" />
-    <score-weight descriptor="D1.2" value="8" />
-    <score-weight descriptor="D1.3" value="8" />
-    <score-weight descriptor="D1.4" value="8" />
-    <score-weight descriptor="D1.5" value="8" />
-    <score-weight descriptor="D1.6" value="8" />
-    <score-weight descriptor="D2" value="8" />
-    <score-weight descriptor="D3" value="8" />
-    <score-weight descriptor="D4" value="8" />
-    <score-weight descriptor="D5" value="8" />
-    <score-weight descriptor="D6" value="8" />
-    <score-weight descriptor="D7" value="8" />
-    <score-weight descriptor="D8" value="8" />
-    <score-weight descriptor="D9" value="8" />
-    <score-weight descriptor="D10" value="8" />
-    <score-weight descriptor="D11" value="8" />
+    <score-weight descriptor="D1.1" value="10" />
+    <score-weight descriptor="D1.2" value="10" />
+    <score-weight descriptor="D1.3" value="10" />
+    <score-weight descriptor="D1.4" value="10" />
+    <score-weight descriptor="D1.5" value="10" />
+    <score-weight descriptor="D1.6" value="10" />
+    <score-weight descriptor="D2" value="10" />
+    <score-weight descriptor="D3" value="10" />
+    <score-weight descriptor="D4" value="10" />
+    <score-weight descriptor="D5" value="10" />
+    <score-weight descriptor="D6" value="10" />
+    <score-weight descriptor="D7" value="10" />
+    <score-weight descriptor="D8" value="10" />
+    <score-weight descriptor="D9" value="10" />
+    <score-weight descriptor="D10" value="10" />
+    <score-weight descriptor="D11" value="10" />
   </assessment-question>
 
   <assessment-question id="A09Co5" class="coherence" use-criteria='all'>
@@ -377,22 +379,22 @@
     </answers>
     <scoring determination-method="wise.msfd.compliance.scoring.scoring_based">
     </scoring>
-    <score-weight descriptor="D1.1" value="8" />
-    <score-weight descriptor="D1.2" value="8" />
-    <score-weight descriptor="D1.3" value="8" />
-    <score-weight descriptor="D1.4" value="8" />
-    <score-weight descriptor="D1.5" value="8" />
-    <score-weight descriptor="D1.6" value="8" />
-    <score-weight descriptor="D2" value="8" />
-    <score-weight descriptor="D3" value="8" />
-    <score-weight descriptor="D4" value="8" />
-    <score-weight descriptor="D5" value="8" />
-    <score-weight descriptor="D6" value="8" />
-    <score-weight descriptor="D7" value="8" />
-    <score-weight descriptor="D8" value="8" />
-    <score-weight descriptor="D9" value="8" />
-    <score-weight descriptor="D10" value="8" />
-    <score-weight descriptor="D11" value="8" />
+    <score-weight descriptor="D1.1" value="15" />
+    <score-weight descriptor="D1.2" value="15" />
+    <score-weight descriptor="D1.3" value="15" />
+    <score-weight descriptor="D1.4" value="15" />
+    <score-weight descriptor="D1.5" value="15" />
+    <score-weight descriptor="D1.6" value="15" />
+    <score-weight descriptor="D2" value="15" />
+    <score-weight descriptor="D3" value="15" />
+    <score-weight descriptor="D4" value="15" />
+    <score-weight descriptor="D5" value="15" />
+    <score-weight descriptor="D6" value="15" />
+    <score-weight descriptor="D7" value="15" />
+    <score-weight descriptor="D8" value="15" />
+    <score-weight descriptor="D9" value="15" />
+    <score-weight descriptor="D10" value="15" />
+    <score-weight descriptor="D11" value="15" />
   </assessment-question>
 
   <assessment-question id="A09Co6" class="coherence" use-criteria='all'>
@@ -413,22 +415,22 @@
     </answers>
     <scoring determination-method="wise.msfd.compliance.scoring.scoring_based">
     </scoring>
-    <score-weight descriptor="D1.1" value="8" />
-    <score-weight descriptor="D1.2" value="8" />
-    <score-weight descriptor="D1.3" value="8" />
-    <score-weight descriptor="D1.4" value="8" />
-    <score-weight descriptor="D1.5" value="8" />
-    <score-weight descriptor="D1.6" value="8" />
-    <score-weight descriptor="D2" value="8" />
-    <score-weight descriptor="D3" value="8" />
-    <score-weight descriptor="D4" value="8" />
-    <score-weight descriptor="D5" value="8" />
-    <score-weight descriptor="D6" value="8" />
-    <score-weight descriptor="D7" value="8" />
-    <score-weight descriptor="D8" value="8" />
-    <score-weight descriptor="D9" value="8" />
-    <score-weight descriptor="D10" value="8" />
-    <score-weight descriptor="D11" value="8" />
+    <score-weight descriptor="D1.1" value="10" />
+    <score-weight descriptor="D1.2" value="10" />
+    <score-weight descriptor="D1.3" value="10" />
+    <score-weight descriptor="D1.4" value="10" />
+    <score-weight descriptor="D1.5" value="10" />
+    <score-weight descriptor="D1.6" value="10" />
+    <score-weight descriptor="D2" value="10" />
+    <score-weight descriptor="D3" value="10" />
+    <score-weight descriptor="D4" value="10" />
+    <score-weight descriptor="D5" value="10" />
+    <score-weight descriptor="D6" value="10" />
+    <score-weight descriptor="D7" value="10" />
+    <score-weight descriptor="D8" value="10" />
+    <score-weight descriptor="D9" value="10" />
+    <score-weight descriptor="D10" value="10" />
+    <score-weight descriptor="D11" value="10" />
   </assessment-question>
 
    <assessment-question id="A09Co7" class="coherence" use-criteria='all'>
@@ -449,22 +451,22 @@
     </answers>
     <scoring determination-method="wise.msfd.compliance.scoring.scoring_based">
     </scoring>
-    <score-weight descriptor="D1.1" value="18" />
-    <score-weight descriptor="D1.2" value="18" />
-    <score-weight descriptor="D1.3" value="18" />
-    <score-weight descriptor="D1.4" value="18" />
-    <score-weight descriptor="D1.5" value="18" />
-    <score-weight descriptor="D1.6" value="18" />
-    <score-weight descriptor="D2" value="18" />
-    <score-weight descriptor="D3" value="18" />
-    <score-weight descriptor="D4" value="18" />
-    <score-weight descriptor="D5" value="18" />
-    <score-weight descriptor="D6" value="18" />
-    <score-weight descriptor="D7" value="18" />
-    <score-weight descriptor="D8" value="18" />
-    <score-weight descriptor="D9" value="18" />
-    <score-weight descriptor="D10" value="18" />
-    <score-weight descriptor="D11" value="18" />
+    <score-weight descriptor="D1.1" value="15" />
+    <score-weight descriptor="D1.2" value="15" />
+    <score-weight descriptor="D1.3" value="15" />
+    <score-weight descriptor="D1.4" value="15" />
+    <score-weight descriptor="D1.5" value="15" />
+    <score-weight descriptor="D1.6" value="15" />
+    <score-weight descriptor="D2" value="15" />
+    <score-weight descriptor="D3" value="15" />
+    <score-weight descriptor="D4" value="15" />
+    <score-weight descriptor="D5" value="15" />
+    <score-weight descriptor="D6" value="15" />
+    <score-weight descriptor="D7" value="15" />
+    <score-weight descriptor="D8" value="15" />
+    <score-weight descriptor="D9" value="15" />
+    <score-weight descriptor="D10" value="15" />
+    <score-weight descriptor="D11" value="15" />
   </assessment-question> 
 
 </questions>

@@ -2,7 +2,8 @@ from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 from z3c.form.field import Fields
 
 from .. import db, sql
-from ..base import EmbeddedForm, MarineUnitIDSelectForm
+from ..base import (EmbeddedForm, MarineUnitIDSelectForm,
+                    MarineUnitIDSelectForm2012)
 from .base import ItemDisplay, MultiItemDisplayForm
 from .interfaces import IA81Form
 from .utils import (data_to_xls, register_form, register_form_section,
@@ -20,6 +21,13 @@ class A81aForm(EmbeddedForm):
         'Article 8.1a (Analysis of the environmental status)'
     fields = Fields(IA81Form)
 
+    reported_date_info = {
+        'mapper_class': sql.MSFD8aImport,
+        'col_import_id': 'MSFD8a_Import_ID',
+        'col_import_time': 'MSFD8a_Import_Time',
+        'col_filename': 'MSFD8a_Import_FileName'
+    }
+
     def get_subform(self):
         klass = self.data.get('theme')
 
@@ -28,17 +36,17 @@ class A81aForm(EmbeddedForm):
 
 # region Ecosystem(s)
 @register_subform(A81aForm)
-class A81aEcoSubForm(MarineUnitIDSelectForm):
+class A81aEcoSubForm(MarineUnitIDSelectForm2012):
     """ Select the MarineUnitID for the Article 8.1a form
     """
-    title = 'Ecosystem(s)'
+    title = 'D4 - Ecosystem(s)'
     mapper_class = sql.MSFD8aEcosystem
 
     def get_subform(self):
         return A81aEcoItemDisplay(self, self.request)
 
     def download_results(self):
-        muids = self.get_marine_unit_ids()
+        muids = [self.get_marine_unit_id()]
         count, data = db.get_all_records(
             self.mapper_class,
             self.mapper_class.MarineUnitID.in_(muids)
@@ -82,10 +90,17 @@ class A81aEcoItemDisplay(MultiItemDisplayForm):
     mapper_class = sql.MSFD8aEcosystem
     order_field = 'MSFD8a_Ecosystem_ID'
 
+    def get_import_id(self):
+        import_id = self.item.MSFD8a_Ecosystem_Import
+
+        return import_id
+
 
 @register_form_section(A81aEcoItemDisplay)
 class A81aEcosystemPressures(ItemDisplay):
     title = 'Pressures and impacts'
+
+    blacklist = ['MSFD8a_Ecosystem']
 
     def get_db_results(self):
         if self.context.item:
@@ -101,6 +116,8 @@ class A81aEcosystemAsessment(ItemDisplay):
     title = 'Status Asessment'
 
     extra_data_template = ViewPageTemplateFile('pt/extra-data-item.pt')
+
+    blacklist = ['MSFD8a_Ecosystem', 'MSFD8a_Ecosystem_StatusAssessment']
 
     def get_db_results(self):
         if self.context.item:
@@ -129,17 +146,17 @@ class A81aEcosystemAsessment(ItemDisplay):
 
 # region Functional Group(s)
 @register_subform(A81aForm)
-class A81aFunctSubForm(MarineUnitIDSelectForm):
+class A81aFunctSubForm(MarineUnitIDSelectForm2012):
     """ Select the MarineUnitID for the Article 8.1a form
     """
-    title = 'Functional group(s)'
+    title = 'D1 - Functional group(s)'
     mapper_class = sql.MSFD8aFunctional
 
     def get_subform(self):
         return A81aFunctItemDisplay(self, self.request)
 
     def download_results(self):
-        muids = self.get_marine_unit_ids()
+        muids = [self.get_marine_unit_id()]
         count, data = db.get_all_records(
             self.mapper_class,
             self.mapper_class.MarineUnitID.in_(muids)
@@ -183,10 +200,18 @@ class A81aFunctItemDisplay(MultiItemDisplayForm):
     mapper_class = sql.MSFD8aFunctional
     order_field = 'MSFD8a_Functional_ID'
 
+    def get_import_id(self):
+        import_id = self.item.MSFD8a_Functional_Import
+
+        return import_id
+
 
 @register_form_section(A81aFunctItemDisplay)
 class A81aFunctionalGroupPressures(ItemDisplay):
     title = 'Pressures and impacts'
+
+    blacklist = ['MSFD8a_Functional']
+    use_blacklist = True
 
     def get_db_results(self):
         if self.context.item:
@@ -202,6 +227,8 @@ class A81aFunctionalGroupAsessment(ItemDisplay):
     title = 'Status Asessment'
 
     extra_data_template = ViewPageTemplateFile('pt/extra-data-item.pt')
+
+    blacklist = ['MSFD8a_Functional', 'MSFD8a_Functional_StatusAssessment']
 
     def get_db_results(self):
         if self.context.item:
@@ -229,17 +256,17 @@ class A81aFunctionalGroupAsessment(ItemDisplay):
 
 # region Habitat(s)
 @register_subform(A81aForm)
-class A81aHabitatSubForm(MarineUnitIDSelectForm):
+class A81aHabitatSubForm(MarineUnitIDSelectForm2012):
     """ Select the MarineUnitID for the Article 8.1a form
     """
-    title = 'Habitat(s)'
+    title = 'D6 - Habitat(s)'
     mapper_class = sql.MSFD8aHabitat
 
     def get_subform(self):
         return A81aHabitatItemDisplay(self, self.request)
 
     def download_results(self):
-        muids = self.get_marine_unit_ids()
+        muids = [self.get_marine_unit_id()]
         count, data = db.get_all_records(
             self.mapper_class,
             self.mapper_class.MarineUnitID.in_(muids)
@@ -283,10 +310,18 @@ class A81aHabitatItemDisplay(MultiItemDisplayForm):
     mapper_class = sql.MSFD8aHabitat
     order_field = 'MSFD8a_Habitat_ID'
 
+    def get_import_id(self):
+        import_id = self.item.MSFD8a_Habitat_Import
+
+        return import_id
+
 
 @register_form_section(A81aHabitatItemDisplay)
 class A81aHabitatPressures(ItemDisplay):
     title = 'Pressures and impacts'
+
+    blacklist = ['MSFD8a_Habitat']
+    use_blacklist = True
 
     def get_db_results(self):
         if self.context.item:
@@ -302,6 +337,8 @@ class A81aHabitatAsessment(ItemDisplay):
     title = 'Status Asessment'
 
     extra_data_template = ViewPageTemplateFile('pt/extra-data-item.pt')
+
+    blacklist = ['MSFD8a_Habitat', 'MSFD8a_Habitat_StatusAssessment']
 
     def get_db_results(self):
         if self.context.item:
@@ -329,17 +366,17 @@ class A81aHabitatAsessment(ItemDisplay):
 
 # region Species(s)
 @register_subform(A81aForm)
-class A81aSpeciesSubForm(MarineUnitIDSelectForm):
+class A81aSpeciesSubForm(MarineUnitIDSelectForm2012):
     """ Select the MarineUnitID for the Article 8.1a form
     """
-    title = 'Species(s)'
+    title = 'D1 - Species(s)'
     mapper_class = sql.MSFD8aSpecy
 
     def get_subform(self):
         return A81aSpeciesItemDisplay(self, self.request)
 
     def download_results(self):
-        muids = self.get_marine_unit_ids()
+        muids = [self.get_marine_unit_id()]
         count, data = db.get_all_records(
             self.mapper_class,
             self.mapper_class.MarineUnitID.in_(muids)
@@ -383,10 +420,18 @@ class A81aSpeciesItemDisplay(MultiItemDisplayForm):
     mapper_class = sql.MSFD8aSpecy
     order_field = 'MSFD8a_Species_ID'
 
+    def get_import_id(self):
+        import_id = self.item.MSFD8a_Species_Import
+
+        return import_id
+
 
 @register_form_section(A81aSpeciesItemDisplay)
 class A81aSpeciesPressures(ItemDisplay):
     title = 'Pressures and impacts'
+
+    blacklist = ['MSFD8a_Species']
+    use_blacklist = True
 
     def get_db_results(self):
         if self.context.item:
@@ -402,6 +447,8 @@ class A81aSpeciesAsessment(ItemDisplay):
     title = 'Status Asessment'
 
     extra_data_template = ViewPageTemplateFile('pt/extra-data-item.pt')
+
+    blacklist = ['MSFD8a_Species', 'MSFD8a_Species_StatusAssessment']
 
     def get_db_results(self):
         if self.context.item:
@@ -429,10 +476,10 @@ class A81aSpeciesAsessment(ItemDisplay):
 
 # region Other(s)
 @register_subform(A81aForm)
-class A81aOtherSubForm(MarineUnitIDSelectForm):
+class A81aOtherSubForm(MarineUnitIDSelectForm2012):
     """ Select the MarineUnitID for the Article 8.1a form
     """
-    title = 'Other(s)'
+    title = 'D4 - Other(s)'
     mapper_class = sql.MSFD8aOther
 
     def get_subform(self):
@@ -440,7 +487,7 @@ class A81aOtherSubForm(MarineUnitIDSelectForm):
 
     # TODO MSFD8aOtherPressuresImpact table is missing
     def download_results(self):
-        muids = self.get_marine_unit_ids()
+        muids = [self.get_marine_unit_id()]
         count, data = db.get_all_records(
             self.mapper_class,
             self.mapper_class.MarineUnitID.in_(muids)
@@ -477,6 +524,11 @@ class A81aOtherItemDisplay(MultiItemDisplayForm):
     mapper_class = sql.MSFD8aOther
     order_field = 'MSFD8a_Other_ID'
 
+    def get_import_id(self):
+        import_id = self.item.MSFD8a_Other_Import
+
+        return import_id
+
 # TODO
 # MSFD8aOtherPressuresImpact table is missing?
 # @register_form_section(A81aOtherItemDisplay)
@@ -497,6 +549,8 @@ class A81aOtherAsessment(ItemDisplay):
     title = 'Status Asessment'
 
     extra_data_template = ViewPageTemplateFile('pt/extra-data-item.pt')
+
+    blacklist = ['MSFD8a_Other', 'MSFD8a_Other_StatusAssessment']
 
     def get_db_results(self):
         if self.context.item:
@@ -528,17 +582,17 @@ class A81aOtherAsessment(ItemDisplay):
 
 # region Nis Inventory(s)
 @register_subform(A81aForm)
-class A81aNisSubForm(MarineUnitIDSelectForm):
+class A81aNisSubForm(MarineUnitIDSelectForm2012):
     """ Select the MarineUnitID for the Article 8.1a form
     """
-    title = 'NIS Inventory'
+    title = 'D2 - NIS Inventory'
     mapper_class = sql.MSFD8aNISInventory
 
     def get_subform(self):
         return A81aNisItemDisplay(self, self.request)
 
     def download_results(self):
-        muids = self.get_marine_unit_ids()
+        muids = [self.get_marine_unit_id()]
         count, data = db.get_all_records(
             self.mapper_class, self.mapper_class.MarineUnitID.in_(muids)
         )
@@ -557,6 +611,11 @@ class A81aNisItemDisplay(MultiItemDisplayForm):
     mapper_class = sql.MSFD8aNISInventory
     order_field = 'MSFD8a_NISInventory_ID'
 
+    def get_import_id(self):
+        import_id = self.item.MSFD8a_NISInventory_Import
+
+        return import_id
+
     # def get_db_results(self):
     #     # if self.context.item:
     #         return db.get_related_record(
@@ -570,17 +629,17 @@ class A81aNisItemDisplay(MultiItemDisplayForm):
 
 # region Physical
 @register_subform(A81aForm)
-class A81aPhysicalSubForm(MarineUnitIDSelectForm):
+class A81aPhysicalSubForm(MarineUnitIDSelectForm2012):
     """ Select the MarineUnitID for the Article 8.1a form
     """
-    title = 'Physical'
+    title = 'D4 - Physical'
     mapper_class = sql.MSFD8aPhysical
 
     def get_subform(self):
         return A81aPhysicalItemDisplay(self, self.request)
 
     def download_results(self):
-        muids = self.get_marine_unit_ids()
+        muids = [self.get_marine_unit_id()]
         count, data = db.get_all_records(
             self.mapper_class,
             self.mapper_class.MarineUnitID.in_(muids)
@@ -600,6 +659,11 @@ class A81aPhysicalItemDisplay(MultiItemDisplayForm):
     mapper_class = sql.MSFD8aPhysical
     order_field = 'MSFD8a_Physical_ID'
 
+    def get_import_id(self):
+        import_id = self.item.MSFD8a_Physical_Import
+
+        return import_id
+
     # def get_db_results(self):
     #     # if self.context.item:
     #         return db.get_related_record(
@@ -613,7 +677,7 @@ class A81aPhysicalItemDisplay(MultiItemDisplayForm):
 
 # Article 8.1c
 @register_form
-class A81cForm(MarineUnitIDSelectForm):
+class A81cForm(MarineUnitIDSelectForm2012):
     """ Main form for A81c.
 
     Class for Article 8.1c Economic and social analysis
@@ -621,6 +685,11 @@ class A81cForm(MarineUnitIDSelectForm):
 
     record_title = title = 'Article 8.1c (Economic and social analysis)'
     mapper_class = sql.MSFD8cUs
+
+    def get_available_marine_unit_ids(self):
+        return super(A81cForm, self).get_available_marine_unit_ids(
+            parent=self.context
+        )
 
     def get_subform(self):
         return A81cEconomicItemDisplay(self, self.request)
@@ -634,8 +703,20 @@ class A81cEconomicItemDisplay(MultiItemDisplayForm):
 
     # TODO: need to filter on topic
 
+    reported_date_info = {
+        'mapper_class': sql.MSFD8cImport,
+        'col_import_id': 'MSFD8c_Import_ID',
+        'col_import_time': 'MSFD8c_Import_Time',
+        'col_filename': 'MSFD8c_Import_FileName'
+    }
+
+    def get_import_id(self):
+        import_id = self.item.MSFD8c_Uses_Import
+
+        return import_id
+
     def download_results(self):
-        muids = self.get_marine_unit_ids()
+        muids = [self.get_marine_unit_id()]
 
         count, data = db.get_all_records(
             self.mapper_class,

@@ -1,13 +1,49 @@
 .regional-descriptors {
-  .inner {
+  .fixed-table-inner {
+    margin-left: 140px !important;
     border-left: 1px solid #DDD !important;
   }
+  .inner {
+    border-left: 1px solid #DDD !important;
+    margin-left: 140px !important;
+
+    .table-regional-desc {
+      //margin-left: 170px;
+    }
+  }
+
   th.first-header {
+    width: 140px !important;
   }
+
   td.sub-header {
-    width: 150px;
     background-color: rgb(239, 239, 239);
-    font-weight: bold;
     border-right: 4px solid #DDD;
+    font-weight: bold;
+    min-width: 170px !important;
+    max-width: 170px !important;
+    position: relative;
+    //position: absolute;
+    //margin-left: -170px;
+
+    .fix-row {
+      position: absolute;
+      top: 1px;
+      right: 3px;
+    }
+
+    span {
+      padding-right: 10px;
+      display: block;
+    }
+
+    input {
+      display: block;
+    }
   }
+
+  .top-scroll {
+    margin-left: 137px !important;
+  }
+
 }

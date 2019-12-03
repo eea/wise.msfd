@@ -1,7 +1,6 @@
 import logging
 from collections import namedtuple
 from datetime import datetime
-from time import time
 
 import lxml.etree
 from sqlalchemy.orm import aliased
@@ -10,6 +9,7 @@ from zope.dottedname.resolve import resolve
 from zope.interface import implements
 from zope.security import checkPermission
 
+from Acquisition import aq_inner
 from eea.cache import cache
 from plone.api import user
 from plone.api.content import get_state
@@ -22,7 +22,7 @@ from wise.msfd import db, sql, sql2018
 from wise.msfd.base import BasePublicPage
 from wise.msfd.compliance.scoring import Score  # , compute_score
 from wise.msfd.compliance.utils import get_assessors
-from wise.msfd.compliance.vocabulary import ASSESSED_ARTICLES, REGIONS
+from wise.msfd.compliance.vocabulary import ASSESSED_ARTICLES  # , REGIONS
 from wise.msfd.gescomponents import (get_descriptor, get_features,
                                      get_marine_units, sorted_criterions)
 from wise.msfd.translation.interfaces import ITranslationContext
@@ -31,6 +31,9 @@ from wise.msfd.utils import (Tab, _parse_files_in_location, natural_sort_key,
 
 from . import interfaces
 from .interfaces import ICountryDescriptorsFolder
+
+# from time import time
+
 
 logger = logging.getLogger('wise.msfd')
 edw_logger = logging.getLogger('edw.logger')
@@ -43,6 +46,7 @@ STATUS_COLORS = {
     "in_draft_review": "warning",
     "in_draft_review_com": "warning-2",
     "in_final_review": "primary",
+    "in_final_review_tl": "primary",
     "in_final_review_com": "success-2",
 }
 
@@ -59,27 +63,54 @@ MAIN_FORMS = [Tab(*x) for x in [
      'compliance-start',    # section name
      'Assessment Module',
      'Start Page',
+     '',
+     lambda view: True,
      ),
     ('national-descriptors-assessments/@@nat-desc-start',
      'national-descriptors',
      'Descriptor - national',
      'Member states reports and Commission assessments',
+     '',
+     lambda view: True,
      ),
     ('regional-descriptors-assessments/@@reg-desc-start',
      'regional-descriptors',
      'Descriptor - regional',
      'Member states reports and Commission assessments',
+     '',
+     lambda view: True,
      ),
-    ('@@comp-national-overviews',
-     'national-overviews',
-     'Overview - national',
+    ('national-summaries/@@nat-summary-start',
+     'national-summaries',
+     'Summary - national',
      'Overview for a Member state',
+     '',
+     lambda view: True,
      ),
     ('@@comp-regional-overviews',
      'regional-overviews',
      'Overview - regional',
      'Overview for all Member states in a region',
+     '',
+     lambda view: True,
      ),
+
+    ('help',
+     'help-section',
+     '<span class="fa fa-question-circle fa-lg"></span>',
+     '<span>&nbsp;</span>',
+     'manage-users',
+     lambda view: True,
+     ),
+
+    ('@@compliance-admin',
+     'compliance-admin',
+     '<span class="fa fa-cogs fa-lg"></span>',
+     '<span>&nbsp;</span>',
+     'manage-users',
+     lambda view: view.is_search and view.check_permission(
+         'wise.msfd: Manage Compliance')
+     )
 ]
 ]
 
@@ -120,17 +151,51 @@ def report_data_cache_key(func, self, *args, **kwargs):
                          ''.join(getattr(self, 'regions', '')))
 
         country = self.country_code
+        year = self.year
     else:
         country = _args[0]
         region = _args[1]
+        year = _args[2]
 
-    res = '_cache_' + '_'.join([country, region])
+    res = '_cache_' + func.__name__ + '_'.join([country, region, year])
     res = res.replace('.', '').replace('-', '')
 
     return res
 
 
-class BaseComplianceView(BrowserView, BasePublicPage):
+class SecurityMixin:
+
+    def check_permission(self, permission, context=None):
+
+        tool = get_tool('portal_membership')
+
+        if context is None:
+            context = self.context
+
+        return bool(tool.checkPermission(permission, aq_inner(context)))
+
+    @property
+    def read_only_access(self):
+        can_edit = self.check_permission('wise.msfd: Edit Assessment')
+
+        return not can_edit
+
+    def can_manage(self):
+        return self.check_permission('wise.msfd: Manage Compliance')
+
+    def can_view_assessment_data(self, context=None):
+        return self.check_permission('wise.msfd: View Assessment Data',
+                                     context)
+
+    def can_edit_assessment_data(self, context=None):
+        return self.check_permission('wise.msfd: Edit Assessment', context)
+
+    def can_view_edit_assessment_data(self, context=None):
+        return self.check_permission('wise.msfd: View Assessment Edit Page',
+                                     context)
+
+
+class BaseComplianceView(BrowserView, BasePublicPage, SecurityMixin):
     """ Base class for compliance views
     """
 
@@ -140,44 +205,33 @@ class BaseComplianceView(BrowserView, BasePublicPage):
     status_colors = STATUS_COLORS
     process_status_colors = PROCESS_STATUS_COLORS
 
-    @property
-    def get_current_user_roles(self):
+    def get_current_user_roles(self, context=None):
         current_user = user.get_current().getId()
-        roles = get_roles(username=current_user)
+        params = {
+            "username": current_user
+        }
+
+        if context:
+            params['obj'] = context
+
+        roles = get_roles(**params)
 
         return roles
 
-    @property
-    def read_only_access(self):
-        roles = self.get_current_user_roles
-
-        if 'Reader' in roles:
-            return True
-
-        return False
-
     def _get_user_group(self, user):
-        """ Returns the group of the user, either returns EC or TL """
-        roles = get_roles(username=user)
+        """ Returns the color according to the role of the user, EC or TL
+        """
+
+        roles = get_roles(username=user, obj=self.context)
 
         if 'Editor' in roles:
             return 'dark'
 
         return 'light'
 
-    def _can_comment(self, folder_id, context=None):
-        if context is None:
-            context = self.context
-
-        return checkPermission('zope2.View', context[folder_id])
-
     @property
-    def can_comment_tl(self):
-        return self._can_comment('tl')
-
-    @property
-    def can_comment_ec(self):
-        return self._can_comment('ec')
+    def can_comment(self):
+        return self.check_permission('Add portal content', self.context)
 
     @property
     def assessor_list(self):
@@ -283,6 +337,22 @@ class BaseComplianceView(BrowserView, BasePublicPage):
         return self._article_assessment.getId().capitalize()
 
     @property
+    def is_primary_article(self):
+        """ Check if the assessment has IDescriptorFolder as parent,
+            if does not have it means the assessment belongs to
+            a "secondary" article (Art 3-4, 7, 8ESA)
+
+        :return: True or False
+        """
+        iface = interfaces.IDescriptorFolder
+
+        for parent in self.request.other['PARENTS']:
+            if iface.providedBy(parent):
+                return True
+
+        return False
+
+    @property
     def _descriptor_folder(self):
         return self.get_parent_by_iface(
             interfaces.IDescriptorFolder
@@ -321,7 +391,9 @@ class BaseComplianceView(BrowserView, BasePublicPage):
 
     @property
     def country_region_name(self):
-        return REGIONS[self.country_region_code]
+        # return REGIONS[self.country_region_code]
+
+        return self._countryregion_folder.title
 
     @property
     def article_name(self):
@@ -422,47 +494,24 @@ class BaseComplianceView(BrowserView, BasePublicPage):
 
         for folder_id in ('tl', 'ec'):
             q_folders = assessment[folder_id].contentValues()
+
             if q_folders:
                 # TODO: we rely on ordered folders, not sure if correct
                 latest = [
                     folder.contentValues()[-1].modification_date.utcdatetime()
+
                     for folder in q_folders
+
                     if folder.contentValues()
                 ]
                 latest = latest and max(latest) or None
                 latest_from_folders.append(latest)
 
-        latest = max(latest_from_folders)
-
-        # TODO old code, we no longer check for _can_comment permission
-        # because both comment sections can be seen by users
-
-        # if self._can_comment('tl', assessment):
-        #     q_folders = assessment['tl'].contentValues()
-        #     if q_folders:
-        #         # TODO: we rely on ordered folders, not sure if correct
-        #         latest = [
-        #             folder.contentValues()[-1].modification_date.utcdatetime()
-        #             for folder in q_folders
-        #             if folder.contentValues()
-        #         ]
-        #         latest = latest and max(latest) or None
-        #
-        # if self._can_comment('ec', assessment):
-        #     q_folders = assessment['ec'].contentValues()
-        #     if q_folders:
-        #         # TODO: we rely on ordered folders, not sure if correct
-        #         ec_latest = [
-        #             folder.contentValues()[-1].modification_date.utcdatetime()
-        #             for folder in q_folders
-        #             if folder.contentValues()
-        #         ]
-        #         ec_latest = ec_latest and max(ec_latest) or None
-        #
-        #         latest = latest and max(ec_latest, latest) or ec_latest
-
-        # if 'd5' in token:
-        #     import pdb; pdb.set_trace()
+        try:
+            latest = latest_from_folders and max(latest_from_folders) or None
+        except:
+            logger.exception("Error in getting latest seen")
+            latest = None
 
         if not latest:
             return None
@@ -497,8 +546,11 @@ Target = namedtuple('Target', ['id', 'title', 'definition', 'year'])
 
 def _a10_ids_cachekey(method, self, descriptor, **kwargs):
     muids = [m.id for m in kwargs['muids']]
+    key = '{}-{}-{}'.format(
+        method.__name__, descriptor.id, ','.join(muids)
+    )
 
-    return '{}-{}'.format(descriptor.id, ','.join(muids))
+    return key
 
 
 def get_weights_from_xml(node):
@@ -539,7 +591,14 @@ class AssessmentQuestionDefinition:
         self.score_method = resolve(sn.get('determination-method'))
 
     def calculate_score(self, descriptor, values):
-        return Score(self, descriptor, values)
+        score_obj = Score(self, descriptor, values)
+
+        # if all options are 'Not relevant' return None, so the question will
+        # behave like not answered and it will not count towards overall score
+        # if score_obj.max_score == 0:
+        #     return None
+
+        return score_obj
 
     def _art_89_ids(self, descriptor, **kwargs):
         return sorted_criterions(descriptor.criterions)
@@ -647,6 +706,7 @@ class AssessmentQuestionDefinition:
     def _art_10_ids(self, descriptor, **kwargs):
         muids = [x.id for x in kwargs['muids']]
         ok_ges_ids = descriptor.all_ids()
+
         if descriptor.id.startswith('D1.'):
             ok_ges_ids.add('D1')
 
@@ -656,6 +716,14 @@ class AssessmentQuestionDefinition:
         targets_all = targets_2018
 
         return targets_all
+
+    def _art_34_ids(self, descriptor, **kwargs):
+        # TODO what to return here
+        country_name = kwargs.get('country_name', 'Country')
+        country_code = kwargs.get('country_code', '')
+        res = Target(country_name, country_code, '', '2012')
+
+        return [res]
 
     def get_assessed_elements(self, descriptor, **kwargs):
         """ Get a list of filtered assessed elements for this question.
@@ -682,6 +750,9 @@ class AssessmentQuestionDefinition:
             'Art8': self._art_89_ids,
             'Art9': self._art_89_ids,
             'Art10': self._art_10_ids,
+            'Art3-4': self._art_34_ids,
+            'Art7': self._art_34_ids,
+            'Art8esa': self._art_34_ids
         }
 
         return impl[self.article](descriptor, **kwargs)
@@ -713,6 +784,13 @@ def filtered_criterias(criterias, question, descriptor):
 
     if question.use_criteria == 'none':
         crits = []
+
+    # we would need to have the criteria D1C1, D1C3, D1C4 and D1C5
+    # listed under both question A09Ad1. And A09Ad2.
+    # C1-C3 are primary for commercial fish species;
+    # C4-C5 are primary for HD fish
+    if descriptor.id == 'D1.4' and question.id == 'A09Ad2':
+        crits = [c for c in criterias if c.id != 'D1C2']
 
     return sorted_criterions(crits)
 

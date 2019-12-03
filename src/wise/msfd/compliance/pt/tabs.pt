@@ -1,0 +1,47 @@
+<div id="compliance-tabs">
+
+  <div id="mainform-tabs" tal:define="tab_type view/tabs_type | string:article">
+
+    <ul class="nav nav-pills topnav hidden-xs"
+      tal:define="root_url view/root_url | string:.">
+      <tal:rep tal:repeat="tab view/main_forms">
+        <li
+          tal:condition="python: tab.condition(view)"
+          tal:define="
+          section view/section | nothing;
+          active python: section and (view.section == tab.section) or (not section and (tab.path in request.URL0));
+          cssclass tab/cssclass | string:;
+          klass python: (active and 'tab-active') or '';
+          "
+          tal:attributes="class string:$klass $cssclass"
+          >
+          <a href=""
+            tal:attributes="href string:${root_url}/${tab/path}"
+            >
+            <span tal:content="structure tab/title">Article X</span>
+            <span tal:content="structure tab/subtitle">Subtitle here</span>
+          </a>
+        </li>
+      </tal:rep>
+    </ul>
+
+    <div class="visible-xs">
+      <div tal:content="view/tab_select_label | string:Select ${tab_type}:">
+        Select article/tab:
+      </div>
+      <select class="notselect" id="mobile-select-article">
+        <tal:rep tal:repeat="tab view/main_forms">
+          <tal:block tal:define="
+            section view/section | nothing;
+            active python: section and (view.section == tab.section) or (not section and (view.name in request.URL0))">
+            <option tal:attributes="value string:./${tab/path}; data-maintitle tab/title;
+              data-subtitle tab/subtitle;
+              selected python: active and 'selected'">
+              <span tal:replace="structure tab/title"></span> <span tal:replace="structure tab/subtitle"></span>
+            </option>
+          </tal:block>
+        </tal:rep>
+      </select>
+    </div>
+  </div>
+</div>

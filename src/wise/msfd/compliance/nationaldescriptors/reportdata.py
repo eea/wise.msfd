@@ -18,21 +18,24 @@ from Products.Five.browser.pagetemplatefile import \
 from Products.statusmessages.interfaces import IStatusMessage
 from wise.msfd import db, sql2018  # sql,
 from wise.msfd.base import BaseUtil
-from wise.msfd.compliance.interfaces import IReportDataView
+from wise.msfd.compliance.interfaces import (IReportDataView,
+                                             IReportDataViewSecondary)
 from wise.msfd.compliance.nationaldescriptors.data import get_report_definition
 from wise.msfd.compliance.utils import group_by_mru, insert_missing_criterions
 from wise.msfd.data import (get_factsheet_url, get_report_file_url,
                             get_report_filename, get_xml_report_data)
-from wise.msfd.gescomponents import (get_descriptor, get_features,
-                                     get_parameters)
+from wise.msfd.gescomponents import get_descriptor, get_features
 from wise.msfd.translation import retrieve_translation
-from wise.msfd.utils import ItemList, items_to_rows, natural_sort_key, timeit
+from wise.msfd.utils import items_to_rows, natural_sort_key, timeit
 from z3c.form.button import buttonAndHandler
 from z3c.form.field import Fields
 from z3c.form.form import Form
 
+from .a34 import Article34
+from .a7 import Article7
 from .a8 import Article8
 from .a8alternate import Article8Alternate
+from .a8esa import Article8ESA
 from .a9 import Article9, Article9Alternate
 from .a10 import Article10, Article10Alternate
 from .base import BaseView
@@ -61,17 +64,24 @@ def get_reportdata_key(func, self, *args, **kwargs):
 
     muids = ",".join([m.id for m in self.muids])
     region = getattr(self, 'country_region_code', ''.join(self.regions))
+    focus_muid = getattr(self, 'focus_muid', '')
 
     cache_key_extra = getattr(self, 'cache_key_extra', '')
 
-    res = '_cache_' + '_'.join([self.report_year,
-                                cache_key_extra,
-                                self.country_code,
-                                region,
-                                self.descriptor,
-                                self.article,
-                                muids])
-    res = res.replace('.', '').replace('-', '')
+    res = '_cache_' + '_'.join([
+        func.__name__,
+        self.report_year,
+        cache_key_extra,
+        self.country_code,
+        region,
+        self.descriptor,
+        self.article,
+        muids,
+        focus_muid,
+    ])
+    # TODO why replace '.', makes D1.1 the same as D11
+    # res = res.replace('.', '').replace('-', '')
+    logger.info("Report data cache key: %s", res)
 
     return res
 
@@ -140,6 +150,9 @@ class ReportData2012(BaseView, BaseUtil):
     @property
     def article_implementations(self):
         res = {
+            'Art3-4': Article34,
+            'Art7': Article7,
+            'Art8esa': Article8ESA,
             'Art8': Article8,
             'Art9': Article9,
             'Art10': Article10,
@@ -204,6 +217,17 @@ class ReportData2012(BaseView, BaseUtil):
                                    self.country_region_code,
                                    art or self.article,
                                    self.descriptor)
+
+    @property
+    def report_title(self):
+        title = "Member State report: {}/{}/{}/{}/2012".format(
+            self.country_name,
+            self.country_region_name,
+            self.descriptor_title,
+            self.article
+        )
+
+        return title
 
     def data_to_xls(self, data, report_header):
         # Create a workbook and add a worksheet.
@@ -294,12 +318,7 @@ class ReportData2012(BaseView, BaseUtil):
         rep_info = self.get_reporting_information()
 
         report_header_data = OrderedDict(
-            title="Member State report: {}/{}/{}/{}/2012".format(
-                self.country_name,
-                self.country_region_name,
-                self.descriptor_title,
-                self.article
-            ),
+            title=self.report_title,
             report_by=rep_info.reporters,
             source_file=source_file,
             factsheet=factsheet,
@@ -310,7 +329,10 @@ class ReportData2012(BaseView, BaseUtil):
         )
         report_header = self.report_header_template(**report_header_data)
 
-        report_data, report_data_rows = self.get_report_data()
+        try:
+            report_data, report_data_rows = self.get_report_data()
+        except:
+            report_data, report_data_rows = 'Error in rendering report', []
         trans_edit_html = self.translate_view()()
         self.report_html = report_header + report_data + trans_edit_html
 
@@ -319,6 +341,15 @@ class ReportData2012(BaseView, BaseUtil):
             return self.download(report_data_rows, report_header_data)
 
         return self.index()
+
+    def _get_reporting_info(self, root):
+        reporters = root.xpath(
+            '//w:ReportingInformation/w:Organisation/text()', namespaces=NSMAP
+        )
+        date = root.xpath('//w:ReportingInformation/w:ReportingDate/text()',
+                          namespaces=NSMAP)
+
+        return reporters, date
 
     def get_reporting_information(self):
         # The MSFD<ArtN>_ReportingInformation tables are not reliable (8b is
@@ -332,23 +363,60 @@ class ReportData2012(BaseView, BaseUtil):
         text = get_xml_report_data(self.filename)
         root = fromstring(text)
 
-        reporters = root.xpath(
-            '//w:ReportingInformation/w:Organisation/text()', namespaces=NSMAP
-        )
-        date = root.xpath('//w:ReportingInformation/w:ReportingDate/text()',
-                          namespaces=NSMAP)
+        reporters, date = self._get_reporting_info(root)
+
         try:
             date_obj = datetime.strptime(date[0], '%d-%m-%Y')
             date_final = date_obj.date().isoformat()
             res = ReportingInformation(date_final, ', '.join(set(reporters)))
         except Exception:
-            logger.exception('Could not get reporting info for %s, %s, %s',
+            logger.exception('Could not parse date for %s, %s, %s',
                              self.article, self.descriptor, self.country_code
                              )
 
             res = ReportingInformation(date[0], ', '.join(set(reporters)))
 
         return res
+
+
+class ReportData2012Secondary(ReportData2012):
+    """ Class implementation for Article 8 ESA
+    """
+
+    implements(IReportDataViewSecondary)
+
+    descriptor = 'Not linked'
+    country_region_code = 'No region'
+
+    @property
+    def report_title(self):
+        title = "Member State report: {}/{}/2012".format(
+            self.country_name,
+            self.article
+        )
+
+        return title
+
+    def _get_reporting_info_art_34(self, root):
+        reporter = [root.attrib['Organisation']]
+        date = [root.attrib['ReportingDate']]
+
+        return reporter, date
+
+    def _get_reporting_info_art_7(self, root):
+        reporter = [root.attrib['GeneratedBy']]
+        date = [root.attrib['CreationDate']]
+
+        return reporter, date
+
+    def _get_reporting_info(self, root):
+        impl = {
+            'Art3-4': self._get_reporting_info_art_34,
+            'Art7': self._get_reporting_info_art_7,
+            'Art8esa': self._get_reporting_info_art_34,
+        }
+
+        return impl[self.article](root)
 
 
 class ReportData2012Like2018(ReportData2012):
@@ -478,23 +546,27 @@ https://svn.eionet.europa.eu/repositories/Reportnet/Dataflows/MarineDirective/MS
     def _get_order_cols_Art8(self, descr):
         descr = descr.split('.')[0]
         criteria_priority = ('MarineReportingUnit', 'GESComponent', 'Criteria',
-                             'Feature', 'Element', 'Element2Code', 'Element2',
+                             'Feature', 'Element', 'Element2', 'Element2Code',
                              'IntegrationRuleTypeParameter')
+
+        default = ('MarineReportingUnit', 'GESComponent', 'Feature',
+                   'Element', 'Element2', 'Element2Code', 'Criteria',
+                   'IntegrationRuleTypeParameter',)
 
         order_by = {
             'D2': criteria_priority,
+            'D4': criteria_priority,
             'D5': ('MarineReportingUnit', 'GESComponent', 'Feature',
-                   'Criteria', 'Element', 'Element2Code', 'Element2',
+                   'Criteria', 'Element', 'Element2', 'Element2Code',
                    'IntegrationRuleTypeParameter',
                    ),
-            'D6': criteria_priority,
+            'D6': default,
             'D7': criteria_priority,
             'D8': criteria_priority,
             'D11': criteria_priority,
-            'default': ('MarineReportingUnit', 'GESComponent', 'Feature',
-                        'Element', 'Element2Code', 'Element2', 'Criteria',
-                        'IntegrationRuleTypeParameter',)
+            'default': default
         }
+
         return order_by.get(descr, order_by['default'])
 
     def get_data_from_view_Art8(self):
@@ -510,12 +582,37 @@ https://svn.eionet.europa.eu/repositories/Reportnet/Dataflows/MarineDirective/MS
         # muids = [x.id for x in self.muids]
         conditions = [
             t.c.CountryCode == self.country_code,
-            t.c.Region == self.country_region_code,
+            # t.c.Region == self.country_region_code,
             # t.c.MarineReportingUnit.in_(muids),     #
-            t.c.GESComponent.in_(all_ids),
-            or_(t.c.Element.isnot(None),
-                t.c.Criteria.isnot(None)),
+            t.c.GESComponent.in_(all_ids)
         ]
+
+        # Handle the case of Romania that submitted duplicate data,
+        # where Element is empty, but Criteria has data
+        if self.country_code != 'RO':
+            conditions.append(
+                or_(t.c.Element.isnot(None),
+                    t.c.Criteria.isnot(None))
+            )
+        else:
+            conditions.append(
+                t.c.Element.isnot(None)
+            )
+
+        if self.country_code != 'DK':
+            conditions.insert(
+                1, t.c.Region == self.country_region_code
+            )
+        else:
+            # Handle the case of Denmark that have submitted a lot of
+            # information under the DK-TOTAL MRU, which doesn't have a region
+            # attached.
+            conditions.insert(1,
+                              or_(t.c.Region == 'NotReported',
+                                  t.c.Region == self.country_region_code
+                                  )
+                              )
+
         orderby = [
             getattr(t.c, x) for x in self._get_order_cols_Art8(self.descriptor)
         ]
@@ -532,15 +629,26 @@ https://svn.eionet.europa.eu/repositories/Reportnet/Dataflows/MarineDirective/MS
     def get_data_from_view_Art10(self):
         t = sql2018.t_V_ART10_Targets_2018
 
-        # TODO check conditions for other countries beside NL
-        # conditions = [t.c.GESComponents.in_(all_ids)]
+        conditions = [t.c.CountryCode == self.country_code]
+
+        if self.country_code != 'DK':
+            conditions.insert(
+                1, t.c.Region == self.country_region_code
+            )
+        else:
+            # Handle the case of Denmark that have submitted a lot of
+            # information under the DK-TOTAL MRU, which doesn't have a region
+            # attached.
+            conditions.insert(1,
+                              or_(t.c.Region == 'NotReported',
+                                  t.c.Region == self.country_region_code
+                                  )
+                              )
 
         count, res = db.get_all_records_ordered(
             t,
-            ('Features', 'TargetCode', 'Element'),
-            t.c.CountryCode == self.country_code,
-            t.c.Region == self.country_region_code,
-            # *conditions
+            ('TargetCode', 'Features', 'Element'),
+            *conditions
         )
 
         out = []
@@ -575,11 +683,12 @@ https://svn.eionet.europa.eu/repositories/Reportnet/Dataflows/MarineDirective/MS
             # Because some Features are missing from FeaturesSmart
             # we consider 'D1' descriptor valid for all 'D1.x'
             # and we keep the data if 'D1' is present in the GESComponents
+            # For D1 Romania filter by features
             ges_comps = getattr(row, 'GESComponents', ())
-            if 'D1' in ges_comps:
+            if 'D1' in ges_comps and self.country_code != 'RO':
                 out_filtered.append(row)
                 continue
-                
+
             feats = set(row.Features.split(','))
 
             if feats.intersection(ok_features):
@@ -597,13 +706,31 @@ https://svn.eionet.europa.eu/repositories/Reportnet/Dataflows/MarineDirective/MS
         if self.descriptor.startswith('D1.'):
             all_ids.append('D1')
 
+        conditions = [
+            t.c.CountryCode == self.country_code,
+            t.c.GESComponent.in_(all_ids)
+        ]
+
+        if self.country_code != 'DK':
+            conditions.insert(
+                1, or_(t.c.Region == self.country_region_code,
+                       t.c.Region.is_(None))
+            )
+        else:
+            # Handle the case of Denmark that have submitted a lot of
+            # information under the DK-TOTAL MRU, which doesn't have a region
+            # attached.
+            conditions.insert(1,
+                              or_(t.c.Region == 'NotReported',
+                                  t.c.Region == self.country_region_code,
+                                  t.c.Region.is_(None)
+                                  )
+                              )
+
         count, q = db.get_all_records_ordered(
             t,
             ('GESComponent', ),
-            t.c.CountryCode == self.country_code,
-            or_(t.c.Region == self.country_region_code,
-                t.c.Region.is_(None)),
-            t.c.GESComponent.in_(all_ids),
+            *conditions
         )
 
         ok_features = set([f.name for f in get_features(self.descriptor)])
@@ -635,8 +762,19 @@ https://svn.eionet.europa.eu/repositories/Reportnet/Dataflows/MarineDirective/MS
         data = getattr(self, 'get_data_from_view_' + self.article)()
         data = [Proxy2018(row, self) for row in data]
 
+        if self.request.form.get('split-mru') and (len(data) > 2000):
+            if self.muids:
+                if getattr(self, 'focus_muid', None) is None:
+                    self.focus_muid = self.muids[0].name
+
+                self.focus_muids = self._get_muids_from_data(data)
+
         if self.article == 'Art8':
-            data = consolidate_singlevalue_to_list(data, 'IndicatorCode')
+            order = self._get_order_cols_Art8(self.descriptor)
+            data = consolidate_singlevalue_to_list(data,
+                                                   'IndicatorCode',
+                                                   order,
+                                                   )
 
         data_by_mru = group_by_mru(data)
 
@@ -653,6 +791,7 @@ https://svn.eionet.europa.eu/repositories/Reportnet/Dataflows/MarineDirective/MS
 
             res.append((mru, _rows))
 
+        # resort the results by marine reporting unit
         res_sorted = sorted(
             res, key=lambda r: natural_sort_key(r[0].__repr__()))
 
@@ -697,6 +836,11 @@ https://svn.eionet.europa.eu/repositories/Reportnet/Dataflows/MarineDirective/MS
 
         data = snapshots[-1][1]
 
+        if hasattr(self, 'focus_muid'):
+            # filter the data based on selected muid
+            # this is used to optmize display of really long data
+            data = [t for t in data if t[0].name == self.focus_muid]
+
         if date_selected:
             filtered = [x for x in snapshots if x[0] == date_selected]
 
@@ -707,27 +851,36 @@ https://svn.eionet.europa.eu/repositories/Reportnet/Dataflows/MarineDirective/MS
 
         return data
 
-    def get_muids_from_data(self, data):
-        # TODO: this shouldn't exist anymore
-        if isinstance(data[0][0], (unicode, str)):
-            all_muids = sorted(set([x[0] for x in data]))
+    def _get_muids_from_data(self, data):
+        muids = set()
+        for row in data:
+            o = getattr(row, '__o')
+            muid = o.MarineReportingUnit
+            muids.add(muid)
 
-            return ', '.join(all_muids)
+        return list(sorted(muids))
 
-        all_muids = [x[0] for x in data]
-        seen = []
-        muids = []
-
-        for muid in all_muids:
-            name = muid.name
-
-            if name in seen:
-                continue
-
-            seen.append(name)
-            muids.append(muid)
-
-        return ItemList(rows=muids)
+    # def get_muids_from_data(self, data):
+    #     # TODO: this shouldn't exist anymore
+    #     if isinstance(data[0][0], (unicode, str)):
+    #         all_muids = sorted(set([x[0] for x in data]))
+    #
+    #         return ', '.join(all_muids)
+    #
+    #     all_muids = [x[0] for x in data]
+    #     seen = []
+    #     muids = []
+    #
+    #     for muid in all_muids:
+    #         name = muid.name
+    #
+    #         if name in seen:
+    #             continue
+    #
+    #         seen.append(name)
+    #         muids.append(muid)
+    #
+    #     return ItemList(rows=muids)
 
     @db.use_db_session('2018')
     @timeit
@@ -790,8 +943,10 @@ https://svn.eionet.europa.eu/repositories/Reportnet/Dataflows/MarineDirective/MS
         out = BytesIO()
         workbook = xlsxwriter.Workbook(out, {'in_memory': True})
 
-        for wtitle, wdata in data:
-            worksheet = workbook.add_worksheet(unicode(wtitle)[:30])
+        for index, (wtitle, wdata) in enumerate(data):
+            _wtitle = '{}_{}'.format(index + 1, unicode(wtitle)[:28])
+
+            worksheet = workbook.add_worksheet(_wtitle)
 
             for i, (row_label, row_values) in enumerate(wdata):
                 worksheet.write(i, 0, row_label.title)
@@ -849,6 +1004,11 @@ https://svn.eionet.europa.eu/repositories/Reportnet/Dataflows/MarineDirective/MS
     @timeit
     def __call__(self):
 
+        # allow focusing on a single muid if the data is too big
+        if 'focus_muid' in self.request.form:
+            self.focus_muid = self.request.form['focus_muid'].strip()
+        # self.focus_muid = 'BAL-AS-EE-ICES_SD_29'
+
         self.content = ''
         template = getattr(self, self.article, None)
 
@@ -857,10 +1017,10 @@ https://svn.eionet.europa.eu/repositories/Reportnet/Dataflows/MarineDirective/MS
 
         self.subform = self.get_form()
 
-        if 'download' in self.request.form:
+        if ('download' in self.request.form):  # and report_data
             return self.download()
 
-        if 'translate' in self.request.form:
+        if 'translate' in self.request.form and self.can_view_assessment_data:
             return self.auto_translate()
 
         trans_edit_html = self.translate_view()()

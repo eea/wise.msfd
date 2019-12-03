@@ -1,5 +1,6 @@
 import re
 from collections import defaultdict
+from datetime import datetime
 from io import BytesIO
 
 from six import string_types
@@ -8,7 +9,10 @@ import xlsxwriter
 from wise.msfd.utils import class_id, get_obj_fields
 
 FORMS_2018 = {}
+FORMS_ART4 = {}
+FORMS_ART8910 = {}
 FORMS_ART11 = {}
+FORMS_ART18 = {}
 FORMS = {}                         # main chapter 1 article form classes
 SUBFORMS = defaultdict(set)        # store subform references
 ITEM_DISPLAYS = defaultdict(set)   # store registration for item displays
@@ -25,12 +29,42 @@ def register_form_2018(klass):
     return klass
 
 
+def register_form_art4(klass):
+    """ Registers a form for article 4
+
+    """
+
+    FORMS_ART4[class_id(klass)] = klass
+
+    return klass
+
+
+def register_form_art8910(klass):
+    """ Registers the 2012 and 2018 main form for articles 8, 9, 10
+
+    """
+
+    FORMS_ART8910[class_id(klass)] = klass
+
+    return klass
+
+
 def register_form_art11(klass):
     """ Registers a 'secondary' form class for article 11
 
     """
 
     FORMS_ART11[class_id(klass)] = klass
+
+    return klass
+
+
+def register_form_art18(klass):
+    """ Registers a form class for article 18
+
+    """
+
+    FORMS_ART18[class_id(klass)] = klass
 
     return klass
 
@@ -137,7 +171,8 @@ def data_to_xls(data):
                 field_val = getattr(wdata[j], f)
 
                 if not isinstance(field_val,
-                                  string_types + (float, int, type(None))):
+                                  string_types + (datetime, float,
+                                                  int, type(None))):
                     field_needed = False
 
                     break
@@ -153,6 +188,9 @@ def data_to_xls(data):
                 else:
                     value = row[i]
 
+                if isinstance(value, datetime):
+                    value = value.isoformat()
+
                 worksheet.write(j + 1, i, value)
 
     workbook.close()
@@ -162,6 +200,7 @@ def data_to_xls(data):
 
 
 ART_RE = re.compile('\s(\d+\.*\d?\w?)\s')
+ART_RE_2018 = re.compile('\s\d+((\.\d\w+)|(\s&\s\d+))?')
 
 
 def article_sort_helper(term):
@@ -180,3 +219,20 @@ def article_sort_helper(term):
     f = ''.join(chars)
 
     return float(f)
+
+
+def article_sort_helper_2018(term):
+    title = term.title
+    text = ART_RE_2018.search(title).group().strip()
+    chars = []
+
+    for c in text:
+        if c.isdigit() or c is '.':
+            chars.append(c)
+        else:
+            chars.append(str(ord(c)))
+
+    f = ''.join(chars)
+
+    return float(f)
+

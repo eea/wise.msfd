@@ -1,3 +1,7 @@
+import logging
+import re
+from datetime import datetime
+
 from zope.interface import implements
 
 from Products.Five.browser import BrowserView
@@ -13,6 +17,8 @@ from ..base import BaseEnhancedForm, BaseUtil, EmbeddedForm
 from ..db import get_item_by_conditions
 from ..interfaces import IMainForm
 from .utils import get_registered_form_sections
+
+logger = logging.getLogger('wise.msfd')
 
 
 class ItemDisplayForm(EmbeddedForm):
@@ -161,16 +167,27 @@ class ItemDisplay(BrowserView, BaseUtil):
         return self.extra_data_template()
 
 
+def true(view):
+    return True
+
+
 MAIN_FORMS = (
-    Tab('msfd-start', 'msfd-start', 'Start', 'About search engine'),
-    Tab('msfd-mru', 'msfd-mru', 'Article 4', 'Marine Unit IDs'),
-    Tab('msfd-rc', 'msfd-rc', 'Article 6', 'Regional cooperation'),
-    Tab('msfd-ca', 'msfd-ca', 'Article 7', 'Competent Authorities'),
-    Tab('msfd-c1', 'msfd-c1',
-        'Articles 8, 9 & 10', '2012 reporting exercise'),
-    Tab('msfd-c2', 'msfd-c2', 'Article 11', '2014 reporting exercise'),
-    Tab('msfd-c3', 'msfd-c3', 'Articles 13 & 14', '2015 reporting exercise'),
-    Tab('msfd-c4', 'msfd-c4', 'Articles 8, 9 & 10', '2018 reporting exercise'),
+    Tab('msfd-start', 'msfd-start', 'Start',
+        'About <br/>search engine', '', true),
+    Tab('msfd-mru', 'msfd-mru', 'Article 4', 'Marine Units', '', true),
+    Tab('msfd-rc', 'msfd-rc', 'Article 6', 'Regional cooperation', '', true),
+    Tab('msfd-ca', 'msfd-ca', 'Article 7', 'Competent Authorities', '', true),
+    Tab('msfd-c14', 'msfd-c14',
+        'Articles <br/>8, 9 & 10', 'GES determinations, assessments & targets',
+        '', true),
+    Tab('msfd-c2', 'msfd-c2', 'Article 11', 'Monitoring programmes',
+        '', true),
+    Tab('msfd-c3', 'msfd-c3', 'Articles <br/>13 & 14',
+        'Programmes of measures (PoM) & exceptions', '', true),
+    # Tab('msfd-c4', 'msfd-c4', 'Articles <br/>8, 9 & 10',
+    #     '2018 reporting exercise', '', true),
+    Tab('msfd-c5', 'msfd-c5', 'Article 18',
+        'Progress on the implementation of PoM', '', true),
 )
 
 
@@ -195,13 +212,26 @@ class MainForm(BaseEnhancedForm, BasePublicPage, Form):
     def handle_continue(self, action):
         self.reset_page = True
 
-    @buttonAndHandler(u'Download as XLS', name='download')
+    @buttonAndHandler(u'Download as spreadsheet', name='download')
     def handle_download(self, action):
         self.should_download = True
 
     @property
     def title(self):
         return [x[1] for x in self.main_forms if x[0] == self.name][0]
+
+    @property
+    def spreadsheet_title(self):
+        title = [x[2] for x in self.main_forms if x[0] == self.name][0]
+
+        title_from_subforms = self.find_spreadsheet_title()
+
+        if title_from_subforms:
+            title = title_from_subforms
+
+        title = re.sub(r"[^a-zA-Z0-9]+", "_", title)
+
+        return title
 
     def update(self):
         super(MainForm, self).update()
@@ -235,7 +265,14 @@ class MainForm(BaseEnhancedForm, BasePublicPage, Form):
 
             sh('Content-Type', 'application/vnd.openxmlformats-officedocument.'
                'spreadsheetml.sheet')
-            sh('Content-Disposition', 'attachment; filename=marinedb.xlsx')
+
+            # fname = self.subform.get_record_title(cntx='subform') or 'marinedb'
+            logger.info("Spreadsheet title: %s", self.spreadsheet_title)
+            fname = self.spreadsheet_title or 'marinedb'
+            fname = fname + '_' + str(datetime.now().replace(microsecond=0))
+            fname = fname.replace(' ', '_').replace('(', '').replace(')', '')\
+                .replace('&', '_')
+            sh('Content-Disposition', 'attachment; filename=%s.xlsx' % fname)
 
             return data.read()
 
@@ -256,3 +293,20 @@ class MainForm(BaseEnhancedForm, BasePublicPage, Form):
 
         if hasattr(ctx, 'download_results'):
             return ctx.download_results
+
+    def find_spreadsheet_title(self):
+        """ Not used, just an experiment to provide custom spreadsheet titles
+            across all articles
+
+        """
+        ctx = self.subform
+
+        while hasattr(ctx, 'subform'):
+
+            if hasattr(ctx, 'record_title'):
+                return ctx.record_title
+
+            ctx = ctx.subform
+
+        if hasattr(ctx, 'record_title'):
+            return ctx.record_title
