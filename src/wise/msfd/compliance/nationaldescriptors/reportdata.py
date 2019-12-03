@@ -386,12 +386,12 @@ class ReportData2012Secondary(ReportData2012):
     implements(IReportDataViewSecondary)
 
     descriptor = 'Not linked'
+    country_region_code = 'No region'
 
     @property
     def report_title(self):
-        title = "Member State report: {}/{}/{}/2012".format(
+        title = "Member State report: {}/{}/2012".format(
             self.country_name,
-            self.country_region_name,
             self.article
         )
 

@@ -65,7 +65,7 @@
         <td>Member State</td>
         <td tal:content="python:view.country_name"/>
       </tr>
-      <tr>
+      <tr tal:condition="view/is_primary_article">
         <td>Region(s) and subregion(s)</td>
         <td tal:content="view/country_region_name"/>
       </tr>
