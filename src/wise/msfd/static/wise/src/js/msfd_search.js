@@ -277,7 +277,7 @@
                 data.push(el.id);
             });
 
-            addAutoComplete($field);
+            // addAutoComplete($field);
         }
     }
 

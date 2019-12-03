@@ -1,2 +1,404 @@
-!function(a){function b(){var a="s--Plone"+window.location.pathname.split("/").slice(0,-1).join("-");document.cookie=a+"="+Date.now()+";path=/"}function c(){colorPalette={light:["lightgreen","lightblue","lightgoldenrodyellow","lightgrey"],dark:["darkgreen","darkblue","darkmagenta","darkred"]},usernames={light:[],dark:[]},a(".comment-name").each(function(){var b=a(this).attr("group-id"),c=a(this).text();usernames[b].indexOf(c)===-1&&usernames[b].push(c)}),a(".comms").each(function(){var b=a(this).find(".comment-name"),c=b.text(),d=b.attr("group-id"),e=colorPalette[d];indx=usernames[d].indexOf(c),color=e[indx%e.length],$comment=a(this).find(".comment"),$comment.css("background-color",color),"light"===d&&$comment.css("color","black")})}function d(b){var c,d=b.find(".accordion");for(c=0;c<d.length;c++)if(d[c].addEventListener("click",function(){this.classList.toggle("active");var b=a(this).nextUntil("li.accordion");b.each(function(){this.classList.toggle("active")})}),c==d.length-1){d[c].classList.toggle("active");var e=a(d[c]).nextUntil("li.accordion");e.each(function(){this.classList.toggle("active")})}}function e(b){var e=b.data("question-id"),f=b.data("thread-id"),g="./@@ast-comments?q="+e+"&thread_id="+f;a.get(g,function(a){b.html(a),c(),d(b)})}function f(e){e.find(".comms .comm-del").each(function(){var f=a(this);clickEventExists=f.data("click-event-setup"),"true"!==clickEventExists&&(f.data("click-event-setup","true"),f.on("click",function(){var f=a(this),g=a(".comments",f.closest(".right")),h=f.siblings(".comm-crtr").find(".comment-name").text(),i=f.siblings(".comm-crtr").find(".comment-time").text(),j=f.siblings(".comment").text(),k=e.data("question-id"),l=e.data("thread-id");if(confirm("Are you sure you want to delete the comment '"+j+"'?")){var m="./@@del_comment",n={comm_name:h,comm_time:i,text:j,q:k,thread_id:l};a.post(m,n,function(a){b(),g.html(a),c(),d(e)})}}))})}function g(){a(window).on("resize scroll",function(){a(".subform .right .comments").each(function(){var b=a(this);"true"!==b.data("comments-loaded")&&b.isInViewport()&&(b.data("comments-loaded","true"),e(b))})})}function h(){a(".subform .right .textline button").on("click",function(){var e=a(this),f=a(".comments",e.closest(".right")),g=a("textarea",e.closest(".textline")),h=f.data("question-id"),i=f.data("thread-id"),j=g.val();if(!j)return!1;var k="./@@add_comment",l={text:j,q:h,thread_id:i};return a.post(k,l,function(a){b(),f.html(a),g.val(""),c(),d(f)}),!1})}function i(){var b=a(".right.disc-tl"),c=a(".right.disc-ec");b.length,c.length;a(".comm-hide").click(function(){a(this).siblings(".comments").find("li").each(function(){a(this).addClass("active")})}),a(".right.discussion .comments").click(function(){$thisComm=a(this).closest(".right"),$thisComm.hasClass("inactive")&&$thisComm.toggleClass("inactive")})}function j(){a("#comp-national-descriptor div.subform.disabled div.left").find("textarea").each(function(){a(this).attr("disabled",!0)}),a(".kssattr-formname-edit-assessment-data-2018").submit(function(){a(":disabled").each(function(){a(this).removeAttr("disabled")})})}function k(){a("#comp-national-descriptor div.subform div.left div.assessment-form-input").find("option:contains('No value'), span.select2-chosen:contains('No value')").each(function(){a(this).text("-")})}function l(){var b=!1,c=!1,d=a(".fields-container");a("#comp-national-descriptor form").submit(function(){b=!0}),d.on("change","input, textarea, select",function(a){c=!0}),a(window).bind("beforeunload",function(){if(c&&!b)return"You have unsaved changes. Do you want to leave this page?"});var e=d.find(".select2-container"),f=d.find("textarea");e.closest(".fields-container-row").addClass("flex-select"),f.closest(".fields-container-row").addClass("flex-textarea")}function m(){var b=a("#report-nav-toggle"),c=a(".report-nav.sticky"),d=a("#assessment-edit-infobox"),e=d.children().length,f=a(".form-right-side.fixed-save-btn");if(e>0&&c.length){c.addClass("has-infobox"),d.show().css("display","inline-block");var g=b.position().left-16;f.length&&(g=f.position().left),g-=d.width(),d.css("left",g+"px")}else c.removeClass("has-infobox"),d.hide()}function n(){function b(){var b=[],c=a("<div>"),d=a("div#assessment-edit-infobox"),e="'Not relevant' option selected for the following questions:";return d.empty(),a(".subform .left select option:selected").each(function(){var d=a(this).text(),e=a(this).parent().attr("id").split("_").slice(-2),f=e[0],g=e[1];g.match("[^a-zA-Z]")&&(g=g.split("-").join(".")),"Not relevant"==d&&(c.append(a("<span>").addClass("infobox-popover").append(f+": "+g)),b.indexOf(g)===-1&&b.push(g))}),b.forEach(function(b,c,e){d.append(a("<span>").attr("class","info-item").append(b))}),d.attr("class","help-popover").attr("data-trigger","hover").attr("data-html","true").attr("data-placement","bottom").attr("data-content",c.html()).attr("data-original-title",e).popover(),0===b.length?void d.hide():void d.append(a("<span>").attr("class","fa fa-exclamation").css({"font-size":"26px","float":"right",display:"block"}))}b(),a("select").change(function(){b(),m()})}a.fn.isInViewport=function(){var b=a(this).offset().top,c=b+a(this).outerHeight(),d=a(window).scrollTop(),e=d+a(window).height();return c>d&&b<e},a(document).ready(function(){b(),g(),h(),i(),j(),k(),l(),n(),a(".subform .right .comments").mouseenter(function(){f(a(this))});var c=a(window),d=a(".subform");d.each(function(){var b=a(this),d=b.find(".right"),e=b.find(".left").innerHeight();d.innerHeight(e);var f;c.resize(function(){clearTimeout(f),f=setTimeout(function(){d=b.find(".right"),e=b.find(".left").innerHeight(),d.innerHeight(e)},100)})});var e,o,p=a(".form-right-side"),q=a(".report-nav"),r=0;p.offset()&&(r=p.offset().top),q.length>0&&(rnOffset=q.offset().top),o=c.height()-2*p.height(),p.find("#form-buttons-save").addClass("btn-success");var s=p.find("#form-buttons-translate");s.addClass("btn-secondary"),window.location.pathname.indexOf("art10")==-1&&s.css("display","none"),c.scroll(function(){e=c.scrollTop();var a=e+o<r&&e>=rnOffset;p.toggleClass("fixed-save-btn",a),m()})})}(jQuery);
-//# sourceMappingURL=assessment-edit.js.map
+(function($){
+
+  $.fn.isInViewport = function() {
+    var elementTop = $(this).offset().top;
+    var elementBottom = elementTop + $(this).outerHeight();
+
+    var viewportTop = $(window).scrollTop();
+    var viewportBottom = viewportTop + $(window).height();
+
+    return elementBottom > viewportTop && elementTop < viewportBottom;
+  };
+
+  function setCommentCookie() {
+    var token = 's--Plone' + window.location.pathname.split('/').slice(0,-1).join('-');
+    document.cookie = token + "=" + Date.now() + ";path=/";
+  }
+
+  function colorComments() {
+    // setup colored chat depending on user
+    colorPalette = {
+      'light': ["lightgreen", "lightblue", "lightgoldenrodyellow", "lightgrey"],
+      'dark': ["darkgreen", "darkblue", "darkmagenta", "darkred"]
+    }
+
+    usernames = {
+      'light': [],
+      'dark': []
+    };
+
+    $('.comment-name').each(function(){
+      var groupId = $(this).attr('group-id');
+      var username = $(this).text();
+
+      if (usernames[groupId].indexOf(username) === -1) {
+        usernames[groupId].push(username);
+      }
+
+    });
+
+    $('.comms').each(function(){
+      var $commentName = $(this).find('.comment-name');
+      var commenter = $commentName.text();
+      var groupId = $commentName.attr('group-id');
+      var colorP = colorPalette[groupId];
+
+      indx = usernames[groupId].indexOf(commenter);
+      color = colorP[indx % colorP.length];
+
+      $comment = $(this).find('.comment');
+      $comment.css('background-color', color);
+      if (groupId === 'light'){
+        $comment.css('color', 'black');
+      }
+    });
+  }
+
+  function setupAccordions($el) {
+    var $acc = $el.find('.accordion');
+    var i;
+
+    for (i = 0; i < $acc.length; i++) {
+      $acc[i].addEventListener("click", function() {
+        this.classList.toggle("active");
+        var $comments = $(this).nextUntil('li.accordion');
+        $comments.each(function(){
+          this.classList.toggle("active");
+        });
+      });
+
+      if(i == $acc.length -1) {
+        $acc[i].classList.toggle("active");
+        var $comments = $($acc[i]).nextUntil('li.accordion');
+        $comments.each(function(){
+          this.classList.toggle("active");
+        });
+      }
+    }
+  }
+
+  function loadComments($el) {
+    var qid = $el.data('question-id');
+    var threadId = $el.data('thread-id');
+    var url = './@@ast-comments?q=' + qid + '&thread_id=' + threadId;
+    $.get(url, function(text){
+      //console.log('getting comments from url', url);
+      $el.html(text);
+      colorComments();
+      setupAccordions($el);
+    });
+  }
+
+  function setupDeleteComments($el) {
+    $el.find('.comms .comm-del').each(function(){
+      var $this = $(this);
+      clickEventExists = $this.data('click-event-setup');
+      if(clickEventExists === 'true'){
+        return;
+      }
+      $this.data('click-event-setup', 'true');
+      //console.log("setup delete comments");
+
+      $this.on('click', function(){
+        var $this = $(this);
+        var $comel = $('.comments', $this.closest('.right'));
+        var commentName = $this.siblings('.comm-crtr').find('.comment-name').text();
+        var commentTime = $this.siblings('.comm-crtr').find('.comment-time').text();
+        var text = $this.siblings('.comment').text();
+        var qid = $el.data('question-id');
+        var threadId = $el.data('thread-id');
+
+        if (confirm("Are you sure you want to delete the comment '" + text + "'?")) {
+          var url = './@@del_comment';
+          var data = {
+            comm_name: commentName,
+            comm_time: commentTime,
+            text: text,
+            q: qid,
+            thread_id: threadId,
+          };
+          $.post(url, data, function(text){
+            setCommentCookie();
+            $comel.html(text);
+            colorComments();
+            setupAccordions($el);
+          });
+        }
+      });
+    });
+  }
+
+  function setupCommentsListing() {
+    $(window).on('resize scroll', function() {
+      $('.subform .right .comments').each(function(){
+        var $n = $(this);
+
+        if ($n.data('comments-loaded') === 'true') {
+          return;
+        }
+        if ($n.isInViewport()) {
+          $n.data('comments-loaded', 'true');
+          loadComments($n);
+        }
+      });
+    });
+  }
+
+  function setupPostComments() {
+    $('.subform .right .textline button').on('click', function() {
+      var $btn = $(this);
+      var $comel = $('.comments', $btn.closest('.right'));
+      var $textarea = $('textarea', $btn.closest('.textline'));
+
+      var qid = $comel.data('question-id');
+      var threadId = $comel.data('thread-id');
+      var text = $textarea.val();
+
+      if (!text) return false;
+
+      var url = './@@add_comment';
+      var data = {
+        text:text,
+        q: qid,
+        thread_id: threadId
+      };
+      $.post(url, data, function(text){
+        setCommentCookie();
+        $comel.html(text);
+        $textarea.val('');
+        colorComments();
+        setupAccordions($comel);
+      });
+      // console.log(qid, text);
+      return false;
+    });
+  }
+
+  function setupToggleComments() {
+    var $discTl = $('.right.disc-tl')
+    var $discEc = $('.right.disc-ec')
+    var existsDiscTl = $discTl.length
+    var existsDiscEc = $discEc.length
+
+    $('.comm-hide').click(function() {
+      // Close button transformed into a 'show all comments' button
+      // $(this).closest('.right').addClass('inactive');
+      $(this).siblings('.comments').find('li').each(function(){
+        $(this).addClass('active');
+      });
+    });
+
+    $('.right.discussion .comments').click(function(){
+      $thisComm = $(this).closest('.right');
+
+      if($thisComm.hasClass('inactive')){
+        $thisComm.toggleClass('inactive');
+      }
+    });
+  }
+
+  function setupDisableAssessmentForms(){
+    // used in edit assessment form
+    // add the disabled attribute for select/textarea elements
+    // if the question type does not match the process phase
+    $('#comp-national-descriptor div.subform.disabled div.left')
+      .find('textarea').each(function(){
+        $(this).attr('disabled', true);
+    });
+
+    // used in edit assessment form
+    // remove the disabled attribute when submitting the form
+    // data from disabled attributes is not submitted
+    $('.kssattr-formname-edit-assessment-data-2018').submit(function(){
+      $(':disabled').each(function(){
+        $(this).removeAttr('disabled');
+      });
+    });
+  }
+
+  function setupFormSelectOptions() {
+    // used in edit assessment form
+    // override plone's default 'No value' option with '-'
+    $('#comp-national-descriptor div.subform div.left div.assessment-form-input')
+      .find("option:contains('No value'), span.select2-chosen:contains('No value')").each(function(){
+        $(this).text('-');
+    });
+
+  }
+
+  function setupUnloadWarning() {
+    // National descriptor edit assessment data
+    // Warn user before leaving the page with unsaved changes
+    var submitted = false;
+    var modified = false;
+    var $nd = $('.fields-container');
+
+    $('#comp-national-descriptor form').submit(function() {
+      submitted = true;
+    });
+
+    $nd.on('change', 'input, textarea, select', function(e) {
+      modified = true;
+    });
+
+    $(window).bind('beforeunload', function() {
+      if (modified && !submitted) {
+        // most browsers ignores custom messages,
+        // in that case the browser default message will be used
+        return "You have unsaved changes. Do you want to leave this page?";
+      }
+    });
+
+    var $select = $nd.find('.select2-container');
+    var $textarea = $nd.find('textarea');
+    $select.closest('.fields-container-row').addClass('flex-select');
+    $textarea.closest('.fields-container-row').addClass('flex-textarea');
+  }
+
+  function adjustInfoboxPosition() {
+    var $repNavToggle = $('#report-nav-toggle');
+    var $repNav = $('.report-nav.sticky');
+    var $infobox = $('#assessment-edit-infobox');
+    var infoboxLength = $infobox.children().length;
+    var $ff = $('.form-right-side.fixed-save-btn');
+
+    if (infoboxLength > 0 && $repNav.length){
+      $repNav.addClass('has-infobox');
+      $infobox.show().css('display', 'inline-block');
+      var leftPos = $repNavToggle.position().left - 16;
+
+      if ($ff.length) leftPos = $ff.position().left;
+
+      leftPos = leftPos - $infobox.width();
+      $infobox.css('left', leftPos + 'px');
+    }
+    else {
+      $repNav.removeClass('has-infobox');
+      $infobox.hide();
+    }
+  }
+
+  function setupAssessmentInfobox() {
+    // add the infobox to the top sticky bar
+    // the infobox will show all ges components/targets with 'Not relevant' option selected
+    function _addGescompsToInfobox() {
+      var gesComps = [];
+      var $allQuestions = $('<div>');
+      var $infobox = $('div#assessment-edit-infobox');
+      var message = "'Not relevant' option selected for the following questions:";
+      $infobox.empty();
+
+      $('.subform .left select option:selected').each(function(){
+        var value = $(this).text();
+        var _id = $(this).parent().attr('id').split('_').slice(-2);
+        var questionId = _id[0];
+        var _idGescomp = _id[1];
+
+        if (_idGescomp.match('[^a-zA-Z]')) _idGescomp = _idGescomp.split('-').join('.');
+
+        if(value == 'Not relevant') {
+          $allQuestions.append($("<span>").addClass('infobox-popover')
+            .append(questionId + ": " + _idGescomp));
+
+          if (gesComps.indexOf(_idGescomp) === -1) gesComps.push(_idGescomp);
+        }
+      });
+
+      gesComps.forEach(function(value, index, array) {
+        $infobox.append($('<span>').attr('class', 'info-item').append(value)
+        );
+      });
+
+      $infobox.attr('class', 'help-popover')
+          .attr('data-trigger', 'hover')
+          .attr('data-html', 'true')
+          .attr('data-placement', 'bottom')
+          .attr('data-content', $allQuestions.html())
+          .attr('data-original-title', message).popover();
+
+      if(gesComps.length === 0) {
+        $infobox.hide();
+        return;
+      }
+
+      $infobox.append($('<span>').attr('class', 'fa fa-exclamation')
+        .css({'font-size': '26px', 'float': 'right', 'display': 'block'})
+      );
+    }
+    _addGescompsToInfobox();
+
+    $('select').change(function(){
+      _addGescompsToInfobox();
+      adjustInfoboxPosition();
+    });
+  }
+
+  $(document).ready(function() {
+    setCommentCookie();
+    setupCommentsListing();
+    setupPostComments();
+    setupToggleComments();
+    setupDisableAssessmentForms();
+    setupFormSelectOptions();
+    setupUnloadWarning();
+    setupAssessmentInfobox();
+
+    // When hovering over the comments section add delete comment event for each comment
+    $('.subform .right .comments').mouseenter(
+      function(){
+        setupDeleteComments($(this));
+      }
+    );
+
+    var $win = $(window);
+
+    // set comment section height for overflow
+    var $sf = $('.subform');
+    $sf.each(function() {
+      var $this = $(this);
+      var $com = $this.find('.right');
+      var formHeight = $this.find('.left').innerHeight();
+
+      $com.innerHeight(formHeight);
+
+      var resizeTimer;
+      $win.resize(function() {
+        clearTimeout(resizeTimer);
+        resizeTimer = setTimeout(function(){
+          $com = $this.find('.right');
+          formHeight = $this.find('.left').innerHeight();
+          $com.innerHeight(formHeight);
+        }, 100)
+      });
+    });
+
+    // sticky save button
+    var $sfw = $('.form-right-side');
+    var $rn = $('.report-nav');
+    var btnPos = 0;
+    var $rnOffset = 0;
+    var scroll, space;
+
+    if ($sfw.offset()) btnPos = $sfw.offset().top;
+    if ($rn.length > 0) rnOffset = $rn.offset().top;
+
+    space = $win.height() - $sfw.height() * 2;
+
+    $sfw.find('#form-buttons-save').addClass('btn-success');
+    // Button to translate targets only displayed for art10
+    var $btnTranslate = $sfw.find('#form-buttons-translate');
+    $btnTranslate.addClass('btn-secondary');
+    if(window.location.pathname.indexOf('art10') == -1){
+      $btnTranslate.css('display', 'none');
+    }
+
+    $win.scroll(function() {
+      scroll = $win.scrollTop();
+      var fixElement = (scroll + space < btnPos) && (scroll >= rnOffset);
+      $sfw.toggleClass('fixed-save-btn', fixElement);
+      adjustInfoboxPosition();
+    });
+
+  });
+
+}(jQuery));
