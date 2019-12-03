@@ -29,8 +29,11 @@
         </div>
       </metal:slot>
       <metal:css fill-slot="formtop">
-        <style>
-        </style>
+        <link href="/++resource++static_css/tabs.css" type="text/css" rel="stylesheet" />
+        <link href="/++resource++static_css/msfd_search.css" type="text/css" rel="stylesheet" />
+        <script src="++plone++static/components/bootstrap/js/collapse.js"></script>
+        <script src="++resource++tabs.js"></script>
+        <script src="++resource++msfd_search.js"></script>
       </metal:css>
     </metal:block>
   </div>
