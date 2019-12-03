@@ -75,7 +75,6 @@ if (!Array.prototype.last){
     // NOT USED
     // create a clone of the assessment data 2018 table and overlap the original table
     // with fixed question and score columns
-    // console.log('setupScrollableTargets');
     $('#container-assessment-data-2018 .table.table-condensed.assessment-data-table')
       .clone(true).appendTo('#container-assessment-data-2018').addClass('clone');
 
@@ -106,11 +105,22 @@ if (!Array.prototype.last){
       $("th", this).each(function() {
         var $th = $(this);
         var $next = $('td', $th.parent());
-        var cells_max_height = Math.max($next.height());
+        var tdHeights = [];
+
+        $next.each(function(){
+          var $this = $(this);
+          if($this.hasClass('translatable')) {
+            var hght = $this.find('.tr-text').height();
+            tdHeights.push(hght);
+          } else {
+            tdHeights.push($this.height());
+          }
+        });
+
+        var cells_max_height = Math.max.apply(Math, tdHeights);
         var height = Math.max($th.height(), cells_max_height);
 
         $th.height(height);
-
         if ($th.height() > cells_max_height) {
           $next.height($th.height());
         }
@@ -138,7 +148,19 @@ if (!Array.prototype.last){
       $("th", this).each(function() {
         var $th = $(this);
         var $next = $('td', $th.parent());
-        var cells_max_height = Math.max($next.height());
+        var tdHeights = [];
+
+        $next.each(function(){
+          var $this = $(this);
+          if($this.hasClass('translatable')) {
+            var hght = $this.find('.tr-text').height();
+            tdHeights.push(hght);
+          } else {
+            tdHeights.push($this.height());
+          }
+        });
+
+        var cells_max_height = Math.max.apply(Math, tdHeights);
 
         $th.height(cells_max_height);
       });
@@ -277,9 +299,9 @@ if (!Array.prototype.last){
       $(this).hide();
       $(this).empty().html(original);
       $(this).show();
-      $(this).fixTableHeaderAndCellsHeight();
+      //$(this).fixTableHeaderAndCellsHeight();
       setupTranslateClickHandlers();
-      setupReadMoreModal();
+      //setupReadMoreModal();
     }
     setupReadMoreModal();
     setupTranslateClickHandlers();
@@ -661,7 +683,6 @@ if (!Array.prototype.last){
   }
 
   function regionalDescriptorsGroupTableHeaders() {
-    // console.log('regionalDescriptorsGroupTableHeaders');
     var $headers = $('.first-header');
     if($headers.length === 0){
       return
