@@ -215,7 +215,14 @@ class A4ItemDisplay2018to2024(ItemDisplayForm):
         if not len(data):
             return 'Not available'
 
-        return data[0].DateReceived
+        reported_date = data[0].DateReceived
+
+        try:
+            reported_date = reported_date.strftime('%Y %b %d')
+        except:
+            pass
+
+        return reported_date
 
     def get_current_country(self):
         country_code = self.item[0]['Country']

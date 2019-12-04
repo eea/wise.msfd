@@ -76,6 +76,11 @@ class CompetentAuthorityItemDisplay(ItemDisplayForm):
         if not reported_date:
             return not_available
 
+        try:
+            reported_date = reported_date.strftime('%Y %b %d')
+        except:
+            pass
+
         return reported_date
 
     def get_current_country(self):
