@@ -1,5 +1,6 @@
 import logging
 import re
+from collections import defaultdict
 from datetime import datetime
 
 from zope.interface import implements
@@ -14,8 +15,9 @@ from z3c.form.form import Form
 
 from . import interfaces
 from ..base import BaseEnhancedForm, BaseUtil, EmbeddedForm
-from ..db import get_item_by_conditions
+from ..db import get_all_records, get_item_by_conditions, use_db_session
 from ..interfaces import IMainForm
+from ..sql2018 import ReportedInformation
 from .utils import get_registered_form_sections
 
 logger = logging.getLogger('wise.msfd')
@@ -94,6 +96,29 @@ class ItemDisplayForm(EmbeddedForm):
         res = get_item_by_conditions(*args, page=page)
 
         return res
+
+    @use_db_session('2018')
+    def latest_import_ids_2018(self):
+        mc = ReportedInformation
+
+        count, res = get_all_records(
+            mc
+        )
+
+        groups = defaultdict(int)
+
+        for row in res:
+            country_code = row.CountryCode
+            schema = row.Schema
+            rowid = row.Id
+            k = (country_code, schema)
+
+            if rowid >= groups[k]:
+                groups[k] = rowid
+
+        latest_ids = [v for k,v in groups.items()]
+
+        return latest_ids
 
     # def item_title(self, item):
     #     state = inspect(item)

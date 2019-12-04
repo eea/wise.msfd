@@ -133,6 +133,7 @@ class Art9Display(ItemDisplayForm):
 
         self.condition_ges_component = and_(
             sql2018.ReportedInformation.CountryCode.in_(member_states),
+            sql2018.ReportedInformation.Id.in_(self.latest_import_ids_2018()),
             mapper_class.GESComponent.in_(ges_components),
             or_(mapper_class.Id.in_(id_ges_components),
                 mapper_class.JustificationDelay.is_(None),
@@ -305,7 +306,10 @@ class A2018Art10Display(ItemDisplayForm):
             sql2018.ReportedInformation,
             and_(mapper_class.MarineReportingUnit.in_(marine_units),
                  sql2018.ReportedInformation.CountryCode.in_(
-                     data['member_states']))
+                     data['member_states']),
+                 sql2018.ReportedInformation.Id.in_(
+                     self.latest_import_ids_2018())
+                 )
         )
         marine_unit_ids = [x.Id for x in marine_unit_ids]
 
@@ -359,7 +363,10 @@ class A2018Art10Display(ItemDisplayForm):
             mapper_class,
             sql2018.ReportedInformation,
             and_(mapper_class.MarineReportingUnit.in_(marine_units),
-                 sql2018.ReportedInformation.CountryCode.in_(member_states))
+                 sql2018.ReportedInformation.CountryCode.in_(member_states),
+                 sql2018.ReportedInformation.Id.in_(
+                     self.latest_import_ids_2018())
+                 )
         )
 
         marine_unit_ids = [x.Id for x in marine_unit_ids]
@@ -579,7 +586,8 @@ class A2018Art81abDisplay(ItemDisplayForm):
             mapper_class,
             mc_countries,
             and_(mapper_class.MarineReportingUnit.in_(marine_units),
-                 mc_countries.CountryCode.in_(member_states)
+                 mc_countries.CountryCode.in_(member_states),
+                 mc_countries.Id.in_(self.latest_import_ids_2018)
                  )
         )
         id_marine_units = [x.Id for x in marine_unit]
@@ -666,7 +674,9 @@ class A2018Art81abDisplay(ItemDisplayForm):
         overall_status_mc = parent.features_mc
         mc_countries = sql2018.ReportedInformation
 
-        conditions = list()
+        conditions = [
+            mc_countries.Id.in_(self.latest_import_ids_2018())
+        ]
 
         if countries:
             conditions.append(mc_countries.CountryCode.in_(countries))
@@ -1079,7 +1089,8 @@ class A2018Art81cDisplay(ItemDisplayForm):
             mapper_class,
             mc_countries,
             and_(mapper_class.MarineReportingUnit.in_(marine_units),
-                 mc_countries.CountryCode.in_(member_states)
+                 mc_countries.CountryCode.in_(member_states),
+                 mc_countries.Id.in_(self.latest_import_ids_2018())
                  )
         )
         id_marine_units = [x.Id for x in marine_unit]
@@ -1177,7 +1188,9 @@ class A2018Art81cDisplay(ItemDisplayForm):
         features_mc = parent.features_mc
         mc_countries = sql2018.ReportedInformation
 
-        conditions = list()
+        conditions = [
+            mc_countries.Id.in_(self.latest_import_ids_2018())
+        ]
 
         if countries:
             conditions.append(mc_countries.CountryCode.in_(countries))
@@ -1574,7 +1587,9 @@ class A2018IndicatorsDisplay(ItemDisplayForm):
         marine_mc = parent.marine_mc
         mc_countries = sql2018.ReportedInformation
 
-        conditions = list()
+        conditions = [
+            mc_countries.Id.in_(self.latest_import_ids_2018())
+        ]
 
         if countries:
             conditions.append(mc_countries.CountryCode.in_(countries))
