@@ -1,14 +1,7 @@
-from collections import Counter, defaultdict, namedtuple
-from itertools import chain
 
 from plone.api.content import get_state
 from plone.api.portal import get_tool
 from wise.msfd.compliance.base import BaseComplianceView
-from wise.msfd.compliance.vocabulary import REGIONAL_DESCRIPTORS_REGIONS
-from wise.msfd.gescomponents import FEATURES_DB_2018, THEMES_2018_ORDER
-from wise.msfd.labels import get_label
-from wise.msfd.translation import get_detected_lang
-from wise.msfd.utils import fixedorder_sortkey, ItemLabel
 
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 

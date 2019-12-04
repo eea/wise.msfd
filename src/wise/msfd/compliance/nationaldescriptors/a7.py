@@ -181,24 +181,25 @@ class Article7(BaseArticle2012):
         return self.template()
 
     def auto_translate(self):
-        self.setup_data()
+        try:
+            self.setup_data()
+        except AssertionError:
+            return
+        
         translatables = self.context.TRANSLATABLES
         seen = set()
 
-        for table in self.rows.items():
-            muid, table_data = table
+        for row in self.rows:
+            if not row:
+                continue
+            if row.title not in translatables:
+                continue
 
-            for row in table_data:
-                if not row:
+            for value in row.raw_values:
+                if not isinstance(value, basestring):
                     continue
-                if row.title not in translatables:
-                    continue
-
-                for value in row.raw_values:
-                    if not isinstance(value, basestring):
-                        continue
-                    if value not in seen:
-                        retrieve_translation(self.country_code, value)
-                        seen.add(value)
+                if value not in seen:
+                    retrieve_translation(self.country_code, value)
+                    seen.add(value)
 
         return ''

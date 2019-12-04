@@ -2,6 +2,7 @@ import logging
 from collections import defaultdict, namedtuple
 
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
+from Products.statusmessages.interfaces import IStatusMessage
 from wise.msfd import db, sql2018
 # from wise.msfd.compliance.base import BaseComplianceView
 from wise.msfd.data import get_report_filename
@@ -58,10 +59,13 @@ class ArticleTable(BaseView):
         'Art7': Article7Copy,
     }
 
+    is_translatable = True
+
     def __init__(self, context, request, article):
         super(ArticleTable, self).__init__(context, request)
 
         self._article = article
+        self.klass = self.impl[article]
 
     year = '2012'
 
@@ -96,18 +100,17 @@ class ArticleTable(BaseView):
         )
 
     def __call__(self):
-        klass = self.impl[self.article]
         try:
-            view = klass(
+            self.view = self.klass(
                 self, self.request, self.country_code,
                 self.country_region_code, self.descriptor, self.article,
                 self.muids
             )
-            rendered_view = view()
+            rendered_view = self.view()
         except:
             rendered_view = 'Error getting report'
 
-        return self.get_article_title(klass) + rendered_view
+        return self.get_article_title(self.klass) + rendered_view
 
 
 class ReportingHistoryTable(BaseNatSummaryView):
@@ -183,17 +186,18 @@ class ReportingHistoryTable(BaseNatSummaryView):
 
         for _k, filenames in groups.items():
             values = [
-                _k[0],
-                ItemList(rows=filenames),
-                # ", ".join(filenames),
-                _k[1],
-                _k[2],
-                _k[3],
-                _k[4]
+                _k[0],  # Report type
+                ItemList(rows=filenames),  # Filenames
+                _k[1],  # Envelope url
+                _k[2],  # Report due
+                _k[3],  # Report date
+                _k[4]  # Report delay
             ]
             rows.append(values)
 
-        sorted_rows = sorted(rows, key=lambda _row: _row[4], reverse=True)
+        sorted_rows = sorted(rows,
+                             key=lambda _row: (_row[4], _row[2], _row[0]),
+                             reverse=True)
 
         return sorted_rows
 
@@ -223,21 +227,34 @@ class NationalSummaryView(BaseNatSummaryView):
                 self.country_name,
             )
         )
+        trans_edit_html = self.translate_view()()
 
-        tables = [
+        self.tables = [
             report_header,
             ArticleTable(self, self.request, 'Art7'),
             ArticleTable(self, self.request, 'Art3-4'),
             ReportingHistoryTable(self, self.request),
+            trans_edit_html,
         ]
 
         template = self.template
 
-        return template(tables=tables)
+        return template(tables=self.tables)
 
     def __call__(self):
         report_html = self.render_reportdata()
         self.report_html = report_html
+
+        if 'translate' in self.request.form:
+            for table in self.tables:
+                if (hasattr(table, 'is_translatable')
+                        and table.is_translatable):
+                    view = table.view
+                    view.auto_translate()
+
+            messages = IStatusMessage(self.request)
+            messages.add(u"Auto-translation initiated, please refresh "
+                         u"in a couple of minutes", type=u"info")
 
         @timeit
         def render_html():

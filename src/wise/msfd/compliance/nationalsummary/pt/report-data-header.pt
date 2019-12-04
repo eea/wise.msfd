@@ -16,5 +16,14 @@
         </a>
       </div>
     </div>
+
+    <div id="download-report-data-form">
+      <form method="POST" action="" tal:attributes="action request/getURL">
+        <button tal:condition="python: False" name="download" class="btn btn-primary">View report data in Excel</button>
+        <button name="translate" class="btn btn-secondary"
+          tal:condition="view/can_view_assessment_data">Auto-translate</button>
+      </form>
+    </div>
+
   </div>
 </div>
