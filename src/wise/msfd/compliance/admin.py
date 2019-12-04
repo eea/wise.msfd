@@ -21,6 +21,7 @@ from Products.statusmessages.interfaces import IStatusMessage
 from wise.msfd import db, sql2018
 from wise.msfd.compliance.vocabulary import (REGIONAL_DESCRIPTORS_REGIONS,
                                              REGIONS)
+from wise.msfd.compliance.regionaldescriptors.base import COUNTRY
 from wise.msfd.gescomponents import (get_all_descriptors, get_descriptor,
                                      get_marine_units)
 from wise.msfd.labels import get_indicator_labels
@@ -45,6 +46,16 @@ def get_wf_state_id(context):
     wf_state_id = wf_state.id or state
 
     return wf_state_id
+
+
+def _get_secondary_articles():
+    articles = [
+        'Art3-4',
+        'Art7',
+        'Art8esa'
+    ]
+
+    return articles
 
 
 class ToPDB(BrowserView):
@@ -110,15 +121,6 @@ class BootstrapCompliance(BrowserView):
         # return articles
 
         return ['Art8', 'Art9', 'Art10']
-
-    def _get_secondary_articles(self):
-        articles = [
-            'Art3-4',
-            'Art7',
-            'Art8esa'
-        ]
-
-        return articles
 
     def set_layout(self, obj, name):
         ISelectableBrowserDefault(obj).setLayout(name)
@@ -326,7 +328,7 @@ class BootstrapCompliance(BrowserView):
         for country in country_ids:
             country_folder = nda_parent[country]
 
-            for article in self._get_secondary_articles():
+            for article in _get_secondary_articles():
                 if article.lower() in country_folder.contentIds():
                     nda = country_folder[article.lower()]
                 else:
@@ -472,6 +474,15 @@ class AdminScoring(BaseComplianceView):
     def descriptor_obj(self, descriptor):
         return get_descriptor(descriptor)
 
+    def get_available_countries(self, region_folder):
+        res = [
+            # id, title, definition, is_primary
+            COUNTRY(x[0], x[1], "", lambda _: True)
+            for x in region_folder._countries_for_region
+        ]
+
+        return res
+
     @cache(report_data_cache_key)
     def muids(self, country_code, country_region_code, year):
         """ Get all Marine Units for a country
@@ -499,6 +510,41 @@ class AdminScoring(BaseComplianceView):
 
         for brain in brains:
             obj = brain.getObject()
+            # safety check to exclude secondary articles
+            obj_title = obj.title.capitalize()
+
+            if obj_title in _get_secondary_articles():
+                continue
+
+            yield obj
+
+    @property
+    def ndas_sec(self):
+        catalog = get_tool('portal_catalog')
+        brains = catalog.searchResults(
+            portal_type='wise.msfd.nationaldescriptorassessment',
+        )
+
+        for brain in brains:
+            obj = brain.getObject()
+            # safety check to exclude primary articles
+            obj_title = obj.title.capitalize()
+
+            if obj_title not in _get_secondary_articles():
+                continue
+
+            yield obj
+
+    @property
+    def rdas(self):
+        catalog = get_tool('portal_catalog')
+        brains = catalog.searchResults(
+            portal_type='wise.msfd.regionaldescriptorassessment',
+        )
+
+        for brain in brains:
+            obj = brain.getObject()
+
             yield obj
 
     def reset_assessment_data(self):
@@ -619,23 +665,146 @@ class AdminScoring(BaseComplianceView):
                 yield (country.title, region.title, d_obj.id,
                        article_id, ' ', 'Progress', val, '', state)
 
-    def data_to_xls(self, labels, data):
+    def get_data_sec(self, obj):
+        """ Get assessment data for a country assessment object
+        """
+
+        if not (hasattr(obj, 'saved_assessment_data')
+                and obj.saved_assessment_data):
+
+            return
+
+        state = get_wf_state_id(obj)
+        article = obj
+        country = obj.aq_parent
+        data = obj.saved_assessment_data.last()
+        d_obj = 'Not linked'
+        muids = []
+
+        for k, val in data.items():
+            if not val:
+                continue
+
+            if '_Score' in k:
+                for i, v in enumerate(val.values):
+                    options = ([o.title
+                                for o in val.question.get_assessed_elements(
+                                    d_obj, muids=muids)] or ['All criteria'])
+
+                    # TODO IndexError: list index out of range
+                    # investigate this
+                    # Possible cause of error: D9C2 was removed and some old
+                    # questions have answered it
+                    try:
+                        option = options[i]
+                    except IndexError:
+                        continue
+
+                    answer = val.question.answers[v]
+
+                    yield (country.title, article.title, val.question.id,
+                           option, answer, val.question.scores[v], state)
+
+            elif '_Summary' in k:
+                article_id, question_id, _ = k.split('_')
+                yield (country.title, article_id, question_id,
+                       'Summary', val, ' ', state)
+
+            elif '_assessment_summary' in k:
+                article_id, _, __ = k.split('_')
+                yield (country.title, article_id, ' ',
+                       'Assessment Summary', val, '', state)
+
+            elif '_recommendations' in k:
+                article_id, _ = k.split('_')
+                yield (country.title, article_id, ' ',
+                       'Recommendations', val, '', state)
+
+            elif '_progress' in k:
+                article_id, _ = k.split('_')
+                yield (country.title, article_id, ' ',
+                       'Progress', val, '', state)
+
+    def get_data_rda(self, obj):
+        """ Get assessment data for a regional descriptor assessment
+        """
+
+        if not (hasattr(obj, 'saved_assessment_data')
+                and obj.saved_assessment_data):
+
+            return
+
+        state = get_wf_state_id(obj)
+        article = obj
+        descr = obj.aq_parent
+        region = obj.aq_parent.aq_parent
+        d_obj = self.descriptor_obj(descr.id.upper())
+        data = obj.saved_assessment_data.last()
+
+        for k, val in data.items():
+            if not val:
+                continue
+
+            if '_Score' in k:
+                for i, v in enumerate(val.values):
+                    options = (
+                        [o.title for o in self.get_available_countries(region)]
+                        or ['All criteria']
+                    )
+
+                    # TODO IndexError: list index out of range
+                    # investigate this
+                    # Possible cause of error: D9C2 was removed and some old
+                    # questions have answered it
+                    try:
+                        option = options[i]
+                    except IndexError:
+                        continue
+
+                    answer = val.question.answers[v]
+
+                    yield (region.title, d_obj.id,
+                           article.title, val.question.id, option, answer,
+                           val.question.scores[v], state)
+
+            elif '_Summary' in k:
+                article_id, question_id, _ = k.split('_')
+                yield (region.title, d_obj.id,
+                       article_id, question_id, 'Summary', val, ' ', state)
+
+            elif '_assessment_summary' in k:
+                article_id, _, __ = k.split('_')
+                yield (region.title, d_obj.id,
+                       article_id, ' ', 'Assessment Summary', val, '', state)
+
+            elif '_recommendations' in k:
+                article_id, _ = k.split('_')
+                yield (region.title, d_obj.id,
+                       article_id, ' ', 'Recommendations', val, '', state)
+
+            elif '_progress' in k:
+                article_id, _ = k.split('_')
+                yield (region.title, d_obj.id,
+                       article_id, ' ', 'Progress', val, '', state)
+
+    def data_to_xls(self, all_data):
         out = BytesIO()
         workbook = xlsxwriter.Workbook(out, {'in_memory': True})
 
-        worksheet = workbook.add_worksheet('Export')
+        for sheetname, labels, data in all_data:
+            worksheet = workbook.add_worksheet(sheetname)
 
-        for i, label in enumerate(labels):
-            worksheet.write(0, i, label)
+            for i, label in enumerate(labels):
+                worksheet.write(0, i, label)
 
-        x = 0
+            x = 0
 
-        for objdata in data:
-            for row in objdata:
-                x += 1
+            for objdata in data:
+                for row in objdata:
+                    x += 1
 
-                for iv, value in enumerate(row):
-                    worksheet.write(x, iv, value)
+                    for iv, value in enumerate(row):
+                        worksheet.write(x, iv, value)
 
         workbook.close()
         out.seek(0)
@@ -643,12 +812,28 @@ class AdminScoring(BaseComplianceView):
         return out
 
     def export_scores(self, context):
-        xlsdata = (self.get_data(nda) for nda in self.ndas)
+        # National descriptors data
+        nda_labels = ('Country', 'Region', 'Descriptor', 'Article', 'Question',
+                      'Option', 'Answer', 'Score', 'State')
+        nda_xlsdata = (self.get_data(nda) for nda in self.ndas)
 
-        labels = ('Country', 'Region', 'Descriptor', 'Article', 'Question',
-                  'Option', 'Answer', 'Score', 'State')
+        # Regional descriptors data
+        rda_labels = ('Region', 'Descriptor', 'Article', 'Question',
+                      'Option', 'Answer', 'Score', 'State')
+        rda_xlsdata = (self.get_data_rda(rda) for rda in self.rdas)
 
-        xlsio = self.data_to_xls(labels, xlsdata)
+        # Secondary Articles 3 & 4, 7
+        sec_labels = ('Country', 'Article', 'Question',
+                      'Option', 'Answer', 'Score', 'State')
+        sec_xlsdata = (self.get_data_sec(sec) for sec in self.ndas_sec)
+
+        all_data = [
+            ('National descriptors', nda_labels, nda_xlsdata),
+            ('Regional descriptors', rda_labels, rda_xlsdata),
+            ('Articles 3 & 4, 7', sec_labels, sec_xlsdata)
+        ]
+
+        xlsio = self.data_to_xls(all_data)
         sh = self.request.response.setHeader
 
         sh('Content-Type', 'application/vnd.openxmlformats-officedocument.'

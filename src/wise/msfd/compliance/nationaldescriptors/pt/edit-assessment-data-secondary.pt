@@ -41,7 +41,9 @@
 
         <div id="assessment-edit-infobox"></div>
 
-        <div class="report-nav fixed">
+        <div class="report-nav fixed"
+          tal:condition="python: False">
+          <!-- Removed -->
           <div class="nav-wrapper">
             <div class="nav-header">
               <button id="report-nav-toggle" class="nav-toggle">

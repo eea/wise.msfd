@@ -371,6 +371,14 @@ class EditAssessmentDataFormSecondary(EditAssessmentDataForm):
         return 'Not linked'
 
     @property
+    def country_region_code(self):
+        return 'No region'
+
+    @property
+    def country_region_name(self):
+        return 'No region'
+
+    @property
     def title(self):
         return u"Edit Comission assessment: {}/ {}/ {}/ 2018".format(
             self.country_title,
