@@ -715,7 +715,7 @@
         if( $( selectorLeftForm + " select:not(.notselect)").val() !== $(opts[1]).val() ){
 
             var topPrevBtn = '<button type="submit" id="form-buttons-prev-top" name="marine.buttons.prev"' +
-                ' class="submit-widget button-field btn btn-default pagination-prev fa fa-angle-left" value="" button="">' +
+                ' class="submit-widget button-field btn btn-default pagination-prev" value="" button="">' +
                 '          </button>';
 
             $(formBtnPrevTop).append(topPrevBtn);
@@ -733,7 +733,7 @@
         // ignore last option for "next" button
         if( $( selectorLeftForm + " select:not(.notselect)").val() !== $(opts[opts.length-1]).val() ){
             var topNextBtn = '<button type="submit" ' +
-                'id="form-buttons-next-top" name="marine.buttons.next" class="submit-widget button-field btn btn-default fa fa-angle-right" value="">' +
+                'id="form-buttons-next-top" name="marine.buttons.next" class="submit-widget button-field btn btn-default pagination-next" value="">' +
                 '            </button>';
 
             $(formBtnNextTop).append(topNextBtn);

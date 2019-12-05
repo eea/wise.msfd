@@ -144,8 +144,8 @@
     transition: content 0.8s;
     /* symbol for "opening" panels */
     content:"\e259";
-    font-family: 'Glyphicons Halflings';
-    /*font-family: 'Glyphicons Halflings';*/  /* essential for enabling glyphicon */
+    font-family: @icon-font-family;
+    /*font-family: @icon-font-family;*/  /* essential for enabling glyphicon */
     // content: "\f105";
     // font-family: FontAwesome;
     font-weight: 700;
@@ -289,19 +289,20 @@
 
   label {
     max-width: 80%;
-    margin-bottom: 0;
-    height: 100%;
-    display: inline-block;
     vertical-align: middle;
     margin-bottom: 8px;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+    display: inline;
+    padding: .2em .6em .3em;
+    font-size: 75%;
+    line-height: 1;
 
-    span {
-      display: inline;
-      color: black;
-    }
+    // span {
+    //   display: inline;
+    //   color: black;
+    // }
   }
 }
 
@@ -370,7 +371,7 @@
 
       &:after {
         content:"\e003";
-        font-family: 'Glyphicons Halflings';
+        font-family: @icon-font-family;
         padding: 3px;
       }
     }
@@ -415,7 +416,7 @@
       // }
       &:after {
         content:"\e014";
-        font-family: 'Glyphicons Halflings';
+        font-family: @icon-font-family;
         padding: 3px;
       }
 
@@ -848,8 +849,8 @@
     &.nav {
 
       li {
-        margin-bottom: -9999px;
-        padding-bottom: 9999px;
+        // margin-bottom: -9999px;
+        // padding-bottom: 9999px;
 
         a {
           white-space: inherit !important;
@@ -876,4 +877,42 @@
 .clear-break {
   overflow: hidden;
   clear: both;
+}
+
+
+.pagination-prev {
+  &:before {
+    content:"\e257";
+    font-family: @icon-font-family;
+  }
+}
+
+.pagination-next {
+  &:after {
+    content:"\e258";
+    font-family: @icon-font-family;
+  }
+}
+
+.btn {
+  display: inline-block;
+  margin-bottom: 0;
+  font-weight: normal;
+  text-align: center;
+  vertical-align: middle;
+  cursor: pointer;
+  background-image: none;
+  border: 1px solid transparent;
+  white-space: nowrap;
+  padding: 6px 12px;
+  font-size: 14px;
+  line-height: 1.42857143;
+  border-radius: 4px;
+}
+
+.btn-xs, .btn-group-xs>.btn {
+  padding: 1px 5px;
+  font-size: 12px;
+  line-height: 1.5;
+  border-radius: 3px;
 }

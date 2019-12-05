@@ -4443,4 +4443,3 @@ def consolidate_data(data, group_by_fields):
         # score_value = data.get(
         #     '{}_{}_RawScore'.format(article, question.id), 0
         # )
-

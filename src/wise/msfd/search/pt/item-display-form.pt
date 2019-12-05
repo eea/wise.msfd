@@ -23,7 +23,7 @@
                 <button
                         type="submit"
                         name="form.buttons.prev"
-                        class="form-buttons-prev submit-widget button-field btn btn-xs btn-default pagination-prev fa fa-angle-left"
+                        class="form-buttons-prev submit-widget button-field btn btn-xs btn-default pagination-prev"
                         value="">
                 </button>
             </div>
@@ -36,7 +36,7 @@
                 <button
                         type="submit"
                         name="form.buttons.next"
-                        class="form-buttons-next submit-widget button-field btn btn-xs btn-default fa fa-angle-right" value="">
+                        class="form-buttons-next submit-widget button-field btn btn-xs btn-default pagination-next" value="">
                 </button>
             </div>
         </div>
@@ -61,7 +61,7 @@
           <button
                   type="submit"
                   name="form.buttons.prev"
-                  class="form-buttons-prev submit-widget button-field btn btn-xs btn-default pagination-prev fa fa-angle-left"
+                  class="form-buttons-prev submit-widget button-field btn btn-xs btn-default pagination-prev"
                   value="">
           </button>
       </div>
@@ -74,7 +74,7 @@
           <button
                   type="submit"
                   name="form.buttons.next"
-                  class="form-buttons-next submit-widget button-field btn btn-xs btn-default fa fa-angle-right" value="">
+                  class="form-buttons-next submit-widget button-field btn btn-xs btn-default pagination-next" value="">
           </button>
       </div>
   </div>
