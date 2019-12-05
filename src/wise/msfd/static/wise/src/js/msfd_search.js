@@ -113,7 +113,7 @@
             '<span class=" search-icon" ></span>' +
             '<span style="position: relative;padding-top:1px;padding-bottom:1px;background: white;" class="search-span">' +
             '<input class="ui-autocomplete-input" type="text" style="width: 80%;" />' +
-            '<span class="clear-btn"><a class="fa fa-times"></a></span>' +
+            '<span class="clear-btn"></span>' +
             '</span>' +
             '</span>';
         return spAll + spClear + invertSel;
@@ -277,6 +277,7 @@
                 data.push(el.id);
             });
 
+            // TIBI TODO: re-enable
             // addAutoComplete($field);
         }
     }

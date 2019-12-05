@@ -131,7 +131,7 @@
 
   .panel-heading .accordion-toggle.accordion-after:after {
     /*content: "\e114";*/
-    content: "\f107";
+    // content: "\f107";
 
     webkit-transition: content 0.8s;
     -moz-transition: content 0.8s;
@@ -143,9 +143,11 @@
     -moz-transition: content 0.8s;
     transition: content 0.8s;
     /* symbol for "opening" panels */
+    content:"\e259";
+    font-family: 'Glyphicons Halflings';
     /*font-family: 'Glyphicons Halflings';*/  /* essential for enabling glyphicon */
-    content: "\f105";
-    font-family: FontAwesome;
+    // content: "\f105";
+    // font-family: FontAwesome;
     font-weight: 700;
     /*content: "\e080"*/;
     /*content: "\e114";*/    /* adjust as needed, taken from bootstrap.css */
@@ -169,7 +171,7 @@
   }
 
   dt {
-    width: 20rem;
+    width: 30%;
     float: left;
     clear: left;
     border-bottom: 1px dotted #CCC;
@@ -178,9 +180,9 @@
 
   dd {
     float: left;
-    max-width: 63.5rem;
+    max-width: 70%;
     /*border-left: 1px solid #CCC;*/
-    margin-left: -1px;
+    // margin-left: -1px;
     margin-top: 0.4rem;
     background-color: #EEE;
     padding: 0.4rem;
@@ -367,8 +369,8 @@
       background: transparent;
 
       &:after {
-        content: "\f002";
-        font-family: FontAwesome;
+        content:"\e003";
+        font-family: 'Glyphicons Halflings';
         padding: 3px;
       }
     }
@@ -389,31 +391,32 @@
 
     .clear-btn {
       background: white;
-      border: none;
-      margin: 0;
+      // border: none;
+      // margin: 0;
       padding-right: 5px;
       display: inline-block;
-
-
-      &:active {
-        a {
-          transform: rotate(30deg);
-        }
-
-      }
-
-      a {
-        background: transparent;
-        line-height: 1.15;
-        text-decoration: none;
-
-        &:hover {
-          text-decoration: none;
-          color: inherit !important;
-
-        }
-
-
+      // &:active {
+      //   a {
+      //     transform: rotate(30deg);
+      //   }
+      //
+      // }
+      //
+      // a {
+      //   background: transparent;
+      //   line-height: 1.15;
+      //   text-decoration: none;
+      //
+      //   &:hover {
+      //     text-decoration: none;
+      //     color: inherit !important;
+      //
+      //   }
+      // }
+      &:after {
+        content:"\e014";
+        font-family: 'Glyphicons Halflings';
+        padding: 3px;
       }
 
     }
@@ -426,8 +429,6 @@
     padding-left: 5px;
 
   }
-
-  // margin-bottom: 20px;
 
   & > span {
     max-height: 150px;

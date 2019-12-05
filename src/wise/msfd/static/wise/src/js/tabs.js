@@ -114,8 +114,10 @@ window.setupTabs = function (tabswrapper) {
         renderTopTabs();
     }
 
-    setupTopTabs(tabswrapper);
-    setupInnerTabs(tabswrapper);
+    // Krisz: disabled, TODO: make sure if we really need it
+    // we can use flex to set equal width & height for tab items
+    // setupTopTabs(tabswrapper);
+    // setupInnerTabs(tabswrapper);
 
     clickFirstTab();
 }

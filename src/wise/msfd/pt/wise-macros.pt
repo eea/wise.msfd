@@ -17,8 +17,10 @@
           <a href=""
             tal:attributes="href string:${root_url}/${tab/path}"
             >
-            <span class="tab-title" tal:content="structure tab/title">Article X</span>
-            <span class="tab-subtitle" tal:content="structure tab/subtitle">Subtitle here</span>
+            <div>
+              <span class="tab-title" tal:content="structure tab/title">Article X</span>
+              <span class="tab-subtitle" tal:content="structure tab/subtitle">Subtitle here</span>
+            </div>
           </a>
         </li>
       </tal:rep>
