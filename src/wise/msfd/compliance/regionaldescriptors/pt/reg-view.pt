@@ -36,12 +36,12 @@
           <div id="nat-desc-art-menu">
             <ul>
               <li tal:condition="python: view.check_permission('wise.msfd: Edit Assessment')">
-                <a href="./@@edit-assessment-data-2018">
+                <a href="./@@edit-assessment-data-2018" target="_blank">
                   <i class='fa fa-edit'></i> Assessment
                 </a>
               </li>
-              <li><a href="./@@view-report-data-2018"><i class='fa fa-table'></i> 2018 Report</a></li>
-              <li><a href="./@@view-report-data-2012"><i class='fa fa-table'></i> 2012 Report</a></li>
+              <li><a href="./@@view-report-data-2018" target="_blank"><i class='fa fa-table'></i> 2018 Report</a></li>
+              <li><a href="./@@view-report-data-2012" target="_blank"><i class='fa fa-table'></i> 2012 Report</a></li>
               <li class="process-state">
                 <form method="GET" action='./content_status_modify'>
                   <div>

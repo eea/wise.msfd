@@ -1,15 +1,12 @@
 import datetime
 import logging
-from collections import namedtuple
 
 from zope.schema import Choice, Text
 from zope.schema.vocabulary import SimpleTerm, SimpleVocabulary
-from zope.security import checkPermission
 
 from AccessControl import Unauthorized
 from persistent.list import PersistentList
 from plone.api import user
-from plone.api.user import get_roles
 from plone.z3cform.layout import wrap_form
 from Products.Five.browser.pagetemplatefile import (PageTemplateFile,
                                                     ViewPageTemplateFile)
@@ -17,16 +14,13 @@ from wise.msfd.base import EmbeddedForm, MainFormWrapper
 from wise.msfd.compliance.assessment import (additional_fields,
                                              EditAssessmentDataFormMain,
                                              EditAssessmentSummaryForm,
-                                             PHASES, render_assessment_help,
-                                             summary_fields)
+                                             PHASES, reg_summary_fields,
+                                             render_assessment_help)
 from wise.msfd.compliance.base import get_questions
 from wise.msfd.compliance.content import AssessmentData
-from wise.msfd.gescomponents import get_descriptor  # get_descriptor_elements
-# from wise.msfd.gescomponents import DESCRIPTOR_ELEMENTS
 
 from z3c.form.button import buttonAndHandler
 from z3c.form.field import Fields
-from z3c.form.form import Form
 
 from .base import BaseRegComplianceView
 
@@ -269,7 +263,7 @@ class RegDescEditAssessmentDataForm(BaseRegComplianceView,
         assessment_summary_form._disabled = self.read_only_access
         asf_fields = []
 
-        for name, title in summary_fields:
+        for name, title in reg_summary_fields:
             _name = '{}_{}'.format(
                 self.article, name
             )

@@ -38,6 +38,12 @@ summary_fields = (
     ('recommendations', u'Recommendations for Member State'),
 )
 
+reg_summary_fields = (
+    ('assessment_summary', u'Assessment summary'),
+    ('progress', u'Progress assessment'),
+    ('recommendations', u'Recommendations'),
+)
+
 # TODO not used
 progress_fields = (
     ('assessment_summary', u'Assessment summary'),
@@ -89,12 +95,16 @@ class ViewAssessmentSummaryForm(BaseComplianceView):
     template = ViewPageTemplateFile("pt/assessment-summary-form-view.pt")
 
     @property
+    def summary_fields(self):
+        return summary_fields
+
+    @property
     def summary_data(self):
         saved_data = self.context.saved_assessment_data.last()
 
         _fields = []
 
-        for name, title in summary_fields:
+        for name, title in self.summary_fields:
             _name = '{}_{}'.format(
                 self.article, name
             )
@@ -118,6 +128,10 @@ class ViewAssessmentSummaryFormRegional(BaseRegComplianceView,
 
         Wrapper class for regional descriptors
     """
+
+    @property
+    def summary_fields(self):
+        return reg_summary_fields
 
 
 class EditAssessmentSummaryForm(Form, BaseComplianceView):

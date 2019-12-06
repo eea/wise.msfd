@@ -7,6 +7,7 @@
  <object name="compliance_assessment_workflow" meta_type="Workflow"/>
  <object name="compliance_comments_section_workflow" meta_type="Workflow"/>
  <object name="compliance_nationaldescriptor_workflow" meta_type="Workflow"/>
+ <object name="compliance_regionaldescriptor_workflow" meta_type="Workflow"/>
  <object name="compliance_section_workflow" meta_type="Workflow"/>
  <object name="folder_workflow" meta_type="Workflow"/>
  <object name="intranet_folder_workflow" meta_type="Workflow"/>
@@ -86,7 +87,7 @@
     <bound-workflow workflow_id="compliance_assessment_workflow"/>
   </type>
   <type type_id="wise.msfd.regiondescriptorsfolder">
-    <bound-workflow workflow_id="compliance_nationaldescriptor_workflow"/>
+    <bound-workflow workflow_id="compliance_regionaldescriptor_workflow"/>
   </type>
  </bindings>
 </object>
