@@ -59,24 +59,39 @@ class RegDescEditAssessmentDataForm(BaseRegComplianceView,
     @buttonAndHandler(u'Save', name='save')
     def handle_save(self, action):
 
-        roles = get_roles(obj=self.context)
+        # roles = get_roles(obj=self.context)
 
-        if 'Contributor' not in roles and ('Manager' not in roles):
+        if self.read_only_access:
             raise Unauthorized
+
+        context = self.context
+
+        if not hasattr(context, 'saved_assessment_data') or \
+                not isinstance(context.saved_assessment_data, PersistentList):
+            context.saved_assessment_data = AssessmentData()
+
+        last = self.context.saved_assessment_data.last().copy()
+        datetime_now = datetime.datetime.now().replace(microsecond=0)
 
         data, errors = self.extractData()
         # if not errors:
         # TODO: check for errors
 
         for question in self.questions:
-            countries = self.get_available_countries()
+            # countries = self.get_available_countries()
+            elements = question.get_assessed_elements(self.descriptor_obj,
+                                                      muids=[])
 
             values = []
             score = None
 
-            for country in countries:
+            if question.use_criteria == 'none':
+                field_name = '{}_{}'.format(self.article, question.id)
+                values.append(data.get(field_name, None))
+
+            for element in elements:
                 field_name = '{}_{}_{}'.format(
-                    self.article, question.id, country.id
+                    self.article, question.id, element.id
                 )
                 values.append(data.get(field_name, None))
 
@@ -86,8 +101,30 @@ class RegDescEditAssessmentDataForm(BaseRegComplianceView,
                 score = question.calculate_score(self.descriptor, values)
 
             name = '{}_{}_Score'.format(self.article, question.id)
+            last_upd = '{}_{}_Last_update'.format(self.article, question.id)
             logger.info("Set score: %s - %s", name, score)
             data[name] = score
+
+            last_values = last.get(name, [])
+            last_values = getattr(last_values, 'values', '')
+            score_values = getattr(score, 'values', '')
+
+            if last_values != score_values:
+                data[last_upd] = datetime_now
+
+            # check if _Summary text is changed, and update _Last_update field
+            summary = '{}_{}_Summary'.format(self.article, question.id)
+
+            if last.get(summary, '') != data.get(summary, ''):
+                data[last_upd] = datetime_now
+
+        last_upd = "{}_assess_summary_last_upd".format(
+            self.article
+        )
+        name = "{}_assessment_summary".format(self.article)
+
+        if last.get(name, '') != data.get(name, ''):
+            data[last_upd] = datetime_now
 
         overall_score = 0
 
@@ -106,17 +143,14 @@ class RegDescEditAssessmentDataForm(BaseRegComplianceView,
 
         data['assess_date'] = datetime.date.today()
 
-        # BBB code, useful for development
-        context = self.context
-
-        if not hasattr(context, 'saved_assessment_data') or \
-                not isinstance(context.saved_assessment_data, PersistentList):
-            context.saved_assessment_data = AssessmentData()
-        last = self.context.saved_assessment_data.last()
-
         if last != data:
             last.update(data)
             self.context.saved_assessment_data.append(last)
+
+        url = self.context.absolute_url() + '/@@edit-assessment-data-2018'
+        self.request.response.setHeader('Content-Type', 'text/html')
+
+        return self.request.response.redirect(url)
 
     def is_disabled(self, question):
         return False
@@ -147,8 +181,9 @@ class RegDescEditAssessmentDataForm(BaseRegComplianceView,
                 if question.klass in v
             ][0]
 
-            # elements
-            countries = self.get_available_countries()
+            elements = question.get_assessed_elements(
+                self.descriptor_obj, muids=[]
+            )
 
             form = EmbeddedForm(self, self.request)
             form.title = question.definition
@@ -158,15 +193,41 @@ class RegDescEditAssessmentDataForm(BaseRegComplianceView,
             form._question_type = question.klass
             form._question_phase = phase
             form._question = question
-            form._elements = countries
+            form._elements = elements
             form._disabled = self.is_disabled(question)
 
             fields = []
 
-            for country in countries:
-                field_title = country.title
+            if not elements:  # and question.use_criteria == 'none'
+                field_title = u'All criteria'
+                field_name = '{}_{}'.format(self.article, question.id)
+                choices = question.answers
+
+                terms = [SimpleTerm(token=i, value=i, title=c)
+                         for i, c in enumerate(choices)]
+
+                # Add 'Not relevant' to choices list
+                # terms.extend([
+                #     SimpleTerm(token=len(terms) + 1,
+                #                value=None,
+                #                title=u'Not relevant')
+                # ])
+
+                default = assessment_data.get(field_name, None)
+                field = Choice(
+                    title=field_title,
+                    __name__=field_name,
+                    vocabulary=SimpleVocabulary(terms),
+                    required=False,
+                    default=default,
+                )
+                # field._criteria = criteria
+                fields.append(field)
+
+            for element in elements:
+                field_title = element.title
                 field_name = '{}_{}_{}'.format(
-                    self.article, question.id, country.id       # , element
+                    self.article, question.id, element.id
                 )
                 choices = question.answers
                 terms = [SimpleTerm(token=i, value=i, title=c)
@@ -180,7 +241,7 @@ class RegDescEditAssessmentDataForm(BaseRegComplianceView,
                     required=False,
                     default=default,
                 )
-                field._element = country
+                field._element = element
                 fields.append(field)
 
             for name, title in additional_fields.items():

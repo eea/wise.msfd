@@ -8,11 +8,8 @@
 
         <tr>
           <th class="fixed-left as-question as-header">Question / assessed elements</th>
-          <th class="fixed-left as-header" tal:condition="not: assessment/gescomponents"></th>
-          <!--<th tal:repeat="g assessment/gescomponents" class="as-ges-component as-header"></th>-->
           <th colspan="2" class="fixed-center as-ges-component as-header"></th>
           <th class="fixed-right as-header">Conclusion</th>
-          <!--<th class="fixed-right as-th-score as-header">Score</th>-->
         </tr>
 
         <tal:rep tal:repeat="row assessment/answers">

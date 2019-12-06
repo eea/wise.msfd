@@ -148,13 +148,18 @@ class RegionalDescriptorArticleView(BaseRegComplianceView):
             self.context.saved_assessment_data, 'ass_new', 'Not assessed'
         )
         data = self.context.saved_assessment_data.last()
+        elements = self.questions[0].get_all_assessed_elements(
+            self.descriptor_obj,
+            muids=[]
+        )
         assess_date_2018 = data.get('assess_date', u'Not assessed')
         source_file_2018 = ('To be addedd...', '.')
         muids = None
         article_weights = ARTICLE_WEIGHTS
         assessment = format_assessment_data(
             self.article,
-            self.get_available_countries(),
+            # self.get_available_countries(),
+            elements,
             self.questions,
             muids,
             data,
