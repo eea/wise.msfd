@@ -622,6 +622,11 @@ class AdminScoring(BaseComplianceView):
                 continue
 
             if '_Score' in k:
+                last_change_name = "{}_{}_Last_update".format(article.title,
+                                                              val.question.id)
+                last_change = data.get(last_change_name, '')
+                last_change = last_change and last_change.isoformat() or ''
+
                 for i, v in enumerate(val.values):
                     options = ([o.title
                                 for o in val.question.get_assessed_elements(
@@ -643,27 +648,50 @@ class AdminScoring(BaseComplianceView):
 
                     yield (country.title, region.title, d_obj.id,
                            article.title, val.question.id, option, answer,
-                           val.question.scores[v], state)
+                           val.question.scores[v], state, last_change)
 
             elif '_Summary' in k:
                 article_id, question_id, _ = k.split('_')
-                yield (country.title, region.title, d_obj.id,
-                       article_id, question_id, 'Summary', val, ' ', state)
+                last_change_name = "{}_{}_Last_update".format(article_id,
+                                                              question_id)
+                last_change = data.get(last_change_name, '')
+                last_change = last_change and last_change.isoformat() or ''
+
+                yield (country.title, region.title, d_obj.id, article_id,
+                       question_id, 'Summary', val, ' ', state, last_change)
 
             elif '_assessment_summary' in k:
                 article_id, _, __ = k.split('_')
-                yield (country.title, region.title, d_obj.id,
-                       article_id, ' ', 'Assessment Summary', val, '', state)
+                last_change_name = "{}_assess_summary_last_upd".format(
+                    article_id
+                )
+                last_change = data.get(last_change_name, '')
+                last_change = last_change and last_change.isoformat() or ''
+
+                yield (country.title, region.title, d_obj.id, article_id,
+                       ' ', 'Assessment Summary', val, '', state, last_change)
 
             elif '_recommendations' in k:
                 article_id, _ = k.split('_')
-                yield (country.title, region.title, d_obj.id,
-                       article_id, ' ', 'Recommendations', val, '', state)
+                last_change_name = "{}_assess_summary_last_upd".format(
+                    article_id
+                )
+                last_change = data.get(last_change_name, '')
+                last_change = last_change and last_change.isoformat() or ''
+
+                yield (country.title, region.title, d_obj.id, article_id,
+                       ' ', 'Recommendations', val, '', state, last_change)
 
             elif '_progress' in k:
                 article_id, _ = k.split('_')
-                yield (country.title, region.title, d_obj.id,
-                       article_id, ' ', 'Progress', val, '', state)
+                last_change_name = "{}_assess_summary_last_upd".format(
+                    article_id
+                )
+                last_change = data.get(last_change_name, '')
+                last_change = last_change and last_change.isoformat() or ''
+
+                yield (country.title, region.title, d_obj.id, article_id,
+                       ' ', 'Progress', val, '', state, last_change)
 
     def get_data_sec(self, obj):
         """ Get assessment data for a country assessment object
@@ -814,7 +842,7 @@ class AdminScoring(BaseComplianceView):
     def export_scores(self, context):
         # National descriptors data
         nda_labels = ('Country', 'Region', 'Descriptor', 'Article', 'Question',
-                      'Option', 'Answer', 'Score', 'State')
+                      'Option', 'Answer', 'Score', 'State', 'Last change')
         nda_xlsdata = (self.get_data(nda) for nda in self.ndas)
 
         # Regional descriptors data
