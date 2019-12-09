@@ -5,6 +5,7 @@ from sqlalchemy import or_
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 from wise.msfd import db, sql, sql_extra
 from wise.msfd.data import countries_in_region, muids_by_country
+from wise.msfd.translation import get_translated
 from wise.msfd.utils import fixedorder_sortkey
 from wise.msfd.gescomponents import (get_ges_component, FEATURES_DB_2012,
                                      FEATURES_DB_2018)
@@ -71,6 +72,7 @@ class RegDescA102018Row(BaseRegDescRow):
 
         for country_code, country_name in self.countries:
             value = []
+            translated = []
             data = [
                 (row.TargetCode, row.Description)
                 for row in self.db_data
@@ -85,9 +87,14 @@ class RegDescA102018Row(BaseRegDescRow):
                 target_code = row[0]
                 description = row[1]
 
-                value.append(u"<b>{}</b>: {}".format(target_code, description))
+                transl = get_translated(description, country_code) or ''
 
-            values.append('<br>'.join(value))
+                value.append(u"<b>{}</b>: {}".format(target_code, description))
+                translated.append(u"<b>{}</b>: {}".format(target_code, transl))
+
+            values.append(
+                ('<br>'.join(value),'<br>'.join(translated))
+            )
 
         rows.append(('', values))
 
