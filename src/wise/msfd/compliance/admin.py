@@ -29,7 +29,7 @@ from wise.msfd.translation import Translation, get_detected_lang
 from wise.msfd.translation.interfaces import ITranslationsStorage
 
 from . import interfaces
-from .base import BaseComplianceView, get_questions, report_data_cache_key
+from .base import BaseComplianceView, NAT_DESC_QUESTIONS, report_data_cache_key
 
 logger = logging.getLogger('wise.msfd')
 
@@ -469,7 +469,7 @@ class AdminScoring(BaseComplianceView):
     name = 'admin-scoring'
     section = 'compliance-admin'
 
-    questions = get_questions()
+    questions = NAT_DESC_QUESTIONS
 
     def descriptor_obj(self, descriptor):
         return get_descriptor(descriptor)

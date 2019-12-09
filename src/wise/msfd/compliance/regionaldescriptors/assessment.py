@@ -16,7 +16,7 @@ from wise.msfd.compliance.assessment import (additional_fields,
                                              EditAssessmentSummaryForm,
                                              PHASES, reg_summary_fields,
                                              render_assessment_help)
-from wise.msfd.compliance.base import get_questions
+from wise.msfd.compliance.base import REG_DESC_QUESTIONS
 from wise.msfd.compliance.content import AssessmentData
 
 from z3c.form.button import buttonAndHandler
@@ -40,7 +40,7 @@ class RegDescEditAssessmentDataForm(BaseRegComplianceView,
     subforms = None
     year = session_name = '2018'
     template = ViewPageTemplateFile("pt/edit-assessment-data.pt")
-    _questions = get_questions("compliance/regionaldescriptors/data")
+    _questions = REG_DESC_QUESTIONS
 
     @property
     def title(self):

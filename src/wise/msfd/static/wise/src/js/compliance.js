@@ -105,6 +105,7 @@ if (!Array.prototype.last){
       $("th", this).each(function() {
         var $th = $(this);
         var $next = $('td', $th.parent());
+        var $subheader = $('td.sub-header', $th.parent())
         var tdHeights = [];
 
         $next.each(function(){
@@ -121,6 +122,7 @@ if (!Array.prototype.last){
         var height = Math.max($th.height(), cells_max_height);
 
         $th.height(height);
+        $subheader.height(height);
         if ($th.height() > cells_max_height) {
           $next.height($th.height());
         }
@@ -466,7 +468,7 @@ if (!Array.prototype.last){
       var topScroll = $('.top-scroll', $t.parent());
       var topScrollInner = topScroll.find('.top-scroll-inner');
       var tableScroll = $('.inner', $t.parent());
-      var tableWidth = $('.table-report', $t.parent()).width();
+      var tableWidth = $('.table-report', $t.parent()).outerWidth(includeMargin=true);
       var tableHeaderWidth = $('th', $t.parent()).width();
       var tableAndHeaderWidth = tableWidth + tableHeaderWidth;
       var customScroll = $('.scroll-wrapper', $t.parent());

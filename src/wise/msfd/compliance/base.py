@@ -828,6 +828,10 @@ def get_questions(location='compliance/nationaldescriptors/data'):
                                     check_filename, parse_question_file)
 
 
+NAT_DESC_QUESTIONS = get_questions('compliance/nationaldescriptors/data')
+REG_DESC_QUESTIONS = get_questions('compliance/regionaldescriptors/data')
+
+
 class BaseArticle2012(BrowserView):
 
     def __init__(self, context, request, country_code, region_code,

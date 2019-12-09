@@ -15,7 +15,7 @@ from Products.Five.browser.pagetemplatefile import \
     ViewPageTemplateFile as Template
 from Products.statusmessages.interfaces import IStatusMessage
 from wise.msfd import db, sql2018
-from wise.msfd.compliance.base import get_questions
+from wise.msfd.compliance.base import NAT_DESC_QUESTIONS
 from wise.msfd.compliance.content import AssessmentData
 from wise.msfd.compliance.scoring import (get_overall_conclusion,
                                           get_range_index, OverallScores)
@@ -582,7 +582,7 @@ class NationalDescriptorArticleView(BaseView):
     assessment_data_2018_tpl = Template('./pt/assessment-data-2018.pt')
 
     year = '2018'       # used by self.muids
-    _questions = get_questions('compliance/nationaldescriptors/data')
+    _questions = NAT_DESC_QUESTIONS
 
     @property
     def title(self):

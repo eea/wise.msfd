@@ -3,7 +3,7 @@ from collections import namedtuple
 from persistent.list import PersistentList
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile as VPTF
 
-from wise.msfd.compliance.base import get_questions
+from wise.msfd.compliance.base import REG_DESC_QUESTIONS
 from wise.msfd.compliance.content import AssessmentData
 from wise.msfd.compliance.nationaldescriptors.main import (
     CONCLUSION_COLOR_TABLE, format_assessment_data)
@@ -93,7 +93,7 @@ class RegionalDescriptorArticleView(BaseRegComplianceView):
     assessment_data_2018_tpl = VPTF(
         'pt/assessment-data-2018.pt'
     )
-    _questions = get_questions("compliance/regionaldescriptors/data")
+    _questions = REG_DESC_QUESTIONS
 
     @property
     def questions(self):

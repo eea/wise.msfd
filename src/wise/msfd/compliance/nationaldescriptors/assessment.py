@@ -20,7 +20,7 @@ from wise.msfd.compliance.assessment import (EditAssessmentDataFormMain,
                                              PHASES, additional_fields,
                                              render_assessment_help,
                                              summary_fields)
-from wise.msfd.compliance.base import get_questions
+from wise.msfd.compliance.base import NAT_DESC_QUESTIONS
 from wise.msfd.compliance.content import AssessmentData
 from wise.msfd.compliance.scoring import Score
 from wise.msfd.translation import get_translated, retrieve_translation
@@ -80,7 +80,7 @@ class EditAssessmentDataForm(BaseView, EditAssessmentDataFormMain):
     subforms = None
     year = session_name = '2018'
     template = ViewPageTemplateFile("./pt/edit-assessment-data.pt")
-    _questions = get_questions()
+    _questions = NAT_DESC_QUESTIONS
 
     @property
     def title(self):
