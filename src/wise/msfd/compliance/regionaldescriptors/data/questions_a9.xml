@@ -205,7 +205,7 @@
     <score-weight descriptor="D11" value="15" />
   </assessment-question>
 
-  <assessment-question id="A09Co7" class="coherence" use-criteria="all">
+  <assessment-question id="A09Co7" class="coherence" use-criteria="none">
     <definition>
       To what extent is the Member States’ level of ambition for GES (GES extent threshold) the same or similar?
     </definition>

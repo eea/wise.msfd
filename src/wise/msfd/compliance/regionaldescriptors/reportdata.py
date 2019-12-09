@@ -315,11 +315,11 @@ class RegReportData2018(BaseRegComplianceView):
                     summary = assess_data.get('{}_{}_Summary'.format(article,
                                                                      q_id))
                     summary = summary or "-"
-                    summary = "<b>{}:</b> {}".format(subregion, summary)
+                    summary = u"<b>{}:</b> {}".format(subregion, summary)
 
                     conclusion = score and score.conclusion or "-"
-                    conclusion = "<span class='as-value-{}'>" \
-                                 "<b>{}:</b> {}</span>".format(
+                    conclusion = u"<span class='as-value-{}'>" \
+                                 u"<b>{}:</b> {}</span>".format(
                         self._conclusion_color(score), subregion, conclusion
                     )
 

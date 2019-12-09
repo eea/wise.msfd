@@ -72,7 +72,7 @@
     <score-weight descriptor="D11" value="15" />
   </assessment-question>
 
-  <assessment-question id="A08Co3" class="coherence" use-criteria="all">
+  <assessment-question id="A08Co3" class="coherence" use-criteria="none">
     <definition>
       Do the Member States in the region report a similar date for achieving GES?      
     </definition>
@@ -105,7 +105,7 @@
     <score-weight descriptor="D11" value="10" />
   </assessment-question>
 
-  <assessment-question id="A08Co4" class="coherence" use-criteria="all">
+  <assessment-question id="A08Co4" class="coherence" use-criteria="none">
     <definition>
       Do the Member States in the region report the same pressures?
     </definition>
