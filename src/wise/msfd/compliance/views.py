@@ -114,7 +114,6 @@ class CommentsList(BaseComplianceView):
         if self.current_user == user:
             return True
 
-        return False
         return self.check_permission('wise.msfd: Delete Comment')
 
     @property
