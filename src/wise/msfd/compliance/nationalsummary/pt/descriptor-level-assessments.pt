@@ -1,0 +1,81 @@
+<div tal:define="data options/data"
+  id="container-assessment-data-2018">
+  <h3>Descriptor-level assessments</h3>
+
+  <div tal:repeat="region_section data" class="report-section">
+    <h4 tal:content="python:region_section[0]">Baltic Sea</h4>
+
+    <tal:rep tal:repeat="descriptor_section python:region_section[1]">
+      <h4 tal:content="python: descriptor_section[0]">D7 - Hydrographical changes</h4>
+
+      <div tal:repeat="article_section python:descriptor_section[1]"
+          class="ast-header-data">
+        <h4 tal:content="python: article_section[0]">Article 8</h4>
+        <table tal:define="article_data python: article_section[1]"
+            class="table table-condensed assessment-data-table">
+          <tbody>
+            <tr id="asssessment-overview-form-comments">
+              <script src="/++resource++msfd/js/assessment-edit.js"></script>
+
+              <!--<th class="fixed-left">Assessment summary, progress assessment and recommendations</th>-->
+
+              <td class="fixed-center subform">
+                <div class="form-assessment-summary">
+                  <div>
+                    <label>Assessment summary</label>
+                    <div style="border: 1px solid #CCC; padding: 0px 5px; margin-bottom: 5px; min-height: 20px;"
+                        tal:content="python: article_data.assessment_summary">Long text</div>
+                  </div>
+                  <div>
+                    <label>Progress assessment</label>
+                    <div style="border: 1px solid #CCC; padding: 0px 5px; margin-bottom: 5px; min-height: 20px;"
+                        tal:content="python: article_data.progress_assessment">Long text</div>
+                  </div>
+                  <div>
+                    <label>Recommendations</label>
+                    <div style="border: 1px solid #CCC; padding: 0px 5px; margin-bottom: 5px; min-height: 20px;"
+                        tal:content="python: article_data.recommendations">Long text</div>
+                  </div>
+                </div>
+              </td>
+
+              <td class="overall-headers fixed-right">
+                <div>Adequacy score (%)</div>
+                <div>Consistency score (%)</div>
+                <div>Coherence score (%)</div>
+                <div>Overall conclusion 2018</div>
+                <div>Overall adequacy conclusion 2012</div>
+                <div>Adequacy change since 2012</div>
+              </td>
+              <td class="overall-values fixed-right">
+                <div tal:attributes="class python: 'as-value as-value-{}'.format(article_data.adequacy[1])"
+                  tal:content="python: article_data.adequacy[0]">65.5</div>
+                <div tal:attributes="class python: 'as-value as-value-{}'.format(article_data.consistency[1])"
+                  tal:content="python: article_data.consistency[0]">65.5</div>
+                <div tal:attributes="class python: 'as-value as-value-{}'.format(article_data.coherence[1])"
+                  tal:content="python: article_data.coherence[0]">65.5</div>
+                <div tal:attributes="class python: 'as-value as-value-{}'.format(article_data.overall_score_2018[1])"
+                  tal:content="python: article_data.overall_score_2018[0]">Very poor (1)</div>
+                <div tal:attributes="class python: 'as-value as-value-{}'.format(article_data.overall_score_2012[1])"
+                  tal:content="python: article_data.overall_score_2012[0]">Partially adequate (2)</div>
+                <div tal:content="python: article_data.change_since_2012">-1</div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+
+      </div>
+    </tal:rep>
+
+    <!--<div class="overflow-table">-->
+      <!--<div class="inner">-->
+        <!--<table class="table table-bordered table-striped table-comp-translate table-report">-->
+          <!--<tal:rep tal:repeat="row allrows">-->
+            <!--<tal:row replace="structure row"></tal:row>-->
+          <!--</tal:rep>-->
+        <!--</table>-->
+      <!--</div>-->
+    <!--</div>-->
+
+  </div>
+</div>

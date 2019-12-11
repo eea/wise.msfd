@@ -85,6 +85,16 @@ class OverallScores(object):
 
         return get_range_index(overall_score), overall_score
 
+    def conclusion(self, phase):
+        """ Get the conclusion text from score_value
+
+        :return: string 'Very good'
+        """
+        score_value = self.get_range_index_for_phase(phase)
+        concl = list(reversed(CONCLUSIONS))[score_value]
+
+        return concl
+
     def get_score_for_phase(self, phase):
         # max_score ............. 100%
         # score ................. x%
