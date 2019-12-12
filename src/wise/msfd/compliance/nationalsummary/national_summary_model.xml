@@ -1,0 +1,21 @@
+<model xmlns:form="http://namespaces.plone.org/supermodel/form"
+       xmlns:i18n="http://xml.zope.org/namespaces/i18n"
+       xmlns:marshal="http://namespaces.plone.org/supermodel/marshal"
+       xmlns:security="http://namespaces.plone.org/supermodel/security"
+       xmlns="http://namespaces.plone.org/supermodel/schema">
+    <schema>
+        <field name="scope_of_marine_waters"
+               type="plone.app.textfield.RichText">
+            <description/>
+            <required>False</required>
+            <title>Scope of marine waters</title>
+        </field>
+        <field name="progress_recommendations"
+               type="plone.app.textfield.RichText">
+            <description/>
+            <required>False</required>
+            <title>Progress against 2012 recommendations to Member State</title>
+        </field>
+    </schema>
+</model>
+

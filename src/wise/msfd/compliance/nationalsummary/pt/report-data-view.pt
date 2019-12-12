@@ -19,7 +19,7 @@
             metal:use-macro="context/wise-macros/macros/tabs"></metal:tabs>
         </div>
 
-        <div class="report-page-view left-side-form full-width-marker">
+        <div class="national-summary-section report-page-view left-side-form full-width-marker">
           <div tal:replace="structure view/report_html">
             Report data here
           </div>

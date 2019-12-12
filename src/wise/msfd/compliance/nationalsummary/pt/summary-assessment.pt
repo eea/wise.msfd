@@ -1,0 +1,32 @@
+<div class="nat-sum-summary-assessment"
+    tal:define="country_folder python: view.nat_desc_country_folder">
+  <h4>2. Summary of the assessment</h4>
+  <tal:rep tal:repeat="region_folder python: view.get_region_folders(country_folder)">
+    <h5 tal:content="region_folder/title">Baltic</h5>
+    <div class="ast-header-data">
+      <table class="table table-condensed assessment-data-table">
+        <thead>
+          <tr>
+            <th>Descriptor</th>
+            <th>Article 9 - Ges Determination</th>
+            <th>Article 8 - Initial Assessment</th>
+            <th>Article 10 - Environmental Targets</th>
+          </tr>
+        </thead>
+        <tbody>
+
+          <tr tal:repeat="descr_folder python: view.get_descr_folders(region_folder)">
+            <th><div tal:content="python: descr_folder.title">D1 - Birds</div></th>
+
+            <td tal:repeat="article_folder python: view.get_article_folders(descr_folder)">
+              <div tal:define="base_class python: 'gescomp as-value as-value'"
+                  tal:attributes="class python: '{}-{}'.format(base_class, view.get_overall_color(region_folder.id.upper(), descr_folder.id.upper(), article_folder.title))"></div>
+            </td>
+
+          </tr>
+
+        </tbody>
+      </table>
+    </div>
+  </tal:rep>
+</div>

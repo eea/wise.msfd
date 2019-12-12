@@ -1,16 +1,17 @@
 <div tal:define="data options/data"
-  id="container-assessment-data-2018">
-  <h3>Descriptor-level assessments</h3>
+     class="nat-sum-descriptor-level-assessments"
+     id="container-assessment-data-2018">
+  <h4>4. Descriptor-level assessments</h4>
 
   <div tal:repeat="region_section data" class="report-section">
-    <h4 tal:content="python:region_section[0]">Baltic Sea</h4>
+    <h5 tal:content="python:region_section[0]">Baltic Sea</h5>
 
     <tal:rep tal:repeat="descriptor_section python:region_section[1]">
-      <h4 tal:content="python: descriptor_section[0]">D7 - Hydrographical changes</h4>
+      <h6 tal:content="python: descriptor_section[0]">D7 - Hydrographical changes</h6>
 
       <div tal:repeat="article_section python:descriptor_section[1]"
           class="ast-header-data">
-        <h4 tal:content="python: article_section[0]">Article 8</h4>
+        <h6 tal:content="python: article_section[0]">Article 8</h6>
         <table tal:define="article_data python: article_section[1]"
             class="table table-condensed assessment-data-table">
           <tbody>

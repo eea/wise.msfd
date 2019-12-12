@@ -1,0 +1,7 @@
+<div class="nat-sum-progress-assessment">
+  <h4>3. Assessment of national progress since 2012</h4>
+  <h5>3.1 2012 recommendations to Member State</h5>
+  <div>To be implemented...</div>
+  <h5>3.2 Progress against 2012 recommendations to Member State</h5>
+  <div tal:content="structure view/progress_recommendations">Editable RichText</div>
+</div>

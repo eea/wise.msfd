@@ -1,7 +1,7 @@
-<div tal:define="tables options/tables">
+<tal:def tal:define="tables options/tables">
 
   <div tal:repeat="table tables"
-    tal:content="structure table">
+    tal:replace="structure table">
   </div>
 
-</div>
+</tal:def>

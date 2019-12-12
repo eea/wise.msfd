@@ -1,5 +1,6 @@
 import logging
 from collections import defaultdict, namedtuple
+from datetime import datetime
 
 from plone.api.portal import get_tool
 
@@ -58,8 +59,100 @@ class CompoundRow(TemplateMixin):
         self.rowspan = len(rows)
 
 
-class NatSummaryTable(BaseNatSummaryView):
-    """ Base class for tables """
+class Introduction(BaseNatSummaryView):
+    """ Implementation of section 1.Introduction """
+
+    template = ViewPageTemplateFile('pt/introduction.pt')
+
+    def reporting_history(self):
+        view = ReportingHistoryTable(self, self.request)
+
+        return view()
+
+    @property
+    def date(self):
+        date = datetime.now().strftime("%d %B %Y")
+
+        return date
+
+    @property
+    def status(self):
+        status = "Draft"
+
+        return status
+
+    @property
+    def scope_of_marine_waters(self):
+        country_folder = self._country_folder
+
+        if not hasattr(country_folder, 'scope_of_marine_waters'):
+            return ""
+
+        output = getattr(country_folder.scope_of_marine_waters, 'output', '')
+
+        return output
+
+    def __call__(self):
+
+        return self.template()
+
+
+class SummaryAssessment(BaseNatSummaryView):
+    """ Implementation of section 2. Summary of the assessment """
+
+    template = ViewPageTemplateFile('pt/summary-assessment.pt')
+
+    def __init__(self, context, request, overall_scores,
+                 nat_desc_country_folder):
+        super(SummaryAssessment, self).__init__(context, request)
+
+        self.overall_scores = overall_scores
+        self.nat_desc_country_folder = nat_desc_country_folder
+
+    def get_region_folders(self, country_folder):
+        return self.filter_contentvalues_by_iface(
+            country_folder, INationalRegionDescriptorFolder
+        )
+
+    def get_descr_folders(self, region_folder):
+        return self.filter_contentvalues_by_iface(
+            region_folder, IDescriptorFolder
+        )
+
+    def get_article_folders(self, descr_folder):
+        return self.filter_contentvalues_by_iface(
+            descr_folder, INationalDescriptorAssessment
+        )
+
+    def get_overall_color(self, region_code, descriptor, article):
+        color = self.overall_scores[(region_code, descriptor, article)][1]
+
+        return color
+
+    def __call__(self):
+        return self.template()
+
+
+class ProgressAssessment(BaseNatSummaryView):
+    """ implementation of section 3. Assessment of national
+    progress since 2012
+    """
+
+    template = ViewPageTemplateFile('pt/progress-assessment.pt')
+
+    @property
+    def progress_recommendations(self):
+        country_folder = self._country_folder
+
+        if not hasattr(country_folder, 'progress_recommendations'):
+            return ""
+
+        output = getattr(country_folder.progress_recommendations, 'output', '')
+
+        return output
+
+    def __call__(self):
+        return self.template()
 
 
 class Article34Copy(Article34):
@@ -147,11 +240,16 @@ class ReportingHistoryTable(BaseNatSummaryView):
 
     @db.use_db_session('2018')
     def get_reporting_history_data(self):
+        obligation = 'MSFD reporting on Initial Assessments (Art. 8), ' \
+                     'Good Environmental Status (Art.9), Env. targets & ' \
+                     'associated indicators (Art.10) & related reporting on ' \
+                     'geographic areas, regional cooperation and metadata.'
         mc = sql2018.ReportingHistory
 
         _, res = db.get_all_records(
             mc,
-            mc.CountryCode == self.country_code
+            mc.CountryCode == self.country_code,
+            mc.ReportingObligation == obligation
         )
 
         res = db_objects_to_dict(res)
@@ -236,9 +334,11 @@ class ReportingHistoryTable(BaseNatSummaryView):
         return self.template(rows=self.allrows)
 
 
-class DescriptorLevelAssessments(BaseView):
+class DescriptorLevelAssessments(BaseNatSummaryView):
 
     template = ViewPageTemplateFile('pt/descriptor-level-assessments.pt')
+
+    overall_scores = {}
 
     @property
     def rdas(self):
@@ -444,6 +544,9 @@ class DescriptorLevelAssessments(BaseView):
         overall_score_2012 = ("{} ({})".format(conclusion_2012, score_2012),
                               self.get_color_for_score(score_2012))
 
+        __key = (region_code, descriptor, article)
+        self.overall_scores[__key] = overall_score_2018
+
         change_since_2012 = int(adequacy_score_val - score_2012)
 
         res = DESCRIPTOR_SUMMARY(
@@ -486,26 +589,28 @@ class DescriptorLevelAssessments(BaseView):
             if country.id == self.country_code.lower()
         ][0]
 
-        for region_folder in country_folder.contentValues():
-            if not INationalRegionDescriptorFolder.providedBy(region_folder):
-                continue
+        self.nat_desc_country_folder = country_folder
+        region_folders = self.filter_contentvalues_by_iface(
+            country_folder, INationalRegionDescriptorFolder
+        )
+
+        for region_folder in region_folders:
             region_code = region_folder.id
             region_name = region_folder.title
             descriptor_data = []
+            descriptor_folders = self.filter_contentvalues_by_iface(
+                region_folder, IDescriptorFolder
+            )
 
-            for descriptor_folder in region_folder.contentValues():
-                if not IDescriptorFolder.providedBy(descriptor_folder):
-                    continue
-
+            for descriptor_folder in descriptor_folders:
                 desc_id = descriptor_folder.id
                 desc_name = descriptor_folder.title
                 articles = []
+                article_folders = self.filter_contentvalues_by_iface(
+                    descriptor_folder, INationalDescriptorAssessment
+                )
 
-                for article_folder in descriptor_folder.contentValues():
-                    if not INationalDescriptorAssessment.providedBy(
-                            article_folder):
-                        continue
-
+                for article_folder in article_folders:
                     article = article_folder.title
 
                     assess_data = self._get_assessment_data(article_folder)
@@ -549,12 +654,20 @@ class NationalSummaryView(BaseNatSummaryView):
         )
         # trans_edit_html = self.translate_view()()
 
+        descriptor_lvl_assess = DescriptorLevelAssessments(self, self.request)
+        descriptor_lvl_assess_view = descriptor_lvl_assess()
+        overall_scores = descriptor_lvl_assess.overall_scores
+        nat_desc_country_folder = descriptor_lvl_assess.nat_desc_country_folder
+
         self.tables = [
             report_header,
-            DescriptorLevelAssessments(self, self.request)
+            Introduction(self.context, self.request),
+            SummaryAssessment(self, self.request, overall_scores,
+                              nat_desc_country_folder),
+            ProgressAssessment(self, self.request),
+            descriptor_lvl_assess_view
             # ArticleTable(self, self.request, 'Art7'),
             # ArticleTable(self, self.request, 'Art3-4'),
-            # ReportingHistoryTable(self, self.request),
             # trans_edit_html,
         ]
 
@@ -568,6 +681,10 @@ class NationalSummaryView(BaseNatSummaryView):
 
         # if 'download' in self.request.form:
         #     return self.download()
+
+        if 'edit-data' in self.request.form:
+            url = "{}/edit".format(self._country_folder.absolute_url())
+            return self.request.response.redirect(url)
 
         if 'translate' in self.request.form:
             for table in self.tables:

@@ -20,9 +20,6 @@ class BaseNatSummaryView(BaseComplianceView):
     section = 'national-summaries'
     _translatables = None
 
-    not_rep = u""
-    rep = u"Reported"
-
     @property
     def current_phase(self):
         region_folder = self._country_folder
@@ -51,6 +48,14 @@ class BaseNatSummaryView(BaseComplianceView):
             interfaces.INationalSummaryCountryFolder
         )
 
+    def filter_contentvalues_by_iface(self, folder, interface):
+        res = [
+            f for f in folder.contentValues()
+            if interface.providedBy(f)
+        ]
+
+        return res
+
     @property
     def available_countries(self):
         return self._country_folder._countries_for_region
@@ -66,25 +71,3 @@ class BaseNatSummaryView(BaseComplianceView):
         title = wf_state.title.strip() or state
 
         return state, title
-
-    # def translate_value(self, fieldname, value, source_lang):
-    #     is_translatable = fieldname in self.TRANSLATABLES
-    #
-    #     v = self.translate_view()
-    #
-    #     if not is_translatable:
-    #         return v.cell_tpl(value=value)
-    #
-    #     if not value:
-    #         return v.cell_tpl(value=value)
-    #
-    #     text = value[0]
-    #     translation = value[1] or ''
-    #
-    #     if get_detected_lang(text) == 'en' or not translation:
-    #         return v.cell_tpl(value=text)
-    #
-    #     return v.translate_tpl(text=text,
-    #                            translation=translation,
-    #                            can_translate=False,
-    #                            source_lang=source_lang)

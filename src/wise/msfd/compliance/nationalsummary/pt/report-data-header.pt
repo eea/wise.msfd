@@ -1,4 +1,4 @@
-<div class="row">
+<div class="nat-sum-report-header" class="row">
   <div class="col-md-12">
 
     <!-- <div metal:use&#45;macro="context/@@compliance&#45;nav&#45;macros/macros/nav"></div> -->
@@ -6,7 +6,7 @@
       Status message
     </div>
 
-    <h3 class="report-title" tal:content="structure options/title">201X Member State Report</h3>
+    <!--<h3 class="report-title" tal:content="structure options/title">201X Member State Report</h3>-->
 
     <div id="report-data-navigation">
       <div class="back-to-art">
@@ -17,11 +17,12 @@
       </div>
     </div>
 
-    <div tal:condition="python: False" id="download-report-data-form">
+    <div id="download-report-data-form">
       <form method="POST" action="" tal:attributes="action request/getURL">
-        <button name="download" class="btn btn-primary">Download as text</button>
-        <button name="translate" class="btn btn-secondary"
-          tal:condition="view/can_view_assessment_data">Auto-translate</button>
+        <button name="edit-data" class="btn btn-primary">Edit</button>
+        <!--<button name="download" class="btn btn-primary">Download as text</button>-->
+        <!--<button name="translate" class="btn btn-secondary"-->
+          <!--tal:condition="view/can_view_assessment_data">Auto-translate</button>-->
       </form>
     </div>
 

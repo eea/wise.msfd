@@ -310,7 +310,7 @@ class BootstrapCompliance(BrowserView):
                 cf = ns[code.lower()]
             else:
                 cf = create(ns,
-                            'wise.msfd.countrydescriptorsfolder',
+                            'national_summary',
                             title=country,
                             id=code)
 
