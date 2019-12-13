@@ -15,6 +15,7 @@ from wise.msfd.compliance.interfaces import (IDescriptorFolder,
 from wise.msfd.compliance.scoring import (CONCLUSIONS, get_range_index,
                                           OverallScores)
 from wise.msfd.data import get_report_filename
+from wise.msfd.translation import get_translated, retrieve_translation
 from wise.msfd.utils import (ItemList, TemplateMixin,  # RawRow,
                              db_objects_to_dict, timeit)
 
@@ -59,11 +60,48 @@ class CompoundRow(TemplateMixin):
         self.rowspan = len(rows)
 
 
+class AssessmentAreas2018(BaseNatSummaryView):
+    """ Implementation of 1.3 Assessment areas (Marine Reporting Units) """
+
+    template = ViewPageTemplateFile('pt/assessment-areas.pt')
+
+    @db.use_db_session('2018')
+    def get_data(self):
+        mapper_class = sql2018.MRUsPublication
+        res = []
+
+        # for better query speed we get only these columns
+        col_names = ('Country', 'Region', 'thematicId', 'nameTxtInt',
+                     'nameText', 'spZoneType', 'legisSName', 'Area')
+        columns = [getattr(mapper_class, name) for name in col_names]
+
+        count, data = db.get_all_specific_columns(
+            columns,
+            mapper_class.Country == self.country_code
+        )
+
+        for row in data:
+            description = row.nameText or row.nameTxtInt
+            translation = get_translated(description, self.country_code) or ""
+            self._translatable_values.append(description)
+
+            res.append((row.Region, row.spZoneType, row.thematicId,
+                        description, translation))
+
+        return res
+
+    def __call__(self):
+        data = self.get_data()
+
+        return self.template(data=data)
+
+
 class Introduction(BaseNatSummaryView):
     """ Implementation of section 1.Introduction """
 
     template = ViewPageTemplateFile('pt/introduction.pt')
 
+    @timeit
     def reporting_history(self):
         view = ReportingHistoryTable(self, self.request)
 
@@ -83,18 +121,30 @@ class Introduction(BaseNatSummaryView):
 
     @property
     def scope_of_marine_waters(self):
-        country_folder = self._country_folder
-
-        if not hasattr(country_folder, 'scope_of_marine_waters'):
-            return ""
-
-        output = getattr(country_folder.scope_of_marine_waters, 'output', '')
+        output = self.get_field_value('scope_of_marine_waters')
 
         return output
 
+    @property
+    def assessment_methodology(self):
+        output = self.get_field_value('assessment_methodology')
+
+        return output
+
+    @property
+    @timeit
+    def assessment_areas(self):
+        view = AssessmentAreas2018(self, self.request)
+
+        return view()
+
     def __call__(self):
 
-        return self.template()
+        @timeit
+        def render_introduction():
+            return self.template()
+
+        return render_introduction()
 
 
 class SummaryAssessment(BaseNatSummaryView):
@@ -124,13 +174,21 @@ class SummaryAssessment(BaseNatSummaryView):
             descr_folder, INationalDescriptorAssessment
         )
 
-    def get_overall_color(self, region_code, descriptor, article):
+    def get_overall_score(self, region_code, descriptor, article):
         color = self.overall_scores[(region_code, descriptor, article)][1]
+        conclusion = self.overall_scores[(region_code, descriptor, article)][0]
+        conclusion = conclusion.split(' ')
+        conclusion = " ".join(conclusion[:-1])
 
-        return color
+        return conclusion, color
 
     def __call__(self):
-        return self.template()
+
+        @timeit
+        def render_summary_assessment():
+            return self.template()
+
+        return render_summary_assessment()
 
 
 class ProgressAssessment(BaseNatSummaryView):
@@ -140,36 +198,25 @@ class ProgressAssessment(BaseNatSummaryView):
 
     template = ViewPageTemplateFile('pt/progress-assessment.pt')
 
-    def get_progress_recommendation(self, attribute):
-        country_folder = self._country_folder
-        default = "-"
-
-        if not hasattr(country_folder, attribute):
-            return default
-
-        progress = getattr(country_folder, attribute)
-        output = getattr(progress, 'output', default)
-
-        return output
-
     @property
     def progress_recommendations_2012(self):
-        progress = self.get_progress_recommendation(
-            'progress_recommendations_2012'
-        )
+        progress = self.get_field_value('progress_recommendations_2012')
 
         return progress
 
     @property
     def progress_recommendations_2018(self):
-        progress = self.get_progress_recommendation(
-            'progress_recommendations_2018'
-        )
+        progress = self.get_field_value('progress_recommendations_2018')
 
         return progress
 
     def __call__(self):
-        return self.template()
+
+        @timeit
+        def render_progress_assessment():
+            return self.template()
+
+        return render_progress_assessment()
 
 
 class Article34Copy(Article34):
@@ -529,23 +576,23 @@ class DescriptorLevelAssessments(BaseNatSummaryView):
         adequacy_score_val, conclusion = \
             phase_overall_scores.adequacy['conclusion']
         score = phase_overall_scores.get_score_for_phase('adequacy')
-        adequacy = ("{} ({}, {})".format(score, conclusion, adequacy_score_val),
+        adequacy = ("{} ({}) {}%".format(conclusion, adequacy_score_val, score),
                     phase_overall_scores.adequacy['color'])
 
         score_val, conclusion = phase_overall_scores.consistency['conclusion']
         score = phase_overall_scores.get_score_for_phase('consistency')
-        consistency = ("{} ({}, {})".format(score, conclusion, score_val),
+        consistency = ("{} ({}) {}%".format(conclusion, score_val, score),
                        phase_overall_scores.consistency['color'])
 
         score_val, conclusion = phase_overall_scores.coherence['conclusion']
         score = phase_overall_scores.get_score_for_phase('coherence')
-        coherence = ("{} ({}, {})".format(score, conclusion, score_val),
+        coherence = ("{} ({}) {}%".format(conclusion, score_val, score),
                      phase_overall_scores.coherence['color'])
 
         score_val, score = phase_overall_scores.get_overall_score(article)
         conclusion = self.get_conclusion(score_val)
         overall_score_2018 = (
-            "{} ({}, {})".format(score, conclusion, score_val),
+            "{} ({}) {}%".format(conclusion, score_val, score),
             self.get_color_for_score(score_val)
         )
 
@@ -574,23 +621,24 @@ class DescriptorLevelAssessments(BaseNatSummaryView):
 
         return res
 
-    def __call__(self):
+    @timeit
+    def setup_descriptor_level_assessment_data(self):
         """
         :return: res =  [("Baltic Sea", [
-                ("D7 - Hydrographical changes", [
-                        ("Art8", DESCRIPTOR_SUMMARY),
-                        ("Art9", DESCRIPTOR_SUMMARY),
-                        ("Art10", DESCRIPTOR_SUMMARY),
-                    ]
-                ),
-                ("D1.4 - Birds", [
-                        ("Art8", DESCRIPTOR_SUMMARY),
-                        ("Art9", DESCRIPTOR_SUMMARY),
-                        ("Art10", DESCRIPTOR_SUMMARY),
-                    ]
-                ),
-            ]
-        )]
+                    ("D7 - Hydrographical changes", [
+                            ("Art8", DESCRIPTOR_SUMMARY),
+                            ("Art9", DESCRIPTOR_SUMMARY),
+                            ("Art10", DESCRIPTOR_SUMMARY),
+                        ]
+                    ),
+                    ("D1.4 - Birds", [
+                            ("Art8", DESCRIPTOR_SUMMARY),
+                            ("Art9", DESCRIPTOR_SUMMARY),
+                            ("Art10", DESCRIPTOR_SUMMARY),
+                        ]
+                    ),
+                ]
+            )]
         """
 
         res = []
@@ -643,7 +691,12 @@ class DescriptorLevelAssessments(BaseNatSummaryView):
 
             res.append((region_name, descriptor_data))
 
-        return self.template(data=res)
+        return res
+
+    def __call__(self):
+        data = self.setup_descriptor_level_assessment_data()
+
+        return self.template(data=data)
 
 
 class NationalSummaryView(BaseNatSummaryView):
@@ -663,6 +716,7 @@ class NationalSummaryView(BaseNatSummaryView):
     #     return doc
 
     # @cache(get_reportdata_key, dependencies=['translation'])
+    @timeit
     def render_reportdata(self):
         report_header = self.report_header_template(
             title="National summary report: {}".format(
@@ -704,11 +758,14 @@ class NationalSummaryView(BaseNatSummaryView):
         #     return self.download()
 
         if 'translate' in self.request.form:
-            for table in self.tables:
-                if (hasattr(table, 'is_translatable')
-                        and table.is_translatable):
-                    view = table.view
-                    view.auto_translate()
+            # for table in self.tables:
+            #     if (hasattr(table, 'is_translatable')
+            #             and table.is_translatable):
+            #         view = table.view
+            #         view.auto_translate()
+
+            for value in self._translatable_values:
+                retrieve_translation(self.country_code, value)
 
             messages = IStatusMessage(self.request)
             messages.add(u"Auto-translation initiated, please refresh "

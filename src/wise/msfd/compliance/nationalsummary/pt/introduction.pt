@@ -56,18 +56,10 @@
   <h5>1.2 Member State's marine waters</h5>
   <div tal:content="structure python: view.scope_of_marine_waters">Editable text</div>
 
-  <h5>1.3 Assessment areas (Marine Reportng Units)</h5>
+  <h5>1.3 Assessment areas (Marine Reporting Units)</h5>
   <div>The table lists the Marine Reporting Units used for the 2018 reporting on updates of Articles 8, 9 and 10.</div>
+  <div tal:replace="structure python: view.assessment_areas">Mru table</div>
 
   <h5>1.4 Assessment methodology</h5>
-  <div>To allow for an effective comparison and the monitoring of progress, the assessment covered the same broad criteria as the previous Article 12 assessment  which was carried out between 2012 and 2014:
-    <ul>
-      <li>Adequacy: assessing whether the reported information is good enough to meet the objectives of the Directive and the technical requirements of Articles 8, 9 and 10.</li>
-      <li>Consistency across the Marine Strategy (hereinafter consistency): assessing the logical flow of reporting of one Member State for Articles 8, 9 and 10, including the identification of missing links, conflicts and gaps.</li>
-      <li>Regional coherence (hereinafter coherence): Assessing the relationships between the reports of the Member State, firstly within one each marine region or sub-region.</li>
-    </ul>
-  The assessment sought to identify progress in the implementation of the MSFD by comparing between 2012 and 2018 assessment results.
-  A list of assessment questions by article for each of the three broad assessment criteria was defined to structure the assessment exercise. A scoring system is applied where each assessment question is scored based on the degree to which the broad assessment criteria are met by the reported information. The assessment is carried out through an online tool.
-  The assessment was based on the e-reporting information (xml and shapefiles) provided by the Member State. Any text reports submitted were not consulted.
-  </div>
+  <div tal:content="structure python: view.assessment_methodology">Long text</div>
 </div>

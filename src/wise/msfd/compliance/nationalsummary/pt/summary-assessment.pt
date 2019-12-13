@@ -19,8 +19,11 @@
             <th><div tal:content="python: descr_folder.title">D1 - Birds</div></th>
 
             <td tal:repeat="article_folder python: view.get_article_folders(descr_folder)">
-              <div tal:define="base_class python: 'gescomp as-value as-value'"
-                  tal:attributes="class python: '{}-{}'.format(base_class, view.get_overall_color(region_folder.id.upper(), descr_folder.id.upper(), article_folder.title))"></div>
+              <div tal:define="base_class python: 'gescomp as-value as-value';
+                      score python: view.get_overall_score(region_folder.id.upper(), descr_folder.id.upper(), article_folder.title);"
+                   tal:attributes="class python: '{}-{}'.format(base_class, score[1])">
+                <div tal:content="python: score[0]">Very good (2)</div>
+              </div>
             </td>
 
           </tr>

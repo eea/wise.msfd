@@ -1,0 +1,21 @@
+<div class="nat-sum-assessment-areas">
+  <table class="table table-bordered table-striped table-comp-translate table-report"
+      tal:define="data options/data">
+    <thead>
+      <tr>
+        <th>Region</th>
+        <th>Zone Type</th>
+        <th>MarineUnitID</th>
+        <th>Marine Reporting Unit Description</th>
+        <th>Marine Reporting Unit Description (Translated)</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr tal:repeat="row data">
+        <td tal:repeat="value row"
+          tal:content="value">Value</td>
+      </tr>
+
+    </tbody>
+  </table>
+</div>

@@ -19,6 +19,19 @@ class BaseNatSummaryView(BaseComplianceView):
 
     section = 'national-summaries'
     _translatables = None
+    _translatable_values = []
+
+    def get_field_value(self, attribute):
+        country_folder = self._country_folder
+        default = "-"
+
+        if not hasattr(country_folder, attribute):
+            return default
+
+        progress = getattr(country_folder, attribute)
+        output = getattr(progress, 'output', default)
+
+        return output
 
     @property
     def current_phase(self):
