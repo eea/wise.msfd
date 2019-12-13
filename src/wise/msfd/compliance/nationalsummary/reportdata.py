@@ -140,16 +140,33 @@ class ProgressAssessment(BaseNatSummaryView):
 
     template = ViewPageTemplateFile('pt/progress-assessment.pt')
 
-    @property
-    def progress_recommendations(self):
+    def get_progress_recommendation(self, attribute):
         country_folder = self._country_folder
+        default = "-"
 
-        if not hasattr(country_folder, 'progress_recommendations'):
-            return ""
+        if not hasattr(country_folder, attribute):
+            return default
 
-        output = getattr(country_folder.progress_recommendations, 'output', '')
+        progress = getattr(country_folder, attribute)
+        output = getattr(progress, 'output', default)
 
         return output
+
+    @property
+    def progress_recommendations_2012(self):
+        progress = self.get_progress_recommendation(
+            'progress_recommendations_2012'
+        )
+
+        return progress
+
+    @property
+    def progress_recommendations_2018(self):
+        progress = self.get_progress_recommendation(
+            'progress_recommendations_2018'
+        )
+
+        return progress
 
     def __call__(self):
         return self.template()
@@ -676,15 +693,15 @@ class NationalSummaryView(BaseNatSummaryView):
         return template(tables=self.tables)
 
     def __call__(self):
+        if 'edit-data' in self.request.form:
+            url = "{}/edit".format(self._country_folder.absolute_url())
+            return self.request.response.redirect(url)
+
         report_html = self.render_reportdata()
         self.report_html = report_html
 
         # if 'download' in self.request.form:
         #     return self.download()
-
-        if 'edit-data' in self.request.form:
-            url = "{}/edit".format(self._country_folder.absolute_url())
-            return self.request.response.redirect(url)
 
         if 'translate' in self.request.form:
             for table in self.tables:

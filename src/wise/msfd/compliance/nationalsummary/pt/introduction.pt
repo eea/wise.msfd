@@ -57,7 +57,7 @@
   <div tal:content="structure python: view.scope_of_marine_waters">Editable text</div>
 
   <h5>1.3 Assessment areas (Marine Reportng Units)</h5>
-  <div>To be implemented...</div>
+  <div>The table lists the Marine Reporting Units used for the 2018 reporting on updates of Articles 8, 9 and 10.</div>
 
   <h5>1.4 Assessment methodology</h5>
   <div>To allow for an effective comparison and the monitoring of progress, the assessment covered the same broad criteria as the previous Article 12 assessment  which was carried out between 2012 and 2014:

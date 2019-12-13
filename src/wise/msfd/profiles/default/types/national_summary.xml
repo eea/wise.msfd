@@ -26,7 +26,6 @@
  <property
     name="klass">wise.msfd.compliance.content.NationalSummaryCountryFolder</property>
  <property name="behaviors">
-  <element value="plone.app.lockingbehavior.behaviors.ILocking"/>
   <element value="plone.app.content.interfaces.INameFromTitle"/>
   <element
      value="plone.app.referenceablebehavior.referenceable.IReferenceable"/>

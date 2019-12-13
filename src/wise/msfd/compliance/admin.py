@@ -314,7 +314,7 @@ class BootstrapCompliance(BrowserView):
                             title=country,
                             id=code)
 
-                self.set_layout(cf, '@@sum-country-start')
+                self.set_layout(cf, 'sum-country-start')
                 alsoProvides(cf, interfaces.INationalSummaryCountryFolder)
                 # self.create_comments_folder(cf)
 

@@ -10,7 +10,13 @@
             <required>False</required>
             <title>Scope of marine waters</title>
         </field>
-        <field name="progress_recommendations"
+        <field name="progress_recommendations_2012"
+               type="plone.app.textfield.RichText">
+            <description/>
+            <required>False</required>
+            <title>2012 recommendations to Member State</title>
+        </field>
+        <field name="progress_recommendations_2018"
                type="plone.app.textfield.RichText">
             <description/>
             <required>False</required>
