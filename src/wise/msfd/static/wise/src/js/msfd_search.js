@@ -110,11 +110,11 @@
         var invertSel = '<a class="" data-value="invert"><label><span class="label">Invert selection</span></label></a>' +
             '<div class="btn btn-default apply-filters" data-value="apply"><span class="" >Apply filters</span></div>'+
             '<span class="ui-autocomplete">' +
-            '<span class=" search-icon" ></span>' +
-            '<span style="position: relative;padding-top:1px;padding-bottom:1px;background: white;" class="search-span">' +
-            '<input class="ui-autocomplete-input" type="text" style="width: 80%;" />' +
-            '<span class="clear-btn"></span>' +
-            '</span>' +
+                '<span class=" search-icon" ></span>' +
+                '<span style="position: relative; flex: 1;" class="search-span">' +
+                    '<input class="ui-autocomplete-input" type="text" />' +
+                    '<span class="clear-btn"></span>' +
+                '</span>' +
             '</span>';
         return spAll + spClear + invertSel;
     }
@@ -330,7 +330,6 @@
             var cheks = $field.find(".option");
             var allcheckboxes = cheks.find("input[type='checkbox']");
             var hasChecks = allcheckboxes.length > 0;
-
             // has checkboxes
             if(hasChecks){
                 var fieldId = $field.attr("id");
@@ -351,7 +350,7 @@
                     $field.find(".controls a").hide();
                     $field.find(".controls").html("").css("height" ,"1px").css("padding", 0);
                 } else {
-                    addCheckboxPanel($field, fieldId, cheks  );
+                    addCheckboxPanel($field, fieldId, cheks);
 
                     $field.find(".search-icon").on("click" , function (ev) {
                         $(ev.target).parent().find("input").trigger("focus");
@@ -685,10 +684,8 @@
     }
 
     function setPaginationButtons(){
-        var prevButton = $(".center-section [name='form.buttons.prev']");
-
-        var nextButton = $(".center-section [name='form.buttons.next']");
-
+        var prevButton = $(".msfd-search-wrapper [name='form.buttons.prev']");
+        var nextButton = $(".msfd-search-wrapper [name='form.buttons.next']");
         var continueBtn = ".formControls #form-buttons-continue";
 
         prevButton.one("click", function (){
@@ -766,13 +763,13 @@
             paginationInputHandlers();
         }
 
-        $(".center-section").on("click", paginationTextResult, function (ev){
+        $(".msfd-search-wrapper").on("click", paginationTextResult, function (ev){
             $(ev.target).parent().find("input").show().focus();
 
             $(ev.target).hide();
         });
 
-        $(".center-section").on("click", function (ev) {
+        $(".msfd-search-wrapper").on("click", function (ev) {
             // if click is on the result text
             if($(ev.target).is(paginationTextResult) || $(ev.target).is(".pagination-text .pagination-input") ) {
 
@@ -907,14 +904,18 @@
             cont = $(".left-side-form");
         }
 
-        cont.prepend("<div id='wise-search-form-preloader' ></div>");
+        cont.prepend("<div id='wise-search-form-preloader'/>");
 
         $("#wise-search-form-preloader")
             .append("<span style='position: absolute;" +
                 " display: block;" +
                 " left: 50%;" +
                 "top: 10%;'></span>");
-        $("#wise-search-form-preloader > span").append( $("#ajax-spinner2").clone().attr("id","ajax-spinner-center" ).show());
+        $("#wise-search-form-preloader > span")
+        .append($("#ajax-spinner2")
+          .clone()
+          .attr("id","ajax-spinner-center" )
+          .show());
 
         $("#ajax-spinner-center").css({
             "position" : "fixed"

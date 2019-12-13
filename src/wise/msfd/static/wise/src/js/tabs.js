@@ -18,7 +18,7 @@ window.setupTabs = function (tabswrapper) {
             var rest = 100 - tabLength * nrtabs;
 
             var totalL = $("ul.nav").width();
-            var mrR = Math.floor( totalL /100 ) ;
+            var mrR = Math.floor( totalL /100 );
 
             $(t).css({
                 "margin-left": 0,
@@ -48,23 +48,18 @@ window.setupTabs = function (tabswrapper) {
         var renderTopTabs = function () {
             var nrTabs = $( tabsWrapper + " ul.topnav li").length || 0;
 
-            if(nrTabs === 0){
-                return false;
+            if (nrTabs === 0) {
+              return false;
             }
 
             var PERCENT = false;
 
-            if(PERCENT){
+            if(PERCENT) {
                 var totalLength = 100;
-
                 var tabSpaces  = nrTabs - 1;
-
                 var tabWidth = (totalLength - tabSpaces) / nrTabs ;
-
                 var rest = totalLength - (tabWidth * nrTabs);
-
                 var tabSpace = rest / (nrTabs-1);
-
                 /*$( ".topnav li").css({
                     "width": tabWidth  + "%",
                     "margin-right": tabSpace + "%"
@@ -74,15 +69,10 @@ window.setupTabs = function (tabswrapper) {
                 });*/
             } else {
                 var totalLength = $( tabsWrapper + " ul.topnav").outerWidth();
-
                 var tabSpaceWidth = 10;
-
                 var tabSpaces = (nrTabs - 1)*tabSpaceWidth;
-
                 var tabWidth = (totalLength - tabSpaces) / nrTabs ;
-
                 var rest = totalLength - (tabWidth * nrTabs);
-
                 var tabSpace = rest / (nrTabs-1);
 
                 $( ".topnav li").css({
@@ -96,7 +86,6 @@ window.setupTabs = function (tabswrapper) {
                     "width": "initial",
                 });
             }
-
         };
 
         if( $( tabsWrapper + " ul li").length === 1 ){
