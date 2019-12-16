@@ -16,8 +16,8 @@ from wise.msfd.compliance.scoring import (CONCLUSIONS, get_range_index,
                                           OverallScores)
 from wise.msfd.data import get_report_filename
 from wise.msfd.translation import get_translated, retrieve_translation
-from wise.msfd.utils import (ItemList, TemplateMixin,  # RawRow,
-                             db_objects_to_dict, timeit)
+from wise.msfd.utils import (ItemList, TemplateMixin, db_objects_to_dict,
+                             fixedorder_sortkey, timeit)
 
 from ..nationaldescriptors.a7 import Article7
 from ..nationaldescriptors.a34 import Article34
@@ -31,6 +31,7 @@ from .base import BaseNatSummaryView
 
 logger = logging.getLogger('wise.msfd')
 
+ARTICLE_ORDER = ('Art9', 'Art8', 'Art10')
 
 DESCRIPTOR_SUMMARY = namedtuple(
     'DescriptorSummary',
@@ -404,6 +405,12 @@ class DescriptorLevelAssessments(BaseNatSummaryView):
 
     overall_scores = {}
 
+    descriptor_types = [
+        ("Pressure-based descriptors", ['D2', 'D5', 'D7', 'D9', 'D10', 'D11']),
+        ("State-based descriptors", ['D1.1', 'D1.2', 'D1.3', 'D1.4', 'D1.5',
+                                     'D3', 'D1.6', 'D6', 'D4'])
+    ]
+
     @property
     def rdas(self):
         catalog = get_tool('portal_catalog')
@@ -589,11 +596,13 @@ class DescriptorLevelAssessments(BaseNatSummaryView):
         coherence = ("{} ({}) {}%".format(conclusion, score_val, score),
                      phase_overall_scores.coherence['color'])
 
-        score_val, score = phase_overall_scores.get_overall_score(article)
-        conclusion = self.get_conclusion(score_val)
+        overallscore_val, score = phase_overall_scores.get_overall_score(
+            article
+        )
+        conclusion = self.get_conclusion(overallscore_val)
         overall_score_2018 = (
-            "{} ({}) {}%".format(conclusion, score_val, score),
-            self.get_color_for_score(score_val)
+            "{} ({}) {}%".format(conclusion, overallscore_val, score),
+            self.get_color_for_score(overallscore_val)
         )
 
         assessment_summary = assess_data.get(
@@ -611,7 +620,7 @@ class DescriptorLevelAssessments(BaseNatSummaryView):
         __key = (region_code, descriptor, article)
         self.overall_scores[__key] = overall_score_2018
 
-        change_since_2012 = int(adequacy_score_val - score_2012)
+        change_since_2012 = int(overallscore_val - score_2012)
 
         res = DESCRIPTOR_SUMMARY(
             assessment_summary, progress_assessment, recommendations,
@@ -668,7 +677,7 @@ class DescriptorLevelAssessments(BaseNatSummaryView):
             )
 
             for descriptor_folder in descriptor_folders:
-                desc_id = descriptor_folder.id
+                desc_id = descriptor_folder.id.upper()
                 desc_name = descriptor_folder.title
                 articles = []
                 article_folders = self.filter_contentvalues_by_iface(
@@ -681,12 +690,17 @@ class DescriptorLevelAssessments(BaseNatSummaryView):
                     assess_data = self._get_assessment_data(article_folder)
                     article_data = self._get_article_data(
                         region_code.upper(), country_folder.title,
-                        desc_id.upper(), assess_data, article
+                        desc_id, assess_data, article
                     )
                     articles.append((article, article_data))
 
+                articles = sorted(
+                    articles, key=lambda i: fixedorder_sortkey(i[0],
+                                                               ARTICLE_ORDER)
+                )
+
                 descriptor_data.append(
-                    (desc_name, articles)
+                    ((desc_id, desc_name), articles)
                 )
 
             res.append((region_name, descriptor_data))
