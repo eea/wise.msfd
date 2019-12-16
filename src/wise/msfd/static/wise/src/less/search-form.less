@@ -282,6 +282,7 @@
     border-radius: @checkboxes-radius;
     display: inline-block;
     position: relative;
+    top: 2px;
 
     &:active,
     &:checked:active {
@@ -332,8 +333,9 @@
 
   .label {
     color: black;
-    font-size: 0.9em;
-    display: inline;
+    font-size: 0.8em;
+    display: inline-block;
+    // margin-bottom: 0;
   }
 
   a {
@@ -344,7 +346,7 @@
       color: black;
 
       &:hover {
-        color: white;
+        color: #069;
         cursor: pointer;
       }
     }
@@ -911,8 +913,8 @@
 }
 
 .label {
-  display: inline;
-  padding: .2em .6em .3em;
+  display: inline-block;
+  padding: 0.8em 0.7em;
   font-size: 75%;
   font-weight: bold;
   line-height: 1;
