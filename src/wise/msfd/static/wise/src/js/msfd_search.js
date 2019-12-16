@@ -102,16 +102,15 @@
     * CHECKBOXES functions
     * */
     function generateControlDiv(){
-        var spAll = '<span class="controls" style="display: inline-block;background-color: #ddd;padding-top: 2px;padding-bottom: 2px;' +
-            'padding-left: 0;position: relative;  ">' +
-            '<span style="font-size: 0.8em; margin-left: 5px;">Select :</span><a class="" data-value="all"><label>' +
+        var spAll = '<span class="controls">' +
+            '<span>Select :</span><a data-value="all"><label>' +
             '<span class="label">All</span></label></a>';
-        var spClear = '<a class="" data-value="none" ><label><span class="label">Clear all</span></label></a>';
-        var invertSel = '<a class="" data-value="invert"><label><span class="label">Invert selection</span></label></a>' +
-            '<div class="btn btn-default apply-filters" data-value="apply"><span class="" >Apply filters</span></div>'+
+        var spClear = '<a data-value="none"><label><span class="label">Clear all</span></label></a>';
+        var invertSel = '<a data-value="invert"><label><span class="label">Invert selection</span></label></a>' +
+            '<div class="btn btn-default apply-filters" data-value="apply"><span>Apply filters</span></div>'+
             '<span class="ui-autocomplete">' +
                 '<span class=" search-icon" ></span>' +
-                '<span style="position: relative; flex: 1;" class="search-span">' +
+                '<span class="search-span">' +
                     '<input class="ui-autocomplete-input" type="text" />' +
                     '<span class="clear-btn"></span>' +
                 '</span>' +
@@ -278,7 +277,7 @@
             });
 
             // TIBI TODO: re-enable
-            // addAutoComplete($field);
+            addAutoComplete($field);
         }
     }
 

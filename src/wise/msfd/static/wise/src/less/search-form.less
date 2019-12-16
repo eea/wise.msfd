@@ -335,7 +335,7 @@
     color: black;
     font-size: 0.8em;
     display: inline-block;
-    // margin-bottom: 0;
+    padding: 0 0.8em;
   }
 
   a {
@@ -371,7 +371,7 @@
   .ui-autocomplete {
     width: 100%;
     display: inline-block;
-    padding: 3px 9px;
+    // padding: 3px 9px;
     position: relative;
     display: flex;
     flex-direction: row;
@@ -430,16 +430,32 @@
   }
 }
 
+.controls {
+  background-color: #ddd;
+  padding-left: 0;
+  padding: 0.6em;
+
+  >span {
+    font-size: 0.8em;
+  }
+
+  .search-span {
+    position: relative;
+    flex: 1;
+  }
+}
+
 .field {
   .noresults {
     padding-left: 5px;
   }
 
   & > span {
-    max-height: 150px;
+    max-height: 180px;
     position: relative;
     overflow-y: auto;
     overflow-x: hidden;
+    display: block;
   }
 
   label.horizontal {
@@ -630,14 +646,14 @@
 }
 
 .panel-default {
-  border-color: #ddd;
+  // border-color: #ddd;
 }
 .panel {
-  margin-bottom: 20px;
-  background-color: #fff;
-  border: 1px solid transparent;
-  border-radius: 4px;
-  box-shadow: 0 1px 1px rgba(0,0,0,0.05);
+  // margin-bottom: 20px;
+  // background-color: #fff;
+  // border: 1px solid transparent;
+  // border-radius: 4px;
+  // box-shadow: 0 1px 1px rgba(0,0,0,0.05);
 }
 
 .hidden {
