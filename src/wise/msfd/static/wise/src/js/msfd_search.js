@@ -876,14 +876,8 @@
 
         $( selectorLeftForm + " .no-results").remove();
 
-        var t = "<div id='wise-search-form-container-preloader' " +
-            "></div>";
-        var sp = $("#ajax-spinner2").clone().attr("id", "ajax-spinner-form").css({
-            "position": "absolute",
-            "top" : "50%",
-            "left" : "50%",
-            "transform": "translate3d(-50%, -50%,0)"
-        }).show();
+        var t = "<div id='wise-search-form-container-preloader'/>";
+        var sp = $("#ajax-spinner2").attr("id", "ajax-spinner-form").show();
 
         $(selectorFormContainer).append(t);
         $("#wise-search-form-container-preloader").append(sp);

@@ -43,7 +43,7 @@
       border-bottom: 1px solid #ddd;
       li {
         a {
-          padding: 1em;
+          padding: 0.8em 0.5em;
         }
       }
     }
@@ -58,12 +58,22 @@
 
       a {
         display: block;
+        color: inherit;
       }
       &:hover {
         background-color: #006699;
         a {
           color: white;
         }
+      }
+    }
+
+    li.nav-item.active {
+      background-color: #006699;
+      a {
+        color: white;
+        font-weight: 600;
+        font-size: 14px;
       }
     }
 
@@ -102,4 +112,18 @@
   .visible-xs {
     display: block !important;
   }
+}
+
+.tab-content>.tab-pane {
+  display: none;
+}
+.tab-content>.active {
+  display: block;
+}
+.fade.in {
+  opacity: 1;
+}
+.fade {
+  opacity: 0;
+  transition: opacity .15s linear;
 }

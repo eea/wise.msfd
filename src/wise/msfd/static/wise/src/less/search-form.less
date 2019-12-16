@@ -31,10 +31,10 @@
   z-index: 1000;
   height: 100%;
   width: 100%;
-  position: absolute;
+  position: fixed;
   top: 0;
   left: 0;
-  background: rgba(255,255,255, 0.3);
+  background: rgba(255,255,255, 0.2);
 }
 
 #wise-search-form-top {
@@ -125,6 +125,21 @@
       border: 1px solid rgb(204, 204, 204);
       padding: 0px 6px;
     }
+  }
+
+  .panel-heading {
+    padding: 10px 15px;
+    border-bottom: 1px solid transparent;
+    border-top-right-radius: 3px;
+    border-top-left-radius: 3px;
+  }
+
+  .panel-title>a,
+  .panel-title>small,
+  .panel-title>.small,
+  .panel-title>small>a,
+  .panel-title>.small>a {
+    color: inherit;
   }
 
   .panel-heading .accordion-toggle.accordion-after:after {
@@ -297,14 +312,10 @@
   label {
     max-width: 80%;
     vertical-align: middle;
-    margin-bottom: 8px;
+    margin-bottom: 0;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    display: inline;
-    padding: .2em .6em .3em;
-    font-size: 75%;
-    line-height: 1;
 
     // span {
     //   display: inline;
@@ -358,7 +369,7 @@
   .ui-autocomplete {
     width: 100%;
     display: inline-block;
-    padding: 3px;
+    padding: 3px 9px;
     position: relative;
     display: flex;
     flex-direction: row;
@@ -411,6 +422,7 @@
         content:"\e014";
         font-family: @icon-font-family;
         padding: 3px;
+        font-size: 12px;
       }
     }
   }
@@ -610,8 +622,25 @@
 
 .label {
   color: black;
+  span {
+    display: inline;
+  }
 }
 
+.panel-default {
+  border-color: #ddd;
+}
+.panel {
+  margin-bottom: 20px;
+  background-color: #fff;
+  border: 1px solid transparent;
+  border-radius: 4px;
+  box-shadow: 0 1px 1px rgba(0,0,0,0.05);
+}
+
+.hidden {
+  display: none !important;
+}
 
 .wise-search-form-container div.formControls,
 #wise-search-form div.formControls {
@@ -872,4 +901,23 @@
   font-size: 12px;
   line-height: 1.5;
   border-radius: 3px;
+}
+
+#ajax-spinner-form {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate3d(-50%, -50%, 0);
+}
+
+.label {
+  display: inline;
+  padding: .2em .6em .3em;
+  font-size: 75%;
+  font-weight: bold;
+  line-height: 1;
+  text-align: center;
+  white-space: nowrap;
+  vertical-align: baseline;
+  border-radius: .25em;
 }

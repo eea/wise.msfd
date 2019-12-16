@@ -26,7 +26,7 @@
         <div tal:content="structure view/subform_content | nothing">subform here</div>
         <div class="form-right-side">
           <metal:block use-macro="context/@@ploneform-macros/actions" />
-          <div id="ajax-spinner2" style="display: none;">
+          <div id="ajax-spinner" style="display: none;">
             <img src="++resource++msfd/images/spinner.gif" alt="">
           </div>
         </div>
@@ -34,6 +34,7 @@
       <metal:css fill-slot="formtop">
         <link href="/++resource++static_css/tabs.css" type="text/css" rel="stylesheet" />
         <link href="/++resource++static_css/msfd_search.css" type="text/css" rel="stylesheet" />
+        <script src="++resource++msfd/bs3/js/bootstrap.min.js"></script>
         <!-- <link href="/++resource++static_css/bootstrap.css" type="text/css" rel="stylesheet" /> -->
         <!-- <script src="++resource++msfd/js/jquery-ui.js"></script> -->
         <!-- <script src="++plone++static/components/select2/select2.js"></script> -->
