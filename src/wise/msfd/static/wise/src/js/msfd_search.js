@@ -214,7 +214,7 @@
         $field.addClass("panel-group");
 
         var chekspan = $field.find("> span:not(.controls)");
-        chekspan.css("border-radius", 0);
+        // chekspan.css("border-radius", 0);
         chekspan
             .addClass( fieldId + "-collapse")
             .addClass("collapse")
@@ -239,7 +239,7 @@
         $field.find(".accordion-toggle").addClass("accordion-after");
 
         // hidden-colapse event
-        chekspan.on("hidden.bs.collapse", function () {
+        chekspan.on("hidden.bs.collapse", function() {
             chekspan.fadeOut("fast");
             $field.find(".controls").slideUp("fast");
             $field.css({"border-bottom" : "1px solid #ccc;"});
@@ -526,6 +526,39 @@
         });
     }
 
+    function formatArticle (article) {
+      var el = $(article.element[0]);
+      var subtitle = el.attr("data-subtitle");
+
+      return '<span style="font-weight: bold;">' +
+                el.attr("data-maintitle") + ': ' +
+              '</span>' +
+              '<span>'+ subtitle +'</span>';
+    }
+
+    function marineUnitSelect() {
+      var $selectArticle = $("#mobile-select-article");
+
+      var moptions = {
+        placeholder: 'Select an option',
+        closeOnSelect: true,
+        dropdownAutoWidth: true,
+        width: 'auto',
+        theme: "flat",
+        minimumResultsForSearch: 20,
+        formatSelection: formatArticle,
+        formatResult: formatArticle,
+        containerCssClass: "mobile-select-article"
+      };
+
+      if ($.fn.select2 !== undefined) {
+        $selectArticle.select2(moptions);
+        $selectArticle.one("select2-selecting", function (ev) {
+          document.location.href = ev.choice.id;
+        });
+      }
+    }
+
     function setupLeftSelect2(){
         var marineUnitTriggerSelector = "#marine-unit-trigger";
         if(  ($( selectorLeftForm + " select:not(.notselect)").hasClass("js-example-basic-single")) ){
@@ -542,7 +575,6 @@
                 allowClear: true,
                 dropdownParent: "#marine-unit-trigger",
                 dropdownAdapter: "AttachContainer",
-
                 containerCssClass : "select2-top-override",
                 dropdownCssClass: "select2-top-override-dropdown",
                 debug: true
@@ -579,12 +611,10 @@
 
             /// Marine Unit id selector
             if ($(selectorLeftForm + ' select').hasClass("js-example-basic-single")) {
-
                 // Select2 has been initialized
                 var text = $(selectorLeftForm + ' select [value="' + jQuery(selectorLeftForm + ' .select-article select').val() + '"]').text();
                 $( selectorLeftForm + ' select:not(.notselect)').parentsUntil(".field").before('<div id="marine-unit-trigger">' +
                     '<div class="text-trigger">'+ text +
-                    '<span class="fa fa-caret-down text-trigger-icon"></span>' +
                     '</div>' +
                     '</div>');
 
@@ -605,8 +635,8 @@
 
     function attachSelect2(){
         setupRightSelects2();
-
         setupLeftSelect2();
+        marineUnitSelect();
 
         var w = "auto";
         var daw = true;
@@ -763,8 +793,7 @@
         }
 
         $(".msfd-search-wrapper").on("click", paginationTextResult, function (ev){
-            $(ev.target).parent().find("input").show().focus();
-
+            $(ev.target).parent().find("input").show(300).focus().css("display", "inline-block");
             $(ev.target).hide();
         });
 
@@ -852,9 +881,7 @@
         $(selectorFormContainer + "," + selectorLeftForm).animate({"opacity" : 1}, 1000);
 
         addCheckboxHandlers( $(selectorFormContainer) );
-
         addCheckboxLabelHandlers();
-
         attachSelect2();
 
         if("undefined" !== typeof window.setupTabs && null !== window.setupTabs) window.setupTabs();
@@ -862,7 +889,6 @@
         if( "undefined" !== typeof clickFirstTab && null !== clickFirstTab ) clickFirstTab();
 
         setPaginationButtons();
-
         initPaginationInput();
     }
 
@@ -1500,7 +1526,10 @@
     }
 
     jQuery(document).ready(function($){
+
+      window.setTimeout(function() {
         initPageElems();
+      }, 100);
 
         /*$(window).on("resize", function () {
             if (window.matchMedia("(max-width: 1024px)").matches) {

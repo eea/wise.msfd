@@ -116,48 +116,48 @@ jQuery(document).ready(function($) {
       window.setupTabs();
     }
 
-    var w = "auto";
-    var daw = true;
+    // var w = "auto";
+    // var daw = true;
+    //
+    // function formatArticle (article) {
+    //   var el = $(article.element[0]);
+    //   var subtitle = el.attr("data-subtitle");
+    //
+    //   return '<span style="font-weight: bold;">' +
+    //             el.attr("data-maintitle") + ': ' +
+    //           '</span>' +
+    //           '<span>'+ subtitle +'</span>';
+    // }
+    //
+    // function marineUnitSelect(w,daw) {
+    //   var $selectArticle = $("#mobile-select-article");
+    //
+    //   w = false;
+    //   daw = false;
+    //   var moptions = {
+    //     placeholder: 'Select an option',
+    //     closeOnSelect: true,
+    //     dropdownAutoWidth: daw,
+    //     width: w,
+    //     theme: "flat",
+    //     minimumResultsForSearch: 20,
+    //     formatSelection: formatArticle,
+    //     formatResult: formatArticle,
+    //     containerCssClass: "mobile-select-article"
+    //   };
+    //
+    //   if ($.fn.select2 !== undefined) {
+    //     $selectArticle.select2(moptions);
+    //     $selectArticle.one("select2-selecting", function (ev) {
+    //       document.location.href = ev.choice.id;
+    //     });
+    //   }
+    // }
 
-    function formatArticle (article) {
-      var el = $(article.element[0]);
-      var subtitle = el.attr("data-subtitle");
-
-      return '<span style="font-weight: bold;">' +
-                el.attr("data-maintitle") + ': ' +
-              '</span>' +
-              '<span>'+ subtitle +'</span>';
-    }
-
-    function marineUnitSelect(w,daw) {
-      var $selectArticle = $("#mobile-select-article");
-
-      w = false;
-      daw = false;
-      var moptions = {
-        placeholder: 'Select an option',
-        closeOnSelect: true,
-        dropdownAutoWidth: daw,
-        width: w,
-        theme: "flat",
-        minimumResultsForSearch: 20,
-        formatSelection: formatArticle,
-        formatResult: formatArticle,
-        containerCssClass: "mobile-select-article"
-      };
-
-      if ($.fn.select2 !== undefined) {
-        $selectArticle.select2(moptions);
-        $selectArticle.one("select2-selecting", function (ev) {
-          document.location.href = ev.choice.id;
-        });
-      }
-    }
-
-    marineUnitSelect(w,daw);
+    // marineUnitSelect(w,daw);
 
     $(window).on('resize', function(){
-      marineUnitSelect(w,daw);
+      // marineUnitSelect(w,daw);
       if ("undefined" !== typeof window.setupTabs) {
         window.setupTabs();
       }
