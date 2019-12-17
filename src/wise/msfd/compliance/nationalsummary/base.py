@@ -21,6 +21,11 @@ class BaseNatSummaryView(BaseComplianceView):
     _translatables = None
     _translatable_values = []
 
+    ARTICLE_ORDER = ('Art9', 'Art8', 'Art10')
+
+    def get_odt_data(self):
+        return []
+
     def get_field_value(self, attribute):
         country_folder = self._country_folder
         default = "-"

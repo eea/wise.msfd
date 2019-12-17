@@ -68,7 +68,7 @@ if (!Array.prototype.last){
 
     $('div.gescomp', $tableWrap).css({'width': maxGescompWidth});
 
-    $(window).on('resize', adjustTargetsWidth);
+    // $(window).on('resize', adjustTargetsWidth);
   }
 
   function setupScrollableTargets() {

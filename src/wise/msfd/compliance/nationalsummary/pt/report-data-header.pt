@@ -20,7 +20,7 @@
     <div id="download-report-data-form">
       <form method="POST" action="" tal:attributes="action request/getURL">
         <button name="edit-data" class="btn btn-primary">Edit</button>
-        <!--<button name="download" class="btn btn-primary">Download as text</button>-->
+        <button name="download" class="btn btn-primary">Download as text</button>
         <button name="translate" class="btn btn-secondary"
           tal:condition="view/can_view_assessment_data">Auto-translate</button>
       </form>
