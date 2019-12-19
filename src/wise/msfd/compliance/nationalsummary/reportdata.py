@@ -22,7 +22,8 @@ from ..nationaldescriptors.base import BaseView
 from .base import BaseNatSummaryView
 from .descriptor_assessments import DescriptorLevelAssessments
 from .introduction import Introduction
-from .odt_utils import create_heading, create_paragraph, create_table
+from .odt_utils import (create_heading, create_paragraph, create_table,
+                        create_table_summary, setup_document_styles)
 
 logger = logging.getLogger('wise.msfd')
 
@@ -112,7 +113,7 @@ class SummaryAssessment(BaseNatSummaryView):
 
             # TODO split score , it is a tuple (conclusion, color_value)
             # and somehow color the table cells
-            table = create_table(document, table_rows, headers=headers)
+            table = create_table_summary(document, table_rows, headers=headers)
             res.append(table)
 
         return res
@@ -255,6 +256,7 @@ class NationalSummaryView(BaseNatSummaryView):
     def get_document(self):
         result = BytesIO()
         document = odf_new_document('text')
+        setup_document_styles(document)
         body = document.get_body()
 
         # Create the Table Of Content

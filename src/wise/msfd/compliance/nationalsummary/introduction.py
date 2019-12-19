@@ -355,7 +355,7 @@ class Introduction(BaseNatSummaryView):
                              headers=headers)
         res.append(table)
 
-        # 1.4
+        # 1.4 Assessment methodology
         title = create_heading(2, u'Assessment methodology')
         res.append(title)
         p = create_paragraph(self.assessment_methodology)

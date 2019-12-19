@@ -1,3 +1,4 @@
+from collections import defaultdict
 import datetime
 
 from lpod.heading import odf_create_heading
@@ -5,6 +6,59 @@ from lpod.paragraph import odf_create_paragraph
 from lpod.style import (make_table_cell_border_string, odf_create_style,
                         odf_create_table_cell_style)
 from lpod.table import odf_create_table, odf_create_row, odf_create_cell
+
+
+
+COLORS = {
+    0: (255, 255, 255),  # not relevant
+    1: (177, 197, 135),  # very good
+    2: (212, 223, 188),  # good
+    4: (255, 174, 174),  # poor
+    5: (253, 120, 120),  # very poor
+    3: (221, 221, 221)   # not reported
+}
+
+TABLE_CELL_BASE = 'table_cell_base'
+TABLE_CELL_AS_VALUE = 'table_cell_as_value_'
+
+STYLES = defaultdict(object)
+
+
+def setup_document_styles(document):
+    """ Setup all styles used in the document, after the setup
+    the style can be used by its 'name' as X.set_style(stylename)
+
+    example: cell.set_style(STYLE[TABLE_CELL_BASE])
+    """
+
+    # Setup base cell style
+    border = make_table_cell_border_string(
+        thick='0.03cm', color='black'
+    )
+    style = {
+        'color': 'black',
+        'background_color': (255, 255, 255),
+        'border_right': border,
+        'border_left': border,
+        'border_bottom': border,
+        'border_top': border
+    }
+
+    base_style = odf_create_table_cell_style(**style)
+    STYLES[TABLE_CELL_BASE] = document.insert_style(
+        style=base_style, automatic=True
+    )
+
+    # Setup colored cell styles (based on score)
+    for color_val, color_rgb in COLORS.items():
+        style['background_color'] = color_rgb
+
+        _style = odf_create_table_cell_style(**style)
+        _stylename = "{}{}".format(TABLE_CELL_AS_VALUE, color_val)
+        STYLES[_stylename] = document.insert_style(
+            style=_style,
+            automatic=True
+        )
 
 
 def create_table(document, data, headers=None, style=None):
@@ -51,9 +105,15 @@ def create_table(document, data, headers=None, style=None):
 def create_table_summary(document, data, headers=None, style=None):
     table = odf_create_table(u"Table")
 
+    # Insert headers and apply base cell style to the cells
     if headers:
         odt_row = odf_create_row()
         odt_row.set_values(headers)
+
+        for cell in odt_row.traverse():
+            cell.set_style(STYLES[TABLE_CELL_BASE])
+            odt_row.set_cell(x=cell.x, cell=cell)
+
         table.set_row(0, odt_row)
 
     for indx, row in enumerate(data):
@@ -63,28 +123,34 @@ def create_table_summary(document, data, headers=None, style=None):
         for val in row:
             if not val:
                 values.append(u"")
-                continue
-
-            if isinstance(val, (datetime.date, datetime.datetime)):
-                values.append(val.strftime('%Y %b %d'))
-                continue
 
             if isinstance(val, (basestring, unicode, int, float)):
                 values.append(val)
-                continue
 
             # In assessment summary table score is a tuple (conclusion, color)
             if isinstance(val, tuple):
                 values.append(val[0])
-                continue
-
-            # ItemList type
-            values.append(', '.join(val.rows))
 
         odt_row.set_values(values)
+
+        # Color the cell, based on the score
+        for j, cell in enumerate(odt_row.traverse()):
+            # first column from row gets base cell style
+            if j == 0:
+                cell.set_style(STYLES[TABLE_CELL_BASE])
+                odt_row.set_cell(x=cell.x, cell=cell)
+                continue
+
+            # import pdb; pdb.set_trace()
+            color_val = row[j][1]
+            colored_style = "{}{}".format(TABLE_CELL_AS_VALUE, color_val)
+            # other rows need too be colored
+            cell.set_style(STYLES[colored_style])
+            odt_row.set_cell(x=cell.x, cell=cell)
+
         table.set_row(indx + 1, odt_row)
 
-    apply_table_cell_base_style(document, table)
+    # apply_table_cell_base_style(document, table)
 
     return table
 
@@ -158,20 +224,10 @@ def create_heading(level, text, style=None):
 def apply_table_cell_base_style(document, table):
     # apply basic styling to table
 
-    border = make_table_cell_border_string(thick='0.03cm', color='black')
-    table_cell_base_style = odf_create_table_cell_style(
-        color='black',
-        border_right=border,
-        border_left=border,
-        border_bottom=border,
-        border_top=border,
-    )
-    style = document.insert_style(style=table_cell_base_style, automatic=True)
-
     all_rows = table.get_rows()
     for row in all_rows:
         for cell in row.traverse():
-            cell.set_style(style)
+            cell.set_style(STYLES[TABLE_CELL_BASE])
             row.set_cell(x=cell.x, cell=cell)
         table.set_row(row.y, row)
 
