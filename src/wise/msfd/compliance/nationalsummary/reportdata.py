@@ -14,7 +14,6 @@ from wise.msfd.utils import (ItemList, TemplateMixin, db_objects_to_dict,
                              fixedorder_sortkey, timeit)
 
 from lpod.document import odf_new_document
-from lpod.heading import odf_create_heading
 from lpod.toc import odf_create_toc
 
 from ..nationaldescriptors.a7 import Article7
@@ -23,6 +22,7 @@ from ..nationaldescriptors.base import BaseView
 from .base import BaseNatSummaryView
 from .descriptor_assessments import DescriptorLevelAssessments
 from .introduction import Introduction
+from .odt_utils import create_heading, create_paragraph, create_table
 
 logger = logging.getLogger('wise.msfd')
 
@@ -56,7 +56,7 @@ class SummaryAssessment(BaseNatSummaryView):
 
         article_folders = sorted(
             article_folders,
-            key=lambda i: fixedorder_sortkey(i.id, self.ARTICLE_ORDER)
+            key=lambda i: fixedorder_sortkey(i.title, self.ARTICLE_ORDER)
         )
 
         return article_folders
@@ -69,10 +69,59 @@ class SummaryAssessment(BaseNatSummaryView):
 
         return conclusion, color
 
+    def setup_data(self):
+        res = []
+        region_folders = self.get_region_folders(self.nat_desc_country_folder)
+
+        for region_folder in region_folders:
+            table_rows = []
+
+            for descr_folder in self.get_descr_folders(region_folder):
+                row = [descr_folder.title]
+
+                for article_folder in self.get_article_folders(descr_folder):
+                    score = self.get_overall_score(
+                        region_folder.id.upper(), descr_folder.id.upper(),
+                        article_folder.title
+                    )
+
+                    row.append(score)
+
+                table_rows.append(row)
+
+            res.append((region_folder.title, table_rows))
+
+        self.summary_assess_data = res
+
+        return res
+
+    def get_odt_data(self, document):
+        res = []
+        headers = ('Descriptor', 'Article 9 - Ges Determination',
+                   'Article 8 - Initial Assessment',
+                   'Article 10 - Environmental Targets')
+
+        t = create_heading(1, u"Summary of the assessment")
+        res.append(t)
+
+        for region_row in self.summary_assess_data:
+            t = create_heading(2, region_row[0])
+            res.append(t)
+
+            table_rows = region_row[1]
+
+            # TODO split score , it is a tuple (conclusion, color_value)
+            # and somehow color the table cells
+            table = create_table(document, table_rows, headers=headers)
+            res.append(table)
+
+        return res
+
     def __call__(self):
 
         @timeit
         def render_summary_assessment():
+            self.setup_data()
             return self.template()
 
         return render_summary_assessment()
@@ -96,6 +145,26 @@ class ProgressAssessment(BaseNatSummaryView):
         progress = self.get_field_value('progress_recommendations_2018')
 
         return progress
+
+    def get_odt_data(self, document):
+        res = []
+
+        h = create_heading(1, "Assessment of national progress since 2012")
+        res.append(h)
+
+        t = create_heading(2, "2012 recommendations to Member State")
+        res.append(t)
+        p = create_paragraph(self.progress_recommendations_2012)
+        res.append(p)
+
+        t = create_heading(
+            2, "Progress against 2012 recommendations to Member State"
+        )
+        res.append(t)
+        p = create_paragraph(self.progress_recommendations_2018)
+        res.append(p)
+
+        return res
 
     def __call__(self):
 
@@ -198,15 +267,13 @@ class NationalSummaryView(BaseNatSummaryView):
 
         for table in self.tables:
             if hasattr(table, 'get_odt_data'):
-                odt_data = table.get_odt_data()
+                odt_data = table.get_odt_data(document)
 
                 body.extend(odt_data)
 
         toc.fill()
 
         document.save(target=result, pretty=True)
-
-        # import pdb;pdb.set_trace()
 
         return result.getvalue()
 

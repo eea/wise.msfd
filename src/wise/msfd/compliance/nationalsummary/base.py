@@ -23,7 +23,7 @@ class BaseNatSummaryView(BaseComplianceView):
 
     ARTICLE_ORDER = ('Art9', 'Art8', 'Art10')
 
-    def get_odt_data(self):
+    def get_odt_data(self, document):
         return []
 
     def get_field_value(self, attribute):

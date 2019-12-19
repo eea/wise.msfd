@@ -12,18 +12,14 @@
 
   <h4>1. Introduction</h4>
   <h5>1.1 Information reported by the Member State</h5>
-  <div>Between July and October 2018, the Member States were due to submit updates of the assessment
-    of their marine waters (Article 8), the determination of GES (Article 9) and the setting of
-    environmental targets (Article 10), in accordance with Article 17 of the Marine Strategy
-    Framework Directive (MSFD).
-  </div>
+  <div tal:content="view/information_memberstate"></div>
   <div tal:replace="structure view/reporting_history">Reporting history</div>
 
   <h5>1.2 Member State's marine waters</h5>
   <div tal:content="structure python: view.scope_of_marine_waters">Editable text</div>
 
   <h5>1.3 Assessment areas (Marine Reporting Units)</h5>
-  <div>The table lists the Marine Reporting Units used for the 2018 reporting on updates of Articles 8, 9 and 10.</div>
+  <div tal:content="view/assessment_areas_title"></div>
   <div tal:replace="structure python: view.assessment_areas">Mru table</div>
 
   <h5>1.4 Assessment methodology</h5>
