@@ -260,7 +260,7 @@ class NationalSummaryView(BaseNatSummaryView):
         # Create the Table Of Content
         toc = odf_create_toc()
         # Changing the default "Table Of Content" Title :
-        toc.set_title("My Table of Content")
+        toc.set_title("Table of Content")
 
         # Do not forget to add every components to the document:
         body.append(toc)

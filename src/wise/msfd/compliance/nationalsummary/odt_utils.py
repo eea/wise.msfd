@@ -48,6 +48,47 @@ def create_table(document, data, headers=None, style=None):
     return table
 
 
+def create_table_summary(document, data, headers=None, style=None):
+    table = odf_create_table(u"Table")
+
+    if headers:
+        odt_row = odf_create_row()
+        odt_row.set_values(headers)
+        table.set_row(0, odt_row)
+
+    for indx, row in enumerate(data):
+        odt_row = odf_create_row()
+
+        values = []
+        for val in row:
+            if not val:
+                values.append(u"")
+                continue
+
+            if isinstance(val, (datetime.date, datetime.datetime)):
+                values.append(val.strftime('%Y %b %d'))
+                continue
+
+            if isinstance(val, (basestring, unicode, int, float)):
+                values.append(val)
+                continue
+
+            # In assessment summary table score is a tuple (conclusion, color)
+            if isinstance(val, tuple):
+                values.append(val[0])
+                continue
+
+            # ItemList type
+            values.append(', '.join(val.rows))
+
+        odt_row.set_values(values)
+        table.set_row(indx + 1, odt_row)
+
+    apply_table_cell_base_style(document, table)
+
+    return table
+
+
 def create_table_descr(document, article_data):
     table = odf_create_table(u"Table")
 

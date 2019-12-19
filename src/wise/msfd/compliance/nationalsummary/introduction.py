@@ -318,7 +318,7 @@ class Introduction(BaseNatSummaryView):
         title = create_heading(1, u'Introduction')
         res.append(title)
 
-        # 1.1
+        # 1.1 Reporting history
         title = create_heading(
             2, u'Information reported by the Member State'
         )
@@ -326,21 +326,27 @@ class Introduction(BaseNatSummaryView):
         p = create_paragraph(self.information_memberstate)
         res.append(p)
 
-        # 1.2
+        headers = ('Report format',' Files available', 'Access to reports',
+                   'Report due', 'Report received', 'Reporting delay (days)')
+        p = create_heading(3, u"Reporting history")
+        res.append(p)
+        table = create_table(document, self.report_hystory_data,
+                             headers=headers)
+        res.append(table)
+
+        # 1.2 Marine waters
         title = create_heading(2, u"Member State's marine waters")
         res.append(title)
         p = create_paragraph(self.scope_of_marine_waters)
         res.append(p)
-        p = create_heading(3, u"Reporting history")
-        res.append(p)
-        table = create_table(document, self.report_hystory_data)
-        res.append(table)
 
-        # 1.3
+        # 1.3 Marine Unit Ids
         title = create_heading(
             2, u'Assessment areas (Marine Reporting Units)'
         )
         res.append(title)
+        p = create_paragraph(self.assessment_areas_title)
+        res.append(p)
 
         headers = ('Region', 'Zone Type', 'MarineUnitID',
                    'Marine Reporting Unit Description',
