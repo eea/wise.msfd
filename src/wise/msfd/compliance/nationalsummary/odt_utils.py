@@ -160,35 +160,46 @@ def create_table_descr(document, article_data):
 
     row = odf_create_row()
     row.set_values([
-        article_data.assessment_summary,
+        u"Assessment summary: ",
         "Adequacy: {}".format(article_data.adequacy[0])
     ])
+    for indx, cell in enumerate(row.traverse()):
+        if indx == 0:
+            cell.set_style(STYLES[TABLE_CELL_BASE])
+        else:
+            colored_style = "{}{}".format(
+                TABLE_CELL_AS_VALUE, article_data.adequacy[1]
+            )
+            cell.set_style(STYLES[colored_style])
+
+        row.set_cell(x=cell.x, cell=cell)
+
     table.set_row(0, row)
 
     row = odf_create_row()
     row.set_values([
-        u"",
+        article_data.assessment_summary,
         "Consistency: {}".format(article_data.consistency[0])
     ])
     table.set_row(1, row)
 
     row = odf_create_row()
     row.set_values([
-        article_data.progress_assessment,
+        u"Progress assessment: ",
         "Coherence: {}".format(article_data.coherence[0])
     ])
     table.set_row(2, row)
 
     row = odf_create_row()
     row.set_values([
-        u"",
+        article_data.progress_assessment,
         "Overall score 2018: {}".format(article_data.overall_score_2018[0])
     ])
     table.set_row(3, row)
 
     row = odf_create_row()
     row.set_values([
-        article_data.recommendations,
+        u"Recommendations: ",
         "Overall score 2012: {}".format(article_data.overall_score_2012[0])
     ])
     table.set_row(4, row)
@@ -200,12 +211,12 @@ def create_table_descr(document, article_data):
     ])
     table.set_row(5, row)
 
-    table.set_span((0, 0, 0, 1))
-    table.set_span((0, 2, 0, 3))
-    table.set_span((0, 4, 0, 5))
+    table.set_span((0, 0, 0, 1), merge=True)
+    table.set_span((0, 2, 0, 3), merge=True)
+    table.set_span((0, 4, 0, 5), merge=True)
 
-    apply_table_cell_base_style(document, table)
-    apply_descriptors_table_style(document, table)
+    # apply_table_cell_base_style(document, table)
+    # apply_descriptors_table_style(document, table)
 
     return table
 
