@@ -8,7 +8,6 @@ from lpod.style import (make_table_cell_border_string, odf_create_style,
 from lpod.table import odf_create_table, odf_create_row, odf_create_cell
 
 
-
 COLORS = {
     0: (255, 255, 255),  # not relevant
     1: (177, 197, 135),  # very good
@@ -20,6 +19,7 @@ COLORS = {
 
 TABLE_CELL_BASE = 'table_cell_base'
 TABLE_CELL_AS_VALUE = 'table_cell_as_value_'
+DOCUMENT_TITLE = 'document_title'
 
 STYLES = defaultdict(object)
 
@@ -30,6 +30,10 @@ def setup_document_styles(document):
 
     example: cell.set_style(STYLE[TABLE_CELL_BASE])
     """
+
+    doc_title_style = odf_create_style('paragraph', size='18', bold=True)
+    STYLES[DOCUMENT_TITLE] = document.insert_style(style=doc_title_style,
+                                                   default=True)
 
     # Setup base cell style
     border = make_table_cell_border_string(
@@ -141,7 +145,6 @@ def create_table_summary(document, data, headers=None, style=None):
                 odt_row.set_cell(x=cell.x, cell=cell)
                 continue
 
-            # import pdb; pdb.set_trace()
             color_val = row[j][1]
             colored_style = "{}{}".format(TABLE_CELL_AS_VALUE, color_val)
             # other rows need too be colored
@@ -156,64 +159,76 @@ def create_table_summary(document, data, headers=None, style=None):
 
 
 def create_table_descr(document, article_data):
+
+    def set_table_cell_style(_row, color_val):
+        for indx, cell in enumerate(_row.traverse()):
+            if indx == 0:
+                cell.set_style(STYLES[TABLE_CELL_BASE])
+            else:
+                colored_style = "{}{}".format(
+                    TABLE_CELL_AS_VALUE, color_val
+                )
+                cell.set_style(STYLES[colored_style])
+
+            _row.set_cell(x=cell.x, cell=cell)
+
     table = odf_create_table(u"Table")
 
     row = odf_create_row()
     row.set_values([
-        u"Assessment summary: ",
-        "Adequacy: {}".format(article_data.adequacy[0])
+        u"Assessment summary: {}".format(
+            article_data.assessment_summary or '-'
+        ),
+        u"Adequacy: {}".format(article_data.adequacy[0])
     ])
-    for indx, cell in enumerate(row.traverse()):
-        if indx == 0:
-            cell.set_style(STYLES[TABLE_CELL_BASE])
-        else:
-            colored_style = "{}{}".format(
-                TABLE_CELL_AS_VALUE, article_data.adequacy[1]
-            )
-            cell.set_style(STYLES[colored_style])
-
-        row.set_cell(x=cell.x, cell=cell)
-
+    set_table_cell_style(row, article_data.adequacy[1])
     table.set_row(0, row)
 
     row = odf_create_row()
     row.set_values([
-        article_data.assessment_summary,
-        "Consistency: {}".format(article_data.consistency[0])
+        u"",
+        u"Consistency: {}".format(article_data.consistency[0])
     ])
+    set_table_cell_style(row, article_data.consistency[1])
     table.set_row(1, row)
 
     row = odf_create_row()
     row.set_values([
-        u"Progress assessment: ",
-        "Coherence: {}".format(article_data.coherence[0])
+        u"Progress assessment: {}".format(
+            article_data.progress_assessment or '-'
+        ),
+        u"Coherence: {}".format(article_data.coherence[0])
     ])
+    set_table_cell_style(row, article_data.coherence[1])
     table.set_row(2, row)
 
     row = odf_create_row()
     row.set_values([
-        article_data.progress_assessment,
-        "Overall score 2018: {}".format(article_data.overall_score_2018[0])
+        u"",
+        u"Overall score 2018: {}".format(article_data.overall_score_2018[0])
     ])
+    set_table_cell_style(row, article_data.overall_score_2018[1])
     table.set_row(3, row)
 
     row = odf_create_row()
     row.set_values([
-        u"Recommendations: ",
-        "Overall score 2012: {}".format(article_data.overall_score_2012[0])
+        u"Recommendations: {}".format(article_data.recommendations or '-'),
+        u"Overall score 2012: {}".format(article_data.overall_score_2012[0])
     ])
+    set_table_cell_style(row, article_data.overall_score_2012[1])
     table.set_row(4, row)
 
     row = odf_create_row()
     row.set_values([
-        article_data.recommendations,
-        "Change since 2012: {}".format(article_data.change_since_2012)
+        u"",
+        u"Change since 2012: {}".format(article_data.change_since_2012)
     ])
+    set_table_cell_style(row, 0)
     table.set_row(5, row)
 
-    table.set_span((0, 0, 0, 1), merge=True)
-    table.set_span((0, 2, 0, 3), merge=True)
-    table.set_span((0, 4, 0, 5), merge=True)
+    table.set_span((0, 0, 0, 1))
+    table.set_span((0, 2, 0, 3))
+    table.set_span((0, 4, 0, 5))
 
     # apply_table_cell_base_style(document, table)
     # apply_descriptors_table_style(document, table)
@@ -223,7 +238,7 @@ def create_table_descr(document, article_data):
 
 def create_paragraph(text, style=None):
 
-    return odf_create_paragraph(text)
+    return odf_create_paragraph(text, style=style)
 
 
 def create_heading(level, text, style=None):

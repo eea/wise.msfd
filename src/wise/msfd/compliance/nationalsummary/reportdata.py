@@ -155,14 +155,20 @@ class ProgressAssessment(BaseNatSummaryView):
 
         t = create_heading(2, "2012 recommendations to Member State")
         res.append(t)
-        p = create_paragraph(self.progress_recommendations_2012)
+        text = self.get_transformed_richfield_text(
+            'progress_recommendations_2012'
+        )
+        p = create_paragraph(text)
         res.append(p)
 
         t = create_heading(
             2, "Progress against 2012 recommendations to Member State"
         )
         res.append(t)
-        p = create_paragraph(self.progress_recommendations_2018)
+        text = self.get_transformed_richfield_text(
+            'progress_recommendations_2018'
+        )
+        p = create_paragraph(text)
         res.append(p)
 
         return res

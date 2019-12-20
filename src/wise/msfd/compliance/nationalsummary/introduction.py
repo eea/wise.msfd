@@ -11,7 +11,8 @@ from wise.msfd.utils import (ItemList, TemplateMixin, db_objects_to_dict,
                              fixedorder_sortkey, timeit)
 
 from .base import BaseNatSummaryView
-from .odt_utils import create_heading, create_paragraph, create_table
+from .odt_utils import (create_heading, create_paragraph, create_table,
+                        DOCUMENT_TITLE, STYLES)
 
 logger = logging.getLogger('wise.msfd')
 
@@ -107,7 +108,8 @@ class ReportingHistoryTable(BaseNatSummaryView):
         tmpl = "<a href={} target='_blank'>{}</a>"
         location = location.replace(filename, '')
 
-        return tmpl.format(location, location)
+        return location
+        # return tmpl.format(location, location)
 
     def format_date(self, date):
         if not date:
@@ -308,7 +310,8 @@ class Introduction(BaseNatSummaryView):
     def get_odt_data(self, document):
         res = []
 
-        title = create_paragraph(self.document_title)
+        title = create_paragraph(self.document_title,
+                                 style=STYLES[DOCUMENT_TITLE])
         res.append(title)
 
         table = create_table(document, self.header_table_rows())
@@ -337,7 +340,8 @@ class Introduction(BaseNatSummaryView):
         # 1.2 Marine waters
         title = create_heading(2, u"Member State's marine waters")
         res.append(title)
-        p = create_paragraph(self.scope_of_marine_waters)
+        text = self.get_transformed_richfield_text('scope_of_marine_waters')
+        p = create_paragraph(text)
         res.append(p)
 
         # 1.3 Marine Unit Ids
@@ -358,7 +362,8 @@ class Introduction(BaseNatSummaryView):
         # 1.4 Assessment methodology
         title = create_heading(2, u'Assessment methodology')
         res.append(title)
-        p = create_paragraph(self.assessment_methodology)
+        text = self.get_transformed_richfield_text('assessment_methodology')
+        p = create_paragraph(text)
         res.append(p)
 
         return res

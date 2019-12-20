@@ -1,6 +1,7 @@
 
 from plone.api.content import get_state
 from plone.api.portal import get_tool
+from plone.app.textfield.interfaces import ITransformer
 from wise.msfd.compliance.base import BaseComplianceView
 
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
@@ -25,6 +26,26 @@ class BaseNatSummaryView(BaseComplianceView):
 
     def get_odt_data(self, document):
         return []
+
+    def get_transformer(self, context=None):
+        if not context:
+            context = self
+
+        transformer = ITransformer(context)
+
+        return transformer
+
+    def get_transformed_richfield_text(self, fieldname):
+        raw_text = getattr(self._country_folder, fieldname, None)
+        text = u"-"
+
+        context = self._country_folder
+
+        if raw_text:
+            transformer = self.get_transformer(context=context)
+            text = transformer(raw_text, 'text/plain')
+
+        return text
 
     def get_field_value(self, attribute):
         country_folder = self._country_folder
