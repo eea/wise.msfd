@@ -10,6 +10,7 @@ from zope.interface import implements
 
 from persistent.list import PersistentList
 from plone.api.content import transition
+from plone.api.portal import get_tool
 from plone.protect import CheckAuthenticator  # , protect
 from Products.Five.browser.pagetemplatefile import \
     ViewPageTemplateFile as Template
@@ -17,7 +18,7 @@ from Products.statusmessages.interfaces import IStatusMessage
 from wise.msfd import db, sql2018
 from wise.msfd.compliance.base import NAT_DESC_QUESTIONS
 from wise.msfd.compliance.content import AssessmentData
-from wise.msfd.compliance.scoring import (get_overall_conclusion,
+from wise.msfd.compliance.scoring import (CONCLUSIONS, get_overall_conclusion,
                                           get_range_index, OverallScores)
 from wise.msfd.compliance.vocabulary import SUBREGIONS_TO_REGIONS
 from wise.msfd.gescomponents import get_descriptor
@@ -226,6 +227,104 @@ def get_assessment_head_data_2012(article, region, country_code):
     return ['Not found'] * 3 + [('Not found', '')]
 
 
+class AssessmentDataMixin(object):
+    """ Helper class for easier access to the assesment_data for
+        national and regional descriptor assessments
+
+        Currently used to get the coherence score from regional descriptors
+
+        TODO: implement a method to get the adequacy and consistency scores
+        from national descriptors assessment
+    """
+
+    @property
+    def rdas(self):
+        catalog = get_tool('portal_catalog')
+        brains = catalog.searchResults(
+            portal_type='wise.msfd.regionaldescriptorassessment',
+        )
+
+        for brain in brains:
+            obj = brain.getObject()
+
+            yield obj
+
+    def get_color_for_score(self, score_value):
+        return CONCLUSION_COLOR_TABLE[score_value]
+
+    def get_conclusion(self, score_value):
+        concl = list(reversed(CONCLUSIONS))[score_value]
+
+        return concl
+
+    def _get_assessment_data(self, article_folder):
+        if not hasattr(article_folder, 'saved_assessment_data'):
+            return {}
+
+        return article_folder.saved_assessment_data.last()
+
+    def get_coherence_data(self, region_code, descriptor, article):
+        """
+        :return: {'color': 5, 'score': 0, 'max_score': 0,
+                'conclusion': (1, 'Very poor')
+            }
+        """
+
+        article_folder = None
+
+        for obj in self.rdas:
+            descr = obj.aq_parent.id.upper()
+
+            if descr != descriptor:
+                continue
+
+            region = obj.aq_parent.aq_parent.id.upper()
+
+            if region != region_code:
+                continue
+
+            art = obj.title
+
+            if art != article:
+                continue
+
+            article_folder = obj
+
+            break
+
+        assess_data = self._get_assessment_data(article_folder)
+
+        res = {
+            'score': 0,
+            'max_score': 0,
+            'color': 0,
+            'conclusion': (1, 'Very poor')
+        }
+
+        for k, score in assess_data.items():
+            if '_Score' not in k:
+                continue
+
+            if not score:
+                continue
+
+            is_not_relevant = getattr(score, 'is_not_relevant', False)
+            weighted_score = getattr(score, 'weighted_score', 0)
+            max_weighted_score = getattr(score, 'max_weighted_score', 0)
+
+            if not is_not_relevant:
+                res['score'] += weighted_score
+                res['max_score'] += max_weighted_score
+
+        score_percent = int(round(res['max_score'] and (res['score'] * 100)
+                                  / res['max_score'] or 0))
+        score_val = get_range_index(score_percent)
+        res['color'] = self.get_color_for_score(score_val)
+        res['conclusion'] = (score_val, self.get_conclusion(score_val))
+
+        return res
+
+
 class NationalDescriptorsOverview(BaseView):
     section = 'national-descriptors'
 
@@ -355,7 +454,7 @@ def get_crit_val(question, element, descriptor):
 
 
 def format_assessment_data(article, elements, questions, muids, data,
-                           descriptor, article_weights):
+                           descriptor, article_weights, self):
     """ Builds a data structure suitable for display in a template
 
     This is used to generate the assessment data overview table for 2018
@@ -463,6 +562,13 @@ def format_assessment_data(article, elements, questions, muids, data,
             phase_scores['conclusion'] = get_overall_conclusion(phase_score)
             phase_scores['color'] = \
                 CONCLUSION_COLOR_TABLE[get_range_index(phase_score)]
+
+    # for national descriptors override the coherence score with the score
+    # from regional descriptors
+    if self.section == 'national-descriptors':
+        phase_overall_scores.coherence = self.get_coherence_data(
+            self.country_region_code, self.descriptor, article
+        )
 
     # the overall score and conclusion for the whole article 2018
     overall_score_val, overall_score = phase_overall_scores.\
@@ -574,7 +680,7 @@ class NationalDescriptorRegionView(BaseView):
     section = 'national-descriptors'
 
 
-class NationalDescriptorArticleView(BaseView):
+class NationalDescriptorArticleView(BaseView, AssessmentDataMixin):
     implements(INationaldescriptorArticleView)
     section = 'national-descriptors'
 
@@ -685,8 +791,13 @@ class NationalDescriptorArticleView(BaseView):
             self.muids,
             data,
             self.descriptor_obj,
-            article_weights
+            article_weights,
+            self
         )
+        assessment.phase_overall_scores.coherence = self.get_coherence_data(
+            self.country_region_code, self.descriptor, self.article
+        )
+
 
         score_2012 = int(round(score_2012))
         conclusion_2012_color = CONCLUSION_COLOR_TABLE.get(score_2012, 0)
@@ -826,7 +937,8 @@ class NationalDescriptorSecondaryArticleView(NationalDescriptorArticleView):
             self.muids,
             data,
             self.descriptor_obj,
-            article_weights
+            article_weights,
+            self
         )
 
         score_2012 = int(round(score_2012))

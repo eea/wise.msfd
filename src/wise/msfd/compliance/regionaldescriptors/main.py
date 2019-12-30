@@ -164,7 +164,8 @@ class RegionalDescriptorArticleView(BaseRegComplianceView):
             muids,
             data,
             self.descriptor_obj,
-            article_weights
+            article_weights,
+            self
         )
         can_edit = self.check_permission('wise.msfd: Edit Assessment')
         show_edit_assessors = self.assessor_list and can_edit
