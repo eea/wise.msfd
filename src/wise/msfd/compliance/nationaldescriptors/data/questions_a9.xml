@@ -224,7 +224,7 @@
     <score-weight descriptor="D11" value="15" />
   </assessment-question>
 
-  <assessment-question id="A09Co1" class="coherence" use-criteria='all'>
+<!--  <assessment-question id="A09Co1" class="coherence" use-criteria='all'>
     <definition>
       To what extent does the Member State use the same primary/ secondary criteria as other MS in this region?
     </definition>
@@ -467,6 +467,7 @@
     <score-weight descriptor="D9" value="15" />
     <score-weight descriptor="D10" value="15" />
     <score-weight descriptor="D11" value="15" />
-  </assessment-question> 
+  </assessment-question>
+-->
 
 </questions>

@@ -102,6 +102,7 @@
   </assessment-question>
 
 
+<!--
   <assessment-question id="A10Co1" class="coherence" use-criteria='2018-targets'>
     <definition>
       To what extent does the Member State define similar targets to other MS in the region?
@@ -134,6 +135,7 @@
     <score-weight descriptor="D10" value="100" />
     <score-weight descriptor="D11" value="100" />
   </assessment-question>
+-->
 
   <assessment-question id="A0810Cy1" class="consistency" use-criteria='2018-targets'>
     <definition>

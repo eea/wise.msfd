@@ -135,6 +135,7 @@
     <score-weight descriptor="D11" value="25" />
   </assessment-question>
 
+<!--
   <assessment-question id="A08Co1" class="coherence" use-criteria='all'>
     <definition>
      To what extent does the Member State report the same elements as other MS in the region?
@@ -270,6 +271,7 @@
     <score-weight descriptor="D10" value="20" />
     <score-weight descriptor="D11" value="20" />
   </assessment-question>
+-->
 
   <assessment-question id="A0809Cy1" class="consistency" use-criteria='all'>
     <definition>
