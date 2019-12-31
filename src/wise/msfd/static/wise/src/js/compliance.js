@@ -104,7 +104,7 @@ if (!Array.prototype.last){
     this.each(function() {
       $("th", this).each(function() {
         var $th = $(this);
-        var $next = $('td', $th.parent());
+        var $next = $('td:not(".sub-header")', $th.parent());
         var $subheader = $('td.sub-header', $th.parent())
         var tdHeights = [];
 
@@ -119,12 +119,17 @@ if (!Array.prototype.last){
         });
 
         var cells_max_height = Math.max.apply(Math, tdHeights);
-        var height = Math.max($th.height(), cells_max_height);
+        var height = Math.max($th.height(), $subheader.height(), cells_max_height);
 
         $th.height(height);
         $subheader.height(height);
+        //debugger;
         if ($th.height() > cells_max_height) {
-          $next.height($th.height());
+          //console.log("BLLALA");
+          $next.each(function(){
+            $(this).height($th.height())
+          });
+          //$next.height($th.height());
         }
 
         $('div', this).css('margin-top', '-4px');
