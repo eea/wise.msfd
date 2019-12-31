@@ -20,6 +20,7 @@ COLORS = {
 TABLE_CELL_BASE = 'table_cell_base'
 TABLE_CELL_AS_VALUE = 'table_cell_as_value_'
 DOCUMENT_TITLE = 'document_title'
+DESCR_COLUMN_WIDTH = 'descriptor_column_width'
 
 STYLES = defaultdict(object)
 
@@ -63,6 +64,11 @@ def setup_document_styles(document):
             style=_style,
             automatic=True
         )
+
+    col_style = odf_create_style('table-column', width='3cm')
+    STYLES[DESCR_COLUMN_WIDTH] = document.insert_style(
+        style=col_style, automatic=True
+    )
 
 
 def create_table(document, data, headers=None, style=None):
@@ -231,7 +237,7 @@ def create_table_descr(document, article_data):
     table.set_span((0, 4, 0, 5))
 
     # apply_table_cell_base_style(document, table)
-    # apply_descriptors_table_style(document, table)
+    apply_descriptors_table_style(document, table)
 
     return table
 
@@ -260,14 +266,11 @@ def apply_table_cell_base_style(document, table):
 
 def apply_descriptors_table_style(document, table):
     # adjust last column width
-    col_style = odf_create_style('table-column', width='3cm')
-    style = document.insert_style(style=col_style, automatic=True)
-
     columns = table.get_columns()
 
     for indx, column in enumerate(columns):
         if indx != len(columns) - 1:
             continue
 
-        column.set_style(col_style)
+        column.set_style(STYLES[DESCR_COLUMN_WIDTH])
         table.set_column(column.x, column)

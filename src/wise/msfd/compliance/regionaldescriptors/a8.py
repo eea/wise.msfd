@@ -104,14 +104,26 @@ class RegDescA82018Row(BaseRegDescRow):
                        and row.Feature
                 ]
 
-                for feature in feats:
-                    elements = [
-                        row.Element
-                        for row in data
-                        if row.Feature == feature and row.Element
-                    ]
+                crits = set([row.Criteria for row in data])
 
-                    value.extend(elements)
+                for crit in crits:
+                    elements_found = []
+
+                    for feature in feats:
+                        elements = [
+                            row.Element
+                            for row in data
+                            if row.Feature == feature and row.Element
+                               and row.Criteria == crit
+                        ]
+
+                        elements_found.extend(elements)
+
+                    if elements_found:
+                        elements_found = sorted(set(elements_found))
+                        value.append(
+                            u"{}: {}".format(crit, ", ".join(elements_found))
+                        )
 
                 value = set(value) or self.not_rep
                 values.append(newline_separated_itemlist(value))

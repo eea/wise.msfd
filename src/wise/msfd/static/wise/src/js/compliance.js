@@ -123,9 +123,7 @@ if (!Array.prototype.last){
 
         $th.height(height);
         $subheader.height(height);
-        //debugger;
         if ($th.height() > cells_max_height) {
-          //console.log("BLLALA");
           $next.each(function(){
             $(this).height($th.height())
           });
