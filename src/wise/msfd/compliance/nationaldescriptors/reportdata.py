@@ -624,7 +624,27 @@ https://svn.eionet.europa.eu/repositories/Reportnet/Dataflows/MarineDirective/MS
             .order_by(*orderby)\
             .distinct()
 
-        return q
+        # For the following countries filter data by features
+        # for other countries return all data
+        country_filters = ('BE', )
+
+        if self.country_code not in country_filters:
+            return q
+
+        ok_features = set([f.name for f in get_features(self.descriptor)])
+        out = []
+
+        for row in q:
+            if not self.descriptor.startswith('D1.'):
+                out.append(row)
+                continue
+
+            feats = set((row.Feature, ))
+
+            if feats.intersection(ok_features):
+                out.append(row)
+
+        return out
 
     def get_data_from_view_Art10(self):
         t = sql2018.t_V_ART10_Targets_2018
@@ -683,9 +703,10 @@ https://svn.eionet.europa.eu/repositories/Reportnet/Dataflows/MarineDirective/MS
             # Because some Features are missing from FeaturesSmart
             # we consider 'D1' descriptor valid for all 'D1.x'
             # and we keep the data if 'D1' is present in the GESComponents
-            # For D1 Romania filter by features
+            # countries_filter = for these countries filter by features
             ges_comps = getattr(row, 'GESComponents', ())
-            if 'D1' in ges_comps and self.country_code != 'RO':
+            countries_filter = ('RO', 'DK')
+            if 'D1' in ges_comps and self.country_code not in countries_filter:
                 out_filtered.append(row)
                 continue
 
