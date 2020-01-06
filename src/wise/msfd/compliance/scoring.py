@@ -3,8 +3,8 @@ DEFAULT_RANGES = [
     [76, 100],
     [51, 75],
     [26, 50],
-    [0, 25],
-    # [0, 0]
+    [1, 25],
+    [0, 0]
 ]
 
 
@@ -23,7 +23,8 @@ def get_range_index(percentage):
 
     for x, r in enumerate(reversed(DEFAULT_RANGES)):
         if (p >= r[0]) and (p <= r[1]):
-            return x + 1
+            # return x + 1
+            return x
 
     return len(DEFAULT_RANGES) + 1
 
@@ -59,7 +60,7 @@ class OverallScores(object):
         _init = {
             'score': 0,
             'max_score': 0,
-            'conclusion': '',
+            'conclusion': 'Not reported',
             'color': 0,
         }
 

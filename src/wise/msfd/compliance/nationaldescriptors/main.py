@@ -298,7 +298,7 @@ class AssessmentDataMixin(object):
             'score': 0,
             'max_score': 0,
             'color': 0,
-            'conclusion': (1, 'Very poor')
+            'conclusion': (0, 'Not reported')
         }
 
         for k, score in assess_data.items():
@@ -319,6 +319,7 @@ class AssessmentDataMixin(object):
         score_percent = int(round(res['max_score'] and (res['score'] * 100)
                                   / res['max_score'] or 0))
         score_val = get_range_index(score_percent)
+
         res['color'] = self.get_color_for_score(score_val)
         res['conclusion'] = (score_val, self.get_conclusion(score_val))
 
@@ -535,14 +536,6 @@ def format_assessment_data(article, elements, questions, muids, data,
             p_score['score'] += weighted_score
             p_score['max_score'] += max_weighted_score
 
-            # print(q_klass, p_score)
-            # print(
-            #     score.raw_scores,
-            #     score.score_achieved,
-            #     score.weighted_score,
-            #     score.max_weighted_score
-            # )
-
         qr = AssessmentRow(question.definition, summary, conclusion,
                            conclusion_color, score, values)
         answers.append(qr)
@@ -555,13 +548,15 @@ def format_assessment_data(article, elements, questions, muids, data,
         # set the conclusion and color based on the score for each phase
         phase_scores = getattr(phase_overall_scores, phase)
         phase_score = phase_overall_scores.get_score_for_phase(phase)
+
         if phase == 'consistency' and article == 'Art9':
             phase_scores['conclusion'] = ('-', 'Not relevant')
             phase_scores['color'] = 0
-        else:
-            phase_scores['conclusion'] = get_overall_conclusion(phase_score)
-            phase_scores['color'] = \
-                CONCLUSION_COLOR_TABLE[get_range_index(phase_score)]
+            continue
+
+        phase_scores['conclusion'] = get_overall_conclusion(phase_score)
+        phase_scores['color'] = \
+            CONCLUSION_COLOR_TABLE[get_range_index(phase_score)]
 
     # for national descriptors override the coherence score with the score
     # from regional descriptors
@@ -797,7 +792,6 @@ class NationalDescriptorArticleView(BaseView, AssessmentDataMixin):
         assessment.phase_overall_scores.coherence = self.get_coherence_data(
             self.country_region_code, self.descriptor, self.article
         )
-
 
         score_2012 = int(round(score_2012))
         conclusion_2012_color = CONCLUSION_COLOR_TABLE.get(score_2012, 0)
