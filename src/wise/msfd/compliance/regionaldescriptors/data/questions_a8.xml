@@ -13,6 +13,78 @@
       <option score="0.5">Some elements used for this criterion are the same in many MS (51-75%) in the region</option>
       <option score="0.25">Some elements used for this criterion are the same in some / few MS (1-50%) in the region</option>
       <option score="0">All MS in the region use different elements for this criterion</option>
+      <option score="0">Only one MS reported elements for this criterion</option>
+      <option score="0.250">Not clear</option>
+      <option score="/">Not relevant</option>
+    </answers>
+    <scoring determination-method="wise.msfd.compliance.scoring.scoring_based">
+    </scoring>
+    <score-weight descriptor="D1.1" value="30" />
+    <score-weight descriptor="D1.2" value="30" />
+    <score-weight descriptor="D1.3" value="30" />
+    <score-weight descriptor="D1.4" value="30" />
+    <score-weight descriptor="D1.5" value="30" />
+    <score-weight descriptor="D1.6" value="30" />
+    <score-weight descriptor="D2" value="30" />
+    <score-weight descriptor="D3" value="30" />
+    <score-weight descriptor="D4" value="30" />
+    <score-weight descriptor="D5" value="30" />
+    <score-weight descriptor="D6" value="30" />
+    <score-weight descriptor="D7" value="30" />
+    <score-weight descriptor="D8" value="30" />
+    <score-weight descriptor="D9" value="30" />
+    <score-weight descriptor="D10" value="30" />
+    <score-weight descriptor="D11" value="30" />
+  </assessment-question>
+
+  <assessment-question id="A08Co2" class="coherence" use-criteria="all">
+    <definition>
+      To what extent do the Member States in the region report the same parameters?
+    </definition>
+    <answers>
+      <option score="1">All parameters used for this criterion are the same in most MS (76-100%) in the region</option>
+      <option score="0.75">All parameters used for this criterion are the same in many MS (51-75%) in the region</option>
+      <option score="0.5">All parameters used for this criterion are the same in some MS (26-50%) in the region</option>
+      <option score="0.25">All parameters used for this criterion are the same in a few MS (1-25%) in the region</option>
+      <option score="0.75">Some parameters used for this criterion are the same in most MS (76-100%) in the region</option>
+      <option score="0.5">Some parameters used for this criterion are the same in many MS (51-75%) in the region</option>
+      <option score="0.25">Some parameters used for this criterion are the same in some / few MS (1-50%) in the region</option>
+      <option score="0">All MS in the region use different parameters for this criterion</option>
+      <option score="0">Only one MS in the region reported parameters for this criterion</option>
+      <option score="0.250">Not clear</option>
+      <option score="/">Not relevant</option>
+    </answers>
+    <scoring determination-method="wise.msfd.compliance.scoring.scoring_based">
+    </scoring>
+    <score-weight descriptor="D1.1" value="30" />
+    <score-weight descriptor="D1.2" value="30" />
+    <score-weight descriptor="D1.3" value="30" />
+    <score-weight descriptor="D1.4" value="30" />
+    <score-weight descriptor="D1.5" value="30" />
+    <score-weight descriptor="D1.6" value="30" />
+    <score-weight descriptor="D2" value="30" />
+    <score-weight descriptor="D3" value="30" />
+    <score-weight descriptor="D4" value="30" />
+    <score-weight descriptor="D5" value="30" />
+    <score-weight descriptor="D6" value="30" />
+    <score-weight descriptor="D7" value="30" />
+    <score-weight descriptor="D8" value="30" />
+    <score-weight descriptor="D9" value="30" />
+    <score-weight descriptor="D10" value="30" />
+    <score-weight descriptor="D11" value="30" />
+  </assessment-question>
+
+  <assessment-question id="A08Co3" class="coherence" use-criteria="none">
+    <definition>
+      Do the Member States in the region report a similar date for achieving GES?      
+    </definition>
+    <answers>
+      <option score="1">Most MS (76-100%) in the region use a similar date for achieving GES</option>
+      <option score="0.75">Many MS (51-75%) in the region use a similar date for achieving GES</option>
+      <option score="0.5">Some MS (26-50%) in the region use a similar date for achieving GES</option>
+      <option score="0.25">A few MS (1-25%) in the region use a similar date for achieving GES</option>
+      <option score="0">All MS in the region use a different date for achieving GES</option>
+      <option score="0">Only one MS in the region provided information about the date for achieving GES</option>
       <option score="0.250">Not clear</option>
       <option score="/">Not relevant</option>
     </answers>
@@ -36,75 +108,6 @@
     <score-weight descriptor="D11" value="20" />
   </assessment-question>
 
-  <assessment-question id="A08Co2" class="coherence" use-criteria="all">
-    <definition>
-      To what extent do the Member States in the region report the same parameters?
-    </definition>
-    <answers>
-      <option score="1">All parameters used for this criterion are the same in most MS (76-100%) in the region</option>
-      <option score="0.75">All parameters used for this criterion are the same in many MS (51-75%) in the region</option>
-      <option score="0.5">All parameters used for this criterion are the same in some MS (26-50%) in the region</option>
-      <option score="0.25">All parameters used for this criterion are the same in a few MS (1-25%) in the region</option>
-      <option score="0.75">Some parameters used for this criterion are the same in most MS (76-100%) in the region</option>
-      <option score="0.5">Some parameters used for this criterion are the same in many MS (51-75%) in the region</option>
-      <option score="0.25">Some parameters used for this criterion are the same in some / few MS (1-50%) in the region</option>
-      <option score="0">All MS in the region use different parameters for this criterion</option>
-      <option score="0.250">Not clear</option>
-      <option score="/">Not relevant</option>
-    </answers>
-    <scoring determination-method="wise.msfd.compliance.scoring.scoring_based">
-    </scoring>
-    <score-weight descriptor="D1.1" value="15" />
-    <score-weight descriptor="D1.2" value="15" />
-    <score-weight descriptor="D1.3" value="15" />
-    <score-weight descriptor="D1.4" value="15" />
-    <score-weight descriptor="D1.5" value="15" />
-    <score-weight descriptor="D1.6" value="15" />
-    <score-weight descriptor="D2" value="15" />
-    <score-weight descriptor="D3" value="15" />
-    <score-weight descriptor="D4" value="15" />
-    <score-weight descriptor="D5" value="15" />
-    <score-weight descriptor="D6" value="15" />
-    <score-weight descriptor="D7" value="15" />
-    <score-weight descriptor="D8" value="15" />
-    <score-weight descriptor="D9" value="15" />
-    <score-weight descriptor="D10" value="15" />
-    <score-weight descriptor="D11" value="15" />
-  </assessment-question>
-
-  <assessment-question id="A08Co3" class="coherence" use-criteria="none">
-    <definition>
-      Do the Member States in the region report a similar date for achieving GES?      
-    </definition>
-    <answers>
-      <option score="1">Most MS (76-100%) in the region use a similar date for achieving GES</option>
-      <option score="0.75">Many MS (51-75%) in the region use a similar date for achieving GES</option>
-      <option score="0.5">Some MS (26-50%) in the region use a similar date for achieving GES</option>
-      <option score="0.25">A few MS (1-25%) in the region use a similar date for achieving GES</option>
-      <option score="0">All MS in the region use a different date for achieving GES</option>
-      <option score="0.250">Not clear</option>
-      <option score="/">Not relevant</option>
-    </answers>
-    <scoring determination-method="wise.msfd.compliance.scoring.scoring_based">
-    </scoring>
-    <score-weight descriptor="D1.1" value="10" />
-    <score-weight descriptor="D1.2" value="10" />
-    <score-weight descriptor="D1.3" value="10" />
-    <score-weight descriptor="D1.4" value="10" />
-    <score-weight descriptor="D1.5" value="10" />
-    <score-weight descriptor="D1.6" value="10" />
-    <score-weight descriptor="D2" value="10" />
-    <score-weight descriptor="D3" value="10" />
-    <score-weight descriptor="D4" value="10" />
-    <score-weight descriptor="D5" value="10" />
-    <score-weight descriptor="D6" value="10" />
-    <score-weight descriptor="D7" value="10" />
-    <score-weight descriptor="D8" value="10" />
-    <score-weight descriptor="D9" value="10" />
-    <score-weight descriptor="D10" value="10" />
-    <score-weight descriptor="D11" value="10" />
-  </assessment-question>
-
   <assessment-question id="A08Co4" class="coherence" use-criteria="none">
     <definition>
       Do the Member States in the region report the same pressures?
@@ -118,26 +121,27 @@
       <option score="0.5">Some pressures reported are the same in many MS (51-75%) in the region</option>
       <option score="0.25">Some pressures reported are the same in some / few MS (1-50%) in the region</option>
       <option score="0">All MS in the region report different pressures</option>
+      <option score="0">Only one MS in the region reported pressures</option>
       <option score="0.250">Not clear</option>
       <option score="/">Not relevant</option>
     </answers>
     <scoring determination-method="wise.msfd.compliance.scoring.scoring_based">
     </scoring>
-    <score-weight descriptor="D1.1" value="15" />
-    <score-weight descriptor="D1.2" value="15" />
-    <score-weight descriptor="D1.3" value="15" />
-    <score-weight descriptor="D1.4" value="15" />
-    <score-weight descriptor="D1.5" value="15" />
-    <score-weight descriptor="D1.6" value="15" />
-    <score-weight descriptor="D2" value="15" />
-    <score-weight descriptor="D3" value="15" />
-    <score-weight descriptor="D4" value="15" />
-    <score-weight descriptor="D5" value="15" />
-    <score-weight descriptor="D6" value="15" />
-    <score-weight descriptor="D7" value="15" />
-    <score-weight descriptor="D8" value="15" />
-    <score-weight descriptor="D9" value="15" />
-    <score-weight descriptor="D10" value="15" />
-    <score-weight descriptor="D11" value="15" />
+    <score-weight descriptor="D1.1" value="20" />
+    <score-weight descriptor="D1.2" value="20" />
+    <score-weight descriptor="D1.3" value="20" />
+    <score-weight descriptor="D1.4" value="20" />
+    <score-weight descriptor="D1.5" value="20" />
+    <score-weight descriptor="D1.6" value="20" />
+    <score-weight descriptor="D2" value="20" />
+    <score-weight descriptor="D3" value="20" />
+    <score-weight descriptor="D4" value="20" />
+    <score-weight descriptor="D5" value="20" />
+    <score-weight descriptor="D6" value="20" />
+    <score-weight descriptor="D7" value="20" />
+    <score-weight descriptor="D8" value="20" />
+    <score-weight descriptor="D9" value="20" />
+    <score-weight descriptor="D10" value="20" />
+    <score-weight descriptor="D11" value="20" />
   </assessment-question>
 </questions>

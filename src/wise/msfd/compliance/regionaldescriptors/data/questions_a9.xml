@@ -9,27 +9,28 @@
       <option score="0.75">51-75% of MS in the region use this criterion, or do not use it with adequate justification</option>
       <option score="0.5">26-50% of MS in the region use this criterion, or do not use it with adequate justification</option>
       <option score="0.25">1-25% of MS in the region use this criterion, or do not use it with adequate justification</option>
+      <option score="0">Only one MS in the region uses this criterion</option>
       <option score="0.250">Not clear</option>
       <option score="/">Not relevant</option>
     </answers>
     <scoring determination-method="wise.msfd.compliance.scoring.scoring_based">
     </scoring>
-    <score-weight descriptor="D1.1" value="20" />
-    <score-weight descriptor="D1.2" value="20" />
-    <score-weight descriptor="D1.3" value="20" />
-    <score-weight descriptor="D1.4" value="20" />
-    <score-weight descriptor="D1.5" value="20" />
-    <score-weight descriptor="D1.6" value="20" />
-    <score-weight descriptor="D2" value="20" />
-    <score-weight descriptor="D3" value="20" />
-    <score-weight descriptor="D4" value="20" />
-    <score-weight descriptor="D5" value="20" />
-    <score-weight descriptor="D6" value="20" />
-    <score-weight descriptor="D7" value="20" />
-    <score-weight descriptor="D8" value="20" />
-    <score-weight descriptor="D9" value="20" />
-    <score-weight descriptor="D10" value="20" />
-    <score-weight descriptor="D11" value="20" />
+    <score-weight descriptor="D1.1" value="15" />
+    <score-weight descriptor="D1.2" value="15" />
+    <score-weight descriptor="D1.3" value="15" />
+    <score-weight descriptor="D1.4" value="15" />
+    <score-weight descriptor="D1.5" value="15" />
+    <score-weight descriptor="D1.6" value="15" />
+    <score-weight descriptor="D2" value="15" />
+    <score-weight descriptor="D3" value="15" />
+    <score-weight descriptor="D4" value="15" />
+    <score-weight descriptor="D5" value="15" />
+    <score-weight descriptor="D6" value="15" />
+    <score-weight descriptor="D7" value="15" />
+    <score-weight descriptor="D8" value="15" />
+    <score-weight descriptor="D9" value="15" />
+    <score-weight descriptor="D10" value="15" />
+    <score-weight descriptor="D11" value="15" />
   </assessment-question>
   
   <assessment-question id="A09Co2" class="coherence" use-criteria="secondary">
@@ -41,27 +42,28 @@
       <option score="0.75">51-75% of MS in the region use this criterion</option>
       <option score="0.5">26-50% of MS in the region use this criterion</option>
       <option score="0.25">1-25% of MS in the region use this criterion</option>
+      <option score="0">Only one MS in the region uses this criterion</option>
       <option score="0.250">Not clear</option>
       <option score="/">Not relevant</option>
     </answers>
     <scoring determination-method="wise.msfd.compliance.scoring.scoring_based">
     </scoring>
-    <score-weight descriptor="D1.1" value="0" />
-    <score-weight descriptor="D1.2" value="0" />
-    <score-weight descriptor="D1.3" value="0" />
-    <score-weight descriptor="D1.4" value="0" />
-    <score-weight descriptor="D1.5" value="0" />
-    <score-weight descriptor="D1.6" value="0" />
-    <score-weight descriptor="D2" value="0" />
-    <score-weight descriptor="D3" value="0" />
-    <score-weight descriptor="D4" value="0" />
-    <score-weight descriptor="D5" value="0" />
-    <score-weight descriptor="D6" value="0" />
-    <score-weight descriptor="D7" value="0" />
-    <score-weight descriptor="D8" value="0" />
-    <score-weight descriptor="D9" value="0" />
-    <score-weight descriptor="D10" value="0" />
-    <score-weight descriptor="D11" value="0" />
+    <score-weight descriptor="D1.1" value="10" />
+    <score-weight descriptor="D1.2" value="10" />
+    <score-weight descriptor="D1.3" value="10" />
+    <score-weight descriptor="D1.4" value="10" />
+    <score-weight descriptor="D1.5" value="10" />
+    <score-weight descriptor="D1.6" value="10" />
+    <score-weight descriptor="D2" value="10" />
+    <score-weight descriptor="D3" value="10" />
+    <score-weight descriptor="D4" value="10" />
+    <score-weight descriptor="D5" value="10" />
+    <score-weight descriptor="D6" value="10" />
+    <score-weight descriptor="D7" value="10" />
+    <score-weight descriptor="D8" value="10" />
+    <score-weight descriptor="D9" value="10" />
+    <score-weight descriptor="D10" value="10" />
+    <score-weight descriptor="D11" value="10" />
   </assessment-question>
 
   <assessment-question id="A09Co3" class="coherence" use-criteria="all">
@@ -77,6 +79,7 @@
       <option score="0.5">Some elements and parameters for this criterion are the same or similar for many MS (51-75%) in the region</option>
       <option score="0.25">Some elements and parameters for this criterion are the same or similar for some (1-50%) in the region</option>
       <option score="0">All elements and parameters for this criterion are different in all MS in the region</option>
+      <option score="0">Only one MS in the region specified elements and parameters</option>
       <option score="0.250">Not clear</option>
       <option score="/">Not relevant</option>
     </answers>
@@ -110,6 +113,7 @@
       <option score="0.5">Objectives for this criterion are the same or similar for some MS (26-50%) in the region</option>
       <option score="0.25">Objectives for this criterion are the same or similar for only a few MS (1-25%) in the region</option>
       <option score="0">All MS in the region use different objectives for this criterion</option>
+      <option score="0">Only one MS in the region specified clear objectives for this criterion</option>
       <option score="0.250">Not clear</option>
       <option score="/">Not relevant</option>
     </answers>
@@ -146,6 +150,7 @@
       <option score="0.5">Some threshold values for this criterion are agreed at EU or regional level for many MS (51-75%) in the region</option>
       <option score="0.25">Some threshold values for this criterion agreed at EU or regional level for some / few MS (1-50%) in the region</option>
       <option score="0">All MS in the region use threshold values that are not agreed at EU or regional level for this criterion</option>
+      <option score="0">Only one MS in the region defined threshold values for this criterion</option>
       <option score="0.250">Not clear</option>
       <option score="/">Not relevant</option>
     </answers>
@@ -182,27 +187,28 @@
       <option score="0.5">Some proportion values for this criterion are the same or similar for many MS (51-75%) in the region</option>
       <option score="0.25">Some proportion values for this criterion are the same or similar for some / few MS (1-50%) in the region</option>
       <option score="0">All MS in the region use different proportion values for this criterion</option>
+      <option score="0">Only one MS in the region defined proportion values for this criterion</option>
       <option score="0.250">Not clear</option>
       <option score="/">Not relevant</option>
     </answers>
     <scoring determination-method="wise.msfd.compliance.scoring.scoring_based">
     </scoring>
-    <score-weight descriptor="D1.1" value="15" />
-    <score-weight descriptor="D1.2" value="15" />
-    <score-weight descriptor="D1.3" value="15" />
-    <score-weight descriptor="D1.4" value="15" />
-    <score-weight descriptor="D1.5" value="15" />
-    <score-weight descriptor="D1.6" value="15" />
-    <score-weight descriptor="D2" value="15" />
-    <score-weight descriptor="D3" value="15" />
-    <score-weight descriptor="D4" value="15" />
-    <score-weight descriptor="D5" value="15" />
-    <score-weight descriptor="D6" value="15" />
-    <score-weight descriptor="D7" value="15" />
-    <score-weight descriptor="D8" value="15" />
-    <score-weight descriptor="D9" value="15" />
-    <score-weight descriptor="D10" value="15" />
-    <score-weight descriptor="D11" value="15" />
+    <score-weight descriptor="D1.1" value="10" />
+    <score-weight descriptor="D1.2" value="10" />
+    <score-weight descriptor="D1.3" value="10" />
+    <score-weight descriptor="D1.4" value="10" />
+    <score-weight descriptor="D1.5" value="10" />
+    <score-weight descriptor="D1.6" value="10" />
+    <score-weight descriptor="D2" value="10" />
+    <score-weight descriptor="D3" value="10" />
+    <score-weight descriptor="D4" value="10" />
+    <score-weight descriptor="D5" value="10" />
+    <score-weight descriptor="D6" value="10" />
+    <score-weight descriptor="D7" value="10" />
+    <score-weight descriptor="D8" value="10" />
+    <score-weight descriptor="D9" value="10" />
+    <score-weight descriptor="D10" value="10" />
+    <score-weight descriptor="D11" value="10" />
   </assessment-question>
 
   <assessment-question id="A09Co7" class="coherence" use-criteria="none">
@@ -218,6 +224,7 @@
       <option score="0.5">Some GES extent thresholds are the same or similar in many MS (51-75%) in the region</option>
       <option score="0.25">Some GES extent thresholds are the same or similar in some / few MS (1-50%) in the region</option>
       <option score="0">All MS in the region use different GES extent thresholds</option>
+      <option score="0">Only one MS in the region specified the GES extent thresholds</option>
       <option score="0.250">Not clear</option>
       <option score="/">Not relevant</option>
     </answers>
@@ -251,6 +258,7 @@
       <option score="0.5">Some (26-50%) aspects of the determination of GES for this criterion are the same in all MS in the subregion</option>
       <option score="0.25">A few (1-25%) aspects of the determination of GES for this criterion are the same in all MS in the subregion</option>
       <option score="0">All MS in the region use different determinations of GES for this criterion</option>
+      <option score="0">Only one MS in the region reported a GES determination for this criterion</option>
       <option score="0.250">Not clear</option>
       <option score="/">Not relevant</option>
     </answers>

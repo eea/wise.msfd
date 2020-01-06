@@ -21,6 +21,7 @@ from Products.statusmessages.interfaces import IStatusMessage
 from wise.msfd import db, sql2018
 from wise.msfd.compliance.vocabulary import (REGIONAL_DESCRIPTORS_REGIONS,
                                              REGIONS)
+from wise.msfd.compliance.nationaldescriptors.main import AssessmentDataMixin
 from wise.msfd.compliance.regionaldescriptors.base import COUNTRY
 from wise.msfd.gescomponents import (get_all_descriptors, get_descriptor,
                                      get_marine_units)
@@ -29,7 +30,8 @@ from wise.msfd.translation import Translation, get_detected_lang
 from wise.msfd.translation.interfaces import ITranslationsStorage
 
 from . import interfaces
-from .base import BaseComplianceView, NAT_DESC_QUESTIONS, report_data_cache_key
+from .base import (BaseComplianceView, NAT_DESC_QUESTIONS, REG_DESC_QUESTIONS,
+                   report_data_cache_key)
 
 logger = logging.getLogger('wise.msfd')
 
@@ -465,11 +467,12 @@ class ComplianceAdmin(BaseComplianceView):
         return self.get_users_by_group_id(group_id)
 
 
-class AdminScoring(BaseComplianceView):
+class AdminScoring(BaseComplianceView, AssessmentDataMixin):
     name = 'admin-scoring'
     section = 'compliance-admin'
 
     questions = NAT_DESC_QUESTIONS
+    questions_reg = REG_DESC_QUESTIONS
 
     def descriptor_obj(self, descriptor):
         return get_descriptor(descriptor)
@@ -535,18 +538,6 @@ class AdminScoring(BaseComplianceView):
 
             yield obj
 
-    @property
-    def rdas(self):
-        catalog = get_tool('portal_catalog')
-        brains = catalog.searchResults(
-            portal_type='wise.msfd.regionaldescriptorassessment',
-        )
-
-        for brain in brains:
-            obj = brain.getObject()
-
-            yield obj
-
     def reset_assessment_data(self):
         """ Completely erase the assessment data from the system
 
@@ -560,8 +551,8 @@ class AdminScoring(BaseComplianceView):
                 del obj.saved_assessment_data
                 obj._p_changed = True
 
-    def recalculate_scores(self):
-        for obj in self.ndas:
+    def recalculate_score_for_objects(self, objects, questions):
+        for obj in objects:
             if hasattr(obj, 'saved_assessment_data') \
                     and obj.saved_assessment_data:
 
@@ -578,7 +569,7 @@ class AdminScoring(BaseComplianceView):
                     _question = [
                         x
 
-                        for x in self.questions[article]
+                        for x in questions[article]
 
                         if x.id == id_
                     ][0]
@@ -598,6 +589,10 @@ class AdminScoring(BaseComplianceView):
 
                 data['OverallScore'] = new_overall_score
                 obj.saved_assessment_data._p_changed = True
+
+    def recalculate_scores(self):
+        self.recalculate_score_for_objects(self.ndas, self.questions)
+        self.recalculate_score_for_objects(self.rdas, self.questions_reg)
 
     def get_data(self, obj):
         """ Get assessment data for a country assessment object

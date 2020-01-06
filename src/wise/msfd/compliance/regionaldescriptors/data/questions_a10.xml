@@ -5,13 +5,13 @@
       To what extent do the Member States in the region define similar targets?
     </definition>
     <answers>
-      <option score="1">All targets defined are the same/similar in most MS (76-100%) in the region</option>
-      <option score="0.75">All targets defined are the same/similar in many MS (51-75%) in the region</option>
-      <option score="0.5">All targets defined are the same/similar in some MS (26-50%) in the region</option>
-      <option score="0.25">All targets defined are the same/similar a few MS (1-25%) in the region</option>
-      <option score="0.75">Some targets defined are the same/similar in most MS (76-100%) in the region</option>
-      <option score="0.5">Some targets defined are the same/similar in many MS (51-75%) in the region</option>
-      <option score="0.25">Some targets defined are the same/similar in some / few MS (1-50%) in the region</option>
+      <option score="1">Targets focused on reducing the pressure/impact are the same/similar in most MS (76-100%) in the region</option>
+      <option score="0.75">Targets focused on reducing the pressure/impact are the same/similar in many MS (51-75%) in the region</option>
+      <option score="0.5">Targets focused on reducing the pressure/impact the same/similar in some MS (26-50%) in the region</option>
+      <option score="0.25">Targets focused on reducing the pressure/impact are the same/similar a few MS (1-25%) in the region</option>
+      <option score="0.75">Some targets focused on reducing the pressure/impact defined are the same/similar in most MS (76-100%) in the region</option>
+      <option score="0.5">Some targets focused on reducing the pressure/impact are the same/similar in many MS (51-75%) in the region</option>
+      <option score="0.25">Some targets focused on reducing the pressure/impact are the same/similar in some MS (26-50%) in the region</option>
       <option score="0">All targets are different in all MS in the region</option>
       <option score="0.250">Not clear</option>
       <option score="/">Not relevant</option>
