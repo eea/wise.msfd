@@ -55,6 +55,8 @@ PROCESS_STATUS_COLORS = {
     "phase1": "warning",
     "phase2": "primary",
     "phase3": "success",
+    # national summary
+    "final": "success",
 }
 
 MAIN_FORMS = [Tab(*x) for x in [

@@ -55,10 +55,35 @@
             <!--</tal:cond>-->
           </form>
 
-          <h3>Question weights per descriptor</h3>
+          <h3>National Descriptors - Question weights per descriptor</h3>
 
           <table class="table as-table-overview table-striped"
             tal:repeat="art python: view.questions.items()">
+            <thead>
+              <tr>
+                <th tal:content="python: art[0]">Artx</th>
+                <th tal:repeat="desc descriptors"
+                  tal:content="python: desc[0]">Descriptor</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr tal:repeat="question python:art[1]">
+                <th>
+                  <span tal:content="python: question.id">D0</span>
+                </th>
+
+                <td tal:repeat="desc descriptors"
+                  tal:content="python: question.score_weights.get(desc[0], '-')">
+
+                </td>
+              </tr>
+            </tbody>
+          </table>
+
+          <h3>Regional Descriptors - Question weights per descriptor</h3>
+
+          <table class="table as-table-overview table-striped"
+            tal:repeat="art python: view.questions_reg.items()">
             <thead>
               <tr>
                 <th tal:content="python: art[0]">Artx</th>
