@@ -89,10 +89,8 @@ class RegionalDescriptorRegionsOverview(BaseRegComplianceView):
 class RegionalDescriptorArticleView(BaseRegComplianceView):
     section = 'regional-descriptors'
 
-    # assessment_data_2012_tpl = VPTF('pt/assessment-data-2012.pt')
-    assessment_data_2018_tpl = VPTF(
-        'pt/assessment-data-2018.pt'
-    )
+    assessment_data_2012_tpl = VPTF('pt/assessment-data-2012.pt')
+    assessment_data_2018_tpl = VPTF('pt/assessment-data-2018.pt')
     _questions = REG_DESC_QUESTIONS
 
     @property
@@ -137,7 +135,10 @@ class RegionalDescriptorArticleView(BaseRegComplianceView):
             source_file=["File 2012", ""],
             show_edit_assessors=False,
         )
-        self.assessment_data_2012 = None
+        assessments_2012 = None
+        self.assessment_data_2012 = self.assessment_data_2012_tpl(
+            data=assessments_2012
+        )
 
         score_2012 = 0
         conclusion_2012 = "Get conclusion 2012"

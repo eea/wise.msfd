@@ -1,0 +1,44 @@
+<div tal:define="assessments options/data">
+
+  <tal:rep tal:repeat="country assessments">
+
+    <span tal:condition="python: len(assessments) > 1"
+      tal:content="country">Country</span>
+
+    <table class="table table-condensed assessment-data-table">
+      <tbody>
+        <!--<div tal:content="assessments/?country">asd</div>-->
+        <tal:def tal:define="assessment assessments/?country;
+          colspan python:3">
+          <tal:rep tal:repeat="crit assessment/criteria">
+            <tr>
+              <th tal:content="crit/crit_name">
+                Criteria
+              </th>
+              <td tal:content="structure crit/answer"
+                tal:attributes="colspan colspan">Text</td>
+            </tr>
+          </tal:rep>
+          <tr>
+            <th rowspan="3">Assessment summary</th>
+            <td tal:content="assessment/summary"
+              tal:attributes="rowspan string:3;
+              colspan python:colspan - 2">
+              Summary
+            </td>
+          </tr>
+          <tr class="overall-score">
+            <th>Overall score</th>
+            <td tal:content="python: int(assessment.score)">2</td>
+          </tr>
+          <tr class="overall-score">
+            <th>Overall conclusion</th>
+            <td tal:content="assessment/overall_ass">Partially adequate</td>
+          </tr>
+        </tal:def>
+      </tbody>
+    </table>
+
+  </tal:rep>
+
+</div>

@@ -338,7 +338,7 @@ def get_common_labels():
     labels.update(getattr(GES_LABELS, 'ges_criterias'))
 
     # TODO there are keys with empty values, find out from where it comes
-    filtered = {k: v for k, v in labels.items() if k}
+    filtered = {k: v for k, v in labels.items() if k and v}
 
     return filtered
 
