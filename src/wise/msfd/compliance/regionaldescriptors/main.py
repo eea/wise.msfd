@@ -9,6 +9,7 @@ from wise.msfd.compliance.nationaldescriptors.main import (
     CONCLUSION_COLOR_TABLE, format_assessment_data)
 from wise.msfd.gescomponents import get_descriptor
 
+from .assessment import ASSESSMENTS_2012
 from .base import BaseRegComplianceView
 
 
@@ -111,6 +112,59 @@ class RegionalDescriptorArticleView(BaseRegComplianceView):
     # def criterias(self):
     #     return self.descriptor_obj.sorted_criterions()      # criterions
 
+    def get_assessments_data_2012(self):
+        res = []
+
+        for x in ASSESSMENTS_2012:
+            if x.region.strip() != self.country_region_code:
+                continue
+
+            if x.descriptor.strip() != self.descriptor_obj.id.split('.')[0]:
+                continue
+
+            article = x.article.replace(" ", "")
+
+            if not article.startswith(self.article):
+                continue
+
+            res.append(x)
+
+        sorted_res = sorted(
+            res, key=lambda i: int(i.overall_score), reverse=True
+        )
+
+        return sorted_res
+
+    def get_assessment_2012_header_data(self, assessments_2012):
+        res = {}
+
+        if not assessments_2012:
+            return res
+
+        assessments_2012 = assessments_2012[0]
+
+        res['report_by'] = assessments_2012.report_by
+        res['assessed_by'] = assessments_2012.assessment_by
+        res['assess_date'] = assessments_2012.date_assessed.date()
+        res['file_name'] = assessments_2012.commission_report.split('/')[-1]
+        res['file_url'] = assessments_2012.commission_report
+
+        return res
+
+    def get_elements_for_question(self):
+        # Because Art 10 questions are based on targets
+        # It is a hack to return something for article 10, to be able to
+        # answer the first question
+        if self.article == 'Art10':
+            return self.descriptor_obj.criterions
+
+        elements = self.questions[0].get_all_assessed_elements(
+            self.descriptor_obj,
+            muids=[]
+        )
+
+        return elements
+
     def __call__(self):
         if 'assessor' in self.request.form:
             assessors = self.request.form['assessor']
@@ -127,21 +181,29 @@ class RegionalDescriptorArticleView(BaseRegComplianceView):
             context.saved_assessment_data = AssessmentData()
 
         # Assessment 2012
+        assessments_2012 = self.get_assessments_data_2012()
+        assessment_2012_header_data = self.get_assessment_2012_header_data(
+            assessments_2012
+        )
         self.assessment_header_2012 = self.assessment_header_template(
-            report_by="Report by 2012",
+            report_by=assessment_2012_header_data.get('report_by', '-'),
             assessor_list=self.assessor_list,
-            assessors="Assessors 2012",
-            assess_date="Date 2012",
-            source_file=["File 2012", ""],
+            assessors=assessment_2012_header_data.get('assessed_by', '-'),
+            assess_date=assessment_2012_header_data.get('assess_date', '-'),
+            source_file=[
+                assessment_2012_header_data.get('file_name', '-'),
+                assessment_2012_header_data.get('file_url', ''),
+            ],
             show_edit_assessors=False,
         )
-        assessments_2012 = None
         self.assessment_data_2012 = self.assessment_data_2012_tpl(
             data=assessments_2012
         )
 
-        score_2012 = 0
-        conclusion_2012 = "Get conclusion 2012"
+        score_2012 = (assessments_2012 and assessments_2012[0].overall_score
+                      or 0)
+        conclusion_2012 = (assessments_2012 and assessments_2012[0].conclusion
+                           or 'Not found')
         conclusion_2012_color = CONCLUSION_COLOR_TABLE.get(score_2012, 0)
 
         # Assessment 2018
@@ -149,10 +211,7 @@ class RegionalDescriptorArticleView(BaseRegComplianceView):
             self.context.saved_assessment_data, 'ass_new', 'Not assessed'
         )
         data = self.context.saved_assessment_data.last()
-        elements = self.questions[0].get_all_assessed_elements(
-            self.descriptor_obj,
-            muids=[]
-        )
+        elements = self.get_elements_for_question()
         assess_date_2018 = data.get('assess_date', u'Not assessed')
         source_file_2018 = ('To be addedd...', '.')
         muids = None
@@ -168,6 +227,11 @@ class RegionalDescriptorArticleView(BaseRegComplianceView):
             article_weights,
             self
         )
+        change = int(
+            assessment.phase_overall_scores
+            .get_range_index_for_phase('coherence') - score_2012
+        )
+
         can_edit = self.check_permission('wise.msfd: Edit Assessment')
         show_edit_assessors = self.assessor_list and can_edit
 
@@ -184,7 +248,7 @@ class RegionalDescriptorArticleView(BaseRegComplianceView):
             score_2012=score_2012,
             conclusion_2012=conclusion_2012,
             conclusion_2012_color=conclusion_2012_color,
-            change_since_2012='-1',
+            change_since_2012=change,
             can_comment=self.can_comment
         )
 

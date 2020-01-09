@@ -1,6 +1,10 @@
 import datetime
 import logging
 
+from collections import namedtuple
+from pkg_resources import resource_filename
+from pyexcel_xlsx import get_data
+
 from zope.schema import Choice, Text
 from zope.schema.vocabulary import SimpleTerm, SimpleVocabulary
 
@@ -25,6 +29,36 @@ from z3c.form.field import Fields
 from .base import BaseRegComplianceView
 
 logger = logging.getLogger('wise.msfd')
+
+
+Assessment_2012 = namedtuple(
+    'Assessment_2012',
+    ['region', 'descriptor', 'article', 'report_by', 'assessment_by',
+     'date_assessed', 'commission_report', 'coherence', 'summary',
+     'overall_score', 'conclusion']
+)
+
+
+def parse_assessments_2012_file():
+    f = resource_filename('wise.msfd',
+                          'data/Regional_Descriptors_2012_assessment.xlsx')
+
+    res = []
+
+    with open(f, 'rb') as file:
+        sheets = get_data(file)
+        rows = sheets['Data']
+
+        for row in rows[1:]:
+            if not row:
+                break
+
+            res.append(Assessment_2012(*row))
+
+    return res
+
+
+ASSESSMENTS_2012 = parse_assessments_2012_file()
 
 
 class RegDescEditAssessmentSummaryForm(BaseRegComplianceView,

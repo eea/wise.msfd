@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # TODO: move most of the stuff here in .search, where it belongs
 import json
+import unicodedata
 
 from sqlalchemy import and_, or_
 from sqlalchemy.sql.schema import Table
@@ -83,9 +84,7 @@ def db_vocab(table, column, sort_helper=None):
     terms = []
     for x in res:
         try:
-            import unicodedata
-            _x = unicodedata.normalize('NFKD', x).encode('ASCII', 'ignore')
-            simple_term = SimpleTerm(_x, _x, COMMON_LABELS.get(x, x))
+            simple_term = SimpleTerm(x, x, COMMON_LABELS.get(x, x))
         except:
             # TODO find a way to create a vocab term with accented chars ex.
             # Nordostatlanten (ANS) och Östersjön (BAL)
@@ -140,27 +139,27 @@ def get_region_subregions_vb_factory(context):
 
 @provider(IVocabularyFactory)
 def get_region_subregions_vb_factory_art6(context):
-    # table = sql.MSFD4RegionalCooperation
-    # column = 'RegionsSubRegions'
-    # res = db.get_unique_from_mapper(table, column, raw=True)
-    # terms = []
-    #
-    # for x in res:
-    #     x = x[0]
-    #
-    #     # TODO find a way to create a vocab term with accented chars for ex.:
-    #     # Nordostatlanten (ANS) och Östersjön (BAL)
-    #     if x.isalnum():
-    #         simple_term = SimpleTerm(x, x, COMMON_LABELS.get(x, x))
-    #         terms.append(simple_term)
-    #
-    # terms.sort(key=lambda t: t.title)
-    #
-    # vocab = SimpleVocabulary(terms)
-    #
-    # return vocab
+    table = sql.MSFD4RegionalCooperation
+    column = 'RegionsSubRegions'
+    res = db.get_unique_from_mapper(table, column, raw=True)
+    terms = []
 
-    return db_vocab(sql.MSFD4RegionalCooperation, 'RegionsSubRegions')
+    for x in res:
+        x = x[0]
+
+        # TODO find a way to create a vocab term with accented chars for ex.:
+        # Nordostatlanten (ANS) och Östersjön (BAL)
+        _x = unicodedata.normalize('NFKD', x).encode('ASCII', 'ignore')
+        simple_term = SimpleTerm(_x, _x, COMMON_LABELS.get(x, x))
+        terms.append(simple_term)
+
+    terms.sort(key=lambda t: t.title)
+
+    vocab = SimpleVocabulary(terms)
+
+    return vocab
+
+    # return db_vocab(sql.MSFD4RegionalCooperation, 'RegionsSubRegions')
 
 
 @provider(IVocabularyFactory)

@@ -1,24 +1,18 @@
 <div tal:define="assessments options/data">
 
-  <tal:rep tal:repeat="country assessments">
+  <tal:rep tal:repeat="assessment assessments">
 
-    <span tal:condition="python: len(assessments) > 1"
-      tal:content="country">Country</span>
+    <h4 tal:content="assessment/article">Article 8</h4>
 
     <table class="table table-condensed assessment-data-table">
       <tbody>
-        <!--<div tal:content="assessments/?country">asd</div>-->
-        <tal:def tal:define="assessment assessments/?country;
-          colspan python:3">
-          <tal:rep tal:repeat="crit assessment/criteria">
-            <tr>
-              <th tal:content="crit/crit_name">
-                Criteria
-              </th>
-              <td tal:content="structure crit/answer"
-                tal:attributes="colspan colspan">Text</td>
-            </tr>
-          </tal:rep>
+        <tal:def tal:define="colspan python:3">
+          <tr>
+            <th>Coherence
+            </th>
+            <td tal:content="structure assessment/coherence"
+              tal:attributes="colspan colspan">Text</td>
+          </tr>
           <tr>
             <th rowspan="3">Assessment summary</th>
             <td tal:content="assessment/summary"
@@ -29,11 +23,11 @@
           </tr>
           <tr class="overall-score">
             <th>Overall score</th>
-            <td tal:content="python: int(assessment.score)">2</td>
+            <td tal:content="python: int(assessment.overall_score)">2</td>
           </tr>
           <tr class="overall-score">
             <th>Overall conclusion</th>
-            <td tal:content="assessment/overall_ass">Partially adequate</td>
+            <td tal:content="assessment/conclusion">Partially adequate</td>
           </tr>
         </tal:def>
       </tbody>

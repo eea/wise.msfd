@@ -937,11 +937,10 @@ class NationalDescriptorSecondaryArticleView(NationalDescriptorArticleView):
 
         score_2012 = int(round(score_2012))
         conclusion_2012_color = CONCLUSION_COLOR_TABLE.get(score_2012, 0)
-        # change = int(
-        #     assessment.phase_overall_scores
-        #     .get_range_index_for_phase('adequacy') - score_2012
-        # )
-        change = 1
+        change = int(
+            assessment.phase_overall_scores
+            .get_range_index_for_phase('adequacy') - score_2012
+        )
 
         self.assessment_data_2018_html = self.assessment_data_2018_tpl(
             assessment=assessment,
@@ -951,7 +950,6 @@ class NationalDescriptorSecondaryArticleView(NationalDescriptorArticleView):
             change_since_2012=change,
             can_comment=self.can_comment
         )
-        # self.assessment_data_2018_html = ''
 
         # Assessment header 2018
         report_by_2018 = u'Commission'
