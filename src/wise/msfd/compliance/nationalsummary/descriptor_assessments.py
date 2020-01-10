@@ -42,6 +42,7 @@ class DescriptorLevelAssessments(BaseNatSummaryView, AssessmentDataMixin):
 
     def get_assessment_data_2012(self, region_code, country_name,
                                  descriptor, article):
+
         try:
             db_data_2012 = get_assessment_data_2012_db(
                 country_name,
@@ -67,7 +68,9 @@ class DescriptorLevelAssessments(BaseNatSummaryView, AssessmentDataMixin):
             score_2012 = 0
             conclusion_2012 = 'Not found'
 
-        return int(round(score_2012)), conclusion_2012
+        __score = int(round(score_2012 or 0))
+
+        return __score, conclusion_2012 or 'Not found'
 
     def _setup_phase_overall_scores(self, phase_overall_scores, assess_data,
                                     article):
