@@ -1,7 +1,8 @@
 <tal:rep tal:repeat="row options/rows"
   tal:define="field nocall:options/field">
   <tr>
-    <th class="first-header summary">
+    <th class="first-header summary"
+      tal:condition="view/show_header">
       <span tal:content="field/title">First header</span>
     </th>
 

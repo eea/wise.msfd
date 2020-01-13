@@ -1,4 +1,5 @@
 from io import BytesIO
+from pkg_resources import resource_filename
 
 import logging
 
@@ -15,6 +16,8 @@ from wise.msfd.utils import (ItemList, TemplateMixin, db_objects_to_dict,
 
 from lpod.document import odf_new_document
 from lpod.toc import odf_create_toc
+
+import pdfkit
 
 from ..nationaldescriptors.a7 import Article7
 from ..nationaldescriptors.a34 import Article34
@@ -296,6 +299,26 @@ class NationalSummaryView(BaseNatSummaryView):
 
         return doc
 
+    def download_pdf(self):
+        options = {'encoding': "UTF-8"}
+        css = [
+            resource_filename('wise.theme',
+                              'static/wise/css/main.css'),
+            resource_filename('wise.msfd',
+                              'static/wise/dist/css/compliance.css'),
+        ]
+        doc = pdfkit.from_string(
+            self.report_html, False, options=options, css=css
+        )
+        sh = self.request.response.setHeader
+
+        sh('Content-Type', 'application/pdf')
+        fname = "{}-Draft".format(self.country_name)
+        sh('Content-Disposition',
+           'attachment; filename=%s.pdf' % fname)
+
+        return doc
+
     # @cache(get_reportdata_key, dependencies=['translation'])
     @timeit
     def render_reportdata(self):
@@ -347,6 +370,9 @@ class NationalSummaryView(BaseNatSummaryView):
 
         if 'download' in self.request.form:
             return self.download()
+
+        if 'download_pdf' in self.request.form:
+            return self.download_pdf()
 
         if 'translate' in self.request.form:
             # for table in self.tables:

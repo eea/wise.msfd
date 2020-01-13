@@ -6,14 +6,15 @@
     <div class="ast-header-data">
       <table class="table table-condensed assessment-data-table">
         <thead>
+        </thead>
+        <tbody>
           <tr>
             <th>Descriptor</th>
             <th>Article 9 - Ges Determination</th>
             <th>Article 8 - Initial Assessment</th>
             <th>Article 10 - Environmental Targets</th>
           </tr>
-        </thead>
-        <tbody>
+
           <tr tal:repeat="row python: region[1]">
               <th><div tal:content="python: row[0]">D1 - Birds</div></th>
               <td tal:repeat="score python: row[1:]">

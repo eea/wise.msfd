@@ -17,24 +17,25 @@ from .odt_utils import (create_heading, create_paragraph, create_table,
 logger = logging.getLogger('wise.msfd')
 
 
-def compoundrow(self, title, rows):
+def compoundrow(self, title, rows, show_header=True):
     """ Function to return a compound row for 2012 report"""
 
     FIELD = namedtuple("Field", ["name", "title"])
     field = FIELD(title, title)
 
-    return CompoundRow(self, self.request, field, rows)
+    return CompoundRow(self, self.request, field, rows, show_header)
 
 
 class CompoundRow(TemplateMixin):
     template = ViewPageTemplateFile('pt/compound-row.pt')
 
-    def __init__(self, context, request, field, rows):
+    def __init__(self, context, request, field, rows, show_header=True):
         self.context = context
         self.request = request
         self.field = field
         self.rows = rows
         self.rowspan = len(rows)
+        self.show_header = show_header
 
 
 class AssessmentAreas2018(BaseNatSummaryView):
@@ -58,7 +59,7 @@ class AssessmentAreas2018(BaseNatSummaryView):
         )
 
         for row in data:
-            description = row.nameText or row.nameTxtInt
+            description = row.nameText or row.nameTxtInt or ""
             translation = get_translated(description, self.country_code) or ""
             self._translatable_values.append(description)
 
@@ -80,6 +81,7 @@ class ReportingHistoryTable(BaseNatSummaryView):
     """
 
     template = ViewPageTemplateFile('pt/report-history-compound-table.pt')
+    show_header = False
 
     def __init__(self, context, request):
         super(ReportingHistoryTable, self).__init__(context, request)
@@ -175,7 +177,8 @@ class ReportingHistoryTable(BaseNatSummaryView):
         obligations = set([x.get('ReportingObligation') for x in data])
 
         self.allrows = [
-            compoundrow(self, obligation, self.get_article_row(obligation))
+            compoundrow(self, obligation, self.get_article_row(obligation),
+                        show_header=self.show_header)
 
             for obligation in obligations
         ]

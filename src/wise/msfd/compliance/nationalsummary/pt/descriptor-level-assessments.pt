@@ -52,7 +52,7 @@
                   <div>Overall adequacy conclusion 2012</div>
                   <div>Adequacy change since 2012</div>
                 </td>
-                <td class="overall-values fixed-right">
+                <td class="overall-values fixed-right" style="width: 250px;">
                   <div tal:attributes="class python: 'as-value as-value-{}'.format(article_data.adequacy[1])">
                     Adequacy: <span tal:content="python: article_data.adequacy[0]">Good (3) 69%</span>
                   </div>

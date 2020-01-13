@@ -2,6 +2,8 @@
   <table class="table table-bordered table-striped table-comp-translate table-report"
       tal:define="data options/data">
     <thead>
+    </thead>
+    <tbody>
       <tr>
         <th>Region</th>
         <th>Zone Type</th>
@@ -9,8 +11,7 @@
         <th>Marine Reporting Unit Description</th>
         <th>Marine Reporting Unit Description (Translated)</th>
       </tr>
-    </thead>
-    <tbody>
+
       <tr tal:repeat="row data">
         <td tal:repeat="value row"
           tal:content="value">Value</td>
