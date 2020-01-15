@@ -122,23 +122,20 @@ class DescriptorLevelAssessments(BaseNatSummaryView, AssessmentDataMixin):
             region_code, descriptor, article
         )
 
-        # if assess_data:
-        #     import pdb; pdb.set_trace()
-
         adequacy_score_val, conclusion = \
             phase_overall_scores.adequacy['conclusion']
-        score = phase_overall_scores.get_score_for_phase('adequacy')
-        adequacy = ("{} ({}) {}%".format(conclusion, adequacy_score_val, score),
+        # score = phase_overall_scores.get_score_for_phase('adequacy')
+        adequacy = ("{} ({})".format(conclusion, adequacy_score_val),
                     phase_overall_scores.adequacy['color'])
 
         score_val, conclusion = phase_overall_scores.consistency['conclusion']
-        score = phase_overall_scores.get_score_for_phase('consistency')
-        consistency = ("{} ({}) {}%".format(conclusion, score_val, score),
+        # score = phase_overall_scores.get_score_for_phase('consistency')
+        consistency = ("{} ({})".format(conclusion, score_val),
                        phase_overall_scores.consistency['color'])
 
         score_val, conclusion = phase_overall_scores.coherence['conclusion']
-        score = phase_overall_scores.get_score_for_phase('coherence')
-        coherence = ("{} ({}) {}%".format(conclusion, score_val, score),
+        # score = phase_overall_scores.get_score_for_phase('coherence')
+        coherence = ("{} ({})".format(conclusion, score_val),
                      phase_overall_scores.coherence['color'])
 
         overallscore_val, score = phase_overall_scores.get_overall_score(
@@ -146,7 +143,7 @@ class DescriptorLevelAssessments(BaseNatSummaryView, AssessmentDataMixin):
         )
         conclusion = self.get_conclusion(overallscore_val)
         overall_score_2018 = (
-            "{} ({}) {}%".format(conclusion, overallscore_val, score),
+            "{} ({})".format(conclusion, overallscore_val),
             self.get_color_for_score(overallscore_val)
         )
 
@@ -165,7 +162,7 @@ class DescriptorLevelAssessments(BaseNatSummaryView, AssessmentDataMixin):
         __key = (region_code, descriptor, article)
         self.overall_scores[__key] = overall_score_2018
 
-        change_since_2012 = int(overallscore_val - score_2012)
+        change_since_2012 = int(adequacy_score_val - score_2012)
 
         res = DESCRIPTOR_SUMMARY(
             assessment_summary, progress_assessment, recommendations,

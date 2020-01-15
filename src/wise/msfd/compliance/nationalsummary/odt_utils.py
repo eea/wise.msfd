@@ -219,7 +219,7 @@ def create_table_descr(document, article_data):
     row = odf_create_row()
     row.set_values([
         u"Recommendations: {}".format(article_data.recommendations or '-'),
-        u"Overall score 2012: {}".format(article_data.overall_score_2012[0])
+        u"Adequacy score 2012: {}".format(article_data.overall_score_2012[0])
     ])
     set_table_cell_style(row, article_data.overall_score_2012[1])
     table.set_row(4, row)
@@ -227,7 +227,7 @@ def create_table_descr(document, article_data):
     row = odf_create_row()
     row.set_values([
         u"",
-        u"Change since 2012: {}".format(article_data.change_since_2012)
+        u"Adequacy change since 2012: {}".format(article_data.change_since_2012)
     ])
     set_table_cell_style(row, 0)
     table.set_row(5, row)

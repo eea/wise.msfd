@@ -39,7 +39,7 @@ class CompoundRow(TemplateMixin):
 
 
 class AssessmentAreas2018(BaseNatSummaryView):
-    """ Implementation of 1.3 Assessment areas (Marine Reporting Units) """
+    """ Implementation of 1.3 Reporting areas (Marine Reporting Units) """
 
     template = ViewPageTemplateFile('pt/assessment-areas.pt')
 
@@ -188,6 +188,101 @@ class ReportingHistoryTable(BaseNatSummaryView):
         return self.template(rows=self.allrows)
 
 
+class ReportedInformationTable(BaseNatSummaryView):
+    """ Reporting information
+    """
+
+    template = ViewPageTemplateFile('pt/report-history-compound-table.pt')
+    show_header = False
+
+    def __init__(self, context, request):
+        super(ReportedInformationTable, self).__init__(context, request)
+
+        self.data = self.get_reporting_history_data()
+
+    @db.use_db_session('2018')
+    def get_reporting_history_data(self):
+
+        mc = sql2018.ReportedInformation
+
+        _, res = db.get_all_records(
+            mc,
+            mc.CountryCode == self.country_code,
+        )
+
+        res = db_objects_to_dict(res)
+
+        return res
+
+    def location_url(self, location, filename):
+        tmpl = "<a href={} target='_blank'>{}</a>"
+        location = location.replace(filename, '')
+
+        return location
+        # return tmpl.format(location, location)
+
+    def format_date(self, date):
+        if not date:
+            return date
+
+        # formatted = date.strftime('%m/%d/%Y')
+        formatted = date.date()
+
+        return formatted
+
+    def headers(self):
+        headers = (
+            'Files available', 'Access to reports',
+            'Report due', 'Report received', 'Reporting delay (days)'
+        )
+
+        return headers
+
+    def get_article_rows(self):
+        # Group the data by report type, envelope, report due, report date
+        # and report delay
+        data = self.data
+        rows = []
+
+        groups = defaultdict(list)
+
+        for row in data:
+            filename = row.get('ReportedFileLink').split('/')[-1]
+            envelope = self.location_url(row.get('ReportedFileLink'), filename)
+            report_due = datetime(year=2018, month=10, day=15).date()
+            report_date = row.get('ReportingDate')
+            report_delay = report_due - report_date
+            k = (envelope, report_due, report_date, report_delay.days)
+
+            groups[k].append(filename)
+
+        for _k, filenames in groups.items():
+            values = [
+                ItemList(rows=filenames),  # Filenames
+                _k[0],  # Envelope url
+                _k[1],  # Report due
+                _k[2],  # Report date
+                _k[3]  # Report delay
+            ]
+            rows.append(values)
+
+        sorted_rows = sorted(rows,
+                             key=lambda _row: (_row[3], _row[1]),
+                             reverse=True)
+
+        return sorted_rows
+
+    def __call__(self):
+        self.allrows = [
+            compoundrow(self, 'Row', self.get_article_rows(),
+                        show_header=self.show_header)
+        ]
+
+        self.report_hystory_data = self.allrows[0].rows
+
+        return self.template(rows=self.allrows)
+
+
 class Introduction(BaseNatSummaryView):
     """ Implementation of section 1.Introduction """
 
@@ -251,7 +346,7 @@ class Introduction(BaseNatSummaryView):
 
     @timeit
     def reporting_history(self):
-        view = ReportingHistoryTable(self, self.request)
+        view = ReportedInformationTable(self, self.request)
         rendered_view = view()
 
         self.report_hystory_data = view.report_hystory_data
@@ -260,7 +355,9 @@ class Introduction(BaseNatSummaryView):
 
     @property
     def date(self):
-        date = datetime.now().strftime("%d %B %Y")
+        # date = datetime.now()
+        date = self.context.modified()
+        date = date.strftime("%d %B %Y")
 
         return date
 
@@ -332,8 +429,13 @@ class Introduction(BaseNatSummaryView):
         p = create_paragraph(self.information_memberstate)
         res.append(p)
 
-        headers = ('Report format',' Files available', 'Access to reports',
-                   'Report due', 'Report received', 'Reporting delay (days)')
+        # headers = ('Report format',' Files available', 'Access to reports',
+        #            'Report due', 'Report received', 'Reporting delay (days)')
+        headers = (
+            'Files available', 'Access to reports',
+            'Report due', 'Report received', 'Reporting delay (days)'
+        )
+
         p = create_heading(3, u"Reporting history")
         res.append(p)
         table = create_table(document, self.report_hystory_data,
@@ -349,7 +451,7 @@ class Introduction(BaseNatSummaryView):
 
         # 1.3 Marine Unit Ids
         title = create_heading(
-            2, u'Assessment areas (Marine Reporting Units)'
+            2, u'Reporting areas (Marine Reporting Units)'
         )
         res.append(title)
         p = create_paragraph(self.assessment_areas_title)

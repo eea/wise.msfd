@@ -18,7 +18,7 @@
   <h5>1.2 Member State's marine waters</h5>
   <div tal:content="structure python: view.scope_of_marine_waters">Editable text</div>
 
-  <h5>1.3 Assessment areas (Marine Reporting Units)</h5>
+  <h5>1.3 Reporting areas (Marine Reporting Units)</h5>
   <div tal:content="view/assessment_areas_title"></div>
   <div tal:replace="structure python: view.assessment_areas">Mru table</div>
 

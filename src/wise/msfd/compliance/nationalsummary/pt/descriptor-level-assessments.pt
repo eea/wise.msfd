@@ -54,22 +54,22 @@
                 </td>
                 <td class="overall-values fixed-right" style="width: 250px;">
                   <div tal:attributes="class python: 'as-value as-value-{}'.format(article_data.adequacy[1])">
-                    Adequacy: <span tal:content="python: article_data.adequacy[0]">Good (3) 69%</span>
+                    Adequacy: <span tal:content="python: article_data.adequacy[0]">Good (3)</span>
                   </div>
                   <div tal:attributes="class python: 'as-value as-value-{}'.format(article_data.consistency[1])">
-                    Consistency: <span tal:content="python: article_data.consistency[0]">Very good (4) 88%</span>
+                    Consistency: <span tal:content="python: article_data.consistency[0]">Very good (4)</span>
                   </div>
                   <div tal:attributes="class python: 'as-value as-value-{}'.format(article_data.coherence[1])">
-                    Coherence: <span tal:content="python: article_data.coherence[0]"> Poor (2) 44%</span>
+                    Coherence: <span tal:content="python: article_data.coherence[0]"> Poor (2)</span>
                   </div>
                   <div tal:attributes="class python: 'as-value as-value-{}'.format(article_data.overall_score_2018[1])">
-                    Overall score 2018: <span tal:content="python: article_data.overall_score_2018[0]">Poor (2) 41%</span>
+                    Overall score 2018: <span tal:content="python: article_data.overall_score_2018[0]">Poor (2)</span>
                   </div>
                   <div tal:attributes="class python: 'as-value as-value-{}'.format(article_data.overall_score_2012[1])">
-                    Overall score 2012: <span tal:content="python: article_data.overall_score_2012[0]">Adequate (3)</span>
+                    Adequacy score 2012: <span tal:content="python: article_data.overall_score_2012[0]">Adequate (3)</span>
                   </div>
                   <div>
-                    Change since 2012: <span tal:content="python: article_data.change_since_2012">1</span>
+                    Adequacy change since 2012: <span tal:content="python: article_data.change_since_2012">1</span>
                   </div>
                 </td>
               </tr>

@@ -68,8 +68,8 @@ class SummaryAssessment(BaseNatSummaryView):
     def get_overall_score(self, region_code, descriptor, article):
         color = self.overall_scores[(region_code, descriptor, article)][1]
         conclusion = self.overall_scores[(region_code, descriptor, article)][0]
-        conclusion = conclusion.split(' ')
-        conclusion = " ".join(conclusion[:-1])
+        # conclusion = conclusion.split(' ')
+        # conclusion = " ".join(conclusion[:-1])
 
         return conclusion, color
 
@@ -262,6 +262,8 @@ class NationalSummaryView(BaseNatSummaryView):
     template = ViewPageTemplateFile('pt/report-data.pt')
     year = "2012"
 
+    render_header = True
+
     def get_document(self):
         result = BytesIO()
         document = odf_new_document('text')
@@ -307,8 +309,12 @@ class NationalSummaryView(BaseNatSummaryView):
             resource_filename('wise.msfd',
                               'static/wise/dist/css/compliance.css'),
         ]
+        # cover = resource_filename('wise.msfd',
+        #                           'compliance/nationalsummary/data/cover.html')
         doc = pdfkit.from_string(
-            self.report_html, False, options=options, css=css
+            self.report_html, False, options=options,
+            # cover=cover,
+            css=css
         )
         sh = self.request.response.setHeader
 
@@ -364,6 +370,9 @@ class NationalSummaryView(BaseNatSummaryView):
         if 'edit-data' in self.request.form:
             url = "{}/edit".format(self._country_folder.absolute_url())
             return self.request.response.redirect(url)
+
+        if 'download_pdf' in self.request.form:
+            self.render_header = False
 
         report_html = self.render_reportdata()
         self.report_html = report_html
