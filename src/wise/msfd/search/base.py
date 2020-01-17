@@ -202,9 +202,9 @@ MAIN_FORMS = (
     Tab('msfd-mru', 'msfd-mru', 'Article 4', 'Marine Units', '', true),
     Tab('msfd-rc', 'msfd-rc', 'Article 6', 'Regional cooperation', '', true),
     Tab('msfd-ca', 'msfd-ca', 'Article 7', 'Competent Authorities', '', true),
-    Tab('msfd-c14', 'msfd-c14',
-        'Articles <br/>8, 9 & 10', 'GES determinations, assessments & targets',
-        '', true),
+    Tab('msfd-a8', 'msfd-a8', 'Article 8', 'GES determinations', '', true),
+    Tab('msfd-a9', 'msfd-a9', 'Article 9', 'Assessments', '', true),
+    Tab('msfd-a10', 'msfd-a10', 'Article 10', 'Targets', '', true),
     Tab('msfd-c2', 'msfd-c2', 'Article 11', 'Monitoring programmes',
         '', true),
     Tab('msfd-c3', 'msfd-c3', 'Articles <br/>13 & 14',
@@ -213,6 +213,8 @@ MAIN_FORMS = (
     #     '2018 reporting exercise', '', true),
     Tab('msfd-c5', 'msfd-c5', 'Article 18',
         'Progress on the implementation of PoM', '', true),
+    Tab('msfd-c6', 'msfd-c6', 'Article 19.3',
+        'Article 19.3', '', true),
 )
 
 

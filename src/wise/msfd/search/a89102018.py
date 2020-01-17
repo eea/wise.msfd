@@ -15,7 +15,8 @@ from ..sql_extra import MSFD4GeographicalAreaID
 from ..utils import (all_values_from_field, change_orientation,
                      db_objects_to_dict, group_data, ItemLabel, ItemList)
 from .base import ItemDisplayForm
-from .utils import data_to_xls, register_form_2018
+from .utils import (data_to_xls, register_form_a8_2018, register_form_art9,
+                    register_form_art19, register_form_art10)
 
 
 #########################
@@ -192,9 +193,12 @@ class Art9Display(ItemDisplayForm):
         return res
 
 
-@register_form_2018
+@register_form_art9
 class A2018Article9(EmbeddedForm):
-    record_title = title = 'Article 9 (GES determination)'
+    record_title = 'Article 9 (GES determination)'
+    title = "2018 reporting exercise"
+    permission = "zope2.View"
+    session_name = '2018'
     mapper_class = sql2018.ART9GESGESComponent
     display_klass = Art9Display
     features_mc = sql2018.ART9GESGESDeterminationFeature
@@ -514,10 +518,13 @@ class A2018MarineUnitID(MarineUnitIDSelectForm):
         return len(res), sorted_
 
 
-@register_form_2018
+@register_form_art10
 class A2018Article10(EmbeddedForm):
     record_title = 'Article 10 (Targets and associated indicators)'
-    title = 'Article 10 (Targets)'
+    title = "2018 reporting exercise"
+    permission = "zope2.View"
+    session_name = '2018'
+
     mapper_class = sql2018.ART10TargetsMarineUnit
     display_klass = A2018Art10Display
     target_mc = sql2018.ART10TargetsTarget
@@ -959,7 +966,7 @@ class A2018Art81abDisplay(ItemDisplayForm):
         return html + extra_html
 
 
-@register_form_2018
+@register_form_a8_2018
 class A2018Article81ab(EmbeddedForm):
     record_title = title = 'Article 8.1ab (GES assessments)'
     mapper_class = sql2018.ART8GESMarineUnit
@@ -1380,7 +1387,7 @@ class A2018Art81cMarineUnitId(MarineUnitIDSelectForm):
         return len(res), sorted_
 
 
-@register_form_2018
+@register_form_a8_2018
 class A2018Article81c(EmbeddedForm):
     record_title = 'Article 8.1c (Economic and social analysis assessments)'
     title = 'Article 8.1c (ESA assessments)'
@@ -1687,9 +1694,12 @@ class A2018IndicatorsDisplay(ItemDisplayForm):
         return res
 
 
-@register_form_2018
+@register_form_art19
 class A2018ArticleIndicators(EmbeddedForm):
-    record_title = title = 'Indicators (Article 8 & 10)'
+    record_title = 'Indicators (Article 8 & 10)'
+    title = '2018 reporting exercise'
+    session_name = '2018'
+
     mapper_class = sql2018.IndicatorsIndicatorAssessment
     features_mc = sql2018.IndicatorsFeatureFeature
     ges_components_mc = sql2018.IndicatorsFeatureGESComponent

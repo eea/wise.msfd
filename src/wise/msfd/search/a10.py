@@ -7,10 +7,9 @@ from ..base import EmbeddedForm, MarineUnitIDSelectForm2012
 from ..utils import group_query
 from .base import ItemDisplayForm
 from .interfaces import IA2012GesComponentsArt10
-from .utils import data_to_xls, register_form
+from .utils import data_to_xls
 
 
-@register_form
 class A10Form(EmbeddedForm):
     """ Select the MarineUnitID for the Article 10 form
     """

@@ -5,8 +5,11 @@ from zope.security import checkPermission
 from zope.schema.interfaces import IVocabularyFactory
 from zope.schema.vocabulary import SimpleTerm, SimpleVocabulary
 
-from .utils import (FORMS, FORMS_2018, FORMS_ART4, FORMS_ART8910,
-                    FORMS_ART11, FORMS_ART18, SUBFORMS, article_sort_helper,
+from .. import db, sql, sql2018
+from ..vocabulary import values_to_vocab
+from .utils import (FORMS_ART4, FORMS_ART8, FORMS_ART8_2012, FORMS_ART8_2018,
+                    FORMS_ART9, FORMS_ART10, FORMS_ART11, FORMS_ART18,
+                    FORMS_ART19, SUBFORMS, article_sort_helper,
                     article_sort_helper_2018)
 
 
@@ -19,16 +22,50 @@ def monitoring_programme_info_types(context):
     return vocab
 
 
-@provider(IVocabularyFactory)
-def a8910_reporting_period(context):
+def _reporting_period(context, forms):
     terms = []
-    for k, v in FORMS_ART8910.items():
+
+    for k, v in forms.items():
         term = SimpleTerm(v, k, v.title)
         permission = v.permission
         can_view = checkPermission(permission, context)
 
         if can_view:
             terms.append(term)
+
+    terms.sort(key=lambda t: t.title)
+    vocab = SimpleVocabulary(terms)
+
+    return vocab
+
+
+@provider(IVocabularyFactory)
+def a8_reporting_period(context):
+    forms = FORMS_ART8
+
+    return _reporting_period(context, forms)
+
+
+@provider(IVocabularyFactory)
+def a9_reporting_period(context):
+    forms = FORMS_ART9
+
+    return _reporting_period(context, forms)
+
+
+@provider(IVocabularyFactory)
+def a10_reporting_period(context):
+    forms = FORMS_ART10
+
+    return _reporting_period(context, forms)
+
+
+@provider(IVocabularyFactory)
+def a19_reporting_period(context):
+    terms = []
+    for k, v in FORMS_ART19.items():
+        term = SimpleTerm(v, k, v.title)
+        terms.append(term)
 
     terms.sort(key=lambda t: t.title)
     vocab = SimpleVocabulary(terms)
@@ -56,8 +93,8 @@ def a81_forms_vocab_factory(context):
 # Articles 8, 9, 10
 # reporting year 2018
 @provider(IVocabularyFactory)
-def articles_vocabulary_factory_2018(context):
-    terms = [SimpleTerm(v, k, v.title) for k, v in FORMS_2018.items()]
+def articles_vocabulary_factory_a8_2018(context):
+    terms = [SimpleTerm(v, k, v.title) for k, v in FORMS_ART8_2018.items()]
     terms.sort(key=article_sort_helper_2018)
     vocab = SimpleVocabulary(terms)
 
@@ -65,8 +102,8 @@ def articles_vocabulary_factory_2018(context):
 
 
 @provider(IVocabularyFactory)
-def articles_vocabulary_factory(context):
-    terms = [SimpleTerm(k, k, v.title) for k, v in FORMS.items()]
+def articles_vocabulary_factory_a8(context):
+    terms = [SimpleTerm(k, k, v.title) for k, v in FORMS_ART8_2012.items()]
     terms.sort(key=article_sort_helper)
     vocab = SimpleVocabulary(terms)
 
@@ -90,3 +127,37 @@ def a18_data_type(context):
     vocab = SimpleVocabulary(terms)
 
     return vocab
+
+
+@provider(IVocabularyFactory)
+def a19_region_subregions(context):
+    conditions = []
+
+    mc = sql.MetadataArt193
+
+    count, rows = db.get_all_records(
+        mc,
+        *conditions
+    )
+
+    return values_to_vocab(set(x.Region for x in rows))
+
+
+@provider(IVocabularyFactory)
+def a19_member_states(context):
+    conditions = []
+
+    mc = sql.MetadataArt193
+
+    if hasattr(context, 'get_selected_region_subregions'):
+        regions = context.get_selected_region_subregions()
+
+        if regions:
+            conditions.append(mc.Region.in_(regions))
+
+    count, rows = db.get_all_records(
+        mc,
+        *conditions
+    )
+
+    return values_to_vocab(set(x.Country for x in rows))

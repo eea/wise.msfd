@@ -3762,3 +3762,24 @@ class Sysdiagram(Base):
     diagram_id = Column(Integer, primary_key=True)
     version = Column(Integer)
     definition = Column(LargeBinary)
+
+
+class MetadataArt193(Base):
+    __tablename__ = 'MetadataArt19_3'
+
+    Id = Column(Integer, primary_key=True)
+    Country = Column(Unicode(11), nullable=False)
+    Region = Column(Unicode(11), nullable=False)
+
+
+t_MetadataFeatures = Table(
+    'MetadataFeatures', metadata,
+    Column('IdMetadataArt19_3', Integer, nullable=False),
+    Column('MarineUnitID', Unicode(42)),
+    Column('ReportingFeature', Unicode(250)),
+    Column('DatasetRecord', Unicode),
+    Column('DatasetLink', Unicode),
+    Column('MetadataStandard', Unicode(20)),
+    Column('DateStamp', Unicode(100)),
+    Column('Language', Unicode(11))
+)

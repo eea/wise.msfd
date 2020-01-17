@@ -36,8 +36,22 @@
 
   <browser:page
     for="*"
-    name="msfd-c14"
-    class=".main.StartArticle8910View"
+    name="msfd-a8"
+    class=".main.StartArticle8View"
+    permission="zope2.View"
+    />
+
+  <browser:page
+    for="*"
+    name="msfd-a9"
+    class=".main.StartArticle9View"
+    permission="zope2.View"
+    />
+
+  <browser:page
+    for="*"
+    name="msfd-a10"
+    class=".main.StartArticle10View"
     permission="zope2.View"
     />
 
@@ -62,6 +76,13 @@
     permission="zope2.View"
   />
 
+  <browser:page
+    for="*"
+    name="msfd-c6"
+    class=".main.StartArticle19View"
+    permission="zope2.View"
+  />
+
   <utility
     component=".vocabulary.monitoring_programme_info_types"
     name="wise_search_monitoring_programme_info_types"
@@ -73,18 +94,28 @@
     />
 
   <utility
-    component=".vocabulary.articles_vocabulary_factory_2018"
-    name="wise_search_articles_2018"
+    component=".vocabulary.articles_vocabulary_factory_a8_2018"
+    name="wise_search_articles_a8_2018"
     />
 
   <utility
-    component=".vocabulary.articles_vocabulary_factory"
-    name="wise_search_articles"
+    component=".vocabulary.articles_vocabulary_factory_a8"
+    name="wise_search_articles_a8"
     />
 
   <utility
-    component=".vocabulary.a8910_reporting_period"
-    name="wise_search_reporting_period"
+    component=".vocabulary.a8_reporting_period"
+    name="wise_search_reporting_period_a8"
+    />
+
+  <utility
+    component=".vocabulary.a9_reporting_period"
+    name="wise_search_reporting_period_a9"
+    />
+
+  <utility
+    component=".vocabulary.a10_reporting_period"
+    name="wise_search_reporting_period_a10"
     />
 
   <utility
@@ -95,6 +126,21 @@
   <utility
     component=".vocabulary.a4_mru_reporting_cycle_factory"
     name="wise_search_a4_mru_reporting_cycle_factory"
+    />
+
+  <utility
+    component=".vocabulary.a19_reporting_period"
+    name="wise_search_reporting_period_art19"
+    />
+
+  <utility
+    component=".vocabulary.a19_region_subregions"
+    name="wise_search_region_subregions_art19"
+    />
+
+  <utility
+    component=".vocabulary.a19_member_states"
+    name="wise_search_member_states_art19"
     />
 
 </configure>

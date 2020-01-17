@@ -8,14 +8,14 @@ from ..db import get_all_records
 from ..utils import group_query
 from .base import ItemDisplayForm
 from .interfaces import IA2012GesComponentsArt9
-from .utils import data_to_xls, register_form
+from .utils import data_to_xls, register_form_art9
 
 
-@register_form
 class A9Form(EmbeddedForm):
     """ Select the MarineUnitID for the Article 9 form
     """
-    record_title = title = 'Article 9 (GES determination)'
+    record_title = 'Article 9 (GES determination)'
+    # session_name = '2012'
     mapper_class = sql.MSFD9Descriptor
 
     fields = Fields(IA2012GesComponentsArt9)

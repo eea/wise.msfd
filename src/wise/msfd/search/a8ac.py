@@ -6,11 +6,11 @@ from ..base import (EmbeddedForm, MarineUnitIDSelectForm,
                     MarineUnitIDSelectForm2012)
 from .base import ItemDisplay, MultiItemDisplayForm
 from .interfaces import IA81Form
-from .utils import (data_to_xls, register_form, register_form_section,
+from .utils import (data_to_xls, register_form_a8_2012, register_form_section,
                     register_subform)
 
 
-@register_form
+@register_form_a8_2012
 class A81aForm(EmbeddedForm):
     """ Main form for A81a.
 
@@ -676,7 +676,7 @@ class A81aPhysicalItemDisplay(MultiItemDisplayForm):
 
 
 # Article 8.1c
-@register_form
+@register_form_a8_2012
 class A81cForm(MarineUnitIDSelectForm2012):
     """ Main form for A81c.
 

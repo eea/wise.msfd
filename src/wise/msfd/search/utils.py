@@ -8,23 +8,63 @@ from six import string_types
 import xlsxwriter
 from wise.msfd.utils import class_id, get_obj_fields
 
-FORMS_2018 = {}
 FORMS_ART4 = {}
-FORMS_ART8910 = {}
+FORMS_ART8 = {}
+FORMS_ART8_2012 = {}
+FORMS_ART8_2018 = {}
+FORMS_ART9 = {}
+FORMS_ART10 = {}
 FORMS_ART11 = {}
 FORMS_ART18 = {}
-FORMS = {}                         # main chapter 1 article form classes
+FORMS_ART19 = {}
 SUBFORMS = defaultdict(set)        # store subform references
 ITEM_DISPLAYS = defaultdict(set)   # store registration for item displays
 
 
-def register_form_2018(klass):
+def register_form_art19(klass):
+    """ Register form classes for article 19
+    2018 reporting year and 2012 reporting year
+    """
+
+    FORMS_ART19[class_id(klass)] = klass
+
+    return klass
+
+
+def register_form_art8(klass):
+    """ Register form classes for article 8
+    """
+
+    FORMS_ART8[class_id(klass)] = klass
+
+    return klass
+
+
+def register_form_art9(klass):
+    """ Register form classes for article 9
+    """
+
+    FORMS_ART9[class_id(klass)] = klass
+
+    return klass
+
+
+def register_form_art10(klass):
+    """ Register form classes for article 10
+    """
+
+    FORMS_ART10[class_id(klass)] = klass
+
+    return klass
+
+
+def register_form_a8_2018(klass):
     """ Register form classes for articles 8, 9, 10
 
     for reporting year 2018
     """
 
-    FORMS_2018[class_id(klass)] = klass
+    FORMS_ART8_2018[class_id(klass)] = klass
 
     return klass
 
@@ -35,16 +75,6 @@ def register_form_art4(klass):
     """
 
     FORMS_ART4[class_id(klass)] = klass
-
-    return klass
-
-
-def register_form_art8910(klass):
-    """ Registers the 2012 and 2018 main form for articles 8, 9, 10
-
-    """
-
-    FORMS_ART8910[class_id(klass)] = klass
 
     return klass
 
@@ -71,7 +101,7 @@ def register_form_art18(klass):
 
 def get_form(name):
     if name:
-        return FORMS[name]
+        return FORMS_ART8_2012[name]
 
 
 def register_subform(mainform):
@@ -117,14 +147,14 @@ def get_registered_form_sections(form):
     return ITEM_DISPLAYS[form.__class__]
 
 
-def register_form(klass):
+def register_form_a8_2012(klass):
     """ Registers a 'secondary' form class
 
     These are the forms implementing the 'Article 9 (GES determination)',
     'Article 10 (Targets)' and so on, for one of the 'chapters'.
     """
 
-    FORMS[class_id(klass)] = klass
+    FORMS_ART8_2012[class_id(klass)] = klass
 
     return klass
 

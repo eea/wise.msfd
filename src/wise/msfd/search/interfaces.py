@@ -21,17 +21,29 @@ class IItemDisplayForm(IEmbeddedForm):
         """
 
 
-class IArticleSelect(Interface):
+class IArticleSelectA8(Interface):
     article = Choice(title=u"Article",
                      required=False,
                      default='',
-                     vocabulary="wise_search_articles")
+                     vocabulary="wise_search_articles_a8")
 
 
-class IReportingPeriodSelect(Interface):
+class IReportingPeriodSelectA8(Interface):
     reporting_period = Choice(title=u"Reporting period",
                               required=False,
-                              vocabulary="wise_search_reporting_period")
+                              vocabulary="wise_search_reporting_period_a8")
+
+
+class IReportingPeriodSelectA9(Interface):
+    reporting_period = Choice(title=u"Reporting period",
+                              required=False,
+                              vocabulary="wise_search_reporting_period_a9")
+
+
+class IReportingPeriodSelectA10(Interface):
+    reporting_period = Choice(title=u"Reporting period",
+                              required=False,
+                              vocabulary="wise_search_reporting_period_a10")
 
 
 class IRecordSelect(Interface):
@@ -175,11 +187,11 @@ class IStartArticle4(Interface):
 
 # Articles 8, 9, 10
 # 2018 reporting year
-class IArticleSelect2018(Interface):
+class IArticleSelectA82018(Interface):
     article = Choice(title=u"Article",
                      required=False,
                      default='',
-                     vocabulary="wise_search_articles_2018")
+                     vocabulary="wise_search_articles_a8_2018")
 
 
 class ICountryCode(Interface):
@@ -293,4 +305,27 @@ class IGESComponentsA18(Interface):
         title=u"GES Component",
         required=False,
         value_type=Choice(vocabulary="wise_search_a18_ges_component")
+    )
+
+
+# Article 19
+class IArticle19ReportingPeriod(Interface):
+    reporting_period = Choice(title=u"Reporting period",
+                              required=False,
+                              vocabulary="wise_search_reporting_period_art19")
+
+
+class IRegionSubregionsArt19(Interface):
+    region_subregions = List(
+        title=u"Region and Subregion",
+        value_type=Choice(vocabulary="wise_search_region_subregions_art19"),
+        required=False,
+    )
+
+
+class ICountryArt19(Interface):
+    member_states = List(
+        title=u"Country",
+        value_type=Choice(vocabulary="wise_search_member_states_art19"),
+        required=False,
     )

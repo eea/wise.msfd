@@ -593,7 +593,6 @@ def marine_unit_id_vocab_factory(context):
     """
 
     # TODO: explain why this (calling from subform) is needed
-
     if hasattr(context, 'subform'):
         count, ids = context.subform.get_available_marine_unit_ids()
     else:
@@ -1069,7 +1068,7 @@ def a2012_ges_components_art9(context):
     mc = sql.MSFD9Descriptor
     conditions = []
 
-    mrus = context.get_form_data_by_key(context, 'marine_unit_ids')
+    mrus = context.subform.get_form_data_by_key(context, 'marine_unit_ids')
 
     if mrus:
         conditions.append(mc.MarineUnitID.in_(mrus))
@@ -1113,3 +1112,4 @@ def a18_ges_component(context):
     ges_components = context.get_ges_components()
 
     return vocab_from_values(ges_components)
+

@@ -16,10 +16,14 @@ from ..utils import scan
 from .a11 import StartArticle11Form
 from .a1314 import StartArticle1314Form
 from .a18 import StartArticle18Form
+from .a19 import StartArticle19Form
 from .a4 import A4Form, A4MemberStatesForm
+from .a9 import A9Form
+from .a10 import A10Form
 from .base import MAIN_FORMS, ItemDisplayForm, MainForm
 from .utils import (data_to_xls, get_form, register_form_art4,
-                    register_form_art8910)
+                    register_form_art8, register_form_art9,
+                    register_form_art10)
 
 
 class StartView(BrowserView, BasePublicPage):
@@ -253,14 +257,14 @@ class RegionalCoopItemDisplay(ItemDisplayForm):
         return res
 
 
-class StartArticle8910Form(MainForm):
+class StartArticle8Form(MainForm):
     """ Select one of the articles: 8(a,b,c,d)/9/10
     """
 
-    name = 'msfd-c14'
+    name = 'msfd-a8'
     session_name = '2012'
 
-    fields = Fields(interfaces.IReportingPeriodSelect)
+    fields = Fields(interfaces.IReportingPeriodSelectA8)
 
     def get_subform(self):
         klass = self.data.get('reporting_period')
@@ -270,14 +274,47 @@ class StartArticle8910Form(MainForm):
         return klass(self, self.request)
 
 
-@register_form_art8910
-class StartArticle89102012Form(EmbeddedForm):
+class StartArticle9Form(MainForm):
+    """ Select one of the articles: 8(a,b,c,d)/9/10
+    """
+
+    name = 'msfd-a9'
+    session_name = '2012'
+
+    fields = Fields(interfaces.IReportingPeriodSelectA9)
+
+    def get_subform(self):
+        klass = self.data.get('reporting_period')
+        session_name = klass.session_name
+        threadlocals.session_name = session_name
+
+        return klass(self, self.request)
+
+
+class StartArticle10Form(MainForm):
+    """ Select one of the articles: 8(a,b,c,d)/9/10
+    """
+
+    name = 'msfd-a10'
+    session_name = '2012'
+
+    fields = Fields(interfaces.IReportingPeriodSelectA10)
+
+    def get_subform(self):
+        klass = self.data.get('reporting_period')
+        session_name = klass.session_name
+        threadlocals.session_name = session_name
+
+        return klass(self, self.request)
+
+
+@register_form_art8
+class StartArticle82012Form(EmbeddedForm):
     """ Select one of the article: 8(a,b,c,d)/9/10
     """
     title = "2012 reporting exercise"
-    # name = 'msfd-c1'
 
-    fields = Fields(interfaces.IArticleSelect)
+    fields = Fields(interfaces.IArticleSelectA8)
     session_name = '2012'
     permission = 'zope2.View'
 
@@ -290,7 +327,7 @@ class RegionForm(EmbeddedForm):
     """ Select the memberstate, region, area form
     """
 
-    fields = Fields(interfaces.IStartArticles8910)
+    fields = Fields(interfaces.IRegionSubregions)
     fields['region_subregions'].widgetFactory = CheckBoxFieldWidget
 
     def get_subform(self):
@@ -317,36 +354,47 @@ class AreaTypesForm(EmbeddedForm):
     fields['area_types'].widgetFactory = CheckBoxFieldWidget
 
     def get_subform(self):
-        # needed for marine unit ids vocabulary
-        # TODO: is this still needed?
-        # self.data['member_states'] = self.context.data['member_states']
-        # self.data['region_subregions'] = \
-        #     self.context.context.data['region_subregions']
+        main_form = self.get_main_form().name
 
-        # data = self.get_main_form().data
-        # if data['article'] == 'a4form':
-        #     klass = get_form(data['article'])
-        #
-        #     return klass(self, self.request)
-
-        if self.get_main_form().name == 'msfd-mru':
+        if main_form == 'msfd-mru':
             return A4Form(self, self.request)
 
-        # data = self.get_main_form().data
-        # klass = get_form(data['article'])
+        if main_form == 'msfd-a9':
+            return A9Form(self, self.request)
+
+        if main_form == 'msfd-a10':
+            return A10Form(self, self.request)
 
         article = self.get_form_data_by_key(self, 'article')
         klass = get_form(article)
 
         return super(AreaTypesForm, self).get_subform(klass)
 
-        # return MarineUnitIDsForm(self, self.request)
-
     def get_available_marine_unit_ids(self):
         return self.subform.get_available_marine_unit_ids()
 
 
-StartArticle8910View = wrap_form(StartArticle8910Form, MainFormWrapper)
+StartArticle8View = wrap_form(StartArticle8Form, MainFormWrapper)
+
+
+@register_form_art9
+class StartArticle92012Form(RegionForm):
+    title = "2012 reporting exercise"
+    permission = "zope2.View"
+    session_name = "2012"
+
+
+StartArticle9View = wrap_form(StartArticle9Form, MainFormWrapper)
+
+
+@register_form_art10
+class StartArticle102012Form(RegionForm):
+    title = "2012 reporting exercise"
+    permission = "zope2.View"
+    session_name = "2012"
+
+
+StartArticle10View = wrap_form(StartArticle10Form, MainFormWrapper)
 
 
 class MarineUnitIDsForm(EmbeddedForm):
@@ -384,13 +432,12 @@ StartArticle11View = wrap_form(StartArticle11Form, MainFormWrapper)
 StartArticle1314View = wrap_form(StartArticle1314Form, MainFormWrapper)
 
 
-@register_form_art8910
-class StartArticle89102018Form(EmbeddedForm):
+@register_form_art8
+class StartArticle82018Form(EmbeddedForm):
     title = "2018 reporting exercise"
-    record_title = 'Articles 8, 9, 10'
-    # name = 'msfd-c4'
+    record_title = 'Article 8'
 
-    fields = Fields(interfaces.IArticleSelect2018)
+    fields = Fields(interfaces.IArticleSelectA82018)
     session_name = '2018'
     permission = 'wise.ViewReports'
 
@@ -409,6 +456,7 @@ class StartArticle89102018Form(EmbeddedForm):
 # StartArticle89102018View = wrap_form(StartArticle89102018Form, MainFormWrapper)
 
 StartArticle18View = wrap_form(StartArticle18Form, MainFormWrapper)
+StartArticle19View = wrap_form(StartArticle19Form, MainFormWrapper)
 
 # discover and register associated views
 
