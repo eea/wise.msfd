@@ -86,51 +86,34 @@ class Article19Display(ItemDisplayForm):
         return country
 
     def download_results(self):
-        mc_descr = sql2018.ART18MeasureProgressDescriptor
-        mc_countries = sql2018.ReportedInformation
+        mc_ids = sql.MetadataArt193
+        mc = self.mapper_class
 
         countries = self.get_form_data_by_key(self, 'member_states')
-        ges_comps = self.get_form_data_by_key(self, 'ges_component')
+        regions = self.get_form_data_by_key(self, 'region_subregions')
 
         conditions = []
+
+        if regions:
+            conditions.append(mc_ids.Region.in_(regions))
 
         if countries:
-            conditions.append(mc_countries.CountryCode.in_(countries))
+            conditions.append(mc_ids.Country.in_(countries))
 
-        count, report_ids = db.get_all_records(
-            mc_countries,
+        _, metadata = db.get_all_records(
+            mc_ids,
             *conditions
         )
-        report_ids = [x.Id for x in report_ids]
+        ids_needed = [x.Id for x in metadata]
 
-        conditions = []
-        if ges_comps:
-            conditions.append(mc_descr.DescriptorCode.in_(ges_comps))
-
-        count, measure_progress_ids = db.get_all_records(
-            mc_descr,
-            *conditions
-        )
-        measure_progress_ids = [
-            x.IdMeasureProgress
-            for x in measure_progress_ids
-        ]
-
-        count, measure_prog = db.get_all_records(
-            self.mapper_class,
-            self.mapper_class.IdReportedInformation.in_(report_ids),
-            self.mapper_class.Id.in_(measure_progress_ids),
-        )
-        id_measure = [x.Id for x in measure_prog]
-
-        count, measure_prog_descr = db.get_all_records(
-            mc_descr,
-            mc_descr.IdMeasureProgress.in_(id_measure)
+        _, metadata_features = db.get_all_records(
+            mc,
+            mc.c.IdMetadataArt19_3.in_(ids_needed)
         )
 
         xlsdata = [
-            ('ART18MeasureProgres', measure_prog),  # worksheet title, row data
-            ('ART18MeasureProgressDescriptor', measure_prog_descr),
+            ('MetadataArt193', metadata),  # worksheet title, row data
+            ('MetadataFeatures', metadata_features)
         ]
 
         return data_to_xls(xlsdata)

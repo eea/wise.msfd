@@ -594,7 +594,7 @@ class A2018Art81abDisplay(ItemDisplayForm):
             mc_countries,
             and_(mapper_class.MarineReportingUnit.in_(marine_units),
                  mc_countries.CountryCode.in_(member_states),
-                 mc_countries.Id.in_(self.latest_import_ids_2018)
+                 mc_countries.Id.in_(self.latest_import_ids_2018())
                  )
         )
         id_marine_units = [x.Id for x in marine_unit]

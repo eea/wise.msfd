@@ -23,7 +23,8 @@ class A10Form(EmbeddedForm):
         return A10MRUForm(self, self.request)
 
     def download_results(self):
-        muids = self.get_marine_unit_ids()
+        # muids = self.get_marine_unit_ids()
+        _, muids = self.subform.get_available_marine_unit_ids()
         count, data = db.get_all_records(
             self.mapper_class,
             self.mapper_class.MarineUnitID.in_(muids)

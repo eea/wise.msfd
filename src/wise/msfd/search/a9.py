@@ -25,7 +25,8 @@ class A9Form(EmbeddedForm):
         return A9MRUForm(self, self.request)
 
     def download_results(self):
-        muids = self.get_marine_unit_ids()
+        # muids = self.get_marine_unit_ids()
+        _, muids = self.subform.get_available_marine_unit_ids()
         ges_comps = self.get_form_data_by_key(self, 'ges_components')
 
         count, data = get_all_records(
