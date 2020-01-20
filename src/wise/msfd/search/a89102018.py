@@ -1497,10 +1497,9 @@ class A2018IndicatorsMarineUnitId(MarineUnitIDSelectForm):
 class A2018IndicatorsDisplay(ItemDisplayForm):
     title = "Indicator Display Form"
     extra_data_template = ViewPageTemplateFile('pt/extra-data-pivot.pt')
-
     conditions_ind_assess = list()
-
     css_class = "left-side-form"
+    blacklist_labels = ('IndicatorCode',)
 
     reported_date_info = {
         'mapper_class': sql2018.ReportedInformation,

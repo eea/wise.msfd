@@ -63,6 +63,8 @@ class Article19Display(ItemDisplayForm):
     mapper_class = sql.t_MetadataFeatures
     css_class = 'left-side-form'
 
+    blacklist = ('IdMetadataArt19_3', )
+
     def get_reported_date(self):
         date = self.item.DateStamp
         try:
