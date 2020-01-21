@@ -311,6 +311,7 @@ class NationalSummaryView(BaseNatSummaryView):
         ]
         # cover = resource_filename('wise.msfd',
         #                           'compliance/nationalsummary/data/cover.html')
+
         doc = pdfkit.from_string(
             self.report_html, False, options=options,
             # cover=cover,
