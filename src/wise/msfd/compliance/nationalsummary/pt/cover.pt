@@ -1,0 +1,18 @@
+<head>
+  <link rel="stylesheet" type="text/css" href="/++resource++static_css/compliance.css">
+</head>
+<body></body>
+<div class="national-summary-cover">
+  <div class="primary-title">Article 12 Technical Assessment</div>
+  <div class="secondary-title">of the MSFD 2018 obligations</div>
+  <div class="country-name"
+       tal:content="view/country_name">Germany</div>
+  <div class="modified-date"
+      tal:content="options/date">DD/MM/YYY</div>
+  <div class="process-status">
+    <span tal:content="view/get_status"></span><span> version</span>
+  </div>
+  <div class="logos">
+    <img src="https://wise-test.eionet.europa.eu/marine/compliance-module/national-summaries/cover_logos.png">
+  </div>
+</div>

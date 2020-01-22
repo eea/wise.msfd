@@ -31,6 +31,14 @@ from .odt_utils import (create_heading, create_paragraph, create_table,
 logger = logging.getLogger('wise.msfd')
 
 
+class NationalSummaryCover(BaseNatSummaryView):
+
+    template = ViewPageTemplateFile('pt/cover.pt')
+
+    def __call__(self):
+        return self.template(date=self.date(context=self.context))
+
+
 class SummaryAssessment(BaseNatSummaryView):
     """ Implementation of section 2. Summary of the assessment """
 
@@ -264,6 +272,24 @@ class NationalSummaryView(BaseNatSummaryView):
 
     render_header = True
 
+    def _get_css(self):
+        return [
+            resource_filename('wise.theme',
+                              'static/wise/css/main.css'),
+            resource_filename('wise.msfd',
+                              'static/wise/dist/css/compliance.css'),
+        ]
+
+    def _get_cover(self):
+        absolute_url = self.context.absolute_url()
+        cover_url = absolute_url + '/nat-sum-cover'
+
+        if 'localhost' in absolute_url:
+            cover_url = cover_url.replace('localhost:5080',
+                                          'office.pixelblaster.ro:4880')
+
+        return cover_url
+
     def get_document(self):
         result = BytesIO()
         document = odf_new_document('text')
@@ -303,18 +329,12 @@ class NationalSummaryView(BaseNatSummaryView):
 
     def download_pdf(self):
         options = {'encoding': "UTF-8"}
-        css = [
-            resource_filename('wise.theme',
-                              'static/wise/css/main.css'),
-            resource_filename('wise.msfd',
-                              'static/wise/dist/css/compliance.css'),
-        ]
-        # cover = resource_filename('wise.msfd',
-        #                           'compliance/nationalsummary/data/cover.html')
+        css = self._get_css()
+        cover = self._get_cover()
 
         doc = pdfkit.from_string(
             self.report_html, False, options=options,
-            # cover=cover,
+            cover=cover,
             css=css
         )
         sh = self.request.response.setHeader

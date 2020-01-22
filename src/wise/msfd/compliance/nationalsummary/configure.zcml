@@ -11,7 +11,7 @@
     name="nat-summary-start"
     class=".main.NationalSummaryOverview"
     template="./pt/nat-sum-start.pt"
-    permission="zope2.View"
+    permission="wise.ViewAssessmentData"
     />
 
   <!-- View for a country -->
@@ -21,6 +21,15 @@
     class=".reportdata.NationalSummaryView"
     template="./pt/report-data-view.pt"
     permission="wise.ViewAssessmentData"
+    />
+
+  <!-- View for pdf cover -->
+  <browser:page
+    for="..interfaces.INationalSummaryCountryFolder"
+    name="nat-sum-cover"
+    class=".reportdata.NationalSummaryCover"
+    template="./pt/cover.pt"
+    permission="zope2.View"
     />
 
 </configure>

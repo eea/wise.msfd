@@ -298,8 +298,8 @@ class Introduction(BaseNatSummaryView):
     def header_table_rows(self):
         rows = [
             (u'Country', self.country_name),
-            (u'Date', self.date),
-            (u'Status', self.status),
+            (u'Date', self.date(context=self.context)),
+            (u'Status', self.get_status()),
             (u'Logos', ""),
             (u'Disclaimer', self.disclaimer),
             (u'Authors', self.authors),
@@ -352,20 +352,6 @@ class Introduction(BaseNatSummaryView):
         self.report_hystory_data = view.report_hystory_data
 
         return rendered_view
-
-    @property
-    def date(self):
-        # date = datetime.now()
-        date = self.context.modified()
-        date = date.strftime("%d %B %Y")
-
-        return date
-
-    @property
-    def status(self):
-        status = "Draft"
-
-        return status
 
     @property
     def information_memberstate(self):

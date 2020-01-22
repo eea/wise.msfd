@@ -24,6 +24,15 @@ class BaseNatSummaryView(BaseComplianceView):
 
     ARTICLE_ORDER = ('Art9', 'Art8', 'Art10')
 
+    def date(self, context=None):
+        if not context:
+            context = self.context
+
+        date = context.modified()
+        date = date.strftime("%d %B %Y")
+
+        return date
+
     def get_odt_data(self, document):
         return []
 
