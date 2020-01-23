@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 from io import BytesIO
 from pkg_resources import resource_filename
 
@@ -35,8 +37,18 @@ class NationalSummaryCover(BaseNatSummaryView):
 
     template = ViewPageTemplateFile('pt/cover.pt')
 
+    def assess_date(self):
+        attr = 'date_assessed'
+        if not hasattr(self._country_folder, attr):
+            return '-'
+
+        date_assessed = getattr(self._country_folder, attr)
+        date_assessed = self._format_date(date_assessed)
+
+        return date_assessed
+
     def __call__(self):
-        return self.template(date=self.date(context=self.context))
+        return self.template(date=self.assess_date())
 
 
 class SummaryAssessment(BaseNatSummaryView):
@@ -57,9 +69,14 @@ class SummaryAssessment(BaseNatSummaryView):
         )
 
     def get_descr_folders(self, region_folder):
-        return self.filter_contentvalues_by_iface(
+        contents = self.filter_contentvalues_by_iface(
             region_folder, IDescriptorFolder
         )
+
+        # D1 Biodiversity is redundant as assessments are all at finer level
+        filtered_contents = [x for x in contents if x.id != 'd1']
+
+        return filtered_contents
 
     def get_article_folders(self, descr_folder):
         article_folders = self.filter_contentvalues_by_iface(
@@ -109,7 +126,7 @@ class SummaryAssessment(BaseNatSummaryView):
 
     def get_odt_data(self, document):
         res = []
-        headers = ('Descriptor', 'Article 9 - Ges Determination',
+        headers = ('Descriptor', 'Article 9 - GES Determination',
                    'Article 8 - Initial Assessment',
                    'Article 10 - Environmental Targets')
 
@@ -328,7 +345,12 @@ class NationalSummaryView(BaseNatSummaryView):
         return doc
 
     def download_pdf(self):
-        options = {'encoding': "UTF-8"}
+        options = {
+            'footer-left': "Page",
+            'footer-font-size': '7',
+            'footer-right': '[page] of [topage]',
+            'encoding': "UTF-8"
+        }
         css = self._get_css()
         cover = self._get_cover()
 
@@ -405,12 +427,6 @@ class NationalSummaryView(BaseNatSummaryView):
             return self.download_pdf()
 
         if 'translate' in self.request.form:
-            # for table in self.tables:
-            #     if (hasattr(table, 'is_translatable')
-            #             and table.is_translatable):
-            #         view = table.view
-            #         view.auto_translate()
-
             for value in self._translatable_values:
                 retrieve_translation(self.country_code, value)
 

@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 import logging
 from collections import defaultdict, namedtuple
 from datetime import datetime
@@ -61,6 +59,9 @@ class AssessmentAreas2018(BaseNatSummaryView):
         for row in data:
             description = row.nameText or row.nameTxtInt or ""
             translation = get_translated(description, self.country_code) or ""
+            if not translation:
+                retrieve_translation(self.country_code, description)
+
             self._translatable_values.append(description)
 
             res.append((row.Region, row.spZoneType, row.thematicId,
@@ -77,7 +78,7 @@ class AssessmentAreas2018(BaseNatSummaryView):
 
 
 class ReportingHistoryTable(BaseNatSummaryView):
-    """ Reporting history and performance
+    """ Implementation for the reporting history table
     """
 
     template = ViewPageTemplateFile('pt/report-history-compound-table.pt')
@@ -189,7 +190,8 @@ class ReportingHistoryTable(BaseNatSummaryView):
 
 
 class ReportedInformationTable(BaseNatSummaryView):
-    """ Reporting information
+    """ Alternate implementation for the reporting history table
+    Reads data from sql2018.ReportedInformation
     """
 
     template = ViewPageTemplateFile('pt/report-history-compound-table.pt')
@@ -218,8 +220,8 @@ class ReportedInformationTable(BaseNatSummaryView):
         tmpl = "<a href={} target='_blank'>{}</a>"
         location = location.replace(filename, '')
 
-        return location
-        # return tmpl.format(location, location)
+        # return location
+        return tmpl.format(location, location)
 
     def format_date(self, date):
         if not date:
@@ -239,8 +241,7 @@ class ReportedInformationTable(BaseNatSummaryView):
         return headers
 
     def get_article_rows(self):
-        # Group the data by report type, envelope, report due, report date
-        # and report delay
+        # Group the data by envelope, report due, report date and report delay
         data = self.data
         rows = []
 
@@ -249,6 +250,11 @@ class ReportedInformationTable(BaseNatSummaryView):
         for row in data:
             filename = row.get('ReportedFileLink').split('/')[-1]
             envelope = self.location_url(row.get('ReportedFileLink'), filename)
+
+            # Article 18 files not relevant for this report, exclude them
+            if 'art18' in envelope:
+                continue
+
             report_due = datetime(year=2018, month=10, day=15).date()
             report_date = row.get('ReportingDate')
             report_delay = report_due - report_date
@@ -292,55 +298,6 @@ class Introduction(BaseNatSummaryView):
     def document_title(self):
         text = u"Marine Strategy Framework Directive - Article 12 technical " \
                u"assessment of the 2018 updates of Articles 8, 9 and 10"
-
-        return text
-
-    def header_table_rows(self):
-        rows = [
-            (u'Country', self.country_name),
-            (u'Date', self.date(context=self.context)),
-            (u'Status', self.get_status()),
-            (u'Logos', ""),
-            (u'Disclaimer', self.disclaimer),
-            (u'Authors', self.authors),
-            (u'Contract', self.contract),
-            (u'Contact', self.contact)
-        ]
-
-        return rows
-
-    @property
-    def disclaimer(self):
-        text = u"The opinions expressed in this document are the sole " \
-               u"responsibility of the authors and do not necessarily " \
-               u"represent the official position of the European Commission."
-
-        return text
-
-    @property
-    def authors(self):
-        text = u"Paola Banfi, Guillermo Gea, Lucille Labayle, David Landais, "\
-               u"Melanie Muro, Goncalo Moreira, Alicia McNeil, and " \
-               u"Imbory Thomas. The main authors are Richard White (D1, 4, 6)"\
-               u", Elena San Martin (D2), Suzannah Walmsley (D3), " \
-               u"William Parr (D5), Christophe Le Visage (D7), " \
-               u"Norman Green (D8 and 9), Annemie Volckaert (D10) " \
-               u"and Frank Thomsen (D11)."
-
-        return text
-
-    @property
-    def contract(self):
-        text = u"""No 11.0661/ENV/2018/791580/SER/ENV.C.2."""
-
-        return text
-
-    @property
-    def contact(self):
-        text = u"Milieu Consulting Sprl, Chaussée de Charleroi 112, " \
-               u"B-1060, Brussels. Tel: +32 2 506 1000; " \
-               u"fax : +32 2 514 3603; e-mail: melanie.muro@milieu.be " \
-               u"and paola.banfi@milieu.be; web address: www.milieu.be."
 
         return text
 

@@ -4,6 +4,12 @@
        xmlns:security="http://namespaces.plone.org/supermodel/security"
        xmlns="http://namespaces.plone.org/supermodel/schema">
     <schema>
+        <field name="date_assessed"
+               type="zope.schema.Date">
+            <description/>
+            <required>False</required>
+            <title>Date assessed</title>
+        </field>
         <field name="scope_of_marine_waters"
                type="plone.app.textfield.RichText">
             <description/>
@@ -15,7 +21,7 @@
             <description/>
             <required>False</required>
             <title>Assessment methodology</title>
-            <default>To allow for an effective comparison and the monitoring of progress, the assessment covered the same broad criteria as the previous Article 12 assessment  which was carried out between 2012 and 2014:
+            <default>To allow for an effective comparison and the monitoring of progress, the assessment of the Member State's reports covered the same broad criteria as the previous Article 12 assessment which was carried out between 2012 and 2014:
     &lt;ul&gt;
       &lt;li&gt;Adequacy: assessing whether the reported information is good enough to meet the objectives of the Directive and the technical requirements of Articles 8, 9 and 10.&lt;/li&gt;
       &lt;li&gt;Consistency across the Marine Strategy (hereinafter consistency): assessing the logical flow of reporting of one Member State for Articles 8, 9 and 10, including the identification of missing links, conflicts and gaps.&lt;/li&gt;

@@ -31,14 +31,22 @@ DESCRIPTOR_SUMMARY = namedtuple(
 class DescriptorLevelAssessments(BaseNatSummaryView, AssessmentDataMixin):
 
     template = ViewPageTemplateFile('pt/descriptor-level-assessments.pt')
-
     overall_scores = {}
+    article_titles = {
+        'Art9': 'Article 9 - GES Determination',
+        'Art8': 'Article 8 - Initial Assessment',
+        'Art10': 'Article 10 - Environmental Targets'
+    }
 
     descriptor_types = [
         ("Pressure-based descriptors", ['D2', 'D5', 'D7', 'D9', 'D10', 'D11']),
         ("State-based descriptors", ['D1.1', 'D1.2', 'D1.3', 'D1.4', 'D1.5',
                                      'D3', 'D1.6', 'D6', 'D4'])
     ]
+
+    def get_article_title(self, article):
+
+        return self.article_titles[article]
 
     def get_assessment_data_2012(self, region_code, country_name,
                                  descriptor, article):

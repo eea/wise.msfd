@@ -1,15 +1,4 @@
 <div class="nat-sum-introduction">
-  <h3 tal:content="view/document_title">Main title</h3>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead></thead>
-    <tbody>
-      <tr tal:repeat="row view/header_table_rows">
-        <th tal:content="python: row[0]">header</th>
-        <td tal:content="python: row[1]">data</td>
-      </tr>
-    </tbody>
-  </table>
-
   <h4>1. Introduction</h4>
   <h5>1.1 Information reported by the Member State</h5>
   <div tal:content="view/information_memberstate"></div>
