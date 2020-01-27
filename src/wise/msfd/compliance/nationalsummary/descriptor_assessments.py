@@ -155,11 +155,15 @@ class DescriptorLevelAssessments(BaseNatSummaryView, AssessmentDataMixin):
             self.get_color_for_score(overallscore_val)
         )
 
-        assessment_summary = assess_data.get(
-            '{}_assessment_summary'.format(article)
+        assessment_summary = (
+            assess_data.get('{}_assessment_summary'.format(article)) or '-'
         )
-        progress_assessment = assess_data.get('{}_progress'.format(article))
-        recommendations = assess_data.get('{}_recommendations'.format(article))
+        progress_assessment = (
+            assess_data.get('{}_progress'.format(article)) or '-'
+        )
+        recommendations = (
+            assess_data.get('{}_recommendations'.format(article)) or '-'
+        )
 
         score_2012, conclusion_2012 = self.get_assessment_data_2012(
             region_code, country_name, descriptor, article

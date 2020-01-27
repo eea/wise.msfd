@@ -1,10 +1,10 @@
 <div tal:define="data options/data"
      class="nat-sum-descriptor-level-assessments"
      id="container-assessment-data-2018">
-  <h4>4. Descriptor-level assessments</h4>
+  <h3>Descriptor-level assessments</h3>
 
   <div tal:repeat="region_section data" class="report-section">
-    <h5 tal:content="python:region_section[0]">Baltic Sea</h5>
+    <h4 tal:content="python:region_section[0]">Baltic Sea</h4>
 
     <tal:rep tal:repeat="descriptor_type python: view.descriptor_types"
         tal:define="descriptor_section python:region_section[1]">
@@ -15,7 +15,7 @@
 
           <div tal:repeat="article_section python:descriptor_data[1]">
             <tal:block tal:define="article_data python: article_section[1]">
-              <h6 tal:content="python: view.get_article_title(article_section[0])">Article 8</h6>
+              <p class="article-title" tal:content="python: view.get_article_title(article_section[0])">Article 8</p>
               <div>
                 <div>
                   <label>Assessment summary</label>
@@ -30,43 +30,51 @@
                   <div tal:content="python: article_data.recommendations">Long text</div>
                 </div>
               </div>
-
-              <table class="table table-condensed assessment-data-table">
-                <tbody>
-                  <tr id="asssessment-overview-form-comments">
-                    <script src="/++resource++msfd/js/assessment-edit.js"></script>
-
-                    <td tal:condition="python: False" class="overall-headers fixed-right">
-                      <div>Adequacy score (%)</div>
-                      <div>Consistency score (%)</div>
-                      <div>Coherence score (%)</div>
-                      <div>Overall conclusion 2018</div>
-                      <div>Overall adequacy conclusion 2012</div>
-                      <div>Adequacy change since 2012</div>
-                    </td>
-                    <td class="overall-values fixed-right" style="width: 250px;">
+              <div class="ast-header-data">
+                <table class="table table-condensed assessment-data-table">
+                  <tr>
+                    <td>Adequacy score</td>
+                    <td>Consistency score</td>
+                    <td>Coherence score</td>
+                    <td>Overall conclusion 2018</td>
+                    <td>Overall adequacy conclusion 2012</td>
+                    <td>Adequacy change since 2012</td>
+                  </tr>
+                  <tr>
+                    <td class="overall-values">
                       <div tal:attributes="class python: 'as-value as-value-{}'.format(article_data.adequacy[1])">
-                        Adequacy: <span tal:content="python: article_data.adequacy[0]">Good (3)</span>
+                        <span tal:content="python: article_data.adequacy[0]">Good (3)</span>
                       </div>
+                    </td>
+                    <td class="overall-values">
                       <div tal:attributes="class python: 'as-value as-value-{}'.format(article_data.consistency[1])">
-                        Consistency: <span tal:content="python: article_data.consistency[0]">Very good (4)</span>
+                        <span tal:content="python: article_data.consistency[0]">Very good (4)</span>
                       </div>
+                    </td>
+                    <td class="overall-values">
                       <div tal:attributes="class python: 'as-value as-value-{}'.format(article_data.coherence[1])">
-                        Coherence: <span tal:content="python: article_data.coherence[0]"> Poor (2)</span>
+                        <span tal:content="python: article_data.coherence[0]"> Poor (2)</span>
                       </div>
+                    </td>
+                    <td class="overall-values">
                       <div tal:attributes="class python: 'as-value as-value-{}'.format(article_data.overall_score_2018[1])">
-                        Overall score 2018: <span tal:content="python: article_data.overall_score_2018[0]">Poor (2)</span>
+                        <span tal:content="python: article_data.overall_score_2018[0]">Poor (2)</span>
                       </div>
+                    </td>
+                    <td class="overall-values">
                       <div tal:attributes="class python: 'as-value as-value-{}'.format(article_data.overall_score_2012[1])">
-                        Adequacy score 2012: <span tal:content="python: article_data.overall_score_2012[0]">Adequate (3)</span>
+                        <span tal:content="python: article_data.overall_score_2012[0]">Adequate (3)</span>
                       </div>
-                      <div>
-                        Adequacy change since 2012: <span tal:content="python: article_data.change_since_2012">1</span>
+                    </td>
+                    <td class="overall-values">
+                      <div class="as-value">
+                        <span tal:content="python: article_data.change_since_2012">1</span>
                       </div>
                     </td>
                   </tr>
-                </tbody>
-              </table>
+                </table>
+
+              </div>
             </tal:block>
           </div>
         </tal:block>

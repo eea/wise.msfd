@@ -349,6 +349,44 @@
 
 // National summary
 .national-summary-section {
+  /* numbering headings */
+  counter-reset: H3; 	/* Create the counter for H1 */
+
+  h3:before {
+    content: counter(H3) ". "; 	/* Print the H1 number */
+    counter-increment: H3; 	/* Add 1 to next H1 */
+  }
+
+  h3 { counter-reset: H4; }
+  h4:before {
+    content: counter(H3) "." counter(H4) " ";
+    counter-increment: H4;
+  }
+
+  h4 { counter-reset: H5; }
+  h5:before {
+    content: counter(H3) "." counter(H4) "." counter(H5) " ";
+    counter-increment: H5;
+  }
+
+  h5 { counter-reset: H6; }
+  h6:before {
+    content: counter(H3) "." counter(H4) "." counter(H5) "." counter(H6) " ";
+    counter-increment: H6;
+  }
+
+  ul {
+    list-style-type: disc;
+    margin-left: 2em;
+
+    li {
+      margin-bottom: 0.25em;
+      line-height: 1.5em;
+      display: list-item;
+      list-style-type: disc;
+    }
+  }
+
   &.report-page-view .report-section {
     margin-top: initial;
     padding: initial;
@@ -378,10 +416,21 @@
 
   .nat-sum-descriptor-level-assessments,
   .nat-sum-summary-assessment {
-    .overall-values {
-      width: 25% !important;
+    label {
+      margin: 0;
     }
+
+    .overall-values {
+      //width: 25% !important;
+    }
+
+    .article-title {
+      font-size: 1.2em;
+      margin: 0.5em 0 0 0;
+    }
+
     .ast-header-data {
+      margin-top: 0.5em;
       padding: 0px !important;
 
       h6 {
@@ -395,6 +444,11 @@
           width: initial;
           vertical-align: middle;
           padding: 5px;
+        }
+        .as-value {
+            height: 30px !important;
+            display: flex;
+            align-items: center;
         }
         div.gescomp.as-value {
           width: initial;

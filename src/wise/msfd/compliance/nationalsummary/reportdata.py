@@ -346,10 +346,14 @@ class NationalSummaryView(BaseNatSummaryView):
 
     def download_pdf(self):
         options = {
-            'footer-left': "Page",
+            'margin-top': '0.5in',
+            'margin-right': '0.5in',
+            'margin-bottom': '0.5in',
+            'margin-left': '0.5in',
+            # 'footer-left': "Page",
             'footer-font-size': '7',
-            'footer-right': '[page] of [topage]',
-            'encoding': "UTF-8"
+            'footer-right': 'Page [page] of [topage]',
+            'encoding': "UTF-8",
         }
         css = self._get_css()
         cover = self._get_cover()

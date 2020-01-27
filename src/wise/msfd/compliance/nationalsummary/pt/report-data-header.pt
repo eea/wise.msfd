@@ -47,6 +47,7 @@
         <button name="edit-data" class="btn btn-primary">Edit</button>
         <button name="download" class="btn btn-primary">Download as document (odt)</button>
         <button name="download_pdf" class="btn btn-primary">Download as PDF</button>
+        <a class="btn btn-primary" href="./nat-sum-cover" target="_blank">Preview PDF cover</a>
         <button name="translate" class="btn btn-secondary"
           tal:condition="view/can_view_assessment_data">Auto-translate</button>
       </form>
