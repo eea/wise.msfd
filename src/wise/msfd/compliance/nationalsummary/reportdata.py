@@ -307,6 +307,14 @@ class NationalSummaryView(BaseNatSummaryView):
 
         return cover_url
 
+    def _get_toc(self):
+        file = resource_filename('wise.msfd',
+                                 'data/pdf_toc.xsl'),
+
+        toc = {"xsl-style-sheet": file}
+
+        return toc
+
     def get_document(self):
         result = BytesIO()
         document = odf_new_document('text')
@@ -357,11 +365,14 @@ class NationalSummaryView(BaseNatSummaryView):
         }
         css = self._get_css()
         cover = self._get_cover()
+        toc = self._get_toc()
 
         doc = pdfkit.from_string(
             self.report_html, False, options=options,
             cover=cover,
-            css=css
+            toc=toc,
+            css=css,
+            cover_first=True
         )
         sh = self.request.response.setHeader
 

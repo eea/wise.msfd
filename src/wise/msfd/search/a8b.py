@@ -16,7 +16,7 @@ class A81bForm(EmbeddedForm):
     Allows selecting between Extraction of fish, seaweed, etc
     """
 
-    record_title = title = 'Article 8.1b (Analysis of pressure impacts)'
+    record_title = title = 'Article 8.1b (Analysis of pressures & impacts)'
     fields = Fields(IA81Form)
 
     reported_date_info = {
