@@ -39,7 +39,8 @@ class A81aForm(EmbeddedForm):
 class A81aEcoSubForm(MarineUnitIDSelectForm2012):
     """ Select the MarineUnitID for the Article 8.1a form
     """
-    title = 'D4 - Ecosystem(s)'
+    # title = 'D4 - Ecosystem(s)'
+    title = 'Ecosystem(s)'
     mapper_class = sql.MSFD8aEcosystem
 
     def get_subform(self):
@@ -149,7 +150,8 @@ class A81aEcosystemAsessment(ItemDisplay):
 class A81aFunctSubForm(MarineUnitIDSelectForm2012):
     """ Select the MarineUnitID for the Article 8.1a form
     """
-    title = 'D1 - Functional group(s)'
+    # title = 'D1 - Functional group(s)'
+    title = 'Functional group(s)'
     mapper_class = sql.MSFD8aFunctional
 
     def get_subform(self):
@@ -259,7 +261,8 @@ class A81aFunctionalGroupAsessment(ItemDisplay):
 class A81aHabitatSubForm(MarineUnitIDSelectForm2012):
     """ Select the MarineUnitID for the Article 8.1a form
     """
-    title = 'D6 - Habitat(s)'
+    # title = 'D6 - Habitat(s)'
+    title = 'Habitat(s)'
     mapper_class = sql.MSFD8aHabitat
 
     def get_subform(self):
@@ -369,7 +372,8 @@ class A81aHabitatAsessment(ItemDisplay):
 class A81aSpeciesSubForm(MarineUnitIDSelectForm2012):
     """ Select the MarineUnitID for the Article 8.1a form
     """
-    title = 'D1 - Species(s)'
+    # title = 'D1 - Species(s)'
+    title = 'Species(s)'
     mapper_class = sql.MSFD8aSpecy
 
     def get_subform(self):
@@ -479,7 +483,8 @@ class A81aSpeciesAsessment(ItemDisplay):
 class A81aOtherSubForm(MarineUnitIDSelectForm2012):
     """ Select the MarineUnitID for the Article 8.1a form
     """
-    title = 'D4 - Other(s)'
+    # title = 'D4 - Other(s)'
+    title = 'Other(s)'
     mapper_class = sql.MSFD8aOther
 
     def get_subform(self):
@@ -585,7 +590,8 @@ class A81aOtherAsessment(ItemDisplay):
 class A81aNisSubForm(MarineUnitIDSelectForm2012):
     """ Select the MarineUnitID for the Article 8.1a form
     """
-    title = 'D2 - NIS Inventory'
+    # title = 'D2 - NIS Inventory'
+    title = 'NIS Inventory'
     mapper_class = sql.MSFD8aNISInventory
 
     def get_subform(self):
@@ -632,7 +638,8 @@ class A81aNisItemDisplay(MultiItemDisplayForm):
 class A81aPhysicalSubForm(MarineUnitIDSelectForm2012):
     """ Select the MarineUnitID for the Article 8.1a form
     """
-    title = 'D4 - Physical'
+    title = 'Physical'
+    # title = 'D4 - Physical'
     mapper_class = sql.MSFD8aPhysical
 
     def get_subform(self):
