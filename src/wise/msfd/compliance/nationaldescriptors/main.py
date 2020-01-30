@@ -20,7 +20,8 @@ from wise.msfd.compliance.base import NAT_DESC_QUESTIONS
 from wise.msfd.compliance.content import AssessmentData
 from wise.msfd.compliance.scoring import (CONCLUSIONS, get_overall_conclusion,
                                           get_range_index, OverallScores)
-from wise.msfd.compliance.vocabulary import SUBREGIONS_TO_REGIONS
+from wise.msfd.compliance.vocabulary import (REGIONAL_DESCRIPTORS_REGIONS,
+                                             SUBREGIONS_TO_REGIONS)
 from wise.msfd.gescomponents import get_descriptor
 from wise.msfd.utils import t2rt
 
@@ -263,6 +264,20 @@ class AssessmentDataMixin(object):
 
         return article_folder.saved_assessment_data.last()
 
+    def get_main_region(self, region_code):
+        """ Returns the main region (used in regional descriptors)
+            for a sub region (used in national descriptors)
+        """
+
+        for region in REGIONAL_DESCRIPTORS_REGIONS:
+            if not region.is_main:
+                continue
+
+            if region_code in region.subregions:
+                return region.code
+
+        return region_code
+
     def get_coherence_data(self, region_code, descriptor, article):
         """
         :return: {'color': 5, 'score': 0, 'max_score': 0,
@@ -280,7 +295,7 @@ class AssessmentDataMixin(object):
 
             region = obj.aq_parent.aq_parent.id.upper()
 
-            if region != region_code:
+            if region != self.get_main_region(region_code):
                 continue
 
             art = obj.title
