@@ -32,6 +32,11 @@
     directory="./static/wise/dist/"
     />
 
+  <browser:resourceDirectory
+    name="static_images"
+    directory="./static/wise/images/"
+    />
+
   <browser:resource
     name="msfd_search.js"
     file="./static/wise/dist/js/msfd_search.js"
