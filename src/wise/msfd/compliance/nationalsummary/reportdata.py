@@ -308,10 +308,9 @@ class NationalSummaryView(BaseNatSummaryView):
         return cover_url
 
     def _get_toc(self):
-        file = resource_filename('wise.msfd',
-                                 'data/pdf_toc.xsl'),
+        xsl_file = resource_filename('wise.msfd', 'data/pdf_toc.xsl'),
 
-        toc = {"xsl-style-sheet": file}
+        toc = {"xsl-style-sheet": xsl_file}
 
         return toc
 

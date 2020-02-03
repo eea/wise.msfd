@@ -357,9 +357,6 @@ class Introduction(BaseNatSummaryView):
                                  style=STYLES[DOCUMENT_TITLE])
         res.append(title)
 
-        table = create_table(document, self.header_table_rows())
-        res.append(table)
-
         # 1. Introduction
         title = create_heading(1, u'Introduction')
         res.append(title)
