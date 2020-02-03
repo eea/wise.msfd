@@ -110,6 +110,14 @@
     permission="zope2.View"
     />
 
+  <browser:page
+    for="..interfaces.INationalDescriptorAssessmentSecondary"
+    name="view-report-data-2018"
+    class=".reportdata.ReportData2018Secondary"
+    template="./pt/report-data-view.pt"
+    permission="wise.ViewAssessmentData"
+    />
+
   <!-- Temp pages-->
   <!-- <browser:page -->
   <!--   for="*" -->

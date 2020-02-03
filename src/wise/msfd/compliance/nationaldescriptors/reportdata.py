@@ -518,6 +518,9 @@ table:
 
 https://svn.eionet.europa.eu/repositories/Reportnet/Dataflows/MarineDirective/MSFD2018/Webforms/msfd2018-codelists.json
 """,
+        'Art3-4': """
+To be completed...        
+"""
     }
 
     @property
@@ -777,10 +780,15 @@ https://svn.eionet.europa.eu/repositories/Reportnet/Dataflows/MarineDirective/MS
 
         return out
 
+    def get_data_from_view(self, article):
+        data = getattr(self, 'get_data_from_view_' + article)()
+
+        return data
+
     @db.use_db_session('2018')
     @timeit
     def get_data_from_db(self):
-        data = getattr(self, 'get_data_from_view_' + self.article)()
+        data = self.get_data_from_view(self.article)
         data = [Proxy2018(row, self) for row in data]
 
         if self.request.form.get('split-mru') and (len(data) > 2000):
@@ -913,6 +921,7 @@ https://svn.eionet.europa.eu/repositories/Reportnet/Dataflows/MarineDirective/MS
             'Art8': 'ART8_GES',
             'Art9': 'ART9_GES',
             'Art10': 'ART10_Targets',
+            'Art3-4': ''
         }
         count, item = db.get_item_by_conditions(
             t,
@@ -922,6 +931,17 @@ https://svn.eionet.europa.eu/repositories/Reportnet/Dataflows/MarineDirective/MS
             reverse=True,
         )
         return item
+
+    @property
+    def report_header_title(self):
+        title = "Member State report: {} / {} / {} / {} / 2018".format(
+            self.country_name,
+            self.country_region_name,
+            self.descriptor_title,
+            self.article
+        )
+
+        return title
 
     @cache(get_reportdata_key, dependencies=['translation'])
     def render_reportdata(self):
@@ -940,12 +960,7 @@ https://svn.eionet.europa.eu/repositories/Reportnet/Dataflows/MarineDirective/MS
             report_date = report.ReportingDate
 
         report_header = self.report_header_template(
-            title="Member State report: {} / {} / {} / {} / 2018".format(
-                self.country_name,
-                self.country_region_name,
-                self.descriptor_title,
-                self.article
-            ),
+            title=self.report_header_title,
             factsheet=None,
             # TODO: find out how to get info about who reported
             report_by=report_by,
@@ -955,7 +970,7 @@ https://svn.eionet.europa.eu/repositories/Reportnet/Dataflows/MarineDirective/MS
             help_text=self.help_text
         )
 
-        template = getattr(self, self.article, None)
+        template = self.get_template(self.article)
 
         return template(data=data, report_header=report_header)
 
@@ -1022,6 +1037,11 @@ https://svn.eionet.europa.eu/repositories/Reportnet/Dataflows/MarineDirective/MS
         url = self.context.absolute_url() + '/@@view-report-data-2018'
         return self.request.response.redirect(url)
 
+    def get_template(self, article):
+        template = getattr(self, article, None)
+
+        return template
+
     @timeit
     def __call__(self):
 
@@ -1031,7 +1051,7 @@ https://svn.eionet.europa.eu/repositories/Reportnet/Dataflows/MarineDirective/MS
         # self.focus_muid = 'BAL-AS-EE-ICES_SD_29'
 
         self.content = ''
-        template = getattr(self, self.article, None)
+        template = self.get_template(self.article)
 
         if not template:
             return self.index()
@@ -1063,3 +1083,36 @@ https://svn.eionet.europa.eu/repositories/Reportnet/Dataflows/MarineDirective/MS
             self.subform = form
 
         return self.subform
+
+
+class ReportData2018Secondary(ReportData2018):
+    implements(IReportDataViewSecondary)
+
+    descriptor = 'Not linked'
+    country_region_code = 'No region'
+
+    Art34 = Template('pt/report-data-multiple-muid.pt')
+
+    @property
+    def report_header_title(self):
+        title = "Member State report: {} / {} / 2018".format(
+            self.country_name,
+            self.article
+        )
+
+        return title
+
+    def get_template(self, article):
+        article = article.replace('-', '')
+        template = getattr(self, article, None)
+
+        return template
+
+    def get_data_from_view(self, article):
+        article = article.replace('-', '')
+        data = getattr(self, 'get_data_from_view_' + article)()
+
+        return data
+
+    def get_data_from_view_Art34(self):
+        return []
