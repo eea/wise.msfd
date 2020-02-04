@@ -136,7 +136,14 @@
   </Art8>
 
   <Art3-4>
-    <element name="Test">Test</element>
+    <element name="Region">Region</element>
+    <element name="Country">Country</element>
+    <element name="thematicId">Marine Unit ID</element>
+    <element name="nameTxtInt">MRU Description in English</element>
+    <element name="nameText">MRU Description</element>
+    <element name="spZoneType">Zone type</element>
+    <element name="legisSName">Legislation short name</element>
+    <element name="Area">Area</element>
   </Art3-4>
 
 </data>

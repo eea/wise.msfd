@@ -1115,4 +1115,21 @@ class ReportData2018Secondary(ReportData2018):
         return data
 
     def get_data_from_view_Art34(self):
-        return []
+        mc = sql2018.MRUsPublication
+
+        conditions = [
+            mc.Country == self.country_code,
+        ]
+
+        col_names = ('Country', 'Region', 'thematicId', 'nameTxtInt',
+                     'nameText', 'spZoneType', 'legisSName', 'Area')
+        columns = [getattr(mc, name) for name in col_names]
+
+        count, data = db.get_all_specific_columns(
+            columns,
+            *conditions
+        )
+
+        sorted_data = sorted(data, key=lambda i: (i.Region, i.thematicId))
+
+        return sorted_data
