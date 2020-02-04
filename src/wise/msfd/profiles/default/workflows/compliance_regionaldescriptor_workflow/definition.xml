@@ -1,14 +1,26 @@
 <?xml version="1.0"?>
 <dc-workflow workflow_id="compliance_regionaldescriptor_workflow" title="Compliance Regional descriptors workflow" description="To be used for MSFD Compliance module, for the regional descriptors folders." state_variable="review_state" initial_state="notstarted" manager_bypass="True">
+ <permission>wise.msfd: Edit Assessment</permission>
 
  <state state_id="final" title="Final state">
  </state>
+
  <state state_id="notstarted" title="Not started">
   <exit-transition transition_id="to_phase1"/>
+  <permission-map name="wise.msfd: Edit Assessment" acquired="False">
+   <permission-role>Editor</permission-role>
+   <permission-role>Reviewer</permission-role>
+  </permission-map>
+
  </state>
  <state state_id="phase1" title="Assessment of regional coherence">
   <exit-transition transition_id="to_notstarted"/>
   <exit-transition transition_id="to_final"/>
+  <permission-map name="wise.msfd: Edit Assessment" acquired="False">
+   <permission-role>Editor</permission-role>
+   <permission-role>Reviewer</permission-role>
+  </permission-map>
+
  </state>
 
  <transition transition_id="to_final" title="To final state" new_state="final" trigger="USER" before_script="" after_script="">
