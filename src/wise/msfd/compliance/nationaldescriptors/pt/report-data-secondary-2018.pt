@@ -1,0 +1,45 @@
+<div tal:define="alldata options/data">
+
+  <div tal:replace="structure options/report_header"></div>
+
+  <!-- TODO: re&#45;enable the harvest subform -->
+  <div class="subform-refresh" tal:replace="nothing">
+    <div tal:replace="structure view/subform">
+      refresh
+    </div>
+  </div>
+
+  <div style="clear: both"><!-- --></div>
+
+  <div tal:condition="not: alldata">
+    No data reported for this Article
+  </div>
+
+  <div tal:condition="alldata" tal:repeat="info alldata" class="report-section">
+
+    <tal:def tal:define="muid python:info[0]; data python: info[1];">
+      <metal:s metal:use-macro="context/wise-macros/macros/simplify-table"></metal:s>
+      <div class="overflow-table">
+        <div class="inner">
+          <table class="table table-bordered table-striped table-comp-translate table-report">
+            <tal:rep tal:repeat="row data">
+              <tr
+                tal:define="field python:row[0];
+                values python: row[1];
+                klass string:f_${field/article}_${field/section} n_${field/name};
+                "
+                tal:attributes="class klass; data-level field/setlevel;"
+                >
+                <th><div tal:content="field/title">Element</div></th>
+                <tal:rep tal:repeat="r values">
+                  <td tal:replace="structure python: view.translate_value(field.name, r, view.country_code)"></td>
+                </tal:rep>
+              </tr>
+            </tal:rep>
+          </table>
+        </div>
+      </div>
+    </tal:def>
+
+  </div>
+</div>

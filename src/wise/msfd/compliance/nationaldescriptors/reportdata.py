@@ -518,9 +518,8 @@ table:
 
 https://svn.eionet.europa.eu/repositories/Reportnet/Dataflows/MarineDirective/MSFD2018/Webforms/msfd2018-codelists.json
 """,
-        'Art3-4': """
-To be completed...        
-"""
+        'Art3-4': "To be completed...",
+        'Art7': "To be completed..."
     }
 
     @property
@@ -921,7 +920,8 @@ To be completed...
             'Art8': 'ART8_GES',
             'Art9': 'ART9_GES',
             'Art10': 'ART10_Targets',
-            'Art3-4': ''
+            'Art3-4': '',
+            'Art7': ''
         }
         count, item = db.get_item_by_conditions(
             t,
@@ -1091,7 +1091,8 @@ class ReportData2018Secondary(ReportData2018):
     descriptor = 'Not linked'
     country_region_code = 'No region'
 
-    Art34 = Template('pt/report-data-multiple-muid.pt')
+    Art34 = Template('pt/report-data-secondary-2018.pt')
+    Art7 = Template('pt/report-data-secondary-2018.pt')
 
     @property
     def report_header_title(self):
@@ -1133,3 +1134,6 @@ class ReportData2018Secondary(ReportData2018):
         sorted_data = sorted(data, key=lambda i: (i.Region, i.thematicId))
 
         return sorted_data
+
+    def get_data_from_view_Art7(self):
+        return []
