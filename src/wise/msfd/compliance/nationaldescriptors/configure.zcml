@@ -81,7 +81,7 @@
     name="view-report-data-2012"
     class=".reportdata.ReportData2012"
     template="./pt/report-data-view.pt"
-    permission="wise.ViewAssessmentData"
+    permission="zope2.View"
     />
 
   <browser:page
@@ -89,7 +89,7 @@
     name="view-report-data-2012"
     class=".reportdata.ReportData2012Secondary"
     template="./pt/report-data-view.pt"
-    permission="wise.ViewAssessmentData"
+    permission="zope2.View"
     />
 
   <!-- View report data for 2012, second version -->
@@ -115,7 +115,7 @@
     name="view-report-data-2018"
     class=".reportdata.ReportData2018Secondary"
     template="./pt/report-data-view.pt"
-    permission="wise.ViewAssessmentData"
+    permission="zope2.View"
     />
 
   <!-- Temp pages-->
