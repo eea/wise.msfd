@@ -8,6 +8,7 @@ from wise.msfd.compliance.interfaces import (IDescriptorFolder,
                                              INationalRegionDescriptorFolder)
 from wise.msfd.compliance.scoring import (CONCLUSIONS, get_range_index,
                                           OverallScores)
+from wise.msfd.compliance.utils import ordered_regions_sortkey
 from wise.msfd.utils import (ItemList, TemplateMixin, db_objects_to_dict,
                              fixedorder_sortkey, timeit)
 
@@ -222,7 +223,11 @@ class DescriptorLevelAssessments(BaseNatSummaryView, AssessmentDataMixin):
             country_folder, INationalRegionDescriptorFolder
         )
 
-        for region_folder in region_folders:
+        region_folders_sorted = sorted(
+            region_folders, key=lambda i: ordered_regions_sortkey(i.id.upper())
+        )
+
+        for region_folder in region_folders_sorted:
             region_code = region_folder.id
             region_name = region_folder.title
             descriptor_data = []

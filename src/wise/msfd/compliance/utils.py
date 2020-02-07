@@ -5,7 +5,10 @@ from zope.interface import Attribute, Interface, implements
 
 from Products.Five.browser.pagetemplatefile import PageTemplateFile
 from wise.msfd.labels import GES_LABELS
-from wise.msfd.utils import get_annot, ItemLabel, TemplateMixin
+from wise.msfd.utils import (fixedorder_sortkey, get_annot, ItemLabel,
+                             TemplateMixin)
+
+from .vocabulary import REGIONAL_DESCRIPTORS_REGIONS
 
 
 class IReportField(Interface):
@@ -226,3 +229,20 @@ def get_assessors():
 def set_assessors(value):
     annot = get_annot()
     annot[ASSESSORS_ANNOT_KEY] = value
+
+
+def ordered_regions_sortkey(region_id):
+    """ Sorting function to sort regions by the order defined in vocabulary.py
+    REGIONAL_DESCRIPTORS_REGIONS
+    """
+
+    regions = REGIONAL_DESCRIPTORS_REGIONS
+    regions_order = []
+
+    for region in regions:
+        if not region.is_main:
+            continue
+
+        regions_order.extend(region.subregions)
+
+    return fixedorder_sortkey(region_id, regions_order)

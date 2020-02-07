@@ -11,6 +11,7 @@ from wise.msfd.compliance.interfaces import (IDescriptorFolder,
                                              INationalDescriptorAssessment,
                                              INationalDescriptorsFolder,
                                              INationalRegionDescriptorFolder)
+from wise.msfd.compliance.utils import ordered_regions_sortkey
 from wise.msfd.data import get_report_filename
 from wise.msfd.translation import get_translated, retrieve_translation
 from wise.msfd.utils import (ItemList, TemplateMixin, db_objects_to_dict,
@@ -64,9 +65,15 @@ class SummaryAssessment(BaseNatSummaryView):
         self.nat_desc_country_folder = nat_desc_country_folder
 
     def get_region_folders(self, country_folder):
-        return self.filter_contentvalues_by_iface(
+        region_folders = self.filter_contentvalues_by_iface(
             country_folder, INationalRegionDescriptorFolder
         )
+
+        region_folders_sorted = sorted(
+            region_folders, key=lambda i: ordered_regions_sortkey(i.id.upper())
+        )
+
+        return region_folders_sorted
 
     def get_descr_folders(self, region_folder):
         contents = self.filter_contentvalues_by_iface(
