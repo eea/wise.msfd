@@ -173,26 +173,61 @@ def true(view):
 
 MAIN_FORMS = (
     Tab('msfd-start', 'msfd-start', 'Start',
-        'About search engine', '', true),
-    Tab('msfd-mru', 'msfd-mru', 'Article 4', 'Marine Units', '', true),
-    Tab('msfd-rc', 'msfd-rc', 'Article 6', 'Regional cooperation', '', true),
-    Tab('msfd-ca', 'msfd-ca', 'Article 7', 'Competent Authorities', '', true),
-    Tab('msfd-c14', 'msfd-c14',
-        'Articles 8, 9 & 10', 'GES determinations, assessments & targets',
+        'About search engine', '', '', true),
+    Tab('msfd-mru', 'msfd-mru', 'Article 4', 'Marine Units',
+        'Geographical areas used by Member States for the\n\
+        implementation of the Directive (e.g. marine waters or subdivisions\n\
+        of those) compatible with the marine regions and subregions\n\
+        listed in the Directive.',
         '', true),
+    Tab('msfd-rc', 'msfd-rc', 'Article 6', 'Regional cooperation',
+        'Member States shall, within each marine region or subregion,\n\
+        coordinate their actions with third countries having sovereignty\n\
+        or jurisdiction over waters in the same marine region or subregion.',
+        '', true),
+    Tab('msfd-ca', 'msfd-ca', 'Article 7', 'Competent Authorities',
+        'Member States authority or authorities competent for the\n\
+        implementation of the Directive with respect to their marine waters.',
+        '', true),
+    # Tab('msfd-c14', 'msfd-c14', 'Articles 8, 9 & 10',
+    #     '2012 Reporting exercise', '', '', true),
+    Tab('msfd-a8', 'msfd-a8', 'Article 8', 'Assessments',
+        'Assessments of Member States marine waters comprising: a) an analysis\n\
+        of the essential features and characteristics, b) an analysis of the\n\
+        predominant pressures and impacts, and c) an economic and social\n\
+        analysis of the use of those waters.', '', true),
+    Tab('msfd-a9', 'msfd-a9', 'Article 9',
+        'Determination of good environmental status',
+        'Determination, for Member States marine waters, and in respect of each\n\
+        marine region or subregion concerned, of a set of characteristics for\n\
+        good environmental status, on the basis of the Descriptors.', '', true),
+    Tab('msfd-a10', 'msfd-a10', 'Article 10',
+        'Establishment of environmental targets', 'Set of environmental targets\n\
+        and associated indicators for Member States marine waters to guide\n\
+        progress towards achieving good environmental status in their marine\n\
+        environment.', '', true),
     Tab('msfd-c2', 'msfd-c2', 'Article 11', 'Monitoring programmes',
-        '', true),
+        'Monitoring programmes for the environmental status of Member States\n\
+        marine waters.', '', true),
     Tab('msfd-c3', 'msfd-c3', 'Articles 13 & 14',
-        'Programmes of measures (PoM) & exceptions', '', true),
+        'Programmes of measures & Exceptions',
+        'Measures which need to be taken in order to achieve or maintain good\n\
+        environmental status, and exceptions reported whenever the environmental\n\
+        targets or good environmental status cannot be achieved through measures\n\
+        taken by the Member State or cannot be achieved within the time schedule\n\
+        concerned.',
+        '', true),
     # Tab('msfd-c4', 'msfd-c4', 'Articles <br/>8, 9 & 10',
     #     '2018 reporting exercise', '', true),
     Tab('msfd-c5', 'msfd-c5', 'Article 18',
-        'Progress on the implementation of PoM', '', true),
+        'Interim reports',
+        'Progress in the implementation of the programmes of measures.',
+        '', true),
 )
 
 
 class MainForm(BaseEnhancedForm, BasePublicPage, Form):
-    """ The main forms need to inherit from this clas
+    """ The main forms need to inherit from this class
     """
 
     implements(IMainForm)
@@ -219,6 +254,14 @@ class MainForm(BaseEnhancedForm, BasePublicPage, Form):
     @property
     def title(self):
         return [x[1] for x in self.main_forms if x[0] == self.name][0]
+
+    @property
+    def main_title(self):
+        return [x[2] for x in self.main_forms if x[0] == self.name][0]
+
+    @property
+    def subtitle(self):
+        return [x[3] for x in self.main_forms if x[0] == self.name][0]
 
     @property
     def spreadsheet_title(self):

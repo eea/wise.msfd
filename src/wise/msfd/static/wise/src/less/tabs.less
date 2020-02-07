@@ -130,3 +130,96 @@
   opacity: 0;
   transition: opacity .15s linear;
 }
+
+
+.articles-wrapper {
+  margin: 1.5em 1em !important;
+
+  .article-box {
+    text-align: center;
+    min-height: 270px;
+    padding-left: 25px;
+    padding-right: 25px;
+
+    .article-box-wrapper {
+      padding: 1em;
+      border-radius: 7px;
+      height: 140px;
+      border: 1px solid #eee;
+      background-color: #f9f9f9;
+      position: relative;
+      cursor: pointer;
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      &:hover {
+        background-color: #f4f4f4;
+      }
+    }
+
+    .article-description {
+      padding: 0.5em 0;
+      font-size: 14px;
+      color: #666;
+    }
+  }
+
+  .tab-title {
+    font-size: 14px;
+  }
+
+  .tab-subtitle {
+    font-size: 21px;
+  }
+
+  .tab-subtitle,
+  .tab-title {
+    color: #058;
+  }
+
+  .article-box:hover .tab-subtitle,
+  .article-box:hover .tab-title
+  .article-box:hover .article-description {
+    color: #002d54 !important;
+  }
+}
+
+.toptab-nav {
+  display: flex;
+  flex-wrap: wrap;
+  border-bottom: 2px solid #0071b3;
+}
+
+.toptab-item {
+  display: inline-block;
+  padding: 0.5em 1.5em;
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  max-width: 220px;
+
+  .toptab-title {
+    margin: 5px 0;
+  }
+  .toptab-subtitle {
+    font-size: 14px;
+  }
+}
+
+.toptab-start:hover .toptab-title {
+  color: #0071b3;
+}
+
+.toptab-item.active {
+  background-color: #0071b3;
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+
+  .toptab-title,
+  .toptab-subtitle {
+    color: #fff;
+  }
+}

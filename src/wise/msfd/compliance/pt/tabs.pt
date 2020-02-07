@@ -26,9 +26,9 @@
     </ul>
 
     <div class="article-select">
-      <div tal:content="view/tab_select_label | string:Select ${tab_type}:">
+      <label tal:content="view/tab_select_label | string:Select ${tab_type}:">
         Select article/tab:
-      </div>
+      </label>
       <select class="notselect" id="mobile-select-article">
         <tal:rep tal:repeat="tab view/main_forms">
           <tal:block tal:define="

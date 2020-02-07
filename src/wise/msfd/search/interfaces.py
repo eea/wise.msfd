@@ -167,7 +167,7 @@ class IStartArticle18(Interface):
 
 class IStartArticle4(Interface):
     reporting_cycle = Choice(
-        title=u"Reporting cycle",
+        title=u"Select reporting cycle",
         vocabulary='wise_search_a4_mru_reporting_cycle_factory',
         required=False
     )

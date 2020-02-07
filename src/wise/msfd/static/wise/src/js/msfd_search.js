@@ -520,9 +520,7 @@
                 window.setTimeout( function (){
                     $(selectorFormCont + " .formControls #form-buttons-continue").trigger("click", {'select': self});
                 }, 300);
-
             });
-
         });
     }
 
@@ -530,10 +528,10 @@
       var el = $(article.element[0]);
       var subtitle = el.attr("data-subtitle");
 
-      return '<span style="font-weight: bold;">' +
+      return '<span>' +
                 el.attr("data-maintitle") + ': ' +
-              '</span>' +
-              '<span>'+ subtitle +'</span>';
+                subtitle +
+              '</span>';
     }
 
     function marineUnitSelect() {
@@ -542,8 +540,9 @@
       var moptions = {
         placeholder: 'Select an option',
         closeOnSelect: true,
-        dropdownAutoWidth: true,
-        width: 'auto',
+        // dropdownAutoWidth: true,
+        // width: 'auto',
+        width: 'element',
         theme: "flat",
         minimumResultsForSearch: 20,
         formatSelection: formatArticle,
