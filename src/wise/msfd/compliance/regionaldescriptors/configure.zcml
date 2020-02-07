@@ -26,7 +26,7 @@
     name="reg-desc-art-view"
     template="./pt/reg-view.pt"
     class=".main.RegionalDescriptorArticleView"
-    permission="zope2.View"
+    permission="wise.ViewAssessmentData"
     />
 
   <browser:page
@@ -49,14 +49,14 @@
     for="..interfaces.IRegionalDescriptorAssessment"
     name="edit-assessment-data-2018"
     class=".assessment.RegDescEditAssessmentDataView"
-    permission="zope2.View"
+    permission="wise.ViewAssessmentEditPage"
     />
 
   <browser:page
     for="..interfaces.IRegionalDescriptorAssessment"
     name="edit-assessment-summary"
     class=".assessment.RegDescEditAssessmentSummaryForm"
-    permission="zope2.View"
+    permission="wise.EditAssessment"
     />
 
   <browser:page
@@ -64,7 +64,7 @@
     name="edit-assessors"
     class="..assessment.EditAssessorsForm"
     template="../pt/edit-assessors.pt"
-    permission="zope2.View"
+    permission="wise.ManageCompliance"
     />
 
   <browser:page
@@ -88,7 +88,7 @@
     name="assessments"
     class=".main.RegionalDescriptorRegionsOverview"
     template="./pt/reg-region-start-assessments.pt"
-    permission="zope2.View"
+    permission="wise.ViewAssessmentData"
     />
 
 
