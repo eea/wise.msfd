@@ -6,10 +6,11 @@
  <object name="comment_review_workflow" meta_type="Workflow"/>
  <object name="compliance_assessment_workflow" meta_type="Workflow"/>
  <object name="compliance_comments_section_workflow" meta_type="Workflow"/>
+ <object name="compliance_national_summary_workflow" meta_type="Workflow"/>
  <object name="compliance_nationaldescriptor_workflow" meta_type="Workflow"/>
+ <object name="compliance_regional_assessment_workflow" meta_type="Workflow"/>
  <object name="compliance_regionaldescriptor_workflow" meta_type="Workflow"/>
  <object name="compliance_section_workflow" meta_type="Workflow"/>
- <object name="compliance_national_summary_workflow" meta_type="Workflow"/>
  <object name="folder_workflow" meta_type="Workflow"/>
  <object name="intranet_folder_workflow" meta_type="Workflow"/>
  <object name="intranet_workflow" meta_type="Workflow"/>
@@ -75,6 +76,9 @@
   <type type_id="collective.cover.content">
    <bound-workflow workflow_id="wise_generic_workflow"/>
   </type>
+  <type type_id="national_summary">
+   <bound-workflow workflow_id="compliance_national_summary_workflow"/>
+  </type>
   <type type_id="wise.msfd.commentsfolder">
    <bound-workflow workflow_id="compliance_comments_section_workflow"/>
   </type>
@@ -85,13 +89,10 @@
    <bound-workflow workflow_id="compliance_assessment_workflow"/>
   </type>
   <type type_id="wise.msfd.regionaldescriptorassessment">
-    <bound-workflow workflow_id="compliance_assessment_workflow"/>
+   <bound-workflow workflow_id="compliance_regional_assessment_workflow"/>
   </type>
   <type type_id="wise.msfd.regiondescriptorsfolder">
-    <bound-workflow workflow_id="compliance_regionaldescriptor_workflow"/>
-  </type>
-  <type type_id="national_summary">
-    <bound-workflow workflow_id="compliance_national_summary_workflow"/>
+   <bound-workflow workflow_id="compliance_regionaldescriptor_workflow"/>
   </type>
  </bindings>
 </object>
