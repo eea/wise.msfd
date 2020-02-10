@@ -113,7 +113,10 @@ class SummaryAssessment(BaseNatSummaryView):
             table_rows = []
 
             for descr_folder in self.get_descr_folders(region_folder):
-                row = [descr_folder.title]
+                # Remove brackets with text from descriptor title
+                # D4 - Food webs/D1 Biodiversity - ecosystems (D4/D1)
+                descriptor_title = descr_folder.title.split('(')[0]
+                row = [descriptor_title]
 
                 for article_folder in self.get_article_folders(descr_folder):
                     score = self.get_overall_score(

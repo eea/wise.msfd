@@ -7,9 +7,9 @@
       <tr>
         <th>Region</th>
         <th>Zone Type</th>
-        <th>MarineUnitID</th>
-        <th>Marine Reporting Unit Description</th>
-        <th>Marine Reporting Unit Description (Translated)</th>
+        <th>Marine Reporting Unit</th>
+        <th>MRU Name</th>
+        <th>MRU name (translated)</th>
       </tr>
 
       <tr tal:repeat="row data">
