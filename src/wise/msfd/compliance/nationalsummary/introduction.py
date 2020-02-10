@@ -91,10 +91,12 @@ class ReportingHistoryTable(BaseNatSummaryView):
 
     @db.use_db_session('2018')
     def get_reporting_history_data(self):
-        obligation = 'MSFD reporting on Initial Assessments (Art. 8), ' \
-                     'Good Environmental Status (Art.9), Env. targets & ' \
-                     'associated indicators (Art.10) & related reporting on ' \
-                     'geographic areas, regional cooperation and metadata.'
+        # obligation = 'MSFD reporting on Initial Assessments (Art. 8), ' \
+        #              'Good Environmental Status (Art.9), Env. targets & ' \
+        #              'associated indicators (Art.10) & related reporting on ' \
+        #              'geographic areas, regional cooperation and metadata.'
+
+        obligation = 'MSFD - Article 4 - Spatial data'
         mc = sql2018.ReportingHistory
 
         _, res = db.get_all_records(
@@ -111,8 +113,8 @@ class ReportingHistoryTable(BaseNatSummaryView):
         tmpl = "<a href={} target='_blank'>{}</a>"
         location = location.replace(filename, '')
 
-        return location
-        # return tmpl.format(location, location)
+        # return location
+        return tmpl.format(location, location)
 
     def format_date(self, date):
         if not date:
@@ -125,14 +127,14 @@ class ReportingHistoryTable(BaseNatSummaryView):
 
     def headers(self):
         headers = (
-            'Report format', 'Files available', 'Access to reports',
+            'Files available', 'Access to reports',
             'Report due', 'Report received', 'Reporting delay (days)'
         )
 
         return headers
 
     def get_article_row(self, obligation):
-        # Group the data by report type, envelope, report due, report date
+        # Group the data by envelope, report due, report date
         # and report delay
         data = [
             row for row in self.data
@@ -151,23 +153,22 @@ class ReportingHistoryTable(BaseNatSummaryView):
             report_due = self.format_date(row.get('DateDue'))
             report_date = self.format_date(row.get('DateReceived'))
             report_delay = row.get('ReportingDelay')
-            k = (report_type, envelope, report_due, report_date, report_delay)
+            k = (envelope, report_due, report_date, report_delay)
 
             groups[k].append(filename)
 
         for _k, filenames in groups.items():
             values = [
-                _k[0],  # Report type
                 ItemList(rows=filenames),  # Filenames
-                _k[1],  # Envelope url
-                _k[2],  # Report due
-                _k[3],  # Report date
-                _k[4]  # Report delay
+                _k[0],  # Envelope url
+                _k[1],  # Report due
+                _k[2],  # Report date
+                _k[3]  # Report delay
             ]
             rows.append(values)
 
         sorted_rows = sorted(rows,
-                             key=lambda _row: (_row[4], _row[2], _row[0]),
+                             key=lambda _row: (_row[3], _row[2]),
                              reverse=True)
 
         return sorted_rows
@@ -240,6 +241,12 @@ class ReportedInformationTable(BaseNatSummaryView):
 
         return headers
 
+    def get_text_and_spacial_files(self):
+        view = ReportingHistoryTable(self, self.request)
+        view()
+
+        return view.report_hystory_data
+
     def get_article_rows(self):
         # Group the data by envelope, report due, report date and report delay
         data = self.data
@@ -271,6 +278,9 @@ class ReportedInformationTable(BaseNatSummaryView):
                 _k[3]  # Report delay
             ]
             rows.append(values)
+
+        text_files = self.get_text_and_spacial_files()
+        rows.extend(text_files)
 
         sorted_rows = sorted(rows,
                              key=lambda _row: (_row[3], _row[1]),
