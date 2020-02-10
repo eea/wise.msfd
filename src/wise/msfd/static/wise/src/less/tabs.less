@@ -134,12 +134,12 @@
 
 .articles-wrapper {
   margin: 1.5em 1em !important;
+  display: flex;
+  flex-wrap: wrap;
 
   .article-box {
     text-align: center;
-    min-height: 270px;
-    padding-left: 25px;
-    padding-right: 25px;
+    padding: 15px 25px;
 
     .article-box-wrapper {
       padding: 1em;
@@ -156,6 +156,7 @@
 
       &:hover {
         background-color: #f4f4f4;
+        border-color: #d7d9da;
       }
     }
 
@@ -171,7 +172,7 @@
   }
 
   .tab-subtitle {
-    font-size: 21px;
+    font-size: 20px;
   }
 
   .tab-subtitle,
@@ -186,40 +187,62 @@
   }
 }
 
-.toptab-nav {
+@media screen and (max-width: 1024px) {
+  .articles-wrapper .tab-subtitle {
+    font-size: 19px;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .articles-wrapper .article-box {
+    margin: 0 auto;
+    max-width: 400px;
+  }
+}
+
+.maintab-nav {
   display: flex;
   flex-wrap: wrap;
   border-bottom: 2px solid #0071b3;
 }
 
-.toptab-item {
+.maintab-item {
   display: inline-block;
-  padding: 0.5em 1.5em;
+  padding: 0.5em 2em;
   text-align: center;
   display: flex;
   justify-content: center;
   align-items: center;
   max-width: 220px;
 
-  .toptab-title {
+  .maintab-title {
     margin: 5px 0;
   }
-  .toptab-subtitle {
+  .maintab-subtitle {
     font-size: 14px;
   }
 }
 
-.toptab-start:hover .toptab-title {
+.tabitem-start {
+  display: flex;
+  align-items: center;
+
+  .maintab-title {
+    margin-left: 10px;
+  }
+}
+
+.maintab-start:hover .maintab-title {
   color: #0071b3;
 }
 
-.toptab-item.active {
+.maintab-item.active {
   background-color: #0071b3;
   border-top-left-radius: 10px;
   border-top-right-radius: 10px;
 
-  .toptab-title,
-  .toptab-subtitle {
+  .maintab-title,
+  .maintab-subtitle {
     color: #fff;
   }
 }

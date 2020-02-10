@@ -49,21 +49,22 @@
   </div>
 </metal:macro>
 
-<metal:macro define-macro="top-maintab">
+<metal:macro define-macro="maintab">
   <div id="mainform-tabs">
-    <div class="topnav toptab-nav">
-      <div class="toptab-item toptab-start">
+    <div class="topnav maintab-nav">
+      <div class="maintab-item maintab-start">
           <a href=""
+             class="tabitem-start"
              tal:attributes="href string:${context/absolute_url}/msfd-start">
              <img src="++resource++msfd/images/msfd_1.png"/>
-             <h4 class="toptab-title">About</h4>
+             <h4 class="maintab-title">About</h4>
           </a>
       </div>
-        <div class="toptab-item active">
+        <div class="maintab-item active">
           <div>
-            <h4 class="toptab-title" tal:content="structure view/main_title">
+            <h4 class="maintab-title" tal:content="structure view/main_title">
               Article X</h4>
-            <div class="toptab-subtitle" tal:content="structure view/subtitle">
+            <div class="maintab-subtitle" tal:content="structure view/subtitle">
               Subtitle here</div>
           </div>
         </div>
