@@ -6,7 +6,7 @@
     <!-- <metal:tabs
        metal:use-macro="context/wise-macros/macros/tabs"></metal:tabs> -->
        <metal:tabs
-          metal:use-macro="context/wise-macros/macros/maintab"></metal:tabs>
+          metal:use-macro="context/wise-macros/macros/top-section"></metal:tabs>
   </div>
 
   <metal:select

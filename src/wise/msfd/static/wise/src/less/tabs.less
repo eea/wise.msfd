@@ -200,49 +200,31 @@
   }
 }
 
-.maintab-nav {
-  display: flex;
-  flex-wrap: wrap;
-  border-bottom: 2px solid #0071b3;
+.main-title {
+  margin-bottom: 0;
 }
 
-.maintab-item {
+.main-subtitle {
+  font-size: 22px;
+  font-weight: 600;
+}
+
+.msfd-start-link {
+  color: #111131;
+  font-size: 15px;
+  font-family: RobotoM;
+  margin-bottom: 1em;
   display: inline-block;
-  padding: 0.5em 2em;
-  text-align: center;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  max-width: 220px;
 
-  .maintab-title {
-    margin: 5px 0;
+  &:before {
+    content:"\e095";
+    font-family: @icon-font-family;
+    display: inline-block;
+    transform: scaleX(-1);
+    position: relative;
+    top: 2px;
   }
-  .maintab-subtitle {
-    font-size: 14px;
-  }
-}
-
-.tabitem-start {
-  display: flex;
-  align-items: center;
-
-  .maintab-title {
-    margin-left: 10px;
-  }
-}
-
-.maintab-start:hover .maintab-title {
-  color: #0071b3;
-}
-
-.maintab-item.active {
-  background-color: #0071b3;
-  border-top-left-radius: 10px;
-  border-top-right-radius: 10px;
-
-  .maintab-title,
-  .maintab-subtitle {
-    color: #fff;
+  &:hover {
+    color: #0077bc;
   }
 }
