@@ -194,6 +194,7 @@ LIMIT 1
 
     return filename
 
+
 @db.use_db_session('2012')
 def _get_report_filename_art9_2012(country, region, article, descriptor):
     mc = sql.MSFD9Import
