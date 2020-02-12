@@ -71,7 +71,7 @@ class CommentsList(BaseComplianceView):
     def content_history(self):
         h = ContentHistoryView(self.context, self.request).fullHistory()
 
-        return h
+        return h or []
 
     def group_comments_by_phase(self, comments):
         if not comments:
@@ -93,7 +93,8 @@ class CommentsList(BaseComplianceView):
                     'type': 'workflow',
                     }]
 
-        history = self.content_history or default
+        history = self.content_history
+        history.extend(default)
         history = [x for x in reversed(history)]
 
         comms = []
