@@ -2,6 +2,7 @@ import json
 import logging
 import time
 from collections import deque
+from datetime import datetime
 
 from eea.cache import cache
 from plone import api
@@ -75,7 +76,23 @@ class CommentsList(BaseComplianceView):
         if not comments:
             return [], (None, [])
 
-        history = self.content_history
+        # This is a hack for assessments which do not have a history because
+        # comments were added before changing the state of the assessment
+        default = [{'state_title': 'Not started',
+                    'actor': {'username': 'laszlo', 'description': '',
+                              'language': '', 'home_page': '',
+                              'has_email': False, 'location': '',
+                              'fullname': ''},
+                    'comments': '',
+                    'transition_title': 'Send to work by Milieu',
+                    'time': datetime(2009, 1, 1, 12, 00, 00),
+                    'action': 'send_for_work',
+                    'review_state': 'in_work',
+                    'actorid': 'laszlo',
+                    'type': 'workflow',
+                    }]
+
+        history = self.content_history or default
         history = [x for x in reversed(history)]
 
         comms = []
@@ -90,10 +107,12 @@ class CommentsList(BaseComplianceView):
                 state = history[ind]
                 comms.append((state, phase_comments))
 
+        last_phase_changedate = history and history[-1]['time']
+
         last_phase_comms = [
             comm
             for comm in comments
-            if comm.created() >= history[-1]['time']
+            if comm.created() >= last_phase_changedate
         ]
         if last_phase_comms:
             state = history[-1]
