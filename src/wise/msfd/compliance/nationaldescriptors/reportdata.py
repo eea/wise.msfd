@@ -32,7 +32,7 @@ from z3c.form.field import Fields
 from z3c.form.form import Form
 
 from .a34 import Article34
-from .a7 import Article7
+from .a7 import Article7, Article72018
 from .a8 import Article8
 from .a8alternate import Article8Alternate
 from .a8esa import Article8ESA
@@ -53,6 +53,10 @@ NSMAP = {"w": "http://water.eionet.europa.eu/schemas/dir200856ec"}
 
 ReportingInformation = namedtuple('ReportingInformation',
                                   ['report_date', 'reporters'])
+
+ReportingInformation2018 = namedtuple(
+    'ReportingInformation', ['ReportedFileLink', 'ContactOrganisation',
+                             'ReportingDate'])
 
 
 def get_reportdata_key(func, self, *args, **kwargs):
@@ -920,8 +924,6 @@ https://svn.eionet.europa.eu/repositories/Reportnet/Dataflows/MarineDirective/MS
             'Art8': 'ART8_GES',
             'Art9': 'ART9_GES',
             'Art10': 'ART10_Targets',
-            'Art3-4': '',
-            'Art7': ''
         }
         count, item = db.get_item_by_conditions(
             t,
@@ -1094,6 +1096,43 @@ class ReportData2018Secondary(ReportData2018):
     Art34 = Template('pt/report-data-secondary-2018.pt')
     Art7 = Template('pt/report-data-secondary-2018.pt')
 
+    def _get_report_metadata_Art7(self):
+        view = Article72018(
+            self, self.request, self.country_code, self.country_region_code,
+            self.descriptor, self.article, self.muids
+        )
+
+        filename = view.get_report_filename()
+        fileurl = get_report_file_url(filename)
+        root = view.get_report_file_root()
+
+        reporters = date = None
+        try:
+            reporters = root.attrib['GeneratedBy']
+            date = root.attrib['CreationDate']
+        except:
+            pass
+
+        metadata = ReportingInformation2018(
+            fileurl,
+            reporters,
+            date
+        )
+
+        return metadata
+
+    def _get_report_metadata_Art34(self):
+        return None
+
+    def get_report_metadata(self):
+        article = self.article.replace('-', '')
+        get_method = getattr(
+            self, '_get_report_metadata_{}'.format(article)
+        )
+        metadata = get_method()
+
+        return metadata
+
     @property
     def report_header_title(self):
         title = "Member State report: {} / {} / 2018".format(
@@ -1136,4 +1175,17 @@ class ReportData2018Secondary(ReportData2018):
         return sorted_data
 
     def get_data_from_view_Art7(self):
-        return []
+        """ In other articles (4, 7, 8, 9, 10) for 2018 year,
+        we get the data from the DB (MSFD2018_production)
+
+        Here instead we will get the data from the report xml from CDR
+        """
+
+        view = Article72018(
+            self, self.request, self.country_code, self.country_region_code,
+            self.descriptor, self.article, self.muids
+        )
+        view()
+        data = view.cols
+
+        return data

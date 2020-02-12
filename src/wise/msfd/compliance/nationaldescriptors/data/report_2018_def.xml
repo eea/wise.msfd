@@ -147,6 +147,14 @@
   </Art3-4>
 
   <Art7>
-    <element name="Test">Test</element>
+    <element name="CACode">CA code (EU, national)</element>
+    <element name="AcronymName">Acronym, Name (national)</element>
+    <element name="Address">Address</element>
+    <element name="URL">URL</element>
+    <element name="LegalStatus" translate="true">Legal status</element>
+    <element name="Responsibilities" translate="true">Responsibilities</element>
+    <element name="Reference">Reference</element>
+    <element name="Membership" translate="true">Membership</element>
+    <element name="RegionalCoordination" translate="true">Regional coordination</element>
   </Art7>
 </data>

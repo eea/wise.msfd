@@ -99,7 +99,6 @@ class A34Item(Item):
 
 
 class Article34(BaseArticle2012):
-    # TODO not implemented, copy of Article 8
     """ Article 3 & 4 implementation
 
     klass(self, self.request, self.country_code, self.descriptor,
