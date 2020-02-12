@@ -1,0 +1,54 @@
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en"
+  xmlns:tal="http://xml.zope.org/namespaces/tal"
+  xmlns:metal="http://xml.zope.org/namespaces/metal"
+  xmlns:i18n="http://xml.zope.org/namespaces/i18n"
+  lang="en"
+  metal:use-macro="context/main_template/macros/master"
+  i18n:domain="eea">
+
+  <head>
+    <metal:block fill-slot="style_slot">
+      <link href="++resource++static_css/tabs.css" type="text/css" rel="stylesheet" />
+      <link href="++resource++static_css/msfd_search.css" type="text/css" rel="stylesheet" />
+    </metal:block>
+  </head>
+
+  <body metal:fill-slot="main">
+    <div id="layout-contents" tal:define="text context/text | nothing" >
+      <div id="wise-search-form">
+        <div id="wise-search-form-top">
+           <div class="topnav articles-wrapper row">
+             <tal:rep tal:repeat="tab python: view.main_forms[1:]">
+               <div class="article-box col-md-4 col-sm-6 col-xs-12">
+                 <div class="article-box-wrapper">
+                   <a class="article-title"
+                     href=""
+                     tal:attributes="href string:${context/absolute_url_path}/${tab/path}">
+                     <div>
+                       <h4 class="tab-subtitle"
+                           tal:content="structure tab/subtitle">Subtitle here</h4>
+                       <div class="tab-title"
+                            tal:content="structure tab/title">Article X</div>
+                     </div>
+                   </a>
+                 </div>
+                 <div class="article-description"
+                   tal:content="structure tab/description">
+                   Geographical areas used by Member States... </div>
+               </div>
+             </tal:rep>
+           </div>
+        </div>
+        <div
+          tal:content="structure text/output"
+          tal:condition="text">
+        </div>
+      </div>
+    </div>
+
+    <metal:css fill-slot="formtop">
+      <script src="++resource++msfd/js/msfd_search.js"></script>
+    </metal:css>
+
+  </body>
+</html>

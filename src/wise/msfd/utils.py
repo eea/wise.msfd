@@ -331,6 +331,7 @@ Tab = namedtuple('Tab', [
     'section',
     'title',
     'subtitle',
+    'description',
     'cssclass',
     'condition',
 ])

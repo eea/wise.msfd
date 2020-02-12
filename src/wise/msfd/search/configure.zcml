@@ -10,7 +10,7 @@
     name="msfd-start"
     permission="zope2.View"
     class = ".main.StartView"
-    template="../pt/start.pt"
+    template="../pt/msfd-start.pt"
     />
 
   <browser:page
