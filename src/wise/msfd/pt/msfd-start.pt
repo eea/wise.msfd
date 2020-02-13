@@ -20,21 +20,23 @@
            <div class="topnav articles-wrapper row">
              <tal:rep tal:repeat="tab python: view.main_forms[1:]">
                <div class="article-box col-md-4 col-sm-6 col-xs-12">
-                 <div class="article-box-wrapper">
-                   <a class="article-title"
-                     href=""
-                     tal:attributes="href string:${context/absolute_url_path}/${tab/path}">
-                     <div>
-                       <h4 class="tab-subtitle"
-                           tal:content="structure tab/subtitle">Subtitle here</h4>
-                       <div class="tab-title"
-                            tal:content="structure tab/title">Article X</div>
-                     </div>
-                   </a>
-                 </div>
+                 <a href=""
+                    tal:attributes="href string:${context/absolute_url_path}/${tab/path}">
+                     <div class="article-box-wrapper">
+                       <div>
+                         <h4 class="tab-subtitle"
+                           tal:content="structure tab/subtitle">Subtitle here
+                         </h4>
+                         <div class="tab-title"
+                           tal:content="structure tab/title">Article X
+                         </div>
+                       </div>
+                    </div>
+                 </a>
                  <div class="article-description"
                    tal:content="structure tab/description">
-                   Geographical areas used by Member States... </div>
+                   Geographical areas used by Member States...
+                 </div>
                </div>
              </tal:rep>
            </div>
