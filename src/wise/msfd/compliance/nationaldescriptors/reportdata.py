@@ -21,7 +21,10 @@ from wise.msfd.base import BaseUtil
 from wise.msfd.compliance.interfaces import (IReportDataView,
                                              IReportDataViewSecondary)
 from wise.msfd.compliance.nationaldescriptors.data import get_report_definition
-from wise.msfd.compliance.utils import group_by_mru, insert_missing_criterions
+from wise.msfd.compliance.utils import (group_by_mru,
+                                        insert_missing_criterions,
+                                        ordered_regions_sortkey)
+from wise.msfd.compliance.vocabulary import get_regions_for_country
 from wise.msfd.data import (get_factsheet_url, get_report_file_url,
                             get_report_filename, get_xml_report_data)
 from wise.msfd.gescomponents import get_descriptor, get_features
@@ -213,6 +216,21 @@ class ReportData2012(BaseView, BaseUtil):
 
         return rendered_view, rows
 
+    def get_report_header_data(self, report_by, source_file, factsheet,
+                               report_date):
+        data = OrderedDict(
+            title=self.report_title,
+            report_by=report_by,
+            source_file=source_file,
+            factsheet=factsheet,
+            # TODO: do the report_due by a mapping with article: date
+            report_due='2012-10-15',
+            report_date=report_date,
+            help_text=self.help_text,
+        )
+
+        return data
+
     def get_report_filename(self, art=None):
         # needed in article report data implementations, to retrieve the file
 
@@ -321,15 +339,8 @@ class ReportData2012(BaseView, BaseUtil):
 
         rep_info = self.get_reporting_information()
 
-        report_header_data = OrderedDict(
-            title=self.report_title,
-            report_by=rep_info.reporters,
-            source_file=source_file,
-            factsheet=factsheet,
-            # TODO: do the report_due by a mapping with article: date
-            report_due='2012-10-15',
-            report_date=rep_info.report_date,
-            help_text=self.help_text,
+        report_header_data = self.get_report_header_data(
+            rep_info.reporters, source_file, factsheet, rep_info.report_date
         )
         report_header = self.report_header_template(**report_header_data)
 
@@ -355,16 +366,19 @@ class ReportData2012(BaseView, BaseUtil):
 
         return reporters, date
 
-    def get_reporting_information(self):
+    def get_reporting_information(self, filename=None):
         # The MSFD<ArtN>_ReportingInformation tables are not reliable (8b is
         # empty), so we try to get the information from the reported XML files.
 
+        if not filename:
+            filename = self.filename
+
         default = ReportingInformation('2013-04-30', 'Member State')
 
-        if not self.filename:
+        if not filename:
             return default
 
-        text = get_xml_report_data(self.filename)
+        text = get_xml_report_data(filename)
         root = fromstring(text)
 
         reporters, date = self._get_reporting_info(root)
@@ -421,6 +435,66 @@ class ReportData2012Secondary(ReportData2012):
         }
 
         return impl[self.article](root)
+
+    def __call__(self):
+        """ Article 3 & 4 reports are separated per regions
+            This means we can have more than one report xml for a country
+            one for each region
+
+            Merge the data from each region, and display it in one table
+        """
+
+        # we treat Art 3 & 4 different because of multiple report files
+        if self.article != 'Art3-4':
+            return super(ReportData2012Secondary, self).__call__()
+
+        template = Template('pt/report-data-view-art34.pt')
+        report_header_template = Template('pt/report-data-header-art34.pt')
+        regions = get_regions_for_country(self.country_code)
+
+        filenames = [
+            (r[0], get_report_filename('2012', self.country_code, r[0],
+                                       self.article, self.descriptor))
+            for r in regions
+        ]
+
+        filenames = sorted(filenames,
+                           key=lambda i: ordered_regions_sortkey(i[0]))
+
+        trans_edit_html = self.translate_view()()
+
+        reports = []
+        rows = []
+        for region, filename in filenames:
+            url = get_report_file_url(filename)
+            source_file = (filename, url + '/manage_document')
+            factsheet = get_factsheet_url(url)
+
+            view = Article34(self, self.request, self.country_code,
+                             region, self.descriptor, self.article,
+                             self.muids, filename)
+
+            rendered_view = view()
+            rows.extend(view.rows)
+
+            rep_info = self.get_reporting_information(filename=filename)
+            report_header_data = self.get_report_header_data(
+                rep_info.reporters, source_file, factsheet,
+                rep_info.report_date
+            )
+            report_header = report_header_template(self, self.request,
+                                                   region=region,
+                                                   **report_header_data)
+            reports.append(report_header + rendered_view + trans_edit_html)
+
+        report_data_rows = serialize_rows(rows)
+        self.reports = reports
+
+        if 'download' in self.request.form:
+
+            return self.download(report_data_rows, {})
+
+        return template(self, self.request)
 
 
 class ReportData2012Like2018(ReportData2012):

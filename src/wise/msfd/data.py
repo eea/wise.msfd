@@ -108,7 +108,9 @@ def _get_report_filename_art8esa_2012(country, region, article):
 
 
 @db.use_db_session('2012')
-def _get_report_filename_art3_4_2012(country, region, article, descriptor):
+def _get_report_filename_art3_4_2012_db(country, region, article, descriptor):
+    """ This method is not used anymore, see _get_report_filename_art3_4_2012
+    """
     mc = sql.MSFD4Import
 
     count, item = db.get_item_by_conditions(
@@ -145,54 +147,6 @@ def _get_report_filename_art7_2012_db(country, region, article, descriptor):
         return None
 
     return item.Import_FileName
-
-
-def _get_report_filename_art7_2012(country, region, article, descriptor):
-    """ Retrieve from CDR the latest filename
-    for Article 7 competent authorities
-    """
-
-    schema = 'http://water.eionet.europa.eu/schemas/dir200856ec/MSCA_1p0.xsd'
-
-    q = """
-PREFIX cr: <http://cr.eionet.europa.eu/ontologies/contreg.rdf#>
-PREFIX terms: <http://purl.org/dc/terms/>
-PREFIX schema: <http://rod.eionet.europa.eu/schema.rdf#>
-PREFIX core: <http://www.w3.org/2004/02/skos/core#>
-
-SELECT ?file
-WHERE {
-?file terms:date ?date .
-?file cr:mediaType 'text/xml' .
-?file terms:isPartOf ?isPartOf .
-?file cr:xmlSchema ?schema .
-?isPartOf schema:locality ?locality .
-?isPartOf schema:obligation ?obligation .
-?obligation core:notation ?obligationNr .
-?locality core:notation ?notation .
-FILTER (?notation = '%s')
-FILTER (?obligationNr = '607')
-FILTER (str(?schema) = '%s')
-}
-ORDER BY DESC(?date)
-LIMIT 1    
-    """ % (country.upper(), schema)
-
-    service = sparql.Service('https://cr.eionet.europa.eu/sparql')
-    filename = None
-    try:
-        req = service.query(q)
-        rows = req.fetchall()
-        url = rows[0][0].value
-        splitted = url.split('/')
-        filename = splitted[-1]
-    except:
-        logger.exception('Got an error in querying SPARQL endpoint for '
-                         'Article 7 country: %s', country)
-
-        raise
-
-    return filename
 
 
 @db.use_db_session('2012')
@@ -433,14 +387,92 @@ def country_ges_components(country_code):
     return list(set([c['Descriptors Criterion Indicators'] for c in recs]))
 
 
-@cache(lambda func, *args: func.__name__ + args[0])
+def _get_report_filename_art3_4_2012(country, region, article, descriptor):
+    schema = 'http://icm.eionet.europa.eu/schemas/dir200856ec/MSFD4Geo_2p0.xsd'
+    obligation = '608'
+
+    return __get_report_filename_art3_4(country, region, schema, obligation)
+
+
+def _get_report_filename_art3_4_2018(country, region, article, descriptor):
+    schema = 'http://icm.eionet.europa.eu/schemas/dir200856ec/MSFD4Geo_2p0.xsd'
+    obligation = '760'
+
+    return __get_report_filename_art3_4(country, region, schema, obligation)
+
+
+@cache(lambda func, *args: func.__name__ + "_".join(args))
 @timeit
-def _get_report_filename_art7_2018(country, region, article, descriptor):
+def __get_report_filename_art3_4(country, region, schema, obligation):
     """ Retrieve from CDR the latest filename
     for Article 7 competent authorities
     """
 
+    q = """
+PREFIX cr: <http://cr.eionet.europa.eu/ontologies/contreg.rdf#>
+PREFIX terms: <http://purl.org/dc/terms/>
+PREFIX schema: <http://rod.eionet.europa.eu/schema.rdf#>
+PREFIX core: <http://www.w3.org/2004/02/skos/core#>
+
+SELECT ?file
+WHERE {
+?file terms:date ?date .
+?file cr:mediaType 'text/xml' .
+?file terms:isPartOf ?isPartOf .
+?file cr:xmlSchema ?schema .
+?isPartOf schema:locality ?locality .
+?isPartOf schema:obligation ?obligation .
+?obligation core:notation ?obligationNr .
+?locality core:notation ?notation .
+FILTER (?notation = '%s')
+FILTER (?obligationNr = '%s')
+FILTER (str(?schema) = '%s')
+FILTER regex(str(?file), '%s')
+}
+ORDER BY DESC(?date)
+LIMIT 1    
+""" % (country.upper(), obligation, schema, region.upper())
+
+    service = sparql.Service('https://cr.eionet.europa.eu/sparql')
+    filename = None
+    try:
+        req = service.query(q)
+        rows = req.fetchall()
+        url = rows[0][0].value
+        splitted = url.split('/')
+        filename = splitted[-1]
+    except:
+        logger.exception('Got an error in querying SPARQL endpoint for '
+                         'Article 7 country: %s', country)
+
+        raise
+
+    return filename
+
+
+def _get_report_filename_art7_2012(country, region, article, descriptor):
+    """ Retrieve from CDR the latest filename
+    for Article 7 competent authorities
+    """
+
+    schema = 'http://water.eionet.europa.eu/schemas/dir200856ec/MSCA_1p0.xsd'
+
+    return __get_report_filename_art7(country, schema)
+
+
+def _get_report_filename_art7_2018(country, region, article, descriptor):
     schema = 'http://dd.eionet.europa.eu/schemas/MSFD/MSFDCA_1p0.xsd'
+
+    return __get_report_filename_art7(country, schema)
+
+
+@cache(lambda func, *args: func.__name__ + args[0])
+@timeit
+def __get_report_filename_art7(country, schema):
+    """ Retrieve from CDR the latest filename
+    for Article 7 competent authorities
+    """
+
     q = """
 PREFIX cr: <http://cr.eionet.europa.eu/ontologies/contreg.rdf#>
 PREFIX terms: <http://purl.org/dc/terms/>

@@ -1,0 +1,116 @@
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en"
+  xmlns:tal="http://xml.zope.org/namespaces/tal"
+  xmlns:metal="http://xml.zope.org/namespaces/metal"
+  xmlns:i18n="http://xml.zope.org/namespaces/i18n"
+  lang="en"
+  metal:use-macro="context/main_template/macros/master"
+  i18n:domain="eea">
+
+  <title meta-fill-slot="title">
+    blabla
+  </title>
+
+  <body metal:fill-slot="content">
+
+    <div id="layout-contents" tal:define="text context/text | nothing" >
+      <div id="wise-search-form">
+        <div id="wise-search-form-top">
+          <metal:tabs
+            metal:use-macro="context/wise-macros/macros/tabs"></metal:tabs>
+        </div>
+
+        <div class="report-page-view left-side-form full-width-marker">
+          <div metal:use-macro="context/global_statusmessage/macros/portal_message">
+            Status message
+          </div>
+
+          <h3 class="report-title" tal:content="structure view/report_title">201X Member State Report</h3>
+
+          <div id="report-data-navigation" tal:condition="view/can_view_assessment_data">
+            <div class="back-to-art" >
+              <a href="./">
+                <i class='fa fa-level-up'></i>
+                Back to Assessment overview
+              </a>
+            </div>
+
+            <div class="report-nav fixed">
+              <div class="nav-wrapper">
+                <div class="nav-header">
+                  <button id="report-nav-toggle" class="nav-toggle">
+                    <i class="fa fa-bars"></i>
+                  </button>
+                </div>
+
+                <div class="nav-body">
+
+                  <div class="art-title">
+                    <a href="" tal:attributes="href view/_country_folder/absolute_url"
+                      tal:content="view/country_name"
+                      target="_blank">EU</a>
+                  </div>
+
+                  <div class="nav-articles"
+                      tal:condition="view/is_primary_article">
+                    <div tal:repeat="art view/_descriptor_folder/contentValues" class="art">
+                      <div class="art-middle">
+                        <a tal:content="art/title_or_id"
+                          tal:attributes="href art/absolute_url"
+                          target="_blank">
+                          Article 9
+                        </a>
+                      </div>
+                      <div class="art-links">
+                        <a href="" tal:attributes="href string:${art/absolute_url}/@@edit-assessment-data-2018" target="_blank">Edit</a>
+                        <a tal:attributes="href string:${art/absolute_url}/@@view-report-data-2018"
+                          target="_blank">
+                          2018</a>
+                        <a tal:attributes="href string:${art/absolute_url}/@@view-report-data-2012"
+                          target="_blank">
+                          2012</a>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div id="download-report-data-form">
+            <form method="POST" action="" tal:attributes="action request/getURL">
+              <button name="download" class="btn btn-primary">View report data in Excel</button>
+              <button name="translate" class="btn btn-secondary"
+                tal:condition="view/can_view_assessment_data">Auto-translate</button>
+            </form>
+          </div>
+
+          <tal:rep tal:repeat="report_html view/reports">
+            <div tal:replace="structure report_html">
+              Report data here
+            </div>
+          </tal:rep>
+
+          <div id="read-more-modal" class="modal fade" role="dialog">
+            <div class="modal-dialog">
+
+              <div class="modal-content">
+                <div class="modal-header">
+                  <button type="button" class="close btn-close-modal" data-dismiss="modal">&times;</button>
+                </div>
+                <div class="modal-body">
+                  <div class="modal-content-wrapper"></div>
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-default btn-close-modal" data-dismiss="modal">Close</button>
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+  </body>
+</html>

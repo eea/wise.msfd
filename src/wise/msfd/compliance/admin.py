@@ -19,8 +19,8 @@ from Products.CMFPlacefulWorkflow.WorkflowPolicyConfig import \
 from Products.Five.browser import BrowserView
 from Products.statusmessages.interfaces import IStatusMessage
 from wise.msfd import db, sql2018
-from wise.msfd.compliance.vocabulary import (REGIONAL_DESCRIPTORS_REGIONS,
-                                             REGIONS)
+from wise.msfd.compliance.vocabulary import (get_regions_for_country,
+                                             REGIONAL_DESCRIPTORS_REGIONS)
 from wise.msfd.compliance.nationaldescriptors.main import AssessmentDataMixin
 from wise.msfd.compliance.regionaldescriptors.base import COUNTRY
 from wise.msfd.gescomponents import (get_all_descriptors, get_descriptor,
@@ -137,19 +137,9 @@ class BootstrapCompliance(BrowserView):
 
     @db.use_db_session('2018')
     def get_country_regions(self, country_code):
-        t = sql2018.MarineReportingUnit
-        regions = db.get_unique_from_mapper(
-            t,
-            'Region',
-            t.CountryCode == country_code
-        )
+        regions = get_regions_for_country(country_code)
 
-        blacklist = ['NotReported']
-
-        return [(code, REGIONS.get(code, code))
-                for code in regions
-
-                if code not in blacklist]
+        return regions
 
     def get_group(self, code):
         if '.' in code:
