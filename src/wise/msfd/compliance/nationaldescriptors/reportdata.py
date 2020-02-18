@@ -287,8 +287,7 @@ class ReportData2012(BaseView, BaseUtil):
 
         return out
 
-    def download(self, report_data, report_header):
-        xlsio = self.data_to_xls(report_data, report_header)
+    def _set_response_header(self, xlsio):
         sh = self.request.response.setHeader
 
         sh('Content-Type', 'application/vnd.openxmlformats-officedocument.'
@@ -301,6 +300,11 @@ class ReportData2012(BaseView, BaseUtil):
            'attachment; filename=%s.xlsx' % fname)
 
         return xlsio.read()
+
+    def download(self, report_data, report_header):
+        xlsio = self.data_to_xls(report_data, report_header)
+
+        return self._set_response_header(xlsio)
 
     @db.use_db_session('2012')
     def __call__(self):
@@ -436,6 +440,51 @@ class ReportData2012Secondary(ReportData2012):
 
         return impl[self.article](root)
 
+    def data_to_xls_art7(self, data):
+        # Create a workbook and add a worksheet.
+        out = BytesIO()
+        workbook = xlsxwriter.Workbook(out, {'in_memory': True})
+
+        for region, wdata, report_header in data:
+            if not wdata:
+                continue
+
+            # add worksheet with report header data
+            worksheet = workbook.add_worksheet(
+                u'Report header for {}'.format(region)
+            )
+
+            for i, (rtitle, rdata) in enumerate(report_header.items()):
+                rtitle = rtitle.title().replace('_', ' ')
+
+                if isinstance(rdata, tuple):
+                    rdata = rdata[1]
+
+                worksheet.write(i, 0, rtitle)
+                worksheet.write(i, 1, rdata)
+
+            worksheet = workbook.add_worksheet(
+                u'Report data for {}'.format(region)
+            )
+
+            for i, row in enumerate(wdata['Report data']):
+                row_label = row[0]
+                worksheet.write(i, 0, row_label)
+                row_values = row[1]
+
+                for j, v in enumerate(row_values):
+                    worksheet.write(i, j + 1, v)
+
+        workbook.close()
+        out.seek(0)
+
+        return out
+
+    def download_art7(self, report_data):
+        xlsio = self.data_to_xls_art7(report_data)
+
+        return self._set_response_header(xlsio)
+
     def __call__(self):
         """ Article 3 & 4 reports are separated per regions
             This means we can have more than one report xml for a country
@@ -464,8 +513,11 @@ class ReportData2012Secondary(ReportData2012):
         trans_edit_html = self.translate_view()()
 
         reports = []
-        rows = []
+        report_data = []
         for region, filename in filenames:
+            if not filename:
+                continue
+
             url = get_report_file_url(filename)
             source_file = (filename, url + '/manage_document')
             factsheet = get_factsheet_url(url)
@@ -475,7 +527,6 @@ class ReportData2012Secondary(ReportData2012):
                              self.muids, filename)
 
             rendered_view = view()
-            rows.extend(view.rows)
 
             rep_info = self.get_reporting_information(filename=filename)
             report_header_data = self.get_report_header_data(
@@ -487,12 +538,14 @@ class ReportData2012Secondary(ReportData2012):
                                                    **report_header_data)
             reports.append(report_header + rendered_view + trans_edit_html)
 
-        report_data_rows = serialize_rows(rows)
+            report_data.append((region, serialize_rows(view.rows),
+                               report_header_data))
+
         self.reports = reports
 
         if 'download' in self.request.form:
 
-            return self.download(report_data_rows, {})
+            return self.download_art7(report_data)
 
         return template(self, self.request)
 

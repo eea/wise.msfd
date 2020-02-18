@@ -84,6 +84,10 @@
             </form>
           </div>
 
+          <div tal:condition="python: not view.reports">
+            No data reported.
+          </div>
+
           <tal:rep tal:repeat="report_html view/reports">
             <div tal:replace="structure report_html">
               Report data here

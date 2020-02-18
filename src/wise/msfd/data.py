@@ -434,10 +434,13 @@ LIMIT 1
 """ % (country.upper(), obligation, schema, region.upper())
 
     service = sparql.Service('https://cr.eionet.europa.eu/sparql')
-    filename = None
+    filename = ''
     try:
         req = service.query(q)
         rows = req.fetchall()
+        if not rows:
+            return filename
+
         url = rows[0][0].value
         splitted = url.split('/')
         filename = splitted[-1]
@@ -498,7 +501,7 @@ LIMIT 1
 """ % (country.upper(), schema)
 
     service = sparql.Service('https://cr.eionet.europa.eu/sparql')
-    filename = None
+    filename = ''
     try:
         req = service.query(q)
         rows = req.fetchall()
