@@ -310,6 +310,35 @@ class BootstrapCompliance(BrowserView):
                 alsoProvides(cf, interfaces.INationalSummaryCountryFolder)
                 # self.create_comments_folder(cf)
 
+    def setup_regionalsummaries(self, parent):
+        if 'regional-summaries' in parent.contentIds():
+            ns = parent['regional-summaries']
+        else:
+            ns = create(parent,
+                        'Folder',
+                        title=u'Regional summaries')
+            self.set_layout(ns, 'reg-summary-start')
+            alsoProvides(ns, interfaces.IRegionalSummaryFolder)
+
+        for region in REGIONAL_DESCRIPTORS_REGIONS:
+            if not region.is_main:
+                continue
+
+            code, name = region.code.lower(), region.title
+
+            if code not in ns.contentIds():
+                rf = create(ns,
+                            'wise.msfd.regionalsummaryfolder',
+                            title=name,
+                            id=code)
+
+                rf._subregions = region.subregions
+                rf._countries_for_region = self._get_countries_names(
+                    region.countries
+                )
+                self.set_layout(rf, '@@sum-region-start')
+                alsoProvides(rf, interfaces.IRegionalSummaryRegionFolder)
+
     def setup_secondary_articles(self, parent):
         if 'national-descriptors-assessments' not in parent.contentIds():
             return
@@ -363,7 +392,7 @@ class BootstrapCompliance(BrowserView):
         # Editor: Milieu
 
         # self.setup_nationaldescriptors(cm)
-        DEFAULT = 'regional,nationalsummary,secondary'
+        DEFAULT = 'regional,nationalsummary,regionalsummary,secondary'
         targets = self.request.form.get('setup', DEFAULT)
 
         if targets:
@@ -379,6 +408,9 @@ class BootstrapCompliance(BrowserView):
 
         if "secondary" in targets:
             self.setup_secondary_articles(cm)
+
+        if 'regionalsummary' in targets:
+            self.setup_regionalsummaries(cm)
 
         return cm.absolute_url()
 
