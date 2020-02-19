@@ -1072,13 +1072,7 @@ https://svn.eionet.europa.eu/repositories/Reportnet/Dataflows/MarineDirective/MS
 
         return title
 
-    @cache(get_reportdata_key, dependencies=['translation'])
-    def render_reportdata(self):
-        logger.info("Quering database for 2018 report data: %s %s %s %s",
-                    self.country_code, self.country_region_code, self.article,
-                    self.descriptor)
-
-        data = self.get_report_data()
+    def get_report_header(self):
         report = self.get_report_metadata()
 
         link = report_by = report_date = None
@@ -1096,9 +1090,20 @@ https://svn.eionet.europa.eu/repositories/Reportnet/Dataflows/MarineDirective/MS
             source_file=link,
             report_due='2018-10-15',
             report_date=report_date,
-            help_text=self.help_text
+            help_text=self.help_text,
+            multiple_source_files=False
         )
 
+        return report_header
+
+    @cache(get_reportdata_key, dependencies=['translation'])
+    def render_reportdata(self):
+        logger.info("Quering database for 2018 report data: %s %s %s %s",
+                    self.country_code, self.country_region_code, self.article,
+                    self.descriptor)
+
+        data = self.get_report_data()
+        report_header = self.get_report_header()
         template = self.get_template(self.article)
 
         return template(data=data, report_header=report_header)
@@ -1260,6 +1265,39 @@ class ReportData2018Secondary(ReportData2018):
 
         return metadata
 
+    def get_report_header(self):
+        if self.article != 'Art3-4':
+            return super(ReportData2018Secondary, self).get_report_header()
+
+        regions = get_regions_for_country(self.country_code)
+        filenames = [
+            (r[0], get_report_filename('2012', self.country_code, r[0],
+                                       self.article, self.descriptor))
+            for r in regions
+        ]
+        filenames = sorted(filenames,
+                           key=lambda i: ordered_regions_sortkey(i[0]))
+
+        links = [
+            (fname[1], get_report_file_url(fname[1]) + '/manage_document')
+            for fname in filenames
+        ]
+        report_by = report_date = ''
+
+        report_header = self.report_header_template(
+            title=self.report_header_title,
+            factsheet=None,
+            # TODO: find out how to get info about who reported
+            report_by=report_by,
+            source_file=links,
+            report_due='2018-10-15',
+            report_date=report_date,
+            help_text=self.help_text,
+            multiple_source_files=True
+        )
+
+        return report_header
+
     @property
     def report_header_title(self):
         title = "Member State report: {} / {} / 2018".format(
@@ -1302,7 +1340,7 @@ class ReportData2018Secondary(ReportData2018):
         return sorted_data
 
     def get_data_from_view_Art7(self):
-        """ In other articles (4, 7, 8, 9, 10) for 2018 year,
+        """ In other articles (8, 9, 10) for 2018 year,
         we get the data from the DB (MSFD2018_production)
 
         Here instead we will get the data from the report xml from CDR

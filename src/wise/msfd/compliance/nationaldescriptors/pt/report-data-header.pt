@@ -3,6 +3,12 @@
 
     <!-- <div metal:use&#45;macro="context/@@compliance&#45;nav&#45;macros/macros/nav"></div> -->
 
+    <div metal:use-macro="context/global_statusmessage/macros/portal_message">
+      Status message
+    </div>
+
+    <h3 class="report-title" tal:content="structure options/title">201X Member State Report</h3>
+
     <div id="report-data-navigation" tal:condition="view/can_view_assessment_data">
       <div class="back-to-art" >
         <a href="./">
@@ -75,12 +81,21 @@
       <tr tal:condition="options/source_file">
         <td>Source file of Member State</td>
         <td>
-          <a tal:attributes="href python: options['source_file'][1]"
-            tal:content="python: options['source_file'][0]"
-            target="_blank">Filename</a>
-          <div tal:condition="options/factsheet">
-            <a tal:attributes="href options/factsheet" target="_blank">HTML Factsheet</a>
-          </div>
+          <tal:cond tal:condition="python: 'multiple_source_files' not in options or not options['multiple_source_files']">
+            <a tal:attributes="href python: options['source_file'][1]"
+              tal:content="python: options['source_file'][0]"
+              target="_blank">Filename</a>
+            <div tal:condition="options/factsheet">
+              <a tal:attributes="href options/factsheet" target="_blank">HTML Factsheet</a>
+            </div>
+          </tal:cond>
+          <tal:cond tal:condition="python: 'multiple_source_files' in options and options['multiple_source_files']">
+            <div tal:repeat="source_file options/source_file">
+              <a tal:attributes="href python: source_file[1]"
+                tal:content="python: source_file[0]"
+                target="_blank">Filename</a>
+            </div>
+          </tal:cond>
         </td>
       </tr>
       <tr tal:condition="options/report_by">

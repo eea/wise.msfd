@@ -235,6 +235,7 @@ def get_report_filename(report_version,
         },
         '2018': {
             'Art7': _get_report_filename_art7_2018,
+            'Art3-4': _get_report_filename_art3_4_2018,
         }
     }
 
