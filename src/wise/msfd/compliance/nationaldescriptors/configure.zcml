@@ -31,7 +31,7 @@
     name="nat-desc-art-view-secondary"
     template="./pt/art-view-secondary.pt"
     class=".main.NationalDescriptorSecondaryArticleView"
-    permission="cmf.ViewAssessmentData"
+    permission="wise.ViewAssessmentData"
     />
 
   <!-- Mini-view to see edit history for an assessment -->
