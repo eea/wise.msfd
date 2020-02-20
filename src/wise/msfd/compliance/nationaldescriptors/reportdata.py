@@ -1290,7 +1290,7 @@ class ReportData2018Secondary(ReportData2018):
             (fname[1], get_report_file_url(fname[1]) + '/manage_document')
             for fname in filenames
         ]
-        report_by = report_date = ''
+        report_due = report_by = report_date = ''
 
         report_header = self.report_header_template(
             title=self.report_header_title,
@@ -1298,7 +1298,7 @@ class ReportData2018Secondary(ReportData2018):
             # TODO: find out how to get info about who reported
             report_by=report_by,
             source_file=links,
-            report_due='2018-10-15',
+            report_due=report_due,
             report_date=report_date,
             help_text=self.help_text,
             multiple_source_files=True

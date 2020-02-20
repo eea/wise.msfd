@@ -143,7 +143,7 @@
     <element name="nameText" translate="true">MRU Description</element>
     <element name="spZoneType">Zone type</element>
     <element name="legisSName">Legislation short name</element>
-    <element name="Area">Area</element>
+    <element name="Area" convert="format_area">Area</element>
   </Art3>
 
   <Art7>

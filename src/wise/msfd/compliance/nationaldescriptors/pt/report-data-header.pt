@@ -102,7 +102,7 @@
         <td>Reported by</td>
         <td tal:content="options/report_by"/>
       </tr>
-      <tr>
+      <tr tal:condition="options/report_due">
         <td>Date report due</td>
         <td tal:content="options/report_due"/>
       </tr>

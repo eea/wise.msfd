@@ -90,3 +90,10 @@ def get_indicators(field, value, lang):
     #     return ItemLabel(value, tr)
     else:
         return ItemLabel(value, title)
+
+
+def format_area(field, value, lang):
+    if value:
+        return "{:.0f} km2".format(value)
+
+    return value
