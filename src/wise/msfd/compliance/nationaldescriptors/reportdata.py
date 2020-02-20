@@ -157,7 +157,8 @@ class ReportData2012(BaseView, BaseUtil):
     @property
     def article_implementations(self):
         res = {
-            'Art3-4': Article34,
+            'Art3': Article34,
+            'Art4': Article34,
             'Art7': Article7,
             'Art8esa': Article8ESA,
             'Art8': Article8,
@@ -433,7 +434,8 @@ class ReportData2012Secondary(ReportData2012):
 
     def _get_reporting_info(self, root):
         impl = {
-            'Art3-4': self._get_reporting_info_art_34,
+            'Art3': self._get_reporting_info_art_34,
+            'Art4': self._get_reporting_info_art_34,
             'Art7': self._get_reporting_info_art_7,
             'Art8esa': self._get_reporting_info_art_34,
         }
@@ -494,7 +496,8 @@ class ReportData2012Secondary(ReportData2012):
         """
 
         # we treat Art 3 & 4 different because of multiple report files
-        if self.article != 'Art3-4':
+        import pdb; pdb.set_trace()
+        if self.article not in ('Art3', 'Art4'):
             return super(ReportData2012Secondary, self).__call__()
 
         template = Template('pt/report-data-view-art34.pt')
@@ -649,7 +652,8 @@ table:
 
 https://svn.eionet.europa.eu/repositories/Reportnet/Dataflows/MarineDirective/MSFD2018/Webforms/msfd2018-codelists.json
 """,
-        'Art3-4': "To be completed...",
+        'Art3': "To be completed...",
+        'Art4': "To be completed...",
         'Art7': "To be completed..."
     }
 
@@ -1225,7 +1229,8 @@ class ReportData2018Secondary(ReportData2018):
     descriptor = 'Not linked'
     country_region_code = 'No region'
 
-    Art34 = Template('pt/report-data-secondary-2018.pt')
+    Art3 = Template('pt/report-data-secondary-2018.pt')
+    Art4 = Template('pt/report-data-secondary-2018.pt')
     Art7 = Template('pt/report-data-secondary-2018.pt')
 
     def _get_report_metadata_Art7(self):
@@ -1253,7 +1258,10 @@ class ReportData2018Secondary(ReportData2018):
 
         return metadata
 
-    def _get_report_metadata_Art34(self):
+    def _get_report_metadata_Art3(self):
+        return None
+
+    def _get_report_metadata_Art4(self):
         return None
 
     def get_report_metadata(self):
@@ -1266,12 +1274,12 @@ class ReportData2018Secondary(ReportData2018):
         return metadata
 
     def get_report_header(self):
-        if self.article != 'Art3-4':
+        if self.article not in ('Art3', 'Art4'):
             return super(ReportData2018Secondary, self).get_report_header()
 
         regions = get_regions_for_country(self.country_code)
         filenames = [
-            (r[0], get_report_filename('2012', self.country_code, r[0],
+            (r[0], get_report_filename('2018', self.country_code, r[0],
                                        self.article, self.descriptor))
             for r in regions
         ]
@@ -1319,7 +1327,27 @@ class ReportData2018Secondary(ReportData2018):
 
         return data
 
-    def get_data_from_view_Art34(self):
+    def get_data_from_view_Art3(self):
+        mc = sql2018.MRUsPublication
+
+        conditions = [
+            mc.Country == self.country_code,
+        ]
+
+        col_names = ('Country', 'Region', 'thematicId', 'nameTxtInt',
+                     'nameText', 'spZoneType', 'legisSName', 'Area')
+        columns = [getattr(mc, name) for name in col_names]
+
+        count, data = db.get_all_specific_columns(
+            columns,
+            *conditions
+        )
+
+        sorted_data = sorted(data, key=lambda i: (i.Region, i.thematicId))
+
+        return sorted_data
+
+    def get_data_from_view_Art4(self):
         mc = sql2018.MRUsPublication
 
         conditions = [

@@ -752,7 +752,8 @@ class AssessmentQuestionDefinition:
             'Art8': self._art_89_ids,
             'Art9': self._art_89_ids,
             'Art10': self._art_10_ids,
-            'Art3-4': self._art_34_ids,
+            'Art3': self._art_34_ids,
+            'Art4': self._art_34_ids,
             'Art7': self._art_34_ids,
             'Art8esa': self._art_34_ids
         }

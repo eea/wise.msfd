@@ -52,7 +52,8 @@ def get_wf_state_id(context):
 
 def _get_secondary_articles():
     articles = [
-        'Art3-4',
+        'Art3',
+        'Art4',
         'Art7',
         'Art8esa'
     ]

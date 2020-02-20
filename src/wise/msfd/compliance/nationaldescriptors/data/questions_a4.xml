@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<questions article='Art3'>
+
+  <assessment-question id="A04Ad1" class="adequacy" use-criteria='none'>
+    <definition>
+      Have all necessary spatial data been submitted?
+    </definition>
+    <answers>
+      <option score="1">Geometries fully (100%) submitted</option>
+      <option score="0.75">Geometries mostly (&gt;90%) submitted</option>
+      <option score="0.5">Geometries partially (&gt;80%) submitted</option>
+      <option score="0.25">Geometries partially (&gt;70%) submitted</option>
+      <option score="0">Geometries partially (&lt;70%) submitted</option>
+      <option score="/">Not relevant</option>
+      <option score="0.250">Not clear</option>
+    </answers>
+    <scoring determination-method="wise.msfd.compliance.scoring.scoring_based">
+    </scoring>
+    <score-weight descriptor="Not linked" value="5" />
+  </assessment-question>
+
+  <assessment-question id="A04Cy1" class="consistency" use-criteria='none'>
+    <definition>
+      Are MRUs in GIS shapefile consistent with MRUs in 4geo file?
+    </definition>
+    <answers>
+      <option score="1">Fully (100%) consistent</option>
+      <option score="0.75">Mostly (&gt;95%) consistent</option>
+      <option score="0.5">Partly (&gt;90%) consistent</option>
+      <option score="0.25">Some (&gt;80%) consistent</option>
+      <option score="0">Mostly (&lt;80%) not consistent</option>
+      <option score="/">Not relevant</option>
+      <option score="0.250">Not clear</option>
+    </answers>
+    <scoring determination-method="wise.msfd.compliance.scoring.scoring_based">
+    </scoring>
+    <score-weight descriptor="Not linked" value="5" />
+  </assessment-question>
+
+  <assessment-question id="A04Ad2" class="adequacy" use-criteria='none'>
+    <definition>
+      Do assessments (MRUs) for the Descriptor cover all MS marine waters?
+    </definition>
+    <answers>
+      <option score="1">Assessments fully (100%) cover marine waters</option>
+      <option score="0.75">Assessments mostly (76-99%) cover marine waters</option>
+      <option score="0.5">Assessments partly (51-75%) cover marine waters</option>
+      <option score="0.25">Assessments cover some (26-50%) of marine waters</option>
+      <option score="0">Assessments cover limited area (0-25%) of marine waters</option>
+      <option score="/">Not relevant</option>
+      <option score="0.250">Not clear</option>
+    </answers>
+    <scoring determination-method="wise.msfd.compliance.scoring.scoring_based">
+    </scoring>
+    <score-weight descriptor="Not linked" value="2.5" />
+  </assessment-question>
+
+  <assessment-question id="A04Co1" class="coherence" use-criteria='none'>
+    <definition>
+      Have reporting units from EU or regional policies been used?
+    </definition>
+    <answers>
+      <option score="1">All 4 types of existing (EU/regional) units used</option>
+      <option score="0.75">3 types of existing (EU/regional) units used</option>
+      <option score="0.5">2 types of existing (EU/regional) units used</option>
+      <option score="0.25">1 type of existing (EU/regional) units used</option>
+      <option score="0">No existing (EU/regional) units used</option>
+      <option score="/">Not relevant</option>
+      <option score="0.250">Not clear</option>
+    </answers>
+    <scoring determination-method="wise.msfd.compliance.scoring.scoring_based">
+    </scoring>
+    <score-weight descriptor="Not linked" value="7.5" />
+  </assessment-question>
+
+  <assessment-question id="A04Ad3" class="adequacy" use-criteria='descriptors'>
+    <definition>
+      Do the MRUs follow the scales expressed in GES Decision (EU) 2017/848?
+    </definition>
+    <answers>
+      <option score="1">&gt;90% criteria assessments use the GES Decision scale</option>
+      <option score="0.75">71-90% criteria assessments use the GES Decision scale</option>
+      <option score="0.5">51-70% criteria assessments use GES Decision scale</option>
+      <option score="0.25">1-50% criteria assessments use GES Decision scale</option>
+      <option score="0">No criteria assessments use the GES Decision scale</option>
+      <option score="0">Not reported</option>
+      <option score="/">Not relevant</option>
+      <option score="0.250">Not clear</option>
+    </answers>
+    <scoring determination-method="wise.msfd.compliance.scoring.scoring_based">
+    </scoring>
+    <score-weight descriptor="Not linked" value="25" />
+  </assessment-question>
+
+  <assessment-question id="A04Ad4" class="adequacy" use-criteria='descriptors'>
+    <definition>
+      Are all criteria used for assessing each feature/element assessed at the same scale/with same MRU?
+    </definition>
+    <answers>
+      <option score="1">Most (76-100%) features/elements use same MRUs across criteria used</option>
+      <option score="0.75">Many (51-75%) features/elements use same MRUs across criteria used</option>
+      <option score="0.5">Some (26-50%) features/elements use same MRUs across criteria used</option>
+      <option score="0.25">Few (1-25%) features/elements use same MRUs across criteria used</option>
+      <option score="0">No features/elements use same MRUs across criteria used</option>
+      <option score="0">Not reported</option>
+      <option score="/">Not relevant</option>
+      <option score="0.250">Not clear</option>
+    </answers>
+    <scoring determination-method="wise.msfd.compliance.scoring.scoring_based">
+    </scoring>
+    <score-weight descriptor="Not linked" value="10" />
+  </assessment-question>
+
+  <assessment-question id="A04Ad5" class="adequacy" use-criteria='descriptors'>
+    <definition>
+      Are there overlapping assessments for the same criterion?
+    </definition>
+    <answers>
+      <option score="1">No overlapping assessments</option>
+      <option score="0.75">&lt;5% of the criteria assessments overlap</option>
+      <option score="0.5">&lt;10% of the criteria assessments overlap</option>
+      <option score="0.25">&lt;20% of the criteria assessments overlap</option>
+      <option score="0">&gt;20% of the criteria assessments overlap</option>
+      <option score="0">Not reported</option>
+      <option score="/">Not relevant</option>
+      <option score="0.250">Not clear</option>
+    </answers>
+    <scoring determination-method="wise.msfd.compliance.scoring.scoring_based">
+    </scoring>
+    <score-weight descriptor="Not linked" value="5" />
+  </assessment-question>
+
+  <assessment-question id="A04Cy2" class="consistency" use-criteria='descriptors'>
+    <definition>
+      Are assessment scales for pressures and adverse effects (in D2, D5, D7, D8, D10, D11) consistent with scales corresponding species (D1) or habitats (D1C6 or D6)?
+    </definition>
+    <answers>
+      <option score="1">Most (76-100%) of the pressure/impact scales match the state scales</option>
+      <option score="0.75">Many (51-75%) of the pressure/impact scales match the state scales</option>
+      <option score="0.5">Some (26-50%) of the pressure/impact scales match the state scales</option>
+      <option score="0.25">Few (1-25%) of the pressure/impact scales match the state scales</option>
+      <option score="0">None of the pressure/impact scales match the state scales</option>
+      <option score="0">Not reported</option>
+      <option score="/">Not relevant</option>
+      <option score="0.250">Not clear</option>
+    </answers>
+    <scoring determination-method="wise.msfd.compliance.scoring.scoring_based">
+    </scoring>
+    <score-weight descriptor="Not linked" value="10" />
+  </assessment-question>
+
+  <assessment-question id="A04Cy3" class="consistency" use-criteria='descriptors'>
+    <definition>
+      Are the MRUs for Art. 10 targets consistent with related Art. 8 assessments?
+    </definition>
+    <answers>
+      <option score="1">Most (76-100%) MRUs where GES is not achieved have associated targets</option>
+      <option score="0.75">Many (51-75%) MRUs where GES is not achieved have associated targets</option>
+      <option score="0.5">Some (26-50%) MRUs where GES is not achieved have associated targets</option>
+      <option score="0.25">Few (1-25%) MRUs where GES is not achieved have associated targets</option>
+      <option score="0">No MRUs where GES is not achieved have associated targets</option>
+      <option score="0">Not reported</option>
+      <option score="/">Not relevant</option>
+      <option score="0.250">Not clear</option>
+    </answers>
+    <scoring determination-method="wise.msfd.compliance.scoring.scoring_based">
+    </scoring>
+    <score-weight descriptor="Not linked" value="10" />
+  </assessment-question>
+
+  <assessment-question id="A04Co2" class="coherence" use-criteria='descriptors'>
+    <definition>
+      Are the MRU scales coherent within the (sub)region?
+    </definition>
+    <answers>
+      <option score="1">(Sub)regionally agreed MRUs fully used</option>
+      <option score="0.75">(Sub)regionally agreed MRUs mostly used</option>
+      <option score="0.5">MRUs of quite similar scale to other MS in (sub)region</option>
+      <option score="0.25">MRUs of poorly similar scale to other MS in (sub)region</option>
+      <option score="0">MRUs of not similar scale to other MS in (sub)region</option>
+      <option score="0">Not reported</option>
+      <option score="/">Not relevant</option>
+      <option score="0.250">Not clear</option>
+    </answers>
+    <scoring determination-method="wise.msfd.compliance.scoring.scoring_based">
+    </scoring>
+    <score-weight descriptor="Not linked" value="20" />
+  </assessment-question>
+
+</questions>

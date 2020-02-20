@@ -135,7 +135,7 @@
     </element>
   </Art8>
 
-  <Art3-4>
+  <Art3>
     <element name="Region">Region</element>
     <element name="Country">Country</element>
     <element name="thematicId">Marine Unit ID</element>
@@ -144,7 +144,7 @@
     <element name="spZoneType">Zone type</element>
     <element name="legisSName">Legislation short name</element>
     <element name="Area">Area</element>
-  </Art3-4>
+  </Art3>
 
   <Art7>
     <element name="CACode">CA code (EU, national)</element>

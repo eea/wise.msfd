@@ -226,7 +226,8 @@ def get_report_filename(report_version,
     # 'Art8': '8b',       # TODO: this needs to be redone for descriptor
     mapping = {
         '2012': {
-            'Art3-4': _get_report_filename_art3_4_2012,
+            'Art3': _get_report_filename_art3_4_2012,
+            'Art4': _get_report_filename_art3_4_2012,
             'Art7': _get_report_filename_art7_2012,
             'Art8esa': _get_report_filename_art8esa_2012,
             'Art8': _get_report_filename_art8_2012,
@@ -235,7 +236,8 @@ def get_report_filename(report_version,
         },
         '2018': {
             'Art7': _get_report_filename_art7_2018,
-            'Art3-4': _get_report_filename_art3_4_2018,
+            'Art3': _get_report_filename_art3_4_2018,
+            'Art4': _get_report_filename_art3_4_2018,
         }
     }
 

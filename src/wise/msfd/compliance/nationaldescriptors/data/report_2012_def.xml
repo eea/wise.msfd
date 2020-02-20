@@ -75,7 +75,7 @@
     <element name="Status Trend">Status Trend</element>
     <element name="Status Confidence">Status Confidence</element>
   </Art8a>
-  <Art3-4>
+  <Art3>
     <element name="Member state description" translate="true">Member state description</element>
     <element name="Region/subregion" translate="true">Region/subregion</element>
     <element name="Subdivisions">Subdivisions</element>
@@ -84,7 +84,7 @@
     <element name="Area type">Area type</element>
     <element name="MRU ID">MRU ID</element>
     <element name="Marine reporting unit" translate="true">Marine reporting unit</element>
-  </Art3-4>
+  </Art3>
   <Art7>
     <element name="CA code (EU, national)">CA code (EU, national)</element>
     <element name="Acronym, Name (national)">Acronym, Name (national)</element>
