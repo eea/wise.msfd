@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<questions article='Art3'>
+<questions article='Art4'>
 
   <assessment-question id="A04Ad1" class="adequacy" use-criteria='none'>
     <definition>
@@ -73,7 +73,7 @@
     <score-weight descriptor="Not linked" value="7.5" />
   </assessment-question>
 
-  <assessment-question id="A04Ad3" class="adequacy" use-criteria='descriptors'>
+  <assessment-question id="A04Ad3" class="adequacy" use-criteria='all'>
     <definition>
       Do the MRUs follow the scales expressed in GES Decision (EU) 2017/848?
     </definition>
@@ -92,7 +92,7 @@
     <score-weight descriptor="Not linked" value="25" />
   </assessment-question>
 
-  <assessment-question id="A04Ad4" class="adequacy" use-criteria='descriptors'>
+  <assessment-question id="A04Ad4" class="adequacy" use-criteria='all'>
     <definition>
       Are all criteria used for assessing each feature/element assessed at the same scale/with same MRU?
     </definition>
@@ -111,7 +111,7 @@
     <score-weight descriptor="Not linked" value="10" />
   </assessment-question>
 
-  <assessment-question id="A04Ad5" class="adequacy" use-criteria='descriptors'>
+  <assessment-question id="A04Ad5" class="adequacy" use-criteria='all'>
     <definition>
       Are there overlapping assessments for the same criterion?
     </definition>
@@ -130,7 +130,7 @@
     <score-weight descriptor="Not linked" value="5" />
   </assessment-question>
 
-  <assessment-question id="A04Cy2" class="consistency" use-criteria='descriptors'>
+  <assessment-question id="A04Cy2" class="consistency" use-criteria='all'>
     <definition>
       Are assessment scales for pressures and adverse effects (in D2, D5, D7, D8, D10, D11) consistent with scales corresponding species (D1) or habitats (D1C6 or D6)?
     </definition>
@@ -149,7 +149,7 @@
     <score-weight descriptor="Not linked" value="10" />
   </assessment-question>
 
-  <assessment-question id="A04Cy3" class="consistency" use-criteria='descriptors'>
+  <assessment-question id="A04Cy3" class="consistency" use-criteria='all'>
     <definition>
       Are the MRUs for Art. 10 targets consistent with related Art. 8 assessments?
     </definition>
@@ -168,7 +168,7 @@
     <score-weight descriptor="Not linked" value="10" />
   </assessment-question>
 
-  <assessment-question id="A04Co2" class="coherence" use-criteria='descriptors'>
+  <assessment-question id="A04Co2" class="coherence" use-criteria='all'>
     <definition>
       Are the MRU scales coherent within the (sub)region?
     </definition>

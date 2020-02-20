@@ -459,7 +459,7 @@ def get_crit_val(question, element, descriptor):
     crit = element.id
 
     # special case for D1.4 A09Ad2 we need to show all crits excluding D1C2
-    if descriptor.id == 'D1.4' and question.id == 'A09Ad2' and crit != 'D1C2':
+    if question.id == 'A09Ad2' and descriptor.id == 'D1.4' and crit != 'D1C2':
         return crit
 
     if use_crit == 'all':
