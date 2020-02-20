@@ -96,13 +96,16 @@ class ReportingHistoryTable(BaseNatSummaryView):
         #              'associated indicators (Art.10) & related reporting on ' \
         #              'geographic areas, regional cooperation and metadata.'
 
-        obligation = 'MSFD - Article 4 - Spatial data'
+        obligations = (
+            'MSFD - Article 4 - Spatial data',
+            'MSFD - Articles 8, 9 and 10 - XML data'
+        )
         mc = sql2018.ReportingHistory
 
         _, res = db.get_all_records(
             mc,
             mc.CountryCode == self.country_code,
-            mc.ReportingObligation == obligation
+            mc.ReportingObligation.in_(obligations)
         )
 
         res = db_objects_to_dict(res)
@@ -133,13 +136,22 @@ class ReportingHistoryTable(BaseNatSummaryView):
 
         return headers
 
-    def get_article_row(self, obligation):
+    def calculate_reporting_delay(self, reporting_delay, report_due,
+                                  report_date):
+        if reporting_delay:
+            return "{:+d}".format(reporting_delay)
+
+        timedelta = report_due - report_date
+
+        return -timedelta.days
+
+    def get_article_row(self, obligations):
         # Group the data by envelope, report due, report date
         # and report delay
         data = [
             row for row in self.data
 
-            if row.get('ReportingObligation') == obligation
+            if row.get('ReportingObligation') in obligations
 
         ]
         rows = []
@@ -152,7 +164,9 @@ class ReportingHistoryTable(BaseNatSummaryView):
             envelope = self.location_url(row.get('LocationURL'), filename)
             report_due = self.format_date(row.get('DateDue'))
             report_date = self.format_date(row.get('DateReceived'))
-            report_delay = row.get('ReportingDelay')
+            report_delay = self.calculate_reporting_delay(
+                row.get('ReportingDelay'), report_due, report_date
+            )
             k = (envelope, report_due, report_date, report_delay)
 
             groups[k].append(filename)
@@ -179,11 +193,9 @@ class ReportingHistoryTable(BaseNatSummaryView):
         obligations = set([x.get('ReportingObligation') for x in data])
 
         self.allrows = [
-            compoundrow(self, obligation, self.get_article_row(obligation),
+            compoundrow(self, "", self.get_article_row(obligations),
                         show_header=self.show_header)
-
-            for obligation in obligations
-        ]
+            ]
 
         self.report_hystory_data = self.allrows[0].rows
 
@@ -313,7 +325,8 @@ class Introduction(BaseNatSummaryView):
 
     @timeit
     def reporting_history(self):
-        view = ReportedInformationTable(self, self.request)
+        # view = ReportedInformationTable(self, self.request)
+        view = ReportingHistoryTable(self, self.request)
         rendered_view = view()
 
         self.report_hystory_data = view.report_hystory_data
