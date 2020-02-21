@@ -450,7 +450,7 @@ def get_all_records(mapper, *conditions, **kw):
 @cache(db_result_key)
 def get_all_specific_columns(columns, *conditions, **kw):
     sess = session()
-    q = sess.query(*columns).filter(*conditions)
+    q = sess.query(*columns).filter(*conditions).distinct()
     count = q.count()
     q = [x for x in q]
 

@@ -1,4 +1,4 @@
-<div class="nat-sum-report-header" class="row"
+<div class="reg-sum-report-header" class="row"
     tal:condition="view/render_header">
   <div class="col-md-12">
 
@@ -7,13 +7,13 @@
       Status message
     </div>
 
-    <!--<h3 class="report-title" tal:content="structure options/title">201X Member State Report</h3>-->
+    <h3 class="report-title" tal:content="structure options/title">201X Member State Report</h3>
 
     <div id="report-data-navigation">
       <div class="back-to-art">
         <a href="./../">
           <i class='fa fa-level-up'></i>
-          Back to national summary overview
+          Back to regional summary overview
         </a>
       </div>
     </div>
@@ -45,13 +45,25 @@
     <div id="download-report-data-form">
       <form method="POST" action="" tal:attributes="action request/getURL">
         <button name="edit-data" class="btn btn-primary">Edit</button>
-        <button name="download" class="btn btn-primary">Download as document (odt)</button>
-        <button name="download_pdf" class="btn btn-primary">Download as PDF</button>
-        <a class="btn btn-primary" href="./nat-sum-cover" target="_blank">Preview PDF cover</a>
         <button name="translate" class="btn btn-secondary"
           tal:condition="view/can_view_assessment_data">Auto-translate</button>
       </form>
     </div>
+
+    <table class="table table-bordered table-striped table-condensed">
+        <tr>
+          <th>Region</th>
+          <td tal:content="view/_region_folder/title">Baltic</td>
+        </tr>
+        <tr>
+          <th>States</th>
+          <td tal:content="options/countries">Finland, Latvia, Germany</td>
+        </tr>
+        <tr>
+          <th>Subregions</th>
+          <td tal:content="view/subregions">TO be completed</td>
+        </tr>
+    </table>
 
   </div>
 </div>

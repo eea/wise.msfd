@@ -18,7 +18,7 @@ class BaseRegSummaryView(BaseComplianceView):
         '../pt/assessment-header.pt'
     )
 
-    section = 'national-summaries'
+    section = 'regional-summaries'
     _translatables = None
     _translatable_values = []
 
@@ -41,9 +41,6 @@ class BaseRegSummaryView(BaseComplianceView):
 
         return date
 
-    def get_odt_data(self, document):
-        return []
-
     def get_transformer(self, context=None):
         if not context:
             context = self
@@ -53,10 +50,10 @@ class BaseRegSummaryView(BaseComplianceView):
         return transformer
 
     def get_transformed_richfield_text(self, fieldname):
-        raw_text = getattr(self._country_folder, fieldname, None)
+        raw_text = getattr(self._region_folder, fieldname, None)
         text = u"-"
 
-        context = self._country_folder
+        context = self._region_folder
 
         if raw_text:
             transformer = self.get_transformer(context=context)
@@ -65,7 +62,7 @@ class BaseRegSummaryView(BaseComplianceView):
         return text
 
     def get_field_value(self, attribute):
-        country_folder = self._country_folder
+        country_folder = self._region_folder
         default = "-"
 
         if not hasattr(country_folder, attribute):
@@ -78,7 +75,7 @@ class BaseRegSummaryView(BaseComplianceView):
 
     @property
     def current_phase(self):
-        region_folder = self._country_folder
+        region_folder = self._region_folder
         state, title = self.process_phase(region_folder)
 
         return state, title
@@ -99,9 +96,9 @@ class BaseRegSummaryView(BaseComplianceView):
         self._translatables = v
 
     @property
-    def _country_folder(self):
+    def _region_folder(self):
         return self.get_parent_by_iface(
-            interfaces.INationalSummaryCountryFolder
+            interfaces.IRegionalSummaryRegionFolder
         )
 
     def filter_contentvalues_by_iface(self, folder, interface):
@@ -114,7 +111,17 @@ class BaseRegSummaryView(BaseComplianceView):
 
     @property
     def available_countries(self):
-        return self._country_folder._countries_for_region
+        return self._region_folder._countries_for_region
+
+    @property
+    def subregions(self):
+        subregions = self._region_folder._subregions
+
+        # if it is a main region, it has only himself as subregion
+        if len(subregions) == 1:
+            return "None"
+
+        return ", ".join(subregions)
 
     def process_phase(self, context=None):
         if context is None:

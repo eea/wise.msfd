@@ -1,4 +1,4 @@
-<div class="national-summary-section report-page-view left-side-form full-width-marker">
+<div class="regional-summary-section report-page-view left-side-form full-width-marker">
   <tal:def tal:define="tables options/tables">
 
     <div tal:repeat="table tables"
