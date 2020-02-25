@@ -5,11 +5,13 @@ import logging
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 from Products.statusmessages.interfaces import IStatusMessage
 from wise.msfd import sql, db
+from wise.msfd.gescomponents import get_all_descriptors
 from wise.msfd.labels import get_label
 from wise.msfd.translation import get_translated, retrieve_translation
 from wise.msfd.utils import (ItemList, TemplateMixin, db_objects_to_dict,
                              fixedorder_sortkey, timeit)
 
+from ..regionaldescriptors.assessment import ASSESSMENTS_2012
 from .base import BaseRegSummaryView
 
 
@@ -26,7 +28,7 @@ def regionalsection(klass):
 class RegionalDescriptorsSimpleTable(BaseRegSummaryView):
     """ Implementation for a simple table, with a title, headers and data
 
-    title: returns a string
+    title: a string
     headers: return a list of strings which represent the headers(first row)
         of the table
     setup_data: returns a list of rows which represent the data
@@ -34,6 +36,7 @@ class RegionalDescriptorsSimpleTable(BaseRegSummaryView):
     """
 
     template = ViewPageTemplateFile("pt/simple-table.pt")
+    title = ''
 
     def setup_data(self):
         return []
@@ -41,13 +44,10 @@ class RegionalDescriptorsSimpleTable(BaseRegSummaryView):
     def get_table_headers(self):
         return []
 
-    def get_title(self):
-        return ''
-
     def __call__(self):
         data = self.setup_data()
         headers = self.get_table_headers()
-        title = self.get_title()
+        title = self.title
 
         return self.template(title=title, data=data, headers=headers)
 
@@ -56,6 +56,7 @@ class RegionalDescriptorsSimpleTable(BaseRegSummaryView):
 class Article11CoverageOfActivities(RegionalDescriptorsSimpleTable):
 
     features_table = sql.t_MSFD_12_8cOverview
+    title = 'Coverage of activities by monitoring programmes'
 
     @property
     @db.use_db_session('2012')
@@ -67,11 +68,6 @@ class Article11CoverageOfActivities(RegionalDescriptorsSimpleTable):
         )
 
         return features
-
-    def get_title(self):
-        t = 'Coverage of activities by monitoring programmes'
-
-        return t
 
     @db.use_db_session('2012')
     def get_db_data(self):
@@ -133,11 +129,7 @@ class Article11CoverageOfActivities(RegionalDescriptorsSimpleTable):
 class PressuresActivities(RegionalDescriptorsSimpleTable):
 
     pressures_table = sql.t_MSFD_8b_8bPressures
-
-    def get_title(self):
-        t = 'Pressures and associated activities affecting the marine waters'
-
-        return t
+    title = 'Pressures and associated activities affecting the marine waters'
 
     @property
     @db.use_db_session('2012')
@@ -198,6 +190,31 @@ class PressuresActivities(RegionalDescriptorsSimpleTable):
                 rows.append((pressure_label, values))
 
         return rows
+
+
+@regionalsection
+class OverallConclusion2012(RegionalDescriptorsSimpleTable):
+    title = "Overall conclusion - descriptor-level"
+    articles = [
+        ('Art9', 'Article 9: Determination of GES'),
+        ('Art8', 'Article 8: Initial assessment'),
+        ('Art10', 'Article 10: Environmental targets'),
+    ]
+
+    def setup_data(self):
+        data = []
+        descriptors = get_all_descriptors()
+
+        for desc_code, desc_title in descriptors:
+            for art_id, art_title in self.articles:
+                pass
+
+        return data
+
+    def get_table_headers(self):
+        h = ['Article'] + [a[0] for a in self.articles]
+
+        return h
 
 
 class RegionalSummaryView(BaseRegSummaryView):
