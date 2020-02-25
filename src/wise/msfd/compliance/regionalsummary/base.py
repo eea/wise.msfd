@@ -110,6 +110,10 @@ class BaseRegSummaryView(BaseComplianceView):
         return res
 
     @property
+    def region_name(self):
+        return self._region_folder.title
+
+    @property
     def available_countries(self):
         return self._region_folder._countries_for_region
 

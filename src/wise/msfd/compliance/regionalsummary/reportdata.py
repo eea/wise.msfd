@@ -1,41 +1,143 @@
 # -*- coding: utf-8 -*-
 
-from io import BytesIO
-from pkg_resources import resource_filename
-
 import logging
 
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 from Products.statusmessages.interfaces import IStatusMessage
 from wise.msfd import sql, db
-from wise.msfd.compliance.interfaces import (IDescriptorFolder,
-                                             INationalDescriptorAssessment,
-                                             INationalDescriptorsFolder,
-                                             INationalRegionDescriptorFolder)
-from wise.msfd.compliance.utils import ordered_regions_sortkey
-from wise.msfd.data import get_report_filename
+from wise.msfd.labels import get_label
 from wise.msfd.translation import get_translated, retrieve_translation
 from wise.msfd.utils import (ItemList, TemplateMixin, db_objects_to_dict,
                              fixedorder_sortkey, timeit)
 
-from lpod.document import odf_new_document
-from lpod.toc import odf_create_toc
-
-import pdfkit
-
-from ..nationaldescriptors.a7 import Article7
-from ..nationaldescriptors.a34 import Article34
-from ..nationaldescriptors.base import BaseView
 from .base import BaseRegSummaryView
 
 
 logger = logging.getLogger('wise.msfd')
 
 
-class PressuresActivities(BaseRegSummaryView):
-    template = ViewPageTemplateFile("pt/pressures-activities.pt")
+SECTIONS = []
+
+
+def regionalsection(klass):
+    SECTIONS.append(klass)
+
+
+class RegionalDescriptorsSimpleTable(BaseRegSummaryView):
+    """ Implementation for a simple table, with a title, headers and data
+
+    title: returns a string
+    headers: return a list of strings which represent the headers(first row)
+        of the table
+    setup_data: returns a list of rows which represent the data
+
+    """
+
+    template = ViewPageTemplateFile("pt/simple-table.pt")
+
+    def setup_data(self):
+        return []
+
+    def get_table_headers(self):
+        return []
+
+    def get_title(self):
+        return ''
+
+    def __call__(self):
+        data = self.setup_data()
+        headers = self.get_table_headers()
+        title = self.get_title()
+
+        return self.template(title=title, data=data, headers=headers)
+
+
+@regionalsection
+class Article11CoverageOfActivities(RegionalDescriptorsSimpleTable):
+
+    features_table = sql.t_MSFD_12_8cOverview
+
+    @property
+    @db.use_db_session('2012')
+    def features(self):
+        table = self.features_table
+
+        features = db.get_unique_from_table(
+            table, 'Features & Characteristics'
+        )
+
+        return features
+
+    def get_title(self):
+        t = 'Coverage of activities by monitoring programmes'
+
+        return t
+
+    @db.use_db_session('2012')
+    def get_db_data(self):
+        table = self.features_table
+        columns_needed = (
+            'MemberState', 'Marine region/subregion',
+            'Features & Characteristics', 'Found relevant by MS?',
+            'Reported by MS?'
+        )
+        columns = [
+            getattr(table.c, c)
+            for c in columns_needed
+        ]
+        conditions = [
+            getattr(table.c, 'Marine region/subregion').in_(
+                self._region_folder._subregions
+            ),
+        ]
+
+        _, data = db.get_all_specific_columns(
+            columns,
+            *conditions
+        )
+
+        return data
+
+    def get_table_headers(self):
+        countries = [x[1] for x in self.available_countries]
+
+        return ['Activities'] + countries
+
+    def setup_data(self):
+        db_data = self.get_db_data()
+
+        rows = []
+
+        for feature in self.features:
+            values = []
+            for country_id, country_name in self.available_countries:
+                reported_for_country = set([
+                    getattr(r, 'Reported by MS?')
+                    for r in db_data
+                    if (getattr(r, 'Features & Characteristics')
+                        .strip() == feature
+                        and r.MemberState.strip() == country_id)
+                ])
+
+                values.append("; ".join(reported_for_country))
+
+            feature_label = feature  # get_label(feature, None)
+
+            if any(values):
+                rows.append((feature_label, values))
+
+        return rows
+
+
+@regionalsection
+class PressuresActivities(RegionalDescriptorsSimpleTable):
 
     pressures_table = sql.t_MSFD_8b_8bPressures
+
+    def get_title(self):
+        t = 'Pressures and associated activities affecting the marine waters'
+
+        return t
 
     @property
     @db.use_db_session('2012')
@@ -68,6 +170,11 @@ class PressuresActivities(BaseRegSummaryView):
 
         return data
 
+    def get_table_headers(self):
+        countries = [x[1] for x in self.available_countries]
+
+        return ['Pressures'] + countries
+
     def setup_data(self):
         db_data = self.get_db_data()
 
@@ -79,24 +186,18 @@ class PressuresActivities(BaseRegSummaryView):
                 activities_for_country = [
                     r.Activity
                     for r in db_data
-                    if (r.Pressure == pressure
-                        and r.MemberState == country_id)
+                    if (r.Pressure.strip() == pressure
+                        and r.MemberState.strip() == country_id)
                 ]
-
-                # import pdb; pdb.set_trace()
 
                 values.append("; ".join(activities_for_country))
 
-            rows.append((pressure, values))
+            pressure_label = pressure  # get_label(pressure, None)
 
-        import pdb; pdb.set_trace()
+            if any(values):
+                rows.append((pressure_label, values))
 
         return rows
-
-    def __call__(self):
-        data = self.setup_data()
-
-        return self.template(data=data)
 
 
 class RegionalSummaryView(BaseRegSummaryView):
@@ -111,7 +212,7 @@ class RegionalSummaryView(BaseRegSummaryView):
     def render_reportdata(self):
         report_header = self.report_header_template(
             title="Regional summary report: {}".format(
-                self.country_name,
+                self.region_name,
             ),
             countries=", ".join([x[1] for x in self.available_countries])
         )
@@ -119,9 +220,10 @@ class RegionalSummaryView(BaseRegSummaryView):
 
         self.tables = [
             report_header,
-            PressuresActivities(self, self.request),
             # trans_edit_html,
         ]
+        for klass in SECTIONS:
+            self.tables.append(klass(self, self.request))
 
         template = self.template
 

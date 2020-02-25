@@ -7,7 +7,7 @@
       Status message
     </div>
 
-    <h3 class="report-title" tal:content="structure options/title">201X Member State Report</h3>
+    <h2 class="report-title" tal:content="structure options/title">201X Member State Report</h2>
 
     <div id="report-data-navigation">
       <div class="back-to-art">
