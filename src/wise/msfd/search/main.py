@@ -15,7 +15,6 @@ from ..sql_extra import MSCompetentAuthority
 from ..utils import scan
 from .a11 import StartArticle11Form
 from .a1314 import StartArticle1314Form
-from .a18 import StartArticle18Form
 from .a19 import StartArticle19Form
 from .a4 import A4Form, A4MemberStatesForm
 from .a9 import A9Form
@@ -455,7 +454,6 @@ class StartArticle82018Form(EmbeddedForm):
 
 # StartArticle89102018View = wrap_form(StartArticle89102018Form, MainFormWrapper)
 
-StartArticle18View = wrap_form(StartArticle18Form, MainFormWrapper)
 StartArticle19View = wrap_form(StartArticle19Form, MainFormWrapper)
 
 # discover and register associated views
@@ -466,3 +464,4 @@ scan('a8b')
 scan('a9')
 scan('a10')
 scan('a89102018')
+scan('a18')

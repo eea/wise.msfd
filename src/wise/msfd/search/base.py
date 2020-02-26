@@ -207,12 +207,13 @@ MAIN_FORMS = (
     Tab('msfd-a10', 'msfd-a10', 'Article 10', 'Targets', '', true),
     Tab('msfd-c2', 'msfd-c2', 'Article 11', 'Monitoring programmes',
         '', true),
-    Tab('msfd-c3', 'msfd-c3', 'Articles <br/>13 & 14',
-        'Programmes of measures (PoM) & exceptions', '', true),
+    Tab('msfd-c3', 'msfd-c3', 'Articles <br/>13, 14 & 18',
+        'Programmes of measures (PoM), exceptions '
+        '& progress on the implementation of PoM', '', true),
     # Tab('msfd-c4', 'msfd-c4', 'Articles <br/>8, 9 & 10',
     #     '2018 reporting exercise', '', true),
-    Tab('msfd-c5', 'msfd-c5', 'Article 18',
-        'Progress on the implementation of PoM', '', true),
+    # Tab('msfd-c5', 'msfd-c5', 'Article 18',
+    #     'Progress on the implementation of PoM', '', true),
     Tab('msfd-c6', 'msfd-c6', 'Article 19.3',
         'Datasets used', '', true),
 )

@@ -14,23 +14,21 @@ from ..interfaces import IMarineUnitIDsSelect
 from .. labels import COMMON_LABELS, GES_LABELS
 from ..utils import default_value_from_field
 from .base import ItemDisplayForm, MainForm
-from .utils import data_to_xls
+from .utils import data_to_xls, register_form_art1314
 
 # all_values_from_field,#
 
 
 class StartArticle1314Form(MainForm):
-    """
-    """
     fields = Fields(interfaces.IStartArticles1314)
-    fields['region_subregions'].widgetFactory = CheckBoxFieldWidget
-
     name = 'msfd-c3'
-    # record_title = 'Articles 13 & 14'
+
     session_name = '2012'
 
     def get_subform(self):
-        return MemberStatesForm(self, self.request)
+        klass = self.data.get('report_type')
+
+        return klass(self, self.request)
 
     # This is needed because of metatype weirdness. Would be nice to have an
     # explanation of why this happens, only for this MainForm
@@ -38,17 +36,43 @@ class StartArticle1314Form(MainForm):
         return default_value_from_field(self, self.fields['report_type'])
 
 
+@register_form_art1314
+class Article13Form(EmbeddedForm):
+    record_title = title = 'Article 13 - Measures'
+    report_type = "Measures"
+    session_name = '2012'
+
+    fields = Fields(interfaces.IArticles1314Region)
+    fields['region_subregions'].widgetFactory = CheckBoxFieldWidget
+
+    def get_subform(self):
+        return MemberStatesForm(self, self.request)
+
+
+@register_form_art1314
+class Article14Form(EmbeddedForm):
+    record_title = title = 'Article 14 - Exceptions'
+    report_type = "Exceptions"
+    session_name = '2012'
+
+    fields = Fields(interfaces.IArticles1314Region)
+    fields['region_subregions'].widgetFactory = CheckBoxFieldWidget
+
+    def get_subform(self):
+        return MemberStatesForm(self, self.request)
+
+
 class MemberStatesForm(EmbeddedForm):
     """ Select the member states based on region
     """
-    # fields = Fields(interfaces.IMemberStates)
     fields = Fields(interfaces.IA1314MemberStates)
 
     fields['member_states'].widgetFactory = CheckBoxFieldWidget
 
     def get_subform(self):
         mc = sql.MSFD13ReportingInfo
-        report_type = self.get_form_data_by_key(self, 'report_type')
+        report_klass = self.get_form_data_by_key(self, 'report_type')
+        report_type = report_klass.report_type
         count, mrus = self.get_available_marine_unit_ids()
 
         count, res = db.get_all_records(
@@ -64,21 +88,18 @@ class MemberStatesForm(EmbeddedForm):
             mc,
             mc.ReportID.in_(self.data['report_ids'])
         )
-        # res = set([(x.UniqueCode, x.Name) for x in set(res)])
         res = set([x.UniqueCode for x in set(res)])
         self.data['unique_codes'] = sorted(res)
 
         return A1314ItemDisplay(self, self.request)
-
-        # return UniqueCodesForm(self, self.request)
-        # return MarineUnitIDsForm(self, self.request)
 
     def get_available_marine_unit_ids(self):
         # TODO: use available marine unit ids from t_MSFD4_GegraphicalAreasID
         mc = sql.MSFD13ReportingInfo
 
         ms = self.get_selected_member_states()
-        report_type = self.context.data['report_type']
+        report_klass = self.get_form_data_by_key(self, 'report_type')
+        report_type = report_klass.report_type
 
         count, res = db.get_all_records_join(
             [mc.MarineUnitID],
@@ -95,15 +116,14 @@ class MarineUnitIDsForm(MarineUnitIDSelectForm):
     """
 
     # TODO: properly show only available marine unit ids
-    # fields = Fields(IMarineUnitIDsSelect)
-    # fields['marine_unit_ids'].widgetFactory = CheckBoxFieldWidget
 
     def get_available_marine_unit_ids(self):
         return self.context.get_available_marine_unit_ids()
 
     def get_subform(self):
         mc = sql.MSFD13ReportingInfo
-        report_type = self.context.context.data['report_type']
+        report_klass = self.get_form_data_by_key(self, 'report_type')
+        report_type = report_klass.report_type
 
         count, res = db.get_all_records(
             mc.ID,
@@ -178,7 +198,8 @@ class A1314ItemDisplay(ItemDisplayForm):
             "Exceptions": 'Article 14 - Exceptions'
         }
 
-        report_type = self.get_form_data_by_key(self, 'report_type')
+        report_klass = self.get_form_data_by_key(self, 'report_type')
+        report_type = report_klass.report_type
 
         record_title = values[report_type]
 

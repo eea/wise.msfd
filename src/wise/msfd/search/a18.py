@@ -8,15 +8,15 @@ from .. import db, sql2018
 from ..base import EmbeddedForm
 from ..utils import db_objects_to_dict
 from .base import ItemDisplayForm, MainForm
-from .utils import data_to_xls, register_form_art18
+from .utils import data_to_xls, register_form_art18, register_form_art1314
 
 
-class StartArticle18Form(MainForm):
+@register_form_art1314
+class StartArticle18Form(EmbeddedForm):
     """ Start form for Article 18 - 2019 reporting year
     """
 
-    # record_title = 'Article 11'
-    name = 'msfd-c5'
+    record_title = title = 'Article 18 - Progress on the implementation of PoM'
     session_name = '2018'
 
     fields = Fields(interfaces.IStartArticle18)
@@ -50,6 +50,7 @@ class A18MeasureProgressDisplay(ItemDisplayForm):
 
         return import_id
 
+    @db.use_db_session('2018')
     def get_current_country(self):
         report_id = self.item.IdReportedInformation
 
@@ -63,6 +64,7 @@ class A18MeasureProgressDisplay(ItemDisplayForm):
 
         return country
 
+    @db.use_db_session('2018')
     def download_results(self):
         mc_descr = sql2018.ART18MeasureProgressDescriptor
         mc_countries = sql2018.ReportedInformation
@@ -113,6 +115,7 @@ class A18MeasureProgressDisplay(ItemDisplayForm):
 
         return data_to_xls(xlsdata)
 
+    @db.use_db_session('2018')
     def get_db_results(self):
         page = self.get_page()
         mc_descr = sql2018.ART18MeasureProgressDescriptor
@@ -155,6 +158,7 @@ class A18MeasureProgressDisplay(ItemDisplayForm):
 
         return item
 
+    @db.use_db_session('2018')
     def get_extra_data(self):
         if not self.item:
             return {}
@@ -188,11 +192,15 @@ class A18CategoryDisplay(ItemDisplayForm):
         'col_import_time': 'ReportingDate'
     }
 
+    def get_reported_date(self):
+        return self.get_reported_date_2018()
+
     def get_import_id(self):
         import_id = self.item.IdReportedInformation
 
         return import_id
 
+    @db.use_db_session('2018')
     def get_current_country(self):
         report_id = self.item.IdReportedInformation
 
@@ -206,6 +214,7 @@ class A18CategoryDisplay(ItemDisplayForm):
 
         return country
 
+    @db.use_db_session('2018')
     def download_results(self):
         mc_countries = sql2018.ReportedInformation
         mc_measure = sql2018.ART18Category1bNotWFDMeasure
@@ -246,6 +255,7 @@ class A18CategoryDisplay(ItemDisplayForm):
 
         return data_to_xls(xlsdata)
 
+    @db.use_db_session('2018')
     def get_db_results(self):
         page = self.get_page()
 
@@ -279,6 +289,7 @@ class A18CategoryDisplay(ItemDisplayForm):
 
         return item
 
+    @db.use_db_session('2018')
     def get_extra_data(self):
         if not self.item:
             return {}
@@ -307,12 +318,15 @@ class A18MeasureProgressForm(EmbeddedForm):
     display_klass = A18MeasureProgressDisplay
     mapper_class = sql2018.ART18MeasureProgres
 
+    session_name = '2018'
+
     fields = Fields(interfaces.ICountryCode)
     fields['member_states'].widgetFactory = CheckBoxFieldWidget
 
     def get_subform(self):
         return A18DescriptorForm(self, self.request)
 
+    @db.use_db_session('2018')
     def get_ges_components(self):
         mc = sql2018.ART18MeasureProgres
         mc_descr = sql2018.ART18MeasureProgressDescriptor
@@ -355,6 +369,7 @@ class A18CategoryForm(EmbeddedForm):
     def get_subform(self):
         return A18DescriptorForm(self, self.request)
 
+    @db.use_db_session('2018')
     def get_ges_components(self):
         mc_countries = sql2018.ReportedInformation
 
