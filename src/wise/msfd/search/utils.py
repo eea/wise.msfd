@@ -15,6 +15,7 @@ FORMS_ART8_2018 = {}
 FORMS_ART9 = {}
 FORMS_ART10 = {}
 FORMS_ART11 = {}
+FORMS_ART1314 ={}
 FORMS_ART18 = {}
 FORMS_ART19 = {}
 SUBFORMS = defaultdict(set)        # store subform references
@@ -85,6 +86,13 @@ def register_form_art11(klass):
     """
 
     FORMS_ART11[class_id(klass)] = klass
+
+    return klass
+
+
+def register_form_art1314(klass):
+
+    FORMS_ART1314[class_id(klass)] = klass
 
     return klass
 

@@ -21,7 +21,10 @@ from wise.msfd.base import BaseUtil
 from wise.msfd.compliance.interfaces import (IReportDataView,
                                              IReportDataViewSecondary)
 from wise.msfd.compliance.nationaldescriptors.data import get_report_definition
-from wise.msfd.compliance.utils import group_by_mru, insert_missing_criterions
+from wise.msfd.compliance.utils import (group_by_mru,
+                                        insert_missing_criterions,
+                                        ordered_regions_sortkey)
+from wise.msfd.compliance.vocabulary import get_regions_for_country
 from wise.msfd.data import (get_factsheet_url, get_report_file_url,
                             get_report_filename, get_xml_report_data)
 from wise.msfd.gescomponents import get_descriptor, get_features
@@ -154,7 +157,8 @@ class ReportData2012(BaseView, BaseUtil):
     @property
     def article_implementations(self):
         res = {
-            'Art3-4': Article34,
+            'Art3': Article34,
+            'Art4': Article34,
             'Art7': Article7,
             'Art8esa': Article8ESA,
             'Art8': Article8,
@@ -213,6 +217,21 @@ class ReportData2012(BaseView, BaseUtil):
 
         return rendered_view, rows
 
+    def get_report_header_data(self, report_by, source_file, factsheet,
+                               report_date):
+        data = OrderedDict(
+            title=self.report_title,
+            report_by=report_by,
+            source_file=source_file,
+            factsheet=factsheet,
+            # TODO: do the report_due by a mapping with article: date
+            report_due='2012-10-15',
+            report_date=report_date,
+            help_text=self.help_text,
+        )
+
+        return data
+
     def get_report_filename(self, art=None):
         # needed in article report data implementations, to retrieve the file
 
@@ -269,8 +288,7 @@ class ReportData2012(BaseView, BaseUtil):
 
         return out
 
-    def download(self, report_data, report_header):
-        xlsio = self.data_to_xls(report_data, report_header)
+    def _set_response_header(self, xlsio):
         sh = self.request.response.setHeader
 
         sh('Content-Type', 'application/vnd.openxmlformats-officedocument.'
@@ -283,6 +301,11 @@ class ReportData2012(BaseView, BaseUtil):
            'attachment; filename=%s.xlsx' % fname)
 
         return xlsio.read()
+
+    def download(self, report_data, report_header):
+        xlsio = self.data_to_xls(report_data, report_header)
+
+        return self._set_response_header(xlsio)
 
     @db.use_db_session('2012')
     def __call__(self):
@@ -321,15 +344,8 @@ class ReportData2012(BaseView, BaseUtil):
 
         rep_info = self.get_reporting_information()
 
-        report_header_data = OrderedDict(
-            title=self.report_title,
-            report_by=rep_info.reporters,
-            source_file=source_file,
-            factsheet=factsheet,
-            # TODO: do the report_due by a mapping with article: date
-            report_due='2012-10-15',
-            report_date=rep_info.report_date,
-            help_text=self.help_text,
+        report_header_data = self.get_report_header_data(
+            rep_info.reporters, source_file, factsheet, rep_info.report_date
         )
         report_header = self.report_header_template(**report_header_data)
 
@@ -355,16 +371,19 @@ class ReportData2012(BaseView, BaseUtil):
 
         return reporters, date
 
-    def get_reporting_information(self):
+    def get_reporting_information(self, filename=None):
         # The MSFD<ArtN>_ReportingInformation tables are not reliable (8b is
         # empty), so we try to get the information from the reported XML files.
 
+        if not filename:
+            filename = self.filename
+
         default = ReportingInformation('2013-04-30', 'Member State')
 
-        if not self.filename:
+        if not filename:
             return default
 
-        text = get_xml_report_data(self.filename)
+        text = get_xml_report_data(filename)
         root = fromstring(text)
 
         reporters, date = self._get_reporting_info(root)
@@ -415,12 +434,123 @@ class ReportData2012Secondary(ReportData2012):
 
     def _get_reporting_info(self, root):
         impl = {
-            'Art3-4': self._get_reporting_info_art_34,
+            'Art3': self._get_reporting_info_art_34,
+            'Art4': self._get_reporting_info_art_34,
             'Art7': self._get_reporting_info_art_7,
             'Art8esa': self._get_reporting_info_art_34,
         }
 
         return impl[self.article](root)
+
+    def data_to_xls_art7(self, data):
+        # Create a workbook and add a worksheet.
+        out = BytesIO()
+        workbook = xlsxwriter.Workbook(out, {'in_memory': True})
+
+        for region, wdata, report_header in data:
+            if not wdata:
+                continue
+
+            # add worksheet with report header data
+            worksheet = workbook.add_worksheet(
+                u'Report header for {}'.format(region)
+            )
+
+            for i, (rtitle, rdata) in enumerate(report_header.items()):
+                rtitle = rtitle.title().replace('_', ' ')
+
+                if isinstance(rdata, tuple):
+                    rdata = rdata[1]
+
+                worksheet.write(i, 0, rtitle)
+                worksheet.write(i, 1, rdata)
+
+            worksheet = workbook.add_worksheet(
+                u'Report data for {}'.format(region)
+            )
+
+            for i, row in enumerate(wdata['Report data']):
+                row_label = row[0]
+                worksheet.write(i, 0, row_label)
+                row_values = row[1]
+
+                for j, v in enumerate(row_values):
+                    worksheet.write(i, j + 1, v)
+
+        workbook.close()
+        out.seek(0)
+
+        return out
+
+    def download_art7(self, report_data):
+        xlsio = self.data_to_xls_art7(report_data)
+
+        return self._set_response_header(xlsio)
+
+    def __call__(self):
+        """ Article 3 & 4 reports are separated per regions
+            This means we can have more than one report xml for a country
+            one for each region
+
+            Merge the data from each region, and display it in one table
+        """
+
+        # we treat Art 3 & 4 different because of multiple report files
+        import pdb; pdb.set_trace()
+        if self.article not in ('Art3', 'Art4'):
+            return super(ReportData2012Secondary, self).__call__()
+
+        template = Template('pt/report-data-view-art34.pt')
+        report_header_template = Template('pt/report-data-header-art34.pt')
+        regions = get_regions_for_country(self.country_code)
+
+        filenames = [
+            (r[0], get_report_filename('2012', self.country_code, r[0],
+                                       self.article, self.descriptor))
+            for r in regions
+        ]
+
+        filenames = sorted(filenames,
+                           key=lambda i: ordered_regions_sortkey(i[0]))
+
+        trans_edit_html = self.translate_view()()
+
+        reports = []
+        report_data = []
+        for region, filename in filenames:
+            if not filename:
+                continue
+
+            url = get_report_file_url(filename)
+            source_file = (filename, url + '/manage_document')
+            factsheet = get_factsheet_url(url)
+
+            view = Article34(self, self.request, self.country_code,
+                             region, self.descriptor, self.article,
+                             self.muids, filename)
+
+            rendered_view = view()
+
+            rep_info = self.get_reporting_information(filename=filename)
+            report_header_data = self.get_report_header_data(
+                rep_info.reporters, source_file, factsheet,
+                rep_info.report_date
+            )
+            report_header = report_header_template(self, self.request,
+                                                   region=region,
+                                                   **report_header_data)
+            reports.append(report_header + rendered_view + trans_edit_html)
+
+            report_data.append((region, serialize_rows(view.rows),
+                               report_header_data))
+
+        self.reports = reports
+
+        if 'download' in self.request.form:
+
+            return self.download_art7(report_data)
+
+        return template(self, self.request)
 
 
 class ReportData2012Like2018(ReportData2012):
@@ -522,7 +652,8 @@ table:
 
 https://svn.eionet.europa.eu/repositories/Reportnet/Dataflows/MarineDirective/MSFD2018/Webforms/msfd2018-codelists.json
 """,
-        'Art3-4': "To be completed...",
+        'Art3': "To be completed...",
+        'Art4': "To be completed...",
         'Art7': "To be completed..."
     }
 
@@ -945,13 +1076,7 @@ https://svn.eionet.europa.eu/repositories/Reportnet/Dataflows/MarineDirective/MS
 
         return title
 
-    @cache(get_reportdata_key, dependencies=['translation'])
-    def render_reportdata(self):
-        logger.info("Quering database for 2018 report data: %s %s %s %s",
-                    self.country_code, self.country_region_code, self.article,
-                    self.descriptor)
-
-        data = self.get_report_data()
+    def get_report_header(self):
         report = self.get_report_metadata()
 
         link = report_by = report_date = None
@@ -969,9 +1094,20 @@ https://svn.eionet.europa.eu/repositories/Reportnet/Dataflows/MarineDirective/MS
             source_file=link,
             report_due='2018-10-15',
             report_date=report_date,
-            help_text=self.help_text
+            help_text=self.help_text,
+            multiple_source_files=False
         )
 
+        return report_header
+
+    @cache(get_reportdata_key, dependencies=['translation'])
+    def render_reportdata(self):
+        logger.info("Quering database for 2018 report data: %s %s %s %s",
+                    self.country_code, self.country_region_code, self.article,
+                    self.descriptor)
+
+        data = self.get_report_data()
+        report_header = self.get_report_header()
         template = self.get_template(self.article)
 
         return template(data=data, report_header=report_header)
@@ -1093,7 +1229,8 @@ class ReportData2018Secondary(ReportData2018):
     descriptor = 'Not linked'
     country_region_code = 'No region'
 
-    Art34 = Template('pt/report-data-secondary-2018.pt')
+    Art3 = Template('pt/report-data-secondary-2018.pt')
+    Art4 = Template('pt/report-data-secondary-2018.pt')
     Art7 = Template('pt/report-data-secondary-2018.pt')
 
     def _get_report_metadata_Art7(self):
@@ -1121,7 +1258,10 @@ class ReportData2018Secondary(ReportData2018):
 
         return metadata
 
-    def _get_report_metadata_Art34(self):
+    def _get_report_metadata_Art3(self):
+        return None
+
+    def _get_report_metadata_Art4(self):
         return None
 
     def get_report_metadata(self):
@@ -1132,6 +1272,39 @@ class ReportData2018Secondary(ReportData2018):
         metadata = get_method()
 
         return metadata
+
+    def get_report_header(self):
+        if self.article not in ('Art3', 'Art4'):
+            return super(ReportData2018Secondary, self).get_report_header()
+
+        regions = get_regions_for_country(self.country_code)
+        filenames = [
+            (r[0], get_report_filename('2018', self.country_code, r[0],
+                                       self.article, self.descriptor))
+            for r in regions
+        ]
+        filenames = sorted(filenames,
+                           key=lambda i: ordered_regions_sortkey(i[0]))
+
+        links = [
+            (fname[1], get_report_file_url(fname[1]) + '/manage_document')
+            for fname in filenames
+        ]
+        report_due = report_by = report_date = ''
+
+        report_header = self.report_header_template(
+            title=self.report_header_title,
+            factsheet=None,
+            # TODO: find out how to get info about who reported
+            report_by=report_by,
+            source_file=links,
+            report_due=report_due,
+            report_date=report_date,
+            help_text=self.help_text,
+            multiple_source_files=True
+        )
+
+        return report_header
 
     @property
     def report_header_title(self):
@@ -1154,7 +1327,27 @@ class ReportData2018Secondary(ReportData2018):
 
         return data
 
-    def get_data_from_view_Art34(self):
+    def get_data_from_view_Art3(self):
+        mc = sql2018.MRUsPublication
+
+        conditions = [
+            mc.Country == self.country_code,
+        ]
+
+        col_names = ('Country', 'Region', 'thematicId', 'nameTxtInt',
+                     'nameText', 'spZoneType', 'legisSName', 'Area')
+        columns = [getattr(mc, name) for name in col_names]
+
+        count, data = db.get_all_specific_columns(
+            columns,
+            *conditions
+        )
+
+        sorted_data = sorted(data, key=lambda i: (i.Region, i.thematicId))
+
+        return sorted_data
+
+    def get_data_from_view_Art4(self):
         mc = sql2018.MRUsPublication
 
         conditions = [
@@ -1175,7 +1368,7 @@ class ReportData2018Secondary(ReportData2018):
         return sorted_data
 
     def get_data_from_view_Art7(self):
-        """ In other articles (4, 7, 8, 9, 10) for 2018 year,
+        """ In other articles (8, 9, 10) for 2018 year,
         we get the data from the DB (MSFD2018_production)
 
         Here instead we will get the data from the report xml from CDR

@@ -17,7 +17,8 @@ REPORT_DEFS = {
         'Art8': ReportDefinition(f_2018, 'Art8'),
         'Art9': ReportDefinition(f_2018, 'Art9'),
         'Art10': ReportDefinition(f_2018, 'Art10'),
-        'Art3-4': ReportDefinition(f_2018, 'Art3-4'),
+        'Art3': ReportDefinition(f_2018, 'Art3'),
+        'Art4': ReportDefinition(f_2018, 'Art3'),
         'Art7': ReportDefinition(f_2018, 'Art7'),
     },
     '2012': {
@@ -25,7 +26,8 @@ REPORT_DEFS = {
         'Art8b': ReportDefinition(f_2012, 'Art8b'),
         'Art9': ReportDefinition(f_2012, 'Art9'),
         'Art10': ReportDefinition(f_2012, 'Art10'),
-        'Art3-4': ReportDefinition(f_2012, 'Art3-4'),
+        'Art3': ReportDefinition(f_2012, 'Art3'),
+        'Art4': ReportDefinition(f_2012, 'Art3'),
         'Art7': ReportDefinition(f_2012, 'Art7'),
         'Art8esa': ReportDefinition(f_2012, 'Art8esa'),
     }

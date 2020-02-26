@@ -1,0 +1,69 @@
+<div class="reg-sum-report-header" class="row"
+    tal:condition="view/render_header">
+  <div class="col-md-12">
+
+    <!-- <div metal:use&#45;macro="context/@@compliance&#45;nav&#45;macros/macros/nav"></div> -->
+    <div metal:use-macro="context/global_statusmessage/macros/portal_message">
+      Status message
+    </div>
+
+    <h2 class="report-title" tal:content="structure options/title">201X Member State Report</h2>
+
+    <div id="report-data-navigation">
+      <div class="back-to-art">
+        <a href="./../">
+          <i class='fa fa-level-up'></i>
+          Back to regional summary overview
+        </a>
+      </div>
+    </div>
+
+    <div class="process-state-phase-form">
+      <form class="process-state"
+          method="GET" action='./content_status_modify'>
+        <div>
+          <i class='fa fa-exchange'></i>
+          Process state:
+          <strong tal:content="view/get_status">Phase 0</strong>
+
+          <div class="phase-selector"
+            tal:condition="python: not(view.read_only_access)">
+            <select onchange="javascript:this.form.submit()"
+              name="workflow_action"
+              class="pat-select2"
+              data-pat-select2="width:10em">
+              <option value=''>Choose action...</option>
+              <tal:rep repeat="trans view/get_transitions">
+                <option tal:content="trans/title" tal:attributes="value trans/id">Send to Phase 0</option>
+              </tal:rep>
+            </select>
+          </div>
+        </div>
+      </form>
+    </div>
+
+    <div id="download-report-data-form">
+      <form method="POST" action="" tal:attributes="action request/getURL">
+        <button name="edit-data" class="btn btn-primary">Edit</button>
+        <button name="translate" class="btn btn-secondary"
+          tal:condition="view/can_view_assessment_data">Auto-translate</button>
+      </form>
+    </div>
+
+    <table class="table table-bordered table-striped table-condensed">
+        <tr>
+          <th>Region</th>
+          <td tal:content="view/_region_folder/title">Baltic</td>
+        </tr>
+        <tr>
+          <th>States</th>
+          <td tal:content="options/countries">Finland, Latvia, Germany</td>
+        </tr>
+        <tr>
+          <th>Subregions</th>
+          <td tal:content="view/subregions">TO be completed</td>
+        </tr>
+    </table>
+
+  </div>
+</div>

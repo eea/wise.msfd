@@ -234,7 +234,8 @@ class Article7Copy(Article7):
 
 class ArticleTable(BaseView):
     impl = {
-        'Art3-4': Article34Copy,
+        'Art3': Article34Copy,
+        'Art4': Article34Copy,
         'Art7': Article7Copy,
     }
 

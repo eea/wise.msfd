@@ -23,8 +23,9 @@ from wise.msfd.base import BasePublicPage
 from wise.msfd.compliance.scoring import Score  # , compute_score
 from wise.msfd.compliance.utils import get_assessors
 from wise.msfd.compliance.vocabulary import ASSESSED_ARTICLES  # , REGIONS
-from wise.msfd.gescomponents import (get_descriptor, get_features,
-                                     get_marine_units, sorted_criterions)
+from wise.msfd.gescomponents import (get_all_descriptors, get_descriptor,
+                                     get_features, get_marine_units,
+                                     sorted_criterions, Descriptor)
 from wise.msfd.translation.interfaces import ITranslationContext
 from wise.msfd.utils import (Tab, _parse_files_in_location, natural_sort_key,
                              row_to_dict, timeit)
@@ -93,9 +94,9 @@ MAIN_FORMS = [Tab(*x) for x in [
      '',
      lambda view: True,
      ),
-    ('@@comp-regional-overviews',
-     'regional-overviews',
-     'Overview - regional',
+    ('regional-summaries/@@reg-summary-start',
+     'regional-summaries',
+     'Summary - regional',
      'Overview for all Member states in a region',
      '',
      '',
@@ -122,6 +123,9 @@ MAIN_FORMS = [Tab(*x) for x in [
      )
 ]
 ]
+
+Target = namedtuple('Target', ['id', 'title', 'definition', 'year'])
+DescriptorOption = namedtuple('Descriptor', ['id', 'title', 'is_primary'])
 
 
 class Container(object):
@@ -550,9 +554,6 @@ class BaseComplianceView(BrowserView, BasePublicPage, SecurityMixin):
                            is_translatable=is_translatable)
 
 
-Target = namedtuple('Target', ['id', 'title', 'definition', 'year'])
-
-
 def _a10_ids_cachekey(method, self, descriptor, **kwargs):
     muids = [m.id for m in kwargs['muids']]
     key = '{}-{}-{}'.format(
@@ -734,6 +735,18 @@ class AssessmentQuestionDefinition:
 
         return [res]
 
+    def _art_4_ids(self, descriptor, **kwargs):
+        """ Return all descriptors """
+        descriptors = get_all_descriptors()
+        descriptors = [
+            DescriptorOption(id=d[0], title=d[1], is_primary=lambda _: True)
+            for d in descriptors if d[0] != 'D1'
+        ]
+
+        # import pdb; pdb.set_trace()
+
+        return descriptors
+
     def get_assessed_elements(self, descriptor, **kwargs):
         """ Get a list of filtered assessed elements for this question.
         """
@@ -759,7 +772,8 @@ class AssessmentQuestionDefinition:
             'Art8': self._art_89_ids,
             'Art9': self._art_89_ids,
             'Art10': self._art_10_ids,
-            'Art3-4': self._art_34_ids,
+            'Art3': self._art_34_ids,
+            'Art4': self._art_4_ids,
             'Art7': self._art_34_ids,
             'Art8esa': self._art_34_ids
         }

@@ -101,15 +101,24 @@ class A34Item(Item):
 class Article34(BaseArticle2012):
     """ Article 3 & 4 implementation
 
-    klass(self, self.request, self.country_code, self.descriptor,
-          self.article, self.muids, self.colspan)
+    klass(self, self.request, self.country_code, self.country_region_code,
+            self.descriptor, self.article, self.muids)
     """
 
     template = Template('pt/report-data-secondary.pt')
     help_text = ""
 
+    def __init__(self, context, request, country_code, region_code,
+                 descriptor, article,  muids, filename):
+
+        super(Article34, self).__init__(context, request, country_code,
+                                        region_code, descriptor, article,
+                                        muids)
+
+        self.filename = filename
+
     def setup_data(self):
-        filename = self.context.get_report_filename()
+        filename = self.filename
         text = get_xml_report_data(filename)
         root = fromstring(text)
 

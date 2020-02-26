@@ -71,13 +71,6 @@
 
   <browser:page
     for="*"
-    name="msfd-c5"
-    class=".main.StartArticle18View"
-    permission="zope2.View"
-  />
-
-  <browser:page
-    for="*"
     name="msfd-c6"
     class=".main.StartArticle19View"
     permission="zope2.View"

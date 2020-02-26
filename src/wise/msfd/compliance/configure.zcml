@@ -8,6 +8,7 @@
   <include package='.nationaldescriptors' />
   <include package='.regionaldescriptors'/>
   <include package='.nationalsummary'/>
+  <include package='.regionalsummary'/>
   <include file='admin.zcml' />
   <include file='viewlets.zcml' />
 

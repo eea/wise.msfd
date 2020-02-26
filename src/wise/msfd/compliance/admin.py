@@ -19,8 +19,8 @@ from Products.CMFPlacefulWorkflow.WorkflowPolicyConfig import \
 from Products.Five.browser import BrowserView
 from Products.statusmessages.interfaces import IStatusMessage
 from wise.msfd import db, sql2018
-from wise.msfd.compliance.vocabulary import (REGIONAL_DESCRIPTORS_REGIONS,
-                                             REGIONS)
+from wise.msfd.compliance.vocabulary import (get_regions_for_country,
+                                             REGIONAL_DESCRIPTORS_REGIONS)
 from wise.msfd.compliance.nationaldescriptors.main import AssessmentDataMixin
 from wise.msfd.compliance.regionaldescriptors.base import COUNTRY
 from wise.msfd.gescomponents import (get_all_descriptors, get_descriptor,
@@ -52,7 +52,8 @@ def get_wf_state_id(context):
 
 def _get_secondary_articles():
     articles = [
-        'Art3-4',
+        'Art3',
+        'Art4',
         'Art7',
         'Art8esa'
     ]
@@ -137,19 +138,9 @@ class BootstrapCompliance(BrowserView):
 
     @db.use_db_session('2018')
     def get_country_regions(self, country_code):
-        t = sql2018.MarineReportingUnit
-        regions = db.get_unique_from_mapper(
-            t,
-            'Region',
-            t.CountryCode == country_code
-        )
+        regions = get_regions_for_country(country_code)
 
-        blacklist = ['NotReported']
-
-        return [(code, REGIONS.get(code, code))
-                for code in regions
-
-                if code not in blacklist]
+        return regions
 
     def get_group(self, code):
         if '.' in code:
@@ -320,6 +311,35 @@ class BootstrapCompliance(BrowserView):
                 alsoProvides(cf, interfaces.INationalSummaryCountryFolder)
                 # self.create_comments_folder(cf)
 
+    def setup_regionalsummaries(self, parent):
+        if 'regional-summaries' in parent.contentIds():
+            ns = parent['regional-summaries']
+        else:
+            ns = create(parent,
+                        'Folder',
+                        title=u'Regional summaries')
+            self.set_layout(ns, 'reg-summary-start')
+            alsoProvides(ns, interfaces.IRegionalSummaryFolder)
+
+        for region in REGIONAL_DESCRIPTORS_REGIONS:
+            if not region.is_main:
+                continue
+
+            code, name = region.code.lower(), region.title
+
+            if code not in ns.contentIds():
+                rf = create(ns,
+                            'wise.msfd.regionalsummaryfolder',
+                            title=name,
+                            id=code)
+
+                rf._subregions = region.subregions
+                rf._countries_for_region = self._get_countries_names(
+                    region.countries
+                )
+                self.set_layout(rf, '@@sum-region-start')
+                alsoProvides(rf, interfaces.IRegionalSummaryRegionFolder)
+
     def setup_secondary_articles(self, parent):
         if 'national-descriptors-assessments' not in parent.contentIds():
             return
@@ -373,7 +393,7 @@ class BootstrapCompliance(BrowserView):
         # Editor: Milieu
 
         # self.setup_nationaldescriptors(cm)
-        DEFAULT = 'regional,nationalsummary,secondary'
+        DEFAULT = 'regional,nationalsummary,regionalsummary,secondary'
         targets = self.request.form.get('setup', DEFAULT)
 
         if targets:
@@ -389,6 +409,9 @@ class BootstrapCompliance(BrowserView):
 
         if "secondary" in targets:
             self.setup_secondary_articles(cm)
+
+        if 'regionalsummary' in targets:
+            self.setup_regionalsummaries(cm)
 
         return cm.absolute_url()
 

@@ -1,0 +1,47 @@
+<div class="row">
+  <div class="col-md-12">
+
+    <h4>
+      Reported information for region <span tal:content="options/region">BAL</span>
+    </h4>
+
+    <table class="table table-bordered table-striped table-condensed">
+      <tr>
+        <td>Member State</td>
+        <td tal:content="python:view.country_name"/>
+      </tr>
+      <tr>
+        <td>Region</td>
+        <td tal:content="options/region"/>
+      </tr>
+      <tr>
+        <td>Article reported</td>
+        <td tal:content="view/article_name"/>
+      </tr>
+      <tr tal:condition="options/source_file">
+        <td>Source file of Member State</td>
+        <td>
+          <a tal:attributes="href python: options['source_file'][1]"
+            tal:content="python: options['source_file'][0]"
+            target="_blank">Filename</a>
+          <div tal:condition="options/factsheet">
+            <a tal:attributes="href options/factsheet" target="_blank">HTML Factsheet</a>
+          </div>
+        </td>
+      </tr>
+      <tr tal:condition="options/report_by">
+        <td>Reported by</td>
+        <td tal:content="options/report_by"/>
+      </tr>
+      <tr>
+        <td>Date report due</td>
+        <td tal:content="options/report_due"/>
+      </tr>
+      <tr tal:condition="options/report_date">
+        <td>Date reported by Member State</td>
+        <td tal:content="options/report_date"/>
+      </tr>
+    </table>
+
+  </div>
+</div>

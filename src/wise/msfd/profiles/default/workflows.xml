@@ -94,5 +94,8 @@
   <type type_id="wise.msfd.regiondescriptorsfolder">
    <bound-workflow workflow_id="compliance_regionaldescriptor_workflow"/>
   </type>
+  <type type_id="wise.msfd.regionalsummaryfolder">
+   <bound-workflow workflow_id="compliance_national_summary_workflow"/>
+  </type>
  </bindings>
 </object>

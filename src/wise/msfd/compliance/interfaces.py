@@ -147,3 +147,19 @@ class INationalSummaryCountryFolder(Interface):
 
     Ex: /compliance-module/national-summaries/lv
     """
+
+
+# Interfaces for Regional summaries
+
+class IRegionalSummaryFolder(Interface):
+    """ A container for regional summaries
+
+    Ex: /compliance-module/regional-summaries
+    """
+
+
+class IRegionalSummaryRegionFolder(Interface):
+    """ A container for regional summaries regions
+
+    Ex: /compliance-module/regional-summaries/bal
+    """

@@ -113,6 +113,8 @@ class IStartArticles1314(Interface):
         required=False,
     )
 
+
+class IArticles1314Region(Interface):
     region_subregions = List(
         title=u"Region and Subregion",
         value_type=Choice(vocabulary="wise_search_a1314_regions"),

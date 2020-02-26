@@ -1,0 +1,28 @@
+<div class="regional-summary-section report-page-view left-side-form full-width-marker">
+  <tal:def tal:define="tables options/tables">
+
+    <div tal:repeat="table tables"
+      tal:replace="structure table">
+    </div>
+
+  </tal:def>
+
+  <div id="read-more-modal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close btn-close-modal" data-dismiss="modal">&times;</button>
+        </div>
+        <div class="modal-body">
+          <div class="modal-content-wrapper"></div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default btn-close-modal" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</div>

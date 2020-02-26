@@ -2,8 +2,6 @@ import json
 import logging
 import time
 from collections import deque
-from datetime import datetime
-from DateTime import DateTime
 
 from eea.cache import cache
 from plone import api
@@ -86,7 +84,7 @@ class CommentsList(BaseComplianceView):
                               'fullname': ''},
                     'comments': '',
                     'transition_title': 'Send to work by Milieu',
-                    'time': DateTime(datetime(2009, 1, 1, 12, 00, 00)),
+                    'time': self.context.created(),
                     'action': 'send_for_work',
                     'review_state': 'in_work',
                     'actorid': 'laszlo',

@@ -7,7 +7,8 @@ from .interfaces import (ICountryDescriptorsFolder,
                          INationalDescriptorAssessment,
                          INationalSummaryCountryFolder,
                          IRegionalDescriptorAssessment,
-                         IRegionalDescriptorRegionsFolder)
+                         IRegionalDescriptorRegionsFolder,
+                         IRegionalSummaryRegionFolder)
 
 
 class CountryDescriptorsFolder(Container):
@@ -17,15 +18,21 @@ class CountryDescriptorsFolder(Container):
 
 
 class RegionDescriptorsFolder(Container):
-    """ Assessment implementation for national descriptor assessments
+    """ Assessment implementation for regional descriptor assessments
     """
     implements(IRegionalDescriptorRegionsFolder)
 
 
 class NationalSummaryCountryFolder(Container):
-    """ Assessment implementation for national descriptor assessments
+    """ Assessment implementation for national summary assessments
     """
     implements(INationalSummaryCountryFolder)
+
+
+class RegionalSummaryRegionFolder(Container):
+    """ Assessment implementation for regional summary assessments
+    """
+    implements(IRegionalSummaryRegionFolder)
 
 
 

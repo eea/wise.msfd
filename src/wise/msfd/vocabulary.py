@@ -9,6 +9,8 @@ from zope.interface import provider
 from zope.schema.interfaces import IVocabularyFactory
 from zope.schema.vocabulary import SimpleTerm, SimpleVocabulary
 
+from wise.msfd.search.utils import FORMS_ART1314
+
 from . import db, sql, sql2018
 from .labels import COMMON_LABELS, GES_LABELS
 
@@ -603,17 +605,17 @@ def marine_unit_id_vocab_factory(context):
 
 @provider(IVocabularyFactory)
 def a1314_report_types(context):
-    # table = sql.MSFD13ReportingInfo
-    # column = 'ReportType'
-    # values = db.get_unique_from_mapper(table, column)
-    # values = reversed(values)
-    values = (
-        ("Measures", 'Article 13 - Measures'),
-        ("Exceptions", 'Article 14 - Exceptions')
-    )
-
-    terms = [SimpleTerm(x, x, t) for x, t in values]
+    terms = [SimpleTerm(v, k, v.title) for k, v in FORMS_ART1314.items()]
+    terms.sort(key=lambda t: t.title)
     vocab = SimpleVocabulary(terms)
+
+    # values = (
+    #     ("Measures", 'Article 13 - Measures'),
+    #     ("Exceptions", 'Article 14 - Exceptions')
+    # )
+    #
+    # terms = [SimpleTerm(x, x, t) for x, t in values]
+    # vocab = SimpleVocabulary(terms)
 
     return vocab
 
@@ -626,7 +628,8 @@ def a1314_regions(context):
 @provider(IVocabularyFactory)
 def a1314_member_states(context):
     regions = context.get_selected_region_subregions()
-    report_type = context.data['report_type']
+    klass = context.context.data['report_type']
+    report_type = klass.report_type
 
     mc = sql.MSFD13ReportingInfo
 
@@ -1025,6 +1028,7 @@ def a2018_mru_ind(context):
 
 
 @provider(IVocabularyFactory)
+@db.use_db_session('2018')
 def a2018_country(context):
     mapper_class = context.subform.mapper_class
 
@@ -1105,6 +1109,7 @@ def a2012_ges_components_art10(context):
 
 
 @provider(IVocabularyFactory)
+@db.use_db_session('2018')
 def a18_ges_component(context):
     """ Vocabulary for article 18 Ges components
     """

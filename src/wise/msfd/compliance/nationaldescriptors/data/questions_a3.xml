@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<questions article='Art3'>
+
+  <assessment-question id="A03Ad1" class="adequacy" use-criteria='none'>
+    <definition>
+      Has a GIS shapefile for marine waters been submitted, according to reporting guidance?
+    </definition>
+    <answers>
+      <option score="1">GIS fully meets guidance</option>
+      <option score="0.75">GIS mostly meets guidance</option>
+      <option score="0.5">GIS partly meets guidance</option>
+      <option score="0.25">GIS submitted but does not meet guidance</option>
+      <option score="0">GIS not submitted</option>
+    </answers>
+    <scoring determination-method="wise.msfd.compliance.scoring.scoring_based">
+    </scoring>
+    <score-weight descriptor="Not linked" value="15" />
+  </assessment-question>
+
+  <assessment-question id="A03Ad2" class="adequacy" use-criteria='none'>
+    <definition>
+      How well do the marine waters comply with Art. 3(1a)?
+    </definition>
+    <answers>
+      <option score="1">Definition fully in accordance with Art. 3(1a)</option>
+      <option score="0.75">Definition mostly in accordance with Art. 3(1a)</option>
+      <option score="0.5">Definition partially in accordance with Art. 3(1a)</option>
+      <option score="0.25">Definition poorly in accordance with Art. 3(1a)</option>
+      <option score="0">Definition not in accordance with Art. 3(1a)</option>
+    </answers>
+    <scoring determination-method="wise.msfd.compliance.scoring.scoring_based">
+    </scoring>
+    <score-weight descriptor="Not linked" value="35" />
+  </assessment-question>
+
+  <assessment-question id="A03Ad3" class="adequacy" use-criteria='none'>
+    <definition>
+      A03Ad2. How well do the marine waters comply with Art. 3(1b)?
+    </definition>
+    <answers>
+      <option score="1">Definition fully in accordance with Art. 3(1b)</option>
+      <option score="0.75">Definition mostly in accordance with Art. 3(1b)</option>
+      <option score="0.5">Definition partially in accordance with Art. 3(1b)</option>
+      <option score="0.25">Definition poorly in accordance with Art. 3(1b)</option>
+      <option score="0">Definition not in accordance with Art. 3(1b)</option>
+    </answers>
+    <scoring determination-method="wise.msfd.compliance.scoring.scoring_based">
+    </scoring>
+    <score-weight descriptor="Not linked" value="35" />
+  </assessment-question>
+
+  <assessment-question id="A03Co1" class="coherence" use-criteria='none'>
+    <definition>
+       Are borders of marine waters coincident with neighbouring MS?
+    </definition>
+    <answers>
+      <option score="1">Borders coincident with all neighbour MS</option>
+      <option score="0.75">Borders coincident with most (&gt;75%) neighbour MS</option>
+      <option score="0.5">Borders coincident with many (&gt;50%) neighbour MS</option>
+      <option score="0.25">Borders coincident with some (&gt;25%) neighbour MS</option>
+      <option score="0">Borders coincident with few (&lt;25%) neighbour MS</option>
+    </answers>
+    <scoring determination-method="wise.msfd.compliance.scoring.scoring_based">
+    </scoring>
+    <score-weight descriptor="Not linked" value="15" />
+  </assessment-question>
+
+</questions>

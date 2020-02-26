@@ -3,6 +3,9 @@ from collections import defaultdict, namedtuple
 
 from zope.schema.vocabulary import SimpleTerm, SimpleVocabulary
 
+from wise.msfd import db, sql2018
+
+
 ASSESSED_ARTICLES = (
     ('Art3', 'Art. 3(1) Marine waters',),
     ('Art4', 'Art. 4/2017 Decision: Marine regions, subregions, '
@@ -117,6 +120,23 @@ REGIONAL_DESCRIPTORS_REGIONS = [
     Region('MAL', 'Mediterranean: Aegean-Levantine Sea', ('MAL',),
            ('EL', 'CY'), False),
 ]
+
+
+@db.use_db_session('2018')
+def get_regions_for_country(country_code):
+    t = sql2018.MarineReportingUnit
+    regions = db.get_unique_from_mapper(
+        t,
+        'Region',
+        t.CountryCode == country_code
+    )
+
+    blacklist = ['NotReported']
+
+    return [(code, REGIONS.get(code, code))
+            for code in regions
+
+            if code not in blacklist]
 
 
 def make_subregions(d):
