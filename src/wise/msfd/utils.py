@@ -306,7 +306,7 @@ def db_result_key(func, *argss, **kwargs):
     if kwargs.get('raw', False):
         raise volatile.DontCache
 
-    keys = [func.__name__]
+    keys = [current_date(), func.__name__]
 
     for arg in argss:
         if hasattr(arg, '__name__'):
@@ -617,6 +617,13 @@ class RelaxedNode(Node):
             return Empty()
 
         return n
+
+
+def current_date():
+    """ Return the current date as string, included in cache keys
+    """
+
+    return datetime.datetime.now().date().isoformat()
 
 
 def items_to_rows(data, fields):

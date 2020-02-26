@@ -29,7 +29,8 @@ from wise.msfd.data import (get_factsheet_url, get_report_file_url,
                             get_report_filename, get_xml_report_data)
 from wise.msfd.gescomponents import get_descriptor, get_features
 from wise.msfd.translation import retrieve_translation
-from wise.msfd.utils import items_to_rows, natural_sort_key, timeit
+from wise.msfd.utils import (current_date, items_to_rows, natural_sort_key,
+                             timeit)
 from z3c.form.button import buttonAndHandler
 from z3c.form.field import Fields
 from z3c.form.form import Form
@@ -85,6 +86,7 @@ def get_reportdata_key(func, self, *args, **kwargs):
         self.article,
         muids,
         focus_muid,
+        current_date(),
     ])
     # TODO why replace '.', makes D1.1 the same as D11
     # res = res.replace('.', '').replace('-', '')

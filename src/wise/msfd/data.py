@@ -9,7 +9,7 @@ import sparql
 from eea.cache import cache
 from wise.msfd import db, sql, sql_extra
 
-from .utils import timeit
+from .utils import current_date, timeit
 
 logger = logging.getLogger('wise.msfd')
 
@@ -246,7 +246,7 @@ def get_report_filename(report_version,
     return handler(country, region, article, descriptor)
 
 
-@cache(lambda func, filename: func.__name__ + filename)
+@cache(lambda func, filename: func.__name__ + filename + current_date())
 @timeit
 def get_report_file_url(filename):
     """ Retrieve the CDR url based on query in ContentRegistry
@@ -310,7 +310,7 @@ LIMIT 1""" % filename
     return urls[0]
 
 
-@cache(lambda func, url: func.__name__ + url)
+@cache(lambda func, url: func.__name__ + url + current_date())
 def get_factsheet_url(url):
     """ Returns the URL for the conversion that gets the "HTML Factsheet"
     """
@@ -404,7 +404,7 @@ def _get_report_filename_art3_4_2018(country, region, article, descriptor):
     return __get_report_filename_art3_4(country, region, schema, obligation)
 
 
-@cache(lambda func, *args: func.__name__ + "_".join(args))
+@cache(lambda func, *args: func.__name__ + "_".join(args) + current_date())
 @timeit
 def __get_report_filename_art3_4(country, region, schema, obligation):
     """ Retrieve from CDR the latest filename
@@ -472,7 +472,7 @@ def _get_report_filename_art7_2018(country, region, article, descriptor):
     return __get_report_filename_art7(country, schema)
 
 
-@cache(lambda func, *args: func.__name__ + args[0])
+@cache(lambda func, *args: func.__name__ + args[0], current_date())
 @timeit
 def __get_report_filename_art7(country, schema):
     """ Retrieve from CDR the latest filename
