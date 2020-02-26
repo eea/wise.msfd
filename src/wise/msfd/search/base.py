@@ -200,53 +200,49 @@ MAIN_FORMS = (
     Tab('msfd-start', 'msfd-start', 'Start',
         'About <br/>search engine', '', '', true),
     Tab('msfd-mru', 'msfd-mru', 'Article 4', 'Marine Units',
-        'Geographical areas used by Member States for the\n\
-        implementation of the Directive (e.g. marine waters or subdivisions\n\
-        of those) compatible with the marine regions and subregions\n\
-        listed in the Directive.',
+        ' Geographical areas used by Member States for the implementation of\n\
+        the Directive compatible with the marine regions and subregions listed\n\
+        in the Directive.',
         '', true),
     Tab('msfd-rc', 'msfd-rc', 'Article 6', 'Regional cooperation',
-        'Member States shall, within each marine region or subregion,\n\
-        coordinate their actions with third countries having sovereignty\n\
-        or jurisdiction over waters in the same marine region or subregion.',
+        'Member States coordination with third countries having sovereignty or\n\
+        jurisdiction over waters in the same marine region or subregion.',
         '', true),
     Tab('msfd-ca', 'msfd-ca', 'Article 7', 'Competent Authorities',
-        'Member States authority or authorities competent for the\n\
-        implementation of the Directive with respect to their marine waters.',
+        'Member States authority or authorities for the implementation of the\n\
+        Directive with respect to their marine waters.',
         '', true),
     Tab('msfd-a8', 'msfd-a8', 'Article 8', 'Assessments',
-        'Assessments of Member States marine waters comprising: a) an analysis\n\
-        of the essential features and characteristics, b) an analysis of the\n\
-        predominant pressures and impacts, and c) an economic and social\n\
-        analysis of the use of those waters.', '', true),
+        'Assessments of Member States marine waters comprising: a) analysis of\n\
+        the essential features and characteristics, b) analysis of the\n\
+        predominant pressures and impacts, and c) economic and social analysis\n\
+        of the use of those waters.', '', true),
     Tab('msfd-a9', 'msfd-a9', 'Article 9',
         'Determination of good environmental status',
-        'Determination, for Member States marine waters, and in respect of each\n\
-        marine region or subregion concerned, of a set of characteristics for\n\
-        good environmental status, on the basis of the Descriptors.', '', true),
+        'Determination of the good environmental status of the Descriptors,\n\
+        for Member States marine waters and in respect of each marine region\n\
+        or subregion.', '', true),
     Tab('msfd-a10', 'msfd-a10', 'Article 10',
-        'Establishment of environmental targets', 'Set of environmental targets\n\
-        and associated indicators for Member States marine waters to guide\n\
-        progress towards achieving good environmental status in their marine\n\
-        environment.', '', true),
+        'Establishment of environmental targets',
+        'Environmental targets and associated indicators for Member States\n\
+        marine waters to guide progress towards achieving good environmental\n\
+        status in their marine environment.', '', true),
     Tab('msfd-c2', 'msfd-c2', 'Article 11', 'Monitoring programmes',
-        'Monitoring programmes for the environmental status of Member States\n\
-        marine waters.', '', true),
+        'Programmes established by Member States to monitor the environmental\n\
+        status of their marine waters.', '', true),
     Tab('msfd-c3', 'msfd-c3', 'Articles 13, 14 & 18',
-        'Programmes of measures & Exceptions'
-        '& progress on the implementation of PoM',
-        'Measures which need to be taken in order to achieve or maintain good\n\
-        environmental status, and exceptions reported whenever the environmental\n\
-        targets or good environmental status cannot be achieved through measures\n\
-        taken by the Member State or cannot be achieved within the time schedule\n\
-        concerned.',
+        'Programmes of measures & Exceptions',
+        'Measures to be taken in order to achieve or maintain good environmental\n\
+        status, exceptions reported whenever it cannot be achieved, and progress\n\
+        in the implementation of the programmes of measures.',
         '', true),
     # Tab('msfd-c4', 'msfd-c4', 'Articles <br/>8, 9 & 10',
     #     '2018 reporting exercise', '', true),
     # Tab('msfd-c5', 'msfd-c5', 'Article 18',
     #     'Progress on the implementation of PoM', '', true),
-    Tab('msfd-c6', 'msfd-c6', 'Article 19.3',
-        'Datasets used', '', '', true),
+    Tab('msfd-c6', 'msfd-c6', 'Article 19.3', 'Datasets used',
+        'Access to data resulting from the GES assessments and the monitoring\n\
+        programmes.', '', true),
 )
 
 

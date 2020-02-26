@@ -139,7 +139,14 @@
 
   .article-box {
     text-align: center;
-    padding: 15px 25px;
+    padding: 15px 3.5em;
+
+    >a {
+      display: block;
+      max-width: 250px;
+      width: 100%;
+      margin: 0 auto;
+    }
 
     .article-box-wrapper {
       padding: 1em;
@@ -172,7 +179,7 @@
   }
 
   .tab-subtitle {
-    font-size: 20px;
+    font-size: 18px;
   }
 
   .tab-subtitle,
@@ -187,16 +194,28 @@
   }
 }
 
-@media screen and (max-width: 1024px) {
-  .articles-wrapper .tab-subtitle {
-    font-size: 19px;
+@media screen and (max-width: 1260px) {
+  .articles-wrapper .article-box {
+      padding: 15px 1.5em;
+  }
+}
+
+@media screen and (max-width: 960px) {
+  .articles-wrapper .article-box {
+      padding: 15px 1em;
   }
 }
 
 @media screen and (max-width: 768px) {
   .articles-wrapper .article-box {
-    margin: 0 auto;
     max-width: 400px;
+  }
+}
+
+@media screen and (max-width: 580px) {
+  .articles-wrapper .article-box {
+    margin: 0 auto;
+    width: 100%;
   }
 }
 
