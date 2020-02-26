@@ -201,13 +201,40 @@ class OverallConclusion2012(RegionalDescriptorsSimpleTable):
         ('Art10', 'Article 10: Environmental targets'),
     ]
 
+    def get_assessment_data(self, region, article, descriptor):
+        data = ASSESSMENTS_2012
+
+        for row in data:
+            if row.region.strip() != region:
+                continue
+
+            if row.descriptor.strip() != descriptor:
+                continue
+
+            if article not in row.article.replace(' ', ''):
+                continue
+
+            return row
+
     def setup_data(self):
         data = []
         descriptors = get_all_descriptors()
 
         for desc_code, desc_title in descriptors:
+            conclusions = []
             for art_id, art_title in self.articles:
-                pass
+                concl = ''
+                assess_data = self.get_assessment_data(
+                    self.region_code, art_id, desc_code
+                )
+
+                if assess_data:
+                    concl = assess_data.conclusion
+
+                conclusions.append(concl)
+
+            if any(conclusions):
+                data.append((desc_title, conclusions))
 
         return data
 
