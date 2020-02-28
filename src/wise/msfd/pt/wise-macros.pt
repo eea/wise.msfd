@@ -54,7 +54,8 @@
     <a href=""
       class="msfd-start-link"
       tal:attributes="href string:${context/absolute_url}/msfd-start">
-      About MSFD
+      About MSFD reporting data explorer
+      <img src="++resource++msfd/images/msfd-mini.png">
     </a>
     <div>
       <h2 class="main-title" tal:content="structure view/main_title">Article X</h2>
@@ -75,7 +76,8 @@
       <tal:rep tal:repeat="tab view/main_forms">
         <tal:block tal:define="
           section view/section | nothing;
-          active python: section and (view.section == tab.section) or (not section and (view.name in request.URL0))">
+          select python: section and (view.section == tab.section) or (not section and (view.name in request.URL0));
+          active python: tab.section in request.URL0">
           <option tal:attributes="value string:./${tab/path}; data-maintitle tab/title;
             data-subtitle tab/subtitle;
             selected python: active and 'selected'">

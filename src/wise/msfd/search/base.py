@@ -198,7 +198,7 @@ def true(view):
 
 MAIN_FORMS = (
     Tab('msfd-start', 'msfd-start', 'Start',
-        'About <br/>search engine', '', '', true),
+        'About MSFD reporting data explorer', '', '', true),
     Tab('msfd-mru', 'msfd-mru', 'Article 4', 'Marine Units',
         ' Geographical areas used by Member States for the implementation of\n\
         the Directive compatible with the marine regions and subregions listed\n\
