@@ -6,6 +6,7 @@ from plone.dexterity.content import Container
 from .interfaces import (ICountryDescriptorsFolder,
                          INationalDescriptorAssessment,
                          INationalSummaryCountryFolder,
+                         INationalSummaryOverviewFolder,
                          IRegionalDescriptorAssessment,
                          IRegionalDescriptorRegionsFolder,
                          IRegionalSummaryRegionFolder)
@@ -27,6 +28,12 @@ class NationalSummaryCountryFolder(Container):
     """ Assessment implementation for national summary assessments
     """
     implements(INationalSummaryCountryFolder)
+
+
+class NationalSummaryOverviewFolder(Container):
+    """ Assessment implementation for national summary assessments
+    """
+    implements(INationalSummaryOverviewFolder)
 
 
 class RegionalSummaryRegionFolder(Container):

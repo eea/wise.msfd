@@ -302,14 +302,27 @@ class BootstrapCompliance(BrowserView):
             if code.lower() in ns.contentIds():
                 cf = ns[code.lower()]
             else:
+                # national_summary type used for Assessment summary/pdf export
                 cf = create(ns,
                             'national_summary',
                             title=country,
                             id=code)
 
-                self.set_layout(cf, 'sum-country-start')
-                alsoProvides(cf, interfaces.INationalSummaryCountryFolder)
-                # self.create_comments_folder(cf)
+            self.set_layout(cf, 'assessment-summary')
+            alsoProvides(cf, interfaces.INationalSummaryCountryFolder)
+            # self.create_comments_folder(cf)
+
+            # create the overview folder
+            if 'overview' in cf.contentIds():
+                of = cf['overview']
+            else:
+                of = create(cf,
+                            'wise.msfd.nationalsummaryoverview',
+                            title='National summary overview',
+                            id='overview')
+
+            self.set_layout(of, 'sum-country-start')
+            alsoProvides(of, interfaces.INationalSummaryOverviewFolder)
 
     def setup_regionalsummaries(self, parent):
         if 'regional-summaries' in parent.contentIds():

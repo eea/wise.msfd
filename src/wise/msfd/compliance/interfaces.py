@@ -149,6 +149,13 @@ class INationalSummaryCountryFolder(Interface):
     """
 
 
+class INationalSummaryOverviewFolder(Interface):
+    """ A container for national summaries overview
+
+        Ex: /compliance-module/national-summaries/lv/overview
+        """
+
+
 # Interfaces for Regional summaries
 
 class IRegionalSummaryFolder(Interface):
