@@ -498,7 +498,6 @@ class ReportData2012Secondary(ReportData2012):
         """
 
         # we treat Art 3 & 4 different because of multiple report files
-        import pdb; pdb.set_trace()
         if self.article not in ('Art3', 'Art4'):
             return super(ReportData2012Secondary, self).__call__()
 
