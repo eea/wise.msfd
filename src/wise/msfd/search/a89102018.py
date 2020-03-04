@@ -28,6 +28,8 @@ class Art9Display(ItemDisplayForm):
     extra_data_template = ViewPageTemplateFile('pt/extra-data-pivot.pt')
     show_extra_data = True
 
+    blacklist = ('Id', 'IdGESComponent')
+
     reported_date_info = {
         'mapper_class': sql2018.ReportedInformation,
         'col_import_id': 'Id',
@@ -161,13 +163,22 @@ class Art9Display(ItemDisplayForm):
 
         self.show_extra_data = True
         id_ges_comp = res.Id
-        cnt, res = db.get_related_record(
+
+        # cnt, res = db.get_related_record(
+        #     determination_mc,
+        #     'IdGESComponent',
+        #     id_ges_comp
+        # )
+
+        cnt, res = db.get_all_records_join(
+            [mapper_class.GESComponent, determination_mc.GESDescription,
+             determination_mc.Id, determination_mc.IdGESComponent,
+             determination_mc.DeterminationDate, determination_mc.UpdateType],
             determination_mc,
-            'IdGESComponent',
-            id_ges_comp
+            determination_mc.IdGESComponent == id_ges_comp
         )
 
-        return count, res
+        return count, res[0]
 
     def get_extra_data(self):
         if not self.item or not self.show_extra_data:
@@ -709,7 +720,7 @@ class A2018Art81abDisplay(ItemDisplayForm):
 
         res = db.get_item_by_conditions(
             overall_status_mc,
-            'Id',
+            'GESComponent',
             conditions_overall_status,
             page=page
         )

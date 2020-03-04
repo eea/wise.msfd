@@ -67,7 +67,7 @@ class CompetentAuthorityItemDisplay(ItemDisplayForm):
     order_field = 'C_CD'
     css_class = "left-side-form"
 
-    blacklist = ('Import_Time', 'Import_FileName')
+    blacklist = ('Import_Time', 'Import_FileName', 'C_CD')
     use_blacklist = False
 
     def get_reported_date(self):
@@ -79,10 +79,7 @@ class CompetentAuthorityItemDisplay(ItemDisplayForm):
         if not reported_date:
             return not_available
 
-        try:
-            reported_date = reported_date.strftime('%Y %b %d')
-        except:
-            pass
+        reported_date = self.format_reported_date(reported_date)
 
         return reported_date
 
@@ -210,8 +207,28 @@ class RegionalCoopItemDisplay(ItemDisplayForm):
         'col_filename': 'MSFD4_Import_FileName'
     }
 
-    blacklist = ('MSFD4_Import_ID', )
+    blacklist = ('MSFD4_Import_ID', 'MSFD4_Import_ReportingCountry')
     blacklist_labels = ('Topic', )
+
+    def get_reported_date(self):
+        rep_date = super(RegionalCoopItemDisplay, self).get_reported_date()
+        default = 'Not available'
+
+        if rep_date != default:
+            return rep_date
+
+        import_id = self.get_import_id()
+        t = sql.t_MSFD4_ReportingInformation
+
+        count, data = db.get_all_specific_columns(
+            [t.c.ReportingDate],
+            t.c.MSFD4_ReportingInformation_Import == import_id
+        )
+
+        if count:
+            return self.format_reported_date(data[0].ReportingDate)
+
+        return default
 
     def get_import_id(self):
         import_id = self.item.MSFD4_Import_ID

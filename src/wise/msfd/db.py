@@ -1,6 +1,8 @@
 import os
 import threading
 
+from collections import defaultdict
+
 from sqlalchemy import create_engine, distinct, func, inspect
 from sqlalchemy.orm import scoped_session, sessionmaker
 from sqlalchemy.orm.relationships import RelationshipProperty
@@ -8,7 +10,7 @@ from zope.sqlalchemy import register
 
 from eea.cache import cache
 
-from . import sql  # , sql2018
+from . import sql, sql2018
 from .utils import db_result_key, group_query
 
 env = os.environ.get
@@ -528,3 +530,26 @@ def compliance_art8_join(columns, mc_join1, mc_join2, *conditions):
     q = [x for x in q]
 
     return [count, q]
+
+
+def latest_import_ids_2018():
+    mc = sql2018.ReportedInformation
+
+    count, res = get_all_records(
+        mc
+    )
+
+    groups = defaultdict(int)
+
+    for row in res:
+        country_code = row.CountryCode
+        schema = row.Schema
+        rowid = row.Id
+        k = (country_code, schema)
+
+        if rowid >= groups[k]:
+            groups[k] = rowid
+
+    latest_ids = [v for k, v in groups.items()]
+
+    return latest_ids

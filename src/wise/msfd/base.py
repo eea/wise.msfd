@@ -131,6 +131,14 @@ class BaseUtil(object):
 
         return date
 
+    def format_reported_date(self, reported_date):
+        try:
+            reported_date = reported_date.strftime('%Y %b %d')
+        except:
+            pass
+
+        return reported_date
+
     @use_db_session('2018')
     def get_reported_date_2018(self):
         not_available = 'Not available'
@@ -154,11 +162,7 @@ class BaseUtil(object):
 
         reported_date = data[0]
         reported_date = getattr(reported_date, col_import_time)
-
-        try:
-            reported_date = reported_date.strftime('%Y %b %d')
-        except:
-            pass
+        reported_date = self.format_reported_date(reported_date)
 
         return reported_date
 
@@ -193,10 +197,7 @@ class BaseUtil(object):
         if not reported_date:
             return not_available
 
-        try:
-            reported_date = reported_date.strftime('%Y %b %d')
-        except:
-            pass
+        reported_date = self.format_reported_date(reported_date)
 
         return reported_date
 
