@@ -335,8 +335,16 @@ class StartArticle82012Form(EmbeddedForm):
     permission = 'zope2.View'
 
     def get_subform(self):
-        if self.data['article']:
+        # if self.data['article']:
+        #     return RegionForm(self, self.request)
+
+        article = self.get_form_data_by_key(self, 'article')
+        if article == 'a81cform':
             return RegionForm(self, self.request)
+
+        klass = get_form(article)
+
+        return super(StartArticle82012Form, self).get_subform(klass)
 
 
 class RegionForm(EmbeddedForm):
@@ -380,7 +388,14 @@ class AreaTypesForm(EmbeddedForm):
 
         if main_form == 'msfd-a10':
             return A10Form(self, self.request)
-        
+
+        if main_form == 'msfd-a8':
+            # For Art 8.1a and 8.1b we return the theme class
+            klass = self.get_flattened_data(self).get('theme')
+
+            if klass:
+                return super(AreaTypesForm, self).get_subform(klass)
+
         article = self.get_form_data_by_key(self, 'article')
         klass = get_form(article)
 

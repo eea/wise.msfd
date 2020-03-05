@@ -6,6 +6,7 @@ from ..base import (EmbeddedForm, MarineUnitIDSelectForm,
                     MarineUnitIDSelectForm2012)
 from .base import ItemDisplay, MultiItemDisplayForm
 from .interfaces import IA81Form
+from .main import RegionForm
 from .utils import (data_to_xls, register_form_a8_2012, register_form_section,
                     register_subform)
 
@@ -29,9 +30,11 @@ class A81aForm(EmbeddedForm):
     }
 
     def get_subform(self):
-        klass = self.data.get('theme')
+        # klass = self.data.get('theme')
+        #
+        # return super(A81aForm, self).get_subform(klass)
 
-        return super(A81aForm, self).get_subform(klass)
+        return RegionForm(self, self.request)
 
 
 # region Ecosystem(s)

@@ -537,10 +537,15 @@ class MarineUnitIDSelectForm2012(MarineUnitIDSelectForm):
     def get_available_marine_unit_ids(self, parent=None):
         data = {}
         if not parent:
-            parent = self.context.context
+            # find AreaTypes form
+            context = self
+            while hasattr(context, 'context'):
+                if hasattr(context, 'get_selected_area_types'):
+                    parent = context
+                    break
+                context = context.context
 
         # lookup values in the inheritance tree
-
         for crit in ['area_types', 'member_states', 'region_subregions']:
             data[crit] = getattr(parent, 'get_selected_' + crit)()
             parent = parent.context
