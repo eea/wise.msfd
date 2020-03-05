@@ -380,7 +380,7 @@ class AreaTypesForm(EmbeddedForm):
 
         if main_form == 'msfd-a10':
             return A10Form(self, self.request)
-
+        
         article = self.get_form_data_by_key(self, 'article')
         klass = get_form(article)
 

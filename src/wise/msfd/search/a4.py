@@ -249,9 +249,9 @@ class A4ItemDisplay2018to2024(ItemDisplayForm):
     @db.use_db_session('2018')
     def get_db_results(self):
         page = self.get_page()
-        data = self.get_flattened_data(self)
-        regions = data['region_subregions']
-        countries = data['member_states']
+        form_data = self.get_flattened_data(self)
+        regions = form_data['region_subregions']
+        countries = form_data['member_states']
 
         col_names = ('Country', 'Region', 'thematicId', 'nameTxtInt',
                      'nameText', 'spZoneType', 'legisSName', 'Area')
@@ -268,11 +268,11 @@ class A4ItemDisplay2018to2024(ItemDisplayForm):
 
         sess = db.session()
 
-        data = sess.query(*columns).filter(
+        self.data_download = sess.query(*columns).filter(
             *conditions
         ).order_by(getattr(self.mapper_class, self.order_field))
 
-        data = db_objects_to_dict(data)
+        data = db_objects_to_dict(self.data_download)
         data_grouped = group_data(data, 'Country', remove_pivot=False)
 
         pages = sorted(data_grouped.keys())
@@ -283,3 +283,12 @@ class A4ItemDisplay2018to2024(ItemDisplayForm):
 
         return count, items
 
+    @db.use_db_session('2018')
+    def download_results(self):
+        data = [x for x in self.data_download]
+
+        xlsdata = [
+            ('MRUsPublication', data),
+        ]
+
+        return data_to_xls(xlsdata)
