@@ -788,8 +788,7 @@ def a2018_feature_art81c(context):
 
 @provider(IVocabularyFactory)
 def a2018_feature(context):
-    # if not hasattr(context, 'features_mc'):
-    #     context = context.context
+    context = context.context
 
     mapper_class = context.mapper_class
     features_mc = context.features_mc
@@ -831,7 +830,7 @@ def a2018_feature(context):
 
 @provider(IVocabularyFactory)
 def a2018_ges_component(context):
-    parent = context.context
+    parent = context
 
     # if not hasattr(context, 'ges_components_mc'):
     #     context = context.context

@@ -946,7 +946,7 @@ class A2018Art81abDisplay(ItemDisplayForm):
                     final_rows.append(_row.copy())
 
         _sorted_rows = sorted(final_rows, key=lambda d: d['Element'])
-        extra_final = change_orientation(_sorted_rows)
+        extra_final = _sorted_rows and change_orientation(_sorted_rows) or []
 
         res = []
         res_extra = []
@@ -992,7 +992,7 @@ class A2018Article81ab(EmbeddedForm):
     fields['member_states'].widgetFactory = CheckBoxFieldWidget
 
     def get_subform(self):
-        return A2018Art81abFeatures(self, self.request)
+        return A2018Art81abGesComponents(self, self.request)
 
     def default_marine_unit_id(self):
         return all_values_from_field(self,
@@ -1004,7 +1004,7 @@ class A2018Art81abFeatures(EmbeddedForm):
     fields['feature'].widgetFactory = CheckBoxFieldWidget
 
     def get_subform(self):
-        return A2018Art81abGesComponents(self, self.request)
+        return A2018Art81abMarineUnitID(self, self.request)
 
 
 class A2018Art81abGesComponents(EmbeddedForm):
@@ -1012,7 +1012,7 @@ class A2018Art81abGesComponents(EmbeddedForm):
     fields['ges_component'].widgetFactory = CheckBoxFieldWidget
 
     def get_subform(self):
-        return A2018Art81abMarineUnitID(self, self.request)
+        return A2018Art81abFeatures(self, self.request)
 
 
 class A2018Art81abMarineUnitID(MarineUnitIDSelectForm):
