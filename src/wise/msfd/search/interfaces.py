@@ -22,7 +22,7 @@ class IItemDisplayForm(IEmbeddedForm):
 
 
 class IArticleSelectA8(Interface):
-    article = Choice(title=u"Article",
+    article = Choice(title=u"Report type",
                      required=False,
                      default='',
                      vocabulary="wise_search_articles_a8")
@@ -190,7 +190,7 @@ class IStartArticle4(Interface):
 # Articles 8, 9, 10
 # 2018 reporting year
 class IArticleSelectA82018(Interface):
-    article = Choice(title=u"Article",
+    article = Choice(title=u"Report type",
                      required=False,
                      default='',
                      vocabulary="wise_search_articles_a8_2018")

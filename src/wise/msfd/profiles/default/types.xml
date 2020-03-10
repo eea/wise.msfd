@@ -96,4 +96,5 @@
  <object name="wise.msfd.regiondescriptorsfolder" meta_type="Dexterity FTI"/>
  <object name="national_summary" meta_type="Dexterity FTI"/>
  <object name="wise.msfd.regionalsummaryfolder" meta_type="Dexterity FTI"/>
+ <object name="wise.msfd.nationalsummaryoverview" meta_type="Dexterity FTI"/>
 </object>

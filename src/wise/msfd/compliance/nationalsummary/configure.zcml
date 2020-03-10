@@ -14,11 +14,20 @@
     permission="wise.ViewAssessmentData"
     />
 
-  <!-- View for a country -->
+  <!-- National summary view for a country -->
   <browser:page
-    for="..interfaces.INationalSummaryCountryFolder"
+    for="..interfaces.INationalSummaryOverviewFolder"
     name="sum-country-start"
     class=".reportdata.NationalSummaryView"
+    template="./pt/report-data-view.pt"
+    permission="wise.ViewAssessmentData"
+    />
+
+  <!-- Assessment export view -->
+  <browser:page
+    for="..interfaces.INationalSummaryCountryFolder"
+    name="assessment-summary"
+    class=".pdfexport.AssessmentExportView"
     template="./pt/report-data-view.pt"
     permission="wise.ViewAssessmentData"
     />
@@ -26,8 +35,8 @@
   <!-- View for pdf cover -->
   <browser:page
     for="..interfaces.INationalSummaryCountryFolder"
-    name="nat-sum-cover"
-    class=".reportdata.NationalSummaryCover"
+    name="export-cover"
+    class=".pdfexport.AssessmentExportCover"
     template="./pt/cover.pt"
     permission="zope2.View"
     />

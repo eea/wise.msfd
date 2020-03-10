@@ -1,9 +1,9 @@
 <?xml version="1.0"?>
 <object name="national_summary" meta_type="Dexterity FTI"
    i18n:domain="wise.msfd" xmlns:i18n="http://xml.zope.org/namespaces/i18n">
- <property name="title" i18n:translate="">National Summary</property>
+ <property name="title" i18n:translate="">Assessment Summary (PDF export)</property>
  <property name="description"
-    i18n:translate="">A container for National Summaries</property>
+    i18n:translate="">A container for Assessment Summaries used for PDF exports</property>
  <property name="icon_expr">string:${portal_url}/document_icon.png</property>
  <property name="factory">national_summary</property>
  <property
@@ -16,6 +16,7 @@
   <element value="Folder"/>
   <element value="Image"/>
   <element value="wise.msfd.nationaldescriptorassessment"/>
+  <element value="wise.msfd.nationalsummaryoverview"/>
  </property>
  <property name="allow_discussion">True</property>
  <property name="default_view">view</property>

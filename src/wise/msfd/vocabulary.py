@@ -226,7 +226,7 @@ def get_member_states_vb_factory_art6(context):
         mcr,
         *conditions
     )
-    rows = [x[0] for x in rows]
+    rows = [x[0].strip() for x in rows]
 
     if conditions and ('ANS' in regions or 'BAL' in regions):
         rows.append('SE')
@@ -788,8 +788,7 @@ def a2018_feature_art81c(context):
 
 @provider(IVocabularyFactory)
 def a2018_feature(context):
-    # if not hasattr(context, 'features_mc'):
-    #     context = context.context
+    context = context.context
 
     mapper_class = context.mapper_class
     features_mc = context.features_mc
@@ -802,6 +801,10 @@ def a2018_feature(context):
 
     if countries:
         conditions.append(mc_countries.CountryCode.in_(countries))
+
+    latest_import_ids_2018 = db.latest_import_ids_2018()
+    if latest_import_ids_2018:
+        conditions.append(mc_countries.Id.in_(latest_import_ids_2018))
 
     count, id_marine_units = db.get_all_records_outerjoin(
         mapper_class,
@@ -827,7 +830,7 @@ def a2018_feature(context):
 
 @provider(IVocabularyFactory)
 def a2018_ges_component(context):
-    parent = context.context
+    parent = context
 
     # if not hasattr(context, 'ges_components_mc'):
     #     context = context.context

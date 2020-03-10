@@ -3,8 +3,11 @@
   class="extra-details">
 
     <div style="overflow: initial;"
-        class="extra-details-section" tal:repeat="info extra_data" >
+        class="extra-details-section"
+         tal:repeat="info extra_data" >
       <h4 class="section-title" tal:content="python: info[0]"></h4>
+      <div tal:condition="python: len(info[1]) == 0">No data </div>
+      
       <div class="section-select" tal:condition="python: len(info[1])>0">
         <tal:section
           define="data python: info[1];">

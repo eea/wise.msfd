@@ -24,7 +24,9 @@ DISPLAY_LABELS = {
     'nameTxtInt': 'Name in English',
     'nameText': 'Name in the national language',
     'spZoneType': 'Zone type',
-    'legisSName': 'Legislation short name'
+    'legisSName': 'Legislation short name',
+    # Article 19.3
+    'MarineUnitID': 'Marine Reporting unit'
 }
 
 logger = logging.getLogger('wise.msfd')

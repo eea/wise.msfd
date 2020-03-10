@@ -21,7 +21,7 @@
 
   <assessment-question id="A04Cy1" class="consistency" use-criteria='none'>
     <definition>
-      Are MRUs in GIS shapefile consistent with MRUs in 4geo file?
+      Are the MRUs from the 4geo file consistent with the MRUs used in the assessments?
     </definition>
     <answers>
       <option score="1">Fully (100%) consistent</option>

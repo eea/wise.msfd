@@ -37,7 +37,8 @@
                     class="class string:p-${country/state_id}"
                     tal:content="country/status"
                     tal:define="color python:view.process_status_colors.get(country.state_id, 'default')"
-                    tal:attributes="class string:process-status btn btn-xs btn-${color}; href country/url">
+                    tal:attributes="class string:process-status btn btn-xs btn-${color};
+                      href python: country.url + '/assessment-summary'">
                     Phase -1
                   </a>
                 </td>

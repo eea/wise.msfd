@@ -139,11 +139,11 @@ class ReportingHistoryTable(BaseNatSummaryView):
     def calculate_reporting_delay(self, reporting_delay, report_due,
                                   report_date):
         if reporting_delay:
-            return "{:+d}".format(reporting_delay)
+            return -reporting_delay
 
         timedelta = report_due - report_date
 
-        return -timedelta.days
+        return "{:+d}".format(timedelta.days)
 
     def get_article_row(self, obligations):
         # Group the data by envelope, report due, report date

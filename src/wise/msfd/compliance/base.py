@@ -27,8 +27,8 @@ from wise.msfd.gescomponents import (get_all_descriptors, get_descriptor,
                                      get_features, get_marine_units,
                                      sorted_criterions, Descriptor)
 from wise.msfd.translation.interfaces import ITranslationContext
-from wise.msfd.utils import (Tab, _parse_files_in_location, natural_sort_key,
-                             row_to_dict, timeit)
+from wise.msfd.utils import (Tab, _parse_files_in_location, current_date,
+                             natural_sort_key, row_to_dict, timeit)
 
 from . import interfaces
 from .interfaces import ICountryDescriptorsFolder
@@ -171,6 +171,7 @@ def report_data_cache_key(func, self, *args, **kwargs):
         year = _args[2]
 
     res = '_cache_' + func.__name__ + '_'.join([country, region, year])
+    res += current_date()
     res = res.replace('.', '').replace('-', '')
 
     return res

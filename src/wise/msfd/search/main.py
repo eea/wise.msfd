@@ -67,7 +67,7 @@ class CompetentAuthorityItemDisplay(ItemDisplayForm):
     order_field = 'C_CD'
     css_class = "left-side-form"
 
-    blacklist = ('Import_Time', 'Import_FileName')
+    blacklist = ('Import_Time', 'Import_FileName', 'C_CD')
     use_blacklist = False
 
     def get_reported_date(self):
@@ -79,10 +79,7 @@ class CompetentAuthorityItemDisplay(ItemDisplayForm):
         if not reported_date:
             return not_available
 
-        try:
-            reported_date = reported_date.strftime('%Y %b %d')
-        except:
-            pass
+        reported_date = self.format_reported_date(reported_date)
 
         return reported_date
 
@@ -210,8 +207,28 @@ class RegionalCoopItemDisplay(ItemDisplayForm):
         'col_filename': 'MSFD4_Import_FileName'
     }
 
-    blacklist = ('MSFD4_Import_ID', )
+    blacklist = ('MSFD4_Import_ID', 'MSFD4_Import_ReportingCountry')
     blacklist_labels = ('Topic', )
+
+    def get_reported_date(self):
+        rep_date = super(RegionalCoopItemDisplay, self).get_reported_date()
+        default = 'Not available'
+
+        if rep_date != default:
+            return rep_date
+
+        import_id = self.get_import_id()
+        t = sql.t_MSFD4_ReportingInformation
+
+        count, data = db.get_all_specific_columns(
+            [t.c.ReportingDate],
+            t.c.MSFD4_ReportingInformation_Import == import_id
+        )
+
+        if count:
+            return self.format_reported_date(data[0].ReportingDate)
+
+        return default
 
     def get_import_id(self):
         import_id = self.item.MSFD4_Import_ID
@@ -318,8 +335,16 @@ class StartArticle82012Form(EmbeddedForm):
     permission = 'zope2.View'
 
     def get_subform(self):
-        if self.data['article']:
+        # if self.data['article']:
+        #     return RegionForm(self, self.request)
+
+        article = self.get_form_data_by_key(self, 'article')
+        if article == 'a81cform':
             return RegionForm(self, self.request)
+
+        klass = get_form(article)
+
+        return super(StartArticle82012Form, self).get_subform(klass)
 
 
 class RegionForm(EmbeddedForm):
@@ -363,6 +388,13 @@ class AreaTypesForm(EmbeddedForm):
 
         if main_form == 'msfd-a10':
             return A10Form(self, self.request)
+
+        if main_form == 'msfd-a8':
+            # For Art 8.1a and 8.1b we return the theme class
+            klass = self.get_flattened_data(self).get('theme')
+
+            if klass:
+                return super(AreaTypesForm, self).get_subform(klass)
 
         article = self.get_form_data_by_key(self, 'article')
         klass = get_form(article)

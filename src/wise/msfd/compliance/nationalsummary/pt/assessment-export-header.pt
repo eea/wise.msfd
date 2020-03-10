@@ -45,7 +45,11 @@
     <div id="download-report-data-form">
       <form method="POST" action="" tal:attributes="action request/getURL">
         <button name="edit-data" class="btn btn-primary">Edit</button>
-        <a class="btn btn-primary" href="./assessment-summary" target="_blank">Assessment summary</a>
+        <button name="download" class="btn btn-primary">Download as document (odt)</button>
+        <button name="download_pdf" class="btn btn-primary">Download as PDF</button>
+        <a class="btn btn-primary" href="./export-cover" target="_blank">Preview PDF cover</a>
+        <button name="translate" class="btn btn-secondary"
+          tal:condition="view/can_view_assessment_data">Auto-translate</button>
       </form>
     </div>
 

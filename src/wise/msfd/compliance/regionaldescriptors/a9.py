@@ -9,7 +9,8 @@ from wise.msfd.data import countries_in_region, muids_by_country
 from wise.msfd.gescomponents import (get_descriptor, FEATURES_DB_2012,
                                      FEATURES_DB_2018)
 from wise.msfd.translation import get_translated
-from wise.msfd.utils import CompoundRow, ItemLabel, ItemList, Row, TableHeader
+from wise.msfd.utils import (CompoundRow, ItemLabel, ItemList, Row,
+                             TableHeader, current_date)
 
 from .utils import (compoundrow, compoundrow2012, get_nat_desc_country_url,
                     emptyline_separated_itemlist, newline_separated_itemlist)
@@ -22,7 +23,8 @@ def get_key(func, self):
         'reg-desc',
         self.descriptor,
         ''.join(self.region),
-        self.article
+        self.article,
+        current_date()
     ))
 
     return key

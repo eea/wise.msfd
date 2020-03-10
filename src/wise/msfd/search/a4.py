@@ -66,11 +66,11 @@ class A4Form(ItemDisplayForm):
     order_field = 'MSFD4_GeograpicalAreasDescription_Import'
     css_class = "left-side-form"
 
-    blacklist_labels = ('MarineUnitID', )
+    blacklist_labels = ('MarineUnitID')
 
     extra_data_template = ViewPageTemplateFile('pt/extra-data-pivot.pt')
     # extra_data_template = ViewPageTemplateFile('pt/extra-data-simple.pt')
-    blacklist = ('MSFD4_GeograpicalAreasDescription_Import',)
+    blacklist = ('MSFD4_GeograpicalAreasDescription_Import', 'MemberState')
 
     reported_date_info = {
         'mapper_class': sql.MSFD4Import,
@@ -78,6 +78,26 @@ class A4Form(ItemDisplayForm):
         'col_import_time': 'MSFD4_Import_Time',
         'col_filename': 'MSFD4_Import_FileName'
     }
+
+    def get_reported_date(self):
+        reported_date = super(A4Form, self).get_reported_date()
+        default = 'Not available'
+
+        if reported_date != default:
+            return reported_date
+
+        import_id = self.get_import_id()
+        t = sql.t_MSFD4_ReportingInformation
+
+        count, data = db.get_all_specific_columns(
+            [t.c.ReportingDate],
+            t.c.MSFD4_ReportingInformation_Import == import_id
+        )
+
+        if count:
+            return self.format_reported_date(data[0].ReportingDate)
+
+        return default
 
     def get_import_id(self):
         import_id = self.item.MSFD4_GeograpicalAreasDescription_Import
@@ -198,7 +218,8 @@ class A4ItemDisplay2018to2024(ItemDisplayForm):
     order_field = 'thematicId'
 
     data_template = ViewPageTemplateFile('pt/item-display-rows.pt')
-    blacklist_labels = ('thematicId', 'legisSName', 'nameText')
+    blacklist = ('Country', )
+    blacklist_labels = ('thematicId', 'legisSName', 'nameText', '')
 
     @db.use_db_session('2018')
     def get_reported_date(self):
@@ -216,11 +237,7 @@ class A4ItemDisplay2018to2024(ItemDisplayForm):
             return 'Not available'
 
         reported_date = data[0].DateReceived
-
-        try:
-            reported_date = reported_date.strftime('%Y %b %d')
-        except:
-            pass
+        reported_date = self.format_reported_date(reported_date)
 
         return reported_date
 
@@ -232,9 +249,9 @@ class A4ItemDisplay2018to2024(ItemDisplayForm):
     @db.use_db_session('2018')
     def get_db_results(self):
         page = self.get_page()
-        data = self.get_flattened_data(self)
-        regions = data['region_subregions']
-        countries = data['member_states']
+        form_data = self.get_flattened_data(self)
+        regions = form_data['region_subregions']
+        countries = form_data['member_states']
 
         col_names = ('Country', 'Region', 'thematicId', 'nameTxtInt',
                      'nameText', 'spZoneType', 'legisSName', 'Area')
@@ -251,11 +268,11 @@ class A4ItemDisplay2018to2024(ItemDisplayForm):
 
         sess = db.session()
 
-        data = sess.query(*columns).filter(
+        self.data_download = sess.query(*columns).filter(
             *conditions
         ).order_by(getattr(self.mapper_class, self.order_field))
 
-        data = db_objects_to_dict(data)
+        data = db_objects_to_dict(self.data_download)
         data_grouped = group_data(data, 'Country', remove_pivot=False)
 
         pages = sorted(data_grouped.keys())
@@ -266,3 +283,12 @@ class A4ItemDisplay2018to2024(ItemDisplayForm):
 
         return count, items
 
+    @db.use_db_session('2018')
+    def download_results(self):
+        data = [x for x in self.data_download]
+
+        xlsdata = [
+            ('MRUsPublication', data),
+        ]
+
+        return data_to_xls(xlsdata)

@@ -222,6 +222,7 @@ class EditAssessmentDataFormMain(Form):
         if self.read_only_access:
             return True
 
+        # Is this still needed?
         state, _ = self.current_phase
         is_disabled = question.klass not in PHASES.get(state, ())
 
