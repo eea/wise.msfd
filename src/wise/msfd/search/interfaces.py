@@ -85,6 +85,14 @@ class IMemberStatesArt6(Interface):
     )
 
 
+class IMemberStatesArt7(Interface):
+    member_states = List(
+        title=u"Country",
+        value_type=Choice(vocabulary="wise_search_member_states_art7"),
+        required=False,
+    )
+
+
 class IAreaTypes(Interface):
     area_types = List(
         title=u"Area Type",

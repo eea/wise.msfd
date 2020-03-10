@@ -34,7 +34,7 @@ class StartMSCompetentAuthoritiesForm(MainForm):
     name = 'msfd-ca'
 
     record_title = title = 'Article 7 (Competent Authorities)'
-    fields = Fields(interfaces.IMemberStates)
+    fields = Fields(interfaces.IMemberStatesArt7)
     fields['member_states'].widgetFactory = CheckBoxFieldWidget
     session_name = '2012'
 

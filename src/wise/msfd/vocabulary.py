@@ -11,7 +11,7 @@ from zope.schema.vocabulary import SimpleTerm, SimpleVocabulary
 
 from wise.msfd.search.utils import FORMS_ART1314
 
-from . import db, sql, sql2018
+from . import db, sql, sql_extra, sql2018
 from .labels import COMMON_LABELS, GES_LABELS
 
 # from eea.cache import cache
@@ -232,6 +232,16 @@ def get_member_states_vb_factory_art6(context):
         rows.append('SE')
 
     return values_to_vocab(set(rows))
+
+
+@provider(IVocabularyFactory)
+def get_member_states_vb_factory_art7(context):
+    res = db.get_unique_from_mapper(
+        sql_extra.MSCompetentAuthority,
+        'C_CD'
+    )
+
+    return vocab_from_values(res)
 
 
 @provider(IVocabularyFactory)
