@@ -372,6 +372,16 @@ class MemberStatesForm(EmbeddedForm):
         return AreaTypesForm(self, self.request)
 
 
+class MemberStatesFormArt9(EmbeddedForm):
+    fields = Fields(interfaces.IMemberStates)
+    fields['member_states'].widgetFactory = CheckBoxFieldWidget
+
+    def get_subform(self):
+        # return AreaTypesForm(self, self.request)
+
+        return A9Form(self, self.request)
+
+
 class AreaTypesForm(EmbeddedForm):
 
     fields = Fields(interfaces.IAreaTypes)
@@ -383,8 +393,8 @@ class AreaTypesForm(EmbeddedForm):
         if main_form == 'msfd-mru':
             return A4Form(self, self.request)
 
-        if main_form == 'msfd-a9':
-            return A9Form(self, self.request)
+        # if main_form == 'msfd-a9':
+        #     return A9Form(self, self.request)
 
         if main_form == 'msfd-a10':
             return A10Form(self, self.request)
@@ -409,10 +419,16 @@ StartArticle8View = wrap_form(StartArticle8Form, MainFormWrapper)
 
 
 @register_form_art9
-class StartArticle92012Form(RegionForm):
+class StartArticle92012Form(EmbeddedForm):
     title = "2012 reporting exercise"
     permission = "zope2.View"
     session_name = "2012"
+
+    fields = Fields(interfaces.IRegionSubregions)
+    fields['region_subregions'].widgetFactory = CheckBoxFieldWidget
+
+    def get_subform(self):
+        return MemberStatesFormArt9(self, self.request)
 
 
 StartArticle9View = wrap_form(StartArticle9Form, MainFormWrapper)

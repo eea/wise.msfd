@@ -246,10 +246,15 @@ def get_member_states_vb_factory_art7(context):
 
 @provider(IVocabularyFactory)
 def get_area_type_vb_factory(context):
-
     t = sql.t_MSFD4_GegraphicalAreasID
+    member_states = []
 
-    member_states = context.get_selected_member_states()
+    while hasattr(context, 'context'):
+        if hasattr(context, 'get_selected_member_states'):
+            member_states = context.get_selected_member_states()
+            break
+
+        context = context.context
 
     if member_states:
         count, rows = db.get_all_records(
