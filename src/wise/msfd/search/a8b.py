@@ -60,7 +60,7 @@ class A81bExtractionFishSubForm(MarineUnitIDSelectForm2012):
         return A81bExtractionFishItemDisplay(self, self.request)
 
     def download_results(self):
-        muids = [self.get_marine_unit_id()]
+        muids = self.get_available_marine_unit_ids()[1]
         count, data = db.get_all_records(
             self.mapper_class,
             self.mapper_class.MarineUnitID.in_(muids)
@@ -211,7 +211,7 @@ class A81bExtractionSeaweedSubForm(MarineUnitIDSelectForm2012):
         return A81bExtractionSeaweedItemDisplay(self, self.request)
 
     def download_results(self):
-        muids = [self.get_marine_unit_id()]
+        muids = self.get_available_marine_unit_ids()[1]
         count, data = db.get_all_records(
             self.mapper_class,
             self.mapper_class.MarineUnitID.in_(muids)
@@ -363,7 +363,7 @@ class A81bHazardousSubForm(MarineUnitIDSelectForm2012):
         return A81bHazardousItemDisplay(self, self.request)
 
     def download_results(self):
-        muids = [self.get_marine_unit_id()]
+        muids = self.get_available_marine_unit_ids()[1]
         count, data = db.get_all_records(
             self.mapper_class, self.mapper_class.MarineUnitID.in_(muids)
         )
@@ -513,7 +513,7 @@ class A81bHydroSubForm(MarineUnitIDSelectForm2012):
         return A81bHydroItemDisplay(self, self.request)
 
     def download_results(self):
-        muids = [self.get_marine_unit_id()]
+        muids = self.get_available_marine_unit_ids()[1]
         count, data = db.get_all_records(
             self.mapper_class, self.mapper_class.MarineUnitID.in_(muids)
         )
@@ -662,7 +662,7 @@ class A81bMarineLitterSubForm(MarineUnitIDSelectForm2012):
         return A81bMarineLitterItemDisplay(self, self.request)
 
     def download_results(self):
-        muids = [self.get_marine_unit_id()]
+        muids = self.get_available_marine_unit_ids()[1]
         count, data = db.get_all_records(
             self.mapper_class, self.mapper_class.MarineUnitID.in_(muids)
         )
@@ -810,7 +810,7 @@ class A81bMicrobialSubForm(MarineUnitIDSelectForm2012):
         return A81bMicrobialItemDisplay(self, self.request)
 
     def download_results(self):
-        muids = [self.get_marine_unit_id()]
+        muids = self.get_available_marine_unit_ids()[1]
         count, data = db.get_all_records(
             self.mapper_class, self.mapper_class.MarineUnitID.in_(muids)
         )
@@ -960,7 +960,7 @@ class A81bNonIndigenousSubForm(MarineUnitIDSelectForm2012):
         return A81bNonIndigenousItemDisplay(self, self.request)
 
     def download_results(self):
-        muids = [self.get_marine_unit_id()]
+        muids = self.get_available_marine_unit_ids()[1]
         count, data = db.get_all_records(
             self.mapper_class, self.mapper_class.MarineUnitID.in_(muids)
         )
@@ -1106,7 +1106,7 @@ class A81bNoiseSubForm(MarineUnitIDSelectForm2012):
         return A81bNoiseItemDisplay(self, self.request)
 
     def download_results(self):
-        muids = [self.get_marine_unit_id()]
+        muids = self.get_available_marine_unit_ids()[1]
         count, data = db.get_all_records(
             self.mapper_class, self.mapper_class.MarineUnitID.in_(muids)
         )
@@ -1249,7 +1249,7 @@ class A81bNutrientSubForm(MarineUnitIDSelectForm2012):
         return A81bNutrientItemDisplay(self, self.request)
 
     def download_results(self):
-        muids = [self.get_marine_unit_id()]
+        muids = self.get_available_marine_unit_ids()[1]
         count, data = db.get_all_records(
             self.mapper_class, self.mapper_class.MarineUnitID.in_(muids)
         )
@@ -1392,7 +1392,7 @@ class A81bPhysicalDamageSubForm(MarineUnitIDSelectForm2012):
         return A81bPhysicalDamageItemDisplay(self, self.request)
 
     def download_results(self):
-        muids = [self.get_marine_unit_id()]
+        muids = self.get_available_marine_unit_ids()[1]
         count, data = db.get_all_records(
             self.mapper_class, self.mapper_class.MarineUnitID.in_(muids)
         )
@@ -1536,7 +1536,7 @@ class A81bPhysicalLosSubForm(MarineUnitIDSelectForm2012):
         return A81bPhysicalLosItemDisplay(self, self.request)
 
     def download_results(self):
-        muids = [self.get_marine_unit_id()]
+        muids = self.get_available_marine_unit_ids()[1]
         count, data = db.get_all_records(
             self.mapper_class, self.mapper_class.MarineUnitID.in_(muids)
         )
@@ -1680,7 +1680,7 @@ class A81bPollutantEventSubForm(MarineUnitIDSelectForm2012):
         return A81bPollutantEventItemDisplay(self, self.request)
 
     def download_results(self):
-        muids = [self.get_marine_unit_id()]
+        muids = self.get_available_marine_unit_ids()[1]
         count, data = db.get_all_records(
             self.mapper_class, self.mapper_class.MarineUnitID.in_(muids)
         )
@@ -1824,7 +1824,7 @@ class A81bAcidificationSubForm(MarineUnitIDSelectForm2012):
         return A81bAcidificationItemDisplay(self, self.request)
 
     def download_results(self):
-        muids = [self.get_marine_unit_id()]
+        muids = self.get_available_marine_unit_ids()[1]
         count, data = db.get_all_records(
             self.mapper_class, self.mapper_class.MarineUnitID.in_(muids)
         )
