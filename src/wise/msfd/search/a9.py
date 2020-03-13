@@ -75,8 +75,12 @@ class A9MRUForm(MarineUnitIDSelectForm2012):
 
         # lookup values in the inheritance tree
         for crit in ['area_types', 'member_states', 'region_subregions']:
-            if hasattr(parent, 'get_selected_' + crit):
-                data[crit] = getattr(parent, 'get_selected_' + crit)()
+            while hasattr(parent, 'context'):
+                if hasattr(parent, 'get_selected_' + crit):
+                    data[crit] = getattr(parent, 'get_selected_' + crit)()
+                    break
+
+                parent = parent.context
 
             parent = parent.context
 
