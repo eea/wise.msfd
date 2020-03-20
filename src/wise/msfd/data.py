@@ -472,7 +472,7 @@ def _get_report_filename_art7_2018(country, region, article, descriptor):
     return __get_report_filename_art7(country, schema)
 
 
-@cache(lambda func, *args: func.__name__ + args[0], current_date())
+@cache(lambda func, *args: func.__name__ + "".join(args) + current_date())
 @timeit
 def __get_report_filename_art7(country, schema):
     """ Retrieve from CDR the latest filename
