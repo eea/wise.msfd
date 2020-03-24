@@ -359,8 +359,14 @@ class EditAssessmentDataForm(BaseView, EditAssessmentDataFormMain):
 class EditAssessmentDataFormSecondary(EditAssessmentDataForm):
     """ Implementation for secondary articles (A3-4, A7, A8ESA)
     """
-
+    help_text = ""
     template = ViewPageTemplateFile("./pt/edit-assessment-data-secondary.pt")
+
+    def is_disabled(self, question):
+        """ All questions are enabled for secondary articles
+            regardless of phase
+        """
+        return False
 
     @property
     def descriptor_obj(self):
@@ -380,9 +386,8 @@ class EditAssessmentDataFormSecondary(EditAssessmentDataForm):
 
     @property
     def title(self):
-        return u"Edit Comission assessment: {}/ {}/ {}/ 2018".format(
+        return u"Edit Comission assessment: {}/ {}/ 2018".format(
             self.country_title,
-            self.country_region_name,
             self.article,
         )
 

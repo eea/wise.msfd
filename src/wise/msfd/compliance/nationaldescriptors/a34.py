@@ -45,8 +45,8 @@ class A34Item(Item):
             ('Region or subregion', self.region_or_subregion),
             ('Member state', self.member_state),
             ('Area type', self.area_type),
-            ('MRU ID', self.mru_id),
-            ('Marine reporting unit', self.marine_reporting_unit),
+            ('Marine Reporting Unit', self.mru_id),
+            ('MRU Name', self.marine_reporting_unit),
         ]
 
         for title, getter in attrs:
@@ -143,7 +143,9 @@ class Article34(BaseArticle2012):
 
         sorted_cols = sorted(
             cols, key=lambda _r: (
-                _r['Region or subregion'], _r['Area type'], _r['MRU ID']
+                _r['Region or subregion'],
+                _r['Area type'],
+                _r['Marine Reporting Unit']
             )
         )
 

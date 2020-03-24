@@ -20,22 +20,19 @@
 
     <div class="left-side-form nat-edit-form">
 
-      <div class="crt-def">
+      <div class="crt-def" tal:condition="python: False">
         <button type="button" class="btn btn-primary btn-lg"
           data-toggle="modal" data-target="#assessment-help">
           Criteria definition
         </button>
       </div>
       <h2 tal:content="structure view/title" class="report-title">Title here</h2>
-      <h4 class="process-phase-title" >
-        Current phase: <span tal:content="python: view.current_phase[1]">Adequacy</span>
-      </h4>
 
       <div id="report-data-navigation">
         <div class="back-to-descr">
           <a href="./">
             <i class='fa fa-level-up'></i>
-            Back to Descriptor
+            Back to descriptor assessment overview
           </a>
         </div>
 
@@ -86,7 +83,8 @@
       <div id="comp-national-descriptor">
 
         <div tal:replace="structure view/help"
-          tal:on-error="string:Error in help">Subform help here</div>
+             tal:condition="python: False"
+             tal:on-error="string:Error in help">Subform help here</div>
 
         <metal:form use-macro="context/@@ploneform-macros/titlelessform">
 
@@ -99,16 +97,6 @@
                 <div class="body">
                   <div class="left">
                     <h4>
-                      <span
-                        tal:on-error="nothing"
-                        class="help-popover fa fa-info-circle fa-s"
-                        data-trigger="hover"
-                        data-html="true"
-                        tal:condition="subform/_question_type/title"
-                        tal:attributes="title string: Type: ${subform/_question_type/title};
-                        data-content string: Phase: ${subform/_question_phase}"
-                        >
-                      </span>
                       <span tal:content="subform/title">Question here</span>
                       <span style="float:right;"
                           tal:define="last_change python: plone.toLocalizedTime(subform._last_update, long_format=True) or '-'"

@@ -1,0 +1,46 @@
+<div class="row">
+  <div class="col-md-12">
+    <table class="table table-condensed assessment-data-table assessment-header">
+      <tr>
+        <th>Assessment by</th>
+        <td tal:attributes="colspan view/colspan">
+          <span tal:content="structure options/assessors">Milieu</span>
+          <button class="btn btn-primary btn-xs btn-light"
+            data-toggle="modal" data-target="#edit-assessors"
+            tal:condition="options/show_edit_assessors">Edit</button>
+        </td>
+      </tr>
+      <tr>
+        <th>Date assessed</th>
+        <td tal:attributes="colspan view/colspan"
+           tal:content="options/assess_date"/>
+      </tr>
+    </table>
+  </div>
+  <div id="edit-assessors" class="modal fade" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+          <h3 class="modal-title">Select assessors</h3>
+        </div>
+        <div class="modal-body">
+          <form method="POST" name="assessors" tal:condition="options/show_edit_assessors">
+            <tal:rep tal:repeat="assess options/assessor_list">
+              <div>
+                <input type="checkbox" tal:attributes="id assess; name string:assessor; value assess">
+                <label tal:attributes="for assess" tal:content="assess">Milieu</label>
+              </div>
+            </tal:rep>
+            <div>
+              <input type="submit" class="btn btn-primary" value="Save">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

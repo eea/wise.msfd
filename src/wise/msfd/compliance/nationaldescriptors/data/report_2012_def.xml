@@ -77,13 +77,13 @@
   </Art8a>
   <Art3>
     <element name="Member state description" translate="true">Member state description</element>
-    <element name="Region/subregion" translate="true">Region/subregion</element>
-    <element name="Subdivisions">Subdivisions</element>
+    <element name="Region / subregion description" translate="true">Region / subregion description</element>
+    <element name="Subdivisions" translate="true">Subdivisions</element>
     <element name="Marine reporting units description" translate="true">Marine reporting units description (AreaType)</element>
     <element name="Member state">Member state</element>
     <element name="Area type">Area type</element>
-    <element name="MRU ID">MRU ID</element>
-    <element name="Marine reporting unit" translate="true">Marine reporting unit</element>
+    <element name="Marine Reporting Unit">Marine Reporting Unit</element>
+    <element name="MRU Name" translate="true">MRU Name</element>
   </Art3>
   <Art7>
     <element name="CA code (EU, national)">CA code (EU, national)</element>

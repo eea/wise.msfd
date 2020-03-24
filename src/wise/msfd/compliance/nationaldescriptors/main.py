@@ -856,6 +856,14 @@ class NationalDescriptorArticleView(BaseView, AssessmentDataMixin):
 class NationalDescriptorSecondaryArticleView(NationalDescriptorArticleView):
     """"""
 
+    assessment_data_2018_tpl = Template(
+        './pt/assessment-data-2018-secondary.pt'
+    )
+    assessment_header_template = Template(
+        '../pt/assessment-header-secondary.pt'
+    )
+
+
     implements(INationaldescriptorSecondaryArticleView)
     _descriptor = 'Not linked'
 

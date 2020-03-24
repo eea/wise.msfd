@@ -507,8 +507,8 @@ class ReportData2012Secondary(ReportData2012):
         regions = get_regions_for_country(self.country_code)
 
         filenames = [
-            (r[0], get_report_filename('2012', self.country_code, r[0],
-                                       self.article, self.descriptor))
+            (r[0], r[1], get_report_filename('2012', self.country_code, r[0],
+                                             self.article, self.descriptor))
             for r in regions
         ]
 
@@ -519,7 +519,7 @@ class ReportData2012Secondary(ReportData2012):
 
         reports = []
         report_data = []
-        for region, filename in filenames:
+        for region, region_name, filename in filenames:
             if not filename:
                 continue
 
@@ -539,7 +539,7 @@ class ReportData2012Secondary(ReportData2012):
                 rep_info.report_date
             )
             report_header = report_header_template(self, self.request,
-                                                   region=region,
+                                                   region=region_name,
                                                    **report_header_data)
             reports.append(report_header + rendered_view + trans_edit_html)
 
@@ -1360,6 +1360,7 @@ class ReportData2018Secondary(ReportData2018):
         we get the data from the DB (MSFD2018_production)
 
         Here instead we will get the data from the report xml from CDR
+        by initializing and calling the view's class to setup the data
         """
 
         view = Article72018(
@@ -1431,8 +1432,6 @@ class ReportData2018Secondary(ReportData2018):
 
             rendered_results.append(template(data=res,
                                              report_header=report_header))
-
-        # import pdb; pdb.set_trace()
 
         return "".join(rendered_results)
 
