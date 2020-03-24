@@ -36,13 +36,13 @@ from z3c.form.button import buttonAndHandler
 from z3c.form.field import Fields
 from z3c.form.form import Form
 
-from .a34 import Article34
 from .a7 import Article7, Article72018
 from .a8 import Article8
 from .a8alternate import Article8Alternate
 from .a8esa import Article8ESA
 from .a9 import Article9, Article9Alternate
 from .a10 import Article10, Article10Alternate
+from .a34 import Article34
 from .base import BaseView
 from .proxy import Proxy2018
 from .utils import consolidate_date_by_mru, consolidate_singlevalue_to_list
@@ -499,6 +499,7 @@ class ReportData2012Secondary(ReportData2012):
         """
 
         # we treat Art 3 & 4 different because of multiple report files
+
         if self.article not in ('Art3', 'Art4'):
             return super(ReportData2012Secondary, self).__call__()
 
@@ -509,6 +510,7 @@ class ReportData2012Secondary(ReportData2012):
         filenames = [
             (r[0], r[1], get_report_filename('2012', self.country_code, r[0],
                                              self.article, self.descriptor))
+
             for r in regions
         ]
 
@@ -519,6 +521,7 @@ class ReportData2012Secondary(ReportData2012):
 
         reports = []
         report_data = []
+
         for region, region_name, filename in filenames:
             if not filename:
                 continue
@@ -544,7 +547,7 @@ class ReportData2012Secondary(ReportData2012):
             reports.append(report_header + rendered_view + trans_edit_html)
 
             report_data.append((region, serialize_rows(view.rows),
-                               report_header_data))
+                                report_header_data))
 
         self.reports = reports
 
@@ -1282,17 +1285,29 @@ class ReportData2018Secondary(ReportData2018):
             return super(ReportData2018Secondary, self).get_report_header()
 
         regions = get_regions_for_country(self.country_code)
-        filenames = [
-            (r[0], get_report_filename('2018', self.country_code, r[0],
-                                       self.article, self.descriptor))
-            for r in regions
-        ]
-        filenames = sorted(filenames,
-                           key=lambda i: ordered_regions_sortkey(i[0]))
+        filenames = []
+        for r in regions:
+            try:
+                args = ('2018', self.country_code, r[0], self.article,
+                        self.descriptor)
+                f = get_report_filename(*args)
+            except AssertionError:
+                logger.exception("No filename for %s", ' '.join(args))
+                continue
+            else:
+                if f:
+                    filenames.append(([r[0], f]))
+
+        clean_filenames = list(sorted(
+            filenames,
+            key=lambda i: ordered_regions_sortkey(i[0])))
+
+        if not clean_filenames:
+            return 'no files found for reported data'
 
         links = [
             (fname[1], get_report_file_url(fname[1]) + '/manage_document')
-            for fname in filenames
+            for fname in clean_filenames
         ]
         report_due = report_by = report_date = ''
 

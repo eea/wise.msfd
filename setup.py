@@ -46,6 +46,7 @@ setup(
         'sparql-client',
         # 'pyodbc',
         'langdetect',  # used in translations
+        'pyexcel-xlsx',
 
         'z3c.formwidget.optgroup',  # used in compliance select lists
     ],

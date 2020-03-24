@@ -55,6 +55,7 @@ def muids_by_country(regions=None):
 
     for rec in records:
         # filter MUIDs by region, used in regional descriptors A9 2012
+
         if regions and rec.RegionSubRegions not in regions:
             continue
 
@@ -217,7 +218,9 @@ def get_report_filename(report_version,
     if country in FILENAMES_MISSING_DB:
         filename = [
             x[2]
+
             for x in FILENAMES_MISSING_DB[country]
+
             if x[0] == region and x[1] == article
         ]
 
@@ -433,7 +436,7 @@ FILTER (str(?schema) = '%s')
 FILTER regex(str(?file), '%s')
 }
 ORDER BY DESC(?date)
-LIMIT 1    
+LIMIT 1
 """ % (country.upper(), obligation, schema, region.upper())
 
     service = sparql.Service('https://cr.eionet.europa.eu/sparql')
@@ -458,6 +461,7 @@ LIMIT 1
 
 def _get_report_filename_art7_2012(country, region, article, descriptor):
     """ Retrieve from CDR the latest filename
+
     for Article 7 competent authorities
     """
 
@@ -476,6 +480,7 @@ def _get_report_filename_art7_2018(country, region, article, descriptor):
 @timeit
 def __get_report_filename_art7(country, schema):
     """ Retrieve from CDR the latest filename
+
     for Article 7 competent authorities
     """
 
@@ -500,7 +505,7 @@ FILTER (?obligationNr = '607')
 FILTER (str(?schema) = '%s')
 }
 ORDER BY DESC(?date)
-LIMIT 1    
+LIMIT 1
 """ % (country.upper(), schema)
 
     service = sparql.Service('https://cr.eionet.europa.eu/sparql')
@@ -524,6 +529,7 @@ LIMIT 1
 @timeit
 def get_all_report_filenames_art7(country):
     """ Retrieve from CDR the latest filename
+
     for Article 7 competent authorities
     """
 
@@ -545,7 +551,7 @@ WHERE {
 ?locality core:notation ?notation .
 FILTER (?notation = '%s')
 FILTER (?obligationNr = '607')
-FILTER (str(?schema) IN ('http://dd.eionet.europa.eu/schemas/MSFD/MSFDCA_1p0.xsd', 
+FILTER (str(?schema) IN ('http://dd.eionet.europa.eu/schemas/MSFD/MSFDCA_1p0.xsd',
 'http://water.eionet.europa.eu/schemas/dir200856ec/MSCA_1p0.xsd'))
 }
 ORDER BY DESC(?date)""" % (country.upper())
