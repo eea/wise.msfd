@@ -223,7 +223,19 @@ class Article72018(Article7):
         3. Get the data from the xml file
     """
 
+    def __init__(self, context, request, country_code, region_code,
+                 descriptor, article,  muids, filename=None):
+
+        super(Article72018, self).__init__(context, request, country_code,
+                                           region_code, descriptor, article,
+                                           muids)
+
+        self._filename = filename
+
     def get_report_filename(self):
+        if self._filename:
+            return self._filename
+
         filename = get_report_filename(
             '2018',
             self.country_code,
@@ -234,8 +246,10 @@ class Article72018(Article7):
 
         return filename
 
-    def get_report_file_root(self):
-        filename = self.get_report_filename()
+    def get_report_file_root(self, filename=None):
+        if not filename:
+            filename = self.get_report_filename()
+
         text = get_xml_report_data(filename)
         root = fromstring(text)
 

@@ -25,8 +25,9 @@ from wise.msfd.compliance.utils import (group_by_mru,
                                         insert_missing_criterions,
                                         ordered_regions_sortkey)
 from wise.msfd.compliance.vocabulary import get_regions_for_country
-from wise.msfd.data import (get_factsheet_url, get_report_file_url,
-                            get_report_filename, get_xml_report_data)
+from wise.msfd.data import (get_all_report_filenames_art7, get_factsheet_url,
+                            get_report_file_url, get_report_filename,
+                            get_xml_report_data)
 from wise.msfd.gescomponents import get_descriptor, get_features
 from wise.msfd.translation import retrieve_translation
 from wise.msfd.utils import (current_date, items_to_rows, natural_sort_key,
@@ -1234,15 +1235,17 @@ class ReportData2018Secondary(ReportData2018):
     Art4 = Template('pt/report-data-secondary-2018.pt')
     Art7 = Template('pt/report-data-secondary-2018.pt')
 
-    def _get_report_metadata_Art7(self):
+    def _get_report_metadata_Art7(self, filename=None):
         view = Article72018(
             self, self.request, self.country_code, self.country_region_code,
-            self.descriptor, self.article, self.muids
+            self.descriptor, self.article, self.muids, filename
         )
 
-        filename = view.get_report_filename()
+        if not filename:
+            filename = view.get_report_filename()
+
         fileurl = get_report_file_url(filename)
-        root = view.get_report_file_root()
+        root = view.get_report_file_root(filename)
 
         reporters = date = None
         try:
@@ -1368,7 +1371,7 @@ class ReportData2018Secondary(ReportData2018):
 
         return sorted_data
 
-    def get_data_from_view_Art7(self):
+    def get_data_from_view_Art7(self, filename=None):
         """ In other articles (8, 9, 10) for 2018 year,
         we get the data from the DB (MSFD2018_production)
 
@@ -1377,9 +1380,80 @@ class ReportData2018Secondary(ReportData2018):
 
         view = Article72018(
             self, self.request, self.country_code, self.country_region_code,
-            self.descriptor, self.article, self.muids
+            self.descriptor, self.article, self.muids, filename
         )
         view()
         data = view.cols
 
         return data
+
+    def _render_reportdata_Art3(self):
+        return super(ReportData2018Secondary, self).render_reportdata()
+
+    def _render_reportdata_Art4(self):
+        return super(ReportData2018Secondary, self).render_reportdata()
+
+    def _render_reportdata_Art7(self):
+        """
+        1. Get all reported files under Article 7
+        2. Render the data separately for all files
+        3. Concat the rendered htmls into a single
+
+        :return: rendered html
+        """
+
+        filenames = get_all_report_filenames_art7(self.country_code)
+
+        rendered_results = []
+
+        for filename in filenames:
+            res = []
+            url = get_report_file_url(filename)
+            source_file = (filename, url + '/manage_document')
+            factsheet = get_factsheet_url(url)
+            data = self.get_data_from_view_Art7(filename)
+            data = [Proxy2018(row, self) for row in data]
+            data_by_mru = group_by_mru(data)
+            fields = get_report_definition(self.article).get_fields()
+
+            for mru, rows in data_by_mru.items():
+                _rows = items_to_rows(rows, fields)
+
+                res.append((mru, _rows))
+
+            template = self.get_template(self.article)
+
+            # Report Header
+            report = self._get_report_metadata_Art7(filename)
+
+            link = report_by = report_date = None
+            if report:
+                link = report.ReportedFileLink
+                link = (link.rsplit('/', 1)[1], link)
+                report_by = report.ContactOrganisation
+                report_date = report.ReportingDate
+
+            report_header = self.report_header_template(
+                title=self.report_header_title,
+                factsheet=factsheet,
+                # TODO: find out how to get info about who reported
+                report_by=report_by,
+                source_file=source_file,
+                report_due=None,
+                report_date=report_date,
+                help_text=self.help_text,
+                multiple_source_files=False
+            )
+
+            rendered_results.append(template(data=res,
+                                             report_header=report_header))
+
+        # import pdb; pdb.set_trace()
+
+        return "".join(rendered_results)
+
+    def render_reportdata(self):
+        renderer_name = "_render_reportdata_{}".format(self.article)
+        renderer = getattr(self, renderer_name)
+
+        return renderer()

@@ -518,3 +518,55 @@ LIMIT 1
         raise
 
     return filename
+
+
+@cache(lambda func, *args: func.__name__ + "".join(args) + current_date())
+@timeit
+def get_all_report_filenames_art7(country):
+    """ Retrieve from CDR the latest filename
+    for Article 7 competent authorities
+    """
+
+    q = """
+PREFIX cr: <http://cr.eionet.europa.eu/ontologies/contreg.rdf#>
+PREFIX terms: <http://purl.org/dc/terms/>
+PREFIX schema: <http://rod.eionet.europa.eu/schema.rdf#>
+PREFIX core: <http://www.w3.org/2004/02/skos/core#>
+
+SELECT distinct ?file
+WHERE {
+?file terms:date ?date .
+?file cr:mediaType 'text/xml' .
+?file terms:isPartOf ?isPartOf .
+?file cr:xmlSchema ?schema .
+?isPartOf schema:locality ?locality .
+?isPartOf schema:obligation ?obligation .
+?obligation core:notation ?obligationNr .
+?locality core:notation ?notation .
+FILTER (?notation = '%s')
+FILTER (?obligationNr = '607')
+FILTER (str(?schema) IN ('http://dd.eionet.europa.eu/schemas/MSFD/MSFDCA_1p0.xsd', 
+'http://water.eionet.europa.eu/schemas/dir200856ec/MSCA_1p0.xsd'))
+}
+ORDER BY DESC(?date)""" % (country.upper())
+
+    service = sparql.Service('https://cr.eionet.europa.eu/sparql')
+    filenames = []
+
+    try:
+        req = service.query(q)
+        rows = req.fetchall()
+
+        for row in rows:
+            url = row[0].value
+            splitted = url.split('/')
+            filename = splitted[-1]
+            filenames.append(filename)
+
+    except:
+        logger.exception('Got an error in querying SPARQL endpoint for '
+                         'Article 7 country: %s', country)
+
+        raise
+
+    return filenames
