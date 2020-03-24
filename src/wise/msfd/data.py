@@ -410,8 +410,7 @@ def _get_report_filename_art3_4_2018(country, region, article, descriptor):
 @cache(lambda func, *args: func.__name__ + "_".join(args) + current_date())
 @timeit
 def __get_report_filename_art3_4(country, region, schema, obligation):
-    """ Retrieve from CDR the latest filename
-    for Article 7 competent authorities
+    """ Retrieve from CDR the latest filename for Article 3/4
     """
 
     q = """
@@ -445,6 +444,7 @@ LIMIT 1
         req = service.query(q)
         rows = req.fetchall()
         if not rows:
+            logger.warning("Filename not found for query: %s", q)
             return filename
 
         url = rows[0][0].value
@@ -452,7 +452,7 @@ LIMIT 1
         filename = splitted[-1]
     except:
         logger.exception('Got an error in querying SPARQL endpoint for '
-                         'Article 7 country: %s', country)
+                         'Article 3/4 country: %s', country)
 
         raise
 
