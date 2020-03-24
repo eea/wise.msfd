@@ -30,7 +30,8 @@ from wise.msfd.translation import Translation, get_detected_lang
 from wise.msfd.translation.interfaces import ITranslationsStorage
 
 from . import interfaces
-from .base import (BaseComplianceView, NAT_DESC_QUESTIONS, REG_DESC_QUESTIONS,
+from .base import (_get_secondary_articles, BaseComplianceView,
+                   NAT_DESC_QUESTIONS, REG_DESC_QUESTIONS,
                    report_data_cache_key)
 
 logger = logging.getLogger('wise.msfd')
@@ -48,17 +49,6 @@ def get_wf_state_id(context):
     wf_state_id = wf_state.id or state
 
     return wf_state_id
-
-
-def _get_secondary_articles():
-    articles = [
-        'Art3',
-        'Art4',
-        'Art7',
-        'Art8esa'
-    ]
-
-    return articles
 
 
 class ToPDB(BrowserView):

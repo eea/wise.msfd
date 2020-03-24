@@ -121,6 +121,17 @@ Target = namedtuple('Target', ['id', 'title', 'definition', 'year'])
 DescriptorOption = namedtuple('Descriptor', ['id', 'title', 'is_primary'])
 
 
+def _get_secondary_articles():
+    articles = [
+        'Art3',
+        'Art4',
+        'Art7',
+        'Art8esa'
+    ]
+
+    return articles
+
+
 class Container(object):
     """ A container can render its children forms and views
     """
@@ -358,6 +369,16 @@ class BaseComplianceView(BrowserView, BasePublicPage, SecurityMixin):
                 return True
 
         return False
+
+    def get_secondary_article_folders(self):
+        contents = self._country_folder.contentValues()
+        filtered_contents = [
+            c
+            for c in contents
+            if c.title in _get_secondary_articles()
+        ]
+
+        return sorted(filtered_contents, key=lambda c: c.title)
 
     @property
     def _descriptor_folder(self):

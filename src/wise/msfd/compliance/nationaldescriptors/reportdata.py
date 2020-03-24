@@ -1338,7 +1338,7 @@ class ReportData2018Secondary(ReportData2018):
             mc.Country == self.country_code,
         ]
 
-        col_names = ('Country', 'Region', 'thematicId', 'nameTxtInt',
+        col_names = ('Country', 'rZoneId', 'thematicId', 'nameTxtInt',
                      'nameText', 'spZoneType', 'legisSName', 'Area')
         columns = [getattr(mc, name) for name in col_names]
 
@@ -1347,29 +1347,13 @@ class ReportData2018Secondary(ReportData2018):
             *conditions
         )
 
-        sorted_data = sorted(data, key=lambda i: (i.Region, i.thematicId))
+        sorted_data = sorted(data, key=lambda i: (i.rZoneId, i.thematicId))
 
         return sorted_data
 
     def get_data_from_view_Art4(self):
-        mc = sql2018.MRUsPublication
 
-        conditions = [
-            mc.Country == self.country_code,
-        ]
-
-        col_names = ('Country', 'Region', 'thematicId', 'nameTxtInt',
-                     'nameText', 'spZoneType', 'legisSName', 'Area')
-        columns = [getattr(mc, name) for name in col_names]
-
-        count, data = db.get_all_specific_columns(
-            columns,
-            *conditions
-        )
-
-        sorted_data = sorted(data, key=lambda i: (i.Region, i.thematicId))
-
-        return sorted_data
+        return self.get_data_from_view_Art3()
 
     def get_data_from_view_Art7(self, filename=None):
         """ In other articles (8, 9, 10) for 2018 year,

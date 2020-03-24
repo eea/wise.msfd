@@ -136,7 +136,7 @@
   </Art8>
 
   <Art3>
-    <element name="Region">Region</element>
+    <element name="rZoneId">Region</element>
     <element name="Country">Country</element>
     <element name="thematicId">Marine Unit ID</element>
     <element name="nameTxtInt">MRU Description in English</element>
