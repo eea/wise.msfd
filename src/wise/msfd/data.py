@@ -255,6 +255,11 @@ def get_report_file_url(filename):
     """ Retrieve the CDR url based on query in ContentRegistry
     """
 
+    if 'http' in filename:
+        # already a url
+
+        return filename
+
 #     q = """
 # PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 # PREFIX cr: <http://cr.eionet.europa.eu/ontologies/contreg.rdf#>

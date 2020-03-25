@@ -1341,45 +1341,7 @@ class ReportData2018Secondary(ReportData2018):
 
         return template
 
-    def get_data_from_view(self, article):
-        article = article.replace('-', '')
-        data = getattr(self, 'get_data_from_view_' + article)()
-
-        return data
-
-    def get_data_from_view_Art3(self, filename=None):
-        # mc = sql2018.MRUsPublication
-        #
-        # conditions = [
-        #     mc.Country == self.country_code,
-        # ]
-        #
-        # col_names = ('Country', 'rZoneId', 'thematicId', 'nameTxtInt',
-        #              'nameText', 'spZoneType', 'legisSName', 'Area')
-        # columns = [getattr(mc, name) for name in col_names]
-        #
-        # count, data = db.get_all_specific_columns(
-        #     columns,
-        #     *conditions
-        # )
-        #
-        # sorted_data = sorted(data, key=lambda i: (i.rZoneId, i.thematicId))
-        #
-        # return sorted_data
-        view = Article34(
-            self, self.request, self.country_code, self.country_region_code,
-            self.descriptor, self.article, self.muids, filename
-        )
-        view()
-        data = view.cols
-
-        return data
-
-    def get_data_from_view_Art4(self, filename=None):
-
-        return self.get_data_from_view_Art3(filename)
-
-    def get_data_from_view_Art7(self, filename=None):
+    def get_data_from_view(self, filename):
         """ In other articles (8, 9, 10) for 2018 year,
         we get the data from the DB (MSFD2018_production)
 
@@ -1387,7 +1349,12 @@ class ReportData2018Secondary(ReportData2018):
         by initializing and calling the view's class to setup the data
         """
 
-        view = Article7_2018(
+        if self.article == 'Art7':
+            klass = Article7_2018
+        else:
+            klass = Article34
+
+        view = klass(
             self, self.request, self.country_code, self.country_region_code,
             self.descriptor, self.article, self.muids, filename
         )
@@ -1419,13 +1386,13 @@ class ReportData2018Secondary(ReportData2018):
 
         rendered_results = []
 
-        data_getter = getattr(self, 'get_data_from_view_%s' % self.article)
+        # data_getter = getattr(self, 'get_data_from_view_%s' % self.article)
 
         for url in urls:
             res = []
             source_file = (url.rsplit('/', 1)[-1], url + '/manage_document')
             factsheet = get_factsheet_url(url)
-            data = data_getter(url)
+            data = self.get_data_from_view(url)
             data = [Proxy2018(row, self) for row in data]
             data_by_mru = group_by_mru(data)
             fields = get_report_definition(self.article).get_fields()
