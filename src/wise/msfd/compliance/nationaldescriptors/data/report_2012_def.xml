@@ -21,6 +21,7 @@
     <element name="Functional group">Functional group</element>
     <element name="Pressures">Pressures</element>
   </Art10>
+
   <Art9>
     <element name="Method used" translate="true">Method used</element>
     <element name="Marine reporting unit(s)">Marine reporting unit(s)</element>
@@ -35,6 +36,7 @@
     <element name="Assessment method" translate="true">Assessment method</element>
     <element name="Development status" translate="true">Development status</element>
   </Art9>
+
   <Art8b>
     <element name="GES component">GES component</element>
     <element name="Feature">Feature</element>
@@ -62,6 +64,7 @@
     <element name="Activity type">Activity type</element>
     <element name="Information gaps" translate="true">Information gaps</element>
   </Art8b>
+
   <Art8a>
     <element name="Topic">Topic</element>
     <element name="Reporting Feature">Reporting Feature</element>
@@ -75,6 +78,7 @@
     <element name="Status Trend">Status Trend</element>
     <element name="Status Confidence">Status Confidence</element>
   </Art8a>
+
   <Art3>
     <element name="Member state description" translate="true">Member state description</element>
     <element name="Region / subregion description" translate="true">Region / subregion description</element>
@@ -85,6 +89,7 @@
     <element name="Marine Reporting Unit">Marine Reporting Unit</element>
     <element name="MRU Name" translate="true">MRU Name</element>
   </Art3>
+
   <Art7>
     <element name="CA code (EU, national)">CA code (EU, national)</element>
     <element name="Acronym, Name (national)">Acronym, Name (national)</element>
@@ -96,7 +101,9 @@
     <element name="Membership" translate="true">Membership</element>
     <element name="Regional coordination" translate="true">Regional coordination</element>
   </Art7>
+
   <Art8esa>
     <element name="Test">Test</element>
   </Art8esa>
+
 </data>

@@ -42,7 +42,7 @@ from .a8alternate import Article8Alternate
 from .a8esa import Article8ESA
 from .a9 import Article9, Article9Alternate
 from .a10 import Article10, Article10Alternate
-from .a34 import Article34
+from .a34 import Article34, Article34_2018
 from .base import BaseView
 from .proxy import Proxy2018
 from .utils import consolidate_date_by_mru, consolidate_singlevalue_to_list
@@ -1280,6 +1280,111 @@ class ReportData2018Secondary(ReportData2018):
 
         return metadata
 
+    @property
+    def report_header_title(self):
+        title = "Member State report: {} / {} / 2018".format(
+            self.country_name,
+            self.article
+        )
+
+        return title
+
+    def get_template(self, article):
+        article = article.replace('-', '')
+        template = getattr(self, article, None)
+
+        return template
+
+    def get_data_from_view(self, filename):
+        """ In other articles (8, 9, 10) for 2018 year,
+        we get the data from the DB (MSFD2018_production)
+
+        Here instead we will get the data from the report xml from CDR
+        by initializing and calling the view's class to setup the data
+        """
+
+        if self.article == 'Art7':
+            klass = Article7_2018
+        else:
+            klass = Article34_2018
+
+        view = klass(
+            self, self.request, self.country_code, self.country_region_code,
+            self.descriptor, self.article, self.muids, filename
+        )
+        view()
+        data = view.cols
+
+        return data
+
+    def render_reportdata(self):
+        """
+        1. Get all reported files under Article 7 or 3/4
+        2. Render the data separately for all files
+        3. Concat the rendered htmls into a single
+
+        :return: rendered html
+        """
+
+        urls = get_all_report_filenames(self.country_code, self.article)
+
+        rendered_results = []
+
+        for url in urls:
+            res = []
+            source_file = (url.rsplit('/', 1)[-1], url + '/manage_document')
+            factsheet = get_factsheet_url(url)
+            data = self.get_data_from_view(url)
+            data = [Proxy2018(row, self) for row in data]
+
+            if self.article == 'Art7':
+                data_by_mru = group_by_mru(data)
+            else:
+                data_by_mru = {'no mru': data}
+
+            fields = get_report_definition(self.article).get_fields()
+
+            for mru, rows in data_by_mru.items():
+                _rows = items_to_rows(rows, fields)
+
+                res.append((mru, _rows))
+
+            template = self.get_template(self.article)
+
+            # Report Header
+
+            if self.article == 'Art7':
+                report = self._get_report_metadata_Art7(url)
+            else:
+                report = None
+
+            link = report_by = report_date = None
+
+            if report:
+                link = report.ReportedFileLink
+                link = (link.rsplit('/', 1)[-1], link)
+                report_by = report.ContactOrganisation
+                report_date = report.ReportingDate
+
+            report_header = self.report_header_template(
+                title=self.report_header_title,
+                factsheet=factsheet,
+                # TODO: find out how to get info about who reported
+                report_by=report_by,
+                source_file=source_file,
+                report_due=None,
+                report_date=report_date,
+                help_text=self.help_text,
+                multiple_source_files=False,
+                show_navigation=False,
+            )
+
+            rendered_results.append(template(data=res,
+                                             report_header=report_header,
+                                             show_navigation=False))
+
+        return "<hr/>".join(rendered_results)
+
     # def get_report_header(self):
     #     # For Art7, use the default report header
     #     if self.article not in ('Art3', 'Art4'):
@@ -1325,103 +1430,3 @@ class ReportData2018Secondary(ReportData2018):
     #     )
     #
     #     return report_header
-
-    @property
-    def report_header_title(self):
-        title = "Member State report: {} / {} / 2018".format(
-            self.country_name,
-            self.article
-        )
-
-        return title
-
-    def get_template(self, article):
-        article = article.replace('-', '')
-        template = getattr(self, article, None)
-
-        return template
-
-    def get_data_from_view(self, filename):
-        """ In other articles (8, 9, 10) for 2018 year,
-        we get the data from the DB (MSFD2018_production)
-
-        Here instead we will get the data from the report xml from CDR
-        by initializing and calling the view's class to setup the data
-        """
-
-        if self.article == 'Art7':
-            klass = Article7_2018
-        else:
-            klass = Article34
-
-        view = klass(
-            self, self.request, self.country_code, self.country_region_code,
-            self.descriptor, self.article, self.muids, filename
-        )
-        view()
-        data = view.cols
-
-        return data
-
-    def render_reportdata(self):
-        """
-        1. Get all reported files under Article 7 or 3/4
-        2. Render the data separately for all files
-        3. Concat the rendered htmls into a single
-
-        :return: rendered html
-        """
-
-        urls = get_all_report_filenames(self.country_code, self.article)
-
-        rendered_results = []
-
-        for url in urls:
-            res = []
-            source_file = (url.rsplit('/', 1)[-1], url + '/manage_document')
-            factsheet = get_factsheet_url(url)
-            data = self.get_data_from_view(url)
-            data = [Proxy2018(row, self) for row in data]
-            data_by_mru = group_by_mru(data)
-            fields = get_report_definition(self.article).get_fields()
-
-            for mru, rows in data_by_mru.items():
-                _rows = items_to_rows(rows, fields)
-
-                res.append((mru, _rows))
-
-            template = self.get_template(self.article)
-
-            # Report Header
-
-            if self.article == 'Art7':
-                report = self._get_report_metadata_Art7(url)
-            else:
-                report = None
-
-            link = report_by = report_date = None
-
-            if report:
-                link = report.ReportedFileLink
-                link = (link.rsplit('/', 1)[-1], link)
-                report_by = report.ContactOrganisation
-                report_date = report.ReportingDate
-
-            report_header = self.report_header_template(
-                title=self.report_header_title,
-                factsheet=factsheet,
-                # TODO: find out how to get info about who reported
-                report_by=report_by,
-                source_file=source_file,
-                report_due=None,
-                report_date=report_date,
-                help_text=self.help_text,
-                multiple_source_files=False,
-                show_navigation=False,
-            )
-
-            rendered_results.append(template(data=res,
-                                             report_header=report_header,
-                                             show_navigation=False))
-
-        return "<hr/>".join(rendered_results)

@@ -6,11 +6,12 @@ from Products.Five.browser.pagetemplatefile import \
     ViewPageTemplateFile as Template
 from wise.msfd.data import get_xml_report_data
 from wise.msfd.translation import retrieve_translation
-from wise.msfd.utils import (Item, ItemLabel, ItemList, Node, RawRow,
-                             RelaxedNode, Row, natural_sort_key, to_html)
+from wise.msfd.utils import (Item, ItemLabel, ItemList, Node, RawRow,  # Row,
+                             RelaxedNode, natural_sort_key, to_html)
 
 from ..base import BaseArticle2012
-from .data import REPORT_DEFS
+
+# from .data import REPORT_DEFS
 
 logger = logging.getLogger('wise.msfd')
 
@@ -51,6 +52,7 @@ class A34Item(Item):
 
         for title, getter in attrs:
             self[title] = getter()
+            setattr(self, title, getter())
 
     def member_state_descr(self):
         text = xp('w:MemberState/text()', self.description)
@@ -105,6 +107,8 @@ class Article34(BaseArticle2012):
             self.descriptor, self.article, self.muids)
     """
 
+    year = '2012'
+
     template = Template('pt/report-data-secondary.pt')
     help_text = ""
 
@@ -117,18 +121,30 @@ class Article34(BaseArticle2012):
 
         self.filename = filename
 
+    def sort_cols(self, cols):
+        return cols
+        sorted_cols = sorted(
+            cols, key=lambda _r: (
+                _r['Region or subregion'],
+                _r['Area type'],
+                _r['Marine Reporting Unit']
+            )
+        )
+
+        return sorted_cols
+
     def setup_data(self):
         filename = self.filename
         text = get_xml_report_data(filename)
         root = fromstring(text)
 
         # basic algorithm to detect what type of report it is
-        article = self.article
+        # article = self.article
 
         # override the default translatable
-        fields = REPORT_DEFS[self.context.year][article]\
-            .get_translatable_fields()
-        self.context.TRANSLATABLES.extend(fields)
+        # fields = REPORT_DEFS[self.year][article].get_translatable_fields()
+        # this is not a good idea if context is persistent
+        # self.context.TRANSLATABLES.extend(fields)
 
         cols = []
         # TODO get nodes from XML
@@ -141,13 +157,7 @@ class Article34(BaseArticle2012):
 
         self.rows = []
 
-        sorted_cols = sorted(
-            cols, key=lambda _r: (
-                _r['Region or subregion'],
-                _r['Area type'],
-                _r['Marine Reporting Unit']
-            )
-        )
+        sorted_cols = self.sort_cols(cols)
 
         for col in sorted_cols:
             for name in col.keys():
@@ -163,9 +173,6 @@ class Article34(BaseArticle2012):
                     raw_values.append(v)
                     vals.append(self.context.translate_value(
                         name, v, self.country_code))
-
-                # values = [self.context.translate_value(name, value=v)
-                #           for v in values]
 
                 row = RawRow(name, vals, raw_values)
                 self.rows.append(row)
@@ -200,3 +207,10 @@ class Article34(BaseArticle2012):
                     seen.add(value)
 
         return ''
+
+
+class Article34_2018(Article34):
+    """
+    """
+
+    year = '2012'
