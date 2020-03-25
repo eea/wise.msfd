@@ -1402,63 +1402,6 @@ class ReportData2018Secondary(ReportData2018):
     def _render_reportdata_Art4(self):
         return super(ReportData2018Secondary, self).render_reportdata()
 
-    # def _render_reportdata_Art7(self):
-    #     """
-    #     1. Get all reported files under Article 7
-    #     2. Render the data separately for all files
-    #     3. Concat the rendered htmls into a single
-    #
-    #     :return: rendered html
-    #     """
-    #
-    #     filenames = get_all_report_filenames_art7(self.country_code)
-    #
-    #     rendered_results = []
-    #
-    #     for filename in filenames:
-    #         res = []
-    #         url = get_report_file_url(filename)
-    #         source_file = (filename, url + '/manage_document')
-    #         factsheet = get_factsheet_url(url)
-    #         data = self.get_data_from_view_Art7(filename)
-    #         data = [Proxy2018(row, self) for row in data]
-    #         data_by_mru = group_by_mru(data)
-    #         fields = get_report_definition(self.article).get_fields()
-    #
-    #         for mru, rows in data_by_mru.items():
-    #             _rows = items_to_rows(rows, fields)
-    #
-    #             res.append((mru, _rows))
-    #
-    #         template = self.get_template(self.article)
-    #
-    #         # Report Header
-    #         report = self._get_report_metadata_Art7(filename)
-    #
-    #         link = report_by = report_date = None
-    #         if report:
-    #             link = report.ReportedFileLink
-    #             link = (link.rsplit('/', 1)[1], link)
-    #             report_by = report.ContactOrganisation
-    #             report_date = report.ReportingDate
-    #
-    #         report_header = self.report_header_template(
-    #             title=self.report_header_title,
-    #             factsheet=factsheet,
-    #             # TODO: find out how to get info about who reported
-    #             report_by=report_by,
-    #             source_file=source_file,
-    #             report_due=None,
-    #             report_date=report_date,
-    #             help_text=self.help_text,
-    #             multiple_source_files=False
-    #         )
-    #
-    #         rendered_results.append(template(data=res,
-    #                                          report_header=report_header))
-    #
-    #     return "".join(rendered_results)
-
     def render_reportdata(self):
         """
         1. Get all reported files under Article 7
@@ -1518,10 +1461,12 @@ class ReportData2018Secondary(ReportData2018):
                 report_due=None,
                 report_date=report_date,
                 help_text=self.help_text,
-                multiple_source_files=False
+                multiple_source_files=False,
+                show_navigation=False,
             )
 
             rendered_results.append(template(data=res,
-                                             report_header=report_header))
+                                             report_header=report_header,
+                                             show_navigation=False))
 
         return "".join(rendered_results)
