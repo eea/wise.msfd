@@ -1363,30 +1363,18 @@ class ReportData2018Secondary(ReportData2018):
 
         return data
 
-    def _render_reportdata_Art3(self):
-        return super(ReportData2018Secondary, self).render_reportdata()
-
-    def _render_reportdata_Art4(self):
-        return super(ReportData2018Secondary, self).render_reportdata()
-
     def render_reportdata(self):
         """
-        1. Get all reported files under Article 7
+        1. Get all reported files under Article 7 or 3/4
         2. Render the data separately for all files
         3. Concat the rendered htmls into a single
 
         :return: rendered html
         """
-        # renderer_name = "_render_reportdata_{}".format(self.article)
-        # renderer = getattr(self, renderer_name)
-        #
-        # return renderer()
 
         urls = get_all_report_filenames(self.country_code, self.article)
 
         rendered_results = []
-
-        # data_getter = getattr(self, 'get_data_from_view_%s' % self.article)
 
         for url in urls:
             res = []
@@ -1436,4 +1424,4 @@ class ReportData2018Secondary(ReportData2018):
                                              report_header=report_header,
                                              show_navigation=False))
 
-        return "".join(rendered_results)
+        return "<hr/>".join(rendered_results)

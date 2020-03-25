@@ -543,11 +543,12 @@ LIMIT 1
 @timeit
 def get_all_report_filenames(country, article):
     ART3 = 'http://icm.eionet.europa.eu/schemas/dir200856ec/MSFD4Geo_2p0.xsd'
-    ART7 = 'http://dd.eionet.europa.eu/schemas/MSFD/MSFDCA_1p0.xsd'
+    ART7 = ('http://dd.eionet.europa.eu/schemas/MSFD/MSFDCA_1p0.xsd',
+            'http://water.eionet.europa.eu/schemas/dir200856ec/MSCA_1p0.xsd')
     schemas = {
-        'art7': ART7,
-        'art3': ART3,
-        'art4': ART3,
+        'art7': "str(?schema) IN %s" % str(ART7),      # tuple hack
+        'art3': "str(?schema) = '%s'" % ART3,
+        'art4': "str(?schema) = '%s'" % ART3,
     }
     obligations = {
         'art3': '760',
@@ -556,6 +557,7 @@ def get_all_report_filenames(country, article):
     }
 
     schema = schemas[article.lower()]
+
     obligation = obligations[article.lower()]
 
     q = """
@@ -576,7 +578,7 @@ WHERE {
 ?locality core:notation ?notation .
 FILTER (?notation = '%s')
 FILTER (?obligationNr = '%s')
-FILTER (str(?schema) = '%s')
+FILTER (%s)
 }
 ORDER BY DESC(?date)
 """ % (country.upper(), obligation, schema, )       # region.upper()
