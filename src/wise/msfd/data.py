@@ -339,6 +339,12 @@ def get_xml_report_data(filename):
     if not filename:
         return ""
 
+    url = ''
+
+    if 'http' in filename:      # this is a URL, not a filename
+        url = filename
+        filename = url.rsplit('/', 1)[-1]
+
     xmldir = os.environ.get("MSFDXML")
 
     if not xmldir:
@@ -357,7 +363,10 @@ def get_xml_report_data(filename):
     if not text:
         # TODO: handle this problem:
         # https://cr.eionet.europa.eu/factsheet.action?uri=http%3A%2F%2Fcdr.eionet.europa.eu%2Fro%2Feu%2Fmsfd8910%2Fblkro%2Fenvux97qw%2FRO_MSFD10TI_20130430.xml&page1=http%3A%2F%2Fwww.w3.org%2F1999%2F02%2F22-rdf-syntax-ns%23type
-        url = get_report_file_url(filename)
+
+        if not url:
+            url = get_report_file_url(filename)
+
         req = requests.get(url)
         text = req.content
         logger.info("Requesting XML file: %s", fpath)
@@ -527,11 +536,22 @@ LIMIT 1
 
 @cache(lambda func, *args: func.__name__ + "".join(args) + current_date())
 @timeit
-def get_all_report_filenames_art7(country):
-    """ Retrieve from CDR the latest filename
+def get_all_report_filenames(country, article):
+    ART3 = 'http://icm.eionet.europa.eu/schemas/dir200856ec/MSFD4Geo_2p0.xsd'
+    ART7 = 'http://dd.eionet.europa.eu/schemas/MSFD/MSFDCA_1p0.xsd'
+    schemas = {
+        'art7': ART7,
+        'art3': ART3,
+        'art4': ART3,
+    }
+    obligations = {
+        'art3': '760',
+        'art4': '760',
+        'art7': '607',
+    }
 
-    for Article 7 competent authorities
-    """
+    schema = schemas[article.lower()]
+    obligation = obligations[article.lower()]
 
     q = """
 PREFIX cr: <http://cr.eionet.europa.eu/ontologies/contreg.rdf#>
@@ -539,7 +559,7 @@ PREFIX terms: <http://purl.org/dc/terms/>
 PREFIX schema: <http://rod.eionet.europa.eu/schema.rdf#>
 PREFIX core: <http://www.w3.org/2004/02/skos/core#>
 
-SELECT distinct ?file
+SELECT ?file
 WHERE {
 ?file terms:date ?date .
 ?file cr:mediaType 'text/xml' .
@@ -550,14 +570,16 @@ WHERE {
 ?obligation core:notation ?obligationNr .
 ?locality core:notation ?notation .
 FILTER (?notation = '%s')
-FILTER (?obligationNr = '607')
-FILTER (str(?schema) IN ('http://dd.eionet.europa.eu/schemas/MSFD/MSFDCA_1p0.xsd',
-'http://water.eionet.europa.eu/schemas/dir200856ec/MSCA_1p0.xsd'))
+FILTER (?obligationNr = '%s')
+FILTER (str(?schema) = '%s')
 }
-ORDER BY DESC(?date)""" % (country.upper())
+ORDER BY DESC(?date)
+""" % (country.upper(), obligation, schema, )       # region.upper()
+
+# FILTER regex(str(?file), '%s')
 
     service = sparql.Service('https://cr.eionet.europa.eu/sparql')
-    filenames = []
+    urls = set()
 
     try:
         req = service.query(q)
@@ -565,14 +587,15 @@ ORDER BY DESC(?date)""" % (country.upper())
 
         for row in rows:
             url = row[0].value
-            splitted = url.split('/')
-            filename = splitted[-1]
-            filenames.append(filename)
+            # splitted = url.split('/')
+            # filename = splitted[-1]
+            if url not in urls:
+                urls.add(url)
 
     except:
         logger.exception('Got an error in querying SPARQL endpoint for '
-                         'Article 7 country: %s', country)
+                         '%s country: %s', article, country)
 
         raise
 
-    return filenames
+    return urls

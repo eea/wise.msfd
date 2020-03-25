@@ -122,7 +122,7 @@ class Article34(BaseArticle2012):
         text = get_xml_report_data(filename)
         root = fromstring(text)
 
-        # basic algorthim to detect what type of report it is
+        # basic algorithm to detect what type of report it is
         article = self.article
 
         # override the default translatable
@@ -158,6 +158,7 @@ class Article34(BaseArticle2012):
 
                 raw_values = []
                 vals = []
+
                 for v in values:
                     raw_values.append(v)
                     vals.append(self.context.translate_value(
@@ -186,12 +187,14 @@ class Article34(BaseArticle2012):
         for row in self.rows:
             if not row:
                 continue
+
             if row.title not in translatables:
                 continue
 
             for value in row.raw_values:
                 if not isinstance(value, basestring):
                     continue
+
                 if value not in seen:
                     retrieve_translation(self.country_code, value)
                     seen.add(value)

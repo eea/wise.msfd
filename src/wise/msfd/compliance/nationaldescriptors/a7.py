@@ -170,6 +170,7 @@ class Article7(BaseArticle2012):
 
                 raw_values = []
                 vals = []
+
                 for v in values:
                     raw_values.append(v)
                     vals.append(self.context.translate_value(
@@ -195,19 +196,21 @@ class Article7(BaseArticle2012):
             self.setup_data()
         except AssertionError:
             return
-        
+
         translatables = self.context.TRANSLATABLES
         seen = set()
 
         for row in self.rows:
             if not row:
                 continue
+
             if row.title not in translatables:
                 continue
 
             for value in row.raw_values:
                 if not isinstance(value, basestring):
                     continue
+
                 if value not in seen:
                     retrieve_translation(self.country_code, value)
                     seen.add(value)
@@ -215,7 +218,7 @@ class Article7(BaseArticle2012):
         return ''
 
 
-class Article72018(Article7):
+class Article7_2018(Article7):
     """ Article 7 implementation for 2018 year
 
         1. Get the report filename with a sparql query
@@ -226,9 +229,9 @@ class Article72018(Article7):
     def __init__(self, context, request, country_code, region_code,
                  descriptor, article,  muids, filename=None):
 
-        super(Article72018, self).__init__(context, request, country_code,
-                                           region_code, descriptor, article,
-                                           muids)
+        super(Article7_2018, self).__init__(context, request, country_code,
+                                            region_code, descriptor, article,
+                                            muids)
 
         self._filename = filename
 

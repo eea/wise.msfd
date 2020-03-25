@@ -25,7 +25,7 @@ from wise.msfd.compliance.utils import (group_by_mru,
                                         insert_missing_criterions,
                                         ordered_regions_sortkey)
 from wise.msfd.compliance.vocabulary import get_regions_for_country
-from wise.msfd.data import (get_all_report_filenames_art7, get_factsheet_url,
+from wise.msfd.data import (get_all_report_filenames, get_factsheet_url,
                             get_report_file_url, get_report_filename,
                             get_xml_report_data)
 from wise.msfd.gescomponents import get_descriptor, get_features
@@ -36,7 +36,7 @@ from z3c.form.button import buttonAndHandler
 from z3c.form.field import Fields
 from z3c.form.form import Form
 
-from .a7 import Article7, Article72018
+from .a7 import Article7, Article7_2018
 from .a8 import Article8
 from .a8alternate import Article8Alternate
 from .a8esa import Article8ESA
@@ -1239,7 +1239,7 @@ class ReportData2018Secondary(ReportData2018):
     Art7 = Template('pt/report-data-secondary-2018.pt')
 
     def _get_report_metadata_Art7(self, filename=None):
-        view = Article72018(
+        view = Article7_2018(
             self, self.request, self.country_code, self.country_region_code,
             self.descriptor, self.article, self.muids, filename
         )
@@ -1280,50 +1280,51 @@ class ReportData2018Secondary(ReportData2018):
 
         return metadata
 
-    def get_report_header(self):
-        if self.article not in ('Art3', 'Art4'):
-            return super(ReportData2018Secondary, self).get_report_header()
-
-        regions = get_regions_for_country(self.country_code)
-        filenames = []
-        for r in regions:
-            try:
-                args = ('2018', self.country_code, r[0], self.article,
-                        self.descriptor)
-                f = get_report_filename(*args)
-            except AssertionError:
-                logger.exception("No filename for %s", ' '.join(args))
-                continue
-            else:
-                if f:
-                    filenames.append(([r[0], f]))
-
-        clean_filenames = list(sorted(
-            filenames,
-            key=lambda i: ordered_regions_sortkey(i[0])))
-
-        if not clean_filenames:
-            return 'no files found for reported data'
-
-        links = [
-            (fname[1], get_report_file_url(fname[1]) + '/manage_document')
-            for fname in clean_filenames
-        ]
-        report_due = report_by = report_date = ''
-
-        report_header = self.report_header_template(
-            title=self.report_header_title,
-            factsheet=None,
-            # TODO: find out how to get info about who reported
-            report_by=report_by,
-            source_file=links,
-            report_due=report_due,
-            report_date=report_date,
-            help_text=self.help_text,
-            multiple_source_files=True
-        )
-
-        return report_header
+    # def get_report_header(self):
+    #     # For Art7, use the default report header
+    #     if self.article not in ('Art3', 'Art4'):
+    #         return super(ReportData2018Secondary, self).get_report_header()
+    #
+    #     regions = get_regions_for_country(self.country_code)
+    #     filenames = []
+    #     for r in regions:
+    #         try:
+    #             args = ('2018', self.country_code, r[0], self.article,
+    #                     self.descriptor)
+    #             f = get_report_filename(*args)
+    #         except AssertionError:
+    #             logger.exception("No filename for %s", ' '.join(args))
+    #             continue
+    #         else:
+    #             if f:
+    #                 filenames.append(([r[0], f]))
+    #
+    #     clean_filenames = list(sorted(
+    #         filenames,
+    #         key=lambda i: ordered_regions_sortkey(i[0])))
+    #
+    #     if not clean_filenames:
+    #         return 'no files found for reported data'
+    #
+    #     links = [
+    #         (fname[1], get_report_file_url(fname[1]) + '/manage_document')
+    #         for fname in clean_filenames
+    #     ]
+    #     report_due = report_by = report_date = ''
+    #
+    #     report_header = self.report_header_template(
+    #         title=self.report_header_title,
+    #         factsheet=None,
+    #         # TODO: find out how to get info about who reported
+    #         report_by=report_by,
+    #         source_file=links,
+    #         report_due=report_due,
+    #         report_date=report_date,
+    #         help_text=self.help_text,
+    #         multiple_source_files=True
+    #     )
+    #
+    #     return report_header
 
     @property
     def report_header_title(self):
@@ -1346,29 +1347,37 @@ class ReportData2018Secondary(ReportData2018):
 
         return data
 
-    def get_data_from_view_Art3(self):
-        mc = sql2018.MRUsPublication
-
-        conditions = [
-            mc.Country == self.country_code,
-        ]
-
-        col_names = ('Country', 'rZoneId', 'thematicId', 'nameTxtInt',
-                     'nameText', 'spZoneType', 'legisSName', 'Area')
-        columns = [getattr(mc, name) for name in col_names]
-
-        count, data = db.get_all_specific_columns(
-            columns,
-            *conditions
+    def get_data_from_view_Art3(self, filename=None):
+        # mc = sql2018.MRUsPublication
+        #
+        # conditions = [
+        #     mc.Country == self.country_code,
+        # ]
+        #
+        # col_names = ('Country', 'rZoneId', 'thematicId', 'nameTxtInt',
+        #              'nameText', 'spZoneType', 'legisSName', 'Area')
+        # columns = [getattr(mc, name) for name in col_names]
+        #
+        # count, data = db.get_all_specific_columns(
+        #     columns,
+        #     *conditions
+        # )
+        #
+        # sorted_data = sorted(data, key=lambda i: (i.rZoneId, i.thematicId))
+        #
+        # return sorted_data
+        view = Article34(
+            self, self.request, self.country_code, self.country_region_code,
+            self.descriptor, self.article, self.muids, filename
         )
+        view()
+        data = view.cols
 
-        sorted_data = sorted(data, key=lambda i: (i.rZoneId, i.thematicId))
+        return data
 
-        return sorted_data
+    def get_data_from_view_Art4(self, filename=None):
 
-    def get_data_from_view_Art4(self):
-
-        return self.get_data_from_view_Art3()
+        return self.get_data_from_view_Art3(filename)
 
     def get_data_from_view_Art7(self, filename=None):
         """ In other articles (8, 9, 10) for 2018 year,
@@ -1378,7 +1387,7 @@ class ReportData2018Secondary(ReportData2018):
         by initializing and calling the view's class to setup the data
         """
 
-        view = Article72018(
+        view = Article7_2018(
             self, self.request, self.country_code, self.country_region_code,
             self.descriptor, self.article, self.muids, filename
         )
@@ -1393,7 +1402,64 @@ class ReportData2018Secondary(ReportData2018):
     def _render_reportdata_Art4(self):
         return super(ReportData2018Secondary, self).render_reportdata()
 
-    def _render_reportdata_Art7(self):
+    # def _render_reportdata_Art7(self):
+    #     """
+    #     1. Get all reported files under Article 7
+    #     2. Render the data separately for all files
+    #     3. Concat the rendered htmls into a single
+    #
+    #     :return: rendered html
+    #     """
+    #
+    #     filenames = get_all_report_filenames_art7(self.country_code)
+    #
+    #     rendered_results = []
+    #
+    #     for filename in filenames:
+    #         res = []
+    #         url = get_report_file_url(filename)
+    #         source_file = (filename, url + '/manage_document')
+    #         factsheet = get_factsheet_url(url)
+    #         data = self.get_data_from_view_Art7(filename)
+    #         data = [Proxy2018(row, self) for row in data]
+    #         data_by_mru = group_by_mru(data)
+    #         fields = get_report_definition(self.article).get_fields()
+    #
+    #         for mru, rows in data_by_mru.items():
+    #             _rows = items_to_rows(rows, fields)
+    #
+    #             res.append((mru, _rows))
+    #
+    #         template = self.get_template(self.article)
+    #
+    #         # Report Header
+    #         report = self._get_report_metadata_Art7(filename)
+    #
+    #         link = report_by = report_date = None
+    #         if report:
+    #             link = report.ReportedFileLink
+    #             link = (link.rsplit('/', 1)[1], link)
+    #             report_by = report.ContactOrganisation
+    #             report_date = report.ReportingDate
+    #
+    #         report_header = self.report_header_template(
+    #             title=self.report_header_title,
+    #             factsheet=factsheet,
+    #             # TODO: find out how to get info about who reported
+    #             report_by=report_by,
+    #             source_file=source_file,
+    #             report_due=None,
+    #             report_date=report_date,
+    #             help_text=self.help_text,
+    #             multiple_source_files=False
+    #         )
+    #
+    #         rendered_results.append(template(data=res,
+    #                                          report_header=report_header))
+    #
+    #     return "".join(rendered_results)
+
+    def render_reportdata(self):
         """
         1. Get all reported files under Article 7
         2. Render the data separately for all files
@@ -1401,17 +1467,22 @@ class ReportData2018Secondary(ReportData2018):
 
         :return: rendered html
         """
+        # renderer_name = "_render_reportdata_{}".format(self.article)
+        # renderer = getattr(self, renderer_name)
+        #
+        # return renderer()
 
-        filenames = get_all_report_filenames_art7(self.country_code)
+        urls = get_all_report_filenames(self.country_code, self.article)
 
         rendered_results = []
 
-        for filename in filenames:
+        data_getter = getattr(self, 'get_data_from_view_%s' % self.article)
+
+        for url in urls:
             res = []
-            url = get_report_file_url(filename)
-            source_file = (filename, url + '/manage_document')
+            source_file = (url.rsplit('/', 1)[-1], url + '/manage_document')
             factsheet = get_factsheet_url(url)
-            data = self.get_data_from_view_Art7(filename)
+            data = data_getter(url)
             data = [Proxy2018(row, self) for row in data]
             data_by_mru = group_by_mru(data)
             fields = get_report_definition(self.article).get_fields()
@@ -1424,12 +1495,17 @@ class ReportData2018Secondary(ReportData2018):
             template = self.get_template(self.article)
 
             # Report Header
-            report = self._get_report_metadata_Art7(filename)
+
+            if self.article == 'Art7':
+                report = self._get_report_metadata_Art7(url)
+            else:
+                report = None
 
             link = report_by = report_date = None
+
             if report:
                 link = report.ReportedFileLink
-                link = (link.rsplit('/', 1)[1], link)
+                link = (link.rsplit('/', 1)[-1], link)
                 report_by = report.ContactOrganisation
                 report_date = report.ReportingDate
 
@@ -1449,9 +1525,3 @@ class ReportData2018Secondary(ReportData2018):
                                              report_header=report_header))
 
         return "".join(rendered_results)
-
-    def render_reportdata(self):
-        renderer_name = "_render_reportdata_{}".format(self.article)
-        renderer = getattr(self, renderer_name)
-
-        return renderer()
