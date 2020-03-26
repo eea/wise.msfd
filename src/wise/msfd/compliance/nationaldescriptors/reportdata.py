@@ -1238,15 +1238,7 @@ class ReportData2018Secondary(ReportData2018):
     Art4 = Template('pt/report-data-secondary-2018.pt')
     Art7 = Template('pt/report-data-secondary-2018.pt')
 
-    def _get_report_metadata_Art7(self, filename=None):
-        view = Article7_2018(
-            self, self.request, self.country_code, self.country_region_code,
-            self.descriptor, self.article, self.muids, filename
-        )
-
-        if not filename:
-            filename = view.get_report_filename()
-
+    def get_report_metadata_from_view(self, view, filename):
         fileurl = get_report_file_url(filename)
         root = view.get_report_file_root(filename)
 
@@ -1265,21 +1257,6 @@ class ReportData2018Secondary(ReportData2018):
 
         return metadata
 
-    def _get_report_metadata_Art3(self):
-        return "to be implemented"
-
-    def _get_report_metadata_Art4(self):
-        return "to be implemented"
-
-    def get_report_metadata(self):
-        article = self.article.replace('-', '')
-        get_method = getattr(
-            self, '_get_report_metadata_{}'.format(article)
-        )
-        metadata = get_method()
-
-        return metadata
-
     @property
     def report_header_title(self):
         title = "Member State report: {} / {} / 2018".format(
@@ -1295,7 +1272,7 @@ class ReportData2018Secondary(ReportData2018):
 
         return template
 
-    def get_data_from_view(self, filename):
+    def get_implementation_view(self, filename):
         """ In other articles (8, 9, 10) for 2018 year,
         we get the data from the DB (MSFD2018_production)
 
@@ -1303,19 +1280,14 @@ class ReportData2018Secondary(ReportData2018):
         by initializing and calling the view's class to setup the data
         """
 
-        if self.article == 'Art7':
-            klass = Article7_2018
-        else:
-            klass = Article34_2018
+        klass = {'Art7': Article7_2018,
+                 'Art3': Article34_2018,
+                 'Art4': Article34_2018}.get(self.article)
 
-        view = klass(
+        return klass(
             self, self.request, self.country_code, self.country_region_code,
             self.descriptor, self.article, self.muids, filename
         )
-        view()
-        data = view.cols
-
-        return data
 
     def render_reportdata(self):
         """
@@ -1331,11 +1303,24 @@ class ReportData2018Secondary(ReportData2018):
         rendered_results = []
 
         for url in urls:
+            view = self.get_implementation_view(url)
+
+            report = self.get_report_metadata_from_view(view, url)
+            # Report Header
+            link = report_by = report_date = None
+
+            if report:
+                link = report.ReportedFileLink
+                link = (link.rsplit('/', 1)[-1], link)
+                report_by = report.ContactOrganisation
+                report_date = report.ReportingDate
+
             res = []
             source_file = (url.rsplit('/', 1)[-1], url + '/manage_document')
             factsheet = get_factsheet_url(url)
-            data = self.get_data_from_view(url)
-            data = [Proxy2018(row, self) for row in data]
+
+            view()      # updates the view
+            data = [Proxy2018(row, self) for row in view.cols]
 
             if self.article == 'Art7':
                 data_by_mru = group_by_mru(data)
@@ -1350,21 +1335,6 @@ class ReportData2018Secondary(ReportData2018):
                 res.append((mru, _rows))
 
             template = self.get_template(self.article)
-
-            # Report Header
-
-            if self.article == 'Art7':
-                report = self._get_report_metadata_Art7(url)
-            else:
-                report = None
-
-            link = report_by = report_date = None
-
-            if report:
-                link = report.ReportedFileLink
-                link = (link.rsplit('/', 1)[-1], link)
-                report_by = report.ContactOrganisation
-                report_date = report.ReportingDate
 
             report_header = self.report_header_template(
                 title=self.report_header_title,
@@ -1384,51 +1354,4 @@ class ReportData2018Secondary(ReportData2018):
                                              show_navigation=False))
 
         res = "<hr/>".join(rendered_results)
-        if not res:
-            return "No data found"
-
-    # def get_report_header(self):
-    #     # For Art7, use the default report header
-    #     if self.article not in ('Art3', 'Art4'):
-    #         return super(ReportData2018Secondary, self).get_report_header()
-    #
-    #     regions = get_regions_for_country(self.country_code)
-    #     filenames = []
-    #     for r in regions:
-    #         try:
-    #             args = ('2018', self.country_code, r[0], self.article,
-    #                     self.descriptor)
-    #             f = get_report_filename(*args)
-    #         except AssertionError:
-    #             logger.exception("No filename for %s", ' '.join(args))
-    #             continue
-    #         else:
-    #             if f:
-    #                 filenames.append(([r[0], f]))
-    #
-    #     clean_filenames = list(sorted(
-    #         filenames,
-    #         key=lambda i: ordered_regions_sortkey(i[0])))
-    #
-    #     if not clean_filenames:
-    #         return 'no files found for reported data'
-    #
-    #     links = [
-    #         (fname[1], get_report_file_url(fname[1]) + '/manage_document')
-    #         for fname in clean_filenames
-    #     ]
-    #     report_due = report_by = report_date = ''
-    #
-    #     report_header = self.report_header_template(
-    #         title=self.report_header_title,
-    #         factsheet=None,
-    #         # TODO: find out how to get info about who reported
-    #         report_by=report_by,
-    #         source_file=links,
-    #         report_due=report_due,
-    #         report_date=report_date,
-    #         help_text=self.help_text,
-    #         multiple_source_files=True
-    #     )
-    #
-    #     return report_header
+        return res or "No data found"

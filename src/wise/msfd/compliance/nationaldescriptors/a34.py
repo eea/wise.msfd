@@ -214,3 +214,26 @@ class Article34_2018(Article34):
     """
 
     year = '2012'
+
+    def get_report_file_root(self, filename=None):
+        if not filename:
+            filename = self.get_report_filename()
+
+        text = get_xml_report_data(filename)
+        root = fromstring(text)
+
+        return root
+
+    def get_report_filename(self):
+        if self._filename:
+            return self._filename
+
+        filename = get_report_filename(
+            '2018',
+            self.country_code,
+            self.region_code,
+            self.article,
+            self.descriptor,
+        )
+
+        return filename
