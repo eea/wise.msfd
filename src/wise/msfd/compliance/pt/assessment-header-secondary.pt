@@ -15,6 +15,12 @@
         <td tal:attributes="colspan view/colspan"
            tal:content="options/assess_date"/>
       </tr>
+      <tr tal:condition="view/source_pdf_assessment">
+        <th>Link to PDF assessment</th>
+        <td tal:attributes="colspan view/colspan">
+          <a tal:attributes="href view/source_pdf_assessment" tal:content="view/source_pdf_assessment"/>
+        </td>
+      </tr>
     </table>
   </div>
   <div id="edit-assessors" class="modal fade" tabindex="-1" role="dialog">

@@ -752,15 +752,25 @@ class AssessmentQuestionDefinition:
 
     def _art_4_ids(self, descriptor, **kwargs):
         """ Return all descriptors """
+
         descriptors = get_all_descriptors()
-        descriptors = [
-            DescriptorOption(id=d[0], title=d[1], is_primary=lambda _: True)
-            for d in descriptors if d[0] != 'D1'
-        ]
+        res = []
 
-        # import pdb; pdb.set_trace()
+        for descriptor in descriptors:
+            descr_id = descriptor[0]
+            if descr_id == 'D1':
+                continue
 
-        return descriptors
+            descr_title = descriptor[1]
+            descriptor_obj = get_descriptor(descr_id)
+            alternate_id = descriptor_obj.template_vars['title']
+
+            descr_opt = DescriptorOption(id=alternate_id, title=descr_title,
+                                         is_primary=lambda _: True)
+
+            res.append(descr_opt)
+
+        return res
 
     def get_assessed_elements(self, descriptor, **kwargs):
         """ Get a list of filtered assessed elements for this question.

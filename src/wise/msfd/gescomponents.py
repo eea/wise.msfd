@@ -152,7 +152,8 @@ class Descriptor(ItemLabel):
             bits = self.title.split('Biodiversity')
             b2 = bits[1].strip()
             major = b2[1:].strip()
-            title = u"D1&#8209;" + major[0].upper()     # non-breaking hyphen
+            # title = u"D1&#8209;" + major[0].upper()     # non-breaking hyphen
+            title = u"D1-" + major[0].upper()  # non-breaking hyphen
 
         return {
             'title': title,
