@@ -22,6 +22,7 @@ from wise.msfd.compliance.scoring import (CONCLUSIONS, get_overall_conclusion,
                                           get_range_index, OverallScores)
 from wise.msfd.compliance.vocabulary import (REGIONAL_DESCRIPTORS_REGIONS,
                                              SUBREGIONS_TO_REGIONS)
+from wise.msfd.data import _extract_pdf_assessments
 from wise.msfd.gescomponents import get_descriptor
 from wise.msfd.utils import t2rt
 
@@ -863,6 +864,7 @@ class NationalDescriptorSecondaryArticleView(NationalDescriptorArticleView):
         '../pt/assessment-header-secondary.pt'
     )
 
+    pdf_assessments = _extract_pdf_assessments()
 
     implements(INationaldescriptorSecondaryArticleView)
     _descriptor = 'Not linked'
@@ -874,6 +876,22 @@ class NationalDescriptorSecondaryArticleView(NationalDescriptorArticleView):
     @property
     def descriptor_obj(self):
         return 'Not linked'
+
+    def source_pdf_assessment(self):
+        for row in self.pdf_assessments:
+            country = row[0]
+            if country != self.country_code:
+                continue
+
+            article = row[1]
+            if article != self.article:
+                continue
+
+            url = row[2]
+
+            return url
+
+        return None
 
     def __call__(self):
 

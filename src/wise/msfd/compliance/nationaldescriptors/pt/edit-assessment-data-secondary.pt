@@ -99,7 +99,7 @@
                     <h4>
                       <span tal:content="subform/title">Question here</span>
                       <span style="float:right;"
-                          tal:define="last_change python: plone.toLocalizedTime(subform._last_update, long_format=True) or '-'"
+                          tal:define="last_change python: view.format_last_change(subform._last_update)"
                           class="help-popover"
                           data-trigger="hover"
                           data-html="true"
@@ -137,7 +137,7 @@
                                   data-html="true"
                                   tal:attributes="for widget/id;
                                   title python: element and element.title or '';
-                                  data-content python: element and view.get_translated(element.definition) or ''" >
+                                  data-content python: ''" >
                                   <span i18n:translate="" tal:content="widget/label">label</span>
                                   <!-- <span tal:condition="element" class="fa fa-question-circle"></span> -->
                                 </label>

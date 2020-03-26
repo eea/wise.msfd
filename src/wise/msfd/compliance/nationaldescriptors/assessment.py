@@ -82,6 +82,24 @@ class EditAssessmentDataForm(BaseView, EditAssessmentDataFormMain):
     template = ViewPageTemplateFile("./pt/edit-assessment-data.pt")
     _questions = NAT_DESC_QUESTIONS
 
+    def format_last_change(self, last_update):
+        default = '-'
+        toLocalizedTime = self.context.toLocalizedTime
+        # convert the last_update datetime to local timezone
+        local_time = toLocalizedTime(last_update, long_format=True) or default
+        if local_time == default:
+            return default
+
+        # parse the datestring to reformat into a clearer format
+        local_time = datetime.datetime.strptime(
+            local_time, '%b %d, %Y %I:%M %p'
+        )
+        local_time = datetime.datetime.strftime(
+            local_time, "%Y %b %d, %H:%M"
+        )
+
+        return local_time
+
     @property
     def title(self):
         return u"Edit Comission assessment: {}/ {}/ {}/ {}/ 2018".format(

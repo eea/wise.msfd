@@ -2,7 +2,9 @@ import logging
 import os
 import tempfile
 from collections import defaultdict
+from pkg_resources import resource_filename
 
+import csv
 import requests
 
 import sparql
@@ -21,6 +23,20 @@ FILENAMES_MISSING_DB = {
         ('BAL', 'Art10', 'MSFD10TI_20160226_150132.xml')
     )
 }
+
+
+def _extract_pdf_assessments():
+    data = []
+    csv_f = resource_filename('wise.msfd',
+                              'data/pdf_assessments.csv')
+
+    with open(csv_f, 'rb') as csvfile:
+        csv_file = csv.reader(csvfile, delimiter='\t', quotechar='|')
+
+        for row in csv_file:
+            data.append(row)
+
+    return data
 
 
 @db.use_db_session('2012')
