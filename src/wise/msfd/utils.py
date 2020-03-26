@@ -203,6 +203,7 @@ def change_orientation(data):
 
     for field in fields:
         field_data = []
+
         for row in data:
             field_data.append(row.get(field, ''))
 
@@ -221,6 +222,7 @@ def group_data(data, pivot, remove_pivot=True):
 
         # Remove the pivot column from the rows, so it will not be showed
         # In some edge cases (Art10 2018) we don't want to remove the pivot
+
         if remove_pivot:
             p = d.pop(pivot)  # if count_distinct_values > 1 else d[pivot]
         else:
@@ -553,6 +555,36 @@ class TableHeader(TemplateMixin):
     def __init__(self, title, values):
         self.title = title
         self.cells = values
+
+
+class SimpleTable(TemplateMixin):
+    template = PageTemplateFile('pt/table.pt')
+
+    # <div tal:content="labels"></div>
+    # <hr />
+    # <div tal:content="values"></div>
+    # <hr />
+    #
+    # <h3>Vlaues</h3>
+    #
+    # <div tal:repeat="item values">
+    #   <div tal:content="item"></div>
+    #   <div tal:repeat="name labels">
+    #     <span tal:content="python: item[name]"></span>
+    #   </div>
+    #   <hr/>
+    # </div>
+
+    def __init__(self, title, values):
+        self.title = title
+        self.item_labels = []
+
+        for row in values:
+            self.item_labels = row.keys()
+
+            break
+
+        self.item_values = values
 
 
 class Item(OrderedDict):

@@ -1284,10 +1284,12 @@ class ReportData2018Secondary(ReportData2018):
                  'Art3': Article34_2018,
                  'Art4': Article34_2018}.get(self.article)
 
-        return klass(
+        view = klass(
             self, self.request, self.country_code, self.country_region_code,
-            self.descriptor, self.article, self.muids, filename
+            self.descriptor, self.article, self.muids
         )
+        view.setup_data(filename)
+        return view
 
     def render_reportdata(self):
         """
@@ -1305,7 +1307,7 @@ class ReportData2018Secondary(ReportData2018):
 
         # reported_information = defaultdict(list)
 
-        for (url, index) in enumerate(urls):
+        for (index, url) in enumerate(urls):
             view = self.get_implementation_view(url)
 
             report = self.get_report_metadata_from_view(view, url)

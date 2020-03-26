@@ -5,7 +5,7 @@ some other useful formats. Used when displaying data.
 from wise.msfd.gescomponents import get_ges_component
 from wise.msfd.labels import GES_LABELS
 from wise.msfd.translation import get_translated
-from wise.msfd.utils import ItemLabel, ItemList
+from wise.msfd.utils import ItemLabel, ItemList, SimpleTable
 
 
 def csv_ges_labels_list(field, value, lang):
@@ -97,3 +97,8 @@ def format_area(field, value, lang):
         return "{:.0f} km2".format(value)
 
     return value
+
+
+def mrus_as_table(field, value, lang):
+
+    return SimpleTable(field.name, value)

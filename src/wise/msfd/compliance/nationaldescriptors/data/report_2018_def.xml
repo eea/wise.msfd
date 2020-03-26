@@ -146,15 +146,17 @@
   <!--   <element name="Area" convert="format_area">Area</element> -->
   <!-- </Art3> -->
 
+    <!-- <element name="Member state">Member state</element> -->
+    <!-- <element name="Area type">Area type</element> -->
+    <!-- <element name="Marine Reporting Unit">Marine Reporting Unit</element> -->
+    <!-- <element name="MRU Name" translate="true">MRU Name</element> -->
+
   <Art3>
     <element name="Member state description" translate="true">Member state description</element>
     <element name="Region / subregion description" translate="true">Region / subregion description</element>
     <element name="Subdivisions" translate="true">Subdivisions</element>
     <element name="Marine reporting units description" translate="true">Marine reporting units description (AreaType)</element>
-    <element name="Member state">Member state</element>
-    <element name="Area type">Area type</element>
-    <element name="Marine Reporting Unit">Marine Reporting Unit</element>
-    <element name="MRU Name" translate="true">MRU Name</element>
+    <element name="MRUs" convert="mrus_as_table">MRUs</element>
   </Art3>
 
   <Art7>
