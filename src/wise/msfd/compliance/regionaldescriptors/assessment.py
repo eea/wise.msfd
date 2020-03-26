@@ -1,28 +1,27 @@
 import datetime
 import logging
-
 from collections import namedtuple
-from pkg_resources import resource_filename
-from pyexcel_xlsx import get_data
 
+from persistent.list import PersistentList
+from pkg_resources import resource_filename
 from zope.schema import Choice, Text
 from zope.schema.vocabulary import SimpleTerm, SimpleVocabulary
 
 from AccessControl import Unauthorized
-from persistent.list import PersistentList
 from plone.api import user
 from plone.z3cform.layout import wrap_form
 from Products.Five.browser.pagetemplatefile import (PageTemplateFile,
                                                     ViewPageTemplateFile)
+from pyexcel_xlsx import get_data
 from wise.msfd.base import EmbeddedForm, MainFormWrapper
-from wise.msfd.compliance.assessment import (additional_fields,
+from wise.msfd.compliance.assessment import (PHASES,
                                              EditAssessmentDataFormMain,
                                              EditAssessmentSummaryForm,
-                                             PHASES, reg_summary_fields,
+                                             additional_fields,
+                                             reg_summary_fields,
                                              render_assessment_help)
 from wise.msfd.compliance.base import REG_DESC_QUESTIONS
 from wise.msfd.compliance.content import AssessmentData
-
 from z3c.form.button import buttonAndHandler
 from z3c.form.field import Fields
 
@@ -83,6 +82,25 @@ class RegDescEditAssessmentDataForm(BaseRegComplianceView,
             self.descriptor,
             self.article,
         )
+
+    def format_last_change(self, last_update):
+        default = '-'
+        toLocalizedTime = self.context.toLocalizedTime
+        # convert the last_update datetime to local timezone
+        local_time = toLocalizedTime(last_update, long_format=True) or default
+
+        if local_time == default:
+            return default
+
+        # parse the datestring to reformat into a clearer format
+        local_time = datetime.datetime.strptime(
+            local_time, '%b %d, %Y %I:%M %p'
+        )
+        local_time = datetime.datetime.strftime(
+            local_time, "%Y %b %d, %H:%M"
+        )
+
+        return local_time
 
     @buttonAndHandler(u'Save', name='save')
     def handle_save(self, action):
@@ -314,4 +332,5 @@ class RegDescEditAssessmentDataForm(BaseRegComplianceView,
         return forms
 
 
-RegDescEditAssessmentDataView = wrap_form(RegDescEditAssessmentDataForm, MainFormWrapper)
+RegDescEditAssessmentDataView = wrap_form(
+    RegDescEditAssessmentDataForm, MainFormWrapper)

@@ -5,16 +5,14 @@ from eea.cache import cache
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 from wise.msfd import db, sql, sql_extra
 from wise.msfd.compliance.vocabulary import REGIONAL_DESCRIPTORS_REGIONS
-from wise.msfd.data import countries_in_region, muids_by_country
-from wise.msfd.gescomponents import (get_descriptor, FEATURES_DB_2012,
-                                     FEATURES_DB_2018)
+from wise.msfd.data import muids_by_country
+from wise.msfd.gescomponents import FEATURES_DB_2012
 from wise.msfd.translation import get_translated
-from wise.msfd.utils import (CompoundRow, ItemLabel, ItemList, Row,
-                             TableHeader, current_date)
+from wise.msfd.utils import ItemLabel, current_date
 
-from .utils import (compoundrow, compoundrow2012, get_nat_desc_country_url,
-                    emptyline_separated_itemlist, newline_separated_itemlist)
-from .base import BaseRegDescRow, BaseRegComplianceView
+from .base import BaseRegComplianceView, BaseRegDescRow
+from .utils import (compoundrow, compoundrow2012, emptyline_separated_itemlist,
+                    get_nat_desc_country_url, newline_separated_itemlist)
 
 
 def get_key(func, self):
@@ -41,19 +39,24 @@ class RegDescA92018Row(BaseRegDescRow):
 
         for crit in criterions:
             values = []
+
             for country_code, country_name in self.countries:
                 orig = []
                 translated = []
                 data = set([
                     row.GESDescription
+
                     for row in self.db_data
+
                     if row.CountryCode == country_code
-                       and (row.GESComponent == crit.id
-                            or row.GESComponent.split('/')[0] == crit.id)
-                       and row.Features
+                    and (row.GESComponent == crit.id
+                         or row.GESComponent.split('/')[0] == crit.id)
+                    and row.Features
                 ])
+
                 if not data:
                     values.append(self.not_rep)
+
                     continue
 
                 for ges_descr in data:
@@ -75,17 +78,22 @@ class RegDescA92018Row(BaseRegDescRow):
     def get_justif_nonuse_row(self):
         rows = []
         values = []
+
         for country_code, country_name in self.countries:
             orig = []
             translated = []
             data = set([
                 (row.GESComponent, row.JustificationNonUse)
+
                 for row in self.db_data
+
                 if row.CountryCode == country_code
-                   and row.JustificationNonUse
+                and row.JustificationNonUse
             ])
+
             if not data:
                 values.append(self.not_rep)
+
                 continue
 
             for row in data:
@@ -109,17 +117,22 @@ class RegDescA92018Row(BaseRegDescRow):
     def get_justif_delay_row(self):
         rows = []
         values = []
+
         for country_code, country_name in self.countries:
             orig = []
             translated = []
             data = set([
                 (row.GESComponent, row.JustificationDelay)
+
                 for row in self.db_data
+
                 if row.CountryCode == country_code
-                    and row.JustificationDelay
+                and row.JustificationDelay
             ])
+
             if not data:
                 values.append(self.not_rep)
+
                 continue
 
             for row in data:
@@ -190,6 +203,7 @@ class RegDescA92012(BaseRegComplianceView):
     @property
     def descriptor(self):
         descriptor = self._descriptor
+
         if descriptor.startswith("D1."):
             descriptor = "D1"
 
@@ -319,6 +333,7 @@ class RegDescA92012(BaseRegComplianceView):
                     t.MarineUnitID.in_(muids)
                 )
                 value = self.not_rep
+
                 for _d in data:
                     transl = get_translated(_d, country) or ''
 
@@ -360,9 +375,11 @@ class RegDescA92012(BaseRegComplianceView):
 
         rows = []
         all_themes = defaultdict(list)
+
         for feature in all_features:
             if feature not in themes_fromdb:
                 all_themes['No theme'].append(feature)
+
                 continue
 
             theme = themes_fromdb[feature].theme
@@ -381,6 +398,7 @@ class RegDescA92012(BaseRegComplianceView):
                         t.FeaturesPressuresImpacts == feature,
                         t.MarineUnitID.in_(muids)
                     )
+
                     if not count:
                         continue
 

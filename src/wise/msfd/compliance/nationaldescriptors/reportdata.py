@@ -1,5 +1,5 @@
 import logging
-from collections import OrderedDict, namedtuple
+from collections import OrderedDict, defaultdict, namedtuple
 from datetime import datetime
 from HTMLParser import HTMLParser
 from io import BytesIO
@@ -1298,11 +1298,14 @@ class ReportData2018Secondary(ReportData2018):
         :return: rendered html
         """
 
+        template = self.get_template(self.article)
         urls = get_all_report_filenames(self.country_code, self.article)
 
         rendered_results = []
 
-        for url in urls:
+        # reported_information = defaultdict(list)
+
+        for (url, index) in enumerate(urls):
             view = self.get_implementation_view(url)
 
             report = self.get_report_metadata_from_view(view, url)
@@ -1334,10 +1337,8 @@ class ReportData2018Secondary(ReportData2018):
 
                 res.append((mru, _rows))
 
-            template = self.get_template(self.article)
-
             report_header = self.report_header_template(
-                title=self.report_header_title,
+                title=(index == 0 and self.report_header_title or ''),
                 factsheet=factsheet,
                 # TODO: find out how to get info about who reported
                 report_by=report_by,

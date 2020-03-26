@@ -3,15 +3,14 @@ from itertools import chain
 
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 from wise.msfd import db, sql  # , sql_extra
-from wise.msfd.data import countries_in_region, muids_by_country
-from wise.msfd.gescomponents import (FEATURES_DB_2018, FEATURES_DB_2012,
+from wise.msfd.data import muids_by_country
+from wise.msfd.gescomponents import (FEATURES_DB_2012, FEATURES_DB_2018,
                                      THEMES_2018_ORDER)
 from wise.msfd.translation import get_translated
-from wise.msfd.utils import (fixedorder_sortkey, CompoundRow, ItemLabel,
-                             ItemList, Row, TableHeader)
+from wise.msfd.utils import ItemLabel, fixedorder_sortkey
 
 from ..a8_utils import UtilsArticle8
-from .base import BaseRegDescRow, BaseRegComplianceView
+from .base import BaseRegComplianceView, BaseRegDescRow
 from .utils import compoundrow, compoundrow2012, newline_separated_itemlist
 
 
@@ -33,6 +32,7 @@ class RegDescA82018Row(BaseRegDescRow):
         for feature in all_features:
             if feature not in themes_fromdb:
                 all_themes['No theme'].append(feature)
+
                 continue
 
             theme = themes_fromdb[feature].theme
@@ -50,14 +50,17 @@ class RegDescA82018Row(BaseRegDescRow):
                 value = []
                 data = [
                     row.Feature
+
                     for row in self.db_data
+
                     if row.CountryCode == country_code
-                       and row.Feature
+                    and row.Feature
                 ]
                 count_features = Counter(data)
 
                 for feature in feats:
                     cnt = count_features.get(feature, 0)
+
                     if not cnt:
                         continue
 
@@ -82,6 +85,7 @@ class RegDescA82018Row(BaseRegDescRow):
         for feature in all_features:
             if feature not in themes_fromdb:
                 all_themes['No theme'].append(feature)
+
                 continue
 
             theme = themes_fromdb[feature].theme
@@ -99,9 +103,11 @@ class RegDescA82018Row(BaseRegDescRow):
                 value = []
                 data = [
                     row
+
                     for row in self.db_data
+
                     if row.CountryCode == country_code
-                       and row.Feature
+                    and row.Feature
                 ]
 
                 crits = set([row.Criteria for row in data])
@@ -112,9 +118,11 @@ class RegDescA82018Row(BaseRegDescRow):
                     for feature in feats:
                         elements = [
                             row.Element
+
                             for row in data
+
                             if row.Feature == feature and row.Element
-                               and row.Criteria == crit
+                            and row.Criteria == crit
                         ]
 
                         elements_found.extend(elements)
@@ -140,9 +148,11 @@ class RegDescA82018Row(BaseRegDescRow):
         for country_code, country_name in self.countries:
             data = [
                 row.Element2
+
                 for row in self.db_data
+
                 if row.CountryCode == country_code
-                   and row.Element2
+                and row.Element2
             ]
 
             value = set(data) or self.not_rep
@@ -162,13 +172,16 @@ class RegDescA82018Row(BaseRegDescRow):
             value = []
             data = [
                 row.ElementSource
+
                 for row in self.db_data
+
                 if row.CountryCode == country_code
-                   and row.Element
+                and row.Element
             ]
 
             if not data:
                 values.append(self.not_rep)
+
                 continue
 
             for elem_source in element_sources:
@@ -189,14 +202,17 @@ class RegDescA82018Row(BaseRegDescRow):
 
         for crit in criterions:
             values = []
+
             for country_code, country_name in self.countries:
                 data = [
                     row
+
                     for row in self.db_data
+
                     if row.CountryCode == country_code
-                       and row.Criteria == crit.id
-                            # or row.GESComponent.split('/')[0] == crit.id)
-                       and row.Parameter
+                    and row.Criteria == crit.id
+                    # or row.GESComponent.split('/')[0] == crit.id)
+                    and row.Parameter
                 ]
                 value = self.not_rep
 
@@ -205,6 +221,7 @@ class RegDescA82018Row(BaseRegDescRow):
                         u"{} ({})".format(
                             self.get_label_for_value(d.Parameter), len(data)
                         )
+
                         for d in data
                     )
 
@@ -222,18 +239,22 @@ class RegDescA82018Row(BaseRegDescRow):
         for country_code, country_name in self.countries:
             data = [
                 row
+
                 for row in self.db_data
+
                 if row.CountryCode == country_code
-                    and row.Parameter
+                and row.Parameter
             ]
 
             if not data:
                 values.append(self.not_rep)
+
                 continue
 
             total = len(data)
             thresholds = len([
                 row for row in data
+
                 if row.ThresholdValueUpper or row.ThresholdValueLower
             ])
 
@@ -242,7 +263,8 @@ class RegDescA82018Row(BaseRegDescRow):
             value = u"{}% ({})".format(percentage, total)
             values.append(value)
 
-        rows.append(('% of parameters with values (no. of parameters)', values))
+        rows.append(('% of parameters with values (no. of parameters)',
+                     values))
 
         return rows
 
@@ -261,17 +283,23 @@ class RegDescA82018Row(BaseRegDescRow):
                 value = []
                 data = [
                     row
+
                     for row in self.db_data
+
                     if row.CountryCode == country_code
-                       and row.Parameter
+                    and row.Parameter
                 ]
+
                 for threshold_source in threshs:
                     found = [
                         x.ThresholdValueSource
+
                         for x in data
+
                         if x.ThresholdValueSource == threshold_source
-                           and x.Criteria == crit.id
+                        and x.Criteria == crit.id
                     ]
+
                     if found:
                         value.append(u"{} ({})".format(
                             threshold_source, len(found))
@@ -279,6 +307,7 @@ class RegDescA82018Row(BaseRegDescRow):
 
                 if not value:
                     values.append(self.not_rep)
+
                     continue
 
                 values.append(newline_separated_itemlist(value))
@@ -295,9 +324,11 @@ class RegDescA82018Row(BaseRegDescRow):
         for country_code, country_name in self.countries:
             data = [
                 row.ProportionThresholdValue
+
                 for row in self.db_data
+
                 if row.CountryCode == country_code
-                   and row.Parameter
+                and row.Parameter
             ]
 
             value = self.not_rep
@@ -323,9 +354,11 @@ class RegDescA82018Row(BaseRegDescRow):
         for country_code, country_name in self.countries:
             data = [
                 row.ProportionValueAchieved
+
                 for row in self.db_data
+
                 if row.CountryCode == country_code
-                   and row.Parameter #row.ProportionValueAchieved
+                and row.Parameter  # row.ProportionValueAchieved
             ]
 
             value = self.not_rep
@@ -351,12 +384,15 @@ class RegDescA82018Row(BaseRegDescRow):
         for country_code, country_name in self.countries:
             data = set([
                 row.ProportionThresholdValueUnit
+
                 for row in self.db_data
+
                 if row.CountryCode == country_code
-                   and row.ProportionThresholdValueUnit
+                and row.ProportionThresholdValueUnit
             ])
 
             value = self.not_rep
+
             if data:
                 value = newline_separated_itemlist(data)
 
@@ -380,12 +416,16 @@ class RegDescA82018Row(BaseRegDescRow):
             value = []
             data = [
                 row.Trend
+
                 for row in self.db_data
+
                 if row.CountryCode == country_code
-                   and row.Parameter
+                and row.Parameter
             ]
+
             if not data:
                 values.append(self.not_rep)
+
                 continue
 
             for trend in trends:
@@ -416,12 +456,16 @@ class RegDescA82018Row(BaseRegDescRow):
             value = []
             data = [
                 row.ParameterAchieved
+
                 for row in self.db_data
+
                 if row.CountryCode == country_code
-                   and row.Parameter
+                and row.Parameter
             ]
+
             if not data:
                 values.append(self.not_rep)
+
                 continue
 
             for param in param_achievs:
@@ -447,13 +491,16 @@ class RegDescA82018Row(BaseRegDescRow):
             indicators = []
             data = [
                 row.IndicatorCode
+
                 for row in self.db_data
+
                 if row.CountryCode == country_code
-                   and row.IndicatorCode
+                and row.IndicatorCode
             ]
 
             if not data:
                 values.append(self.not_rep)
+
                 continue
 
             for indic in data:
@@ -481,13 +528,16 @@ class RegDescA82018Row(BaseRegDescRow):
             value = []
             data = [
                 row.CriteriaStatus
+
                 for row in self.db_data
+
                 if row.CountryCode == country_code
-                   and row.CriteriaStatus
+                and row.CriteriaStatus
             ]
 
             if not data:
                 values.append(self.not_rep)
+
                 continue
 
             for crit_stat in crit_stats:
@@ -520,13 +570,16 @@ class RegDescA82018Row(BaseRegDescRow):
             value = []
             data = [
                 row.ElementStatus
+
                 for row in self.db_data
+
                 if row.CountryCode == country_code
-                   and row.ElementStatus
+                and row.ElementStatus
             ]
 
             if not data:
                 values.append(self.not_rep)
+
                 continue
 
             for elem in elem_stats:
@@ -554,13 +607,16 @@ class RegDescA82018Row(BaseRegDescRow):
             value = []
             data = [
                 row.IntegrationRuleTypeParameter
+
                 for row in self.db_data
+
                 if row.CountryCode == country_code
-                   and row.IntegrationRuleTypeParameter
+                and row.IntegrationRuleTypeParameter
             ]
 
             if not data:
                 values.append(self.not_rep)
+
                 continue
 
             for param in set(data):
@@ -589,12 +645,16 @@ class RegDescA82018Row(BaseRegDescRow):
             translated = []
             data = set([
                 row.IntegrationRuleDescriptionParameter
+
                 for row in self.db_data
+
                 if row.CountryCode == country_code
-                   and row.IntegrationRuleDescriptionParameter
+                and row.IntegrationRuleDescriptionParameter
             ])
+
             if not data:
                 values.append(self.not_rep)
+
                 continue
 
             for description in data:
@@ -621,13 +681,16 @@ class RegDescA82018Row(BaseRegDescRow):
             value = []
             data = [
                 row.IntegrationRuleTypeCriteria
+
                 for row in self.db_data
+
                 if row.CountryCode == country_code
-                   and row.IntegrationRuleTypeCriteria
+                and row.IntegrationRuleTypeCriteria
             ]
 
             if not data:
                 values.append(self.not_rep)
+
                 continue
 
             for crit in set(data):
@@ -657,13 +720,16 @@ class RegDescA82018Row(BaseRegDescRow):
 
             data = set([
                 row.IntegrationRuleDescriptionCriteria
+
                 for row in self.db_data
+
                 if row.CountryCode == country_code
-                   and row.IntegrationRuleDescriptionCriteria
+                and row.IntegrationRuleDescriptionCriteria
             ])
 
             if not data:
                 values.append(self.not_rep)
+
                 continue
 
             for description in data:
@@ -689,12 +755,15 @@ class RegDescA82018Row(BaseRegDescRow):
         for country_code, country_name in self.countries:
             data = set([
                 str(row.GESExtentThreshold)
+
                 for row in self.db_data
+
                 if row.CountryCode == country_code
-                   and row.GESExtentThreshold
+                and row.GESExtentThreshold
             ])
 
             value = self.not_rep
+
             if data:
                 value = newline_separated_itemlist(data)
 
@@ -712,12 +781,15 @@ class RegDescA82018Row(BaseRegDescRow):
         for country_code, country_name in self.countries:
             data = set([
                 str(row.GESExtentAchieved)
+
                 for row in self.db_data
+
                 if row.CountryCode == country_code
-                   and row.GESExtentAchieved
+                and row.GESExtentAchieved
             ])
 
             value = self.not_rep
+
             if data:
                 value = newline_separated_itemlist(data)
 
@@ -735,12 +807,15 @@ class RegDescA82018Row(BaseRegDescRow):
         for country_code, country_name in self.countries:
             data = set([
                 str(row.GESExtentUnit)
+
                 for row in self.db_data
+
                 if row.CountryCode == country_code
-                   and row.GESExtentUnit
+                and row.GESExtentUnit
             ])
 
             value = self.not_rep
+
             if data:
                 value = newline_separated_itemlist(data)
 
@@ -759,13 +834,16 @@ class RegDescA82018Row(BaseRegDescRow):
             value = []
             data = [
                 str(row.GESAchieved)
+
                 for row in self.db_data
+
                 if row.CountryCode == country_code
-                   and row.GESAchieved
+                and row.GESAchieved
             ]
 
             if not data:
                 values.append(self.not_rep)
+
                 continue
 
             for achiev in set(data):
@@ -793,13 +871,16 @@ class RegDescA82018Row(BaseRegDescRow):
             value = []
             data = [
                 str(row.AssessmentsPeriod)
+
                 for row in self.db_data
+
                 if row.CountryCode == country_code
-                   and row.AssessmentsPeriod
+                and row.AssessmentsPeriod
             ]
 
             if not data:
                 values.append(self.not_rep)
+
                 continue
 
             for period in set(data):
@@ -827,15 +908,18 @@ class RegDescA82018Row(BaseRegDescRow):
             value = []
             data = [
                 row.PressureCodes.split(',')
+
                 for row in self.db_data
+
                 if row.CountryCode == country_code
-                    and row.PressureCodes
+                and row.PressureCodes
             ]
 
             pressures = [self.get_label_for_value(x) for x in chain(*data)]
 
             if not pressures:
                 values.append(self.not_rep)
+
                 continue
 
             for pressure in set(pressures):
@@ -862,14 +946,17 @@ class RegDescA82018Row(BaseRegDescRow):
         for country_code, country_name in self.countries:
             data = [
                 row.TargetCodes.split(',')
+
                 for row in self.db_data
+
                 if row.CountryCode == country_code
-                    and row.TargetCodes
+                and row.TargetCodes
             ]
 
             targets = set([x for x in chain(*data)])
 
             value = self.not_rep
+
             if targets:
                 value = len(targets)
 
@@ -905,6 +992,7 @@ class RegDescA82012(BaseRegComplianceView):
         self.assessment_data = {}
         self.assessment_criteria_data = {}
         self.assessment_indicator_data = {}
+
         for country in self.countries:
             muids = self.all_countries.get(country, [])
             assess_data = self.get_assessment_data(muids)
@@ -973,14 +1061,18 @@ class RegDescA82012(BaseRegComplianceView):
 
         all_features = set([
             getattr(r, feature_col)
+
             for r in chain(*self.base_data.values())
+
             if getattr(r, feature_col) != 'InfoGaps'
         ])
 
         all_themes = defaultdict(list)
+
         for feature in all_features:
             if feature not in themes_fromdb:
                 all_themes['No theme'].append(feature)
+
                 continue
 
             theme = themes_fromdb[feature].theme
@@ -996,10 +1088,13 @@ class RegDescA82012(BaseRegComplianceView):
                 for feature in feats:
                     data = [
                         r
+
                         for r in chain(*self.base_data.values())
+
                         if r.MarineUnitID in muids
-                           and getattr(r, feature_col) == feature
+                        and getattr(r, feature_col) == feature
                     ]
+
                     if not data:
                         continue
 
@@ -1029,13 +1124,16 @@ class RegDescA82012(BaseRegComplianceView):
 
         all_features = set([
             get_feature(r)
+
             for r in chain(*self.suminfo2_data.values())
         ])
 
         all_themes = defaultdict(list)
+
         for feature in all_features:
             if feature not in themes_fromdb:
                 all_themes['No theme'].append(feature)
+
                 continue
 
             theme = themes_fromdb[feature].theme
@@ -1051,10 +1149,13 @@ class RegDescA82012(BaseRegComplianceView):
                 for feature in feats:
                     data = [
                         r
+
                         for r in chain(*self.suminfo2_data.values())
+
                         if r.MarineUnitID in muids
-                           and get_feature(r) == feature
+                        and get_feature(r) == feature
                     ]
+
                     if not data:
                         continue
 
@@ -1087,12 +1188,16 @@ class RegDescA82012(BaseRegComplianceView):
 
                 crit_vals = set([
                     row.CriteriaType
+
                     for row in chain(*crit_data.values())
+
                     if row.CriteriaType in crit_ids
                 ])
                 indic_vals = set([
                     row.GESIndicators
+
                     for row in chain(*indic_data.values())
+
                     if row.GESIndicators in crit_ids
                 ])
 
@@ -1112,6 +1217,7 @@ class RegDescA82012(BaseRegComplianceView):
             indic_data = self.assessment_indicator_data[c]
             data = [
                 x.ThresholdValue
+
                 for x in chain(*indic_data.values())
             ]
             total = len(data)
@@ -1136,8 +1242,10 @@ class RegDescA82012(BaseRegComplianceView):
             indic_data = self.assessment_indicator_data[c]
             data = [
                 x.ThresholdProportion
+
                 for x in chain(*indic_data.values())
             ]
+
             if data:
                 total = len(data)
                 min_ = min(data)
@@ -1160,7 +1268,9 @@ class RegDescA82012(BaseRegComplianceView):
             indic_data = self.assessment_indicator_data[c]
             data = [
                 x.Baseline
+
                 for x in chain(*indic_data.values())
+
                 if x.Baseline
             ]
 
@@ -1190,9 +1300,11 @@ class RegDescA82012(BaseRegComplianceView):
 
             data = [
                 get_suminfo(x)
+
                 for x in chain(*self.base_data.values())
+
                 if x.MarineUnitID in muids and get_suminfo(x)
-                   and x.Topic != 'InfoGaps'
+                and x.Topic != 'InfoGaps'
             ]
             total = len(data)
 
@@ -1226,7 +1338,9 @@ class RegDescA82012(BaseRegComplianceView):
 
             data = [
                 get_status_trend(x)
+
                 for x in chain(*assess_data.values())
+
                 if get_status_trend(x)
             ]
             total = len(data)
@@ -1255,7 +1369,9 @@ class RegDescA82012(BaseRegComplianceView):
 
             data = [
                 x.Status
+
                 for x in chain(*assess_data.values())
+
                 if x.Status
             ]
             total = len(data)
@@ -1284,9 +1400,11 @@ class RegDescA82012(BaseRegComplianceView):
 
             data = [
                 x
+
                 for x in chain(*self.metadata_data.values())
+
                 if x.Topic == 'Assessment' and x.AssessmentDateStart
-                   and x.MarineUnitID in muids
+                and x.MarineUnitID in muids
             ]
 
             for row in data:
@@ -1308,7 +1426,9 @@ class RegDescA82012(BaseRegComplianceView):
 
             data = [
                 x.Activity
+
                 for x in chain(*self.activity_data.values())
+
                 if x.Activity and x.MarineUnitID in muids
             ]
             value = ", ".join(sorted(set(data)))
@@ -1403,7 +1523,9 @@ class RegDescA82012(BaseRegComplianceView):
             col_id = '{}_ID'.format(table)
             base_ids = [
                 getattr(x, col_id)
+
                 for x in self.base_data[table]
+
                 if x.MarineUnitID in muids
             ]
 
@@ -1433,6 +1555,7 @@ class RegDescA82012(BaseRegComplianceView):
             assess_col_id = '{}_{}_ID'.format(table, assess_suffix)
             assess_ids = [
                 getattr(x, assess_col_id)
+
                 for x in assessment_data[table]
             ]
 
@@ -1470,6 +1593,7 @@ class RegDescA82012(BaseRegComplianceView):
             assess_col_id = '{}_{}_ID'.format(table, assess_suffix)
             assess_ids = [
                 getattr(x, assess_col_id)
+
                 for x in assessment_data[table]
             ]
 

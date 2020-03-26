@@ -1,16 +1,16 @@
-from collections import Counter, defaultdict, OrderedDict
+from collections import Counter, defaultdict
 from itertools import chain
+
 from sqlalchemy import or_
 
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 from wise.msfd import db, sql, sql_extra
-from wise.msfd.data import countries_in_region, muids_by_country
+from wise.msfd.data import muids_by_country
+from wise.msfd.gescomponents import FEATURES_DB_2012, get_ges_component
 from wise.msfd.translation import get_translated
 from wise.msfd.utils import fixedorder_sortkey
-from wise.msfd.gescomponents import (get_ges_component, FEATURES_DB_2012,
-                                     FEATURES_DB_2018)
 
-from .base import BaseRegDescRow, BaseRegComplianceView
+from .base import BaseRegComplianceView, BaseRegDescRow
 from .utils import compoundrow, compoundrow2012, newline_separated_itemlist
 
 
@@ -25,11 +25,14 @@ class RegDescA102018Row(BaseRegDescRow):
         for country_code, country_name in self.countries:
             data = [
                 row.GESComponents.split(',')
+
                 for row in self.db_data
+
                 if row.CountryCode == country_code
-                   and row.GESComponents
+                and row.GESComponents
             ]
             value = self.not_rep
+
             if data:
                 vals = [get_ges_component(x).title for x in chain(*data)]
                 counted = Counter(vals)
@@ -51,11 +54,14 @@ class RegDescA102018Row(BaseRegDescRow):
         for country_code, country_name in self.countries:
             data = set([
                 row.TargetCode
+
                 for row in self.db_data
+
                 if row.CountryCode == country_code
-                   and row.TargetCode
+                and row.TargetCode
             ])
             value = self.not_rep
+
             if data:
                 value = len(data)
 
@@ -75,12 +81,16 @@ class RegDescA102018Row(BaseRegDescRow):
             translated = []
             data = [
                 (row.TargetCode, row.Description)
+
                 for row in self.db_data
+
                 if row.CountryCode == country_code
-                   and row.TargetCode
+                and row.TargetCode
             ]
+
             if not data:
                 values.append(self.not_rep)
+
                 continue
 
             for row in set(data):
@@ -93,7 +103,7 @@ class RegDescA102018Row(BaseRegDescRow):
                 translated.append(u"<b>{}</b>: {}".format(target_code, transl))
 
             values.append(
-                ('<br>'.join(value),'<br>'.join(translated))
+                ('<br>'.join(value), '<br>'.join(translated))
             )
 
         rows.append(('', values))
@@ -112,19 +122,23 @@ class RegDescA102018Row(BaseRegDescRow):
             value = []
             data = [
                 row.TargetValue
+
                 for row in self.db_data
+
                 if row.CountryCode == country_code
-                    and (row.Parameter or row.Element)
+                and (row.Parameter or row.Element)
             ]
             total = len(data)
 
             if not data:
                 values.append(self.not_rep)
+
                 continue
 
             for target_val in data:
                 if target_val:
                     reports['Reported'] += 1
+
                     continue
 
                 reports['Not reported'] += 1
@@ -155,19 +169,23 @@ class RegDescA102018Row(BaseRegDescRow):
 
             data = [
                 row.TargetStatus
+
                 for row in self.db_data
+
                 if row.CountryCode == country_code
-                   and (row.Parameter or row.Element)
+                and (row.Parameter or row.Element)
             ]
             total = len(data)
 
             if not data:
                 values.append(self.not_rep)
+
                 continue
 
             for target_status in data:
                 if not target_status:
                     tar_status_counter['Status not reported'] += 1
+
                     continue
 
                 tar_status_counter[target_status] += 1
@@ -191,14 +209,17 @@ class RegDescA102018Row(BaseRegDescRow):
             value = []
             data = [
                 row.AssessmentPeriod
+
                 for row in self.db_data
+
                 if row.CountryCode == country_code
-                   and row.AssessmentPeriod
+                and row.AssessmentPeriod
             ]
             total = len(data)
 
             if not total:
                 values.append(self.not_rep)
+
                 continue
 
             for period in set(data):
@@ -223,13 +244,17 @@ class RegDescA102018Row(BaseRegDescRow):
             value = []
             data = [
                 row.TimeScale
+
                 for row in self.db_data
+
                 if row.CountryCode == country_code
-                   and row.TimeScale
+                and row.TimeScale
             ]
             total = len(data)
+
             if not total:
                 values.append(self.not_rep)
+
                 continue
 
             for timescale in set(data):
@@ -256,14 +281,17 @@ class RegDescA102018Row(BaseRegDescRow):
             value = []
             data = [
                 row.UpdateDate
+
                 for row in self.db_data
+
                 if row.CountryCode == country_code
-                   and row.UpdateDate
+                and row.UpdateDate
             ]
             total = len(data)
 
             if not total:
                 values.append(self.not_rep)
+
                 continue
 
             for updatedate in set(data):
@@ -292,14 +320,17 @@ class RegDescA102018Row(BaseRegDescRow):
             value = []
             data = [
                 row.UpdateType
+
                 for row in self.db_data
+
                 if row.CountryCode == country_code
-                   and row.UpdateType
+                and row.UpdateType
             ]
             total = len(data)
 
             if not total:
                 values.append(self.not_rep)
+
                 continue
 
             updatetypes = sorted(set(data),
@@ -322,14 +353,18 @@ class RegDescA102018Row(BaseRegDescRow):
     def get_indicators_row(self):
         rows = []
         values = []
+
         for country_code, country_name in self.countries:
             data = set([
                 row.Indicators
+
                 for row in self.db_data
+
                 if row.CountryCode == country_code
-                   and row.Indicators
+                and row.Indicators
             ])
             value = self.not_rep
+
             if data:
                 value = len(data)
 
@@ -343,14 +378,18 @@ class RegDescA102018Row(BaseRegDescRow):
     def get_measures_row(self):
         rows = []
         values = []
+
         for country_code, country_name in self.countries:
             data = set([
                 row.Measures
+
                 for row in self.db_data
+
                 if row.CountryCode == country_code
-                   and row.Measures
+                and row.Measures
             ])
             value = self.not_rep
+
             if data:
                 value = len(data)
 
@@ -433,13 +472,16 @@ class RegDescA102012(BaseRegComplianceView):
 
         all_features = set([
             getattr(r, feature_col)
+
             for r in self.features_data
         ])
 
         all_themes = defaultdict(list)
+
         for feature in all_features:
             if feature not in themes_fromdb:
                 all_themes['No theme'].append(feature)
+
                 continue
 
             theme = themes_fromdb[feature].theme
@@ -455,10 +497,13 @@ class RegDescA102012(BaseRegComplianceView):
                 for feature in feats:
                     data = [
                         r
+
                         for r in self.features_data
+
                         if r.MarineUnitID in muids
-                           and getattr(r, feature_col) == feature
+                        and getattr(r, feature_col) == feature
                     ]
+
                     if not data:
                         continue
 
@@ -479,9 +524,11 @@ class RegDescA102012(BaseRegComplianceView):
             muids = self.all_countries.get(country, [])
             value = len([
                 row.ReportingFeature
+
                 for row in self.target_data
+
                 if row.Topic == 'EnvironmentalTarget'
-                   and row.MarineUnitID in muids
+                and row.MarineUnitID in muids
             ])
 
             if not value:
@@ -501,9 +548,11 @@ class RegDescA102012(BaseRegComplianceView):
             muids = self.all_countries.get(country, [])
             value = len([
                 row.ReportingFeature
+
                 for row in self.target_data
+
                 if row.Topic == 'AssociatedIndicator'
-                   and row.MarineUnitID in muids
+                and row.MarineUnitID in muids
             ])
 
             if not value:
@@ -531,9 +580,11 @@ class RegDescA102012(BaseRegComplianceView):
             for label, topic in types:
                 data = [
                     row.ThresholdValue
+
                     for row in self.target_data
+
                     if row.Topic == topic
-                       and row.MarineUnitID in muids
+                    and row.MarineUnitID in muids
                 ]
                 found = len([x for x in data if x])
                 percentage = data and (found / float(len(data))) * 100 or 0.0
@@ -563,9 +614,11 @@ class RegDescA102012(BaseRegComplianceView):
             for label, topic in types:
                 data = [
                     row.Proportion
+
                     for row in self.target_data
+
                     if row.Topic == topic
-                       and row.MarineUnitID in muids
+                    and row.MarineUnitID in muids
                 ]
                 found = len([x for x in data if x])
                 percentage = data and (found / float(len(data))) * 100 or 0.0
@@ -634,10 +687,12 @@ class RegDescA102012(BaseRegComplianceView):
             for label, topic in types:
                 data = [
                     getattr(row, col_name)
+
                     for row in self.target_data
+
                     if row.Topic == topic
-                       and row.MarineUnitID in muids
-                       and getattr(row, col_name)
+                    and row.MarineUnitID in muids
+                    and getattr(row, col_name)
                 ]
                 total = len(data)
                 found_vals = set([x for x in data if x])
@@ -662,6 +717,7 @@ class RegDescA102012(BaseRegComplianceView):
     @property
     def descriptor(self):
         descriptor = self._descriptor
+
         if descriptor.startswith("D1."):
             descriptor = "D1"
 

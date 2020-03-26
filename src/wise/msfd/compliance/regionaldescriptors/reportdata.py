@@ -1,9 +1,8 @@
-from collections import namedtuple
-
 import logging
-from sqlalchemy import or_
-
+from collections import namedtuple
 from io import BytesIO
+
+from sqlalchemy import or_
 
 import xlsxwriter
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
@@ -13,14 +12,13 @@ from wise.msfd.compliance.base import NAT_DESC_QUESTIONS
 from wise.msfd.compliance.vocabulary import REGIONAL_DESCRIPTORS_REGIONS
 from wise.msfd.gescomponents import get_features, get_parameters
 from wise.msfd.translation import retrieve_translation
-from wise.msfd.utils import (CompoundRow, ItemList, items_to_rows, timeit,
-                             natural_sort_key, Row)
+from wise.msfd.utils import ItemList, timeit
 
-from ..nationaldescriptors.utils import consolidate_singlevalue_to_list
 from ..nationaldescriptors.main import CONCLUSION_COLOR_TABLE
-from .a8 import RegDescA82018Row, RegDescA82012
-from .a9 import RegDescA92018Row, RegDescA92012
-from .a10 import RegDescA102018Row, RegDescA102012
+from ..nationaldescriptors.utils import consolidate_singlevalue_to_list
+from .a8 import RegDescA82012, RegDescA82018Row
+from .a9 import RegDescA92012, RegDescA92018Row
+from .a10 import RegDescA102012, RegDescA102018Row
 from .base import BaseRegComplianceView
 from .data import get_report_definition
 from .proxy import Proxy2018
@@ -55,9 +53,11 @@ class RegReportData2012(BaseRegComplianceView):
         worksheet = workbook.add_worksheet(unicode(wtitle)[:30])
 
         row_index = 0
+
         for compoundrow in data:
             title = compoundrow.field.title
             rows = compoundrow.rows
+
             for row in rows:
                 sub_title, values = row
                 worksheet.write(row_index, 0, title)
@@ -212,6 +212,7 @@ class RegReportData2018(BaseRegComplianceView):
 
         # GESComponents contains multiple values separated by comma
         # filter rows by splitting GESComponents
+
         for row in res:
             ges_comps = getattr(row, 'GESComponents', ())
             ges_comps = set([g.strip() for g in ges_comps.split(',')])
@@ -300,10 +301,12 @@ class RegReportData2018(BaseRegComplianceView):
 
                 country_regions = [
                     r.code
+
                     for r in REGIONAL_DESCRIPTORS_REGIONS
+
                     if len(r.subregions) == 1
-                        and country_code in r.countries
-                        and r.code in subregions
+                    and country_code in r.countries
+                    and r.code in subregions
                 ]
 
                 for subregion in country_regions:
@@ -320,8 +323,9 @@ class RegReportData2018(BaseRegComplianceView):
                     conclusion = score and score.conclusion or "-"
                     conclusion = u"<span class='as-value-{}'>" \
                                  u"<b>{}:</b> {}</span>".format(
-                        self._conclusion_color(score), subregion, conclusion
-                    )
+                                     self._conclusion_color(
+                                         score), subregion, conclusion
+                                 )
 
                     country_concl.append(conclusion)
                     country_sums.append(summary)
@@ -358,6 +362,7 @@ class RegReportData2018(BaseRegComplianceView):
             row_class = impl_class(self, self.request, db_data, descriptor_obj,
                                    regions, countries, field)
             field_data_method = getattr(row_class, field.getrowdata, None)
+
             if not field_data_method:
                 continue
 
@@ -376,9 +381,11 @@ class RegReportData2018(BaseRegComplianceView):
         worksheet = workbook.add_worksheet(unicode(wtitle)[:30])
 
         row_index = 0
+
         for compoundrow in data:
             title = compoundrow.field.title
             rows = compoundrow.rows
+
             for row in rows:
                 sub_title, values = row
                 worksheet.write(row_index, 0, title)
@@ -422,6 +429,7 @@ class RegReportData2018(BaseRegComplianceView):
 
             for row in rows:
                 sub_title, values = row
+
                 if compoundrow.field.name in translatables:
                     for indx, value in enumerate(values):
                         if not value:
@@ -437,6 +445,7 @@ class RegReportData2018(BaseRegComplianceView):
                      u"in a couple of minutes", type=u"info")
 
         url = self.context.absolute_url() + '/@@view-report-data-2018'
+
         return self.request.response.redirect(url)
 
     # @cache(get_reportdata_key, dependencies=['translation'])
