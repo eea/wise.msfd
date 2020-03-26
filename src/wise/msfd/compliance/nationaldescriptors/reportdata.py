@@ -1266,10 +1266,10 @@ class ReportData2018Secondary(ReportData2018):
         return metadata
 
     def _get_report_metadata_Art3(self):
-        return None
+        return "to be implemented"
 
     def _get_report_metadata_Art4(self):
-        return None
+        return "to be implemented"
 
     def get_report_metadata(self):
         article = self.article.replace('-', '')
@@ -1383,7 +1383,9 @@ class ReportData2018Secondary(ReportData2018):
                                              report_header=report_header,
                                              show_navigation=False))
 
-        return "<hr/>".join(rendered_results)
+        res = "<hr/>".join(rendered_results)
+        if not res:
+            return "No data found"
 
     # def get_report_header(self):
     #     # For Art7, use the default report header
