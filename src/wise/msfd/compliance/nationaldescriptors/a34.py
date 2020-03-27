@@ -324,11 +324,13 @@ class Article34_2018(BaseArticle2012):
     help_text = ""
 
     def __init__(self, context, request, country_code, region_code,
-                 descriptor, article, muids):
+                 descriptor, article, muids, filename=None):
 
         super(Article34_2018, self).__init__(context, request, country_code,
                                              region_code, descriptor, article,
                                              muids)
+
+        self.filename = filename
 
     def get_report_file_root(self, filename=None):
         if self.root is None:
@@ -336,8 +338,8 @@ class Article34_2018(BaseArticle2012):
 
         return self.root
 
-    def setup_data(self, filename):
-        self.filename = filename
+    def setup_data(self):
+        filename = self.filename
         text = get_xml_report_data(filename)
         self.root = fromstring(text)
 

@@ -1287,9 +1287,10 @@ class ReportData2018Secondary(ReportData2018):
 
         view = klass(
             self, self.request, self.country_code, self.country_region_code,
-            self.descriptor, self.article, self.muids
+            self.descriptor, self.article, self.muids, filename
         )
-        view.setup_data(filename)
+        view.setup_data()
+
         return view
 
     def render_reportdata(self):
