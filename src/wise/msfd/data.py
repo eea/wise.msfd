@@ -602,7 +602,7 @@ ORDER BY DESC(?date)
 # FILTER regex(str(?file), '%s')
 
     service = sparql.Service('https://cr.eionet.europa.eu/sparql')
-    urls = set()
+    urls = []
 
     try:
         req = service.query(q)
@@ -610,10 +610,9 @@ ORDER BY DESC(?date)
 
         for row in rows:
             url = row[0].value
-            # splitted = url.split('/')
-            # filename = splitted[-1]
+            
             if url not in urls:
-                urls.add(url)
+                urls.append(url)
 
     except:
         logger.exception('Got an error in querying SPARQL endpoint for '
@@ -622,3 +621,41 @@ ORDER BY DESC(?date)
         raise
 
     return urls
+
+# TODO with caching enabled the file url is returned WHY???
+# @cache(lambda func, *args: func.__name__ + args[0] + current_date())
+@timeit
+def get_envelope_release_date(file_url):
+    q = """
+PREFIX cr: <http://cr.eionet.europa.eu/ontologies/contreg.rdf#>
+PREFIX terms: <http://purl.org/dc/terms/>
+PREFIX schema: <http://rod.eionet.europa.eu/schema.rdf#>
+
+SELECT ?released
+WHERE {
+?file terms:date ?date .
+?file cr:mediaType 'text/xml'.
+?file terms:isPartOf ?part .
+?part schema:released ?released .
+FILTER (str(?file) = '%s')
+}
+ORDER BY DESC(?date)
+LIMIT 1
+""" % file_url
+
+    service = sparql.Service('https://cr.eionet.europa.eu/sparql')
+
+    try:
+        req = service.query(q)
+        rows = req.fetchall()
+
+        released = rows[0][0].value
+    except:
+        logger.exception('Got an error in querying SPARQL endpoint for '
+                         'file_url: %s', file_url)
+
+        raise
+
+    release_date = released.split('T')[0]
+
+    return release_date

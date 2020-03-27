@@ -51,8 +51,8 @@
                   </div>
 
                   <div class="nav-articles"
-                       tal:condition="python: False">
-                    <div tal:repeat="art view/_descriptor_folder/contentValues" class="art">
+                      tal:condition="python: not view.is_primary_article">
+                    <div tal:repeat="art view/get_secondary_article_folders" class="art">
                       <div class="art-middle">
                         <a tal:content="art/title_or_id"
                           tal:attributes="href art/absolute_url"
@@ -71,6 +71,7 @@
                       </div>
                     </div>
                   </div>
+
                 </div>
               </div>
             </div>
