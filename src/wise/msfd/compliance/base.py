@@ -782,6 +782,8 @@ class AssessmentQuestionDefinition:
             res = filtered_criterias(res, self, descriptor)
         if self.article in ['Art10']:
             res = filtered_targets(res, self)
+        if self.article in ['Art4']:
+            res = filtered_descriptors(res, self)
 
         return sorted_criterions(res)
 
@@ -853,6 +855,13 @@ def filtered_targets(targets, question):
         _targets = [t for t in targets if t.year == '2018']
 
     return _targets
+
+
+def filtered_descriptors(descriptors, question):
+    if question.use_criteria == 'all':
+        return descriptors
+
+    return []
 
 
 def parse_question_file(fpath):
