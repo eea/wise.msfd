@@ -1347,7 +1347,7 @@ class ReportData2018Secondary(ReportData2018):
                 report_by=report_by,
                 source_file=source_file,
                 report_due=None,
-                report_date=report_date,
+                report_date=report_date.date(),
                 help_text=self.help_text,
                 multiple_source_files=False,
                 show_navigation=False,

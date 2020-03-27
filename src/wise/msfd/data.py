@@ -2,6 +2,7 @@ import logging
 import os
 import tempfile
 from collections import defaultdict
+from datetime import datetime
 from pkg_resources import resource_filename
 
 import csv
@@ -656,6 +657,6 @@ LIMIT 1
 
         raise
 
-    release_date = released.split('T')[0]
+    release_date = datetime.strptime(released, "%Y-%m-%dT%H:%M:%SZ")
 
     return release_date
