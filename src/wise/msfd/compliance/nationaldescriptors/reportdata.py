@@ -26,9 +26,9 @@ from wise.msfd.compliance.utils import (group_by_mru,
                                         ordered_regions_sortkey)
 from wise.msfd.compliance.vocabulary import get_regions_for_country
 from wise.msfd.data import (get_all_report_filenames,
-                            get_envelope_release_date,
-                            get_factsheet_url, get_report_file_url,
-                            get_report_filename, get_xml_report_data)
+                            get_envelope_release_date, get_factsheet_url,
+                            get_report_file_url, get_report_filename,
+                            get_xml_report_data)
 from wise.msfd.gescomponents import get_descriptor, get_features
 from wise.msfd.translation import retrieve_translation
 from wise.msfd.utils import (current_date, items_to_rows, natural_sort_key,
@@ -1315,7 +1315,7 @@ class ReportData2018Secondary(ReportData2018):
             # Report Header
             report_by = None
             report_date = get_envelope_release_date(url)
-            
+
             if report:
                 report_by = report.ContactOrganisation
                 # report_date = report.ReportingDate
