@@ -1309,7 +1309,15 @@ class ReportData2018Secondary(ReportData2018):
 
         # reported_information = defaultdict(list)
 
+        # identify order of files, grouped by region. If multiple regions are
+        # reported in a file, then just sort them by envelope release date.
+        # once sorted, create view for each file. Each view can potentially get
+        # a reference to the previous file data.
+
         for (index, url) in enumerate(urls):
+            # For article 3/4 2018, the data from previous "version" of the
+            # file should also be sent. Then it will be possible to identify
+            # which MRUs have been added/removed
             view = self.get_implementation_view(url)
 
             report = self.get_report_metadata_from_view(view, url)

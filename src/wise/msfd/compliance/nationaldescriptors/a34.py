@@ -324,8 +324,11 @@ class Article34_2018(BaseArticle2012):
     help_text = ""
 
     def __init__(self, context, request, country_code, region_code,
-                 descriptor, article, muids, filename=None):
+                 descriptor, article, muids, filename=None,
+                 previous_mrus=None):
 
+        # TODO: use previous_mrus to highlight this file MRUs according to edit
+        # status: added or deleted
         super(Article34_2018, self).__init__(context, request, country_code,
                                              region_code, descriptor, article,
                                              muids)
@@ -346,6 +349,7 @@ class Article34_2018(BaseArticle2012):
         mru_nodes = xp('//w:GeographicalBoundariesID', self.root)
         description = xp('//w:Description', self.root)[0]
 
+        # TODO: also send the previous file data
         main_node = A34Item_2018_main(description, mru_nodes)
 
         self.rows = []
