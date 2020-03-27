@@ -211,16 +211,16 @@ class A34Item_2018_mru(Item):
         self.g = RelaxedNode(node, NSMAP)
 
         attrs = [
-            ('Region or subregion', self.region_or_subregion),
-            ('Member state', self.member_state),
-            ('Area type', self.area_type),
-            ('Marine Reporting Unit', self.mru_id),
-            ('MRU Name', self.marine_reporting_unit),
+            ('Region or subregion', self.region_or_subregion()),
+            ('Member state', self.member_state()),
+            ('Area type', self.area_type()),
+            ('Marine Reporting Unit', self.mru_id()),
+            ('MRU Name', self.marine_reporting_unit()),
         ]
 
-        for title, getter in attrs:
-            self[title] = getter()
-            setattr(self, title, getter())
+        for title, value in attrs:
+            self[title] = value
+            setattr(self, title, value)
 
     def region_or_subregion(self):
         v = self.g['w:RegionSubRegions/text()']

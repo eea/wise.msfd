@@ -560,21 +560,6 @@ class TableHeader(TemplateMixin):
 class SimpleTable(TemplateMixin):
     template = PageTemplateFile('pt/table.pt')
 
-    # <div tal:content="labels"></div>
-    # <hr />
-    # <div tal:content="values"></div>
-    # <hr />
-    #
-    # <h3>Vlaues</h3>
-    #
-    # <div tal:repeat="item values">
-    #   <div tal:content="item"></div>
-    #   <div tal:repeat="name labels">
-    #     <span tal:content="python: item[name]"></span>
-    #   </div>
-    #   <hr/>
-    # </div>
-
     def __init__(self, title, values):
         self.title = title
         self.item_labels = []
