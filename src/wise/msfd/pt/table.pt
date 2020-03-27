@@ -1,0 +1,14 @@
+<table tal:define="labels nocall: options/item_labels; values nocall: options/item_values">
+  <tr>
+    <tal:rep tal:repeat="name labels">
+      <td tal:content="name">Name</td>
+    </tal:rep>
+    <td>Item<td>
+  </tr>
+  <tr tal:repeat="item values">
+    <tal:rep repeat="name labels">
+      <td tal:content="python:item[name]" tal:on-error="string:error"/>
+    </tal:rep>
+    <td tal:content="python: item">Item</td>
+  </tr>
+</table>
