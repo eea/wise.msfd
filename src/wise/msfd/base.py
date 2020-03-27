@@ -1,4 +1,4 @@
-import time
+# import time
 
 from zope.browserpage.viewpagetemplatefile import \
     ViewPageTemplateFile as Z3ViewPageTemplateFile
@@ -176,7 +176,7 @@ class BaseUtil(object):
         import_id = self.get_import_id()
         mc = reported_date_info['mapper_class']
         col_import_id = reported_date_info['col_import_id']
-        col_import_time = reported_date_info['col_import_time']
+        # col_import_time = reported_date_info['col_import_time']
         col_filename = reported_date_info['col_filename']
 
         count, data = get_all_specific_columns(
@@ -283,6 +283,7 @@ class BaseUtil(object):
 
         # 'blacklist_labels' is a list of field names, for these fields
         # we will print the original value
+
         if field_name in getattr(self, 'blacklist_labels', []):
             return value
 
@@ -536,16 +537,20 @@ class MarineUnitIDSelectForm2012(MarineUnitIDSelectForm):
 
     def get_available_marine_unit_ids(self, parent=None):
         data = {}
+
         if not parent:
             # find AreaTypes form
             context = self
+
             while hasattr(context, 'context'):
                 if hasattr(context, 'get_selected_area_types'):
                     parent = context
+
                     break
                 context = context.context
 
         # lookup values in the inheritance tree
+
         for crit in ['area_types', 'member_states', 'region_subregions']:
             data[crit] = getattr(parent, 'get_selected_' + crit)()
             parent = parent.context

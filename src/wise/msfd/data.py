@@ -1,12 +1,12 @@
+import csv
 import logging
 import os
 import tempfile
 from collections import defaultdict
 from datetime import datetime
-from pkg_resources import resource_filename
 
-import csv
 import requests
+from pkg_resources import resource_filename
 
 import sparql
 from eea.cache import cache
@@ -611,7 +611,7 @@ ORDER BY DESC(?date)
 
         for row in rows:
             url = row[0].value
-            
+
             if url not in urls:
                 urls.append(url)
 
@@ -625,6 +625,8 @@ ORDER BY DESC(?date)
 
 # TODO with caching enabled the file url is returned WHY???
 # @cache(lambda func, *args: func.__name__ + args[0] + current_date())
+
+
 @timeit
 def get_envelope_release_date(file_url):
     q = """

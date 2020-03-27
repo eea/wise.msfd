@@ -272,7 +272,7 @@ class A34Item_2018_main(Item):
             item = A34Item_2018_mru(node)
             mrus.append(item)
 
-        sorted_mrus = sorted(mrus, key=lambda x: x['MRU Name'])
+        sorted_mrus = sorted(mrus, key=lambda x: x['Marine Reporting Unit'])
 
         self['MRUs'] = sorted_mrus
         setattr(self, 'MRUs', sorted_mrus)
