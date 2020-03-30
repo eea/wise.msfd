@@ -1,0 +1,19 @@
+<table tal:define="labels nocall: options/item_labels;
+        values nocall: options/item_values;
+        previous_mrus nocall: options/previous_mrus"
+     class="value-as-table">
+  <tr>
+    <tal:rep tal:repeat="name labels">
+      <td tal:content="name">Name</td>
+    </tal:rep>
+  </tr>
+  <tr tal:repeat="item values">
+    <tal:rep repeat="name labels">
+      <td tal:define="value python:item[name];
+          is_new_mru python: name == 'Marine Reporting Unit' and value not in previous_mrus">
+        <span tal:attributes="class python: is_new_mru and 'new' or ''"
+            tal:content="value" ></span>
+      </td>
+    </tal:rep>
+  </tr>
+</table>

@@ -249,11 +249,15 @@ class A34Item_2018_mru(Item):
 
 
 class A34Item_2018_main(Item):
-    def __init__(self, description, mru_nodes):
+    mrus_template = Template('pt/mrus-table-art34.pt')
+
+    def __init__(self, context, request, description,
+                 mru_nodes, previous_mrus=None):
 
         super(A34Item_2018_main, self).__init__([])
-
         self.description = description
+        self.context = context
+        self.request = request
 
         attrs = [
             ('Member state description', self.member_state_descr),
@@ -273,6 +277,18 @@ class A34Item_2018_main(Item):
             mrus.append(item)
 
         sorted_mrus = sorted(mrus, key=lambda x: x['Marine Reporting Unit'])
+        self.available_mrus = [x['Marine Reporting Unit'] for x in sorted_mrus]
+        self.available_regions = set(
+            [x['Region or subregion'] for x in sorted_mrus]
+        )
+        self.previous_mrus = previous_mrus or []
+        item_labels = sorted_mrus and sorted_mrus[0].keys() or ""
+
+        sorted_mrus = self.mrus_template(
+            item_labels=item_labels,
+            item_values=sorted_mrus,
+            previous_mrus=self.previous_mrus
+        )
 
         self['MRUs'] = sorted_mrus
         setattr(self, 'MRUs', sorted_mrus)
@@ -334,6 +350,7 @@ class Article34_2018(BaseArticle2012):
                                              muids)
 
         self.filename = filename
+        self.previous_mrus = previous_mrus
 
     def get_report_file_root(self, filename=None):
         if self.root is None:
@@ -350,8 +367,12 @@ class Article34_2018(BaseArticle2012):
         description = xp('//w:Description', self.root)[0]
 
         # TODO: also send the previous file data
-        main_node = A34Item_2018_main(description, mru_nodes)
+        main_node = A34Item_2018_main(
+            self, self.request, description, mru_nodes, self.previous_mrus
+        )
 
+        self.available_mrus = main_node.available_mrus
+        self.available_regions = main_node.available_regions
         self.rows = []
 
         # TODO: this code needs to be explained. It's hard to understand what

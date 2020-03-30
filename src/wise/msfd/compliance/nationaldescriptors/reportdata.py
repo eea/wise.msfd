@@ -1239,6 +1239,21 @@ class ReportData2018Secondary(ReportData2018):
     Art4 = Template('pt/report-data-secondary-2018.pt')
     Art7 = Template('pt/report-data-secondary-2018.pt')
 
+    def get_previus_url(self, grouped_urls, url):
+        for region, group in grouped_urls.items():
+            # find the right group for our url
+            if url not in group:
+                continue
+
+            # if our url is the last from its group, it does not have previous
+            # file
+            if group[-1] == url:
+                return None
+
+            url_index = group.index(url)
+
+            return group[url_index + 1]
+
     def get_report_metadata_from_view(self, view, filename):
         fileurl = get_report_file_url(filename)
         root = view.get_report_file_root(filename)
@@ -1273,7 +1288,7 @@ class ReportData2018Secondary(ReportData2018):
 
         return template
 
-    def get_implementation_view(self, filename):
+    def get_implementation_view(self, filename, prev_filename):
         """ In other articles (8, 9, 10) for 2018 year,
         we get the data from the DB (MSFD2018_production)
 
@@ -1285,10 +1300,20 @@ class ReportData2018Secondary(ReportData2018):
                  'Art3': Article34_2018,
                  'Art4': Article34_2018}.get(self.article)
 
-        view = klass(
-            self, self.request, self.country_code, self.country_region_code,
-            self.descriptor, self.article, self.muids, filename
-        )
+        init_args = [self, self.request, self.country_code,
+                     self.country_region_code, self.descriptor, self.article,
+                     self.muids, filename]
+
+        if self.article in ['Art3', 'Art4'] and prev_filename:
+            prev_view = klass(
+                self, self.request, self.country_code, self.country_region_code,
+                self.descriptor, self.article, self.muids, prev_filename
+            )
+            prev_view.setup_data()
+            previous_mrus = prev_view.available_mrus
+            init_args.append(previous_mrus)
+
+        view = klass(*init_args)
         view.setup_data()
 
         return view
@@ -1307,18 +1332,24 @@ class ReportData2018Secondary(ReportData2018):
 
         rendered_results = []
 
-        # reported_information = defaultdict(list)
-
         # identify order of files, grouped by region. If multiple regions are
         # reported in a file, then just sort them by envelope release date.
         # once sorted, create view for each file. Each view can potentially get
         # a reference to the previous file data.
 
+        grouped_urls = defaultdict(list)
+        for url in urls:
+            view = self.get_implementation_view(url, None)
+            regions = "-".join(view.available_regions)
+            grouped_urls[regions].append(url)
+
         for (index, url) in enumerate(urls):
+            prev_url = self.get_previus_url(grouped_urls, url)
+
             # For article 3/4 2018, the data from previous "version" of the
             # file should also be sent. Then it will be possible to identify
             # which MRUs have been added/removed
-            view = self.get_implementation_view(url)
+            view = self.get_implementation_view(url, prev_url)
 
             report = self.get_report_metadata_from_view(view, url)
             # Report Header

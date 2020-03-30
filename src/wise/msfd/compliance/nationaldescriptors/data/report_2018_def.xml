@@ -156,7 +156,7 @@
     <element name="Region / subregion description" translate="true">Region / subregion description</element>
     <element name="Subdivisions" translate="true">Subdivisions</element>
     <element name="Marine reporting units description" translate="true">MRUs description (AreaType)</element>
-    <element name="MRUs" convert="mrus_as_table">MRUs</element>
+    <element name="MRUs">MRUs</element>
   </Art3>
 
   <Art7>
