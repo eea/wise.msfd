@@ -568,9 +568,9 @@ def get_all_report_filenames(country, article):
         'art4': "str(?schema) = '%s'" % ART3,
     }
     obligations = {
-        'art3': '760',
-        'art4': '760',
-        'art7': '607',
+        'art3': "?obligationNr IN ('608', '760')",
+        'art4': "?obligationNr IN ('608', '760')",
+        'art7': "?obligationNr = '607'",
     }
 
     schema = schemas[article.lower()]
@@ -589,12 +589,14 @@ WHERE {
 ?file cr:mediaType 'text/xml' .
 ?file terms:isPartOf ?isPartOf .
 ?file cr:xmlSchema ?schema .
+?file schema:restricted ?restricted.
 ?isPartOf schema:locality ?locality .
 ?isPartOf schema:obligation ?obligation .
 ?obligation core:notation ?obligationNr .
 ?locality core:notation ?notation .
+FILTER (str(?restricted) = 'false')
 FILTER (?notation = '%s')
-FILTER (?obligationNr = '%s')
+FILTER (%s)
 FILTER (%s)
 }
 ORDER BY DESC(?date)
