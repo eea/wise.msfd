@@ -37,7 +37,7 @@ class A4Form2018to2024(MarineUnitIDSelectForm):
         conditions = []
 
         if regions:
-            conditions.append(mapper_class.Region.in_(regions))
+            conditions.append(mapper_class.rZoneId.in_(regions))
 
         if countries:
             conditions.append(mapper_class.Country.in_(countries))
@@ -253,7 +253,7 @@ class A4ItemDisplay2018to2024(ItemDisplayForm):
         regions = form_data['region_subregions']
         countries = form_data['member_states']
 
-        col_names = ('Country', 'Region', 'thematicId', 'nameTxtInt',
+        col_names = ('Country', 'rZoneId', 'thematicId', 'nameTxtInt',
                      'nameText', 'spZoneType', 'legisSName', 'Area')
         columns = [getattr(self.mapper_class, name) for name in col_names]
 
@@ -261,7 +261,7 @@ class A4ItemDisplay2018to2024(ItemDisplayForm):
         conditions = []
 
         if regions:
-            conditions.append(mapper_class.Region.in_(regions))
+            conditions.append(mapper_class.rZoneId.in_(regions))
 
         if countries:
             conditions.append(mapper_class.Country.in_(countries))

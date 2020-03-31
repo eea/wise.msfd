@@ -196,7 +196,7 @@ def get_member_states_vb_factory_art4(context):
         regions = context.get_selected_region_subregions()
 
         if regions:
-            conditions.append(t.Region.in_(regions))
+            conditions.append(t.rZoneId.in_(regions))
 
     rows = db.get_unique_from_mapper(
         t,

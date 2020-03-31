@@ -20,6 +20,7 @@ DISPLAY_LABELS = {
     'AssessmentsPeriod': 'Assessment Period',
     'UniqueCode': 'Measure code',
     # Article 4
+    'rZoneId': 'Region',
     'thematicId': 'Identifier',
     'nameTxtInt': 'Name in English',
     'nameText': 'Name in the national language',
