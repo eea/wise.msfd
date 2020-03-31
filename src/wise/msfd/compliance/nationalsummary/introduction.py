@@ -47,7 +47,7 @@ class AssessmentAreas2018(BaseNatSummaryView):
         res = []
 
         # for better query speed we get only these columns
-        col_names = ('Country', 'Region', 'thematicId', 'nameTxtInt',
+        col_names = ('Country', 'rZoneId', 'thematicId', 'nameTxtInt',
                      'nameText', 'spZoneType', 'legisSName', 'Area')
         columns = [getattr(mapper_class, name) for name in col_names]
 
@@ -64,7 +64,7 @@ class AssessmentAreas2018(BaseNatSummaryView):
 
             self._translatable_values.append(description)
 
-            res.append((row.Region, row.spZoneType, row.thematicId,
+            res.append((row.rZoneId, row.spZoneType, row.thematicId,
                         description, translation))
 
         return res
