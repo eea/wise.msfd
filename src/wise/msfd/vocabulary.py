@@ -803,7 +803,10 @@ def a2018_feature_art81c(context):
 
 @provider(IVocabularyFactory)
 def a2018_feature(context):
-    context = context.context
+    # Art10 and Art8ab both use this vocab
+    # the main class is not at the same level
+    if not hasattr(context, 'mapper_class'):
+        context = context.context
 
     mapper_class = context.mapper_class
     features_mc = context.features_mc
@@ -847,8 +850,8 @@ def a2018_feature(context):
 def a2018_ges_component(context):
     parent = context
 
-    # if not hasattr(context, 'ges_components_mc'):
-    #     context = context.context
+    if not hasattr(context, 'ges_components_mc'):
+        parent = context.context
 
     mapper_class = parent.mapper_class
     features_mc = parent.features_mc
