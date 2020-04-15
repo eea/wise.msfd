@@ -534,10 +534,14 @@ def compliance_art8_join(columns, mc_join1, mc_join2, *conditions):
 
 def latest_import_ids_2018():
     mc = sql2018.ReportedInformation
+    mc_v = sql2018.t_V_ReportedInformation
 
-    count, res = get_all_records(
-        mc
-    )
+    conditions = [
+        mc_v.c.EnvelopeStatus == 'End'
+    ]
+
+    sess = session()
+    res = sess.query(mc).join(mc_v, mc.Id == mc_v.c.Id).filter(*conditions)
 
     groups = defaultdict(int)
 

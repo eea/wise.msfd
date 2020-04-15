@@ -5,6 +5,7 @@ from sqlalchemy.dialects.mssql.base import BIT
 from sqlalchemy.sql.sqltypes import NullType
 from sqlalchemy.ext.declarative import declarative_base
 
+from . import sql
 
 Base = declarative_base()
 metadata = Base.metadata
@@ -866,6 +867,50 @@ class ReportedInformation(Base):
     IdReportingPeriod = Column(ForeignKey(u'ReportingPeriod.Id'), nullable=False)
 
     ReportingPeriod = relationship(u'ReportingPeriod')
+
+
+# class ReportedInformation(Base):
+#     """ Class implementation for the view named 'V_ReportedInformation'
+#
+#     Override the original ReportedInformation class with the 'view'
+#     named V_ReportedInformation, so the view will be used instead of the
+#     'ReportedInformation' table.
+#     """
+#
+#     __tablename__ = 'V_ReportedInformation'
+#
+#     Id = Column(Integer, primary_key=True)
+#     CountryCode = Column(Unicode(2), nullable=False)
+#     Schema = Column(Unicode(50), nullable=False)
+#     ContactMail = Column(Unicode(50), nullable=False)
+#     ContactName = Column(Unicode(100))
+#     ContactOrganisation = Column(Unicode(1000), nullable=False)
+#     ReportingDate = Column(Date, nullable=False)
+#     ReportedFileLink = Column(Unicode(350), nullable=False)
+#     EnvelopeStatus = Column(Unicode(50))
+
+
+t_V_ReportedInformation = Table(
+    'V_ReportedInformation', metadata,
+    Column('Id', Integer, nullable=False),
+    Column('CountryCode', Unicode(2), nullable=False),
+    Column('Schema', Unicode(50), nullable=False),
+    Column('ContactMail', Unicode(50), nullable=False),
+    Column('ContactName', Unicode(100)),
+    Column('ContactOrganisation', Unicode(1000), nullable=False),
+    Column('ReportingDate', Date, nullable=False),
+    Column('ReportedFileLink', Unicode(350), nullable=False),
+    Column('IdReportingPeriod', Integer, nullable=False),
+    Column('EnvelopeStatus', Unicode(50)),
+)
+
+
+# class ReportedInformation(sql.Base):
+#     __table__ = t_V_ReportedInformation
+#
+#     __mapper_args__ = {
+#         'primary_key': [t_V_ReportedInformation.c.Id],
+#     }
 
 
 class ReportingPeriod(Base):
