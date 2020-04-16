@@ -139,7 +139,7 @@ class Art9Display(ItemDisplayForm):
             sql2018.ReportedInformation.Id.in_(self.latest_import_ids_2018()),
             mapper_class.GESComponent.in_(ges_components),
             or_(mapper_class.Id.in_(id_ges_components),
-                mapper_class.JustificationDelay.is_(None),
+                # mapper_class.JustificationDelay.is_(None),
                 mapper_class.JustificationNonUse.is_(None)
                 )
         )
@@ -155,8 +155,8 @@ class Art9Display(ItemDisplayForm):
         if not res:
             return 0, []
 
-        if getattr(res, 'JustificationDelay', 0) \
-                or getattr(res, 'JustificationNonUse', 0):
+        if getattr(res, 'JustificationNonUse', 0):
+            # or getattr(res, 'JustificationDelay', 0)
             self.show_extra_data = False
 
             return count, res
@@ -171,7 +171,8 @@ class Art9Display(ItemDisplayForm):
         # )
 
         cnt, res = db.get_all_records_join(
-            [mapper_class.GESComponent, determination_mc.GESDescription,
+            [mapper_class.GESComponent, mapper_class.JustificationDelay,
+             determination_mc.GESDescription,
              determination_mc.Id, determination_mc.IdGESComponent,
              determination_mc.DeterminationDate, determination_mc.UpdateType],
             determination_mc,
