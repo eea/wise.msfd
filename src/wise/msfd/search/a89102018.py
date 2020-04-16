@@ -209,7 +209,7 @@ class Art9Display(ItemDisplayForm):
 class A2018Article9(EmbeddedForm):
     record_title = 'Article 9 (GES determination)'
     title = "2018 reporting exercise"
-    permission = "wise.ViewReports"
+    permission = "zope2.View"
     session_name = '2018'
     mapper_class = sql2018.ART9GESGESComponent
     display_klass = Art9Display
@@ -534,7 +534,7 @@ class A2018MarineUnitID(MarineUnitIDSelectForm):
 class A2018Article10(EmbeddedForm):
     record_title = 'Article 10 (Targets and associated indicators)'
     title = "2018 reporting exercise"
-    permission = "wise.ViewReports"
+    permission = "zope2.View"
     session_name = '2018'
 
     mapper_class = sql2018.ART10TargetsMarineUnit
