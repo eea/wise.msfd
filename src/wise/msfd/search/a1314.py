@@ -322,8 +322,8 @@ class A1314ItemDisplay(ItemDisplayForm):
             marine_units_labeled.append(mru_label)
 
         mrus_extra = [
-            ('Marine Unit(s)', {
-                '': [{'MarineUnitID': x} for x in marine_units_labeled]
+            ('', {
+                '': [{'Marine Unit(s)': x} for x in marine_units_labeled]
             })
         ]
 

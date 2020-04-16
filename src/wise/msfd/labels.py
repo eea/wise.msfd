@@ -12,6 +12,12 @@ from . import db, sql, sql2018, sql_extra
 
 COMMON_LABELS = {}                        # vocabulary of labels
 
+# Collection of label fixes, where the description/title for a value
+# is not appropriate
+LABEL_FIX = {
+    "ANS": "North-east Atlantic Ocean: Greater North Sea"
+}
+
 # MSFD Search engine
 # Labels used to override the default db column name into a
 # user friendly text
@@ -333,6 +339,7 @@ def get_common_labels():
     labels.update(_extract_from_xsd('data/MSCommon_1p1.xsd'))
     labels.update(_extract_from_csv())
     labels.update(get_human_labels())
+    labels.update(LABEL_FIX)
 
     # We should use the labels from msfd2018-codelists.json
     # they look better and there are more labels

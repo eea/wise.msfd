@@ -11,7 +11,9 @@
 
         <div class="section-select">
 
-          <h4 class="section-title"><span tal:replace="section_title">...</span>:</h4>
+          <h4 tal:condition="section_title" class="section-title">
+            <span tal:replace="section_title">...</span>:
+          </h4>
           <select class="notselect extra-details-select">
             <tal:block tal:repeat="tab_title section">
               <tal:block tal:define="utitle python: tab_title or section_title">

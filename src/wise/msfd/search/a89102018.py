@@ -197,8 +197,8 @@ class Art9Display(ItemDisplayForm):
         res = list()
 
         res.append(
-            ('Marine Unit IDs', {
-                '': [{'Marine Unit Id': x} for x in marine_units]
+            ('', {
+                '': [{'Marine Unit(s)': x} for x in marine_units]
             })
         )
 
