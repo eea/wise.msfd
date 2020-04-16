@@ -21,8 +21,9 @@ from .a9 import A9Form
 from .a10 import A10Form
 from .base import MAIN_FORMS, ItemDisplayForm, MainForm
 from .utils import (data_to_xls, get_form, register_form_art4,
-                    register_form_art8, register_form_art9,
-                    register_form_art10)
+                    register_form_a8_2012, register_form_art8,
+                    register_form_a9_2012, register_form_art9,
+                    register_form_a10_2012, register_form_art10)
 
 
 class StartView(BrowserView, BasePublicPage):
@@ -144,9 +145,7 @@ class StartA4Form(MainForm):
 StartArticle4View = wrap_form(StartA4Form, MainFormWrapper)
 
 
-class StartRegionalCoopForm(MainForm):
-    name = 'msfd-rc'
-
+class StartRegionalCoopForm(EmbeddedForm):
     record_title = title = 'Article 6 (Regional cooperation)'
     fields = Fields(interfaces.IRegionSubregionsArt6)
     fields['region_subregions'].widgetFactory = CheckBoxFieldWidget
@@ -156,8 +155,19 @@ class StartRegionalCoopForm(MainForm):
         return RegionalCoopForm(self, self.request)
 
 
-StartRegionalCoopView = wrap_form(StartRegionalCoopForm,
-                                  MainFormWrapper)
+@register_form_a8_2012
+class RegionalCoopFormArt8(StartRegionalCoopForm):
+    topic = 'Art8'
+
+
+@register_form_a9_2012
+class RegionalCoopFormArt9(StartRegionalCoopForm):
+    topic = 'Art9'
+
+
+@register_form_a10_2012
+class RegionalCoopFormArt10(StartRegionalCoopForm):
+    topic = 'Art10'
 
 
 class RegionalCoopForm(EmbeddedForm):
@@ -182,7 +192,8 @@ class RegionalCoopForm(EmbeddedForm):
         count, data = get_all_records_join(
             cols,
             mcr,
-            mcr.MSFD4_RegionalCooperation_Import.in_(import_ids)
+            mcr.MSFD4_RegionalCooperation_Import.in_(import_ids),
+            mcr.Topic == self.context.topic
         )
 
         xlsdata = [
@@ -249,7 +260,9 @@ class RegionalCoopItemDisplay(ItemDisplayForm):
         page = self.get_page()
         mci = sql.MSFD4Import
         mcr = sql.MSFD4RegionalCooperation
-        conditions = []
+        conditions = [
+            mcr.Topic == self.context.context.topic
+        ]
 
         c_codes = self.get_form_data_by_key(self.context, 'member_states')
         r_codes = self.get_form_data_by_key(self.context, 'region_subregions')
@@ -424,6 +437,18 @@ class StartArticle92012Form(EmbeddedForm):
     permission = "zope2.View"
     session_name = "2012"
 
+    fields = Fields(interfaces.IReportTypeArt9)
+
+    def get_subform(self):
+        klass = self.get_form_data_by_key(self, 'report_type')
+
+        return klass(self, self.request)
+
+
+@register_form_a9_2012
+class Article92012Form(EmbeddedForm):
+    title = "Article 9 (GES determination)"
+
     fields = Fields(interfaces.IRegionSubregions)
     fields['region_subregions'].widgetFactory = CheckBoxFieldWidget
 
@@ -435,10 +460,22 @@ StartArticle9View = wrap_form(StartArticle9Form, MainFormWrapper)
 
 
 @register_form_art10
-class StartArticle102012Form(RegionForm):
+class StartArticle102012Form(EmbeddedForm):
     title = "2012 reporting exercise"
     permission = "zope2.View"
     session_name = "2012"
+
+    fields = Fields(interfaces.IReportTypeArt10)
+
+    def get_subform(self):
+        klass = self.get_form_data_by_key(self, 'report_type')
+
+        return klass(self, self.request)
+
+
+@register_form_a10_2012
+class Article102012Form(RegionForm):
+    title = "Article 10 (Targets)"
 
 
 StartArticle10View = wrap_form(StartArticle10Form, MainFormWrapper)
@@ -486,7 +523,7 @@ class StartArticle82018Form(EmbeddedForm):
 
     fields = Fields(interfaces.IArticleSelectA82018)
     session_name = '2018'
-    permission = 'wise.ViewReports'
+    permission = 'zope2.View'  # 'wise.ViewReports'
 
     def get_subform(self):
         article = self.data['article']

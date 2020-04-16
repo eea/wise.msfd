@@ -29,13 +29,6 @@
 
   <browser:page
     for="*"
-    name="msfd-rc"
-    class=".main.StartRegionalCoopView"
-    permission="zope2.View"
-    />
-
-  <browser:page
-    for="*"
     name="msfd-a8"
     class=".main.StartArticle8View"
     permission="zope2.View"
@@ -104,6 +97,16 @@
   <utility
     component=".vocabulary.a9_reporting_period"
     name="wise_search_reporting_period_a9"
+    />
+
+  <utility
+    component=".vocabulary.report_type_art9"
+    name="wise_search_report_type_a9"
+    />
+
+  <utility
+    component=".vocabulary.report_type_art10"
+    name="wise_search_report_type_a10"
     />
 
   <utility

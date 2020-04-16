@@ -244,6 +244,24 @@ class IGESComponents(Interface):
     )
 
 
+class IReportTypeArt9(Interface):
+    report_type = Choice(
+        title=u"Report type",
+        required=False,
+        default='',
+        vocabulary="wise_search_report_type_a9"
+    )
+
+
+class IReportTypeArt10(Interface):
+    report_type = Choice(
+        title=u"Report type",
+        required=False,
+        default='',
+        vocabulary="wise_search_report_type_a10"
+    )
+
+
 class IFeaturesA9(Interface):
     feature = List(
         title=u"Feature",

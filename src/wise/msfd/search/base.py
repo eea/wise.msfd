@@ -187,10 +187,10 @@ MAIN_FORMS = (
         the Directive compatible with the marine regions and subregions listed\n\
         in the Directive.',
         '', true),
-    Tab('msfd-rc', 'msfd-rc', 'Article 6', 'Regional cooperation',
-        'Member States coordination with third countries having sovereignty or\n\
-        jurisdiction over waters in the same marine region or subregion.',
-        '', true),
+    # Tab('msfd-rc', 'msfd-rc', 'Article 6', 'Regional cooperation',
+    #     'Member States coordination with third countries having sovereignty or\n\
+    #     jurisdiction over waters in the same marine region or subregion.',
+    #     '', true),
     Tab('msfd-ca', 'msfd-ca', 'Article 7', 'Competent Authorities',
         'Member States authority or authorities for the implementation of the\n\
         Directive with respect to their marine waters.',

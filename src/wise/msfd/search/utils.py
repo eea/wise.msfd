@@ -13,7 +13,9 @@ FORMS_ART8 = {}
 FORMS_ART8_2012 = {}
 FORMS_ART8_2018 = {}
 FORMS_ART9 = {}
+FORMS_ART9_2012 = {}
 FORMS_ART10 = {}
+FORMS_ART10_2012 = {}
 FORMS_ART11 = {}
 FORMS_ART1314 ={}
 FORMS_ART18 = {}
@@ -163,6 +165,24 @@ def register_form_a8_2012(klass):
     """
 
     FORMS_ART8_2012[class_id(klass)] = klass
+
+    return klass
+
+
+def register_form_a9_2012(klass):
+    """ Registers a 'Report type' form class for Article 9 year 2012
+    """
+
+    FORMS_ART9_2012[class_id(klass)] = klass
+
+    return klass
+
+
+def register_form_a10_2012(klass):
+    """ Registers a 'Report type' form class for Article 10 year 2012
+    """
+
+    FORMS_ART10_2012[class_id(klass)] = klass
 
     return klass
 
