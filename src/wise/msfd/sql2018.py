@@ -934,7 +934,9 @@ class ReportingHistory(Base):
     ReportingObligationURL = Column(Unicode(250), nullable=False)
     DateDue = Column(DateTime)
     DateReceived = Column(DateTime, nullable=False)
+    DateReleased = Column(DateTime)
     ReportingDelay = Column(Integer)
+    EnvelopeStatus = Column(Unicode(100))
     ReportType = Column(Unicode(50))
 
 

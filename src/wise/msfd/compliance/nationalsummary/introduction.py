@@ -163,7 +163,7 @@ class ReportingHistoryTable(BaseNatSummaryView):
             report_type = row.get('ReportType')
             envelope = self.location_url(row.get('LocationURL'), filename)
             report_due = self.format_date(row.get('DateDue'))
-            report_date = self.format_date(row.get('DateReceived'))
+            report_date = self.format_date(row.get('DateReleased'))
             report_delay = self.calculate_reporting_delay(
                 row.get('ReportingDelay'), report_due, report_date
             )

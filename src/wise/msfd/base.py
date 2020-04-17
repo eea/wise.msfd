@@ -120,14 +120,14 @@ class BaseUtil(object):
         mc = sql2018.ReportingHistory
 
         count, data = get_all_specific_columns(
-            [mc.DateReceived],
+            [mc.DateReleased],
             mc.FileName == filename
         )
 
         if not count:
             return None
 
-        date = data[0].DateReceived
+        date = data[0].DateReleased
 
         return date
 

@@ -228,7 +228,7 @@ class A4ItemDisplay2018to2024(ItemDisplayForm):
         mc = sql2018.ReportingHistory
         data = db.get_all_columns_from_mapper(
             mc,
-            'DateReceived',
+            'DateReleased',
             mc.CountryCode == country_code,
             mc.ReportingObligation == 'MSFD - Article 4 - Spatial data'
         )
@@ -236,7 +236,7 @@ class A4ItemDisplay2018to2024(ItemDisplayForm):
         if not len(data):
             return 'Not available'
 
-        reported_date = data[0].DateReceived
+        reported_date = data[0].DateReleased
         reported_date = self.format_reported_date(reported_date)
 
         return reported_date
