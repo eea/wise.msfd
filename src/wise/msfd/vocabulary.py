@@ -643,8 +643,12 @@ def a1314_regions(context):
 @provider(IVocabularyFactory)
 def a1314_member_states(context):
     regions = context.get_selected_region_subregions()
-    klass = context.context.data['report_type']
-    report_type = klass.report_type
+
+    if hasattr(context, 'report_type'):
+        report_type = context.report_type
+    else:
+        klass = context.context.data['report_type']
+        report_type = klass.report_type
 
     mc = sql.MSFD13ReportingInfo
 

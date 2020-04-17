@@ -14,7 +14,7 @@ from ..interfaces import IMarineUnitIDsSelect
 from ..sql_extra import MSCompetentAuthority
 from ..utils import scan
 from .a11 import StartArticle11Form
-from .a1314 import StartArticle1314Form
+from .a1314 import StartArticle1314Form, StartArticle14Form
 from .a19 import StartArticle19Form
 from .a4 import A4Form, A4MemberStatesForm
 from .a9 import A9Form
@@ -514,6 +514,7 @@ class MarineUnitIDsForm(EmbeddedForm):
 
 StartArticle11View = wrap_form(StartArticle11Form, MainFormWrapper)
 StartArticle1314View = wrap_form(StartArticle1314Form, MainFormWrapper)
+StartArticle14View = wrap_form(StartArticle14Form, MainFormWrapper)
 
 
 @register_form_art8

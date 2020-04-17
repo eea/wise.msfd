@@ -213,11 +213,14 @@ MAIN_FORMS = (
     Tab('msfd-c2', 'msfd-c2', 'Article 11', 'Monitoring programmes',
         'Programmes established by Member States to monitor the environmental\n\
         status of their marine waters.', '', true),
-    Tab('msfd-c3', 'msfd-c3', 'Articles 13, 14 & 18',
-        'Programmes of measures & Exceptions',
+    Tab('msfd-c3', 'msfd-c3', 'Articles 13 & 18',
+        'Programmes of measures & Progress of PoM',
         'Measures to be taken in order to achieve or maintain good environmental\n\
-        status, exceptions reported whenever it cannot be achieved, and progress\n\
-        in the implementation of the programmes of measures.',
+        status, and progress in the implementation of the programmes of measures.',
+        '', true),
+    Tab('msfd-a14', 'msfd-a14', 'Article 14',
+        'Exceptions',
+        'Exceptions reported whenever good environmental status cannot be achieved.',
         '', true),
     # Tab('msfd-c4', 'msfd-c4', 'Articles <br/>8, 9 & 10',
     #     '2018 reporting exercise', '', true),
