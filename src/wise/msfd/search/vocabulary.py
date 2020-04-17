@@ -57,7 +57,7 @@ def a9_reporting_period(context):
 @provider(IVocabularyFactory)
 def report_type_art9(context):
     terms = [SimpleTerm(v, k, v.title) for k, v in FORMS_ART9_2012.items()]
-    terms.sort(key=lambda t: t.title)
+    terms.sort(key=lambda t: t.title, reverse=True)
     vocab = SimpleVocabulary(terms)
 
     return vocab
@@ -66,7 +66,7 @@ def report_type_art9(context):
 @provider(IVocabularyFactory)
 def report_type_art10(context):
     terms = [SimpleTerm(v, k, v.title) for k, v in FORMS_ART10_2012.items()]
-    terms.sort(key=lambda t: t.title, reverse=True)
+    terms.sort(key=lambda t: t.title)
     vocab = SimpleVocabulary(terms)
 
     return vocab

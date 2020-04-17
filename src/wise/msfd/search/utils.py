@@ -265,6 +265,10 @@ def article_sort_helper(term):
     """ Returns a float number for an article, to help with sorting
     """
     title = term.title
+    # make Article 6 last in order
+    if 'Article 6' in title:
+        return 99.9
+
     text = ART_RE.search(title).group().strip()
     chars = []
 
