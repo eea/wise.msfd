@@ -99,7 +99,7 @@ class CompetentAuthorityItemDisplay(ItemDisplayForm):
         c_codes = self.context.data.get('member_states')
 
         if c_codes:
-            conditions.append(self.mapper_class.C_CD.in_(c_codes))
+            conditions.append(self.mapper_class.c.C_CD.in_(c_codes))
 
         cnt, data = get_competent_auth_data(*conditions)
 
