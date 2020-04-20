@@ -7,11 +7,11 @@ from . import interfaces
 from .. import sql
 from .. import db
 from ..base import BasePublicPage, EmbeddedForm, MainFormWrapper
-from ..db import (get_all_records, get_all_records_join,
-                  get_item_by_conditions, get_item_by_conditions_art_6,
+from ..db import (get_competent_auth_data, get_all_records,
+                  get_all_records_join, get_item_by_conditions_art_6,
                   threadlocals)
 from ..interfaces import IMarineUnitIDsSelect
-from ..sql_extra import MSCompetentAuthority
+from ..sql import t_MS_CompetentAuthorities
 from ..utils import scan
 from .a11 import StartArticle11Form
 from .a1314 import StartArticle1314Form, StartArticle14Form
@@ -44,10 +44,8 @@ class StartMSCompetentAuthoritiesForm(MainForm):
 
     def download_results(self):
         c_codes = self.data.get('member_states')
-        count, data = get_all_records(
-            MSCompetentAuthority,
-            MSCompetentAuthority.C_CD.in_(c_codes)
-        )
+        conditions = [t_MS_CompetentAuthorities.c.C_CD.in_(c_codes)]
+        cnt, data = get_competent_auth_data(*conditions)
 
         xlsdata = [
             ('MSCompetentAuthority', data),
@@ -64,7 +62,7 @@ class CompetentAuthorityItemDisplay(ItemDisplayForm):
     """ The implementation for the Article 7
     """
 
-    mapper_class = MSCompetentAuthority
+    mapper_class = t_MS_CompetentAuthorities
     order_field = 'C_CD'
     css_class = "left-side-form"
 
@@ -97,15 +95,15 @@ class CompetentAuthorityItemDisplay(ItemDisplayForm):
     def get_db_results(self):
         page = self.get_page()
 
-        args = [self.mapper_class, self.order_field]
+        conditions = []
         c_codes = self.context.data.get('member_states')
 
         if c_codes:
-            args.append(self.mapper_class.C_CD.in_(c_codes))
+            conditions.append(self.mapper_class.C_CD.in_(c_codes))
 
-        res = get_item_by_conditions(*args, page=page)
+        cnt, data = get_competent_auth_data(*conditions)
 
-        return res
+        return cnt, data[page]
 
 
 @register_form_art4

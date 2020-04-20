@@ -3674,10 +3674,10 @@ t_MSFD_9_ExtractionFishShellfishPressure = Table(
 t_MS_CompetentAuthorities = Table(
     'MS_CompetentAuthorities', metadata,
     Column('C_CD', Unicode(2), index=True),
-    Column('MSCACode', Unicode(42), unique=True),
+    Column('MSCACode', Unicode(42)),
     Column('Auth_CD', Unicode(40)),
-    Column('CompetentAuthorityName', Unicode(100)),
-    Column('CompetentAuthorityNameNL', Unicode(100)),
+    Column('CompetentAuthorityName', Unicode(200)),
+    Column('CompetentAuthorityNameNL', Unicode(200)),
     Column('Acronym', Unicode(25)),
     Column('Street', Unicode(100)),
     Column('City', Unicode(100)),
@@ -3693,7 +3693,9 @@ t_MS_CompetentAuthorities = Table(
     Column('Import_Time', DateTime),
     Column('Import_FileName', Unicode),
     Column('METADATA', Unicode),
-    Column('URL', Unicode)
+    Column('URL', Unicode),
+    Column('ReportingDate', DateTime),
+    Index('MS_CompetentAuthorities$EUCACode*', 'C_CD', 'MSCACode', 'ReportingDate', unique=True)
 )
 
 

@@ -3,7 +3,7 @@ import threading
 
 from collections import defaultdict
 
-from sqlalchemy import create_engine, distinct, func, inspect
+from sqlalchemy import create_engine, distinct, func
 from sqlalchemy.orm import scoped_session, sessionmaker
 from sqlalchemy.orm.relationships import RelationshipProperty
 from zope.sqlalchemy import register
@@ -532,6 +532,7 @@ def compliance_art8_join(columns, mc_join1, mc_join2, *conditions):
     return [count, q]
 
 
+@cache(db_result_key)
 def latest_import_ids_2018():
     mc = sql2018.ReportedInformation
     mc_v = sql2018.t_V_ReportedInformation
@@ -557,3 +558,41 @@ def latest_import_ids_2018():
     latest_ids = [v for k, v in groups.items()]
 
     return latest_ids
+
+
+@cache(db_result_key)
+def get_competent_auth_data(*conditions):
+    mc = sql.t_MS_CompetentAuthorities
+    sess = session()
+    query = sess.query(mc).filter(*conditions).order_by(mc.c.C_CD)
+
+    data = [x for x in query]
+
+    filtered_data = []
+    last_rep_dates = {}
+
+    # get the last reported date for each country
+    for row in data:
+        country = row.C_CD
+        rep_date = row.ReportingDate
+
+        # we do not have a max rep date yet so insert it
+        if country not in last_rep_dates:
+            last_rep_dates[country] = rep_date
+            continue
+
+        # update the reported date for the country if we have a newer rep date
+        if rep_date > last_rep_dates[country]:
+            last_rep_dates[country] = rep_date
+
+    # filter the data
+    for row in data:
+        country = row.C_CD
+        rep_date = row.ReportingDate
+
+        if last_rep_dates[country] == rep_date:
+            filtered_data.append(row)
+
+    cnt = len(filtered_data)
+
+    return cnt, filtered_data
