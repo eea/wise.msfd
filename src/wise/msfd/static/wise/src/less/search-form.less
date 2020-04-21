@@ -74,9 +74,14 @@
     tr:nth-child(odd) {
       background-color: #EEE;
     }
+    tr:nth-child(even) {
+      th {
+        background-color: white;
+      }
+    }
     th, td {
       padding: 0.5em;
-      min-width: 10em;
+      min-width: 10rem;
 
       &.fixed-position {
         position: absolute;
@@ -89,6 +94,7 @@
 
     &.table-report {
        margin-left: 15rem;
+       margin-bottom: 0;
     }
   }
 

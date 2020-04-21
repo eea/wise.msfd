@@ -1481,7 +1481,7 @@
 
           $th.height(height);
 
-          if ($th.height() > cells_max_height) {
+          if ($th.height() >= cells_max_height) {
             $next.height($th.height());
           }
 
@@ -1498,7 +1498,7 @@
 
     function addDoubleScroll() {
       var secondScroll = '<div class="cloned-scroll-top" style="overflow-x: auto;">' +
-          '<div style="height: 1px;"></div>' +
+          '<div style="height: 1px; margin-left: 150px;"></div>' +
         '</div>'
 
       $(".double-scroll").each(function(){
