@@ -79,8 +79,9 @@ class Art9Display(ItemDisplayForm):
         features_mc = parent.features_mc
         determination_mc = sql2018.ART9GESGESDetermination
 
-        count, ges_component = db.get_all_records(
+        count, ges_component = db.get_all_records_outerjoin(
             mapper_class,
+            sql2018.ReportedInformation,
             self.condition_ges_component
         )
         id_ges_comp = [x.Id for x in ges_component]
