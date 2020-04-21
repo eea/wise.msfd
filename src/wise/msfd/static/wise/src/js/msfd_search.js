@@ -1503,11 +1503,10 @@
 
       $(".double-scroll").each(function(){
         var $doubleScroll = $(this)
-        var tableWidth = $doubleScroll.find('table').outerWidth(includeMargin=true);
+        var $table = $doubleScroll.find('table');
+        var tableWidth = $table.outerWidth(includeMargin=true);
 
-        //debugger;
-
-        if (tableWidth == null || $doubleScroll.width() == tableWidth) {
+        if (tableWidth == null || $table.outerWidth() <= $table.parent().width()) {
           return
         }
 
