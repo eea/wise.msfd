@@ -1498,14 +1498,16 @@
 
     function addDoubleScroll() {
       var secondScroll = '<div class="cloned-scroll-top" style="overflow-x: auto;">' +
-          '<div style="height: 1px; margin-left: 150px;"></div>' +
+          '<div style="height: 1px; margin-left: 165px;"></div>' +
         '</div>'
 
       $(".double-scroll").each(function(){
         var $doubleScroll = $(this)
         var tableWidth = $doubleScroll.find('table').outerWidth(includeMargin=true);
 
-        if (tableWidth == null) {
+        //debugger;
+
+        if (tableWidth == null || $doubleScroll.width() == tableWidth) {
           return
         }
 
