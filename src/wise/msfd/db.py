@@ -16,8 +16,8 @@ from .utils import db_result_key, group_query
 env = os.environ.get
 DSN = env('MSFDURI', 'mssql+pymssql://SA:bla3311!@msdb')  # ?charset=utf8mb4
 DBS = {
-    '2012': env('MSFD_db_default', 'MarineDB'),
-    '2018': env('MSFD_db_2018', 'MSFD2018_production')
+    '2012': env('MSFD_db_default', 'MarineDB_public'),
+    '2018': env('MSFD_db_2018', 'MSFD2018_public')
     # MSFD2018_sandbox_25102018
     # MSFD2018_production_v2
 }
