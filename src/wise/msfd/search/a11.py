@@ -424,14 +424,6 @@ class A11MonProgDisplay(ItemDisplayForm):
             'ID',
             getattr(mapper_class_mp_marine, column) == monitoring_programme_id
         )
-        marine_units_labeled = []
-        for mru in marine_units:
-            mru_label = GES_LABELS.get('mrus', mru)
-
-            if mru_label != mru:
-                mru_label = u"{} ({})".format(mru_label, unicode(mru))
-
-            marine_units_labeled.append(mru_label)
 
         element_names = db_objects_to_dict(result_programme_list,
                                            excluded_columns)
@@ -457,16 +449,16 @@ class A11MonProgDisplay(ItemDisplayForm):
 
         res.append(('Other information', element_names))
 
-        if marine_units_labeled:
+        if marine_units:
             res.append(
-                ('Marine Unit(s)', {
-                    '': [{'MarineUnitID': x} for x in marine_units_labeled]
+                ('', {
+                    '': [{'Marine Unit(s)': x} for x in marine_units]
                 }))
 
         if targets:
             res.append(
-                ('Target(s)', {
-                    '': [{'Relevant Targets': x} for x in targets]
+                ('', {
+                    '': [{'Relevant Target(s)': x} for x in targets]
                 }))
 
         return res
@@ -948,25 +940,16 @@ class A11MPExtraInfo(ItemDisplay):
         )
         marine_units = [x.MarineUnitID for x in marine_units]
 
-        marine_units_labeled = []
-        for mru in marine_units:
-            mru_label = GES_LABELS.get('mrus', mru)
-
-            if mru_label != mru:
-                mru_label = u"{} ({})".format(mru_label, unicode(mru))
-
-            marine_units_labeled.append(mru_label)
-
         return [
-            ('Elements monitored', {
+            ('', {
                 '': [
-                    {'ElementMonitored': x.Q9a_ElementMonitored}
+                    {'Elements monitored': x.Q9a_ElementMonitored}
 
                     for x in elements_monitored
                 ]
             }),
-            ('Parameters measured', {'': parameters_measured}),
-            ('Marine Unit(s)', {
-                '': [{'MarineUnitID': x} for x in marine_units_labeled]
+            ('', {'Parameters measured': parameters_measured}),
+            ('', {
+                '': [{'Marine Unit(s)': x} for x in marine_units]
             })
         ]

@@ -22,6 +22,7 @@ from plone.intelligenttext.transforms import \
 from plone.memoize import volatile
 from Products.Five.browser.pagetemplatefile import PageTemplateFile
 
+
 # TODO: move this registration to search package
 BLACKLIST = ['ID', 'Import', 'Id']
 
@@ -737,3 +738,25 @@ def get_weight_from_annot(q_id, descr):
         x = ''
 
     return x
+
+
+def area_transform(value):
+    new_val = "{:.2f}".format(value)
+
+    return new_val
+
+
+def mrus_transform(value):
+    from .labels import GES_LABELS
+
+    mru_labels = getattr(GES_LABELS, 'mrus')
+    label = mru_labels.get(value, 'No name available')
+    template = "{} ({})".format(label, value)
+
+    return template
+
+
+TRANSFORMS = {
+    'Area': area_transform,
+    'Marine Unit(s)': mrus_transform
+}

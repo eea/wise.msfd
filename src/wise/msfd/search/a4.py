@@ -6,7 +6,7 @@ from .. import db, sql, sql2018
 from ..base import EmbeddedForm, MarineUnitIDSelectForm
 from ..sql_extra import (MSFD4GeographicalAreaID,
                          MSFD4GeograpicalAreaDescription)
-from ..utils import db_objects_to_dict, group_data
+from ..utils import db_objects_to_dict, group_data, print_value
 from . import interfaces
 from .base import ItemDisplayForm
 from .utils import data_to_xls

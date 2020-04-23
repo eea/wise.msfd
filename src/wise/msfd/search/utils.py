@@ -297,4 +297,3 @@ def article_sort_helper_2018(term):
     f = ''.join(chars)
 
     return float(f)
-

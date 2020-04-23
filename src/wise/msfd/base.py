@@ -19,7 +19,8 @@ from .db import (get_all_specific_columns, get_available_marine_unit_ids,
                  get_marine_unit_ids, threadlocals, use_db_session)
 from .interfaces import IEmbeddedForm, IMainForm, IMarineUnitIDSelect
 from .labels import DISPLAY_LABELS
-from .utils import all_values_from_field, get_obj_fields, print_value
+from .utils import (all_values_from_field, get_obj_fields, print_value,
+                    TRANSFORMS)
 from .widget import MarineUnitIDSelectFieldWidget
 
 
@@ -277,6 +278,11 @@ class BaseUtil(object):
     def print_value(self, value, field_name=None):
         if not field_name:
             return print_value(value)
+
+        if field_name in TRANSFORMS:
+            transformer = TRANSFORMS.get(field_name)
+
+            return transformer(value)
 
         # if 'Code' in field_name:
         #     return value

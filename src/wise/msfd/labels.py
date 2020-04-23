@@ -8,7 +8,7 @@ import logging
 from lxml.etree import parse
 from pkg_resources import resource_filename
 
-from . import db, sql, sql2018, sql_extra
+from . import db, sql, sql2018
 
 COMMON_LABELS = {}                        # vocabulary of labels
 

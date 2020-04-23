@@ -310,18 +310,9 @@ class A1314ItemDisplay(ItemDisplayForm):
 
         marine_units = [x.MarineUnitID for x in marine_units]
 
-        marine_units_labeled = []
-        for mru in marine_units:
-            mru_label = GES_LABELS.get('mrus', mru)
-
-            if mru_label != mru:
-                mru_label = u"{} ({})".format(mru_label, unicode(mru))
-
-            marine_units_labeled.append(mru_label)
-
         mrus_extra = [
             ('', {
-                '': [{'Marine Unit(s)': x} for x in marine_units_labeled]
+                '': [{'Marine Unit(s)': x} for x in marine_units]
             })
         ]
 
