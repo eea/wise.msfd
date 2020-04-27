@@ -9,7 +9,6 @@ from ..sql_extra import (MSFD4GeographicalAreaID,
 from ..utils import db_objects_to_dict, group_data, print_value
 from . import interfaces
 from .base import ItemDisplayForm
-from .utils import data_to_xls
 
 
 class A4MemberStatesForm(EmbeddedForm):
@@ -66,7 +65,7 @@ class A4Form(ItemDisplayForm):
     order_field = 'MSFD4_GeograpicalAreasDescription_Import'
     css_class = "left-side-form"
 
-    blacklist_labels = ('MarineUnitID')
+    blacklist_labels = ('MarineUnitID', )
 
     extra_data_template = ViewPageTemplateFile('pt/extra-data-pivot.pt')
     # extra_data_template = ViewPageTemplateFile('pt/extra-data-simple.pt')
@@ -206,7 +205,7 @@ class A4Form(ItemDisplayForm):
             ('MSFD4GeograpicalAreaDescription', data_descr)
         ]
 
-        return data_to_xls(xlsdata)
+        return xlsdata
 
 
 class A4ItemDisplay2018to2024(ItemDisplayForm):
@@ -291,4 +290,4 @@ class A4ItemDisplay2018to2024(ItemDisplayForm):
             ('MRUsPublication', data),
         ]
 
-        return data_to_xls(xlsdata)
+        return xlsdata

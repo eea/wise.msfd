@@ -357,7 +357,7 @@ class A11MonProgDisplay(ItemDisplayForm):
             ('MSFD11Q6aRelevantTarget', data_rt),
         ]
 
-        return data_to_xls(xlsdata)
+        return xlsdata
 
     def get_db_results(self):
         page = self.get_page()
@@ -692,7 +692,7 @@ class A11MonSubDisplay(MultiItemDisplayForm):
             ('MSFD11Q9bMeasurementParameter', data_mp),
         ]
 
-        return data_to_xls(xlsdata)
+        return xlsdata
 
     def get_db_results(self):
         page = self.get_page()

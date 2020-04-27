@@ -115,7 +115,7 @@ class A81bExtractionFishSubForm(MarineUnitIDSelectForm2012):
             ('MSFD8bExtractionFSSumInfo', data_sum),
         ]
 
-        return data_to_xls(xlsdata)
+        return xlsdata
 
 
 @register_form_section(A81bExtractionFishItemDisplay)
@@ -267,7 +267,7 @@ class A81bExtractionSeaweedSubForm(MarineUnitIDSelectForm2012):
             ('MSFD8bExtrSeaweedMaerlOtherSum', data_sum),
         ]
 
-        return data_to_xls(xlsdata)
+        return xlsdata
 
 
 @register_form_section(A81bExtractionSeaweedItemDisplay)
@@ -417,7 +417,7 @@ class A81bHazardousSubForm(MarineUnitIDSelectForm2012):
             ('MSFD8bHazardSubstancesSum', data_sum),
         ]
 
-        return data_to_xls(xlsdata)
+        return xlsdata
 
 
 @register_form_section(A81bHazardousItemDisplay)
@@ -566,7 +566,7 @@ class A81bHydroSubForm(MarineUnitIDSelectForm2012):
             ('MSFD8bHydroProcSum', data_sum),
         ]
 
-        return data_to_xls(xlsdata)
+        return xlsdata
 
 
 @register_form_section(A81bHydroItemDisplay)
@@ -714,7 +714,7 @@ class A81bMarineLitterSubForm(MarineUnitIDSelectForm2012):
             ('MSFD8bLitterSum', data_sum),
         ]
 
-        return data_to_xls(xlsdata)
+        return xlsdata
 
 
 @register_form_section(A81bMarineLitterItemDisplay)
@@ -864,7 +864,7 @@ class A81bMicrobialSubForm(MarineUnitIDSelectForm2012):
             # ('MSFD8bMicroPathSum', data_sum),
         ]
 
-        return data_to_xls(xlsdata)
+        return xlsdata
 
 
 @register_form_section(A81bMicrobialItemDisplay)
@@ -1012,7 +1012,7 @@ class A81bNonIndigenousSubForm(MarineUnitIDSelectForm2012):
             ('MSFD8bNISSum', data_sum),
         ]
 
-        return data_to_xls(xlsdata)
+        return xlsdata
 
 
 @register_form_section(A81bNonIndigenousItemDisplay)
@@ -1158,7 +1158,7 @@ class A81bNoiseSubForm(MarineUnitIDSelectForm2012):
             ('MSFD8bNoiseSum', data_sum),
         ]
 
-        return data_to_xls(xlsdata)
+        return xlsdata
 
 
 @register_form_section(A81bNoiseItemDisplay)
@@ -1301,7 +1301,7 @@ class A81bNutrientSubForm(MarineUnitIDSelectForm2012):
             ('MSFD8bNutrientsSum', data_sum),
         ]
 
-        return data_to_xls(xlsdata)
+        return xlsdata
 
 
 @register_form_section(A81bNutrientItemDisplay)
@@ -1445,7 +1445,7 @@ class A81bPhysicalDamageSubForm(MarineUnitIDSelectForm2012):
             ('MSFD8bPhysicalDamageSum', data_sum),
         ]
 
-        return data_to_xls(xlsdata)
+        return xlsdata
 
 
 @register_form_section(A81bPhysicalDamageItemDisplay)
@@ -1589,7 +1589,7 @@ class A81bPhysicalLosSubForm(MarineUnitIDSelectForm2012):
             ('MSFD8bPhysicalLossSum', data_sum),
         ]
 
-        return data_to_xls(xlsdata)
+        return xlsdata
 
 
 @register_form_section(A81bPhysicalLosItemDisplay)
@@ -1733,7 +1733,7 @@ class A81bPollutantEventSubForm(MarineUnitIDSelectForm2012):
             ('MSFD8bPollutantEventsSum', data_sum),
         ]
 
-        return data_to_xls(xlsdata)
+        return xlsdata
 
 
 @register_form_section(A81bPollutantEventItemDisplay)
@@ -1855,7 +1855,7 @@ class A81bAcidificationSubForm(MarineUnitIDSelectForm2012):
             ('MSFD8bAcidificationActivity', data_ac),
         ]
 
-        return data_to_xls(xlsdata)
+        return xlsdata
 
 
 #  TODO CHECK IF IMPLEMENTATION IS CORRECT

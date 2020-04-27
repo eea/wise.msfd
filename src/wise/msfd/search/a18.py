@@ -113,7 +113,7 @@ class A18MeasureProgressDisplay(ItemDisplayForm):
             ('ART18MeasureProgressDescriptor', measure_prog_descr),
         ]
 
-        return data_to_xls(xlsdata)
+        return xlsdata
 
     @db.use_db_session('2018')
     def get_db_results(self):
@@ -253,7 +253,7 @@ class A18CategoryDisplay(ItemDisplayForm):
             ('ART18Category1bNotWFDMeasure', category_measure),
         ]
 
-        return data_to_xls(xlsdata)
+        return xlsdata
 
     @db.use_db_session('2018')
     def get_db_results(self):

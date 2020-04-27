@@ -85,7 +85,7 @@ class A81aEcoSubForm(MarineUnitIDSelectForm2012):
             ('MSFD8aEcosystemStatusIndicator', data_si),
         ]
 
-        return data_to_xls(xlsdata)
+        return xlsdata
 
 
 class A81aEcoItemDisplay(MultiItemDisplayForm):
@@ -196,7 +196,7 @@ class A81aFunctSubForm(MarineUnitIDSelectForm2012):
             ('MSFD8aFunctionalStatusIndicator', data_si),
         ]
 
-        return data_to_xls(xlsdata)
+        return xlsdata
 
 
 class A81aFunctItemDisplay(MultiItemDisplayForm):
@@ -307,7 +307,7 @@ class A81aHabitatSubForm(MarineUnitIDSelectForm2012):
             ('MSFD8aHabitatStatusIndicator', data_hsi),
         ]
 
-        return data_to_xls(xlsdata)
+        return xlsdata
 
 
 class A81aHabitatItemDisplay(MultiItemDisplayForm):
@@ -418,7 +418,7 @@ class A81aSpeciesSubForm(MarineUnitIDSelectForm2012):
             ('MSFD8aSpeciesStatusIndicator', data_ssi),
         ]
 
-        return data_to_xls(xlsdata)
+        return xlsdata
 
 
 class A81aSpeciesItemDisplay(MultiItemDisplayForm):
@@ -523,7 +523,7 @@ class A81aOtherSubForm(MarineUnitIDSelectForm2012):
             ('MSFD8aOtherStatusIndicator', data_other_si),
         ]
 
-        return data_to_xls(xlsdata)
+        return xlsdata
 
 
 class A81aOtherItemDisplay(MultiItemDisplayForm):
@@ -611,7 +611,7 @@ class A81aNisSubForm(MarineUnitIDSelectForm2012):
             ('MSFD8aNISInventory', data),
         ]
 
-        return data_to_xls(xlsdata)
+        return xlsdata
 
 
 class A81aNisItemDisplay(MultiItemDisplayForm):
@@ -660,7 +660,7 @@ class A81aPhysicalSubForm(MarineUnitIDSelectForm2012):
             ('MSFD8aPhysical', data),
         ]
 
-        return data_to_xls(xlsdata)
+        return xlsdata
 
 
 class A81aPhysicalItemDisplay(MultiItemDisplayForm):
@@ -732,7 +732,7 @@ class A81cForm(MarineUnitIDSelectForm2012):
             ('MSFD8cDepend', data_d),
         ]
 
-        return data_to_xls(xlsdata)
+        return xlsdata
 
 
 class A81cEconomicItemDisplay(MultiItemDisplayForm):

@@ -246,7 +246,7 @@ class A1314ItemDisplay(ItemDisplayForm):
             ('MSFD13ReportInfoFurtherInfo', data_report),
         ]
 
-        return data_to_xls(xlsdata)
+        return xlsdata
 
     def get_db_results(self):
         page = self.get_page()

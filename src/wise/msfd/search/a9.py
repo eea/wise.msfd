@@ -63,7 +63,7 @@ class AreaTypesFormArt9(EmbeddedForm):
             ('MSFD9_Features', data_f),
         ]
 
-        return data_to_xls(xlsdata)
+        return xlsdata
 
 
 class A9MRUForm(MarineUnitIDSelectForm2012):

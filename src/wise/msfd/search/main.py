@@ -42,17 +42,6 @@ class StartMSCompetentAuthoritiesForm(MainForm):
     def get_subform(self):
         return CompetentAuthorityItemDisplay(self, self.request)
 
-    def download_results(self):
-        c_codes = self.data.get('member_states')
-        conditions = [t_MS_CompetentAuthorities.c.C_CD.in_(c_codes)]
-        cnt, data = get_competent_auth_data(*conditions)
-
-        xlsdata = [
-            ('MSCompetentAuthority', data),
-        ]
-
-        return data_to_xls(xlsdata)
-
 
 StartMSCompetentAuthoritiesView = wrap_form(StartMSCompetentAuthoritiesForm,
                                             MainFormWrapper)
@@ -67,6 +56,7 @@ class CompetentAuthorityItemDisplay(ItemDisplayForm):
     css_class = "left-side-form"
 
     blacklist = ('Import_Time', 'Import_FileName', 'C_CD')
+    blacklist_labels = ('C_CD', )
     use_blacklist = False
 
     def get_reported_date(self):
@@ -91,6 +81,17 @@ class CompetentAuthorityItemDisplay(ItemDisplayForm):
         country = self.print_value(country_code)
 
         return country
+
+    def download_results(self):
+        c_codes = self.context.data.get('member_states')
+        conditions = [t_MS_CompetentAuthorities.c.C_CD.in_(c_codes)]
+        cnt, data = get_competent_auth_data(*conditions)
+
+        xlsdata = [
+            ('MSCompetentAuthority', data),
+        ]
+
+        return xlsdata
 
     def get_db_results(self):
         page = self.get_page()
@@ -175,31 +176,6 @@ class RegionalCoopForm(EmbeddedForm):
     def get_subform(self):
         return RegionalCoopItemDisplay(self, self.request)
 
-    def download_results(self):
-        mci = sql.MSFD4Import
-        mcr = sql.MSFD4RegionalCooperation
-        c_codes = self.data.get('member_states')
-
-        import_ids = db.get_unique_from_mapper(
-            sql.MSFD4Import,
-            'MSFD4_Import_ID',
-            sql.MSFD4Import.MSFD4_Import_ReportingCountry.in_(c_codes)
-        )
-        cols = [mci.MSFD4_Import_ReportingCountry] + self.get_obj_fields(mcr)
-
-        count, data = get_all_records_join(
-            cols,
-            mcr,
-            mcr.MSFD4_RegionalCooperation_Import.in_(import_ids),
-            mcr.Topic == self.context.topic
-        )
-
-        xlsdata = [
-            ('RegionalCooperation', data),
-        ]
-
-        return data_to_xls(xlsdata)
-
 
 class RegionalCoopItemDisplay(ItemDisplayForm):
     """ The implementation for the Article 6 display form
@@ -253,6 +229,31 @@ class RegionalCoopItemDisplay(ItemDisplayForm):
         country = self.print_value(country_code)
 
         return country
+
+    def download_results(self):
+        mci = sql.MSFD4Import
+        mcr = sql.MSFD4RegionalCooperation
+        c_codes = self.get_form_data_by_key(self, 'member_states')
+
+        import_ids = db.get_unique_from_mapper(
+            sql.MSFD4Import,
+            'MSFD4_Import_ID',
+            sql.MSFD4Import.MSFD4_Import_ReportingCountry.in_(c_codes)
+        )
+        cols = [mci.MSFD4_Import_ReportingCountry] + self.get_obj_fields(mcr)
+
+        count, data = get_all_records_join(
+            cols,
+            mcr,
+            mcr.MSFD4_RegionalCooperation_Import.in_(import_ids),
+            mcr.Topic == self.context.context.topic
+        )
+
+        xlsdata = [
+            ('RegionalCooperation', data),
+        ]
+
+        return xlsdata
 
     def get_db_results(self):
         page = self.get_page()

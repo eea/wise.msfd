@@ -110,7 +110,7 @@ class Art9Display(ItemDisplayForm):
             ('ART9GESMarineUnit', ges_marine_unit),
         ]
 
-        return data_to_xls(xlsdata)
+        return xlsdata
 
     def get_db_results(self):
         page = self.get_page()
@@ -358,7 +358,7 @@ class A2018Art10Display(ItemDisplayForm):
             ('ART10TargetsProgressAssessment', target_progress),
         ]
 
-        return data_to_xls(xlsdata)
+        return xlsdata
 
     def get_db_results(self):
         page = self.get_page()
@@ -678,7 +678,7 @@ class A2018Art81abDisplay(ItemDisplayForm):
             ('ART8GESCriteriaValuesIndicator', criteria_value_ind),
         ]
 
-        return data_to_xls(xlsdata)
+        return xlsdata
 
     def get_db_results(self):
         page = self.get_page()
@@ -1193,7 +1193,7 @@ class A2018Art81cDisplay(ItemDisplayForm):
             ('ART8ESAUsesActivitiesPressure', uses_activity_pres),
         ]
 
-        return data_to_xls(xlsdata)
+        return xlsdata
 
     def get_db_results(self):
         page = self.get_page()
@@ -1588,7 +1588,7 @@ class A2018IndicatorsDisplay(ItemDisplayForm):
             ('IndicatorsMarineUnit', marine_unit),
         ]
 
-        return data_to_xls(xlsdata)
+        return xlsdata
 
     def get_db_results(self):
         page = self.get_page()

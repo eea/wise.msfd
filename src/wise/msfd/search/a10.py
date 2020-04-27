@@ -51,7 +51,7 @@ class A10Form(EmbeddedForm):
             ('MSFD10_DESCrit', data_dc),
         ]
 
-        return data_to_xls(xlsdata)
+        return xlsdata
 
 
 class A10MRUForm(MarineUnitIDSelectForm2012):

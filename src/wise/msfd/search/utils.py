@@ -6,7 +6,7 @@ from io import BytesIO
 from six import string_types
 
 import xlsxwriter
-from wise.msfd.utils import class_id, get_obj_fields
+from wise.msfd.utils import class_id, get_obj_fields, print_value_xls
 
 FORMS_ART4 = {}
 FORMS_ART8 = {}
@@ -187,11 +187,15 @@ def register_form_a10_2012(klass):
     return klass
 
 
-def data_to_xls(data):
+def data_to_xls(data, blacklist_labels=None):
     """ Convert python export data to XLS stream of data
+
+    blacklist_labels: a list of column names for which we do not get label
 
     NOTE: this is very specific to MSFD search. Too bad
     """
+    if not blacklist_labels:
+        blacklist_labels = []
 
     # Create a workbook and add a worksheet.
     out = BytesIO()
@@ -249,7 +253,12 @@ def data_to_xls(data):
                 if isinstance(value, datetime):
                     value = value.isoformat()
 
-                worksheet.write(j + 1, i, value)
+                label = value
+
+                if f not in blacklist_labels:
+                    label = print_value_xls(value, f)
+
+                worksheet.write(j + 1, i, label)
 
     workbook.close()
     out.seek(0)

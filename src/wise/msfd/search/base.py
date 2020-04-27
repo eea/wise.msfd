@@ -18,7 +18,7 @@ from ..base import BaseEnhancedForm, BaseUtil, EmbeddedForm
 from ..db import (get_item_by_conditions, latest_import_ids_2018,
                   use_db_session)
 from ..interfaces import IMainForm
-from .utils import get_registered_form_sections
+from .utils import data_to_xls, get_registered_form_sections
 
 logger = logging.getLogger('wise.msfd')
 
@@ -300,7 +300,7 @@ class MainForm(BaseEnhancedForm, BasePublicPage, Form):
 
     # @cache(request_cache_key)
     def render(self):
-        download_action = self.find_download_action()
+        blacklist_labels, download_action = self.find_download_action()
 
         if download_action in (None, False):
             del self.actions['download']
@@ -309,13 +309,13 @@ class MainForm(BaseEnhancedForm, BasePublicPage, Form):
             # TODO: need to implement this as xls response
 
             data = download_action()
+            data_xls = data_to_xls(data, blacklist_labels)
 
             sh = self.request.response.setHeader
 
             sh('Content-Type', 'application/vnd.openxmlformats-officedocument.'
                'spreadsheetml.sheet')
 
-            # fname = self.subform.get_record_title(cntx='subform') or 'marinedb'
             logger.info("Spreadsheet title: %s", self.spreadsheet_title)
             fname = self.spreadsheet_title or 'marinedb'
             fname = fname + '_' + str(datetime.now().replace(microsecond=0))
@@ -323,7 +323,7 @@ class MainForm(BaseEnhancedForm, BasePublicPage, Form):
                 .replace('&', '_')
             sh('Content-Disposition', 'attachment; filename=%s.xlsx' % fname)
 
-            return data.read()
+            return data_xls.read()
 
         return super(MainForm, self).render()
 
@@ -336,12 +336,13 @@ class MainForm(BaseEnhancedForm, BasePublicPage, Form):
         while hasattr(ctx, 'subform'):
 
             if hasattr(ctx, 'download_results'):
-                return ctx.download_results
+                return (getattr(ctx, 'blacklist_labels', []),
+                        ctx.download_results)
 
             ctx = ctx.subform
 
         if hasattr(ctx, 'download_results'):
-            return ctx.download_results
+            return getattr(ctx, 'blacklist_labels', []), ctx.download_results
 
     def find_spreadsheet_title(self):
         """ Not used, just an experiment to provide custom spreadsheet titles
