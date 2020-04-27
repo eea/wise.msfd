@@ -1506,7 +1506,7 @@
         var $table = $doubleScroll.find('table');
         var tableWidth = $table.outerWidth(includeMargin=true);
 
-        if (tableWidth == null || $table.outerWidth() <= $table.parent().width()) {
+        if (tableWidth == null || tableWidth <= $table.parent().width()) {
           return
         }
 
