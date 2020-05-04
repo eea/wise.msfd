@@ -877,6 +877,17 @@ class NationalDescriptorSecondaryArticleView(NationalDescriptorArticleView):
     def descriptor_obj(self):
         return 'Not linked'
 
+    @property
+    def has_assessment(self):
+        """ Article 7 will be not assessed, we do not show the 2018 and
+        2012 assessment tables
+        """
+
+        if self.article == 'Art7':
+            return False
+
+        return True
+
     def source_pdf_assessment(self):
         for row in self.pdf_assessments:
             country = row[0]
