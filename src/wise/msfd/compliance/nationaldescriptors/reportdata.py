@@ -334,7 +334,6 @@ class ReportData2012(BaseView, BaseUtil):
 
         if filename:
             url = get_report_file_url(filename)
-
             if url:
                 try:
                     factsheet = get_factsheet_url(url)
@@ -431,8 +430,9 @@ class ReportData2012Secondary(ReportData2012):
         return reporter, date
 
     def _get_reporting_info_art_7(self, root):
-        reporter = [root.attrib['GeneratedBy']]
-        date = [root.attrib['CreationDate']]
+        default = u'Not available'
+        reporter = [root.attrib.get('GeneratedBy', default)]
+        date = [root.attrib.get('CreationDate', default)]
 
         return reporter, date
 

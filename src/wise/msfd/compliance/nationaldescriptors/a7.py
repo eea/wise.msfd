@@ -226,6 +226,8 @@ class Article7_2018(Article7):
         3. Get the data from the xml file
     """
 
+    available_regions = []
+
     def __init__(self, context, request, country_code, region_code,
                  descriptor, article,  muids, filename=None):
 
