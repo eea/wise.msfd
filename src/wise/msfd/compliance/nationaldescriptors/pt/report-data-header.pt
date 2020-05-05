@@ -70,10 +70,10 @@
                   <a href="" tal:attributes="href string:${art/absolute_url}/@@edit-assessment-data-2018" target="_blank">Edit</a>
                   <a tal:attributes="href string:${art/absolute_url}/@@view-report-data-2018"
                     target="_blank">
-                    2018</a>
-                  <a tal:attributes="href string:${art/absolute_url}/@@view-report-data-2012"
-                    target="_blank">
-                    2012</a>
+                    Report(s)</a>
+                  <!--<a tal:attributes="href string:${art/absolute_url}/@@view-report-data-2012"-->
+                    <!--target="_blank">-->
+                    <!--2012</a>-->
                 </div>
               </div>
             </div>
@@ -136,41 +136,11 @@
     </table>
 
     <div id="download-report-data-form" tal:condition="python: options.get('show_navigation') != False">
-      <!-- <div tal:condition="python:False" class="crt&#45;def"> -->
-      <!--   <!&#45;&#45; Removed &#45;&#45;> -->
-      <!--   <button type="button" -->
-      <!--     class="btn btn&#45;primary btn&#45;small btn&#45;success" -->
-      <!--     data&#45;toggle="modal" data&#45;target="#reportdata&#45;help"> -->
-      <!--     Harvesting details -->
-      <!--   </button> -->
-      <!-- </div> -->
-
       <form method="POST" action="" tal:attributes="action request/getURL">
         <button name="download" class="btn btn-primary">View report data in Excel</button>
         <button name="translate" class="btn btn-secondary"
           tal:condition="view/can_view_assessment_data">Auto-translate</button>
       </form>
-
-      <!-- <div tal:condition="nothing" class="modal fade" id="reportdata&#45;help" tabindex="&#45;1" role="dialog"> -->
-      <!--   <!&#45;&#45; Removed &#45;&#45;> -->
-      <!--   <div class="modal&#45;dialog modal&#45;lg" role="document"> -->
-      <!--     <div class="modal&#45;content"> -->
-      <!--       <div class="modal&#45;header"> -->
-      <!--         <button type="button" class="close" data&#45;dismiss="modal" aria&#45;label="Close"><span aria&#45;hidden="true">&#38;times;</span></button> -->
-      <!--         <h4 class="modal&#45;title">Report data harvesting</h4> -->
-      <!--       </div> -->
-      <!--  -->
-      <!--       <div class="modal&#45;body"> -->
-      <!--         <pre tal:content="options/help_text | nothing"></pre> -->
-      <!--       </div> -->
-      <!--  -->
-      <!--       <div class="modal&#45;footer"> -->
-      <!--         <button type="button" class="btn btn&#45;default" data&#45;dismiss="modal">Close</button> -->
-      <!--       </div> -->
-      <!--     </div> -->
-      <!--   </div> -->
-      <!-- </div> -->
-
     </div>
 
   </div>

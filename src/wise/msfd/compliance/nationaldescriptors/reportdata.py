@@ -1156,8 +1156,10 @@ https://svn.eionet.europa.eu/repositories/Reportnet/Dataflows/MarineDirective/MS
 
         return xlsio.read()
 
-    def auto_translate(self):
-        data = self.get_report_data()
+    def auto_translate(self, data=None):
+        if not data:
+            data = self.get_report_data()
+
         # report_def = REPORT_DEFS[self.year][self.article]
         # translatables = report_def.get_translatable_fields()
         translatables = self.TRANSLATABLES
@@ -1275,7 +1277,7 @@ class ReportData2018Secondary(ReportData2018):
 
     @property
     def report_header_title(self):
-        title = "Member State report: {} / {} / 2018".format(
+        title = "Member State report: {} / {}".format(
             self.country_name,
             self.article
         )
@@ -1317,6 +1319,28 @@ class ReportData2018Secondary(ReportData2018):
         view.setup_data()
 
         return view
+
+    def auto_translate(self):
+        self.setup_data()
+        translatables = self.context.TRANSLATABLES
+        seen = set()
+
+        for row in self.rows:
+            if not row:
+                continue
+
+            if row.title not in translatables:
+                continue
+
+            for value in row.raw_values:
+                if not isinstance(value, basestring):
+                    continue
+
+                if value not in seen:
+                    retrieve_translation(self.country_code, value)
+                    seen.add(value)
+
+        return ''
 
     def render_reportdata(self):
         """
@@ -1389,7 +1413,7 @@ class ReportData2018Secondary(ReportData2018):
                 report_date=report_date.date(),
                 help_text=self.help_text,
                 multiple_source_files=False,
-                show_navigation=False,
+                show_navigation=index == 0,
             )
 
             rendered_results.append(template(data=res,

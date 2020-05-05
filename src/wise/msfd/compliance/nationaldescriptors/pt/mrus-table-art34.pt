@@ -1,6 +1,8 @@
 <table tal:define="labels nocall: options/item_labels;
         values nocall: options/item_values;
-        previous_mrus nocall: options/previous_mrus"
+        previous_mrus nocall: options/previous_mrus;
+        country_code options/country_code;
+        translate_value nocall: options/translate_value"
      class="value-as-table">
   <tr>
     <tal:rep tal:repeat="name labels">
@@ -9,11 +11,18 @@
   </tr>
   <tr tal:repeat="item values">
     <tal:rep repeat="name labels">
-      <td tal:define="value python:item[name];
-          is_new_mru python: name == 'Marine Reporting Unit' and value not in previous_mrus">
+      <td tal:condition="python: name not in view.TRANSLATABLES"
+          tal:define="value python:item[name];
+            is_new_mru python: name == 'Marine Reporting Unit' and value not in previous_mrus">
         <span tal:attributes="class python: is_new_mru and 'new' or ''"
-            tal:content="value" ></span>
+            tal:content="value">
+        </span>
       </td>
+
+      <tal:def tal:define="value python:item[name]">
+        <td tal:condition="python: name in view.TRANSLATABLES"
+            tal:replace="structure python: translate_value(name, value, country_code)"></td>
+      </tal:def>
     </tal:rep>
   </tr>
 </table>

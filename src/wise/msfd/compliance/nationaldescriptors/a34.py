@@ -250,6 +250,7 @@ class A34Item_2018_mru(Item):
 
 class A34Item_2018_main(Item):
     mrus_template = Template('pt/mrus-table-art34.pt')
+    TRANSLATABLES = ['MRU Name']
 
     def __init__(self, context, request, description,
                  mru_nodes, previous_mrus=None):
@@ -287,7 +288,9 @@ class A34Item_2018_main(Item):
         sorted_mrus = self.mrus_template(
             item_labels=item_labels,
             item_values=sorted_mrus,
-            previous_mrus=self.previous_mrus
+            previous_mrus=self.previous_mrus,
+            country_code=self.context.country_code,
+            translate_value=self.translate_value
         )
 
         self['MRUs'] = sorted_mrus
@@ -295,6 +298,14 @@ class A34Item_2018_main(Item):
 
         # Region or subregion Member state    Area type   MRU ID  Marine
         # reporting unit  Marine reporting unit
+
+    def translate_value(self, fieldname, value, source_lang):
+        is_translatable = fieldname in self.TRANSLATABLES
+        v = self.context.context.translate_view()
+
+        return v.translate(source_lang=source_lang,
+                           value=value,
+                           is_translatable=is_translatable)
 
     def sort_mrus(self, cols):
         sorted_cols = sorted(
@@ -402,25 +413,3 @@ class Article34_2018(BaseArticle2012):
             self.setup_data()
 
         return self.template()
-
-    def auto_translate(self):
-        self.setup_data()
-        translatables = self.context.TRANSLATABLES
-        seen = set()
-
-        for row in self.rows:
-            if not row:
-                continue
-
-            if row.title not in translatables:
-                continue
-
-            for value in row.raw_values:
-                if not isinstance(value, basestring):
-                    continue
-
-                if value not in seen:
-                    retrieve_translation(self.country_code, value)
-                    seen.add(value)
-
-        return ''
