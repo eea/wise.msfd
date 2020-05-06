@@ -782,7 +782,7 @@ class AssessmentQuestionDefinition:
             res = filtered_criterias(res, self, descriptor)
         if self.article in ['Art10']:
             res = filtered_targets(res, self)
-        if self.article in ['Art4']:
+        if self.article in ['Art3', 'Art4']:
             res = filtered_descriptors(res, self)
 
         return sorted_criterions(res)

@@ -71,6 +71,15 @@ class ViewAssessmentEditHistory(BaseView, BrowserView):
         )
 
 
+class ViewAssessmentEditHistorySecondary(ViewAssessmentEditHistory):
+    @property
+    def title(self):
+        return "Edit Assessment History for: {}/ {}".format(
+            self.country_name,
+            self.article,
+        )
+
+
 class EditAssessmentDataForm(BaseView, EditAssessmentDataFormMain):
     """ Edit the assessment for a national descriptor, for a specific article
     """
@@ -178,7 +187,6 @@ class EditAssessmentDataForm(BaseView, EditAssessmentDataFormMain):
                 values.append(data.get(field_name, None))
 
             # score is updated if ALL of the fields have been answered
-
             if values and None not in values:
                 score = question.calculate_score(self.descriptor, values)
 

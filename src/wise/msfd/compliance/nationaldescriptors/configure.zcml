@@ -43,6 +43,14 @@
     permission="wise.ViewAssessmentData"
   />
 
+  <browser:page
+    for="..interfaces.INationalDescriptorAssessmentSecondary"
+    name="view-edit-history"
+    template="./pt/view-edit-history.pt"
+    class=".assessment.ViewAssessmentEditHistorySecondary"
+    permission="wise.ViewAssessmentData"
+  />
+
   <!-- Form to edit the assessment history -->
   <browser:page
     for="..interfaces.INationalDescriptorAssessment"
