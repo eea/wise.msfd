@@ -1,5 +1,6 @@
 import logging
 
+from collections import defaultdict
 from lxml.etree import fromstring
 
 from Products.Five.browser.pagetemplatefile import \
@@ -179,28 +180,6 @@ class Article34(BaseArticle2012):
 
         return self.template()
 
-    def auto_translate(self):
-        self.setup_data()
-        translatables = self.context.TRANSLATABLES
-        seen = set()
-
-        for row in self.rows:
-            if not row:
-                continue
-
-            if row.title not in translatables:
-                continue
-
-            for value in row.raw_values:
-                if not isinstance(value, basestring):
-                    continue
-
-                if value not in seen:
-                    retrieve_translation(self.country_code, value)
-                    seen.add(value)
-
-        return ''
-
 
 class A34Item_2018_mru(Item):
     def __init__(self, node):
@@ -250,7 +229,7 @@ class A34Item_2018_mru(Item):
 
 class A34Item_2018_main(Item):
     mrus_template = Template('pt/mrus-table-art34.pt')
-    TRANSLATABLES = ['MRU Name']
+    TRANSLATABLES_EXTRA = ['MRU Name']
 
     def __init__(self, context, request, description,
                  mru_nodes, previous_mrus=None):
@@ -278,6 +257,7 @@ class A34Item_2018_main(Item):
             mrus.append(item)
 
         sorted_mrus = sorted(mrus, key=lambda x: x['Marine Reporting Unit'])
+        self._mrus = sorted_mrus
         self.available_mrus = [x['Marine Reporting Unit'] for x in sorted_mrus]
         self.available_regions = set(
             [x['Region or subregion'] for x in sorted_mrus]
@@ -299,8 +279,25 @@ class A34Item_2018_main(Item):
         # Region or subregion Member state    Area type   MRU ID  Marine
         # reporting unit  Marine reporting unit
 
+    def get_translatable_extra_data(self):
+        """ Get the translatable fields from the MRU nodes
+
+        :return: a list of values to translate
+        """
+        res = []
+
+        for row in self._mrus:
+            for field in self.TRANSLATABLES_EXTRA:
+                value = getattr(row, field, None)
+                if not value:
+                    continue
+
+                res.append(value)
+
+        return set(res)
+
     def translate_value(self, fieldname, value, source_lang):
-        is_translatable = fieldname in self.TRANSLATABLES
+        is_translatable = fieldname in self.TRANSLATABLES_EXTRA
         v = self.context.context.translate_view()
 
         return v.translate(source_lang=source_lang,
@@ -381,7 +378,7 @@ class Article34_2018(BaseArticle2012):
         main_node = A34Item_2018_main(
             self, self.request, description, mru_nodes, self.previous_mrus
         )
-
+        self.translatable_extra_data = main_node.get_translatable_extra_data()
         self.available_mrus = main_node.available_mrus
         self.available_regions = main_node.available_regions
         self.rows = []

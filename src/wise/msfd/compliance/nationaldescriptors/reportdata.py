@@ -1321,26 +1321,43 @@ class ReportData2018Secondary(ReportData2018):
         return view
 
     def auto_translate(self):
-        self.setup_data()
-        translatables = self.context.TRANSLATABLES
+        self.render_reportdata()
         seen = set()
 
-        for row in self.rows:
-            if not row:
+        all_translatables = (self.translatable_data +
+                             self.translatable_extra_data)
+
+        for value in all_translatables:
+            if not value:
                 continue
 
-            if row.title not in translatables:
+            if not isinstance(value, basestring):
                 continue
 
-            for value in row.raw_values:
-                if not isinstance(value, basestring):
-                    continue
+            if value not in seen:
+                retrieve_translation(self.country_code, value)
+                seen.add(value)
 
-                if value not in seen:
-                    retrieve_translation(self.country_code, value)
-                    seen.add(value)
+        messages = IStatusMessage(self.request)
+        messages.add(u"Auto-translation initiated, please refresh "
+                     u"in a couple of minutes", type=u"info")
 
-        return ''
+        url = self.context.absolute_url() + '/@@view-report-data-2018'
+        return self.request.response.redirect(url)
+
+
+    def get_translatable_data(self, view):
+        res = []
+
+        for row in view.rows:
+            field_name = row.title
+
+            if field_name not in self.TRANSLATABLES:
+                continue
+
+            res.extend(row.raw_values)
+
+        return set(res)
 
     def render_reportdata(self):
         """
@@ -1350,6 +1367,9 @@ class ReportData2018Secondary(ReportData2018):
 
         :return: rendered html
         """
+
+        translatable_extra_data = []
+        translatable_data = []
 
         template = self.get_template(self.article)
         urls = get_all_report_filenames(self.country_code, self.article)
@@ -1374,6 +1394,8 @@ class ReportData2018Secondary(ReportData2018):
             # file should also be sent. Then it will be possible to identify
             # which MRUs have been added/removed
             view = self.get_implementation_view(url, prev_url)
+            translatable_extra_data.extend(view.translatable_extra_data)
+            translatable_data.extend(self.get_translatable_data(view))
 
             report = self.get_report_metadata_from_view(view, url)
             # Report Header
@@ -1419,6 +1441,9 @@ class ReportData2018Secondary(ReportData2018):
             rendered_results.append(template(data=res,
                                              report_header=report_header,
                                              show_navigation=False))
+
+        self.translatable_extra_data = translatable_extra_data
+        self.translatable_data = translatable_data
 
         res = "<hr/>".join(rendered_results)
         return res or "No data found"

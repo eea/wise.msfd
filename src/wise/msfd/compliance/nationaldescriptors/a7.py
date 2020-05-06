@@ -227,6 +227,7 @@ class Article7_2018(Article7):
     """
 
     available_regions = []
+    translatable_extra_data = []
 
     def __init__(self, context, request, country_code, region_code,
                  descriptor, article,  muids, filename=None):
