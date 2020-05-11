@@ -20,6 +20,7 @@ from wise.msfd.compliance.base import NAT_DESC_QUESTIONS
 from wise.msfd.compliance.content import AssessmentData
 from wise.msfd.compliance.scoring import (CONCLUSIONS, get_overall_conclusion,
                                           get_range_index, OverallScores)
+from wise.msfd.compliance.utils import ordered_regions_sortkey
 from wise.msfd.compliance.vocabulary import (REGIONAL_DESCRIPTORS_REGIONS,
                                              SUBREGIONS_TO_REGIONS)
 from wise.msfd.data import _extract_pdf_assessments
@@ -105,9 +106,6 @@ ARTICLE_WEIGHTS = {
     }
 }
 
-CountryStatus = namedtuple('CountryStatus',
-                           ['name', 'status', 'state_id', 'url'])
-
 Assessment2012 = namedtuple(
     'Assessment2012', [
         'gescomponents',
@@ -143,6 +141,9 @@ AssessmentRow = namedtuple('AssessmentRow',
                                'score',
                                'values'
                            ])
+
+CountryStatus = namedtuple('CountryStatus',
+                           ['code', 'name', 'status', 'state_id', 'url'])
 
 
 @db.use_db_session('2018')
@@ -356,8 +357,8 @@ class NationalDescriptorsOverview(BaseView):
 
         for country in countries:
             state_id, state_label = self.process_phase(country)
-            info = CountryStatus(country.Title(), state_label, state_id,
-                                 country.absolute_url())
+            info = CountryStatus(country.id.upper(), country.Title(),
+                                 state_label, state_id, country.absolute_url())
 
             res.append(info)
 
@@ -373,7 +374,11 @@ class NationalDescriptorCountryOverview(BaseView):
             if x.portal_type == 'Folder'
         ]
 
-        return regions
+        sorted_regions = sorted(
+            regions, key=lambda i: ordered_regions_sortkey(i.id.upper())
+        )
+
+        return sorted_regions
 
     # @protect(CheckAuthenticator)
     def send_to_tl(self):

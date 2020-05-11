@@ -13,7 +13,7 @@
   </permission-map>
  </state>
 
- <state state_id="phase1" title="Phase 1: Assessment adequacy and consistency">
+ <state state_id="phase1" title="Assessment of adequacy and consistency">
   <exit-transition transition_id="to_notstarted"/>
   <exit-transition transition_id="to_phase2"/>
   <permission-map name="wise.msfd: Edit Assessment" acquired="False">

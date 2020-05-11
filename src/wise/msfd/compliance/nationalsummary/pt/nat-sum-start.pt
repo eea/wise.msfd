@@ -22,6 +22,7 @@
           <table class="table table-striped table-condensed comp-c-listing">
             <thead>
               <tr>
+                <th>Country Code</th>
                 <th>Country</th>
                 <th>Status</th>
                 <!-- <th>Actions</th> -->
@@ -29,6 +30,7 @@
             </thead>
             <tbody>
               <tr tal:repeat="country view/countries">
+                <th tal:content="country/code">DE</th>
                 <th tal:content="country/name">
                   Germany
                 </th>
