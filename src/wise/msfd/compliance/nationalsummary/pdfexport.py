@@ -400,7 +400,7 @@ class AssessmentExportView(BaseNatSummaryView):
     @timeit
     def render_reportdata(self):
         report_header = self.report_header_template(
-            title="Assessment summary: {}".format(
+            title="Commission assessment / Art12 / 2018 / {}-summary".format(
                 self.country_name,
             )
         )

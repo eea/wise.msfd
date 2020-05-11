@@ -65,7 +65,7 @@
                   <span tal:content="python: view.descriptor_for_code(desc.id).title">D0</span>
                 </th>
                 <td tal:repeat="assessment python: view.get_articles(desc)">
-                  <tal:block tal:define="css_class python:'btn btn-xs btn-' + view.get_status_color(assessment);
+                  <tal:block tal:define="css_class python:'assessment-status-colorbar btn btn-xs btn-' + view.get_status_color(assessment);
                       url assessment/absolute_url;
                       can_view_data python:view.can_view_assessment_data(assessment);
                       can_edit_data python:view.can_view_edit_assessment_data(assessment)">
@@ -78,8 +78,9 @@
                         class="has-new-comments fa fa-exclamation-circle"
                         tal:condition="python: view.has_new_comments(assessment)"></span>
                     </a>
-                    <a class="btn btn-xs btn-light" tal:attributes="href url" tal:condition="can_view_data">Overview</a>
                     <div style='margin-top: 0.3rem'>
+                      <a tal:attributes="href url" tal:condition="can_view_data"
+                         class="btn btn-xs btn-light" >2018 Assessment</a>
                       <a tal:attributes="href string:${url}/@@view-report-data-2012;"
                         class="btn btn-xs btn-light" >2012 report</a>
                       <a tal:attributes="href string:${url}/@@view-report-data-2018;"

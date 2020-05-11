@@ -247,11 +247,11 @@ class ReportData2012(BaseView, BaseUtil):
 
     @property
     def report_title(self):
-        title = "Member State report: {}/{}/{}/{}/2012".format(
+        title = "Member State report / {} / 2012/ {} / {} / {}".format(
+            self.article,
+            self.descriptor_title,
             self.country_name,
             self.country_region_name,
-            self.descriptor_title,
-            self.article
         )
 
         return title
@@ -416,9 +416,9 @@ class ReportData2012Secondary(ReportData2012):
 
     @property
     def report_title(self):
-        title = "Member State report: {}/{}/2012".format(
+        title = "Member State report / {} / {} / 2012".format(
+            self.article,
             self.country_name,
-            self.article
         )
 
         return title
@@ -1073,11 +1073,11 @@ https://svn.eionet.europa.eu/repositories/Reportnet/Dataflows/MarineDirective/MS
 
     @property
     def report_header_title(self):
-        title = "Member State report: {} / {} / {} / {} / 2018".format(
+        title = "Member State report / {} / 2018 / {} / {} / {}".format(
+            self.article,
+            self.descriptor_title,
             self.country_name,
             self.country_region_name,
-            self.descriptor_title,
-            self.article
         )
 
         return title
@@ -1278,8 +1278,8 @@ class ReportData2018Secondary(ReportData2018):
     @property
     def report_header_title(self):
         title = "Member State report: {} / {}".format(
+            self.article,
             self.country_name,
-            self.article
         )
 
         return title

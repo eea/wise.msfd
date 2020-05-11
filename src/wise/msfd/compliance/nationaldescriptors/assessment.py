@@ -111,11 +111,12 @@ class EditAssessmentDataForm(BaseView, EditAssessmentDataFormMain):
 
     @property
     def title(self):
-        return u"Edit Comission assessment: {}/ {}/ {}/ {}/ 2018".format(
+        return u"Edit Comission assessment / {} / 2018 / {} / {} " \
+               u"/ {} ".format(
+            self.article,
+            self.descriptor_title,
             self.country_title,
             self.country_region_name,
-            self.descriptor_title,
-            self.article,
         )
 
     @buttonAndHandler(u'Translate targets', name='translate')

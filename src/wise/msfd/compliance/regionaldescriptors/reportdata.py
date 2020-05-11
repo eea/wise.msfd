@@ -100,10 +100,10 @@ class RegReportData2012(BaseRegComplianceView):
         data = self.get_report_data()
 
         report_header = self.report_header_template(
-            title="Member State report: {} / {} / {} / 2012".format(
-                self.country_region_name,
+            title="Member State report / {} / 2012 / {} / {}".format(
+                self.article,
                 self.descriptor_title,
-                self.article
+                self.country_region_name,
             ),
             factsheet=None,
             # TODO: find out how to get info about who reported
@@ -457,10 +457,10 @@ class RegReportData2018(BaseRegComplianceView):
         data = self.get_report_data()
 
         report_header = self.report_header_template(
-            title="Member State report: {} / {} / {} / 2018".format(
-                self.country_region_name,
+            title="Member State report / {} / 2018 / {} / {}".format(
+                self.article,
                 self.descriptor_title,
-                self.article
+                self.country_region_name,
             ),
             factsheet=None,
             # TODO: find out how to get info about who reported

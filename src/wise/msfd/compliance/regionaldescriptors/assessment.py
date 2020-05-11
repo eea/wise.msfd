@@ -77,10 +77,10 @@ class RegDescEditAssessmentDataForm(BaseRegComplianceView,
 
     @property
     def title(self):
-        return "Edit {}'s Assessment for {}/{}".format(
-            self.country_region_code,
-            self.descriptor,
+        return "Edit Commission assessment / {} / 2018 / {} / {}".format(
             self.article,
+            self.descriptor,
+            self.country_region_code,
         )
 
     def format_last_change(self, last_update):

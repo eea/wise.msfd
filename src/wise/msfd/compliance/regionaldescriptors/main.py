@@ -102,10 +102,10 @@ class RegionalDescriptorArticleView(BaseRegComplianceView):
 
     @property
     def title(self):
-        return u"Regional descriptor: {} / {} / {} / 2018".format(
-            self.country_region_name,
-            self.descriptor_title,
+        return u"Regional descriptor / {} / 2018 / {} / {}".format(
             self.article,
+            self.descriptor_title,
+            self.country_region_name,
         )
 
     # @property

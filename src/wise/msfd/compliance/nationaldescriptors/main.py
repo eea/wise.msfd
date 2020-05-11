@@ -713,11 +713,11 @@ class NationalDescriptorArticleView(BaseView, AssessmentDataMixin):
 
     @property
     def title(self):
-        return u"Commission assessment: {} / {} / {} / {} / 2018".format(
+        return u"Commission assessment / {} / 2018 / {} / {} / {} ".format(
+            self.article,
+            self.descriptor_title,
             self.country_title,
             self.country_region_name,
-            self.descriptor_title,
-            self.article,
         )
 
     @property
