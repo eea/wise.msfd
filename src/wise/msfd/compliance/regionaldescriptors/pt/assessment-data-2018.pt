@@ -10,6 +10,7 @@
           <th class="fixed-left as-question as-header">Question / assessed elements</th>
           <th colspan="2" class="fixed-center as-ges-component as-header"></th>
           <th class="fixed-right as-header">Conclusion</th>
+          <th class="fixed-right as-th-score as-header">Score</th>
         </tr>
 
         <tal:rep tal:repeat="row assessment/answers">
@@ -43,21 +44,13 @@
 
             <td tal:attributes="class python: 'fixed-right as-value as-value-{}'.format(row.conclusion_color)"
               colspan="1">
-              <span tal:condition="row/score"
-                  class="score help-popover fa fa-info-circle fa-s"
-                  data-trigger="hover"
-                  data-html="true"
-                  data-placement="left"
-                  tal:attributes="title python: 'Score calculation algorithm';
-                    data-content python: getattr(row.score, 'score_tooltip', '');">
-              </span>
-              <strong tal:condition="row/score"
+              <strong tal:condition="python: False"
                   tal:content="python: '{} ({}%)'.format(row.conclusion, getattr(row.score, 'percentage'))">Very poor</strong>
+              <strong tal:condition="row/score"
+                  tal:content="row/conclusion">Very poor</strong>
             </td>
 
-            <td class="fixed-right"
-              tal:condition="python: False">
-              <!-- Not showed -->
+            <td tal:attributes="class python: 'fixed-right as-value as-value-{}'.format(row.conclusion_color)">
               <span tal:condition="row/score"
                   class="score help-popover fa fa-info-circle fa-s"
                   data-trigger="hover"
@@ -85,24 +78,27 @@
           </td>
 
           <td class="overall-headers fixed-right">
-            <div>Coherence score (%)</div>
-            <div>Overall conclusion: 2018</div>
-            <div>Overall conclusion: 2012</div>
-            <div>Change since 2012</div>
+            <div>2018 Coherence</div>
+            <div>2018 Overall</div>
+            <div>2012 Adequacy: change since 2012</div>
           </td>
           <td class="overall-values fixed-right"
               tal:define="phase_score python: assessment.phase_overall_scores">
             <div tal:attributes="class python: 'as-value as-value-{}'.format(phase_score.coherence['color'])"
-                 tal:define="score python: phase_score.get_score_for_phase('coherence');
-                    conclusion python: phase_score.coherence['conclusion'][1];
+                 tal:define="conclusion python: phase_score.coherence['conclusion'][1];
                     score_value python: phase_score.coherence['conclusion'][0]"
-              tal:content="python: '{} ({}, {})'.format(score, conclusion, score_value)">65.5</div>
+              tal:content="python: '{} ({})'.format(conclusion, score_value)">65.5</div>
             <div tal:attributes="class python: 'as-value as-value-{}'.format(assessment.overall_conclusion_color)"
-              tal:content="python: '{} ({}, {})'.format(
-                assessment.overall_score, assessment.overall_conclusion[1], assessment.overall_conclusion[0]
-              )">Very poor (1)</div>
-            <div tal:attributes="class python: 'as-value as-value-{}'.format(options['conclusion_2012_color'])"
-              tal:content="conclusion_2012">Partially adequate (2)</div>
+              tal:content="python: '{} ({})'.format(assessment.overall_conclusion[1], assessment.overall_conclusion[0])">Very poor (1)</div>
+            <div tal:content="options/change_since_2012">-1</div>
+          </td>
+          <td class="overall-values fixed-right"
+              tal:define="phase_score python: assessment.phase_overall_scores">
+            <div tal:attributes="class python: 'as-value as-value-{}'.format(phase_score.coherence['color'])"
+                 tal:define="score python: phase_score.get_score_for_phase('coherence');"
+              tal:content="score">65.5</div>
+            <div tal:attributes="class python: 'as-value as-value-{}'.format(assessment.overall_conclusion_color)"
+              tal:content="assessment/overall_score">Very poor (1)</div>
             <div tal:content="options/change_since_2012">-1</div>
           </td>
         </tr>

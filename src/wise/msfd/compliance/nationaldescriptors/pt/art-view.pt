@@ -38,44 +38,7 @@
 
             <div id="assessment-edit-infobox"></div>
 
-            <div class="report-nav fixed">
-              <div class="nav-wrapper">
-                <div class="nav-header">
-                  <button id="report-nav-toggle" class="nav-toggle">
-                    <i class="fa fa-bars"></i>
-                  </button>
-                </div>
-
-                <div class="nav-body">
-                  <div class="art-title">
-                    <a href="" tal:attributes="href view/_country_folder/absolute_url"
-                      tal:content="view/country_name"
-                      target="_blank">EU</a>
-                  </div>
-
-                  <div class="nav-articles">
-                    <div tal:repeat="art view/_descriptor_folder/contentValues" class="art">
-                      <div class="art-middle">
-                        <a tal:content="art/title_or_id"
-                          tal:attributes="href art/absolute_url"
-                          target="_blank">
-                          Article 9
-                        </a>
-                      </div>
-                      <div class="art-links">
-                        <a href="" tal:attributes="href string:${art/absolute_url}/@@edit-assessment-data-2018" target="_blank">Edit</a>
-                        <a tal:attributes="href string:${art/absolute_url}/@@view-report-data-2018"
-                          target="_blank">
-                          2018</a>
-                        <a tal:attributes="href string:${art/absolute_url}/@@view-report-data-2012"
-                          target="_blank">
-                          2012</a>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
+            <div metal:use-macro="context/wise-macros/macros/nat-desc-report-nav"></div>
           </div>
 
           <div id="nat-desc-art-menu">

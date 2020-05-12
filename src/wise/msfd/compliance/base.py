@@ -21,14 +21,15 @@ from Products.Five.browser import BrowserView
 from wise.msfd import db, sql, sql2018
 from wise.msfd.base import BasePublicPage
 from wise.msfd.compliance.scoring import Score  # , compute_score
-from wise.msfd.compliance.utils import get_assessors
+from wise.msfd.compliance.utils import get_assessors, ordered_regions_sortkey
 from wise.msfd.compliance.vocabulary import ASSESSED_ARTICLES  # , REGIONS
 from wise.msfd.gescomponents import (get_all_descriptors, get_descriptor,
                                      get_features, get_marine_units,
                                      sorted_criterions, Descriptor)
 from wise.msfd.translation.interfaces import ITranslationContext
 from wise.msfd.utils import (Tab, _parse_files_in_location, current_date,
-                             natural_sort_key, row_to_dict, timeit)
+                             fixedorder_sortkey, natural_sort_key,
+                             row_to_dict, timeit)
 
 from . import interfaces
 from .interfaces import ICountryDescriptorsFolder
@@ -222,6 +223,7 @@ class BaseComplianceView(BrowserView, BasePublicPage, SecurityMixin):
     _translatables = None
     status_colors = STATUS_COLORS
     process_status_colors = PROCESS_STATUS_COLORS
+    ARTICLE_ORDER = ('Art9', 'Art8', 'Art10')
 
     def get_current_user_roles(self, context=None):
         current_user = user.get_current().getId()
@@ -451,6 +453,50 @@ class BaseComplianceView(BrowserView, BasePublicPage, SecurityMixin):
         return self.get_parent_by_iface(
             interfaces.IComplianceModuleFolder
         )
+
+    def get_region_folders(self, country_folder=None):
+        if not country_folder:
+            country_folder = self._country_folder
+
+        region_folders = self.filter_contentvalues_by_iface(
+            country_folder, interfaces.INationalRegionDescriptorFolder
+        )
+
+        region_folders_sorted = sorted(
+            region_folders, key=lambda i: ordered_regions_sortkey(i.id.upper())
+        )
+
+        return region_folders_sorted
+
+    def get_descr_folders(self, region_folder):
+        contents = self.filter_contentvalues_by_iface(
+            region_folder, interfaces.IDescriptorFolder
+        )
+
+        # D1 Biodiversity is redundant as assessments are all at finer level
+        filtered_contents = [x for x in contents if x.id != 'd1']
+
+        return filtered_contents
+
+    def get_article_folders(self, descr_folder):
+        article_folders = self.filter_contentvalues_by_iface(
+            descr_folder, interfaces.INationalDescriptorAssessment
+        )
+
+        article_folders = sorted(
+            article_folders,
+            key=lambda i: fixedorder_sortkey(i.title, self.ARTICLE_ORDER)
+        )
+
+        return article_folders
+
+    def filter_contentvalues_by_iface(self, folder, interface):
+        res = [
+            f for f in folder.contentValues()
+            if interface.providedBy(f)
+        ]
+
+        return res
 
     def get_wf_state_id(self, context):
         state = get_state(context)

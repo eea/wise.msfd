@@ -2,11 +2,6 @@
   <div class="col-md-12">
     <table class="table table-condensed assessment-data-table assessment-header">
       <tr>
-        <th>Reported by</th>
-        <td tal:attributes="colspan view/colspan"
-           tal:content="options/report_by"/>
-      </tr>
-      <tr>
         <th>Assessment by</th>
         <td tal:attributes="colspan view/colspan">
           <span tal:content="structure options/assessors">Milieu</span>
@@ -19,16 +14,6 @@
         <th>Date assessed</th>
         <td tal:attributes="colspan view/colspan"
            tal:content="options/assess_date"/>
-      </tr>
-      <tr>
-        <th>Commission technical report</th>
-        <td tal:attributes="colspan view/colspan"
-          tal:define="sf options/source_file;
-          href python: sf[1];
-          text python: sf[0];
-          ">
-          <a tal:attributes="href href" tal:content="text"/>
-        </td>
       </tr>
     </table>
   </div>

@@ -209,8 +209,7 @@ span.has-new-comments {
     visibility: visible;
   }
 }
-
-#container-assessment-data-2018 {
+#container-assessment-data-2018, #container-assessment-data-2012 {
   position: relative;
 
   .table-wrap {
@@ -235,30 +234,57 @@ span.has-new-comments {
         padding: 5px;
         margin-right: -3px;
         width: 2000px;
+
+        label {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
       }
     }
     &.fixed-right {
       min-width: 150px;
       width: 150px;
+      text-align: center;
+      vertical-align: middle;
     }
   }
 
   .form-assessment-summary {
     padding: 5px;
-    border-top: 1px solid #ddd;
+    border-top: 1px solid #ccc;
   }
 
   .overall-headers, .overall-values {
     height: 100%;
     padding: 0px;
 
+    &.fixed-right {
+      vertical-align: top;
+    }
+
     div {
       padding: 1px 5px;
       height: 55px;
-      border: 1px solid #ddd;
+      border: 1px solid #ccc;
       //margin: -1px;
       overflow: hidden;
       width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+  }
+}
+
+#container-assessment-data-2012 {
+  .overall-headers {
+    div {
+      height: 76px;
+      background-color: #eee;
+      color: #333;
+      border: 0px;
+      border-bottom: 1px solid #ccc;
     }
   }
 }
@@ -532,7 +558,7 @@ table.comp-c-listing {
 
     .nav-articles {
       display: flex;
-      border-top: 2px solid #fff;
+      border-top: 1px solid #fff;
     }
 
     .art-middle {
@@ -542,8 +568,10 @@ table.comp-c-listing {
         border-bottom: 1px solid #fff;
       }
     }
-
-    .art-title {
+    .nav-region:not(:last-child) {
+      border-bottom: 3px solid #fff;
+    }
+    .art-title, .nav-regions {
       a {
         color: #fff;
         font-size: 17px;
@@ -560,9 +588,16 @@ table.comp-c-listing {
         color: #0071b3;
       }
     }
+    .art-title {
+      border-bottom: 3px solid #fff;
+
+      a {
+        font-size: 20px;
+      }
+    }
 
     .art:not(:last-child) {
-      border-right: 2px solid #fff;
+      border-right: 1px solid #fff;
     }
 
     .art {

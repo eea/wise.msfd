@@ -34,20 +34,20 @@ additional_fields = {
 
 summary_fields = (
     ('assessment_summary', u'Assessment summary'),
-    ('progress', u'Progress assessment'),
+    ('progress', u'Progress since 2012'),
     ('recommendations', u'Recommendations for Member State'),
 )
 
 reg_summary_fields = (
     ('assessment_summary', u'Assessment summary'),
-    ('progress', u'Progress assessment'),
+    ('progress', u'Progress since 2012'),
     ('recommendations', u'Recommendations'),
 )
 
 # TODO not used
 progress_fields = (
     ('assessment_summary', u'Assessment summary'),
-    ('progress', u'Progress assessment'),
+    ('progress', u'Progress since 2012'),
     ('recommendations', u'Recommendations for Member State'),
 )
 

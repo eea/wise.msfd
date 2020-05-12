@@ -7,11 +7,6 @@ import logging
 
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 from Products.statusmessages.interfaces import IStatusMessage
-from wise.msfd.compliance.interfaces import (IDescriptorFolder,
-                                             INationalDescriptorAssessment,
-                                             INationalDescriptorsFolder,
-                                             INationalRegionDescriptorFolder)
-from wise.msfd.compliance.utils import ordered_regions_sortkey
 from wise.msfd.data import get_report_filename
 from wise.msfd.translation import get_translated, retrieve_translation
 from wise.msfd.utils import (ItemList, TemplateMixin, db_objects_to_dict,
@@ -28,7 +23,7 @@ from ..nationaldescriptors.base import BaseView
 from .base import BaseNatSummaryView
 from .descriptor_assessments import DescriptorLevelAssessments
 from .introduction import Introduction
-from .odt_utils import (create_heading, create_paragraph, create_table,
+from .odt_utils import (create_heading, create_paragraph,
                         create_table_summary, setup_document_styles)
 
 logger = logging.getLogger('wise.msfd')
@@ -63,39 +58,6 @@ class SummaryAssessment(BaseNatSummaryView):
 
         self.overall_scores = overall_scores
         self.nat_desc_country_folder = nat_desc_country_folder
-
-    def get_region_folders(self, country_folder):
-        region_folders = self.filter_contentvalues_by_iface(
-            country_folder, INationalRegionDescriptorFolder
-        )
-
-        region_folders_sorted = sorted(
-            region_folders, key=lambda i: ordered_regions_sortkey(i.id.upper())
-        )
-
-        return region_folders_sorted
-
-    def get_descr_folders(self, region_folder):
-        contents = self.filter_contentvalues_by_iface(
-            region_folder, IDescriptorFolder
-        )
-
-        # D1 Biodiversity is redundant as assessments are all at finer level
-        filtered_contents = [x for x in contents if x.id != 'd1']
-
-        return filtered_contents
-
-    def get_article_folders(self, descr_folder):
-        article_folders = self.filter_contentvalues_by_iface(
-            descr_folder, INationalDescriptorAssessment
-        )
-
-        article_folders = sorted(
-            article_folders,
-            key=lambda i: fixedorder_sortkey(i.title, self.ARTICLE_ORDER)
-        )
-
-        return article_folders
 
     def get_overall_score(self, region_code, descriptor, article):
         color = self.overall_scores[(region_code, descriptor, article)][1]

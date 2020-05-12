@@ -200,7 +200,7 @@ def create_table_descr(document, article_data):
 
     row = odf_create_row()
     row.set_values([
-        u"Progress assessment: {}".format(
+        u"Progress since 2012: {}".format(
             article_data.progress_assessment or '-'
         ),
         u"Coherence: {}".format(article_data.coherence[0])

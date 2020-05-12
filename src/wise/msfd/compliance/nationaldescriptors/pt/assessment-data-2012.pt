@@ -1,4 +1,5 @@
-<div tal:define="assessments options/data">
+<div id="container-assessment-data-2012"
+    tal:define="assessments options/data">
   <tal:rep tal:repeat="country assessments">
 
     <span tal:condition="python: len(assessments) > 1"
@@ -6,9 +7,8 @@
 
     <table class="table table-condensed assessment-data-table">
       <tbody>
-        <!--<div tal:content="assessments/?country">asd</div>-->
         <tal:def tal:define="assessment assessments/?country;
-          colspan python:3">
+          colspan python:4">
           <tal:rep tal:repeat="crit assessment/criteria">
             <tr>
               <th tal:content="crit/crit_name">
@@ -19,20 +19,27 @@
             </tr>
           </tal:rep>
           <tr>
-            <th rowspan="3">Assessment summary</th>
+            <th rowspan="2">Assessment summary</th>
             <td tal:content="assessment/summary"
-              tal:attributes="rowspan string:3;
-              colspan python:colspan - 2">
+              tal:attributes="rowspan string:2;
+              colspan python:colspan - 3">
               Summary
             </td>
+            <td class="overall-headers fixed-right" rowspan="2">
+              <div>2012 Adequacy</div>
+            </td>
+            <th>Conclusion</th>
+            <th>Score</th>
           </tr>
-          <tr class="overall-score">
-            <th>Overall score</th>
-            <td tal:content="python: int(assessment.score)">2</td>
-          </tr>
-          <tr class="overall-score">
-            <th>Overall conclusion</th>
-            <td tal:content="assessment/overall_ass">Partially adequate</td>
+          <tr tal:define="css_class python: 'as-value as-value-{}'.format(view.get_color_for_score(assessment.score))">
+            <td class="overall-values fixed-right">
+              <div tal:attributes="class css_class"
+                  tal:content="assessment/overall_ass"></div>
+            </td>
+            <td class="overall-values fixed-right">
+              <div tal:attributes="class css_class"
+                  tal:content="python: int(assessment.score)"></div>
+            </td>
           </tr>
         </tal:def>
       </tbody>

@@ -22,8 +22,6 @@ class BaseNatSummaryView(BaseComplianceView):
     _translatables = None
     _translatable_values = []
 
-    ARTICLE_ORDER = ('Art9', 'Art8', 'Art10')
-
     def _format_date(self, date):
         if not date:
             return '-'
@@ -103,14 +101,6 @@ class BaseNatSummaryView(BaseComplianceView):
         return self.get_parent_by_iface(
             interfaces.INationalSummaryCountryFolder
         )
-
-    def filter_contentvalues_by_iface(self, folder, interface):
-        res = [
-            f for f in folder.contentValues()
-            if interface.providedBy(f)
-        ]
-
-        return res
 
     @property
     def available_countries(self):
