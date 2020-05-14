@@ -945,10 +945,17 @@ https://svn.eionet.europa.eu/repositories/Reportnet/Dataflows/MarineDirective/MS
                                                    order,
                                                    )
 
-        data_by_mru = group_by_mru(data)
+            data_by_mru = group_by_mru(data)
+
+        if self.article == 'Art10':
+            data_by_mru = group_by_mru(data)
 
         if self.article == 'Art9':
-            data_by_mru = consolidate_date_by_mru(data_by_mru)
+            # data_by_mru = consolidate_date_by_mru(data_by_mru)
+            data_by_mru = consolidate_singlevalue_to_list(
+                data, 'MarineReportingUnit'
+            )
+            data_by_mru = {"": data_by_mru}
             insert_missing_criterions(data_by_mru, self.descriptor_obj)
 
         res = []

@@ -41,15 +41,16 @@
     <element skip='true' name='CountryCode'></element>
 
     <element section="ges" setlevel="0" name="GESComponent" convert="ges_component">GES component</element>
-    <element section="ges" name="JustificationNonUse" translate="true">Justification for non-use of criterion</element>
+    <element section="ges" setlevel="1" name="MarineReportingUnit">Marine reporting units</element>
+    <element section="gesdetermination" name="Features" label="features" convert="csv_ges_labels_list">Features</element>
+    <element section="gesdetermination" setlevel="2" name="GESDescription" translate="true">GES description</element>
+    <element section="gesdetermination" name="DeterminationDate">Determination date</element>
+    <element section="gesdetermination" name="UpdateType">Update type</element>
+    <element section="ges" setlevel="0" name="JustificationNonUse" translate="true">Justification for non-use of criterion</element>
     <element section="ges" name="JustificationDelay" translate="true">
       Justification for delay in setting EU/regional requirements
     </element>
 
-    <element section="gesdetermination" setlevel="1" name="Features" label="features" convert="csv_ges_labels_list">Features</element>
-    <element section="gesdetermination" setlevel="2" name="GESDescription" translate="true">GES description</element>
-    <element section="gesdetermination" name="DeterminationDate">Determination date</element>
-    <element section="gesdetermination" name="UpdateType">Update type</element>
   </Art9>
 
   <Art8>

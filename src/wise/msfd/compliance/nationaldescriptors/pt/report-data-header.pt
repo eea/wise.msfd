@@ -14,7 +14,7 @@
       <div class="back-to-art">
         <a href="./">
           <i class='fa fa-level-up'></i>
-          Back to Assessment overview
+          Back to descriptor assessment overview
         </a>
       </div>
 
@@ -29,23 +29,39 @@
 
     <table class="table table-bordered table-striped table-condensed">
       <tr>
+        <td>Report type</td>
+        <td>Member State report to Commission</td>
+      </tr>
+      <tr>
+        <td>MSFD Article</td>
+        <td tal:content="view/article_name"/>
+      </tr>
+      <tr tal:condition="options/report_due">
+        <td>Report due</td>
+        <td tal:content="options/report_due"/>
+      </tr>
+      <tr tal:condition="view/is_primary_article">
+        <td>GES Descriptor</td>
+        <td tal:content="python:view.descriptor_obj.title"/>
+      </tr>
+      <tr>
         <td>Member State</td>
         <td tal:content="python:view.country_name"/>
       </tr>
       <tr tal:condition="view/is_primary_article">
-        <td>Region(s) and subregion(s)</td>
+        <td>Region/subregion</td>
         <td tal:content="view/country_region_name"/>
       </tr>
-      <tr tal:condition="view/is_primary_article">
-        <td>Descriptor</td>
-        <td tal:content="python:view.descriptor_obj.title"/>
+      <tr tal:condition="options/report_by">
+        <td>Reported by</td>
+        <td tal:content="options/report_by"/>
       </tr>
-      <tr>
-        <td>Article reported</td>
-        <td tal:content="view/article_name"/>
+      <tr tal:condition="options/report_date">
+        <td>Report date</td>
+        <td tal:content="options/report_date"/>
       </tr>
       <tr tal:condition="options/source_file">
-        <td>Source file of Member State</td>
+        <td>Report access</td>
         <td>
           <tal:cond tal:condition="python: 'multiple_source_files' not in options or not options['multiple_source_files']">
             <a tal:attributes="href python: options['source_file'][1]"
@@ -63,18 +79,6 @@
             </div>
           </tal:cond>
         </td>
-      </tr>
-      <tr tal:condition="options/report_by">
-        <td>Reported by</td>
-        <td tal:content="options/report_by"/>
-      </tr>
-      <tr tal:condition="options/report_due">
-        <td>Date report due</td>
-        <td tal:content="options/report_due"/>
-      </tr>
-      <tr tal:condition="options/report_date">
-        <td>Date reported by Member State</td>
-        <td tal:content="options/report_date"/>
       </tr>
     </table>
 
