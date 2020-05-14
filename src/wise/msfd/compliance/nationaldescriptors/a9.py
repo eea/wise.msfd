@@ -72,18 +72,17 @@ class A9Item(Item):
             self.siblings.append(n)
 
         attrs = [
-            ('GES descriptor, criterion or indicator [GEScomponent]',
-             self.criterion),
+            ('GES component', self.criterion),
             ('Method used', self.method_used),
-            ('Marine reporting unit(s)', lambda: muids),
-            ('GES component', self.ges_component),
-            ('Feature(s) reported', self.feature),
+            ('Marine reporting units', lambda: muids),
+            ('Feature', self.feature),
+            ('Criterion/indicator', self.ges_component),
             ('GES description', self.ges_description),
-            ('Threshold value(s)', self.threshold_value),
+            ('Threshold values', self.threshold_value),
             ('Threshold value unit', self.threshold_value_unit),
+            ('Proportion of area to achieve threshold value', self.proportion),
             ('Reference point type', self.reference_point_type),
             ('Baseline', self.baseline),
-            ('Proportion', self.proportion),
             ('Assessment method', self.assessment_method),
             ('Development status', self.development_status),
         ]
@@ -99,9 +98,17 @@ class A9Item(Item):
         return to_html(text)
 
     def criterion(self):
-
         crit = criteria_from_gescomponent(self.id)
+        ges_comp = get_ges_component(crit)
 
+        criterion_2012 = [x for x in ges_comp.alternatives if x.id == crit]
+
+        if criterion_2012:
+            c = criterion_2012[0]
+
+            return "{} {}".format(c.id, c.title)
+
+        return ges_comp.title
         return get_ges_component(crit)
 
     def feature(self):

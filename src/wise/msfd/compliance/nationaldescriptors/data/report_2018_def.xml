@@ -5,43 +5,41 @@
     <element skip='true' name='Region'></element>
     <element skip='true' name='ReportedFileLink'></element>
     <element skip='true' name='ReportingDate'></element>
-    <element skip='true' name='MarineReportingUnit'></element>
     <element skip='true' name='CountryCode'></element>
 
-    <element section="target" setlevel="0" name="Features" label="features" convert="csv_ges_labels_list">Feature(s) reported</element>
-    <element section="target" setlevel="1" name="TargetCode" label="targets" convert="csv_ges_labels_inverse_list">Target code</element>
-
-    <element section="target" name="Description" translate="true">Description target</element>
+    <element section="target" setlevel="0" name="TargetCode" labelDisabled="targets" convertDisabled="csv_ges_labels_inverse_list">Target code</element>
+    <element section="target" name="Description" translate="true">Target description</element>
+    <element section="target" setlevel="1" name="Features" label="features" convert="csv_ges_labels_list">Feature(s)</element>
     <element section="target" name="GESComponents" convert="ges_component_list" filter="all_descriptor_ids">GES components</element>
-    <element section="target" name="TimeScale">Time scale</element>
+    <element section="target" name="TimeScale">Timescale</element>
     <element section="target" name="UpdateDate">Update date</element>
     <element section="target" name="UpdateType">Update type</element>
-    <element section="target" name="Measures">Related measures</element>
+    <element section="target" name="MarineReportingUnit" label="mrus" convert="inverse_label">Marine reporting unit</element>
 
     <element section="progressassessment" setlevel="2" name="Element">Element</element>
     <element section="progressassessment" name="Element2">Element 2</element>
     <element section="progressassessment" name="Parameter" label="parameters">Parameter</element>
-    <element section="progressassessment" name="ParameterOther" translate="true">Parameter other</element>
+    <element section="progressassessment" name="ParameterOther" translate="true">Parameter - other</element>
     <element section="progressassessment" name="TargetValue">Target value</element>
-    <element section="progressassessment" name="ValueAchievedUpper">Value achieved upper</element>
-    <element section="progressassessment" name="ValueAchievedLower">Value achieved lower</element>
+    <element section="progressassessment" name="ValueAchievedUpper">Value achieved - upper</element>
+    <element section="progressassessment" name="ValueAchievedLower">Value achieved - lower</element>
     <element section="progressassessment" name="ValueUnit" label="units">Value unit</element>
-    <element section="progressassessment" name="ValueUnitOther" translate="true">Value unit other</element>
+    <element section="progressassessment" name="ValueUnitOther" translate="true">Value unit - other</element>
     <element section="progressassessment" name="TargetStatus">Target status</element>
     <element section="progressassessment" name="AssessmentPeriod">Assessment period</element>
-    <element section="progressassessment" name="ProgressDescription" translate="true">Description target assessment</element>
+    <element section="progressassessment" name="ProgressDescription" translate="true">Target assessment description</element>
     <element section="progressassessment" name="Indicators" label="indicators" convert="csv_ges_labels_inverse_list_indicators">Related indicator</element>
+    <element section="progressassessment" name="Measures">Related measures</element>
   </Art10>
 
   <Art9>
     <element skip='true' name='Region'></element>
     <element skip='true' name='ReportedFileLink'></element>
     <element skip='true' name='ReportingDate'></element>
-    <element skip='true' name='MarineReportingUnit'></element>
     <element skip='true' name='CountryCode'></element>
 
     <element section="ges" setlevel="0" name="GESComponent" convert="ges_component">GES component</element>
-    <element section="ges" setlevel="1" name="MarineReportingUnit">Marine reporting units</element>
+    <element section="ges" setlevel="1" name="MarineReportingUnit" label="mrus" convert="inverse_label">Marine reporting units</element>
     <element section="gesdetermination" name="Features" label="features" convert="csv_ges_labels_list">Features</element>
     <element section="gesdetermination" setlevel="2" name="GESDescription" translate="true">GES description</element>
     <element section="gesdetermination" name="DeterminationDate">Determination date</element>

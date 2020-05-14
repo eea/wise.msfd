@@ -712,6 +712,11 @@ https://svn.eionet.europa.eu/repositories/Reportnet/Dataflows/MarineDirective/MS
 
         return order_by.get(descr, order_by['default'])
 
+    def _get_order_cols_Art10(self):
+        order = ('TargetCode', 'Features', 'Element')
+
+        return order
+
     def get_data_from_view_Art8(self):
         sess = db.session()
         t = sql2018.t_V_ART8_GES_2018
@@ -810,7 +815,7 @@ https://svn.eionet.europa.eu/repositories/Reportnet/Dataflows/MarineDirective/MS
 
         count, res = db.get_all_records_ordered(
             t,
-            ('TargetCode', 'Features', 'Element'),
+            self._get_order_cols_Art10(),
             *conditions
         )
 
@@ -948,7 +953,12 @@ https://svn.eionet.europa.eu/repositories/Reportnet/Dataflows/MarineDirective/MS
             data_by_mru = group_by_mru(data)
 
         if self.article == 'Art10':
-            data_by_mru = group_by_mru(data)
+            # data_by_mru = group_by_mru(data)
+            order = self._get_order_cols_Art10()
+            data_by_mru = consolidate_singlevalue_to_list(
+                data, 'MarineReportingUnit', order
+            )
+            data_by_mru = {"": data_by_mru}
 
         if self.article == 'Art9':
             # data_by_mru = consolidate_date_by_mru(data_by_mru)

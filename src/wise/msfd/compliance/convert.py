@@ -30,6 +30,13 @@ def ges_component(field, value, lang):
     return criterion
 
 
+def inverse_label(field, value, lang):
+    title = GES_LABELS.get(field.label_collection, value)
+    item = ItemLabel(title, value)
+
+    return item
+
+
 def ges_component_list(field, value, lang):
     values = value.split(',')
     rows = [ges_component(None, v, lang) for v in values]

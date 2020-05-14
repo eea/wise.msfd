@@ -1,5 +1,6 @@
 <div class="report-section" tal:define="data view/rows">
-  <h4>
+  <h4 tal:condition="python: False">
+    <!-- REMOVED Header-->
     <tal:rep tal:repeat="muid python: view.muids_labeled[:-1]">
       <em tal:attributes="title python:muid.name"
           tal:content="python: muid.title">DE_ANS</em>,
