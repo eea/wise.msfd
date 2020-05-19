@@ -27,15 +27,15 @@
         </button>
       </div>
       <h2 tal:content="structure view/title" class="report-title">Title here</h2>
-      <h4 class="process-phase-title" >
-        Current phase: <span tal:content="python: view.current_phase[1]">Adequacy</span>
-      </h4>
+      <!--<h4 class="process-phase-title" >-->
+        <!--Current phase: <span tal:content="python: view.current_phase[1]">Adequacy</span>-->
+      <!--</h4>-->
 
       <div id="report-data-navigation">
         <div class="back-to-descr">
           <a href="./">
             <i class='fa fa-level-up'></i>
-            Back to Assessment overview
+            Back to descriptor assessment overview
           </a>
         </div>
 
@@ -60,16 +60,16 @@
                 <div class="body">
                   <div class="left">
                     <h4>
-                      <span
-                        tal:on-error="nothing"
-                        class="help-popover fa fa-info-circle fa-s"
-                        data-trigger="hover"
-                        data-html="true"
-                        tal:condition="subform/_question_type/title"
-                        tal:attributes="title string: Type: ${subform/_question_type/title};
-                        data-content string: Phase: ${subform/_question_phase}"
-                        >
-                      </span>
+                      <!--<span-->
+                        <!--tal:on-error="nothing"-->
+                        <!--class="help-popover fa fa-info-circle fa-s"-->
+                        <!--data-trigger="hover"-->
+                        <!--data-html="true"-->
+                        <!--tal:condition="subform/_question_type/title"-->
+                        <!--tal:attributes="title string: Type: ${subform/_question_type/title};-->
+                        <!--data-content string: Phase: ${subform/_question_phase}"-->
+                        <!--&gt;-->
+                      <!--</span>-->
                       <span tal:content="subform/title">Question here</span>
                       <span style="float:right;"
                           tal:define="last_change python: view.format_last_change(subform._last_update)"

@@ -12,7 +12,7 @@
       <div class="back-to-art">
         <a href="./">
           <i class='fa fa-level-up'></i>
-          Back to Assessment overview
+          Back to descriptor assessment overview
         </a>
       </div>
 
@@ -22,24 +22,28 @@
 
     <table class="table table-bordered table-striped table-condensed">
       <tr>
-        <td>Region</td>
-        <td tal:content="view/country_region_name"/>
+        <td>Report type</td>
+        <td>Member State report to Commission</td>
       </tr>
       <tr>
-        <td>Descriptor</td>
+        <td>MSFD Article</td>
+        <td tal:content="view/article_name"/>
+      </tr>
+      <tr>
+        <td>Report due</td>
+        <td tal:content="options/report_due"/>
+      </tr>
+      <tr>
+        <td>GES Descriptor</td>
         <td tal:content="python:view.descriptor_obj.title"/>
       </tr>
       <tr>
-        <td>Article reported</td>
-        <td tal:content="view/article_name"/>
+        <td>Region/subregion</td>
+        <td tal:content="view/country_region_name"/>
       </tr>
       <tr tal:condition="options/report_by">
         <td>Reported by</td>
         <td tal:content="options/report_by"/>
-      </tr>
-      <tr>
-        <td>Date report due</td>
-        <td tal:content="options/report_due"/>
       </tr>
     </table>
 

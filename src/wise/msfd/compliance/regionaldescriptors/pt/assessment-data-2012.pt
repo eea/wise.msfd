@@ -1,12 +1,12 @@
-<div tal:define="assessments options/data">
-
+<div id="container-assessment-data-2012"
+    tal:define="assessments options/data">
   <tal:rep tal:repeat="assessment assessments">
 
     <h4 tal:content="assessment/article">Article 8</h4>
 
     <table class="table table-condensed assessment-data-table">
       <tbody>
-        <tal:def tal:define="colspan python:3">
+        <tal:def tal:define="colspan python:4">
           <tr>
             <th>Coherence
             </th>
@@ -14,21 +14,33 @@
               tal:attributes="colspan colspan">Text</td>
           </tr>
           <tr>
-            <th rowspan="3">Assessment summary</th>
+            <th>Assessment summary</th>
             <td tal:content="assessment/summary"
-              tal:attributes="rowspan string:3;
-              colspan python:colspan - 2">
+              tal:attributes="colspan colspan">
               Summary
             </td>
           </tr>
-          <tr class="overall-score">
-            <th>Overall score</th>
-            <td tal:content="python: int(assessment.overall_score)">2</td>
+
+          <tr>
+            <td rowspan="2"></td>
+            <td rowspan="2"></td>
+            <td class="overall-headers fixed-right" rowspan="2">
+              <div>2012 Adequacy</div>
+            </td>
+            <th>Conclusion</th>
+            <th>Score</th>
           </tr>
-          <tr class="overall-score">
-            <th>Overall conclusion</th>
-            <td tal:content="assessment/conclusion">Partially adequate</td>
+          <tr tal:define="css_class python: 'as-value as-value-{}'.format(view.get_color_for_score(int(assessment.overall_score)))">
+            <td class="overall-values fixed-right">
+              <div tal:attributes="class css_class"
+                  tal:content="assessment/conclusion"></div>
+            </td>
+            <td class="overall-values fixed-right">
+              <div tal:attributes="class css_class"
+                  tal:content="python: int(assessment.overall_score)"></div>
+            </td>
           </tr>
+
         </tal:def>
       </tbody>
     </table>

@@ -1,5 +1,4 @@
 import logging
-from collections import namedtuple
 from io import BytesIO
 
 from sqlalchemy import or_
@@ -8,13 +7,10 @@ import xlsxwriter
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 from Products.statusmessages.interfaces import IStatusMessage
 from wise.msfd import db, sql2018
-from wise.msfd.compliance.base import NAT_DESC_QUESTIONS
-from wise.msfd.compliance.vocabulary import REGIONAL_DESCRIPTORS_REGIONS
 from wise.msfd.gescomponents import get_features, get_parameters
 from wise.msfd.translation import retrieve_translation
 from wise.msfd.utils import ItemList, timeit
 
-from ..nationaldescriptors.main import CONCLUSION_COLOR_TABLE
 from ..nationaldescriptors.utils import consolidate_singlevalue_to_list
 from .a8 import RegDescA82012, RegDescA82018Row
 from .a9 import RegDescA92012, RegDescA92018Row
@@ -22,7 +18,6 @@ from .a10 import RegDescA102012, RegDescA102018Row
 from .base import BaseRegComplianceView
 from .data import get_report_definition
 from .proxy import Proxy2018
-from .utils import RegionalCompoundRow
 
 logger = logging.getLogger('wise.msfd')
 
@@ -238,108 +233,6 @@ class RegReportData2018(BaseRegComplianceView):
 
         return out_filtered
 
-    def get_nat_desc_assessment_data(self, country_code, region, descriptor,
-                                     article):
-        catalog = self.context.portal_catalog
-        p = "/Plone/marine/compliance-module/national-descriptors-assessments"
-        path = p + "/{}/{}/{}/{}".format(country_code.lower(), region.lower(),
-                                         descriptor.lower(), article.lower())
-
-        brains = catalog.searchResults(
-            portal_type='wise.msfd.nationaldescriptorassessment',
-            path={
-                "query": path
-            }
-
-        )
-
-        if not brains:
-            return {}
-
-        obj = brains[0].getObject()
-
-        if not hasattr(obj, 'saved_assessment_data'):
-            return {}
-
-        return obj.saved_assessment_data.last()
-
-    def _conclusion_color(self, score):
-        if not score:
-            return 0
-
-        score_value = score.score_value
-
-        conclusion_color = CONCLUSION_COLOR_TABLE[score_value]
-
-        return conclusion_color
-
-    def get_adequacy_assessment_data(self):
-        Field = namedtuple('Field', ['name', 'title'])
-
-        countries = self.available_countries
-        questions = NAT_DESC_QUESTIONS.get(self.article, [])
-        region = self.country_region_code
-        subregions = [r.subregions for r in REGIONAL_DESCRIPTORS_REGIONS
-                      if region in r.code][0]
-
-        descriptor = self.descriptor
-        article = self.article
-
-        res = []
-
-        for question in questions:
-            q_id = question.id
-            field = Field(q_id, q_id)
-
-            rows = []
-            conclusion_values = []
-            summary_values = []
-
-            for country_code, country_name in countries:
-                country_concl = []
-                country_sums = []
-
-                country_regions = [
-                    r.code
-
-                    for r in REGIONAL_DESCRIPTORS_REGIONS
-
-                    if len(r.subregions) == 1
-                    and country_code in r.countries
-                    and r.code in subregions
-                ]
-
-                for subregion in country_regions:
-                    assess_data = self.get_nat_desc_assessment_data(
-                        country_code, subregion, descriptor, article
-                    )
-                    score = assess_data.get('{}_{}_Score'.format(article,
-                                                                 q_id))
-                    summary = assess_data.get('{}_{}_Summary'.format(article,
-                                                                     q_id))
-                    summary = summary or "-"
-                    summary = u"<b>{}:</b> {}".format(subregion, summary)
-
-                    conclusion = score and score.conclusion or "-"
-                    conclusion = u"<span class='as-value-{}'>" \
-                                 u"<b>{}:</b> {}</span>".format(
-                                     self._conclusion_color(
-                                         score), subregion, conclusion
-                                 )
-
-                    country_concl.append(conclusion)
-                    country_sums.append(summary)
-
-                conclusion_values.append(ItemList(country_concl))
-                summary_values.append(ItemList(country_sums))
-
-            rows.append((u'Conclusion', conclusion_values))
-            rows.append((u'Summary', summary_values))
-
-            res.append(RegionalCompoundRow(self, self.request, field, rows))
-
-        return res
-
     @db.use_db_session('2018')
     def get_report_data(self):
         # TODO check if data is filtered by features for D1
@@ -368,7 +261,7 @@ class RegReportData2018(BaseRegComplianceView):
 
             result.append(field_data_method())
 
-        result.extend(self.get_adequacy_assessment_data())
+        # result.extend(self.get_adequacy_assessment_data())
 
         return result
 

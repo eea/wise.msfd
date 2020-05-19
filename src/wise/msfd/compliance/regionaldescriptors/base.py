@@ -4,22 +4,190 @@ from itertools import chain
 from plone.api.content import get_state
 from plone.api.portal import get_tool
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
-from wise.msfd.compliance.base import BaseComplianceView
+from wise.msfd.compliance.base import BaseComplianceView, NAT_DESC_QUESTIONS
 from wise.msfd.compliance.vocabulary import REGIONAL_DESCRIPTORS_REGIONS
 from wise.msfd.gescomponents import FEATURES_DB_2018, THEMES_2018_ORDER
 from wise.msfd.labels import get_label
 from wise.msfd.translation import get_detected_lang
-from wise.msfd.utils import ItemLabel, fixedorder_sortkey
+from wise.msfd.utils import ItemLabel, ItemList, fixedorder_sortkey
 
 from .. import interfaces
+from ..nationaldescriptors.main import (ANSWERS_COLOR_TABLE,
+                                        CONCLUSION_COLOR_TABLE)
 from .data import REPORT_DEFS
-from .utils import (compoundrow, get_nat_desc_country_url,
+from .utils import (RegionalCompoundRow, compoundrow, get_nat_desc_country_url,
                     newline_separated_itemlist)
 
 COUNTRY = namedtuple("Country", ["id", "title", "definition", "is_primary"])
 
 
-class BaseRegComplianceView(BaseComplianceView):
+class NationalAssessmentMixin:
+    year = '2018'
+
+    def make_countries_row(self):
+        rows = []
+        country_names = []
+
+        for country in self.available_countries:
+            c_name = country[1]
+
+            country_names.append(c_name)
+
+        rows.append(('', country_names))
+
+        return rows
+
+    def _conclusion_color(self, score):
+        if not score:
+            return 0
+
+        score_value = score.score_value
+
+        conclusion_color = CONCLUSION_COLOR_TABLE[score_value]
+
+        return conclusion_color
+
+    def _answer_color(self, score):
+        if not score:
+            return 0
+
+        conclusion_color = ANSWERS_COLOR_TABLE[score]
+
+        return conclusion_color
+
+    def get_nat_desc_assessment_data(self, country_code, region, descriptor,
+                                     article):
+        catalog = self.context.portal_catalog
+        p = "/Plone/marine/compliance-module/national-descriptors-assessments"
+        path = p + "/{}/{}/{}/{}".format(country_code.lower(), region.lower(),
+                                         descriptor.lower(), article.lower())
+
+        brains = catalog.searchResults(
+            portal_type='wise.msfd.nationaldescriptorassessment',
+            path={
+                "query": path
+            }
+
+        )
+
+        if not brains:
+            return {}
+
+        obj = brains[0].getObject()
+
+        if not hasattr(obj, 'saved_assessment_data'):
+            return {}
+
+        return obj.saved_assessment_data.last()
+
+    def get_adequacy_assessment_data(self):
+        answer_tpl = u"<span class='as-value-{}'><b>{}:</b> {}</span>"
+        Field = namedtuple('Field', ['name', 'title'])
+
+        countries = self.available_countries
+        questions = NAT_DESC_QUESTIONS.get(self.article, [])
+        region = self.country_region_code
+        subregions = [r.subregions for r in REGIONAL_DESCRIPTORS_REGIONS
+                      if region in r.code][0]
+
+        descriptor = self.descriptor
+        article = self.article
+
+        res = [
+            RegionalCompoundRow(
+                self, self.request, Field('Country', 'Country'),
+                self.make_countries_row()
+            )]
+
+        for question in questions:
+            q_id = question.id
+            q_def = question.definition
+            field = Field(q_id, q_def)
+
+            rows = []
+            criteria_values = {
+                x.id: []
+                for x in question.get_assessed_elements(self.descriptor_obj)
+            }
+            conclusion_values = []
+            summary_values = []
+
+            for country_code, country_name in countries:
+                country_concl = []
+                country_sums = []
+                country_crits = {
+                    x.id: []
+                    for x in question.get_assessed_elements(self.descriptor_obj)
+                }
+                country_regions = [
+                    r.code
+
+                    for r in REGIONAL_DESCRIPTORS_REGIONS
+
+                    if len(r.subregions) == 1
+                       and country_code in r.countries
+                       and r.code in subregions
+                ]
+
+                for subregion in country_regions:
+                    assess_data = self.get_nat_desc_assessment_data(
+                        country_code, subregion, descriptor, article
+                    )
+
+                    score = assess_data.get('{}_{}_Score'.format(article,
+                                                                 q_id))
+                    summary = assess_data.get('{}_{}_Summary'.format(article,
+                                                                     q_id))
+                    summary = summary or "-"
+                    summary = u"<b>{}:</b> {}".format(subregion, summary)
+
+                    conclusion = score and score.conclusion or "-"
+                    conclusion = u"<span class='as-value-{}'>" \
+                                 u"<b>{}:</b> {}</span>".format(
+                        self._conclusion_color(
+                            score), subregion, conclusion
+                    )
+
+                    country_concl.append(conclusion)
+                    country_sums.append(summary)
+
+                    for crit_id in country_crits.keys():
+                        option_txt = '-'
+                        option_score = 0
+                        option = assess_data.get('{}_{}_{}'.format(
+                            article, q_id, crit_id)
+                        )
+                        if option is not None:
+                            option_txt = question.answers[option]
+                            option_score = question.scores[option]
+                        _val = answer_tpl.format(
+                            self._answer_color(option_score),
+                            subregion,
+                            option_txt
+                        )
+
+                        country_crits[crit_id].append(_val)
+
+                for crit_id in criteria_values.keys():
+                    criteria_values[crit_id].append(
+                        ItemList(country_crits[crit_id])
+                    )
+
+                conclusion_values.append(ItemList(country_concl))
+                summary_values.append(ItemList(country_sums))
+
+            for crit_id, crit_values in criteria_values.items():
+                rows.append((crit_id, crit_values))
+
+            rows.append((u'Conclusion', conclusion_values))
+            rows.append((u'Summary', summary_values))
+
+            res.append(RegionalCompoundRow(self, self.request, field, rows))
+
+        return res
+
+
+class BaseRegComplianceView(BaseComplianceView, NationalAssessmentMixin):
     report_header_template = ViewPageTemplateFile(
         'pt/report-data-header.pt'
     )

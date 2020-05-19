@@ -68,8 +68,14 @@
                   </div>
                 </form>
               </li>
-
             </ul>
+          </div>
+
+          <div class="report-page-view">
+            <div class="report-section">
+              <h3>Summary of national assessments</h3>
+              <div tal:replace="structure view/national_assessments_2018"></div>
+            </div>
           </div>
 
           <div class="asts-header-data">

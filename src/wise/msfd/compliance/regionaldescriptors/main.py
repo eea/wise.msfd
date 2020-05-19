@@ -6,7 +6,7 @@ from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile as VPTF
 from wise.msfd.compliance.base import REG_DESC_QUESTIONS
 from wise.msfd.compliance.content import AssessmentData
 from wise.msfd.compliance.nationaldescriptors.main import (
-    CONCLUSION_COLOR_TABLE, format_assessment_data)
+    AssessmentDataMixin, CONCLUSION_COLOR_TABLE, format_assessment_data)
 from wise.msfd.gescomponents import get_descriptor
 
 from .assessment import ASSESSMENTS_2012
@@ -87,11 +87,13 @@ class RegionalDescriptorRegionsOverview(BaseRegComplianceView):
         return False
 
 
-class RegionalDescriptorArticleView(BaseRegComplianceView):
+class RegionalDescriptorArticleView(BaseRegComplianceView,
+                                    AssessmentDataMixin):
     section = 'regional-descriptors'
 
     assessment_data_2012_tpl = VPTF('pt/assessment-data-2012.pt')
     assessment_data_2018_tpl = VPTF('pt/assessment-data-2018.pt')
+    national_assessment_tpl= VPTF('pt/report-data.pt')
     _questions = REG_DESC_QUESTIONS
 
     @property
@@ -102,7 +104,7 @@ class RegionalDescriptorArticleView(BaseRegComplianceView):
 
     @property
     def title(self):
-        return u"Regional descriptor / {} / 2018 / {} / {}".format(
+        return u"Commission assessment / {} / 2018 / {} / {}".format(
             self.article,
             self.descriptor_title,
             self.country_region_name,
@@ -234,6 +236,11 @@ class RegionalDescriptorArticleView(BaseRegComplianceView):
 
         can_edit = self.check_permission('wise.msfd: Edit Assessment')
         show_edit_assessors = self.assessor_list and can_edit
+
+        national_assessments_data = self.get_adequacy_assessment_data()
+        self.national_assessments_2018 = self.national_assessment_tpl(
+            data=national_assessments_data, report_header=""
+        )
 
         self.assessment_header_2018_html = self.assessment_header_template(
             report_by="Member state",

@@ -60,16 +60,6 @@
                 <div class="body">
                   <div class="left">
                     <h4>
-                      <span
-                        tal:on-error="nothing"
-                        class="help-popover fa fa-info-circle fa-s"
-                        data-trigger="hover"
-                        data-html="true"
-                        tal:condition="subform/_question_type/title"
-                        tal:attributes="title string: Type: ${subform/_question_type/title};
-                        data-content string: Phase: ${subform/_question_phase}"
-                        >
-                      </span>
                       <span tal:content="subform/title">Question here</span>
                       <span style="float:right;"
                           tal:define="last_change python: view.format_last_change(subform._last_update)"
