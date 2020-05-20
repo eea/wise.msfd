@@ -11,7 +11,8 @@ from wise.msfd.translation import get_translated
 from wise.msfd.utils import fixedorder_sortkey
 
 from .base import BaseRegComplianceView, BaseRegDescRow
-from .utils import compoundrow, compoundrow2012, newline_separated_itemlist
+from .utils import (compoundrow, compoundrow2012, newline_separated_itemlist,
+                    simple_itemlist)
 
 
 class RegDescA102018Row(BaseRegDescRow):
@@ -38,7 +39,7 @@ class RegDescA102018Row(BaseRegDescRow):
                 counted = Counter(vals)
                 crits = [u'{} ({})'.format(k, v) for k, v in counted.items()]
 
-                value = newline_separated_itemlist(crits)
+                value = simple_itemlist(crits)
 
             values.append(value)
 
@@ -151,7 +152,7 @@ class RegDescA102018Row(BaseRegDescRow):
                     k, v, percentage
                 ))
 
-            values.append(newline_separated_itemlist(value, sort=False))
+            values.append(simple_itemlist(value, sort=False))
 
         rows.append(('No. of parameters/elements with quantitative values',
                      values))
@@ -194,7 +195,7 @@ class RegDescA102018Row(BaseRegDescRow):
                 percentage = total and (v / float(total)) * 100 or 0
                 value.append(u"{0} ({1} - {2:0.1f}%)".format(k, v, percentage))
 
-            values.append(newline_separated_itemlist(value))
+            values.append(simple_itemlist(value))
 
         rows.append(('No. of assessments per category', values))
 
@@ -343,7 +344,7 @@ class RegDescA102018Row(BaseRegDescRow):
                     updatetype, found, percentage
                 ))
 
-            values.append(newline_separated_itemlist(value, sort=False))
+            values.append(simple_itemlist(value, sort=False))
 
         rows.append(('No. of targets per category', values))
 

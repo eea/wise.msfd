@@ -11,7 +11,8 @@ from wise.msfd.utils import ItemLabel, fixedorder_sortkey
 
 from ..a8_utils import UtilsArticle8
 from .base import BaseRegComplianceView, BaseRegDescRow
-from .utils import compoundrow, compoundrow2012, newline_separated_itemlist
+from .utils import (compoundrow, compoundrow2012, newline_separated_itemlist,
+                    simple_itemlist)
 
 
 class RegDescA82018Row(BaseRegDescRow):
@@ -134,7 +135,7 @@ class RegDescA82018Row(BaseRegDescRow):
                         )
 
                 value = set(value) or self.not_rep
-                values.append(newline_separated_itemlist(value))
+                values.append(simple_itemlist(value))
 
             rows.append((theme, values))
 
@@ -156,7 +157,7 @@ class RegDescA82018Row(BaseRegDescRow):
             ]
 
             value = set(data) or self.not_rep
-            values.append(newline_separated_itemlist(value))
+            values.append(simple_itemlist(value))
 
         rows.append(('', values))
 
@@ -188,7 +189,7 @@ class RegDescA82018Row(BaseRegDescRow):
                 found = [x for x in data if x == elem_source]
                 value.append(u"{} ({})".format(elem_source, len(found)))
 
-            values.append(newline_separated_itemlist(value))
+            values.append(simple_itemlist(value))
 
         rows.append((u"No. of elements per level", values))
 
@@ -216,20 +217,26 @@ class RegDescA82018Row(BaseRegDescRow):
                 ]
                 value = self.not_rep
 
-                parameters = set([d.Parameter for d in data])
+                parameters = set([
+                    (d.Parameter, d.ParameterOther)
+                    for d in data
+                ])
                 _vals = []
-                for param in parameters:
+                for param, param_other in parameters:
                     cnt = len([
                         r
                         for r in data
-                        if r.Parameter == param
+                        if (r.Parameter == param
+                            and r.ParameterOther == param_other)
                     ])
                     _vals.append(u"{} ({})".format(
-                        self.get_label_for_value(param), cnt)
+                        " - ".join(
+                            (self.get_label_for_value(param), param_other)),
+                        cnt)
                     )
 
                 if data:
-                    value = newline_separated_itemlist(_vals)
+                    value = simple_itemlist(_vals)
 
                 values.append(value)
 
@@ -316,7 +323,7 @@ class RegDescA82018Row(BaseRegDescRow):
 
                     continue
 
-                values.append(newline_separated_itemlist(value))
+                values.append(simple_itemlist(value))
 
             rows.append((ItemLabel(crit.name, crit.title), values))
 
@@ -442,7 +449,7 @@ class RegDescA82018Row(BaseRegDescRow):
                     u"{0} ({1} or {2:.1f}%)".format(trend, found, percent)
                 )
 
-            values.append(newline_separated_itemlist(value, sort=False))
+            values.append(simple_itemlist(value, sort=False))
 
         rows.append((u'No. of trends per category', values))
 
@@ -482,7 +489,7 @@ class RegDescA82018Row(BaseRegDescRow):
                     u"{0} ({1} or {2:.1f}%)".format(param, found, percent)
                 )
 
-            values.append(newline_separated_itemlist(value, sort=False))
+            values.append(simple_itemlist(value, sort=False))
 
         rows.append(('No. of parameters per category', values))
 
@@ -513,7 +520,7 @@ class RegDescA82018Row(BaseRegDescRow):
                 splitted = indic.split(',')
                 indicators.extend(splitted)
 
-            values.append(newline_separated_itemlist(set(indicators)))
+            values.append(simple_itemlist(set(indicators)))
 
         rows.append((u'', values))
 
@@ -556,7 +563,7 @@ class RegDescA82018Row(BaseRegDescRow):
                 )
                 value.append(text)
 
-            values.append(newline_separated_itemlist(value, sort=False))
+            values.append(simple_itemlist(value, sort=False))
 
         rows.append(('No. of criteria per category', values))
 
@@ -598,7 +605,7 @@ class RegDescA82018Row(BaseRegDescRow):
                 )
                 value.append(text)
 
-            values.append(newline_separated_itemlist(value, sort=False))
+            values.append(simple_itemlist(value, sort=False))
 
         rows.append(('No. of elements per category', values))
 
@@ -862,7 +869,7 @@ class RegDescA82018Row(BaseRegDescRow):
                 )
                 value.append(text)
 
-            values.append(newline_separated_itemlist(value))
+            values.append(simple_itemlist(value))
 
         rows.append(('', values))
 
@@ -938,7 +945,7 @@ class RegDescA82018Row(BaseRegDescRow):
                 )
                 value.append(text)
 
-            values.append(newline_separated_itemlist(value))
+            values.append(simple_itemlist(value))
 
         rows.append(('', values))
 

@@ -38,7 +38,7 @@
           </button>
         </tal:cond>
       </div>
-      <div class="tr-text" tal:content='active_text'
+      <div class="tr-text" tal:content='structure active_text'
         tal:attributes= "data-original text; data-translation translation;">
       </div>
 

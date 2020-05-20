@@ -6,12 +6,21 @@ from plone.intelligenttext.transforms import \
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 from wise.msfd import db, sql, utils
 from wise.msfd.data import countries_in_region, muids_by_country
-from wise.msfd.utils import TemplateMixin
+from wise.msfd.utils import ItemList, TemplateMixin
 
 from ..base import BaseComplianceView
 
 # TODO: AreaType for each record can be AA_AssessmentArea, SR_SubRegion and
 # so on. Which one we use?
+
+
+def _itemlist(values, sort):
+    _sorted = values
+
+    if sort:
+        _sorted = sorted(set(values))
+
+    return ItemList(_sorted)
 
 
 def _separated_itemlist(values, separator, sort):
@@ -27,6 +36,11 @@ def newline_separated_itemlist(values, sort=True):
     separator = u"\n"
 
     return _separated_itemlist(values, separator, sort)
+
+
+def simple_itemlist(values, sort=True):
+
+    return _itemlist(values, sort)
 
 
 def emptyline_separated_itemlist(values, sort=True):

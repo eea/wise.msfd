@@ -83,17 +83,16 @@
 
       var $langToolbar = $(this).parents('.lang-toolbar');
       var $trText = $langToolbar.siblings('.tr-text');
-      $langToolbar
-      .toggleClass('blue green');
+      $langToolbar.toggleClass('blue green');
 
       // var $cell = $(this).parents('td.translatable');
       // $('.text', $cell).toggleClass('blue');
       // $('.transl', $cell).toggleClass('green');
 
       if ($langToolbar.hasClass('blue')) {
-        $trText.text($trText.data('original'))
+        $trText.html($trText.data('original'));
       } else if ($langToolbar.hasClass('green'))  {
-        $trText.text($trText.data('translation'))
+        $trText.html($trText.data('translation'));
       }      
 
       // fix height of <th> on this row

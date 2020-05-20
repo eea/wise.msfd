@@ -323,13 +323,15 @@ if (!Array.prototype.last){
     var sep = '...';
     var $cells = $table.find('.tr-text');
     $cells.each(function() {
-      var t = $(this).text()
-      if (t.length > maxchars) {
+      var t = $(this).text();
+      var t_html = $(this).html();
+
+      if (t_html.length > maxchars) {
         $(this).addClass('short');
-        var sh = t.substr(0, 0.75*maxchars) + sep;
-        $(this).text(sh);
+        var sh = t_html.substr(0, 0.75*maxchars) + sep;
+        $(this).html(sh);
         $(this).on('click', function() {
-          $modalContent.html(t);
+          $modalContent.html(t_html);
           $modal.modal('show');
         });
       };
