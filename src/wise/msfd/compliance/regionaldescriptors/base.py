@@ -1,12 +1,16 @@
 from collections import Counter, defaultdict, namedtuple
 from itertools import chain
 
+from eea.cache import cache
+
 from plone.api.content import get_state
 from plone.api.portal import get_tool
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
-from wise.msfd.compliance.base import BaseComplianceView, NAT_DESC_QUESTIONS
+from wise.msfd.compliance.base import (BaseComplianceView, NAT_DESC_QUESTIONS,
+                                       report_data_cache_key)
 from wise.msfd.compliance.vocabulary import REGIONAL_DESCRIPTORS_REGIONS
-from wise.msfd.gescomponents import FEATURES_DB_2018, THEMES_2018_ORDER
+from wise.msfd.gescomponents import (FEATURES_DB_2018, THEMES_2018_ORDER,
+                                     get_marine_units)
 from wise.msfd.labels import get_label
 from wise.msfd.translation import get_detected_lang
 from wise.msfd.utils import ItemLabel, ItemList, fixedorder_sortkey
@@ -82,10 +86,37 @@ class NationalAssessmentMixin:
 
     def get_adequacy_assessment_data(self):
         def get_assessed_elements(self, question):
+            muids = []
+
+            if self.article in ['Art10']:
+                region = self.country_region_code
+                subregions = [
+                    _r.subregions
+                    for _r in REGIONAL_DESCRIPTORS_REGIONS
+                    if region in _r.code
+                ][0]
+
+                for country_code, country_name in self.available_countries:
+                    country_regions = [
+                        r.code
+
+                        for r in REGIONAL_DESCRIPTORS_REGIONS
+
+                        if len(r.subregions) == 1
+                           and country_code in r.countries
+                           and r.code in subregions
+                    ]
+                    for subregion in country_regions:
+                        _muids = self.muids(
+                            country_code.upper(), subregion.upper(), self.year
+                        )
+
+                        muids.extend(_muids)
+
             elements = {
                 x.id: []
                 for x in question.get_assessed_elements(self.descriptor_obj,
-                                                        muids=[])
+                                                        muids=muids)
             }
 
             if not elements:
@@ -212,6 +243,17 @@ class BaseRegComplianceView(BaseComplianceView, NationalAssessmentMixin):
 
     not_rep = u""
     rep = u"Reported"
+
+    @cache(report_data_cache_key)
+    def muids(self, country_code, country_region_code, year):
+        """ Get all Marine Units for a country
+
+        :return: ['BAL- LV- AA- 001', 'BAL- LV- AA- 002', ...]
+        """
+
+        return get_marine_units(country_code,
+                                country_region_code,
+                                year)
 
     @property
     def current_phase(self):
