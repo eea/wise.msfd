@@ -216,14 +216,20 @@ class RegDescA82018Row(BaseRegDescRow):
                 ]
                 value = self.not_rep
 
-                if data:
-                    value = newline_separated_itemlist(
-                        u"{} ({})".format(
-                            self.get_label_for_value(d.Parameter), len(data)
-                        )
-
-                        for d in data
+                parameters = set([d.Parameter for d in data])
+                _vals = []
+                for param in parameters:
+                    cnt = len([
+                        r
+                        for r in data
+                        if r.Parameter == param
+                    ])
+                    _vals.append(u"{} ({})".format(
+                        self.get_label_for_value(param), cnt)
                     )
+
+                if data:
+                    value = newline_separated_itemlist(_vals)
 
                 values.append(value)
 

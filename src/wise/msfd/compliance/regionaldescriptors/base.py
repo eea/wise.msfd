@@ -81,6 +81,18 @@ class NationalAssessmentMixin:
         return obj.saved_assessment_data.last()
 
     def get_adequacy_assessment_data(self):
+        def get_assessed_elements(self, question):
+            elements = {
+                x.id: []
+                for x in question.get_assessed_elements(self.descriptor_obj,
+                                                        muids=[])
+            }
+
+            if not elements:
+                elements['All criteria'] = []
+
+            return elements
+
         answer_tpl = u"<span class='as-value-{}'><b>{}:</b> {}</span>"
         Field = namedtuple('Field', ['name', 'title'])
 
@@ -105,20 +117,14 @@ class NationalAssessmentMixin:
             field = Field(q_id, q_def)
 
             rows = []
-            criteria_values = {
-                x.id: []
-                for x in question.get_assessed_elements(self.descriptor_obj)
-            }
+            criteria_values = get_assessed_elements(self, question)
             conclusion_values = []
             summary_values = []
 
             for country_code, country_name in countries:
                 country_concl = []
                 country_sums = []
-                country_crits = {
-                    x.id: []
-                    for x in question.get_assessed_elements(self.descriptor_obj)
-                }
+                country_crits = get_assessed_elements(self, question)
                 country_regions = [
                     r.code
 
@@ -154,9 +160,14 @@ class NationalAssessmentMixin:
                     for crit_id in country_crits.keys():
                         option_txt = '-'
                         option_score = 0
-                        option = assess_data.get('{}_{}_{}'.format(
-                            article, q_id, crit_id)
-                        )
+                        if question.use_criteria == 'none':
+                            option = assess_data.get('{}_{}'.format(
+                                article, q_id)
+                            )
+                        else:
+                            option = assess_data.get('{}_{}_{}'.format(
+                                article, q_id, crit_id)
+                            )
                         if option is not None:
                             option_txt = question.answers[option]
                             option_score = question.scores[option]
