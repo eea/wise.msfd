@@ -33,17 +33,24 @@ def _separated_itemlist(values, separator, sort):
 
 
 def newline_separated_itemlist(values, sort=True):
+    """ Used for translatable fields/rows instead of ItemList because it
+        is compatible with translations """
+
     separator = u"\n"
 
     return _separated_itemlist(values, separator, sort)
 
 
 def simple_itemlist(values, sort=True):
+    """ This is used for non translatable fields/rows """
 
     return _itemlist(values, sort)
 
 
 def emptyline_separated_itemlist(values, sort=True):
+    """ Used for translatable fields/rows instead of ItemList because it
+        is compatible with translations """
+
     separator = u"\n\n\n"
 
     return _separated_itemlist(values, separator, sort)

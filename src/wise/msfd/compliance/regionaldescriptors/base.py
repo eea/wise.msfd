@@ -20,7 +20,7 @@ from ..nationaldescriptors.main import (ANSWERS_COLOR_TABLE,
                                         CONCLUSION_COLOR_TABLE)
 from .data import REPORT_DEFS
 from .utils import (RegionalCompoundRow, compoundrow, get_nat_desc_country_url,
-                    newline_separated_itemlist)
+                    newline_separated_itemlist, simple_itemlist)
 
 COUNTRY = namedtuple("Country", ["id", "title", "definition", "is_primary"])
 
@@ -489,7 +489,7 @@ class BaseRegDescRow(BaseRegComplianceView):
                     val = u"{} ({})".format(label, cnt)
                     value.append(val)
 
-                values.append(newline_separated_itemlist(value))
+                values.append(simple_itemlist(value))
 
             rows.append((theme, values))
 

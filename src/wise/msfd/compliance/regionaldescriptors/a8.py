@@ -69,7 +69,7 @@ class RegDescA82018Row(BaseRegDescRow):
                     val = u"{} ({})".format(label, cnt)
                     value.append(val)
 
-                values.append(newline_separated_itemlist(value))
+                values.append(simple_itemlist(value))
 
             rows.append((theme, values))
 
@@ -77,27 +77,10 @@ class RegDescA82018Row(BaseRegDescRow):
 
     @compoundrow
     def get_element_row(self):
-        all_features = self.get_unique_values("Feature")
-        themes_fromdb = FEATURES_DB_2018
-
+        all_elements = self.get_unique_values("Element")
         rows = []
-        all_themes = defaultdict(list)
 
-        for feature in all_features:
-            if feature not in themes_fromdb:
-                all_themes['No theme'].append(feature)
-
-                continue
-
-            theme = themes_fromdb[feature].theme
-            all_themes[theme].append(feature)
-
-        all_themes = sorted(
-            all_themes.items(),
-            key=lambda t: fixedorder_sortkey(t[0], THEMES_2018_ORDER)
-        )
-
-        for theme, feats in all_themes:
+        for element in all_elements:
             values = []
 
             for country_code, country_name in self.countries:
@@ -114,30 +97,24 @@ class RegDescA82018Row(BaseRegDescRow):
                 crits = set([row.Criteria for row in data])
 
                 for crit in crits:
-                    elements_found = []
+                    elements = [
+                        row.Element
 
-                    for feature in feats:
-                        elements = [
-                            row.Element
+                        for row in data
 
-                            for row in data
+                        if row.Element == element
+                        and row.Criteria == crit
+                    ]
 
-                            if row.Feature == feature and row.Element
-                            and row.Criteria == crit
-                        ]
-
-                        elements_found.extend(elements)
-
-                    if elements_found:
-                        elements_found = sorted(set(elements_found))
+                    if elements:
                         value.append(
-                            u"{}: {}".format(crit, ", ".join(elements_found))
+                            u"{} ({})".format(crit, len(elements))
                         )
 
-                value = set(value) or self.not_rep
+                value = value or self.not_rep
                 values.append(simple_itemlist(value))
 
-            rows.append((theme, values))
+            rows.append((element, values))
 
         return rows
 
@@ -229,11 +206,13 @@ class RegDescA82018Row(BaseRegDescRow):
                         if (r.Parameter == param
                             and r.ParameterOther == param_other)
                     ])
-                    _vals.append(u"{} ({})".format(
-                        " - ".join(
-                            (self.get_label_for_value(param), param_other)),
-                        cnt)
-                    )
+                    # filter empty ParametherOther values
+                    _filtered = [
+                        x
+                        for x in (self.get_label_for_value(param), param_other)
+                        if x
+                    ]
+                    _vals.append(u"{} ({})".format(" - ".join(_filtered), cnt))
 
                 if data:
                     value = simple_itemlist(_vals)
@@ -766,21 +745,32 @@ class RegDescA82018Row(BaseRegDescRow):
         values = []
 
         for country_code, country_name in self.countries:
-            data = set([
-                str(row.GESExtentThreshold)
+            value = []
+            data = [
+                "{:.2f}".format(row.GESExtentThreshold)
 
                 for row in self.db_data
 
                 if row.CountryCode == country_code
                 and row.GESExtentThreshold
-            ])
+            ]
+            total = len(data)
 
-            value = self.not_rep
+            if not data:
+                values.append(self.not_rep)
 
-            if data:
-                value = newline_separated_itemlist(data)
+                continue
 
-            values.append(value)
+            for ges_extent in set(data):
+                found = len([x for x in data if x == ges_extent])
+
+                percent = data and (float(found) / len(data) * 100) or 0
+                value.append(
+                    u"{0} ({1} of {2}, or {3:.1f}%)".format(
+                        ges_extent, found, total, percent)
+                )
+
+            values.append(simple_itemlist(value))
 
         rows.append(('', values))
 
@@ -792,21 +782,32 @@ class RegDescA82018Row(BaseRegDescRow):
         values = []
 
         for country_code, country_name in self.countries:
-            data = set([
-                str(row.GESExtentAchieved)
+            value = []
+            data = [
+                "{:.2f}".format(row.GESExtentAchieved)
 
                 for row in self.db_data
 
                 if row.CountryCode == country_code
                 and row.GESExtentAchieved
-            ])
+            ]
 
-            value = self.not_rep
+            total = len(data)
 
-            if data:
-                value = newline_separated_itemlist(data)
+            if not data:
+                values.append(self.not_rep)
 
-            values.append(value)
+                continue
+
+            for ges_extent in set(data):
+                found = len([x for x in data if x == ges_extent])
+
+                percent = data and (float(found) / len(data) * 100) or 0
+                value.append(
+                    u"{0} ({1} of {2}, or {3:.1f}%)".format(
+                        ges_extent, found, total, percent)
+                )
+            values.append(simple_itemlist(value))
 
         rows.append(('', values))
 
@@ -818,21 +819,31 @@ class RegDescA82018Row(BaseRegDescRow):
         values = []
 
         for country_code, country_name in self.countries:
-            data = set([
+            value = []
+            data = [
                 str(row.GESExtentUnit)
 
                 for row in self.db_data
 
                 if row.CountryCode == country_code
                 and row.GESExtentUnit
-            ])
+            ]
+            total = len(data)
+            if not data:
+                values.append(self.not_rep)
 
-            value = self.not_rep
+                continue
 
-            if data:
-                value = newline_separated_itemlist(data)
+            for ges_extent in set(data):
+                found = len([x for x in data if x == ges_extent])
 
-            values.append(value)
+                percent = data and (float(found) / len(data) * 100) or 0
+                value.append(
+                    u"{0} ({1} of {2}, or {3:.1f}%)".format(
+                        ges_extent, found, total, percent)
+                )
+
+            values.append(simple_itemlist(value))
 
         rows.append(('', values))
 
@@ -840,38 +851,42 @@ class RegDescA82018Row(BaseRegDescRow):
 
     @compoundrow
     def get_ges_achiev_row(self):
+        all_features = self.get_unique_values("Feature")
+        
         rows = []
-        values = []
 
-        for country_code, country_name in self.countries:
-            value = []
-            data = [
-                str(row.GESAchieved)
+        for feature in all_features:
+            values = []
 
-                for row in self.db_data
+            for country_code, country_name in self.countries:
+                value = []
+                data = [
+                    str(row.GESAchieved)
 
-                if row.CountryCode == country_code
-                and row.GESAchieved
-            ]
+                    for row in self.db_data
 
-            if not data:
-                values.append(self.not_rep)
+                    if (row.CountryCode == country_code
+                        and row.GESAchieved
+                        and row.Feature == feature)
+                ]
 
-                continue
+                if not data:
+                    values.append(self.not_rep)
 
-            for achiev in set(data):
-                found = len([x for x in data if x == achiev])
-                total = len(data)
-                percentage = total and (found / float(total)) * 100 or 0
+                    continue
 
-                text = u"{0} ({1} or {2:0.1f}%)".format(
-                    achiev, found, percentage
-                )
-                value.append(text)
+                for achiev in set(data):
+                    found = len([x for x in data if x == achiev])
 
-            values.append(simple_itemlist(value))
+                    text = u"{0} ({1})".format(
+                        achiev, found
+                    )
+                    value.append(text)
 
-        rows.append(('', values))
+                values.append(simple_itemlist(value))
+
+            label = self.get_label_for_value(feature)
+            rows.append((ItemLabel(feature, label), values))
 
         return rows
 
