@@ -16,11 +16,9 @@ from wise.msfd.translation import get_detected_lang
 from wise.msfd.utils import ItemLabel, ItemList, fixedorder_sortkey
 
 from .. import interfaces
-from ..nationaldescriptors.main import (ANSWERS_COLOR_TABLE,
-                                        CONCLUSION_COLOR_TABLE)
 from .data import REPORT_DEFS
 from .utils import (RegionalCompoundRow, compoundrow, get_nat_desc_country_url,
-                    newline_separated_itemlist, simple_itemlist)
+                    simple_itemlist)
 
 COUNTRY = namedtuple("Country", ["id", "title", "definition", "is_primary"])
 
@@ -44,6 +42,7 @@ class NationalAssessmentMixin:
     def _conclusion_color(self, score):
         if not score:
             return 0
+        from wise.msfd.compliance.assessment import CONCLUSION_COLOR_TABLE
 
         score_value = score.score_value
 
@@ -52,6 +51,7 @@ class NationalAssessmentMixin:
         return conclusion_color
 
     def _answer_color(self, score):
+        from wise.msfd.compliance.assessment import ANSWERS_COLOR_TABLE
         if not score:
             return 0
 

@@ -4,6 +4,7 @@ from datetime import datetime
 
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 from wise.msfd import db, sql2018
+from wise.msfd.data import get_text_reports_2018
 from wise.msfd.translation import get_translated, retrieve_translation
 from wise.msfd.utils import (ItemList, TemplateMixin, db_objects_to_dict,
                              fixedorder_sortkey, timeit)
@@ -88,6 +89,26 @@ class ReportingHistoryTable(BaseNatSummaryView):
         super(ReportingHistoryTable, self).__init__(context, request)
 
         self.data = self.get_reporting_history_data()
+        text_reports = get_text_reports_2018(self.country_code)
+        data_text = []
+
+        # FileName, LocationURL, DateDue, DateReceived, ReportingDelay
+        for row in text_reports:
+            _row = {}
+
+            file_url = row[0]
+            release_date = row[1]
+            file_url_split = file_url.split('/')
+
+            _row['FileName'] = file_url_split[-1]
+            _row['LocationURL'] = file_url
+            _row['DateDue'] = datetime.strptime('15-10-2018', '%d-%m-%Y')
+            _row['DateReceived'] = release_date
+            _row['ReportingDelay'] = None
+
+            data_text.append(_row)
+
+        self.data.extend(data_text)
 
     @db.use_db_session('2018')
     def get_reporting_history_data(self):
@@ -131,7 +152,7 @@ class ReportingHistoryTable(BaseNatSummaryView):
     def headers(self):
         headers = (
             'Files available', 'Access to reports',
-            'Report due', 'Report received', 'Reporting delay (days)'
+            'Report due', 'Report received', 'Difference (days)'
         )
 
         return headers
@@ -160,7 +181,6 @@ class ReportingHistoryTable(BaseNatSummaryView):
 
         for row in data:
             filename = row.get('FileName')
-            report_type = row.get('ReportType')
             envelope = self.location_url(row.get('LocationURL'), filename)
             report_due = self.format_date(row.get('DateDue'))
             report_date = self.format_date(row.get('DateReceived'))
@@ -248,7 +268,7 @@ class ReportedInformationTable(BaseNatSummaryView):
     def headers(self):
         headers = (
             'Files available', 'Access to reports',
-            'Report due', 'Report received', 'Reporting delay (days)'
+            'Report due', 'Report received', 'Difference (days)'
         )
 
         return headers
@@ -393,10 +413,10 @@ class Introduction(BaseNatSummaryView):
         res.append(p)
 
         # headers = ('Report format',' Files available', 'Access to reports',
-        #            'Report due', 'Report received', 'Reporting delay (days)')
+        #            'Report due', 'Report received', 'Difference (days)')
         headers = (
             'Files available', 'Access to reports',
-            'Report due', 'Report received', 'Reporting delay (days)'
+            'Report due', 'Report received', 'Difference (days)'
         )
 
         p = create_heading(3, u"Reporting history")

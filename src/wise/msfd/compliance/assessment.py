@@ -3,14 +3,21 @@ from collections import namedtuple
 
 from zope.schema import Text
 
+from plone.api.portal import get_tool
+
 from AccessControl import Unauthorized
 from persistent.list import PersistentList
 from Products.Five.browser.pagetemplatefile import (PageTemplateFile,
                                                     ViewPageTemplateFile)
+
 from wise.msfd.compliance.content import AssessmentData
 from wise.msfd.compliance.interfaces import IEditAssessorsForm
 from wise.msfd.compliance.regionaldescriptors.base import BaseRegComplianceView
+from wise.msfd.compliance.scoring import (CONCLUSIONS, get_overall_conclusion,
+                                          get_range_index, OverallScores)
 from wise.msfd.compliance.utils import get_assessors, set_assessors
+from wise.msfd.compliance.vocabulary import (REGIONAL_DESCRIPTORS_REGIONS,
+                                             SUBREGIONS_TO_REGIONS)
 from wise.msfd.gescomponents import get_descriptor  # get_descriptor_elements
 from z3c.form.button import buttonAndHandler
 from z3c.form.field import Fields
@@ -19,6 +26,40 @@ from z3c.form.form import Form
 from .base import BaseComplianceView
 
 logger = logging.getLogger('wise.msfd')
+
+
+# This somehow translates the real value in a color, to be able to compress the
+# displayed information in the assessment table
+# New color table with answer score as keys, color as value
+ANSWERS_COLOR_TABLE = {
+    '1': 1,      # very good
+    '0.75': 2,   # good
+    '0.5': 4,    # poor
+    '0.25': 5,   # very poor
+    '0': 3,      # not reported
+    '0.250': 6,  # not clear
+    '/': 7       # not relevant
+}
+
+# score_value as key, color as value
+CONCLUSION_COLOR_TABLE = {
+    5: 0,       # not relevant
+    4: 1,       # very good
+    3: 2,       # good
+    2: 4,       # poor
+    1: 5,       # very poor
+    0: 3        # not reported
+}
+
+CHANGE_COLOR_TABLE = {
+    -2: 5,
+    -1: 4,
+    0: 6,
+    1: 3,
+    2: 2,
+    3: 1,
+}
+
 
 # TODO which question type belongs to which phase?
 PHASES = {
@@ -312,3 +353,152 @@ def render_assessment_help(criterias, descriptor):
         rows.append(row)
 
     return help_template(rows=rows)
+
+
+class AssessmentDataMixin(object):
+    """ Helper class for easier access to the assesment_data for
+        national and regional descriptor assessments
+
+        Currently used to get the coherence score from regional descriptors
+
+        TODO: implement a method to get the adequacy and consistency scores
+        from national descriptors assessment
+    """
+
+    @property
+    def rdas(self):
+        catalog = get_tool('portal_catalog')
+        brains = catalog.searchResults(
+            portal_type='wise.msfd.regionaldescriptorassessment',
+        )
+
+        for brain in brains:
+            obj = brain.getObject()
+
+            yield obj
+
+    def get_color_for_score(self, score_value):
+        return CONCLUSION_COLOR_TABLE[score_value]
+
+    def get_conclusion(self, score_value):
+        concl = list(reversed(CONCLUSIONS))[score_value]
+
+        return concl
+
+    def _get_assessment_data(self, article_folder):
+        if not hasattr(article_folder, 'saved_assessment_data'):
+            return {}
+
+        return article_folder.saved_assessment_data.last()
+
+    def get_main_region(self, region_code):
+        """ Returns the main region (used in regional descriptors)
+            for a sub region (used in national descriptors)
+        """
+
+        for region in REGIONAL_DESCRIPTORS_REGIONS:
+            if not region.is_main:
+                continue
+
+            if region_code in region.subregions:
+                return region.code
+
+        return region_code
+
+    def get_coherence_data(self, region_code, descriptor, article):
+        """ For year 2018
+        :return: {'color': 5, 'score': 0, 'max_score': 0,
+                'conclusion': (1, 'Very poor')
+            }
+        """
+
+        article_folder = None
+
+        for obj in self.rdas:
+            descr = obj.aq_parent.id.upper()
+
+            if descr != descriptor:
+                continue
+
+            region = obj.aq_parent.aq_parent.id.upper()
+
+            if region != self.get_main_region(region_code):
+                continue
+
+            art = obj.title
+
+            if art != article:
+                continue
+
+            article_folder = obj
+
+            break
+
+        assess_data = self._get_assessment_data(article_folder)
+
+        res = {
+            'score': 0,
+            'max_score': 0,
+            'color': 0,
+            'conclusion': (0, 'Not reported')
+        }
+
+        for k, score in assess_data.items():
+            if '_Score' not in k:
+                continue
+
+            if not score:
+                continue
+
+            is_not_relevant = getattr(score, 'is_not_relevant', False)
+            weighted_score = getattr(score, 'weighted_score', 0)
+            max_weighted_score = getattr(score, 'max_weighted_score', 0)
+
+            if not is_not_relevant:
+                res['score'] += weighted_score
+                res['max_score'] += max_weighted_score
+
+        score_percent = int(round(res['max_score'] and (res['score'] * 100)
+                                  / res['max_score'] or 0))
+        score_val = get_range_index(score_percent)
+
+        res['color'] = self.get_color_for_score(score_val)
+        res['conclusion'] = (score_val, self.get_conclusion(score_val))
+
+        return res
+
+    def get_assessments_data_2012(self, article=None, region_code=None,
+                                  descriptor_code=None):
+        """ Get the regional descriptor assessment 2012 data """
+        from .regionaldescriptors.assessment import ASSESSMENTS_2012
+
+        if not article:
+            article = self.article
+
+        if not region_code:
+            region_code = self.country_region_code
+
+        if not descriptor_code:
+            descriptor_code = self.descriptor_obj.id
+
+        res = []
+
+        for x in ASSESSMENTS_2012:
+            if x.region.strip() != region_code:
+                continue
+
+            if x.descriptor.strip() != descriptor_code.split('.')[0]:
+                continue
+
+            art = x.article.replace(" ", "")
+
+            if not art.startswith(article):
+                continue
+
+            res.append(x)
+
+        sorted_res = sorted(
+            res, key=lambda i: int(i.overall_score), reverse=True
+        )
+
+        return sorted_res

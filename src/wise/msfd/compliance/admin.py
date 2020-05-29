@@ -19,9 +19,9 @@ from Products.CMFPlacefulWorkflow.WorkflowPolicyConfig import \
 from Products.Five.browser import BrowserView
 from Products.statusmessages.interfaces import IStatusMessage
 from wise.msfd import db, sql2018
+from wise.msfd.compliance.assessment import AssessmentDataMixin
 from wise.msfd.compliance.vocabulary import (get_regions_for_country,
                                              REGIONAL_DESCRIPTORS_REGIONS)
-from wise.msfd.compliance.nationaldescriptors.main import AssessmentDataMixin
 from wise.msfd.compliance.regionaldescriptors.base import COUNTRY
 from wise.msfd.gescomponents import (get_all_descriptors, get_descriptor,
                                      get_marine_units)

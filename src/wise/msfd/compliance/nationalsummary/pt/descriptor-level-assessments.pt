@@ -33,14 +33,14 @@
               <div class="ast-header-data">
                 <table class="table table-condensed assessment-data-table">
                   <tr>
-                    <td>Adequacy score</td>
-                    <td>Consistency score</td>
-                    <td>Coherence score</td>
-                    <td>Overall conclusion 2018</td>
-                    <td>Overall adequacy conclusion 2012</td>
-                    <td>Adequacy change since 2012</td>
+                    <td></td>
+                    <td>Adequacy</td>
+                    <td>Consistency</td>
+                    <td>Coherence</td>
+                    <td>Overall</td>
                   </tr>
                   <tr>
+                    <td>Assessment 2018</td>
                     <td class="overall-values">
                       <div tal:attributes="class python: 'as-value as-value-{}'.format(article_data.adequacy[1])">
                         <span tal:content="python: article_data.adequacy[0]">Good (3)</span>
@@ -61,14 +61,50 @@
                         <span tal:content="python: article_data.overall_score_2018[0]">Poor (2)</span>
                       </div>
                     </td>
+                  </tr>
+                  <tr>
+                    <td>Assessment 2012</td>
                     <td class="overall-values">
                       <div tal:attributes="class python: 'as-value as-value-{}'.format(article_data.overall_score_2012[1])">
                         <span tal:content="python: article_data.overall_score_2012[0]">Adequate (3)</span>
                       </div>
                     </td>
                     <td class="overall-values">
+                      <div class="as-value as-value-0">
+                        <span>Not scored</span>
+                      </div>
+                    </td>
+                    <td class="overall-values">
+                      <div tal:attributes="class python: 'as-value as-value-{}'.format(article_data.coherence_2012[1])">
+                        <span tal:content="python: article_data.coherence_2012[0]"></span>
+                      </div>
+                    </td>
+                    <td class="overall-values">
+                      <div class="as-value as-value-0">
+                        <span>Not scored</span>
+                      </div>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>Change since 2012</td>
+                    <td class="overall-values">
                       <div class="as-value">
                         <span tal:content="python: article_data.change_since_2012">1</span>
+                      </div>
+                    </td>
+                    <td class="overall-values">
+                      <div class="as-value as-value-0">
+                        <span>-</span>
+                      </div>
+                    </td>
+                    <td class="overall-values">
+                      <div class="as-value">
+                        <span tal:content="article_data/coherence_change_since_2012"></span>
+                      </div>
+                    </td>
+                    <td class="overall-values">
+                      <div class="as-value as-value-0">
+                        <span>-</span>
                       </div>
                     </td>
                   </tr>

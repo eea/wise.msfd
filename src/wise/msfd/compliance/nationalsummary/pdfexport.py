@@ -8,6 +8,7 @@ import logging
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 from Products.statusmessages.interfaces import IStatusMessage
 from wise.msfd.data import get_report_filename
+from wise.msfd.gescomponents import DESCRIPTOR_TYPES
 from wise.msfd.translation import get_translated, retrieve_translation
 from wise.msfd.utils import (ItemList, TemplateMixin, db_objects_to_dict,
                              fixedorder_sortkey, timeit)
@@ -51,6 +52,7 @@ class SummaryAssessment(BaseNatSummaryView):
     """ Implementation of section 2. Summary of the assessment """
 
     template = ViewPageTemplateFile('pt/summary-assessment.pt')
+    descriptor_types = DESCRIPTOR_TYPES
 
     def __init__(self, context, request, overall_scores,
                  nat_desc_country_folder):
@@ -73,22 +75,33 @@ class SummaryAssessment(BaseNatSummaryView):
 
         for region_folder in region_folders:
             table_rows = []
+            descr_folders = self.get_descr_folders(region_folder)
 
-            for descr_folder in self.get_descr_folders(region_folder):
-                # Remove brackets with text from descriptor title
-                # D4 - Food webs/D1 Biodiversity - ecosystems (D4/D1)
-                descriptor_title = descr_folder.title.split('(')[0]
-                row = [descriptor_title]
+            for descr_type, descriptors in self.descriptor_types:
+                descr_rows = []
 
-                for article_folder in self.get_article_folders(descr_folder):
-                    score = self.get_overall_score(
-                        region_folder.id.upper(), descr_folder.id.upper(),
-                        article_folder.title
-                    )
+                for descr in descriptors:
+                    descr_folder = [
+                        d
+                        for d in descr_folders
+                        if d.id.upper() == descr
+                    ][0]
+                    # Remove brackets with text from descriptor title
+                    # D4 - Food webs/D1 Biodiversity - ecosystems (D4/D1)
+                    descriptor_title = descr_folder.title.split('(')[0]
+                    row = [descriptor_title]
 
-                    row.append(score)
+                    for article_folder in self.get_article_folders(descr_folder):
+                        score = self.get_overall_score(
+                            region_folder.id.upper(), descr_folder.id.upper(),
+                            article_folder.title
+                        )
 
-                table_rows.append(row)
+                        row.append(score)
+
+                    descr_rows.append(row)
+
+                table_rows.append((descr_type, descr_rows))
 
             res.append((region_folder.title, table_rows))
 
@@ -271,6 +284,8 @@ class AssessmentExportView(BaseNatSummaryView):
                               'static/wise/css/main.css'),
             resource_filename('wise.msfd',
                               'static/wise/dist/css/compliance.css'),
+            resource_filename('wise.msfd',
+                              'static/wise/dist/css/pdf_export.css'),
         ]
 
     def _get_cover(self):
@@ -278,6 +293,7 @@ class AssessmentExportView(BaseNatSummaryView):
         cover_url = absolute_url + '/export-cover'
 
         if 'localhost' in absolute_url:
+            return ""
             cover_url = cover_url.replace('localhost:5080',
                                           'office.pixelblaster.ro:4880')
 

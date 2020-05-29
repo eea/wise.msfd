@@ -26,6 +26,9 @@ module.exports = {
             '<%= path.src %>/less/translate.less',
             '<%= path.src %>/less/switch.less',
             '<%= path.src %>/less/regional-descriptors.less',
+          ],
+          '<%= path.dest %>/css/pdf_export.css': [
+            '<%= path.src %>/less/pdf_export.less',
           ]
       }
     }

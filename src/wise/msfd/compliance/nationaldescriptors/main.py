@@ -10,12 +10,14 @@ from zope.interface import implements
 
 from persistent.list import PersistentList
 from plone.api.content import transition
-from plone.api.portal import get_tool
 from plone.protect import CheckAuthenticator  # , protect
 from Products.Five.browser.pagetemplatefile import \
     ViewPageTemplateFile as Template
 from Products.statusmessages.interfaces import IStatusMessage
 from wise.msfd import db, sql2018
+from wise.msfd.compliance.assessment import (ANSWERS_COLOR_TABLE,
+                                             CONCLUSION_COLOR_TABLE,
+                                             AssessmentDataMixin)
 from wise.msfd.compliance.base import NAT_DESC_QUESTIONS
 from wise.msfd.compliance.content import AssessmentData
 from wise.msfd.compliance.scoring import (CONCLUSIONS, get_overall_conclusion,
@@ -35,38 +37,6 @@ logger = getLogger('wise.msfd')
 
 REGION_RE = re.compile('.+\s\((?P<region>.+)\)$')
 
-
-# This somehow translates the real value in a color, to be able to compress the
-# displayed information in the assessment table
-# New color table with answer score as keys, color as value
-ANSWERS_COLOR_TABLE = {
-    '1': 1,      # very good
-    '0.75': 2,   # good
-    '0.5': 4,    # poor
-    '0.25': 5,   # very poor
-    '0': 3,      # not reported
-    '0.250': 6,  # not clear
-    '/': 7       # not relevant
-}
-
-# score_value as key, color as value
-CONCLUSION_COLOR_TABLE = {
-    5: 0,       # not relevant
-    4: 1,       # very good
-    3: 2,       # good
-    2: 4,       # poor
-    1: 5,       # very poor
-    0: 3        # not reported
-}
-
-CHANGE_COLOR_TABLE = {
-    -2: 5,
-    -1: 4,
-    0: 6,
-    1: 3,
-    2: 2,
-    3: 1,
-}
 
 ARTICLE_WEIGHTS = {
     'Art9': {
@@ -233,119 +203,6 @@ def get_assessment_head_data_2012(article, region, country_code):
                 (com_report.split('/')[-1], com_report))
 
     return ['Not found'] * 3 + [('Not found', '')]
-
-
-class AssessmentDataMixin(object):
-    """ Helper class for easier access to the assesment_data for
-        national and regional descriptor assessments
-
-        Currently used to get the coherence score from regional descriptors
-
-        TODO: implement a method to get the adequacy and consistency scores
-        from national descriptors assessment
-    """
-
-    @property
-    def rdas(self):
-        catalog = get_tool('portal_catalog')
-        brains = catalog.searchResults(
-            portal_type='wise.msfd.regionaldescriptorassessment',
-        )
-
-        for brain in brains:
-            obj = brain.getObject()
-
-            yield obj
-
-    def get_color_for_score(self, score_value):
-        return CONCLUSION_COLOR_TABLE[score_value]
-
-    def get_conclusion(self, score_value):
-        concl = list(reversed(CONCLUSIONS))[score_value]
-
-        return concl
-
-    def _get_assessment_data(self, article_folder):
-        if not hasattr(article_folder, 'saved_assessment_data'):
-            return {}
-
-        return article_folder.saved_assessment_data.last()
-
-    def get_main_region(self, region_code):
-        """ Returns the main region (used in regional descriptors)
-            for a sub region (used in national descriptors)
-        """
-
-        for region in REGIONAL_DESCRIPTORS_REGIONS:
-            if not region.is_main:
-                continue
-
-            if region_code in region.subregions:
-                return region.code
-
-        return region_code
-
-    def get_coherence_data(self, region_code, descriptor, article):
-        """
-        :return: {'color': 5, 'score': 0, 'max_score': 0,
-                'conclusion': (1, 'Very poor')
-            }
-        """
-
-        article_folder = None
-
-        for obj in self.rdas:
-            descr = obj.aq_parent.id.upper()
-
-            if descr != descriptor:
-                continue
-
-            region = obj.aq_parent.aq_parent.id.upper()
-
-            if region != self.get_main_region(region_code):
-                continue
-
-            art = obj.title
-
-            if art != article:
-                continue
-
-            article_folder = obj
-
-            break
-
-        assess_data = self._get_assessment_data(article_folder)
-
-        res = {
-            'score': 0,
-            'max_score': 0,
-            'color': 0,
-            'conclusion': (0, 'Not reported')
-        }
-
-        for k, score in assess_data.items():
-            if '_Score' not in k:
-                continue
-
-            if not score:
-                continue
-
-            is_not_relevant = getattr(score, 'is_not_relevant', False)
-            weighted_score = getattr(score, 'weighted_score', 0)
-            max_weighted_score = getattr(score, 'max_weighted_score', 0)
-
-            if not is_not_relevant:
-                res['score'] += weighted_score
-                res['max_score'] += max_weighted_score
-
-        score_percent = int(round(res['max_score'] and (res['score'] * 100)
-                                  / res['max_score'] or 0))
-        score_val = get_range_index(score_percent)
-
-        res['color'] = self.get_color_for_score(score_val)
-        res['conclusion'] = (score_val, self.get_conclusion(score_val))
-
-        return res
 
 
 class NationalDescriptorsOverview(BaseView):

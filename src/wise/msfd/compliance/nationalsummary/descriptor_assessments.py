@@ -2,6 +2,7 @@ import logging
 from collections import namedtuple
 
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
+from wise.msfd.compliance.assessment import AssessmentDataMixin
 from wise.msfd.compliance.interfaces import (IDescriptorFolder,
                                              INationalDescriptorAssessment,
                                              INationalDescriptorsFolder,
@@ -9,15 +10,15 @@ from wise.msfd.compliance.interfaces import (IDescriptorFolder,
 from wise.msfd.compliance.scoring import (CONCLUSIONS, get_range_index,
                                           OverallScores)
 from wise.msfd.compliance.utils import ordered_regions_sortkey
+from wise.msfd.gescomponents import DESCRIPTOR_TYPES
 from wise.msfd.utils import (ItemList, TemplateMixin, db_objects_to_dict,
                              fixedorder_sortkey, timeit)
 
-from ..nationaldescriptors.main import (AssessmentDataMixin,
-                                        ARTICLE_WEIGHTS,
+from ..nationaldescriptors.main import (ARTICLE_WEIGHTS,
                                         get_assessment_data_2012_db,
                                         filter_assessment_data_2012)
 from .base import BaseNatSummaryView
-from .odt_utils import create_heading, create_paragraph, create_table_descr
+from .odt_utils import create_heading, create_table_descr
 
 logger = logging.getLogger('wise.msfd')
 
@@ -25,7 +26,8 @@ DESCRIPTOR_SUMMARY = namedtuple(
     'DescriptorSummary',
     ['assessment_summary', 'progress_assessment', 'recommendations',
      'adequacy', 'consistency', 'coherence', 'overall_score_2018',
-     'overall_score_2012', 'change_since_2012']
+     'overall_score_2012', 'change_since_2012', 'coherence_2012',
+     'coherence_change_since_2012',]
 )
 
 
@@ -39,11 +41,7 @@ class DescriptorLevelAssessments(BaseNatSummaryView, AssessmentDataMixin):
         'Art10': 'Article 10 - Environmental Targets'
     }
 
-    descriptor_types = [
-        ("Pressure-based descriptors", ['D2', 'D5', 'D7', 'D9', 'D10', 'D11']),
-        ("State-based descriptors", ['D1.1', 'D1.2', 'D1.3', 'D1.4', 'D1.5',
-                                     'D3', 'D1.6', 'D6', 'D4'])
-    ]
+    descriptor_types = DESCRIPTOR_TYPES
 
     def get_article_title(self, article):
 
@@ -142,9 +140,9 @@ class DescriptorLevelAssessments(BaseNatSummaryView, AssessmentDataMixin):
         consistency = ("{} ({})".format(conclusion, score_val),
                        phase_overall_scores.consistency['color'])
 
-        score_val, conclusion = phase_overall_scores.coherence['conclusion']
+        cscore_val, conclusion = phase_overall_scores.coherence['conclusion']
         # score = phase_overall_scores.get_score_for_phase('coherence')
-        coherence = ("{} ({})".format(conclusion, score_val),
+        coherence = ("{} ({})".format(conclusion, cscore_val),
                      phase_overall_scores.coherence['color'])
 
         overallscore_val, score = phase_overall_scores.get_overall_score(
@@ -177,10 +175,21 @@ class DescriptorLevelAssessments(BaseNatSummaryView, AssessmentDataMixin):
 
         change_since_2012 = int(adequacy_score_val - score_2012)
 
+        reg_assess_2012 = self.get_assessments_data_2012(article, region_code, descriptor)
+        coherence_2012 = ('-', '0')
+        coherence_change_since_2012 = '-'
+        if reg_assess_2012:
+            __score = reg_assess_2012[0].overall_score
+            coherence_2012 = ("{} ({})".format(reg_assess_2012[0].conclusion,
+                                              __score),
+                              self.get_color_for_score(__score))
+            coherence_change_since_2012 = int(cscore_val - __score)
+
         res = DESCRIPTOR_SUMMARY(
             assessment_summary, progress_assessment, recommendations,
             adequacy, consistency, coherence, overall_score_2018,
-            overall_score_2012, change_since_2012
+            overall_score_2012, change_since_2012,
+            coherence_2012, coherence_change_since_2012
         )
 
         return res
@@ -300,7 +309,6 @@ class DescriptorLevelAssessments(BaseNatSummaryView, AssessmentDataMixin):
 
                         t = create_table_descr(document, article_data)
 
-                        # t = create_paragraph(u'Table here')
                         res.append(t)
 
         return res

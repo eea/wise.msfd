@@ -9,21 +9,26 @@
         </thead>
         <tbody>
           <tr>
-            <th>Descriptor</th>
+            <th colspan="2">Descriptor</th>
             <th>Article 9 - GES Determination</th>
             <th>Article 8 - Initial Assessment</th>
             <th>Article 10 - Environmental Targets</th>
           </tr>
 
-          <tr tal:repeat="row python: region[1]">
-              <th><div tal:content="python: row[0]">D1 - Birds</div></th>
-              <td tal:repeat="score python: row[1:]">
-                <div tal:define="base_class python: 'gescomp as-value as-value';"
-                     tal:attributes="class python: '{}-{}'.format(base_class, score[1])">
-                  <div tal:content="python: score[0]">Very good (2)</div>
-                </div>
-              </td>
-          </tr>
+          <tal:rep tal:repeat="descr_type python: region[1]">
+            <tr tal:repeat="row python: descr_type[1]">
+                <th tal:condition="python: descr_type[1].index(row) == 0"
+                    tal:attributes="rowspan python: len(descr_type[1])"
+                    tal:content="python: descr_type[0]">Pressure based</th>
+                <th><div tal:content="python: row[0]">D1 - Birds</div></th>
+                <td tal:repeat="score python: row[1:]">
+                  <div tal:define="base_class python: 'gescomp as-value as-value';"
+                       tal:attributes="class python: '{}-{}'.format(base_class, score[1])">
+                    <div tal:content="python: score[0]">Very good (2)</div>
+                  </div>
+                </td>
+            </tr>
+          </tal:rep>
         </tbody>
       </table>
     </div>
