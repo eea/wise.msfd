@@ -105,7 +105,7 @@
               class="nav-region">
             <div class="region">
               <a tal:content="region_folder/title_or_id"
-                  tal:attributes="href region_folder/absolute_url"
+                  tal:attributes="href python: '{}#{}'.format(view._country_folder.absolute_url(), region_folder.id)"
                   target="_blank">
                   Baltic
                 </a>

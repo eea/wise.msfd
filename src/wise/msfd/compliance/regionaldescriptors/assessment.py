@@ -97,7 +97,7 @@ class RegDescEditAssessmentDataForm(BaseRegComplianceView,
             local_time, '%b %d, %Y %I:%M %p'
         )
         local_time = datetime.datetime.strftime(
-            local_time, "%Y %b %d, %H:%M"
+            local_time, "%Y-%m-%d %H:%M"
         )
 
         return local_time

@@ -70,7 +70,7 @@
           </div>
 
           <div tal:repeat="region view/get_regions">
-            <h4 tal:content="region/Title">Region name</h4>
+            <h4 tal:attributes="id region/id" tal:content="region/Title">Baltic sea</h4>
 
             <table class="table as-table-overview table-striped">
               <thead>

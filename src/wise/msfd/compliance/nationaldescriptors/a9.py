@@ -101,6 +101,9 @@ class A9Item(Item):
         crit = criteria_from_gescomponent(self.id)
         ges_comp = get_ges_component(crit)
 
+        if not hasattr(ges_comp, 'alternatives'):
+            return ges_comp
+
         criterion_2012 = [x for x in ges_comp.alternatives if x.id == crit]
 
         if criterion_2012:
@@ -109,7 +112,6 @@ class A9Item(Item):
             return "{} {}".format(c.id, c.title)
 
         return ges_comp.title
-        return get_ges_component(crit)
 
     def feature(self):
         # TODO: this needs more work, to aggregate with siblings
