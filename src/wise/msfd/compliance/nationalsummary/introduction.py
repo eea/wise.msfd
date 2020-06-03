@@ -58,7 +58,7 @@ class AssessmentAreas2018(BaseNatSummaryView):
         )
 
         for row in data:
-            description = row.nameText or row.nameTxtInt or ""
+            description = row.nameTxtInt or row.nameText or ""
             translation = get_translated(description, self.country_code) or ""
             if not translation:
                 retrieve_translation(self.country_code, description)
