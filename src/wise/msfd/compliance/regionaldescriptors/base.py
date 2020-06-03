@@ -451,19 +451,21 @@ class BaseRegDescRow(BaseRegComplianceView):
 
         for feature in all_features:
             if feature not in themes_fromdb:
-                all_themes['No theme'].append(feature)
+                all_themes['No subject: No theme'].append(feature)
 
                 continue
 
-            theme = themes_fromdb[feature].theme
-            all_themes[theme].append(feature)
+            subject_and_theme = "{}: {}".format(
+                themes_fromdb[feature].subject, themes_fromdb[feature].theme)
+            all_themes[subject_and_theme].append(feature)
 
         all_themes = sorted(
             all_themes.items(),
-            key=lambda t: fixedorder_sortkey(t[0], THEMES_2018_ORDER)
+            key=lambda t: fixedorder_sortkey(t[0].split(': ')[1],
+                                             THEMES_2018_ORDER)
         )
 
-        for theme, feats in all_themes:
+        for subject_and_theme, feats in all_themes:
             values = []
 
             for country_code, country_name in self.countries:
@@ -491,6 +493,6 @@ class BaseRegDescRow(BaseRegComplianceView):
 
                 values.append(simple_itemlist(value))
 
-            rows.append((theme, values))
+            rows.append((subject_and_theme, values))
 
         return rows

@@ -22,6 +22,7 @@ logger = logging.getLogger('wise.msfd')
 
 Criterion2012 = namedtuple('Criterion2012', ['id', 'title'])
 Feature = namedtuple('Feature', ['name', 'label', 'descriptors', 'theme'])
+Feature_2018 = namedtuple('Feature', ['name', 'label', 'subject', 'theme'])
 Parameter = namedtuple('Parameter', ['name', 'unit', 'criterias'])
 
 DESC_RE = re.compile(r'^D\d(\.\d|\d)?$')
@@ -519,8 +520,9 @@ def parse_features_from_db_2018():
         code = row.Code
         label = row.Feature
         theme = row.Theme or NOTHEME
+        subject = row.Subject
 
-        res[code] = Feature(code, label, '', theme)
+        res[code] = Feature_2018(code, label, subject, theme)
 
     return res
 

@@ -34,10 +34,18 @@
                 <table class="table table-condensed assessment-data-table">
                   <tr>
                     <td></td>
-                    <td>Adequacy</td>
-                    <td>Consistency</td>
-                    <td>Coherence</td>
-                    <td>Overall</td>
+                    <td class="overall-values">
+                      <div class="as-value"><span>Adequacy</span></div>
+                    </td>
+                    <td class="overall-values">
+                      <div class="as-value"><span>Consistency</span></div>
+                    </td>
+                    <td class="overall-values">
+                      <div class="as-value"><span>Coherence</span></div>
+                    </td>
+                    <td class="overall-values">
+                      <div class="as-value"><span>Overall</span></div>
+                    </td>
                   </tr>
                   <tr>
                     <td>Assessment 2018</td>

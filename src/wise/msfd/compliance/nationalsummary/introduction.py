@@ -159,8 +159,8 @@ class ReportingHistoryTable(BaseNatSummaryView):
 
     def calculate_reporting_delay(self, reporting_delay, report_due,
                                   report_date):
-        if reporting_delay:
-            return -reporting_delay
+        # if reporting_delay:
+        #     return -reporting_delay
 
         timedelta = report_due - report_date
 
