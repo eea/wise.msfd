@@ -21,7 +21,7 @@
       <metal:s metal:use-macro="context/wise-macros/macros/simplify-table"></metal:s>
       <div class="overflow-table">
         <div class="inner">
-          <table class="table table-bordered table-striped table-comp-translate table-report">
+          <table class="table table-assessment-secondary table-bordered table-striped table-comp-translate table-report">
             <tal:rep tal:repeat="row data">
               <tr
                 tal:define="field python:row[0];

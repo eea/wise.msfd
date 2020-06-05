@@ -425,14 +425,16 @@ class BaseComplianceView(BrowserView, BasePublicPage, SecurityMixin):
 
         return self._countryregion_folder.title
 
-    @property
-    def article_name(self):
-        art_name = [x[1] for x in ASSESSED_ARTICLES if x[0] == self.article]
+    def article_name(self, article=None):
+        if not article:
+            article = self.article
+
+        art_name = [x[1] for x in ASSESSED_ARTICLES if x[0] == article]
 
         if art_name:
             return art_name[0]
 
-        return self.article
+        return article
 
     @property       # TODO: memoize
     def descriptor_obj(self):

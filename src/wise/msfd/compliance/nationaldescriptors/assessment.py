@@ -111,7 +111,7 @@ class EditAssessmentDataForm(BaseView, EditAssessmentDataFormMain):
 
     @property
     def title(self):
-        return u"Edit Comission assessment / {} / 2018 / {} / {} " \
+        return u"Edit Commission assessment / {} / 2018 / {} / {} " \
                u"/ {} ".format(
             self.article,
             self.descriptor_title,
@@ -413,7 +413,7 @@ class EditAssessmentDataFormSecondary(EditAssessmentDataForm):
 
     @property
     def title(self):
-        return u"Edit Comission assessment: {}/ {}/ 2018".format(
+        return u"Edit Commission assessment: {}/ {}/ 2018".format(
             self.country_title,
             self.article,
         )

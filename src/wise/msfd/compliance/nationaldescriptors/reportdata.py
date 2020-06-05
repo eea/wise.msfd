@@ -1258,6 +1258,17 @@ class ReportData2018Secondary(ReportData2018):
     Art4 = Template('pt/report-data-secondary-2018.pt')
     Art7 = Template('pt/report-data-secondary-2018.pt')
 
+    def article_name(self):
+        get_art_name = super(ReportData2018Secondary, self).article_name
+
+        if self.article not in ('Art3', 'Art4'):
+            return get_art_name()
+
+        art_name = '{} & {}'.format(get_art_name('Art3'),
+                                    get_art_name('Art4'))
+
+        return art_name
+
     def get_previus_url(self, grouped_urls, url):
         for region, group in grouped_urls.items():
             # find the right group for our url
@@ -1294,9 +1305,13 @@ class ReportData2018Secondary(ReportData2018):
 
     @property
     def report_header_title(self):
+        article = self.article
+        if self.article in ('Art3', 'Art4'):
+            article = 'Art3-4'
+
         title = "Member State report: {} / {}".format(
-            self.article,
             self.country_name,
+            article,
         )
 
         return title

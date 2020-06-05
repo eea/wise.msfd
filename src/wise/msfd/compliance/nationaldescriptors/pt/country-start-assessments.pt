@@ -59,14 +59,53 @@
           </div>
 
           <div tal:define="abs_url context/absolute_url">
-            <a class="btn btn-sm btn-primary"
-                tal:attributes="href python: '{}/art3'.format(abs_url)">Article 3</a>
-            <a class="btn btn-sm btn-primary"
-                tal:attributes="href python: '{}/art4'.format(abs_url)">Article 4</a>
-            <a class="btn btn-sm btn-primary"
-                tal:attributes="href python: '{}/art7'.format(abs_url)">Article 7</a>
+            <!--<a class="btn btn-sm btn-primary"-->
+                <!--tal:attributes="href python: '{}/art3'.format(abs_url)">Article 3</a>-->
+            <!--<a class="btn btn-sm btn-primary"-->
+                <!--tal:attributes="href python: '{}/art4'.format(abs_url)">Article 4</a>-->
+            <!--<a class="btn btn-sm btn-primary"-->
+                <!--tal:attributes="href python: '{}/art7'.format(abs_url)">Article 7</a>-->
             <!--<a class="btn btn-sm btn-primary"-->
                 <!--tal:attributes="href python: '{}/art8esa'.format(abs_url)">Article 8 ESA</a>-->
+            <table class="table as-table-overview table-striped">
+              <thead>
+                <tr>
+                  <th>Art 3</th>
+                  <th>Art 4</th>
+                  <th>Art 7</th>
+                  <th>Art 8 ESA</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td tal:repeat="assessment python: view.get_secondary_article_folders()">
+                    <tal:block tal:condition="python: assessment.id not in ('art8esa')"
+                        tal:define="css_class python:'assessment-status-colorbar btn btn-xs btn-' + view.get_status_color(assessment);
+                      url assessment/absolute_url;
+                      can_view_data python:view.can_view_assessment_data(assessment);
+                      can_edit_data python:view.can_view_edit_assessment_data(assessment)">
+
+                      <a tal:attributes="class css_class; href string:${url}/@@edit-assessment-data-2018;"
+                        tal:condition="python: can_edit_data and assessment.id not in ('art7')">
+                        <span class="fa fa-edit"></span>Assessment:
+                        <span class="as-state-label" tal:content="python: view.get_status(assessment)">State</span>
+                        <span title="New comments"
+                          class="has-new-comments fa fa-exclamation-circle"
+                          tal:condition="python: view.has_new_comments(assessment)"></span>
+                      </a>
+                      <div style='margin-top: 0.3rem'>
+                        <a tal:condition="python: can_view_data and assessment.id not in ('art7')"
+                           tal:attributes="href url"
+                           class="btn btn-xs btn-light">2018 Assessment</a>
+                        <a tal:attributes="href string:${url}/@@view-report-data-2018;"
+                          class="btn btn-xs btn-light">View report(s)</a>
+                      </div>
+                    </tal:block>
+                    <i tal:condition="python: assessment.id in ('art8esa')">Under development</i>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
           </div>
 
           <div tal:repeat="region view/get_regions">

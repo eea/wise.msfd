@@ -4,7 +4,7 @@
         country_code options/country_code;
         translate_value nocall: options/translate_value;
         translatables view/TRANSLATABLES_EXTRA"
-     class="value-as-table">
+     class="article-3-mrus-table value-as-table">
   <tr>
     <tal:rep tal:repeat="name labels">
       <td tal:content="name">Name</td>
