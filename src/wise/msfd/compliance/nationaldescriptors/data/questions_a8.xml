@@ -42,7 +42,7 @@
       <option score="1">76-100% of key aspects of methodology reported for this criterion</option>
       <option score="0.75">51-75% of key aspect of methodology reported for this criterion</option>
       <option score="0.5">26-50% of key aspects of methodology reported for this criterion</option>
-      <option score="0.25">1-25% of key aspect of methodology reported for this criterion</option>
+      <option score="0.25">1-25% of key aspect of methodology reported for this criterion / Not clear</option>
       <option score="0">No key aspects of methodology reported for this criterion</option>
       <option score="/">Not relevant</option>
     </answers>
@@ -74,7 +74,7 @@
       <option score="1">76-100% of parameters, criteria and elements reported with status assessments</option>
       <option score="0.75">51-75% of parameters, criteria and elements reported with status assessments</option>
       <option score="0.5">26-50% of parameters, criteria and elements reported with status assessments</option>
-      <option score="0.25">1-25% of parameters, criteria and elements reported with status assessments</option>
+      <option score="0.25">1-25% of parameters, criteria and elements reported with status assessments / Not clear</option>
       <option score="0">No parameters, criteria and elements reported with status assessments</option>
       <option score="/">Not relevant</option>
     </answers>
