@@ -958,14 +958,20 @@ https://svn.eionet.europa.eu/repositories/Reportnet/Dataflows/MarineDirective/MS
             data_by_mru = consolidate_singlevalue_to_list(
                 data, 'MarineReportingUnit', order
             )
-            data_by_mru = {"": data_by_mru}
+            if data_by_mru:
+                data_by_mru = {"": data_by_mru}
+            else:
+                data_by_mru = {}
 
         if self.article == 'Art9':
             # data_by_mru = consolidate_date_by_mru(data_by_mru)
             data_by_mru = consolidate_singlevalue_to_list(
                 data, 'MarineReportingUnit'
             )
-            data_by_mru = {"": data_by_mru}
+            if data_by_mru:
+                data_by_mru = {"": data_by_mru}
+            else:
+                data_by_mru = {}
             insert_missing_criterions(data_by_mru, self.descriptor_obj)
 
         res = []
