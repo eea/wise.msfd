@@ -1,0 +1,74 @@
+<div tal:define="data options/data"
+     class="nat-sum-descriptor-level-assessments"
+     id="container-assessment-data-2018">
+
+  <div tal:repeat="region_section data" class="report-section">
+    <h3 tal:content="python:'Descriptor-level assessments for ' + region_section[0]">Descriptor-level assessments for Baltic Sea</h3>
+
+    <tal:rep tal:repeat="descriptor_type python: view.descriptor_types"
+        tal:define="descriptor_section python:region_section[1]">
+      <h4 tal:content="python: descriptor_type[0]">Pressure-based descriptors</h4>
+      <tal:rep tal:repeat="descriptor python: descriptor_type[1]">
+        <tal:block tal:define="descriptor_data python: [d for d in descriptor_section if d[0][0] == descriptor][0]">
+          <h5 tal:content="python: descriptor_data[0][1]">D7 - Hydrographical changes</h5>
+
+          <div tal:repeat="article_section python:descriptor_data[1]">
+            <tal:block tal:define="article_data python: article_section[1]">
+              <p class="article-title" tal:content="python: view.get_article_title(article_section[0])">Article 8</p>
+              <div>
+                <div>
+                  <label>Assessment summary</label>
+                  <div tal:content="python: article_data.assessment_summary">Long text</div>
+                </div>
+                <div>
+                  <label>Progress since 2012</label>
+                  <div tal:content="python: article_data.progress_assessment">Long text</div>
+                </div>
+                <div>
+                  <label>Recommendations</label>
+                  <div tal:content="python: article_data.recommendations">Long text</div>
+                </div>
+              </div>
+              <div class="ast-header-data">
+                <table class="table table-condensed assessment-data-table">
+                  <tr>
+                    <td></td>
+                    <td class="overall-values">
+                      <div class="as-value"><span>Coherence</span></div>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>Coherence 2018</td>
+                    <td class="overall-values">
+                      <div tal:attributes="class python: 'as-value as-value-{}'.format(article_data.coherence[1])">
+                        <span tal:content="python: article_data.coherence[0]"> Poor (2)</span>
+                      </div>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>Coherence 2012</td>
+                    <td class="overall-values">
+                      <div tal:attributes="class python: 'as-value as-value-{}'.format(article_data.coherence_2012[1])">
+                        <span tal:content="python: article_data.coherence_2012[0]"></span>
+                      </div>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>Change since 2012</td>
+                    <td class="overall-values">
+                      <div class="as-value">
+                        <span tal:content="article_data/coherence_change_since_2012"></span>
+                      </div>
+                    </td>
+                  </tr>
+                </table>
+
+              </div>
+            </tal:block>
+          </div>
+        </tal:block>
+      </tal:rep>
+    </tal:rep>
+
+  </div>
+</div>

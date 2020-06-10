@@ -1,0 +1,24 @@
+<div class="nat-sum-report-history">
+  <h5 tal:condition="options/header"
+      tal:content="options/header">Header</h5>
+  <div tal:condition="options/title"
+      tal:content="options/title">Header</div>
+  <div tal:define="allrows options/rows" class="report-section">
+
+    <div class="overflow-table-disabled">
+      <div class="inner">
+        <table class="table table-bordered table-striped table-comp-translate table-report">
+          <tal:rep tal:repeat="row allrows">
+            <tr>
+              <td tal:content="python: row[0]">Text reports</td>
+              <tal:rep tal:repeat="val python: row[1]">
+                <td tal:content="val">Report dates</td>
+              </tal:rep>
+            </tr>
+          </tal:rep>
+        </table>
+      </div>
+    </div>
+
+  </div>
+</div>

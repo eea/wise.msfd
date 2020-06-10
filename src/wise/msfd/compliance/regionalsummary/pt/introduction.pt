@@ -1,0 +1,17 @@
+<div class="nat-sum-introduction">
+  <h3>Introduction</h3>
+  <h4>Information reported by the Member States</h4>
+  <div tal:content="structure view/information_memberstate"></div>
+  <div tal:replace="structure view/memberstate_reports">Member state reports</div>
+
+  <h4>Marine region and Member State's marine waters</h4>
+  <h5>Scope of marine region/subregions</h5>
+  <div tal:content="structure python: view.scope_of_marine_waters">Editable text</div>
+  <div tal:content="structure view/marine_waters"></div>
+
+  <h4>Assessment areas (Marine Reporting Units)</h4>
+  <div tal:replace="structure view/assessment_areas">Mru table</div>
+
+  <h4>Assessment methodology</h4>
+  <div tal:content="structure python: view.assessment_methodology">Long text</div>
+</div>

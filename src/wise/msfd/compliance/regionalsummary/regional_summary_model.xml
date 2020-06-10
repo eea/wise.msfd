@@ -1,0 +1,49 @@
+<model xmlns:form="http://namespaces.plone.org/supermodel/form"
+       xmlns:i18n="http://xml.zope.org/namespaces/i18n"
+       xmlns:marshal="http://namespaces.plone.org/supermodel/marshal"
+       xmlns:security="http://namespaces.plone.org/supermodel/security"
+       xmlns="http://namespaces.plone.org/supermodel/schema">
+    <schema>
+        <field name="date_assessed"
+               type="zope.schema.Date">
+            <description/>
+            <required>False</required>
+            <title>Date assessed</title>
+        </field>
+        <field name="scope_of_marine_waters"
+               type="plone.app.textfield.RichText">
+            <description/>
+            <required>False</required>
+            <title>Scope of marine waters</title>
+        </field>
+        <field name="assessment_methodology"
+               type="plone.app.textfield.RichText">
+            <description/>
+            <required>False</required>
+            <title>Assessment methodology</title>
+            <default>To allow for an effective comparison and the monitoring of progress, the assessment of the Member State's reports covered the same broad criteria as the previous Article 12 assessment which was carried out between 2012 and 2014:
+    &lt;ul&gt;
+      &lt;li&gt;Adequacy: assessing whether the reported information is good enough to meet the objectives of the Directive and the technical requirements of Articles 8, 9 and 10.&lt;/li&gt;
+      &lt;li&gt;Consistency across the Marine Strategy (hereinafter consistency): assessing the logical flow of reporting of one Member State for Articles 8, 9 and 10, including the identification of missing links, conflicts and gaps.&lt;/li&gt;
+      &lt;li&gt;Regional coherence (hereinafter coherence): Assessing the relationships between the reports of the Member State, firstly within one each marine region or sub-region.&lt;/li&gt;
+    &lt;/ul&gt;
+  The assessment sought to identify progress in the implementation of the MSFD by comparing between 2012 and 2018 assessment results.
+  A list of assessment questions by article for each of the three broad assessment criteria was defined to structure the assessment exercise. A scoring system is applied where each assessment question is scored based on the degree to which the broad assessment criteria are met by the reported information. The assessment is carried out through an online tool.
+  The assessment was based on the e-reporting information (xml and shapefiles) provided by the Member State. Any text reports submitted were not consulted.
+            </default>
+        </field>
+        <field name="progress_recommendations_2012"
+               type="plone.app.textfield.RichText">
+            <description/>
+            <required>False</required>
+            <title>2012 recommendations to Member State</title>
+        </field>
+        <field name="progress_recommendations_2018"
+               type="plone.app.textfield.RichText">
+            <description/>
+            <required>False</required>
+            <title>Progress against 2012 recommendations to Member State</title>
+        </field>
+    </schema>
+</model>
+
