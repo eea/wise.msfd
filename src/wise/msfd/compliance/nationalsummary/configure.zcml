@@ -16,14 +16,14 @@
 
   <!-- National summary view for a country -->
   <browser:page
-    for="..interfaces.INationalSummaryOverviewFolder"
+    for="..interfaces.INationalSummaryCountryFolder"
     name="sum-country-start"
     class=".reportdata.NationalSummaryView"
     template="./pt/report-data-view.pt"
     permission="wise.ViewAssessmentData"
     />
 
-  <!-- Assessment export view -->
+  <!-- Art 12 Assessment view / pdf export -->
   <browser:page
     for="..interfaces.INationalSummaryCountryFolder"
     name="assessment-summary"

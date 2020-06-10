@@ -96,6 +96,14 @@ class BaseRegSummaryView(BaseComplianceView):
         self._translatables = v
 
     @property
+    def _country_folder(self):
+        """ Needs to be defined for our National summaries code
+            to be compatible with Regional summaries
+        """
+
+        return self._region_folder
+
+    @property
     def _region_folder(self):
         return self.get_parent_by_iface(
             interfaces.IRegionalSummaryRegionFolder
@@ -108,6 +116,14 @@ class BaseRegSummaryView(BaseComplianceView):
         ]
 
         return res
+
+    @property
+    def country_code(self):
+        """ Needs to be defined for our National summaries code
+            to be compatible with Regional summaries
+        """
+
+        return self.region_code
 
     @property
     def region_name(self):

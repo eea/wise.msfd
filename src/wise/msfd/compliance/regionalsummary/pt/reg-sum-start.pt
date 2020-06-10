@@ -23,8 +23,8 @@
             <thead>
               <tr>
                 <th>Region</th>
-                <th>Status</th>
-                <!-- <th>Actions</th> -->
+                <th>Assessment Art12 Status</th>
+                <!--<th>Regional summary report</th>-->
               </tr>
             </thead>
             <tbody>
@@ -33,14 +33,16 @@
                   Germany
                 </th>
                 <td>
-                  <a href=""
-                    class="class string:p-${region/state_id}"
-                    tal:content="region/status"
+                  <a tal:content="region/status"
                     tal:define="color python:view.process_status_colors.get(region.state_id, 'default')"
-                    tal:attributes="class string:process-status btn btn-xs btn-${color}; href region/url">
+                    tal:attributes="class string:process-status btn btn-xs btn-${color};
+                      href python: region.url + '/@@assessment-summary'">
                     Phase -1
                   </a>
                 </td>
+                <!--<td>-->
+                  <!--<a tal:attributes="href python: '{}/@@sum-region-start'.format(region.url)">View report</a>-->
+                <!--</td>-->
               </tr>
             </tbody>
           </table>

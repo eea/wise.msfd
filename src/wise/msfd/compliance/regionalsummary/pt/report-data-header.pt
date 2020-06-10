@@ -18,7 +18,8 @@
       </div>
     </div>
 
-    <div class="process-state-phase-form">
+    <div class="process-state-phase-form"
+        tal:condition="python: False">
       <form class="process-state"
           method="GET" action='./content_status_modify'>
         <div>

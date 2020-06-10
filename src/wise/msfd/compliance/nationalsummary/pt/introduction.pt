@@ -1,7 +1,7 @@
 <div class="nat-sum-introduction">
   <h3>Introduction</h3>
   <h4>Information reported by the Member State</h4>
-  <div tal:content="view/information_memberstate"></div>
+  <div tal:content="structure view/information_memberstate"></div>
   <div tal:replace="structure view/reporting_history">Reporting history</div>
 
   <h4>Member State's marine waters</h4>

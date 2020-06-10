@@ -467,8 +467,8 @@ class AssessmentDataMixin(object):
 
         return res
 
-    def get_assessments_data_2012(self, article=None, region_code=None,
-                                  descriptor_code=None):
+    def get_reg_assessments_data_2012(self, article=None, region_code=None,
+                                      descriptor_code=None):
         """ Get the regional descriptor assessment 2012 data """
         from .regionaldescriptors.assessment import ASSESSMENTS_2012
 

@@ -14,7 +14,7 @@
     permission="wise.ViewAssessmentData"
     />
 
-  <!-- View for a country -->
+  <!-- Regional summary - Overview for a country -->
   <browser:page
     for="..interfaces.IRegionalSummaryRegionFolder"
     name="sum-region-start"
@@ -22,5 +22,15 @@
     template="./pt/report-data-view.pt"
     permission="wise.ViewAssessmentData"
     />
+
+  <!-- Art 12 Assessment view / pdf export -->
+  <browser:page
+    for="..interfaces.IRegionalSummaryRegionFolder"
+    name="assessment-summary"
+    class=".pdfexport.AssessmentExportView"
+    template="./pt/report-data-view.pt"
+    permission="wise.ViewAssessmentData"
+    />
+
 
 </configure>

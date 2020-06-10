@@ -24,8 +24,7 @@
               <tr>
                 <th>Country Code</th>
                 <th>Country</th>
-                <th>Status</th>
-                <!-- <th>Actions</th> -->
+                <th>Assessment Art12 Status</th>
               </tr>
             </thead>
             <tbody>
@@ -35,9 +34,7 @@
                   Germany
                 </th>
                 <td>
-                  <a href=""
-                    class="class string:p-${country/state_id}"
-                    tal:content="country/status"
+                  <a tal:content="country/status"
                     tal:define="color python:view.process_status_colors.get(country.state_id, 'default')"
                     tal:attributes="class string:process-status btn btn-xs btn-${color};
                       href python: country.url + '/assessment-summary'">

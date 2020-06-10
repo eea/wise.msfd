@@ -303,16 +303,16 @@ class BootstrapCompliance(BrowserView):
             # self.create_comments_folder(cf)
 
             # create the overview folder
-            if 'overview' in cf.contentIds():
-                of = cf['overview']
-            else:
-                of = create(cf,
-                            'wise.msfd.nationalsummaryoverview',
-                            title='National summary overview',
-                            id='overview')
-
-            self.set_layout(of, 'sum-country-start')
-            alsoProvides(of, interfaces.INationalSummaryOverviewFolder)
+            # if 'overview' in cf.contentIds():
+            #     of = cf['overview']
+            # else:
+            #     of = create(cf,
+            #                 'wise.msfd.nationalsummaryoverview',
+            #                 title='National summary overview',
+            #                 id='overview')
+            #
+            # self.set_layout(of, 'sum-country-start')
+            # alsoProvides(of, interfaces.INationalSummaryOverviewFolder)
 
     def setup_regionalsummaries(self, parent):
         if 'regional-summaries' in parent.contentIds():

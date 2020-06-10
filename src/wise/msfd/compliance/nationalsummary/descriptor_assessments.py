@@ -32,6 +32,8 @@ DESCRIPTOR_SUMMARY = namedtuple(
 
 
 class DescriptorLevelAssessments(BaseNatSummaryView, AssessmentDataMixin):
+    base_folder_iface = INationalDescriptorsFolder
+    descr_assess_iface = INationalDescriptorAssessment
 
     template = ViewPageTemplateFile('pt/descriptor-level-assessments.pt')
     overall_scores = {}
@@ -175,7 +177,9 @@ class DescriptorLevelAssessments(BaseNatSummaryView, AssessmentDataMixin):
 
         change_since_2012 = int(adequacy_score_val - score_2012)
 
-        reg_assess_2012 = self.get_assessments_data_2012(article, region_code, descriptor)
+        reg_assess_2012 = self.get_reg_assessments_data_2012(
+            article, region_code, descriptor
+        )
         coherence_2012 = ('-', '0')
         coherence_change_since_2012 = '-'
         if reg_assess_2012:
@@ -218,7 +222,7 @@ class DescriptorLevelAssessments(BaseNatSummaryView, AssessmentDataMixin):
 
         portal_catalog = self.context.context.portal_catalog
         brains = portal_catalog.searchResults(
-            object_provides=INationalDescriptorsFolder.__identifier__
+            object_provides=self.base_folder_iface.__identifier__
         )
         nat_desc_folder = brains[0].getObject()
         country_folder = [
@@ -249,7 +253,7 @@ class DescriptorLevelAssessments(BaseNatSummaryView, AssessmentDataMixin):
                 desc_name = descriptor_folder.title
                 articles = []
                 article_folders = self.filter_contentvalues_by_iface(
-                    descriptor_folder, INationalDescriptorAssessment
+                    descriptor_folder, self.descr_assess_iface
                 )
 
                 for article_folder in article_folders:

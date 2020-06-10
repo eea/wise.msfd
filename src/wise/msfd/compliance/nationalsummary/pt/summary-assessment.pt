@@ -1,5 +1,4 @@
-<div class="nat-sum-summary-assessment"
-    tal:define="country_folder python: view.nat_desc_country_folder">
+<div class="nat-sum-summary-assessment">
   <h3>Summary of the assessment</h3>
   <tal:rep tal:repeat="region python: view.summary_assess_data">
     <h4 tal:content="python: region[0]">Baltic</h4>

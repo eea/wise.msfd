@@ -195,7 +195,7 @@ class RegionalDescriptorArticleView(BaseRegComplianceView,
             context.saved_assessment_data = AssessmentData()
 
         # Assessment 2012
-        assessments_2012 = self.get_assessments_data_2012()
+        assessments_2012 = self.get_reg_assessments_data_2012()
         assessment_2012_header_data = self.get_assessment_2012_header_data(
             assessments_2012
         )
