@@ -20,6 +20,8 @@ from Products.Five.browser import BrowserView
 from Products.statusmessages.interfaces import IStatusMessage
 from wise.msfd import db, sql2018
 from wise.msfd.compliance.assessment import AssessmentDataMixin
+from wise.msfd.compliance.interfaces import (INationalDescriptorAssessment,
+                                             INationalDescriptorAssessmentSecondary)
 from wise.msfd.compliance.vocabulary import (get_regions_for_country,
                                              REGIONAL_DESCRIPTORS_REGIONS)
 from wise.msfd.compliance.regionaldescriptors.base import COUNTRY
@@ -539,10 +541,17 @@ class AdminScoring(BaseComplianceView, AssessmentDataMixin):
 
         for brain in brains:
             obj = brain.getObject()
+
+            # safety check to exclude secondary articles
+            if not INationalDescriptorAssessment.providedBy(obj):
+                continue
+
             # safety check to exclude secondary articles
             obj_title = obj.title.capitalize()
-
             if obj_title in _get_secondary_articles():
+                continue
+
+            if obj_title in ('Art3-4'):
                 continue
 
             yield obj
@@ -557,8 +566,10 @@ class AdminScoring(BaseComplianceView, AssessmentDataMixin):
         for brain in brains:
             obj = brain.getObject()
             # safety check to exclude primary articles
-            obj_title = obj.title.capitalize()
+            if not INationalDescriptorAssessmentSecondary.providedBy(obj):
+                continue
 
+            obj_title = obj.title.capitalize()
             if obj_title not in _get_secondary_articles():
                 continue
 
@@ -595,10 +606,14 @@ class AdminScoring(BaseComplianceView, AssessmentDataMixin):
                     _question = [
                         x
 
-                        for x in questions[article]
+                        for x in questions.get(article, ())
 
                         if x.id == id_
-                    ][0]
+                    ]
+                    if not _question:
+                        continue
+
+                    _question = _question[0]
 
                     # new_score_weight = _question.score_weights
                     # _question.score_weights = new_score_weight
@@ -634,7 +649,10 @@ class AdminScoring(BaseComplianceView, AssessmentDataMixin):
         descr = obj.aq_parent
         region = obj.aq_parent.aq_parent
         country = obj.aq_parent.aq_parent.aq_parent
-        d_obj = self.descriptor_obj(descr.id.upper())
+        try:
+            d_obj = self.descriptor_obj(descr.id.upper())
+        except:
+            import pdb; pdb.set_trace()
         muids = self.muids(country.id.upper(), region.id.upper(), '2018')
         data = obj.saved_assessment_data.last()
 

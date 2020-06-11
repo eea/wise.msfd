@@ -11,7 +11,8 @@ from Products.Five.browser.pagetemplatefile import (PageTemplateFile,
                                                     ViewPageTemplateFile)
 
 from wise.msfd.compliance.content import AssessmentData
-from wise.msfd.compliance.interfaces import IEditAssessorsForm
+from wise.msfd.compliance.interfaces import (IEditAssessorsForm,
+                                             IRegionalDescriptorAssessment)
 from wise.msfd.compliance.regionaldescriptors.base import BaseRegComplianceView
 from wise.msfd.compliance.scoring import (CONCLUSIONS, get_overall_conclusion,
                                           get_range_index, OverallScores)
@@ -374,6 +375,9 @@ class AssessmentDataMixin(object):
 
         for brain in brains:
             obj = brain.getObject()
+
+            if not IRegionalDescriptorAssessment.providedBy(obj):
+                continue
 
             yield obj
 
