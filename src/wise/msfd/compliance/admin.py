@@ -649,10 +649,7 @@ class AdminScoring(BaseComplianceView, AssessmentDataMixin):
         descr = obj.aq_parent
         region = obj.aq_parent.aq_parent
         country = obj.aq_parent.aq_parent.aq_parent
-        try:
-            d_obj = self.descriptor_obj(descr.id.upper())
-        except:
-            import pdb; pdb.set_trace()
+        d_obj = self.descriptor_obj(descr.id.upper())
         muids = self.muids(country.id.upper(), region.id.upper(), '2018')
         data = obj.saved_assessment_data.last()
 

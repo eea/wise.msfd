@@ -4,6 +4,7 @@ import lxml.etree
 from zope.interface import Attribute, Interface, implements
 
 from Products.Five.browser.pagetemplatefile import PageTemplateFile
+from wise.msfd.gescomponents import get_descriptor
 from wise.msfd.labels import GES_LABELS
 from wise.msfd.utils import (fixedorder_sortkey, get_annot, ItemLabel,
                              TemplateMixin)
@@ -125,7 +126,15 @@ def insert_missing_criterions(data, descriptor):
     This function will change in place the provided data
     """
 
-    criterions = [descriptor] + descriptor.sorted_criterions()
+    criterions = []
+
+    # need to add D1 descriptor to the criterion lists too, CY reported data
+    # on the generic D1 descriptor
+    if 'D1.' in descriptor.id:
+        criterions.append(get_descriptor('D1'))
+
+    criterions.append(descriptor)
+    criterions.extend(descriptor.sorted_criterions())
 
     for muidlist, dataset in data.items():
         # build a map of existing criterions, so that we detect missing ones
