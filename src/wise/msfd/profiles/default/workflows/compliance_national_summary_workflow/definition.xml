@@ -55,6 +55,12 @@
    <guard-permission>Review portal content</guard-permission>
   </guard>
  </transition>
+ <transition transition_id="to_notstarted" title="To not started" new_state="not_started" trigger="USER" before_script="" after_script="">
+  <action url="%(content_url)s/content_status_modify?workflow_action=to_notstarted" category="workflow" icon="">To not started</action>
+  <guard>
+   <guard-permission>Review portal content</guard-permission>
+  </guard>
+ </transition>
  <transition transition_id="to_draft" title="To draft state" new_state="draft" trigger="USER" before_script="" after_script="">
   <action url="%(content_url)s/content_status_modify?workflow_action=to_draft" category="workflow" icon="">Send back to draft</action>
   <guard>
