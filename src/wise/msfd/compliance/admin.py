@@ -331,8 +331,9 @@ class BootstrapCompliance(BrowserView):
                 continue
 
             code, name = region.code.lower(), region.title
-
-            if code not in ns.contentIds():
+            if code in ns.contentIds():
+                rf = ns[code]
+            else:
                 rf = create(ns,
                             'wise.msfd.regionalsummaryfolder',
                             title=name,
@@ -342,8 +343,11 @@ class BootstrapCompliance(BrowserView):
                 rf._countries_for_region = self._get_countries_names(
                     region.countries
                 )
-                self.set_layout(rf, '@@sum-region-start')
-                alsoProvides(rf, interfaces.IRegionalSummaryRegionFolder)
+
+            self.set_layout(rf, 'assessment-summary')
+            alsoProvides(rf, interfaces.IRegionalSummaryRegionFolder)
+            # self.set_layout(rf, '@@sum-region-start')
+
 
     def setup_secondary_articles(self, parent):
         if 'national-descriptors-assessments' not in parent.contentIds():
