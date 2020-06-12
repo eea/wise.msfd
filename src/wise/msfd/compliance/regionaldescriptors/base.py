@@ -10,7 +10,7 @@ from wise.msfd.compliance.base import (BaseComplianceView, NAT_DESC_QUESTIONS,
                                        report_data_cache_key)
 from wise.msfd.compliance.vocabulary import REGIONAL_DESCRIPTORS_REGIONS
 from wise.msfd.gescomponents import (FEATURES_DB_2018, THEMES_2018_ORDER,
-                                     get_marine_units)
+                                     SUBJECT_2018_ORDER, get_marine_units)
 from wise.msfd.labels import get_label
 from wise.msfd.translation import get_detected_lang
 from wise.msfd.utils import ItemLabel, ItemList, fixedorder_sortkey
@@ -459,10 +459,18 @@ class BaseRegDescRow(BaseRegComplianceView):
                 themes_fromdb[feature].subject, themes_fromdb[feature].theme)
             all_themes[subject_and_theme].append(feature)
 
+        # First sort by THEME
         all_themes = sorted(
             all_themes.items(),
             key=lambda t: fixedorder_sortkey(t[0].split(': ')[1],
                                              THEMES_2018_ORDER)
+        )
+
+        # Second sort by SUBJECT
+        all_themes = sorted(
+            all_themes,
+            key=lambda t: fixedorder_sortkey(t[0].split(': ')[0],
+                                             SUBJECT_2018_ORDER)
         )
 
         for subject_and_theme, feats in all_themes:

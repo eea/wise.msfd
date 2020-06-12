@@ -529,6 +529,13 @@ def parse_features_from_db_2018():
 
 FEATURES_DB_2018 = parse_features_from_db_2018()
 
+SUBJECT_2018_ORDER = [
+    'Structure, functions and processes of marine ecosystems',
+    'Anthropogenic pressures on the marine environment',
+    'Pressure levels and impacts in marine environment',
+    'Uses and human activities in or affecting the marine environment',
+    'Ecosystem services',
+]
 
 THEMES_2018_ORDER = [
     'Species',
