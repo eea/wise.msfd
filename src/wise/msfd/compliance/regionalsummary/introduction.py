@@ -1,6 +1,9 @@
 
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 
+from wise.msfd import db
+from wise.msfd.sql2018 import t_MarineWaters
+
 from ..nationalsummary.introduction import Introduction
 from .base import BaseRegSummaryView
 from .utils import SimpleTable
@@ -10,6 +13,9 @@ class RegionalIntroduction(BaseRegSummaryView, Introduction):
     """ Make National summary code compatible for Regional summary """
 
     template = ViewPageTemplateFile('pt/introduction.pt')
+
+    def default(self):
+        return ['-' for _ in self.available_countries]
 
     @property
     def information_memberstate(self):
@@ -27,25 +33,84 @@ By October 2018, the Member States were due to submit updates of the assessment
                 u"Articles 8, 9 and 10"
         rows = [
             ("", [x[1] for x in self.available_countries]),
-            ("Text reports (pdf)", []),
-            ("Electronic reports (xml)", []),
-            ("Geographic data (4geo.xml; GIS shapefiles)", [])
+            ("Text reports (pdf)", self.default()),
+            ("Electronic reports (xml)", self.default()),
+            ("Geographic data (4geo.xml; GIS shapefiles)", self.default())
         ]
         view = SimpleTable(self, self.request, header, rows)
 
         return view()
 
+    def _get_marine_water_by_type(self, data, types):
+        res = []
+
+        for country_id, country_name in self.available_countries:
+            values = [
+                int(row.Area_km2)
+                for row in data
+                if (row.Country == country_id and
+                    row.Type in types and
+                    row.Subregion in self.available_subregions)
+            ]
+
+            res.append("{:,}".format(sum(values)))
+
+        return res
+
+    def get_water_seabed_row(self, data):
+        types = ['Water column & seabed/subsoil', 'Marine waters']
+
+        return self._get_marine_water_by_type(data, types)
+
+    def get_seabed_only_row(self, data):
+        types = ['Seabed/subsoil']
+
+        return self._get_marine_water_by_type(data, types)
+
+    def get_proportion_row(self, data):
+        types = ['Water column & seabed/subsoil', 'Marine waters']
+        res = []
+        total = sum([
+            float(row.Area_km2)
+            for row in data
+            if (row.Type in types and
+                row.Subregion in self.available_subregions)
+        ])
+
+        for country_id, country_name in self.available_countries:
+            values = [
+                float(row.Area_km2)
+                for row in data
+                if (row.Country == country_id and
+                    row.Type in types and
+                    row.Subregion in self.available_subregions)
+            ]
+            country_total = sum(values)
+            res.append("{:.1f}%".format(country_total/total * 100))
+
+        return res
+
+    @db.use_db_session('2018')
     def marine_waters(self):
         header = u"Length of coastline and area of marine waters per Member " \
                 u"State (based on GIS data reported for MSFD by each Member " \
                 u"State)"
+
+        column_names = ['Country', 'Subregion', 'Area_km2', 'Type']
+
+        cnt, data = db.get_all_specific_columns(
+            [getattr(t_MarineWaters.c, c) for c in column_names]
+        )
+
         rows = [
             ("", [x[1] for x in self.available_countries]),
-            ("Length of coastline (km)", []),
-            ("Area of marine waters (water column and seabed) (km2)", []),
+            ("Length of coastline (km)", self.default()),
+            ("Area of marine waters (water column and seabed) (km2)",
+             self.get_water_seabed_row(data)),
             ("Area of marine waters (seabed only - beyond EEZ or quivalent) "
-             "(km2)", []),
-            ("Proportion of Baltic Sea region per Member State (areal %)", [])
+             "(km2)", self.get_seabed_only_row(data)),
+            ("Proportion of Baltic Sea region per Member State (areal %)",
+             self.get_proportion_row(data))
         ]
         view = SimpleTable(self, self.request, header, rows)
 
@@ -59,9 +124,10 @@ By October 2018, the Member States were due to submit updates of the assessment
 
         rows = [
             ("", [x[1] for x in self.available_countries]),
-            ("Number of Marine Reporting Units used", []),
-            ("Range of extent of Marine Reporting Units (km2)", []),
-            ("Average extent of Marine Reporting Units (km2)", [])
+            ("Number of Marine Reporting Units used", self.default()),
+            ("Range of extent of Marine Reporting Units (km2)",
+             self.default()),
+            ("Average extent of Marine Reporting Units (km2)", self.default())
         ]
         view = SimpleTable(self, self.request, header, rows, title)
 

@@ -138,8 +138,12 @@ class BaseRegSummaryView(BaseComplianceView):
         return self._region_folder._countries_for_region
 
     @property
+    def available_subregions(self):
+        return self._region_folder._subregions
+
+    @property
     def subregions(self):
-        subregions = self._region_folder._subregions
+        subregions = self.available_subregions
 
         # if it is a main region, it has only himself as subregion
         if len(subregions) == 1:

@@ -842,6 +842,16 @@ class MarineReportingUnit(Base):
     _4geo = Column('4geo', Unicode(500))
 
 
+t_MarineWaters = Table(
+    'MarineWaters', metadata,
+    Column('Country', String(50, u'Latin1_General_CI_AS')),
+    Column('Subregion', String(3, u'Latin1_General_CI_AS')),
+    Column('Area_km2', Float(53)),
+    Column('Type', String(100, u'Latin1_General_CI_AS')),
+    Column('SHAPE', NullType)
+)
+
+
 class Obligation(Base):
     __tablename__ = 'Obligation'
 
