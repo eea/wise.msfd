@@ -466,16 +466,18 @@ class ItemList(TemplateMixin):
 
     template = PageTemplateFile('pt/list.pt')
 
-    def __init__(self, rows):
+    def __init__(self, rows, sort=True):
         rows = list(rows)
 
         # the rows may be ItemLabel instances
 
-        if rows and (not isinstance(rows[0], basestring)):
+        if sort and rows and (not isinstance(rows[0], basestring)):
             self.rows = sorted(rows,
                                key=lambda r: (r is not None) and r.title or '')
-        else:
+        elif sort:
             self.rows = sorted(rows)
+        else:
+            self.rows = rows
 
     def __repr__(self):
         v = ', '.join(map(unicode, self.rows))

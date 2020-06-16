@@ -12,7 +12,7 @@
             <tr>
               <td tal:content="python: row[0]">Text reports</td>
               <tal:rep tal:repeat="val python: row[1]">
-                <td tal:content="val">Report dates</td>
+                <td tal:content="structure val">Report dates</td>
               </tal:rep>
             </tr>
           </tal:rep>

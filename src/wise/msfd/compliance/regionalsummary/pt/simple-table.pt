@@ -9,7 +9,7 @@
     <tr tal:repeat="row data">
       <th tal:content="python: row[0]">Row header</th>
       <td tal:repeat="value python: row[1]"
-          tal:content="value">Value</td>
+          tal:content="structure value">Value</td>
     </tr>
   </table>
 </div>
