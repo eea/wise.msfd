@@ -32,5 +32,12 @@
     permission="wise.ViewAssessmentData"
     />
 
+  <!-- View for pdf cover -->
+  <browser:page
+    for="..interfaces.IRegionalSummaryRegionFolder"
+    name="export-cover"
+    class=".pdfexport.RegionalAssessmentExportCover"
+    permission="zope2.View"
+    />
 
 </configure>

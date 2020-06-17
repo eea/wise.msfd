@@ -13,13 +13,18 @@ from wise.msfd.utils import (ItemList, TemplateMixin, db_objects_to_dict,
 
 import pdfkit
 
-from ..nationalsummary.pdfexport import SummaryAssessment, ProgressAssessment
+from ..nationalsummary.pdfexport import (AssessmentExportCover,
+                                         ProgressAssessment, SummaryAssessment)
 
 from .base import BaseRegSummaryView
 from .descriptor_assessments import RegDescriptorLevelAssessments
 from .introduction import RegionalIntroduction
 
 logger = logging.getLogger('wise.msfd')
+
+
+class RegionalAssessmentExportCover(BaseRegSummaryView, AssessmentExportCover):
+    """ PDF Assessment cover for regional summaries """
 
 
 class RegionalSummaryAssessment(BaseRegSummaryView, SummaryAssessment):
