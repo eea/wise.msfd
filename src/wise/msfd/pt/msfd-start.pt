@@ -44,9 +44,8 @@
                </div>
              </tal:rep>
            </div>
-          <div class="disclaimer-container">
-            <p><strong>Disclaimer:</strong> Note that some of the information submitted by Member States to the Central Data Repository may not be accessible through the present tool, due to technical issues related to the delivered data (e.g. envelopes not ended, duplicated keys, missing files, missing labels, files not structured according to the schema, etc.). This can lead to inconsistencies in the case of some Member States between the information made available under the different articles (e.g. Article 8 vs. Article 4 on Marine units).</p>
-            <p><strong>More information:</strong> to know more about the reporting exercises, as well as better understand the fields and meaning of the reporting information, see the reporting guidance documents, schemas and tools in the reporting resources pages in CDR Help: <a href="http://cdr.eionet.europa.eu/help/msfd">http://cdr.eionet.europa.eu/help/msfd</a></p>
+          <div tal:condition="python: context.disclaimer">
+            <p tal:replace="structure python: context.disclaimer.output"></p>
           </div>
         </div>
         <div
