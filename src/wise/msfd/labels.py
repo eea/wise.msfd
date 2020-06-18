@@ -15,7 +15,8 @@ COMMON_LABELS = {}                        # vocabulary of labels
 # Collection of label fixes, where the description/title for a value
 # is not appropriate
 LABEL_FIX = {
-    "ANS": "North-east Atlantic Ocean: Greater North Sea"
+    "ANS": "North-east Atlantic Ocean: Greater North Sea",
+    "CY": 'Cyprus'
 }
 
 # MSFD Search engine
