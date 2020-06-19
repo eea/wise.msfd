@@ -12,7 +12,10 @@ from Products.Five.browser.pagetemplatefile import (PageTemplateFile,
 
 from wise.msfd.compliance.content import AssessmentData
 from wise.msfd.compliance.interfaces import (IEditAssessorsForm,
-                                             IRegionalDescriptorAssessment)
+                                             INationalDescriptorsFolder,
+                                             IRegionalDescriptorAssessment,
+                                             IRegionalDescriptorRegionsFolder,
+                                             IRegionalDescriptorsFolder)
 from wise.msfd.compliance.regionaldescriptors.base import BaseRegComplianceView
 from wise.msfd.compliance.scoring import (CONCLUSIONS, get_overall_conclusion,
                                           get_range_index, OverallScores)
@@ -365,6 +368,32 @@ class AssessmentDataMixin(object):
         TODO: implement a method to get the adequacy and consistency scores
         from national descriptors assessment
     """
+
+    @property
+    def _nat_desc_folder(self):
+        portal_catalog = get_tool('portal_catalog')
+        brains = portal_catalog.searchResults(
+            object_provides=INationalDescriptorsFolder.__identifier__
+        )
+        nat_desc_folder = brains[0].getObject()
+
+        return nat_desc_folder
+
+    @property
+    def _reg_desc_folder(self):
+        portal_catalog = get_tool('portal_catalog')
+        brains = portal_catalog.searchResults(
+            object_provides=IRegionalDescriptorsFolder.__identifier__
+        )
+        nat_desc_folder = brains[0].getObject()
+
+        return nat_desc_folder
+
+    @property
+    def _reg_desc_region_folders(self):
+        return self.filter_contentvalues_by_iface(
+            self._reg_desc_folder, IRegionalDescriptorRegionsFolder
+        )
 
     @property
     def rdas(self):

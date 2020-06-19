@@ -5,7 +5,6 @@ from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 from wise.msfd.compliance.assessment import AssessmentDataMixin
 from wise.msfd.compliance.interfaces import (IDescriptorFolder,
                                              INationalDescriptorAssessment,
-                                             INationalDescriptorsFolder,
                                              INationalRegionDescriptorFolder)
 from wise.msfd.compliance.scoring import (CONCLUSIONS, get_range_index,
                                           OverallScores)
@@ -32,8 +31,6 @@ DESCRIPTOR_SUMMARY = namedtuple(
 
 
 class DescriptorLevelAssessments(BaseNatSummaryView, AssessmentDataMixin):
-    base_folder_iface = INationalDescriptorsFolder
-    descr_assess_iface = INationalDescriptorAssessment
 
     template = ViewPageTemplateFile('pt/descriptor-level-assessments.pt')
     overall_scores = {}
@@ -220,14 +217,9 @@ class DescriptorLevelAssessments(BaseNatSummaryView, AssessmentDataMixin):
 
         res = []
 
-        portal_catalog = self.context.context.portal_catalog
-        brains = portal_catalog.searchResults(
-            object_provides=self.base_folder_iface.__identifier__
-        )
-        nat_desc_folder = brains[0].getObject()
         country_folder = [
             country
-            for country in nat_desc_folder.contentValues()
+            for country in self._nat_desc_folder.contentValues()
             if country.id == self.country_code.lower()
         ][0]
 
@@ -253,7 +245,7 @@ class DescriptorLevelAssessments(BaseNatSummaryView, AssessmentDataMixin):
                 desc_name = descriptor_folder.title
                 articles = []
                 article_folders = self.filter_contentvalues_by_iface(
-                    descriptor_folder, self.descr_assess_iface
+                    descriptor_folder, INationalDescriptorAssessment
                 )
 
                 for article_folder in article_folders:

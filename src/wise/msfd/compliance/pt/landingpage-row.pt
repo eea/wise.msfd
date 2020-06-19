@@ -1,0 +1,6 @@
+<tal:rep tal:repeat="value python: options.data.items()">
+  <td tal:attributes="python: view.get_colspan(value[0])"
+    tal:content="structure python: value[1]">
+    Content here
+  </td>
+</tal:rep>

@@ -104,6 +104,16 @@
     for="*"
     />
 
+  <!-- Assessment module landing page -->
+  <browser:page
+    for=".interfaces.IComplianceModuleFolder"
+    name="landingpage"
+    class=".landingpage.StartLandingPage"
+    template="./pt/landingpage.pt"
+    permission="zope2.View"
+    />
+
+
   <!-- <subscriber -->
   <!--   for="ZPublisher.interfaces.IPubAfterTraversal" -->
   <!--   handler=".handle_traverse" -->

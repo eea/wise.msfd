@@ -2,8 +2,7 @@ import logging
 
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 from wise.msfd.compliance.interfaces import (IDescriptorFolder,
-                                             IRegionalDescriptorAssessment,
-                                             IRegionalDescriptorsFolder)
+                                             IRegionalDescriptorAssessment)
 from wise.msfd.compliance.scoring import OverallScores
 from wise.msfd.utils import fixedorder_sortkey
 
@@ -21,9 +20,6 @@ class RegDescriptorLevelAssessments(BaseRegSummaryView,
     """ Make National summary code compatible for Regional summary """
 
     template = ViewPageTemplateFile('pt/descriptor-level-assessments.pt')
-
-    base_folder_iface = IRegionalDescriptorsFolder
-    descr_assess_iface = IRegionalDescriptorAssessment
 
     def _get_article_data(self, region_code, descriptor,
                           assess_data, article):
@@ -102,14 +98,9 @@ class RegDescriptorLevelAssessments(BaseRegSummaryView,
 
         res = []
 
-        portal_catalog = self.context.context.portal_catalog
-        brains = portal_catalog.searchResults(
-            object_provides=self.base_folder_iface.__identifier__
-        )
-        reg_desc_folder = brains[0].getObject()
         region_folder = [
             region
-            for region in reg_desc_folder.contentValues()
+            for region in self._reg_desc_region_folders
             if region.id == self.region_code.lower()
         ][0]
 
@@ -130,7 +121,7 @@ class RegDescriptorLevelAssessments(BaseRegSummaryView,
             desc_name = descriptor_folder.title
             articles = []
             article_folders = self.filter_contentvalues_by_iface(
-                descriptor_folder, self.descr_assess_iface
+                descriptor_folder, IRegionalDescriptorAssessment
             )
 
             for article_folder in article_folders:

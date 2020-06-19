@@ -109,14 +109,6 @@ class BaseRegSummaryView(BaseComplianceView):
             interfaces.IRegionalSummaryRegionFolder
         )
 
-    def filter_contentvalues_by_iface(self, folder, interface):
-        res = [
-            f for f in folder.contentValues()
-            if interface.providedBy(f)
-        ]
-
-        return res
-
     @property
     def country_code(self):
         """ Needs to be defined for our National summaries code
