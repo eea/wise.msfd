@@ -11,7 +11,11 @@
     <div id="layout-contents" tal:define="text context/text | nothing" >
       <div id="wise-search-form">
         <div class="start-page-content left-side-form full-width-marker">
-          HELLO
+          <table class="table table-bordered">
+            <tal:rep tal:repeat="row options/data">
+                <tr tal:replace="structure row"></tr>
+            </tal:rep>
+          </table>
         </div>
       </div>
     </div>

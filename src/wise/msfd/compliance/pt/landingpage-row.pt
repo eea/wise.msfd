@@ -1,6 +1,24 @@
-<tal:rep tal:repeat="value python: options.data.items()">
-  <td tal:attributes="python: view.get_colspan(value[0])"
-    tal:content="structure python: value[1]">
-    Content here
-  </td>
+<tal:rep tal:repeat="row options/data">
+  <tal:def tal:define="date python: row[0];
+        who python: row[1];
+        article python: row[2];
+        task python: row[3];
+        subrows python: row[4];">
+    <tr tal:define="rowspan python: len(subrows)">
+      <th tal:attributes="rowspan rowspan" tal:content="date"></th>
+      <th tal:attributes="rowspan rowspan" tal:content="who"></th>
+      <th tal:attributes="rowspan rowspan" tal:content="article"></th>
+      <th tal:attributes="rowspan rowspan" tal:content="task"></th>
+      <td>1</td>
+      <td>2</td>
+      <td>3</td>
+    </tr>
+    <tal:cond tal:condition="python: len(subrows) > 1">
+      <tr tal:repeat="subrow python: subrows[1:]">
+        <td>1</td>
+        <td>2</td>
+        <td>3</td>
+      </tr>
+    </tal:cond>
+  </tal:def>
 </tal:rep>

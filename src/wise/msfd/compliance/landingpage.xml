@@ -1,16 +1,16 @@
 <landingpage>
-    <group date="2018">
+    <year date="2018">
         <element who="MS" article="17 (8)" task="2018 update of assessment">
-            <row colspan="country" class="BaseCountryRow" display-text="Reports"/>
-            <row colspan="region" class="BaseRegionRow" display-text="MS reports for region"/>
+            <row colspan="country" get-method="BaseCountryRow" display-text="Reports"/>
+            <row colspan="region" get-method="BaseRegionRow" display-text="MS reports for region"/>
         </element>
         <element who="MS" article="17 (9)" task="2018 update of determination of GES">
-            <row colspan="country" class="BaseCountryRow" display-text="Reports"/>
-            <row colspan="region" class="BaseRegionRow" display-text="MS reports for region"/>
+            <row colspan="country" get-method="BaseCountryRow" display-text="Reports"/>
+            <row colspan="region" get-method="BaseRegionRow" display-text="MS reports for region"/>
         </element>
         <element who="MS" article="17 (10)" task="2018 update of environmental targets">
-            <row colspan="country" class="BaseCountryRow" display-text="Reports"/>
-            <row colspan="region" class="BaseRegionRow" display-text="MS reports for region"/>
+            <row colspan="country" get-method="BaseCountryRow" display-text="Reports"/>
+            <row colspan="region" get-method="BaseRegionRow" display-text="MS reports for region"/>
         </element>
-    </group>
+    </year>
 </landingpage>
