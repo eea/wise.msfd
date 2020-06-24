@@ -30,7 +30,7 @@ from wise.msfd.data import (get_all_report_filenames,
                             get_report_file_url, get_report_filename,
                             get_xml_report_data)
 from wise.msfd.gescomponents import get_descriptor, get_features
-from wise.msfd.translation import retrieve_translation
+from wise.msfd.translation import get_translated, retrieve_translation
 from wise.msfd.utils import (current_date, items_to_rows, natural_sort_key,
                              timeit)
 from z3c.form.button import buttonAndHandler
@@ -285,7 +285,8 @@ class ReportData2012(BaseView, BaseUtil):
                 row_values = row[1]
 
                 for j, v in enumerate(row_values):
-                    worksheet.write(i, j + 1, v)
+                    transl = get_translated(v, self.country_code) or v
+                    worksheet.write(i, j + 1, transl)
 
         workbook.close()
         out.seek(0)
@@ -479,7 +480,8 @@ class ReportData2012Secondary(ReportData2012):
                 row_values = row[1]
 
                 for j, v in enumerate(row_values):
-                    worksheet.write(i, j + 1, v)
+                    transl = get_translated(v, self.country_code) or v
+                    worksheet.write(i, j + 1, transl)
 
         workbook.close()
         out.seek(0)
@@ -1155,7 +1157,9 @@ https://svn.eionet.europa.eu/repositories/Reportnet/Dataflows/MarineDirective/MS
                 worksheet.write(i, 0, row_label.title)
 
                 for j, v in enumerate(row_values):
-                    worksheet.write(i, j + 1, unicode(v or ''))
+                    v = unicode(v or '')
+                    transl = get_translated(v, self.country_code) or v
+                    worksheet.write(i, j + 1, transl)
 
         workbook.close()
         out.seek(0)
