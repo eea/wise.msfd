@@ -45,9 +45,7 @@
     <element section="gesdetermination" name="DeterminationDate">Determination date</element>
     <element section="gesdetermination" name="UpdateType">Update type</element>
     <element section="ges" setlevel="0" name="JustificationNonUse" translate="true">Justification for non-use of criterion</element>
-    <element section="ges" name="JustificationDelay" translate="true">
-      Justification for delay in setting EU/regional requirements
-    </element>
+    <element section="ges" name="JustificationDelay" translate="true">Justification for delay in setting EU/regional requirements</element>
 
   </Art9>
 
@@ -75,9 +73,7 @@
     <element section="criteria" name="ThresholdValueUpper">Threshold value upper</element>
     <element section="criteria" name="ThresholdValueLower">Threshold value lower</element>
     <element section="criteria" name="ThresholdQualitative" translate="true">Threshold qualitative</element>
-    <element section="criteria" name="ThresholdValueSource" label="threshold_sources">
-      Threshold value source
-    </element>
+    <element section="criteria" name="ThresholdValueSource" label="threshold_sources">Threshold value source</element>
     <element section="criteria" name="ThresholdValueSourceOther" translate="true">Threshold value source other</element>
     <element section="criteria" name="ValueAchievedUpper">Value achieved upper</element>
     <element section="criteria" name="ValueAchievedLower">Value achieved lower</element>
@@ -97,41 +93,21 @@
     <element section="elementstatus" setlevel="2" name="ElementStatus">Element status</element>
     <element section="elementstatus" name="DescriptionElement" translate="true">Description element</element>
 
-    <element section="overallstatus" setlevel="0" name="IntegrationRuleTypeParameter" label="parameters">
-      Integration rule type parameter
-    </element>
-    <element section="overallstatus" name="IntegrationRuleDescriptionParameter" translate="true">
-      Integration rule description parameter
-    </element>
-    <element section="overallstatus" name="IntegrationRuleDescriptionReferenceParameter" skip="true" reason="Not in the XML">
-      Integration rule description reference parameter
-    </element>
-    <element section="overallstatus" name="IntegrationRuleTypeCriteria" label="parameters">
-      Integration rule type criteria
-    </element>
-    <element section="overallstatus" name="IntegrationRuleDescriptionCriteria" translate="true">
-      Integration rule description criteria
-    </element>
-    <element section="overallstatus" name="IntegrationRuleDescriptionReferenceCriteria" skip="true" reason="Not in the XML">
-      Integration rule description reference criteria
-    </element>
+    <element section="overallstatus" setlevel="0" name="IntegrationRuleTypeParameter" label="parameters">Integration rule type parameter</element>
+    <element section="overallstatus" name="IntegrationRuleDescriptionParameter" translate="true">Integration rule description parameter</element>
+    <element section="overallstatus" name="IntegrationRuleDescriptionReferenceParameter" skip="true" reason="Not in the XML">Integration rule description reference parameter</element>
+    <element section="overallstatus" name="IntegrationRuleTypeCriteria" label="parameters">Integration rule type criteria</element>
+    <element section="overallstatus" name="IntegrationRuleDescriptionCriteria" translate="true">Integration rule description criteria</element>
+    <element section="overallstatus" name="IntegrationRuleDescriptionReferenceCriteria" skip="true" reason="Not in the XML">Integration rule description reference criteria</element>
     <element section="overallstatus" convert="format_nr" name="GESExtentThreshold">GES extent threshold</element>
     <element section="overallstatus" convert="format_nr" name="GESExtentAchieved">GES extent achieved</element>
     <element section="overallstatus" name="GESExtentUnit">GES extent unit</element>
     <element section="overallstatus" name="GESAchieved">GES achieved</element>
-    <element section="overallstatus" name="DescriptionOverallStatus" translate="true">
-      Description overall status
-    </element>
+    <element section="overallstatus" name="DescriptionOverallStatus" translate="true">Description overall status</element>
     <element section="overallstatus" name="AssessmentsPeriod">Assessments period</element>
-    <element section="overallstatus" name="PressureCodes" label="pressures" convert="csv_ges_labels_list">
-      Related pressures
-    </element>
-    <element section="overallstatus" name="RelatedActivities" skip="true" reason="This field is not in the DB">
-      Related activities
-    </element>
-    <element section="overallstatus" name="TargetCodes" label="targets" convert="csv_ges_labels_inverse_list">
-      Related targets
-    </element>
+    <element section="overallstatus" name="PressureCodes" label="pressures" convert="csv_ges_labels_list">Related pressures</element>
+    <element section="overallstatus" name="RelatedActivities" skip="true" reason="This field is not in the DB">Related activities</element>
+    <element section="overallstatus" name="TargetCodes" label="targets" convert="csv_ges_labels_inverse_list">Related targets</element>
   </Art8>
 
   <!-- <Art3> -->
