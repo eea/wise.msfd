@@ -9,9 +9,9 @@
   <body metal:fill-slot="content">
 
     <div id="layout-contents" tal:define="text context/text | nothing" >
-      <div id="wise-search-form">
-        <div class="start-page-content left-side-form full-width-marker">
-          <table class="table table-bordered">
+      <div id="wise-search-landingpage">
+        <div class="start-page-content full-width-marker">
+          <table class="table table-bordered table-landingpage">
             <tal:rep tal:repeat="row options/data">
                 <tr tal:replace="structure row"></tr>
             </tal:rep>

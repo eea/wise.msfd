@@ -9,15 +9,19 @@
       <th tal:attributes="rowspan rowspan" tal:content="who"></th>
       <th tal:attributes="rowspan rowspan" tal:content="article"></th>
       <th tal:attributes="rowspan rowspan" tal:content="task"></th>
-      <td>1</td>
-      <td>2</td>
-      <td>3</td>
+      <tal:rep tal:repeat="item python: subrows[0]">
+        <td tal:attributes="colspan python: item[0]">
+          <a tal:attributes="href python: item[2]" tal:content="python: item[1]"></a>
+        </td>
+      </tal:rep>
     </tr>
     <tal:cond tal:condition="python: len(subrows) > 1">
       <tr tal:repeat="subrow python: subrows[1:]">
-        <td>1</td>
-        <td>2</td>
-        <td>3</td>
+        <tal:rep tal:repeat="item subrow">
+          <td tal:attributes="colspan python: item[0]">
+            <a tal:attributes="href python: item[2]" tal:content="python: item[1]"></a>
+          </td>
+        </tal:rep>
       </tr>
     </tal:cond>
   </tal:def>
