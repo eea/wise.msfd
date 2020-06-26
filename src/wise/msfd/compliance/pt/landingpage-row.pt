@@ -3,14 +3,17 @@
         who python: row[1];
         article python: row[2];
         task python: row[3];
-        subrows python: row[4];">
-    <tr tal:define="rowspan python: len(subrows)">
+        css_extra python: row[4];
+        subrows python: row[5];">
+    <tr tal:attributes="class python: css_extra"
+        tal:define="rowspan python: len(subrows)">
       <th tal:attributes="rowspan rowspan" tal:content="date"></th>
       <th tal:attributes="rowspan rowspan" tal:content="who"></th>
       <th tal:attributes="rowspan rowspan" tal:content="article"></th>
-      <th tal:attributes="rowspan rowspan" tal:content="task"></th>
+      <th class="bold-border"
+          tal:attributes="rowspan rowspan" tal:content="task"></th>
       <tal:rep tal:repeat="item python: subrows[0]">
-        <td tal:attributes="colspan python: item[0]">
+        <td tal:attributes="colspan python: item[0]; class python: item[3]">
           <a tal:attributes="href python: item[2]" tal:content="python: item[1]"></a>
         </td>
       </tal:rep>
@@ -18,7 +21,7 @@
     <tal:cond tal:condition="python: len(subrows) > 1">
       <tr tal:repeat="subrow python: subrows[1:]">
         <tal:rep tal:repeat="item subrow">
-          <td tal:attributes="colspan python: item[0]">
+          <td tal:attributes="colspan python: item[0]; class python: item[3]">
             <a tal:attributes="href python: item[2]" tal:content="python: item[1]"></a>
           </td>
         </tal:rep>
@@ -26,3 +29,4 @@
     </tal:cond>
   </tal:def>
 </tal:rep>
+<tr class="year-separator"></tr>

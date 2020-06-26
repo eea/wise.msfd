@@ -1,5 +1,5 @@
 <landingpage>
-    <year date="Date">
+    <year date="Date" extra-css-class="landpage-header">
         <element who="Who" article="Article" task="Task">
             <row colspan="country" get-method="get_2018_countries" display-text="_country"/>
             <row colspan="region" get-method="get_2018_regions" display-text="_region"/>
@@ -17,6 +17,23 @@
         <element who="MS" article="17 (10)" task="2018 update of environmental targets">
             <row colspan="country" get-method="get_2018_countries" display-text="Reports"/>
             <row colspan="region" get-method="get_2018_regions" display-text="MS reports for region"/>
+        </element>
+    </year>
+    <year date="2012">
+        <element who="MS" article="8" task="Initial assessment">
+            <row colspan="country" get-method="get_2018_countries" display-text="Reports"/>
+            <row colspan="region" get-method="get_2018_regions" display-text="MS reports for region"/>
+        </element>
+        <element who="MS" article="9" task="Determination of GES">
+            <row colspan="country" get-method="get_2018_countries" display-text="Reports"/>
+            <row colspan="region" get-method="get_2018_regions" display-text="MS reports for region"/>
+        </element>
+        <element who="MS" article="10" task="Environmental targets">
+            <row colspan="country" get-method="get_2018_countries" display-text="Reports"/>
+            <row colspan="region" get-method="get_2018_regions" display-text="MS reports for region"/>
+        </element>
+        <element who="COM" article="20.2" task="International report">
+            <row colspan="row" get-method="get_2012_inter_report" display-text="COM(2012) 662"/>
         </element>
     </year>
 </landingpage>

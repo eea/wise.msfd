@@ -11,7 +11,8 @@ from Products.Five.browser.pagetemplatefile import (PageTemplateFile,
                                                     ViewPageTemplateFile)
 
 from wise.msfd.compliance.content import AssessmentData
-from wise.msfd.compliance.interfaces import (IEditAssessorsForm,
+from wise.msfd.compliance.interfaces import (ICountryDescriptorsFolder,
+                                             IEditAssessorsForm,
                                              INationalDescriptorsFolder,
                                              IRegionalDescriptorAssessment,
                                              IRegionalDescriptorRegionsFolder,
@@ -378,6 +379,12 @@ class AssessmentDataMixin(object):
         nat_desc_folder = brains[0].getObject()
 
         return nat_desc_folder
+
+    @property
+    def _nat_desc_country_folders(self):
+        return self.filter_contentvalues_by_iface(
+            self._nat_desc_folder, ICountryDescriptorsFolder
+        )
 
     @property
     def _reg_desc_folder(self):

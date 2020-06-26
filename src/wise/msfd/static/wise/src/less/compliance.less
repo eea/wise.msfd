@@ -653,15 +653,86 @@ table.comp-c-listing {
   .table-landingpage {
     margin: 0 !important;
 
+    tr {
+      &.landpage-header {
+        th {
+          font-size: 120%;
+        }
+      }
+
+      &.year-separator {
+
+      }
+    }
+
+    tr.year-separator + tr {
+      border-top: 2px solid #aaa;
+    }
+
     th, td {
-      padding: 1px !important;
+      border: 1px solid white;
+      border-radius: 2px;
+      font-size: 90%;
       max-width: 100px;
+      padding: 1px !important;
       text-align: center;
+      text-decoration: none;
       vertical-align: middle !important;
+
+      &.landpage-header {
+        font-size: 175%;
+      }
+
+      &.bold-border {
+        border-right: 3px solid #aaa;
+        margin-right: 1px;
+      }
     }
 
     th {
       background-color: #efefef;
+    }
+
+    td {
+      border: 1px solid white;
+      &.BAL-C, &.ATL-C, &.MED-C, &.BLK-C {
+        a {
+          color: black;
+        }
+      }
+      &.BAL, &.ATL, &.MED, &.BLK, &.ROW {
+        a {
+          color: white;
+        }
+      }
+
+      &.BAL-C {
+        background-color: #93CDDD;
+      }
+      &.BAL {
+        background-color: #215968;
+      }
+      &.ATL-C {
+        background-color: #C6D9F1;
+      }
+      &.ATL {
+        background-color: #558ED5;
+      }
+      &.MED-C {
+        background-color: #FCD5B5;
+      }
+      &.MED {
+        background-color: #E46C0A;
+      }
+      &.BLK-C {
+        background-color: #D99694;
+      }
+      &.BLK {
+        background-color: #632523;
+      }
+      &.ROW {
+        background-color: #984807;
+      }
     }
   }
 }

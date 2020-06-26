@@ -39,6 +39,7 @@ class LandingPageYearDefinition(object):
         """
 
         date = year_node.attrib.get('date')
+        css_extra = year_node.attrib.get('extra-css-class', '')
 
         rows = []
 
@@ -55,7 +56,7 @@ class LandingPageYearDefinition(object):
 
                 subrows.append((colspan_type, text, get_method))
 
-            rows.append((date, who, article, task, subrows))
+            rows.append((date, who, article, task, css_extra, subrows))
 
         self.rows = rows
 
@@ -70,7 +71,6 @@ class StartLandingPage(BaseComplianceView):
         data = []
 
         for year_def in self.year_defs:
-            # import pdb; pdb.set_trace()
             rendered_row = BaseLandingPageRow(self, self.request, year_def)()
 
             data.append(rendered_row)
@@ -86,6 +86,17 @@ class BaseLandingPageRow(BaseComplianceView, AssessmentDataMixin):
     template = PageTemplateFile('pt/landingpage-row.pt')
 
     @property
+    def _nr_of_countries(self):
+        cnt = 0
+
+        for region_folder in self._reg_desc_region_folders:
+            available_countries = region_folder._countries_for_region
+
+            cnt += len(available_countries)
+
+        return cnt
+
+    @property
     def regions_and_countries(self):
         res = []
 
@@ -97,36 +108,58 @@ class BaseLandingPageRow(BaseComplianceView, AssessmentDataMixin):
 
         return res
 
-    def get_2018_countries(self):
+    def _default(self):
         return {}
 
-    def get_2018_regions(self):
-        data = {
-            'BAL': "test link",
-            'ATL': "test link",
-            'MED': "test link",
-            'BLK': 'test link'
-        }
+    def get_2018_countries(self):
+        data = {}
+
+        for folder in self._nat_desc_country_folders:
+            url = folder.absolute_url()
+            reg_id = folder.id.upper()
+            data[reg_id] = url
 
         return data
 
-    def _make_subrow_region(self, text, data):
+
+    def get_2018_regions(self):
+        data = {}
+
+        for folder in self._reg_desc_region_folders:
+            url = folder.absolute_url()
+            reg_id = folder.id.upper()
+            data[reg_id] = url
+
+        return data
+
+    def _make_subrow_row(self, text, data, extra_css_class):
         res = []
         _text = text
+        css_class = extra_css_class + " {}"
+
+        res.append((self._nr_of_countries, _text,
+                    data.get('ROW', ''), css_class.format('ROW')))
+
+        return res
+
+    def _make_subrow_region(self, text, data, extra_css_class):
+        res = []
+        _text = text
+        css_class = extra_css_class + " {}"
 
         for region_id, available_countries in self.regions_and_countries:
             if text == '_region':
                 _text = region_id
 
-            res.append(
-                (len(available_countries), _text, data.get(region_id, ''))
-            )
+            res.append((len(available_countries), _text,
+                        data.get(region_id, ''), css_class.format(region_id)))
 
         return res
 
-    def _make_subrow_country(self, text, data):
+    def _make_subrow_country(self, text, data, extra_css_class):
         res = []
         _text = text
+        css_class = extra_css_class + " {}-C"
 
         for region_id, available_countries in self.regions_and_countries:
             for country in available_countries:
@@ -136,13 +169,14 @@ class BaseLandingPageRow(BaseComplianceView, AssessmentDataMixin):
                 if text == '_country':
                     _text = country_id
 
-                res.append((1, _text, data.get(country_id, "")))
+                res.append((1, _text, data.get(country_id, ""),
+                            css_class.format(region_id)))
 
         return res
 
-    def make_subrow(self, colspan_type, text, data):
+    def make_subrow(self, colspan_type, text, data, extra_css_class):
         make_method = getattr(self, "_make_subrow_" + colspan_type)
-        subrow_final = make_method(text, data)
+        subrow_final = make_method(text, data, extra_css_class)
 
         return subrow_final
 
@@ -152,19 +186,25 @@ class BaseLandingPageRow(BaseComplianceView, AssessmentDataMixin):
         data = []
 
         for row in year_def.rows:
-            subrows = row[4]
+            date = row[0]
+            who = row[1]
+            art = row[2]
+            task = row[3]
+            css = row[4]
+            subrows = row[5]
             _subrows = []
 
             for subrow in subrows:
                 colspan_type = subrow[0]
                 text = subrow[1]
                 get_data_method = subrow[2]
-                subrow_data = getattr(self, get_data_method)()
+                subrow_data = getattr(self, get_data_method, self._default)()
 
-                _subrows.append(self.make_subrow(colspan_type, text,
-                                                 subrow_data))
+                _subrows.append(
+                    self.make_subrow(colspan_type, text, subrow_data, css)
+                )
 
-            data.append((row[0], row[1], row[2], row[3], _subrows))
+            data.append((date, who, art, task, css, _subrows))
 
         self.data = data
 

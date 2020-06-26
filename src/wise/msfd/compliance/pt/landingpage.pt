@@ -11,6 +11,7 @@
     <div id="layout-contents" tal:define="text context/text | nothing" >
       <div id="wise-search-landingpage">
         <div class="start-page-content full-width-marker">
+          <h3>MSFD Assessment Module home page</h3>
           <table class="table table-bordered table-landingpage">
             <tal:rep tal:repeat="row options/data">
                 <tr tal:replace="structure row"></tr>
