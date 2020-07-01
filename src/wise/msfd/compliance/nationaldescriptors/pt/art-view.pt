@@ -74,13 +74,13 @@
           </div>
 
           <div class="asts-header-data">
-            <h3>2018 Assessment</h3>
+            <h3 id="assessment-2018">2018 Assessment</h3>
             <div class="ast-header-data">
               <div tal:replace="structure view/assessment_header_2018_html"></div>
               <div tal:replace="structure view/assessment_data_2018_html"></div>
             </div>
 
-            <h3>2012 Assessment</h3>
+            <h3 id="assessment-2012">2012 Assessment</h3>
             <div class="ast-header-data">
               <div tal:replace="structure view/assessment_header_2012"></div>
               <div tal:replace="structure view/assessment_data_2012"></div>

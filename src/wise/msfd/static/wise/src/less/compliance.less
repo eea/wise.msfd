@@ -647,7 +647,7 @@ table.comp-c-listing {
   font-size: 1.5em;
 }
 
-#wise-search-landingpage {
+.wise-search-landingpage {
   overflow-x: auto;
 
   .table-landingpage {
@@ -695,7 +695,9 @@ table.comp-c-listing {
 
     td {
       border: 1px solid white;
-      &.BAL-C, &.ATL-C, &.MED-C, &.BLK-C {
+      &.BAL-C, &.ATL-C, &.MED-C, &.BLK-C,
+       &.BAL-CA, &.ATL-CA, &.MED-CA, &.BLK-CA,
+        &.BAL-A, &.ATL-A, &.MED-A, &.BLK-A {
         a {
           color: black;
         }
@@ -705,7 +707,12 @@ table.comp-c-listing {
           color: white;
         }
       }
-
+      &.BAL-CA, &.ATL-CA, &.MED-CA, &.BLK-CA {
+        background-color: #FDEADA;
+      }
+      &.BAL-A, &.ATL-A, &.MED-A, &.BLK-A {
+        background-color: #FAC090;
+      }
       &.BAL-C {
         background-color: #93CDDD;
       }
