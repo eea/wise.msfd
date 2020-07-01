@@ -32,14 +32,14 @@
     permission="zope2.View"
     />
 
-  <!-- All country reports on a page, for the MS Reporters -->
-  <!-- <browser:page -->
-  <!--   for="..interfaces.ICountryDescriptorsFolder" -->
-  <!--   name="reports" -->
-  <!--   class=".main.NationalDescriptorCountryOverview" -->
-  <!--   template="./pt/country&#45;start&#45;reports.pt" -->
-  <!--   permission="zope2.View" -->
-  <!--   /> -->
+   <!-- All country reports on a page, for the MS Reporters -->
+   <browser:page
+     for="..interfaces.INationalRegionDescriptorFolder"
+     name="reports"
+     class=".main.NationalDescriptorCountryOverview"
+     template="./pt/country-start-reports.pt"
+     permission="zope2.View"
+     />
 
   <!-- Renders assessment data, for member states to view -->
   <browser:page

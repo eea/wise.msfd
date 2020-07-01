@@ -80,7 +80,7 @@ class RegionalDescriptorRegionsOverview(BaseRegComplianceView):
         return desc
 
     def get_articles(self, desc):
-        order = ['art9', 'art8', 'art10']
+        order = ['art8', 'art9', 'art10']
 
         return [desc[a] for a in order]
 

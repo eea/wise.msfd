@@ -15,9 +15,10 @@
             metal:use-macro="context/wise-macros/macros/tabs"></metal:tabs>
         </div>
 
-        <div class="start-page-content left-side-form">
+        <div class="start-page-content left-side-form"
+            tal:define="region python: view._countryregion_folder">
 
-          <h1>Member state reports - national overview: <span tal:content="context/title"></span></h1>
+          <h1>Member state reports - national overview: <span tal:content="python: '{} - {}'.format(view.country_title, view.country_region_name)"></span></h1>
 
           <div class="nda-link">
             <a href="./../">
@@ -26,33 +27,51 @@
             </a>
           </div>
 
-          <div tal:repeat="region view/get_regions">
-            <h4 tal:content="region/Title">Region name</h4>
+          <!--<h3 tal:attributes="id region/id" tal:content="region/Title">Region name</h3>-->
 
-            <table class="table as-table-overview table-striped">
-              <thead>
-                <tr>
-                  <th>Descriptor</th>
-                  <th>Art 9</th>
-                  <th>Art 8</th>
-                  <th>Art 10</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr tal:repeat="desc python: view.get_descriptors(region)">
-                  <th>
-                    <span tal:content="python: view.descriptor_for_code(desc.id).title">D0</span>
-                  </th>
-                  <td tal:repeat="assessment python: view.get_articles(desc)">
-                    <a tal:attributes="href python: assessment.absolute_url() + '/@@view-report-data-2012';
-                        class python: 'btn btn-xs btn-primary'">2012</a>
-                    <a tal:attributes="href python: assessment.absolute_url() + '/@@view-report-data-2018';
-                        class python: 'btn btn-xs btn-success'">2018</a>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
+          <table class="table as-table-overview table-striped table-country-start">
+            <tbody>
+              <tr class="article-title">
+                <th></th>
+                <th>Art. 7 Competent Authorities</th>
+                <th colspan="2">Art. 3(1) Marine waters & Art. 4 Reporting areas</th>
+                <th colspan="22"></th>
+              </tr>
+              <tr>
+                <td></td>
+                <td tal:repeat="assessment python: view.get_secondary_articles(view._country_folder)">
+                  <a tal:attributes="href python: assessment.absolute_url() + '/@@view-report-data-2018';
+                      class python: 'btn btn-xs btn-primary'">Reports</a>
+                </td>
+                <td colspan="22"></td>
+              </tr>
+
+              <tr class="article-title">
+                <th>Descriptor</th>
+                <th>Article 8 Assessment</th>
+                <th>Art 9 GES Determination</th>
+                <th>Article 10 Targets</th>
+                <th>Article 11 Monitoring</th>
+                <th>Article 13 Measures</th>
+                <th>Article 14 Exceptions</th>
+                <th>Article 18 Progress on measures</th>
+              </tr>
+              <tr tal:repeat="desc python: view.get_descriptors(region)">
+                <th>
+                  <span tal:content="python: view.descriptor_for_code(desc.id).title">D0</span>
+                </th>
+                <td tal:repeat="assessment python: view.get_articles(desc)">
+                  <a tal:attributes="href python: assessment.absolute_url() + '/@@view-report-data-2012';
+                      class python: 'btn btn-xs btn-success'">2012</a>
+                  <a tal:attributes="href python: assessment.absolute_url() + '/@@view-report-data-2018';
+                      class python: 'btn btn-xs btn-primary'">2018</a>
+                </td>
+                <td tal:repeat="assessment python: view.get_articles_part2(desc)">
+                  <i>Under development</i>
+                </td>
+              </tr>
+            </tbody>
+          </table>
 
         </div>
       </div>

@@ -225,9 +225,12 @@ class NationalDescriptorsOverview(BaseView):
 class NationalDescriptorCountryOverview(BaseView):
     section = 'national-descriptors'
 
-    def get_regions(self):
+    def get_regions(self, context=None):
+        if not context:
+            context = self.context
+
         regions = [
-            x for x in self.context.contentValues()
+            x for x in context.contentValues()
             if x.portal_type == 'Folder'
         ]
 
@@ -298,6 +301,16 @@ class NationalDescriptorCountryOverview(BaseView):
         order = ['art9', 'art8', 'art10']
 
         return [desc[a] for a in order]
+
+    def get_articles_part2(self, desc):
+        order = ['art11', 'art13', 'art14', 'art18']
+
+        return order
+
+    def get_secondary_articles(self, country):
+        order = ['art7', 'art3']
+
+        return [country[a] for a in order]
 
     def __call__(self):
 
