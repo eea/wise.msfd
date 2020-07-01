@@ -33,6 +33,7 @@ DISPLAY_LABELS = {
     'nameText': 'Name in the national language',
     'spZoneType': 'Zone type',
     'legisSName': 'Legislation short name',
+    'Area': 'Area (km2)',
     # Article 19.3
     'MarineUnitID': 'Marine Reporting unit'
 }
