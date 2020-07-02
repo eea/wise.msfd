@@ -352,7 +352,6 @@ class ReportData2012(BaseView, BaseUtil):
             rep_info.reporters, source_file, factsheet, rep_info.report_date
         )
         report_header = self.report_header_template(**report_header_data)
-
         try:
             report_data, report_data_rows = self.get_report_data()
         except:
@@ -372,6 +371,9 @@ class ReportData2012(BaseView, BaseUtil):
         )
         date = root.xpath('//w:ReportingInformation/w:ReportingDate/text()',
                           namespaces=NSMAP)
+
+        if not date:
+            date.append('-')
 
         return reporters, date
 

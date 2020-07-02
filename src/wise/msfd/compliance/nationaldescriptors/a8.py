@@ -241,10 +241,16 @@ class A8aItem(Item):
             return status[0]
 
     def row_reporting_feature(self):
-        return self.reporting_feature['w:ReportingFeature/text()'][0]
+        rep = self.reporting_feature['w:ReportingFeature/text()']
+
+        if rep:
+            return rep[0]
 
     def row_indicator(self):
-        return self.node['c:Indicator/text()'][0]
+        ind = self.node['c:Indicator/text()']
+
+        if ind:
+            return ind[0]
 
     def row_threshold_value(self):
         tv = self.node['c:ThresholdValue/text()']
@@ -641,7 +647,6 @@ class Article8(BaseArticle2012):
     """
 
     def setup_data(self):
-
         filename = self.context.get_report_filename()
         text = get_xml_report_data(filename)
         root = fromstring(text)
@@ -719,7 +724,6 @@ class Article8(BaseArticle2012):
         report_data = {}
 
         # TODO: use reported list of muids per country,from database
-
         for muid in xml_muids:
             if muid not in report_map:
                 logger.warning("MarineUnitID not reported: %s, %s, Article 8",

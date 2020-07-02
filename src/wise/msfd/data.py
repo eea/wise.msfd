@@ -22,6 +22,11 @@ FILENAMES_MISSING_DB = {
         ('BAL', 'Art8', 'MSFD8aFeatures_20150225_135158.xml'),
         ('BAL', 'Art9', 'MSFD9GES_20150130_111719.xml'),
         ('BAL', 'Art10', 'MSFD10TI_20160226_150132.xml')
+    ),
+    'MT': (
+        ('MIC', 'Art8', 'MSFD8aFeatures_20131105_121510.xml'),
+        ('MIC', 'Art9', 'MSFD9GES_20131105_121546.xml'),
+        ('MIC', 'Art10', 'MSFD10TI_20140502_095401.xml')
     )
 }
 
