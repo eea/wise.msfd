@@ -148,14 +148,11 @@ def get_assessment_data_2012_db(*args):
 
     for row in res:
         overall_text = row.OverallAssessment
+        assess = row.Assessment
 
-        if not overall_text:
-            res_final.append(row)
-
-            continue
-
-        if 'see' in overall_text.lower():
-            descr_match = descr_reg.match(overall_text)
+        if 'see' in overall_text.lower() or 'see' in assess.lower():
+            descr_match = (descr_reg.match(overall_text)
+                            or descr_reg.match(assess))
             descriptor = descr_match.groups()[0]
 
             _, r = db.get_all_records(
@@ -167,6 +164,11 @@ def get_assessment_data_2012_db(*args):
             )
 
             res_final.append(r[0])
+
+            continue
+
+        if not overall_text:
+            res_final.append(row)
 
             continue
 
@@ -296,16 +298,6 @@ class NationalDescriptorCountryOverview(BaseView):
         desc = get_descriptor(code.upper())
 
         return desc
-
-    def get_articles(self, desc):
-        order = ['art9', 'art8', 'art10']
-
-        return [desc[a] for a in order]
-
-    def get_articles_part2(self, desc):
-        order = ['art11', 'art13', 'art14', 'art18']
-
-        return order
 
     def get_secondary_articles(self, country):
         order = ['art7', 'art3']
@@ -633,6 +625,7 @@ class NationalDescriptorArticleView(BaseView, AssessmentDataMixin):
                 self.country_region_code,       # TODO: this will need refactor
                 descriptor_criterions,
             )
+
             self.assessment_data_2012 = self.assessment_data_2012_tpl(
                 data=assessments_2012
             )

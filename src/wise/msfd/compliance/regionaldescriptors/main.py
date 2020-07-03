@@ -79,11 +79,6 @@ class RegionalDescriptorRegionsOverview(BaseRegComplianceView):
 
         return desc
 
-    def get_articles(self, desc):
-        order = ['art8', 'art9', 'art10']
-
-        return [desc[a] for a in order]
-
     def ready_phase2(self):
         return False
 

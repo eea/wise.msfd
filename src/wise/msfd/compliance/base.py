@@ -225,6 +225,15 @@ class BaseComplianceView(BrowserView, BasePublicPage, SecurityMixin):
     process_status_colors = PROCESS_STATUS_COLORS
     ARTICLE_ORDER = ('Art9', 'Art8', 'Art10')
 
+    def get_articles(self, desc):
+
+        return [desc[a.lower()] for a in self.ARTICLE_ORDER]
+
+    def get_articles_part2(self, desc):
+        order = ['art11', 'art13', 'art14', 'art18']
+
+        return order
+
     def get_current_user_roles(self, context=None):
         current_user = user.get_current().getId()
         params = {
