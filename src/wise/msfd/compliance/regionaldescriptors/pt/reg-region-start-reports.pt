@@ -22,19 +22,23 @@
           <div class="nda-link">
             <a href="./../">
               <i class='fa fa-level-up'></i>
-              Go to all National Descriptor Assessments
+              Go to all Regional Descriptor Assessments
             </a>
           </div>
 
-          <h4 tal:content="python: view.context.title">Region name</h4>
+          <!--<h4 tal:content="python: view.context.title">Region name</h4>-->
 
-          <table class="table as-table-overview table-striped">
+          <table class="table as-table-overview table-striped table-country-start">
             <thead>
               <tr>
                 <th>Descriptor</th>
-                <th>Art 9</th>
-                <th>Art 8</th>
-                <th>Art 10</th>
+                <th>Article 8 Assessment</th>
+                <th>Art 9 GES Determination</th>
+                <th>Article 10 Targets</th>
+                <th>Article 11 Monitoring</th>
+                <th>Article 13 Measures</th>
+                <th>Article 14 Exceptions</th>
+                <th>Article 18 Progress on measures</th>
               </tr>
             </thead>
             <tbody>
@@ -47,6 +51,9 @@
                       class python: 'btn btn-xs btn-primary'">2012</a>
                   <a tal:attributes="href python: assessment.absolute_url() + '/@@view-report-data-2018';
                       class python: 'btn btn-xs btn-success'">2018</a>
+                </td>
+                <td tal:repeat="assessment python: view.get_articles_part2(desc)">
+                  <i>Not available</i>
                 </td>
               </tr>
             </tbody>

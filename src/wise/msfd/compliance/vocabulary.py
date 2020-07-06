@@ -131,7 +131,9 @@ def get_regions_for_country(country_code):
         t.CountryCode == country_code
     )
 
-    blacklist = ['NotReported']
+    # blacklist main/generic regions as they do not have reported data
+    # but they appear in the database. Countries affected: ES, IE, PT, IT
+    blacklist = ['NotReported', 'ATL', 'MED']
 
     return [(code, REGIONS.get(code, code))
             for code in regions

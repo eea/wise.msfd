@@ -22,7 +22,7 @@
           <div class="nda-link">
             <a href="./../">
               <i class='fa fa-level-up'></i>
-              Go to all National Descriptor Assessments
+              Go to all Regional Descriptor Assessments
             </a>
           </div>
 
@@ -56,15 +56,19 @@
             </form>
           </div>
 
-          <h4 tal:content="python: view.context.title">Region name</h4>
+          <!--<h4 tal:content="python: view.context.title">Region name</h4>-->
 
           <table class="table as-table-overview table-striped">
             <thead>
               <tr>
                 <th>Descriptor</th>
-                <th>Art 9</th>
-                <th>Art 8</th>
-                <th>Art 10</th>
+                <th>Article 8 Assessment</th>
+                <th>Art 9 GES Determination</th>
+                <th>Article 10 Targets</th>
+                <th>Article 11 Monitoring</th>
+                <th>Article 13 Measures</th>
+                <th>Article 14 Exceptions</th>
+                <th>Article 18 Progress on measures</th>
               </tr>
             </thead>
             <tbody>
@@ -73,18 +77,24 @@
                   <span tal:content="python: view.descriptor_for_code(desc.id).title">D0</span>
                 </th>
                 <td tal:repeat="assessment python: view.get_articles(desc)">
-                  <tal:block tal:define="css_class python:'btn btn-xs btn-' + view.get_status_color(assessment)">
-                    <a tal:attributes="href python: assessment.absolute_url() + '/@@edit-assessment-data-2018';
-                        class python: css_class">
+                  <tal:block tal:define="css_class python:'assessment-status-colorbar btn btn-xs btn-' + view.get_status_color(assessment);
+                      url assessment/absolute_url;
+                      can_view_data python:view.can_view_assessment_data(assessment);
+                      can_edit_data python:view.can_view_edit_assessment_data(assessment)">
+                    <a tal:condition="can_edit_data"
+                        tal:attributes="href python: url + '/@@edit-assessment-data-2018'">
+                      <i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>
+                    <a tal:condition="can_view_data"
+                        tal:attributes="href url; class python: css_class">
                       Assessment:
                       <span class="as-state-label" tal:content="python: view.get_status(assessment)">State</span>
                       <span title="New comments"
                           class="has-new-comments fa fa-exclamation-circle"
-                          tal:condition="python: view.has_new_comments(assessment)"></span>
-                    </a>
-                    <a tal:attributes="href assessment/absolute_url;
-                          class css_class">Overview</a>
+                          tal:condition="python: view.has_new_comments(assessment)"></span></a>
                   </tal:block>
+                </td>
+                <td tal:repeat="assessment python: view.get_articles_part2(desc)">
+                  <i>Not available</i>
                 </td>
               </tr>
             </tbody>

@@ -34,7 +34,8 @@
               <tr class="article-title">
                 <th></th>
                 <th>Art. 7 Competent Authorities</th>
-                <th colspan="2">Art. 3(1) Marine waters & Art. 4 Reporting areas</th>
+                <th>Art. 3(1) Marine waters</th>
+                <th>Art. 4 Reporting areas</th>
                 <th colspan="22"></th>
               </tr>
               <tr>
@@ -67,7 +68,7 @@
                       class python: 'btn btn-xs btn-primary'">2018</a>
                 </td>
                 <td tal:repeat="assessment python: view.get_articles_part2(desc)">
-                  <i>Under development</i>
+                  <i>Not available</i>
                 </td>
               </tr>
             </tbody>

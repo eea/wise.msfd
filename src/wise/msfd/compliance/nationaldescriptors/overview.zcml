@@ -28,7 +28,7 @@
     for="..interfaces.ICountryDescriptorsFolder"
     name="view"
     class=".main.NationalDescriptorCountryOverview"
-    template="./pt/country-start-assessments.pt"
+    template="./pt/country-start.pt"
     permission="zope2.View"
     />
 
@@ -38,6 +38,14 @@
      name="reports"
      class=".main.NationalDescriptorCountryOverview"
      template="./pt/country-start-reports.pt"
+     permission="zope2.View"
+     />
+
+   <browser:page
+     for="..interfaces.INationalRegionDescriptorFolder"
+     name="assessments"
+     class=".main.NationalDescriptorCountryOverview"
+     template="./pt/country-start-assessments.pt"
      permission="zope2.View"
      />
 

@@ -603,9 +603,12 @@ class BaseComplianceView(BrowserView, BasePublicPage, SecurityMixin):
 
         return latest > dt
 
-    def get_transitions(self):
+    def get_transitions(self, context=None):
+        if not context:
+            context = self.context
+
         wftool = get_tool('portal_workflow')
-        transitions = wftool.listActionInfos(object=self.context)
+        transitions = wftool.listActionInfos(object=context)
 
         return [t for t in transitions if t['allowed']]
 

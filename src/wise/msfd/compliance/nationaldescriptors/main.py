@@ -264,13 +264,14 @@ class NationalDescriptorCountryOverview(BaseView):
 
         return self.request.response.redirect(url)
 
-    def ready_phase2(self):
-        roles = self.get_current_user_roles(self.context)
+    def ready_phase2(self, regions=None):
+        # roles = self.get_current_user_roles(self.context)
 
-        if 'Editor' not in roles:
+        if not self.can_view_edit_assessment_data(self.context):
             return False
 
-        regions = self.get_regions()
+        if not regions:
+            regions = self.get_regions()
 
         for region in regions:
             descriptors = self.get_descriptors(region)
@@ -300,7 +301,7 @@ class NationalDescriptorCountryOverview(BaseView):
         return desc
 
     def get_secondary_articles(self, country):
-        order = ['art7', 'art3']
+        order = ['art7', 'art3', 'art4']
 
         return [country[a] for a in order]
 
