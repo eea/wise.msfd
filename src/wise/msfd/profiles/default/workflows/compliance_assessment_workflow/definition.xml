@@ -419,6 +419,7 @@
   <action url="" category="workflow" icon="">Send for work by Topic Leads</action>
   <guard>
    <guard-role>Editor</guard-role>
+   <guard-role>Contributor</guard-role>
   </guard>
  </transition>
  <transition transition_id="send_to_not_started" title="Send back to not started" new_state="not_started" trigger="USER" before_script="" after_script="">
