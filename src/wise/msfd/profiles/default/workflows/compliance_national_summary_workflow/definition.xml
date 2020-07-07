@@ -34,6 +34,12 @@
    <permission-role>Reader</permission-role>
    <permission-role>Reviewer</permission-role>
   </permission-map>
+  <permission-map name="wise.msfd: Edit Assessment" acquired="False">
+   <permission-role>Contributor</permission-role>
+   <permission-role>Editor</permission-role>
+   <permission-role>Manager</permission-role>
+   <permission-role>Reviewer</permission-role>
+  </permission-map>
  </state>
  <state state_id="final" title="Final">
   <exit-transition transition_id="to_draft"/>
@@ -45,6 +51,12 @@
    <permission-role>Manager</permission-role>
    <permission-role>Owner</permission-role>
    <permission-role>Reader</permission-role>
+   <permission-role>Reviewer</permission-role>
+  </permission-map>
+  <permission-map name="wise.msfd: Edit Assessment" acquired="False">
+   <permission-role>Contributor</permission-role>
+   <permission-role>Editor</permission-role>
+   <permission-role>Manager</permission-role>
    <permission-role>Reviewer</permission-role>
   </permission-map>
  </state>

@@ -58,6 +58,7 @@ PROCESS_STATUS_COLORS = {
     "phase2": "primary",
     "phase3": "success",
     # national summary
+    "draft": "primary",
     "final": "success",
 }
 

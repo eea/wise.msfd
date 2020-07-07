@@ -2,10 +2,10 @@
 <dc-workflow workflow_id="compliance_assessment_workflow" title="Compliance Asessment workflow" description="Workflow to be used for Assessments on Articles/Descriptors, in National Descriptors Assessment" state_variable="review_state" initial_state="not_started" manager_bypass="False">
  <permission>Add portal content</permission>
  <permission>Modify portal content</permission>
+ <permission>Review portal content</permission>
  <permission>View</permission>
  <permission>wise.msfd: Edit Assessment</permission>
  <permission>wise.msfd: View Assessment Data</permission>
- <permission>Review portal content</permission>
  <permission>wise.msfd: View Assessment Edit Page</permission>
  <state state_id="approved" title="Approved">
   <exit-transition transition_id="send_back_to_draft"/>
@@ -332,20 +332,24 @@
    <permission-role>Manager</permission-role>
   </permission-map>
   <permission-map name="View" acquired="False">
+   <permission-role>Contributor</permission-role>
    <permission-role>Editor</permission-role>
    <permission-role>Manager</permission-role>
    <permission-role>Reviewer</permission-role>
   </permission-map>
   <permission-map name="wise.msfd: Edit Assessment" acquired="False">
+   <permission-role>Contributor</permission-role>
    <permission-role>Editor</permission-role>
    <permission-role>Manager</permission-role>
   </permission-map>
   <permission-map name="wise.msfd: View Assessment Data" acquired="False">
+   <permission-role>Contributor</permission-role>
    <permission-role>Editor</permission-role>
    <permission-role>Manager</permission-role>
    <permission-role>Reviewer</permission-role>
   </permission-map>
   <permission-map name="wise.msfd: View Assessment Edit Page" acquired="False">
+   <permission-role>Contributor</permission-role>
    <permission-role>Editor</permission-role>
    <permission-role>Manager</permission-role>
    <permission-role>Reviewer</permission-role>
