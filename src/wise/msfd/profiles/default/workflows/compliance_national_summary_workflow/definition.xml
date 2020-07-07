@@ -50,21 +50,21 @@
  </state>
 
  <transition transition_id="to_final" title="To final state" new_state="final" trigger="USER" before_script="" after_script="">
-  <action url="%(content_url)s/content_status_modify?workflow_action=to_final" category="workflow" icon="">To final state</action>
+  <action url="%(content_url)s/content_status_modify?workflow_action=to_final" category="workflow" icon="">Send to final state</action>
   <guard>
    <guard-role>Reviewer</guard-role>
    <guard-role>Editor</guard-role>
   </guard>
  </transition>
  <transition transition_id="to_notstarted" title="To not started" new_state="not_started" trigger="USER" before_script="" after_script="">
-  <action url="%(content_url)s/content_status_modify?workflow_action=to_notstarted" category="workflow" icon="">To not started</action>
+  <action url="%(content_url)s/content_status_modify?workflow_action=to_notstarted" category="workflow" icon="">Send to not started</action>
   <guard>
    <guard-role>Reviewer</guard-role>
    <guard-role>Editor</guard-role>
   </guard>
  </transition>
  <transition transition_id="to_draft" title="To draft state" new_state="draft" trigger="USER" before_script="" after_script="">
-  <action url="%(content_url)s/content_status_modify?workflow_action=to_draft" category="workflow" icon="">Send back to draft</action>
+  <action url="%(content_url)s/content_status_modify?workflow_action=to_draft" category="workflow" icon="">Send to draft</action>
   <guard>
    <guard-role>Reviewer</guard-role>
    <guard-role>Editor</guard-role>
