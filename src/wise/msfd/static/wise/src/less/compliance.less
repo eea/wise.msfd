@@ -52,6 +52,15 @@
 
 .table-country-start {
   tbody {
+    .region-title {
+      border: none;
+      font-size: 24px;
+
+      td {
+        padding-top: 1em;
+        background-color: white;
+      }
+    }
     .article-title {
       th, td {
         background-color: #AAA;
@@ -690,7 +699,7 @@ table.comp-c-listing {
       border: 1px solid white;
       border-radius: 2px;
       font-size: 90%;
-      max-width: 100px;
+      max-width: 110px;
       padding: 1px !important;
       text-align: center;
       text-decoration: none;
@@ -712,6 +721,7 @@ table.comp-c-listing {
 
     td {
       border: 1px solid white;
+
       &.BAL-C, &.ATL-C, &.MED-C, &.BLK-C,
        &.BAL-CA, &.ATL-CA, &.MED-CA, &.BLK-CA,
         &.BAL-A, &.ATL-A, &.MED-A, &.BLK-A {
@@ -756,6 +766,10 @@ table.comp-c-listing {
       }
       &.ROW {
         background-color: #984807;
+      }
+
+      a {
+        //text-decoration: initial;
       }
     }
   }

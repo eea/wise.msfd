@@ -125,21 +125,33 @@ class BaseLandingPageRow(BaseComplianceView, AssessmentDataMixin):
     def _default(self):
         return {}
 
-    def get_2018_countries(self):
+    def get_2018_countries_assess(self):
+        return self.get_2018_countries(extra_path='assessments')
+
+    def get_2018_countries_reports(self):
+        return self.get_2018_countries(extra_path='reports')
+
+    def get_2018_countries(self, extra_path=''):
         data = {}
 
         for folder in self._nat_desc_country_folders:
-            url = folder.absolute_url()
+            url = "{}/{}".format(folder.absolute_url(), extra_path)
             reg_id = folder.id.upper()
             data[reg_id] = url
 
         return data
 
-    def get_2018_regions(self):
+    def get_2018_regions_assess(self):
+        return self.get_2018_regions(extra_path='assessments')
+
+    def get_2018_regions_reports(self):
+        return self.get_2018_regions(extra_path='reports')
+
+    def get_2018_regions(self, extra_path=''):
         data = {}
 
         for folder in self._reg_desc_region_folders:
-            url = folder.absolute_url()
+            url = "{}/{}".format(folder.absolute_url(), extra_path)
             reg_id = folder.id.upper()
             data[reg_id] = url
 

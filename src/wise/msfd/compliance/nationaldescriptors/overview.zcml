@@ -34,7 +34,7 @@
 
    <!-- All country reports on a page, for the MS Reporters -->
    <browser:page
-     for="..interfaces.INationalRegionDescriptorFolder"
+     for="..interfaces.ICountryDescriptorsFolder"
      name="reports"
      class=".main.NationalDescriptorCountryOverview"
      template="./pt/country-start-reports.pt"
@@ -42,7 +42,7 @@
      />
 
    <browser:page
-     for="..interfaces.INationalRegionDescriptorFolder"
+     for="..interfaces.ICountryDescriptorsFolder"
      name="assessments"
      class=".main.NationalDescriptorCountryOverview"
      template="./pt/country-start-assessments.pt"
