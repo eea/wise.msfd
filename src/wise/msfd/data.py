@@ -17,7 +17,7 @@ from .utils import current_date, timeit
 logger = logging.getLogger('wise.msfd')
 
 
-FILENAMES_MISSING_DB = {
+FILENAMES_MISSING_DB_ALL = {
     'PL': (
         ('BAL', 'Art8', 'MSFD8aFeatures_20150225_135158.xml'),
         ('BAL', 'Art9', 'MSFD9GES_20150130_111719.xml'),
@@ -27,7 +27,34 @@ FILENAMES_MISSING_DB = {
         ('MIC', 'Art8', 'MSFD8aFeatures_20131105_121510.xml'),
         ('MIC', 'Art9', 'MSFD9GES_20131105_121546.xml'),
         ('MIC', 'Art10', 'MSFD10TI_20140502_095401.xml')
-    )
+    ),
+    'ES': (
+        ('ABI', 'Art8', ('ABIES-NOR_MSFD8aFeatures_20130430.xml',
+                         'ABIES-SUD_MSFD8aFeatures_20130513.xml')),
+        ('ABI', 'Art9', ('ABIES-NOR_MSFD9GES_20121210.xml',
+                         'ABIES-SUD_MSFD9GES_20121210.xml')),
+        ('ABI', 'Art10', ('ABIES-NOR_MSFD10TI.xml',
+                          'ABIES-SUD_MSFD10TI.xml')),
+        ('AMA', 'Art8', 'AMAES_MSFD8aFeatures_20131004.xml'),
+        ('AMA', 'Art9', 'AMAES_MSFD9GES_20121210.xml'),
+        ('AMA', 'Art10', 'AMAES_MSFD10TI_20130412.xml'),
+        ('MWE', 'Art8', ('MWEES-ESAL_MSFD8aFeatures_20130517.xml',
+                         'MWEES-LEBA_MSFD8aFeatures_20130624.xml')),
+        ('MWE', 'Art9', ('MWEES-ESAL_MSFD9GES_20121210.xml',
+                         'MWEES-LEBA_MSFD9GES_20121210.xml')),
+        ('MWE', 'Art10', ('MWEES-ESAL_MSFD10TI.xml',
+                          'MWEES-LEBA_MSFD10TI.xml')),
+    ),
+}
+
+FILENAMES_MISSING_DB_8b = {
+    'ES': (
+        ('ABI', 'Art8', ('ABIES-NOR_MSFD8bPressures_20130516.xml',
+                         'ABIES-SUD_MSFD8bPressures_20130722.xml')),
+        ('AMA', 'Art8', 'AMAES_MSFD8bPressures_20121015.xml'),
+        ('MWE', 'Art8', ('MWEES-ESAL_MSFD8bPressures_20130726.xml',
+                         'MWEES-LEBA_MSFD8bPressures_20121015.xml')),
+    ),
 }
 
 
@@ -236,12 +263,20 @@ def get_report_filename(report_version,
     :param article: article code, like: 'art9'
     :param descriptor: descriptor code, like: 'D5'
     """
+    d = descriptor.split('.')[0]
 
-    if country in FILENAMES_MISSING_DB:
+    if article != 'Art8':
+        filenames = FILENAMES_MISSING_DB_ALL
+    elif d in ['D1', 'D4', 'D6']:
+        filenames = FILENAMES_MISSING_DB_ALL
+    else:
+        filenames = FILENAMES_MISSING_DB_8b
+
+    if country in filenames:
         filename = [
             x[2]
 
-            for x in FILENAMES_MISSING_DB[country]
+            for x in filenames[country]
 
             if x[0] == region and x[1] == article
         ]

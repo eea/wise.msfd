@@ -222,7 +222,7 @@ class ReportData2012(BaseView, BaseUtil):
         return rendered_view, rows
 
     def get_report_header_data(self, report_by, source_file, factsheet,
-                               report_date):
+                               report_date, multiple_source_files=False):
         data = OrderedDict(
             title=self.report_title,
             report_by=report_by,
@@ -232,6 +232,7 @@ class ReportData2012(BaseView, BaseUtil):
             report_due='2012-10-15',
             report_date=report_date,
             help_text=self.help_text,
+            multiple_source_files=multiple_source_files
         )
 
         return data
@@ -332,24 +333,36 @@ class ReportData2012(BaseView, BaseUtil):
         factsheet = None
 
         source_file = ('File not found', None)
+        multiple_source_files = False
 
         if filename:
-            url = get_report_file_url(filename)
-            if url:
+            if isinstance(filename, tuple):
+                multiple_source_files = True
                 try:
-                    factsheet = get_factsheet_url(url)
-                except Exception:
-                    logger.exception("Error in getting HTML Factsheet URL %s",
-                                     url)
+                    source_file = [
+                        (f, get_report_file_url(f) + '/manage_document')
+                        for f in filename
+                    ]
+                except:
+                    logger.exception("Error in getting HTML Factsheet URL)")
             else:
-                logger.warning("No factsheet url, filename is: %r", filename)
+                url = get_report_file_url(filename)
+                if url:
+                    try:
+                        factsheet = get_factsheet_url(url)
+                    except Exception:
+                        logger.exception("Error in getting HTML Factsheet URL %s",
+                                         url)
+                else:
+                    logger.warning("No factsheet url, filename is: %r", filename)
 
-            source_file = (filename, url + '/manage_document')
+                source_file = (filename, url + '/manage_document')
 
         rep_info = self.get_reporting_information()
 
         report_header_data = self.get_report_header_data(
-            rep_info.reporters, source_file, factsheet, rep_info.report_date
+            rep_info.reporters, source_file, factsheet, rep_info.report_date,
+            multiple_source_files
         )
         report_header = self.report_header_template(**report_header_data)
         try:
@@ -382,7 +395,8 @@ class ReportData2012(BaseView, BaseUtil):
         # empty), so we try to get the information from the reported XML files.
 
         if not filename:
-            filename = self.filename
+            f = self.filename
+            filename = isinstance(f, tuple) and f[0] or f
 
         default = ReportingInformation('2013-04-30', 'Member State')
 
