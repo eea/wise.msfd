@@ -232,24 +232,9 @@ class Article9(BaseArticle2012):
     def setup_data(self, filename=None):
         if not filename:
             filename = self.context.get_report_filename()
-        text = get_xml_report_data(filename)
 
-        if not text:
-            self.rows = []
-
-            return self.template()
-
-        root = fromstring(text)
-
-        descriptor_class = get_descriptor(self.descriptor)
-        all_ids = descriptor_class.all_ids()
-        if self.descriptor.startswith('D1.'):
-            all_ids.add('D1')
-
-        self.descriptor_label = descriptor_class.title
-
-        def x(xpath, node=root):
-            return node.xpath(xpath, namespaces=NSMAP)
+        if not isinstance(filename, tuple):
+            filename = [filename]
 
         def filter_descriptors(nodes, descriptor):
             res = []
@@ -263,59 +248,86 @@ class Article9(BaseArticle2012):
 
             return res
 
-        # these are the records we are interested in
-        descriptors = filter_descriptors(x('//w:Descriptors'),
-                                         self.descriptor)
+        descriptor_class = get_descriptor(self.descriptor)
+        all_ids = descriptor_class.all_ids()
+        self.descriptor_label = descriptor_class.title
 
-        # the xml file is a collection of records that need to be agregated
-        # in order to "simplify" their information. For example, the
-        # ThresholdValues need to be shown for all MarineUnitIds, but the
-        # grouping criteria is the "GES Component"
+        if self.descriptor.startswith('D1.'):
+            all_ids.add('D1')
 
-        cols = []
-        seen = []
+        _cols = []
+        _muids = []
 
-        muids = root.xpath('//w:MarineUnitID/text()', namespaces=NSMAP)
+        for fname in filename:
+            text = get_xml_report_data(fname)
 
-        count, res = db.get_marine_unit_id_names(list(set(muids)))
-        muid_ids = [y.id for y in self.muids]
+            if not text:
+                self.rows = []
 
-        labels = [
-            ItemLabel(m, t or m)
-            for m, t in res
-            if m in muid_ids
-        ]
+                return self.template()
 
-        # special case for PL where marine_unit_ids are not imported into DB
-        # therefore we cannot get the labels for them
-        if muids and not labels:
-            labels = [ItemLabel(m, m) for m in set(muids)]
+            root = fromstring(text)
 
-        self.muids_labeled = sorted(
-            labels, key=lambda l: natural_sort_key(l.name)
-        )
-        muids = ItemList(labels)
+            def x(xpath, node=root):
+                return node.xpath(xpath, namespaces=NSMAP)
 
-        for node in descriptors:
-            col_id = node.find('w:ReportingFeature', namespaces=NSMAP).text
+            # these are the records we are interested in
+            descriptors = filter_descriptors(x('//w:Descriptors'),
+                                             self.descriptor)
 
-            if col_id in seen:
-                continue
+            # the xml file is a collection of records that need to be agregated
+            # in order to "simplify" their information. For example, the
+            # ThresholdValues need to be shown for all MarineUnitIds, but the
+            # grouping criteria is the "GES Component"
 
-            item = A9Item(self, node, descriptors, muids)
-            cols.append(item)
-            seen.append(item.id)
+            cols = []
+            seen = []
 
+            muids = root.xpath('//w:MarineUnitID/text()', namespaces=NSMAP)
+
+            count, res = db.get_marine_unit_id_names(list(set(muids)))
+            muid_ids = [y.id for y in self.muids]
+
+            labels = [
+                ItemLabel(m, t or m)
+                for m, t in res
+                if m in muid_ids
+            ]
+
+            # special case for PL where marine_unit_ids are not imported into DB
+            # therefore we cannot get the labels for them
+            if muids and not labels:
+                labels = [ItemLabel(m, m) for m in set(muids)]
+
+            self.muids_labeled = sorted(
+                labels, key=lambda l: natural_sort_key(l.name)
+            )
+            _muids.extend(labels)
+            muids = ItemList(labels)
+
+            for node in descriptors:
+                col_id = node.find('w:ReportingFeature', namespaces=NSMAP).text
+
+                if col_id in seen:
+                    continue
+
+                item = A9Item(self, node, descriptors, muids)
+                cols.append(item)
+                seen.append(item.id)
+
+            _cols.extend(cols)
+
+        _muids = ItemList(_muids)
         # insert missing criterions
-        self.insert_missing_criterions(descriptor_class, cols, muids)
+        self.insert_missing_criterions(descriptor_class, _cols, _muids)
 
         self.rows = []
-        sorted_ges_c = sorted_by_criterion([c.ges_component() for c in cols])
+        sorted_ges_c = sorted_by_criterion([c.ges_component() for c in _cols])
 
         def sort_func(col):
             return sorted_ges_c.index(col.ges_component())
 
-        sorted_cols = sorted(cols, key=sort_func)
+        sorted_cols = sorted(_cols, key=sort_func)
         self.cols = list(sorted_cols)
 
         for col in sorted_cols:

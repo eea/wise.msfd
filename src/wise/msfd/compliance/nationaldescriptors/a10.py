@@ -419,63 +419,75 @@ class Article10(BaseArticle2012):
     def setup_data(self):
         self.article9_cols = self.get_article9_columns()
         filename = self.context.get_report_filename()
-        text = get_xml_report_data(filename)
 
-        if not text:
+        if not isinstance(filename, tuple):
+            filename = [filename]
+
+        _cols = []
+        _muids = []
+
+        for fname in filename:
+            text = get_xml_report_data(fname)
+
+            if not text:
+                self.rows = []
+
+                return self.template()
+
+            root = fromstring(text)
+
+            def xp(xpath, node=root):
+                return node.xpath(xpath, namespaces=NSMAP)
+
+            muids = xp('//w:MarineUnitID/text()')
+            count, res = db.get_marine_unit_id_names(list(set(muids)))
+
+            labels = [
+                ItemLabel(m, u'{} ({})'.format(t, m))
+                for m, t in res
+            ]
+
+            # special case for PL where marine_unit_ids are not imported into DB
+            # therefore we cannot get the labels for them
+            if muids and not labels:
+                labels = [ItemLabel(m, m) for m in set(muids)]
+
+            _muids.extend(labels)
+            muids = ItemList(labels)
+
+            descriptor = get_descriptor(self.descriptor)
+            self.descriptor_label = descriptor.title
+
+            reported = xp("//w:DesriptorCriterionIndicator/text()")
+            gcs = self.filtered_ges_components(reported)
+
             self.rows = []
 
-            return self.template()
+            # wrap the target per MarineUnitID
+            all_target_indicators = [TargetsIndicators(node)
+                                     for node in xp('w:TargetsIndicators')]
+            cols = [A10Item(self,
+                            gc,
+                            all_target_indicators,
+                            self.country_code,
+                            self.region_code,
+                            muids)
 
-        root = fromstring(text)
+                    for gc in gcs]
 
-        def xp(xpath, node=root):
-            return node.xpath(xpath, namespaces=NSMAP)
-
-        muids = xp('//w:MarineUnitID/text()')
-        count, res = db.get_marine_unit_id_names(list(set(muids)))
-
-        labels = [
-            ItemLabel(m, u'{} ({})'.format(t, m))
-            for m, t in res
-        ]
-
-        # special case for PL where marine_unit_ids are not imported into DB
-        # therefore we cannot get the labels for them
-        if muids and not labels:
-            labels = [ItemLabel(m, m) for m in set(muids)]
+            _cols.extend(cols)
 
         self.muids_labeled = sorted(
-            labels, key=lambda l: natural_sort_key(l.name)
+            _muids, key=lambda l: natural_sort_key(l.name)
         )
-        muids = ItemList(labels)
-
-        descriptor = get_descriptor(self.descriptor)
-        self.descriptor_label = descriptor.title
-
-        reported = xp("//w:DesriptorCriterionIndicator/text()")
-        gcs = self.filtered_ges_components(reported)
-
-        self.rows = []
-
-        # wrap the target per MarineUnitID
-        all_target_indicators = [TargetsIndicators(node)
-                                 for node in xp('w:TargetsIndicators')]
-        self.cols = cols = [A10Item(self,
-                                    gc,
-                                    all_target_indicators,
-                                    self.country_code,
-                                    self.region_code,
-                                    muids)
-
-                            for gc in gcs]
-
+        self.cols = _cols
         # unwrap the columns into rows
 
-        for col in cols:
+        for col in _cols:
             for name in col.keys():
                 values = []
 
-                for inner in cols:
+                for inner in _cols:
                     values.append(inner[name])
 
                 raw_values = []

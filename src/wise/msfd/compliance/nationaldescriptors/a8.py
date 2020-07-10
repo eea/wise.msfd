@@ -654,6 +654,7 @@ class Article8(BaseArticle2012):
 
         report_map = defaultdict(list)
         _xml_muids = []
+
         for fname in filename:
             text = get_xml_report_data(fname)
             root = fromstring(text)
