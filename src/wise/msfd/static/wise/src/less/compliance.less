@@ -54,11 +54,13 @@
   tbody {
     .region-title {
       border: none;
-      font-size: 24px;
+      font-size: 20px;
 
       td {
         padding-top: 1em;
         background-color: white;
+        border: none;
+        text-align: left;
       }
     }
     .article-title {
@@ -70,6 +72,13 @@
     tr {
       th:first-of-type {
         width: 300px;
+      }
+      &.fullwidth-statusbar {
+        td {
+          a {
+            width: 100%;
+          }
+        }
       }
     }
   }
@@ -115,6 +124,7 @@ h4.process-phase-title {
 // Country national descriptors overview
 .assessment-status-colorbar {
   //display: block !important;
+  text-align: center;
 }
 .process-state-phase-form {
   background-color: #dff1c3;

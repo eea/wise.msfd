@@ -10,6 +10,7 @@ from zope.interface import implements
 
 from persistent.list import PersistentList
 from plone.api.content import transition
+from plone.api.portal import get_tool
 from plone.protect import CheckAuthenticator  # , protect
 from Products.Five.browser.pagetemplatefile import \
     ViewPageTemplateFile as Template
@@ -150,7 +151,8 @@ def get_assessment_data_2012_db(*args):
         overall_text = row.OverallAssessment
         assess = row.Assessment
 
-        if 'see' in overall_text.lower() or 'see' in assess.lower():
+        if 'see' in overall_text.lower() or (not overall_text and
+                                             'see d' in assess.lower()):
             descr_match = (descr_reg.match(overall_text)
                             or descr_reg.match(assess))
             descriptor = descr_match.groups()[0]
@@ -304,6 +306,33 @@ class NationalDescriptorCountryOverview(BaseView):
         order = ['art7', 'art3', 'art4']
 
         return [country[a] for a in order]
+
+    @property
+    def national_report_art12_url(self):
+        portal_type = 'national_summary'
+
+        return self._get_report_url_art12(portal_type)
+
+    @property
+    def regional_report_art12_url(self):
+        portal_type = 'wise.msfd.regionalsummaryfolder'
+
+        return self._get_report_url_art12(portal_type)
+
+    def _get_report_url_art12(self, portal_type):
+        portal_catalog = get_tool('portal_catalog')
+        brains = portal_catalog.searchResults(
+            portal_type=portal_type
+        )
+
+        for brain in brains:
+            obj = brain.getObject()
+
+            if obj.id != self.country_code.lower():
+                continue
+
+            return obj.absolute_url()
+
 
     def __call__(self):
 

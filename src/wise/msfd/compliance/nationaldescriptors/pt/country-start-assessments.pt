@@ -58,8 +58,50 @@
             </form>
           </div>
 
+          <h3>Commission Assessments</h3>
+
           <table class="table as-table-overview table-striped table-country-start">
             <tbody>
+              <tr class="article-title">
+                <th>Article 8 Assessment</th>
+                <th>Art 9 GES Determination</th>
+                <th>Article 10 Targets</th>
+                <th>Article 11 Monitoring</th>
+                <th>Article 13 Measures</th>
+                <th>Article 14 Exceptions</th>
+                <th colspan="22">Article 18 Progress on measures</th>
+              </tr>
+
+              <tr class="fullwidth-statusbar">
+                <td colspan="3">
+                  <a disabled class="assessment-status-colorbar btn btn-xs btn-primary">Art. 12 (8-9-10) National report - 2012</a>
+                </td>
+                <td>
+                  <a disabled class="assessment-status-colorbar btn btn-xs btn-primary">Art. 12 (11) National report - 2014</a>
+                </td>
+                <td colspan="2">
+                  <a disabled class="assessment-status-colorbar btn btn-xs btn-primary">Art. 16 (13-14) National report - 2016</a>
+                </td>
+                <td colspan="2">
+                  <a disabled class="assessment-status-colorbar btn btn-xs btn-primary">Art. 20 (18) National report - 2019??</a>
+                </td>
+              </tr>
+              <tr class="fullwidth-statusbar">
+                <td colspan="3">
+                  <a tal:attributes="href view/national_report_art12_url"
+                      class="assessment-status-colorbar btn btn-xs btn-primary">Art. 12 (8-9-10) National report - 2018</a>
+                </td>
+                <td>
+                  <a disabled class="assessment-status-colorbar btn btn-xs btn-primary">Art. 12 (11) National report - 2020</a>
+                </td>
+                <td colspan="2">
+                  <a disabled class="assessment-status-colorbar btn btn-xs btn-primary">Art. 16 (13-14) National report - 2022</a>
+                </td>
+                <td colspan="2">
+                  <a disabled class="assessment-status-colorbar btn btn-xs btn-primary">Art. 20 (18) National report - 2025??</a>
+                </td>
+              </tr>
+
               <tr class="article-title">
                 <th></th>
                 <th>Art. 7 Competent Authorities</th>
@@ -67,7 +109,7 @@
                 <th>Art. 4 Reporting areas</th>
                 <th colspan="22"></th>
               </tr>
-              <tr>
+              <tr class="fullwidth-statusbar">
                 <td></td>
                 <td tal:repeat="assessment python: view.get_secondary_articles(view._country_folder)">
                   <tal:block tal:define="css_class python:'assessment-status-colorbar btn btn-xs btn-' + view.get_status_color(assessment);
@@ -93,9 +135,9 @@
               <tal:rep tal:repeat="region view/get_regions">
                 <tr class="region-title">
                   <td colspan="22"
-                      tal:attributes="id region/id" tal:content="region/Title">Region name</td>
+                      tal:attributes="id region/id"
+                      tal:content="region/title">Region name</td>
                 </tr>
-
                 <tr class="article-title">
                   <th>Descriptor</th>
                   <th>Article 8 Assessment</th>
@@ -106,6 +148,7 @@
                   <th>Article 14 Exceptions</th>
                   <th>Article 18 Progress on measures</th>
                 </tr>
+
                 <tr tal:repeat="desc python: view.get_descriptors(region)">
                   <th>
                     <span tal:content="python: view.descriptor_for_code(desc.id).title">D0</span>

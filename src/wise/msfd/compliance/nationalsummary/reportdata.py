@@ -1,35 +1,19 @@
 # -*- coding: utf-8 -*-
 
-from io import BytesIO
-from pkg_resources import resource_filename
-
 import logging
 
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 from Products.statusmessages.interfaces import IStatusMessage
-from wise.msfd.compliance.interfaces import (IDescriptorFolder,
-                                             INationalDescriptorAssessment,
-                                             INationalDescriptorsFolder,
-                                             INationalRegionDescriptorFolder)
-from wise.msfd.compliance.utils import ordered_regions_sortkey
+
 from wise.msfd.data import get_report_filename
 from wise.msfd.translation import get_translated, retrieve_translation
 from wise.msfd.utils import (ItemList, TemplateMixin, db_objects_to_dict,
                              fixedorder_sortkey, timeit)
 
-from lpod.document import odf_new_document
-from lpod.toc import odf_create_toc
-
-import pdfkit
-
 from ..nationaldescriptors.a7 import Article7
 from ..nationaldescriptors.a34 import Article34
 from ..nationaldescriptors.base import BaseView
 from .base import BaseNatSummaryView
-from .descriptor_assessments import DescriptorLevelAssessments
-from .introduction import Introduction
-from .odt_utils import (create_heading, create_paragraph, create_table,
-                        create_table_summary, setup_document_styles)
 
 logger = logging.getLogger('wise.msfd')
 
