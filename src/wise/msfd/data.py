@@ -610,7 +610,7 @@ def get_all_report_filenames(country, article):
     obligations = {
         'art3': "?obligationNr IN ('608', '760')",
         'art4': "?obligationNr IN ('608', '760')",
-        'art7': "?obligationNr = '607'",
+        'art7': "?obligationNr IN ('607', '608')",
     }
 
     schema = schemas[article.lower()]
