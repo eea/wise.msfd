@@ -109,7 +109,7 @@
                 <th>Art. 4 Reporting areas</th>
                 <th colspan="22"></th>
               </tr>
-              <tr class="fullwidth-statusbar">
+              <tr>
                 <td></td>
                 <td tal:repeat="assessment python: view.get_secondary_articles(view._country_folder)">
                   <tal:block tal:define="css_class python:'assessment-status-colorbar btn btn-xs btn-' + view.get_status_color(assessment);

@@ -628,7 +628,33 @@ class BaseComplianceView(BrowserView, BasePublicPage, SecurityMixin):
         return v.translate(source_lang=source_lang,
                            value=value,
                            is_translatable=is_translatable)
+    @property
+    def national_report_art12_url(self):
+        portal_type = 'national_summary'
+        code = self.country_code
 
+        return self._get_report_url_art12(portal_type, code)
+
+    @property
+    def regional_report_art12_url(self):
+        portal_type = 'wise.msfd.regionalsummaryfolder'
+        code = self.country_region_code
+
+        return self._get_report_url_art12(portal_type, code)
+
+    def _get_report_url_art12(self, portal_type, code):
+        portal_catalog = get_tool('portal_catalog')
+        brains = portal_catalog.searchResults(
+            portal_type=portal_type
+        )
+
+        for brain in brains:
+            obj = brain.getObject()
+
+            if obj.id != code.lower():
+                continue
+
+            return obj.absolute_url()
 
 def _a10_ids_cachekey(method, self, descriptor, **kwargs):
     muids = [m.id for m in kwargs['muids']]

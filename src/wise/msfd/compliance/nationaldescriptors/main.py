@@ -307,33 +307,6 @@ class NationalDescriptorCountryOverview(BaseView):
 
         return [country[a] for a in order]
 
-    @property
-    def national_report_art12_url(self):
-        portal_type = 'national_summary'
-
-        return self._get_report_url_art12(portal_type)
-
-    @property
-    def regional_report_art12_url(self):
-        portal_type = 'wise.msfd.regionalsummaryfolder'
-
-        return self._get_report_url_art12(portal_type)
-
-    def _get_report_url_art12(self, portal_type):
-        portal_catalog = get_tool('portal_catalog')
-        brains = portal_catalog.searchResults(
-            portal_type=portal_type
-        )
-
-        for brain in brains:
-            obj = brain.getObject()
-
-            if obj.id != self.country_code.lower():
-                continue
-
-            return obj.absolute_url()
-
-
     def __call__(self):
 
         return self.index()
