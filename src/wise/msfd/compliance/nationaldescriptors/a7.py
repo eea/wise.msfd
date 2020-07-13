@@ -156,6 +156,10 @@ class Article7(BaseArticle2012):
         nodes = xp('//w:CompetentAuthority', root)
 
         for node in nodes:
+            # filter empty nodes
+            if not node.getchildren():
+                continue
+
             item = self._make_item(node)
             cols.append(item)
 
