@@ -53,4 +53,28 @@
     permission="zope2.View"
     />
 
+  <browser:viewlet
+    name="plone.htmlhead.title"
+    view='wise.msfd.compliance.interfaces.INationalSummaryCountryFolder'
+    manager="plone.app.layout.viewlets.interfaces.IHtmlHead"
+    class=".viewlets.SummaryCountryTitleViewlet"
+    permission="zope2.View"
+    />
+
+  <browser:viewlet
+    name="plone.htmlhead.title"
+    view='wise.msfd.compliance.interfaces.ICountryStartReports'
+    manager="plone.app.layout.viewlets.interfaces.IHtmlHead"
+    class=".viewlets.CountryStartReportsTitleViewlet"
+    permission="zope2.View"
+    />
+
+  <browser:viewlet
+    name="plone.htmlhead.title"
+    view='wise.msfd.compliance.interfaces.ICountryStartAssessments'
+    manager="plone.app.layout.viewlets.interfaces.IHtmlHead"
+    class=".viewlets.CountryStartAssessmentsTitleViewlet"
+    permission="zope2.View"
+    />
+
 </configure>

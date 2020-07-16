@@ -413,9 +413,9 @@ class EditAssessmentDataFormSecondary(EditAssessmentDataForm):
 
     @property
     def title(self):
-        return u"Edit Commission assessment: {}/ {}/ 2018".format(
-            self.country_title,
+        return u"Edit Commission assessment: {}/ 2018/ {}".format(
             self.article,
+            self.country_title,
         )
 
 

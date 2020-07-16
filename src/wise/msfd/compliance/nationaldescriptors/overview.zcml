@@ -36,7 +36,7 @@
    <browser:page
      for="..interfaces.ICountryDescriptorsFolder"
      name="reports"
-     class=".main.NationalDescriptorCountryOverview"
+     class=".main.NatDescCountryOverviewReports"
      template="./pt/country-start-reports.pt"
      permission="zope2.View"
      />
@@ -44,7 +44,7 @@
    <browser:page
      for="..interfaces.ICountryDescriptorsFolder"
      name="assessments"
-     class=".main.NationalDescriptorCountryOverview"
+     class=".main.NatDescCountryOverviewAssessments"
      template="./pt/country-start-assessments.pt"
      permission="zope2.View"
      />

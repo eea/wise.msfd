@@ -32,6 +32,20 @@ class ICountryDescriptorsFolder(Schema):
     title = TextLine(title=u'Title', required=True)
 
 
+class ICountryStartReports(Interface):
+    """ Interface used to override the HTML head title
+
+    Ex: /compliance-module/national-descriptors-assessments/lv/reports
+    """
+
+
+class ICountryStartAssessments(Interface):
+    """ Interface used to override the HTML head title
+
+    Ex: /compliance-module/national-descriptors-assessments/lv/assessments
+    """
+
+
 class INationalRegionDescriptorFolder(Interface):
     """ A container for a country's region
 

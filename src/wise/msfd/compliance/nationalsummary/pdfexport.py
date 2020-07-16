@@ -7,11 +7,14 @@ import logging
 
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 from Products.statusmessages.interfaces import IStatusMessage
+from wise.msfd.compliance.interfaces import INationalSummaryCountryFolder
 from wise.msfd.data import get_report_filename
 from wise.msfd.gescomponents import DESCRIPTOR_TYPES
 from wise.msfd.translation import get_translated, retrieve_translation
 from wise.msfd.utils import (ItemList, TemplateMixin, db_objects_to_dict,
                              fixedorder_sortkey, timeit)
+
+from zope.interface import implements
 
 from lpod.document import odf_new_document
 from lpod.toc import odf_create_toc
@@ -269,6 +272,8 @@ class ArticleTable(BaseView):
 
 
 class AssessmentExportView(BaseNatSummaryView):
+    implements(INationalSummaryCountryFolder)
+
     help_text = "HELP TEXT"
     template = ViewPageTemplateFile('pt/report-data.pt')
     report_header_template = ViewPageTemplateFile(

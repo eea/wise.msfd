@@ -31,6 +31,7 @@ from wise.msfd.gescomponents import get_descriptor
 from wise.msfd.utils import t2rt
 
 from .base import BaseView
+from ..interfaces import ICountryStartAssessments, ICountryStartReports
 from .interfaces import (INationaldescriptorArticleView,
                          INationaldescriptorSecondaryArticleView)
 
@@ -311,6 +312,17 @@ class NationalDescriptorCountryOverview(BaseView):
 
         return self.index()
 
+
+class NatDescCountryOverviewReports(NationalDescriptorCountryOverview):
+    """ Class declaration needed to be able to override HTML head title """
+
+    implements(ICountryStartReports)
+
+
+class NatDescCountryOverviewAssessments(NationalDescriptorCountryOverview):
+    """ Class declaration needed to be able to override HTML head title """
+
+    implements(ICountryStartAssessments)
 
 def get_crit_val(question, element, descriptor):
     """ Get the criteria value to be shown in the assessment data 2018 table
