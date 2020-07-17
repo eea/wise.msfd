@@ -45,6 +45,11 @@ FILENAMES_MISSING_DB_ALL = {
         ('MWE', 'Art10', ('MWEES-ESAL_MSFD10TI.xml',
                           'MWEES-LEBA_MSFD10TI.xml')),
     ),
+    'HR': (
+        ('MAD', 'Art8', 'MADHR_MSFD8aFeatures_20130610.xml'),
+        ('MAD', 'Art9', 'MADHR_MSFD9GES_20141014.xml'),
+        ('MAD', 'Art10', 'MADHR_MSFD10TI_20141014.xml'),
+    ),
 }
 
 FILENAMES_MISSING_DB_8b = {
@@ -57,6 +62,9 @@ FILENAMES_MISSING_DB_8b = {
     ),
     'MT': (
         ('MIC', 'Art8', 'MSFD8bPressures_20140826_082900.xml'),
+    ),
+    'HR': (
+        ('MAD', 'Art8', 'MADHR_MSFD8bPressures_20130610.xml'),
     )
 }
 
