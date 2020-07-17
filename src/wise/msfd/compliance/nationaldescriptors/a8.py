@@ -1,4 +1,5 @@
 import logging
+import re
 from collections import defaultdict
 
 from lxml.etree import fromstring
@@ -300,29 +301,32 @@ class A8bItem(Item):
             ('Assessment Topic', self.row_assessment_topic()),
             ('Element', self.row_element()),
             ('Element 2', self.row_element2()),
-            ('ImpactType [Parameter]', 'Row not implemented'),
+            # ('ImpactType [Parameter]', 'Row not implemented'),
             ('ThresholdValue', self.row_threshold_value()),
-            ('Value achieved', 'Row not implemented'),
+            # ('Value achieved', 'Row not implemented'),
             ('Threshold value/Value unit',
              self.row_threshold_value_unit()),
             ('Proportion threshold value', self.row_proportion_threshold()),
-            ('Proportion value achieved', 'Row not implemented'
-                                          '(same values as Input load)'),
+            # ('Proportion value achieved', 'Row not implemented'
+            #                               '(same values as Input load)'),
 
             ('Status of criteria/indicator', self.row_assessment_status()),
             ('Status trend', self.row_assessment_status_trend()),
             ('Status confidence', self.row_assessment_status_confidence()),
             ('Description (status of criteria/indicator)',
              self.row_status_description()),
-            ('Limitations', self.db_record.Limitations),
+            ('Limitations', getattr(self.db_record, 'Limitations', None)),
             ('Assessment period', self.assessment_period()),
 
-            ('Description', self.db_record.Description),
-            ('Input load', self.db_record.SumInfo1),
+            ('Description', getattr(self.db_record, 'Description', None)),
+            ('Input load', getattr(self.db_record, 'SumInfo1', None)),
             ('Load unit', self.row_record_suminfo1_unit()),
-            ('Confidence', label(self.db_record.SumInfo1Confidence)),
-            ('Trends (recent)', label(self.db_record.TrendsRecent)),
-            ('Trends (future)', label(self.db_record.TrendsFuture)),
+            ('Confidence', label(getattr(self.db_record, 'SumInfo1Confidence',
+                                         None))),
+            ('Trends (recent)', label(getattr(self.db_record, 'TrendsRecent',
+                                              None))),
+            ('Trends (future)', label(getattr(self.db_record, 'TrendsFuture',
+                                              None))),
 
             ('Description (activities)', self.row_activity_description()),
             ('Activity type', self.row_activity_types()),
@@ -470,7 +474,10 @@ def get_db_record(report_type, marine_unit_id, topic):
     # if not count:
     #     import pdb; pdb.set_trace()
 
-    assert count == 1, "Matching record not found"
+    # assert count == 1, "Matching record not found"
+
+    if not res:
+        return None
 
     return res[0]
 
@@ -520,11 +527,25 @@ class ReportTag8a(Node):
 class ReportTag8b(Node):
     """ Handle a (for ex) <PhysicalLoss> or <Nutrients> tag
     """
+    report_type_regex = re.compile(r"([a-zA-Z]+)([0-9].+)")
 
     def __init__(self, node, nsmap):
         super(ReportTag8b, self).__init__(node, nsmap)
 
         self.marine_unit_id = self['w:MarineUnitID/text()'][0]
+
+    @property
+    def criterias_from_topics(self):
+        crits_from_topic = []
+        topics = self['w:AssessmentPI/w:Topic/text()']
+
+        for topic in topics:
+            matches = self.report_type_regex.match(topic)
+            if matches:
+                crit = matches.groups()[1].replace("_", ".")
+                crits_from_topic.append(crit)
+
+        return crits_from_topic
 
     @property
     def criterias(self):
@@ -538,7 +559,8 @@ class ReportTag8b(Node):
 
     def matches_descriptor(self, descriptor):
         descriptor = get_descriptor(descriptor)
-        self_crits = set(self.indicators + self.criterias)
+        self_crits = set(self.indicators + self.criterias +
+                         self.criterias_from_topics)
 
         return bool(self_crits.intersection(descriptor.all_ids()))
 
@@ -753,7 +775,6 @@ class Article8(BaseArticle2012):
 
                 # if i > 0:       # add a splitter row, to separate reports
                 #     rows.append(Row('', ''))
-
                 cols = report.columns(ges_crits)
 
                 for col in cols:
