@@ -383,8 +383,8 @@ class BootstrapCompliance(BrowserView):
         # if 'compliance-module' in self.context.contentIds():
         #     self.context.manage_delObjects(['compliance-module'])
 
-        if 'compliance-module' in self.context.contentIds():
-            cm = self.context['compliance-module']
+        if 'assessment-module' in self.context.contentIds():
+            cm = self.context['assessment-module']
         else:
             cm = create(self.context, 'Folder', title=u'Compliance Module')
 
