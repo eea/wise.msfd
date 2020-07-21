@@ -62,7 +62,7 @@ class NationalAssessmentMixin:
     def get_nat_desc_assessment_data(self, country_code, region, descriptor,
                                      article):
         catalog = self.context.portal_catalog
-        p = "/Plone/marine/assessment-module/national-descriptors-assessments"
+        p = "/Plone/marine/compliance-module/national-descriptors-assessments"
         path = p + "/{}/{}/{}/{}".format(country_code.lower(), region.lower(),
                                          descriptor.lower(), article.lower())
 
