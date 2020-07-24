@@ -41,15 +41,21 @@ logger = logging.getLogger('wise.msfd')
 edw_logger = logging.getLogger('edw.logger')
 edw_logger.setLevel('WARNING')
 
+STATUS_ORDER = ("not_started", "in_work", "in_draft_review",
+                "in_draft_review_com", "in_final_review_tl", "in_final_review",
+                "in_final_review_com", "approved")
+
 STATUS_COLORS = {
     "approved": "success",
     "not_started": "default",
     "in_work": "danger",
     "in_draft_review": "warning",
     "in_draft_review_com": "warning-2",
+    "in_final_review_tl": "danger",
     "in_final_review": "primary",
-    "in_final_review_tl": "primary",
     "in_final_review_com": "success-2",
+    "final": "success",
+    "draft": "primary",
 }
 
 PROCESS_STATUS_COLORS = {
@@ -510,47 +516,52 @@ class BaseComplianceView(BrowserView, BasePublicPage, SecurityMixin):
 
         return res
 
-    def get_wf_state_id(self, context):
+    def get_all_wf_states(self, context=None):
+        if context is None:
+            context = self.context
+
+        wftool = get_tool('portal_workflow')
+        wf = wftool.getWorkflowsFor(context)[0]        # assumes one wf
+
+        states = [k for k, v in wf.states.items()]
+        states_sorted = sorted(
+            states, key=lambda i: fixedorder_sortkey(i, STATUS_ORDER)
+        )
+        titles = [wf.states[s].title for s in states_sorted]
+
+        return titles
+
+    def _get_current_wf_state(self, context=None):
+        if context is None:
+            context = self.context
+
         state = get_state(context)
         wftool = get_tool('portal_workflow')
-        wf = wftool.getWorkflowsFor(context)[0]  # assumes one wf
+        wf = wftool.getWorkflowsFor(context)[0]        # assumes one wf
         wf_state = wf.states[state]
+
+        return state, wf_state
+
+    def get_wf_state_id(self, context=None):
+        state, wf_state = self._get_current_wf_state(context)
         wf_state_id = wf_state.id or state
 
         return wf_state_id
 
     def process_phase(self, context=None):
-        if context is None:
-            context = self.context
-
-        state = get_state(context)
-        wftool = get_tool('portal_workflow')
-        wf = wftool.getWorkflowsFor(context)[0]        # assumes one wf
-        wf_state = wf.states[state]
+        state, wf_state = self._get_current_wf_state(context)
         title = wf_state.title.strip() or state
 
         return state, title
 
     def get_status_color(self, context=None):
-        if context is None:
-            context = self.context
-
-        state = get_state(context)
-        wftool = get_tool('portal_workflow')
-        wf = wftool.getWorkflowsFor(context)[0]        # assumes one wf
-        wf_state = wf.states[state]
+        state, wf_state = self._get_current_wf_state(context)
         wf_state_id = wf_state.id or state
 
         return self.status_colors.get(wf_state_id, "secondary")
 
     def get_status(self, context=None):
-        if context is None:
-            context = self.context
-
-        state = get_state(context)
-        wftool = get_tool('portal_workflow')
-        wf = wftool.getWorkflowsFor(context)[0]        # assumes one wf
-        wf_state = wf.states[state]
+        state, wf_state = self._get_current_wf_state(context)
         title = wf_state.title.strip() or state
 
         return title
@@ -629,20 +640,22 @@ class BaseComplianceView(BrowserView, BasePublicPage, SecurityMixin):
                            value=value,
                            is_translatable=is_translatable)
     @property
-    def national_report_art12_url(self):
+    def national_report_art12(self):
         portal_type = 'national_summary'
         code = self.country_code
+        obj = self._get_report_art12(portal_type, code)
 
-        return self._get_report_url_art12(portal_type, code)
+        return obj
 
     @property
     def regional_report_art12_url(self):
         portal_type = 'wise.msfd.regionalsummaryfolder'
         code = self.country_region_code
+        obj = self._get_report_art12(portal_type, code)
 
-        return self._get_report_url_art12(portal_type, code)
+        return obj.absolute_url()
 
-    def _get_report_url_art12(self, portal_type, code):
+    def _get_report_art12(self, portal_type, code):
         portal_catalog = get_tool('portal_catalog')
         brains = portal_catalog.searchResults(
             portal_type=portal_type
@@ -654,7 +667,7 @@ class BaseComplianceView(BrowserView, BasePublicPage, SecurityMixin):
             if obj.id != code.lower():
                 continue
 
-            return obj.absolute_url()
+            return obj
 
 def _a10_ids_cachekey(method, self, descriptor, **kwargs):
     muids = [m.id for m in kwargs['muids']]
