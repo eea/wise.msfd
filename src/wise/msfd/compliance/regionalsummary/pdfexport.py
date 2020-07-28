@@ -5,8 +5,11 @@ from pkg_resources import resource_filename
 
 import logging
 
+from zope.interface import implements
+
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 from Products.statusmessages.interfaces import IStatusMessage
+from wise.msfd.compliance.interfaces import IRegionalSummaryRegionFolder
 from wise.msfd.translation import get_translated, retrieve_translation
 from wise.msfd.utils import (ItemList, TemplateMixin, db_objects_to_dict,
                              fixedorder_sortkey, timeit)
@@ -84,6 +87,8 @@ class RegProgressAssessment(BaseRegSummaryView, ProgressAssessment):
 
 
 class AssessmentExportView(BaseRegSummaryView):
+    implements(IRegionalSummaryRegionFolder)
+
     help_text = "HELP TEXT"
     template = ViewPageTemplateFile('pt/report-data.pt')
     report_header_template = ViewPageTemplateFile(

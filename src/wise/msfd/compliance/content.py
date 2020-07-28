@@ -42,8 +42,6 @@ class RegionalSummaryRegionFolder(Container):
     implements(IRegionalSummaryRegionFolder)
 
 
-
-
 class NationalDescriptorAssessment(Container):
     """ Assessment implementation for national descriptor assessments
     """

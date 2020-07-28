@@ -5,6 +5,8 @@
   xmlns:z3c="http://namespaces.zope.org/z3c"
   i18n_domain="wise.msfd">
 
+  <include file="viewlets.zcml"/>
+
   <browser:page
     for="..interfaces.IRegionalDescriptorsFolder"
     name="reg-desc-start"
@@ -78,7 +80,7 @@
   <browser:page
     for="..interfaces.IRegionalDescriptorRegionsFolder"
     name="reports"
-    class=".main.RegionalDescriptorRegionsOverview"
+    class=".main.RegDescRegionOverviewReports"
     template="./pt/reg-region-start-reports.pt"
     permission="zope2.View"
     />
@@ -86,7 +88,7 @@
   <browser:page
     for="..interfaces.IRegionalDescriptorRegionsFolder"
     name="assessments"
-    class=".main.RegionalDescriptorRegionsOverview"
+    class=".main.RegDescRegionOverviewAssessments"
     template="./pt/reg-region-start-assessments.pt"
     permission="wise.ViewAssessmentData"
     />

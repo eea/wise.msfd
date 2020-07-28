@@ -324,6 +324,7 @@ class NatDescCountryOverviewAssessments(NationalDescriptorCountryOverview):
 
     implements(ICountryStartAssessments)
 
+
 def get_crit_val(question, element, descriptor):
     """ Get the criteria value to be shown in the assessment data 2018 table
     """

@@ -5,6 +5,7 @@ from collections import namedtuple
 from persistent.list import PersistentList
 from pkg_resources import resource_filename
 from zope.schema import Choice, Text
+from zope.interface import implements
 from zope.schema.vocabulary import SimpleTerm, SimpleVocabulary
 
 from AccessControl import Unauthorized
@@ -22,6 +23,7 @@ from wise.msfd.compliance.assessment import (PHASES,
                                              render_assessment_help)
 from wise.msfd.compliance.base import REG_DESC_QUESTIONS
 from wise.msfd.compliance.content import AssessmentData
+from wise.msfd.compliance.interfaces import IRegionalEditAssessmentForm
 from z3c.form.button import buttonAndHandler
 from z3c.form.field import Fields
 
@@ -63,6 +65,10 @@ ASSESSMENTS_2012 = parse_assessments_2012_file()
 class RegDescEditAssessmentSummaryForm(BaseRegComplianceView,
                                        EditAssessmentSummaryForm):
     """ Needed to override EditAssessmentSummaryForm's methods """
+
+
+class RegEditAssessmentFormWrapper(MainFormWrapper):
+    implements(IRegionalEditAssessmentForm)
 
 
 class RegDescEditAssessmentDataForm(BaseRegComplianceView,
@@ -333,4 +339,4 @@ class RegDescEditAssessmentDataForm(BaseRegComplianceView,
 
 
 RegDescEditAssessmentDataView = wrap_form(
-    RegDescEditAssessmentDataForm, MainFormWrapper)
+    RegDescEditAssessmentDataForm, RegEditAssessmentFormWrapper)

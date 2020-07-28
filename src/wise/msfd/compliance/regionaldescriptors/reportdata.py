@@ -3,10 +3,13 @@ from io import BytesIO
 
 from sqlalchemy import or_
 
+from zope.interface import implements
+
 import xlsxwriter
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 from Products.statusmessages.interfaces import IStatusMessage
 from wise.msfd import db, sql2018
+from wise.msfd.compliance.interfaces import IRegionalReportDataView
 from wise.msfd.gescomponents import get_features, get_parameters
 from wise.msfd.translation import retrieve_translation
 from wise.msfd.utils import ItemList, timeit
@@ -23,6 +26,8 @@ logger = logging.getLogger('wise.msfd')
 
 
 class RegReportData2012(BaseRegComplianceView):
+    implements(IRegionalReportDataView)
+
     help_text = "HELP TEXT"
     template = ViewPageTemplateFile('pt/report-data.pt')
     year = "2012"
@@ -127,7 +132,7 @@ class RegReportData2012(BaseRegComplianceView):
 
 
 class RegReportData2018(BaseRegComplianceView):
-    # implements(IReportDataView)
+    implements(IRegionalReportDataView)
 
     help_text = "HELP TEXT"
     template = ViewPageTemplateFile('pt/report-data.pt')

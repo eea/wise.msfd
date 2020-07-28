@@ -1,5 +1,7 @@
 from collections import namedtuple
 
+from zope.interface import implements
+
 from persistent.list import PersistentList
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile as VPTF
 
@@ -7,6 +9,9 @@ from wise.msfd.compliance.assessment import (AssessmentDataMixin,
                                              CONCLUSION_COLOR_TABLE)
 from wise.msfd.compliance.base import REG_DESC_QUESTIONS
 from wise.msfd.compliance.content import AssessmentData
+from wise.msfd.compliance.interfaces import (IRegionalDescriptorAssessment,
+                                             IRegionStartAssessments,
+                                             IRegionStartReports)
 from wise.msfd.compliance.nationaldescriptors.main import (
     format_assessment_data)
 from wise.msfd.gescomponents import get_descriptor
@@ -83,8 +88,22 @@ class RegionalDescriptorRegionsOverview(BaseRegComplianceView):
         return False
 
 
+class RegDescRegionOverviewReports(RegionalDescriptorRegionsOverview):
+    """ Class declaration needed to be able to override HTML head title """
+
+    implements(IRegionStartReports)
+
+
+class RegDescRegionOverviewAssessments(RegionalDescriptorRegionsOverview):
+    """ Class declaration needed to be able to override HTML head title """
+
+    implements(IRegionStartAssessments)
+
+
 class RegionalDescriptorArticleView(BaseRegComplianceView,
                                     AssessmentDataMixin):
+    implements(IRegionalDescriptorAssessment)
+
     section = 'regional-descriptors'
 
     assessment_data_2012_tpl = VPTF('pt/assessment-data-2012.pt')

@@ -126,6 +126,11 @@ class IEditAssessorsForm(Interface):
 
 # Interfaces for Regional descriptors section
 
+class IRegionalReportDataView(Interface):
+    """ Interface for regional descriptors report data views
+    """
+
+
 class IRegionalDescriptorsFolder(Interface):
     """ A container for regional descriptors
 
@@ -140,10 +145,26 @@ class IRegionalDescriptorRegionsFolder(Interface):
     """
 
 
+class IRegionStartReports(Interface):
+    """ /compliance-module/regional-descriptors-assessments/bal/reports
+    """
+
+
+class IRegionStartAssessments(Interface):
+    """ /compliance-module/regional-descriptors-assessments/bal/assessments
+    """
+
+
 class IRegionalDescriptorAssessment(Schema):
     """ A Region > Descriptor > Article assessment
 
     Ex: /compliance-module/regional-descriptors-assessments/bal/d5/art8
+    """
+
+
+class IRegionalEditAssessmentForm(Interface):
+    """ /compliance-module/regional-descriptors-assessments/bal/d6/art8/
+        /@@edit-assessment-data-2018
     """
 
 
