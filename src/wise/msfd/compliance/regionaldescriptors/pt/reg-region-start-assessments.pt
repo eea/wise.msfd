@@ -56,7 +56,7 @@
             </form>
           </div>
 
-          <h3>Commission Assessments</h3>
+          <!--<h3>Commission Assessments</h3>-->
 
           <table class="table as-table-overview table-striped table-country-start">
             <tbody>
@@ -72,31 +72,33 @@
 
               <tr class="fullwidth-statusbar">
                 <td colspan="3">
-                  <a disabled class="assessment-status-colorbar btn btn-xs btn-primary">Art. 12 (8-9-10) Regional report - 2012</a>
+                  <div style="text-align: center; font-style: italic; font-weight: 300;">Art. 12 (8-9-10) Regional report - 2012</div>
                 </td>
                 <td>
-                  <a disabled class="assessment-status-colorbar btn btn-xs btn-primary">Art. 12 (11) Regional report - 2014</a>
+                  <div style="text-align: center; font-style: italic; font-weight: 300;">Art. 12 (11) Regional report - 2014</div>
                 </td>
                 <td colspan="2">
-                  <a disabled class="assessment-status-colorbar btn btn-xs btn-primary">Art. 16 (13-14) Regional report - 2016</a>
+                  <div style="text-align: center; font-style: italic; font-weight: 300;">Art. 16 (13-14) Regional report - 2016</div>
                 </td>
                 <td colspan="2">
-                  <a disabled class="assessment-status-colorbar btn btn-xs btn-primary">Art. 20 (18) Regional report - 2019??</a>
+                  <div style="text-align: center; font-style: italic; font-weight: 300;">Art. 20 (18) Regional report - 2019??</div>
                 </td>
               </tr>
               <tr class="fullwidth-statusbar">
-                <td colspan="3">
-                  <a tal:attributes="href view/regional_report_art12_url"
-                      class="assessment-status-colorbar btn btn-xs btn-primary">Art. 12 (8-9-10) Regional report - 2018</a>
+                <td colspan="3" tal:define="assessment python: view.regional_report_art12">
+                  <div style="text-align: center;">Art. 12 (8-9-10) Regional report - 2018</div>
+                  <div metal:use-macro="context/wise-macros/macros/assessment-status-bar"></div>
+                  <!--<a tal:attributes="href view/regional_report_art12_url"-->
+                      <!--class="assessment-status-colorbar btn btn-xs btn-primary">Art. 12 (8-9-10) Regional report - 2018</a>-->
                 </td>
                 <td>
-                  <a disabled class="assessment-status-colorbar btn btn-xs btn-primary">Art. 12 (11) Regional report - 2020</a>
+                  <div style="text-align: center; font-style: italic; font-weight: 300;">Art. 12 (11) Regional report - 2020</div>
                 </td>
                 <td colspan="2">
-                  <a disabled class="assessment-status-colorbar btn btn-xs btn-primary">Art. 16 (13-14) Regional report - 2022</a>
+                  <div style="text-align: center; font-style: italic; font-weight: 300;">Art. 16 (13-14) Regional report - 2022</div>
                 </td>
                 <td colspan="2">
-                  <a disabled class="assessment-status-colorbar btn btn-xs btn-primary">Art. 20 (18) Regional report - 2025??</a>
+                  <div style="text-align: center; font-style: italic; font-weight: 300;">Art. 20 (18) Regional report - 2025??</div>
                 </td>
               </tr>
 
@@ -116,22 +118,7 @@
                   <span tal:content="python: view.descriptor_for_code(desc.id).title">D0</span>
                 </th>
                 <td tal:repeat="assessment python: view.get_articles(desc)">
-                  <tal:block tal:define="css_class python:'assessment-status-colorbar btn btn-xs btn-' + view.get_status_color(assessment);
-                      url assessment/absolute_url;
-                      can_view_data python:view.can_view_assessment_data(assessment);
-                      can_edit_data python:view.can_view_edit_assessment_data(assessment)">
-                    <a tal:condition="can_edit_data"
-                        tal:attributes="href python: url + '/@@edit-assessment-data-2018'">
-                      <i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>
-                    <a tal:condition="can_view_data"
-                        tal:attributes="href url; class python: css_class">
-                      Assessment:
-                      <span class="as-state-label" tal:content="python: view.get_status(assessment)">State</span>
-                      <span title="New comments"
-                          class="has-new-comments fa fa-exclamation-circle"
-                          tal:condition="python: view.has_new_comments(assessment)"></span></a>
-                  </tal:block>
-                </td>
+                  <div metal:use-macro="context/wise-macros/macros/assessment-status-bar"></div>                </td>
                 <td tal:repeat="assessment python: view.get_articles_part2(desc)">
                   <i>Not available</i>
                 </td>

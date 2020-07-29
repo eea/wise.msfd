@@ -97,6 +97,43 @@ if (!Array.prototype.last){
     }
   }
 
+  function setupAssessmentStatusChange() {
+    // Setup the process status change forms to make it possible
+    // to change the assessment status on pages like
+    // ./assessment-module/national-descriptors-assessments/fi/assessments
+    // ./assessment-module/regional-descriptors-assessments/bal/assessments
+
+    $('.assessment-status-processstate').each(function(){
+      var $this = $(this);
+      var $processState = $this.find('.process-state');
+
+      $this.on('click', function(){
+        $this.toggleClass('active');
+      });
+    });
+
+    $('.assessment-status-wrapper .assessment-status.process-state select').change(function(){
+      var $form = $(this).parents('form');
+      var $assessmentContainers = $('.assessment-status-container2');
+      var url = $form[0].action;
+
+      $(document.body).addClass('cursor-wait');
+      $form.addClass('cursor-wait');
+      $assessmentContainers.each(function(){
+        $(this).addClass('cursor-wait');
+      });
+
+      $.ajax({
+        url: url,
+        type: 'POST',
+        data: $form.serialize(),
+        success:function(){
+            location.reload();
+        }
+      });
+    });
+  }
+
   $.fn.fixTableHeaderAndCellsHeight = function() {
     // because the <th> are position: absolute, they don't get the height of
     // the <td> cells, and the other way around.
@@ -736,6 +773,7 @@ if (!Array.prototype.last){
 
       // setupScrollableTargets();
       setupTargetsWidth();
+      setupAssessmentStatusChange();
     });
 
   });

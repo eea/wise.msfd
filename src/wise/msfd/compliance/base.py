@@ -41,14 +41,16 @@ logger = logging.getLogger('wise.msfd')
 edw_logger = logging.getLogger('edw.logger')
 edw_logger.setLevel('WARNING')
 
-STATUS_ORDER = ("not_started", "in_work", "in_draft_review",
-                "in_draft_review_com", "in_final_review_tl", "in_final_review",
+STATUS_ORDER = ("not_started", "in_work", "in_draft_review_tl",
+                "in_draft_review", "in_draft_review_com",
+                "in_final_review_tl", "in_final_review",
                 "in_final_review_com", "approved")
 
 STATUS_COLORS = {
     "approved": "success",
     "not_started": "default",
     "in_work": "danger",
+    "in_draft_review_tl": "danger",
     "in_draft_review": "warning",
     "in_draft_review_com": "warning-2",
     "in_final_review_tl": "danger",
@@ -648,12 +650,12 @@ class BaseComplianceView(BrowserView, BasePublicPage, SecurityMixin):
         return obj
 
     @property
-    def regional_report_art12_url(self):
+    def regional_report_art12(self):
         portal_type = 'wise.msfd.regionalsummaryfolder'
         code = self.country_region_code
         obj = self._get_report_art12(portal_type, code)
 
-        return obj.absolute_url()
+        return obj
 
     def _get_report_art12(self, portal_type, code):
         portal_catalog = get_tool('portal_catalog')

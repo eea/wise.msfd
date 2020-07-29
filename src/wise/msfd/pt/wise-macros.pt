@@ -217,13 +217,46 @@
 </metal:macro>
 
 <metal:macro define-macro="assessment-status-bar">
-  <tal:block tal:define="status_color python: view.get_status_color(assessment);
+  <div class="assessment-status-wrapper"
+      tal:define="status_color python: view.get_status_color(assessment);
   css_class python:'assessment-status-colorbar btn btn-xs btn-' + status_color;
   url assessment/absolute_url;
   can_view_data python:view.can_view_assessment_data(assessment);
   can_edit_data python:view.can_view_edit_assessment_data(assessment);
   wf_states python: view.get_all_wf_states(assessment);
   current_state python: view.get_status(assessment)">
+    <div class="assessment-status-processstate">
+      <form class="assessment-status process-state"
+            method="GET"
+            tal:attributes="action python: url + '/content_status_modify'">
+        <div>
+          <i class='fa fa-exchange'></i>
+          Process state:
+          <strong tal:content="python: view.get_status(assessment)">Phase 0</strong>
+          <i class='fa fa-times close-button'></i>
+
+          <div class="phase-selector"
+            tal:condition="python: not(view.read_only_access)">
+            <select name="workflow_action"
+              class="pat-select2"
+              data-pat-select2="width:250px">
+              <option value=''>Choose action...</option>
+              <tal:rep repeat="trans python: view.get_transitions(assessment)">
+                <option tal:content="trans/title" tal:attributes="value trans/id">Send to Phase 0</option>
+              </tal:rep>
+            </select>
+          </div>
+        </div>
+      </form>
+      <div class="buttons-wrapper">
+        <a target="_blank"
+           tal:attributes="href python: url + '/@@edit-assessment-data-2018';
+              class css_class">Edit</a>
+        <a target="_blank"
+           tal:attributes="href url; class css_class;">Overview</a>
+      </div>
+    </div>
+
     <a class="assessment-status-container2"
        target="_blank"
        tal:attributes="href url">
@@ -235,18 +268,5 @@
         </tal:rep>
       </ul>
     </a>
-    <tal:cond tal:condition="python: False">
-      <a tal:condition="can_edit_data"
-          tal:attributes="href python: url + '/@@edit-assessment-data-2018'">
-        <i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>
-      <a tal:condition="can_view_data"
-          tal:attributes="href url; class python: css_class">
-        Assessment:
-        <span class="as-state-label" tal:content="python: current_state">State</span>
-        <span title="New comments"
-            class="has-new-comments fa fa-exclamation-circle"
-            tal:condition="python: view.has_new_comments(assessment)"></span></a>
-    </tal:cond>
-  </tal:block>
-
+  </div>
 </metal:macro>

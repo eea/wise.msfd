@@ -58,7 +58,7 @@
             </form>
           </div>
 
-          <h3>Commission Assessments</h3>
+          <!--<h3>Commission Assessments</h3>-->
 
           <table class="table as-table-overview table-striped table-country-start">
             <tbody>
@@ -74,32 +74,33 @@
 
               <tr class="fullwidth-statusbar">
                 <td colspan="3">
-                  <a disabled class="assessment-status-colorbar btn btn-xs btn-default">Art. 12 (8-9-10) National report - 2012</a>
+                  <div style="text-align: center; font-style: italic; font-weight: 300;">Art. 12 (8-9-10) National report - 2012</div>
                 </td>
                 <td>
-                  <a disabled class="assessment-status-colorbar btn btn-xs btn-default">Art. 12 (11) National report - 2014</a>
+                  <div style="text-align: center; font-style: italic; font-weight: 300;">Art. 12 (11) National report - 2014</div>
                 </td>
                 <td colspan="2">
-                  <a disabled class="assessment-status-colorbar btn btn-xs btn-default">Art. 16 (13-14) National report - 2016</a>
+                  <div style="text-align: center; font-style: italic; font-weight: 300;">Art. 16 (13-14) National report - 2016</div>
                 </td>
                 <td colspan="2">
-                  <a disabled class="assessment-status-colorbar btn btn-xs btn-default">Art. 20 (18) National report - 2019??</a>
+                  <div style="text-align: center; font-style: italic; font-weight: 300;">Art. 20 (18) National report - 2019??</div>
                 </td>
               </tr>
               <tr class="fullwidth-statusbar">
                 <td colspan="3" tal:define="assessment python: view.national_report_art12">
+                  <div style="text-align: center;">Art. 12 (8-9-10) National report - 2018</div>
                   <div metal:use-macro="context/wise-macros/macros/assessment-status-bar"></div>
                   <!--<a tal:attributes="href "-->
                       <!--class="assessment-status-colorbar btn btn-xs btn-default">Art. 12 (8-9-10) National report - 2018</a>-->
                 </td>
                 <td>
-                  <a disabled class="assessment-status-colorbar btn btn-xs btn-default">Art. 12 (11) National report - 2020</a>
+                  <div style="text-align: center; font-style: italic; font-weight: 300;">Art. 12 (11) National report - 2020</div>
                 </td>
                 <td colspan="2">
-                  <a disabled class="assessment-status-colorbar btn btn-xs btn-default">Art. 16 (13-14) National report - 2022</a>
+                  <div style="text-align: center; font-style: italic; font-weight: 300;">Art. 16 (13-14) National report - 2022</div>
                 </td>
                 <td colspan="2">
-                  <a disabled class="assessment-status-colorbar btn btn-xs btn-default">Art. 20 (18) National report - 2025??</a>
+                  <div style="text-align: center; font-style: italic; font-weight: 300;">Art. 20 (18) National report - 2025??</div>
                 </td>
               </tr>
 
@@ -148,7 +149,7 @@
                     <div metal:use-macro="context/wise-macros/macros/assessment-status-bar"></div>
                   </td>
                   <td tal:repeat="assessment python: view.get_articles_part2(desc)">
-                    <i>Not available</i>
+                    <i style="text-align: center; font-style: italic; font-weight: 300;">Not available</i>
                   </td>
                 </tr>
               </tal:rep>
