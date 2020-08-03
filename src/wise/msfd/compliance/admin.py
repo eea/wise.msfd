@@ -815,10 +815,9 @@ class AdminScoring(BaseComplianceView, AssessmentDataMixin):
 
             if '_Score' in k:
                 for i, v in enumerate(val.values):
-                    options = (
-                        [o.title for o in self.get_available_countries(region)]
-                        or ['All criteria']
-                    )
+                    options = ([o.title
+                                for o in val.question.get_assessed_elements(
+                                    d_obj, muids=[])] or ['All criteria'])
 
                     # TODO IndexError: list index out of range
                     # investigate this
