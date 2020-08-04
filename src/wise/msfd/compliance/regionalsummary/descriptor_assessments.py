@@ -3,12 +3,11 @@ import logging
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 from wise.msfd.compliance.interfaces import (IDescriptorFolder,
                                              IRegionalDescriptorAssessment)
+from wise.msfd.compliance.assessment import DESCRIPTOR_SUMMARY
 from wise.msfd.compliance.scoring import OverallScores
 from wise.msfd.utils import fixedorder_sortkey
 
-from ..nationalsummary.descriptor_assessments import (
-    DESCRIPTOR_SUMMARY, DescriptorLevelAssessments
-)
+from ..nationalsummary.descriptor_assessments import DescriptorLevelAssessments
 from ..regionaldescriptors.main import ARTICLE_WEIGHTS
 from .base import BaseRegSummaryView
 

@@ -19,7 +19,9 @@ from Products.CMFPlacefulWorkflow.WorkflowPolicyConfig import \
 from Products.Five.browser import BrowserView
 from Products.statusmessages.interfaces import IStatusMessage
 from wise.msfd import db, sql2018
-from wise.msfd.compliance.assessment import AssessmentDataMixin
+from wise.msfd.compliance.assessment import (ARTICLE_WEIGHTS,
+                                             AssessmentDataMixin,
+                                             OverallScores)
 from wise.msfd.compliance.interfaces import (INationalDescriptorAssessment,
                                              INationalDescriptorAssessmentSecondary)
 from wise.msfd.compliance.vocabulary import (get_regions_for_country,
@@ -42,6 +44,15 @@ CONTRIBUTOR_GROUP_ID = 'extranet-wisemarine-msfd-tl'
 REVIEWER_GROUP_ID = 'extranet-wisemarine-msfd-reviewers'
 EDITOR_GROUP_ID = 'extranet-wisemarine-msfd-editors'
 
+CONCLUSIONS = {
+    '/': 'Not relevant',
+    '1': 'Very good',
+    '0.75': 'Good',
+    '0.5': 'Poor',
+    '0.25': 'Very poor',
+    '0.250': 'Not clear',
+    '0': 'Not reported',
+}
 
 def get_wf_state_id(context):
     state = get_state(context)
@@ -649,22 +660,32 @@ class AdminScoring(BaseComplianceView, AssessmentDataMixin):
             return
 
         state = get_wf_state_id(obj)
-        article = obj
+        article_folder = obj
+        article_title = article_folder.title
         descr = obj.aq_parent
-        region = obj.aq_parent.aq_parent
-        country = obj.aq_parent.aq_parent.aq_parent
+        region_code = obj.aq_parent.aq_parent.id.upper()
+        region_name = obj.aq_parent.aq_parent.title
+        country_code = obj.aq_parent.aq_parent.aq_parent.id.upper()
+        country_name = obj.aq_parent.aq_parent.aq_parent.title
         d_obj = self.descriptor_obj(descr.id.upper())
-        muids = self.muids(country.id.upper(), region.id.upper(), '2018')
+        muids = self.muids(country_code, region_code, '2018')
         data = obj.saved_assessment_data.last()
+
+        phase_overall_scores = OverallScores(ARTICLE_WEIGHTS)
+        phase_overall_scores = self._setup_phase_overall_scores(
+            phase_overall_scores, data, article_title)
+
+        score_last_change = []
 
         for k, val in data.items():
             if not val:
                 continue
 
             if '_Score' in k:
-                last_change_name = "{}_{}_Last_update".format(article.title,
+                last_change_name = "{}_{}_Last_update".format(article_title,
                                                               val.question.id)
                 last_change = data.get(last_change_name, '')
+                score_last_change.append(last_change)
                 last_change = last_change and last_change.isoformat() or ''
 
                 for i, v in enumerate(val.values):
@@ -685,10 +706,12 @@ class AdminScoring(BaseComplianceView, AssessmentDataMixin):
                         )
 
                     answer = val.question.answers[v]
+                    score = val.question.scores[v]
+                    score_title = CONCLUSIONS[score]
 
-                    yield (country.title, region.title, d_obj.id,
-                           article.title, val.question.id, option, answer,
-                           val.question.scores[v], state, last_change)
+                    yield (country_code, region_code, d_obj.id, d_obj.title,
+                           article_title, val.question.id, option, answer,
+                           score, score_title, state, last_change)
 
             elif '_Summary' in k:
                 article_id, question_id, _ = k.split('_')
@@ -697,8 +720,9 @@ class AdminScoring(BaseComplianceView, AssessmentDataMixin):
                 last_change = data.get(last_change_name, '')
                 last_change = last_change and last_change.isoformat() or ''
 
-                yield (country.title, region.title, d_obj.id, article_id,
-                       question_id, 'Summary', val, ' ', state, last_change)
+                yield (country_code, region_code, d_obj.id, d_obj.title,
+                       article_id, question_id, 'Summary', val,
+                       '', '', state, last_change)
 
             elif '_assessment_summary' in k:
                 article_id, _, __ = k.split('_')
@@ -708,8 +732,9 @@ class AdminScoring(BaseComplianceView, AssessmentDataMixin):
                 last_change = data.get(last_change_name, '')
                 last_change = last_change and last_change.isoformat() or ''
 
-                yield (country.title, region.title, d_obj.id, article_id,
-                       ' ', 'Assessment Summary', val, '', state, last_change)
+                yield (country_code, region_code, d_obj.id, d_obj.title,
+                       article_id, ' ', 'Assessment Summary', val,
+                       '', '', state, last_change)
 
             elif '_recommendations' in k:
                 article_id, _ = k.split('_')
@@ -719,8 +744,9 @@ class AdminScoring(BaseComplianceView, AssessmentDataMixin):
                 last_change = data.get(last_change_name, '')
                 last_change = last_change and last_change.isoformat() or ''
 
-                yield (country.title, region.title, d_obj.id, article_id,
-                       ' ', 'Recommendations', val, '', state, last_change)
+                yield (country_code, region_code, d_obj.id, d_obj.title,
+                       article_id, '', 'Recommendations', val,
+                       '', '', state, last_change)
 
             elif '_progress' in k:
                 article_id, _ = k.split('_')
@@ -730,8 +756,32 @@ class AdminScoring(BaseComplianceView, AssessmentDataMixin):
                 last_change = data.get(last_change_name, '')
                 last_change = last_change and last_change.isoformat() or ''
 
-                yield (country.title, region.title, d_obj.id, article_id,
-                       ' ', 'Progress', val, '', state, last_change)
+                yield (country_code, region_code, d_obj.id, d_obj.title,
+                       article_id, '', 'Progress', val,
+                       '', '', state, last_change)
+
+        score_last_change = filter(None, score_last_change)
+        last_change = score_last_change and max(score_last_change) or ''
+        last_change = last_change and last_change.isoformat() or ''
+
+        phases = phase_overall_scores.article_weights.values()[0].keys()
+
+        for phase in phases:
+            _phase_score = getattr(phase_overall_scores, phase, {})
+            score = _phase_score.get('score', '')
+            score_title = _phase_score.get('conclusion', '')[1]
+
+            yield (country_code, region_code, d_obj.id, d_obj.title,
+                   article_title, '', '2018 {}'.format(phase.capitalize()), '',
+                   score, score_title, state, last_change)
+
+        overall_concl, score = phase_overall_scores.get_overall_score(
+            article_title)
+        score_title = self.get_conclusion(overall_concl)
+
+        yield (country_code, region_code, d_obj.id, d_obj.title,
+               article_title, '', '2018 Overall', '',
+               score, score_title, state, last_change)
 
     def get_data_sec(self, obj):
         """ Get assessment data for a country assessment object
@@ -743,17 +793,29 @@ class AdminScoring(BaseComplianceView, AssessmentDataMixin):
             return
 
         state = get_wf_state_id(obj)
-        article = obj
-        country = obj.aq_parent
+        article_title = obj.title
+        country_code = obj.aq_parent.id.upper()
         data = obj.saved_assessment_data.last()
         d_obj = 'Not linked'
         muids = []
+
+        phase_overall_scores = OverallScores(ARTICLE_WEIGHTS)
+        phase_overall_scores = self._setup_phase_overall_scores(
+            phase_overall_scores, data, article_title)
+
+        score_last_change = []
 
         for k, val in data.items():
             if not val:
                 continue
 
             if '_Score' in k:
+                last_change_name = "{}_{}_Last_update".format(article_title,
+                                                              val.question.id)
+                last_change = data.get(last_change_name, '')
+                score_last_change.append(last_change)
+                last_change = last_change and last_change.isoformat() or ''
+
                 for i, v in enumerate(val.values):
                     options = ([o.title
                                 for o in val.question.get_assessed_elements(
@@ -769,29 +831,67 @@ class AdminScoring(BaseComplianceView, AssessmentDataMixin):
                         continue
 
                     answer = val.question.answers[v]
+                    score = val.question.scores[v]
+                    score_title = CONCLUSIONS[score]
 
-                    yield (country.title, article.title, val.question.id,
-                           option, answer, val.question.scores[v], state)
+                    yield (country_code, article_title, val.question.id,
+                           option, answer, score, score_title,
+                           state, last_change)
 
             elif '_Summary' in k:
                 article_id, question_id, _ = k.split('_')
-                yield (country.title, article_id, question_id,
-                       'Summary', val, ' ', state)
+                last_change_name = "{}_{}_Last_update".format(article_id,
+                                                              question_id)
+                last_change = data.get(last_change_name, '')
+                last_change = last_change and last_change.isoformat() or ''
+
+                yield (country_code, article_id, question_id,
+                       'Summary', val, '', '', state, last_change)
 
             elif '_assessment_summary' in k:
                 article_id, _, __ = k.split('_')
-                yield (country.title, article_id, ' ',
-                       'Assessment Summary', val, '', state)
+                last_change_name = "{}_assess_summary_last_upd".format(
+                    article_id
+                )
+                last_change = data.get(last_change_name, '')
+                last_change = last_change and last_change.isoformat() or ''
+
+                yield (country_code, article_id, '',
+                       'Assessment Summary', val, '', '', state, last_change)
 
             elif '_recommendations' in k:
                 article_id, _ = k.split('_')
-                yield (country.title, article_id, ' ',
-                       'Recommendations', val, '', state)
+                last_change_name = "{}_assess_summary_last_upd".format(
+                    article_id
+                )
+                last_change = data.get(last_change_name, '')
+                last_change = last_change and last_change.isoformat() or ''
+
+                yield (country_code, article_id, '',
+                       'Recommendations', val, '', '', state, last_change)
 
             elif '_progress' in k:
                 article_id, _ = k.split('_')
-                yield (country.title, article_id, ' ',
-                       'Progress', val, '', state)
+                last_change_name = "{}_assess_summary_last_upd".format(
+                    article_id
+                )
+                last_change = data.get(last_change_name, '')
+                last_change = last_change and last_change.isoformat() or ''
+
+                yield (country_code, article_id, '',
+                       'Progress', val, '', '', state, last_change)
+
+        score_last_change = filter(None, score_last_change)
+        last_change = score_last_change and max(score_last_change) or ''
+        last_change = last_change and last_change.isoformat() or ''
+
+        overall_concl, score = phase_overall_scores.get_overall_score(
+            article_title)
+        score_title = self.get_conclusion(overall_concl)
+
+        yield (country_code, article_title, '',
+               '2018 Overall', '', score, score_title,
+               state, last_change)
 
     def get_data_rda(self, obj):
         """ Get assessment data for a regional descriptor assessment
@@ -803,17 +903,25 @@ class AdminScoring(BaseComplianceView, AssessmentDataMixin):
             return
 
         state = get_wf_state_id(obj)
-        article = obj
+        article_title = obj.title
         descr = obj.aq_parent
-        region = obj.aq_parent.aq_parent
+        region_code = obj.aq_parent.aq_parent.id.upper()
+        region_title = obj.aq_parent.aq_parent.title
         d_obj = self.descriptor_obj(descr.id.upper())
         data = obj.saved_assessment_data.last()
+        score_last_change = []
 
         for k, val in data.items():
             if not val:
                 continue
 
             if '_Score' in k:
+                last_change_name = "{}_{}_Last_update".format(article_title,
+                                                              val.question.id)
+                last_change = data.get(last_change_name, '')
+                score_last_change.append(last_change)
+                last_change = last_change and last_change.isoformat() or ''
+
                 for i, v in enumerate(val.values):
                     options = ([o.title
                                 for o in val.question.get_assessed_elements(
@@ -829,30 +937,73 @@ class AdminScoring(BaseComplianceView, AssessmentDataMixin):
                         continue
 
                     answer = val.question.answers[v]
+                    score = val.question.scores[v]
+                    score_title = CONCLUSIONS[score]
 
-                    yield (region.title, d_obj.id,
-                           article.title, val.question.id, option, answer,
-                           val.question.scores[v], state)
+                    yield (region_code, d_obj.id, d_obj.title,
+                           article_title, val.question.id, option, answer,
+                           score, score_title, state, last_change)
 
             elif '_Summary' in k:
                 article_id, question_id, _ = k.split('_')
-                yield (region.title, d_obj.id,
-                       article_id, question_id, 'Summary', val, ' ', state)
+                last_change_name = "{}_{}_Last_update".format(article_id,
+                                                              question_id)
+                last_change = data.get(last_change_name, '')
+                last_change = last_change and last_change.isoformat() or ''
+
+                yield (region_code, d_obj.id, d_obj.title,
+                       article_id, question_id, 'Summary', val,
+                       '', '', state, last_change)
 
             elif '_assessment_summary' in k:
                 article_id, _, __ = k.split('_')
-                yield (region.title, d_obj.id,
-                       article_id, ' ', 'Assessment Summary', val, '', state)
+                last_change_name = "{}_assess_summary_last_upd".format(
+                    article_id
+                )
+                last_change = data.get(last_change_name, '')
+                last_change = last_change and last_change.isoformat() or ''
+
+                yield (region_code, d_obj.id, d_obj.title,
+                       article_id, '', 'Assessment Summary', val,
+                       '', '', state, last_change)
 
             elif '_recommendations' in k:
                 article_id, _ = k.split('_')
-                yield (region.title, d_obj.id,
-                       article_id, ' ', 'Recommendations', val, '', state)
+                last_change_name = "{}_assess_summary_last_upd".format(
+                    article_id
+                )
+                last_change = data.get(last_change_name, '')
+                last_change = last_change and last_change.isoformat() or ''
+
+                yield (region_code, d_obj.id, d_obj.title,
+                       article_id, '', 'Recommendations', val,
+                       '', '', state, last_change)
 
             elif '_progress' in k:
                 article_id, _ = k.split('_')
-                yield (region.title, d_obj.id,
-                       article_id, ' ', 'Progress', val, '', state)
+                last_change_name = "{}_assess_summary_last_upd".format(
+                    article_id
+                )
+                last_change = data.get(last_change_name, '')
+                last_change = last_change and last_change.isoformat() or ''
+
+                yield (region_code, d_obj.id, d_obj.title,
+                       article_id, '', 'Progress', val,
+                       '', '', state, last_change)
+
+        score_last_change = filter(None, score_last_change)
+        last_change = score_last_change and max(score_last_change) or ''
+        last_change = last_change and last_change.isoformat() or ''
+
+        coherence_data = self.get_coherence_data(
+            region_code, d_obj.id,article_title)
+        score_title = coherence_data['conclusion'][1]
+        score = int((float(coherence_data['score']) * 100)
+                    / float(coherence_data['max_score']))
+
+        yield (region_code, d_obj.id, d_obj.title,
+               article_title, '', '2018 Overall', '',
+               score, score_title, state, last_change)
 
     def data_to_xls(self, all_data):
         out = BytesIO()
@@ -880,18 +1031,20 @@ class AdminScoring(BaseComplianceView, AssessmentDataMixin):
 
     def export_scores(self, context):
         # National descriptors data
-        nda_labels = ('Country', 'Region', 'Descriptor', 'Article', 'Question',
-                      'Option', 'Answer', 'Score', 'State', 'Last change')
+        nda_labels = ('Country', 'Region', 'Descriptor', 'Descriptor title',
+                      'Article', 'Question', 'Option', 'Answer',
+                      'Score', 'Score title', 'State', 'Last change')
         nda_xlsdata = (self.get_data(nda) for nda in self.ndas)
 
         # Regional descriptors data
-        rda_labels = ('Region', 'Descriptor', 'Article', 'Question',
-                      'Option', 'Answer', 'Score', 'State')
+        rda_labels = ('Region', 'Descriptor', 'Descriptor title',
+                      'Article', 'Question', 'Option', 'Answer',
+                      'Score', 'Score title','State', 'Last change')
         rda_xlsdata = (self.get_data_rda(rda) for rda in self.rdas)
 
         # Secondary Articles 3 & 4, 7
-        sec_labels = ('Country', 'Article', 'Question',
-                      'Option', 'Answer', 'Score', 'State')
+        sec_labels = ('Country', 'Article', 'Question', 'Option', 'Answer',
+                      'Score', 'Score title', 'State', 'Last change')
         sec_xlsdata = (self.get_data_sec(sec) for sec in self.ndas_sec)
 
         all_data = [

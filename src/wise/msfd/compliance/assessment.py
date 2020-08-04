@@ -1,5 +1,7 @@
 import logging
+import re
 from collections import namedtuple
+from sqlalchemy import or_
 
 from zope.schema import Text
 
@@ -10,6 +12,7 @@ from persistent.list import PersistentList
 from Products.Five.browser.pagetemplatefile import (PageTemplateFile,
                                                     ViewPageTemplateFile)
 
+from wise.msfd import db, sql2018
 from wise.msfd.compliance.content import AssessmentData
 from wise.msfd.compliance.interfaces import (ICountryDescriptorsFolder,
                                              IEditAssessorsForm,
@@ -24,6 +27,7 @@ from wise.msfd.compliance.utils import get_assessors, set_assessors
 from wise.msfd.compliance.vocabulary import (REGIONAL_DESCRIPTORS_REGIONS,
                                              SUBREGIONS_TO_REGIONS)
 from wise.msfd.gescomponents import get_descriptor  # get_descriptor_elements
+from wise.msfd.utils import t2rt
 from z3c.form.button import buttonAndHandler
 from z3c.form.field import Fields
 from z3c.form.form import Form
@@ -31,6 +35,60 @@ from z3c.form.form import Form
 from .base import BaseComplianceView
 
 logger = logging.getLogger('wise.msfd')
+
+
+REGION_RE = re.compile('.+\s\((?P<region>.+)\)$')
+
+ARTICLE_WEIGHTS = {
+    'Art9': {
+        'adequacy': 3/5.0,
+        'consistency': 0.0,
+        'coherence': 2/5.0
+    },
+    'Art8': {
+        'adequacy': 3/5.0,
+        'consistency': 1/5.0,
+        'coherence': 1/5.0
+    },
+    'Art10': {
+        'adequacy': 3/5.0,
+        'consistency': 1/5.0,
+        'coherence': 1/5.0
+    },
+    'Art3': {
+        'adequacy': 1.0,
+        'consistency': 0,
+        'coherence': 0
+    },
+    'Art4': {
+        'adequacy': 1.0,
+        'consistency': 0,
+        'coherence': 0
+    },
+    'Art7': {
+        'adequacy': 1.0,
+        'consistency': 0,
+        'coherence': 0
+    },
+    'Art8esa': {
+        'adequacy': 1.0,
+        'consistency': 0,
+        'coherence': 0
+    },
+    'Art8ESA': {
+        'adequacy': 1.0,
+        'consistency': 0,
+        'coherence': 0
+    }
+}
+
+DESCRIPTOR_SUMMARY = namedtuple(
+    'DescriptorSummary',
+    ['assessment_summary', 'progress_assessment', 'recommendations',
+     'adequacy', 'consistency', 'coherence', 'overall_score_2018',
+     'overall_score_2012', 'change_since_2012', 'coherence_2012',
+     'coherence_change_since_2012',]
+)
 
 
 # This somehow translates the real value in a color, to be able to compress the
@@ -65,6 +123,20 @@ CHANGE_COLOR_TABLE = {
     3: 1,
 }
 
+Assessment2012 = namedtuple(
+    'Assessment2012', [
+        'gescomponents',
+        'criteria',
+        'summary',
+        'overall_ass',
+        'score'
+    ]
+)
+
+Criteria = namedtuple(
+    'Criteria', ['crit_name', 'answer']
+)
+
 
 # TODO which question type belongs to which phase?
 PHASES = {
@@ -96,6 +168,152 @@ progress_fields = (
     ('progress', u'Progress since 2012'),
     ('recommendations', u'Recommendations for Member State'),
 )
+
+
+@db.use_db_session('2018')
+def get_assessment_data_2012_db(*args):
+    """ Returns the assessment for 2012, from COM_Assessments_2012 table
+    """
+
+    articles = {
+        'Art8': 'Initial assessment (Article 8)',
+        'Art9': 'GES (Article 9)',
+        'Art10': 'Targets (Article 10)',
+    }
+
+    country, descriptor, article = args
+    art = articles.get(article)
+    descriptor = descriptor.split('.')[0]
+
+    t = sql2018.t_COM_Assessments_2012
+    count, res = db.get_all_records(
+        t,
+        t.c.Country.like('%{}%'.format(country)),
+        t.c.Descriptor == descriptor,
+        or_(t.c.MSFDArticle == art,
+            t.c.MSFDArticle.is_(None))
+    )
+
+    # look for rows where OverallAssessment looks like 'see D1'
+    # replace these rows with data for the descriptor mentioned in the
+    # OverallAssessment
+    res_final = []
+    descr_reg = re.compile('see\s(d\d{1,2})', flags=re.I)
+
+    for row in res:
+        overall_text = row.OverallAssessment
+        assess = row.Assessment
+
+        if 'see' in overall_text.lower() or (not overall_text and
+                                             'see d' in assess.lower()):
+            descr_match = (descr_reg.match(overall_text)
+                            or descr_reg.match(assess))
+            descriptor = descr_match.groups()[0]
+
+            _, r = db.get_all_records(
+                t,
+                t.c.Country == row.Country,
+                t.c.Descriptor == descriptor,
+                t.c.AssessmentCriteria == row.AssessmentCriteria,
+                t.c.MSFDArticle == row.MSFDArticle
+            )
+
+            res_final.append(r[0])
+
+            continue
+
+        if not overall_text:
+            res_final.append(row)
+
+            continue
+
+        res_final.append(row)
+
+    return res_final
+
+
+# TODO: use memoization for old data, needs to be called again to get the
+# score, to allow delta compute for 2018
+#
+# @memoize
+def filter_assessment_data_2012(data, region_code, descriptor_criterions):
+    """ Filters and formats the raw db data for 2012 assessment data
+    """
+    gescomponents = [c.id for c in descriptor_criterions]
+
+    assessments = {}
+    criterias = []
+
+    for row in data:
+        fields = row._fields
+
+        def col(col):
+            return row[fields.index(col)]
+
+        country = col('Country')
+
+        # The 2012 assessment data have the region in the country name
+        # For example: United Kingdom (North East Atlantic)
+        # When we display the assessment data (which we do, right now, based on
+        # subregion), we want to match the data according to the "big" region
+
+        if '(' in country:
+            region = REGION_RE.match(country).groupdict()['region']
+
+            if region not in SUBREGIONS_TO_REGIONS[region_code]:
+                continue
+
+        summary = col('Conclusions')
+        score = col('OverallScore')
+        overall_ass = col('OverallAssessment')
+        criteria = Criteria(
+            col('AssessmentCriteria'),
+            t2rt(col('Assessment'))
+        )
+
+        # TODO test for other countries beside LV
+        # Condition changed because of LV report, where score is 0
+
+        # if not score:
+
+        if score is None:
+            criterias.append(criteria)
+        elif country not in assessments:
+            criterias.insert(0, criteria)
+            assessment = Assessment2012(
+                gescomponents,
+                criterias,
+                summary,
+                overall_ass,
+                score,
+            )
+            assessments[country] = assessment
+        else:
+            assessments[country].criteria.append(criteria)
+
+        # if country not in assessments:
+        #     assessment = Assessment2012(
+        #         gescomponents,
+        #         [criteria],
+        #         summary,
+        #         overall_ass,
+        #         score,
+        #     )
+        #     assessments[country] = assessment
+        # else:
+        #     assessments[country].criteria.append(criteria)
+
+    if not assessments:
+        assessment = Assessment2012(
+            gescomponents,
+            criterias,
+            summary,
+            overall_ass,
+            score,
+        )
+        assessments[country] = assessment
+
+    return assessments
 
 
 class EditAssessorsForm(Form, BaseComplianceView):
@@ -369,6 +587,7 @@ class AssessmentDataMixin(object):
         TODO: implement a method to get the adequacy and consistency scores
         from national descriptors assessment
     """
+    overall_scores = {}
 
     @property
     def _nat_desc_folder(self):
@@ -507,6 +726,38 @@ class AssessmentDataMixin(object):
 
         return res
 
+    def get_assessment_data_2012(self, region_code, country_name,
+                                 descriptor, article):
+
+        try:
+            db_data_2012 = get_assessment_data_2012_db(
+                country_name,
+                descriptor,
+                article
+            )
+            assessments_2012 = filter_assessment_data_2012(
+                db_data_2012,
+                region_code,
+                []  # descriptor_criterions,
+            )
+
+            if assessments_2012.get(country_name):
+                score_2012 = assessments_2012[country_name].score
+                conclusion_2012 = assessments_2012[country_name].overall_ass
+            else:       # fallback
+                ctry = assessments_2012.keys()[0]
+                score_2012 = assessments_2012[ctry].score
+                conclusion_2012 = assessments_2012[ctry].overall_ass
+
+        except:
+            logger.exception("Could not get assessment data for 2012")
+            score_2012 = 0
+            conclusion_2012 = 'Not found'
+
+        __score = int(round(score_2012 or 0))
+
+        return __score, conclusion_2012 or 'Not found'
+
     def get_reg_assessments_data_2012(self, article=None, region_code=None,
                                       descriptor_code=None):
         """ Get the regional descriptor assessment 2012 data """
@@ -542,3 +793,146 @@ class AssessmentDataMixin(object):
         )
 
         return sorted_res
+
+    def _setup_phase_overall_scores(self, phase_overall_scores, assess_data,
+                                    article):
+        """ National Descriptors Assessments
+            Given an assessment data calculates the adequacy, consistency
+            and coherence scores
+
+        :param phase_overall_scores: an instance of OverallScores class, with
+            empty adequacy, consistency, coherence score values
+        :param assess_data: saved_assessment_data (dictionary) attribute
+            from an assessment object like .../fi/bal/d1.1/art8
+        :param article: 'Art9'
+        :return: instance of OverallScores with calculated adequacy,
+            consistency and coherence score values
+        """
+
+        for k, score in assess_data.items():
+            if '_Score' not in k:
+                continue
+
+            if not score:
+                continue
+
+            is_not_relevant = getattr(score, 'is_not_relevant', False)
+            q_klass = score.question.klass
+            weighted_score = getattr(score, 'weighted_score', 0)
+            max_weighted_score = getattr(score, 'max_weighted_score', 0)
+
+            if not is_not_relevant:
+                p_score = getattr(phase_overall_scores, q_klass)
+                p_score['score'] += weighted_score
+                p_score['max_score'] += max_weighted_score
+
+        phases = phase_overall_scores.article_weights[article].keys()
+
+        for phase in phases:
+            # set the conclusion and color based on the score for each phase
+            phase_scores = getattr(phase_overall_scores, phase)
+            score_val = phase_overall_scores.get_range_index_for_phase(phase)
+
+            if phase == 'consistency' and article == 'Art9':
+                phase_scores['conclusion'] = ('-', 'Not relevant')
+                phase_scores['color'] = 0
+                phase_scores['score'] = '/'
+            else:
+                phase_scores['conclusion'] = (score_val,
+                                              self.get_conclusion(score_val))
+                phase_scores['color'] = self.get_color_for_score(score_val)
+
+        return phase_overall_scores
+
+    def _get_article_data(self, region_code, country_name, descriptor,
+                          assess_data, article):
+        """ Given the result from '_setup_phase_overall_scores' method
+            return a DESCRIPTOR_SUMMARY namedtuple with summaries,
+            adequacy/consistency/coherence scores, 2012 scores, conclusions,
+            score changes
+
+        :param region_code: 'BAL'
+        :param country_name: 'Finland'
+        :param descriptor: 'D1.1'
+        :param assess_data: saved_assessment_data dictionary
+        :param article: Art9
+        :return: DESCRIPTOR_SUMMARY namedtuple
+        """
+
+        phase_overall_scores = OverallScores(ARTICLE_WEIGHTS)
+
+        # Get the adequacy, consistency scores from national descriptors
+        phase_overall_scores = self._setup_phase_overall_scores(
+            phase_overall_scores, assess_data, article)
+
+        # Get the coherence scores from regional descriptors
+        phase_overall_scores.coherence = self.get_coherence_data(
+            region_code, descriptor, article
+        )
+
+        adequacy_score_val, conclusion = \
+            phase_overall_scores.adequacy['conclusion']
+        # score = phase_overall_scores.get_score_for_phase('adequacy')
+        adequacy = ("{} ({})".format(conclusion, adequacy_score_val),
+                    phase_overall_scores.adequacy['color'])
+
+        score_val, conclusion = phase_overall_scores.consistency['conclusion']
+        # score = phase_overall_scores.get_score_for_phase('consistency')
+        consistency = ("{} ({})".format(conclusion, score_val),
+                       phase_overall_scores.consistency['color'])
+
+        cscore_val, conclusion = phase_overall_scores.coherence['conclusion']
+        # score = phase_overall_scores.get_score_for_phase('coherence')
+        coherence = ("{} ({})".format(conclusion, cscore_val),
+                     phase_overall_scores.coherence['color'])
+
+        overallscore_val, score = phase_overall_scores.get_overall_score(
+            article
+        )
+        conclusion = self.get_conclusion(overallscore_val)
+        overall_score_2018 = (
+            "{} ({})".format(conclusion, overallscore_val),
+            self.get_color_for_score(overallscore_val)
+        )
+
+        assessment_summary = (
+            assess_data.get('{}_assessment_summary'.format(article)) or '-'
+        )
+        progress_assessment = (
+            assess_data.get('{}_progress'.format(article)) or '-'
+        )
+        recommendations = (
+            assess_data.get('{}_recommendations'.format(article)) or '-'
+        )
+
+        score_2012, conclusion_2012 = self.get_assessment_data_2012(
+            region_code, country_name, descriptor, article
+        )
+        overall_score_2012 = ("{} ({})".format(conclusion_2012, score_2012),
+                              self.get_color_for_score(score_2012))
+
+        __key = (region_code, descriptor, article)
+        self.overall_scores[__key] = overall_score_2018
+
+        change_since_2012 = int(adequacy_score_val - score_2012)
+
+        reg_assess_2012 = self.get_reg_assessments_data_2012(
+            article, region_code, descriptor
+        )
+        coherence_2012 = ('-', '0')
+        coherence_change_since_2012 = '-'
+        if reg_assess_2012:
+            __score = reg_assess_2012[0].overall_score
+            coherence_2012 = ("{} ({})".format(reg_assess_2012[0].conclusion,
+                                              __score),
+                              self.get_color_for_score(__score))
+            coherence_change_since_2012 = int(cscore_val - __score)
+
+        res = DESCRIPTOR_SUMMARY(
+            assessment_summary, progress_assessment, recommendations,
+            adequacy, consistency, coherence, overall_score_2018,
+            overall_score_2012, change_since_2012,
+            coherence_2012, coherence_change_since_2012
+        )
+
+        return res

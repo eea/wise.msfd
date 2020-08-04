@@ -1,22 +1,20 @@
 """ Classes and views to implement the National Descriptors compliance page
 """
 
-import re
 from collections import namedtuple
 from logging import getLogger
 
-from sqlalchemy import or_
 from zope.interface import implements
 
 from persistent.list import PersistentList
 from plone.api.content import transition
-from plone.api.portal import get_tool
 from plone.protect import CheckAuthenticator  # , protect
 from Products.Five.browser.pagetemplatefile import \
     ViewPageTemplateFile as Template
 from Products.statusmessages.interfaces import IStatusMessage
 from wise.msfd import db, sql2018
 from wise.msfd.compliance.assessment import (ANSWERS_COLOR_TABLE,
+                                             ARTICLE_WEIGHTS,
                                              CONCLUSION_COLOR_TABLE,
                                              AssessmentDataMixin)
 from wise.msfd.compliance.base import NAT_DESC_QUESTIONS
@@ -24,11 +22,8 @@ from wise.msfd.compliance.content import AssessmentData
 from wise.msfd.compliance.scoring import (CONCLUSIONS, get_overall_conclusion,
                                           get_range_index, OverallScores)
 from wise.msfd.compliance.utils import ordered_regions_sortkey
-from wise.msfd.compliance.vocabulary import (REGIONAL_DESCRIPTORS_REGIONS,
-                                             SUBREGIONS_TO_REGIONS)
 from wise.msfd.data import _extract_pdf_assessments
 from wise.msfd.gescomponents import get_descriptor
-from wise.msfd.utils import t2rt
 
 from .base import BaseView
 from ..interfaces import ICountryStartAssessments, ICountryStartReports
@@ -36,61 +31,6 @@ from .interfaces import (INationaldescriptorArticleView,
                          INationaldescriptorSecondaryArticleView)
 
 logger = getLogger('wise.msfd')
-
-REGION_RE = re.compile('.+\s\((?P<region>.+)\)$')
-
-
-ARTICLE_WEIGHTS = {
-    'Art9': {
-        'adequacy': 3/5.0,
-        'consistency': 0.0,
-        'coherence': 2/5.0
-    },
-    'Art8': {
-        'adequacy': 3/5.0,
-        'consistency': 1/5.0,
-        'coherence': 1/5.0
-    },
-    'Art10': {
-        'adequacy': 3/5.0,
-        'consistency': 1/5.0,
-        'coherence': 1/5.0
-    },
-    'Art3': {
-        'adequacy': 1.0,
-        'consistency': 0,
-        'coherence': 0
-    },
-    'Art4': {
-        'adequacy': 1.0,
-        'consistency': 0,
-        'coherence': 0
-    },
-    'Art7': {
-        'adequacy': 1.0,
-        'consistency': 0,
-        'coherence': 0
-    },
-    'Art8esa': {
-        'adequacy': 1.0,
-        'consistency': 0,
-        'coherence': 0
-    }
-}
-
-Assessment2012 = namedtuple(
-    'Assessment2012', [
-        'gescomponents',
-        'criteria',
-        'summary',
-        'overall_ass',
-        'score'
-    ]
-)
-
-Criteria = namedtuple(
-    'Criteria', ['crit_name', 'answer']
-)
 
 
 Assessment = namedtuple('Assessment',
@@ -116,68 +56,6 @@ AssessmentRow = namedtuple('AssessmentRow',
 
 CountryStatus = namedtuple('CountryStatus',
                            ['code', 'name', 'status', 'state_id', 'url'])
-
-
-@db.use_db_session('2018')
-def get_assessment_data_2012_db(*args):
-    """ Returns the assessment for 2012, from COM_Assessments_2012 table
-    """
-
-    articles = {
-        'Art8': 'Initial assessment (Article 8)',
-        'Art9': 'GES (Article 9)',
-        'Art10': 'Targets (Article 10)',
-    }
-
-    country, descriptor, article = args
-    art = articles.get(article)
-    descriptor = descriptor.split('.')[0]
-
-    t = sql2018.t_COM_Assessments_2012
-    count, res = db.get_all_records(
-        t,
-        t.c.Country.like('%{}%'.format(country)),
-        t.c.Descriptor == descriptor,
-        or_(t.c.MSFDArticle == art,
-            t.c.MSFDArticle.is_(None))
-    )
-
-    # look for rows where OverallAssessment looks like 'see D1'
-    # replace these rows with data for the descriptor mentioned in the
-    # OverallAssessment
-    res_final = []
-    descr_reg = re.compile('see\s(d\d{1,2})', flags=re.I)
-
-    for row in res:
-        overall_text = row.OverallAssessment
-        assess = row.Assessment
-
-        if 'see' in overall_text.lower() or (not overall_text and
-                                             'see d' in assess.lower()):
-            descr_match = (descr_reg.match(overall_text)
-                            or descr_reg.match(assess))
-            descriptor = descr_match.groups()[0]
-
-            _, r = db.get_all_records(
-                t,
-                t.c.Country == row.Country,
-                t.c.Descriptor == descriptor,
-                t.c.AssessmentCriteria == row.AssessmentCriteria,
-                t.c.MSFDArticle == row.MSFDArticle
-            )
-
-            res_final.append(r[0])
-
-            continue
-
-        if not overall_text:
-            res_final.append(row)
-
-            continue
-
-        res_final.append(row)
-
-    return res_final
 
 
 @db.use_db_session('2018')
@@ -487,92 +365,6 @@ def format_assessment_data(article, elements, questions, muids, data,
     )
 
     return assessment
-
-
-# TODO: use memoization for old data, needs to be called again to get the
-# score, to allow delta compute for 2018
-#
-# @memoize
-
-
-def filter_assessment_data_2012(data, region_code, descriptor_criterions):
-    """ Filters and formats the raw db data for 2012 assessment data
-    """
-    gescomponents = [c.id for c in descriptor_criterions]
-
-    assessments = {}
-    criterias = []
-
-    for row in data:
-        fields = row._fields
-
-        def col(col):
-            return row[fields.index(col)]
-
-        country = col('Country')
-
-        # The 2012 assessment data have the region in the country name
-        # For example: United Kingdom (North East Atlantic)
-        # When we display the assessment data (which we do, right now, based on
-        # subregion), we want to match the data according to the "big" region
-
-        if '(' in country:
-            region = REGION_RE.match(country).groupdict()['region']
-
-            if region not in SUBREGIONS_TO_REGIONS[region_code]:
-                continue
-
-        summary = col('Conclusions')
-        score = col('OverallScore')
-        overall_ass = col('OverallAssessment')
-        criteria = Criteria(
-            col('AssessmentCriteria'),
-            t2rt(col('Assessment'))
-        )
-
-        # TODO test for other countries beside LV
-        # Condition changed because of LV report, where score is 0
-
-        # if not score:
-
-        if score is None:
-            criterias.append(criteria)
-        elif country not in assessments:
-            criterias.insert(0, criteria)
-            assessment = Assessment2012(
-                gescomponents,
-                criterias,
-                summary,
-                overall_ass,
-                score,
-            )
-            assessments[country] = assessment
-        else:
-            assessments[country].criteria.append(criteria)
-
-        # if country not in assessments:
-        #     assessment = Assessment2012(
-        #         gescomponents,
-        #         [criteria],
-        #         summary,
-        #         overall_ass,
-        #         score,
-        #     )
-        #     assessments[country] = assessment
-        # else:
-        #     assessments[country].criteria.append(criteria)
-
-    if not assessments:
-        assessment = Assessment2012(
-            gescomponents,
-            criterias,
-            summary,
-            overall_ass,
-            score,
-        )
-        assessments[country] = assessment
-
-    return assessments
 
 
 class NationalDescriptorRegionView(BaseView):
