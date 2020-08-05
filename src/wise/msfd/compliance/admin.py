@@ -998,8 +998,9 @@ class AdminScoring(BaseComplianceView, AssessmentDataMixin):
         coherence_data = self.get_coherence_data(
             region_code, d_obj.id,article_title)
         score_title = coherence_data['conclusion'][1]
-        score = int((float(coherence_data['score']) * 100)
-                    / float(coherence_data['max_score']))
+        _max_score = float(coherence_data['max_score'])
+        score = int(_max_score and (float(coherence_data['score']) * 100)
+                    / _max_score or 0)
 
         yield (region_code, d_obj.id, d_obj.title,
                article_title, '', '2018 Overall', '',
