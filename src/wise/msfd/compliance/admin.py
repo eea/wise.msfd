@@ -1,8 +1,12 @@
 import logging
+import os
+
 from collections import namedtuple
 from datetime import datetime
 from io import BytesIO
+from lxml import etree
 
+from AccessControl import Unauthorized
 from zope.interface import alsoProvides
 
 import xlsxwriter
@@ -39,6 +43,8 @@ from .base import (_get_secondary_articles, BaseComplianceView,
                    report_data_cache_key)
 
 logger = logging.getLogger('wise.msfd')
+
+EXPORTPASS = os.environ.get('XMLEXPORTPASS', None)
 
 CONTRIBUTOR_GROUP_ID = 'extranet-wisemarine-msfd-tl'
 REVIEWER_GROUP_ID = 'extranet-wisemarine-msfd-reviewers'
@@ -1030,7 +1036,32 @@ class AdminScoring(BaseComplianceView, AssessmentDataMixin):
 
         return out
 
-    def export_scores(self, context):
+    def data_to_xml(self, all_data):
+        root = etree.Element('data')
+        out = BytesIO()
+
+        for name, labels, data in all_data:
+            name = name.title().replace(' ', '_').replace(',', '')
+            descr_element = etree.SubElement(root, name)
+
+            for row in data:
+                for objdata in row:
+                    element = etree.SubElement(descr_element, 'element')
+                    for i, value in enumerate(objdata):
+                        value_name = labels[i].title().replace(' ', '')
+
+                        v_element = etree.SubElement(element, value_name)
+                        v_element.text = unicode(value)
+
+        tree = etree.ElementTree(root)
+        tree.write(out, pretty_print=True, xml_declaration=True,
+                   encoding='utf-8')
+
+        out.seek(0)
+        
+        return out
+
+    def get_export_scores_data(self, context):
         # National descriptors data
         nda_labels = ('Country', 'Region', 'Descriptor', 'Descriptor title',
                       'Article', 'Question', 'Option', 'Answer',
@@ -1051,9 +1082,13 @@ class AdminScoring(BaseComplianceView, AssessmentDataMixin):
         all_data = [
             ('National descriptors', nda_labels, nda_xlsdata),
             ('Regional descriptors', rda_labels, rda_xlsdata),
-            ('Articles 3 & 4, 7', sec_labels, sec_xlsdata)
+            ('Articles 3, 4, 7', sec_labels, sec_xlsdata)
         ]
 
+        return all_data
+
+    def export_scores(self, context):
+        all_data = self.get_export_scores_data(context)
         xlsio = self.data_to_xls(all_data)
         sh = self.request.response.setHeader
 
@@ -1066,6 +1101,20 @@ class AdminScoring(BaseComplianceView, AssessmentDataMixin):
 
         return xlsio.read()
 
+    def export_scores_xml(self, context):
+        all_data = self.get_export_scores_data(context)
+
+        xlsio = self.data_to_xml(all_data)
+        sh = self.request.response.setHeader
+
+        sh('Content-Type', 'text/xml')
+        fname = "_".join(['Assessment_Scores',
+                          str(datetime.now().replace(microsecond=0))])
+        sh('Content-Disposition',
+           'attachment; filename=%s.xml' % fname)
+
+        return xlsio.read()
+
     def __call__(self):
 
         msgs = IStatusMessage(self.request)
@@ -1073,10 +1122,24 @@ class AdminScoring(BaseComplianceView, AssessmentDataMixin):
         if 'export-scores' in self.request.form:
             return self.export_scores(self.context)
 
-        if 'reset-assessments' in self.request.form:
-            self.reset_assessment_data()
-            msgs.add('Assessments reseted successfully!', type='warning')
-            logger.info('Reset score finished!')
+        if 'export-xml' in self.request.form:
+            password = self.request.form.get('token', None)
+
+            if not password:
+                raise Unauthorized
+
+            if not EXPORTPASS:
+                raise Unauthorized
+
+            if password != EXPORTPASS:
+                raise Unauthorized
+
+            return self.export_scores_xml(self.context)
+
+        # if 'reset-assessments' in self.request.form:
+        #     self.reset_assessment_data()
+        #     msgs.add('Assessments reseted successfully!', type='warning')
+        #     logger.info('Reset score finished!')
 
         if 'recalculate-scores' in self.request.form:
             self.recalculate_scores()
