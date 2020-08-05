@@ -84,7 +84,9 @@ REGIONS = {
 REGIONS_SIMPLIFIED = {
     'North East Atlantic': ('ABI', 'ACS', 'AMA', 'ANS'),
     'West Mediterranean': ('MWE',),
-    'Mediterranean': ('MAD', 'MAL', 'MIC'),           # 'MWE'
+    # 'MWE' is added to Mediterranean region because the 2012 assessments
+    # for Spain are done for Mediterranean level
+    'Mediterranean': ('MAD', 'MAL', 'MIC', 'MWE'),
     'Baltic Sea': ('BAL',),
     'North Sea': ('ANS',),
     'Black Sea': ('BLK',),

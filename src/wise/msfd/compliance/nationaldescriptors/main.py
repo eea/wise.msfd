@@ -16,7 +16,9 @@ from wise.msfd import db, sql2018
 from wise.msfd.compliance.assessment import (ANSWERS_COLOR_TABLE,
                                              ARTICLE_WEIGHTS,
                                              CONCLUSION_COLOR_TABLE,
-                                             AssessmentDataMixin)
+                                             AssessmentDataMixin,
+                                             get_assessment_data_2012_db,
+                                             filter_assessment_data_2012)
 from wise.msfd.compliance.base import NAT_DESC_QUESTIONS
 from wise.msfd.compliance.content import AssessmentData
 from wise.msfd.compliance.scoring import (CONCLUSIONS, get_overall_conclusion,
@@ -71,7 +73,9 @@ def get_assessment_head_data_2012(article, region, country_code):
         t.AssessmentTopic == 'GES Descriptor'
     )
 
-    assert count == 1
+    # assert count == 1
+    # Removed condition because of spain RegionSubregion
+    # ABIES - NOR and ABIES - SUD
 
     if count:
         # report_by = res[0].ReportBy
@@ -428,6 +432,7 @@ class NationalDescriptorArticleView(BaseView, AssessmentDataMixin):
                 self.descriptor,
                 self.article
             )
+
             assessments_2012 = filter_assessment_data_2012(
                 db_data_2012,
                 self.country_region_code,       # TODO: this will need refactor
