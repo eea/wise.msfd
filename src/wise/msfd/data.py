@@ -54,7 +54,7 @@ FILENAMES_MISSING_DB_ALL = {
 
 FILENAMES_MISSING_DB_8b = {
     'ES': (
-        ('ABI', 'Art8', ('ABIES-NOR_MSFD8bPressures_20130516.xml',
+        ('ABI', 'Art8', ('ABIES-NOR_MSFD8bPressures_20121015.xml',
                          'ABIES-SUD_MSFD8bPressures_20130722.xml')),
         ('AMA', 'Art8', 'AMAES_MSFD8bPressures_20121015.xml'),
         ('MWE', 'Art8', ('MWEES-ESAL_MSFD8bPressures_20130726.xml',
