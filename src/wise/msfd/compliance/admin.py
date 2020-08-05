@@ -768,7 +768,7 @@ class AdminScoring(BaseComplianceView, AssessmentDataMixin):
 
         for phase in phases:
             _phase_score = getattr(phase_overall_scores, phase, {})
-            score = _phase_score.get('score', '')
+            score = phase_overall_scores.get_score_for_phase(phase)
             score_title = _phase_score.get('conclusion', '')[1]
 
             yield (country_code, region_code, d_obj.id, d_obj.title,
