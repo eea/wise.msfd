@@ -24,6 +24,7 @@
   <permission-map name="View" acquired="False">
    <permission-role>Contributor</permission-role>
    <permission-role>Editor</permission-role>
+   <permission-role>JRC</permission-role>
    <permission-role>Manager</permission-role>
    <permission-role>Reviewer</permission-role>
   </permission-map>
@@ -35,17 +36,19 @@
   <permission-map name="wise.msfd: View Assessment Data" acquired="False">
    <permission-role>Contributor</permission-role>
    <permission-role>Editor</permission-role>
+   <permission-role>JRC</permission-role>
    <permission-role>Manager</permission-role>
    <permission-role>Reviewer</permission-role>
   </permission-map>
   <permission-map name="wise.msfd: View Assessment Edit Page" acquired="False">
    <permission-role>Contributor</permission-role>
    <permission-role>Editor</permission-role>
+   <permission-role>JRC</permission-role>
    <permission-role>Manager</permission-role>
    <permission-role>Reviewer</permission-role>
   </permission-map>
  </state>
- <state state_id="in_work" title="In work by TL">
+ <state state_id="in_work" title="Work TL">
   <exit-transition transition_id="send_for_draft_review"/>
   <exit-transition transition_id="send_to_not_started"/>
   <permission-map name="Add portal content" acquired="False">
@@ -92,7 +95,7 @@
    <permission-role>Reviewer</permission-role>
   </permission-map>
  </state>
- <state state_id="in_draft_review" title="Draft review by Milieu">
+ <state state_id="in_draft_review" title="Draft Milieu">
   <exit-transition transition_id="send_back_to_work"/>
   <exit-transition transition_id="send_for_draft_review_com"/>
   <permission-map name="Add portal content" acquired="False">
@@ -134,7 +137,7 @@
    <permission-role>Reviewer</permission-role>
   </permission-map>
  </state>
- <state state_id="in_draft_review_com" title="Draft review by COM">
+ <state state_id="in_draft_review_com" title="Draft COM">
   <exit-transition transition_id="approve"/>
   <exit-transition transition_id="send_for_final_review"/>
   <permission-map name="Add portal content" acquired="False">
@@ -179,7 +182,7 @@
    <permission-role>Reviewer</permission-role>
   </permission-map>
  </state>
- <state state_id="in_final_review_tl" title="Final review by TL">
+ <state state_id="in_final_review_tl" title="Final TL">
   <exit-transition transition_id="send_for_final_review_tl"/>
   <permission-map name="Add portal content" acquired="False">
    <permission-role>Contributor</permission-role>
@@ -225,7 +228,7 @@
    <permission-role>Reviewer</permission-role>
   </permission-map>
  </state>
- <state state_id="in_final_review" title="Final review by Milieu">
+ <state state_id="in_final_review" title="Final Milieu">
   <exit-transition transition_id="send_back_to_final_review_tl"/>
   <exit-transition transition_id="send_for_final_review_com"/>
   <permission-map name="Add portal content" acquired="False">
@@ -268,7 +271,7 @@
    <permission-role>Reviewer</permission-role>
   </permission-map>
  </state>
- <state state_id="in_final_review_com" title="Final review by COM">
+ <state state_id="in_final_review_com" title="Final COM">
   <exit-transition transition_id="approve"/>
   <exit-transition transition_id="send_back_to_final_review"/>
   <permission-map name="Add portal content" acquired="False">
