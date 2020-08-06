@@ -556,12 +556,12 @@ class AdminScoring(BaseComplianceView, AssessmentDataMixin):
     @property
     def ndas(self):
         catalog = get_tool('portal_catalog')
-        brains = catalog.searchResults(
+        brains = catalog.unrestrictedSearchResults(
             portal_type='wise.msfd.nationaldescriptorassessment',
         )
 
         for brain in brains:
-            obj = brain.getObject()
+            obj = brain._unrestrictedGetObject()
 
             # safety check to exclude secondary articles
             if not INationalDescriptorAssessment.providedBy(obj):
@@ -580,12 +580,12 @@ class AdminScoring(BaseComplianceView, AssessmentDataMixin):
     @property
     def ndas_sec(self):
         catalog = get_tool('portal_catalog')
-        brains = catalog.searchResults(
+        brains = catalog.unrestrictedSearchResults(
             portal_type='wise.msfd.nationaldescriptorassessment',
         )
 
         for brain in brains:
-            obj = brain.getObject()
+            obj = brain._unrestrictedGetObject()
             # safety check to exclude primary articles
             if not INationalDescriptorAssessmentSecondary.providedBy(obj):
                 continue
@@ -1040,17 +1040,27 @@ class AdminScoring(BaseComplianceView, AssessmentDataMixin):
         root = etree.Element('data')
         out = BytesIO()
 
+        excludes = ('Progress', 'Summary', 'Recommendations',
+                    'Assessment Summary')
+
         for name, labels, data in all_data:
+            index_option = labels.index('Option')
             name = name.title().replace(' ', '_').replace(',', '')
             descr_element = etree.SubElement(root, name)
 
             for row in data:
                 for objdata in row:
-                    element = etree.SubElement(descr_element, 'element')
-                    for i, value in enumerate(objdata):
-                        value_name = labels[i].title().replace(' ', '')
+                    option = objdata[index_option]
 
-                        v_element = etree.SubElement(element, value_name)
+                    if option in excludes:
+                        continue
+
+                    element = etree.SubElement(descr_element, 'element')
+
+                    for i, value in enumerate(objdata):
+                        label_title = labels[i].title().replace(' ', '')
+
+                        v_element = etree.SubElement(element, label_title)
                         v_element.text = unicode(value)
 
         tree = etree.ElementTree(root)
@@ -1102,6 +1112,17 @@ class AdminScoring(BaseComplianceView, AssessmentDataMixin):
         return xlsio.read()
 
     def export_scores_xml(self, context):
+        password = self.request.form.get('token', None)
+
+        if not password:
+            raise Unauthorized
+
+        if not EXPORTPASS:
+            raise Unauthorized
+
+        if password != EXPORTPASS:
+            raise Unauthorized
+
         all_data = self.get_export_scores_data(context)
 
         xlsio = self.data_to_xml(all_data)
@@ -1123,17 +1144,6 @@ class AdminScoring(BaseComplianceView, AssessmentDataMixin):
             return self.export_scores(self.context)
 
         if 'export-xml' in self.request.form:
-            password = self.request.form.get('token', None)
-
-            if not password:
-                raise Unauthorized
-
-            if not EXPORTPASS:
-                raise Unauthorized
-
-            if password != EXPORTPASS:
-                raise Unauthorized
-
             return self.export_scores_xml(self.context)
 
         # if 'reset-assessments' in self.request.form:
@@ -1147,6 +1157,13 @@ class AdminScoring(BaseComplianceView, AssessmentDataMixin):
             logger.info('Recalculating score finished!')
 
         return self.index()
+
+
+class AdminScoringExportXML(AdminScoring):
+    def __call__(self):
+        file = self.export_scores_xml(self.context)
+
+        return file
 
 
 class SetupAssessmentWorkflowStates(BaseComplianceView):

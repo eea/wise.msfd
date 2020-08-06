@@ -52,6 +52,13 @@
 
   <browser:page
     for="*"
+    name="export-scores-xml"
+    class=".admin.AdminScoringExportXML"
+    permission="zope2.View"
+  />
+
+  <browser:page
+    for="*"
     name="setup-workflow-states"
     class=".admin.SetupAssessmentWorkflowStates"
     permission="cmf.ManagePortal"

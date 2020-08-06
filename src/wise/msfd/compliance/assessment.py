@@ -624,12 +624,12 @@ class AssessmentDataMixin(object):
     @property
     def rdas(self):
         catalog = get_tool('portal_catalog')
-        brains = catalog.searchResults(
+        brains = catalog.unrestrictedSearchResults(
             portal_type='wise.msfd.regionaldescriptorassessment',
         )
 
         for brain in brains:
-            obj = brain.getObject()
+            obj = brain._unrestrictedGetObject()
 
             if not IRegionalDescriptorAssessment.providedBy(obj):
                 continue
