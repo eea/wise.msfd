@@ -36,6 +36,7 @@ from wise.msfd.gescomponents import (get_all_descriptors, get_descriptor,
 from wise.msfd.labels import get_indicator_labels
 from wise.msfd.translation import Translation, get_detected_lang
 from wise.msfd.translation.interfaces import ITranslationsStorage
+from wise.msfd.utils import timeit
 
 from . import interfaces
 from .base import (_get_secondary_articles, BaseComplianceView,
@@ -554,6 +555,7 @@ class AdminScoring(BaseComplianceView, AssessmentDataMixin):
         return descriptors[1:]
 
     @property
+    @timeit
     def ndas(self):
         catalog = get_tool('portal_catalog')
         brains = catalog.unrestrictedSearchResults(
@@ -578,6 +580,7 @@ class AdminScoring(BaseComplianceView, AssessmentDataMixin):
             yield obj
 
     @property
+    @timeit
     def ndas_sec(self):
         catalog = get_tool('portal_catalog')
         brains = catalog.unrestrictedSearchResults(
@@ -1012,6 +1015,7 @@ class AdminScoring(BaseComplianceView, AssessmentDataMixin):
                article_title, '', '2018 Overall', '',
                score, score_title, state, last_change)
 
+    @timeit
     def data_to_xls(self, all_data):
         out = BytesIO()
         workbook = xlsxwriter.Workbook(out, {'in_memory': True})
@@ -1036,6 +1040,7 @@ class AdminScoring(BaseComplianceView, AssessmentDataMixin):
 
         return out
 
+    @timeit
     def data_to_xml(self, all_data):
         root = etree.Element('data')
         out = BytesIO()
@@ -1071,23 +1076,42 @@ class AdminScoring(BaseComplianceView, AssessmentDataMixin):
         
         return out
 
+    @timeit
+    @cache(lambda func, *args: func.__name__, lifetime=300)
     def get_export_scores_data(self, context):
         # National descriptors data
         nda_labels = ('Country', 'Region', 'Descriptor', 'Descriptor title',
                       'Article', 'Question', 'Option', 'Answer',
                       'Score', 'Score title', 'State', 'Last change')
-        nda_xlsdata = (self.get_data(nda) for nda in self.ndas)
+
+        # transform data to lists to make it cacheable
+        nda_xlsdata = [
+            [row for row in self.get_data(nda)]
+            for nda in self.ndas
+            # if (hasattr(nda, 'saved_assessment_data')
+            #     and nda.saved_assessment_data)
+        ]
 
         # Regional descriptors data
         rda_labels = ('Region', 'Descriptor', 'Descriptor title',
                       'Article', 'Question', 'Option', 'Answer',
                       'Score', 'Score title','State', 'Last change')
-        rda_xlsdata = (self.get_data_rda(rda) for rda in self.rdas)
+
+        # transform data to lists to make it cacheable
+        rda_xlsdata = [
+            [row for row in self.get_data_rda(rda)]
+            for rda in self.rdas
+        ]
 
         # Secondary Articles 3 & 4, 7
         sec_labels = ('Country', 'Article', 'Question', 'Option', 'Answer',
                       'Score', 'Score title', 'State', 'Last change')
-        sec_xlsdata = (self.get_data_sec(sec) for sec in self.ndas_sec)
+
+        # transform data to lists to make it cacheable
+        sec_xlsdata = [
+            [row for row in self.get_data_sec(sec)]
+            for sec in self.ndas_sec
+        ]
 
         all_data = [
             ('National descriptors', nda_labels, nda_xlsdata),
@@ -1097,6 +1121,7 @@ class AdminScoring(BaseComplianceView, AssessmentDataMixin):
 
         return all_data
 
+    @timeit
     def export_scores(self, context):
         all_data = self.get_export_scores_data(context)
         xlsio = self.data_to_xls(all_data)
