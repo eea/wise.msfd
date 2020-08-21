@@ -25,7 +25,7 @@
             <td rowspan="2"></td>
             <td rowspan="2"></td>
             <td class="overall-headers fixed-right" rowspan="2">
-              <div>2012 Adequacy</div>
+              <div class='as-value'>2012 Adequacy</div>
             </td>
             <th>Conclusion</th>
             <th>Score</th>

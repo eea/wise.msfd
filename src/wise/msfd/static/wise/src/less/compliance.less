@@ -524,9 +524,9 @@ span.has-new-comments {
       vertical-align: top;
     }
 
-    div {
+    div.as-value {
       padding: 1px 5px;
-      height: 55px;
+      min-height: 55px;
       border: 1px solid #ccc;
       //margin: -1px;
       overflow: hidden;
@@ -578,16 +578,11 @@ span.has-new-comments {
       }
     }
 
-    td, div.gescomp, .overall-values div {
+    td, div.gescomp, .overall-values div.as-value, .overall-headers div.as-value {
       min-width: 4em;
       height: 2rem;
       border: 1px solid #ccc;
       background-color: #fff;
-
-      &.as-value {
-        width: 30px;
-        height: 30px;
-      }
 
       &.as-score { text-align: right; }
 
@@ -649,6 +644,10 @@ span.has-new-comments {
     span.score.fa.fa-info-circle.fa-s {
       padding-right: 0.5rem;
       color: #0071b3;
+    }
+    span.score.fa.fa-exclamation-circle.fa-s {
+      padding-right: 0.5rem;
+      color: orangered;
     }
   }
 

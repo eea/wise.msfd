@@ -309,10 +309,11 @@ def format_assessment_data(article, elements, questions, muids, data,
 
         conclusion_color = CONCLUSION_COLOR_TABLE[score_value]
 
-        weighted_score = getattr(score, 'weighted_score', 0)
-        max_weighted_score = getattr(score, 'max_weighted_score', 0)
+        weighted_score = getattr(score, 'final_score', 0)
+        q_weight = getattr(score, 'weight',
+                           float(question.score_weights.get(descriptor.id, 0)))
+        max_weighted_score = q_weight
         is_not_relevant = getattr(score, 'is_not_relevant', False)
-        # q_weight = float(question.score_weights.get(descriptor.id, 10.0))
 
         # is_not_relevant is True if all answered options are 'Not relevant'
         # maximum overall score is incremented if the is_not_relevant is False

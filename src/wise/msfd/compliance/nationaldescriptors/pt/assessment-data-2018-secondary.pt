@@ -79,7 +79,7 @@
           </td>
 
           <td class="overall-headers fixed-right">
-            <div>2018 Overall </div>
+            <div class="as-value">2018 Overall </div>
           </td>
           <td class="overall-values fixed-right"
             tal:define="phase_score python: assessment.phase_overall_scores">
@@ -91,7 +91,7 @@
           <td class="overall-values fixed-right"
             tal:define="phase_score python: assessment.phase_overall_scores">
             <div tal:attributes="class python: 'as-value as-value-{}'.format(assessment.overall_conclusion_color)"
-              tal:content="assessment/overall_score">Very poor (1)</div>
+              tal:content="assessment/overall_score">56.8</div>
           </td>
         </tr>
 

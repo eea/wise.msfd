@@ -82,7 +82,7 @@ class OverallScores(object):
             score = self.get_score_for_phase(phase)
             overall_score += score * weights[phase]
 
-        overall_score = int(overall_score)
+        overall_score = int(round(overall_score))
 
         return get_range_index(overall_score), overall_score
 
@@ -111,19 +111,37 @@ class OverallScores(object):
         return get_range_index(score)
 
     def score_tooltip(self, phase):
-        """ TODO not used """
-
-        score = getattr(self, phase)['score']
-        max_score = getattr(self, phase)['max_score']
+        # score = getattr(self, phase)['score']
+        # max_score = getattr(self, phase)['max_score']
         final_score = self.get_score_for_phase(phase)
 
         text = \
-            "<b>Score achieved</b>: {} (Sum of the final scores " \
-            "from each questions)" \
-            "</br><b>Max score</b>: {} (Maximum possible score)" \
-            "</br><b>Final score</b>: {} (Final calculated score " \
-            "(<b>Score achieved</b> / <b>Max score</b>) * 100)" \
-            .format(score, max_score, final_score)
+            "<b>Final score</b>: {} (Sum of the final scores " \
+            "from each <b>{}</b> question)" \
+            .format(final_score, phase)
+
+        return text
+
+    def score_tooltip_overall(self, article):
+        weights = self.article_weights[article]
+        ad_wght = int(weights['adequacy'] * 100)
+        cn_wght = int(weights['consistency'] * 100)
+        co_wght = int(weights['coherence'] * 100)
+        ad_score = self.get_score_for_phase('adequacy')
+        cn_score = self.get_score_for_phase('consistency')
+        co_score = self.get_score_for_phase('coherence')
+        overall_color, overall_score_val = self.get_overall_score(article)
+
+        text = "<b>Adequacy weight</b>: {}" \
+               "</br><b>Consistency weight</b>: {}" \
+               "</br><b>Coherence weight</b>: {}" \
+               "</br></br><b>Final score</b>: {} (adequacy_score * " \
+               "adequacy_weight + consistency_score * consistency_weight + " \
+               "coherence_score * coherence_weight) / 100" \
+               "</br>({}*{} + {}*{} + {}*{}) / 100" \
+               .format(ad_wght, cn_wght, co_wght,
+                       overall_score_val,
+                       ad_score, ad_wght, cn_score, cn_wght, co_score, co_wght)
 
         return text
 
@@ -144,7 +162,7 @@ class Score(object):
         self.weight = float(question.score_weights.get(descriptor, 10.0))
         self.values = values
         self.scores = question.scores
-    
+
     @property
     def is_not_relevant(self):
         """ If all options selected are 'Not relevant' return True
@@ -251,6 +269,15 @@ class Score(object):
         return ws
 
     @property
+    def final_score(self):
+        if self.max_score == 0:
+            return 0
+
+        ws = (self.percentage * self.weight) / 100
+
+        return ws
+
+    @property
     def score_tooltip(self):
         if self.is_not_relevant:
             return "All selected options are 'Not relevant', therefore " \
@@ -264,13 +291,14 @@ class Score(object):
             '</br><b>Max score</b>: {} (number of answered criterias/targets ' \
             'excluding answers where option selected is "Not relevant")' \
             '</br><b>Score achieved</b>: {} (Sum of the scores {})' \
-            '</br><b>Max weighted score</b>: {} (Maximum possible weighted ' \
-            'score <b>Weight</b> * <b>Max score</b>)' \
+            '</br><b>Percentage</b>: {} (<b>Score achieved</b> * 100 / ' \
+            '<b>Max score</b>)' \
             '</br><b>Weighted score</b>: {} (Final calculated score ' \
-            '<b>Score achieved</b> * <b>Weight</b>)' \
+            '<b>Percentage</b> * <b>Weight</b> / 100)' \
             .format(self.weight, self.max_score, self.score_achieved,
-                    raw_score, self.max_weighted_score, self.weighted_score)
+                    raw_score, self.percentage, self.final_score)
+
+        # '</br><b>Max weighted score</b>: {} (Maximum possible weighted ' \
+        # 'score <b>Weight</b> * <b>Max score</b>)' \
 
         return text
-
-# A10Ad1 A0810Cy1 A08Ad4 A09Ad1 A09Ad2
