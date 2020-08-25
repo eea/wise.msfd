@@ -51,7 +51,7 @@
                   tal:content="row/conclusion">Very poor</strong>
             </td>
 
-            <td tal:attributes="class python: 'fixed-right as-value as-value-{}'.format(row.conclusion_color)">
+            <td tal:attributes="class python: 'fixed-right'">
               <span tal:condition="row/score"
                   class="score help-popover fa fa-info-circle fa-s"
                   data-trigger="hover"
@@ -60,7 +60,15 @@
                   tal:attributes="title python: 'Score calculation algorithm';
                     data-content python: getattr(row.score, 'score_tooltip', '');">
               </span>
-              <span tal:content="python: getattr(row.score, 'weighted_score', 0)">0</span>
+              <span tal:condition="python: not row.score"
+                  class="score help-popover fa fa-exclamation-circle fa-s"
+                  data-trigger="hover"
+                  data-html="true"
+                  data-placement="left"
+                  tal:attributes="title python: 'Score calculation algorithm';
+                    data-content python: 'Score is calculated after all answers are filled in.';">
+              </span>
+              <span tal:content="python: getattr(row.score, 'final_score', 0)">0</span>
             </td>
 
           </tr>
@@ -83,15 +91,24 @@
           </td>
           <td class="overall-values fixed-right"
             tal:define="phase_score python: assessment.phase_overall_scores">
-            <div tal:attributes="class python: 'as-value as-value-{}'.format(assessment.overall_conclusion_color)"
-              tal:content="python: '{} ({})'.format(
-                assessment.overall_conclusion[1], assessment.overall_conclusion[0])">Very poor (1)</div>
+            <div tal:attributes="class python: 'as-value as-value-{}'.format(assessment.overall_conclusion_color)">
+              <strong tal:content="python: '{} ({})'.format(
+                assessment.overall_conclusion[1], assessment.overall_conclusion[0])">Very poor (1)</strong>
+            </div>
           </td>
 
           <td class="overall-values fixed-right"
             tal:define="phase_score python: assessment.phase_overall_scores">
-            <div tal:attributes="class python: 'as-value as-value-{}'.format(assessment.overall_conclusion_color)"
-              tal:content="assessment/overall_score">56.8</div>
+            <div tal:attributes="class python: 'as-value as-value-{}'.format(assessment.overall_conclusion_color)">
+              <span class="score help-popover fa fa-info-circle fa-s"
+                  data-trigger="hover"
+                  data-html="true"
+                  data-placement="left"
+                  tal:attributes="title python: 'Score calculation algorithm';
+                    data-content python: phase_score.score_tooltip_overall_secondary(view.article);">
+              </span>
+              <span tal:content="assessment/overall_score">56.8</span>
+            </div>
           </td>
         </tr>
 

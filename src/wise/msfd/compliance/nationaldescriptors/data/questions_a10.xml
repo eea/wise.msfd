@@ -101,42 +101,6 @@
       <score-weight descriptor="D11" value="30" />
   </assessment-question>
 
-
-<!--
-  <assessment-question id="A10Co1" class="coherence" use-criteria='2018-targets'>
-    <definition>
-      To what extent does the Member State define similar targets to other MS in the region?
-    </definition>
-    <answers>
-      <option score="1">Target is similar to most (76-100%) MS in the region</option>
-      <option score="0.75">Target is similar to many (51-75%) MS in the region</option>
-      <option score="0.5">Target is similar to some (26-50%) MS in the region</option>
-      <option score="0.25">Target is similar to a few (1-25%) MS in the region</option>
-      <option score="1">Target is not similar to other MS targets in the region</option>
-      <option score="0.250">Not clear</option>
-      <option score="/">Not relevant</option>
-    </answers>
-    <scoring determination-method="wise.msfd.compliance.scoring.scoring_based">
-    </scoring>
-    <score-weight descriptor="D1.1" value="100" />
-    <score-weight descriptor="D1.2" value="100" />
-    <score-weight descriptor="D1.3" value="100" />
-    <score-weight descriptor="D1.4" value="100" />
-    <score-weight descriptor="D1.5" value="100" />
-    <score-weight descriptor="D1.6" value="100" />
-    <score-weight descriptor="D2" value="100" />
-    <score-weight descriptor="D3" value="100" />
-    <score-weight descriptor="D4" value="100" />
-    <score-weight descriptor="D5" value="100" />
-    <score-weight descriptor="D6" value="100" />
-    <score-weight descriptor="D7" value="100" />
-    <score-weight descriptor="D8" value="100" />
-    <score-weight descriptor="D9" value="100" />
-    <score-weight descriptor="D10" value="100" />
-    <score-weight descriptor="D11" value="100" />
-  </assessment-question>
--->
-
   <assessment-question id="A0810Cy1" class="consistency" use-criteria='2018-targets'>
     <definition>
      To what extent do targets adequately address the gap between current (2018) state and GES?

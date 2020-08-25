@@ -251,6 +251,7 @@ def format_assessment_data(article, elements, questions, muids, data,
     answers = []
     phases = article_weights.values()[0].keys()
     phase_overall_scores = OverallScores(article_weights)
+    descr_id = hasattr(descriptor, 'id') and descriptor.id or descriptor
 
     for question in questions:
         values = []
@@ -311,7 +312,7 @@ def format_assessment_data(article, elements, questions, muids, data,
 
         weighted_score = getattr(score, 'final_score', 0)
         q_weight = getattr(score, 'weight',
-                           float(question.score_weights.get(descriptor.id, 0)))
+                           float(question.score_weights.get(descr_id, 0)))
         max_weighted_score = q_weight
         is_not_relevant = getattr(score, 'is_not_relevant', False)
 
@@ -345,9 +346,9 @@ def format_assessment_data(article, elements, questions, muids, data,
         phase_scores['color'] = \
             CONCLUSION_COLOR_TABLE[get_range_index(phase_score)]
 
-    # for national descriptors override the coherence score with the score
-    # from regional descriptors
-    if self.section == 'national-descriptors':
+    # for national descriptors and primary articles (Art 8, 9, 10)
+    # override the coherence score with the score from regional descriptors
+    if self.section == 'national-descriptors' and self.is_primary_article:
         phase_overall_scores.coherence = self.get_coherence_data(
             self.country_region_code, self.descriptor, article
         )

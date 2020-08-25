@@ -41,29 +41,29 @@ REGION_RE = re.compile('.+\s\((?P<region>.+)\)$')
 
 ARTICLE_WEIGHTS = {
     'Art9': {
-        'adequacy': 3/5.0,
+        'adequacy': 0.4,
         'consistency': 0.0,
-        'coherence': 2/5.0
+        'coherence': 0.6
     },
     'Art8': {
-        'adequacy': 3/5.0,
-        'consistency': 1/5.0,
-        'coherence': 1/5.0
+        'adequacy': 0.54,
+        'consistency': 0.1,
+        'coherence': 0.36
     },
     'Art10': {
-        'adequacy': 3/5.0,
-        'consistency': 1/5.0,
-        'coherence': 1/5.0
+        'adequacy': 0.5,
+        'consistency': 0.35,
+        'coherence': 0.15
     },
     'Art3': {
         'adequacy': 1.0,
-        'consistency': 0,
-        'coherence': 0
+        'consistency': 1.0,
+        'coherence': 1.0
     },
     'Art4': {
         'adequacy': 1.0,
-        'consistency': 0,
-        'coherence': 0
+        'consistency': 1.0,
+        'coherence': 1.0
     },
     'Art7': {
         'adequacy': 1.0,
@@ -697,7 +697,7 @@ class AssessmentDataMixin(object):
 
         res = {
             'score': 0,
-            'max_score': 0,
+            'max_score': 100,
             'color': 0,
             'conclusion': (0, 'Not reported')
         }
@@ -713,9 +713,11 @@ class AssessmentDataMixin(object):
             weighted_score = getattr(score, 'final_score', 0)
             max_weighted_score = getattr(score, 'weight', 0)
 
-            if not is_not_relevant:
-                res['score'] += weighted_score
-                res['max_score'] += max_weighted_score
+            if is_not_relevant:
+                res['max_score'] -= max_weighted_score
+                continue
+
+            res['score'] += weighted_score
 
         # score_percent = int(round(res['max_score'] and (res['score'] * 100)
         #                           / res['max_score'] or 0))

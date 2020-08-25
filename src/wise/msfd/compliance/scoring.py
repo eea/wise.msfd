@@ -74,6 +74,8 @@ class OverallScores(object):
 
         :return: 80
         """
+        if article in ('Art3', 'Art4'):
+            return self.get_overall_score_secondary(article)
 
         overall_score = 0
         weights = self.article_weights[article]
@@ -83,6 +85,29 @@ class OverallScores(object):
             overall_score += score * weights[phase]
 
         overall_score = int(round(overall_score))
+
+        return get_range_index(overall_score), overall_score
+
+    def get_overall_score_secondary(self, article):
+        """ Overall conclusion art. XX: 2018
+
+        :return: 80
+        """
+
+        score_achieved = 0
+        max_score = 0
+        weights = self.article_weights[article]
+
+        for phase in weights:
+            _score = getattr(self, phase)['score']
+            _max_score = getattr(self, phase)['max_score']
+
+            score_achieved += _score
+            max_score += _max_score
+
+        overall_score = int(round(
+            max_score and (score_achieved * 100) / max_score or 0
+        ))
 
         return get_range_index(overall_score), overall_score
 
@@ -111,14 +136,55 @@ class OverallScores(object):
         return get_range_index(score)
 
     def score_tooltip(self, phase):
-        # score = getattr(self, phase)['score']
-        # max_score = getattr(self, phase)['max_score']
+        score = getattr(self, phase)['score']
+        max_score = getattr(self, phase)['max_score']
         final_score = self.get_score_for_phase(phase)
 
         text = \
-            "<b>Final score</b>: {} (Sum of the final scores " \
-            "from each <b>{}</b> question)" \
-            .format(final_score, phase)
+            "<b>Score achieved</b>: {} (Sum of the scores from each question)"\
+            "</br><b>Max score</b>: {} (Maximum possible score: sum of the " \
+            "weights from each question, excluding <b>Not relevant</b> " \
+            "questions)" \
+            "</br><b>Final score</b>: {} (<b>Score achieved</b> * 100 / " \
+            "<b>Max score<b/>)" \
+            .format(score, max_score, final_score, phase)
+
+        return text
+
+    def score_tooltip_overall_secondary(self, article):
+        weights = self.article_weights[article]
+        overall_color, overall_score_val = self.get_overall_score(article)
+
+        score_achieved = 0
+        max_score = 0
+
+        for phase in weights:
+            _score = getattr(self, phase)['score']
+            _max_score = getattr(self, phase)['max_score']
+
+            score_achieved += _score
+            max_score += _max_score
+
+        text = \
+            "<b>Score achieved</b>: {} (Sum of the scores from each question)"\
+            "</br><b>Max score</b>: {} (Maximum possible score: sum of " \
+            "the weights from each question, excluding " \
+            "<b>Not relevant</b> questions)" \
+            "</br><b>Final score</b>: {} (<b>Score achieved</b> * 100 / " \
+            "<b>Max score</b>)" \
+            .format(score_achieved, max_score, overall_score_val)
+
+        return text
+
+    def score_tooltip_overall_regional(self, article):
+        weights = self.article_weights[article]
+        co_wght = int(weights['coherence'] * 100)
+        overall_color, overall_score_val = self.get_overall_score(article)
+
+        text = "<b>Coherence weight</b>: {}" \
+               "</br><b>Final score</b>: {} (<b>Coherence</b> score)" \
+               .format(co_wght,
+                       overall_score_val)
 
         return text
 
@@ -135,9 +201,9 @@ class OverallScores(object):
         text = "<b>Adequacy weight</b>: {}" \
                "</br><b>Consistency weight</b>: {}" \
                "</br><b>Coherence weight</b>: {}" \
-               "</br></br><b>Final score</b>: {} (adequacy_score * " \
-               "adequacy_weight + consistency_score * consistency_weight + " \
-               "coherence_score * coherence_weight) / 100" \
+               "</br></br><b>Final score</b>: {} (Adequacy score * " \
+               "Adequacy weight + Consistency score * Consistency weight + " \
+               "Coherence score * Coherence weight) / 100" \
                "</br>({}*{} + {}*{} + {}*{}) / 100" \
                .format(ad_wght, cn_wght, co_wght,
                        overall_score_val,
@@ -293,7 +359,7 @@ class Score(object):
             '</br><b>Score achieved</b>: {} (Sum of the scores {})' \
             '</br><b>Percentage</b>: {} (<b>Score achieved</b> * 100 / ' \
             '<b>Max score</b>)' \
-            '</br><b>Weighted score</b>: {} (Final calculated score ' \
+            '</br><b>Weighted score</b>: {} (Final score ' \
             '<b>Percentage</b> * <b>Weight</b> / 100)' \
             .format(self.weight, self.max_score, self.score_achieved,
                     raw_score, self.percentage, self.final_score)

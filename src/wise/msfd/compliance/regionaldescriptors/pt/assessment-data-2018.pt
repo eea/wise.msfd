@@ -50,7 +50,7 @@
                   tal:content="row/conclusion">Very poor</strong>
             </td>
 
-            <td tal:attributes="class python: 'fixed-right as-value as-value-{}'.format(row.conclusion_color)">
+            <td tal:attributes="class python: 'fixed-right'">
               <span tal:condition="row/score"
                   class="score help-popover fa fa-info-circle fa-s"
                   data-trigger="hover"
@@ -95,12 +95,17 @@
             <div tal:attributes="class python: 'as-value as-value-{}'.format(phase_score.coherence['color'])"
                  tal:define="conclusion python: phase_score.coherence['conclusion'][1];
                     score_value python: phase_score.coherence['conclusion'][0]"
-              tal:content="python: '{} ({})'.format(conclusion, score_value)">Very good (4)</div>
+              tal:content="python: '{} ({})'.format(conclusion, score_value)">
+              Very good (4)
+            </div>
             <div tal:attributes="class python: 'as-value as-value-{}'.format(assessment.overall_conclusion_color)"
-              tal:content="python: '{} ({})'.format(assessment.overall_conclusion[1], assessment.overall_conclusion[0])">Very poor (1)</div>
+              tal:content="python: '{} ({})'.format(assessment.overall_conclusion[1], assessment.overall_conclusion[0])">
+              Very poor (1)
+            </div>
             <div class="as-value"
                 tal:content="options/change_since_2012">-1</div>
           </td>
+
           <td class="overall-values fixed-right"
               tal:define="phase_score python: assessment.phase_overall_scores">
             <div tal:attributes="class python: 'as-value as-value-{}'.format(phase_score.coherence['color'])"
@@ -120,7 +125,7 @@
                   data-html="true"
                   data-placement="left"
                   tal:attributes="title python: 'Score calculation algorithm';
-                    data-content python: phase_score.score_tooltip_overall(view.article);">
+                    data-content python: phase_score.score_tooltip_overall_regional(view.article);">
               </span>
               <span tal:content="assessment/overall_score">65.5</span>
             </div>
