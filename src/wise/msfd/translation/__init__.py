@@ -50,6 +50,12 @@ TRANS_LANGUAGE_MAPPING = {
     'SE': get_detected_lang,
 }
 
+# For the following countries, the translation service uses
+# different country code
+ALTERNATE_COUNTRY_CODES = {
+    'SI': 'SL',
+}
+
 
 def get_mapped_language(country_code, text):
     detect_func = TRANS_LANGUAGE_MAPPING[country_code]
@@ -62,6 +68,16 @@ def get_mapped_language(country_code, text):
         return country_code
 
     return detected_lang.upper()
+
+
+def _get_country_code(country_code, text):
+    if country_code in TRANS_LANGUAGE_MAPPING:
+        country_code = get_mapped_language(country_code, text)
+
+    if country_code in ALTERNATE_COUNTRY_CODES:
+        country_code = ALTERNATE_COUNTRY_CODES.get(country_code, country_code)
+
+    return country_code
 
 
 def decode_text(text):
@@ -95,8 +111,7 @@ def retrieve_translation(country_code,
     Returns a json formatted string
     """
 
-    if country_code in TRANS_LANGUAGE_MAPPING:
-        country_code = get_mapped_language(country_code, text)
+    country_code = _get_country_code(country_code, text)
 
     if not text:
         return
@@ -174,8 +189,7 @@ def retrieve_translation(country_code,
 
 
 def get_translated(value, language, site=None):
-    if language in TRANS_LANGUAGE_MAPPING:
-        language = get_mapped_language(language, value)
+    language = _get_country_code(language, value)
 
     if site is None:
         site = portal.get()
@@ -207,8 +221,7 @@ def normalize(text):
 
 
 def delete_translation(text, source_lang):
-    if source_lang in TRANS_LANGUAGE_MAPPING:
-        source_lang = get_mapped_language(source_lang, text)
+    source_lang = _get_country_code(source_lang, text)
 
     site = portal.get()
 
@@ -226,8 +239,7 @@ def delete_translation(text, source_lang):
 
 
 def save_translation(original, translated, source_lang, approved=False):
-    if source_lang in TRANS_LANGUAGE_MAPPING:
-        source_lang = get_mapped_language(source_lang, original)
+    source_lang = _get_country_code(source_lang, original)
 
     site = portal.get()
     
