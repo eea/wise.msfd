@@ -637,10 +637,13 @@ class AssessmentDataMixin(object):
             yield obj
 
     def get_color_for_score(self, score_value):
-        return CONCLUSION_COLOR_TABLE[score_value]
+        return CONCLUSION_COLOR_TABLE.get(score_value, 3)
 
     def get_conclusion(self, score_value):
-        concl = list(reversed(CONCLUSIONS))[score_value]
+        try:
+            concl = list(reversed(CONCLUSIONS))[score_value]
+        except:
+            concl = CONCLUSIONS[-1]
 
         return concl
 

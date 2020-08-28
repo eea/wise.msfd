@@ -2,37 +2,69 @@
 <questions article='Art10'>
   <assessment-question id="A10Co1" class="coherence" use-criteria="none">
     <definition>
-      To what extent do the Member States in the region define similar targets?
+      To what extent do the Member States in the region report operational targets?
     </definition>
     <answers>
-      <option score="1">Targets focused on reducing the pressure/impact are the same/similar in most MS (76-100%) in the region</option>
-      <option score="0.75">Targets focused on reducing the pressure/impact are the same/similar in many MS (51-75%) in the region</option>
-      <option score="0.5">Targets focused on reducing the pressure/impact the same/similar in some MS (26-50%) in the region</option>
-      <option score="0.25">Targets focused on reducing the pressure/impact are the same/similar a few MS (1-25%) in the region</option>
-      <option score="0.75">Some targets focused on reducing the pressure/impact defined are the same/similar in most MS (76-100%) in the region</option>
-      <option score="0.5">Some targets focused on reducing the pressure/impact are the same/similar in many MS (51-75%) in the region</option>
-      <option score="0.25">Some targets focused on reducing the pressure/impact are the same/similar in some MS (26-50%) in the region</option>
-      <option score="0">All targets are different in all MS in the region</option>
+      <option score="1">Most (76-100%) MS report operational targets</option>
+      <option score="0.75">Several (51-75%) MS report operational targets</option>
+      <option score="0.5">Some (26-50%) MS report operational targets</option>
+      <option score="0.25">Few (1-25%) MS report operational targets</option>
+      <option score="0">No MS reports operational targets</option>
       <option score="0.250">Not clear</option>
       <option score="/">Not relevant</option>
     </answers>
     <scoring determination-method="wise.msfd.compliance.scoring.scoring_based">
     </scoring>
-    <score-weight descriptor="D1.1" value="100" />
-    <score-weight descriptor="D1.2" value="100" />
-    <score-weight descriptor="D1.3" value="100" />
-    <score-weight descriptor="D1.4" value="100" />
-    <score-weight descriptor="D1.5" value="100" />
-    <score-weight descriptor="D1.6" value="100" />
-    <score-weight descriptor="D2" value="100" />
-    <score-weight descriptor="D3" value="100" />
-    <score-weight descriptor="D4" value="100" />
-    <score-weight descriptor="D5" value="100" />
-    <score-weight descriptor="D6" value="100" />
-    <score-weight descriptor="D7" value="100" />
-    <score-weight descriptor="D8" value="100" />
-    <score-weight descriptor="D9" value="100" />
-    <score-weight descriptor="D10" value="100" />
-    <score-weight descriptor="D11" value="100" />
+    <score-weight descriptor="D1.1" value="50" />
+    <score-weight descriptor="D1.2" value="50" />
+    <score-weight descriptor="D1.3" value="50" />
+    <score-weight descriptor="D1.4" value="50" />
+    <score-weight descriptor="D1.5" value="50" />
+    <score-weight descriptor="D1.6" value="50" />
+    <score-weight descriptor="D2" value="50" />
+    <score-weight descriptor="D3" value="50" />
+    <score-weight descriptor="D4" value="50" />
+    <score-weight descriptor="D5" value="50" />
+    <score-weight descriptor="D6" value="50" />
+    <score-weight descriptor="D7" value="50" />
+    <score-weight descriptor="D8" value="50" />
+    <score-weight descriptor="D9" value="50" />
+    <score-weight descriptor="D10" value="50" />
+    <score-weight descriptor="D11" value="50" />
+  </assessment-question>
+  <assessment-question id="A10Co2" class="coherence" use-criteria="none">
+    <definition>
+      To what extent do the Member States in the region address similar pressures/impacts through operational targets?
+    </definition>
+    <answers>
+      <option score="1">(operational) targets focus on reducing the same/similar pressure/impact in most MS (76-100%) in the region</option>
+      <option score="0.75">(operational) targets focus on reducing the same/similar pressure/impact in many MS (51-75%) in the region</option>
+      <option score="0.5">(operational) targets focus on reducing the same/similar pressure/impact in some MS (26-50%) in the region</option>
+      <option score="0.25">(operational) targets focus on reducing the same/similar pressure/impact in few MS (1-25%) in the region</option>
+      <option score="0.75">Some (operational) targets focus on reducing the same/similar pressure/impact in most MS (76-100%) in the region</option>
+      <option score="0.5">Some (operational) targets focus on reducing the same/similar pressure/impact in many MS (51-75%) in the region</option>
+      <option score="0.25">Some (operational) targets focus on reducing the same/similar pressure/impact in some / few MS (1-50%) in the region</option>
+      <option score="0">All (operational) targets are different in all MS in the region</option>
+      <option score="0.250">Not clear</option>
+      <option score="/">Not relevant</option>
+    </answers>
+    <scoring determination-method="wise.msfd.compliance.scoring.scoring_based">
+    </scoring>
+    <score-weight descriptor="D1.1" value="50" />
+    <score-weight descriptor="D1.2" value="50" />
+    <score-weight descriptor="D1.3" value="50" />
+    <score-weight descriptor="D1.4" value="50" />
+    <score-weight descriptor="D1.5" value="50" />
+    <score-weight descriptor="D1.6" value="50" />
+    <score-weight descriptor="D2" value="50" />
+    <score-weight descriptor="D3" value="50" />
+    <score-weight descriptor="D4" value="50" />
+    <score-weight descriptor="D5" value="50" />
+    <score-weight descriptor="D6" value="50" />
+    <score-weight descriptor="D7" value="50" />
+    <score-weight descriptor="D8" value="50" />
+    <score-weight descriptor="D9" value="50" />
+    <score-weight descriptor="D10" value="50" />
+    <score-weight descriptor="D11" value="50" />
   </assessment-question>
 </questions>
