@@ -34,25 +34,39 @@ logger = logging.getLogger('wise.msfd')
 
 Assessment_2012 = namedtuple(
     'Assessment_2012',
-    ['region', 'descriptor', 'article', 'report_by', 'assessment_by',
-     'date_assessed', 'commission_report', 'coherence', 'summary',
-     'overall_score', 'conclusion']
+    ['region', 'descriptor', 'article', 'coherence', 'summary',
+     'overall_score', 'conclusion',
+     'report_by', 'assessment_by', 'date_assessed', 'commission_report'
+     ]
 )
 
 
 def parse_assessments_2012_file():
-    f = resource_filename('wise.msfd',
-                          'data/Regional_Descriptors_2012_assessment.xlsx')
+    f = resource_filename(
+        'wise.msfd', 'data/Regional_Descriptors_2012_assessment.xlsx'
+    )
 
     res = []
 
     with open(f, 'rb') as file:
         sheets = get_data(file)
-        rows = sheets['Data']
+        rows = sheets['Assessment']
 
         for row in rows[1:]:
             if not row:
                 break
+
+            report_by = 'Commission'
+            assessment_by = 'Milieu'
+            date_assessed = datetime.datetime.strptime('2019-09-20',
+                                                       '%Y-%m-%d')
+            commission_report = 'http://ec.europa.eu/environment/marine/' \
+                                'eu-coast-and-marine-policy/implementation/' \
+                                'pdf/national_reports.zip'
+
+            row.extend(
+                [report_by, assessment_by, date_assessed, commission_report]
+            )
 
             res.append(Assessment_2012(*row))
 

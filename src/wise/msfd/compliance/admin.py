@@ -83,6 +83,8 @@ class BootstrapCompliance(BrowserView):
     """ Bootstrap the compliance module by creating all needed country folders
     """
 
+    compliance_folder_id = 'compliance-module'
+
     @property
     def debug(self):
         return 'production' not in self.request.form
@@ -396,13 +398,12 @@ class BootstrapCompliance(BrowserView):
 
                 self.create_comments_folder(nda)
 
-    def __call__(self):
+    def setup_compliancefolder(self):
+        if self.context.id == self.compliance_folder_id:
+            return self.context
 
-        # if 'compliance-module' in self.context.contentIds():
-        #     self.context.manage_delObjects(['compliance-module'])
-
-        if 'compliance-module' in self.context.contentIds():
-            cm = self.context['compliance-module']
+        if self.compliance_folder_id in self.context.contentIds():
+            cm = self.context[self.compliance_folder_id]
         else:
             cm = create(self.context, 'Folder', title=u'Compliance Module')
 
@@ -415,9 +416,18 @@ class BootstrapCompliance(BrowserView):
             lr[REVIEWER_GROUP_ID] = [u'Reviewer']
             lr[EDITOR_GROUP_ID] = [u'Editor']
 
-        # Contributor: TL
-        # Reviewer: EC
-        # Editor: Milieu
+            # Contributor: TL
+            # Reviewer: EC
+            # Editor: Milieu
+
+        return cm
+
+    def __call__(self):
+
+        # if self.compliance_folder_id in self.context.contentIds():
+        #     self.context.manage_delObjects([self.compliance_folder_id])
+
+        cm = self.setup_compliancefolder()
 
         # self.setup_nationaldescriptors(cm)
         DEFAULT = 'regional,nationalsummary,regionalsummary,secondary'
