@@ -1,0 +1,19 @@
+<tal:rep tal:repeat="row options/rows"
+  tal:define="countries python:view.context.available_countries;
+    field nocall:options/field">
+  <tr>
+    <th class="first-header"
+        tal:define="firstheader python: row[0]">
+      <span tal:content="structure firstheader">First header</span>
+    </th>
+    <td class="sub-header"
+        tal:define="subheader python: row[1]">
+      <span tal:content="structure subheader">Subrow header</span>
+    </td>
+
+    <tal:rep tal:repeat="indx python: range(len(countries))">
+      <td tal:replace="structure python: view.context.translate_value(field.name, row[2][indx], countries[indx][0])"></td>
+    </tal:rep>
+
+  </tr>
+</tal:rep>
