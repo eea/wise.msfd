@@ -389,6 +389,20 @@ class BaseRegDescRow(BaseRegComplianceView):
 
     @compoundrow
     def get_countries_row(self):
+        rows = []
+        country_names = []
+
+        for country in self.context.available_countries:
+            c_name = country[1]
+            final = '{}'.format(c_name)
+            country_names.append(final)
+
+        rows.append(('', country_names))
+
+        return rows
+
+    @compoundrow
+    def get_countries_reports_row(self):
         url = self.request['URL0']
 
         reg_main = self._countryregion_folder.id.upper()
@@ -407,11 +421,10 @@ class BaseRegDescRow(BaseRegComplianceView):
                        and r.code in subregions[0]]
 
             for r in regions:
-                value.append(get_nat_desc_country_url(url, reg_main,
-                                                      c_code, r))
+                report_url = get_nat_desc_country_url(url, reg_main, c_code, r)
+                value.append("{}: {}".format(r, report_url))
 
-            final = '{} ({})'.format(c_name, ', '.join(value))
-            country_names.append(final)
+            country_names.append(simple_itemlist(value))
 
         rows.append(('', country_names))
 

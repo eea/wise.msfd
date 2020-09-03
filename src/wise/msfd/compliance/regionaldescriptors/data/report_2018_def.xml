@@ -2,14 +2,18 @@
 <data>
     <Art9>
         <element name="MemberState" getrowdata="get_countries_row">Member state</element>
+        <element name="MemberStateReport" getrowdata="get_countries_reports_row">Member state report</element>
         <element name="MarineReportingUnit" getrowdata="get_mru_row">Marine reporting units</element>
         <element name="Feature" getrowdata="get_feature_row" label="features">Features</element>
         <element name="GESComponent" getrowdata="get_gescomp_row" translate="true">GES description</element>
+        <element name="DeterminationDate" getrowdata="get_determination_row">Determination date</element>
+        <element name="UpdateType" getrowdata="get_updatetype_row">Update type</element>
         <element name="JustificationNonUse" getrowdata="get_justif_nonuse_row" translate="true">Justification for non-use of criterion</element>
         <element name="JustificationDelay" getrowdata="get_justif_delay_row" translate="true">Justification for delay in setting EU/regional requirements</element>
     </Art9>
     <Art8>
         <element name="MemberState" getrowdata="get_countries_row">Member state</element>
+        <element name="MemberStateReport" getrowdata="get_countries_reports_row">Member state report</element>
         <element name="MarineReportingUnit" getrowdata="get_mru_row">Marine reporting units</element>
         <element name="Feature" getrowdata="get_feature_row" label="features">Features</element>
         <element name="Element" getrowdata="get_element_row">Element</element>
@@ -40,6 +44,7 @@
     </Art8>
     <Art10>
         <element name="MemberState" getrowdata="get_countries_row">Member state</element>
+        <element name="MemberStateReport" getrowdata="get_countries_reports_row">Member state report</element>
         <element name="MarineReportingUnit" getrowdata="get_mru_row">Reporting area(s)</element>
         <element name="Feature" getrowdata="get_feature_row" label="features">Features</element>
         <element name="GESComponent" getrowdata="get_gescomp_row">GES components</element>

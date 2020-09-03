@@ -69,6 +69,19 @@ def compoundrow(func):
     return inner
 
 
+def multilinerow(func):
+    """ Decorator to return a compound row for 2018 reports"""
+
+    def inner(*args, **kwargs):
+        rows = func(*args, **kwargs)
+        self = args[0]
+
+        return RegionalMultilineRow(self, self.request,
+                                   self.field, rows)
+
+    return inner
+
+
 def compoundrow2012(self, title, rows):
     """ Function to return a compound row for 2012 report"""
 
@@ -96,6 +109,10 @@ class RegionalCompoundRow(TemplateMixin):
         self.field = field
         self.rows = rows
         self.rowspan = len(rows)
+
+
+class RegionalMultilineRow(RegionalCompoundRow):
+    template = ViewPageTemplateFile('pt/regional-multiline-row.pt')
 
 
 class RegDescA11(BaseComplianceView):
@@ -165,4 +182,5 @@ def get_nat_desc_country_url(url, reg_main, c_code, r_code):
             c_code.lower(), r_code.lower())
     )
 
-    return "<a target='_blank' href='{}'>{}</a>".format(href, r_code)
+    return href
+    # return "<a target='_blank' href='{}'>{}</a>".format(href, r_code)

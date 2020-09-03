@@ -1,18 +1,22 @@
 
-from collections import defaultdict
+from collections import Counter, defaultdict
+from itertools import chain
 
 from eea.cache import cache
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 from wise.msfd import db, sql, sql_extra
 from wise.msfd.compliance.vocabulary import REGIONAL_DESCRIPTORS_REGIONS
 from wise.msfd.data import muids_by_country
-from wise.msfd.gescomponents import FEATURES_DB_2012
+from wise.msfd.gescomponents import (FEATURES_DB_2012, FEATURES_DB_2018,
+                                     SUBJECT_2018_ORDER, THEMES_2018_ORDER,
+                                     get_features)
 from wise.msfd.translation import get_translated
-from wise.msfd.utils import ItemLabel, current_date
+from wise.msfd.utils import ItemLabel, current_date, fixedorder_sortkey
 
 from .base import BaseRegComplianceView, BaseRegDescRow
 from .utils import (compoundrow, compoundrow2012, emptyline_separated_itemlist,
-                    get_nat_desc_country_url, newline_separated_itemlist)
+                    get_nat_desc_country_url, multilinerow,
+                    newline_separated_itemlist, simple_itemlist)
 
 
 def get_key(func, self):
@@ -30,6 +34,103 @@ def get_key(func, self):
 
 class RegDescA92018Row(BaseRegDescRow):
     year = '2018'
+
+    @compoundrow
+    def get_mru_row(self):
+        rows = []
+        values = []
+
+        for country_code, country_name in self.countries:
+            value = sorted(set([
+                row.MarineReportingUnit
+
+                for row in self.db_data
+
+                if row.CountryCode == country_code
+                   and row.MarineReportingUnit
+            ]))
+
+            values.append(simple_itemlist(value))
+
+        rows.append((u'MRUs used', values))
+
+        return rows
+
+    @multilinerow
+    def get_feature_row(self):
+        all_features_reported = self.get_unique_values("Features")
+        themes_fromdb = FEATURES_DB_2018
+
+        rows = []
+        all_features = []
+        all_themes = defaultdict(list)
+
+        for feat in all_features_reported:
+            all_features.extend(feat.split(','))
+        all_features = sorted(set(all_features))
+
+        ok_features = all_features
+
+        if self.descriptor.startswith('D1') and '.' in self.descriptor:
+            ok_features = set([f.name for f in get_features(self.descriptor)])
+
+        for feature in all_features:
+            if feature not in themes_fromdb:
+                all_themes['No subject: No theme'].append(feature)
+
+                continue
+
+            subject_and_theme = "{}: {}".format(
+                themes_fromdb[feature].subject, themes_fromdb[feature].theme)
+            all_themes[subject_and_theme].append(feature)
+
+        # First sort by THEME
+        all_themes = sorted(
+            all_themes.items(),
+            key=lambda t: fixedorder_sortkey(t[0].split(': ')[1],
+                                             THEMES_2018_ORDER)
+        )
+
+        # Second sort by SUBJECT
+        all_themes = sorted(
+            all_themes,
+            key=lambda t: fixedorder_sortkey(t[0].split(': ')[0],
+                                             SUBJECT_2018_ORDER)
+        )
+
+        for subject_and_theme, feats in all_themes:
+            for feature in feats:
+                if feature not in ok_features:
+                    continue
+
+                values = []
+                feature_label = self.get_label_for_value(feature)
+
+                for country_code, country_name in self.countries:
+                    value = []
+                    data = [
+                        row.GESComponent
+
+                        for row in self.db_data
+
+                        if row.CountryCode == country_code
+                        and row.Features
+                           and feature in row.Features.split(',')
+                    ]
+
+                    count_gescomps = Counter(data)
+
+                    if count_gescomps:
+                        value = [
+                            u'{} ({})'.format(k, v)
+                            for k, v in count_gescomps.items()
+                        ]
+
+                    values.append(simple_itemlist(value))
+
+                rows.append((subject_and_theme, feature_label, values))
+
+        return rows
 
     @compoundrow
     def get_gescomp_row(self):
@@ -71,6 +172,79 @@ class RegDescA92018Row(BaseRegDescRow):
                 values.append(value)
 
             rows.append((ItemLabel(crit.id, crit.title), values))
+
+        return rows
+
+    @compoundrow
+    def get_determination_row(self):
+        rows = []
+        values = []
+
+        for country_code, country_name in self.countries:
+            dates = defaultdict(set)
+
+            for row in self.db_data:
+                if row.CountryCode != country_code:
+                    continue
+
+                determination_date = row.DeterminationDate
+
+                if not determination_date:
+                    continue
+
+                d_date = "{}-{}".format(determination_date[:4],
+                                        determination_date[-2:])
+
+                ges_comp = row.GESComponent
+
+                dates[d_date].add(ges_comp)
+
+            value = ''
+
+            if dates:
+                value = [
+                    "{} ({})".format(k, ', '.join(v))
+                    for k, v in dates.items()
+                ]
+
+            values.append(simple_itemlist(value))
+
+        rows.append((u'', values))
+
+        return rows
+
+    @compoundrow
+    def get_updatetype_row(self):
+        rows = []
+        values = []
+
+        for country_code, country_name in self.countries:
+            dates = defaultdict(set)
+
+            for row in self.db_data:
+                if row.CountryCode != country_code:
+                    continue
+
+                update_type = row.UpdateType
+
+                if not update_type:
+                    continue
+
+                ges_comp = row.GESComponent
+
+                dates[update_type].add(ges_comp)
+
+            value = ''
+
+            if dates:
+                value = [
+                    "{} ({})".format(k, ', '.join(v))
+                    for k, v in dates.items()
+                ]
+
+            values.append(simple_itemlist(value))
+
+        rows.append((u'', values))
 
         return rows
 

@@ -170,7 +170,24 @@ class RegReportData2018(BaseRegComplianceView):
             t.c.GESComponent.in_(self.all_descriptor_ids),
         )
 
-        return q
+        ok_features = set([f.name for f in get_features(self.descriptor)])
+        out = []
+
+        for row in q:
+            if not row.Features:
+                out.append(row)
+                continue
+
+            if not self.descriptor.startswith('D1.'):
+                out.append(row)
+                continue
+
+            feats = set(row.Features.split(','))
+
+            if feats.intersection(ok_features):
+                out.append(row)
+
+        return out
 
     @property
     def get_data_from_view_Art8(self):
@@ -282,17 +299,49 @@ class RegReportData2018(BaseRegComplianceView):
 
         for compoundrow in data:
             title = compoundrow.field.title
+            field_name = compoundrow.field.name
             rows = compoundrow.rows
 
             for row in rows:
-                sub_title, values = row
+                # multirow
+                if len(row) == 3:
+                    title, sub_title, values = row
+                # compoundrow
+                else:
+                    sub_title, values = row
+
                 worksheet.write(row_index, 0, title)
                 worksheet.write(row_index, 1, unicode(sub_title or ''))
 
                 for j, value in enumerate(values):
+                    if isinstance(value, ItemList):
+                        value = "\n".join(value.rows)
+
+                    # if 'value' is a list/tuple meaning it contains both the
+                    # original and the translated value, we need
+                    # the translated value
+                    if hasattr(value, '__iter__'):
+                        value = value[0].replace('<br />', '\n')
+
                     worksheet.write(row_index, j + 2, unicode(value or ''))
 
                 row_index += 1
+
+                if field_name in self.TRANSLATABLES:
+                    worksheet.write(row_index, 0, title + ' [Translation]')
+                    worksheet.write(row_index, 1, unicode(sub_title or '')
+                                    + ' [Translation]')
+
+                    for j, value in enumerate(values):
+                        # if 'value' is a list/tuple meaning it contains both
+                        # the # original and the translated value, we need
+                        # the translated value
+                        if hasattr(value, '__iter__'):
+                            value = value[1].replace('<br />', '\n')
+
+                        worksheet.write(row_index, j + 2, unicode(value or ''))
+
+                    row_index += 1
 
         workbook.close()
         out.seek(0)
