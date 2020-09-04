@@ -406,6 +406,39 @@ class NationalDescriptorArticleView(BaseView, AssessmentDataMixin):
 
         return qs
 
+    @db.use_db_session('2018')
+    def get_file_version(self, date_assessed):
+        """ Given the assessment date, returns the latest file
+        """
+        t = sql2018.ReportedInformation
+        schemas = {
+            'Art8': 'ART8_GES',
+            'Art9': 'ART9_GES',
+            'Art10': 'ART10_Targets',
+        }
+        count, data = db.get_all_records(
+            t,
+            t.CountryCode == self.country_code,
+            t.Schema == schemas[self.article],
+            order_by=t.ReportingDate
+        )
+
+        file_url = None
+        file_name = 'Not found'
+        report_date = None
+
+        for row in data:
+            if date_assessed >= row.ReportingDate:
+                file_url = row.ReportedFileLink
+                report_date = row.ReportingDate
+            else:
+                break
+
+        if file_url:
+            file_name = file_url.split('/')[-1]
+
+        return file_name, file_url, report_date
+
     def __call__(self):
 
         if 'assessor' in self.request.form:
@@ -474,6 +507,7 @@ class NationalDescriptorArticleView(BaseView, AssessmentDataMixin):
             assess_date=assess_date,
             source_file=source_file,
             show_edit_assessors=False,
+            show_file_version=False,
         )
 
         # Assessment data 2018
@@ -525,6 +559,8 @@ class NationalDescriptorArticleView(BaseView, AssessmentDataMixin):
         can_edit = self.check_permission('wise.msfd: Edit Assessment')
         show_edit_assessors = self.assessor_list and can_edit
 
+        file_version = self.get_file_version(assess_date_2018)
+
         self.assessment_header_2018_html = self.assessment_header_template(
             report_by=report_by_2018,
             assessor_list=self.assessor_list,
@@ -532,6 +568,8 @@ class NationalDescriptorArticleView(BaseView, AssessmentDataMixin):
             assess_date=assess_date_2018,
             source_file=source_file_2018,
             show_edit_assessors=show_edit_assessors,
+            show_file_version=True,
+            file_version=file_version
         )
 
         return self.index()
@@ -654,6 +692,7 @@ class NationalDescriptorSecondaryArticleView(NationalDescriptorArticleView):
             assess_date=assess_date,
             source_file=source_file,
             show_edit_assessors=False,
+            show_file_version=False,
         )
 
         # Assessment data 2018
@@ -710,6 +749,7 @@ class NationalDescriptorSecondaryArticleView(NationalDescriptorArticleView):
             assess_date=assess_date_2018,
             source_file=source_file_2018,
             show_edit_assessors=show_edit_assessors,
+            show_file_version=False,
         )
 
         return self.index()

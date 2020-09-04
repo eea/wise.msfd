@@ -15,6 +15,19 @@
         <td tal:attributes="colspan view/colspan"
            tal:content="options/assess_date"/>
       </tr>
+      <tr tal:condition="options/show_file_version">
+        <th>Assessment file version</th>
+        <td tal:attributes="colspan view/colspan">
+          <a tal:attributes="href python: options['file_version'][1]"
+              tal:content="python: options['file_version'][0]"></a>
+        </td>
+      </tr>
+      <tr tal:condition="options/show_file_version">
+        <th>Report date</th>
+        <td tal:attributes="colspan view/colspan"
+            tal:content="python: options['file_version'][2]"/>
+      </tr>
+
     </table>
   </div>
   <div id="edit-assessors" class="modal fade" tabindex="-1" role="dialog">
