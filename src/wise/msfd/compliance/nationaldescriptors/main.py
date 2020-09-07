@@ -225,7 +225,9 @@ def get_crit_val(question, element, descriptor):
     crit = element.id
 
     # special case for D1.4 A09Ad2 we need to show all crits excluding D1C2
-    if question.id == 'A09Ad2' and descriptor.id == 'D1.4' and crit != 'D1C2':
+    # and D1C1 see google spreadhseet Assessments 17-07-2020 request
+    if question.id == 'A09Ad2' and descriptor.id == 'D1.4' \
+            and crit not in ('D1C1', 'D1C2'):
         return crit
 
     if use_crit == 'all':
@@ -516,6 +518,7 @@ class NationalDescriptorArticleView(BaseView, AssessmentDataMixin):
             self.descriptor_obj,
             muids=self.muids
         )
+
         article_weights = ARTICLE_WEIGHTS
         assessment = format_assessment_data(
             self.article,
@@ -527,6 +530,7 @@ class NationalDescriptorArticleView(BaseView, AssessmentDataMixin):
             article_weights,
             self
         )
+
         assessment.phase_overall_scores.coherence = self.get_coherence_data(
             self.country_region_code, self.descriptor, self.article
         )

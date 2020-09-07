@@ -221,6 +221,8 @@ class NationalAssessmentMixin:
             for crit_id, crit_values in criteria_values.items():
                 rows.append((crit_id, crit_values))
 
+            rows = sorted(rows, key=lambda i: i[0])
+
             rows.append((u'Conclusion', conclusion_values))
             rows.append((u'Summary', summary_values))
 

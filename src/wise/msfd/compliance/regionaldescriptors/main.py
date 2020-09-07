@@ -223,6 +223,7 @@ class RegionalDescriptorArticleView(BaseRegComplianceView,
                 assessment_2012_header_data.get('file_url', ''),
             ],
             show_edit_assessors=False,
+            show_file_version=False
         )
         self.assessment_data_2012 = self.assessment_data_2012_tpl(
             data=assessments_2012
@@ -275,6 +276,7 @@ class RegionalDescriptorArticleView(BaseRegComplianceView,
             assess_date=assess_date_2018,
             source_file=source_file_2018,
             show_edit_assessors=show_edit_assessors,
+            show_file_version=False
         )
         self.assessment_data_2018_html = self.assessment_data_2018_tpl(
             assessment=assessment,
