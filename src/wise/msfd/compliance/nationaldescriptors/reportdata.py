@@ -871,8 +871,8 @@ https://svn.eionet.europa.eu/repositories/Reportnet/Dataflows/MarineDirective/MS
             # and we keep the data if 'D1' is present in the GESComponents
             # countries_filter = for these countries DO NOT filter by features
             ges_comps = getattr(row, 'GESComponents', ())
-            countries_filter = ('RO', 'DK', 'CY', 'MT')
-            if 'D1' in ges_comps and self.country_code not in countries_filter:
+            countries_nofilter = []  # ('RO', 'DK', 'CY', 'MT')
+            if 'D1' in ges_comps and self.country_code in countries_nofilter:
                 out_filtered.append(row)
                 continue
 
