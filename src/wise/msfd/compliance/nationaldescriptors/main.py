@@ -412,6 +412,14 @@ class NationalDescriptorArticleView(BaseView, AssessmentDataMixin):
     def get_file_version(self, date_assessed):
         """ Given the assessment date, returns the latest file
         """
+        edit_url = self._country_folder.absolute_url() + '/edit'
+        file_name = 'Date assessed not set'
+        file_url = ''
+        report_date = 'Not found'
+
+        if not date_assessed:
+            return file_name, edit_url, report_date, edit_url
+
         t = sql2018.ReportedInformation
         schemas = {
             'Art8': 'ART8_GES',
@@ -425,9 +433,7 @@ class NationalDescriptorArticleView(BaseView, AssessmentDataMixin):
             order_by=t.ReportingDate
         )
 
-        file_url = None
-        file_name = 'Not found'
-        report_date = None
+        file_name = 'File not found'
 
         for row in data:
             if date_assessed >= row.ReportingDate:
@@ -439,7 +445,7 @@ class NationalDescriptorArticleView(BaseView, AssessmentDataMixin):
         if file_url:
             file_name = file_url.split('/')[-1]
 
-        return file_name, file_url, report_date
+        return file_name, file_url, report_date, edit_url
 
     def __call__(self):
 
@@ -563,7 +569,7 @@ class NationalDescriptorArticleView(BaseView, AssessmentDataMixin):
         can_edit = self.check_permission('wise.msfd: Edit Assessment')
         show_edit_assessors = self.assessor_list and can_edit
 
-        file_version = self.get_file_version(assess_date_2018)
+        file_version = self.get_file_version(self.country_date_assessed)
 
         self.assessment_header_2018_html = self.assessment_header_template(
             report_by=report_by_2018,

@@ -1,0 +1,15 @@
+<model xmlns:form="http://namespaces.plone.org/supermodel/form"
+       xmlns:i18n="http://xml.zope.org/namespaces/i18n"
+       xmlns:marshal="http://namespaces.plone.org/supermodel/marshal"
+       xmlns:security="http://namespaces.plone.org/supermodel/security"
+       xmlns="http://namespaces.plone.org/supermodel/schema">
+    <schema>
+        <field name="date_assessed"
+               type="zope.schema.Date">
+            <description/>
+            <required>False</required>
+            <title>Date assessed</title>
+        </field>
+    </schema>
+</model>
+

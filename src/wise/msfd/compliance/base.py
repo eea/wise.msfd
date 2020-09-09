@@ -428,6 +428,13 @@ class BaseComplianceView(BrowserView, BasePublicPage, SecurityMixin):
         return self._country_folder.title
 
     @property
+    def country_date_assessed(self):
+        if not hasattr(self._country_folder, 'date_assessed'):
+            return None
+
+        return getattr(self._country_folder, 'date_assessed')
+
+    @property
     def _countryregion_folder(self):
         return self.get_parent_by_iface(
             interfaces.INationalRegionDescriptorFolder

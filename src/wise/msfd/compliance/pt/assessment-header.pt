@@ -20,6 +20,8 @@
         <td tal:attributes="colspan view/colspan">
           <a tal:attributes="href python: options['file_version'][1]"
               tal:content="python: options['file_version'][0]"></a>
+          <a class="btn btn-primary btn-xs btn-light" target="_blank"
+             tal:attributes="href python: options['file_version'][3]">Edit</a>
         </td>
       </tr>
       <tr tal:condition="options/show_file_version">
