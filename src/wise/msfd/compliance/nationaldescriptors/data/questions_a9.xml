@@ -163,8 +163,8 @@
     </definition>
     <answers>
       <option score="1">Proportion value set for this criterion is sufficient</option>
-      <option score="0.75">Proportion value set for this criterion is partially sufficient</option>
-      <option score="0.5">Proportion value set for this criterion is not sufficient</option>
+      <option score="0.5">Proportion value set for this criterion is partially sufficient</option>
+      <option score="0.25">Proportion value set for this criterion is not sufficient</option>
       <option score="0.25">Proportion value set for this criterion is not sufficient</option>
       <option score="0">Proportion value not set for this criterion</option>
       <option score="0.250">Not clear</option>
