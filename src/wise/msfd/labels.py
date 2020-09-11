@@ -16,7 +16,9 @@ COMMON_LABELS = {}                        # vocabulary of labels
 # is not appropriate
 LABEL_FIX = {
     "ANS": "North-east Atlantic Ocean: Greater North Sea",
-    "CY": 'Cyprus'
+    "CY": 'Cyprus',
+    'D4': '(Descriptor) D4 - Food webs',
+    'D6': '(Descriptor) D6 - Sea-floor integrity'
 }
 
 # MSFD Search engine
