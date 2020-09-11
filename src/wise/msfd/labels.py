@@ -337,10 +337,15 @@ GES_LABELS = LabelCollection()
 
 def get_common_labels():
     labels = {}
-    labels.update(_extract_from_xsd('data/MSCommon_1p0.xsd'))
-    labels.update(_extract_from_xsd('data/MSCommon_1p1.xsd'))
+    # The following labels were disabled because it contains
+    # imprecise/non-sense labels ex. 'Good' = 'e.g. based on extensive surveys'
+    # Other	= 'Please specify in comment'
+    
+    # labels.update(_extract_from_xsd('data/MSCommon_1p0.xsd'))
+    # labels.update(_extract_from_xsd('data/MSCommon_1p1.xsd'))
+    # labels.update(get_human_labels())
+
     labels.update(_extract_from_csv())
-    labels.update(get_human_labels())
     labels.update(LABEL_FIX)
 
     # We should use the labels from msfd2018-codelists.json
