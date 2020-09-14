@@ -44,6 +44,12 @@
             <i style="position: relative; left: -28px; top: 1px;"
               class="fa fa-download" aria-hidden="true"></i>
 
+            <input style="padding-right:32px;"
+              type="submit" class="btn btn-primary btn-small btn-success"
+              value="Export scores as XML" name="export-xml"/>
+            <i style="position: relative; left: -28px; top: 1px;"
+              class="fa fa-download" aria-hidden="true"></i>
+
             <!--<tal:cond tal:condition="python: view.check_permission('wise.ManageCompliance')">-->
               <!--<input style="padding-right:32px;"-->
                 <!--type="submit" class="btn btn-primary btn-small btn-danger"-->

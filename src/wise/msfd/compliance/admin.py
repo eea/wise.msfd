@@ -728,9 +728,11 @@ class AdminScoring(BaseComplianceView, AssessmentDataMixin):
                     score = val.question.scores[v]
                     score_title = CONCLUSIONS[score]
 
-                    yield (country_code, region_code, d_obj.id, d_obj.title,
-                           article_title, val.question.id, option, answer,
-                           score, score_title, state, last_change)
+                    yield (
+                        country_code, country_name, region_code, region_name,
+                        d_obj.id, d_obj.title,
+                        article_title, val.question.id, option, answer,
+                        score, score_title, state, last_change)
 
             elif '_Summary' in k:
                 article_id, question_id, _ = k.split('_')
@@ -739,7 +741,8 @@ class AdminScoring(BaseComplianceView, AssessmentDataMixin):
                 last_change = data.get(last_change_name, '')
                 last_change = last_change and last_change.isoformat() or ''
 
-                yield (country_code, region_code, d_obj.id, d_obj.title,
+                yield (country_code, country_name, region_code, region_name,
+                       d_obj.id, d_obj.title,
                        article_id, question_id, 'Summary', val,
                        '', '', state, last_change)
 
@@ -751,7 +754,8 @@ class AdminScoring(BaseComplianceView, AssessmentDataMixin):
                 last_change = data.get(last_change_name, '')
                 last_change = last_change and last_change.isoformat() or ''
 
-                yield (country_code, region_code, d_obj.id, d_obj.title,
+                yield (country_code, country_name, region_code, region_name,
+                       d_obj.id, d_obj.title,
                        article_id, ' ', 'Assessment Summary', val,
                        '', '', state, last_change)
 
@@ -763,7 +767,8 @@ class AdminScoring(BaseComplianceView, AssessmentDataMixin):
                 last_change = data.get(last_change_name, '')
                 last_change = last_change and last_change.isoformat() or ''
 
-                yield (country_code, region_code, d_obj.id, d_obj.title,
+                yield (country_code, country_name, region_code, region_name,
+                       d_obj.id, d_obj.title,
                        article_id, '', 'Recommendations', val,
                        '', '', state, last_change)
 
@@ -775,7 +780,8 @@ class AdminScoring(BaseComplianceView, AssessmentDataMixin):
                 last_change = data.get(last_change_name, '')
                 last_change = last_change and last_change.isoformat() or ''
 
-                yield (country_code, region_code, d_obj.id, d_obj.title,
+                yield (country_code, country_name, region_code, region_name,
+                       d_obj.id, d_obj.title,
                        article_id, '', 'Progress', val,
                        '', '', state, last_change)
 
@@ -790,7 +796,8 @@ class AdminScoring(BaseComplianceView, AssessmentDataMixin):
             score = phase_overall_scores.get_score_for_phase(phase)
             score_title = _phase_score.get('conclusion', '')[1]
 
-            yield (country_code, region_code, d_obj.id, d_obj.title,
+            yield (country_code, country_name, region_code, region_name,
+                   d_obj.id, d_obj.title,
                    article_title, '', '2018 {}'.format(phase.capitalize()), '',
                    score, score_title, state, last_change)
 
@@ -798,7 +805,8 @@ class AdminScoring(BaseComplianceView, AssessmentDataMixin):
             article_title)
         score_title = self.get_conclusion(overall_concl)
 
-        yield (country_code, region_code, d_obj.id, d_obj.title,
+        yield (country_code, country_name, region_code, region_name,
+               d_obj.id, d_obj.title,
                article_title, '', '2018 Overall', '',
                score, score_title, state, last_change)
 
@@ -814,6 +822,7 @@ class AdminScoring(BaseComplianceView, AssessmentDataMixin):
         state = get_wf_state_id(obj)
         article_title = obj.title
         country_code = obj.aq_parent.id.upper()
+        country_title = obj.aq_parent.title
         data = obj.saved_assessment_data.last()
         d_obj = 'Not linked'
         muids = []
@@ -853,8 +862,8 @@ class AdminScoring(BaseComplianceView, AssessmentDataMixin):
                     score = val.question.scores[v]
                     score_title = CONCLUSIONS[score]
 
-                    yield (country_code, article_title, val.question.id,
-                           option, answer, score, score_title,
+                    yield (country_code, country_title, article_title,
+                           val.question.id, option, answer, score, score_title,
                            state, last_change)
 
             elif '_Summary' in k:
@@ -864,7 +873,7 @@ class AdminScoring(BaseComplianceView, AssessmentDataMixin):
                 last_change = data.get(last_change_name, '')
                 last_change = last_change and last_change.isoformat() or ''
 
-                yield (country_code, article_id, question_id,
+                yield (country_code, country_title, article_id, question_id,
                        'Summary', val, '', '', state, last_change)
 
             elif '_assessment_summary' in k:
@@ -875,7 +884,7 @@ class AdminScoring(BaseComplianceView, AssessmentDataMixin):
                 last_change = data.get(last_change_name, '')
                 last_change = last_change and last_change.isoformat() or ''
 
-                yield (country_code, article_id, '',
+                yield (country_code, country_title, article_id, '',
                        'Assessment Summary', val, '', '', state, last_change)
 
             elif '_recommendations' in k:
@@ -886,7 +895,7 @@ class AdminScoring(BaseComplianceView, AssessmentDataMixin):
                 last_change = data.get(last_change_name, '')
                 last_change = last_change and last_change.isoformat() or ''
 
-                yield (country_code, article_id, '',
+                yield (country_code, country_title, article_id, '',
                        'Recommendations', val, '', '', state, last_change)
 
             elif '_progress' in k:
@@ -897,7 +906,7 @@ class AdminScoring(BaseComplianceView, AssessmentDataMixin):
                 last_change = data.get(last_change_name, '')
                 last_change = last_change and last_change.isoformat() or ''
 
-                yield (country_code, article_id, '',
+                yield (country_code, country_title, article_id, '',
                        'Progress', val, '', '', state, last_change)
 
         score_last_change = filter(None, score_last_change)
@@ -908,7 +917,7 @@ class AdminScoring(BaseComplianceView, AssessmentDataMixin):
             article_title)
         score_title = self.get_conclusion(overall_concl)
 
-        yield (country_code, article_title, '',
+        yield (country_code, country_title, article_title, '',
                '2018 Overall', '', score, score_title,
                state, last_change)
 
@@ -959,7 +968,7 @@ class AdminScoring(BaseComplianceView, AssessmentDataMixin):
                     score = val.question.scores[v]
                     score_title = CONCLUSIONS[score]
 
-                    yield (region_code, d_obj.id, d_obj.title,
+                    yield (region_code, region_title, d_obj.id, d_obj.title,
                            article_title, val.question.id, option, answer,
                            score, score_title, state, last_change)
 
@@ -970,7 +979,7 @@ class AdminScoring(BaseComplianceView, AssessmentDataMixin):
                 last_change = data.get(last_change_name, '')
                 last_change = last_change and last_change.isoformat() or ''
 
-                yield (region_code, d_obj.id, d_obj.title,
+                yield (region_code, region_title, d_obj.id, d_obj.title,
                        article_id, question_id, 'Summary', val,
                        '', '', state, last_change)
 
@@ -982,7 +991,7 @@ class AdminScoring(BaseComplianceView, AssessmentDataMixin):
                 last_change = data.get(last_change_name, '')
                 last_change = last_change and last_change.isoformat() or ''
 
-                yield (region_code, d_obj.id, d_obj.title,
+                yield (region_code, region_title, d_obj.id, d_obj.title,
                        article_id, '', 'Assessment Summary', val,
                        '', '', state, last_change)
 
@@ -994,7 +1003,7 @@ class AdminScoring(BaseComplianceView, AssessmentDataMixin):
                 last_change = data.get(last_change_name, '')
                 last_change = last_change and last_change.isoformat() or ''
 
-                yield (region_code, d_obj.id, d_obj.title,
+                yield (region_code, region_title, d_obj.id, d_obj.title,
                        article_id, '', 'Recommendations', val,
                        '', '', state, last_change)
 
@@ -1006,7 +1015,7 @@ class AdminScoring(BaseComplianceView, AssessmentDataMixin):
                 last_change = data.get(last_change_name, '')
                 last_change = last_change and last_change.isoformat() or ''
 
-                yield (region_code, d_obj.id, d_obj.title,
+                yield (region_code, region_title, d_obj.id, d_obj.title,
                        article_id, '', 'Progress', val,
                        '', '', state, last_change)
 
@@ -1021,7 +1030,7 @@ class AdminScoring(BaseComplianceView, AssessmentDataMixin):
         score = int(_max_score and (float(coherence_data['score']) * 100)
                     / _max_score or 0)
 
-        yield (region_code, d_obj.id, d_obj.title,
+        yield (region_code, region_title, d_obj.id, d_obj.title,
                article_title, '', '2018 Overall', '',
                score, score_title, state, last_change)
 
@@ -1090,7 +1099,8 @@ class AdminScoring(BaseComplianceView, AssessmentDataMixin):
     @cache(lambda func, *args: func.__name__, lifetime=300)
     def get_export_scores_data(self, context):
         # National descriptors data
-        nda_labels = ('Country', 'Region', 'Descriptor', 'Descriptor title',
+        nda_labels = ('Country', 'Country title', 'Region', 'Region title',
+                      'Descriptor', 'Descriptor title',
                       'Article', 'Question', 'Option', 'Answer',
                       'Score', 'Score title', 'State', 'Last change')
 
@@ -1103,9 +1113,10 @@ class AdminScoring(BaseComplianceView, AssessmentDataMixin):
         ]
 
         # Regional descriptors data
-        rda_labels = ('Region', 'Descriptor', 'Descriptor title',
+        rda_labels = ('Region', 'Region title', 'Descriptor',
+                      'Descriptor title',
                       'Article', 'Question', 'Option', 'Answer',
-                      'Score', 'Score title','State', 'Last change')
+                      'Score', 'Score title', 'State', 'Last change')
 
         # transform data to lists to make it cacheable
         rda_xlsdata = [
@@ -1114,8 +1125,9 @@ class AdminScoring(BaseComplianceView, AssessmentDataMixin):
         ]
 
         # Secondary Articles 3 & 4, 7
-        sec_labels = ('Country', 'Article', 'Question', 'Option', 'Answer',
-                      'Score', 'Score title', 'State', 'Last change')
+        sec_labels = ('Country', 'Country title', 'Article', 'Question',
+                      'Option', 'Answer', 'Score', 'Score title',
+                      'State', 'Last change')
 
         # transform data to lists to make it cacheable
         sec_xlsdata = [
@@ -1146,16 +1158,27 @@ class AdminScoring(BaseComplianceView, AssessmentDataMixin):
 
         return xlsio.read()
 
-    def export_scores_xml(self, context):
+    def can_export_xml(self, use_password=True):
+        if not use_password:
+            return True
+
         password = self.request.form.get('token', None)
 
         if not password:
-            raise Unauthorized
+            return False
 
         if not EXPORTPASS:
-            raise Unauthorized
+            return False
 
         if password != EXPORTPASS:
+            return False
+
+        return True
+
+    def export_scores_xml(self, context, use_password):
+        can_export_xml = self.can_export_xml(use_password)
+
+        if not can_export_xml:
             raise Unauthorized
 
         all_data = self.get_export_scores_data(context)
@@ -1179,7 +1202,7 @@ class AdminScoring(BaseComplianceView, AssessmentDataMixin):
             return self.export_scores(self.context)
 
         if 'export-xml' in self.request.form:
-            return self.export_scores_xml(self.context)
+            return self.export_scores_xml(self.context, use_password=False)
 
         # if 'reset-assessments' in self.request.form:
         #     self.reset_assessment_data()
@@ -1196,7 +1219,7 @@ class AdminScoring(BaseComplianceView, AssessmentDataMixin):
 
 class AdminScoringExportXML(AdminScoring):
     def __call__(self):
-        file = self.export_scores_xml(self.context)
+        file = self.export_scores_xml(self.context, use_password=True)
 
         return file
 

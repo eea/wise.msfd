@@ -225,6 +225,8 @@ class ReportingHistoryTable(BaseNatSummaryView):
 class ReportedInformationTable(BaseNatSummaryView):
     """ Alternate implementation for the reporting history table
     Reads data from sql2018.ReportedInformation
+
+    TODO currently not used
     """
 
     template = ViewPageTemplateFile('pt/report-history-compound-table.pt')
