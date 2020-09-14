@@ -29,7 +29,7 @@
     <element section="progressassessment" name="AssessmentPeriod">Assessment period</element>
     <element section="progressassessment" name="ProgressDescription" translate="true">Target assessment description</element>
     <element section="progressassessment" name="Indicators" label="indicators" convert="csv_ges_labels_inverse_list_indicators">Related indicator</element>
-    <element section="progressassessment" name="Measures">Related measures</element>
+    <element section="progressassessment" name="Measures" convert="simple_itemlist">Related measures</element>
   </Art10>
 
   <Art9>

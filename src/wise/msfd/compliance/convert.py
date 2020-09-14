@@ -8,6 +8,12 @@ from wise.msfd.translation import get_translated
 from wise.msfd.utils import ItemLabel, ItemList, SimpleTable
 
 
+def simple_itemlist(field, value, lang):
+    vals = set(value.split(','))
+
+    return ItemList(rows=vals)
+
+
 def csv_ges_labels_list(field, value, lang):
     vals = set(value.split(','))
 
