@@ -252,7 +252,7 @@ class RegDescA82018Row(BaseRegDescRow):
 
             percentage = total and int((thresholds / float(total)) * 100) or 0
 
-            value = u"{}% ({})".format(percentage, total)
+            value = u"{}% ({})".format(percentage, thresholds)
             values.append(value)
 
         rows.append(('% of parameters with values (no. of parameters)',
@@ -295,6 +295,119 @@ class RegDescA82018Row(BaseRegDescRow):
                     if found:
                         value.append(u"{} ({})".format(
                             threshold_source, len(found))
+                        )
+
+                if not value:
+                    values.append(self.not_rep)
+
+                    continue
+
+                values.append(simple_itemlist(value))
+
+            rows.append((ItemLabel(crit.name, crit.title), values))
+
+        return rows
+
+    def _get_value_achiev_row(self, column_name):
+        rows = []
+        values = []
+
+        for country_code, country_name in self.countries:
+            data = [
+                row
+
+                for row in self.db_data
+
+                if row.CountryCode == country_code
+                and row.Parameter
+            ]
+
+            if not data:
+                values.append(self.not_rep)
+
+                continue
+
+            total = len(data)
+            thresholds = len([
+                row for row in data
+
+                if getattr(row, column_name)
+            ])
+
+            percentage = total and int((thresholds / float(total)) * 100) or 0
+
+            value = u"{}% ({})".format(percentage, thresholds)
+            values.append(value)
+
+        rows.append(('% of parameters with values (no. of parameters)',
+                     values))
+
+        return rows
+
+    @compoundrow
+    def get_value_achiev_upper_row(self):
+        column_name = 'ValueAchievedUpper'
+
+        return self._get_value_achiev_row(column_name)
+
+    @compoundrow
+    def get_value_achiev_lower_row(self):
+        column_name = 'ValueAchievedLower'
+
+        return self._get_value_achiev_row(column_name)
+
+    @compoundrow
+    def get_value_unit_row(self):
+        rows = []
+        value_units = self.get_unique_values('ValueUnit')
+        value_units_other = self.get_unique_values('ValueUnitOther')
+
+        descriptor = self.descriptor_obj
+        criterions = [descriptor] + descriptor.sorted_criterions()
+
+        for crit in criterions:
+            values = []
+
+            for country_code, country_name in self.countries:
+                value = []
+                data = [
+                    row
+
+                    for row in self.db_data
+
+                    if row.CountryCode == country_code
+                    and row.Parameter
+                ]
+
+                for value_unit in value_units:
+                    found = [
+                        x.ValueUnit
+
+                        for x in data
+
+                        if (x.ValueUnit == value_unit
+                            and x.Criteria == crit.id
+                            and x.ValueUnit != 'Other')
+                    ]
+
+                    if found:
+                        value.append(u"{} ({})".format(
+                            self.get_label_for_value(value_unit), len(found))
+                        )
+                for value_unit in value_units_other:
+                    found = [
+                        x.ValueUnitOther
+
+                        for x in data
+
+                        if (x.ValueUnitOther == value_unit
+                            and x.Criteria == crit.id
+                            and x.ValueUnit == 'Other')
+                    ]
+
+                    if found:
+                        value.append(u"{} ({})".format(
+                            self.get_label_for_value(value_unit), len(found))
                         )
 
                 if not value:

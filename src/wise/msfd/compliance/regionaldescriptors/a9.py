@@ -35,27 +35,6 @@ def get_key(func, self):
 class RegDescA92018Row(BaseRegDescRow):
     year = '2018'
 
-    @compoundrow
-    def get_mru_row(self):
-        rows = []
-        values = []
-
-        for country_code, country_name in self.countries:
-            value = sorted(set([
-                row.MarineReportingUnit
-
-                for row in self.db_data
-
-                if row.CountryCode == country_code
-                   and row.MarineReportingUnit
-            ]))
-
-            values.append(simple_itemlist(value))
-
-        rows.append((u'MRUs used', values))
-
-        return rows
-
     @multilinerow
     def get_feature_row(self):
         all_features_reported = self.get_unique_values("Features")

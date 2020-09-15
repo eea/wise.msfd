@@ -386,7 +386,7 @@ class BaseRegDescRow(BaseRegComplianceView):
 
     def make_item_label(self, value):
         return value
-
+        
         return ItemLabel(value, self.get_label_for_value(value))
 
     @compoundrow
@@ -433,7 +433,7 @@ class BaseRegDescRow(BaseRegComplianceView):
         return rows
 
     @compoundrow
-    def get_mru_row(self):
+    def get_mru_row_old(self):
         rows = []
         values = []
 
@@ -448,6 +448,27 @@ class BaseRegDescRow(BaseRegComplianceView):
             values.append(len(value))
 
         rows.append((u'Number used', values))
+
+        return rows
+
+    @compoundrow
+    def get_mru_row(self):
+        rows = []
+        values = []
+
+        for country_code, country_name in self.countries:
+            value = sorted(set([
+                row.MarineReportingUnit
+
+                for row in self.db_data
+
+                if row.CountryCode == country_code
+                   and row.MarineReportingUnit
+            ]))
+
+            values.append(simple_itemlist(value))
+
+        rows.append((u'MRUs used', values))
 
         return rows
 

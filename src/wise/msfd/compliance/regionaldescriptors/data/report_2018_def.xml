@@ -22,6 +22,9 @@
         <element name="CriteriaParameters" getrowdata="get_crit_param_row" label="parameters">Criteria and parameters used (number of parameters)</element>
         <element name="ThresholdValue" getrowdata="get_threshold_value_row">Threshold values</element>
         <element name="ThresholdValueSource" getrowdata="get_threshold_source_row" label="threshold_sources">Threshold value sources</element>
+        <element name="ValueAchievedUpper" getrowdata="get_value_achiev_upper_row">Value achieved upper</element>
+        <element name="ValueAchievedLower" getrowdata="get_value_achiev_lower_row">Value achieved lower</element>
+        <element name="ValueUnit" getrowdata="get_value_unit_row" label="units">Value unit/Value unit other (count of use per criterion)</element>
         <element name="ProportionThresholdValue" getrowdata="get_proportion_threshold_row">Proportion threshold values</element>
         <element name="ProportionValueAchieved" getrowdata="get_proportion_value_achieved_row">Proportion values achieved</element>
         <element name="ProportionThresholdValueUnit" getrowdata="get_proportion_threshold_unit_row">Proportion threshold value units</element>
