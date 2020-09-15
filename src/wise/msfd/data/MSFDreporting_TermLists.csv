@@ -40,18 +40,18 @@ SY,Syria
 TN,Tunisia
 TR,Turkey
 UA,Ukraine
-BAL or Baltic Sea,Baltic Sea
-ATL or Atlantic,North-East Atlantic Ocean
-ANS or North Sea,"NE Atlantic: Greater North Sea, incl. Kattegat & English Channel"
-ACS or Celtic Seas,NE Atlantic: Celtic Seas
-ABI or Biscay_Iberia,NE Atlantic: Bay of Biscay & Iberian Coast
-AMA or Macaronesia,NE Atlantic: Macaronesia
-MED or Mediterranean,Mediterranean Sea
-MWE or WestMed,Mediterranean: Western Mediterranean Sea
-MAD or Adriatic,Mediterranean: Adriatic Sea
-MIC or Ionian_CentralMed,Mediterranean: Ionian Sea & Central Mediterranean Sea
-MAL or Aegean_Levantine,Mediterranean: Aegean-Levantine Sea
-BLK or Black Sea,Black Sea
+BAL,Baltic Sea
+ATL,North-East Atlantic Ocean
+ANS,NE Atlantic: Greater North Sea, incl. Kattegat & English Channel
+ACS,NE Atlantic: Celtic Seas
+ABI,NE Atlantic: Bay of Biscay & Iberian Coast
+AMA,NE Atlantic: Macaronesia
+MED,Mediterranean Sea
+MWE,Mediterranean: Western Mediterranean Sea
+MAD,Mediterranean: Adriatic Sea
+MIC,Mediterranean: Ionian Sea & Central Mediterranean Sea
+MAL,Mediterranean: Aegean-Levantine Sea
+BLK,Black Sea
 Region,Region
 Subregion,Subregion
 Subdivision,Subdivision (of a Region or Subregion)
