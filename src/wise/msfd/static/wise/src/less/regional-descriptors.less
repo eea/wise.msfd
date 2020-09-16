@@ -1,5 +1,5 @@
 .regional-descriptors {
-  li span {
+  li span, td span {
     &.as-value-0 { background-color: #eee !important; }     // not completed
     &.as-value-1 { background-color: #a2b971 !important; }  // very good
     &.as-value-2 { background-color: #d4dfbc !important; }  // good
@@ -10,7 +10,16 @@
     &.as-value-5 { background-color: #ff6d6d !important; }  // very poor
     &.as-value-6 { background-color: #b8d1e0 !important; }  // not clear
     &.as-value-7 { background-color: #fff !important; }     // not relevant
+
+    &.empty-colorbox {
+      width: 10px;
+      height: 10px;
+      margin-right: 2px;
+      display: inline-flex;
+      align-items: center;
+    }
   }
+
   .fixed-table-inner {
     margin-left: 140px !important;
     border-left: 1px solid #DDD !important;

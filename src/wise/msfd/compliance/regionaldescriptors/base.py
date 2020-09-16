@@ -8,6 +8,7 @@ from plone.api.portal import get_tool
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 from wise.msfd.compliance.base import (BaseComplianceView, NAT_DESC_QUESTIONS,
                                        report_data_cache_key)
+from wise.msfd.compliance.interfaces import IComplianceModuleFolder
 from wise.msfd.compliance.vocabulary import REGIONAL_DESCRIPTORS_REGIONS
 from wise.msfd.gescomponents import (FEATURES_DB_2018, THEMES_2018_ORDER,
                                      SUBJECT_2018_ORDER, get_marine_units)
@@ -62,7 +63,12 @@ class NationalAssessmentMixin:
     def get_nat_desc_assessment_data(self, country_code, region, descriptor,
                                      article):
         catalog = self.context.portal_catalog
-        p = "/Plone/marine/compliance-module/national-descriptors-assessments"
+        assessment_module_folder = self.get_parent_by_iface(
+            IComplianceModuleFolder
+        )
+
+        p = ('/'.join(assessment_module_folder.getPhysicalPath())
+             + '/national-descriptors-assessments')
         path = p + "/{}/{}/{}/{}".format(country_code.lower(), region.lower(),
                                          descriptor.lower(), article.lower())
 
@@ -85,33 +91,11 @@ class NationalAssessmentMixin:
         return obj.saved_assessment_data.last()
 
     def get_adequacy_assessment_data(self):
+        if self.article in ['Art10']:
+            return self.get_adequacy_assessment_data_art10()
+
         def get_assessed_elements(self, question):
             muids = []
-
-            if self.article in ['Art10']:
-                region = self.country_region_code
-                subregions = [
-                    _r.subregions
-                    for _r in REGIONAL_DESCRIPTORS_REGIONS
-                    if region in _r.code
-                ][0]
-
-                for country_code, country_name in self.available_countries:
-                    country_regions = [
-                        r.code
-
-                        for r in REGIONAL_DESCRIPTORS_REGIONS
-
-                        if len(r.subregions) == 1
-                           and country_code in r.countries
-                           and r.code in subregions
-                    ]
-                    for subregion in country_regions:
-                        _muids = self.muids(
-                            country_code.upper(), subregion.upper(), self.year
-                        )
-
-                        muids.extend(_muids)
 
             elements = {
                 x.id: []
@@ -124,7 +108,8 @@ class NationalAssessmentMixin:
 
             return elements
 
-        answer_tpl = u"<span class='as-value-{}'><b>{}:</b> {}</span>"
+        answer_tpl = u"<span class='empty-colorbox as-value-{}'/>" \
+                     u"<span><b>{}:</b> {}</span>"
         Field = namedtuple('Field', ['name', 'title'])
 
         countries = self.available_countries
@@ -179,11 +164,11 @@ class NationalAssessmentMixin:
                     summary = u"<b>{}:</b> {}".format(subregion, summary)
 
                     conclusion = score and score.conclusion or "-"
-                    conclusion = u"<span class='as-value-{}'>" \
-                                 u"<b>{}:</b> {}</span>".format(
-                        self._conclusion_color(
-                            score), subregion, conclusion
-                    )
+                    conclusion = \
+                        u"<span class='empty-colorbox as-value-{}'/>" \
+                        u"<span><b>{}:</b> {}</span>" \
+                        .format(self._conclusion_color(score), subregion,
+                                conclusion)
 
                     country_concl.append(conclusion)
                     country_sums.append(summary)
@@ -222,6 +207,160 @@ class NationalAssessmentMixin:
                 rows.append((crit_id, crit_values))
 
             rows = sorted(rows, key=lambda i: i[0])
+
+            rows.append((u'Conclusion', conclusion_values))
+            rows.append((u'Summary', summary_values))
+
+            res.append(RegionalCompoundRow(self, self.request, field, rows))
+
+        return res
+
+    def get_adequacy_assessment_data_art10(self):
+        def get_assessed_elements(self, question, country_code):
+            muids = []
+
+            _region = self.country_region_code
+            _subregions = [
+                _r.subregions
+                for _r in REGIONAL_DESCRIPTORS_REGIONS
+                if _region in _r.code
+            ][0]
+
+            _country_regions = [
+                r.code
+
+                for r in REGIONAL_DESCRIPTORS_REGIONS
+
+                if len(r.subregions) == 1
+                   and country_code in r.countries
+                   and r.code in _subregions
+            ]
+            for _subregion in _country_regions:
+                _muids = self.muids(
+                    country_code.upper(), _subregion.upper(), self.year
+                )
+
+                muids.append((_subregion.upper(), _muids))
+
+            elements = {}
+
+            for _subreg, _muids in muids:
+                targets = question.get_assessed_elements(self.descriptor_obj,
+                                                         muids=_muids)
+
+                elements[_subreg] = targets
+
+            return elements
+
+        answer_tpl = u"<span class='empty-colorbox as-value-{}'/>" \
+                     u"<span><b>{}:</b> {}</span>"
+        Field = namedtuple('Field', ['name', 'title'])
+
+        countries = self.available_countries
+        questions = NAT_DESC_QUESTIONS.get(self.article, [])
+        region = self.country_region_code
+        subregions = [r.subregions for r in REGIONAL_DESCRIPTORS_REGIONS
+                      if region in r.code][0]
+
+        descriptor = self.descriptor
+        article = self.article
+
+        res = [
+            RegionalCompoundRow(
+                self, self.request, Field('Country', 'Country'),
+                self.make_countries_row()
+            )]
+
+        for question in questions:
+            q_id = question.id
+            q_def = question.definition
+            q_answ = question.answers
+            field = Field(q_id, q_def)
+
+            rows = []
+            conclusion_values = []
+            summary_values = []
+
+            # Init the result with empty values
+            answer_values = {
+                answer: {country_code: [] for country_code, _ in countries}
+                for answer in q_answ
+            }
+
+            for country_code, country_name in countries:
+                country_concl = []
+                country_sums = []
+                country_targets = get_assessed_elements(
+                    self, question, country_code
+                )
+
+                country_regions = [
+                    r.code
+
+                    for r in REGIONAL_DESCRIPTORS_REGIONS
+
+                    if len(r.subregions) == 1
+                       and country_code in r.countries
+                       and r.code in subregions
+                ]
+
+                for subregion in country_regions:
+                    assess_data = self.get_nat_desc_assessment_data(
+                        country_code, subregion, descriptor, article
+                    )
+
+                    # Setup the conclusion and the summary
+                    score = assess_data.get('{}_{}_Score'.format(article,
+                                                                 q_id))
+                    summary = assess_data.get('{}_{}_Summary'.format(article,
+                                                                     q_id))
+                    summary = summary or "-"
+                    summary = u"<b>{}:</b> {}".format(subregion, summary)
+
+                    conclusion = score and score.conclusion or "-"
+                    conclusion = \
+                        u"<span class='empty-colorbox as-value-{}'/>" \
+                        u"<span><b>{}:</b> {}</span>" \
+                        .format(self._conclusion_color(score), subregion,
+                                conclusion)
+
+                    country_concl.append(conclusion)
+                    country_sums.append(summary)
+
+                    # Setup the targets
+                    subregion_targets = country_targets[subregion]
+
+                    for target in subregion_targets:
+                        option = assess_data.get('{}_{}_{}'.format(
+                            article, q_id, target.id)
+                        )
+                        if option is None:
+                            continue
+
+                        option_txt = q_answ[option]
+                        option_score = question.scores[option]
+
+                        _val = answer_tpl.format(
+                            self._answer_color(option_score),
+                            subregion,
+                            target.title
+                        )
+
+                        answer_values[option_txt][country_code].append(_val)
+
+                conclusion_values.append(ItemList(country_concl))
+                summary_values.append(ItemList(country_sums))
+
+            # Add rows with the answers and values into the table
+            for _answer in q_answ:
+                _countries = answer_values[_answer]
+
+                values = [
+                    ItemList(values)
+                    for country_code, values in _countries.items()
+                ]
+
+                rows.append((_answer, values))
 
             rows.append((u'Conclusion', conclusion_values))
             rows.append((u'Summary', summary_values))
@@ -386,7 +525,7 @@ class BaseRegDescRow(BaseRegComplianceView):
 
     def make_item_label(self, value):
         return value
-        
+
         return ItemLabel(value, self.get_label_for_value(value))
 
     @compoundrow
