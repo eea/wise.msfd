@@ -619,8 +619,8 @@ def get_all_report_filenames(country, article):
         'art4': "str(?schema) = '%s'" % ART3,
     }
     obligations = {
-        'art3': "?obligationNr IN ('608', '760')",
-        'art4': "?obligationNr IN ('608', '760')",
+        'art3': "?obligationNr IN ('608', '759', '760')",
+        'art4': "?obligationNr IN ('608', '759', '760')",
         'art7': "?obligationNr IN ('607', '608')",
     }
 

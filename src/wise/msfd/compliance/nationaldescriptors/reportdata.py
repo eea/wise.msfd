@@ -1504,4 +1504,5 @@ class ReportData2018Secondary(ReportData2018):
         self.translatable_data = translatable_data
 
         res = "<hr/>".join(rendered_results)
+
         return res or "No data found"
