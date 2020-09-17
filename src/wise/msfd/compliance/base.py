@@ -774,12 +774,12 @@ class AssessmentQuestionDefinition:
         # assessment overview pages
 
         # Get all targets without filtering by feature
-        targets = self.__get_a10_2018_targets_from_table(ok_ges_ids, muids)
+        # targets = self.__get_a10_2018_targets_from_table(ok_ges_ids, muids)
 
         # Get targets filtered by feature, Only relevant for D1.x
-        # targets = self.__get_a10_2018_targets_from_view(
-        #     descr_obj, ok_ges_ids, muids
-        # )
+        targets = self.__get_a10_2018_targets_from_view(
+            descr_obj, ok_ges_ids, muids
+        )
 
         res = [Target(t.TargetCode.encode('ascii', errors='ignore'),
                       t.TargetCode,
