@@ -356,8 +356,8 @@ class NationalAssessmentMixin:
                 _countries = answer_values[_answer]
 
                 values = [
-                    ItemList(values)
-                    for country_code, values in _countries.items()
+                    ItemList(_countries[country_code])
+                    for country_code, _ in countries
                 ]
 
                 rows.append((_answer, values))
