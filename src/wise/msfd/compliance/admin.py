@@ -534,6 +534,21 @@ class AdminScoring(BaseComplianceView, AssessmentDataMixin):
     questions = NAT_DESC_QUESTIONS
     questions_reg = REG_DESC_QUESTIONS
 
+    def _get_values_for_question(self, data, descriptor_obj, question, muids):
+        targets = question.get_assessed_elements(descriptor_obj, muids=muids)
+
+        values = []
+
+        for target in targets:
+            target_id = target.id
+
+            field_name = "{}_{}_{}".format(question.article, question.id,
+                                           target_id)
+
+            values.append(data[field_name])
+
+        return values
+
     def descriptor_obj(self, descriptor):
         return get_descriptor(descriptor)
 
@@ -634,6 +649,16 @@ class AdminScoring(BaseComplianceView, AssessmentDataMixin):
                 scores = {k: v for k, v in data.items()
                           if '_Score' in k and v is not None}
 
+                article = obj.title
+
+                if article in ('Art10',):
+                    descriptor_id = obj.aq_parent.id.upper()
+                    descriptor_obj = self.descriptor_obj(descriptor_id)
+                    country_code = obj.aq_parent.aq_parent.aq_parent.id.upper()
+                    country_region_code = obj.aq_parent.aq_parent.id.upper()
+                    year = '2018'
+                    muids = self.muids(country_code, country_region_code, year)
+
                 for q_id, score in scores.items():
                     id_ = score.question.id
                     article = score.question.article
@@ -653,6 +678,12 @@ class AdminScoring(BaseComplianceView, AssessmentDataMixin):
                     # _question.score_weights = new_score_weight
 
                     values = score.values
+
+                    if article in ('Art10', ):
+                        values = self._get_values_for_question(
+                            data, descriptor_obj, _question, muids
+                        )
+
                     descriptor = score.descriptor
 
                     new_score = _question.calculate_score(descriptor,
