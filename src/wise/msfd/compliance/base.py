@@ -833,6 +833,16 @@ class AssessmentQuestionDefinition:
             ok_features = set([f.name for f in get_features(descriptor)])
 
             for row in ges_filtered:
+                ges_comps = getattr(row, 'GESComponents', ())
+                ges_comps = set([g.strip() for g in ges_comps.split(',')])
+
+                # Get all rows if targets linked to current descriptor,
+                # regardless # of whether associated features include relevant
+                # features for current descriptor
+                if descriptor in ges_comps:
+                    feature_filtered.append(row)
+                    continue
+
                 feats = set(row.Features.split(','))
 
                 if feats.intersection(ok_features):

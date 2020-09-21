@@ -876,6 +876,13 @@ https://svn.eionet.europa.eu/repositories/Reportnet/Dataflows/MarineDirective/MS
                 out_filtered.append(row)
                 continue
 
+            # Get all rows if targets linked to current descriptor, regardless
+            # of whether associated features include relevant features for
+            # current descriptor
+            if self.descriptor in ges_comps:
+                out_filtered.append(row)
+                continue
+
             feats = set(row.Features.split(','))
 
             if feats.intersection(ok_features):
