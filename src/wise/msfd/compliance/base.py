@@ -855,7 +855,7 @@ class AssessmentQuestionDefinition:
                                   'D1.6'}
                 if ('D1' in ges_comps
                         and not ges_comps.intersection(ges_comps_2018)):
-                    ges_filtered.append(row)
+                    feature_filtered.append(row)
 
             ges_filtered = feature_filtered
 
