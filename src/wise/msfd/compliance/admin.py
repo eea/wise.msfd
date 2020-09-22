@@ -546,7 +546,7 @@ class AdminScoring(BaseComplianceView, AssessmentDataMixin):
                                            target_id)
 
             value = data.get(field_name, None)
-            
+
             if value:
                 values.append(value)
 

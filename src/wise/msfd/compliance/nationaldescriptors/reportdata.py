@@ -18,6 +18,7 @@ from Products.Five.browser.pagetemplatefile import \
 from Products.statusmessages.interfaces import IStatusMessage
 from wise.msfd import db, sql2018  # sql,
 from wise.msfd.base import BaseUtil
+from wise.msfd.compliance.base import is_row_relevant_for_descriptor
 from wise.msfd.compliance.interfaces import (IReportDataView,
                                              IReportDataViewSecondary)
 from wise.msfd.compliance.nationaldescriptors.data import get_report_definition
@@ -878,24 +879,11 @@ https://svn.eionet.europa.eu/repositories/Reportnet/Dataflows/MarineDirective/MS
                 out_filtered.append(row)
                 continue
 
-            # Get all rows if targets linked to current descriptor, regardless
-            # of whether associated features include relevant features for
-            # current descriptor
-            if self.descriptor in ges_comps:
-                out_filtered.append(row)
-                continue
+            row_needed = is_row_relevant_for_descriptor(
+                row, self.descriptor, ok_features, ges_comps
+            )
 
-            feats = set(row.Features.split(','))
-
-            if feats.intersection(ok_features):
-                out_filtered.append(row)
-                continue
-
-            # Targets assigned only to D1 generic descriptor
-            # are also assigned to every D1.x
-            ges_comps_2018 = {'D1.1', 'D1.2', 'D1.3', 'D1.4', 'D1.5', 'D1.6'}
-            if ('D1' in ges_comps
-                    and not ges_comps.intersection(ges_comps_2018)):
+            if row_needed:
                 out_filtered.append(row)
 
         return out_filtered

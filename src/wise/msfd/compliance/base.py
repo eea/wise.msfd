@@ -142,6 +142,46 @@ def _get_secondary_articles():
     return articles
 
 
+def is_row_relevant_for_descriptor(row, descriptor, ok_features, ges_comps):
+    # Get all rows if targets linked to current descriptor,
+    # regardless of whether associated features include relevant
+    # features for current descriptor
+    if descriptor in ges_comps:
+        return True
+
+    feats = set(row.Features.split(','))
+
+    if feats.intersection(ok_features):
+        return True
+
+    # Targets assigned to D1 and with benthic habitat features,
+    # or physical loss or physical disturbance , these should
+    # appear under D6 - exclude them
+    features_blacklist = {
+        # D6 features
+        'HabBenAll', 'HabBenOther'
+                     'HabBenLitRock', 'HabBenLitSed', 'HabBenOffshCoarSed',
+        'HabBenOffshMud', 'HabBenOffshMxdSed',
+        'HabBenOffshRock', 'HabBenOffshSand',
+        'PresPhyLoss', 'PresPhyDisturbSeabed',
+        # D4 features
+        # 'EcosysCoastal', 'EcosysShelf', 'EcosysOceanic', 'EcosysElemAll'
+    }
+    if ('D1' in ges_comps
+            and feats.intersection(features_blacklist)):
+        return False
+
+    # Targets assigned to D1 with other features
+    # are also assigned to every D1.x
+    ges_comps_2018 = {'D1.1', 'D1.2', 'D1.3', 'D1.4', 'D1.5',
+                      'D1.6'}
+    if ('D1' in ges_comps
+            and not ges_comps.intersection(ges_comps_2018)):
+        return True
+
+    return False
+
+
 class Container(object):
     """ A container can render its children forms and views
     """
@@ -836,25 +876,11 @@ class AssessmentQuestionDefinition:
                 ges_comps = getattr(row, 'GESComponents', ())
                 ges_comps = set([g.strip() for g in ges_comps.split(',')])
 
-                # Get all rows if targets linked to current descriptor,
-                # regardless of whether associated features include relevant
-                # features for current descriptor
-                if descriptor in ges_comps:
-                    feature_filtered.append(row)
-                    continue
+                row_needed = is_row_relevant_for_descriptor(
+                    row, descriptor, ok_features, ges_comps
+                )
 
-                feats = set(row.Features.split(','))
-
-                if feats.intersection(ok_features):
-                    feature_filtered.append(row)
-                    continue
-
-                # Targets assigned only to D1 generic descriptor
-                # are also assigned to every D1.x
-                ges_comps_2018 = {'D1.1', 'D1.2', 'D1.3', 'D1.4', 'D1.5',
-                                  'D1.6'}
-                if ('D1' in ges_comps
-                        and not ges_comps.intersection(ges_comps_2018)):
+                if row_needed:
                     feature_filtered.append(row)
 
             ges_filtered = feature_filtered
