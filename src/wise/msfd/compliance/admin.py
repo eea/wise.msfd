@@ -545,7 +545,10 @@ class AdminScoring(BaseComplianceView, AssessmentDataMixin):
             field_name = "{}_{}_{}".format(question.article, question.id,
                                            target_id)
 
-            values.append(data[field_name])
+            value = data.get(field_name, None)
+            
+            if value:
+                values.append(value)
 
         return values
 
