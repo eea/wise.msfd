@@ -837,7 +837,7 @@ class AssessmentQuestionDefinition:
                 ges_comps = set([g.strip() for g in ges_comps.split(',')])
 
                 # Get all rows if targets linked to current descriptor,
-                # regardless # of whether associated features include relevant
+                # regardless of whether associated features include relevant
                 # features for current descriptor
                 if descriptor in ges_comps:
                     feature_filtered.append(row)
@@ -847,6 +847,15 @@ class AssessmentQuestionDefinition:
 
                 if feats.intersection(ok_features):
                     feature_filtered.append(row)
+                    continue
+
+                # Targets assigned only to D1 generic descriptor
+                # are also assigned to every D1.x
+                ges_comps_2018 = {'D1.1', 'D1.2', 'D1.3', 'D1.4', 'D1.5',
+                                  'D1.6'}
+                if ('D1' in ges_comps
+                        and not ges_comps.intersection(ges_comps_2018)):
+                    ges_filtered.append(row)
 
             ges_filtered = feature_filtered
 

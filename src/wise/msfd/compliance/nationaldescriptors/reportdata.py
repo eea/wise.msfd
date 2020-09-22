@@ -871,7 +871,9 @@ https://svn.eionet.europa.eu/repositories/Reportnet/Dataflows/MarineDirective/MS
             # and we keep the data if 'D1' is present in the GESComponents
             # countries_filter = for these countries DO NOT filter by features
             ges_comps = getattr(row, 'GESComponents', ())
+            ges_comps = set([g.strip() for g in ges_comps.split(',')])
             countries_nofilter = []  # ('RO', 'DK', 'CY', 'MT')
+
             if 'D1' in ges_comps and self.country_code in countries_nofilter:
                 out_filtered.append(row)
                 continue
@@ -886,6 +888,14 @@ https://svn.eionet.europa.eu/repositories/Reportnet/Dataflows/MarineDirective/MS
             feats = set(row.Features.split(','))
 
             if feats.intersection(ok_features):
+                out_filtered.append(row)
+                continue
+
+            # Targets assigned only to D1 generic descriptor
+            # are also assigned to every D1.x
+            ges_comps_2018 = {'D1.1', 'D1.2', 'D1.3', 'D1.4', 'D1.5', 'D1.6'}
+            if ('D1' in ges_comps
+                    and not ges_comps.intersection(ges_comps_2018)):
                 out_filtered.append(row)
 
         return out_filtered
