@@ -5,8 +5,7 @@ from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 
 from wise.msfd import db
 from wise.msfd.data import get_text_reports_2018
-from wise.msfd.sql2018 import (MarineReportingUnit, ReportingHistory,
-                               t_MarineWaters)
+from wise.msfd.sql2018 import MarineReportingUnit, ReportingHistory
 from wise.msfd.utils import ItemList
 
 from ..nationalsummary.introduction import Introduction
@@ -160,17 +159,12 @@ By October 2018, the Member States were due to submit updates of the assessment
 
         return res
 
-    @db.use_db_session('2018')
     def marine_waters(self):
         header = u"Length of coastline and area of marine waters per Member " \
                 u"State (based on GIS data reported for MSFD by each Member " \
                 u"State)"
 
-        column_names = ['Country', 'Subregion', 'Area_km2', 'Type']
-
-        cnt, data = db.get_all_specific_columns(
-            [getattr(t_MarineWaters.c, c) for c in column_names]
-        )
+        data = self._get_marine_waters_data()
 
         rows = [
             ("", [x[1] for x in self.available_countries]),

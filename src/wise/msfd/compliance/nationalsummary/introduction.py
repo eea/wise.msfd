@@ -338,6 +338,40 @@ class Introduction(BaseNatSummaryView):
 
     template = ViewPageTemplateFile('pt/introduction.pt')
 
+    @db.use_db_session('2018')
+    def _get_marine_waters_data(self):
+        column_names = ['Country', 'Subregion', 'Area_km2', 'Type']
+
+        cnt, data = db.get_all_specific_columns(
+            [getattr(sql2018.t_MarineWaters.c, c) for c in column_names]
+        )
+
+        return data
+
+    def __get_water_seabed_value(self, types):
+        data = self._get_marine_waters_data()
+
+        values = [
+            int(row.Area_km2)
+            for row in data
+            if (row.Country == self.country_code and
+                row.Type in types)
+        ]
+
+        return "{:,}".format(sum(values))
+
+    @property
+    def water_seabed_value(self):
+        types = ['Water column & seabed/subsoil', 'Marine waters']
+
+        return self.__get_water_seabed_value(types)
+
+    @property
+    def seabed_only_value(self):
+        types = ['Seabed/subsoil']
+
+        return self.__get_water_seabed_value(types)
+
     @property
     def document_title(self):
         text = u"Marine Strategy Framework Directive - Article 12 technical " \
@@ -346,7 +380,7 @@ class Introduction(BaseNatSummaryView):
         return text
 
     @timeit
-    def reporting_history(self):
+    def reporting_history_table(self):
         # view = ReportedInformationTable(self, self.request)
         view = ReportingHistoryTable(self, self.request)
         rendered_view = view()
@@ -373,21 +407,20 @@ class Introduction(BaseNatSummaryView):
         return output
 
     @property
+    def reporting_areas(self):
+        output = self.get_field_value('reporting_areas')
+
+        return output
+
+    @property
     def assessment_methodology(self):
         output = self.get_field_value('assessment_methodology')
 
         return output
 
     @property
-    def assessment_areas_title(self):
-        text = u"The table lists the Marine Reporting Units used for the " \
-               u"2018 reporting on updates of Articles 8, 9 and 10."
-
-        return text
-
-    @property
     @timeit
-    def assessment_areas(self):
+    def assessment_areas_table(self):
         view = AssessmentAreas2018(self, self.request)
         rendered_view = view()
 

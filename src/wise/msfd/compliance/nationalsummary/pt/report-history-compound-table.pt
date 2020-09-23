@@ -1,5 +1,4 @@
 <div class="nat-sum-report-history">
-  <h5>Reporting history</h5>
   <div tal:define="allrows options/rows" class="report-section">
 
     <div class="overflow-table-disabled">
