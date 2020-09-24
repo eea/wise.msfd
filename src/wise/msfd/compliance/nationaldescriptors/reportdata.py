@@ -852,6 +852,9 @@ https://svn.eionet.europa.eu/repositories/Reportnet/Dataflows/MarineDirective/MS
         if not self.descriptor.startswith('D1.'):
             return out
 
+        # DISABLE filtering by features for D1.x
+        return out
+
         # conditions = []
         # params = get_parameters(self.descriptor)
         # p_codes = [p.name for p in params]

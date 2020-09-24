@@ -10,7 +10,7 @@
     <element section="target" setlevel="0" name="TargetCode" labelDisabled="targets" convertDisabled="csv_ges_labels_inverse_list">Target code</element>
     <element section="target" name="Description" translate="true">Target description</element>
     <element section="target" setlevel="1" name="Features" label="features" convert="csv_ges_labels_list">Feature(s)</element>
-    <element section="target" name="GESComponents" convert="ges_component_list" filter="all_descriptor_ids">GES components</element>
+    <element section="target" name="GESComponents" convert="ges_component_list" filterX="all_descriptor_ids">GES components</element>
     <element section="target" name="TimeScale">Timescale</element>
     <element section="target" name="UpdateDate">Update date</element>
     <element section="target" name="UpdateType">Update type</element>
