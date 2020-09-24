@@ -49,6 +49,12 @@
 &lt;p&gt;The assessment was based on the e-reporting information (xml and shapefiles) provided by the Member State. Any text reports submitted were not consulted.&lt;/p&gt;
             </default>
         </field>
+        <field name="summary_of_assessment_text"
+               type="plone.app.textfield.RichText">
+            <description/>
+            <required>False</required>
+            <title>Summary of the assessment text</title>
+        </field>
         <field name="progress_recommendations_2012"
                type="plone.app.textfield.RichText">
             <description/>

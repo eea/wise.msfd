@@ -51,4 +51,6 @@
       </table>
     </div>
   </tal:rep>
+  <h4>Summary</h4>
+  <div tal:content="structure python: view.summary_of_assessment_text">Editable text</div>
 </div>

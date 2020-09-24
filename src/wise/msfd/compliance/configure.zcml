@@ -82,6 +82,14 @@
     />
 
   <browser:page
+    for=".interfaces.IComplianceModuleFolder"
+    name="recommendations"
+    class=".main.RecommendationsView"
+    template="./pt/recommendations-view.pt"
+    permission="zope2.View"
+    />
+
+  <browser:page
     for=".interfaces.INationalDescriptorAssessment"
     name="comments-view"
     class=".comments.CommentsView"

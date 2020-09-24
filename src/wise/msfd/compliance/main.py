@@ -19,6 +19,13 @@ class DescriptorsView(BaseComplianceView):
         return GES_DESCRIPTORS
 
 
+class RecommendationsView(BaseComplianceView):
+    """"""
+
+    def __call__(self):
+
+        return self.index()
+
 class ViewComplianceModule(BaseComplianceView):
     # name = 'comp-start2'
 

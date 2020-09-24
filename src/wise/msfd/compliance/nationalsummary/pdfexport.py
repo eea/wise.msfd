@@ -64,6 +64,12 @@ class SummaryAssessment(BaseNatSummaryView):
         self.overall_scores = overall_scores
         self.nat_desc_country_folder = nat_desc_country_folder
 
+    @property
+    def summary_of_assessment_text(self):
+        output = self.get_field_value('summary_of_assessment_text')
+
+        return output
+
     def get_overall_score(self, region_code, descriptor, article):
         color = self.overall_scores[(region_code, descriptor, article)][1]
         conclusion = self.overall_scores[(region_code, descriptor, article)][0]
