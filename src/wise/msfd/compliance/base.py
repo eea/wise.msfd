@@ -154,24 +154,6 @@ def is_row_relevant_for_descriptor(row, descriptor, ok_features, ges_comps):
     if feats.intersection(ok_features):
         return True
 
-    # Targets assigned to D1 and with benthic habitat features,
-    # or physical loss or physical disturbance , these should
-    # appear under D6 - exclude them
-    # TODO disabled
-    features_blacklist = {
-        # D6 features
-        'HabBenAll', 'HabBenOther'
-                     'HabBenLitRock', 'HabBenLitSed', 'HabBenOffshCoarSed',
-        'HabBenOffshMud', 'HabBenOffshMxdSed',
-        'HabBenOffshRock', 'HabBenOffshSand',
-        'PresPhyLoss', 'PresPhyDisturbSeabed',
-        # D4 features
-        # 'EcosysCoastal', 'EcosysShelf', 'EcosysOceanic', 'EcosysElemAll'
-    }
-    # if ('D1' in ges_comps
-    #         and feats.intersection(features_blacklist)):
-    #     return False
-
     # Targets assigned to D1 with other features
     # are also assigned to every D1.x
     ges_comps_2018 = {'D1.1', 'D1.2', 'D1.3', 'D1.4', 'D1.5',
@@ -815,12 +797,12 @@ class AssessmentQuestionDefinition:
         # assessment overview pages
 
         # Get all targets without filtering by feature
-        targets = self.__get_a10_2018_targets_from_table(ok_ges_ids, muids)
+        # targets = self.__get_a10_2018_targets_from_table(ok_ges_ids, muids)
 
         # Get targets filtered by feature, Only relevant for D1.x
-        # targets = self.__get_a10_2018_targets_from_view(
-        #     descr_obj, ok_ges_ids, muids
-        # )
+        targets = self.__get_a10_2018_targets_from_view(
+            descr_obj, ok_ges_ids, muids
+        )
 
         res = [Target(t.TargetCode.encode('ascii', errors='ignore'),
                       t.TargetCode,

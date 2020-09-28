@@ -2487,6 +2487,11 @@
   ],
   "FeaturesSmart": [
     {
+      "code": "BirdsAll",
+      "label": "All birds",
+      "descriptor": "D1.1"
+    },
+    {
       "code": "BirdsGrazing",
       "label": "Grazing birds",
       "descriptor": "D1.1"
@@ -2510,6 +2515,11 @@
       "code": "BirdsBenthicFeeding",
       "label": "Benthic-feeding birds",
       "descriptor": "D1.1"
+    },
+    {
+      "code": "MamAll",
+      "label": "All mammals",
+      "descriptor": "D1.2"
     },
     {
       "code": "MamCetacSmall",
@@ -2542,6 +2552,11 @@
       "descriptor": "D1.4"
     },
     {
+      "code": "FishAll",
+      "label": "All fish",
+      "descriptor": "D1.4"
+    },
+    {
       "code": "FishPelagicShelf",
       "label": "Pelagic shelf fish",
       "descriptor": "D1.4"
@@ -2562,6 +2577,11 @@
       "descriptor": "D1.4"
     },
     {
+      "code": "CephaAll",
+      "label": "All cephalopods",
+      "descriptor": "D1.5"
+    },
+    {
       "code": "CephaCoastShelf",
       "label": "Coastal/shelf cephalopods",
       "descriptor": "D1.5"
@@ -2572,6 +2592,41 @@
       "descriptor": "D1.5"
     },
     {
+      "code": "HabPelagVarSalinity",
+      "label": "Variable salinity",
+      "descriptor": "D1.6"
+    },
+    {
+      "code": "HabPelagCoastal",
+      "label": "Coastal",
+      "descriptor": "D1.6"
+    },
+    {
+      "code": "HabPelagShelf",
+      "label": "Shelf",
+      "descriptor": "D1.6"
+    },
+    {
+      "code": "HabPelagOcean",
+      "label": "Oceanic/beyond shelf",
+      "descriptor": "D1.6"
+    },
+    {
+      "code": "HabAll",
+      "label": "All habitats",
+      "descriptor": "D1.6"
+    },
+    {
+      "code": "HabOther",
+      "label": "Other habitat types",
+      "descriptor": "D1.6"
+    },
+    {
+      "code": "HabPelagAll",
+      "label": "Pelagic habitats",
+      "descriptor": "D1.6"
+    },
+    {
       "code": "HabPelBHT",
       "label": "Pelagic broad habitats",
       "descriptor": "D1.6"
@@ -2580,6 +2635,111 @@
       "code": "HabPelagOther",
       "label": "Other pelagic habitats",
       "descriptor": "D1.6"
+    },
+    {
+      "code": "PhyHydroCharacAll",
+      "label": "All physical and hydrological characteristics",
+      "descriptor": "D1.6"
+    },
+    {
+      "code": "Temperature",
+      "label": "Temperature",
+      "descriptor": "D1.6"
+    },
+    {
+      "code": "Ice",
+      "label": "Ice",
+      "descriptor": "D1.6"
+    },
+    {
+      "code": "Waves",
+      "label": "Wave regime",
+      "descriptor": "D1.6"
+    },
+    {
+      "code": "Currents",
+      "label": "Current regime",
+      "descriptor": "D1.6"
+    },
+    {
+      "code": "Upwelling",
+      "label": "Upwelling",
+      "descriptor": "D1.6"
+    },
+    {
+      "code": "Mixing",
+      "label": "Mixing",
+      "descriptor": "D1.6"
+    },
+    {
+      "code": "ResidenceTime",
+      "label": "Residence time",
+      "descriptor": "D1.6"
+    },
+    {
+      "code": "Turbidity",
+      "label": "Turbidity (silt/sediment loads)",
+      "descriptor": "D1.6"
+    },
+    {
+      "code": "Transparency",
+      "label": "Transparency",
+      "descriptor": "D1.6"
+    },
+    {
+      "code": "ChemCharacAll",
+      "label": "All chemical characteristics",
+      "descriptor": "D1.6"
+    },
+    {
+      "code": "Salinity",
+      "label": "Salinity",
+      "descriptor": "D1.6"
+    },
+    {
+      "code": "Nutrients",
+      "label": "Nutrients (N, P)",
+      "descriptor": "D1.6"
+    },
+    {
+      "code": "OrganicCarbon",
+      "label": "Organic carbon",
+      "descriptor": "D1.6"
+    },
+    {
+      "code": "pCO2",
+      "label": "Dissolved carbon dioxide (pCO2)",
+      "descriptor": "D1.6"
+    },
+    {
+      "code": "Oxygen",
+      "label": "Dissolved oxygen",
+      "descriptor": "D1.6"
+    },
+    {
+      "code": "pH",
+      "label": "pH",
+      "descriptor": "D1.6"
+    },
+    {
+      "code": "PresPhyAll",
+      "label": "All physical pressures",
+      "descriptor": "D1.6"
+    },
+    {
+      "code": "PresPhyHydroCond",
+      "label": "Changes to hydrological conditions",
+      "descriptor": "D1.6"
+    },
+    {
+      "code": "PresEnvHydroChanges",
+      "label": "Hydrographical changes",
+      "descriptor": "D1.6"
+    },
+    {
+      "code": "HabAll",
+      "label": "All habitats",
+      "descriptor": "D6/D1"
     },
     {
       "code": "PresPhyDisturbSeabed",
@@ -2630,6 +2790,11 @@
       "code": "SppAll",
       "label": "Marine species",
       "descriptor": "D2"
+    },
+    {
+      "code": "FishAll",
+      "label": "All fish",
+      "descriptor": "D3"
     },
     {
       "code": "FishCommercial",

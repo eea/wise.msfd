@@ -517,7 +517,7 @@ def parse_features_from_db_2018():
     count, data = db.get_all_records(mc)
 
     for row in data:
-        code = row.Code
+        code = row.Code.strip()
         label = row.Feature
         theme = row.Theme or NOTHEME
         subject = row.Subject
@@ -591,31 +591,6 @@ def parse_features():
         theme = FEATURES_DB_2018[code].theme
 
         res[code] = Feature(code, label, descs, theme)
-
-    # this is missing from FeaturesSmart
-    res['BirdsAll'] = Feature('BirdsAll', 'All birds', set(['D1.1']), NOTHEME)
-    res['MamAll'] = Feature('MamAll', 'All mammals', set(['D1.2']), NOTHEME)
-    res['FishAll'] = Feature('FishAll', 'All fish', set(['D1.4', 'D3']),
-                             NOTHEME)
-    res['CephaAll'] = Feature('CephaAll', 'All cephalopods', set(['D1.5']),
-                              NOTHEME)
-    res['HabPelagAll'] = Feature('HabPelagAll',
-                                 'Pelagic habitats', set(['D1.6']), NOTHEME)
-    res['HabPelagVarSalinity'] = Feature('HabPelagVarSalinity',
-                                         'Variable salinity', set(['D1.6']),
-                                         NOTHEME)
-    res['HabPelagCoastal'] = Feature('HabPelagCoastal',
-                                     'Coastal', set(['D1.6']), NOTHEME)
-    res['HabPelagShelf'] = Feature('HabPelagShelf',
-                                   'Shelf', set(['D1.6']), NOTHEME)
-    res['HabPelagOcean'] = Feature('HabPelagOcean',
-                                   'Oceanic/beyond shelf', set(['D1.6']),
-                                   NOTHEME)
-    res['HabOther'] = Feature('HabOther',
-                              'Other habitat types ', set(['D1.6', 'D6']),
-                              NOTHEME)
-    res['HabAll'] = Feature('HabAll',
-                            'All habitats ', set(['D1.6', 'D6']), NOTHEME)
 
     return res
 
