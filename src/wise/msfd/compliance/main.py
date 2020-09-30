@@ -1,11 +1,21 @@
 # -*- coding: utf-8 -*-
 
+from zope.annotation.factory import factory
+from zope.component import adapter
+from zope.interface import implementer
+
+from BTrees.OOBTree import OOBTree
+from Products.CMFPlone.interfaces.siteroot import IPloneSiteRoot
+from persistent import Persistent
+from plone.api import portal
+
 from wise.msfd.gescomponents import GES_DESCRIPTORS
 
 from .base import BaseComplianceView
-
+from .interfaces import IRecommendationStorage
 # from itertools import chain
 
+ANNOTATION_KEY = 'wise.msfd.recommendations'
 
 class StartComplianceView(BaseComplianceView):
     name = 'comp-start'
@@ -19,9 +29,45 @@ class DescriptorsView(BaseComplianceView):
         return GES_DESCRIPTORS
 
 
+@implementer(IRecommendationStorage)
+@adapter(IPloneSiteRoot)
+class RecommendationStorage(OOBTree):
+    pass
+
+
+annotfactory_rec = factory(RecommendationStorage, key=ANNOTATION_KEY)
+
+
+class Recommendation(Persistent):
+    def __init__(self, code, topic, text, ms_region, descriptors):
+        self.code = code
+        self.topic = topic
+        self.text = text
+
+        if not hasattr(ms_region,  '__iter__'):
+            ms_region = [ms_region]
+
+        self.ms_region = ms_region
+
+        if not hasattr(descriptors, '__iter__'):
+            descriptors = [descriptors]
+
+        self.descriptors = descriptors
+
+    def data_to_list(self):
+        return [
+            self.code,
+            self.topic,
+            self.text,
+            ', '.join(self.ms_region),
+            ', '.join(self.descriptors)
+        ]
+
+
 class RecommendationsView(BaseComplianceView):
     name = 'recommendation'
     section = 'compliance-admin'
+    storage_key = 'recommendations'
 
     topics = (
         'Allocation of species to species groups'
@@ -55,21 +101,47 @@ class RecommendationsView(BaseComplianceView):
     )
 
     def __call__(self):
+        site = portal.get()
+        storage = IRecommendationStorage(site)
+        storage_recom = storage.get(self.storage_key, None)
+
+        if not storage_recom:
+            storage_recom = OOBTree()
+            storage[self.storage_key] = storage_recom
+
         if 'add-recommendation' in self.request.form:
             form_data = self.request.form
 
-            import pdb; pdb.set_trace()
+            code = form_data.get('rec_code', '')
+            topic = form_data.get('topic', '')
+            text = form_data.get('rec_text', '')
+            ms_region = form_data.get('ms_or_region', [])
+            descriptors = form_data.get('descriptors', [])
 
-        recommendations = {
-            'Art09/2018/MS/Rec01': [
-                'Use of primary criteria',
-                'Provide a qualitative GES description, or an adequate justification for non-use together with which other Member States were informed of its non-use and when, for all primary criteria.',
-                'FI, EE, PL, SE',
-                'D1B, D1M, D1F, D3, D6'
-            ]
-        }
+            recom = Recommendation(code, topic, text, ms_region, descriptors)
+            storage_recom[code] = recom
 
-        return self.index(recommendations=recommendations)
+        # recommendations = {
+        #     'Art09/2018/MS/Rec01': [
+        #         'Use of primary criteria',
+        #         'Provide a qualitative GES description, or an adequate justification for non-use together with which other Member States were informed of its non-use and when, for all primary criteria.',
+        #         'FI, EE, PL, SE',
+        #         'D1B, D1M, D1F, D3, D6'
+        #     ]
+        # }
+
+        recommendations = []
+
+        if len(storage_recom.items()):
+            for code, recommendation in storage_recom.items():
+                try:
+                    recommendations.append(recommendation.data_to_list())
+                except:
+                    import pdb; pdb.set_trace()
+
+        sorted_rec = sorted(recommendations, key=lambda i: i[0])
+
+        return self.index(recommendations=sorted_rec)
 
 
 class ViewComplianceModule(BaseComplianceView):

@@ -4,6 +4,13 @@ from zope.schema import Text, TextLine
 from plone.supermodel.model import Schema
 
 
+class IRecommendationStorage(Interface):
+    """ Provide storage (as a mapping) for recommendations
+
+    Keys will be the recommendation code
+    """
+
+
 class IComplianceModuleMarker(Interface):
     """ A marker interface for request that happens inside compliance folder
     """

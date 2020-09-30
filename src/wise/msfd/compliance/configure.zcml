@@ -18,6 +18,8 @@
     provides="wise.msfd.translation.interfaces.ITranslationContext"
     />
 
+  <adapter factory=".main.annotfactory_rec" />
+
   <browser:page
     for="*"
     name="compliance-nav-macros"
