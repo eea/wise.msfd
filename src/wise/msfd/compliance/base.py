@@ -142,24 +142,37 @@ def _get_secondary_articles():
     return articles
 
 
-def is_row_relevant_for_descriptor(row, descriptor, ok_features, ges_comps):
+def is_row_relevant_for_descriptor(row, descriptor, ok_features,
+                                   blacklist_features, ges_comps):
     # Get all rows if targets linked to current descriptor,
     # regardless of whether associated features include relevant
     # features for current descriptor
     if descriptor in ges_comps:
         return True
 
+    ges_comps_2018 = ['D1.1', 'D1.2', 'D1.3', 'D1.4', 'D1.5', 'D1.6']
+
+    # other_ges_comps_2018 = [v for v in ges_comps_2018 if v != descriptor]
+    # if ges_comps.intersection(set(other_ges_comps_2018)):
+    #     return False
+
     feats = set(row.Features.split(','))
 
+    # Get row if one of the features is associated with relevant features
+    # for current descriptor
     if feats.intersection(ok_features):
         return True
 
-    # Targets assigned to D1 with other features
+    # DO NOT get row if has features which is relevant for another descriptor
+    if feats.intersection(blacklist_features):
+        return False
+
+    # Targets assigned to D1 with OTHER features (relevant to all D1.x or
+    # not relevant at all for any descriptor)
     # are also assigned to every D1.x
-    ges_comps_2018 = {'D1.1', 'D1.2', 'D1.3', 'D1.4', 'D1.5',
-                      'D1.6'}
+
     if ('D1' in ges_comps
-            and not ges_comps.intersection(ges_comps_2018)):
+            and not ges_comps.intersection(set(ges_comps_2018))):
         return True
 
     return False
@@ -854,13 +867,24 @@ class AssessmentQuestionDefinition:
         if descriptor.startswith('D1.'):
             feature_filtered = []
             ok_features = set([f.name for f in get_features(descriptor)])
+            blacklist_descriptors = ['D1.1', 'D1.2', 'D1.3', 'D1.4', 'D1.5',
+                                     'D1.6', 'D4', 'D6']
+            blacklist_descriptors.remove(descriptor)
+            blacklist_features = []
+
+            for _desc in blacklist_descriptors:
+                blacklist_features.extend([
+                    f.name for f in get_features(_desc)
+                ])
+
+            blacklist_features = set(blacklist_features)
 
             for row in ges_filtered:
                 ges_comps = getattr(row, 'GESComponents', ())
                 ges_comps = set([g.strip() for g in ges_comps.split(',')])
 
                 row_needed = is_row_relevant_for_descriptor(
-                    row, descriptor, ok_features, ges_comps
+                    row, descriptor, ok_features, blacklist_features, ges_comps
                 )
 
                 if row_needed:

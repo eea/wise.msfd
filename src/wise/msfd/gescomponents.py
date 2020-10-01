@@ -592,6 +592,65 @@ def parse_features():
 
         res[code] = Feature(code, label, descs, theme)
 
+    # this is missing from FeaturesSmart, features assigned to multiple
+    # descriptors
+    res['HabAll'] = Feature('HabAll', 'All habitats', set(['D1.6', 'D6']),
+                            FEATURES_DB_2018['BirdsAll'].theme)
+    res['HabOther'] = Feature('HabOther', 'Other habitat types',
+                              set(['D1.6', 'D6']),
+                              FEATURES_DB_2018['HabOther'].theme)
+    res['PhyHydroCharacAll'] = Feature(
+        'PhyHydroCharacAll', 'All physical and hydrological characteristics',
+        set(['D1.6', 'D6']), FEATURES_DB_2018['PhyHydroCharacAll'].theme)
+    res['Temperature'] = Feature(
+        'Temperature', 'Temperature',
+        set(['D1.6', 'D6']), FEATURES_DB_2018['Temperature'].theme)
+    res['Ice'] = Feature(
+        'Ice', 'Ice',
+        set(['D1.6', 'D6']), FEATURES_DB_2018['Ice'].theme)
+    res['Waves'] = Feature(
+        'Waves', 'Wave regime',
+        set(['D1.6', 'D6']), FEATURES_DB_2018['Waves'].theme)
+    res['Currents'] = Feature(
+        'Currents', 'Current regime',
+        set(['D1.6', 'D6']), FEATURES_DB_2018['Currents'].theme)
+    res['OrganicCarbon'] = Feature(
+        'OrganicCarbon', 'Organic carbon',
+        set(['D1.6', 'D6']), FEATURES_DB_2018['OrganicCarbon'].theme)
+    res['OrganicCarbon'] = Feature(
+        'OrganicCarbon', 'Organic carbon',
+        set(['D1.6', 'D6']), FEATURES_DB_2018['OrganicCarbon'].theme)
+    res['pH'] = Feature(
+        'pH', 'pH',
+        set(['D1.6', 'D6']), FEATURES_DB_2018['pH'].theme)
+    res['PresBioDisturbSpp'] = Feature(
+        'PresBioDisturbSpp',
+        'Disturbance of species (e.g. where they breed, rest and feed) '
+        'due to human presence',
+        set(['D1.1', 'D1.2', 'D1.3', 'D1.4', 'D1.5']),
+        FEATURES_DB_2018['PresBioDisturbSpp'].theme)
+    res['PresBioExtractSpp'] = Feature(
+        'PresBioExtractSpp',
+        'Extraction of, or mortality/injury to, wild species '
+        '(by commercial and recreational fishing and other activities)',
+        set(['D1.1', 'D1.2', 'D1.3', 'D1.4', 'D1.5']),
+        FEATURES_DB_2018['PresBioExtractSpp'].theme)
+    res['PresPhyAll'] = Feature(
+        'PresPhyAll',
+        'All physical pressures',
+        set(['D1.6', 'D6']),
+        FEATURES_DB_2018['PresPhyAll'].theme)
+    res['PresPhyHydroCond'] = Feature(
+        'PresPhyHydroCond',
+        'Changes to hydrological conditions',
+        set(['D1.6', 'D6']),
+        FEATURES_DB_2018['PresPhyHydroCond'].theme)
+    res['PresEnvHydroChanges'] = Feature(
+        'PresEnvHydroChanges',
+        'Hydrographical changes',
+        set(['D1.6', 'D6']),
+        FEATURES_DB_2018['PresEnvHydroChanges'].theme)
+
     return res
 
 

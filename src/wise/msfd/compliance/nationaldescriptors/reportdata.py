@@ -869,6 +869,18 @@ https://svn.eionet.europa.eu/repositories/Reportnet/Dataflows/MarineDirective/MS
         ok_features = set([f.name for f in get_features(self.descriptor)])
         out_filtered = []
 
+        blacklist_descriptors = ['D1.1', 'D1.2', 'D1.3', 'D1.4', 'D1.5',
+                                 'D1.6', 'D4', 'D6']
+        blacklist_descriptors.remove(self.descriptor)
+        blacklist_features = []
+
+        for _desc in blacklist_descriptors:
+            blacklist_features.extend([
+                f.name for f in get_features(_desc)
+            ])
+
+        blacklist_features = set(blacklist_features)
+
         for row in out:
             # Because some Features are missing from FeaturesSmart
             # we consider 'D1' descriptor valid for all 'D1.x'
@@ -883,7 +895,8 @@ https://svn.eionet.europa.eu/repositories/Reportnet/Dataflows/MarineDirective/MS
                 continue
 
             row_needed = is_row_relevant_for_descriptor(
-                row, self.descriptor, ok_features, ges_comps
+                row, self.descriptor, ok_features, blacklist_features,
+                ges_comps
             )
 
             if row_needed:

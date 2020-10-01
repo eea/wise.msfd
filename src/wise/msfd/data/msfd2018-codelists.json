@@ -2612,16 +2612,6 @@
       "descriptor": "D1.6"
     },
     {
-      "code": "HabAll",
-      "label": "All habitats",
-      "descriptor": "D1.6"
-    },
-    {
-      "code": "HabOther",
-      "label": "Other habitat types",
-      "descriptor": "D1.6"
-    },
-    {
       "code": "HabPelagAll",
       "label": "Pelagic habitats",
       "descriptor": "D1.6"
@@ -2634,26 +2624,6 @@
     {
       "code": "HabPelagOther",
       "label": "Other pelagic habitats",
-      "descriptor": "D1.6"
-    },
-    {
-      "code": "PhyHydroCharacAll",
-      "label": "All physical and hydrological characteristics",
-      "descriptor": "D1.6"
-    },
-    {
-      "code": "Temperature",
-      "label": "Temperature",
-      "descriptor": "D1.6"
-    },
-    {
-      "code": "Ice",
-      "label": "Ice",
-      "descriptor": "D1.6"
-    },
-    {
-      "code": "Waves",
-      "label": "Wave regime",
       "descriptor": "D1.6"
     },
     {
@@ -2702,11 +2672,6 @@
       "descriptor": "D1.6"
     },
     {
-      "code": "OrganicCarbon",
-      "label": "Organic carbon",
-      "descriptor": "D1.6"
-    },
-    {
       "code": "pCO2",
       "label": "Dissolved carbon dioxide (pCO2)",
       "descriptor": "D1.6"
@@ -2717,29 +2682,9 @@
       "descriptor": "D1.6"
     },
     {
-      "code": "pH",
-      "label": "pH",
-      "descriptor": "D1.6"
-    },
-    {
       "code": "PresPhyAll",
       "label": "All physical pressures",
       "descriptor": "D1.6"
-    },
-    {
-      "code": "PresPhyHydroCond",
-      "label": "Changes to hydrological conditions",
-      "descriptor": "D1.6"
-    },
-    {
-      "code": "PresEnvHydroChanges",
-      "label": "Hydrographical changes",
-      "descriptor": "D1.6"
-    },
-    {
-      "code": "HabAll",
-      "label": "All habitats",
-      "descriptor": "D6/D1"
     },
     {
       "code": "PresPhyDisturbSeabed",
@@ -2759,6 +2704,151 @@
     {
       "code": "HabBenOther",
       "label": "Other benthic habitats",
+      "descriptor": "D6/D1"
+    },
+    {
+      "code": "HabBenAll",
+      "label": "Benthic habitats",
+      "descriptor": "D6/D1"
+    },
+    {
+      "code": "HabBenLitRock",
+      "label": "Littoral rock and biogenic reef",
+      "descriptor": "D6/D1"
+    },
+    {
+      "code": "HabBenLitSed",
+      "label": "Littoral sediment",
+      "descriptor": "D6/D1"
+    },
+    {
+      "code": "HabBenInfralitRock",
+      "label": "Infralittoral rock and biogenic reef",
+      "descriptor": "D6/D1"
+    },
+    {
+      "code": "HabBenInfralitCoarSed",
+      "label": "Infralittoral coarse sediment",
+      "descriptor": "D6/D1"
+    },
+    {
+      "code": "HabBenInfralitMxdSed",
+      "label": "Infralittoral mixed sediment",
+      "descriptor": "D6/D1"
+    },
+    {
+      "code": "HabBenInfralitSand",
+      "label": "Infralittoral sand",
+      "descriptor": "D6/D1"
+    },
+    {
+      "code": "HabBenInfralitMud",
+      "label": "Infralittoral mud",
+      "descriptor": "D6/D1"
+    },
+    {
+      "code": "HabBenCircalitRock",
+      "label": "Circalittoral rock and biogenic reef",
+      "descriptor": "D6/D1"
+    },
+    {
+      "code": "HabBenCircalitCoarSed",
+      "label": "Circalittoral coarse sediment",
+      "descriptor": "D6/D1"
+    },
+    {
+      "code": "HabBenCircalitMxdSed",
+      "label": "Circalittoral mixed sediment",
+      "descriptor": "D6/D1"
+    },
+    {
+      "code": "HabBenCircalitSand",
+      "label": "Circalittoral sand",
+      "descriptor": "D6/D1"
+    },
+    {
+      "code": "HabBenCircalitMud",
+      "label": "Circalittoral mud",
+      "descriptor": "D6/D1"
+    },
+    {
+      "code": "HabBenOffshRock",
+      "label": "Offshore circalittoral rock and biogenic reef",
+      "descriptor": "D6/D1"
+    },
+    {
+      "code": "HabBenOffshCoarSed",
+      "label": "Offshore circalittoral coarse sediment",
+      "descriptor": "D6/D1"
+    },
+    {
+      "code": "HabBenOffshMxdSed",
+      "label": "Offshore circalittoral mixed sediment",
+      "descriptor": "D6/D1"
+    },
+    {
+      "code": "HabBenOffshSand",
+      "label": "Offshore circalittoral sand",
+      "descriptor": "D6/D1"
+    },
+    {
+      "code": "HabBenOffshMud",
+      "label": "Offshore circalittoral mud",
+      "descriptor": "D6/D1"
+    },
+    {
+      "code": "HabBenBathyalUpRock",
+      "label": "Upper bathyal rock and biogenic reef",
+      "descriptor": "D6/D1"
+    },
+    {
+      "code": "HabBenBathyalUpSed",
+      "label": "Upper bathyal sediment",
+      "descriptor": "D6/D1"
+    },
+    {
+      "code": "HabBenBathyalLowRock",
+      "label": "Lower bathyal rock and biogenic reef",
+      "descriptor": "D6/D1"
+    },
+    {
+      "code": "HabBenBathyalLowSed",
+      "label": "Lower bathyal sediment",
+      "descriptor": "D6/D1"
+    },
+    {
+      "code": "HabBenAbyssal",
+      "label": "Abyssal",
+      "descriptor": "D6/D1"
+    },
+    {
+      "code": "HabBenAbyssal",
+      "label": "Abyssal",
+      "descriptor": "D6/D1"
+    },
+    {
+      "code": "FreshwaterInput",
+      "label": "Freshwater input",
+      "descriptor": "D6/D1"
+    },
+    {
+      "code": "SeaLevel",
+      "label": "Sea level",
+      "descriptor": "D6/D1"
+    },
+    {
+      "code": "Bathymetry",
+      "label": "Bathymetry",
+      "descriptor": "D6/D1"
+    },
+    {
+      "code": "SubstrateMorphology",
+      "label": "Seabed substrate and morphology",
+      "descriptor": "D6/D1"
+    },
+    {
+      "code": "PresBioCultHab",
+      "label": "Loss of, or change to, natural biological communities due to cultivation of animal or plant species",
       "descriptor": "D6/D1"
     },
     {
@@ -2802,6 +2892,11 @@
       "descriptor": "D3"
     },
     {
+      "code": "EcosystemFoodWeb",
+      "label": "Ecosystem, including food webs",
+      "descriptor": "D4/D1"
+    },
+    {
       "code": "EcosysCoastal",
       "label": "Coastal ecosystem",
       "descriptor": "D4/D1"
@@ -2814,6 +2909,51 @@
     {
       "code": "EcosysOceanic",
       "label": "Oceanic/deep-sea ecosystem",
+      "descriptor": "D4/D1"
+    },
+    {
+      "code": "TrophicGuildsAll",
+      "label": "All trophic guilds",
+      "descriptor": "D4/D1"
+    },
+    {
+      "code": "TrophicGuildsPrimProd",
+      "label": "Primary producers",
+      "descriptor": "D4/D1"
+    },
+    {
+      "code": "TrophicGuildsSecProd",
+      "label": "Secondary producers",
+      "descriptor": "D4/D1"
+    },
+    {
+      "code": "TrophicGuildsFilFeed",
+      "label": "Filter-feeders",
+      "descriptor": "D4/D1"
+    },
+    {
+      "code": "TrophicGuildsDepFeed",
+      "label": "Deposit-feeders",
+      "descriptor": "D4/D1"
+    },
+    {
+      "code": "TrophicGuildsPlankt",
+      "label": "Planktivores",
+      "descriptor": "D4/D1"
+    },
+    {
+      "code": "TrophicGuildsPredSApexPel",
+      "label": "Sub-apex pelagic predators",
+      "descriptor": "D4/D1"
+    },
+    {
+      "code": "TrophicGuildsPredSApexDem",
+      "label": "Sub-apex demersal predators",
+      "descriptor": "D4/D1"
+    },
+    {
+      "code": "TrophicGuildsPredApex",
+      "label": "Apex predators",
       "descriptor": "D4/D1"
     },
     {
