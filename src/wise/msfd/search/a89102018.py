@@ -254,6 +254,8 @@ class A2018Art10Display(ItemDisplayForm):
         'col_import_time': 'ReportingDate'
     }
 
+    blacklist_labels = ('TargetCode', )
+
     def get_reported_date(self):
         return self.get_reported_date_2018()
 
