@@ -1,0 +1,29 @@
+<table id="recommendation-edit-table" class="table table-listing">
+  <thead>
+    <tr>
+      <th>Recommendation code</th>
+      <th style="min-width: 300px;">Topic</th>
+      <th>Recommendation text</th>
+      <th>Applicable MS or (sub)region</th>
+      <th>Applicable descriptors</th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody style="word-break: break-word">
+    <tr tal:repeat="rec options/recommendations">
+      <td tal:content="python: rec[0]"></td>
+      <td tal:content="python: rec[1]"></td>
+      <td tal:content="python: rec[2]"></td>
+      <td tal:content="python: rec[3]"></td>
+      <td tal:content="python: rec[4]"></td>
+      <td>
+        <a tal:condition="options/show_edit_buttons"
+           class="btn btn-sm btn-primary"
+           data-toggle="modal"
+           data-target="#edit-recommendation">
+            <i class="fa fa-edit"></i>
+        </a>
+      </td>
+    </tr>
+  </tbody>
+</table>

@@ -5,17 +5,22 @@ from zope.component import adapter
 from zope.interface import implementer
 
 from BTrees.OOBTree import OOBTree
+from Products.Five.browser.pagetemplatefile import PageTemplateFile
 from Products.CMFPlone.interfaces.siteroot import IPloneSiteRoot
 from persistent import Persistent
 from plone.api import portal
 
-from wise.msfd.gescomponents import GES_DESCRIPTORS
+from wise.msfd.compliance.vocabulary import REGIONS, get_all_countries
+from wise.msfd.gescomponents import (GES_DESCRIPTORS, get_all_descriptors,
+                                     get_descriptor)
 
 from .base import BaseComplianceView
 from .interfaces import IRecommendationStorage
 # from itertools import chain
 
 ANNOTATION_KEY = 'wise.msfd.recommendations'
+STORAGE_KEY = 'recommendations'
+
 
 class StartComplianceView(BaseComplianceView):
     name = 'comp-start'
@@ -64,10 +69,21 @@ class Recommendation(Persistent):
         ]
 
 
+class RecommendationsTable:
+    template = PageTemplateFile('pt/recommendations-table.pt')
+
+    def __init__(self, recommendations, show_edit_buttons):
+        self.recommendations = recommendations
+        self.show_edit_buttons = show_edit_buttons
+
+    def __call__(self):
+        return self.template(recommendations=self.recommendations,
+                             show_edit_buttons=self.show_edit_buttons)
+
+
 class RecommendationsView(BaseComplianceView):
     name = 'recommendation'
     section = 'compliance-admin'
-    storage_key = 'recommendations'
 
     topics = (
         'Allocation of species to species groups'
@@ -100,14 +116,35 @@ class RecommendationsView(BaseComplianceView):
         'Use of primary criteria',
     )
 
+    def descriptors(self):
+        descriptors = get_all_descriptors()
+        descriptors.pop(0)  # remove D1 general descriptor
+
+        res = []
+
+        for desc in descriptors:
+            desc_obj = get_descriptor(desc[0])
+
+            res.append((desc_obj.template_vars['title'], desc_obj.title))
+
+        return res
+
+    def regions(self):
+        return [(code, name) for code, name in REGIONS.items()]
+
+    def countries(self):
+        countries = get_all_countries()
+
+        return countries
+
     def __call__(self):
         site = portal.get()
         storage = IRecommendationStorage(site)
-        storage_recom = storage.get(self.storage_key, None)
+        storage_recom = storage.get(STORAGE_KEY, None)
 
         if not storage_recom:
             storage_recom = OOBTree()
-            storage[self.storage_key] = storage_recom
+            storage[STORAGE_KEY] = storage_recom
 
         if 'add-recommendation' in self.request.form:
             form_data = self.request.form
@@ -121,27 +158,19 @@ class RecommendationsView(BaseComplianceView):
             recom = Recommendation(code, topic, text, ms_region, descriptors)
             storage_recom[code] = recom
 
-        # recommendations = {
-        #     'Art09/2018/MS/Rec01': [
-        #         'Use of primary criteria',
-        #         'Provide a qualitative GES description, or an adequate justification for non-use together with which other Member States were informed of its non-use and when, for all primary criteria.',
-        #         'FI, EE, PL, SE',
-        #         'D1B, D1M, D1F, D3, D6'
-        #     ]
-        # }
-
         recommendations = []
 
         if len(storage_recom.items()):
             for code, recommendation in storage_recom.items():
-                try:
-                    recommendations.append(recommendation.data_to_list())
-                except:
-                    import pdb; pdb.set_trace()
+                recommendations.append(recommendation.data_to_list())
 
         sorted_rec = sorted(recommendations, key=lambda i: i[0])
 
-        return self.index(recommendations=sorted_rec)
+        self.recommendations_table = RecommendationsTable(
+            recommendations=sorted_rec, show_edit_buttons=True
+        )
+
+        return self.index()
 
 
 class ViewComplianceModule(BaseComplianceView):

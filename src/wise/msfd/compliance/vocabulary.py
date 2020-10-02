@@ -46,6 +46,16 @@ GES_DESCRIPTORS = (
 )
 
 
+@db.use_db_session('2018')
+def get_all_countries():
+    count, res = db.get_all_records(
+        sql2018.LCountry
+    )
+    countries = [(x.Code, x.Country) for x in res]
+
+    return countries
+
+
 def vocab_from_pairs(pairs):
     """ Build a zope.schema vocabulary from pairs of (value(token), title)
     """

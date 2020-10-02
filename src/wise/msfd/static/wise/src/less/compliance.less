@@ -201,16 +201,16 @@ h4.process-phase-title {
     position: relative;
     text-align: center;
     color: #aaa;
-    margin-left: -8px;
+    margin-left: -4px;
     padding: 2px;
   }
 
   li:before {
     color: #bbb;
-    width: 26px;
-    height: 26px;
+    width: 30px;
+    height: 30px;
     content: '';
-    line-height: 24px;
+    line-height: 27px;
     border: 2px solid #ddd;
     display: block;
     text-align: center;
@@ -227,7 +227,7 @@ h4.process-phase-title {
     content: '';
     position: absolute;
     background-color: #ddd;
-    top: 14px;
+    top: 16px;
     left: -50%;
     z-index: 0;
   }
@@ -1007,5 +1007,43 @@ table.comp-c-listing {
         //text-decoration: initial;
       }
     }
+  }
+}
+
+#recommendation-edit-table {
+  td:not(:last-child):not(:first-child) {
+    min-width: 150px;
+  }
+}
+#recommendation-form {
+  label {
+    font-size: 1.1em;
+  }
+
+  #recomm-code {
+    &.disabled {
+      pointer-events: none;
+      background: lightgray;
+    }
+  }
+
+  .container-form-group-multiple {
+    display: flex;
+    align-items: stretch;
+    flex-direction: row;
+    justify-content: space-evenly;
+  }
+  .form-group.disabled {
+    cursor: not-allowed !important;
+  }
+
+  .form-group.multiple {
+    margin: 5px;
+  }
+  .form-group.multiple:first-child {
+    flex: 1.1;
+  }
+  .form-group.multiple:last-child {
+    flex: 1;
   }
 }

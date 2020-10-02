@@ -28,7 +28,8 @@ from wise.msfd.compliance.assessment import (ARTICLE_WEIGHTS,
                                              OverallScores)
 from wise.msfd.compliance.interfaces import (INationalDescriptorAssessment,
                                              INationalDescriptorAssessmentSecondary)
-from wise.msfd.compliance.vocabulary import (get_regions_for_country,
+from wise.msfd.compliance.vocabulary import (get_all_countries,
+                                             get_regions_for_country,
                                              REGIONAL_DESCRIPTORS_REGIONS)
 from wise.msfd.compliance.regionaldescriptors.base import COUNTRY
 from wise.msfd.gescomponents import (get_all_descriptors, get_descriptor,
@@ -89,15 +90,11 @@ class BootstrapCompliance(BrowserView):
     def debug(self):
         return 'production' not in self.request.form
 
-    @db.use_db_session('2018')
     def _get_countries(self):
         """ Get a list of (code, name) countries
         """
 
-        count, res = db.get_all_records(
-            sql2018.LCountry
-        )
-        countries = [(x.Code, x.Country) for x in res]
+        countries = get_all_countries()
 
         if self.debug:
             countries = [x for x in countries if x[0] in ('LV', 'NL', 'DE')]

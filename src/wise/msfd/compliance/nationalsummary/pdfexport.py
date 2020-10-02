@@ -5,9 +5,13 @@ from pkg_resources import resource_filename
 
 import logging
 
-from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
+from Products.Five.browser.pagetemplatefile import (PageTemplateFile,
+                                                    ViewPageTemplateFile)
 from Products.statusmessages.interfaces import IStatusMessage
-from wise.msfd.compliance.interfaces import INationalSummaryCountryFolder
+from plone.api import portal
+from wise.msfd.compliance.interfaces import (INationalSummaryCountryFolder,
+                                             IRecommendationStorage)
+from wise.msfd.compliance.main import RecommendationsTable, STORAGE_KEY
 from wise.msfd.data import get_report_filename
 from wise.msfd.gescomponents import DESCRIPTOR_TYPES
 from wise.msfd.translation import get_translated, retrieve_translation
@@ -410,17 +414,36 @@ class AssessmentExportView(BaseNatSummaryView):
 
         # 3. Progress Assessment
         prog_assess = ProgressAssessment(self, self.request)
-        
+
         self.tables = [
             report_header,
             introduction,
             sum_assess,
             prog_assess,
-            descriptor_lvl_assess
+            descriptor_lvl_assess,
             # ArticleTable(self, self.request, 'Art7'),
             # ArticleTable(self, self.request, 'Art3-4'),
             # trans_edit_html,
         ]
+
+        if self.render_header:
+            # 5. Recommendations table
+            recommendations = []
+            site = portal.get()
+            storage = IRecommendationStorage(site)
+            storage_recom = storage.get(STORAGE_KEY, None)
+
+            if len(storage_recom.items()):
+                for code, recommendation in storage_recom.items():
+                    recommendations.append(recommendation.data_to_list())
+
+            sorted_rec = sorted(recommendations, key=lambda i: i[0])
+
+            recomm_table = RecommendationsTable(
+                recommendations=sorted_rec, show_edit_buttons=False
+            )
+
+            self.tables.append(recomm_table)
 
         template = self.template
 
