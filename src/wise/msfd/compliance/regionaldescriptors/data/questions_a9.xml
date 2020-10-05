@@ -11,7 +11,7 @@
       <option score="0.75">51-75% of MS in the region do not use this criterion with adequate justification</option>
       <option score="0.5">26-50% of MS in the region use this criterion</option>
       <option score="0.5">26 -50% of MS in the region do not use this criterion with adequate justification</option>
-      <option score="0.25">1-25% of MS in the region use this criterion, or do not use it with adequate justification</option>
+      <option score="0.25">1-25% of MS in the region use this criterion</option>
       <option score="0.25">1-25% of MS in the region do not use this criterion with adequate justification</option>
       <option score="0">Only one MS in the region uses this criterion</option>
       <option score="0.250">Not clear</option>
@@ -81,7 +81,7 @@
       <option score="0.25">All elements and parameters for this criterion are the same or similar for only a few MS (1-25%) in the region</option>
       <option score="0.75">Some elements and parameters for this criterion are the same or similar for most MS (76-100%) in the region</option>
       <option score="0.5">Some elements and parameters for this criterion are the same or similar for many MS (51-75%) in the region</option>
-      <option score="0.25">Some elements and parameters for this criterion are the same or similar for some (1-50%) in the region</option>
+      <option score="0.25"> Some elements and parameters for this criterion are the same or similar for some / a few MS (1-50%) in the region</option>
       <option score="0">All elements and parameters for this criterion are different in all MS in the region</option>
       <option score="0">Only one MS in the region specified elements and parameters</option>
       <option score="0.250">Not clear</option>
