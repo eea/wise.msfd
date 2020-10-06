@@ -33,7 +33,7 @@
               <div class="ast-header-data">
                 <table class="table table-condensed assessment-data-table">
                   <tr>
-                    <td></td>
+                    <td tal:content="python: '{} - {} - {}'.format(article_section[0], descriptor, view.country_name)"></td>
                     <td class="overall-values">
                       <div class="as-value"><span>Adequacy</span></div>
                     </td>

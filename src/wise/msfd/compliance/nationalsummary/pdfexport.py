@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+from collections import defaultdict
 from io import BytesIO
 from pkg_resources import resource_filename
 
@@ -12,6 +13,7 @@ from plone.api import portal
 from wise.msfd.compliance.interfaces import (INationalSummaryCountryFolder,
                                              IRecommendationStorage)
 from wise.msfd.compliance.main import RecommendationsTable, STORAGE_KEY
+from wise.msfd.compliance.vocabulary import get_regions_for_country
 from wise.msfd.data import get_report_filename
 from wise.msfd.gescomponents import DESCRIPTOR_TYPES
 from wise.msfd.translation import get_translated, retrieve_translation
@@ -152,6 +154,51 @@ class SummaryAssessment(BaseNatSummaryView):
             return self.template()
 
         return render_summary_assessment()
+
+
+class Recommendations(BaseNatSummaryView):
+    template = ViewPageTemplateFile('pt/recommendations.pt')
+
+    def __call__(self):
+        site = portal.get()
+        storage = IRecommendationStorage(site)
+        storage_recom = storage.get(STORAGE_KEY, None)
+
+        data_by_region = defaultdict(list)
+        regions = get_regions_for_country(self.country_code)
+        region_codes = set([r_code for r_code, r_name in regions])
+
+        if not len(storage_recom.items()):
+            return [(r_name, '-') for r_code, r_name in regions]
+
+        for rec_code, recommendation in storage_recom.items():
+            ms_region = recommendation.ms_region
+
+            for region_code in region_codes:
+                if region_code in ms_region:
+                    data_by_region[region_code].append(
+                        recommendation.data_to_list())
+                    continue
+
+                if (self.country_code in ms_region and
+                        not region_codes.intersection(set(ms_region))):
+                    data_by_region[region_code].append(
+                        recommendation.data_to_list())
+                    continue
+
+        res = []
+
+        for region_code, region_name in regions:
+            rec = data_by_region[region_code]
+            sorted_rec = sorted(rec, key=lambda i: i[0])
+
+            recomm_table = RecommendationsTable(
+                recommendations=sorted_rec, show_edit_buttons=False
+            )
+
+            res.append((region_name, recomm_table()))
+
+        return self.template(data=res)
 
 
 class ProgressAssessment(BaseNatSummaryView):
@@ -428,20 +475,7 @@ class AssessmentExportView(BaseNatSummaryView):
 
         if self.render_header:
             # 5. Recommendations table
-            recommendations = []
-            site = portal.get()
-            storage = IRecommendationStorage(site)
-            storage_recom = storage.get(STORAGE_KEY, None)
-
-            if len(storage_recom.items()):
-                for code, recommendation in storage_recom.items():
-                    recommendations.append(recommendation.data_to_list())
-
-            sorted_rec = sorted(recommendations, key=lambda i: i[0])
-
-            recomm_table = RecommendationsTable(
-                recommendations=sorted_rec, show_edit_buttons=False
-            )
+            recomm_table = Recommendations(self, self.request)
 
             self.tables.append(recomm_table)
 
