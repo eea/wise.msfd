@@ -162,7 +162,7 @@ class Recommendations(BaseNatSummaryView):
     def __call__(self):
         site = portal.get()
         storage = IRecommendationStorage(site)
-        storage_recom = storage.get(STORAGE_KEY, None)
+        storage_recom = storage.get(STORAGE_KEY, {})
 
         data_by_region = defaultdict(list)
         regions = get_regions_for_country(self.country_code)
