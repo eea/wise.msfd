@@ -169,7 +169,9 @@ class Recommendations(BaseNatSummaryView):
         region_codes = set([r_code for r_code, r_name in regions])
 
         if not len(storage_recom.items()):
-            return [(r_name, '-') for r_code, r_name in regions]
+            return self.template(
+                data=[(r_name, '-') for r_code, r_name in regions]
+            )
 
         for rec_code, recommendation in storage_recom.items():
             ms_region = recommendation.ms_region
