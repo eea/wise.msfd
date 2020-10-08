@@ -28,7 +28,8 @@ from wise.msfd.data import _extract_pdf_assessments
 from wise.msfd.gescomponents import get_descriptor
 
 from .base import BaseView
-from ..interfaces import ICountryStartAssessments, ICountryStartReports
+from ..interfaces import (ICountryDescriptorsFolder, ICountryStartAssessments,
+                          ICountryStartReports)
 from .interfaces import (INationaldescriptorArticleView,
                          INationaldescriptorSecondaryArticleView)
 
@@ -94,12 +95,16 @@ def get_assessment_head_data_2012(article, region, country_code):
 
 class NationalDescriptorsOverview(BaseView):
     section = 'national-descriptors'
+    iface_country_folder = ICountryDescriptorsFolder
 
     def countries(self):
         countries = self.context.contentValues()
         res = []
 
         for country in countries:
+            if not self.iface_country_folder.providedBy(country):
+                continue
+
             state_id, state_label = self.process_phase(country)
             info = CountryStatus(country.id.upper(), country.Title(),
                                  state_label, state_id, country.absolute_url())
