@@ -86,7 +86,7 @@ class RecommendationsView(BaseComplianceView):
     section = 'compliance-admin'
 
     topics = (
-        'Allocation of species to species groups'
+        'Allocation of species to species groups',
         'Assess progress with targets',
         'Assessment methodology',
         'Assessment scales/areas',

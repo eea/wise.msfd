@@ -43,13 +43,24 @@ class AssessmentExportCover(BaseNatSummaryView):
 
     template = ViewPageTemplateFile('pt/cover.pt')
 
+    def authors_logos(self):
+        edit_page = self.context.aq_parent['edit-summary']
+        attr = 'authors_logo'
+
+        authors_logo = getattr(edit_page, attr, '')
+
+        if not authors_logo:
+            return ''
+
+        return authors_logo.output
+
     def assess_date(self):
         attr = 'date_assessed'
         if not hasattr(self._country_folder, attr):
             return '-'
 
         date_assessed = getattr(self._country_folder, attr)
-        date_assessed = self._format_date(date_assessed)
+        # date_assessed = self._format_date(date_assessed)
 
         return date_assessed
 
@@ -413,9 +424,8 @@ class AssessmentExportView(BaseNatSummaryView):
             'margin-right': '0.5in',
             'margin-bottom': '0.5in',
             'margin-left': '0.5in',
-            # 'footer-left': "Page",
             'footer-font-size': '7',
-            'footer-right': 'Page [page] of [topage]',
+            'footer-right': '[page]',
             'encoding': "UTF-8",
         }
         css = self._get_css()

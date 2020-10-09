@@ -16,10 +16,10 @@
 
   <!-- National summary view for a country -->
   <browser:page
-    for="..interfaces.INationalSummaryCountryFolder"
-    name="sum-country-start"
-    class=".reportdata.NationalSummaryView"
-    template="./pt/report-data-view.pt"
+    for="..interfaces.INationalSummaryOverviewFolder"
+    name="national-overview"
+    class=".overview.NationalOverviewView"
+    template="./pt/report-data.pt"
     permission="wise.ViewAssessmentData"
     />
 

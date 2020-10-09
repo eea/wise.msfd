@@ -5,7 +5,7 @@
        xmlns="http://namespaces.plone.org/supermodel/schema">
     <schema>
         <field name="date_assessed"
-               type="zope.schema.Date">
+               type="zope.schema.Text">
             <description/>
             <required>False</required>
             <title>Date assessed</title>
@@ -24,13 +24,13 @@
             <default>
 &lt;p&gt;The map shows the Marine Reporting Units (MRUs) listed in the table and reported for use with the 2018 updates of Articles 8, 9 and 10.&lt;/p&gt;
 &lt;p&gt;The table provides:&lt;/p&gt;
-    &lt;ul&gt;
-        &lt;li&gt;(a) a list of MRUs, including the relevant region or subregion, the area type, its code and name, as reported by the Member State;&lt;/li&gt;
-        &lt;li&gt;(b) an English translation (where appropriate) of the MRU name;&lt;/li&gt;
-        &lt;li&gt;(c) the areal extent of the MRU (km2);&lt;/li&gt;
-        &lt;li&gt;(d) the proportion of the Member State’s marine waters taken by the MRU (%). Values greater than 100% are likely to indicate use of MRUs which extend beyond the Member State’s marine waters (for example, one used by a regional sea convention); if the total across all MRUs exceeds 100% (but no single MRU exceeds 100%), it may indicate some MRUs are overlapping or nested within others, particularly where the Member State has used different (sets of) MRUs per descriptor;&lt;/li&gt;
-        &lt;li&gt;(e) the MSFD Descriptors for which the MRU is used (Articles 8 and 9).&lt;/li&gt;
-    &lt;/ul&gt;
+    &lt;ol style="list-style-type: lower-alpha;"&gt;
+        &lt;li&gt;a list of MRUs, including the relevant region or subregion, the area type, its code and name, as reported by the Member State;&lt;/li&gt;
+        &lt;li&gt;an English translation (where appropriate) of the MRU name;&lt;/li&gt;
+        &lt;li&gt;the areal extent of the MRU (km2);&lt;/li&gt;
+        &lt;li&gt;the proportion of the Member State’s marine waters taken by the MRU (%). Values greater than 100% are likely to indicate use of MRUs which extend beyond the Member State’s marine waters (for example, one used by a regional sea convention); if the total across all MRUs exceeds 100% (but no single MRU exceeds 100%), it may indicate some MRUs are overlapping or nested within others, particularly where the Member State has used different (sets of) MRUs per descriptor;&lt;/li&gt;
+        &lt;li&gt;the MSFD Descriptors for which the MRU is used (Articles 8 and 9).&lt;/li&gt;
+    &lt;/ol&gt;
             </default>
         </field>
         <field name="assessment_methodology"
@@ -40,11 +40,11 @@
             <title>Assessment methodology</title>
             <default>
 &lt;p&gt;The assessment applied the same broad criteria as the previous Article 12 assessment which was carried out between 2012 and 2014 to allow for an effective comparison and monitoring of progress:&lt;/p&gt;
-    &lt;ul&gt;
+    &lt;ol style="list-style-type: lower-alpha;"&gt;
         &lt;li&gt;Adequacy: assessing whether the reported information is good enough to meet the objectives of the Directive and the technical requirements of Articles 8, 9 and 10. &lt;/li&gt;
         &lt;li&gt;Consistency across the Marine Strategy (hereinafter: Consistency): assessing the logical flow of reporting of one Member State for Articles 8, 9 and 10, including the identification of missing links, conflicts, and gaps.&lt;/li&gt;
         &lt;li&gt;Regional coherence (hereinafter: Coherence): assessing the relationships between the reports of the Member States, within each marine region or subregion.&lt;/li&gt;
-    &lt;/ul&gt;
+    &lt;/ol&gt;
 &lt;p&gt;For the 2018 reporting exercise, Member States reported using the criteria and methodological standards on good environmental status of marine waters, and specifications and standardised methods for monitoring and assessment laid down in the Commission Decision (EU) 2017/848 of 17 May 2017. An assessment framework was developed on the Directive’s key concepts and the standards established by the Commission Decision. For each article and broad assessment criteria, a set of assessment questions was defined to structure the assessment exercise. Each assessment question was scored based on the degree to which the broad assessment criteria were met by the reported information. The assessment was carried out through an online tool.&lt;/p&gt;
 &lt;p&gt;The assessment was based on the e-reporting information (xml and shapefiles) provided by the Member State. Any text reports submitted were not consulted.&lt;/p&gt;
             </default>

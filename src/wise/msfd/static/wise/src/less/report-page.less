@@ -394,15 +394,15 @@
     counter-increment: H6;
   }
 
-  ul {
-    list-style-type: disc;
+  ul, ol {
+    //list-style-type: disc;
     margin-left: 2em;
 
     li {
       margin-bottom: 0.25em;
       line-height: 1.5em;
       display: list-item;
-      list-style-type: disc;
+      list-style-type: inherit !important;
     }
   }
 
@@ -529,12 +529,23 @@
   }
 
   .disclaimer-authors {
-    margin-top: 65em;
+    margin-top: 55em;
     text-align: left;
   }
 
   .logos {
     text-align: center;
     margin-top: 1em;
+  }
+
+  table {
+      border-spacing: 0;
+      border-collapse: collapse;
+
+      td, th {
+        padding: 0.5em 1em;
+        vertical-align: top;
+        border: 1px solid #ddd;
+      }
   }
 }

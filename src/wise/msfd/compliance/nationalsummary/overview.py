@@ -91,12 +91,17 @@ class ArticleTable(BaseView):
         return self.get_article_title(self.klass) + rendered_view
 
 
-class NationalSummaryView(BaseNatSummaryView):
+class NationalOverviewView(BaseNatSummaryView):
     help_text = "HELP TEXT"
     template = ViewPageTemplateFile('pt/report-data.pt')
     year = "2012"
 
     render_header = True
+
+    def title(self):
+        title = u"National overview: {}".format(self.country_name)
+
+        return title
 
     # @cache(get_reportdata_key, dependencies=['translation'])
     @timeit
@@ -119,7 +124,8 @@ class NationalSummaryView(BaseNatSummaryView):
 
     def __call__(self):
         if 'edit-data' in self.request.form:
-            url = "{}/edit".format(self._country_folder.absolute_url())
+            url = "{}/edit".format(self.absolute_url())
+
             return self.request.response.redirect(url)
 
         report_html = self.render_reportdata()

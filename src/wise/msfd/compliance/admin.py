@@ -84,7 +84,7 @@ class BootstrapCompliance(BrowserView):
     """ Bootstrap the compliance module by creating all needed country folders
     """
 
-    compliance_folder_id = 'compliance-module'
+    compliance_folder_id = 'assessment-module'
 
     @property
     def debug(self):
@@ -307,6 +307,13 @@ class BootstrapCompliance(BrowserView):
             self.set_layout(ns, '@@nat-summary-start')
             alsoProvides(ns, interfaces.INationalSummaryFolder)
 
+        # Changing the content type for national-summaries is not possible
+        # need this folder to be able to edit some fields
+        if 'edit-summary' not in ns.contentIds():
+            es = create(ns, 'wise.msfd.nationalsummaryedit',
+                        title='National summary edit', id='edit-summary')
+            alsoProvides(es, interfaces.INationalSummaryEdit)
+
         for code, country in self._get_countries():
             if code.lower() in ns.contentIds():
                 cf = ns[code.lower()]
@@ -322,16 +329,16 @@ class BootstrapCompliance(BrowserView):
             # self.create_comments_folder(cf)
 
             # create the overview folder
-            # if 'overview' in cf.contentIds():
-            #     of = cf['overview']
-            # else:
-            #     of = create(cf,
-            #                 'wise.msfd.nationalsummaryoverview',
-            #                 title='National summary overview',
-            #                 id='overview')
-            #
-            # self.set_layout(of, 'sum-country-start')
-            # alsoProvides(of, interfaces.INationalSummaryOverviewFolder)
+            if 'overview' in cf.contentIds():
+                of = cf['overview']
+            else:
+                of = create(cf,
+                            'wise.msfd.nationalsummaryoverview',
+                            title='National summary overview',
+                            id='overview')
+
+            self.set_layout(of, 'national-overview')
+            alsoProvides(of, interfaces.INationalSummaryOverviewFolder)
 
     def setup_regionalsummaries(self, parent):
         if 'regional-summaries' in parent.contentIds():
@@ -364,7 +371,6 @@ class BootstrapCompliance(BrowserView):
             self.set_layout(rf, 'assessment-summary')
             alsoProvides(rf, interfaces.IRegionalSummaryRegionFolder)
             # self.set_layout(rf, '@@sum-region-start')
-
 
     def setup_secondary_articles(self, parent):
         if 'national-descriptors-assessments' not in parent.contentIds():

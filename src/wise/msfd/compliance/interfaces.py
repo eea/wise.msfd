@@ -184,6 +184,13 @@ class INationalSummaryFolder(Interface):
     """
 
 
+class INationalSummaryEdit(Interface):
+    """ A container for national summaries edit
+
+    Ex: /compliance-module/national-summaries
+    """
+
+
 class INationalSummaryCountryFolder(Interface):
     """ A container for national summaries countries
 

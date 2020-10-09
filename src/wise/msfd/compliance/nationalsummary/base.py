@@ -10,8 +10,8 @@ from .. import interfaces
 
 
 class BaseNatSummaryView(BaseComplianceView):
-    report_header_template = ViewPageTemplateFile(
-        'pt/report-data-header.pt'
+    overview_header_template = ViewPageTemplateFile(
+        'pt/overview-header.pt'
     )
 
     assessment_header_template = ViewPageTemplateFile(
