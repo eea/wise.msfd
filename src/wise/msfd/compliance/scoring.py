@@ -4,7 +4,7 @@ DEFAULT_RANGES = [
     [51, 75],
     [26, 50],
     [1, 25],
-    [0, 0]
+    [0, 0],
 ]
 
 
@@ -42,6 +42,9 @@ def scoring_based(answers, scores):
 
 
 def get_overall_conclusion(concl_score):
+    if concl_score == '-':  # not relevant
+        return '-', CONCLUSIONS[0]
+
     if concl_score > 100:
         return 1, 'Error'
 
@@ -78,15 +81,22 @@ class OverallScores(object):
             return self.get_overall_score_secondary(article)
 
         overall_score = 0
+        max_score = 0
         weights = self.article_weights[article]
 
         for phase in weights:
             score = self.get_score_for_phase(phase)
             overall_score += score * weights[phase]
+            max_score += getattr(self, phase)['max_score'] * weights[phase]
 
-        overall_score = int(round(overall_score))
+        # overall_score = int(round(overall_score))
 
-        return get_range_index(overall_score), overall_score
+        if max_score == 0:  # all phases not relevant
+            return '-', '-'
+
+        final_score = int(round((overall_score / max_score) * 100))
+
+        return get_range_index(final_score), final_score
 
     def get_overall_score_secondary(self, article):
         """ Overall conclusion art. XX: 2018

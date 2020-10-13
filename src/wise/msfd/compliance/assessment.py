@@ -637,13 +637,13 @@ class AssessmentDataMixin(object):
             yield obj
 
     def get_color_for_score(self, score_value):
-        return CONCLUSION_COLOR_TABLE.get(score_value, 3)
+        return CONCLUSION_COLOR_TABLE.get(score_value, 0)
 
     def get_conclusion(self, score_value):
         try:
             concl = list(reversed(CONCLUSIONS))[score_value]
         except:
-            concl = CONCLUSIONS[-1]
+            concl = CONCLUSIONS[0]
 
         return concl
 
@@ -730,6 +730,10 @@ class AssessmentDataMixin(object):
         res['color'] = self.get_color_for_score(score_val)
         res['conclusion'] = (score_val, self.get_conclusion(score_val))
 
+        if res['max_score'] == 0:
+            res['conclusion'] = ('-', 'Not relevant')
+            res['color'] = 0
+
         return res
 
     def get_assessment_data_2012(self, region_code, country_name,
@@ -814,6 +818,8 @@ class AssessmentDataMixin(object):
         :return: instance of OverallScores with calculated adequacy,
             consistency and coherence score values
         """
+        phases = phase_overall_scores.article_weights[article].keys()
+        phases_answered = set()
 
         for k, score in assess_data.items():
             if '_Score' not in k:
@@ -824,22 +830,34 @@ class AssessmentDataMixin(object):
 
             is_not_relevant = getattr(score, 'is_not_relevant', False)
             q_klass = score.question.klass
-            weighted_score = getattr(score, 'weighted_score', 0)
-            max_weighted_score = getattr(score, 'max_weighted_score', 0)
+            phases_answered.add(q_klass)
+            weighted_score = getattr(score, 'final_score', 0)
+            max_weighted_score = getattr(score, 'weight', 0)
 
             if not is_not_relevant:
                 p_score = getattr(phase_overall_scores, q_klass)
                 p_score['score'] += weighted_score
                 p_score['max_score'] += max_weighted_score
 
-        phases = phase_overall_scores.article_weights[article].keys()
+        # set the max score to 100 for phases which do not have
+        # answered questions
+        for phase in phases:
+            if phase == 'consistency' and article == 'Art9':
+                continue
+
+            if phase in phases_answered:
+                continue
+
+            phase_scores = getattr(phase_overall_scores, phase)
+            phase_scores['max_score'] = 100
 
         for phase in phases:
             # set the conclusion and color based on the score for each phase
             phase_scores = getattr(phase_overall_scores, phase)
             score_val = phase_overall_scores.get_range_index_for_phase(phase)
 
-            if phase == 'consistency' and article == 'Art9':
+            if (phase == 'consistency' and article == 'Art9'
+                    or phase_scores['max_score'] == 0):
                 phase_scores['conclusion'] = ('-', 'Not relevant')
                 phase_scores['color'] = 0
                 phase_scores['score'] = '/'
@@ -920,6 +938,8 @@ class AssessmentDataMixin(object):
         __key = (region_code, descriptor, article)
         self.overall_scores[__key] = overall_score_2018
 
+        if adequacy_score_val == '-':  # if adequacy is not relevant
+            adequacy_score_val = 0
         change_since_2012 = int(adequacy_score_val - score_2012)
 
         reg_assess_2012 = self.get_reg_assessments_data_2012(
@@ -932,6 +952,8 @@ class AssessmentDataMixin(object):
             coherence_2012 = ("{} ({})".format(reg_assess_2012[0].conclusion,
                                               __score),
                               self.get_color_for_score(__score))
+            if cscore_val == '-':
+                cscore_val = 0
             coherence_change_since_2012 = int(cscore_val - __score)
 
         res = DESCRIPTOR_SUMMARY(

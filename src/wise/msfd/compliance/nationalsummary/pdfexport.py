@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from collections import defaultdict
+from datetime import datetime
 from io import BytesIO
 from pkg_resources import resource_filename
 
@@ -442,7 +443,10 @@ class AssessmentExportView(BaseNatSummaryView):
         sh = self.request.response.setHeader
 
         sh('Content-Type', 'application/pdf')
-        fname = "{}-Draft".format(self.country_name)
+        fname = "{}-{}-{}".format(
+            self.country_name, self.get_status().title().replace(' ', ''),
+            str(datetime.now().date())
+        )
         sh('Content-Disposition',
            'attachment; filename=%s.pdf' % fname)
 

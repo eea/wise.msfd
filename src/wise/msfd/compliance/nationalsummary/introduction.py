@@ -5,9 +5,10 @@ from datetime import datetime
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 from wise.msfd import db, sql2018
 from wise.msfd.data import get_text_reports_2018
+from wise.msfd.gescomponents import get_descriptor
 from wise.msfd.translation import get_translated, retrieve_translation
 from wise.msfd.utils import (ItemList, TemplateMixin, db_objects_to_dict,
-                             fixedorder_sortkey, timeit)
+                             fixedorder_sortkey, natural_sort_key, timeit)
 
 from .base import BaseNatSummaryView
 from .odt_utils import (create_heading, create_paragraph, create_table,
@@ -47,6 +48,13 @@ class AssessmentAreas2018(BaseNatSummaryView):
         mapper_class = sql2018.MRUsPublication
         res = []
 
+        marine_waters_data = self.context._get_marine_waters_data()
+        marine_waters_total = sum([
+            x[2]
+            for x in marine_waters_data
+            if x[0] == self.country_code
+         ])
+
         # for better query speed we get only these columns
         col_names = ('Country', 'rZoneId', 'thematicId', 'nameTxtInt',
                      'nameText', 'spZoneType', 'legisSName', 'Area')
@@ -57,16 +65,50 @@ class AssessmentAreas2018(BaseNatSummaryView):
             mapper_class.Country == self.country_code
         )
 
+        _, art8_data = db.get_all_specific_columns(
+            [sql2018.t_V_ART8_GES_2018.c.MarineReportingUnit,
+             sql2018.t_V_ART8_GES_2018.c.GESComponent],
+            sql2018.t_V_ART8_GES_2018.c.CountryCode == self.country_code
+        )
+        _, art9_data = db.get_all_specific_columns(
+            [sql2018.t_V_ART9_GES_2018.c.MarineReportingUnit,
+             sql2018.t_V_ART9_GES_2018.c.GESComponent],
+            sql2018.t_V_ART9_GES_2018.c.CountryCode == self.country_code
+        )
+        art8_art9_data = set(art8_data + art9_data)
+
         for row in data:
             description = row.nameTxtInt or row.nameText or ""
             translation = get_translated(description, self.country_code) or ""
+            area = int(round(row.Area))
+
             if not translation:
                 retrieve_translation(self.country_code, description)
 
             self._translatable_values.append(description)
 
+            prop_water = int(round((area / marine_waters_total) * 100))
+
+            descr_list = set([
+                x[1]
+                for x in art8_art9_data
+                if x[0] == row.thematicId
+            ])
+            descr_list = sorted(descr_list, key=natural_sort_key)
+
+            try:
+                descr_list = [
+                    get_descriptor(d).template_vars['title']
+                    for d in descr_list
+                ]
+            except:
+                pass
+
+            descriptors = ', '.join(descr_list)
+
             res.append((row.rZoneId, row.spZoneType, row.thematicId,
-                        description, translation))
+                        description, translation, '{:,}'.format(area),
+                        prop_water, descriptors))
 
         return res
 

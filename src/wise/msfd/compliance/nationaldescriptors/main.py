@@ -344,7 +344,8 @@ def format_assessment_data(article, elements, questions, muids, data,
         phase_scores = getattr(phase_overall_scores, phase)
         phase_score = phase_overall_scores.get_score_for_phase(phase)
 
-        if phase == 'consistency' and article == 'Art9':
+        if (phase == 'consistency' and article == 'Art9'
+                or phase_scores['max_score'] == 0):
             phase_scores['conclusion'] = ('-', 'Not relevant')
             phase_scores['color'] = 0
             continue
@@ -364,7 +365,7 @@ def format_assessment_data(article, elements, questions, muids, data,
     overall_score_val, overall_score = phase_overall_scores.\
         get_overall_score(article)
     overall_conclusion = get_overall_conclusion(overall_score)
-    overall_conclusion_color = CONCLUSION_COLOR_TABLE[overall_score_val]
+    overall_conclusion_color = CONCLUSION_COLOR_TABLE.get(overall_score_val, 0)
 
     assessment = Assessment(
         elements,
