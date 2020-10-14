@@ -323,14 +323,18 @@ class RegReportData2018(BaseRegComplianceView):
                     if hasattr(value, '__iter__'):
                         value = value[0].replace('<br />', '\n')
 
-                    worksheet.write(row_index, j + 2, unicode(value or ''))
+                    try:
+                        unicode_value = unicode(value)
+                    except:
+                        unicode_value = unicode(value.decode('utf-8'))
+
+                    worksheet.write(row_index, j + 2, unicode_value or '')
 
                 row_index += 1
 
                 if field_name in self.TRANSLATABLES:
                     worksheet.write(row_index, 0, title + ' [Translation]')
-                    worksheet.write(row_index, 1, unicode(sub_title or '')
-                                    + ' [Translation]')
+                    worksheet.write(row_index, 1, unicode(sub_title or ''))
 
                     for j, value in enumerate(values):
                         # if 'value' is a list/tuple meaning it contains both
