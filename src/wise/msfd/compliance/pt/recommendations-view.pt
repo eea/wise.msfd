@@ -45,20 +45,24 @@
                     <label>Recommendation text:</label>
                     <textarea style="height: 6.5em;"id="recomm-text" name="rec_text" class="form-control" required></textarea>
                   </div>
+                  <i style="color: grey;">(hold CTRL key for multiple selections)</i>
                   <div class="container-form-group-multiple">
                     <div class="form-group multiple">
                       <label>Applicable MS or (sub)region:</label>
                       <select id="ms-region" size="20" multiple name="ms_or_region" class="form-control" autocomplete="off" required>
                         <optgroup label="Countries">
                           <tal:rep tal:repeat="country view/countries">
-                            <option tal:attributes="value python: country[0];"
-                                  tal:content="python: '{} - {}'.format(country[0], country[1])">Belgium (BE)</option>
+                            <option tal:attributes="value python: country;"
+                                  tal:content="python: '{}'.format(country)">Belgium (BE)</option>
                           </tal:rep>
+                        </optgroup>
+                        <optgroup label="Europe">
+                          <option value="EU">EU (Europe)</option>
                         </optgroup>
                         <optgroup label="Regions">
                           <tal:rep tal:repeat="region view/regions">
                             <option tal:attributes="value python: region[0];"
-                                  tal:content="python: '{} - {}'.format(region[0], region[1])">Belgium (BE)</option>
+                                  tal:content="python: '{} ({})'.format(region[0], region[1])">Belgium (BE)</option>
                           </tal:rep>
                         </optgroup>
                       </select>

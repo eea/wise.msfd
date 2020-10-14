@@ -189,13 +189,10 @@ class Recommendations(BaseNatSummaryView):
             ms_region = recommendation.ms_region
 
             for region_code in region_codes:
-                if region_code in ms_region:
-                    data_by_region[region_code].append(
-                        recommendation.data_to_list())
-                    continue
+                r_code_c_code = "{} - {}".format(region_code,
+                                                 self.country_code)
 
-                if (self.country_code in ms_region and
-                        not region_codes.intersection(set(ms_region))):
+                if r_code_c_code in ms_region:
                     data_by_region[region_code].append(
                         recommendation.data_to_list())
                     continue

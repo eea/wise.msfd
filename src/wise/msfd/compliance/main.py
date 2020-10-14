@@ -10,7 +10,8 @@ from Products.CMFPlone.interfaces.siteroot import IPloneSiteRoot
 from persistent import Persistent
 from plone.api import portal
 
-from wise.msfd.compliance.vocabulary import REGIONS, get_all_countries
+from wise.msfd.compliance.vocabulary import (REGIONAL_DESCRIPTORS_REGIONS,
+                                             REGIONS, get_all_countries)
 from wise.msfd.gescomponents import (GES_DESCRIPTORS, get_all_descriptors,
                                      get_descriptor)
 
@@ -95,6 +96,7 @@ class RecommendationsView(BaseComplianceView):
         'Coherent qualitative GES description',
         'Coherent quantitative GES determination',
         'Coherent set of elements',
+        'Coherent use of primary criteria',
         'Coherent use of secondary criteria',
         'Extent to which GES is achieved',
         'Features and elements assessed',
@@ -114,6 +116,7 @@ class RecommendationsView(BaseComplianceView):
         'Quantitative GES determination',
         'Targets for key pressures',
         'Use of primary criteria',
+        'Use of secondary criteria',
     )
 
     def descriptors(self):
@@ -133,9 +136,27 @@ class RecommendationsView(BaseComplianceView):
         return [(code, name) for code, name in REGIONS.items()]
 
     def countries(self):
-        countries = get_all_countries()
+        # countries = get_all_countries()
 
-        return countries
+        res = []
+
+        for r_code, r_name in self.regions():
+            countries = [
+                r.countries
+                for r in REGIONAL_DESCRIPTORS_REGIONS
+                if r.code == r_code
+            ]
+
+            sorted_countries = countries[0]
+
+            for c_code in sorted_countries:
+                res.append(
+                    "{} - {}".format(r_code, c_code)
+                )
+
+        # res_sorted = sorted(res, key=lambda i: i[0])
+
+        return res
 
     def __call__(self):
         site = portal.get()
