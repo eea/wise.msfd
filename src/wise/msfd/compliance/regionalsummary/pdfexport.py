@@ -135,7 +135,7 @@ class AssessmentExportView(BaseRegSummaryView):
             'margin-left': '0.5in',
             # 'footer-left': "Page",
             'footer-font-size': '7',
-            'footer-right': 'Page [page] of [topage]',
+            'footer-right': '[page]',
             'encoding': "UTF-8",
         }
         css = self._get_css()
@@ -168,7 +168,7 @@ class AssessmentExportView(BaseRegSummaryView):
         )
         # trans_edit_html = self.translate_view()()
 
-        # 3. Descriptor-level assessments
+        # 4. Descriptor-level assessments
         descriptor_lvl_assess = RegDescriptorLevelAssessments(self, self.request)
         descriptor_lvl_assess_view = descriptor_lvl_assess()
         overall_scores = descriptor_lvl_assess.overall_scores
@@ -182,17 +182,15 @@ class AssessmentExportView(BaseRegSummaryView):
             self, self.request, overall_scores, reg_desc_region_folder
         )
 
-        # 4. Progress Assessment
-        prog_assess = ""
-        if self.render_recommendations:
-            prog_assess = RegProgressAssessment(self, self.request)
-        
+        # 3. Progress Assessment
+        prog_assess = RegProgressAssessment(self, self.request)
+
         self.tables = [
             report_header,
             introduction,
             sum_assess,
-            descriptor_lvl_assess,
             prog_assess,
+            descriptor_lvl_assess,
             # ArticleTable(self, self.request, 'Art7'),
             # ArticleTable(self, self.request, 'Art3-4'),
             # trans_edit_html,
@@ -209,7 +207,6 @@ class AssessmentExportView(BaseRegSummaryView):
 
         if 'download_pdf' in self.request.form:
             self.render_header = False
-            self.render_recommendations = False
 
         report_html = self.render_reportdata()
         self.report_html = report_html

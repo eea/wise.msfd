@@ -1,5 +1,5 @@
 <div class="nat-sum-progress-assessment">
-  <h3>Recommendations to Member States - regional overview</h3>
+  <h3>Assessment of regional progress since 2012</h3>
   <h4>2012 recommendations to Member State</h4>
   <div tal:content="structure view/progress_recommendations_2012">Editable RichText</div>
   <h4>Progress against 2012 recommendations to Member State</h4>

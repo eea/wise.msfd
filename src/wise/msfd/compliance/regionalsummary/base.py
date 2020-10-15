@@ -3,6 +3,7 @@ from plone.api.content import get_state
 from plone.api.portal import get_tool
 from plone.app.textfield.interfaces import ITransformer
 from wise.msfd.compliance.base import BaseComplianceView
+from wise.msfd.compliance.vocabulary import REGIONAL_DESCRIPTORS_REGIONS
 
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 
@@ -116,6 +117,14 @@ class BaseRegSummaryView(BaseComplianceView):
         """
 
         return self.region_code
+
+    @property
+    def country_name(self):
+        for region in REGIONAL_DESCRIPTORS_REGIONS:
+            if region.code == self.region_code:
+                return region.title
+
+        return self.region_name
 
     @property
     def region_name(self):

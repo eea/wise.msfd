@@ -88,8 +88,6 @@ By October 2018, the Member States were due to submit updates of the assessment
 
     @db.use_db_session('2018')
     def memberstate_reports(self):
-        header = u"Dates of Member State's reports for 2018 updates of " \
-                u"Articles 8, 9 and 10"
         mc = ReportingHistory
         _, data = db.get_all_records(
             mc,
@@ -106,9 +104,15 @@ By October 2018, the Member States were due to submit updates of the assessment
                  data, 'MSFD - Article 4 - Spatial data')
              )
         ]
-        view = SimpleTable(self, self.request, header, rows)
+        view = SimpleTable(self, self.request, rows)
 
         return view()
+
+    @property
+    def length_of_coastline(self):
+        output = self.get_field_value('length_of_coastline')
+
+        return output
 
     def _get_marine_water_by_type(self, data, types):
         res = []
@@ -160,10 +164,6 @@ By October 2018, the Member States were due to submit updates of the assessment
         return res
 
     def marine_waters(self):
-        header = u"Length of coastline and area of marine waters per Member " \
-                u"State (based on GIS data reported for MSFD by each Member " \
-                u"State)"
-
         data = self._get_marine_waters_data()
 
         rows = [
@@ -173,10 +173,10 @@ By October 2018, the Member States were due to submit updates of the assessment
              self.get_water_seabed_row(data)),
             ("Area of marine waters (seabed only - beyond EEZ or quivalent) "
              "(km2)", self.get_seabed_only_row(data)),
-            ("Proportion of Baltic Sea region per Member State (areal %)",
+            ("Proportion of the region (areal %)",
              self.get_proportion_row(data))
         ]
-        view = SimpleTable(self, self.request, header, rows)
+        view = SimpleTable(self, self.request, rows)
 
         return view()
 
@@ -205,11 +205,6 @@ By October 2018, the Member States were due to submit updates of the assessment
         return res
 
     def assessment_areas(self):
-        header = u"Reporting areas of the Member States"
-        title = u"The table gives details about the Marine Reporting Units " \
-                u"used for the 2018 reporting on updates of Articles 8, 9 " \
-                u"and 10."
-
         rows = [
             ("", [x[1] for x in self.available_countries]),
             ("Number of Marine Reporting Units used",
@@ -218,7 +213,7 @@ By October 2018, the Member States were due to submit updates of the assessment
              self.default()),
             ("Average extent of Marine Reporting Units (km2)", self.default())
         ]
-        view = SimpleTable(self, self.request, header, rows, title)
+        view = SimpleTable(self, self.request, rows)
 
         return view()
 

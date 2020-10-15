@@ -107,7 +107,7 @@ Region = namedtuple('Region', ['code', 'title', 'subregions',
 
 REGIONAL_DESCRIPTORS_REGIONS = [
     # Main regions
-    Region('BAL', 'Baltic', ('BAL',),
+    Region('BAL', 'Baltic Sea', ('BAL',),
            ('FI', 'EE', 'LV', 'LT', 'PL', 'DE', 'DK', 'SE'), True),
     Region('ATL', 'North East Atlantic', ('ABI', 'ACS', 'AMA', 'ANS',),
            ('SE', 'DK', 'DE', 'NL', 'BE', 'FR', 'UK', 'IE', 'ES', 'PT'), True),

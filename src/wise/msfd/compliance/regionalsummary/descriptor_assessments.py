@@ -65,6 +65,8 @@ class RegDescriptorLevelAssessments(BaseRegSummaryView,
             coherence_2012 = ("{} ({})".format(reg_assess_2012[0].conclusion,
                                               __score),
                               self.get_color_for_score(__score))
+            if cscore_val == '-':
+                cscore_val = 0
             coherence_change_since_2012 = int(cscore_val - __score)
 
         res = DESCRIPTOR_SUMMARY(

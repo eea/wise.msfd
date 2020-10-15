@@ -7,9 +7,12 @@
   <h4>Marine region and Member State's marine waters</h4>
   <h5>Scope of marine region/subregions</h5>
   <div tal:content="structure python: view.scope_of_marine_waters">Editable text</div>
+  <h5>Length of coastline and area of marine waters per Member State (based on GIS data reported for MSFD by each Member State)</h5>
+  <div tal:content="structure view/length_of_coastline"></div>
   <div tal:content="structure view/marine_waters"></div>
 
   <h4>Assessment areas (Marine Reporting Units)</h4>
+  <div>The table gives details about the Marine Reporting Units used for the 2018 reporting on updates of Articles 8, 9 and 10.</div>
   <div tal:replace="structure view/assessment_areas">Mru table</div>
 
   <h4>Assessment methodology</h4>

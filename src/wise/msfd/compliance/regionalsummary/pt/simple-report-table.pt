@@ -7,7 +7,7 @@
 
     <div class="overflow-table-disabled">
       <div class="inner">
-        <table class="table table-bordered table-striped table-comp-translate table-report">
+        <table class="table table-bordered table-striped table-comp-translate table-report table-simple-summary">
           <tal:rep tal:repeat="row allrows">
             <tr>
               <td tal:content="python: row[0]">Text reports</td>

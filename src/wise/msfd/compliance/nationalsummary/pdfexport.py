@@ -12,6 +12,7 @@ from Products.Five.browser.pagetemplatefile import (PageTemplateFile,
 from Products.statusmessages.interfaces import IStatusMessage
 from plone.api import portal
 from wise.msfd.compliance.interfaces import (INationalSummaryCountryFolder,
+                                             INationalSummaryEdit,
                                              IRecommendationStorage)
 from wise.msfd.compliance.main import RecommendationsTable, STORAGE_KEY
 from wise.msfd.compliance.vocabulary import get_regions_for_country
@@ -45,9 +46,14 @@ class AssessmentExportCover(BaseNatSummaryView):
     template = ViewPageTemplateFile('pt/cover.pt')
 
     def authors_logos(self):
-        edit_page = self.context.aq_parent['edit-summary']
-        attr = 'authors_logo'
+        portal_catalog = portal.get_tool('portal_catalog')
+        brains = portal_catalog.searchResults(
+            object_provides=INationalSummaryEdit.__identifier__
+        )
+        edit_page = brains[0].getObject()
+        # edit_page = self.context.aq_parent['edit-summary']
 
+        attr = 'authors_logo'
         authors_logo = getattr(edit_page, attr, '')
 
         if not authors_logo:

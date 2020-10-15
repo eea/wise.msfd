@@ -7,7 +7,7 @@ class SimpleTable(BaseRegSummaryView):
     template = ViewPageTemplateFile('pt/simple-report-table.pt')
     show_header = False
 
-    def __init__(self, context, request, header, rows, title=None):
+    def __init__(self, context, request, rows, header=None, title=None):
         super(SimpleTable, self).__init__(context, request)
 
         self.header = header
