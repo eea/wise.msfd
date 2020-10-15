@@ -343,7 +343,12 @@ class RegReportData2018(BaseRegComplianceView):
                         if hasattr(value, '__iter__'):
                             value = value[1].replace('<br />', '\n')
 
-                        worksheet.write(row_index, j + 2, unicode(value or ''))
+                        try:
+                            unicode_value = unicode(value)
+                        except:
+                            unicode_value = unicode(value.decode('utf-8'))
+
+                        worksheet.write(row_index, j + 2, unicode_value or '')
 
                     row_index += 1
 
