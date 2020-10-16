@@ -84,7 +84,7 @@ class BootstrapCompliance(BrowserView):
     """ Bootstrap the compliance module by creating all needed country folders
     """
 
-    compliance_folder_id = 'assessment-module'
+    compliance_folder_id = 'compliance-module'
 
     @property
     def debug(self):
