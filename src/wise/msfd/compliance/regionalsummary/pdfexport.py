@@ -1,18 +1,25 @@
 # -*- coding: utf-8 -*-
 
 from io import BytesIO
-from pkg_resources import resource_filename
+
+from datetime import datetime
 
 import logging
 
-from zope.interface import implements
+from pkg_resources import resource_filename
+from plone.api import portal
 
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 from Products.statusmessages.interfaces import IStatusMessage
-from wise.msfd.compliance.interfaces import IRegionalSummaryRegionFolder
+from wise.msfd.compliance.interfaces import (IRecommendationStorage,
+                                             IRegionalSummaryRegionFolder
+                                             )
+from wise.msfd.compliance.main import RecommendationsTable, STORAGE_KEY
 from wise.msfd.translation import get_translated, retrieve_translation
 from wise.msfd.utils import (ItemList, TemplateMixin, db_objects_to_dict,
                              fixedorder_sortkey, timeit)
+
+from zope.interface import implements
 
 import pdfkit
 
@@ -28,6 +35,40 @@ logger = logging.getLogger('wise.msfd')
 
 class RegionalAssessmentExportCover(BaseRegSummaryView, AssessmentExportCover):
     """ PDF Assessment cover for regional summaries """
+
+
+class Recommendations(BaseRegSummaryView):
+    template = ViewPageTemplateFile('pt/recommendations.pt')
+
+    def __call__(self):
+        site = portal.get()
+        storage = IRecommendationStorage(site)
+        storage_recom = storage.get(STORAGE_KEY, {})
+        default = self.template(data='-')
+
+        if not len(storage_recom.items()):
+            return default
+
+        subregions = set(self.available_subregions)
+        recommendations = []
+
+        for rec_code, recommendation in storage_recom.items():
+            ms_region = set(recommendation.ms_region)
+
+            if subregions.intersection(ms_region):
+                recommendations.append(recommendation.data_to_list())
+
+        if not recommendations:
+            return default
+
+        sorted_rec = sorted(recommendations, key=lambda i: i[0])
+
+        recomm_table = RecommendationsTable(
+            recommendations=sorted_rec, show_edit_buttons=False
+        )
+        res = recomm_table()
+
+        return self.template(data=res)
 
 
 class RegionalSummaryAssessment(BaseRegSummaryView, SummaryAssessment):
@@ -152,7 +193,10 @@ class AssessmentExportView(BaseRegSummaryView):
         sh = self.request.response.setHeader
 
         sh('Content-Type', 'application/pdf')
-        fname = "{}-Draft".format(self.country_name)
+        fname = "{}-{}-{}".format(
+            self.country_name, self.get_status().title().replace(' ', ''),
+            str(datetime.now().date())
+        )
         sh('Content-Disposition',
            'attachment; filename=%s.pdf' % fname)
 
@@ -195,6 +239,12 @@ class AssessmentExportView(BaseRegSummaryView):
             # ArticleTable(self, self.request, 'Art3-4'),
             # trans_edit_html,
         ]
+
+        if self.render_header:
+            # 5. Recommendations table
+            recomm_table = Recommendations(self, self.request)
+
+            self.tables.append(recomm_table)
 
         template = self.template
 
