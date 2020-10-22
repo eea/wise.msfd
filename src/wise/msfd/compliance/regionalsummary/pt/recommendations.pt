@@ -1,0 +1,7 @@
+<div>
+  <h3>
+    <span>Recommendations to Member States - regional overview</span>
+    <a style="font-size: 14px;" href="./../../@@recommendations" target="_blank">(Edit recommendations)</a>
+  </h3>
+  <table tal:replace="structure options/data"></table>
+</div>

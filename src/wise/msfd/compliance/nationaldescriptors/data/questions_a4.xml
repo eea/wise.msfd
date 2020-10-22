@@ -37,7 +37,7 @@
     <score-weight descriptor="Not linked" value="5" />
   </assessment-question>
 
-  <assessment-question id="A04Ad2" class="adequacy" use-criteria='none'>
+  <assessment-question id="A04Ad2" class="adequacy" use-criteria='all'>
     <definition>
       Do assessments (MRUs) for the Descriptor cover all MS marine waters?
     </definition>
