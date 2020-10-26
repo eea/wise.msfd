@@ -808,6 +808,8 @@ class AssessmentDataMixin(object):
 
     def get_assessment_data_2012(self, region_code, country_name,
                                  descriptor, article):
+        """ Returns the score and conclusion of the 2012 national assessment
+        """
 
         try:
             db_data_2012 = get_assessment_data_2012_db(

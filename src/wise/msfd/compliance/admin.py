@@ -851,6 +851,31 @@ class AdminScoring(BaseComplianceView, AssessmentDataMixin):
                article_title, '', '2018 Overall', '',
                score, score_title, state, last_change)
 
+        # 2012 Adequacy and change
+        score_2012, concl_2012 = self.get_assessment_data_2012(
+            region_code, country_name, descr_id, article_title
+        )
+
+        adeq_2018_score_val = phase_overall_scores.get_range_index_for_phase(
+            'adequacy'
+        )
+        adequacy_2012_change = adeq_2018_score_val - score_2012
+
+        yield (country_code, country_name, region_code, region_name,
+               d_obj.id, d_obj.title,
+               article_title, '', '2018 Adequacy score value', '',
+               adeq_2018_score_val, '', state, last_change)
+
+        yield (country_code, country_name, region_code, region_name,
+               d_obj.id, d_obj.title,
+               article_title, '', '2012 Adequacy score value', '',
+               score_2012, concl_2012, state, last_change)
+
+        yield (country_code, country_name, region_code, region_name,
+               d_obj.id, d_obj.title,
+               article_title, '', '2012 Adequacy change', '',
+               adequacy_2012_change, '', state, last_change)
+
     def get_data_sec(self, obj):
         """ Get assessment data for a country assessment object
         """
