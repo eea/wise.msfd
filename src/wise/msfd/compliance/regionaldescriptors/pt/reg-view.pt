@@ -73,7 +73,13 @@
 
           <div class="report-page-view">
             <div class="report-section">
-              <h3>Summary of national assessments</h3>
+              <h3 style="display: inline-block;">Summary of national assessments</h3>
+              <form method="POST" tal:attributes="action request/getURL" style="display: inline-block;">
+                <button style="margin-top: -5px;"
+                    class="btn btn-primary btn-xs" name="download-summary-national">
+                  <i class="fa fa-download"></i><span style="margin-left: 5px;">Download as excel</span>
+                </button>
+              </form>
               <div tal:replace="structure view/national_assessments_2018"></div>
             </div>
           </div>

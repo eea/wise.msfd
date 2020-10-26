@@ -1,6 +1,8 @@
 from collections import namedtuple
+from io import BytesIO
 
 from zope.interface import implements
+import xlsxwriter
 
 from persistent.list import PersistentList
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile as VPTF
@@ -15,6 +17,7 @@ from wise.msfd.compliance.interfaces import (IRegionalDescriptorAssessment,
 from wise.msfd.compliance.nationaldescriptors.main import (
     format_assessment_data)
 from wise.msfd.gescomponents import get_descriptor
+from wise.msfd.utils import ItemList
 
 from .base import BaseRegComplianceView
 
@@ -193,6 +196,53 @@ class RegionalDescriptorArticleView(BaseRegComplianceView,
 
         return elements
 
+    def data_to_xls(self, data):
+        out = BytesIO()
+        workbook = xlsxwriter.Workbook(out, {'in_memory': True})
+
+        wtitle = self.country_region_code
+        worksheet = workbook.add_worksheet(unicode(wtitle)[:30])
+
+        row_index = 0
+
+        for row in data:
+            for i, value in enumerate(row):
+                if isinstance(value, ItemList):
+                    value = "\n".join(value.rows)
+
+                try:
+                    unicode_value = unicode(value)
+                except:
+                    unicode_value = unicode(value.decode('utf-8'))
+
+                worksheet.write(row_index, i, unicode_value or '')
+
+            row_index += 1
+
+        workbook.close()
+        out.seek(0)
+
+        return out
+
+    def download_summary_national(self):
+        xlsdata = self.raw_adeq_assess_data
+
+        xlsio = self.data_to_xls(xlsdata)
+        sh = self.request.response.setHeader
+
+        sh('Content-Type', 'application/vnd.openxmlformats-officedocument.'
+           'spreadsheetml.sheet')
+        fname = "-".join(["SummaryOfNationalAssessments",
+                          self.article,
+                          self.year,
+                          self.descriptor,
+                          self.country_region_code,
+                          ])
+        sh('Content-Disposition',
+           'attachment; filename=%s.xlsx' % fname)
+
+        return xlsio.read()
+
     def __call__(self):
         if 'assessor' in self.request.form:
             assessors = self.request.form['assessor']
@@ -200,6 +250,14 @@ class RegionalDescriptorArticleView(BaseRegComplianceView,
             if isinstance(assessors, list):
                 assessors = ', '.join(assessors)
             self.context.saved_assessment_data.ass_new = assessors
+
+        national_assessments_data = self.get_adequacy_assessment_data()
+        self.national_assessments_2018 = self.national_assessment_tpl(
+            data=national_assessments_data, report_header=""
+        )
+
+        if 'download-summary-national' in self.request.form:
+            return self.download_summary_national()
 
         # BBB:
         context = self.context
@@ -263,11 +321,6 @@ class RegionalDescriptorArticleView(BaseRegComplianceView,
 
         can_edit = self.check_permission('wise.msfd: Edit Assessment')
         show_edit_assessors = self.assessor_list and can_edit
-
-        national_assessments_data = self.get_adequacy_assessment_data()
-        self.national_assessments_2018 = self.national_assessment_tpl(
-            data=national_assessments_data, report_header=""
-        )
 
         self.assessment_header_2018_html = self.assessment_header_template(
             report_by="Member state",

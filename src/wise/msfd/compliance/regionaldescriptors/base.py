@@ -127,20 +127,31 @@ class NationalAssessmentMixin:
                 self.make_countries_row()
             )]
 
+        self.raw_adeq_assess_data = [
+            tuple(['Country', ''] + [c[1] for c in self.available_countries])
+        ]
+
         for question in questions:
             q_id = question.id
             q_def = question.definition
             field = Field(q_id, q_def)
 
             rows = []
+            rows_raw = []
             criteria_values = get_assessed_elements(self, question)
+            criteria_values_raw = defaultdict(list)
             conclusion_values = []
             summary_values = []
+            conclusion_values_raw = []
+            summary_values_raw = []
 
             for country_code, country_name in countries:
                 country_concl = []
+                country_concl_raw = []
                 country_sums = []
+                country_sums_raw = []
                 country_crits = get_assessed_elements(self, question)
+                country_crits_raw = defaultdict(list)
                 country_regions = [
                     r.code
 
@@ -160,18 +171,22 @@ class NationalAssessmentMixin:
                                                                  q_id))
                     summary = assess_data.get('{}_{}_Summary'.format(article,
                                                                      q_id))
-                    summary = summary or "-"
-                    summary = u"<b>{}:</b> {}".format(subregion, summary)
+                    summary_raw = summary or "-"
+                    summary = u"<b>{}:</b> {}".format(subregion, summary_raw)
 
-                    conclusion = score and score.conclusion or "-"
+                    conclusion_raw = score and score.conclusion or "-"
                     conclusion = \
                         u"<span class='empty-colorbox as-value-{}'/>" \
                         u"<span><b>{}:</b> {}</span>" \
                         .format(self._conclusion_color(score), subregion,
-                                conclusion)
+                                conclusion_raw)
 
                     country_concl.append(conclusion)
+                    country_concl_raw.append(u"{}: {}".format(subregion,
+                                                              conclusion_raw))
                     country_sums.append(summary)
+                    country_sums_raw.append(u"{}: {}".format(subregion,
+                                                             summary_raw))
 
                     for crit_id in country_crits.keys():
                         option_txt = '-'
@@ -192,26 +207,41 @@ class NationalAssessmentMixin:
                             subregion,
                             option_txt
                         )
+                        _val_raw = u"{}: {}".format(subregion, option_txt)
 
                         country_crits[crit_id].append(_val)
+                        country_crits_raw[crit_id].append(_val_raw)
 
                 for crit_id in criteria_values.keys():
                     criteria_values[crit_id].append(
                         ItemList(country_crits[crit_id])
                     )
+                    criteria_values_raw[crit_id].append(
+                        ItemList(country_crits_raw[crit_id])
+                    )
 
                 conclusion_values.append(ItemList(country_concl))
                 summary_values.append(ItemList(country_sums))
+                conclusion_values_raw.append(ItemList(country_concl_raw))
+                summary_values_raw.append(ItemList(country_sums_raw))
 
             for crit_id, crit_values in criteria_values.items():
                 rows.append((crit_id, crit_values))
 
+            for crit_id, crit_values in criteria_values_raw.items():
+                rows_raw.append(tuple([q_def, crit_id] + crit_values))
+
             rows = sorted(rows, key=lambda i: i[0])
+            rows_raw = sorted(rows_raw, key=lambda i: i[1])
 
             rows.append((u'Conclusion', conclusion_values))
             rows.append((u'Summary', summary_values))
+            rows_raw.append(tuple([q_def, u'Conclusion']
+                                  + conclusion_values_raw))
+            rows_raw.append(tuple([q_def, u'Summary'] + summary_values_raw))
 
             res.append(RegionalCompoundRow(self, self.request, field, rows))
+            self.raw_adeq_assess_data.extend(rows_raw)
 
         return res
 
@@ -271,6 +301,10 @@ class NationalAssessmentMixin:
                 self.make_countries_row()
             )]
 
+        self.raw_adeq_assess_data = [
+            tuple(['Country', ''] + [c[1] for c in self.available_countries])
+        ]
+
         for question in questions:
             q_id = question.id
             q_def = question.definition
@@ -278,11 +312,18 @@ class NationalAssessmentMixin:
             field = Field(q_id, q_def)
 
             rows = []
+            rows_raw = []
             conclusion_values = []
             summary_values = []
+            conclusion_values_raw = []
+            summary_values_raw = []
 
             # Init the result with empty values
             answer_values = {
+                answer: {country_code: [] for country_code, _ in countries}
+                for answer in q_answ
+            }
+            answer_values_raw = {
                 answer: {country_code: [] for country_code, _ in countries}
                 for answer in q_answ
             }
@@ -290,6 +331,8 @@ class NationalAssessmentMixin:
             for country_code, country_name in countries:
                 country_concl = []
                 country_sums = []
+                country_concl_raw = []
+                country_sums_raw = []
                 country_targets = get_assessed_elements(
                     self, question, country_code
                 )
@@ -314,18 +357,22 @@ class NationalAssessmentMixin:
                                                                  q_id))
                     summary = assess_data.get('{}_{}_Summary'.format(article,
                                                                      q_id))
-                    summary = summary or "-"
-                    summary = u"<b>{}:</b> {}".format(subregion, summary)
+                    summary_raw = summary or "-"
+                    summary = u"<b>{}:</b> {}".format(subregion, summary_raw)
 
-                    conclusion = score and score.conclusion or "-"
+                    conclusion_raw = score and score.conclusion or "-"
                     conclusion = \
                         u"<span class='empty-colorbox as-value-{}'/>" \
                         u"<span><b>{}:</b> {}</span>" \
                         .format(self._conclusion_color(score), subregion,
-                                conclusion)
+                                conclusion_raw)
 
                     country_concl.append(conclusion)
                     country_sums.append(summary)
+                    country_concl_raw.append(u"{}: {}".format(subregion,
+                                                              conclusion_raw))
+                    country_sums_raw.append(u"{}: {}".format(subregion,
+                                                             summary_raw))
 
                     # Setup the targets
                     subregion_targets = country_targets[subregion]
@@ -345,27 +392,41 @@ class NationalAssessmentMixin:
                             subregion,
                             target.title
                         )
+                        _val_raw = u"{}: {}".format(subregion, target.title)
 
                         answer_values[option_txt][country_code].append(_val)
+                        answer_values_raw[option_txt][country_code]\
+                            .append(_val_raw)
 
                 conclusion_values.append(ItemList(country_concl))
                 summary_values.append(ItemList(country_sums))
+                conclusion_values_raw.append(ItemList(country_concl_raw))
+                summary_values_raw.append(ItemList(country_sums_raw))
 
             # Add rows with the answers and values into the table
             for _answer in q_answ:
                 _countries = answer_values[_answer]
-
                 values = [
                     ItemList(_countries[country_code])
                     for country_code, _ in countries
                 ]
 
+                _countries_raw = answer_values_raw[_answer]
+                values_raw = [
+                    ItemList(_countries_raw[country_code])
+                    for country_code, _ in countries
+                ]
+
                 rows.append((_answer, values))
+                rows_raw.append(tuple([q_def, _answer] + values_raw))
 
             rows.append((u'Conclusion', conclusion_values))
             rows.append((u'Summary', summary_values))
+            rows_raw.append(tuple([q_def, u'Conclusion'] + conclusion_values_raw))
+            rows_raw.append(tuple([q_def, u'Summary'] + summary_values_raw))
 
             res.append(RegionalCompoundRow(self, self.request, field, rows))
+            self.raw_adeq_assess_data.extend(rows_raw)
 
         return res
 
