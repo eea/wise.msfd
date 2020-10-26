@@ -56,6 +56,45 @@
   }
 }
 
+.scroll-wrapper.fixed-scroll {
+  position: fixed !important;
+  bottom: 0 !important;
+  left: 0;
+  right: 0;
+  padding: 10px 26px;
+  background-color: #0071b3;
+  z-index: 9;
+
+  .fa-table {
+    color: #fff;
+    font-size: 22px;
+    position: absolute;
+    top: 8px;
+    display: none;
+  }
+
+
+  .top-scroll {
+    overflow-x: auto;
+    //margin-left: 212px;
+    background: white;
+    border-left: 4px solid #DDD;
+    div {
+      height: 1px;
+      // margin: 0 1%;
+    }
+  }
+
+}
+.table-homepage-assessments {
+  th:first-of-type {
+    min-width: 200px;
+  }
+  td:not(first-of-type) {
+    min-width: 330px;
+  }
+}
+
 .table-country-start {
   tbody {
     .region-title {
@@ -77,7 +116,7 @@
     }
     tr {
       th:first-of-type {
-        width: 200px;
+        width: 150px;
       }
       &.fullwidth-statusbar {
         td {
@@ -139,7 +178,7 @@ h4.process-phase-title {
   .assessment-status-processstate {
     position: absolute;
     float: right;
-    z-index: 99;
+    z-index: 1;
     background-color: #dff1c3;
     padding: 6px;
     right: 1em;
