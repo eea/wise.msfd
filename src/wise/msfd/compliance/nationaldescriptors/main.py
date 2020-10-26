@@ -26,6 +26,7 @@ from wise.msfd.compliance.scoring import (CONCLUSIONS, get_overall_conclusion,
 from wise.msfd.compliance.utils import ordered_regions_sortkey
 from wise.msfd.data import _extract_pdf_assessments
 from wise.msfd.gescomponents import get_descriptor
+from wise.msfd.utils import t2rt
 
 from .base import BaseView
 from ..interfaces import (ICountryDescriptorsFolder, ICountryStartAssessments,
@@ -307,7 +308,7 @@ def format_assessment_data(article, elements, questions, muids, data,
                 values.append(value)
 
         summary_title = '{}_{}_Summary'.format(article, question.id)
-        summary = data.get(summary_title) or ''
+        summary = t2rt(data.get(summary_title) or '')
 
         sn = '{}_{}_Score'.format(article, question.id)
         score = data.get(sn, {})
@@ -481,7 +482,6 @@ class NationalDescriptorArticleView(BaseView, AssessmentDataMixin):
                 self.descriptor,
                 self.article
             )
-
             assessments_2012 = filter_assessment_data_2012(
                 db_data_2012,
                 self.country_region_code,       # TODO: this will need refactor
@@ -507,7 +507,7 @@ class NationalDescriptorArticleView(BaseView, AssessmentDataMixin):
         except:
             logger.exception("Could not get assessment data for 2012")
             self.assessment_data_2012 = ''
-            score_2012 = 100
+            score_2012 = 0
             conclusion_2012 = 'Not found'
             report_by, assessors, assess_date, source_file = [
                 'Not found'] * 3 + [('Not found', '')]

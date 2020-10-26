@@ -1,10 +1,10 @@
+import csv
 import logging
 import re
 from collections import namedtuple
 from sqlalchemy import or_
 
-from zope.schema import Text
-
+from pkg_resources import resource_filename
 from plone.api.portal import get_tool
 
 from AccessControl import Unauthorized
@@ -31,6 +31,7 @@ from wise.msfd.utils import t2rt
 from z3c.form.button import buttonAndHandler
 from z3c.form.field import Fields
 from z3c.form.form import Form
+from zope.schema import Text
 
 from .base import BaseComplianceView
 
@@ -128,6 +129,7 @@ Assessment2012 = namedtuple(
         'gescomponents',
         'criteria',
         'summary',
+        'concl_crit',
         'overall_ass',
         'score'
     ]
@@ -170,8 +172,70 @@ progress_fields = (
 )
 
 
-@db.use_db_session('2018')
+COM_ASSESSMENT = namedtuple(
+    'COM_ASSESSMENT',
+    ('Country', 'Descriptor', 'AssessmentCriteria', 'MSFDArticle',
+     'Assessment', 'Conclusions', 'Criteria', 'OverallScore',
+     'OverallAssessment')
+)
+
+
 def get_assessment_data_2012_db(*args):
+    """ Returns the assessment for 2012, from COM_Assessments_2012.csv
+    """
+
+    articles = {
+        'Art8': 'Initial assessment (Article 8)',
+        'Art9': 'GES (Article 9)',
+        'Art10': 'Targets (Article 10)',
+    }
+
+    country, descriptor, article = args
+    art = articles.get(article)
+    descriptor = descriptor.split('.')[0]
+
+    res = []
+    csv_f = resource_filename('wise.msfd', 'data/COM_Assessments_2012.csv')
+
+    with open(csv_f, 'rb') as csvfile:
+        csv_file = csv.reader(csvfile, delimiter=';', quotechar='"')
+
+        for row in csv_file:
+            res.append(row)
+
+    res_final = []
+
+    for row in res[1:]:
+        assess_row = COM_ASSESSMENT(*row)
+
+        overall_text = assess_row.OverallAssessment
+        _country = assess_row.Country
+
+        if country not in _country:
+            continue
+
+        _desc = assess_row.Descriptor
+
+        if descriptor != _desc:
+            continue
+
+        _article = assess_row.MSFDArticle or None
+
+        if _article != art and _article is not None:
+            continue
+
+        if not overall_text:
+            res_final.append(assess_row)
+
+            continue
+
+        res_final.append(assess_row)
+
+    return res_final
+
+
+@db.use_db_session('2018')
+def get_assessment_data_2012_db_old(*args):
     """ Returns the assessment for 2012, from COM_Assessments_2012 table
     """
 
@@ -270,6 +334,7 @@ def filter_assessment_data_2012(data, region_code, descriptor_criterions):
             col('AssessmentCriteria'),
             t2rt(col('Assessment'))
         )
+        concl_crit = t2rt(col('Criteria'))
 
         # TODO test for other countries beside LV
         # Condition changed because of LV report, where score is 0
@@ -284,8 +349,9 @@ def filter_assessment_data_2012(data, region_code, descriptor_criterions):
                 gescomponents,
                 criterias,
                 summary,
+                concl_crit,
                 overall_ass,
-                score,
+                int(round(float(score))),
             )
             assessments[country] = assessment
         else:
@@ -308,6 +374,7 @@ def filter_assessment_data_2012(data, region_code, descriptor_criterions):
             gescomponents,
             criterias,
             summary,
+            concl_crit,
             overall_ass,
             score,
         )
@@ -373,7 +440,7 @@ class ViewAssessmentSummaryForm(BaseComplianceView):
                 self.article, name
             )
 
-            text = saved_data.get(_name, None)
+            text = t2rt(saved_data.get(_name, None))
 
             _fields.append((title, text))
 
@@ -588,6 +655,9 @@ class AssessmentDataMixin(object):
         from national descriptors assessment
     """
     overall_scores = {}
+
+    def t2rt(self, text):
+        return t2rt(text)
 
     @property
     def _nat_desc_folder(self):
@@ -919,13 +989,13 @@ class AssessmentDataMixin(object):
             self.get_color_for_score(overallscore_val)
         )
 
-        assessment_summary = (
+        assessment_summary = t2rt(
             assess_data.get('{}_assessment_summary'.format(article)) or '-'
         )
-        progress_assessment = (
+        progress_assessment = t2rt(
             assess_data.get('{}_progress'.format(article)) or '-'
         )
-        recommendations = (
+        recommendations = t2rt(
             assess_data.get('{}_recommendations'.format(article)) or '-'
         )
 

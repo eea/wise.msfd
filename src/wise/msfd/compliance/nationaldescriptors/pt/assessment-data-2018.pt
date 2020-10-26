@@ -41,7 +41,7 @@
                 </div>
               </tal:rep>
               <div class="assessment-summary"
-                  tal:content="row/summary">Summary</div>
+                  tal:content="structure row/summary">Summary</div>
             </td>
 
             <td tal:attributes="class python: 'fixed-right as-value as-value-{}'.format(row.conclusion_color)"

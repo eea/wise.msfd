@@ -19,15 +19,15 @@
               <div>
                 <div>
                   <label>Assessment summary</label>
-                  <div tal:content="python: article_data.assessment_summary">Long text</div>
+                  <div tal:content="structure python: article_data.assessment_summary">Long text</div>
                 </div>
                 <div>
                   <label>Progress since 2012</label>
-                  <div tal:content="python: article_data.progress_assessment">Long text</div>
+                  <div tal:content="structure python: article_data.progress_assessment">Long text</div>
                 </div>
                 <div>
                   <label>Recommendations</label>
-                  <div tal:content="python: article_data.recommendations">Long text</div>
+                  <div tal:content="structure python: article_data.recommendations">Long text</div>
                 </div>
               </div>
               <div class="ast-header-data">

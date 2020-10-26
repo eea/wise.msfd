@@ -10,12 +10,12 @@
           <tr>
             <th>Coherence
             </th>
-            <td tal:content="structure assessment/coherence"
+            <td tal:content="structure python: view.t2rt(assessment.coherence)"
               tal:attributes="colspan colspan">Text</td>
           </tr>
           <tr>
             <th>Assessment summary</th>
-            <td tal:content="assessment/summary"
+            <td tal:content="structure python: view.t2rt(assessment.summary)"
               tal:attributes="colspan colspan">
               Summary
             </td>

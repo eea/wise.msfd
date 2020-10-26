@@ -719,17 +719,21 @@ class AdminScoring(BaseComplianceView, AssessmentDataMixin):
         article_folder = obj
         article_title = article_folder.title
         descr = obj.aq_parent
+        descr_id = descr.id.upper()
         region_code = obj.aq_parent.aq_parent.id.upper()
         region_name = obj.aq_parent.aq_parent.title
         country_code = obj.aq_parent.aq_parent.aq_parent.id.upper()
         country_name = obj.aq_parent.aq_parent.aq_parent.title
-        d_obj = self.descriptor_obj(descr.id.upper())
+        d_obj = self.descriptor_obj(descr_id)
         muids = self.muids(country_code, region_code, '2018')
         data = obj.saved_assessment_data.last()
 
         phase_overall_scores = OverallScores(ARTICLE_WEIGHTS)
         phase_overall_scores = self._setup_phase_overall_scores(
             phase_overall_scores, data, article_title)
+        phase_overall_scores.coherence = self.get_coherence_data(
+            region_code, descr_id, article_title
+        )
 
         score_last_change = []
 
@@ -1068,7 +1072,7 @@ class AdminScoring(BaseComplianceView, AssessmentDataMixin):
                     / _max_score or 0)
 
         yield (region_code, region_title, d_obj.id, d_obj.title,
-               article_title, '', '2018 Overall', '',
+               article_title, '', '2018 Coherence', '',
                score, score_title, state, last_change)
 
     @timeit

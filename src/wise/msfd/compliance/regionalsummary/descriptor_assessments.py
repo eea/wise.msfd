@@ -5,7 +5,7 @@ from wise.msfd.compliance.interfaces import (IDescriptorFolder,
                                              IRegionalDescriptorAssessment)
 from wise.msfd.compliance.assessment import DESCRIPTOR_SUMMARY
 from wise.msfd.compliance.scoring import OverallScores
-from wise.msfd.utils import fixedorder_sortkey
+from wise.msfd.utils import fixedorder_sortkey, t2rt
 
 from ..nationalsummary.descriptor_assessments import DescriptorLevelAssessments
 from ..regionaldescriptors.main import ARTICLE_WEIGHTS
@@ -43,13 +43,13 @@ class RegDescriptorLevelAssessments(BaseRegSummaryView,
             self.get_color_for_score(overallscore_val)
         )
 
-        assessment_summary = (
+        assessment_summary = t2rt(
             assess_data.get('{}_assessment_summary'.format(article)) or '-'
         )
-        progress_assessment = (
+        progress_assessment = t2rt(
             assess_data.get('{}_progress'.format(article)) or '-'
         )
-        recommendations = (
+        recommendations = t2rt(
             assess_data.get('{}_recommendations'.format(article)) or '-'
         )
         __key = (region_code, descriptor, article)

@@ -15,7 +15,7 @@
             metal:use-macro="context/wise-macros/macros/tabs"></metal:tabs>
         </div>
 
-        <div class="start-page-content left-side-form"
+        <div class="report-page-viewZ start-page-content left-side-form"
              tal:define="country_folder python: view._country_folder;">
 
           <h1>Commission assessments - national overview: <span tal:content="view/country_title"></span></h1>
@@ -58,9 +58,8 @@
             </form>
           </div>
 
-          <!--<h3>Commission Assessments</h3>-->
-
-          <table class="table as-table-overview table-striped table-country-start">
+          <table class="table as-table-overview table-striped table-country-start"
+              classX="table table-bordered table-striped table-comp-translate table-report">
             <tbody>
               <tr class="article-title">
                 <th>Article 8 Assessment</th>
@@ -106,12 +105,14 @@
 
               <tr class="article-title">
                 <th></th>
+                <th></th>
                 <th>Art. 7 Competent Authorities</th>
-                <th>Art. 3(1) Marine waters</th>
-                <th>Art. 4 Reporting areas</th>
+                <th style="min-width: 330px;">Art. 3(1) Marine waters</th>
+                <th style="min-width: 330px;">Art. 4 Reporting areas</th>
                 <th colspan="22"></th>
               </tr>
               <tr>
+                <td></td>
                 <td></td>
                 <td tal:repeat="assessment python: view.get_secondary_articles(view._country_folder)">
                   <tal:cond tal:condition="python: assessment.id != 'art7'">
@@ -123,38 +124,49 @@
                 </td>
                 <td colspan="22"></td>
               </tr>
-
-              <tal:rep tal:repeat="region view/get_regions">
-                <tr class="region-title">
-                  <td colspan="22"
-                      tal:attributes="id region/id"
-                      tal:content="region/title">Region name</td>
-                </tr>
-                <tr class="article-title">
-                  <th>Descriptor</th>
-                  <th>Art 9 GES Determination</th>
-                  <th>Article 8 Assessment</th>
-                  <th>Article 10 Targets</th>
-                  <th>Article 11 Monitoring</th>
-                  <th>Article 13 Measures</th>
-                  <th>Article 14 Exceptions</th>
-                  <th>Article 18 Progress on measures</th>
-                </tr>
-
-                <tr tal:repeat="desc python: view.get_descriptors(region)">
-                  <th>
-                    <span tal:content="python: view.descriptor_for_code(desc.id).title">D0</span>
-                  </th>
-                  <td tal:repeat="assessment python: view.get_articles(desc)">
-                    <div metal:use-macro="context/wise-macros/macros/assessment-status-bar"></div>
-                  </td>
-                  <td tal:repeat="assessment python: view.get_articles_part2(desc)">
-                    <i style="text-align: center; font-style: italic; font-weight: 300;">Not available</i>
-                  </td>
-                </tr>
-              </tal:rep>
             </tbody>
           </table>
+
+          <div classS="report-section">
+            <div class="overflow-table">
+              <div class="inner">
+                <table class="table as-table-overview table-striped table-country-start table-homepage-assessments table-report"
+                    classX="table table-bordered table-striped table-comp-translate table-report">
+                  <tbody>
+                    <tal:rep tal:repeat="region view/get_regions">
+                      <tr class="region-title">
+                        <td colspan="22"
+                            tal:attributes="id region/id"
+                            tal:content="region/title">Region name</td>
+                      </tr>
+                      <tr class="article-title">
+                        <th>Descriptor</th>
+                        <th>Art 9 GES Determination</th>
+                        <th>Article 8 Assessment</th>
+                        <th>Article 10 Targets</th>
+                        <th>Article 11 Monitoring</th>
+                        <th>Article 13 Measures</th>
+                        <th>Article 14 Exceptions</th>
+                        <th>Article 18 Progress on measures</th>
+                      </tr>
+
+                      <tr tal:repeat="desc python: view.get_descriptors(region)">
+                        <th>
+                          <span tal:content="python: view.descriptor_for_code(desc.id).title">D0</span>
+                        </th>
+                        <td tal:repeat="assessment python: view.get_articles(desc)">
+                          <div metal:use-macro="context/wise-macros/macros/assessment-status-bar"></div>
+                        </td>
+                        <td tal:repeat="assessment python: view.get_articles_part2(desc)">
+                          <i style="text-align: center; font-style: italic; font-weight: 300;">Not available</i>
+                        </td>
+                      </tr>
+                    </tal:rep>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
 
         </div>
       </div>

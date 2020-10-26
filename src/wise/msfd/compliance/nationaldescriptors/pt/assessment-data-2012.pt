@@ -9,22 +9,35 @@
       <tbody>
         <tal:def tal:define="assessment assessments/?country;
           colspan python:4">
-          <tal:rep tal:repeat="crit assessment/criteria">
-            <tr>
-              <th tal:content="crit/crit_name">
-                Criteria
-              </th>
-              <td tal:content="structure crit/answer"
-                tal:attributes="colspan colspan">Text</td>
-            </tr>
-          </tal:rep>
+          <tr tal:define="crit_adequacy python: assessment.criteria[0]">
+            <th tal:content="crit_adequacy/crit_name">
+              Adequacy
+            </th>
+            <td tal:content="structure crit_adequacy/answer"
+              tal:attributes="colspan colspan">Text</td>
+          </tr>
           <tr>
-            <th rowspan="2">Assessment summary</th>
-            <td tal:content="assessment/summary"
-              tal:attributes="rowspan string:2;
-              colspan python:colspan - 3">
+            <th>Adequacy conclusion criteria</th>
+            <td tal:attributes="colspan colspan"
+                tal:content="structure assessment/concl_crit">
+              Text
+            </td>
+          </tr>
+          <tr>
+            <th>Adequacy conclusion</th>
+            <td tal:content="structure assessment/summary"
+                tal:attributes="colspan colspan">
               Summary
             </td>
+          </tr>
+          <tr tal:define="crit_consistency python: assessment.criteria[1]">
+            <th tal:content="structure crit_consistency/crit_name"
+                tal:attributes="rowspan string: 2">
+              Consistency
+            </th>
+            <td tal:content="structure crit_consistency/answer"
+              tal:attributes="rowspan string:2;
+              colspan python:colspan - 3">Text</td>
             <td class="overall-headers fixed-right" rowspan="2">
               <div class="as-value as-value-th">2012 Adequacy</div>
             </td>

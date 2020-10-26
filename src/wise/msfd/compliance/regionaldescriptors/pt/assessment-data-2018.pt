@@ -39,7 +39,7 @@
                 </div>
               </tal:rep>
               <div class="assessment-summary"
-                  tal:content="row/summary">Summary</div>
+                  tal:content="structure row/summary">Summary</div>
             </td>
 
             <td tal:attributes="class python: 'fixed-right as-value as-value-{}'.format(row.conclusion_color)"
@@ -87,7 +87,7 @@
 
           <td class="overall-headers fixed-right">
             <div class="as-value as-value-th">2018 Coherence</div>
-            <div class="as-value as-value-th">2012 Adequacy: change since 2012</div>
+            <div class="as-value as-value-th">2012 Coherence: change since 2012</div>
           </td>
           <td class="overall-values fixed-right"
               tal:define="phase_score python: assessment.phase_overall_scores">

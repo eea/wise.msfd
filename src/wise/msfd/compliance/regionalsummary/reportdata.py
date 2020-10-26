@@ -5,6 +5,7 @@ import logging
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 from Products.statusmessages.interfaces import IStatusMessage
 from wise.msfd import sql, db
+from wise.msfd.compliance.assessment import AssessmentDataMixin
 from wise.msfd.gescomponents import get_all_descriptors
 from wise.msfd.labels import get_label
 from wise.msfd.translation import get_translated, retrieve_translation
@@ -193,28 +194,29 @@ class PressuresActivities(RegionalDescriptorsSimpleTable):
 
 
 @regionalsection
-class OverallConclusion2012(RegionalDescriptorsSimpleTable):
+class OverallConclusion2012(RegionalDescriptorsSimpleTable,
+                            AssessmentDataMixin):
     title = "Overall conclusion - descriptor-level"
     articles = [
         ('Art9', 'Article 9: Determination of GES'),
         ('Art8', 'Article 8: Initial assessment'),
         ('Art10', 'Article 10: Environmental targets'),
     ]
-
-    def get_assessment_data(self, region, article, descriptor):
-        data = ASSESSMENTS_2012
-
-        for row in data:
-            if row.region.strip() != region:
-                continue
-
-            if row.descriptor.strip() != descriptor:
-                continue
-
-            if article not in row.article.replace(' ', ''):
-                continue
-
-            return row
+    # get_reg_assessments_data_2012
+    # def get_assessment_data(self, region, article, descriptor):
+    #     data = ASSESSMENTS_2012
+    #
+    #     for row in data:
+    #         if row.region.strip() != region:
+    #             continue
+    #
+    #         if row.descriptor.strip() != descriptor:
+    #             continue
+    #
+    #         if article not in row.article.replace(' ', ''):
+    #             continue
+    #
+    #         return row
 
     def setup_data(self):
         data = []
@@ -224,8 +226,8 @@ class OverallConclusion2012(RegionalDescriptorsSimpleTable):
             conclusions = []
             for art_id, art_title in self.articles:
                 concl = ''
-                assess_data = self.get_assessment_data(
-                    self.region_code, art_id, desc_code
+                assess_data = self.get_reg_assessments_data_2012(
+                    art_id, self.region_code, desc_code
                 )
 
                 if assess_data:

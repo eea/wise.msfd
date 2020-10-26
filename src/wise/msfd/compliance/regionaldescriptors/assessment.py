@@ -24,6 +24,7 @@ from wise.msfd.compliance.assessment import (PHASES,
 from wise.msfd.compliance.base import REG_DESC_QUESTIONS
 from wise.msfd.compliance.content import AssessmentData
 from wise.msfd.compliance.interfaces import IRegionalEditAssessmentForm
+from wise.msfd.utils import t2rt
 from z3c.form.button import buttonAndHandler
 from z3c.form.field import Fields
 
