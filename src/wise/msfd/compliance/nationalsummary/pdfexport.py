@@ -45,7 +45,26 @@ class AssessmentExportCover(BaseNatSummaryView):
 
     template = ViewPageTemplateFile('pt/cover.pt')
 
+    def authors(self):
+        field = 'authors'
+        value = self.get_field_value(field)
+
+        return value
+
+    def contract(self):
+        field = 'contract'
+        value = self.get_field_value(field)
+
+        return value
+
+    def logos(self):
+        field = 'logo'
+        value = self.get_field_value(field)
+
+        return value
+
     def authors_logos(self):
+        """ Not used anymore """
         portal_catalog = portal.get_tool('portal_catalog')
         brains = portal_catalog.searchResults(
             object_provides=INationalSummaryEdit.__identifier__

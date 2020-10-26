@@ -10,6 +10,32 @@
             <required>False</required>
             <title>Date assessed</title>
         </field>
+        <field name="authors"
+               type="plone.app.textfield.RichText">
+            <description/>
+            <required>False</required>
+            <title>Cover page authors</title>
+            <default>Paola Banfi, Guillermo Gea, Lucille Labayle, David Landais, Melanie Muro, Goncalo Moreira,
+            Alicia McNeil, and Imbory Thomas. The main authors are Richard White (D1, 4, 6),
+            Elena San Martin (D2), Suzannah Walmsley (D3), William Parr (D5), Christophe Le Visage (D7),
+            Norman Green (D8 and 9), Annemie Volckaert (D10) and Frank Thomsen (D11).</default>
+        </field>
+        <field name="contract"
+               type="plone.app.textfield.RichText">
+            <description/>
+            <required>False</required>
+            <title>Cover page contract</title>
+            <default>No 11.0661/ENV/2018/791580/SER/ENV.C.2.</default>
+        </field>
+        <field name="logo"
+               type="plone.app.textfield.RichText">
+            <description/>
+            <required>False</required>
+            <title>Cover page logo</title>
+            <default>
+                &lt;img src="/++resource++static_images/cover_logos.png"&gt;
+            </default>
+        </field>
         <field name="scope_of_marine_waters"
                type="plone.app.textfield.RichText">
             <description/>
