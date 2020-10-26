@@ -46,7 +46,6 @@
     <div id="download-report-data-form">
       <form method="POST" action="" tal:attributes="action request/getURL">
         <button name="edit-data" class="btn btn-primary">Edit</button>
-        <a class="btn btn-primary" href="./../edit-summary/edit" target="_blank">Edit authors, disclaimer, logos</a>
         <!--<button name="download" class="btn btn-primary">Download as document (odt)</button>-->
         <button name="download_pdf" class="btn btn-primary">Download as PDF</button>
         <!--<button name="translate" class="btn btn-secondary"-->
