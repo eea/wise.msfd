@@ -117,8 +117,9 @@
               <strong tal:content="python: '{} ({})'.format(
                 assessment.overall_conclusion[1], assessment.overall_conclusion[0])">Very poor (1)</strong>
             </div>
-            <div class="as-value"
-                tal:content="options/change_since_2012">-1</div>
+            <div tal:attributes="class python: 'as-value as-value-{}'.format(options['conclusion_2012_color'])">
+              <strong tal:content="conclusion_2012">Adequate(3)</strong>
+            </div>
           </td>
 
           <td class="overall-values fixed-right"
