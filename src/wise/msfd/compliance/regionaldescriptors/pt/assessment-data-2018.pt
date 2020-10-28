@@ -97,8 +97,8 @@
               tal:content="python: '{} ({})'.format(conclusion, score_value)">
               Very good (4)
             </div>
-            <div class="as-value"
-                tal:content="options/change_since_2012">-1</div>
+            <div tal:attributes="class python: 'as-value as-value-{}'.format(options['conclusion_2012_color'])"
+                tal:content="conclusion_2012">-1</div>
           </td>
 
           <td class="overall-values fixed-right"

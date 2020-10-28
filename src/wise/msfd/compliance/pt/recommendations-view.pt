@@ -85,11 +85,40 @@
             </div>
           </div>
         </div>
+        <div id="edit-topics" class="modal fade" tabindex="-1" role="dialog">
+          <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h3>Edit topics</h3>
+              </div>
+
+              <div class="modal-body">
+                <form id="topic-form" method="POST" action="@@recommendations">
+                  <div class="form-group">
+                    <label>Topics:</label>
+                    <i style="color: grey;">(topics are separated by a newline)</i>
+                    <textarea rows="40" stylezz="height: 6.5em;" id="topics-text" name="topics" class="form-control" required
+                        tal:content="python: '\r\n'.join(view.topics)"></textarea>
+                  </div>
+                  <input class="submitRecomm btn btn-primary btn-s"
+                         type="submit" value="Save"
+                         name="edit-topics"/>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
 
         <a class="btn btn-s btn-primary"
           data-toggle="modal"
           data-target="#edit-recommendation">
             Add recommendation
+        </a>
+        <a class="btn btn-s btn-primary"
+          data-toggle="modal"
+          data-target="#edit-topics">
+            Edit topics
         </a>
 
         <table tal:replace="structure view/recommendations_table"></table>
