@@ -39,13 +39,14 @@ class CompoundRow(TemplateMixin):
 
 
 class AssessmentAreas2018(BaseNatSummaryView):
-    """ Implementation of 1.3 Reporting areas (Marine Reporting Units) """
+    """ Implementation of 1.4 Reporting areas (Marine Reporting Units) """
 
     template = ViewPageTemplateFile('pt/assessment-areas.pt')
 
     @db.use_db_session('2018')
     def get_data(self):
         mapper_class = sql2018.MRUsPublication
+        mc_mru_descr = sql2018.MarineReportingUnit
         res = []
 
         marine_waters_data = self.context._get_marine_waters_data()
@@ -64,6 +65,13 @@ class AssessmentAreas2018(BaseNatSummaryView):
             columns,
             mapper_class.Country == self.country_code
         )
+        mrus_needed = [x.thematicId for x in data]
+
+        _, mru_descriptions = db.get_all_specific_columns(
+            [mc_mru_descr.MarineReportingUnitId, mc_mru_descr.nameTxtInt,
+             mc_mru_descr.nameText],
+            mc_mru_descr.MarineReportingUnitId.in_(mrus_needed)
+        )
 
         _, art8_data = db.get_all_specific_columns(
             [sql2018.t_V_ART8_GES_2018.c.MarineReportingUnit,
@@ -78,7 +86,17 @@ class AssessmentAreas2018(BaseNatSummaryView):
         art8_art9_data = set(art8_data + art9_data)
 
         for row in data:
-            description = row.nameTxtInt or row.nameText or ""
+            mru = row.thematicId
+            description = [
+                x.nameTxtInt.strip() or x.nameText or ""
+                for x in mru_descriptions
+                if x.MarineReportingUnitId == mru
+            ]
+            if not description:
+                description = row.nameTxtInt or row.nameText or ""
+            else:
+                description = description[0]
+
             translation = get_translated(description, self.country_code) or ""
             area = int(round(row.Area))
 
@@ -106,7 +124,7 @@ class AssessmentAreas2018(BaseNatSummaryView):
 
             descriptors = ', '.join(descr_list)
 
-            res.append((row.rZoneId, row.spZoneType, row.thematicId,
+            res.append((row.rZoneId, row.spZoneType, mru,
                         description, translation, '{:,}'.format(area),
                         prop_water, descriptors))
 
@@ -463,6 +481,7 @@ class Introduction(BaseNatSummaryView):
     @property
     @timeit
     def assessment_areas_table(self):
+        """ 1.4 Reporting areas """
         view = AssessmentAreas2018(self, self.request)
         rendered_view = view()
 
