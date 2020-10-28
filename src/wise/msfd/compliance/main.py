@@ -21,6 +21,7 @@ from .interfaces import IRecommendationStorage
 
 ANNOTATION_KEY = 'wise.msfd.recommendations'
 STORAGE_KEY = 'recommendations'
+TOPICS_STORAGE_KEY = '__topics__'
 
 
 class StartComplianceView(BaseComplianceView):
@@ -86,38 +87,46 @@ class RecommendationsView(BaseComplianceView):
     name = 'recommendation'
     section = 'compliance-admin'
 
-    topics = (
-        'Allocation of species to species groups',
-        'Assess progress with targets',
-        'Assessment methodology',
-        'Assessment scales/areas',
-        'Coherence of extent to which GES is achieved',
-        'Coherent assessment methodology',
-        'Coherent qualitative GES description',
-        'Coherent quantitative GES determination',
-        'Coherent set of elements',
-        'Coherent use of primary criteria',
-        'Coherent use of secondary criteria',
-        'Extent to which GES is achieved',
-        'Features and elements assessed',
-        'Good status based on low risk',
-        'Guidance on good status based on low risk',
-        'Guidance on quantitative GES determination',
-        'Integrated MSFD and Birds Directive assessments',
-        'Key pressures in (sub)region',
-        'Key pressures preventing GES',
-        'Link target to direct measures',
-        'Lists of parameters and units for reporting',
-        'Measurable joint targets',
-        'Measurable targets',
-        '(Sub)regional targets',
-        'Qualitative GES description',
-        'Quantify gap to GES',
-        'Quantitative GES determination',
-        'Targets for key pressures',
-        'Use of primary criteria',
-        'Use of secondary criteria',
+    __topics = (
+'Allocation of species to species groups',
+'Assess progress with targets',
+'Assessment methodology',
+'Assessment scales/areas',
+'Coherence of extent to which GES is achieved',
+'Coherent assessment methodology',
+'Coherent qualitative GES description',
+'Coherent quantitative GES determination',
+'Coherent set of elements',
+'Coherent use of primary criteria',
+'Coherent use of secondary criteria',
+'Extent to which GES is achieved',
+'Features and elements assessed',
+'Good status based on low risk',
+'Guidance on good status based on low risk',
+'Guidance on quantitative GES determination',
+'Integrated MSFD and Birds Directive assessments',
+'Key pressures in (sub)region',
+'Key pressures preventing GES',
+'Link target to direct measures',
+'Lists of parameters and units for reporting',
+'Measurable joint targets',
+'Measurable targets',
+'(Sub)regional targets',
+'Qualitative GES description',
+'Quantify gap to GES',
+'Quantitative GES determination',
+'Targets for key pressures',
+'Use of primary criteria',
+'Use of secondary criteria',
     )
+
+    @property
+    def topics(self):
+        site = portal.get()
+        storage = IRecommendationStorage(site)
+        topics = storage.get(TOPICS_STORAGE_KEY, [])
+
+        return topics
 
     def descriptors(self):
         descriptors = get_all_descriptors()
@@ -178,6 +187,11 @@ class RecommendationsView(BaseComplianceView):
 
             recom = Recommendation(code, topic, text, ms_region, descriptors)
             storage_recom[code] = recom
+
+        if 'edit-topics' in self.request.form:
+            topics = self.request.form.get('topics', '')
+            topics = topics.split('\r\n')
+            storage[TOPICS_STORAGE_KEY] = topics
 
         recommendations = []
 
