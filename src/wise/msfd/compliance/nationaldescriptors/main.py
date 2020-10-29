@@ -547,9 +547,9 @@ class NationalDescriptorArticleView(BaseView, AssessmentDataMixin):
             self.country_region_code, self.descriptor, self.article
         )
 
-        score_2012 = int(round(score_2012))
+        # score_2012 = score_2012
         conclusion_2012_color = CONCLUSION_COLOR_TABLE.get(score_2012, 0)
-        change = int(
+        change = (
             assessment.phase_overall_scores
             .get_range_index_for_phase('adequacy') - score_2012
         )

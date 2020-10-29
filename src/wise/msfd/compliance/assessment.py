@@ -112,7 +112,11 @@ CONCLUSION_COLOR_TABLE = {
     3: 2,       # good
     2: 4,       # poor
     1: 5,       # very poor
-    0: 3        # not reported
+    0: 3,       # not reported
+    0.5: 05,
+    1.5: 15,
+    2.5: 25,
+    3.5: 35,
 }
 
 CHANGE_COLOR_TABLE = {
@@ -345,13 +349,19 @@ def filter_assessment_data_2012(data, region_code, descriptor_criterions):
             criterias.append(criteria)
         elif country not in assessments:
             criterias.insert(0, criteria)
+
+            if round(float(score)) == float(score):  # score is int like 2
+                score = int(score)
+            else:  # score is float like 1.5
+                score = float(score)
+
             assessment = Assessment2012(
                 gescomponents,
                 criterias,
                 summary,
                 concl_crit,
                 overall_ass,
-                int(round(float(score))),
+                score,
             )
             assessments[country] = assessment
         else:
@@ -836,9 +846,9 @@ class AssessmentDataMixin(object):
             score_2012 = 0
             conclusion_2012 = 'Not found'
 
-        __score = int(round(score_2012 or 0))
+        # __score = int(round(score_2012 or 0))
 
-        return __score, conclusion_2012 or 'Not found'
+        return score_2012, conclusion_2012 or 'Not found'
 
     def get_reg_assessments_data_2012(self, article=None, region_code=None,
                                       descriptor_code=None):

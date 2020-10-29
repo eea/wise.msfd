@@ -1,6 +1,6 @@
 <div id="container-assessment-data-2018"
     tal:define="assessment options/assessment;
-    score_2012 python: int(options['score_2012']);
+    score_2012 python: options['score_2012'];
     conclusion_2012 python: '{} ({})'.format(options['conclusion_2012'], score_2012)">
   <div class="table-wrap">
     <table class="table table-condensed assessment-data-table">

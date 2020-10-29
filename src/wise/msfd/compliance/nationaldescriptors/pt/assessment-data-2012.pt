@@ -51,7 +51,7 @@
             </td>
             <td class="overall-values fixed-right">
               <div tal:attributes="class css_class"
-                  tal:content="python: int(assessment.score)"></div>
+                  tal:content="python: assessment.score"></div>
             </td>
           </tr>
         </tal:def>
