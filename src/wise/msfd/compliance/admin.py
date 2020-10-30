@@ -706,6 +706,8 @@ class AdminScoring(BaseComplianceView, AssessmentDataMixin):
         self.recalculate_score_for_objects(self.ndas, self.questions)
         self.recalculate_score_for_objects(self.rdas, self.questions_reg)
 
+    # @cache(lambda func, *args: func.__name__ + args[1].absolute_url(),
+    #        lifetime=1800)
     def get_data(self, obj):
         """ Get assessment data for a country assessment object
         """
@@ -1162,7 +1164,7 @@ class AdminScoring(BaseComplianceView, AssessmentDataMixin):
         return out
 
     @timeit
-    @cache(lambda func, *args: func.__name__, lifetime=300)
+    @cache(lambda func, *args: func.__name__, lifetime=1800)
     def get_export_scores_data(self, context):
         # National descriptors data
         nda_labels = ('Country', 'Country title', 'Region', 'Region title',

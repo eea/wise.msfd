@@ -2,6 +2,7 @@ import csv
 import logging
 import re
 from collections import namedtuple
+from eea.cache import cache
 from sqlalchemy import or_
 
 from pkg_resources import resource_filename
@@ -747,6 +748,8 @@ class AssessmentDataMixin(object):
 
         return region_code
 
+    @cache(lambda func, *args: '-'.join((func.__name__, args[1], args[2],
+                                        args[3])), lifetime=1800)
     def get_coherence_data(self, region_code, descriptor, article):
         """ For year 2018
         :return: {'color': 5, 'score': 0, 'max_score': 0,
@@ -816,6 +819,8 @@ class AssessmentDataMixin(object):
 
         return res
 
+    @cache(lambda func, *args: '-'.join((func.__name__, args[1], args[2],
+                                        args[3], args[4])), lifetime=1800)
     def get_assessment_data_2012(self, region_code, country_name,
                                  descriptor, article):
         """ Returns the score and conclusion of the 2012 national assessment
