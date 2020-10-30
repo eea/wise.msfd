@@ -88,7 +88,8 @@ class AssessmentAreas2018(BaseNatSummaryView):
         for row in data:
             mru = row.thematicId
             description = [
-                x.nameTxtInt.strip() or x.nameText or ""
+                (x.nameTxtInt is not None and x.nameTxtInt.strip()
+                 or x.nameText or "")
                 for x in mru_descriptions
                 if x.MarineReportingUnitId == mru
             ]
