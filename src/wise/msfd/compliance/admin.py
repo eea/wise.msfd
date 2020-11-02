@@ -62,6 +62,7 @@ CONCLUSIONS = {
     '0': 'Not reported',
 }
 
+
 def get_wf_state_id(context):
     state = get_state(context)
     wftool = get_tool('portal_workflow')

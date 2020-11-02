@@ -750,6 +750,53 @@ if (!Array.prototype.last){
     }
   }
 
+  $.fn.setupStickyRows = function() {
+    // Pin all rows with 'sticky-row' class
+    $fixedTable = $(this).find('.fixed-table');
+    var tableWrapper = $(this).find('.fixed-table-wrapper');
+    tableWrapper.addClass('sticky-table');
+
+    if($(this).find('.inner table').hasClass('table-sticky-first-col')){
+      $fixedTable.addClass('table-sticky-first-col');
+    }
+
+    $(this).find('tr.sticky-row').each(function(){
+      $(this).children().each(function(){
+        var width = $(this).outerWidth();
+        $(this).css('min-width', width);
+        $(this).css('background-color', $(this).css('background-color'));
+        $(this).css('color', $(this).css('color'));
+      });
+
+      clone = $(this).clone();
+      clone.appendTo($fixedTable)
+    });
+
+    // on scroll check if the all rows 'sticky-row' are displayed on screen
+    // if not show the 'fixed-table' with the pinned rows
+    $(window).on('resize scroll', function(){
+      var $ot = $('.overflow-table');
+      var tableWrapper = $ot.find('.fixed-table-wrapper');
+      var stickyRowsInView = []
+
+      $ot.find('.inner tr.sticky-row').each(function(){
+        var elementTop = $(this).offset().top;
+        var viewportTop = $(window).scrollTop();
+        var viewportBottom = viewportTop + $(window).height();
+
+        isInViewport = $(this).isInViewport() || elementTop > viewportBottom;
+        stickyRowsInView.push(isInViewport);
+      });
+
+      if(stickyRowsInView.includes(false)) {
+        $ot.removeClass('hidden-fixed-table');
+      } else {
+        $ot.addClass('hidden-fixed-table');
+      }
+    });
+
+  };
+
   $(document).ready(function($){
 
     setupReadMoreModal();
@@ -768,13 +815,17 @@ if (!Array.prototype.last){
       var $ot = $('.overflow-table');
       $ot.each(function(){
         $(this).setupFixedTableRows();
+
+        // when loading the screen pin all rows marked with 'sticky-row' class
+        // and display them if they are not in viewport
+        $(this).setupStickyRows();
       });
+
       setupCustomScroll();
 
       // setupScrollableTargets();
       setupTargetsWidth();
       setupAssessmentStatusChange();
     });
-
   });
 }(window, document, $));

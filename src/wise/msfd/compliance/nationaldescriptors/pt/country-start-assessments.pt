@@ -15,8 +15,9 @@
             metal:use-macro="context/wise-macros/macros/tabs"></metal:tabs>
         </div>
 
-        <div class="report-page-viewZ start-page-content left-side-form"
-             tal:define="country_folder python: view._country_folder;">
+        <div class="country-start-assessments-page start-page-content left-side-form"
+             tal:define="country_folder python: view._country_folder;
+                  regions view/get_regions">
 
           <h1>Commission assessments - national overview: <span tal:content="view/country_title"></span></h1>
           <div class="nda-link">
@@ -50,7 +51,7 @@
             </form>
             <form class="send-to-tl"
               method="POST" action="."
-              tal:condition="python: view.ready_phase2(view.get_regions())">
+              tal:condition="python: view.ready_phase2(regions)">
 
               <span tal:replace="structure context/@@authenticator/authenticator"/>
               <input class="btn btn-success"
@@ -66,8 +67,7 @@
                 <th>Art 9 GES Determination</th>
                 <th>Article 10 Targets</th>
                 <th>Article 11 Monitoring</th>
-                <th>Article 13 Measures</th>
-                <th>Article 14 Exceptions</th>
+                <th>Article 13 Measures & Article 14 Exceptions</th>
                 <th colspan="22">Article 18 Progress on measures</th>
               </tr>
 
@@ -78,7 +78,7 @@
                 <td>
                   <div style="text-align: center; font-style: italic; font-weight: 300;">Art. 12 (11) National report - 2014</div>
                 </td>
-                <td colspan="2">
+                <td>
                   <div style="text-align: center; font-style: italic; font-weight: 300;">Art. 16 (13-14) National report - 2016</div>
                 </td>
                 <td colspan="2">
@@ -95,7 +95,7 @@
                 <td>
                   <div style="text-align: center; font-style: italic; font-weight: 300;">Art. 12 (11) National report - 2020</div>
                 </td>
-                <td colspan="2">
+                <td>
                   <div style="text-align: center; font-style: italic; font-weight: 300;">Art. 16 (13-14) National report - 2022</div>
                 </td>
                 <td colspan="2">
@@ -104,42 +104,41 @@
               </tr>
 
               <tr class="article-title">
-                <th></th>
-                <th></th>
-                <th>Art. 7 Competent Authorities</th>
+                <th colspan="3">Art. 7 Competent Authorities</th>
                 <th style="min-width: 330px;">Art. 3(1) Marine waters</th>
                 <th style="min-width: 330px;">Art. 4 Reporting areas</th>
                 <th colspan="22"></th>
               </tr>
               <tr>
-                <td></td>
-                <td></td>
-                <td tal:repeat="assessment python: view.get_secondary_articles(view._country_folder)">
-                  <tal:cond tal:condition="python: assessment.id != 'art7'">
-                    <div metal:use-macro="context/wise-macros/macros/assessment-status-bar"></div>
-                  </tal:cond>
-                  <tal:cond tal:condition="python: assessment.id == 'art7'">
+                <tal:rep tal:repeat="assessment python: view.get_secondary_articles(view._country_folder)">
+                  <td colspan="3" tal:condition="python: assessment.id == 'art7'">
                     <div><i>Not assessed</i></div>
-                  </tal:cond>
-                </td>
+                  </td>
+                </tal:rep>
+                <tal:rep tal:repeat="assessment python: view.get_secondary_articles(view._country_folder)">
+                  <td tal:condition="python: assessment.id != 'art7'">
+                    <div metal:use-macro="context/wise-macros/macros/assessment-status-bar"></div>
+                  </td>
+                </tal:rep>
                 <td colspan="22"></td>
               </tr>
             </tbody>
           </table>
 
           <div classS="report-section">
-            <div class="overflow-table">
-              <div class="inner">
-                <table class="table as-table-overview table-striped table-country-start table-homepage-assessments table-report"
-                    classX="table table-bordered table-striped table-comp-translate table-report">
+            <div class="overflow-table sticky-header hidden-fixed-table">
+              <div class="inner" style="overflow: auto;">
+                  <!--<h3 tal:attributes="id region/id" tal:content="region/title"-->
+                      <!--style="position: sticky; left: 0;">Region name</h3>-->
+                <table class="table table-sticky-first-col as-table-overview table-striped table-country-start table-homepage-assessments table-report">
                   <tbody>
-                    <tal:rep tal:repeat="region view/get_regions">
-                      <tr class="region-title">
-                        <td colspan="22"
-                            tal:attributes="id region/id"
-                            tal:content="region/title">Region name</td>
+                    <tal:rep tal:repeat="region regions">
+                      <tr>
+                        <th colspan="2" class="region-title"
+                            tal:attributes="id region/id" tal:content="region/title">Baltic</th>
                       </tr>
-                      <tr class="article-title">
+                      <tr class="article-title sticky-row"
+                          tal:attributes="class python: 'article-title {}'.format(region.id == regions[0].id and 'sticky-row' or '')">
                         <th>Descriptor</th>
                         <th>Art 9 GES Determination</th>
                         <th>Article 8 Assessment</th>
@@ -151,7 +150,7 @@
                       </tr>
 
                       <tr tal:repeat="desc python: view.get_descriptors(region)">
-                        <th>
+                        <th class="sub-header">
                           <span tal:content="python: view.descriptor_for_code(desc.id).title">D0</span>
                         </th>
                         <td tal:repeat="assessment python: view.get_articles(desc)">
@@ -167,7 +166,6 @@
               </div>
             </div>
           </div>
-
         </div>
       </div>
     </div>
