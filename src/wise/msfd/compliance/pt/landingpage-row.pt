@@ -1,10 +1,10 @@
-<tal:rep tal:repeat="row options/data">
-  <tal:def tal:define="date python: row[0];
-        who python: row[1];
-        article python: row[2];
-        task python: row[3];
-        css_extra python: row[4];
-        subrows python: row[5];">
+<tal:rep tal:repeat="year_row options/data">
+  <tal:def tal:define="date python: year_row.date;
+        who python: year_row.who;
+        article python: year_row.article;
+        task python: year_row.task;
+        css_extra python: year_row.css_extra;
+        subrows python: year_row.subrows;">
     <tr tal:attributes="class python: css_extra"
         tal:define="rowspan python: len(subrows)">
       <th style="min-width: 35px" class="sticky-col" tal:attributes="rowspan rowspan" tal:content="date"></th>
@@ -12,8 +12,12 @@
       <th style="min-width: 40px" class="sticky-col" tal:attributes="rowspan rowspan" tal:content="article"></th>
       <th style="min-width: 120px" class="sticky-col" tal:attributes="rowspan rowspan" class="bold-border" tal:content="task"></th>
       <tal:rep tal:repeat="item python: subrows[0]">
-        <td tal:attributes="colspan python: item[0]; class python: item[3]">
-          <a tal:attributes="href python: item[2]" tal:content="python: item[1]"></a>
+        <td tal:condition="python: item.rowspan > 0"
+            tal:attributes="colspan python: item.colspan; class python: item.css_class;
+                            rowspan python: item.rowspan">
+          <a tal:condition="python: item.href"
+             tal:attributes="href python: item.href" tal:content="python: item.text"></a>
+          <i tal:condition="python: not(item.href)" style="color: #aaa;">Not available</i>
         </td>
       </tal:rep>
     </tr>
@@ -21,8 +25,12 @@
       <tr tal:attributes="class python: css_extra"
           tal:repeat="subrow python: subrows[1:]">
         <tal:rep tal:repeat="item subrow">
-          <td tal:attributes="colspan python: item[0]; class python: item[3]">
-            <a tal:attributes="href python: item[2]" tal:content="python: item[1]"></a>
+          <td tal:condition="python: item.rowspan > 0"
+              tal:attributes="colspan python: item.colspan; class python: item.css_class;
+                              rowspan python: item.rowspan">
+            <a tal:condition="python: item.href"
+               tal:attributes="href python: item.href" tal:content="python: item.text"></a>
+            <i tal:condition="python: not(item.href)" style="color: #aaa;">Not available</i>
           </td>
         </tal:rep>
       </tr>

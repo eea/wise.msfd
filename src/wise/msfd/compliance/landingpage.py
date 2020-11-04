@@ -1,4 +1,4 @@
-
+from collections import namedtuple
 import lxml.etree
 
 from pkg_resources import resource_filename
@@ -18,6 +18,16 @@ COLOR_SUFFIX = {
     "region-a": "-A",
     "row": "",
 }
+
+
+YearRow = namedtuple('YearRow', ['date', 'who', 'article', 'task', 'css_extra',
+                                 'subrows'])
+
+SubrowDef = namedtuple('SubrowDef', ['colspan_type', 'text', 'color_class',
+                                     'get_method', 'rowspan'])
+
+SubrowItem = namedtuple('SubrowItem', ['colspan', 'text', 'href',
+                                       'css_class', 'rowspan'])
 
 
 def _parse_landingpage_xml(path='compliance/landingpage.xml'):
@@ -67,10 +77,12 @@ class LandingPageYearDefinition(object):
                 color_class = subrow.attrib.get('color-class', colspan_type)
                 get_method = subrow.attrib.get('get-method')
                 text = subrow.attrib.get('display-text')
+                rowspan = int(subrow.attrib.get('rowspan', 1))
 
-                subrows.append((colspan_type, text, color_class, get_method))
+                subrows.append(SubrowDef(colspan_type, text, color_class,
+                                         get_method, rowspan))
 
-            rows.append((date, who, article, task, css_extra, subrows))
+            rows.append(YearRow(date, who, article, task, css_extra, subrows))
 
         self.rows = rows
 
@@ -158,24 +170,29 @@ class BaseLandingPageRow(BaseComplianceView, AssessmentDataMixin):
 
         return data
 
-    def _make_subrow_row(self, text, data, color_class, extra_css_class):
+    def _make_subrow_row(self, text, data, color_class, extra_css_class,
+                         rowspan=1):
         res = []
         _text = text
         color_suffix = COLOR_SUFFIX.get(color_class, "")
         css_class = extra_css_class + " {}{}"
 
-        res.append((self._nr_of_countries, _text, data.get('ROW', ''),
-                    css_class.format('ROW', color_suffix)))
+        res.append(
+            SubrowItem(self._nr_of_countries, _text, data.get('ROW', ''),
+                       css_class.format('ROW', color_suffix), rowspan)
+        )
 
         return res
 
-    def _make_subrow_region(self, text, data, color_class, extra_css_class):
+    def _make_subrow_region(self, text, data, color_class, extra_css_class,
+                            rowspan=1):
         res = []
-        _text = text
         color_suffix = COLOR_SUFFIX.get(color_class, "")
         css_class = extra_css_class + " {}{}"
 
         for region_id, available_countries in self.regions_and_countries:
+            _text = text.format(region_id)
+
             if text == '_region':
                 _text = [
                     r.title
@@ -183,15 +200,17 @@ class BaseLandingPageRow(BaseComplianceView, AssessmentDataMixin):
                     if r.code == region_id
                 ][0]
 
-            res.append((len(available_countries), _text,
-                        data.get(region_id, ''),
-                        css_class.format(region_id, color_suffix)))
+            res.append(
+                SubrowItem(len(available_countries), _text,
+                           data.get(region_id, ''),
+                           css_class.format(region_id, color_suffix), rowspan)
+            )
 
         return res
 
-    def _make_subrow_country(self, text, data, color_class, extra_css_class):
+    def _make_subrow_country(self, text, data, color_class, extra_css_class,
+                             rowspan=1):
         res = []
-        _text = text
         color_suffix = COLOR_SUFFIX.get(color_class, "")
         css_class = extra_css_class + " {}{}"
 
@@ -200,17 +219,23 @@ class BaseLandingPageRow(BaseComplianceView, AssessmentDataMixin):
                 country_id = country[0]
                 country_name = country[1]
 
+                _text = text.format(country_id)
+
                 if text == '_country':
                     _text = country_name
 
-                res.append((1, _text, data.get(country_id, ""),
-                            css_class.format(region_id, color_suffix)))
+                res.append(
+                    SubrowItem(1, _text, data.get(country_id, ""),
+                               css_class.format(region_id, color_suffix),
+                               rowspan)
+                )
 
         return res
 
-    def make_subrow(self, colspan_type, text, color_class, css_extra, data):
+    def make_subrow(self, colspan_type, rowspan, text, color_class, css_extra,
+                    data):
         make_method = getattr(self, "_make_subrow_" + colspan_type)
-        subrow_final = make_method(text, data, color_class, css_extra)
+        subrow_final = make_method(text, data, color_class, css_extra, rowspan)
 
         return subrow_final
 
@@ -220,28 +245,29 @@ class BaseLandingPageRow(BaseComplianceView, AssessmentDataMixin):
         data = []
 
         for row in year_def.rows:
-            date = row[0]
-            who = row[1]
-            art = row[2]
-            task = row[3]
-            css_extra = row[4]
-            subrows = row[5]
+            date = row.date
+            who = row.who
+            art = row.article
+            task = row.task
+            css_extra = row.css_extra
+            subrows = row.subrows
             _subrows = []
 
-            for subrow in subrows:
-                colspan_type = subrow[0]
-                text = subrow[1]
-                color_class = subrow[2]
-                get_data_method = subrow[3]
+            for subrow_def in subrows:
+                colspan_type = subrow_def.colspan_type
+                text = subrow_def.text
+                color_class = subrow_def.color_class
+                get_data_method = subrow_def.get_method
+                rowspan = subrow_def.rowspan
 
                 subrow_data = getattr(self, get_data_method, self._default)()
 
                 _subrows.append(
-                    self.make_subrow(colspan_type, text, color_class,
+                    self.make_subrow(colspan_type, rowspan, text, color_class,
                                      css_extra, subrow_data)
                 )
 
-            data.append((date, who, art, task, css_extra, _subrows))
+            data.append(YearRow(date, who, art, task, css_extra, _subrows))
 
         self.data = data
 
