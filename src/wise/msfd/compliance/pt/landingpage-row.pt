@@ -7,11 +7,10 @@
         subrows python: row[5];">
     <tr tal:attributes="class python: css_extra"
         tal:define="rowspan python: len(subrows)">
-      <th tal:attributes="rowspan rowspan" tal:content="date"></th>
-      <th tal:attributes="rowspan rowspan" tal:content="who"></th>
-      <th tal:attributes="rowspan rowspan" tal:content="article"></th>
-      <th class="bold-border"
-          tal:attributes="rowspan rowspan" tal:content="task"></th>
+      <th style="min-width: 35px" class="sticky-col" tal:attributes="rowspan rowspan" tal:content="date"></th>
+      <th style="min-width: 35px" class="sticky-col" tal:attributes="rowspan rowspan" tal:content="who"></th>
+      <th style="min-width: 40px" class="sticky-col" tal:attributes="rowspan rowspan" tal:content="article"></th>
+      <th style="min-width: 120px" class="sticky-col" tal:attributes="rowspan rowspan" class="bold-border" tal:content="task"></th>
       <tal:rep tal:repeat="item python: subrows[0]">
         <td tal:attributes="colspan python: item[0]; class python: item[3]">
           <a tal:attributes="href python: item[2]" tal:content="python: item[1]"></a>
@@ -19,7 +18,8 @@
       </tal:rep>
     </tr>
     <tal:cond tal:condition="python: len(subrows) > 1">
-      <tr tal:repeat="subrow python: subrows[1:]">
+      <tr tal:attributes="class python: css_extra"
+          tal:repeat="subrow python: subrows[1:]">
         <tal:rep tal:repeat="item subrow">
           <td tal:attributes="colspan python: item[0]; class python: item[3]">
             <a tal:attributes="href python: item[2]" tal:content="python: item[1]"></a>
@@ -29,4 +29,4 @@
     </tal:cond>
   </tal:def>
 </tal:rep>
-<tr class="year-separator"></tr>
+<tr class="year-separator"><td colspan="99"></td></tr>

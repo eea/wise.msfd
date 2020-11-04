@@ -134,12 +134,12 @@
                   <tbody>
                     <tal:rep tal:repeat="region regions">
                       <tr>
-                        <th colspan="2" class="region-title"
+                        <th colspan="2" class="region-title sticky-col"
                             tal:attributes="id region/id" tal:content="region/title">Baltic</th>
                       </tr>
                       <tr class="article-title sticky-row"
                           tal:attributes="class python: 'article-title {}'.format(region.id == regions[0].id and 'sticky-row' or '')">
-                        <th>Descriptor</th>
+                        <th class="sticky-col">Descriptor</th>
                         <th>Art 9 GES Determination</th>
                         <th>Article 8 Assessment</th>
                         <th>Article 10 Targets</th>
@@ -150,7 +150,7 @@
                       </tr>
 
                       <tr tal:repeat="desc python: view.get_descriptors(region)">
-                        <th class="sub-header">
+                        <th class="sticky-col sub-header">
                           <span tal:content="python: view.descriptor_for_code(desc.id).title">D0</span>
                         </th>
                         <td tal:repeat="assessment python: view.get_articles(desc)">

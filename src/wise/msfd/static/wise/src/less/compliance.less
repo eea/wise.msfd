@@ -104,21 +104,26 @@
 
     table {
       margin-bottom: 0;
+
+      th {
+        vertical-align: middle;
+        text-align: center;
+      }
     }
   }
 }
 .fixed-table.table-sticky-first-col {
   th {
-    left: 0 !important;
+    //left: 0 !important;
     background-color: inherit;
   }
 }
 .table-sticky-first-col {
   tr {
-    th:first-of-type {
+    th.sticky-col {
       min-width: 170px;
       position: sticky;
-      left: 0;
+      left: -1px;
       z-index: 3;
       box-shadow: 2px 0 0 #ddd;
     }
@@ -1005,37 +1010,76 @@ table.comp-c-listing {
 .wise-search-landingpage {
   overflow-x: auto;
 
+  .overflow-table .fixed-table-inner {
+    th {
+      padding: 5px 3px !important;
+    }
+    td {
+      font-size: 18px;
+      font-weight: bold;
+      color: #333;
+      border: 1px solid white;
+      border-radius: 2px;
+      max-width: 120px;
+      padding: 5px 5px !important;
+      text-align: center;
+      text-decoration: none;
+      vertical-align: middle
+    }
+    a {
+      color: #333;
+    }
+  }
+
   .table-landingpage {
     margin: 0 !important;
 
+    .row-header {
+    }
+
+    input.fix-row {
+      display: none;
+    }
+
+    tr th:first-of-type {
+      //min-width: 250px;
+    }
     tr {
       &.landpage-header {
         th {
-          font-size: 120%;
+          font-size: 100%;
         }
       }
 
       &.year-separator {
-
+        td {
+          height: 5px;
+          background-color: #ccc;
+          padding: 0 !important;
+        }
+      }
+      &.year-separator:last-of-type {
+        display: none;
       }
     }
 
     tr.year-separator + tr {
-      border-top: 2px solid #aaa;
+      //border-top: 3px solid #aaa;
     }
 
     th, td {
       border: 1px solid white;
       border-radius: 2px;
       font-size: 90%;
-      max-width: 110px;
-      padding: 1px !important;
+      max-width: 120px;
+      padding: 5px 8px !important;
       text-align: center;
       text-decoration: none;
       vertical-align: middle !important;
 
       &.landpage-header {
-        font-size: 175%;
+        font-size: 18px;
+        font-weight: bold;
       }
 
       &.bold-border {
@@ -1046,6 +1090,7 @@ table.comp-c-listing {
 
     th {
       background-color: #efefef;
+      padding: 5px 3px !important;
     }
 
     td {
@@ -1060,41 +1105,41 @@ table.comp-c-listing {
       }
       &.BAL, &.ATL, &.MED, &.BLK, &.ROW {
         a {
-          color: white;
+          color: #333;
         }
       }
       &.BAL-CA, &.ATL-CA, &.MED-CA, &.BLK-CA {
-        background-color: #FDEADA;
+        background-color: rgba(253, 234, 218, 0.2);
       }
       &.BAL-A, &.ATL-A, &.MED-A, &.BLK-A {
-        background-color: #FAC090;
+        background-color: rgba(250, 192, 144, 0.2);
       }
       &.BAL-C {
-        background-color: #93CDDD;
+        background-color: rgba(147, 205, 221, 0.2);
       }
       &.BAL {
-        background-color: #215968;
+        background-color: rgba(33, 89, 104, 0.2);
       }
       &.ATL-C {
-        background-color: #C6D9F1;
+        background-color: rgba(198, 217, 241, 0.2);
       }
       &.ATL {
-        background-color: #558ED5;
+        background-color: rgba(85, 142, 213, 0.2);
       }
       &.MED-C {
-        background-color: #FCD5B5;
+        background-color: rgba(252, 213, 181, 0.2);
       }
       &.MED {
-        background-color: #E46C0A;
+        background-color: rgba(228, 108, 10, 0.2);
       }
       &.BLK-C {
-        background-color: #D99694;
+        background-color: rgba(217, 150, 148, 0.2);
       }
       &.BLK {
-        background-color: #632523;
+        background-color: rgba(99, 37, 35, 0.2);
       }
       &.ROW {
-        background-color: #984807;
+        background-color: rgba(152, 72, 7, 0.2);
       }
 
       a {

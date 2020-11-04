@@ -2,6 +2,9 @@
 @import "variables.less";
 
 // Report page
+.report-page-view .report-section .overflow-table .fixed-table-wrapper table.fixed-table tr th {
+  left: 24px;
+}
 .report-page-view {
   .report-section {
     margin-top: 2rem;
@@ -316,6 +319,11 @@
 }
 
 .fixed-table-wrapper {
+  &.sticky-table {
+    th {
+      left: auto;
+    }
+  }
   button.reset-pins {
     display: none;
     font-size: 14px;
@@ -328,7 +336,8 @@
     left: 1px;
   }
   th {
-    left: 24px !important;
+    //left: 24px !important;
+    left: 24px;
   }
 
   &.sticky-table {

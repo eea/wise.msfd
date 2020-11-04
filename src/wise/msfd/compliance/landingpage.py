@@ -8,6 +8,7 @@ from Products.Five.browser.pagetemplatefile import (PageTemplateFile,
 
 from .assessment import AssessmentDataMixin
 from .base import BaseComplianceView
+from .vocabulary import REGIONAL_DESCRIPTORS_REGIONS
 
 
 COLOR_SUFFIX = {
@@ -176,7 +177,11 @@ class BaseLandingPageRow(BaseComplianceView, AssessmentDataMixin):
 
         for region_id, available_countries in self.regions_and_countries:
             if text == '_region':
-                _text = region_id
+                _text = [
+                    r.title
+                    for r in REGIONAL_DESCRIPTORS_REGIONS
+                    if r.code == region_id
+                ][0]
 
             res.append((len(available_countries), _text,
                         data.get(region_id, ''),
@@ -196,7 +201,7 @@ class BaseLandingPageRow(BaseComplianceView, AssessmentDataMixin):
                 country_name = country[1]
 
                 if text == '_country':
-                    _text = country_id
+                    _text = country_name
 
                 res.append((1, _text, data.get(country_id, ""),
                             css_class.format(region_id, color_suffix)))

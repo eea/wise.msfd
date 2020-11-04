@@ -140,6 +140,10 @@ if (!Array.prototype.last){
 
     this.each(function() {
       $("th", this).each(function() {
+        if($(this).parents('table').hasClass('skip-height-fix')) {
+          return
+        }
+
         var $th = $(this);
         var $next = $('td:not(".sub-header")', $th.parent());
         var $subheader = $('td.sub-header', $th.parent())
@@ -751,6 +755,25 @@ if (!Array.prototype.last){
   }
 
   $.fn.setupStickyRows = function() {
+    // make first th element(s) with 'sticky-col' class stick to the left of the
+    // screen when scrolling horizontally
+    $stickyTable = $('.table-sticky-first-col');
+    $stickyTable.find('tr').each(function(){
+      $(this).find('th.sticky-col').each(function(){
+        $currentTh = $(this);
+        $prevTh = $(this).prev('.sticky-col');
+
+        if($prevTh.hasClass('sticky-col')){
+          prevWidth = $prevTh.outerWidth();
+          prevLeft = parseInt($prevTh.css('left'));
+          $currentTh.css({'left': prevWidth + prevLeft});
+        }
+        else {
+          $currentTh.css('left', -1);
+        }
+      });
+    });
+
     // Pin all rows with 'sticky-row' class
     $fixedTable = $(this).find('.fixed-table');
     var tableWrapper = $(this).find('.fixed-table-wrapper');
@@ -794,7 +817,6 @@ if (!Array.prototype.last){
         $ot.addClass('hidden-fixed-table');
       }
     });
-
   };
 
   $(document).ready(function($){
