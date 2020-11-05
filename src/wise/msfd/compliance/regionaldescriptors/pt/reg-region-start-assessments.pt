@@ -102,29 +102,38 @@
                 </td>
               </tr>
 
-              <tr class="article-title">
-                <th>Descriptor</th>
-                <th>Article 8 Assessment</th>
-                <th>Art 9 GES Determination</th>
-                <th>Article 10 Targets</th>
-                <th>Article 11 Monitoring</th>
-                <th>Article 13 Measures</th>
-                <th>Article 14 Exceptions</th>
-                <th>Article 18 Progress on measures</th>
-              </tr>
-
-              <tr tal:repeat="desc python: view.context.contentValues()">
-                <th>
-                  <span tal:content="python: view.descriptor_for_code(desc.id).title">D0</span>
-                </th>
-                <td tal:repeat="assessment python: view.get_articles(desc)">
-                  <div metal:use-macro="context/wise-macros/macros/assessment-status-bar"></div>                </td>
-                <td tal:repeat="assessment python: view.get_articles_part2(desc)">
-                  <i>Not available</i>
-                </td>
-              </tr>
             </tbody>
           </table>
+
+          <div class="overflow-table sticky-header hidden-fixed-table">
+            <div class="inner" style="overflow: auto;">
+              <table class="table table-sticky-first-col as-table-overview table-striped table-country-start table-homepage-reports table-report">
+                <tbody>
+                  <tr class="article-title sticky-row">
+                    <th class="sticky-col">Descriptor</th>
+                    <th>Article 8 Assessment</th>
+                    <th>Art 9 GES Determination</th>
+                    <th>Article 10 Targets</th>
+                    <th>Article 11 Monitoring</th>
+                    <th>Article 13 Measures</th>
+                    <th>Article 14 Exceptions</th>
+                    <th>Article 18 Progress on measures</th>
+                  </tr>
+
+                  <tr tal:repeat="desc python: view.context.contentValues()">
+                    <th class="sticky-col">
+                      <span tal:content="python: view.descriptor_for_code(desc.id).title">D0</span>
+                    </th>
+                    <td tal:repeat="assessment python: view.get_articles(desc)">
+                      <div metal:use-macro="context/wise-macros/macros/assessment-status-bar"></div>                </td>
+                    <td tal:repeat="assessment python: view.get_articles_part2(desc)">
+                      <i>Not available</i>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
 
         </div>
       </div>

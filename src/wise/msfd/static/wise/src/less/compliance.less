@@ -130,6 +130,16 @@
   }
 }
 .table-homepage-assessments {
+  td:not(first-of-type) {
+    min-width: 330px;
+  }
+}
+.table-homepage-reports {
+  td:not(first-of-type) {
+    min-width: 360px;
+  }
+}
+.table-homepage-assessments, .table-homepage-reports{
   tr:nth-child(odd) {
     th {
       background-color: #f9f9f9;
@@ -139,9 +149,6 @@
     th {
       background-color: white;
     }
-  }
-  td:not(first-of-type) {
-    min-width: 330px;
   }
 }
 
@@ -169,7 +176,7 @@
     }
     tr {
       th:first-of-type {
-        width: 150px;
+        width: 180px;
       }
       &.fullwidth-statusbar {
         td {

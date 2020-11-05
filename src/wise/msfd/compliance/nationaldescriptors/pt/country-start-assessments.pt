@@ -59,8 +59,7 @@
             </form>
           </div>
 
-          <table class="table as-table-overview table-striped table-country-start"
-              classX="table table-bordered table-striped table-comp-translate table-report">
+          <table class="table as-table-overview table-striped table-country-start">
             <tbody>
               <tr class="article-title">
                 <th>Article 8 Assessment</th>
@@ -125,7 +124,7 @@
             </tbody>
           </table>
 
-          <div classS="report-section">
+          <div class="report-section-X">
             <div class="overflow-table sticky-header hidden-fixed-table">
               <div class="inner" style="overflow: auto;">
                   <!--<h3 tal:attributes="id region/id" tal:content="region/title"-->
