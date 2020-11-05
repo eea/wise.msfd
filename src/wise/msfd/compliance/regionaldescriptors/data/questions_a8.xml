@@ -13,7 +13,7 @@
       <option score="0.5">Some elements used for this criterion are the same in many MS (51-75%) in the region</option>
       <option score="0.25">Some elements used for this criterion are the same in some / few MS (1-50%) in the region</option>
       <option score="0">All MS in the region use different elements for this criterion</option>
-      <option score="0">Only one MS reported elements for this criterion</option>
+      <option score="0">Only one MS in the region reported elements for this criterion</option>
       <option score="0.250">Not clear</option>
       <option score="/">Not relevant</option>
     </answers>

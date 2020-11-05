@@ -109,7 +109,7 @@
   
   <assessment-question id="A09Co4" class="coherence" use-criteria="all">
     <definition>
-      To what extent does the Member States in the marine region use GES determinations (objectives) that are the same or similar?
+      To what extent do the Member States in the region use GES determinations (objectives) that are the same or similar?
     </definition>
     <answers>
       <option score="1">Objectives for this criterion are the same or similar for most MS (76-100%) in the region</option>
@@ -153,7 +153,7 @@
       <option score="0.75">Some threshold values for this criterion are agreed at EU or regional level for most MS (76-100%) in the region</option>
       <option score="0.5">Some threshold values for this criterion are agreed at EU or regional level for many MS (51-75%) in the region</option>
       <option score="0.25">Some threshold values for this criterion agreed at EU or regional level for some / few MS (1-50%) in the region</option>
-      <option score="0">All MS in the region use threshold values that are not agreed at EU or regional level for this criterion  / regional threshold values used are all differentS</option>
+      <option score="0">All MS in the region use threshold values that are not agreed at EU or regional level for this criterion / regional threshold values used are all different</option>
       <option score="0">Only one MS in the region defined threshold values for this criterion</option>
       <option score="0.250">Not clear</option>
       <option score="/">Not relevant / None of the MS in the region use this criterion / none of the MS in the region defined threshold values for this criterion</option>
@@ -228,7 +228,7 @@
       <option score="0.5">Some GES extent thresholds are the same or similar in many MS (51-75%) in the region</option>
       <option score="0.25">Some GES extent thresholds are the same or similar in some / few MS (1-50%) in the region</option>
       <option score="0">All MS in the region use different GES extent thresholds</option>
-      <option score="0">Only one MS in the region specified the GES extent thresholds</option>
+      <option score="0">Only one MS in the region defined GES extent thresholds</option>
       <option score="0.250">Not clear</option>
       <option score="/">Not relevant / None of the MS in the region use this criterion / None of the MS in the region defined GES extent thresholds</option>
     </answers>
@@ -257,14 +257,14 @@
       To what extent is the Member State’s determination of GES the same or similar to other MS in the subregion?
     </definition>
     <answers>
-      <option score="1">Most (76-100%) aspects of the determination of GES for this criterion are the same in all MS in the subregions</option>
-      <option score="0.75">Many (51-75%) aspects of the determination of GES for this criterion are the same in all MS in the subregions</option>
-      <option score="0.5">Some (26-50%) aspects of the determination of GES for this criterion are the same in all MS in the subregions</option>
-      <option score="0.25">A few (1-25%) aspects of the determination of GES for this criterion are the same in all MS in the subregions</option>
+      <option score="1">Most (76-100%) aspects of the determination of GES for this criterion are the same in all MS in the subregion</option>
+      <option score="0.75">Many (51-75%) aspects of the determination of GES for this criterion are the same in all MS in the subregion</option>
+      <option score="0.5">Some (26-50%) aspects of the determination of GES for this criterion are the same in all MS in the subregion</option>
+      <option score="0.25">A few (1-25%) aspects of the determination of GES for this criterion are the same in all MS in the subregion</option>
       <option score="0">All MS in the subregions use different determinations of GES for this criterion</option>
-      <option score="0">Only one MS in the region reported a GES determination for this criterion</option>
+      <option score="0">Only one MS in the subregion reported a GES determination for this criterion</option>
       <option score="0.250">Not clear</option>
-      <option score="/">Not relevant / None of the MS in the region use this criterion</option>
+      <option score="/">Not relevant / None of the MS in the subregion use this criterion</option>
     </answers>
     <scoring determination-method="wise.msfd.compliance.scoring.scoring_based">
     </scoring>
