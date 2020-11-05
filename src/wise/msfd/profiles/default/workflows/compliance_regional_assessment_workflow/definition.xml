@@ -30,6 +30,8 @@
    <permission-role>Manager</permission-role>
    <permission-role>Reader</permission-role>
    <permission-role>Reviewer</permission-role>
+   <permission-role>Authenticated</permission-role>
+   <permission-role>Anonymous</permission-role>
   </permission-map>
   <permission-map name="wise.msfd: Edit Assessment" acquired="False">
    <permission-role>Editor</permission-role>
@@ -49,7 +51,7 @@
    <permission-role>Reviewer</permission-role>
   </permission-map>
  </state>
- <state state_id="in_draft_review" title="Draft review by Milieu">
+ <state state_id="in_draft_review" title="Draft Milieu">
   <exit-transition transition_id="send_back_to_work"/>
   <exit-transition transition_id="send_for_draft_review_com"/>
   <permission-map name="Add portal content" acquired="False">
@@ -73,6 +75,8 @@
    <permission-role>Manager</permission-role>
    <permission-role>Reader</permission-role>
    <permission-role>Reviewer</permission-role>
+   <permission-role>Authenticated</permission-role>
+   <permission-role>Anonymous</permission-role>
   </permission-map>
   <permission-map name="wise.msfd: Edit Assessment" acquired="False">
    <permission-role>Editor</permission-role>
@@ -91,7 +95,7 @@
    <permission-role>Reviewer</permission-role>
   </permission-map>
  </state>
- <state state_id="in_draft_review_com" title="Draft review by COM">
+ <state state_id="in_draft_review_com" title="Draft COM">
   <exit-transition transition_id="approve"/>
   <exit-transition transition_id="send_for_final_review"/>
   <permission-map name="Add portal content" acquired="False">
@@ -116,6 +120,8 @@
    <permission-role>Manager</permission-role>
    <permission-role>Reader</permission-role>
    <permission-role>Reviewer</permission-role>
+   <permission-role>Authenticated</permission-role>
+   <permission-role>Anonymous</permission-role>
   </permission-map>
   <permission-map name="wise.msfd: Edit Assessment" acquired="False">
    <permission-role>Manager</permission-role>
@@ -136,7 +142,7 @@
    <permission-role>Reviewer</permission-role>
   </permission-map>
  </state>
- <state state_id="in_draft_review_tl" title="Draft review by TL">
+ <state state_id="in_draft_review_tl" title="Draft TL">
   <exit-transition transition_id="send_back_to_draft"/>
   <permission-map name="Add portal content" acquired="False">
    <permission-role>Contributor</permission-role>
@@ -160,6 +166,8 @@
    <permission-role>Manager</permission-role>
    <permission-role>Reader</permission-role>
    <permission-role>Reviewer</permission-role>
+   <permission-role>Authenticated</permission-role>
+   <permission-role>Anonymous</permission-role>
   </permission-map>
   <permission-map name="wise.msfd: Edit Assessment" acquired="False">
    <permission-role>Contributor</permission-role>
@@ -182,7 +190,7 @@
    <permission-role>Reviewer</permission-role>
   </permission-map>
  </state>
- <state state_id="in_final_review" title="Final review by Milieu">
+ <state state_id="in_final_review" title="Final Milieu">
   <exit-transition transition_id="send_back_to_final_review_tl"/>
   <exit-transition transition_id="send_for_final_review_com"/>
   <permission-map name="Add portal content" acquired="False">
@@ -205,6 +213,8 @@
    <permission-role>Manager</permission-role>
    <permission-role>Reader</permission-role>
    <permission-role>Reviewer</permission-role>
+   <permission-role>Authenticated</permission-role>
+   <permission-role>Anonymous</permission-role>
   </permission-map>
   <permission-map name="wise.msfd: Edit Assessment" acquired="False">
    <permission-role>Editor</permission-role>
@@ -225,7 +235,7 @@
    <permission-role>Reviewer</permission-role>
   </permission-map>
  </state>
- <state state_id="in_final_review_com" title="Final review by COM">
+ <state state_id="in_final_review_com" title="Final COM">
   <exit-transition transition_id="approve"/>
   <exit-transition transition_id="send_back_to_final_review"/>
   <permission-map name="Add portal content" acquired="False">
@@ -250,6 +260,8 @@
    <permission-role>Manager</permission-role>
    <permission-role>Reader</permission-role>
    <permission-role>Reviewer</permission-role>
+   <permission-role>Authenticated</permission-role>
+   <permission-role>Anonymous</permission-role>
   </permission-map>
   <permission-map name="wise.msfd: Edit Assessment" acquired="False">
    <permission-role>Manager</permission-role>
@@ -270,7 +282,7 @@
    <permission-role>Reviewer</permission-role>
   </permission-map>
  </state>
- <state state_id="in_final_review_tl" title="Final review by Topic Lead">
+ <state state_id="in_final_review_tl" title="Final TL">
   <exit-transition transition_id="send_for_final_review_tl"/>
   <permission-map name="Add portal content" acquired="False">
    <permission-role>Contributor</permission-role>
@@ -294,6 +306,8 @@
    <permission-role>Manager</permission-role>
    <permission-role>Reader</permission-role>
    <permission-role>Reviewer</permission-role>
+   <permission-role>Authenticated</permission-role>
+   <permission-role>Anonymous</permission-role>
   </permission-map>
   <permission-map name="wise.msfd: Edit Assessment" acquired="False">
    <permission-role>Contributor</permission-role>
@@ -316,7 +330,7 @@
    <permission-role>Reviewer</permission-role>
   </permission-map>
  </state>
- <state state_id="in_work" title="In work by Milieu">
+ <state state_id="in_work" title="Work Milieu">
   <exit-transition transition_id="send_for_draft_review_com"/>
   <exit-transition transition_id="send_for_draft_review_tl"/>
   <exit-transition transition_id="send_to_not_started"/>
@@ -342,6 +356,8 @@
    <permission-role>Manager</permission-role>
    <permission-role>Reader</permission-role>
    <permission-role>Reviewer</permission-role>
+   <permission-role>Authenticated</permission-role>
+   <permission-role>Anonymous</permission-role>
   </permission-map>
   <permission-map name="wise.msfd: Edit Assessment" acquired="False">
    <permission-role>Contributor</permission-role>
@@ -382,6 +398,8 @@
    <permission-role>Editor</permission-role>
    <permission-role>Manager</permission-role>
    <permission-role>Reviewer</permission-role>
+   <permission-role>Authenticated</permission-role>
+   <permission-role>Anonymous</permission-role>
   </permission-map>
   <permission-map name="wise.msfd: Edit Assessment" acquired="False">
    <permission-role>Editor</permission-role>

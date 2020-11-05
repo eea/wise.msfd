@@ -110,16 +110,18 @@
           </div>
         </div>
 
-        <a class="btn btn-s btn-primary"
-          data-toggle="modal"
-          data-target="#edit-recommendation">
-            Add recommendation
-        </a>
-        <a class="btn btn-s btn-primary"
-          data-toggle="modal"
-          data-target="#edit-topics">
-            Edit topics
-        </a>
+        <div tal:condition="python: view.can_view_assessment_data()">
+          <a class="btn btn-s btn-primary"
+            data-toggle="modal"
+            data-target="#edit-recommendation">
+              Add recommendation
+          </a>
+          <a class="btn btn-s btn-primary"
+            data-toggle="modal"
+            data-target="#edit-topics">
+              Edit topics
+          </a>
+        </div>
 
         <table tal:replace="structure view/recommendations_table"></table>
       </div>

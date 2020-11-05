@@ -201,8 +201,10 @@ class RecommendationsView(BaseComplianceView):
 
         sorted_rec = sorted(recommendations, key=lambda i: i[0])
 
+        show_edit_buttons = self.can_view_assessment_data()
+
         self.recommendations_table = RecommendationsTable(
-            recommendations=sorted_rec, show_edit_buttons=True
+            recommendations=sorted_rec, show_edit_buttons=show_edit_buttons
         )
 
         return self.index()

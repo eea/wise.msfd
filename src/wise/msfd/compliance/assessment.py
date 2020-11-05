@@ -673,10 +673,10 @@ class AssessmentDataMixin(object):
     @property
     def _nat_desc_folder(self):
         portal_catalog = get_tool('portal_catalog')
-        brains = portal_catalog.searchResults(
+        brains = portal_catalog.unrestrictedSearchResults(
             object_provides=INationalDescriptorsFolder.__identifier__
         )
-        nat_desc_folder = brains[0].getObject()
+        nat_desc_folder = brains[0]._unrestrictedGetObject()
 
         return nat_desc_folder
 
@@ -689,10 +689,10 @@ class AssessmentDataMixin(object):
     @property
     def _reg_desc_folder(self):
         portal_catalog = get_tool('portal_catalog')
-        brains = portal_catalog.searchResults(
+        brains = portal_catalog.unrestrictedSearchResults(
             object_provides=IRegionalDescriptorsFolder.__identifier__
         )
-        nat_desc_folder = brains[0].getObject()
+        nat_desc_folder = brains[0]._unrestrictedGetObject()
 
         return nat_desc_folder
 

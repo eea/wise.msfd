@@ -46,7 +46,7 @@
      name="assessments"
      class=".main.NatDescCountryOverviewAssessments"
      template="./pt/country-start-assessments.pt"
-     permission="zope2.View"
+     permission="wise.ViewAssessmentData"
      />
 
   <!-- Renders assessment data, for member states to view -->

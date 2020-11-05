@@ -9,7 +9,7 @@
   <body metal:fill-slot="content">
 
     <div id="layout-contents" tal:define="text context/text | nothing" >
-      <div id="wise-search-form start-page-content">
+      <div id="wise-search-form" class="full-width-marker">
         <div id="wise-search-form-top">
           <metal:tabs
              metal:use-macro="context/wise-macros/macros/tabs"></metal:tabs>

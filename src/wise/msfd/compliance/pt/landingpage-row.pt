@@ -5,7 +5,8 @@
         task python: year_row.task;
         css_extra python: year_row.css_extra;
         subrows python: year_row.subrows;">
-    <tr tal:attributes="class python: css_extra"
+    <tr tal:condition="python: len(subrows) > 0"
+        tal:attributes="class python: css_extra"
         tal:define="rowspan python: len(subrows)">
       <th style="min-width: 35px" class="sticky-col" tal:attributes="rowspan rowspan" tal:content="date"></th>
       <th style="min-width: 35px" class="sticky-col" tal:attributes="rowspan rowspan" tal:content="who"></th>

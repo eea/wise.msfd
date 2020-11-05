@@ -411,7 +411,7 @@ class BootstrapCompliance(BrowserView):
         else:
             cm = create(self.context, 'Folder', title=u'Compliance Module')
 
-            self.set_layout(cm, '@@comp-start')
+            self.set_layout(cm, '@@landingpage')
             self.set_policy(cm, 'compliance_section_policy')
 
             alsoProvides(cm, interfaces.IComplianceModuleFolder)

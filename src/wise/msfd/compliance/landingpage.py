@@ -24,7 +24,7 @@ YearRow = namedtuple('YearRow', ['date', 'who', 'article', 'task', 'css_extra',
                                  'subrows'])
 
 SubrowDef = namedtuple('SubrowDef', ['colspan_type', 'text', 'color_class',
-                                     'get_method', 'rowspan'])
+                                     'get_method', 'rowspan', 'permission'])
 
 SubrowItem = namedtuple('SubrowItem', ['colspan', 'text', 'href',
                                        'css_class', 'rowspan'])
@@ -78,9 +78,10 @@ class LandingPageYearDefinition(object):
                 get_method = subrow.attrib.get('get-method')
                 text = subrow.attrib.get('display-text')
                 rowspan = int(subrow.attrib.get('rowspan', 1))
+                permission = subrow.attrib.get('permission', None)
 
                 subrows.append(SubrowDef(colspan_type, text, color_class,
-                                         get_method, rowspan))
+                                         get_method, rowspan, permission))
 
             rows.append(YearRow(date, who, article, task, css_extra, subrows))
 
@@ -259,9 +260,12 @@ class BaseLandingPageRow(BaseComplianceView, AssessmentDataMixin):
                 color_class = subrow_def.color_class
                 get_data_method = subrow_def.get_method
                 rowspan = subrow_def.rowspan
+                permission = subrow_def.permission
+
+                if permission and not(self.check_permission(permission)):
+                    continue
 
                 subrow_data = getattr(self, get_data_method, self._default)()
-
                 _subrows.append(
                     self.make_subrow(colspan_type, rowspan, text, color_class,
                                      css_extra, subrow_data)

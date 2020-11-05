@@ -72,7 +72,7 @@ PROCESS_STATUS_COLORS = {
 
 MAIN_FORMS = [Tab(*x) for x in [
     # view name, (title, explanation)
-    ('@@comp-start',
+    ('@@landingpage',
      'compliance-start',    # section name
      'Assessment Module',
      'Start Page',
