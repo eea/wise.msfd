@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 from collections import defaultdict, namedtuple
+from pkg_resources import resource_filename
+from pyexcel_xlsx import get_data
 
 from zope.schema.vocabulary import SimpleTerm, SimpleVocabulary
 
@@ -132,6 +134,33 @@ REGIONAL_DESCRIPTORS_REGIONS = [
     Region('MAL', 'Mediterranean: Aegean-Levantine Sea', ('MAL',),
            ('EL', 'CY'), False),
 ]
+
+ReportingHistoryENVRow = namedtuple(
+    'ReportingHistoryENVRow',
+    ['ARES', 'CIRCABC', 'WISE', 'Sort', 'CountryCode', 'FileName',
+     'LocationURL', 'Schema', 'ReportingObligation', 'ReportingObligationID',
+     'ReportingObligationURL', 'DateDue', 'DateReceived', 'ReportingDelay',
+     'MSFDArticle', 'ReportType']
+)
+
+
+def parse_reporting_history_env():
+    res = []
+
+    file_loc = resource_filename('wise.msfd',
+                          'data/MSFDReportingHistory_2020-04-12.xlsx')
+
+    with open(file_loc, 'rb') as file:
+        sheets = get_data(file)
+        env_data = sheets['ENV']
+
+        for row in env_data[1:]:
+            res.append(ReportingHistoryENVRow(*row[:16]))
+
+    return res
+
+
+REPORTING_HISTORY_ENV = parse_reporting_history_env()
 
 
 @db.use_db_session('2018')

@@ -16,9 +16,17 @@
         <td tal:condition="python: item.rowspan > 0"
             tal:attributes="colspan python: item.colspan; class python: item.css_class;
                             rowspan python: item.rowspan">
+
+          <tal:cond tal:condition="python: hasattr(item.href, '__iter__')">
+            <tal:rep tal:repeat="i item/href">
+              <a tal:attributes="href python: i[0]" tal:content="python: i[1]"/>
+            </tal:rep>
+          </tal:cond>
+
           <a tal:condition="python: item.href"
              tal:attributes="href python: item.href" tal:content="python: item.text"></a>
-          <i tal:condition="python: not(item.href)" style="color: #aaa;">Not available</i>
+          <i tal:condition="python: not(item.href)" style="color: #aaa;">Not found</i>
+
         </td>
       </tal:rep>
     </tr>
@@ -29,9 +37,11 @@
           <td tal:condition="python: item.rowspan > 0"
               tal:attributes="colspan python: item.colspan; class python: item.css_class;
                               rowspan python: item.rowspan">
+
             <a tal:condition="python: item.href"
                tal:attributes="href python: item.href" tal:content="python: item.text"></a>
-            <i tal:condition="python: not(item.href)" style="color: #aaa;">Not available</i>
+            <i tal:condition="python: not(item.href)" style="color: #aaa;">Not found</i>
+
           </td>
         </tal:rep>
       </tr>

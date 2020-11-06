@@ -1,8 +1,8 @@
 <landingpage>
     <year date="Date" extra-css-class="landpage-header sticky-row">
         <element who="Author" article="Related MSFD Article" task="Product/Report">
-            <row colspan="country" get-method="get_2018_countries" display-text="_country"/>
-            <row colspan="region" get-method="get_2018_regions" display-text="_region"/>
+            <row colspan="country" get-method="get_header_countries" display-text="_country"/>
+            <row colspan="region" get-method="get_header_regions" display-text="_region"/>
         </element>
     </year>
     <year date="2019">
@@ -45,13 +45,21 @@
         <element who="COM" article="16" task="Recommendations to MS">
             <row colspan="country" get-method="" display-text="View {} letter"/>
         </element>
-        <element who="COM" article="16" task="Assessment of  2016 Art13-14 reports">
-            <row colspan="row" get-method="" display-text="COM(2018) 562; SWD(2018) 393; SWD(2019) 510"/>
-            <row colspan="region" get-method="" display-text="View {} technical report"/>
-            <row colspan="country" get-method="" display-text="View {} report"/>
+        <element who="COM" article="16" task="Assessment of 2016 Art13-14 reports">
+            <row colspan="row" get-method="get_from_env_2016_art16" display-text=""
+                 msfd-article="Article 16 assessment of Articles 13 and 14 (2016)"/>
+            <row colspan="region" get-method="get_from_env_simple"
+                 msfd-article="Article 16 assessment of Articles 13 and 14 (2016)"
+                 report-type="Commission technical assessment - regional"
+                 display-text="View {} technical report" color-class="region-a"/>
+            <row colspan="country" get-method="get_from_env_simple"
+                 msfd-article="Article 16 assessment of Articles 13 and 14 (2016)"
+                 report-type="Commission technical assessment - national"
+                 display-text="View {} asses." color-class="country-a"/>
         </element>
         <element who="COM" article="9.3" task="Revised Decision on criteria and methodological standards for GES">
-            <row colspan="row" get-method="" display-text="Commission Decision (EU) 2017/848; Commission Directive (EU) 2017/845 (revised MSFD Annex III)"/>
+            <row colspan="row" get-method="get_from_env_2016_art9_3" display-text=""
+                 msfd-article="Article 9(3)"/>
         </element>
         <element who="MS" article="13" task="Programme of measures">
             <row colspan="country" get-method="" display-text="View {} reports"/>
@@ -69,10 +77,10 @@
         <element who="COM" article="12" task="Recommendations to MS">
             <row colspan="country" get-method="" display-text="View {} letter"/>
         </element>
-        <element who="COM" article="12" task="Assessment of  2014 Art11 reports">
+        <element who="COM" article="12" task="Assessment of 2014 Art11 reports">
             <row colspan="row" get-method="" display-text="COM(2017) 3; SWD(2017) 1; SWD(2018) 393"/>
-            <row colspan="region" get-method="" display-text="View {} technical report"/>
-            <row colspan="country" get-method="" display-text="View {} report"/>
+            <row colspan="region" get-method="" display-text="View {} technical report" color-class="region-a"/>
+            <row colspan="country" get-method="" display-text="View {} report" color-class="country-a"/>
         </element>
     </year>
     <year date="2014">
@@ -91,10 +99,10 @@
         <element who="COM" article="12" task="Recommendations to MS">
             <row colspan="country" get-method="" display-text="View {} letter"/>
         </element>
-        <element who="COM" article="12" task="Assessment of  2012 Art8-9-10 reports">
+        <element who="COM" article="12" task="Assessment of 2012 Art8-9-10 reports">
             <row colspan="row" get-method="" display-text="COM(2014) 97; SWD(2014) 49; SWD(2017) 1; JRC in-depth assessment (D1, 2, 4, 5, 6, 8, 9, 10, 11); JRC in-depth assessment (D7)"/>
-            <row colspan="region" get-method="" display-text="View {} technical report"/>
-            <row colspan="country" get-method="" display-text="View {} Report"/>
+            <row colspan="region" get-method="" display-text="View {} technical report" color-class="region-a"/>
+            <row colspan="country" get-method="" display-text="View {} Report" color-class="country-a"/>
         </element>
     </year>
     <year date="2012">

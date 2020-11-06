@@ -8,7 +8,7 @@ from Products.Five.browser.pagetemplatefile import (PageTemplateFile,
 
 from .assessment import AssessmentDataMixin
 from .base import BaseComplianceView
-from .vocabulary import REGIONAL_DESCRIPTORS_REGIONS
+from .vocabulary import REGIONAL_DESCRIPTORS_REGIONS, REPORTING_HISTORY_ENV
 
 
 COLOR_SUFFIX = {
@@ -24,7 +24,8 @@ YearRow = namedtuple('YearRow', ['date', 'who', 'article', 'task', 'css_extra',
                                  'subrows'])
 
 SubrowDef = namedtuple('SubrowDef', ['colspan_type', 'text', 'color_class',
-                                     'get_method', 'rowspan', 'permission'])
+                                     'get_method', 'rowspan', 'permission',
+                                     'msfd_article', 'report_type'])
 
 SubrowItem = namedtuple('SubrowItem', ['colspan', 'text', 'href',
                                        'css_class', 'rowspan'])
@@ -54,10 +55,14 @@ class LandingPageYearDefinition(object):
         """ Initialize a year node, represented in the form of a nested list
         with the following structure
 
-        [[date1, who1, article1, task1, css_class1,
-            [colspanA, textA, colorA, get_data_methodA]],
-         [date2, who2, article2, task2, css_class2,
-            [colspanB, textB, colorB, get_data_methodB]]
+        [YearRow(date, who, article, task, css_extra,[
+            SubrowDef1(colspan_type, text, color_class,
+                        get_method, rowspan, permission, msfd_article),
+            SubrowDef2(colspan_type, text, color_class,
+                        get_method, rowspan, permission, msfd_article)
+            ],
+         YearRow2...,
+         YearRow3...,
         ]
         """
 
@@ -79,9 +84,12 @@ class LandingPageYearDefinition(object):
                 text = subrow.attrib.get('display-text')
                 rowspan = int(subrow.attrib.get('rowspan', 1))
                 permission = subrow.attrib.get('permission', None)
+                msfd_article = subrow.attrib.get('msfd-article', None)
+                report_type = subrow.attrib.get('report-type', None)
 
                 subrows.append(SubrowDef(colspan_type, text, color_class,
-                                         get_method, rowspan, permission))
+                                         get_method, rowspan, permission,
+                                         msfd_article, report_type))
 
             rows.append(YearRow(date, who, article, task, css_extra, subrows))
 
@@ -106,7 +114,154 @@ class StartLandingPage(BaseComplianceView):
         return self.template(data=data)
 
 
-class BaseLandingPageRow(BaseComplianceView, AssessmentDataMixin):
+class LandingpageDataMixin:
+    """ Class to hold all the methods to get the urls displayed on the
+    landingpage
+    """
+
+    def _get_location_url(self, article, country_code, report_type,
+                          file_name=None):
+        for row in REPORTING_HISTORY_ENV:
+            if article != row.MSFDArticle:
+                continue
+
+            if country_code != row.CountryCode:
+                continue
+
+            if report_type != row.ReportType:
+                continue
+
+            if file_name and file_name != row.FileName:
+                continue
+
+            return row.LocationURL
+
+        return None
+
+    def _get_2018_countries(self, extra_path=''):
+        data = {}
+
+        for folder in self._nat_desc_country_folders:
+            url = "{}/{}".format(folder.absolute_url(), extra_path)
+            country_id = folder.id.upper()
+            data[country_id] = url
+
+        return data
+
+    def _get_2018_regions(self, extra_path=''):
+        data = {}
+
+        for folder in self._reg_desc_region_folders:
+            url = "{}/{}".format(folder.absolute_url(), extra_path)
+            reg_id = folder.id.upper()
+            data[reg_id] = url
+
+        return data
+
+    def _get_from_env_row(self, msfd_article, report_type):
+        url = self._get_location_url(msfd_article, 'COM', report_type)
+
+        return {"ROW": url}
+
+    def _get_from_env_country(self, msfd_article, report_type):
+        data = {}
+
+        for folder in self._nat_desc_country_folders:
+            country_id = folder.id.upper()
+            url = self._get_location_url(msfd_article, country_id, report_type)
+            data[country_id] = url
+
+        return data
+
+    def _get_from_env_region(self, msfd_article, report_type):
+        data = {}
+
+        for folder in self._reg_desc_region_folders:
+            reg_id = folder.id.upper()
+            url = self._get_location_url(msfd_article, reg_id, report_type)
+            data[reg_id] = url
+
+        return data
+
+    def _default(self, *args):
+        return {}
+
+    def _get_from_env_multilink(self, links):
+        data = {"ROW": []}
+
+        for link in links:
+            msfd_article = link[0]
+            report_type = link[1]
+            file_name = link[2]
+            url = self._get_location_url(msfd_article, 'COM', report_type,
+                                         file_name)
+
+            data["ROW"].append((url, file_name))
+
+        return data
+
+
+    def get_header_countries(self, *args):
+        return self._get_2018_countries()
+
+    def get_header_regions(self, *args):
+        return self._get_2018_regions()
+
+    def get_from_env_2016_art16(self, *args):
+        msfd_article = args[1]
+        links = (
+            # article, report_type, file_name
+            (msfd_article, 'Commission report', 'COM(2018)562.pdf'),
+            (msfd_article, 'Commission Staff Working Document',
+             'SWD(2018)393 final.pdf'),
+            (msfd_article, 'Commission Staff Working Document',
+             'SWD(2019) 510 final')
+        )
+
+        return self._get_from_env_multilink(links)
+
+    def get_from_env_2016_art9_3(self, *args):
+        msfd_article = args[1]
+        links = (
+            # article, report_type, file_name
+            (msfd_article, 'Commission decision',
+             'Commission Decision (EU) 2017/848'),
+            ('Annex III', 'Commission directive',
+             'Commission Directive (EU) 2017/845'),
+        )
+
+        return self._get_from_env_multilink(links)
+
+    def get_from_env_simple(self, *args):
+        """ Get url from MSFD reporting history ENV using the msfd-article
+            and country_code or region code
+
+            Return single url for each country/region
+        """
+        colspan_type = args[0]
+        msfd_article = args[1]
+        report_type = args[2]
+
+        get_method = getattr(self, "_get_from_env_" + colspan_type)
+        data = get_method(msfd_article, report_type)
+
+        return data
+
+    def get_2018_countries_assess(self, *args):
+        return self._get_2018_countries(extra_path='assessments')
+
+    def get_2018_countries_reports(self, *args):
+        return self._get_2018_countries(extra_path='reports')
+
+    def get_2018_regions_assess(self, *args):
+        return self._get_2018_regions(extra_path='assessments')
+
+    def get_2018_regions_reports(self, *args):
+        return self._get_2018_regions(extra_path='reports')
+
+
+class BaseLandingPageRow(BaseComplianceView, AssessmentDataMixin,
+                         LandingpageDataMixin):
     """ Base class with all the needed base methods to build the landing page
         structure
     """
@@ -135,41 +290,6 @@ class BaseLandingPageRow(BaseComplianceView, AssessmentDataMixin):
             res.append((region_id, available_countries))
 
         return res
-
-    def _default(self):
-        return {}
-
-    def get_2018_countries_assess(self):
-        return self.get_2018_countries(extra_path='assessments')
-
-    def get_2018_countries_reports(self):
-        return self.get_2018_countries(extra_path='reports')
-
-    def get_2018_countries(self, extra_path=''):
-        data = {}
-
-        for folder in self._nat_desc_country_folders:
-            url = "{}/{}".format(folder.absolute_url(), extra_path)
-            reg_id = folder.id.upper()
-            data[reg_id] = url
-
-        return data
-
-    def get_2018_regions_assess(self):
-        return self.get_2018_regions(extra_path='assessments')
-
-    def get_2018_regions_reports(self):
-        return self.get_2018_regions(extra_path='reports')
-
-    def get_2018_regions(self, extra_path=''):
-        data = {}
-
-        for folder in self._reg_desc_region_folders:
-            url = "{}/{}".format(folder.absolute_url(), extra_path)
-            reg_id = folder.id.upper()
-            data[reg_id] = url
-
-        return data
 
     def _make_subrow_row(self, text, data, color_class, extra_css_class,
                          rowspan=1):
@@ -261,11 +381,16 @@ class BaseLandingPageRow(BaseComplianceView, AssessmentDataMixin):
                 get_data_method = subrow_def.get_method
                 rowspan = subrow_def.rowspan
                 permission = subrow_def.permission
+                msfd_article = subrow_def.msfd_article
+                report_type = subrow_def.report_type
 
                 if permission and not(self.check_permission(permission)):
                     continue
 
-                subrow_data = getattr(self, get_data_method, self._default)()
+                _get_method = getattr(self, get_data_method, self._default)
+                subrow_data = _get_method(colspan_type, msfd_article,
+                                          report_type)
+
                 _subrows.append(
                     self.make_subrow(colspan_type, rowspan, text, color_class,
                                      css_extra, subrow_data)
