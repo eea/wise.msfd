@@ -155,6 +155,10 @@ def parse_reporting_history_env():
         env_data = sheets['ENV']
 
         for row in env_data[1:]:
+            row = [
+                isinstance(x, basestring) and x.strip() or x
+                for x in row
+            ]
             res.append(ReportingHistoryENVRow(*row[:16]))
 
     return res

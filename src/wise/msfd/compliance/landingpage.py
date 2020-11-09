@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 from collections import namedtuple
 import lxml.etree
 
@@ -25,7 +27,8 @@ YearRow = namedtuple('YearRow', ['date', 'who', 'article', 'task', 'css_extra',
 
 SubrowDef = namedtuple('SubrowDef', ['colspan_type', 'text', 'color_class',
                                      'get_method', 'rowspan', 'permission',
-                                     'msfd_article', 'report_type'])
+                                     'msfd_article', 'report_type',
+                                     'file_name'])
 
 SubrowItem = namedtuple('SubrowItem', ['colspan', 'text', 'href',
                                        'css_class', 'rowspan'])
@@ -86,10 +89,11 @@ class LandingPageYearDefinition(object):
                 permission = subrow.attrib.get('permission', None)
                 msfd_article = subrow.attrib.get('msfd-article', None)
                 report_type = subrow.attrib.get('report-type', None)
+                file_name = subrow.attrib.get('file-name', None)
 
                 subrows.append(SubrowDef(colspan_type, text, color_class,
                                          get_method, rowspan, permission,
-                                         msfd_article, report_type))
+                                         msfd_article, report_type, file_name))
 
             rows.append(YearRow(date, who, article, task, css_extra, subrows))
 
@@ -158,27 +162,35 @@ class LandingpageDataMixin:
 
         return data
 
-    def _get_from_env_row(self, msfd_article, report_type):
-        url = self._get_location_url(msfd_article, 'COM', report_type)
+    def _get_from_env_row(self, msfd_article, report_type, file_name):
+        url = self._get_location_url(msfd_article, 'COM', report_type,
+                                     file_name)
 
         return {"ROW": url}
 
-    def _get_from_env_country(self, msfd_article, report_type):
+    def _get_from_env_country(self, msfd_article, report_type, file_name):
         data = {}
 
         for folder in self._nat_desc_country_folders:
             country_id = folder.id.upper()
-            url = self._get_location_url(msfd_article, country_id, report_type)
+            _file_name = file_name
+
+            if file_name:
+                _file_name = file_name.format(country_id)
+
+            url = self._get_location_url(msfd_article, country_id, report_type,
+                                         _file_name)
             data[country_id] = url
 
         return data
 
-    def _get_from_env_region(self, msfd_article, report_type):
+    def _get_from_env_region(self, msfd_article, report_type, file_name):
         data = {}
 
         for folder in self._reg_desc_region_folders:
             reg_id = folder.id.upper()
-            url = self._get_location_url(msfd_article, reg_id, report_type)
+            url = self._get_location_url(msfd_article, reg_id, report_type,
+                                         file_name)
             data[reg_id] = url
 
         return data
@@ -202,10 +214,10 @@ class LandingpageDataMixin:
 
 
     def get_header_countries(self, *args):
-        return self._get_2018_countries()
+        return self._get_2018_countries(extra_path='reports')
 
     def get_header_regions(self, *args):
-        return self._get_2018_regions()
+        return self._get_2018_regions(extra_path='reports')
 
     def get_from_env_2016_art16(self, *args):
         msfd_article = args[1]
@@ -232,6 +244,53 @@ class LandingpageDataMixin:
 
         return self._get_from_env_multilink(links)
 
+    def get_from_env_2015_art12(self, *args):
+        msfd_article = args[1]
+        links = (
+            # article, report_type, file_name
+            (msfd_article, 'Commission report', 'COM(2017) 3'),
+            (msfd_article, 'Commission Staff Working Document', 'SWD(2017) 1'),
+            (msfd_article, 'Commission Staff Working Document',
+             'SWD(2018)393 final.pdf'),
+        )
+
+        return self._get_from_env_multilink(links)
+
+    def get_from_env_2010_9_3(self, *args):
+        msfd_article = args[1]
+        links = (
+            # article, report_type, file_name
+            (msfd_article, 'Commission decision',
+             'Commission Decision 2010/477/EU'),
+            (msfd_article, 'Commission Staff Working Document',
+             'SEC(2011) 1255'),
+        )
+
+        return self._get_from_env_multilink(links)
+
+    def get_from_env_2012_art12(self, *args):
+        msfd_article = args[1]
+        links = (
+            # article, report_type, file_name
+            (msfd_article, 'Commission report',
+             '2014 - Report COM/2014/097 final - The first phase of '
+             'implementation of the MSFD'),
+            (msfd_article, 'Commission Staff Working Document',
+             "2014 - SWD/2014/049 final - Annex to the report - "
+             "The European's Commission's assessment and guidance"),
+            (msfd_article, 'Commission Staff Working Document', 'SWD(2017) 1'),
+            (msfd_article, 'Commission in-depth assessment (JRC)',
+             "JRC In-Depth Assessment of the EU Member States’ Submissions "
+             "for the Marine Strategy Framework Directive under articles 8, "
+             "9 and 10 [Descriptors 1, 2, 4, 5, 6, 8, 9, 10, 11]"),
+            (msfd_article, 'Commission in-depth assessment (JRC)',
+             "JRC In-Depth Assessment of the EU Member States’ Submissions "
+             "for the Marine Strategy Framework Directive under articles 8, "
+             "9 and 10 on hydrographical conditions Descriptor 7"),
+        )
+
+        return self._get_from_env_multilink(links)
+
     def get_from_env_simple(self, *args):
         """ Get url from MSFD reporting history ENV using the msfd-article
             and country_code or region code
@@ -241,9 +300,10 @@ class LandingpageDataMixin:
         colspan_type = args[0]
         msfd_article = args[1]
         report_type = args[2]
+        file_name = args[3]
 
         get_method = getattr(self, "_get_from_env_" + colspan_type)
-        data = get_method(msfd_article, report_type)
+        data = get_method(msfd_article, report_type, file_name)
 
         return data
 
@@ -287,7 +347,8 @@ class BaseLandingPageRow(BaseComplianceView, AssessmentDataMixin,
             region_id = region_folder.id.upper()
             available_countries = region_folder._countries_for_region
 
-            res.append((region_id, available_countries))
+            res.append((region_id,
+                        sorted(available_countries, key=lambda i: i[1])))
 
         return res
 
@@ -383,13 +444,14 @@ class BaseLandingPageRow(BaseComplianceView, AssessmentDataMixin,
                 permission = subrow_def.permission
                 msfd_article = subrow_def.msfd_article
                 report_type = subrow_def.report_type
+                file_name = subrow_def.file_name
 
                 if permission and not(self.check_permission(permission)):
                     continue
 
                 _get_method = getattr(self, get_data_method, self._default)
                 subrow_data = _get_method(colspan_type, msfd_article,
-                                          report_type)
+                                          report_type, file_name)
 
                 _subrows.append(
                     self.make_subrow(colspan_type, rowspan, text, color_class,

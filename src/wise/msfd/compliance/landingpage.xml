@@ -5,6 +5,12 @@
             <row colspan="region" get-method="get_header_regions" display-text="_region"/>
         </element>
     </year>
+    <year date="2020">
+        <element who="MS" article="17 (11)" task="2020 update of monitoring programme">
+            <row colspan="country" get-method="" display-text="View {} reports"/>
+            <row colspan="region" get-method="" display-text="View {} reports"/>
+        </element>
+    </year>
     <year date="2019">
         <element who="COM" article="20" task="1st report on implementation of the Directive">
             <row colspan="row" get-method="" display-text="View COM(2020) ???; SWD(2020) ???; SWD(2020) ???; SWD(2020) ???"/>
@@ -13,7 +19,7 @@
             <row colspan="country" get-method="" display-text=""/>
         </element>
         <element who="COM" article="12" task="Recommendations to MS">
-            <row colspan="country" get-method="get_2018_countries_reports" display-text="View {} Recom." permission="wise.ViewAssessmentData"/>
+            <row colspan="country" get-method="" display-text="View {} Recom." permission="wise.ViewAssessmentData"/>
         </element>
         <element who="COM" article="12" task="Assessment of 2018 updated Art8-9-10 reports">
             <row colspan="row" get-method="" display-text="View report" permission="wise.ViewAssessmentData"/>
@@ -21,7 +27,7 @@
             <row colspan="country" color-class="country-a" get-method="get_2018_countries_assess" display-text="View {} asses." permission="wise.ViewAssessmentData"/>
         </element>
         <element who="MS" article="18" task="Interim report on programme of measures">
-            <row colspan="country" get-method="" display-text="View reports"/>
+            <row colspan="country" get-method="" display-text="View {} reports"/>
         </element>
     </year>
     <year date="2018">
@@ -40,10 +46,18 @@
     </year>
     <year date="2016">
         <element who="MS" article="16" task="MS response to recommendations">
-            <row colspan="country" get-method="" display-text="View {} response"/>
+            <row colspan="country" get-method="get_from_env_simple"
+                 msfd-article="Article 16 assessment of Articles 13 and 14 (2016)"
+                 report-type="Member State response to Commission recommendations"
+                 file-name="Reply {}.pdf"
+                 display-text="View {} response"/>
         </element>
         <element who="COM" article="16" task="Recommendations to MS">
-            <row colspan="country" get-method="" display-text="View {} letter"/>
+            <row colspan="country" get-method="get_from_env_simple"
+                 msfd-article="Article 16 assessment of Articles 13 and 14 (2016)"
+                 report-type="Commission recommendations to Member State"
+                 file-name="{} Letter.pdf"
+                 display-text="View {} letter"/>
         </element>
         <element who="COM" article="16" task="Assessment of 2016 Art13-14 reports">
             <row colspan="row" get-method="get_from_env_2016_art16" display-text=""
@@ -72,20 +86,40 @@
     </year>
     <year date="2015">
         <element who="MS" article="12" task="MS response to recommendations">
-            <row colspan="country" get-method="" display-text="View {} response"/>
+            <row colspan="country" get-method="get_from_env_simple"
+                 msfd-article="Article 12 assessment of Article 11 (2015)"
+                 report-type="Member State response to Commission recommendations"
+                 file-name="Reply {}.pdf"
+                 display-text="View {} response"/>
         </element>
         <element who="COM" article="12" task="Recommendations to MS">
-            <row colspan="country" get-method="" display-text="View {} letter"/>
+            <row colspan="country" get-method="get_from_env_simple"
+                 msfd-article="Article 12 assessment of Article 11 (2015)"
+                 report-type="Commission recommendations to Member State"
+                 file-name="{} Letter.pdf"
+                 display-text="View {} letter"/>
         </element>
         <element who="COM" article="12" task="Assessment of 2014 Art11 reports">
-            <row colspan="row" get-method="" display-text="COM(2017) 3; SWD(2017) 1; SWD(2018) 393"/>
-            <row colspan="region" get-method="" display-text="View {} technical report" color-class="region-a"/>
-            <row colspan="country" get-method="" display-text="View {} report" color-class="country-a"/>
+            <row colspan="row" get-method="get_from_env_2015_art12"
+                 msfd-article="Article 12 assessment of Article 11 (2015)"
+                 display-text=""/>
+            <row colspan="region" get-method="get_from_env_simple"
+                 msfd-article="Article 12 assessment of Article 11 (2015)"
+                 report-type="Commission technical assessment - regional"
+                 display-text="View {} technical report" color-class="region-a"/>
+            <row colspan="country" get-method="get_from_env_simple"
+                 msfd-article="Article 12 assessment of Article 11 (2015)"
+                 report-type="Commission technical assessment - national"
+                 display-text="View {} report" color-class="country-a"/>
         </element>
     </year>
     <year date="2014">
         <element who="COM" article="21" task="Protected areas">
-            <row colspan="row" get-method="" display-text="COM(2015) 481 including Annexes"/>
+            <row colspan="row" get-method="get_from_env_simple"
+                 msfd-article="Article 21"
+                 report-type="Commission report"
+                 file-name="COM(2015) 481 including Annexes"
+                 display-text="COM(2015) 481 including Annexes"/>
         </element>
         <element who="MS" article="11" task="Monitoring programme">
             <row colspan="country" get-method="" display-text="View {} Reports"/>
@@ -100,9 +134,17 @@
             <row colspan="country" get-method="" display-text="View {} letter"/>
         </element>
         <element who="COM" article="12" task="Assessment of 2012 Art8-9-10 reports">
-            <row colspan="row" get-method="" display-text="COM(2014) 97; SWD(2014) 49; SWD(2017) 1; JRC in-depth assessment (D1, 2, 4, 5, 6, 8, 9, 10, 11); JRC in-depth assessment (D7)"/>
-            <row colspan="region" get-method="" display-text="View {} technical report" color-class="region-a"/>
-            <row colspan="country" get-method="" display-text="View {} Report" color-class="country-a"/>
+            <row colspan="row" get-method="get_from_env_2012_art12"
+                 msfd-article="Article 12 assessment of Articles 8, 9 and 10 (2013)"
+                 display-text=""/>
+            <row colspan="region" get-method="get_from_env_simple"
+                 msfd-article="Article 12 assessment of Articles 8, 9 and 10 (2013)"
+                 report-type="Commission technical assessment - regional"
+                 display-text="View {} technical report" color-class="region-a"/>
+            <row colspan="country" get-method="get_from_env_simple"
+                 msfd-article="Article 12 assessment of Articles 8, 9 and 10 (2013)"
+                 report-type="Commission technical assessment - national"
+                 display-text="View {} Report" color-class="country-a"/>
         </element>
     </year>
     <year date="2012">
@@ -119,7 +161,11 @@
             <row colspan="region" rowspan="0" get-method="get_2018_regions_reports" display-text="View {} reports"/>
         </element>
         <element who="COM" article="20.2" task="International report">
-            <row colspan="row" get-method="get_2012_inter_report" display-text="View COM(2012) 662"/>
+            <row colspan="row" get-method="get_from_env_simple"
+                 msfd-article="Article 20(2)"
+                 report-type="Commission report"
+                 file-name="COM(2012) 662"
+                 display-text="View COM(2012) 662"/>
         </element>
     </year>
     <year date="2011">
@@ -132,7 +178,9 @@
             <row colspan="country" get-method="" display-text="View {} reports"/>
         </element>
         <element who="COM" article="9.3" task="Criteria and methodological standards for GES">
-            <row colspan="row" get-method="" display-text="Decision 2010/477/EU (repealed); SEC(2011) 1255"/>
+            <row colspan="row" get-method="get_from_env_2010_9_3"
+                 msfd-article="Article 9(3)"
+                 display-text=""/>
         </element>
         <element who="MS" article="26" task="Transposition of directive">
             <row colspan="country" get-method="" display-text="View {}"/>
@@ -140,7 +188,11 @@
     </year>
     <year date="2008">
         <element who="Com" article="" task="Marine Strategy Framework Directive">
-            <row colspan="row" get-method="" display-text="Directive 2008/56/EC"/>
+            <row colspan="row" get-method="get_from_env_simple"
+                 msfd-article="Not relevant"
+                 report-type="Commission directive"
+                 file-name="Directive 2008/56/EC"
+                 display-text="Directive 2008/56/EC"/>
         </element>
     </year>
 </landingpage>
