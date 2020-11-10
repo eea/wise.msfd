@@ -22,6 +22,7 @@ from plone.intelligenttext.transforms import \
 from plone.memoize import volatile
 from Products.Five.browser.pagetemplatefile import PageTemplateFile
 
+
 # TODO: move this registration to search package
 BLACKLIST = ['ID', 'Import', 'Id']
 
@@ -49,10 +50,8 @@ def scan(namespace):
     importlib.import_module(name)
 
 
-def print_value(value):
+def __setup_common_labels():
     from .labels import COMMON_LABELS, GES_LABELS
-
-    # TODO: this is only used in search package
 
     common_labels = {}
     common_labels.update(COMMON_LABELS)
@@ -60,6 +59,14 @@ def print_value(value):
     common_labels.update(getattr(GES_LABELS, 'targets'))
     common_labels.update(getattr(GES_LABELS, 'mrus'))
     common_labels.update(getattr(GES_LABELS, 'ktms'))
+
+    return common_labels
+
+
+def print_value(value):
+    # TODO: this is only used in search package
+
+    common_labels = __setup_common_labels()
 
     if not value:
         return value
@@ -104,6 +111,48 @@ def print_value(value):
 
         return None
         # return '&lt;hidden&gt;'
+
+    return value
+
+
+def print_value_xls(value, fieldname):
+    # TODO: this is only used in search package
+
+    if fieldname in TRANSFORMS:
+        transformer = TRANSFORMS.get(fieldname)
+
+        return transformer(value)
+
+    common_labels = __setup_common_labels()
+
+    if not value:
+        return value
+
+    if isinstance(value, string_types):
+        value = value.strip()
+
+        if value in common_labels:
+            tmpl = u'{}'
+            try:
+                html = common_labels[value]
+                ret = tmpl.format(html)
+            except UnicodeEncodeError as e:
+                ret = tmpl.format(common_labels[value].encode('utf-8'))
+            except Exception as e:
+                logger.exception("Error print_value_xls: %r", e)
+                ret = tmpl.format(common_labels[value].decode('utf-8'))
+
+            return ret
+
+        return value
+
+    if isinstance(value, ItemList):
+        return value()
+
+    base_values = string_types + (int, float, datetime.datetime, list)
+
+    if not isinstance(value, base_values):
+        return None
 
     return value
 
@@ -333,6 +382,7 @@ Tab = namedtuple('Tab', [
     'section',
     'title',
     'subtitle',
+    'description',
     'cssclass',
     'condition',
 ])
@@ -755,3 +805,27 @@ def get_weight_from_annot(q_id, descr):
         x = ''
 
     return x
+
+
+def area_transform(value):
+    new_val = "{:.2f}".format(value)
+
+    return new_val
+
+
+def mrus_transform(value):
+    from .labels import GES_LABELS
+
+    mru_labels = getattr(GES_LABELS, 'mrus')
+    label = mru_labels.get(value, 'No name available')
+    template = u"{} ({})".format(label, value)
+
+    return template
+
+
+TRANSFORMS = {
+    'Area': area_transform,
+    'Marine Unit(s)': mrus_transform,
+    'MarineUnitID': mrus_transform,
+    'MarineReportingUnit': mrus_transform
+}

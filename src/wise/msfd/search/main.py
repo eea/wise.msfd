@@ -7,22 +7,23 @@ from . import interfaces
 from .. import sql
 from .. import db
 from ..base import BasePublicPage, EmbeddedForm, MainFormWrapper
-from ..db import (get_all_records, get_all_records_join,
-                  get_item_by_conditions, get_item_by_conditions_art_6,
+from ..db import (get_competent_auth_data, get_all_records,
+                  get_all_records_join, get_item_by_conditions_art_6,
                   threadlocals)
 from ..interfaces import IMarineUnitIDsSelect
-from ..sql_extra import MSCompetentAuthority
+from ..sql import t_MS_CompetentAuthorities
 from ..utils import scan
 from .a11 import StartArticle11Form
-from .a1314 import StartArticle1314Form
+from .a1314 import StartArticle1314Form, StartArticle14Form
 from .a19 import StartArticle19Form
 from .a4 import A4Form, A4MemberStatesForm
 from .a9 import A9Form
 from .a10 import A10Form
 from .base import MAIN_FORMS, ItemDisplayForm, MainForm
 from .utils import (data_to_xls, get_form, register_form_art4,
-                    register_form_art8, register_form_art9,
-                    register_form_art10)
+                    register_form_a8_2012, register_form_art8,
+                    register_form_a9_2012, register_form_art9,
+                    register_form_a10_2012, register_form_art10)
 
 
 class StartView(BrowserView, BasePublicPage):
@@ -34,25 +35,12 @@ class StartMSCompetentAuthoritiesForm(MainForm):
     name = 'msfd-ca'
 
     record_title = title = 'Article 7 (Competent Authorities)'
-    fields = Fields(interfaces.IMemberStates)
+    fields = Fields(interfaces.IMemberStatesArt7)
     fields['member_states'].widgetFactory = CheckBoxFieldWidget
     session_name = '2012'
 
     def get_subform(self):
         return CompetentAuthorityItemDisplay(self, self.request)
-
-    def download_results(self):
-        c_codes = self.data.get('member_states')
-        count, data = get_all_records(
-            MSCompetentAuthority,
-            MSCompetentAuthority.C_CD.in_(c_codes)
-        )
-
-        xlsdata = [
-            ('MSCompetentAuthority', data),
-        ]
-
-        return data_to_xls(xlsdata)
 
 
 StartMSCompetentAuthoritiesView = wrap_form(StartMSCompetentAuthoritiesForm,
@@ -63,11 +51,12 @@ class CompetentAuthorityItemDisplay(ItemDisplayForm):
     """ The implementation for the Article 7
     """
 
-    mapper_class = MSCompetentAuthority
+    mapper_class = t_MS_CompetentAuthorities
     order_field = 'C_CD'
     css_class = "left-side-form"
 
     blacklist = ('Import_Time', 'Import_FileName', 'C_CD')
+    blacklist_labels = ('C_CD', )
     use_blacklist = False
 
     def get_reported_date(self):
@@ -93,18 +82,29 @@ class CompetentAuthorityItemDisplay(ItemDisplayForm):
 
         return country
 
+    def download_results(self):
+        c_codes = self.context.data.get('member_states')
+        conditions = [t_MS_CompetentAuthorities.c.C_CD.in_(c_codes)]
+        cnt, data = get_competent_auth_data(*conditions)
+
+        xlsdata = [
+            ('MSCompetentAuthority', data),
+        ]
+
+        return xlsdata
+
     def get_db_results(self):
         page = self.get_page()
 
-        args = [self.mapper_class, self.order_field]
+        conditions = []
         c_codes = self.context.data.get('member_states')
 
         if c_codes:
-            args.append(self.mapper_class.C_CD.in_(c_codes))
+            conditions.append(self.mapper_class.c.C_CD.in_(c_codes))
 
-        res = get_item_by_conditions(*args, page=page)
+        cnt, data = get_competent_auth_data(*conditions)
 
-        return res
+        return cnt, data[page]
 
 
 @register_form_art4
@@ -144,9 +144,7 @@ class StartA4Form(MainForm):
 StartArticle4View = wrap_form(StartA4Form, MainFormWrapper)
 
 
-class StartRegionalCoopForm(MainForm):
-    name = 'msfd-rc'
-
+class StartRegionalCoopForm(EmbeddedForm):
     record_title = title = 'Article 6 (Regional cooperation)'
     fields = Fields(interfaces.IRegionSubregionsArt6)
     fields['region_subregions'].widgetFactory = CheckBoxFieldWidget
@@ -156,8 +154,19 @@ class StartRegionalCoopForm(MainForm):
         return RegionalCoopForm(self, self.request)
 
 
-StartRegionalCoopView = wrap_form(StartRegionalCoopForm,
-                                  MainFormWrapper)
+@register_form_a8_2012
+class RegionalCoopFormArt8(StartRegionalCoopForm):
+    topic = 'Art8'
+
+
+@register_form_a9_2012
+class RegionalCoopFormArt9(StartRegionalCoopForm):
+    topic = 'Art9'
+
+
+@register_form_a10_2012
+class RegionalCoopFormArt10(StartRegionalCoopForm):
+    topic = 'Art10'
 
 
 class RegionalCoopForm(EmbeddedForm):
@@ -166,30 +175,6 @@ class RegionalCoopForm(EmbeddedForm):
 
     def get_subform(self):
         return RegionalCoopItemDisplay(self, self.request)
-
-    def download_results(self):
-        mci = sql.MSFD4Import
-        mcr = sql.MSFD4RegionalCooperation
-        c_codes = self.data.get('member_states')
-
-        import_ids = db.get_unique_from_mapper(
-            sql.MSFD4Import,
-            'MSFD4_Import_ID',
-            sql.MSFD4Import.MSFD4_Import_ReportingCountry.in_(c_codes)
-        )
-        cols = [mci.MSFD4_Import_ReportingCountry] + self.get_obj_fields(mcr)
-
-        count, data = get_all_records_join(
-            cols,
-            mcr,
-            mcr.MSFD4_RegionalCooperation_Import.in_(import_ids)
-        )
-
-        xlsdata = [
-            ('RegionalCooperation', data),
-        ]
-
-        return data_to_xls(xlsdata)
 
 
 class RegionalCoopItemDisplay(ItemDisplayForm):
@@ -245,11 +230,38 @@ class RegionalCoopItemDisplay(ItemDisplayForm):
 
         return country
 
+    def download_results(self):
+        mci = sql.MSFD4Import
+        mcr = sql.MSFD4RegionalCooperation
+        c_codes = self.get_form_data_by_key(self, 'member_states')
+
+        import_ids = db.get_unique_from_mapper(
+            sql.MSFD4Import,
+            'MSFD4_Import_ID',
+            sql.MSFD4Import.MSFD4_Import_ReportingCountry.in_(c_codes)
+        )
+        cols = [mci.MSFD4_Import_ReportingCountry] + self.get_obj_fields(mcr)
+
+        count, data = get_all_records_join(
+            cols,
+            mcr,
+            mcr.MSFD4_RegionalCooperation_Import.in_(import_ids),
+            mcr.Topic == self.context.context.topic
+        )
+
+        xlsdata = [
+            ('RegionalCooperation', data),
+        ]
+
+        return xlsdata
+
     def get_db_results(self):
         page = self.get_page()
         mci = sql.MSFD4Import
         mcr = sql.MSFD4RegionalCooperation
-        conditions = []
+        conditions = [
+            mcr.Topic == self.context.context.topic
+        ]
 
         c_codes = self.get_form_data_by_key(self.context, 'member_states')
         r_codes = self.get_form_data_by_key(self.context, 'region_subregions')
@@ -372,6 +384,16 @@ class MemberStatesForm(EmbeddedForm):
         return AreaTypesForm(self, self.request)
 
 
+class MemberStatesFormArt9(EmbeddedForm):
+    fields = Fields(interfaces.IMemberStates)
+    fields['member_states'].widgetFactory = CheckBoxFieldWidget
+
+    def get_subform(self):
+        # return AreaTypesForm(self, self.request)
+
+        return A9Form(self, self.request)
+
+
 class AreaTypesForm(EmbeddedForm):
 
     fields = Fields(interfaces.IAreaTypes)
@@ -383,8 +405,8 @@ class AreaTypesForm(EmbeddedForm):
         if main_form == 'msfd-mru':
             return A4Form(self, self.request)
 
-        if main_form == 'msfd-a9':
-            return A9Form(self, self.request)
+        # if main_form == 'msfd-a9':
+        #     return A9Form(self, self.request)
 
         if main_form == 'msfd-a10':
             return A10Form(self, self.request)
@@ -409,20 +431,50 @@ StartArticle8View = wrap_form(StartArticle8Form, MainFormWrapper)
 
 
 @register_form_art9
-class StartArticle92012Form(RegionForm):
+class StartArticle92012Form(EmbeddedForm):
     title = "2012 reporting exercise"
     permission = "zope2.View"
     session_name = "2012"
+
+    fields = Fields(interfaces.IReportTypeArt9)
+
+    def get_subform(self):
+        klass = self.get_form_data_by_key(self, 'report_type')
+
+        return klass(self, self.request)
+
+
+@register_form_a9_2012
+class Article92012Form(EmbeddedForm):
+    title = "Article 9 (GES determination)"
+
+    fields = Fields(interfaces.IRegionSubregions)
+    fields['region_subregions'].widgetFactory = CheckBoxFieldWidget
+
+    def get_subform(self):
+        return MemberStatesFormArt9(self, self.request)
 
 
 StartArticle9View = wrap_form(StartArticle9Form, MainFormWrapper)
 
 
 @register_form_art10
-class StartArticle102012Form(RegionForm):
+class StartArticle102012Form(EmbeddedForm):
     title = "2012 reporting exercise"
     permission = "zope2.View"
     session_name = "2012"
+
+    fields = Fields(interfaces.IReportTypeArt10)
+
+    def get_subform(self):
+        klass = self.get_form_data_by_key(self, 'report_type')
+
+        return klass(self, self.request)
+
+
+@register_form_a10_2012
+class Article102012Form(RegionForm):
+    title = "Article 10 (Targets)"
 
 
 StartArticle10View = wrap_form(StartArticle10Form, MainFormWrapper)
@@ -461,6 +513,7 @@ class MarineUnitIDsForm(EmbeddedForm):
 
 StartArticle11View = wrap_form(StartArticle11Form, MainFormWrapper)
 StartArticle1314View = wrap_form(StartArticle1314Form, MainFormWrapper)
+StartArticle14View = wrap_form(StartArticle14Form, MainFormWrapper)
 
 
 @register_form_art8
@@ -470,7 +523,7 @@ class StartArticle82018Form(EmbeddedForm):
 
     fields = Fields(interfaces.IArticleSelectA82018)
     session_name = '2018'
-    permission = 'wise.ViewReports'
+    permission = 'zope2.View'  # 'wise.ViewReports'
 
     def get_subform(self):
         article = self.data['article']

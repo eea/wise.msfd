@@ -10,7 +10,7 @@
     name="msfd-start"
     permission="zope2.View"
     class = ".main.StartView"
-    template="../pt/start.pt"
+    template="../pt/msfd-start.pt"
     />
 
   <browser:page
@@ -24,13 +24,6 @@
     for="*"
     name="msfd-mru"
     class=".main.StartArticle4View"
-    permission="zope2.View"
-    />
-
-  <browser:page
-    for="*"
-    name="msfd-rc"
-    class=".main.StartRegionalCoopView"
     permission="zope2.View"
     />
 
@@ -71,6 +64,13 @@
 
   <browser:page
     for="*"
+    name="msfd-a14"
+    class=".main.StartArticle14View"
+    permission="zope2.View"
+    />
+
+  <browser:page
+    for="*"
     name="msfd-c6"
     class=".main.StartArticle19View"
     permission="zope2.View"
@@ -104,6 +104,16 @@
   <utility
     component=".vocabulary.a9_reporting_period"
     name="wise_search_reporting_period_a9"
+    />
+
+  <utility
+    component=".vocabulary.report_type_art9"
+    name="wise_search_report_type_a9"
+    />
+
+  <utility
+    component=".vocabulary.report_type_art10"
+    name="wise_search_report_type_a10"
     />
 
   <utility

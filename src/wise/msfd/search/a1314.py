@@ -49,11 +49,12 @@ class Article13Form(EmbeddedForm):
         return MemberStatesForm(self, self.request)
 
 
-@register_form_art1314
-class Article14Form(EmbeddedForm):
+# @register_form_art1314
+class StartArticle14Form(MainForm):
     record_title = title = 'Article 14 - Exceptions'
     report_type = "Exceptions"
     session_name = '2012'
+    name = 'msfd-a14'
 
     fields = Fields(interfaces.IArticles1314Region)
     fields['region_subregions'].widgetFactory = CheckBoxFieldWidget
@@ -71,8 +72,7 @@ class MemberStatesForm(EmbeddedForm):
 
     def get_subform(self):
         mc = sql.MSFD13ReportingInfo
-        report_klass = self.get_form_data_by_key(self, 'report_type')
-        report_type = report_klass.report_type
+        report_type = self.context.report_type
         count, mrus = self.get_available_marine_unit_ids()
 
         count, res = db.get_all_records(
@@ -98,8 +98,7 @@ class MemberStatesForm(EmbeddedForm):
         mc = sql.MSFD13ReportingInfo
 
         ms = self.get_selected_member_states()
-        report_klass = self.get_form_data_by_key(self, 'report_type')
-        report_type = report_klass.report_type
+        report_type = self.context.report_type
 
         count, res = db.get_all_records_join(
             [mc.MarineUnitID],
@@ -198,8 +197,7 @@ class A1314ItemDisplay(ItemDisplayForm):
             "Exceptions": 'Article 14 - Exceptions'
         }
 
-        report_klass = self.get_form_data_by_key(self, 'report_type')
-        report_type = report_klass.report_type
+        report_type = self.context.context.report_type
 
         record_title = values[report_type]
 
@@ -248,7 +246,7 @@ class A1314ItemDisplay(ItemDisplayForm):
             ('MSFD13ReportInfoFurtherInfo', data_report),
         ]
 
-        return data_to_xls(xlsdata)
+        return xlsdata
 
     def get_db_results(self):
         page = self.get_page()
@@ -312,18 +310,9 @@ class A1314ItemDisplay(ItemDisplayForm):
 
         marine_units = [x.MarineUnitID for x in marine_units]
 
-        marine_units_labeled = []
-        for mru in marine_units:
-            mru_label = GES_LABELS.get('mrus', mru)
-
-            if mru_label != mru:
-                mru_label = u"{} ({})".format(mru_label, unicode(mru))
-
-            marine_units_labeled.append(mru_label)
-
         mrus_extra = [
-            ('Marine Unit(s)', {
-                '': [{'MarineUnitID': x} for x in marine_units_labeled]
+            ('', {
+                '': [{'Marine Unit(s)': x} for x in marine_units]
             })
         ]
 

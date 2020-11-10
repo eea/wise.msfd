@@ -4,22 +4,37 @@ from z3c.form.field import Fields
 
 from .. import db, sql
 from ..base import EmbeddedForm, MarineUnitIDSelectForm2012
-from ..db import get_all_records
+from ..db import (get_all_records, get_available_marine_unit_ids,
+                  get_marine_unit_ids)
 from ..utils import group_query
 from .base import ItemDisplayForm
-from .interfaces import IA2012GesComponentsArt9
+from .interfaces import IA2012GesComponentsArt9, IAreaTypes
 from .utils import data_to_xls, register_form_art9
 
 
 class A9Form(EmbeddedForm):
     """ Select the MarineUnitID for the Article 9 form
     """
-    record_title = 'Article 9 (GES determination)'
-    # session_name = '2012'
-    mapper_class = sql.MSFD9Descriptor
 
     fields = Fields(IA2012GesComponentsArt9)
     fields['ges_components'].widgetFactory = CheckBoxFieldWidget
+
+    def get_subform(self):
+        # return A9MRUForm(self, self.request)
+
+        return AreaTypesFormArt9(self, self.request)
+
+    # def get_available_marine_unit_ids(self):
+    #     return self.subform.get_available_marine_unit_ids()
+
+
+class AreaTypesFormArt9(EmbeddedForm):
+    record_title = 'Article 9 (GES determination)'
+
+    fields = Fields(IAreaTypes)
+    fields['area_types'].widgetFactory = CheckBoxFieldWidget
+    session_name = '2012'
+    mapper_class = sql.MSFD9Descriptor
 
     def get_subform(self):
         return A9MRUForm(self, self.request)
@@ -48,18 +63,37 @@ class A9Form(EmbeddedForm):
             ('MSFD9_Features', data_f),
         ]
 
-        return data_to_xls(xlsdata)
+        return xlsdata
 
 
 class A9MRUForm(MarineUnitIDSelectForm2012):
     mapper_class = sql.MSFD9Descriptor
 
-    # def get_available_marine_unit_ids(self):
-    #     return super(A9MRUForm, self).get_available_marine_unit_ids(
-    #         parent=self.context
-    #     )
+    def get_available_marine_unit_ids(self, parent=None):
+        data = {}
+        parent = self.context
+
+        # lookup values in the inheritance tree
+        for crit in ['area_types', 'member_states', 'region_subregions']:
+            while hasattr(parent, 'context'):
+                if hasattr(parent, 'get_selected_' + crit):
+                    data[crit] = getattr(parent, 'get_selected_' + crit)()
+                    break
+
+                parent = parent.context
+
+            parent = parent.context
+
+        _, all_mrus = get_marine_unit_ids(**data)
+
+        count, res = get_available_marine_unit_ids(
+            all_mrus, self.mapper_class
+        )
+
+        return count, [x[0] for x in res]
 
     def get_subform(self):
+
         return A9ItemDisplay(self, self.request)
 
 

@@ -18,7 +18,7 @@ from ..base import BaseEnhancedForm, BaseUtil, EmbeddedForm
 from ..db import (get_item_by_conditions, latest_import_ids_2018,
                   use_db_session)
 from ..interfaces import IMainForm
-from .utils import get_registered_form_sections
+from .utils import data_to_xls, get_registered_form_sections
 
 logger = logging.getLogger('wise.msfd')
 
@@ -181,29 +181,59 @@ def true(view):
 
 MAIN_FORMS = (
     Tab('msfd-start', 'msfd-start', 'Start',
-        'About <br/>search engine', '', true),
-    Tab('msfd-mru', 'msfd-mru', 'Article 4', 'Marine Units', '', true),
-    Tab('msfd-rc', 'msfd-rc', 'Article 6', 'Regional cooperation', '', true),
-    Tab('msfd-ca', 'msfd-ca', 'Article 7', 'Competent Authorities', '', true),
-    Tab('msfd-a8', 'msfd-a8', 'Article 8', 'Assessments', '', true),
-    Tab('msfd-a9', 'msfd-a9', 'Article 9', 'GES determinations', '', true),
-    Tab('msfd-a10', 'msfd-a10', 'Article 10', 'Targets', '', true),
-    Tab('msfd-c2', 'msfd-c2', 'Article 11', 'Monitoring programmes',
+        'About MSFD reporting data explorer', '', '', true),
+    Tab('msfd-mru', 'msfd-mru', 'Article 4', 'Marine Units',
+        ' Geographical areas used by Member States for the implementation of\n\
+        the Directive compatible with the marine regions and subregions listed\n\
+        in the Directive.',
         '', true),
-    Tab('msfd-c3', 'msfd-c3', 'Articles <br/>13, 14 & 18',
-        'Programmes of measures (PoM), exceptions '
-        '& progress on the implementation of PoM', '', true),
+    # Tab('msfd-rc', 'msfd-rc', 'Article 6', 'Regional cooperation',
+    #     'Member States coordination with third countries having sovereignty or\n\
+    #     jurisdiction over waters in the same marine region or subregion.',
+    #     '', true),
+    Tab('msfd-ca', 'msfd-ca', 'Article 7', 'Competent Authorities',
+        'Member States authority or authorities for the implementation of the\n\
+        Directive with respect to their marine waters.',
+        '', true),
+    Tab('msfd-a8', 'msfd-a8', 'Article 8', 'Assessments',
+        'Assessments of Member States marine waters comprising: a) analysis of\n\
+        the essential features and characteristics, b) analysis of the\n\
+        predominant pressures and impacts, and c) economic and social analysis\n\
+        of the use of those waters.', '', true),
+    Tab('msfd-a9', 'msfd-a9', 'Article 9',
+        'Determination of good environmental status',
+        'Determination of the good environmental status of the Descriptors,\n\
+        for Member States marine waters and in respect of each marine region\n\
+        or subregion.', '', true),
+    Tab('msfd-a10', 'msfd-a10', 'Article 10',
+        'Establishment of environmental targets',
+        'Environmental targets and associated indicators for Member States\n\
+        marine waters to guide progress towards achieving good environmental\n\
+        status in their marine environment.', '', true),
+    Tab('msfd-c2', 'msfd-c2', 'Article 11', 'Monitoring programmes',
+        'Programmes established by Member States to monitor the environmental\n\
+        status of their marine waters.', '', true),
+    Tab('msfd-c3', 'msfd-c3', 'Articles 13 & 18',
+        'Programmes of measures & Progress of PoM',
+        'Measures to be taken in order to achieve or maintain good environmental\n\
+        status, and progress in the implementation of the programmes of measures.',
+        '', true),
+    Tab('msfd-a14', 'msfd-a14', 'Article 14',
+        'Exceptions',
+        'Exceptions reported whenever good environmental status cannot be achieved.',
+        '', true),
     # Tab('msfd-c4', 'msfd-c4', 'Articles <br/>8, 9 & 10',
     #     '2018 reporting exercise', '', true),
     # Tab('msfd-c5', 'msfd-c5', 'Article 18',
     #     'Progress on the implementation of PoM', '', true),
-    Tab('msfd-c6', 'msfd-c6', 'Article 19.3',
-        'Datasets used', '', true),
+    Tab('msfd-c6', 'msfd-c6', 'Article 19.3', 'Datasets used',
+        'Access to data resulting from the GES assessments and the monitoring\n\
+        programmes.', '', true),
 )
 
 
 class MainForm(BaseEnhancedForm, BasePublicPage, Form):
-    """ The main forms need to inherit from this clas
+    """ The main forms need to inherit from this class
     """
 
     implements(IMainForm)
@@ -230,6 +260,14 @@ class MainForm(BaseEnhancedForm, BasePublicPage, Form):
     @property
     def title(self):
         return [x[1] for x in self.main_forms if x[0] == self.name][0]
+
+    @property
+    def main_title(self):
+        return [x[2] for x in self.main_forms if x[0] == self.name][0]
+
+    @property
+    def subtitle(self):
+        return [x[3] for x in self.main_forms if x[0] == self.name][0]
 
     @property
     def spreadsheet_title(self):
@@ -262,7 +300,7 @@ class MainForm(BaseEnhancedForm, BasePublicPage, Form):
 
     # @cache(request_cache_key)
     def render(self):
-        download_action = self.find_download_action()
+        blacklist_labels, download_action = self.find_download_action()
 
         if download_action in (None, False):
             del self.actions['download']
@@ -271,13 +309,13 @@ class MainForm(BaseEnhancedForm, BasePublicPage, Form):
             # TODO: need to implement this as xls response
 
             data = download_action()
+            data_xls = data_to_xls(data, blacklist_labels)
 
             sh = self.request.response.setHeader
 
             sh('Content-Type', 'application/vnd.openxmlformats-officedocument.'
                'spreadsheetml.sheet')
 
-            # fname = self.subform.get_record_title(cntx='subform') or 'marinedb'
             logger.info("Spreadsheet title: %s", self.spreadsheet_title)
             fname = self.spreadsheet_title or 'marinedb'
             fname = fname + '_' + str(datetime.now().replace(microsecond=0))
@@ -285,7 +323,7 @@ class MainForm(BaseEnhancedForm, BasePublicPage, Form):
                 .replace('&', '_')
             sh('Content-Disposition', 'attachment; filename=%s.xlsx' % fname)
 
-            return data.read()
+            return data_xls.read()
 
         return super(MainForm, self).render()
 
@@ -298,12 +336,13 @@ class MainForm(BaseEnhancedForm, BasePublicPage, Form):
         while hasattr(ctx, 'subform'):
 
             if hasattr(ctx, 'download_results'):
-                return ctx.download_results
+                return (getattr(ctx, 'blacklist_labels', []),
+                        ctx.download_results)
 
             ctx = ctx.subform
 
         if hasattr(ctx, 'download_results'):
-            return ctx.download_results
+            return getattr(ctx, 'blacklist_labels', []), ctx.download_results
 
     def find_spreadsheet_title(self):
         """ Not used, just an experiment to provide custom spreadsheet titles

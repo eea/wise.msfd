@@ -1,4 +1,5 @@
 @import "./bootstrap/variables.less";
+@import "variables.less";
 
 #marine-unit-trigger {
   display: inline-block;
@@ -58,19 +59,18 @@
   .text-trigger {
     display: inline-block;
     font-size: 1em;
-    text-decoration: none;
+    text-decoration: none !important;
     padding: 0.2em 0.5em;
     border: 1px solid #ddd;
     font-weight: bold;
     color: rgb(51, 51, 51);
-  }
 
-  .text-trigger-icon {
-    font-size: 60%;
-    margin-top: 5px;
-    display: block;
-    float: right;
-    margin-left: 5px;
+    &:after {
+      content:"\e259";
+      font-family: @icon-font-family;
+      font-size: 12px;
+      margin-left: 5px;
+    }
   }
 
   .arrow-right-container {
@@ -181,10 +181,6 @@
       &:first-child {
          border-top: 1px solid #dce4ec;
       }
-
-      .select2-match {
-
-      }
     }
     .select2-result-label {
       //white-space: nowrap;
@@ -242,4 +238,3 @@
 
   }
 }
-

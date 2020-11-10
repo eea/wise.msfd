@@ -17,14 +17,18 @@
           <a href=""
             tal:attributes="href string:${root_url}/${tab/path}"
             >
-            <span class="tab-title" tal:content="structure tab/title">Article X</span>
-            <span class="tab-subtitle" tal:content="structure tab/subtitle">Subtitle here</span>
+            <div>
+              <span class="tab-title" tal:content="structure tab/title">
+                Article X</span>
+              <span class="tab-subtitle" tal:content="structure tab/subtitle">
+                Subtitle here</span>
+            </div>
           </a>
         </li>
       </tal:rep>
     </ul>
     <!-- <div class="visible-xs" style="clear: both;"> -->
-    <div class="visible-xs">
+    <div class="article-select">
       <div tal:content="view/tab_select_label | string:Select ${tab_type}:">
         Select article/tab:
       </div>
@@ -42,6 +46,46 @@
         </tal:rep>
       </select>
     </div>
+  </div>
+</metal:macro>
+
+<metal:macro define-macro="top-section">
+  <div>
+    <a href=""
+      class="msfd-start-link"
+      tal:attributes="href string:${context/absolute_url}/msfd-start">
+      About MSFD reporting data explorer
+      <img src="++resource++msfd/images/msfd-mini.png">
+    </a>
+    <div>
+      <h2 class="main-title" tal:content="structure view/main_title">Article X</h2>
+      <div class="main-subtitle" tal:content="structure view/subtitle">
+        Subtitle here
+      </div>
+    </div>
+  </div>
+</metal:macro>
+
+<metal:macro define-macro="articles-select">
+  <!-- <div class="visible-xs" style="clear: both;"> -->
+  <div class="article-select" tal:define="tab_type view/tabs_type | string:article">
+    <label tal:content="view/tab_select_label | string:Select ${tab_type}:">
+      Select article/tab:
+    </label>
+    <select class="notselect" id="mobile-select-article">
+      <tal:rep tal:repeat="tab view/main_forms">
+        <tal:block tal:define="
+          section view/section | nothing;
+          select python: section and (view.section == tab.section) or (not section and (view.name in request.URL0));
+          active python: tab.section in request.URL0">
+          <option tal:attributes="value string:./${tab/path}; data-maintitle tab/title;
+            data-subtitle tab/subtitle;
+            selected python: active and 'selected'">
+            <span tal:replace="tab/title"></span> <span tal:replace="tab/subtitle"></span>
+          </option>
+        </tal:block>
+      </tal:rep>
+    </select>
   </div>
 </metal:macro>
 

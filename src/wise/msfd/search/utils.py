@@ -6,14 +6,16 @@ from io import BytesIO
 from six import string_types
 
 import xlsxwriter
-from wise.msfd.utils import class_id, get_obj_fields
+from wise.msfd.utils import class_id, get_obj_fields, print_value_xls
 
 FORMS_ART4 = {}
 FORMS_ART8 = {}
 FORMS_ART8_2012 = {}
 FORMS_ART8_2018 = {}
 FORMS_ART9 = {}
+FORMS_ART9_2012 = {}
 FORMS_ART10 = {}
+FORMS_ART10_2012 = {}
 FORMS_ART11 = {}
 FORMS_ART1314 ={}
 FORMS_ART18 = {}
@@ -167,11 +169,33 @@ def register_form_a8_2012(klass):
     return klass
 
 
-def data_to_xls(data):
+def register_form_a9_2012(klass):
+    """ Registers a 'Report type' form class for Article 9 year 2012
+    """
+
+    FORMS_ART9_2012[class_id(klass)] = klass
+
+    return klass
+
+
+def register_form_a10_2012(klass):
+    """ Registers a 'Report type' form class for Article 10 year 2012
+    """
+
+    FORMS_ART10_2012[class_id(klass)] = klass
+
+    return klass
+
+
+def data_to_xls(data, blacklist_labels=None):
     """ Convert python export data to XLS stream of data
+
+    blacklist_labels: a list of column names for which we do not get label
 
     NOTE: this is very specific to MSFD search. Too bad
     """
+    if not blacklist_labels:
+        blacklist_labels = []
 
     # Create a workbook and add a worksheet.
     out = BytesIO()
@@ -229,7 +253,12 @@ def data_to_xls(data):
                 if isinstance(value, datetime):
                     value = value.isoformat()
 
-                worksheet.write(j + 1, i, value)
+                label = value
+
+                if f not in blacklist_labels:
+                    label = print_value_xls(value, f)
+
+                worksheet.write(j + 1, i, label)
 
     workbook.close()
     out.seek(0)
@@ -245,6 +274,10 @@ def article_sort_helper(term):
     """ Returns a float number for an article, to help with sorting
     """
     title = term.title
+    # make Article 6 last in order
+    if 'Article 6' in title:
+        return 99.9
+
     text = ART_RE.search(title).group().strip()
     chars = []
 
@@ -273,4 +306,3 @@ def article_sort_helper_2018(term):
     f = ''.join(chars)
 
     return float(f)
-

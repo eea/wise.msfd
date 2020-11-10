@@ -79,8 +79,9 @@ class Art9Display(ItemDisplayForm):
         features_mc = parent.features_mc
         determination_mc = sql2018.ART9GESGESDetermination
 
-        count, ges_component = db.get_all_records(
+        count, ges_component = db.get_all_records_outerjoin(
             mapper_class,
+            sql2018.ReportedInformation,
             self.condition_ges_component
         )
         id_ges_comp = [x.Id for x in ges_component]
@@ -109,7 +110,7 @@ class Art9Display(ItemDisplayForm):
             ('ART9GESMarineUnit', ges_marine_unit),
         ]
 
-        return data_to_xls(xlsdata)
+        return xlsdata
 
     def get_db_results(self):
         page = self.get_page()
@@ -139,7 +140,7 @@ class Art9Display(ItemDisplayForm):
             sql2018.ReportedInformation.Id.in_(self.latest_import_ids_2018()),
             mapper_class.GESComponent.in_(ges_components),
             or_(mapper_class.Id.in_(id_ges_components),
-                mapper_class.JustificationDelay.is_(None),
+                # mapper_class.JustificationDelay.is_(None),
                 mapper_class.JustificationNonUse.is_(None)
                 )
         )
@@ -155,8 +156,8 @@ class Art9Display(ItemDisplayForm):
         if not res:
             return 0, []
 
-        if getattr(res, 'JustificationDelay', 0) \
-                or getattr(res, 'JustificationNonUse', 0):
+        if getattr(res, 'JustificationNonUse', 0):
+            # or getattr(res, 'JustificationDelay', 0)
             self.show_extra_data = False
 
             return count, res
@@ -171,7 +172,8 @@ class Art9Display(ItemDisplayForm):
         # )
 
         cnt, res = db.get_all_records_join(
-            [mapper_class.GESComponent, determination_mc.GESDescription,
+            [mapper_class.GESComponent, mapper_class.JustificationDelay,
+             determination_mc.GESDescription,
              determination_mc.Id, determination_mc.IdGESComponent,
              determination_mc.DeterminationDate, determination_mc.UpdateType],
             determination_mc,
@@ -196,8 +198,8 @@ class Art9Display(ItemDisplayForm):
         res = list()
 
         res.append(
-            ('Marine Unit IDs', {
-                '': [{'Marine Unit Id': x} for x in marine_units]
+            ('', {
+                '': [{'Marine Unit(s)': x} for x in marine_units]
             })
         )
 
@@ -251,6 +253,8 @@ class A2018Art10Display(ItemDisplayForm):
         'col_import_id': 'Id',
         'col_import_time': 'ReportingDate'
     }
+
+    blacklist_labels = ('TargetCode', )
 
     def get_reported_date(self):
         return self.get_reported_date_2018()
@@ -356,7 +360,7 @@ class A2018Art10Display(ItemDisplayForm):
             ('ART10TargetsProgressAssessment', target_progress),
         ]
 
-        return data_to_xls(xlsdata)
+        return xlsdata
 
     def get_db_results(self):
         page = self.get_page()
@@ -676,7 +680,7 @@ class A2018Art81abDisplay(ItemDisplayForm):
             ('ART8GESCriteriaValuesIndicator', criteria_value_ind),
         ]
 
-        return data_to_xls(xlsdata)
+        return xlsdata
 
     def get_db_results(self):
         page = self.get_page()
@@ -1191,7 +1195,7 @@ class A2018Art81cDisplay(ItemDisplayForm):
             ('ART8ESAUsesActivitiesPressure', uses_activity_pres),
         ]
 
-        return data_to_xls(xlsdata)
+        return xlsdata
 
     def get_db_results(self):
         page = self.get_page()
@@ -1586,7 +1590,7 @@ class A2018IndicatorsDisplay(ItemDisplayForm):
             ('IndicatorsMarineUnit', marine_unit),
         ]
 
-        return data_to_xls(xlsdata)
+        return xlsdata
 
     def get_db_results(self):
         page = self.get_page()

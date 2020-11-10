@@ -85,6 +85,14 @@ class IMemberStatesArt6(Interface):
     )
 
 
+class IMemberStatesArt7(Interface):
+    member_states = List(
+        title=u"Country",
+        value_type=Choice(vocabulary="wise_search_member_states_art7"),
+        required=False,
+    )
+
+
 class IAreaTypes(Interface):
     area_types = List(
         title=u"Area Type",
@@ -181,7 +189,7 @@ class IStartArticle18(Interface):
 
 class IStartArticle4(Interface):
     reporting_cycle = Choice(
-        title=u"Reporting cycle",
+        title=u"Select reporting cycle",
         vocabulary='wise_search_a4_mru_reporting_cycle_factory',
         required=False
     )
@@ -233,6 +241,24 @@ class IGESComponents(Interface):
         title=u"GES Component",
         required=False,
         value_type=Choice(vocabulary="wise_search_a2018_ges_component")
+    )
+
+
+class IReportTypeArt9(Interface):
+    report_type = Choice(
+        title=u"Report type",
+        required=False,
+        default='',
+        vocabulary="wise_search_report_type_a9"
+    )
+
+
+class IReportTypeArt10(Interface):
+    report_type = Choice(
+        title=u"Report type",
+        required=False,
+        default='',
+        vocabulary="wise_search_report_type_a10"
     )
 
 

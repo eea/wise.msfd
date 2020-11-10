@@ -118,7 +118,7 @@ class Article19Display(ItemDisplayForm):
             ('MetadataFeatures', metadata_features)
         ]
 
-        return data_to_xls(xlsdata)
+        return xlsdata
 
     def get_db_results(self):
         page = self.get_page()

@@ -6,10 +6,9 @@ from .. import db, sql, sql2018
 from ..base import EmbeddedForm, MarineUnitIDSelectForm
 from ..sql_extra import (MSFD4GeographicalAreaID,
                          MSFD4GeograpicalAreaDescription)
-from ..utils import db_objects_to_dict, group_data
+from ..utils import db_objects_to_dict, group_data, print_value
 from . import interfaces
 from .base import ItemDisplayForm
-from .utils import data_to_xls
 
 
 class A4MemberStatesForm(EmbeddedForm):
@@ -37,7 +36,7 @@ class A4Form2018to2024(MarineUnitIDSelectForm):
         conditions = []
 
         if regions:
-            conditions.append(mapper_class.Region.in_(regions))
+            conditions.append(mapper_class.rZoneId.in_(regions))
 
         if countries:
             conditions.append(mapper_class.Country.in_(countries))
@@ -66,7 +65,7 @@ class A4Form(ItemDisplayForm):
     order_field = 'MSFD4_GeograpicalAreasDescription_Import'
     css_class = "left-side-form"
 
-    blacklist_labels = ('MarineUnitID')
+    blacklist_labels = ('MarineUnitID', )
 
     extra_data_template = ViewPageTemplateFile('pt/extra-data-pivot.pt')
     # extra_data_template = ViewPageTemplateFile('pt/extra-data-simple.pt')
@@ -206,7 +205,7 @@ class A4Form(ItemDisplayForm):
             ('MSFD4GeograpicalAreaDescription', data_descr)
         ]
 
-        return data_to_xls(xlsdata)
+        return xlsdata
 
 
 class A4ItemDisplay2018to2024(ItemDisplayForm):
@@ -228,7 +227,7 @@ class A4ItemDisplay2018to2024(ItemDisplayForm):
         mc = sql2018.ReportingHistory
         data = db.get_all_columns_from_mapper(
             mc,
-            'DateReceived',
+            'DateReleased',
             mc.CountryCode == country_code,
             mc.ReportingObligation == 'MSFD - Article 4 - Spatial data'
         )
@@ -236,7 +235,7 @@ class A4ItemDisplay2018to2024(ItemDisplayForm):
         if not len(data):
             return 'Not available'
 
-        reported_date = data[0].DateReceived
+        reported_date = data[0].DateReleased
         reported_date = self.format_reported_date(reported_date)
 
         return reported_date
@@ -253,7 +252,7 @@ class A4ItemDisplay2018to2024(ItemDisplayForm):
         regions = form_data['region_subregions']
         countries = form_data['member_states']
 
-        col_names = ('Country', 'Region', 'thematicId', 'nameTxtInt',
+        col_names = ('Country', 'rZoneId', 'thematicId', 'nameTxtInt',
                      'nameText', 'spZoneType', 'legisSName', 'Area')
         columns = [getattr(self.mapper_class, name) for name in col_names]
 
@@ -261,7 +260,7 @@ class A4ItemDisplay2018to2024(ItemDisplayForm):
         conditions = []
 
         if regions:
-            conditions.append(mapper_class.Region.in_(regions))
+            conditions.append(mapper_class.rZoneId.in_(regions))
 
         if countries:
             conditions.append(mapper_class.Country.in_(countries))
@@ -291,4 +290,4 @@ class A4ItemDisplay2018to2024(ItemDisplayForm):
             ('MRUsPublication', data),
         ]
 
-        return data_to_xls(xlsdata)
+        return xlsdata

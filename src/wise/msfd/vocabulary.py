@@ -11,7 +11,7 @@ from zope.schema.vocabulary import SimpleTerm, SimpleVocabulary
 
 from wise.msfd.search.utils import FORMS_ART1314
 
-from . import db, sql, sql2018
+from . import db, sql, sql_extra, sql2018
 from .labels import COMMON_LABELS, GES_LABELS
 
 # from eea.cache import cache
@@ -196,7 +196,7 @@ def get_member_states_vb_factory_art4(context):
         regions = context.get_selected_region_subregions()
 
         if regions:
-            conditions.append(t.Region.in_(regions))
+            conditions.append(t.rZoneId.in_(regions))
 
     rows = db.get_unique_from_mapper(
         t,
@@ -235,11 +235,26 @@ def get_member_states_vb_factory_art6(context):
 
 
 @provider(IVocabularyFactory)
+def get_member_states_vb_factory_art7(context):
+    res = db.get_unique_from_mapper(
+        sql_extra.MSCompetentAuthority,
+        'C_CD'
+    )
+
+    return vocab_from_values(res)
+
+
+@provider(IVocabularyFactory)
 def get_area_type_vb_factory(context):
-
     t = sql.t_MSFD4_GegraphicalAreasID
+    member_states = []
 
-    member_states = context.get_selected_member_states()
+    while hasattr(context, 'context'):
+        if hasattr(context, 'get_selected_member_states'):
+            member_states = context.get_selected_member_states()
+            break
+
+        context = context.context
 
     if member_states:
         count, rows = db.get_all_records(
@@ -628,8 +643,12 @@ def a1314_regions(context):
 @provider(IVocabularyFactory)
 def a1314_member_states(context):
     regions = context.get_selected_region_subregions()
-    klass = context.context.data['report_type']
-    report_type = klass.report_type
+
+    if hasattr(context, 'report_type'):
+        report_type = context.report_type
+    else:
+        klass = context.context.data['report_type']
+        report_type = klass.report_type
 
     mc = sql.MSFD13ReportingInfo
 
@@ -788,7 +807,10 @@ def a2018_feature_art81c(context):
 
 @provider(IVocabularyFactory)
 def a2018_feature(context):
-    context = context.context
+    # Art10 and Art8ab both use this vocab
+    # the main class is not at the same level
+    if not hasattr(context, 'mapper_class'):
+        context = context.context
 
     mapper_class = context.mapper_class
     features_mc = context.features_mc
@@ -832,8 +854,8 @@ def a2018_feature(context):
 def a2018_ges_component(context):
     parent = context
 
-    # if not hasattr(context, 'ges_components_mc'):
-    #     context = context.context
+    if not hasattr(context, 'ges_components_mc'):
+        parent = context.context
 
     mapper_class = parent.mapper_class
     features_mc = parent.features_mc

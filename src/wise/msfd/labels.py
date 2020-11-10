@@ -8,9 +8,18 @@ import logging
 from lxml.etree import parse
 from pkg_resources import resource_filename
 
-from . import db, sql, sql2018, sql_extra
+from . import db, sql, sql2018
 
 COMMON_LABELS = {}                        # vocabulary of labels
+
+# Collection of label fixes, where the description/title for a value
+# is not appropriate
+LABEL_FIX = {
+    "ANS": "North-east Atlantic Ocean: Greater North Sea",
+    "CY": 'Cyprus',
+    'D4': '(Descriptor) D4 - Food webs',
+    'D6': '(Descriptor) D6 - Sea-floor integrity'
+}
 
 # MSFD Search engine
 # Labels used to override the default db column name into a
@@ -20,11 +29,13 @@ DISPLAY_LABELS = {
     'AssessmentsPeriod': 'Assessment Period',
     'UniqueCode': 'Measure code',
     # Article 4
+    'rZoneId': 'Region',
     'thematicId': 'Identifier',
     'nameTxtInt': 'Name in English',
     'nameText': 'Name in the national language',
     'spZoneType': 'Zone type',
     'legisSName': 'Legislation short name',
+    'Area': 'Area (km2)',
     # Article 19.3
     'MarineUnitID': 'Marine Reporting unit'
 }
@@ -328,10 +339,16 @@ GES_LABELS = LabelCollection()
 
 def get_common_labels():
     labels = {}
-    labels.update(_extract_from_xsd('data/MSCommon_1p0.xsd'))
-    labels.update(_extract_from_xsd('data/MSCommon_1p1.xsd'))
+    # The following labels were disabled because it contains
+    # imprecise/non-sense labels ex. 'Good' = 'e.g. based on extensive surveys'
+    # Other	= 'Please specify in comment'
+    
+    # labels.update(_extract_from_xsd('data/MSCommon_1p0.xsd'))
+    # labels.update(_extract_from_xsd('data/MSCommon_1p1.xsd'))
+    # labels.update(get_human_labels())
+
     labels.update(_extract_from_csv())
-    labels.update(get_human_labels())
+    labels.update(LABEL_FIX)
 
     # We should use the labels from msfd2018-codelists.json
     # they look better and there are more labels

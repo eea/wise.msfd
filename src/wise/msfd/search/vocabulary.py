@@ -8,9 +8,10 @@ from zope.schema.vocabulary import SimpleTerm, SimpleVocabulary
 from .. import db, sql, sql2018
 from ..vocabulary import values_to_vocab
 from .utils import (FORMS_ART4, FORMS_ART8, FORMS_ART8_2012, FORMS_ART8_2018,
-                    FORMS_ART9, FORMS_ART10, FORMS_ART11, FORMS_ART18,
-                    FORMS_ART19, SUBFORMS, article_sort_helper,
-                    article_sort_helper_2018)
+                    FORMS_ART9_2012, FORMS_ART9,
+                    FORMS_ART10_2012, FORMS_ART10,
+                    FORMS_ART11, FORMS_ART18, FORMS_ART19, SUBFORMS,
+                    article_sort_helper, article_sort_helper_2018)
 
 
 @provider(IVocabularyFactory)
@@ -51,6 +52,24 @@ def a9_reporting_period(context):
     forms = FORMS_ART9
 
     return _reporting_period(context, forms)
+
+
+@provider(IVocabularyFactory)
+def report_type_art9(context):
+    terms = [SimpleTerm(v, k, v.title) for k, v in FORMS_ART9_2012.items()]
+    terms.sort(key=lambda t: t.title, reverse=True)
+    vocab = SimpleVocabulary(terms)
+
+    return vocab
+
+
+@provider(IVocabularyFactory)
+def report_type_art10(context):
+    terms = [SimpleTerm(v, k, v.title) for k, v in FORMS_ART10_2012.items()]
+    terms.sort(key=lambda t: t.title)
+    vocab = SimpleVocabulary(terms)
+
+    return vocab
 
 
 @provider(IVocabularyFactory)

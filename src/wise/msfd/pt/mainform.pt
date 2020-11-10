@@ -3,9 +3,14 @@
 
   <div id="wise-search-form-top"
        tal:attributes="id view/form_id_top | string:wise-search-form-top">
-    <metal:tabs
-       metal:use-macro="context/wise-macros/macros/tabs"></metal:tabs>
+    <!-- <metal:tabs
+       metal:use-macro="context/wise-macros/macros/tabs"></metal:tabs> -->
+       <metal:tabs
+          metal:use-macro="context/wise-macros/macros/top-section"></metal:tabs>
   </div>
+
+  <metal:select
+     metal:use-macro="context/wise-macros/macros/articles-select"></metal:select>
 
   <div class="wise-search-form-container"
     tal:attributes="id view/form_container_class | string:wise-search-form-container">
@@ -26,11 +31,25 @@
         <div tal:content="structure view/subform_content | nothing">subform here</div>
         <div class="form-right-side">
           <metal:block use-macro="context/@@ploneform-macros/actions" />
+          <div id="ajax-spinner" style="display: none;">
+            <img src="++resource++msfd/images/spinner.gif" alt="">
+          </div>
         </div>
       </metal:slot>
       <metal:css fill-slot="formtop">
-        <style>
-        </style>
+        <link href="/marine/++resource++static_css/tabs.css" type="text/css" rel="stylesheet" />
+        <link href="/marine/++resource++static_css/msfd_search.css" type="text/css" rel="stylesheet" />
+        <script src="/marine/++resource++msfd/bs3/js/bootstrap.min.js"></script>
+        <!-- <link href="/++resource++static_css/bootstrap.css" type="text/css" rel="stylesheet" /> -->
+        <script>
+          require = undefined;
+          define = undefined;
+        </script>
+        <script src="/marine/++resource++msfd/js/jquery-ui.js"></script>
+        <!-- <script src="++plone++static/components/select2/select2.js"></script> -->
+        <!-- <script src="++plone++static/components/bootstrap/js/collapse.js"></script> -->
+        <script src="/marine/++resource++msfd/js/tabs.js"></script>
+        <script src="/marine/++resource++msfd/js/msfd_search.js"></script>
       </metal:css>
     </metal:block>
   </div>

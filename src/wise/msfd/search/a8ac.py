@@ -50,7 +50,7 @@ class A81aEcoSubForm(MarineUnitIDSelectForm2012):
         return A81aEcoItemDisplay(self, self.request)
 
     def download_results(self):
-        muids = [self.get_marine_unit_id()]
+        muids = self.get_available_marine_unit_ids()[1]
         count, data = db.get_all_records(
             self.mapper_class,
             self.mapper_class.MarineUnitID.in_(muids)
@@ -85,7 +85,7 @@ class A81aEcoSubForm(MarineUnitIDSelectForm2012):
             ('MSFD8aEcosystemStatusIndicator', data_si),
         ]
 
-        return data_to_xls(xlsdata)
+        return xlsdata
 
 
 class A81aEcoItemDisplay(MultiItemDisplayForm):
@@ -161,7 +161,7 @@ class A81aFunctSubForm(MarineUnitIDSelectForm2012):
         return A81aFunctItemDisplay(self, self.request)
 
     def download_results(self):
-        muids = [self.get_marine_unit_id()]
+        muids = self.get_available_marine_unit_ids()[1]
         count, data = db.get_all_records(
             self.mapper_class,
             self.mapper_class.MarineUnitID.in_(muids)
@@ -196,7 +196,7 @@ class A81aFunctSubForm(MarineUnitIDSelectForm2012):
             ('MSFD8aFunctionalStatusIndicator', data_si),
         ]
 
-        return data_to_xls(xlsdata)
+        return xlsdata
 
 
 class A81aFunctItemDisplay(MultiItemDisplayForm):
@@ -272,7 +272,7 @@ class A81aHabitatSubForm(MarineUnitIDSelectForm2012):
         return A81aHabitatItemDisplay(self, self.request)
 
     def download_results(self):
-        muids = [self.get_marine_unit_id()]
+        muids = self.get_available_marine_unit_ids()[1]
         count, data = db.get_all_records(
             self.mapper_class,
             self.mapper_class.MarineUnitID.in_(muids)
@@ -307,7 +307,7 @@ class A81aHabitatSubForm(MarineUnitIDSelectForm2012):
             ('MSFD8aHabitatStatusIndicator', data_hsi),
         ]
 
-        return data_to_xls(xlsdata)
+        return xlsdata
 
 
 class A81aHabitatItemDisplay(MultiItemDisplayForm):
@@ -383,7 +383,7 @@ class A81aSpeciesSubForm(MarineUnitIDSelectForm2012):
         return A81aSpeciesItemDisplay(self, self.request)
 
     def download_results(self):
-        muids = [self.get_marine_unit_id()]
+        muids = self.get_available_marine_unit_ids()[1]
         count, data = db.get_all_records(
             self.mapper_class,
             self.mapper_class.MarineUnitID.in_(muids)
@@ -418,7 +418,7 @@ class A81aSpeciesSubForm(MarineUnitIDSelectForm2012):
             ('MSFD8aSpeciesStatusIndicator', data_ssi),
         ]
 
-        return data_to_xls(xlsdata)
+        return xlsdata
 
 
 class A81aSpeciesItemDisplay(MultiItemDisplayForm):
@@ -495,7 +495,7 @@ class A81aOtherSubForm(MarineUnitIDSelectForm2012):
 
     # TODO MSFD8aOtherPressuresImpact table is missing
     def download_results(self):
-        muids = [self.get_marine_unit_id()]
+        muids = self.get_available_marine_unit_ids()[1]
         count, data = db.get_all_records(
             self.mapper_class,
             self.mapper_class.MarineUnitID.in_(muids)
@@ -523,7 +523,7 @@ class A81aOtherSubForm(MarineUnitIDSelectForm2012):
             ('MSFD8aOtherStatusIndicator', data_other_si),
         ]
 
-        return data_to_xls(xlsdata)
+        return xlsdata
 
 
 class A81aOtherItemDisplay(MultiItemDisplayForm):
@@ -601,7 +601,7 @@ class A81aNisSubForm(MarineUnitIDSelectForm2012):
         return A81aNisItemDisplay(self, self.request)
 
     def download_results(self):
-        muids = [self.get_marine_unit_id()]
+        muids = self.get_available_marine_unit_ids()[1]
         count, data = db.get_all_records(
             self.mapper_class, self.mapper_class.MarineUnitID.in_(muids)
         )
@@ -611,7 +611,7 @@ class A81aNisSubForm(MarineUnitIDSelectForm2012):
             ('MSFD8aNISInventory', data),
         ]
 
-        return data_to_xls(xlsdata)
+        return xlsdata
 
 
 class A81aNisItemDisplay(MultiItemDisplayForm):
@@ -649,7 +649,7 @@ class A81aPhysicalSubForm(MarineUnitIDSelectForm2012):
         return A81aPhysicalItemDisplay(self, self.request)
 
     def download_results(self):
-        muids = [self.get_marine_unit_id()]
+        muids = self.get_available_marine_unit_ids()[1]
         count, data = db.get_all_records(
             self.mapper_class,
             self.mapper_class.MarineUnitID.in_(muids)
@@ -660,7 +660,7 @@ class A81aPhysicalSubForm(MarineUnitIDSelectForm2012):
             ('MSFD8aPhysical', data),
         ]
 
-        return data_to_xls(xlsdata)
+        return xlsdata
 
 
 class A81aPhysicalItemDisplay(MultiItemDisplayForm):
@@ -704,29 +704,8 @@ class A81cForm(MarineUnitIDSelectForm2012):
     def get_subform(self):
         return A81cEconomicItemDisplay(self, self.request)
 
-
-class A81cEconomicItemDisplay(MultiItemDisplayForm):
-    """ Group the multiple items together for A8.1c
-    """
-    mapper_class = sql.MSFD8cUs
-    order_field = 'MSFD8c_Uses_ID'
-
-    # TODO: need to filter on topic
-
-    reported_date_info = {
-        'mapper_class': sql.MSFD8cImport,
-        'col_import_id': 'MSFD8c_Import_ID',
-        'col_import_time': 'MSFD8c_Import_Time',
-        'col_filename': 'MSFD8c_Import_FileName'
-    }
-
-    def get_import_id(self):
-        import_id = self.item.MSFD8c_Uses_Import
-
-        return import_id
-
     def download_results(self):
-        muids = [self.get_marine_unit_id()]
+        muids = self.get_available_marine_unit_ids()[1]
 
         count, data = db.get_all_records(
             self.mapper_class,
@@ -753,7 +732,28 @@ class A81cEconomicItemDisplay(MultiItemDisplayForm):
             ('MSFD8cDepend', data_d),
         ]
 
-        return data_to_xls(xlsdata)
+        return xlsdata
+
+
+class A81cEconomicItemDisplay(MultiItemDisplayForm):
+    """ Group the multiple items together for A8.1c
+    """
+    mapper_class = sql.MSFD8cUs
+    order_field = 'MSFD8c_Uses_ID'
+
+    # TODO: need to filter on topic
+
+    reported_date_info = {
+        'mapper_class': sql.MSFD8cImport,
+        'col_import_id': 'MSFD8c_Import_ID',
+        'col_import_time': 'MSFD8c_Import_Time',
+        'col_filename': 'MSFD8c_Import_FileName'
+    }
+
+    def get_import_id(self):
+        import_id = self.item.MSFD8c_Uses_Import
+
+        return import_id
 
 
 @register_form_section(A81cEconomicItemDisplay)

@@ -21,6 +21,11 @@
     />
 
   <utility
+    component=".vocabulary.get_member_states_vb_factory_art7"
+    name="wise_search_member_states_art7"
+    />
+
+  <utility
     component=".vocabulary.get_region_subregions_vb_factory"
     name="wise_search_region_subregions"
     />

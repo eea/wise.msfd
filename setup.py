@@ -49,6 +49,8 @@ setup(
         'pyexcel-xlsx',
 
         'z3c.formwidget.optgroup',  # used in compliance select lists
+        'eea.cache',        # generic caching solution
+        'Products.CMFPlacefulWorkflow',
     ],
     extras_require={
         'test': [

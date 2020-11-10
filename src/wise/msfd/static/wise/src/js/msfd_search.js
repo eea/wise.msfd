@@ -102,19 +102,18 @@
     * CHECKBOXES functions
     * */
     function generateControlDiv(){
-        var spAll = '<span class="controls" style="display: inline-block;background-color: #ddd;padding-top: 2px;padding-bottom: 2px;' +
-            'padding-left: 0;position: relative;  ">' +
-            '<span style="font-size: 0.8em; margin-left: 5px;">Select :</span><a class="" data-value="all"><label>' +
+        var spAll = '<span class="controls">' +
+            '<span>Select :</span><a data-value="all"><label>' +
             '<span class="label">All</span></label></a>';
-        var spClear = '<a class="" data-value="none" ><label><span class="label">Clear all</span></label></a>';
-        var invertSel = '<a class="" data-value="invert"><label><span class="label">Invert selection</span></label></a>' +
-            '<div class="btn btn-default apply-filters" data-value="apply"><span class="" >Apply filters</span></div>'+
+        var spClear = '<a data-value="none"><label><span class="label">Clear all</span></label></a>';
+        var invertSel = '<a data-value="invert"><label><span class="label">Invert selection</span></label></a>' +
+            '<div class="btn btn-default apply-filters" data-value="apply"><span>Apply filters</span></div>'+
             '<span class="ui-autocomplete">' +
-            '<span class=" search-icon" ></span>' +
-            '<span style="position: relative;padding-top:1px;padding-bottom:1px;background: white;" class="search-span">' +
-            '<input class="ui-autocomplete-input" type="text" style="width: 80%;" />' +
-            '<span class="clear-btn"><a class="fa fa-times"></a></span>' +
-            '</span>' +
+                '<span class=" search-icon" ></span>' +
+                '<span class="search-span">' +
+                    '<input class="ui-autocomplete-input" type="text" />' +
+                    '<span class="clear-btn"></span>' +
+                '</span>' +
             '</span>';
         return spAll + spClear + invertSel;
     }
@@ -215,7 +214,7 @@
         $field.addClass("panel-group");
 
         var chekspan = $field.find("> span:not(.controls)");
-        chekspan.css("border-radius", 0);
+        // chekspan.css("border-radius", 0);
         chekspan
             .addClass( fieldId + "-collapse")
             .addClass("collapse")
@@ -240,7 +239,7 @@
         $field.find(".accordion-toggle").addClass("accordion-after");
 
         // hidden-colapse event
-        chekspan.on("hidden.bs.collapse", function () {
+        chekspan.on("hidden.bs.collapse", function() {
             chekspan.fadeOut("fast");
             $field.find(".controls").slideUp("fast");
             $field.css({"border-bottom" : "1px solid #ccc;"});
@@ -277,6 +276,7 @@
                 data.push(el.id);
             });
 
+            // TIBI TODO: re-enable
             addAutoComplete($field);
         }
     }
@@ -329,7 +329,6 @@
             var cheks = $field.find(".option");
             var allcheckboxes = cheks.find("input[type='checkbox']");
             var hasChecks = allcheckboxes.length > 0;
-
             // has checkboxes
             if(hasChecks){
                 var fieldId = $field.attr("id");
@@ -350,7 +349,7 @@
                     $field.find(".controls a").hide();
                     $field.find(".controls").html("").css("height" ,"1px").css("padding", 0);
                 } else {
-                    addCheckboxPanel($field, fieldId, cheks  );
+                    addCheckboxPanel($field, fieldId, cheks);
 
                     $field.find(".search-icon").on("click" , function (ev) {
                         $(ev.target).parent().find("input").trigger("focus");
@@ -521,10 +520,42 @@
                 window.setTimeout( function (){
                     $(selectorFormCont + " .formControls #form-buttons-continue").trigger("click", {'select': self});
                 }, 300);
-
             });
-
         });
+    }
+
+    function formatArticle (article) {
+      var el = $(article.element[0]);
+      var subtitle = el.attr("data-subtitle");
+
+      return '<span>' +
+                el.attr("data-maintitle") + ': ' +
+                subtitle +
+              '</span>';
+    }
+
+    function marineUnitSelect() {
+      var $selectArticle = $("#mobile-select-article");
+
+      var moptions = {
+        placeholder: 'Select an option',
+        closeOnSelect: true,
+        // dropdownAutoWidth: true,
+        // width: 'auto',
+        width: 'element',
+        theme: "flat",
+        minimumResultsForSearch: 20,
+        formatSelection: formatArticle,
+        formatResult: formatArticle,
+        containerCssClass: "mobile-select-article"
+      };
+
+      if ($.fn.select2 !== undefined) {
+        $selectArticle.select2(moptions);
+        $selectArticle.one("select2-selecting", function (ev) {
+          document.location.href = ev.choice.id;
+        });
+      }
     }
 
     function setupLeftSelect2(){
@@ -543,7 +574,6 @@
                 allowClear: true,
                 dropdownParent: "#marine-unit-trigger",
                 dropdownAdapter: "AttachContainer",
-
                 containerCssClass : "select2-top-override",
                 dropdownCssClass: "select2-top-override-dropdown",
                 debug: true
@@ -580,12 +610,10 @@
 
             /// Marine Unit id selector
             if ($(selectorLeftForm + ' select').hasClass("js-example-basic-single")) {
-
                 // Select2 has been initialized
                 var text = $(selectorLeftForm + ' select [value="' + jQuery(selectorLeftForm + ' .select-article select').val() + '"]').text();
                 $( selectorLeftForm + ' select:not(.notselect)').parentsUntil(".field").before('<div id="marine-unit-trigger">' +
                     '<div class="text-trigger">'+ text +
-                    '<span class="fa fa-caret-down text-trigger-icon"></span>' +
                     '</div>' +
                     '</div>');
 
@@ -606,8 +634,8 @@
 
     function attachSelect2(){
         setupRightSelects2();
-
         setupLeftSelect2();
+        marineUnitSelect();
 
         var w = "auto";
         var daw = true;
@@ -684,10 +712,8 @@
     }
 
     function setPaginationButtons(){
-        var prevButton = $(".center-section [name='form.buttons.prev']");
-
-        var nextButton = $(".center-section [name='form.buttons.next']");
-
+        var prevButton = $(".msfd-search-wrapper [name='form.buttons.prev']");
+        var nextButton = $(".msfd-search-wrapper [name='form.buttons.next']");
         var continueBtn = ".formControls #form-buttons-continue";
 
         prevButton.one("click", function (){
@@ -714,7 +740,7 @@
         if( $( selectorLeftForm + " select:not(.notselect)").val() !== $(opts[1]).val() ){
 
             var topPrevBtn = '<button type="submit" id="form-buttons-prev-top" name="marine.buttons.prev"' +
-                ' class="submit-widget button-field btn btn-default pagination-prev fa fa-angle-left" value="" button="">' +
+                ' class="submit-widget button-field btn btn-default pagination-prev" value="" button="">' +
                 '          </button>';
 
             $(formBtnPrevTop).append(topPrevBtn);
@@ -732,7 +758,7 @@
         // ignore last option for "next" button
         if( $( selectorLeftForm + " select:not(.notselect)").val() !== $(opts[opts.length-1]).val() ){
             var topNextBtn = '<button type="submit" ' +
-                'id="form-buttons-next-top" name="marine.buttons.next" class="submit-widget button-field btn btn-default fa fa-angle-right" value="">' +
+                'id="form-buttons-next-top" name="marine.buttons.next" class="submit-widget button-field btn btn-default pagination-next" value="">' +
                 '            </button>';
 
             $(formBtnNextTop).append(topNextBtn);
@@ -765,13 +791,12 @@
             paginationInputHandlers();
         }
 
-        $(".center-section").on("click", paginationTextResult, function (ev){
-            $(ev.target).parent().find("input").show().focus();
-
+        $(".msfd-search-wrapper").on("click", paginationTextResult, function (ev){
+            $(ev.target).parent().find("input").show(300).focus().css("display", "inline-block");
             $(ev.target).hide();
         });
 
-        $(".center-section").on("click", function (ev) {
+        $(".msfd-search-wrapper").on("click", function (ev) {
             // if click is on the result text
             if($(ev.target).is(paginationTextResult) || $(ev.target).is(".pagination-text .pagination-input") ) {
 
@@ -855,9 +880,7 @@
         $(selectorFormContainer + "," + selectorLeftForm).animate({"opacity" : 1}, 1000);
 
         addCheckboxHandlers( $(selectorFormContainer) );
-
         addCheckboxLabelHandlers();
-
         attachSelect2();
 
         if("undefined" !== typeof window.setupTabs && null !== window.setupTabs) window.setupTabs();
@@ -865,7 +888,6 @@
         if( "undefined" !== typeof clickFirstTab && null !== clickFirstTab ) clickFirstTab();
 
         setPaginationButtons();
-
         initPaginationInput();
     }
 
@@ -878,14 +900,8 @@
 
         $( selectorLeftForm + " .no-results").remove();
 
-        var t = "<div id='wise-search-form-container-preloader' " +
-            "></div>";
-        var sp = $("#ajax-spinner2").clone().attr("id", "ajax-spinner-form").css({
-            "position": "absolute",
-            "top" : "50%",
-            "left" : "50%",
-            "transform": "translate3d(-50%, -50%,0)"
-        }).show();
+        var t = "<div id='wise-search-form-container-preloader'/>";
+        var sp = $("#ajax-spinner2").attr("id", "ajax-spinner-form").show();
 
         $(selectorFormContainer).append(t);
         $("#wise-search-form-container-preloader").append(sp);
@@ -906,14 +922,18 @@
             cont = $(".left-side-form");
         }
 
-        cont.prepend("<div id='wise-search-form-preloader' ></div>");
+        cont.prepend("<div id='wise-search-form-preloader'/>");
 
         $("#wise-search-form-preloader")
             .append("<span style='position: absolute;" +
                 " display: block;" +
                 " left: 50%;" +
                 "top: 10%;'></span>");
-        $("#wise-search-form-preloader > span").append( $("#ajax-spinner2").clone().attr("id","ajax-spinner-center" ).show());
+        $("#wise-search-form-preloader > span")
+        .append($("#ajax-spinner2")
+          .clone()
+          .attr("id","ajax-spinner-center" )
+          .show());
 
         $("#ajax-spinner-center").css({
             "position" : "fixed"
@@ -1461,7 +1481,7 @@
 
           $th.height(height);
 
-          if ($th.height() > cells_max_height) {
+          if ($th.height() >= cells_max_height) {
             $next.height($th.height());
           }
 
@@ -1478,14 +1498,15 @@
 
     function addDoubleScroll() {
       var secondScroll = '<div class="cloned-scroll-top" style="overflow-x: auto;">' +
-          '<div style="height: 1px;"></div>' +
+          '<div style="height: 1px; margin-left: 165px;"></div>' +
         '</div>'
 
       $(".double-scroll").each(function(){
         var $doubleScroll = $(this)
-        var tableWidth = $doubleScroll.find('table').outerWidth(includeMargin=true);
+        var $table = $doubleScroll.find('table');
+        var tableWidth = $table.outerWidth(includeMargin=true);
 
-        if (tableWidth == null) {
+        if (tableWidth == null || tableWidth <= $table.parent().width()) {
           return
         }
 
@@ -1505,7 +1526,10 @@
     }
 
     jQuery(document).ready(function($){
+
+      window.setTimeout(function() {
         initPageElems();
+      }, 100);
 
         /*$(window).on("resize", function () {
             if (window.matchMedia("(max-width: 1024px)").matches) {
