@@ -81,6 +81,14 @@ class RegionalSummaryAssessment(BaseRegSummaryView, SummaryAssessment):
         self.overall_scores = overall_scores
         self.reg_desc_region_folder = reg_desc_region_folder
 
+    @property
+    def intro_text(self):
+        text = "The table shows the overall conclusions on the coherence of " \
+               "the information reported by the Member States in the Baltic " \
+               "Sea region for each descriptor and article."
+
+        return text
+
     def setup_data(self):
         res = []
         region_folder = self.reg_desc_region_folder

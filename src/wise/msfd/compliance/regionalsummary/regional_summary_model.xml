@@ -48,19 +48,30 @@
             <required>False</required>
             <title>Length of coastline and area of marine waters</title>
         </field>
+        <field name="reporting_areas_text"
+               type="plone.app.textfield.RichText">
+            <description/>
+            <required>False</required>
+            <title>Reporting areas text</title>
+            <default>
+&lt;p&gt;The map shows the Marine Reporting Units (MRUs) listed in the table and reported for use with the 2018 updates of Articles 8, 9 and 10.&lt;/p&gt;
+&lt;p&gt;The table provides:&lt;/p&gt;
+    &lt;ol style="list-style-type: lower-alpha;"&gt;
+        &lt;li&gt;the number of MRUs reported by each Member State in the marine region;&lt;/li&gt;
+        &lt;li&gt;the range of extent of the MRUs (km2);&lt;/li&gt;
+        &lt;li&gt;the average extent of MRUs (km2).&lt;/li&gt;
+    &lt;/ol&gt;
+
+            </default>
+        </field>
         <field name="assessment_methodology"
                type="plone.app.textfield.RichText">
             <description/>
             <required>False</required>
             <title>Assessment methodology</title>
             <default>
-&lt;p&gt;The assessment applied the same broad criteria as the previous Article 12 assessment which was carried out between 2012 and 2014 to allow for an effective comparison and monitoring of progress:&lt;/p&gt;
-    &lt;ol style="list-style-type: lower-alpha;"&gt;
-        &lt;li&gt;Adequacy: assessing whether the reported information is good enough to meet the objectives of the Directive and the technical requirements of Articles 8, 9 and 10. &lt;/li&gt;
-        &lt;li&gt;Consistency across the Marine Strategy (hereinafter: Consistency): assessing the logical flow of reporting of one Member State for Articles 8, 9 and 10, including the identification of missing links, conflicts, and gaps.&lt;/li&gt;
-        &lt;li&gt;Regional coherence (hereinafter: Coherence): assessing the relationships between the reports of the Member States, within each marine region or subregion.&lt;/li&gt;
-    &lt;/ol&gt;
-&lt;p&gt;The assessment sought to identify progress in the implementation of the MSFD by comparing between 2012 and 2018 assessment results. A list of assessment questions by article for each of the three broad assessment criteria was defined to structure the assessment exercise. A scoring system is applied where each assessment question is scored based on the degree to which the broad assessment criteria are met by the reported information. The assessment is carried out through an online tool.&lt;/p&gt;
+&lt;p&gt;The assessment of regional coherence (hereinafter: Coherence) evaluates the relationships between the reports of the Member States, within each marine region or subregion.&lt;/p&gt;
+&lt;p&gt;For the 2018 reporting exercise, Member States reported using the criteria and methodological standards on good environmental status of marine waters, and specifications and standardised methods for monitoring and assessment laid down in Commission Decision (EU) 2017/848. An assessment framework was developed on the Directive’s key concepts and the standards established by the Commission Decision. For each article, a set of assessment questions was defined to structure the assessment exercise. Each assessment question was scored based on the degree to which the broad assessment criteria were met by the reported information. The assessment was carried out through an online tool.&lt;/p&gt;
 &lt;p&gt;The assessment was based on the e-reporting information (xml and shapefiles) provided by the Member State. Any text reports submitted were not consulted.&lt;/p&gt;
             </default>
         </field>
@@ -68,13 +79,13 @@
                type="plone.app.textfield.RichText">
             <description/>
             <required>False</required>
-            <title>2012 recommendations to Member State</title>
+            <title>2012 conclusions on regional coherence</title>
         </field>
         <field name="progress_recommendations_2018"
                type="plone.app.textfield.RichText">
             <description/>
             <required>False</required>
-            <title>Progress against 2012 recommendations to Member State</title>
+            <title>Progress against 2012 conclusions on regional coherence</title>
         </field>
     </schema>
 </model>

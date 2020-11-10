@@ -2,7 +2,7 @@
   <h3>Summary of the assessment</h3>
   <div>
     <div>
-      <p>The table shows the overall conclusions on the adequacy, consistency, and coherence of the information reported by the Member State for each descriptor and article. In cases where the Member State's marine waters lie in several marine regions or subregions, the conclusions are presented separately.</p>
+      <p tal:content="structure view/intro_text">Intro Text</p>
       <p>Results are presented firstly for the pressure-based descriptors D2, D5, D7, D8, D9, D10, and D11, followed by the state-based descriptors D1, D3, D4, and D6. The pressure-based descriptors relate to specific pressures caused by human activities. The state-based descriptors relate to particular components of marine biodiversity.</p>
     </div>
     <div class="ast-header-data" style="display: inline-block; border: none;">

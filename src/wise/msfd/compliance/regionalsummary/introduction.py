@@ -109,6 +109,12 @@ By October 2018, the Member States were due to submit updates of the assessment
         return view()
 
     @property
+    def reporting_areas_text(self):
+        output = self.get_field_value('reporting_areas_text')
+
+        return output
+
+    @property
     def length_of_coastline(self):
         output = self.get_field_value('length_of_coastline')
 

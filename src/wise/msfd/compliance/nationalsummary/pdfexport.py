@@ -108,6 +108,17 @@ class SummaryAssessment(BaseNatSummaryView):
         self.nat_desc_country_folder = nat_desc_country_folder
 
     @property
+    def intro_text(self):
+        text = "The table shows the overall conclusions on the adequacy, " \
+               "consistency, and coherence of the information reported by " \
+               "the Member State for each descriptor and article. In cases " \
+               "where the Member State's marine waters lie in several " \
+               "marine regions or subregions, the conclusions are presented " \
+               "separately."
+
+        return text
+
+    @property
     def summary_of_assessment_text(self):
         output = self.get_field_value('summary_of_assessment_text')
 

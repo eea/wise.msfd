@@ -1,7 +1,24 @@
 <div class="nat-sum-introduction">
   <h3>Introduction</h3>
-  <h4>Information reported by the Member States</h4>
-  <div tal:content="structure view/information_memberstate"></div>
+  <h4>Requirements of the Marine Strategy Framework Directive</h4>
+  <div>
+    <p>The Marine Strategy Framework Directive (MSFD, Directive 2008/56/EC) requires in Article 17 that Member States review, in a coordinated manner as referred to in Article 5, the following elements of their marine strategies every six years after their initial establishment:</p>
+    <ol style="list-style-type: lower-alpha;">
+      <li>the initial assessment and the determination of good environmental status (GES), as provided for in Articles 8(1) and 9(1);</li>
+      <li>the environmental targets established pursuant to Article 10(1);</li>
+      <li>the monitoring programmes established pursuant to Article 11(1);</li>
+      <li>the programmes of measures established pursuant to Article 13(2).</li>
+    </ol>
+    <p>Details of any updates made following these reviews are to be sent to the Commission, to the Regional Sea Conventions and to any other Members States concerned.</p>
+    <p>MSFD Article 12 requires the Commission to assess whether the reports notified by the Member States constitute an appropriate framework to meet the requirements of the Directive. In drawing up these assessments, the Commission shall consider the coherence of frameworks within the marine regions or subregions and across the Community. The Commission is required to inform the Member States concerned whether, in its opinion, the reports notified are consistent with the Directive and to provide guidance on any modifications it considers necessary.</p>
+    <p>For Articles 8, 9 and 10, first reported in 2012, the first 6-year updates were due to be sent to the Commission by 15 October 2018.</p>
+    <p>This report provides an assessment of coherence of the Member State’s 2018 updates for Articles 8, 9 and 10, in support of the Commission’s obligations under MSFD Article 12.</p>
+  </div>
+
+  <h4>Reports submitted by the Member States</h4>
+  <div>
+    The table gives details of when the Member States submitted their reports, in text (usually pdf) and electronic (xml) format. Electronic reporting was undertaken in relation to specific geographic areas (Marine Reporting Units) which are specified in an xml file (4geo.xml) and accompanied by geographic information system (GIS) shapefiles that allow the reported information to be displayed as maps. In cases where the Member State uploaded reports in stages (text reports) or modified previous versions (e-reports), multiple dates are shown.
+  </div>
   <div tal:replace="structure view/memberstate_reports">Member state reports</div>
 
   <h4>Marine region and Member State's marine waters</h4>
@@ -11,8 +28,8 @@
   <div tal:content="structure view/length_of_coastline"></div>
   <div tal:content="structure view/marine_waters"></div>
 
-  <h4>Assessment areas (Marine Reporting Units)</h4>
-  <div>The table gives details about the Marine Reporting Units used for the 2018 reporting on updates of Articles 8, 9 and 10.</div>
+  <h4>Reporting areas (Marine Reporting Units)</h4>
+  <div tal:content="structure view/reporting_areas_text">Text</div>
   <div tal:replace="structure view/assessment_areas">Mru table</div>
 
   <h4>Assessment methodology</h4>
