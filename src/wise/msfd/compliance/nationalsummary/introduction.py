@@ -153,7 +153,7 @@ class ReportingHistoryTable(BaseNatSummaryView):
         text_reports = get_text_reports_2018(self.country_code)
         data_text = []
 
-        # FileName, LocationURL, DateDue, DateReceived, ReportingDelay
+        # FileName, LocationURL, DateDue, DateReleased, ReportingDelay
         for row in text_reports:
             _row = {}
 
@@ -164,7 +164,7 @@ class ReportingHistoryTable(BaseNatSummaryView):
             _row['FileName'] = file_url_split[-1]
             _row['LocationURL'] = file_url
             _row['DateDue'] = datetime.strptime('15-10-2018', '%d-%m-%Y')
-            _row['DateReceived'] = release_date
+            _row['DateReleased'] = release_date
             _row['ReportingDelay'] = None
 
             data_text.append(_row)
