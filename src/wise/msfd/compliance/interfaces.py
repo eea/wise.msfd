@@ -23,6 +23,13 @@ class IComplianceModuleFolder(Interface):
     """
 
 
+class IMSFDReportingHistoryFolder(Interface):
+    """ A container for MSFD reporting history
+
+    /compliance-module/msfd-reporting-history/
+    """
+
+
 class INationalDescriptorsFolder(Interface):
     """ A container for national descriptors assessments
 

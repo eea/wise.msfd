@@ -1,2 +1,66 @@
-!function(a){a(document).ready(function(){var b=a("#edit-recommendation");b.on("show.bs.modal",function(b){var c=a(b.relatedTarget),d=c.parent("td").parent("tr").children("td");if(a("#recomm-code").text(""),a("#recomm-code").parent().removeClass("disabled"),a("#recomm-code").removeClass("disabled"),a("#recomm-text").text(""),a("#topic option").each(function(){a(this).removeProp("selected")}),a("#ms-region option").each(function(){a(this).removeProp("selected")}),a("#descriptors option").each(function(){a(this).removeProp("selected")}),d.length){var e=a(d[0]).text(),f=a(d[1]).text(),g=a(d[2]).text(),h=a(d[3]).text().split(",").map(function(a){return a.trim()}),i=a(d[4]).text().split(",").map(function(a){return a.trim()});a("#recomm-code").text(e),a("#recomm-code").parent().addClass("disabled"),a("#recomm-code").addClass("disabled"),a("#recomm-text").text(g),a("#topic option").each(function(){var b=this.value;f==b&&a(this).prop("selected",!0)}),a("#ms-region option").each(function(){var b=this.value;h.includes(b)&&a(this).prop("selected",!0)}),a("#descriptors option").each(function(){var b=this.value;i.includes(b)&&a(this).prop("selected",!0)})}})})}(jQuery);
-//# sourceMappingURL=recommendations-edit.js.map
+(function($){
+  $(document).ready(function() {
+    var $modal = $('#edit-recommendation');
+
+    $modal.on('show.bs.modal', function(event){
+      var $btn = $(event.relatedTarget);
+      var cells = $btn.parent('td').parent('tr').children('td')
+
+      // clear form
+      $('#recomm-code').text('');
+      $('#recomm-code').parent().removeClass('disabled');
+      $('#recomm-code').removeClass('disabled');
+      $('#recomm-text').text('');
+      $('#topic option').each(function(){
+        $(this).removeProp('selected');
+      });
+      $('#ms-region option').each(function(){
+        $(this).removeProp('selected');
+      });
+      $('#descriptors option').each(function(){
+        $(this).removeProp('selected');
+      });
+
+      // edit recommendation button prefill the form with values
+      if (cells.length) {
+        var rec_code = $(cells[0]).text();
+        var topic = $(cells[1]).text();
+        var recommText = $(cells[2]).text();
+        var msRegion = $(cells[3]).text().split(',').map(function(item){ return item.trim(); });
+        var descriptors = $(cells[4]).text().split(',').map(function(item){ return item.trim(); });
+
+        $('#recomm-code').text(rec_code);
+        $('#recomm-code').parent().addClass('disabled');
+        $('#recomm-code').addClass('disabled');
+        $('#recomm-text').text(recommText);
+
+        $('#topic option').each(function(){
+          var currentValue = this.value;
+
+          if (topic == currentValue) {
+            $(this).prop('selected', true);
+          }
+        });
+
+        $('#ms-region option').each(function(){
+          var currentValue = this.value;
+
+          if (msRegion.includes(currentValue)) {
+            $(this).prop('selected', true);
+          }
+        });
+
+        $('#descriptors option').each(function(){
+          var currentValue = this.value;
+
+          if (descriptors.includes(currentValue)) {
+            $(this).prop('selected', true);
+          }
+        });
+
+      };
+
+    });
+  });
+
+}(jQuery));

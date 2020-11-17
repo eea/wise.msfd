@@ -11,7 +11,8 @@ from persistent import Persistent
 from plone.api import portal
 
 from wise.msfd.compliance.vocabulary import (REGIONAL_DESCRIPTORS_REGIONS,
-                                             REGIONS, get_all_countries)
+                                             REGIONS, get_all_countries,
+                                             ReportingHistoryENVRow)
 from wise.msfd.gescomponents import (GES_DESCRIPTORS, get_all_descriptors,
                                      get_descriptor)
 
@@ -247,3 +248,43 @@ class ViewComplianceModule(BaseComplianceView):
     #     folders = self.get_folder_by_id(id)
     #
     #     return folders
+
+
+class MSFDReportingHistoryView(BaseComplianceView):
+    name = 'msfd-reporting-history'
+    section = 'compliance-admin'
+
+    @property
+    def _msfd_rep_history_data(self):
+        """ all data including the headers """
+
+        return self.context._msfd_reporting_history_data
+
+    @property
+    def msfd_rep_history_headers(self):
+        return self._msfd_rep_history_data[0]
+
+    @property
+    def msfd_rep_history_data(self):
+        """ only the data, without headers """
+
+        return self._msfd_rep_history_data[1:]
+
+    def __call__(self):
+        form_data = self.request.form
+
+        if 'add-msfd-data' in form_data:
+            index = int(form_data.get('Row'))
+
+            _data = [
+                form_data.get(f)
+                for f in self.msfd_rep_history_headers
+            ]
+            new_data = ReportingHistoryENVRow(*_data)
+
+            if index == len(self._msfd_rep_history_data):
+                self._msfd_rep_history_data.append(new_data)
+            else:
+                self._msfd_rep_history_data[index] = new_data
+
+        return self.index()

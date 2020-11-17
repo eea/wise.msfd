@@ -1,0 +1,107 @@
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en"
+  xmlns:tal="http://xml.zope.org/namespaces/tal"
+  xmlns:metal="http://xml.zope.org/namespaces/metal"
+  xmlns:i18n="http://xml.zope.org/namespaces/i18n"
+  lang="en"
+  metal:use-macro="context/main_template/macros/master"
+  i18n:domain="eea">
+
+  <body metal:fill-slot="content">
+
+    <div id="wise-search-form" class="full-width-marker">
+      <script src="/++resource++msfd/js/table-edit.js"></script>
+
+      <div id="wise-search-form-top">
+        <metal:tabs metal:use-macro="context/wise-macros/macros/tabs"></metal:tabs>
+      </div>
+
+      <div class="start-page-content left-side-form full-width-marker">
+
+        <h3 class="report-title">Edit MSFD reporting history</h3>
+
+        <div id="edit-msfd-history" class="modal fade" tabindex="-1" role="dialog">
+          <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h3>Edit row</h3>
+              </div>
+
+              <div class="modal-body">
+                <form id="recommendation-form" method="POST" action=".">
+                  <div class="form-group">
+                    <label>Row number:</label>
+                    <textarea tal:content="python: len(view.msfd_rep_history_data) + 1"
+                        tal:attributes="max-rows python: len(view.msfd_rep_history_data) + 1"
+                        style="height: 3em; overflow: hidden;" id="Row" name="Row" class="form-control disabled"></textarea>
+                  </div>
+                  <tal:rep tal:repeat="header python: view.msfd_rep_history_headers">
+                    <div class="form-group">
+                      <label tal:content="header">Label:</label>
+                      <textarea tal:attributes="id header; name header"
+                          style="height: 3em; overflow: hidden;" class="form-control editable"></textarea>
+                    </div>
+                  </tal:rep>
+                  <input class="submitRecomm btn btn-primary btn-s"
+                         type="submit" value="Save"
+                         name="add-msfd-data"/>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div tal:condition="python: view.can_view_assessment_data()">
+          <a class="btn btn-s btn-primary"
+            data-toggle="modal"
+            data-target="#edit-msfd-history">
+              Add new data
+          </a>
+          <a class="btn btn-s btn-primary" href="./edit" target="_blank">
+              Download as excel
+          </a>
+          <a class="btn btn-s btn-primary" href="./edit" target="_blank">
+              Upload new excel file
+          </a>
+        </div>
+
+        <div class="overflow-table sticky-header">
+          <div class="inner" style="overflow: auto; margin-top: 1em;">
+            <table id="ZZrecommendation-edit-table"
+                   class="table table-listing table-report table-striped table-bordered">
+              <thead>
+                <tr class="sticky-row">
+                  <th>Row</th>
+                  <tal:rep tal:repeat="value python:view.msfd_rep_history_headers">
+                    <th tal:content="value">Value here</th>
+                  </tal:rep>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody style="word-break: keep-all;">
+                <tr tal:repeat="row python: enumerate(view.msfd_rep_history_data)">
+                  <td tal:content="python: row[0] + 1">1</td>
+                  <tal:rep tal:repeat="value python: row[1]">
+                    <td tal:condition="python: not unicode(value).startswith('http')"
+                        tal:content="value">Value here</td>
+                    <td tal:condition="python: unicode(value).startswith('http')">
+                      <a tal:attributes="href value" tal:content="value">url here</a>
+                    </td>
+                  </tal:rep>
+                  <td>
+                    <a class="btn btn-sm btn-primary"
+                       data-toggle="modal"
+                       data-target="#edit-msfd-history">
+                        <i class="fa fa-edit"></i>
+                    </a>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+
+</html>

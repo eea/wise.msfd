@@ -140,7 +140,7 @@ ReportingHistoryENVRow = namedtuple(
     ['ARES', 'CIRCABC', 'WISE', 'Sort', 'CountryCode', 'FileName',
      'LocationURL', 'Schema', 'ReportingObligation', 'ReportingObligationID',
      'ReportingObligationURL', 'DateDue', 'DateReceived', 'ReportingDelay',
-     'MSFDArticle', 'ReportType']
+     'MSFDArticle', 'ReportType', 'Comments']
 )
 
 
@@ -154,12 +154,15 @@ def parse_reporting_history_env():
         sheets = get_data(file)
         env_data = sheets['ENV']
 
-        for row in env_data[1:]:
+        for row in env_data:
             row = [
                 isinstance(x, basestring) and x.strip() or x
                 for x in row
             ]
-            res.append(ReportingHistoryENVRow(*row[:16]))
+            if len(row) == 16:
+                row.append('')
+
+            res.append(ReportingHistoryENVRow(*row[:17]))
 
     return res
 

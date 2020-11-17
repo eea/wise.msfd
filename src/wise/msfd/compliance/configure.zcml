@@ -68,6 +68,14 @@
     />
 
   <browser:page
+    for=".interfaces.IMSFDReportingHistoryFolder"
+    name="msfd-reporting-history"
+    class=".main.MSFDReportingHistoryView"
+    template="./pt/msfd-reporting-history-view.pt"
+    permission="wise.ManageCompliance"
+  />
+
+  <browser:page
     for=".interfaces.IComplianceModuleFolder"
     name="view"
     class=".main.ViewComplianceModule"

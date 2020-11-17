@@ -30,7 +30,8 @@ from wise.msfd.compliance.interfaces import (INationalDescriptorAssessment,
                                              INationalDescriptorAssessmentSecondary)
 from wise.msfd.compliance.vocabulary import (get_all_countries,
                                              get_regions_for_country,
-                                             REGIONAL_DESCRIPTORS_REGIONS)
+                                             REGIONAL_DESCRIPTORS_REGIONS,
+                                             REPORTING_HISTORY_ENV)
 from wise.msfd.compliance.regionaldescriptors.base import COUNTRY
 from wise.msfd.gescomponents import (get_all_descriptors, get_descriptor,
                                      get_marine_units)
@@ -85,7 +86,7 @@ class BootstrapCompliance(BrowserView):
     """ Bootstrap the compliance module by creating all needed country folders
     """
 
-    compliance_folder_id = 'compliance-module'
+    compliance_folder_id = 'assessment-module'
 
     @property
     def debug(self):
@@ -426,12 +427,34 @@ class BootstrapCompliance(BrowserView):
 
         return cm
 
+    def setup_msfd_reporting_history_folder(self, cm):
+        msfd_id = 'msfd-reporting-history'
+
+        if msfd_id in cm.contentIds():
+            msfd = cm[msfd_id]
+        else:
+            msfd = create(cm, 'wise.msfd.reportinghistoryfolder',
+                          title='MSFD reporting history',
+                          id=msfd_id)
+
+            logger.info("Created MSFD Reporting history folder %s",
+                        msfd.absolute_url())
+
+            msfd._msfd_reporting_history_data = REPORTING_HISTORY_ENV
+
+        alsoProvides(msfd, interfaces.IMSFDReportingHistoryFolder)
+        self.set_layout(msfd, '@@msfd-reporting-history')
+
+        return msfd
+
     def __call__(self):
 
         # if self.compliance_folder_id in self.context.contentIds():
         #     self.context.manage_delObjects([self.compliance_folder_id])
 
         cm = self.setup_compliancefolder()
+
+        self.setup_msfd_reporting_history_folder(cm)
 
         # self.setup_nationaldescriptors(cm)
         DEFAULT = 'regional,nationalsummary,regionalsummary,secondary'

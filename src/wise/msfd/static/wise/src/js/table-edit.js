@@ -1,5 +1,5 @@
 (function($){
-  $(document).ready(function() {
+  function setupEditRecommendationModal() {
     var $modal = $('#edit-recommendation');
 
     $modal.on('show.bs.modal', function(event){
@@ -21,7 +21,7 @@
         $(this).removeProp('selected');
       });
 
-      // edit recommendation button prefill the form with values
+      // edit recommendation button pressed, prefill the form with values
       if (cells.length) {
         var rec_code = $(cells[0]).text();
         var topic = $(cells[1]).text();
@@ -57,10 +57,40 @@
             $(this).prop('selected', true);
           }
         });
-
       };
 
     });
+  };
+
+  function setupEditMSFDReportingHistoryModal() {
+    var $modal = $('#edit-msfd-history');
+
+    $modal.on('show.bs.modal', function(event){
+      var $btn = $(event.relatedTarget);
+      var cells = $btn.parent('td').parent('tr').children('td')
+
+      var maxRows = $('#Row').attr('max-rows');
+      $('#Row').text(maxRows)
+
+      //clear form
+      $(this).find('textarea.editable').each(function(){
+        $(this).text('')
+      });
+
+      // edit recommendation button pressed, prefill the form with values
+      if (cells.length) {
+        cells.each(function(index){
+          var text = $(this).text();
+          var formTextareas = $modal.find('textarea');
+          $(formTextareas[index]).text(text);
+        });
+      };
+    });
+  };
+
+  $(document).ready(function() {
+    setupEditRecommendationModal();
+    setupEditMSFDReportingHistoryModal();
   });
 
 }(jQuery));
