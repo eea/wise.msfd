@@ -383,6 +383,8 @@
   },
   "css": [],
   "js": [
+    "tooltip.js",
+    "popover.js",
     "tab.js"
   ]
 }

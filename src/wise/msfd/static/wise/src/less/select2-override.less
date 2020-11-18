@@ -55,41 +55,43 @@ Link : http://techhysahil.com
   }
 }
 
-.select2-container{
-  .select2-choice {
-    border: 1px solid #dce4ec;
-    height: auto;
-    border-radius: 0px ;
-    font-family: "Lato", sans-serif;
-    font-size: 14px;
-    text-indent: 1px;
-    -webkit-box-shadow: none;
-    -moz-box-shadow: none;
-    box-shadow: none;
-    background-image: none;
-    div {
-      border-left: 1px solid #dce4ec;
-      -webkit-border-radius: 0 4px 4px 0;
-      -moz-border-radius: 0 4px 4px 0;
-      border-radius: 0 4px 4px 0;
+#wise-search-form {
+  .select2-container {
+    .select2-choice {
+      border: 1px solid #dce4ec !important;
+      height: auto !important;
+      border-radius: 0px !important;
+      font-family: "Lato", sans-serif;
+      font-size: 14px;
+      text-indent: 1px;
+      -webkit-box-shadow: none;
+      -moz-box-shadow: none;
+      box-shadow: none;
+      background-image: none !important;
+      div {
+        border-left: 1px solid #dce4ec;
+        -webkit-border-radius: 0 4px 4px 0;
+        -moz-border-radius: 0 4px 4px 0;
+        border-radius: 0 4px 4px 0;
 
-      -webkit-background-clip: padding-box;
-      -moz-background-clip: padding;
-      background-clip: padding-box;
+        -webkit-background-clip: padding-box;
+        -moz-background-clip: padding;
+        background-clip: padding-box;
+      }
+      .select2-arrow{
+        border: 0px;
+        border-radius: 0px;
+        background: transparent;
+        background-image: none;
+      }
     }
-    .select2-arrow{
-      border: 0px;
-      border-radius: 0px;
-      background: transparent;
-      background-image: none;
+    *:focus{
+      outline:0px;
     }
-  }
-  *:focus{
-    outline:0px;
-  }
-  &.select2-drop-above .select2-choice {
-    border-bottom-color: #dce4ec;
-    border-radius:0px;
+    &.select2-drop-above .select2-choice {
+      border-bottom-color: #dce4ec;
+      border-radius:0px;
+    }
   }
 }
 
