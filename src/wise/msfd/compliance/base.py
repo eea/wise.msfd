@@ -115,7 +115,7 @@ MAIN_FORMS = [Tab(*x) for x in [
 
     ('help',
      'help-section',
-     '<span class="fa fa-question-circle fa-lg"></span>',
+     '<i class="glyphicon glyphicon-question-sign" />',
      '<span>&nbsp;</span>',
      'manage-users',
      '',
@@ -124,7 +124,7 @@ MAIN_FORMS = [Tab(*x) for x in [
 
     ('@@compliance-admin',
      'compliance-admin',
-     '<span class="fa fa-cogs fa-lg"></span>',
+     '<i class="glyphicon glyphicon-cog" />',
      '<span>&nbsp;</span>',
      'manage-users',
      '',

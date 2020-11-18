@@ -30,7 +30,7 @@
             <div class="back-to-descr">
               <a href="./../../"
                 tal:attributes="href python:view._countryregion_folder.absolute_url()">
-                <i class='fa fa-level-up'></i>
+                <i class="glyphicon glyphicon-share-alt"></i>
                 Go to Regional Descriptor Assessment
               </a>
             </div>
@@ -45,15 +45,15 @@
             <ul>
               <li tal:condition="python: view.check_permission('wise.msfd: Edit Assessment')">
                 <a href="./@@edit-assessment-data-2018" target="_blank">
-                  <i class='fa fa-edit'></i> Assessment
+                  <i class="glyphicon glyphicon-edit"></i> Assessment
                 </a>
               </li>
-              <li><a href="./@@view-report-data-2018" target="_blank"><i class='fa fa-table'></i> 2018 Report</a></li>
-              <li><a href="./@@view-report-data-2012" target="_blank"><i class='fa fa-table'></i> 2012 Report</a></li>
+              <li><a href="./@@view-report-data-2018" target="_blank"><i class="glyphicon glyphicon-th"></i> 2018 Report</a></li>
+              <li><a href="./@@view-report-data-2012" target="_blank"><i class="glyphicon glyphicon-th"></i> 2012 Report</a></li>
               <li class="process-state">
                 <form method="GET" action='./content_status_modify'>
                   <div>
-                    <i class='fa fa-exchange'></i>
+                    <i class="glyphicon glyphicon-transfer"></i>
                     Process state:
                     <strong tal:content="view/get_status">Phase 0</strong>
                     <select onchange="javascript:this.form.submit()" name="workflow_action"

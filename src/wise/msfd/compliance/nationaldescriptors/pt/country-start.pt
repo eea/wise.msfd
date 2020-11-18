@@ -21,7 +21,7 @@
 
           <div class="nda-link">
             <a href="./../">
-              <i class='fa fa-level-up'></i>
+              <i class="glyphicon glyphicon-share-alt"></i>
               Go to all National Descriptor Assessments
             </a>
           </div>
@@ -30,7 +30,7 @@
             <form class="process-state"
               method="GET" action='./content_status_modify'>
               <div>
-                <i class='fa fa-exchange'></i>
+                <i class="glyphicon glyphicon-transfer"></i>
                 Process state:
                 <strong tal:content="view/get_status">Phase 0</strong>
 
@@ -87,7 +87,7 @@
 
                       <a tal:attributes="class css_class; href string:${url}/@@edit-assessment-data-2018;"
                         tal:condition="python: can_edit_data and assessment.id not in ('art7')">
-                        <span class="fa fa-edit"></span>Assessment:
+                        <i class="glyphicon glyphicon-edit"></i>Assessment:
                         <span class="as-state-label" tal:content="python: view.get_status(assessment)">State</span>
                         <span title="New comments"
                           class="has-new-comments fa fa-exclamation-circle"
@@ -133,7 +133,7 @@
 
                       <a tal:attributes="class css_class; href string:${url}/@@edit-assessment-data-2018;"
                         tal:condition="can_edit_data">
-                        <span class="fa fa-edit"></span>Assessment:
+                        <i class="glyphicon glyphicon-edit"></i>Assessment:
                         <span class="as-state-label" tal:content="python: view.get_status(assessment)">State</span>
                         <span title="New comments"
                           class="has-new-comments fa fa-exclamation-circle"

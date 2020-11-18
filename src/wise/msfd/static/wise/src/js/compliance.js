@@ -494,7 +494,7 @@ if (!Array.prototype.last){
 
   function addCustomScroll() {
     var $cs = $('<div class="scroll-wrapper">' +
-      '<i class="fa fa-table"></i>' +
+      '<i class="glyphicon glyphicon-th"></i>' +
       '<div class="top-scroll">' +
         '<div class="top-scroll-inner"></div>' +
       '</div>' +

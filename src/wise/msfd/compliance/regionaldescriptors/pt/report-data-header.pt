@@ -11,7 +11,7 @@
     <div id="report-data-navigation">
       <div class="back-to-art">
         <a href="./">
-          <i class='fa fa-level-up'></i>
+          <i class="glyphicon glyphicon-share-alt"></i>
           Back to descriptor assessment overview
         </a>
       </div>

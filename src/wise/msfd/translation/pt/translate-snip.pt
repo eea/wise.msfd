@@ -31,7 +31,7 @@
 
         <tal:cond condition="can_translate">
           <button data-toggle="modal" data-target="#edit-translation" class="btn btn-light btn-xs editTransl">
-            <span class="fa fa-edit" />
+            <i class="glyphicon glyphicon-edit"></i>
           </button>
           <button class="btn btn-light btn-xs autoTransl">
             <span class="fa fa-refresh fa-sync" />

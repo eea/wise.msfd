@@ -28,7 +28,7 @@
             <div class="nda-link">
               <a href="./../../"
                 tal:attributes="href python:view._country_folder.absolute_url()">
-                <i class='fa fa-level-up'></i>
+                <i class="glyphicon glyphicon-share-alt"></i>
                 Go to National Descriptor Assessment
               </a>
             </div>
@@ -41,16 +41,17 @@
           <div id="nat-desc-art-menu">
             <ul>
               <li tal:condition="view/has_assessment">
-                <a href="./@@edit-assessment-data-2018" target="_blank"><i class='fa fa-edit'></i> Assessment</a>
-                <a href="./@@view-edit-history" class="fa fa-table pat-plone-modal"
+                <a href="./@@edit-assessment-data-2018" target="_blank">
+                  <i class="glyphicon glyphicon-edit"></i> Assessment</a>
+                <a href="./@@view-edit-history" class="glyphicon glyphicon-th pat-plone-modal"
                    data-pat-plone-modal="height: 600px; content:#edit-history; width: 80%"></a>
               </li>
-              <li><a href="./@@view-report-data-2018" target="_blank"><i class='fa fa-table'></i> View report(s)</a></li>
-              <!--<li><a href="./@@view-report-data-2012" target="_blank"><i class='fa fa-table'></i> 2012 Report</a></li>-->
+              <li><a href="./@@view-report-data-2018" target="_blank"><i class="glyphicon glyphicon-th"></i> View report(s)</a></li>
+              <!--<li><a href="./@@view-report-data-2012" target="_blank"><i class="glyphicon glyphicon-th"></i> 2012 Report</a></li>-->
               <li class="process-state" style="display:flex; align-items: center">
                 <form method="GET" action='./content_status_modify'>
                   <div>
-                    <i class='fa fa-exchange'></i>
+                    <i class="glyphicon glyphicon-transfer"></i>
                     Process state:
                     <strong tal:content="view/get_status">Phase 0</strong>
                     <select tal:condition="python: not(view.read_only_access)"

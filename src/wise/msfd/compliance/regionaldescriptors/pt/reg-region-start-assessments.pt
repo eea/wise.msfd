@@ -21,7 +21,7 @@
 
           <div class="nda-link">
             <a href="./../">
-              <i class='fa fa-level-up'></i>
+              <i class="glyphicon glyphicon-share-alt"></i>
               Go to all Regional Descriptor Assessments
             </a>
           </div>
@@ -30,7 +30,7 @@
             <form class="process-state"
                 method="GET" action='./content_status_modify'>
               <div>
-                <i class='fa fa-exchange'></i>
+                <i class="glyphicon glyphicon-transfer"></i>
                 Process state:
                 <strong tal:content="view/get_status">Phase 0</strong>
 

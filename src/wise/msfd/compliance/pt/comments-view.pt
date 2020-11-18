@@ -4,7 +4,7 @@
     class="comp-discussion-track-container">
 
     <h4>
-      <i class='fa fa-comments'></i>
+      <i class="glyphicon glyphicon-comment"></i>
       <span tal:replace="folder/title_or_id">Discussion track with UN</span>
     </h4>
 

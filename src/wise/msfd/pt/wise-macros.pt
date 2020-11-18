@@ -28,6 +28,7 @@
       </tal:rep>
     </ul>
     <!-- <div class="visible-xs" style="clear: both;"> -->
+    <div class="visible-xs">
     <div class="article-select">
       <div tal:content="view/tab_select_label | string:Select ${tab_type}:">
         Select article/tab:
@@ -45,6 +46,7 @@
           </tal:block>
         </tal:rep>
       </select>
+    </div>
     </div>
   </div>
 </metal:macro>
@@ -133,7 +135,7 @@
     <div class="nav-wrapper">
       <div class="nav-header">
         <button id="report-nav-toggle" class="nav-toggle">
-          <i class="fa fa-bars"></i>
+          <i class="glyphicon glyphicon-menu-hamburger"></i>
         </button>
       </div>
 
@@ -188,7 +190,7 @@
     <div class="nav-wrapper">
       <div class="nav-header">
         <button id="report-nav-toggle" class="nav-toggle">
-          <i class="fa fa-bars"></i>
+          <i class="glyphicon glyphicon-menu-hamburger"></i>
         </button>
       </div>
       <div class="nav-body">
@@ -224,7 +226,7 @@
     <div class="nav-wrapper">
       <div class="nav-header">
         <button id="report-nav-toggle" class="nav-toggle">
-          <i class="fa fa-bars"></i>
+          <i class="glyphicon glyphicon-menu-hamburger"></i>
         </button>
       </div>
 
@@ -274,7 +276,7 @@
             method="GET"
             tal:attributes="action python: url + '/content_status_modify'">
         <div>
-          <i class='fa fa-exchange'></i>
+          <i class="glyphicon glyphicon-transfer"></i>
           Process state:
           <strong tal:content="python: view.get_status(assessment)">Phase 0</strong>
           <i class='fa fa-times close-button'></i>

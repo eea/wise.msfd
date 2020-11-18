@@ -13,7 +13,7 @@
       tal:condition="python: options.get('show_navigation') != False and view.can_view_assessment_data">
       <div class="back-to-art">
         <a href="./">
-          <i class='fa fa-level-up'></i>
+          <i class="glyphicon glyphicon-share-alt"></i>
           Back to descriptor assessment overview
         </a>
       </div>

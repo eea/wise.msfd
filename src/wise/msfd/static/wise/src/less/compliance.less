@@ -15,6 +15,10 @@
   -o-@{prop}: @val;
 }
 
+h1 {
+  margin: 2.5rem 0 3rem 0 !important;
+}
+
 // generic fixes, should be temporary. This fixes the really long breadcrumbs
 .content-page .main-content {
   margin-top: 4em !important;
@@ -26,14 +30,41 @@
   }
 }
 
-.breadcrumbs {
-  display: none;
+.glyphicon.glyphicon-share-alt {
+  transform: scaleX(-1);
+}
+
+.plone-breadcrumb,
+.breadcrumbs,
+.print-btn-wrapper {
+  display: none !important;
+}
+
+#main-container .pat-select2 {
+  min-width: 400px;
+}
+
+.msfd-search-wrapper {
+  .row {
+    >.col-md-3 {
+      display: none;
+    }
+    >.col-md-9 {
+      width: 100%;
+    }
+  }
+}
+
+.center-section{
+  width: 100%;
+  border: none;
 }
 
 .fullwidth {
-  .center-section {
-    width: 100%;
-    border: none;
+  .container {
+    width: 100% !important;
+    max-width: 100%;
+    padding: 0 2em;
   }
 
   .main-content {
@@ -45,14 +76,22 @@
   }
 }
 
-.table-striped {
+table.table-striped {
+  border: none;
+
+  th, td {
+    border: none;
+  }
+
   tbody tr:nth-of-type(odd) {
-    background-color: #eee;
+    background-color: #f1f1f1 !important;
   }
 
   thead {
-    background-color: #AAA;
-    color: white;
+    background-color: #aaa !important;
+    th {
+      color: white !important;
+    }
   }
 }
 
@@ -519,8 +558,36 @@ span.has-new-comments {
 
 }
 
+.btn {
+  display: inline-block;
+  margin-bottom: 0;
+  font-weight: normal;
+  text-align: center;
+  vertical-align: middle;
+  cursor: pointer;
+  background-image: none;
+  border: 1px solid transparent;
+  white-space: nowrap;
+  padding: 6px 12px;
+  font-size: 14px;
+  line-height: 1.42857143;
+  border-radius: 4px;
+}
+
 .btn-light {
   border: 1px solid #DDD;
+}
+
+.btn-default {
+  border-color: #29a2d9;
+}
+
+.btn-xs,
+.btn-group-xs>.btn {
+  padding: 1px 5px;
+  font-size: 12px;
+  line-height: 1.5;
+  border-radius: 3px;
 }
 
 // Assessment overview

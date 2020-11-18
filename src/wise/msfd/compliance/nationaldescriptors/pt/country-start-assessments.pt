@@ -22,7 +22,7 @@
           <h1>Commission assessments - national overview: <span tal:content="view/country_title"></span></h1>
           <div class="nda-link">
             <a href="./../">
-              <i class='fa fa-level-up'></i>
+              <i class="glyphicon glyphicon-share-alt"></i>
               Go to all National Descriptor Assessments
             </a>
           </div>
@@ -31,7 +31,7 @@
             <form class="process-state"
               method="GET" action='./content_status_modify'>
               <div>
-                <i class='fa fa-exchange'></i>
+                <i class="glyphicon glyphicon-transfer"></i>
                 Process state:
                 <strong tal:content="python: view.get_status(country_folder)">Phase 0</strong>
 
