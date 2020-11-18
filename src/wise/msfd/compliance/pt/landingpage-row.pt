@@ -11,7 +11,7 @@
       <th style="min-width: 35px" class="sticky-col" tal:attributes="rowspan rowspan" tal:content="date"></th>
       <th style="min-width: 35px" class="sticky-col" tal:attributes="rowspan rowspan" tal:content="who"></th>
       <th style="min-width: 40px" class="sticky-col" tal:attributes="rowspan rowspan" tal:content="article"></th>
-      <th style="min-width: 120px" class="sticky-col" tal:attributes="rowspan rowspan" class="bold-border" tal:content="task"></th>
+      <th style="min-width: 120px" class="sticky-col bold-border" tal:attributes="rowspan rowspan" tal:content="task"></th>
       <tal:rep tal:repeat="item python: subrows[0]">
         <td tal:condition="python: item.rowspan > 0"
             tal:attributes="colspan python: item.colspan; class python: item.css_class;

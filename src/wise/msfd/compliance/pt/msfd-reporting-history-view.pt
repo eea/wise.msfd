@@ -65,7 +65,7 @@
           </a>
         </div>
 
-        <div class="overflow-table sticky-header hidden-fixed-table">
+        <div class="overflow-table sticky-overflow-header hidden-fixed-table">
           <div class="inner" style="overflow: auto; margin-top: 1em;">
             <table id="msfd-history-edit-table"
                    class="table table-listing table-report table-striped table-bordered">

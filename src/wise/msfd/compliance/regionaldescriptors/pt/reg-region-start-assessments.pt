@@ -105,7 +105,7 @@
             </tbody>
           </table>
 
-          <div class="overflow-table sticky-header hidden-fixed-table">
+          <div class="overflow-table sticky-overflow-header hidden-fixed-table">
             <div class="inner" style="overflow: auto;">
               <table class="table table-sticky-first-col as-table-overview table-striped table-country-start table-homepage-reports table-report">
                 <tbody>

@@ -125,7 +125,7 @@
           </table>
 
           <div class="report-section-X">
-            <div class="overflow-table sticky-header hidden-fixed-table">
+            <div class="overflow-table sticky-overflow-header hidden-fixed-table">
               <div class="inner" style="overflow: auto;">
                   <!--<h3 tal:attributes="id region/id" tal:content="region/title"-->
                       <!--style="position: sticky; left: 0;">Region name</h3>-->
