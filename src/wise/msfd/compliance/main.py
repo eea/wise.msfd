@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 
+from io import BytesIO
+
 from zope.annotation.factory import factory
 from zope.component import adapter
 from zope.interface import implementer
@@ -9,12 +11,17 @@ from Products.Five.browser.pagetemplatefile import PageTemplateFile
 from Products.CMFPlone.interfaces.siteroot import IPloneSiteRoot
 from persistent import Persistent
 from plone.api import portal
+from StringIO import StringIO
 
-from wise.msfd.compliance.vocabulary import (REGIONAL_DESCRIPTORS_REGIONS,
-                                             REGIONS, get_all_countries,
-                                             ReportingHistoryENVRow)
+from wise.msfd.compliance.vocabulary import (
+    REGIONAL_DESCRIPTORS_REGIONS,
+    REGIONS, get_all_countries, ReportingHistoryENVRow,
+    get_msfd_reporting_history_from_file
+)
 from wise.msfd.gescomponents import (GES_DESCRIPTORS, get_all_descriptors,
                                      get_descriptor)
+
+import xlsxwriter
 
 from .base import BaseComplianceView
 from .interfaces import IRecommendationStorage
@@ -254,6 +261,13 @@ class MSFDReportingHistoryView(BaseComplianceView):
     name = 'msfd-reporting-history'
     section = 'compliance-admin'
 
+    column_widths = {
+        'DateDue': '100px',
+        'DateReceived': '100px',
+        'MSFDArticle(year)': '200px',
+        'ReportType': '250px',
+    }
+
     @property
     def _msfd_rep_history_data(self):
         """ all data including the headers """
@@ -270,8 +284,66 @@ class MSFDReportingHistoryView(BaseComplianceView):
 
         return self._msfd_rep_history_data[1:]
 
+    @property
+    def msfd_file(self):
+        return self.context.msfd_reporting_history_xml
+
+    def setup_msfd_data(self):
+        file_obj = StringIO(self.msfd_file.data)
+        data = get_msfd_reporting_history_from_file(file_obj)
+
+        self.context._msfd_reporting_history_filename = self.msfd_file.filename
+        self.context._msfd_reporting_history_data = data
+
+    def data_to_xls(self, data):
+        # Create a workbook and add a worksheet.
+        out = BytesIO()
+        workbook = xlsxwriter.Workbook(out, {'in_memory': True})
+
+        wtitle = 'ENV'
+        worksheet = workbook.add_worksheet(unicode(wtitle)[:30])
+
+        row_index = 0
+
+        for row in data:
+            for i, value in enumerate(row):
+                worksheet.write(row_index, i, unicode(value or ''))
+
+            row_index += 1
+
+        workbook.close()
+        out.seek(0)
+
+        return out
+
+    def download(self):
+        xlsdata = self._msfd_rep_history_data
+
+        xlsio = self.data_to_xls(xlsdata)
+        sh = self.request.response.setHeader
+
+        sh('Content-Type', 'application/vnd.openxmlformats-officedocument.'
+           'spreadsheetml.sheet')
+        fname = "-".join(["MSFDReportingHistory",
+                          'date_here'])
+        sh('Content-Disposition',
+           'attachment; filename=%s.xlsx' % fname)
+
+        return xlsio.read()
+
     def __call__(self):
         form_data = self.request.form
+
+        if 'download-excel' in form_data:
+            return self.download()
+
+        if self.msfd_file:
+            old_filename = getattr(self.context,
+                                   '_msfd_reporting_history_filename', u'')
+            new_filename = self.msfd_file.filename
+
+            if new_filename != old_filename:
+                self.setup_msfd_data()
 
         if 'add-msfd-data' in form_data:
             index = int(form_data.get('Row'))

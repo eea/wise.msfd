@@ -6,7 +6,7 @@
     <schema>
         <field name="msfd_reporting_history_xml"
                type="plone.namedfile.field.NamedFile">
-            <description/>
+            <description>Upload a new MSFD reporting history xml file. WARNING! This will delete previous data. Before uploading a new file make sure to download the old data as backup.</description>
             <required>False</required>
             <title>MSFD reporting history xml file</title>
         </field>

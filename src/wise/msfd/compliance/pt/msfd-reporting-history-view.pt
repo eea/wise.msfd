@@ -57,23 +57,24 @@
             data-target="#edit-msfd-history">
               Add new data
           </a>
-          <a class="btn btn-s btn-primary" href="./edit" target="_blank">
+          <a class="btn btn-s btn-primary" href="./@@msfd-reporting-history?download-excel" target="_blank">
               Download as excel
           </a>
-          <a class="btn btn-s btn-primary" href="./edit" target="_blank">
+          <a class="btn btn-s btn-danger" href="./edit" target="_blank">
               Upload new excel file
           </a>
         </div>
 
-        <div class="overflow-table sticky-header">
+        <div class="overflow-table sticky-header hidden-fixed-table">
           <div class="inner" style="overflow: auto; margin-top: 1em;">
-            <table id="ZZrecommendation-edit-table"
+            <table id="msfd-history-edit-table"
                    class="table table-listing table-report table-striped table-bordered">
               <thead>
                 <tr class="sticky-row">
                   <th>Row</th>
                   <tal:rep tal:repeat="value python:view.msfd_rep_history_headers">
-                    <th tal:content="value">Value here</th>
+                    <th tal:attributes="style python: 'min-width: {}'.format(view.column_widths.get(value, ''))"
+                        tal:content="value">Table header</th>
                   </tal:rep>
                   <th></th>
                 </tr>
