@@ -67,6 +67,20 @@
     permission="zope2.View"
     />
 
+  <browser:viewlet
+    name="css-resources"
+    manager="plone.app.layout.viewlets.interfaces.IHtmlHead"
+    template="./pt/css-resources.pt"
+    permission="zope2.View"
+    />
+
+  <browser:viewlet
+    name="js-resources"
+    manager="plone.app.layout.viewlets.interfaces.IScripts"
+    template="./pt/js-resources.pt"
+    permission="zope2.View"
+    />
+
   <browser:page
     for=".interfaces.IComplianceModuleFolder"
     name="view"

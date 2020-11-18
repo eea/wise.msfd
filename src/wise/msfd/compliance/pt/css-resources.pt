@@ -1,0 +1,8 @@
+<tal:cond tal:condition="python: 'compliance-module' in request.URL0 or 'msfd-data' in request.URL0">
+  <link href="/marine/++resource++static_css/tabs.css" type="text/css" rel="stylesheet" />
+  <link href="/marine/++resource++static_css/bootstrap.css" type="text/css" rel="stylesheet" />
+</tal:cond>
+
+<tal:cond tal:condition="python: 'compliance-module' in request.URL0">
+  <link href="/marine/++resource++static_css/compliance.css" type="text/css" rel="stylesheet" />
+</tal:cond>

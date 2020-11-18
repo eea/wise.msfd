@@ -7,7 +7,7 @@
       $('.help-popover').popover();
     });
   </script>
-  <script src="/++resource++msfd/js/assessment-edit.js"></script>
+  <!-- <script src="/++resource++msfd/js/assessment-edit.js"></script> -->
 
   <div id="wise-compliance-form-top"
     tal:attributes="id view/form_id_top | string:wise-compliance-form-top">
@@ -31,7 +31,7 @@
       <div id="report-data-navigation">
         <div class="back-to-descr">
           <a href="./">
-            <i class='fa fa-level-up'></i>
+            <i class="glyphicon glyphicon-share-alt"></i>
             Back to descriptor assessment overview
           </a>
         </div>
