@@ -279,7 +279,7 @@
           <i class="glyphicon glyphicon-transfer"></i>
           Process state:
           <strong tal:content="python: view.get_status(assessment)">Phase 0</strong>
-          <i class='fa fa-times close-button'></i>
+          <i class='glyphicon glyphicon-remove-circle close-button'></i>
 
           <div class="phase-selector"
             tal:condition="python: not(view.read_only_access)">

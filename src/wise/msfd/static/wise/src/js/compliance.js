@@ -391,7 +391,9 @@ if (!Array.prototype.last){
     var $reportnav = $('#report-data-navigation');
     $('button', $reportnav).on('click', function() {
       $('.nav-body', $reportnav).toggle();
-      $(this).children().toggleClass('fa-bars fa-times');
+      $(this).children()
+      .addClass('glyphicon')
+      .toggleClass('glyphicon-menu-hamburger glyphicon-remove-circle');
       return false;
     });
     $('.nav-body', $reportnav).hide();
@@ -557,7 +559,7 @@ if (!Array.prototype.last){
     var $ft = $(
       '<div class="fixed-table-wrapper">' +
         '<button title="Clear filters" class="btn btn-primary btn-xs reset-pins">' +
-          '<i class="fa fa-times" aria-hidden="true"></i>' +
+          '<i class="glyphicon glyphicon-remove-circle"></i>' +
         '</button>' +
         '<div class="fixed-table-inner">' +
           '<table class="table table-bordered table-striped fixed-table">' +

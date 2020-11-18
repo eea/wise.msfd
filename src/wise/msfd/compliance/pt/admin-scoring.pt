@@ -36,19 +36,19 @@
               type="submit" class="btn btn-primary btn-small btn-success"
               value="Recalculate scores" name="recalculate-scores"/>
             <i style="position: relative; left: -28px; top: 1px;"
-              class="fa fa-refresh" aria-hidden="true"></i>
+              class="glyphicon glyphicon-refresh" aria-hidden="true"></i>
 
             <input style="padding-right:32px;"
               type="submit" class="btn btn-primary btn-small btn-success"
               value="Export scores as excel" name="export-scores"/>
             <i style="position: relative; left: -28px; top: 1px;"
-              class="fa fa-download" aria-hidden="true"></i>
+              class="glyphicon glyphicon-download-alt" aria-hidden="true"></i>
 
             <input style="padding-right:32px;"
               type="submit" class="btn btn-primary btn-small btn-success"
               value="Export scores as XML" name="export-xml"/>
             <i style="position: relative; left: -28px; top: 1px;"
-              class="fa fa-download" aria-hidden="true"></i>
+              class="glyphicon glyphicon-download-alt" aria-hidden="true"></i>
 
             <!--<tal:cond tal:condition="python: view.check_permission('wise.ManageCompliance')">-->
               <!--<input style="padding-right:32px;"-->
@@ -57,7 +57,7 @@
                 <!--onclick="javascript:return confirm('Are you sure you want to reinitialize the assessment module?')"-->
                 <!--name="reset-assessments"/>-->
               <!--<i style="position: relative; left: -28px; top: 1px;"-->
-                <!--class="fa fa-exclamation-triangle" aria-hidden="true"></i>-->
+                <!--class="glyphicon glyphicon-warning-sign" aria-hidden="true"></i>-->
             <!--</tal:cond>-->
           </form>
 

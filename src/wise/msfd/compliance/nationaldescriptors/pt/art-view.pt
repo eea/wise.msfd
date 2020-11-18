@@ -71,7 +71,7 @@
                     </select>
                   </div>
                 </form>
-                <a href="./@@historyview" class="link-overlay contentHistory fa fa-history" id="content-history" style="margin-left: 2rem"></a>
+                <a href="./@@historyview" class="link-overlay contentHistory glyphicon glyphicon-time" id="content-history" style="margin-left: 2rem"></a>
               </li>
             </ul>
           </div>

@@ -56,7 +56,7 @@
 
             <td class="fixed-right">
               <span tal:condition="row/score"
-                  class="score help-popover fa fa-info-circle fa-s"
+                  class="score help-popover glyphicon glyphicon-info-sign"
                   data-trigger="hover"
                   data-html="true"
                   data-placement="left"
@@ -64,7 +64,7 @@
                     data-content python: getattr(row.score, 'score_tooltip', '');">
               </span>
               <span tal:condition="python: not row.score"
-                  class="score help-popover fa fa-exclamation-circle fa-s"
+                  class="score help-popover glyphicon glyphicon-exclamation-sign"
                   data-trigger="hover"
                   data-html="true"
                   data-placement="left"
@@ -126,7 +126,7 @@
             tal:define="phase_score python: assessment.phase_overall_scores">
             <div tal:attributes="class python: 'as-value as-value-{}'.format(phase_score.adequacy['color'])"
                  tal:define="score python: phase_score.get_score_for_phase('adequacy');">
-              <span class="score help-popover fa fa-info-circle fa-s"
+              <span class="score help-popover glyphicon glyphicon-info-sign"
                   data-trigger="hover"
                   data-html="true"
                   data-placement="left"
@@ -137,7 +137,7 @@
             </div>
             <div tal:attributes="class python: 'as-value as-value-{}'.format(phase_score.consistency['color'])"
                  tal:define="score python: phase_score.get_score_for_phase('consistency');">
-              <span class="score help-popover fa fa-info-circle fa-s"
+              <span class="score help-popover glyphicon glyphicon-info-sign"
                   data-trigger="hover"
                   data-html="true"
                   data-placement="left"
@@ -148,7 +148,7 @@
             </div>
             <div tal:attributes="class python: 'as-value as-value-{}'.format(phase_score.coherence['color'])"
                  tal:define="score python: phase_score.get_score_for_phase('coherence');">
-              <span class="score help-popover fa fa-info-circle fa-s"
+              <span class="score help-popover glyphicon glyphicon-info-sign"
                   data-trigger="hover"
                   data-html="true"
                   data-placement="left"
@@ -158,7 +158,7 @@
               <span tal:content="python: '{}'.format(score)">65.5</span>
             </div>
             <div tal:attributes="class python: 'as-value as-value-{}'.format(assessment.overall_conclusion_color)">
-              <span class="score help-popover fa fa-info-circle fa-s"
+              <span class="score help-popover glyphicon glyphicon-info-sign"
                   data-trigger="hover"
                   data-html="true"
                   data-placement="left"

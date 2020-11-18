@@ -94,7 +94,7 @@
             fbDownload.remove();
 
             btnForm.append( $(dBtn) );
-            $("#form-buttons-download").val("&#xf019; Download as spreadsheet").addClass("fa").addClass("fa-download");
+            $("#form-buttons-download").val("&#xf019; Download as spreadsheet").addClass("glyphicon glyphicon-download-alt");
         }
     }
 

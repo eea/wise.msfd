@@ -68,7 +68,7 @@
                           tal:attributes="title python: '';
                           data-content python: last_change">
                         <span tal:content="string:Last change">Last change</span>
-                        <i class="fa fa-calendar"></i>
+                        <i class="glyphicon glyphicon-calendar"></i>
                       </span>
                     </h4>
 
@@ -101,7 +101,7 @@
                                   title python: element and element.title or '';
                                   data-content python: ''" >
                                   <span i18n:translate="" tal:content="widget/label">label</span>
-                                  <!-- <span tal:condition="element" class="fa fa-question-circle"></span> -->
+                                  <!-- <span tal:condition="element" class="glyphicon glyphicon-question-sign"></span> -->
                                 </label>
                               </div>
                               <div class="assessment-form-input">
@@ -129,7 +129,7 @@
 
                   <div class="right discussion disc-tl"
                        tal:define="question_id subform/_question/id | string:summary">
-                    <i class="comm-hide fa fa-plus-square fa-1" title="Show all comments"></i>
+                    <i class="comm-hide glyphicon glyphicon-plus-sign" title="Show all comments"></i>
                     <div class="comments"
                       tal:attributes="data-question-id question_id; data-thread-id string:tl"></div>
                     <div tal:condition="python: can_comment"

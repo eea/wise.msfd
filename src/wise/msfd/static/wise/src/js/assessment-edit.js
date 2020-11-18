@@ -321,7 +321,7 @@
         return;
       }
 
-      $infobox.append($('<span>').attr('class', 'fa fa-exclamation')
+      $infobox.append($('<span>').attr('class', 'glyphicon glyphicon-exclamation-sign')
         .css({'font-size': '26px', 'float': 'right', 'display': 'block'})
       );
     }

@@ -34,7 +34,7 @@
             <i class="glyphicon glyphicon-edit"></i>
           </button>
           <button class="btn btn-light btn-xs autoTransl">
-            <span class="fa fa-refresh fa-sync" />
+            <i class="glyphicon glyphicon-refresh"></i>
           </button>
         </tal:cond>
       </div>

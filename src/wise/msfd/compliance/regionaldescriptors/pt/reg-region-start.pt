@@ -75,7 +75,7 @@
                       <i class="glyphicon glyphicon-edit"></i>Assessment:
                       <span class="as-state-label" tal:content="python: view.get_status(assessment)">State</span>
                       <span title="New comments"
-                        class="has-new-comments fa fa-exclamation-circle"
+                        class="has-new-comments glyphicon glyphicon-exclamation-sign"
                         tal:condition="python: view.has_new_comments(assessment)"></span>
                     </a>
                     <div style='margin-top: 0.3rem'>
