@@ -17,7 +17,7 @@
 
         <div class="wise-search-landingpage start-page-content left-side-form full-width-marker">
           <h3>MSFD Assessment Module home page</h3>
-          <div class="overflow-table sticky-header hidden-fixed-table">
+          <div class="overflow-table sticky-overflow-header hidden-fixed-table">
             <div class="inner" style="overflow: auto;">
               <table class="table table-sticky-first-col table-bordered table-landingpage table-report skip-height-fix">
                 <tal:rep tal:repeat="row options/data">

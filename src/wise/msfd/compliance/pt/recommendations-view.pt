@@ -43,7 +43,7 @@
                   </div>
                   <div class="form-group">
                     <label>Recommendation text:</label>
-                    <textarea style="height: 6.5em;"id="recomm-text" name="rec_text" class="form-control" required></textarea>
+                    <textarea style="height: 6.5em;" id="recomm-text" name="rec_text" class="form-control" required></textarea>
                   </div>
                   <i style="color: grey;">(hold CTRL key for multiple selections)</i>
                   <div class="container-form-group-multiple">
