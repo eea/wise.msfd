@@ -28,24 +28,29 @@
           <div class="form-group">
             <a class="btn btn-primary btn-small btn-success"
               tal:attributes="href string:${view/_compliance_folder/absolute_url}/@@compliance-users"
-              target="_blank">Compliance Users
+              target="_blank">
+              <i class="fa fa-users" aria-hidden="true"></i>
+              Compliance Users
             </a>
 
             <a class="btn btn-primary btn-small btn-success"
               tal:attributes="href string:${view/_compliance_folder/portal_url}/@@translations-overview"
               target="_blank">
+              <i class="fa fa-globe" aria-hidden="true"></i>
               Translations overview
             </a>
 
             <a class="btn btn-primary btn-small btn-success"
               tal:attributes="href string:${view/_compliance_folder/absolute_url}/national-descriptors-assessments/@@edit-assessors"
               target="_blank">
+              <i class="fa fa-pencil" aria-hidden="true"></i>
               Edit assessors
             </a>
 
             <a class="btn btn-primary btn-small btn-success"
               tal:attributes="href string:${view/_compliance_folder/absolute_url}/national-descriptors-assessments/@@admin-scoring"
               target="_blank">
+              <i class="fa fa-calculator" aria-hidden="true"></i>
               Scoring operations
             </a>
 
@@ -54,6 +59,13 @@
               target="_blank">
               <i class="fa fa-download" aria-hidden="true"></i>
               Export Compliance Data
+            </a>
+
+            <a class="btn btn-primary btn-small btn-success"
+              tal:attributes="href string:${view/_compliance_folder/absolute_url}/msfd-reporting-history"
+              target="_blank">
+              <i class="fa fa-file-excel-o" aria-hidden="true"></i>
+              Edit MSFD Reporting History data
             </a>
 
           </div>

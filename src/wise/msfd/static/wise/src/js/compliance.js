@@ -789,6 +789,7 @@ if (!Array.prototype.last){
         $(this).css('min-width', width);
         $(this).css('background-color', $(this).css('background-color'));
         $(this).css('color', $(this).css('color'));
+        $(this).css('text-align', $(this).css('text-align'));
       });
 
       clone = $(this).clone();

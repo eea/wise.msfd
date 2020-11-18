@@ -4,6 +4,7 @@ from persistent.list import PersistentList
 from plone.dexterity.content import Container
 
 from .interfaces import (ICountryDescriptorsFolder,
+                         IMSFDReportingHistoryFolder,
                          INationalDescriptorAssessment,
                          INationalSummaryCountryFolder,
                          INationalSummaryEdit,
@@ -11,6 +12,12 @@ from .interfaces import (ICountryDescriptorsFolder,
                          IRegionalDescriptorAssessment,
                          IRegionalDescriptorRegionsFolder,
                          IRegionalSummaryRegionFolder)
+
+
+class MSFDReportingHistoryFolder(Container):
+    """ MSFD Reporting history folder
+    """
+    implements(IMSFDReportingHistoryFolder)
 
 
 class CountryDescriptorsFolder(Container):

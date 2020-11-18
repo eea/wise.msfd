@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 from collections import defaultdict, namedtuple
+from datetime import datetime
+
 from pkg_resources import resource_filename
 from pyexcel_xlsx import get_data
 
@@ -140,26 +142,47 @@ ReportingHistoryENVRow = namedtuple(
     ['ARES', 'CIRCABC', 'WISE', 'Sort', 'CountryCode', 'FileName',
      'LocationURL', 'Schema', 'ReportingObligation', 'ReportingObligationID',
      'ReportingObligationURL', 'DateDue', 'DateReceived', 'ReportingDelay',
-     'MSFDArticle', 'ReportType']
+     'MSFDArticle', 'ReportType', 'Comments']
 )
 
 
-def parse_reporting_history_env():
+def get_msfd_reporting_history_from_file(file):
     res = []
+    sheets = get_data(file)
+    env_data = sheets['ENV']
 
-    file_loc = resource_filename('wise.msfd',
-                          'data/MSFDReportingHistory_2020-04-12.xlsx')
+    indx_date_due = env_data[0].index('DateDue')
+    indx_date_received = env_data[0].index('DateReceived')
+
+    for row in env_data:
+        row = [
+            isinstance(x, basestring) and x.strip() or x
+            for x in row
+        ]
+        if len(row) == 16:
+            row.append('')
+
+        date_due = row[indx_date_due]
+        date_received = row[indx_date_received]
+
+        if isinstance(date_due, datetime):
+            row[indx_date_due] = date_due.date()
+
+        if isinstance(date_received, datetime):
+            row[indx_date_received] = date_received.date()
+
+        res.append(ReportingHistoryENVRow(*row[:17]))
+
+    return res
+
+
+def parse_reporting_history_env():
+    file_loc = resource_filename(
+        'wise.msfd', 'data/MSFDReportingHistory_2020-04-12.xlsx'
+    )
 
     with open(file_loc, 'rb') as file:
-        sheets = get_data(file)
-        env_data = sheets['ENV']
-
-        for row in env_data[1:]:
-            row = [
-                isinstance(x, basestring) and x.strip() or x
-                for x in row
-            ]
-            res.append(ReportingHistoryENVRow(*row[:16]))
+        res = get_msfd_reporting_history_from_file(file)
 
     return res
 
