@@ -31,7 +31,7 @@
     name="compliance-admin"
     class=".admin.ComplianceAdmin"
     template="./pt/admin.pt"
-    permission="zope2.View"
+    permission="wise.ManageCompliance"
   />
 
   <browser:page

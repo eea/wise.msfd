@@ -44,12 +44,14 @@
           <div id="nat-desc-art-menu">
             <ul>
               <li tal:condition="python: view.check_permission('wise.msfd: Edit Assessment')">
-                <a href="./@@edit-assessment-data-2018" target="_blank">
+                <a tal:attributes="href python: context.absolute_url() + '/@@edit-assessment-data-2018'"target="_blank">
                   <i class="glyphicon glyphicon-edit"></i> Assessment
                 </a>
               </li>
-              <li><a href="./@@view-report-data-2018" target="_blank"><i class="glyphicon glyphicon-th"></i> 2018 Report</a></li>
-              <li><a href="./@@view-report-data-2012" target="_blank"><i class="glyphicon glyphicon-th"></i> 2012 Report</a></li>
+              <li><a tal:attributes="href python: context.absolute_url() + '/@@view-report-data-2018'"
+                  target="_blank"><i class="glyphicon glyphicon-th"></i> 2018 Report</a></li>
+              <li><a tal:attributes="href python: context.absolute_url() + '/@@view-report-data-2012'"
+                  target="_blank"><i class="glyphicon glyphicon-th"></i> 2012 Report</a></li>
               <li class="process-state">
                 <form method="GET" action='./content_status_modify'>
                   <div>

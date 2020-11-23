@@ -44,15 +44,20 @@
           <div id="nat-desc-art-menu">
             <ul>
               <li>
-                <a href="./@@edit-assessment-data-2018" target="_blank">
+                <a tal:attributes="href python: context.absolute_url() + '/@@edit-assessment-data-2018'"target="_blank">
                   <i class="glyphicon glyphicon-edit"></i> Assessment
                 </a>
-                <a href="./@@view-edit-history" class="glyphicon glyphicon-th pat-plone-modal"
-                      data-pat-plone-modal="height: 600px; content:#edit-history; width: 80%"></a>
+                <a tal:attributes="href python: context.absolute_url() + '/@@view-edit-history'"
+                    class="glyphicon glyphicon-th pat-plone-modal"
+                    data-pat-plone-modal="height: 600px; content:#edit-history; width: 80%"></a>
               </li>
-              <li><a href="./@@view-report-data-2018" target="_blank"><i class="glyphicon glyphicon-th"></i> 2018 Report</a></li>
-              <li><a href="./@@view-report-data-2012" target="_blank"><i class="glyphicon glyphicon-th"></i> 2012 Report</a></li>
-              <li tal:condition="python:False"><!--Removed--><a href="./@@view-report-data-2012-like-2018" target="_blank"><i class="glyphicon glyphicon-th"></i>2012 Report (II)</a></li>
+              <li><a tal:attributes="href python: context.absolute_url() + '/@@view-report-data-2018'"
+                     target="_blank"><i class="glyphicon glyphicon-th"></i> 2018 Report</a></li>
+              <li><a tal:attributes="href python: context.absolute_url() + '/@@view-report-data-2012'"
+                     target="_blank"><i class="glyphicon glyphicon-th"></i> 2012 Report</a></li>
+              <li tal:condition="python:False"><!--Removed-->
+                <a tal:attributes="href python: context.absolute_url() + '/@@view-report-data-2012-like-2018'"
+                   target="_blank"><i class="glyphicon glyphicon-th"></i>2012 Report (II)</a></li>
               <li class="process-state" style="display:flex; align-items: center">
                 <form method="GET" action='./content_status_modify'>
                   <div>
@@ -71,7 +76,8 @@
                     </select>
                   </div>
                 </form>
-                <a href="./@@historyview" class="link-overlay contentHistory glyphicon glyphicon-time" id="content-history" style="margin-left: 2rem"></a>
+                <a tal:attributes="href python: context.absolute_url() + '/@@historyview'"
+                    class="link-overlay contentHistory glyphicon glyphicon-time" id="content-history" style="margin-left: 2rem"></a>
               </li>
             </ul>
           </div>
