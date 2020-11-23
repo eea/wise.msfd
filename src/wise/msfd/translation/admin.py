@@ -153,9 +153,12 @@ class TranslationsOverview(BrowserView):
             transl_data = sheets['translations']
 
             for row in transl_data:
-                lang = row[0]
-                orig = row[1]
-                transl = row[2]
-                approved = row[3]
+                try:
+                    lang = row[0]
+                    orig = row[1]
+                    transl = row[2]
+                    approved = len(row) == 4 and int(row[3]) or 0
 
-                save_translation(orig, transl, lang, approved=approved)
+                    save_translation(orig, transl, lang, approved=approved)
+                except:
+                    pass
