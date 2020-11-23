@@ -1,11 +1,19 @@
+
+from io import BytesIO
+
 import json
 import logging
 from datetime import datetime
+
+from pkg_resources import resource_filename
+from pyexcel_xlsx import get_data
 
 from zope import event
 
 from eea.cache.event import InvalidateMemCacheEvent
 from Products.Five.browser import BrowserView
+
+import xlsxwriter
 
 from . import normalize, save_translation
 from .interfaces import ITranslationsStorage
@@ -20,9 +28,11 @@ class TranslationsOverview(BrowserView):
     def languages(self):
         return ITranslationsStorage(self.context).keys()
 
-    def available_translations(self):
+    def available_translations(self, selected_lang=None):
         storage = ITranslationsStorage(self.context)
-        selected_lang = self.request.form.get('language')
+
+        if not selected_lang:
+            selected_lang = self.request.form.get('language')
 
         langstore = storage.get(selected_lang, {})
 
@@ -94,3 +104,58 @@ class TranslationsOverview(BrowserView):
 
         return self.request.response.redirect(url)
 
+    def export_translations(self):
+        data = []
+
+        for language in self.languages():
+            transl_data = self.available_translations(language)
+            translations = [
+                (language, unicode(k), unicode(v), v.approved)
+                for k, v in transl_data.items()
+            ]
+            data.extend(translations)
+
+        # data to xls
+        out = BytesIO()
+        workbook = xlsxwriter.Workbook(out, {'in_memory': True})
+
+        wtitle = 'translations'
+        worksheet = workbook.add_worksheet(unicode(wtitle)[:30])
+
+        row_index = 0
+
+        for row in data:
+            for i, value in enumerate(row):
+                worksheet.write(row_index, i, value or '')
+
+            row_index += 1
+
+        workbook.close()
+        out.seek(0)
+
+        sh = self.request.response.setHeader
+
+        sh('Content-Type', 'application/vnd.openxmlformats-officedocument.'
+           'spreadsheetml.sheet')
+        fname = "-".join(["MSFDTranslations", ])
+        sh('Content-Disposition',
+           'attachment; filename=%s.xlsx' % fname)
+
+        return out.read()
+
+    def import_translations(self):
+        file_loc = resource_filename(
+            'wise.msfd', 'data/MSFDTranslations.xlsx'
+        )
+
+        with open(file_loc, 'rb') as file:
+            sheets = get_data(file)
+            transl_data = sheets['translations']
+
+            for row in transl_data:
+                lang = row[0]
+                orig = row[1]
+                transl = row[2]
+                approved = row[3]
+
+                save_translation(orig, transl, lang, approved=approved)

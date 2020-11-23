@@ -44,6 +44,22 @@
     />
 
   <browser:page
+    name="export-translations"
+    class=".admin.TranslationsOverview"
+    attribute="export_translations"
+    for="Products.CMFCore.interfaces.ISiteRoot"
+    permission="zope2.View"
+    />
+
+  <browser:page
+    name="import-translations"
+    class=".admin.TranslationsOverview"
+    attribute="import_translations"
+    for="Products.CMFCore.interfaces.ISiteRoot"
+    permission="zope2.View"
+    />
+
+  <browser:page
     class=".views.TranslationCallback"
     for="*"
     name="translate-callback"
