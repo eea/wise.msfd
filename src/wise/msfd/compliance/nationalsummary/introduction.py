@@ -175,7 +175,7 @@ class ReportingHistoryTable(BaseNatSummaryView):
     def get_reporting_history_data(self):
         # obligation = 'MSFD reporting on Initial Assessments (Art. 8), ' \
         #              'Good Environmental Status (Art.9), Env. targets & ' \
-        #              'associated indicators (Art.10) & related reporting on ' \
+        #              'associated indicators (Art.10) & related reporting on '\
         #              'geographic areas, regional cooperation and metadata.'
 
         obligations = (
@@ -184,10 +184,12 @@ class ReportingHistoryTable(BaseNatSummaryView):
         )
         mc = sql2018.ReportingHistory
 
+        # skip not released files as they are deleted from CDR (Germany)
         _, res = db.get_all_records(
             mc,
             mc.CountryCode == self.country_code,
-            mc.ReportingObligation.in_(obligations)
+            mc.ReportingObligation.in_(obligations),
+            mc.DateReleased.isnot(None)  # skip not released files
         )
 
         res = db_objects_to_dict(res)
@@ -245,6 +247,7 @@ class ReportingHistoryTable(BaseNatSummaryView):
             envelope = self.location_url(row.get('LocationURL'), filename)
             report_due = self.format_date(row.get('DateDue'))
             report_date = self.format_date(row.get('DateReleased'))
+
             report_delay = self.calculate_reporting_delay(
                 row.get('ReportingDelay'), report_due, report_date
             )
