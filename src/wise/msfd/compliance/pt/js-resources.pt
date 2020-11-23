@@ -1,9 +1,11 @@
 <tal:cond tal:condition="python: 'compliance-module' in request.URL0 or 'msfd-data' in request.URL0">
-  <script src="/marine/++resource++tabs.js"></script>
+  <script src="/marine/++resource++static_js/tabs.js"></script>
 </tal:cond>
 
 <tal:cond tal:condition="python: 'compliance-module' in request.URL0">
   <script src="/marine/++resource++msfd/bs3/js/bootstrap.min.js"></script>
-  <script src="/marine/++resource++compliance.js"></script>
-  <script src="/marine/++resource++msfd/js/assessment-edit.js"></script>
+  <script src="/marine/++resource++static_js/wise_javascript_variables.js"></script>
+  <script src="/marine/++resource++msfd.trans/translate-comp.js"></script>
+  <script src="/marine/++resource++static_js/compliance.js"></script>
+  <script src="/marine/++resource++static_js/assessment-edit.js"></script>
 </tal:cond>
