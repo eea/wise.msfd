@@ -44,14 +44,23 @@
           <div id="nat-desc-art-menu">
             <ul>
               <li tal:condition="python: view.check_permission('wise.msfd: Edit Assessment')">
-                <a tal:attributes="href python: context.absolute_url() + '/@@edit-assessment-data-2018'"target="_blank">
+                <a tal:attributes="href python: context.absolute_url() + '/@@edit-assessment-data-2018'"
+                   target="_blank">
                   <i class="glyphicon glyphicon-edit"></i> Assessment
                 </a>
               </li>
-              <li><a tal:attributes="href python: context.absolute_url() + '/@@view-report-data-2018'"
-                  target="_blank"><i class="glyphicon glyphicon-th"></i> 2018 Report</a></li>
-              <li><a tal:attributes="href python: context.absolute_url() + '/@@view-report-data-2012'"
-                  target="_blank"><i class="glyphicon glyphicon-th"></i> 2012 Report</a></li>
+              <li>
+                <a tal:attributes="href python: context.absolute_url() + '/@@view-report-data-2018'"
+                   target="_blank">
+                  <i class="glyphicon glyphicon-th"></i> 2018 Report
+                </a>
+              </li>
+              <li>
+                <a tal:attributes="href python: context.absolute_url() + '/@@view-report-data-2012'"
+                   target="_blank">
+                  <i class="glyphicon glyphicon-th"></i> 2012 Report
+                </a>
+              </li>
               <li class="process-state">
                 <form method="GET" action='./content_status_modify'>
                   <div>
@@ -79,7 +88,8 @@
               <form method="POST" tal:attributes="action request/getURL" style="display: inline-block;">
                 <button style="margin-top: -5px;"
                     class="btn btn-primary btn-xs" name="download-summary-national">
-                  <i class="glyphicon glyphicon-download-alt"></i><span style="margin-left: 5px;">Download as excel</span>
+                  <i class="glyphicon glyphicon-download-alt"></i>
+                  <span style="margin-left: 5px;">Download as excel</span>
                 </button>
               </form>
               <div tal:replace="structure view/national_assessments_2018"></div>
