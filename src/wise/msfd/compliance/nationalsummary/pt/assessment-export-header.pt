@@ -7,8 +7,9 @@
       Status message
     </div>
 
-    <p style="font-size: 2.5em;"
-        class="report-title" tal:content="structure options/title">201X Member State Report</p>
+    <h1 class="report-title" tal:content="structure options/title">
+      201X Member State Report
+    </h1>
 
     <div id="report-data-navigation">
       <div class="back-to-art">
@@ -35,7 +36,9 @@
               data-pat-select2="width:10em">
               <option value=''>Choose action...</option>
               <tal:rep repeat="trans view/get_transitions">
-                <option tal:content="trans/title" tal:attributes="value trans/id">Send to Phase 0</option>
+                <option tal:content="trans/title" tal:attributes="value trans/id">
+                  Send to Phase 0
+                </option>
               </tal:rep>
             </select>
           </div>

@@ -16,9 +16,9 @@
   </div>
 
   <h4>Reports submitted by the Member States</h4>
-  <div>
+  <p>
     The table gives details of when the Member States submitted their reports, in text (usually pdf) and electronic (xml) format. Electronic reporting was undertaken in relation to specific geographic areas (Marine Reporting Units) which are specified in an xml file (4geo.xml) and accompanied by geographic information system (GIS) shapefiles that allow the reported information to be displayed as maps. In cases where the Member State uploaded reports in stages (text reports) or modified previous versions (e-reports), multiple dates are shown.
-  </div>
+  </p>
   <div tal:replace="structure view/memberstate_reports">Member state reports</div>
 
   <h4>Marine region and Member State's marine waters</h4>

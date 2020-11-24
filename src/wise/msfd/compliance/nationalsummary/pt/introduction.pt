@@ -16,9 +16,9 @@ For Articles 8, 9 and 10, first reported in 2012, the first 6-year updates were 
 This report provides a technical assessment of the Member State’s 2018 updates for Articles 8, 9 and 10, in support of the Commission’s obligations under MSFD Article 12
   </div>
   <h4>Reports submitted by the Member State</h4>
-  <div>
+  <p>
     The table gives details of when the Member State submitted its reports, in text (usually pdf) and electronic (xml) format. Electronic reporting was undertaken in relation to specific geographic areas (Marine Reporting Units) which are specified in an xml file (4geo.xml) and accompanied by geographic information system (GIS) shapefiles that allow the reported information to be displayed as maps. In cases where the Member State uploaded reports in stages (text reports) or modified previous versions (e-reports), multiple dates are shown. The final column indicates the difference (in days) between the date reported and the date when the reports were due according to the MSFD (value is positive if reported before the due date and negative if reported after the due date).
-  </div>
+  </p>
   <div tal:replace="structure view/reporting_history_table">Reporting history</div>
 
   <h4>Member State's marine waters</h4>

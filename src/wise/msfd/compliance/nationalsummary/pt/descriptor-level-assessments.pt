@@ -15,19 +15,28 @@
 
           <div tal:repeat="article_section python:descriptor_data[1]">
             <tal:block tal:define="article_data python: article_section[1]">
-              <p class="article-title" tal:content="python: view.get_article_title(article_section[0])">Article 8</p>
+              <p class="article-title"
+                 tal:content="python: view.get_article_title(article_section[0])">
+                 Article 8
+              </p>
               <div>
                 <div>
                   <label>Assessment summary</label>
-                  <div tal:content="structure python: article_data.assessment_summary">Long text</div>
+                  <p tal:content="structure python: article_data.assessment_summary">
+                    Long text
+                  </p>
                 </div>
                 <div>
                   <label>Progress since 2012</label>
-                  <div tal:content="structure python: article_data.progress_assessment">Long text</div>
+                  <p tal:content="structure python: article_data.progress_assessment">
+                    Long text
+                  </p>
                 </div>
                 <div>
                   <label>Recommendations</label>
-                  <div tal:content="structure python: article_data.recommendations">Long text</div>
+                  <p tal:content="structure python: article_data.recommendations">
+                    Long text
+                  </p>
                 </div>
               </div>
               <div class="ast-header-data">
