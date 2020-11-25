@@ -558,7 +558,7 @@ if (!Array.prototype.last){
     var $cb = $('<input type="checkbox" class="fix-row"/>');
     var $ft = $(
       '<div class="fixed-table-wrapper">' +
-        '<button title="Clear filters" class="btn btn-primary btn-xs reset-pins">' +
+        '<button title="Clear filters" class="reset-pins">' +
           '<i class="glyphicon glyphicon-remove-circle"></i>' +
         '</button>' +
         '<div class="fixed-table-inner">' +

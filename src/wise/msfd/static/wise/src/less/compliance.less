@@ -19,6 +19,37 @@ h1 {
   margin: 2.5rem 0 3rem 0 !important;
 }
 
+h2,
+h3,
+h4,
+h5,
+h6 {
+  margin-top: 3rem !important;
+  margin-bottom: 2rem !important;
+}
+
+p,
+div > ul,
+div > ol {
+  font-family: "RobotoL";
+  font-size: 18px;
+}
+
+label {
+  font-family: 'RobotoM';
+  font-weight: normal !important;
+}
+
+b, strong {
+  font-family: 'RobotoB';
+  font-weight: normal;
+}
+
+#content textarea {
+  font: 90% Monaco, "Courier New", Courier, monospace;
+  width: 100%;
+}
+
 // generic fixes, should be temporary. This fixes the really long breadcrumbs
 .content-page .main-content {
   margin-top: 4em !important;
@@ -76,15 +107,30 @@ h1 {
   }
 }
 
-table.table-striped {
+table {
+  font-size: 15px;
+
+  ol, ul {
+    font-family: inherit;
+    font-size: inherit;
+    padding-left: 0;
+  }
+}
+
+.table-striped {
   border: none;
+
+  th {
+    font-family: 'RobotoB';
+    font-weight: normal;
+  }
 
   th, td {
     border: none;
   }
 
   tbody tr:nth-of-type(odd) {
-    background-color: #f1f1f1 !important;
+    background-color: #f1f1f1;
   }
 
   thead {
@@ -101,7 +147,7 @@ table.table-striped {
   bottom: 0 !important;
   left: 0;
   right: 0;
-  padding: 10px 26px;
+  padding: 10px 16px;
   background-color: #0071b3;
   z-index: 9;
 
@@ -118,7 +164,7 @@ table.table-striped {
     overflow-x: auto;
     //margin-left: 212px;
     background: white;
-    border-left: 4px solid #DDD;
+    // border-left: 4px solid #DDD;
     div {
       height: 1px;
       // margin: 0 1%;
@@ -505,6 +551,10 @@ h4.process-phase-title {
     .phase-selector {
       margin-left: 3em;
       float: right;
+
+      .select2-container {
+        margin-bottom: 0;
+      }
     }
   }
 
@@ -562,18 +612,22 @@ span.has-new-comments {
   ul {
     display: flex;
     margin-left: 0 !important;
+    padding-left: 0;
+
     li {
+      font-size: 15px;
+      display: flex;
+      align-items: center;
       padding: 1em;
-      line-height: 2em;
-      list-style-type: none;
-      display: block;
       margin-right: 1em;
       background-color: #d3f3f9;
     }
+
     .process-state {
       background-color: #dff1c3;
 
       .select2-container {
+        margin: 0;
         margin-left: 1em;
       }
     }
@@ -635,6 +689,7 @@ span.has-new-comments {
           display: flex;
           align-items: center;
           justify-content: center;
+          margin-bottom: 0;
         }
       }
     }
@@ -662,7 +717,7 @@ span.has-new-comments {
     div.as-value {
       padding: 1px 5px;
       min-height: 55px;
-      border: 1px solid #ccc;
+      // border: 1px solid #ccc;
       //margin: -1px;
       overflow: hidden;
       width: 100%;
@@ -687,7 +742,6 @@ span.has-new-comments {
 
 .ast-header-data {
   background-color: #ddd;
-  border: 1px solid #bbb;
   padding: 1em;
 
   table.assessment-header {
@@ -695,6 +749,8 @@ span.has-new-comments {
 
     th {
       height: auto !important;
+      padding: 0.3em !important;
+      vertical-align: middle;
     }
   }
 
@@ -717,7 +773,7 @@ span.has-new-comments {
     td, div.gescomp, .overall-values div.as-value, .overall-headers div.as-value {
       min-width: 4em;
       height: 2rem;
-      border: 1px solid #ccc;
+      // border: none;
       background-color: #fff;
 
       &.as-score { text-align: right; }
@@ -795,10 +851,13 @@ span.has-new-comments {
 
 }
 
-.nda-link {
+.nda-link,
+.back-to-descr,
+.back-to-art {
+  margin-top: 0.5em;
   margin-bottom: 1em;
-  display: inline;
-  font-size: 14px;
+  display: inline-block;
+  font-size: 13px;
 }
 
 .as-table-overview {
@@ -819,19 +878,6 @@ div.comp-discussion-track-container {
     margin: 0;
   }
 }
-
-
-div.back-to-descr {
-  margin-top: 20px;
-  margin-bottom: 10px;
-}
-
-// .nat-edit-form {
-  //   margin: 0 auto;
-  //   max-width: 1170px;
-  //   position: relative;
-  //   width: 100%;
-// }
 
 
 // National and Regional descriptors assessment overview
@@ -894,45 +940,12 @@ table.comp-c-listing {
 
     i {
       position: relative;
-      // bottom: 11px;
     }
 
     .nav-body {
-      border-radius: 10px;
-      right: 30px;
-      top: -32px;
+      right: 10px;
+      top: 50px;
       z-index: 99;
-
-      .art-title {
-        a {
-          border-top-right-radius: 10px;
-          border-top-left-radius: 10px;
-        }
-      }
-
-      .art:first-child {
-        .art-title,
-        .art-title a {
-          border-top-left-radius: 10px;
-        }
-        .art-links {
-          a:first-child {
-            border-bottom-left-radius: 10px;
-          }
-        }
-      }
-
-      .art:last-child {
-        .art-title,
-        .art-title a {
-          border-top-right-radius: 10px;
-        }
-        .art-links {
-          a:last-child {
-            border-bottom-right-radius: 10px;
-          }
-        }
-      }
     }
   }
 
@@ -940,10 +953,14 @@ table.comp-c-listing {
     .nav-toggle {
       background-color: transparent;
       border: none;
+
+      &:focus,
+      &:hover {
+        outline: none;
+        box-shadow: none;
+      }
     }
-    .nav-toggle:focus {
-      outline: none;
-    }
+
     i {
       font-size: 30px;
       color: @main-dark-blue;
@@ -985,13 +1002,15 @@ table.comp-c-listing {
         flex-grow: 1;
         flex-shrink: 1;
         justify-content: center;
-      }
-      a:hover {
-        text-decoration: none;
-        background-color: #fff;
-        color: #0071b3;
+
+        &:hover {
+          text-decoration: none;
+          background-color: #fff;
+          color:@main-dark-blue;
+        }
       }
     }
+
     .art-title {
       border-bottom: 3px solid #fff;
 
@@ -1014,27 +1033,30 @@ table.comp-c-listing {
         flex-grow: 1;
         flex-shrink: 1;
         justify-content: center;
-      }
-      a:hover {
-        background-color: #fff;
-        color: @main-dark-blue;
-        text-decoration: none;
+
+        &:hover {
+          background-color: #fff;
+          color: @main-dark-blue;
+          text-decoration: none;
+        }
       }
 
       .art-title {
         font-weight: bold;
         font-size: 16px;
         border-bottom: 1px solid #fff;
-      }
-      .art-title:hover {
-        background-color: #fff;
-        a {
-          color: @main-dark-blue;
+
+        &:hover {
+          background-color: #fff;
+          a {
+            color: @main-dark-blue;
+          }
         }
       }
 
       .art-links {
         display: flex;
+
         a {
           &:not(:last-child) {
             border-right: 1px solid #fff;
@@ -1121,7 +1143,7 @@ table.comp-c-listing {
       vertical-align: middle !important;
 
       &.landpage-header {
-        font-size: 18px;
+        font-size: 16px;
         font-weight: bold;
       }
 

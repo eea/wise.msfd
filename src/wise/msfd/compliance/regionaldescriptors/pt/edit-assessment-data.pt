@@ -1,14 +1,6 @@
 <div id="wise-compliance-form" class="full-width-marker"
-  tal:define="can_comment view/can_comment; plone nocall:context/@@plone"
-
-  tal:attributes="id view/form_id | string:wise-compliance-form">
-  <script>
-    jQuery(document).ready(function() {
-      $('.help-popover').popover();
-    });
-  </script>
-  <!-- <script src="/++resource++msfd/js/assessment-edit.js"></script> -->
-
+     tal:define="can_comment view/can_comment; plone nocall:context/@@plone"
+     tal:attributes="id view/form_id | string:wise-compliance-form">
 
   <div id="wise-compliance-form-top"
     tal:attributes="id view/form_id_top | string:wise-compliance-form-top">
@@ -17,7 +9,7 @@
   </div>
 
   <div class="wise-search-form-container"
-    tal:attributes="id view/form_container_class | string:wise-search-form-container">
+       tal:attributes="id view/form_container_class | string:wise-search-form-container">
 
     <div class="left-side-form nat-edit-form">
 
@@ -42,21 +34,21 @@
 
         <div id="assessment-edit-infobox"></div>
         <div metal:use-macro="context/wise-macros/macros/reg-desc-report-nav"></div>
-
       </div>
 
       <div id="comp-national-descriptor">
 
         <div tal:replace="structure view/help"
-          tal:on-error="string:Error in help">Subform help here</div>
+             tal:on-error="string:Error in help">Subform help here</div>
 
         <metal:form use-macro="context/@@ploneform-macros/titlelessform">
 
           <metal:fields fill-slot="fields">
             <tal:rep tal:repeat='subform view/subforms'>
 
-              <div class="subform" tal:define="disabled python:subform._disabled and ' disabled' or ''"
-                tal:attributes="class string:subform $disabled">
+              <div class="subform"
+                   tal:define="disabled python:subform._disabled and ' disabled' or ''"
+                   tal:attributes="class string:subform $disabled">
 
                 <div class="body">
                   <div class="left">
@@ -141,16 +133,17 @@
 
                   <div class="right discussion disc-tl"
                        tal:define="question_id subform/_question/id | string:summary">
-                    <i class="comm-hide glyphicon glyphicon-plus-sign" title="Show all comments"></i>
+                    <i class="comm-hide glyphicon glyphicon-plus-sign"
+                       title="Show all comments"></i>
                     <div class="comments"
-                      tal:attributes="data-question-id question_id; data-thread-id string:tl"></div>
+                         tal:attributes="data-question-id question_id; data-thread-id string:tl"></div>
                     <div tal:condition="python: can_comment"
-                        class="textline">
-                      <textarea name="comment-text" placeholder="Write a comment..."></textarea>
+                         class="textline">
+                      <textarea name="comment-text"
+                                placeholder="Write a comment..."></textarea>
                       <button class="btn btn-primary">Post</button>
                     </div>
                   </div>
-
                 </div>
               </div>
             </tal:rep>
@@ -158,13 +151,10 @@
 
           <metal:slot fill-slot="actions">
             <div tal:condition="python: not(view.read_only_access)"
-                class="form-right-side">
+                 class="form-right-side">
               <metal:block use-macro="context/@@ploneform-macros/actions" />
             </div>
           </metal:slot>
-
-          <metal:css fill-slot="formtop">
-          </metal:css>
 
         </metal:form>
       </div>

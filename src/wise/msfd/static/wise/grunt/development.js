@@ -28,6 +28,7 @@ module.exports = {
             '<%= path.src %>/less/bootstrap/tables.less',
             '<%= path.src %>/less/bootstrap/popovers.less',
             '<%= path.src %>/less/bootstrap/tooltips.less',
+            '<%= path.src %>/less/bootstrap/modals.less',
             '<%= path.src %>/less/switch.less',
             '<%= path.src %>/less/regional-descriptors.less',
           ],
