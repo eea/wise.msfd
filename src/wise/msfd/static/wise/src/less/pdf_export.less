@@ -1,5 +1,6 @@
 .national-summary-section{
   font-size: 20px;
+  color: #333;
 }
 .table-simple-summary {
   ul, ol {
@@ -11,5 +12,34 @@
       list-style-type: disc !important;
     }
 
+  }
+}
+table {
+  th, td {
+    color: #333
+  }
+}
+.ast-header-data {
+  td, th {
+    text-align: center !important;
+    vertical-align: middle !important;
+
+    div {
+      padding: 5px;
+      display: block;
+      align-items: center !important;
+      justify-content: center !important;
+
+      &.as-value {
+        div {
+          padding: 5px;
+        }
+      }
+    }
+  }
+  td.overall-values {
+    div.as-value div {
+      padding: 15px;
+    }
   }
 }

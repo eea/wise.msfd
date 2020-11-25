@@ -224,6 +224,7 @@ class OverallConclusion2012(RegionalDescriptorsSimpleTable,
 
         for desc_code, desc_title in descriptors:
             conclusions = []
+
             for art_id, art_title in self.articles:
                 concl = ''
                 assess_data = self.get_reg_assessments_data_2012(
@@ -231,7 +232,7 @@ class OverallConclusion2012(RegionalDescriptorsSimpleTable,
                 )
 
                 if assess_data:
-                    concl = assess_data.conclusion
+                    concl = assess_data[0].conclusion
 
                 conclusions.append(concl)
 
@@ -269,7 +270,8 @@ class RegionalSummaryView(BaseRegSummaryView):
             # trans_edit_html,
         ]
         for klass in SECTIONS:
-            self.tables.append(klass(self, self.request))
+            rendered_table = klass(self, self.request)()
+            self.tables.append(rendered_table)
 
         template = self.template
 
