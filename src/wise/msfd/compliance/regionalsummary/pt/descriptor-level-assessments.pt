@@ -16,25 +16,25 @@
 
           <div tal:repeat="article_section python:descriptor_data[1]">
             <tal:block tal:define="article_data python: article_section[1]">
-              <h4 class="article-title"
+              <p class="article-title"
                  tal:content="python: view.get_article_title(article_section[0])">
                  Article 8
-              </h4>
+              </p>
               <div>
                 <div>
-                  <h4>Assessment summary</h4>
+                  <label>Assessment summary</label>
                   <p tal:content="structure python: article_data.assessment_summary">
                     Long text
                   </p>
                 </div>
                 <div>
-                  <h4>Progress since 2012</h4>
+                  <label>Progress since 2012</label>
                   <p tal:content="structure python: article_data.progress_assessment">
                     Long text
                   </p>
                 </div>
                 <div>
-                  <h4>Recommendations</h4>
+                  <label>Recommendations</label>
                   <p tal:content="structure python: article_data.recommendations">
                     Long text
                   </p>
@@ -45,14 +45,14 @@
                   <tr>
                     <td></td>
                     <td class="overall-values">
-                      <div class="as-value"><span>Coherence</span></div>
+                      <div class="as-value"><div>Coherence</div></div>
                     </td>
                   </tr>
                   <tr>
                     <td>Coherence 2018</td>
                     <td class="overall-values">
                       <div tal:attributes="class python: 'as-value as-value-{}'.format(article_data.coherence[1])">
-                        <span tal:content="python: article_data.coherence[0]"> Poor (2)</span>
+                        <div tal:content="python: article_data.coherence[0]"> Poor (2)</div>
                       </div>
                     </td>
                   </tr>
@@ -60,7 +60,7 @@
                     <td>Coherence 2012</td>
                     <td class="overall-values">
                       <div tal:attributes="class python: 'as-value as-value-{}'.format(article_data.coherence_2012[1])">
-                        <span tal:content="python: article_data.coherence_2012[0]"></span>
+                        <div tal:content="python: article_data.coherence_2012[0]"></div>
                       </div>
                     </td>
                   </tr>
@@ -68,7 +68,7 @@
                     <td>Change since 2012</td>
                     <td class="overall-values">
                       <div class="as-value">
-                        <span tal:content="article_data/coherence_change_since_2012"></span>
+                        <div tal:content="article_data/coherence_change_since_2012"></div>
                       </div>
                     </td>
                   </tr>

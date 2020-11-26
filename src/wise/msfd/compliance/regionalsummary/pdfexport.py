@@ -150,8 +150,8 @@ class AssessmentExportView(BaseRegSummaryView):
 
     def _get_css(self):
         return [
-            resource_filename('wise.theme',
-                              'static/wise/css/main.css'),
+            resource_filename('wise.msfd',
+                              'static/wise/dist/css/bootstrap.css'),
             resource_filename('wise.msfd',
                               'static/wise/dist/css/compliance.css'),
             resource_filename('wise.msfd',
@@ -190,13 +190,16 @@ class AssessmentExportView(BaseRegSummaryView):
         css = self._get_css()
         cover = self._get_cover()
         toc = self._get_toc()
+        path_wkhtmltopdf = '/plone/instance/parts/wkhtmltopdf/wkhtmltopdf'
+        config = pdfkit.configuration(wkhtmltopdf=path_wkhtmltopdf)
 
         doc = pdfkit.from_string(
             self.report_html, False, options=options,
             cover=cover,
             toc=toc,
             css=css,
-            cover_first=True
+            cover_first=True,
+            configuration=config
         )
         sh = self.request.response.setHeader
 
