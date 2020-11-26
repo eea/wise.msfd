@@ -46,10 +46,46 @@ b, strong {
 }
 
 #content textarea {
-  font: 90% Monaco, "Courier New", Courier, monospace;
+  font: 85% Monaco, "Courier New", Courier, monospace;
   width: 100%;
 }
 
+#form-buttons-save {
+  display: inline-block;
+  margin-bottom: 0;
+  font-weight: @btn-font-weight;
+  text-align: center;
+  vertical-align: middle;
+  touch-action: manipulation;
+  cursor: pointer;
+  background-image: none;
+  border: 1px solid transparent;
+  white-space: nowrap;
+  color: #fff;
+  background-color: @btn-primary-bg;
+  border-color: @btn-primary-border;
+}
+
+body.plone-toolbar-left-default {
+  #report-data-navigation .sticky.has-infobox {
+    width: calc(100% - 4.75em);
+    left: 3.75em;
+  }
+}
+
+body.plone-toolbar-left-expanded {
+  #report-data-navigation .sticky.has-infobox {
+    width: calc(100% - 9.6em);
+    left: 7.5em;
+  }
+}
+
+.form-right-side {
+  .formControls {
+    border: none;
+    padding-left: 0;
+  }
+}
 // generic fixes, should be temporary. This fixes the really long breadcrumbs
 .content-page .main-content {
   margin-top: 4em !important;
@@ -887,8 +923,8 @@ table.comp-c-listing {
 
 .fixed-title {
   position: fixed;
-  top: 0px;
-  z-index: 999;
+  top: -13px;
+  z-index: 9999;
   font-size: 18px;
 }
 
@@ -912,9 +948,10 @@ table.comp-c-listing {
     right: 0;
     left: 0;
     width: 100%;
-    z-index: 99;
+    z-index: 999;
     background-color: #fff;
-    padding: 1em 2em;
+    height: 56px;
+    // padding: 1em;
     box-shadow: 0 2px 4px rgba(0,0,0,0.2);
     transition: top .2s ease-in-out;
 
@@ -928,9 +965,8 @@ table.comp-c-listing {
       .nav-body {
         left: 0;
         right: 0;
-        top: 58px;
+        top: 56px;
         box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-
       }
     }
   }
@@ -1251,5 +1287,13 @@ table.comp-c-listing {
   }
   .form-group.multiple:last-child {
     flex: 1;
+  }
+}
+
+.popover {
+  background-color: @popover-bg !important;
+
+  .popover-title {
+    margin: 0 !important;
   }
 }

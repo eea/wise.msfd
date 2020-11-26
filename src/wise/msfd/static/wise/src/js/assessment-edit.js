@@ -384,7 +384,7 @@
 
     space = $win.height() - $sfw.height() * 2;
 
-    $sfw.find('#form-buttons-save').addClass('btn-success');
+    // $sfw.find('#form-buttons-save').addClass('btn-success');
     // Button to translate targets only displayed for art10
     var $btnTranslate = $sfw.find('#form-buttons-translate');
     $btnTranslate.addClass('btn-secondary');
