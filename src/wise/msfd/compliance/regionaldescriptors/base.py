@@ -6,9 +6,11 @@ from eea.cache import cache
 from plone.api.content import get_state
 from plone.api.portal import get_tool
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
-from wise.msfd.compliance.base import (BaseComplianceView, NAT_DESC_QUESTIONS,
+from wise.msfd.compliance.base import (BaseComplianceView,
+                                       NAT_DESC_QUESTIONS,
                                        report_data_cache_key)
 from wise.msfd.compliance.interfaces import IComplianceModuleFolder
+from wise.msfd.compliance.nationaldescriptors.base import BaseView
 from wise.msfd.compliance.vocabulary import REGIONAL_DESCRIPTORS_REGIONS
 from wise.msfd.gescomponents import (FEATURES_DB_2018, THEMES_2018_ORDER,
                                      SUBJECT_2018_ORDER, get_marine_units)
@@ -431,7 +433,7 @@ class NationalAssessmentMixin:
         return res
 
 
-class BaseRegComplianceView(BaseComplianceView, NationalAssessmentMixin):
+class BaseRegComplianceView(BaseView, NationalAssessmentMixin):
     report_header_template = ViewPageTemplateFile(
         'pt/report-data-header.pt'
     )
@@ -441,6 +443,7 @@ class BaseRegComplianceView(BaseComplianceView, NationalAssessmentMixin):
     )
 
     section = 'regional-descriptors'
+    name = 'reg-view'
     _translatables = None
 
     not_rep = u""

@@ -91,6 +91,9 @@ class RegDescEditAssessmentDataForm(BaseRegComplianceView,
     """ Edit the assessment for a regional descriptor, for a specific article
     """
 
+    name = 'reg-art-view'
+    section = 'regional-descriptors'
+
     subforms = None
     year = session_name = '2018'
     template = ViewPageTemplateFile("pt/edit-assessment-data.pt")
