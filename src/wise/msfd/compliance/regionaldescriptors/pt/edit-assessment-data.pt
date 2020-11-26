@@ -42,12 +42,13 @@
         <div metal:use-macro="context/wise-macros/macros/reg-desc-report-nav"></div>
       </div>
 
-      <div id="comp-national-descriptor">
+      <div id="comp-national-descriptor"
+          tal:define="view nocall:view">
 
         <div tal:replace="structure view/help"
              tal:on-error="string:Error in help">Subform help here</div>
 
-        <metal:form use-macro="context/@@ploneform-macros/titlelessform">
+        <metal:form use-macro="view/context/@@ploneform-macros/titlelessform">
 
           <metal:fields fill-slot="fields">
             <tal:rep tal:repeat='subform view/subforms'>
@@ -59,16 +60,6 @@
                 <div class="body">
                   <div class="left">
                     <div class="subform-title">
-                      <!--<span-->
-                        <!--tal:on-error="nothing"-->
-                        <!--class="help-popover glyphicon glyphicon-info-sign"-->
-                        <!--data-trigger="hover"-->
-                        <!--data-html="true"-->
-                        <!--tal:condition="subform/_question_type/title"-->
-                        <!--tal:attributes="title string: Type: ${subform/_question_type/title};-->
-                        <!--data-content string: Phase: ${subform/_question_phase}"-->
-                        <!--&gt;-->
-                      <!--</span>-->
                       <span tal:content="subform/title">Question here</span>
                       <span style="float:right;"
                           tal:define="last_change python: view.format_last_change(subform._last_update)"
