@@ -1,16 +1,15 @@
 <div id="wise-compliance-form" class="full-width-marker"
   tal:define="can_comment view/can_comment; plone nocall:context/@@plone"
-
   tal:attributes="id view/form_id | string:wise-compliance-form">
+
   <script>
     jQuery(document).ready(function() {
       $('.help-popover').popover();
     });
   </script>
-  <!-- <script src="/++resource++msfd/js/assessment-edit.js"></script> -->
 
   <div id="wise-compliance-form-top"
-    tal:attributes="id view/form_id_top | string:wise-compliance-form-top">
+       tal:attributes="id view/form_id_top | string:wise-compliance-form-top">
     <metal:tabs
       metal:use-macro="context/wise-macros/macros/tabs"></metal:tabs>
   </div>
@@ -59,7 +58,7 @@
 
                 <div class="body">
                   <div class="left">
-                    <h4>
+                    <div class="subform-title">
                       <span tal:content="subform/title">Question here</span>
                       <span style="float:right;"
                           tal:define="last_change python: view.format_last_change(subform._last_update)"
@@ -71,7 +70,7 @@
                         <span tal:content="string:Last change">Last change</span>
                         <i class="glyphicon glyphicon-calendar"></i>
                       </span>
-                    </h4>
+                    </div>
 
                     <div class="fields-container">
                       <div tal:repeat="fieldname subform/fields" class="fields-container-row">

@@ -43,16 +43,13 @@ span.infobox-popover {
 }
 
 #comp-national-descriptor {
-
   .assessment-form-input {
     width: 80%;
   }
 
   .subform {
-    // margin-bottom: 2rem;
     .vendor-prefix(border-radius; 4px);
     border: 1px solid white;
-    // background-color: #a6e1fb;
 
     &.disabled {
       .body .left {
@@ -80,18 +77,19 @@ span.infobox-popover {
       width: 100%;
     }
 
-    h4 {
-      font-weight: 600;
-      font-size: small;
+    .subform-title {
+      font-family: "RobotoM";
+      font-size: 15px;
       padding: 1rem;
       color: white;
       margin: 0;
       background-color: #3791b9;
-      // .vendor-prefix(text-shadow; 1px 1px 2px #aaa);
+
       .help-popover {
         padding-right: 1rem;
         color: white;
       }
+
       .popover {
         color: black;
       }
@@ -260,8 +258,6 @@ span.infobox-popover {
             margin-left: 5px;
           }
 
-
-
           .comment {
             color: #fff;
             background: #86BB71;
@@ -389,6 +385,7 @@ span.infobox-popover {
         }
       }
     }
+
     .body:after {
       content: '';
       visibility: hidden;
@@ -405,5 +402,12 @@ span.infobox-popover {
     right: 70px;
     padding: 1em;
     z-index: 99;
+
+    .formControls {
+      border-top: none;
+      background: transparent;
+      padding: 0;
+      box-shadow: none;
+    }
   }
 }

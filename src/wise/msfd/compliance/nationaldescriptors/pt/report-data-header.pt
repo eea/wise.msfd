@@ -82,11 +82,18 @@
       </tr>
     </table>
 
-    <div id="download-report-data-form" tal:condition="python: options.get('show_navigation') != False">
+    <div id="download-report-data-form"
+         tal:condition="python: options.get('show_navigation') != False">
       <form method="POST" action="" tal:attributes="action request/getURL">
-        <button name="download" class="btn btn-primary">View report data in Excel</button>
-        <button name="translate" class="btn btn-secondary"
-          tal:condition="view/can_view_assessment_data">Auto-translate</button>
+        <button name="download" class="btn btn-primary">
+          View report data in Excel
+        </button>
+        <button
+          name="translate"
+          class="btn btn-secondary"
+          tal:condition="view/can_view_assessment_data">
+          Auto-translate
+        </button>
       </form>
     </div>
 

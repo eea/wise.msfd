@@ -20,26 +20,38 @@
       <tbody>
         <tr>
           <th>Disclaimer</th>
-          <td>The opinions expressed in this document are the sole responsibility of the authors
-            and do not necessarily represent the official position of the European Commission.</td>
+          <td>
+            The opinions expressed in this document are the sole responsibility
+            of the authors and do not necessarily represent the official position
+            of the European Commission.
+          </td>
         </tr>
         <tr>
           <th>Authors</th>
-          <td tal:content="structure view/authors">Paola Banfi, Guillermo Gea, Lucille Labayle, David Landais, Melanie Muro, Goncalo Moreira,
-            Alicia McNeil, and Imbory Thomas. The main authors are Richard White (D1, 4, 6),
-            Elena San Martin (D2), Suzannah Walmsley (D3), William Parr (D5), Christophe Le Visage (D7),
-            Norman Green (D8 and 9), Annemie Volckaert (D10) and Frank Thomsen (D11).</td>
+          <td tal:content="structure view/authors">
+            Paola Banfi, Guillermo Gea, Lucille Labayle, David Landais,
+            Melanie Muro, Goncalo Moreira,
+            Alicia McNeil, and Imbory Thomas. The main authors are Richard White
+            (D1, 4, 6), Elena San Martin (D2), Suzannah Walmsley (D3),
+            William Parr (D5), Christophe Le Visage (D7),
+            Norman Green (D8 and 9), Annemie Volckaert (D10) and Frank Thomsen (D11).
+          </td>
         </tr>
         <tr>
           <th>Contract</th>
-          <td tal:content="structure view/contract">No 11.0661/ENV/2018/791580/SER/ENV.C.2.</td>
+          <td tal:content="structure view/contract">
+            No 11.0661/ENV/2018/791580/SER/ENV.C.2.
+          </td>
         </tr>
         <tr>
           <th>Contact</th>
-          <td>Milieu Consulting Sprl, Chaussée de Charleroi 112, B-1060, Brussels. Tel: +32 2 506 1000;
-            fax : +32 2 514 3603; e-mail: <a href="mailto:melanie.muro@milieu.be">melanie.muro@milieu.be</a>
+          <td>
+            Milieu Consulting Sprl, Chaussée de Charleroi 112, B-1060, Brussels.
+            Tel: +32 2 506 1000; fax : +32 2 514 3603;
+            e-mail: <a href="mailto:melanie.muro@milieu.be">melanie.muro@milieu.be</a>
             and <a href="mailto:paola.banfi@milieu.be">paola.banfi@milieu.be</a>;
-            web address: <a href="http://www.milieu.be">www.milieu.be</a></td>
+            web address: <a href="http://www.milieu.be">www.milieu.be</a>
+          </td>
         </tr>
       </tbody>
     </table>
