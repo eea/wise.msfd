@@ -28,18 +28,19 @@
               </div>
 
               <div class="modal-body">
-                <form id="recommendation-form" method="POST" action=".">
+                <form id="recommendation-form" method="POST"
+                      tal:attributes="action context/absolute_url">
                   <div class="form-group">
                     <label>Row number:</label>
                     <textarea tal:content="python: len(view.msfd_rep_history_data) + 1"
                         tal:attributes="max-rows python: len(view.msfd_rep_history_data) + 1"
-                        style="height: 3em; overflow: hidden;" id="Row" name="Row" class="form-control disabled"></textarea>
+                        style="min-height: 3em; overflow: hidden;" id="Row" name="Row" class="form-control disabled"></textarea>
                   </div>
                   <tal:rep tal:repeat="header python: view.msfd_rep_history_headers">
                     <div class="form-group">
                       <label tal:content="header">Label:</label>
                       <textarea tal:attributes="id header; name header"
-                          style="height: 3em; overflow: hidden;" class="form-control editable"></textarea>
+                          style="min-height: 3em; overflow: hidden;" class="form-control editable"></textarea>
                     </div>
                   </tal:rep>
                   <input class="submitRecomm btn btn-primary btn-s"
@@ -57,10 +58,14 @@
             data-target="#edit-msfd-history">
               Add new data
           </a>
-          <a class="btn btn-s btn-primary" href="./@@msfd-reporting-history?download-excel" target="_blank">
+          <a class="btn btn-s btn-primary"
+             tal:attributes="href python: context.absolute_url() + '/@@msfd-reporting-history?download-excel'"
+             target="_blank">
               Download as excel
           </a>
-          <a class="btn btn-s btn-danger" href="./edit" target="_blank">
+          <a class="btn btn-s btn-danger"
+             tal:attributes="href python: context.absolute_url() + '/edit'"
+             target="_blank">
               Upload new excel file
           </a>
         </div>
