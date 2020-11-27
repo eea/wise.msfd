@@ -321,9 +321,9 @@
         return;
       }
 
-      $infobox.append($('<span>').attr('class', 'glyphicon glyphicon-exclamation-sign')
-        .css({'font-size': '26px', 'float': 'right', 'display': 'block'})
-      );
+      $infobox
+      .append($('<i class="glyphicon glyphicon-exclamation-sign infobox-icon">'));
+
     }
     _addGescompsToInfobox();
 
@@ -359,7 +359,7 @@
       var $com = $this.find('.right');
       var formHeight = $this.find('.left').innerHeight();
 
-      $com.innerHeight(formHeight);
+      $com.innerHeight(formHeight + 30);
 
       var resizeTimer;
       $win.resize(function() {

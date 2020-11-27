@@ -41,6 +41,12 @@ span.infobox-popover {
     margin: 1px 2px;
     padding: 2px 5px;
   }
+
+  .infobox-icon {
+    font-size: 20px;
+    float: right;
+    display: block;
+  }
 }
 
 #comp-national-descriptor {
@@ -49,8 +55,7 @@ span.infobox-popover {
   }
 
   .subform {
-    .vendor-prefix(border-radius; 4px);
-    border: 1px solid white;
+    padding: 1.5em 0;
 
     &.disabled {
       .body .left {
@@ -81,15 +86,24 @@ span.infobox-popover {
 
     .subform-title {
       font-family: "RobotoM";
-      font-size: 15px;
-      padding: 1rem;
-      color: white;
+      font-size: 13px;
+      color: #002d54;
+      border-bottom: 1px solid #ddd;
+      padding-bottom: 1rem;
       margin: 0;
-      background-color: #3791b9;
+
+      >span:first-child {
+        font-size: 16px;
+        font-family: "PoppinsSemiB";
+        max-width: 80%;
+        display: inline-block;
+      }
 
       .help-popover {
-        padding-right: 1rem;
-        color: white;
+        color: #002d54;
+        position: relative;
+        top: 3px;
+        cursor: pointer;
       }
 
       .popover {
@@ -107,30 +121,35 @@ span.infobox-popover {
     }
 
     .body {
-      margin-bottom: 1%;
       display:flex;
+      background-color: #eee;
+      border-radius: 5px;
+      padding: 1.5em;
 
       .right.discussion:hover {
         position: relative;
 
         .textline {
-          display: block;
+          display: flex;
         }
+
         .comm-hide {
-          position: absolute;
-          display:flex;
+          // position: absolute;
+          float: right;
+          display: flex;
         }
       }
 
       .right {
-        background: #d2f1ff;
-        padding: 10px;
+        padding-top: 0;
+        padding-bottom: 0;
+        background-color: white;
+        margin-left: 1em;
+        border-radius: 5px;
       }
 
       .right.discussion {
-        // background-image: linear-gradient(to right, #999, #DDD 1.2%);
         width: 25%;
-        // float: right;
         flex-grow: 2;
         display: flex;
         flex-direction: column;
@@ -151,9 +170,11 @@ span.infobox-popover {
               display: none;
             }
           }
+
           .textline {
             display: none;
           }
+
           .comm-hide {
             display: none;
           }
@@ -163,22 +184,27 @@ span.infobox-popover {
           background-color: #debdcb;
         }
 
+        .comments-header {
+          width: 100%;
+          background-color: #fff;
+          z-index: 2;
+          padding: 0.5em;
+          border-top-left-radius: 5px;
+          border-top-right-radius: 5px;
+        }
+
         .comm-hide {
-          background-color: white;
           color: #29a2d9;
           cursor: pointer;
-          font-size: 22px;
+          font-size: 20px;
           position: initial;
           display: none;
-          right: 0;
-          top: 0;
         }
+
         .comments {
-          background-color: white;
           flex-grow: 2;
           overflow: auto;
-          border: 1px solid #d6d6d6;
-          padding: 1em 0.5em;
+          padding: 2em 1em 1em 1em;
           display: flex;
           flex-direction: column-reverse;
 
@@ -214,6 +240,7 @@ span.infobox-popover {
           padding-top: 0.4rem;
           display: none;
           flex-shrink: 0;
+          border-top: 1px solid #ddd;
 
           textarea {
             margin-right: 0.4rem;
@@ -266,12 +293,12 @@ span.infobox-popover {
           .comment {
             color: #fff;
             background: #86BB71;
-            padding: 5px 10px;
+            padding: 0.7rem 1rem;
             border-radius: 3px;
             display: inline-block;
             position: relative;
             overflow: auto;
-            font-size: 13px;
+            font-size: 14px;
           }
 
           .comment:after {
@@ -323,18 +350,16 @@ span.infobox-popover {
             resize: none;
             overflow: auto;
             outline: none;
-            padding: 0.5em;
+            padding: 0.5em 1em;
             min-height: auto;
             color: #676767;
-            border: solid 1px #a6e1fb;
-            margin-top: 0.5em;
-            margin-bottom: 0.7em;
+            border: none;
+            box-shadow: none;
           }
 
           textarea:focus {
             outline: none !important;
-            border: solid 1px #29a2d9;
-            background-color: #fff;
+            border: none;
           }
 
           .btn {
@@ -342,46 +367,18 @@ span.infobox-popover {
             margin-top: 9px;
             margin: auto;
             position: relative;
-            padding-left: 57px;
-            padding-right: 21px;
-
-            > i {
-              position: absolute;
-              top: 0;
-              left: 0;
-              height: 100%;
-              line-height: 1;
-              border-radius: 0;
-              border-top-left-radius: inherit;
-              border-bottom-left-radius: inherit;
-              text-align: center;
-              margin: 0;
-              width: 36px;
-              background-color: rgba(0,0,0,.05);
-              box-shadow: -1px 0 0 0 transparent inset;
-
-              &:before {
-                display: block;
-                position: absolute;
-                width: 100%;
-                top: 50%;
-                text-align: center;
-                transform: translateY(-50%);
-              }
-            }
+            margin-right: 1em;
           }
         }
 
       }
 
       .left {
-        // flex-grow: 2;
         width: 60%;
         float: left;
-        background-color: #a6e1fb;
 
         .fields-container {
-          padding: 1rem 1rem 0 1rem;
+          padding-top: 3rem;
           display: flex;
           flex-wrap: wrap;
 
@@ -395,7 +392,7 @@ span.infobox-popover {
 
           .flex-textarea {
             flex: 0 100%;
-            margin-top: 1em;
+            margin-top: 2.5rem;
           }
 
           div.widget {
@@ -441,4 +438,26 @@ span.infobox-popover {
       box-shadow: none;
     }
   }
+}
+
+
+@media only screen and (max-width: 1400px) {
+  .fields-container {
+    display: block!important;
+    padding: 1rem!important;
+
+    .field {
+      margin-bottom: 0!important;
+    }
+
+    .flex-select {
+      flex: none!important;
+      padding-right: 0!important;
+    }
+
+    .flex-textarea {
+      margin-top: 0!important;
+    }
+  }
+
 }

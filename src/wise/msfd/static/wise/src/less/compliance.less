@@ -68,15 +68,15 @@ b, strong {
 
 body.plone-toolbar-left-default {
   #report-data-navigation .sticky.has-infobox {
-    width: calc(100% - 4.75em);
-    left: 3.75em;
+    width: calc(~"100% - 60px");
+    left: 60px;
   }
 }
 
 body.plone-toolbar-left-expanded {
   #report-data-navigation .sticky.has-infobox {
-    width: calc(100% - 9.6em);
-    left: 7.5em;
+    width: calc(~"100% - 120px");
+    left: 120px;
   }
 }
 
@@ -116,6 +116,7 @@ body.plone-toolbar-left-expanded {
     >.col-md-3 {
       display: none;
     }
+
     >.col-md-9 {
       width: 100%;
     }
@@ -198,16 +199,14 @@ table {
 
   .top-scroll {
     overflow-x: auto;
-    //margin-left: 212px;
     background: white;
-    // border-left: 4px solid #DDD;
+
     div {
       height: 1px;
-      // margin: 0 1%;
     }
   }
-
 }
+
 .overflow-table.sticky-overflow-header {
   &.hidden-fixed-table {
     .fixed-table-wrapper {
@@ -217,11 +216,11 @@ table {
   .reset-pins {
     display: none !important;
   }
+
   .fixed-table-inner {
     margin-bottom: 0;
     overflow-x: auto;
     overflow-y: visible;
-    // margin-left: 14.4em;
     background: white;
 
     table {
@@ -234,12 +233,13 @@ table {
     }
   }
 }
+
 .fixed-table.table-sticky-first-col {
   th {
-    //left: 0 !important;
     background-color: inherit;
   }
 }
+
 .table-sticky-first-col {
   tr {
     th.sticky-col {
@@ -251,22 +251,26 @@ table {
     }
   }
 }
+
 .table-homepage-assessments {
   td:not(first-of-type) {
     min-width: 330px;
   }
 }
+
 .table-homepage-reports {
   td:not(first-of-type) {
     min-width: 360px;
   }
 }
+
 .table-homepage-assessments, .table-homepage-reports{
   tr:nth-child(odd) {
     th {
       background-color: #f9f9f9;
     }
   }
+
   tr:nth-child(even) {
     th {
       background-color: white;
@@ -290,16 +294,19 @@ table {
         text-align: left;
       }
     }
+
     .article-title {
       th, td {
         background-color: #AAA;
         color: white;
       }
     }
+
     tr {
       th:first-of-type {
         width: 180px;
       }
+
       &.fullwidth-statusbar {
         td {
           a {
@@ -339,6 +346,7 @@ div.subform-refresh {
     margin: 0;
   }
 }
+
 h4.process-phase-title {
   margin-top: 0;
   font-style: italic;
@@ -382,9 +390,11 @@ h4.process-phase-title {
         margin-top: 3px;
         margin-bottom: 3px;
       }
+
       .select2-container {
         min-width: 200px !important;
       }
+
       .close-button {
         float: right;
         font-size: 14px;
@@ -399,6 +409,7 @@ h4.process-phase-title {
       .process-state {
         display: block;
       }
+
       .buttons-wrapper {
         display: block;
       }
@@ -458,94 +469,122 @@ h4.process-phase-title {
 
   li.active {
     font-weight: bold;
+
     &.danger {
       color: @btn-danger-border;
+
       &:before {
         border-color: @btn-danger-border;
         background-color: @btn-danger-bg;
       }
+
       &:after {
         background-color: @btn-danger-bg;
       }
+
       +li:after {
         background-color: @btn-danger-bg;
       }
     }
+
     &.default {
       @default-color: #555;
       color: @default-color;
+
       &:before {
         border-color: @default-color;
         background-color: @btn-default-bg;
       }
+
       &:after {
         background-color: @default-color;
       }
+
       +li:after {
         background-color: @default-color;
       }
     }
+
     &.warning {
       color: @btn-warning-border;
+
       &:before {
         border-color: @btn-warning-border;
         background-color: @btn-warning-bg;
       }
+
       &:after {
         background-color: @btn-warning-bg;
       }
+
       +li:after {
         background-color: @btn-warning-bg;
       }
     }
+
     &.warning-2 {
       color: @btn-warning-2-border;
+
       &:before {
         border-color: @btn-warning-2-border;
         background-color: @btn-warning-2-bg;
       }
+
       &:after {
         background-color: @btn-warning-2-bg;
       }
+
       +li:after {
         background-color: @btn-warning-2-bg;
       }
     }
+
     &.primary {
       color: @btn-primary-border;
+
       &:before {
         border-color: @btn-primary-border;
         background-color: @btn-primary-bg;
       }
+
       &:after {
         background-color: @btn-primary-bg;
       }
+
       +li:after {
         background-color: @btn-primary-bg;
       }
     }
+
     &.success {
       color: @btn-success-border;
+
       &:before {
         border-color: @btn-success-border;
         background-color: @btn-success-bg;
       }
+
       &:after {
         background-color: @btn-success-bg;
       }
+
       +li:after {
         background-color: @btn-success-bg;
       }
     }
+
     &.success-2 {
       color: @btn-success-2-border;
+
       &:before {
         border-color: @btn-success-2-border;
         background-color: @btn-success-2-bg;
       }
+
       &:after {
         background-color: @btn-success-2-bg;
       }
+
       +li:after {
         background-color: @btn-success-2-bg;
       }
@@ -554,15 +593,16 @@ h4.process-phase-title {
 
   li.finished {
     color: #555;
+
     &:before {
       background-color: #ccc;
       border: 2px solid #bbb;
-      //content: "\f00c";
       color: #444;
       font-family: FontAwesome;
       font-weight: lighter;
       font-size: 14px;
     }
+
     &:after {
       background-color: #bbb;
     }
@@ -576,7 +616,6 @@ h4.process-phase-title {
 .process-state-phase-form {
   background-color: #dff1c3;
   padding: 1em;
-  // border: 1px solid #aaa;
   margin-bottom: 2em;
   margin-top: 1em;
   line-height: 2em;
@@ -729,6 +768,7 @@ span.has-new-comments {
         }
       }
     }
+
     &.fixed-right {
       min-width: 150px;
       width: 150px;
@@ -753,8 +793,6 @@ span.has-new-comments {
     div.as-value {
       padding: 1px 5px;
       min-height: 55px;
-      // border: 1px solid #ccc;
-      //margin: -1px;
       overflow: hidden;
       width: 100%;
       display: flex;
@@ -956,7 +994,7 @@ table.comp-c-listing {
     transition: top .2s ease-in-out;
 
     &.has-infobox {
-     background-color: #f96a6a;
+     background-color: #fff;
     }
 
     .nav-wrapper {
@@ -1292,8 +1330,14 @@ table.comp-c-listing {
 
 .popover {
   background-color: @popover-bg !important;
+  z-index: 99999;
 
   .popover-title {
     margin: 0 !important;
+  }
+
+  .popover-content p {
+    font-size: 14px;
+    font-family: "RobotoR";
   }
 }
