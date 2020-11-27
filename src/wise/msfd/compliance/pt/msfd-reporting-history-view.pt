@@ -58,10 +58,14 @@
             data-target="#edit-msfd-history">
               Add new data
           </a>
-          <a class="btn btn-s btn-primary" href="./@@msfd-reporting-history?download-excel" target="_blank">
+          <a class="btn btn-s btn-primary"
+             tal:attributes="href python: context.absolute_url() + '/@@msfd-reporting-history?download-excel'"
+             target="_blank">
               Download as excel
           </a>
-          <a class="btn btn-s btn-danger" href="./edit" target="_blank">
+          <a class="btn btn-s btn-danger"
+             tal:attributes="href python: context.absolute_url() + '/edit'"
+             target="_blank">
               Upload new excel file
           </a>
         </div>
