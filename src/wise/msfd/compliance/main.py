@@ -359,4 +359,6 @@ class MSFDReportingHistoryView(BaseComplianceView):
             else:
                 self._msfd_rep_history_data[index] = new_data
 
+            self._p_changed = True
+
         return self.index()
