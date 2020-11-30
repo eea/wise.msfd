@@ -12,6 +12,20 @@
     directory="./static/"
     />
 
+  <browser:viewlet
+    name="css-resource"
+    manager="plone.app.layout.viewlets.interfaces.IHtmlHead"
+    template="./pt/css-resources.pt"
+    permission="zope2.View"
+    />
+
+  <browser:viewlet
+    name="js-resource"
+    manager="plone.app.layout.viewlets.interfaces.IScripts"
+    template="./pt/js-resources.pt"
+    permission="zope2.View"
+    />
+
   <browser:page
     for="*"
     name="translate-text"

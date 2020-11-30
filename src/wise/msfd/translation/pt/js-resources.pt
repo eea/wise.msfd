@@ -1,0 +1,4 @@
+<tal:cond tal:condition="python: 'translation' in request.URL0">
+  <script src="/marine/++resource++msfd/bs3/js/bootstrap.min.js"></script>
+  <script src="/marine/++resource++msfd.trans/translate-comp.js"></script>
+</tal:cond>
