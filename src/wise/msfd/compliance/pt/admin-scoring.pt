@@ -32,23 +32,32 @@
 
           <form method="post"
             tal:attributes="action string:${context/absolute_url}/@@admin-scoring">
-            <input style="padding-right:32px;"
-              type="submit" class="btn btn-primary btn-small btn-success"
-              value="Recalculate scores" name="recalculate-scores"/>
-            <i style="position: relative; left: -28px; top: 1px;"
-              class="glyphicon glyphicon-refresh" aria-hidden="true"></i>
+            <button
+              type="submit"
+              class="btn btn-primary btn-small btn-success"
+              value="Recalculate scores"
+              name="recalculate-scores">
+              <i class="glyphicon glyphicon-refresh" aria-hidden="true"></i>
+              Recalculate scores
+            </button>
 
-            <input style="padding-right:32px;"
-              type="submit" class="btn btn-primary btn-small btn-success"
-              value="Export scores as excel" name="export-scores"/>
-            <i style="position: relative; left: -28px; top: 1px;"
-              class="glyphicon glyphicon-download-alt" aria-hidden="true"></i>
+            <button
+              type="submit"
+              class="btn btn-primary btn-small btn-success"
+              value="Export scores as excel"
+              name="export-scores">
+              <i class="glyphicon glyphicon-export" aria-hidden="true"></i>
+              Export scores as excel
+            </button>
 
-            <input style="padding-right:32px;"
-              type="submit" class="btn btn-primary btn-small btn-success"
-              value="Export scores as XML" name="export-xml"/>
-            <i style="position: relative; left: -28px; top: 1px;"
-              class="glyphicon glyphicon-download-alt" aria-hidden="true"></i>
+            <button
+              type="submit"
+              class="btn btn-primary btn-small btn-success"
+              value="Export scores as XML"
+              name="export-xml">
+              <i class="glyphicon glyphicon-export" aria-hidden="true"></i>
+              Export scores as XML
+            </button>
 
             <!--<tal:cond tal:condition="python: view.check_permission('wise.ManageCompliance')">-->
               <!--<input style="padding-right:32px;"-->
@@ -56,7 +65,7 @@
                 <!--value="Reset assessments"-->
                 <!--onclick="javascript:return confirm('Are you sure you want to reinitialize the assessment module?')"-->
                 <!--name="reset-assessments"/>-->
-              <!--<i style="position: relative; left: -28px; top: 1px;"-->
+              <!--<i style="position: relative; color: white; left: -30px; top: 4px;"-->
                 <!--class="glyphicon glyphicon-warning-sign" aria-hidden="true"></i>-->
             <!--</tal:cond>-->
           </form>

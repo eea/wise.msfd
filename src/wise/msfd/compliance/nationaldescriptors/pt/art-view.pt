@@ -44,7 +44,9 @@
           <div id="nat-desc-art-menu">
             <ul>
               <li>
-                <a tal:attributes="href python: context.absolute_url() + '/@@edit-assessment-data-2018'"target="_blank">
+                <a
+                  tal:attributes="href python: context.absolute_url() + '/@@edit-assessment-data-2018'"
+                  target="_blank">
                   <i class="glyphicon glyphicon-edit"></i> Assessment
                 </a>
                 <a tal:attributes="href python: context.absolute_url() + '/@@view-edit-history'"

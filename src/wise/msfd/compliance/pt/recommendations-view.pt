@@ -9,7 +9,6 @@
   <body metal:fill-slot="content">
 
     <div id="wise-search-form" class="full-width-marker">
-      <script src="/++resource++msfd/js/table-edit.js"></script>
 
       <div id="wise-search-form-top">
         <metal:tabs metal:use-macro="context/wise-macros/macros/tabs"></metal:tabs>

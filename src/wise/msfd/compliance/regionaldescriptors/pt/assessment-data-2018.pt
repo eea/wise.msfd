@@ -7,7 +7,9 @@
       <tbody>
 
         <tr>
-          <th class="fixed-left as-question as-header">Question / assessed elements</th>
+          <th class="fixed-left as-question as-header">
+            Question / assessed elements
+          </th>
           <th colspan="2" class="fixed-center as-ges-component as-header"></th>
           <th class="fixed-right as-header">Conclusion</th>
           <th class="fixed-right as-th-score as-header">Score</th>
@@ -17,8 +19,12 @@
           <tr>
             <th class="fixed-left">
             <div class="q-wrap">
-                <div class="q-id" tal:content="python: row.question.split(':')[0]">Question Id</div>
-                <div class="q-title" tal:content="python: row.question.split(':', 1)[1]">Question text</div>
+                <div class="q-id" tal:content="python: row.question.split(':')[0]">
+                  Question Id
+                </div>
+                <div class="q-title" tal:content="python: row.question.split(':', 1)[1]">
+                  Question text
+                </div>
                 </div>
             </th>
             <td colspan="2" class="fixed-center">
@@ -30,8 +36,7 @@
                     data-trigger="hover"
                     data-html="true"
                     tal:attributes="
-                    title python: value[0];
-                    data-content python: value[2]"
+                    title python: value[0]; data-content python: value[2]"
                     >
                     <span tal:content="python: value[2]">D0C0</span>
                   </label>
@@ -44,8 +49,11 @@
 
             <td tal:attributes="class python: 'fixed-right as-value as-value-{}'.format(row.conclusion_color)"
               colspan="1">
-              <strong tal:condition="python: False"
-                  tal:content="python: '{} ({}%)'.format(row.conclusion, getattr(row.score, 'percentage'))">Very poor</strong>
+              <strong
+                tal:condition="python: False"
+                tal:content="python: '{} ({}%)'.format(row.conclusion, getattr(row.score, 'percentage'))">
+                Very poor
+              </strong>
               <strong tal:condition="row/score"
                   tal:content="row/conclusion">Very poor</strong>
             </td>
@@ -75,13 +83,13 @@
 
 
         <tr id="asssessment-overview-form-comments">
-        <!-- <script src="/++resource++msfd/js/assessment-edit.js"></script> -->
-
-          <th class="fixed-left">Assessment summary, progress assessment and recommendations</th>
+          <th class="fixed-left">
+            Assessment summary, progress assessment and recommendations
+          </th>
 
           <td class="fixed-center subform">
             <div class="form-assessment-summary">
-                <div tal:replace="structure context/@@view-assessment-summary"></div>
+              <div tal:replace="structure context/@@view-assessment-summary"></div>
             </div>
           </td>
 

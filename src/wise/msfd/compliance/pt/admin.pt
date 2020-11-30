@@ -57,7 +57,7 @@
             <a class="btn btn-primary btn-small btn-success"
               tal:attributes="href string:${view/_compliance_folder/absolute_url}/national-descriptors-assessments/@@admin-scoring?export-scores=1"
               target="_blank">
-              <i class="glyphicon glyphicon-download-alt"></i>
+              <i class="glyphicon glyphicon-export"></i>
               Export Compliance Data
             </a>
 

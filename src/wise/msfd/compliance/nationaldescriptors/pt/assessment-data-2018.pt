@@ -79,9 +79,9 @@
 
 
         <tr id="asssessment-overview-form-comments">
-        <!-- <script src="/++resource++msfd/js/assessment-edit.js"></script> -->
-
-          <th class="fixed-left">Assessment summary, progress assessment and recommendations</th>
+          <th class="fixed-left">
+            Assessment summary, progress assessment and recommendations
+          </th>
 
           <td class="fixed-center subform">
             <div class="form-assessment-summary">
