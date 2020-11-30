@@ -3,7 +3,7 @@
 
 // Report page
 .report-page-view .report-section .overflow-table .fixed-table-wrapper table.fixed-table tr th {
-  left: 24px;
+  left: 17px;
 }
 .report-page-view {
   .report-section {
@@ -330,8 +330,7 @@ body.plone-toolbar-left-expanded {
     color: #337ab7;
   }
   th {
-    //left: 24px !important;
-    left: 24px;
+    left: 17px;
   }
 
   &.sticky-table {
@@ -340,7 +339,7 @@ body.plone-toolbar-left-expanded {
     top: 0;
     left: 2px;
     right: 0;
-    padding: 0 16px;
+    padding: 0 18px;
     overflow-x: auto;
     overflow-y: overlay;
     z-index: 998;
@@ -550,6 +549,10 @@ body.plone-toolbar-left-expanded {
   table {
       border-spacing: 0;
       border-collapse: collapse;
+
+      td {
+        border-top: 1px solid #ddd;
+      }
 
       td, th {
         padding: 0.5em 1em;

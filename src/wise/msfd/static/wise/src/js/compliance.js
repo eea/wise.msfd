@@ -690,7 +690,7 @@ if (!Array.prototype.last){
 
     $(window).on('resize scroll', function() {
       if ($('.report-nav.sticky').length > 0) {
-        $fixedTable.css('top', '58px');
+        $fixedTable.css('top', '56px');
       } else {
         $fixedTable.css('top', '0');
       }

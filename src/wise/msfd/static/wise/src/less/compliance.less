@@ -112,7 +112,7 @@ body.plone-toolbar-left-expanded {
 }
 
 .msfd-search-wrapper {
-  .row {
+  > .row {
     >.col-md-3 {
       display: none;
     }
@@ -128,6 +128,17 @@ body.plone-toolbar-left-expanded {
   border: none;
 }
 
+#right-sidebar {
+  border-left: 1px solid #ddd;
+  height: 100%;
+
+  ul {
+    margin-top: 3rem;
+    list-style-type: none;
+    padding-left: 1.2rem;
+  }
+}
+
 .fullwidth {
   .container {
     width: 100% !important;
@@ -141,6 +152,14 @@ body.plone-toolbar-left-expanded {
 
   .side-section {
     display: none;
+  }
+}
+
+.plone-modal {
+  table {
+    display: block;
+    overflow: auto;
+    max-width: 100% !important;
   }
 }
 
@@ -706,6 +725,10 @@ span.has-new-comments {
         margin-left: 1em;
       }
     }
+  }
+
+  .glyphicon-th {
+    margin-left: 10px;
   }
 }
 
