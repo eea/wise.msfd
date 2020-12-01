@@ -1,6 +1,5 @@
-<div class="nat-sum-report-header" class="row"
-    tal:condition="view/render_header">
-  <div class="col-md-12">
+<div tal:condition="view/render_header">
+  <div class="nat-sum-report-header">
 
     <!-- <div metal:use&#45;macro="context/@@compliance&#45;nav&#45;macros/macros/nav"></div> -->
     <div metal:use-macro="context/global_statusmessage/macros/portal_message">

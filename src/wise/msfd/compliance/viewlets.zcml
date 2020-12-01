@@ -5,12 +5,11 @@
   xmlns:z3c="http://namespaces.zope.org/z3c"
   i18n_domain="wise.msfd">
 
-  <!-- <browser:viewlet -->
-  <!--   name="wise.msfd.compliance.tabs" -->
-  <!--   layer=".interfaces.IComplianceModuleMarker" -->
-  <!--   manager="plone.app.layout.viewlets.interfaces.IAboveContentTitle" -->
-  <!--   class=".viewlets.TabsViewlet" -->
-  <!--   permission="zope2.View" -->
-  <!--   /> -->
+  <browser:viewlet
+    name="wise.msfd.compliance.tabs"
+    manager="plone.app.layout.viewlets.interfaces.IAboveContentTitle"
+    class=".viewlets.TabsViewlet"
+    permission="zope2.View"
+    />
 
 </configure>

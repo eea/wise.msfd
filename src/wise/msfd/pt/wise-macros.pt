@@ -29,24 +29,24 @@
     </ul>
     <!-- <div class="visible-xs" style="clear: both;"> -->
     <div class="visible-xs">
-    <div class="article-select">
-      <div tal:content="view/tab_select_label | string:Select ${tab_type}:">
-        Select article/tab:
+      <div class="article-select">
+        <div tal:content="view/tab_select_label | string:Select ${tab_type}:">
+          Select article/tab:
+        </div>
+        <select class="notselect" id="mobile-select-article">
+          <tal:rep tal:repeat="tab view/main_forms">
+            <tal:block tal:define="
+              section view/section | nothing;
+              active python: section and (view.section == tab.section) or (not section and (view.name in request.URL0))">
+              <option tal:attributes="value string:./${tab/path}; data-maintitle tab/title;
+                data-subtitle tab/subtitle;
+                selected python: active and 'selected'">
+                <span tal:replace="tab/title"></span> <span tal:replace="tab/subtitle"></span>
+              </option>
+            </tal:block>
+          </tal:rep>
+        </select>
       </div>
-      <select class="notselect" id="mobile-select-article">
-        <tal:rep tal:repeat="tab view/main_forms">
-          <tal:block tal:define="
-            section view/section | nothing;
-            active python: section and (view.section == tab.section) or (not section and (view.name in request.URL0))">
-            <option tal:attributes="value string:./${tab/path}; data-maintitle tab/title;
-              data-subtitle tab/subtitle;
-              selected python: active and 'selected'">
-              <span tal:replace="tab/title"></span> <span tal:replace="tab/subtitle"></span>
-            </option>
-          </tal:block>
-        </tal:rep>
-      </select>
-    </div>
     </div>
   </div>
 </metal:macro>

@@ -1,4 +1,4 @@
-<div id="compliance-tabs">
+<div id="compliance-tabs" class="full-width-marker">
   <div id="mainform-tabs"
        tal:define="tab_type view/tabs_type | string:article">
 
@@ -11,37 +11,43 @@
           section view/section | nothing;
           active python: section and (view.section == tab.section) or (not section and (tab.path in request.URL0));
           cssclass tab/cssclass | string:;
-          klass python: (active and 'tab-active') or '';
-          "
-          tal:attributes="class string:$klass $cssclass"
-          >
-          <a href=""
-            tal:attributes="href string:${root_url}/${tab/path}"
-            >
-            <span tal:content="structure tab/title">Article X</span>
-            <span tal:content="structure tab/subtitle">Subtitle here</span>
+          klass python: (active and 'tab-active') or '';"
+          tal:attributes="class string:$klass $cssclass">
+          <a href="" tal:attributes="href string:${root_url}/${tab/path}">
+            <div>
+              <span class="tab-title" tal:content="structure tab/title">
+               Article X
+              </span>
+              <span class="tab-subtitle" tal:content="structure tab/subtitle">
+               Subtitle here
+              </span>
+            </div>
           </a>
         </li>
       </tal:rep>
     </ul>
 
-    <div class="article-select">
-      <label tal:content="view/tab_select_label | string:Select ${tab_type}:">
-        Select article/tab:
-      </label>
-      <select class="notselect" id="mobile-select-article">
-        <tal:rep tal:repeat="tab view/main_forms">
-          <tal:block tal:define="
-            section view/section | nothing;
-            active python: section and (view.section == tab.section) or (not section and (view.name in request.URL0))">
-            <option tal:attributes="value string:./${tab/path}; data-maintitle tab/title;
-              data-subtitle tab/subtitle;
-              selected python: active and 'selected'">
-              <span tal:replace="structure tab/title"></span> <span tal:replace="structure tab/subtitle"></span>
-            </option>
-          </tal:block>
-        </tal:rep>
-      </select>
+    <div class="visible-xs">
+      <div class="article-select">
+        <label tal:content="view/tab_select_label | string:Select ${tab_type}:">
+          Select article/tab:
+        </label>
+        <select class="notselect" id="mobile-select-article">
+          <tal:rep tal:repeat="tab view/main_forms">
+            <tal:block tal:define="
+              section view/section | nothing;
+              active python: section and (view.section == tab.section) or (not section and (view.name in request.URL0))">
+              <option
+                tal:attributes="value string:./${tab/path}; data-maintitle tab/title;
+                data-subtitle tab/subtitle;
+                selected python: active and 'selected'">
+                <span tal:replace="structure tab/title"></span> <span tal:replace="structure tab/subtitle"></span>
+              </option>
+            </tal:block>
+          </tal:rep>
+        </select>
+      </div>
     </div>
+
   </div>
 </div>

@@ -8,8 +8,7 @@ class TabsViewlet(ViewletBase, BaseComplianceView):
     template = ViewPageTemplateFile('pt/tabs.pt')
 
     def index(self):
-        print "Rendering tabs viewlet"
-
+        # print "Rendering tabs viewlet"
         return self.template()
 
     @property

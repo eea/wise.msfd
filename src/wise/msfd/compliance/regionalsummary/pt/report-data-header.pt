@@ -1,6 +1,5 @@
-<div class="reg-sum-report-header" class="row"
-    tal:condition="view/render_header">
-  <div class="col-md-12">
+<div tal:condition="view/render_header">
+  <div class="reg-sum-report-header">
 
     <!-- <div metal:use&#45;macro="context/@@compliance&#45;nav&#45;macros/macros/nav"></div> -->
     <div metal:use-macro="context/global_statusmessage/macros/portal_message">
@@ -52,18 +51,18 @@
     </div>
 
     <table class="table table-bordered table-striped table-condensed">
-        <tr>
-          <th>Region</th>
-          <td tal:content="view/_region_folder/title">Baltic</td>
-        </tr>
-        <tr>
-          <th>States</th>
-          <td tal:content="options/countries">Finland, Latvia, Germany</td>
-        </tr>
-        <tr>
-          <th>Subregions</th>
-          <td tal:content="view/subregions">TO be completed</td>
-        </tr>
+      <tr>
+        <th>Region</th>
+        <td tal:content="view/_region_folder/title">Baltic</td>
+      </tr>
+      <tr>
+        <th>States</th>
+        <td tal:content="options/countries">Finland, Latvia, Germany</td>
+      </tr>
+      <tr>
+        <th>Subregions</th>
+        <td tal:content="view/subregions">TO be completed</td>
+      </tr>
     </table>
 
   </div>

@@ -24,7 +24,6 @@
       }
     }
 
-
     .overflow-table {
       position: relative;
       margin-bottom: 1rem;
@@ -87,9 +86,11 @@
           &.f_Art9_criteria th {
             background-color: #cccc00;
           }
+
           &.f_Art9_elementstatus th {
             background-color: #bdd7ee;
           }
+
           &.f_Art9_criteriastatus th {
             background-color: #ffe699;
           }
@@ -111,18 +112,22 @@
             background: rgb(189,215,238);
             background: linear-gradient(90deg, rgba(244,177,131,1) 6px, rgba(189,215,238,1) 6px);
           }
+
           &.f_Art8_criteria th {
             background: rgb(244,177,131);
             background: linear-gradient(90deg, rgba(244,177,131,1) 6px, rgba(189,215,238,1) 6px, rgba(189,215,238,1) 12px, rgba(255,230,153,1) 12px, rgba(255,230,153,1) 18px, rgba(204,204,0,1) 18px);
           }
+
           &.f_Art8_criteriastatus th {
             background: rgb(244,177,131);
             background: linear-gradient(90deg, rgba(244,177,131,1) 6px, rgba(189,215,238,1) 6px, rgba(189,215,238,1) 12px, rgb(255, 230, 153) 6px);
           }
+
           &.f_Art8_elementstatus th {
             background: rgb(244,177,131);
             background: linear-gradient(90deg, rgba(244,177,131,1) 6px, rgba(189,215,238,1) 6px);
           }
+
           &.f_Art8_overallstatus th, &.f_Art9_overallstatus th {
             background-color: #f4b183;
           }
@@ -164,7 +169,13 @@
               }
             }
           }
+
           td {
+            min-width: 3rem;
+            border-top: none;
+            border-left: none;
+            padding: 6px;
+
             &.summary {
               min-width: 10rem;
 
@@ -176,14 +187,8 @@
               ul.cell-listing li {
                 max-width: inherit;
               }
-
             }
 
-            min-width: 3rem;
-            border-top: none;
-            border-left: none;
-            padding: 6px;
-            // &.merged {}
             &.endgroup {
               &_0 {
                 border-right: 10px solid #DCDCDB;
@@ -198,22 +203,27 @@
                 border-right: 2px solid #DCDCDB;
               }
             }
+
             > div {
               max-width: 50rem;
             }
+
             ul {
               min-width: 16rem;
               margin: 0 0 0 -1rem !important;
+
               &.cell-listing  {
                 // display: flex;
                 // max-height: 30rem;
                 // flex-direction: column;
                 // flex-wrap: wrap;
+
                 li {
                   display: block !important;
                   padding-left: 1rem;
                   max-width: 30rem;
-                  &::before {
+
+                  &:before {
                     content: '▪';
                   }
                 }
@@ -314,6 +324,7 @@ body.plone-toolbar-left-expanded {
       left: auto;
     }
   }
+
   button.reset-pins {
     display: none;
     font-size: 14px;
@@ -329,6 +340,7 @@ body.plone-toolbar-left-expanded {
     background-color: transparent;
     color: #337ab7;
   }
+
   th {
     left: 17px;
   }
@@ -339,7 +351,7 @@ body.plone-toolbar-left-expanded {
     top: 0;
     left: 2px;
     right: 0;
-    padding: 0 18px;
+    padding: 0 17px;
     overflow-x: auto;
     overflow-y: overlay;
     z-index: 998;
@@ -413,30 +425,6 @@ body.plone-toolbar-left-expanded {
    p, ol, ul {
     color: #003159 !important;
   }
-
-  // h3 {
-  //   //font-size: 26px;
-  //   font-size: 1.8em;
-  //   font-weight: bold;
-  // }
-  //
-  // h4 {
-  //   //font-size: 23px;
-  //   font-size: 1.6em;
-  //   font-weight: bold;
-  // }
-  //
-  // h5 {
-  //   //font-size: 20px;
-  //   font-size: 1.4em;
-  //   font-weight: bold;
-  // }
-  //
-  // h6 {
-  //   //font-size: 17px;
-  //   font-size: 1.2em;
-  //   font-weight: bold;
-  // }
 
   .table-simple-summary {
     td {
