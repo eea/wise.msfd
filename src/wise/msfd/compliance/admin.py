@@ -16,6 +16,7 @@ from plone.api import portal
 from plone.api.content import get_state, transition
 from plone.api.portal import get_tool
 from plone.dexterity.utils import createContentInContainer as create
+from plone.protect.interfaces import IDisableCSRFProtection
 from Products.CMFCore.utils import getToolByName
 from Products.CMFDynamicViewFTI.interfaces import ISelectableBrowserDefault
 from Products.CMFPlacefulWorkflow.WorkflowPolicyConfig import \
@@ -86,7 +87,7 @@ class BootstrapCompliance(BrowserView):
     """ Bootstrap the compliance module by creating all needed country folders
     """
 
-    compliance_folder_id = 'assessment-module'
+    compliance_folder_id = 'compliance-module'
 
     @property
     def debug(self):
@@ -476,6 +477,8 @@ class BootstrapCompliance(BrowserView):
 
         if 'regionalsummary' in targets:
             self.setup_regionalsummaries(cm)
+
+        alsoProvides(self.request, IDisableCSRFProtection)
 
         return cm.absolute_url()
 

@@ -6,9 +6,11 @@ import logging
 from datetime import datetime
 
 from pkg_resources import resource_filename
+from plone.protect.interfaces import IDisableCSRFProtection
 from pyexcel_xlsx import get_data
 
 from zope import event
+from zope.interface import alsoProvides
 
 from eea.cache.event import InvalidateMemCacheEvent
 from Products.Five.browser import BrowserView
@@ -144,6 +146,8 @@ class TranslationsOverview(BrowserView):
         return out.read()
 
     def import_translations(self):
+        alsoProvides(self.request, IDisableCSRFProtection)
+
         file_loc = resource_filename(
             'wise.msfd', 'data/MSFDTranslations.xlsx'
         )
