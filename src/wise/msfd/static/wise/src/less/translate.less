@@ -5,16 +5,17 @@ td.translatable  {
   .w-t {    // wrapper for translations
     width: 100%;
     height: 100%;
-    
+
     .tr-text {
       display: block;
       padding: 6px 6px 6px 8px;
-            
+
       &.active {
         display: block;
         min-width: 10rem;
         max-width: 50rem;
       }
+
       &.short:after {
         content: "\f0da";
         font: normal normal normal 14px/1 FontAwesome;
@@ -22,7 +23,7 @@ td.translatable  {
         transform: rotate(45deg);
         position: absolute;
         margin: 0 0.6em;
-      }    
+      }
     }
 
     .lang-toolbar {
@@ -36,6 +37,7 @@ td.translatable  {
       &.blue {
         background-color: #d3f3f9;
       }
+
       &.green {
         background-color: #dff1c3;
       }
@@ -46,23 +48,19 @@ td.translatable  {
         margin-left: 3px
       }
 
-      // buttons styling
-      .fa {
-        font-size: initial;
-        line-height: 18px;
-      }
       .lang-orig {
+        margin-right: 20px;
+
         &.active {
           background-color: #91d4e0;
         }
-        margin-right: 20px;
       }
+
       .lang-transl {
         &.active {
           background-color: #b4c8a0;
         }
       }
-      .editTransl {}
     }
   }
 }
@@ -71,7 +69,9 @@ td.translatable  {
   .modal-translate-section {
     border-bottom: solid 1px #CCC;
     padding-bottom: 1em;
+    font-size: 14px;
   }
+
   .modal-content {
     padding: 1em;
   }

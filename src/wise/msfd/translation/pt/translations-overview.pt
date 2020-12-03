@@ -9,49 +9,62 @@
   <body metal:fill-slot="content">
 
     <div id="wise-search-form" class="full-width-marker">
-      <div class="start-page-content left-side-form">
-
+      <div class="start-page-content left-side-form translation-view">
+        <h1>Manage translations</h1>
         <div class="row">
-          <div class="col-md-9 col-xs-12">
+          <div class="col-md-10 col-xs-12">
             <div id="wise-translations-overview"
                 tal:define="translations view/available_translations;
                 selectedlang request/form/language | nothing">
 
               <div class="translations-container">
                 <div id="edit-translation" class="modal fade" tabindex="-1" role="dialog">
-                <div class="modal-dialog modal-lg" role="document">
-                  <div class="modal-content">
-                    <div class="modal-header">
-                      <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                      <h3>Edit translation</h3>
-                    </div>
-                    <div class="modal-body">
+                  <div class="modal-dialog modal-lg" role="document">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                          <span aria-hidden="true">&times;</span>
+                        </button>
+                        <h3>Edit translation</h3>
+                      </div>
 
-                      <h4 class="modal-translate-header">Original text</h4>
-                      <div class="modal-translate-section" id="tr-original">Original text</div>
-
-                      <h4 class="modal-translate-header">Current translation</h4>
-                      <div class="modal-translate-section" id="tr-current">Current translation</div>
-
-                      <form id="form-edit-translation"
-                        method="POST"
-                        action="./@@edit-translation"
-                        tal:attributes="action string:${context/absolute_url}/@@edit-translation">
-                        <input type="hidden" name="language" tal:attributes="value selectedlang" />
-                        <textarea style="display:none" type="hidden" name="original" ></textarea>
-                        <div class="form-group">
-                          <h4 class="modal-translate-header">New translation</h4>
-                          <textarea class="form-control" style="height: 10em;" type="text" id="tr-new" name="tr-new"></textarea>
-                          <input class="submitTransl btn btn-primary btn-s" type="submit" value="Save" />
+                      <div class="modal-body">
+                        <h5 class="modal-translate-header">
+                          Original text
+                        </h5>
+                        <div class="modal-translate-section" id="tr-original">
+                          Original text
                         </div>
-                      </form>
 
+                        <h5 class="modal-translate-header">
+                          Current translation
+                        </h5>
+                        <div class="modal-translate-section" id="tr-current">
+                          Current translation
+                        </div>
+
+                        <form id="form-edit-translation"
+                          method="POST"
+                          action="./@@edit-translation"
+                          tal:attributes="action string:${context/absolute_url}/@@edit-translation">
+                          <input type="hidden" name="language" tal:attributes="value selectedlang" />
+                          <textarea style="display:none" type="hidden" name="original" ></textarea>
+                          <div class="form-group">
+                            <h5 class="modal-translate-header">New translation</h5>
+                            <textarea
+                              class="form-control"
+                              type="text"
+                              id="tr-new"
+                              name="tr-new">
+                            </textarea>
+                            <input class="submitTransl btn btn-primary btn-s" type="submit" value="Save" />
+                          </div>
+                        </form>
+
+                      </div>
                     </div>
                   </div>
                 </div>
-              </div>
-
-                <h1>Manage translations</h1>
 
                 <div tal:condition="not: translations">
                   Please select a language from the right side menu
@@ -62,7 +75,9 @@
                   </h4>
 
                   <form method="POST" action="./@@approve-translations">
-                    <table id="edit-table" class="table table-listing"
+                    <table
+                      id="edit-table"
+                      class="table table-listing table-striped"
                       style="word-break: break-word"
                       tal:condition="translations">
                       <thead>
@@ -120,7 +135,7 @@
             </div>
           </div>
 
-          <div class="col-md-3 col-xs-12">
+          <div class="col-md-2 col-xs-12">
             <div id="right-sidebar"
               tal:define="languages view/languages;
               selectedlang request/form/language | nothing">
@@ -137,8 +152,8 @@
                   </li>
                   <li tal:condition="python: selectedlang != lang">
                     <a
-                      class="btn btn-xs btn-secondary"
                       href=""
+                      class="btn btn-xs btn-secondary"
                       tal:attributes="href string:./@@translations-overview?language=${lang}"
                       style="width: 3rem; margin-bottom: 0.5rem">
                       <span tal:replace="lang">EN</span>

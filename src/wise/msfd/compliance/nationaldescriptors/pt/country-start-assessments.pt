@@ -43,7 +43,9 @@
                     data-pat-select2="width:10em">
                     <option value=''>Choose action...</option>
                     <tal:rep repeat="trans python: view.get_transitions(country_folder)">
-                      <option tal:content="trans/title" tal:attributes="value trans/id">Send to Phase 0</option>
+                      <option tal:content="trans/title" tal:attributes="value trans/id">
+                        Send to Phase 0
+                      </option>
                     </tal:rep>
                   </select>
                 </div>

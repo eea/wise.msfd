@@ -42,7 +42,9 @@
                     data-pat-select2="width:10em">
                     <option value=''>Choose action...</option>
                     <tal:rep repeat="trans view/get_transitions">
-                      <option tal:content="trans/title" tal:attributes="value trans/id">Send to Phase 0</option>
+                      <option tal:content="trans/title" tal:attributes="value trans/id">
+                        Send to Phase 0
+                      </option>
                     </tal:rep>
                   </select>
                 </div>
@@ -134,7 +136,9 @@
                       <a tal:attributes="class css_class; href string:${url}/@@edit-assessment-data-2018;"
                         tal:condition="can_edit_data">
                         <i class="glyphicon glyphicon-edit"></i>Assessment:
-                        <span class="as-state-label" tal:content="python: view.get_status(assessment)">State</span>
+                        <span class="as-state-label" tal:content="python: view.get_status(assessment)">
+                          State
+                        </span>
                         <span title="New comments"
                           class="has-new-comments glyphicon glyphicon-exclamation-sign"
                           tal:condition="python: view.has_new_comments(assessment)"></span>

@@ -15,7 +15,9 @@
         <!-- <em style="color: #AAA"> -->
         <em class="comm-crtr">
           <span tal:content="comment/Creator">Creator</span>, at
-          <span tal:content="python: plone.toLocalizedTime(comment.created(), long_format=True)">Creator</span>
+          <span tal:content="python: plone.toLocalizedTime(comment.created(), long_format=True)">
+            Creator
+          </span>
         </em>
       </li>
     </ul>

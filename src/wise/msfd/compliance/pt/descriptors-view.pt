@@ -19,7 +19,7 @@
           <table>
             <thead>
               <tr>
-                <th>Descriptor</td>
+                <th>Descriptor</th>
                 <th>Criterion</th>
                 <th>Alternatives</th>
               </tr>
@@ -45,4 +45,3 @@
 
   </body>
 </html>
-

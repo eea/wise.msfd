@@ -133,7 +133,6 @@ body.plone-toolbar-left-expanded {
   height: 100%;
 
   ul {
-    margin-top: 3rem;
     list-style-type: none;
     padding-left: 1.2rem;
   }
@@ -163,7 +162,8 @@ body.plone-toolbar-left-expanded {
   }
 }
 
-#content-container {
+#content-container,
+.msfd-search-wrapper {
   table {
     font-size: 15px;
 
@@ -1375,9 +1375,29 @@ table.comp-c-listing {
     min-width: 150px;
   }
 }
+
 #recommendation-form {
+  display: flex;
+  flex-wrap: wrap;
+
   label {
-    font-size: 1.1em;
+    font-size: 15px;
+  }
+
+  .form-group {
+    flex: 0 50%;
+    padding: 5px 10px;
+
+    textarea {
+      padding: 10px;
+      min-height: 4em;
+      overflow: hidden;
+    }
+  }
+
+  .btn {
+    margin-top: 1em;
+    margin-left: 10px;
   }
 
   #textarea, #Row {
@@ -1393,6 +1413,7 @@ table.comp-c-listing {
     flex-direction: row;
     justify-content: space-evenly;
   }
+
   .form-group.disabled {
     cursor: not-allowed !important;
   }
@@ -1400,9 +1421,11 @@ table.comp-c-listing {
   .form-group.multiple {
     margin: 5px;
   }
+
   .form-group.multiple:first-child {
     flex: 1.1;
   }
+
   .form-group.multiple:last-child {
     flex: 1;
   }
@@ -1419,5 +1442,24 @@ table.comp-c-listing {
   .popover-content p {
     font-size: 14px;
     font-family: "RobotoR";
+  }
+}
+
+.modal {
+  .form-group {
+    .btn {
+      margin-top: 1.5em;
+    }
+  }
+}
+
+.translation-view h4 {
+  margin-top: 0 !important;
+}
+
+@media (min-width: 768px) {
+  .translation-view .row {
+    display: flex;
+    flex-wrap: wrap;
   }
 }

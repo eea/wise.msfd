@@ -22,7 +22,13 @@
           <div class="modal-dialog modal-lg" role="document">
             <div class="modal-content">
               <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <button
+                  type="button"
+                  class="close"
+                  data-dismiss="modal"
+                  aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
                 <h3>Edit row</h3>
               </div>
 
@@ -31,15 +37,21 @@
                       tal:attributes="action context/absolute_url">
                   <div class="form-group">
                     <label>Row number:</label>
-                    <textarea tal:content="python: len(view.msfd_rep_history_data) + 1"
-                        tal:attributes="max-rows python: len(view.msfd_rep_history_data) + 1"
-                        style="min-height: 3em; overflow: hidden;" id="Row" name="Row" class="form-control disabled"></textarea>
+                    <textarea
+                      tal:content="python: len(view.msfd_rep_history_data) + 1"
+                      tal:attributes="max-rows python: len(view.msfd_rep_history_data) + 1"
+                      id="Row"
+                      name="Row"
+                      class="form-control disabled">
+                    </textarea>
                   </div>
                   <tal:rep tal:repeat="header python: view.msfd_rep_history_headers">
                     <div class="form-group">
                       <label tal:content="header">Label:</label>
-                      <textarea tal:attributes="id header; name header"
-                          style="min-height: 3em; overflow: hidden;" class="form-control editable"></textarea>
+                      <textarea
+                        class="form-control editable">
+                        tal:attributes="id header; name header"
+                      </textarea>
                     </div>
                   </tal:rep>
                   <input class="submitRecomm btn btn-primary btn-s"

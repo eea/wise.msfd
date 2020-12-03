@@ -81,6 +81,13 @@
     permission="zope2.View"
     />
 
+  <browser:viewlet
+    name="msfd-tabs"
+    manager="plone.app.layout.viewlets.interfaces.IAboveContentTitle"
+    class=".viewlets.TabsViewlet"
+    permission="zope2.View"
+    />
+
   <browser:page
     for=".interfaces.IMSFDReportingHistoryFolder"
     name="msfd-reporting-history"

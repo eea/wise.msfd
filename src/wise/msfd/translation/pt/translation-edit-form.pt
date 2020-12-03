@@ -3,19 +3,33 @@
     <div class="modal-dialog modal-lg" role="document">
       <div class="modal-content">
         <div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
           <h3>Edit translation</h3>
         </div>
         <div class="modal-body">
           <h4 class="modal-translate-header">Original text</h4>
-          <div class="modal-translate-section" id="transl-original-text">Original text</div>
+          <div class="modal-translate-section" id="transl-original-text">
+            Original text
+          </div>
           <h4 class="modal-translate-header">Current translation</h4>
-          <div class="modal-translate-section" id="transl-old-translation">Current translation</div>
+          <div class="modal-translate-section" id="transl-old-translation">
+            Current translation
+          </div>
           <form id="form-edit-translation">
-            <input type="hidden" name="language" tal:attributes="value view/country_code | nothing" />
+            <input type="hidden"
+                   name="language"
+                   tal:attributes="value view/country_code | nothing" />
             <div class="form-group" tal:attributes="portal_url context/portal_url">
               <h4 class="modal-translate-header">New translation</h4>
-              <textarea class="form-control" style="height: 10em;" type="text" id="new_transl" name="new_transl"></textarea>
+              <textarea
+                class="form-control"
+                style="height: 10em;"
+                type="text"
+                id="new_transl"
+                name="new_transl">
+              </textarea>
               <div style="padding-top: 1rem;">
                 <input class="submitTransl btn btn-primary btn-s" type="submit" value="Save" />
               </div>
@@ -25,7 +39,7 @@
       </div>
     </div>
   </div>
-  
+
   <form class="form-refresh-translation" method="POST" action="./@@translate-text" style="display: none">
     <input type="hidden" name="redirect_url" tal:attributes="value request/URL0"/>
     <input type="hidden" name="language" tal:attributes="value view/country_code | nothing" />
