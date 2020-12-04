@@ -49,8 +49,8 @@
                     <div class="form-group">
                       <label tal:content="header">Label:</label>
                       <textarea
-                        class="form-control editable">
-                        tal:attributes="id header; name header"
+                        class="form-control editable"
+                        tal:attributes="id header; name header">
                       </textarea>
                     </div>
                   </tal:rep>

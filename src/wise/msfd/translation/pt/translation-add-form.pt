@@ -22,7 +22,9 @@
     </div>
   </div>
 
-  <form class="form-refresh-translation" method="POST" action="./@@translate-text" style="display: none">
+  <form class="form-refresh-translation" method="POST"
+        tal:attributes="action python: context.absolute_url() + '/@@translate-text'"
+        style="display: none">
     <input type="hidden" name="redirect_url" tal:attributes="value request/URL0"/>
     <input type="hidden" name="language" tal:attributes="value view/country_code | nothing" />
     <textarea name="text"></textarea>

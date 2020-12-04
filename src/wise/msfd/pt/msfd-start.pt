@@ -42,7 +42,7 @@
                </div>
              </tal:rep>
            </div>
-          <div tal:condition="python: context.disclaimer">
+          <div tal:condition="python: hasattr(context, 'disclaimer')">
             <p tal:replace="structure python: context.disclaimer.output"></p>
           </div>
         </div>

@@ -20,7 +20,8 @@
     <div class="process-state-phase-form"
         tal:condition="python: False">
       <form class="process-state"
-          method="GET" action='./content_status_modify'>
+          method="GET"
+          tal:attributes="action python: context.absolute_url() + '/content_status_modify'">
         <div>
           <i class="glyphicon glyphicon-transfer"></i>
           Process state:

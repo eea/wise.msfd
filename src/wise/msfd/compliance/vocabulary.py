@@ -2,6 +2,7 @@
 from collections import defaultdict, namedtuple
 from datetime import datetime
 
+from persistent.list import PersistentList
 from pkg_resources import resource_filename
 from pyexcel_xlsx import get_data
 
@@ -147,7 +148,7 @@ ReportingHistoryENVRow = namedtuple(
 
 
 def get_msfd_reporting_history_from_file(file):
-    res = []
+    res = PersistentList()
     sheets = get_data(file)
     env_data = sheets['ENV']
 
