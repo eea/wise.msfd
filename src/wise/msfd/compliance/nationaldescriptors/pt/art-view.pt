@@ -61,7 +61,8 @@
                 <a tal:attributes="href python: context.absolute_url() + '/@@view-report-data-2012-like-2018'"
                    target="_blank"><i class="glyphicon glyphicon-th"></i>2012 Report (II)</a></li>
               <li class="process-state" style="display:flex; align-items: center">
-                <form method="GET" action='./content_status_modify'>
+                <form method="GET"
+                      tal:attributes="action python: context.absolute_url() + '/content_status_modify'">
                   <div>
                     <i class="glyphicon glyphicon-transfer"></i>
                     Process state:

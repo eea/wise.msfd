@@ -45,7 +45,6 @@
 
                         <form id="form-edit-translation"
                           method="POST"
-                          action="./@@edit-translation"
                           tal:attributes="action string:${context/absolute_url}/@@edit-translation">
                           <input type="hidden" name="language" tal:attributes="value selectedlang" />
                           <textarea style="display:none" type="hidden" name="original" ></textarea>
@@ -74,7 +73,8 @@
                     Selected language: <span tal:content="selectedlang">EN</span>
                   </h4>
 
-                  <form method="POST" action="./@@approve-translations">
+                  <form method="POST"
+                        tal:attributes="action python: context.absolute_url() + '/@@approve-translations'">
                     <table
                       id="edit-table"
                       class="table table-listing table-striped"

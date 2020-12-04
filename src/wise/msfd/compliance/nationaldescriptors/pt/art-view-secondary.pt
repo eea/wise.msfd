@@ -53,7 +53,8 @@
                   <i class="glyphicon glyphicon-th"></i> View report(s)</a>
               </li>
               <li class="process-state" style="display:flex; align-items: center">
-                <form method="GET" action='./content_status_modify'>
+                <form method="GET"
+                    tal:attributes="action python: context.absolute_url() + '/content_status_modify'">
                   <div>
                     <i class="glyphicon glyphicon-transfer"></i>
                     Process state:
