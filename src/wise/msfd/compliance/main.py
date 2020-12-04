@@ -4,13 +4,14 @@ from io import BytesIO
 
 from zope.annotation.factory import factory
 from zope.component import adapter
-from zope.interface import implementer
+from zope.interface import implementer, alsoProvides
 
 from BTrees.OOBTree import OOBTree
 from Products.Five.browser.pagetemplatefile import PageTemplateFile
 from Products.CMFPlone.interfaces.siteroot import IPloneSiteRoot
 from persistent import Persistent
 from plone.api import portal
+from plone.protect.interfaces import IDisableCSRFProtection
 from StringIO import StringIO
 
 from wise.msfd.compliance.vocabulary import (
@@ -176,6 +177,8 @@ class RecommendationsView(BaseComplianceView):
         return res
 
     def __call__(self):
+        alsoProvides(self.request, IDisableCSRFProtection)
+
         site = portal.get()
         storage = IRecommendationStorage(site)
         storage_recom = storage.get(STORAGE_KEY, None)
@@ -294,6 +297,7 @@ class MSFDReportingHistoryView(BaseComplianceView):
 
         self.context._msfd_reporting_history_filename = self.msfd_file.filename
         self.context._msfd_reporting_history_data = data
+        self._p_changed = True
 
     def data_to_xls(self, data):
         # Create a workbook and add a worksheet.
