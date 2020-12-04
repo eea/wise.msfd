@@ -4,7 +4,7 @@
       <div class="modal-content">
         <div class="modal-header">
           <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-          <h3>Add translation</h3>
+          <h3 class="modal-title">Add translation</h3>
         </div>
         <div class="modal-body">
           <form id="form-add-translation">
@@ -21,7 +21,7 @@
       </div>
     </div>
   </div>
-  
+
   <form class="form-refresh-translation" method="POST" action="./@@translate-text" style="display: none">
     <input type="hidden" name="redirect_url" tal:attributes="value request/URL0"/>
     <input type="hidden" name="language" tal:attributes="value view/country_code | nothing" />

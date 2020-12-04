@@ -24,7 +24,9 @@
             Status message
           </div>
 
-          <h3 class="report-title" tal:content="structure view/report_title">201X Member State Report</h3>
+          <h3 class="report-title" tal:content="structure view/report_title">
+            201X Member State Report
+          </h3>
 
           <div id="report-data-navigation" tal:condition="view/can_view_assessment_data">
             <div class="back-to-art" >
@@ -43,7 +45,6 @@
                 </div>
 
                 <div class="nav-body">
-
                   <div class="art-title">
                     <a href="" tal:attributes="href view/_country_folder/absolute_url"
                       tal:content="view/country_name"
@@ -78,9 +79,13 @@
 
           <div id="download-report-data-form">
             <form method="POST" action="" tal:attributes="action request/getURL">
-              <button name="download" class="btn btn-primary">View report data in Excel</button>
+              <button name="download" class="btn btn-primary">
+                View report data in Excel
+              </button>
               <button name="translate" class="btn btn-secondary"
-                tal:condition="view/can_view_assessment_data">Auto-translate</button>
+                tal:condition="view/can_view_assessment_data">
+                Auto-translate
+              </button>
             </form>
           </div>
 
@@ -96,19 +101,27 @@
 
           <div id="read-more-modal" class="modal fade" role="dialog">
             <div class="modal-dialog">
-
               <div class="modal-content">
                 <div class="modal-header">
-                  <button type="button" class="close btn-close-modal" data-dismiss="modal">&times;</button>
+                  <button
+                    type="button"
+                    class="close btn-close-modal"
+                    data-dismiss="modal">
+                    &times;
+                  </button>
                 </div>
                 <div class="modal-body">
                   <div class="modal-content-wrapper"></div>
                 </div>
                 <div class="modal-footer">
-                  <button type="button" class="btn btn-default btn-close-modal" data-dismiss="modal">Close</button>
+                  <button
+                    type="button"
+                    class="btn btn-default btn-close-modal"
+                    data-dismiss="modal">
+                    Close
+                  </button>
                 </div>
               </div>
-
             </div>
           </div>
 
