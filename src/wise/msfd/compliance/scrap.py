@@ -1729,7 +1729,7 @@ form_structure = parse_forms_file()
     </div>
   </div>
 </metal:macro>
-<!--<div id="compliance-module-container">-->
+<!--<div id="assessment-module-container">-->
   <!--<div tal:content="structure view/compliance_content">forms</div>-->
 <!--</div>-->
 <html>

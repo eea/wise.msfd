@@ -397,7 +397,7 @@ def filter_assessment_data_2012(data, region_code, descriptor_criterions):
 class EditAssessorsForm(Form, BaseComplianceView):
     """ Assessment settings form, used to edit the assessors list
 
-    /compliance-module/national-descriptors-assessments/edit-assessors
+    /assessment-module/national-descriptors-assessments/edit-assessors
     """
 
     ignoreContext = True

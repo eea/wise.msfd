@@ -33,7 +33,7 @@
               </div>
 
               <div class="modal-body">
-                <form id="recommendation-form" method="POST"
+                <form id="msfd-history-form" method="POST"
                       tal:attributes="action context/absolute_url">
                   <div class="form-group">
                     <label>Row number:</label>

@@ -2,11 +2,11 @@
   tal:define="can_comment view/can_comment; plone nocall:context/@@plone"
   tal:attributes="id view/form_id | string:wise-compliance-form">
 
-  <script>
-    jQuery(document).ready(function() {
-      $('.help-popover').popover();
-    });
-  </script>
+<!--  <script>-->
+<!--    jQuery(document).ready(function() {-->
+<!--      $('.help-popover').popover();-->
+<!--    });-->
+<!--  </script>-->
 
   <div id="wise-compliance-form-top"
        tal:attributes="id view/form_id_top | string:wise-compliance-form-top">

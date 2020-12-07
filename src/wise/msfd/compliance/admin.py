@@ -87,7 +87,7 @@ class BootstrapCompliance(BrowserView):
     """ Bootstrap the compliance module by creating all needed country folders
     """
 
-    compliance_folder_id = 'compliance-module'
+    compliance_folder_id = 'assessment-module'
 
     @property
     def debug(self):
@@ -411,7 +411,7 @@ class BootstrapCompliance(BrowserView):
         if self.compliance_folder_id in self.context.contentIds():
             cm = self.context[self.compliance_folder_id]
         else:
-            cm = create(self.context, 'Folder', title=u'Compliance Module')
+            cm = create(self.context, 'Folder', title=u'Assessment Module')
 
             self.set_layout(cm, '@@landingpage')
             self.set_policy(cm, 'compliance_section_policy')

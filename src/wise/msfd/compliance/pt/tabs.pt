@@ -1,4 +1,4 @@
-<div tal:condition="python: 'compliance-module/help' in request.URL0"
+<div tal:condition="python: 'assessment-module/help' in request.URL0"
      id="compliance-tabs" class="full-width-marker">
   <div id="mainform-tabs"
        tal:define="tab_type view/tabs_type | string:article">

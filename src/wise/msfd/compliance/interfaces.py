@@ -19,28 +19,28 @@ class IComplianceModuleMarker(Interface):
 class IComplianceModuleFolder(Interface):
     """ A container that implements the compliance module functionality
 
-    Ex: /compliance-module/
+    Ex: /assessment-module/
     """
 
 
 class IMSFDReportingHistoryFolder(Interface):
     """ A container for MSFD reporting history
 
-    /compliance-module/msfd-reporting-history/
+    /assessment-module/msfd-reporting-history/
     """
 
 
 class INationalDescriptorsFolder(Interface):
     """ A container for national descriptors assessments
 
-    Ex: /compliance-module/national-descriptors-assessments/
+    Ex: /assessment-module/national-descriptors-assessments/
     """
 
 
 class ICountryDescriptorsFolder(Schema):
     """ A container for a country's descriptor assessments
 
-    Ex: /compliance-module/national-descriptors-assessments/lv/
+    Ex: /assessment-module/national-descriptors-assessments/lv/
     """
 
     title = TextLine(title=u'Title', required=True)
@@ -49,35 +49,35 @@ class ICountryDescriptorsFolder(Schema):
 class ICountryStartReports(Interface):
     """ Interface used to override the HTML head title
 
-    Ex: /compliance-module/national-descriptors-assessments/lv/reports
+    Ex: /assessment-module/national-descriptors-assessments/lv/reports
     """
 
 
 class ICountryStartAssessments(Interface):
     """ Interface used to override the HTML head title
 
-    Ex: /compliance-module/national-descriptors-assessments/lv/assessments
+    Ex: /assessment-module/national-descriptors-assessments/lv/assessments
     """
 
 
 class INationalRegionDescriptorFolder(Interface):
     """ A container for a country's region
 
-    Ex: /compliance-module/national-descriptors-assessments/lv/bal
+    Ex: /assessment-module/national-descriptors-assessments/lv/bal
     """
 
 
 class IDescriptorFolder(Interface):
     """ Container for individual descriptor article assessments
 
-    Ex: /compliance-module/national-descriptors-assessments/lv/bal/d5
+    Ex: /assessment-module/national-descriptors-assessments/lv/bal/d5
     """
 
 
 class INationalDescriptorAssessment(Schema):
     """ A Country > Region > Descriptor > Article assessment
 
-    Ex: /compliance-module/national-descriptors-assessments/lv/bal/d5/art8
+    Ex: /assessment-module/national-descriptors-assessments/lv/bal/d5/art8
     """
 
 
@@ -85,14 +85,14 @@ class INationalDescriptorAssessmentSecondary(Schema):
     """ A Country > Region > Article assessment, used for "secondary"
         articles like Article 3-4, Article 7, Article8ESA
 
-    Ex: /compliance-module/national-descriptors-assessments/lv/bal/art3-4
+    Ex: /assessment-module/national-descriptors-assessments/lv/bal/art3-4
     """
 
 
 class ICommentsFolder(Schema):
     """ A container for a track of discussion (comments)
 
-    Ex: /compliance-module/national-descriptors-assessments/lv/bal/d5/art8/tl
+    Ex: /assessment-module/national-descriptors-assessments/lv/bal/d5/art8/tl
     """
 
 
@@ -128,7 +128,7 @@ class IReportDataViewSecondary(Interface):
 class IEditAssessorsForm(Interface):
     """ Interface for assessment settings form
 
-    Ex: /compliance-module/national-descriptors-assessments/edit-assessors
+    Ex: /assessment-module/national-descriptors-assessments/edit-assessors
     """
 
     assessed_by = Text(
@@ -148,36 +148,36 @@ class IRegionalReportDataView(Interface):
 class IRegionalDescriptorsFolder(Interface):
     """ A container for regional descriptors
 
-    Ex: /compliance-module/regional-descriptors-assessments
+    Ex: /assessment-module/regional-descriptors-assessments
     """
 
 
 class IRegionalDescriptorRegionsFolder(Interface):
     """ A container for a regions descriptors
 
-    Ex: /compliance-module/regional-descriptors-assessments/bal
+    Ex: /assessment-module/regional-descriptors-assessments/bal
     """
 
 
 class IRegionStartReports(Interface):
-    """ /compliance-module/regional-descriptors-assessments/bal/reports
+    """ /assessment-module/regional-descriptors-assessments/bal/reports
     """
 
 
 class IRegionStartAssessments(Interface):
-    """ /compliance-module/regional-descriptors-assessments/bal/assessments
+    """ /assessment-module/regional-descriptors-assessments/bal/assessments
     """
 
 
 class IRegionalDescriptorAssessment(Schema):
     """ A Region > Descriptor > Article assessment
 
-    Ex: /compliance-module/regional-descriptors-assessments/bal/d5/art8
+    Ex: /assessment-module/regional-descriptors-assessments/bal/d5/art8
     """
 
 
 class IRegionalEditAssessmentForm(Interface):
-    """ /compliance-module/regional-descriptors-assessments/bal/d6/art8/
+    """ /assessment-module/regional-descriptors-assessments/bal/d6/art8/
         /@@edit-assessment-data-2018
     """
 
@@ -187,28 +187,28 @@ class IRegionalEditAssessmentForm(Interface):
 class INationalSummaryFolder(Interface):
     """ A container for national summaries
 
-    Ex: /compliance-module/national-summaries
+    Ex: /assessment-module/national-summaries
     """
 
 
 class INationalSummaryEdit(Interface):
     """ A container for national summaries edit
 
-    Ex: /compliance-module/national-summaries
+    Ex: /assessment-module/national-summaries
     """
 
 
 class INationalSummaryCountryFolder(Interface):
     """ A container for national summaries countries
 
-    Ex: /compliance-module/national-summaries/lv
+    Ex: /assessment-module/national-summaries/lv
     """
 
 
 class INationalSummaryOverviewFolder(Interface):
     """ A container for national summaries overview
 
-        Ex: /compliance-module/national-summaries/lv/overview
+        Ex: /assessment-module/national-summaries/lv/overview
         """
 
 
@@ -217,12 +217,12 @@ class INationalSummaryOverviewFolder(Interface):
 class IRegionalSummaryFolder(Interface):
     """ A container for regional summaries
 
-    Ex: /compliance-module/regional-summaries
+    Ex: /assessment-module/regional-summaries
     """
 
 
 class IRegionalSummaryRegionFolder(Interface):
     """ A container for regional summaries regions
 
-    Ex: /compliance-module/regional-summaries/bal
+    Ex: /assessment-module/regional-summaries/bal
     """
