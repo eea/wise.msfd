@@ -176,9 +176,9 @@
     </table>
   </div>
 
-<!--  <script>-->
-<!--    jQuery(document).ready(function() {-->
-<!--      $('.help-popover').popover();-->
-<!--    });-->
-<!--  </script>-->
+  <script>
+    jQuery(document).ready(function() {
+      $('.help-popover').popover();
+    });
+  </script>
 </div>
