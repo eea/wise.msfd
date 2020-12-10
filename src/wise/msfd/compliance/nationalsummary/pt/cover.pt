@@ -56,7 +56,7 @@
       </tbody>
     </table>
     <div class="logos" tal:content="structure view/logos">
-      <img src="/++resource++static_images/cover_logos.png">
+      <img src="/marine/++resource++static_images/cover_logos.png">
     </div>
 
   </div>

@@ -33,7 +33,7 @@
             <required>False</required>
             <title>Cover page logo</title>
             <default>
-                &lt;img src="/++resource++static_images/cover_logos.png"&gt;
+                &lt;img src="/marine/++resource++static_images/cover_logos.png"&gt;
             </default>
         </field>
         <field name="scope_of_marine_waters"
