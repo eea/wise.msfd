@@ -390,8 +390,6 @@ class AssessmentExportView(BaseNatSummaryView):
     def _get_css(self):
         return [
             resource_filename('wise.msfd',
-                              'static/wise/dist/css/bootstrap.css'),
-            resource_filename('wise.msfd',
                               'static/wise/dist/css/compliance.css'),
             resource_filename('wise.msfd',
                               'static/wise/dist/css/pdf_export.css'),
