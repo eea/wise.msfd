@@ -61,6 +61,12 @@ class AssessmentExportCover(BaseNatSummaryView):
         field = 'logo'
         value = self.get_field_value(field)
 
+        if '../' in value:
+            return None
+
+        if value == '-':
+            return None
+
         return value
 
     def authors_logos(self):
@@ -400,7 +406,8 @@ class AssessmentExportView(BaseNatSummaryView):
         cover_url = absolute_url + '/export-cover'
 
         if 'localhost' in absolute_url:
-            return ""
+            cover_url = 'https://water.europa.eu/marine/assessment-module/' \
+                        'national-summaries/lv/export-cover'
             cover_url = cover_url.replace('localhost:5080',
                                           'office.pixelblaster.ro:4880')
 
@@ -460,6 +467,7 @@ class AssessmentExportView(BaseNatSummaryView):
             'footer-right': '[page]',
             'encoding': "UTF-8",
             'load-error-handling': 'ignore',
+            # 'load-media-error-handling': 'ignore'
         }
         css = self._get_css()
         cover = self._get_cover()

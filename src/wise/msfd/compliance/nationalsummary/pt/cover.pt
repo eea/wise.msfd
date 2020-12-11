@@ -55,8 +55,15 @@
         </tr>
       </tbody>
     </table>
-    <div class="logos" tal:content="structure view/logos">
-      <img src="/marine/++resource++static_images/cover_logos.png">
+    <div class="logos">
+      <tal:cond tal:condition="view/logos">
+        <div tal:replace="structure view/logos"></div>
+      </tal:cond>
+      <tal:cond tal:condition="python: not view.logos()">
+        <p>
+          <img tal:attributes="src python: context.Plone.absolute_url() + '/++resource++static_images/cover_logos.png';">
+        </p>
+      </tal:cond>
     </div>
 
   </div>
