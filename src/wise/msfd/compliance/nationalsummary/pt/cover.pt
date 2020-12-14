@@ -1,5 +1,7 @@
 <head>
-  <link rel="stylesheet" type="text/css" href="/marine/++resource++static_css/compliance.css">
+  <link rel="stylesheet" type="text/css"
+        href="/marine/++resource++static_css/compliance.css"
+        tal:attributes="href python: context.Plone.absolute_url() + '/++resource++static_css/compliance.css';">
 </head>
 <body>
   <div class="national-summary-cover">
