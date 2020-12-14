@@ -1,7 +1,7 @@
 <head>
   <link rel="stylesheet" type="text/css"
         href="/marine/++resource++static_css/compliance.css"
-        tal:attributes="href python: context.Plone.absolute_url() + '/++resource++static_css/compliance.css';">
+        tal:attributes="href python: context.Plone.absolute_url().replace('https', 'http') + '/++resource++static_css/compliance.css';">
 </head>
 <body>
   <div class="national-summary-cover">
@@ -52,7 +52,7 @@
             Tel: +32 2 506 1000; fax : +32 2 514 3603;
             e-mail: <a href="mailto:melanie.muro@milieu.be">melanie.muro@milieu.be</a>
             and <a href="mailto:paola.banfi@milieu.be">paola.banfi@milieu.be</a>;
-            web address: <a href="https://www.milieu.be">www.milieu.be</a>
+            web address: <a href="http://www.milieu.be">www.milieu.be</a>
           </td>
         </tr>
       </tbody>
@@ -63,7 +63,7 @@
       </tal:cond>
       <tal:cond tal:condition="python: not view.logos()">
         <p>
-          <img tal:attributes="src python: context.Plone.absolute_url() + '/++resource++static_images/cover_logos.png';">
+          <img tal:attributes="src python: context.Plone.absolute_url().replace('https', 'http') + '/++resource++static_images/cover_logos.png';">
         </p>
       </tal:cond>
     </div>
