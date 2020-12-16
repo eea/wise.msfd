@@ -1,7 +1,6 @@
 <div tal:condition="view/render_header">
   <div class="nat-sum-report-header">
 
-    <!-- <div metal:use&#45;macro="context/@@compliance&#45;nav&#45;macros/macros/nav"></div> -->
     <div metal:use-macro="context/global_statusmessage/macros/portal_message">
       Status message
     </div>
@@ -17,35 +16,11 @@
       </div>
     </div>
 
-    <div class="process-state-phase-form">
-      <form class="process-state"
-          method="GET"
-          tal:attributes="action python: context.absolute_url() + '/content_status_modify'">
-        <div>
-          <i class="glyphicon glyphicon-transfer"></i>
-          Process state:
-          <strong tal:content="view/get_status">Phase 0</strong>
-
-          <div class="phase-selector"
-            tal:condition="python: not(view.read_only_access)">
-            <select onchange="javascript:this.form.submit()"
-              name="workflow_action"
-              class="pat-select2"
-              data-pat-select2="width:10em">
-              <option value=''>Choose action...</option>
-              <tal:rep repeat="trans view/get_transitions">
-                <option tal:content="trans/title" tal:attributes="value trans/id">Send to Phase 0</option>
-              </tal:rep>
-            </select>
-          </div>
-        </div>
-      </form>
-    </div>
-
-    <div id="download-report-data-form">
+    <div tal:condition="False"
+        id="download-report-data-form">
       <form method="POST" action="" tal:attributes="action request/getURL">
-        <button name="edit-data" class="btn btn-primary">Edit</button>
-        <!--<a class="btn btn-primary" href="./assessment-summary" target="_blank">Assessment summary</a>-->
+<!--?        <button name="edit-data" class="btn btn-primary">Edit</button>-->
+<!--?        <a class="btn btn-primary" href="./assessment-summary" target="_blank">Assessment summary</a>-->
       </form>
     </div>
 

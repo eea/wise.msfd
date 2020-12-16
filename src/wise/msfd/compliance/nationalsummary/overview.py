@@ -26,6 +26,9 @@ logger = logging.getLogger('wise.msfd')
 class ReportData2018SecondaryOverview(ReportData2018Secondary,
                                       BaseNatSummaryView):
     is_translatable = False
+    report_header_template = ViewPageTemplateFile(
+        'pt/report-data-header-secondary.pt'
+    )
 
     @property
     def descriptor(self):
@@ -54,7 +57,7 @@ class ReportData2018SecondaryOverview(ReportData2018Secondary,
         rendered_results = []
 
         for (index, url) in enumerate(urls[:1]):
-            prev_url = None
+            prev_url = url
             view = self.get_implementation_view(url, prev_url)
             report = self.get_report_metadata_from_view(view, url)
 
@@ -86,7 +89,7 @@ class ReportData2018SecondaryOverview(ReportData2018Secondary,
                 res.append((mru, _rows))
 
             report_header = self.report_header_template(
-                title=(index == 0 and self.report_header_title or ''),
+                title=self.title,
                 factsheet=factsheet,
                 report_by=report_by,
                 source_file=source_file,
@@ -94,7 +97,7 @@ class ReportData2018SecondaryOverview(ReportData2018Secondary,
                 report_date=report_date.date(),
                 help_text=self.help_text,
                 multiple_source_files=False,
-                show_navigation=index == 0,
+                show_navigation=False,
             )
 
             rendered_results.append(template(data=res,
@@ -105,21 +108,18 @@ class ReportData2018SecondaryOverview(ReportData2018Secondary,
 
         return res or "No data found"
 
-
     def __call__(self):
         return self.render_reportdata()
 
 
 class Article7Table(ReportData2018SecondaryOverview):
-    @property
-    def article(self):
-        return 'Art7'
+    article = 'Art7'
+    title = 'Who is responsible for MSFD implementation?'
 
 
 class Article34Table(ReportData2018SecondaryOverview):
-    @property
-    def article(self):
-        return 'Art4'
+    article = 'Art4'
+    title = 'Where is the MSFD implemented? & Areas for MSFD reporting'
 
 
 class NationalOverviewView(BaseNatSummaryView):
