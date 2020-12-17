@@ -127,11 +127,25 @@
     <!-- <element name="MRU Name" translate="true">MRU Name</element> -->
 
   <Art3>
-    <element name="Member state description" translate="true">Member state description</element>
-    <element name="Region / subregion description" translate="true">Region / subregion description</element>
-    <element name="Subdivisions" translate="true">Subdivisions</element>
-    <element name="Marine reporting units description" translate="true">MRUs description (AreaType)</element>
-    <element name="MRUs">MRUs</element>
+    <element section="marine_waters" name="Member state marine waters" translate="true">Member state marine waters</element>
+    <element section="marine_areas" name="Region / subregion description" translate="true">Region / subregion description</element>
+    <element section="marine_areas" name="Subdivisions" translate="true">Subdivisions</element>
+    <element section="marine_areas" name="Marine reporting units description" translate="true">MRUs description (AreaType)</element>
+    <element section="marine_areas" name="MRUs">MRUs</element>
+    <element section="cooperation" name="Region/ subregion">Region/ subregion</element>
+    <element section="cooperation" name="Art. 8 countries involved">Art. 8 countries involved</element>
+    <element section="cooperation" name="Art. 8 nature of coordination" translate="true">Art. 8 nature of coordination</element>
+    <element section="cooperation" name="Art. 8 regional coherence">Art. 8 regional coherence</element>
+    <element section="cooperation" name="Art. 8 regional coherence problems" translate="true">Art. 8 regional coherence problems</element>
+    <element section="cooperation" name="Art. 9 countries involved">Art. 9 countries involved</element>
+    <element section="cooperation" name="Art. 9 nature of coordination" translate="true">Art. 9 nature of coordination</element>
+    <element section="cooperation" name="Art. 9 regional coherence">Art. 9 regional coherence</element>
+    <element section="cooperation" name="Art. 9 regional coherence problems" translate="true">Art. 9 regional coherence problems</element>
+    <element section="cooperation" name="Art. 10 countries involved">Art. 10 countries involved</element>
+    <element section="cooperation" name="Art. 10 nature of coordination" translate="true">Art. 10 nature of coordination</element>
+    <element section="cooperation" name="Art. 10 regional coherence">Art. 10 regional coherence</element>
+    <element section="cooperation" name="Art. 10 regional coherence problems" translate="true">Art. 10 regional coherence problems</element>
+
   </Art3>
 
   <Art7>

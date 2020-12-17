@@ -231,16 +231,17 @@ class A34Item_2018_main(Item):
     mrus_template = Template('pt/mrus-table-art34.pt')
     TRANSLATABLES_EXTRA = ['MRU Name']
 
-    def __init__(self, context, request, description,
-                 mru_nodes, previous_mrus=None):
+    def __init__(self, context, request, description, mru_nodes,
+                 root, previous_mrus=None):
 
         super(A34Item_2018_main, self).__init__([])
         self.description = description
+        self.root = root
         self.context = context
         self.request = request
 
         attrs = [
-            ('Member state description', self.member_state_descr),
+            ('Member state marine waters', self.member_state_descr),
             ('Region / subregion description', self.region_subregion),
             ('Subdivisions', self.subdivisions),
             ('Marine reporting units description', self.assessment_areas),
@@ -258,7 +259,9 @@ class A34Item_2018_main(Item):
 
         sorted_mrus = sorted(mrus, key=lambda x: x['Marine Reporting Unit'])
         self._mrus = sorted_mrus
-        self.available_mrus = [x['Marine Reporting Unit'] for x in sorted_mrus]
+        self.available_mrus = [
+            x['Marine Reporting Unit'] for x in sorted_mrus
+        ]
         self.available_regions = set(
             [x['Region or subregion'] for x in sorted_mrus]
         )
@@ -278,6 +281,39 @@ class A34Item_2018_main(Item):
 
         # Region or subregion Member state    Area type   MRU ID  Marine
         # reporting unit  Marine reporting unit
+
+        cooperation_attrs = [
+            ('Region/ subregion', self.coop_region_subregion()),
+            ('Art. 8 countries involved',
+             self.coop_by_params('Art8', 'CountriesInvolved')),
+            ('Art. 8 nature of coordination',
+             self.coop_by_params('Art8', 'NatureCoordination')),
+            ('Art. 8 regional coherence',
+             self.coop_by_params('Art8', 'RegionalCoherence')),
+            ('Art. 8 regional coherence problems',
+             self.coop_by_params('Art8', 'RegionalCoordinationProblems')),
+            ('Art. 9 countries involved',
+             self.coop_by_params('Art9', 'CountriesInvolved')),
+            ('Art. 9 nature of coordination',
+             self.coop_by_params('Art9', 'NatureCoordination')),
+            ('Art. 9 regional coherence',
+             self.coop_by_params('Art9', 'RegionalCoherence')),
+            ('Art. 9 regional coherence problems',
+             self.coop_by_params('Art9', 'RegionalCoordinationProblems')),
+            ('Art. 10 countries involved',
+             self.coop_by_params('Art10', 'CountriesInvolved')),
+            ('Art. 10 nature of coordination',
+             self.coop_by_params('Art10', 'NatureCoordination')),
+            ('Art. 10 regional coherence',
+             self.coop_by_params('Art10', 'RegionalCoherence')),
+            ('Art. 10 regional coherence problems',
+             self.coop_by_params('Art10', 'RegionalCoordinationProblems')),
+
+        ]
+
+        for title, data in cooperation_attrs:
+            self[title] = data
+            setattr(self, title, data)
 
     def get_translatable_extra_data(self):
         """ Get the translatable fields from the MRU nodes
@@ -336,6 +372,19 @@ class A34Item_2018_main(Item):
 
         return text and text[0] or ''
 
+    def coop_region_subregion(self):
+        texts = xp('//w:Cooperation/w:RegionsSubRegions/text()', self.root)
+
+        return texts and ' !!! '.join(set(texts)) or ''
+
+    def coop_by_params(self, article, node_name):
+        xpath = '//w:Cooperation[w:Topic = "{}"]' \
+                '/w:{}/descendant-or-self::*/text()'.format(article, node_name)
+
+        texts = xp(xpath, self.root)
+
+        return texts and ', '.join(set(sorted(texts))) or ''
+
 
 class Article34_2018(BaseArticle2012):
     """ Implementation for Article 3/4 2018 reported data
@@ -356,7 +405,6 @@ class Article34_2018(BaseArticle2012):
         super(Article34_2018, self).__init__(context, request, country_code,
                                              region_code, descriptor, article,
                                              muids)
-
         self.filename = filename
         self.previous_mrus = previous_mrus
 
@@ -373,10 +421,12 @@ class Article34_2018(BaseArticle2012):
 
         mru_nodes = xp('//w:GeographicalBoundariesID', self.root)
         description = xp('//w:Description', self.root)[0]
+        # cooperation_nodes = xp('//w:Cooperation', self.root)
 
         # TODO: also send the previous file data
         main_node = A34Item_2018_main(
-            self, self.request, description, mru_nodes, self.previous_mrus
+            self, self.request, description, mru_nodes, self.root,
+            self.previous_mrus
         )
         self.translatable_extra_data = main_node.get_translatable_extra_data()
         self.available_mrus = main_node.available_mrus

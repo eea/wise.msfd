@@ -1311,8 +1311,10 @@ class ReportData2018Secondary(ReportData2018):
         if self.article not in ('Art3', 'Art4'):
             return get_art_name()
 
-        art_name = '{} & {}'.format(get_art_name('Art3'),
-                                    get_art_name('Art4'))
+        art_name = ' & '.join((
+            get_art_name('Art3'), get_art_name('Art4'),
+            get_art_name('Art5'), get_art_name('Art6')
+        ))
 
         return art_name
 
@@ -1387,8 +1389,9 @@ class ReportData2018Secondary(ReportData2018):
 
         if self.article in ['Art3', 'Art4'] and prev_filename:
             prev_view = klass(
-                self, self.request, self.country_code, self.country_region_code,
-                self.descriptor, self.article, self.muids, prev_filename
+                self, self.request, self.country_code,
+                self.country_region_code, self.descriptor, self.article,
+                self.muids, prev_filename
             )
             prev_view.setup_data()
             previous_mrus = prev_view.available_mrus

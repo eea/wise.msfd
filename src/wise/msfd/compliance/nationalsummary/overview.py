@@ -59,19 +59,9 @@ class ReportData2018SecondaryOverview(ReportData2018Secondary,
         for (index, url) in enumerate(urls[:1]):
             prev_url = url
             view = self.get_implementation_view(url, prev_url)
-            report = self.get_report_metadata_from_view(view, url)
 
             # Report Header
-            report_by = None
             report_date = get_envelope_release_date(url)
-
-            if report:
-                report_by = report.ContactOrganisation
-                # report_date = report.ReportingDate
-
-            res = []
-            source_file = (url.rsplit('/', 1)[-1], url + '/manage_document')
-            factsheet = get_factsheet_url(url)
 
             view()      # updates the view
             data = [Proxy2018(row, self) for row in view.cols]
@@ -82,22 +72,23 @@ class ReportData2018SecondaryOverview(ReportData2018Secondary,
                 data_by_mru = {'no mru': data}
 
             fields = get_report_definition(self.article).get_fields()
+            fields_filtered = [
+                f for f in fields
+                if self.render_sections.get(f.section, True)
+            ]
+
+            res = []
 
             for mru, rows in data_by_mru.items():
-                _rows = items_to_rows(rows, fields)
+                _rows = items_to_rows(rows, fields_filtered)
 
                 res.append((mru, _rows))
 
             report_header = self.report_header_template(
                 title=self.title,
-                factsheet=factsheet,
-                report_by=report_by,
-                source_file=source_file,
-                report_due=None,
                 report_date=report_date.date(),
-                help_text=self.help_text,
-                multiple_source_files=False,
                 show_navigation=False,
+                article_name=self.article_name
             )
 
             rendered_results.append(template(data=res,
@@ -115,11 +106,41 @@ class ReportData2018SecondaryOverview(ReportData2018Secondary,
 class Article7Table(ReportData2018SecondaryOverview):
     article = 'Art7'
     title = 'Who is responsible for MSFD implementation?'
+    render_sections = {}
 
 
-class Article34Table(ReportData2018SecondaryOverview):
+class Article34TableMarineWaters(ReportData2018SecondaryOverview):
     article = 'Art4'
-    title = 'Where is the MSFD implemented? & Areas for MSFD reporting'
+    title = 'Where is the MSFD implemented?'
+    article_name = 'Art. 3(1) Marine waters'
+    render_sections = {
+        'marine_waters': True,
+        'marine_areas': False,
+        'cooperation': False,
+    }
+
+
+class Article34TableMarineAreas(ReportData2018SecondaryOverview):
+    article = 'Art4'
+    title = 'Areas for MSFD reporting'
+    article_name = 'Art. 4/2017 Decision: Marine regions, subregions, ' \
+                   'and subdivisions'
+    render_sections = {
+        'marine_waters': False,
+        'marine_areas': True,
+        'cooperation': False,
+    }
+
+
+class Article34TableCooperation(ReportData2018SecondaryOverview):
+    article = 'Art4'
+    title = 'Regional cooperation'
+    article_name = 'Art. 5(2) and Art. 6 Regional cooperation'
+    render_sections = {
+        'marine_waters': False,
+        'marine_areas': False,
+        'cooperation': True,
+    }
 
 
 class NationalOverviewView(BaseNatSummaryView):
@@ -145,7 +166,9 @@ class NationalOverviewView(BaseNatSummaryView):
         self.tables = [
             report_header,
             Article7Table(self.context, self.request)(),
-            Article34Table(self.context, self.request)(),
+            Article34TableMarineWaters(self.context, self.request)(),
+            Article34TableMarineAreas(self.context, self.request)(),
+            Article34TableCooperation(self.context, self.request)(),
             # trans_edit_html,
         ]
 

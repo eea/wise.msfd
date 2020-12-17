@@ -15,7 +15,7 @@ ASSESSED_ARTICLES = (
     ('Art3', 'Art. 3(1) Marine waters',),
     ('Art4', 'Art. 4/2017 Decision: Marine regions, subregions, '
      'and subdivisions '),
-    ('Art5', '(MRUs)', ),
+    ('Art5', 'Art. 5(2)', ),
     ('Art6', 'Art. 6 Regional cooperation', ),
     ('Art7', 'Art. 7 Competent authorities', ),
     ('Art8', 'Art. 8 Initial assessment (and Art. 17 updates)', ),
