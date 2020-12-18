@@ -23,7 +23,7 @@ from zope.interface import implements
 
 import pdfkit
 
-from ..nationalsummary.pdfexport import (AssessmentExportCover,
+from ..nationalsummary.assessmentsummary import (AssessmentExportCover,
                                          ProgressAssessment, SummaryAssessment)
 
 from .base import BaseRegSummaryView
@@ -135,7 +135,7 @@ class RegProgressAssessment(BaseRegSummaryView, ProgressAssessment):
     template = ViewPageTemplateFile('pt/progress-assessment.pt')
 
 
-class AssessmentExportView(BaseRegSummaryView):
+class AssessmentSummaryView(BaseRegSummaryView):
     implements(IRegionalSummaryRegionFolder)
 
     help_text = "HELP TEXT"

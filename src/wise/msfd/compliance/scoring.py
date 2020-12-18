@@ -89,12 +89,13 @@ class OverallScores(object):
             overall_score += score * weights[phase]
             max_score += getattr(self, phase)['max_score'] * weights[phase]
 
-        # overall_score = int(round(overall_score))
-
         if max_score == 0:  # all phases not relevant
             return '-', '-'
 
-        final_score = int(round((overall_score / max_score) * 100))
+        final_score = int(round(overall_score))
+
+        # TODO this formula is not correct, why was it introduced
+        # final_score = int(round((overall_score / max_score) * 100))
 
         return get_range_index(final_score), final_score
 
