@@ -4,74 +4,73 @@ module.exports = {
       options: {
         compress: false,
         sourceMap: true,
-        sourceMapFilename: '<%= path.dest %>/css/source.css.map',
-        sourceMapURL: './source.css.map'
+        sourceMapFilename: "<%= path.dest %>/css/source.css.map",
+        sourceMapURL: "./source.css.map",
       },
       files: {
-          '<%= path.dest %>/css/msfd_search.css': [
-              '<%= path.src %>/less/search-form.less',
-              '<%= path.src %>/less/select2-override.less',
-              '<%= path.src %>/less/select2-top-override.less',
-              '<%= path.src %>/less/search-style.less'
-          ],
-          '<%= path.dest %>/css/tabs.css' : [
-              '<%= path.src %>/less/tabs.less',
-              '<%= path.src %>/less/select2-override.less',
-              '<%= path.src %>/less/select2-top-override.less'
-          ],
-          '<%= path.dest %>/css/compliance.css': [
-            '<%= path.src %>/less/compliance.less',
-            '<%= path.src %>/less/report-page.less',
-            '<%= path.src %>/less/assessment-edit.less',
-            '<%= path.src %>/less/translate.less',
-            '<%= path.src %>/less/buttons.less',
-            '<%= path.src %>/less/bootstrap/tables.less',
-            '<%= path.src %>/less/bootstrap/popovers.less',
-            '<%= path.src %>/less/bootstrap/tooltips.less',
-            '<%= path.src %>/less/bootstrap/modals.less',
-            '<%= path.src %>/less/switch.less',
-            '<%= path.src %>/less/regional-descriptors.less',
-          ],
-          '<%= path.dest %>/css/pdf_export.css': [
-            '<%= path.src %>/less/pdf_export.less',
-          ]
-      }
-    }
+        "<%= path.dest %>/css/msfd_search.css": [
+          "<%= path.src %>/less/search-form.less",
+          "<%= path.src %>/less/select2-override.less",
+          "<%= path.src %>/less/select2-top-override.less",
+          "<%= path.src %>/less/search-style.less",
+        ],
+        "<%= path.dest %>/css/tabs.css": [
+          "<%= path.src %>/less/tabs.less",
+          "<%= path.src %>/less/select2-override.less",
+          "<%= path.src %>/less/select2-top-override.less",
+        ],
+        "<%= path.dest %>/css/compliance.css": [
+          "<%= path.src %>/less/compliance.less",
+          "<%= path.src %>/less/report-page.less",
+          "<%= path.src %>/less/assessment-edit.less",
+          "<%= path.src %>/less/translate.less",
+          "<%= path.src %>/less/buttons.less",
+          "<%= path.src %>/less/bootstrap/tables.less",
+          "<%= path.src %>/less/bootstrap/popovers.less",
+          "<%= path.src %>/less/bootstrap/tooltips.less",
+          "<%= path.src %>/less/bootstrap/modals.less",
+          "<%= path.src %>/less/switch.less",
+          "<%= path.src %>/less/regional-descriptors.less",
+        ],
+        "<%= path.dest %>/css/pdf_export.css": [
+          "<%= path.src %>/less/pdf_export.less",
+        ],
+      },
+    },
   },
   copy: {
     scripts: {
       files: [
-        { expand: true,
+        {
+          expand: true,
           flatten: true,
-          src: [
-            '<%= path.src %>/js/*.js'
-          ],
-          dest: '<%= path.dest %>/js/'
-        }
-      ]
-    }
+          src: ["<%= path.src %>/js/*.js"],
+          dest: "<%= path.dest %>/js/",
+        },
+      ],
+    },
   },
   watch: {
     styles: {
-      files: ['<%= path.src %>/less/**/*.less'],
-      tasks: ['less:development'],
+      files: ["<%= path.src %>/less/**/*.less"],
+      tasks: ["less:development"],
       options: {
-        nospawn: true
-      }
+        nospawn: true,
+      },
     },
     scripts: {
-      files: ['<%= path.src %>/js/**/*.js'],
-      tasks: ['copy'],
+      files: ["<%= path.src %>/js/**/*.js"],
+      tasks: ["copy"],
       options: {
-        nospawn: true
-      }
+        nospawn: true,
+      },
     },
     templates: {
-      files: ['<%= path.static %>/src/tpl/**/*.hbs'],
-      tasks: ['template:dev'],
+      files: ["<%= path.static %>/src/tpl/**/*.hbs"],
+      tasks: ["template:dev"],
       options: {
-        nospawn: true
-      }
-    }
-  }
+        nospawn: true,
+      },
+    },
+  },
 };

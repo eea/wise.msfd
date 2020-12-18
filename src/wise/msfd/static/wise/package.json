@@ -1,7 +1,7 @@
 {
-  "name": "wise",
+  "name": "wise.msfd",
   "version": "1.0.0",
-  "description": "",
+  "description": "wise MSFD implementation",
   "main": "Gruntfile.js",
   "dependencies": {
     "autoprefixer": "^6.3.5",
@@ -13,11 +13,13 @@
     "grunt-contrib-uglify": "^1.0.1",
     "grunt-contrib-watch": "^1.0.0",
     "grunt-postcss": "^0.8.0",
-    "grunt-template-html": "^0.1.4",
     "handlebars": "^4.0.8",
     "load-grunt-tasks": "^3.4.1",
     "merge": "^1.2.0"
   },
-  "author": "Valentin Popescu",
-  "license": "ISC"
+  "author": "Eaudeweb",
+  "license": "ISC",
+  "devDependencies": {
+    "grunt-cache-breaker": "^2.0.1"
+  }
 }

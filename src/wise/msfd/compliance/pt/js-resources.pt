@@ -1,12 +1,12 @@
 <tal:cond tal:condition="python: 'assessment-module' in request.URL0 or 'msfd-data' in request.URL0">
-  <script src="/marine/++resource++static_js/tabs.js"></script>
+  <script src="/marine/++resource++static_js/tabs.js?rel=e49a198c70"></script>
 </tal:cond>
 
 <tal:cond tal:condition="python: 'assessment-module' in request.URL0">
   <script src="/marine/++resource++msfd/bs3/js/bootstrap.min.js"></script>
   <script src="/marine/++resource++static_js/wise_javascript_variables.js"></script>
-  <script src="/marine/++resource++static_js/compliance.js"></script>
-  <script src="/marine/++resource++static_js/assessment-edit.js"></script>
+  <script src="/marine/++resource++static_js/compliance.js?rel=af86318fad"></script>
+  <script src="/marine/++resource++static_js/assessment-edit.js?rel=b04d81a794"></script>
   <script src="/marine/++resource++msfd.trans/translate-comp.js"></script>
-  <script src="/marine/++resource++msfd/js/table-edit.js"></script>
+  <script src="/marine/++resource++msfd/js/table-edit.js?rel=fc7390ae64"></script>
 </tal:cond>
