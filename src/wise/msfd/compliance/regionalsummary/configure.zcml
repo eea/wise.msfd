@@ -27,7 +27,7 @@
   <browser:page
     for="..interfaces.IRegionalSummaryRegionFolder"
     name="assessment-summary"
-    class=".pdfexport.AssessmentExportView"
+    class=".assessmentsummary.AssessmentSummaryView"
     template="./pt/report-data-view.pt"
     permission="wise.ViewAssessmentData"
     />
@@ -36,7 +36,7 @@
   <browser:page
     for="..interfaces.IRegionalSummaryRegionFolder"
     name="export-cover"
-    class=".pdfexport.RegionalAssessmentExportCover"
+    class=".assessmentsummary.RegionalAssessmentExportCover"
     permission="zope2.View"
     />
 
