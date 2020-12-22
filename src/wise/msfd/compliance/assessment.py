@@ -15,20 +15,23 @@ from Products.Five.browser.pagetemplatefile import (PageTemplateFile,
 
 from wise.msfd import db, sql2018
 from wise.msfd.compliance.content import AssessmentData
-from wise.msfd.compliance.interfaces import (ICountryDescriptorsFolder,
-                                             IEditAssessorsForm,
-                                             INationalDescriptorsFolder,
-                                             IRegionalDescriptorAssessment,
-                                             IRegionalDescriptorRegionsFolder,
-                                             IRegionalDescriptorsFolder)
+from wise.msfd.compliance.interfaces import (
+    ICountryDescriptorsFolder, IDescriptorFolder, IEditAssessorsForm,
+    INationalDescriptorAssessment, INationalDescriptorsFolder,
+    INationalRegionDescriptorFolder, IRegionalDescriptorAssessment,
+    IRegionalDescriptorRegionsFolder, IRegionalDescriptorsFolder
+)
 from wise.msfd.compliance.regionaldescriptors.base import BaseRegComplianceView
 from wise.msfd.compliance.scoring import (CONCLUSIONS, get_overall_conclusion,
                                           get_range_index, OverallScores)
-from wise.msfd.compliance.utils import get_assessors, set_assessors
+from wise.msfd.compliance.utils import (get_assessors, set_assessors,
+                                        ordered_regions_sortkey)
 from wise.msfd.compliance.vocabulary import (REGIONAL_DESCRIPTORS_REGIONS,
                                              SUBREGIONS_TO_REGIONS)
 from wise.msfd.gescomponents import get_descriptor  # get_descriptor_elements
-from wise.msfd.utils import t2rt
+from wise.msfd.utils import (ItemList, TemplateMixin, db_objects_to_dict,
+                             fixedorder_sortkey, t2rt, timeit)
+
 from z3c.form.button import buttonAndHandler
 from z3c.form.field import Fields
 from z3c.form.form import Form
@@ -1022,8 +1025,10 @@ class AssessmentDataMixin(object):
         overall_score_2012 = ("{} ({})".format(conclusion_2012, score_2012),
                               self.get_color_for_score(score_2012))
 
-        __key = (region_code, descriptor, article)
-        self.overall_scores[__key] = overall_score_2018
+        __key_2018 = (region_code, descriptor, article, '2018')
+        __key_2012 = (region_code, descriptor, article, '2012')
+        self.overall_scores[__key_2012] = overall_score_2012
+        self.overall_scores[__key_2018] = overall_score_2018
 
         if adequacy_score_val == '-':  # if adequacy is not relevant
             adequacy_score_val = 0
@@ -1049,5 +1054,82 @@ class AssessmentDataMixin(object):
             overall_score_2012, change_since_2012,
             coherence_2012, coherence_change_since_2012
         )
+
+        return res
+
+    @timeit
+    def setup_descriptor_level_assessment_data(self):
+        """ Setup the national assessments data for a country
+
+        :return: res =  [("Baltic Sea", [
+                    ("D7 - Hydrographical changes", [
+                            ("Art8", DESCRIPTOR_SUMMARY),
+                            ("Art9", DESCRIPTOR_SUMMARY),
+                            ("Art10", DESCRIPTOR_SUMMARY),
+                        ]
+                    ),
+                    ("D1.4 - Birds", [
+                            ("Art8", DESCRIPTOR_SUMMARY),
+                            ("Art9", DESCRIPTOR_SUMMARY),
+                            ("Art10", DESCRIPTOR_SUMMARY),
+                        ]
+                    ),
+                ]
+            )]
+        """
+
+        res = []
+
+        country_folder = [
+            country
+            for country in self._nat_desc_folder.contentValues()
+            if country.id == self.country_code.lower()
+        ][0]
+
+        self.nat_desc_country_folder = country_folder
+        region_folders = self.filter_contentvalues_by_iface(
+            country_folder, INationalRegionDescriptorFolder
+        )
+
+        region_folders_sorted = sorted(
+            region_folders, key=lambda i: ordered_regions_sortkey(i.id.upper())
+        )
+
+        for region_folder in region_folders_sorted:
+            region_code = region_folder.id
+            region_name = region_folder.title
+            descriptor_data = []
+            descriptor_folders = self.filter_contentvalues_by_iface(
+                region_folder, IDescriptorFolder
+            )
+
+            for descriptor_folder in descriptor_folders:
+                desc_id = descriptor_folder.id.upper()
+                desc_name = descriptor_folder.title
+                articles = []
+                article_folders = self.filter_contentvalues_by_iface(
+                    descriptor_folder, INationalDescriptorAssessment
+                )
+
+                for article_folder in article_folders:
+                    article = article_folder.title
+
+                    assess_data = self._get_assessment_data(article_folder)
+                    article_data = self._get_article_data(
+                        region_code.upper(), country_folder.title,
+                        desc_id, assess_data, article
+                    )
+                    articles.append((article, article_data))
+
+                articles = sorted(
+                    articles,
+                    key=lambda i: fixedorder_sortkey(i[0], self.ARTICLE_ORDER)
+                )
+
+                descriptor_data.append(
+                    ((desc_id, desc_name), articles)
+                )
+
+            res.append((region_name, descriptor_data))
 
         return res

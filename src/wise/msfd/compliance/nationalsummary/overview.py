@@ -5,6 +5,7 @@ import logging
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 from Products.statusmessages.interfaces import IStatusMessage
 
+from wise.msfd.compliance.assessment import AssessmentDataMixin
 from wise.msfd.compliance.utils import group_by_mru
 from wise.msfd.data import (get_all_report_filenames,
                             get_envelope_release_date, get_factsheet_url,
@@ -17,6 +18,7 @@ from wise.msfd.utils import (ItemList, TemplateMixin, db_objects_to_dict,
 from ..nationaldescriptors.data import get_report_definition
 from ..nationaldescriptors.reportdata import ReportData2018Secondary
 from ..nationaldescriptors.proxy import Proxy2018
+from .assessmentsummary import SummaryAssessment
 from .base import BaseNatSummaryView
 
 
@@ -143,6 +145,30 @@ class Article34TableCooperation(ReportData2018SecondaryOverview):
     }
 
 
+class AssessmentSummary2018(BaseNatSummaryView, AssessmentDataMixin):
+    template = ViewPageTemplateFile('pt/summary-assessment-overview-2018.pt')
+    year = '2018'
+    cycle = 'Second cycle'
+    cycle_year = '2018-2023'
+
+    def __call__(self):
+        self.setup_descriptor_level_assessment_data()
+
+        table = SummaryAssessment(self, self.request, self.overall_scores,
+                                  self.nat_desc_country_folder, self.year)
+
+        self.summary_assess_data = table.setup_data()
+        macro_assess_sum = table.template.macros['assessment-summary-table']
+
+        return self.template(macro_assess_sum=macro_assess_sum)
+
+
+class AssessmentSummary2012(AssessmentSummary2018):
+    year = '2012'
+    cycle = 'First cycle'
+    cycle_year = '2012-2017'
+
+
 class NationalOverviewView(BaseNatSummaryView):
     help_text = "HELP TEXT"
     template = ViewPageTemplateFile('pt/report-data.pt')
@@ -169,6 +195,8 @@ class NationalOverviewView(BaseNatSummaryView):
             Article34TableMarineWaters(self.context, self.request)(),
             Article34TableMarineAreas(self.context, self.request)(),
             Article34TableCooperation(self.context, self.request)(),
+            AssessmentSummary2012(self.context, self.request)(),
+            AssessmentSummary2018(self.context, self.request)(),
             # trans_edit_html,
         ]
 

@@ -1,16 +1,8 @@
 import logging
 
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
-from wise.msfd.compliance.assessment import (get_assessment_data_2012_db,
-                                             filter_assessment_data_2012,
-                                             AssessmentDataMixin)
-from wise.msfd.compliance.interfaces import (IDescriptorFolder,
-                                             INationalDescriptorAssessment,
-                                             INationalRegionDescriptorFolder)
-from wise.msfd.compliance.utils import ordered_regions_sortkey
+from wise.msfd.compliance.assessment import AssessmentDataMixin
 from wise.msfd.gescomponents import DESCRIPTOR_TYPES
-from wise.msfd.utils import (ItemList, TemplateMixin, db_objects_to_dict,
-                             fixedorder_sortkey, timeit)
 
 from .base import BaseNatSummaryView
 from .odt_utils import create_heading, create_table_descr
@@ -33,82 +25,6 @@ class DescriptorLevelAssessments(BaseNatSummaryView, AssessmentDataMixin):
     def get_article_title(self, article):
 
         return self.article_titles[article]
-
-    @timeit
-    def setup_descriptor_level_assessment_data(self):
-        """
-        :return: res =  [("Baltic Sea", [
-                    ("D7 - Hydrographical changes", [
-                            ("Art8", DESCRIPTOR_SUMMARY),
-                            ("Art9", DESCRIPTOR_SUMMARY),
-                            ("Art10", DESCRIPTOR_SUMMARY),
-                        ]
-                    ),
-                    ("D1.4 - Birds", [
-                            ("Art8", DESCRIPTOR_SUMMARY),
-                            ("Art9", DESCRIPTOR_SUMMARY),
-                            ("Art10", DESCRIPTOR_SUMMARY),
-                        ]
-                    ),
-                ]
-            )]
-        """
-
-        res = []
-
-        country_folder = [
-            country
-            for country in self._nat_desc_folder.contentValues()
-            if country.id == self.country_code.lower()
-        ][0]
-
-        self.nat_desc_country_folder = country_folder
-        region_folders = self.filter_contentvalues_by_iface(
-            country_folder, INationalRegionDescriptorFolder
-        )
-
-        region_folders_sorted = sorted(
-            region_folders, key=lambda i: ordered_regions_sortkey(i.id.upper())
-        )
-
-        for region_folder in region_folders_sorted:
-            region_code = region_folder.id
-            region_name = region_folder.title
-            descriptor_data = []
-            descriptor_folders = self.filter_contentvalues_by_iface(
-                region_folder, IDescriptorFolder
-            )
-
-            for descriptor_folder in descriptor_folders:
-                desc_id = descriptor_folder.id.upper()
-                desc_name = descriptor_folder.title
-                articles = []
-                article_folders = self.filter_contentvalues_by_iface(
-                    descriptor_folder, INationalDescriptorAssessment
-                )
-
-                for article_folder in article_folders:
-                    article = article_folder.title
-
-                    assess_data = self._get_assessment_data(article_folder)
-                    article_data = self._get_article_data(
-                        region_code.upper(), country_folder.title,
-                        desc_id, assess_data, article
-                    )
-                    articles.append((article, article_data))
-
-                articles = sorted(
-                    articles,
-                    key=lambda i: fixedorder_sortkey(i[0], self.ARTICLE_ORDER)
-                )
-
-                descriptor_data.append(
-                    ((desc_id, desc_name), articles)
-                )
-
-            res.append((region_name, descriptor_data))
-
-        return res
 
     def get_odt_data(self, document):
         res = []

@@ -107,11 +107,12 @@ class SummaryAssessment(BaseNatSummaryView):
     descriptor_types = DESCRIPTOR_TYPES
 
     def __init__(self, context, request, overall_scores,
-                 nat_desc_country_folder):
+                 nat_desc_country_folder, year='2018'):
         super(SummaryAssessment, self).__init__(context, request)
 
         self.overall_scores = overall_scores
         self.nat_desc_country_folder = nat_desc_country_folder
+        self.year = year
 
     @property
     def intro_text(self):
@@ -131,8 +132,9 @@ class SummaryAssessment(BaseNatSummaryView):
         return output
 
     def get_overall_score(self, region_code, descriptor, article):
-        color = self.overall_scores[(region_code, descriptor, article)][1]
-        conclusion = self.overall_scores[(region_code, descriptor, article)][0]
+        __key = (region_code, descriptor, article, self.year)
+        color = self.overall_scores[__key][1]
+        conclusion = self.overall_scores[__key][0]
         # conclusion = conclusion.split(' ')
         # conclusion = " ".join(conclusion[:-1])
 
