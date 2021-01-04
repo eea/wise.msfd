@@ -57,6 +57,9 @@ def parse_assessments_2012_file():
             if not row:
                 break
 
+            if row[0] == 'NEA':
+                row[0] = u'ATL'
+
             report_by = 'Commission'
             assessment_by = 'Milieu'
             date_assessed = datetime.datetime.strptime('2019-09-20',
