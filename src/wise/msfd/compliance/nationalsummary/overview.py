@@ -20,6 +20,7 @@ from ..nationaldescriptors.reportdata import ReportData2018Secondary
 from ..nationaldescriptors.proxy import Proxy2018
 from .assessmentsummary import SummaryAssessment
 from .base import BaseNatSummaryView
+from .introduction import ReportingHistoryTable
 
 
 logger = logging.getLogger('wise.msfd')
@@ -169,6 +170,19 @@ class AssessmentSummary2012(AssessmentSummary2018):
     cycle_year = '2012-2017'
 
 
+class ReportingHistoryTableOverview(ReportingHistoryTable):
+    show_header = True
+    obligations_needed = None  # meaning we need all obligations
+
+    @property
+    def all_obligations(self):
+        data = self.data
+
+        obligations = set([x.get('ReportingObligation') for x in data])
+
+        return [[o] for o in obligations]
+
+
 class NationalOverviewView(BaseNatSummaryView):
     help_text = "HELP TEXT"
     template = ViewPageTemplateFile('pt/report-data.pt')
@@ -197,6 +211,7 @@ class NationalOverviewView(BaseNatSummaryView):
             Article34TableCooperation(self.context, self.request)(),
             AssessmentSummary2012(self.context, self.request)(),
             AssessmentSummary2018(self.context, self.request)(),
+            ReportingHistoryTableOverview(self.context, self.request)(),
             # trans_edit_html,
         ]
 

@@ -1,14 +1,23 @@
 <div class="nat-sum-report-history">
-  <div tal:define="allrows options/rows" class="report-section">
+  <div tal:define="allrows options/rows"
+      class="report-sectionZ">
 
-    <div class="overflow-table-disabled">
-      <div class="inner">
+    <div class="overflow-tableZ">
+      <div class="innerZ">
         <table class="table table-bordered table-striped table-comp-translate table-report">
           <tr>
             <th tal:condition="view/show_header"
-                class="first-header summary"><span>MSFD Article</span></th>
-            <td class="summary column-header" tal:repeat="title view/headers" tal:content="title">Column header</td>
+                style="min-width: 200px;"
+                class="first-headerZ summary">
+              <span>MSFD Article</span>
+            </th>
+            <th class="summary column-header"
+                tal:repeat="title view/headers"
+                tal:content="title">
+              Column header
+            </th>
           </tr>
+
           <tal:rep tal:repeat="row allrows">
             <tal:row replace="structure row"></tal:row>
           </tal:rep>

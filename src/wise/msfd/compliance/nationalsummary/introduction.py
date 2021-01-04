@@ -160,7 +160,9 @@ class ReportingHistoryTable(BaseNatSummaryView):
             file_url = row[0]
             release_date = row[1]
             file_url_split = file_url.split('/')
+            text_report_ob = 'MSFD - Articles 8, 9 and 10 - Text reports'
 
+            _row['ReportingObligation'] = text_report_ob
             _row['FileName'] = file_url_split[-1]
             _row['LocationURL'] = file_url
             _row['DateDue'] = datetime.strptime('15-10-2018', '%d-%m-%Y')
@@ -171,6 +173,15 @@ class ReportingHistoryTable(BaseNatSummaryView):
 
         self.data.extend(data_text)
 
+    @property
+    def obligations_needed(self):
+        obligations = (
+            'MSFD - Article 4 - Spatial data',
+            'MSFD - Articles 8, 9 and 10 - XML data'
+        )
+
+        return obligations
+
     @db.use_db_session('2018')
     def get_reporting_history_data(self):
         # obligation = 'MSFD reporting on Initial Assessments (Art. 8), ' \
@@ -178,18 +189,21 @@ class ReportingHistoryTable(BaseNatSummaryView):
         #              'associated indicators (Art.10) & related reporting on '\
         #              'geographic areas, regional cooperation and metadata.'
 
-        obligations = (
-            'MSFD - Article 4 - Spatial data',
-            'MSFD - Articles 8, 9 and 10 - XML data'
-        )
         mc = sql2018.ReportingHistory
+        conditions = [
+            mc.CountryCode == self.country_code,
+            mc.DateReleased.isnot(None)  # skip not released files
+        ]
+
+        if self.obligations_needed:
+            conditions.append(
+                mc.ReportingObligation.in_(self.obligations_needed)
+            )
 
         # skip not released files as they are deleted from CDR (Germany)
         _, res = db.get_all_records(
             mc,
-            mc.CountryCode == self.country_code,
-            mc.ReportingObligation.in_(obligations),
-            mc.DateReleased.isnot(None)  # skip not released files
+            *conditions
         )
 
         res = db_objects_to_dict(res)
@@ -229,7 +243,7 @@ class ReportingHistoryTable(BaseNatSummaryView):
 
         return "{:+d}".format(timedelta.days)
 
-    def get_article_row(self, obligations):
+    def get_data_by_obligations(self, obligations):
         # Group the data by envelope, report due, report date
         # and report delay
         data = [
@@ -271,17 +285,24 @@ class ReportingHistoryTable(BaseNatSummaryView):
 
         return sorted_rows
 
-    def __call__(self):
+    @property
+    def all_obligations(self):
         data = self.data
 
-        obligations = set([x.get('ReportingObligation') for x in data])
+        obligations = [set([x.get('ReportingObligation') for x in data])]
 
+        return obligations
+
+    def __call__(self):
         self.allrows = [
-            compoundrow(self, "", self.get_article_row(obligations),
+            compoundrow(self, ", ".join(obligations),
+                        self.get_data_by_obligations(obligations),
                         show_header=self.show_header)
+            for obligations in self.all_obligations
             ]
 
-        self.report_hystory_data = self.allrows[0].rows
+        # needed for odt export, which is not used anymore
+        # self.report_hystory_data = self.allrows[0].rows
 
         return self.template(rows=self.allrows)
 
@@ -449,7 +470,7 @@ class Introduction(BaseNatSummaryView):
         view = ReportingHistoryTable(self, self.request)
         rendered_view = view()
 
-        self.report_hystory_data = view.report_hystory_data
+        # self.report_hystory_data = view.report_hystory_data
 
         return rendered_view
 

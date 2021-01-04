@@ -1,0 +1,34 @@
+<div class="nat-sum-summary-assessment">
+  <h3 tal:content="python: 'Assessments of progress in MSFD implementation (Art. 12, 16) / {}'.format(view.year)" ></h3>
+  <table class="table table-bordered table-striped table-condensed">
+    <tr>
+      <td>Title</td>
+      <td>Implementation of marine strategies (Art. 8, 9, 10, 11, 13, 14, 18)</td>
+    </tr>
+    <tr>
+      <td tal:content="view/cycle">Second cycle</td>
+      <td tal:content="view/cycle_year">2018-2023</td>
+    </tr>
+    <tr>
+      <td>Access reports</td>
+      <td>
+        <a tal:attributes="href python: context.aq_parent.absolute_url()">View Art12 (8-9-10) report</a>
+      </td>
+    </tr>
+  </table>
+  <div tal:condition="False"
+      class="ast-header-data" style="display: inline-block; border: none;">
+    <table class="assessment-data-table">
+      <tr><td colspan="6"><div class="gescomp as-value">Colour codes</div></td></tr>
+      <tr>
+        <td><div class="gescomp as-value as-value-1">Very good</div></td>
+        <td><div class="gescomp as-value as-value-2">Good</div></td>
+        <td><div class="gescomp as-value as-value-4">Poor</div></td>
+        <td><div class="gescomp as-value as-value-5">Very poor</div></td>
+        <td><div class="gescomp as-value as-value-3">Not reported</div></td>
+        <td><div class="gescomp as-value as-value-0">Not relevant</div></td>
+      </tr>
+    </table>
+  </div>
+  <div metal:use-macro="options/macro_assess_sum"></div>
+</div>
