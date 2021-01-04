@@ -218,7 +218,6 @@ class NationalOverviewView(BaseNatSummaryView):
         return self.template(tables=self.tables)
 
     def __call__(self):
-        
         if 'edit-data' in self.request.form:
             url = "{}/edit".format(self.context.absolute_url())
 
