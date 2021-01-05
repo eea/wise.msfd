@@ -1,10 +1,11 @@
 from collections import namedtuple
 from io import BytesIO
 
-from zope.interface import implements
+from zope.interface import alsoProvides, implements
 import xlsxwriter
 
 from persistent.list import PersistentList
+from plone.protect.interfaces import IDisableCSRFProtection
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile as VPTF
 
 from wise.msfd.compliance.assessment import (AssessmentDataMixin,
@@ -244,6 +245,8 @@ class RegionalDescriptorArticleView(BaseRegComplianceView,
         return xlsio.read()
 
     def __call__(self):
+        alsoProvides(self.request, IDisableCSRFProtection)
+
         if 'assessor' in self.request.form:
             assessors = self.request.form['assessor']
 

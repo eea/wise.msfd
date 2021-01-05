@@ -173,6 +173,7 @@ class AssessmentSummary2012(AssessmentSummary2018):
 class ReportingHistoryTableOverview(ReportingHistoryTable):
     show_header = True
     obligations_needed = None  # meaning we need all obligations
+    view_template = ViewPageTemplateFile('pt/overview-report-history.pt')
 
     @property
     def all_obligations(self):
@@ -181,6 +182,12 @@ class ReportingHistoryTableOverview(ReportingHistoryTable):
         obligations = set([x.get('ReportingObligation') for x in data])
 
         return [[o] for o in obligations]
+
+    def __call__(self):
+
+        self.table = super(ReportingHistoryTableOverview, self).__call__()
+
+        return self.view_template()
 
 
 class NationalOverviewView(BaseNatSummaryView):

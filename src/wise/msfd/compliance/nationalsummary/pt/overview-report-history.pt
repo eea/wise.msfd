@@ -1,0 +1,4 @@
+<div>
+  <h3>Reporting history and performance</h3>
+  <div tal:replace="structure view/table"/>
+</div>

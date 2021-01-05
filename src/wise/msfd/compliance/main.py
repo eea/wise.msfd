@@ -4,7 +4,7 @@ from io import BytesIO
 
 from zope.annotation.factory import factory
 from zope.component import adapter
-from zope.interface import implementer, alsoProvides
+from zope.interface import alsoProvides, implementer
 
 from BTrees.OOBTree import OOBTree
 from Products.Five.browser.pagetemplatefile import PageTemplateFile
