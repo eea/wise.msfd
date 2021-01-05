@@ -52,8 +52,8 @@ class RegDescriptorLevelAssessments(BaseRegSummaryView,
         recommendations = t2rt(
             assess_data.get('{}_recommendations'.format(article)) or '-'
         )
-        __key = (region_code, descriptor, article)
-        self.overall_scores[__key] = overall_score_2018
+        __key_2018 = (region_code, descriptor, article, '2018')
+        self.overall_scores[__key_2018] = overall_score_2018
 
         reg_assess_2012 = self.get_reg_assessments_data_2012(
             article, region_code, descriptor

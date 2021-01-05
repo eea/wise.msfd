@@ -75,11 +75,12 @@ class RegionalSummaryAssessment(BaseRegSummaryView, SummaryAssessment):
     """ Make National summary code compatible for Regional summary """
 
     def __init__(self, context, request, overall_scores,
-                 reg_desc_region_folder):
+                 reg_desc_region_folder, year='2018'):
         super(SummaryAssessment, self).__init__(context, request)
 
         self.overall_scores = overall_scores
         self.reg_desc_region_folder = reg_desc_region_folder
+        self.year = year
 
     @property
     def intro_text(self):
