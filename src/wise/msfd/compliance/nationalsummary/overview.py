@@ -1,16 +1,21 @@
 # -*- coding: utf-8 -*-
 
+from collections import defaultdict
 import logging
 
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 from Products.statusmessages.interfaces import IStatusMessage
 
+from wise.msfd import db
 from wise.msfd.compliance.assessment import AssessmentDataMixin
 from wise.msfd.compliance.utils import group_by_mru
 from wise.msfd.data import (get_all_report_filenames,
                             get_envelope_release_date, get_factsheet_url,
                             get_report_file_url, get_report_filename,
                             get_xml_report_data)
+from wise.msfd.gescomponents import (ANTHROPOGENIC_FEATURES_SHORT_NAMES,
+                                     DESCRIPTOR_TYPES, FEATURES_DB_2018,
+                                     NOTHEME, THEMES_2018_ORDER)
 from wise.msfd.translation import get_translated, retrieve_translation
 from wise.msfd.utils import (ItemList, TemplateMixin, db_objects_to_dict,
                              fixedorder_sortkey, items_to_rows, timeit)
@@ -190,6 +195,79 @@ class ReportingHistoryTableOverview(ReportingHistoryTable):
         return self.view_template()
 
 
+class PressuresMarineEnvTable(BaseNatSummaryView):
+    template = ViewPageTemplateFile('pt/pressures-marine-env-table.pt')
+    title = 'Pressures affecting environmental status'
+    features = FEATURES_DB_2018
+
+    def get_feature_short_name(self, code):
+        for _code, _name in ANTHROPOGENIC_FEATURES_SHORT_NAMES:
+            if _code == code:
+                return _name
+
+        return self.features[code].label
+
+    # @db.use_db_session('2018')
+    # def get_data_art8(self):
+
+
+    @property
+    def features_needed(self):
+        features_order = [
+            x[0]
+            for x in ANTHROPOGENIC_FEATURES_SHORT_NAMES
+        ]
+        needed = ('Anthropogenic pressures on the marine environment', )
+        filtered = defaultdict(list)
+
+        for k, v in self.features.items():
+            if v.subject not in needed:
+                continue
+
+            filtered[v.theme].append(v.name)
+
+        out = [
+            (k, sorted(v, key=lambda i: fixedorder_sortkey(i, features_order)))
+            for k, v in filtered.items()
+        ]
+
+        sorted_out = sorted(
+            out, key=lambda i: fixedorder_sortkey(i[0], THEMES_2018_ORDER)
+        )
+
+        return sorted_out
+
+    def data_tbody(self):
+        data = self.get_data_art8()
+
+        out = []
+
+        for descr_type, descriptors in DESCRIPTOR_TYPES:
+            descriptor_type_data = []
+
+            for descriptor in descriptors:
+                descriptor_data = []
+
+                for theme, features in self.features_needed:
+                    for feature in features:
+                        if feature.endswith('All'):
+                            continue
+
+                        # TODO check if feature was reported for the descriptor
+                        descriptor_data.append(
+                            self.get_feature_short_name(feature)
+                        )
+
+                descriptor_type_data.append((descriptor, descriptor_data))
+
+            out.append((descr_type, descriptor_type_data))
+
+        return out
+
+    def __call__(self):
+        return self.template()
+
+
 class NationalOverviewView(BaseNatSummaryView):
     help_text = "HELP TEXT"
     template = ViewPageTemplateFile('pt/report-data.pt')
@@ -211,14 +289,15 @@ class NationalOverviewView(BaseNatSummaryView):
             )
         )
         self.tables = [
-            report_header,
-            Article7Table(self.context, self.request)(),
-            Article34TableMarineWaters(self.context, self.request)(),
-            Article34TableMarineAreas(self.context, self.request)(),
-            Article34TableCooperation(self.context, self.request)(),
-            AssessmentSummary2012(self.context, self.request)(),
-            AssessmentSummary2018(self.context, self.request)(),
-            ReportingHistoryTableOverview(self.context, self.request)(),
+            # report_header,
+            # Article7Table(self.context, self.request)(),
+            # Article34TableMarineWaters(self.context, self.request)(),
+            # Article34TableMarineAreas(self.context, self.request)(),
+            # Article34TableCooperation(self.context, self.request)(),
+            # AssessmentSummary2012(self.context, self.request)(),
+            # AssessmentSummary2018(self.context, self.request)(),
+            # ReportingHistoryTableOverview(self.context, self.request)(),
+            PressuresMarineEnvTable(self.context, self.request)()
             # trans_edit_html,
         ]
 

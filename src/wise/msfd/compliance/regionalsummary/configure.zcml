@@ -17,7 +17,7 @@
   <!-- Regional summary - Overview for a country -->
   <browser:page
     for="..interfaces.IRegionalSummaryRegionFolder"
-    name="sum-region-start"
+    name="overview"
     class=".reportdata.RegionalSummaryView"
     template="./pt/report-data-view.pt"
     permission="wise.ViewAssessmentData"

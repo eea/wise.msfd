@@ -568,6 +568,38 @@ THEMES_2018_ORDER = [
     'No theme',
 ]
 
+# Anthropogenic features are declared in the correct order
+ANTHROPOGENIC_FEATURES_SHORT_NAMES = [
+    ('PresAll', 'All pressures'),
+    # Biological features
+    ('PresBioAll', 'All biological pressures'),
+    ('PresBioIntroNIS', 'Input or spread of non-indigenous species'),
+    ('PresBioIntroMicroPath', 'Input of microbial pathogens'),
+    ('PresBioIntroGenModSpp', 'Input of genetically modified species '
+                              'and translocation'),
+    ('PresBioCultHab', 'Loss of, or change to, natural biological communities '
+                       'due to cultivation of animal or plant species'),
+
+    ('PresBioDisturbSpp', 'Disturbance of species due to human presence'),
+    ('PresBioExtractSpp', 'Extraction of, or mortality/injury to, '
+                          'wild species'),
+    # Physical features
+    ('PresPhyAll', 'All physical pressures'),
+    ('PresPhyDisturbSeabed', 'Physical disturbance to seabed'),
+    ('PresPhyLoss', 'Physical loss of the seabed'),
+    ('PresPhyHydroCond', 'Changes to hydrological conditions'),
+    # Substances, litter and energy features
+    ('PresInputAll', 'All pressures related to inputs of substances, '
+                     'litter and energy'),
+    ('PresInputNut', 'Input of nutrients'),
+    ('PresInputOrg', 'Input of organic matter'),
+    ('PresInputCont', 'Input of other substances'),
+    ('PresInputLitter', 'Input of litter'),
+    ('PresInputSound', 'Input of anthropogenic sound'),
+    ('PresInputOthEnergy', 'Input of other forms of energy'),
+    ('PresInputWater', 'Input of water'),
+]
+
 
 def parse_features():
     res = {}

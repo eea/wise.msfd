@@ -1,0 +1,54 @@
+<div>
+  <h3 tal:content="view/title">Title here</h3>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th colspan="2" rowspan="3">Ges descriptors</th>
+        <th colspan="99">Anthropogenic pressures on the marine environment (MSFD Annex III, Table 2a)</th>
+      </tr>
+      <tr>
+        <tal:rep tal:repeat="feature view/features_needed">
+          <th tal:condition="python: feature[0] != 'No theme'"
+              tal:attributes="colspan python: len(filter(lambda i: not i.endswith('All'),feature[1]))"
+              tal:content="python: feature[0]">
+            Biological
+          </th>
+        </tal:rep>
+      </tr>
+      <tr>
+        <th>Non-indigenous species</th>
+        <th>Microbial pathogens</th>
+        <th>Genetically modified species & translocation</th>
+        <th>Cultivation of species</th>
+        <th>Disturbance of species</th>
+        <th>Extraction of, or mortality/ injury to, species</th>
+        <th>Physical disturbance</th>
+        <th>Physical loss</th>
+        <th>Changes to hydrological conditions</th>
+        <th>Nutrients</th>
+        <th>Organic matter</th>
+        <th>Contaminants, incl. acute pollution events</th>
+        <th>Litter</th>
+        <th>Anthropogenic sound</th>
+        <th>Other forms of energy</th>
+        <th>Input of water</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tal:rep tal:repeat="descriptor_type view/data_tbody">
+        <tr tal:repeat="descriptor_data python: descriptor_type[1]">
+          <td tal:condition="python: descriptor_type[1].index(descriptor_data) == 0"
+              tal:attributes="rowspan python: len(descriptor_type[1])"
+              tal:content="python: descriptor_type[0]">
+            Pressure based descriptors
+          </td>
+          <td tal:content="python: descriptor_data[0]">D2</td>
+          <td tal:repeat="value python: descriptor_data[1]"
+              tal:content="value">
+            All pressures
+          </td>
+        </tr>
+      </tal:rep>
+    </tbody>
+  </table>
+</div>

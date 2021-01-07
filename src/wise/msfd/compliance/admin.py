@@ -373,7 +373,9 @@ class BootstrapCompliance(BrowserView):
 
             self.set_layout(rf, 'assessment-summary')
             alsoProvides(rf, interfaces.IRegionalSummaryRegionFolder)
-            # self.set_layout(rf, '@@sum-region-start')
+
+            # TODO setup the folder for the regional overview page
+            # similar to national summaries page
 
     def setup_secondary_articles(self, parent):
         if 'national-descriptors-assessments' not in parent.contentIds():
