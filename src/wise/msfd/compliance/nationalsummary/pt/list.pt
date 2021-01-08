@@ -1,0 +1,7 @@
+<ul class="cell-listing" tal:condition="options/rows">
+  <li tal:repeat="row options/rows">
+    <span>
+      <em tal:replace="structure row"></em>
+    </span>
+  </li>
+</ul>

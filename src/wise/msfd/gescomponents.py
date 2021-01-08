@@ -32,7 +32,7 @@ INDICATOR_2012_RE = re.compile(r'^\d[0,1]?\.\d\.\d$')       # ex: 10.1.1
 NOTHEME = u'No theme'
 
 DESCRIPTOR_TYPES = [
-    ("Pressure-based descriptors", ['D2', 'D5', 'D7', 'D8','D9', 'D10',
+    ("Pressure-based descriptors", ['D2', 'D5', 'D7', 'D8', 'D9', 'D10',
                                     'D11']),
     ("State-based descriptors", ['D1.1', 'D1.2', 'D1.3', 'D1.4', 'D1.5',
                                  'D3', 'D1.6', 'D6', 'D4'])

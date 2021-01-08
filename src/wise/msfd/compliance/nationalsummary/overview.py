@@ -3,10 +3,11 @@
 from collections import defaultdict
 import logging
 
-from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
+from Products.Five.browser.pagetemplatefile import (PageTemplateFile,
+                                                    ViewPageTemplateFile)
 from Products.statusmessages.interfaces import IStatusMessage
 
-from wise.msfd import db
+from wise.msfd import db, sql2018
 from wise.msfd.compliance.assessment import AssessmentDataMixin
 from wise.msfd.compliance.utils import group_by_mru
 from wise.msfd.data import (get_all_report_filenames,
@@ -17,8 +18,8 @@ from wise.msfd.gescomponents import (ANTHROPOGENIC_FEATURES_SHORT_NAMES,
                                      DESCRIPTOR_TYPES, FEATURES_DB_2018,
                                      NOTHEME, THEMES_2018_ORDER)
 from wise.msfd.translation import get_translated, retrieve_translation
-from wise.msfd.utils import (ItemList, TemplateMixin, db_objects_to_dict,
-                             fixedorder_sortkey, items_to_rows, timeit)
+from wise.msfd.utils import (ItemList, fixedorder_sortkey, items_to_rows,
+                             timeit)
 
 from ..nationaldescriptors.data import get_report_definition
 from ..nationaldescriptors.reportdata import ReportData2018Secondary
@@ -29,6 +30,10 @@ from .introduction import ReportingHistoryTable
 
 
 logger = logging.getLogger('wise.msfd')
+
+
+class ItemListOverview(ItemList):
+    template = PageTemplateFile('pt/list.pt')
 
 
 class ReportData2018SecondaryOverview(ReportData2018Secondary,
@@ -195,9 +200,8 @@ class ReportingHistoryTableOverview(ReportingHistoryTable):
         return self.view_template()
 
 
-class PressuresMarineEnvTable(BaseNatSummaryView):
+class PressuresTableBase(BaseNatSummaryView):
     template = ViewPageTemplateFile('pt/pressures-marine-env-table.pt')
-    title = 'Pressures affecting environmental status'
     features = FEATURES_DB_2018
 
     def get_feature_short_name(self, code):
@@ -205,11 +209,10 @@ class PressuresMarineEnvTable(BaseNatSummaryView):
             if _code == code:
                 return _name
 
-        return self.features[code].label
+        if code in self.features:
+            return self.features.get[code].label
 
-    # @db.use_db_session('2018')
-    # def get_data_art8(self):
-
+        return code
 
     @property
     def features_needed(self):
@@ -237,36 +240,97 @@ class PressuresMarineEnvTable(BaseNatSummaryView):
 
         return sorted_out
 
+    def __call__(self):
+        return self.template()
+
+
+class PressureTableMarineEnv(PressuresTableBase):
+    section_title = 'Pressures affecting environmental status'
+    title = 'Analysis of predominant pressures and impacts, ' \
+            'including human activity (Art. 8(1)(b))'
+
+    @property
+    def report_access(self):
+        nat_sum_id = 'national-descriptors-assessments'
+        ccode = self.country_code.lower()
+        cfolder = self._compliance_folder[nat_sum_id][ccode]
+        url = cfolder.absolute_url() + '/reports'
+
+        return url
+
+    @db.use_db_session('2018')
+    def get_data_art8(self):
+        t = sql2018.t_V_ART8_GES_2018
+
+        count, data = db.get_all_specific_columns(
+            [t.c.GESComponent, t.c.PressureCodes],
+            t.c.CountryCode == self.country_code,
+            t.c.PressureCodes.isnot(None)
+        )
+
+        out = defaultdict(set)
+
+        for row in data:
+            gescomp = row.GESComponent
+            presscodes = set(row.PressureCodes.split(','))
+
+            if '/' in row.GESComponent:
+                gescomp = gescomp.split('/')[0]
+
+            out[gescomp].update(presscodes)
+
+        return out
+
     def data_tbody(self):
         data = self.get_data_art8()
 
         out = []
 
+        general_pressures = set(['PresAll', 'Unknown'])
+
         for descr_type, descriptors in DESCRIPTOR_TYPES:
             descriptor_type_data = []
 
             for descriptor in descriptors:
+                features_rep = data[descriptor]
                 descriptor_data = []
 
-                for theme, features in self.features_needed:
-                    for feature in features:
+                # we iterate on all pressures 'Non-indigenous species',
+                # 'Microbial pathogens' etc. and check if the pressures
+                # was reported for the current descriptor and feature
+                for theme, features_for_theme in self.features_needed:
+                    for feature in features_for_theme:
                         if feature.endswith('All'):
                             continue
 
-                        # TODO check if feature was reported for the descriptor
-                        descriptor_data.append(
-                            self.get_feature_short_name(feature)
+                        # if pressure is ending with 'All' it applies to all
+                        # features in the current theme
+                        values = filter(
+                            lambda i: i.endswith('All') or i == feature,
+                            list(features_rep.intersection(
+                                set(features_for_theme))
+                            )
                         )
+
+                        # These pressures apply to all themes and features
+                        general_pressures_reported = list(
+                            general_pressures.intersection(features_rep)
+                        )
+
+                        values.extend(general_pressures_reported)
+
+                        values = [
+                            self.get_feature_short_name(x)
+                            for x in values
+                        ]
+
+                        descriptor_data.append(ItemListOverview(values))
 
                 descriptor_type_data.append((descriptor, descriptor_data))
 
             out.append((descr_type, descriptor_type_data))
 
         return out
-
-    def __call__(self):
-        return self.template()
-
 
 class NationalOverviewView(BaseNatSummaryView):
     help_text = "HELP TEXT"
@@ -289,15 +353,15 @@ class NationalOverviewView(BaseNatSummaryView):
             )
         )
         self.tables = [
-            # report_header,
-            # Article7Table(self.context, self.request)(),
-            # Article34TableMarineWaters(self.context, self.request)(),
-            # Article34TableMarineAreas(self.context, self.request)(),
-            # Article34TableCooperation(self.context, self.request)(),
-            # AssessmentSummary2012(self.context, self.request)(),
-            # AssessmentSummary2018(self.context, self.request)(),
-            # ReportingHistoryTableOverview(self.context, self.request)(),
-            PressuresMarineEnvTable(self.context, self.request)()
+            report_header,
+            Article7Table(self.context, self.request)(),
+            Article34TableMarineWaters(self.context, self.request)(),
+            Article34TableMarineAreas(self.context, self.request)(),
+            Article34TableCooperation(self.context, self.request)(),
+            PressureTableMarineEnv(self.context, self.request)(),
+            AssessmentSummary2012(self.context, self.request)(),
+            AssessmentSummary2018(self.context, self.request)(),
+            ReportingHistoryTableOverview(self.context, self.request)(),
             # trans_edit_html,
         ]
 
