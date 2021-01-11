@@ -808,9 +808,10 @@ class AssessmentDataMixin(object):
 
             res['score'] += weighted_score
 
-        # score_percent = int(round(res['max_score'] and (res['score'] * 100)
-        #                           / res['max_score'] or 0))
-        score_percent = res['score']
+        score_percent = int(round(res['max_score'] and (res['score'] * 100)
+                                  / res['max_score'] or 0))
+
+        # score_percent = res['score']
         score_val = get_range_index(score_percent)
 
         res['color'] = self.get_color_for_score(score_val)
