@@ -204,6 +204,43 @@ class PressuresTableBase(BaseNatSummaryView):
     template = ViewPageTemplateFile('pt/pressures-marine-env-table.pt')
     features = FEATURES_DB_2018
 
+    @timeit
+    @db.use_db_session('2018')
+    def get_data_art8(self):
+        t = sql2018.t_V_ART8_GES_2018
+
+        count, data = db.get_all_specific_columns(
+            [t.c.GESComponent, t.c.PressureCodes, t.c.TargetCodes],
+            t.c.CountryCode == self.country_code,
+            t.c.PressureCodes.isnot(None)
+        )
+
+        return data
+
+    def get_features_pressures_data(self):
+        data = self.get_data_art8()
+        out = defaultdict(set)
+
+        for row in data:
+            gescomp = row.GESComponent
+            presscodes = set(row.PressureCodes.split(','))
+
+            if '/' in row.GESComponent:
+                gescomp = gescomp.split('/')[0]
+
+            out[gescomp].update(presscodes)
+
+        return out
+
+    @property
+    def report_access(self):
+        nat_sum_id = 'national-descriptors-assessments'
+        ccode = self.country_code.lower()
+        cfolder = self._compliance_folder[nat_sum_id][ccode]
+        url = cfolder.absolute_url() + '/reports'
+
+        return url
+
     def get_feature_short_name(self, code):
         for _code, _name in ANTHROPOGENIC_FEATURES_SHORT_NAMES:
             if _code == code:
@@ -249,40 +286,8 @@ class PressureTableMarineEnv(PressuresTableBase):
     title = 'Analysis of predominant pressures and impacts, ' \
             'including human activity (Art. 8(1)(b))'
 
-    @property
-    def report_access(self):
-        nat_sum_id = 'national-descriptors-assessments'
-        ccode = self.country_code.lower()
-        cfolder = self._compliance_folder[nat_sum_id][ccode]
-        url = cfolder.absolute_url() + '/reports'
-
-        return url
-
-    @db.use_db_session('2018')
-    def get_data_art8(self):
-        t = sql2018.t_V_ART8_GES_2018
-
-        count, data = db.get_all_specific_columns(
-            [t.c.GESComponent, t.c.PressureCodes],
-            t.c.CountryCode == self.country_code,
-            t.c.PressureCodes.isnot(None)
-        )
-
-        out = defaultdict(set)
-
-        for row in data:
-            gescomp = row.GESComponent
-            presscodes = set(row.PressureCodes.split(','))
-
-            if '/' in row.GESComponent:
-                gescomp = gescomp.split('/')[0]
-
-            out[gescomp].update(presscodes)
-
-        return out
-
     def data_tbody(self):
-        data = self.get_data_art8()
+        data = self.get_features_pressures_data()
 
         out = []
 
@@ -305,7 +310,7 @@ class PressureTableMarineEnv(PressuresTableBase):
 
                         # if pressure is ending with 'All' it applies to all
                         # features in the current theme
-                        values = filter(
+                        pressures = filter(
                             lambda i: i.endswith('All') or i == feature,
                             list(features_rep.intersection(
                                 set(features_for_theme))
@@ -317,20 +322,101 @@ class PressureTableMarineEnv(PressuresTableBase):
                             general_pressures.intersection(features_rep)
                         )
 
-                        values.extend(general_pressures_reported)
+                        pressures.extend(general_pressures_reported)
 
-                        values = [
+                        pressures = [
                             self.get_feature_short_name(x)
-                            for x in values
+                            for x in pressures
                         ]
 
-                        descriptor_data.append(ItemListOverview(values))
+                        descriptor_data.append(ItemListOverview(pressures))
 
                 descriptor_type_data.append((descriptor, descriptor_data))
 
             out.append((descr_type, descriptor_type_data))
 
         return out
+
+
+class EnvironmentalTargetsTable(PressuresTableBase):
+    section_title = 'Environmental targets to achieve GES'
+    title = 'Environmental targets (Art. 10)'
+
+    def get_env_targets_data(self):
+        data = self.get_data_art8()
+        out = defaultdict(set)
+
+        for row in data:
+            if not row.TargetCodes:
+                continue
+
+            gescomp = row.GESComponent
+
+            if '/' in gescomp:
+                gescomp = gescomp.split('/')[0]
+
+            pressures = row.PressureCodes.split(',')
+            targets = row.TargetCodes.split(',')
+
+            for pressure in pressures:
+                __key = '-'.join((gescomp, pressure))
+                out[__key].update(targets)
+
+        return out
+
+    def data_tbody(self):
+        pressures_data = self.get_features_pressures_data()
+        env_targets_data = self.get_env_targets_data()
+        out = []
+
+        general_pressures = set(['PresAll', 'Unknown'])
+
+        for descr_type, descriptors in DESCRIPTOR_TYPES:
+            descriptor_type_data = []
+
+            for descriptor in descriptors:
+                features_rep = pressures_data[descriptor]
+                descriptor_data = []
+
+                # we iterate on all pressures 'Non-indigenous species',
+                # 'Microbial pathogens' etc. and check if the pressures
+                # was reported for the current descriptor and feature
+                for theme, features_for_theme in self.features_needed:
+                    for feature in features_for_theme:
+                        if feature.endswith('All'):
+                            continue
+
+                        # if pressure is ending with 'All' it applies to all
+                        # features in the current theme
+                        pressures = filter(
+                            lambda i: i.endswith('All') or i == feature,
+                            list(features_rep.intersection(
+                                set(features_for_theme))
+                            )
+                        )
+
+                        # These pressures apply to all themes and features
+                        general_pressures_reported = list(
+                            general_pressures.intersection(features_rep)
+                        )
+
+                        pressures.extend(general_pressures_reported)
+
+                        targets = set(sorted([
+                            p
+                            for press in pressures
+                            for p in
+                            env_targets_data['-'.join((descriptor, press))]
+                        ]))
+
+                        descriptor_data.append(ItemListOverview(targets))
+
+                descriptor_type_data.append((descriptor, descriptor_data))
+
+            out.append((descr_type, descriptor_type_data))
+
+        return out
+
 
 class NationalOverviewView(BaseNatSummaryView):
     help_text = "HELP TEXT"
@@ -359,6 +445,7 @@ class NationalOverviewView(BaseNatSummaryView):
             Article34TableMarineAreas(self.context, self.request)(),
             Article34TableCooperation(self.context, self.request)(),
             PressureTableMarineEnv(self.context, self.request)(),
+            EnvironmentalTargetsTable(self.context, self.request)(),
             AssessmentSummary2012(self.context, self.request)(),
             AssessmentSummary2018(self.context, self.request)(),
             ReportingHistoryTableOverview(self.context, self.request)(),
