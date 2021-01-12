@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 
+from eea.cache import cache
+
 import csv
 import logging
 import re
@@ -690,6 +692,7 @@ def parse_features():
 FEATURES = parse_features()
 
 
+@cache(lambda func, *args: func.__name__ + args[0], lifetime=1800)
 def get_features(descriptor_code=None):
     if descriptor_code is None:
         return FEATURES.values()
@@ -832,11 +835,11 @@ def _muids_2018(country, region):
     return sorted(res)
 
 
-@timeit
+@cache(lambda func, *args: '-'.join((func.__name__, args[0], args[1],
+                                     args[2])), lifetime=1800)
 def get_marine_units(country, region, year=None):
     """ Get a list of ``MarineReportingUnit`` objects
     """
-    print "Get marine units for year: ", year
 
     if year == '2012':
         return _muids_2012(country, region)

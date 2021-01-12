@@ -858,9 +858,15 @@ class AssessmentQuestionDefinition:
     def __get_a10_2018_targets_from_view(self, descr_obj, ok_ges_ids, muids):
         t = sql2018.t_V_ART10_Targets_2018
         descriptor = descr_obj.id
-        sess = db.session()
 
-        q = sess.query(t).filter(t.c.MarineReportingUnit.in_(muids))
+        # use db.get_all_records because of caching
+        # sess = db.session()
+        # q = sess.query(t).filter(t.c.MarineReportingUnit.in_(muids))
+
+        _count, q = db.get_all_records(
+            t,
+            t.c.MarineReportingUnit.in_(muids)
+        )
 
         ges_filtered = []
 

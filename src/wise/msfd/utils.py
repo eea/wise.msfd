@@ -363,14 +363,19 @@ def db_result_key(func, *argss, **kwargs):
         if hasattr(arg, '__name__'):
             arg_key = arg.__name__
         elif hasattr(arg, 'compile'):
-            arg_key = repr(arg.compile(compile_kwargs={"literal_binds": True}))
+            if hasattr(arg, 'name'):  # meaning its a table
+                arg_key = arg.fullname
+            else:
+                arg_key = str(
+                    arg.compile(compile_kwargs={"literal_binds": True})
+                )
+
         else:
             arg_key = arg.__str__()
 
         keys.append(arg_key)
 
     bits = dumps(keys)
-
     key = md5(bits).hexdigest()
 
     return key
