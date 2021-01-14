@@ -33,6 +33,7 @@
                 <th>Art. 7 Competent Authorities</th>
                 <th>Art. 3(1) Marine waters</th>
                 <th>Art. 4 Reporting areas</th>
+                <th>Article 11 Monitoring</th>
                 <th colspan="22"></th>
               </tr>
               <tr>
@@ -40,6 +41,10 @@
                 <td tal:repeat="assessment python: view.get_secondary_articles(view._country_folder)">
                   <a tal:attributes="href python: assessment.absolute_url() + '/@@view-report-data-2018';
                       class python: 'btn btn-xs btn-primary'">Reports</a>
+                </td>
+                <td>
+                  <a href="." class="btn btn-xs btn-success">2014 Overview</a>
+                  <a href="." class="btn btn-xs btn-primary">2020 Overview</a>
                 </td>
                 <td colspan="22"></td>
               </tr>
@@ -68,6 +73,14 @@
                         class python: 'btn btn-xs btn-success'">2012</a>
                     <a tal:attributes="href python: assessment.absolute_url() + '/@@view-report-data-2018';
                         class python: 'btn btn-xs btn-primary'">2018</a>
+                  </td>
+                  <td tal:define="assessment python: desc['art11']">
+                    <a tal:attributes="href python: assessment.absolute_url() + '/@@view-report-data-2014'"
+                        class="btn btn-xs btn-success">2014</a>
+                    <a tal:attributes="href python: assessment.absolute_url() + '/@@view-report-data-2020'"
+                        class="btn btn-xs btn-primary">2020</a>
+                    <a tal:attributes="href python: assessment.absolute_url() + '/@@view-report-data-2014-2020'"
+                        class="btn btn-xs btn-warning">2014/2020</a>
                   </td>
                   <td tal:repeat="assessment python: view.get_articles_part2(desc)">
                     <i>Not available</i>

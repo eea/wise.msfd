@@ -16,7 +16,6 @@ from wise.msfd.compliance.interfaces import (INationalSummaryCountryFolder,
                                              IRecommendationStorage)
 from wise.msfd.compliance.main import RecommendationsTable, STORAGE_KEY
 from wise.msfd.compliance.vocabulary import get_regions_for_country
-from wise.msfd.data import get_report_filename
 from wise.msfd.gescomponents import DESCRIPTOR_TYPES
 from wise.msfd.translation import get_translated, retrieve_translation
 from wise.msfd.utils import (ItemList, TemplateMixin, db_objects_to_dict,
@@ -29,9 +28,6 @@ from lpod.toc import odf_create_toc
 
 import pdfkit
 
-from ..nationaldescriptors.a7 import Article7
-from ..nationaldescriptors.a34 import Article34
-from ..nationaldescriptors.base import BaseView
 from .base import BaseNatSummaryView
 from .descriptor_assessments import DescriptorLevelAssessments
 from .introduction import Introduction

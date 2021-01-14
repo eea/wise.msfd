@@ -44,6 +44,7 @@ from .a8alternate import Article8Alternate
 from .a8esa import Article8ESA
 from .a9 import Article9, Article9Alternate
 from .a10 import Article10, Article10Alternate
+from .a11 import Article11
 from .a34 import Article34, Article34_2018
 from .base import BaseView
 from .proxy import Proxy2018
@@ -169,6 +170,7 @@ class ReportData2012(BaseView, BaseUtil):
             'Art8': Article8,
             'Art9': Article9,
             'Art10': Article10,
+            'Art11': Article11,
         }
 
         return res

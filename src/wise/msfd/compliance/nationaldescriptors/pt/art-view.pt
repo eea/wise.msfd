@@ -53,10 +53,20 @@
                     class="glyphicon glyphicon-th pat-plone-modal"
                     data-pat-plone-modal="height: 600px; content:#edit-history; width: 80%"></a>
               </li>
-              <li><a tal:attributes="href python: context.absolute_url() + '/@@view-report-data-2018'"
-                     target="_blank"><i class="glyphicon glyphicon-th"></i> 2018 Report</a></li>
-              <li><a tal:attributes="href python: context.absolute_url() + '/@@view-report-data-2012'"
-                     target="_blank"><i class="glyphicon glyphicon-th"></i> 2012 Report</a></li>
+              <li>
+                <a tal:define="year python: view.get_report_year('2018')"
+                    tal:attributes="href python: context.absolute_url() + '/@@view-report-data-' + year"
+                    target="_blank">
+                  <i class="glyphicon glyphicon-th"></i><span tal:content="year">2018</span> Report
+                </a>
+              </li>
+              <li>
+                <a tal:define="year python: view.get_report_year('2012')"
+                    tal:attributes="href python: context.absolute_url() + '/@@view-report-data-' + year"
+                    target="_blank">
+                  <i class="glyphicon glyphicon-th"></i><span tal:content="year">2012</span> Report
+                </a>
+              </li>
               <li tal:condition="python:False"><!--Removed-->
                 <a tal:attributes="href python: context.absolute_url() + '/@@view-report-data-2012-like-2018'"
                    target="_blank"><i class="glyphicon glyphicon-th"></i>2012 Report (II)</a></li>

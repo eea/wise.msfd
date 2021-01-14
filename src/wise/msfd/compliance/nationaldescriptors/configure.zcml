@@ -93,6 +93,14 @@
     />
 
   <browser:page
+    for="..interfaces.INationalDescriptorAssessment"
+    name="view-report-data-2014"
+    class=".reportdata.ReportData2012"
+    template="./pt/report-data-view.pt"
+    permission="zope2.View"
+    />
+
+  <browser:page
     for="..interfaces.INationalDescriptorAssessmentSecondary"
     name="view-report-data-2012"
     class=".reportdata.ReportData2012Secondary"
@@ -113,6 +121,15 @@
   <browser:page
     for="..interfaces.INationalDescriptorAssessment"
     name="view-report-data-2018"
+    class=".reportdata.ReportData2018"
+    template="./pt/report-data-view.pt"
+    permission="zope2.View"
+    />
+
+  <!-- view report data for 2018 -->
+  <browser:page
+    for="..interfaces.INationalDescriptorAssessment"
+    name="view-report-data-2020"
     class=".reportdata.ReportData2018"
     template="./pt/report-data-view.pt"
     permission="zope2.View"

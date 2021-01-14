@@ -158,6 +158,9 @@
                         <td tal:repeat="assessment python: view.get_articles(desc)">
                           <div metal:use-macro="context/wise-macros/macros/assessment-status-bar"></div>
                         </td>
+                        <td tal:define="assessment python: desc['art11']">
+                          <div metal:use-macro="context/wise-macros/macros/assessment-status-bar"></div>
+                        </td>
                         <td tal:repeat="assessment python: view.get_articles_part2(desc)">
                           <i style="text-align: center; font-style: italic; font-weight: 300;">Not available</i>
                         </td>

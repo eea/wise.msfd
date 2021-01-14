@@ -84,6 +84,11 @@ ARTICLE_WEIGHTS = {
         'adequacy': 1.0,
         'consistency': 0,
         'coherence': 0
+    },
+    'Art11': {
+        'adequacy': 1.0,
+        'consistency': 0,
+        'coherence': 0
     }
 }
 

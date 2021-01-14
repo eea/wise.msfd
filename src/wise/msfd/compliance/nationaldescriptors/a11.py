@@ -26,10 +26,10 @@ def xp(xpath, node):
     return node.xpath(xpath, namespaces=NSMAP)
 
 
-class A7Item(Item):
+class A11Item(Item):
     def __init__(self, parent, node):
 
-        super(A7Item, self).__init__([])
+        super(A11Item, self).__init__([])
 
         self.parent = parent
         self.node = node
@@ -49,6 +49,7 @@ class A7Item(Item):
 
         for title, getter in attrs:
             self[title] = getter()
+            setattr(self, title, getter())
 
     def ca_code(self):
         v = self.g['w:MSCACode/text()']
@@ -107,25 +108,56 @@ class A7Item(Item):
         return v[0]
 
 
-class Article7(BaseArticle2012):
+class Article11(BaseArticle2012):
     """ Article 7 implementation for 2012 year
 
     klass(self, self.request, country_code, region_code,
           descriptor, article,  muids)
+
+        1. Get the report filename with a sparql query
+        2. With the filename get the report url from CDR
+        3. Get the data from the xml file
     """
 
     template = Template('pt/report-data-secondary.pt')
     help_text = ""
+    available_regions = []
+    translatable_extra_data = []
 
-    def get_report_file_root(self):
-        filename = self.context.get_report_filename()
+    def __init__(self, context, request, country_code, region_code,
+                 descriptor, article,  muids, filename=None):
+
+        super(Article11, self).__init__(context, request, country_code,
+                                        region_code, descriptor, article,
+                                        muids)
+
+        self._filename = filename
+
+    def get_report_filename(self):
+        if self._filename:
+            return self._filename
+
+        filename = get_report_filename(
+            '2018',
+            self.country_code,
+            self.region_code,
+            self.article,
+            self.descriptor,
+        )
+
+        return filename
+
+    def get_report_file_root(self, filename=None):
+        if not filename:
+            filename = self.get_report_filename()
+
         text = get_xml_report_data(filename)
         root = fromstring(text)
 
         return root
 
     def _make_item(self, node):
-        item = A7Item(self, node)
+        item = A11Item(self, node)
 
         return item
 
@@ -208,83 +240,3 @@ class Article7(BaseArticle2012):
                     seen.add(value)
 
         return ''
-
-
-class Article7_2018(Article7):
-    """ Article 7 implementation for 2018 year
-
-        1. Get the report filename with a sparql query
-        2. With the filename get the report url from CDR
-        3. Get the data from the xml file
-    """
-
-    available_regions = []
-    translatable_extra_data = []
-
-    def __init__(self, context, request, country_code, region_code,
-                 descriptor, article,  muids, filename=None):
-
-        super(Article7_2018, self).__init__(context, request, country_code,
-                                            region_code, descriptor, article,
-                                            muids)
-
-        self._filename = filename
-
-    def get_report_filename(self):
-        if self._filename:
-            return self._filename
-
-        filename = get_report_filename(
-            '2018',
-            self.country_code,
-            self.region_code,
-            self.article,
-            self.descriptor,
-        )
-
-        return filename
-
-    def get_report_file_root(self, filename=None):
-        if not filename:
-            filename = self.get_report_filename()
-
-        text = get_xml_report_data(filename)
-        root = fromstring(text)
-
-        return root
-
-    def _make_item(self, node):
-        item = A7Item2018(self, node)
-
-        return item
-
-
-class A7Item2018(A7Item):
-    """ Article 7 item for 2018 year
-
-    Difference between 2018 and 2012 is that here we set the data as
-    class attributes (not as key:value (dictionary) like in the 2012 version)
-    """
-
-    def __init__(self, parent, node):
-
-        super(A7Item2018, self).__init__(parent, node)
-
-        self.parent = parent
-        self.node = node
-        self.g = RelaxedNodeEmpty(node, NSMAP)
-
-        attrs = [
-            ('CACode', self.ca_code),
-            ('AcronymName', self.acronym_name),
-            ('Address', self.address),
-            ('URL', self.url),
-            ('LegalStatus', self.legal_status),
-            ('Responsibilities', self.responsibilities),
-            ('Reference', self.reference),
-            ('Membership', self.membership),
-            ('RegionalCoordination', self.regional_coord),
-        ]
-
-        for title, getter in attrs:
-            setattr(self, title, getter())

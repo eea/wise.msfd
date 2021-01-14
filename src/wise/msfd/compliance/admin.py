@@ -173,6 +173,26 @@ class BootstrapCompliance(BrowserView):
                             title=title)
                 transition(obj=dt, transition=trans)
 
+    def create_nda_folder(self, df, desc_code, art):
+        if art.lower() in df.contentIds():
+            nda = df[art.lower()]
+        else:
+            nda = create(df,
+                         'wise.msfd.nationaldescriptorassessment',
+                         title=art)
+            lr = nda.__ac_local_roles__
+
+            group = self.get_group(desc_code)
+
+            lr[group] = ['Contributor']
+
+            logger.info("Created NationalDescriptorAssessment %s",
+                        nda.absolute_url())
+
+            self.set_layout(nda, '@@nat-desc-art-view')
+
+        self.create_comments_folder(nda)
+
     def make_country(self, parent, country_code, name):
 
         if country_code.lower() in parent.contentIds():
@@ -201,25 +221,12 @@ class BootstrapCompliance(BrowserView):
                     df = create(reg, 'Folder', title=description, id=desc_code)
                     alsoProvides(df, interfaces.IDescriptorFolder)
 
+                # articles 8, 9, 10
                 for art in self._get_articles():
-                    if art.lower() in df.contentIds():
-                        nda = df[art.lower()]
-                    else:
-                        nda = create(df,
-                                     'wise.msfd.nationaldescriptorassessment',
-                                     title=art)
-                        lr = nda.__ac_local_roles__
+                    self.create_nda_folder(df, desc_code, art)
 
-                        group = self.get_group(desc_code)
-
-                        lr[group] = ['Contributor']
-
-                        logger.info("Created NationalDescriptorAssessment %s",
-                                    nda.absolute_url())
-
-                        self.set_layout(nda, '@@nat-desc-art-view')
-
-                    self.create_comments_folder(nda)
+                # article 11
+                self.create_nda_folder(df, desc_code, 'Art11')
 
         return cf
 
@@ -459,8 +466,7 @@ class BootstrapCompliance(BrowserView):
 
         self.setup_msfd_reporting_history_folder(cm)
 
-        # self.setup_nationaldescriptors(cm)
-        DEFAULT = 'regional,nationalsummary,regionalsummary,secondary'
+        DEFAULT = 'regionaldesc,nationalsummary,regionalsummary,secondary'
         targets = self.request.form.get('setup', DEFAULT)
 
         if targets:
@@ -468,7 +474,10 @@ class BootstrapCompliance(BrowserView):
         else:
             targets = DEFAULT
 
-        if "regional" in targets:
+        if "nationaldesc" in targets:
+            self.setup_nationaldescriptors(cm)
+
+        if "regionaldesc" in targets:
             self.setup_regionaldescriptors(cm)
 
         if "nationalsummary" in targets:

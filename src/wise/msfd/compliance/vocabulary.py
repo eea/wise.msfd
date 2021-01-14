@@ -207,7 +207,7 @@ def get_regions_for_country(country_code):
     return [(code, REGIONS.get(code, code))
             for code in regions
 
-            if code not in blacklist]
+            if code and code not in blacklist]
 
 
 def make_subregions(d):

@@ -282,7 +282,7 @@ class BaseComplianceView(BrowserView, BasePublicPage, SecurityMixin):
         return [desc[a.lower()] for a in self.ARTICLE_ORDER]
 
     def get_articles_part2(self, desc):
-        order = ['art11', 'art13', 'art14', 'art18']
+        order = ['art13', 'art14', 'art18']
 
         return order
 
@@ -958,7 +958,7 @@ class AssessmentQuestionDefinition:
 
         res = self.get_all_assessed_elements(descriptor, **kwargs)
 
-        if self.article in ['Art8', 'Art9']:
+        if self.article in ['Art8', 'Art9', 'Art11']:
             res = filtered_criterias(res, self, descriptor)
         if self.article in ['Art10']:
             res = filtered_targets(res, self)
@@ -982,7 +982,8 @@ class AssessmentQuestionDefinition:
             'Art3': self._art_34_ids,
             'Art4': self._art_4_ids,
             'Art7': self._art_34_ids,
-            'Art8esa': self._art_34_ids
+            'Art8esa': self._art_34_ids,
+            'Art11': self._art_89_ids,
         }
 
         return impl[self.article](descriptor, **kwargs)

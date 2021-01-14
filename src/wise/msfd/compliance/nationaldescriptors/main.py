@@ -4,11 +4,12 @@
 from collections import namedtuple
 from logging import getLogger
 
-from zope.interface import implements
+from zope.interface import implements, alsoProvides
 
 from persistent.list import PersistentList
 from plone.api.content import transition
 from plone.protect import CheckAuthenticator  # , protect
+from plone.protect.interfaces import IDisableCSRFProtection
 from Products.Five.browser.pagetemplatefile import \
     ViewPageTemplateFile as Template
 from Products.statusmessages.interfaces import IStatusMessage
@@ -396,6 +397,16 @@ class NationalDescriptorArticleView(BaseView, AssessmentDataMixin):
     year = '2018'       # used by self.muids
     _questions = NAT_DESC_QUESTIONS
 
+    def get_report_year(self, year):
+        report_years = {
+            'Art11': {'2012': '2014', '2018': '2020'}
+        }
+
+        if self.article not in report_years:
+            return year
+
+        return report_years.get(self.article).get(year)
+
     @property
     def title(self):
         return u"Commission assessment / {} / 2018 / {} / {} / {} ".format(
@@ -455,6 +466,7 @@ class NationalDescriptorArticleView(BaseView, AssessmentDataMixin):
         return file_name, file_url, report_date, edit_url
 
     def __call__(self):
+        alsoProvides(self.request, IDisableCSRFProtection)
 
         if 'assessor' in self.request.form:
             assessors = self.request.form['assessor']
@@ -642,6 +654,7 @@ class NationalDescriptorSecondaryArticleView(NationalDescriptorArticleView):
         return None
 
     def __call__(self):
+        alsoProvides(self.request, IDisableCSRFProtection)
 
         if 'assessor' in self.request.form:
             assessors = self.request.form['assessor']

@@ -126,7 +126,11 @@
                       <span tal:content="python: view.descriptor_for_code(desc.id).title">D0</span>
                     </th>
                     <td tal:repeat="assessment python: view.get_articles(desc)">
-                      <div metal:use-macro="context/wise-macros/macros/assessment-status-bar"></div>                </td>
+                      <div metal:use-macro="context/wise-macros/macros/assessment-status-bar"></div>
+                    </td>
+                    <td>
+                      <i style="text-align: center; font-style: italic; font-weight: 300;">Not available</i>
+                    </td>
                     <td tal:repeat="assessment python: view.get_articles_part2(desc)">
                       <i>Not available</i>
                     </td>

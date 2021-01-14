@@ -693,6 +693,19 @@ class RelaxedNode(Node):
         return n
 
 
+class RelaxedNodeEmpty(RelaxedNode):
+    """ If no results, return empty list instead of empty string
+    """
+
+    def __getitem__(self, name):
+        val = super(RelaxedNodeEmpty, self).__getitem__(name)
+
+        if not val:
+            return ['']
+
+        return val
+
+
 def current_date():
     """ Return the current date as string, included in cache keys
     """
