@@ -130,7 +130,7 @@
   <browser:page
     for="..interfaces.INationalDescriptorAssessment"
     name="view-report-data-2020"
-    class=".reportdata.ReportData2018"
+    class=".reportdata.ReportData2020"
     template="./pt/report-data-view.pt"
     permission="zope2.View"
     />

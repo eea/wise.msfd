@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<data>
+  <Art11>
+    <element name="Descriptor">Descriptor</element>
+    <element name="MonitoringStrategyDescription">Monitoring strategy description</element>
+    <element name="Coverage_GEScriteria">Coverage of GES criteria</element>
+    <element name="Gaps_Plans">Gaps and plans</element>
+    <element name="RelatedTargets">Related targets</element>
+    <element name="Coverage_Targets">Coverage of targets</element>
+    <element name="RelatedMeasures">Related measure code</element>
+    <element name="Coverage_Measures">Coverage of measures</element>
+    <element name="MonitoringProgrammes">Related monitoring programmes</element>
+<!--    <element name="">Programme code</element>-->
+<!--    <element name="">Programme name</element>-->
+<!--    <element name="">Update type</element>-->
+<!--    <element name="">Old programme codes</element>-->
+<!--    <element name="">Programme description</element>-->
+<!--    <element name="">Monitoring purpose</element>-->
+<!--    <element name="">Other policies and conventions</element>-->
+<!--    <element name="">Regional cooperation - coordinating body</element>-->
+<!--    <element name="">Regional cooperation - implementation level</element>-->
+<!--    <element name="">Monitoring details</element>-->
+<!--    <element name="">Features</element>-->
+<!--    <element name="">Elements</element>-->
+<!--    <element name="">GES criteria</element>-->
+<!--    <element name="">Parameters</element>-->
+<!--    <element name="">Spatial scope</element>-->
+<!--    <element name="">Marine reporting units</element>-->
+<!--    <element name="">Temporal scope (start date - end date)</element>-->
+<!--    <element name="">Monitoring frequency</element>-->
+<!--    <element name="">Monitoring type</element>-->
+<!--    <element name="">Monitoring method</element>-->
+<!--    <element name="">Monitoring method other</element>-->
+<!--    <element name="">Quality control</element>-->
+<!--    <element name="">Data management</element>-->
+<!--    <element name="">Data access</element>-->
+<!--    <element name="">Related indicator/name</element>-->
+<!--    <element name="">Contact</element>-->
+<!--    <element name="">References</element>-->
+  </Art11>
+</data>

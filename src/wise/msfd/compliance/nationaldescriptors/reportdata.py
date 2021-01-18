@@ -681,7 +681,9 @@ https://svn.eionet.europa.eu/repositories/Reportnet/Dataflows/MarineDirective/MS
 """,
         'Art3': "To be completed...",
         'Art4': "To be completed...",
-        'Art7': "To be completed..."
+        'Art7': "To be completed...",
+        'Art11': """The data is retrieved from the MSFD2018_production.V_ART11_Strategies database
+view."""
     }
 
     @property
@@ -691,6 +693,7 @@ https://svn.eionet.europa.eu/repositories/Reportnet/Dataflows/MarineDirective/MS
     Art8 = Template('pt/report-data-multiple-muid.pt')
     Art9 = Template('pt/report-data-multiple-muid.pt')
     Art10 = Template('pt/report-data-multiple-muid.pt')
+    Art11 = Template('pt/report-data-multiple-muid.pt')
     # Art9 = Template('pt/report-data-single-muid.pt')
 
     subform = None      # used for the snapshot selection form
@@ -966,6 +969,32 @@ https://svn.eionet.europa.eu/repositories/Reportnet/Dataflows/MarineDirective/MS
 
         return out
 
+    def get_data_from_view_Art11(self, filter_by_descriptor=True):
+        return []
+
+        t = sql2018.t_V_ART9_GES_2018
+
+        conditions = [
+            t.c.CountryCode == self.country_code
+        ]
+
+        if filter_by_descriptor:
+            descriptor = get_descriptor(self.descriptor)
+            all_ids = list(descriptor.all_ids())
+
+            if self.descriptor.startswith('D1.'):
+                all_ids.append('D1')
+
+            conditions.append(t.c.Descriptor.in_(all_ids))
+
+        count, q = db.get_all_records_ordered(
+            t,
+            ('Descriptor', ),
+            *conditions
+        )
+
+        return q
+
     def get_data_from_view(self, article):
         data = getattr(self, 'get_data_from_view_' + article)()
 
@@ -1014,6 +1043,15 @@ https://svn.eionet.europa.eu/repositories/Reportnet/Dataflows/MarineDirective/MS
             else:
                 data_by_mru = {}
             insert_missing_criterions(data_by_mru, self.descriptor_obj)
+
+        if self.article == 'Art11':
+            data_by_mru = consolidate_singlevalue_to_list(
+                data, 'CountryCode'
+            )
+            if data_by_mru:
+                data_by_mru = {"": data_by_mru}
+            else:
+                data_by_mru = {}
 
         res = []
 
@@ -1256,7 +1294,6 @@ https://svn.eionet.europa.eu/repositories/Reportnet/Dataflows/MarineDirective/MS
 
     @timeit
     def __call__(self):
-
         # allow focusing on a single muid if the data is too big
         if 'focus_muid' in self.request.form:
             self.focus_muid = self.request.form['focus_muid'].strip()
@@ -1532,3 +1569,17 @@ class ReportData2018Secondary(ReportData2018):
         res = "<hr/>".join(rendered_results)
 
         return res or "No data found"
+
+
+class ReportData2020(ReportData2018):
+    report_year = '2020'        # used by cache key
+    year = '2020'       # used in report definition and translation
+
+    def get_report_metadata(self):
+        # TODO implement this
+
+        return {}
+
+    @property
+    def muids(self):
+        return []
