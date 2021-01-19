@@ -126,7 +126,15 @@
     permission="zope2.View"
     />
 
-  <!-- view report data for 2018 -->
+  <browser:page
+    for="..interfaces.INationalDescriptorAssessmentSecondary"
+    name="view-report-data-2018"
+    class=".reportdata.ReportData2018Secondary"
+    template="./pt/report-data-view.pt"
+    permission="zope2.View"
+    />
+
+  <!-- view report data for 2020 -->
   <browser:page
     for="..interfaces.INationalDescriptorAssessment"
     name="view-report-data-2020"
@@ -136,9 +144,9 @@
     />
 
   <browser:page
-    for="..interfaces.INationalDescriptorAssessmentSecondary"
-    name="view-report-data-2018"
-    class=".reportdata.ReportData2018Secondary"
+    for="..interfaces.INationalRegionDescriptorFolder"
+    name="art11-view-report-data-2020"
+    class=".reportdata.ReportDataOverview2020Art11"
     template="./pt/report-data-view.pt"
     permission="zope2.View"
     />

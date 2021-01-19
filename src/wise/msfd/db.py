@@ -17,7 +17,7 @@ env = os.environ.get
 DSN = env('MSFDURI', 'mssql+pymssql://SA:bla3311!@msdb')  # ?charset=utf8mb4
 DBS = {
     '2012': env('MSFD_db_default', 'MarineDB_public'),
-    '2018': env('MSFD_db_2018', 'MSFD2018_public')
+    '2018': env('MSFD_db_2018', 'MSFD2018_production')  # has all needed views
     # MSFD2018_sandbox_25102018
     # MSFD2018_production_v2
 }
@@ -463,8 +463,10 @@ def get_all_specific_columns(columns, *conditions, **kw):
 def get_all_records_ordered(table, order_cols, *conditions):
     sess = session()
 
-    order_by = [table.c.MarineReportingUnit] + \
-               [getattr(table.c, c)for c in order_cols]
+    order_by_mru = (hasattr(table.c, 'MarineReportingUnit')
+                and [table.c.MarineReportingUnit] or [])
+
+    order_by = order_by_mru + [getattr(table.c, c)for c in order_cols]
 
     q = sess.query(table).filter(*conditions).\
         order_by(*order_by).distinct()

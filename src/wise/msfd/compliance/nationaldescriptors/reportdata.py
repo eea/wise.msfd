@@ -20,7 +20,8 @@ from wise.msfd import db, sql2018  # sql,
 from wise.msfd.base import BaseUtil
 from wise.msfd.compliance.base import is_row_relevant_for_descriptor
 from wise.msfd.compliance.interfaces import (IReportDataView,
-                                             IReportDataViewSecondary)
+                                             IReportDataViewSecondary,
+                                             IReportDataViewOverview)
 from wise.msfd.compliance.nationaldescriptors.data import get_report_definition
 from wise.msfd.compliance.utils import (group_by_mru,
                                         insert_missing_criterions,
@@ -741,6 +742,12 @@ view."""
 
         return order
 
+    def _get_order_cols_Art11(self):
+        o = ('Descriptor', 'MonitoringProgrammes', 'P_ProgrammeCode',
+             'GESCriteria', 'Feature')
+
+        return o
+
     def get_data_from_view_Art8(self):
         sess = db.session()
         t = sql2018.t_V_ART8_GES_2018
@@ -970,9 +977,7 @@ view."""
         return out
 
     def get_data_from_view_Art11(self, filter_by_descriptor=True):
-        return []
-
-        t = sql2018.t_V_ART9_GES_2018
+        t = sql2018.t_V_ART11_Strategies_Programmes_2020
 
         conditions = [
             t.c.CountryCode == self.country_code
@@ -989,7 +994,7 @@ view."""
 
         count, q = db.get_all_records_ordered(
             t,
-            ('Descriptor', ),
+            self._get_order_cols_Art11(),
             *conditions
         )
 
@@ -999,6 +1004,11 @@ view."""
         data = getattr(self, 'get_data_from_view_' + article)()
 
         return data
+
+    def get_report_definition(self):
+        rep_def = get_report_definition(self.article).get_fields()
+
+        return rep_def
 
     @db.use_db_session('2018')
     @timeit
@@ -1045,9 +1055,11 @@ view."""
             insert_missing_criterions(data_by_mru, self.descriptor_obj)
 
         if self.article == 'Art11':
+            order = self._get_order_cols_Art11()
             data_by_mru = consolidate_singlevalue_to_list(
-                data, 'CountryCode'
+                data, 'Element', order
             )
+
             if data_by_mru:
                 data_by_mru = {"": data_by_mru}
             else:
@@ -1055,7 +1067,7 @@ view."""
 
         res = []
 
-        fields = get_report_definition(self.article).get_fields()
+        fields = self.get_report_definition()
 
         for mru, rows in data_by_mru.items():
             _rows = items_to_rows(rows, fields)
@@ -1163,6 +1175,7 @@ view."""
             'Art8': 'ART8_GES',
             'Art9': 'ART9_GES',
             'Art10': 'ART10_Targets',
+            'Art11': 'ART11_Programmes'
         }
         count, item = db.get_item_by_conditions(
             t,
@@ -1572,14 +1585,49 @@ class ReportData2018Secondary(ReportData2018):
 
 
 class ReportData2020(ReportData2018):
+    """ Implementation for Article 11 report data view for year 2020
+    """
+
     report_year = '2020'        # used by cache key
     year = '2020'       # used in report definition and translation
-
-    def get_report_metadata(self):
-        # TODO implement this
-
-        return {}
 
     @property
     def muids(self):
         return []
+
+
+class ReportDataOverview2020Art11(ReportData2020):
+    implements(IReportDataViewOverview)
+
+    is_primary_article = False
+
+    @property
+    def descriptor(self):
+        return 'Not defined'
+
+    @property
+    def article(self):
+        return 'Art11'
+
+    def get_report_definition(self):
+        article = '{}Overview'.format(self.article)
+        rep_def = get_report_definition(article).get_fields()
+
+        return rep_def
+
+    # def get_report_header(self):
+    #     return 'Report header here'
+
+    def get_data_from_view_Art11(self):
+        d = super(ReportDataOverview2020Art11, self).get_data_from_view_Art11(
+            filter_by_descriptor=False
+        )
+
+        return d
+
+    @property
+    def report_header_title(self):
+        title = "Member State report / Art11 / 2018 / {} / {} - Overview"\
+            .format(self.country_name, self.country_region_name)
+
+        return title

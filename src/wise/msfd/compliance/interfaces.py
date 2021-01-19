@@ -125,6 +125,11 @@ class IReportDataViewSecondary(Interface):
     """
 
 
+class IReportDataViewOverview(Interface):
+    """ Plone pages that display report data (overview)
+    """
+
+
 class IEditAssessorsForm(Interface):
     """ Interface for assessment settings form
 

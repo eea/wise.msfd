@@ -33,7 +33,6 @@
                 <th>Art. 7 Competent Authorities</th>
                 <th>Art. 3(1) Marine waters</th>
                 <th>Art. 4 Reporting areas</th>
-                <th>Article 11 Monitoring</th>
                 <th colspan="22"></th>
               </tr>
               <tr>
@@ -41,10 +40,6 @@
                 <td tal:repeat="assessment python: view.get_secondary_articles(view._country_folder)">
                   <a tal:attributes="href python: assessment.absolute_url() + '/@@view-report-data-2018';
                       class python: 'btn btn-xs btn-primary'">Reports</a>
-                </td>
-                <td>
-                  <a href="." class="btn btn-xs btn-success">2014 Overview</a>
-                  <a href="." class="btn btn-xs btn-primary">2020 Overview</a>
                 </td>
                 <td colspan="22"></td>
               </tr>
@@ -63,6 +58,22 @@
                   <th>Article 13 Measures</th>
                   <th>Article 14 Exceptions</th>
                   <th>Article 18 Progress on measures</th>
+                </tr>
+                <tr>
+                  <td><i>Overview</i></td>
+                  <td>-</td>
+                  <td>-</td>
+                  <td>-</td>
+                  <td>
+                    <a href="." class="btn btn-xs btn-primary">2014 Overview</a>
+                    <a tal:attributes="href python: region.absolute_url() + '/@@art11-view-report-data-2020'"
+                      class="btn btn-xs btn-success">
+                      2020 Overview
+                    </a>
+                  </td>
+                  <td>-</td>
+                  <td>-</td>
+                  <td>-</td>
                 </tr>
                 <tr tal:repeat="desc python: view.get_descriptors(region)">
                   <th>

@@ -1,41 +1,49 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <data>
   <Art11>
-    <element name="Descriptor">Descriptor</element>
-    <element name="MonitoringStrategyDescription">Monitoring strategy description</element>
+    <element setlevel="0" name="Descriptor">Descriptor</element>
+    <element name="MonitoringStrategyDescription" translate="true">Monitoring strategy description</element>
     <element name="Coverage_GEScriteria">Coverage of GES criteria</element>
-    <element name="Gaps_Plans">Gaps and plans</element>
-    <element name="RelatedTargets">Related targets</element>
+    <element name="Gaps_Plans" translate="true">Gaps and plans</element>
+    <element name="RelatedTargets" convert="simple_itemlist">Related targets</element>
     <element name="Coverage_Targets">Coverage of targets</element>
     <element name="RelatedMeasures">Related measure code</element>
     <element name="Coverage_Measures">Coverage of measures</element>
-    <element name="MonitoringProgrammes">Related monitoring programmes</element>
-<!--    <element name="">Programme code</element>-->
-<!--    <element name="">Programme name</element>-->
-<!--    <element name="">Update type</element>-->
-<!--    <element name="">Old programme codes</element>-->
-<!--    <element name="">Programme description</element>-->
-<!--    <element name="">Monitoring purpose</element>-->
-<!--    <element name="">Other policies and conventions</element>-->
-<!--    <element name="">Regional cooperation - coordinating body</element>-->
-<!--    <element name="">Regional cooperation - implementation level</element>-->
-<!--    <element name="">Monitoring details</element>-->
-<!--    <element name="">Features</element>-->
-<!--    <element name="">Elements</element>-->
-<!--    <element name="">GES criteria</element>-->
-<!--    <element name="">Parameters</element>-->
-<!--    <element name="">Spatial scope</element>-->
-<!--    <element name="">Marine reporting units</element>-->
-<!--    <element name="">Temporal scope (start date - end date)</element>-->
-<!--    <element name="">Monitoring frequency</element>-->
-<!--    <element name="">Monitoring type</element>-->
-<!--    <element name="">Monitoring method</element>-->
-<!--    <element name="">Monitoring method other</element>-->
-<!--    <element name="">Quality control</element>-->
-<!--    <element name="">Data management</element>-->
-<!--    <element name="">Data access</element>-->
-<!--    <element name="">Related indicator/name</element>-->
-<!--    <element name="">Contact</element>-->
-<!--    <element name="">References</element>-->
+    <element name="MonitoringProgrammes" convert="simple_itemlist">Related monitoring programmes</element>
+    <element setlevel="1" name="P_ProgrammeCode">Programme code</element>
+    <element name="P_ProgrammeName">Programme name</element>
+    <element name="P_UpdateType">Update type</element>
+    <element name="P_OldProgrammeCodes">Old programme codes</element>
+    <element name="P_ProgrammeDescription" translate="true">Programme description</element>
+    <element name="P_MonitoringPurposes">Monitoring purpose</element>
+    <element name="P_OtherPoliciesConventions" convert="simple_itemlist">Other policies and conventions</element>
+    <element name="P_RegionalCooperation_coordinations">Regional cooperation - coordinating body</element>
+    <element name="P_RegionalCooperation_implementation">Regional cooperation - implementation level</element>
+    <element name="P_MonitoringDetails" translate="true">Monitoring details</element>
+    <element setlevel="2" name="Feature">Features</element>
+    <element name="Element">Elements</element>
+    <element name="GESCriteria">GES criteria</element>
+    <element name="P_Parameters" convert="simple_itemlist">Parameters</element>
+    <element setlevel="1" name="P_SpatialScopes" convert="simple_itemlist">Spatial scope</element>
+    <element name="P_MarineReportingUnits">Marine reporting units</element>
+    <element name="P_TemporalScope">Temporal scope (start date - end date)</element>
+    <element name="P_MonitoringFrequency">Monitoring frequency</element>
+    <element name="P_MonitoringTypes" convert="simple_itemlist">Monitoring type</element>
+    <element name="P_MonitoringMethods" convert="simple_itemlist">Monitoring method</element>
+    <element name="P_MonitoringMethodOther">Monitoring method other</element>
+    <element name="P_QualityControl" translate="true">Quality control</element>
+    <element name="P_DataManagement" translate="true">Data management</element>
+    <element name="P_DataAccess">Data access</element>
+    <element name="P_RelatedIndicators">Related indicator/name</element>
+    <element name="P_Contact">Contact</element>
+    <element name="P_References">References</element>
   </Art11>
+  <Art11Overview>
+    <element name="ResponsibleCompetentAuthority">Competent Authority responsible for monitoring</element>
+    <element name="ResponsibleOrganisations">Responsible organisations</element>
+    <element name="RelationshipToCA">Relationship to CA</element>
+    <element name="PublicConsultationDates">Public consultation dates</element>
+    <element name="PublicConsultationSite">Public consultation site</element>
+    <element name="RegionalCooperation" translate="true">Regional cooperation</element>
+  </Art11Overview>
 </data>

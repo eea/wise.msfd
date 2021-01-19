@@ -22,6 +22,20 @@ class ReportTitleViewlet(BaseTitleViewlet, BaseView):
                 u'{country}/{region}'.format(**params))
 
 
+class ReportTitleViewletOverview(BaseTitleViewlet, BaseView):
+
+    @property
+    def page_title(self):
+        params = {
+            'country': self.country_name,
+            'region': self.country_region_name,
+            'year': self.view.report_year,
+        }
+
+        return (u'MS/Art11/{year}/'
+                u'{country}/{region}/Overview'.format(**params))
+
+
 class SecondaryReportTitleViewlet(BaseTitleViewlet, BaseView):
 
     @property
