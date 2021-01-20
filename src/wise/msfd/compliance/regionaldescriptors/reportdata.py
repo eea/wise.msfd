@@ -3,7 +3,7 @@ from io import BytesIO
 
 from sqlalchemy import or_
 
-from zope.interface import implements
+from zope.interface import implements, implementsOnly
 
 import xlsxwriter
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
@@ -14,6 +14,7 @@ from wise.msfd.gescomponents import get_features, get_parameters
 from wise.msfd.translation import retrieve_translation
 from wise.msfd.utils import ItemList, timeit
 
+from ..nationaldescriptors.reportdata import ReportData2020
 from ..nationaldescriptors.utils import consolidate_singlevalue_to_list
 from .a8 import RegDescA82012, RegDescA82018Row
 from .a9 import RegDescA92012, RegDescA92018Row
@@ -404,14 +405,7 @@ class RegReportData2018(BaseRegComplianceView):
 
         return self.request.response.redirect(url)
 
-    # @cache(get_reportdata_key, dependencies=['translation'])
-    def render_reportdata(self):
-        logger.info("Quering database for 2018 report data: %s %s %s",
-                    self.country_region_code, self.article,
-                    self.descriptor)
-
-        data = self.get_report_data()
-
+    def get_report_header(self):
         report_header = self.report_header_template(
             title="Member State report / {} / 2018 / {} / {}".format(
                 self.article,
@@ -425,6 +419,18 @@ class RegReportData2018(BaseRegComplianceView):
             help_text=self.help_text,
             use_translation=True
         )
+
+        return report_header
+
+    # @cache(get_reportdata_key, dependencies=['translation'])
+    def render_reportdata(self):
+        logger.info("Quering database for 2018 report data: %s %s %s",
+                    self.country_region_code, self.article,
+                    self.descriptor)
+
+        data = self.get_report_data()
+
+        report_header = self.get_report_header()
 
         # template = getattr(self, self.article, None)
         template = self.template
@@ -447,3 +453,47 @@ class RegReportData2018(BaseRegComplianceView):
             return self.index()
 
         return render_html()
+
+
+class RegReportData2020(ReportData2020, RegReportData2018):
+    implementsOnly(IRegionalReportDataView)
+
+    section = 'regional-descriptors'
+
+    @property
+    def country_region_code(self):
+        """" Needed for caching """
+        return self.region
+
+    @property
+    def country_code(self):
+        """" Needed for caching """
+        countries = [c[0] for c in self.available_countries]
+
+        return ','.join(countries)
+
+    @property
+    def regions(self):
+        """" Needed for caching """
+        return [self.region]
+
+    @property
+    def report_header_title(self):
+        title = "Member State report / {} / 2018 / {} / {}".format(
+            self.article,
+            self.descriptor_title,
+            self.country_region_name,
+        )
+
+        return title
+
+    def get_report_definition(self):
+        rep_def = get_report_definition(self.year, self.article).get_fields()
+
+        return rep_def
+
+    def get_report_header(self):
+        return RegReportData2018.get_report_header(self)
+
+    # def render_reportdata(self):
+    #     return RegReportData2018.render_reportdata(self)

@@ -743,8 +743,8 @@ view."""
         return order
 
     def _get_order_cols_Art11(self):
-        o = ('Descriptor', 'MonitoringProgrammes', 'P_ProgrammeCode',
-             'GESCriteria', 'Feature')
+        o = ('CountryCode', 'Descriptor', 'MonitoringProgrammes',
+             'P_ProgrammeCode', 'GESCriteria', 'Feature')
 
         return o
 
@@ -980,7 +980,7 @@ view."""
         t = sql2018.t_V_ART11_Strategies_Programmes_2020
 
         conditions = [
-            t.c.CountryCode == self.country_code
+            t.c.CountryCode.in_(self.country_code.split(','))
         ]
 
         if filter_by_descriptor:

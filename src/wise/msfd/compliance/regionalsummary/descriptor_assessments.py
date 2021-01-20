@@ -128,6 +128,9 @@ class RegDescriptorLevelAssessments(BaseRegSummaryView,
             for article_folder in article_folders:
                 article = article_folder.title
 
+                if article in ('Art11', ):
+                    continue
+
                 assess_data = self._get_assessment_data(article_folder)
                 article_data = self._get_article_data(
                     region_code.upper(), desc_id, assess_data, article

@@ -112,6 +112,9 @@ class RegionalSummaryAssessment(BaseRegSummaryView, SummaryAssessment):
                 row = [descriptor_title]
 
                 for article_folder in descr_folder.contentValues():
+                    if article_folder.title in ('Art11', ):
+                        continue
+
                     score = self.get_overall_score(
                         region_folder.id.upper(), descr_folder.id.upper(),
                         article_folder.title

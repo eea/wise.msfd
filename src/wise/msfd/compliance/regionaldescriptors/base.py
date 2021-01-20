@@ -506,6 +506,10 @@ class BaseRegComplianceView(BaseView, NationalAssessmentMixin):
         return self._countryregion_folder.title
 
     @property
+    def region(self):
+        return self._countryregion_folder.id
+
+    @property
     def available_countries(self):
         return self._countryregion_folder._countries_for_region
 

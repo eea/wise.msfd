@@ -17,7 +17,8 @@ class DescriptorLevelAssessments(BaseNatSummaryView, AssessmentDataMixin):
     article_titles = {
         'Art9': 'Article 9 - GES Determination',
         'Art8': 'Article 8 - Initial Assessment',
-        'Art10': 'Article 10 - Environmental Targets'
+        'Art10': 'Article 10 - Environmental Targets',
+        'Art11': 'Article 11 - Monitoring Programmes'
     }
 
     descriptor_types = DESCRIPTOR_TYPES

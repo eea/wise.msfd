@@ -159,6 +159,9 @@ class SummaryAssessment(BaseNatSummaryView):
                     row = [descriptor_title]
 
                     for article_folder in self.get_article_folders(descr_folder):
+                        if article_folder.title in ('Art11', ):
+                            continue
+
                         score = self.get_overall_score(
                             region_folder.id.upper(), descr_folder.id.upper(),
                             article_folder.title

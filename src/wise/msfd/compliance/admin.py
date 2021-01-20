@@ -119,6 +119,7 @@ class BootstrapCompliance(BrowserView):
         """
 
         descriptors = get_all_descriptors()
+        descriptors = [d for d in descriptors if d[0] != 'D1']
 
         debug_descriptors = ('D1.1', 'D4', 'D5', 'D6')
 
@@ -193,6 +194,26 @@ class BootstrapCompliance(BrowserView):
 
         self.create_comments_folder(nda)
 
+    def create_rda_folder(self, df, desc_code, art):
+        if art.lower() in df.contentIds():
+            rda = df[art.lower()]
+        else:
+            rda = create(df,
+                         'wise.msfd.regionaldescriptorassessment',
+                         title=art)
+
+            lr = rda.__ac_local_roles__
+            group = self.get_group(desc_code)
+            lr[group] = ['Contributor']
+
+            logger.info("Created RegionalDescriptorArticle %s",
+                        rda.absolute_url())
+
+            self.set_layout(rda, '@@reg-desc-art-view')
+            alsoProvides(rda, interfaces.IRegionalDescriptorAssessment)
+
+        self.create_comments_folder(rda)
+
     def make_country(self, parent, country_code, name):
 
         if country_code.lower() in parent.contentIds():
@@ -255,25 +276,12 @@ class BootstrapCompliance(BrowserView):
                 df = create(rf, 'Folder', title=description, id=desc_code)
                 alsoProvides(df, interfaces.IDescriptorFolder)
 
+            # articles 8, 9, 10
             for art in self._get_articles():
-                if art.lower() in df.contentIds():
-                    rda = df[art.lower()]
-                else:
-                    rda = create(df,
-                                 'wise.msfd.regionaldescriptorassessment',
-                                 title=art)
+                self.create_rda_folder(df, desc_code, art)
 
-                    lr = rda.__ac_local_roles__
-                    group = self.get_group(desc_code)
-                    lr[group] = ['Contributor']
-
-                    logger.info("Created RegionalDescriptorArticle %s",
-                                rda.absolute_url())
-
-                    self.set_layout(rda, '@@reg-desc-art-view')
-                    alsoProvides(rda, interfaces.IRegionalDescriptorAssessment)
-
-                self.create_comments_folder(rda)
+            # article 11
+            self.create_rda_folder(df, desc_code, 'Art11')
 
         return rf
 
