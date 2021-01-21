@@ -461,6 +461,10 @@ class RegReportData2020(ReportData2020, RegReportData2018):
     section = 'regional-descriptors'
 
     @property
+    def region(self):
+        return self._countryregion_folder.id
+
+    @property
     def country_region_code(self):
         """" Needed for caching """
         return self.region
