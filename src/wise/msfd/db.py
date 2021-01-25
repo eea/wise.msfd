@@ -464,7 +464,7 @@ def get_all_records_ordered(table, order_cols, *conditions):
     sess = session()
 
     order_by_mru = (hasattr(table.c, 'MarineReportingUnit')
-                and [table.c.MarineReportingUnit] or [])
+                    and [table.c.MarineReportingUnit] or [])
 
     order_by = order_by_mru + [getattr(table.c, c)for c in order_cols]
 

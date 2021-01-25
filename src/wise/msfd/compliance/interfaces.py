@@ -130,6 +130,11 @@ class IReportDataViewOverview(Interface):
     """
 
 
+class IRegReportDataViewOverview(Interface):
+    """ Plone pages that display regional report data (overview)
+    """
+
+
 class IEditAssessorsForm(Interface):
     """ Interface for assessment settings form
 

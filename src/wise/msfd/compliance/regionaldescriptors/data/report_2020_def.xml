@@ -42,5 +42,13 @@
         <element name="P_Contact">Contact</element>
         <element name="P_References">References</element>
     </Art11>
+  <Art11Overview>
+    <element name="ResponsibleCompetentAuthority">Competent Authority responsible for monitoring</element>
+    <element name="ResponsibleOrganisations">Responsible organisations</element>
+    <element name="RelationshipToCA">Relationship to CA</element>
+    <element name="PublicConsultationDates">Public consultation dates</element>
+    <element name="PublicConsultationSite">Public consultation site</element>
+    <element name="RegionalCooperation" translate="true">Regional cooperation</element>
+  </Art11Overview>
 </data>
 

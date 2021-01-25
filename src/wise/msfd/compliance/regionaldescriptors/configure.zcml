@@ -41,14 +41,6 @@
 
   <browser:page
     for="..interfaces.IRegionalDescriptorAssessment"
-    name="view-report-data-2020"
-    class=".reportdata.RegReportData2020"
-    template="../nationaldescriptors/pt/report-data-view.pt"
-    permission="zope2.View"
-    />
-
-  <browser:page
-    for="..interfaces.IRegionalDescriptorAssessment"
     name="view-report-data-2012"
     class=".reportdata.RegReportData2012"
     template="./pt/report-data-view.pt"
@@ -99,6 +91,23 @@
     class=".main.RegDescRegionOverviewAssessments"
     template="./pt/reg-region-start-assessments.pt"
     permission="wise.ViewAssessmentData"
+    />
+
+  <!-- view report data 2020 -->
+  <browser:page
+    for="..interfaces.IRegionalDescriptorAssessment"
+    name="view-report-data-2020"
+    class=".reportdata.RegReportData2020"
+    template="../nationaldescriptors/pt/report-data-view.pt"
+    permission="zope2.View"
+    />
+
+  <browser:page
+    for="..interfaces.IRegionalDescriptorRegionsFolder"
+    name="art11-view-report-data-2020"
+    class=".reportdata.RegReportDataOverview2020Art11"
+    template="./pt/report-data-view.pt"
+    permission="zope2.View"
     />
 
 

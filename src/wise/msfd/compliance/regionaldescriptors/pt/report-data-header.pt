@@ -16,7 +16,12 @@
         </a>
       </div>
 
-      <div metal:use-macro="context/wise-macros/macros/reg-desc-report-nav"></div>
+      <tal:cond tal:condition="python: view.is_primary_article">
+        <div metal:use-macro="context/wise-macros/macros/reg-desc-report-nav"></div>
+      </tal:cond>
+      <tal:cond tal:condition="python: not view.is_primary_article">
+        <div></div>
+      </tal:cond>
 
     </div>
 
@@ -33,7 +38,7 @@
         <td>Report due</td>
         <td tal:content="options/report_due"/>
       </tr>
-      <tr>
+      <tr tal:condition="view/is_primary_article">
         <td>GES Descriptor</td>
         <td tal:content="python:view.descriptor_obj.title"/>
       </tr>

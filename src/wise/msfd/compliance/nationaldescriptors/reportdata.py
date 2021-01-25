@@ -976,21 +976,20 @@ view."""
 
         return out
 
-    def get_data_from_view_Art11(self, filter_by_descriptor=True):
+    def get_data_from_view_Art11(self):
         t = sql2018.t_V_ART11_Strategies_Programmes_2020
 
         conditions = [
             t.c.CountryCode.in_(self.country_code.split(','))
         ]
 
-        if filter_by_descriptor:
-            descriptor = get_descriptor(self.descriptor)
-            all_ids = list(descriptor.all_ids())
+        descriptor = get_descriptor(self.descriptor)
+        all_ids = list(descriptor.all_ids())
 
-            if self.descriptor.startswith('D1.'):
-                all_ids.append('D1')
+        if self.descriptor.startswith('D1.'):
+            all_ids.append('D1')
 
-            conditions.append(t.c.Descriptor.in_(all_ids))
+        conditions.append(t.c.Descriptor.in_(all_ids))
 
         count, q = db.get_all_records_ordered(
             t,
@@ -1615,15 +1614,21 @@ class ReportDataOverview2020Art11(ReportData2020):
 
         return rep_def
 
-    # def get_report_header(self):
-    #     return 'Report header here'
-
     def get_data_from_view_Art11(self):
-        d = super(ReportDataOverview2020Art11, self).get_data_from_view_Art11(
-            filter_by_descriptor=False
+        t = sql2018.t_V_ART11_Strategies_Programmes_2020
+
+        conditions = [
+            t.c.CountryCode.in_(self.country_code.split(','))
+        ]
+
+        count, q = db.get_all_specific_columns(
+            [t.c.ResponsibleCompetentAuthority, t.c.ResponsibleOrganisations,
+             t.c.RelationshipToCA, t.c.PublicConsultationDates,
+             t.c.PublicConsultationSite, t.c.RegionalCooperation],
+            *conditions
         )
 
-        return d
+        return q
 
     @property
     def report_header_title(self):

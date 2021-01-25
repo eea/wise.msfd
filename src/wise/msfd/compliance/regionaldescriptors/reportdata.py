@@ -9,12 +9,14 @@ import xlsxwriter
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 from Products.statusmessages.interfaces import IStatusMessage
 from wise.msfd import db, sql2018
-from wise.msfd.compliance.interfaces import IRegionalReportDataView
+from wise.msfd.compliance.interfaces import (IRegionalReportDataView,
+                                             IRegReportDataViewOverview)
 from wise.msfd.gescomponents import get_features, get_parameters
 from wise.msfd.translation import retrieve_translation
 from wise.msfd.utils import ItemList, timeit
 
-from ..nationaldescriptors.reportdata import ReportData2020
+from ..nationaldescriptors.reportdata import (ReportData2020,
+                                              ReportDataOverview2020Art11)
 from ..nationaldescriptors.utils import consolidate_singlevalue_to_list
 from .a8 import RegDescA82012, RegDescA82018Row
 from .a9 import RegDescA92012, RegDescA92018Row
@@ -147,6 +149,16 @@ class RegReportData2018(BaseRegComplianceView):
     Art8 = RegDescA82018Row
     Art9 = RegDescA92018Row
     Art10 = RegDescA102018Row
+
+    @property
+    def report_header_title(self):
+        title = "Member State report / {} / 2018 / {} / {}".format(
+                self.article,
+                self.descriptor_title,
+                self.country_region_name,
+            )
+
+        return title
 
     @property
     def all_descriptor_ids(self):
@@ -407,11 +419,7 @@ class RegReportData2018(BaseRegComplianceView):
 
     def get_report_header(self):
         report_header = self.report_header_template(
-            title="Member State report / {} / 2018 / {} / {}".format(
-                self.article,
-                self.descriptor_title,
-                self.country_region_name,
-            ),
+            title=self.report_header_title,
             factsheet=None,
             # TODO: find out how to get info about who reported
             report_by='Member state',
@@ -501,3 +509,46 @@ class RegReportData2020(ReportData2020, RegReportData2018):
 
     # def render_reportdata(self):
     #     return RegReportData2018.render_reportdata(self)
+
+
+class RegReportDataOverview2020Art11(RegReportData2020):
+    # implementsOnly(IRegReportDataViewOverview)
+
+    is_primary_article = False
+
+    @property
+    def descriptor(self):
+        return 'Not defined'
+
+    @property
+    def article(self):
+        return 'Art11'
+
+    def get_report_definition(self):
+        article = '{}Overview'.format(self.article)
+        rep_def = get_report_definition(self.year, article).get_fields()
+
+        return rep_def
+
+    def get_data_from_view_Art11(self):
+        t = sql2018.t_V_ART11_Strategies_Programmes_2020
+
+        conditions = [
+            t.c.CountryCode.in_(self.country_code.split(','))
+        ]
+
+        count, q = db.get_all_specific_columns(
+            [t.c.ResponsibleCompetentAuthority, t.c.ResponsibleOrganisations,
+             t.c.RelationshipToCA, t.c.PublicConsultationDates,
+             t.c.PublicConsultationSite, t.c.RegionalCooperation],
+            *conditions
+        )
+
+        return q
+
+    @property
+    def report_header_title(self):
+        title = "Member State report / Art11 / 2018 / {} - Overview"\
+            .format(self.country_region_name)
+
+        return title

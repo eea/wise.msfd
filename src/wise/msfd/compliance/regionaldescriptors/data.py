@@ -16,7 +16,8 @@ f_2020 = resource_filename(__package__, definition_files['2020'])
 
 REPORT_DEFS = {
     '2020': {
-        'Art11': ReportDefinition(f_2020, 'Art11')
+        'Art11': ReportDefinition(f_2020, 'Art11'),
+        'Art11Overview': ReportDefinition(f_2020, 'Art11Overview')
     },
     '2018': {
         'Art8': ReportDefinition(f_2018, 'Art8'),
