@@ -92,6 +92,15 @@ class OverallScores(object):
         if max_score == 0:  # all phases not relevant
             return '-', '-'
 
+        # check if adequacy and consistency scores are 0
+        # and they are not 'Not relevant'
+        # if both are 0, overall score is 0 regardless of coherence
+        if (self.adequacy['score'] == 0 and self.consistency['score'] == 0
+            and (self.adequacy['max_score'] > 0
+                 or self.consistency['max_score'] > 0)
+            ):
+            overall_score = 0
+
         final_score = int(round(overall_score))
 
         # TODO this formula is not correct, why was it introduced
