@@ -115,3 +115,20 @@ def format_area(field, value, lang):
 def mrus_as_table(field, value, lang):
 
     return SimpleTable(field.name, value)
+
+
+def anchor(field, value, lang):
+    if value and value.startswith('http'):
+        return u"<a href='{0}'>{0}</a>".format(value)
+
+    return value
+
+
+def public_consulation_date(field, value, lang):
+    if value:
+        v = value
+
+        return "{}/{}/{} - {}/{}/{}".format(v[0:4], v[4:6], v[6:8],
+                                            v[9:13], v[13:15], v[15:17])
+
+    return value

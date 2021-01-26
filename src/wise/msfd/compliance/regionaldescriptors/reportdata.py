@@ -512,7 +512,7 @@ class RegReportData2020(ReportData2020, RegReportData2018):
 
 
 class RegReportDataOverview2020Art11(RegReportData2020):
-    # implementsOnly(IRegReportDataViewOverview)
+    implementsOnly(IRegReportDataViewOverview)
 
     is_primary_article = False
 
@@ -538,7 +538,8 @@ class RegReportDataOverview2020Art11(RegReportData2020):
         ]
 
         count, q = db.get_all_specific_columns(
-            [t.c.ResponsibleCompetentAuthority, t.c.ResponsibleOrganisations,
+            [t.c.CountryCode, t.c.ResponsibleCompetentAuthority,
+             t.c.ResponsibleOrganisations,
              t.c.RelationshipToCA, t.c.PublicConsultationDates,
              t.c.PublicConsultationSite, t.c.RegionalCooperation],
             *conditions
