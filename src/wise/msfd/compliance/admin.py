@@ -689,7 +689,7 @@ class AdminScoring(BaseComplianceView, AssessmentDataMixin):
                 del obj.saved_assessment_data
                 obj._p_changed = True
 
-    def recalculate_score_for_objects(self, objects, questions):
+    def recalculate_score_for_objects(self, objects, questions, section):
         for obj in objects:
             if hasattr(obj, 'saved_assessment_data') \
                     and obj.saved_assessment_data:
@@ -702,8 +702,10 @@ class AdminScoring(BaseComplianceView, AssessmentDataMixin):
                           if '_Score' in k and v is not None}
 
                 article = obj.title
+                is_art10_nat_desc = (section == 'national'
+                                     and article in ('Art10', ))
 
-                if article in ('Art10',):
+                if is_art10_nat_desc:
                     descriptor_id = obj.aq_parent.id.upper()
                     descriptor_obj = self.descriptor_obj(descriptor_id)
                     country_code = obj.aq_parent.aq_parent.aq_parent.id.upper()
@@ -731,15 +733,24 @@ class AdminScoring(BaseComplianceView, AssessmentDataMixin):
 
                     values = score.values
 
-                    if article in ('Art10', ):
+                    if is_art10_nat_desc:
                         values = self._get_values_for_question(
                             data, descriptor_obj, _question, muids
                         )
 
                     descriptor = score.descriptor
 
-                    new_score = _question.calculate_score(descriptor,
-                                                          values)
+                    # this is a fix for a special case, when the score object
+                    # was initialized with empty values
+                    if not values and section == 'regional':
+                        field_name = '{}_{}'.format(article, id_)
+                        values = [
+                            v
+                            for k, v in data.items()
+                            if field_name in k and isinstance(v, int)
+                        ]
+
+                    new_score = _question.calculate_score(descriptor, values)
 
                     data[q_id] = new_score
                     new_overall_score += getattr(new_score,
@@ -749,8 +760,10 @@ class AdminScoring(BaseComplianceView, AssessmentDataMixin):
                 obj.saved_assessment_data._p_changed = True
 
     def recalculate_scores(self):
-        self.recalculate_score_for_objects(self.ndas, self.questions)
-        self.recalculate_score_for_objects(self.rdas, self.questions_reg)
+        # self.recalculate_score_for_objects(self.ndas, self.questions,
+        #                                    'national')
+        self.recalculate_score_for_objects(self.rdas, self.questions_reg,
+                                           'regional')
 
     # @cache(lambda func, *args: func.__name__ + args[1].absolute_url(),
     #        lifetime=1800)
