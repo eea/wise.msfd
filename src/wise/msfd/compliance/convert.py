@@ -2,16 +2,27 @@
 some other useful formats. Used when displaying data.
 """
 
+import re
+
 from wise.msfd.gescomponents import get_ges_component
 from wise.msfd.labels import GES_LABELS
 from wise.msfd.translation import get_translated
 from wise.msfd.utils import ItemLabel, ItemList, SimpleTable
 
 
+comma_separator_re = re.compile(r',(?=[^\s])')
+
+
 def simple_itemlist(field, value, lang):
     vals = set(value.split(','))
 
     return ItemList(rows=vals)
+
+
+def simple_itemlist_re(field, value, lang):
+    vals = re.split(comma_separator_re, value)
+
+    return ItemList(rows=set(vals))
 
 
 def csv_ges_labels_list(field, value, lang):
@@ -75,6 +86,19 @@ def csv_ges_labels_inverse_list_indicators(field, value, lang):
     return ItemList(rows=res)
 
 
+def art11_indicators(field, value, lang):
+    vals = re.split(comma_separator_re, value)
+
+    res = []
+
+    for v in vals:
+        code = v.split(' - ')[0].strip()
+        i = get_indicators(field, code, lang)
+        res.append(i)
+
+    return ItemList(rows=res)
+
+
 def format_nr(field, value, lang):
     if value:
         return "%.2f" % value
@@ -119,7 +143,7 @@ def mrus_as_table(field, value, lang):
 
 def anchor(field, value, lang):
     if value and value.startswith('http'):
-        return u"<a href='{0}'>{0}</a>".format(value)
+        return u"<a href='{0}' target='_blank'>{0}</a>".format(value)
 
     return value
 
@@ -132,3 +156,10 @@ def public_consulation_date(field, value, lang):
                                             v[9:13], v[13:15], v[15:17])
 
     return value
+
+
+def link_to_nat_desc_art11(field, value, lang):
+    template = u"<a href='../../../{0}/@@view-report-data-2020'>{1}</a>"\
+        .format(value.lower(), value)
+
+    return template

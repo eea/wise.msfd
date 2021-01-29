@@ -683,14 +683,12 @@ class BaseComplianceView(BrowserView, BasePublicPage, SecurityMixin):
 
     def translate_value(self, fieldname, value, source_lang):
         is_translatable = fieldname in self.TRANSLATABLES
-
         v = self.translate_view()
-
-        # source_lang = self.country_code
 
         return v.translate(source_lang=source_lang,
                            value=value,
                            is_translatable=is_translatable)
+
     @property
     def national_report_art12(self):
         portal_type = 'national_summary'

@@ -1,0 +1,447 @@
+"CountryCode";"AT";"Austria";
+"CountryCode";"BE";"Belgium";
+"CountryCode";"BG";"Bulgaria";
+"CountryCode";"CY";"Cyprus";
+"CountryCode";"CZ";"Czechia";
+"CountryCode";"DE";"Germany";
+"CountryCode";"DK";"Denmark";
+"CountryCode";"DZ";"Algeria";
+"CountryCode";"EE";"Estonia";
+"CountryCode";"EG";"Egypt";
+"CountryCode";"EL";"Greece";
+"CountryCode";"ES";"Spain";
+"CountryCode";"FI";"Finland";
+"CountryCode";"FR";"France";
+"CountryCode";"GE";"Georgia";
+"CountryCode";"HR";"Croatia";
+"CountryCode";"HU";"Hungary";
+"CountryCode";"IE";"Ireland";
+"CountryCode";"IL";"Israel";
+"CountryCode";"IS";"Iceland";
+"CountryCode";"IT";"Italy";
+"CountryCode";"LB";"Lebanon";
+"CountryCode";"LT";"Lithuania";
+"CountryCode";"LU";"Luxembourg";
+"CountryCode";"LV";"Latvia";
+"CountryCode";"LY";"Libya";
+"CountryCode";"MA";"Morocco";
+"CountryCode";"MT";"Malta";
+"CountryCode";"NL";"Netherlands";
+"CountryCode";"NO";"Norway";
+"CountryCode";"PL";"Poland";
+"CountryCode";"PS";"Palestine";
+"CountryCode";"PT";"Portugal";
+"CountryCode";"RO";"Romania";
+"CountryCode";"RU";"Russian Federation";
+"CountryCode";"SE";"Sweden";
+"CountryCode";"SI";"Slovenia";
+"CountryCode";"SK";"Slovakia";
+"CountryCode";"SY";"Syria";
+"CountryCode";"TN";"Tunisia";
+"CountryCode";"TR";"Turkey";
+"CountryCode";"UA";"Ukraine";
+"CountryCode";"UK";"United Kingdom";
+"Coverage";2014;"Adequate monitoring was in place in 2014";"Year of implementation of Art. 11"
+"Coverage";2018;"Adequate monitoring was in place by 2018";"Year implementation was previously reported for some programmes"
+"Coverage";2020;"Adequate monitoring is in place by July 2020";"Date for updating monitoring programmes"
+"Coverage";2024;"Adequate monitoring will be in place by 2024";"Year for next updates of Art. 8, 9, 10"
+"Coverage";"LowRisk";"Monitoring is not being put in place for this descriptor due to a low risk";
+"Coverage";"NotRelevant";"Monitoring for this descriptor is not relevant";"E.g. does not occur in MS waters (note this option is not relevant for targets or measures, where monitoring is expected to enable progress with the targets or measures to be assessed)."
+"Frequency";"2-monthly";"2-monthly";
+"Frequency";"2-weekly";"2-weekly";
+"Frequency";"2-yearly";"Every 2 years";
+"Frequency";"3-monthly";"3-monthly";
+"Frequency";"3-yearly";"Every 3 years";
+"Frequency";"6-monthly";"6-monthly";
+"Frequency";"6-yearly";"Every 6 years";
+"Frequency";"As needed";"As needed";
+"Frequency";"Continually";"Continually";
+"Frequency";"Daily";"Daily";
+"Frequency";"Hourly";"Hourly";
+"Frequency";"4-weekly";"4-weekly";
+"Frequency";"Monthly";"Monthly";
+"Frequency";"One-off";"One-off";
+"Frequency";"Other";"Other (specify)";
+"Frequency";"Unknown";"Unknown";
+"Frequency";"Weekly";"Weekly";
+"Frequency";"Yearly";"Yearly";
+"GEScomponent";"D1.1";"D1 Biodiversity - birds";
+"GEScomponent";"D1.2";"D1 Biodiversity - mammals";
+"GEScomponent";"D1.3";"D1 Biodiversity - reptiles";
+"GEScomponent";"D1.4";"D1 Biodiversity - fish";
+"GEScomponent";"D1.5";"D1 Biodiversity - cephalopods";
+"GEScomponent";"D1.6";"D1 Biodiversity – pelagic habitats";
+"GEScomponent";"D10";"D10 Litter";
+"GEScomponent";"D10C1";"D10C1 Litter (excluding micro-litter)";
+"GEScomponent";"D10C2";"D10C2 Micro-litter";
+"GEScomponent";"D10C3";"D10C3 Litter ingested";
+"GEScomponent";"D10C4";"D10C4 Adverse effects of litter";
+"GEScomponent";"D11";"D11 Energy, including underwater noise";
+"GEScomponent";"D11C1";"D11C1 Anthropogenic impulsive sound";
+"GEScomponent";"D11C2";"D11C2 Anthropogenic continuous low-frequency sound";
+"GEScomponent";"D1C1";"D1C1 Mortality rate from incidental by-catch";
+"GEScomponent";"D1C2";"D1C2 Population abundance";
+"GEScomponent";"D1C3";"D1C3 Population demographic characteristics";
+"GEScomponent";"D1C4";"D1C4 Population distributional range and pattern";
+"GEScomponent";"D1C5";"D1C5 Habitat for the species";
+"GEScomponent";"D1C6";"D1C6 Pelagic habitat condition";
+"GEScomponent";"D2";"D2 Non-indigenous species";
+"GEScomponent";"D2C1";"D2C1 Newly-introduced NIS";
+"GEScomponent";"D2C2";"D2C2 Established NIS";
+"GEScomponent";"D2C3";"D2C3 Adverse effects of NIS";
+"GEScomponent";"D3";"D3 Commercial fish and shellfish";
+"GEScomponent";"D3C1";"D3C1 Fishing mortality rate (F)";
+"GEScomponent";"D3C2";"D3C2 Spawning stock biomass (SSB)";
+"GEScomponent";"D3C3";"D3C3 Population age/size distribution";
+"GEScomponent";"D4/D1";"D4 Food webs/D1 Biodiversity - ecosystems";
+"GEScomponent";"D4C1";"D4C1 Trophic guild species diversity";
+"GEScomponent";"D4C2";"D4C2 Abundance across trophic guilds";
+"GEScomponent";"D4C3";"D4C3 Trophic guild size distribution";
+"GEScomponent";"D4C4";"D4C4 Trophic guild productivity";
+"GEScomponent";"D5";"D5 Eutrophication";
+"GEScomponent";"D5C1";"D5C1 Nutrient concentrations";
+"GEScomponent";"D5C2";"D5C2 Chlorophyll-a concentration";
+"GEScomponent";"D5C3";"D5C3 Harmful algal blooms";
+"GEScomponent";"D5C4";"D5C4 Photic limit";
+"GEScomponent";"D5C5";"D5C5 Dissolved oxygen concentration";
+"GEScomponent";"D5C6";"D5C6 Opportunistic macroalgae of benthic habitats";
+"GEScomponent";"D5C7";"D5C7 Macrophyte communities of benthic habitats";
+"GEScomponent";"D5C8";"D5C8 Macrofaunal communities of benthic habitats";
+"GEScomponent";"D6/D1";"D6 Sea-floor integrity/D1 Biodiversity - benthic habitats";
+"GEScomponent";"D6C1";"D6C1 Physical loss of the seabed";
+"GEScomponent";"D6C2";"D6C2 Physical disturbance to the seabed";
+"GEScomponent";"D6C3";"D6C3 Adverse effects from physical disturbance";
+"GEScomponent";"D6C4";"D6C4 Benthic habitat extent";
+"GEScomponent";"D6C5";"D6C5 Benthic habitat condition";
+"GEScomponent";"D7";"D7 Hydrographical changes";
+"GEScomponent";"D7C1";"D7C1 Alteration of hydrographical conditions";
+"GEScomponent";"D7C2";"D7C2 Adverse effects from alteration of hydrographical conditions";
+"GEScomponent";"D8";"D8 Contaminants";
+"GEScomponent";"D8C1";"D8C1 Contaminant in environment";
+"GEScomponent";"D8C2";"D8C2 Adverse effects of contaminants";
+"GEScomponent";"D8C3";"D8C3 Acute pollution events";
+"GEScomponent";"D8C4";"D8C4 Adverse effects of acute pollution events";
+"GEScomponent";"D9";"D9 Contaminants in seafood";
+"GEScomponent";"D9C1";"D9C1 Contaminants in seafood";
+"GEScomponent";"NotRelevant";"GES component not relevant";
+"MonitoringPurpose";"Effectiveness of measures";"Effectiveness of measures";
+"MonitoringPurpose";"Environmental state and impacts";"Environmental state and impacts";
+"MonitoringPurpose";"Human activities causing the pressures";"Human activities causing the pressures";
+"MonitoringPurpose";"Pressures at source";"Pressures at source";"Land-based, riverine, sea-based and atmospheric sources"
+"MonitoringPurpose";"Pressures in the marine environment";"Pressures in the marine environment";
+"MonitoringType";"Administrative data collection";"Administrative data collection";
+"MonitoringType";"Ecological modelling";"Ecological modelling";
+"MonitoringType";"In-situ sampling coastal";"In-situ sampling coastal";
+"MonitoringType";"In-situ sampling land/beach";"In-situ sampling land/beach";
+"MonitoringType";"In-situ sampling offshore";"In-situ sampling offshore";
+"MonitoringType";"Numerical modelling";"Numerical modelling";
+"MonitoringType";"Other";"Other";
+"MonitoringType";"Remote flight imagery";"Remote flight imagery";"Orthoimages"
+"MonitoringType";"Remote satellite imagery";"Remote satellite imagery";"Satellite observations"
+"MonitoringType";"Remote surveillance";"Remote surveillance";"E.g. buoys"
+"MonitoringType";"Visual observation";"Visual observation";
+"RegionalCooperation_coordination";"HELCOM";"Helsinki Commission for the Helsinki Convention on the Protection of the Marine Environment of the Baltic Sea Area";
+"RegionalCooperation_coordination";"OSPAR";"OSPAR Commission for the Oslo-Paris Convention for the Protection of the Marine Environment of the North-East Atlantic";
+"RegionalCooperation_coordination";"BARCON";"Barcelona Convention (UNEP/MAP)";
+"RegionalCooperation_coordination";"BSC";"Black Sea Commission for the Bucharest Convention";
+"RegionalCooperation_coordination";"Other";"Other";
+"RegionalCooperation_implementation";"Agreed data collection methods";"Agreed data collection methods";
+"RegionalCooperation_implementation";"Common monitoring strategy";"Common monitoring strategy";"Spatial and temporal design of programme"
+"RegionalCooperation_implementation";"Coordinated data collection";"Coordinated data collection";"Delivered separately by each country"
+"RegionalCooperation_implementation";"Joint data collection";"Joint data collection";"Multinational delivery using same platform and/or algorithms"
+"SpatialScope";"Beyond MS Marine Waters";"Beyond MS Marine Waters";
+"SpatialScope";"Coastal waters (WFD)";"Coastal waters (WFD)";
+"SpatialScope";"Continental shelf (beyond EEZ)";"Continental shelf (beyond EEZ)";
+"SpatialScope";"EEZ (or similar)";"EEZ (or similar)";" Valid for similar zones such as Contiguous Zone, Fishing Zone or Ecological Protection Zone"
+"SpatialScope";"Terrestrial part of MS";"Terrestrial part of MS";
+"SpatialScope";"Territorial waters";"Territorial waters";
+"SpatialScope";"Transitional waters (WFD)";"Transitional waters (WFD)";
+"DirectivesConventions";"AC-AMAP";"Arctic Council Monitoring and Assessment Programme";"Arctic Council"
+"DirectivesConventions";"BC-IMAP";"UNEP-MAP Integrated Monitoring and Assessment Programme";"Barcelona Convention"
+"DirectivesConventions";"BONN";"Bonn Aerial surveillance for prevention of pollution";"Bonn Agreement"
+"DirectivesConventions";"BS-IMAP";"BSC Integrated Monitoring and Assessment Programme";"Bucharest Convention"
+"DirectivesConventions";"CPH";"Copenhagen Agreement";"Copenhagen Agreement"
+"DirectivesConventions";"CWS-MAP";"Trilateral Monitoring and Assessment Programme (TMAP)";"Trilateral Wadden Sea Cooperation"
+"DirectivesConventions";"EU-BD";"Birds Directive";"European Commission"
+"DirectivesConventions";"EU-BWD";"Bathing Water Directive";"European Commission"
+"DirectivesConventions";"EU-EIA";"Environmental Impact Assessment Directive (2011/92/EU)";"European Commission"
+"DirectivesConventions";"EU-FSR";"Foodstuffs Regulation";"European Commission"
+"DirectivesConventions";"EU-HD";"Habitats Directive";"European Commission"
+"DirectivesConventions";"EU-IASR";"Invasive Alien Species Regulation";"European Commission"
+"DirectivesConventions";"EU-CFP-DCF";"Data Collection Framework Multi-Annual Plan (Common Fisheries Policy)";"European Commission"
+"DirectivesConventions";"EU-MSP";"Maritime Spatial Planning Directive";"European Commission"
+"DirectivesConventions";"EU-ND";"Nitrates Directive";"European Commission"
+"DirectivesConventions";"EU-NEC";"National Emission Ceilings Directive";"European Commission"
+"DirectivesConventions";"EU-Sev";"Seveso Directive";"European Commission"
+"DirectivesConventions";"EU-UWWD";"Urban Waste Water Treatment Directive";"European Commission"
+"DirectivesConventions";"EU-WFD";"Water Framework Directive";"European Commission"
+"DirectivesConventions";"EU-WaFD";"Waste Framework Directive";"European Commission"
+"DirectivesConventions";"GFCM";"General Fisheries Commission for the Mediterranean";"GFCM"
+"DirectivesConventions";"HEL-MON";"HELCOM Monitoring programmes";"Helsinki Convention"
+"DirectivesConventions";"ICCAT";"International Commission for the Conservation of Atlantic Tunas";"ICCAT"
+"DirectivesConventions";"IMO-OPRC";"International Convention on Oil Pollution Preparedness, Response and Co-operation";"International Maritime Organisation"
+"DirectivesConventions";"IMO-OPRC-HNS";"Protocol on Preparedness, Response and Co-operation to pollution Incidents by Hazardous and Noxious Substances";"International Maritime Organisation"
+"DirectivesConventions";"NEAFC";"NEAFC Monitoring of Fisheries";"NEAFC"
+"DirectivesConventions";"OSP-CEMP";"OSPAR Coordinated Environmental Monitoring Programme";"Oslo-Paris Convention"
+"DirectivesConventions";"CMS";"Convention on the Conservation of Migratory Species of Wild Animals (Bonn Convention)";"United Nations"
+"DirectivesConventions";"C-POP";"Stockholm Convention on persistent organic pollutions (POPs)";"United Nations"
+"DirectivesConventions";"CLRTAP";"Convention on Long-Range Transboundary Air Pollution";"United Nations"
+"DirectivesConventions";"C-Hg";"Minamata Convention on Mercury";"United Nations"
+"DirectivesConventions";"MARPOL";"International Convention for the Prevention of Pollution from Ships";"United Nations"
+"DirectivesConventions";"National";"Monitoring programme targeting at national legislation";"National"
+"Feature";"BirdsGrazing";"Grazing birds";"Element level has to be provided "
+"Feature";"BirdsWading";"Wading birds";"Element level has to be provided "
+"Feature";"BirdsSurfaceFeeding";"Surface-feeding birds";"Element level has to be provided "
+"Feature";"BirdsPelagicFeeding";"Pelagic-feeding birds";"Element level has to be provided "
+"Feature";"BirdsBenthicFeeding";"Benthic-feeding birds";"Element level has to be provided "
+"Feature";"MamCetacSmall";"Small toothed cetaceans";"Element level has to be provided "
+"Feature";"MamCetacDeepDiving";"Deep-diving toothed cetaceans";"Element level has to be provided "
+"Feature";"MamCetacBaleenWhales";"Baleen whales";"Element level has to be provided "
+"Feature";"MamSeals";"Seals";"Element level has to be provided "
+"Feature";"RepTurtles";"Turtles";"Element level has to be provided "
+"Feature";"FishCoastal";"Coastal fish";"Element level has to be provided "
+"Feature";"FishPelagicShelf";"Pelagic shelf fish";"Element level has to be provided "
+"Feature";"FishDemersalShelf";"Demersal shelf fish";"Element level has to be provided "
+"Feature";"FishDeepSea";"Deep-sea fish";"Element level has to be provided "
+"Feature";"FishCommercial";"Commercially exploited fish and shellfish";"Element level has to be provided "
+"Feature";"CephaCoastShelf";"Coastal/shelf cephalopods";"Element level has to be provided "
+"Feature";"CephaDeepSea";"Deep-sea cephalopods";"Element level has to be provided "
+"Feature";"HabBenBHT";"Benthic broad habitats";"Element level has to be provided "
+"Feature";"HabBenOther";"Other benthic habitats";"Element level has to be provided "
+"Feature";"HabPelBHT";"Pelagic broad habitats";"Element level has to be provided "
+"Feature";"HabPelOther";"Other pelagic habitats";"Element level has to be provided "
+"Feature";"CharaPhyHydro";"Physical and hydrological characteristics";"Element level has to be provided "
+"Feature";"CharaChem";"Chemical characteristics";"Element level has to be provided "
+"Feature";"EcosysCoastal";"Coastal ecosystems";"Element level has to be provided "
+"Feature";"EcosysShelf";"Shelf ecosystems";"Element level has to be provided "
+"Feature";"EcosysOceanic";"Oceanic/deep-sea ecosystems";"Element level has to be provided "
+"Feature";"PresEnvNISnew";"Newly introduced non-indigenous species";
+"Feature";"PresEnvNISestablished";"Established non-indigenous species";"Element level has to be provided "
+"Feature";"PresEnvBycatch";"Species affected by incidental by-catch";
+"Feature";"PresEnvHydroChanges";"Hydrographical changes";
+"Feature";"PresPhyDisturbSeabed";"Physical disturbance to seabed";
+"Feature";"PresPhyLoss";"Physical loss of the seabed";
+"Feature";"PresEnvEutrophi";"Eutrophication";"Element level has to be provided "
+"Feature";"PresEnvContNonUPBTs";"Contaminants - non UPBT substances";"Element level has to be provided "
+"Feature";"PresEnvContUPBTs";"Contaminants - UPBT substances";"Element level has to be provided "
+"Feature";"PresEnvContSeafood";"Contaminants – in seafood";"Element level has to be provided "
+"Feature";"PrevEnvAdvEffectsSppHab";"Adverse effects on species or habitats";
+"Feature";"PresEnvAcuPolluEvents";"Acute pollution events";
+"Feature";"PresEnvLitter";"Litter in the environment";"Element level has to be provided "
+"Feature";"PresEnvLitterMicro";"Micro-litter in the environment";"Element level has to be provided "
+"Feature";"PresEnvLitterSpp";"Litter and micro-litter in species";"Element level has to be provided "
+"Feature";"PresEnvSoundImpulsive";"Impulsive sound in water";
+"Feature";"PresEnvSoundContinuous";"Continuous low frequency sound";"Element level has to be provided "
+"Feature";"PresBioIntroNIS";"Input or spread of non-indigenous species";
+"Feature";"PresBioIntroMicroPath";"Input of microbial pathogens";
+"Feature";"PresBioIntroGenModSpp";"Input of genetically modified species and translocation of native species";
+"Feature";"PresBioCultHab";"Loss of, or change to, natural biological communities due to cultivation of animal or plant species";
+"Feature";"PresBioDisturbSpp";"Disturbance of species (e.g. where they breed, rest and feed) due to human presence";
+"Feature";"PresBioExtractSpp";"Extraction of, or mortality/injury to, wild species (by commercial and recreational fishing and other activities)";
+"Feature";"PresInputNut";"Input of nutrients – diffuse sources, point sources, atmospheric deposition";
+"Feature";"PresInputOrg";"Input of organic matter – diffuse sources and point sources";
+"Feature";"PresInputCont";"Input of other substances (e.g. synthetic substances, non-synthetic substances, radionuclides) – diffuse sources, point sources, atmospheric deposition, acute events";
+"Feature";"PresInputLitter";"Input of litter (solid waste matter, including micro-sized litter)";
+"Feature";"PresInputSound";"Input of anthropogenic sound (impulsive, continuous)";
+"Feature";"PresInputOthEnergy";"Input of other forms of energy (including electromagnetic fields, light and heat)";
+"Feature";"PresInputWater";"Input of water – point sources (e.g. brine)";
+"Feature";"ActivRestrucLandClaim";"Land claim";
+"Feature";"ActivRestrucCanalisation";"Canalisation and other watercourse modifications";
+"Feature";"ActivRestrucCoastDef";"Coastal defence and flood protection";
+"Feature";"ActivRestrucOffshStruc";"Offshore structures (other than for oil/gas/renewables)";
+"Feature";"ActivRestrucSeabedMorph";"Restructuring of seabed morphology, including dredging and depositing of materials";
+"Feature";"ActivExtrNonLivingMinerals";"Extraction of minerals (rock, metal ores, gravel, sand, shell)";
+"Feature";"ActivExtrNonLivingOilGas";"Extraction of oil and gas, including infrastructure";
+"Feature";"ActivExtrNonLivingSalt";"Extraction of salt";
+"Feature";"ActivExtrNonLivingWater";"Extraction of water";
+"Feature";"ActivProdEnerRenew";"Renewable energy generation (wind, wave and tidal power), including infrastructure";
+"Feature";"ActivProdEnerNonRenew";"Non-renewable energy generation";
+"Feature";"ActivProdEnerCables";"Transmission of electricity and communications (cables)";
+"Feature";"ActivExtrLivingFishHarv";"Fish and shellfish harvesting (professional, recreational)";
+"Feature";"ActivExtrLivingFishProcess";"Fish and shellfish processing";
+"Feature";"ActivExtrLivingPlantHarv";"Marine plant harvesting";
+"Feature";"ActivExtrLivingHunt";"Hunting and collecting for other purposes";
+"Feature";"ActivCultivAquaculMarine";"Aquaculture – marine, including infrastructure";
+"Feature";"ActivCultivAquaculFreshwa";"Aquaculture – freshwater";
+"Feature";"ActivCultivAgri";"Agriculture";
+"Feature";"ActivCultivFores";"Forestry";
+"Feature";"ActivTranspInfras";"Transport infrastructure";
+"Feature";"ActivTranspShip";"Transport – shipping";
+"Feature";"ActivTranspAir";"Transport – air";
+"Feature";"ActivTranspLand";"Transport – land";
+"Feature";"ActivUrbIndUrban";"Urban uses";
+"Feature";"ActivUrbIndIndustrial";"Industrial uses";
+"Feature";"ActivUrbIndWaste";"Waste treatment and disposal";
+"Feature";"ActivTourismInfras";"Tourism and leisure infrastructure";
+"Feature";"ActivTourismActiv";"Tourism and leisure activities";
+"Feature";"ActivMilitary";"Military operations (subject to Article 2(2))";
+"Feature";"ActivResearch";"Research, survey and educational activities";
+"MonitoringMethod";"HEL-001";"HELCOM Guidelines for the annual and periodical compilation and reporting of waterborne pollution inputs to the Baltic Sea (PLC-Water)";
+"MonitoringMethod";"HEL-002";"HELCOM Guideline for the determination of heavy metals in sediment";
+"MonitoringMethod";"HEL-003";"HELCOM Guideline on the determination of perfluoroalkylated substances (PFAS) in seawater";
+"MonitoringMethod";"HEL-004";"HELCOM Guidelines for sampling and determination of dissolved oxygen";
+"MonitoringMethod";"HEL-005";"HELCOM Guidelines for determination of chlorinated hydrocarbons in sediment";
+"MonitoringMethod";"HEL-006";"HELCOM Guidelines for determination of PAH in sediment";
+"MonitoringMethod";"HEL-007";"HELCOM Guidelines for determination of POPs in seawater";
+"MonitoringMethod";"HEL-008";"HELCOM Guidelines for determination of salinity and temperature using CTD";
+"MonitoringMethod";"HEL-009";"HELCOM Guidelines for measuring chlorophyll a";
+"MonitoringMethod";"HEL-010";"HELCOM Guidelines for measuring Secchi depth";
+"MonitoringMethod";"HEL-011";"HELCOM Guidelines for measuring turbidity";
+"MonitoringMethod";"HEL-012";"HELCOM Guidelines for monitoring of mesozooplankton";
+"MonitoringMethod";"HEL-013";"HELCOM Guidelines for monitoring of non-indigenous species by eRAS";
+"MonitoringMethod";"HEL-014";"HELCOM Guidelines for monitoring of radioactive substances";
+"MonitoringMethod";"HEL-015";"HELCOM Guidelines for monitoring phytoplankton species composition, abundance and biomass";
+"MonitoringMethod";"HEL-016";"HELCOM Guidelines for monitoring seal abundance and distribution in the HELCOM area";
+"MonitoringMethod";"HEL-017";"HELCOM Guidelines for monitoring reproductive status of seals in the HELCOM area";
+"MonitoringMethod";"HEL-018";"HELCOM Guidelines for sampling and determination of ammonium";
+"MonitoringMethod";"HEL-019";"HELCOM Guidelines for sampling and determination of hydrogen sulphide";
+"MonitoringMethod";"HEL-020";"HELCOM Guidelines for sampling and determination of nitrate";
+"MonitoringMethod";"HEL-021";"HELCOM Guidelines for sampling and determination of nitrite";
+"MonitoringMethod";"HEL-022";"HELCOM Guidelines for sampling and determination of pH";
+"MonitoringMethod";"HEL-023";"HELCOM Guidelines for sampling and determination of phosphate";
+"MonitoringMethod";"HEL-024";"HELCOM Guidelines for sampling and determination of silicate";
+"MonitoringMethod";"HEL-025";"HELCOM Guidelines for sampling and determination of total alkalinity";
+"MonitoringMethod";"HEL-026";"HELCOM Guidelines for sampling and determination of total nitrogen";
+"MonitoringMethod";"HEL-027";"HELCOM Guidelines for sampling and determination of total phosphorus";
+"MonitoringMethod";"HEL-028";"HELCOM Guidelines for coastal fish monitoring";
+"MonitoringMethod";"HEL-029";"HELCOM Guidelines for coordinated monitoring of wintering birds";
+"MonitoringMethod";"HEL-030";"HELCOM Recommendations and guidelines for benthic habitat monitoring in the Baltic Sea";
+"MonitoringMethod";"HEL-031";"HELCOM Manual on co-operation in response to marine pollution";
+"MonitoringMethod";"HEL-032";"HELCOM Manual for monitoring in COMBINE programme";
+"MonitoringMethod";"HEL-033";"HELCOM guideline for Seal Abundance Monitoring";
+"MonitoringMethod";"HEL-034";"HELCOM Guidelines for monitoring of biological effects - imposex and intersex";
+"MonitoringMethod";"HEL-035";"HELCOM Guidelines for monitoring beach litter";
+"MonitoringMethod";"HEL-036";"HELCOM Guidelines for monitoring continuous noise";
+"MonitoringMethod";"OSP-001";"OSPAR Guidelines on Quality Assurance for Biological Monitoring in the OSPAR Area (Agreement 2002-15)";
+"MonitoringMethod";"OSP-002";"OSPAR CEMP Guideline: Common Indicator - Marine Bird Abundance (B1) (Agreement 2016-09)";
+"MonitoringMethod";"OSP-003";"OSPAR CEMP Guideline: Common Indicator - Marine Bird Breeding Success/Failure (B3) (Agreement 2016-10)";
+"MonitoringMethod";"OSP-004";"OSPAR CEMP Guideline: Common Indicator - Seal Abundance and Distribution (M3) (Agreement 2016-11)";
+"MonitoringMethod";"OSP-005";"OSPAR CEMP Guideline: Common Indicator - Grey Seal Pup Production (M5) (Agreement 2016-12)";
+"MonitoringMethod";"OSP-006";"OSPAR CEMP Guidelines Common Indicator: BH3 Extent of Physical damage to predominant and special habitats (Agreement 2017-09)";
+"MonitoringMethod";"OSP-007";"OSPAR CEMP Guideline: Common Indicator - Changes to non-indigenous species communities (NIS3) (Agreement 2018-04)";
+"MonitoringMethod";"OSP-008";"OSPAR CEMP Guideline: Combined guideline for the common indicators FC1, FC2, FC3 and FW3 for fish and food webs (Agreement 2018-05)";
+"MonitoringMethod";"OSP-009";"OSPAR CEMP Guideline: Common indicator: Condition of benthic habitat communities (BH2) – common approach (Agreement 2018-06)";
+"MonitoringMethod";"OSP-010";"OSPAR CEMP Guideline: Common Indicator: PH1/FW5 Plankton lifeforms (Agreement 2018-07)";
+"MonitoringMethod";"OSP-011";"OSPAR CEMP Guideline: Common indicator: Abundance at the relevant temporal scale of cetacean species regularly present (M4) – Interim version (Agreement 2018-09)";
+"MonitoringMethod";"OSP-012";"OSPAR CEMP Guideline: Common indicator in Region IV: Change in average trophic level of marine predators (FW4) (Agreement 2018-08)";
+"MonitoringMethod";"OSP-013";"OSPAR CEMP Guidelines for the assessment of dumping and placement of waste or other matter at sea";
+"MonitoringMethod";"OSP-014";"OSPAR CEMP Guidelines for monitoring marine litter washed ashore and/or deposited on coastlines (beach litter)";
+"MonitoringMethod";"OSP-015";"OSPAR CEMP Guidelines on Litter on the Seafloor";
+"MonitoringMethod";"OSP-016";"OSPAR CEMP Guidelines for Monitoring and Assessment of loud, low and mid-frequency impulsive sound sources in the OSPAR Maritime Region";
+"MonitoringMethod";"OSP-017";"OSPAR Coordinated Environmental Monitoring Programme (CEMP) Guidelines for Monitoring and Assessment of plastic particles in stomachs of fulmars in the North Sea area";
+"MonitoringMethod";"OSP-018";"OSPAR CEMP Guidelines for Monitoring Contaminants in Sediments (Agreement 2002-16). Revision 2018";
+"MonitoringMethod";"OSP-019";"OSPAR JAMP Guidelines for Monitoring Chemical Aspects of Ocean Acidification (Agreement 2014-03e)";
+"MonitoringMethod";"OSP-020";"OSPAR Revised JAMP Eutrophication Monitoring Guideline: Oxygen (Agreement 2013-05) (Replaces Agreement 1997-03)";
+"MonitoringMethod";"OSP-021";"OSPAR Revised JAMP Eutrophication Monitoring Guideline: Nutrients (Agreement 2013-04) (Replaces Agreement 1997-02)";
+"MonitoringMethod";"OSP-022";"OSPAR JAMP Eutrophication Monitoring Guidelines: Chlorophyll a in Water (Agreement 2012-11) (Replaces Agreement 1997-04)";
+"MonitoringMethod";"OSP-023";"OSPAR CEMP Eutrophication Monitoring Guidelines: Phytoplankton Species Composition (Agreement 2016-06)";
+"MonitoringMethod";"OSP-024";"OSPAR JAMP Eutrophication Monitoring Guidelines: Benthos (Agreement 2012-12) (Replaces Agreement 1997-06)";
+"MonitoringMethod";"OSP-025";"OSPAR JAMP Guidelines for General Biological Effects Monitoring. Revised technical annexes 2007 (Agreement 2007-07)";
+"MonitoringMethod";"OSP-026";"OSPAR JAMP Guidelines for Contaminant-Specific Biological Effects (Agreement 2008-09) (Replaces Agreement 2003-10)";
+"MonitoringMethod";"OSP-027";"OSPAR JAMP Guideline on the analysis of PFCs in Seawater (Agreement 2010-08)";
+"MonitoringMethod";"OSP-028";"OSPAR CEMP Guidelines for Monitoring Contaminants in Biota (Agreement 1999-02). Revision 2018";
+"MonitoringMethod";"OSP-029";"OSPAR CEMP guidelines for coordinated monitoring for eutrophication, CAMP and RID (Agreement 2016-05), Revised in 2018";
+"MonitoringMethod";"AMP-001";"AMAP Trends and Effects Monotoring Programme (ATEMP)";
+"MonitoringMethod";"WFD-007";"WFD Guidance document n.° 7 - Monitoring under the Water Framework Directive (monitoring framework)";
+"MonitoringMethod";"WFD-019";"WFD Guidance document n.° 19 - Monitoring under the Water Framework Directive (surface water chemical monitoring)";
+"MonitoringMethod";"WFD-025";"WFD Guidance document n.° 25 - Chemical Monitoring of Sediment and Biota";
+"MonitoringMethod";"WFD-032";"WFD Guidance document n.° 32 - Biota Monitoring";
+"MonitoringMethod";"WFD-033";"WFD Guidance document n.° 33 - Analytical Methods for Biota Monitoring";
+"MonitoringMethod";"CWS-001";"Wadden Sea - Trilateral Monitoring and Assessment Programme Handbook";
+"MonitoringMethod";"BC-001";"UNEP/MAP Integrated Monitoring and Assessment Guidance (2016)";
+"MonitoringMethod";"BSC-001";"Black Sea: Guidelines for quality control of biological data - Phytoplankton";
+"MonitoringMethod";"BSC-002";"Black Sea: Manual for phytoplankton sampling and analysis";
+"MonitoringMethod";"BSC-003";"Black Sea: Manual for quantitative sampling and sample treatment of marine soft-bottom macrozoobenthos";
+"MonitoringMethod";"CFP-001";"International bottom trawl survey in the Mediterranean Manual (Version 9)";
+"MonitoringMethod";"CFP-002";"Common protocol for the Pan-Mediterranean Acoustic Survey (MEDIAS) (v. 2017)";
+"MonitoringMethod";"CFP-003";"SISP 6 - Manual for mackerel and horse mackerel egg surveys, sampling at sea";
+"MonitoringMethod";"CFP-004";"SISP 15 - Manual of the IBTS North Eastern Atlantic Surveys";
+"MonitoringMethod";"CFP-005";"SISP 7 - BITS Manual for the Baltic International Trawl Surveys";
+"MonitoringMethod";"CFP-006";"SISP 8 - IBAS Manual for the International Baltic Acoustic Surveys";
+"MonitoringMethod";"CFP-007";"SISP 10 - Manual for the International Bottom Trawl Surveys, Revision IX";
+"MonitoringMethod";"CFP-008";"SISP 9 Manual for International Pelagic Surveys (IPS) - Version 1.00";
+"MonitoringMethod";"CFP-009";"Manual for the Offshore Beam Trawl Surveys (WGBEAM)";
+"MonitoringMethod";"BWD-001";"Bathing Water Profiles: Best Practice and Guidance (2009)";
+"MonitoringMethod";"UWW-001";"Urban Waste Water Treatment Directive: Annex 1";
+"MonitoringMethod";"NFC-001";"NEAFC: Recording of Catch and Fishing Effort";
+"MonitoringMethod";"NFC-002";"NEAFC: Vessel Monitoring System";
+"MonitoringMethod";"BON-001";"Bonn Agreement Aerial Operations Handbook, 2009";
+"MonitoringMethod";"BON-002";"Bonn Agreement Aerial Operations Handbook, 2017";
+"MonitoringMethod";"BON-003";"Bonn Agreement Counter Pollution Manual (BACPM)";
+"MonitoringMethod";"CPH-001";"Copenhagen Agreement manual for cooperation on pollution control";
+"MonitoringMethod";"ICC-001";"ICCAT Manual: Data for Assessment and Research";
+"MonitoringMethod";"EC-001";"Guidance on Monitoring of Marine Litter in European Seas [note: to be updated with specific guidance for beaches, water, seabed and microlitter when available from TG Litter]";
+"MonitoringMethod";"EC-002";"Guidance on monitoring impulsive underwater noise";
+"MonitoringMethod";"EC-003";"Guidance on monitoring continuous underwater noise";
+"MonitoringMethod";"OTH";"Other monitoring method";
+"Parameter";"ABU";"Abundance (number of individuals)";
+"Parameter";"ABU-REL";"Relative abundance within community (of pelagic and benthic habitats)";
+"Parameter";"AGE-D";"Age distribution";
+"Parameter";"AMO-B";"Amount in biota (ingested)";
+"Parameter";"AMO-C";"Amount on coastline";
+"Parameter";"AMO-SB";"Amount on seabed";
+"Parameter";"AMO-WS";"Amount on water surface";
+"Parameter";"BATH";"Bathymetric depth";
+"Parameter";"BIOM";"Biomass";
+"Parameter";"BIOM-SSB";"Biomass of Spawning Stock (SSB)";
+"Parameter";"BREED";"Breeding success";
+"Parameter";"BROOD";"Brood size";
+"Parameter";"CELL-C";"Cell counts";
+"Parameter";"CO2";"pco2 - alkalinity";
+"Parameter";"CONC-B";"Concentration in biota (total)";
+"Parameter";"CONC-B-FA";"Concentration in biota – fat";
+"Parameter";"CONC-B-LI";"Concentration in biota – liver";
+"Parameter";"CONC-B-MU";"Concentration in biota – muscle";
+"Parameter";"CONC-B-OT";"Concentration in biota – other";
+"Parameter";"CONC-S";"Concentration in sediment (total)";
+"Parameter";"CONC-S-20";"Concentration in sediment (fraction below 20 µm)";
+"Parameter";"CONC-S-2000";"Concentration in sediment (fraction below 2000 µm)";
+"Parameter";"CONC-S-63";"Concentration in sediment (fraction below 63 µm)";
+"Parameter";"CONC-S-OT";"Concentration in sediment – other";
+"Parameter";"CONC-SM";"Concentration in suspended matter";
+"Parameter";"CONC-W";"Concentration in water";
+"Parameter";"COV";"Coverage (e.g. of a species within a habitat or area)";
+"Parameter";"DEP";"Deposition";
+"Parameter";"DIST-DEPTH";"Maximum depth";
+"Parameter";"DIST-P";"Distribution (pattern)";
+"Parameter";"DIST-R";"Distribution (range)";
+"Parameter";"DIST-S";"Distribution (spatial)";
+"Parameter";"DUR";"Duration";
+"Parameter";"EMI";"Emission";
+"Parameter";"EXT";"Extent";
+"Parameter";"FEC";"Fecundity (breeding rate)";
+"Parameter";"FRE";"Frequency";
+"Parameter";"FRESH";"Freshwater input rates from rivers";
+"Parameter";"HAB-STRUCT";"Physical structure of habitat (e.g. sediment characteristics, topographic structure)";
+"Parameter";"HYDRO";"Hydrological conditions of habitat";
+"Parameter";"INC";"Incidence";
+"Parameter";"INDEX";"Index value (parameters calculated as complex indices)";
+"Parameter";"LEN";"Length";
+"Parameter";"LEV-N";"Level of sound";
+"Parameter";"MASS";"Mass";
+"Parameter";"MOR";"Mortality (weight/volume; number of individuals)";
+"Parameter";"F";"Mortality rate";
+"Parameter";"OTH";"Other";
+"Parameter";"OXY";"Oxygen debt";
+"Parameter";"PH";"Ph ";
+"Parameter";"PRE";"Presence";
+"Parameter";"PP";"Primary production";
+"Parameter";"PROD";"Productivity";
+"Parameter";"SAL";"Salinity";
+"Parameter";"SEX-D";"Sex distribution";
+"Parameter";"SHELL";"Shell thickness";
+"Parameter";"SIZE-D";"Size distribution";
+"Parameter";"SPL";"Underwater sound level";
+"Parameter";"SPP-C";"Species composition";
+"Parameter";"SUR";"Survival rate";
+"Parameter";"TEM";"Temperature";
+"Parameter";"THICK-BLU";"Blubber thickness";
+"Parameter";"TID";"Tidal range/level";
+"Parameter";"TRA";"Transparency of water";
+"Parameter";"TURB";"Transparency / turbidity of water column";
+"Parameter";"VEL";"Current velocity";
+"Parameter";"WAV";"Wave action";
+"UpdateType";"Same programme as in 2014";"Same programme as in 2014";
+"UpdateType";"Modified from 2014";"Modified from 2014";
+"UpdateType";"New programme";"New programme";
+"UpdateType";"Programme no longer in place";"Programme no longer in place";

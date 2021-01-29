@@ -27,14 +27,13 @@ class BaseView(BaseComplianceView):
     @property
     def TRANSLATABLES(self):
         # for 2018, returns a list of field names that are translatable
-
         if self._translatables:
             return self._translatables
 
-        year = REPORT_DEFS[self.year]
+        translatables = self.get_report_translatable_fields()
 
-        if self.article in year:
-            return year[self.article].get_translatable_fields()
+        if translatables:
+            return translatables
 
         self._translatables = []
 

@@ -65,7 +65,7 @@ class Proxy2018(object):
 
         self.report_class = report_class
         self.article = report_class.article
-        self.fields = get_report_definition(self.article).get_fields()
+        self.fields = report_class.get_report_definition()
 
         if not extra:
             extra = {}

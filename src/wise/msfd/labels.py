@@ -78,6 +78,24 @@ def _extract_ktm():
     return labels
 
 
+def _parse_art11_2020_labels():
+    labels = defaultdict(dict)
+    csv_f = resource_filename('wise.msfd',
+                              'data/MSFD_Art11_2020_Enumerations_v3_2.csv')
+
+    with open(csv_f, 'rb') as csvfile:
+        csv_file = csv.reader(csvfile, delimiter=';', quotechar='"')
+
+        for row in csv_file:
+            label_type = row[0]
+            code = row[1]
+            label = row[2]
+
+            labels[label_type][code] = label
+
+    return labels
+
+
 def _extract_from_xsd(fpath):
     labels = {}
 
@@ -322,6 +340,9 @@ class LabelCollection(object):
     targets = get_target_labels()
     ktms = _extract_ktm()
     env_targets = get_environmental_targets()
+    art11_conventions = _parse_art11_2020_labels()['DirectivesConventions']
+    art11_parameters = _parse_art11_2020_labels()['Parameter']
+    art11_monitor_method = _parse_art11_2020_labels()['MonitoringMethod']
 
     def get(self, collection_name, name):
         label_dict = getattr(self, collection_name, None)

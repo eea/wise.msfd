@@ -647,6 +647,7 @@ class ReportData2018(BaseView):
 
     report_year = '2018'        # used by cache key
     year = '2018'       # used in report definition and translation
+    report_due = '2018-10-15'
     section = 'national-descriptors'
     help_texts = {
         'Art8': """
@@ -1009,6 +1010,11 @@ view."""
 
         return rep_def
 
+    def get_report_translatable_fields(self):
+        rep_def = get_report_definition(self.article).get_translatable_fields()
+
+        return rep_def
+
     @db.use_db_session('2018')
     @timeit
     def get_data_from_db(self):
@@ -1187,8 +1193,9 @@ view."""
 
     @property
     def report_header_title(self):
-        title = "Member State report / {} / 2018 / {} / {} / {}".format(
+        title = "Member State report / {} / {} / {} / {} / {}".format(
             self.article,
+            self.report_year,
             self.descriptor_title,
             self.country_name,
             self.country_region_name,
@@ -1212,7 +1219,7 @@ view."""
             # TODO: find out how to get info about who reported
             report_by=report_by,
             source_file=link,
-            report_due='2018-10-15',
+            report_due=self.report_due,
             report_date=report_date,
             help_text=self.help_text,
             multiple_source_files=False
@@ -1296,7 +1303,9 @@ view."""
         messages.add(u"Auto-translation initiated, please refresh "
                      u"in a couple of minutes", type=u"info")
 
-        url = self.context.absolute_url() + '/@@view-report-data-2018'
+        url = (self.context.absolute_url() +
+               '/@@view-report-data-{}'.format(self.report_year))
+
         return self.request.response.redirect(url)
 
     def get_template(self, article):
@@ -1589,16 +1598,77 @@ class ReportData2020(ReportData2018):
 
     report_year = '2020'        # used by cache key
     year = '2020'       # used in report definition and translation
+    report_due = '2020-10-15'
+    is_overview = False
 
     @property
     def muids(self):
         return []
+
+    @db.use_db_session('2018')
+    @timeit
+    def get_report_metadata(self):
+        """ Returns metadata about the reported information
+        """
+
+        article = self.article
+
+        if self.is_overview:
+            article = article + 'Overview'
+
+        t = sql2018.ReportedInformation
+        schemas = {
+            'Art11': ['ART11_Programmes', 'ART11_Strategies'],
+            'Art11Overview': ['ART11_Strategies']
+        }
+        items = []
+
+        for schema in schemas[article]:
+            count, item = db.get_item_by_conditions(
+                t,
+                'ReportingDate',
+                t.CountryCode == self.country_code,
+                t.Schema == schema,
+                reverse=True,
+            )
+
+            items.append(item)
+
+        return items
+
+    def get_report_header(self):
+        report_items = self.get_report_metadata()
+
+        report_by = report_date = None
+        links = []
+
+        for report in report_items:
+            link = report.ReportedFileLink
+            link = (link.rsplit('/', 1)[1], link)
+            links.append(link)
+            report_by = report.ContactOrganisation
+            report_date = report.ReportingDate
+
+        report_header = self.report_header_template(
+            title=self.report_header_title,
+            factsheet=None,
+            # TODO: find out how to get info about who reported
+            report_by=report_by,
+            source_file=links,
+            report_due=self.report_due,
+            report_date=report_date,
+            help_text=self.help_text,
+            multiple_source_files=True
+        )
+
+        return report_header
 
 
 class ReportDataOverview2020Art11(ReportData2020):
     implements(IReportDataViewOverview)
 
     is_primary_article = False
+    is_overview = True
 
     @property
     def descriptor(self):
@@ -1607,6 +1677,14 @@ class ReportDataOverview2020Art11(ReportData2020):
     @property
     def article(self):
         return 'Art11'
+
+    @property
+    def TRANSLATABLES(self):
+        article = '{}Overview'.format(self.article)
+        rep_def = get_report_definition(article)
+        translatables = rep_def.get_translatable_fields()
+
+        return translatables
 
     def get_report_definition(self):
         article = '{}Overview'.format(self.article)
@@ -1632,7 +1710,7 @@ class ReportDataOverview2020Art11(ReportData2020):
 
     @property
     def report_header_title(self):
-        title = "Member State report / Art11 / 2018 / {} / {} - Overview"\
+        title = "Member State report / Art11 / 2020 / {} / {} - Overview"\
             .format(self.country_name, self.country_region_name)
 
         return title

@@ -140,6 +140,8 @@ class RegReportData2018(BaseRegComplianceView):
     help_text = "HELP TEXT"
     template = ViewPageTemplateFile('pt/report-data.pt')
     year = "2018"
+    report_due = "2018-10-15"
+    report_by = "Member state"
     cache_key_extra = "reg-desc-2018"
 
     # Art8 = ViewPageTemplateFile('pt/report-data.pt')
@@ -268,6 +270,11 @@ class RegReportData2018(BaseRegComplianceView):
 
         return out_filtered
 
+    def get_report_definition(self):
+        rep_def = get_report_definition(self.year, self.article).get_fields()
+
+        return rep_def
+
     @db.use_db_session('2018')
     def get_report_data(self):
         # TODO check if data is filtered by features for D1
@@ -281,7 +288,7 @@ class RegReportData2018(BaseRegComplianceView):
         regions = self._countryregion_folder._subregions
         descriptor_obj = self.descriptor_obj
 
-        fields = get_report_definition('2018', self.article).get_fields()
+        fields = self.get_report_definition()
 
         impl_class = getattr(self, self.article)
         result = []
@@ -422,8 +429,8 @@ class RegReportData2018(BaseRegComplianceView):
             title=self.report_header_title,
             factsheet=None,
             # TODO: find out how to get info about who reported
-            report_by='Member state',
-            report_due='2018-10-15',
+            report_by=self.report_by,
+            report_due=self.report_due,
             help_text=self.help_text,
             use_translation=True
         )
@@ -466,7 +473,10 @@ class RegReportData2018(BaseRegComplianceView):
 class RegReportData2020(ReportData2020, RegReportData2018):
     implementsOnly(IRegionalReportDataView)
 
+    report_due = "2020-10-15"
+    report_by = None
     section = 'regional-descriptors'
+    Art11 = ViewPageTemplateFile('pt/report-data-multiple-muid.pt')
 
     @property
     def region(self):
@@ -491,13 +501,19 @@ class RegReportData2020(ReportData2020, RegReportData2018):
 
     @property
     def report_header_title(self):
-        title = "Member State report / {} / 2018 / {} / {}".format(
+        title = "Member State report / {} / {} / {} / {}".format(
             self.article,
+            self.report_year,
             self.descriptor_title,
             self.country_region_name,
         )
 
         return title
+
+    def translate_value(self, fieldname, value, source_lang):
+        t = ReportData2020.translate_value(self, fieldname, value, source_lang)
+
+        return t
 
     def get_report_definition(self):
         rep_def = get_report_definition(self.year, self.article).get_fields()
@@ -506,9 +522,6 @@ class RegReportData2020(ReportData2020, RegReportData2018):
 
     def get_report_header(self):
         return RegReportData2018.get_report_header(self)
-
-    # def render_reportdata(self):
-    #     return RegReportData2018.render_reportdata(self)
 
 
 class RegReportDataOverview2020Art11(RegReportData2020):
@@ -549,7 +562,8 @@ class RegReportDataOverview2020Art11(RegReportData2020):
 
     @property
     def report_header_title(self):
-        title = "Member State report / Art11 / 2018 / {} - Overview"\
-            .format(self.country_region_name)
+        import pdb; pdb.set_trace()
+        title = "Member State report / Art11 / {} / {} - Overview" \
+            .format(self.report_year, self.country_region_name)
 
         return title

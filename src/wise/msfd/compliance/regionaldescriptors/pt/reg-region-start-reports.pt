@@ -48,13 +48,15 @@
                 </th>
                 <td tal:repeat="assessment python: view.get_articles(desc)">
                   <a tal:attributes="href python: assessment.absolute_url() + '/@@view-report-data-2012';
-                      class python: 'btn btn-xs btn-primary'">2012</a>
+                      class python: 'btn btn-xs btn-primary'" target='_blank'>2012</a>
                   <a tal:attributes="href python: assessment.absolute_url() + '/@@view-report-data-2018';
-                      class python: 'btn btn-xs btn-success'">2018</a>
+                      class python: 'btn btn-xs btn-success'" target='_blank'>2018</a>
                 </td>
-                <td>
-                  <a href="." class="btn btn-xs btn-success">2014</a>
-                  <a href="." class="btn btn-xs btn-primary">2020</a>
+                <td tal:define="assessment python: desc['art11']">
+                  <a tal:attributes="href python: assessment.absolute_url() + '/@@view-report-data-2014'"
+                      class="btn btn-xs btn-primary" target='_blank'>2014</a>
+                  <a tal:attributes="href python: assessment.absolute_url() + '/@@view-report-data-2020'"
+                     class="btn btn-xs btn-success" target='_blank'>2020</a>
                 </td>
                 <td tal:repeat="assessment python: view.get_articles_part2(desc)">
                   <i>Not available</i>
