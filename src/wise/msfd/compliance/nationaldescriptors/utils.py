@@ -124,6 +124,73 @@ def consolidate_singlevalue_to_list(proxies, fieldname, order=None):
     return res
 
 
+@timeit
+def group_multiple_fields(proxies, main_fieldname, group_fields, order):
+    """ Given a 'main_fieldname', get all unique values from that field and
+        split these values into different rows. Also given the 'group_fields'
+        we aggregate the data from these fields into a single value and display
+        that value for the 'main_fieldname'
+
+        To get a better understanding, check regional descriptors Art11 the
+        following rows: features (split into multiple rows), element,
+        gescriteria, parameters
+    """
+
+    main_field_vals = []
+    seen = []
+
+    proxy_hash_map = defaultdict(list)
+
+    # create a map of unique proxies by creating a hash with
+    # ignoring the main and the group fields
+    for o in proxies:
+        __k = o.hash_multi((main_fieldname, ) + group_fields)
+        proxy_hash_map[__k].append(o)
+
+    # get all unique main_field values
+    for proxy in proxies:
+        fvalue = getattr(proxy, main_fieldname)
+        name = hasattr(fvalue, 'name') and fvalue.name or fvalue
+
+        if name not in seen:
+            seen.append(name)
+            main_field_vals.append(fvalue)
+
+    res = []
+
+    # make the grouping of the field values
+    for _, proxy_sets in proxy_hash_map.items():
+        res_proxy = proxy_sets[0]
+
+        for proxy in proxy_sets:
+            for main_field in main_field_vals:
+                name = (hasattr(main_field, 'name') and main_field.name
+                        or main_field)
+
+                group_field_vals = []
+
+                if getattr(proxy, main_fieldname) == main_field:
+                    group_field_vals = [
+                        getattr(proxy, fname)
+                        for fname in group_fields
+                    ]
+
+                if not getattr(res_proxy, name):
+                    res_proxy.set_value(
+                        name, ItemList(group_field_vals, False)
+                    )
+        # res_proxy.PresEnvEutrophi, res_proxy.HabBenBHT, res_proxy.HabBenOther
+        if len(proxy_sets) > 1:
+            import pdb; pdb.set_trace()
+
+        res.append(res_proxy)
+
+    if order:
+        res = list(sorted(res, key=attrgetter(*order)))
+
+    return res, main_field_vals
+
+
 class ViewSavedAssessmentData(BrowserView):
     """ Temporary class for viewing saved assessment data
     """

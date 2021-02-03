@@ -1,49 +1,50 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <data>
     <Art11>
-        <element setlevel="0" name="CountryCode" convert="link_to_nat_desc_art11">Member state</element>
-        <element name="Descriptor">Descriptor</element>
-        <element name="MonitoringStrategyDescription" translate="true">Monitoring strategy description</element>
-        <element name="Coverage_GEScriteria">Coverage of GES criteria</element>
-        <element name="Gaps_Plans" translate="true">Gaps and plans</element>
-        <element name="RelatedTargets" label="targets" convert="csv_ges_labels_inverse_list">Related targets</element>
-        <element name="Coverage_Targets">Coverage of targets</element>
-        <element name="RelatedMeasures" convert="simple_itemlist_re">Related measures</element>
-        <element name="Coverage_Measures">Coverage of measures</element>
-        <element name="MonitoringProgrammes" convert="simple_itemlist_re">Related monitoring programmes</element>
-        <element setlevel="1" name="P_ProgrammeCode">Programme code</element>
-        <element name="P_ProgrammeName">Programme name</element>
-        <element name="P_UpdateType">Update type</element>
-        <element name="P_OldProgrammeCodes">Old programme codes</element>
-        <element name="P_ProgrammeDescription" translate="true">Programme description</element>
-        <element name="P_MonitoringPurposes" convert="simple_itemlist_re">Monitoring purpose</element>
-        <element name="P_OtherPoliciesConventions" label="art11_conventions" convert="csv_ges_labels_list">Other policies and conventions</element>
-        <element name="P_RegionalCooperation_coordinations">Regional cooperation - coordinating body</element>
-        <element name="P_RegionalCooperation_countries">Regional cooperation - countries involved</element>
-        <element name="P_RegionalCooperation_implementation">Regional cooperation - implementation level</element>
-        <element name="P_MonitoringDetails" translate="true">Monitoring details</element>
-        <element setlevel="2" name="Feature" label="features">Features</element>
-        <element name="Element">Elements</element>
-        <element name="GESCriteria">GES criteria</element>
-        <element name="P_Parameters" label="art11_parameters" convert="csv_ges_labels_list">Parameters</element>
-        <element setlevel="1" name="P_SpatialScopes" convert="simple_itemlist_re">Spatial scope</element>
-        <element name="P_MarineReportingUnits" convert="simple_itemlist_re">Marine reporting units</element>
-        <element name="P_TemporalScope">Temporal scope (start date - end date)</element>
-        <element name="P_MonitoringFrequency">Monitoring frequency</element>
-        <element name="P_MonitoringTypes" convert="simple_itemlist_re">Monitoring type</element>
-        <element name="P_MonitoringMethods" label="art11_monitor_method" convert="csv_ges_labels_list">Monitoring method</element>
-        <element name="P_MonitoringMethodOther">Monitoring method other</element>
-        <element name="P_QualityControl" translate="true">Quality control</element>
-        <element name="P_DataManagement" translate="true">Data management</element>
-        <element name="P_DataAccess" convert="anchor">Data access</element>
-        <element name="P_RelatedIndicators" label="indicators" convert="art11_indicators">Related indicator/name</element>
-        <element name="P_Contact">Contact</element>
-        <element name="P_References" convert="anchor">References</element>
+        <element section="ges" setlevel="0" name="CountryCode" >Member state</element>
+        <element section="ges" name="ReportedFileLink" convert="__link_to_nat_desc_art11">Report Access</element>
+        <element section="ges" name="Descriptor">Descriptor</element>
+        <element section="ges" name="MonitoringStrategyDescription" translate="true">Monitoring strategy description</element>
+        <element section="ges" name="Coverage_GEScriteria">Coverage of GES criteria</element>
+        <element section="ges" name="Gaps_Plans" translate="true">Gaps and plans</element>
+        <element section="ges" name="RelatedTargets" label="targets" convert="csv_ges_labels_inverse_list">Related targets</element>
+        <element section="ges" name="Coverage_Targets">Coverage of targets</element>
+        <element section="ges" name="RelatedMeasures" convert="simple_itemlist_re">Related measures</element>
+        <element section="ges" name="Coverage_Measures">Coverage of measures</element>
+        <element section="ges" name="MonitoringProgrammes" convert="simple_itemlist_re">Related monitoring programmes</element>
+        <element section="ges" setlevel="1" name="P_ProgrammeCode">Programme code</element>
+        <element section="ges" name="P_ProgrammeName">Programme name</element>
+        <element section="ges" name="P_UpdateType">Update type</element>
+        <element section="ges" name="P_OldProgrammeCodes" convert="simple_itemlist_re">Old programme codes</element>
+        <element section="ges" name="P_ProgrammeDescription" translate="true">Programme description</element>
+        <element section="ges" name="P_MonitoringPurposes" convert="simple_itemlist_re">Monitoring purpose</element>
+        <element section="ges" name="P_OtherPoliciesConventions" label="art11_conventions" convert="csv_ges_labels_list">Other policies and conventions</element>
+        <element section="ges" name="P_RegionalCooperation_coordinations" convert="simple_itemlist_re">Regional cooperation - coordinating body</element>
+        <element section="ges" name="P_RegionalCooperation_countries">Regional cooperation - countries involved</element>
+        <element section="ges" name="P_RegionalCooperation_implementation">Regional cooperation - implementation level</element>
+        <element section="ges" name="P_MonitoringDetails" translate="true">Monitoring details</element>
+        <element section="element" setlevel="2" name="Feature" label="features">Features</element>
+        <element section="element" name="Element">Elements</element>
+        <element section="element" name="GESCriteria">GES criteria</element>
+        <element section="element" name="P_Parameters" label="art11_parameters" convert="csv_ges_labels_list">Parameters</element>
+        <element section="ges" setlevel="1" name="P_SpatialScopes" convert="simple_itemlist_re">Spatial scope</element>
+        <element section="ges" name="P_MarineReportingUnits" convert="simple_itemlist_re">Marine reporting units</element>
+        <element section="ges" name="P_TemporalScope">Temporal scope (start date - end date)</element>
+        <element section="ges" name="P_MonitoringFrequency">Monitoring frequency</element>
+        <element section="ges" name="P_MonitoringTypes" convert="simple_itemlist_re">Monitoring type</element>
+        <element section="ges" name="P_MonitoringMethods" label="art11_monitor_method" convert="csv_ges_labels_list">Monitoring method</element>
+        <element section="ges" name="P_MonitoringMethodOther">Monitoring method other</element>
+        <element section="ges" name="P_QualityControl" translate="true">Quality control</element>
+        <element section="ges" name="P_DataManagement" translate="true">Data management</element>
+        <element section="ges" name="P_DataAccess" convert="anchor">Data access</element>
+        <element section="ges" name="P_RelatedIndicators" label="indicators" convert="art11_indicators">Related indicator/name</element>
+        <element section="ges" name="P_Contact">Contact</element>
+        <element section="ges" name="P_References" convert="anchor">References</element>
     </Art11>
     <Art11Overview>
         <element setlevel="0" name="CountryCode">Member State</element>
         <element name="ResponsibleCompetentAuthority">Competent Authority responsible for monitoring</element>
-        <element name="ResponsibleOrganisations">Responsible organisations</element>
+        <element name="ResponsibleOrganisations" convert="simple_itemlist_re">Responsible organisations</element>
         <element name="RelationshipToCA">Relationship to CA</element>
         <element name="PublicConsultationDates" convert="public_consulation_date">Public consultation dates</element>
         <element name="PublicConsultationSite" convert="anchor">Public consultation site</element>

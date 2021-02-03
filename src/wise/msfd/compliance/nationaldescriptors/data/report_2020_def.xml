@@ -13,11 +13,11 @@
     <element setlevel="1" name="P_ProgrammeCode">Programme code</element>
     <element name="P_ProgrammeName">Programme name</element>
     <element name="P_UpdateType">Update type</element>
-    <element name="P_OldProgrammeCodes">Old programme codes</element>
+    <element name="P_OldProgrammeCodes" convert="simple_itemlist_re">Old programme codes</element>
     <element name="P_ProgrammeDescription" translate="true">Programme description</element>
     <element name="P_MonitoringPurposes" convert="simple_itemlist">Monitoring purpose</element>
     <element name="P_OtherPoliciesConventions" label="art11_conventions" convert="csv_ges_labels_list">Other policies and conventions</element>
-    <element name="P_RegionalCooperation_coordinations">Regional cooperation - coordinating body</element>
+    <element name="P_RegionalCooperation_coordinations" convert="simple_itemlist_re">Regional cooperation - coordinating body</element>
     <element name="P_RegionalCooperation_implementation">Regional cooperation - implementation level</element>
     <element name="P_MonitoringDetails" translate="true">Monitoring details</element>
     <element setlevel="2" name="Feature" label="features">Features</element>
@@ -40,7 +40,7 @@
   </Art11>
   <Art11Overview>
     <element name="ResponsibleCompetentAuthority">Competent Authority responsible for monitoring</element>
-    <element name="ResponsibleOrganisations">Responsible organisations</element>
+    <element name="ResponsibleOrganisations" convert="simple_itemlist_re">Responsible organisations</element>
     <element name="RelationshipToCA">Relationship to CA</element>
     <element name="PublicConsultationDates" convert="public_consulation_date">Public consultation dates</element>
     <element name="PublicConsultationSite" convert="anchor">Public consultation site</element>

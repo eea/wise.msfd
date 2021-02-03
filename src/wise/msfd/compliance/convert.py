@@ -4,11 +4,13 @@ some other useful formats. Used when displaying data.
 
 import re
 
+from wise.msfd.compliance.vocabulary import REGIONAL_DESCRIPTORS_REGIONS
 from wise.msfd.gescomponents import get_ges_component
 from wise.msfd.labels import GES_LABELS
 from wise.msfd.translation import get_translated
 from wise.msfd.utils import ItemLabel, ItemList, SimpleTable
 
+from .regionaldescriptors.utils import get_nat_desc_country_url
 
 comma_separator_re = re.compile(r',(?=[^\s])')
 
@@ -158,8 +160,23 @@ def public_consulation_date(field, value, lang):
     return value
 
 
-def link_to_nat_desc_art11(field, value, lang):
-    template = u"<a href='../../../{0}/@@view-report-data-2020'>{1}</a>"\
-        .format(value.lower(), value)
+def __link_to_nat_desc_art11(field, value, self):
+    url = self.request['URL0']
 
-    return template
+    reg_main = self._countryregion_folder.id.upper()
+    subregions = [r.subregions for r in REGIONAL_DESCRIPTORS_REGIONS
+                  if reg_main in r.code]
+
+    res = []
+    template = u'<a style="cursor: pointer;" target="_blank" href="{}">{}</a>'
+
+    c_code = value.split('/')[3].upper()
+    regions = [r.code for r in REGIONAL_DESCRIPTORS_REGIONS
+               if len(r.subregions) == 1 and c_code in r.countries
+               and r.code in subregions[0]]
+
+    for r in regions:
+        report_url = get_nat_desc_country_url(url, reg_main, c_code, r)
+        res.append(ItemLabel(r, template.format(report_url, r)))
+
+    return ItemList(res)

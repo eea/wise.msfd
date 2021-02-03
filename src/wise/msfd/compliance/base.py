@@ -286,6 +286,19 @@ class BaseComplianceView(BrowserView, BasePublicPage, SecurityMixin):
 
         return order
 
+    def get_report_year(self, year, article=None):
+        report_years = {
+            'Art11': {'2012': '2014', '2018': '2020'}
+        }
+
+        if not article:
+            article = self.article
+
+        if article not in report_years:
+            return year
+
+        return report_years.get(article).get(year)
+
     def get_current_user_roles(self, context=None):
         current_user = user.get_current().getId()
         params = {

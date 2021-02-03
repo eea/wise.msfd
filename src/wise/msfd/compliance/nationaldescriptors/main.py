@@ -397,16 +397,6 @@ class NationalDescriptorArticleView(BaseView, AssessmentDataMixin):
     year = '2018'       # used by self.muids
     _questions = NAT_DESC_QUESTIONS
 
-    def get_report_year(self, year):
-        report_years = {
-            'Art11': {'2012': '2014', '2018': '2020'}
-        }
-
-        if self.article not in report_years:
-            return year
-
-        return report_years.get(self.article).get(year)
-
     @property
     def title(self):
         return u"Commission assessment / {} / 2018 / {} / {} / {} ".format(

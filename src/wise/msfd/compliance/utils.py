@@ -25,6 +25,18 @@ class IReportField(Interface):
     filter_values = Attribute(u'???')
 
 
+class DummyReportField(TemplateMixin):
+    template = PageTemplateFile('pt/report_field_header.pt')
+
+    def __init__(self, proxy_obj):
+        self.title = proxy_obj.title
+        self.name = proxy_obj.name
+        self.drop = False
+        self.article = 'Art11'
+        self.section = 'element'
+        self.setlevel = None
+
+
 class ReportField(TemplateMixin):
     """ An object reprezenting the field (row) definition in a report table
     """

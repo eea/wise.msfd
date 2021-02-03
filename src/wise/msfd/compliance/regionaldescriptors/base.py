@@ -620,6 +620,7 @@ class BaseRegDescRow(BaseRegComplianceView):
 
         rows = []
         country_names = []
+        template = u'<a style="cursor: pointer;" target="_blank" href="{}">{}</a>'
 
         for country in self.context.available_countries:
             value = []
@@ -631,7 +632,7 @@ class BaseRegDescRow(BaseRegComplianceView):
 
             for r in regions:
                 report_url = get_nat_desc_country_url(url, reg_main, c_code, r)
-                value.append("{}: {}".format(r, report_url))
+                value.append(ItemLabel(r, template.format(report_url, r)))
 
             country_names.append(simple_itemlist(value))
 

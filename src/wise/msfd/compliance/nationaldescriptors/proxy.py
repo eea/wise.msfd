@@ -36,7 +36,7 @@ class Proxy2018(object):
             return
 
         label_collection = field.label_collection
-        converter = field.converter
+        converter_name = field.converter
         filter_values = field.filter_values
 
         # assert (label_name or converter), 'Field should be dropped'
@@ -49,10 +49,18 @@ class Proxy2018(object):
                 filtered = values.intersection(ok_values)
                 value = u','.join(filtered)
 
-        if converter:
-            assert '.' not in converter
-            converter = getattr(convert, converter)
-            value = converter(field, value, self.report_class.country_code)
+        if converter_name:
+            assert '.' not in converter_name
+            converter = getattr(convert, converter_name)
+
+            # special convert method, needs the report_class instance to get
+            # additional info like url, article, descriptor, region etc.
+            if converter_name.startswith('__'):
+                value = converter(
+                    field, value, self.report_class
+                )
+            else:
+                value = converter(field, value, self.report_class.country_code)
 
         elif label_collection:
             title = GES_LABELS.get(label_collection, value)
@@ -117,6 +125,21 @@ class Proxy2018(object):
     def hash(self, ignore=None):
         if ignore not in self._hash:
             keys = sorted([k for k in self.__o.keys() if k != ignore])
+            vals = []
+
+            for v in [getattr(self.__o, k) for k in keys]:
+                if isinstance(v, list):
+                    v = tuple(v)
+                vals.append(v)
+            self._hash[ignore] = hash(tuple(vals))
+
+        return self._hash[ignore]
+
+    def hash_multi(self, ignore=None):
+        """ same as hash, but for multiple ignore fields """
+
+        if ignore not in self._hash:
+            keys = sorted([k for k in self.__o.keys() if k not in ignore])
             vals = []
 
             for v in [getattr(self.__o, k) for k in keys]:

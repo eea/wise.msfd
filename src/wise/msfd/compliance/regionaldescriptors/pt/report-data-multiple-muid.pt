@@ -39,15 +39,14 @@
         <div class="inner">
           <table class="table table-bordered table-striped table-comp-translate table-report">
             <tal:rep tal:repeat="row data">
-              <tr
-                tal:define="field python:row[0];
-                  values python: row[1];
-                  klass string:f_${field/article}_${field/section} n_${field/name};"
-                tal:attributes="class klass; data-level field/setlevel;">
+              <tr tal:define="field python:row[0];
+                    values python: row[1];
+                    klass string:f_${field/article}_${field/section} n_${field/name};"
+                  tal:attributes="class klass; data-level field/setlevel;">
                 <th><div tal:content="field/title">Element</div></th>
                 <tal:rep tal:repeat="r values">
                   <td tal:define="index python: repeat['r'].index;
-                      country_code python: data[0][1][index] or view.country_code;"
+                        country_code python: data[0][1][index] or view.country_code;"
                       tal:replace="structure python: view.translate_value(field.name, r, country_code)"></td>
                 </tal:rep>
               </tr>

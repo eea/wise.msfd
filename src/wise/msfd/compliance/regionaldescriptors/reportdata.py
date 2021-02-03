@@ -11,13 +11,14 @@ from Products.statusmessages.interfaces import IStatusMessage
 from wise.msfd import db, sql2018
 from wise.msfd.compliance.interfaces import (IRegionalReportDataView,
                                              IRegReportDataViewOverview)
+from wise.msfd.compliance.utils import DummyReportField
 from wise.msfd.gescomponents import get_features, get_parameters
 from wise.msfd.translation import retrieve_translation
-from wise.msfd.utils import ItemList, timeit
+from wise.msfd.utils import ItemList, items_to_rows, timeit
 
-from ..nationaldescriptors.reportdata import (ReportData2020,
-                                              ReportDataOverview2020Art11)
-from ..nationaldescriptors.utils import consolidate_singlevalue_to_list
+from ..nationaldescriptors.reportdata import ReportData2020
+from ..nationaldescriptors.utils import (consolidate_singlevalue_to_list,
+                                         group_multiple_fields)
 from .a8 import RegDescA82012, RegDescA82018Row
 from .a9 import RegDescA92012, RegDescA92018Row
 from .a10 import RegDescA102012, RegDescA102018Row
@@ -523,6 +524,45 @@ class RegReportData2020(ReportData2020, RegReportData2018):
     def get_report_header(self):
         return RegReportData2018.get_report_header(self)
 
+    @db.use_db_session('2018')
+    @timeit
+    def get_data_from_db(self):
+        data = self.get_data_from_view(self.article)
+        data = [Proxy2018(row, self) for row in data]
+        order = self._get_order_cols_Art11()
+
+        data_ = consolidate_singlevalue_to_list(
+            data, 'Element', order
+        )
+
+        data_by_mru, features = group_multiple_fields(
+            data_, 'Feature', ('Element', 'GESCriteria', 'P_Parameters'),
+            order
+        )
+
+        if data_by_mru:
+            data_by_mru = {"": data_by_mru}
+        else:
+            data_by_mru = {}
+
+        res = []
+
+        fields = self.get_report_definition()
+        feature_field_orig = [a for a in fields if a.title == 'Features'][0]
+        f_field_index = fields.index(feature_field_orig)
+
+        feature_fields = [DummyReportField(f) for f in features]
+
+        fields_all = (fields[:f_field_index] + feature_fields +
+                      fields[f_field_index + 4:])
+
+        for mru, rows in data_by_mru.items():
+            _rows = items_to_rows(rows, fields_all)
+
+            res.append((mru, _rows))
+
+        return res
+
 
 class RegReportDataOverview2020Art11(RegReportData2020):
     implementsOnly(IRegReportDataViewOverview)
@@ -562,7 +602,6 @@ class RegReportDataOverview2020Art11(RegReportData2020):
 
     @property
     def report_header_title(self):
-        import pdb; pdb.set_trace()
         title = "Member State report / Art11 / {} / {} - Overview" \
             .format(self.report_year, self.country_region_name)
 
