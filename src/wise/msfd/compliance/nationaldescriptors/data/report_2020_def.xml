@@ -10,7 +10,7 @@
     <element section="strategy" name="RelatedMeasures" convert="simple_itemlist">Related measures</element>
     <element section="strategy" name="Coverage_Measures">Coverage of measures</element>
     <element section="strategy" name="MonitoringProgrammes" convert="simple_itemlist">Related monitoring programmes</element>
-    <element setlevel="1" name="P_ProgrammeCode">Programme code</element>
+    <element section="programme" setlevel="1" name="P_ProgrammeCode">Programme code</element>
     <element section="programme" name="P_ProgrammeName">Programme name</element>
     <element section="programme" name="P_UpdateType">Update type</element>
     <element section="programme" name="P_OldProgrammeCodes" convert="simple_itemlist_re">Old programme codes</element>
