@@ -4,7 +4,8 @@ from operator import attrgetter
 
 from Products.Five.browser import BrowserView
 from wise.msfd.labels import GES_LABELS
-from wise.msfd.utils import ItemLabel, ItemList, LabeledItemList, timeit
+from wise.msfd.utils import (ItemLabel, ItemList, ItemListGroup,
+                             LabeledItemList, timeit)
 
 from .proxy import proxy_cmp
 
@@ -161,27 +162,45 @@ def group_multiple_fields(proxies, main_fieldname, group_fields, order):
     # make the grouping of the field values
     for _, proxy_sets in proxy_hash_map.items():
         res_proxy = proxy_sets[0]
+        values = defaultdict(lambda: defaultdict(list))
+
+        # if res_proxy.P_ProgrammeCode == 'BALEE-D00-40_MarineAndCoastalActivities':
+        #     import pdb; pdb.set_trace()
 
         for proxy in proxy_sets:
             for main_field in main_field_vals:
                 name = (hasattr(main_field, 'name') and main_field.name
                         or main_field)
 
-                group_field_vals = []
+                if getattr(proxy, main_fieldname).name != name:
+                    continue
 
-                if getattr(proxy, main_fieldname) == main_field:
-                    group_field_vals = [
-                        getattr(proxy, fname)
-                        for fname in group_fields
-                    ]
+                for gfield in group_fields:
+                    v = getattr(proxy, gfield)
 
-                if not getattr(res_proxy, name):
-                    res_proxy.set_value(
-                        name, ItemList(group_field_vals, False)
-                    )
+                    if isinstance(v, ItemList):
+                        v = v.rows
+                    else:
+                        v = [v]
+
+                    values[name][gfield].extend(v)
+
+        for _field, vals in values.items():
+            try:
+                x = [
+                    (_gfield, sorted(set(vals[_gfield])))
+                    for _gfield in group_fields
+                ]
+            except:
+                import pdb; pdb.set_trace()
+
+            res_proxy.set_value(
+                _field, ItemListGroup(x)
+            )
+        # res_proxy.P_ProgrammeCode - DK-D06-08
         # res_proxy.PresEnvEutrophi, res_proxy.HabBenBHT, res_proxy.HabBenOther
-        if len(proxy_sets) > 1:
-            import pdb; pdb.set_trace()
+        # if len(proxy_sets) > 1:
+        #     import pdb; pdb.set_trace()
 
         res.append(res_proxy)
 

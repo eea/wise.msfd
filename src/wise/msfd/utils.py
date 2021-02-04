@@ -571,6 +571,10 @@ class LabeledItemList(ItemList):
         return self.template(rows=self.rows)
 
 
+class ItemListGroup(LabeledItemList):
+    template = PageTemplateFile('pt/grouped-list.pt')
+
+
 class CompoundRow(TemplateMixin):
     multi_row = PageTemplateFile('pt/compound-row.pt')
     one_row = PageTemplateFile('pt/compound-one-row.pt')
