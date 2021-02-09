@@ -1,9 +1,13 @@
 <tal:rep tal:repeat="group options/rows">
-  <label style="margin: 5px 0 0 0; font-weight: bold !important;" tal:content="python: group[0]">Element</label>
-  <ul class="cell-listing">
-    <li tal:repeat="value python: group[1]">
-      <em tal:replace="structure value"></em>
-    </li>
-  </ul>
+
+  <tal:cond tal:condition="python: group[1]">
+    <label style="margin: 5px 0 0 0; font-weight: bold !important;"
+        tal:content="python: group[0]">Element</label>
+    <ul class="cell-listing">
+      <li tal:repeat="value python: group[1]">
+        <em tal:replace="structure value"></em>
+      </li>
+    </ul>
+  </tal:cond>
 
 </tal:rep>

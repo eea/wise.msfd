@@ -13,6 +13,7 @@ from wise.msfd.utils import ItemLabel, ItemList, SimpleTable
 from .regionaldescriptors.utils import get_nat_desc_country_url
 
 comma_separator_re = re.compile(r',(?=[^\s])')
+art11_measure_separator = re.compile(r'(?<=\'),')
 
 
 def simple_itemlist(field, value, lang):
@@ -23,6 +24,12 @@ def simple_itemlist(field, value, lang):
 
 def simple_itemlist_re(field, value, lang):
     vals = re.split(comma_separator_re, value)
+
+    return ItemList(rows=set(vals))
+
+
+def simple_itemlist_art11_measures(field, value, lang):
+    vals = re.split(art11_measure_separator, value)
 
     return ItemList(rows=set(vals))
 

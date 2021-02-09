@@ -12,9 +12,10 @@ from wise.msfd import db, sql2018
 from wise.msfd.compliance.interfaces import (IRegionalReportDataView,
                                              IRegReportDataViewOverview)
 from wise.msfd.compliance.utils import DummyReportField
-from wise.msfd.gescomponents import get_features, get_parameters
+from wise.msfd.gescomponents import (FEATURES_ORDER, get_features,
+                                     get_parameters)
 from wise.msfd.translation import retrieve_translation
-from wise.msfd.utils import ItemList, items_to_rows, timeit
+from wise.msfd.utils import ItemList, fixedorder_sortkey, items_to_rows, timeit
 
 from ..nationaldescriptors.reportdata import ReportData2020
 from ..nationaldescriptors.utils import (consolidate_singlevalue_to_list,
@@ -491,6 +492,7 @@ class RegReportData2020(ReportData2020, RegReportData2018):
     @property
     def country_code(self):
         """" Needed for caching """
+
         countries = [c[0] for c in self.available_countries]
 
         return ','.join(countries)
@@ -535,8 +537,13 @@ class RegReportData2020(ReportData2020, RegReportData2018):
             data, 'Element', order
         )
 
+        grouped_fields = ('Element', 'GESCriteria', 'P_Parameters',
+                          'ParameterOther')
+
         data_by_mru, features = group_multiple_fields(
-            data_, 'Feature', ('Element', 'GESCriteria', 'P_Parameters'),
+            data_,
+            'Feature',
+            grouped_fields,
             order
         )
 
@@ -551,10 +558,15 @@ class RegReportData2020(ReportData2020, RegReportData2018):
         feature_field_orig = [a for a in fields if a.title == 'Features'][0]
         f_field_index = fields.index(feature_field_orig)
 
-        feature_fields = [DummyReportField(f) for f in features]
+        feature_fields = [
+            DummyReportField(f)
+            for f in sorted(features,
+                            key=lambda i: fixedorder_sortkey(i.name,
+                                                             FEATURES_ORDER))
+        ]
 
         fields_all = (fields[:f_field_index] + feature_fields +
-                      fields[f_field_index + 4:])
+                      fields[f_field_index + len(grouped_fields) + 1:])
 
         for mru, rows in data_by_mru.items():
             _rows = items_to_rows(rows, fields_all)

@@ -23,10 +23,11 @@
         <element section="programme" name="P_RegionalCooperation_countries" convert="simple_itemlist_re">Regional cooperation - countries involved</element>
         <element section="programme" name="P_RegionalCooperation_implementation">Regional cooperation - implementation level</element>
         <element section="programme" name="P_MonitoringDetails" translate="true">Monitoring details</element>
-        <element section="element" setlevel="2" name="Feature" label="features">Features</element>
+        <element section="element" setlevel="2" name="Feature" label="art11_features">Features</element>
         <element section="element" name="Element">Elements</element>
         <element section="element" name="GESCriteria">GES criteria</element>
         <element section="element" name="P_Parameters" label="art11_parameters" convert="csv_ges_labels_list">Parameters</element>
+        <element section="element" name="ParameterOther">Parameter Other</element>
         <element section="programme" setlevel="1" name="P_SpatialScopes" convert="simple_itemlist_re">Spatial scope</element>
         <element section="programme" name="P_MarineReportingUnits" convert="simple_itemlist_re">Marine reporting units</element>
         <element section="programme" name="P_TemporalScope">Temporal scope (start date - end date)</element>

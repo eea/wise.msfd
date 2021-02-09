@@ -146,6 +146,7 @@ class Proxy2018(object):
                 if isinstance(v, list):
                     v = tuple(v)
                 vals.append(v)
+
             self._hash[ignore] = hash(tuple(vals))
 
         return self._hash[ignore]

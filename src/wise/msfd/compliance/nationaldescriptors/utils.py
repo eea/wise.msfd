@@ -164,9 +164,8 @@ def group_multiple_fields(proxies, main_fieldname, group_fields, order):
         res_proxy = proxy_sets[0]
         values = defaultdict(lambda: defaultdict(list))
 
-        # if res_proxy.P_ProgrammeCode == 'BALEE-D00-40_MarineAndCoastalActivities':
-        #     import pdb; pdb.set_trace()
-
+        # iterate over all proxy sets, and group the data
+        # into the 'group_fields'
         for proxy in proxy_sets:
             for main_field in main_field_vals:
                 name = (hasattr(main_field, 'name') and main_field.name
@@ -181,26 +180,35 @@ def group_multiple_fields(proxies, main_fieldname, group_fields, order):
                     if isinstance(v, ItemList):
                         v = v.rows
                     else:
-                        v = [v]
+                        v = v and [v] or []
 
                     values[name][gfield].extend(v)
 
         for _field, vals in values.items():
-            try:
-                x = [
-                    (_gfield, sorted(set(vals[_gfield])))
-                    for _gfield in group_fields
-                ]
-            except:
-                import pdb; pdb.set_trace()
+            unique_vals = []
+
+            for _gfield in group_fields:
+                __vals = vals[_gfield]
+
+                if __vals and isinstance(__vals[0], ItemLabel):
+                    seen = set()
+
+                    # This works because set.add returns None, so the
+                    # expression in the list comprehension always yields obj,
+                    # but only if obj.name has not already been added to seen
+                    __vals = [
+                        seen.add(obj.name) or obj
+                        for obj in __vals
+                        if obj.name not in seen
+                    ]
+                else:
+                    __vals = sorted(set(__vals))
+
+                unique_vals.append((_gfield, __vals))
 
             res_proxy.set_value(
-                _field, ItemListGroup(x)
+                _field, ItemListGroup(unique_vals)
             )
-        # res_proxy.P_ProgrammeCode - DK-D06-08
-        # res_proxy.PresEnvEutrophi, res_proxy.HabBenBHT, res_proxy.HabBenOther
-        # if len(proxy_sets) > 1:
-        #     import pdb; pdb.set_trace()
 
         res.append(res_proxy)
 

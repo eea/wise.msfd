@@ -7,28 +7,29 @@
     <element section="strategy" name="Gaps_Plans" translate="true">Gaps and plans</element>
     <element section="strategy" name="RelatedTargets" label="targets" convert="csv_ges_labels_inverse_list">Related targets</element>
     <element section="strategy" name="Coverage_Targets">Coverage of targets</element>
-    <element section="strategy" name="RelatedMeasures" convert="simple_itemlist">Related measures</element>
+    <element section="strategy" name="RelatedMeasures" convert="simple_itemlist_art11_measures">Related measures</element>
     <element section="strategy" name="Coverage_Measures">Coverage of measures</element>
-    <element section="strategy" name="MonitoringProgrammes" convert="simple_itemlist">Related monitoring programmes</element>
+    <element section="strategy" name="MonitoringProgrammes" convert="simple_itemlist_re">Related monitoring programmes</element>
     <element section="programme" setlevel="1" name="P_ProgrammeCode">Programme code</element>
     <element section="programme" name="P_ProgrammeName">Programme name</element>
     <element section="programme" name="P_UpdateType">Update type</element>
     <element section="programme" name="P_OldProgrammeCodes" convert="simple_itemlist_re">Old programme codes</element>
     <element section="programme" name="P_ProgrammeDescription" translate="true">Programme description</element>
-    <element section="programme" name="P_MonitoringPurposes" convert="simple_itemlist">Monitoring purpose</element>
+    <element section="programme" name="P_MonitoringPurposes" convert="simple_itemlist_re">Monitoring purpose</element>
     <element section="programme" name="P_OtherPoliciesConventions" label="art11_conventions" convert="csv_ges_labels_list">Other policies and conventions</element>
     <element section="programme" name="P_RegionalCooperation_coordinations" convert="simple_itemlist_re">Regional cooperation - coordinating body</element>
     <element section="programme" name="P_RegionalCooperation_implementation">Regional cooperation - implementation level</element>
     <element section="programme" name="P_MonitoringDetails" translate="true">Monitoring details</element>
-    <element section="element" setlevel="2" name="Feature" label="features">Features</element>
+    <element section="element" setlevel="2" name="Feature" label="art11_features">Features</element>
     <element section="element" name="Element">Elements</element>
     <element section="element" name="GESCriteria">GES criteria</element>
     <element section="element" name="P_Parameters" label="art11_parameters" convert="csv_ges_labels_list">Parameters</element>
-    <element section="programme" setlevel="1" name="P_SpatialScopes" convert="simple_itemlist">Spatial scope</element>
-    <element section="programme" name="P_MarineReportingUnits" convert="simple_itemlist">Marine reporting units</element>
+    <element section="element" name="ParameterOther">Parameter Other</element>
+    <element section="programme" setlevel="1" name="P_SpatialScopes" convert="simple_itemlist_re">Spatial scope</element>
+    <element section="programme" name="P_MarineReportingUnits" convert="simple_itemlist_re">Marine reporting units</element>
     <element section="programme" name="P_TemporalScope">Temporal scope (start date - end date)</element>
     <element section="programme" name="P_MonitoringFrequency">Monitoring frequency</element>
-    <element section="programme" name="P_MonitoringTypes" convert="simple_itemlist">Monitoring type</element>
+    <element section="programme" name="P_MonitoringTypes" convert="simple_itemlist_re">Monitoring type</element>
     <element section="programme" name="P_MonitoringMethods" label="art11_monitor_method" convert="csv_ges_labels_list">Monitoring method</element>
     <element section="programme" name="P_MonitoringMethodOther">Monitoring method other</element>
     <element section="programme" name="P_QualityControl" translate="true">Quality control</element>
