@@ -957,6 +957,9 @@ class AssessmentDataMixin(object):
                 phase_scores['conclusion'] = ('-', 'Not relevant')
                 phase_scores['color'] = 0
                 phase_scores['score'] = '/'
+            elif phase == 'consistency' and phase_scores['score'] == 0:
+                phase_scores['conclusion'] = (0, 'Not consistent')
+                phase_scores['color'] = 3
             else:
                 phase_scores['conclusion'] = (score_val,
                                               self.get_conclusion(score_val))

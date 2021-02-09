@@ -22,7 +22,7 @@ from wise.msfd.compliance.assessment import (ANSWERS_COLOR_TABLE,
                                              filter_assessment_data_2012)
 from wise.msfd.compliance.base import NAT_DESC_QUESTIONS
 from wise.msfd.compliance.content import AssessmentData
-from wise.msfd.compliance.scoring import (CONCLUSIONS, get_overall_conclusion,
+from wise.msfd.compliance.scoring import (get_overall_conclusion,
                                           get_range_index, OverallScores)
 from wise.msfd.compliance.utils import ordered_regions_sortkey
 from wise.msfd.data import _extract_pdf_assessments
@@ -350,6 +350,11 @@ def format_assessment_data(article, elements, questions, muids, data,
                 or phase_scores['max_score'] == 0):
             phase_scores['conclusion'] = ('-', 'Not relevant')
             phase_scores['color'] = 0
+            continue
+
+        if phase == 'consistency' and phase_scores['score'] == 0:
+            phase_scores['conclusion'] = (0, 'Not consistent')
+            phase_scores['color'] = 3
             continue
 
         phase_scores['conclusion'] = get_overall_conclusion(phase_score)

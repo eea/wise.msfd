@@ -137,6 +137,10 @@ class OverallScores(object):
         :return: string 'Very good'
         """
         score_value = self.get_range_index_for_phase(phase)
+
+        if score_value == 0 and phase == 'consistency':
+            return 'Not consistent'
+
         concl = list(reversed(CONCLUSIONS))[score_value]
 
         return concl
