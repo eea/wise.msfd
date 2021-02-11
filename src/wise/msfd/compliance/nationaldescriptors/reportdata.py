@@ -215,6 +215,15 @@ class ReportData2012(BaseView, BaseUtil):
 
         return view
 
+    def get_report_translatable_fields(self):
+        rep_def = get_report_definition(
+            self.year, self.article)
+
+        if not rep_def:
+            return []
+
+        return rep_def.get_translatable_fields()
+
     @cache(get_reportdata_key, dependencies=['translation'])
     def get_report_data(self):
         view = self.get_report_view()
@@ -1029,12 +1038,13 @@ view."""
         return data
 
     def get_report_definition(self):
-        rep_def = get_report_definition(self.article).get_fields()
+        rep_def = get_report_definition(self.year, self.article).get_fields()
 
         return rep_def
 
     def get_report_translatable_fields(self):
-        rep_def = get_report_definition(self.article).get_translatable_fields()
+        rep_def = get_report_definition(
+            self.year, self.article).get_translatable_fields()
 
         return rep_def
 
@@ -1583,7 +1593,7 @@ class ReportData2018Secondary(ReportData2018):
             else:
                 data_by_mru = {'no mru': data}
 
-            fields = get_report_definition(self.article).get_fields()
+            fields = get_report_definition(self.year, self.article).get_fields()
 
             for mru, rows in data_by_mru.items():
                 _rows = items_to_rows(rows, fields)
@@ -1704,14 +1714,14 @@ class ReportDataOverview2020Art11(ReportData2020):
     @property
     def TRANSLATABLES(self):
         article = '{}Overview'.format(self.article)
-        rep_def = get_report_definition(article)
+        rep_def = get_report_definition(self.year, article)
         translatables = rep_def.get_translatable_fields()
 
         return translatables
 
     def get_report_definition(self):
         article = '{}Overview'.format(self.article)
-        rep_def = get_report_definition(article).get_fields()
+        rep_def = get_report_definition(self.year, article).get_fields()
 
         return rep_def
 

@@ -113,7 +113,7 @@ class A10Item(Item):
         # TODO: cache this info
         t = sql.t_MSFD_16a_9Detailed
         count, res = db.get_all_records(
-            t.c.DescriptionGES,
+            [t.c.DescriptionGES],
             t.c.MemberState == self.country_code,
             t.c.ListOfGES == self.criterion,
         )

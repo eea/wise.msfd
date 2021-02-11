@@ -84,7 +84,8 @@ class ReportData2018SecondaryOverview(ReportData2018Secondary,
             else:
                 data_by_mru = {'no mru': data}
 
-            fields = get_report_definition(self.article).get_fields()
+            fields = get_report_definition(
+                self.year, self.article).get_fields()
             fields_filtered = [
                 f for f in fields
                 if self.render_sections.get(f.section, True)

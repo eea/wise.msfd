@@ -40,9 +40,11 @@ REPORT_DEFS = {
 }
 
 
-def get_report_definition(article):
-    for year, art_def in REPORT_DEFS.items():
-        if article in art_def:
-            return REPORT_DEFS[year][article]
+def get_report_definition(year, article):
+    try:
+        rep_def = REPORT_DEFS[year][article]
 
-    raise Exception("Must define report definition for {}".format(article))
+        return rep_def
+
+    except KeyError:
+        return None
