@@ -58,27 +58,28 @@
     <element section="SubProgramme" name="Habitat_impacts" group-name="Q9b - Parameters monitored (state/impact)">Habitat impacts</element>
     <element section="SubProgramme" name="Pressure_input" group-name="Q9b - Parameters monitored (pressures)">Pressure input</element>
     <element section="SubProgramme" name="Pressure_output" group-name="Q9b - Parameters monitored (pressures)">Pressure output</element>
-    <element section="SubProgramme" name="" group-name=""></element>
-    <element section="SubProgramme" name="" group-name=""></element>
-    <element section="SubProgramme" name="" group-name=""></element>
-    <element section="SubProgramme" name="" group-name=""></element>
-    <element section="MonitoringProgramme" name="" group-name=""></element>
-    <element section="SubProgramme" name="" group-name=""></element>
-    <element section="SubProgramme" name="" group-name=""></element>
-    <element section="SubProgramme" name="" group-name=""></element>
-    <element section="SubProgramme" name="" group-name=""></element>
-    <element section="SubProgramme" name="" group-name=""></element>
-    <element section="SubProgramme" name="" group-name=""></element>
-    <element section="SubProgramme" name="" group-name=""></element>
-    <element section="SubProgramme" name="" group-name=""></element>
-    <element section="SubProgramme" name="" group-name=""></element>
-    <element section="SubProgramme" name="" group-name=""></element>
-    <element section="SubProgramme" name="" group-name=""></element>
-    <element section="SubProgramme" name="" group-name=""></element>
-    <element section="SubProgramme" name="" group-name=""></element>
-    <element section="SubProgramme" name="" group-name=""></element>
-    <element section="SubProgramme" name="" group-name=""></element>
-    <element section="SubProgramme" name="" group-name=""></element>
-    <element section="" name="" group-name=""></element>
+    <element section="SubProgramme" name="Activity" group-name="Q9b - Parameters monitored (activity)">Activity</element>
+    <element section="SubProgramme" name="Other" group-name="Q9b Parameters monitored (other)">Other</element>
+    <element section="SubProgramme" name="Q4i_SpatialScope" group-name="">Q41 Spatial scope</element>
+    <element section="SubProgramme" name="Q4j_DescriptionSpatialScope" group-name="">Q4j - Description of spatial scope</element>
+    <element section="MonitoringProgramme" name="MarineUnitID" group-name="">Marine Unit IDs</element>
+    <element section="SubProgramme" name="Q4h_StartDate" group-name="Q4h - Temporal scope">Start date- End date</element>
+    <element section="SubProgramme" name="Q9h_Other" group-name="">Q9h - Temporal resolution of sampling</element>
+    <element section="SubProgramme" name="Q9c_MonitoringMethod" group-name="">Q9c - Monitoring method</element>
+    <element section="SubProgramme" name="Q9d_DescriptionMethod" group-name="">Q9d - Description of alteration to method</element>
+    <element section="SubProgramme" name="Q9e_QualityAssurance" group-name="">Q9e - Quality assurance</element>
+    <element section="SubProgramme" name="Q9f_QualityControl" group-name="">Q9f - Quality control</element>
+    <element section="SubProgramme" name="Q9g_Proportion" group-name="Q9g - Spatial resolution of sampling">Q9g - Proportion of area covered %</element>
+    <element section="SubProgramme" name="Q9g_NoSamples" group-name="Q9g - Spatial resolution of sampling">Q9g - No. of samples</element>
+    <element section="SubProgramme" name="Q9i_DescriptionSampleRepresentivity" group-name="">Q9i - Description of sample representivity</element>
+    <element section="SubProgramme" name="Q10a_AggregationData" group-name="">Q10a - Scale for aggregation of data</element>
+    <element section="SubProgramme" name="Q10b_DescriptionDataAggregation" group-name="">Q10b - Other scale for aggregation of data</element>
+    <element section="SubProgramme" name="Q10c_DataType" group-name="Q10c - Access to monitoring data">Q10c - Data type</element>
+    <element section="SubProgramme" name="Q10c_DataAccessMechanism" group-name="Q10c - Access to monitoring data">Q10c - Data access mechanism</element>
+    <element section="SubProgramme" name="Q10c_DataAccessRights" group-name="Q10c - Access to monitoring data">Q10c - Data access rights</element>
+    <element section="SubProgramme" name="Q10c_INSPIREStandard" group-name="Q10c - Access to monitoring data">Q10c - INSPIRE standard</element>
+    <element section="SubProgramme" name="Q10c_DataAvailable" group-name="Q10c - Access to monitoring data">Q10c Date data are available</element>
+    <element section="SubProgramme" name="Q10c_DataAFrequency" group-name="Q10c - Access to monitoring data">Q10c - Data update frequency</element>
+    <element section="SubProgramme" name="Q10d_DescriptionDataAccess" group-name="">Q10d - Description of data access</element>
   </Art11>
 </data>
