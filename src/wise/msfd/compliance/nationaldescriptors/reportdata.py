@@ -26,7 +26,7 @@ from wise.msfd.compliance.nationaldescriptors.data import get_report_definition
 from wise.msfd.compliance.utils import (group_by_mru,
                                         insert_missing_criterions,
                                         ordered_regions_sortkey)
-from wise.msfd.compliance.vocabulary import get_regions_for_country
+from wise.msfd.compliance.vocabulary import REGIONS, get_regions_for_country
 from wise.msfd.data import (get_all_report_filenames,
                             get_envelope_release_date, get_factsheet_url,
                             get_report_file_url, get_report_filename,
@@ -998,7 +998,30 @@ view."""
             *conditions
         )
 
-        return q
+        if hasattr(self._countryregion_folder, '_subregions'):
+            regions = self._countryregion_folder._subregions
+        else:
+            regions = [self.country_region_code]
+
+        # filter data by regions
+        region_names = [
+            REGIONS[code].replace('&', 'and')
+            for code in regions
+        ]
+        region_names = [
+            ':' in rname and rname.split(':')[1].strip() or rname
+            for rname in region_names
+        ]
+
+        res = []
+
+        for row in q:
+            regions_reported = set(row.SubRegions.split(','))
+
+            if regions_reported.intersection(set(region_names)):
+                res.append(row)
+
+        return res
 
     def get_data_from_view(self, article):
         data = getattr(self, 'get_data_from_view_' + article)()
