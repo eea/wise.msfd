@@ -1,4 +1,5 @@
 import logging
+import re
 from io import BytesIO
 
 from sqlalchemy import or_
@@ -15,7 +16,8 @@ from wise.msfd.compliance.utils import DummyReportField
 from wise.msfd.gescomponents import (FEATURES_ORDER, get_features,
                                      get_parameters)
 from wise.msfd.translation import retrieve_translation
-from wise.msfd.utils import ItemList, fixedorder_sortkey, items_to_rows, timeit
+from wise.msfd.utils import (ItemLabel, ItemList, fixedorder_sortkey,
+                             items_to_rows, timeit)
 
 from ..nationaldescriptors.reportdata import ReportData2020
 from ..nationaldescriptors.utils import (consolidate_singlevalue_to_list,
@@ -28,6 +30,9 @@ from .data import get_report_definition
 from .proxy import Proxy2018
 
 logger = logging.getLogger('wise.msfd')
+
+
+href_regex = re.compile(r'(?<=href=\")[^\"]+(?=\")')
 
 
 class RegReportData2012(BaseRegComplianceView):
@@ -337,7 +342,17 @@ class RegReportData2018(BaseRegComplianceView):
 
                 for j, value in enumerate(values):
                     if isinstance(value, ItemList):
-                        value = "\n".join(value.rows)
+                        rows = value.rows
+
+                        # it is 'Member state report' field
+                        if rows and isinstance(rows[0], ItemLabel):
+                            rows = [
+                                "{}: {}".format(
+                                    r.name, href_regex.search(r.title).group())
+                                for r in rows
+                            ]
+
+                        value = "\n".join(rows)
 
                     # if 'value' is a list/tuple meaning it contains both the
                     # original and the translated value, we need
