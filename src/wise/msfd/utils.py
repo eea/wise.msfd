@@ -558,6 +558,15 @@ class ItemList(TemplateMixin):
         return id(self)     # wonky but should work
 
 
+class ItemListFiltered(ItemList):
+    """ Filter out empty values """
+
+    def __init__(self, rows, sort=True):
+        ItemList.__init__(self, rows, sort)
+
+        self.rows = [x for x in self.rows if x]
+
+
 class LabeledItemList(ItemList):
     """ List that renders using <div> instead of <ul>
     """

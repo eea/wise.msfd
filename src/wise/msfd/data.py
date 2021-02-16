@@ -264,6 +264,61 @@ def _get_report_filename_art8_2012(country, region, article, descriptor):
     return getattr(item, filecol)
 
 
+def _get_report_fileurl_art11_2014(country, region, article, descriptor):
+    q = """
+PREFIX cr: <http://cr.eionet.europa.eu/ontologies/contreg.rdf#>
+PREFIX terms: <http://purl.org/dc/terms/>
+PREFIX schema: <http://rod.eionet.europa.eu/schema.rdf#>
+PREFIX core: <http://www.w3.org/2004/02/skos/core#>
+
+SELECT distinct ?file
+WHERE {
+?file terms:date ?date .
+?file cr:mediaType 'text/xml' .
+?file terms:isPartOf ?isPartOf .
+?file cr:xmlSchema ?schema .
+?file schema:restricted ?restricted.
+?isPartOf schema:locality ?locality .
+?isPartOf schema:obligation ?obligation .
+?obligation core:notation ?obligationNr .
+?locality core:notation ?notation .
+FILTER (?notation = '%s')
+FILTER (?obligationNr = '611')
+FILTER (str(?schema) = 'http://dd.eionet.europa.eu/schemas/MSFD11Mon/MSFD11MonSub_1p0.xsd'
+|| str(?schema) = 'http://dd.eionet.europa.eu/schemas/MSFD11Mon/MSFD11Mon_1p1.xsd')
+#FILTER regex(str(?file), '/%s')
+FILTER (?restricted = 0)
+}
+ORDER BY DESC(?date)
+""" % (country.upper(), region.lower())
+
+    service = sparql.Service('https://cr.eionet.europa.eu/sparql')
+
+    logger.info("Getting fileurl Art11 with SPARQL: %s - %s",
+                country, region)
+    try:
+        req = service.query(q)
+        rows = req.fetchall()
+
+        urls = []
+
+        for row in rows:
+            url = row[0].value
+            splitted = url.split('/')
+
+            # filename_from_url = splitted[-1]
+
+            urls.append(url)
+
+    except:
+        logger.exception('Got an error in querying SPARQL endpoint for '
+                         'Art11: %s - %s', country, region)
+
+        raise
+
+    return urls
+
+
 def get_report_filename(report_version,
                         country, region, article, descriptor):
     """ Return the filename for imported information
@@ -291,8 +346,8 @@ def get_report_filename(report_version,
 
             if x[0] == region and x[1] == article
         ]
-
-        return filename[0]
+        if filename:
+            return filename[0]
 
     # 'Art8': '8b',       # TODO: this needs to be redone for descriptor
     mapping = {
@@ -304,6 +359,9 @@ def get_report_filename(report_version,
             'Art8': _get_report_filename_art8_2012,
             'Art9': _get_report_filename_art9_2012,
             'Art10': _get_report_filename_art10_2012,
+        },
+        '2014': {
+            'Art11': _get_report_fileurl_art11_2014,
         },
         '2018': {
             'Art7': _get_report_filename_art7_2018,

@@ -206,7 +206,6 @@ class ReportData2012(BaseView, BaseUtil):
         logger.info("Rendering 2012 report for: %s %s %s %s",
                     self.country_code, self.descriptor, self.article,
                     ",".join([x.id for x in self.muids]))
-
         klass = self.article_implementations[self.article]
 
         view = klass(self, self.request, self.country_code,
@@ -253,7 +252,7 @@ class ReportData2012(BaseView, BaseUtil):
     def get_report_filename(self, art=None):
         # needed in article report data implementations, to retrieve the file
 
-        return get_report_filename('2012',
+        return get_report_filename(self.year,
                                    self.country_code,
                                    self.country_region_code,
                                    art or self.article,
@@ -605,6 +604,74 @@ class ReportData2012Like2018(ReportData2012):
         }
 
         return res
+
+
+class ReportData2014(ReportData2012):
+    year = report_year = '2014'
+
+    def get_report_view(self):
+        klass = self.article_implementations[self.article]
+
+        view = klass(self, self.request, self.country_code,
+                     self.country_region_code, self.descriptor, self.article,
+                     self.muids, self.filename)
+
+        return view
+
+    @db.use_db_session('2012')
+    def __call__(self):
+        if 'translate' in self.request.form:
+            report_view = self.get_report_view()
+            report_view.auto_translate()
+
+            messages = IStatusMessage(self.request)
+            messages.add(u"Auto-translation initiated, please refresh "
+                         u"in a couple of minutes", type=u"info")
+
+        print("Will render report for: %s" % self.article)
+        # returns all fileurls from sparql, including monitoring programme
+        # and monitoring subprogramme files
+        all_filenames = self.get_report_filename()
+
+        # filter by regions if country has multiple regions
+        filename = []
+        for fileurl in all_filenames:
+            if len(self.regions) == 1:
+                continue
+
+            if '/' + self.country_region_code.lower() not in fileurl:
+                continue
+
+            filename.append(fileurl)
+
+        self.filename = filename
+
+        factsheet = None
+        multiple_source_files = True
+        source_file = [
+            (f, f + '/manage_document')
+            for f in filename
+        ]
+
+        rep_info = self.get_reporting_information(filename=filename[0])
+
+        report_header_data = self.get_report_header_data(
+            rep_info.reporters, source_file, factsheet, rep_info.report_date,
+            multiple_source_files
+        )
+        report_header = self.report_header_template(**report_header_data)
+        try:
+            report_data, report_data_rows = self.get_report_data()
+        except:
+            report_data, report_data_rows = 'Error in rendering report', []
+        trans_edit_html = self.translate_view()()
+        self.report_html = report_header + report_data + trans_edit_html
+
+        if 'download' in self.request.form:
+
+            return self.download(report_data_rows, report_header_data)
+
+        return self.index()
 
 
 class SnapshotSelectForm(Form):

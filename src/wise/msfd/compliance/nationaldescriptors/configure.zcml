@@ -95,7 +95,7 @@
   <browser:page
     for="..interfaces.INationalDescriptorAssessment"
     name="view-report-data-2014"
-    class=".reportdata.ReportData2012"
+    class=".reportdata.ReportData2014"
     template="./pt/report-data-view.pt"
     permission="zope2.View"
     />
