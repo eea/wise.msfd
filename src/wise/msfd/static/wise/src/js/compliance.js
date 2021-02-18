@@ -241,7 +241,7 @@ if (!Array.prototype.last){
     }
 
     // group cells by similarity
-    $('td', row).each(function(ix) {
+    $('td', row).not('.sub-header').each(function(ix) {
       if ((sets.length == 0) || limits.includes(ix)) {
         sets.push([this]);
       } else {

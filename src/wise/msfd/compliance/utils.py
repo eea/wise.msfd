@@ -47,6 +47,7 @@ class ReportField(TemplateMixin):
     def __init__(self, node, article):
         self.title = node.text
         self.name = node.get('name')
+        self.group_name = node.get('group-name')
         self.article = article
 
         self.label_collection = node.get('label')

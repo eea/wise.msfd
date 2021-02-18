@@ -20,7 +20,8 @@ from plone.api.portal import get_tool, getSite
 from plone.intelligenttext.transforms import \
     convertWebIntelligentPlainTextToHtml
 from plone.memoize import volatile
-from Products.Five.browser.pagetemplatefile import PageTemplateFile
+from Products.Five.browser.pagetemplatefile import (PageTemplateFile,
+                                                    ViewPageTemplateFile)
 
 
 # TODO: move this registration to search package
@@ -455,6 +456,25 @@ class TemplateMixin:
             values = self.__dict__
 
         return self.template(**values)
+
+
+class NationalCompoundRow(TemplateMixin):
+    template = ViewPageTemplateFile('pt/national-compound-row.pt')
+
+    def __init__(self, context, request, field, vals, raw_values):
+        self.context = context
+        self.request = request
+        self.field = field
+        self.title = field.title
+        self.vals = vals
+        self.raw_values = raw_values
+
+
+def national_compoundrow(self, field, vals, raw_values):
+    # FIELD = namedtuple("Field", ["group_name", "name", "title"])
+    # field = FIELD(title, title, title)
+
+    return NationalCompoundRow(self, self.request, field, vals, raw_values)
 
 
 class ItemLabel(TemplateMixin):

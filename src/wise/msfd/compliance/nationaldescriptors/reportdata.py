@@ -214,6 +214,11 @@ class ReportData2012(BaseView, BaseUtil):
 
         return view
 
+    def get_report_definition(self):
+        rep_def = get_report_definition(self.year, self.article).get_fields()
+
+        return rep_def
+
     def get_report_translatable_fields(self):
         rep_def = get_report_definition(
             self.year, self.article)
@@ -664,6 +669,7 @@ class ReportData2014(ReportData2012):
             report_data, report_data_rows = self.get_report_data()
         except:
             report_data, report_data_rows = 'Error in rendering report', []
+
         trans_edit_html = self.translate_view()()
         self.report_html = report_header + report_data + trans_edit_html
 

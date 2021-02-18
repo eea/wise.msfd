@@ -5,7 +5,7 @@
     <element section="MonitoringProgramme" name="ProgrammeID" group-name="Monitoring programme">Reference existing programme</element>
     <element section="MonitoringProgramme" name="MarineUnitID" group-name="Monitoring programme">Marine Unit ID</element>
     <element section="MonitoringProgramme" name="Q4e_ProgrammeID" group-name="">Q4e - Programme ID</element>
-    <element section="MonitoringProgramme" name="Q4f_ProgrammeDescription" group-name="">Q4f - Programme description</element>
+    <element section="MonitoringProgramme" name="Q4f_ProgrammeDescription" group-name="" translate="true">Q4f - Programme description</element>
     <element section="MonitoringProgramme" name="Q5e_NaturalVariablity" group-name="">Q5e - Natural variability</element>
     <element section="MonitoringProgramme" name="Q5d_AdequateData" group-name="Q5d - Adequacy for assessment of GES">Q5d - Adequate data</element>
     <element section="MonitoringProgramme" name="Q5d_EstablishedMethods" group-name="Q5d - Adequacy for assessment of GES">Q5d - Established methods</element>
@@ -16,14 +16,14 @@
     <element section="MonitoringProgramme" name="Q5h_PlansGES" group-name="">Q5h - Plans to implement monitoring for GES assessment</element>
     <element section="MonitoringProgramme" name="Q6a_EnvironmentalTarget" group-name="Q6a -Relevant targets">Q6a - Environmental target</element>
     <element section="MonitoringProgramme" name="Q6a_AssociatedIndicator" group-name="Q6a -Relevant targets">Q6a - Associated indicator</element>
-    <element section="MonitoringProgramme" name="Q6d_AdequateData" group-name="Q6b - Adequacy for assessment of targets">Q6b_SuitableData</element>
-    <element section="MonitoringProgramme" name="Q6d_EstablishedMethods" group-name="Q6b - Adequacy for assessment of targets">Q6b_EstablishedMethods</element>
+    <element section="MonitoringProgramme" name="Q6b_AdequateData" group-name="Q6b - Adequacy for assessment of targets">Q6b_SuitableData</element>
+    <element section="MonitoringProgramme" name="Q6b_EstablishedMethods" group-name="Q6b - Adequacy for assessment of targets">Q6b_EstablishedMethods</element>
     <element section="MonitoringProgramme" name="Q6b_AdequateCapacity" group-name="Q6b - Adequacy for assessment of targets">Q6d_AdequateCapacity</element>
     <element section="MonitoringProgramme" name="Q6c_Target" group-name="">Q6c - Target updating</element>
     <element section="MonitoringProgramme" name="Q6d_DescriptionTargets" group-name="">Q6d - Description of programme for targets assessment</element>
     <element section="MonitoringProgramme" name="Q6e_GapFillingDateTargets" group-name="">Q6e - Gap-filling date for targets assessment</element>
     <element section="MonitoringProgramme" name="Q6f_PlansTargets" group-name="">Q6f - Plans to implement monitoring for targets assessment</element>
-    <element section="MonitoringProgramme" name="Q7a_UsesActivitiesOther" group-name="">Q7b - Description of monitoring of activities</element>
+    <element section="MonitoringProgramme" name="Q7a_RelevantActivities" group-name="">Q7b - Description of monitoring of activities</element>
     <element section="MonitoringProgramme" name="Q7c_RelevantMeasures" group-name="">Q7c - Relevant measures</element>
     <element section="MonitoringProgramme" name="Q7e_AdequateData" group-name="Q7e - Adequacy for assessment of measures">Q7d - Adequate data</element>
     <element section="MonitoringProgramme" name="Q7e_EstablishedMethods" group-name="Q7e - Adequacy for assessment of measures">Q7d - Established methods</element>
@@ -40,20 +40,20 @@
     <element section="MonitoringProgramme" name="SubMonitoringProgrammeName2" group-name="Q4g - Sub-programmes">Sub-programme name</element>
     <element section="SubProgramme" name="Q4k_Purpose" group-name="">Q4k - Monitoring purpose</element>
     <element section="SubProgramme" name="Q4l_LinksProgrammesDirectivesConventions" group-name="">Q4l - Links of monitoring programmes of other Directives and Conventions</element>
-    <element section="MonitoringProgramme" name="Q5c_HabitatsOther" group-name="Q5c - Features">Q5c - Habitats</element>
+    <element section="MonitoringProgramme" name="Habitats" group-name="Q5c - Features">Q5c - Habitats</element>
     <element section="MonitoringProgramme" name="SpeciesList" group-name="Q5c - Features">Q5c - Species list</element>
     <element section="MonitoringProgramme" name="PhysicalChemicalFeatures" group-name="Q5c - Features">Q5c - Physical/Chemical features</element>
     <element section="MonitoringProgramme" name="Pressures" group-name="Q5c - Features">Q5c - Pressures</element>
     <element section="SubProgramme" name="Q9a_ElementMonitored" group-name="">Q9a - Elements</element>
-    <element section="MonitoringProgramme" name="Q5a_DescriptionOther" group-name="Q5a - GES criteria">Relevant GES criteria</element>
-    <element section="MonitoringProgramme" name="Q5b_DescriptionOther" group-name="Q5b - GES indicators">Relevant GES indicators</element>
+    <element section="MonitoringProgramme" name="Q5a_RelevantGESCriteria" group-name="Q5a - GES criteria">Relevant GES criteria</element>
+    <element section="MonitoringProgramme" name="Q5b_RelevantGESIndicators" group-name="Q5b - GES indicators">Relevant GES indicators</element>
     <element section="SubProgramme" name="Species_distribution" group-name="Q9b - Parameters monitored (state/impact)">Species distribution</element>
     <element section="SubProgramme" name="Species_population_size" group-name="Q9b - Parameters monitored (state/impact)">Species population size</element>
     <element section="SubProgramme" name="Species_population_characteristics" group-name="Q9b - Parameters monitored (state/impact)">Species population characteristics</element>
     <element section="SubProgramme" name="Species_impacts" group-name="Q9b - Parameters monitored (state/impact)">Species impacts</element>
     <element section="SubProgramme" name="Habitat_distribution" group-name="Q9b - Parameters monitored (state/impact)">Habitat distribution</element>
     <element section="SubProgramme" name="Habitat_extent" group-name="Q9b - Parameters monitored (state/impact)">Habitat extent</element>
-    <element section="SubProgramme" name="Habitat_condition_physical-chemical;" group-name="Q9b - Parameters monitored (state/impact)">Habitat condition (physical-chemical)</element>
+    <element section="SubProgramme" name="Habitat_condition_physical" group-name="Q9b - Parameters monitored (state/impact)">Habitat condition (physical-chemical)</element>
     <element section="SubProgramme" name="Habitat_condition_biological" group-name="Q9b - Parameters monitored (state/impact)">Habitat condition (biological)</element>
     <element section="SubProgramme" name="Habitat_impacts" group-name="Q9b - Parameters monitored (state/impact)">Habitat impacts</element>
     <element section="SubProgramme" name="Pressure_input" group-name="Q9b - Parameters monitored (pressures)">Pressure input</element>
@@ -62,9 +62,9 @@
     <element section="SubProgramme" name="Other" group-name="Q9b Parameters monitored (other)">Other</element>
     <element section="SubProgramme" name="Q4i_SpatialScope" group-name="">Q41 Spatial scope</element>
     <element section="SubProgramme" name="Q4j_DescriptionSpatialScope" group-name="">Q4j - Description of spatial scope</element>
-    <element section="MonitoringProgramme" name="MarineUnitID" group-name="">Marine Unit IDs</element>
+    <element section="MonitoringProgramme" name="MarineUnitID2" group-name="">Marine Unit IDs</element>
     <element section="SubProgramme" name="Q4h_StartDate" group-name="Q4h - Temporal scope">Start date- End date</element>
-    <element section="SubProgramme" name="Q9h_Other" group-name="">Q9h - Temporal resolution of sampling</element>
+    <element section="SubProgramme" name="Q9h_TemporalResolutionSampling" group-name="">Q9h - Temporal resolution of sampling</element>
     <element section="SubProgramme" name="Q9c_MonitoringMethod" group-name="">Q9c - Monitoring method</element>
     <element section="SubProgramme" name="Q9d_DescriptionMethod" group-name="">Q9d - Description of alteration to method</element>
     <element section="SubProgramme" name="Q9e_QualityAssurance" group-name="">Q9e - Quality assurance</element>

@@ -9,7 +9,7 @@ from wise.msfd.gescomponents import get_descriptor
 from wise.msfd.translation import retrieve_translation
 from wise.msfd.utils import (Item, ItemLabel, ItemListFiltered, Node, RawRow,
                              RelaxedNode, RelaxedNodeEmpty, Row,
-                             natural_sort_key, to_html)
+                             national_compoundrow, natural_sort_key, to_html)
 
 from ..base import BaseArticle2012
 from .data import REPORT_DEFS
@@ -90,6 +90,40 @@ class A11Item(Item):
             ('Q9a_ElementMonitored', self.q9a_element),
             ('Q5a_RelevantGESCriteria', self.q5a_gescrit),
             ('Q5b_RelevantGESIndicators', self.q5a_gesindicator),
+            ('Species_distribution', self.q9b_spec_distr),
+            ('Species_population_size', self.q9b_spec_popsize),
+            ('Species_population_characteristics', self.q9b_spec_popchar),
+            ('Species_impacts', self.q9b_spec_impact),
+            ('Habitat_distribution', self.q9b_hab_distr),
+            ('Habitat_extent', self.q9b_hab_extent),
+            ('Habitat_condition_physical', self.q9b_hab_cond_phys),
+            ('Habitat_condition_biological', self.q9b_hab_cond_bio),
+            ('Habitat_impacts', self.q9b_hab_impact),
+            ('Pressure_input', self.q9b_pres_input),
+            ('Pressure_output', self.q9b_pres_output),
+            ('Activity', self.q9b_activity),
+            ('Other', self.q9b_other),
+            ('Q4i_SpatialScope', self.q4i_spatial),
+            ('Q4j_DescriptionSpatialScope', self.q4j_description),
+            ('MarineUnitID2', self.mru_mp),
+            ('Q4h_StartDate', self.q4h_start_end),
+            ('Q9h_TemporalResolutionSampling', self.q9h_temporal),
+            ('Q9c_MonitoringMethod', self.q9c_monitoring),
+            ('Q9d_DescriptionMethod', self.q9c_description),
+            ('Q9e_QualityAssurance', self.q9e_quality),
+            ('Q9f_QualityControl', self.q9f_quality_control),
+            ('Q9g_Proportion', self.q9g_proportion),
+            ('Q9g_NoSamples', self.q9g_samples),
+            ('Q9i_DescriptionSampleRepresentivity', self.q9i_description),
+            ('Q10a_AggregationData', self.q10a_aggregation),
+            ('Q10b_DescriptionDataAggregation', self.q10b_description),
+            ('Q10c_DataType', self.q10c_datatype),
+            ('Q10c_DataAccessMechanism', self.q10c_data_access),
+            ('Q10c_DataAccessRights', self.q10c_data_rights),
+            ('Q10c_INSPIREStandard', self.q10c_inspire),
+            ('Q10c_DataAvailable', self.q10c_data_available),
+            ('Q10c_DataAFrequency', self.q10c_data_freq),
+            ('Q10d_DescriptionDataAccess', self.q10d_description),
         ]
 
         for title, getter in attrs:
@@ -256,7 +290,7 @@ class A11Item(Item):
         return v
 
     def q8a_links(self):
-        v = self.mpr['.//Q7f_GapFillingDateActivitiesMeasures/text()'][0]
+        v = self.mpr['.//Q8a_LinksExistingMonitoringProgrammes/text()'][0]
         other = self.mpr['.//Q8a_Other/text()']
 
         return ItemListFiltered(v.split(' ') + other)
@@ -279,11 +313,11 @@ class A11Item(Item):
 
     def q5c_habitats(self):
         v = self.mpr['.//Q5c_RelevantFeaturesPressuresImpacts' \
-                     '/Habitats/text()'][0]
+                     '/Habitats/text()']
         other = self.mpr['.//Q5c_RelevantFeaturesPressuresImpacts/Habitats' \
                          '/Q5c_HabitatsOther/text()']
 
-        return ItemListFiltered(v.split(' ') + other)
+        return ItemListFiltered(v + other)
 
     def q5c_species(self):
         v = self.mpr['.//Q5c_RelevantFeaturesPressuresImpacts' \
@@ -302,10 +336,18 @@ class A11Item(Item):
 
         return ItemListFiltered(v.split(' ') + other)
 
-    def q9a_element(self):
-        v = self.subr['.//Q9a_ElementMonitored/text()'][0]
+    def q5c_pressures(self):
+        v = self.mpr['.//Q5c_RelevantFeaturesPressuresImpacts' \
+                     '/Pressures/text()'][0]
+        other = self.mpr['.//Q5c_RelevantFeaturesPressuresImpacts' \
+                         '/Pressures/Q5c_PressureOther/text()']
 
-        return v
+        return ItemListFiltered(v.split(' ') + other)
+
+    def q9a_element(self):
+        v = self.subr['.//Q9a_ElementMonitored/text()']
+
+        return ItemListFiltered(v)
 
     def q5a_gescrit(self):
         v = self.mpr['.//Q5a_RelevantGESCriteria/text()'][0]
@@ -321,6 +363,184 @@ class A11Item(Item):
 
         return ItemListFiltered(v.split(' ') + other)
 
+    def q9b_spec_distr(self):
+        v = self.subr['.//Species_distribution/MeasurementParameter/text()'][0]
+
+        return ItemListFiltered(v.split(' '))
+
+    def q9b_spec_popsize(self):
+        v = self.subr['.//Species_population_size/MeasurementParameter' \
+                      '/text()'][0]
+
+        return ItemListFiltered(v.split(' '))
+
+    def q9b_spec_popchar(self):
+        v = self.subr['.//Species_population_characteristics' \
+                      '/MeasurementParameter/text()'][0]
+
+        return ItemListFiltered(v.split(' '))
+
+    def q9b_spec_impact(self):
+        v = self.subr['.//Species_impacts/MeasurementParameter/text()'][0]
+
+        return ItemListFiltered(v.split(' '))
+
+    def q9b_hab_distr(self):
+        v = self.subr['.//Habitat_distribution/MeasurementParameter/text()'][0]
+
+        return ItemListFiltered(v.split(' '))
+
+    def q9b_hab_extent(self):
+        v = self.subr['.//Habitat_extent/MeasurementParameter/text()'][0]
+
+        return ItemListFiltered(v.split(' '))
+
+    def q9b_hab_cond_phys(self):
+        v = self.subr['.//Habitat_condition_physical-chemical' \
+                      '/MeasurementParameter/text()'][0]
+
+        return ItemListFiltered(v.split(' '))
+
+    def q9b_hab_cond_bio(self):
+        v = self.subr['.//Habitat_condition_biological' \
+                      '/MeasurementParameter/text()'][0]
+
+        return ItemListFiltered(v.split(' '))
+
+    def q9b_hab_impact(self):
+        v = self.subr['.//Habitat_impacts/MeasurementParameter/text()'][0]
+
+        return ItemListFiltered(v.split(' '))
+
+    def q9b_pres_input(self):
+        v = self.subr['.//Pressure_input/MeasurementParameter/text()'][0]
+
+        return ItemListFiltered(v.split(' '))
+
+    def q9b_pres_output(self):
+        v = self.subr['.//Pressure_output/MeasurementParameter/text()'][0]
+
+        return ItemListFiltered(v.split(' '))
+
+    def q9b_activity(self):
+        v = self.subr['.//Activity/MeasurementParameter/text()'][0]
+
+        return ItemListFiltered(v.split(' '))
+
+    def q9b_other(self):
+        v = self.subr['.//Other/MeasurementParameter/text()'][0]
+
+        return ItemListFiltered(v.split(' '))
+
+    def q4i_spatial(self):
+        v = self.subr['.//Q4i_SpatialScope/text()'][0]
+
+        return v
+
+    def q4j_description(self):
+        v = self.subr['.//Q4j_DescriptionSpatialScope/text()'][0]
+
+        return v
+
+    def mru_mp(self):
+        v = self.mpr['.//MonitoringProgramme/MarineUnitID/text()']
+
+        return ItemListFiltered(v)
+
+    def q4h_start_end(self):
+        start = self.subr['.//Q4h_StartDate/text()'][0]
+        end = self.subr['.//Q4h_EndDate/text()'][0]
+
+        return u"{}-{}".format(start, end)
+
+    def q9h_temporal(self):
+        v = self.subr['.//Q9h_TemporalResolutionSampling/text()'][0]
+        other = self.subr['.//Q9h_TemporalResolutionSampling/Q9h_Other/text()']
+
+        return ItemListFiltered(v.split(', ') + other)
+
+    def q9c_monitoring(self):
+        v = self.subr['.//Q9c_MonitoringMethod/text()'][0]
+
+        return v
+
+    def q9c_description(self):
+        v = self.subr['.//Q9d_DescriptionMethod/text()'][0]
+
+        return v
+
+    def q9e_quality(self):
+        v = self.subr['.//Q9e_QualityAssurance/text()'][0]
+        other = self.subr['.//Q9e_QualityAssurance/Q9e_Other/text()']
+
+        return ItemListFiltered(v.split(' ') + other)
+
+    def q9f_quality_control(self):
+        v = self.subr['.//Q9f_QualityControl/text()'][0]
+
+        return v
+
+    def q9g_proportion(self):
+        v = self.subr['.//Q9g_Proportion/text()'][0]
+
+        return v
+
+    def q9g_samples(self):
+        v = self.subr['.//Q9g_NoSamples/text()'][0]
+
+        return v
+
+    def q9i_description(self):
+        v = self.subr['.//Q9i_DescriptionSampleRepresentivity/text()'][0]
+
+        return v
+
+    def q10a_aggregation(self):
+        v = self.subr['.//Q10a_AggregationData/text()'][0]
+        other = self.subr['.//Q10a_AggregationData/Q10a_Other/text()']
+
+        return ItemListFiltered(v.split(' ') + other)
+
+    def q10b_description(self):
+        v = self.subr['.//Q10b_DescriptionDataAggregation/text()'][0]
+
+        return v
+
+    def q10c_datatype(self):
+        v = self.subr['.//Q10c_DataType/text()'][0]
+
+        return v
+
+    def q10c_data_access(self):
+        v = self.subr['.//Q10c_DataAccessMechanism/text()'][0]
+
+        return v
+
+    def q10c_data_rights(self):
+        v = self.subr['.//Q10c_DataAccessRights/text()'][0]
+
+        return v
+
+    def q10c_inspire(self):
+        v = self.subr['.//Q10c_INSPIREStandard/text()'][0]
+
+        return v
+
+    def q10c_data_available(self):
+        v = self.subr['.//Q10c_DataAvailable/text()'][0]
+
+        return v
+
+    def q10c_data_freq(self):
+        v = self.subr['.//Q10c_DataAFrequency/text()'][0]
+
+        return v
+
+    def q10d_description(self):
+        v = self.subr['.//Q10d_DescriptionDataAccess/text()'][0]
+
+        return v
+
 
 class Article11(BaseArticle2012):
     """ Article 7 implementation for 2012 year
@@ -333,7 +553,8 @@ class Article11(BaseArticle2012):
         3. Get the data from the xml file
     """
 
-    template = Template('pt/report-data-secondary.pt')
+    # template = Template('pt/report-data-secondary.pt')
+    template = Template('pt/report-data-art11.pt')
     help_text = ""
     available_regions = []
     translatable_extra_data = []
@@ -380,6 +601,32 @@ class Article11(BaseArticle2012):
         item = A11Item(self, mp_node, subprog_node, subprog_name)
 
         return item
+
+    def auto_translate(self):
+        try:
+            self.setup_data()
+        except AssertionError:
+            return
+
+        translatables = self.context.TRANSLATABLES
+        seen = set()
+
+        for row in self.rows:
+            if not row:
+                continue
+
+            if row.title not in translatables:
+                continue
+
+            for value in row.raw_values:
+                if not isinstance(value, basestring):
+                    continue
+
+                if value not in seen:
+                    retrieve_translation(self.country_code, value)
+                    seen.add(value)
+
+        return ''
 
     def setup_data(self):
         descriptor_class = get_descriptor(self.descriptor)
@@ -458,9 +705,10 @@ class Article11(BaseArticle2012):
                     for x in sub_prog_nodes
                     if xp('./Q4g_SubProgrammeID', x)[0].text == subprog_id
                 ]
-                sub_prog_node = sub_prog_node and sub_prog_node[0] or SUBEMPTY
+                sub_prog_node = (len(sub_prog_node) and sub_prog_node[0]
+                                 or SUBEMPTY)
 
-                item = self._make_item(mp, sub_prog_node, subp_name)
+                item = self._make_item(mp, sub_prog_node, subp_name[0])
                 items.append(item)
 
         self.rows = []
@@ -468,58 +716,38 @@ class Article11(BaseArticle2012):
         items = sorted(items,
                        key=lambda i: [getattr(i, o) for o in self.sort_order])
 
-        for item in items:
-            for name in item.keys():
-                values = []
+        # ikeys = items[0].keys()
+        rep_fields = self.context.get_report_definition()
 
-                for inner in items:
-                    values.append(inner[name])
+        for field in rep_fields:
+            field_name = field.name
+            values = []
 
-                raw_values = []
-                vals = []
+            for inner in items:
+                values.append(inner[field_name])
 
-                for v in values:
-                    raw_values.append(v)
-                    vals.append(self.context.translate_value(
-                        name, v, self.country_code))
+            # if field_name == 'MarineUnitID2':
+            #     import pdb; pdb.set_trace()
 
-                # values = [self.context.translate_value(name, value=v)
-                #           for v in values]
+            raw_values = []
+            vals = []
 
-                row = RawRow(name, vals, raw_values)
-                self.rows.append(row)
+            for v in values:
+                raw_values.append(v)
 
-            break       # only need the "first" row
+                vals.append(self.context.translate_value(
+                    field_name, v, self.country_code))
+
+            # row = RawRow(name, vals, raw_values)
+            row = national_compoundrow(self.context, field, vals,
+                                       raw_values)
+            self.rows.append(row)
 
         self.cols = items
 
     def __call__(self):
         self.setup_data()
 
-        return self.template()
+        return self.template(data=self.rows, report_header='')
 
-    def auto_translate(self):
-        try:
-            self.setup_data()
-        except AssertionError:
-            return
-
-        translatables = self.context.TRANSLATABLES
-        seen = set()
-
-        for row in self.rows:
-            if not row:
-                continue
-
-            if row.title not in translatables:
-                continue
-
-            for value in row.raw_values:
-                if not isinstance(value, basestring):
-                    continue
-
-                if value not in seen:
-                    retrieve_translation(self.country_code, value)
-                    seen.add(value)
-
-        return ''
+        # return self.template()

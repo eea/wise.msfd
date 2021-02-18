@@ -6,10 +6,12 @@ from wise.msfd.compliance.utils import ReportDefinition
 definition_files = {
     '2020': 'data/report_2020_def.xml',
     '2018': 'data/report_2018_def.xml',
+    '2014': 'data/report_2014_def.xml',
     '2012': 'data/report_2012_def.xml',
 }
 
 f_2012 = resource_filename(__package__, definition_files['2012'])
+f_2014 = resource_filename(__package__, definition_files['2014'])
 f_2018 = resource_filename(__package__, definition_files['2018'])
 f_2020 = resource_filename(__package__, definition_files['2020'])
 
@@ -26,6 +28,9 @@ REPORT_DEFS = {
         'Art3': ReportDefinition(f_2018, 'Art3'),
         'Art4': ReportDefinition(f_2018, 'Art3'),
         'Art7': ReportDefinition(f_2018, 'Art7'),
+    },
+    '2014': {
+        'Art11': ReportDefinition(f_2014, 'Art11'),
     },
     '2012': {
         'Art8a': ReportDefinition(f_2012, 'Art8a'),

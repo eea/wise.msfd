@@ -1,0 +1,15 @@
+<tal:def tal:define="field nocall:options/field">
+  <tr>
+    <th class="first-header">
+      <span tal:content="python: field.group_name and field.group_name or field.name">First header</span>
+    </th>
+    <td class="sub-header">
+      <span tal:content="python: field.group_name and field.name or ''">Subrow header</span>
+    </td>
+
+    <tal:rep tal:repeat="value options/vals">
+      <td tal:replace="structure value"></td>
+    </tal:rep>
+
+  </tr>
+</tal:def>
