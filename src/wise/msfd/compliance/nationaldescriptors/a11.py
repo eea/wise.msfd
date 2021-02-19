@@ -67,6 +67,7 @@ class A11Item(Item):
             ('Q6e_GapFillingDateTargets', self.q6e_gapfill),
             ('Q6f_PlansTargets', self.q6f_plans),
             ('Q7a_RelevantActivities', self.q7a_activities),
+            ('Q7b_DescriptionActivities', self.q7b_description),
             ('Q7c_RelevantMeasures', self.q7c_measures),
             ('Q7e_AdequateData', self.q7e_adequate),
             ('Q7e_EstablishedMethods', self.q7e_methods),
@@ -243,6 +244,11 @@ class A11Item(Item):
         other = self.mpr['.//Q7a_UsesActivitiesOther/text()']
 
         return ItemListFiltered(v.split(' ') + other)
+
+    def q7b_description(self):
+        v = self.mpr['.//Q7b_DescriptionActivities/text()'][0]
+
+        return v
 
     def q7c_measures(self):
         v = self.mpr['.//Q7c_RelevantMeasure/text()']

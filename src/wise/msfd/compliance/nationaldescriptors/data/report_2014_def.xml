@@ -23,7 +23,8 @@
     <element section="MonitoringProgramme" name="Q6d_DescriptionTargets" group-name="" translate="true">Q6d - Description of programme for targets assessment</element>
     <element section="MonitoringProgramme" name="Q6e_GapFillingDateTargets" group-name="">Q6e - Gap-filling date for targets assessment</element>
     <element section="MonitoringProgramme" name="Q6f_PlansTargets" group-name="" translate="true">Q6f - Plans to implement monitoring for targets assessment</element>
-    <element section="MonitoringProgramme" name="Q7a_RelevantActivities" group-name="">Q7b - Description of monitoring of activities</element>
+    <element section="MonitoringProgramme" name="Q7a_RelevantActivities" group-name="">Q7a - Relevant activities</element>
+    <element section="MonitoringProgramme" name="Q7b_DescriptionActivities" group-name="">Q7b - Description of monitoring of activities</element>
     <element section="MonitoringProgramme" name="Q7c_RelevantMeasures" group-name="">Q7c - Relevant measures</element>
     <element section="MonitoringProgramme" name="Q7e_AdequateData" group-name="Q7e - Adequacy for assessment of measures">Q7d - Adequate data</element>
     <element section="MonitoringProgramme" name="Q7e_EstablishedMethods" group-name="Q7e - Adequacy for assessment of measures">Q7d - Established methods</element>
