@@ -584,7 +584,9 @@ class ItemListFiltered(ItemList):
     def __init__(self, rows, sort=True):
         ItemList.__init__(self, rows, sort)
 
-        self.rows = [x for x in self.rows if x]
+        _rows = [x.replace('\n', '').replace('\t', '') for x in self.rows]
+        _rows = [x for x in _rows if x]
+        self.rows = _rows
 
 
 class LabeledItemList(ItemList):

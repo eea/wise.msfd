@@ -11,18 +11,18 @@
     <element section="MonitoringProgramme" name="Q5d_EstablishedMethods" group-name="Q5d - Adequacy for assessment of GES">Q5d - Established methods</element>
     <element section="MonitoringProgramme" name="Q5d_AdequateUnderstandingGES" group-name="Q5d - Adequacy for assessment of GES">Q5d - Adequate understanding of GES</element>
     <element section="MonitoringProgramme" name="Q5d_AdequateCapacity" group-name="Q5d - Adequacy for assessment of GES">Q5d - Adequate capacity</element>
-    <element section="MonitoringProgramme" name="Q5f_DescriptionGES" group-name="">Q5f - Description of programme for GES assessment</element>
+    <element section="MonitoringProgramme" name="Q5f_DescriptionGES" group-name="" translate="true">Q5f - Description of programme for GES assessment</element>
     <element section="MonitoringProgramme" name="Q5g_GapFillingDateGES" group-name="">Q5g - Gap-filling date for GES assessment</element>
-    <element section="MonitoringProgramme" name="Q5h_PlansGES" group-name="">Q5h - Plans to implement monitoring for GES assessment</element>
+    <element section="MonitoringProgramme" name="Q5h_PlansGES" group-name="" translate="true">Q5h - Plans to implement monitoring for GES assessment</element>
     <element section="MonitoringProgramme" name="Q6a_EnvironmentalTarget" group-name="Q6a -Relevant targets">Q6a - Environmental target</element>
     <element section="MonitoringProgramme" name="Q6a_AssociatedIndicator" group-name="Q6a -Relevant targets">Q6a - Associated indicator</element>
     <element section="MonitoringProgramme" name="Q6b_AdequateData" group-name="Q6b - Adequacy for assessment of targets">Q6b_SuitableData</element>
     <element section="MonitoringProgramme" name="Q6b_EstablishedMethods" group-name="Q6b - Adequacy for assessment of targets">Q6b_EstablishedMethods</element>
     <element section="MonitoringProgramme" name="Q6b_AdequateCapacity" group-name="Q6b - Adequacy for assessment of targets">Q6d_AdequateCapacity</element>
     <element section="MonitoringProgramme" name="Q6c_Target" group-name="">Q6c - Target updating</element>
-    <element section="MonitoringProgramme" name="Q6d_DescriptionTargets" group-name="">Q6d - Description of programme for targets assessment</element>
+    <element section="MonitoringProgramme" name="Q6d_DescriptionTargets" group-name="" translate="true">Q6d - Description of programme for targets assessment</element>
     <element section="MonitoringProgramme" name="Q6e_GapFillingDateTargets" group-name="">Q6e - Gap-filling date for targets assessment</element>
-    <element section="MonitoringProgramme" name="Q6f_PlansTargets" group-name="">Q6f - Plans to implement monitoring for targets assessment</element>
+    <element section="MonitoringProgramme" name="Q6f_PlansTargets" group-name="" translate="true">Q6f - Plans to implement monitoring for targets assessment</element>
     <element section="MonitoringProgramme" name="Q7a_RelevantActivities" group-name="">Q7b - Description of monitoring of activities</element>
     <element section="MonitoringProgramme" name="Q7c_RelevantMeasures" group-name="">Q7c - Relevant measures</element>
     <element section="MonitoringProgramme" name="Q7e_AdequateData" group-name="Q7e - Adequacy for assessment of measures">Q7d - Adequate data</element>
@@ -31,7 +31,7 @@
     <element section="MonitoringProgramme" name="Q7e_AdequateCapacity" group-name="Q7e - Adequacy for assessment of measures">Q7d - Adequate capacity</element>
     <element section="MonitoringProgramme" name="Q7e_AddressesActivitiesPressures" group-name="Q7e - Adequacy for assessment of measures">Q7d - Addresses activities and pressures</element>
     <element section="MonitoringProgramme" name="Q7e_AddressesEffectiveness" group-name="Q7e - Adequacy for assessment of measures">Q7d - Addresses effectiveness of measures</element>
-    <element section="MonitoringProgramme" name="Q7d_DescriptionMeasures" group-name="">Q7d - Description of monitoring for measures</element>
+    <element section="MonitoringProgramme" name="Q7d_DescriptionMeasures" group-name="" translate="true">Q7d - Description of monitoring for measures</element>
     <element section="MonitoringProgramme" name="Q7f_GapFillingDateActivitiesMeasures" group-name="">Q7f - Gap-filling date for activities and measures</element>
     <element section="MonitoringProgramme" name="Q8a_LinksExistingMonitoringProgrammes" group-name="">Q8a - Links to existing Monitoring Programmes</element>
     <element section="MonitoringProgramme" name="SubMonitoringProgrammeID" group-name="Reference sub-programme">Sub-programme ID</element>
@@ -39,7 +39,7 @@
     <element section="SubProgramme" name="Q4g_SubProgrammeID" group-name="Q4g - Sub-programmes">Sub-programme ID</element>
     <element section="MonitoringProgramme" name="SubMonitoringProgrammeName2" group-name="Q4g - Sub-programmes">Sub-programme name</element>
     <element section="SubProgramme" name="Q4k_Purpose" group-name="">Q4k - Monitoring purpose</element>
-    <element section="SubProgramme" name="Q4l_LinksProgrammesDirectivesConventions" group-name="">Q4l - Links of monitoring programmes of other Directives and Conventions</element>
+    <element section="SubProgramme" name="Q4l_LinksProgrammesDirectivesConventions" group-name="" translate="true">Q4l - Links of monitoring programmes of other Directives and Conventions</element>
     <element section="MonitoringProgramme" name="Habitats" group-name="Q5c - Features">Q5c - Habitats</element>
     <element section="MonitoringProgramme" name="SpeciesList" group-name="Q5c - Features">Q5c - Species list</element>
     <element section="MonitoringProgramme" name="PhysicalChemicalFeatures" group-name="Q5c - Features">Q5c - Physical/Chemical features</element>
@@ -61,7 +61,7 @@
     <element section="SubProgramme" name="Activity" group-name="Q9b - Parameters monitored (activity)">Activity</element>
     <element section="SubProgramme" name="Other" group-name="Q9b Parameters monitored (other)">Other</element>
     <element section="SubProgramme" name="Q4i_SpatialScope" group-name="">Q41 Spatial scope</element>
-    <element section="SubProgramme" name="Q4j_DescriptionSpatialScope" group-name="">Q4j - Description of spatial scope</element>
+    <element section="SubProgramme" name="Q4j_DescriptionSpatialScope" group-name="" translate="true">Q4j - Description of spatial scope</element>
     <element section="MonitoringProgramme" name="MarineUnitID2" group-name="">Marine Unit IDs</element>
     <element section="SubProgramme" name="Q4h_StartDate" group-name="Q4h - Temporal scope">Start date- End date</element>
     <element section="SubProgramme" name="Q9h_TemporalResolutionSampling" group-name="">Q9h - Temporal resolution of sampling</element>
@@ -80,6 +80,6 @@
     <element section="SubProgramme" name="Q10c_INSPIREStandard" group-name="Q10c - Access to monitoring data">Q10c - INSPIRE standard</element>
     <element section="SubProgramme" name="Q10c_DataAvailable" group-name="Q10c - Access to monitoring data">Q10c Date data are available</element>
     <element section="SubProgramme" name="Q10c_DataAFrequency" group-name="Q10c - Access to monitoring data">Q10c - Data update frequency</element>
-    <element section="SubProgramme" name="Q10d_DescriptionDataAccess" group-name="">Q10d - Description of data access</element>
+    <element section="SubProgramme" name="Q10d_DescriptionDataAccess" group-name="" translate="true">Q10d - Description of data access</element>
   </Art11>
 </data>

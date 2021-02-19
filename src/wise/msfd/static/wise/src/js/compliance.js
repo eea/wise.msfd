@@ -287,7 +287,7 @@ if (!Array.prototype.last){
 
     // apply special class to group end cells
     var cursor = 0;
-    $('td', row).each(function(iy) {
+    $('td', row).not('.sub-header').each(function(iy) {
       var level = cache.curentLevel;
       var l;
       var prevset;
@@ -331,6 +331,7 @@ if (!Array.prototype.last){
     });
 
     $table.fixTableHeaderHeight();
+    $table.fixTableHeaderAndCellsHeight();
     $table.data('simplified', $table.html());
   };
 

@@ -333,7 +333,7 @@ class A11Item(Item):
         other = self.mpr['.//Q5c_RelevantFeaturesPressuresImpacts' \
                          '/PhysicalChemicalFeatures' \
                          '/Q5c_PhysicalChemicalOther/text()']
-
+        
         return ItemListFiltered(v.split(' ') + other)
 
     def q5c_pressures(self):
@@ -726,9 +726,6 @@ class Article11(BaseArticle2012):
             for inner in items:
                 values.append(inner[field_name])
 
-            # if field_name == 'MarineUnitID2':
-            #     import pdb; pdb.set_trace()
-
             raw_values = []
             vals = []
 
@@ -738,7 +735,6 @@ class Article11(BaseArticle2012):
                 vals.append(self.context.translate_value(
                     field_name, v, self.country_code))
 
-            # row = RawRow(name, vals, raw_values)
             row = national_compoundrow(self.context, field, vals,
                                        raw_values)
             self.rows.append(row)
@@ -748,6 +744,6 @@ class Article11(BaseArticle2012):
     def __call__(self):
         self.setup_data()
 
-        return self.template(data=self.rows, report_header='')
+        return self.template(data=self.rows)
 
         # return self.template()
