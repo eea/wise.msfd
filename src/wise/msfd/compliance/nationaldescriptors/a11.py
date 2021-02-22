@@ -753,3 +753,54 @@ class Article11(BaseArticle2012):
         return self.template(data=self.rows)
 
         # return self.template()
+
+
+class A11OverviewItem(Item):
+    def __init__(self, parent, node):
+
+        super(A11OverviewItem, self).__init__([])
+
+        self.parent = parent
+        self.mp_node = node
+        self.r = RelaxedNodeEmpty(node, NSMAP)
+
+        attrs = [
+            ('Q4a_ResponsibleCompetentAuthority', self.q4a_responsible_ca),
+            ('Q4b_ResponsibleOrganisations', self.default),
+            ('Q4c_RelationshipToCA', self.default),
+            ('Q2a_PublicConsultationDates', self.default),
+            ('Q2b_PublicConsultationDescription', self.default),
+            ('Q3a_RegionalCooperation', self.default),
+            ('Q1a_Overall_adequacy', self.default),
+            ('Q1b_GapsGES', self.default),
+            ('Q1c_GapsTargets', self.default),
+            ('Habitats', self.default),
+            ('SpeciesFunctionalGroups', self.default),
+            ('PhysicalChemicalFeatures', self.default),
+            ('Pressures', self.default),
+            ('Activities', self.default),
+            ('Q1e_Gaps_Plans', self.default),
+            ('Q3b_TransboundaryImpactsFeatures', self.default),
+            ('Q3c_EnvironmentalChanges', self.default),
+            ('Q3d_SourceContaminantsSeafood', self.default),
+            ('Q3e_AccessAndUseRights', self.default),
+        ]
+
+        for title, getter in attrs:
+            self[title] = getter()
+            setattr(self, title, getter())
+
+    def default(self):
+        return ''
+
+    def q4a_responsible_ca(self):
+        return self.mpr['Q4a_ResponsibleCompetentAuthority/text()'][0]
+
+
+class Article11Overview(Article11):
+
+    def setup_data(self):
+        pass
+
+    def _make_item(self, node):
+        return A11OverviewItem(node)
