@@ -266,8 +266,9 @@ class ReportData2012(BaseView, BaseUtil):
 
     @property
     def report_title(self):
-        title = "Member State report / {} / 2012/ {} / {} / {}".format(
+        title = "Member State report / {} / {} / {} / {} / {}".format(
             self.article,
+            self.report_year,
             self.descriptor_title,
             self.country_name,
             self.country_region_name,
@@ -670,7 +671,7 @@ class ReportData2014(ReportData2012):
             report_data, report_data_rows = self.get_report_data()
         except:
             report_data, report_data_rows = 'Error in rendering report', []
-
+        
         trans_edit_html = self.translate_view()()
         self.report_html = report_header + report_data + trans_edit_html
 
@@ -679,6 +680,44 @@ class ReportData2014(ReportData2012):
             return self.download(report_data_rows, report_header_data)
 
         return self.index()
+
+
+class ReportDataOverview2014Art11(ReportData2014):
+    implements(IReportDataViewOverview)
+
+    @property
+    def descriptor(self):
+        return 'Not defined'
+
+    @property
+    def article(self):
+        return 'Art11'
+
+    @property
+    def report_title(self):
+        title = "Member State report / {} / {} / {} / {}".format(
+            self.article,
+            self.report_year,
+            self.country_name,
+            self.country_region_name,
+        )
+
+        return title
+
+    def get_report_definition(self):
+        rep_def = get_report_definition(
+            self.year, 'Art11Overview').get_fields()
+
+        return rep_def
+
+    def get_report_view(self):
+        klass = self.article_implementations['Art11Overview']
+
+        view = klass(self, self.request, self.country_code,
+                     self.country_region_code, self.descriptor, self.article,
+                     self.muids, self.filename)
+
+        return view
 
 
 class SnapshotSelectForm(Form):

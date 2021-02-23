@@ -1,3 +1,6 @@
+
+from collections import namedtuple
+
 import logging
 
 from lxml.etree import fromstring
@@ -24,6 +27,7 @@ NSMAP = {
 
 
 SUBEMPTY = fromstring('<SubProgramme/>')
+FIELD = namedtuple("Field", ["group_name", "name", "title"])
 
 
 def xp(xpath, node):
@@ -761,18 +765,18 @@ class A11OverviewItem(Item):
         super(A11OverviewItem, self).__init__([])
 
         self.parent = parent
-        self.mp_node = node
+        self.node = node
         self.r = RelaxedNodeEmpty(node, NSMAP)
 
         attrs = [
             ('Q4a_ResponsibleCompetentAuthority', self.q4a_responsible_ca),
-            ('Q4b_ResponsibleOrganisations', self.default),
-            ('Q4c_RelationshipToCA', self.default),
-            ('Q2a_PublicConsultationDates', self.default),
-            ('Q2b_PublicConsultationDescription', self.default),
-            ('Q3a_RegionalCooperation', self.default),
-            ('Q1a_Overall_adequacy', self.default),
-            ('Q1b_GapsGES', self.default),
+            ('Q4b_ResponsibleOrganisations', self.q4b_responsible_org),
+            ('Q4c_RelationshipToCA', self.q4c_relationship),
+            ('Q2a_PublicConsultationDates', self.q2a_public_dates),
+            ('Q2b_PublicConsultationDescription', self.q2b_public_description),
+            ('Q3a_RegionalCooperation', self.q3a_regional_coop),
+            ('Q1a_Overall_adequacy', self.q1a_overall_adequacy),
+            ('Q1b_GapsGES', self.q1b_gaps_ges),
             ('Q1c_GapsTargets', self.default),
             ('Habitats', self.default),
             ('SpeciesFunctionalGroups', self.default),
@@ -794,13 +798,103 @@ class A11OverviewItem(Item):
         return ''
 
     def q4a_responsible_ca(self):
-        return self.mpr['Q4a_ResponsibleCompetentAuthority/text()'][0]
+        return self.r['Q4a_ResponsibleCompetentAuthority/text()'][0]
+
+    def q4b_responsible_org(self):
+        v = self.r['Q4b_ResponsibleOrganisations' \
+                      '/Q4b_ResponsibleOrganisation/text()']
+
+        return ItemListFiltered(v)
+
+    def q4c_relationship(self):
+        return self.r['Q4c_RelationshipToCA/text()'][0]
+
+    def q2a_public_dates(self):
+        nodes = self.r['Q2a_PublicConsultationDates']
+        v = []
+
+        for node in nodes:
+            start = node.xpath('StartDate/text()')[0]
+            end = node.xpath('EndDate/text()')[0]
+
+            v.append('{} / {}'.format(start, end))
+
+        return ItemListFiltered(v)
+
+    def q2b_public_description(self):
+        v = self.r['Q2b_PublicConsultationDescription/text()']
+
+        return ItemListFiltered(v)
+
+    def q3a_regional_coop(self):
+        v = self.r['Q3a_RegionalCooperation/text()'][0]
+
+        return v
+
+    def q1a_overall_adequacy(self):
+        v = self.r['Q1a_Overall_adequacy/text()'][0]
+
+        return v
+
+    def q1b_gaps_ges(self):
+        gaps_ges = self.r['Q1b_GapsGES'][0]
+        res = []
+
+        for node in gaps_ges.getchildren():
+            name = node.tag
+            value = node.xpath('AddressedByProgramme/text()')[0]
+
+            res.append((name, value))
+
+        return res
 
 
 class Article11Overview(Article11):
 
     def setup_data(self):
-        pass
+        fileurls = self._filename
+
+        for fileurl in fileurls:
+            root = self.get_report_file_root(fileurl)
+
+            if root.tag == 'MON':
+                node = xp('//GeneralDescription', root)
+                break
+
+        item = self._make_item(node[0])
+        rep_fields = self.context.get_report_definition()
+        self.rows = []
+
+        for field in rep_fields:
+            field_name = field.name
+            value = item[field_name]
+
+            # import pdb; pdb.set_trace()
+
+            if field.group_name == 'child_nodes':
+                for val in value:
+                    title = val[0]
+                    _val = val[1]
+
+                    transl = self.context.translate_value(
+                                field_name, _val, self.country_code)
+
+                    field = FIELD(field_name, title, title)
+
+                    row = national_compoundrow(self.context, field, [transl],
+                                               [_val])
+
+                self.rows.append(row)
+
+                continue
+
+            transl = self.context.translate_value(
+                field_name, value, self.country_code)
+
+            row = national_compoundrow(self.context, field, [transl],
+                                       [value])
+
+        self.cols = [item]
 
     def _make_item(self, node):
-        return A11OverviewItem(node)
+        return A11OverviewItem(self, node)

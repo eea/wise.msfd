@@ -101,6 +101,14 @@
     />
 
   <browser:page
+    for="..interfaces.INationalRegionDescriptorFolder"
+    name="art11-view-report-data-2014"
+    class=".reportdata.ReportDataOverview2014Art11"
+    template="./pt/report-data-view.pt"
+    permission="zope2.View"
+    />
+
+  <browser:page
     for="..interfaces.INationalDescriptorAssessmentSecondary"
     name="view-report-data-2012"
     class=".reportdata.ReportData2012Secondary"

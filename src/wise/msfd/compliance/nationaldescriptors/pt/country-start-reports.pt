@@ -65,11 +65,10 @@
                   <td>-</td>
                   <td>-</td>
                   <td>
-                    <a href="." class="btn btn-xs btn-success" target='_blank'>2014 Overview</a>
+                    <a tal:attributes="href python: region.absolute_url() + '/@@art11-view-report-data-2014'"
+                        class="btn btn-xs btn-success" target='_blank'>2014 Overview</a>
                     <a tal:attributes="href python: region.absolute_url() + '/@@art11-view-report-data-2020'"
-                      class="btn btn-xs btn-primary" target='_blank'>
-                      2020 Overview
-                    </a>
+                        class="btn btn-xs btn-primary" target='_blank'>2020 Overview</a>
                   </td>
                   <td>-</td>
                   <td>-</td>
