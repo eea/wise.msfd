@@ -97,8 +97,8 @@
     <element name="SpeciesFunctionalGroups" group-name="child_nodes">Q1d - Coverage Annex III Species/Functional groups: date addressed by programme</element>
     <element name="PhysicalChemicalFeatures" group-name="child_nodes">Q1d - Coverage Annex III Physical/Chemical features: date addressed by programme</element>
     <element name="Pressures" group-name="child_nodes">Q1d - Coverage Annex III Pressures: date addressed by programme</element>
-    <element name="Activities" group-name="">Q1d - Coverage Annex III Activities: date addressed by programme</element>
-    <element name="Q1e_Gaps_Plans" group-name="">Q1e - Gaps and plans</element>
+    <element name="Activities" group-name="child_nodes">Q1d - Coverage Annex III Activities: date addressed by programme</element>
+    <element name="Q1e_Gaps_Plans" group-name="" translate="true">Q1e - Gaps and plans</element>
     <element name="Q3b_TransboundaryImpactsFeatures" group-name="" translate="true">Q3b - Transboundary impacts on features</element>
     <element name="Q3c_EnvironmentalChanges" group-name="">Q3c - Environmental changes</element>
     <element name="Q3d_SourceContaminantsSeafood" group-name="" translate="true">Q3d - Source of contaminants in seafood</element>

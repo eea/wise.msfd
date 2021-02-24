@@ -710,6 +710,14 @@ class ReportDataOverview2014Art11(ReportData2014):
 
         return rep_def
 
+    def get_report_translatable_fields(self):
+        rep_def = get_report_definition(self.year, 'Art11Overview')
+
+        if not rep_def:
+            return []
+
+        return rep_def.get_translatable_fields()
+
     def get_report_view(self):
         klass = self.article_implementations['Art11Overview']
 

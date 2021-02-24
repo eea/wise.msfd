@@ -777,17 +777,17 @@ class A11OverviewItem(Item):
             ('Q3a_RegionalCooperation', self.q3a_regional_coop),
             ('Q1a_Overall_adequacy', self.q1a_overall_adequacy),
             ('Q1b_GapsGES', self.q1b_gaps_ges),
-            ('Q1c_GapsTargets', self.default),
-            ('Habitats', self.default),
-            ('SpeciesFunctionalGroups', self.default),
-            ('PhysicalChemicalFeatures', self.default),
-            ('Pressures', self.default),
-            ('Activities', self.default),
-            ('Q1e_Gaps_Plans', self.default),
-            ('Q3b_TransboundaryImpactsFeatures', self.default),
-            ('Q3c_EnvironmentalChanges', self.default),
-            ('Q3d_SourceContaminantsSeafood', self.default),
-            ('Q3e_AccessAndUseRights', self.default),
+            ('Q1c_GapsTargets', self.q1c_gaps_targets),
+            ('Habitats', self.habitats),
+            ('SpeciesFunctionalGroups', self.species),
+            ('PhysicalChemicalFeatures', self.physical),
+            ('Pressures', self.pressures),
+            ('Activities', self.activities),
+            ('Q1e_Gaps_Plans', self.q1e_gaps),
+            ('Q3b_TransboundaryImpactsFeatures', self.q3b_trans),
+            ('Q3c_EnvironmentalChanges', self.q3c_env),
+            ('Q3d_SourceContaminantsSeafood', self.q3d_source),
+            ('Q3e_AccessAndUseRights', self.q3e_access),
         ]
 
         for title, getter in attrs:
@@ -836,17 +836,90 @@ class A11OverviewItem(Item):
 
         return v
 
-    def q1b_gaps_ges(self):
-        gaps_ges = self.r['Q1b_GapsGES'][0]
+    def _rows_from_children_nodes(self, nodes):
         res = []
 
-        for node in gaps_ges.getchildren():
+        for node in nodes.getchildren():
             name = node.tag
             value = node.xpath('AddressedByProgramme/text()')[0]
+            other = node.xpath('DescriptionOther/text()')
+
+            if other:
+                v = [value] + other
+                res.append((name, ItemListFiltered(v)))
+                continue
 
             res.append((name, value))
 
         return res
+
+    def q1b_gaps_ges(self):
+        nodes = self.r['Q1b_GapsGES'][0]
+
+        return self._rows_from_children_nodes(nodes)
+
+    def q1c_gaps_targets(self):
+        nodes = self.r['Q1c_GapsTargets']
+        res = []
+
+        for gap_node in nodes:
+            for node in gap_node.getchildren():
+                name = node.tag
+                value = node.text
+
+                res.append((name, value))
+
+        return res
+
+    def habitats(self):
+        nodes = self.r['Q1d_CoverageTargets/Habitats'][0]
+
+        return self._rows_from_children_nodes(nodes)
+
+    def species(self):
+        nodes = self.r['Q1d_CoverageTargets/Species_FunctionalGroup'][0]
+
+        return self._rows_from_children_nodes(nodes)
+
+    def physical(self):
+        nodes = self.r['Q1d_CoverageTargets/PhysicalChemicalFeatures'][0]
+
+        return self._rows_from_children_nodes(nodes)
+
+    def pressures(self):
+        nodes = self.r['Q1d_CoverageTargets/Pressures'][0]
+
+        return self._rows_from_children_nodes(nodes)
+
+    def activities(self):
+        nodes = self.r['Q1d_CoverageTargets/Activities'][0]
+
+        return self._rows_from_children_nodes(nodes)
+
+    def q1e_gaps(self):
+        v = self.r['Q1e_Gaps_Plans/text()'][0]
+
+        return v
+
+    def q3b_trans(self):
+        v = self.r['Q3b_TransboundaryImpactsFeatures/text()'][0]
+
+        return v
+
+    def q3c_env(self):
+        v = self.r['Q3c_EnvironmentalChanges/text()'][0]
+
+        return v
+
+    def q3d_source(self):
+        v = self.r['Q3d_SourceContaminantsSeafood/text()'][0]
+
+        return v
+
+    def q3e_access(self):
+        v = self.r['Q3e_AccessAndUseRights/text()'][0]
+
+        return v
 
 
 class Article11Overview(Article11):
@@ -869,8 +942,6 @@ class Article11Overview(Article11):
             field_name = field.name
             value = item[field_name]
 
-            # import pdb; pdb.set_trace()
-
             if field.group_name == 'child_nodes':
                 for val in value:
                     title = val[0]
@@ -878,13 +949,13 @@ class Article11Overview(Article11):
 
                     transl = self.context.translate_value(
                                 field_name, _val, self.country_code)
+                    
+                    _field = FIELD(field.title, title, title)
 
-                    field = FIELD(field_name, title, title)
-
-                    row = national_compoundrow(self.context, field, [transl],
+                    row = national_compoundrow(self.context, _field, [transl],
                                                [_val])
 
-                self.rows.append(row)
+                    self.rows.append(row)
 
                 continue
 
@@ -893,6 +964,7 @@ class Article11Overview(Article11):
 
             row = national_compoundrow(self.context, field, [transl],
                                        [value])
+            self.rows.append(row)
 
         self.cols = [item]
 
