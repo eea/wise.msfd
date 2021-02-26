@@ -219,7 +219,9 @@ class ReportData2012(BaseView, BaseUtil):
     def get_report_definition(self):
         rep_def = get_report_definition(self.year, self.article).get_fields()
 
-        return rep_def
+        filtered_fields = [f for f in rep_def if f.name]
+
+        return filtered_fields
 
     def get_report_translatable_fields(self):
         rep_def = get_report_definition(
@@ -1174,7 +1176,9 @@ view."""
     def get_report_definition(self):
         rep_def = get_report_definition(self.year, self.article).get_fields()
 
-        return rep_def
+        filtered_fields = [f for f in rep_def if f.name]
+
+        return filtered_fields
 
     def get_report_translatable_fields(self):
         rep_def = get_report_definition(
