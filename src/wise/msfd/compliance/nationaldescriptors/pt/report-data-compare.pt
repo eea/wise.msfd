@@ -1,0 +1,35 @@
+<div class="report-section" tal:define="data options/data">
+  <metal:s metal:use-macro="context/context/wise-macros/macros/simplify-table"></metal:s>
+  <div>
+
+    <div tal:condition="not: data">
+      No data reported for this Descriptor
+    </div>
+
+    <div tal:condition="data" class="report-section side-by-side">
+
+      <div class="overflow-table regional-descriptors side-by-side-table"
+          style="width: 50%; float: left;">
+        <div class="inner">
+          <table class="table table-bordered table-striped table-comp-translate table-report table-regional-desc">
+            <tal:rep tal:repeat="row data">
+              <tal:row replace="structure row"></tal:row>
+            </tal:rep>
+          </table>
+        </div>
+      </div>
+
+      <div class="overflow-table regional-descriptors side-by-side-table"
+          style="width: 50%; float: left;">
+        <div class="inner">
+          <table class="table table-bordered table-striped table-comp-translate table-report table-regional-desc">
+            <tal:rep tal:repeat="row data">
+              <tal:row replace="structure row"></tal:row>
+            </tal:rep>
+          </table>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
