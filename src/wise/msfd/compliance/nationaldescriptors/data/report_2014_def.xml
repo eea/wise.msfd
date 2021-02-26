@@ -37,10 +37,17 @@
     <element section="MonitoringProgramme" name="Q8a_LinksExistingMonitoringProgrammes" group-name="">Q8a - Links to existing Monitoring Programmes</element>
     <element section="MonitoringProgramme" name="SubMonitoringProgrammeID" group-name="Reference sub-programme">Sub-programme ID</element>
     <element section="MonitoringProgramme" name="SubMonitoringProgrammeName" group-name="Reference sub-programme">Sub-programme name</element>
+    <element name=""></element>
+    <element name=""></element>
+    <element name=""></element>
     <element section="SubProgramme" name="Q4g_SubProgrammeID" group-name="Q4g - Sub-programmes">Sub-programme ID</element>
     <element section="MonitoringProgramme" name="SubMonitoringProgrammeName2" group-name="Q4g - Sub-programmes">Sub-programme name</element>
     <element section="SubProgramme" name="Q4k_Purpose" group-name="">Q4k - Monitoring purpose</element>
     <element section="SubProgramme" name="Q4l_LinksProgrammesDirectivesConventions" group-name="" translate="true">Q4l - Links of monitoring programmes of other Directives and Conventions</element>
+    <element name=""></element>
+    <element name=""></element>
+    <element name=""></element>
+    <element name=""></element>
     <element section="MonitoringProgramme" name="Habitats" group-name="Q5c - Features">Q5c - Habitats</element>
     <element section="MonitoringProgramme" name="SpeciesList" group-name="Q5c - Features">Q5c - Species list</element>
     <element section="MonitoringProgramme" name="PhysicalChemicalFeatures" group-name="Q5c - Features">Q5c - Physical/Chemical features</element>
@@ -66,6 +73,7 @@
     <element section="MonitoringProgramme" name="MarineUnitID2" group-name="">Marine Unit IDs</element>
     <element section="SubProgramme" name="Q4h_StartDate" group-name="Q4h - Temporal scope">Start date- End date</element>
     <element section="SubProgramme" name="Q9h_TemporalResolutionSampling" group-name="">Q9h - Temporal resolution of sampling</element>
+    <element name=""></element>
     <element section="SubProgramme" name="Q9c_MonitoringMethod" group-name="">Q9c - Monitoring method</element>
     <element section="SubProgramme" name="Q9d_DescriptionMethod" group-name="">Q9d - Description of alteration to method</element>
     <element section="SubProgramme" name="Q9e_QualityAssurance" group-name="">Q9e - Quality assurance</element>
@@ -82,6 +90,9 @@
     <element section="SubProgramme" name="Q10c_DataAvailable" group-name="Q10c - Access to monitoring data">Q10c Date data are available</element>
     <element section="SubProgramme" name="Q10c_DataAFrequency" group-name="Q10c - Access to monitoring data">Q10c - Data update frequency</element>
     <element section="SubProgramme" name="Q10d_DescriptionDataAccess" group-name="" translate="true">Q10d - Description of data access</element>
+    <element name=""></element>
+    <element name=""></element>
+    <element name=""></element>
   </Art11>
   <Art11Overview>
     <element name="Q4a_ResponsibleCompetentAuthority" group-name="">Q4a - Responsible Competent Authority</element>

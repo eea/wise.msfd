@@ -970,3 +970,7 @@ class Article11Overview(Article11):
 
     def _make_item(self, node):
         return A11OverviewItem(self, node)
+
+
+class Article11Compare(Article11):
+    template = Template('pt/report-data-compare.pt')

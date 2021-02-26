@@ -45,7 +45,7 @@ from .a8alternate import Article8Alternate
 from .a8esa import Article8ESA
 from .a9 import Article9, Article9Alternate
 from .a10 import Article10, Article10Alternate
-from .a11 import Article11, Article11Overview
+from .a11 import Article11, Article11Compare, Article11Overview
 from .a34 import Article34, Article34_2018
 from .base import BaseView
 from .proxy import Proxy2018
@@ -172,7 +172,8 @@ class ReportData2012(BaseView, BaseUtil):
             'Art9': Article9,
             'Art10': Article10,
             'Art11': Article11,
-            'Art11Overview': Article11Overview
+            'Art11Overview': Article11Overview,
+            'Art11Compare': Article11Compare
         }
 
         return res
@@ -720,6 +721,18 @@ class ReportDataOverview2014Art11(ReportData2014):
 
     def get_report_view(self):
         klass = self.article_implementations['Art11Overview']
+
+        view = klass(self, self.request, self.country_code,
+                     self.country_region_code, self.descriptor, self.article,
+                     self.muids, self.filename)
+
+        return view
+
+
+class ReportData20142020(ReportData2014):
+
+    def get_report_view(self):
+        klass = self.article_implementations['Art11Compare']
 
         view = klass(self, self.request, self.country_code,
                      self.country_region_code, self.descriptor, self.article,

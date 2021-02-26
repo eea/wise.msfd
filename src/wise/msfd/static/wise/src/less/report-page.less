@@ -11,6 +11,25 @@
     padding: 0.6rem 0;
     position: relative;
 
+    &.side-by-side {
+      .side-by-side-table {
+        .inner {
+          margin-left: 100px !important;
+
+          table {
+            margin-left: 120px;
+          }
+        }
+        .first-header {
+          width: 100px !important;
+        }
+        .sub-header {
+          min-width: 120px !important;
+          max-width: 120px !important;
+          margin-left: -120px;
+        }
+      }
+    }
     .simplify-form {
       float: right;
       position: absolute;
