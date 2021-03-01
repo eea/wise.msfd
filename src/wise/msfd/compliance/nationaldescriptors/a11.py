@@ -15,7 +15,6 @@ from wise.msfd.utils import (Item, ItemLabel, ItemListFiltered, Node, RawRow,
                              national_compoundrow, natural_sort_key, to_html)
 
 from ..base import BaseArticle2012
-from .data import REPORT_DEFS
 
 logger = logging.getLogger('wise.msfd')
 
@@ -553,7 +552,7 @@ class A11Item(Item):
 
 
 class Article11(BaseArticle2012):
-    """ Article 7 implementation for 2012 year
+    """ Article 11 implementation for 2014 year
 
     klass(self, self.request, country_code, region_code,
           descriptor, article,  muids)
@@ -755,8 +754,6 @@ class Article11(BaseArticle2012):
         self.setup_data()
 
         return self.template(data=self.rows)
-
-        # return self.template()
 
 
 class A11OverviewItem(Item):
@@ -974,3 +971,17 @@ class Article11Overview(Article11):
 
 class Article11Compare(Article11):
     template = Template('pt/report-data-compare.pt')
+
+    def __init__(self, context, request, country_code, region_code,
+                 descriptor, article,  muids, data_2020, filenames=None):
+
+        super(Article11Compare, self).__init__(
+            context, request, country_code, region_code, descriptor,
+            article, muids, filenames)
+
+        self.data_2020 = data_2020
+
+    def __call__(self):
+        self.setup_data()
+
+        return self.template(data=self.rows, data_2020=self.data_2020)

@@ -153,6 +153,7 @@ class ReportData2012(BaseView, BaseUtil):
 
     year = report_year = '2012'
     section = 'national-descriptors'
+    report_due = '2012-10-15'
     cache_key_extra = 'base'
 
     @property
@@ -173,7 +174,6 @@ class ReportData2012(BaseView, BaseUtil):
             'Art10': Article10,
             'Art11': Article11,
             'Art11Overview': Article11Overview,
-            'Art11Compare': Article11Compare
         }
 
         return res
@@ -249,8 +249,7 @@ class ReportData2012(BaseView, BaseUtil):
             report_by=report_by,
             source_file=source_file,
             factsheet=factsheet,
-            # TODO: do the report_due by a mapping with article: date
-            report_due='2012-10-15',
+            report_due=self.report_due,
             report_date=report_date,
             help_text=self.help_text,
             multiple_source_files=multiple_source_files
@@ -618,6 +617,7 @@ class ReportData2012Like2018(ReportData2012):
 
 class ReportData2014(ReportData2012):
     year = report_year = '2014'
+    report_due = '2014-10-15'
 
     def get_report_view(self):
         klass = self.article_implementations[self.article]
@@ -656,6 +656,11 @@ class ReportData2014(ReportData2012):
 
         self.filename = filename
 
+        try:
+            report_data, report_data_rows = self.get_report_data()
+        except:
+            report_data, report_data_rows = 'Error in rendering report', []
+
         factsheet = None
         multiple_source_files = True
         source_file = [
@@ -670,11 +675,7 @@ class ReportData2014(ReportData2012):
             multiple_source_files
         )
         report_header = self.report_header_template(**report_header_data)
-        try:
-            report_data, report_data_rows = self.get_report_data()
-        except:
-            report_data, report_data_rows = 'Error in rendering report', []
-        
+
         trans_edit_html = self.translate_view()()
         self.report_html = report_header + report_data + trans_edit_html
 
@@ -707,6 +708,25 @@ class ReportDataOverview2014Art11(ReportData2014):
 
         return title
 
+    def get_report_filename(self, art=None):
+        # needed in article report data implementations, to retrieve the file
+
+        filename = get_report_filename(
+            self.year, self.country_code, self.country_region_code,
+            art or self.article, self.descriptor)
+
+        res = []
+
+        for fname in filename:
+            text = get_xml_report_data(fname)
+            root = fromstring(text)
+
+            if root.tag == 'MON':
+                res.append(fname)
+                break
+
+        return res
+
     def get_report_definition(self):
         rep_def = get_report_definition(
             self.year, 'Art11Overview').get_fields()
@@ -734,11 +754,14 @@ class ReportDataOverview2014Art11(ReportData2014):
 class ReportData20142020(ReportData2014):
 
     def get_report_view(self):
-        klass = self.article_implementations['Art11Compare']
+        klass = Article11Compare
+
+        view_2020 = ReportData2020(self.context, self.request)
+        data_2020 = view_2020.get_data_from_db()
 
         view = klass(self, self.request, self.country_code,
                      self.country_region_code, self.descriptor, self.article,
-                     self.muids, self.filename)
+                     self.muids, data_2020, self.filename)
 
         return view
 
