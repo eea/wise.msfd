@@ -292,7 +292,7 @@ FILTER (?obligationNr = '611')
 FILTER (str(?schema) = 'http://dd.eionet.europa.eu/schemas/MSFD11Mon/MSFD11MonSub_1p0.xsd'
 || str(?schema) = 'http://dd.eionet.europa.eu/schemas/MSFD11Mon/MSFD11Mon_1p1.xsd')
 #FILTER regex(str(?file), '/%s')
-FILTER (?restricted = 0)
+#FILTER (?restricted = 0)
 }
 ORDER BY DESC(?date)
 """ % (country.upper(), region.lower())

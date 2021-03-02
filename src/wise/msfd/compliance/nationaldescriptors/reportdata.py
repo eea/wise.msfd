@@ -647,6 +647,7 @@ class ReportData2014(ReportData2012):
         filename = []
         for fileurl in all_filenames:
             if len(self.regions) == 1:
+                filename.append(fileurl)
                 continue
 
             if '/' + self.country_region_code.lower() not in fileurl:
