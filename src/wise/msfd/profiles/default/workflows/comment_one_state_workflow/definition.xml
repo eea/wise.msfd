@@ -1,30 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<dc-workflow workflow_id="compliance_section_workflow" title="Compliance section Workflow" description="Generic one-state workflow for the compliance section. To be used for all objects that don't have a specific workflow." state_variable="review_state" initial_state="internal" manager_bypass="False">
- <permission>Add portal content</permission>
+<dc-workflow workflow_id="comment_one_state_workflow" title="Single State Workflow" description="- Essentially a workflow with no transitions, but has a Published state, so portlets and applications that expect that state will continue to work." state_variable="review_state" initial_state="published" manager_bypass="False">
+ <permission>Access contents information</permission>
+ <permission>Modify portal content</permission>
  <permission>View</permission>
- <state state_id="internal" title="Internal use">
-  <description>Objects cannot be published</description>
+ <state state_id="published" title="Published">
+  <description>Visible to everyone, editable by the owner.</description>
   <permission-map name="Access contents information" acquired="False">
-   <permission-role>Contributor</permission-role>
-   <permission-role>Editor</permission-role>
-   <permission-role>Manager</permission-role>
-   <permission-role>Owner</permission-role>
-   <permission-role>Reader</permission-role>
-   <permission-role>Reviewer</permission-role>
+   <permission-role>Anonymous</permission-role>
   </permission-map>
   <permission-map name="Modify portal content" acquired="False">
    <permission-role>Manager</permission-role>
    <permission-role>Owner</permission-role>
-  </permission-map>
-  <permission-map name="View" acquired="False">
-   <permission-role>Contributor</permission-role>
    <permission-role>Editor</permission-role>
-   <permission-role>Manager</permission-role>
-   <permission-role>Owner</permission-role>
-   <permission-role>Reader</permission-role>
-   <permission-role>Reviewer</permission-role>
-   <permission-role>Authenticated</permission-role>
-   <permission-role>Anonymous</permission-role>
+   <permission-role>Site Administrator</permission-role>
+  </permission-map>
+  <permission-map name="View" acquired="True">
   </permission-map>
  </state>
  <variable variable_id="action" for_catalog="False" for_status="True" update_always="True">

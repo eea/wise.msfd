@@ -1,4 +1,4 @@
-<?xml version="1.0"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <dc-workflow workflow_id="wise_generic_workflow" title="Simple Publication Workflow" description=" - Simple workflow that is useful for basic web sites. - Things start out as private, and can either be submitted for review, or published directly. - The creator of a content item can edit the item even after it is published." state_variable="review_state" initial_state="private" manager_bypass="False">
  <permission>Access contents information</permission>
  <permission>Add portal content</permission>
@@ -12,6 +12,8 @@
  <permission>View</permission>
  <permission>iterate : Check in content</permission>
  <permission>iterate : Check out content</permission>
+ <state state_id="internal" title="Internal use">
+ </state>
  <state state_id="pending" title="Pending review">
   <description>Waiting to be reviewed, not editable by the owner.</description>
   <exit-transition transition_id="publish"/>

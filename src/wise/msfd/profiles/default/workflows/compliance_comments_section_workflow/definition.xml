@@ -1,4 +1,4 @@
-<?xml version="1.0"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <dc-workflow workflow_id="compliance_comments_section_workflow" title="Compliance Comments section Workflow" description="To be used as workflow for the folders that hold the comments (one for TL, one for EC)" state_variable="review_state" initial_state="closed" manager_bypass="False">
  <permission>Add portal content</permission>
  <permission>View</permission>

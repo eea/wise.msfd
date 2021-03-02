@@ -1,10 +1,8 @@
-<?xml version="1.0"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <dc-workflow workflow_id="compliance_nationaldescriptor_workflow" title="Compliance National descriptors workflow" description="To be used for MSFD Compliance module, for the national descriptors folders." state_variable="review_state" initial_state="notstarted" manager_bypass="True">
  <permission>wise.msfd: Edit Assessment</permission>
-
  <state state_id="final" title="Final state">
  </state>
-
  <state state_id="notstarted" title="Not started">
   <exit-transition transition_id="to_phase1"/>
   <permission-map name="wise.msfd: Edit Assessment" acquired="False">
@@ -12,7 +10,6 @@
    <permission-role>Reviewer</permission-role>
   </permission-map>
  </state>
-
  <state state_id="phase1" title="Assessment of adequacy and consistency">
   <exit-transition transition_id="to_notstarted"/>
   <exit-transition transition_id="to_phase2"/>
@@ -21,7 +18,6 @@
    <permission-role>Reviewer</permission-role>
   </permission-map>
  </state>
-
  <state state_id="phase2" title="Phase 2">
   <exit-transition transition_id="to_phase1"/>
   <exit-transition transition_id="to_phase3"/>
@@ -30,7 +26,6 @@
    <permission-role>Reviewer</permission-role>
   </permission-map>
  </state>
-
  <state state_id="phase3" title="Phase 3">
   <exit-transition transition_id="to_final"/>
   <permission-map name="wise.msfd: Edit Assessment" acquired="False">
@@ -38,7 +33,6 @@
    <permission-role>Reviewer</permission-role>
   </permission-map>
  </state>
-
  <transition transition_id="to_final" title="To final state" new_state="final" trigger="USER" before_script="" after_script="">
   <action url="%(content_url)s/content_status_modify?workflow_action=to_final" category="workflow" icon="">To final state</action>
   <guard>
@@ -69,11 +63,10 @@
    <guard-permission>Review portal content</guard-permission>
   </guard>
  </transition>
-
  <variable variable_id="action" for_catalog="False" for_status="True" update_always="True">
   <description>Previous transition</description>
   <default>
-
+   
    <expression>transition/getId|nothing</expression>
   </default>
   <guard>
@@ -82,7 +75,7 @@
  <variable variable_id="actor" for_catalog="False" for_status="True" update_always="True">
   <description>The ID of the user who performed the last transition</description>
   <default>
-
+   
    <expression>user/getId</expression>
   </default>
   <guard>
@@ -91,7 +84,7 @@
  <variable variable_id="comments" for_catalog="False" for_status="True" update_always="True">
   <description>Comment about the last transition</description>
   <default>
-
+   
    <expression>python:state_change.kwargs.get('comment', '')</expression>
   </default>
   <guard>
@@ -100,7 +93,7 @@
  <variable variable_id="review_history" for_catalog="False" for_status="False" update_always="False">
   <description>Provides access to workflow history</description>
   <default>
-
+   
    <expression>state_change/getHistory</expression>
   </default>
   <guard>
@@ -111,7 +104,7 @@
  <variable variable_id="time" for_catalog="False" for_status="True" update_always="True">
   <description>When the previous transition was performed</description>
   <default>
-
+   
    <expression>state_change/getDateTime</expression>
   </default>
   <guard>
