@@ -13,6 +13,14 @@
 
     &.side-by-side {
       .side-by-side-table {
+        width: 50%;
+        float: left;
+
+        &.side-by-side-table-right {
+          .inner table {
+            margin-left: 51px;
+          }
+        }
         .inner {
           margin-left: 100px !important;
 
@@ -20,7 +28,10 @@
             margin-left: 120px;
           }
         }
-        .first-header {
+        th {
+          width: 150px !important;
+        }
+        th.first-header {
           width: 100px !important;
         }
         .sub-header {

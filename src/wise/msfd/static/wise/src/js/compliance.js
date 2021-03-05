@@ -139,13 +139,26 @@ if (!Array.prototype.last){
     // the <td> cells, and the other way around.
 
     this.each(function() {
-      $("th", this).each(function() {
+      $("th", this).each(function(index) {
         if($(this).parents('table').hasClass('skip-height-fix')) {
           return
         }
+        var isSideBySideLeft = $(this).parents('.overflow-table').hasClass('side-by-side-table-left')
+        var isSideBySideRigth = $(this).parents('.overflow-table').hasClass('side-by-side-table-right')
+
+        if (isSideBySideRigth) { return }
 
         var $th = $(this);
         var $next = $('td:not(".sub-header")', $th.parent());
+
+        if (isSideBySideLeft) {
+          var $nextSideBySide = $($(this).parents('.overflow-table.side-by-side-table')
+              .siblings('.overflow-table.side-by-side-table-right').find('tr')[index])
+              .children()
+          $next = $.merge($next, $nextSideBySide)
+          //debugger;
+        }
+
         var $subheader = $('td.sub-header', $th.parent())
         var tdHeights = [];
 
@@ -164,7 +177,7 @@ if (!Array.prototype.last){
 
         $th.height(height);
         $subheader.height(height);
-        if ($th.height() > cells_max_height) {
+        if ($th.height() >= cells_max_height) {
           $next.each(function(){
             $(this).height($th.height())
           });
@@ -191,10 +204,22 @@ if (!Array.prototype.last){
     // layout algorithm. For this reason we have to recompute their height (to
     // make either the <td> or the <th> match same height
     this.each(function() {
-      $("th", this).each(function() {
+      $("th", this).each(function(index) {
         var $th = $(this);
         var $next = $('td', $th.parent());
         var tdHeights = [];
+        var isSideBySideLeft = $(this).parents('.overflow-table').hasClass('side-by-side-table-left')
+        var isSideBySideRigth = $(this).parents('.overflow-table').hasClass('side-by-side-table-right')
+
+        if (isSideBySideRigth || isSideBySideLeft) { return }
+
+        if (isSideBySideLeft) {
+          var $rowSideBySide = $($(this).parents('.overflow-table.side-by-side-table')
+              .siblings('.overflow-table.side-by-side-table-right').find('tr')[index])
+          var $nextSideBySide = $rowSideBySide.children('td')
+          var $thSideBySide = $rowSideBySide.children('th')
+          $next = $.merge($next, $nextSideBySide)
+        }
 
         $next.each(function(){
           var $this = $(this);
@@ -209,6 +234,9 @@ if (!Array.prototype.last){
         var cells_max_height = Math.max.apply(Math, tdHeights);
 
         $th.height(cells_max_height);
+        if (isSideBySideLeft) {
+          $thSideBySide.height(cells_max_height);
+        }
       });
 
     });
@@ -514,13 +542,15 @@ if (!Array.prototype.last){
 
     $ot.each(function() {
       var $t = $(this);
-      var topScroll = $('.top-scroll', $t.parent());
+      // var $tParent = $t.parent();
+      var $tParent = $t;
+      var topScroll = $('.top-scroll', $tParent);
       var topScrollInner = topScroll.find('.top-scroll-inner');
-      var tableScroll = $('.inner', $t.parent());
-      var tableWidth = $('.table-report', $t.parent()).outerWidth(includeMargin=true);
-      var tableHeaderWidth = $('th', $t.parent()).width();
+      var tableScroll = $('.inner', $tParent);
+      var tableWidth = $('.table-report', $tParent).outerWidth(includeMargin=true);
+      var tableHeaderWidth = $('th', $tParent).width();
       var tableAndHeaderWidth = tableWidth + tableHeaderWidth;
-      var customScroll = $('.scroll-wrapper', $t.parent());
+      var customScroll = $('.scroll-wrapper', $tParent);
 
       topScrollInner.width(tableWidth);
 

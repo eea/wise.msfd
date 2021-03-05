@@ -155,6 +155,7 @@ class ReportData2012(BaseView, BaseUtil):
     section = 'national-descriptors'
     report_due = '2012-10-15'
     cache_key_extra = 'base'
+    is_side_by_side = False
 
     @property
     def help_text(self):
@@ -218,6 +219,9 @@ class ReportData2012(BaseView, BaseUtil):
 
     def get_report_definition(self):
         rep_def = get_report_definition(self.year, self.article).get_fields()
+
+        if self.is_side_by_side:
+            return rep_def
 
         filtered_fields = [f for f in rep_def if f.name]
 
@@ -753,11 +757,14 @@ class ReportDataOverview2014Art11(ReportData2014):
 
 
 class ReportData20142020(ReportData2014):
+    is_side_by_side = True
+    cache_key_extra = 'side-by-side'
 
     def get_report_view(self):
         klass = Article11Compare
 
-        view_2020 = ReportData2020(self.context, self.request)
+        view_2020 = ReportData2020(self.context, self.request,
+                                   self.is_side_by_side)
         data_2020 = view_2020.get_data_from_db()
 
         view = klass(self, self.request, self.country_code,
@@ -818,6 +825,8 @@ class ReportData2018(BaseView):
     year = '2018'       # used in report definition and translation
     report_due = '2018-10-15'
     section = 'national-descriptors'
+    is_side_by_side = False
+
     help_texts = {
         'Art8': """
 The data is retrieved from the MSFD2018_production.V_ART8_GES_2018 database
@@ -1200,9 +1209,12 @@ view."""
     def get_report_definition(self):
         rep_def = get_report_definition(self.year, self.article).get_fields()
 
-        filtered_fields = [f for f in rep_def if f.name]
+        if self.is_side_by_side:
+            return rep_def
 
-        return filtered_fields
+        filtered_rep_def = [f for f in rep_def if f.name]
+
+        return filtered_rep_def
 
     def get_report_translatable_fields(self):
         rep_def = get_report_definition(
@@ -1795,6 +1807,11 @@ class ReportData2020(ReportData2018):
     year = '2020'       # used in report definition and translation
     report_due = '2020-10-15'
     is_overview = False
+
+    def __init__(self, context, request, is_side_by_side=False):
+        super(ReportData2020, self).__init__(context, request)
+
+        self.is_side_by_side = is_side_by_side
 
     @property
     def muids(self):

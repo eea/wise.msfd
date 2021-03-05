@@ -128,6 +128,7 @@ class A11Item(Item):
             ('Q10c_DataAvailable', self.q10c_data_available),
             ('Q10c_DataAFrequency', self.q10c_data_freq),
             ('Q10d_DescriptionDataAccess', self.q10d_description),
+            ('', self.default)
         ]
 
         for title, getter in attrs:
@@ -203,9 +204,10 @@ class A11Item(Item):
         return ItemListFiltered(v)
 
     def q6a_indic(self):
-        v = self.mpr['.//Q6a_AssociatedIndicator/text()'][0].split(' ')
+        v = self.mpr['.//Q6a_AssociatedIndicator/text()'][0]
 
-        return ItemListFiltered(v)
+        # return ItemListFiltered(v)
+        return v
 
     def q6b_adequate(self):
         v = self.mpr['.//Q6b_SuitableData/text()'][0]
@@ -971,6 +973,7 @@ class Article11Overview(Article11):
 
 class Article11Compare(Article11):
     template = Template('pt/report-data-compare.pt')
+    is_side_by_side = True
 
     def __init__(self, context, request, country_code, region_code,
                  descriptor, article,  muids, data_2020, filenames=None):

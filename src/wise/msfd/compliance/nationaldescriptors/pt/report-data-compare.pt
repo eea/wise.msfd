@@ -10,8 +10,7 @@
 
     <div tal:condition="data" class="report-section side-by-side">
 
-      <div class="overflow-table regional-descriptors side-by-side-table"
-          style="width: 50%; float: left;">
+      <div class="overflow-table regional-descriptors side-by-side-table side-by-side-table-left">
         <div class="inner">
           <table class="table table-bordered table-striped table-comp-translate table-report table-regional-desc">
             <tal:rep tal:repeat="row data">
@@ -21,8 +20,7 @@
         </div>
       </div>
 
-      <div class="overflow-table regional-descriptors side-by-side-table"
-          style="width: 50%; float: left;">
+      <div class="overflow-table regional-descriptors side-by-side-table side-by-side-table-right">
         <div class="inner">
           <table class="table table-bordered table-striped table-comp-translate table-report table-regional-desc">
             <tal:rep tal:repeat="row python: data_2020[0][1]">
