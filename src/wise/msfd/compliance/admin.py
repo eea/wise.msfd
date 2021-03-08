@@ -1164,7 +1164,7 @@ class AdminScoring(BaseComplianceView, AssessmentDataMixin):
     @timeit
     def data_to_xls(self, all_data):
         out = BytesIO()
-        workbook = xlsxwriter.Workbook(out, {'in_memory': True})
+        workbook = xlsxwriter.Workbook(out, {'constant_memory': True})
 
         for sheetname, labels, data in all_data:
             worksheet = workbook.add_worksheet(sheetname)
