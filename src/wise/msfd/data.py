@@ -673,13 +673,14 @@ LIMIT 1
 @cache(lambda func, *args: func.__name__ + "".join(args) + current_date())
 @timeit
 def get_all_report_filenames(country, article):
-    ART3 = 'http://icm.eionet.europa.eu/schemas/dir200856ec/MSFD4Geo_2p0.xsd'
+    ART3 = ('http://icm.eionet.europa.eu/schemas/dir200856ec/MSFD4Geo_2p0.xsd',
+            'http://cdr.eionet.europa.eu/se/eu/msfd8910/msfd4geo/envunbs3a/MSFD4Geo_2p0.xsd')
     ART7 = ('http://dd.eionet.europa.eu/schemas/MSFD/MSFDCA_1p0.xsd',
             'http://water.eionet.europa.eu/schemas/dir200856ec/MSCA_1p0.xsd')
     schemas = {
         'art7': "str(?schema) IN %s" % str(ART7),      # tuple hack
-        'art3': "str(?schema) = '%s'" % ART3,
-        'art4': "str(?schema) = '%s'" % ART3,
+        'art3': "str(?schema) IN %s" % str(ART3),
+        'art4': "str(?schema) IN %s" % str(ART3),
     }
     obligations = {
         'art3': "?obligationNr IN ('608', '759', '760')",

@@ -92,11 +92,13 @@
               <div tal:replace="structure view/assessment_data_2018_html"></div>
             </div>
 
-            <h3>2012 Assessment</h3>
-            <div class="ast-header-data">
-              <div tal:replace="structure view/assessment_header_2012"></div>
-              <div tal:replace="structure view/assessment_data_2012"></div>
-            </div>
+            <tal:cond tal:condition="python: view.article != 'Art4'">
+              <h3>2012 Assessment</h3>
+              <div class="ast-header-data">
+                <div tal:replace="structure view/assessment_header_2012"></div>
+                <div tal:replace="structure view/assessment_data_2012"></div>
+              </div>
+            </tal:cond>
           </div>
 
         </div>

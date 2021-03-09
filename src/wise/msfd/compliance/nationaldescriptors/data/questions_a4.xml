@@ -37,24 +37,6 @@
     <score-weight descriptor="Not linked" value="5" />
   </assessment-question>
 
-  <assessment-question id="A04Ad2" class="adequacy" use-criteria='all'>
-    <definition>
-      Do assessments (MRUs) for the Descriptor cover all MS marine waters?
-    </definition>
-    <answers>
-      <option score="1">Assessments fully (100%) cover marine waters</option>
-      <option score="0.75">Assessments mostly (76-99%) cover marine waters</option>
-      <option score="0.5">Assessments partly (51-75%) cover marine waters</option>
-      <option score="0.25">Assessments cover some (26-50%) of marine waters</option>
-      <option score="0">Assessments cover limited area (0-25%) of marine waters</option>
-      <option score="/">Not relevant</option>
-      <option score="0.250">Not clear</option>
-    </answers>
-    <scoring determination-method="wise.msfd.compliance.scoring.scoring_based">
-    </scoring>
-    <score-weight descriptor="Not linked" value="2.5" />
-  </assessment-question>
-
   <assessment-question id="A04Co1" class="coherence" use-criteria='none'>
     <definition>
       Have reporting units from EU or regional policies been used?
@@ -71,6 +53,24 @@
     <scoring determination-method="wise.msfd.compliance.scoring.scoring_based">
     </scoring>
     <score-weight descriptor="Not linked" value="7.5" />
+  </assessment-question>
+
+  <assessment-question id="A04Ad2" class="adequacy" use-criteria='all'>
+    <definition>
+      Do assessments (MRUs) for the Descriptor cover all MS marine waters?
+    </definition>
+    <answers>
+      <option score="1">Assessments fully (100%) cover marine waters</option>
+      <option score="0.75">Assessments mostly (76-99%) cover marine waters</option>
+      <option score="0.5">Assessments partly (51-75%) cover marine waters</option>
+      <option score="0.25">Assessments cover some (26-50%) of marine waters</option>
+      <option score="0">Assessments cover limited area (0-25%) of marine waters</option>
+      <option score="/">Not relevant</option>
+      <option score="0.250">Not clear</option>
+    </answers>
+    <scoring determination-method="wise.msfd.compliance.scoring.scoring_based">
+    </scoring>
+    <score-weight descriptor="Not linked" value="2.5" />
   </assessment-question>
 
   <assessment-question id="A04Ad3" class="adequacy" use-criteria='all'>
