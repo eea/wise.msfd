@@ -1,6 +1,6 @@
 <div class="nat-sum-assessment-areas">
   <table class="table table-bordered table-striped table-comp-translate table-report"
-      tal:define="data options/data">
+      tal:define="data options/data; align_right string: text-align: right;; padding-right: 24px">
     <thead>
     </thead>
     <tbody>
@@ -16,8 +16,10 @@
       </tr>
 
       <tr tal:repeat="row data">
-        <td tal:repeat="value row"
-          tal:content="value">Value</td>
+        <tal:rep tal:repeat="value row">
+          <td tal:attributes="style python: row.index(value) in (5, 6) and align_right or ''"
+              tal:content="value">Value</td>
+        </tal:rep>
       </tr>
 
     </tbody>

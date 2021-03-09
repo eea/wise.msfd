@@ -10,9 +10,10 @@
         <table class="table table-bordered table-striped table-comp-translate table-report table-simple-summary">
           <tal:rep tal:repeat="row allrows">
             <tr>
-              <td tal:content="python: row[0]">Text reports</td>
+              <td style="max-width: 200px" tal:content="python: row[0]">Text reports</td>
               <tal:rep tal:repeat="val python: row[1]">
-                <td tal:content="structure val">Report dates</td>
+                <td tal:attributes="style python: view.align_right and 'text-align: right;; padding-right: 24px' or ''"
+                    tal:content="structure val">Report dates</td>
               </tal:rep>
             </tr>
           </tal:rep>

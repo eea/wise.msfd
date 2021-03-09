@@ -23,6 +23,13 @@ class RegionalIntroduction(BaseRegSummaryView, Introduction):
         return ['-' for _ in self.available_countries]
 
     @property
+    def available_countries(self):
+        countries = super(RegionalIntroduction, self).available_countries
+        c_sorted = sorted(countries, key=lambda i: i[1])
+
+        return c_sorted
+
+    @property
     def information_memberstate(self):
         text = u"""
 By October 2018, the Member States were due to submit updates of the assessment
@@ -104,7 +111,7 @@ By October 2018, the Member States were due to submit updates of the assessment
                  data, 'MSFD - Article 4 - Spatial data')
              )
         ]
-        view = SimpleTable(self, self.request, rows)
+        view = SimpleTable(self, self.request, rows, align_right=False)
 
         return view()
 

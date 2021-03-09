@@ -43,8 +43,9 @@
               <div class="ast-header-data">
                 <table class="table table-condensed assessment-data-table">
                   <tr>
-                    <td></td>
-                    <td class="overall-values">
+                    <td style="width: 50%"></td>
+                    <td style="width: 50%"
+                        class="overall-values">
                       <div class="as-value"><div>Coherence</div></div>
                     </td>
                   </tr>
