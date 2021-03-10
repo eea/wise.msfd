@@ -143,20 +143,23 @@ if (!Array.prototype.last){
         if($(this).parents('table').hasClass('skip-height-fix')) {
           return
         }
-        var isSideBySideLeft = $(this).parents('.overflow-table').hasClass('side-by-side-table-left')
-        var isSideBySideRigth = $(this).parents('.overflow-table').hasClass('side-by-side-table-right')
+
+        var isSideBySideLeft = $(this).parents('.overflow-table').hasClass('side-by-side-table-left');
+        var isSideBySideRigth = $(this).parents('.overflow-table').hasClass('side-by-side-table-right');
 
         if (isSideBySideRigth) { return }
 
         var $th = $(this);
-        var $next = $('td:not(".sub-header")', $th.parent());
+        // var $next = $('td:not(".sub-header")', $th.parent());
+        var $next = $th.parent().children('td:not(".sub-header")');
+
+        if (index === 21) {debugger}
 
         if (isSideBySideLeft) {
           var $nextSideBySide = $($(this).parents('.overflow-table.side-by-side-table')
               .siblings('.overflow-table.side-by-side-table-right').find('tr')[index])
-              .children()
-          $next = $.merge($next, $nextSideBySide)
-          //debugger;
+              .children();
+          $next = $.merge($next, $nextSideBySide);
         }
 
         var $subheader = $('td.sub-header', $th.parent())
@@ -179,7 +182,11 @@ if (!Array.prototype.last){
         $subheader.height(height);
         if ($th.height() >= cells_max_height) {
           $next.each(function(){
-            $(this).height($th.height())
+            if($(this).hasClass('translatable')) {
+              $(this).height($th.innerHeight());
+            } else {
+              $(this).height($th.height());
+            }
           });
           //$next.height($th.height());
         }
@@ -199,11 +206,17 @@ if (!Array.prototype.last){
   };
 
   $.fn.fixTableHeaderHeight = function fixTableHeaderHeight() {
+    // TODO not used anymore, replaced by fixTableHeaderAndCellsHeight
+
     // Because of the way the <th> cells are positioned absolute, to be able to
     // keep them fixed, they are "disconnected" from the regular box sizing
     // layout algorithm. For this reason we have to recompute their height (to
     // make either the <td> or the <th> match same height
     this.each(function() {
+      if($(this).parents('table').hasClass('skip-height-fix')) {
+        return
+      }
+
       $("th", this).each(function(index) {
         var $th = $(this);
         var $next = $('td', $th.parent());
@@ -358,8 +371,9 @@ if (!Array.prototype.last){
       mergeCellsInRow(this, cache);
     });
 
-    $table.fixTableHeaderHeight();
-    $table.fixTableHeaderAndCellsHeight();
+    // Laci disable
+    // $table.fixTableHeaderHeight();
+    // $table.fixTableHeaderAndCellsHeight();
     $table.data('simplified', $table.html());
   };
 
@@ -374,12 +388,12 @@ if (!Array.prototype.last){
       $(this).hide();
       $(this).empty().html(original);
       $(this).show();
-      //$(this).fixTableHeaderAndCellsHeight();
-      setupTranslateClickHandlers();
+      //setupTranslateClickHandlers();
       //setupReadMoreModal();
     }
     setupReadMoreModal();
     setupTranslateClickHandlers();
+    $(this).fixTableHeaderAndCellsHeight();
   };
 
   /* Used in report data table create a 'read more' modal if the cell content
@@ -411,7 +425,8 @@ if (!Array.prototype.last){
       $modalContent.empty();
     });
 
-    $table.fixTableHeaderAndCellsHeight();
+    // Laci disable
+    // $table.fixTableHeaderAndCellsHeight();
   }
 
   function setupReportNavigation() {
@@ -737,7 +752,10 @@ if (!Array.prototype.last){
     });
 
     function doneResizing() {
-      $('.table-report').fixTableHeaderHeight();
+      // $('.table-report').fixTableHeaderHeight();
+      $('.table-report').each(function(){
+        $(this).fixTableHeaderAndCellsHeight();
+      });
     }
 
     if (window.matchMedia("(max-width: 768px)").matches) {
@@ -758,6 +776,7 @@ if (!Array.prototype.last){
       var onoff = $(this).attr('aria-pressed') == 'true';
       $p = $(this).parent().next();
       $('.table-report', $p).toggleTable(!onoff);
+      // Laci disable
       $p.setupFixedTableRows();
       setupCustomScroll();
     });
@@ -854,7 +873,6 @@ if (!Array.prototype.last){
   };
 
   $(document).ready(function($){
-
     setupReadMoreModal();
     initStyling();
     setupSelects2();
@@ -871,7 +889,7 @@ if (!Array.prototype.last){
       var $ot = $('.overflow-table');
       $ot.each(function(){
         $(this).setupFixedTableRows();
-
+        $(this).find('.table-report').fixTableHeaderAndCellsHeight();
         // when loading the screen pin all rows marked with 'sticky-row' class
         // and display them if they are not in viewport
         $(this).setupStickyRows();

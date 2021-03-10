@@ -223,7 +223,7 @@ class ReportData2012(BaseView, BaseUtil):
         if self.is_side_by_side:
             return rep_def
 
-        filtered_fields = [f for f in rep_def if f.name]
+        filtered_fields = [f for f in rep_def if f.section != 'empty']
 
         return filtered_fields
 
@@ -1212,7 +1212,7 @@ view."""
         if self.is_side_by_side:
             return rep_def
 
-        filtered_rep_def = [f for f in rep_def if f.name]
+        filtered_rep_def = [f for f in rep_def if f.section != 'empty']
 
         return filtered_rep_def
 

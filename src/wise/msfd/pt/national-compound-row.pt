@@ -1,5 +1,6 @@
-<tal:def tal:define="field nocall:options/field">
-  <tr>
+<tal:def tal:define="field nocall:options/field;
+    klass string:cf_${field/article}_${field/section} n_${field/name}">
+  <tr tal:attributes="class klass; data-level field/setlevel">
     <th class="first-header">
       <span tal:content="python: field.group_name and field.group_name or field.title">First header</span>
     </th>

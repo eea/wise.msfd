@@ -95,6 +95,8 @@
         $trText.html($trText.data('translation'));
       }      
 
+      setupReadMoreModal();
+
       // fix height of <th> on this row
       var $th = $(this).parents('tr').find('th').each(function(){
         var $th = $(this);
@@ -103,7 +105,8 @@
 
         $th.height(cells_max_height);
       });
-      setupReadMoreModal();
+
+      // $(this).parents('.table-report').fixTableHeaderAndCellsHeight();
       // $th.fixTableHeaderHeight();
 
       // fix height of lang-toolbar on this row
