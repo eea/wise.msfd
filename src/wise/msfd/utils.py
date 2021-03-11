@@ -364,7 +364,7 @@ def db_result_key(func, *argss, **kwargs):
         if hasattr(arg, '__name__'):
             arg_key = arg.__name__
         elif hasattr(arg, 'compile'):
-            if hasattr(arg, 'name'):  # meaning its a table
+            if hasattr(arg, 'fullname'):  # meaning its a table
                 arg_key = arg.fullname
             else:
                 arg_key = str(
