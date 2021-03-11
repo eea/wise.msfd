@@ -145,7 +145,7 @@ class A11Item(Item):
         return self.mpr['ReferenceExistingProgramme/ProgrammeID/text()'][0]
 
     def mru(self):
-        v = self.mpr['ReferenceExistingProgramme/MarineUnitID/text()']
+        v = self.mpr['ReferenceExistingProgramme//MarineUnitID/text()']
 
         return ItemListFiltered(v)
 
@@ -199,9 +199,10 @@ class A11Item(Item):
         return v
 
     def q6a_env(self):
-        v = self.mpr['.//Q6a_EnvironmentalTarget/text()'][0].split(' ')
+        v = self.mpr['.//Q6a_EnvironmentalTarget/text()'][0]
 
-        return ItemListFiltered(v)
+        # return ItemListFiltered(v)
+        return v
 
     def q6a_indic(self):
         v = self.mpr['.//Q6a_AssociatedIndicator/text()'][0]
@@ -454,7 +455,7 @@ class A11Item(Item):
         return v
 
     def mru_mp(self):
-        v = self.mpr['.//MonitoringProgramme/MarineUnitID/text()']
+        v = self.mpr['.//MonitoringProgramme//MarineUnitID/text()']
 
         return ItemListFiltered(v)
 
@@ -708,7 +709,7 @@ class Article11(BaseArticle2012):
 
             for sub_prog in subprogrammes:
                 subprog_id = xp('./SubMonitoringProgrammeID/text()', sub_prog)
-                subprog_id = subprog_id[0].replace('.xml', '')
+                subprog_id = subprog_id[0].replace('.xml', '').strip()
                 subp_name = xp('./SubMonitoringProgrammeName/text()', sub_prog)
 
                 sub_prog_node = [
