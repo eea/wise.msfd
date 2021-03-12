@@ -1,7 +1,7 @@
 <script src="https://browser.sentry-cdn.com/5.5.0/bundle.min.js" crossorigin="anonymous"></script>
 
 <tal:cond tal:condition="python: 'assessment-module' in request.URL0 or 'msfd-data' in request.URL0">
-  <script src="/marine/++resource++static_js/tabs.js?rel=16fd42a144"></script>
+  <script src="/marine/++resource++static_js/tabs.js?rel=6f99bb4bcd"></script>
 </tal:cond>
 
 <tal:cond tal:condition="python: 'assessment-module' in request.URL0">
