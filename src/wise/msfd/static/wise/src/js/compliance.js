@@ -153,8 +153,6 @@ if (!Array.prototype.last){
         // var $next = $('td:not(".sub-header")', $th.parent());
         var $next = $th.parent().children('td:not(".sub-header")');
 
-        if (index === 21) {debugger}
-
         if (isSideBySideLeft) {
           var $nextSideBySide = $($(this).parents('.overflow-table.side-by-side-table')
               .siblings('.overflow-table.side-by-side-table-right').find('tr')[index])
