@@ -10,6 +10,7 @@ import xlsxwriter
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 from Products.statusmessages.interfaces import IStatusMessage
 from wise.msfd import db, sql2018
+from wise.msfd.compliance.base import is_row_relevant_for_descriptor
 from wise.msfd.compliance.interfaces import (IRegionalReportDataView,
                                              IRegReportDataViewOverview)
 from wise.msfd.compliance.utils import DummyReportField
@@ -262,17 +263,40 @@ class RegReportData2018(BaseRegComplianceView):
         if not self.descriptor.startswith('D1.'):
             return out
 
-        conditions = []
-        params = get_parameters(self.descriptor)
-        p_codes = [p.name for p in params]
-        conditions.append(t.c.Parameter.in_(p_codes))
         ok_features = set([f.name for f in get_features(self.descriptor)])
         out_filtered = []
 
-        for row in out:
-            feats = set(row.Features.split(','))
+        blacklist_descriptors = ['D1.1', 'D1.2', 'D1.3', 'D1.4', 'D1.5',
+                                 'D1.6', 'D4', 'D6']
+        blacklist_descriptors.remove(self.descriptor)
+        blacklist_features = []
 
-            if feats.intersection(ok_features):
+        for _desc in blacklist_descriptors:
+            blacklist_features.extend([
+                f.name for f in get_features(_desc)
+            ])
+
+        blacklist_features = set(blacklist_features)
+
+        for row in out:
+            # Because some Features are missing from FeaturesSmart
+            # we consider 'D1' descriptor valid for all 'D1.x'
+            # and we keep the data if 'D1' is present in the GESComponents
+            # countries_filter = for these countries DO NOT filter by features
+            ges_comps = getattr(row, 'GESComponents', ())
+            ges_comps = set([g.strip() for g in ges_comps.split(',')])
+            countries_nofilter = []  # ('RO', 'DK', 'CY', 'MT')
+
+            if 'D1' in ges_comps and row.CountryCode in countries_nofilter:
+                out_filtered.append(row)
+                continue
+
+            row_needed = is_row_relevant_for_descriptor(
+                row, self.descriptor, ok_features, blacklist_features,
+                ges_comps
+            )
+
+            if row_needed:
                 out_filtered.append(row)
 
         return out_filtered

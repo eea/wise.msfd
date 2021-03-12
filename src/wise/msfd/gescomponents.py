@@ -523,6 +523,9 @@ def parse_features_from_db_2018():
         code = row.Code.strip()
         label = row.Feature
         theme = row.Theme or NOTHEME
+        if theme.endswith(','):
+            theme = theme.strip(',')
+
         subject = row.Subject
 
         res[code] = Feature_2018(code, label, subject, theme)
