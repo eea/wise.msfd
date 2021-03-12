@@ -114,7 +114,6 @@ window.setupTabs = function (tabswrapper) {
 jQuery(document).ready(function($) {
     Sentry.init({ dsn: 'https://3b1e925c59cd4e1799c6efbd8251ec80@sentry.eea.europa.eu/32' });
 
-    myfunct();
     if ("undefined" !== typeof window.setupTabs) {
       window.setupTabs();
     }
