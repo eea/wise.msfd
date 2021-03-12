@@ -11,7 +11,6 @@
     var selectorLeftForm = "#wise-search-form";
 
     var sessionStore = storageFactory(sessionStorage);
-
     /*
     * Vars and $ plugins
     *
