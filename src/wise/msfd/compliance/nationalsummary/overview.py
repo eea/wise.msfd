@@ -17,6 +17,7 @@ from wise.msfd.data import (get_all_report_filenames,
 from wise.msfd.gescomponents import (ANTHROPOGENIC_FEATURES_SHORT_NAMES,
                                      DESCRIPTOR_TYPES, FEATURES_DB_2018,
                                      NOTHEME, THEMES_2018_ORDER)
+from wise.msfd.labels import get_label
 from wise.msfd.translation import get_translated, retrieve_translation
 from wise.msfd.utils import (ItemList, fixedorder_sortkey, items_to_rows,
                              timeit)
@@ -205,6 +206,11 @@ class PressuresTableBase(BaseNatSummaryView):
     template = ViewPageTemplateFile('pt/pressures-marine-env-table.pt')
     features = FEATURES_DB_2018
 
+    needed_subjects = (
+        'Anthropogenic pressures on the marine environment',
+    )
+    column_header = "GES Descriptors"
+
     @timeit
     @db.use_db_session('2018')
     def get_data_art8(self):
@@ -252,17 +258,16 @@ class PressuresTableBase(BaseNatSummaryView):
 
         return code
 
-    @property
-    def features_needed(self):
+    def get_features_by_subject(self, subjects):
         features_order = [
             x[0]
             for x in ANTHROPOGENIC_FEATURES_SHORT_NAMES
         ]
-        needed = ('Anthropogenic pressures on the marine environment', )
+
         filtered = defaultdict(list)
 
         for k, v in self.features.items():
-            if v.subject not in needed:
+            if v.subject not in subjects:
                 continue
 
             filtered[v.theme].append(v.name)
@@ -278,16 +283,127 @@ class PressuresTableBase(BaseNatSummaryView):
 
         return sorted_out
 
+    @property
+    def features_needed(self):
+        return self.get_features_by_subject(self.needed_subjects)
+
     def __call__(self):
         return self.template()
 
 
-class PressureTableMarineEnv(PressuresTableBase):
-    section_title = 'Pressures affecting environmental status'
+class UsesHumanActivities(PressuresTableBase):
+    section_title = 'Uses and human activities and their pressures ' \
+                    'on marine environment'
     title = 'Analysis of predominant pressures and impacts, ' \
             'including human activity (Art. 8(1)(b))'
+    column_header = "Uses and human activities (MSFD Annex III, Table 2b)"
 
-    def data_tbody(self):
+    @property
+    def uses_activities_features(self):
+        subjects = (
+            'Uses and human activities in or affecting the marine environment',
+        )
+        uses_activities = self.get_features_by_subject(subjects)
+        filtered = [x for x in uses_activities if x[0] != 'No theme']
+
+        return filtered
+
+    @timeit
+    @db.use_db_session('2018')
+    def get_features_pressures_data(self):
+        sess = db.session()
+        esa_mru = sql2018.ART8ESAMarineUnit
+        rep_info = sql2018.ReportedInformation
+        esa_feat = sql2018.ART8ESAFeature
+        esa_uses = sql2018.ART8ESAUsesActivity
+        esa_uses_p = sql2018.ART8ESAUsesActivitiesPressure
+
+        columns = [
+            esa_mru.MarineReportingUnit, esa_feat.Feature,
+            esa_uses_p.PressureCode
+        ]
+
+        conditions = [
+            rep_info.Schema == 'ART8_ESA',
+            rep_info.CountryCode == self.country_code
+        ]
+
+        res = sess.query(*columns) \
+            .join(rep_info, esa_mru.IdReportedInformation == rep_info.Id) \
+            .join(esa_feat, esa_feat.IdMarineUnit == esa_mru.Id) \
+            .join(esa_uses, esa_uses.IdFeature == esa_feat.Id) \
+            .join(esa_uses_p, esa_uses_p.IdUsesActivities == esa_uses.Id) \
+            .filter(*conditions).distinct()
+
+        out = defaultdict(set)
+
+        for row in res:
+            activ_feat = row.Feature
+            press_code = row.PressureCode
+
+            out[activ_feat].add(press_code)
+
+        return out
+
+    def data_table(self):
+        data = self.get_features_pressures_data()
+
+        out = []
+
+        # general_pressures = set(['PresAll', 'Unknown'])
+
+        for activ_theme, activ_features in self.uses_activities_features:
+            descriptor_type_data = []
+
+            for activ_feat in activ_features:
+                features_rep = data.get(activ_feat, set())
+                descriptor_data = []
+
+                # we iterate on all pressures 'Non-indigenous species',
+                # 'Microbial pathogens' etc. and check if the pressures
+                # was reported for the current descriptor and feature
+                for theme, features_for_theme in self.features_needed:
+                    for feature in features_for_theme:
+                        if feature.endswith('All'):
+                            continue
+
+                        # if pressure is ending with 'All' it applies to all
+                        # features in the current theme
+                        pressures = filter(
+                            lambda i: i.endswith('All') or i == feature,
+                            list(features_rep.intersection(
+                                set(features_for_theme))
+                            )
+                        )
+
+                        # These pressures apply to all themes and features
+                        # general_pressures_reported = list(
+                        #     general_pressures.intersection(features_rep)
+                        # )
+
+                        # pressures.extend(general_pressures_reported)
+
+                        pressures = [
+                            self.get_feature_short_name(x)
+                            for x in pressures
+                        ]
+
+                        descriptor_data.append(ItemListOverview(pressures))
+
+                descriptor_type_data.append((get_label(activ_feat, 'features'),
+                                             descriptor_data))
+
+            out.append((activ_theme, descriptor_type_data))
+
+        return out
+
+
+class PressureTableMarineEnv(PressuresTableBase):
+    section_title = 'Pressures affecting environmental status'
+    title = 'Assessments of current environental status and pressures ' \
+            'and impacts (Art. 8(1)(a)(b))'
+
+    def data_table(self):
         data = self.get_features_pressures_data()
 
         out = []
@@ -365,7 +481,7 @@ class EnvironmentalTargetsTable(PressuresTableBase):
 
         return out
 
-    def data_tbody(self):
+    def data_table(self):
         pressures_data = self.get_features_pressures_data()
         env_targets_data = self.get_env_targets_data()
         out = []
@@ -419,6 +535,90 @@ class EnvironmentalTargetsTable(PressuresTableBase):
         return out
 
 
+class ProgrammesOfMeasures(EnvironmentalTargetsTable):
+    section_title = 'Measures to meet environmental targets and to achieve GES'
+    title = 'Programme of measures (Art. 13)'
+    column_header = "GES Descriptors"
+
+    @db.use_db_session('2018')
+    def get_measures_data(self):
+        t = sql2018.t_V_ART10_Targets_2018
+
+        count, data = db.get_all_specific_columns(
+            [t.c.TargetCode, t.c.Measures],
+            t.c.CountryCode == self.country_code,
+            t.c.Measures.isnot(None)
+        )
+
+        return data
+
+    def data_table(self):
+        pressures_data = self.get_features_pressures_data()
+        env_targets_data = self.get_env_targets_data()
+        measures_data = self.get_measures_data()
+        out = []
+
+        general_pressures = set(['PresAll', 'Unknown'])
+
+        for descr_type, descriptors in DESCRIPTOR_TYPES:
+            descriptor_type_data = []
+
+            for descriptor in descriptors:
+                features_rep = pressures_data[descriptor]
+                descriptor_data = []
+
+                # we iterate on all pressures 'Non-indigenous species',
+                # 'Microbial pathogens' etc. and check if the pressures
+                # was reported for the current descriptor and feature
+                for theme, features_for_theme in self.features_needed:
+                    for feature in features_for_theme:
+                        if feature.endswith('All'):
+                            continue
+
+                        # if pressure is ending with 'All' it applies to all
+                        # features in the current theme
+                        pressures = filter(
+                            lambda i: i.endswith('All') or i == feature,
+                            list(features_rep.intersection(
+                                set(features_for_theme))
+                            )
+                        )
+
+                        # These pressures apply to all themes and features
+                        general_pressures_reported = list(
+                            general_pressures.intersection(features_rep)
+                        )
+
+                        pressures.extend(general_pressures_reported)
+
+                        targets = set(sorted([
+                            p
+                            for press in pressures
+                            for p in
+                            env_targets_data['-'.join((descriptor, press))]
+                        ]))
+
+                        # get the measures related to targets
+                        measures = [
+                            r.Measures.split(',')
+                            for r in measures_data
+                            if r.TargetCode in targets
+                        ]
+                        measures_flat = [
+                            measure
+                            for sublist in measures
+                            for measure in sublist
+                        ]
+
+                        descriptor_data.append(ItemListOverview(measures_flat))
+
+                descriptor_type_data.append((descriptor, descriptor_data))
+
+            out.append((descr_type, descriptor_type_data))
+
+        return out
+
+
 class NationalOverviewView(BaseNatSummaryView):
     help_text = "HELP TEXT"
     template = ViewPageTemplateFile('pt/report-data.pt')
@@ -445,8 +645,10 @@ class NationalOverviewView(BaseNatSummaryView):
             Article34TableMarineWaters(self.context, self.request)(),
             Article34TableMarineAreas(self.context, self.request)(),
             Article34TableCooperation(self.context, self.request)(),
+            UsesHumanActivities(self.context, self.request)(),
             PressureTableMarineEnv(self.context, self.request)(),
             EnvironmentalTargetsTable(self.context, self.request)(),
+            ProgrammesOfMeasures(self.context, self.request)(),
             AssessmentSummary2012(self.context, self.request)(),
             AssessmentSummary2018(self.context, self.request)(),
             ReportingHistoryTableOverview(self.context, self.request)(),
