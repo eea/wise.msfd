@@ -1,0 +1,51 @@
+<div>
+  <h3 tal:content="view/section_title">Title here</h3>
+  <table class="table table-bordered table-striped table-condensed">
+    <tr>
+      <td>Title</td>
+      <td tal:content="view/title">Article 8</td>
+    </tr>
+    <tr>
+      <td>Access reports</td>
+      <td>
+        <a target="_blank"
+            tal:attributes="href view/report_access">
+          View reports
+        </a>
+      </td>
+    </tr>
+  </table>
+  <div class="overflow-table sticky-overflow-header hidden-fixed-table">
+    <div class="inner" style="overflow: auto">
+      <table class="table table-bordered table-striped table-condensed table-national-overview table-sticky-first-col table-report skip-height-fix">
+        <thead>
+          <tr>
+            <th colspan="2">GES Descriptors</th>
+            <th>Features</th>
+            <th>Marine Reporting Unit</th>
+            <th>GES extent achieved</th>
+            <th>GES extent unit</th>
+            <th>GES achieved</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tal:rep tal:repeat="descriptor_type view/data_table">
+            <tr tal:repeat="descriptor_data python: descriptor_type[1]">
+              <th tal:condition="python: descriptor_type[1].index(descriptor_data) == 0"
+                  tal:attributes="rowspan python: len(descriptor_type[1])"
+                  tal:content="python: descriptor_type[0]">
+                Pressure based descriptors
+              </th>
+              <th tal:content="python: descriptor_data[0]">D2</th>
+              <td style="min-width: 75px;"
+                  tal:repeat="value python: descriptor_data[1]"
+                  tal:content="structure value">
+                All pressures
+              </td>
+            </tr>
+          </tal:rep>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

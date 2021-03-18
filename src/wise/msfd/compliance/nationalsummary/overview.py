@@ -203,7 +203,7 @@ class ReportingHistoryTableOverview(ReportingHistoryTable):
 
 
 class PressuresTableBase(BaseNatSummaryView):
-    template = ViewPageTemplateFile('pt/pressures-marine-env-table.pt')
+    template = ViewPageTemplateFile('pt/overview-press-marine-env-table.pt')
     features = FEATURES_DB_2018
 
     needed_subjects = (
@@ -447,6 +447,36 @@ class PressureTableMarineEnv(PressuresTableBase):
                         ]
 
                         descriptor_data.append(ItemListOverview(pressures))
+
+                descriptor_type_data.append((descriptor, descriptor_data))
+
+            out.append((descr_type, descriptor_type_data))
+
+        return out
+
+
+class GESExtentAchieved(PressuresTableBase):
+    template = ViewPageTemplateFile('pt/overview-ges-extent-table.pt')
+
+    section_title = 'Current environmental status and extent to ' \
+                    'which GES is achieved'
+    title = 'Assessments of current environental status and ' \
+            'pressures and impacts (Art. 8(1)(a)(b))'
+
+    def data_table(self):
+        data = self.get_ges_extent_data()
+
+        out = []
+
+        for descr_type, descriptors in DESCRIPTOR_TYPES:
+            descriptor_type_data = []
+
+            for descriptor in descriptors:
+                descriptor_data = [
+                    row
+                    for row in data
+                    if row.GESComponent == descriptor
+                ]
 
                 descriptor_type_data.append((descriptor, descriptor_data))
 
