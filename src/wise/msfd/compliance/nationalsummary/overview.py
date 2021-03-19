@@ -16,7 +16,8 @@ from wise.msfd.data import (get_all_report_filenames,
                             get_xml_report_data)
 from wise.msfd.gescomponents import (ANTHROPOGENIC_FEATURES_SHORT_NAMES,
                                      DESCRIPTOR_TYPES, FEATURES_DB_2018,
-                                     NOTHEME, THEMES_2018_ORDER)
+                                     GES_DESCRIPTORS, NOTHEME,
+                                     THEMES_2018_ORDER)
 from wise.msfd.labels import get_label
 from wise.msfd.translation import get_translated, retrieve_translation
 from wise.msfd.utils import (ItemList, fixedorder_sortkey, items_to_rows,
@@ -223,6 +224,13 @@ class PressuresTableBase(BaseNatSummaryView):
         )
 
         return data
+
+    def get_descriptor_title(self, code):
+        for c, title in GES_DESCRIPTORS.items():
+            if c == code:
+                return title
+
+        return code
 
     def get_features_pressures_data(self):
         data = self.get_data_art8()
@@ -448,7 +456,8 @@ class PressureTableMarineEnv(PressuresTableBase):
 
                         descriptor_data.append(ItemListOverview(pressures))
 
-                descriptor_type_data.append((descriptor, descriptor_data))
+                descriptor_type_data.append((
+                    self.get_descriptor_title(descriptor), descriptor_data))
 
             out.append((descr_type, descriptor_type_data))
 
@@ -463,6 +472,18 @@ class GESExtentAchieved(PressuresTableBase):
     title = 'Assessments of current environental status and ' \
             'pressures and impacts (Art. 8(1)(a)(b))'
 
+    @db.use_db_session('2018')
+    def get_ges_extent_data(self):
+        t = sql2018.t_V_ART8_GES_2018
+
+        count, data = db.get_all_specific_columns(
+            [t.c.GESComponent, t.c.Feature, t.c.MarineReportingUnit,
+             t.c.GESExtentAchieved, t.c.GESExtentUnit, t.c.GESAchieved],
+            t.c.CountryCode == self.country_code,
+        )
+
+        return data
+
     def data_table(self):
         data = self.get_ges_extent_data()
 
@@ -473,14 +494,20 @@ class GESExtentAchieved(PressuresTableBase):
 
             for descriptor in descriptors:
                 descriptor_data = [
-                    row
+                    [get_label(row.Feature, 'features'),
+                     row.MarineReportingUnit,
+                     row.GESExtentAchieved, row.GESExtentUnit, row.GESAchieved]
                     for row in data
-                    if row.GESComponent == descriptor
+                    if row.GESComponent.split('/')[0] == descriptor
                 ]
 
-                descriptor_type_data.append((descriptor, descriptor_data))
+                if not descriptor_data:
+                    descriptor_data = [['Not reported', '', '', '', '']]
 
-            out.append((descr_type, descriptor_type_data))
+                descriptor_type_data.append([
+                    self.get_descriptor_title(descriptor), descriptor_data])
+
+            out.append([descr_type, descriptor_type_data])
 
         return out
 
@@ -558,7 +585,8 @@ class EnvironmentalTargetsTable(PressuresTableBase):
 
                         descriptor_data.append(ItemListOverview(targets))
 
-                descriptor_type_data.append((descriptor, descriptor_data))
+                descriptor_type_data.append((
+                    self.get_descriptor_title(descriptor), descriptor_data))
 
             out.append((descr_type, descriptor_type_data))
 
@@ -642,9 +670,50 @@ class ProgrammesOfMeasures(EnvironmentalTargetsTable):
 
                         descriptor_data.append(ItemListOverview(measures_flat))
 
-                descriptor_type_data.append((descriptor, descriptor_data))
+                descriptor_type_data.append((
+                    self.get_descriptor_title(descriptor), descriptor_data))
 
             out.append((descr_type, descriptor_type_data))
+
+        return out
+
+
+class ExceptionsReported(PressuresTableBase):
+    template = ViewPageTemplateFile('pt/overview-exceptions-table.pt')
+
+    section_title = 'Exceptions reported when targets or GES cannot be achieved'
+    title = 'Exceptions (Art. 14)'
+
+    @db.use_db_session('2018')
+    def get_ges_extent_data(self):
+        t = sql2018.t_V_ART8_GES_2018
+
+        count, data = db.get_all_specific_columns(
+            [t.c.GESComponent, t.c.Feature, t.c.MarineReportingUnit,
+             t.c.GESExtentAchieved, t.c.GESExtentUnit, t.c.GESAchieved],
+            t.c.CountryCode == self.country_code,
+        )
+
+        return data
+
+    def data_table(self):
+        data = []
+
+        out = []
+
+        for descr_type, descriptors in DESCRIPTOR_TYPES:
+            descriptor_type_data = []
+
+            for descriptor in descriptors:
+                descriptor_data = []
+
+                if not descriptor_data:
+                    descriptor_data = ['', '', '', '', '', '']
+
+                descriptor_type_data.append([
+                    self.get_descriptor_title(descriptor), descriptor_data])
+
+            out.append([descr_type, descriptor_type_data])
 
         return out
 
@@ -677,8 +746,10 @@ class NationalOverviewView(BaseNatSummaryView):
             Article34TableCooperation(self.context, self.request)(),
             UsesHumanActivities(self.context, self.request)(),
             PressureTableMarineEnv(self.context, self.request)(),
+            GESExtentAchieved(self.context, self.request)(),
             EnvironmentalTargetsTable(self.context, self.request)(),
             ProgrammesOfMeasures(self.context, self.request)(),
+            ExceptionsReported(self.context, self.request)(),
             AssessmentSummary2012(self.context, self.request)(),
             AssessmentSummary2018(self.context, self.request)(),
             ReportingHistoryTableOverview(self.context, self.request)(),

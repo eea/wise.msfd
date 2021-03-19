@@ -21,32 +21,29 @@
         <thead>
           <tr>
             <th colspan="2">GES Descriptors</th>
-            <th>Features</th>
-            <th>Marine Reporting Unit</th>
-            <th>GES extent achieved</th>
-            <th>GES extent unit</th>
-            <th>GES achieved</th>
+            <th>Action or inaction for which MS is not responsible (Art. 14 (1a))</th>
+            <th>Natural causes (Art. 14 (1b))</th>
+            <th>Force majeure (Art. 14 (1c))</th>
+            <th>Physical modifications for overriding public interest (Art. 14 (1d))</th>
+            <th>Natural conditions preventing timely improvement (Art. 14 (1e))</th>
+            <th>No significant risk or disproportionate costs (Art. 14 (4))</th>
           </tr>
         </thead>
         <tbody>
           <tal:rep tal:repeat="descriptor_type all_data">
             <tal:rep tal:repeat="descriptor_data python: descriptor_type[1]">
-              <tal:rep tal:repeat="row python: descriptor_data[1]">
-                <tr>
-                  <th tal:condition="python: descriptor_type[1].index(descriptor_data) == 0 and descriptor_data[1].index(row) == 0"
-                      tal:attributes="rowspan python: sum([len(x[1]) for x in descriptor_type[1]])"
-                      tal:content="python: descriptor_type[0]">
-                    Pressure based descriptors
-                  </th>
-                  <th tal:condition="python: descriptor_data[1].index(row) == 0"
-                      tal:attributes="rowspan python: len(descriptor_data[1])"
-                      tal:content="python: descriptor_data[0]">D2</th>
-                  <td tal:repeat="value row"
-                      tal:content="structure value">
-                    All pressures
-                  </td>
-                </tr>
-              </tal:rep>
+              <tr>
+                <th tal:condition="python: descriptor_type[1].index(descriptor_data) == 0"
+                    tal:attributes="rowspan python: len(descriptor_type[1])"
+                    tal:content="python: descriptor_type[0]">
+                  Pressure based descriptors
+                </th>
+                <th tal:content="python: descriptor_data[0]">D2</th>
+                <td tal:repeat="value python: descriptor_data[1]"
+                    tal:content="structure value">
+                  All pressures
+                </td>
+              </tr>
             </tal:rep>
           </tal:rep>
         </tbody>

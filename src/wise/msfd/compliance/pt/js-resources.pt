@@ -1,5 +1,7 @@
-<script src="https://browser.sentry-cdn.com/5.5.0/bundle.min.js" crossorigin="anonymous"></script>
-<script>Sentry.init({ dsn: 'https://3b1e925c59cd4e1799c6efbd8251ec80@sentry.eea.europa.eu/32' });</script>
+<tal:cond tal:condition="python: 'water.europa.eu' in request.URL0">
+  <script src="https://browser.sentry-cdn.com/5.5.0/bundle.min.js" crossorigin="anonymous"></script>
+  <script>Sentry.init({ dsn: 'https://3b1e925c59cd4e1799c6efbd8251ec80@sentry.eea.europa.eu/32' });</script>
+</tal:cond>
 
 <tal:cond tal:condition="python: 'assessment-module' in request.URL0 or 'msfd-data' in request.URL0">
   <script src="/marine/++resource++static_js/tabs.js?rel=e49a198c70"></script>
