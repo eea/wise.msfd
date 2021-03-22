@@ -691,7 +691,7 @@ class A11MonSubDisplay(MultiItemDisplayForm):
             ('MSFD11Q9aElementMonitored', data_em),
             ('MSFD11Q9bMeasurementParameter', data_mp),
         ]
-
+        
         return xlsdata
 
     def get_db_results(self):

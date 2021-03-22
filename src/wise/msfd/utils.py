@@ -161,11 +161,15 @@ def print_value_xls(value, fieldname):
 def get_obj_fields(obj, use_blacklist=True, whitelist=None):
     whitelist = whitelist or []
     whitelist = getattr(obj, 'whitelist', whitelist)
-
-    mapper = inspect(obj)
-
     fields = []
-    keys = [c.key for c in mapper.attrs]        # forgo sorted use
+
+    try:
+        mapper = inspect(obj)
+        keys = [c.key for c in mapper.attrs]  # forgo sorted use
+    except:  # NoInspectionAvailable
+        keys = [k for k in obj.keys()]
+
+        return keys
 
     if use_blacklist:
         for key in keys:
@@ -367,9 +371,12 @@ def db_result_key(func, *argss, **kwargs):
             if hasattr(arg, 'fullname'):  # meaning its a table
                 arg_key = arg.fullname
             else:
-                arg_key = str(
-                    arg.compile(compile_kwargs={"literal_binds": True})
-                )
+                arg_comp = arg.compile(compile_kwargs={"literal_binds": True})
+
+                if hasattr(arg_comp, 'string'):
+                    arg_key = arg_comp.string
+                else:
+                    arg_key = str(arg_comp)
 
         else:
             arg_key = arg.__str__()
