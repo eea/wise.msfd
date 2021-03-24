@@ -92,6 +92,38 @@ class ART10TargetsTargetMeasure(Base):
     ART10_Targets_Target = relationship(u'ART10TargetsTarget')
 
 
+class ART11ProgrammesMonitoringProgramme(Base):
+    __tablename__ = 'ART11_Programmes_MonitoringProgramme'
+
+    Id = Column(Integer, primary_key=True)
+    ProgrammeCode = Column(Unicode(50), nullable=False)
+    ProgrammeName = Column(Unicode(250), nullable=False)
+    UpdateType = Column(Unicode(100), nullable=False)
+    ProgrammeDescription = Column(Unicode)
+    RegionalCooperation_implementation = Column(Unicode(150))
+    TemporalScope = Column(Unicode(9))
+    MonitoringDetails = Column(Unicode(2500))
+    MonitoringMethodOther = Column(Unicode(2500))
+    QualityControl = Column(Unicode(2500))
+    MonitoringFrequency = Column(Unicode(15))
+    DataManagement = Column(Unicode(2500))
+    Contact = Column(Unicode(2500))
+    References = Column(Unicode(2500))
+    IdReportedInformation = Column(ForeignKey(u'ReportedInformation.Id'), nullable=False)
+
+    ReportedInformation = relationship(u'ReportedInformation')
+
+
+class ART11ProgrammesMonitoringProgrammeMarineReportingUnit(Base):
+    __tablename__ = 'ART11_Programmes_MonitoringProgramme_MarineReportingUnit'
+
+    Id = Column(Integer, primary_key=True)
+    MarineReportingUnit = Column(Unicode(50), nullable=False)
+    IdMonitoringProgramme = Column(ForeignKey(u'ART11_Programmes_MonitoringProgramme.Id'), nullable=False)
+
+    ART11_Programmes_MonitoringProgramme = relationship(u'ART11ProgrammesMonitoringProgramme')
+
+
 class ART18Category1bNotWFD(Base):
     __tablename__ = 'ART18_Category1bNotWFD'
 

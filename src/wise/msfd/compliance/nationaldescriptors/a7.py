@@ -222,7 +222,8 @@ class Article7_2018(Article7):
     translatable_extra_data = []
 
     def __init__(self, context, request, country_code, region_code,
-                 descriptor, article,  muids, filename=None):
+                 descriptor, article,  muids, filename=None,
+                 show_mru_usage=False):
 
         super(Article7_2018, self).__init__(context, request, country_code,
                                             region_code, descriptor, article,

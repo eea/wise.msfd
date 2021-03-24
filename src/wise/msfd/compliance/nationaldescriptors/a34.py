@@ -5,6 +5,7 @@ from lxml.etree import fromstring
 
 from Products.Five.browser.pagetemplatefile import \
     ViewPageTemplateFile as Template
+from wise.msfd import db, sql, sql2018, sql_extra
 from wise.msfd.data import get_xml_report_data
 from wise.msfd.translation import retrieve_translation
 from wise.msfd.utils import (Item, ItemLabel, ItemList, Node, RawRow,  # Row,
@@ -25,6 +26,79 @@ NSMAP = {
 
 def xp(xpath, node):
     return node.xpath(xpath, namespaces=NSMAP)
+
+
+@db.use_db_session('2012')
+def _get_a8910_2020_mrus():
+    count, res = db.get_all_specific_columns(
+        [sql_extra.MSFD4GeographicalAreaID.MarineUnitID]
+    )
+    out = [x[0] for x in res]
+
+    return out
+
+
+@db.use_db_session('2012')
+def _get_a11_2014_mrus():
+    count, res = db.get_all_specific_columns(
+        [sql.MSFD11MarineUnitID.MarineUnitID]
+    )
+    out = [x[0] for x in res]
+
+    return out
+
+
+@db.use_db_session('2012')
+def _get_1314_2016_mrus():
+    count, res = db.get_all_specific_columns(
+        [sql.MSFD13Import.MarineUnitID]
+    )
+    out = [x[0] for x in res]
+
+    return out
+
+
+@db.use_db_session('2012')
+def _get_8910_2018_mrus():
+    count, res = db.get_all_specific_columns(
+        [sql2018.MRUsPublication.thematicId]
+    )
+    out = [x[0] for x in res]
+
+    return out
+
+
+@db.use_db_session('2018')
+def _get_18_2019_mrus():
+    return []
+
+
+@db.use_db_session('2018')
+def _get_11_2020_mrus():
+    table = sql2018.ART11ProgrammesMonitoringProgrammeMarineReportingUnit
+    count, res = db.get_all_specific_columns(
+        [table.MarineReportingUnit]
+    )
+    out = [x[0] for x in res]
+
+    return out
+
+
+def get_mru_usage_per_article():
+    out = {
+        'Art. 8-9-10 (2012)': _get_a8910_2020_mrus(),
+        'Art. 11 (2014)': _get_a11_2014_mrus(),
+        'Art. 13-14 (2016)': _get_1314_2016_mrus(),
+        'Art. 17 (8-9-10) (2018)': _get_8910_2018_mrus(),
+        'Art. 18 (2019)': _get_18_2019_mrus(),
+        'Art. 17 (11) (2020)': _get_11_2020_mrus(),
+
+    }
+
+    return out
+
+
+MRU_USAGE_PER_ART = get_mru_usage_per_article()
 
 
 class A34Item(Item):
@@ -182,7 +256,7 @@ class Article34(BaseArticle2012):
 
 
 class A34Item_2018_mru(Item):
-    def __init__(self, node):
+    def __init__(self, node, show_mru_usage=False):
 
         super(A34Item_2018_mru, self).__init__([])
 
@@ -197,9 +271,34 @@ class A34Item_2018_mru(Item):
             ('MRU Name', self.marine_reporting_unit()),
         ]
 
+        if show_mru_usage:
+            attrs.extend([
+                ('Art. 8-9-10 (2012)',
+                 self.check_mru_usage('Art. 8-9-10 (2012)')),
+                ('Art. 11 (2014)', self.check_mru_usage('Art. 11 (2014)')),
+                ('Art. 13-14 (2016)',
+                 self.check_mru_usage('Art. 13-14 (2016)')),
+                ('Art. 17 (8-9-10) (2018)',
+                 self.check_mru_usage('Art. 17 (8-9-10) (2018)')),
+                ('Art. 18 (2019)', self.check_mru_usage('Art. 18 (2019)')),
+                ('Art. 17 (11) (2020)',
+                 self.check_mru_usage('Art. 17 (11) (2020)')),
+            ])
+
         for title, value in attrs:
             self[title] = value
             setattr(self, title, value)
+
+    def default(self):
+        return ''
+
+    def check_mru_usage(self, art):
+        mru = self.mru_id()
+
+        if mru in MRU_USAGE_PER_ART[art]:
+            return 'Used'
+
+        return ''
 
     def region_or_subregion(self):
         v = self.g['w:RegionSubRegions/text()']
@@ -232,7 +331,7 @@ class A34Item_2018_main(Item):
     TRANSLATABLES_EXTRA = ['MRU Name']
 
     def __init__(self, context, request, description, mru_nodes,
-                 root, previous_mrus=None):
+                 root, previous_mrus=None, show_mru_usage=False):
 
         super(A34Item_2018_main, self).__init__([])
         self.description = description
@@ -254,7 +353,7 @@ class A34Item_2018_main(Item):
         mrus = []
 
         for node in mru_nodes:
-            item = A34Item_2018_mru(node)
+            item = A34Item_2018_mru(node, show_mru_usage)
             mrus.append(item)
 
         sorted_mrus = sorted(mrus, key=lambda x: x['Marine Reporting Unit'])
@@ -398,7 +497,7 @@ class Article34_2018(BaseArticle2012):
 
     def __init__(self, context, request, country_code, region_code,
                  descriptor, article, muids, filename=None,
-                 previous_mrus=None):
+                 previous_mrus=None, show_mru_usage=False):
 
         # TODO: use previous_mrus to highlight this file MRUs according to edit
         # status: added or deleted
@@ -407,6 +506,7 @@ class Article34_2018(BaseArticle2012):
                                              muids)
         self.filename = filename
         self.previous_mrus = previous_mrus
+        self.show_mru_usage = show_mru_usage
 
     def get_report_file_root(self, filename=None):
         if self.root is None:
@@ -426,7 +526,7 @@ class Article34_2018(BaseArticle2012):
         # TODO: also send the previous file data
         main_node = A34Item_2018_main(
             self, self.request, description, mru_nodes, self.root,
-            self.previous_mrus
+            self.previous_mrus, self.show_mru_usage
         )
         self.translatable_extra_data = main_node.get_translatable_extra_data()
         self.available_mrus = main_node.available_mrus

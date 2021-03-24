@@ -1638,7 +1638,8 @@ class ReportData2018Secondary(ReportData2018):
 
         return template
 
-    def get_implementation_view(self, filename, prev_filename):
+    def get_implementation_view(self, filename, prev_filename,
+                                show_mru_usage=False):
         """ In other articles (8, 9, 10) for 2018 year,
         we get the data from the DB (MSFD2018_production)
 
@@ -1658,13 +1659,13 @@ class ReportData2018Secondary(ReportData2018):
             prev_view = klass(
                 self, self.request, self.country_code,
                 self.country_region_code, self.descriptor, self.article,
-                self.muids, prev_filename
+                self.muids, prev_filename, show_mru_usage=show_mru_usage
             )
             prev_view.setup_data()
             previous_mrus = prev_view.available_mrus
             init_args.append(previous_mrus)
 
-        view = klass(*init_args)
+        view = klass(*init_args, show_mru_usage=show_mru_usage)
         view.setup_data()
 
         return view

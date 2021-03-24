@@ -7,7 +7,7 @@ from Products.Five.browser.pagetemplatefile import (PageTemplateFile,
                                                     ViewPageTemplateFile)
 from Products.statusmessages.interfaces import IStatusMessage
 
-from wise.msfd import db, sql2018
+from wise.msfd import db, sql2018, sql
 from wise.msfd.compliance.assessment import AssessmentDataMixin
 from wise.msfd.compliance.utils import group_by_mru
 from wise.msfd.data import (get_all_report_filenames,
@@ -73,7 +73,8 @@ class ReportData2018SecondaryOverview(ReportData2018Secondary,
 
         for (index, url) in enumerate(urls[:1]):
             prev_url = url
-            view = self.get_implementation_view(url, prev_url)
+            view = self.get_implementation_view(url, prev_url,
+                                                show_mru_usage=True)
 
             # Report Header
             report_date = get_envelope_release_date(url)
@@ -684,20 +685,31 @@ class ExceptionsReported(PressuresTableBase):
     section_title = 'Exceptions reported when targets or GES cannot be achieved'
     title = 'Exceptions (Art. 14)'
 
-    @db.use_db_session('2018')
+    @db.use_db_session('2012')
     def get_ges_extent_data(self):
-        t = sql2018.t_V_ART8_GES_2018
+        sess = db.session()
+        rep_info_mem = sql.MSFD13ReportingInfoMemberState
+        rep_info = sql.MSFD13ReportingInfo
+        info = sql.MSFD13MeasuresInfo
 
-        count, data = db.get_all_specific_columns(
-            [t.c.GESComponent, t.c.Feature, t.c.MarineReportingUnit,
-             t.c.GESExtentAchieved, t.c.GESExtentUnit, t.c.GESAchieved],
-            t.c.CountryCode == self.country_code,
-        )
+        columns = [rep_info_mem.MemberState, info.InfoType, info.InfoText,
+                   rep_info.ReportingDate]
 
-        return data
+        conditions = [
+            rep_info_mem.MemberState == self.country_code,
+            rep_info.ReportType == 'Exceptions',
+            info.InfoType == 'RelevantGESDescriptors',
+        ]
+
+        res = sess.query(*columns) \
+            .join(info, rep_info_mem.ReportID == info.ReportID) \
+            .join(rep_info, rep_info.ID == rep_info_mem.ReportID) \
+            .filter(*conditions).distinct()
+
+        return res
 
     def data_table(self):
-        data = []
+        data = self.get_ges_extent_data()
 
         out = []
 
@@ -705,10 +717,17 @@ class ExceptionsReported(PressuresTableBase):
             descriptor_type_data = []
 
             for descriptor in descriptors:
-                descriptor_data = []
+                descriptor_data = ['', '', '', '', '', '']
 
-                if not descriptor_data:
-                    descriptor_data = ['', '', '', '', '', '']
+                rep_data = [
+                    row.ReportingDate.year
+                    for row in data
+                    if row.InfoText == descriptor.split('.')[0]
+                ]
+                # TODO get exception type
+
+                if rep_data:
+                    descriptor_data = rep_data[:1] * 6
 
                 descriptor_type_data.append([
                     self.get_descriptor_title(descriptor), descriptor_data])
