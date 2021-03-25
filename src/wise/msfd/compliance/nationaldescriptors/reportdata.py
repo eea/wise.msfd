@@ -760,6 +760,15 @@ class ReportData20142020(ReportData2014):
     is_side_by_side = True
     cache_key_extra = 'side-by-side'
 
+    @property
+    def TRANSLATABLES(self):
+        rep_def_2014 = get_report_definition('2014', self.article)
+        rep_def_2020 = get_report_definition('2020', self.article)
+        translatables_2014 = rep_def_2014.get_translatable_fields()
+        translatables_2020 = rep_def_2020.get_translatable_fields()
+
+        return translatables_2014 + translatables_2020
+
     def get_report_view(self):
         klass = Article11Compare
 

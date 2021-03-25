@@ -139,6 +139,7 @@ if (!Array.prototype.last){
     // the <td> cells, and the other way around.
 
     this.each(function() {
+      console.log('fixTableHeaderAndCellsHeight');
       $("th", this).each(function(index) {
         if($(this).parents('table').hasClass('skip-height-fix')) {
           return
@@ -598,54 +599,58 @@ if (!Array.prototype.last){
 
   function addFixedTable() {
     var $ot = $('.overflow-table');
-    var $table = $ot.find('table');
-    var $cb = $('<input type="checkbox" class="fix-row"/>');
-    var $ft = $(
-      '<div class="fixed-table-wrapper">' +
-        '<button title="Clear filters" class="reset-pins">' +
-          '<i class="glyphicon glyphicon-remove-circle"></i>' +
-        '</button>' +
-        '<div class="fixed-table-inner">' +
-          '<table class="table table-bordered table-striped fixed-table">' +
-          '</table>' +
-        '</div>' +
-      '</div>'
-    );
 
-    // Register click event for button to clear all pinned rows for the current table
-    $ft.find('button.reset-pins').click(function(){
-      $ftw = $(this).closest('.fixed-table-wrapper');
-      $ftw.removeClass('sticky-table');
-      $ftw.find('tr').remove();
+    $ot.each(function(){
+      var $table = $(this).find('table');
+      var $cb = $('<input type="checkbox" class="fix-row"/>');
+      var $ft = $(
+        '<div class="fixed-table-wrapper">' +
+          '<button title="Clear filters" class="reset-pins">' +
+            '<i class="glyphicon glyphicon-remove-circle"></i>' +
+          '</button>' +
+          '<div class="fixed-table-inner">' +
+            '<table class="table table-bordered table-striped fixed-table">' +
+            '</table>' +
+          '</div>' +
+        '</div>'
+      );
 
-      $innerTable = $ftw.siblings('.inner');
-      $innerTable.find('tr input').prop('checked', false);
+      // Register click event for button to clear all pinned rows for the current table
+      $ft.find('button.reset-pins').click(function(){
+        $ftw = $(this).closest('.fixed-table-wrapper');
+        $ftw.removeClass('sticky-table');
+        $ftw.find('tr').remove();
+
+        $innerTable = $ftw.siblings('.inner');
+        $innerTable.find('tr input').prop('checked', false);
+      });
+
+      if($table.find('td.sub-header').length){
+        // Regional descriptors
+        $table.find('td.sub-header').append($cb);
+      } else {
+        // National descriptors
+        $table.find('th div').append($cb);
+      }
+
+      $ft.insertBefore($(this).find('.inner'));
     });
 
-    if($table.find('td.sub-header').length){
-      // Regional descriptors
-      $table.find('td.sub-header').append($cb);
-    } else {
-      // National descriptors
-      $table.find('th div').append($cb);
-    }
-
-    $ft.insertBefore($ot.find('.inner'));
   }
 
   $.fn.setupFixedTableRows = function() {
     // Allows report table rows to be fixed while scrolling
     // var $ot = $('.overflow-table');
     var $ot = $(this)
-    var $fixedTable = $('.fixed-table-wrapper');
 
-    // The .each is unnecesary, because we always fix only one table
+    // The .each is necessary, we can have more overflow-tables
     $ot.each(function() {
       var $t = $(this);
+      var $fixedTable = $t.find('.fixed-table-wrapper');
       var $th = $('th', $t.parent());
-      var tableW = $('.table-report', $t.parent()).width();
-      var tableScroll = $('.inner', $t.parent());
-      var fixedTableInner = $('.fixed-table-inner', $t.parent());
+      var tableW = $('.table-report', $t).width();
+      var tableScroll = $('.inner', $t);
+      var fixedTableInner = $('.fixed-table-inner', $t);
 
       function toggleSyncScrolls(onoff) {
         function f1 () {
@@ -664,7 +669,7 @@ if (!Array.prototype.last){
       }
       toggleSyncScrolls(true);
 
-      $('.fix-row').each(function(i) {
+      $t.find('.fix-row').each(function(i) {
         var val = "cb" + i++;
         // var checkBox = $(this).find('.fix-row');
         var checkBox = $(this);
@@ -677,7 +682,7 @@ if (!Array.prototype.last){
         var value = $this.val();
         var table = $this.closest('.overflow-table').find('.fixed-table');
         var tableWrapper = $this.closest('.overflow-table').find('.fixed-table-wrapper');
-        $('.fixed-table').width(tableW);
+        table.width(tableW);
 
         if ($this.is(':checked')) {
           tableWrapper.addClass('sticky-table');
@@ -699,7 +704,8 @@ if (!Array.prototype.last){
           });
           clone.appendTo(table).attr('data-row', value);
 
-          $t.find('.table').fixTableHeaderAndCellsHeight();
+          // disable for test
+          //$t.find('.table').fixTableHeaderAndCellsHeight();
           // setupTableScrolling();
         } else {
           $fixedTable.find('tr[data-row="' + value + '"]').slideUp('fast', function() {
@@ -734,9 +740,13 @@ if (!Array.prototype.last){
 
     $(window).on('resize scroll', function() {
       if ($('.report-nav.sticky').length > 0) {
-        $fixedTable.css('top', '56px');
+        $('.fixed-table-wrapper').each(function(){
+          $(this).css('top', '56px');
+        });
       } else {
-        $fixedTable.css('top', '0');
+        $('.fixed-table-wrapper').each(function(){
+          $(this).css('top', '0');
+        })
       }
     });
   }

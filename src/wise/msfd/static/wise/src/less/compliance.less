@@ -235,6 +235,40 @@ body.plone-toolbar-left-expanded {
   width: 47% !important;
 }
 
+.side-by-side-table {
+  .fixed-table-wrapper {
+    width: 48.5% !important;
+
+    .fixed-table-inner {
+      margin-left: 50px !important;
+    }
+  }
+}
+
+.side-by-side-table-right {
+  .fixed-table-wrapper {
+    left: initial !important;
+    right: initial !important;
+    z-index: 999 !important;
+
+    .reset-pins {
+      left: 10px !important;
+    }
+
+    .fixed-table-inner {
+      margin-left: 133px !important;
+
+      table {
+        margin-left: 0px;
+      }
+
+      th {
+        left: 0px !important;
+      }
+    }
+  }
+}
+
 .overflow-table.sticky-overflow-header {
   &.hidden-fixed-table {
     .fixed-table-wrapper {
