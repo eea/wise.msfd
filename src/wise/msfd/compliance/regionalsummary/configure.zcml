@@ -14,16 +14,25 @@
     permission="wise.ViewAssessmentData"
     />
 
-  <!-- Regional summary - Overview for a country -->
+  <!-- Regional overview for a country -->
   <browser:page
-    for="..interfaces.IRegionalSummaryRegionFolder"
-    name="overview"
-    class=".reportdata.RegionalSummaryView"
+    for="..interfaces.IRegionalSummaryOverviewFolder"
+    name="regional-overview"
+    class=".overview.RegionalOverviewView"
     template="./pt/report-data-view.pt"
     permission="wise.ViewAssessmentData"
     />
 
-  <!-- Art 12 Assessment view / pdf export -->
+<!--  <browser:page-->
+<!--    for="..interfaces.IRegionalSummaryOverviewFolder"-->
+<!--    name="regional-overview"-->
+<!--    class=".overview.RegionalOverviewView"-->
+<!--    template="./pt/report-data-view.pt"-->
+<!--    permission="wise.ViewAssessmentData"-->
+<!--    />-->
+
+
+  <!-- Regional summary / Art 12 Assessment view / pdf export -->
   <browser:page
     for="..interfaces.IRegionalSummaryRegionFolder"
     name="assessment-summary"

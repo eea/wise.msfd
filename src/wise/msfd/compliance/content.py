@@ -11,7 +11,8 @@ from .interfaces import (ICountryDescriptorsFolder,
                          INationalSummaryOverviewFolder,
                          IRegionalDescriptorAssessment,
                          IRegionalDescriptorRegionsFolder,
-                         IRegionalSummaryRegionFolder)
+                         IRegionalSummaryRegionFolder,
+                         IRegionalSummaryOverviewFolder)
 
 
 class MSFDReportingHistoryFolder(Container):
@@ -54,6 +55,12 @@ class RegionalSummaryRegionFolder(Container):
     """ Assessment implementation for regional summary assessments
     """
     implements(IRegionalSummaryRegionFolder)
+
+
+class RegionalSummaryOverviewFolder(Container):
+    """ implementation for regional overview page
+    """
+    implements(IRegionalSummaryOverviewFolder)
 
 
 class NationalDescriptorAssessment(Container):

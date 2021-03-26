@@ -236,3 +236,10 @@ class IRegionalSummaryRegionFolder(Interface):
 
     Ex: /assessment-module/regional-summaries/bal
     """
+
+
+class IRegionalSummaryOverviewFolder(Interface):
+    """ A container for regional overview pages
+
+    /assessment-module/regional-summaries/bal/overview
+    """

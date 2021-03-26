@@ -247,7 +247,7 @@ class OverallConclusion2012(RegionalDescriptorsSimpleTable,
         return h
 
 
-class RegionalSummaryView(BaseRegSummaryView):
+class RegionalOverviewView(BaseRegSummaryView):
     help_text = "HELP TEXT"
     template = ViewPageTemplateFile('pt/report-data.pt')
     year = "2012"

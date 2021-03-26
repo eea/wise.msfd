@@ -14,7 +14,7 @@
     permission="wise.ViewAssessmentData"
     />
 
-  <!-- National summary view for a country -->
+  <!-- National overview for a country -->
   <browser:page
     for="..interfaces.INationalSummaryOverviewFolder"
     name="national-overview"
@@ -23,7 +23,7 @@
     permission="wise.ViewAssessmentData"
     />
 
-  <!-- Art 12 Assessment view / pdf export -->
+  <!-- National summary / Art 12 Assessment view / pdf export -->
   <browser:page
     for="..interfaces.INationalSummaryCountryFolder"
     name="assessment-summary"

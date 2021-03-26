@@ -391,6 +391,17 @@ class BootstrapCompliance(BrowserView):
 
             # TODO setup the folder for the regional overview page
             # similar to national summaries page
+            # create the overview folder
+            if 'overview' in rf.contentIds():
+                of = rf['overview']
+            else:
+                of = create(rf,
+                            'wise.msfd.regionalsummaryoverview',
+                            title='Regional summary overview',
+                            id='overview')
+
+            self.set_layout(of, 'regional-overview')
+            alsoProvides(of, interfaces.IRegionalSummaryOverviewFolder)
 
     def setup_secondary_articles(self, parent):
         if 'national-descriptors-assessments' not in parent.contentIds():
