@@ -93,6 +93,9 @@
   <type type_id="wise.msfd.nationalsummaryoverview">
    <bound-workflow workflow_id="compliance_national_summary_workflow"/>
   </type>
+  <type type_id="wise.msfd.regionalsummaryoverview">
+   <bound-workflow workflow_id="compliance_national_summary_workflow"/>
+  </type>
   <type type_id="wise.msfd.regionaldescriptorassessment">
    <bound-workflow workflow_id="compliance_regional_assessment_workflow"/>
   </type>
