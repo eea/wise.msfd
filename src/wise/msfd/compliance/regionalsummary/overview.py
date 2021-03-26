@@ -22,7 +22,7 @@ logger = logging.getLogger('wise.msfd')
 SECTIONS = []
 
 
-def regionalsection(klass):
+def register_section(klass):
     SECTIONS.append(klass)
 
 
@@ -36,14 +36,17 @@ class RegionalDescriptorsSimpleTable(BaseRegSummaryView):
 
     """
 
-    template = ViewPageTemplateFile("pt/simple-table.pt")
+    template = ViewPageTemplateFile("pt/overview-simple-table.pt")
     title = ''
+    _id = ''
 
     def setup_data(self):
-        return []
+        []
 
     def get_table_headers(self):
-        return []
+        countries = [x[1] for x in self.available_countries]
+
+        return [''] + countries
 
     def __call__(self):
         data = self.setup_data()
@@ -53,11 +56,239 @@ class RegionalDescriptorsSimpleTable(BaseRegSummaryView):
         return self.template(title=title, data=data, headers=headers)
 
 
-@regionalsection
-class Article11CoverageOfActivities(RegionalDescriptorsSimpleTable):
+@register_section
+class CompetentAuthorities(RegionalDescriptorsSimpleTable):
+    title = 'Compentent Authorities'
+    _id = 'reg-overview-ca'
 
+    def setup_data(self):
+        rows = []
+        values = []
+
+        for country_id, country_name in self.available_countries:
+            # TODO get values
+            val = ''
+
+            values.append(val)
+
+        rows.append(('No of designated CAs', values))
+
+        return rows
+
+
+@register_section
+class MarineWaters(RegionalDescriptorsSimpleTable):
+    title = 'Marine waters'
+    _id = 'reg-overview-mw'
+
+    def setup_data(self):
+        rows = []
+
+        row_headers = [
+            'Length of coastline (km)',
+            'Area of marine waters (water column and seabed) (km2)',
+            'Area of marine waters (seabed only - '
+            'beyond EEZ or quivalent) (km2)',
+            'Proportion of Baltic Sea region per Member State (areal %)'
+        ]
+
+        values = []
+
+        for info in row_headers:
+            for country_id, country_name in self.available_countries:
+                # TODO get values
+                val = ''
+
+                values.append(val)
+
+            rows.append((info, values))
+
+        return rows
+
+
+@register_section
+class MarineRegionSubregions(RegionalDescriptorsSimpleTable):
+    title = 'Marine region and subregions'
+    _id = 'reg-overview-mrs'
+
+    def get_table_headers(self):
+        regions = [x[1] for x in self.available_subregions]
+
+        return [''] + regions
+
+    def setup_data(self):
+        rows = []
+
+        row_headers = [
+            'Length of coastline (km) - total',
+            'Length of coastline (km) - EU',
+            'Length of coastline (km) - non EU',
+            'Area (km2) - total',
+            'Area (km2) - EU',
+            'Area (km2) - non EU'
+        ]
+
+        values = []
+
+        for info in row_headers:
+            for country_id, country_name in self.available_countries:
+                # TODO get values
+                val = ''
+
+                values.append(val)
+
+            rows.append((info, values))
+
+        return rows
+
+
+@register_section
+class MarineReportingAreas(RegionalDescriptorsSimpleTable):
+    title = 'Marine reporting areas'
+    _id = 'reg-overview-mra'
+
+    def setup_data(self):
+        rows = []
+
+        row_headers = [
+            'Number of MRUs used',
+            'Range of extent of MRUs (km2)',
+            'Average extent of MRUs (km2)',
+        ]
+
+        values = []
+
+        for info in row_headers:
+            for country_id, country_name in self.available_countries:
+                # TODO get values
+                val = ''
+
+                values.append(val)
+
+            rows.append((info, values))
+
+        return rows
+
+
+@register_section
+class UsesHumanActivitiesPressures(RegionalDescriptorsSimpleTable):
+    title = 'Uses and human activities, and associated pressures'
+    _id = 'reg-overview-uses'
+
+
+@register_section
+class PressuresAffectingDescriptors(RegionalDescriptorsSimpleTable):
+    title = 'Pressures affecting descriptors'
+    _id = 'reg-overview-press'
+
+
+@register_section
+class ExtentGESAchieved(RegionalDescriptorsSimpleTable):
+    title = 'Extent to which GES is achieved'
+    _id = 'reg-overview-extent'
+
+
+@register_section
+class CurrentEnvitonmentalStatus(RegionalDescriptorsSimpleTable):
+    title = 'Current environmental status'
+    _id = 'reg-overview-env-stat'
+
+
+@register_section
+class EnvironmentalTargets(RegionalDescriptorsSimpleTable):
+    title = 'Environmental targets on pressures'
+    _id = 'reg-overview-env-target'
+
+
+@register_section
+class MeasuresPressures(RegionalDescriptorsSimpleTable):
+    title = 'Measures on pressures'
+    _id = 'reg-overview-meas'
+
+
+@register_section
+class ExceptionsGESAchieved(RegionalDescriptorsSimpleTable):
+    title = 'Exceptions reported when targets or GES cannot be achieved'
+    _id = 'reg-overview-exception'
+
+
+@register_section
+class Article92012(RegionalDescriptorsSimpleTable):
+    title = 'Implementation of Art. 9 - Determination of GES (2012)'
+    _id = 'reg-overview-art9-2012'
+
+
+@register_section
+class Article82012(RegionalDescriptorsSimpleTable):
+    title = 'Implementation of Art. 8 (Assessments) (2012)'
+    _id = 'reg-overview-art8-2012'
+
+
+@register_section
+class Article102012(RegionalDescriptorsSimpleTable):
+    title = 'Implementation of Art. 10 (Environmental targets) (2012)'
+    _id = 'reg-overview-art10-2012'
+
+
+@register_section
+class Article112014(RegionalDescriptorsSimpleTable):
+    title = 'Implementation of Art. 11 (Monitoring programmes) (2014)'
+    _id = 'reg-overview-art11-2014'
+
+
+@register_section
+class Article132016(RegionalDescriptorsSimpleTable):
+    title = 'Implementation of Art. 13 (Programmes of measures) (2016)'
+    _id = 'reg-overview-art13-2016'
+
+
+@register_section
+class Article142016(RegionalDescriptorsSimpleTable):
+    title = 'Implementation of Art. 14 (Exceptions) (2016)'
+    _id = 'reg-overview-art14-2016'
+
+
+@register_section
+class Article92018(RegionalDescriptorsSimpleTable):
+    title = 'Implementation of Art. 9 - Determination of GES (2018)'
+    _id = 'reg-overview-art9-2018'
+
+
+@register_section
+class Article82018(RegionalDescriptorsSimpleTable):
+    title = 'Implementation of Art. 8 (Assessments) (2018)'
+    _id = 'reg-overview-art8-2018'
+
+
+@register_section
+class Article102018(RegionalDescriptorsSimpleTable):
+    title = 'Implementation of Art. 10 (Environmental targets) (2018)'
+    _id = 'reg-overview-art10-2018'
+
+
+@register_section
+class Implementation2017Decision(RegionalDescriptorsSimpleTable):
+    title = 'Implementation of 2017 Decision reporting scales/areas (2018)'
+    _id = 'reg-overview-impl-2017'
+
+
+@register_section
+class RegionalCoherence2012(RegionalDescriptorsSimpleTable):
+    title = 'Regional coherence: first cycle 2012-2017'
+    _id = 'reg-overview-coh-2012'
+
+
+@register_section
+class RegionalCoherence2018(RegionalDescriptorsSimpleTable):
+    title = 'Regional coherence: second cycle 2018-2023'
+    _id = 'reg-overview-coh-2018'
+
+
+# @register_section
+class Article11CoverageOfActivities(RegionalDescriptorsSimpleTable):
     features_table = sql.t_MSFD_12_8cOverview
     title = 'Coverage of activities by monitoring programmes'
+    _id = 'reg-overview-t1'
 
     @property
     @db.use_db_session('2012')
@@ -126,11 +357,11 @@ class Article11CoverageOfActivities(RegionalDescriptorsSimpleTable):
         return rows
 
 
-@regionalsection
+# @register_section
 class PressuresActivities(RegionalDescriptorsSimpleTable):
-
     pressures_table = sql.t_MSFD_8b_8bPressures
     title = 'Pressures and associated activities affecting the marine waters'
+    _id = 'reg-overview-t2'
 
     @property
     @db.use_db_session('2012')
@@ -193,7 +424,7 @@ class PressuresActivities(RegionalDescriptorsSimpleTable):
         return rows
 
 
-@regionalsection
+# @register_section
 class OverallConclusion2012(RegionalDescriptorsSimpleTable,
                             AssessmentDataMixin):
     title = "Overall conclusion - descriptor-level"
@@ -202,21 +433,7 @@ class OverallConclusion2012(RegionalDescriptorsSimpleTable,
         ('Art8', 'Article 8: Initial assessment'),
         ('Art10', 'Article 10: Environmental targets'),
     ]
-    # get_reg_assessments_data_2012
-    # def get_assessment_data(self, region, article, descriptor):
-    #     data = ASSESSMENTS_2012
-    #
-    #     for row in data:
-    #         if row.region.strip() != region:
-    #             continue
-    #
-    #         if row.descriptor.strip() != descriptor:
-    #             continue
-    #
-    #         if article not in row.article.replace(' ', ''):
-    #             continue
-    #
-    #         return row
+    _id = 'reg-overview-t3'
 
     def setup_data(self):
         data = []
@@ -250,6 +467,7 @@ class OverallConclusion2012(RegionalDescriptorsSimpleTable,
 class RegionalOverviewView(BaseRegSummaryView):
     help_text = "HELP TEXT"
     template = ViewPageTemplateFile('pt/report-data.pt')
+    toc_template = ViewPageTemplateFile('pt/overview-table-of-contents.pt')
     year = "2012"
 
     render_header = True
@@ -258,16 +476,18 @@ class RegionalOverviewView(BaseRegSummaryView):
     @timeit
     def render_reportdata(self):
         report_header = self.report_header_template(
-            title="Regional summary report: {}".format(
+            title="Regional overview: {}".format(
                 self.region_name,
             ),
             countries=", ".join([x[1] for x in self.available_countries])
         )
-        # trans_edit_html = self.translate_view()()
+        table_of_contents = self.toc_template(
+            sections=SECTIONS
+        )
 
         self.tables = [
             report_header,
-            # trans_edit_html,
+            table_of_contents,
         ]
         for klass in SECTIONS:
             rendered_table = klass(self, self.request)()

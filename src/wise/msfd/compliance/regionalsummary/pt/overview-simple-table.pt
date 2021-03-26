@@ -1,0 +1,27 @@
+<div tal:define="data options/data"
+    tal:attributes="id view/_id">
+  <h3 tal:content="options/title">Title</h3>
+
+  <div class="overflow-table sticky-overflow-header hidden-fixed-table">
+    <div class="inner" style="overflow: auto">
+      <table
+          class="table table-bordered table-striped table-condensed table-national-overview table-sticky-first-col table-report skip-height-fix">
+        <thead>
+          <tr>
+            <th tal:repeat="header options/headers"
+                 tal:content="header">Top Header</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr tal:repeat="row data">
+            <th style="width: 250px;"
+                tal:content="python: row[0]">Row header</th>
+            <td tal:repeat="value python: row[1]"
+                 tal:content="structure value">Value</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+</div>

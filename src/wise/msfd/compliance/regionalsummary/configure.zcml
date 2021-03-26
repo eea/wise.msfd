@@ -23,15 +23,6 @@
     permission="wise.ViewAssessmentData"
     />
 
-<!--  <browser:page-->
-<!--    for="..interfaces.IRegionalSummaryOverviewFolder"-->
-<!--    name="regional-overview"-->
-<!--    class=".overview.RegionalOverviewView"-->
-<!--    template="./pt/report-data-view.pt"-->
-<!--    permission="wise.ViewAssessmentData"-->
-<!--    />-->
-
-
   <!-- Regional summary / Art 12 Assessment view / pdf export -->
   <browser:page
     for="..interfaces.IRegionalSummaryRegionFolder"
