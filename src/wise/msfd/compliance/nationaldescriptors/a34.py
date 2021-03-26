@@ -29,41 +29,45 @@ def xp(xpath, node):
 
 
 @db.use_db_session('2012')
-def _get_a8910_2020_mrus():
-    count, res = db.get_all_specific_columns(
-        [sql_extra.MSFD4GeographicalAreaID.MarineUnitID]
+def _get_a8910_2012_mrus():
+    res = db.get_unique_from_mapper(
+        sql_extra.MSFD4GeographicalAreaID,
+        'MarineUnitID'
     )
-    out = [x[0] for x in res]
+    out = [x.replace(' ', '') for x in res]
 
     return out
 
 
 @db.use_db_session('2012')
 def _get_a11_2014_mrus():
-    count, res = db.get_all_specific_columns(
-        [sql.MSFD11MarineUnitID.MarineUnitID]
+    res = db.get_unique_from_mapper(
+        sql.MSFD11MarineUnitID,
+        'MarineUnitID'
     )
-    out = [x[0] for x in res]
+    out = [x.replace(' ', '') for x in res]
 
     return out
 
 
 @db.use_db_session('2012')
 def _get_1314_2016_mrus():
-    count, res = db.get_all_specific_columns(
-        [sql.MSFD13Import.MarineUnitID]
+    res = db.get_unique_from_mapper(
+        sql.MSFD13Import,
+        'MarineUnitID'
     )
-    out = [x[0] for x in res]
+    out = [x.replace(' ', '') for x in res]
 
     return out
 
 
-@db.use_db_session('2012')
+@db.use_db_session('2018')
 def _get_8910_2018_mrus():
-    count, res = db.get_all_specific_columns(
-        [sql2018.MRUsPublication.thematicId]
+    res = db.get_unique_from_mapper(
+        sql2018.MRUsPublication,
+        'thematicId'
     )
-    out = [x[0] for x in res]
+    out = [x.replace(' ', '') for x in res]
 
     return out
 
@@ -76,17 +80,18 @@ def _get_18_2019_mrus():
 @db.use_db_session('2018')
 def _get_11_2020_mrus():
     table = sql2018.ART11ProgrammesMonitoringProgrammeMarineReportingUnit
-    count, res = db.get_all_specific_columns(
-        [table.MarineReportingUnit]
+    res = db.get_unique_from_mapper(
+        table,
+        'MarineReportingUnit'
     )
-    out = [x[0] for x in res]
+    out = [x.replace(' ', '') for x in res]
 
     return out
 
 
 def get_mru_usage_per_article():
     out = {
-        'Art. 8-9-10 (2012)': _get_a8910_2020_mrus(),
+        'Art. 8-9-10 (2012)': _get_a8910_2012_mrus(),
         'Art. 11 (2014)': _get_a11_2014_mrus(),
         'Art. 13-14 (2016)': _get_1314_2016_mrus(),
         'Art. 17 (8-9-10) (2018)': _get_8910_2018_mrus(),
@@ -295,7 +300,7 @@ class A34Item_2018_mru(Item):
     def check_mru_usage(self, art):
         mru = self.mru_id()
 
-        if mru in MRU_USAGE_PER_ART[art]:
+        if mru.replace(' ', '') in MRU_USAGE_PER_ART[art]:
             return 'Used'
 
         return ''
