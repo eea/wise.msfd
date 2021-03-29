@@ -1,4 +1,5 @@
 # import time
+import re
 
 from zope.browserpage.viewpagetemplatefile import \
     ViewPageTemplateFile as Z3ViewPageTemplateFile
@@ -24,6 +25,9 @@ from .utils import (all_values_from_field, get_obj_fields, print_value,
 from .widget import MarineUnitIDSelectFieldWidget
 
 
+re_art11_name_clean = re.compile(r'^Q\d+\w\s+')
+
+
 class BaseUtil(object):
     """ Generic utilities for search views
     """
@@ -47,6 +51,9 @@ class BaseUtil(object):
             return DISPLAY_LABELS[text]
 
         text = text.replace('_', ' ')
+
+        if re_art11_name_clean.match(text):
+            text = re_art11_name_clean.sub('', text)
 
         for l in range(len(text) - 1):
             if text[l].islower() and text[l + 1].isupper():

@@ -436,7 +436,7 @@ class A11MonProgDisplay(ItemDisplayForm):
         )
         q5d_adequacy = db_objects_to_dict(q5d_adequacy, excluded_columns)
         if q5d_adequacy:
-            res.append(('Q5dAdequacyForAssessmentGES', {'': q5d_adequacy})),
+            res.append(('Adequacy For Assessment GES', {'': q5d_adequacy})),
 
         q6b_adequacy_id = self.item.Q6b_AdequacyForAssessmentTargets
         count, q6b_adequacy = db.get_all_records(
@@ -445,7 +445,7 @@ class A11MonProgDisplay(ItemDisplayForm):
         )
         q6b_adequacy = db_objects_to_dict(q6b_adequacy, excluded_columns)
         if q6b_adequacy:
-            res.append(('Q6bAdequacyForAssessmentTargets', {'': q6b_adequacy})),
+            res.append(('Adequacy For Assessment Targets', {'': q6b_adequacy})),
 
         res.append(('Other information', element_names))
 
