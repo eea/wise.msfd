@@ -12,6 +12,7 @@ from wise.msfd.translation import get_translated, retrieve_translation
 from wise.msfd.utils import (ItemList, TemplateMixin, db_objects_to_dict,
                              fixedorder_sortkey, timeit)
 
+from ..nationalsummary.overview import TableOfContents
 from ..regionaldescriptors.assessment import ASSESSMENTS_2012
 from .base import BaseRegSummaryView
 
@@ -24,6 +25,8 @@ SECTIONS = []
 
 def register_section(klass):
     SECTIONS.append(klass)
+
+    return klass
 
 
 class RegionalDescriptorsSimpleTable(BaseRegSummaryView):
@@ -92,9 +95,9 @@ class MarineWaters(RegionalDescriptorsSimpleTable):
             'Proportion of Baltic Sea region per Member State (areal %)'
         ]
 
-        values = []
-
         for info in row_headers:
+            values = []
+
             for country_id, country_name in self.available_countries:
                 # TODO get values
                 val = ''
@@ -112,7 +115,7 @@ class MarineRegionSubregions(RegionalDescriptorsSimpleTable):
     _id = 'reg-overview-mrs'
 
     def get_table_headers(self):
-        regions = [x[1] for x in self.available_subregions]
+        regions = [x for x in self.available_subregions]
 
         return [''] + regions
 
@@ -128,10 +131,10 @@ class MarineRegionSubregions(RegionalDescriptorsSimpleTable):
             'Area (km2) - non EU'
         ]
 
-        values = []
-
         for info in row_headers:
-            for country_id, country_name in self.available_countries:
+            values = []
+
+            for region_code in self.available_subregions:
                 # TODO get values
                 val = ''
 
@@ -156,9 +159,9 @@ class MarineReportingAreas(RegionalDescriptorsSimpleTable):
             'Average extent of MRUs (km2)',
         ]
 
-        values = []
-
         for info in row_headers:
+            values = []
+
             for country_id, country_name in self.available_countries:
                 # TODO get values
                 val = ''
@@ -467,7 +470,6 @@ class OverallConclusion2012(RegionalDescriptorsSimpleTable,
 class RegionalOverviewView(BaseRegSummaryView):
     help_text = "HELP TEXT"
     template = ViewPageTemplateFile('pt/report-data.pt')
-    toc_template = ViewPageTemplateFile('pt/overview-table-of-contents.pt')
     year = "2012"
 
     render_header = True
@@ -481,13 +483,10 @@ class RegionalOverviewView(BaseRegSummaryView):
             ),
             countries=", ".join([x[1] for x in self.available_countries])
         )
-        table_of_contents = self.toc_template(
-            sections=SECTIONS
-        )
 
         self.tables = [
             report_header,
-            table_of_contents,
+            TableOfContents(self, self.request, SECTIONS),
         ]
         for klass in SECTIONS:
             rendered_table = klass(self, self.request)()

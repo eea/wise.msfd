@@ -1,9 +1,10 @@
-<div tal:define="all_data view/data_table">
-  <h3 tal:content="view/section_title">Title here</h3>
+<div tal:attributes="id python: getattr(view, '_id', '')"
+    tal:define="all_data view/data_table">
+  <h3 tal:content="view/title">Title here</h3>
   <table class="table table-bordered table-striped table-condensed">
     <tr>
       <td>Title</td>
-      <td tal:content="view/title">Article 8</td>
+      <td tal:content="view/article">Article 8</td>
     </tr>
     <tr>
       <td>Access reports</td>

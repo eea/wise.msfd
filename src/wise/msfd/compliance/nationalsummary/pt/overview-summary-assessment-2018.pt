@@ -1,4 +1,5 @@
-<div class="nat-sum-summary-assessment">
+<div tal:attributes="id python: getattr(view, '_id', '')"
+    class="nat-sum-summary-assessment">
   <h3 tal:content="python: 'Assessments of progress in MSFD implementation (Art. 12, 16) / {}'.format(view.year)" ></h3>
   <table class="table table-bordered table-striped table-condensed">
     <tr>

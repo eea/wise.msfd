@@ -3,6 +3,7 @@
 from collections import defaultdict
 import logging
 
+from Products.Five.browser import BrowserView
 from Products.Five.browser.pagetemplatefile import (PageTemplateFile,
                                                     ViewPageTemplateFile)
 from Products.statusmessages.interfaces import IStatusMessage
@@ -32,6 +33,25 @@ from .introduction import ReportingHistoryTable
 
 
 logger = logging.getLogger('wise.msfd')
+
+SECTIONS = []
+
+
+def register_section(klass):
+    SECTIONS.append(klass)
+
+    return klass
+
+
+class TableOfContents(BrowserView):
+    template = ViewPageTemplateFile('pt/overview-table-of-contents.pt')
+
+    def __init__(self, context, request, sections):
+        super(TableOfContents, self).__init__(context, request)
+        self.sections = sections
+
+    def __call__(self):
+        return self.template(sections=self.sections)
 
 
 class ItemListOverview(ItemList):
@@ -120,15 +140,19 @@ class ReportData2018SecondaryOverview(ReportData2018Secondary,
         return self.render_reportdata()
 
 
+@register_section
 class Article7Table(ReportData2018SecondaryOverview):
     article = 'Art7'
     title = 'Who is responsible for MSFD implementation?'
+    _id = 'nat-overview-a7'
     render_sections = {}
 
 
+@register_section
 class Article34TableMarineWaters(ReportData2018SecondaryOverview):
     article = 'Art4'
     title = 'Where is the MSFD implemented?'
+    _id = 'nat-overview-a34water'
     article_name = 'Art. 3(1) Marine waters'
     render_sections = {
         'marine_waters': True,
@@ -137,9 +161,11 @@ class Article34TableMarineWaters(ReportData2018SecondaryOverview):
     }
 
 
+@register_section
 class Article34TableMarineAreas(ReportData2018SecondaryOverview):
     article = 'Art4'
     title = 'Areas for MSFD reporting'
+    _id = 'nat-overview-a34area'
     article_name = 'Art. 4/2017 Decision: Marine regions, subregions, ' \
                    'and subdivisions'
     render_sections = {
@@ -149,59 +175,17 @@ class Article34TableMarineAreas(ReportData2018SecondaryOverview):
     }
 
 
+@register_section
 class Article34TableCooperation(ReportData2018SecondaryOverview):
     article = 'Art4'
     title = 'Regional cooperation'
+    _id = 'nat-overview-a34coop'
     article_name = 'Art. 5(2) and Art. 6 Regional cooperation'
     render_sections = {
         'marine_waters': False,
         'marine_areas': False,
         'cooperation': True,
     }
-
-
-class AssessmentSummary2018(BaseNatSummaryView, AssessmentDataMixin):
-    template = ViewPageTemplateFile('pt/summary-assessment-overview-2018.pt')
-    year = '2018'
-    cycle = 'Second cycle'
-    cycle_year = '2018-2023'
-
-    def __call__(self):
-        self.setup_descriptor_level_assessment_data()
-
-        table = SummaryAssessment(self, self.request, self.overall_scores,
-                                  self.nat_desc_country_folder, self.year)
-
-        self.summary_assess_data = table.setup_data()
-        macro_assess_sum = table.template.macros['assessment-summary-table']
-
-        return self.template(macro_assess_sum=macro_assess_sum)
-
-
-class AssessmentSummary2012(AssessmentSummary2018):
-    year = '2012'
-    cycle = 'First cycle'
-    cycle_year = '2012-2017'
-
-
-class ReportingHistoryTableOverview(ReportingHistoryTable):
-    show_header = True
-    obligations_needed = None  # meaning we need all obligations
-    view_template = ViewPageTemplateFile('pt/overview-report-history.pt')
-
-    @property
-    def all_obligations(self):
-        data = self.data
-
-        obligations = set([x.get('ReportingObligation') for x in data])
-
-        return [[o] for o in obligations]
-
-    def __call__(self):
-
-        self.table = super(ReportingHistoryTableOverview, self).__call__()
-
-        return self.view_template()
 
 
 class PressuresTableBase(BaseNatSummaryView):
@@ -300,11 +284,13 @@ class PressuresTableBase(BaseNatSummaryView):
         return self.template()
 
 
+@register_section
 class UsesHumanActivities(PressuresTableBase):
-    section_title = 'Uses and human activities and their pressures ' \
+    title = 'Uses and human activities and their pressures ' \
                     'on marine environment'
-    title = 'Analysis of predominant pressures and impacts, ' \
-            'including human activity (Art. 8(1)(b))'
+    article = 'Analysis of predominant pressures and impacts, ' \
+              'including human activity (Art. 8(1)(b))'
+    _id = 'nat-overview-activ'
     column_header = "Uses and human activities (MSFD Annex III, Table 2b)"
 
     @property
@@ -407,10 +393,12 @@ class UsesHumanActivities(PressuresTableBase):
         return out
 
 
+@register_section
 class PressureTableMarineEnv(PressuresTableBase):
-    section_title = 'Pressures affecting environmental status'
-    title = 'Assessments of current environental status and pressures ' \
-            'and impacts (Art. 8(1)(a)(b))'
+    title = 'Pressures affecting environmental status'
+    article = 'Assessments of current environental status and pressures ' \
+              'and impacts (Art. 8(1)(a)(b))'
+    _id = 'nat-overivew-press'
 
     def data_table(self):
         data = self.get_features_pressures_data()
@@ -465,13 +453,15 @@ class PressureTableMarineEnv(PressuresTableBase):
         return out
 
 
+@register_section
 class GESExtentAchieved(PressuresTableBase):
     template = ViewPageTemplateFile('pt/overview-ges-extent-table.pt')
 
-    section_title = 'Current environmental status and extent to ' \
+    title = 'Current environmental status and extent to ' \
                     'which GES is achieved'
-    title = 'Assessments of current environental status and ' \
-            'pressures and impacts (Art. 8(1)(a)(b))'
+    article = 'Assessments of current environental status and ' \
+              'pressures and impacts (Art. 8(1)(a)(b))'
+    _id = 'nat-overview-gesextent'
 
     @db.use_db_session('2018')
     def get_ges_extent_data(self):
@@ -513,9 +503,11 @@ class GESExtentAchieved(PressuresTableBase):
         return out
 
 
+@register_section
 class EnvironmentalTargetsTable(PressuresTableBase):
-    section_title = 'Environmental targets to achieve GES'
-    title = 'Environmental targets (Art. 10)'
+    title = 'Environmental targets to achieve GES'
+    article = 'Environmental targets (Art. 10)'
+    _id = 'nat-overview-art10'
 
     def get_env_targets_data(self):
         data = self.get_data_art8()
@@ -594,9 +586,11 @@ class EnvironmentalTargetsTable(PressuresTableBase):
         return out
 
 
+@register_section
 class ProgrammesOfMeasures(EnvironmentalTargetsTable):
-    section_title = 'Measures to meet environmental targets and to achieve GES'
-    title = 'Programme of measures (Art. 13)'
+    title = 'Measures to meet environmental targets and to achieve GES'
+    article = 'Programme of measures (Art. 13)'
+    _id = 'nat-overview-art13'
     column_header = "GES Descriptors"
 
     @db.use_db_session('2018')
@@ -679,11 +673,13 @@ class ProgrammesOfMeasures(EnvironmentalTargetsTable):
         return out
 
 
+@register_section
 class ExceptionsReported(PressuresTableBase):
     template = ViewPageTemplateFile('pt/overview-exceptions-table.pt')
 
-    section_title = 'Exceptions reported when targets or GES cannot be achieved'
-    title = 'Exceptions (Art. 14)'
+    title = 'Exceptions reported when targets or GES cannot be achieved'
+    article = 'Exceptions (Art. 14)'
+    _id = 'nat-overview-a14'
 
     @db.use_db_session('2012')
     def get_ges_extent_data(self):
@@ -737,6 +733,61 @@ class ExceptionsReported(PressuresTableBase):
         return out
 
 
+@register_section
+class AssessmentSummary2012(BaseNatSummaryView, AssessmentDataMixin):
+    template = ViewPageTemplateFile('pt/overview-summary-assessment-2018.pt')
+    year = '2012'
+    cycle = 'First cycle'
+    cycle_year = '2012-2017'
+    title = 'Assessments of progress in MSFD implementation ' \
+            '(Art. 12, 16) / 2012'
+    _id = 'nat-overview-sum2012'
+
+    def __call__(self):
+        self.setup_descriptor_level_assessment_data()
+
+        table = SummaryAssessment(self, self.request, self.overall_scores,
+                                  self.nat_desc_country_folder, self.year)
+
+        self.summary_assess_data = table.setup_data()
+        macro_assess_sum = table.template.macros['assessment-summary-table']
+
+        return self.template(macro_assess_sum=macro_assess_sum)
+
+
+@register_section
+class AssessmentSummary2018(AssessmentSummary2012):
+    year = '2018'
+    cycle = 'Second cycle'
+    cycle_year = '2018-2023'
+    title = 'Assessments of progress in MSFD implementation ' \
+            '(Art. 12, 16) / 2018'
+    _id = 'nat-overview-sum2018'
+
+
+@register_section
+class ReportingHistoryTableOverview(ReportingHistoryTable):
+    show_header = True
+    obligations_needed = None  # meaning we need all obligations
+    view_template = ViewPageTemplateFile('pt/overview-report-history.pt')
+    title = 'Reporting history and performance'
+    _id = 'nat-overview-rep'
+
+    @property
+    def all_obligations(self):
+        data = self.data
+
+        obligations = set([x.get('ReportingObligation') for x in data])
+
+        return [[o] for o in obligations]
+
+    def __call__(self):
+
+        self.table = super(ReportingHistoryTableOverview, self).__call__()
+
+        return self.view_template()
+
+
 class NationalOverviewView(BaseNatSummaryView):
     help_text = "HELP TEXT"
     template = ViewPageTemplateFile('pt/report-data.pt')
@@ -759,21 +810,13 @@ class NationalOverviewView(BaseNatSummaryView):
         )
         self.tables = [
             report_header,
-            Article7Table(self.context, self.request)(),
-            Article34TableMarineWaters(self.context, self.request)(),
-            Article34TableMarineAreas(self.context, self.request)(),
-            Article34TableCooperation(self.context, self.request)(),
-            UsesHumanActivities(self.context, self.request)(),
-            PressureTableMarineEnv(self.context, self.request)(),
-            GESExtentAchieved(self.context, self.request)(),
-            EnvironmentalTargetsTable(self.context, self.request)(),
-            ProgrammesOfMeasures(self.context, self.request)(),
-            ExceptionsReported(self.context, self.request)(),
-            AssessmentSummary2012(self.context, self.request)(),
-            AssessmentSummary2018(self.context, self.request)(),
-            ReportingHistoryTableOverview(self.context, self.request)(),
+            TableOfContents(self.context, self.request, SECTIONS)
             # trans_edit_html,
         ]
+
+        for klass in SECTIONS:
+            rendered_table = klass(self.context, self.request)()
+            self.tables.append(rendered_table)
 
         return self.template(tables=self.tables)
 

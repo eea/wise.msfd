@@ -1,5 +1,5 @@
 <div tal:define="sections options/sections">
-  <div style="">Table of contents</div>
+  <div style="font-family: 'PoppinsB'; color: #002d54; font-size: 20px;">Table of contents</div>
 
   <div>
     <ul style="list-style-type: decimal">
