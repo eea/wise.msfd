@@ -701,6 +701,9 @@ ANTHROPOGENIC_FEATURES_SHORT_NAMES = [
 def parse_features():
     res = {}
 
+    if not FEATURES_DB_2018:
+        return res
+
     FEATURES = TERMSLIST['FeaturesSmart']        #
 
     for fr in FEATURES:

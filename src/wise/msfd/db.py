@@ -32,6 +32,43 @@ USE_DB = 'USE {}'
 threadlocals = threading.local()
 
 
+class MockQuery(list):
+    """ Mock query object """
+
+    @staticmethod
+    def count():
+        return 0
+
+    def filter(self, *args, **kwargs):
+        return self
+
+    def join(self, *args, **kwargs):
+        return self
+
+    def distinct(self):
+        return self
+
+    def order_by(self, *args, **kwargs):
+        return self
+
+
+class MockSession(object):
+    """ Our code is dependent on the MSFD database availability
+        This session is used when the MSFD database is offline
+    """
+
+    def __init__(self):
+        self._query = MockQuery()
+        self.dirty = []
+
+    def flush(self):
+        pass
+
+    # This is used to mimic the session.query call
+    def query(self, *args, **kwargs):
+        return self._query
+
+
 def session():
     session_name = getattr(threadlocals, 'session_name')
 
@@ -44,11 +81,20 @@ def session():
     if hasattr(threadlocals, session_name):
         return getattr(threadlocals, session_name)
 
-    print "Session DSN: ", DSN
-    print "Session DBS: ", DBS[session_name]
+    try:
+        session = _make_session(DSN)
+        session.execute(USE_DB.format(DBS[session_name]))
+        print "Session DSN: ", DSN
+        print "Session DBS: ", DBS[session_name]
+    except:
+        # TODO this is a temporary solution
+        # Is it possible to switch back to MSFD database when it is online
+        # without restarting?
+        print "Unable to connect to: ", DSN
+        print "Using MockSession()"
 
-    session = _make_session(DSN)
-    session.execute(USE_DB.format(DBS[session_name]))
+        return MockSession()
+
     session.rollback()
     setattr(threadlocals, session_name, session)
 
@@ -95,7 +141,8 @@ def use_db_session(session_name):
 
 
 def _make_session(dsn):
-    engine = create_engine(dsn, pool_recycle=1800)  # , encoding="utf8"
+    engine = create_engine(dsn,  # , encoding="utf8"
+                           pool_recycle=1800)
     Session = scoped_session(sessionmaker(bind=engine))
     register(Session, keep_session=True)
 
