@@ -634,15 +634,6 @@ class ReportData2014(ReportData2012):
 
     @db.use_db_session('2012')
     def __call__(self):
-        if 'translate' in self.request.form:
-            report_view = self.get_report_view()
-            report_view.auto_translate()
-
-            messages = IStatusMessage(self.request)
-            messages.add(u"Auto-translation initiated, please refresh "
-                         u"in a couple of minutes", type=u"info")
-
-        print("Will render report for: %s" % self.article)
         # returns all fileurls from sparql, including monitoring programme
         # and monitoring subprogramme files
         all_filenames = self.get_report_filename()
@@ -660,6 +651,16 @@ class ReportData2014(ReportData2012):
             filename.append(fileurl)
 
         self.filename = filename
+
+        if 'translate' in self.request.form:
+            report_view = self.get_report_view()
+            report_view.auto_translate()
+
+            messages = IStatusMessage(self.request)
+            messages.add(u"Auto-translation initiated, please refresh "
+                         u"in a couple of minutes", type=u"info")
+
+        print("Will render report for: %s" % self.article)
 
         try:
             report_data, report_data_rows = self.get_report_data()

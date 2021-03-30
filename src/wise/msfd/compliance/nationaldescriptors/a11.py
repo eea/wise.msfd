@@ -26,7 +26,8 @@ NSMAP = {
 
 
 SUBEMPTY = fromstring('<SubProgramme/>')
-FIELD = namedtuple("Field", ["group_name", "name", "title"])
+FIELD = namedtuple("Field", ["group_name", "name", "title",
+                             "article", "section", "setlevel"])
 
 
 def xp(xpath, node):
@@ -950,7 +951,8 @@ class Article11Overview(Article11):
                     transl = self.context.translate_value(
                                 field_name, _val, self.country_code)
                     
-                    _field = FIELD(field.title, title, title)
+                    _field = FIELD(field.title, title, title,
+                                   self.article, '', '')
 
                     row = national_compoundrow(self.context, _field, [transl],
                                                [_val])
@@ -984,6 +986,50 @@ class Article11Compare(Article11):
             article, muids, filenames)
 
         self.data_2020 = data_2020
+
+    def auto_translate(self):
+        try:
+            self.setup_data()
+        except AssertionError:
+            return
+
+        translatables = self.context.TRANSLATABLES
+        seen = set()
+
+        # initiate translation for 2014 data
+        for row in self.rows:
+            if not row:
+                continue
+
+            if row.title not in translatables:
+                continue
+
+            for value in row.raw_values:
+                if not isinstance(value, basestring):
+                    continue
+
+                if value not in seen:
+                    retrieve_translation(self.country_code, value)
+                    seen.add(value)
+
+        # initiate translation for 2020 data
+        for row in self.data_2020[0][1]:
+            field = row[0]
+
+            if field.title not in translatables:
+                continue
+
+            values = row[1]
+
+            for value in values:
+                if not isinstance(value, basestring):
+                    continue
+
+                if value not in seen:
+                    retrieve_translation(self.country_code, value)
+                    seen.add(value)
+
+        return ''
 
     def __call__(self):
         self.setup_data()
