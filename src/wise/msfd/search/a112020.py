@@ -86,7 +86,21 @@ class A11MProgrammeDisplay2020(ItemDisplayForm, A112020Mixin):
     extra_data_template = ViewPageTemplateFile('pt/extra-data-pivot.pt')
     mapper_class = sql2018.ART11ProgrammesMonitoringProgramme
 
-    blacklist_labels = ('ProgrammeCode', )
+    blacklist_labels = ('ProgrammeCode', 'RelatedIndicator_code')
+
+    reported_date_info = {
+        'mapper_class': sql2018.ReportedInformation,
+        'col_import_id': 'Id',
+        'col_import_time': 'ReportingDate'
+    }
+
+    def get_import_id(self):
+        import_id = self.item.IdReportedInformation
+
+        return import_id
+
+    def get_reported_date(self):
+        return self.get_reported_date_2018()
 
     def get_current_country(self):
         report_id = self.item.IdReportedInformation
@@ -140,8 +154,53 @@ class A11MProgrammeDisplay2020(ItemDisplayForm, A112020Mixin):
     def get_extra_data(self):
         if not self.item:
             return {}
+        mp_id = self.item.Id
 
-        res = []
+        mc_mp = self.mapper_class
+        mc_feat = sql2018.ART11ProgrammesFeature
+        mc_elem = sql2018.ART11ProgrammesElement
+        mc_crit = sql2018.ART11ProgrammesCriterion
+        mc_param = sql2018.ART11ProgrammesCriteriaParameter
+
+        columns = [
+            mc_mp.Id,
+            mc_feat.Feature,
+            mc_elem.Element,
+            mc_param.Parameter,
+            mc_crit.ParameterOther,
+            mc_crit.GESCriteria
+        ]
+
+        sess = db.session()
+        features_elements = sess.query(*columns) \
+            .join(mc_feat, mc_feat.IdMonitoringProgramme == mc_mp.Id) \
+            .join(mc_elem, mc_elem.IdFeature == mc_feat.Id) \
+            .join(mc_crit, mc_crit.IdElement == mc_elem.Id) \
+            .join(mc_param, mc_param.IdCriteria == mc_crit.Id) \
+            .filter(mc_mp.Id == mp_id)
+
+        features_elements = db_objects_to_dict(features_elements, ('Id', ))
+        title = 'Features, Elements, Parameters and Criterias'
+        _data = [title, {}]
+
+        if features_elements:
+            _data = (title, {'': features_elements})
+
+        res = [_data]
+
+        title = 'Related Indicators'
+        mc = sql2018.ART11ProgrammesRelatedIndicator
+        count, indicator_data = db.get_all_specific_columns(
+            [mc.RelatedIndicator_code, mc.RelatedIndicator_name],
+            mc.IdMonitoringProgramme == mp_id
+        )
+        indicator_data = db_objects_to_dict(indicator_data)
+        _data = [title, {}]
+
+        if indicator_data:
+            _data = (title, {'': indicator_data})
+
+        res.append(_data)
 
         _data = self.create_extra_data(
             sql2018.ART11ProgrammesMonitoringProgrammeDataAcces,
