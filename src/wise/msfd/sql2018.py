@@ -92,6 +92,47 @@ class ART10TargetsTargetMeasure(Base):
     ART10_Targets_Target = relationship(u'ART10TargetsTarget')
 
 
+class ART11ProgrammesCriterion(Base):
+    __tablename__ = 'ART11_Programmes_Criteria'
+
+    Id = Column(Integer, primary_key=True)
+    GESCriteria = Column(Unicode(10), nullable=False)
+    ParameterOther = Column(Unicode(50))
+    IdElement = Column(ForeignKey(u'ART11_Programmes_Element.Id'), nullable=False)
+
+    ART11_Programmes_Element = relationship(u'ART11ProgrammesElement')
+
+
+class ART11ProgrammesCriteriaParameter(Base):
+    __tablename__ = 'ART11_Programmes_Criteria_Parameter'
+
+    Id = Column(Integer, primary_key=True)
+    Parameter = Column(Unicode(50), nullable=False)
+    IdCriteria = Column(ForeignKey(u'ART11_Programmes_Criteria.Id'), nullable=False)
+
+    ART11_Programmes_Criterion = relationship('ART11ProgrammesCriterion')
+
+
+class ART11ProgrammesElement(Base):
+    __tablename__ = 'ART11_Programmes_Element'
+
+    Id = Column(Integer, primary_key=True)
+    Element = Column(Unicode(250), nullable=False)
+    IdFeature = Column(ForeignKey(u'ART11_Programmes_Feature.Id'), nullable=False)
+
+    ART11_Programmes_Feature = relationship(u'ART11ProgrammesFeature')
+
+
+class ART11ProgrammesFeature(Base):
+    __tablename__ = 'ART11_Programmes_Feature'
+
+    Id = Column(Integer, primary_key=True)
+    Feature = Column(Unicode(50), nullable=False)
+    IdMonitoringProgramme = Column(ForeignKey(u'ART11_Programmes_MonitoringProgramme.Id'), nullable=False)
+
+    ART11_Programmes_MonitoringProgramme = relationship(u'ART11ProgrammesMonitoringProgramme')
+
+
 class ART11ProgrammesMonitoringProgramme(Base):
     __tablename__ = 'ART11_Programmes_MonitoringProgramme'
 
@@ -114,6 +155,16 @@ class ART11ProgrammesMonitoringProgramme(Base):
     ReportedInformation = relationship(u'ReportedInformation')
 
 
+class ART11ProgrammesMonitoringProgrammeDataAcces(Base):
+    __tablename__ = 'ART11_Programmes_MonitoringProgramme_DataAccess'
+
+    Id = Column(Integer, primary_key=True)
+    DataAccess = Column(Unicode(250), nullable=False)
+    IdMonitoringProgramme = Column(ForeignKey(u'ART11_Programmes_MonitoringProgramme.Id'), nullable=False)
+
+    ART11_Programmes_MonitoringProgramme = relationship(u'ART11ProgrammesMonitoringProgramme')
+
+
 class ART11ProgrammesMonitoringProgrammeMarineReportingUnit(Base):
     __tablename__ = 'ART11_Programmes_MonitoringProgramme_MarineReportingUnit'
 
@@ -122,6 +173,176 @@ class ART11ProgrammesMonitoringProgrammeMarineReportingUnit(Base):
     IdMonitoringProgramme = Column(ForeignKey(u'ART11_Programmes_MonitoringProgramme.Id'), nullable=False)
 
     ART11_Programmes_MonitoringProgramme = relationship(u'ART11ProgrammesMonitoringProgramme')
+
+
+class ART11ProgrammesMonitoringProgrammeMonitoringMethod(Base):
+    __tablename__ = 'ART11_Programmes_MonitoringProgramme_MonitoringMethod'
+
+    Id = Column(Integer, primary_key=True)
+    MonitoringMethod = Column(Unicode(10), nullable=False)
+    IdMonitoringProgramme = Column(ForeignKey(u'ART11_Programmes_MonitoringProgramme.Id'), nullable=False)
+
+    ART11_Programmes_MonitoringProgramme = relationship(u'ART11ProgrammesMonitoringProgramme')
+
+
+class ART11ProgrammesMonitoringProgrammeMonitoringPurpose(Base):
+    __tablename__ = 'ART11_Programmes_MonitoringProgramme_MonitoringPurpose'
+
+    Id = Column(Integer, primary_key=True)
+    MonitoringPurpose = Column(Unicode(50), nullable=False)
+    IdMonitoringProgramme = Column(ForeignKey(u'ART11_Programmes_MonitoringProgramme.Id'), nullable=False)
+
+    ART11_Programmes_MonitoringProgramme = relationship(u'ART11ProgrammesMonitoringProgramme')
+
+
+class ART11ProgrammesMonitoringProgrammeMonitoringType(Base):
+    __tablename__ = 'ART11_Programmes_MonitoringProgramme_MonitoringType'
+
+    Id = Column(Integer, primary_key=True)
+    MonitoringType = Column(Unicode(50), nullable=False)
+    IdMonitoringProgramme = Column(ForeignKey(u'ART11_Programmes_MonitoringProgramme.Id'), nullable=False)
+
+    ART11_Programmes_MonitoringProgramme = relationship(u'ART11ProgrammesMonitoringProgramme')
+
+
+class ART11ProgrammesMonitoringProgrammeOldProgrammeCode(Base):
+    __tablename__ = 'ART11_Programmes_MonitoringProgramme_OldProgrammeCodes'
+
+    Id = Column(Integer, primary_key=True)
+    OldProgrammeCode = Column(Unicode(50), nullable=False)
+    IdMonitoringProgramme = Column(ForeignKey(u'ART11_Programmes_MonitoringProgramme.Id'), nullable=False)
+
+    ART11_Programmes_MonitoringProgramme = relationship(u'ART11ProgrammesMonitoringProgramme')
+
+
+class ART11ProgrammesMonitoringProgrammeOtherPoliciesConvention(Base):
+    __tablename__ = 'ART11_Programmes_MonitoringProgramme_OtherPoliciesConventions'
+
+    Id = Column(Integer, primary_key=True)
+    OtherPoliciesConventions = Column(Unicode(10), nullable=False)
+    IdMonitoringProgramme = Column(ForeignKey(u'ART11_Programmes_MonitoringProgramme.Id'), nullable=False)
+
+    ART11_Programmes_MonitoringProgramme = relationship(u'ART11ProgrammesMonitoringProgramme')
+
+
+class ART11ProgrammesMonitoringProgrammeRegionalCooperationCoordination(Base):
+    __tablename__ = 'ART11_Programmes_MonitoringProgramme_RegionalCooperation_coordination'
+
+    Id = Column(Integer, primary_key=True)
+    RegionalCooperation_coordination = Column(Unicode(10), nullable=False)
+    IdMonitoringProgramme = Column(ForeignKey(u'ART11_Programmes_MonitoringProgramme.Id'), nullable=False)
+
+    ART11_Programmes_MonitoringProgramme = relationship(u'ART11ProgrammesMonitoringProgramme')
+
+
+class ART11ProgrammesMonitoringProgrammeRegionalCooperationCountry(Base):
+    __tablename__ = 'ART11_Programmes_MonitoringProgramme_RegionalCooperation_countries'
+
+    Id = Column(Integer, primary_key=True)
+    RegionalCooperation_countries = Column(Unicode(10), nullable=False)
+    IdMonitoringProgramme = Column(ForeignKey(u'ART11_Programmes_MonitoringProgramme.Id'), nullable=False)
+
+    ART11_Programmes_MonitoringProgramme = relationship(u'ART11ProgrammesMonitoringProgramme')
+
+
+class ART11ProgrammesMonitoringProgrammeSpatialScope(Base):
+    __tablename__ = 'ART11_Programmes_MonitoringProgramme_SpatialScope'
+
+    Id = Column(Integer, primary_key=True)
+    SpatialScope = Column(Unicode(150), nullable=False)
+    IdMonitoringProgramme = Column(ForeignKey(u'ART11_Programmes_MonitoringProgramme.Id'), nullable=False)
+
+    ART11_Programmes_MonitoringProgramme = relationship(u'ART11ProgrammesMonitoringProgramme')
+
+
+class ART11ProgrammesRelatedIndicator(Base):
+    __tablename__ = 'ART11_Programmes_RelatedIndicator'
+
+    Id = Column(Integer, primary_key=True)
+    RelatedIndicator_code = Column(Unicode(50), nullable=False)
+    RelatedIndicator_name = Column(Unicode(2500), nullable=False)
+    IdMonitoringProgramme = Column(ForeignKey(u'ART11_Programmes_MonitoringProgramme.Id'), nullable=False)
+
+    ART11_Programmes_MonitoringProgramme = relationship(u'ART11ProgrammesMonitoringProgramme')
+
+
+class ART11StrategiesMetadatum(Base):
+    __tablename__ = 'ART11_Strategies_Metadata'
+
+    Id = Column(Integer, primary_key=True)
+    RelationshipToCA = Column(Unicode(1000))
+    PublicConsultationDates = Column(Unicode(20), nullable=False)
+    PublicConsultationSite = Column(Unicode(250), nullable=False)
+    RegionalCooperation = Column(Unicode(2500), nullable=False)
+    IdReportedInformation = Column(ForeignKey(u'ReportedInformation.Id'), nullable=False)
+
+    ReportedInformation = relationship(u'ReportedInformation')
+
+
+class ART11StrategiesMetadataResponsibleCompetentAuthority(Base):
+    __tablename__ = 'ART11_Strategies_Metadata_ResponsibleCompetentAuthorities'
+
+    Id = Column(Integer, primary_key=True)
+    ResponsibleCompetentAuthority = Column(Unicode(1000), nullable=False)
+    IdMetadata = Column(ForeignKey(u'ART11_Strategies_Metadata.Id'), nullable=False)
+
+    ART11_Strategies_Metadatum = relationship('ART11StrategiesMetadatum')
+
+
+class ART11StrategiesMetadataResponsibleOrganisation(Base):
+    __tablename__ = 'ART11_Strategies_Metadata_ResponsibleOrganisations'
+
+    Id = Column(Integer, primary_key=True)
+    ResponsibleOrganisations = Column(Unicode(1000), nullable=False)
+    IdMetadata = Column(ForeignKey(u'ART11_Strategies_Metadata.Id'), nullable=False)
+
+    ART11_Strategies_Metadatum = relationship('ART11StrategiesMetadatum')
+
+
+class ART11StrategiesMonitoringStrategy(Base):
+    __tablename__ = 'ART11_Strategies_MonitoringStrategy'
+
+    Id = Column(Integer, primary_key=True)
+    Descriptor = Column(Unicode(10), nullable=False)
+    MonitoringStrategyDescription = Column(Unicode, nullable=False)
+    Coverage_GEScriteria = Column(Unicode(150), nullable=False)
+    Coverage_Targets = Column(Unicode(150))
+    Coverage_Measures = Column(Unicode(150))
+    Gaps_Plans = Column(Unicode(2500), nullable=False)
+    IdMetadata = Column(ForeignKey(u'ART11_Strategies_Metadata.Id'), nullable=False)
+
+    ART11_Strategies_Metadatum = relationship('ART11StrategiesMetadatum')
+
+
+class ART11StrategiesMonitoringStrategyMonitoringProgramme(Base):
+    __tablename__ = 'ART11_Strategies_MonitoringStrategy_MonitoringProgrammes'
+
+    Id = Column(Integer, primary_key=True)
+    MonitoringProgrammes = Column(Unicode(50), nullable=False)
+    IdMonitoringStrategy = Column(ForeignKey(u'ART11_Strategies_MonitoringStrategy.Id'), nullable=False)
+
+    ART11_Strategies_MonitoringStrategy = relationship(u'ART11StrategiesMonitoringStrategy')
+
+
+class ART11StrategiesMonitoringStrategyRelatedMeasure(Base):
+    __tablename__ = 'ART11_Strategies_MonitoringStrategy_RelatedMeasures'
+
+    Id = Column(Integer, primary_key=True)
+    RelatedMeasure_code = Column(Unicode(50), nullable=False)
+    RelatedMeasure_name = Column(Unicode(1000), nullable=False)
+    IdMonitoringStrategy = Column(ForeignKey(u'ART11_Strategies_MonitoringStrategy.Id'), nullable=False)
+
+    ART11_Strategies_MonitoringStrategy = relationship(u'ART11StrategiesMonitoringStrategy')
+
+
+class ART11StrategiesMonitoringStrategyRelatedTarget(Base):
+    __tablename__ = 'ART11_Strategies_MonitoringStrategy_RelatedTargets'
+
+    Id = Column(Integer, primary_key=True)
+    RelatedTargets = Column(Unicode(50), nullable=False)
+    IdMonitoringStrategy = Column(ForeignKey(u'ART11_Strategies_MonitoringStrategy.Id'), nullable=False)
+
+    ART11_Strategies_MonitoringStrategy = relationship(u'ART11StrategiesMonitoringStrategy')
 
 
 class ART18Category1bNotWFD(Base):
