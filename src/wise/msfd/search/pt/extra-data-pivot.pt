@@ -42,10 +42,12 @@
                   <table class="listing" tal:condition="section_data">
                     <!-- tal:condition="section_data" -->
                     <thead>
-                      <tr tal:define="row_labels python:section_data[0].keys()">
-                        <th tal:repeat="l row_labels"
-                            tal:content="python:view.name_as_title(l)">Label</th>
-                      </tr>
+                      <tal:def tal:define="row_labels python:section_data[0].keys()">
+                        <tr tal:condition="python: all(v for v in row_labels)">
+                          <th tal:repeat="l row_labels"
+                              tal:content="python:view.name_as_title(l)">Label</th>
+                        </tr>
+                      </tal:def>
                     </thead>
                     <tbody>
                       <tr tal:repeat="row section_data" >

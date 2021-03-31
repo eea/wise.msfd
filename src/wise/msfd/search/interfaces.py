@@ -336,6 +336,29 @@ class IGESComponentsA18(Interface):
     )
 
 
+class IRegionSubregionsArt112020(Interface):
+    region_subregions = List(
+        title=u"Region and Subregion",
+        value_type=Choice(vocabulary="wise_search_region_art112020"),
+        required=False,
+    )
+
+
+class IMemberStatesArt112020(Interface):
+    member_states = List(
+        title=u"Country",
+        value_type=Choice(vocabulary="wise_search_country_art112020"),
+        required=False,
+    )
+
+
+class IGESComponentArt112020(Interface):
+    ges_component = List(
+        title=u"Descriptor",
+        value_type=Choice(vocabulary="wise_search_ges_component_a112020"),
+        required=False,
+    )
+
 # Article 19
 class IArticle19ReportingPeriod(Interface):
     reporting_period = Choice(title=u"Reporting period",

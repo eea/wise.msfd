@@ -10,11 +10,9 @@ from z3c.form.field import Fields
 from . import interfaces
 from .. import db, sql
 from ..base import EmbeddedForm, MarineUnitIDSelectForm
-from ..interfaces import IMarineUnitIDsSelect
-from ..labels import GES_LABELS
 from ..utils import all_values_from_field, db_objects_to_dict, group_data
 from .base import ItemDisplay, ItemDisplayForm, MainForm, MultiItemDisplayForm
-from .utils import data_to_xls, register_form_art11, register_form_section
+from .utils import register_form_art11, register_form_section
 
 
 logger = logging.getLogger('wise.msfd')
@@ -33,6 +31,8 @@ class StartArticle11Form(MainForm):
 
     def get_subform(self):
         klass = self.data.get('monitoring_programme_info_type')
+        session_name = klass.session_name
+        db.threadlocals.session_name = session_name
 
         return klass(self, self.request)
 
@@ -212,8 +212,6 @@ class A11MSubMemberStateForm(EmbeddedForm):
 
 
 class A11MProgMarineUnitIdForm(MarineUnitIDSelectForm):
-    # fields = Fields(IMarineUnitIDsSelect)
-    # fields['marine_unit_ids'].widgetFactory = CheckBoxFieldWidget
 
     def get_available_marine_unit_ids(self):
         return self.context.get_available_marine_unit_ids()
@@ -223,8 +221,6 @@ class A11MProgMarineUnitIdForm(MarineUnitIDSelectForm):
 
 
 class A11MSubMarineUnitIdForm(MarineUnitIDSelectForm):
-    # fields = Fields(IMarineUnitIDsSelect)
-    # fields['marine_unit_ids'].widgetFactory = CheckBoxFieldWidget
 
     def get_available_marine_unit_ids(self):
         return self.context.get_available_marine_unit_ids()
@@ -466,10 +462,11 @@ class A11MonProgDisplay(ItemDisplayForm):
 
 @register_form_art11
 class A11MonitoringProgrammeForm(EmbeddedForm):
-    record_title = 'Article 11 (Monitoring Programmes)'
-    title = "Monitoring Programmes"
+    record_title = 'Article 11 (Monitoring Programmes) - 2014'
+    title = "Monitoring Programmes - 2014"
     # mru_class = A11MProgMarineUnitIdForm
     mru_class = A11MonProgDisplay
+    session_name = '2012'
 
     fields = Fields(interfaces.IRegionSubregions)
     fields['region_subregions'].widgetFactory = CheckBoxFieldWidget
@@ -769,10 +766,11 @@ class A11MonSubDisplay(MultiItemDisplayForm):
 
 @register_form_art11
 class A11MonitorSubprogrammeForm(EmbeddedForm):
-    record_title = 'Article 11 (Monitoring Subprogrammes)'
-    title = "Monitoring Subprogrammes"
+    record_title = 'Article 11 (Monitoring Subprogrammes) - 2014'
+    title = "Monitoring Subprogrammes - 2014"
     # mru_class = A11MSubMarineUnitIdForm
     mru_class = A11MonSubDisplay
+    session_name = '2012'
 
     fields = Fields(interfaces.IRegionSubregions)
     fields['region_subregions'].widgetFactory = CheckBoxFieldWidget

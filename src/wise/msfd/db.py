@@ -3,7 +3,7 @@ import threading
 
 from collections import defaultdict
 
-from sqlalchemy import create_engine, distinct, func
+from sqlalchemy import create_engine, distinct, func, and_
 from sqlalchemy.orm import scoped_session, sessionmaker
 from sqlalchemy.orm.relationships import RelationshipProperty
 from zope.sqlalchemy import register
@@ -328,7 +328,6 @@ def get_collapsed_item(mapper_class, klass_join, order_field, collapses,
 def get_item_by_conditions(mapper_class, order_field, *conditions, **kwargs):
     """Paged retrieval of items based on conditions
     """
-
     page = kwargs.get('page', 0)
     sess = session()
     order_field = getattr(mapper_class, order_field)
@@ -341,7 +340,10 @@ def get_item_by_conditions(mapper_class, order_field, *conditions, **kwargs):
     ).order_by(order_field)
 
     total = q.count()
-    item = q.offset(page).limit(1).first()
+    # Laci disabled: sometimes gives unpredictable result,
+    # might be the first() which brokes it?
+    # item = q.offset(page).limit(1).first()
+    item = q[page]
 
     return [total, item]
 
@@ -645,3 +647,53 @@ def get_competent_auth_data(*conditions):
     cnt = len(filtered_data)
 
     return cnt, filtered_data
+
+
+# MSFD Search article 11 2020 specific queries
+@use_db_session('2018')
+def get_a11_regions_countries():
+    t = sql2018.ART11ProgrammesMonitoringProgrammeMarineReportingUnit
+    mp = sql2018.ART11ProgrammesMonitoringProgramme
+    t_mru = sql2018.MarineReportingUnit
+    rep = sql2018.ReportedInformation
+
+    columns = [
+        # t.MarineReportingUnit,
+        t.IdMonitoringProgramme,
+        t_mru.Region,
+        t_mru.CountryCode,
+        mp.ProgrammeCode,
+    ]
+
+    sess = session()
+    q = sess.query(*columns) \
+        .join(mp, mp.Id == t.IdMonitoringProgramme) \
+        .join(rep, rep.Id == mp.IdReportedInformation) \
+        .join(t_mru,
+              and_(t.MarineReportingUnit == t_mru.MarineReportingUnitId,
+                   rep.CountryCode == t_mru.CountryCode)) \
+        .distinct()
+
+    res = [x for x in q]
+
+    return res
+
+
+A11_REGIONS_COUNTRIES = get_a11_regions_countries()
+
+
+@use_db_session('2018')
+def get_a11_descr_prog_code():
+    strat = sql2018.ART11StrategiesMonitoringStrategy
+    strat_mp = sql2018.ART11StrategiesMonitoringStrategyMonitoringProgramme
+
+    sess = session()
+    columns = [strat.Descriptor, strat_mp.MonitoringProgrammes]
+    q = sess.query(*columns).join(strat_mp)
+
+    res = [x for x in q]
+
+    return res
+
+
+A11_DESCR_PROG_CODES = get_a11_descr_prog_code()

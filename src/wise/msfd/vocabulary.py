@@ -1143,3 +1143,56 @@ def a18_ges_component(context):
 
     return vocab_from_values(ges_components)
 
+
+# Article 11 2020
+@provider(IVocabularyFactory)
+@db.use_db_session('2018')
+def region_art112020(context):
+    data = db.A11_REGIONS_COUNTRIES
+
+    regions = []
+    for row in data:
+        regions.append(row.Region)
+
+    return vocab_from_values(set(regions))
+
+
+@provider(IVocabularyFactory)
+@db.use_db_session('2018')
+def country_art112020(context):
+    data = db.A11_REGIONS_COUNTRIES
+    regions = context.get_form_data_by_key(context, 'region_subregions')
+
+    if regions:
+        data = [x for x in data if x.Region in regions]
+
+    countries = []
+    for row in data:
+        countries.append(row.CountryCode)
+
+    return vocab_from_values(set(countries))
+
+
+@provider(IVocabularyFactory)
+@db.use_db_session('2018')
+def ges_component_art112020(context):
+    data = db.A11_REGIONS_COUNTRIES
+    data_descr = db.A11_DESCR_PROG_CODES
+
+    regions = context.get_form_data_by_key(context, 'region_subregions')
+    countries = context.get_form_data_by_key(context, 'member_states')
+
+    if regions:
+        data = [x for x in data if x.Region in regions]
+
+    if countries:
+        data = [x for x in data if x.CountryCode in countries]
+
+    programme_codes = [x.ProgrammeCode for x in data]
+    descriptors = set([
+        x.Descriptor
+        for x in data_descr
+        if x.MonitoringProgrammes in programme_codes
+    ])
+
+    return vocab_from_values(descriptors)

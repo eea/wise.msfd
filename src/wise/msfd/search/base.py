@@ -330,7 +330,6 @@ class MainForm(BaseEnhancedForm, BasePublicPage, Form):
     def find_download_action(self):
         """ Look for a download method in all subform children
         """
-
         ctx = self
 
         while hasattr(ctx, 'subform'):
