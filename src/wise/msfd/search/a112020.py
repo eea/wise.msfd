@@ -45,7 +45,7 @@ class A112020Mixin:
         return final_prog_codes
 
 
-# @register_form_art11
+@register_form_art11
 class A11MonitoringProgrammeForm2020(EmbeddedForm):
     record_title = 'Article 11 (Monitoring Programmes) - 2020'
     title = "Monitoring Programmes - 2020"
@@ -89,7 +89,125 @@ class A11MProgrammeDisplay2020(ItemDisplayForm2018, A112020Mixin):
     blacklist_labels = ('ProgrammeCode', 'RelatedIndicator_code')
 
     def download_results(self):
-        return []
+        prog_codes = self.get_programme_codes_needed()
+
+        count, mp_data = db.get_all_records(
+            self.mapper_class,
+            self.mapper_class.ProgrammeCode.in_(prog_codes)
+        )
+        mp_ids = [x.Id for x in mp_data]
+
+        count, features = db.get_all_records(
+            sql2018.ART11ProgrammesFeature,
+            sql2018.ART11ProgrammesFeature.IdMonitoringProgramme.in_(mp_ids)
+        )
+        feature_ids = [x.Id for x in features]
+
+        count, elements = db.get_all_records(
+            sql2018.ART11ProgrammesElement,
+            sql2018.ART11ProgrammesElement.IdFeature.in_(feature_ids)
+        )
+        element_ids = [x.Id for x in elements]
+
+        count, criterias = db.get_all_records(
+            sql2018.ART11ProgrammesCriterion,
+            sql2018.ART11ProgrammesCriterion.IdElement.in_(element_ids)
+        )
+        criteria_ids = [x.Id for x in criterias]
+
+        mc = sql2018.ART11ProgrammesCriteriaParameter
+        count, crit_params = db.get_all_records(
+            mc,
+            mc.IdCriteria.in_(criteria_ids)
+        )
+
+        mc = sql2018.ART11ProgrammesRelatedIndicator
+        count, indicators = db.get_all_records(
+            mc,
+            mc.IdMonitoringProgramme.in_(mp_ids)
+        )
+
+        mc = sql2018.ART11ProgrammesMonitoringProgrammeDataAcces
+        count, data_access = db.get_all_records(
+            mc,
+            mc.IdMonitoringProgramme.in_(mp_ids)
+        )
+
+        mc = sql2018.ART11ProgrammesMonitoringProgrammeMarineReportingUnit
+        count, mru = db.get_all_records(
+            mc,
+            mc.IdMonitoringProgramme.in_(mp_ids)
+        )
+
+        mc = sql2018.ART11ProgrammesMonitoringProgrammeMonitoringMethod
+        count, method = db.get_all_records(
+            mc,
+            mc.IdMonitoringProgramme.in_(mp_ids)
+        )
+
+        mc = sql2018.ART11ProgrammesMonitoringProgrammeMonitoringPurpose
+        count, purpose = db.get_all_records(
+            mc,
+            mc.IdMonitoringProgramme.in_(mp_ids)
+        )
+
+        mc = sql2018.ART11ProgrammesMonitoringProgrammeMonitoringType
+        count, type = db.get_all_records(
+            mc,
+            mc.IdMonitoringProgramme.in_(mp_ids)
+        )
+
+        mc = sql2018.ART11ProgrammesMonitoringProgrammeOldProgrammeCode
+        count, oldcode = db.get_all_records(
+            mc,
+            mc.IdMonitoringProgramme.in_(mp_ids)
+        )
+
+        mc = sql2018.ART11ProgrammesMonitoringProgrammeOtherPoliciesConvention
+        count, policies = db.get_all_records(
+            mc,
+            mc.IdMonitoringProgramme.in_(mp_ids)
+        )
+
+        mc = sql2018.ART11ProgrammesMonitoringProgrammeRegionalCooperationCoordination
+        count, coord = db.get_all_records(
+            mc,
+            mc.IdMonitoringProgramme.in_(mp_ids)
+        )
+
+        mc = sql2018.ART11ProgrammesMonitoringProgrammeRegionalCooperationCountry
+        count, country = db.get_all_records(
+            mc,
+            mc.IdMonitoringProgramme.in_(mp_ids)
+        )
+
+        mc = sql2018.ART11ProgrammesMonitoringProgrammeSpatialScope
+        count, scope = db.get_all_records(
+            mc,
+            mc.IdMonitoringProgramme.in_(mp_ids)
+        )
+
+        xlsdata = [
+            # worksheet title, row data
+            ('ART11MonitoringProgramme', mp_data),
+            ('ART11Feature', features),
+            ('ART11Element', elements),
+            ('ART11Criterion', criterias),
+            ('ART11CriteriaParameter', crit_params),
+            ('ART11RelatedIndicator', indicators),
+            ('ART11MPDataAcces', data_access),
+            ('ART11MPMarineReportingUnit', mru),
+            ('ART11MPMonitoringMethod', method),
+            ('ART11MPMonitoringPurpose', purpose),
+            ('ART11MPMonitoringType', type),
+            ('ART11MPOldProgrammeCode', oldcode),
+            ('ART11MPOtherPoliciesConvention', policies),
+            ('ART11MPRegionalCoopCoord', coord),
+            ('ART11MPRegionalCoopCountry', country),
+            ('ART11MPSpatialScope', scope),
+        ]
+
+        return xlsdata
 
     def get_db_results(self):
         page = self.get_page()
@@ -248,7 +366,7 @@ class A11MProgrammeDisplay2020(ItemDisplayForm2018, A112020Mixin):
         return res
 
 
-# @register_form_art11
+@register_form_art11
 class A11MonitoringStrategyForm2020(EmbeddedForm):
     record_title = 'Article 11 (Monitoring Strategies) - 2020'
     title = "Monitoring Strategy - 2020"
@@ -286,7 +404,70 @@ class A11MStrategyDisplay2020(ItemDisplayForm2018, A112020Mixin):
         return import_id
 
     def download_results(self):
-        return []
+        prog_codes = self.get_programme_codes_needed()
+        mc = sql2018.ART11StrategiesMonitoringStrategyMonitoringProgramme
+
+        strategy_ids = db.get_unique_from_mapper(
+            mc,
+            'IdMonitoringStrategy',
+            mc.MonitoringProgrammes.in_(prog_codes)
+        )
+
+        count, strategy_data = db.get_all_records(
+            self.mapper_class,
+            self.mapper_class.Id.in_(strategy_ids),
+        )
+        metadata_ids = [x.IdMetadata for x in strategy_data]
+        strategy_ids = [x.Id for x in strategy_data]
+
+        mc = sql2018.ART11StrategiesMetadatum
+        count, metadata = db.get_all_records(
+            mc,
+            mc.Id.in_(metadata_ids),
+        )
+
+        mc = sql2018.ART11StrategiesMetadataResponsibleCompetentAuthority
+        count, comp_auth = db.get_all_records(
+            mc,
+            mc.IdMetadata.in_(metadata_ids),
+        )
+
+        mc = sql2018.ART11StrategiesMetadataResponsibleOrganisation
+        count, resp_org = db.get_all_records(
+            mc,
+            mc.IdMetadata.in_(metadata_ids),
+        )
+
+        mc = sql2018.ART11StrategiesMonitoringStrategyMonitoringProgramme
+        count, mon_prog = db.get_all_records(
+            mc,
+            mc.IdMonitoringStrategy.in_(strategy_ids),
+        )
+
+        mc = sql2018.ART11StrategiesMonitoringStrategyRelatedMeasure
+        count, measures = db.get_all_records(
+            mc,
+            mc.IdMonitoringStrategy.in_(strategy_ids),
+        )
+
+        mc = sql2018.ART11StrategiesMonitoringStrategyRelatedTarget
+        count, targets = db.get_all_records(
+            mc,
+            mc.IdMonitoringStrategy.in_(strategy_ids),
+        )
+
+        xlsdata = [
+            # worksheet title, row data
+            ('ART11MonitoringStrategy', strategy_data),
+            ('ART11Metadata', metadata),
+            ('ART11ResponsibleCompAuthority', comp_auth),
+            ('ART11ResponsibleOrganisation', resp_org),
+            ('ART11StrategyMonitoringProg', mon_prog),
+            ('ART11StrategyRelatedMeasure', measures),
+            ('ART11StrategyRelatedTarget', targets),
+        ]
+
+        return xlsdata
 
     def get_db_results(self):
         page = self.get_page()
@@ -308,6 +489,24 @@ class A11MStrategyDisplay2020(ItemDisplayForm2018, A112020Mixin):
 
         return count, item
 
+    def create_extra_data(self, mc, col_name, title, *conditions):
+        data_db = db.get_unique_from_mapper(
+            mc,
+            col_name,
+            *conditions
+        )
+        result = [title, {}]
+
+        if not data_db:
+            return result
+
+        result = (
+            title,
+            {'': [{'': x} for x in data_db]}
+        )
+
+        return result
+
     def get_extra_data(self):
         if not self.item:
             return {}
@@ -319,10 +518,67 @@ class A11MStrategyDisplay2020(ItemDisplayForm2018, A112020Mixin):
 
         title = 'Metadata'
         _data = [title, {}]
+        count, metadata = db.get_all_records(
+            sql2018.ART11StrategiesMetadatum,
+            sql2018.ART11StrategiesMetadatum.Id == meta_id
+        )
+        metadata = db_objects_to_dict(metadata,
+                                      ('Id', 'IdReportedInformation'))
 
-        # metadata = db.
-        #
-        # if metadata:
-        #     _data = ('', {'': metadata})
+        if metadata:
+            _data = (title, {'': metadata})
 
         res.append(_data)
+
+        mc = sql2018.ART11StrategiesMetadataResponsibleCompetentAuthority
+        _data = self.create_extra_data(
+            mc,
+            'ResponsibleCompetentAuthority',
+            'Responsible Competent Authority',
+            mc.IdMetadata == meta_id
+        )
+        res.append(_data)
+
+        mc = sql2018.ART11StrategiesMetadataResponsibleOrganisation
+        _data = self.create_extra_data(
+            mc,
+            'ResponsibleOrganisations',
+            'Responsible Organisations',
+            mc.IdMetadata == meta_id
+        )
+        res.append(_data)
+
+        mc = sql2018.ART11StrategiesMonitoringStrategyMonitoringProgramme
+        _data = self.create_extra_data(
+            mc,
+            'MonitoringProgrammes',
+            'Monitoring Programmes',
+            mc.IdMonitoringStrategy == strat_id
+        )
+        res.append(_data)
+
+        mc = sql2018.ART11StrategiesMonitoringStrategyRelatedMeasure
+        title = 'Related Measures'
+        _data = [title, {}]
+        count, measures = db.get_all_records(
+            mc,
+            mc.IdMonitoringStrategy == strat_id
+        )
+        measures = db_objects_to_dict(measures,
+                                      ('Id', 'IdMonitoringStrategy'))
+
+        if measures:
+            _data = (title, {'': measures})
+
+        res.append(_data)
+
+        mc = sql2018.ART11StrategiesMonitoringStrategyRelatedTarget
+        _data = self.create_extra_data(
+            mc,
+            'RelatedTargets',
+            'Related Targets',
+            mc.IdMonitoringStrategy == strat_id
+        )
+        res.append(_data)
+
+        return res
