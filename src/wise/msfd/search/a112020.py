@@ -1,21 +1,15 @@
 import logging
 
-from collections import defaultdict
-from sqlalchemy import and_, or_
-
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 from z3c.form.browser.checkbox import CheckBoxFieldWidget
 from z3c.form.field import Fields
 
 from . import interfaces
-from .. import db, sql, sql2018
-from ..base import EmbeddedForm, MarineUnitIDSelectForm
-from ..interfaces import IMarineUnitIDsSelect
-from ..labels import GES_LABELS
-from ..utils import all_values_from_field, db_objects_to_dict, group_data
-from .base import ItemDisplay, ItemDisplayForm, MainForm, MultiItemDisplayForm
-from .utils import data_to_xls, register_form_art11, register_form_section
-
+from .. import db, sql2018
+from ..base import EmbeddedForm
+from ..utils import db_objects_to_dict
+from .base import ItemDisplayForm2018
+from .utils import register_form_art11
 
 logger = logging.getLogger('wise.msfd')
 
@@ -51,7 +45,7 @@ class A112020Mixin:
         return final_prog_codes
 
 
-@register_form_art11
+# @register_form_art11
 class A11MonitoringProgrammeForm2020(EmbeddedForm):
     record_title = 'Article 11 (Monitoring Programmes) - 2020'
     title = "Monitoring Programmes - 2020"
@@ -59,6 +53,10 @@ class A11MonitoringProgrammeForm2020(EmbeddedForm):
 
     fields = Fields(interfaces.IRegionSubregionsArt112020)
     fields['region_subregions'].widgetFactory = CheckBoxFieldWidget
+
+    @property
+    def display_class(self):
+        return A11MProgrammeDisplay2020
 
     def get_subform(self):
         return A11MProgrammeMemberStateForm2020(self, self.request)
@@ -77,43 +75,18 @@ class A11MProgrammeDescriptorForm2020(EmbeddedForm):
     fields['ges_component'].widgetFactory = CheckBoxFieldWidget
 
     def get_subform(self):
-        return A11MProgrammeDisplay2020(self, self.request)
+        display_class = self.context.context.display_class
+
+        return display_class(self, self.request)
 
 
-class A11MProgrammeDisplay2020(ItemDisplayForm, A112020Mixin):
+class A11MProgrammeDisplay2020(ItemDisplayForm2018, A112020Mixin):
     css_class = 'left-side-form'
     title = "Monitoring Programmes display"
     extra_data_template = ViewPageTemplateFile('pt/extra-data-pivot.pt')
     mapper_class = sql2018.ART11ProgrammesMonitoringProgramme
 
     blacklist_labels = ('ProgrammeCode', 'RelatedIndicator_code')
-
-    reported_date_info = {
-        'mapper_class': sql2018.ReportedInformation,
-        'col_import_id': 'Id',
-        'col_import_time': 'ReportingDate'
-    }
-
-    def get_import_id(self):
-        import_id = self.item.IdReportedInformation
-
-        return import_id
-
-    def get_reported_date(self):
-        return self.get_reported_date_2018()
-
-    def get_current_country(self):
-        report_id = self.item.IdReportedInformation
-
-        _, res = db.get_related_record(
-            sql2018.ReportedInformation,
-            'Id',
-            report_id
-        )
-
-        country = self.print_value(res.CountryCode)
-
-        return country
 
     def download_results(self):
         return []
@@ -277,11 +250,79 @@ class A11MProgrammeDisplay2020(ItemDisplayForm, A112020Mixin):
 
 # @register_form_art11
 class A11MonitoringStrategyForm2020(EmbeddedForm):
-    record_title = 'Article 11 (Monitoring Programmes)'
+    record_title = 'Article 11 (Monitoring Strategies) - 2020'
     title = "Monitoring Strategy - 2020"
+    session_name = '2018'
 
-    fields = Fields(interfaces.IRegionSubregions)
+    fields = Fields(interfaces.IRegionSubregionsArt112020)
     fields['region_subregions'].widgetFactory = CheckBoxFieldWidget
 
+    @property
+    def display_class(self):
+        return A11MStrategyDisplay2020
+
     def get_subform(self):
-        return None
+        return A11MProgrammeMemberStateForm2020(self, self.request)
+
+
+class A11MStrategyDisplay2020(ItemDisplayForm2018, A112020Mixin):
+    css_class = 'left-side-form'
+    title = "Monitoring Strategies display"
+    extra_data_template = ViewPageTemplateFile('pt/extra-data-pivot.pt')
+    mapper_class = sql2018.ART11StrategiesMonitoringStrategy
+
+    # blacklist_labels = ()
+
+    def get_import_id(self):
+        metadata_id = self.item.IdMetadata
+
+        count, metadata = db.get_related_record(
+            sql2018.ART11StrategiesMetadatum,
+            'Id',
+            metadata_id
+        )
+        import_id = metadata.IdReportedInformation
+
+        return import_id
+
+    def download_results(self):
+        return []
+
+    def get_db_results(self):
+        page = self.get_page()
+        prog_codes = self.get_programme_codes_needed()
+        mc = sql2018.ART11StrategiesMonitoringStrategyMonitoringProgramme
+
+        strategy_ids = db.get_unique_from_mapper(
+            mc,
+            'IdMonitoringStrategy',
+            mc.MonitoringProgrammes.in_(prog_codes)
+        )
+
+        count, item = db.get_item_by_conditions(
+            self.mapper_class,
+            'Id',
+            self.mapper_class.Id.in_(strategy_ids),
+            page=page
+        )
+
+        return count, item
+
+    def get_extra_data(self):
+        if not self.item:
+            return {}
+
+        res = []
+
+        meta_id = self.item.IdMetadata
+        strat_id = self.item.Id
+
+        title = 'Metadata'
+        _data = [title, {}]
+
+        # metadata = db.
+        #
+        # if metadata:
+        #     _data = ('', {'': metadata})
+
+        res.append(_data)

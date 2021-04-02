@@ -462,8 +462,8 @@ class A11MonProgDisplay(ItemDisplayForm):
 
 @register_form_art11
 class A11MonitoringProgrammeForm(EmbeddedForm):
-    record_title = 'Article 11 (Monitoring Programmes) - 2014'
-    title = "Monitoring Programmes - 2014"
+    record_title = 'Article 11 (Monitoring Programmes)'
+    title = "Monitoring Programmes"
     # mru_class = A11MProgMarineUnitIdForm
     mru_class = A11MonProgDisplay
     session_name = '2012'
@@ -766,8 +766,8 @@ class A11MonSubDisplay(MultiItemDisplayForm):
 
 @register_form_art11
 class A11MonitorSubprogrammeForm(EmbeddedForm):
-    record_title = 'Article 11 (Monitoring Subprogrammes) - 2014'
-    title = "Monitoring Subprogrammes - 2014"
+    record_title = 'Article 11 (Monitoring Subprogrammes)'
+    title = "Monitoring Subprogrammes"
     # mru_class = A11MSubMarineUnitIdForm
     mru_class = A11MonSubDisplay
     session_name = '2012'

@@ -14,9 +14,10 @@ from z3c.form.field import Fields
 from z3c.form.form import Form
 
 from . import interfaces
+from .. import sql2018
 from ..base import BaseEnhancedForm, BaseUtil, EmbeddedForm
-from ..db import (get_item_by_conditions, latest_import_ids_2018,
-                  use_db_session)
+from ..db import (get_item_by_conditions, get_related_record,
+                  latest_import_ids_2018, use_db_session)
 from ..interfaces import IMainForm
 from .utils import data_to_xls, get_registered_form_sections
 
@@ -112,6 +113,35 @@ class ItemDisplayForm(EmbeddedForm):
     #         id = 0
     #
     #     return (item.__class__.__name__, id)
+
+
+class ItemDisplayForm2018(ItemDisplayForm):
+    reported_date_info = {
+        'mapper_class': sql2018.ReportedInformation,
+        'col_import_id': 'Id',
+        'col_import_time': 'ReportingDate'
+    }
+
+    def get_import_id(self):
+        import_id = self.item.IdReportedInformation
+
+        return import_id
+
+    def get_reported_date(self):
+        return self.get_reported_date_2018()
+
+    def get_current_country(self):
+        report_id = self.get_import_id()
+
+        _, res = get_related_record(
+            sql2018.ReportedInformation,
+            'Id',
+            report_id
+        )
+
+        country = self.print_value(res.CountryCode)
+
+        return country
 
 
 class MultiItemDisplayForm(ItemDisplayForm):
