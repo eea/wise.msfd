@@ -617,9 +617,13 @@ class ProgrammesOfMeasures(EnvironmentalTargetsTable):
     def get_measures_data(self):
         t = sql2018.t_V_ART10_Targets_2018
 
+        country_codes = self.country_code
+        if not hasattr(country_codes, '__iter__'):
+            country_codes = [country_codes]
+
         count, data = db.get_all_specific_columns(
-            [t.c.TargetCode, t.c.Measures],
-            t.c.CountryCode == self.country_code,
+            [t.c.CountryCode, t.c.TargetCode, t.c.Measures],
+            t.c.CountryCode.in_(country_codes),
             t.c.Measures.isnot(None)
         )
 
@@ -711,8 +715,12 @@ class ExceptionsReported(PressuresTableBase):
         columns = [rep_info_mem.MemberState, info.InfoType, info.InfoText,
                    rep_info.ReportingDate]
 
+        country_codes = self.country_code
+        if not hasattr(country_codes, '__iter__'):
+            country_codes = [country_codes]
+
         conditions = [
-            rep_info_mem.MemberState == self.country_code,
+            rep_info_mem.MemberState.in_(country_codes),
             rep_info.ReportType == 'Exceptions',
             info.InfoType == 'RelevantGESDescriptors',
         ]

@@ -12,9 +12,11 @@ from wise.msfd.translation import get_translated, retrieve_translation
 from wise.msfd.utils import (ItemList, TemplateMixin, db_objects_to_dict,
                              fixedorder_sortkey, timeit)
 
-from ..nationalsummary.overview import (GESExtentAchieved,
+from ..nationalsummary.overview import (ExceptionsReported,
+                                        GESExtentAchieved,
                                         ItemListOverview,
                                         PressureTableMarineEnv,
+                                        ProgrammesOfMeasures,
                                         TableOfContents,
                                         UsesHumanActivities)
 from ..regionaldescriptors.assessment import ASSESSMENTS_2012
@@ -304,8 +306,6 @@ class PressuresAffectingDescriptors(RegionalDescriptorsSimpleTable,
                     # features in the current theme
                     descriptors_rep = []
 
-                    # import pdb; pdb.set_trace()
-
                     for x in data:
                         descr = x[1]
                         ccode = x[0]
@@ -423,23 +423,201 @@ class CurrentEnvitonmentalStatus(RegionalDescriptorsSimpleTable,
 
 
 @register_section
-class EnvironmentalTargets(RegionalDescriptorsSimpleTable):
+class EnvironmentalTargets(RegionalDescriptorsSimpleTable,
+                           PressureTableMarineEnv):
     title = 'Environmental targets on pressures'
     _id = 'reg-overview-env-target'
     template = ViewPageTemplateFile('pt/overview-press-marine-env-table.pt')
 
+    @property
+    def country_code(self):
+        countries = [x[0] for x in self.available_countries]
+
+        return countries
+
+    def setup_data(self):
+        # setup data to be available at 'features_pressures_data' attr
+        self.get_features_pressures_data()
+        data = self.features_pressures_data
+
+        out = []
+        general_pressures = set(['PresAll', ])  # 'Unknown'
+
+        for theme, features_for_theme in self.features_needed:
+            theme_data = []
+            theme_general_pressures = set([
+                x
+                for x in features_for_theme
+                if x.endswith('All')
+            ])
+
+            for feature in features_for_theme:
+                if feature.endswith('All'):
+                    continue
+
+                feature_data = []
+                for country_id, country_name in self.available_countries:
+                    # if pressure is ending with 'All' it applies to all
+                    # features in the current theme
+                    targets_rep = []
+
+                    for x in data:
+                        targets = x[3]
+                        ccode = x[0]
+
+                        if not targets:
+                            continue
+
+                        if ccode != country_id:
+                            continue
+
+                        feats = set(x[2].split(','))
+
+                        if(feature in feats
+                            or general_pressures.intersection(feats)
+                            or theme_general_pressures.intersection(feats)):
+
+                            targets_rep.extend(targets.split(','))
+
+                    targets_count = len(set(targets_rep))
+
+                    feature_data.append(targets_count)
+
+                theme_data.append(
+                    (self.get_feature_short_name(feature), feature_data)
+                )
+
+            out.append((theme, theme_data))
+
+        return out
+
 
 @register_section
-class MeasuresPressures(RegionalDescriptorsSimpleTable):
+class MeasuresPressures(RegionalDescriptorsSimpleTable, ProgrammesOfMeasures):
     title = 'Measures on pressures'
     _id = 'reg-overview-meas'
     template = ViewPageTemplateFile('pt/overview-press-marine-env-table.pt')
 
+    @property
+    def country_code(self):
+        countries = [x[0] for x in self.available_countries]
+
+        return countries
+
+    def setup_data(self):
+        # setup data to be available at 'features_pressures_data' attr
+        self.get_features_pressures_data()
+        data = self.features_pressures_data
+        measures_data = self.get_measures_data()
+
+        out = []
+        general_pressures = set(['PresAll', ])  # 'Unknown'
+
+        for theme, features_for_theme in self.features_needed:
+            theme_data = []
+            theme_general_pressures = set([
+                x
+                for x in features_for_theme
+                if x.endswith('All')
+            ])
+
+            for feature in features_for_theme:
+                if feature.endswith('All'):
+                    continue
+
+                feature_data = []
+                for country_id, country_name in self.available_countries:
+                    # if pressure is ending with 'All' it applies to all
+                    # features in the current theme
+                    targets_rep = []
+
+                    for x in data:
+                        targets = x[3]
+                        ccode = x[0]
+
+                        if not targets:
+                            continue
+
+                        if ccode != country_id:
+                            continue
+
+                        feats = set(x[2].split(','))
+
+                        if(feature in feats
+                            or general_pressures.intersection(feats)
+                            or theme_general_pressures.intersection(feats)):
+
+                            targets_rep.extend(targets.split(','))
+
+                    targets_rep = set(targets_rep)
+
+                    measures = [
+                        r.Measures.split(',')
+                        for r in measures_data
+                        if r.TargetCode in targets_rep
+                    ]
+                    measures_flat = [
+                        measure
+                        for sublist in measures
+                        for measure in sublist
+                    ]
+
+                    feature_data.append(len(set(measures_flat)))
+
+                theme_data.append(
+                    (self.get_feature_short_name(feature), feature_data)
+                )
+
+            out.append((theme, theme_data))
+
+        return out
+
 
 @register_section
-class ExceptionsGESAchieved(RegionalDescriptorsSimpleTable):
+class ExceptionsGESAchieved(RegionalDescriptorsSimpleTable,
+                            ExceptionsReported):
     title = 'Exceptions reported when targets or GES cannot be achieved'
     _id = 'reg-overview-exception'
+    template = ViewPageTemplateFile('pt/overview-press-marine-env-table.pt')
+
+    @property
+    def country_code(self):
+        countries = [x[0] for x in self.available_countries]
+
+        return countries
+
+    def setup_data(self):
+        data = self.get_ges_extent_data()
+
+        out = []
+
+        for descr_type, descriptors in DESCRIPTOR_TYPES:
+            descriptor_type_data = []
+
+            for descriptor in descriptors:
+                descriptor_data = []
+
+                for country_id, country_name in self.available_countries:
+                    rep_data = [
+                        row.ReportingDate.year
+                        for row in data
+                        if row.InfoText == descriptor.split('.')[0] and
+                           row.MemberState.strip() == country_id
+                    ]
+                    # TODO get exception type
+                    exception_year = ''
+
+                    if rep_data:
+                        exception_year = rep_data[0]
+
+                    descriptor_data.append(exception_year)
+
+                descriptor_type_data.append([
+                    self.get_descriptor_title(descriptor), descriptor_data])
+
+            out.append([descr_type, descriptor_type_data])
+
+        return out
 
 
 @register_section
@@ -708,7 +886,8 @@ class RegionalOverviewView(BaseRegSummaryView):
             title="Regional overview: {}".format(
                 self.region_name,
             ),
-            countries=", ".join([x[1] for x in self.available_countries])
+            countries=", ".join([x[1] for x in self.available_countries]),
+            can_translate=False
         )
 
         self.tables = [

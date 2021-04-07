@@ -3,7 +3,7 @@
   <h3 tal:content="view/title">Title here</h3>
 
   <div tal:condition="python: not data">
-    <i>Not implemented</i>
+    <i>Under development</i>
   </div>
 
   <div tal:condition="python: data"
@@ -22,17 +22,17 @@
             <tal:rep tal:repeat="descriptor_data python: descriptor_type[1]">
               <tal:rep tal:repeat="row python: descriptor_data[1]">
                 <tr>
-                  <th style="width: 150px;"
+                  <th style="width: 140px;"
                       tal:condition="python: descriptor_type[1].index(descriptor_data) == 0 and descriptor_data[1].index(row) == 0"
                       tal:attributes="rowspan python: sum([len(x[1]) for x in descriptor_type[1]])"
                       tal:content="python: descriptor_type[0]">
                     Pressure based descriptors
                   </th>
-                  <th style="width: 170px;"
+                  <th style="width: 140px;"
                       tal:condition="python: descriptor_data[1].index(row) == 0"
                       tal:attributes="rowspan python: len(descriptor_data[1])"
                       tal:content="python: descriptor_data[0]">D2</th>
-                  <th style="width: 170px;"
+                  <th style="width: 150px;"
                       tal:content="python: row[0]">Non indigenous species</th>
                   <td tal:repeat="value python: row[1]"
                       tal:content="structure value">

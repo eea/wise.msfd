@@ -15,13 +15,13 @@
         <tbody>
           <tal:rep tal:repeat="descriptor_type data">
             <tr tal:repeat="descriptor_data python: descriptor_type[1]">
-              <th style="width: 150px;"
+              <th style="width: 140px;"
                   tal:condition="python: descriptor_type[1].index(descriptor_data) == 0"
                   tal:attributes="rowspan python: len(descriptor_type[1])"
                   tal:content="python: descriptor_type[0]">
                 Extraction of non-living resources
               </th>
-              <th style="width: 170px;"
+              <th style="width: 150px;"
                   tal:content="python: descriptor_data[0]">Extraction of salt</th>
               <td style="min-width: 75px;"
                   tal:repeat="value python: descriptor_data[1]"

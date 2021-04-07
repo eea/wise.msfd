@@ -29,7 +29,7 @@
   </div>
 
   <div tal:condition="python: not data">
-    <i>Not implemented</i>
+    <i>Under development</i>
   </div>
 
 </div>
