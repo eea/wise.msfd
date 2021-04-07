@@ -883,9 +883,18 @@ def mrus_transform(value):
     return template
 
 
+def temporal_scope_transform(value):
+    if '9999' in value:
+        return value.replace('9999', 'Ongoing')
+
+    return value
+
+
 TRANSFORMS = {
     'Area': area_transform,
     'Marine Unit(s)': mrus_transform,
     'MarineUnitID': mrus_transform,
-    'MarineReportingUnit': mrus_transform
+    'MarineReportingUnit': mrus_transform,
+    'Q4h_TemporalScopeEndDate': temporal_scope_transform,
+    'TemporalScope': temporal_scope_transform
 }
