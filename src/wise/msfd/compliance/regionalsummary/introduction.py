@@ -143,56 +143,18 @@ By October 2018, the Member States were due to submit updates of the assessment
 
         return res
 
-    def get_water_seabed_row(self, data):
-        types = ['Water column & seabed/subsoil', 'Marine waters']
-
-        return self._get_marine_water_by_type(data, types)
-
-    def get_seabed_only_row(self, data):
-        types = ['Seabed/subsoil']
-
-        return self._get_marine_water_by_type(data, types)
-
-    def get_proportion_row(self, data):
-        types = ['Water column & seabed/subsoil', 'Marine waters']
-        res = []
-        total = sum([
-            float(row.Area_km2)
-            for row in data
-            if (row.Type in types and
-                row.Subregion in self.available_subregions)
-        ])
-
-        for country_id, country_name in self.available_countries:
-            values = [
-                float(row.Area_km2)
-                for row in data
-                if (row.Country == country_id and
-                    row.Type in types and
-                    row.Subregion in self.available_subregions)
-            ]
-            country_total = sum(values)
-            res.append("{:.1f}%".format(country_total/total * 100))
-
-        return res
-
     def marine_waters(self):
-        data = self._get_marine_waters_data()
+        klass = MarineWatersTable(self, self.request)
 
-        rows = [
-            ("", [x[1] for x in self.available_countries]),
-            ("Length of coastline (km)", self.default()),
-            ("Area of marine waters (water column and seabed) (km2)",
-             self.get_water_seabed_row(data)),
-            ("Area of marine waters (seabed only - beyond EEZ or quivalent) "
-             "(km2)", self.get_seabed_only_row(data)),
-            ("Proportion of the region (areal %)",
-             self.get_proportion_row(data))
-        ]
-        view = SimpleTable(self, self.request, rows)
+        return klass.marine_waters()
 
-        return view()
+    def assessment_areas(self):
+        klass = ReportingAreasTable(self, self.request)
 
+        return klass.assessment_areas()
+
+
+class ReportingAreasTable(RegionalIntroduction):
     @db.use_db_session('2018')
     def get_number_of_mrus(self):
         columns = ['CountryCode', 'MarineReportingUnitId', 'desigBegin',
@@ -226,7 +188,60 @@ By October 2018, the Member States were due to submit updates of the assessment
              self.default()),
             ("Average extent of Marine Reporting Units (km2)", self.default())
         ]
+        self.rows = rows
         view = SimpleTable(self, self.request, rows)
 
         return view()
 
+
+class MarineWatersTable(RegionalIntroduction):
+    def get_proportion_row(self, data):
+        types = ['Water column & seabed/subsoil', 'Marine waters']
+        res = []
+        total = sum([
+            float(row.Area_km2)
+            for row in data
+            if (row.Type in types and
+                row.Subregion in self.available_subregions)
+        ])
+
+        for country_id, country_name in self.available_countries:
+            values = [
+                float(row.Area_km2)
+                for row in data
+                if (row.Country == country_id and
+                    row.Type in types and
+                    row.Subregion in self.available_subregions)
+            ]
+            country_total = sum(values)
+            res.append("{:.1f}%".format(country_total/total * 100))
+
+        return res
+
+    def get_seabed_only_row(self, data):
+        types = ['Seabed/subsoil']
+
+        return self._get_marine_water_by_type(data, types)
+
+    def get_water_seabed_row(self, data):
+        types = ['Water column & seabed/subsoil', 'Marine waters']
+
+        return self._get_marine_water_by_type(data, types)
+
+    def marine_waters(self):
+        data = self._get_marine_waters_data()
+
+        rows = [
+            ("", [x[1] for x in self.available_countries]),
+            ("Length of coastline (km)", self.default()),
+            ("Area of marine waters (water column and seabed) (km2)",
+             self.get_water_seabed_row(data)),
+            ("Area of marine waters (seabed only - beyond EEZ or quivalent) "
+             "(km2)", self.get_seabed_only_row(data)),
+            ("Proportion of the region (areal %)",
+             self.get_proportion_row(data))
+        ]
+        self.rows = rows
+        view = SimpleTable(self, self.request, rows)
+
+        return view()

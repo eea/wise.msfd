@@ -202,9 +202,14 @@ class PressuresTableBase(BaseNatSummaryView):
     def get_data_art8(self):
         t = sql2018.t_V_ART8_GES_2018
 
+        country_codes = self.country_code
+        if not hasattr(country_codes, '__iter__'):
+            country_codes = [country_codes]
+
         count, data = db.get_all_specific_columns(
-            [t.c.GESComponent, t.c.PressureCodes, t.c.TargetCodes],
-            t.c.CountryCode == self.country_code,
+            [t.c.CountryCode, t.c.GESComponent, t.c.PressureCodes,
+             t.c.TargetCodes],
+            t.c.CountryCode.in_(country_codes),
             t.c.PressureCodes.isnot(None)
         )
 
@@ -219,6 +224,7 @@ class PressuresTableBase(BaseNatSummaryView):
 
     def get_features_pressures_data(self):
         data = self.get_data_art8()
+        self.features_pressures_data = data
         out = defaultdict(set)
 
         for row in data:
@@ -247,7 +253,7 @@ class PressuresTableBase(BaseNatSummaryView):
                 return _name
 
         if code in self.features:
-            return self.features.get[code].label
+            return self.features.get(code).label
 
         return code
 
@@ -314,13 +320,17 @@ class UsesHumanActivities(PressuresTableBase):
         esa_uses_p = sql2018.ART8ESAUsesActivitiesPressure
 
         columns = [
-            esa_mru.MarineReportingUnit, esa_feat.Feature,
-            esa_uses_p.PressureCode
+            rep_info.CountryCode, esa_mru.MarineReportingUnit,
+            esa_feat.Feature, esa_uses_p.PressureCode
         ]
+
+        country_codes = self.country_code
+        if not hasattr(country_codes, '__iter__'):
+            country_codes = [country_codes]
 
         conditions = [
             rep_info.Schema == 'ART8_ESA',
-            rep_info.CountryCode == self.country_code
+            rep_info.CountryCode.in_(country_codes)
         ]
 
         res = sess.query(*columns) \
@@ -331,6 +341,8 @@ class UsesHumanActivities(PressuresTableBase):
             .filter(*conditions).distinct()
 
         out = defaultdict(set)
+
+        self.features_pressures_data = [x for x in res]
 
         for row in res:
             activ_feat = row.Feature
@@ -351,6 +363,9 @@ class UsesHumanActivities(PressuresTableBase):
             descriptor_type_data = []
 
             for activ_feat in activ_features:
+                # if activ_feat.endswith('All'):
+                #     continue
+
                 features_rep = data.get(activ_feat, set())
                 descriptor_data = []
 
@@ -467,10 +482,15 @@ class GESExtentAchieved(PressuresTableBase):
     def get_ges_extent_data(self):
         t = sql2018.t_V_ART8_GES_2018
 
+        country_codes = self.country_code
+        if not hasattr(country_codes, '__iter__'):
+            country_codes = [country_codes]
+
         count, data = db.get_all_specific_columns(
-            [t.c.GESComponent, t.c.Feature, t.c.MarineReportingUnit,
+            [t.c.CountryCode, t.c.GESComponent, t.c.Feature,
+             t.c.MarineReportingUnit,
              t.c.GESExtentAchieved, t.c.GESExtentUnit, t.c.GESAchieved],
-            t.c.CountryCode == self.country_code,
+            t.c.CountryCode.in_(country_codes),
         )
 
         return data

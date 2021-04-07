@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <object name="wise.msfd.nationalsummaryoverview" meta_type="Dexterity FTI"
    i18n:domain="wise.msfd" xmlns:i18n="http://xml.zope.org/namespaces/i18n">
- <property name="title" i18n:translate="">National Summary Overview</property>
+ <property name="title" i18n:translate="">National Overview</property>
  <property name="description"
-    i18n:translate="">A container for National Summaries</property>
+    i18n:translate="">A container for National Overviews</property>
  <property name="icon_expr">string:${portal_url}/document_icon.png</property>
  <property name="factory">wise.msfd.nationalsummaryoverview</property>
  <property

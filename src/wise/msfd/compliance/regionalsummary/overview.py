@@ -6,15 +6,20 @@ from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 from Products.statusmessages.interfaces import IStatusMessage
 from wise.msfd import sql, db
 from wise.msfd.compliance.assessment import AssessmentDataMixin
-from wise.msfd.gescomponents import get_all_descriptors
+from wise.msfd.gescomponents import DESCRIPTOR_TYPES, get_all_descriptors
 from wise.msfd.labels import get_label
 from wise.msfd.translation import get_translated, retrieve_translation
 from wise.msfd.utils import (ItemList, TemplateMixin, db_objects_to_dict,
                              fixedorder_sortkey, timeit)
 
-from ..nationalsummary.overview import TableOfContents
+from ..nationalsummary.overview import (GESExtentAchieved,
+                                        ItemListOverview,
+                                        PressureTableMarineEnv,
+                                        TableOfContents,
+                                        UsesHumanActivities)
 from ..regionaldescriptors.assessment import ASSESSMENTS_2012
 from .base import BaseRegSummaryView
+from .introduction import MarineWatersTable, ReportingAreasTable
 
 
 logger = logging.getLogger('wise.msfd')
@@ -27,6 +32,27 @@ def register_section(klass):
     SECTIONS.append(klass)
 
     return klass
+
+
+DESCRIPTORS_FEATURES = {
+    'D1.1': ['BirdsBenthicFeeding', 'BirdsGrazing', 'BirdsPelagicFeeding',
+             'BirdsSurfaceFeeding', 'BirdsWading'],
+    'D1.2': ['MamSeals'],
+    'D1.3': ['Not reported'],
+    'D1.4': ['FishCoastal', 'FishDemersalShelf', 'FishPelagicShelf'],
+    'D1.5': ['Not reported'],
+    'D1.6': ['HabPelBHT'],
+    'D2': ['PresEnvNISnew'],
+    'D3': ['FishCommercial'],
+    'D4': ['EcosysCoastal'],
+    'D5': ['PresEnvEutrophi'],
+    'D6': ['PresPhyLoss', 'HabBenBHT'],
+    'D7': [],
+    'D8': ['PresEnvContUPBTs', 'PresEnvAcuPolluEvents'],
+    'D9': ['PresEnvContSeafood'],
+    'D10': ['PresEnvLitter'],
+    'D11': ['PresEnvSoundContinuous'],
+}
 
 
 class RegionalDescriptorsSimpleTable(BaseRegSummaryView):
@@ -42,9 +68,10 @@ class RegionalDescriptorsSimpleTable(BaseRegSummaryView):
     template = ViewPageTemplateFile("pt/overview-simple-table.pt")
     title = ''
     _id = ''
+    editable_text = ''
 
     def setup_data(self):
-        []
+        return []
 
     def get_table_headers(self):
         countries = [x[1] for x in self.available_countries]
@@ -61,18 +88,29 @@ class RegionalDescriptorsSimpleTable(BaseRegSummaryView):
 
 @register_section
 class CompetentAuthorities(RegionalDescriptorsSimpleTable):
-    title = 'Compentent Authorities'
+    title = 'Competent Authorities'
     _id = 'reg-overview-ca'
 
+    @db.use_db_session('2012')
+    def get_ca_data(self):
+        cnt, data = db.get_competent_auth_data()
+
+        return data
+
     def setup_data(self):
+        data = self.get_ca_data()
         rows = []
         values = []
 
         for country_id, country_name in self.available_countries:
             # TODO get values
-            val = ''
+            vals = [
+                x
+                for x in data
+                if x.C_CD == country_id
+            ]
 
-            values.append(val)
+            values.append(len(vals))
 
         rows.append(('No of designated CAs', values))
 
@@ -84,27 +122,43 @@ class MarineWaters(RegionalDescriptorsSimpleTable):
     title = 'Marine waters'
     _id = 'reg-overview-mw'
 
+    @property
+    def editable_text(self):
+        field_name = 'marine_waters'
+        folder = self.context.context
+        default = "-"
+
+        if not hasattr(folder, field_name):
+            return default
+
+        progress = getattr(folder, field_name)
+        output = getattr(progress, 'output', default)
+
+        return output
+
     def setup_data(self):
-        rows = []
+        view = MarineWatersTable(self, self.request)
+        view.marine_waters()
+        rows = view.rows[1:]
 
-        row_headers = [
-            'Length of coastline (km)',
-            'Area of marine waters (water column and seabed) (km2)',
-            'Area of marine waters (seabed only - '
-            'beyond EEZ or quivalent) (km2)',
-            'Proportion of Baltic Sea region per Member State (areal %)'
-        ]
-
-        for info in row_headers:
-            values = []
-
-            for country_id, country_name in self.available_countries:
-                # TODO get values
-                val = ''
-
-                values.append(val)
-
-            rows.append((info, values))
+        # row_headers = [
+        #     'Length of coastline (km)',
+        #     'Area of marine waters (water column and seabed) (km2)',
+        #     'Area of marine waters (seabed only - '
+        #     'beyond EEZ or quivalent) (km2)',
+        #     'Proportion of Baltic Sea region per Member State (areal %)'
+        # ]
+        #
+        # for info in row_headers:
+        #     values = []
+        #
+        #     for country_id, country_name in self.available_countries:
+        #         # TODO get values
+        #         val = ''
+        #
+        #         values.append(val)
+        #
+        #     rows.append((info, values))
 
         return rows
 
@@ -121,6 +175,8 @@ class MarineRegionSubregions(RegionalDescriptorsSimpleTable):
 
     def setup_data(self):
         rows = []
+
+        return rows
 
         row_headers = [
             'Length of coastline (km) - total',
@@ -151,62 +207,233 @@ class MarineReportingAreas(RegionalDescriptorsSimpleTable):
     _id = 'reg-overview-mra'
 
     def setup_data(self):
-        rows = []
-
-        row_headers = [
-            'Number of MRUs used',
-            'Range of extent of MRUs (km2)',
-            'Average extent of MRUs (km2)',
-        ]
-
-        for info in row_headers:
-            values = []
-
-            for country_id, country_name in self.available_countries:
-                # TODO get values
-                val = ''
-
-                values.append(val)
-
-            rows.append((info, values))
+        view = ReportingAreasTable(self, self.request)
+        view.assessment_areas()
+        rows = view.rows[1:]
 
         return rows
 
 
 @register_section
-class UsesHumanActivitiesPressures(RegionalDescriptorsSimpleTable):
+class UsesHumanActivitiesPressures(RegionalDescriptorsSimpleTable,
+                                   UsesHumanActivities):
     title = 'Uses and human activities, and associated pressures'
     _id = 'reg-overview-uses'
+    template = ViewPageTemplateFile('pt/overview-press-marine-env-table.pt')
+    # features = FEATURES_DB_2018
+
+    @property
+    def country_code(self):
+        countries = [x[0] for x in self.available_countries]
+
+        return countries
+
+    def setup_data(self):
+        # setup data to be available at 'features_pressures_data' attr
+        self.get_features_pressures_data()
+        data = self.features_pressures_data
+        out = []
+
+        for activ_theme, activ_features in self.uses_activities_features:
+            theme_data = []
+
+            for activ_feat in activ_features:
+                # if activ_feat.endswith('All'):
+                #     continue
+
+                activity_data = []
+
+                for country_id, country_name in self.available_countries:
+                    pressures = [
+                        x[3]
+                        for x in data
+                        if x[0] == country_id and x[2] == activ_feat
+                    ]
+
+                    pressures = [
+                        self.get_feature_short_name(x)
+                        for x in set(pressures)
+                    ]
+
+                    activity_data.append(ItemListOverview(pressures))
+
+                theme_data.append((get_label(activ_feat, 'features'),
+                                   activity_data))
+
+            out.append((activ_theme, theme_data))
+
+        return out
 
 
 @register_section
-class PressuresAffectingDescriptors(RegionalDescriptorsSimpleTable):
+class PressuresAffectingDescriptors(RegionalDescriptorsSimpleTable,
+                                    PressureTableMarineEnv):
     title = 'Pressures affecting descriptors'
     _id = 'reg-overview-press'
+    template = ViewPageTemplateFile('pt/overview-press-marine-env-table.pt')
+
+    @property
+    def country_code(self):
+        countries = [x[0] for x in self.available_countries]
+
+        return countries
+
+    def setup_data(self):
+        # setup data to be available at 'features_pressures_data' attr
+        self.get_features_pressures_data()
+        data = self.features_pressures_data
+
+        out = []
+        general_pressures = set(['PresAll', ])  # 'Unknown'
+
+        for theme, features_for_theme in self.features_needed:
+            theme_data = []
+            theme_general_pressures = set([
+                x
+                for x in features_for_theme
+                if x.endswith('All')
+            ])
+
+            for feature in features_for_theme:
+                if feature.endswith('All'):
+                    continue
+
+                feature_data = []
+                for country_id, country_name in self.available_countries:
+                    # if pressure is ending with 'All' it applies to all
+                    # features in the current theme
+                    descriptors_rep = []
+
+                    # import pdb; pdb.set_trace()
+
+                    for x in data:
+                        descr = x[1]
+                        ccode = x[0]
+
+                        if ccode != country_id:
+                            continue
+
+                        feats = set(x[2].split(','))
+
+                        if(feature in feats
+                            or general_pressures.intersection(feats)
+                            or theme_general_pressures.intersection(feats)):
+
+                            descriptors_rep.append(descr)
+
+                    feature_data.append(ItemListOverview(set(descriptors_rep)))
+
+                theme_data.append(
+                    (self.get_feature_short_name(feature), feature_data)
+                )
+
+            out.append((theme, theme_data))
+
+        return out
 
 
 @register_section
-class ExtentGESAchieved(RegionalDescriptorsSimpleTable):
+class ExtentGESAchieved(RegionalDescriptorsSimpleTable, GESExtentAchieved):
     title = 'Extent to which GES is achieved'
     _id = 'reg-overview-extent'
+    template = ViewPageTemplateFile('pt/overview-descriptor-pressures-table.pt')
+
+    @property
+    def country_code(self):
+        countries = [x[0] for x in self.available_countries]
+
+        return countries
+
+    def setup_data(self):
+        data = self.get_ges_extent_data()
+
+        out = []
+        return out
+
+        for descr_type, descriptors in DESCRIPTOR_TYPES:
+            descriptor_type_data = []
+
+            for descriptor in descriptors:
+                descriptor_data = []
+
+                for feature in DESCRIPTORS_FEATURES[descriptor]:
+                    feature_data = []
+
+                    for country_id, country_name in self.available_countries:
+                        feature_data.append('')
+
+                    descriptor_data.append((get_label(feature, 'features'),
+                                           feature_data))
+
+                descriptor_type_data.append([
+                    self.get_descriptor_title(descriptor), descriptor_data])
+
+            out.append([descr_type, descriptor_type_data])
+
+        return out
 
 
 @register_section
-class CurrentEnvitonmentalStatus(RegionalDescriptorsSimpleTable):
+class CurrentEnvitonmentalStatus(RegionalDescriptorsSimpleTable,
+                                 GESExtentAchieved):
     title = 'Current environmental status'
     _id = 'reg-overview-env-stat'
+    template = ViewPageTemplateFile('pt/overview-descriptor-pressures-table.pt')
+
+    @property
+    def country_code(self):
+        countries = [x[0] for x in self.available_countries]
+
+        return countries
+
+    def setup_data(self):
+        data = self.get_ges_extent_data()
+
+        out = []
+
+        for descr_type, descriptors in DESCRIPTOR_TYPES:
+            descriptor_type_data = []
+
+            for descriptor in descriptors:
+                descriptor_data = []
+
+                for feature in DESCRIPTORS_FEATURES[descriptor]:
+                    feature_data = []
+
+                    for country_id, country_name in self.available_countries:
+                        v = [
+                            x.GESAchieved
+                            for x in data
+                            if (x.CountryCode == country_id and
+                                x.Feature == feature)
+                        ]
+                        v = v and v[0] or ''
+
+                        feature_data.append(v)
+
+                    descriptor_data.append((get_label(feature, 'features'),
+                                           feature_data))
+
+                descriptor_type_data.append([
+                    self.get_descriptor_title(descriptor), descriptor_data])
+
+            out.append([descr_type, descriptor_type_data])
+
+        return out
 
 
 @register_section
 class EnvironmentalTargets(RegionalDescriptorsSimpleTable):
     title = 'Environmental targets on pressures'
     _id = 'reg-overview-env-target'
+    template = ViewPageTemplateFile('pt/overview-press-marine-env-table.pt')
 
 
 @register_section
 class MeasuresPressures(RegionalDescriptorsSimpleTable):
     title = 'Measures on pressures'
     _id = 'reg-overview-meas'
+    template = ViewPageTemplateFile('pt/overview-press-marine-env-table.pt')
 
 
 @register_section

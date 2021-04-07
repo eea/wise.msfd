@@ -2,7 +2,11 @@
     tal:attributes="id view/_id">
   <h3 tal:content="options/title">Title</h3>
 
-  <div class="overflow-table sticky-overflow-header hidden-fixed-table">
+  <div tal:condition="view/editable_text"
+      tal:content="structure view/editable_text">Long editable text</div>
+
+  <div tal:condition="data"
+      class="overflow-table sticky-overflow-header hidden-fixed-table">
     <div class="inner" style="overflow: auto">
       <table
           class="table table-bordered table-striped table-condensed table-national-overview table-sticky-first-col table-report skip-height-fix">
@@ -22,6 +26,10 @@
         </tbody>
       </table>
     </div>
+  </div>
+
+  <div tal:condition="python: not data">
+    <i>Not implemented</i>
   </div>
 
 </div>

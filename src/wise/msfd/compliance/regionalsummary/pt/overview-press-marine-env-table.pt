@@ -1,0 +1,37 @@
+<div tal:attributes="id python: getattr(view, '_id', '')"
+    tal:define="data options/data">
+  <h3 tal:content="view/title">Title here</h3>
+
+  <div class="overflow-table sticky-overflow-header hidden-fixed-table">
+    <div class="inner" style="overflow: auto">
+      <table class="table table-bordered table-striped table-condensed table-national-overview table-sticky-first-col table-report skip-height-fix">
+        <thead>
+          <tr>
+            <th colspan="2"></th>
+            <th tal:repeat="country view/available_countries"
+                tal:content="python: country[0]">Finland</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tal:rep tal:repeat="descriptor_type data">
+            <tr tal:repeat="descriptor_data python: descriptor_type[1]">
+              <th style="width: 150px;"
+                  tal:condition="python: descriptor_type[1].index(descriptor_data) == 0"
+                  tal:attributes="rowspan python: len(descriptor_type[1])"
+                  tal:content="python: descriptor_type[0]">
+                Extraction of non-living resources
+              </th>
+              <th style="width: 170px;"
+                  tal:content="python: descriptor_data[0]">Extraction of salt</th>
+              <td style="min-width: 75px;"
+                  tal:repeat="value python: descriptor_data[1]"
+                  tal:content="structure value">
+                All pressures
+              </td>
+            </tr>
+          </tal:rep>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

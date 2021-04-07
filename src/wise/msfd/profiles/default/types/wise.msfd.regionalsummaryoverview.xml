@@ -1,9 +1,9 @@
 <?xml version="1.0"?>
 <object name="wise.msfd.regionalsummaryoverview" meta_type="Dexterity FTI"
    i18n:domain="wise.msfd" xmlns:i18n="http://xml.zope.org/namespaces/i18n">
- <property name="title" i18n:translate="">National Summary Overview</property>
+ <property name="title" i18n:translate="">Regional Overview</property>
  <property name="description"
-    i18n:translate="">A container for National Summaries</property>
+    i18n:translate="">A container for Regional Overviews</property>
  <property name="icon_expr">string:${portal_url}/document_icon.png</property>
  <property name="factory">wise.msfd.regionalsummaryoverview</property>
  <property
@@ -30,11 +30,9 @@
   <element
      value="plone.app.referenceablebehavior.referenceable.IReferenceable"/>
  </property>
- <property
-    name="schema">wise.msfd.compliance.interfaces.IRegionalSummaryOverviewFolder</property>
- <property
-    name="model_source"></property>
- <property name="model_file"></property>
+ <property name="schema"></property>
+ <property name="model_source"></property>
+ <property name="model_file">wise.msfd.compliance.regionalsummary:regional_overview_model.xml</property>
  <property name="schema_policy">dexterity</property>
  <alias from="(Default)" to="(dynamic view)"/>
  <alias from="edit" to="@@edit"/>
