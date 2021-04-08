@@ -19,17 +19,16 @@ from ..nationalsummary.overview import (ExceptionsReported,
                                         ProgrammesOfMeasures,
                                         TableOfContents,
                                         UsesHumanActivities)
-from ..regionaldescriptors.assessment import ASSESSMENTS_2012
 from .base import BaseRegSummaryView
 from .introduction import MarineWatersTable, ReportingAreasTable
-
+from .descriptor_assessments import RegDescriptorLevelAssessments
 
 logger = logging.getLogger('wise.msfd')
 
 
 SECTIONS = []
 NATIONAL_ASSESSMENT_DATA = {}
-
+REGIONAL_ASSESSMENT_DATA = {}
 
 def register_section(klass):
     SECTIONS.append(klass)
@@ -621,10 +620,11 @@ class ExceptionsGESAchieved(RegionalDescriptorsSimpleTable,
         return out
 
 
-class BaseAssessmentOverviewTable(RegionalDescriptorsSimpleTable,
-                                  PressureTableMarineEnv):
+class BaseNationalAssessmentOverviewTable(RegionalDescriptorsSimpleTable,
+                                          PressureTableMarineEnv):
 
     template = ViewPageTemplateFile('pt/overview-assessment-summary.pt')
+    section = 'national'
 
     def setup_data(self):
         self.table_headers = []
@@ -665,7 +665,7 @@ class BaseAssessmentOverviewTable(RegionalDescriptorsSimpleTable,
 
 
 @register_section
-class Article92012(BaseAssessmentOverviewTable):
+class Article92012(BaseNationalAssessmentOverviewTable):
     title = 'Implementation of Art. 9 - Determination of GES (2012)'
     _id = 'reg-overview-art9-2012'
     year = '2012'
@@ -673,7 +673,7 @@ class Article92012(BaseAssessmentOverviewTable):
 
 
 @register_section
-class Article82012(BaseAssessmentOverviewTable):
+class Article82012(BaseNationalAssessmentOverviewTable):
     title = 'Implementation of Art. 8 (Assessments) (2012)'
     _id = 'reg-overview-art8-2012'
     year = '2012'
@@ -681,7 +681,7 @@ class Article82012(BaseAssessmentOverviewTable):
 
 
 @register_section
-class Article102012(BaseAssessmentOverviewTable):
+class Article102012(BaseNationalAssessmentOverviewTable):
     title = 'Implementation of Art. 10 (Environmental targets) (2012)'
     _id = 'reg-overview-art10-2012'
     year = '2012'
@@ -707,7 +707,7 @@ class Article142016(RegionalDescriptorsSimpleTable):
 
 
 @register_section
-class Article92018(BaseAssessmentOverviewTable):
+class Article92018(BaseNationalAssessmentOverviewTable):
     title = 'Implementation of Art. 9 - Determination of GES (2018)'
     _id = 'reg-overview-art9-2018'
     year = '2018'
@@ -715,7 +715,7 @@ class Article92018(BaseAssessmentOverviewTable):
 
 
 @register_section
-class Article82018(BaseAssessmentOverviewTable):
+class Article82018(BaseNationalAssessmentOverviewTable):
     title = 'Implementation of Art. 8 (Assessments) (2018)'
     _id = 'reg-overview-art8-2018'
     year = '2018'
@@ -723,7 +723,7 @@ class Article82018(BaseAssessmentOverviewTable):
 
 
 @register_section
-class Article102018(BaseAssessmentOverviewTable):
+class Article102018(BaseNationalAssessmentOverviewTable):
     title = 'Implementation of Art. 10 (Environmental targets) (2018)'
     _id = 'reg-overview-art10-2018'
     year = '2018'
@@ -737,55 +737,46 @@ class Implementation2017Decision(RegionalDescriptorsSimpleTable):
 
 
 @register_section
-class RegionalCoherence2012(RegionalDescriptorsSimpleTable):
+class RegionalCoherence2012(RegionalDescriptorsSimpleTable,
+                            RegDescriptorLevelAssessments,
+                            PressureTableMarineEnv):
     title = 'Regional coherence: first cycle 2012-2017'
     _id = 'reg-overview-coh-2012'
+    template = ViewPageTemplateFile('pt/overview-assessment-summary.pt')
+    year = '2012'
+    section = 'regional'
+
+    def setup_data(self):
+        out = []
+        data = REGIONAL_ASSESSMENT_DATA[self.region_code]
+
+        for descr_type, descriptors in DESCRIPTOR_TYPES:
+            descriptor_type_data = []
+
+            for descriptor in descriptors:
+                descriptor_data = []
+
+                for article in self.ARTICLE_ORDER:
+                    default = ['Not found', '3']
+
+                    __key = (self.region_code, descriptor, article, self.year)
+                    val = data.get(__key, default)
+
+                    descriptor_data.append(val)
+
+                descriptor_type_data.append([
+                    self.get_descriptor_title(descriptor), descriptor_data])
+
+            out.append([descr_type, descriptor_type_data])
+
+        return out
 
 
 @register_section
-class RegionalCoherence2018(RegionalDescriptorsSimpleTable):
+class RegionalCoherence2018(RegionalCoherence2012):
     title = 'Regional coherence: second cycle 2018-2023'
     _id = 'reg-overview-coh-2018'
-
-
-# @register_section
-class OverallConclusion2012(RegionalDescriptorsSimpleTable,
-                            AssessmentDataMixin):
-    title = "Overall conclusion - descriptor-level"
-    articles = [
-        ('Art9', 'Article 9: Determination of GES'),
-        ('Art8', 'Article 8: Initial assessment'),
-        ('Art10', 'Article 10: Environmental targets'),
-    ]
-    _id = 'reg-overview-t3'
-
-    def setup_data(self):
-        data = []
-        descriptors = get_all_descriptors()
-
-        for desc_code, desc_title in descriptors:
-            conclusions = []
-
-            for art_id, art_title in self.articles:
-                concl = ''
-                assess_data = self.get_reg_assessments_data_2012(
-                    art_id, self.region_code, desc_code
-                )
-
-                if assess_data:
-                    concl = assess_data[0].conclusion
-
-                conclusions.append(concl)
-
-            if any(conclusions):
-                data.append((desc_title, conclusions))
-
-        return data
-
-    def get_table_headers(self):
-        h = ['Article'] + [a[0] for a in self.articles]
-
-        return h
+    year = '2018'
 
 
 class RegionalOverviewView(BaseRegSummaryView, AssessmentDataMixin):
@@ -826,7 +817,9 @@ class RegionalOverviewView(BaseRegSummaryView, AssessmentDataMixin):
             NATIONAL_ASSESSMENT_DATA[country_id] = country_data
 
         # setup regional assessment data
-        # TODO
+        view = RegDescriptorLevelAssessments(self, self.request)
+        view.setup_descriptor_level_assessment_data()
+        REGIONAL_ASSESSMENT_DATA[self.region_code] = view.overall_scores
 
         if 'edit-data' in self.request.form:
             url = "{}/edit".format(self._country_folder.absolute_url())

@@ -60,14 +60,18 @@ class RegDescriptorLevelAssessments(BaseRegSummaryView,
         )
         coherence_2012 = ('-', '0')
         coherence_change_since_2012 = '-'
+
         if reg_assess_2012:
             __score = reg_assess_2012[0].overall_score
             coherence_2012 = ("{} ({})".format(reg_assess_2012[0].conclusion,
-                                              __score),
+                                               __score),
                               self.get_color_for_score(__score))
             if cscore_val == '-':
                 cscore_val = 0
             coherence_change_since_2012 = int(cscore_val - __score)
+
+            __key_2012 = (region_code, descriptor, article, '2012')
+            self.overall_scores[__key_2012] = coherence_2012
 
         res = DESCRIPTOR_SUMMARY(
             assessment_summary, progress_assessment, recommendations,
@@ -97,7 +101,7 @@ class RegDescriptorLevelAssessments(BaseRegSummaryView,
                 ]
             )]
         """
-
+        self.overall_scores = {}
         res = []
 
         region_folder = [

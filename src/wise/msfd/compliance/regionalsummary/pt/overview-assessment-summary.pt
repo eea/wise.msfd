@@ -5,19 +5,28 @@
   <div class="overview-assessment-section">
     <table class="table table-bordered table-striped table-condensed table-national-overview table-sticky-first-col table-report skip-height-fix assessment-data-table">
       <thead>
-        <tr>
-          <th colspan="2"></th>
-          <th tal:repeat="country view/table_headers"
-              tal:attributes="colspan python: len(country[1])"
-              tal:content="python: country[0]">Finland</th>
-        </tr>
-        <tr>
-          <th colspan="2"></th>
-          <tal:rep tal:repeat="country view/table_headers">
-            <th tal:repeat="region python: country[1]"
-                tal:content="region">Baltic</th>
-          </tal:rep>
-        </tr>
+        <tal:cond tal:condition="python: view.section == 'national'">
+          <tr>
+            <th colspan="2"></th>
+            <th tal:repeat="country view/table_headers"
+                tal:attributes="colspan python: len(country[1])"
+                tal:content="python: country[0]">Finland</th>
+          </tr>
+          <tr>
+            <th colspan="2"></th>
+            <tal:rep tal:repeat="country view/table_headers">
+              <th tal:repeat="region python: country[1]"
+                  tal:content="region">Baltic</th>
+            </tal:rep>
+          </tr>
+        </tal:cond>
+        <tal:cond tal:condition="python: view.section == 'regional'">
+          <tr>
+            <th colspan="2"></th>
+            <th tal:repeat="article view/ARTICLE_ORDER"
+                tal:content="python: view.article_titles[article]">Article 10</th>
+          </tr>
+        </tal:cond>
       </thead>
       <tbody>
         <tal:rep tal:repeat="descriptor_type data">
