@@ -888,6 +888,42 @@ span.has-new-comments {
   }
 }
 
+.overview-assessment-section table.assessment-data-table div.gescomp.as-value {
+  height: 100%;
+  color: #1d1d1d;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center
+}
+
+.ast-header-data table.assessment-data-table,
+ .overview-assessment-section table.assessment-data-table {
+    td, div.gescomp, .overall-values div.as-value, .overall-headers div.as-value {
+      min-width: 4em;
+      height: 2rem;
+      // border: none;
+      background-color: #fff;
+
+      &.as-score { text-align: right; }
+
+      &.as-value-0 { background-color: #eee !important; }     // not completed
+      &.as-value-1 { background-color: #a2b971 !important; }  // very good
+      &.as-value-2 { background-color: #d4dfbc !important; }  // good
+      //&.as-value-3 { background-color: #ffeeae !important; }  // partial
+      &.as-value-3 { background-color: #c74040 !important; }  // not reported
+      &.as-value-4 { background-color: #ffb6b6 !important; }  // poor
+      //&.as-value-4 { background-color: #ffcbc1 !important; }  // poor
+      &.as-value-5 { background-color: #ff6d6d !important; }  // very poor
+      &.as-value-6 { background-color: #b8d1e0 !important; }  // not clear
+      &.as-value-7 { background-color: #fafafa !important; }     // not relevant
+      &.as-value-05 { background-color: #d85d5d !important; }
+      &.as-value-15 { background-color: #ea8b8b !important; }
+      &.as-value-25 { background-color: #ffee99 !important; }
+      &.as-value-35 { background-color: #bace8f !important; }
+    }
+}
+
 .ast-header-data {
   background-color: #ddd;
   padding: 1em;
@@ -916,30 +952,6 @@ span.has-new-comments {
       td {
         min-height: 30px;
       }
-    }
-
-    td, div.gescomp, .overall-values div.as-value, .overall-headers div.as-value {
-      min-width: 4em;
-      height: 2rem;
-      // border: none;
-      background-color: #fff;
-
-      &.as-score { text-align: right; }
-
-      &.as-value-0 { background-color: #eee !important; }     // not completed
-      &.as-value-1 { background-color: #a2b971 !important; }  // very good
-      &.as-value-2 { background-color: #d4dfbc !important; }  // good
-      //&.as-value-3 { background-color: #ffeeae !important; }  // partial
-      &.as-value-3 { background-color: #c74040 !important; }  // not reported
-      &.as-value-4 { background-color: #ffb6b6 !important; }  // poor
-      //&.as-value-4 { background-color: #ffcbc1 !important; }  // poor
-      &.as-value-5 { background-color: #ff6d6d !important; }  // very poor
-      &.as-value-6 { background-color: #b8d1e0 !important; }  // not clear
-      &.as-value-7 { background-color: #fafafa !important; }     // not relevant
-      &.as-value-05 { background-color: #d85d5d !important; }
-      &.as-value-15 { background-color: #ea8b8b !important; }
-      &.as-value-25 { background-color: #ffee99 !important; }
-      &.as-value-35 { background-color: #bace8f !important; }
     }
 
     th {

@@ -79,7 +79,8 @@ class RegDescriptorLevelAssessments(BaseRegSummaryView,
         return res
 
     def setup_descriptor_level_assessment_data(self):
-        """
+        """ Setup the regional assessments data for a region
+
         :return: res =  [("Baltic Sea", [
                     ("D7 - Hydrographical changes", [
                             ("Art8", DESCRIPTOR_SUMMARY),

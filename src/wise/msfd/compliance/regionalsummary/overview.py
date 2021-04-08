@@ -28,6 +28,7 @@ logger = logging.getLogger('wise.msfd')
 
 
 SECTIONS = []
+NATIONAL_ASSESSMENT_DATA = {}
 
 
 def register_section(klass):
@@ -620,22 +621,71 @@ class ExceptionsGESAchieved(RegionalDescriptorsSimpleTable,
         return out
 
 
+class BaseAssessmentOverviewTable(RegionalDescriptorsSimpleTable,
+                                  PressureTableMarineEnv):
+
+    template = ViewPageTemplateFile('pt/overview-assessment-summary.pt')
+
+    def setup_data(self):
+        self.table_headers = []
+
+        out = []
+
+        for descr_type, descriptors in DESCRIPTOR_TYPES:
+            descriptor_type_data = []
+
+            for descriptor in descriptors:
+                descriptor_data = []
+
+                for country_id, country_name in self.available_countries:
+                    data = NATIONAL_ASSESSMENT_DATA[country_id]
+                    val = ['Not found', '3']
+                    regions = set([
+                        x[0]
+                        for x in data
+                        if (x[0] == self.region_code
+                            or x[0] in self.subregions)
+                    ])
+
+                    if country_name not in [x[0] for x in self.table_headers]:
+                        self.table_headers.append((country_name, regions))
+
+                    for region in regions:
+                        __key = (region, descriptor, self.article, self.year)
+                        val = data[__key]
+
+                    descriptor_data.append(val)
+
+                descriptor_type_data.append([
+                    self.get_descriptor_title(descriptor), descriptor_data])
+
+            out.append([descr_type, descriptor_type_data])
+
+        return out
+
+
 @register_section
-class Article92012(RegionalDescriptorsSimpleTable):
+class Article92012(BaseAssessmentOverviewTable):
     title = 'Implementation of Art. 9 - Determination of GES (2012)'
     _id = 'reg-overview-art9-2012'
+    year = '2012'
+    article = 'Art9'
 
 
 @register_section
-class Article82012(RegionalDescriptorsSimpleTable):
+class Article82012(BaseAssessmentOverviewTable):
     title = 'Implementation of Art. 8 (Assessments) (2012)'
     _id = 'reg-overview-art8-2012'
+    year = '2012'
+    article = 'Art8'
 
 
 @register_section
-class Article102012(RegionalDescriptorsSimpleTable):
+class Article102012(BaseAssessmentOverviewTable):
     title = 'Implementation of Art. 10 (Environmental targets) (2012)'
     _id = 'reg-overview-art10-2012'
+    year = '2012'
+    article = 'Art10'
 
 
 @register_section
@@ -657,21 +707,27 @@ class Article142016(RegionalDescriptorsSimpleTable):
 
 
 @register_section
-class Article92018(RegionalDescriptorsSimpleTable):
+class Article92018(BaseAssessmentOverviewTable):
     title = 'Implementation of Art. 9 - Determination of GES (2018)'
     _id = 'reg-overview-art9-2018'
+    year = '2018'
+    article = 'Art9'
 
 
 @register_section
-class Article82018(RegionalDescriptorsSimpleTable):
+class Article82018(BaseAssessmentOverviewTable):
     title = 'Implementation of Art. 8 (Assessments) (2018)'
     _id = 'reg-overview-art8-2018'
+    year = '2018'
+    article = 'Art8'
 
 
 @register_section
-class Article102018(RegionalDescriptorsSimpleTable):
+class Article102018(BaseAssessmentOverviewTable):
     title = 'Implementation of Art. 10 (Environmental targets) (2018)'
     _id = 'reg-overview-art10-2018'
+    year = '2018'
+    article = 'Art10'
 
 
 @register_section
@@ -690,146 +746,6 @@ class RegionalCoherence2012(RegionalDescriptorsSimpleTable):
 class RegionalCoherence2018(RegionalDescriptorsSimpleTable):
     title = 'Regional coherence: second cycle 2018-2023'
     _id = 'reg-overview-coh-2018'
-
-
-# @register_section
-class Article11CoverageOfActivities(RegionalDescriptorsSimpleTable):
-    features_table = sql.t_MSFD_12_8cOverview
-    title = 'Coverage of activities by monitoring programmes'
-    _id = 'reg-overview-t1'
-
-    @property
-    @db.use_db_session('2012')
-    def features(self):
-        table = self.features_table
-
-        features = db.get_unique_from_table(
-            table, 'Features & Characteristics'
-        )
-
-        return features
-
-    @db.use_db_session('2012')
-    def get_db_data(self):
-        table = self.features_table
-        columns_needed = (
-            'MemberState', 'Marine region/subregion',
-            'Features & Characteristics', 'Found relevant by MS?',
-            'Reported by MS?'
-        )
-        columns = [
-            getattr(table.c, c)
-            for c in columns_needed
-        ]
-        conditions = [
-            getattr(table.c, 'Marine region/subregion').in_(
-                self._region_folder._subregions
-            ),
-        ]
-
-        _, data = db.get_all_specific_columns(
-            columns,
-            *conditions
-        )
-
-        return data
-
-    def get_table_headers(self):
-        countries = [x[1] for x in self.available_countries]
-
-        return ['Activities'] + countries
-
-    def setup_data(self):
-        db_data = self.get_db_data()
-
-        rows = []
-
-        for feature in self.features:
-            values = []
-            for country_id, country_name in self.available_countries:
-                reported_for_country = set([
-                    getattr(r, 'Reported by MS?')
-                    for r in db_data
-                    if (getattr(r, 'Features & Characteristics')
-                        .strip() == feature
-                        and r.MemberState.strip() == country_id)
-                ])
-
-                values.append("; ".join(reported_for_country))
-
-            feature_label = feature  # get_label(feature, None)
-
-            if any(values):
-                rows.append((feature_label, values))
-
-        return rows
-
-
-# @register_section
-class PressuresActivities(RegionalDescriptorsSimpleTable):
-    pressures_table = sql.t_MSFD_8b_8bPressures
-    title = 'Pressures and associated activities affecting the marine waters'
-    _id = 'reg-overview-t2'
-
-    @property
-    @db.use_db_session('2012')
-    def pressures(self):
-        table = self.pressures_table
-        pressures = db.get_unique_from_table(table, 'Pressure')
-
-        return pressures
-
-    @db.use_db_session('2012')
-    def get_db_data(self):
-        table = self.pressures_table
-        columns_needed = ('MemberState', 'Marine region/subregion',
-                          'Pressure', 'Activity')
-        columns = [
-            getattr(table.c, c)
-            for c in columns_needed
-        ]
-        conditions = [
-            getattr(table.c, 'Marine region/subregion').in_(
-                self._region_folder._subregions
-            ),
-            table.c.Activity != 'NotReported'
-        ]
-
-        _, data = db.get_all_specific_columns(
-            columns,
-            *conditions
-        )
-
-        return data
-
-    def get_table_headers(self):
-        countries = [x[1] for x in self.available_countries]
-
-        return ['Pressures'] + countries
-
-    def setup_data(self):
-        db_data = self.get_db_data()
-
-        rows = []
-
-        for pressure in self.pressures:
-            values = []
-            for country_id, country_name in self.available_countries:
-                activities_for_country = [
-                    r.Activity
-                    for r in db_data
-                    if (r.Pressure.strip() == pressure
-                        and r.MemberState.strip() == country_id)
-                ]
-
-                values.append("; ".join(activities_for_country))
-
-            pressure_label = pressure  # get_label(pressure, None)
-
-            if any(values):
-                rows.append((pressure_label, values))
-
-        return rows
 
 
 # @register_section
@@ -872,7 +788,7 @@ class OverallConclusion2012(RegionalDescriptorsSimpleTable,
         return h
 
 
-class RegionalOverviewView(BaseRegSummaryView):
+class RegionalOverviewView(BaseRegSummaryView, AssessmentDataMixin):
     help_text = "HELP TEXT"
     template = ViewPageTemplateFile('pt/report-data.pt')
     year = "2012"
@@ -903,6 +819,15 @@ class RegionalOverviewView(BaseRegSummaryView):
         return template(tables=self.tables)
 
     def __call__(self):
+        # setup national assessment data
+        for country_id, country_name in self.available_countries:
+            self.setup_descriptor_level_assessment_data(country_id)
+            country_data = self.overall_scores
+            NATIONAL_ASSESSMENT_DATA[country_id] = country_data
+
+        # setup regional assessment data
+        # TODO
+
         if 'edit-data' in self.request.form:
             url = "{}/edit".format(self._country_folder.absolute_url())
             return self.request.response.redirect(url)

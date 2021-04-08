@@ -1067,8 +1067,9 @@ class AssessmentDataMixin(object):
         return res
 
     @timeit
-    def setup_descriptor_level_assessment_data(self):
-        """ Setup the national assessments data for a country
+    def setup_descriptor_level_assessment_data(self, country_code=None):
+        """ Setup the national assessments data for a single country,
+
 
         :return: res =  [("Baltic Sea", [
                     ("D7 - Hydrographical changes", [
@@ -1086,13 +1087,17 @@ class AssessmentDataMixin(object):
                 ]
             )]
         """
+        self.overall_scores = {}
+
+        if not country_code:
+            country_code = self.country_code
 
         res = []
 
         country_folder = [
             country
             for country in self._nat_desc_folder.contentValues()
-            if country.id == self.country_code.lower()
+            if country.id == country_code.lower()
         ][0]
 
         self.nat_desc_country_folder = country_folder
