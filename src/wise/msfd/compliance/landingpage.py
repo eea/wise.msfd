@@ -261,10 +261,30 @@ class LandingpageDataMixin:
         return data
 
     def get_header_countries(self, *args):
-        return self._get_2018_countries(extra_path='reports')
+        data = {}
+
+        for folder in self._nat_desc_country_folders:
+            url = "{}/national-summaries/{}/overview".format(
+                self.request.URL1, folder.id)
+            country_id = folder.id.upper()
+            data[country_id] = url
+
+        return data
+
+        # return self._get_2018_countries(extra_path='reports')
 
     def get_header_regions(self, *args):
-        return self._get_2018_regions(extra_path='reports')
+        data = {}
+
+        for folder in self._reg_desc_region_folders:
+            url = "{}/regional-summaries/{}/overview".format(
+                self.request.URL1, folder.id)
+            reg_id = folder.id.upper()
+            data[reg_id] = url
+
+        return data
+
+        # return self._get_2018_regions(extra_path='reports')
 
     def get_from_env_2019_art20(self, *args):
         msfd_article = args[1]

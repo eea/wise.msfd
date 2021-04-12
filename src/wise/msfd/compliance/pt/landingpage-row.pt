@@ -5,13 +5,16 @@
         task python: year_row.task;
         css_extra python: year_row.css_extra;
         subrows python: year_row.subrows;">
+
     <tr tal:condition="python: len(subrows) > 0"
         tal:attributes="class python: css_extra"
         tal:define="rowspan python: len(subrows)">
+
       <th style="min-width: 35px" class="sticky-col" tal:attributes="rowspan rowspan" tal:content="date"></th>
       <th style="min-width: 35px" class="sticky-col" tal:attributes="rowspan rowspan" tal:content="who"></th>
       <th style="min-width: 40px" class="sticky-col" tal:attributes="rowspan rowspan" tal:content="article"></th>
       <th style="min-width: 120px" class="sticky-col bold-border" tal:attributes="rowspan rowspan" tal:content="task"></th>
+
       <tal:rep tal:repeat="item python: subrows[0]">
         <td tal:condition="python: item.rowspan > 0"
             tal:attributes="colspan python: item.colspan; class python: item.css_class;
@@ -20,20 +23,32 @@
           <tal:cond tal:condition="python: hasattr(item.href, '__iter__')">
             <tal:rep tal:repeat="i item/href">
               <a tal:attributes="href python: i[0]"
-                 tal:content="python: i[1]" target="_blank"/>
+                 target="_blank">
+                <span style="color: #4cae4c"
+                    class="glyphicon glyphicon-file" aria-hidden="true"
+                    tal:attributes="title python: i[1]"></span>
+                <span tal:content="python: i[1]">File name</span>
+              </a>
             </tal:rep>
           </tal:cond>
 
-          <a tal:condition="python: item.href"
+          <a tal:condition="python: item.href and not hasattr(item.href, '__iter__')"
              tal:attributes="href python: item.href"
-             tal:content="python: item.text" target="_blank"/>
+             target="_blank">
+            <span tal:condition="python: 'landpage-header' not in css_extra"
+                style="color: #337ab7"
+                class="glyphicon glyphicon-file" aria-hidden="true"
+                tal:attributes="title python: item.text"></span>
+            <span tal:condition="python: 'landpage-header' in css_extra"
+                tal:content="python: item.text"></span>
+          </a>
           <i tal:condition="python: not(item.href)" style="color: #d9534f;">
             <span class="glyphicon glyphicon-remove" aria-hidden="true" title="Not found"></span>
           </i>
-
         </td>
       </tal:rep>
     </tr>
+
     <tal:cond tal:condition="python: len(subrows) > 1">
       <tr tal:attributes="class python: css_extra"
           tal:repeat="subrow python: subrows[1:]">
@@ -44,8 +59,14 @@
 
             <a tal:condition="python: item.href"
                tal:attributes="href python: item.href"
-               tal:content="python: item.text"
-               target="_blank"/>
+               target="_blank">
+              <span tal:condition="python: 'landpage-header' not in css_extra"
+                  style="color: #337ab7"
+                  class="glyphicon glyphicon-file" aria-hidden="true"
+                  tal:attributes="title python: item.text"></span>
+              <span tal:condition="python: 'landpage-header' in css_extra"
+                  tal:content="python: item.text">File name</span>
+            </a>
             <i tal:condition="python: not(item.href)" style="color: #d9534f;">
               <span class="glyphicon glyphicon-remove" aria-hidden="true" title="Not found"></span>
             </i>

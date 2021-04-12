@@ -30,9 +30,9 @@
             <row colspan="country" get-method="get_from_env_simple" display-text="{} Recom." permission="wise.ViewAssessmentData"/>
         </element>
         <element who="COM" article="12" task="Assessment of 2018 Art. 8-9-10 updates">
-            <row colspan="row" get-method="" display-text="View report" permission="wise.ViewAssessmentData"/>
-            <row colspan="region" color-class="region-a" get-method="get_2018_regions_assess" display-text="View {} asses." permission="wise.ViewAssessmentData"/>
-            <row colspan="country" color-class="country-a" get-method="get_2018_countries_assess" display-text="View {} asses." permission="wise.ViewAssessmentData"/>
+            <row colspan="row" get-method="" display-text="Assessment report" permission="wise.ViewAssessmentData"/>
+            <row colspan="region" color-class="region-a" get-method="get_2018_regions_assess" display-text="{} assessment" permission="wise.ViewAssessmentData"/>
+            <row colspan="country" color-class="country-a" get-method="get_2018_countries_assess" display-text="{} assessment" permission="wise.ViewAssessmentData"/>
         </element>
         <element who="MS" article="18" task="Interim report on programme of measures">
             <row colspan="country" get-method="get_from_env_simple" display-text="{} reports"/>
@@ -78,7 +78,7 @@
             <row colspan="country" get-method="get_from_env_simple"
                  msfd-article="Article 16 (Art.13-14)"
                  report-type="Commission technical assessment - national"
-                 display-text="{} asses." color-class="country-a"/>
+                 display-text="{} assessment" color-class="country-a"/>
         </element>
         <element who="COM" article="9.3" task="Criteria and methodological standards for GES (2017 revision)">
             <row colspan="row" get-method="get_from_env_2016_art9_3" display-text=""
@@ -98,7 +98,8 @@
         <element who="MS" article="12" task="MS response to recommendations">
             <row colspan="country" get-method="get_from_env_simple"
                  msfd-article="Article 12 (Art.11)"
-                 report-type="Member State response to Commission recommendations"/>
+                 report-type="Member State response to Commission recommendations"
+                 display-text="{} response"/>
         </element>
         <element who="COM" article="12" task="Recommendations to MS">
             <row colspan="country" get-method="get_from_env_simple"
