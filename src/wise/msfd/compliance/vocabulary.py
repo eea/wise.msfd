@@ -11,6 +11,9 @@ from zope.schema.vocabulary import SimpleTerm, SimpleVocabulary
 from wise.msfd import db, sql2018
 
 
+REPORTING_HISTORY_ENV = PersistentList()
+
+
 ASSESSED_ARTICLES = (
     ('Art3', 'Art. 3(1) Marine waters',),
     ('Art4', 'Art. 4/2017 Decision: Marine regions, subregions, '
@@ -140,10 +143,9 @@ REGIONAL_DESCRIPTORS_REGIONS = [
 
 ReportingHistoryENVRow = namedtuple(
     'ReportingHistoryENVRow',
-    ['ARES', 'CIRCABC', 'WISE', 'Sort', 'CountryCode', 'FileName',
-     'LocationURL', 'Schema', 'ReportingObligation', 'ReportingObligationID',
-     'ReportingObligationURL', 'DateDue', 'DateReceived', 'ReportingDelay',
-     'MSFDArticle', 'ReportType', 'Comments']
+    ['Sort', 'Year', 'MSFDArticle', 'TaskProduct', 'ReportType',
+     'DateDue', 'DateReceived', 'CountryCode', 'FileName',
+     'CIRCABC', 'WISE', 'ARES', 'LocationURL', 'Comments']
 )
 
 
@@ -160,7 +162,7 @@ def get_msfd_reporting_history_from_file(file):
             isinstance(x, basestring) and x.strip() or x
             for x in row
         ]
-        if len(row) == 16:
+        while len(row) < 14:
             row.append('')
 
         date_due = row[indx_date_due]
@@ -172,23 +174,22 @@ def get_msfd_reporting_history_from_file(file):
         if isinstance(date_received, datetime):
             row[indx_date_received] = date_received.date()
 
-        res.append(ReportingHistoryENVRow(*row[:17]))
+        res.append(ReportingHistoryENVRow(*row[:14]))
 
     return res
 
 
 def parse_reporting_history_env():
     file_loc = resource_filename(
-        'wise.msfd', 'data/MSFDReportingHistory_2020-04-12.xlsx'
+        'wise.msfd', 'data/MSFDReportingHistory_Local.xlsx'
     )
 
     with open(file_loc, 'rb') as file:
         res = get_msfd_reporting_history_from_file(file)
 
+    REPORTING_HISTORY_ENV = res
+
     return res
-
-
-REPORTING_HISTORY_ENV = parse_reporting_history_env()
 
 
 @db.use_db_session('2018')

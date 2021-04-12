@@ -19,13 +19,17 @@
 
           <tal:cond tal:condition="python: hasattr(item.href, '__iter__')">
             <tal:rep tal:repeat="i item/href">
-              <a tal:attributes="href python: i[0]" tal:content="python: i[1]" target="_blank"/>
+              <a tal:attributes="href python: i[0]"
+                 tal:content="python: i[1]" target="_blank"/>
             </tal:rep>
           </tal:cond>
 
           <a tal:condition="python: item.href"
-             tal:attributes="href python: item.href" tal:content="python: item.text" target="_blank"/>
-          <i tal:condition="python: not(item.href)" style="color: #aaa;">Not found</i>
+             tal:attributes="href python: item.href"
+             tal:content="python: item.text" target="_blank"/>
+          <i tal:condition="python: not(item.href)" style="color: #d9534f;">
+            <span class="glyphicon glyphicon-remove" aria-hidden="true" title="Not found"></span>
+          </i>
 
         </td>
       </tal:rep>
@@ -39,8 +43,12 @@
                               rowspan python: item.rowspan">
 
             <a tal:condition="python: item.href"
-               tal:attributes="href python: item.href" tal:content="python: item.text" target="_blank"/>
-            <i tal:condition="python: not(item.href)" style="color: #aaa;">Not found</i>
+               tal:attributes="href python: item.href"
+               tal:content="python: item.text"
+               target="_blank"/>
+            <i tal:condition="python: not(item.href)" style="color: #d9534f;">
+              <span class="glyphicon glyphicon-remove" aria-hidden="true" title="Not found"></span>
+            </i>
 
           </td>
         </tal:rep>

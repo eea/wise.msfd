@@ -10,6 +10,7 @@ from BTrees.OOBTree import OOBTree
 from Products.Five.browser.pagetemplatefile import PageTemplateFile
 from Products.CMFPlone.interfaces.siteroot import IPloneSiteRoot
 from persistent import Persistent
+from pkg_resources import resource_filename
 from plone.api import portal
 from plone.protect.interfaces import IDisableCSRFProtection
 from StringIO import StringIO
@@ -297,7 +298,29 @@ class MSFDReportingHistoryView(BaseComplianceView):
 
         self.context._msfd_reporting_history_filename = self.msfd_file.filename
         self.context._msfd_reporting_history_data = data
+        # save to disk
+        self.save_to_localfile()
+
         self._p_changed = True
+
+    def save_to_localfile(self):
+        data = self._msfd_rep_history_data
+
+        file_loc = resource_filename(
+            'wise.msfd', 'data/MSFDReportingHistory_Local.xlsx'
+        )
+        workbook = xlsxwriter.Workbook(file_loc)
+        wtitle = 'ENV'
+        worksheet = workbook.add_worksheet(unicode(wtitle)[:30])
+        row_index = 0
+
+        for row in data:
+            for i, value in enumerate(row):
+                worksheet.write(row_index, i, unicode(value or ''))
+
+            row_index += 1
+
+        workbook.close()
 
     def data_to_xls(self, data):
         # Create a workbook and add a worksheet.
@@ -336,6 +359,7 @@ class MSFDReportingHistoryView(BaseComplianceView):
         return xlsio.read()
 
     def __call__(self):
+        alsoProvides(self.request, IDisableCSRFProtection)
         form_data = self.request.form
 
         if 'download-excel' in form_data:
@@ -363,6 +387,7 @@ class MSFDReportingHistoryView(BaseComplianceView):
             else:
                 self._msfd_rep_history_data[index] = new_data
 
+            self.save_to_localfile()
             self._p_changed = True
 
         return self.index()

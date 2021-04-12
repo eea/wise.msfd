@@ -639,7 +639,7 @@ class BaseNationalAssessmentOverviewTable(RegionalDescriptorsSimpleTable,
 
                 for country_id, country_name in self.available_countries:
                     data = NATIONAL_ASSESSMENT_DATA[country_id]
-                    val = ['Not found', '3']
+                    val = []
                     regions = set([
                         x[0]
                         for x in data
@@ -653,6 +653,9 @@ class BaseNationalAssessmentOverviewTable(RegionalDescriptorsSimpleTable,
                     for region in regions:
                         __key = (region, descriptor, self.article, self.year)
                         val = data[__key]
+
+                    if not val:
+                        val = ['Not assessed', '3']
 
                     descriptor_data.append(val)
 
