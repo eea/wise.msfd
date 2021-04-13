@@ -143,6 +143,8 @@ class LandingpageDataMixin:
     def _get_location_url(self, article, country_code, report_type,
                           task_product):
         data = self.context.msfd_reporting_data
+        if country_code == 'ATL':
+            country_code = 'NEA'
 
         for row in data:
             if article != row.MSFDArticle:
@@ -165,6 +167,8 @@ class LandingpageDataMixin:
                                    task_product):
         res = []
         data = self.context.msfd_reporting_data
+        if country_code == 'ATL':
+            country_code = 'NEA'
 
         for row in data:
             if article != row.MSFDArticle:
