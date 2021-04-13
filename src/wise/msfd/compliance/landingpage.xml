@@ -5,6 +5,68 @@
             <row colspan="region" get-method="get_header_regions" display-text="_region"/>
         </element>
     </year>
+    <year date="2022">
+        <element who="MS" article="16" task="MS response to recommendations">
+            <row colspan="country" get-method="get_from_env_simple"
+                 msfd-article="Article 17 (Art.13-14)" display-text=""/>
+        </element>
+        <element who="COM" article="16" task="Recommendations to MS">
+            <row colspan="country" get-method="get_from_env_simple"
+                 msfd-article="Article 17 (Art.13-14)" display-text="{} Recom." permission="wise.ViewAssessmentData"/>
+        </element>
+        <element who="COM" article="16" task="Assessment of 2022 updated Art.13-14 reports">
+            <row colspan="row" get-method="get_from_env_with_filename" display-text=""
+                 msfd-article="Article 17 (Art.13-14)"
+                 report-type="Commission report"
+                 permission="wise.ViewAssessmentData"/>
+            <row colspan="region" get-method="get_from_env_simple"
+                 msfd-article="Article 17 (Art.13-14)"
+                 report-type="Commission technical assessment - regional"
+                 display-text="{} technical report" color-class="region-a"
+                 permission="wise.ViewAssessmentData"/>
+            <row colspan="country" get-method="get_from_env_simple"
+                 msfd-article="Article 17 (Art.13-14)"
+                 report-type="Commission technical assessment - national"
+                 display-text="{} assessment" color-class="country-a"
+                 permission="wise.ViewAssessmentData"/>
+        </element>
+        <element who="MS" article="17 (13, 14)" task="2022 update of programme of measures, exceptions">
+            <row colspan="country" get-method="" display-text="{} reports"/>
+            <row colspan="region" get-method="" display-text="{} reports"/>
+        </element>
+        <element who="CIS" article="17 (13, 14)" task="Updates of programmes of measures and exceptions">
+            <row colspan="row" get-method="get_from_env_multiple_cis"
+                 msfd-article="Article 17 (Art.13-14)"/>
+        </element>
+
+    </year>
+
+    <year date="2021">
+        <element who="MS" article="12" task="MS response to recommendations">
+            <row colspan="country" get-method="get_from_env_simple"
+                 msfd-article="Article 12 (Art.11)" display-text=""/>
+        </element>
+        <element who="COM" article="12" task="Recommendations to MS">
+            <row colspan="country" get-method="get_from_env_simple"
+                 msfd-article="Article 12 (Art.11)" display-text="{} Recom." permission="wise.ViewAssessmentData"/>
+        </element>
+        <element who="COM" article="12" task="Assessment of 2018 Art. 8-9-10 updates">
+            <row colspan="row" get-method="get_from_env_with_filename" display-text=""
+                 msfd-article="Article 12 (Art.11)"
+                 report-type="Commission report"
+                 permission="wise.ViewAssessmentData"/>
+            <row colspan="region" get-method="get_from_env_simple"
+                 msfd-article="Article 12 (Art.11)"
+                 report-type="Commission technical assessment - regional"
+                 display-text="{} technical report" color-class="region-a"
+                 permission="wise.ViewAssessmentData"/>
+            <row colspan="country" get-method="get_from_env_simple"
+                 msfd-article="Article 12 (Art.11)"
+                 report-type="Commission technical assessment - national"
+                 display-text="{} assessment" color-class="country-a"
+                 permission="wise.ViewAssessmentData"/>
+        </element>
+    </year>
     <year date="2020">
         <element who="MS" article="17 (11)" task="2020 update of monitoring programme">
             <row colspan="country" get-method="" display-text="{} reports"/>
@@ -24,10 +86,12 @@
                  msfd-article="Article 20(1)" display-text=""/>
         </element>
         <element who="MS" article="12" task="MS response to recommendations">
-            <row colspan="country" get-method="get_from_env_simple" display-text=""/>
+            <row colspan="country" get-method="get_from_env_simple"
+                 msfd-article="Article 12 (Art.8-9-10)" display-text=""/>
         </element>
         <element who="COM" article="12" task="Recommendations to MS">
-            <row colspan="country" get-method="get_from_env_simple" display-text="{} Recom." permission="wise.ViewAssessmentData"/>
+            <row colspan="country" get-method="get_from_env_simple"
+                 msfd-article="Article 12 (Art.8-9-10)" display-text="{} Recom." permission="wise.ViewAssessmentData"/>
         </element>
         <element who="COM" article="12" task="Assessment of 2018 Art. 8-9-10 updates">
             <row colspan="row" get-method="" display-text="Assessment report" permission="wise.ViewAssessmentData"/>
