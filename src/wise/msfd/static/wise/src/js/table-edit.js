@@ -67,7 +67,7 @@
 
     $modal.on('show.bs.modal', function(event){
       var $btn = $(event.relatedTarget);
-      var cells = $btn.parent('td').parent('tr').children('td')
+      var cells = $btn.parent('td').parent('tr').children('td').not('.edit-row-button')
 
       var maxRows = $('#Row').attr('max-rows');
       $('#Row').text(maxRows)

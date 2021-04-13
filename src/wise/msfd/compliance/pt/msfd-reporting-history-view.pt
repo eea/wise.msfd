@@ -75,6 +75,7 @@
               Download as excel
           </a>
           <a class="btn btn-s btn-danger"
+             tal:condition="view/can_manage"
              tal:attributes="href python: context.absolute_url() + '/edit'"
              target="_blank">
               Upload new excel file
@@ -87,16 +88,23 @@
                    class="table table-listing table-report table-striped table-bordered">
               <thead>
                 <tr class="sticky-row">
+                  <th></th>
                   <th>Row</th>
                   <tal:rep tal:repeat="value python:view.msfd_rep_history_headers">
                     <th tal:attributes="style python: 'min-width: {}'.format(view.column_widths.get(value, ''))"
                         tal:content="value">Table header</th>
                   </tal:rep>
-                  <th></th>
                 </tr>
               </thead>
               <tbody style="word-break: keep-all;">
                 <tr tal:repeat="row python: enumerate(view.msfd_rep_history_data)">
+                  <td class="edit-row-button">
+                    <a class="btn btn-sm btn-primary"
+                       data-toggle="modal"
+                       data-target="#edit-msfd-history">
+                        <i class="glyphicon glyphicon-edit"></i>
+                    </a>
+                  </td>
                   <td tal:content="python: row[0] + 1">1</td>
                   <tal:rep tal:repeat="value python: row[1]">
                     <td tal:condition="python: not unicode(value).startswith('http')"
@@ -105,13 +113,6 @@
                       <a tal:attributes="href value" tal:content="value">url here</a>
                     </td>
                   </tal:rep>
-                  <td>
-                    <a class="btn btn-sm btn-primary"
-                       data-toggle="modal"
-                       data-target="#edit-msfd-history">
-                        <i class="glyphicon glyphicon-edit"></i>
-                    </a>
-                  </td>
                 </tr>
               </tbody>
             </table>
