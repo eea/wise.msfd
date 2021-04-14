@@ -9,7 +9,7 @@
     <h3 class="report-title" tal:content="structure options/title">201X Member State Report</h3>
 
     <div id="report-data-navigation"
-      tal:condition="python: options.get('show_navigation') != False and view.can_view_assessment_data">
+      tal:condition="python: options.get('show_navigation') != False and view.can_view_assessment_data()">
       <div class="back-to-art">
         <a href="./">
           <i class="glyphicon glyphicon-share-alt"></i>

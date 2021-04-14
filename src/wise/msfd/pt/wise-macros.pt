@@ -1,5 +1,7 @@
 <metal:macro define-macro="tabs">
-  <div id="mainform-tabs" tal:define="tab_type view/tabs_type | string:article">
+  <div id="mainform-tabs"
+       tal:condition="view/can_edit_assessment_data"
+       tal:define="tab_type view/tabs_type | string:article">
 
     <ul class="nav nav-pills topnav hidden-xs"
       tal:define="root_url view/root_url | string:.">

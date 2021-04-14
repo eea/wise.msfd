@@ -139,7 +139,6 @@ if (!Array.prototype.last){
     // the <td> cells, and the other way around.
 
     this.each(function() {
-      console.log('fixTableHeaderAndCellsHeight');
       $("th", this).each(function(index) {
         if($(this).parents('table').hasClass('skip-height-fix')) {
           return
