@@ -83,6 +83,9 @@
                   <input class="submitRecomm btn btn-primary btn-s"
                          type="submit" value="Save"
                          name="add-recommendation"/>
+                  <input class="submitRecomm btn btn-danger btn-s"
+                         type="submit" value="Remove"
+                         name="remove-recommendation"/>
                 </form>
               </div>
             </div>

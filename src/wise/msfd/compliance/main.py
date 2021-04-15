@@ -200,6 +200,12 @@ class RecommendationsView(BaseComplianceView):
             recom = Recommendation(code, topic, text, ms_region, descriptors)
             storage_recom[code] = recom
 
+        if 'remove-recommendation' in self.request.form:
+            form_data = self.request.form
+
+            code = form_data.get('rec_code', '')
+            storage_recom.pop(code)
+
         if 'edit-topics' in self.request.form:
             topics = self.request.form.get('topics', '')
             topics = topics.split('\r\n')
