@@ -674,7 +674,9 @@ class ReportData2014(ReportData2012):
             for f in filename
         ]
 
-        rep_info = self.get_reporting_information(filename=filename[0])
+        rep_info = self.get_reporting_information(
+            filename=filename and filename[0] or None
+        )
 
         report_header_data = self.get_report_header_data(
             rep_info.reporters, source_file, factsheet, rep_info.report_date,
