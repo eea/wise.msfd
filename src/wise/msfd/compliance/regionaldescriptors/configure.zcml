@@ -12,7 +12,7 @@
     name="reg-desc-start"
     class=".main.RegionalDescriptorsOverview"
     template="./pt/reg-desc-start.pt"
-    permission="zope2.View"
+    permission="wise.ViewAssessmentData"
     />
 
   <browser:page
@@ -20,7 +20,7 @@
     name="reg-region-start"
     class=".main.RegionalDescriptorRegionsOverview"
     template="./pt/reg-region-start.pt"
-    permission="zope2.View"
+    permission="wise.ViewAssessmentData"
     />
 
   <browser:page

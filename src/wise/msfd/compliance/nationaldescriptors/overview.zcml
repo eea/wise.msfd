@@ -11,7 +11,7 @@
     name="nat-desc-start"
     class=".main.NationalDescriptorsOverview"
     template="./pt/start.pt"
-    permission="zope2.View"
+    permission="wise.ViewAssessmentData"
     />
 
   <!-- An empty page, to serve as main page of a "/be/ans" region folder -->
@@ -29,7 +29,7 @@
     name="view"
     class=".main.NationalDescriptorCountryOverview"
     template="./pt/country-start.pt"
-    permission="zope2.View"
+    permission="wise.ViewAssessmentData"
     />
 
    <!-- All country reports on a page, for the MS Reporters -->

@@ -12,7 +12,7 @@
         <th>MRU name (translated)</th>
         <th>Area of MRU (km2)</th>
         <th>Proportion of MS waters (%)</th>
-        <th>Descriptors used in MRU</th>
+        <th>Descriptors and criterias used in MRU</th>
       </tr>
 
       <tr tal:repeat="row data">

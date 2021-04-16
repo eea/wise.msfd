@@ -55,7 +55,7 @@
         &lt;li&gt;an English translation (where appropriate) of the MRU name;&lt;/li&gt;
         &lt;li&gt;the areal extent of the MRU (km2);&lt;/li&gt;
         &lt;li&gt;the proportion of the Member State’s marine waters taken by the MRU (%). Values greater than 100% are likely to indicate use of MRUs which extend beyond the Member State’s marine waters (for example, one used by a regional sea convention); if the total across all MRUs exceeds 100% (but no single MRU exceeds 100%), it may indicate some MRUs are overlapping or nested within others, particularly where the Member State has used different (sets of) MRUs per descriptor;&lt;/li&gt;
-        &lt;li&gt;the MSFD Descriptors for which the MRU is used (Articles 8 and 9).&lt;/li&gt;
+        &lt;li&gt;the MSFD Descriptors for which the MRU is used (Articles 8 and 9). D1.1 = D1-Birds, D1.2 = D1-Mammals, D1.3 = D1-Reptiles, D1.4 = D1-Fish, D1.5 = D1-Cephalopods, D1.6 = D1-Pelagic habitats &lt;/li&gt;
     &lt;/ol&gt;
             </default>
         </field>
@@ -85,13 +85,13 @@
                type="plone.app.textfield.RichText">
             <description/>
             <required>False</required>
-            <title>2012 recommendations to Member State</title>
+            <title>2014 recommendations to Member State</title>
         </field>
         <field name="progress_recommendations_2018"
                type="plone.app.textfield.RichText">
             <description/>
             <required>False</required>
-            <title>Progress against 2012 recommendations to Member State</title>
+            <title>Progress against 2014 recommendations to Member State</title>
         </field>
     </schema>
 </model>
