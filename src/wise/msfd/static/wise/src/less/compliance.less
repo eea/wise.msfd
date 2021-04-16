@@ -1239,7 +1239,7 @@ table.comp-c-listing {
 
   .overflow-table .fixed-table-inner {
     table {
-      border: none;
+      //border: none;
     }
 
     tr {
@@ -1261,26 +1261,21 @@ table.comp-c-listing {
       // font-size: 16px;
       font-weight: bold;
       color: #333;
-      border: 1px solid white;
-      border-radius: 2px;
+      border: 1px solid #ddd;
       max-width: 120px;
       padding: 5px 8px !important;
       text-align: center;
       text-decoration: none;
       vertical-align: middle;
-      border: 1px solid white;
-      border: none;
+      //border: none;
       border-radius: 0;
     }
 
-    a {
-      color: #333;
-    }
   }
 
   .table-landingpage {
     margin: 0 !important;
-    border: none;
+    //border: none;
     font-size: 14px;
 
     input.fix-row {
@@ -1291,10 +1286,17 @@ table.comp-c-listing {
       //min-width: 250px;
     }
 
+    tr.base-row:nth-of-type(even) {
+      background-color: #f1f1f1;
+    }
+
     tr {
       &.landpage-header {
         th {
           font-size: 100%;
+        }
+        td {
+          background-color: #f1f1f1;
         }
       }
 
@@ -1317,8 +1319,18 @@ table.comp-c-listing {
       //border-top: 3px solid #aaa;
     }
 
+    tr {
+      th:last-of-type {
+        border-right: none;
+      }
+    }
+
+    tr.base-row {
+      border: 1px solid black !important;
+    }
+
     th, td {
-      border: 1px solid white;
+      //border: 1px solid white;
       border-radius: 2px;
       font-size: 90%;
       max-width: 120px;
@@ -1338,17 +1350,12 @@ table.comp-c-listing {
       }
     }
 
-    tr {
-      th:last-of-type {
-        border-right: none;
-      }
-    }
-
     th {
-      //background-color: #005588;
-      //color: white;
-      background-color: #efefef;
-      color: #333;
+      background-color: #005588;
+      color: white;
+      border: 1px solid #005588;
+      //background-color: #efefef;
+      //color: #333;
       font-weight: 200;
       font-family: 'RobotoM';
       padding: 5px 3px !important;
@@ -1358,11 +1365,11 @@ table.comp-c-listing {
     }
 
     td {
-      border: 1px solid white;
-      border: none;
+      //border: 1px solid white;
+      //border: none;
       border-radius: 0;
 
-      &.BAL-C, &.ATL-C, &.MED-C, &.BLK-C,
+      /*&.BAL-C, &.ATL-C, &.MED-C, &.BLK-C,
        &.BAL-CA, &.ATL-CA, &.MED-CA, &.BLK-CA,
         &.BAL-A, &.ATL-A, &.MED-A, &.BLK-A {
         a {
@@ -1420,7 +1427,7 @@ table.comp-c-listing {
       &.ROW {
         background-color: rgba(152, 72, 7, 0.2);
       }
-
+*/
     }
   }
 }

@@ -7,7 +7,7 @@
         subrows python: year_row.subrows;">
 
     <tr tal:condition="python: len(subrows) > 0"
-        tal:attributes="class python: css_extra"
+        tal:attributes="class python: css_extra or 'base-row'"
         tal:define="rowspan python: len(subrows)">
 
       <th style="min-width: 35px" class="sticky-col" tal:attributes="rowspan rowspan" tal:content="date"></th>
@@ -50,7 +50,7 @@
     </tr>
 
     <tal:cond tal:condition="python: len(subrows) > 1">
-      <tr tal:attributes="class python: css_extra"
+      <tr tal:attributes="class python: css_extra or 'base-row'"
           tal:repeat="subrow python: subrows[1:]">
         <tal:rep tal:repeat="item subrow">
           <td tal:condition="python: item.rowspan > 0"
@@ -77,4 +77,4 @@
     </tal:cond>
   </tal:def>
 </tal:rep>
-<tr class="year-separator"><td colspan="99"></td></tr>
+<!--<tr class="year-separator"><td colspan="99"></td></tr>-->
