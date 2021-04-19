@@ -1238,6 +1238,8 @@ table.comp-c-listing {
   overflow-x: auto;
 
   .overflow-table .fixed-table-inner {
+    margin-left: -2px;
+
     table {
       //border: none;
     }
@@ -1270,7 +1272,14 @@ table.comp-c-listing {
       //border: none;
       border-radius: 0;
     }
+  }
 
+  .fixed-table-inner, .table-landingpage {
+    .BAL-C + .ATL-C, .BAL + .ATL, .BAL-A + .ATL-A, .BAL-CA + .ATL-CA,
+     .ATL-C + .MED-C, .ATL + .MED, .ATL-A + .MED-A, .ATL-CA + .MED-CA,
+     .MED-C + .BLK-C, .MED + .BLK, .MED-A + .BLK-A, .ATL-CA + .BLK-CA,{
+      border-left: 3px solid #ddd !important;
+    }
   }
 
   .table-landingpage {

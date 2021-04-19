@@ -4,5 +4,5 @@
 </tal:cond>
 
 <tal:cond tal:condition="python: 'assessment-module' in request.URL0">
-  <link href="/marine/++resource++static_css/compliance.css?rel=ba03c9a44f" type="text/css" rel="stylesheet" />
+  <link href="/marine/++resource++static_css/compliance.css?rel=d3d055b320" type="text/css" rel="stylesheet" />
 </tal:cond>
