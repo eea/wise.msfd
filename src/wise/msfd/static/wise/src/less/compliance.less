@@ -1238,8 +1238,6 @@ table.comp-c-listing {
   overflow-x: auto;
 
   .overflow-table .fixed-table-inner {
-    margin-left: -2px;
-
     table {
       //border: none;
     }
@@ -1249,7 +1247,9 @@ table.comp-c-listing {
         border-right: none;
       }
     }
-
+    a {
+      color: white;
+    }
     th {
       padding: 5px 3px !important;
       border: 1px solid white;
@@ -1280,6 +1280,13 @@ table.comp-c-listing {
      .MED-C + .BLK-C, .MED + .BLK, .MED-A + .BLK-A, .ATL-CA + .BLK-CA,{
       border-left: 3px solid #ddd !important;
     }
+
+    .BAL-A, .ATL-A, .MED-A, .BLK-A, .BAL-CA, .ATL-CA, .MED-CA, .BLK-CA {
+      .glyphicon-file {
+        color: #e09934 !important;
+      }
+    }
+
   }
 
   .table-landingpage {
@@ -1301,11 +1308,16 @@ table.comp-c-listing {
 
     tr {
       &.landpage-header {
+        th, td, a {
+          color: white;
+        }
         th {
+          background-color: #005588;
           font-size: 100%;
         }
         td {
-          background-color: #f1f1f1;
+          //background-color: #f1f1f1;
+          background-color: #005588;
         }
       }
 
@@ -1335,7 +1347,7 @@ table.comp-c-listing {
     }
 
     tr.base-row {
-      border: 1px solid black !important;
+      border: 1px solid white !important;
     }
 
     th, td {
@@ -1349,7 +1361,7 @@ table.comp-c-listing {
       vertical-align: middle !important;
 
       &.landpage-header {
-        font-size: 16px;
+        font-size: 15px;
         font-weight: bold;
       }
 
@@ -1360,10 +1372,12 @@ table.comp-c-listing {
     }
 
     th {
-      background-color: #005588;
-      color: white;
-      border: 1px solid #005588;
-      //background-color: #efefef;
+      //background-color: #005588;
+      //border: 1px solid #005588;
+      //color: white;
+
+      background-color: #efefef;
+      border: 1px solid white;
       //color: #333;
       font-weight: 200;
       font-family: 'RobotoM';
