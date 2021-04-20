@@ -256,7 +256,8 @@ class ReportData2012(BaseView, BaseUtil):
             report_due=self.report_due,
             report_date=report_date,
             help_text=self.help_text,
-            multiple_source_files=multiple_source_files
+            multiple_source_files=multiple_source_files,
+            use_translation=True
         )
 
         return data
@@ -632,24 +633,27 @@ class ReportData2014(ReportData2012):
 
         return view
 
-    @db.use_db_session('2012')
-    def __call__(self):
-        # returns all fileurls from sparql, including monitoring programme
-        # and monitoring subprogramme files
-        all_filenames = self.get_report_filename()
-
+    def filter_filenames_by_region(self, all_filenames):
         # filter by regions if country has multiple regions
-        filename = []
+        filenames = []
         for fileurl in all_filenames:
             if len(self.regions) == 1:
-                filename.append(fileurl)
+                filenames.append(fileurl)
                 continue
 
             if '/' + self.country_region_code.lower() not in fileurl:
                 continue
 
-            filename.append(fileurl)
+            filenames.append(fileurl)
 
+        return filenames
+
+    @db.use_db_session('2012')
+    def __call__(self):
+        # returns all fileurls from sparql, including monitoring programme
+        # and monitoring subprogramme files
+        all_filenames = self.get_report_filename()
+        filename = self.filter_filenames_by_region(all_filenames)
         self.filename = filename
 
         if 'translate' in self.request.form:

@@ -14,18 +14,20 @@ from wise.msfd.compliance.base import is_row_relevant_for_descriptor
 from wise.msfd.compliance.interfaces import (IRegionalReportDataView,
                                              IRegReportDataViewOverview)
 from wise.msfd.compliance.utils import DummyReportField
+from wise.msfd.data import get_report_filename
 from wise.msfd.gescomponents import (FEATURES_ORDER, get_features,
                                      get_parameters)
 from wise.msfd.translation import retrieve_translation
 from wise.msfd.utils import (ItemLabel, ItemList, fixedorder_sortkey,
                              items_to_rows, timeit)
 
-from ..nationaldescriptors.reportdata import ReportData2020
+from ..nationaldescriptors.reportdata import ReportData2014, ReportData2020
 from ..nationaldescriptors.utils import (consolidate_singlevalue_to_list,
                                          group_multiple_fields)
 from .a8 import RegDescA82012, RegDescA82018Row
 from .a9 import RegDescA92012, RegDescA92018Row
 from .a10 import RegDescA102012, RegDescA102018Row
+from .a11 import RegArticle11
 from .base import BaseRegComplianceView
 from .data import get_report_definition
 from .proxy import Proxy2018
@@ -140,6 +142,66 @@ class RegReportData2012(BaseRegComplianceView):
             return self.index()
 
         return render_html()
+
+
+class RegReportData2014(ReportData2014, BaseRegComplianceView):
+    implements(IRegionalReportDataView)
+
+    @property
+    def article_implementations(self):
+        res = {
+            'Art11': RegArticle11,
+        }
+
+        return res
+
+    @property
+    def regions(self):
+        return [self.country_region_code]
+
+    @property
+    def country_code(self):
+        return self.country_region_code
+
+    @property
+    def report_title(self):
+        title = "Member State report / {} / {} / {} / {}".format(
+            self.article,
+            self.report_year,
+            self.descriptor_title,
+            self.country_region_name,
+        )
+
+        return title
+
+    def get_report_filename(self):
+        res = []
+
+        for ccode, cname in self.available_countries:
+            filenames = get_report_filename(
+                '2014',
+                ccode,
+                self.country_region_code,
+                self.article,
+                self.descriptor,
+            )
+
+            res.extend(filenames)
+
+        return res
+
+    def filter_filenames_by_region(self, all_filenames):
+        filenames = []
+        subregions = self._countryregion_folder._subregions
+
+        for fileurl in all_filenames:
+            for subregion in subregions:
+                if '/' + subregion.lower() not in fileurl:
+                    continue
+
+            filenames.append(fileurl)
+
+        return filenames
 
 
 class RegReportData2018(BaseRegComplianceView):

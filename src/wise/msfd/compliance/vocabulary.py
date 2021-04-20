@@ -117,9 +117,9 @@ REGIONAL_DESCRIPTORS_REGIONS = [
     # Main regions
     Region('BAL', 'Baltic Sea', ('BAL',),
            ('FI', 'EE', 'LV', 'LT', 'PL', 'DE', 'DK', 'SE'), True),
-    Region('ATL', 'North East Atlantic', ('ABI', 'ACS', 'AMA', 'ANS',),
+    Region('ATL', 'North East Atlantic Ocean', ('ABI', 'ACS', 'AMA', 'ANS',),
            ('SE', 'DK', 'DE', 'NL', 'BE', 'FR', 'UK', 'IE', 'ES', 'PT'), True),
-    Region('MED', 'Mediterranean', ('MAD', 'MAL', 'MIC', 'MWE'),
+    Region('MED', 'Mediterranean Sea', ('MAD', 'MAL', 'MIC', 'MWE'),
            ('UK', 'ES', 'FR', 'IT', 'MT', 'SI', 'HR', 'EL', 'CY'), True),
     Region('BLK', 'Black Sea', ('BLK',), ('BG', 'RO'), True),
     # Sub regions

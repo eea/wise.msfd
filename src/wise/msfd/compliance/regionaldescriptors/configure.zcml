@@ -49,6 +49,14 @@
 
   <browser:page
     for="..interfaces.IRegionalDescriptorAssessment"
+    name="view-report-data-2014"
+    class=".reportdata.RegReportData2014"
+    template="./pt/report-data-view.pt"
+    permission="zope2.View"
+    />
+
+  <browser:page
+    for="..interfaces.IRegionalDescriptorAssessment"
     name="edit-assessment-data-2018"
     class=".assessment.RegDescEditAssessmentDataView"
     permission="wise.ViewAssessmentEditPage"
