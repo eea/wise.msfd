@@ -1084,7 +1084,7 @@ REG_DESC_QUESTIONS = get_questions('compliance/regionaldescriptors/data')
 class BaseArticle2012(BrowserView):
 
     def __init__(self, context, request, country_code, region_code,
-                 descriptor, article,  muids):
+                 descriptor, article, muids):
 
         BrowserView.__init__(self, context, request)
 

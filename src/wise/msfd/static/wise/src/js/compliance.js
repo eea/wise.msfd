@@ -178,15 +178,18 @@ if (!Array.prototype.last){
 
         $th.height(height);
         $subheader.height(height);
-        if ($th.height() >= cells_max_height) {
+        var thHeight = $th.height();
+        var thInnerHeight = $th.innerHeight();
+
+        if (thHeight >= cells_max_height) {
           $next.each(function(){
             if($(this).hasClass('translatable')) {
-              $(this).height($th.innerHeight());
+              $(this).height(thInnerHeight);
             } else {
-              $(this).height($th.height());
+              $(this).height(thHeight);
             }
           });
-          //$next.height($th.height());
+          //$next.height(thHeight);
         }
 
         $('div', this).css('margin-top', '-4px');
@@ -901,7 +904,6 @@ if (!Array.prototype.last){
         // and display them if they are not in viewport
         $(this).setupStickyRows();
       });
-
       setupCustomScroll();
 
       // setupScrollableTargets();

@@ -578,7 +578,6 @@ class Article11(BaseArticle2012):
         super(Article11, self).__init__(context, request, country_code,
                                         region_code, descriptor, article,
                                         muids)
-
         self._filename = filenames
 
     @property
@@ -656,6 +655,13 @@ class Article11(BaseArticle2012):
         # separate Monitoring Programmes from Sub Programmes
         for fileurl in fileurls:
             root = self.get_report_file_root(fileurl)
+            region = xp('//Region', root)
+
+            if region:
+                region = region[0].text
+
+            if region not in self.context.regions:
+                continue
 
             if root.tag == 'MON':
                 nodes = xp('//MonitoringProgrammes/*', root)

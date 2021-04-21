@@ -10,7 +10,7 @@
 <tal:cond tal:condition="python: 'assessment-module' in request.URL0">
   <script src="/marine/++resource++msfd/bs3/js/bootstrap.min.js"></script>
   <script src="/marine/++resource++static_js/wise_javascript_variables.js"></script>
-  <script src="/marine/++resource++static_js/compliance.js?rel=970cce2d27"></script>
+  <script src="/marine/++resource++static_js/compliance.js?rel=72d5acbe2d"></script>
   <script src="/marine/++resource++static_js/assessment-edit.js?rel=b04d81a794"></script>
   <script src="/marine/++resource++msfd.trans/translate-comp.js"></script>
   <script src="/marine/++resource++msfd/js/table-edit.js?rel=59085174f0"></script>

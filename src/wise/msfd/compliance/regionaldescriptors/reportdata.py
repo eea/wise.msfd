@@ -1,3 +1,5 @@
+
+from collections import OrderedDict
 import logging
 import re
 from io import BytesIO
@@ -156,8 +158,12 @@ class RegReportData2014(ReportData2014, BaseRegComplianceView):
         return res
 
     @property
+    def muids(self):
+        return []
+
+    @property
     def regions(self):
-        return [self.country_region_code]
+        return self._countryregion_folder._subregions
 
     @property
     def country_code(self):
@@ -173,6 +179,22 @@ class RegReportData2014(ReportData2014, BaseRegComplianceView):
         )
 
         return title
+
+    def get_report_header_data(self, report_by, source_file, factsheet,
+                               report_date, multiple_source_files=False):
+        data = OrderedDict(
+            title=self.report_title,
+            report_by=report_by,
+            source_file=[],
+            factsheet=factsheet,
+            report_due=self.report_due,
+            report_date=report_date,
+            help_text=self.help_text,
+            multiple_source_files=multiple_source_files,
+            use_translation=True
+        )
+
+        return data
 
     def get_report_filename(self):
         res = []
@@ -191,15 +213,23 @@ class RegReportData2014(ReportData2014, BaseRegComplianceView):
         return res
 
     def filter_filenames_by_region(self, all_filenames):
+        """ impossible to filter files by region by only looking
+            at the filename """
+
+        return all_filenames
+
         filenames = []
         subregions = self._countryregion_folder._subregions
 
         for fileurl in all_filenames:
             for subregion in subregions:
-                if '/' + subregion.lower() not in fileurl:
+                if 'msfd_mp/env' in 'fileurl':
+                    filenames.append(fileurl)
                     continue
 
-            filenames.append(fileurl)
+                if 'msfd_mp/' + subregion.lower() not in fileurl:
+                    import pdb; pdb.set_trace()
+                    continue
 
         return filenames
 

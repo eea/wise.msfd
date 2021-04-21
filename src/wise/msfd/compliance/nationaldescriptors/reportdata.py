@@ -624,6 +624,22 @@ class ReportData2014(ReportData2012):
     year = report_year = '2014'
     report_due = '2014-10-15'
 
+    def get_report_header_data(self, report_by, source_file, factsheet,
+                               report_date, multiple_source_files=False):
+        data = OrderedDict(
+            title=self.report_title,
+            report_by=report_by,
+            source_file=source_file,
+            factsheet=factsheet,
+            report_due=self.report_due,
+            report_date=report_date,
+            help_text=self.help_text,
+            multiple_source_files=multiple_source_files,
+            use_translation=True
+        )
+
+        return data
+
     def get_report_view(self):
         klass = self.article_implementations[self.article]
 
@@ -635,6 +651,7 @@ class ReportData2014(ReportData2012):
 
     def filter_filenames_by_region(self, all_filenames):
         # filter by regions if country has multiple regions
+        # TODO need better filtering by <Region> text
         filenames = []
         for fileurl in all_filenames:
             if len(self.regions) == 1:
