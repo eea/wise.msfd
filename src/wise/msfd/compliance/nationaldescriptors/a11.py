@@ -35,14 +35,14 @@ def xp(xpath, node):
 
 
 class A11Item(Item):
-    def __init__(self, parent, mp_node, subprog_node, subprog_name):
+    def __init__(self, context, mp_node, subprog_node, subprog_name):
 
         super(A11Item, self).__init__([])
 
         self.mp_name = mp_node.tag
         self.subprog_node = subprog_node
         self.subprog_name = subprog_name
-        self.parent = parent
+        self.context = context
         self.mp_node = mp_node
         self.mpr = RelaxedNodeEmpty(mp_node, NSMAP)
         self.subr = RelaxedNodeEmpty(subprog_node, NSMAP)
@@ -132,12 +132,22 @@ class A11Item(Item):
             ('', self.default)
         ]
 
+        if self.context.is_regional:
+            regional_attrs = [
+                ('MemberState', self.member_state)
+            ]
+
+            attrs = regional_attrs + attrs
+
         for title, getter in attrs:
             self[title] = getter()
             setattr(self, title, getter())
 
     def default(self):
         return ''
+
+    def member_state(self):
+        return xp('//MemberState/text()', self.mp_node.getparent())[0]
 
     def node_name(self):
         return self.mp_name
@@ -571,6 +581,7 @@ class Article11(BaseArticle2012):
     help_text = ""
     available_regions = []
     translatable_extra_data = []
+    is_regional = False
 
     def __init__(self, context, request, country_code, region_code,
                  descriptor, article,  muids, filenames=None):
@@ -639,6 +650,29 @@ class Article11(BaseArticle2012):
                     seen.add(value)
 
         return ''
+
+    def items_to_rows(self, items):
+        rep_fields = self.context.get_report_definition()
+
+        for field in rep_fields:
+            field_name = field.name
+            values = []
+
+            for inner in items:
+                values.append(inner[field_name])
+
+            raw_values = []
+            vals = []
+
+            for v in values:
+                raw_values.append(v)
+
+                vals.append(self.context.translate_value(
+                    field_name, v, self.country_code))
+
+            row = national_compoundrow(self.context, field, vals,
+                                       raw_values)
+            self.rows.append(row)
 
     def setup_data(self):
         descriptor_class = get_descriptor(self.descriptor)
@@ -735,30 +769,9 @@ class Article11(BaseArticle2012):
         items = sorted(items,
                        key=lambda i: [getattr(i, o) for o in self.sort_order])
 
-        # ikeys = items[0].keys()
-        rep_fields = self.context.get_report_definition()
-
-        for field in rep_fields:
-            field_name = field.name
-            values = []
-
-            for inner in items:
-                values.append(inner[field_name])
-
-            raw_values = []
-            vals = []
-
-            for v in values:
-                raw_values.append(v)
-
-                vals.append(self.context.translate_value(
-                    field_name, v, self.country_code))
-
-            row = national_compoundrow(self.context, field, vals,
-                                       raw_values)
-            self.rows.append(row)
-
         self.cols = items
+
+        self.items_to_rows(items)
 
     def __call__(self):
         self.setup_data()

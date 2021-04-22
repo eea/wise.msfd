@@ -180,6 +180,18 @@ class RegReportData2014(ReportData2014, BaseRegComplianceView):
 
         return title
 
+    def translate_value(self, fieldname, value, source_lang):
+        t = ReportData2014.translate_value(self, fieldname, value, source_lang)
+
+        return t
+
+    def get_report_definition(self):
+        rep_def = get_report_definition(self.year, self.article).get_fields()
+
+        filtered_rep_def = [f for f in rep_def if f.section != 'empty']
+
+        return filtered_rep_def
+
     def get_report_header_data(self, report_by, source_file, factsheet,
                                report_date, multiple_source_files=False):
         data = OrderedDict(

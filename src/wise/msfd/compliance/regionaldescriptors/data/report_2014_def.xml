@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <data>
   <Art11>
-    <element setlevel="0" section="MonitoringProgramme" name="MonitoringProgrammeName" group-name="Monitoring programme">Monitoring programme name</element>
+    <element setlevel="0" section="MonitoringProgramme" name="MemberState">Member state</element>
+    <element setlevel="1" section="MonitoringProgramme" name="MonitoringProgrammeName" group-name="Monitoring programme">Monitoring programme name</element>
     <element section="MonitoringProgramme" name="ProgrammeID" group-name="Monitoring programme">Reference existing programme</element>
     <element section="MonitoringProgramme" name="MarineUnitID" group-name="Monitoring programme">Marine Unit ID</element>
     <element section="MonitoringProgramme" name="Q4e_ProgrammeID" group-name="">Q4e - Programme ID</element>
@@ -35,7 +36,7 @@
     <element section="MonitoringProgramme" name="Q7d_DescriptionMeasures" group-name="" translate="true">Q7d - Description of monitoring for measures</element>
     <element section="MonitoringProgramme" name="Q7f_GapFillingDateActivitiesMeasures" group-name="">Q7f - Gap-filling date for activities and measures</element>
     <element section="MonitoringProgramme" name="Q8a_LinksExistingMonitoringProgrammes" group-name="">Q8a - Links to existing Monitoring Programmes</element>
-    <element setlevel="1" section="SubProgramme" name="SubMonitoringProgrammeID" group-name="Reference sub-programme">Sub-programme ID</element>
+    <element setlevel="2" section="SubProgramme" name="SubMonitoringProgrammeID" group-name="Reference sub-programme">Sub-programme ID</element>
     <element section="SubProgramme" name="SubMonitoringProgrammeName" group-name="Reference sub-programme">Sub-programme name</element>
     <element section="SubProgramme" name="Q4g_SubProgrammeID" group-name="Q4g - Sub-programmes">Sub-programme ID</element>
     <element section="SubProgramme" name="SubMonitoringProgrammeName2" group-name="Q4g - Sub-programmes">Sub-programme name</element>
@@ -48,14 +49,14 @@
     <element section="empty" name=""></element>
     <element section="empty" name=""></element>
     <element section="empty" name=""></element>
-    <element setlevel="0" section="MonitoringProgramme" name="Habitats" group-name="Q5c - Features">Q5c - Habitats</element>
+    <element setlevel="1" section="MonitoringProgramme" name="Habitats" group-name="Q5c - Features">Q5c - Habitats</element>
     <element section="MonitoringProgramme" name="SpeciesList" group-name="Q5c - Features">Q5c - Species list</element>
     <element section="MonitoringProgramme" name="PhysicalChemicalFeatures" group-name="Q5c - Features">Q5c - Physical/Chemical features</element>
     <element section="MonitoringProgramme" name="Pressures" group-name="Q5c - Features">Q5c - Pressures</element>
-    <element setlevel="1" section="SubProgramme" name="Q9a_ElementMonitored" group-name="">Q9a - Elements</element>
-    <element setlevel="0" section="MonitoringProgramme" name="Q5a_RelevantGESCriteria" group-name="Q5a - GES criteria">Relevant GES criteria</element>
+    <element setlevel="2" section="SubProgramme" name="Q9a_ElementMonitored" group-name="">Q9a - Elements</element>
+    <element setlevel="1" section="MonitoringProgramme" name="Q5a_RelevantGESCriteria" group-name="Q5a - GES criteria">Relevant GES criteria</element>
     <element section="MonitoringProgramme" name="Q5b_RelevantGESIndicators" group-name="Q5b - GES indicators">Relevant GES indicators</element>
-    <element setlevel="1" section="SubProgramme" name="Species_distribution" group-name="Q9b - Parameters monitored (state/impact)">Species distribution</element>
+    <element setlevel="2" section="SubProgramme" name="Species_distribution" group-name="Q9b - Parameters monitored (state/impact)">Species distribution</element>
     <element section="SubProgramme" name="Species_population_size" group-name="Q9b - Parameters monitored (state/impact)">Species population size</element>
     <element section="SubProgramme" name="Species_population_characteristics" group-name="Q9b - Parameters monitored (state/impact)">Species population characteristics</element>
     <element section="SubProgramme" name="Species_impacts" group-name="Q9b - Parameters monitored (state/impact)">Species impacts</element>
@@ -70,8 +71,8 @@
     <element section="SubProgramme" name="Other" group-name="Q9b Parameters monitored (other)">Other</element>
     <element section="SubProgramme" name="Q4i_SpatialScope" group-name="">Q41 Spatial scope</element>
     <element section="SubProgramme" name="Q4j_DescriptionSpatialScope" group-name="" translate="true">Q4j - Description of spatial scope</element>
-    <element setlevel="0" section="MonitoringProgramme" name="MarineUnitID2" group-name="">Marine Unit IDs</element>
-    <element setlevel="1" section="SubProgramme" name="Q4h_StartDate" group-name="Q4h - Temporal scope">Start date- End date</element>
+    <element setlevel="1" section="MonitoringProgramme" name="MarineUnitID2" group-name="">Marine Unit IDs</element>
+    <element setlevel="2" section="SubProgramme" name="Q4h_StartDate" group-name="Q4h - Temporal scope">Start date- End date</element>
     <element section="SubProgramme" name="Q9h_TemporalResolutionSampling" group-name="">Q9h - Temporal resolution of sampling</element>
     <element section="empty" name=""></element>
     <element section="SubProgramme" name="Q9c_MonitoringMethod" group-name="">Q9c - Monitoring method</element>
