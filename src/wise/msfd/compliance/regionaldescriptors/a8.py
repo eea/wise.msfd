@@ -5,7 +5,8 @@ from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 from wise.msfd import db, sql  # , sql_extra
 from wise.msfd.data import muids_by_country
 from wise.msfd.gescomponents import (FEATURES_DB_2012, FEATURES_DB_2018,
-                                     THEMES_2018_ORDER)
+                                     FEATURES_ORDER, THEMES_2018_ORDER)
+from wise.msfd.labels import GES_LABELS, COMMON_LABELS
 from wise.msfd.translation import get_translated
 from wise.msfd.utils import ItemLabel, fixedorder_sortkey
 
@@ -77,10 +78,21 @@ class RegDescA82018Row(BaseRegDescRow):
 
     @compoundrow
     def get_element_row(self):
+        element_order = [
+            # COMMON_LABELS[feat]
+            FEATURES_DB_2018[feat].label
+            for feat in FEATURES_ORDER
+            if feat in FEATURES_DB_2018
+        ]
+
         all_elements = self.get_unique_values("Element")
+        all_elements_ordered = sorted(
+            all_elements, key=lambda i: fixedorder_sortkey(i, element_order)
+        )
+
         rows = []
 
-        for element in all_elements:
+        for element in all_elements_ordered:
             values = []
 
             for country_code, country_name in self.countries:

@@ -535,7 +535,7 @@ def parse_features_from_db_2018():
 
 FEATURES_DB_2018 = parse_features_from_db_2018()
 
-
+# TODO the list is not complete, get the complete list if needed in the future
 FEATURES_ORDER = [
     'BirdsGrazing',
     'BirdsWading',
@@ -554,7 +554,32 @@ FEATURES_ORDER = [
     'FishCommercial',
     'CephaCoastShelf',
     'CephaDeepSea',
+    'HabBenAll',
     'HabBenBHT',
+    'HabBenLitRock',
+    'HabBenLitSed',
+    'HabBenInfralitRock',
+    'HabBenInfralitCoarSed',
+    'HabBenInfralitMxdSed',
+    'HabBenInfralitSand',
+    'HabBenInfralitMud',
+    'HabBenCircalitRock',
+    'HabBenCircalitCoarSed',
+    'HabBenCircalitMxdSed',
+    'HabBenCircalitSand',
+    'HabBenCircalitMud',
+    'HabBenOffshRock',
+    'HabBenOffshCoarSed',
+    'HabBenOffshMxdSed',
+    'HabBenOffshSand',
+    'HabBenOffshMud',
+    'HabBenBathyalUpRock',
+    'HabBenBathyalUpSed',
+    'HabBenBathyalLowRock',
+    'HabBenBathyalLowSed',
+    'HabBenAbyssal',
+    'HabBenAbyssal',
+    'HabBenBroad',
     'HabBenOther',
     'HabPelBHT',
     'HabPelOther',
