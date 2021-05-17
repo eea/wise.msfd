@@ -186,7 +186,7 @@ class ReportingAreasTable(RegionalIntroduction):
              self.get_number_of_mrus()),
             ("Range of extent of Marine Reporting Units (km2)",
              self.default()),
-            ("Average extent of Marine Reporting Units (km2)", self.default())
+            # ("Average extent of Marine Reporting Units (km2)", self.default())
         ]
         self.rows = rows
         view = SimpleTable(self, self.request, rows)
@@ -233,7 +233,7 @@ class MarineWatersTable(RegionalIntroduction):
 
         rows = [
             ("", [x[1] for x in self.available_countries]),
-            ("Length of coastline (km)", self.default()),
+            # ("Length of coastline (km)", self.default()),
             ("Area of marine waters (water column and seabed) (km2)",
              self.get_water_seabed_row(data)),
             ("Area of marine waters (seabed only - beyond EEZ or quivalent) "

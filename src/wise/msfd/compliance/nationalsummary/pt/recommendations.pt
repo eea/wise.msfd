@@ -1,7 +1,7 @@
 <div>
   <h3>
     <span>Recommendations to Member State</span>
-    <a style="font-size: 14px;" href="./../../@@recommendations" target="_blank">(Edit recommendations)</a>
+    <a style="font-size: 14px;" href="./../@@recommendations" target="_blank">(Edit recommendations)</a>
   </h3>
   <tal:rep tal:repeat="region_data options/data">
     <h4 tal:content="python: region_data[0]">Region title</h4>

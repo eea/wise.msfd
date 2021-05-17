@@ -54,7 +54,7 @@
 
   <h4>Member State's marine waters</h4>
   <div tal:content="structure python: view.scope_of_marine_waters">Editable text</div>
-  <p>Length of coastline (km): <span><strong>N/A</strong></span></p>
+<!--  <p>Length of coastline (km): <span><strong>N/A</strong></span></p>-->
   <p>Area of marine waters (water column and seabed) (km2):
     <span tal:content="view/water_seabed_value"><strong>N/A</strong></span>
   </p>

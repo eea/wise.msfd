@@ -181,9 +181,9 @@ class MarineRegionSubregions(RegionalDescriptorsSimpleTable):
         return rows
 
         row_headers = [
-            'Length of coastline (km) - total',
-            'Length of coastline (km) - EU',
-            'Length of coastline (km) - non EU',
+            # 'Length of coastline (km) - total',
+            # 'Length of coastline (km) - EU',
+            # 'Length of coastline (km) - non EU',
             'Area (km2) - total',
             'Area (km2) - EU',
             'Area (km2) - non EU'
