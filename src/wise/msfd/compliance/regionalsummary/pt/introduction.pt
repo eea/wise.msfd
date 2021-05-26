@@ -57,9 +57,9 @@
   <div tal:content="structure view/length_of_coastline"></div>
   <div tal:content="structure view/marine_waters"></div>
 
-  <h4>Reporting areas (Marine Reporting Units)</h4>
-  <div tal:content="structure view/reporting_areas_text">Text</div>
-  <div tal:replace="structure view/assessment_areas">Mru table</div>
+<!--  <h4>Reporting areas (Marine Reporting Units)</h4>-->
+<!--  <div tal:content="structure view/reporting_areas_text">Text</div>-->
+<!--  <div tal:replace="structure view/assessment_areas">Mru table</div>-->
 
   <h4>Assessment methodology</h4>
   <div tal:content="structure python: view.assessment_methodology">Long text</div>

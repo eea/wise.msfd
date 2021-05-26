@@ -203,8 +203,11 @@ class MarineRegionSubregions(RegionalDescriptorsSimpleTable):
         return rows
 
 
-@register_section
+# @register_section
 class MarineReportingAreas(RegionalDescriptorsSimpleTable):
+    """ TODO removed from regional assessment summary and overview pages
+    """
+
     title = 'Marine reporting areas'
     _id = 'reg-overview-mra'
 
