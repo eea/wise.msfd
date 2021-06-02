@@ -167,6 +167,13 @@
     permission="zope2.View"
     />
 
+  <browser:page
+    for="..interfaces.INationalDescriptorsFolder"
+    name="export-data"
+    class=".reportdata.ExportMSReportData"
+    permission="zope2.View"
+    />
+
   <!-- Temp pages-->
   <!-- <browser:page -->
   <!--   for="*" -->

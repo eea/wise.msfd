@@ -31,10 +31,11 @@ from wise.msfd.data import (get_all_report_filenames,
                             get_envelope_release_date, get_factsheet_url,
                             get_report_file_url, get_report_filename,
                             get_xml_report_data)
-from wise.msfd.gescomponents import get_descriptor, get_features
+from wise.msfd.gescomponents import (get_all_descriptors, get_descriptor,
+                                     get_features)
 from wise.msfd.translation import get_translated, retrieve_translation
-from wise.msfd.utils import (current_date, items_to_rows, natural_sort_key,
-                             timeit)
+from wise.msfd.utils import (current_date, get_obj_fields, items_to_rows,
+                             natural_sort_key, timeit)
 from z3c.form.button import buttonAndHandler
 from z3c.form.field import Fields
 from z3c.form.form import Form
@@ -67,6 +68,9 @@ ReportingInformation2018 = namedtuple(
     'ReportingInformation', ['ReportedFileLink', 'ContactOrganisation',
                              'ReportingDate'])
 
+
+ORDER_COLS_ART11 = ('CountryCode', 'Descriptor', 'MonitoringProgrammes',
+                    'P_ProgrammeCode', 'GESCriteria', 'Feature')
 
 def get_reportdata_key(func, self, *args, **kwargs):
     """ Reportdata template rendering cache key generation
@@ -954,12 +958,6 @@ view."""
 
         return order
 
-    def _get_order_cols_Art11(self):
-        o = ('CountryCode', 'Descriptor', 'MonitoringProgrammes',
-             'P_ProgrammeCode', 'GESCriteria', 'Feature')
-
-        return o
-
     def get_data_from_view_Art8(self):
         sess = db.session()
         t = sql2018.t_V_ART8_GES_2018
@@ -1205,7 +1203,7 @@ view."""
 
         count, q = db.get_all_records_ordered(
             t,
-            self._get_order_cols_Art11(),
+            ORDER_COLS_ART11,
             *conditions
         )
 
@@ -1300,7 +1298,7 @@ view."""
             insert_missing_criterions(data_by_mru, self.descriptor_obj)
 
         if self.article == 'Art11':
-            order = self._get_order_cols_Art11()
+            order = ORDER_COLS_ART11
             data_by_mru = consolidate_singlevalue_to_list(
                 data, 'Element', order
             )
@@ -1960,3 +1958,126 @@ class ReportDataOverview2020Art11(ReportData2020):
             .format(self.country_name, self.country_region_name)
 
         return title
+
+
+class ExportMSReportData(BaseView):
+    """"""
+    template = Template('pt/export-data.pt')
+
+    @property
+    def descriptors(self):
+        descriptors = get_all_descriptors()
+        descriptors = [d for d in descriptors if d[0] != 'D1']
+
+        return descriptors
+
+    @property
+    def articles(self):
+        return ['Art9', 'Art8', 'Art10']
+
+    def get_report_definition(self):
+        year = '2018'
+
+        if self.article in ('Art11', ):
+            year = '2020'
+
+        rep_def = get_report_definition(year, self.article).get_fields()
+
+        filtered_fields = [f for f in rep_def if f.section != 'empty']
+
+        return filtered_fields
+
+    def data_to_xls(self, labels, data):
+        out = BytesIO()
+        workbook = xlsxwriter.Workbook(out, {'constant_memory': True})
+        sheetname = 'Data'
+        worksheet = workbook.add_worksheet(sheetname)
+
+        for i, label in enumerate(labels):
+            worksheet.write(0, i, label)
+
+        x = 0
+
+        for row in data:
+            x += 1
+
+            for iv, value in enumerate(row):
+                worksheet.write(x, iv, unicode(value))
+
+        workbook.close()
+        out.seek(0)
+
+        return out
+
+    @property
+    def article(self):
+        article = self.request.form['art']
+
+        return article
+
+    @property
+    def country_code(self):
+        return 'Not available'
+
+    @db.use_db_session('2018')
+    def get_art11_data(self, _descriptor):
+        t = sql2018.t_V_ART11_Strategies_Programmes_2020
+
+        conditions = []
+
+        descriptor = get_descriptor(_descriptor)
+        all_ids = list(descriptor.all_ids())
+
+        if _descriptor.startswith('D1.'):
+            all_ids.append('D1')
+
+        conditions.append(t.c.Descriptor.in_(all_ids))
+
+        count, q = db.get_all_records_ordered(
+            t,
+            ORDER_COLS_ART11,
+            *conditions
+        )
+
+        data = [x for x in q]
+
+        return data
+
+        data = [Proxy2018(row, self) for row in data]
+        data_by_mru = consolidate_singlevalue_to_list(
+            data, 'Element', ORDER_COLS_ART11
+        )
+
+        if data_by_mru:
+            data_by_mru = {"": data_by_mru}
+        else:
+            data_by_mru = {}
+
+        return data_by_mru
+
+    def download(self, article, descriptor):
+        articles_map = {
+            'Art11': self.get_art11_data,
+        }
+
+        xlsdata = articles_map[article](descriptor)
+        labels = get_obj_fields(xlsdata[0])
+
+        xlsio = self.data_to_xls(labels, xlsdata)
+        sh = self.request.response.setHeader
+
+        sh('Content-Type', 'application/vnd.openxmlformats-officedocument.'
+           'spreadsheetml.sheet')
+        fname = "-".join([article, descriptor])
+        sh('Content-Disposition', 'attachment; filename=%s.xlsx' % fname)
+
+        return xlsio.read()
+
+    def __call__(self):
+        if 'art' in self.request.form:
+            article = self.request.form['art']
+            descriptor = self.request.form['desc']
+
+            return self.download(article, descriptor)
+
+        return self.template()
