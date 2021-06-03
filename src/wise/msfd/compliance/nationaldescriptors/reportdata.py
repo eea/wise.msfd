@@ -7,6 +7,7 @@ from io import BytesIO
 from lxml.etree import fromstring
 from sqlalchemy import or_
 from zope.interface import implements
+from zope.security import checkPermission
 from zope.schema import Choice
 from zope.schema.vocabulary import SimpleTerm, SimpleVocabulary
 
@@ -72,6 +73,7 @@ ReportingInformation2018 = namedtuple(
 ORDER_COLS_ART11 = ('CountryCode', 'Descriptor', 'MonitoringProgrammes',
                     'P_ProgrammeCode', 'GESCriteria', 'Feature')
 
+
 def get_reportdata_key(func, self, *args, **kwargs):
     """ Reportdata template rendering cache key generation
     """
@@ -79,6 +81,7 @@ def get_reportdata_key(func, self, *args, **kwargs):
     if 'nocache' in self.request.form:
         raise volatile.DontCache
 
+    can_edit = checkPermission('wise.EditTranslations', self.context)
     muids = ",".join([m.id for m in self.muids])
     region = getattr(self, 'country_region_code', ''.join(self.regions))
     focus_muid = getattr(self, 'focus_muid', '')
@@ -96,6 +99,8 @@ def get_reportdata_key(func, self, *args, **kwargs):
         muids,
         focus_muid,
         current_date(),
+        unicode(can_edit),
+
     ])
     # TODO why replace '.', makes D1.1 the same as D11
     # res = res.replace('.', '').replace('-', '')

@@ -23,7 +23,8 @@ from wise.msfd.translation import retrieve_translation
 from wise.msfd.utils import (ItemLabel, ItemList, fixedorder_sortkey,
                              items_to_rows, timeit)
 
-from ..nationaldescriptors.reportdata import ReportData2014, ReportData2020
+from ..nationaldescriptors.reportdata import (ORDER_COLS_ART11, ReportData2014,
+                                              ReportData2020)
 from ..nationaldescriptors.utils import (consolidate_singlevalue_to_list,
                                          group_multiple_fields)
 from .a8 import RegDescA82012, RegDescA82018Row
@@ -203,7 +204,7 @@ class RegReportData2014(ReportData2014, BaseRegComplianceView):
             report_date=report_date,
             help_text=self.help_text,
             multiple_source_files=multiple_source_files,
-            use_translation=True
+            use_translation=False
         )
 
         return data
@@ -674,7 +675,7 @@ class RegReportData2020(ReportData2020, RegReportData2018):
     def get_data_from_db(self):
         data = self.get_data_from_view(self.article)
         data = [Proxy2018(row, self) for row in data]
-        order = self._get_order_cols_Art11()
+        order = ORDER_COLS_ART11
 
         data_ = consolidate_singlevalue_to_list(
             data, 'Element', order
