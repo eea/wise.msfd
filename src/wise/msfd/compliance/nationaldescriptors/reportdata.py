@@ -1968,6 +1968,7 @@ class ReportDataOverview2020Art11(ReportData2020):
 class ExportMSReportData(BaseView):
     """"""
     template = Template('pt/export-data.pt')
+    name = 'export-data'
 
     @property
     def descriptors(self):
@@ -1998,15 +1999,19 @@ class ExportMSReportData(BaseView):
         sheetname = 'Data'
         worksheet = workbook.add_worksheet(sheetname)
 
+        labels = [x for x in labels if x not in self.blacklist_fields]
+
         for i, label in enumerate(labels):
-            worksheet.write(0, i, label)
+            _label = label.replace('P_', '')
+            worksheet.write(0, i, _label)
 
         x = 0
 
         for row in data:
             x += 1
 
-            for iv, value in enumerate(row):
+            for iv, fieldname in enumerate(labels):
+                value = getattr(row, fieldname)
                 worksheet.write(x, iv, unicode(value))
 
         workbook.close()
@@ -2023,6 +2028,12 @@ class ExportMSReportData(BaseView):
     @property
     def country_code(self):
         return 'Not available'
+
+    @property
+    def blacklist_fields(self):
+        blacklist = ('IdReportedInformation',)
+
+        return blacklist
 
     @db.use_db_session('2018')
     def get_art11_data(self, _descriptor):
