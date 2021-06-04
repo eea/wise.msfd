@@ -1981,6 +1981,22 @@ class ExportMSReportData(BaseView):
     def articles(self):
         return ['Art9', 'Art8', 'Art10']
 
+    @property
+    def article(self):
+        article = self.request.form['art']
+
+        return article
+
+    @property
+    def country_code(self):
+        return 'Not available'
+
+    @property
+    def blacklist_fields(self):
+        blacklist = ('IdReportedInformation',)
+
+        return blacklist
+
     def get_report_definition(self):
         year = '2018'
 
@@ -1999,8 +2015,6 @@ class ExportMSReportData(BaseView):
         sheetname = 'Data'
         worksheet = workbook.add_worksheet(sheetname)
 
-        labels = [x for x in labels if x not in self.blacklist_fields]
-
         for i, label in enumerate(labels):
             _label = label.replace('P_', '')
             worksheet.write(0, i, _label)
@@ -2011,29 +2025,13 @@ class ExportMSReportData(BaseView):
             x += 1
 
             for iv, fieldname in enumerate(labels):
-                value = getattr(row, fieldname)
+                value = getattr(row, fieldname) or ''
                 worksheet.write(x, iv, unicode(value))
 
         workbook.close()
         out.seek(0)
 
         return out
-
-    @property
-    def article(self):
-        article = self.request.form['art']
-
-        return article
-
-    @property
-    def country_code(self):
-        return 'Not available'
-
-    @property
-    def blacklist_fields(self):
-        blacklist = ('IdReportedInformation',)
-
-        return blacklist
 
     @db.use_db_session('2018')
     def get_art11_data(self, _descriptor):
@@ -2056,8 +2054,11 @@ class ExportMSReportData(BaseView):
         )
 
         data = [x for x in q]
+        fields = get_report_definition('2020', self.article).get_fields()
+        field_names = [x.name for x in fields if x.title]
+        labels_ordered = ['SubRegions', 'CountryCode'] + field_names
 
-        return data
+        return labels_ordered, data
 
         data = [Proxy2018(row, self) for row in data]
         data_by_mru = consolidate_singlevalue_to_list(
@@ -2076,8 +2077,7 @@ class ExportMSReportData(BaseView):
             'Art11': self.get_art11_data,
         }
 
-        xlsdata = articles_map[article](descriptor)
-        labels = get_obj_fields(xlsdata[0])
+        labels, xlsdata = articles_map[article](descriptor)
 
         xlsio = self.data_to_xls(labels, xlsdata)
         sh = self.request.response.setHeader
