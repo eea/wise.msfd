@@ -5,6 +5,7 @@ from collections import namedtuple
 from datetime import datetime
 from io import BytesIO
 from lxml import etree
+from persistent.list import PersistentList
 
 from AccessControl import Unauthorized
 from zope.interface import alsoProvides
@@ -39,7 +40,7 @@ from wise.msfd.gescomponents import (get_all_descriptors, get_descriptor,
 from wise.msfd.labels import get_indicator_labels
 from wise.msfd.translation import Translation, get_detected_lang
 from wise.msfd.translation.interfaces import ITranslationsStorage
-from wise.msfd.utils import timeit
+from wise.msfd.utils import get_annot, timeit
 
 from . import interfaces
 from .base import (_get_secondary_articles, BaseComplianceView,
@@ -48,6 +49,7 @@ from .base import (_get_secondary_articles, BaseComplianceView,
 
 logger = logging.getLogger('wise.msfd')
 
+ANNOT_XLSDATA = 'wise.msfd.xlsdata'
 EXPORTPASS = os.environ.get('XMLEXPORTPASS', None)
 
 CONTRIBUTOR_GROUP_ID = 'extranet-wisemarine-msfd-tl'
@@ -1174,6 +1176,8 @@ class AdminScoring(BaseComplianceView, AssessmentDataMixin):
 
     @timeit
     def data_to_xls(self, all_data):
+        logger.info('Preparing data to xls!')
+
         out = BytesIO()
         workbook = xlsxwriter.Workbook(out, {'constant_memory': True})
 
@@ -1230,12 +1234,31 @@ class AdminScoring(BaseComplianceView, AssessmentDataMixin):
                    encoding='utf-8')
 
         out.seek(0)
-        
+
         return out
+
+    def save_xsldata_to_annot(self, data):
+        annot = get_annot()
+        annot[ANNOT_XLSDATA] = (datetime.now(), data)
+
+    def get_xlsdata_from_annot(self):
+        annot = get_annot()
+        xlsdata = annot.get(ANNOT_XLSDATA, (datetime.now(), None))
+
+        return xlsdata
 
     @timeit
     @cache(lambda func, *args: func.__name__, lifetime=1800)
     def get_export_scores_data(self, context):
+        last_savedate, annot_xlsdata = self.get_xlsdata_from_annot()
+        diff = datetime.now() - last_savedate
+        total_mins = (diff.days * 1440 + diff.seconds / 60)
+
+        if total_mins < 60 and annot_xlsdata:
+            logger.info('Got xlsdata from annotations: '
+                        'data saved %s minutes ago', total_mins)
+            return annot_xlsdata
+
         # National descriptors data
         nda_labels = ('Country', 'Country title', 'Region', 'Region title',
                       'Descriptor', 'Descriptor title',
@@ -1273,11 +1296,13 @@ class AdminScoring(BaseComplianceView, AssessmentDataMixin):
             for sec in self.ndas_sec
         ]
 
-        all_data = [
+        all_data = PersistentList()
+        all_data.extend([
             ('National descriptors', nda_labels, nda_xlsdata),
             ('Regional descriptors', rda_labels, rda_xlsdata),
             ('Articles 3, 4, 7', sec_labels, sec_xlsdata)
-        ]
+        ])
+        self.save_xsldata_to_annot(all_data)
 
         return all_data
 
