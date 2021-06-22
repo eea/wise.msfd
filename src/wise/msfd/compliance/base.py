@@ -842,6 +842,12 @@ class AssessmentQuestionDefinition:
 
                for t in targets]
 
+        if not res:
+            res = [Target('NoTargetsReported',
+                          'NoTargetsReported',
+                          'No targets reported',
+                          '2018')]
+
         # sort Targets and make them distinct
         res_sorted = sorted(set(res), key=lambda _x: natural_sort_key(_x.id))
 
