@@ -82,12 +82,16 @@ class OverallScores(object):
 
         overall_score = 0
         max_score = 0
+        overall_max = 0
         weights = self.article_weights[article]
 
         for phase in weights:
             score = self.get_score_for_phase(phase)
+            max_phase_score = getattr(self, phase)['max_score']
             overall_score += score * weights[phase]
-            max_score += getattr(self, phase)['max_score'] * weights[phase]
+            max_score += max_phase_score * weights[phase]
+            if max_phase_score > 0:
+                overall_max += weights[phase] * 100
 
         if max_score == 0:  # all phases not relevant
             return '-', '-'
@@ -101,10 +105,9 @@ class OverallScores(object):
             ):
             overall_score = 0
 
-        final_score = int(round(overall_score))
-
-        # TODO this formula is not correct, why was it introduced
-        # final_score = int(round((overall_score / max_score) * 100))
+        # in cases when adequacy/consistency or coherence is not relevant
+        # final_score = int(round(overall_score))
+        final_score = int(round((overall_score / overall_max) * 100))
 
         return get_range_index(final_score), final_score
 
@@ -213,6 +216,7 @@ class OverallScores(object):
         return text
 
     def score_tooltip_overall(self, article):
+        overall_max = 0
         weights = self.article_weights[article]
         ad_wght = int(weights['adequacy'] * 100)
         cn_wght = int(weights['consistency'] * 100)
@@ -220,18 +224,26 @@ class OverallScores(object):
         ad_score = self.get_score_for_phase('adequacy')
         cn_score = self.get_score_for_phase('consistency')
         co_score = self.get_score_for_phase('coherence')
+        ad_max = getattr(self, 'adequacy')['max_score']
+        cn_max = getattr(self, 'consistency')['max_score']
+        co_max = getattr(self, 'coherence')['max_score']
+        overall_max += ad_max and weights['adequacy'] * 100 or 0
+        overall_max += cn_max and weights['consistency'] * 100 or 0
+        overall_max += co_max and weights['coherence'] * 100 or 0
         overall_color, overall_score_val = self.get_overall_score(article)
 
-        text = "<b>Adequacy weight</b>: {}" \
-               "</br><b>Consistency weight</b>: {}" \
-               "</br><b>Coherence weight</b>: {}" \
-               "</br></br><b>Final score</b>: {} (Adequacy score * " \
+        text = "<b>Adequacy weight</b>: {0}" \
+               "</br><b>Consistency weight</b>: {1}" \
+               "</br><b>Coherence weight</b>: {2}" \
+               "</br> <b>Overall max score</b>: {10}" \
+               "</br></br><b>Final score</b>: {3} (Adequacy score * " \
                "Adequacy weight + Consistency score * Consistency weight + " \
-               "Coherence score * Coherence weight) / 100" \
-               "</br>({}*{} + {}*{} + {}*{}) / 100" \
+               "Coherence score * Coherence weight) / {10}" \
+               "</br>({4}*{5} + {6}*{7} + {8}*{9}) / {10}" \
                .format(ad_wght, cn_wght, co_wght,
                        overall_score_val,
-                       ad_score, ad_wght, cn_score, cn_wght, co_score, co_wght)
+                       ad_score, ad_wght, cn_score, cn_wght, co_score, co_wght,
+                       int(overall_max))
 
         return text
 
