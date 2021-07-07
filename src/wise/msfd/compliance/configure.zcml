@@ -145,10 +145,26 @@
 
   <!-- Assessment module landing page -->
   <browser:page
-    for=".interfaces.IComplianceModuleFolder"
+    for="*"
     name="landingpage"
     class=".landingpage.StartLandingPage"
     template="./pt/landingpage.pt"
+    permission="zope2.View"
+    />
+
+  <browser:page
+    for="*"
+    name="country-landingpage"
+    class=".landingpage.CountryLandingPage"
+    template="./pt/country-landingpage.pt"
+    permission="zope2.View"
+    />
+
+  <browser:page
+    for="*"
+    name="region-landingpage"
+    class=".landingpage.RegionLandingPage"
+    template="./pt/region-landingpage.pt"
     permission="zope2.View"
     />
 

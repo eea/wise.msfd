@@ -572,3 +572,17 @@ class BaseLandingPageRow(BaseComplianceView, AssessmentDataMixin,
 
     def __call__(self):
         return self.template(data=self.data)
+
+
+class CountryLandingPage(BaseComplianceView):
+    template = ViewPageTemplateFile("pt/country-landingpage.pt")
+
+    def __call__(self):
+        return self.template()
+
+
+class RegionLandingPage(BaseComplianceView):
+    template = ViewPageTemplateFile("pt/region-landingpage.pt")
+
+    def __call__(self):
+        return self.template()

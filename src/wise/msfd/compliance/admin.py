@@ -515,6 +515,47 @@ class BootstrapCompliance(BrowserView):
         return cm.absolute_url()
 
 
+class BootstrapAssessmentLandingpages(BootstrapCompliance):
+
+    def __call__(self):
+        countries = create(self.context,
+                           'Folder',
+                           title='Assessment Module - Countries',
+                           id='assessment-module-countries')
+        self.set_layout(countries, 'landingpage')
+
+        for code, country in self._get_countries():
+            cpage = create(countries,
+                           'Folder',
+                           title=country,
+                           id=code.lower())
+            alsoProvides(cpage, interfaces.ICountryDescriptorsFolder)
+            self.set_layout(cpage, 'country-landingpage')
+
+        regions = create(self.context,
+                         'Folder',
+                         title='Assessment Module - Regions',
+                         id='assessment-module-regions')
+        self.set_layout(regions, 'landingpage')
+
+        for region in REGIONAL_DESCRIPTORS_REGIONS:
+            if not region.is_main:
+                continue
+
+            code, name = region.code.lower(), region.title
+
+            rpage = create(regions,
+                           'Folder',
+                           title=name,
+                           id=code)
+
+            self.set_layout(rpage, 'region-landingpage')
+
+        alsoProvides(self.request, IDisableCSRFProtection)
+
+        return countries.absolute_url()
+
+
 class CleanupCache(BrowserView):
     """ Remove the persistent cache that we have saved in objects
     """

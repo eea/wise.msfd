@@ -21,6 +21,13 @@
 
   <browser:page
     for="*"
+    name="bootstrap-assessment-landingpages"
+    class=".admin.BootstrapAssessmentLandingpages"
+    permission="cmf.ManagePortal"
+    />
+
+  <browser:page
+    for="*"
     name="cleanup-compliance"
     class=".admin.CleanupCache"
     permission="cmf.ManagePortal"
