@@ -556,10 +556,15 @@ class NationalDescriptorArticleView(BaseView, AssessmentDataMixin):
 
         # score_2012 = score_2012
         conclusion_2012_color = CONCLUSION_COLOR_TABLE.get(score_2012, 0)
+
         change = (
             assessment.phase_overall_scores
             .get_range_index_for_phase('adequacy') - score_2012
         )
+
+        # if 2018 adequacy is not relevant, change since 2012 is not relevant
+        if assessment.phase_overall_scores.adequacy['conclusion'][0] == '-':
+            change = 'Not relevant (-)'
 
         self.assessment_data_2018_html = self.assessment_data_2018_tpl(
             assessment=assessment,

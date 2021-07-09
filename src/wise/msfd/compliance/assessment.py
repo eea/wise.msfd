@@ -1040,14 +1040,16 @@ class AssessmentDataMixin(object):
         self.overall_scores[__key_2018] = overall_score_2018
 
         if adequacy_score_val == '-':  # if adequacy is not relevant
-            adequacy_score_val = 0
-        change_since_2012 = int(adequacy_score_val - score_2012)
+            change_since_2012 = 'Not relevant (-)'
+        else:
+            change_since_2012 = int(adequacy_score_val - score_2012)
 
         reg_assess_2012 = self.get_reg_assessments_data_2012(
             article, region_code, descriptor
         )
         coherence_2012 = ('-', '0')
-        coherence_change_since_2012 = '-'
+        coherence_change_since_2012 = 'Not relevant (-)'
+
         if reg_assess_2012:
             __score = float(reg_assess_2012[0].overall_score)
             coherence_2012 = ("{} ({})".format(reg_assess_2012[0].conclusion,
