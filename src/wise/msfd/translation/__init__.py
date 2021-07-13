@@ -227,7 +227,7 @@ def delete_translation(text, source_lang):
 
     storage = ITranslationsStorage(site)
 
-    if (storage.get(source_lang, None)):
+    if storage.get(source_lang, None):
         decoded = normalize(text)
 
         if decoded in storage[source_lang]:
@@ -255,5 +255,6 @@ def save_translation(original, translated, source_lang, approved=False):
 
     if approved:
         translated.approved = True
+
     storage_lang[original] = translated
     logger.info('Saving to annotation: %s', translated)

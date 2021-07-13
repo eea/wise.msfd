@@ -18,7 +18,8 @@ from Products.Five.browser import BrowserView
 
 import xlsxwriter
 
-from . import normalize, save_translation, retrieve_translation
+from . import (normalize, delete_translation, save_translation,
+               retrieve_translation)
 from .interfaces import ITranslationsStorage
 
 logger = logging.getLogger('wise.msfd.translation')
@@ -168,7 +169,13 @@ class TranslationsOverview(BrowserView):
                     transl = row[2]
                     approved = len(row) == 4 and int(row[3]) or 0
 
+                    if not transl:
+                        delete_translation(orig, lang)
+
+                        continue
+
                     save_translation(orig, transl, lang, approved=approved)
+
                 except:
                     pass
 
