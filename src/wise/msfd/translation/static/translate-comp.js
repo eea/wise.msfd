@@ -240,6 +240,29 @@
         return false;
       });
     });
+
+    $("a.auto-translate").click(function() {
+      $this = $(this);
+      var url = "/marine/translate-text";
+      var data = {};
+      data['language'] = $this.attr('selectedlang');
+      data['text'] = $this.parents('tr').children('td')[0].outerText;
+
+      $this.children('i').removeClass('glyphicon-refresh');
+      $this.children('i').addClass('glyphicon-ok');
+
+      debugger;
+
+      $.ajax({
+        type: "POST",
+        url: url,
+        data: data,
+        success: function(data)
+        {}
+      });
+
+      return false;
+    });
   };
 
   $(document).ready(function(){

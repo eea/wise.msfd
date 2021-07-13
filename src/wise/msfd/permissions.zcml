@@ -36,6 +36,12 @@
     />
 
   <permission
+    id="wise.AccessTranslations"
+    title="wise.msfd: Access Translations"
+    description="Access to translations overview page to edit/add translations"
+    />
+
+  <permission
     id="wise.ManageCompliance"
     title="wise.msfd: Manage Compliance"
     description="Manage compliance admin page"

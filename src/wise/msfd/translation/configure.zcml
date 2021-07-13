@@ -29,69 +29,69 @@
   <browser:page
     for="*"
     name="translate-text"
-    permission="zope2.View"
     class=".views.SendTranslationRequest"
+    permission="wise.AccessTranslations"
     />
 
   <browser:page
+    for="Products.CMFCore.interfaces.ISiteRoot"
     name="edit-translation"
     class=".admin.TranslationsOverview"
     attribute="edit_translation"
-    for="Products.CMFCore.interfaces.ISiteRoot"
-    permission="zope2.View"
+    permission="wise.AccessTranslations"
     />
 
   <browser:page
+    for="Products.CMFCore.interfaces.ISiteRoot"
     name="add-translation"
     class=".admin.TranslationsOverview"
     attribute="add_translation"
-    for="Products.CMFCore.interfaces.ISiteRoot"
-    permission="zope2.View"
+    permission="wise.AccessTranslations"
     />
 
   <browser:page
+    for="Products.CMFCore.interfaces.ISiteRoot"
     name="approve-translations"
     class=".admin.TranslationsOverview"
     attribute="approve_translations"
-    for="Products.CMFCore.interfaces.ISiteRoot"
     permission="zope2.View"
     />
 
   <browser:page
+    for="Products.CMFCore.interfaces.ISiteRoot"
     name="export-translations"
     class=".admin.TranslationsOverview"
     attribute="export_translations"
-    for="Products.CMFCore.interfaces.ISiteRoot"
     permission="zope2.View"
     />
 
   <browser:page
+    for="Products.CMFCore.interfaces.ISiteRoot"
     name="import-translations"
     class=".admin.TranslationsOverview"
     attribute="import_translations"
-    for="Products.CMFCore.interfaces.ISiteRoot"
-    permission="zope2.View"
+    permission="wise.EditTranslations"
     />
 
   <browser:page
-    class=".views.TranslationCallback"
     for="*"
+    class=".views.TranslationCallback"
     name="translate-callback"
     permission="zope2.View"
     />
 
   <browser:page
-    class=".views.TranslationView"
     for="*"
+    class=".views.TranslationView"
     name="translation-view"
     permission="zope2.View"
     />
 
   <browser:page
+    for="*"
     class=".admin.TranslationsOverview"
-    for="Products.CMFPlone.interfaces.siteroot.IPloneSiteRoot"
     name="translations-overview"
-    permission="zope2.View"
+    permission="wise.EditTranslations"
     template="pt/translations-overview.pt"
     />
 

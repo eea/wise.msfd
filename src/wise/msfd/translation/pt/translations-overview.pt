@@ -45,7 +45,7 @@
 
                         <form id="form-edit-translation"
                           method="POST"
-                          tal:attributes="action string:${context/absolute_url}/@@edit-translation">
+                          tal:attributes="action string:${context/portal_url}/@@edit-translation">
                           <input type="hidden" name="language" tal:attributes="value selectedlang" />
                           <textarea style="display:none" type="hidden" name="original" ></textarea>
                           <div class="form-group">
@@ -69,6 +69,17 @@
                   Please select a language from the right side menu
                 </div>
                 <div tal:condition="selectedlang">
+                  <div style="margin-bottom: 1em;">
+                    <form method="POST" tal:attributes="action request/getURL">
+                      <button
+                        name="translate"
+                        class="btn btn-secondary">
+                        Auto-translate
+                      </button>
+                      <input type="hidden" name="language" tal:attributes="value selectedlang"/>
+                    </form>
+                  </div>
+
                   <h4>
                     Selected language: <span tal:content="selectedlang">EN</span>
                   </h4>
@@ -88,6 +99,7 @@
                           <th>Translation</th>
                           <th></th>
                           <th></th>
+                          <th></th>
                         </tr>
                       </thead>
                       <tbody>
@@ -102,9 +114,15 @@
                           <td>
                             <a class="btn btn-sm btn-primary"
                               data-toggle="modal"
-                              data-target="#edit-translation"
-                              >
+                              data-target="#edit-translation">
                               <i class="glyphicon glyphicon-edit"></i>
+                            </a>
+                          </td>
+                          <td tal:define="approved python: hasattr(kv[1], 'approved') and kv[1].approved">
+                            <a tal:condition="not: approved"
+                               tal:attributes="selectedlang selectedlang"
+                               class="btn btn-sm btn-primary auto-translate">
+                              <i class="glyphicon glyphicon-refresh"></i>
                             </a>
                           </td>
                         </tr>
