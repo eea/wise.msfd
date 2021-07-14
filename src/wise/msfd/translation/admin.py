@@ -166,7 +166,7 @@ class TranslationsOverview(BrowserView):
                 try:
                     lang = row[0]
                     orig = row[1]
-                    transl = row[2]
+                    transl = len(row) > 2 and row[2] or ''
                     approved = len(row) == 4 and int(row[3]) or 0
 
                     if not transl:
