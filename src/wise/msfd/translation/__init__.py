@@ -230,6 +230,9 @@ def delete_translation(text, source_lang):
     if storage.get(source_lang, None):
         decoded = normalize(text)
 
+        if text in storage[source_lang]:
+            del storage[source_lang][text]
+
         if decoded in storage[source_lang]:
             del storage[source_lang][decoded]
 
