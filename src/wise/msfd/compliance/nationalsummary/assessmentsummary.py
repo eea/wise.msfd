@@ -269,6 +269,12 @@ class ProgressAssessment(BaseNatSummaryView):
         return progress
 
     @property
+    def progress_intro(self):
+        progress = self.get_field_value('progress_intro')
+
+        return progress
+
+    @property
     def progress_recommendations_2018(self):
         progress = self.get_field_value('progress_recommendations_2018')
 

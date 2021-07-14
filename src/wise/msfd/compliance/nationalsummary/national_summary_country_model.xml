@@ -81,6 +81,12 @@
             <required>False</required>
             <title>Summary of the assessment text</title>
         </field>
+        <field name="progress_intro"
+               type="plone.app.textfield.RichText">
+            <description/>
+            <required>False</required>
+            <title>Assessment of national progress introductory text</title>
+        </field>
         <field name="progress_recommendations_2012"
                type="plone.app.textfield.RichText">
             <description/>
