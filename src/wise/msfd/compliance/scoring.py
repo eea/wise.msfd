@@ -99,7 +99,7 @@ class OverallScores(object):
         # adequacy and consistency are not relevant
         if (self.adequacy['score'] == 0 and self.consistency['score'] == 0
             and (self.adequacy['max_score'] == 0
-                 or self.consistency['max_score'] == 0)
+                 and self.consistency['max_score'] == 0)
             ):
             return '-', '-'
 
