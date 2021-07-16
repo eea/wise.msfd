@@ -303,8 +303,11 @@ class ReportData2012(BaseView, BaseUtil):
         for i, (wtitle, wdata) in enumerate(report_header.items()):
             wtitle = wtitle.title().replace('_', ' ')
 
-            if isinstance(wdata, tuple):
-                wdata = wdata[1]
+            if hasattr(wdata, '__iter__'):
+                if report_header.get('multiple_source_files', False):
+                    wdata = u"\n".join([x[1] for x in wdata])
+                else:
+                    wdata = wdata[1]
 
             worksheet.write(i, 0, wtitle)
             worksheet.write(i, 1, wdata)
@@ -321,8 +324,19 @@ class ReportData2012(BaseView, BaseUtil):
                 row_values = row[1]
 
                 for j, v in enumerate(row_values):
-                    transl = get_translated(v, self.country_code) or v
-                    worksheet.write(i, j + 1, transl)
+                    try:
+                        transl = get_translated(v, self.country_code) or v
+                        worksheet.write(i, j + 1, transl)
+                    except:
+                        if hasattr(v, 'rows') and v.rows:
+                            try:
+                                v_rows = [unicode(x) for x in v.rows]
+                                worksheet.write(i, j + 1, "#".join(v_rows))
+                                continue
+                            except:
+                                import pdb; pdb.set_trace()
+
+                        worksheet.write(i, j + 1, '')
 
         workbook.close()
         out.seek(0)
@@ -793,6 +807,30 @@ class ReportData20142020(ReportData2014):
     is_side_by_side = True
     cache_key_extra = 'side-by-side'
 
+    def download(self, report_data, report_header):
+        klass = Article11Compare
+
+        view_2020 = ReportData2020(self.context, self.request,
+                                   self.is_side_by_side)
+        data_2020 = view_2020.get_data_from_db()
+
+        view = klass(self, self.request, self.country_code,
+                     self.country_region_code, self.descriptor, self.article,
+                     self.muids, data_2020, self.filename)
+        view.setup_data()
+
+        data_2014 = view.rows
+        res = {'Report data': []}
+
+        for i, (field, row) in enumerate(data_2020[0][1]):
+            xls_title = data_2014[i].title
+            xls_row = data_2014[i].raw_values + [field.title] + row
+            res["Report data"].append((xls_title, xls_row))
+
+        xlsio = self.data_to_xls(res, report_header)
+
+        return self._set_response_header(xlsio)
+
     @property
     def TRANSLATABLES(self):
         rep_def_2014 = get_report_definition('2014', self.article)
@@ -1248,7 +1286,8 @@ view."""
         if self.is_side_by_side:
             return rep_def
 
-        filtered_rep_def = [f for f in rep_def if f.section != 'empty']
+        # filtered_rep_def = [f for f in rep_def if f.section != 'empty']
+        filtered_rep_def = [f for f in rep_def if f.title]
 
         return filtered_rep_def
 

@@ -98,9 +98,9 @@ class OverallScores(object):
 
         # adequacy and consistency are not relevant
         if (self.adequacy['score'] == 0 and self.consistency['score'] == 0
-            and (self.adequacy['max_score'] == 0
-                 and self.consistency['max_score'] == 0)
-            ):
+                and self.adequacy['max_score'] == 0
+                and self.consistency['max_score'] == 0):
+
             return '-', '-'
 
         # check if adequacy and consistency scores are 0
@@ -108,8 +108,8 @@ class OverallScores(object):
         # if both are 0, overall score is 0 regardless of coherence
         if (self.adequacy['score'] == 0 and self.consistency['score'] == 0
             and (self.adequacy['max_score'] > 0
-                 or self.consistency['max_score'] > 0)
-            ):
+                 or self.consistency['max_score'] > 0)):
+
             overall_score = 0
 
         # in cases when adequacy/consistency or coherence is not relevant
