@@ -1350,14 +1350,20 @@ view."""
             if data_by_mru:
                 data_by_mru = {"": data_by_mru}
             else:
-                data_by_mru = {}
+                if not self.is_side_by_side:
+                    return []
+
+                data_by_mru = {"": []}
 
         res = []
-
         fields = self.get_report_definition()
 
+        # if view is article 11 compare
+        return_empty = self.is_side_by_side and self.article in ('Art11', )
+
         for mru, rows in data_by_mru.items():
-            _rows = items_to_rows(rows, fields)
+
+            _rows = items_to_rows(rows, fields, return_empty)
 
             res.append((mru, _rows))
 
@@ -1912,13 +1918,17 @@ class ReportData2020(ReportData2018):
         items = []
 
         for schema in schemas[article]:
-            count, item = db.get_item_by_conditions(
-                t,
-                'ReportingDate',
-                t.CountryCode == self.country_code,
-                t.Schema == schema,
-                reverse=True,
-            )
+            try:
+                count, item = db.get_item_by_conditions(
+                    t,
+                    'ReportingDate',
+                    t.CountryCode == self.country_code,
+                    t.Schema == schema,
+                    reverse=True,
+                )
+            except:
+                # no data reported
+                continue
 
             items.append(item)
 

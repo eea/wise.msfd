@@ -755,11 +755,13 @@ def current_date():
     return datetime.datetime.now().date().isoformat()
 
 
-def items_to_rows(data, fields):
+def items_to_rows(data, fields, return_empty=False):
     """ From a set of results, create labeled list of rows
 
     :param data: a list of sql table rows results
     :param fields: a list of ``ReportField`` objects
+    :param return_empty: used in Article 11, return list with single empty
+        value if there is no data
 
     Given a query result (a list of rows), it will return list of tuples like:
 
@@ -780,6 +782,9 @@ def items_to_rows(data, fields):
 
             for row in data     # make_distinct(fname, getattr(row, fname))
         ]
+
+        if not values and return_empty:
+            values = [""]
 
         res.append([field, values])
 

@@ -3,7 +3,7 @@ from collections import namedtuple
 
 import logging
 
-from lxml.etree import fromstring
+from lxml.etree import fromstring, XMLSyntaxError
 
 from Products.Five.browser.pagetemplatefile import \
     ViewPageTemplateFile as Template
@@ -616,6 +616,7 @@ class Article11(BaseArticle2012):
             filename = self.get_report_filename()
 
         text = get_xml_report_data(filename)
+
         root = fromstring(text)
 
         return root
@@ -688,7 +689,11 @@ class Article11(BaseArticle2012):
 
         # separate Monitoring Programmes from Sub Programmes
         for fileurl in fileurls:
-            root = self.get_report_file_root(fileurl)
+            try:
+                root = self.get_report_file_root(fileurl)
+            except XMLSyntaxError:
+                continue
+
             region = xp('//Region', root)
 
             if region:
