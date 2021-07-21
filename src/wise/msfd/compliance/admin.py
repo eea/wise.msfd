@@ -518,11 +518,35 @@ class BootstrapCompliance(BrowserView):
 class BootstrapAssessmentLandingpages(BootstrapCompliance):
 
     def __call__(self):
+        reports_folder = create(
+            self.context,
+            'Folder',
+            title='Reports and assessments',
+            id='reports-and-assessments'
+        )
+
+        landingpage = create(
+            reports_folder,
+            'Folder',
+            title='EU overview - Commission reports and assessments, '
+                  'Member State reports',
+            id='assessment-module-overview'
+        )
+        self.set_layout(landingpage, 'landingpage')
+
+        landingpage = create(
+            reports_folder,
+            'Folder',
+            title='EU overview - Member State reports per Descriptor',
+            id='assessment-module-per-descriptor-descriptor'
+        )
+        self.set_layout(landingpage, 'ms-by-descriptor')
+
         countries = create(self.context,
                            'Folder',
-                           title='Assessment Module - Countries',
+                           title='Assessment by Country',
                            id='assessment-module-countries')
-        self.set_layout(countries, 'landingpage')
+        # self.set_layout(countries, 'landingpage')
 
         for code, country in self._get_countries():
             cpage = create(countries,
@@ -534,9 +558,9 @@ class BootstrapAssessmentLandingpages(BootstrapCompliance):
 
         regions = create(self.context,
                          'Folder',
-                         title='Assessment Module - Regions',
+                         title='Assessment by Region',
                          id='assessment-module-regions')
-        self.set_layout(regions, 'landingpage')
+        # self.set_layout(regions, 'landingpage')
 
         for region in REGIONAL_DESCRIPTORS_REGIONS:
             if not region.is_main:
@@ -553,7 +577,7 @@ class BootstrapAssessmentLandingpages(BootstrapCompliance):
 
         alsoProvides(self.request, IDisableCSRFProtection)
 
-        return countries.absolute_url()
+        return "Boostrap finished!"
 
 
 class CleanupCache(BrowserView):
