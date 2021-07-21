@@ -48,7 +48,7 @@ class A112020Mixin:
 @register_form_art11
 class A11MonitoringProgrammeForm2020(EmbeddedForm):
     record_title = 'Article 11 (Monitoring Programmes) - 2020'
-    title = "Monitoring Programmes - 2020"
+    title = "2020 Monitoring programmes"
     session_name = '2018'
 
     fields = Fields(interfaces.IRegionSubregionsArt112020)
@@ -369,7 +369,7 @@ class A11MProgrammeDisplay2020(ItemDisplayForm2018, A112020Mixin):
 @register_form_art11
 class A11MonitoringStrategyForm2020(EmbeddedForm):
     record_title = 'Article 11 (Monitoring Strategies) - 2020'
-    title = "Monitoring Strategy - 2020"
+    title = "2020 Monitoring strategies"
     session_name = '2018'
 
     fields = Fields(interfaces.IRegionSubregionsArt112020)
@@ -472,6 +472,7 @@ class A11MStrategyDisplay2020(ItemDisplayForm2018, A112020Mixin):
     def get_db_results(self):
         page = self.get_page()
         prog_codes = self.get_programme_codes_needed()
+        descriptors = self.get_form_data_by_key(self, 'ges_component')
         mc = sql2018.ART11StrategiesMonitoringStrategyMonitoringProgramme
 
         strategy_ids = db.get_unique_from_mapper(
@@ -480,10 +481,15 @@ class A11MStrategyDisplay2020(ItemDisplayForm2018, A112020Mixin):
             mc.MonitoringProgrammes.in_(prog_codes)
         )
 
+        conditions = [self.mapper_class.Id.in_(strategy_ids)]
+
+        if descriptors:
+            conditions.append(self.mapper_class.Descriptor.in_(descriptors))
+
         count, item = db.get_item_by_conditions(
             self.mapper_class,
             'Id',
-            self.mapper_class.Id.in_(strategy_ids),
+            *conditions,
             page=page
         )
 

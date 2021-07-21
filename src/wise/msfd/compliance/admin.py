@@ -538,7 +538,7 @@ class BootstrapAssessmentLandingpages(BootstrapCompliance):
             reports_folder,
             'Folder',
             title='EU overview - Member State reports per Descriptor',
-            id='assessment-module-per-descriptor-descriptor'
+            id='assessment-module-per-descriptor'
         )
         self.set_layout(landingpage, 'ms-by-descriptor')
 
