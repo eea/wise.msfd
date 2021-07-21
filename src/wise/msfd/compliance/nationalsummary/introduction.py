@@ -114,16 +114,17 @@ class AssessmentAreas2018(BaseNatSummaryView):
                 if x[0] == row.thematicId
             ])
             descr_list = sorted(descr_list, key=natural_sort_key)
+            descr_list_norm = []
 
-            try:
-                descr_list = [
-                    get_descriptor(d).template_vars['title']
-                    for d in descr_list
-                ]
-            except:
-                pass
+            for d in descr_list:
+                try:
+                    desc = get_descriptor(d).template_vars['title']
+                except:
+                    desc = d
 
-            descriptors = ', '.join(descr_list)
+                descr_list_norm.append(desc)
+
+            descriptors = ', '.join(descr_list_norm)
 
             res.append((row.rZoneId, row.spZoneType, mru,
                         description, translation, '{:,}'.format(area),
