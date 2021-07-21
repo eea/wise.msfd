@@ -1567,6 +1567,13 @@ view."""
 
         return xlsio.read()
 
+    @property
+    def translate_redirect_url(self):
+        url = (self.context.absolute_url() +
+               '/@@view-report-data-{}'.format(self.report_year))
+
+        return url
+
     def auto_translate(self, data=None):
         if not data:
             data = self.get_report_data()
@@ -1591,10 +1598,7 @@ view."""
         messages.add(u"Auto-translation initiated, please refresh "
                      u"in a couple of minutes", type=u"info")
 
-        url = (self.context.absolute_url() +
-               '/@@view-report-data-{}'.format(self.report_year))
-
-        return self.request.response.redirect(url)
+        return self.request.response.redirect(self.translate_redirect_url)
 
     def get_template(self, article):
         template = getattr(self, article, None)
@@ -2012,6 +2016,12 @@ class ReportDataOverview2020Art11(ReportData2020):
             .format(self.country_name, self.country_region_name)
 
         return title
+
+    @property
+    def translate_redirect_url(self):
+        url = (self.context.absolute_url() + '/@@art11-view-report-data-2020')
+
+        return url
 
 
 class ExportMSReportData(BaseView):

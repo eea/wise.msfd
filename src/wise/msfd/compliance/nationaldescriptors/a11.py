@@ -639,7 +639,7 @@ class Article11(BaseArticle2012):
             if not row:
                 continue
 
-            if row.title not in translatables:
+            if row.field.name not in translatables:
                 continue
 
             for value in row.raw_values:
