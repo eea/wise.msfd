@@ -9,7 +9,14 @@
     </div>
 
     <div tal:condition="data" class="report-section side-by-side">
-
+      <div style="display: flex;
+    justify-content: space-around;
+    margin-bottom: 0.5em;
+    font-size: 1.2em;
+    font-weight: bold;">
+        <div>2014 data</div>
+        <div>2020 data</div>
+      </div>
       <div class="overflow-table regional-descriptors side-by-side-table side-by-side-table-left">
         <div class="inner">
           <table class="table table-bordered table-striped table-comp-translate table-report table-regional-desc">
