@@ -2001,14 +2001,21 @@ class ReportDataOverview2020Art11(ReportData2020):
             t.c.CountryCode.in_(self.country_code.split(','))
         ]
 
-        count, q = db.get_all_specific_columns(
-            [t.c.ResponsibleCompetentAuthority, t.c.ResponsibleOrganisations,
-             t.c.RelationshipToCA, t.c.PublicConsultationDates,
-             t.c.PublicConsultationSite, t.c.RegionalCooperation],
-            *conditions
-        )
+        columns = [
+            t.c.ResponsibleCompetentAuthority, t.c.ResponsibleOrganisations,
+            t.c.RelationshipToCA, t.c.PublicConsultationDates,
+            t.c.PublicConsultationSite, t.c.RegionalCooperation
+        ]
 
-        return q
+        # count, q = db.get_all_specific_columns(
+        #     *columns,
+        #     *conditions
+        # )
+
+        sess = db.session()
+        q = sess.query(*columns).filter(*conditions).first()
+
+        return [q]
 
     @property
     def report_header_title(self):
