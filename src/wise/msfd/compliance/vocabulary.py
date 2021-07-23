@@ -229,3 +229,43 @@ def make_subregions(d):
 
 
 SUBREGIONS_TO_REGIONS = make_subregions(REGIONS_SIMPLIFIED)
+
+
+_4GEO = namedtuple('_4GEO', [
+    'MarineRegion',
+    'MemberState',
+    'AssessmentArea',
+    'MRUName',
+    'MRUID',
+    'SourceURL',
+    'DateReported',
+    'MRUAarea',
+    'MarineWatersArea',
+    'MRUCoverage',
+    'Status',
+])
+
+
+def parse_4geo_file():
+    f = resource_filename(
+        'wise.msfd', 'data/MSmarinewaters_MRUs_statistics_2021-05-03.xlsx'
+    )
+
+    res = []
+
+    with open(f, 'rb') as file:
+        sheets = get_data(file)
+        rows = sheets['4GEO_SHP']
+
+        for row in rows[2:]:
+            if not row:
+                break
+
+            if len(row) == 10:
+                row.append('')
+
+            res.append(_4GEO(*row))
+
+    return res
+
+_4GEO_DATA = parse_4geo_file()

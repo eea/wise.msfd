@@ -18,7 +18,7 @@
   <div tal:condition="alldata" tal:repeat="info alldata" class="report-section">
 
     <tal:def tal:define="muid python:info[0]; data python: info[1];">
-      <metal:s metal:use-macro="context/wise-macros/macros/simplify-table"></metal:s>
+<!--      <metal:s metal:use-macro="context/wise-macros/macros/simplify-table"></metal:s>-->
       <div class="overflow-table">
         <div class="inner">
           <table class="table table-assessment-secondary table-bordered table-striped table-comp-translate table-report">

@@ -6,6 +6,7 @@ from lxml.etree import fromstring
 from Products.Five.browser.pagetemplatefile import \
     ViewPageTemplateFile as Template
 from wise.msfd import db, sql, sql2018, sql_extra
+from wise.msfd.compliance.vocabulary import _4GEO_DATA
 from wise.msfd.data import get_xml_report_data
 from wise.msfd.translation import retrieve_translation
 from wise.msfd.utils import (Item, ItemLabel, ItemList, Node, RawRow,  # Row,
@@ -299,8 +300,12 @@ class A34Item_2018_mru(Item):
 
     def check_mru_usage(self, art):
         mru = self.mru_id()
+        mru = mru.replace(' ', '')
 
-        if mru.replace(' ', '') in MRU_USAGE_PER_ART[art]:
+        if self.member_state() in ('LV', ) and art == 'Art. 17 (8-9-10) (2018)':
+            mru = mru.replace('AA', 'AAA')
+
+        if mru in MRU_USAGE_PER_ART[art]:
             return 'Used'
 
         return ''
@@ -329,6 +334,32 @@ class A34Item_2018_mru(Item):
         v = self.g['w:MarineUnits_ReportingAreas/text()']
 
         return v and v[0] or ''
+
+
+class A34Item_2018_mru_overview(A34Item_2018_mru):
+    def __init__(self, row):
+        self._mru_row = row
+
+        super(A34Item_2018_mru_overview, self).__init__(node=None,
+                                                        show_mru_usage=True)
+
+    def default(self):
+        return 'TEST'
+
+    def region_or_subregion(self):
+        return self._mru_row.MarineRegion
+
+    def member_state(self):
+        return self._mru_row.MemberState
+
+    def area_type(self):
+        return self._mru_row.AssessmentArea
+
+    def mru_id(self):
+        return self._mru_row.MRUID
+
+    def marine_reporting_unit(self):
+        return self._mru_row.MRUName
 
 
 class A34Item_2018_main(Item):
@@ -490,6 +521,59 @@ class A34Item_2018_main(Item):
         return texts and ', '.join(set(sorted(texts))) or ''
 
 
+class A34Item_2018_overview(A34Item_2018_main):
+    """ Display class used in National Overview """
+
+    @property
+    def mru_rows(self):
+        data = _4GEO_DATA
+        res = []
+
+        for row in data:
+            country_code = row.MemberState
+
+            if country_code != self.context.country_code:
+                continue
+
+            res.append(row)
+
+        return res
+
+    def __init__(self, context, request, description, mru_nodes,
+                 root, previous_mrus=None, show_mru_usage=False):
+        super(A34Item_2018_overview, self).__init__(
+            context, request, description, mru_nodes,
+            root, previous_mrus=previous_mrus, show_mru_usage=True)
+
+        mrus = []
+
+        for row in self.mru_rows:
+            item = A34Item_2018_mru_overview(row)
+            mrus.append(item)
+
+        sorted_mrus = sorted(mrus, key=lambda x: x['Marine Reporting Unit'])
+        self._mrus = sorted_mrus
+        self.available_mrus = [
+            x['Marine Reporting Unit'] for x in sorted_mrus
+        ]
+        self.available_regions = set(
+            [x['Region or subregion'] for x in sorted_mrus]
+        )
+        self.previous_mrus = previous_mrus or []
+        item_labels = sorted_mrus and sorted_mrus[0].keys() or []
+
+        sorted_mrus = self.mrus_template(
+            item_labels=item_labels,
+            item_values=sorted_mrus,
+            previous_mrus=self.previous_mrus,
+            country_code=self.context.country_code,
+            translate_value=self.translate_value
+        )
+
+        self['MRUs'] = sorted_mrus
+        setattr(self, 'MRUs', sorted_mrus)
+
+
 class Article34_2018(BaseArticle2012):
     """ Implementation for Article 3/4 2018 reported data
     """
@@ -529,10 +613,17 @@ class Article34_2018(BaseArticle2012):
         # cooperation_nodes = xp('//w:Cooperation', self.root)
 
         # TODO: also send the previous file data
-        main_node = A34Item_2018_main(
-            self, self.request, description, mru_nodes, self.root,
-            self.previous_mrus, self.show_mru_usage
-        )
+        if self.show_mru_usage:  # class used in National overview
+            main_node = A34Item_2018_overview(
+                self, self.request, description, mru_nodes, self.root,
+                self.previous_mrus, self.show_mru_usage
+            )
+        else:  # used in Article 3 & 4 display
+            main_node = A34Item_2018_main(
+                self, self.request, description, mru_nodes, self.root,
+                self.previous_mrus, self.show_mru_usage
+            )
+
         self.translatable_extra_data = main_node.get_translatable_extra_data()
         self.available_mrus = main_node.available_mrus
         self.available_regions = main_node.available_regions
