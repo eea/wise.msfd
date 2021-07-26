@@ -1,4 +1,5 @@
-<div tal:define="alldata options/data">
+<div tal:define="alldata options/data;
+    marine_waters python: options.get('marine_waters', '')">
 
   <div tal:replace="structure options/report_header"></div>
 
@@ -39,5 +40,10 @@
       </div>
     </tal:def>
 
+  </div>
+
+  <div tal:condition="marine_waters"
+      tal:content="structure marine_waters">
+    Marine waters text
   </div>
 </div>

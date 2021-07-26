@@ -13,6 +13,7 @@
   <tr tal:repeat="item values">
     <tal:rep repeat="name labels">
       <td tal:condition="python: name not in translatables"
+          tal:attributes="class python: name.startswith('Art.') and 'centered' or ''"
           tal:define="value python:item[name];
             is_new_mru python: name == 'Marine Reporting Unit' and value not in previous_mrus">
         <span tal:attributes="class python: is_new_mru and 'new' or ''"

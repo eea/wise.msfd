@@ -128,9 +128,12 @@ class ReportData2018SecondaryOverview(ReportData2018Secondary,
                 article_name=self.article_name
             )
 
+            marine_waters = self.get_marine_waters()
+
             rendered_results.append(template(data=res,
                                              report_header=report_header,
-                                             show_navigation=False))
+                                             show_navigation=False,
+                                             marine_waters=marine_waters))
 
         res = "<hr/>".join(rendered_results)
 
@@ -159,6 +162,11 @@ class Article34TableMarineWaters(ReportData2018SecondaryOverview):
         'marine_areas': False,
         'cooperation': False,
     }
+
+    def get_marine_waters(self):
+        v = self.get_field_value('marine_waters', self.context)
+
+        return v
 
 
 @register_section
@@ -478,6 +486,16 @@ class GESExtentAchieved(PressuresTableBase):
               'pressures and impacts (Art. 8(1)(a)(b))'
     _id = 'nat-overview-gesextent'
 
+    def _norm_float(self, value):
+        if value is None:
+            return value
+
+        norm = "{0:g}".format(float(value))
+
+        print (value, norm)
+
+        return norm
+
     @db.use_db_session('2018')
     def get_ges_extent_data(self):
         t = sql2018.t_V_ART8_GES_2018
@@ -507,7 +525,8 @@ class GESExtentAchieved(PressuresTableBase):
                 descriptor_data = [
                     [get_label(row.Feature, 'features'),
                      row.MarineReportingUnit,
-                     row.GESExtentAchieved, row.GESExtentUnit, row.GESAchieved]
+                     self._norm_float(row.GESExtentAchieved),
+                     row.GESExtentUnit, row.GESAchieved]
                     for row in data
                     if row.GESComponent.split('/')[0] == descriptor
                 ]

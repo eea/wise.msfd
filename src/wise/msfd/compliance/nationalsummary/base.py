@@ -62,8 +62,12 @@ class BaseNatSummaryView(BaseComplianceView):
 
         return text
 
-    def get_field_value(self, attribute):
-        country_folder = self._country_folder
+    def get_field_value(self, attribute, context=None):
+        country_folder = context
+
+        if not context:
+            country_folder = self._country_folder
+
         default = "-"
 
         if not hasattr(country_folder, attribute):

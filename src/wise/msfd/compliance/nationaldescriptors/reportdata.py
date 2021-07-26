@@ -1657,6 +1657,9 @@ class ReportData2018Secondary(ReportData2018):
     Art4 = Template('pt/report-data-secondary-2018.pt')
     Art7 = Template('pt/report-data-secondary-2018.pt')
 
+    def get_marine_waters(self):
+        return ''
+
     def article_name(self):
         get_art_name = super(ReportData2018Secondary, self).article_name
 

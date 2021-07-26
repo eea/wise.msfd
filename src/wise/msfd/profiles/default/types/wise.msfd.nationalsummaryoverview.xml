@@ -30,10 +30,9 @@
   <element
      value="plone.app.referenceablebehavior.referenceable.IReferenceable"/>
  </property>
- <property
-    name="schema">wise.msfd.compliance.interfaces.INationalSummaryOverviewFolder</property>
+ <property name="schema"></property>
  <property name="model_source"></property>
- <property name="model_file"></property>
+ <property name="model_file">wise.msfd.compliance.nationalsummary:national_overview_model.xml</property>
  <property name="schema_policy">dexterity</property>
  <alias from="(Default)" to="(dynamic view)"/>
  <alias from="edit" to="@@edit"/>
