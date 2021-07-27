@@ -9,7 +9,7 @@
           <tr>
             <th colspan="2"></th>
             <th tal:repeat="country view/available_countries"
-                tal:content="python: country[0]">Finland</th>
+                tal:content="python: country[1]">Finland</th>
           </tr>
         </thead>
         <tbody>

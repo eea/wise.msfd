@@ -16,10 +16,9 @@
       </div>
     </div>
 
-    <div tal:condition="False"
-        id="download-report-data-form">
+    <div id="download-report-data-form">
       <form method="POST" action="" tal:attributes="action request/getURL">
-<!--?        <button name="edit-data" class="btn btn-primary">Edit</button>-->
+        <button name="edit-data" class="btn btn-primary">Edit</button>
 <!--?        <a class="btn btn-primary" href="./assessment-summary" target="_blank">Assessment summary</a>-->
       </form>
     </div>

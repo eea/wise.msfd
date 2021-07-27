@@ -30,6 +30,40 @@ SECTIONS = []
 NATIONAL_ASSESSMENT_DATA = {}
 REGIONAL_ASSESSMENT_DATA = {}
 
+REGIONS_SUBREGIONS = {
+    'BAL': {
+        'area': '392,215',
+        'subregions': []
+    },
+    'ATL': {
+        'area': '15,462,049',
+        'subregions': [
+            ('Greater North Sea', '654,179'),
+            ('Celtic Seas', '1,123,380'),
+            ('Bay of Biscay and the Iberian Coast', '803,349'),
+            ('Macaronesia', '3,967,476')
+        ]
+    },
+    'MED': {
+        'area': '2,516,652',
+        'subregions': [
+            ('Western Mediterranean Sea', '846,003'),
+            ('Adriatic Sea', '139,784'),
+            ('Ionian Sea and the Central Mediterranean Sea', '773,032'),
+            ('Aegean-Levantine Sea', '757,833'),
+        ]
+    },
+    'BLK': {
+        'area': '525,482',
+        'subregions': [
+            ('Black Sea (excluding Seas of Marmara and Azov)', '473,894'),
+            ('Black Sea - Sea of Marmara', '11,737'),
+            ('Black Sea - Sea of Azov', '39,851')
+        ]
+    }
+}
+
+
 def register_section(klass):
     SECTIONS.append(klass)
 
@@ -114,7 +148,7 @@ class CompetentAuthorities(RegionalDescriptorsSimpleTable):
 
             values.append(len(vals))
 
-        rows.append(('No of designated CAs', values))
+        rows.append(('No. of designated CAs', values))
 
         return rows
 
@@ -171,32 +205,33 @@ class MarineRegionSubregions(RegionalDescriptorsSimpleTable):
     _id = 'reg-overview-mrs'
 
     def get_table_headers(self):
-        regions = [x for x in self.available_subregions]
+        regions = ["Region: " + self.country_name]
+        subregions = [
+            "Subregion: " + x[0]
+            for x in REGIONS_SUBREGIONS[self.region_code]['subregions']
+        ]
 
-        return [''] + regions
+        return [''] + regions + subregions
 
     def setup_data(self):
         rows = []
-
-        return rows
 
         row_headers = [
             # 'Length of coastline (km) - total',
             # 'Length of coastline (km) - EU',
             # 'Length of coastline (km) - non EU',
             'Area (km2) - total',
-            'Area (km2) - EU',
-            'Area (km2) - non EU'
+            # 'Area (km2) - EU',
+            # 'Area (km2) - non EU'
         ]
 
+        region = REGIONS_SUBREGIONS[self.region_code]
+
         for info in row_headers:
-            values = []
+            values = [region['area']]
 
-            for region_code in self.available_subregions:
-                # TODO get values
-                val = ''
-
-                values.append(val)
+            for subregion in region['subregions']:
+                values.append(subregion[1])
 
             rows.append((info, values))
 
