@@ -681,7 +681,9 @@ class ReportData2014(ReportData2012):
                 filenames.append(fileurl)
                 continue
 
-            if '/' + self.country_region_code.lower() not in fileurl:
+            if ('/' + self.country_region_code.lower() not in fileurl
+               and '/' + self.country_region_code.upper() not in fileurl):
+
                 continue
 
             filenames.append(fileurl)
