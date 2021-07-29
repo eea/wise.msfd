@@ -644,8 +644,15 @@ class ReportData2012Like2018(ReportData2012):
 
 
 class ReportData2014(ReportData2012):
-    year = report_year = '2014'
+    year = '2014'
+    report_year = '2014'
     report_due = '2014-10-15'
+
+    def _get_reporting_info(self, root):
+        reporter = [root.attrib['Organisation']]
+        date = [root.attrib['ReportingDate']]
+
+        return reporter, date
 
     def get_report_header_data(self, report_by, source_file, factsheet,
                                report_date, multiple_source_files=False):
@@ -808,6 +815,8 @@ class ReportDataOverview2014Art11(ReportData2014):
 class ReportData20142020(ReportData2014):
     is_side_by_side = True
     cache_key_extra = 'side-by-side'
+    report_year = '2014-2020'
+    report_due = '2014-10-15; 2020-10-15'
 
     def download(self, report_data, report_header):
         klass = Article11Compare
@@ -842,12 +851,42 @@ class ReportData20142020(ReportData2014):
 
         return translatables_2014 + translatables_2020
 
+    def get_report_header_data(self, report_by, source_file, factsheet,
+                               report_date, multiple_source_files=False):
+
+        metadata_2020 = self.report_metadata_2020
+
+        source_files_2020 = [
+            (x.ReportedFileLink, x.ReportedFileLink + '/manage_document')
+            for x in metadata_2020
+        ]
+
+        report_date_2020 = (metadata_2020
+                            and metadata_2020[0].ReportingDate.isoformat()
+                            or '')
+
+        data = OrderedDict(
+            title=self.report_title,
+            report_by=report_by,
+            source_file=source_file + source_files_2020,
+            factsheet=factsheet,
+            report_due=self.report_due,
+            report_date=report_date + '; ' + report_date_2020,
+            help_text=self.help_text,
+            multiple_source_files=multiple_source_files,
+            use_translation=True
+        )
+
+        return data
+
     def get_report_view(self):
         klass = Article11Compare
 
         view_2020 = ReportData2020(self.context, self.request,
                                    self.is_side_by_side)
         data_2020 = view_2020.get_data_from_db()
+
+        self.report_metadata_2020 = view_2020.get_report_metadata()
 
         view = klass(self, self.request, self.country_code,
                      self.country_region_code, self.descriptor, self.article,
