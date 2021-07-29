@@ -488,8 +488,8 @@ def get_xml_report_data(filename):
 
     assert '..' not in filename     # need better security?
 
+    filename = filename.replace('%2C', ',')
     fpath = os.path.join(xmldir, filename)
-
     text = ''
 
     if filename in os.listdir(xmldir):

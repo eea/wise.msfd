@@ -733,6 +733,7 @@ class Article11(BaseArticle2012):
             sub_prog_nodes.append(sub_node)
 
         items = []
+
         for mp in mp_nodes:
             # filter empty nodes
             if not mp.getchildren():
