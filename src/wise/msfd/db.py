@@ -1,3 +1,4 @@
+import logging
 import os
 import threading
 
@@ -30,6 +31,8 @@ DBS = {
 USE_DB = 'USE {}'
 
 threadlocals = threading.local()
+
+logger = logging.getLogger('wise.msfd')
 
 
 class MockQuery(list):
@@ -142,7 +145,10 @@ def use_db_session(session_name):
 
 def _make_session(dsn):
     engine = create_engine(dsn,  # , encoding="utf8"
-                           pool_recycle=1800)
+                           pool_recycle=1800,
+                           pool_pre_ping=True,
+                           connect_args={'timeout': 30}
+                           )
     Session = scoped_session(sessionmaker(bind=engine))
     register(Session, keep_session=True)
 
@@ -156,7 +162,12 @@ def get_unique_from_table(table, column):
     col = getattr(table.c, column)
 
     sess = session()
-    res = sess.query(col).distinct().order_by(col)
+    try:
+        res = sess.query(col).distinct().order_by(col)
+    except:
+        sess.rollback()
+        logger.exception("MSFD database is timed out")
+        return []
 
     return sorted([x[0] for x in res])
 
@@ -169,15 +180,22 @@ def get_unique_from_mapper(mapper_class, column, *conditions, **kwargs):
     col = getattr(mapper_class, column)
 
     sess = session()
-    res = sess.query(col)\
-        .filter(*conditions)\
-        .distinct()\
-        .order_by(col)
+    try:
+        res = sess.query(col)\
+            .filter(*conditions)\
+            .distinct()\
+            .order_by(col)
+
+        res_unicode = [unicode(x[0]).strip() for x in res]
+    except:
+        sess.rollback()
+        logger.exception("MSFD database is timed out")
+        return []
 
     if raw:
         return res
 
-    return [unicode(x[0]).strip() for x in res]
+    return res_unicode
 
 
 # @cache(db_result_key)
@@ -194,9 +212,14 @@ def get_unique_from_mapper_join(
     col = getattr(mapper_class, column)
 
     sess = session()
-    q = sess.query(col).join(klass_join).filter(
-        *conditions
-    ).order_by(order_field)
+    try:
+        q = sess.query(col).join(klass_join).filter(
+            *conditions
+        ).order_by(order_field)
+    except:
+        sess.rollback()
+        logger.exception("MSFD database is timed out")
+        return []
 
     total = q.count()
     item = q.offset(page).limit(1).first()
@@ -212,7 +235,12 @@ def get_all_columns_from_mapper(mapper_class, column, *conditions, **kw):
     col = getattr(mapper_class, column)
 
     sess = session()
-    res = sess.query(mapper_class).filter(*conditions).order_by(col)
+    try:
+        res = sess.query(mapper_class).filter(*conditions).order_by(col)
+    except:
+        sess.rollback()
+        logger.exception("MSFD database is timed out")
+        return []
 
     return_value = [x for x in res]
 
@@ -241,11 +269,16 @@ def get_marine_unit_ids(**data):
         conditions.append(table.c.RegionSubRegions.in_(
             data['region_subregions']))
 
-    query = sess.query(col).filter(
-        *conditions
-        # table.c.RegionSubRegions.in_(data['region_subregions']),
-        # table.c.AreaType.in_(data['area_types']),
-    )
+    try:
+        query = sess.query(col).filter(
+            *conditions
+            # table.c.RegionSubRegions.in_(data['region_subregions']),
+            # table.c.AreaType.in_(data['area_types']),
+        )
+    except:
+        sess.rollback()
+        logger.exception("MSFD database is timed out")
+        return []
 
     l = sorted([x[0] for x in query])
 
@@ -300,8 +333,14 @@ def get_collapsed_item(mapper_class, klass_join, order_field, collapses,
     mapped_cols = [getattr(mapper_class, n) for n in cols]
     all_cols = mapped_cols + mapped_cols_join
 
-    q = sess.query(*all_cols).join(klass_join).filter(*conditions).distinct()
-    all_items = q.all()
+    try:
+        q = sess.query(*all_cols).join(klass_join).filter(*conditions).distinct()
+        all_items = q.all()
+    except:
+        sess.rollback()
+        logger.exception("MSFD database is timed out")
+        return []
+
     total = len(all_items)
     item_values = all_items[page]
     # print("Item values", item_values)
@@ -314,12 +353,17 @@ def get_collapsed_item(mapper_class, klass_join, order_field, collapses,
 
     extra_data = {}
 
-    for d in collapses:
-        for k, cs in d.items():
-            cols = [k] + cs
-            c_cols = [getattr(mapper_class, c) for c in cols]
-            q = sess.query(*c_cols).filter(*collapse_conditions)
-            extra_data[k] = group_query(q, k)
+    try:
+        for d in collapses:
+            for k, cs in d.items():
+                cols = [k] + cs
+                c_cols = [getattr(mapper_class, c) for c in cols]
+                q = sess.query(*c_cols).filter(*collapse_conditions)
+                extra_data[k] = group_query(q, k)
+    except:
+        sess.rollback()
+        logger.exception("MSFD database is timed out")
+        return []
 
     return [total, item, extra_data]
 
@@ -335,9 +379,14 @@ def get_item_by_conditions(mapper_class, order_field, *conditions, **kwargs):
     if kwargs.get('reverse', False) is True:
         order_field = order_field.desc()
 
-    q = sess.query(mapper_class).filter(
-        *conditions
-    ).order_by(order_field)
+    try:
+        q = sess.query(mapper_class).filter(
+            *conditions
+        ).order_by(order_field)
+    except:
+        sess.rollback()
+        logger.exception("MSFD database is timed out")
+        return []
 
     total = q.count()
     # Laci disabled: sometimes gives unpredictable result,
@@ -359,9 +408,14 @@ def get_item_by_conditions_joined(
     page = kwargs.get('page', 0)
     sess = session()
     order_field = getattr(mapper_class, order_field)
-    q = sess.query(mapper_class).join(klass_join).filter(
-        *conditions
-    ).order_by(order_field)
+    try:
+        q = sess.query(mapper_class).join(klass_join).filter(
+            *conditions
+        ).order_by(order_field)
+    except:
+        sess.rollback()
+        logger.exception("MSFD database is timed out")
+        return []
 
     total = q.count()
     item = q.offset(page).limit(1).first()
@@ -379,9 +433,15 @@ def get_item_by_conditions_art_6(
     page = kwargs.get('page', 0)
     r_codes = kwargs.get('r_codes', [])
     sess = session()
-    q = sess.query(*columns).join(klass_join).filter(
-        *conditions
-    ).order_by(order_field)
+    try:
+        q = sess.query(*columns).join(klass_join).filter(
+            *conditions
+        ).order_by(order_field)
+    except:
+        sess.rollback()
+        logger.exception("MSFD database is timed out")
+        return []
+
     q = [x for x in q]
 
     filtered_coops = []
@@ -401,7 +461,12 @@ def get_item_by_conditions_art_6(
 def get_table_records(columns, *conditions, **kwargs):
     order_by = kwargs.get('order_by')
     sess = session()
-    q = sess.query(*columns).filter(*conditions)
+    try:
+        q = sess.query(*columns).filter(*conditions)
+    except:
+        sess.rollback()
+        logger.exception("MSFD database is timed out")
+        return []
 
     if order_by:
         q = q.order_by(order_by)
@@ -416,9 +481,14 @@ def get_available_marine_unit_ids(marine_unit_ids, klass):
     """ Returns a list of which muid is available, of the ones provided
     """
     sess = session()
-    q = sess.query(klass.MarineUnitID).filter(
-        klass.MarineUnitID.in_(marine_unit_ids)
-    ).order_by(klass.MarineUnitID).distinct()
+    try:
+        q = sess.query(klass.MarineUnitID).filter(
+            klass.MarineUnitID.in_(marine_unit_ids)
+        ).order_by(klass.MarineUnitID).distinct()
+    except:
+        sess.rollback()
+        logger.exception("MSFD database is timed out")
+        return []
 
     total = q.count()
     q = [x for x in q]
@@ -432,7 +502,12 @@ def count_items(primary, *conditions):
 
     sess = session()
     fc = func.count(primary)
-    count = sess.query(fc).filter(*conditions)[0][0]
+    try:
+        count = sess.query(fc).filter(*conditions)[0][0]
+    except:
+        sess.rollback()
+        logger.exception("MSFD database is timed out")
+        return []
 
     return count
 
@@ -446,10 +521,15 @@ def get_marine_unit_id_names(marine_unit_ids):
     sess = session()
     t = sql.t_MSFD4_GegraphicalAreasID
 
-    q = sess.query(t.c.MarineUnitID, t.c.MarineUnits_ReportingAreas)\
-        .filter(t.c.MarineUnitID.in_(marine_unit_ids))\
-        .order_by(t.c.MarineUnits_ReportingAreas)\
-        .distinct()
+    try:
+        q = sess.query(t.c.MarineUnitID, t.c.MarineUnits_ReportingAreas)\
+            .filter(t.c.MarineUnitID.in_(marine_unit_ids))\
+            .order_by(t.c.MarineUnits_ReportingAreas)\
+            .distinct()
+    except:
+        sess.rollback()
+        logger.exception("MSFD database is timed out")
+        return []
 
     total = q.count()
     q = [x for x in q]
@@ -460,10 +540,17 @@ def get_marine_unit_id_names(marine_unit_ids):
 # @cache(db_result_key)
 def get_related_record(klass, column, rel_id):
     sess = session()
-    q = sess.query(klass).filter(
-        getattr(klass, column) == rel_id
-    )
-    item = q.first()
+
+    try:
+        q = sess.query(klass).filter(
+            getattr(klass, column) == rel_id
+        )
+        item = q.first()
+    except:
+        sess.rollback()
+        logger.exception("MSFD database is timed out")
+        return []
+
 
     return [q.count(), item]
 
@@ -471,10 +558,15 @@ def get_related_record(klass, column, rel_id):
 # @cache(db_result_key)
 def get_related_record_join(klass, klass_join, column, rel_id):
     sess = session()
-    q = sess.query(klass).join(klass_join).filter(
-        getattr(klass_join, column) == rel_id
-    )
-    item = q.first()
+    try:
+        q = sess.query(klass).join(klass_join).filter(
+            getattr(klass_join, column) == rel_id
+        )
+        item = q.first()
+    except:
+        sess.rollback()
+        logger.exception("MSFD database is timed out")
+        return [0, {}]
 
     return [q.count(), item]
 
@@ -483,17 +575,23 @@ def get_related_record_join(klass, klass_join, column, rel_id):
 def get_all_records(mapper, *conditions, **kw):
     sess = session()
 
-    if isinstance(mapper, (list, tuple)):
-        q = sess.query(*mapper).filter(*conditions)
-    else:
-        q = sess.query(mapper).filter(*conditions)
+    try:
+        if isinstance(mapper, (list, tuple)):
+            q = sess.query(*mapper).filter(*conditions)
+        else:
+            q = sess.query(mapper).filter(*conditions)
 
-    if 'order_by' in kw:
-        order_by = kw.pop('order_by')
-        q = q.order_by(order_by)
+        if 'order_by' in kw:
+            order_by = kw.pop('order_by')
+            q = q.order_by(order_by)
 
-    count = q.count()
-    q = [x for x in q]
+        count = q.count()
+        q = [x for x in q]
+
+    except:
+        sess.rollback()
+        logger.exception("MSFD database is timed out")
+        return [0, []]
 
     return [count, q]
 
@@ -501,9 +599,14 @@ def get_all_records(mapper, *conditions, **kw):
 @cache(db_result_key)
 def get_all_specific_columns(columns, *conditions, **kw):
     sess = session()
-    q = sess.query(*columns).filter(*conditions).distinct()
-    count = q.count()
-    q = [x for x in q]
+    try:
+        q = sess.query(*columns).filter(*conditions).distinct()
+        count = q.count()
+        q = [x for x in q]
+    except:
+        sess.rollback()
+        logger.exception("MSFD database is timed out")
+        return [0, []]
 
     return [count, q]
 
@@ -517,8 +620,14 @@ def get_all_records_ordered(table, order_cols, *conditions):
 
     order_by = order_by_mru + [getattr(table.c, c)for c in order_cols]
 
-    q = sess.query(table).filter(*conditions).\
-        order_by(*order_by).distinct()
+    try:
+        q = sess.query(table).filter(*conditions).\
+            order_by(*order_by).distinct()
+    except:
+        sess.rollback()
+        logger.exception("MSFD database is timed out")
+        return []
+
 
     # print q
     count = q.count()
@@ -535,12 +644,17 @@ def get_all_records_distinct_ordered(table, order_col, exclude, *conditions):
     needed = set(table.columns.keys()) - set(exclude)
     col_needed = [getattr(table.c, c) for c in needed]
 
-    # asd = sess.query(table).with_entities(*col_needed).distinct()
+    try:
+        # asd = sess.query(table).with_entities(*col_needed).distinct()
 
-    q = sess.query(table).filter(*conditions).\
-        order_by(table.c.MarineReportingUnit, col)
+        q = sess.query(table).filter(*conditions).\
+            order_by(table.c.MarineReportingUnit, col)
 
-    q_unique = q.with_entities(*col_needed).distinct()
+        q_unique = q.with_entities(*col_needed).distinct()
+    except:
+        sess.rollback()
+        logger.exception("MSFD database is timed out")
+        return []
 
     q_unique = [x for x in q_unique]
 
@@ -555,7 +669,13 @@ def get_all_records_distinct_ordered(table, order_col, exclude, *conditions):
 @cache(db_result_key)
 def get_all_records_outerjoin(mapper_class, klass_join, *conditions):
     sess = session()
-    res = sess.query(mapper_class).outerjoin(klass_join).filter(*conditions)
+    try:
+        res = sess.query(mapper_class).outerjoin(klass_join).filter(*conditions)
+    except:
+        sess.rollback()
+        logger.exception("MSFD database is timed out")
+        return []
+
     count = res.count()
     res = [x for x in res]
 
@@ -565,7 +685,13 @@ def get_all_records_outerjoin(mapper_class, klass_join, *conditions):
 @cache(db_result_key)
 def get_all_records_join(columns, klass_join, *conditions):
     sess = session()
-    q = sess.query(*columns).join(klass_join).filter(*conditions)
+    try:
+        q = sess.query(*columns).join(klass_join).filter(*conditions)
+    except:
+        sess.rollback()
+        logger.exception("MSFD database is timed out")
+        return []
+
     count = q.count()
     q = [x for x in q]
 
@@ -574,10 +700,17 @@ def get_all_records_join(columns, klass_join, *conditions):
 
 def compliance_art8_join(columns, mc_join1, mc_join2, *conditions):
     sess = session()
-    q = sess.query(*columns).outerjoin(mc_join1).outerjoin(mc_join2).filter(
-        *conditions
-    )
-    count = q.count()
+    try:
+        q = sess.query(*columns).outerjoin(mc_join1).outerjoin(mc_join2).filter(
+            *conditions
+        )
+        count = q.count()
+    except:
+        sess.rollback()
+        logger.exception("MSFD database is timed out")
+        return []
+
+
     q = [x for x in q]
 
     return [count, q]
@@ -593,7 +726,12 @@ def latest_import_ids_2018():
     ]
 
     sess = session()
-    res = sess.query(mc).join(mc_v, mc.Id == mc_v.c.Id).filter(*conditions)
+    try:
+        res = sess.query(mc).join(mc_v, mc.Id == mc_v.c.Id).filter(*conditions)
+    except:
+        sess.rollback()
+        logger.exception("MSFD database is timed out")
+        return []
 
     groups = defaultdict(int)
 
@@ -615,9 +753,13 @@ def latest_import_ids_2018():
 def get_competent_auth_data(*conditions):
     mc = sql.t_MS_CompetentAuthorities
     sess = session()
-    query = sess.query(mc).filter(*conditions).order_by(mc.c.C_CD)
-
-    data = [x for x in query]
+    try:
+        query = sess.query(mc).filter(*conditions).order_by(mc.c.C_CD)
+        data = [x for x in query]
+    except:
+        sess.rollback()
+        logger.exception("MSFD database is timed out")
+        return []
 
     filtered_data = []
     last_rep_dates = {}
@@ -652,29 +794,36 @@ def get_competent_auth_data(*conditions):
 # MSFD Search article 11 2020 specific queries
 @use_db_session('2018')
 def get_a11_regions_countries():
-    t = sql2018.ART11ProgrammesMonitoringProgrammeMarineReportingUnit
-    mp = sql2018.ART11ProgrammesMonitoringProgramme
-    t_mru = sql2018.MarineReportingUnit
-    rep = sql2018.ReportedInformation
+    try:
+        t = sql2018.ART11ProgrammesMonitoringProgrammeMarineReportingUnit
+        mp = sql2018.ART11ProgrammesMonitoringProgramme
+        t_mru = sql2018.MarineReportingUnit
+        rep = sql2018.ReportedInformation
 
-    columns = [
-        # t.MarineReportingUnit,
-        t.IdMonitoringProgramme,
-        t_mru.Region,
-        t_mru.CountryCode,
-        mp.ProgrammeCode,
-    ]
+        columns = [
+            # t.MarineReportingUnit,
+            t.IdMonitoringProgramme,
+            t_mru.Region,
+            t_mru.CountryCode,
+            mp.ProgrammeCode,
+        ]
 
-    sess = session()
-    q = sess.query(*columns) \
-        .join(mp, mp.Id == t.IdMonitoringProgramme) \
-        .join(rep, rep.Id == mp.IdReportedInformation) \
-        .join(t_mru,
-              and_(t.MarineReportingUnit == t_mru.MarineReportingUnitId,
-                   rep.CountryCode == t_mru.CountryCode)) \
-        .distinct()
+        sess = session()
 
-    res = [x for x in q]
+        q = sess.query(*columns) \
+            .join(mp, mp.Id == t.IdMonitoringProgramme) \
+            .join(rep, rep.Id == mp.IdReportedInformation) \
+            .join(t_mru,
+                  and_(t.MarineReportingUnit == t_mru.MarineReportingUnitId,
+                       rep.CountryCode == t_mru.CountryCode)) \
+            .distinct()
+
+        res = [x for x in q]
+
+    except:
+        sess.rollback()
+        logger.exception("MSFD database is timed out")
+        return []
 
     return res
 
@@ -689,9 +838,13 @@ def get_a11_descr_prog_code():
 
     sess = session()
     columns = [strat.Descriptor, strat_mp.MonitoringProgrammes]
-    q = sess.query(*columns).join(strat_mp)
-
-    res = [x for x in q]
+    try:
+        q = sess.query(*columns).join(strat_mp)
+        res = [x for x in q]
+    except:
+        sess.rollback()
+        logger.exception("MSFD database is timed out")
+        return []
 
     return res
 
