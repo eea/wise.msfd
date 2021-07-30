@@ -85,7 +85,7 @@ articles_vocabulary = vocab_from_pairs(ASSESSED_ARTICLES)
 
 
 REGIONS = {
-    "ABI": "NE Atlantic: Bay of Biscay & Iberian Coast",
+    "ABI": "NE Atlantic: Bay of Biscay & the Iberian Coast",
     "ACS": "NE Atlantic: Celtic Seas",
     "AMA": "NE Atlantic: Macaronesia",
     "ANS": "NE Atlantic: Greater North Sea",

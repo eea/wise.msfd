@@ -68,8 +68,8 @@ class AssessmentAreas2018(BaseNatSummaryView):
         mrus_needed = [x.thematicId for x in data]
 
         _, mru_descriptions = db.get_all_specific_columns(
-            [mc_mru_descr.MarineReportingUnitId, mc_mru_descr.nameTxtInt,
-             mc_mru_descr.nameText],
+            [mc_mru_descr.MarineReportingUnitId, mc_mru_descr.Description,
+             mc_mru_descr.nameTxtInt, mc_mru_descr.nameText],
             mc_mru_descr.MarineReportingUnitId.in_(mrus_needed)
         )
 
@@ -88,8 +88,9 @@ class AssessmentAreas2018(BaseNatSummaryView):
         for row in data:
             mru = row.thematicId
             description = [
-                (x.nameTxtInt is not None and x.nameTxtInt.strip()
-                 or x.nameText or "")
+                x.Description
+                # (x.nameTxtInt is not None and x.nameTxtInt.strip()
+                #  or x.nameText or "")
                 for x in mru_descriptions
                 if x.MarineReportingUnitId == mru
             ]

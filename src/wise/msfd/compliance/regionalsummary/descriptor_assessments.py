@@ -35,8 +35,9 @@ class RegDescriptorLevelAssessments(BaseRegSummaryView,
                      phase_overall_scores.coherence['color'])
 
         overallscore_val, score = phase_overall_scores.get_overall_score(
-            article
+            article, is_national=False
         )
+
         conclusion = self.get_conclusion(overallscore_val)
         overall_score_2018 = (
             "{} ({})".format(conclusion, overallscore_val),
