@@ -72,7 +72,7 @@ class OverallScores(object):
             d.update(_init)
             setattr(self, phase, d)
 
-    def get_overall_score(self, article):
+    def get_overall_score(self, article, is_national=True):
         """ Overall conclusion art. XX: 2018
 
         :return: 80
@@ -96,10 +96,12 @@ class OverallScores(object):
         if max_score == 0:  # all phases not relevant
             return '-', '-'
 
-        # adequacy and consistency are not relevant
-        if (self.adequacy['score'] == 0 and self.consistency['score'] == 0
-                and self.adequacy['max_score'] == 0
-                and self.consistency['max_score'] == 0):
+        # adequacy and consistency are not relevant -> overall is not relevant
+        # ONLY for National scores, for Regional this rule is not used
+        if (is_national
+            and self.adequacy['score'] == 0 and self.consistency['score'] == 0
+            and self.adequacy['max_score'] == 0
+            and self.consistency['max_score'] == 0):
 
             return '-', '-'
 
