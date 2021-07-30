@@ -16,6 +16,7 @@ from .utils import db_result_key, group_query
 
 env = os.environ.get
 DSN = env('MSFDURI', 'mssql+pymssql://SA:bla3311!@msdb')  # ?charset=utf8mb4
+USE_MOCKSESSION = env('USE_MOCKSESSION', False)
 DBS = {
     '2012': env('MSFD_db_default', 'MarineDB_public'),
     '2018': env('MSFD_db_2018', 'MSFD2018_production')  # has all needed views
@@ -73,6 +74,11 @@ class MockSession(object):
 
 
 def session():
+    if USE_MOCKSESSION:
+        print "Using MockSession()"
+
+        return MockSession()
+
     session_name = getattr(threadlocals, 'session_name')
 
     if not session_name:
