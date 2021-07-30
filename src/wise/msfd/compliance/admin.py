@@ -1457,8 +1457,8 @@ class SetupAssessmentWorkflowStates(BaseComplianceView):
     def get_objects(self):
         catalog = get_tool('portal_catalog')
         brains = catalog.searchResults(
-            portal_type='wise.msfd.nationaldescriptorassessment',
-            path='/Plone/assessment-module/national-descriptors-assessments'
+            portal_type='wise.msfd.regionaldescriptorassessment',
+            path='/Plone/assessment-module/regional-descriptors-assessments'
         )
 
         for brain in brains:
