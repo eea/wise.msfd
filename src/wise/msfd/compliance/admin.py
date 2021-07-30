@@ -1454,42 +1454,56 @@ class AdminScoringExportXML(AdminScoring):
 
 class SetupAssessmentWorkflowStates(BaseComplianceView):
 
-    @property
-    def ndas(self):
+    def get_objects(self):
         catalog = get_tool('portal_catalog')
         brains = catalog.searchResults(
             portal_type='wise.msfd.nationaldescriptorassessment',
+            path='/Plone/assessment-module/national-descriptors-assessments'
         )
 
         for brain in brains:
             obj = brain.getObject()
-            yield obj
 
-    def __call__(self):
+            state = get_wf_state_id(obj)
+
+            if state in ('not_started', 'approved'):
+                continue
+
+            if '/d1/' in obj.absolute_url():
+                continue
+
+            yield obj, state
+
+    def view_objects(self):
+        template = "<tr><td><a href={0}>{0}</a></td><td>{1}<td><tr>"
+        res = [template.format(x[0].absolute_url(), x[1]) for x in self.get_objects()]
+
+        return "<table>{}</table".format("".join(res))
+
+    def fix_objects(self):
         changed = 0
         not_changed = 0
 
         logger.info("Changing workflow states to not_started...")
 
-        for nda in self.ndas:
-            state = get_wf_state_id(nda)
+        for nda, state in self.get_objects():
+            # if hasattr(nda, 'saved_assessment_data'):
+                # data = nda.saved_assessment_data.last()
+                #
+                # if data:
+                #     not_changed += 1
+                #
+                #     continue
 
-            if hasattr(nda, 'saved_assessment_data'):
-                data = nda.saved_assessment_data.last()
-
-                if data:
-                    not_changed += 1
-
-                    continue
-
-            if state == 'in_work':
-                changed += 1
-                logger.info("State changing for {}".format(nda.__repr__()))
-                transition(obj=nda, to_state='not_started')
+            changed += 1
+            logger.info("State changing for {}".format(nda.__repr__()))
+            transition(obj=nda, to_state='approved')
 
         logger.info("States changed: {}, Not changed: {}".format(
             changed, not_changed)
         )
+
+        alsoProvides(self.request, IDisableCSRFProtection)
 
         return "Done"
 
