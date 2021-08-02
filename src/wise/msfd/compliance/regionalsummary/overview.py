@@ -6,7 +6,8 @@ from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 from Products.statusmessages.interfaces import IStatusMessage
 from wise.msfd import sql, db
 from wise.msfd.compliance.assessment import AssessmentDataMixin
-from wise.msfd.gescomponents import DESCRIPTOR_TYPES, get_all_descriptors
+from wise.msfd.gescomponents import (DESCRIPTOR_TYPES, FEATURES_ORDER,
+                                     get_all_descriptors, get_descriptor)
 from wise.msfd.labels import get_label
 from wise.msfd.translation import get_translated, retrieve_translation
 from wise.msfd.utils import (ItemList, TemplateMixin, db_objects_to_dict,
@@ -290,12 +291,18 @@ class UsesHumanActivitiesPressures(RegionalDescriptorsSimpleTable,
                         if x[0] == country_id and x[2] == activ_feat
                     ]
 
+                    sorted_press = sorted(
+                        set(pressures), key=lambda i: fixedorder_sortkey(
+                            i, FEATURES_ORDER)
+                    )
+
                     pressures = [
                         self.get_feature_short_name(x)
-                        for x in set(pressures)
+                        for x in sorted_press
                     ]
 
-                    activity_data.append(ItemListOverview(pressures))
+                    activity_data.append(ItemListOverview(pressures,
+                                                          sort=False))
 
                 theme_data.append((get_label(activ_feat, 'features'),
                                    activity_data))
@@ -346,6 +353,12 @@ class PressuresAffectingDescriptors(RegionalDescriptorsSimpleTable,
 
                     for x in data:
                         descr = x[1]
+
+                        try:
+                            descr = get_descriptor(descr).template_vars['title']
+                        except:
+                            pass
+
                         ccode = x[0]
 
                         if ccode != country_id:
@@ -386,7 +399,7 @@ class ExtentGESAchieved(RegionalDescriptorsSimpleTable, GESExtentAchieved):
         data = self.get_ges_extent_data()
 
         out = []
-        return out
+        # return out
 
         for descr_type, descriptors in DESCRIPTOR_TYPES:
             descriptor_type_data = []
