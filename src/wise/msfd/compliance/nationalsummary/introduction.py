@@ -4,6 +4,7 @@ from datetime import datetime
 
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 from wise.msfd import db, sql2018
+from wise.msfd.compliance.vocabulary import _4GEO_DATA
 from wise.msfd.data import get_text_reports_2018
 from wise.msfd.gescomponents import get_descriptor
 from wise.msfd.translation import get_translated, retrieve_translation
@@ -43,8 +44,109 @@ class AssessmentAreas2018(BaseNatSummaryView):
 
     template = ViewPageTemplateFile('pt/assessment-areas.pt')
 
+    def norm_mru_id(self, mru_id):
+        _id = mru_id.replace(' ', '')
+
+        if self.country_code == 'LV':
+            _id = _id.replace('AA', 'AAA')
+
+        return _id
+
     @db.use_db_session('2018')
     def get_data(self):
+        mapper_class = sql2018.MRUsPublication
+        mc_mru_descr = sql2018.MarineReportingUnit
+        data = _4GEO_DATA
+        data_filtered = [
+            row
+            for row in data
+            if row.MemberState == self.country_code
+        ]
+
+        # for better query speed we get only these columns
+        col_names = ('Country', 'rZoneId', 'thematicId', 'nameTxtInt',
+                     'nameText', 'spZoneType', 'legisSName', 'Area')
+        columns = [getattr(mapper_class, name) for name in col_names]
+
+        _, data_db = db.get_all_specific_columns(
+            columns,
+            mapper_class.Country == self.country_code
+        )
+
+        res = []
+
+        _, art8_data = db.get_all_specific_columns(
+            [sql2018.t_V_ART8_GES_2018.c.MarineReportingUnit,
+             sql2018.t_V_ART8_GES_2018.c.GESComponent],
+            sql2018.t_V_ART8_GES_2018.c.CountryCode == self.country_code
+        )
+        _, art9_data = db.get_all_specific_columns(
+            [sql2018.t_V_ART9_GES_2018.c.MarineReportingUnit,
+             sql2018.t_V_ART9_GES_2018.c.GESComponent],
+            sql2018.t_V_ART9_GES_2018.c.CountryCode == self.country_code
+        )
+        art8_art9_data = set(art8_data + art9_data)
+
+        for row in data_filtered:
+            # if row.Status == 'Not used':
+            #     continue
+
+            description = row.MRUName
+            mru_id = self.norm_mru_id(row.MRUID)
+            translation = get_translated(description, self.country_code) or ''
+            area = row.MRUAarea and int(round(row.MRUAarea)) or 0
+
+            if not area:
+                area = [
+                    x.Area
+                    for x in data_db
+                    if x.thematicId == mru_id
+                ]
+                area = area and int(round(area[0])) or 0
+
+            if not translation:
+                retrieve_translation(self.country_code, description)
+
+            self._translatable_values.append(description)
+
+            # prop_water = int(round((area / marine_waters_total) * 100))
+            prop_water = row.MRUCoverage and int(round(row.MRUCoverage)) or 0
+
+            if not prop_water:
+                mw_total = [
+                    x.MarineWatersArea
+                    for x in data_filtered
+                    if x.MarineWatersArea
+                ]
+                mw_total = mw_total and mw_total[0] or 0
+                prop_water = int(round((area / mw_total) * 100))
+
+            descr_list = set([
+                x[1]
+                for x in art8_art9_data
+                if x[0] == mru_id
+            ])
+            descr_list = sorted(descr_list, key=natural_sort_key)
+            descr_list_norm = []
+
+            for d in descr_list:
+                try:
+                    desc = get_descriptor(d).template_vars['title']
+                except:
+                    desc = d
+
+                descr_list_norm.append(desc)
+
+            descriptors = ', '.join(descr_list_norm)
+
+            res.append((row.MarineRegion, row.AssessmentArea, mru_id,
+                        description, translation, '{:,}'.format(area),
+                        prop_water, descriptors))
+
+        return res
+
+    @db.use_db_session('2018')
+    def get_data_old(self):
         mapper_class = sql2018.MRUsPublication
         mc_mru_descr = sql2018.MarineReportingUnit
         res = []
