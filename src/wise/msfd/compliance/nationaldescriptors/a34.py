@@ -1,6 +1,5 @@
 import logging
 
-from collections import defaultdict
 from lxml.etree import fromstring
 
 from Products.Five.browser.pagetemplatefile import \
@@ -8,7 +7,6 @@ from Products.Five.browser.pagetemplatefile import \
 from wise.msfd import db, sql, sql2018, sql_extra
 from wise.msfd.compliance.vocabulary import _4GEO_DATA
 from wise.msfd.data import get_xml_report_data
-from wise.msfd.translation import retrieve_translation
 from wise.msfd.utils import (Item, ItemLabel, ItemList, Node, RawRow,  # Row,
                              RelaxedNode, natural_sort_key, to_html)
 
@@ -26,6 +24,9 @@ NSMAP = {
 
 
 def xp(xpath, node):
+    if not node:
+        return []
+
     return node.xpath(xpath, namespaces=NSMAP)
 
 
@@ -607,9 +608,14 @@ class Article34_2018(BaseArticle2012):
         filename = self.filename
         text = get_xml_report_data(filename)
         self.root = fromstring(text)
+        self.rows = []
 
         mru_nodes = xp('//w:GeographicalBoundariesID', self.root)
-        description = xp('//w:Description', self.root)[0]
+        description = xp('//w:Description', self.root)
+
+        if description:
+            description = description[0]
+
         # cooperation_nodes = xp('//w:Cooperation', self.root)
 
         # TODO: also send the previous file data
@@ -627,7 +633,6 @@ class Article34_2018(BaseArticle2012):
         self.translatable_extra_data = main_node.get_translatable_extra_data()
         self.available_mrus = main_node.available_mrus
         self.available_regions = main_node.available_regions
-        self.rows = []
 
         # TODO: this code needs to be explained. It's hard to understand what
         # its purpose is

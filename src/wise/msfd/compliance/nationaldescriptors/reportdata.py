@@ -1735,8 +1735,18 @@ class ReportData2018Secondary(ReportData2018):
 
         reporters = date = None
         try:
-            reporters = root.attrib['GeneratedBy']
-            date = root.attrib['CreationDate']
+            reporters = root.get('GeneratedBy')
+
+            if not reporters:
+                reporters = root.get('Organisation')
+
+            date = root.get('CreationDate')
+
+            if not date:
+                date = root.get('ReportingDate')
+
+            date = datetime.strptime(date, '%d-%m-%Y')
+
         except:
             pass
 
@@ -1883,7 +1893,8 @@ class ReportData2018Secondary(ReportData2018):
 
             if report:
                 report_by = report.ContactOrganisation
-                # report_date = report.ReportingDate
+                if not report_date:
+                    report_date = report.ReportingDate
 
             res = []
             source_file = (url.rsplit('/', 1)[-1], url + '/manage_document')

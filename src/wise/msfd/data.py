@@ -460,6 +460,10 @@ def get_factsheet_url(url):
     base = base.replace('https://cdr.eionet.europa.eu/', '')
 
     resp = requests.get(url + '/get_possible_conversions')
+
+    if resp.status_code == 401:
+        return url
+
     j = resp.json()
     ids = [x
            for x in j['remote_converters']
@@ -692,6 +696,12 @@ def get_all_report_filenames(country, article):
 
     obligation = obligations[article.lower()]
 
+    if country.lower() == 'el':
+        country = 'GR'
+
+    if country.lower() == 'uk':
+        country = 'GB'
+
     q = """
 PREFIX cr: <http://cr.eionet.europa.eu/ontologies/contreg.rdf#>
 PREFIX terms: <http://purl.org/dc/terms/>
@@ -709,19 +719,33 @@ WHERE {
 ?isPartOf schema:obligation ?obligation .
 ?obligation core:notation ?obligationNr .
 ?locality core:notation ?notation .
-FILTER (str(?restricted) = 'false')
+#FILTER (str(?restricted) = 'false')
 FILTER (?notation = '%s')
-FILTER (%s)
+#FILTER (%s)
 FILTER (%s)
 }
 ORDER BY DESC(?date)
 """ % (country.upper(), obligation, schema, )       # region.upper()
 
+# disabled filter on the obligation, as 4GEO files are reported along other
+# obligations too
 # FILTER regex(str(?file), '%s')
 
     service = sparql.Service('https://cr.eionet.europa.eu/sparql')
     urls = []
 
+    if article.lower() in ('art3', 'art4'):
+        if country.upper() == 'IT':
+            urls.append('https://cdr.eionet.europa.eu/it/eu/msfd_art17/'
+                        '2018reporting/spatialdata/envxd9fqa/IT_MSFD4Geo_20181220.xml')
+
+        if country.upper() == 'LT':
+            urls.append("https://cdr.eionet.europa.eu/lt/eu/msfd_art17/"
+                        "2018reporting/spatialdata/envxosfwq/LT_MSFD4Geo.xml")
+
+        if country.upper() == 'PT':
+            urls.append("https://cdr.eionet.europa.eu/pt/eu/msfd_art17/"
+                        "2018reporting/spatialdata/envxuw4ba/PT_MSFD_4GEO_version_2_2019.08.09.xml")
     try:
         req = service.query(q)
         rows = req.fetchall()
@@ -775,7 +799,13 @@ LIMIT 1
         req = service.query(q)
         rows = req.fetchall()
 
+        if not rows:
+            released = 0
+
+            return released
+
         released = rows[0][0].value
+
     except:
         logger.exception('Got an error in querying SPARQL endpoint for '
                          'file_url: %s', file_url)
