@@ -27,6 +27,15 @@ def compoundrow(self, title, rows, show_header=True):
     return CompoundRow(self, self.request, field, rows, show_header)
 
 
+def calculate_reporting_delay(reporting_delay, report_due, report_date):
+    # if reporting_delay:
+    #     return -reporting_delay
+
+    timedelta = report_due - report_date
+
+    return "{:+d}".format(timedelta.days)
+
+
 class CompoundRow(TemplateMixin):
     template = ViewPageTemplateFile('pt/compound-row.pt')
 
@@ -254,6 +263,16 @@ class ReportingHistoryTable(BaseNatSummaryView):
         super(ReportingHistoryTable, self).__init__(context, request)
 
         self.data = self.get_reporting_history_data()
+
+        report_info = ReportedInformationTable(self, self.request)
+        report_info()
+
+        # reporting history is incomplete for the following countries
+        # need to add data from reported information table
+        if self.country_code in ('IT',):
+            data_alternate = report_info.data_alternate
+            self.data.extend(data_alternate)
+
         text_reports = get_text_reports_2018(self.country_code)
         data_text = []
 
@@ -338,15 +357,6 @@ class ReportingHistoryTable(BaseNatSummaryView):
 
         return headers
 
-    def calculate_reporting_delay(self, reporting_delay, report_due,
-                                  report_date):
-        # if reporting_delay:
-        #     return -reporting_delay
-
-        timedelta = report_due - report_date
-
-        return "{:+d}".format(timedelta.days)
-
     def get_data_by_obligations(self, obligations):
         # Group the data by envelope, report due, report date
         # and report delay
@@ -366,7 +376,7 @@ class ReportingHistoryTable(BaseNatSummaryView):
             report_due = self.format_date(row.get('DateDue'))
             report_date = self.format_date(row.get('DateReleased'))
 
-            report_delay = self.calculate_reporting_delay(
+            report_delay = calculate_reporting_delay(
                 row.get('ReportingDelay'), report_due, report_date
             )
             k = (envelope, report_due, report_date, report_delay)
@@ -415,7 +425,7 @@ class ReportedInformationTable(BaseNatSummaryView):
     """ Alternate implementation for the reporting history table
     Reads data from sql2018.ReportedInformation
 
-    TODO currently not used
+    TODO currently used for Italy
     """
 
     template = ViewPageTemplateFile('pt/report-history-compound-table.pt')
@@ -428,13 +438,39 @@ class ReportedInformationTable(BaseNatSummaryView):
 
     @db.use_db_session('2018')
     def get_reporting_history_data(self):
-
+        schema_needed = ('ART10_Targets', 'ART8_ESA', 'ART9_GES', 'Indicators')
         mc = sql2018.ReportedInformation
 
         _, res = db.get_all_records(
             mc,
             mc.CountryCode == self.country_code,
+            mc.Schema.in_(schema_needed)
         )
+
+        data_alternate = []
+        for row in res:
+            _row = {}
+
+            file_url = row.ReportedFileLink
+            rep_date = row.ReportingDate
+            release_date = datetime.strptime(rep_date.isoformat(), '%Y-%m-%d')
+            file_url_split = file_url.split('/')
+            text_report_ob = 'MSFD - Articles 8, 9 and 10 - XML data'
+            report_due = datetime.strptime('15-10-2018', '%d-%m-%Y')
+            report_delay = calculate_reporting_delay(
+                0, report_due, release_date
+            )
+
+            _row['ReportingObligation'] = text_report_ob
+            _row['FileName'] = file_url_split[-1]
+            _row['LocationURL'] = file_url
+            _row['DateDue'] = report_due
+            _row['DateReleased'] = release_date
+            _row['ReportingDelay'] = report_delay
+
+            data_alternate.append(_row)
+
+        self.data_alternate = data_alternate
 
         res = db_objects_to_dict(res)
 
@@ -502,8 +538,8 @@ class ReportedInformationTable(BaseNatSummaryView):
             ]
             rows.append(values)
 
-        text_files = self.get_text_and_spacial_files()
-        rows.extend(text_files)
+        # text_files = self.get_text_and_spacial_files()
+        # rows.extend(text_files)
 
         sorted_rows = sorted(rows,
                              key=lambda _row: (_row[3], _row[1]),
@@ -570,7 +606,6 @@ class Introduction(BaseNatSummaryView):
 
     @timeit
     def reporting_history_table(self):
-        # view = ReportedInformationTable(self, self.request)
         view = ReportingHistoryTable(self, self.request)
         rendered_view = view()
 

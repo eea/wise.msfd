@@ -96,8 +96,12 @@ class ReportData2018SecondaryOverview(ReportData2018Secondary,
             view = self.get_implementation_view(url, prev_url,
                                                 show_mru_usage=True)
 
+            report = self.get_report_metadata_from_view(view, url)
             # Report Header
             report_date = get_envelope_release_date(url)
+
+            if not report_date:
+                report_date = report.ReportingDate
 
             view()      # updates the view
             data = [Proxy2018(row, self) for row in view.cols]
@@ -491,8 +495,6 @@ class GESExtentAchieved(PressuresTableBase):
             return value
 
         norm = "{0:g}".format(float(value))
-
-        print (value, norm)
 
         return norm
 
