@@ -34,9 +34,10 @@
                       tal:content="python: descriptor_data[0]">D2</th>
                   <th style="width: 150px;"
                       tal:content="python: row[0]">Non indigenous species</th>
-                  <td tal:repeat="value python: row[1]"
-                      tal:content="structure value">
-                    All pressures
+                  <td tal:repeat="value python: row[1]" style="height: 1px;">
+                    <div tal:attributes="class python: 'env-status ' + view.get_color_class(value)">
+                      <div tal:content="structure value">All pressures</div>
+                    </div>
                   </td>
                 </tr>
               </tal:rep>

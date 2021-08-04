@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-
+from collections import Counter
 import logging
 
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
@@ -106,6 +106,9 @@ class RegionalDescriptorsSimpleTable(BaseRegSummaryView):
     title = ''
     _id = ''
     editable_text = ''
+
+    def get_color_class(self, value):
+        return ''
 
     def setup_data(self):
         return []
@@ -399,7 +402,6 @@ class ExtentGESAchieved(RegionalDescriptorsSimpleTable, GESExtentAchieved):
         data = self.get_ges_extent_data()
 
         out = []
-        # return out
 
         for descr_type, descriptors in DESCRIPTOR_TYPES:
             descriptor_type_data = []
@@ -411,7 +413,30 @@ class ExtentGESAchieved(RegionalDescriptorsSimpleTable, GESExtentAchieved):
                     feature_data = []
 
                     for country_id, country_name in self.available_countries:
-                        feature_data.append('')
+                        _v = [
+                            x.GESExtentUnit
+                            for x in data
+                            if (x.CountryCode == country_id and
+                                x.Feature == feature)
+                        ]
+                        _vals = Counter(_v)
+                        len_v = len(_v)
+
+                        if feature == 'PresEnvNISnew':
+                            _vals = [
+                                "{0}: {1}".format(k, v)
+                                for k, v in _vals.items()
+                                if k
+                            ]
+                        else:
+                            _vals = [
+                                "{0}: {1} ({2} of {3})".format(
+                                    k, int((float(v) / len_v) * 100), v, len_v)
+                                for k, v in _vals.items()
+                                if k
+                            ]
+
+                        feature_data.append(ItemListOverview(_vals))
 
                     descriptor_data.append((get_label(feature, 'features'),
                                            feature_data))
@@ -423,13 +448,25 @@ class ExtentGESAchieved(RegionalDescriptorsSimpleTable, GESExtentAchieved):
 
         return out
 
-
 @register_section
 class CurrentEnvitonmentalStatus(RegionalDescriptorsSimpleTable,
                                  GESExtentAchieved):
     title = 'Current environmental status'
     _id = 'reg-overview-env-stat'
     template = ViewPageTemplateFile('pt/overview-descriptor-pressures-table.pt')
+
+    def get_color_class(self, value):
+        colors = {
+            "Unknown": 'ges-1',
+            "Not assessed": 'ges-2',
+            "Not relevant": 'ges-3',
+            "GES expected to be achieved later than 2020, no Article 14 exception reported": 'ges-4',
+            "GES expected to be achieved later than 2020, Article 14 exception reported": 'ges-5',
+            "GES expected to be achieved by 2020": 'ges-6',
+            "GES achieved": 'ges-7',
+        }
+
+        return colors.get(value, 'ges-1')
 
     @property
     def country_code(self):
@@ -690,7 +727,6 @@ class BaseNationalAssessmentOverviewTable(RegionalDescriptorsSimpleTable,
 
                 for country_id, country_name in self.available_countries:
                     data = NATIONAL_ASSESSMENT_DATA[country_id]
-                    val = []
                     regions = set([
                         x[0]
                         for x in data
@@ -705,10 +741,10 @@ class BaseNationalAssessmentOverviewTable(RegionalDescriptorsSimpleTable,
                         __key = (region, descriptor, self.article, self.year)
                         val = data[__key]
 
-                    if not val:
-                        val = ['Not assessed', '3']
+                        if not val:
+                            val = ['Not assessed', '3']
 
-                    descriptor_data.append(val)
+                        descriptor_data.append(val)
 
                 descriptor_type_data.append([
                     self.get_descriptor_title(descriptor), descriptor_data])
