@@ -1,5 +1,5 @@
 <tal:cond tal:condition="python: 'assessment-module' in request.URL0 or 'msfd-data' in request.URL0">
-  <link href="/marine/++resource++static_css/tabs.css?rel=7ccf836f66" type="text/css" rel="stylesheet" />
+  <link href="/marine/++resource++static_css/tabs.css?rel=caf2fcbfe2" type="text/css" rel="stylesheet" />
   <!-- <link href="/marine/++resource++static_css/bootstrap.css" type="text/css" rel="stylesheet" /> -->
 </tal:cond>
 

@@ -497,6 +497,7 @@ class A11MonitoringProgrammeForm(EmbeddedForm):
                  sql.MSFD11MP.MonitoringProgramme.isnot(None)
                  )
         )
+
         mon_prog_ids_from_MP = [int(elem) for elem in mon_prog_ids_from_MP]
 
         count, mon_prog_ids = db.get_all_records_outerjoin(
