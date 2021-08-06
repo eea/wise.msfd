@@ -153,7 +153,7 @@ def _make_session(dsn):
     engine = create_engine(dsn,  # , encoding="utf8"
                            pool_recycle=1800,
                            pool_pre_ping=True,
-                           connect_args={'timeout': 30}
+                           connect_args={'timeout': 60}
                            )
     Session = scoped_session(sessionmaker(bind=engine))
     register(Session, keep_session=True)
