@@ -17,73 +17,84 @@
     <div id="layout-contents" tal:define="text context/text | nothing" >
       <div id="wise-search-form">
         <div id="wise-search-form-top">
-          <h4>Lead image here with country name included</h4>
-          <h2 tal:content="string: ${view/context/title}">Member State</h2>
-          <h4>Text/Description if needed</h4>
+          <div><p>Text/Description if needed</p></div>
 
            <div class="topnav articles-wrapper row">
-             <div class="article-box col-lg-4 col-xs-6">
-               <div class="article-box-wrapper">
-                 <div class="article-box-header">
-                   <h4 class="tab-subtitle">Overview</h4>
-                   <div class="tab-title"
-                        tal:content="string: Overview for ${view/context/title}">Overview for MS
+             <a class="article-box-anchor"
+                tal:define="_href python: '/marine/assessment-module/national-summaries/' + view.context._ccode + '/overview'"
+                tal:attributes="href _href">
+               <div class="article-box col-lg-4 col-xs-6">
+                 <div class="article-box-wrapper">
+                   <div class="article-box-header">
+                     <h4 class="tab-subtitle">Overview</h4>
+                     <div class="tab-title"
+                          tal:content="string: Overview for ${view/context/title}">Overview for MS
+                     </div>
                    </div>
-                 </div>
-                 <div class="article-description">
-                   Longer introductory text or description here ...
-                 </div>
-                 <a href=""
-                    tal:attributes="href string:/marine/assessment-module/national-summaries/${context/id}/overview"
-                    class="article-link"
-                    target="_blank">
-                   <span class="link-btn"></span>
-                 </a>
-              </div>
-             </div>
+                   <div class="article-description">
+                     Longer introductory text or description here ...
+                   </div>
+                   <a href=""
+                      tal:attributes="href _href"
+                      class="article-link"
+                      target="_blank">
+                     <span class="link-btn"></span>
+                   </a>
+                </div>
+               </div>
+             </a>
 
-             <div class="article-box col-lg-4 col-xs-6">
-               <div class="article-box-wrapper">
-                 <div class="article-box-header">
-                   <h4 class="tab-subtitle">Reports
-                   </h4>
-                   <div class="tab-title"
-                        tal:content="string: View reports for ${view/context/title}">View reports by Member State
+             <a class="article-box-anchor"
+                tal:define="_href python:'/marine/assessment-module/national-descriptors-assessments/' + view.context._ccode + '/reports'"
+                tal:attributes="href _href">
+               <div class="article-box col-lg-4 col-xs-6">
+                 <div class="article-box-wrapper">
+                   <div class="article-box-header">
+                     <h4 class="tab-subtitle">Reports
+                     </h4>
+                     <div class="tab-title"
+                          tal:content="string: View reports for ${view/context/title}">View reports by Member State
+                     </div>
                    </div>
-                 </div>
-                 <div class="article-description">
-                   Longer introductory text or description here ...
-                 </div>
-                 <a href=""
-                    tal:attributes="href string:/marine/assessment-module/national-descriptors-assessments/${context/id}/reports"
-                    class="article-link"
-                    target="_blank">
-                   <span class="link-btn"></span>
-                 </a>
-              </div>
-             </div>
+                   <div class="article-description">
+                     Longer introductory text or description here ...
+                   </div>
+                   <a href=""
+                      tal:attributes="href _href"
+                      class="article-link"
+                      target="_blank">
+                     <span class="link-btn"></span>
+                   </a>
+                </div>
+               </div>
+             </a>
 
-             <div class="article-box col-lg-4 col-xs-6">
-               <div class="article-box-wrapper">
-                 <div class="article-box-header">
-                   <h4 class="tab-subtitle">Assessments
-                   </h4>
-                   <div class="tab-title">View or edit the ongoing assessments
+             <a class="article-box-anchor"
+                tal:define="_href python:'/marine/assessment-module/national-descriptors-assessments/' + view.context._ccode + '/assessments'"
+                tal:attributes="href _href">
+               <div class="article-box col-lg-4 col-xs-6">
+                 <div class="article-box-wrapper">
+                   <div class="article-box-header">
+                     <h4 class="tab-subtitle">Assessments
+                     </h4>
+                     <div class="tab-title">View or edit the ongoing assessments
+                     </div>
                    </div>
+                   <div class="article-description">
+                     Longer introductory text or description here ...
+                   </div>
+                   <a href=""
+                      tal:attributes="href _href"
+                      class="article-link"
+                      target="_blank">
+                     <span class="link-btn"></span>
+                   </a>
                  </div>
-                 <div class="article-description">
-                   Longer introductory text or description here ...
-                 </div>
-                 <a href=""
-                    tal:attributes="href string:/marine/assessment-module/national-descriptors-assessments/${context/id}/assessments"
-                    class="article-link"
-                    target="_blank">
-                   <span class="link-btn"></span>
-                 </a>
-              </div>
-             </div>
+               </div>
+             </a>
+
            </div>
-        </div>
+         </div>
         <div
           tal:content="structure text/output"
           tal:condition="text">

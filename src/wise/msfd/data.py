@@ -461,7 +461,7 @@ def get_factsheet_url(url):
 
     resp = requests.get(url + '/get_possible_conversions')
 
-    if resp.status_code == 401:
+    if resp.status_code in (401, 503):
         return url
 
     j = resp.json()
@@ -844,7 +844,7 @@ ORDER BY DESC(?date)
     res = []
 
     try:
-        req = service.query(q)
+        req = service.query(q, timeout=30)
         rows = req.fetchall()
 
         for row in rows:

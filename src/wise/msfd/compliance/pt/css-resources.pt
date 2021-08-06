@@ -3,6 +3,6 @@
   <!-- <link href="/marine/++resource++static_css/bootstrap.css" type="text/css" rel="stylesheet" /> -->
 </tal:cond>
 
-<tal:cond tal:condition="python: 'assessment-module' in request.URL0">
+<tal:cond tal:condition="python: 'assessment-module' in request.URL0 or 'assessment-per-descriptor' in request.URL0">
   <link href="/marine/++resource++static_css/compliance.css?rel=ed5f766e2a" type="text/css" rel="stylesheet" />
 </tal:cond>

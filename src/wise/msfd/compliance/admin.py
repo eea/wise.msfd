@@ -1,5 +1,7 @@
+# coding=utf-8
 import logging
 import os
+import requests
 
 from collections import namedtuple
 from datetime import datetime
@@ -17,6 +19,7 @@ from plone.api import portal
 from plone.api.content import get_state, transition
 from plone.api.portal import get_tool
 from plone.dexterity.utils import createContentInContainer as create
+from plone.namedfile.file import NamedBlobImage
 from plone.protect.interfaces import IDisableCSRFProtection
 from Products.CMFCore.utils import getToolByName
 from Products.CMFDynamicViewFTI.interfaces import ISelectableBrowserDefault
@@ -518,6 +521,12 @@ class BootstrapCompliance(BrowserView):
 class BootstrapAssessmentLandingpages(BootstrapCompliance):
 
     def __call__(self):
+        image_url = "https://wise-test.eionet.europa.eu/policy-and-reporting/implementation-and-reports/implementation-and-reports/@@download/image/30657450808_59e1973b0b_o.jpg"
+        image_caption = "© Paweł Gładyś, WaterPIX /EEA"
+        response = requests.get(image_url)
+        filename = u'lead_image.png'
+        image = NamedBlobImage(data=response.content, filename=filename)
+
         reports_folder = create(
             self.context,
             'Folder',
@@ -534,32 +543,39 @@ class BootstrapAssessmentLandingpages(BootstrapCompliance):
         )
         self.set_layout(landingpage, 'landingpage')
 
-        landingpage = create(
+        report_per_descr = create(
             reports_folder,
             'Folder',
-            title='EU overview - Member State reports per Descriptor',
-            id='assessment-module-per-descriptor'
+            title=u'EU overview - Member State reports per Descriptor',
+            id='assessment-per-descriptor'
         )
-        self.set_layout(landingpage, 'ms-by-descriptor')
+        report_per_descr.image = image
+        report_per_descr.image_caption = image_caption
+        self.set_layout(report_per_descr, 'reports-per-descriptor')
 
         countries = create(self.context,
                            'Folder',
                            title='Assessment by Country',
-                           id='assessment-module-countries')
+                           id='assessment-by-country')
         # self.set_layout(countries, 'landingpage')
 
         for code, country in self._get_countries():
             cpage = create(countries,
-                           'Folder',
+                           'Document',
                            title=country,
-                           id=code.lower())
+                           # id=code.lower()
+                           )
             alsoProvides(cpage, interfaces.ICountryDescriptorsFolder)
+
+            cpage.image = image
+            cpage.image_caption = image_caption
+            cpage._ccode = code.lower()
             self.set_layout(cpage, 'country-landingpage')
 
         regions = create(self.context,
                          'Folder',
                          title='Assessment by Region',
-                         id='assessment-module-regions')
+                         id='assessment-by-region')
         # self.set_layout(regions, 'landingpage')
 
         for region in REGIONAL_DESCRIPTORS_REGIONS:
@@ -569,10 +585,14 @@ class BootstrapAssessmentLandingpages(BootstrapCompliance):
             code, name = region.code.lower(), region.title
 
             rpage = create(regions,
-                           'Folder',
+                           'Document',
                            title=name,
-                           id=code)
+                           # id=code
+                           )
 
+            rpage.image = image
+            rpage.image_caption = image_caption
+            rpage._rcode = code
             self.set_layout(rpage, 'region-landingpage')
 
         alsoProvides(self.request, IDisableCSRFProtection)

@@ -168,8 +168,8 @@
     />
 
   <browser:page
-    for="..interfaces.INationalDescriptorsFolder"
-    name="export-data"
+    for="*"
+    name="reports-per-descriptor"
     class=".reportdata.ExportMSReportData"
     permission="zope2.View"
     />

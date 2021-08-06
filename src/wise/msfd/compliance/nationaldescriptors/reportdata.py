@@ -2088,8 +2088,8 @@ class ReportDataOverview2020Art11(ReportData2020):
 
 class ExportMSReportData(BaseView):
     """"""
-    template = Template('pt/export-data.pt')
-    name = 'export-data'
+    template = Template('pt/reports-per-descriptor.pt')
+    name = 'reports-per-descriptor'
 
     @property
     def descriptors(self):
