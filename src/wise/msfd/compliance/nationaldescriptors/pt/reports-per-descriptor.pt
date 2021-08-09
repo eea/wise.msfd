@@ -29,15 +29,15 @@
               <tr tal:condition="python: False">
                 <td></td>
                 <td>
-                  <a tal:attributes="href python: './export-data?art=7&desc=d0';
+                  <a tal:attributes="href python: './reports-per-descriptor?art=7&desc=d0';
                       class python: 'btn btn-xs btn-success'">Download</a>
                 </td>
                 <td>
-                  <a tal:attributes="href python: './export-data?art=7&desc=d0';
+                  <a tal:attributes="href python: './reports-per-descriptor?art=7&desc=d0';
                       class python: 'btn btn-xs btn-success'">Download</a>
                 </td>
                 <td>
-                  <a tal:attributes="href python: './export-data?art=7&desc=d0';
+                  <a tal:attributes="href python: './reports-per-descriptor?art=7&desc=d0';
                       class python: 'btn btn-xs btn-success'">Download</a>
                 </td>
                 <td colspan="22"></td>
@@ -46,9 +46,9 @@
 
               <tr class="article-title">
                 <th>Descriptor</th>
-<!--                <th>Art 9 GES Determination</th>-->
-<!--                <th>Article 8 Assessment</th>-->
-<!--                <th>Article 10 Targets</th>-->
+                <th>Art 9 GES Determination</th>
+                <th>Article 8 Assessment</th>
+                <th>Article 10 Targets</th>
                 <th>Article 11 Monitoring</th>
 <!--                <th>Article 13 Measures</th>-->
 <!--                <th>Article 14 Exceptions</th>-->
@@ -58,12 +58,12 @@
                 <th>
                   <span tal:content="python: desc[1]">D0</span>
                 </th>
-<!--                <td tal:repeat="art python: view.articles">-->
-<!--                  <a tal:attributes="href python: './export-data?art={}&desc={}'.format(art, desc[0]);-->
-<!--                      class python: 'btn btn-xs btn-success'" target='_blank'>Download</a>-->
-<!--                </td>-->
+                <td tal:repeat="art python: view.articles">
+                  <a tal:attributes="href python: './reports-per-descriptor?art={}&desc={}'.format(art, desc[0]);
+                      class python: 'btn btn-xs btn-success'" target='_blank'>Download</a>
+                </td>
                 <td>
-                  <a tal:attributes="href python: './export-data?art=Art11&desc={}'.format(desc[0]);
+                  <a tal:attributes="href python: './reports-per-descriptor?art=Art11&desc={}'.format(desc[0]);
                       class python: 'btn btn-xs btn-success'" target='_blank'>Download</a>
                 </td>
               </tr>

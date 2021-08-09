@@ -634,7 +634,6 @@ def get_all_records_ordered(table, order_cols, *conditions):
         logger.exception("MSFD database is timed out")
         return []
 
-
     # print q
     count = q.count()
     q = [x for x in q]
