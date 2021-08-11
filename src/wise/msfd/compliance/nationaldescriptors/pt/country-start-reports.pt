@@ -15,7 +15,8 @@
             metal:use-macro="context/wise-macros/macros/tabs"></metal:tabs>
         </div>
 
-        <div class="start-page-content left-side-form">
+        <div class="start-page-content left-side-form"
+            tal:define="text_reports view/text_reports">
 
           <h1>Member state reports - national overview: <span tal:content="view/country_title"></span></h1>
 
@@ -26,6 +27,22 @@
             </a>
           </div>
 
+          <h3>Text reports</h3>
+          <table tal:condition="text_reports"
+              class="table as-table-overview table-striped table-country-start">
+            <tbody>
+              <tr tal:repeat="text_report text_reports">
+                <td><a tal:attributes="href python: text_report[1]"
+                        tal:content="python: text_report[0]">FileName1</a>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+          <div tal:condition="python: not text_reports">
+            <p>Not reported</p>
+          </div>
+
+          <h3>E-Reports</h3>
           <table class="table as-table-overview table-striped table-country-start">
             <tbody>
               <tr class="article-title">

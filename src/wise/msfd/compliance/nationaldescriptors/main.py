@@ -26,7 +26,7 @@ from wise.msfd.compliance.content import AssessmentData
 from wise.msfd.compliance.scoring import (get_overall_conclusion,
                                           get_range_index, OverallScores)
 from wise.msfd.compliance.utils import ordered_regions_sortkey
-from wise.msfd.data import _extract_pdf_assessments
+from wise.msfd.data import _extract_pdf_assessments, get_text_reports_2018
 from wise.msfd.gescomponents import get_descriptor
 from wise.msfd.utils import t2rt
 
@@ -250,6 +250,18 @@ class NatDescCountryOverviewReports(NationalDescriptorCountryOverview):
     """ Class declaration needed to be able to override HTML head title """
 
     implements(ICountryStartReports)
+
+    def text_reports(self):
+        reports = get_text_reports_2018(self.country_code)
+        res = []
+
+        for row in reports:
+            file_url = row[0]
+            file_url_split = file_url.split('/')
+            file_name = file_url_split[-1]
+            res.append((file_name, file_url))
+
+        return res
 
 
 class NatDescCountryOverviewAssessments(NationalDescriptorCountryOverview,
