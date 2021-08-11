@@ -16,7 +16,7 @@ from wise.msfd.compliance.interfaces import (IRegionalDescriptorAssessment,
                                              IRegionStartAssessments,
                                              IRegionStartReports)
 from wise.msfd.compliance.nationaldescriptors.main import (
-    format_assessment_data)
+    MSFDReportingHistoryMixin, format_assessment_data)
 from wise.msfd.gescomponents import get_descriptor
 from wise.msfd.utils import ItemList
 
@@ -98,10 +98,38 @@ class RegDescRegionOverviewReports(RegionalDescriptorRegionsOverview):
     implements(IRegionStartReports)
 
 
-class RegDescRegionOverviewAssessments(RegionalDescriptorRegionsOverview):
+class RegDescRegionOverviewAssessments(RegionalDescriptorRegionsOverview,
+                                       MSFDReportingHistoryMixin):
     """ Class declaration needed to be able to override HTML head title """
 
     implements(IRegionStartAssessments)
+
+    def get_url_art12_2012(self):
+        article = 'Article 12 (Art.8-9-10)'
+        country_code = self.country_region_code
+        report_type = 'Commission technical assessment - regional'
+        task_product = 'Assessment of 2012 Art. 8-9-10 reports'
+
+        return self.get_msfd_url(article, country_code,
+                                 report_type, task_product)
+
+    def get_url_art12_2014(self):
+        article = 'Article 12 (Art.11)'
+        country_code = self.country_region_code
+        report_type = 'Commission technical assessment - regional'
+        task_product = 'Assessment of 2014 Art. 11 reports'
+
+        return self.get_msfd_url(article, country_code,
+                                 report_type, task_product)
+
+    def get_url_art12_2016(self):
+        article = 'Article 16 (Art.13-14)'
+        country_code = self.country_region_code
+        report_type = 'Commission technical assessment - regional'
+        task_product = 'Assessment of 2016 Art. 13-14 reports'
+
+        return self.get_msfd_url(article, country_code,
+                                 report_type, task_product)
 
 
 class RegionalDescriptorArticleView(BaseRegComplianceView,

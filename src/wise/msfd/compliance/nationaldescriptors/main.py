@@ -8,6 +8,7 @@ from zope.interface import implements, alsoProvides
 
 from persistent.list import PersistentList
 from plone.api.content import transition
+from plone.api.portal import get_tool
 from plone.protect import CheckAuthenticator  # , protect
 from plone.protect.interfaces import IDisableCSRFProtection
 from Products.Five.browser.pagetemplatefile import \
@@ -31,7 +32,7 @@ from wise.msfd.utils import t2rt
 
 from .base import BaseView
 from ..interfaces import (ICountryDescriptorsFolder, ICountryStartAssessments,
-                          ICountryStartReports)
+                          ICountryStartReports, IMSFDReportingHistoryFolder)
 from .interfaces import (INationaldescriptorArticleView,
                          INationaldescriptorSecondaryArticleView)
 
@@ -202,16 +203,87 @@ class NationalDescriptorCountryOverview(BaseView):
         return self.index()
 
 
+class MSFDReportingHistoryMixin(object):
+    def get_msfd_reporting_history(self):
+        reporting_data = []
+        catalog = get_tool('portal_catalog')
+        brains = catalog.unrestrictedSearchResults(
+            object_provides=IMSFDReportingHistoryFolder.__identifier__,
+        )
+
+        for brain in brains:
+            obj = brain._unrestrictedGetObject()
+            reporting_data = obj._msfd_reporting_history_data
+
+            break
+
+        return reporting_data
+
+    def get_msfd_url(self, article, country_code, report_type, task_product):
+        data = self.get_msfd_reporting_history()
+
+        res = ['']
+
+        if country_code == 'ATL':
+            country_code = 'NEA'
+
+        for row in data:
+            if article != row.MSFDArticle:
+                continue
+
+            if country_code != row.CountryCode:
+                continue
+
+            if report_type != row.ReportType:
+                continue
+
+            if task_product != row.TaskProduct:
+                continue
+
+            # res.append((row.LocationURL, row.FileName))
+            res.append(row.LocationURL)
+
+        return res[-1]
+
+
 class NatDescCountryOverviewReports(NationalDescriptorCountryOverview):
     """ Class declaration needed to be able to override HTML head title """
 
     implements(ICountryStartReports)
 
 
-class NatDescCountryOverviewAssessments(NationalDescriptorCountryOverview):
+class NatDescCountryOverviewAssessments(NationalDescriptorCountryOverview,
+                                        MSFDReportingHistoryMixin):
     """ Class declaration needed to be able to override HTML head title """
 
     implements(ICountryStartAssessments)
+
+    def get_url_art12_2012(self):
+        article = 'Article 12 (Art.8-9-10)'
+        country_code = self.country_code
+        report_type = 'Commission technical assessment - national'
+        task_product = 'Assessment of 2012 Art. 8-9-10 reports'
+
+        return self.get_msfd_url(article, country_code,
+                                 report_type, task_product)
+
+    def get_url_art12_2014(self):
+        article = 'Article 12 (Art.11)'
+        country_code = self.country_code
+        report_type = 'Commission technical assessment - national'
+        task_product = 'Assessment of 2014 Art. 11 reports'
+
+        return self.get_msfd_url(article, country_code,
+                                 report_type, task_product)
+
+    def get_url_art12_2016(self):
+        article = 'Article 16 (Art.13-14)'
+        country_code = self.country_code
+        report_type = 'Commission technical assessment - national'
+        task_product = 'Assessment of 2016 Art. 13-14 reports'
+
+        return self.get_msfd_url(article, country_code,
+                                 report_type, task_product)
 
 
 def get_crit_val(question, element, descriptor):

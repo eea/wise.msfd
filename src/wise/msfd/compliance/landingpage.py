@@ -268,8 +268,8 @@ class LandingpageDataMixin:
         data = {}
 
         for folder in self._nat_desc_country_folders:
-            url = "{}/national-summaries/{}/overview".format(
-                self.request.URL1, folder.id)
+            url = "/marine/policy-and-reporting/assessment-by-country" \
+                  "/{}".format(folder.title.lower().replace(' ', '-'))
             country_id = folder.id.upper()
             data[country_id] = url
 
@@ -281,8 +281,17 @@ class LandingpageDataMixin:
         data = {}
 
         for folder in self._reg_desc_region_folders:
-            url = "{}/regional-summaries/{}/overview".format(
-                self.request.URL1, folder.id)
+            region_title = [
+                r.title
+                for r in REGIONAL_DESCRIPTORS_REGIONS
+                if r.code == folder.id.upper()
+            ][0]
+
+            if not region_title:
+                import pdb; pdb.set_trace()
+
+            url = "/marine/policy-and-reporting/assessment-by-region" \
+                  "/{}".format(region_title.lower().replace(' ', '-'))
             reg_id = folder.id.upper()
             data[reg_id] = url
 

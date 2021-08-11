@@ -10,13 +10,13 @@
 
     <div id="layout-contents" tal:define="text context/text | nothing" >
       <div id="wise-search-form" class="full-width-marker">
-        <div id="wise-search-form-top">
-          <metal:tabs
-             metal:use-macro="context/wise-macros/macros/tabs"></metal:tabs>
-        </div>
+<!--        <div id="wise-search-form-top">-->
+<!--          <metal:tabs-->
+<!--             metal:use-macro="context/wise-macros/macros/tabs"></metal:tabs>-->
+<!--        </div>-->
 
         <div class="wise-search-landingpage start-page-content left-side-form full-width-marker">
-          <h3>MSFD reports: home page</h3>
+<!--          <h3>MSFD reports: home page</h3>-->
           <div class="overflow-table sticky-overflow-header hidden-fixed-table">
             <div class="inner" style="overflow: auto;">
               <table class="table table-sticky-first-col table-bordered table-landingpage table-report skip-height-fix">

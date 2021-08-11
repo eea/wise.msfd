@@ -73,24 +73,35 @@
 
               <tr class="fullwidth-statusbar">
                 <td colspan="3">
-                  <div style="text-align: center; font-style: italic; font-weight: 300;">Art. 12 (8-9-10) Regional report - 2012</div>
+<!--                  <div style="text-align: center; font-style: italic; font-weight: 300;">Art. 12 (8-9-10) Regional report - 2012</div>-->
+                  <a style="margin-bottom: 5px;"
+                      tal:attributes="href view/get_url_art12_2012"
+                      class="assessment-status-colorbar btn btn-xs btn-default">Art. 12 (8-9-10) Regional report - 2012</a>
+
                 </td>
                 <td>
-                  <div style="text-align: center; font-style: italic; font-weight: 300;">Art. 12 (11) Regional report - 2014</div>
+<!--                  <div style="text-align: center; font-style: italic; font-weight: 300;">Art. 12 (11) Regional report - 2014</div>-->
+                  <a style="margin-bottom: 5px;"
+                      tal:attributes="href view/get_url_art12_2014"
+                      class="assessment-status-colorbar btn btn-xs btn-default">Art. 12 (11) Regional report - 2014</a>
                 </td>
                 <td colspan="2">
-                  <div style="text-align: center; font-style: italic; font-weight: 300;">Art. 16 (13-14) Regional report - 2016</div>
+<!--                  <div style="text-align: center; font-style: italic; font-weight: 300;">Art. 16 (13-14) Regional report - 2016</div>-->
+                  <a style="margin-bottom: 5px;"
+                      tal:attributes="href view/get_url_art12_2016"
+                      class="assessment-status-colorbar btn btn-xs btn-default">Art. 16 (13-14) Regional report - 2016</a>
                 </td>
                 <td colspan="2">
-                  <div style="text-align: center; font-style: italic; font-weight: 300;">Art. 20 (18) Regional report - 2019??</div>
+                  <div style="text-align: center; font-style: italic; font-weight: 300;">Art. 20 (18) Regional report - 2019</div>
                 </td>
               </tr>
               <tr class="fullwidth-statusbar">
                 <td colspan="3" tal:define="assessment python: view.regional_report_art12">
-                  <div style="text-align: center;">Art. 12 (8-9-10) Regional report - 2018</div>
+<!--                  <div style="text-align: center;">Art. 12 (8-9-10) Regional report - 2018</div>-->
+                  <a style="margin-bottom: 5px;"
+                      tal:attributes="href assessment/absolute_url"
+                      class="assessment-status-colorbar btn btn-xs btn-default">Art. 12 (8-9-10) Regional report - 2018</a>
                   <div metal:use-macro="context/wise-macros/macros/assessment-status-bar"></div>
-                  <!--<a tal:attributes="href view/regional_report_art12_url"-->
-                      <!--class="assessment-status-colorbar btn btn-xs btn-primary">Art. 12 (8-9-10) Regional report - 2018</a>-->
                 </td>
                 <td>
                   <div style="text-align: center; font-style: italic; font-weight: 300;">Art. 12 (11) Regional report - 2020</div>
@@ -99,7 +110,7 @@
                   <div style="text-align: center; font-style: italic; font-weight: 300;">Art. 16 (13-14) Regional report - 2022</div>
                 </td>
                 <td colspan="2">
-                  <div style="text-align: center; font-style: italic; font-weight: 300;">Art. 20 (18) Regional report - 2025??</div>
+                  <div style="text-align: center; font-style: italic; font-weight: 300;">Art. 20 (18) Regional report - 2025</div>
                 </td>
               </tr>
 
