@@ -42,7 +42,6 @@ setup(
 
         'zope.sqlalchemy',
         'pymssql',
-        'xlsxwriter',
         'sparql-client',
         # 'pyodbc',
         'langdetect',  # used in translations
