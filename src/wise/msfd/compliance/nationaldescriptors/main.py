@@ -120,6 +120,9 @@ class NationalDescriptorsOverview(BaseView):
 class NationalDescriptorCountryOverview(BaseView):
     section = 'national-descriptors'
 
+    def country_name_url(self):
+        return self.country_name.lower().replace(' ', '-')
+
     def get_regions(self, context=None):
         if not context:
             context = self.context
@@ -261,7 +264,7 @@ class NatDescCountryOverviewReports(NationalDescriptorCountryOverview):
             file_name = file_url_split[-1]
             res.append((file_name, file_url))
 
-        return res
+        return sorted(res, key=lambda i: i[0])
 
 
 class NatDescCountryOverviewAssessments(NationalDescriptorCountryOverview,

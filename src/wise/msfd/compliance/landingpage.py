@@ -287,9 +287,6 @@ class LandingpageDataMixin:
                 if r.code == folder.id.upper()
             ][0]
 
-            if not region_title:
-                import pdb; pdb.set_trace()
-
             url = "/marine/policy-and-reporting/assessment-by-region" \
                   "/{}".format(region_title.lower().replace(' ', '-'))
             reg_id = folder.id.upper()

@@ -22,6 +22,9 @@ class BaseNatSummaryView(BaseComplianceView):
     _translatables = None
     _translatable_values = []
 
+    def country_name_url(self):
+        return self.country_name.lower().replace(' ', '-')
+
     def _format_date(self, date):
         if not date:
             return '-'

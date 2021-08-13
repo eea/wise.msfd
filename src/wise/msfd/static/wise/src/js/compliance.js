@@ -893,6 +893,28 @@ if (!Array.prototype.last){
     addFixedTable();
     regionalDescriptorsGroupTableHeaders();
 
+    $('.assessment-read-more').click(function() {
+      var $this = $(this);
+      $this.text(function(a,b) {
+          return (b.startsWith("Show") ? "Hide reports" : $(this).attr('display-text'));
+        });
+      $this.parents().siblings('.assessment-dd-list').fadeToggle();
+    });
+
+    var $scrollBtn = $('.scroll-to-top');
+    $(window).scroll(function() {
+      if ($(this).scrollTop() > 400) {
+        $scrollBtn.fadeIn();
+      } else {
+        $scrollBtn.fadeOut();
+      }
+    });
+
+    $scrollBtn.click(function() {
+      $('html, body').animate({ scrollTop : 0 }, 400);
+      return false;
+    });
+
     $(window).on('load', function() {
       // setupReadMoreModal();
       setupSimplifiedTables();

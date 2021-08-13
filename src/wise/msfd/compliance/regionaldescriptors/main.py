@@ -20,6 +20,7 @@ from wise.msfd.compliance.nationaldescriptors.main import (
 from wise.msfd.gescomponents import get_descriptor
 from wise.msfd.utils import ItemList
 
+from ..vocabulary import REGIONAL_DESCRIPTORS_REGIONS
 from .base import BaseRegComplianceView
 
 
@@ -66,6 +67,19 @@ class RegionalDescriptorsOverview(BaseRegComplianceView):
 
 class RegionalDescriptorRegionsOverview(BaseRegComplianceView):
     section = 'regional-descriptors'
+
+    def region_name_url(self):
+        region_code = self.country_region_code
+
+        region_title = [
+            r.title
+            for r in REGIONAL_DESCRIPTORS_REGIONS
+            if r.code == region_code.upper()
+        ][0]
+
+        region_title = region_title.lower().replace(' ', '-')
+
+        return region_title
 
     def get_regions(self):
         regions = [

@@ -9,11 +9,16 @@
 
     <div id="report-data-navigation">
       <div class="back-to-art">
-        <a href="./../">
+        <a href="/marine/policy-and-reporting/assessment-by-country/${view/country_name_url}">
           <i class="glyphicon glyphicon-share-alt"></i>
-          Back to national summary overview
+          Go to Country page
         </a>
       </div>
+    </div>
+    <div class="scroll-to-top">
+      <button title="Scroll to top" class="scroll-button">
+        <i class="scroll-icon glyphicon glyphicon-chevron-up"></i>
+      </button>
     </div>
 
     <div id="download-report-data-form">

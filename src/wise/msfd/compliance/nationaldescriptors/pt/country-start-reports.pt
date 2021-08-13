@@ -21,28 +21,46 @@
           <h1>Member state reports - national overview: <span tal:content="view/country_title"></span></h1>
 
           <div class="nda-link">
-            <a href="./../">
+            <a href="/marine/policy-and-reporting/assessment-by-country/${view/country_name_url}">
               <i class="glyphicon glyphicon-share-alt"></i>
-              Go to all National Descriptor Assessments
+              Go to Country page
             </a>
           </div>
+          <div class="scroll-to-top">
+            <button title="Scroll to top" class="scroll-button">
+              <i class="scroll-icon glyphicon glyphicon-chevron-up"></i>
+            </button>
+          </div>
 
-          <h3>Text reports</h3>
-          <table tal:condition="text_reports"
-              class="table as-table-overview table-striped table-country-start">
-            <tbody>
-              <tr tal:repeat="text_report text_reports">
-                <td><a tal:attributes="href python: text_report[1]"
+          <div class="assessment-module-header">
+            <span>Text reports</span>
+            <span tal:condition="python: len(text_reports) > 5"
+                  tal:content="python: 'Show all {} reports'.format(len(text_reports))"
+                  tal:attributes="display-text python: 'Show all {} reports'.format(len(text_reports))"
+                class="assessment-read-more">Show all reports</span>
+          </div>
+          <div tal:condition="python: len(text_reports) > 5" class="assessment-dd-list-5">
+            <ul style="margin: 0;">
+              <li tal:repeat="text_report python: text_reports[:5]">
+                <a tal:attributes="href python: text_report[1]"
                         tal:content="python: text_report[0]">FileName1</a>
-                </td>
-              </tr>
-            </tbody>
-          </table>
+              </li>
+            </ul>
+          </div>
+          <div tal:condition="text_reports"
+              class="assessment-dd-list">
+            <ul>
+              <li tal:repeat="text_report python: text_reports[5:]">
+                <a tal:attributes="href python: text_report[1]"
+                        tal:content="python: text_report[0]">FileName1</a>
+              </li>
+            </ul>
+          </div>
           <div tal:condition="python: not text_reports">
             <p>Not reported</p>
           </div>
 
-          <h3>E-Reports</h3>
+          <div class="assessment-module-header">E-Reports</div>
           <table class="table as-table-overview table-striped table-country-start">
             <tbody>
               <tr class="article-title">

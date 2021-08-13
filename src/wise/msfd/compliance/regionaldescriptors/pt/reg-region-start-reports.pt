@@ -20,14 +20,18 @@
           <h1>Member state reports - regional overview: <span tal:content="context/title"></span></h1>
 
           <div class="nda-link">
-            <a href="./../">
+            <a href="/marine/policy-and-reporting/assessment-by-region/${view/region_name_url}">
               <i class="glyphicon glyphicon-share-alt"></i>
-              Go to all Regional Descriptor Assessments
+              Go to Region page
             </a>
           </div>
+          <div class="scroll-to-top">
+            <button title="Scroll to top" class="scroll-button">
+              <i class="scroll-icon glyphicon glyphicon-chevron-up"></i>
+            </button>
+          </div>
 
-          <!--<h4 tal:content="python: view.context.title">Region name</h4>-->
-
+          <div class="assessment-module-header">E-Reports</div>
           <table class="table as-table-overview table-striped table-country-start">
             <thead>
               <tr>

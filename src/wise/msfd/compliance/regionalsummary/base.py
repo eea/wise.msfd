@@ -25,6 +25,19 @@ class BaseRegSummaryView(BaseComplianceView):
 
     ARTICLE_ORDER = ('Art9', 'Art8', 'Art10')
 
+    def region_name_url(self):
+        region_code = self.region_code
+
+        region_title = [
+            r.title
+            for r in REGIONAL_DESCRIPTORS_REGIONS
+            if r.code == region_code.upper()
+        ][0]
+
+        region_title = region_title.lower().replace(' ', '-')
+
+        return region_title
+
     def _format_date(self, date):
         if not date:
             return '-'

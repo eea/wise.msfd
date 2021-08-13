@@ -12,12 +12,18 @@
 
     <div id="report-data-navigation">
       <div class="back-to-art">
-        <a href="./../">
+        <a href="/marine/assessment-module/national-descriptors-assessments/${view/country_code/lower}/assessments">
           <i class="glyphicon glyphicon-share-alt"></i>
-          Back to national summary overview
+          Go to Assessments page
         </a>
       </div>
     </div>
+    <div class="scroll-to-top">
+      <button title="Scroll to top" class="scroll-button">
+        <i class="scroll-icon glyphicon glyphicon-chevron-up"></i>
+      </button>
+    </div>
+
 
     <div class="process-state-phase-form">
       <form class="process-state"

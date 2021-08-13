@@ -21,10 +21,15 @@
 
           <h1>Commission assessments - national overview: <span tal:content="view/country_title"></span></h1>
           <div class="nda-link">
-            <a href="./../">
+            <a href="/marine/policy-and-reporting/assessment-by-country/${view/country_name_url}">
               <i class="glyphicon glyphicon-share-alt"></i>
-              Go to all National Descriptor Assessments
+              Go to Country page
             </a>
+          </div>
+          <div class="scroll-to-top">
+            <button title="Scroll to top" class="scroll-button">
+              <i class="scroll-icon glyphicon glyphicon-chevron-up"></i>
+            </button>
           </div>
 
           <div class="process-state-phase-form" tal:condition="view/can_manage">
