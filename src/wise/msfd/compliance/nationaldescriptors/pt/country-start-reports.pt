@@ -39,7 +39,7 @@
                   tal:attributes="display-text python: 'Show all {} reports'.format(len(text_reports))"
                 class="assessment-read-more">Show all reports</span>
           </div>
-          <div tal:condition="python: len(text_reports) > 5" class="assessment-dd-list-5">
+          <div class="assessment-dd-list-5">
             <ul style="margin: 0;">
               <li tal:repeat="text_report python: text_reports[:5]">
                 <a tal:attributes="href python: text_report[1]"
@@ -47,7 +47,7 @@
               </li>
             </ul>
           </div>
-          <div tal:condition="text_reports"
+          <div tal:condition="python: len(text_reports) > 5"
               class="assessment-dd-list">
             <ul>
               <li tal:repeat="text_report python: text_reports[5:]">
