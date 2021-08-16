@@ -11,12 +11,16 @@
     <div id="report-data-navigation"
       tal:condition="python: options.get('show_navigation') != False and view.can_view_assessment_data()">
       <div class="back-to-art">
-        <a href="./">
+        <a href="/marine/assessment-module/national-descriptors-assessments/${view/country_code/lower}/reports">
           <i class="glyphicon glyphicon-share-alt"></i>
-          Back to descriptor assessment overview
+          Go to Reports page
         </a>
       </div>
-
+    </div>
+    <div class="scroll-to-top">
+      <button title="Scroll to top" class="scroll-button">
+        <i class="scroll-icon glyphicon glyphicon-chevron-up"></i>
+      </button>
     </div>
 
     <table class="table table-bordered table-striped table-condensed"

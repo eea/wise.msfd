@@ -28,17 +28,20 @@
 
           <div id="report-data-navigation">
             <div class="back-to-descr">
-              <a href="./../../"
-                tal:attributes="href python:view._countryregion_folder.absolute_url()">
+              <a href="/marine/assessment-module/regional-descriptors-assessments/${view/country_region_code/lower}/assessments">
                 <i class="glyphicon glyphicon-share-alt"></i>
-                Go to Regional Descriptor Assessment
+                Go to Assessments page
               </a>
             </div>
 
             <div id="assessment-edit-infobox"></div>
 
             <div metal:use-macro="context/wise-macros/macros/reg-desc-report-nav"></div>
-
+          </div>
+          <div class="scroll-to-top">
+            <button title="Scroll to top" class="scroll-button">
+              <i class="scroll-icon glyphicon glyphicon-chevron-up"></i>
+            </button>
           </div>
 
           <div id="nat-desc-art-menu">
