@@ -63,7 +63,7 @@
           </div>
 
           <!--<h3>Commission Assessments</h3>-->
-
+          <div class="assessment-module-header">National reports</div>
           <table class="table as-table-overview table-striped table-country-start">
             <tbody>
               <tr class="article-title">
@@ -122,6 +122,7 @@
             </tbody>
           </table>
 
+          <div class="assessment-module-header">Commission assessments per descriptor</div>
           <div class="overflow-table sticky-overflow-header hidden-fixed-table">
             <div class="inner" style="overflow: auto;">
               <table class="table table-sticky-first-col as-table-overview table-striped table-country-start table-homepage-reports table-report">

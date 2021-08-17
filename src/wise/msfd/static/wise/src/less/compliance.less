@@ -360,12 +360,23 @@ body.plone-toolbar-left-expanded {
   position: relative;
   top: -3px;
 }
-.assessment-module-header {
+.assessment-module-header, .tr-assessment-module-header div {
   margin: 1em -0.7em;
   padding: 0.1em 1em;
   color: white;
   background-color: #002d54;
   font-size: 1.5em;
+}
+.tr-assessment-module-header {
+  background-color: white !important;
+
+  td {
+    padding: 0;
+  }
+
+  div{
+    margin: 1em -1.1em;
+  }
 }
 .assessment-dd-list {
   display: none;
