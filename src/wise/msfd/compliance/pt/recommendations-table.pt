@@ -1,4 +1,5 @@
-<table id="recommendation-edit-table" class="table table-listing">
+<table id="recommendation-edit-table" 
+      class="pat-datatables table table-striped listing dataTable no-footer">
   <thead>
     <tr>
       <th>Recommendation code</th>
@@ -6,7 +7,7 @@
       <th>Recommendation text</th>
       <th>Applicable MS or (sub)region</th>
       <th>Applicable descriptors</th>
-      <th></th>
+      <th>Edit</th>
     </tr>
   </thead>
   <tbody style="word-break: break-word">
