@@ -245,6 +245,9 @@ _4GEO = namedtuple('_4GEO', [
     'Status',
 ])
 
+_MARINE_WATER = namedtuple('_MARINE_WATER', [
+    'Country', 'CountryName', 'Type', 'AreaType', 'Area_km2'
+])
 
 def parse_4geo_file():
     f = resource_filename(
@@ -269,3 +272,27 @@ def parse_4geo_file():
     return res
 
 _4GEO_DATA = parse_4geo_file()
+
+
+def parse_marine_waters_file():
+    f = resource_filename(
+        'wise.msfd', 'data/MSmarinewaters_MRUs_statistics_2021-05-03.xlsx'
+    )
+
+    res = []
+
+    with open(f, 'rb') as file:
+        sheets = get_data(file)
+        rows = sheets['MS marine waters']
+
+        for row in rows[2:]:
+            if not row:
+                break
+            
+            water_data = row[:5]
+
+            res.append(_MARINE_WATER(*water_data))
+
+    return res
+
+_MARINE_WATERS_DATA = parse_marine_waters_file()

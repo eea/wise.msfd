@@ -4,7 +4,7 @@ from datetime import datetime
 
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 from wise.msfd import db, sql2018
-from wise.msfd.compliance.vocabulary import _4GEO_DATA
+from wise.msfd.compliance.vocabulary import _4GEO_DATA, _MARINE_WATERS_DATA
 from wise.msfd.data import get_text_reports_2018
 from wise.msfd.gescomponents import get_descriptor
 from wise.msfd.translation import get_translated, retrieve_translation
@@ -565,11 +565,13 @@ class Introduction(BaseNatSummaryView):
 
     @db.use_db_session('2018')
     def _get_marine_waters_data(self):
-        column_names = ['Country', 'Subregion', 'Area_km2', 'Type']
+        data = _MARINE_WATERS_DATA
+        # import pdb; pdb.set_trace();
+        # column_names = ['Country', 'Subregion', 'Area_km2', 'Type']
 
-        cnt, data = db.get_all_specific_columns(
-            [getattr(sql2018.t_MarineWaters.c, c) for c in column_names]
-        )
+        # cnt, data = db.get_all_specific_columns(
+            # [getattr(sql2018.t_MarineWaters.c, c) for c in column_names]
+        # )
 
         return data
 
@@ -587,13 +589,15 @@ class Introduction(BaseNatSummaryView):
 
     @property
     def water_seabed_value(self):
-        types = ['Water column & seabed/subsoil', 'Marine waters']
+        # types = ['Water column & seabed/subsoil', 'Marine waters']
+        types = ['Water column + seabed']
 
         return self.__get_water_seabed_value(types)
 
     @property
     def seabed_only_value(self):
-        types = ['Seabed/subsoil']
+        # types = ['Seabed/subsoil']
+        types = ['Seabed only']
 
         return self.__get_water_seabed_value(types)
 
