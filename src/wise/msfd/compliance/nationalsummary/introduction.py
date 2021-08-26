@@ -579,7 +579,7 @@ class Introduction(BaseNatSummaryView):
         data = self._get_marine_waters_data()
 
         values = [
-            int(row.Area_km2)
+            int(round(row.Area_km2))
             for row in data
             if (row.Country == self.country_code and
                 row.Type in types)
