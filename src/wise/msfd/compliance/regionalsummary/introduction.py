@@ -3,12 +3,13 @@ from sqlalchemy import or_
 
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 
-from wise.msfd import db
+from wise.msfd import db, sql2018
 from wise.msfd.data import get_text_reports_2018
 from wise.msfd.sql2018 import MarineReportingUnit, ReportingHistory
 from wise.msfd.utils import ItemList
 
 from ..nationalsummary.introduction import Introduction
+from ..vocabulary import MARINE_WATERS_REGION_DATA
 from .base import BaseRegSummaryView
 from .utils import SimpleTable
 
@@ -127,22 +128,6 @@ By October 2018, the Member States were due to submit updates of the assessment
 
         return output
 
-    def _get_marine_water_by_type(self, data, types):
-        res = []
-
-        for country_id, country_name in self.available_countries:
-            values = [
-                int(row.Area_km2)
-                for row in data
-                if (row.Country == country_id and
-                    row.Type in types and
-                    row.Subregion in self.available_subregions)
-            ]
-
-            res.append("{:,}".format(sum(values)))
-
-        return res
-
     def marine_waters(self):
         klass = MarineWatersTable(self, self.request)
 
@@ -195,36 +180,75 @@ class ReportingAreasTable(RegionalIntroduction):
 
 
 class MarineWatersTable(RegionalIntroduction):
+    seabed_types = [
+        'Seabed/subsoil', 'Continental shelf', 'Seabed only',
+        'Extended continental shelf', 'Fisheries Management Zone'
+    ]
+
+    water_column_types = ['Water column & seabed/subsoil', 'Marine waters',
+        'Territorial waters', 'Water column + seabed',
+        'Area designated for hydrocarbon exploration and exploitation'
+    ]
+
+    def _get_marine_water_by_type(self, data, types):
+        res = []
+
+        for country_id, country_name in self.available_countries:
+            values = [
+            int(row.Area_km2.replace(',', ''))
+                for row in data
+                if (row.Country == country_id and
+                    row.Type in types and
+                    row.Region == self.region_code)
+            ]
+
+            res.append("{:,}".format(sum(values)))
+
+        return res
+
+    @db.use_db_session('2018')
+    def _get_marine_waters_data(self):
+        column_names = ['Country', 'Subregion', 'Area_km2', 'Type']
+
+        # cnt, data = db.get_all_specific_columns(
+        #     [getattr(sql2018.t_MarineWaters.c, c) for c in column_names]
+        # )
+
+        data = MARINE_WATERS_REGION_DATA
+
+        return data
+
     def get_proportion_row(self, data):
-        types = ['Water column & seabed/subsoil', 'Marine waters']
+        types = self.seabed_types + self.water_column_types
         res = []
         total = sum([
-            float(row.Area_km2)
+            float(row.Area_km2.replace(',', ''))
             for row in data
             if (row.Type in types and
-                row.Subregion in self.available_subregions)
+                row.Region == self.region_code)
         ])
 
         for country_id, country_name in self.available_countries:
             values = [
-                float(row.Area_km2)
+                float(row.Area_km2.replace(',', ''))
                 for row in data
                 if (row.Country == country_id and
                     row.Type in types and
-                    row.Subregion in self.available_subregions)
+                    row.Region == self.region_code)
             ]
+            
             country_total = sum(values)
             res.append("{:.1f}%".format(country_total/total * 100))
 
         return res
 
     def get_seabed_only_row(self, data):
-        types = ['Seabed/subsoil']
+        types = self.seabed_types
 
         return self._get_marine_water_by_type(data, types)
 
     def get_water_seabed_row(self, data):
-        types = ['Water column & seabed/subsoil', 'Marine waters']
+        types = self.water_column_types
 
         return self._get_marine_water_by_type(data, types)
 

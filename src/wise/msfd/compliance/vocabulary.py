@@ -245,6 +245,48 @@ _4GEO = namedtuple('_4GEO', [
     'Status',
 ])
 
+_MARINE_WATER_REGION = namedtuple('_MARINE_WATER_REGION', [
+    'Country', 'Region', 'Type', 'Area_km2'
+])
+
+MARINE_WATERS_REGION_DATA = [
+    _MARINE_WATER_REGION('BE', 'ATL', 'Water column + seabed', '3,458'),
+    _MARINE_WATER_REGION('BG', 'BLK', 'Water column + seabed', '34,525'),
+    _MARINE_WATER_REGION('CY', 'MED', 'Water column + seabed', '98,042'),
+    _MARINE_WATER_REGION('DE', 'BAL', 'Water column + seabed', '15,505'),
+    _MARINE_WATER_REGION('DE', 'ATL', 'Water column + seabed', '40,465'),
+    _MARINE_WATER_REGION('DK', 'BAL', 'Water column + seabed', '46,254'),
+    _MARINE_WATER_REGION('DK', 'ATL', 'Water column + seabed', '76,564'),
+    _MARINE_WATER_REGION('EE', 'BAL', 'Water column + seabed', '36,609'),
+    _MARINE_WATER_REGION('EL', 'MED', 'Water column + seabed', '114,521'),
+    _MARINE_WATER_REGION('EL', 'MED', 'Seabed only', '373,999'),
+    _MARINE_WATER_REGION('ES', 'ATL', 'Water column + seabed', '811,913'),
+    _MARINE_WATER_REGION('ES', 'MED', 'Water column + seabed', '256,555'),
+    _MARINE_WATER_REGION('FI', 'BAL', 'Water column + seabed', '80,936'),
+    _MARINE_WATER_REGION('FR', 'ATL', 'Water column + seabed', '260,148'),
+    _MARINE_WATER_REGION('FR', 'MED', 'Water column + seabed', '110,662'),
+    _MARINE_WATER_REGION('HR', 'MED', 'Water column + seabed', '55,494'),
+    _MARINE_WATER_REGION('IE', 'ATL', 'Water column + seabed', '449,248'),
+    _MARINE_WATER_REGION('IE', 'ATL', 'Seabed only', '39,523'),
+    _MARINE_WATER_REGION('IT', 'MED', 'Water column + seabed', '587,152'),
+    _MARINE_WATER_REGION('LT', 'BAL', 'Water column + seabed', '6,437'),
+    _MARINE_WATER_REGION('LV', 'BAL', 'Water column + seabed', '28,348'),
+    _MARINE_WATER_REGION('MT', 'MED', 'Water column + seabed', '11,479'),
+    _MARINE_WATER_REGION('MT', 'MED', 'Seabed only', '63,994'),
+    _MARINE_WATER_REGION('NL', 'ATL', 'Water column + seabed', '58,847'),
+    _MARINE_WATER_REGION('PL', 'BAL', 'Water column + seabed', '33,385'),
+    _MARINE_WATER_REGION('PT', 'ATL', 'Water column + seabed', '1,727,620'),
+    _MARINE_WATER_REGION('PT', 'ATL', 'Seabed only', '2,349,541'),
+    _MARINE_WATER_REGION('RO', 'BLK', 'Water column + seabed', '29,560'),
+    _MARINE_WATER_REGION('SE', 'BAL', 'Water column + seabed', '141,422'),
+    _MARINE_WATER_REGION('SE', 'ATL', 'Water column + seabed', '14,203'),
+    _MARINE_WATER_REGION('SI', 'MED', 'Water column + seabed', '214'),
+    _MARINE_WATER_REGION('UK', 'ATL', 'Water column + seabed', '721,214'),
+    _MARINE_WATER_REGION('UK', 'MED', 'Water column + seabed', '28'),
+    _MARINE_WATER_REGION('UK', 'ATL', 'Seabed only', '148,994'),
+    _MARINE_WATER_REGION('UK', 'MED', 'Seabed only', '0'),
+]
+
 _MARINE_WATER = namedtuple('_MARINE_WATER', [
     'Country', 'CountryName', 'Type', 'AreaType', 'Area_km2'
 ])

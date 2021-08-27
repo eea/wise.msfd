@@ -107,6 +107,13 @@ class RegionalDescriptorsSimpleTable(BaseRegSummaryView):
     _id = ''
     editable_text = ''
 
+    @property
+    def available_countries(self):
+        countries = self._region_folder._countries_for_region
+        sorted_countries = sorted(countries, key=lambda i: i[1])
+
+        return sorted_countries
+
     def get_color_class(self, value):
         return ''
 
@@ -115,6 +122,7 @@ class RegionalDescriptorsSimpleTable(BaseRegSummaryView):
 
     def get_table_headers(self):
         countries = [x[1] for x in self.available_countries]
+        sorted_countries = sorted(countries)
 
         return [''] + countries
 
