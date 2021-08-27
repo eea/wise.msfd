@@ -11,11 +11,11 @@
                 class="first-headerZ summary">
               <span>MSFD Article</span>
             </th>
-            <th class="summary column-header"
-                tal:repeat="title view/headers"
-                tal:content="title">
-              Column header
-            </th>
+            <th class="summary column-header" style="width: 50%;">Files available</th>
+            <th class="summary column-header" style="width: 30%;">Access to reports</th>
+            <th class="summary column-header" style="width: 7%;">Report due</th>
+            <th class="summary column-header" style="width: 7%;">Report received</th>
+            <th class="summary column-header" style="width: 6%;">Difference (days)</th>
           </tr>
 
           <tal:rep tal:repeat="row allrows">
