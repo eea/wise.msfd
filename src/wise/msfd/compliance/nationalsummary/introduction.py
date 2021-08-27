@@ -566,7 +566,6 @@ class Introduction(BaseNatSummaryView):
     @db.use_db_session('2018')
     def _get_marine_waters_data(self):
         data = _MARINE_WATERS_DATA
-        # import pdb; pdb.set_trace();
         # column_names = ['Country', 'Subregion', 'Area_km2', 'Type']
 
         # cnt, data = db.get_all_specific_columns(
@@ -585,14 +584,22 @@ class Introduction(BaseNatSummaryView):
                 row.Type in types)
         ]
 
+        if not values:
+            return 0
+
         return "{:,}".format(sum(values))
 
     @property
     def water_seabed_value(self):
         # types = ['Water column & seabed/subsoil', 'Marine waters']
         types = ['Water column + seabed']
+        value = self.__get_water_seabed_value(types)
 
-        return self.__get_water_seabed_value(types)
+        if not value:
+            types = ['Total']
+            value = self.__get_water_seabed_value(types)    
+
+        return value
 
     @property
     def seabed_only_value(self):
