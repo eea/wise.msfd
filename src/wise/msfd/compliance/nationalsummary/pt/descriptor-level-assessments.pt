@@ -115,7 +115,9 @@
                       </div>
                     </td>
                     <td class="overall-values">
-                      <div class="as-value">
+                      <div tal:define="as_value python: 'Not relevant' in str(article_data.coherence_change_since_2012) and 'as-value-0' or ''" 
+                          class="as-value" 
+                          tal:attributes="class python: 'as-value {}'.format(as_value)">
                         <div tal:content="article_data/coherence_change_since_2012"></div>
                       </div>
                     </td>

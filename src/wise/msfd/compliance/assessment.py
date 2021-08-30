@@ -878,6 +878,8 @@ class AssessmentDataMixin(object):
         if not descriptor_code:
             descriptor_code = self.descriptor_obj.id
 
+        # region_code = self.get_main_region(region_code)
+
         res = []
 
         for x in ASSESSMENTS_2012:
@@ -1047,13 +1049,13 @@ class AssessmentDataMixin(object):
         reg_assess_2012 = self.get_reg_assessments_data_2012(
             article, region_code, descriptor
         )
-        coherence_2012 = ('-', '0')
+        coherence_2012 = ('Not scored', '0')
         coherence_change_since_2012 = 'Not relevant (-)'
 
         if reg_assess_2012:
             __score = float(reg_assess_2012[0].overall_score)
             coherence_2012 = ("{} ({})".format(reg_assess_2012[0].conclusion,
-                                              __score),
+                                              int(__score)),
                               self.get_color_for_score(__score))
             if cscore_val == '-':
                 cscore_val = 0

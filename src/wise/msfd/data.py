@@ -818,6 +818,9 @@ LIMIT 1
 
 
 def get_text_reports_2018(country_code):
+    if country_code == 'EL':
+        country_code = 'GR'
+
     q = """
 PREFIX cr: <http://cr.eionet.europa.eu/ontologies/contreg.rdf#>
 PREFIX terms: <http://purl.org/dc/terms/>
@@ -836,6 +839,53 @@ WHERE {
 ?locality core:notation ?notation .
 FILTER (?notation = '%s')
 FILTER (?obligationNr = '761')
+}
+ORDER BY DESC(?date)
+""" % country_code
+
+    service = sparql.Service('https://cr.eionet.europa.eu/sparql')
+    res = []
+
+    try:
+        req = service.query(q, timeout=30)
+        rows = req.fetchall()
+
+        for row in rows:
+            file_url = row[0].value
+            release_date = _to_datetime(row[1].value)
+
+            res.append((file_url, release_date))
+
+    except:
+        logger.exception('Got an error in querying SPARQL endpoint when '
+                         'getting text reports for: %s', country_code)
+
+        raise
+
+    return res
+    
+def get_gis_reports_2018(country_code):
+    if country_code == 'EL':
+        country_code = 'GR'
+
+    q = """
+PREFIX cr: <http://cr.eionet.europa.eu/ontologies/contreg.rdf#>
+PREFIX terms: <http://purl.org/dc/terms/>
+PREFIX schema: <http://rod.eionet.europa.eu/schema.rdf#>
+PREFIX core: <http://www.w3.org/2004/02/skos/core#>
+
+SELECT distinct ?file, ?released
+WHERE {
+?file terms:date ?date .
+#?file cr:mediaType 'text/xml' .
+?file terms:isPartOf ?isPartOf .
+?isPartOf schema:released ?released .
+?isPartOf schema:locality ?locality .
+?isPartOf schema:obligation ?obligation .
+?obligation core:notation ?obligationNr .
+?locality core:notation ?notation .
+FILTER (?notation = '%s')
+FILTER (?obligationNr = '760')
 }
 ORDER BY DESC(?date)
 """ % country_code

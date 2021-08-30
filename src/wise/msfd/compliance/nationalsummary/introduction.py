@@ -5,7 +5,7 @@ from datetime import datetime
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 from wise.msfd import db, sql2018
 from wise.msfd.compliance.vocabulary import _4GEO_DATA, _MARINE_WATERS_DATA
-from wise.msfd.data import get_text_reports_2018
+from wise.msfd.data import get_text_reports_2018, get_gis_reports_2018
 from wise.msfd.gescomponents import get_descriptor
 from wise.msfd.translation import get_translated, retrieve_translation
 from wise.msfd.utils import (ItemList, TemplateMixin, db_objects_to_dict,
@@ -269,14 +269,14 @@ class ReportingHistoryTable(BaseNatSummaryView):
 
         # reporting history is incomplete for the following countries
         # need to add data from reported information table
-        if self.country_code in ('IT',):
-            data_alternate = report_info.data_alternate
-            self.data.extend(data_alternate)
+        # if self.country_code in ('IT', 'CY', 'EL', 'IE'):
+        data_alternate = report_info.data_alternate
+        self.data.extend(data_alternate)
 
         text_reports = get_text_reports_2018(self.country_code)
         data_text = []
 
-        # FileName, LocationURL, DateDue, DateReleased, ReportingDelay
+        # Text reports FileName, LocationURL, DateDue, DateReleased, ReportingDelay
         for row in text_reports:
             _row = {}
 
@@ -296,6 +296,29 @@ class ReportingHistoryTable(BaseNatSummaryView):
 
         self.data.extend(data_text)
 
+        gis_reports = get_gis_reports_2018(self.country_code)
+        data_gis = []
+
+        # geographic information system (GIS) shapefiles
+        for row in gis_reports:
+            _row = {}
+
+            file_url = row[0]
+            release_date = row[1]
+            file_url_split = file_url.split('/')
+            text_report_ob = 'MSFD - Article 4 - Spatial data'
+
+            _row['ReportingObligation'] = text_report_ob
+            _row['FileName'] = file_url_split[-1]
+            _row['LocationURL'] = file_url
+            _row['DateDue'] = datetime.strptime('15-10-2018', '%d-%m-%Y')
+            _row['DateReleased'] = release_date
+            _row['ReportingDelay'] = None
+
+            data_gis.append(_row)
+
+        self.data.extend(data_gis)
+
     @property
     def obligations_needed(self):
         obligations = (
@@ -312,9 +335,14 @@ class ReportingHistoryTable(BaseNatSummaryView):
         #              'associated indicators (Art.10) & related reporting on '\
         #              'geographic areas, regional cooperation and metadata.'
 
+        country_code = self.country_code
+
+        if country_code == 'EL':
+            country_code = 'GR'
+
         mc = sql2018.ReportingHistory
         conditions = [
-            mc.CountryCode == self.country_code,
+            mc.CountryCode == country_code,
             mc.DateReleased.isnot(None)  # skip not released files
         ]
 
@@ -385,7 +413,7 @@ class ReportingHistoryTable(BaseNatSummaryView):
 
         for _k, filenames in groups.items():
             values = [
-                ItemList(rows=filenames),  # Filenames
+                ItemList(rows=set(filenames)),  # Filenames
                 _k[0],  # Envelope url
                 _k[1],  # Report due
                 _k[2],  # Report date
@@ -425,7 +453,8 @@ class ReportedInformationTable(BaseNatSummaryView):
     """ Alternate implementation for the reporting history table
     Reads data from sql2018.ReportedInformation
 
-    TODO currently used for Italy
+    The data from this table is merged into Reporting History table
+
     """
 
     template = ViewPageTemplateFile('pt/report-history-compound-table.pt')
@@ -530,7 +559,7 @@ class ReportedInformationTable(BaseNatSummaryView):
 
         for _k, filenames in groups.items():
             values = [
-                ItemList(rows=filenames),  # Filenames
+                ItemList(rows=set(filenames)),  # Filenames
                 _k[0],  # Envelope url
                 _k[1],  # Report due
                 _k[2],  # Report date
