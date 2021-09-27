@@ -129,6 +129,11 @@
             data-target="#edit-topics">
               Edit topics
           </a>
+          <form style="display: inline-block;" id="download" method="POST" action="@@recommendations">
+            <input class="btn btn-primary btn-s"
+                    type="submit" value="Download as excel"
+                    name="download-excel"/>
+          </form>
         </div>
 
         <table tal:replace="structure view/recommendations_table"></table>

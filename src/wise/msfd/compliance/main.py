@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+from datetime import datetime
 from io import BytesIO
 
 from zope.annotation.factory import factory
@@ -96,6 +97,10 @@ class RecommendationsTable:
 class RecommendationsView(BaseComplianceView):
     name = 'recommendation'
     section = 'compliance-admin'
+    headers = [
+        'Recommendation code', 'Topic', 'Recommendation text',
+        'Applicable MS or (sub)region', 'Applicable descriptors', 'Edit'
+    ]
 
     __topics = (
 'Allocation of species to species groups',
@@ -177,13 +182,49 @@ class RecommendationsView(BaseComplianceView):
 
         return res
 
+    def data_to_xls(self, data):
+        # Create a workbook and add a worksheet.
+        out = BytesIO()
+        workbook = xlsxwriter.Workbook(out, {'in_memory': True})
+
+        wtitle = 'Recommendations'
+        worksheet = workbook.add_worksheet(unicode(wtitle)[:30])
+
+        for i, value in enumerate(self.headers):
+                worksheet.write(0, i, unicode(value or ''))
+
+        row_index = 1
+
+        for row in data:
+            for i, value in enumerate(row):
+                worksheet.write(row_index, i, unicode(value or ''))
+
+            row_index += 1
+
+        workbook.close()
+        out.seek(0)
+
+        return out
+    def download(self, xlsdata):
+        xlsio = self.data_to_xls(xlsdata)
+        sh = self.request.response.setHeader
+
+        sh('Content-Type', 'application/vnd.openxmlformats-officedocument.'
+           'spreadsheetml.sheet')
+        fname = "-".join(["COM_Art12_2018_Recommendations",
+                          str(datetime.now().replace(microsecond=0))])
+        sh('Content-Disposition',
+           'attachment; filename=%s.xlsx' % fname)
+
+        return xlsio.read()
+
     def __call__(self):
         alsoProvides(self.request, IDisableCSRFProtection)
 
         site = portal.get()
         storage = IRecommendationStorage(site)
         storage_recom = storage.get(STORAGE_KEY, None)
-
+        
         if not storage_recom:
             storage_recom = OOBTree()
             storage[STORAGE_KEY] = storage_recom
@@ -218,6 +259,9 @@ class RecommendationsView(BaseComplianceView):
                 recommendations.append(recommendation.data_to_list())
 
         sorted_rec = sorted(recommendations, key=lambda i: i[0])
+
+        if 'download-excel' in self.request.form:
+            return self.download(sorted_rec)
 
         show_edit_buttons = self.can_view_assessment_data()
 
@@ -358,7 +402,7 @@ class MSFDReportingHistoryView(BaseComplianceView):
         sh('Content-Type', 'application/vnd.openxmlformats-officedocument.'
            'spreadsheetml.sheet')
         fname = "-".join(["MSFDReportingHistory",
-                          'date_here'])
+                          str(datetime.now().replace(microsecond=0))])
         sh('Content-Disposition',
            'attachment; filename=%s.xlsx' % fname)
 
