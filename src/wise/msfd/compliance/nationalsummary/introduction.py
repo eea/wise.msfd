@@ -103,7 +103,7 @@ class AssessmentAreas2018(BaseNatSummaryView):
             description = row.MRUName
             mru_id = self.norm_mru_id(row.MRUID)
             translation = get_translated(description, self.country_code) or ''
-            area = row.MRUAarea and int(round(row.MRUAarea)) or 0
+            area = row.MRUArea and int(round(row.MRUArea)) or 0
 
             if not area:
                 area = [
@@ -119,7 +119,10 @@ class AssessmentAreas2018(BaseNatSummaryView):
             self._translatable_values.append(description)
 
             # prop_water = int(round((area / marine_waters_total) * 100))
-            prop_water = row.MRUCoverage and int(round(row.MRUCoverage)) or 0
+            prop_water = (
+                row.MRUCoverage and "{0:.1f}".format(float(row.MRUCoverage)) 
+                or 0
+            )
 
             if not prop_water:
                 mw_total = [
