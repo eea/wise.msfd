@@ -821,6 +821,9 @@ def get_text_reports_2018(country_code):
     if country_code == 'EL':
         country_code = 'GR'
 
+    if country_code == 'UK':
+        country_code = 'GB'
+
     q = """
 PREFIX cr: <http://cr.eionet.europa.eu/ontologies/contreg.rdf#>
 PREFIX terms: <http://purl.org/dc/terms/>

@@ -326,7 +326,7 @@ class ReportingHistoryTable(BaseNatSummaryView):
     def obligations_needed(self):
         obligations = (
             'MSFD - Article 4 - Spatial data',
-            'MSFD - Articles 8, 9 and 10 - XML data'
+            'MSFD - Articles 8, 9 and 10 - XML data',
         )
 
         return obligations
@@ -342,6 +342,9 @@ class ReportingHistoryTable(BaseNatSummaryView):
 
         if country_code == 'EL':
             country_code = 'GR'
+
+        if country_code == 'UK':
+            country_code = 'GB'            
 
         mc = sql2018.ReportingHistory
         conditions = [
@@ -473,9 +476,14 @@ class ReportedInformationTable(BaseNatSummaryView):
         schema_needed = ('ART10_Targets', 'ART8_ESA', 'ART9_GES', 'Indicators')
         mc = sql2018.ReportedInformation
 
+        country_code = self.country_code
+
+        # if country_code == 'UK':
+            # country_code = 'GB'
+
         _, res = db.get_all_records(
             mc,
-            mc.CountryCode == self.country_code,
+            mc.CountryCode == country_code,
             mc.Schema.in_(schema_needed)
         )
 
