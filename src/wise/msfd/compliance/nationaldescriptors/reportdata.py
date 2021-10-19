@@ -854,6 +854,7 @@ class ReportData20142020(ReportData2014):
     def get_report_header_data(self, report_by, source_file, factsheet,
                                report_date, multiple_source_files=False):
 
+        self.get_report_view()
         metadata_2020 = self.report_metadata_2020
 
         source_files_2020 = [
