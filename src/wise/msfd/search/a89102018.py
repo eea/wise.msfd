@@ -574,6 +574,8 @@ class A2018Art81abDisplay(ItemDisplayForm):
         'col_import_id': 'Id',
         'col_import_time': 'ReportingDate'
     }
+    
+    blacklist_labels = ['Criteria']
 
     def get_reported_date(self):
         return self.get_reported_date_2018()
