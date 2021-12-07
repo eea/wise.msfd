@@ -58,6 +58,7 @@ class AssessmentAreas2018(BaseNatSummaryView):
 
         if self.country_code == 'LV':
             _id = _id.replace('AA', 'AAA')
+            _id = _id.replace('AAAA', 'AAA')
 
         return _id
 
