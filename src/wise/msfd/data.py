@@ -677,7 +677,8 @@ LIMIT 1
 @cache(lambda func, *args: func.__name__ + "".join(args) + current_date())
 @timeit
 def get_all_report_filenames(country, article):
-    ART3 = ('http://icm.eionet.europa.eu/schemas/dir200856ec/MSFD4Geo_2p0.xsd',
+    ART3 = ('http://dd.eionet.europa.eu/schemas/MSFD/MSFD4Geo_2p0.xsd',
+            'http://icm.eionet.europa.eu/schemas/dir200856ec/MSFD4Geo_2p0.xsd',
             'http://cdr.eionet.europa.eu/se/eu/msfd8910/msfd4geo/envunbs3a/MSFD4Geo_2p0.xsd')
     ART7 = ('http://dd.eionet.europa.eu/schemas/MSFD/MSFDCA_1p0.xsd',
             'http://water.eionet.europa.eu/schemas/dir200856ec/MSCA_1p0.xsd')
@@ -743,9 +744,9 @@ ORDER BY DESC(?date)
             urls.append("https://cdr.eionet.europa.eu/lt/eu/msfd_art17/"
                         "2018reporting/spatialdata/envxosfwq/LT_MSFD4Geo.xml")
 
-        if country.upper() == 'PT':
-            urls.append("https://cdr.eionet.europa.eu/pt/eu/msfd_art17/"
-                        "2018reporting/spatialdata/envxuw4ba/PT_MSFD_4GEO_version_2_2019.08.09.xml")
+        # if country.upper() == 'PT':
+        #     urls.append("https://cdr.eionet.europa.eu/pt/eu/msfd_art17/"
+        #                 "2018reporting/spatialdata/envxuw4ba/PT_MSFD_4GEO_version_2_2019.08.09.xml")
     try:
         req = service.query(q)
         rows = req.fetchall()
@@ -813,7 +814,7 @@ LIMIT 1
         raise
 
     release_date = _to_datetime(released)
-
+    
     return release_date
 
 

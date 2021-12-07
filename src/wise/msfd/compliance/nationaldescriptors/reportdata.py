@@ -1863,7 +1863,7 @@ class ReportData2018Secondary(ReportData2018):
 
         template = self.get_template(self.article)
         urls = get_all_report_filenames(self.country_code, self.article)
-
+        
         rendered_results = []
 
         # identify order of files, grouped by region. If multiple regions are
