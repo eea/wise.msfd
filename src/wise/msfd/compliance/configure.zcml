@@ -121,6 +121,22 @@
     />
 
   <browser:page
+    for="*"
+    name="ms-recommendations-start"
+    class=".recommendations.MSRecommendationsStart"
+    template="./pt/ms-recommendations-start.pt"
+    permission="zope2.View"
+    />
+
+  <browser:page 
+    for=".interfaces.IMSRecommendationsFeedback"
+    name="country-ms-recommendation"
+    class=".recommendations.MSRecommendationsEditForm"
+    template="./pt/ms-recommendations-edit.pt"
+    permission="zope2.View"
+    />
+
+  <browser:page
     for=".interfaces.INationalDescriptorAssessment"
     name="comments-view"
     class=".comments.CommentsView"

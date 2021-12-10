@@ -5,6 +5,7 @@ from plone.dexterity.content import Container
 
 from .interfaces import (ICountryDescriptorsFolder,
                          IMSFDReportingHistoryFolder,
+                         IMSRecommendationsFeedback,
                          INationalDescriptorAssessment,
                          INationalSummaryCountryFolder,
                          INationalSummaryEdit,
@@ -13,6 +14,12 @@ from .interfaces import (ICountryDescriptorsFolder,
                          IRegionalDescriptorRegionsFolder,
                          IRegionalSummaryRegionFolder,
                          IRegionalSummaryOverviewFolder)
+
+
+class MSRecommendationsFeedback(Container):
+    """ Implementation for MS response for art 12 recommendation """
+
+    implements(IMSRecommendationsFeedback)
 
 
 class MSFDReportingHistoryFolder(Container):

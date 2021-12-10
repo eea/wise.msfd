@@ -11,20 +11,22 @@ from plone.api import portal
 
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 from Products.statusmessages.interfaces import IStatusMessage
-from wise.msfd.compliance.interfaces import (IRecommendationStorage,
-                                             IRegionalSummaryRegionFolder
-                                             )
-from wise.msfd.compliance.main import RecommendationsTable, STORAGE_KEY
-from wise.msfd.translation import get_translated, retrieve_translation
-from wise.msfd.utils import (ItemList, TemplateMixin, db_objects_to_dict,
-                             fixedorder_sortkey, timeit)
+from wise.msfd.compliance.interfaces import (
+    IRecommendationStorage, IRegionalSummaryRegionFolder
+)
+from wise.msfd.compliance.main import (
+    RecommendationsTable, STORAGE_KEY
+)
+from wise.msfd.translation import retrieve_translation
+from wise.msfd.utils import timeit
 
 from zope.interface import implements
 
 import pdfkit
 
-from ..nationalsummary.assessmentsummary import (AssessmentExportCover,
-                                         ProgressAssessment, SummaryAssessment)
+from ..nationalsummary.assessmentsummary import (
+    AssessmentExportCover, ProgressAssessment, SummaryAssessment
+)
 
 from .base import BaseRegSummaryView
 from .descriptor_assessments import RegDescriptorLevelAssessments

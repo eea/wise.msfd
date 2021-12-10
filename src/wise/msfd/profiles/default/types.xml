@@ -108,4 +108,5 @@
  <object name="wise.msfd.nationalsummaryoverview" meta_type="Dexterity FTI"/>
  <object name="wise.msfd.nationalsummaryedit" meta_type="Dexterity FTI"/>
  <object name="wise.msfd.reportinghistoryfolder" meta_type="Dexterity FTI"/>
+ <object name="wise.msfd.msrecommendationfeedback" meta_type="Dexterity FTI"/>
 </object>

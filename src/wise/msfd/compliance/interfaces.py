@@ -4,6 +4,13 @@ from zope.schema import Text, TextLine
 from plone.supermodel.model import Schema
 
 
+class IMSRecommendationsFeedback(Interface):
+    """ Implements MS response for art 12 recommendations 
+    
+    /assessment-module/ms-recommendations/be
+    """
+
+
 class IRecommendationStorage(Interface):
     """ Provide storage (as a mapping) for recommendations
 

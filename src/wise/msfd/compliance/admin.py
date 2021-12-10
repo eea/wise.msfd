@@ -600,6 +600,34 @@ class BootstrapAssessmentLandingpages(BootstrapCompliance):
         return "Boostrap finished!"
 
 
+class BoostrapMembestateRecommendations(BootstrapCompliance):
+    """ Bootstrap the member state recommendation pages """
+
+    def __call__(self):
+        ms_recommendation_page = create(
+            self.context,
+            'Folder',
+            title='Member State responses to Article 12 recommendations \
+                (2018 reports on Articles 8, 9, 10)',
+            id='ms-recommendations'
+        )
+        self.set_layout(ms_recommendation_page, 'ms-recommendations-start')
+
+        for code, country in self._get_countries():
+            cpage = create(ms_recommendation_page,
+                           'wise.msfd.msrecommendationfeedback',
+                           title=country,
+                           id=code.lower()
+                           )
+            alsoProvides(cpage, interfaces.IMSRecommendationsFeedback)
+
+            self.set_layout(cpage, 'country-ms-recommendation')
+
+        alsoProvides(self.request, IDisableCSRFProtection)
+
+        return "Success!"
+
+
 class CleanupCache(BrowserView):
     """ Remove the persistent cache that we have saved in objects
     """

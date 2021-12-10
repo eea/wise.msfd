@@ -7,19 +7,19 @@ from pkg_resources import resource_filename
 
 import logging
 
-from Products.Five.browser.pagetemplatefile import (PageTemplateFile,
-                                                    ViewPageTemplateFile)
+from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 from Products.statusmessages.interfaces import IStatusMessage
 from plone.api import portal
 from wise.msfd.compliance.interfaces import (INationalSummaryCountryFolder,
                                              INationalSummaryEdit,
                                              IRecommendationStorage)
-from wise.msfd.compliance.main import RecommendationsTable, STORAGE_KEY
+from wise.msfd.compliance.main import (
+    RecommendationsTable, STORAGE_KEY
+    )
 from wise.msfd.compliance.vocabulary import get_regions_for_country
 from wise.msfd.gescomponents import DESCRIPTOR_TYPES
-from wise.msfd.translation import get_translated, retrieve_translation
-from wise.msfd.utils import (ItemList, TemplateMixin, db_objects_to_dict,
-                             fixedorder_sortkey, timeit)
+from wise.msfd.translation import retrieve_translation
+from wise.msfd.utils import timeit
 
 from zope.interface import implements
 

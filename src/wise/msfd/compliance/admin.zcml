@@ -28,6 +28,13 @@
 
   <browser:page
     for="*"
+    name="bootstrap-ms-recommendations"
+    class=".admin.BoostrapMembestateRecommendations"
+    permission="cmf.ManagePortal"
+    />
+
+  <browser:page
+    for="*"
     name="cleanup-compliance"
     class=".admin.CleanupCache"
     permission="cmf.ManagePortal"

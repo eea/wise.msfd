@@ -1,0 +1,55 @@
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en"
+  xmlns:tal="http://xml.zope.org/namespaces/tal"
+  xmlns:metal="http://xml.zope.org/namespaces/metal"
+  xmlns:i18n="http://xml.zope.org/namespaces/i18n"
+  lang="en"
+  metal:use-macro="context/main_template/macros/master"
+  i18n:domain="eea">
+
+  <body metal:fill-slot="content">
+
+    <div id="layout-contents" tal:define="text context/text | nothing" >
+      <div id="wise-search-form" class="full-width-marker">
+        <div id="wise-search-form-top">
+          <metal:tabs
+            metal:use-macro="context/wise-macros/macros/tabs"></metal:tabs>
+        </div>
+
+        <div class="start-page-content left-side-form">
+
+          <h1>Member State responses to Article 12 recommendations (2018 reports on Articles 8, 9, 10)</h1>
+
+          <table class="table table-striped table-condensed comp-c-listing">
+            <thead>
+              <tr>
+                <th>Country Code</th>
+                <th>Country</th>
+                <th>Status</th>
+                <!-- <th>Actions</th> -->
+              </tr>
+            </thead>
+            <tbody>
+              <tr tal:repeat="country view/countries">
+                <th tal:content="country/code">DE</th>
+                <th tal:content="country/name">
+                  Germany
+                </th>
+                <td>
+                  <a href=""
+                    class="class string:p-${country/state_id}"
+                    tal:content="country/status"
+                    tal:define="color python:view.process_status_colors.get(country.state_id, 'secondary')"
+                    tal:attributes="class string:process-status btn btn-xs btn-${color}; href country/url">
+                    Phase -1
+                  </a>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+
+        </div>
+      </div>
+    </div>
+
+  </body>
+</html>
