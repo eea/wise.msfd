@@ -6,12 +6,19 @@ from io import BytesIO
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 from plone.api import portal
 from plone.z3cform.layout import wrap_form
+from zope.schema import Choice
+from zope.schema.vocabulary import SimpleTerm, SimpleVocabulary
 
-from wise.msfd.base import MainFormWrapper
+from wise.msfd.base import EmbeddedForm, MainFormWrapper
 from wise.msfd.compliance.vocabulary import get_regions_for_country
+
+from z3c.form.button import buttonAndHandler
+from z3c.form.field import Fields
+from z3c.form.form import Form
 
 from .base import BaseComplianceView
 from .interfaces import IRecommendationStorage
+from .nationaldescriptors.base import BaseView
 from .nationaldescriptors.main import CountryStatus
 
 
@@ -38,7 +45,7 @@ class MSRecommendationsStart(BaseComplianceView):
         return res
 
 
-class MSRecommendationsEditForm(BaseComplianceView):
+class MSRecommendationsEditForm(BaseView, Form):
     """ Edit the assessment for a national descriptor, for a specific article
     """
     name = 'art-view'
@@ -83,26 +90,63 @@ class MSRecommendationsEditForm(BaseComplianceView):
 
         return False
 
-    def get_recommendations_by_region(self, region):
-        # recommendation attributes: code, topic, text, ms_region [], descriptors []
+    @property
+    def fields(self):
+        if not self.subforms:
+            self.subforms = self.get_subforms()
 
+        fields = []
+
+        for subform in self.subforms:
+            fields.extend(subform.fields._data_values)
+
+        return Fields(*fields)
+
+    def get_subforms(self):
+        # recommendation attributes: code, topic, text, ms_region [], descriptors []
+        choices = (u'By 2024', u'After 2024', u'No action')
+        terms = [
+            SimpleTerm(token=i, value=c, title=c) 
+            for i, c in enumerate(choices)
+        ]
+        default = u'By 2024'
         site = portal.get()
         storage = IRecommendationStorage(site)
         storage_recom = storage.get(STORAGE_KEY, None)
-        recommendations = []
+        forms = []
         
+        descriptors = [u'D2', u'D5', u'D6']
+
         for code, recommendation in storage_recom.items():
-            is_needed = self.recommendation_needed(
-                region, recommendation.ms_region)
+            # is_needed = self.recommendation_needed(
+            #     region, recommendation.ms_region)
+
+            is_needed = True
 
             if is_needed:
-                # TODO filter by region
-                recommendations.append(recommendation)
+                form = EmbeddedForm(self, self.request)
+                fields = []  # descriptors
 
-        return recommendations
+                for descr in descriptors:
+                    field = Choice(
+                        title=descr,
+                        __name__="{}_{}".format(code, descr),
+                        vocabulary=SimpleVocabulary(terms),
+                        required=False,
+                        default=default,
+                    )
+                    # field._criteria = criteria
+                    fields.append(field)
 
-    def __call__(self):
-        return self.template()
+                form.fields = Fields(*fields)
+                form.recommendation = recommendation
+                forms.append(form)
+
+        return forms
+
+    @buttonAndHandler(u'Save', name='save')
+    def handle_save(self, action):
+        return "todo"
 
 
 # MSRecommendationsEditFormView = wrap_form(MSRecommendationsEditForm, MainFormWrapper)

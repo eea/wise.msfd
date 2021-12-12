@@ -124,7 +124,6 @@
     for="*"
     name="ms-recommendations-start"
     class=".recommendations.MSRecommendationsStart"
-    template="./pt/ms-recommendations-start.pt"
     permission="zope2.View"
     />
 

@@ -19,20 +19,88 @@
 
           <h1>MS responses to recommendations</h1>
 
-          <tal:rep tal:repeat="region view/region_codes">
+          <metal:form use-macro="context/@@ploneform-macros/titlelessform">
+            <metal:fields fill-slot="fields">
+              <tal:rep tal:repeat="region view/region_codes">
+                
+                <h3 tal:content="python: region[1]">Baltic</h3>
+                
+                <tal:rep tal:repeat='subform python: view.get_subforms()'>
+                  <div tal:content="python: subform.recommendation.code"></div>
+                  <div tal:content="python: subform.recommendation.topic"></div>
+                  <div tal:content="python: subform.recommendation.text"></div>
+                  <div tal:content="python: subform.recommendation.ms_region"></div>
+                  <div tal:content="python: subform.recommendation.descriptors"></div>
+
+                  <div class="fields-container">
+                    <div tal:repeat="fieldname subform/fields" class="fields-container-row">
+                      <tal:def define="widget python: view.widgets[fieldname]">
+
+                        <div class="field"
+                          tal:define="error widget/error;
+                          hidden python:widget.mode == 'hidden';
+                          element nocall: widget/field/_element | nothing;"
+                          tal:attributes="class python:'field' + (error and ' error' or '')">
+
+                          <span class="fieldRequired" title="Required"
+                            tal:condition="python:widget.required and not hidden"
+                            i18n:translate="label_required"
+                            i18n:attributes="title title_required;">
+                            (Required)
+                          </span>
+
+                          <div class="widget">
+                            <div>
+                              <label for=""
+                                tal:condition="not:hidden"
+                                class="help-popover"
+                                data-trigger="hover"
+                                data-html="true"
+                                tal:attributes="for widget/id;
+                                title python: element and element.title or '';">
+                                <span i18n:translate="" tal:content="widget/label">label</span>
+                              </label>
+                            </div>
+                            <div class="assessment-form-input">
+                              <input type="text" tal:replace="structure widget/render" />
+                            </div>
+                          </div>
+
+                          <div tal:condition="error" tal:content="structure error/render">
+                            Error
+                          </div>
+                        </div>
+
+                      </tal:def>
+                    </div>
+                  </div>
+
+                </tal:rep>
+              </tal:rep>
+            </metal:fields>
+
+            <metal:slot fill-slot="actions">
+              <div class="form-right-side">
+                <metal:block use-macro="context/@@ploneform-macros/actions" />
+              </div>
+            </metal:slot>
+
+          </metal:form>
+
+          <!-- <tal:rep tal:repeat="region view/region_codes">
             <h3 tal:content="python: region[1]">Baltic</h3>
 
             <table>
-              <tr tal:repeat="recommendation python: view.get_recommendations_by_region(region[0])">
-                  <td tal:content="python: recommendation.code"></td>
-                  <td tal:content="python: recommendation.topic"></td>
-                  <td tal:content="python: recommendation.text"></td>
-                  <td tal:content="python: recommendation.ms_region"></td>
-                  <td tal:content="python: recommendation.descriptors"></td>
+              <tr tal:repeat="subform python: view.get_subforms_for_region(region[0])">
+                  <td tal:content="python: subform.recommendation.code"></td>
+                  <td tal:content="python: subform.recommendation.topic"></td>
+                  <td tal:content="python: subform.recommendation.text"></td>
+                  <td tal:content="python: subform.recommendation.ms_region"></td>
+                  <td tal:content="python: subform.recommendation.descriptors"></td>
               </tr>
             </table>
 
-          </tal:rep>
+          </tal:rep> -->
 
           
         </div>
