@@ -376,7 +376,7 @@
     var $sfw = $('.form-right-side');
     var $rn = $('.report-nav');
     var btnPos = 0;
-    var $rnOffset = 0;
+    var rnOffset = 0;
     var scroll, space;
 
     if ($sfw.offset()) btnPos = $sfw.offset().top;

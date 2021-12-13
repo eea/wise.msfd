@@ -7,7 +7,6 @@
   i18n:domain="eea">
 
   <body metal:fill-slot="content">
-
     <div id="layout-contents" tal:define="text context/text | nothing" >
       <div id="wise-search-form" class="full-width-marker">
         <div id="wise-search-form-top">
@@ -15,67 +14,75 @@
             metal:use-macro="context/wise-macros/macros/tabs"></metal:tabs>
         </div>
 
-        <div class="start-page-content left-side-form">
-
+        <div class="start-page-content left-side-form edit-recommendation-feedback">
           <h1>MS responses to recommendations</h1>
 
           <metal:form use-macro="context/@@ploneform-macros/titlelessform">
             <metal:fields fill-slot="fields">
               <tal:rep tal:repeat="region view/region_codes">
-                
-                <h3 tal:content="python: region[1]">Baltic</h3>
-                
-                <tal:rep tal:repeat='subform python: view.get_subforms()'>
-                  <div tal:content="python: subform.recommendation.code"></div>
-                  <div tal:content="python: subform.recommendation.topic"></div>
-                  <div tal:content="python: subform.recommendation.text"></div>
-                  <div tal:content="python: subform.recommendation.ms_region"></div>
-                  <div tal:content="python: subform.recommendation.descriptors"></div>
-
-                  <div class="fields-container">
-                    <div tal:repeat="fieldname subform/fields" class="fields-container-row">
-                      <tal:def define="widget python: view.widgets[fieldname]">
-
-                        <div class="field"
-                          tal:define="error widget/error;
-                          hidden python:widget.mode == 'hidden';
-                          element nocall: widget/field/_element | nothing;"
-                          tal:attributes="class python:'field' + (error and ' error' or '')">
-
-                          <span class="fieldRequired" title="Required"
-                            tal:condition="python:widget.required and not hidden"
-                            i18n:translate="label_required"
-                            i18n:attributes="title title_required;">
-                            (Required)
-                          </span>
-
-                          <div class="widget">
-                            <div>
-                              <label for=""
-                                tal:condition="not:hidden"
-                                class="help-popover"
-                                data-trigger="hover"
-                                data-html="true"
-                                tal:attributes="for widget/id;
-                                title python: element and element.title or '';">
-                                <span i18n:translate="" tal:content="widget/label">label</span>
-                              </label>
-                            </div>
-                            <div class="assessment-form-input">
-                              <input type="text" tal:replace="structure widget/render" />
-                            </div>
-                          </div>
-
-                          <div tal:condition="error" tal:content="structure error/render">
-                            Error
-                          </div>
+                <tal:def tal:define="subforms python: view.get_subforms_for_region(region[0])">
+                  <h3 tal:condition="subforms"
+                    tal:content="python: '{} ({})'.format(region[1], region[0])">Baltic</h3>
+                  
+                  <div tal:repeat='subform subforms'
+                      class="recommendation-subform-wrap">
+                    <div class="recommendation-subform">
+                      <div class="recommendation-info-container">
+                        <div class="subform-title">
+                          <span tal:content="python: subform.recommendation.code"></span>
+                          -
+                          <span tal:content="python: subform.recommendation.topic"></span>
                         </div>
+                        <div tal:content="python: subform.recommendation.text"></div>
+                        <div tal:content="python: subform.recommendation.ms_region"></div>
+                        <div tal:content="python: subform.recommendation.descriptors"></div>
+                      </div>
 
-                      </tal:def>
+                      <div class="fields-container">
+                        <div tal:repeat="fieldname subform/fields" class="fields-container-row">
+                          <tal:def define="widget python: view.widgets[fieldname]">
+
+                            <div class="field"
+                              tal:define="error widget/error;
+                              hidden python:widget.mode == 'hidden';
+                              element nocall: widget/field/_element | nothing;"
+                              tal:attributes="class python:'field' + (error and ' error' or '')">
+
+                              <span class="fieldRequired" title="Required"
+                                tal:condition="python:widget.required and not hidden"
+                                i18n:translate="label_required"
+                                i18n:attributes="title title_required;">
+                                (Required)
+                              </span>
+
+                              <div class="widget">
+                                <div>
+                                  <label for=""
+                                    tal:condition="not:hidden"
+                                    class="help-popover"
+                                    data-trigger="hover"
+                                    data-html="true"
+                                    tal:attributes="for widget/id;
+                                    title python: element and element.title or '';">
+                                    <span i18n:translate="" tal:content="widget/label">label</span>
+                                  </label>
+                                </div>
+                                <div class="assessment-form-input">
+                                  <input type="text" tal:replace="structure widget/render" />
+                                </div>
+                              </div>
+
+                              <div tal:condition="error" tal:content="structure error/render">
+                                Error
+                              </div>
+                            </div>
+
+                          </tal:def>
+                        </div>
+                      </div>
                     </div>
                   </div>
-
-                </tal:rep>
+                </tal:def>
               </tal:rep>
             </metal:fields>
 

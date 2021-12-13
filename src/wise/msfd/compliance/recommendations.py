@@ -6,12 +6,12 @@ from io import BytesIO
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 from plone.api import portal
 from plone.z3cform.layout import wrap_form
-from zope.schema import Choice
+from zope.schema import Choice, Text
 from zope.schema.vocabulary import SimpleTerm, SimpleVocabulary
 
 from wise.msfd.base import EmbeddedForm, MainFormWrapper
 from wise.msfd.compliance.vocabulary import get_regions_for_country
-
+from wise.msfd.gescomponents import get_all_descriptors, get_descriptor
 from z3c.form.button import buttonAndHandler
 from z3c.form.field import Fields
 from z3c.form.form import Form
@@ -66,13 +66,19 @@ class MSRecommendationsEditForm(BaseView, Form):
         # region_codes = [x[0] for x in country_regions]
 
         return country_regions
+        return [('EU', 'All subregions')] + country_regions
 
     def recommendation_needed(self, region_code, recom_regions):
+        """ identify all recommendations for a single country """
+
         if 'EU' in recom_regions:
             return True
 
         if region_code in recom_regions:
             return True
+
+        # if set(self.region_codes).intersection(set(recom_regions)):
+        #     return True
 
         for recom_region in recom_regions:
             if '-' not in recom_region:
@@ -90,6 +96,19 @@ class MSRecommendationsEditForm(BaseView, Form):
 
         return False
 
+    @property
+    def descriptors(self):
+        descriptors = get_all_descriptors()
+        descriptors.pop(0)  # remove D1 general descriptor
+
+        res = []
+
+        for desc in descriptors:
+            desc_obj = get_descriptor(desc[0])
+
+            res.append((desc_obj.template_vars['title'], desc_obj.title))
+
+        return res
     @property
     def fields(self):
         if not self.subforms:
@@ -115,22 +134,26 @@ class MSRecommendationsEditForm(BaseView, Form):
         storage_recom = storage.get(STORAGE_KEY, None)
         forms = []
         
-        descriptors = [u'D2', u'D5', u'D6']
-
+        
         for code, recommendation in storage_recom.items():
-            # is_needed = self.recommendation_needed(
-            #     region, recommendation.ms_region)
+            for region_code, region_title in self.region_codes:
+                is_needed = self.recommendation_needed(
+                    region_code, recommendation.ms_region)
+                
+                if not is_needed:
+                    continue
 
-            is_needed = True
-
-            if is_needed:
                 form = EmbeddedForm(self, self.request)
                 fields = []  # descriptors
 
-                for descr in descriptors:
+                for descr_code, descr_title in self.descriptors:
+                    if descr_code not in recommendation.descriptors:
+                        continue
+
                     field = Choice(
-                        title=descr,
-                        __name__="{}_{}".format(code, descr),
+                        title=unicode(descr_code),
+                        __name__="{}_{}_{}".format(
+                            code, descr_code, region_code),
                         vocabulary=SimpleVocabulary(terms),
                         required=False,
                         default=default,
@@ -138,15 +161,50 @@ class MSRecommendationsEditForm(BaseView, Form):
                     # field._criteria = criteria
                     fields.append(field)
 
+                text_field = Text(
+                        title=u'Comments on recommendation',
+                        __name__="{}_{}_{}_comment".format(
+                            code, descr_code, region_code), 
+                        required=False, 
+                        default=None
+                    )
+
+                fields.append(text_field)
+
                 form.fields = Fields(*fields)
                 form.recommendation = recommendation
+                form.region = region_code
                 forms.append(form)
 
         return forms
 
+    def get_subforms_for_region(self, region):
+        res = []
+
+        for subform in self.subforms:
+            if region == subform.region:
+                res.append(subform)
+
+            # ms_regions = subform.recommendation.ms_region
+            
+            # if region in ms_regions:
+            #     res.append(subform)
+            #     continue
+
+            # for ms_region in ms_regions:
+            #     _region = ms_region.split(' - ')
+
+            #     if region == _region[0]:
+            #         res.append(subform)
+
+        return res
+
+
     @buttonAndHandler(u'Save', name='save')
     def handle_save(self, action):
-        return "todo"
+        data, errors = self.extractData()
+
+        # import pdb; pdb.set_trace()
 
 
 # MSRecommendationsEditFormView = wrap_form(MSRecommendationsEditForm, MainFormWrapper)
