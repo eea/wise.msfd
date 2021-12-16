@@ -271,7 +271,7 @@ MARINE_WATERS_REGION_DATA = [
     _MARINE_WATER_REGION('LT', 'BAL', 'Water column + seabed', '6,437'),
     _MARINE_WATER_REGION('LV', 'BAL', 'Water column + seabed', '28,348'),
     _MARINE_WATER_REGION('MT', 'MED', 'Water column + seabed', '11,678'),
-    _MARINE_WATER_REGION('MT', 'MED', 'Seabed only', '63,797'),
+    _MARINE_WATER_REGION('MT', 'MED', 'Seabed only', '63,798'),
     _MARINE_WATER_REGION('NL', 'ATL', 'Water column + seabed', '58,847'),
     _MARINE_WATER_REGION('PL', 'BAL', 'Water column + seabed', '33,138'),
     _MARINE_WATER_REGION('PT', 'ATL', 'Water column + seabed', '1,730,576'),

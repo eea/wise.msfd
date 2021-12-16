@@ -496,8 +496,8 @@ def get_available_marine_unit_ids(marine_unit_ids, klass):
         logger.exception("MSFD database is timed out")
         return []
 
-    total = q.count()
     q = [x for x in q]
+    total = len(q)
 
     return [total, q]
 
@@ -537,8 +537,8 @@ def get_marine_unit_id_names(marine_unit_ids):
         logger.exception("MSFD database is timed out")
         return []
 
-    total = q.count()
     q = [x for x in q]
+    total = len(q)
 
     return [total, q]
 
@@ -591,8 +591,8 @@ def get_all_records(mapper, *conditions, **kw):
             order_by = kw.pop('order_by')
             q = q.order_by(order_by)
 
-        count = q.count()
         q = [x for x in q]
+        count = len(q)
 
     except:
         sess.rollback()
@@ -607,9 +607,9 @@ def get_all_specific_columns(columns, *conditions, **kw):
     sess = session()
     try:
         q = sess.query(*columns).filter(*conditions).distinct()
-        count = q.count()
         q = [x for x in q]
-    except:
+        count = len(q)
+    except Exception as e:
         sess.rollback()
         logger.exception("MSFD database is timed out")
         return [0, []]
@@ -635,8 +635,8 @@ def get_all_records_ordered(table, order_cols, *conditions):
         return []
 
     # print q
-    count = q.count()
     q = [x for x in q]
+    count = len(q)
 
     return [count, q]
 
@@ -681,8 +681,8 @@ def get_all_records_outerjoin(mapper_class, klass_join, *conditions):
         logger.exception("MSFD database is timed out")
         return []
 
-    count = res.count()
     res = [x for x in res]
+    count = len(res)
 
     return [count, res]
 
@@ -697,8 +697,8 @@ def get_all_records_join(columns, klass_join, *conditions):
         logger.exception("MSFD database is timed out")
         return []
 
-    count = q.count()
     q = [x for x in q]
+    count = len(q)
 
     return [count, q]
 
@@ -709,7 +709,6 @@ def compliance_art8_join(columns, mc_join1, mc_join2, *conditions):
         q = sess.query(*columns).outerjoin(mc_join1).outerjoin(mc_join2).filter(
             *conditions
         )
-        count = q.count()
     except:
         sess.rollback()
         logger.exception("MSFD database is timed out")
@@ -717,6 +716,7 @@ def compliance_art8_join(columns, mc_join1, mc_join2, *conditions):
 
 
     q = [x for x in q]
+    count = len(q)
 
     return [count, q]
 

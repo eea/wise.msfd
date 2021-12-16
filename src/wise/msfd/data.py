@@ -735,18 +735,6 @@ ORDER BY DESC(?date)
     service = sparql.Service('https://cr.eionet.europa.eu/sparql')
     urls = []
 
-    if article.lower() in ('art3', 'art4'):
-        if country.upper() == 'IT':
-            urls.append('https://cdr.eionet.europa.eu/it/eu/msfd_art17/'
-                        '2018reporting/spatialdata/envxd9fqa/IT_MSFD4Geo_20181220.xml')
-
-        if country.upper() == 'LT':
-            urls.append("https://cdr.eionet.europa.eu/lt/eu/msfd_art17/"
-                        "2018reporting/spatialdata/envxosfwq/LT_MSFD4Geo.xml")
-
-        # if country.upper() == 'PT':
-        #     urls.append("https://cdr.eionet.europa.eu/pt/eu/msfd_art17/"
-        #                 "2018reporting/spatialdata/envxuw4ba/PT_MSFD_4GEO_version_2_2019.08.09.xml")
     try:
         req = service.query(q)
         rows = req.fetchall()
@@ -762,6 +750,19 @@ ORDER BY DESC(?date)
                          '%s country: %s', article, country)
 
         raise
+
+    if article.lower() in ('art3', 'art4'):
+        if country.upper() == 'IT':
+            urls.insert(1, 'https://cdr.eionet.europa.eu/it/eu/msfd_art17/'
+                '2018reporting/spatialdata/envxd9fqa/IT_MSFD4Geo_20181220.xml')
+
+        if country.upper() == 'LT':
+            urls.append("https://cdr.eionet.europa.eu/lt/eu/msfd_art17/"
+                        "2018reporting/spatialdata/envxosfwq/LT_MSFD4Geo.xml")
+
+        # if country.upper() == 'PT':
+        #     urls.append("https://cdr.eionet.europa.eu/pt/eu/msfd_art17/"
+        #                 "2018reporting/spatialdata/envxuw4ba/PT_MSFD_4GEO_version_2_2019.08.09.xml")
 
     return urls
 
