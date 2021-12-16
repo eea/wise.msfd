@@ -159,14 +159,14 @@
 
   <assessment-question id="A09Ad6" class="adequacy" use-criteria='all'>
     <definition>
-      To what extent is there a quantitative determination of GES (proportion values)?
+      To what extent is there a quantitative determination of GES (proportion threshold values)?
     </definition>
     <answers>
-      <option score="1">Proportion value set for this criterion is sufficient</option>
-      <option score="0.5">Proportion value set for this criterion is partially sufficient</option>
-      <option score="0.25">Proportion value set for this criterion is not sufficient</option>
-      <option score="0.25">Proportion value set for this criterion is not sufficient</option>
-      <option score="0">Proportion value not set for this criterion</option>
+      <option score="1">Proportion threshold value set for this criterion is sufficient</option>
+      <option score="0.5">Proportion threshold value set for this criterion is partially sufficient</option>
+      <option score="0.25">Proportion threshold value set for this criterion is not sufficient</option>
+      <option score="0.25">Proportion threshold value set for this criterion is not sufficient</option>
+      <option score="0">Proportion threshold value not set for this criterion</option>
       <option score="0.250">Not clear</option>
       <option score="/">Not relevant</option>
     </answers>
