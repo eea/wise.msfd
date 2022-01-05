@@ -30,6 +30,11 @@
 
               <div class="modal-body">
                 <form id="recommendation-form" method="POST" action="@@recommendations">
+                  <!-- <div class="form-group">
+                    <label>ID:</label>
+                    <textarea style="height: 2em;" id="recomm-id" name="rec_id" class="form-control" required disabled></textarea>
+                  </div>-->
+                  <input type="hidden" id="recomm-id" name="rec_id">
                   <div class="form-group">
                     <label>Recommendation code:</label>
                     <textarea style="height: 2em;" id="recomm-code" name="rec_code" class="form-control" required></textarea>
@@ -133,6 +138,9 @@
             <input class="btn btn-primary btn-s"
                     type="submit" value="Download as excel"
                     name="download-excel"/>
+            <input class="btn btn-primary btn-s"
+                    type="submit" value="Migrate recommendations"
+                    name="migrate-recommendations"/>
           </form>
         </div>
 

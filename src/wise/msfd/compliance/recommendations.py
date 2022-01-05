@@ -58,7 +58,11 @@ class MSRecommendationsEditForm(BaseView, Form):
 
     @property
     def country_code(self):
-        return self.context.id.upper()
+        return self.context.id.upper()    
+        
+    @property
+    def country_name(self):
+        return self.context.title
 
     @property
     def region_codes(self):
@@ -67,6 +71,12 @@ class MSRecommendationsEditForm(BaseView, Form):
 
         return country_regions
         return [('EU', 'All subregions')] + country_regions
+
+    def title(self):
+        title = "Edit MS responses to Article 12 recommendations for {}" \
+                .format(self.country_name)
+
+        return title
 
     def recommendation_needed(self, region_code, recom_regions):
         """ identify all recommendations for a single country """
@@ -122,13 +132,13 @@ class MSRecommendationsEditForm(BaseView, Form):
         return Fields(*fields)
 
     def get_subforms(self):
-        # recommendation attributes: code, topic, text, ms_region [], descriptors []
+        recommendations_data = getattr(
+            self.context, 'recommendations_data', {})
         choices = (u'By 2024', u'After 2024', u'No action')
         terms = [
             SimpleTerm(token=i, value=c, title=c) 
             for i, c in enumerate(choices)
         ]
-        default = u'By 2024'
         site = portal.get()
         storage = IRecommendationStorage(site)
         storage_recom = storage.get(STORAGE_KEY, None)
@@ -136,6 +146,8 @@ class MSRecommendationsEditForm(BaseView, Form):
         
         
         for code, recommendation in storage_recom.items():
+            code = code.strip()
+            
             for region_code, region_title in self.region_codes:
                 is_needed = self.recommendation_needed(
                     region_code, recommendation.ms_region)
@@ -149,11 +161,14 @@ class MSRecommendationsEditForm(BaseView, Form):
                 for descr_code, descr_title in self.descriptors:
                     if descr_code not in recommendation.descriptors:
                         continue
-
+                    
+                    # default = u'By 2024'
+                    field_name = "{}_{}_{}".format(
+                        code, descr_code, region_code)
+                    default = recommendations_data.get(field_name, u'By 2024')
                     field = Choice(
                         title=unicode(descr_code),
-                        __name__="{}_{}_{}".format(
-                            code, descr_code, region_code),
+                        __name__=field_name,
                         vocabulary=SimpleVocabulary(terms),
                         required=False,
                         default=default,
@@ -161,12 +176,15 @@ class MSRecommendationsEditForm(BaseView, Form):
                     # field._criteria = criteria
                     fields.append(field)
 
+                field_name = "{}_{}_{}_comment".format(
+                    code, descr_code, region_code)
+                default = recommendations_data.get(field_name, None)
+
                 text_field = Text(
                         title=u'Comments on recommendation',
-                        __name__="{}_{}_{}_comment".format(
-                            code, descr_code, region_code), 
+                        __name__=field_name, 
                         required=False, 
-                        default=None
+                        default=default
                     )
 
                 fields.append(text_field)
@@ -176,7 +194,12 @@ class MSRecommendationsEditForm(BaseView, Form):
                 form.region = region_code
                 forms.append(form)
 
-        return forms
+        sorted_forms = sorted(
+            forms,
+            key=lambda i: (i.recommendation.code, i.recommendation.topic)
+            )
+
+        return sorted_forms
 
     def get_subforms_for_region(self, region):
         res = []
@@ -203,8 +226,9 @@ class MSRecommendationsEditForm(BaseView, Form):
     @buttonAndHandler(u'Save', name='save')
     def handle_save(self, action):
         data, errors = self.extractData()
-
-        # import pdb; pdb.set_trace()
-
+        self.context.recommendations_data = data
+        self.context._p_changed = True
+        self._p_changed = True
+        
 
 # MSRecommendationsEditFormView = wrap_form(MSRecommendationsEditForm, MainFormWrapper)

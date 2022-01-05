@@ -57,7 +57,8 @@ annotfactory_rec = factory(RecommendationStorage, key=ANNOTATION_KEY)
 
 
 class Recommendation(Persistent):
-    def __init__(self, code, topic, text, ms_region, descriptors):
+    def __init__(self, id_rec, code, topic, text, ms_region, descriptors):
+        self._id_recommendation = id_rec
         self.code = code
         self.topic = topic
         self.text = text
@@ -74,6 +75,7 @@ class Recommendation(Persistent):
 
     def data_to_list(self):
         return [
+            getattr(self, '_id_recommendation', '0'),
             self.code,
             self.topic,
             self.text,
@@ -225,6 +227,45 @@ class RecommendationsView(BaseComplianceView):
         storage = IRecommendationStorage(site)
         storage_recom = storage.get(STORAGE_KEY, None)
         
+        if 'migrate-recommendations' in self.request.form:
+            new_recommendations = []
+
+            for i, (_, recommendation) in enumerate(storage_recom.items()):
+                id_recom = str(i + 1)
+                rec_code = recommendation.code.split('/')
+
+                if len(rec_code) == 4:
+                    rec_code = "/".join((
+                        rec_code[0], rec_code[1], rec_code[3].strip()
+                        ))
+                else:
+                    rec_code = "/".join(rec_code)
+
+                recommendation = Recommendation(
+                    id_recom, 
+                    rec_code, 
+                    recommendation.topic, 
+                    recommendation.text, 
+                    recommendation.ms_region, 
+                    recommendation.descriptors
+                    )
+                # storage_recom.pop(recommendation.code, None)    
+                # storage_recom.pop(id_recom, None)
+                # storage_recom.pop(int(id_recom), None)        
+                
+                new_recommendations.append(recommendation)
+
+            # asd = [x for x in storage_recom.keys()]
+            # asdf = [x._id_recommendation for x in new_recommendations]
+            # import pdb; pdb.set_trace()
+
+            storage_recom = OOBTree()
+            storage[STORAGE_KEY] = storage_recom
+
+            for new_rec in new_recommendations:
+                id_recom = new_rec._id_recommendation
+                storage_recom[id_recom] = new_rec
+
         if not storage_recom:
             storage_recom = OOBTree()
             storage[STORAGE_KEY] = storage_recom
@@ -232,20 +273,31 @@ class RecommendationsView(BaseComplianceView):
         if 'add-recommendation' in self.request.form:
             form_data = self.request.form
 
+            id_recom = form_data.get('rec_id', '')
             code = form_data.get('rec_code', '')
             topic = form_data.get('topic', '')
             text = form_data.get('rec_text', '')
             ms_region = form_data.get('ms_or_region', [])
             descriptors = form_data.get('descriptors', [])
 
-            recom = Recommendation(code, topic, text, ms_region, descriptors)
-            storage_recom[code] = recom
+            if not id_recom:
+                max_id = max([
+                    int(_rec._id_recommendation)
+                    for _code, _rec in storage_recom.items()
+                ])
+
+                id_recom = str(int(max_id) + 1)
+            
+            recom = Recommendation(
+                id_recom, code, topic, text, ms_region, descriptors)
+
+            storage_recom[id_recom] = recom
 
         if 'remove-recommendation' in self.request.form:
             form_data = self.request.form
-
-            code = form_data.get('rec_code', '')
-            storage_recom.pop(code)
+            
+            id_recom = form_data.get('rec_id', '')
+            storage_recom.pop(id_recom)
 
         if 'edit-topics' in self.request.form:
             topics = self.request.form.get('topics', '')

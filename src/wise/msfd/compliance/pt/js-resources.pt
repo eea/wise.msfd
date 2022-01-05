@@ -11,7 +11,7 @@
   <script src="/marine/++resource++msfd/bs3/js/bootstrap.min.js"></script>
   <script src="/marine/++resource++static_js/wise_javascript_variables.js"></script>
   <script src="/marine/++resource++static_js/compliance.js?rel=d8d9eae5ff"></script>
-  <script src="/marine/++resource++static_js/assessment-edit.js?rel=41b1ffc365"></script>
+  <script src="/marine/++resource++static_js/assessment-edit.js?rel=d5ac4026a2"></script>
   <script src="/marine/++resource++msfd.trans/translate-comp.js"></script>
-  <script src="/marine/++resource++msfd/js/table-edit.js?rel=59085174f0"></script>
+  <script src="/marine/++resource++msfd/js/table-edit.js?rel=8585e3cda8"></script>
 </tal:cond>

@@ -224,6 +224,11 @@
         $(this).text('-');
     });
 
+    // in edit ms responses to recommendations remove the 'No value' from the options
+    $('.edit-recommendation-feedback div.assessment-form-input')
+      .find("option:contains('No value'), span.select2-chosen:contains('No value')").each(function(){
+        $(this).remove();
+    });
   }
 
   function setupUnloadWarning() {

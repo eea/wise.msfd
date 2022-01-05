@@ -14,15 +14,23 @@
             metal:use-macro="context/wise-macros/macros/tabs"></metal:tabs>
         </div>
 
-        <div class="start-page-content left-side-form edit-recommendation-feedback">
-          <h1>MS responses to recommendations</h1>
+        <div id="comp-national-descriptor" 
+            class="start-page-content left-side-form edit-recommendation-feedback">
+          <h2 class="report-title" tal:content="view/title">Edit MS responses to Article 12 recommendations for </h2>
+
+          <div id="report-data-navigation">
+            <div class="report-nav fixed">
+              <div class="nav-wrapper">
+              </div>
+            </div>
+          </div>
 
           <metal:form use-macro="context/@@ploneform-macros/titlelessform">
             <metal:fields fill-slot="fields">
               <tal:rep tal:repeat="region view/region_codes">
                 <tal:def tal:define="subforms python: view.get_subforms_for_region(region[0])">
-                  <h3 tal:condition="subforms"
-                    tal:content="python: '{} ({})'.format(region[1], region[0])">Baltic</h3>
+                  <h4 tal:condition="subforms"
+                    tal:content="python: '{} ({}) - {} recommendations'.format(region[1], region[0], len(subforms))">Baltic</h4>
                   
                   <div tal:repeat='subform subforms'
                       class="recommendation-subform-wrap">
@@ -34,8 +42,8 @@
                           <span tal:content="python: subform.recommendation.topic"></span>
                         </div>
                         <div tal:content="python: subform.recommendation.text"></div>
-                        <div tal:content="python: subform.recommendation.ms_region"></div>
-                        <div tal:content="python: subform.recommendation.descriptors"></div>
+                        <!-- <div tal:content="python: subform.recommendation.ms_region"></div> -->
+                        <!-- <div tal:content="python: subform.recommendation.descriptors"></div> -->
                       </div>
 
                       <div class="fields-container">
