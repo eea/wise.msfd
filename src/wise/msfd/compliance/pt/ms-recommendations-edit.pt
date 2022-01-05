@@ -16,7 +16,41 @@
 
         <div id="comp-national-descriptor" 
             class="start-page-content left-side-form edit-recommendation-feedback">
-          <h2 class="report-title" tal:content="view/title">Edit MS responses to Article 12 recommendations for </h2>
+          <h1 class="report-title" tal:content="view/title">Edit MS responses to Article 12 recommendations for </h1>
+
+          <div class="nda-link">
+            <a href="./">
+              <i class="glyphicon glyphicon-share-alt"></i>
+              Go to all Member State responses to Article 12 recommendations
+            </a>
+          </div>
+
+          <div class="process-state-phase-form" tal:condition="view/can_manage">
+            <form class="process-state"
+              method="GET"
+              tal:attributes="action python: context.absolute_url() + '/content_status_modify'">
+              <div>
+                <i class="glyphicon glyphicon-transfer"></i>
+                Process state:
+                <strong tal:content="view/get_status">Phase 0</strong>
+
+                <div class="phase-selector"
+                  tal:condition="python: not(view.read_only_access)">
+                  <select onchange="javascript:this.form.submit()"
+                    name="workflow_action"
+                    class="pat-select2"
+                    data-pat-select2="width:10em">
+                    <option value=''>Choose action...</option>
+                    <tal:rep repeat="trans view/get_transitions">
+                      <option tal:content="trans/title" tal:attributes="value trans/id">
+                        Send to Phase 0
+                      </option>
+                    </tal:rep>
+                  </select>
+                </div>
+              </div>
+            </form>
+          </div>
 
           <div id="report-data-navigation">
             <div class="report-nav fixed">

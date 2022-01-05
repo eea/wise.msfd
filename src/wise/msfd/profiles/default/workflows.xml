@@ -11,6 +11,7 @@
  <object name="compliance_regional_assessment_workflow" meta_type="Workflow"/>
  <object name="compliance_regionaldescriptor_workflow" meta_type="Workflow"/>
  <object name="compliance_section_workflow" meta_type="Workflow"/>
+ <object name="ms_recommendations_feedback_workflow" meta_type="Workflow"/>
  <object name="folder_workflow" meta_type="Workflow"/>
  <object name="intranet_folder_workflow" meta_type="Workflow"/>
  <object name="intranet_workflow" meta_type="Workflow"/>
@@ -93,9 +94,6 @@
   <type type_id="wise.msfd.nationalsummaryoverview">
    <bound-workflow workflow_id="compliance_national_summary_workflow"/>
   </type>
-  <type type_id="wise.msfd.regionalsummaryoverview">
-   <bound-workflow workflow_id="compliance_national_summary_workflow"/>
-  </type>
   <type type_id="wise.msfd.regionaldescriptorassessment">
    <bound-workflow workflow_id="compliance_regional_assessment_workflow"/>
   </type>
@@ -104,6 +102,9 @@
   </type>
   <type type_id="wise.msfd.regiondescriptorsfolder">
    <bound-workflow workflow_id="compliance_regionaldescriptor_workflow"/>
+  </type>
+  <type type_id="wise.msfd.msrecommendationfeedback">
+   <bound-workflow workflow_id="ms_recommendations_feedback_workflow"/>
   </type>
  </bindings>
 </object>

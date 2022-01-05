@@ -14,25 +14,20 @@
  <object name="Image" meta_type="Dexterity FTI"/>
  <object name="News Item" meta_type="Dexterity FTI"/>
  <object name="Event" meta_type="Dexterity FTI"/>
- <object name="indicator" meta_type="Dexterity FTI"/>
- <object name="testcontenttype" meta_type="Dexterity FTI"/>
  <object name="frontpage-banner" meta_type="Dexterity FTI"/>
  <object name="country_factsheet" meta_type="Dexterity FTI"/>
  <object name="country_factsheet_section" meta_type="Dexterity FTI"/>
  <object name="external_report" meta_type="Dexterity FTI"/>
  <object name="external_datasources" meta_type="Dexterity FTI"/>
  <object name="key_message_card" meta_type="Dexterity FTI"/>
- <object name="collective.cover.content" meta_type="Dexterity FTI"/>
  <object name="Sparql"
     meta_type="Factory-based Type Information with dynamic views"/>
  <object name="SparqlBookmarksFolder"
     meta_type="Factory-based Type Information with dynamic views"/>
- <object name="ElasticSearch" meta_type="Dexterity FTI"/>
  <object name="PDFTool"
     meta_type="Factory-based Type Information with dynamic views"/>
  <object name="PDFTheme"
     meta_type="Factory-based Type Information with dynamic views"/>
- <object name="RichImage" meta_type="Dexterity FTI"/>
  <object name="FieldsetFolder"
     meta_type="Factory-based Type Information with dynamic views"/>
  <object name="FormBooleanField"
@@ -104,9 +99,18 @@
  <object name="wise.msfd.regiondescriptorsfolder" meta_type="Dexterity FTI"/>
  <object name="national_summary" meta_type="Dexterity FTI"/>
  <object name="wise.msfd.regionalsummaryfolder" meta_type="Dexterity FTI"/>
- <object name="wise.msfd.regionalsummaryoverview" meta_type="Dexterity FTI"/>
  <object name="wise.msfd.nationalsummaryoverview" meta_type="Dexterity FTI"/>
  <object name="wise.msfd.nationalsummaryedit" meta_type="Dexterity FTI"/>
  <object name="wise.msfd.reportinghistoryfolder" meta_type="Dexterity FTI"/>
+ <object name="data_visualization" meta_type="Dexterity FTI"/>
+ <object name="publication_report" meta_type="Dexterity FTI"/>
+ <object name="spatial_dataset" meta_type="Dexterity FTI"/>
+ <object name="map_interactive" meta_type="Dexterity FTI"/>
+ <object name="dataset" meta_type="Dexterity FTI"/>
+ <object name="indicator" meta_type="Dexterity FTI"/>
+ <object name="collective.cover.content" meta_type="Dexterity FTI"/>
+ <object name="ElasticSearch" meta_type="Dexterity FTI"/>
+ <object name="RichImage" meta_type="Dexterity FTI"/>
+ <object name="wise.msfd.regionalsummaryoverview" meta_type="Dexterity FTI"/>
  <object name="wise.msfd.msrecommendationfeedback" meta_type="Dexterity FTI"/>
 </object>
