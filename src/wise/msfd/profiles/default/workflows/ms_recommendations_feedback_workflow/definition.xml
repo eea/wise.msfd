@@ -22,13 +22,10 @@
   <permission-map name="Review portal content" acquired="True">
   </permission-map>
   <permission-map name="View" acquired="False">
-   <permission-role>Anonymous</permission-role>
-   <permission-role>Authenticated</permission-role>
    <permission-role>Contributor</permission-role>
    <permission-role>Editor</permission-role>
    <permission-role>Manager</permission-role>
    <permission-role>Owner</permission-role>
-   <permission-role>Reader</permission-role>
    <permission-role>Reviewer</permission-role>
   </permission-map>
   <permission-map name="wise.msfd: Edit Assessment" acquired="False">
@@ -45,13 +42,10 @@
  <state state_id="final" title="Final">
   <exit-transition transition_id="to_draft"/>
   <permission-map name="View" acquired="False">
-   <permission-role>Anonymous</permission-role>
-   <permission-role>Authenticated</permission-role>
    <permission-role>Contributor</permission-role>
    <permission-role>Editor</permission-role>
    <permission-role>Manager</permission-role>
    <permission-role>Owner</permission-role>
-   <permission-role>Reader</permission-role>
    <permission-role>Reviewer</permission-role>
   </permission-map>
   <permission-map name="wise.msfd: Edit Assessment" acquired="False">
@@ -64,13 +58,10 @@
  <state state_id="not_started" title="Not started">
   <exit-transition transition_id="to_draft"/>
   <permission-map name="View" acquired="False">
-   <permission-role>Anonymous</permission-role>
-   <permission-role>Authenticated</permission-role>
    <permission-role>Contributor</permission-role>
    <permission-role>Editor</permission-role>
    <permission-role>Manager</permission-role>
    <permission-role>Owner</permission-role>
-   <permission-role>Reader</permission-role>
    <permission-role>Reviewer</permission-role>
   </permission-map>
  </state>
