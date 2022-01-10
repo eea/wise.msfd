@@ -21,7 +21,8 @@ from ..nationalsummary.overview import (ExceptionsReported,
                                         TableOfContents,
                                         UsesHumanActivities)
 from .base import BaseRegSummaryView
-from .introduction import MarineWatersTable, ReportingAreasTable
+from .introduction import (
+    MarineWatersTable, ReportingAreasTable, REGIONS_SUBREGIONS)
 from .descriptor_assessments import RegDescriptorLevelAssessments
 
 logger = logging.getLogger('wise.msfd')
@@ -30,39 +31,6 @@ logger = logging.getLogger('wise.msfd')
 SECTIONS = []
 NATIONAL_ASSESSMENT_DATA = {}
 REGIONAL_ASSESSMENT_DATA = {}
-
-REGIONS_SUBREGIONS = {
-    'BAL': {
-        'area': '392,215',
-        'subregions': []
-    },
-    'ATL': {
-        'area': '15,462,049',
-        'subregions': [
-            ('Greater North Sea', '654,179'),
-            ('Celtic Seas', '1,123,380'),
-            ('Bay of Biscay and the Iberian Coast', '803,349'),
-            ('Macaronesia', '3,967,476')
-        ]
-    },
-    'MED': {
-        'area': '2,516,652',
-        'subregions': [
-            ('Western Mediterranean Sea', '846,003'),
-            ('Adriatic Sea', '139,784'),
-            ('Ionian Sea and the Central Mediterranean Sea', '773,032'),
-            ('Aegean-Levantine Sea', '757,833'),
-        ]
-    },
-    'BLK': {
-        'area': '525,482',
-        'subregions': [
-            ('Black Sea (excluding Seas of Marmara and Azov)', '473,894'),
-            ('Black Sea - Sea of Marmara', '11,737'),
-            ('Black Sea - Sea of Azov', '39,851')
-        ]
-    }
-}
 
 
 def register_section(klass):
@@ -233,20 +201,51 @@ class MarineRegionSubregions(RegionalDescriptorsSimpleTable):
             # 'Length of coastline (km) - EU',
             # 'Length of coastline (km) - non EU',
             'Area (km2) - total',
-            # 'Area (km2) - EU',
-            # 'Area (km2) - non EU'
+            'Area (km2) - EU',
+            'Area (km2) - non EU'
         ]
 
         region = REGIONS_SUBREGIONS[self.region_code]
 
-        for info in row_headers:
-            values = [region['area']]
+        # Area (km2) - total
+        info = 'Area (km2) - total'
+        values = [region['area']]
 
-            for subregion in region['subregions']:
-                values.append(subregion[1])
+        for subregion in region['subregions']:
+            values.append(subregion[1])
 
-            rows.append((info, values))
+        rows.append((info, values))
+        
+        # Area (km2) - EU
+        info = 'Area (km2) - EU'
+        values = [region['eu_area']]
 
+        for subregion in region['subregions']:
+            v = subregion[2] or '-'
+
+            values.append(v)
+
+        rows.append((info, values))
+        
+        # Area (km2) - non EU
+        info = 'Area (km2) - non EU'
+        non_eu = (int(region['area'].replace(',', '')) 
+                    - int(region['eu_area'].replace(',', '')))
+        non_eu = "{:,}".format(non_eu)
+        values = [non_eu]
+
+        for subregion in region['subregions']:
+            v = '-'
+
+            if subregion[2]:
+                v = (int(subregion[1].replace(',', '')) 
+                        - int(subregion[2].replace(',', '')))
+                v = "{:,}".format(v)
+
+            values.append(v)
+
+        rows.append((info, values))
+        
         return rows
 
 
@@ -287,6 +286,9 @@ class UsesHumanActivitiesPressures(RegionalDescriptorsSimpleTable,
         out = []
 
         for activ_theme, activ_features in self.uses_activities_features:
+            activ_features = sorted(
+                activ_features, 
+                key=lambda i : fixedorder_sortkey(i, FEATURES_ORDER))
             theme_data = []
 
             for activ_feat in activ_features:
@@ -920,7 +922,7 @@ class RegionalOverviewView(BaseRegSummaryView, AssessmentDataMixin):
         REGIONAL_ASSESSMENT_DATA[self.region_code] = view.overall_scores
 
         if 'edit-data' in self.request.form:
-            url = "{}/edit".format(self._country_folder.absolute_url())
+            url = "{}/edit".format(self.context.absolute_url())
             return self.request.response.redirect(url)
 
         report_html = self.render_reportdata()

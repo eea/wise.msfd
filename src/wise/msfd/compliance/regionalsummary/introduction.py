@@ -13,6 +13,50 @@ from ..vocabulary import MARINE_WATERS_REGION_DATA
 from .base import BaseRegSummaryView
 from .utils import SimpleTable
 
+# Source: StatisticsMarineRegionsWatersMRUs.xml / RegionsSubregions sheet
+# eu_area source: EU28_MarineWaters_to_2020 sheet
+REGIONS_SUBREGIONS = {
+    'BAL': {
+        'area': '392,215',
+        'eu_area': '366,777',
+        'subregions': []
+    },
+    'ATL': {
+        'area': '15,462,049',
+        'eu_area': '6,612,255',
+        'subregions': [
+            # region name, total area, eu area
+            ('Greater North Sea', '654,179', '485,415'),
+            ('Celtic Seas', '1,123,380', '1,115,665'),
+            ('Bay of Biscay and the Iberian Coast', '803,349', '802,145'),
+            ('Macaronesia', '3,967,476', '4,209,029'),
+            ('Area of NEA outside the four MSFD subregions', '8,913,665', '')
+        ]
+    },
+    'MED': {
+        'area': '2,516,652',
+        'eu_area': '1,637,561',
+        'subregions': [
+            # region name, total area, eu area
+            ('Western Mediterranean Sea', '846,003', '650,893'),
+            ('Adriatic Sea', '139,784', '120,062'),
+            ('Ionian Sea and the Central Mediterranean Sea', '773,032', 
+            '464,368'),
+            ('Aegean-Levantine Sea', '757,833', '402,238'),
+        ]
+    },
+    'BLK': {
+        'area': '525,482',
+        'eu_area': '63,227',
+        'subregions': [
+            # region name, total area, eu area
+            ('Black Sea (excluding Seas of Marmara and Azov)', '473,894', ''),
+            ('Black Sea - Sea of Marmara', '11,737', ''),
+            ('Black Sea - Sea of Azov', '39,851', '')
+        ]
+    }
+}
+
 
 class RegionalIntroduction(BaseRegSummaryView, Introduction):
     """ Make National summary code compatible for Regional summary """
@@ -221,12 +265,15 @@ class MarineWatersTable(RegionalIntroduction):
     def get_proportion_row(self, data):
         types = self.seabed_types + self.water_column_types
         res = []
-        total = sum([
-            float(row.Area_km2.replace(',', ''))
-            for row in data
-            if (row.Type in types and
-                row.Region == self.region_code)
-        ])
+        # total = sum([
+        #     float(row.Area_km2.replace(',', ''))
+        #     for row in data
+        #     if (row.Type in types and
+        #         row.Region == self.region_code)
+        # ])
+
+        total = REGIONS_SUBREGIONS[self.region_code]['area']
+        total = int(total.replace(',', ''))
 
         for country_id, country_name in self.available_countries:
             values = [
