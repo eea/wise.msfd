@@ -63,7 +63,7 @@
           </div>
 
           <!--<h3>Commission Assessments</h3>-->
-          <div class="assessment-module-header">Regional reports</div>
+          <div class="assessment-module-header">Commission assessments - regional reports</div>
           <table class="table as-table-overview table-striped table-country-start">
             <tbody>
               <tr class="article-title">
@@ -80,6 +80,7 @@
                 <td colspan="3">
 <!--                  <div style="text-align: center; font-style: italic; font-weight: 300;">Art. 12 (8-9-10) Regional report - 2012</div>-->
                   <a style="margin-bottom: 5px;"
+                      target="_blank"
                       tal:attributes="href view/get_url_art12_2012"
                       class="assessment-status-colorbar btn btn-xs btn-default">Art. 12 (8-9-10) Regional report - 2012</a>
 
@@ -87,12 +88,14 @@
                 <td>
 <!--                  <div style="text-align: center; font-style: italic; font-weight: 300;">Art. 12 (11) Regional report - 2014</div>-->
                   <a style="margin-bottom: 5px;"
+                      target="_blank"
                       tal:attributes="href view/get_url_art12_2014"
                       class="assessment-status-colorbar btn btn-xs btn-default">Art. 12 (11) Regional report - 2014</a>
                 </td>
                 <td colspan="2">
 <!--                  <div style="text-align: center; font-style: italic; font-weight: 300;">Art. 16 (13-14) Regional report - 2016</div>-->
                   <a style="margin-bottom: 5px;"
+                      target="_blank"
                       tal:attributes="href view/get_url_art12_2016"
                       class="assessment-status-colorbar btn btn-xs btn-default">Art. 16 (13-14) Regional report - 2016</a>
                 </td>
@@ -104,6 +107,7 @@
                 <td colspan="3" tal:define="assessment python: view.regional_report_art12">
 <!--                  <div style="text-align: center;">Art. 12 (8-9-10) Regional report - 2018</div>-->
                   <a style="margin-bottom: 5px;"
+                      target="_blank"
                       tal:attributes="href assessment/absolute_url"
                       class="assessment-status-colorbar btn btn-xs btn-default">Art. 12 (8-9-10) Regional report - 2018</a>
                   <div metal:use-macro="context/wise-macros/macros/assessment-status-bar"></div>
@@ -122,13 +126,13 @@
             </tbody>
           </table>
 
-          <div class="assessment-module-header">Commission assessments per descriptor</div>
+          <div class="assessment-module-header">Commission assessments - per descriptor</div>
           <div class="overflow-table sticky-overflow-header hidden-fixed-table">
             <div class="inner" style="overflow: auto;">
               <table class="table table-sticky-first-col as-table-overview table-striped table-country-start table-homepage-reports table-report">
                 <tbody>
                   <tr class="article-title sticky-row">
-                    <th class="sticky-col">Descriptor</th>
+                    <th style="text-align: left;" class="sticky-col">Descriptor</th>
                     <th>Article 8 Assessment</th>
                     <th>Art 9 GES Determination</th>
                     <th>Article 10 Targets</th>
@@ -145,10 +149,10 @@
                     <td tal:repeat="assessment python: view.get_articles(desc)">
                       <div metal:use-macro="context/wise-macros/macros/assessment-status-bar"></div>
                     </td>
-                    <td>
+                    <td style="text-align: center;">
                       <i style="text-align: center; font-style: italic; font-weight: 300;">Not available</i>
                     </td>
-                    <td tal:repeat="assessment python: view.get_articles_part2(desc)">
+                    <td style="text-align: center;" tal:repeat="assessment python: view.get_articles_part2(desc)">
                       <i>Not available</i>
                     </td>
                   </tr>

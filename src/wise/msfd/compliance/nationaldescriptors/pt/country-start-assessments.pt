@@ -67,11 +67,12 @@
             </form>
           </div>
 
-          <table class="table as-table-overview table-striped table-country-start">
+          <table style="margin-bottom: 0;"
+              class="table as-table-overview table-striped table-country-start">
             <tbody>
               <tr class="tr-assessment-module-header">
                 <td colspan="99">
-                  <div class="">National reports</div>
+                  <div class="">Commission assessments - national reports</div>
                 </td>
               </tr>
               <tr class="article-title">
@@ -87,18 +88,21 @@
                 <td colspan="3">
 <!--                  <div style="text-align: center; font-style: italic; font-weight: 300;">Art. 12 (8-9-10) National report - 2012</div>-->
                   <a style="margin-bottom: 5px;"
+                      target="_blank"
                       tal:attributes="href view/get_url_art12_2012"
                       class="assessment-status-colorbar btn btn-xs btn-default">Art. 12 (8-9-10) National report - 2012</a>
                 </td>
                 <td>
 <!--                  <div style="text-align: center; font-style: italic; font-weight: 300;">Art. 12 (11) National report - 2014</div>-->
                   <a style="margin-bottom: 5px;"
+                      target="_blank"
                       tal:attributes="href view/get_url_art12_2014"
                       class="assessment-status-colorbar btn btn-xs btn-default">Art. 12 (11) National report - 2014</a>
                 </td>
                 <td>
 <!--                  <div style="text-align: center; font-style: italic; font-weight: 300;">Art. 16 (13-14) National report - 2016</div>-->
                   <a style="margin-bottom: 5px;"
+                      target="_blank"
                       tal:attributes="href view/get_url_art12_2016"
                       class="assessment-status-colorbar btn btn-xs btn-default">Art. 16 (13-14) National report - 2016</a>
                 </td>
@@ -110,6 +114,7 @@
                 <td colspan="3" tal:define="assessment python: view.national_report_art12">
 <!--                  <div style="text-align: center;">Art. 12 (8-9-10) National report - 2018</div>-->
                   <a style="margin-bottom: 5px;"
+                      target="_blank"
                       tal:attributes="href assessment/absolute_url"
                       class="assessment-status-colorbar btn btn-xs btn-default">Art. 12 (8-9-10) National report - 2018</a>
                   <div metal:use-macro="context/wise-macros/macros/assessment-status-bar"></div>
@@ -125,33 +130,34 @@
                 </td>
               </tr>
 
-              <tr class="tr-assessment-module-header">
-                <td colspan="99">
-                  <div class="">Commission assessments per descriptor</div>
-                </td>
-              </tr>
-
               <tr class="article-title">
-                <th>Descriptor</th>
-                <th colspan="2">Art. 7 Competent Authorities</th>
+                <th colspan="3">Art. 7 Competent Authorities</th>
                 <th style="min-width: 330px;">Art. 3(1) Marine waters</th>
                 <th style="min-width: 330px;">Art. 4 Reporting areas</th>
                 <th colspan="22"></th>
               </tr>
               <tr>
-                <td>All descriptors</td>
                 <tal:rep tal:repeat="assessment python: view.get_secondary_articles(view._country_folder)">
-                  <td colspan="2" tal:condition="python: assessment.id == 'art7'">
+                  <td style="text-align: center;"
+                      colspan="3" tal:condition="python: assessment.id == 'art7'">
                     <div><i>Not assessed</i></div>
                   </td>
                 </tal:rep>
                 <tal:rep tal:repeat="assessment python: view.get_secondary_articles(view._country_folder)">
-                  <td tal:condition="python: assessment.id != 'art7'">
+                  <td style="text-align: center;"
+                      tal:condition="python: assessment.id != 'art7'">
                     <div metal:use-macro="context/wise-macros/macros/assessment-status-bar"></div>
                   </td>
                 </tal:rep>
                 <td colspan="22"></td>
               </tr>
+
+              <tr class="tr-assessment-module-header" style="margin-bottom: 0;">
+                <td colspan="99">
+                  <div class="">Commission assessments - per descriptor</div>
+                </td>
+              </tr>
+
             </tbody>
           </table>
 
@@ -160,16 +166,17 @@
               <div class="inner" style="overflow: auto;">
                   <!--<h3 tal:attributes="id region/id" tal:content="region/title"-->
                       <!--style="position: sticky; left: 0;">Region name</h3>-->
-                <table class="table table-sticky-first-col as-table-overview table-striped table-country-start table-homepage-assessments table-report">
+                <table style="margin-top: -0.8em;"
+                    class="table table-sticky-first-col as-table-overview table-striped table-country-start table-homepage-assessments table-report">
                   <tbody>
-                    <tal:rep tal:repeat="region regions">
+                    <tal:rep tal:repeat="region regions">                
                       <tr>
                         <th colspan="2" class="region-title sticky-col"
                             tal:attributes="id region/id" tal:content="region/title">Baltic</th>
                       </tr>
                       <tr class="article-title sticky-row"
                           tal:attributes="class python: 'article-title {}'.format(region.id == regions[0].id and 'sticky-row' or '')">
-                        <th class="sticky-col">Descriptor</th>
+                        <th style="text-align: left;" class="sticky-col">Descriptor</th>
                         <th>Art 9 GES Determination</th>
                         <th>Article 8 Assessment</th>
                         <th>Article 10 Targets</th>
@@ -189,7 +196,7 @@
                         <td tal:define="assessment python: desc['art11']">
                           <div metal:use-macro="context/wise-macros/macros/assessment-status-bar"></div>
                         </td>
-                        <td tal:repeat="assessment python: view.get_articles_part2(desc)">
+                        <td style="text-align: center;" tal:repeat="assessment python: view.get_articles_part2(desc)">
                           <i style="text-align: center; font-style: italic; font-weight: 300;">Not available</i>
                         </td>
                       </tr>
