@@ -45,7 +45,7 @@
 
 
               <tr class="article-title">
-                <th>Descriptor</th>
+                <th style="text-align: left;">Descriptor</th>
                 <th>Art 9 GES Determination</th>
                 <th>Article 8 Assessment</th>
                 <th>Article 10 Targets</th>
@@ -58,11 +58,12 @@
                 <th>
                   <span tal:content="python: desc[1]">D0</span>
                 </th>
-                <td tal:repeat="art python: view.articles">
+                <td style="text-align: center;"
+                    tal:repeat="art python: view.articles">
                   <a tal:attributes="href python: './reports-per-descriptor?art={}&desc={}'.format(art, desc[0]);
                       class python: 'btn btn-xs btn-success'" target='_blank'>Download</a>
                 </td>
-                <td>
+                <td style="text-align: center;">
                   <a tal:attributes="href python: './reports-per-descriptor?art=Art11&desc={}'.format(desc[0]);
                       class python: 'btn btn-xs btn-success'" target='_blank'>Download</a>
                 </td>
