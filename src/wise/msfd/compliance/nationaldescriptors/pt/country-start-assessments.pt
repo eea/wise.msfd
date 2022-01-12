@@ -32,7 +32,7 @@
             </button>
           </div>
 
-          <div class="process-state-phase-form" tal:condition="view/can_manage">
+          <div class="process-state-phase-form" tal:condition="False">
             <form class="process-state"
               method="GET"
               tal:attributes="action python: context.absolute_url() + '/content_status_modify'">
