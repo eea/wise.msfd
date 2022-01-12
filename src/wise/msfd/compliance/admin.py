@@ -18,6 +18,7 @@ from plone import api
 from plone.api import portal
 from plone.api.content import get_state, transition
 from plone.api.portal import get_tool
+from plone.app.textfield.value import RichTextValue
 from plone.dexterity.utils import createContentInContainer as create
 from plone.namedfile.file import NamedBlobImage
 from plone.protect.interfaces import IDisableCSRFProtection
@@ -570,6 +571,8 @@ class BootstrapAssessmentLandingpages(BootstrapCompliance):
             cpage.image = image
             cpage.image_caption = image_caption
             cpage._ccode = code.lower()
+            cpage.text = RichTextValue(
+                'Text/Description if needed', 'text/plain', 'text/html')
             self.set_layout(cpage, 'country-landingpage')
 
         regions = create(self.context,
@@ -593,6 +596,8 @@ class BootstrapAssessmentLandingpages(BootstrapCompliance):
             rpage.image = image
             rpage.image_caption = image_caption
             rpage._rcode = code
+            rpage.text = RichTextValue(
+                'Text/Description if needed', 'text/plain', 'text/html')
             self.set_layout(rpage, 'region-landingpage')
 
         alsoProvides(self.request, IDisableCSRFProtection)

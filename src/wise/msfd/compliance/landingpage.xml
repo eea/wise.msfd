@@ -1,8 +1,8 @@
 <landingpage>
     <year date="Date" extra-css-class="landpage-header sticky-row">
         <element who="Author" article="Related MSFD Article" task="Product/Report">
-            <row colspan="country" get-method="get_header_countries" display-text="_country"/>
             <row colspan="region" get-method="get_header_regions" display-text="_region"/>
+            <row colspan="country" get-method="get_header_countries" display-text="_country"/>
         </element>
     </year>
     <year date="2022">

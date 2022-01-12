@@ -17,7 +17,8 @@
     <div id="layout-contents" tal:define="text context/text | nothing" >
       <div id="wise-search-form">
         <div id="wise-search-form-top">
-          <div><p>Text/Description if needed</p></div>
+          <div tal:condition="text" tal:content="structure text/output"></div>
+
           <div class="topnav articles-wrapper row">
 
              <a class="article-box-anchor"
@@ -93,10 +94,6 @@
                </div>
              </a>
           </div>
-        </div>
-        <div
-          tal:content="structure text/output"
-          tal:condition="text">
         </div>
       </div>
     </div>
