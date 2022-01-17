@@ -45,7 +45,7 @@
                       class="form-control disabled">
                     </textarea>
                   </div>
-                  <tal:rep tal:repeat="header python: view.msfd_rep_history_headers">
+                  <tal:rep tal:repeat="header python: view.msfd_rep_history_headers()">
                     <div class="form-group">
                       <label tal:content="header">Label:</label>
                       <textarea
@@ -90,14 +90,14 @@
                 <tr class="sticky-row">
                   <th></th>
                   <th>Row</th>
-                  <tal:rep tal:repeat="value python:view.msfd_rep_history_headers">
+                  <tal:rep tal:repeat="value python:view.msfd_rep_history_headers()">
                     <th tal:attributes="style python: 'min-width: {}'.format(view.column_widths.get(value, ''))"
                         tal:content="value">Table header</th>
                   </tal:rep>
                 </tr>
               </thead>
               <tbody style="word-break: keep-all;">
-                <tr tal:repeat="row python: enumerate(view.msfd_rep_history_data)">
+                <tr tal:repeat="row python: view.msfd_rep_history_data">
                   <td class="edit-row-button">
                     <a class="btn btn-sm btn-primary"
                        data-toggle="modal"
@@ -106,12 +106,14 @@
                     </a>
                   </td>
                   <td tal:content="python: row[0] + 1">1</td>
-                  <tal:rep tal:repeat="value python: row[1]">
-                    <td tal:condition="python: not unicode(value).startswith('http')"
-                        tal:content="value">Value here</td>
-                    <td tal:condition="python: unicode(value).startswith('http')">
-                      <a tal:attributes="href value" tal:content="value">url here</a>
-                    </td>
+                  <tal:rep tal:repeat="header python: view.msfd_rep_history_columns">
+                    <tal:def tal:define="value python: getattr(row[1], header)">
+                      <td tal:condition="python: not unicode(value).startswith('http')"
+                          tal:content="value">Value here</td>
+                      <td tal:condition="python: unicode(value).startswith('http')">
+                        <a tal:attributes="href value" tal:content="value">url here</a>
+                      </td>
+                    </tal:def>
                   </tal:rep>
                 </tr>
               </tbody>

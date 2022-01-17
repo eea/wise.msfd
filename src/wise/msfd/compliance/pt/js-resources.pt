@@ -13,5 +13,5 @@
   <script src="/marine/++resource++static_js/compliance.js?rel=d8d9eae5ff"></script>
   <script src="/marine/++resource++static_js/assessment-edit.js?rel=d5ac4026a2"></script>
   <script src="/marine/++resource++msfd.trans/translate-comp.js"></script>
-  <script src="/marine/++resource++msfd/js/table-edit.js?rel=8585e3cda8"></script>
+  <script src="/marine/++resource++msfd/js/table-edit.js?rel=4328f0eafe"></script>
 </tal:cond>

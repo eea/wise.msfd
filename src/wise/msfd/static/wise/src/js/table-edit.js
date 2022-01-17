@@ -83,7 +83,7 @@
       // edit recommendation button pressed, prefill the form with values
       if (cells.length) {
         cells.each(function(index){
-          var text = $(this).text();
+          var text = $(this).text().trim();
           var formTextareas = $modal.find('textarea');
           $(formTextareas[index]).text(text);
         });

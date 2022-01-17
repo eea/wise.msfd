@@ -374,21 +374,56 @@ class MSFDReportingHistoryView(BaseComplianceView):
         'ReportType': '250px',
     }
 
+    blacklist_headers = ['Sort', 'CIRCABC', 'WISE', 'ARES', 'Comments']
+
     @property
     def _msfd_rep_history_data(self):
         """ all data including the headers """
+        data = self.context._msfd_reporting_history_data
+        
+        return data
 
-        return self.context._msfd_reporting_history_data
+    def msfd_rep_history_headers(self, use_blacklist=True):
+        """ Used to display the headers in the table """
+        # do not show these columns
+        blacklist_headers = self.blacklist_headers
+        headers = self._msfd_rep_history_data[0]
+
+        if use_blacklist:
+            headers = set(headers) - set(blacklist_headers)
+
+        return headers
 
     @property
-    def msfd_rep_history_headers(self):
-        return self._msfd_rep_history_data[0]
+    def msfd_rep_history_columns(self):
+        """ Define the columns displayed in the table """
+        # do not show these columns
+        # blacklist_headers = self.blacklist_headers
+        # fields = self._msfd_rep_history_data[1]._fields
+        # columns = set(fields) - set(blacklist_headers)
+
+        columns = ['TaskProduct', 'CountryCode', 'DateDue', 'FileName', 
+            'DateReceived', 'ReportType', 'Year', 'LocationURL', 'MSFDArticle'] 
+
+        return columns
 
     @property
     def msfd_rep_history_data(self):
-        """ only the data, without headers """
+        """ Used when displaying the data in the table
+        Here we filter the rows, hide rows where only ARES = Yes
+        """
 
-        return self._msfd_rep_history_data[1:]
+        data = self._msfd_rep_history_data[1:]
+        res = []
+
+        for index, report_row in enumerate(data):
+            if (report_row.ARES == 'Yes' and not report_row.CIRCABC 
+                and not report_row.WISE):
+                continue
+
+            res.append((index, report_row))
+
+        return res
 
     @property
     def msfd_file(self):
@@ -479,8 +514,8 @@ class MSFDReportingHistoryView(BaseComplianceView):
             index = int(form_data.get('Row'))
 
             _data = [
-                form_data.get(f)
-                for f in self.msfd_rep_history_headers
+                form_data.get(f, '')
+                for f in self.msfd_rep_history_headers(False)
             ]
             new_data = ReportingHistoryENVRow(*_data)
 
