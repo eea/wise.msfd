@@ -372,7 +372,7 @@ class MSFDReportingHistoryView(BaseComplianceView):
         'DateReceived': '100px',
         'MSFDArticle(year)': '200px',
         'ReportType': '250px',
-        'MSFD Article': '200px'
+        'MSFD Article': '120px'
     }
 
     blacklist_headers = ['Sort', 'CIRCABC', 'WISE', 'ARES', 'Comments']
@@ -391,7 +391,10 @@ class MSFDReportingHistoryView(BaseComplianceView):
         headers = self._msfd_rep_history_data[0]
 
         if use_blacklist:
-            headers = set(headers) - set(blacklist_headers)
+            headers = [
+                x for x in headers
+                if x not in blacklist_headers
+            ]
 
         return headers
 
@@ -403,8 +406,9 @@ class MSFDReportingHistoryView(BaseComplianceView):
         # fields = self._msfd_rep_history_data[1]._fields
         # columns = set(fields) - set(blacklist_headers)
 
-        columns = ['TaskProduct', 'CountryCode', 'DateDue', 'FileName', 
-            'DateReceived', 'ReportType', 'Year', 'LocationURL', 'MSFDArticle'] 
+        columns = ['Year', 'MSFDArticle', 'TaskProduct', 'ReportType', 
+            'DateDue', 'DateReceived', 'CountryCode', 'FileName', 
+            'LocationURL'] 
 
         return columns
 
