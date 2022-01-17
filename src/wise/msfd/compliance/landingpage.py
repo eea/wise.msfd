@@ -268,9 +268,11 @@ class LandingpageDataMixin:
         data = {}
 
         for folder in self._nat_desc_country_folders:
-            url = "/marine/policy-and-reporting/assessment-by-country" \
-                  "/{}".format(folder.title.lower().replace(' ', '-'))
             country_id = folder.id.upper()
+            # url = "/marine/policy-and-reporting/assessment-by-country" \
+            #       "/{}".format(folder.title.lower().replace(' ', '-'))
+            url = "/marine/assessment-module/national-summaries/{}/overview" \
+                  .format(country_id.lower())            
             data[country_id] = url
 
         return data
@@ -286,10 +288,12 @@ class LandingpageDataMixin:
                 for r in REGIONAL_DESCRIPTORS_REGIONS
                 if r.code == folder.id.upper()
             ][0]
-
-            url = "/marine/policy-and-reporting/assessment-by-region" \
-                  "/{}".format(region_title.lower().replace(' ', '-'))
+            
             reg_id = folder.id.upper()
+            # url = "/marine/policy-and-reporting/assessment-by-region" \
+            #       "/{}".format(region_title.lower().replace(' ', '-'))
+            url = "/marine/assessment-module/regional-summaries/{}/overview" \
+                  .format(reg_id.lower())
             data[reg_id] = url
 
         return data

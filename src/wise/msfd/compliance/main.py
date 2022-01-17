@@ -372,6 +372,7 @@ class MSFDReportingHistoryView(BaseComplianceView):
         'DateReceived': '100px',
         'MSFDArticle(year)': '200px',
         'ReportType': '250px',
+        'MSFD Article': '200px'
     }
 
     blacklist_headers = ['Sort', 'CIRCABC', 'WISE', 'ARES', 'Comments']
