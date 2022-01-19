@@ -467,13 +467,14 @@ class CurrentEnvitonmentalStatus(RegionalDescriptorsSimpleTable,
 
     def get_color_class(self, value):
         colors = {
-            "Unknown": 'ges-1',
+            "Unknown": 'ges-2',
             "Not assessed": 'ges-2',
-            "Not relevant": 'ges-3',
+            "Not relevant": 'ges-2',
             "GES expected to be achieved later than 2020, no Article 14 exception reported": 'ges-4',
-            "GES expected to be achieved later than 2020, Article 14 exception reported": 'ges-5',
-            "GES expected to be achieved by 2020": 'ges-6',
-            "GES achieved": 'ges-7',
+            "GES expected to be achieved later than 2020, Article 14 exception reported": 'ges-4',
+            "GES expected to be achieved by 2020": 'ges-4',
+            "GES achieved by 2018": 'ges-6',
+            "GES achieved": 'ges-6',
         }
 
         return colors.get(value, 'ges-1')
@@ -506,6 +507,9 @@ class CurrentEnvitonmentalStatus(RegionalDescriptorsSimpleTable,
                                 x.Feature == feature)
                         ]
                         v = v and v[0] or ''
+                        
+                        if v == "GES achieved":
+                            v = "GES achieved by 2018"
 
                         feature_data.append(v)
 

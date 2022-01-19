@@ -21,8 +21,8 @@ from wise.msfd.gescomponents import (ANTHROPOGENIC_FEATURES_SHORT_NAMES,
                                      THEMES_2018_ORDER)
 from wise.msfd.labels import get_label
 from wise.msfd.translation import get_translated, retrieve_translation
-from wise.msfd.utils import (ItemList, fixedorder_sortkey, items_to_rows,
-                             timeit)
+from wise.msfd.utils import (ItemLabel, ItemList, fixedorder_sortkey, 
+                             items_to_rows, timeit)
 
 from ..nationaldescriptors.data import get_report_definition
 from ..nationaldescriptors.reportdata import ReportData2018Secondary
@@ -500,13 +500,14 @@ class GESExtentAchieved(PressuresTableBase):
 
     def get_color_class(self, value):
         colors = {
-            "Unknown": 'ges-1',
+            "Unknown": 'ges-2',
             "Not assessed": 'ges-2',
-            "Not relevant": 'ges-3',
+            "Not relevant": 'ges-2',
             "GES expected to be achieved later than 2020, no Article 14 exception reported": 'ges-4',
-            "GES expected to be achieved later than 2020, Article 14 exception reported": 'ges-5',
-            "GES expected to be achieved by 2020": 'ges-6',
-            "GES achieved": 'ges-7',
+            "GES expected to be achieved later than 2020, Article 14 exception reported": 'ges-4',
+            "GES expected to be achieved by 2020": 'ges-4',
+            "GES achieved by 2018": 'ges-6',
+            "GES achieved": 'ges-6',
         }
 
         return colors.get(value, 'ges-0')
@@ -528,6 +529,12 @@ class GESExtentAchieved(PressuresTableBase):
 
         return data
 
+    def _ges_achieved(self, value):
+        if value == "GES achieved":
+            return "GES achieved by 2018"
+
+        return value
+
     def data_table(self):
         data = self.get_ges_extent_data()
 
@@ -541,7 +548,7 @@ class GESExtentAchieved(PressuresTableBase):
                     [get_label(row.Feature, 'features'),
                      row.MarineReportingUnit,
                      self._norm_float(row.GESExtentAchieved),
-                     row.GESExtentUnit, row.GESAchieved]
+                     row.GESExtentUnit, self._ges_achieved(row.GESAchieved)]
                     for row in data
                     if row.GESComponent.split('/')[0] == descriptor
                 ]
@@ -624,7 +631,7 @@ class EnvironmentalTargetsTable(PressuresTableBase):
                         pressures.extend(general_pressures_reported)
 
                         targets = set(sorted([
-                            p
+                            ItemLabel(get_label(p, 'targets'), p)
                             for press in pressures
                             for p in
                             env_targets_data['-'.join((descriptor, press))]
