@@ -20,7 +20,7 @@
     <div class="inner" style="overflow: auto">
       <table class="table table-bordered table-striped table-condensed table-national-overview table-sticky-first-col table-report skip-height-fix">
         <thead>
-          <tr>
+          <tr class="sticky-row">
             <th colspan="2">GES Descriptors</th>
             <th>Action or inaction for which MS is not responsible (Art. 14 (1a))</th>
             <th>Natural causes (Art. 14 (1b))</th>

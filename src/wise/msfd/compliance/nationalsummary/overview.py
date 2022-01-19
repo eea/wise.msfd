@@ -485,7 +485,7 @@ class GESExtentAchieved(PressuresTableBase):
     template = ViewPageTemplateFile('pt/overview-ges-extent-table.pt')
 
     title = 'Current environmental status and extent to ' \
-                    'which GES is achieved'
+                    'which GES is achieved (as reported in 2018)'
     article = 'Assessments of current environental status and ' \
               'pressures and impacts (Art. 8(1)(a)(b))'
     _id = 'nat-overview-gesextent'
@@ -497,6 +497,19 @@ class GESExtentAchieved(PressuresTableBase):
         norm = "{0:g}".format(float(value))
 
         return norm
+
+    def get_color_class(self, value):
+        colors = {
+            "Unknown": 'ges-1',
+            "Not assessed": 'ges-2',
+            "Not relevant": 'ges-3',
+            "GES expected to be achieved later than 2020, no Article 14 exception reported": 'ges-4',
+            "GES expected to be achieved later than 2020, Article 14 exception reported": 'ges-5',
+            "GES expected to be achieved by 2020": 'ges-6',
+            "GES achieved": 'ges-7',
+        }
+
+        return colors.get(value, 'ges-0')
 
     @db.use_db_session('2018')
     def get_ges_extent_data(self):

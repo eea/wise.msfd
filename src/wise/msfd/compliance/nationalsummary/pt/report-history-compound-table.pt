@@ -2,25 +2,29 @@
   <div tal:define="allrows options/rows"
       class="report-sectionZ">
 
-    <div class="overflow-tableZ">
-      <div class="innerZ">
-        <table class="table table-bordered table-striped table-comp-translate table-report">
-          <tr>
-            <th tal:condition="view/show_header"
-                style="min-width: 200px;"
-                class="first-headerZ summary">
-              <span>MSFD Article</span>
-            </th>
-            <th class="summary column-header" style="width: 50%;">Files available</th>
-            <th class="summary column-header" style="width: 30%;">Access to reports</th>
-            <th class="summary column-header" style="width: 7%;">Report due</th>
-            <th class="summary column-header" style="width: 7%;">Report received</th>
-            <th class="summary column-header" style="width: 6%;">Difference (days)</th>
-          </tr>
+    <div class="overflow-table sticky-overflow-header">
+      <div class="inner" style="overflow: auto">
+        <table class="table table-sticky-first-col table-bordered table-striped table-comp-translate table-report">
+          <thead>
+            <tr class="sticky-row">
+              <th tal:condition="view/show_header"
+                  style="min-width: 200px;"
+                  class="first-headerZ summary">
+                <span>MSFD Article</span>
+              </th>
+              <th class="summary column-header" style="width: 50%;">Files available</th>
+              <th class="summary column-header" style="width: 30%;">Access to reports</th>
+              <th class="summary column-header" style="width: 7%;">Report due</th>
+              <th class="summary column-header" style="width: 7%;">Report received</th>
+              <th class="summary column-header" style="width: 6%;">Difference (days)</th>
+            </tr>          
+          </thead>
 
-          <tal:rep tal:repeat="row allrows">
-            <tal:row replace="structure row"></tal:row>
-          </tal:rep>
+          <tbody>
+            <tal:rep tal:repeat="row allrows">
+              <tal:row replace="structure row"></tal:row>
+            </tal:rep>
+          </tbody>
         </table>
       </div>
     </div>

@@ -11,7 +11,7 @@
     <div class="inner" style="overflow: auto">
       <table class="table table-bordered table-striped table-condensed table-national-overview table-sticky-first-col table-report skip-height-fix">
         <thead>
-          <tr>
+          <tr class="sticky-row">
             <th colspan="3"></th>
             <th tal:repeat="country view/available_countries"
                 tal:content="python: country[1]">Finland</th>

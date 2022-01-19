@@ -20,11 +20,11 @@
     <div class="inner" style="overflow: auto">
       <table class="table table-bordered table-striped table-condensed table-national-overview table-sticky-first-col table-report skip-height-fix">
         <thead>
-          <tr>
+          <tr class="sticky-row">
             <th colspan="2" rowspan="3" tal:content="view/column_header">Ges descriptors</th>
             <th colspan="99">Anthropogenic pressures on the marine environment (MSFD Annex III, Table 2a)</th>
           </tr>
-          <tr>
+          <tr class="sticky-row">
             <tal:rep tal:repeat="feature view/features_needed">
               <th tal:condition="python: feature[0] != 'No theme'"
                   tal:attributes="colspan python: len(filter(lambda i: not i.endswith('All'),feature[1]))"
@@ -33,7 +33,7 @@
               </th>
             </tal:rep>
           </tr>
-          <tr>
+          <tr class="sticky-row">
             <th>Non-indigenous species</th>
             <th>Microbial pathogens</th>
             <th>Genetically modified species & translocation</th>

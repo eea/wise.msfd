@@ -530,6 +530,30 @@ body.plone-toolbar-left-expanded {
   .nat-sum-assessment-areas {
     margin-top: 1em;
   }
+
+  .table-sticky-first-col {
+    .sticky-row {
+      th {
+        background-color: #7b7b7b;
+        // background-color: #005588;
+        padding: 5px;
+      }
+    }
+  }  
+
+  .overflow-table .fixed-table-inner {
+    tr {
+      th:last-of-type {
+        border-right: none;
+      }
+      th {
+        border: 1px solid white;
+        border-top: none;
+        border-bottom: 1px solid white;
+        font-size: 14px;
+      }
+    }
+  }
 }
 
 .nat-sum-report-history {
@@ -605,8 +629,11 @@ table.table-national-overview {
     height: 100%;
     justify-content: flex-start;
     align-items: center;
-    padding: 0 5px;
+    padding: 2px 5px;;
 
+    &.ges-0 {
+      background-color: initial;
+    }
     &.ges-1 {
       background-color: #e6e7e8;
     }
