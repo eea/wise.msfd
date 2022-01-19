@@ -6,12 +6,12 @@
       tal:content="structure view/editable_text">Long editable text</div>
 
   <div tal:condition="data"
-      class="overflow-table sticky-overflow-header hidden-fixed-table">
-    <div class="inner" style="overflow: auto">
+      class="overflow-tableZ sticky-overflow-header hidden-fixed-table">
+    <div class="innerZ" style="overflow: auto">
       <table
           class="table table-bordered table-striped table-condensed table-national-overview table-sticky-first-col table-report skip-height-fix">
         <thead>
-          <tr>
+          <tr class="sticky-row">
             <th tal:repeat="header options/headers"
                  tal:content="header">Top Header</th>
           </tr>
