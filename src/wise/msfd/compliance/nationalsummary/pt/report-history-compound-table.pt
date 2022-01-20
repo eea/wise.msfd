@@ -2,7 +2,7 @@
   <div tal:define="allrows options/rows"
       class="report-sectionZ">
 
-    <div class="overflow-table sticky-overflow-header">
+    <div class="overflow-table sticky-overflow-header hidden-fixed-table">
       <div class="inner" style="overflow: auto">
         <table class="table table-sticky-first-col table-bordered table-striped table-comp-translate table-report">
           <thead>
