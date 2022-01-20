@@ -8,13 +8,13 @@
       <thead>
         <tal:cond tal:condition="python: view.section == 'national'">
           <tr class="sticky-row">
-            <th colspan="2"></th>
+            <th class="thick-right-border" colspan="2"></th>
             <th tal:repeat="country view/table_headers"
                 tal:attributes="colspan python: len(country[1])"
                 tal:content="python: country[0]">Finland</th>
           </tr>
           <tr class="sticky-row">
-            <th colspan="2"></th>
+            <th class="thick-right-border" colspan="2"></th>
             <tal:rep tal:repeat="country view/table_headers">
               <th tal:repeat="region python: country[1]"
                   tal:content="region">Baltic</th>
@@ -23,7 +23,7 @@
         </tal:cond>
         <tal:cond tal:condition="python: view.section == 'regional'">
           <tr class="sticky-row">
-            <th colspan="2"></th>
+            <th class="thick-right-border" colspan="2"></th>
             <th tal:repeat="article view/ARTICLE_ORDER"
                 tal:content="python: view.article_titles[article]">Article 10</th>
           </tr>
@@ -32,14 +32,15 @@
       <tbody>
         <tal:rep tal:repeat="descriptor_type data">
           <tr tal:repeat="descriptor_data python: descriptor_type[1]">
-            <th style="width: 140px;"
+            <th style="width: 140px; vertical-align: middle;"
                 tal:condition="python: descriptor_type[1].index(descriptor_data) == 0"
                 tal:attributes="rowspan python: len(descriptor_type[1])"
                 tal:content="python: descriptor_type[0]">
-              Extraction of non-living resources
+              Pressure based descriptors
             </th>
-            <th style="width: 150px;"
-                tal:content="python: descriptor_data[0]">Extraction of salt</th>
+            <th class="thick-right-border" 
+                style="width: 150px;"
+                tal:content="python: descriptor_data[0]">D5 Euthropication</th>
             <td style="min-width: 75px;"
                 tal:repeat="value python: descriptor_data[1]">
               <div tal:define="base_class python: 'gescomp as-value as-value';"

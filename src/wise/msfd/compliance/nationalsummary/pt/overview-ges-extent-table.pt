@@ -21,7 +21,7 @@
       <table class="table table-bordered table-striped table-condensed table-national-overview table-sticky-first-col table-report skip-height-fix">
         <thead>
           <tr class="sticky-row">
-            <th colspan="2" style="width: 230px;">GES Descriptors</th>
+            <th class="thick-right-border" colspan="2" style="width: 230px;">GES Descriptors</th>
             <th>Features</th>
             <th>Marine Reporting Unit</th>
             <th>GES extent achieved</th>
@@ -34,12 +34,14 @@
             <tal:rep tal:repeat="descriptor_data python: descriptor_type[1]">
               <tal:rep tal:repeat="row python: descriptor_data[1]">
                 <tr>
-                  <th tal:condition="python: descriptor_type[1].index(descriptor_data) == 0 and descriptor_data[1].index(row) == 0"
+                  <th style="vertical-align: middle;"
+                      tal:condition="python: descriptor_type[1].index(descriptor_data) == 0 and descriptor_data[1].index(row) == 0"
                       tal:attributes="rowspan python: sum([len(x[1]) for x in descriptor_type[1]])"
                       tal:content="python: descriptor_type[0]">
                     Pressure based descriptors
                   </th>
-                  <th tal:condition="python: descriptor_data[1].index(row) == 0"
+                  <th class="thick-right-border"
+                      tal:condition="python: descriptor_data[1].index(row) == 0"
                       tal:attributes="rowspan python: len(descriptor_data[1])"
                       tal:content="python: descriptor_data[0]">D2</th>
                   <td tal:repeat="value row">

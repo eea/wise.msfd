@@ -406,7 +406,7 @@ class UsesHumanActivities(PressuresTableBase):
                         # pressures.extend(general_pressures_reported)
 
                         pressures = [
-                            self.get_feature_short_name(x)
+                            ItemLabel(x, self.get_feature_short_name(x))
                             for x in pressures
                         ]
 
@@ -466,7 +466,7 @@ class PressureTableMarineEnv(PressuresTableBase):
                         pressures.extend(general_pressures_reported)
 
                         pressures = [
-                            self.get_feature_short_name(x)
+                            ItemLabel(x, self.get_feature_short_name(x))
                             for x in pressures
                         ]
 

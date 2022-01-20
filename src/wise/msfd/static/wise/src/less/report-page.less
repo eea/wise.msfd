@@ -550,7 +550,11 @@ body.plone-toolbar-left-expanded {
         border: 1px solid white;
         border-top: none;
         border-bottom: 1px solid white;
-        font-size: 14px;
+        font-size: 12px;
+
+        &.thick-right-border {
+          border-right: 4px solid #ddd !important;
+        }
       }
     }
   }
@@ -629,7 +633,7 @@ table.table-national-overview {
     height: 100%;
     justify-content: flex-start;
     align-items: center;
-    padding: 2px 5px;;
+    padding: 2px 5px;
 
     &.ges-0 {
       background-color: initial;
@@ -638,35 +642,29 @@ table.table-national-overview {
       background-color: #e6e7e8;
     }
     &.ges-2 {
-      background-color: #a7a9ac;
+      background-color: #afafaf;
     }
     &.ges-3 {
       background-color: #fbf7c2;
     }
     &.ges-4 {
-      background-color: #dc4d28;
+      background-color: #ff5a5a;
     }
     &.ges-5 {
       background-color: #faa85f;
     }
     &.ges-6 {
-      background-color: #96eb96;
+      background-color: #00b400;
     }
     &.ges-7 {
       background-color: #3b85b3;
     }
   }
 
-  thead {
-    th {
-      border: 1px solid #ddd !important;
-    }
-  }
   tbody {
     th {
-      background-color: #aaa;
-      color: white !important;
-      border: 1px solid #ddd !important;
+      background-color: #efefef;
+      // color: white !important;
     }
 
     td {
@@ -674,7 +672,12 @@ table.table-national-overview {
     }
   }
   th {
-    font-size: 14px;
+    font-size: 12px;
+    border: 1px solid #ddd !important;
+
+    &.thick-right-border {
+      border-right: 4px solid #ddd !important;
+    }
   }
   td {
     font-size: 12px

@@ -7,7 +7,7 @@
       <table class="table table-bordered table-striped table-condensed table-national-overview table-sticky-first-col table-report skip-height-fix">
         <thead>
           <tr class="sticky-row">
-            <th colspan="2"></th>
+            <th class="thick-right-border" colspan="2"></th>
             <th tal:repeat="country view/available_countries"
                 tal:content="python: country[1]">Finland</th>
           </tr>
@@ -15,13 +15,14 @@
         <tbody>
           <tal:rep tal:repeat="descriptor_type data">
             <tr tal:repeat="descriptor_data python: descriptor_type[1]">
-              <th style="width: 140px;"
+              <th style="width: 140px; vertical-align: middle;"
                   tal:condition="python: descriptor_type[1].index(descriptor_data) == 0"
                   tal:attributes="rowspan python: len(descriptor_type[1])"
                   tal:content="python: descriptor_type[0]">
                 Extraction of non-living resources
               </th>
-              <th style="width: 150px;"
+              <th class="thick-right-border"
+                  style="width: 150px;"
                   tal:content="python: descriptor_data[0]">Extraction of salt</th>
               <td style="min-width: 75px;"
                   tal:repeat="value python: descriptor_data[1]"

@@ -4,14 +4,13 @@ import logging
 
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 from Products.statusmessages.interfaces import IStatusMessage
-from wise.msfd import sql, db
+from wise.msfd import db
 from wise.msfd.compliance.assessment import AssessmentDataMixin
-from wise.msfd.gescomponents import (DESCRIPTOR_TYPES, FEATURES_ORDER,
-                                     get_all_descriptors, get_descriptor)
+from wise.msfd.gescomponents import (DESCRIPTOR_TYPES, FEATURES_ORDER, 
+                                     get_descriptor)
 from wise.msfd.labels import get_label
-from wise.msfd.translation import get_translated, retrieve_translation
-from wise.msfd.utils import (ItemList, TemplateMixin, db_objects_to_dict,
-                             fixedorder_sortkey, timeit)
+from wise.msfd.translation import retrieve_translation
+from wise.msfd.utils import ItemLabel, fixedorder_sortkey, timeit
 
 from ..nationalsummary.overview import (ExceptionsReported,
                                         GESExtentAchieved,
@@ -310,7 +309,7 @@ class UsesHumanActivitiesPressures(RegionalDescriptorsSimpleTable,
                     )
 
                     pressures = [
-                        self.get_feature_short_name(x)
+                        ItemLabel(x, self.get_feature_short_name(x))
                         for x in sorted_press
                     ]
 
@@ -368,9 +367,11 @@ class PressuresAffectingDescriptors(RegionalDescriptorsSimpleTable,
                         descr = x[1]
 
                         try:
-                            descr = get_descriptor(descr).template_vars['title']
+                            descr_obj = get_descriptor(descr)
+                            descr = descr_obj.template_vars['title']
+                            descr_name = descr_obj.name
                         except:
-                            pass
+                            descr_name = descr
 
                         ccode = x[0]
 
@@ -383,9 +384,15 @@ class PressuresAffectingDescriptors(RegionalDescriptorsSimpleTable,
                             or general_pressures.intersection(feats)
                             or theme_general_pressures.intersection(feats)):
 
-                            descriptors_rep.append(descr)
+                            descriptors_rep.append((descr_name, descr))
 
-                    feature_data.append(ItemListOverview(set(descriptors_rep)))
+                    descriptors_rep = set(descriptors_rep)
+                    descriptors_rep = [
+                        ItemLabel(*x)
+                        for x in descriptors_rep
+                    ]
+
+                    feature_data.append(ItemListOverview(descriptors_rep))
 
                 theme_data.append(
                     (self.get_feature_short_name(feature), feature_data)
