@@ -1,3 +1,4 @@
+from __future__ import absolute_import
 import datetime
 import logging
 from collections import namedtuple
@@ -29,6 +30,7 @@ from z3c.form.button import buttonAndHandler
 from z3c.form.field import Fields
 
 from .base import BaseRegComplianceView
+import six
 
 logger = logging.getLogger('wise.msfd')
 
@@ -308,7 +310,7 @@ class RegDescEditAssessmentDataForm(BaseRegComplianceView,
 
                 default = assessment_data.get(field_name, None)
                 field = Choice(
-                    title=unicode(field_title),
+                    title=six.text_type(field_title),
                     __name__=field_name,
                     vocabulary=SimpleVocabulary(terms),
                     required=False,

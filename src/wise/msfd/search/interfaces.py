@@ -1,3 +1,4 @@
+from __future__ import absolute_import
 from zope.interface import Attribute, Interface
 from zope.schema import Choice, Int, List
 

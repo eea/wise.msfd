@@ -1,3 +1,4 @@
+from __future__ import absolute_import
 import logging
 
 from collections import defaultdict
@@ -13,6 +14,7 @@ from ..base import EmbeddedForm, MarineUnitIDSelectForm
 from ..utils import all_values_from_field, db_objects_to_dict, group_data
 from .base import ItemDisplay, ItemDisplayForm, MainForm, MultiItemDisplayForm
 from .utils import register_form_art11, register_form_section
+import six
 
 
 logger = logging.getLogger('wise.msfd')
@@ -718,7 +720,7 @@ class A11MonSubDisplay(MultiItemDisplayForm):
 
         needed_subprogids = []
         for mpid, subprogids in mptypes_subprog.items():
-            if unicode(mpid) in mp_ids:
+            if six.text_type(mpid) in mp_ids:
                 needed_subprogids.extend(subprogids)
 
         subprogramme_ids = db.get_unique_from_mapper(

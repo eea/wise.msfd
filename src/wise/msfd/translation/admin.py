@@ -1,4 +1,5 @@
 
+from __future__ import absolute_import
 from io import BytesIO
 
 import json
@@ -21,6 +22,7 @@ import xlsxwriter
 from . import (normalize, delete_translation, save_translation,
                retrieve_translation)
 from .interfaces import ITranslationsStorage
+import six
 
 logger = logging.getLogger('wise.msfd.translation')
 
@@ -34,7 +36,7 @@ class TranslationsOverview(BrowserView):
         return portal.get()
 
     def languages(self):
-        return ITranslationsStorage(self.get_root).keys()
+        return list(ITranslationsStorage(self.get_root).keys())
 
     def available_translations(self, selected_lang=None):
         storage = ITranslationsStorage(self.get_root)
@@ -92,7 +94,7 @@ class TranslationsOverview(BrowserView):
         if not approved:
             return self.request.response.redirect(url)
 
-        if isinstance(approved, basestring):
+        if isinstance(approved, six.string_types):
             approved = [approved]
 
         storage = ITranslationsStorage(self.get_root)
@@ -118,7 +120,7 @@ class TranslationsOverview(BrowserView):
         for language in self.languages():
             transl_data = self.available_translations(language)
             translations = [
-                (language, unicode(k), unicode(v), v.approved)
+                (language, six.text_type(k), six.text_type(v), v.approved)
                 for k, v in transl_data.items()
             ]
             data.extend(translations)
@@ -128,7 +130,7 @@ class TranslationsOverview(BrowserView):
         workbook = xlsxwriter.Workbook(out, {'in_memory': True})
 
         wtitle = 'translations'
-        worksheet = workbook.add_worksheet(unicode(wtitle)[:30])
+        worksheet = workbook.add_worksheet(six.text_type(wtitle)[:30])
 
         row_index = 0
 

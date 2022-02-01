@@ -1,3 +1,4 @@
+from __future__ import absolute_import
 from plone.app.layout.viewlets.common import TitleViewlet
 
 from ..regionalsummary.base import BaseRegSummaryView

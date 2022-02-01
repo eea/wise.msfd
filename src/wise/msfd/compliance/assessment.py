@@ -1,3 +1,4 @@
+from __future__ import absolute_import
 import csv
 import logging
 import re
@@ -122,7 +123,7 @@ CONCLUSION_COLOR_TABLE = {
     2: 4,       # poor
     1: 5,       # very poor
     0: 3,       # not reported
-    0.5: 05,
+    0.5: 0o5,
     1.5: 15,
     2.5: 25,
     3.5: 35,
@@ -851,7 +852,7 @@ class AssessmentDataMixin(object):
                 score_2012 = assessments_2012[country_name].score
                 conclusion_2012 = assessments_2012[country_name].overall_ass
             else:       # fallback
-                ctry = assessments_2012.keys()[0]
+                ctry = list(assessments_2012.keys())[0]
                 score_2012 = assessments_2012[ctry].score
                 conclusion_2012 = assessments_2012[ctry].overall_ass
 
@@ -916,7 +917,7 @@ class AssessmentDataMixin(object):
         :return: instance of OverallScores with calculated adequacy,
             consistency and coherence score values
         """
-        phases = phase_overall_scores.article_weights[article].keys()
+        phases = list(phase_overall_scores.article_weights[article].keys())
         phases_answered = set()
 
         for k, score in assess_data.items():

@@ -1,4 +1,6 @@
 # coding=utf-8
+from __future__ import absolute_import
+from __future__ import print_function
 import logging
 import os
 import requests
@@ -50,6 +52,7 @@ from . import interfaces
 from .base import (_get_secondary_articles, BaseComplianceView,
                    NAT_DESC_QUESTIONS, REG_DESC_QUESTIONS,
                    report_data_cache_key)
+import six
 
 logger = logging.getLogger('wise.msfd')
 
@@ -642,7 +645,7 @@ class CleanupCache(BrowserView):
 
         for brain in brains:
             obj = brain.getObject()
-            print "For obj", obj
+            print("For obj", obj)
 
             for name in obj.__dict__.keys():
 
@@ -1018,11 +1021,11 @@ class AdminScoring(BaseComplianceView, AssessmentDataMixin):
                        article_id, '', 'Progress', val,
                        '', '', state, last_change)
 
-        score_last_change = filter(None, score_last_change)
+        score_last_change = [_f for _f in score_last_change if _f]
         last_change = score_last_change and max(score_last_change) or ''
         last_change = last_change and last_change.isoformat() or ''
 
-        phases = phase_overall_scores.article_weights.values()[0].keys()
+        phases = list(phase_overall_scores.article_weights.values())[0].keys()
 
         for phase in phases:
             _phase_score = getattr(phase_overall_scores, phase, {})
@@ -1167,7 +1170,7 @@ class AdminScoring(BaseComplianceView, AssessmentDataMixin):
                 yield (country_code, country_title, article_id, '',
                        'Progress', val, '', '', state, last_change)
 
-        score_last_change = filter(None, score_last_change)
+        score_last_change = [_f for _f in score_last_change if _f]
         last_change = score_last_change and max(score_last_change) or ''
         last_change = last_change and last_change.isoformat() or ''
 
@@ -1277,7 +1280,7 @@ class AdminScoring(BaseComplianceView, AssessmentDataMixin):
                        article_id, '', 'Progress', val,
                        '', '', state, last_change)
 
-        score_last_change = filter(None, score_last_change)
+        score_last_change = [_f for _f in score_last_change if _f]
         last_change = score_last_change and max(score_last_change) or ''
         last_change = last_change and last_change.isoformat() or ''
 
@@ -1345,7 +1348,7 @@ class AdminScoring(BaseComplianceView, AssessmentDataMixin):
                         label_title = labels[i].title().replace(' ', '')
 
                         v_element = etree.SubElement(element, label_title)
-                        v_element.text = unicode(value)
+                        v_element.text = six.text_type(value)
 
         tree = etree.ElementTree(root)
         tree.write(out, pretty_print=True, xml_declaration=True,
@@ -1564,7 +1567,7 @@ class SetupAssessmentWorkflowStates(BaseComplianceView):
 class TranslateIndicators(BrowserView):
 
     def __call__(self):
-        labels = get_indicator_labels().values()
+        labels = list(get_indicator_labels().values())
         site = portal.get()
         storage = ITranslationsStorage(site)
 

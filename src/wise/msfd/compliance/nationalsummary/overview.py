@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+from __future__ import absolute_import
 from collections import defaultdict
 import logging
 
@@ -391,12 +392,9 @@ class UsesHumanActivities(PressuresTableBase):
 
                         # if pressure is ending with 'All' it applies to all
                         # features in the current theme
-                        pressures = filter(
-                            lambda i: i.endswith('All') or i == feature,
-                            list(features_rep.intersection(
+                        pressures = [i for i in list(features_rep.intersection(
                                 set(features_for_theme))
-                            )
-                        )
+                            ) if i.endswith('All') or i == feature]
 
                         # These pressures apply to all themes and features
                         # general_pressures_reported = list(
@@ -451,12 +449,9 @@ class PressureTableMarineEnv(PressuresTableBase):
 
                         # if pressure is ending with 'All' it applies to all
                         # features in the current theme
-                        pressures = filter(
-                            lambda i: i.endswith('All') or i == feature,
-                            list(features_rep.intersection(
+                        pressures = [i for i in list(features_rep.intersection(
                                 set(features_for_theme))
-                            )
-                        )
+                            ) if i.endswith('All') or i == feature]
 
                         # These pressures apply to all themes and features
                         general_pressures_reported = list(
@@ -616,12 +611,9 @@ class EnvironmentalTargetsTable(PressuresTableBase):
 
                         # if pressure is ending with 'All' it applies to all
                         # features in the current theme
-                        pressures = filter(
-                            lambda i: i.endswith('All') or i == feature,
-                            list(features_rep.intersection(
+                        pressures = [i for i in list(features_rep.intersection(
                                 set(features_for_theme))
-                            )
-                        )
+                            ) if i.endswith('All') or i == feature]
 
                         # These pressures apply to all themes and features
                         general_pressures_reported = list(
@@ -695,12 +687,9 @@ class ProgrammesOfMeasures(EnvironmentalTargetsTable):
 
                         # if pressure is ending with 'All' it applies to all
                         # features in the current theme
-                        pressures = filter(
-                            lambda i: i.endswith('All') or i == feature,
-                            list(features_rep.intersection(
+                        pressures = [i for i in list(features_rep.intersection(
                                 set(features_for_theme))
-                            )
-                        )
+                            ) if i.endswith('All') or i == feature]
 
                         # These pressures apply to all themes and features
                         general_pressures_reported = list(

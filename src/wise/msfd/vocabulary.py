@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 # TODO: move most of the stuff here in .search, where it belongs
+from __future__ import absolute_import
 import json
 import unicodedata
 

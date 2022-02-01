@@ -1,5 +1,6 @@
 """ Forms and views for Article 13-14 search
 """
+from __future__ import absolute_import
 from sqlalchemy import and_
 
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
@@ -271,14 +272,14 @@ class A1314ItemDisplay(ItemDisplayForm):
 
         env_target_labels = getattr(GES_LABELS, 'env_targets')
 
-        env_targets = extra_data.items()[0][1]["RelevantEnvironmentalTargets"]
+        env_targets = list(extra_data.items())[0][1]["RelevantEnvironmentalTargets"]
 
         for row in env_targets:
             label = env_target_labels[mru].get(row['InfoText'], '')
             if label:
                 row['InfoText'] = label
 
-        self.extra_data = extra_data.items()
+        self.extra_data = list(extra_data.items())
 
         return [count, item]
 

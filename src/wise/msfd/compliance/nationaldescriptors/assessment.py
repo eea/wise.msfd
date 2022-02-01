@@ -1,3 +1,4 @@
+from __future__ import absolute_import
 import collections
 import datetime
 import logging
@@ -28,6 +29,7 @@ from z3c.form.button import buttonAndHandler
 from z3c.form.field import Fields
 
 from .base import BaseView
+import six
 
 # from zope.security import checkPermission
 # PageTemplateFile,
@@ -49,11 +51,11 @@ class ViewAssessmentEditHistory(BaseView, BrowserView):
                 if isinstance(record[field], datetime.datetime):
                     tsr.append(record[field])
                 elif isinstance(record[field], Score):
-                    if field in res.keys():
+                    if field in list(res.keys()):
                         res[field] += [record[field].conclusion]
                     else:
                         res[field] = [record[field].conclusion]
-                elif field in res.keys():
+                elif field in list(res.keys()):
                     res[field] += [record[field]]
                 else:
                     res[field] = [record[field]]
@@ -323,7 +325,7 @@ class EditAssessmentDataForm(BaseView, EditAssessmentDataFormMain):
 
                 default = assessment_data.get(field_name, None)
                 field = Choice(
-                    title=unicode(field_title),
+                    title=six.text_type(field_title),
                     __name__=field_name,
                     vocabulary=SimpleVocabulary(terms),
                     required=False,

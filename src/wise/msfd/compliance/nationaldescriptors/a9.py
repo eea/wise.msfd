@@ -1,5 +1,6 @@
 # from collections import defaultdict
 
+from __future__ import absolute_import
 import logging
 from collections import defaultdict
 
@@ -18,6 +19,7 @@ from wise.msfd.utils import (Item, ItemLabel, ItemList, Node, RawRow,
                              RelaxedNode, Row, natural_sort_key, to_html)
 
 from ..base import BaseArticle2012
+import six
 
 logger = logging.getLogger('wise.msfd')
 
@@ -159,7 +161,7 @@ class A9Item(Item):
             values[muid] = tv[0]
 
         rows = []
-        count, mres = db.get_marine_unit_id_names(values.keys())
+        count, mres = db.get_marine_unit_id_names(list(values.keys()))
         muid_labels = dict(mres)
 
         for muid in sorted(values.keys()):
@@ -369,7 +371,7 @@ class Article9(BaseArticle2012):
         for item in self.cols:
             for k in translatables:
                 value = item[k]
-                if not isinstance(value, basestring):
+                if not isinstance(value, six.string_types):
                     continue
 
                 if value not in seen:
@@ -460,7 +462,7 @@ class Article9Alternate(BaseArticle2012):
         muids = {m.id: m for m in self.muids}
         count, res = db.get_all_records(
             t,
-            t.MarineUnitID.in_(muids.keys()),
+            t.MarineUnitID.in_(list(muids.keys())),
         )
 
         by_muid = defaultdict(list)

@@ -1,3 +1,5 @@
+from __future__ import absolute_import
+from __future__ import print_function
 import logging
 from collections import OrderedDict, defaultdict
 
@@ -37,7 +39,7 @@ class A8AlternateItem(Item):
 
     @staticmethod
     def _get_mapper_pk(mapper):
-        pk = mapper.__table__.primary_key.columns.values()[0]
+        pk = list(mapper.__table__.primary_key.columns.values())[0]
 
         return pk
 
@@ -78,7 +80,7 @@ class A8aGeneric(A8AlternateItem):
         #             M.c.MarineUnitID.in_(muids))\
         #     .distinct()
 
-        print 'Started to query data!'
+        print('Started to query data!')
 
         if P:
             # .filter(A.Topic == cls.ast_topic)
@@ -103,11 +105,11 @@ class A8aGeneric(A8AlternateItem):
                 .order_by(N.ReportingFeature, pk)
             # asd = q.statement.compile(compile_kwargs={"literal_binds": True})
 
-            print 'Started to setup data!'
-            print q.count()
+            print('Started to setup data!')
+            print(q.count())
 
             for item in q:
-                print 'Will yield one item!'
+                print('Will yield one item!')
                 yield cls(descriptor, *item)
 
         # A8aPhysical only has the primary mapper, needs different query
@@ -118,7 +120,7 @@ class A8aGeneric(A8AlternateItem):
                 .filter(N.MarineUnitID.in_(muids)) \
                 .order_by(N.Topic, pk)
 
-            print q.count()
+            print(q.count())
 
             for item in q:
                 yield cls(descriptor, *(item, None, None, None, None))
@@ -438,7 +440,7 @@ class A8bGeneric(A8AlternateItem):
 
         pk = cls._get_mapper_pk(N)
 
-        print 'Started to query data!'
+        print('Started to query data!')
 
         filters = []
         filters.append(N.MarineUnitID.in_(muids))
@@ -462,11 +464,11 @@ class A8bGeneric(A8AlternateItem):
                 .outerjoin(AC)\
                 .order_by(pk)
 
-            print 'Started to setup data!'
-            print q.count()
+            print('Started to setup data!')
+            print(q.count())
 
             for tup in q:
-                print 'Will yield one item!'
+                print('Will yield one item!')
                 yield cls(descriptor, *tup)
 
         # special case for Acidification
@@ -476,11 +478,11 @@ class A8bGeneric(A8AlternateItem):
                 .filter(*filters) \
                 .order_by(pk)
 
-            print 'Started to setup data!'
-            print q.count()
+            print('Started to setup data!')
+            print(q.count())
 
             for tup in q:
-                print 'Will yield one item!'
+                print('Will yield one item!')
                 yield cls(descriptor, *(tup, None, None, None))
 
     def _topic_filter(self, topic, value, topics):
@@ -1146,7 +1148,7 @@ class Article8Alternate(BaseArticle2012):
         muids = {m.id: m for m in self.muids}
 
         for Klass in self.implementations[descriptor]:
-            print 'Started Klass: %s' % (Klass.__name__)
+            print('Started Klass: %s' % (Klass.__name__))
 
             # Klass = self.implementations[descriptor][0]
 
@@ -1157,7 +1159,7 @@ class Article8Alternate(BaseArticle2012):
 
             by_muid = defaultdict(list)
 
-            for item in Klass.items(self.descriptor, muids.keys()):
+            for item in Klass.items(self.descriptor, list(muids.keys())):
                 by_muid[item.MarineUnitID].append(item)
 
             for muid, cols in by_muid.items():

@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+from __future__ import absolute_import
 from eea.cache import cache
 
 import csv
@@ -14,6 +15,7 @@ from wise.msfd import db, sql, sql2018, sql_extra
 from wise.msfd.labels import COMMON_LABELS, TERMSLIST
 from wise.msfd.utils import (ItemLabel, _parse_files_in_location,
                              get_element_by_id, natural_sort_key, timeit)
+import six
 
 logger = logging.getLogger('wise.msfd')
 
@@ -145,7 +147,7 @@ class Descriptor(ItemLabel):
     def __init__(self, id=None, title=None, criterions=None):
         self.id = id
         self.title = title
-        assert isinstance(self.title, unicode)
+        assert isinstance(self.title, six.text_type)
         self.name = self.title
         self.criterions = criterions or set()
 
@@ -194,7 +196,7 @@ class Descriptor(ItemLabel):
         crits = {c.id: c for c in self.criterions}
         # ids = crits.keys()
 
-        s = sorted_by_criterion(crits.keys())
+        s = sorted_by_criterion(list(crits.keys()))
 
         return [crits[x] for x in s]
 
@@ -478,7 +480,7 @@ PARAMETERS = parse_parameters()
 def get_parameters(descriptor_code=None):
 
     if descriptor_code is None:
-        return PARAMETERS.values()
+        return list(PARAMETERS.values())
 
     descriptor = get_descriptor(descriptor_code)
     crit_ids = set(descriptor.all_ids())
@@ -908,7 +910,7 @@ FEATURES = parse_features()
 @cache(lambda func, *args: func.__name__ + args[0], lifetime=1800)
 def get_features(descriptor_code=None):
     if descriptor_code is None:
-        return FEATURES.values()
+        return list(FEATURES.values())
 
     return [f
             for f in FEATURES.values()
@@ -979,7 +981,7 @@ def sorted_criterions(crits):
     """
 
     cm = {c.id: c for c in crits}
-    s = sorted_by_criterion(cm.keys())
+    s = sorted_by_criterion(list(cm.keys()))
 
     return [cm[k] for k in s]
 

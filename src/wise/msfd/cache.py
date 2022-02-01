@@ -1,4 +1,6 @@
 # from Products.Five.bbb import AcquisitionBBB
+from __future__ import absolute_import
+from __future__ import print_function
 import logging
 
 from zope.tales.expressions import StringExpr
@@ -23,7 +25,7 @@ class CacheExpr(StringExpr):
             vvals.append(v)
 
         # return self._expr % tuple(vvals)
-        print self._expr, vvals
+        print(self._expr, vvals)
 
         return None
 

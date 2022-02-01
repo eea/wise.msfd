@@ -1,3 +1,4 @@
+from __future__ import absolute_import
 import re
 from collections import defaultdict
 from datetime import datetime
@@ -7,6 +8,7 @@ from six import string_types
 
 import xlsxwriter
 from wise.msfd.utils import class_id, get_obj_fields, print_value_xls
+from six.moves import range
 
 FORMS_ART4 = {}
 FORMS_ART8 = {}

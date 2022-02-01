@@ -1,3 +1,5 @@
+from __future__ import absolute_import
+from __future__ import print_function
 import json
 import logging
 import time
@@ -12,6 +14,7 @@ from Products.Five.browser import BrowserView
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 
 from .base import BaseComplianceView, STATUS_COLORS
+from six.moves import range
 
 logger = logging.getLogger('wise.msfd')
 
@@ -22,7 +25,7 @@ class ComplianceJSONMap(BrowserView):
 
     @cache(lambda *a, **kw: 'comp-json-map')
     def __call__(self):
-        print "Calling"
+        print("Calling")
         # node = {'name': ..., 'url': '...', 'children': []}
         initial = []
 

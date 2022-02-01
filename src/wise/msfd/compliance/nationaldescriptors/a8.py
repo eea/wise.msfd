@@ -1,3 +1,4 @@
+from __future__ import absolute_import
 import logging
 import re
 from collections import defaultdict
@@ -17,6 +18,7 @@ from wise.msfd.utils import Item, ItemLabel, ItemList, Node, RawRow, Row
 
 from ..base import BaseArticle2012
 from .data import REPORT_DEFS
+import six
 
 logger = logging.getLogger('wise.msfd')
 
@@ -804,7 +806,7 @@ class Article8(BaseArticle2012):
             mlabel = muids.get(mid)
             if mlabel is None:
                 logger.warning("Report for non-defined muids: %s", mid)
-                mid = unicode(mid)
+                mid = six.text_type(mid)
                 mlabel = MarineReportingUnit(mid, mid)
             res[mlabel] = v
 
@@ -831,7 +833,7 @@ class Article8(BaseArticle2012):
                     continue
 
                 for value in row.raw_values:
-                    if not isinstance(value, basestring):
+                    if not isinstance(value, six.string_types):
                         continue
                     if value not in seen:
                         retrieve_translation(self.country_code, value)

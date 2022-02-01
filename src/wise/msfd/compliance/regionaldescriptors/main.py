@@ -1,3 +1,4 @@
+from __future__ import absolute_import
 from collections import namedtuple
 from io import BytesIO
 
@@ -22,6 +23,7 @@ from wise.msfd.utils import ItemList
 
 from ..vocabulary import REGIONAL_DESCRIPTORS_REGIONS
 from .base import BaseRegComplianceView
+import six
 
 
 RegionStatus = namedtuple('CountryStatus',
@@ -244,7 +246,7 @@ class RegionalDescriptorArticleView(BaseRegComplianceView,
         workbook = xlsxwriter.Workbook(out, {'in_memory': True})
 
         wtitle = self.country_region_code
-        worksheet = workbook.add_worksheet(unicode(wtitle)[:30])
+        worksheet = workbook.add_worksheet(six.text_type(wtitle)[:30])
 
         row_index = 0
 
@@ -254,9 +256,9 @@ class RegionalDescriptorArticleView(BaseRegComplianceView,
                     value = "\n".join(value.rows)
 
                 try:
-                    unicode_value = unicode(value)
+                    unicode_value = six.text_type(value)
                 except:
-                    unicode_value = unicode(value.decode('utf-8'))
+                    unicode_value = six.text_type(value.decode('utf-8'))
 
                 worksheet.write(row_index, i, unicode_value or '')
 

@@ -1,4 +1,5 @@
 
+from __future__ import absolute_import
 from collections import defaultdict
 
 import csv
@@ -52,7 +53,7 @@ def _extract_from_csv():
         csv_file = csv.reader(csvfile, delimiter=',', quotechar='|')
 
         for row in csv_file:
-            if row[0] in labels.keys():
+            if row[0] in list(labels.keys()):
                 logger.debug("Duplicate label in csv file: %s", row[0])
 
             labels[row[0]] = row[1]
@@ -69,7 +70,7 @@ def _extract_ktm():
         csv_file = csv.reader(csvfile, delimiter=',', quotechar='|')
 
         for row in csv_file:
-            if row[0] in labels.keys():
+            if row[0] in list(labels.keys()):
                 logger.debug("Duplicate label in csv file: %s", row[0])
 
             label = row[2].strip('"')

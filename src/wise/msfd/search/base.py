@@ -1,3 +1,4 @@
+from __future__ import absolute_import
 import logging
 import re
 from collections import defaultdict
@@ -316,7 +317,7 @@ class MainForm(BaseEnhancedForm, BasePublicPage, Form):
         super(MainForm, self).update()
         self.data, self.errors = self.extractData()
 
-        has_values = self.data.values() and all(self.data.values())
+        has_values = list(self.data.values()) and all(self.data.values())
 
         if has_values:
             self.subform = self.get_subform()

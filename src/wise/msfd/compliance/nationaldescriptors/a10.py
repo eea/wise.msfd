@@ -1,3 +1,5 @@
+from __future__ import absolute_import
+from __future__ import print_function
 import logging
 from collections import defaultdict
 
@@ -16,6 +18,8 @@ from wise.msfd.utils import (Item, ItemLabel, ItemList, Node, RawRow, Row,
 
 from ..base import BaseArticle2012
 from .a9 import Article9
+import six
+from six.moves import zip
 
 logger = logging.getLogger('wise.msfd')
 
@@ -44,7 +48,7 @@ class A10Item(Item):
             for ti in targets_indicators:
                 targets = ti.targets_for_descriptor(self.criterion)
                 self.targets.extend(targets)
-            print self.targets
+            print(self.targets)
         else:
             for ti in targets_indicators:
                 targets = ti.targets_for_criterion(self.criterion)
@@ -140,7 +144,7 @@ class A10Item(Item):
             t.c['Marine region/subregion'] == self.region_code
         )
 
-        cols = t.c.keys()
+        cols = list(t.c.keys())
         recs = [
             {k: v for k, v in zip(cols, row)}
 
@@ -219,7 +223,7 @@ class A10Item(Item):
             values[muid] = target['w:ThresholdValue/text()'][0]
 
         rows = []
-        count, mres = db.get_marine_unit_id_names(values.keys())
+        count, mres = db.get_marine_unit_id_names(list(values.keys()))
         muid_labels = dict(mres)
 
         for muid in sorted(values.keys()):
@@ -519,7 +523,7 @@ class Article10(BaseArticle2012):
         for item in self.cols:
             for k in translatables:
                 value = item[k]
-                if not isinstance(value, basestring):
+                if not isinstance(value, six.string_types):
                     continue
 
                 if value not in seen:
@@ -664,7 +668,7 @@ class Article10Alternate(BaseArticle2012):
 
         count, res = db.get_all_records(
             t,
-            t.MarineUnitID.in_(muids.keys()),
+            t.MarineUnitID.in_(list(muids.keys())),
             t.Topic == 'EnvironmentalTarget',
         )
         by_muid = defaultdict(list)

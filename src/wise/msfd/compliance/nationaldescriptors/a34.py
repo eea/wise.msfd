@@ -1,3 +1,4 @@
+from __future__ import absolute_import
 import logging
 
 from lxml.etree import fromstring
@@ -402,7 +403,7 @@ class A34Item_2018_main(Item):
             [x['Region or subregion'] for x in sorted_mrus]
         )
         self.previous_mrus = previous_mrus or []
-        item_labels = sorted_mrus and sorted_mrus[0].keys() or ""
+        item_labels = sorted_mrus and list(sorted_mrus[0].keys()) or ""
 
         sorted_mrus = self.mrus_template(
             item_labels=item_labels,
@@ -561,7 +562,7 @@ class A34Item_2018_overview(A34Item_2018_main):
             [x['Region or subregion'] for x in sorted_mrus]
         )
         self.previous_mrus = previous_mrus or []
-        item_labels = sorted_mrus and sorted_mrus[0].keys() or []
+        item_labels = sorted_mrus and list(sorted_mrus[0].keys()) or []
 
         sorted_mrus = self.mrus_template(
             item_labels=item_labels,

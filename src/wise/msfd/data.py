@@ -1,3 +1,4 @@
+from __future__ import absolute_import
 import csv
 import logging
 import os
@@ -13,6 +14,7 @@ from eea.cache import cache
 from wise.msfd import db, sql, sql_extra
 
 from .utils import current_date, timeit
+from six.moves import zip
 
 logger = logging.getLogger('wise.msfd')
 
@@ -532,7 +534,7 @@ def country_ges_components(country_code):
         t.c.MemberState == country_code,
     )
 
-    cols = t.c.keys()
+    cols = list(t.c.keys())
     recs = [
         {
             k: v for k, v in zip(cols, row)

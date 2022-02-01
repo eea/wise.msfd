@@ -1,4 +1,5 @@
 # coding: utf-8
+from __future__ import absolute_import
 from sqlalchemy import BigInteger, Column, Date, DateTime, Float, ForeignKey, Integer, Numeric, SmallInteger, String, Table, Unicode, UnicodeText
 from sqlalchemy.orm import relationship
 from sqlalchemy.dialects.mssql.base import BIT

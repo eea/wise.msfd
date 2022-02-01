@@ -1,3 +1,4 @@
+from __future__ import absolute_import
 from collections import defaultdict
 import datetime
 
@@ -6,6 +7,7 @@ from lpod.paragraph import odf_create_paragraph
 from lpod.style import (make_table_cell_border_string, odf_create_style,
                         odf_create_table_cell_style)
 from lpod.table import odf_create_table, odf_create_row, odf_create_cell
+import six
 
 
 COLORS = {
@@ -92,7 +94,7 @@ def create_table(document, data, headers=None, style=None):
                 values.append(val.strftime('%Y %b %d'))
                 continue
 
-            if isinstance(val, (basestring, unicode, int, float)):
+            if isinstance(val, (six.string_types, six.text_type, int, float)):
                 values.append(val)
                 continue
 
@@ -134,7 +136,7 @@ def create_table_summary(document, data, headers=None, style=None):
             if not val:
                 values.append(u"")
 
-            if isinstance(val, (basestring, unicode, int, float)):
+            if isinstance(val, (six.string_types, six.text_type, int, float)):
                 values.append(val)
 
             # In assessment summary table score is a tuple (conclusion, color)

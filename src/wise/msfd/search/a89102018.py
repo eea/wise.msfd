@@ -1,6 +1,7 @@
 # TODO: we need to check behavior of this module after modifications to
 # extractData() in EmbeddedForm
 
+from __future__ import absolute_import
 from collections import OrderedDict
 from sqlalchemy import and_, or_
 
@@ -17,6 +18,7 @@ from ..utils import (all_values_from_field, change_orientation,
 from .base import ItemDisplayForm
 from .utils import (data_to_xls, register_form_a8_2018, register_form_art9,
                     register_form_art19, register_form_art10)
+from six.moves import map
 
 
 #########################
@@ -395,14 +397,14 @@ class A2018Art10Display(ItemDisplayForm):
             'Id',
             target_mc.IdMarineUnit.in_(marine_unit_ids)
         )
-        target_ids = map(int, target_ids)
+        target_ids = list(map(int, target_ids))
 
         features_ids = db.get_unique_from_mapper(
             sql2018.ART10TargetsTargetFeature,
             'IdTarget',
             sql2018.ART10TargetsTargetFeature.Feature.in_(features)
         )
-        features_ids = map(int, features_ids)
+        features_ids = list(map(int, features_ids))
 
         s = sql2018.ART10TargetsTargetGESComponent
         ges_components_ids = db.get_unique_from_mapper(
@@ -410,7 +412,7 @@ class A2018Art10Display(ItemDisplayForm):
             'IdTarget',
             s.GESComponent.in_(ges_components)
         )
-        ges_components_ids = map(int, ges_components_ids)
+        ges_components_ids = list(map(int, ges_components_ids))
 
         target_ids_all = tuple(set(target_ids)
                                & set(features_ids)

@@ -1,3 +1,4 @@
+from __future__ import absolute_import
 from zope.interface import implements, implementer
 
 from persistent.list import PersistentList

@@ -1,4 +1,5 @@
 
+from __future__ import absolute_import
 from sqlalchemy import or_
 
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile

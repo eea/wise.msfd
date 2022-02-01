@@ -1,4 +1,5 @@
 
+from __future__ import absolute_import
 from collections import OrderedDict
 import logging
 import re
@@ -34,6 +35,7 @@ from .a11 import RegArticle11
 from .base import BaseRegComplianceView
 from .data import get_report_definition
 from .proxy import Proxy2018
+import six
 
 logger = logging.getLogger('wise.msfd')
 
@@ -66,7 +68,7 @@ class RegReportData2012(BaseRegComplianceView):
         workbook = xlsxwriter.Workbook(out, {'in_memory': True})
 
         wtitle = self.country_region_code
-        worksheet = workbook.add_worksheet(unicode(wtitle)[:30])
+        worksheet = workbook.add_worksheet(six.text_type(wtitle)[:30])
 
         row_index = 0
 
@@ -77,10 +79,10 @@ class RegReportData2012(BaseRegComplianceView):
             for row in rows:
                 sub_title, values = row
                 worksheet.write(row_index, 0, title)
-                worksheet.write(row_index, 1, unicode(sub_title or ''))
+                worksheet.write(row_index, 1, six.text_type(sub_title or ''))
 
                 for j, value in enumerate(values):
-                    worksheet.write(row_index, j + 2, unicode(value or ''))
+                    worksheet.write(row_index, j + 2, six.text_type(value or ''))
 
                 row_index += 1
 
@@ -449,7 +451,7 @@ class RegReportData2018(BaseRegComplianceView):
         workbook = xlsxwriter.Workbook(out, {'in_memory': True})
 
         wtitle = self.country_region_code
-        worksheet = workbook.add_worksheet(unicode(wtitle)[:30])
+        worksheet = workbook.add_worksheet(six.text_type(wtitle)[:30])
 
         row_index = 0
 
@@ -467,7 +469,7 @@ class RegReportData2018(BaseRegComplianceView):
                     sub_title, values = row
 
                 worksheet.write(row_index, 0, title)
-                worksheet.write(row_index, 1, unicode(sub_title or ''))
+                worksheet.write(row_index, 1, six.text_type(sub_title or ''))
 
                 for j, value in enumerate(values):
                     if isinstance(value, ItemList):
@@ -490,9 +492,9 @@ class RegReportData2018(BaseRegComplianceView):
                         value = value[0].replace('<br />', '\n')
 
                     try:
-                        unicode_value = unicode(value)
+                        unicode_value = six.text_type(value)
                     except:
-                        unicode_value = unicode(value.decode('utf-8'))
+                        unicode_value = six.text_type(value.decode('utf-8'))
 
                     worksheet.write(row_index, j + 2, unicode_value or '')
 
@@ -500,7 +502,7 @@ class RegReportData2018(BaseRegComplianceView):
 
                 if field_name in self.TRANSLATABLES:
                     worksheet.write(row_index, 0, title + ' [Translation]')
-                    worksheet.write(row_index, 1, unicode(sub_title or ''))
+                    worksheet.write(row_index, 1, six.text_type(sub_title or ''))
 
                     for j, value in enumerate(values):
                         # if 'value' is a list/tuple meaning it contains both
@@ -510,9 +512,9 @@ class RegReportData2018(BaseRegComplianceView):
                             value = value[1].replace('<br />', '\n')
 
                         try:
-                            unicode_value = unicode(value)
+                            unicode_value = six.text_type(value)
                         except:
-                            unicode_value = unicode(value.decode('utf-8'))
+                            unicode_value = six.text_type(value.decode('utf-8'))
 
                         worksheet.write(row_index, j + 2, unicode_value or '')
 

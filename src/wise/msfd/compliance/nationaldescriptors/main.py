@@ -1,6 +1,7 @@
 """ Classes and views to implement the National Descriptors compliance page
 """
 
+from __future__ import absolute_import
 from collections import namedtuple
 from logging import getLogger
 
@@ -345,7 +346,7 @@ def format_assessment_data(article, elements, questions, muids, data,
     TODO: this is doing too much. Need to be simplified and refactored.
     """
     answers = []
-    phases = article_weights.values()[0].keys()
+    phases = list(article_weights.values())[0].keys()
     phase_overall_scores = OverallScores(article_weights)
     descr_id = hasattr(descriptor, 'id') and descriptor.id or descriptor
 
@@ -590,7 +591,7 @@ class NationalDescriptorArticleView(BaseView, AssessmentDataMixin):
                 score_2012 = assessments_2012[country_name].score
                 conclusion_2012 = assessments_2012[country_name].overall_ass
             else:       # fallback
-                ctry = assessments_2012.keys()[0]
+                ctry = list(assessments_2012.keys())[0]
                 score_2012 = assessments_2012[ctry].score
                 conclusion_2012 = assessments_2012[ctry].overall_ass
 
@@ -783,7 +784,7 @@ class NationalDescriptorSecondaryArticleView(NationalDescriptorArticleView):
                 score_2012 = assessments_2012[country_name].score
                 conclusion_2012 = assessments_2012[country_name].overall_ass
             else:       # fallback
-                ctry = assessments_2012.keys()[0]
+                ctry = list(assessments_2012.keys())[0]
                 score_2012 = assessments_2012[ctry].score
                 conclusion_2012 = assessments_2012[ctry].overall_ass
 

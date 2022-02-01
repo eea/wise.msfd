@@ -1,3 +1,4 @@
+from __future__ import absolute_import
 from z3c.form.browser.select import SelectWidget
 from z3c.form.interfaces import NO_VALUE
 from z3c.form.widget import FieldWidget
@@ -19,7 +20,7 @@ class MarineUnitIDSelectWidget(SelectWidget):
             items = self.items
 
             if callable(self.items):
-                items = self.items()
+                items = list(self.items())
 
             available = [x['value'] for x in items]
 

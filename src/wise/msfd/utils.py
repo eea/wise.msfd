@@ -1,10 +1,11 @@
+from __future__ import absolute_import
 import datetime
 import logging
 import os
 import re
 import time
 from collections import OrderedDict, defaultdict, namedtuple
-from cPickle import dumps
+from six.moves.cPickle import dumps
 from hashlib import md5
 from inspect import getsource, isclass
 
@@ -22,6 +23,9 @@ from plone.intelligenttext.transforms import \
 from plone.memoize import volatile
 from Products.Five.browser.pagetemplatefile import (PageTemplateFile,
                                                     ViewPageTemplateFile)
+import six
+from six.moves import map
+from six.moves import zip
 
 
 # TODO: move this registration to search package
@@ -91,7 +95,7 @@ def print_value(value):
                                       common_labels[value].encode('utf-8'))
             except Exception as e:
                 logger.exception("Error print_value: %r", e)
-                ret = tmpl.format(value, unicode(common_labels[value]))
+                ret = tmpl.format(value, six.text_type(common_labels[value]))
 
             return ret
 
@@ -211,7 +215,7 @@ def get_obj_fields(obj, use_blacklist=True, whitelist=None):
     if not res:
         tbl = obj.__table__
 
-        return tbl.c.keys()
+        return list(tbl.c.keys())
 
     return res
 
@@ -228,7 +232,7 @@ def db_objects_to_dict(data, excluded_columns=()):
 
     for row in data:
         if hasattr(row, '__table__'):
-            columns = row.__table__.columns.keys()
+            columns = list(row.__table__.columns.keys())
         else:
             columns = row._fields
 
@@ -249,11 +253,11 @@ def change_orientation(data):
     max = 0
 
     for row in data:
-        nr_of_keys = len(row.keys())
+        nr_of_keys = len(list(row.keys()))
 
         if nr_of_keys > max:
             max = nr_of_keys
-            fields = row.keys()
+            fields = list(row.keys())
 
     for field in fields:
         field_data = []
@@ -526,7 +530,7 @@ class ItemLabel(TemplateMixin):
         out = {}
 
         for k, v in values.items():
-            if isinstance(v, unicode):
+            if isinstance(v, six.text_type):
                 pass
             elif v is None:
                 v = u''
@@ -553,7 +557,7 @@ class ItemList(TemplateMixin):
 
         # the rows may be ItemLabel instances
 
-        if sort and rows and (not isinstance(rows[0], basestring)):
+        if sort and rows and (not isinstance(rows[0], six.string_types)):
             self.rows = sorted(rows,
                                key=lambda r: (r is not None) and r.title or '')
         elif sort:
@@ -562,7 +566,7 @@ class ItemList(TemplateMixin):
             self.rows = rows
 
     def __repr__(self):
-        v = ', '.join(map(unicode, self.rows))
+        v = ', '.join(map(six.text_type, self.rows))
 
         return v
         # return "<ItemList of %s children>" % len(self.rows)
@@ -664,7 +668,7 @@ class SimpleTable(TemplateMixin):
         self.item_labels = []
 
         for row in values:
-            self.item_labels = row.keys()
+            self.item_labels = list(row.keys())
 
             break
 
@@ -803,7 +807,7 @@ def to_html(text):
 
 def row_to_dict(table, row):
     # TODO: couldn't we use row.keys(), so that we don't need table?
-    cols = table.c.keys()
+    cols = list(table.c.keys())
     res = {k: v for k, v in zip(cols, row)}
 
     return res

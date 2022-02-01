@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+from __future__ import absolute_import
 import json
 import logging
 import os
@@ -16,6 +17,7 @@ from persistent import Persistent
 from plone.api import portal
 
 from .interfaces import ITranslationsStorage
+import six
 
 env = os.environ.get
 
@@ -206,7 +208,7 @@ def get_translated(value, language, site=None):
 
 
 def normalize(text):
-    if not isinstance(text, basestring):
+    if not isinstance(text, six.string_types):
         return text
 
     if isinstance(text, str):

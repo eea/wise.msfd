@@ -1,4 +1,5 @@
 # import time
+from __future__ import absolute_import
 import re
 
 from zope.browserpage.viewpagetemplatefile import \
@@ -23,6 +24,7 @@ from .labels import DISPLAY_LABELS
 from .utils import (all_values_from_field, get_obj_fields, print_value,
                     TRANSFORMS)
 from .widget import MarineUnitIDSelectFieldWidget
+from six.moves import range
 
 
 re_art11_name_clean = re.compile(r'^Q\d+\w\s+')
@@ -397,7 +399,7 @@ class BaseEnhancedForm(object):
 
                     return all_values_from_field(self, field)
 
-                default_impl.func_name = default
+                default_impl.__name__ = default
                 setattr(cls,
                         default,
                         default_impl
@@ -409,7 +411,7 @@ class BaseEnhancedForm(object):
 
                     return self.data[local_name]
 
-                selected_impl.func_name = selected
+                selected_impl.__name__ = selected
                 setattr(cls,
                         selected,
                         selected_impl
@@ -473,7 +475,7 @@ class EmbeddedForm(BaseEnhancedForm, Form, BaseUtil):
 
         self.data, errors = self.extractData()
 
-        has_values = self.data.values() and all(self.data.values())
+        has_values = list(self.data.values()) and all(self.data.values())
 
         if (not errors) and has_values:
             subform = self.get_subform()
@@ -514,8 +516,8 @@ class MarineUnitIDSelectForm(EmbeddedForm):
 
         self.data, errors = self.extractData()
 
-        if (not (errors or (None in self.data.values()))) and \
-                self.data.values():
+        if (not (errors or (None in list(self.data.values())))) and \
+                list(self.data.values()):
             subform = self.get_subform()
 
             if subform is not None:

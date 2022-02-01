@@ -3,6 +3,7 @@
 """ Module to generate the feature list based on terms
 """
 
+from __future__ import absolute_import
 from zope.schema.vocabulary import SimpleVocabulary
 
 from z3c.formwidget.optgroup.widget import OptgroupTerm

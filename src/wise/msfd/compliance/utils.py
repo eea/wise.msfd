@@ -1,3 +1,4 @@
+from __future__ import absolute_import
 from collections import defaultdict
 
 import lxml.etree
@@ -10,6 +11,7 @@ from wise.msfd.utils import (fixedorder_sortkey, get_annot, ItemLabel,
                              TemplateMixin)
 
 from .vocabulary import REGIONAL_DESCRIPTORS_REGIONS
+import six
 
 
 class IReportField(Interface):
@@ -215,7 +217,7 @@ def group_by_mru(data):
             mru_label = GES_LABELS.get('mrus', mru)
 
             if mru_label != mru:
-                mru_label = u"{} ({})".format(mru_label, unicode(mru))
+                mru_label = u"{} ({})".format(mru_label, six.text_type(mru))
 
             mru_item = ItemLabel(mru, mru_label)
             mrus[mru] = mru_item

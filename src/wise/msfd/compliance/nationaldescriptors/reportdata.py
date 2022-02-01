@@ -1,7 +1,9 @@
+from __future__ import absolute_import
+from __future__ import print_function
 import logging
 from collections import OrderedDict, defaultdict, namedtuple
 from datetime import datetime
-from HTMLParser import HTMLParser
+from six.moves.html_parser import HTMLParser
 from io import BytesIO
 
 from lxml.etree import fromstring
@@ -52,6 +54,7 @@ from .a34 import Article34, Article34_2018
 from .base import BaseView
 from .proxy import Proxy2018
 from .utils import consolidate_date_by_mru, consolidate_singlevalue_to_list
+import six
 
 # from persistent.list import PersistentList
 # from six import string_types
@@ -99,7 +102,7 @@ def get_reportdata_key(func, self, *args, **kwargs):
         muids,
         focus_muid,
         current_date(),
-        unicode(can_edit),
+        six.text_type(can_edit),
 
     ])
     # TODO why replace '.', makes D1.1 the same as D11
@@ -137,7 +140,7 @@ def serialize_rows(rows):
                     parser = HTMLParser()
                     v = parser.unescape(v.decode('utf-8'))
 
-                if not isinstance(v, basestring):
+                if not isinstance(v, six.string_types):
                     if not v:
                         v = ''
                     else:
@@ -146,7 +149,7 @@ def serialize_rows(rows):
                         if isinstance(v, str):
                             v = v.decode('utf-8')
 
-                raw_values.append(unicode(v))
+                raw_values.append(six.text_type(v))
 
             raw_data.append((title, raw_values))
 
@@ -298,7 +301,7 @@ class ReportData2012(BaseView, BaseUtil):
         workbook = xlsxwriter.Workbook(out, {'in_memory': True})
 
         # add worksheet with report header data
-        worksheet = workbook.add_worksheet(unicode('Report header'))
+        worksheet = workbook.add_worksheet(six.text_type('Report header'))
 
         for i, (wtitle, wdata) in enumerate(report_header.items()):
             wtitle = wtitle.title().replace('_', ' ')
@@ -316,7 +319,7 @@ class ReportData2012(BaseView, BaseUtil):
             if not wdata:
                 continue
 
-            worksheet = workbook.add_worksheet(unicode(wtitle)[:30])
+            worksheet = workbook.add_worksheet(six.text_type(wtitle)[:30])
 
             for i, row in enumerate(wdata):
                 row_label = row[0]
@@ -330,7 +333,7 @@ class ReportData2012(BaseView, BaseUtil):
                     except:
                         if hasattr(v, 'rows') and v.rows:
                             try:
-                                v_rows = [unicode(x) for x in v.rows]
+                                v_rows = [six.text_type(x) for x in v.rows]
                                 worksheet.write(i, j + 1, "#".join(v_rows))
                                 continue
                             except:
@@ -377,7 +380,7 @@ class ReportData2012(BaseView, BaseUtil):
             messages.add(u"Auto-translation initiated, please refresh "
                          u"in a couple of minutes", type=u"info")
 
-        print("Will render report for: %s" % self.article)
+        print(("Will render report for: %s" % self.article))
         self.filename = filename = self.get_report_filename()
         factsheet = None
 
@@ -713,7 +716,7 @@ class ReportData2014(ReportData2012):
             messages.add(u"Auto-translation initiated, please refresh "
                          u"in a couple of minutes", type=u"info")
 
-        print("Will render report for: %s" % self.article)
+        print(("Will render report for: %s" % self.article))
 
         try:
             report_data, report_data_rows = self.get_report_data()
@@ -1575,7 +1578,7 @@ view."""
         workbook = xlsxwriter.Workbook(out, {'in_memory': True})
 
         for index, (wtitle, wdata) in enumerate(data):
-            _wtitle = '{}_{}'.format(index + 1, unicode(wtitle)[:28])
+            _wtitle = '{}_{}'.format(index + 1, six.text_type(wtitle)[:28])
 
             worksheet = workbook.add_worksheet(_wtitle)
 
@@ -1583,7 +1586,7 @@ view."""
                 worksheet.write(i, 0, row_label.title)
 
                 for j, v in enumerate(row_values):
-                    v = unicode(v) or ''
+                    v = six.text_type(v) or ''
                     transl = get_translated(v, self.country_code) or v
                     worksheet.write(i, j + 1, transl)
 
@@ -1670,7 +1673,7 @@ view."""
 
         trans_edit_html = self.translate_view()()
 
-        print "will render report"
+        print("will render report")
         report_html = self.render_reportdata()
         self.report_html = report_html + trans_edit_html
 
@@ -1821,7 +1824,7 @@ class ReportData2018Secondary(ReportData2018):
             if not value:
                 continue
 
-            if not isinstance(value, basestring):
+            if not isinstance(value, six.string_types):
                 continue
 
             if value not in seen:
@@ -2148,7 +2151,7 @@ class ExportMSReportData(BaseView):
 
             for iv, fieldname in enumerate(labels):
                 value = getattr(row, fieldname) or ''
-                worksheet.write(x, iv, unicode(value))
+                worksheet.write(x, iv, six.text_type(value))
 
         workbook.close()
         out.seek(0)

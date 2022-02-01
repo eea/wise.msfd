@@ -1,3 +1,5 @@
+from __future__ import absolute_import
+from __future__ import print_function
 from plone.api import portal
 from plone.dexterity.browser.add import DefaultAddForm
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
@@ -40,7 +42,7 @@ class AddForm(DefaultAddForm):
 class CommentsView(object):
 
     def add_form(self, context):
-        print context
+        print(context)
         types = portal.get_tool('portal_types')
         fti = types['wise.msfd.comment']
 

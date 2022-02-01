@@ -1,3 +1,4 @@
+from __future__ import absolute_import
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 
 from .base import BaseRegSummaryView

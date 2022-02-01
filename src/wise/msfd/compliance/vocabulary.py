@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from __future__ import absolute_import
 from collections import defaultdict, namedtuple
 from datetime import datetime
 
@@ -9,6 +10,7 @@ from pyexcel_xlsx import get_data
 from zope.schema.vocabulary import SimpleTerm, SimpleVocabulary
 
 from wise.msfd import db, sql2018
+import six
 
 
 REPORTING_HISTORY_ENV = PersistentList()
@@ -159,7 +161,7 @@ def get_msfd_reporting_history_from_file(file):
 
     for row in env_data:
         row = [
-            isinstance(x, basestring) and x.strip() or x
+            isinstance(x, six.string_types) and x.strip() or x
             for x in row
         ]
         while len(row) < 14:

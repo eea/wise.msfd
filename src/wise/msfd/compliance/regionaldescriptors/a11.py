@@ -1,4 +1,5 @@
 
+from __future__ import absolute_import
 from wise.msfd.utils import national_compoundrow
 from ..nationaldescriptors.a11 import Article11
 

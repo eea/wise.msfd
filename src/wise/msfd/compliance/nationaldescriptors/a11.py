@@ -1,4 +1,5 @@
 
+from __future__ import absolute_import
 from collections import namedtuple
 
 import logging
@@ -15,6 +16,7 @@ from wise.msfd.utils import (Item, ItemLabel, ItemListFiltered, Node, RawRow,
                              national_compoundrow, natural_sort_key, to_html)
 
 from ..base import BaseArticle2012
+import six
 
 logger = logging.getLogger('wise.msfd')
 
@@ -643,7 +645,7 @@ class Article11(BaseArticle2012):
                 continue
 
             for value in row.raw_values:
-                if not isinstance(value, basestring):
+                if not isinstance(value, six.string_types):
                     continue
 
                 if value not in seen:
@@ -1030,7 +1032,7 @@ class Article11Compare(Article11):
                 continue
 
             for value in row.raw_values:
-                if not isinstance(value, basestring):
+                if not isinstance(value, six.string_types):
                     continue
 
                 if value not in seen:
@@ -1047,7 +1049,7 @@ class Article11Compare(Article11):
             values = row[1]
 
             for value in values:
-                if not isinstance(value, basestring):
+                if not isinstance(value, six.string_types):
                     continue
 
                 if value not in seen:

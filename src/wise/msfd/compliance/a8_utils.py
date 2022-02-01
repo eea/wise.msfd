@@ -1,6 +1,7 @@
 """ Utilities to help map the 2012->2018 information for Art8
 """
 
+from __future__ import absolute_import
 from wise.msfd import sql
 
 # descriptors mapped to DB tables, based on mappings excel doc

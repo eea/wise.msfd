@@ -1,3 +1,4 @@
+from __future__ import absolute_import
 from zope.annotation.factory import factory
 from zope.component import adapter
 from zope.interface import implementer

@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+from __future__ import absolute_import
 from io import BytesIO
 
 from datetime import datetime
@@ -48,7 +49,7 @@ class Recommendations(BaseRegSummaryView):
         storage_recom = storage.get(STORAGE_KEY, {})
         default = self.template(data='-')
 
-        if not len(storage_recom.items()):
+        if not len(list(storage_recom.items())):
             return default
 
         subregions = set(self.available_subregions)

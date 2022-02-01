@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+from __future__ import absolute_import
 from datetime import datetime
 from io import BytesIO
 
@@ -20,6 +21,7 @@ from .base import BaseComplianceView
 from .interfaces import IRecommendationStorage
 from .nationaldescriptors.base import BaseView
 from .nationaldescriptors.main import CountryStatus
+import six
 
 
 RECOMMENDATION_ANNOTATION_KEY = 'wise.msfd.recommendations'
@@ -167,7 +169,7 @@ class MSRecommendationsEditForm(BaseView, Form):
                         code, descr_code, region_code)
                     default = recommendations_data.get(field_name, u'By 2024')
                     field = Choice(
-                        title=unicode(descr_code),
+                        title=six.text_type(descr_code),
                         __name__=field_name,
                         vocabulary=SimpleVocabulary(terms),
                         required=False,

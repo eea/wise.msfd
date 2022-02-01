@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+from __future__ import absolute_import
 from collections import defaultdict
 from datetime import datetime
 from io import BytesIO
@@ -223,7 +224,7 @@ class Recommendations(BaseNatSummaryView):
         regions = get_regions_for_country(self.country_code)
         region_codes = set([r_code for r_code, r_name in regions])
 
-        if not len(storage_recom.items()):
+        if not len(list(storage_recom.items())):
             return self.template(
                 data=[(r_name, '-') for r_code, r_name in regions]
             )

@@ -1,3 +1,5 @@
+from __future__ import absolute_import
+from __future__ import print_function
 from collections import namedtuple
 
 from plone.intelligenttext.transforms import \
@@ -150,7 +152,7 @@ class RegDescA11(BaseComplianceView):
         all_elements = get_monitored_elements(self.countries)
 
         for el in all_elements:
-            print el.Q9a_ElementMonitored
+            print(el.Q9a_ElementMonitored)
 
         rows = []
 

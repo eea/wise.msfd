@@ -1,3 +1,4 @@
+from __future__ import absolute_import
 from collections import Counter, defaultdict
 from itertools import chain
 
@@ -41,7 +42,7 @@ class RegDescA82018Row(BaseRegDescRow):
             all_themes[theme].append(feature)
 
         all_themes = sorted(
-            all_themes.items(),
+            list(all_themes.items()),
             key=lambda t: fixedorder_sortkey(t[0], THEMES_2018_ORDER)
         )
 
@@ -1215,7 +1216,7 @@ class RegDescA82012(BaseRegComplianceView):
         all_features = set([
             getattr(r, feature_col)
 
-            for r in chain(*self.base_data.values())
+            for r in chain(*list(self.base_data.values()))
 
             if getattr(r, feature_col) != 'InfoGaps'
         ])
@@ -1242,7 +1243,7 @@ class RegDescA82012(BaseRegComplianceView):
                     data = [
                         r
 
-                        for r in chain(*self.base_data.values())
+                        for r in chain(*list(self.base_data.values()))
 
                         if r.MarineUnitID in muids
                         and getattr(r, feature_col) == feature
@@ -1278,7 +1279,7 @@ class RegDescA82012(BaseRegComplianceView):
         all_features = set([
             get_feature(r)
 
-            for r in chain(*self.suminfo2_data.values())
+            for r in chain(*list(self.suminfo2_data.values()))
         ])
 
         all_themes = defaultdict(list)
@@ -1303,7 +1304,7 @@ class RegDescA82012(BaseRegComplianceView):
                     data = [
                         r
 
-                        for r in chain(*self.suminfo2_data.values())
+                        for r in chain(*list(self.suminfo2_data.values()))
 
                         if r.MarineUnitID in muids
                         and get_feature(r) == feature
@@ -1342,14 +1343,14 @@ class RegDescA82012(BaseRegComplianceView):
                 crit_vals = set([
                     row.CriteriaType
 
-                    for row in chain(*crit_data.values())
+                    for row in chain(*list(crit_data.values()))
 
                     if row.CriteriaType in crit_ids
                 ])
                 indic_vals = set([
                     row.GESIndicators
 
-                    for row in chain(*indic_data.values())
+                    for row in chain(*list(indic_data.values()))
 
                     if row.GESIndicators in crit_ids
                 ])
@@ -1371,7 +1372,7 @@ class RegDescA82012(BaseRegComplianceView):
             data = [
                 x.ThresholdValue
 
-                for x in chain(*indic_data.values())
+                for x in chain(*list(indic_data.values()))
             ]
             total = len(data)
             threshs = len([x for x in data if x])
@@ -1396,7 +1397,7 @@ class RegDescA82012(BaseRegComplianceView):
             data = [
                 x.ThresholdProportion
 
-                for x in chain(*indic_data.values())
+                for x in chain(*list(indic_data.values()))
             ]
 
             if data:
@@ -1422,7 +1423,7 @@ class RegDescA82012(BaseRegComplianceView):
             data = [
                 x.Baseline
 
-                for x in chain(*indic_data.values())
+                for x in chain(*list(indic_data.values()))
 
                 if x.Baseline
             ]
@@ -1454,7 +1455,7 @@ class RegDescA82012(BaseRegComplianceView):
             data = [
                 get_suminfo(x)
 
-                for x in chain(*self.base_data.values())
+                for x in chain(*list(self.base_data.values()))
 
                 if x.MarineUnitID in muids and get_suminfo(x)
                 and x.Topic != 'InfoGaps'
@@ -1492,7 +1493,7 @@ class RegDescA82012(BaseRegComplianceView):
             data = [
                 get_status_trend(x)
 
-                for x in chain(*assess_data.values())
+                for x in chain(*list(assess_data.values()))
 
                 if get_status_trend(x)
             ]
@@ -1523,7 +1524,7 @@ class RegDescA82012(BaseRegComplianceView):
             data = [
                 x.Status
 
-                for x in chain(*assess_data.values())
+                for x in chain(*list(assess_data.values()))
 
                 if x.Status
             ]
@@ -1554,7 +1555,7 @@ class RegDescA82012(BaseRegComplianceView):
             data = [
                 x
 
-                for x in chain(*self.metadata_data.values())
+                for x in chain(*list(self.metadata_data.values()))
 
                 if x.Topic == 'Assessment' and x.AssessmentDateStart
                 and x.MarineUnitID in muids
@@ -1580,7 +1581,7 @@ class RegDescA82012(BaseRegComplianceView):
             data = [
                 x.Activity
 
-                for x in chain(*self.activity_data.values())
+                for x in chain(*list(self.activity_data.values()))
 
                 if x.Activity and x.MarineUnitID in muids
             ]
@@ -1603,7 +1604,7 @@ class RegDescA82012(BaseRegComplianceView):
         return compoundrow2012(self, title, rows)
 
     def get_metadata_data(self):
-        tables = self.base_data.keys()
+        tables = list(self.base_data.keys())
 
         results = {}
 
@@ -1628,7 +1629,7 @@ class RegDescA82012(BaseRegComplianceView):
         return results
 
     def get_activity_data(self):
-        tables = self.base_data.keys()
+        tables = list(self.base_data.keys())
 
         results = {}
 
@@ -1657,7 +1658,7 @@ class RegDescA82012(BaseRegComplianceView):
         return results
 
     def get_assessment_data(self, muids):
-        tables = self.base_data.keys()
+        tables = list(self.base_data.keys())
 
         results = {}
 
@@ -1693,7 +1694,7 @@ class RegDescA82012(BaseRegComplianceView):
 
     def get_assessment_criteria_data(self, assess_data):
         assessment_data = assess_data  # self.get_assessment_data(muids)
-        tables = assessment_data.keys()
+        tables = list(assessment_data.keys())
         results = {}
 
         for table in tables:
@@ -1731,7 +1732,7 @@ class RegDescA82012(BaseRegComplianceView):
 
     def get_assessment_indicator_data(self, assess_data):
         assessment_data = assess_data  # self.get_assessment_data(muids)
-        tables = assessment_data.keys()
+        tables = list(assessment_data.keys())
         results = {}
 
         for table in tables:
@@ -1810,7 +1811,7 @@ class RegDescA82012(BaseRegComplianceView):
 
             col_id = getattr(mc, '{}_Import'.format(table))
 
-            conditions.append(col_id.in_(self.import_data[table].values()))
+            conditions.append(col_id.in_(list(self.import_data[table].values())))
 
             _, res = db.get_all_records(
                 mc,
@@ -1822,7 +1823,7 @@ class RegDescA82012(BaseRegComplianceView):
         return results
 
     def get_suminfo2_data(self):
-        tables = self.base_data.keys()
+        tables = list(self.base_data.keys())
 
         results = {}
 

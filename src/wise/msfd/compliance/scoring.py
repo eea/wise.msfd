@@ -67,7 +67,7 @@ class OverallScores(object):
             'color': 0,
         }
 
-        for phase in article_weights.values()[0].keys():
+        for phase in list(article_weights.values())[0].keys():
             d = {}
             d.update(_init)
             setattr(self, phase, d)

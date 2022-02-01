@@ -1,4 +1,5 @@
 # coding: utf-8
+from __future__ import absolute_import
 from sqlalchemy import (Column, Date, DateTime, ForeignKey, Index, Integer,
                         LargeBinary, String, Table, Unicode, text)
 from sqlalchemy.ext.declarative import declarative_base

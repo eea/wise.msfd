@@ -1,3 +1,4 @@
+from __future__ import absolute_import
 from pkg_resources import resource_filename
 
 from wise.msfd.compliance.utils import ReportDefinition

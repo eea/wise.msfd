@@ -1,3 +1,4 @@
+from __future__ import absolute_import
 import logging
 
 from zope import event
@@ -12,6 +13,7 @@ from Products.statusmessages.interfaces import IStatusMessage
 from . import (delete_translation, get_detected_lang, get_translated,
                normalize, retrieve_translation, save_translation)
 from .interfaces import ITranslationContext
+import six
 
 logger = logging.getLogger('wise.msfd.translation')
 
@@ -39,7 +41,7 @@ class TranslationCallback(BrowserView):
         original = form.pop('external-reference', '')
         original = normalize(original)
 
-        translated = form.pop('translation', form.keys()[0]).strip()
+        translated = form.pop('translation', list(form.keys())[0]).strip()
 
         # translated = decode_text(translated)
         # it seems the EC service sends translated text in latin-1.
@@ -83,7 +85,7 @@ class TranslationView(BrowserView):
         if (not value) or (not is_translatable):
             return self.cell_tpl(value=value)
 
-        if not isinstance(value, basestring):
+        if not isinstance(value, six.string_types):
             return self.cell_tpl(value=value)
 
         # if detected language is english render cell template

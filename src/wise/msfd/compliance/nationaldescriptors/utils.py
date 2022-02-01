@@ -1,3 +1,4 @@
+from __future__ import absolute_import
 from collections import defaultdict
 from itertools import chain
 from operator import attrgetter
@@ -23,7 +24,7 @@ def consolidate_date_by_mru(data):
     # This case applies for Art9, when justification for delay is reported
     rows_without_mru = []
 
-    for obj in chain(*data.values()):
+    for obj in chain(*list(data.values())):
         found = False
 
         for group in groups:

@@ -2,6 +2,7 @@
 some other useful formats. Used when displaying data.
 """
 
+from __future__ import absolute_import
 import re
 
 from wise.msfd.compliance.vocabulary import REGIONAL_DESCRIPTORS_REGIONS

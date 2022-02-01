@@ -1,3 +1,4 @@
+from __future__ import absolute_import
 import logging
 
 from lxml.etree import fromstring
@@ -12,6 +13,7 @@ from wise.msfd.utils import (Item, ItemLabel, ItemList, Node, RawRow,
 
 from ..base import BaseArticle2012
 from .data import REPORT_DEFS
+import six
 
 logger = logging.getLogger('wise.msfd')
 
@@ -200,7 +202,7 @@ class Article7(BaseArticle2012):
                 continue
 
             for value in row.raw_values:
-                if not isinstance(value, basestring):
+                if not isinstance(value, six.string_types):
                     continue
 
                 if value not in seen:

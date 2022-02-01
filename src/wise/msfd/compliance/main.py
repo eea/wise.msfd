@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+from __future__ import absolute_import
 from datetime import datetime
 from io import BytesIO
 
@@ -28,6 +29,7 @@ import xlsxwriter
 
 from .base import BaseComplianceView
 from .interfaces import IRecommendationStorage
+import six
 # from itertools import chain
 
 ANNOTATION_KEY = 'wise.msfd.recommendations'
@@ -190,16 +192,16 @@ class RecommendationsView(BaseComplianceView):
         workbook = xlsxwriter.Workbook(out, {'in_memory': True})
 
         wtitle = 'Recommendations'
-        worksheet = workbook.add_worksheet(unicode(wtitle)[:30])
+        worksheet = workbook.add_worksheet(six.text_type(wtitle)[:30])
 
         for i, value in enumerate(self.headers):
-                worksheet.write(0, i, unicode(value or ''))
+                worksheet.write(0, i, six.text_type(value or ''))
 
         row_index = 1
 
         for row in data:
             for i, value in enumerate(row):
-                worksheet.write(row_index, i, unicode(value or ''))
+                worksheet.write(row_index, i, six.text_type(value or ''))
 
             row_index += 1
 
@@ -306,7 +308,7 @@ class RecommendationsView(BaseComplianceView):
 
         recommendations = []
 
-        if len(storage_recom.items()):
+        if len(list(storage_recom.items())):
             for code, recommendation in storage_recom.items():
                 recommendations.append(recommendation.data_to_list())
 
@@ -453,12 +455,12 @@ class MSFDReportingHistoryView(BaseComplianceView):
         )
         workbook = xlsxwriter.Workbook(file_loc)
         wtitle = 'ENV'
-        worksheet = workbook.add_worksheet(unicode(wtitle)[:30])
+        worksheet = workbook.add_worksheet(six.text_type(wtitle)[:30])
         row_index = 0
 
         for row in data:
             for i, value in enumerate(row):
-                worksheet.write(row_index, i, unicode(value or ''))
+                worksheet.write(row_index, i, six.text_type(value or ''))
 
             row_index += 1
 
@@ -470,13 +472,13 @@ class MSFDReportingHistoryView(BaseComplianceView):
         workbook = xlsxwriter.Workbook(out, {'in_memory': True})
 
         wtitle = 'ENV'
-        worksheet = workbook.add_worksheet(unicode(wtitle)[:30])
+        worksheet = workbook.add_worksheet(six.text_type(wtitle)[:30])
 
         row_index = 0
 
         for row in data:
             for i, value in enumerate(row):
-                worksheet.write(row_index, i, unicode(value or ''))
+                worksheet.write(row_index, i, six.text_type(value or ''))
 
             row_index += 1
 

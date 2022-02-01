@@ -1,4 +1,5 @@
 
+from __future__ import absolute_import
 from collections import Counter, defaultdict
 from itertools import chain
 
@@ -65,7 +66,7 @@ class RegDescA92018Row(BaseRegDescRow):
 
         # First sort by THEME
         all_themes = sorted(
-            all_themes.items(),
+            list(all_themes.items()),
             key=lambda t: fixedorder_sortkey(t[0].split(': ')[1],
                                              THEMES_2018_ORDER)
         )
