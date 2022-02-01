@@ -1,4 +1,4 @@
-from zope.interface import implements
+from zope.interface import implements, implementer
 
 from persistent.list import PersistentList
 from plone.dexterity.content import Container
@@ -16,65 +16,75 @@ from .interfaces import (ICountryDescriptorsFolder,
                          IRegionalSummaryOverviewFolder)
 
 
+@implementer(IMSRecommendationsFeedback)
 class MSRecommendationsFeedback(Container):
     """ Implementation for MS response for art 12 recommendation """
 
-    implements(IMSRecommendationsFeedback)
+    # implements(IMSRecommendationsFeedback)
 
 
+@implementer(IMSFDReportingHistoryFolder)
 class MSFDReportingHistoryFolder(Container):
     """ MSFD Reporting history folder
     """
-    implements(IMSFDReportingHistoryFolder)
+    # implements(IMSFDReportingHistoryFolder)
 
 
+@implementer(ICountryDescriptorsFolder)
 class CountryDescriptorsFolder(Container):
     """ Assessment implementation for national descriptor assessments
     """
-    implements(ICountryDescriptorsFolder)
+    # implements(ICountryDescriptorsFolder)
 
 
+@implementer(IRegionalDescriptorRegionsFolder)
 class RegionDescriptorsFolder(Container):
     """ Assessment implementation for regional descriptor assessments
     """
-    implements(IRegionalDescriptorRegionsFolder)
+    # implements(IRegionalDescriptorRegionsFolder)
 
 
+@implementer(INationalSummaryCountryFolder)
 class NationalSummaryCountryFolder(Container):
     """ Assessment implementation for national summary assessments
     """
-    implements(INationalSummaryCountryFolder)
+    # implements(INationalSummaryCountryFolder)
 
 
+@implementer(INationalSummaryEdit)
 class NationalSummaryEditFolder(Container):
     """ Implementation for national summary assessments edit page
     """
-    implements(INationalSummaryEdit)
+    # implements(INationalSummaryEdit)
 
 
+@implementer(INationalSummaryOverviewFolder)
 class NationalSummaryOverviewFolder(Container):
     """ Assessment implementation for national summary assessments
     """
-    implements(INationalSummaryOverviewFolder)
+    # implements(INationalSummaryOverviewFolder)
 
 
+@implementer(IRegionalSummaryRegionFolder)
 class RegionalSummaryRegionFolder(Container):
     """ Assessment implementation for regional summary assessments
     """
-    implements(IRegionalSummaryRegionFolder)
+    # implements(IRegionalSummaryRegionFolder)
 
 
+@implementer(IRegionalSummaryOverviewFolder)
 class RegionalSummaryOverviewFolder(Container):
     """ implementation for regional overview page
     """
-    implements(IRegionalSummaryOverviewFolder)
+    # implements(IRegionalSummaryOverviewFolder)
 
 
+@implementer(INationalDescriptorAssessment)
 class NationalDescriptorAssessment(Container):
     """ Assessment implementation for national descriptor assessments
     """
 
-    implements(INationalDescriptorAssessment)
+    # implements(INationalDescriptorAssessment)
     _data = None
 
     def _get_assessment_data(self):
