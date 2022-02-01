@@ -104,11 +104,12 @@ class NationalDescriptorAssessment(Container):
         return data.get('{}_assessment_summary'.format(art), '')
 
 
+@implementer(IRegionalDescriptorAssessment)
 class RegionalDescriptorAssessment(Container):
     """ Assessment implementation for regional descriptor assessments
     """
 
-    implements(IRegionalDescriptorAssessment)
+    # implements(IRegionalDescriptorAssessment)
     _data = None
 
     def _get_assessment_data(self):
