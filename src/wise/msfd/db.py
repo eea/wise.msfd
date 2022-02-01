@@ -1,3 +1,5 @@
+from __future__ import absolute_import
+from __future__ import print_function
 import logging
 import os
 import threading
@@ -13,6 +15,8 @@ from eea.cache import cache
 
 from . import sql, sql2018
 from .utils import db_result_key, group_query
+import six
+from six.moves import zip
 
 env = os.environ.get
 DSN = env('MSFDURI', 'mssql+pymssql://SA:bla3311!@msdb')  # ?charset=utf8mb4
@@ -75,7 +79,7 @@ class MockSession(object):
 
 def session():
     if USE_MOCKSESSION:
-        print "Using MockSession()"
+        print("Using MockSession()")
 
         return MockSession()
 
@@ -93,14 +97,14 @@ def session():
     try:
         session = _make_session(DSN)
         session.execute(USE_DB.format(DBS[session_name]))
-        print "Session DSN: ", DSN
-        print "Session DBS: ", DBS[session_name]
+        print("Session DSN: ", DSN)
+        print("Session DBS: ", DBS[session_name])
     except:
         # TODO this is a temporary solution
         # Is it possible to switch back to MSFD database when it is online
         # without restarting?
-        print "Unable to connect to: ", DSN
-        print "Using MockSession()"
+        print("Unable to connect to: ", DSN)
+        print("Using MockSession()")
 
         return MockSession()
 
@@ -192,7 +196,7 @@ def get_unique_from_mapper(mapper_class, column, *conditions, **kwargs):
             .distinct()\
             .order_by(col)
 
-        res_unicode = [unicode(x[0]).strip() for x in res]
+        res_unicode = [six.text_type(x[0]).strip() for x in res]
     except:
         sess.rollback()
         logger.exception("MSFD database is timed out")
