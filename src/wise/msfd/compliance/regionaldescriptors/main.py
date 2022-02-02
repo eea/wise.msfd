@@ -108,17 +108,19 @@ class RegionalDescriptorRegionsOverview(BaseRegComplianceView):
         return False
 
 
+@implementer(IRegionStartReports)
 class RegDescRegionOverviewReports(RegionalDescriptorRegionsOverview):
     """ Class declaration needed to be able to override HTML head title """
 
-    implements(IRegionStartReports)
+    # implements(IRegionStartReports)
 
 
+@implementer(IRegionStartAssessments)
 class RegDescRegionOverviewAssessments(RegionalDescriptorRegionsOverview,
                                        MSFDReportingHistoryMixin):
     """ Class declaration needed to be able to override HTML head title """
 
-    implements(IRegionStartAssessments)
+    # implements(IRegionStartAssessments)
 
     def get_url_art12_2012(self):
         article = 'Article 12 (Art.8-9-10)'
@@ -148,9 +150,10 @@ class RegDescRegionOverviewAssessments(RegionalDescriptorRegionsOverview,
                                  report_type, task_product)
 
 
+@implementer(IRegionalDescriptorAssessment)
 class RegionalDescriptorArticleView(BaseRegComplianceView,
                                     AssessmentDataMixin):
-    implements(IRegionalDescriptorAssessment)
+    # implements(IRegionalDescriptorAssessment)
 
     section = 'regional-descriptors'
 

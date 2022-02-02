@@ -4,7 +4,7 @@ import re
 from collections import defaultdict
 from datetime import datetime
 
-from zope.interface import implements
+from zope.interface import implementer, implements
 
 from Products.Five.browser import BrowserView
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
@@ -25,11 +25,12 @@ from .utils import data_to_xls, get_registered_form_sections
 logger = logging.getLogger('wise.msfd')
 
 
+@implementer(interfaces.IItemDisplayForm)
 class ItemDisplayForm(EmbeddedForm):
     """ Generic form for displaying records
     """
 
-    implements(interfaces.IItemDisplayForm)
+    # implements(interfaces.IItemDisplayForm)
 
     fields = Fields(interfaces.IRecordSelect)
 
@@ -263,11 +264,12 @@ MAIN_FORMS = (
 )
 
 
+@implementer(IMainForm)
 class MainForm(BaseEnhancedForm, BasePublicPage, Form):
     """ The main forms need to inherit from this class
     """
 
-    implements(IMainForm)
+    # implements(IMainForm)
     template = ViewPageTemplateFile('../pt/mainform.pt')
     ignoreContext = True
     reset_page = False

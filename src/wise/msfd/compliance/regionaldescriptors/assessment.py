@@ -6,7 +6,7 @@ from collections import namedtuple
 from persistent.list import PersistentList
 from pkg_resources import resource_filename
 from zope.schema import Choice, Text
-from zope.interface import implements
+from zope.interface import implementer, implements
 from zope.schema.vocabulary import SimpleTerm, SimpleVocabulary
 
 from AccessControl import Unauthorized
@@ -87,8 +87,10 @@ class RegDescEditAssessmentSummaryForm(BaseRegComplianceView,
     """ Needed to override EditAssessmentSummaryForm's methods """
 
 
+@implementer(IRegionalEditAssessmentForm)
 class RegEditAssessmentFormWrapper(MainFormWrapper):
-    implements(IRegionalEditAssessmentForm)
+    pass
+    # implements(IRegionalEditAssessmentForm)
 
 
 class RegDescEditAssessmentDataForm(BaseRegComplianceView,

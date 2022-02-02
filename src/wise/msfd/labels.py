@@ -67,7 +67,6 @@ def _extract_ktm():
                               'data/KTM.csv')
 
     with open(csv_f, 'rt') as csvfile:
-        import pdb; pdb.set_trace()
         csv_file = csv.reader(csvfile, delimiter=',', quotechar='|')
 
         for row in csv_file:

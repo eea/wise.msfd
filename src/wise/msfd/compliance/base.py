@@ -7,7 +7,7 @@ import lxml.etree
 from sqlalchemy.orm import aliased
 from zope.component import getMultiAdapter
 from zope.dottedname.resolve import resolve
-from zope.interface import implements
+from zope.interface import implementer, implements
 from zope.security import checkPermission
 
 from Acquisition import aq_inner
@@ -1102,8 +1102,9 @@ class BaseArticle2012(BrowserView):
         self.muids = muids
 
 
+@implementer(ITranslationContext)
 class TranslationContext(object):
-    implements(ITranslationContext)
+    # implements(ITranslationContext)
 
     def __init__(self, context):
         self.context = context

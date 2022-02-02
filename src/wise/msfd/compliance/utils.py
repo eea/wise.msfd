@@ -2,7 +2,7 @@ from __future__ import absolute_import
 from collections import defaultdict
 
 import lxml.etree
-from zope.interface import Attribute, Interface, implements
+from zope.interface import Attribute, Interface, implementer, implements
 
 from Products.Five.browser.pagetemplatefile import PageTemplateFile
 from wise.msfd.gescomponents import get_descriptor
@@ -39,10 +39,11 @@ class DummyReportField(TemplateMixin):
         self.setlevel = None
 
 
+@implementer(IReportField)
 class ReportField(TemplateMixin):
     """ An object reprezenting the field (row) definition in a report table
     """
-    implements(IReportField)
+    # implements(IReportField)
 
     template = PageTemplateFile('pt/report_field_header.pt')
 

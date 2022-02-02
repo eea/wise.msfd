@@ -8,7 +8,7 @@ from io import BytesIO
 
 from lxml.etree import fromstring
 from sqlalchemy import or_
-from zope.interface import implements
+from zope.interface import implementer, implements
 from zope.security import checkPermission
 from zope.schema import Choice
 from zope.schema.vocabulary import SimpleTerm, SimpleVocabulary
@@ -158,10 +158,11 @@ def serialize_rows(rows):
     return res
 
 
+@implements(IReportDataView)
 class ReportData2012(BaseView, BaseUtil):
     """ WIP on compliance tables
     """
-    implements(IReportDataView)
+    # implements(IReportDataView)
 
     year = report_year = '2012'
     section = 'national-descriptors'
@@ -474,11 +475,12 @@ class ReportData2012(BaseView, BaseUtil):
         return res
 
 
+@implementer(IReportDataViewSecondary)
 class ReportData2012Secondary(ReportData2012):
     """ Class implementation for Article 8 ESA
     """
 
-    implements(IReportDataViewSecondary)
+    # implements(IReportDataViewSecondary)
 
     descriptor = 'Not linked'
     country_region_code = 'No region'
@@ -750,8 +752,9 @@ class ReportData2014(ReportData2012):
         return self.index()
 
 
+@implementer(IReportDataViewOverview)
 class ReportDataOverview2014Art11(ReportData2014):
-    implements(IReportDataViewOverview)
+    # implements(IReportDataViewOverview)
 
     @property
     def descriptor(self):
@@ -943,8 +946,9 @@ class SnapshotSelectForm(Form):
         self.request.response.redirect('./@@view-report-data-2018')
 
 
+@implementer(IReportDataView)
 class ReportData2018(BaseView):
-    implements(IReportDataView)
+    # implements(IReportDataView)
 
     report_year = '2018'        # used by cache key
     year = '2018'       # used in report definition and translation
@@ -1692,8 +1696,9 @@ view."""
         return self.subform
 
 
+@implementer(IReportDataViewSecondary)
 class ReportData2018Secondary(ReportData2018):
-    implements(IReportDataViewSecondary)
+    # implements(IReportDataViewSecondary)
 
     descriptor = 'Not linked'
     country_region_code = 'No region'
@@ -2025,8 +2030,9 @@ class ReportData2020(ReportData2018):
         return report_header
 
 
+@implementer(IReportDataViewOverview)
 class ReportDataOverview2020Art11(ReportData2020):
-    implements(IReportDataViewOverview)
+    # implements(IReportDataViewOverview)
 
     is_primary_article = False
     is_overview = True

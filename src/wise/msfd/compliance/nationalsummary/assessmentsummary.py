@@ -22,7 +22,7 @@ from wise.msfd.gescomponents import DESCRIPTOR_TYPES
 from wise.msfd.translation import retrieve_translation
 from wise.msfd.utils import timeit
 
-from zope.interface import implements
+from zope.interface import implementer, implements
 
 from lpod.document import odf_new_document
 from lpod.toc import odf_create_toc
@@ -316,8 +316,9 @@ class ProgressAssessment(BaseNatSummaryView):
         return render_progress_assessment()
 
 
+@implementer(INationalSummaryCountryFolder)
 class AssessmentSummaryView(BaseNatSummaryView):
-    implements(INationalSummaryCountryFolder)
+    # implements(INationalSummaryCountryFolder)
 
     help_text = "HELP TEXT"
     template = ViewPageTemplateFile('pt/report-data.pt')

@@ -7,7 +7,7 @@ from io import BytesIO
 
 from sqlalchemy import or_
 
-from zope.interface import implements, implementsOnly
+from zope.interface import implementer, implementer_only, implements, implementsOnly
 
 import xlsxwriter
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
@@ -43,8 +43,9 @@ logger = logging.getLogger('wise.msfd')
 href_regex = re.compile(r'(?<=href=\")[^\"]+(?=\")')
 
 
+@implementer(IRegionalReportDataView)
 class RegReportData2012(BaseRegComplianceView):
-    implements(IRegionalReportDataView)
+    # implements(IRegionalReportDataView)
 
     help_text = "HELP TEXT"
     template = ViewPageTemplateFile('pt/report-data.pt')
@@ -149,8 +150,9 @@ class RegReportData2012(BaseRegComplianceView):
         return render_html()
 
 
+@implementer(IRegionalReportDataView)
 class RegReportData2014(ReportData2014, BaseRegComplianceView):
-    implements(IRegionalReportDataView)
+    # implements(IRegionalReportDataView)
 
     @property
     def article_implementations(self):
@@ -249,8 +251,9 @@ class RegReportData2014(ReportData2014, BaseRegComplianceView):
         return filenames
 
 
+@implementer(IRegionalReportDataView)
 class RegReportData2018(BaseRegComplianceView):
-    implements(IRegionalReportDataView)
+    # implements(IRegionalReportDataView)
 
     help_text = "HELP TEXT"
     template = ViewPageTemplateFile('pt/report-data.pt')
@@ -618,8 +621,9 @@ class RegReportData2018(BaseRegComplianceView):
         return render_html()
 
 
+@implementer_only(IRegionalReportDataView)
 class RegReportData2020(ReportData2020, RegReportData2018):
-    implementsOnly(IRegionalReportDataView)
+    # implementsOnly(IRegionalReportDataView)
 
     report_due = "2020-10-15"
     report_by = None
@@ -722,8 +726,9 @@ class RegReportData2020(ReportData2020, RegReportData2018):
         return res
 
 
+@implementer_only(IRegReportDataViewOverview)
 class RegReportDataOverview2020Art11(RegReportData2020):
-    implementsOnly(IRegReportDataViewOverview)
+    # implementsOnly(IRegReportDataViewOverview)
 
     is_primary_article = False
 

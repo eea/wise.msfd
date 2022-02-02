@@ -21,7 +21,7 @@ from wise.msfd.compliance.main import (
 from wise.msfd.translation import retrieve_translation
 from wise.msfd.utils import timeit
 
-from zope.interface import implements
+from zope.interface import implementer, implements
 
 import pdfkit
 
@@ -142,8 +142,9 @@ class RegProgressAssessment(BaseRegSummaryView, ProgressAssessment):
     template = ViewPageTemplateFile('pt/progress-assessment.pt')
 
 
+@implementer(IRegionalSummaryRegionFolder)
 class AssessmentSummaryView(BaseRegSummaryView):
-    implements(IRegionalSummaryRegionFolder)
+    # implements(IRegionalSummaryRegionFolder)
 
     help_text = "HELP TEXT"
     template = ViewPageTemplateFile('pt/report-data.pt')

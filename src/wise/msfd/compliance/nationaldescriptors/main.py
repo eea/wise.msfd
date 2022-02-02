@@ -5,7 +5,7 @@ from __future__ import absolute_import
 from collections import namedtuple
 from logging import getLogger
 
-from zope.interface import implements, alsoProvides
+from zope.interface import implementer, implements, alsoProvides
 
 from persistent.list import PersistentList
 from plone.api.content import transition
@@ -250,10 +250,11 @@ class MSFDReportingHistoryMixin(object):
         return res[-1]
 
 
+@implementer(ICountryStartReports)
 class NatDescCountryOverviewReports(NationalDescriptorCountryOverview):
     """ Class declaration needed to be able to override HTML head title """
 
-    implements(ICountryStartReports)
+    # implements(ICountryStartReports)
 
     def text_reports(self):
         reports = get_text_reports_2018(self.country_code)
@@ -268,11 +269,12 @@ class NatDescCountryOverviewReports(NationalDescriptorCountryOverview):
         return sorted(res, key=lambda i: i[0])
 
 
+@implementer(ICountryStartAssessments)
 class NatDescCountryOverviewAssessments(NationalDescriptorCountryOverview,
                                         MSFDReportingHistoryMixin):
     """ Class declaration needed to be able to override HTML head title """
 
-    implements(ICountryStartAssessments)
+    # implements(ICountryStartAssessments)
 
     def get_url_art12_2012(self):
         article = 'Article 12 (Art.8-9-10)'
@@ -480,8 +482,9 @@ class NationalDescriptorRegionView(BaseView):
     section = 'national-descriptors'
 
 
+@implementer(INationaldescriptorArticleView)
 class NationalDescriptorArticleView(BaseView, AssessmentDataMixin):
-    implements(INationaldescriptorArticleView)
+    # implements(INationaldescriptorArticleView)
     section = 'national-descriptors'
 
     assessment_data_2012_tpl = Template('./pt/assessment-data-2012.pt')
@@ -691,6 +694,7 @@ class NationalDescriptorArticleView(BaseView, AssessmentDataMixin):
         return self.index()
 
 
+@implementer(INationaldescriptorSecondaryArticleView)
 class NationalDescriptorSecondaryArticleView(NationalDescriptorArticleView):
     """"""
 
@@ -703,7 +707,7 @@ class NationalDescriptorSecondaryArticleView(NationalDescriptorArticleView):
 
     pdf_assessments = _extract_pdf_assessments()
 
-    implements(INationaldescriptorSecondaryArticleView)
+    # implements(INationaldescriptorSecondaryArticleView)
     _descriptor = 'Not linked'
 
     @property
