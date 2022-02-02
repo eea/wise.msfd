@@ -15,7 +15,7 @@ from persistent import Persistent
 from pkg_resources import resource_filename
 from plone.api import portal
 from plone.protect.interfaces import IDisableCSRFProtection
-from StringIO import StringIO
+from io import StringIO
 
 from wise.msfd.compliance.vocabulary import (
     REGIONAL_DESCRIPTORS_REGIONS,

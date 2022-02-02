@@ -24,16 +24,11 @@ from wise.msfd.utils import timeit
 
 from zope.interface import implementer, implements
 
-from lpod.document import odf_new_document
-from lpod.toc import odf_create_toc
-
 import pdfkit
 
 from .base import BaseNatSummaryView
 from .descriptor_assessments import DescriptorLevelAssessments
 from .introduction import Introduction
-from .odt_utils import (create_heading, create_paragraph,
-                        create_table_summary, setup_document_styles)
 
 logger = logging.getLogger('wise.msfd')
 
@@ -180,28 +175,6 @@ class SummaryAssessment(BaseNatSummaryView):
 
         return res
 
-    def get_odt_data(self, document):
-        res = []
-        headers = ('Descriptor', 'Article 9 - GES Determination',
-                   'Article 8 - Initial Assessment',
-                   'Article 10 - Environmental Targets')
-
-        t = create_heading(1, u"Summary of the assessment")
-        res.append(t)
-
-        for region_row in self.summary_assess_data:
-            t = create_heading(2, region_row[0])
-            res.append(t)
-
-            table_rows = region_row[1]
-
-            # TODO split score , it is a tuple (conclusion, color_value)
-            # and somehow color the table cells
-            table = create_table_summary(document, table_rows, headers=headers)
-            res.append(table)
-
-        return res
-
     def __call__(self):
 
         @timeit
@@ -281,32 +254,6 @@ class ProgressAssessment(BaseNatSummaryView):
 
         return progress
 
-    def get_odt_data(self, document):
-        res = []
-
-        h = create_heading(1, "Assessment of national progress since 2012")
-        res.append(h)
-
-        t = create_heading(2, "2012 recommendations to Member State")
-        res.append(t)
-        text = self.get_transformed_richfield_text(
-            'progress_recommendations_2012'
-        )
-        p = create_paragraph(text)
-        res.append(p)
-
-        t = create_heading(
-            2, "Progress against 2012 recommendations to Member State"
-        )
-        res.append(t)
-        text = self.get_transformed_richfield_text(
-            'progress_recommendations_2018'
-        )
-        p = create_paragraph(text)
-        res.append(p)
-
-        return res
-
     def __call__(self):
 
         @timeit
@@ -355,43 +302,6 @@ class AssessmentSummaryView(BaseNatSummaryView):
         toc = {"xsl-style-sheet": xsl_file}
 
         return toc
-
-    def get_document(self):
-        result = BytesIO()
-        document = odf_new_document('text')
-        setup_document_styles(document)
-        body = document.get_body()
-
-        # Create the Table Of Content
-        toc = odf_create_toc()
-        # Changing the default "Table Of Content" Title :
-        toc.set_title("Table of Content")
-
-        # Do not forget to add every components to the document:
-        body.append(toc)
-
-        for table in self.tables:
-            if hasattr(table, 'get_odt_data'):
-                odt_data = table.get_odt_data(document)
-
-                body.extend(odt_data)
-
-        toc.fill()
-
-        document.save(target=result, pretty=True)
-
-        return result.getvalue()
-
-    def download(self):
-        doc = self.get_document()
-        sh = self.request.response.setHeader
-
-        sh('Content-Type', 'application/vnd.oasis.opendocument.text')
-        fname = "{}-Draft".format(self.country_name)
-        sh('Content-Disposition',
-           'attachment; filename=%s.odt' % fname)
-
-        return doc
 
     def download_pdf(self):
         options = {
@@ -486,9 +396,6 @@ class AssessmentSummaryView(BaseNatSummaryView):
 
         report_html = self.render_reportdata()
         self.report_html = report_html
-
-        if 'download' in self.request.form:
-            return self.download()
 
         if 'download_pdf' in self.request.form:
             return self.download_pdf()

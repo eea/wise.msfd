@@ -10,11 +10,9 @@ from wise.msfd.data import get_text_reports_2018, get_gis_reports_2018
 from wise.msfd.gescomponents import get_descriptor
 from wise.msfd.translation import get_translated, retrieve_translation
 from wise.msfd.utils import (ItemList, TemplateMixin, db_objects_to_dict,
-                             fixedorder_sortkey, natural_sort_key, timeit)
+                             natural_sort_key, timeit)
 
 from .base import BaseNatSummaryView
-from .odt_utils import (create_heading, create_paragraph, create_table,
-                        DOCUMENT_TITLE, STYLES)
 
 logger = logging.getLogger('wise.msfd')
 
@@ -705,69 +703,6 @@ class Introduction(BaseNatSummaryView):
         self.assessment_areas_data = view.areas_data
 
         return rendered_view
-
-    def get_odt_data(self, document):
-        res = []
-
-        title = create_paragraph(self.document_title,
-                                 style=STYLES[DOCUMENT_TITLE])
-        res.append(title)
-
-        # 1. Introduction
-        title = create_heading(1, u'Introduction')
-        res.append(title)
-
-        # 1.1 Reporting history
-        title = create_heading(
-            2, u'Information reported by the Member State'
-        )
-        res.append(title)
-        p = create_paragraph(self.information_memberstate)
-        res.append(p)
-
-        # headers = ('Report format',' Files available', 'Access to reports',
-        #            'Report due', 'Report received', 'Difference (days)')
-        headers = (
-            'Files available', 'Access to reports',
-            'Report due', 'Report received', 'Difference (days)'
-        )
-
-        p = create_heading(3, u"Reporting history")
-        res.append(p)
-        table = create_table(document, self.report_hystory_data,
-                             headers=headers)
-        res.append(table)
-
-        # 1.2 Marine waters
-        title = create_heading(2, u"Member State's marine waters")
-        res.append(title)
-        text = self.get_transformed_richfield_text('scope_of_marine_waters')
-        p = create_paragraph(text)
-        res.append(p)
-
-        # 1.3 Marine Unit Ids
-        title = create_heading(
-            2, u'Reporting areas (Marine Reporting Units)'
-        )
-        res.append(title)
-        p = create_paragraph(self.assessment_areas_title)
-        res.append(p)
-
-        headers = ('Region', 'Zone Type', 'MarineUnitID',
-                   'Marine Reporting Unit Description',
-                   'Marine Reporting Unit Description (Translated)')
-        table = create_table(document, self.assessment_areas_data,
-                             headers=headers)
-        res.append(table)
-
-        # 1.4 Assessment methodology
-        title = create_heading(2, u'Assessment methodology')
-        res.append(title)
-        text = self.get_transformed_richfield_text('assessment_methodology')
-        p = create_paragraph(text)
-        res.append(p)
-
-        return res
 
     def __call__(self):
 
