@@ -51,7 +51,7 @@ def scan(namespace):
 
     import importlib
 
-    name = importlib._resolve_name(namespace, 'wise.msfd.search', 1)
+    name = importlib.resolve_name(namespace, 'wise.msfd.search', 1)
     importlib.import_module(name)
 
 
