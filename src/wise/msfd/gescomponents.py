@@ -364,7 +364,7 @@ def parse_ges_extended_format():
 
         if b1.startswith('D') and ('C' not in b1):
             # it's a descriptor label
-            descriptor = Descriptor(b1, b2.decode('utf-8'))
+            descriptor = Descriptor(b1, b2)
             descriptors[descriptor.id] = descriptor
 
             continue

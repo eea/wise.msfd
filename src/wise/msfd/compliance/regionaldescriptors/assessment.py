@@ -51,7 +51,7 @@ def parse_assessments_2012_file():
 
     res = []
 
-    with open(f, 'rt') as file:
+    with open(f, 'rb') as file:
         sheets = get_data(file)
         rows = sheets['Assessment']
 
