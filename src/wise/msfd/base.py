@@ -5,7 +5,7 @@ import re
 from zope.browserpage.viewpagetemplatefile import \
     ViewPageTemplateFile as Z3ViewPageTemplateFile
 from zope.component import queryMultiAdapter
-from zope.interface import implements
+from zope.interface import implementer, implements
 
 from Acquisition import aq_inner
 from plone.api.portal import get_tool
@@ -437,29 +437,32 @@ class MainFormWrapper(FormWrapper):
         return super(MainFormWrapper, self).render()
 
 
+@implementer(IEditAssessmentForm)
 class EditAssessmentFormWrapper(MainFormWrapper):
     """ Wrapper for EditAssessmentDataForm
 
     Needed to override the page title """
 
-    implements(IEditAssessmentForm)
+    # implements(IEditAssessmentForm)
 
 
+@implementer(IEditAssessmentFormSecondary)
 class EditAssessmentFormWrapperSecondary(MainFormWrapper):
     """ Wrapper for EditAssessmentDataForm
 
     Needed to override the page title """
 
-    implements(IEditAssessmentFormSecondary)
+    # implements(IEditAssessmentFormSecondary)
 
 
+@implementer(IEmbeddedForm)
 class EmbeddedForm(BaseEnhancedForm, Form, BaseUtil):
     """ Our most basic super-smart-superclass for forms
 
     It can embed other children forms
     """
 
-    implements(IEmbeddedForm)
+    # implements(IEmbeddedForm)
     ignoreContext = True
 
     template = ViewPageTemplateFile('pt/subform.pt')

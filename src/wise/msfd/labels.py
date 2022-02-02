@@ -49,7 +49,7 @@ def _extract_from_csv():
     csv_f = resource_filename('wise.msfd',
                               'data/MSFDreporting_TermLists.csv')
 
-    with open(csv_f, 'rb') as csvfile:
+    with open(csv_f, 'rt') as csvfile:
         csv_file = csv.reader(csvfile, delimiter=',', quotechar='|')
 
         for row in csv_file:
@@ -66,7 +66,8 @@ def _extract_ktm():
     csv_f = resource_filename('wise.msfd',
                               'data/KTM.csv')
 
-    with open(csv_f, 'rb') as csvfile:
+    with open(csv_f, 'rt') as csvfile:
+        import pdb; pdb.set_trace()
         csv_file = csv.reader(csvfile, delimiter=',', quotechar='|')
 
         for row in csv_file:
@@ -84,7 +85,7 @@ def _parse_art11_2020_labels():
     csv_f = resource_filename('wise.msfd',
                               'data/MSFD_Art11_2020_Enumerations_v3_2.csv')
 
-    with open(csv_f, 'rb') as csvfile:
+    with open(csv_f, 'rt') as csvfile:
         csv_file = csv.reader(csvfile, delimiter=';', quotechar='"')
 
         for row in csv_file:
