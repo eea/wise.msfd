@@ -2,7 +2,7 @@ from __future__ import absolute_import
 from collections import namedtuple
 from io import BytesIO
 
-from zope.interface import alsoProvides, implements
+from zope.interface import alsoProvides, implementer, implements
 import xlsxwriter
 
 from persistent.list import PersistentList
