@@ -158,7 +158,7 @@ def serialize_rows(rows):
     return res
 
 
-@implements(IReportDataView)
+@implementer(IReportDataView)
 class ReportData2012(BaseView, BaseUtil):
     """ WIP on compliance tables
     """
