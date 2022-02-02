@@ -186,7 +186,7 @@ def parse_reporting_history_env():
         'wise.msfd', 'data/MSFDReportingHistory_Local.xlsx'
     )
 
-    with open(file_loc, 'rb') as file:
+    with open(file_loc, 'rt') as file:
         res = get_msfd_reporting_history_from_file(file)
 
     REPORTING_HISTORY_ENV = res
@@ -300,7 +300,7 @@ def parse_4geo_file():
 
     res = []
 
-    with open(f, 'rb') as file:
+    with open(f, 'rt') as file:
         sheets = get_data(file)
         rows = sheets['4GEO_SHP']
 
@@ -325,7 +325,7 @@ def parse_marine_waters_file():
 
     res = []
 
-    with open(f, 'rb') as file:
+    with open(f, 'rt') as file:
         sheets = get_data(file)
         rows = sheets['MS marine waters']
 

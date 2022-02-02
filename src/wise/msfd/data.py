@@ -76,7 +76,7 @@ def _extract_pdf_assessments():
     csv_f = resource_filename('wise.msfd',
                               'data/pdf_assessments.csv')
 
-    with open(csv_f, 'rb') as csvfile:
+    with open(csv_f, 'rt') as csvfile:
         csv_file = csv.reader(csvfile, delimiter='\t', quotechar='|')
 
         for row in csv_file:

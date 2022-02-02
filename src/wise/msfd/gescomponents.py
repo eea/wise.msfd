@@ -335,7 +335,7 @@ def parse_ges_extended_format():
     csv_f = resource_filename('wise.msfd',
                               'data/ges_terms.csv')
 
-    with open(csv_f, 'rb') as csvfile:
+    with open(csv_f, 'rt') as csvfile:
         csv_file = csv.reader(csvfile, delimiter='\t')
         rows = list(csv_file)
 

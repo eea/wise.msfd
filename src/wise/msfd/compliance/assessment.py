@@ -211,7 +211,7 @@ def get_assessment_data_2012_db(*args):
     res = []
     csv_f = resource_filename('wise.msfd', 'data/COM_Assessments_2012.csv')
 
-    with open(csv_f, 'rb') as csvfile:
+    with open(csv_f, 'rt') as csvfile:
         csv_file = csv.reader(csvfile, delimiter=';', quotechar='"')
 
         for row in csv_file:

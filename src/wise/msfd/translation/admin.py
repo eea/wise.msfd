@@ -160,7 +160,7 @@ class TranslationsOverview(BrowserView):
             'wise.msfd', 'data/MSFDTranslations.xlsx'
         )
 
-        with open(file_loc, 'rb') as file:
+        with open(file_loc, 'rt') as file:
             sheets = get_data(file)
             transl_data = sheets['translations']
 
