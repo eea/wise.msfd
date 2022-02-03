@@ -108,9 +108,9 @@
                   <td tal:content="python: row[0] + 1">1</td>
                   <tal:rep tal:repeat="header python: view.msfd_rep_history_columns">
                     <tal:def tal:define="value python: getattr(row[1], header)">
-                      <td tal:condition="python: not unicode(value).startswith('http')"
+                      <td tal:condition="python: not str(value).startswith('http')"
                           tal:content="value">Value here</td>
-                      <td tal:condition="python: unicode(value).startswith('http')">
+                      <td tal:condition="python: str(value).startswith('http')">
                         <a tal:attributes="href value" tal:content="value">url here</a>
                       </td>
                     </tal:def>
