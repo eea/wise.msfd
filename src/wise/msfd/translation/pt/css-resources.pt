@@ -1,3 +1,3 @@
 <tal:cond tal:condition="python: 'translation' in request.URL0">
-  <link href="/marine/++resource++static_css/compliance.css" type="text/css" rel="stylesheet" />
+  <link href="/++resource++static_css/compliance.css" type="text/css" rel="stylesheet" />
 </tal:cond>
