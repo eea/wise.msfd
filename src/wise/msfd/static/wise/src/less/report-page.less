@@ -1,15 +1,22 @@
-@import "bootstrap/variables.less";
-@import "variables.less";
+@import 'bootstrap/variables.less';
+@import 'variables.less';
 
 // Report page
-.report-page-view .report-section .overflow-table .fixed-table-wrapper table.fixed-table tr th {
+.report-page-view
+  .report-section
+  .overflow-table
+  .fixed-table-wrapper
+  table.fixed-table
+  tr
+  th {
   left: 17px;
 }
+
 .report-page-view {
   .report-section {
-    margin-top: 2rem;
-    padding: 0.6rem 0;
     position: relative;
+    padding: 0.6rem 0;
+    margin-top: 2rem;
 
     &.side-by-side {
       .side-by-side-table {
@@ -21,6 +28,7 @@
             margin-left: 50px;
           }
         }
+
         .inner {
           margin-left: 100px !important;
 
@@ -28,12 +36,15 @@
             margin-left: 120px;
           }
         }
+
         th {
           width: 150px !important;
         }
+
         th.first-header {
           width: 100px !important;
         }
+
         .sub-header {
           min-width: 120px !important;
           max-width: 120px !important;
@@ -41,12 +52,13 @@
         }
       }
     }
+
     .simplify-form {
-      float: right;
       position: absolute;
       left: 100%;
       margin-top: -1.2em;
       margin-left: -12em;
+      float: right;
 
       label {
         position: relative;
@@ -56,17 +68,17 @@
 
     .overflow-table {
       position: relative;
-      margin-bottom: 1rem;
-      background-color: #EFEFEF;
       border: 1px solid #ddd;
+      margin-bottom: 1rem;
+      background-color: #efefef;
 
       .glyphicon.glyphicon-th {
-        color: #fff;
-        font-size: 22px;
         position: absolute;
         top: 7px;
         left: 7%;
         display: none;
+        color: #fff;
+        font-size: 22px;
       }
 
       .value-as-table {
@@ -76,9 +88,9 @@
       }
 
       .top-scroll {
-        overflow-x: auto;
         margin-left: 212px;
         background: white;
+        overflow-x: auto;
         // border-left: 4px solid #DDD;
         div {
           height: 1px;
@@ -87,22 +99,22 @@
 
       .inner,
       .fixed-table-inner {
+        border-left: 4px solid #ddd;
         margin-bottom: -1px;
-        overflow-x: auto;
-        overflow-y: visible;
         // margin-left: 14.4em;
         margin-left: 212px;
         background: white;
-        border-left: 4px solid #DDD;
+        overflow-x: auto;
+        overflow-y: visible;
       }
 
       table.table-report,
       table.fixed-table {
+        border: 0;
+        margin-bottom: 0;
+        border-collapse: initial;
         font-size: 70%;
         table-layout: inherit;
-        margin-bottom: 0;
-        border: 0;
-        border-collapse: initial;
 
         tr {
           &:last-child th {
@@ -121,11 +133,15 @@
             background-color: #bdd7ee;
           }
 
-          &.f_Art9_criteriastatus, &.f_Art11_programme th {
+          &.f_Art9_criteriastatus,
+          &.f_Art11_programme th {
             background-color: #ffe699;
           }
 
-          &.f_Art8_ges th, &.f_Art9_ges th, &.f_Art10_ges, &.f_Art11_strategy th {
+          &.f_Art8_ges th,
+          &.f_Art9_ges th,
+          &.f_Art10_ges,
+          &.f_Art11_strategy th {
             background-color: rgb(244, 177, 131);
           }
 
@@ -134,68 +150,104 @@
           }
 
           &.f_Art9_gesdetermination th {
+            background: linear-gradient(
+              90deg,
+              rgba(244, 177, 131, 1) 6px,
+              rgba(214, 220, 229, 1) 6px
+            );
             background-color: rgb(214, 220, 229);
-            background: linear-gradient(90deg, rgba(244,177,131,1) 6px, rgba(214, 220, 229,1) 6px);
           }
 
           &.f_Art8_element th {
-            background: rgb(189,215,238);
-            background: linear-gradient(90deg, rgba(244,177,131,1) 6px, rgba(189,215,238,1) 6px);
+            background: rgb(189, 215, 238);
+            background: linear-gradient(
+              90deg,
+              rgba(244, 177, 131, 1) 6px,
+              rgba(189, 215, 238, 1) 6px
+            );
           }
 
           &.f_Art8_criteria th {
-            background: rgb(244,177,131);
-            background: linear-gradient(90deg, rgba(244,177,131,1) 6px, rgba(189,215,238,1) 6px, rgba(189,215,238,1) 12px, rgba(255,230,153,1) 12px, rgba(255,230,153,1) 18px, rgba(204,204,0,1) 18px);
+            background: rgb(244, 177, 131);
+            background: linear-gradient(
+              90deg,
+              rgba(244, 177, 131, 1) 6px,
+              rgba(189, 215, 238, 1) 6px,
+              rgba(189, 215, 238, 1) 12px,
+              rgba(255, 230, 153, 1) 12px,
+              rgba(255, 230, 153, 1) 18px,
+              rgba(204, 204, 0, 1) 18px
+            );
           }
 
           &.f_Art8_criteriastatus th {
-            background: rgb(244,177,131);
-            background: linear-gradient(90deg, rgba(244,177,131,1) 6px, rgba(189,215,238,1) 6px, rgba(189,215,238,1) 12px, rgb(255, 230, 153) 6px);
+            background: rgb(244, 177, 131);
+            background: linear-gradient(
+              90deg,
+              rgba(244, 177, 131, 1) 6px,
+              rgba(189, 215, 238, 1) 6px,
+              rgba(189, 215, 238, 1) 12px,
+              rgb(255, 230, 153) 6px
+            );
           }
 
           &.f_Art8_elementstatus th {
-            background: rgb(244,177,131);
-            background: linear-gradient(90deg, rgba(244,177,131,1) 6px, rgba(189,215,238,1) 6px);
+            background: rgb(244, 177, 131);
+            background: linear-gradient(
+              90deg,
+              rgba(244, 177, 131, 1) 6px,
+              rgba(189, 215, 238, 1) 6px
+            );
           }
 
-          &.f_Art8_overallstatus th, &.f_Art9_overallstatus th {
+          &.f_Art8_overallstatus th,
+          &.f_Art9_overallstatus th {
             background-color: #f4b183;
           }
 
           &.f_Art10_target th {
-            background: rgb(244,177,131);
+            background: rgb(244, 177, 131);
           }
 
           &.f_Art10_progressassessment th {
-            background: rgb(189,215,238);
-            background: linear-gradient(90deg, rgba(244,177,131,1) 6px, rgba(189,215,238,1) 6px);
+            background: rgb(189, 215, 238);
+            background: linear-gradient(
+              90deg,
+              rgba(244, 177, 131, 1) 6px,
+              rgba(189, 215, 238, 1) 6px
+            );
           }
 
           &.f_Art11_element th {
-            background: rgb(189,215,238);
-            background: linear-gradient(90deg, rgba(255,230,153,1) 6px, rgba(189,215,238,1) 6px);
+            background: rgb(189, 215, 238);
+            background: linear-gradient(
+              90deg,
+              rgba(255, 230, 153, 1) 6px,
+              rgba(189, 215, 238, 1) 6px
+            );
           }
 
-          &.cf_Art11_empty th, &.cf_Art11_empty td {
-            background: rgb(204,204,204);
+          &.cf_Art11_empty th,
+          &.cf_Art11_empty td {
+            background: rgb(204, 204, 204);
           }
 
           th {
             &.summary {
               min-width: 10rem;
             }
-
-            background: #EFEFEF;
-            vertical-align: top;
-            // width: 18em;
-            width: 212px;
-            overflow: hidden;
             position: absolute;
             left: 0;
-            text-align: right;
+            overflow: hidden;
+            // width: 18em;
+            width: 212px;
+            padding: 6px 6px 6px 6px;
             border: 0;
             border-bottom: 1px solid #ddd;
-            padding: 6px 6px 6px 6px;
+
+            background: #efefef;
+            text-align: right;
+            vertical-align: top;
 
             div {
               // margin-top: -5px;
@@ -210,11 +262,11 @@
           }
 
           td {
-            min-height: 16px;
             min-width: 3rem;
+            min-height: 16px;
+            padding: 6px;
             border-top: none;
             border-left: none;
-            padding: 6px;
 
             &.summary {
               min-width: 10rem;
@@ -231,16 +283,19 @@
 
             &.endgroup {
               &_0 {
-                border-right: 10px solid #DCDCDB;
+                border-right: 10px solid #dcdcdb;
               }
+
               &_1 {
-                border-right: 5px solid #DCDCDB;
+                border-right: 5px solid #dcdcdb;
               }
+
               &_2 {
-                border-right: 3px solid #DCDCDB;
+                border-right: 3px solid #dcdcdb;
               }
+
               &_3 {
-                border-right: 2px solid #DCDCDB;
+                border-right: 2px solid #dcdcdb;
               }
             }
 
@@ -252,7 +307,7 @@
               min-width: 16rem;
               margin: 0 0 0 -1rem !important;
 
-              &.cell-listing  {
+              &.cell-listing {
                 // display: flex;
                 // max-height: 30rem;
                 // flex-direction: column;
@@ -260,8 +315,8 @@
 
                 li {
                   display: block !important;
-                  padding-left: 1rem;
                   max-width: 30rem;
+                  padding-left: 1rem;
 
                   &:before {
                     content: '▪';
@@ -281,8 +336,8 @@
           position: relative;
 
           .td-text-scrolled {
-            left: auto !important;
             right: 10px;
+            left: auto !important;
           }
         }
 
@@ -291,12 +346,12 @@
         }
 
         .read-more-btn {
-          padding: 1px 5px;
-          border-radius: 4px;
-          border: 1px solid #808080;
-          cursor: pointer;
-          margin: 0.5em 0;
           display: none;
+          padding: 1px 5px;
+          border: 1px solid #808080;
+          margin: 0.5em 0;
+          border-radius: 4px;
+          cursor: pointer;
         }
 
         .read-more-btn:hover {
@@ -331,6 +386,7 @@
       .short-intro {
         display: none !important;
       }
+
       .active .text-trans {
         display: block !important;
       }
@@ -345,16 +401,16 @@
 body.plone-toolbar-left-default {
   .fixed-table-wrapper,
   .scroll-wrapper.fixed-scroll {
-    width: calc(~"100% - 60px");
     left: 60px;
+    width: calc(~'100% - 60px');
   }
 }
 
 body.plone-toolbar-left-expanded {
   .fixed-table-wrapper,
   .scroll-wrapper.fixed-scroll {
-    width: calc(~"100% - 120px");
     left: 120px;
+    width: calc(~'100% - 120px');
   }
 }
 
@@ -366,19 +422,19 @@ body.plone-toolbar-left-expanded {
   }
 
   button.reset-pins {
-    display: none;
-    font-size: 14px;
-    padding-left: 4px;
-    padding-top: 0px;
-    padding-bottom: 0px;
-    padding-right: 4px;
+    position: absolute;
     z-index: inherit;
     left: 1px;
-    position: absolute;
     left: 0;
+    display: none;
+    padding-top: 0px;
+    padding-right: 4px;
+    padding-bottom: 0px;
+    padding-left: 4px;
     border: none;
     background-color: transparent;
     color: #337ab7;
+    font-size: 14px;
   }
 
   th {
@@ -386,17 +442,17 @@ body.plone-toolbar-left-expanded {
   }
 
   &.sticky-table {
-    max-height: 50%;
     position: fixed;
-    top: 0;
-    left: 2px;
-    right: 0;
-    padding: 0 17px;
-    overflow-x: auto;
-    overflow-y: overlay;
     z-index: 1000;
+    top: 0;
+    right: 0;
+    left: 2px;
+    max-height: 50%;
+    padding: 0 17px;
     background-color: #fff;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    overflow-x: auto;
+    overflow-y: overlay;
 
     button.reset-pins {
       display: block;
@@ -422,51 +478,64 @@ body.plone-toolbar-left-expanded {
 }
 
 // National summary
-.national-summary-section, .regional-summary-section {
+.national-summary-section,
+.regional-summary-section {
   /* numbering headings */
-  counter-reset: H3; 	/* Create the counter for H1 */
+  counter-reset: H3; /* Create the counter for H1 */
 
   h3:before {
-    content: counter(H3) ". "; 	/* Print the H1 number */
-    counter-increment: H3; 	/* Add 1 to next H1 */
+    content: counter(H3) '. '; /* Print the H1 number */
+    counter-increment: H3; /* Add 1 to next H1 */
   }
 
-  h3 { counter-reset: H4; }
+  h3 {
+    counter-reset: H4;
+  }
+
   h4:before {
-    content: counter(H3) "." counter(H4) " ";
+    content: counter(H3) '.' counter(H4) ' ';
     counter-increment: H4;
   }
 
-  h4 { counter-reset: H5; }
+  h4 {
+    counter-reset: H5;
+  }
+
   h5:before {
-    content: counter(H3) "." counter(H4) "." counter(H5) " ";
+    content: counter(H3) '.' counter(H4) '.' counter(H5) ' ';
     counter-increment: H5;
   }
 
-  h5 { counter-reset: H6; }
+  h5 {
+    counter-reset: H6;
+  }
+
   h6:before {
-    content: counter(H3) "." counter(H4) "." counter(H5) "." counter(H6) " ";
+    content: counter(H3) '.' counter(H4) '.' counter(H5) '.' counter(H6) ' ';
     counter-increment: H6;
   }
 
-  ul, ol {
+  ul,
+  ol {
     margin-left: 2em;
 
     li {
+      display: list-item;
       margin-bottom: 0.25em;
       line-height: 1.5em;
-      display: list-item;
       list-style-type: inherit !important;
     }
   }
 
   &.report-page-view .report-section {
-    margin-top: initial;
     padding: initial;
+    margin-top: initial;
   }
 
   .center-section,
-   p, ol, ul {
+  p,
+  ol,
+  ul {
     color: #003159 !important;
   }
 
@@ -479,11 +548,7 @@ body.plone-toolbar-left-expanded {
   .nat-sum-descriptor-level-assessments,
   .nat-sum-summary-assessment {
     label {
-      margin: .5em 0 0 0;
-    }
-
-    .overall-values {
-      //width: 25% !important;
+      margin: 0.5em 0 0 0;
     }
 
     .article-title {
@@ -491,8 +556,8 @@ body.plone-toolbar-left-expanded {
     }
 
     .ast-header-data {
-      margin-top: 0.5em;
       padding: 0px !important;
+      margin-top: 0.5em;
       margin-bottom: 1.5em;
 
       h6 {
@@ -504,23 +569,23 @@ body.plone-toolbar-left-expanded {
 
         th {
           width: initial;
-          vertical-align: middle;
           padding: 5px;
+          vertical-align: middle;
         }
 
         .as-value {
-          height: 30px !important;
           display: flex;
+          height: 30px !important;
           align-items: center;
         }
 
         div.gescomp.as-value {
+          display: flex;
           width: initial;
           height: 2em;
-          display: flex;
+          align-content: center;
           align-items: center;
           justify-content: center;
-          align-content: center;
           padding: 0 5px;
         }
       }
@@ -534,18 +599,19 @@ body.plone-toolbar-left-expanded {
   .table-sticky-first-col {
     .sticky-row {
       th {
-        background-color: #7b7b7b;
         // background-color: #005588;
         padding: 5px;
+        background-color: #7b7b7b;
       }
     }
-  }  
+  }
 
   .overflow-table .fixed-table-inner {
     tr {
       th:last-of-type {
         border-right: none;
       }
+
       th {
         border: 1px solid white;
         border-top: none;
@@ -568,9 +634,9 @@ body.plone-toolbar-left-expanded {
   text-align: right;
 
   .primary-title {
+    margin-bottom: 1em;
     font-size: 42px;
     font-weight: bold;
-    margin-bottom: 1em;
   }
 
   .secondary-title {
@@ -579,9 +645,9 @@ body.plone-toolbar-left-expanded {
   }
 
   .country-name {
+    margin-top: 1em;
     font-size: 2.8em;
     font-weight: bold;
-    margin-top: 1em;
   }
 
   .modified-date {
@@ -603,23 +669,24 @@ body.plone-toolbar-left-expanded {
   }
 
   .logos {
-    text-align: center;
     margin-top: 1em;
+    text-align: center;
   }
 
   table {
-      border-spacing: 0;
-      border-collapse: collapse;
+    border-collapse: collapse;
+    border-spacing: 0;
 
-      td {
-        border-top: 1px solid #ddd;
-      }
+    td {
+      border-top: 1px solid #ddd;
+    }
 
-      td, th {
-        padding: 0.5em 1em;
-        vertical-align: top;
-        border: 1px solid #ddd;
-      }
+    td,
+    th {
+      padding: 0.5em 1em;
+      border: 1px solid #ddd;
+      vertical-align: top;
+    }
   }
 }
 
@@ -628,34 +695,41 @@ table.table-national-overview {
   margin: 0;
 
   div.env-status {
-    color: black;
     display: flex;
     height: 100%;
-    justify-content: flex-start;
     align-items: center;
+    justify-content: flex-start;
     padding: 2px 5px;
+    color: black;
 
     &.ges-0 {
       background-color: initial;
     }
+
     &.ges-1 {
       background-color: #e6e7e8;
     }
+
     &.ges-2 {
       background-color: #afafaf;
     }
+
     &.ges-3 {
       background-color: #fbf7c2;
     }
+
     &.ges-4 {
       background-color: #ff5a5a;
     }
+
     &.ges-5 {
       background-color: #faa85f;
     }
+
     &.ges-6 {
       background-color: #00b400;
     }
+
     &.ges-7 {
       background-color: #3b85b3;
     }
@@ -671,17 +745,20 @@ table.table-national-overview {
       border: 1px solid #ddd !important;
     }
   }
+
   th {
-    font-size: 12px;
     border: 1px solid #ddd !important;
+    font-size: 12px;
 
     &.thick-right-border {
       border-right: 4px solid #ddd !important;
     }
   }
+
   td {
-    font-size: 12px
+    font-size: 12px;
   }
+
   ul {
     margin-left: 1em;
 

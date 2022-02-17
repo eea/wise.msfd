@@ -1,18 +1,17 @@
-@import "./bootstrap/variables.less";
-@import "variables.less";
+@import './bootstrap/variables.less';
+@import 'variables.less';
 
 #mainform-tabs,
 #tabs-wrapper {
-
   .tab-content {
     padding-top: 10px;
   }
 
   & ul {
-    list-style-type: none !important;
     display: flex;
-    padding-left: 0;
     justify-content: flex-start;
+    padding-left: 0;
+    list-style-type: none !important;
 
     &.topnav {
       border-bottom: 1px solid #ddd;
@@ -20,18 +19,18 @@
 
       li {
         display: flex;
-        align-items: flex-start;
+        width: 230px;
         align-content: flex-start;
+        align-items: flex-start;
+        border-bottom: 1px solid transparent;
         margin-bottom: -1px;
         background-color: transparent;
         border-radius: 0;
-        border-bottom: 1px solid transparent;
         text-align: left;
-        width: 230px;
 
         a {
-          height: 100%;
           width: 100%;
+          height: 100%;
           padding: 10px 20px;
           border-radius: 0;
 
@@ -40,18 +39,18 @@
           }
 
           .tab-title {
-            font-family: "PoppinsSemiB";
-            font-size: 1.5rem;
             display: block;
+            font-family: 'PoppinsSemiB';
+            font-size: 1.5rem;
             font-size: 15px;
           }
 
           .tab-subtitle {
-            font-size: 10px;
-            font-family: "RobotoR";
+            display: block;
             max-width: 220px;
             padding: 0.4rem 0;
-            display: block;
+            font-family: 'RobotoR';
+            font-size: 10px;
           }
         }
 
@@ -59,9 +58,9 @@
           margin-left: auto;
         }
 
-        &:nth-last-child(-n+2) {
-          width: 80px;
+        &:nth-last-child(-n + 2) {
           display: flex;
+          width: 80px;
           align-items: center;
           justify-content: center;
 
@@ -86,8 +85,8 @@
           background-color: transparent;
 
           a {
-            color: inherit;
             background-color: transparent;
+            color: inherit;
 
             .tab-title {
               color: #002d54;
@@ -99,6 +98,7 @@
 
     &.nav:not(.topnav) {
       border-bottom: 1px solid #ddd;
+
       li {
         a {
           padding: 0.8em 0.5em;
@@ -107,12 +107,12 @@
     }
 
     li {
+      align-items: center;
+      margin: 0;
       background-color: #eee;
-      text-align: center;
       border-top-left-radius: 10px;
       border-top-right-radius: 10px;
-      margin: 0;
-      align-items: center;
+      text-align: center;
 
       a {
         display: block;
@@ -122,6 +122,7 @@
 
       &:hover {
         background-color: #006699;
+
         a {
           color: white;
         }
@@ -130,6 +131,7 @@
 
     li.nav-item.active {
       background-color: #006699;
+
       a {
         color: white;
         font-weight: 600;
@@ -143,8 +145,8 @@
 
     a {
       border: 1px solid #ddd;
-      border-bottom-color: transparent;
       border: none;
+      border-bottom-color: transparent;
 
       .tab-title {
         color: #002d54;
@@ -170,8 +172,8 @@
 }
 
 .visible-xs {
-  clear: both;
   display: none;
+  clear: both;
 }
 
 @media (max-width: 767px) {
@@ -180,74 +182,77 @@
   }
 }
 
-.tab-content>.tab-pane {
+.tab-content > .tab-pane {
   display: none;
 }
-.tab-content>.active {
+
+.tab-content > .active {
   display: block;
 }
+
 .fade.in {
   opacity: 1;
 }
+
 .fade {
   opacity: 0;
-  transition: opacity .15s linear;
+  transition: opacity 0.15s linear;
 }
 
-
 .articles-wrapper {
-  margin: 1.5em -20px !important;
   display: flex;
   flex-wrap: wrap;
+  margin: 1.5em -20px !important;
 
   a.article-box-anchor {
     color: #002d54;
 
-    &:hover, &:focus {
+    &:hover,
+    &:focus {
       border: 1px solid #002d54;
     }
   }
 
   .article-box {
-    padding: 20px 20px;
     height: 310px;
+    padding: 20px 20px;
     color: #002d54;
 
     .article-box-wrapper {
+      position: relative;
+      height: 100%;
       padding: 1.5em;
       background-color: #59d3ff;
-      height: 100%;
-      position: relative;
     }
 
     .article-box-header {
       min-height: 85px;
 
       .tab-subtitle {
-        font-size: 18px;
-        font-family: "PoppinsB";
+        max-width: 250px;
         margin-top: 0;
         margin-bottom: 3px;
-        max-width: 250px;
+        font-family: 'PoppinsB';
+        font-size: 18px;
       }
 
       .tab-title {
+        font-family: 'PoppinsL';
         font-size: 18px;
-        font-family: "PoppinsL";
       }
     }
 
     .article-description {
-      font-size: 15px;
       margin-top: 0.7em;
+      font-size: 15px;
     }
 
     .article-link {
       position: absolute;
-      bottom: 1.5em;
-      right: 1.5em;
-      height: 35px;
       z-index: 3;
+      right: 1.5em;
+      bottom: 1.5em;
+      height: 35px;
 
       &:hover > .link-btn {
         background-color: #fff;
@@ -255,19 +260,19 @@
 
       .link-btn {
         position: relative;
-        font-size: 11px;
-        background-color: #002d54;
-        border-radius: 50%;
+        display: inline-block;
         width: 35px;
         height: 35px;
-        display: inline-block;
+        background-color: #002d54;
+        border-radius: 50%;
+        font-size: 11px;
       }
 
       .link-btn:after,
       .link-btn:before {
-        content: "";
-        display: block;
         position: absolute;
+        display: block;
+        content: '';
       }
 
       .link-btn:before {
@@ -275,12 +280,12 @@
         right: 1em;
         width: 1em;
         height: 1em;
-        -webkit-transform-origin: 50% 50%;
-        transform-origin: 50% 50%;
+        border-radius: 0 0.15em 0 0;
+        box-shadow: inset -0.2em 0.2em 0 0 #59d3ff;
         -webkit-transform: translate(0, -0.5em) rotate(45deg);
         transform: translate(0, -0.5em) rotate(45deg);
-        box-shadow: inset -0.2em 0.2em 0 0 #59d3ff;
-        border-radius: 0 0.15em 0 0;
+        -webkit-transform-origin: 50% 50%;
+        transform-origin: 50% 50%;
       }
 
       .link-btn:after {
@@ -288,9 +293,9 @@
         right: 1em;
         width: 1.3em;
         height: 0.2em;
+        background-color: #59d3ff;
         -webkit-transform: translate(0, -0.1em);
         transform: translate(0, -0.1em);
-        background-color: #59d3ff;
       }
     }
   }
@@ -298,9 +303,9 @@
 
 @media screen and (max-width: 650px) {
   .articles-wrapper .article-box {
-    margin: 0 auto;
     width: 100%;
     height: auto;
+    margin: 0 auto;
 
     .article-box-wrapper {
       padding-bottom: 4.5em;
@@ -313,25 +318,32 @@
 }
 
 .main-subtitle {
-  font-size: 22px;
-  font-weight: 600;
+  color: #555;
+  font-size: 18px;
+  font-weight: 500;
 }
 
 .msfd-start-link {
-  color: #111131;
-  font-size: 15px;
-  font-family: RobotoM;
-  margin-bottom: 1em;
   display: inline-block;
+  display: flex;
+  align-items: center;
+  margin-bottom: 1em;
+  color: #111131;
+  font-family: inherit;
+  font-size: 15px;
 
   &:before {
-    content:"\e095";
-    font-family: @icon-font-family;
-    display: inline-block;
-    transform: scaleX(-1);
     position: relative;
-    top: 2px;
+    display: inline-block;
+    margin-right: 8px;
+    content: '\f060';
+    font: normal normal normal 13px/1 FontAwesome;
   }
+
+  img {
+    margin-left: 8px;
+  }
+
   &:hover {
     color: #0077bc;
   }

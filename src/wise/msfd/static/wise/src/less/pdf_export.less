@@ -1,59 +1,68 @@
 table {
   border-collapse: collapse;
 
-  th, td {
+  th,
+  td {
     border: 1px solid #e5e5e5;
-    color: #333
+    color: #333;
   }
 
-  ul, ol {
-    padding-inline-start: 10px;
-    font-size: 10px;
+  ul,
+  ol {
     margin-left: 15px !important;
+    font-size: 10px;
+    padding-inline-start: 10px;
   }
 }
+
 p {
   color: #333;
 }
+
 .table-striped > tbody > tr:nth-of-type(odd) {
-  background-color:#f9f9f9
+  background-color: #f9f9f9;
 }
+
 .national-summary-section {
-  font-size: 20px;
   color: #333;
+  font-size: 20px;
 }
+
 .table-simple-summary {
-  ul, ol {
+  ul,
+  ol {
     margin-left: 1.5em;
-    list-style-type: disc !important;
     font-size: 12px;
+    list-style-type: disc !important;
 
     li {
       list-style-type: disc !important;
     }
-
   }
 }
+
 .ast-header-data {
-  td, th {
+  td,
+  th {
     text-align: center !important;
     vertical-align: middle !important;
 
     div {
-      padding: 5px;
       display: block;
       align-items: center !important;
       justify-content: center !important;
+      padding: 5px;
 
       &.as-value {
         overflow: hidden;
-        
+
         div {
           padding: 5px;
         }
       }
     }
   }
+
   td.overall-values {
     overflow: hidden;
 
@@ -62,12 +71,15 @@ p {
     }
   }
 }
+
 th.summary.column-header {
   min-width: 100px;
 }
+
 td.summary {
   word-break: break-word;
 }
+
 .nat-sum-report-history table {
   font-size: 12px;
 }
