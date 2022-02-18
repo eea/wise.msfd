@@ -55,9 +55,8 @@
 
 <metal:macro define-macro="top-section">
   <div>
-    <a href=""
-      class="msfd-start-link"
-      tal:attributes="href string:${context/absolute_url}/marine/data-maps-and-tools/msfd-reporting-information-products/msfd-reporting-data-explorer">
+    <a href="/marine/data-maps-and-tools/msfd-reporting-information-products/msfd-reporting-data-explorer"
+      class="msfd-start-link">
       About MSFD reporting data explorer
       <img src="/api/++api++/++resource++msfd/images/msfd-mini.png">
     </a>
