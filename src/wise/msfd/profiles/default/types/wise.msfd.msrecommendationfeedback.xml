@@ -30,8 +30,6 @@
     name="klass">wise.msfd.compliance.content.MSFDReportingHistoryFolder</property>
  <property name="behaviors">
   <element value="plone.app.content.interfaces.INameFromTitle"/>
-  <element
-     value="plone.app.referenceablebehavior.referenceable.IReferenceable"/>
  </property>
  <property 
       name="schema">wise.msfd.compliance.interfaces.IMSRecommendationsFeedback</property>
