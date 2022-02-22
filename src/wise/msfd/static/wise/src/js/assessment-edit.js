@@ -348,6 +348,8 @@
     setupUnloadWarning();
     setupAssessmentInfobox();
 
+    $('.help-popover').popover();
+
     // When hovering over the comments section add delete comment event for each comment
     $('.subform .right .comments').mouseenter(
       function(){

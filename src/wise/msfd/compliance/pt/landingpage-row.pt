@@ -20,7 +20,7 @@
             tal:attributes="colspan python: item.colspan; class python: item.css_class;
                             rowspan python: item.rowspan">
 
-          <tal:cond tal:condition="python: hasattr(item.href, '__iter__')">
+          <tal:cond tal:condition="python: type(item.href) in (list, tuple)">
             <tal:rep tal:repeat="i item/href">
               <a tal:attributes="href python: i[0]"
                  target="_blank">
@@ -32,7 +32,7 @@
             </tal:rep>
           </tal:cond>
 
-          <a tal:condition="python: item.href and not hasattr(item.href, '__iter__')"
+          <a tal:condition="python: item.href and not type(item.href) in (list, tuple)"
              tal:attributes="href python: item.href"
              target="_blank">
             <span tal:condition="python: 'landpage-header' not in css_extra"

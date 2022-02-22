@@ -445,7 +445,7 @@ class BaseLandingPageRow(BaseComplianceView, AssessmentDataMixin,
         structure
     """
 
-    template = PageTemplateFile('pt/landingpage-row.pt')
+    template = ViewPageTemplateFile('pt/landingpage-row.pt')
 
     @property
     def _nr_of_countries(self):
@@ -582,7 +582,9 @@ class BaseLandingPageRow(BaseComplianceView, AssessmentDataMixin,
         self.data = data
 
     def __call__(self):
-        return self.template(data=self.data)
+        res = self.template(data=self.data)
+
+        return res
 
 
 class CountryLandingPage(BaseComplianceView):

@@ -41,7 +41,7 @@ class DummyReportField(TemplateMixin):
 
 @implementer(IReportField)
 class ReportField(TemplateMixin):
-    """ An object reprezenting the field (row) definition in a report table
+    """ An object representing the field (row) definition in a report table
     """
     # implements(IReportField)
 

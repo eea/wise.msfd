@@ -6,8 +6,7 @@
   metal:use-macro="context/main_template/macros/master"
   i18n:domain="eea">
 
-  <body metal:fill-slot="content">
-
+  <metal:slot metal:fill-slot="main" i18n:domain="cmf_default">
     <div id="layout-contents" tal:define="text context/text | nothing" >
       <div id="wise-search-form" class="full-width-marker">
         <div id="wise-search-form-top">
@@ -16,7 +15,6 @@
         </div>
 
         <div class="start-page-content left-side-form">
-
           <h1>Descriptor assessments - national overview</h1>
 
           <table class="table table-striped table-condensed comp-c-listing">
@@ -51,5 +49,5 @@
       </div>
     </div>
 
-  </body>
+  </metal:slot>
 </html>

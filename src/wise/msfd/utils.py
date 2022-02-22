@@ -36,6 +36,10 @@ logger = logging.getLogger('wise.msfd')
 WEIGHTS_ANNOT_KEY = 'wise.msfd.weights'
 
 
+def cmp(a, b):
+    return (a > b) - (a < b) 
+
+
 def class_id(obj):
     if type(obj) is type:
         klass = obj
@@ -506,6 +510,7 @@ class ItemLabel(TemplateMixin):
         return self.name
 
     def __cmp__(self, other):
+        # TODO this no longer works in python 3
         # see https://rszalski.github.io/magicmethods/
 
         if hasattr(other, 'name'):

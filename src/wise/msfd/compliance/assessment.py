@@ -11,8 +11,8 @@ from plone.api.portal import get_tool
 
 from AccessControl import Unauthorized
 from persistent.list import PersistentList
-from Products.Five.browser.pagetemplatefile import (PageTemplateFile,
-                                                    ViewPageTemplateFile)
+from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
+from zope.pagetemplate.pagetemplatefile import PageTemplateFile
 
 from wise.msfd import db, sql2018
 from wise.msfd.compliance.content import AssessmentData

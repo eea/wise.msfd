@@ -268,7 +268,7 @@ class Criterion(ItemLabel):
         return self.title
 
     def __repr__(self):
-        title = self.title.encode('ascii', 'replace')
+        title = self.title  # .encode('ascii', 'replace')
         title = title.replace('?', '-')
 
         return "<Criterion {}>".format(title)
@@ -1038,8 +1038,6 @@ def _muids_2018(country, region):
         .filter(
             t.CountryCode == country,
             t.Region == region,
-            # t.MarineReportingUnitId.isnot(None),
-            # t.localId.isnot(None),      # TODO: this suits NL, check others
         )
 
     res = [MarineReportingUnit(m.MarineReportingUnitId,
@@ -1047,7 +1045,7 @@ def _muids_2018(country, region):
 
            for m in q]
 
-    return sorted(res)
+    return sorted(res, key=lambda i: i.name)
 
 
 @cache(lambda func, *args: '-'.join((func.__name__, args[0], args[1],
