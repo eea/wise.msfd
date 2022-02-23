@@ -1,7 +1,7 @@
 <tr>
-  <th tal:attributes="rowspan python: options['rowspan'] + 1"
-      tal:content="options/title">First header</th>
+  <th tal:attributes="rowspan rowspan + 1"
+      tal:content="title">First header</th>
 </tr>
-<tal:rep tal:repeat="row options/rows">
+<tal:rep tal:repeat="row rows">
   <tal:row replace="structure row"></tal:row>
 </tal:rep>

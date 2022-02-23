@@ -1,6 +1,6 @@
 <tr class="merge">
-  <th class="bla"><div tal:content="options/title">Subrow header</div></th>
-  <tal:rep tal:repeat="val options/cells">
+  <th class="bla"><div tal:content="title">Subrow header</div></th>
+  <tal:rep tal:repeat="val cells">
     <td tal:replace="structure val">Value</td>
   </tal:rep>
 </tr>

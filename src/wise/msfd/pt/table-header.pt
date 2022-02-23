@@ -1,6 +1,6 @@
 <thead>
-  <th colspan="2" tal:content="options/title">Col title</th>
-  <th tal:repeat="val options/cells">
+  <th colspan="2" tal:content="title">Col title</th>
+  <th tal:repeat="val cells">
     <span tal:replace="val">text</span>
   </th>
 </thead>

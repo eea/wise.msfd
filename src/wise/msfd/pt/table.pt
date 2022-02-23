@@ -1,4 +1,4 @@
-<table tal:define="labels nocall: options/item_labels; values nocall: options/item_values" class="value-as-table">
+<table tal:define="labels nocall: item_labels; values nocall: item_values" class="value-as-table">
   <tr>
     <tal:rep tal:repeat="name labels">
       <td tal:content="name">Name</td>
@@ -7,7 +7,7 @@
   <tr tal:repeat="item values">
     <tal:rep repeat="name labels">
       <td>
-        <span tal:content="python:item[name]" ></span>
+        <span tal:content="item[name]" ></span>
       </td>
     </tal:rep>
   </tr>

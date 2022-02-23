@@ -20,11 +20,11 @@
               <th>Methodological standards</th>
             </tr>
             <tbody>
-              <tr tal:repeat="row options/rows">
+              <tr tal:repeat="row rows">
                 <tal:cell tal:repeat="cell row">
                   <td
-                    tal:attributes="rowspan cell/rowspan"
-                    tal:content="structure cell/text">
+                    tal:attributes="rowspan cell.rowspan"
+                    tal:content="structure cell.text">
                     Text here
                   </td>
                 </tal:cell>
