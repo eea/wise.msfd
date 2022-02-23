@@ -21,8 +21,8 @@ from plone.api.portal import get_tool, getSite
 from plone.intelligenttext.transforms import \
     convertWebIntelligentPlainTextToHtml
 from plone.memoize import volatile
-from Products.Five.browser.pagetemplatefile import (PageTemplateFile,
-                                                    ViewPageTemplateFile)
+from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
+from chameleon.zpt.template import PageTemplateFile
 import six
 from six.moves import map
 from six.moves import zip
@@ -549,14 +549,14 @@ class ItemLabel(TemplateMixin):
 
         return self.template(**out)
 
-    template = PageTemplateFile('pt/label.pt')
+    template = PageTemplateFile('src/wise.msfd/src/wise/msfd/pt/label.pt')
 
 
 class ItemList(TemplateMixin):
     """ Render a python list of ItemLabels as an HTML list
     """
 
-    template = PageTemplateFile('pt/list.pt')
+    template = PageTemplateFile('src/wise.msfd/src/wise/msfd/pt/list.pt')
 
     def __init__(self, rows, sort=True):
         rows = list(rows)
@@ -609,7 +609,8 @@ class ItemListFiltered(ItemList):
 class LabeledItemList(ItemList):
     """ List that renders using <div> instead of <ul>
     """
-    template = PageTemplateFile('pt/labeled-list.pt')
+    template = PageTemplateFile(
+        'src/wise.msfd/src/wise/msfd/pt/labeled-list.pt')
 
     def __init__(self, rows):
         self.rows = rows
@@ -620,12 +621,15 @@ class LabeledItemList(ItemList):
 
 
 class ItemListGroup(LabeledItemList):
-    template = PageTemplateFile('pt/grouped-list.pt')
+    template = PageTemplateFile(
+        'src/wise.msfd/src/wise/msfd/pt/grouped-list.pt')
 
 
 class CompoundRow(TemplateMixin):
-    multi_row = PageTemplateFile('pt/compound-row.pt')
-    one_row = PageTemplateFile('pt/compound-one-row.pt')
+    multi_row = PageTemplateFile(
+        'src/wise.msfd/src/wise/msfd/pt/compound-row.pt')
+    one_row = PageTemplateFile(
+        'src/wise.msfd/src/wise/msfd/pt/compound-one-row.pt')
 
     @property
     def template(self):
@@ -641,7 +645,8 @@ class CompoundRow(TemplateMixin):
 
 
 class Row(TemplateMixin):
-    template = PageTemplateFile('pt/simple-row.pt')
+    template = PageTemplateFile(
+        'src/wise.msfd/src/wise/msfd/pt/simple-row.pt')
 
     def __init__(self, title, values):
         self.title = title
@@ -650,7 +655,7 @@ class Row(TemplateMixin):
 
 
 class RawRow(TemplateMixin):
-    template = PageTemplateFile('pt/row.pt')
+    template = PageTemplateFile('src/wise.msfd/src/wise/msfd/pt/row.pt')
 
     def __init__(self, title, values, raw_values=None):
         self.title = title
@@ -659,7 +664,8 @@ class RawRow(TemplateMixin):
 
 
 class TableHeader(TemplateMixin):
-    template = PageTemplateFile('pt/table-header.pt')
+    template = PageTemplateFile(
+        'src/wise.msfd/src/wise/msfd/pt/table-header.pt')
 
     def __init__(self, title, values):
         self.title = title
@@ -667,7 +673,7 @@ class TableHeader(TemplateMixin):
 
 
 class SimpleTable(TemplateMixin):
-    template = PageTemplateFile('pt/table.pt')
+    template = PageTemplateFile('src/wise.msfd/src/wise/msfd/pt/table.pt')
 
     def __init__(self, title, values):
         self.title = title

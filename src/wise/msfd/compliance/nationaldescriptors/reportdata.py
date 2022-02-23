@@ -138,7 +138,7 @@ def serialize_rows(rows):
             for v in row.raw_values:
                 if isinstance(v, str):
                     parser = HTMLParser()
-                    v = parser.unescape(v.decode('utf-8'))
+                    v = parser.unescape(v)  # .decode('utf-8'))
 
                 if not isinstance(v, six.string_types):
                     if not v:
@@ -147,7 +147,7 @@ def serialize_rows(rows):
                         v = v.__repr__()
 
                         if isinstance(v, str):
-                            v = v.decode('utf-8')
+                            v = v  # .decode('utf-8')
 
                 raw_values.append(six.text_type(v))
 

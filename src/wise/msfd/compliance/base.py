@@ -836,7 +836,7 @@ class AssessmentQuestionDefinition:
             descr_obj, ok_ges_ids, muids
         )
 
-        res = [Target(t.TargetCode.encode('ascii', errors='ignore'),
+        res = [Target(t.TargetCode,  # .encode('ascii', errors='ignore'),
                       t.TargetCode,
                       t.Description,
                       '2018')

@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 
 from __future__ import absolute_import
-from io import BytesIO
 
 from datetime import datetime
 
@@ -21,7 +20,7 @@ from wise.msfd.compliance.main import (
 from wise.msfd.translation import retrieve_translation
 from wise.msfd.utils import timeit
 
-from zope.interface import implementer, implements
+from zope.interface import implementer
 
 import pdfkit
 
@@ -144,7 +143,6 @@ class RegProgressAssessment(BaseRegSummaryView, ProgressAssessment):
 
 @implementer(IRegionalSummaryRegionFolder)
 class AssessmentSummaryView(BaseRegSummaryView):
-    # implements(IRegionalSummaryRegionFolder)
 
     help_text = "HELP TEXT"
     template = ViewPageTemplateFile('pt/report-data.pt')

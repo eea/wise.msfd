@@ -499,7 +499,7 @@ def get_xml_report_data(filename):
     text = ''
 
     if filename in os.listdir(xmldir):
-        with open(fpath) as f:
+        with open(fpath, 'rb') as f:
             text = f.read()
 
     if not text:

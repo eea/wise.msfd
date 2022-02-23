@@ -212,7 +212,7 @@ def normalize(text):
         return text
 
     if isinstance(text, str):
-        text = text.decode('utf-8')
+        text = text  # .decode('utf-8')
 
     if not text:
         return text

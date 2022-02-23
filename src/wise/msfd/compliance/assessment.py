@@ -12,7 +12,8 @@ from plone.api.portal import get_tool
 from AccessControl import Unauthorized
 from persistent.list import PersistentList
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
-from zope.pagetemplate.pagetemplatefile import PageTemplateFile
+# from zope.pagetemplate.pagetemplatefile import PageTemplateFile
+from chameleon.zpt.template import PageTemplateFile
 
 from wise.msfd import db, sql2018
 from wise.msfd.compliance.content import AssessmentData
@@ -23,15 +24,14 @@ from wise.msfd.compliance.interfaces import (
     IRegionalDescriptorRegionsFolder, IRegionalDescriptorsFolder
 )
 from wise.msfd.compliance.regionaldescriptors.base import BaseRegComplianceView
-from wise.msfd.compliance.scoring import (CONCLUSIONS, get_overall_conclusion,
-                                          get_range_index, OverallScores)
+from wise.msfd.compliance.scoring import (CONCLUSIONS, get_range_index, 
+                                          OverallScores)
 from wise.msfd.compliance.utils import (get_assessors, set_assessors,
                                         ordered_regions_sortkey)
 from wise.msfd.compliance.vocabulary import (REGIONAL_DESCRIPTORS_REGIONS,
                                              SUBREGIONS_TO_REGIONS)
 from wise.msfd.gescomponents import get_descriptor  # get_descriptor_elements
-from wise.msfd.utils import (ItemList, TemplateMixin, db_objects_to_dict,
-                             fixedorder_sortkey, t2rt, timeit)
+from wise.msfd.utils import fixedorder_sortkey, t2rt, timeit
 
 from z3c.form.button import buttonAndHandler
 from z3c.form.field import Fields
@@ -605,7 +605,9 @@ class EditAssessmentDataFormMain(Form):
 Cell = namedtuple('Cell', ['text', 'rowspan'])
 
 
-help_template = PageTemplateFile('pt/assessment-question-help.pt')
+help_template = PageTemplateFile(
+    'src/wise.msfd/src/wise/msfd/compliance/pt/assessment-question-help.pt'
+)
 
 
 def render_assessment_help(criterias, descriptor):
