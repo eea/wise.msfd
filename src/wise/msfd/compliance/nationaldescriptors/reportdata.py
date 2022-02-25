@@ -307,7 +307,7 @@ class ReportData2012(BaseView, BaseUtil):
         for i, (wtitle, wdata) in enumerate(report_header.items()):
             wtitle = wtitle.title().replace('_', ' ')
 
-            if hasattr(wdata, '__iter__'):
+            if isinstance(wdata, (list, tuple)):
                 if report_header.get('multiple_source_files', False):
                     wdata = u"\n".join([x[1] for x in wdata])
                 else:

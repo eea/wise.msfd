@@ -9,7 +9,8 @@ from zope.component import adapter
 from zope.interface import alsoProvides, implementer
 
 from BTrees.OOBTree import OOBTree
-from Products.Five.browser.pagetemplatefile import PageTemplateFile
+# from Products.Five.browser.pagetemplatefile import PageTemplateFile
+from chameleon.zpt.template import PageTemplateFile
 from Products.CMFPlone.interfaces.siteroot import IPloneSiteRoot
 from persistent import Persistent
 from pkg_resources import resource_filename
@@ -19,7 +20,7 @@ from io import StringIO
 
 from wise.msfd.compliance.vocabulary import (
     REGIONAL_DESCRIPTORS_REGIONS,
-    REGIONS, get_all_countries, ReportingHistoryENVRow,
+    REGIONS, ReportingHistoryENVRow,
     get_msfd_reporting_history_from_file
 )
 from wise.msfd.gescomponents import (GES_DESCRIPTORS, get_all_descriptors,
@@ -65,12 +66,12 @@ class Recommendation(Persistent):
         self.topic = topic
         self.text = text
 
-        if not hasattr(ms_region,  '__iter__'):
+        if not isinstance(ms_region, (list, tuple)):
             ms_region = [ms_region]
 
         self.ms_region = ms_region
 
-        if not hasattr(descriptors, '__iter__'):
+        if not isinstance(descriptors, (list, tuple)):
             descriptors = [descriptors]
 
         self.descriptors = descriptors
@@ -87,7 +88,8 @@ class Recommendation(Persistent):
 
 
 class RecommendationsTable:
-    template = PageTemplateFile('pt/recommendations-table.pt')
+    template = PageTemplateFile(
+        'src/wise.msfd/src/wise/msfd/compliance/pt/recommendations-table.pt')
 
     def __init__(self, recommendations, show_edit_buttons):
         self.recommendations = recommendations
@@ -164,8 +166,6 @@ class RecommendationsView(BaseComplianceView):
         return [(code, name) for code, name in REGIONS.items()]
 
     def countries(self):
-        # countries = get_all_countries()
-
         res = []
 
         for r_code, r_name in self.regions():

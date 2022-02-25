@@ -491,7 +491,7 @@ class RegReportData2018(BaseRegComplianceView):
                     # if 'value' is a list/tuple meaning it contains both the
                     # original and the translated value, we need
                     # the translated value
-                    if hasattr(value, '__iter__'):
+                    if isinstance(value, (list, tuple)):
                         value = value[0].replace('<br />', '\n')
 
                     try:
@@ -511,7 +511,7 @@ class RegReportData2018(BaseRegComplianceView):
                         # if 'value' is a list/tuple meaning it contains both
                         # the # original and the translated value, we need
                         # the translated value
-                        if hasattr(value, '__iter__'):
+                        if isinstance(value, (list, tuple)):
                             value = value[1].replace('<br />', '\n')
 
                         try:

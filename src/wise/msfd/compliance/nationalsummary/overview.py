@@ -5,23 +5,20 @@ from collections import defaultdict
 import logging
 
 from Products.Five.browser import BrowserView
-from Products.Five.browser.pagetemplatefile import (PageTemplateFile,
-                                                    ViewPageTemplateFile)
+from Products.Five.browser.pagetemplatefile import (ViewPageTemplateFile)
+from chameleon.zpt.template import PageTemplateFile
 from Products.statusmessages.interfaces import IStatusMessage
 
 from wise.msfd import db, sql2018, sql
 from wise.msfd.compliance.assessment import AssessmentDataMixin
 from wise.msfd.compliance.utils import group_by_mru
 from wise.msfd.data import (get_all_report_filenames,
-                            get_envelope_release_date, get_factsheet_url,
-                            get_report_file_url, get_report_filename,
-                            get_xml_report_data)
+                            get_envelope_release_date)
 from wise.msfd.gescomponents import (ANTHROPOGENIC_FEATURES_SHORT_NAMES,
                                      DESCRIPTOR_TYPES, FEATURES_DB_2018,
-                                     GES_DESCRIPTORS, NOTHEME,
-                                     THEMES_2018_ORDER)
+                                     GES_DESCRIPTORS, THEMES_2018_ORDER)
 from wise.msfd.labels import get_label
-from wise.msfd.translation import get_translated, retrieve_translation
+from wise.msfd.translation import retrieve_translation
 from wise.msfd.utils import (ItemLabel, ItemList, fixedorder_sortkey, 
                              items_to_rows, timeit)
 
@@ -56,7 +53,8 @@ class TableOfContents(BrowserView):
 
 
 class ItemListOverview(ItemList):
-    template = PageTemplateFile('pt/list.pt')
+    template = PageTemplateFile(
+        'src/wise.msfd/src/wise/msfd/compliance/nationalsummary/pt/list.pt')
 
 
 class ReportData2018SecondaryOverview(ReportData2018Secondary,
@@ -216,7 +214,7 @@ class PressuresTableBase(BaseNatSummaryView):
         t = sql2018.t_V_ART8_GES_2018
 
         country_codes = self.country_code
-        if not hasattr(country_codes, '__iter__'):
+        if not isinstance(country_codes, (list, tuple)):
             country_codes = [country_codes]
 
         count, data = db.get_all_specific_columns(
@@ -229,9 +227,9 @@ class PressuresTableBase(BaseNatSummaryView):
         return data
 
     def get_descriptor_title(self, code):
-        for c, title in GES_DESCRIPTORS.items():
+        for c, descr_obj in GES_DESCRIPTORS.items():
             if c == code:
-                return title
+                return descr_obj.title
 
         return code
 
@@ -338,7 +336,7 @@ class UsesHumanActivities(PressuresTableBase):
         ]
 
         country_codes = self.country_code
-        if not hasattr(country_codes, '__iter__'):
+        if not isinstance(country_codes, (list, tuple)):
             country_codes = [country_codes]
 
         conditions = [
@@ -512,7 +510,7 @@ class GESExtentAchieved(PressuresTableBase):
         t = sql2018.t_V_ART8_GES_2018
 
         country_codes = self.country_code
-        if not hasattr(country_codes, '__iter__'):
+        if not isinstance(country_codes, (list, tuple)):
             country_codes = [country_codes]
 
         count, data = db.get_all_specific_columns(
@@ -651,7 +649,7 @@ class ProgrammesOfMeasures(EnvironmentalTargetsTable):
         t = sql2018.t_V_ART10_Targets_2018
 
         country_codes = self.country_code
-        if not hasattr(country_codes, '__iter__'):
+        if not isinstance(country_codes, (list, tuple)):
             country_codes = [country_codes]
 
         count, data = db.get_all_specific_columns(
@@ -711,11 +709,11 @@ class ProgrammesOfMeasures(EnvironmentalTargetsTable):
                             for r in measures_data
                             if r.TargetCode in targets
                         ]
-                        measures_flat = [
+                        measures_flat = tuple([
                             measure
                             for sublist in measures
                             for measure in sublist
-                        ]
+                        ])
 
                         descriptor_data.append(ItemListOverview(measures_flat))
 
@@ -746,7 +744,7 @@ class ExceptionsReported(PressuresTableBase):
                    rep_info.ReportingDate]
 
         country_codes = self.country_code
-        if not hasattr(country_codes, '__iter__'):
+        if not isinstance(country_codes, (list, tuple)):
             country_codes = [country_codes]
 
         conditions = [

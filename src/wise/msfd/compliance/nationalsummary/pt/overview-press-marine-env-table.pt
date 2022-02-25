@@ -27,7 +27,7 @@
           <tr class="sticky-row">
             <tal:rep tal:repeat="feature view/features_needed">
               <th tal:condition="python: feature[0] != 'No theme'"
-                  tal:attributes="colspan python: len(filter(lambda i: not i.endswith('All'),feature[1]))"
+                  tal:attributes="colspan python: len(list(filter(lambda i: not i.endswith('All'),feature[1])))"
                   tal:content="python: feature[0]">
                 Biological
               </th>
@@ -61,7 +61,8 @@
                   tal:content="python: descriptor_type[0]">
                 Pressure based descriptors
               </th>
-              <th class="thick-right-border" tal:content="python: descriptor_data[0]">D2</th>
+              <th class="thick-right-border" 
+                  tal:content="structure python: descriptor_data[0]">D2</th>
               <td style="min-width: 75px;"
                   tal:repeat="value python: descriptor_data[1]"
                   tal:content="structure value">

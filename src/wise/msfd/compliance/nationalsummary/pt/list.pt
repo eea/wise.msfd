@@ -1,5 +1,5 @@
-<ul class="cell-listing" tal:condition="options/rows">
-  <li tal:repeat="row options/rows">
+<ul class="cell-listing" tal:condition="rows">
+  <li tal:repeat="row rows">
     <span>
       <em tal:replace="structure row"></em>
     </span>

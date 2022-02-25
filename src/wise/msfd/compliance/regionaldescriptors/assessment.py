@@ -125,7 +125,7 @@ class RegDescEditAssessmentDataForm(BaseRegComplianceView,
 
         # parse the datestring to reformat into a clearer format
         local_time = datetime.datetime.strptime(
-            local_time, '%b %d, %Y %I:%M %p'
+            local_time, '%b %d %Y %I:%M %p'
         )
         local_time = datetime.datetime.strftime(
             local_time, "%Y-%m-%d %H:%M"

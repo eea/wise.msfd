@@ -8,7 +8,7 @@ from collections import OrderedDict, defaultdict, namedtuple
 from six.moves.cPickle import dumps
 from hashlib import md5
 from inspect import getsource, isclass
-
+from functools import total_ordering
 from pkg_resources import resource_filename
 from six import string_types
 from sqlalchemy import inspect
@@ -493,6 +493,7 @@ def national_compoundrow(self, field, vals, raw_values):
     return NationalCompoundRow(self, self.request, field, vals, raw_values)
 
 
+@total_ordering
 class ItemLabel(TemplateMixin):
     """ Render a <span title='...'>Bla</span> for a Label
 
@@ -504,10 +505,25 @@ class ItemLabel(TemplateMixin):
         self.title = title.strip()          # human readable label
 
     def __str__(self):
-        return self.name
+        return self.__call__()
 
     def __repr__(self):
-        return self.name
+        return self.__call__()
+
+    def __eq__(self, other):
+        if hasattr(other, 'name'):
+            return self.name == other.name
+
+        return self.name == other        # this is not really ok
+
+    # def __ne__(self, other):
+    #     pass
+
+    def __lt__(self, other):
+        if hasattr(other, 'name'):
+            return self.name < other.name
+
+        return self.name < other        # this is not really ok
 
     def __cmp__(self, other):
         # TODO this no longer works in python 3
