@@ -11,7 +11,8 @@ from Products.Five.browser.pagetemplatefile import (PageTemplateFile,
 from .assessment import AssessmentDataMixin
 from .base import BaseComplianceView
 from .interfaces import IMSFDReportingHistoryFolder
-from .vocabulary import REGIONAL_DESCRIPTORS_REGIONS, REPORTING_HISTORY_ENV
+from .vocabulary import (
+    get_all_countries, REGIONAL_DESCRIPTORS_REGIONS, REPORTING_HISTORY_ENV)
 
 # TODO make REPORTING_HISTORY_ENV get data from IMSFDReportingHistoryFolder
 # _msfd_reporting_history_data
@@ -582,6 +583,32 @@ class BaseLandingPageRow(BaseComplianceView, AssessmentDataMixin,
 
     def __call__(self):
         return self.template(data=self.data)
+
+
+class AssessmentLandingPage(BaseComplianceView):
+    template = ViewPageTemplateFile("pt/assessment-landingpage.pt")
+
+    @property
+    def countries(self):
+        # ccode, cname
+        countries = get_all_countries()
+
+        return countries
+
+    @property
+    def regions(self):
+        regions = []
+
+        for region in REGIONAL_DESCRIPTORS_REGIONS:
+            if not region.is_main:
+                continue
+            
+            regions.append((region.code, region.title))
+        
+        return regions
+
+    def __call__(self):
+        return self.template()
 
 
 class CountryLandingPage(BaseComplianceView):
