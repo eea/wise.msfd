@@ -390,7 +390,9 @@ class MSFDReportingHistoryView(BaseComplianceView):
         """ Used to display the headers in the table """
         # do not show these columns
         blacklist_headers = self.blacklist_headers
-        headers = self._msfd_rep_history_data[0]
+        headers = (
+            self._msfd_rep_history_data 
+            and self._msfd_rep_history_data[0] or [])
 
         if use_blacklist:
             headers = [

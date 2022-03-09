@@ -178,6 +178,14 @@
 
   <browser:page
     for="*"
+    name="assessment-landingpage"
+    class=".landingpage.AssessmentLandingPage"
+    template="./pt/assessment-landingpage.pt"
+    permission="zope2.View"
+    />
+
+  <browser:page
+    for="*"
     name="region-landingpage"
     class=".landingpage.RegionLandingPage"
     template="./pt/region-landingpage.pt"
