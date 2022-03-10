@@ -178,20 +178,47 @@
 
   <browser:page
     for="*"
-    name="assessment-landingpage"
-    class=".landingpage.AssessmentLandingPage"
-    template="./pt/assessment-landingpage.pt"
-    permission="zope2.View"
-    />
-
-  <browser:page
-    for="*"
     name="region-landingpage"
     class=".landingpage.RegionLandingPage"
     template="./pt/region-landingpage.pt"
     permission="zope2.View"
     />
 
+  <browser:page
+    for="*"
+    name="assessment-landingpage"
+    class=".landingpage.MSFDReportsAssessmentsLandingPage"
+    template="./pt/assessment-landingpage.pt"
+    permission="zope2.View"
+    />
+
+  <browser:page
+    for="*"
+    name="reports-country"
+    class=".landingpage.ReportsCountryLandingPage"
+    permission="zope2.View"
+    />
+
+  <browser:page
+    for="*"
+    name="reports-region"
+    class=".landingpage.ReportsRegionLandingPage"
+    permission="zope2.View"
+    />
+
+  <browser:page
+    for="*"
+    name="assessments-country"
+    class=".landingpage.AssessmentsCountryLandingPage"
+    permission="zope2.View"
+    />
+
+  <browser:page
+    for="*"
+    name="assessments-region"
+    class=".landingpage.AssessmentsRegionLandingPage"
+    permission="zope2.View"
+    />
 
   <!-- <subscriber -->
   <!--   for="ZPublisher.interfaces.IPubAfterTraversal" -->
