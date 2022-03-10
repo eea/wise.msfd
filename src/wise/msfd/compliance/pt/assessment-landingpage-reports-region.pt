@@ -1,0 +1,60 @@
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en"
+  xmlns:tal="http://xml.zope.org/namespaces/tal"
+  xmlns:metal="http://xml.zope.org/namespaces/metal"
+  xmlns:i18n="http://xml.zope.org/namespaces/i18n"
+  lang="en"
+  metal:use-macro="context/main_template/macros/master"
+  i18n:domain="eea">
+
+  <head>
+    <metal:block fill-slot="style_slot">
+      <link href="/++resource++static_css/tabs.css" type="text/css" rel="stylesheet" />
+      <link href="/++resource++static_css/msfd_search.css" type="text/css" rel="stylesheet" />
+    </metal:block>
+  </head>
+
+  <body metal:fill-slot="main">
+    <div id="layout-contents" tal:define="text context/text | nothing" >
+      <div id="wise-search-form" class="full-width-marker">
+        <div id="wise-search-form-top">
+          <div tal:condition="text" tal:content="structure text/output"></div>
+
+          <div class="full-width-marker">
+            <div tal:condition="view/can_view_assessment_data">
+              <div class="topnav articles-wrapper row">
+                <tal:rep tal:repeat="country view/regions">
+                  <a class="article-box-anchor"
+                    tal:define="url python: '/marine/assessment-module/regional-descriptors-assessments/' + country[0].lower() + '/reports'"
+                    tal:attributes="href url">
+                    <div class="article-box col-lg-4 col-xs-6" style="height: 130px;padding: 20px 20px;">
+                      <div class="article-box-wrapper">
+                        <div class="article-box-header">
+                          <h4 class="tab-subtitle" tal:content="python: country[0]">EU</h4>
+                          <div class="tab-title" tal:content="python: country[1]">Belgium</div>
+                        </div>
+                        <!-- <div class="article-description">Assessed on: 01/01/2022</div> -->
+                        <a href=""
+                          tal:attributes="href url"
+                          class="article-link"
+                          target="_blank">
+                          <span class="link-btn"></span>
+                        </a>
+                    </div>
+                    </div>
+                  </a>
+                </tal:rep>
+              </div>
+            </div>
+         
+          </div> 
+          
+        </div>
+      </div>
+    </div>
+
+    <metal:css fill-slot="formtop">
+      <script src="++resource++msfd/js/msfd_search.js"></script>
+    </metal:css>
+
+  </body>
+</html>

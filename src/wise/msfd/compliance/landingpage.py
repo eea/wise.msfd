@@ -585,8 +585,16 @@ class BaseLandingPageRow(BaseComplianceView, AssessmentDataMixin,
         return self.template(data=self.data)
 
 
-class AssessmentLandingPage(BaseComplianceView):
+class MSFDReportsAssessmentsLandingPage(BaseComplianceView):
     template = ViewPageTemplateFile("pt/assessment-landingpage.pt")
+
+    def __call__(self):
+        return self.template()
+
+
+class ReportsCountryLandingPage(BaseComplianceView):
+    template = ViewPageTemplateFile(
+        "pt/assessment-landingpage-reports-country.pt")
 
     @property
     def countries(self):
@@ -595,6 +603,14 @@ class AssessmentLandingPage(BaseComplianceView):
 
         return countries
 
+    def __call__(self):
+        return self.template()
+
+
+class ReportsRegionLandingPage(BaseComplianceView):
+    template = ViewPageTemplateFile(
+        "pt/assessment-landingpage-reports-region.pt")
+    
     @property
     def regions(self):
         regions = []
@@ -611,13 +627,28 @@ class AssessmentLandingPage(BaseComplianceView):
         return self.template()
 
 
-class CountryLandingPage(BaseComplianceView):
-    template = ViewPageTemplateFile("pt/country-landingpage.pt")
+class AssessmentsCountryLandingPage(ReportsCountryLandingPage):
+    template = ViewPageTemplateFile(
+        "pt/assessment-landingpage-assessments-country.pt")
 
     def __call__(self):
         return self.template()
 
 
+class AssessmentsRegionLandingPage(ReportsRegionLandingPage):
+    template = ViewPageTemplateFile(
+        "pt/assessment-landingpage-assessments-region.pt")
+    
+    def __call__(self):
+        return self.template()
+
+
+class CountryLandingPage(BaseComplianceView):
+    template = ViewPageTemplateFile("pt/country-landingpage.pt")
+
+    def __call__(self):
+        return self.template()
+        
 class RegionLandingPage(BaseComplianceView):
     template = ViewPageTemplateFile("pt/region-landingpage.pt")
 
