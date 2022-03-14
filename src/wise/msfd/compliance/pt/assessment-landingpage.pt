@@ -62,119 +62,46 @@
             </div>   
 
             <div class="topnav articles-wrapper row">
-              <a class="article-box-anchor"
-                tal:define="url python: '/marine/policy-and-reporting/msfd-reports-and-assessments/ms-reports-country'"
-                tal:attributes="href url">
-                <div class="article-box col-lg-4 col-xs-6" style="height: 210px;">
+              <div class="article-box-anchor" style="width: 33.33333333%;">
+                <div class="article-box" style="height: 210px; widthz: 33%;">
                   <div class="article-box-wrapper">
                     <div class="article-box-header">
                       <h4 class="tab-subtitle">Reports</h4>
                       <div class="tab-title">Member State reports by country</div>
                     </div>
+                    <div class="country-dropdown-wrapper">
+                      <button class="country-dropdown-button">Select country<span class="link-btn"></span></button>
+                      <div class="country-dropdown-content">
+                        <a tal:repeat="country view/countries"
+                            tal:attributes="href python: '/marine/policy-and-reporting/assessment-by-country/' + country[1].lower().replace(' ', '-')"
+                            tal:content="python: country[1]">Belgium</a>
+                      </div>
+                    </div>
                     <!-- <div class="article-description">Access reports for a country</div> -->
-                    <a href=""
-                      tal:attributes="href url"
-                      class="article-link"
-                      target="_blank">
-                      <span class="link-btn"></span>
-                    </a>
                   </div>
                 </div>
-              </a>     
-              <a class="article-box-anchor"
-                tal:define="url python: '/marine/policy-and-reporting/msfd-reports-and-assessments/ms-reports-region'"
-                tal:attributes="href url">
-                <div class="article-box col-lg-4 col-xs-6" style="height: 210px;">
+              </div>     
+              <div class="article-box-anchor" style="width: 33.33333333%;">
+                <div class="article-box" style="height: 210px;">
                   <div class="article-box-wrapper"> <!-- style="background-color: #fad0c3;" -->
                     <div class="article-box-header">
                       <h4 class="tab-subtitle">Reports</h4>
                       <div class="tab-title">Member State reports by region</div>
                     </div>
+                    <div class="country-dropdown-wrapper">
+                      <button class="country-dropdown-button">Select region<span class="link-btn"></span></button>
+                      <div class="country-dropdown-content" style="width: 240px;height: 188px;">
+                        <a tal:repeat="country view/regions"
+                            tal:attributes="href python: '/marine/policy-and-reporting/assessment-by-region/' + country[1].lower().replace(' ', '-')"
+                            tal:content="python: country[1]">Baltic</a>
+                      </div>
+                    </div>
                     <!-- <div class="article-description">Access reports for a region</div> -->
-                    <a href=""
-                      tal:attributes="href url"
-                      class="article-link"
-                      target="_blank">
-                      <span class="link-btn"></span>
-                    </a>
                   </div>
                 </div>
-              </a>  
+              </div>  
             </div>         
 
-            <div tal:condition="view/can_view_assessment_data"
-                class="topnav articles-wrapper row">
-
-              <a class="article-box-anchor"
-                tal:define="url python: '/marine/policy-and-reporting/msfd-reports-and-assessments/com-assessments-country'"
-                tal:attributes="href url">
-                <div class="article-box col-lg-4 col-xs-6" style="height: 210px;">
-                  <div class="article-box-wrapper" style="background-color: #f3e2ab;">
-                    <div class="article-box-header">
-                      <h4 class="tab-subtitle">Assessments</h4>
-                      <div class="tab-title">Commission assessments by country</div>
-                    </div>
-                    <!-- <div class="article-description">Access assessments for a country</div> -->
-                    <a href=""
-                      tal:attributes="href url"
-                      class="article-link"
-                      target="_blank">
-                      <span class="link-btn"></span>
-                    </a>
-                  </div>
-                </div>
-              </a>     
-
-              <a class="article-box-anchor"
-                tal:define="url python: '/marine/policy-and-reporting/msfd-reports-and-assessments/com-assessments-region'"
-                tal:attributes="href url">
-                <div class="article-box col-lg-4 col-xs-6" style="height: 210px;">
-                  <div class="article-box-wrapper" style="background-color: #f3e2ab;"> <!-- style="background-color: #c1e1c5; -->
-                    <div class="article-box-header">
-                      <h4 class="tab-subtitle">Assessments</h4>
-                      <div class="tab-title">Commission assessments by region</div>
-                    </div>
-                    <!-- <div class="article-description">Access assessments for a region</div> -->
-                    <a href=""
-                      tal:attributes="href url"
-                      class="article-link"
-                      target="_blank">
-                      <span class="link-btn"></span>
-                    </a>
-                  </div>
-                </div>
-              </a>            
-            </div>         
-            
-            <!-- <div tal:condition="view/can_view_assessment_data">
-              <h4>Assessments by region</h4>
-              <div class="topnav articles-wrapper row">
-                <tal:rep tal:repeat="region view/regions">
-                  <a class="article-box-anchor"
-                    tal:define="url python: '/marine/assessment-module/regional-descriptors-assessments/' + region[0].lower() + '/assessments'"
-                    tal:attributes="href url">
-                    <div class="article-box col-lg-4 col-xs-6" style="height: 210px;padding: 20px 20px;">
-                      <div class="article-box-wrapper" style="background-color: #c1e1c5;">
-                        <div class="article-box-header">
-                          <h4 class="tab-subtitle" tal:content="python: region[0]">EU</h4>
-                          <div class="tab-title" tal:content="python: region[1]">Belgium</div>
-                        </div>
-                        <div class="article-description">Assessed on: 01/01/2022</div>
-                        <a href=""
-                          tal:attributes="href url"
-                          class="article-link"
-                          target="_blank">
-                          <span class="link-btn"></span>
-                        </a>
-                    </div>
-                    </div>
-                  </a>
-                </tal:rep>
-              </div>
-            </div> -->
-         
-          </div> 
-          
         </div>
       </div>
     </div>

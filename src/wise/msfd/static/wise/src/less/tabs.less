@@ -185,7 +185,6 @@
 .tab-content > .tab-pane {
   display: none;
 }
-
 .tab-content > .active {
   display: block;
 }
@@ -296,6 +295,54 @@
         background-color: #59d3ff;
         -webkit-transform: translate(0, -0.1em);
         transform: translate(0, -0.1em);
+      }
+    }
+
+    .country-dropdown-wrapper {
+      // position: relative;
+      // display: inline-block;
+
+      &:hover {
+        .country-dropdown-content {
+          display: flex;
+          flex-direction: column;
+          flex-wrap: wrap;
+        }
+        .country-dropdown-button {
+          background-color: #cdd6dd;
+          color: #002d54;
+        }
+      }
+
+      .country-dropdown-button {
+        background-color: #002d54;
+        color: #59d3ff;
+        padding: 5px 10px;
+        font-size: 16px;
+        border: none;
+        // float: right;
+      }
+
+      .country-dropdown-content {
+        display: none;
+        position: absolute;
+        background-color: #ffffff;
+        height: 235px;
+        width: 590px;
+        box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+        z-index: 1;
+
+        a {
+          color: #002d54;
+          padding: 12px 16px;
+          text-decoration: none;
+          display: block;
+          font-family: "PoppinsL";
+
+          &:hover {
+            background-color: #ddd;
+          }
+        }
       }
     }
   }

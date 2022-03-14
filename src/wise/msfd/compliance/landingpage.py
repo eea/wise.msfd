@@ -591,6 +591,25 @@ class BaseLandingPageRow(BaseComplianceView, AssessmentDataMixin,
 class MSFDReportsAssessmentsLandingPage(BaseComplianceView):
     template = ViewPageTemplateFile("pt/assessment-landingpage.pt")
 
+    @property
+    def countries(self):
+        # ccode, cname
+        countries = get_all_countries()
+
+        return countries
+
+    @property
+    def regions(self):
+        regions = []
+
+        for region in REGIONAL_DESCRIPTORS_REGIONS:
+            if not region.is_main:
+                continue
+            
+            regions.append((region.code, region.title))
+        
+        return regions
+
     def __call__(self):
         return self.template()
 
