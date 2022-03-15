@@ -39,7 +39,6 @@
           }
 
           .tab-title {
-            display: block;
             font-family: "PoppinsSemiB";
             font-size: 1.5rem;
             display: block;
@@ -51,8 +50,7 @@
             font-family: "RobotoR";
             max-width: 220px;
             padding: 0.4rem 0;
-            font-family: "RobotoR";
-            font-size: 10px;
+            display: block;
           }
         }
 
@@ -229,12 +227,10 @@
         font-family: "PoppinsB";
         margin-top: 0;
         margin-bottom: 3px;
-        font-family: "PoppinsB";
-        font-size: 18px;
+        max-width: 250px;
       }
 
       .tab-title {
-        font-family: "PoppinsL";
         font-size: 18px;
         font-family: "PoppinsL";
       }
@@ -270,7 +266,7 @@
       .link-btn:before {
         content: "";
         display: block;
-        content: "";
+        position: absolute;
       }
 
       .link-btn:before {
@@ -296,7 +292,7 @@
         background-color: #59d3ff;
       }
     }
-
+    
     .country-dropdown-wrapper {
       // position: relative;
       // display: inline-block;
@@ -379,13 +375,9 @@
     content: "\e095";
     font-family: @icon-font-family;
     display: inline-block;
-    margin-right: 8px;
-    content: "\f060";
-    font: normal normal normal 13px/1 FontAwesome;
-  }
-
-  img {
-    margin-left: 8px;
+    transform: scaleX(-1);
+    position: relative;
+    top: 2px;
   }
   &:hover {
     color: #0077bc;
