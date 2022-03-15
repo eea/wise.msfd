@@ -14,10 +14,11 @@
   </head>
 
   <body metal:fill-slot="main">
-    <div id="layout-contents" tal:define="text context/text | nothing" >
+    <div id="layout-contents">
       <div id="wise-search-form" class="full-width-marker">
-        <div id="wise-search-form-top">
-          <div tal:condition="text" tal:content="structure text/output"></div>
+        <div id="wise-search-form-top"
+            tal:define="text_field python: context.text or None" >
+          <div tal:condition="text_field" tal:content="structure python: text_field.output"></div>
 
           <div class="full-width-marker">
             <div class="topnav articles-wrapper row">
@@ -107,7 +108,7 @@
     </div>
 
     <metal:css fill-slot="formtop">
-      <script src="++resource++msfd/js/msfd_search.js"></script>
+      <script src="/++resource++msfd/js/msfd_search.js"></script>
     </metal:css>
 
   </body>
