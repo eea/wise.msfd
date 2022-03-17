@@ -516,9 +516,6 @@ class ItemLabel(TemplateMixin):
 
         return self.name == other        # this is not really ok
 
-    # def __ne__(self, other):
-    #     pass
-
     def __lt__(self, other):
         if hasattr(other, 'name'):
             return self.name < other.name
@@ -592,6 +589,17 @@ class ItemList(TemplateMixin):
 
         return v
         # return "<ItemList of %s children>" % len(self.rows)
+
+    def __eq__(self, other):
+        if len(self.rows) == len(other.rows):
+            for v1, v2 in zip(self.rows, other.rows):
+                if v1 != v2:
+                    return False
+
+        return True       # this is not really ok
+
+    def __lt__(self, other):
+        return len(self.rows) < len(other.rows)
 
     def __cmp__(self, other):
 
