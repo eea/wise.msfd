@@ -4,7 +4,7 @@ import threading
 
 from collections import defaultdict
 
-from sqlalchemy import create_engine, distinct, func, and_
+from sqlalchemy import create_engine, distinct, func, and_, or_
 from sqlalchemy.orm import scoped_session, sessionmaker
 from sqlalchemy.orm.relationships import RelationshipProperty
 from zope.sqlalchemy import register
@@ -855,3 +855,122 @@ def get_a11_descr_prog_code():
 
 
 A11_DESCR_PROG_CODES = get_a11_descr_prog_code()
+
+@use_db_session('2018')
+def get_all_data_from_view_Art8(country_code):
+    sess = session()
+    t = sql2018.t_V_ART8_GES_2018
+
+    conditions = [
+        t.c.CountryCode == country_code
+    ]
+
+    # Handle the case of Romania that submitted duplicate data,
+    # where Element is empty, but Criteria has data
+    if country_code != 'RO':
+        conditions.append(
+            or_(t.c.Element.isnot(None),
+                t.c.Criteria.isnot(None))
+        )
+    else:
+        conditions.append(
+            t.c.Element.isnot(None)
+        )
+
+    # groupby IndicatorCode
+    q = sess\
+        .query(t)\
+        .filter(*conditions)\
+        .distinct()
+
+    out = [x for x in q]
+
+    return out
+
+
+@use_db_session('2018')
+def get_all_data_from_view_Art9(country_code):
+    t = sql2018.t_V_ART9_GES_2018
+
+    conditions = [
+        t.c.CountryCode == country_code
+    ]
+
+    count, q = get_all_records_ordered(
+        t,
+        ('GESComponent', ),
+        *conditions
+    )
+
+    out = [x for x in q]
+
+    return out    
+
+
+@use_db_session('2018')
+def get_all_data_from_view_Art10(country_code):
+    t = sql2018.t_V_ART10_Targets_2018
+
+    conditions = [t.c.CountryCode == country_code]
+
+    count, res = get_all_records_ordered(
+        t,
+        (),
+        *conditions
+    )
+
+    out = [x for x in res]
+
+    return out
+
+
+@use_db_session('2018')
+def get_all_data_from_view_art11(country_code):
+    t = sql2018.t_V_ART11_Strategies_Programmes_2020
+
+    conditions = [
+        t.c.CountryCode == country_code
+    ]
+
+    count, q = get_all_records_ordered(
+        t,
+        (),
+        *conditions
+    )
+
+    res = [x for x in q]
+
+    return res    
+
+
+@use_db_session('2018')
+def is_art8_report_available_2018(region, country_code, descriptor):
+    mapper = sql2018.t_V_ART8_GES_2018
+    sess = session()
+
+    conditions = [
+        mapper.c.Region == region.upper(),
+        mapper.c.CountryCode == country_code.upper(),
+        mapper.c.GESComponent == descriptor.upper()
+    ]
+
+    q = sess.query(mapper).filter(*conditions).limit(1)
+
+    return q.count() > 0
+
+
+@use_db_session('2018')
+def is_art9_report_available_2018(region, country_code, descriptor):
+    mapper = sql2018.t_V_ART8_GES_2018
+    sess = session()
+
+    conditions = [
+        or_(mapper.c.Region == region.upper(),
+            mapper.c.Region == None),
+        mapper.c.CountryCode == country_code.upper(),
+        mapper.c.GESComponent == descriptor.upper()
+    ]
+
+    q = sess.query(mapper).filter(*conditions).limit(1)
+
+    return q.count() > 0

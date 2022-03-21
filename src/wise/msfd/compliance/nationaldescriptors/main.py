@@ -21,13 +21,15 @@ from wise.msfd.compliance.assessment import (ANSWERS_COLOR_TABLE,
                                              AssessmentDataMixin,
                                              get_assessment_data_2012_db,
                                              filter_assessment_data_2012)
-from wise.msfd.compliance.base import NAT_DESC_QUESTIONS
+from wise.msfd.compliance.base import (
+    NAT_DESC_QUESTIONS, is_row_relevant_for_descriptor)
 from wise.msfd.compliance.content import AssessmentData
 from wise.msfd.compliance.scoring import (get_overall_conclusion,
                                           get_range_index, OverallScores)
 from wise.msfd.compliance.utils import ordered_regions_sortkey
+from wise.msfd.compliance.vocabulary import REGIONS
 from wise.msfd.data import _extract_pdf_assessments, get_text_reports_2018
-from wise.msfd.gescomponents import get_descriptor
+from wise.msfd.gescomponents import get_descriptor, get_features
 from wise.msfd.utils import t2rt
 
 from .base import BaseView
@@ -252,7 +254,172 @@ class MSFDReportingHistoryMixin(object):
 class NatDescCountryOverviewReports(NationalDescriptorCountryOverview):
     """ Class declaration needed to be able to override HTML head title """
 
-    implements(ICountryStartReports)
+    def _is_report_2018_art8(self, region, desc_id):
+        country_code = self.country_code.upper()
+        region = region.upper()
+        desc_id = desc_id.upper()
+        # descriptor_db = desc_id.replace('D4', 'D4/D1').replace('D6', 'D6/D1')
+        descriptor = get_descriptor(desc_id)
+        all_ids = list(descriptor.all_ids())
+        ok_features = set([f.name for f in get_features(desc_id)])
+
+        if desc_id.startswith('D1.'):
+            all_ids.append('D1')
+
+        for row in self.art8_data:
+            # TODO check get_data_from_view_art8 for more edge cases
+            if row.CountryCode != country_code:
+                continue
+
+            if not (row.Region == region or row.Region == 'NotReported'):
+                continue
+
+            if row.GESComponent not in all_ids:
+                continue
+
+            if not desc_id.startswith('D1.'):
+                return True
+
+            feats = set((row.Feature, ))
+
+            if feats.intersection(ok_features):
+                return True
+
+        return False
+
+    def _is_report_2018_art9(self, region, desc_id):
+        country_code = self.country_code.upper()
+        region = region.upper()
+        desc_id = desc_id.upper()
+        # descriptor_db = desc_id.replace('D4', 'D4/D1').replace('D6', 'D6/D1')
+        descriptor = get_descriptor(desc_id)
+        all_ids = list(descriptor.all_ids())
+        ok_features = set([f.name for f in get_features(desc_id)])
+
+        if desc_id.startswith('D1.'):
+            all_ids.append('D1')
+
+        for row in self.art9_data:
+            if row.CountryCode != country_code:
+                continue
+
+            if not (row.Region == region or row.Region == 'NotReported'  or row.Region is None):
+                continue
+
+            if row.GESComponent not in all_ids:
+                continue
+            
+            if not row.Features:
+                return True
+
+            if not desc_id.startswith('D1.'):
+                return True
+
+            feats = set(row.Features.split(','))
+
+            if feats.intersection(ok_features):
+                return True
+
+        return False    
+        
+    def _is_report_2018_art10(self, region, desc_id):
+        country_code = self.country_code.upper()
+        region = region.upper()
+        desc_id = desc_id.upper()
+        # descriptor_db = desc_id.replace('D4', 'D4/D1').replace('D6', 'D6/D1')
+        descriptor = get_descriptor(desc_id)
+        all_ids = list(descriptor.all_ids())
+        ok_features = set([f.name for f in get_features(desc_id)])
+    
+        blacklist_descriptors = ['D1.1', 'D1.2', 'D1.3', 'D1.4', 'D1.5',
+                                 'D1.6', 'D4', 'D6']
+        
+        if descriptor.id in blacklist_descriptors:
+            blacklist_descriptors.remove(descriptor.id)
+        
+        blacklist_features = []
+        for _desc in blacklist_descriptors:
+            blacklist_features.extend([
+                f.name for f in get_features(_desc)
+            ])
+        blacklist_features = set(blacklist_features)
+
+        if desc_id.startswith('D1.'):
+            all_ids.append('D1')
+
+        for row in self.art10_data:
+            if row.CountryCode != country_code:
+                continue
+
+            if not (row.Region == region 
+                    or row.Region == 'NotReported'
+                    or row.Region is None):
+                continue
+
+            ges_comps = getattr(row, 'GESComponents', ())
+            ges_comps = set([g.strip() for g in ges_comps.split(',')])
+
+            if not ges_comps.intersection(all_ids):
+                continue
+            
+            if not desc_id.startswith('D1.'):
+                return True
+
+            row_needed = is_row_relevant_for_descriptor(
+                row, desc_id, ok_features, blacklist_features,
+                ges_comps
+            )
+
+            if row_needed:
+                return True
+
+        return False    
+        
+    def _is_report_2018_art11(self, region, desc_id):
+        country_code = self.country_code.upper()
+        region = region.upper()
+        desc_id = desc_id.upper()
+        # descriptor_db = desc_id.replace('D4', 'D4/D1').replace('D6', 'D6/D1')
+        descriptor = get_descriptor(desc_id)
+        all_ids = list(descriptor.all_ids())
+        region_names = [
+            REGIONS[region].replace('&', 'and')
+        ]
+        region_names = [
+            ':' in rname and rname.split(':')[1].strip() or rname
+            for rname in region_names
+        ]
+
+        if desc_id.startswith('D1.'):
+            all_ids.append('D1')
+
+        for row in self.art11_data:
+            if row.CountryCode != country_code:
+                continue
+
+            if row.Descriptor not in all_ids:
+                continue
+            
+            regions_reported = set(row.SubRegions.split(','))
+
+            if regions_reported.intersection(set(region_names)):
+                return True
+
+        return False
+
+    def is_report_available_2018(self, region, descriptor, article):
+        method_name = '_is_report_2018_' + article
+
+        available = True
+
+        if hasattr(self, method_name):
+            check_method = getattr(self, method_name)
+            available = check_method(region, descriptor)
+            
+        print("Report for %s %s %s is %s" 
+                % (region, descriptor, article, available))
+
+        return available
 
     def text_reports(self):
         reports = get_text_reports_2018(self.country_code)
@@ -260,11 +427,23 @@ class NatDescCountryOverviewReports(NationalDescriptorCountryOverview):
 
         for row in reports:
             file_url = row[0]
+            report_date = row[1]
+            report_date = report_date.date().isoformat()
             file_url_split = file_url.split('/')
             file_name = file_url_split[-1]
-            res.append((file_name, file_url))
+            res.append((file_name, file_url, report_date))
 
-        return sorted(res, key=lambda i: i[0])
+        return res
+
+        # return sorted(res, key=lambda i: i[0])
+
+    def __call__(self):
+        self.art8_data = db.get_all_data_from_view_Art8(self.country_code)
+        self.art9_data = db.get_all_data_from_view_Art9(self.country_code)
+        self.art10_data = db.get_all_data_from_view_Art10(self.country_code)
+        self.art11_data = db.get_all_data_from_view_art11(self.country_code)
+
+        return self.index()
 
 
 class NatDescCountryOverviewAssessments(NationalDescriptorCountryOverview,

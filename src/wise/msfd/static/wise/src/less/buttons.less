@@ -21,6 +21,20 @@
     .button-size(@padding-base-vertical; @padding-base-horizontal; @font-size-base; @line-height-base; @btn-border-radius-base);
     .user-select(none);
 
+    &.not-reported {
+      background-color: #999;
+      border-color: #777;
+      color: white;
+
+      &:hover {
+        background-color: #777;
+        color: white;
+      }
+      &:active {
+        color: white;
+      }
+    }
+
     &,
     &:active,
     &.active {
