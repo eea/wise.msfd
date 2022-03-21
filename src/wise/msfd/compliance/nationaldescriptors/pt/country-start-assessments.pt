@@ -111,12 +111,14 @@
                 </td>
               </tr>
               <tr class="fullwidth-statusbar">
-                <td colspan="3" tal:define="assessment python: view.national_report_art12">
-<!--                  <div style="text-align: center;">Art. 12 (8-9-10) National report - 2018</div>-->
-                  <a style="margin-bottom: 5px;"
+                <td colspan="3" 
+                    class="assessment-status-td"
+                    tal:define="assessment python: view.national_report_art12;
+                        assessment_title python:'Art. 12 (8-9-10) National report - 2018'">
+                  <!-- <a style="margin-bottom: 5px;"
                       target="_blank"
                       tal:attributes="href assessment/absolute_url"
-                      class="assessment-status-colorbar btn btn-xs btn-default">Art. 12 (8-9-10) National report - 2018</a>
+                      class="assessment-status-colorbar btn btn-xs btn-default">Art. 12 (8-9-10) National report - 2018</a> -->
                   <div metal:use-macro="context/wise-macros/macros/assessment-status-bar"></div>
                 </td>
                 <td>
@@ -144,7 +146,9 @@
                   </td>
                 </tal:rep>
                 <tal:rep tal:repeat="assessment python: view.get_secondary_articles(view._country_folder)">
-                  <td style="text-align: center;"
+                  <td class="assessment-status-td" 
+                      style="text-align: center;"
+                      tal:define="assessment_title python: 'View assessment'"
                       tal:condition="python: assessment.id != 'art7'">
                     <div metal:use-macro="context/wise-macros/macros/assessment-status-bar"></div>
                   </td>
@@ -167,7 +171,7 @@
                   <!--<h3 tal:attributes="id region/id" tal:content="region/title"-->
                       <!--style="position: sticky; left: 0;">Region name</h3>-->
                 <table style="margin-top: -0.8em;"
-                    class="table table-sticky-first-col as-table-overview table-striped table-country-start table-homepage-assessments table-report">
+                    class="table table-sticky-first-col as-table-overview table-striped table-country-start table-homepage-assessmentsZ table-report">
                   <tbody>
                     <tal:rep tal:repeat="region regions">                
                       <tr>
@@ -190,11 +194,13 @@
                         <th class="sticky-col sub-header">
                           <span tal:content="python: view.descriptor_for_code(desc.id).title">D0</span>
                         </th>
-                        <td tal:repeat="assessment python: view.get_articles(desc)">
-                          <div metal:use-macro="context/wise-macros/macros/assessment-status-bar"></div>
+                        <td class="assessment-status-td" 
+                            tal:repeat="assessment python: view.get_articles(desc)">
+                          <div metal:use-macro="context/wise-macros/macros/assessment-status-bar-2012-2018"></div>
                         </td>
-                        <td tal:define="assessment python: desc['art11']">
-                          <div metal:use-macro="context/wise-macros/macros/assessment-status-bar"></div>
+                        <td class="assessment-status-td" 
+                            tal:define="assessment python: desc['art11']">
+                          <div metal:use-macro="context/wise-macros/macros/assessment-status-bar-2012-2018"></div>
                         </td>
                         <td style="text-align: center;" tal:repeat="assessment python: view.get_articles_part2(desc)">
                           <i style="text-align: center; font-style: italic; font-weight: 300;">Not available</i>

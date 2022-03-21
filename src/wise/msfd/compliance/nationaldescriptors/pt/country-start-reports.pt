@@ -42,8 +42,9 @@
           <div class="assessment-dd-list-5">
             <ul style="margin: 0;">
               <li tal:repeat="text_report python: text_reports[:5]">
-                <a tal:attributes="href python: text_report[1]"
-                        tal:content="python: text_report[0]">FileName1</a>
+                <a tal:attributes="href python: text_report[1];
+                      title python: 'Reported on: ' + text_report[2]"
+                    tal:content="python: text_report[0]">FileName1</a>
               </li>
             </ul>
           </div>
@@ -51,8 +52,9 @@
               class="assessment-dd-list">
             <ul>
               <li tal:repeat="text_report python: text_reports[5:]">
-                <a tal:attributes="href python: text_report[1]"
-                        tal:content="python: text_report[0]">FileName1</a>
+                <a tal:attributes="href python: text_report[1];
+                      title python: 'Reported on: ' + text_report[2]"
+                    tal:content="python: text_report[0]">FileName1</a>
               </li>
             </ul>
           </div>
@@ -116,14 +118,22 @@
                   <td tal:repeat="assessment python: view.get_articles(desc)">
                     <a tal:attributes="href python: assessment.absolute_url() + '/@@view-report-data-2012';
                         class python: 'btn btn-xs btn-success'" target='_blank'>2012</a>
-                    <a tal:attributes="href python: assessment.absolute_url() + '/@@view-report-data-2018';
-                        class python: 'btn btn-xs btn-primary'" target='_blank'>2018</a>
+                    <a tal:define="is_report_2018 python: view.is_report_available_2018(region.id, desc.id, assessment.id);
+                          is_disabled python: is_report_2018 and ' btn-primary' or ' not-reported'"
+                        tal:attributes="href python: assessment.absolute_url() + '/@@view-report-data-2018';
+                          class python: 'btn btn-xs' + is_disabled;
+                          title python: is_report_2018 and ' ' or 'Not reported' "
+                        target='_blank'>2018</a>
                   </td>
                   <td tal:define="assessment python: desc['art11']">
                     <a tal:attributes="href python: assessment.absolute_url() + '/@@view-report-data-2014'"
                         class="btn btn-xs btn-success" target='_blank'>2014</a>
-                    <a tal:attributes="href python: assessment.absolute_url() + '/@@view-report-data-2020'"
-                        class="btn btn-xs btn-primary" target='_blank'>2020</a>
+                    <a tal:define="is_report_2018 python: view.is_report_available_2018(region.id, desc.id, assessment.id);
+                          is_disabled python: is_report_2018 and ' btn-primary' or ' not-reported'"
+                        tal:attributes="href python: assessment.absolute_url() + '/@@view-report-data-2020';
+                          class python: 'btn btn-xs' + is_disabled;
+                          title python: is_report_2018 and ' ' or 'Not reported'"
+                        target='_blank'>2020</a>
                     <a tal:attributes="href python: assessment.absolute_url() + '/@@view-report-data-2014-2020'"
                         class="btn btn-xs btn-warning" target='_blank'>2014/2020</a>
                   </td>
