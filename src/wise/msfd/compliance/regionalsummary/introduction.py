@@ -51,9 +51,9 @@ REGIONS_SUBREGIONS = {
         'eu_area': '63,227',
         'subregions': [
             # region name, total area, eu area
-            ('Black Sea (excluding Seas of Marmara and Azov)', '473,894', ''),
-            ('Black Sea - Sea of Marmara', '11,737', ''),
-            ('Black Sea - Sea of Azov', '39,851', '')
+            # ('Black Sea (excluding Seas of Marmara and Azov)', '473,894', ''),
+            # ('Black Sea - Sea of Marmara', '11,737', ''),
+            # ('Black Sea - Sea of Azov', '39,851', '')
         ]
     }
 }

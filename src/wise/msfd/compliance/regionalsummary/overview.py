@@ -78,6 +78,8 @@ class RegionalDescriptorsSimpleTable(BaseRegSummaryView):
     @property
     def available_countries(self):
         countries = self._region_folder._countries_for_region
+        # remove united kingdom
+        countries = [x for x in countries if x[0] != 'UK']
         sorted_countries = sorted(countries, key=lambda i: i[1])
 
         return sorted_countries
