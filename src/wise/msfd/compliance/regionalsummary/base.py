@@ -149,7 +149,10 @@ class BaseRegSummaryView(BaseComplianceView):
 
     @property
     def available_countries(self):
-        return self._region_folder._countries_for_region
+        countries = self._region_folder._countries_for_region
+        countries = [x for x in countries if x[0] != 'UK']
+        
+        return countries
 
     @property
     def available_subregions(self):
