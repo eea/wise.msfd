@@ -61,25 +61,29 @@
 
           <metal:form use-macro="context/@@ploneform-macros/titlelessform">
             <metal:fields fill-slot="fields">
-              <tal:rep tal:repeat="region view/region_codes">
-                <tal:def tal:define="subforms python: view.get_subforms_for_region(region[0])">
-                  <h4 tal:condition="subforms"
-                    tal:content="python: '{} ({}) - {} recommendations'.format(region[1], region[0], len(subforms))">Baltic</h4>
-                  
-                  <div tal:repeat='subform subforms'
-                      class="recommendation-subform-wrap">
-                    <div class="recommendation-subform">
-                      <div class="recommendation-info-container">
-                        <div class="subform-title">
-                          <span tal:content="python: subform.recommendation.code"></span>
-                          -
-                          <span tal:content="python: subform.recommendation.topic"></span>
-                        </div>
-                        <div tal:content="python: subform.recommendation.text"></div>
-                        <!-- <div tal:content="python: subform.recommendation.ms_region"></div> -->
-                        <!-- <div tal:content="python: subform.recommendation.descriptors"></div> -->
+              <tal:def tal:define="subforms_grouped python: view.subforms">
+                <!-- <h4 tal:condition="subforms"
+                  tal:content="python: '{} ({}) - {} recommendations'.format(region[1], region[0], len(subforms))">Baltic</h4> -->
+                
+                <div tal:repeat='subform_group subforms_grouped'
+                    class="recommendation-subform-wrap">
+                  <div class="recommendation-subform">
+                    <div class="recommendation-info-container">
+                      <div class="subform-title">
+                        <span tal:content="python: subform_group[0][0]"></span>
+                        -
+                        <span tal:content="python: subform_group[0][1]"></span>
                       </div>
+                      <div tal:content="python: subform_group[0][2]"></div>
+                      <!-- <div tal:content="python: subform_group[1][0].region"></div> -->
+                      <!-- <div tal:content="python: subform.recommendation.descriptors"></div> -->
+                    </div>
 
+                    <tal:rep tal:repeat="subform python: subform_group[1]">
+                      <h5 tal:condition="python: hasattr(subform, 'region_title')"
+                          tal:content="subform/region_title"></h5>
+                      <!-- <div tal:condition="python: hasattr(subform, 'ms_region')" 
+                          tal:content="subform/ms_region"></div> -->
                       <div class="fields-container">
                         <div tal:repeat="fieldname subform/fields" class="fields-container-row">
                           <tal:def define="widget python: view.widgets[fieldname]">
@@ -122,10 +126,10 @@
                           </tal:def>
                         </div>
                       </div>
-                    </div>
+                    </tal:rep>
                   </div>
-                </tal:def>
-              </tal:rep>
+                </div>
+              </tal:def>
             </metal:fields>
 
             <metal:slot fill-slot="actions">
