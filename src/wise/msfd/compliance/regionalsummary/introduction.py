@@ -274,6 +274,14 @@ class MarineWatersTable(RegionalIntroduction):
 
         total = REGIONS_SUBREGIONS[self.region_code]['area']
         total = int(total.replace(',', ''))
+        # uk_total = [
+        #         float(row.Area_km2.replace(',', ''))
+        #         for row in data
+        #         if (row.Country == 'UK' and
+        #             row.Type in types and
+        #             row.Region == self.region_code)
+        #     ]
+        # total = total - sum(uk_total)
 
         for country_id, country_name in self.available_countries:
             values = [

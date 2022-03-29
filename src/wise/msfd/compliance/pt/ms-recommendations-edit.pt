@@ -129,6 +129,54 @@
                     </tal:rep>
                   </div>
                 </div>
+                <div class="recommendation-subform-wrap">
+                  <div class="recommendation-subform">
+                    <div class="fields-container">
+                      <tal:def tal:define="subform view/get_subforms_descr_comments">
+                        <div tal:repeat="fieldname subform/fields" class="fields-container-row">
+                          <tal:def define="widget python: view.widgets[fieldname]">
+
+                            <div class="field"
+                              tal:define="error widget/error;
+                              hidden python:widget.mode == 'hidden';
+                              element nocall: widget/field/_element | nothing;"
+                              tal:attributes="class python:'field' + (error and ' error' or '')">
+
+                              <span class="fieldRequired" title="Required"
+                                tal:condition="python:widget.required and not hidden"
+                                i18n:translate="label_required"
+                                i18n:attributes="title title_required;">
+                                (Required)
+                              </span>
+
+                              <div class="widget">
+                                <div>
+                                  <label for=""
+                                    tal:condition="not:hidden"
+                                    class="help-popover"
+                                    data-trigger="hover"
+                                    data-html="true"
+                                    tal:attributes="for widget/id;
+                                    title python: element and element.title or '';">
+                                    <span i18n:translate="" tal:content="widget/label">label</span>
+                                  </label>
+                                </div>
+                                <div class="assessment-form-input">
+                                  <input type="text" tal:replace="structure widget/render" />
+                                </div>
+                              </div>
+
+                              <div tal:condition="error" tal:content="structure error/render">
+                                Error
+                              </div>
+                            </div>
+
+                          </tal:def>
+                        </div>
+                      </tal:def>
+                    </div>
+                  </div>
+                </div>
               </tal:def>
             </metal:fields>
 

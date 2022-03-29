@@ -200,7 +200,10 @@
                         </td>
                         <td class="assessment-status-td" 
                             tal:define="assessment python: desc['art11']">
-                          <div metal:use-macro="context/wise-macros/macros/assessment-status-bar-2012-2018"></div>
+                          <!-- <div metal:use-macro="context/wise-macros/macros/assessment-status-bar-2012-2018"></div> -->
+                          <a class="assessment-status-colorbar btn btn-xs btn-default"
+                              title="Not started"
+                              tal:attributes="href assessment/absolute_url;">2018</a> 
                         </td>
                         <td style="text-align: center;" tal:repeat="assessment python: view.get_articles_part2(desc)">
                           <i style="text-align: center; font-style: italic; font-weight: 300;">Not available</i>

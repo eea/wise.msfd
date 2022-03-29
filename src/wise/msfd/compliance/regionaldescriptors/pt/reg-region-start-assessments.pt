@@ -104,12 +104,13 @@
                 </td>
               </tr>
               <tr class="fullwidth-statusbar">
-                <td colspan="3" tal:define="assessment python: view.regional_report_art12">
-<!--                  <div style="text-align: center;">Art. 12 (8-9-10) Regional report - 2018</div>-->
-                  <a style="margin-bottom: 5px;"
+                <td class="assessment-status-td regional" colspan="3" 
+                    tal:define="assessment python: view.regional_report_art12;
+                        assessment_title python:'Art. 12 (8-9-10) Regional report - 2018'">
+                  <!-- <a style="margin-bottom: 5px;"
                       target="_blank"
                       tal:attributes="href assessment/absolute_url"
-                      class="assessment-status-colorbar btn btn-xs btn-default">Art. 12 (8-9-10) Regional report - 2018</a>
+                      class="assessment-status-colorbar btn btn-xs btn-default">Art. 12 (8-9-10) Regional report - 2018</a> -->
                   <div metal:use-macro="context/wise-macros/macros/assessment-status-bar"></div>
                 </td>
                 <td>
@@ -129,7 +130,7 @@
           <div class="assessment-module-header">Commission assessments - per descriptor</div>
           <div class="overflow-table sticky-overflow-header hidden-fixed-table">
             <div class="inner" style="overflow: auto;">
-              <table class="table table-sticky-first-col as-table-overview table-striped table-country-start table-homepage-reports table-report">
+              <table class="table table-sticky-first-col as-table-overview table-striped table-country-start table-report">
                 <tbody>
                   <tr class="article-title sticky-row">
                     <th style="text-align: left;" class="sticky-col">Descriptor</th>
@@ -146,11 +147,19 @@
                     <th class="sticky-col">
                       <span tal:content="python: view.descriptor_for_code(desc.id).title">D0</span>
                     </th>
-                    <td tal:repeat="assessment python: view.get_articles(desc)">
-                      <div metal:use-macro="context/wise-macros/macros/assessment-status-bar"></div>
+                    <td class="assessment-status-td regional" 
+                        tal:repeat="assessment python: view.get_articles(desc)">
+                      <div metal:use-macro="context/wise-macros/macros/assessment-status-bar-2012-2018"></div>
                     </td>
-                    <td style="text-align: center;">
+                    <!-- <td style="text-align: center;">
                       <i style="text-align: center; font-style: italic; font-weight: 300;">Not available</i>
+                    </td> -->
+                    <td class="assessment-status-td" 
+                        tal:define="assessment python: desc['art11']">
+                      <!-- <div metal:use-macro="context/wise-macros/macros/assessment-status-bar-2012-2018"></div> -->
+                      <a class="assessment-status-colorbar btn btn-xs btn-default"
+                          title="Not started"
+                          tal:attributes="href assessment/absolute_url;">2018</a> 
                     </td>
                     <td style="text-align: center;" tal:repeat="assessment python: view.get_articles_part2(desc)">
                       <i>Not available</i>

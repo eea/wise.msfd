@@ -325,6 +325,7 @@
         </div>
       </div>
 
+      <div>2018 assessment progress</div>
       <a class="assessment-status-container2"
         target="_blank"
         tal:attributes="href url">
@@ -383,6 +384,7 @@
         </div>
       </div>
 
+      <div>Assessment progress</div>
       <a class="assessment-status-container2"
         target="_blank"
         tal:attributes="href url">

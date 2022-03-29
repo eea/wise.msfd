@@ -194,6 +194,10 @@ body.plone-toolbar-left-expanded {
       background-color: #f1f1f1;
     }
 
+    tbody tr:nth-of-type(even) {
+      background-color: white;
+    }
+
     thead {
       background-color: #aaa !important;
 
@@ -314,6 +318,7 @@ body.plone-toolbar-left-expanded {
       left: -1px;
       z-index: 3;
       box-shadow: 2px 0 0 white;
+      background-color: inherit;
       //box-shadow: 2px 0 0 #ddd;
     }
   }
@@ -731,8 +736,33 @@ h4.process-phase-title {
 }
 
 .assessment-status-td {
+  position: relative;
+  text-align: center;
+
+  &.regional {
+    .assessment-status-wrapper {
+      width: 400px;  
+    }
+  }
+
   .assessment-status-wrapper {
     display: none;
+    width: 350px;
+    flex-direction: column;
+    left: 0;
+    right: 0;
+    margin-left: auto;
+    margin-right: auto;
+
+    .assessment-status-processstate {
+      top: 3px;
+      right: 3px;
+      padding: 7px;
+
+      .pat-select2 {
+        min-width: 250px !important;
+      }
+    }
   }
   &:hover {
     .assessment-status-wrapper {
