@@ -136,7 +136,33 @@ class MSRecommendationsEditForm(BaseView, Form):
             for s in subforms:
                 fields.extend(s.fields._data_values)
 
+        comm_subform = self.get_subforms_descr_comments()
+        fields.extend(comm_subform.fields._data_values)
+
         return Fields(*fields)
+
+    def get_subforms_descr_comments(self):
+        recommendations_data = getattr(
+            self.context, 'recommendations_data', {})
+        form = EmbeddedForm(self, self.request)
+        fields = []
+
+        for descr_code, descr_title in self.descriptors:
+            field_name = "{}_comment".format(descr_code)
+            default = recommendations_data.get(field_name, None)
+
+            field = Text(
+                    title=u'Comments on {}'.format(descr_code),
+                    __name__=field_name, 
+                    required=False, 
+                    default=default
+                )
+            # field._criteria = criteria
+            fields.append(field)
+
+        form.fields = Fields(*fields)
+        
+        return form
 
     def get_subforms(self):
         recommendations_data = getattr(
@@ -235,23 +261,6 @@ class MSRecommendationsEditForm(BaseView, Form):
         sorted_forms = sorted(sorted_forms)
         
         return sorted_forms
-
-    def get_subforms_grouped(self):
-        recommendations = defaultdict(list)
-
-        for subform in self.subforms:
-            rec_code = subform.recommendation.code
-            
-            recommendations[rec_code].append(subform)
-        
-        out = []
-        codes = sorted(recommendations.keys())
-
-        for code in codes:
-            out.append((code, recommendations[code]))
-
-        return out
-
 
     def get_subforms_for_region(self, region):
         res = []
