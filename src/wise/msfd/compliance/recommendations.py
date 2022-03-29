@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 
+from collections import defaultdict
+
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 from plone.api import portal
 from zope.schema import Choice, Text
