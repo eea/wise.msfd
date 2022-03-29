@@ -5,12 +5,11 @@ from __future__ import absolute_import
 from collections import namedtuple
 from logging import getLogger
 
-from zope.interface import implementer, implements, alsoProvides
+from zope.interface import implementer, alsoProvides
 
 from persistent.list import PersistentList
 from plone.api.content import transition
 from plone.api.portal import get_tool
-from plone.protect import CheckAuthenticator  # , protect
 from plone.protect.interfaces import IDisableCSRFProtection
 from Products.Five.browser.pagetemplatefile import \
     ViewPageTemplateFile as Template
@@ -141,7 +140,6 @@ class NationalDescriptorCountryOverview(BaseView):
 
         return sorted_regions
 
-    # @protect(CheckAuthenticator)
     def send_to_tl(self):
         regions = self.get_regions()
 
@@ -453,8 +451,6 @@ class NatDescCountryOverviewAssessments(NationalDescriptorCountryOverview,
                                         MSFDReportingHistoryMixin):
     """ Class declaration needed to be able to override HTML head title """
 
-    # implements(ICountryStartAssessments)
-
     def get_url_art12_2012(self):
         article = 'Article 12 (Art.8-9-10)'
         country_code = self.country_code
@@ -663,7 +659,6 @@ class NationalDescriptorRegionView(BaseView):
 
 @implementer(INationaldescriptorArticleView)
 class NationalDescriptorArticleView(BaseView, AssessmentDataMixin):
-    # implements(INationaldescriptorArticleView)
     section = 'national-descriptors'
 
     assessment_data_2012_tpl = Template('./pt/assessment-data-2012.pt')
@@ -886,7 +881,6 @@ class NationalDescriptorSecondaryArticleView(NationalDescriptorArticleView):
 
     pdf_assessments = _extract_pdf_assessments()
 
-    # implements(INationaldescriptorSecondaryArticleView)
     _descriptor = 'Not linked'
 
     @property

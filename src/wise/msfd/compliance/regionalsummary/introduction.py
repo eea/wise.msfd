@@ -4,7 +4,7 @@ from sqlalchemy import or_
 
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 
-from wise.msfd import db, sql2018
+from wise.msfd import db 
 from wise.msfd.data import get_text_reports_2018
 from wise.msfd.sql2018 import MarineReportingUnit, ReportingHistory
 from wise.msfd.utils import ItemList
@@ -253,7 +253,7 @@ class MarineWatersTable(RegionalIntroduction):
 
     @db.use_db_session('2018')
     def _get_marine_waters_data(self):
-        column_names = ['Country', 'Subregion', 'Area_km2', 'Type']
+        # column_names = ['Country', 'Subregion', 'Area_km2', 'Type']
 
         # cnt, data = db.get_all_specific_columns(
         #     [getattr(sql2018.t_MarineWaters.c, c) for c in column_names]

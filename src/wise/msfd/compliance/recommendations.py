@@ -2,17 +2,13 @@
 
 from __future__ import absolute_import
 from collections import defaultdict
-from datetime import datetime
-from email.policy import default
-from io import BytesIO
 
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 from plone.api import portal
-from plone.z3cform.layout import wrap_form
 from zope.schema import Choice, Text
 from zope.schema.vocabulary import SimpleTerm, SimpleVocabulary
 
-from wise.msfd.base import EmbeddedForm, MainFormWrapper
+from wise.msfd.base import EmbeddedForm
 from wise.msfd.compliance.vocabulary import get_regions_for_country
 from wise.msfd.gescomponents import get_all_descriptors, get_descriptor
 from z3c.form.button import buttonAndHandler
@@ -290,6 +286,3 @@ class MSRecommendationsEditForm(BaseView, Form):
         self.context.recommendations_data = data
         self.context._p_changed = True
         self._p_changed = True
-        
-
-# MSRecommendationsEditFormView = wrap_form(MSRecommendationsEditForm, MainFormWrapper)

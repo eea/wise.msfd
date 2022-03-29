@@ -13,18 +13,16 @@ from plone.api import user
 from plone.z3cform.layout import wrap_form
 from Products.Five.browser import BrowserView
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
-from Products.statusmessages.interfaces import IStatusMessage
 from wise.msfd.base import (EditAssessmentFormWrapper as MainFormWrapper,
                             EditAssessmentFormWrapperSecondary)
 from wise.msfd.base import EmbeddedForm
 from wise.msfd.compliance.assessment import (EditAssessmentDataFormMain,
                                              PHASES, additional_fields,
-                                             render_assessment_help,
                                              summary_fields)
 from wise.msfd.compliance.base import NAT_DESC_QUESTIONS
 from wise.msfd.compliance.content import AssessmentData
 from wise.msfd.compliance.scoring import Score
-from wise.msfd.translation import get_translated, retrieve_translation
+from wise.msfd.translation import get_translated 
 from z3c.form.button import buttonAndHandler
 from z3c.form.field import Fields
 
@@ -116,31 +114,6 @@ class EditAssessmentDataForm(BaseView, EditAssessmentDataFormMain):
             self.country_title,
             self.country_region_name,
         )
-
-    # @buttonAndHandler(u'Translate targets', name='translate')
-    # def handle_translate(self, action):
-    #     seen = set()
-    #
-    #     for question in self.questions:
-    #         elements = question.get_assessed_elements(
-    #             self.descriptor_obj, muids=self.muids
-    #         )
-    #
-    #         for element in elements:
-    #             value = element.definition
-    #
-    #             if value not in seen:
-    #                 retrieve_translation(self.country_code, value)
-    #                 seen.add(value)
-    #
-    #     messages = IStatusMessage(self.request)
-    #     messages.add(u"Auto-translation initiated, please refresh "
-    #                  u"in a couple of minutes", type=u"info")
-    #
-    #     url = self.context.absolute_url() + '/@@edit-assessment-data-2018'
-    #     self.request.response.setHeader('Content-Type', 'text/html')
-    #
-    #     return self.request.response.redirect(url)
 
     @buttonAndHandler(u'Save', name='save')
     def handle_save(self, action):

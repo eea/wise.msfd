@@ -6,14 +6,12 @@ import lxml.etree
 
 from pkg_resources import resource_filename
 from plone.api.portal import get_tool
-from Products.Five.browser.pagetemplatefile import (PageTemplateFile,
-                                                    ViewPageTemplateFile)
+from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 
 from .assessment import AssessmentDataMixin
 from .base import BaseComplianceView
 from .interfaces import IMSFDReportingHistoryFolder
-from .vocabulary import (
-    get_all_countries, REGIONAL_DESCRIPTORS_REGIONS, REPORTING_HISTORY_ENV)
+from .vocabulary import get_all_countries, REGIONAL_DESCRIPTORS_REGIONS
 
 # TODO make REPORTING_HISTORY_ENV get data from IMSFDReportingHistoryFolder
 # _msfd_reporting_history_data
