@@ -55,10 +55,10 @@
 
 <metal:macro define-macro="top-section">
   <div>
-    <a href="/marine/data-maps-and-tools/msfd-reporting-information-products/msfd-reporting-data-explorer"
+    <a href="/marine-new/data-maps-and-tools/msfd-reporting-information-products/msfd-reporting-data-explorer"
       class="msfd-start-link">
       About MSFD reporting data explorer
-      <img src="/api/++api++/++resource++msfd/images/msfd-mini.png">
+      <img src="/marine-new/++api++/++resource++msfd/images/msfd-mini.png">
     </a>
     <div>
       <h2 class="main-title" tal:content="structure view/main_title">Article X</h2>
@@ -284,7 +284,7 @@
     <a tal:attributes="href url"
         class="assessment-status-colorbar btn btn-xs btn-primary">
       <!-- <i class="glyphicon glyphicon-edit"></i> -->
-      2012 
+      2012
     </a>
     <a tal:attributes="href url; class css_class">
       <!-- <i class="glyphicon glyphicon-edit"></i> -->
@@ -349,7 +349,7 @@
       wf_states python: view.get_all_wf_states(assessment);
       current_state python: view.get_status(assessment)">
     <a tal:attributes="href url; class css_class"
-        tal:content="python: assessment_title or 'View assessment'">2018</a>      
+        tal:content="python: assessment_title or 'View assessment'">2018</a>
     <div class="assessment-status-wrapper" >
       <div class="assessment-status-processstate">
         <form class="assessment-status process-state"

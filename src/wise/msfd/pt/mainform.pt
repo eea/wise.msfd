@@ -33,13 +33,13 @@
         <div class="form-right-side">
           <metal:block use-macro="context/@@ploneform-macros/actions" />
           <div id="ajax-spinner" style="display: none;">
-            <img src="/api/++api++/++resource++msfd/images/spinner.gif" alt="">
+            <img src="/marine-new/++api++/++resource++msfd/images/spinner.gif" alt="">
           </div>
         </div>
       </metal:slot>
       <metal:css fill-slot="formtop">
-        <link href="/api/++api++/++resource++static_css/tabs.css" type="text/css" rel="stylesheet" />
-        <link href="/api/++api++/++resource++static_css/msfd_search.css" type="text/css" rel="stylesheet" />
+        <link href="/marine-new/++api++/++resource++static_css/tabs.css" type="text/css" rel="stylesheet" />
+        <link href="/marine-new/++api++/++resource++static_css/msfd_search.css" type="text/css" rel="stylesheet" />
         <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/3.5.4/select2.min.css" rel="stylesheet" />
         <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css" rel="stylesheet" />
         <!-- <script src="/++resource++msfd/bs3/js/bootstrap.min.js" type="application/javascript" rel="script"></script> -->
