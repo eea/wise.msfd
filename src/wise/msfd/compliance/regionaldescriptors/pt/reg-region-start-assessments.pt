@@ -159,7 +159,7 @@
                       <!-- <div metal:use-macro="context/wise-macros/macros/assessment-status-bar-2012-2018"></div> -->
                       <a class="assessment-status-colorbar btn btn-xs btn-default"
                           title="Not started"
-                          tal:attributes="href assessment/absolute_url;">2018</a> 
+                          tal:attributes="href assessment/absolute_url;">2020</a> 
                     </td>
                     <td style="text-align: center;" tal:repeat="assessment python: view.get_articles_part2(desc)">
                       <i>Not available</i>

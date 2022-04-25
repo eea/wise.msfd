@@ -23,9 +23,6 @@
 
           <h1 class="report-title"
               tal:content="structure view/title">Assessment</h1>
-          <h4 class="process-phase-title" >
-            Current phase: <span tal:content="python: view.current_phase[1]">Adequacy</span>
-          </h4>
 
           <div id="report-data-navigation">
             <div class="nda-link">
@@ -71,46 +68,15 @@
                   <i class="glyphicon glyphicon-th"></i><span tal:content="year">2012</span> Report
                 </a>
               </li>
-              <li tal:condition="python:False"><!--Removed-->
-                <a tal:attributes="href python: context.absolute_url() + '/@@view-report-data-2012-like-2018'"
-                   target="_blank"><i class="glyphicon glyphicon-th"></i>2012 Report (II)</a></li>
-              <li class="process-state" style="display:flex; align-items: center">
-                <form method="GET"
-                      tal:attributes="action python: context.absolute_url() + '/content_status_modify'">
-                  <div>
-                    <i class="glyphicon glyphicon-transfer"></i>
-                    Process state:
-                    <strong tal:content="view/get_status">Phase 0</strong>
-                    <select tal:condition="python: not(view.read_only_access)"
-                        onchange="javascript:this.form.submit()" name="workflow_action"
-                        class="pat-select2"
-                        data-pat-select2="width:10em">
-                      <option value=''>Choose action...</option>
-                      <tal:rep repeat="trans view/get_transitions">
-                        <option tal:content="trans/title"
-                          tal:attributes="value trans/id">Send to Phase 0</option>
-                      </tal:rep>
-                    </select>
-                  </div>
-                </form>
-                <a tal:attributes="href python: context.absolute_url() + '/@@historyview'"
-                    class="link-overlay contentHistory glyphicon glyphicon-time" id="content-history" style="margin-left: 2rem"></a>
-              </li>
             </ul>
           </div>
 
           <div class="asts-header-data">
-            <h3 id="assessment-2018">2018 Assessment</h3>
-            <div class="ast-header-data">
-              <div tal:replace="structure view/assessment_header_2018_html"></div>
-              <div tal:replace="structure view/assessment_data_2018_html"></div>
-            </div>
-
-            <!-- <h3 id="assessment-2012">2012 Assessment</h3>
+            <h3 id="assessment-2012">2012 Assessment</h3>
             <div class="ast-header-data">
               <div tal:replace="structure view/assessment_header_2012"></div>
               <div tal:replace="structure view/assessment_data_2012"></div>
-            </div> -->
+            </div>
           </div>
 
         </div>

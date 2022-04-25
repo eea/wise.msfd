@@ -176,44 +176,6 @@ class RegionalDescriptorArticleView(BaseRegComplianceView,
             self.country_region_name,
         )
 
-    # @property
-    # def criterias(self):
-    #     return self.descriptor_obj.sorted_criterions()      # criterions
-
-    # def get_assessments_data_2012(self, article=None, region_code=None,
-    #                               descriptor_code=None):
-    #
-    #     if not article:
-    #         article = self.article
-    #
-    #     if not region_code:
-    #         region_code = self.country_region_code
-    #
-    #     if not descriptor_code:
-    #         descriptor_code = self.descriptor_obj.id
-    #
-    #     res = []
-    #
-    #     for x in ASSESSMENTS_2012:
-    #         if x.region.strip() != region_code:
-    #             continue
-    #
-    #         if x.descriptor.strip() != descriptor_code.split('.')[0]:
-    #             continue
-    #
-    #         art = x.article.replace(" ", "")
-    #
-    #         if not art.startswith(article):
-    #             continue
-    #
-    #         res.append(x)
-    #
-    #     sorted_res = sorted(
-    #         res, key=lambda i: int(i.overall_score), reverse=True
-    #     )
-    #
-    #     return sorted_res
-
     def get_assessment_2012_header_data(self, assessments_2012):
         res = {}
 
@@ -392,3 +354,13 @@ class RegionalDescriptorArticleView(BaseRegComplianceView,
 
         return self.index()
 
+class RegionalDescriptorArticleView2012(RegionalDescriptorArticleView):
+    """ RegionalDescriptorArticleView2012 """
+
+    @property
+    def title(self):
+        return u"Commission assessment / {} / 2012 / {} / {}".format(
+            self.article,
+            self.descriptor_title,
+            self.country_region_name,
+        )

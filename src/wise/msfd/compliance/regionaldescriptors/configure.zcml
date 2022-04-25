@@ -33,6 +33,14 @@
 
   <browser:page
     for="..interfaces.IRegionalDescriptorAssessment"
+    name="assessment-overview-2012"
+    template="./pt/reg-view-2012.pt"
+    class=".main.RegionalDescriptorArticleView2012"
+    permission="wise.ViewAssessmentData"
+    />
+
+  <browser:page
+    for="..interfaces.IRegionalDescriptorAssessment"
     name="view-report-data-2018"
     class=".reportdata.RegReportData2018"
     template="./pt/report-data-view.pt"

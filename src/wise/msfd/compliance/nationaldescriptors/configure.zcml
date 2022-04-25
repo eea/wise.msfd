@@ -27,6 +27,14 @@
     />
 
   <browser:page
+    for="..interfaces.INationalDescriptorAssessment"
+    name="assessment-overview-2012"
+    template="./pt/art-view-2012.pt"
+    class=".main.NationalDescriptorArticleView2012"
+    permission="wise.ViewAssessmentData"
+    />
+
+  <browser:page
     for="..interfaces.INationalDescriptorAssessmentSecondary"
     name="nat-desc-art-view-secondary"
     template="./pt/art-view-secondary.pt"

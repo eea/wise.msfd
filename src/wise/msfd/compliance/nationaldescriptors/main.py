@@ -868,6 +868,19 @@ class NationalDescriptorArticleView(BaseView, AssessmentDataMixin):
         return self.index()
 
 
+class NationalDescriptorArticleView2012(NationalDescriptorArticleView):
+    """ NationalDescriptorArticleView2012 """
+    
+    @property
+    def title(self):
+        return u"Commission assessment / {} / 2012 / {} / {} / {} ".format(
+            self.article,
+            self.descriptor_title,
+            self.country_title,
+            self.country_region_name,
+        )
+
+
 @implementer(INationaldescriptorSecondaryArticleView)
 class NationalDescriptorSecondaryArticleView(NationalDescriptorArticleView):
     """"""

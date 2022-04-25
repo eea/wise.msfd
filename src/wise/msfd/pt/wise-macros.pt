@@ -281,7 +281,7 @@
       can_edit_data python:view.can_view_edit_assessment_data(assessment);
       wf_states python: view.get_all_wf_states(assessment);
       current_state python: view.get_status(assessment)">
-    <a tal:attributes="href url"
+    <a tal:attributes="href python: url + '/@@assessment-overview-2012'"
         class="assessment-status-colorbar btn btn-xs btn-primary">
       <!-- <i class="glyphicon glyphicon-edit"></i> -->
       2012
