@@ -416,8 +416,8 @@ class NatDescCountryOverviewReports(NationalDescriptorCountryOverview):
             check_method = getattr(self, method_name)
             available = check_method(region, descriptor)
             
-        print("Report for %s %s %s is %s" 
-                % (region, descriptor, article, available))
+        # print("Report for %s %s %s is %s" 
+        #         % (region, descriptor, article, available))
 
         return available
 

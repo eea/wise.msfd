@@ -151,7 +151,7 @@ def _get_report_filename_art10_2012(country, region, article, descriptor):
 
 
 @db.use_db_session('2012')
-def _get_report_filename_art8esa_2012(country, region, article):
+def _get_report_filename_art8esa_2012(country, region, article, descriptor):
     mc = sql.MSFD8cImport
 
     count, item = db.get_item_by_conditions(

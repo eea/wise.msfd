@@ -477,10 +477,7 @@ class ReportData2012(BaseView, BaseUtil):
 
 @implementer(IReportDataViewSecondary)
 class ReportData2012Secondary(ReportData2012):
-    """ Class implementation for Article 8 ESA
-    """
-
-    # implements(IReportDataViewSecondary)
+    """ Class implementation for Article 8 ESA """
 
     descriptor = 'Not linked'
     country_region_code = 'No region'
@@ -493,142 +490,71 @@ class ReportData2012Secondary(ReportData2012):
         )
 
         return title
+    
+    @cache(get_reportdata_key, dependencies=['translation'])
+    def get_report_data(self, filename):
+        view = self.get_report_view(filename)
+        rendered_view = view()
 
-    def _get_reporting_info_art_34(self, root):
-        reporter = [root.attrib['Organisation']]
-        date = [root.attrib['ReportingDate']]
+        # get cacheable raw values
+        rows = serialize_rows(view.rows)
 
-        return reporter, date
+        return rendered_view, rows
 
-    def _get_reporting_info_art_7(self, root):
-        default = u'Not available'
-        reporter = [root.attrib.get('GeneratedBy', default)]
-        date = [root.attrib.get('CreationDate', default)]
+    def get_report_view(self, filename):
+        logger.info("Rendering 2012 report for: %s %s %s %s",
+                    self.country_code, self.descriptor, self.article,
+                    ",".join([x.id for x in self.muids]))
+        klass = self.article_implementations[self.article]
 
-        return reporter, date
+        view = klass(self, self.request, self.country_code,
+                     self.country_region_code, self.descriptor, self.article,
+                     self.muids, filename)
 
-    def _get_reporting_info(self, root):
-        impl = {
-            'Art3': self._get_reporting_info_art_34,
-            'Art4': self._get_reporting_info_art_34,
-            'Art7': self._get_reporting_info_art_7,
-            'Art8esa': self._get_reporting_info_art_34,
-        }
-
-        return impl[self.article](root)
-
-    def data_to_xls_art7(self, data):
-        # Create a workbook and add a worksheet.
-        out = BytesIO()
-        workbook = xlsxwriter.Workbook(out, {'in_memory': True})
-
-        for region, wdata, report_header in data:
-            if not wdata:
-                continue
-
-            # add worksheet with report header data
-            worksheet = workbook.add_worksheet(
-                u'Report header for {}'.format(region)
-            )
-
-            for i, (rtitle, rdata) in enumerate(report_header.items()):
-                rtitle = rtitle.title().replace('_', ' ')
-
-                if isinstance(rdata, tuple):
-                    rdata = rdata[1]
-
-                worksheet.write(i, 0, rtitle)
-                worksheet.write(i, 1, rdata)
-
-            worksheet = workbook.add_worksheet(
-                u'Report data for {}'.format(region)
-            )
-
-            for i, row in enumerate(wdata['Report data']):
-                row_label = row[0]
-                worksheet.write(i, 0, row_label)
-                row_values = row[1]
-
-                for j, v in enumerate(row_values):
-                    transl = get_translated(v, self.country_code) or v
-                    worksheet.write(i, j + 1, transl)
-
-        workbook.close()
-        out.seek(0)
-
-        return out
-
-    def download_art7(self, report_data):
-        xlsio = self.data_to_xls_art7(report_data)
-
-        return self._set_response_header(xlsio)
+        return view
 
     def __call__(self):
-        """ Article 3 & 4 reports are separated per regions
-            This means we can have more than one report xml for a country
-            one for each region
+        rendered_results = []
+        multiple_source_files = False
 
-            Merge the data from each region, and display it in one table
-        """
+        for region_code in self.regions:
+            filename = get_report_filename(
+                self.year, self.country_code, region_code,
+                self.article, self.descriptor)
+            trans_edit_html = self.translate_view()()
 
-        # we treat Art 3 & 4 different because of multiple report files
+            if filename:
+                url = get_report_file_url(filename)
+                if url:
+                    try:
+                        factsheet = get_factsheet_url(url)
+                    except Exception:
+                        logger.exception(
+                            "Error in getting HTML Factsheet URL %s", url)
+                else:
+                    logger.warning(
+                        "No factsheet url, filename is: %r", filename)
 
-        if self.article not in ('Art3', 'Art4'):
-            return super(ReportData2012Secondary, self).__call__()
+                source_file = (filename, url + '/manage_document')
 
-        template = Template('pt/report-data-view-art34.pt')
-        report_header_template = Template('pt/report-data-header-art34.pt')
-        regions = get_regions_for_country(self.country_code)
-
-        filenames = [
-            (r[0], r[1], get_report_filename('2012', self.country_code, r[0],
-                                             self.article, self.descriptor))
-
-            for r in regions
-        ]
-
-        filenames = sorted(filenames,
-                           key=lambda i: ordered_regions_sortkey(i[0]))
-
-        trans_edit_html = self.translate_view()()
-
-        reports = []
-        report_data = []
-
-        for region, region_name, filename in filenames:
-            if not filename:
-                continue
-
-            url = get_report_file_url(filename)
-            source_file = (filename, url + '/manage_document')
-            factsheet = get_factsheet_url(url)
-
-            view = Article34(self, self.request, self.country_code,
-                             region, self.descriptor, self.article,
-                             self.muids, filename)
-
-            rendered_view = view()
-
-            rep_info = self.get_reporting_information(filename=filename)
+            rep_info = self.get_reporting_information(filename)
             report_header_data = self.get_report_header_data(
-                rep_info.reporters, source_file, factsheet,
-                rep_info.report_date
+                rep_info.reporters, source_file, factsheet, 
+                rep_info.report_date, multiple_source_files
             )
-            report_header = report_header_template(self, self.request,
-                                                   region=region_name,
-                                                   **report_header_data)
-            reports.append(report_header + rendered_view + trans_edit_html)
+            report_header = self.report_header_template(**report_header_data)
+            
+            try:
+                report_data, report_data_rows = self.get_report_data(filename)
+            except:
+                report_data, report_data_rows = 'Error in rendering report', []
+            
+            rendered_results.append(report_header + report_data)
 
-            report_data.append((region, serialize_rows(view.rows),
-                                report_header_data))
+        res = "<hr/>".join(rendered_results)
+        self.report_html = res + "" + trans_edit_html     
 
-        self.reports = reports
-
-        if 'download' in self.request.form:
-
-            return self.download_art7(report_data)
-
-        return template(self, self.request)
+        return self.index()
 
 
 class ReportData2012Like2018(ReportData2012):

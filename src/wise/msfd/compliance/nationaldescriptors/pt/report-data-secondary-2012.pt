@@ -1,0 +1,12 @@
+<div class="report-section">
+  <div tal:condition="python: not view.rows">
+    No data reported
+  </div>
+  <h3>Uses and activities</h3>
+  <tal:cond tal:condition="view/rows">
+    <tal:def define="data python: view.rows">
+      <metal:s metal:use-macro="context/context/wise-macros/macros/simplify-table"></metal:s>
+      <metal:s metal:use-macro="context/context/wise-macros/macros/overflow-table"></metal:s>
+    </tal:def>
+  </tal:cond>
+</div>

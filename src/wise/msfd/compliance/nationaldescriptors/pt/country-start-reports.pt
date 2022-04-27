@@ -70,6 +70,7 @@
                 <th>Art. 7 Competent Authorities</th>
                 <th>Art. 3(1) Marine waters</th>
                 <th>Art. 4 Reporting areas</th>
+                <th>Art. 8 ESA</th>
                 <th colspan="22"></th>
               </tr>
               <tr>
@@ -77,6 +78,12 @@
                 <td tal:repeat="assessment python: view.get_secondary_articles(view._country_folder)">
                   <a tal:attributes="href python: assessment.absolute_url() + '/@@view-report-data-2018';
                       class python: 'btn btn-xs btn-primary'">Reports</a>
+                </td>
+                <td tal:define="assessment python: view._country_folder['art8esa']">
+                  <a tal:attributes="href python: assessment.absolute_url() + '/@@view-report-data-2012';
+                      class python: 'btn btn-xs btn-success'">2012</a>
+                  <a tal:attributes="href python: assessment.absolute_url() + '/@@view-report-data-2018';
+                      class python: 'btn btn-xs btn-primary'">2018</a>
                 </td>
                 <td colspan="22"></td>
               </tr>
