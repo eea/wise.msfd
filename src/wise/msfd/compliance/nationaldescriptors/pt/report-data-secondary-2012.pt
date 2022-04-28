@@ -1,12 +1,15 @@
-<div class="report-section">
+<div class="report-section Zart8-esa">
   <div tal:condition="python: not view.rows">
     No data reported
   </div>
-  <h3>Uses and activities</h3>
-  <tal:cond tal:condition="view/rows">
-    <tal:def define="data python: view.rows">
-      <metal:s metal:use-macro="context/context/wise-macros/macros/simplify-table"></metal:s>
-      <metal:s metal:use-macro="context/context/wise-macros/macros/overflow-table"></metal:s>
-    </tal:def>
-  </tal:cond>
+  <tal:rep tal:repeat="section view/rows">
+    <h3 tal:content="python: section[0]">Uses and activities</h3>
+    <tal:cond tal:condition="python: section[1]">
+      <tal:def define="data python: section[1]">
+        <metal:s metal:use-macro="context/context/wise-macros/macros/simplify-table"></metal:s>
+        <metal:s metal:use-macro="context/context/wise-macros/macros/overflow-table"></metal:s>
+      </tal:def>
+    </tal:cond>
+
+  </tal:rep>
 </div>

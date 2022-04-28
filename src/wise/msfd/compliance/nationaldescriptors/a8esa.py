@@ -36,6 +36,262 @@ def xp(xpath, node):
     return node.xpath(xpath, namespaces=NSMAP)
 
 
+class A8ESAMetadataItem(Item):
+    def __init__(self, parent, node):
+
+        super(A8ESAMetadataItem, self).__init__([])
+
+        self.parent = parent
+        self.node = node
+        self.g = RelaxedNode(node, NSMAP)
+
+        attrs = [
+            ('Topic', self.topic()),
+            ('Assessment date (start-end)', self.assessment_date()),
+            ('Method used', self.method_used()),
+            ('Sources', self.sources()),
+        ]
+
+        for title, value in attrs:
+            self[title] = value
+            setattr(self, title, value)
+
+        self.attributes = attrs
+
+    def topic(self):
+        v = self.g['w:Topic/text()']
+
+        return v and v[0] or ''
+
+    def assessment_date(self):
+        start = self.g['w:AssessmentStartDate/text()']
+        end = self.g['w:AssessmentEndDate/text()']
+        start = start and start[0] or ''
+        end = end and end[0] or ''
+        v = "{}-{}".format(start, end)
+
+        return v
+    
+    def method_used(self):
+        v = self.g['w:MethodUsed/text()']
+
+        return v and v[0] or ''
+
+    def sources(self):
+        v = self.g['w:Sources/text()']
+
+        return v and v[0] or ''
+
+
+class A8ESAThemesItem(Item):
+    def __init__(self, parent, node):
+
+        super(A8ESAThemesItem, self).__init__([])
+
+        self.parent = parent
+        self.node = node
+        self.g = RelaxedNode(node, NSMAP)
+
+        attrs = [
+            ('Feature', self.feature()),
+            ('Characteristics: description', self.characteristics_descr()),
+            ('Characteristics: limitations', self.characteristics_limit()),
+            ('Cost of degradation: description', self.cod_description()),
+            ('Cost of degradation: value', self.cod_value()),
+            ('Cost of degradation: value confidence', self.cod_confidence()),
+            ('Characteristics: information gaps', self.characteristics_info()),
+            ('Pressure 1 (rank)', self.pressure_rank1()),
+            ('Pressure 2 (rank)', self.pressure_rank2()),
+            ('Pressure 3 (rank)', self.pressure_rank3()),
+        ]
+
+        for title, value in attrs:
+            self[title] = value
+            setattr(self, title, value)
+
+        self.attributes = attrs
+
+    def feature(self):
+        v = self.g['w:ReportingFeature/text()']
+
+        return v and v[0] or ''
+
+    def characteristics_descr(self):
+        v = self.g['w:Theme/w:CharacteristicsTheme/w:Description/text()']
+
+        return v and v[0] or ''
+
+    def characteristics_limit(self):
+        v = self.g['w:Theme/w:CharacteristicsTheme/w:Limitations/text()']
+
+        return v and v[0] or ''
+
+    def cod_description(self):
+        v = self.g['w:Theme/w:CostDegradationTheme/w:Description/text()']
+
+        return v and v[0] or ''
+
+    def cod_value(self):
+        v = self.g['w:Theme/w:CostDegradationTheme/w:SumInfo1/text()']
+
+        return v and v[0] or ''
+
+    def cod_confidence(self):
+        v = self.g['w:Theme/w:CostDegradationTheme/w:SumInfo1Confidence/text()']
+
+        return v and v[0] or ''
+
+    def characteristics_info(self):
+        v = self.g['w:Theme/w:InfoGaps/text()']
+
+        return v and v[0] or ''
+
+    def assessment_date(self):
+        start = self.g['w:AssessmentStartDate/text()']
+        end = self.g['w:AssessmentEndDate/text()']
+        start = start and start[0] or ''
+        end = end and end[0] or ''
+        v = "{}-{}".format(start, end)
+
+        return v
+    
+    def pressures_description(self):
+        v = self.g['w:Pressures/w:Description/text()']
+
+        return v and v[0] or ''
+    
+    def pressure_rank1(self):
+        pressure = self.g['w:Pressures/w:Pressure1/text()']
+        rank = self.g['w:Pressures/w:Rank1/text()']
+        pressure = pressure and pressure[0] or ''
+        rank = rank and rank[0] or ''
+        v = "{}-{}".format(pressure, rank)
+
+        return v
+
+    def pressure_rank2(self):
+        pressure = self.g['w:Pressures/w:Pressure2/text()']
+        rank = self.g['w:Pressures/w:Rank2/text()']
+        pressure = pressure and pressure[0] or ''
+        rank = rank and rank[0] or ''
+        v = "{}-{}".format(pressure, rank)
+
+        return v
+
+    def pressure_rank3(self):
+        pressure = self.g['w:Pressures/w:Pressure3/text()']
+        rank = self.g['w:Pressures/w:Rank3/text()']
+        pressure = pressure and pressure[0] or ''
+        rank = rank and rank[0] or ''
+        v = "{}-{}".format(pressure, rank)
+
+        return v
+
+
+
+class A8ESAEcosystemServicesItem(Item):
+    def __init__(self, parent, node):
+
+        super(A8ESAEcosystemServicesItem, self).__init__([])
+
+        self.parent = parent
+        self.node = node
+        self.g = RelaxedNode(node, NSMAP)
+
+        attrs = [
+            ('Feature', self.feature()),
+            ('Characteristics: description', self.characteristics_descr()),
+            ('Characteristics: CICES class', self.characteristics_cices()),
+            ('Characteristics: limitations', self.characteristics_limit()),
+            ('Characteristics: information gaps', self.characteristics_info()),
+        ]
+        dependencies_nodes = xp('w:EcosystemService/w:Dependencies', node)
+
+        for index, dependency in enumerate(dependencies_nodes):
+            dependency = RelaxedNode(dependency, NSMAP)
+            attrs.append(('Dependencies ({})'.format(index + 1), 
+                self.dependencies(dependency)))
+
+        attrs_extended = [
+            ('Pressures: description', self.pressures_description()),
+            ('Pressure 1 (rank)', self.pressure_rank1()),
+            ('Pressure 2 (rank)', self.pressure_rank2()),
+            ('Pressure 3 (rank)', self.pressure_rank3()),
+        ]
+        attrs.extend(attrs_extended)
+
+        for title, value in attrs:
+            self[title] = value
+            setattr(self, title, value)
+
+        self.attributes = attrs
+
+    def feature(self):
+        v = self.g['w:ReportingFeature/text()']
+
+        return v and v[0] or ''
+    
+    def characteristics_descr(self):
+        v = self.g['w:EcosystemService/w:CharacteristicsEcosystem/w:Description/text()']
+
+        return v and v[0] or ''
+
+    def characteristics_cices(self):
+        v = self.g['w:EcosystemService/w:CharacteristicsEcosystem/w:SumInfo2/text()']
+
+        return v and v[0] or ''
+
+    def characteristics_limit(self):
+        v = self.g['w:EcosystemService/w:CharacteristicsEcosystem/w:Limitations/text()']
+
+        return v and v[0] or ''
+
+    def characteristics_info(self):
+        v = self.g['w:EcosystemService/w:InfoGaps/text()']
+
+        return v and v[0] or ''
+
+    def dependencies(self, dependency):
+        dep = dependency['w:Dependency/text()']
+        other = dependency['w:Other/text()']
+        dep = dep and dep[0] or ''
+        other = other and other[0] or ''
+        v = "-".join((dep, other))
+
+        return v
+
+    def pressures_description(self):
+        v = self.g['w:Pressures/w:Description/text()']
+
+        return v and v[0] or ''
+    
+    def pressure_rank1(self):
+        pressure = self.g['w:Pressures/w:Pressure1/text()']
+        rank = self.g['w:Pressures/w:Rank1/text()']
+        pressure = pressure and pressure[0] or ''
+        rank = rank and rank[0] or ''
+        v = "{}-{}".format(pressure, rank)
+
+        return v
+
+    def pressure_rank2(self):
+        pressure = self.g['w:Pressures/w:Pressure2/text()']
+        rank = self.g['w:Pressures/w:Rank2/text()']
+        pressure = pressure and pressure[0] or ''
+        rank = rank and rank[0] or ''
+        v = "{}-{}".format(pressure, rank)
+
+        return v
+
+    def pressure_rank3(self):
+        pressure = self.g['w:Pressures/w:Pressure3/text()']
+        rank = self.g['w:Pressures/w:Rank3/text()']
+        pressure = pressure and pressure[0] or ''
+        rank = rank and rank[0] or ''
+        v = "{}-{}".format(pressure, rank)
+
+        return v
+
 class A8ESAUsesActivityItem(Item):
     def __init__(self, parent, node):
 
@@ -72,19 +328,38 @@ class A8ESAUsesActivityItem(Item):
         ]
 
         # Other indicators are added dinamically
-        import pdb; pdb.set_trace()
-        other_indicator_nodes = xp('//w:UseActivity/w:OtherIndicators', node)
+        other_indicator_nodes = xp('w:UseActivity/w:OtherIndicators', node)
 
-        for other_indicator in other_indicator_nodes:
+        for index, other_indicator in enumerate(other_indicator_nodes):
             other_indicator = RelaxedNode(other_indicator, NSMAP)
-            attrs.append(('Other indicators: name', self.other_name(other_indicator)))
-            attrs.append(('Other indicators: description', self.other_description(other_indicator)))
-            attrs.append(('Other indicators: value/units', self.other_value(other_indicator)))
-            attrs.append(('Other indicators: value/units confidence', self.other_value_confidence(other_indicator)))
+            attrs.append(('Other indicators: name ({})'.format(index + 1), 
+                self.other_name(other_indicator)))
+            attrs.append(
+                ('Other indicators: description ({})'.format(index + 1), 
+                self.other_description(other_indicator)))
+            attrs.append(
+                ('Other indicators: value/units ({})'.format(index + 1),
+                self.other_value(other_indicator)))
+            attrs.append(
+                ('Other indicators: value/units confidence ({})'
+                    .format(index + 1),
+                self.other_value_confidence(other_indicator)))
 
-        # for title, value in attrs:
-        #     self[title] = value
-        #     setattr(self, title, value)
+        attrs_extended = [
+            ('Information gaps', self.info_gaps()),
+            ('Dependencies', self.dependencies()),
+            ('Pressures: description', self.pressures_description()),
+            ('Pressure 1 (rank)', self.pressure_rank1()),
+            ('Pressure 2 (rank)', self.pressure_rank2()),
+            ('Pressure 3 (rank)', self.pressure_rank3()),
+        ]
+
+        attrs.extend(attrs_extended)
+
+        for title, value in attrs:
+            self[title] = value
+            setattr(self, title, value)
+       
 
         self.attributes = attrs
 
@@ -229,6 +504,48 @@ class A8ESAUsesActivityItem(Item):
 
         return v and v[0] or ''
 
+    def info_gaps(self):
+        v = self.g['w:UseActivity/w:InfoGaps/text()']
+
+        return v and v[0] or ''
+
+    def dependencies(self):
+        v = self.g['w:UseActivity/w:Dependencies/w:Dependency/text()']
+
+        return v and v[0] or ''
+
+    def pressures_description(self):
+        v = self.g['w:Pressures/w:Description/text()']
+
+        return v and v[0] or ''
+
+    def pressure_rank1(self):
+        pressure = self.g['w:Pressures/w:Pressure1/text()']
+        rank = self.g['w:Pressures/w:Rank1/text()']
+        pressure = pressure and pressure[0] or ''
+        rank = rank and rank[0] or ''
+        v = "{}-{}".format(pressure, rank)
+
+        return v
+
+    def pressure_rank2(self):
+        pressure = self.g['w:Pressures/w:Pressure2/text()']
+        rank = self.g['w:Pressures/w:Rank2/text()']
+        pressure = pressure and pressure[0] or ''
+        rank = rank and rank[0] or ''
+        v = "{}-{}".format(pressure, rank)
+
+        return v
+
+    def pressure_rank3(self):
+        pressure = self.g['w:Pressures/w:Pressure3/text()']
+        rank = self.g['w:Pressures/w:Rank3/text()']
+        pressure = pressure and pressure[0] or ''
+        rank = rank and rank[0] or ''
+        v = "{}-{}".format(pressure, rank)
+
+        return v
+
 
 class Article8ESA(BaseArticle2012):
     # TODO not implemented, copy of Article 8
@@ -240,6 +557,13 @@ class Article8ESA(BaseArticle2012):
 
     template = Template('pt/report-data-secondary-2012.pt')
     help_text = ""
+
+    nodes_implementation = {
+        "Metadata": A8ESAMetadataItem,
+        "UsesActivity": A8ESAUsesActivityItem,
+        "EcosystemServices": A8ESAEcosystemServicesItem,
+        "Themes": A8ESAThemesItem,
+    }
 
     def __init__(self, context, request, country_code, region_code,
                  descriptor, article,  muids, filename=None):
@@ -254,46 +578,54 @@ class Article8ESA(BaseArticle2012):
         filename = self.filename
         text = get_xml_report_data(filename)
         root = fromstring(text)
-        node_names = ['UsesActivity']
 
         # override the default translatable
         fields = REPORT_DEFS[self.context.year][self.article]\
             .get_translatable_fields()
         self.context.TRANSLATABLES.extend(fields)
 
-        items = []
+        items_grouped = defaultdict(list)
+        node_names = self.nodes_implementation.keys()
 
-        for name in node_names:
-            nodes = xp('//w:' + name, root)
+        for node_name in node_names:
+            nodes = xp('//w:' + node_name, root)
 
             for node in nodes:
-                item = A8ESAUsesActivityItem(self, node)
-                items.append(item)
+                implementation_class = self.nodes_implementation[node_name]
+                item = implementation_class(self, node)
+                items_grouped[node_name].append(item)
 
+        self.cols = items_grouped
         self.rows = []
-        self.cols = items
 
-        if not items:
+        if not items_grouped:
             return
 
-        for index, (name, value) in enumerate(items[0].attributes):
-            values = []
-            
-            for inner in items:
-                attrs = inner.attributes
+        for node_name in node_names:
+            items = items_grouped[node_name]
+            rows = []
 
-                values.append(attrs[index][1])
+            for index, (name, value) in enumerate(items[0].attributes):
+                values = []
+                
+                for inner in items:
+                    # attrs = inner.attributes
 
-            raw_values = []
-            vals = []
+                    # values.append(attrs[index][1])
+                    values.append(inner.get(name, ''))
 
-            for v in values:
-                raw_values.append(v)
-                vals.append(self.context.translate_value(
-                    name, v, self.country_code))
+                raw_values = []
+                vals = []
 
-            row = RawRow(name, vals, raw_values)
-            self.rows.append(row)
+                for v in values:
+                    raw_values.append(v)
+                    vals.append(self.context.translate_value(
+                        name, v, self.country_code))
+
+                row = RawRow(name, vals, raw_values)
+                rows.append(row)
+
+            self.rows.append((node_name, rows))
 
     def __call__(self):
         self.setup_data()
