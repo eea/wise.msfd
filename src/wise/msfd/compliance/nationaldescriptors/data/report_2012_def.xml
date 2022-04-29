@@ -104,7 +104,21 @@
   </Art7>
 
   <Art8esa>
-    <element name="Test">Test</element>
+    <element name="Method used" translate="true">Method used</element>
+    <element name="Sources" translate="true">Sources</element>
+    <element name="Description of use/activity" translate="true">Description of use/activity</element>
+    <element name="Limitations" translate="true">Limitations</element>
+    <element name="Production value: description" translate="true">Production value: description</element>
+    <element name="Production value: limitations" translate="true">Production value: limitations</element>
+    <element name="Value added: description" translate="true">Value added: description</element>
+    <element name="Employment: description" translate="true">Employment: description</element>
+    <element name="Other indicators: description" translate="true">Other indicators: description</element>
+    <element name="Information gaps" translate="true">Information gaps</element>
+    <element name="Pressures: description" translate="true">Pressures: description</element>
+    <element name="Characteristics: description" translate="true">Characteristics: description</element>
+    <element name="Characteristics: limitations" translate="true">Characteristics: limitations</element>
+    <element name="Cost of degradation: description" translate="true">Cost of degradation: description</element>
+    <element name="Cost of degradation: value" translate="true">Cost of degradation: value</element>
   </Art8esa>
 
 </data>

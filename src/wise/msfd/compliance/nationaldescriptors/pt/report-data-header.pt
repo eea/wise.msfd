@@ -57,6 +57,10 @@
         <td>Region/subregion</td>
         <td tal:content="view/country_region_name"/>
       </tr>
+      <tr tal:condition="options/region_name">
+        <td>Region/subregion</td>
+        <td tal:content="options/region_name"/>
+      </tr>
       <tr tal:condition="options/report_by">
         <td>Reported by</td>
         <td tal:content="options/report_by"/>

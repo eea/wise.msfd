@@ -1,4 +1,4 @@
-<div class="report-section Zart8-esa">
+<div class="report-section art8-esa">
   <div tal:condition="python: not view.rows">
     No data reported
   </div>
@@ -10,6 +10,9 @@
         <metal:s metal:use-macro="context/context/wise-macros/macros/overflow-table"></metal:s>
       </tal:def>
     </tal:cond>
+    <div tal:condition="python: not section[1]">
+      No data reported
+    </div>
 
   </tal:rep>
 </div>

@@ -1,5 +1,7 @@
 from __future__ import absolute_import
+
 import logging
+import re
 from collections import defaultdict
 
 from lxml.etree import fromstring
@@ -21,7 +23,7 @@ from .data import REPORT_DEFS
 import six
 
 logger = logging.getLogger('wise.msfd')
-
+NODE_NAME_SUB = re.compile(r'\s\(\d+\)$')
 
 NSMAP = {
     "w": "http://water.eionet.europa.eu/schemas/dir200856ec",
@@ -605,6 +607,10 @@ class Article8ESA(BaseArticle2012):
             items = items_grouped[node_name]
             rows = []
 
+            if not items:
+                self.rows.append((node_name, rows))
+                continue
+
             for index, (name, value) in enumerate(items[0].attributes):
                 values = []
                 
@@ -619,8 +625,11 @@ class Article8ESA(BaseArticle2012):
 
                 for v in values:
                     raw_values.append(v)
-                    vals.append(self.context.translate_value(
-                        name, v, self.country_code))
+                    name_norm = NODE_NAME_SUB.sub('', name)
+                    translated = self.context.translate_value(
+                        name_norm, v, self.country_code) 
+
+                    vals.append(translated)
 
                 row = RawRow(name, vals, raw_values)
                 rows.append(row)

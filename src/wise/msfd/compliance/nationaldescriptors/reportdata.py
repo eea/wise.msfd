@@ -518,7 +518,7 @@ class ReportData2012Secondary(ReportData2012):
         rendered_results = []
         multiple_source_files = False
 
-        for region_code in self.regions:
+        for region_index, region_code in enumerate(self.regions):
             filename = get_report_filename(
                 self.year, self.country_code, region_code,
                 self.article, self.descriptor)
@@ -543,10 +543,14 @@ class ReportData2012Secondary(ReportData2012):
                 rep_info.reporters, source_file, factsheet, 
                 rep_info.report_date, multiple_source_files
             )
+            report_header_data['region_name'] = region_code
+            report_header_data['show_navigation'] = region_index == 0
+            report_header_data['title'] = (
+                region_index == 0 and self.report_title or '')
             report_header = self.report_header_template(**report_header_data)
             
             try:
-                import pdb; pdb.set_trace()
+                # import pdb; pdb.set_trace()
                 report_data, report_data_rows = self.get_report_data(filename)
             except:
                 report_data, report_data_rows = 'Error in rendering report', []
