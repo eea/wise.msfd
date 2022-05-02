@@ -48,8 +48,8 @@
                 <div class="article-box" style="height: 210px; widthz: 33%;">
                   <div class="article-box-wrapper">
                     <div class="article-box-header">
-                      <h4 class="tab-subtitle">Reports</h4>
-                      <div class="tab-title">Member State reports by country</div>
+                      <h4 class="tab-subtitle">Reports & assessments</h4>
+                      <div class="tab-title">Member State reports and assessments by country</div>
                     </div>
                     <div class="country-dropdown-wrapper">
                       <button class="country-dropdown-button">Select country<span class="link-btn"></span></button>
@@ -67,8 +67,8 @@
                 <div class="article-box" style="height: 210px;">
                   <div class="article-box-wrapper" styleZ="background-color: #fad0c3;">
                     <div class="article-box-header">
-                      <h4 class="tab-subtitle">Reports</h4>
-                      <div class="tab-title">Member State reports by region</div>
+                      <h4 class="tab-subtitle">Reports & assessments</h4>
+                      <div class="tab-title">Member State reports and assessments by region</div>
                     </div>
                     <div class="country-dropdown-wrapper">
                       <button class="country-dropdown-button">Select region<span class="link-btn"></span></button>
