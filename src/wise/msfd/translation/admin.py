@@ -49,12 +49,14 @@ class TranslationsOverview(BrowserView):
         return langstore
 
     def edit_translation(self):
+        alsoProvides(self.request, IDisableCSRFProtection)
+
         form = self.request.form
 
         language = form.get('language')
         original = form.get('original')  # .decode('utf-8')
         original = normalize(original)
-        translated = form.get('tr-new').decode('utf-8')
+        translated = form.get('tr-new')  # .decode('utf-8')
 
         save_translation(original, translated, language, approved=True)
 
@@ -69,13 +71,14 @@ class TranslationsOverview(BrowserView):
         return json.dumps({'text': translated})
 
     def add_translation(self):
+        alsoProvides(self.request, IDisableCSRFProtection)
 
         form = self.request.form
 
         language = form.get('language')
         original = form.get('original')  # .decode('utf-8')
         original = normalize(original)
-        translated = form.get('translated').decode('utf-8')
+        translated = form.get('translated')  # .decode('utf-8')
 
         save_translation(original, translated, language, approved=True)
 
@@ -84,6 +87,8 @@ class TranslationsOverview(BrowserView):
         return self.request.response.redirect(url)
 
     def approve_translations(self):
+        alsoProvides(self.request, IDisableCSRFProtection)
+
         form = self.request.form
 
         language = form.get('language')
@@ -103,7 +108,7 @@ class TranslationsOverview(BrowserView):
         langstore = storage.get(selected_lang, {})
 
         for label in approved:
-            label = label.decode('utf-8')
+            label = label  # .decode('utf-8')
             translation = langstore[label]
 
             if translation.text.startswith('?'):

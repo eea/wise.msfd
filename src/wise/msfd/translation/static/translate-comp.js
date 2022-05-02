@@ -45,7 +45,7 @@
       var orig_text = $original.text().trim();
       var $form = $('#form-edit-translation');
       var translation = $("#new_transl", $form).val();
-      var url = $('.form-group').attr('portal_url') + '/@@edit-translation';
+      var url = $('.form-group').attr('portal_url') + '/marine-api/@@edit-translation';
       var language = $form.children('input').attr('value');
 
       $.ajax({
