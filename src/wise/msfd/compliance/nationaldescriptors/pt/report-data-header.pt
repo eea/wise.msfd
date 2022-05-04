@@ -57,7 +57,7 @@
         <td>Region/subregion</td>
         <td tal:content="view/country_region_name"/>
       </tr>
-      <tr tal:condition="options/region_name">
+      <tr tal:condition="python: 'region_name' in options">
         <td>Region/subregion</td>
         <td tal:content="options/region_name"/>
       </tr>

@@ -70,7 +70,7 @@ class A8ESAMetadataItem(Item):
         end = self.g['w:AssessmentEndDate/text()']
         start = start and start[0] or ''
         end = end and end[0] or ''
-        v = "{}-{}".format(start, end)
+        v = u"{}-{}".format(start, end)
 
         return v
     
@@ -153,7 +153,7 @@ class A8ESAThemesItem(Item):
         end = self.g['w:AssessmentEndDate/text()']
         start = start and start[0] or ''
         end = end and end[0] or ''
-        v = "{}-{}".format(start, end)
+        v = u"{}-{}".format(start, end)
 
         return v
     
@@ -167,7 +167,7 @@ class A8ESAThemesItem(Item):
         rank = self.g['w:Pressures/w:Rank1/text()']
         pressure = pressure and pressure[0] or ''
         rank = rank and rank[0] or ''
-        v = "{}-{}".format(pressure, rank)
+        v = u"{}-{}".format(pressure, rank)
 
         return v
 
@@ -176,7 +176,7 @@ class A8ESAThemesItem(Item):
         rank = self.g['w:Pressures/w:Rank2/text()']
         pressure = pressure and pressure[0] or ''
         rank = rank and rank[0] or ''
-        v = "{}-{}".format(pressure, rank)
+        v = u"{}-{}".format(pressure, rank)
 
         return v
 
@@ -185,7 +185,7 @@ class A8ESAThemesItem(Item):
         rank = self.g['w:Pressures/w:Rank3/text()']
         pressure = pressure and pressure[0] or ''
         rank = rank and rank[0] or ''
-        v = "{}-{}".format(pressure, rank)
+        v = u"{}-{}".format(pressure, rank)
 
         return v
 
@@ -258,7 +258,7 @@ class A8ESAEcosystemServicesItem(Item):
         other = dependency['w:Other/text()']
         dep = dep and dep[0] or ''
         other = other and other[0] or ''
-        v = "-".join((dep, other))
+        v = u"-".join((dep, other))
 
         return v
 
@@ -272,7 +272,7 @@ class A8ESAEcosystemServicesItem(Item):
         rank = self.g['w:Pressures/w:Rank1/text()']
         pressure = pressure and pressure[0] or ''
         rank = rank and rank[0] or ''
-        v = "{}-{}".format(pressure, rank)
+        v = u"{}-{}".format(pressure, rank)
 
         return v
 
@@ -281,7 +281,7 @@ class A8ESAEcosystemServicesItem(Item):
         rank = self.g['w:Pressures/w:Rank2/text()']
         pressure = pressure and pressure[0] or ''
         rank = rank and rank[0] or ''
-        v = "{}-{}".format(pressure, rank)
+        v = u"{}-{}".format(pressure, rank)
 
         return v
 
@@ -290,7 +290,7 @@ class A8ESAEcosystemServicesItem(Item):
         rank = self.g['w:Pressures/w:Rank3/text()']
         pressure = pressure and pressure[0] or ''
         rank = rank and rank[0] or ''
-        v = "{}-{}".format(pressure, rank)
+        v = u"{}-{}".format(pressure, rank)
 
         return v
 
@@ -403,7 +403,7 @@ class A8ESAUsesActivityItem(Item):
                      '/w:RecentTimeEnd/text()']
         start = start and start[0] or ''
         end = end and end[0] or ''
-        v = "{}-{}".format(start, end)
+        v = u"{}-{}".format(start, end)
 
         return v
 
@@ -417,7 +417,7 @@ class A8ESAUsesActivityItem(Item):
         end = self.g['w:UseActivity/w:CharacteristicsUse/w:FutureTimeEnd/text()']
         start = start and start[0] or ''
         end = end and end[0] or ''
-        v = "{}-{}".format(start, end)
+        v = u"{}-{}".format(start, end)
 
         return v
     
@@ -526,7 +526,7 @@ class A8ESAUsesActivityItem(Item):
         rank = self.g['w:Pressures/w:Rank1/text()']
         pressure = pressure and pressure[0] or ''
         rank = rank and rank[0] or ''
-        v = "{}-{}".format(pressure, rank)
+        v = u"{}-{}".format(pressure, rank)
 
         return v
 
@@ -535,7 +535,7 @@ class A8ESAUsesActivityItem(Item):
         rank = self.g['w:Pressures/w:Rank2/text()']
         pressure = pressure and pressure[0] or ''
         rank = rank and rank[0] or ''
-        v = "{}-{}".format(pressure, rank)
+        v = u"{}-{}".format(pressure, rank)
 
         return v
 
@@ -544,7 +544,7 @@ class A8ESAUsesActivityItem(Item):
         rank = self.g['w:Pressures/w:Rank3/text()']
         pressure = pressure and pressure[0] or ''
         rank = rank and rank[0] or ''
-        v = "{}-{}".format(pressure, rank)
+        v = u"{}-{}".format(pressure, rank)
 
         return v
 
@@ -599,6 +599,7 @@ class Article8ESA(BaseArticle2012):
 
         self.cols = items_grouped
         self.rows = []
+        self.grouped_rows = []
 
         if not items_grouped:
             return
@@ -608,7 +609,7 @@ class Article8ESA(BaseArticle2012):
             rows = []
 
             if not items:
-                self.rows.append((node_name, rows))
+                self.grouped_rows.append((node_name, rows))
                 continue
 
             for index, (name, value) in enumerate(items[0].attributes):
@@ -632,9 +633,11 @@ class Article8ESA(BaseArticle2012):
                     vals.append(translated)
 
                 row = RawRow(name, vals, raw_values)
+                
+                self.rows.append(row)
                 rows.append(row)
 
-            self.rows.append((node_name, rows))
+            self.grouped_rows.append((node_name, rows))
 
     def __call__(self):
         self.setup_data()

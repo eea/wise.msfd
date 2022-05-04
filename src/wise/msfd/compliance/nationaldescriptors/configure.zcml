@@ -158,6 +158,14 @@
     permission="zope2.View"
     />
 
+  <browser:page
+    for="..interfaces.INationalDescriptorAssessmentSecondary"
+    name="view-report-data-2018-art8-esa"
+    class=".reportdata.ReportData2018Art8ESA"
+    template="./pt/report-data-view.pt"
+    permission="zope2.View"
+    />
+
   <!-- view report data for 2020 -->
   <browser:page
     for="..interfaces.INationalDescriptorAssessment"

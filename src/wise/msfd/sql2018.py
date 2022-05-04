@@ -1313,6 +1313,29 @@ t_V_ART10_Targets_2018 = Table(
     Column('Indicators', Unicode)
 )
 
+t_V_ART8_ESA_2018 = Table(
+    'V_ART8_ESA_2018', metadata,
+    Column('CountryCode', Unicode(2), nullable=False),
+    Column('ReportingDate', Date, nullable=False),
+    Column('ReportedFileLink', Unicode(350), nullable=False),
+    Column('Region', Unicode(20)),
+    Column('MarineReportingUnit', Unicode(50), nullable=False),
+    Column('Feature', Unicode(250), nullable=False),
+    Column('NACECode', Unicode),
+    Column('GESComponent', Unicode),
+    Column('CostDegradationApproach', Unicode(100)),
+    Column('CostDegradationType', Unicode),
+    Column('CostDegradationDescription', Unicode(2500)),
+    Column('CostDegradationRelatedIndicators', Unicode),
+    Column('CostDegradationResults', Unicode(2500)),
+    Column('UsesActivitiesDescription', Unicode(2500)),
+    Column('UsesActivitiesEmployment', Float(53)),
+    Column('UsesActivitiesProductionValue', Float(53)),
+    Column('UsesActivitiesRelatedEcosystemServices', Unicode),
+    Column('UsesActivitiesRelatedIndicators', Unicode),
+    Column('UsesActivitiesRelatedPressures', Unicode),
+    Column('UsesActivitiesValueAdded', Float(53))
+)
 
 t_V_ART8_GES_2018 = Table(
     'V_ART8_GES_2018', metadata,

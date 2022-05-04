@@ -1,8 +1,8 @@
 <div class="report-section art8-esa">
-  <div tal:condition="python: not view.rows">
+  <div tal:condition="python: not view.grouped_rows">
     No data reported
   </div>
-  <tal:rep tal:repeat="section view/rows">
+  <tal:rep tal:repeat="section view/grouped_rows">
     <h3 tal:content="python: section[0]">Uses and activities</h3>
     <tal:cond tal:condition="python: section[1]">
       <tal:def define="data python: section[1]">

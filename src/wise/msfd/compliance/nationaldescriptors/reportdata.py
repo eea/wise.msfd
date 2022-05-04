@@ -1,5 +1,6 @@
 from __future__ import absolute_import
 from __future__ import print_function
+from email.policy import default
 import logging
 from collections import OrderedDict, defaultdict, namedtuple
 from datetime import datetime
@@ -497,8 +498,8 @@ class ReportData2012Secondary(ReportData2012):
         rendered_view = view()
 
         # get cacheable raw values
-        # rows = serialize_rows(view.rows)
-        rows = []
+        rows = serialize_rows(view.rows)
+        # rows = []
 
         return rendered_view, rows
 
@@ -514,9 +515,64 @@ class ReportData2012Secondary(ReportData2012):
 
         return view
 
+    def data_to_xls(self, data, report_headers):
+        # Create a workbook and add a worksheet.
+        out = BytesIO()
+        workbook = xlsxwriter.Workbook(out, {'in_memory': True})
+
+        for region_code, report_header in report_headers.items():
+            # add worksheet with report header data
+            worksheet = workbook.add_worksheet(
+                six.text_type('Report header' + region_code))
+            
+            for i, (wtitle, wdata) in enumerate(report_header.items()):
+                wtitle = wtitle.title().replace('_', ' ')
+
+                if isinstance(wdata, (list, tuple)):
+                    if report_header.get('multiple_source_files', False):
+                        wdata = u"\n".join([x[1] for x in wdata])
+                    else:
+                        wdata = wdata[1]
+
+                worksheet.write(i, 0, wtitle)
+                worksheet.write(i, 1, wdata)
+
+        for wtitle, wdata in data.items():  # add worksheet(s) with report data
+            if not wdata:
+                continue
+
+            worksheet = workbook.add_worksheet(six.text_type(wtitle)[:30])
+
+            for i, row in enumerate(wdata):
+                row_label = row[0]
+                worksheet.write(i, 0, row_label)
+                row_values = row[1]
+
+                for j, v in enumerate(row_values):
+                    try:
+                        transl = get_translated(v, self.country_code) or v
+                        worksheet.write(i, j + 1, transl)
+                    except:
+                        if hasattr(v, 'rows') and v.rows:
+                            try:
+                                v_rows = [six.text_type(x) for x in v.rows]
+                                worksheet.write(i, j + 1, "#".join(v_rows))
+                                continue
+                            except:
+                                import pdb; pdb.set_trace()
+
+                        worksheet.write(i, j + 1, '')
+
+        workbook.close()
+        out.seek(0)
+
+        return out
+
     def __call__(self):
         rendered_results = []
         multiple_source_files = False
+        download_rows = {}
+        download_headers = {}
 
         for region_index, region_code in enumerate(self.regions):
             filename = get_report_filename(
@@ -555,7 +611,13 @@ class ReportData2012Secondary(ReportData2012):
             except:
                 report_data, report_data_rows = 'Error in rendering report', []
             
+            download_rows[region_code] = report_data_rows["Report data"]
+            download_headers[region_code] = report_header_data
             rendered_results.append(report_header + report_data)
+
+        if 'download' in self.request.form:
+
+            return self.download(download_rows, download_headers)  # report_header_data
 
         res = "<hr/>".join(rendered_results)
         self.report_html = res + "" + trans_edit_html     
@@ -923,8 +985,12 @@ https://svn.eionet.europa.eu/repositories/Reportnet/Dataflows/MarineDirective/MS
         'Art3': "To be completed...",
         'Art4': "To be completed...",
         'Art7': "To be completed...",
-        'Art11': """The data is retrieved from the MSFD2018_production.V_ART11_Strategies database
-view."""
+        'Art11': """
+The data is retrieved from the MSFD2018_production.V_ART11_Strategies database view.
+""",
+        'Art8esa': """
+The data is retrieved from the MSFD2018_production.V_ART8_ESA_2018 database view.
+"""
     }
 
     @property
@@ -1300,6 +1366,22 @@ view."""
 
             data_by_mru = group_by_mru(data)
 
+        if self.article == 'Art8esa':
+            order = ('MarineReportingUnit',)
+            data_by_mru = consolidate_singlevalue_to_list(
+                data, 'MarineReportingUnit', order, )
+
+            if data_by_mru:
+                data_by_region = defaultdict(list)
+                # group data by region
+                for item in data_by_mru:
+                    region = item.Region
+                    data_by_region[region].append(item)
+
+                data_by_mru = data_by_region
+            else:
+                data_by_mru = {}
+
         if self.article == 'Art10':
             # data_by_mru = group_by_mru(data)
             order = self._get_order_cols_Art10()
@@ -1343,7 +1425,6 @@ view."""
         return_empty = self.is_side_by_side and self.article in ('Art11', )
 
         for mru, rows in data_by_mru.items():
-
             _rows = items_to_rows(rows, fields, return_empty)
 
             res.append((mru, _rows))
@@ -1447,6 +1528,7 @@ view."""
         t = sql2018.ReportedInformation
         schemas = {
             'Art8': 'ART8_GES',
+            'Art8esa': 'ART8_ESA',
             'Art9': 'ART9_GES',
             'Art10': 'ART10_Targets',
             'Art11': 'ART11_Programmes'
@@ -1626,6 +1708,46 @@ view."""
             self.subform = form
 
         return self.subform
+
+
+@implementer(IReportDataViewSecondary)
+class ReportData2018Art8ESA(ReportData2018):
+    descriptor = 'Not linked'
+    country_region_code = 'No region'
+    country_region_name = 'No region'
+
+    Art8esa = Template('pt/report-data-multiple-muid.pt')
+
+    @property
+    def report_header_title(self):
+        title = "Member State report / {} / {} / {} ".format(
+            self.article,
+            self.report_year,
+            self.country_name,
+        )
+
+        return title
+
+    def get_data_from_view_Art8esa(self):
+        t = sql2018.t_V_ART8_ESA_2018
+
+        conditions = [
+            t.c.CountryCode.in_(self.country_code.split(','))
+        ]
+
+        count, q = db.get_all_records_ordered(
+            t,
+            ('CountryCode',),
+            *conditions
+        )
+
+        res = []
+
+        # filter here?
+        for row in q:
+            res.append(row)
+
+        return res
 
 
 @implementer(IReportDataViewSecondary)
