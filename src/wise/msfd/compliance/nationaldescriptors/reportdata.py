@@ -1,6 +1,5 @@
 from __future__ import absolute_import
 from __future__ import print_function
-from email.policy import default
 import logging
 from collections import OrderedDict, defaultdict, namedtuple
 from datetime import datetime
@@ -9,7 +8,7 @@ from io import BytesIO
 
 from lxml.etree import fromstring
 from sqlalchemy import or_
-from zope.interface import implementer, implements
+from zope.interface import implementer
 from zope.security import checkPermission
 from zope.schema import Choice
 from zope.schema.vocabulary import SimpleTerm, SimpleVocabulary
@@ -27,10 +26,9 @@ from wise.msfd.compliance.interfaces import (IReportDataView,
                                              IReportDataViewSecondary,
                                              IReportDataViewOverview)
 from wise.msfd.compliance.nationaldescriptors.data import get_report_definition
-from wise.msfd.compliance.utils import (group_by_mru,
-                                        insert_missing_criterions,
-                                        ordered_regions_sortkey)
-from wise.msfd.compliance.vocabulary import REGIONS, get_regions_for_country
+from wise.msfd.compliance.utils import (group_by_mru, has_cost_uses_data,
+                                        insert_missing_criterions)
+from wise.msfd.compliance.vocabulary import REGIONS
 from wise.msfd.data import (get_all_report_filenames,
                             get_envelope_release_date, get_factsheet_url,
                             get_report_file_url, get_report_filename,
@@ -38,7 +36,7 @@ from wise.msfd.data import (get_all_report_filenames,
 from wise.msfd.gescomponents import (get_all_descriptors, get_descriptor,
                                      get_features)
 from wise.msfd.translation import get_translated, retrieve_translation
-from wise.msfd.utils import (current_date, get_obj_fields, items_to_rows,
+from wise.msfd.utils import (ItemLabel, current_date, items_to_rows,
                              natural_sort_key, timeit)
 from z3c.form.button import buttonAndHandler
 from z3c.form.field import Fields
@@ -54,7 +52,7 @@ from .a11 import Article11, Article11Compare, Article11Overview
 from .a34 import Article34, Article34_2018
 from .base import BaseView
 from .proxy import Proxy2018
-from .utils import consolidate_date_by_mru, consolidate_singlevalue_to_list
+from .utils import consolidate_singlevalue_to_list
 import six
 
 # from persistent.list import PersistentList
@@ -163,7 +161,6 @@ def serialize_rows(rows):
 class ReportData2012(BaseView, BaseUtil):
     """ WIP on compliance tables
     """
-    # implements(IReportDataView)
 
     year = report_year = '2012'
     section = 'national-descriptors'
@@ -599,7 +596,7 @@ class ReportData2012Secondary(ReportData2012):
                 rep_info.reporters, source_file, factsheet, 
                 rep_info.report_date, multiple_source_files
             )
-            report_header_data['region_name'] = region_code
+            report_header_data['region_name'] = REGIONS[region_code]
             report_header_data['show_navigation'] = region_index == 0
             report_header_data['title'] = (
                 region_index == 0 and self.report_title or '')
@@ -748,8 +745,6 @@ class ReportData2014(ReportData2012):
 
 @implementer(IReportDataViewOverview)
 class ReportDataOverview2014Art11(ReportData2014):
-    # implements(IReportDataViewOverview)
-
     @property
     def descriptor(self):
         return 'Not defined'
@@ -942,8 +937,6 @@ class SnapshotSelectForm(Form):
 
 @implementer(IReportDataView)
 class ReportData2018(BaseView):
-    # implements(IReportDataView)
-
     report_year = '2018'        # used by cache key
     year = '2018'       # used in report definition and translation
     report_due = '2018-10-15'
@@ -1373,10 +1366,18 @@ The data is retrieved from the MSFD2018_production.V_ART8_ESA_2018 database view
 
             if data_by_mru:
                 data_by_region = defaultdict(list)
-                # group data by region
+
+                # group data by region, also filter items without 
+                # CostDegradation or UsesActivities data
                 for item in data_by_mru:
+                    is_needed = has_cost_uses_data(item)
+
+                    if not is_needed:
+                        continue
+
                     region = item.Region
-                    data_by_region[region].append(item)
+                    region_name = REGIONS[region]
+                    data_by_region[region_name].append(item)
 
                 data_by_mru = data_by_region
             else:
@@ -1394,7 +1395,6 @@ The data is retrieved from the MSFD2018_production.V_ART8_ESA_2018 database view
                 data_by_mru = {}
 
         if self.article == 'Art9':
-            # data_by_mru = consolidate_date_by_mru(data_by_mru)
             data_by_mru = consolidate_singlevalue_to_list(
                 data, 'MarineReportingUnit'
             )
@@ -1497,28 +1497,6 @@ The data is retrieved from the MSFD2018_production.V_ART8_ESA_2018 database view
             muids.add(muid)
 
         return list(sorted(muids))
-
-    # def get_muids_from_data(self, data):
-    #     # TODO: this shouldn't exist anymore
-    #     if isinstance(data[0][0], (unicode, str)):
-    #         all_muids = sorted(set([x[0] for x in data]))
-    #
-    #         return ', '.join(all_muids)
-    #
-    #     all_muids = [x[0] for x in data]
-    #     seen = []
-    #     muids = []
-    #
-    #     for muid in all_muids:
-    #         name = muid.name
-    #
-    #         if name in seen:
-    #             continue
-    #
-    #         seen.append(name)
-    #         muids.append(muid)
-    #
-    #     return ItemList(rows=muids)
 
     @db.use_db_session('2018')
     @timeit
@@ -1743,7 +1721,6 @@ class ReportData2018Art8ESA(ReportData2018):
 
         res = []
 
-        # filter here?
         for row in q:
             res.append(row)
 
@@ -1752,8 +1729,6 @@ class ReportData2018Art8ESA(ReportData2018):
 
 @implementer(IReportDataViewSecondary)
 class ReportData2018Secondary(ReportData2018):
-    # implements(IReportDataViewSecondary)
-
     descriptor = 'Not linked'
     country_region_code = 'No region'
 
@@ -2086,8 +2061,6 @@ class ReportData2020(ReportData2018):
 
 @implementer(IReportDataViewOverview)
 class ReportDataOverview2020Art11(ReportData2020):
-    # implements(IReportDataViewOverview)
-
     is_primary_article = False
     is_overview = True
 

@@ -161,21 +161,21 @@
   </Art7>
 
   <Art8esa>
-    <element name="MarineReportingUnit" setlevel="0">Marine reporting unit</element>
-    <element name="Feature" setlevel="1">Feature</element>
-    <element name="NACECode">NACE codes</element>
-    <element name="GESComponent">Related GES component</element>
+    <element name="MarineReportingUnit" setlevel="0" label="mrus" convert="inverse_label">Marine reporting unit</element>
+    <element name="Feature" setlevel="1" label="features">Feature</element>
+    <element name="NACECode" label="nace_codes" convert="csv_ges_labels_list">NACE codes</element>
+    <element name="GESComponent" convert="ges_component_list">Related GES component</element>
     <element name="UsesActivitiesDescription" setlevel="2" translate="true">Description</element>
     <element name="UsesActivitiesEmployment">Employment (direct *1000 FTE)</element>
     <element name="UsesActivitiesProductionValue">Production value (€ million)</element>
     <element name="UsesActivitiesValueAdded">Value added (€ million)</element>
-    <element name="UsesActivitiesRelatedPressures">Related pressures</element>
-    <element name="UsesActivitiesRelatedIndicators">Related indicators</element>
-    <element name="UsesActivitiesRelatedEcosystemServices">Related ecosystem services</element>
+    <element name="UsesActivitiesRelatedPressures" label="pressures" convert="csv_ges_labels_list">Related pressures</element>
+    <element name="UsesActivitiesRelatedIndicators" label="indicators" convert="csv_ges_labels_inverse_list_indicators">Related indicators</element>
+    <element name="UsesActivitiesRelatedEcosystemServices" label="features" convert="csv_ges_labels_list">Related ecosystem services</element>
     <element name="CostDegradationDescription" translate="true">Cost of degradation: description</element>
     <element name="CostDegradationApproach">Cost of degradation: approach</element>
     <element name="CostDegradationType">Cost of degradation: type</element>
     <element name="CostDegradationResults" translate="true">Cost of degradation: results</element>
-    <element name="CostDegradationRelatedIndicators">Related indicators</element>
+    <element name="CostDegradationRelatedIndicators" label="indicators" convert="csv_ges_labels_inverse_list_indicators">Related indicators</element>
   </Art8esa>
 </data>

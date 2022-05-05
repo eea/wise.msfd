@@ -271,3 +271,30 @@ def ordered_regions_sortkey(region_id):
         regions_order.extend(region.subregions)
 
     return fixedorder_sortkey(region_id, regions_order)
+
+def has_cost_uses_data(item):
+    """ check if an Art 8.c ESA item has CostDegradation and UsesActivities
+        data    
+    """
+
+    name_bits = ['CostDegradation', 'UsesActivities']
+    has_data = False
+
+    for field in item.fields:
+        name = field.name
+        skip_field = True
+
+        for name_bit in name_bits:
+            if name.startswith(name_bit):
+                skip_field = False
+                break
+
+        if skip_field:
+            continue
+        
+        field_value = getattr(item, name)
+
+        if field_value:
+            return True
+
+    return has_data

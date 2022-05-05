@@ -345,6 +345,7 @@ class LabelCollection(object):
     art11_parameters = _parse_art11_2020_labels()['Parameter']
     art11_monitor_method = _parse_art11_2020_labels()['MonitoringMethod']
     art11_features = _parse_art11_2020_labels()['Feature']
+    nace_codes = _parse_labels('NACECodesAll')
 
     def get(self, collection_name, name):
         label_dict = getattr(self, collection_name, None)
