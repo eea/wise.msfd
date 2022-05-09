@@ -1573,18 +1573,50 @@ The data is retrieved from the MSFD2018_production.V_ART8_ESA_2018 database view
         out = BytesIO()
         workbook = xlsxwriter.Workbook(out, {'in_memory': True})
 
+        inverse_fields = ('MarineReportingUnit', )
+
         for index, (wtitle, wdata) in enumerate(data):
             _wtitle = '{}_{}'.format(index + 1, six.text_type(wtitle)[:28])
+            _wtitle = _wtitle.replace(':', '-')
 
             worksheet = workbook.add_worksheet(_wtitle)
 
             for i, (row_label, row_values) in enumerate(wdata):
                 worksheet.write(i, 0, row_label.title)
+                label_name = row_label.name
 
                 for j, v in enumerate(row_values):
-                    v = six.text_type(v) or ''
-                    transl = get_translated(v, self.country_code) or v
-                    worksheet.write(i, j + 1, transl)
+                    try:
+                        if hasattr(v, 'rows') and v.rows:
+                            values = []
+
+                            for item in v.rows:
+                                item_title = item.name
+
+                                if label_name in inverse_fields:
+                                    item_title = item.title
+
+                                trnsl = get_translated(
+                                    item_title, self.country_code)
+                                trnsl = trnsl or item_title
+                                values.append(trnsl)
+
+                            transl = ", ".join(values)
+                        else:
+                            if hasattr(v, 'name') and v.name:
+                                val = v.name
+                                
+                                if label_name in inverse_fields:
+                                    val = v.title
+                                
+                                v = val
+                                
+                            v = v and six.text_type(v) or ''
+                            transl = get_translated(v, self.country_code) or v
+                        
+                        worksheet.write(i, j + 1, transl or '')
+                    except:
+                        import pdb; pdb.set_trace()
 
         workbook.close()
         out.seek(0)
