@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<object name="CompositePage" meta_type="Dexterity FTI" i18n:domain="plone"
+   xmlns:i18n="http://xml.zope.org/namespaces/i18n">
+ <property name="title" i18n:translate="">Composite Page</property>
+ <property name="description"
+    i18n:translate="">Volto-blocks powered page</property>
+ <property name="icon_expr"></property>
+ <property name="factory">CompositePage</property>
+ <property
+    name="add_view_expr">string:${folder_url}/++add++CompositePage</property>
+ <property name="link_target"></property>
+ <property name="immediate_view">view</property>
+ <property name="global_allow">False</property>
+ <property name="filter_content_types">False</property>
+ <property name="allowed_content_types"/>
+ <property name="allow_discussion">False</property>
+ <property name="default_view">compositepage_view</property>
+ <property name="view_methods">
+  <element value="compositepage_view"/>
+  <element value="document_view"/>
+  <element value="country_tab_view"/>
+  <element value="homepage_view"/>
+  <element value="mosaic_tiles_view"/>
+ </property>
+ <property name="default_view_fallback">False</property>
+ <property name="add_permission">plone.app.contenttypes.addDocument</property>
+ <property
+    name="klass">collective.folderishtypes.dx.content.FolderishDocument</property>
+ <property name="behaviors">
+  <element value="plone.namefromtitle"/>
+  <element value="plone.shortname"/>
+  <element value="plone.basic"/>
+  <element value="plone.excludefromnavigation"/>
+  <element
+     value="Products.CMFPlone.interfaces.constrains.ISelectableConstrainTypes"/>
+  <element value="plone.leadimage"/>
+  <element value="plone.richtext"/>
+  <element value="plone.restapi.behaviors.IBlocks"/>
+ </property>
+ <property name="schema"></property>
+ <property name="model_source"></property>
+ <property
+    name="model_file">plone.app.contenttypes.schema:document.xml</property>
+ <property name="schema_policy">dexterity</property>
+ <alias from="(Default)" to="(dynamic view)"/>
+ <alias from="edit" to="@@edit"/>
+ <alias from="sharing" to="@@sharing"/>
+ <alias from="view" to="(selected layout)"/>
+ <action title="View" action_id="view" category="object" condition_expr=""
+    icon_expr="" link_target="" url_expr="string:${object_url}"
+    visible="True">
+  <permission value="View"/>
+ </action>
+ <action title="Edit" action_id="edit" category="object" condition_expr=""
+    icon_expr="" link_target="" url_expr="string:${object_url}/edit"
+    visible="True">
+  <permission value="Modify portal content"/>
+ </action>
+</object>

@@ -108,9 +108,11 @@
  <object name="map_interactive" meta_type="Dexterity FTI"/>
  <object name="dataset" meta_type="Dexterity FTI"/>
  <object name="indicator" meta_type="Dexterity FTI"/>
- <object name="collective.cover.content" meta_type="Dexterity FTI"/>
- <object name="ElasticSearch" meta_type="Dexterity FTI"/>
- <object name="RichImage" meta_type="Dexterity FTI"/>
  <object name="wise.msfd.regionalsummaryoverview" meta_type="Dexterity FTI"/>
  <object name="wise.msfd.msrecommendationfeedback" meta_type="Dexterity FTI"/>
+ <object name="discodataconnector" meta_type="Dexterity FTI"/>
+ <object name="visualization" meta_type="Dexterity FTI"/>
+ <object name="CompositePage" meta_type="Dexterity FTI"/>
+ <object name="clonable_type" meta_type="Dexterity FTI"/>
+ <object name="dashboard" meta_type="Dexterity FTI"/>
 </object>
