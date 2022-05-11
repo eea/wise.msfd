@@ -185,12 +185,12 @@ class MSRecommendationsEditForm(BaseView, Form):
                 rec_code = recommendation.code.strip()
                 topic = recommendation.topic.strip()
                 text = recommendation.text.strip()
+                text = " ".join(text.split())  # get rid of double spaces
                 _key = (rec_code, topic, text)
 
                 recommendations_grouped[_key].append(
                     ((rec_code, topic, region_code, region_title), recommendation)
                 )
-
 
         # # TODO better naming
         for _key, recommendations in recommendations_grouped.items():
