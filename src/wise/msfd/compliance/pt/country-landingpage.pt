@@ -22,7 +22,7 @@
           <div class="topnav articles-wrapper row">
             <a class="article-box-anchor"
               tal:define="_href python: '/marine/assessment-module/national-summaries/' + view.context._ccode + '/overview'"
-              tal:attributes="href _href">
+              tal:attributes="href python: _href">
               <div class="article-box col-lg-4 col-xs-6">
                 <div class="article-box-wrapper">
                   <div class="article-box-header">
@@ -35,7 +35,7 @@
                     Longer introductory text or description here ...
                   </div>
                   <a href=""
-                    tal:attributes="href _href"
+                    tal:attributes="href python:_href"
                     class="article-link"
                     target="_blank">
                     <span class="link-btn"></span>
@@ -46,7 +46,7 @@
 
             <a class="article-box-anchor"
               tal:define="_href python:'/marine/assessment-module/national-descriptors-assessments/' + view.context._ccode + '/reports'"
-              tal:attributes="href _href">
+              tal:attributes="href python:_href">
               <div class="article-box col-lg-4 col-xs-6">
                 <div class="article-box-wrapper">
                   <div class="article-box-header">
@@ -60,7 +60,7 @@
                     Longer introductory text or description here ...
                   </div>
                   <a href=""
-                    tal:attributes="href _href"
+                    tal:attributes="href python:_href"
                     class="article-link"
                     target="_blank">
                     <span class="link-btn"></span>
@@ -71,7 +71,7 @@
 
             <a class="article-box-anchor"
               tal:define="_href python:'/marine/assessment-module/national-descriptors-assessments/' + view.context._ccode + '/assessments'"
-              tal:attributes="href _href">
+              tal:attributes="href python:_href">
               <div class="article-box col-lg-4 col-xs-6">
                 <div class="article-box-wrapper">
                   <div class="article-box-header">
@@ -84,7 +84,7 @@
                     Longer introductory text or description here ...
                   </div>
                   <a href=""
-                    tal:attributes="href _href"
+                    tal:attributes="href python:_href"
                     class="article-link"
                     target="_blank">
                     <span class="link-btn"></span>

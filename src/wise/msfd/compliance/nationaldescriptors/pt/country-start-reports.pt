@@ -82,7 +82,7 @@
                 <td tal:define="assessment python: view._country_folder['art8esa']">
                   <a tal:attributes="href python: assessment.absolute_url() + '/@@view-report-data-2012';
                       class python: 'btn btn-xs btn-success'">2012</a>
-                  <a tal:attributes="href python: assessment.absolute_url() + '/@@view-report-data-2018';
+                  <a tal:attributes="href python: assessment.absolute_url() + '/@@view-report-data-2018-art8-esa';
                       class python: 'btn btn-xs btn-primary'">2018</a>
                 </td>
                 <td colspan="22"></td>
