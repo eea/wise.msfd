@@ -21,7 +21,7 @@
  <property name="klass">plone.dexterity.content.Container</property>
  <property name="behaviors">
   <element value="plone.namefromtitle"/>
-  <element value="freshwater.catalogue-metadata"/>
+  <element value="wise.catalogue-metadata"/>
   <element value="plone.publication"/>
   <element value="plone.ownership"/>
   <element value="plone.relateditems"/>
