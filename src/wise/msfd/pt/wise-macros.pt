@@ -55,10 +55,10 @@
 
 <metal:macro define-macro="top-section">
   <div>
-    <a href="/marine-new/data-maps-and-tools/msfd-reporting-information-products/msfd-reporting-data-explorer"
+    <a href="/marine/data-maps-and-tools/msfd-reporting-information-products/msfd-reporting-data-explorer"
       class="msfd-start-link">
       About MSFD reporting data explorer
-      <img src="/marine-new/++api++/++resource++msfd/images/msfd-mini.png">
+      <img src="/marine/++api++/++resource++msfd/images/msfd-mini.png">
     </a>
     <div>
       <h2 class="main-title" tal:content="structure view/main_title">Article X</h2>
