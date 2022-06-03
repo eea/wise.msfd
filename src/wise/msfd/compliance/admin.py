@@ -550,7 +550,7 @@ class BootstrapAssessmentLandingpages(BootstrapCompliance):
         report_per_descr = create(
             reports_folder,
             'Folder',
-            title=u'EU overview - Member State reports per Descriptor',
+            title=u'EU overview - Reports per Descriptor',
             id='assessment-per-descriptor'
         )
         report_per_descr.image = image
@@ -575,7 +575,7 @@ class BootstrapAssessmentLandingpages(BootstrapCompliance):
             cpage.image_caption = image_caption
             cpage._ccode = code.lower()
             cpage.text = RichTextValue(
-                'Text/Description if needed', 'text/plain', 'text/html')
+                '', 'text/plain', 'text/html')
             self.set_layout(cpage, 'country-landingpage')
 
         regions = create(self.context,
@@ -600,7 +600,7 @@ class BootstrapAssessmentLandingpages(BootstrapCompliance):
             rpage.image_caption = image_caption
             rpage._rcode = code
             rpage.text = RichTextValue(
-                'Text/Description if needed', 'text/plain', 'text/html')
+                '', 'text/plain', 'text/html')
             self.set_layout(rpage, 'region-landingpage')
 
         alsoProvides(self.request, IDisableCSRFProtection)

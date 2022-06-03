@@ -8,7 +8,7 @@
 
   <body metal:fill-slot="content">
 
-    <div id="layout-contents" tal:define="text context/text | nothing" >
+    <div id="layout-contents" tal:define="text_field python: context.text or None" >
       <div id="wise-search-form" class="full-width-marker">
 <!--        <div id="wise-search-form-top">-->
 <!--          <metal:tabs-->
@@ -16,6 +16,8 @@
 <!--        </div>-->
 
         <div class="start-page-content left-side-form">
+          <div style="margin-bottom: 1em;"
+            tal:condition="text_field" tal:content="structure python: text_field.output"></div>
 
           <table class="table as-table-overview table-striped table-country-start">
             <tbody>

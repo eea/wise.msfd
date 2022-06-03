@@ -217,6 +217,10 @@ class MSFDReportingHistoryMixin(object):
 
         for brain in brains:
             obj = brain._unrestrictedGetObject()
+
+            if not hasattr(obj, '_msfd_reporting_history_data'):
+                continue
+            
             reporting_data = obj._msfd_reporting_history_data
 
             break

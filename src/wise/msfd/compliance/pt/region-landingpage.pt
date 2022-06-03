@@ -23,8 +23,8 @@
 
              <a class="article-box-anchor"
                 tal:define="_href python:'/marine/assessment-module/regional-summaries/' + context._rcode + '/overview'"
-                tal:attributes="href _href">
-               <div class="article-box col-lg-4 col-xs-6">
+                tal:attributes="href python:_href">
+               <div class="article-box col-lg-4 col-xs-6" style="height: 380px;">
                  <div class="article-box-wrapper">
                    <div class="article-box-header">
                      <h4 class="tab-subtitle">Overview</h4>
@@ -32,11 +32,12 @@
                           tal:content="string: Overview for ${view/context/title}">Overview for MS
                      </div>
                    </div>
-                   <div class="article-description">
+                   <div class="article-description"
+                      tal:content="string:Regional overview of the data reported by each Member State for each phase of the Marine Strategy Framework Directive (MSFD) implementation cycle, and of the corresponding assessment by the European Commission.">
                      Longer introductory text or description here ...
                    </div>
                    <a href=""
-                      tal:attributes="href _href"
+                      tal:attributes="href python:_href"
                       class="article-link"
                       target="_blank">
                      <span class="link-btn"></span>
@@ -47,8 +48,8 @@
 
              <a class="article-box-anchor"
                 tal:define="_href python:'/marine/assessment-module/regional-descriptors-assessments/' + context._rcode + '/reports'"
-                tal:attributes="href _href">
-               <div class="article-box col-lg-4 col-xs-6">
+                tal:attributes="href python:_href">
+               <div class="article-box col-lg-4 col-xs-6" style="height: 380px;">
                  <div class="article-box-wrapper">
                    <div class="article-box-header">
                      <h4 class="tab-subtitle">Reports
@@ -57,11 +58,12 @@
                           tal:content="string: View reports for ${view/context/title}">View reports by Member State
                      </div>
                    </div>
-                   <div class="article-description">
+                   <div class="article-description"
+                      tal:content="string:Access to the Member State reports (text reports and e-reports) per region for each phase of the Marine Strategy Framework Directive (MSFD) implementation cycle.">
                      Longer introductory text or description here ...
                    </div>
                    <a href=""
-                      tal:attributes="href _href"
+                      tal:attributes="href python:_href"
                       class="article-link"
                       target="_blank">
                      <span class="link-btn"></span>
@@ -72,8 +74,8 @@
 
              <a class="article-box-anchor"
                 tal:define="_href python:'/marine/assessment-module/regional-descriptors-assessments/' + context._rcode + '/assessments'"
-                tal:attributes="href _href">
-               <div class="article-box col-lg-4 col-xs-6">
+                tal:attributes="href python:_href">
+               <div class="article-box col-lg-4 col-xs-6" style="height: 380px;">
                  <div class="article-box-wrapper">
                    <div class="article-box-header">
                      <h4 class="tab-subtitle">Assessments
@@ -81,11 +83,12 @@
                      <div class="tab-title">View or edit the ongoing assessments
                      </div>
                    </div>
-                   <div class="article-description">
+                   <div class="article-description"
+                      tal:content="string:This page provides access to the regional assessment of the European Commission for each phase of the Marine Strategy Framework Directive (MSFD) implementation cycle for the ${view/context/title} region">
                      Longer introductory text or description here ...
                    </div>
                    <a href=""
-                      tal:attributes="href _href"
+                      tal:attributes="href python:_href"
                       class="article-link"
                       target="_blank">
                      <span class="link-btn"></span>

@@ -116,9 +116,14 @@ class StartLandingPage(BaseComplianceView):
         brains = catalog.unrestrictedSearchResults(
             object_provides=IMSFDReportingHistoryFolder.__identifier__,
         )
+        reporting_data = []
 
         for brain in brains:
             obj = brain._unrestrictedGetObject()
+            
+            if not hasattr(obj, '_msfd_reporting_history_data'):
+                continue
+
             reporting_data = obj._msfd_reporting_history_data
 
             break

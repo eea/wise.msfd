@@ -8,13 +8,12 @@
 
   <body metal:fill-slot="main">
 
-    <div id="layout-contents" tal:define="text context/text | nothing" >
+    <div id="layout-contents" tal:define="text_field python: context.text or None" >
       <div id="wise-search-form" class="full-width-marker">
 <!--        <div id="wise-search-form-top">-->
 <!--          <metal:tabs-->
 <!--             metal:use-macro="context/wise-macros/macros/tabs"></metal:tabs>-->
 <!--        </div>-->
-
         <div class="wise-search-landingpage start-page-content left-side-form full-width-marker">
 <!--          <h3>MSFD reports: home page</h3>-->
           <div class="scroll-to-top">
@@ -22,6 +21,9 @@
               <i class="scroll-icon glyphicon glyphicon-chevron-up"></i>
             </button>
           </div>
+          
+          <div style="margin-bottom: 1em;"
+            tal:condition="text_field" tal:content="structure python: text_field.output"></div>
 
           <div class="overflow-table sticky-overflow-header hidden-fixed-table">
             <div class="inner" style="overflow: auto;">

@@ -27,7 +27,7 @@
 
             <div class="topnav articles-wrapper row">
               <div class="article-box-anchor" style="width: 33.33333333%;">
-                <div class="article-box" style="height: 210px; widthz: 33%;">
+                <div class="article-box">
                   <div class="article-box-wrapper" styleZ="background-color: #2dd2b7;">
                     <div class="article-box-header">
                       <h4 class="tab-subtitle">EU overview</h4>
@@ -45,10 +45,10 @@
                 </div>
               </div>            
               <div class="article-box-anchor" style="width: 33.33333333%;">
-                <div class="article-box" style="height: 210px; widthz: 33%;">
+                <div class="article-box">
                   <div class="article-box-wrapper">
                     <div class="article-box-header">
-                      <h4 class="tab-subtitle">Reports & assessments</h4>
+                      <h4 class="tab-subtitle">Reports and assessments</h4>
                       <div class="tab-title">Member State reports and assessments by country</div>
                     </div>
                     <div class="country-dropdown-wrapper">
@@ -64,10 +64,10 @@
                 </div>
               </div>     
               <div class="article-box-anchor" style="width: 33.33333333%;">
-                <div class="article-box" style="height: 210px;">
+                <div class="article-box">
                   <div class="article-box-wrapper" styleZ="background-color: #fad0c3;">
                     <div class="article-box-header">
-                      <h4 class="tab-subtitle">Reports & assessments</h4>
+                      <h4 class="tab-subtitle">Regional reports and assessments</h4>
                       <div class="tab-title">Member State reports and assessments by region</div>
                     </div>
                     <div class="country-dropdown-wrapper">

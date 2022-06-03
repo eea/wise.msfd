@@ -16,7 +16,7 @@ from persistent import Persistent
 from pkg_resources import resource_filename
 from plone.api import portal
 from plone.protect.interfaces import IDisableCSRFProtection
-from io import StringIO
+from io import BytesIO
 
 from wise.msfd.compliance.vocabulary import (
     REGIONAL_DESCRIPTORS_REGIONS,
@@ -439,7 +439,7 @@ class MSFDReportingHistoryView(BaseComplianceView):
         return self.context.msfd_reporting_history_xml
 
     def setup_msfd_data(self):
-        file_obj = StringIO(self.msfd_file.data)
+        file_obj = BytesIO(self.msfd_file.data)
         data = get_msfd_reporting_history_from_file(file_obj)
 
         self.context._msfd_reporting_history_filename = self.msfd_file.filename
@@ -507,6 +507,9 @@ class MSFDReportingHistoryView(BaseComplianceView):
     def __call__(self):
         alsoProvides(self.request, IDisableCSRFProtection)
         form_data = self.request.form
+
+        if 'force-setup' in form_data:
+            self.setup_msfd_data()
 
         if 'download-excel' in form_data:
             return self.download()
