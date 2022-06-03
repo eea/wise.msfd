@@ -233,6 +233,16 @@
       justify-content: space-between;
       align-items: flex-start;
       gap: 1em;
+
+      &.disabled {
+        background-color: #ccc;
+        cursor: not-allowed;
+
+        a {
+          cursor: not-allowed;
+          pointer-events: none;
+        }
+      }
     }
 
     .article-box-header {

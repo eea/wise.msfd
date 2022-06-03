@@ -14,7 +14,8 @@
   </head>
 
   <body metal:fill-slot="main">
-    <div id="layout-contents" tal:define="text context/text | nothing" >
+    <div id="layout-contents" tal:define="text context/text | nothing;
+        can_view_assessment_data python:view.can_view_assessment_data()" >
       <div id="wise-search-form">
         <div id="wise-search-form-top">
           <div tal:condition="text" tal:content="structure text/output"></div>
@@ -74,9 +75,10 @@
 
              <a class="article-box-anchor"
                 tal:define="_href python:'/marine/assessment-module/regional-descriptors-assessments/' + context._rcode + '/assessments'"
-                tal:attributes="href python:_href">
-               <div class="article-box col-lg-4 col-xs-6" style="height: 380px;">
-                 <div class="article-box-wrapper">
+                tal:attributes="href python:can_view_assessment_data and _href or '';">
+                <div class="article-box col-lg-4 col-xs-6" style="height: 380px;">
+                 <div class="article-box-wrapper"
+                    tal:attributes="class python: can_view_assessment_data and 'article-box-wrapper' or 'article-box-wrapper disabled'">
                    <div class="article-box-header">
                      <h4 class="tab-subtitle">Assessments
                      </h4>
@@ -88,7 +90,7 @@
                      Longer introductory text or description here ...
                    </div>
                    <a href=""
-                      tal:attributes="href python:_href"
+                      tal:attributes="href python:can_view_assessment_data and _href or ''"
                       class="article-link"
                       target="_blank">
                      <span class="link-btn"></span>
