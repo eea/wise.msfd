@@ -48,7 +48,7 @@
              </a>
 
              <a class="article-box-anchor"
-                tal:define="_href python:'/marine/assessment-module/regional-descriptors-assessments/' + context._rcode + '/reports'"
+                tal:define="_href python:'/marine/policy-and-reporting/assessment-by-region/' + context.id + '/reports'"
                 tal:attributes="href python:_href">
                <div class="article-box col-lg-4 col-xs-6" style="height: 380px;">
                  <div class="article-box-wrapper">

@@ -8,6 +8,7 @@ from logging import getLogger
 from zope.interface import implementer, alsoProvides
 
 from persistent.list import PersistentList
+from plone.api import portal
 from plone.api.content import transition
 from plone.api.portal import get_tool
 from plone.protect.interfaces import IDisableCSRFProtection
@@ -122,12 +123,35 @@ class NationalDescriptorsOverview(BaseView):
 class NationalDescriptorCountryOverview(BaseView):
     section = 'national-descriptors'
 
+    def root_url(self):
+        # return the url of the assessment module
+        site = portal.get()
+        url = site.absolute_url()
+        final_url = url + "/marine/assessment-module"
+
+        return final_url
+
+    @property
+    def is_search(self):
+        return True
+
+    @property
+    def _country_folder(self):
+        site = portal.get()
+        
+        ccode = getattr(self.context, '_ccode', self.context.id)
+
+        country_folder = site['marine']['assessment-module'] \
+            ['national-descriptors-assessments'][ccode]
+        
+        return country_folder
+
     def country_name_url(self):
         return self.country_name.lower().replace(' ', '-')
 
     def get_regions(self, context=None):
         if not context:
-            context = self.context
+            context = self._country_folder
 
         regions = [
             x for x in context.contentValues()

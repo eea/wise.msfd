@@ -595,7 +595,8 @@ class BootstrapAssessmentLandingpages(BootstrapCompliance):
                            title=name,
                            # id=code
                            )
-
+            
+            alsoProvides(rpage, interfaces.IRegionalDescriptorRegionsFolder)
             rpage.image = image
             rpage.image_caption = image_caption
             rpage._rcode = code

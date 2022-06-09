@@ -46,7 +46,7 @@
               </tr>
             </thead>
             <tbody>
-              <tr tal:repeat="desc python: view.context.contentValues()">
+              <tr tal:repeat="desc python: view.get_regions()">
                 <th>
                   <span tal:content="python: view.descriptor_for_code(desc.id).title">D0</span>
                 </th>

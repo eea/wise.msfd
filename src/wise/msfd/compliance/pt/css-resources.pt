@@ -1,8 +1,8 @@
-<tal:cond tal:condition="python: 'assessment-module' in request.URL0 or 'msfd-data' in request.URL0">
+<tal:cond tal:condition="python: 'assessment-module' in request.URL0 or 'msfd-data' in request.URL0 or 'policy-and-reporting/assessment-by' in request.URL0">
   <link href="/++resource++static_css/tabs.css?rel=89a45eaa54" type="text/css" rel="stylesheet" />
   <!-- <link href="/marine/++resource++static_css/bootstrap.css" type="text/css" rel="stylesheet" /> -->
 </tal:cond>
 
-<tal:cond tal:condition="python: 'assessment-module' in request.URL0 or 'assessment-per-descriptor' in request.URL0">
+<tal:cond tal:condition="python: 'assessment-module' in request.URL0 or 'assessment-per-descriptor' in request.URL0 or 'policy-and-reporting/assessment-by' in request.URL0">
   <link href="/++resource++static_css/compliance.css?rel=89c9c3d6a8" type="text/css" rel="stylesheet" />
 </tal:cond>

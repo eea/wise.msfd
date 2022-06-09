@@ -3,7 +3,7 @@
   <script>Sentry.init({ dsn: 'https://3b1e925c59cd4e1799c6efbd8251ec80@sentry.eea.europa.eu/32' });</script>
 </tal:cond>
 
-<tal:cond tal:condition="python: 'assessment-module' in request.URL0">
+<tal:cond tal:condition="python: 'assessment-module' in request.URL0 or 'policy-and-reporting/assessment-by' in request.URL0" >
   <script src="/++plone++static/components/jquery/dist/jquery.min.js"></script>
   <script src="/++plone++static/components/select2/select2.js"></script>
   <script src="/++resource++msfd/bs3/js/bootstrap.min.js"></script>
@@ -14,6 +14,6 @@
   <script src="/++resource++msfd/js/table-edit.js?rel=dd14d8aae5"></script>
 </tal:cond>
 
-<tal:cond tal:condition="python: 'assessment-module' in request.URL0 or 'msfd-data' in request.URL0">
+<tal:cond tal:condition="python: 'assessment-module' in request.URL0 or 'msfd-data' in request.URL0 or 'policy-and-reporting/assessment-by' in request.URL0">
   <script src="/++resource++static_js/tabs.js?rel=7490a93573"></script>
 </tal:cond>

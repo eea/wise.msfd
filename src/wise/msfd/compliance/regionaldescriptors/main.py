@@ -6,6 +6,7 @@ from zope.interface import alsoProvides, implementer, implements
 import xlsxwriter
 
 from persistent.list import PersistentList
+from plone.api import portal
 from plone.protect.interfaces import IDisableCSRFProtection
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile as VPTF
 
@@ -70,6 +71,27 @@ class RegionalDescriptorsOverview(BaseRegComplianceView):
 class RegionalDescriptorRegionsOverview(BaseRegComplianceView):
     section = 'regional-descriptors'
 
+    def root_url(self):
+        # return the url of the assessment module
+        site = portal.get()
+        url = site.absolute_url()
+        final_url = url + "/marine/assessment-module"
+
+        return final_url
+
+    @property
+    def is_search(self):
+        return True
+
+    @property
+    def _countryregion_folder(self):
+        site = portal.get()
+
+        country_folder = site['marine']['assessment-module'] \
+            ['regional-descriptors-assessments'][self.context._rcode]
+        
+        return country_folder
+
     def region_name_url(self):
         region_code = self.country_region_code
 
@@ -85,7 +107,7 @@ class RegionalDescriptorRegionsOverview(BaseRegComplianceView):
 
     def get_regions(self):
         regions = [
-            x for x in self.context.contentValues()
+            x for x in self._countryregion_folder.contentValues()
             if x.portal_type == 'Folder'
         ]
 

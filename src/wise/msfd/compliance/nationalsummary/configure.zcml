@@ -20,7 +20,7 @@
     name="national-overview"
     class=".overview.NationalOverviewView"
     template="./pt/report-data-view.pt"
-    permission="wise.ViewAssessmentData"
+    permission="zope2.View"
     />
 
   <!-- National summary / Art 12 Assessment view / pdf export -->

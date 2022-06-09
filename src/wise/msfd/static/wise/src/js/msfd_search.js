@@ -1156,7 +1156,11 @@
 
     initPageElems();
     var formAction = $('.wise-search-form-container form').attr('action');
-    var newFormAction = formAction.replace('msfd', 'api/++api++/msfd');
+    if (formAction.includes("api/++api++")) {
+      var newFormAction = formAction;
+    } else {
+      var newFormAction = formAction.replace("msfd", "api/++api++/msfd");
+    }
 
     $('.wise-search-form-container form').attr('action', newFormAction);
     removeNoValues();
@@ -1552,7 +1556,11 @@
   }
 
   function searchFormAjax(boundary, data, url, formData) {
-    url = url.replace('msfd', 'api/++api++/msfd');
+    if (!url.includes("api/++api++")) {
+      url = url.replace('msfd', 'api/++api++/msfd');
+    }
+
+    
     $.ajax({
       type: 'POST',
       contentType: 'multipart/form-data; boundary=' + boundary,
@@ -1766,7 +1774,11 @@
     }, 100);
 
     var formAction = $('.wise-search-form-container form').attr('action');
-    var newFormAction = formAction.replace('msfd', 'api/++api++/msfd');
+    if (formAction.includes("api/++api++")) {
+      var newFormAction = formAction;
+    } else {
+      var newFormAction = formAction.replace("msfd", "api/++api++/msfd");
+    }
 
     $('.wise-search-form-container form').attr('action', newFormAction);
 
