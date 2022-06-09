@@ -84,19 +84,22 @@ class Art9Display(ItemDisplayForm):
         count, ges_component = db.get_all_records_outerjoin(
             mapper_class,
             sql2018.ReportedInformation,
-            self.condition_ges_component
+            self.condition_ges_component,
+            raw=True
         )
         id_ges_comp = [x.Id for x in ges_component]
 
         count, ges_determination = db.get_all_records(
             determination_mc,
-            determination_mc.IdGESComponent.in_(id_ges_comp)
+            determination_mc.IdGESComponent.in_(id_ges_comp),
+            raw=True
         )
         id_ges_deter = [x.Id for x in ges_determination]
 
         count, ges_deter_feature = db.get_all_records(
             features_mc,
-            features_mc.IdGESDetermination.in_(id_ges_deter)
+            features_mc.IdGESDetermination.in_(id_ges_deter),
+            raw=True
         )
 
         count, ges_marine_unit = db.get_all_records(
@@ -311,14 +314,16 @@ class A2018Art10Display(ItemDisplayForm):
 
         count, target_feature = db.get_all_records(
             sql2018.ART10TargetsTargetFeature,
-            sql2018.ART10TargetsTargetFeature.Feature.in_(data['feature'])
+            sql2018.ART10TargetsTargetFeature.Feature.in_(data['feature']),
+            raw=True
         )
         feature_id_target = [x.IdTarget for x in target_feature]
 
         s = sql2018.ART10TargetsTargetGESComponent
         count, target_ges = db.get_all_records(
             s,
-            s.GESComponent.in_(data['ges_component'])
+            s.GESComponent.in_(data['ges_component']),
+            raw=True
         )
         ges_id_target = [x.IdTarget for x in target_ges]
 
@@ -330,27 +335,31 @@ class A2018Art10Display(ItemDisplayForm):
                      data['member_states']),
                  sql2018.ReportedInformation.Id.in_(
                      self.latest_import_ids_2018())
-                 )
+                 ),
+            raw=True
         )
         marine_unit_ids = [x.Id for x in marine_unit_ids]
 
         count, target = db.get_all_records(
             target_mc,
             and_(target_mc.IdMarineUnit.in_(marine_unit_ids),
-                 target_mc.Id.in_(set(feature_id_target) & set(ges_id_target)))
+                 target_mc.Id.in_(set(feature_id_target) & set(ges_id_target))),
+            raw=True
         )
         target_ids = [x.Id for x in target]
         marine_unit_ids = [x.IdMarineUnit for x in target]
 
         count, marine_unit = db.get_all_records(
             mapper_class,
-            mapper_class.Id.in_(marine_unit_ids)
+            mapper_class.Id.in_(marine_unit_ids),
+            raw=True
         )
 
         s = sql2018.ART10TargetsProgressAssessment
         count, target_progress = db.get_all_records(
             s,
-            s.IdTarget.in_(target_ids)
+            s.IdTarget.in_(target_ids),
+            raw=True
         )
 
         xlsdata = [
@@ -614,7 +623,8 @@ class A2018Art81abDisplay(ItemDisplayForm):
             and_(mapper_class.MarineReportingUnit.in_(marine_units),
                  mc_countries.CountryCode.in_(member_states),
                  mc_countries.Id.in_(self.latest_import_ids_2018())
-                 )
+                 ),
+            raw=True
         )
         id_marine_units = [x.Id for x in marine_unit]
 
@@ -622,32 +632,37 @@ class A2018Art81abDisplay(ItemDisplayForm):
             overall_status_mc,
             overall_status_mc.Feature.in_(features),
             overall_status_mc.GESComponent.in_(ges_components),
-            overall_status_mc.IdMarineUnit.in_(id_marine_units)
+            overall_status_mc.IdMarineUnit.in_(id_marine_units),
+            raw=True
         )
         id_overall_status = [x.Id for x in overall_status]
         id_marine_units = [x.IdMarineUnit for x in overall_status]
 
         count, marine_unit = db.get_all_records(
             mapper_class,
-            mapper_class.Id.in_(id_marine_units)
+            mapper_class.Id.in_(id_marine_units),
+            raw=True
         )
 
         mc = sql2018.ART8GESOverallStatusPressure
         count, overall_status_pressure = db.get_all_records(
             mc,
-            mc.IdOverallStatus.in_(id_overall_status)
+            mc.IdOverallStatus.in_(id_overall_status),
+            raw=True
         )
 
         mc = sql2018.ART8GESOverallStatusTarget
         count, overall_status_target = db.get_all_records(
             mc,
-            mc.IdOverallStatus.in_(id_overall_status)
+            mc.IdOverallStatus.in_(id_overall_status),
+            raw=True
         )
 
         mc = sql2018.ART8GESElementStatu
         count, element_status = db.get_all_records(
             mc,
-            mc.IdOverallStatus.in_(id_overall_status)
+            mc.IdOverallStatus.in_(id_overall_status),
+            raw=True
         )
         id_element_status = [x.Id for x in element_status]
 
@@ -655,21 +670,24 @@ class A2018Art81abDisplay(ItemDisplayForm):
         count, criteria_status = db.get_all_records(
             mc,
             or_(mc.IdOverallStatus.in_(id_overall_status),
-                mc.IdElementStatus.in_(id_element_status))
+                mc.IdElementStatus.in_(id_element_status)),
+            raw=True
         )
         id_criteria_status = [x.Id for x in criteria_status]
 
         mc = sql2018.ART8GESCriteriaValue
         count, criteria_value = db.get_all_records(
             mc,
-            mc.IdCriteriaStatus.in_(id_criteria_status)
+            mc.IdCriteriaStatus.in_(id_criteria_status),
+            raw=True
         )
         id_criteria_value = [x.Id for x in criteria_value]
 
         mc = sql2018.ART8GESCriteriaValuesIndicator
         count, criteria_value_ind = db.get_all_records(
             mc,
-            mc.IdCriteriaValues.in_(id_criteria_value)
+            mc.IdCriteriaValues.in_(id_criteria_value),
+            raw=True
         )
 
         xlsdata = [
@@ -1117,7 +1135,8 @@ class A2018Art81cDisplay(ItemDisplayForm):
             and_(mapper_class.MarineReportingUnit.in_(marine_units),
                  mc_countries.CountryCode.in_(member_states),
                  mc_countries.Id.in_(self.latest_import_ids_2018())
-                 )
+                 ),
+            raw=True
         )
         id_marine_units = [x.Id for x in marine_unit]
 
@@ -1129,60 +1148,70 @@ class A2018Art81cDisplay(ItemDisplayForm):
 
         count, feature = db.get_all_records(
             features_mc,
-            *conditions
+            *conditions,
+            raw=True
         )
         id_feature = [x.Id for x in feature]
         id_marine_units = [x.IdMarineUnit for x in feature]
 
         count, marine_unit = db.get_all_records(
             mapper_class,
-            mapper_class.Id.in_(id_marine_units)
+            mapper_class.Id.in_(id_marine_units),
+            raw=True
         )
 
         count, feature_nace = db.get_all_records(
             sql2018.ART8ESAFeatureNACE,
-            sql2018.ART8ESAFeatureNACE.IdFeature.in_(id_feature)
+            sql2018.ART8ESAFeatureNACE.IdFeature.in_(id_feature),
+            raw=True
         )
 
         count, feature_ges_comp = db.get_all_records(
             sql2018.ART8ESAFeatureGESComponent,
-            sql2018.ART8ESAFeatureGESComponent.IdFeature.in_(id_feature)
+            sql2018.ART8ESAFeatureGESComponent.IdFeature.in_(id_feature),
+            raw=True
         )
 
         count, cost_degradation = db.get_all_records(
             sql2018.ART8ESACostDegradation,
-            sql2018.ART8ESACostDegradation.IdFeature.in_(id_feature)
+            sql2018.ART8ESACostDegradation.IdFeature.in_(id_feature),
+            raw=True
         )
         id_cost_degrad = [x.Id for x in cost_degradation]
 
         mc = sql2018.ART8ESACostDegradationIndicator
         count, cost_degradation_ind = db.get_all_records(
             mc,
-            mc.IdCostDegradation.in_(id_cost_degrad)
+            mc.IdCostDegradation.in_(id_cost_degrad),
+            raw=True
         )
 
         count, uses_activity = db.get_all_records(
             sql2018.ART8ESAUsesActivity,
-            sql2018.ART8ESAUsesActivity.IdFeature.in_(id_feature)
+            sql2018.ART8ESAUsesActivity.IdFeature.in_(id_feature),
+            raw=True
         )
         id_uses_act = [x.Id for x in uses_activity]
 
         mc = sql2018.ART8ESAUsesActivitiesIndicator
         count, uses_activity_ind = db.get_all_records(
             mc,
-            mc.IdUsesActivities.in_(id_uses_act)
+            mc.IdUsesActivities.in_(id_uses_act),
+            raw=True
         )
 
         mc = sql2018.ART8ESAUsesActivitiesEcosystemService
         count, uses_activity_eco = db.get_all_records(
             mc,
-            mc.IdUsesActivities.in_(id_uses_act)
+            mc.IdUsesActivities.in_(id_uses_act),
+            raw=True
         )
 
         mc = sql2018.ART8ESAUsesActivitiesPressure
         count, uses_activity_pres = db.get_all_records(
             mc,
-            mc.IdUsesActivities.in_(id_uses_act)
+            mc.IdUsesActivities.in_(id_uses_act),
+            raw=True
         )
 
         xlsdata = [
@@ -1547,6 +1576,7 @@ class A2018IndicatorsDisplay(ItemDisplayForm):
 
         return country
 
+    @db.use_db_session('2018')
     def download_results(self):
         parent = self.context.context.context
 
@@ -1559,30 +1589,35 @@ class A2018IndicatorsDisplay(ItemDisplayForm):
 
         count, indicator_assessment = db.get_all_records(
             mapper_class,
-            mapper_class.Id.in_(ids_needed)
+            mapper_class.Id.in_(ids_needed),
+            raw=True
         )
 
         ids_indicator = [x.Id for x in indicator_assessment]
 
         count, indicator_dataset = db.get_all_records(
             sql2018.IndicatorsDataset,
-            sql2018.IndicatorsDataset.IdIndicatorAssessment.in_(ids_indicator)
+            sql2018.IndicatorsDataset.IdIndicatorAssessment.in_(ids_indicator),
+            raw=True
         )
 
         count, feature_ges_comp = db.get_all_records(
             ges_components_mc,
-            ges_components_mc.IdIndicatorAssessment.in_(ids_indicator)
+            ges_components_mc.IdIndicatorAssessment.in_(ids_indicator),
+            raw=True
         )
         id_ges_components = [x.Id for x in feature_ges_comp]
 
         count, feature_feature = db.get_all_records(
             features_mc,
-            features_mc.IdGESComponent.in_(id_ges_components)
+            features_mc.IdGESComponent.in_(id_ges_components),
+            raw=True
         )
 
         count, marine_unit = db.get_all_records(
             marine_mc,
-            marine_mc.IdIndicatorAssessment.in_(ids_indicator)
+            marine_mc.IdIndicatorAssessment.in_(ids_indicator),
+            raw=True
         )
 
         xlsdata = [

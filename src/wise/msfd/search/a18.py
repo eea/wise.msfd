@@ -80,7 +80,8 @@ class A18MeasureProgressDisplay(ItemDisplayForm):
 
         count, report_ids = db.get_all_records(
             mc_countries,
-            *conditions
+            *conditions,
+            raw=True
         )
         report_ids = [x.Id for x in report_ids]
 
@@ -90,7 +91,8 @@ class A18MeasureProgressDisplay(ItemDisplayForm):
 
         count, measure_progress_ids = db.get_all_records(
             mc_descr,
-            *conditions
+            *conditions,
+            raw=True
         )
         measure_progress_ids = [
             x.IdMeasureProgress
@@ -101,12 +103,14 @@ class A18MeasureProgressDisplay(ItemDisplayForm):
             self.mapper_class,
             self.mapper_class.IdReportedInformation.in_(report_ids),
             self.mapper_class.Id.in_(measure_progress_ids),
+            raw=True
         )
         id_measure = [x.Id for x in measure_prog]
 
         count, measure_prog_descr = db.get_all_records(
             mc_descr,
-            mc_descr.IdMeasureProgress.in_(id_measure)
+            mc_descr.IdMeasureProgress.in_(id_measure),
+            raw=True
         )
 
         xlsdata = [
@@ -229,7 +233,8 @@ class A18CategoryDisplay(ItemDisplayForm):
 
         count, report_ids = db.get_all_records(
             mc_countries,
-            *conditions
+            *conditions,
+            raw=True
         )
         report_ids = [x.Id for x in report_ids]
 
@@ -240,13 +245,15 @@ class A18CategoryDisplay(ItemDisplayForm):
 
         count, category = db.get_all_records(
             self.mapper_class,
-            *conditions
+            *conditions,
+            raw=True
         )
         id_category = [x.Id for x in category]
 
         count, category_measure = db.get_all_records(
             mc_measure,
-            mc_measure.IdCategory1bNotWFD.in_(id_category)
+            mc_measure.IdCategory1bNotWFD.in_(id_category),
+            raw=True
         )
 
         xlsdata = [

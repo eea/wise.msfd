@@ -48,7 +48,8 @@ class AreaTypesFormArt9(EmbeddedForm):
         count, data = get_all_records(
             self.mapper_class,
             self.mapper_class.MarineUnitID.in_(muids),
-            self.mapper_class.ReportingFeature.in_(ges_comps)
+            self.mapper_class.ReportingFeature.in_(ges_comps),
+            raw=True
         )
 
         descriptor_ids = [row.MSFD9_Descriptor_ID for row in data]
@@ -56,7 +57,8 @@ class AreaTypesFormArt9(EmbeddedForm):
         t_features = sql.t_MSFD9_Features
         count, data_f = get_all_records(
             t_features,
-            t_features.c.MSFD9_Descriptor.in_(descriptor_ids)
+            t_features.c.MSFD9_Descriptor.in_(descriptor_ids),
+            raw=True
         )
 
         xlsdata = [

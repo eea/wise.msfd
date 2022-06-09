@@ -64,7 +64,8 @@ class A81bExtractionFishSubForm(MarineUnitIDSelectForm2012):
         muids = self.get_available_marine_unit_ids()[1]
         count, data = db.get_all_records(
             self.mapper_class,
-            self.mapper_class.MarineUnitID.in_(muids)
+            self.mapper_class.MarineUnitID.in_(muids),
+            raw=True
         )
 
         extraction_ids = [row.MSFD8b_ExtractionFishShellfish_ID
@@ -72,7 +73,8 @@ class A81bExtractionFishSubForm(MarineUnitIDSelectForm2012):
         mc_a = sql.MSFD8bExtractionFishShellfishAssesment
         count, data_a = db.get_all_records(
             mc_a,
-            mc_a.MSFD8b_ExtractionFishShellfish.in_(extraction_ids)
+            mc_a.MSFD8b_ExtractionFishShellfish.in_(extraction_ids),
+            raw=True
         )
 
         assesment_ids = [row.MSFD8b_ExtractionFishShellfish_Assesment_ID
@@ -80,7 +82,8 @@ class A81bExtractionFishSubForm(MarineUnitIDSelectForm2012):
         mc_ai = sql.MSFD8bExtractionFishShellfishAssesmentIndicator
         count, data_ai = db.get_all_records(
             mc_ai,
-            mc_ai.MSFD8b_ExtractionFishShellfish_Assesment.in_(assesment_ids)
+            mc_ai.MSFD8b_ExtractionFishShellfish_Assesment.in_(assesment_ids),
+            raw=True
         )
 
         mc_ac = sql.MSFD8bExtractionFishShellfishActivity
@@ -98,13 +101,15 @@ class A81bExtractionFishSubForm(MarineUnitIDSelectForm2012):
                 kj.MSFD8b_ExtractionFishShellfish
             ],
             kj,
-            kj.MSFD8b_ExtractionFishShellfish.in_(extraction_ids)
+            kj.MSFD8b_ExtractionFishShellfish.in_(extraction_ids),
+            raw=True
         )
 
         mc_sum = sql.MSFD8bExtractionFishShellfishSumInfo2ImpactedElement
         count, data_sum = db.get_all_records(
             mc_sum,
-            mc_sum.MSFD8b_ExtractionFishShellfish.in_(extraction_ids)
+            mc_sum.MSFD8b_ExtractionFishShellfish.in_(extraction_ids),
+            raw=True
         )
 
         xlsdata = [
@@ -215,14 +220,16 @@ class A81bExtractionSeaweedSubForm(MarineUnitIDSelectForm2012):
         muids = self.get_available_marine_unit_ids()[1]
         count, data = db.get_all_records(
             self.mapper_class,
-            self.mapper_class.MarineUnitID.in_(muids)
+            self.mapper_class.MarineUnitID.in_(muids),
+            raw=True
         )
 
         base_ids = [row.MSFD8b_ExtractionSeaweedMaerlOther_ID for row in data]
         mc_a = sql.MSFD8bExtractionSeaweedMaerlOtherAssesment
         count, data_a = db.get_all_records(
             mc_a,
-            mc_a.MSFD8b_ExtractionSeaweedMaerlOther.in_(base_ids)
+            mc_a.MSFD8b_ExtractionSeaweedMaerlOther.in_(base_ids),
+            raw=True
         )
 
         assesment_ids = [row.MSFD8b_ExtractionSeaweedMaerlOther_Assesment_ID
@@ -231,7 +238,8 @@ class A81bExtractionSeaweedSubForm(MarineUnitIDSelectForm2012):
         count, data_ai = db.get_all_records(
             mc_ai,
             mc_ai.MSFD8b_ExtractionSeaweedMaerlOther_Assesment.in_(
-                assesment_ids)
+                assesment_ids),
+            raw=True
         )
 
         mc_ac = sql.MSFD8bExtractionSeaweedMaerlOtherActivity
@@ -250,13 +258,15 @@ class A81bExtractionSeaweedSubForm(MarineUnitIDSelectForm2012):
                 kj.MSFD8b_ExtractionSeaweedMaerlOther
             ],
             kj,
-            kj.MSFD8b_ExtractionSeaweedMaerlOther.in_(base_ids)
+            kj.MSFD8b_ExtractionSeaweedMaerlOther.in_(base_ids),
+            raw=True
         )
 
         mc_sum = sql.MSFD8bExtractionSeaweedMaerlOtherSumInfo2ImpactedElement
         count, data_sum = db.get_all_records(
             mc_sum,
-            mc_sum.MSFD8b_ExtractionSeaweedMaerlOther.in_(base_ids)
+            mc_sum.MSFD8b_ExtractionSeaweedMaerlOther.in_(base_ids),
+            raw=True
         )
 
         xlsdata = [
@@ -366,14 +376,16 @@ class A81bHazardousSubForm(MarineUnitIDSelectForm2012):
     def download_results(self):
         muids = self.get_available_marine_unit_ids()[1]
         count, data = db.get_all_records(
-            self.mapper_class, self.mapper_class.MarineUnitID.in_(muids)
+            self.mapper_class, self.mapper_class.MarineUnitID.in_(muids),
+            raw=True
         )
 
         base_ids = [row.MSFD8b_HazardousSubstances_ID for row in data]
         mc_a = sql.MSFD8bHazardousSubstancesAssesment
         count, data_a = db.get_all_records(
             mc_a,
-            mc_a.MSFD8b_HazardousSubstances.in_(base_ids)
+            mc_a.MSFD8b_HazardousSubstances.in_(base_ids),
+            raw=True
         )
 
         assesment_ids = [row.MSFD8b_HazardousSubstances_Assesment_ID
@@ -381,7 +393,8 @@ class A81bHazardousSubForm(MarineUnitIDSelectForm2012):
         mc_ai = sql.MSFD8bHazardousSubstancesAssesmentIndicator
         count, data_ai = db.get_all_records(
             mc_ai,
-            mc_ai.MSFD8b_HazardousSubstances_Assesment.in_(assesment_ids)
+            mc_ai.MSFD8b_HazardousSubstances_Assesment.in_(assesment_ids),
+            raw=True
         )
 
         mc_ac = sql.MSFD8bHazardousSubstancesActivity
@@ -400,13 +413,15 @@ class A81bHazardousSubForm(MarineUnitIDSelectForm2012):
                 klass_join.MSFD8b_HazardousSubstances
             ],
             klass_join,
-            klass_join.MSFD8b_HazardousSubstances.in_(base_ids)
+            klass_join.MSFD8b_HazardousSubstances.in_(base_ids),
+            raw=True
         )
 
         mc_sum = sql.MSFD8bHazardousSubstancesSumInfo2ImpactedElement
         count, data_sum = db.get_all_records(
             mc_sum,
-            mc_sum.MSFD8b_HazardousSubstances.in_(base_ids)
+            mc_sum.MSFD8b_HazardousSubstances.in_(base_ids),
+            raw=True
         )
 
         xlsdata = [
@@ -516,14 +531,16 @@ class A81bHydroSubForm(MarineUnitIDSelectForm2012):
     def download_results(self):
         muids = self.get_available_marine_unit_ids()[1]
         count, data = db.get_all_records(
-            self.mapper_class, self.mapper_class.MarineUnitID.in_(muids)
+            self.mapper_class, self.mapper_class.MarineUnitID.in_(muids),
+            raw=True
         )
 
         base_ids = [row.MSFD8b_HydrologicalProcesses_ID for row in data]
         mc_a = sql.MSFD8bHydrologicalProcessesAssesment
         count, data_a = db.get_all_records(
             mc_a,
-            mc_a.MSFD8b_HydrologicalProcesses.in_(base_ids)
+            mc_a.MSFD8b_HydrologicalProcesses.in_(base_ids),
+            raw=True
         )
 
         assesment_ids = [row.MSFD8b_HydrologicalProcesses_Assesment_ID
@@ -531,7 +548,8 @@ class A81bHydroSubForm(MarineUnitIDSelectForm2012):
         mc_ai = sql.MSFD8bHydrologicalProcessesAssesmentIndicator
         count, data_ai = db.get_all_records(
             mc_ai,
-            mc_ai.MSFD8b_HydrologicalProcesses_Assesment.in_(assesment_ids)
+            mc_ai.MSFD8b_HydrologicalProcesses_Assesment.in_(assesment_ids),
+            raw=True
         )
 
         mc_ac = sql.MSFD8bHydrologicalProcessesActivity
@@ -549,13 +567,15 @@ class A81bHydroSubForm(MarineUnitIDSelectForm2012):
                 klass_join.MSFD8b_HydrologicalProcesses
             ],
             klass_join,
-            klass_join.MSFD8b_HydrologicalProcesses.in_(base_ids)
+            klass_join.MSFD8b_HydrologicalProcesses.in_(base_ids),
+            raw=True
         )
 
         mc_sum = sql.MSFD8bHydrologicalProcessesSumInfo2ImpactedElement
         count, data_sum = db.get_all_records(
             mc_sum,
-            mc_sum.MSFD8b_HydrologicalProcesses.in_(base_ids)
+            mc_sum.MSFD8b_HydrologicalProcesses.in_(base_ids),
+            raw=True
         )
 
         xlsdata = [
@@ -665,21 +685,24 @@ class A81bMarineLitterSubForm(MarineUnitIDSelectForm2012):
     def download_results(self):
         muids = self.get_available_marine_unit_ids()[1]
         count, data = db.get_all_records(
-            self.mapper_class, self.mapper_class.MarineUnitID.in_(muids)
+            self.mapper_class, self.mapper_class.MarineUnitID.in_(muids),
+            raw=True
         )
 
         base_ids = [row.MSFD8b_Litter_ID for row in data]
         mc_a = sql.MSFD8bLitterAssesment
         count, data_a = db.get_all_records(
             mc_a,
-            mc_a.MSFD8b_Litter.in_(base_ids)
+            mc_a.MSFD8b_Litter.in_(base_ids),
+            raw=True
         )
 
         assesment_ids = [row.MSFD8b_Litter_Assesment_ID for row in data_a]
         mc_ai = sql.MSFD8bLitterAssesmentIndicator
         count, data_ai = db.get_all_records(
             mc_ai,
-            mc_ai.MSFD8b_Litter_Assesment.in_(assesment_ids)
+            mc_ai.MSFD8b_Litter_Assesment.in_(assesment_ids),
+            raw=True
         )
 
         mc_ac = sql.MSFD8bLitterActivity
@@ -697,13 +720,15 @@ class A81bMarineLitterSubForm(MarineUnitIDSelectForm2012):
                 klass_join.MSFD8b_Litter
             ],
             klass_join,
-            klass_join.MSFD8b_Litter.in_(base_ids)
+            klass_join.MSFD8b_Litter.in_(base_ids),
+            raw=True
         )
 
         mc_sum = sql.MSFD8bLitterSumInfo2ImpactedElement
         count, data_sum = db.get_all_records(
             mc_sum,
-            mc_sum.MSFD8b_Litter.in_(base_ids)
+            mc_sum.MSFD8b_Litter.in_(base_ids),
+            raw=True
         )
 
         xlsdata = [
@@ -813,14 +838,16 @@ class A81bMicrobialSubForm(MarineUnitIDSelectForm2012):
     def download_results(self):
         muids = self.get_available_marine_unit_ids()[1]
         count, data = db.get_all_records(
-            self.mapper_class, self.mapper_class.MarineUnitID.in_(muids)
+            self.mapper_class, self.mapper_class.MarineUnitID.in_(muids),
+            raw=True
         )
 
         base_ids = [row.MSFD8b_MicrobialPathogens_ID for row in data]
         mc_a = sql.MSFD8bMicrobialPathogensAssesment
         count, data_a = db.get_all_records(
             mc_a,
-            mc_a.MSFD8b_MicrobialPathogens.in_(base_ids)
+            mc_a.MSFD8b_MicrobialPathogens.in_(base_ids),
+            raw=True
         )
 
         assesment_ids = [row.MSFD8b_MicrobialPathogens_Assesment_ID
@@ -828,7 +855,8 @@ class A81bMicrobialSubForm(MarineUnitIDSelectForm2012):
         mc_ai = sql.MSFD8bMicrobialPathogensAssesmentIndicator
         count, data_ai = db.get_all_records(
             mc_ai,
-            mc_ai.MSFD8b_MicrobialPathogens_Assesment.in_(assesment_ids)
+            mc_ai.MSFD8b_MicrobialPathogens_Assesment.in_(assesment_ids),
+            raw=True
         )
 
         mc_ac = sql.MSFD8bMicrobialPathogensActivity
@@ -846,7 +874,8 @@ class A81bMicrobialSubForm(MarineUnitIDSelectForm2012):
                 klass_join.MSFD8b_MicrobialPathogens
             ],
             klass_join,
-            klass_join.MSFD8b_MicrobialPathogens.in_(base_ids)
+            klass_join.MSFD8b_MicrobialPathogens.in_(base_ids),
+            raw=True
         )
 
         # TODO missing table MSFD8bMicrobialPathogenSumInfo2ImpactedElement
@@ -963,21 +992,24 @@ class A81bNonIndigenousSubForm(MarineUnitIDSelectForm2012):
     def download_results(self):
         muids = self.get_available_marine_unit_ids()[1]
         count, data = db.get_all_records(
-            self.mapper_class, self.mapper_class.MarineUnitID.in_(muids)
+            self.mapper_class, self.mapper_class.MarineUnitID.in_(muids),
+            raw=True
         )
 
         base_ids = [row.MSFD8b_NIS_ID for row in data]
         mc_a = sql.MSFD8bNISAssesment
         count, data_a = db.get_all_records(
             mc_a,
-            mc_a.MSFD8b_NIS.in_(base_ids)
+            mc_a.MSFD8b_NIS.in_(base_ids),
+            raw=True
         )
 
         assesment_ids = [row.MSFD8b_NIS_Assesment_ID for row in data_a]
         mc_ai = sql.MSFD8bNISAssesmentIndicator
         count, data_ai = db.get_all_records(
             mc_ai,
-            mc_ai.MSFD8b_NIS_Assesment.in_(assesment_ids)
+            mc_ai.MSFD8b_NIS_Assesment.in_(assesment_ids),
+            raw=True
         )
 
         mc_ac = sql.MSFD8bNISActivity
@@ -995,13 +1027,15 @@ class A81bNonIndigenousSubForm(MarineUnitIDSelectForm2012):
                 klass_join.MSFD8b_NIS
             ],
             klass_join,
-            klass_join.MSFD8b_NIS.in_(base_ids)
+            klass_join.MSFD8b_NIS.in_(base_ids),
+            raw=True
         )
 
         mc_sum = sql.MSFD8bNISSumInfo2ImpactedElement
         count, data_sum = db.get_all_records(
             mc_sum,
-            mc_sum.MSFD8b_NIS.in_(base_ids)
+            mc_sum.MSFD8b_NIS.in_(base_ids),
+            raw=True
         )
 
         xlsdata = [
@@ -1109,21 +1143,24 @@ class A81bNoiseSubForm(MarineUnitIDSelectForm2012):
     def download_results(self):
         muids = self.get_available_marine_unit_ids()[1]
         count, data = db.get_all_records(
-            self.mapper_class, self.mapper_class.MarineUnitID.in_(muids)
+            self.mapper_class, self.mapper_class.MarineUnitID.in_(muids),
+            raw=True
         )
 
         base_ids = [row.MSFD8b_Noise_ID for row in data]
         mc_a = sql.MSFD8bNoiseAssesment
         count, data_a = db.get_all_records(
             mc_a,
-            mc_a.MSFD8b_Noise.in_(base_ids)
+            mc_a.MSFD8b_Noise.in_(base_ids),
+            raw=True
         )
 
         assesment_ids = [row.MSFD8b_Noise_Assesment_ID for row in data_a]
         mc_ai = sql.MSFD8bNoiseAssesmentIndicator
         count, data_ai = db.get_all_records(
             mc_ai,
-            mc_ai.MSFD8b_Noise_Assesment.in_(assesment_ids)
+            mc_ai.MSFD8b_Noise_Assesment.in_(assesment_ids),
+            raw=True
         )
 
         mc_ac = sql.MSFD8bNoiseActivity
@@ -1141,13 +1178,15 @@ class A81bNoiseSubForm(MarineUnitIDSelectForm2012):
                 klass_join.MSFD8b_Noise
             ],
             klass_join,
-            klass_join.MSFD8b_Noise.in_(base_ids)
+            klass_join.MSFD8b_Noise.in_(base_ids),
+            raw=True
         )
 
         mc_sum = sql.MSFD8bNoiseSumInfo2ImpactedElement
         count, data_sum = db.get_all_records(
             mc_sum,
-            mc_sum.MSFD8b_Noise.in_(base_ids)
+            mc_sum.MSFD8b_Noise.in_(base_ids),
+            raw=True
         )
 
         xlsdata = [
@@ -1252,21 +1291,24 @@ class A81bNutrientSubForm(MarineUnitIDSelectForm2012):
     def download_results(self):
         muids = self.get_available_marine_unit_ids()[1]
         count, data = db.get_all_records(
-            self.mapper_class, self.mapper_class.MarineUnitID.in_(muids)
+            self.mapper_class, self.mapper_class.MarineUnitID.in_(muids),
+            raw=True
         )
 
         base_ids = [row.MSFD8b_Nutrients_ID for row in data]
         mc_a = sql.MSFD8bNutrientsAssesment
         count, data_a = db.get_all_records(
             mc_a,
-            mc_a.MSFD8b_Nutrients.in_(base_ids)
+            mc_a.MSFD8b_Nutrients.in_(base_ids),
+            raw=True
         )
 
         assesment_ids = [row.MSFD8b_Nutrients_Assesment_ID for row in data_a]
         mc_ai = sql.MSFD8bNutrientsAssesmentIndicator
         count, data_ai = db.get_all_records(
             mc_ai,
-            mc_ai.MSFD8b_Nutrients_Assesment.in_(assesment_ids)
+            mc_ai.MSFD8b_Nutrients_Assesment.in_(assesment_ids),
+            raw=True
         )
 
         mc_ac = sql.MSFD8bNutrientsActivity
@@ -1284,13 +1326,15 @@ class A81bNutrientSubForm(MarineUnitIDSelectForm2012):
                 klass_join.MSFD8b_Nutrients
             ],
             klass_join,
-            klass_join.MSFD8b_Nutrients.in_(base_ids)
+            klass_join.MSFD8b_Nutrients.in_(base_ids),
+            raw=True
         )
 
         mc_sum = sql.MSFD8bNutrientsSumInfo2ImpactedElement
         count, data_sum = db.get_all_records(
             mc_sum,
-            mc_sum.MSFD8b_Nutrients.in_(base_ids)
+            mc_sum.MSFD8b_Nutrients.in_(base_ids),
+            raw=True
         )
 
         xlsdata = [
@@ -1395,14 +1439,16 @@ class A81bPhysicalDamageSubForm(MarineUnitIDSelectForm2012):
     def download_results(self):
         muids = self.get_available_marine_unit_ids()[1]
         count, data = db.get_all_records(
-            self.mapper_class, self.mapper_class.MarineUnitID.in_(muids)
+            self.mapper_class, self.mapper_class.MarineUnitID.in_(muids),
+            raw=True
         )
 
         base_ids = [row.MSFD8b_PhysicalDamage_ID for row in data]
         mc_a = sql.MSFD8bPhysicalDamageAssesment
         count, data_a = db.get_all_records(
             mc_a,
-            mc_a.MSFD8b_PhysicalDamage.in_(base_ids)
+            mc_a.MSFD8b_PhysicalDamage.in_(base_ids),
+            raw=True
         )
 
         assesment_ids = [row.MSFD8b_PhysicalDamage_Assesment_ID
@@ -1410,7 +1456,8 @@ class A81bPhysicalDamageSubForm(MarineUnitIDSelectForm2012):
         mc_ai = sql.MSFD8bPhysicalDamageAssesmentIndicator
         count, data_ai = db.get_all_records(
             mc_ai,
-            mc_ai.MSFD8b_PhysicalDamage_Assesment.in_(assesment_ids)
+            mc_ai.MSFD8b_PhysicalDamage_Assesment.in_(assesment_ids),
+            raw=True
         )
 
         mc_ac = sql.MSFD8bPhysicalDamageActivity
@@ -1428,13 +1475,15 @@ class A81bPhysicalDamageSubForm(MarineUnitIDSelectForm2012):
                 klass_join.MSFD8b_PhysicalDamage
             ],
             klass_join,
-            klass_join.MSFD8b_PhysicalDamage.in_(base_ids)
+            klass_join.MSFD8b_PhysicalDamage.in_(base_ids),
+            raw=True
         )
 
         mc_sum = sql.MSFD8bPhysicalDamageSumInfo2ImpactedElement
         count, data_sum = db.get_all_records(
             mc_sum,
-            mc_sum.MSFD8b_PhysicalDamage.in_(base_ids)
+            mc_sum.MSFD8b_PhysicalDamage.in_(base_ids),
+            raw=True
         )
 
         xlsdata = [
@@ -1539,14 +1588,16 @@ class A81bPhysicalLosSubForm(MarineUnitIDSelectForm2012):
     def download_results(self):
         muids = self.get_available_marine_unit_ids()[1]
         count, data = db.get_all_records(
-            self.mapper_class, self.mapper_class.MarineUnitID.in_(muids)
+            self.mapper_class, self.mapper_class.MarineUnitID.in_(muids),
+            raw=True
         )
 
         base_ids = [row.MSFD8b_PhysicalLoss_ID for row in data]
         mc_a = sql.MSFD8bPhysicalLossAssesment
         count, data_a = db.get_all_records(
             mc_a,
-            mc_a.MSFD8b_PhysicalLoss.in_(base_ids)
+            mc_a.MSFD8b_PhysicalLoss.in_(base_ids),
+            raw=True
         )
 
         assesment_ids = [row.MSFD8b_PhysicalLoss_Assesment_ID
@@ -1554,7 +1605,8 @@ class A81bPhysicalLosSubForm(MarineUnitIDSelectForm2012):
         mc_ai = sql.MSFD8bPhysicalLossAssesmentIndicator
         count, data_ai = db.get_all_records(
             mc_ai,
-            mc_ai.MSFD8b_PhysicalLoss_Assesment.in_(assesment_ids)
+            mc_ai.MSFD8b_PhysicalLoss_Assesment.in_(assesment_ids),
+            raw=True
         )
 
         mc_ac = sql.MSFD8bPhysicalLossActivity
@@ -1572,13 +1624,15 @@ class A81bPhysicalLosSubForm(MarineUnitIDSelectForm2012):
                 klass_join.MSFD8b_PhysicalLoss
             ],
             klass_join,
-            klass_join.MSFD8b_PhysicalLoss.in_(base_ids)
+            klass_join.MSFD8b_PhysicalLoss.in_(base_ids),
+            raw=True
         )
 
         mc_sum = sql.MSFD8bPhysicalLossSumInfo2ImpactedElement
         count, data_sum = db.get_all_records(
             mc_sum,
-            mc_sum.MSFD8b_PhysicalLoss.in_(base_ids)
+            mc_sum.MSFD8b_PhysicalLoss.in_(base_ids),
+            raw=True
         )
 
         xlsdata = [
@@ -1683,14 +1737,16 @@ class A81bPollutantEventSubForm(MarineUnitIDSelectForm2012):
     def download_results(self):
         muids = self.get_available_marine_unit_ids()[1]
         count, data = db.get_all_records(
-            self.mapper_class, self.mapper_class.MarineUnitID.in_(muids)
+            self.mapper_class, self.mapper_class.MarineUnitID.in_(muids),
+            raw=True
         )
 
         base_ids = [row.MSFD8b_PollutantEvents_ID for row in data]
         mc_a = sql.MSFD8bPollutantEventsAssesment
         count, data_a = db.get_all_records(
             mc_a,
-            mc_a.MSFD8b_PollutantEvents.in_(base_ids)
+            mc_a.MSFD8b_PollutantEvents.in_(base_ids),
+            raw=True
         )
 
         assesment_ids = [row.MSFD8b_PollutantEvents_Assesment_ID
@@ -1698,7 +1754,8 @@ class A81bPollutantEventSubForm(MarineUnitIDSelectForm2012):
         mc_ai = sql.MSFD8bPollutantEventsAssesmentIndicator
         count, data_ai = db.get_all_records(
             mc_ai,
-            mc_ai.MSFD8b_PollutantEvents_Assesment.in_(assesment_ids)
+            mc_ai.MSFD8b_PollutantEvents_Assesment.in_(assesment_ids),
+            raw=True
         )
 
         mc_ac = sql.MSFD8bPollutantEventsActivity
@@ -1716,13 +1773,15 @@ class A81bPollutantEventSubForm(MarineUnitIDSelectForm2012):
                 klass_join.MSFD8b_PollutantEvents
             ],
             klass_join,
-            klass_join.MSFD8b_PollutantEvents.in_(base_ids)
+            klass_join.MSFD8b_PollutantEvents.in_(base_ids),
+            raw=True
         )
 
         mc_sum = sql.MSFD8bPollutantEventsSumInfo2ImpactedElement
         count, data_sum = db.get_all_records(
             mc_sum,
-            mc_sum.MSFD8b_PollutantEvents.in_(base_ids)
+            mc_sum.MSFD8b_PollutantEvents.in_(base_ids),
+            raw=True
         )
 
         xlsdata = [
@@ -1827,7 +1886,8 @@ class A81bAcidificationSubForm(MarineUnitIDSelectForm2012):
     def download_results(self):
         muids = self.get_available_marine_unit_ids()[1]
         count, data = db.get_all_records(
-            self.mapper_class, self.mapper_class.MarineUnitID.in_(muids)
+            self.mapper_class, self.mapper_class.MarineUnitID.in_(muids),
+            raw=True
         )
 
         base_ids = [row.MSFD8b_Acidification_ID for row in data]
@@ -1847,7 +1907,8 @@ class A81bAcidificationSubForm(MarineUnitIDSelectForm2012):
                 klass_join.MSFD8b_Acidification
             ],
             klass_join,
-            klass_join.MSFD8b_Acidification.in_(base_ids)
+            klass_join.MSFD8b_Acidification.in_(base_ids),
+            raw=True
         )
 
         xlsdata = [

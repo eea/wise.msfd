@@ -327,7 +327,8 @@ class A11MonProgDisplay(ItemDisplayForm):
         mapper_class_mpl = sql.MSFD11MonitoringProgrammeList
         count_mpl, data_mpl = db.get_all_records(
             mapper_class_mpl,
-            mapper_class_mpl.MonitoringProgramme.in_(mp_ids)
+            mapper_class_mpl.MonitoringProgramme.in_(mp_ids),
+            raw=True
         )
 
         mapper_class_mpmid = sql.MSFD11MonitoringProgrammeMarineUnitID
@@ -338,13 +339,15 @@ class A11MonProgDisplay(ItemDisplayForm):
                 sql.MSFD11MarineUnitID.MarineUnitID
             ],
             sql.MSFD11MarineUnitID,
-            mapper_class_mpmid.MonitoringProgramme.in_(mp_ids)
+            mapper_class_mpmid.MonitoringProgramme.in_(mp_ids),
+            raw=True
         )
 
         mapper_class_rt = sql.MSFD11Q6aRelevantTarget
         count_mpl, data_rt = db.get_all_records(
             mapper_class_rt,
-            mapper_class_rt.MonitoringProgramme.in_(mp_ids)
+            mapper_class_rt.MonitoringProgramme.in_(mp_ids),
+            raw=True
         )
 
         xlsdata = [
@@ -597,13 +600,14 @@ class A11MonSubDisplay(MultiItemDisplayForm):
         count, mon_prog_ids = db.get_all_records_outerjoin(
             sql.MSFD11MonitoringProgrammeMarineUnitID,
             sql.MSFD11MarineUnitID,
-            # sql.MSFD11MarineUnitID.MarineUnitID.in_(marine_unit_ids)
+            raw=True
         )
         mon_prog_ids = [row.MonitoringProgramme for row in mon_prog_ids]
         mp_ids = db.get_unique_from_mapper(
             sql.MSFD11MP,
             'ID',
-            sql.MSFD11MP.MonitoringProgramme.in_(mon_prog_ids)
+            sql.MSFD11MP.MonitoringProgramme.in_(mon_prog_ids),
+            raw=True
         )
 
         subprogramme_ids = db.get_unique_from_mapper(
@@ -614,21 +618,24 @@ class A11MonSubDisplay(MultiItemDisplayForm):
                  sql.MSFD11MONSub.Import.in_(
                      self.context.context.context.context.
                          get_latest_import_ids())
-                 )
+                 ),
+            raw=True
         )
         subprogramme_ids = [int(i) for i in subprogramme_ids]
 
         q4g_subprogids_1 = db.get_unique_from_mapper(
             sql.MSFD11SubProgramme,
             'Q4g_SubProgrammeID',
-            sql.MSFD11SubProgramme.ID.in_(subprogramme_ids)
+            sql.MSFD11SubProgramme.ID.in_(subprogramme_ids),
+            raw=True
         )
         q4g_subprogids_2 = db.get_unique_from_mapper(
             sql.MSFD11SubProgrammeIDMatch,
             'MP_ReferenceSubProgramme',
             sql.MSFD11SubProgrammeIDMatch.Q4g_SubProgrammeID.in_(
                 q4g_subprogids_1
-            )
+            ),
+            raw=True
         )
 
         klass_join_mp = sql.MSFD11MP
@@ -667,7 +674,8 @@ class A11MonSubDisplay(MultiItemDisplayForm):
             mapper_class_sp,
             mapper_class_sp.Q4g_SubProgrammeID.in_(submonitor_programme_ids),
             mapper_class_sp.ID.in_(subprogramme_ids),
-            mapper_class_sp.ID.in_(needed_subprogids)
+            mapper_class_sp.ID.in_(needed_subprogids),
+            raw=True
         )
 
         subprograme_ids = [row.ID for row in data_sp]
@@ -675,13 +683,15 @@ class A11MonSubDisplay(MultiItemDisplayForm):
         mapper_class_em = sql.MSFD11Q9aElementMonitored
         count_em, data_em = db.get_all_records(
             mapper_class_em,
-            mapper_class_em.SubProgramme.in_(subprograme_ids)
+            mapper_class_em.SubProgramme.in_(subprograme_ids),
+            raw=True
         )
 
         mapper_class_mp = sql.MSFD11Q9bMeasurementParameter
         count_mp, data_mp = db.get_all_records(
             mapper_class_mp,
-            mapper_class_mp.SubProgramme.in_(subprograme_ids)
+            mapper_class_mp.SubProgramme.in_(subprograme_ids),
+            raw=True
         )
 
         xlsdata = [

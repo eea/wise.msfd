@@ -86,7 +86,7 @@ class CompetentAuthorityItemDisplay(ItemDisplayForm):
     def download_results(self):
         c_codes = self.context.data.get('member_states')
         conditions = [t_MS_CompetentAuthorities.c.C_CD.in_(c_codes)]
-        cnt, data = get_competent_auth_data(*conditions)
+        cnt, data = get_competent_auth_data(*conditions, raw=True)
 
         xlsdata = [
             ('MSCompetentAuthority', data),
@@ -239,7 +239,8 @@ class RegionalCoopItemDisplay(ItemDisplayForm):
         import_ids = db.get_unique_from_mapper(
             sql.MSFD4Import,
             'MSFD4_Import_ID',
-            sql.MSFD4Import.MSFD4_Import_ReportingCountry.in_(c_codes)
+            sql.MSFD4Import.MSFD4_Import_ReportingCountry.in_(c_codes),
+            raw=True
         )
         cols = [mci.MSFD4_Import_ReportingCountry] + self.get_obj_fields(mcr)
 
@@ -247,7 +248,8 @@ class RegionalCoopItemDisplay(ItemDisplayForm):
             cols,
             mcr,
             mcr.MSFD4_RegionalCooperation_Import.in_(import_ids),
-            mcr.Topic == self.context.context.topic
+            mcr.Topic == self.context.context.topic,
+            raw=True
         )
 
         xlsdata = [

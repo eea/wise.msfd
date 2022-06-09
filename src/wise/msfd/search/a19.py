@@ -105,13 +105,15 @@ class Article19Display(ItemDisplayForm):
 
         _, metadata = db.get_all_records(
             mc_ids,
-            *conditions
+            *conditions,
+            raw=True
         )
         ids_needed = [x.Id for x in metadata]
 
         _, metadata_features = db.get_all_records(
             mc,
-            mc.c.IdMetadataArt19_3.in_(ids_needed)
+            mc.c.IdMetadataArt19_3.in_(ids_needed),
+            raw=True
         )
 
         xlsdata = [

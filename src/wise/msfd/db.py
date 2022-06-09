@@ -160,6 +160,7 @@ def _make_session(dsn):
                            connect_args={'timeout': 60}
                            )
     Session = scoped_session(sessionmaker(bind=engine))
+    Session.expire_on_commit = False
     register(Session, keep_session=True)
 
     return Session()
@@ -676,7 +677,7 @@ def get_all_records_distinct_ordered(table, order_col, exclude, *conditions):
 
 
 @cache(db_result_key)
-def get_all_records_outerjoin(mapper_class, klass_join, *conditions):
+def get_all_records_outerjoin(mapper_class, klass_join, *conditions, **kw):
     sess = session()
     try:
         res = sess.query(mapper_class).outerjoin(klass_join).filter(*conditions)
@@ -692,7 +693,7 @@ def get_all_records_outerjoin(mapper_class, klass_join, *conditions):
 
 
 @cache(db_result_key)
-def get_all_records_join(columns, klass_join, *conditions):
+def get_all_records_join(columns, klass_join, *conditions, **kw):
     sess = session()
     try:
         q = sess.query(*columns).join(klass_join).filter(*conditions)
@@ -759,7 +760,7 @@ def latest_import_ids_2018():
 
 
 @cache(db_result_key)
-def get_competent_auth_data(*conditions):
+def get_competent_auth_data(*conditions, **kw):
     mc = sql.t_MS_CompetentAuthorities
     sess = session()
     try:

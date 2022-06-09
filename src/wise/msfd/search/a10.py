@@ -28,7 +28,8 @@ class A10Form(EmbeddedForm):
         _, muids = self.subform.get_available_marine_unit_ids()
         count, data = db.get_all_records(
             self.mapper_class,
-            self.mapper_class.MarineUnitID.in_(muids)
+            self.mapper_class.MarineUnitID.in_(muids),
+            raw=True
         )
 
         target_ids = [row.MSFD10_Target_ID for row in data]
@@ -36,14 +37,16 @@ class A10Form(EmbeddedForm):
         mapper_class_features_pres = sql.t_MSFD10_FeaturesPressures
         count_fp, data_fp = db.get_table_records(
             [mapper_class_features_pres],
-            mapper_class_features_pres.c.MSFD10_Target.in_(target_ids)
+            mapper_class_features_pres.c.MSFD10_Target.in_(target_ids),
+            raw=True
         )
         data_fp = [x for x in data_fp]
 
         mapper_class_des_crit = sql.t_MSFD10_DESCrit
         count_dc, data_dc = db.get_all_records(
             mapper_class_des_crit,
-            mapper_class_des_crit.c.MSFD10_Target.in_(target_ids)
+            mapper_class_des_crit.c.MSFD10_Target.in_(target_ids),
+            raw=True
         )
 
         xlsdata = [

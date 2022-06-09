@@ -54,20 +54,23 @@ class A81aEcoSubForm(MarineUnitIDSelectForm2012):
         muids = self.get_available_marine_unit_ids()[1]
         count, data = db.get_all_records(
             self.mapper_class,
-            self.mapper_class.MarineUnitID.in_(muids)
+            self.mapper_class.MarineUnitID.in_(muids),
+            raw=True
         )
 
         eco_ids = [row.MSFD8a_Ecosystem_ID for row in data]
         mc_pi = sql.MSFD8aEcosystemPressuresImpact
         count, data_pi = db.get_all_records(
             mc_pi,
-            mc_pi.MSFD8a_Ecosystem.in_(eco_ids)
+            mc_pi.MSFD8a_Ecosystem.in_(eco_ids),
+            raw=True
         )
 
         mc_sa = sql.MSFD8aEcosystemStatusAssessment
         count, data_sa = db.get_all_records(
             mc_sa,
-            mc_sa.MSFD8a_Ecosystem.in_(eco_ids)
+            mc_sa.MSFD8a_Ecosystem.in_(eco_ids),
+            raw=True
         )
 
         eco_sa_ids = [row.MSFD8a_Ecosystem_StatusAssessment_ID
@@ -75,7 +78,8 @@ class A81aEcoSubForm(MarineUnitIDSelectForm2012):
         mc_si = sql.MSFD8aEcosystemStatusIndicator
         count, data_si = db.get_all_records(
             mc_si,
-            mc_si.MSFD8a_Ecosystem_StatusAssessment.in_(eco_sa_ids)
+            mc_si.MSFD8a_Ecosystem_StatusAssessment.in_(eco_sa_ids),
+            raw=True
         )
 
         xlsdata = [
@@ -165,7 +169,8 @@ class A81aFunctSubForm(MarineUnitIDSelectForm2012):
         muids = self.get_available_marine_unit_ids()[1]
         count, data = db.get_all_records(
             self.mapper_class,
-            self.mapper_class.MarineUnitID.in_(muids)
+            self.mapper_class.MarineUnitID.in_(muids),
+            raw=True
         )
 
         funct_ids = [row.MSFD8a_Functional_ID for row in data]
@@ -173,12 +178,14 @@ class A81aFunctSubForm(MarineUnitIDSelectForm2012):
         count, data_pi = db.get_all_records(
             mc_pi,
             mc_pi.MSFD8a_Functional.in_(funct_ids)
+            ,raw=True
         )
 
         mc_sa = sql.MSFD8aFunctionalStatusAssessment
         count, data_sa = db.get_all_records(
             mc_sa,
-            mc_sa.MSFD8a_Functional.in_(funct_ids)
+            mc_sa.MSFD8a_Functional.in_(funct_ids),
+            raw=True
         )
 
         funct_sa_ids = [row.MSFD8a_Functional_StatusAssessment_ID
@@ -186,7 +193,8 @@ class A81aFunctSubForm(MarineUnitIDSelectForm2012):
         mc_si = sql.MSFD8aFunctionalStatusIndicator
         count, data_si = db.get_all_records(
             mc_si,
-            mc_si.MSFD8a_Functional_StatusAssessment.in_(funct_sa_ids)
+            mc_si.MSFD8a_Functional_StatusAssessment.in_(funct_sa_ids),
+            raw=True
         )
 
         xlsdata = [
@@ -276,20 +284,23 @@ class A81aHabitatSubForm(MarineUnitIDSelectForm2012):
         muids = self.get_available_marine_unit_ids()[1]
         count, data = db.get_all_records(
             self.mapper_class,
-            self.mapper_class.MarineUnitID.in_(muids)
+            self.mapper_class.MarineUnitID.in_(muids),
+            raw=True
         )
 
         habitat_ids = [row.MSFD8a_Habitat_ID for row in data]
         mc_hpi = sql.MSFD8aHabitatPressuresImpact
         count, data_hpi = db.get_all_records(
             mc_hpi,
-            mc_hpi.MSFD8a_Habitat.in_(habitat_ids)
+            mc_hpi.MSFD8a_Habitat.in_(habitat_ids),
+            raw=True
         )
 
         mc_hsa = sql.MSFD8aHabitatStatusAssessment
         count, data_hsa = db.get_all_records(
             mc_hsa,
-            mc_hsa.MSFD8a_Habitat.in_(habitat_ids)
+            mc_hsa.MSFD8a_Habitat.in_(habitat_ids),
+            raw=True
         )
 
         habitat_sa_ids = [row.MSFD8a_Habitat_StatusAssessment_ID
@@ -297,7 +308,8 @@ class A81aHabitatSubForm(MarineUnitIDSelectForm2012):
         mc_hsi = sql.MSFD8aHabitatStatusIndicator
         count, data_hsi = db.get_all_records(
             mc_hsi,
-            mc_hsi.MSFD8a_Habitat_StatusAssessment.in_(habitat_sa_ids)
+            mc_hsi.MSFD8a_Habitat_StatusAssessment.in_(habitat_sa_ids),
+            raw=True
         )
 
         xlsdata = [
@@ -387,20 +399,23 @@ class A81aSpeciesSubForm(MarineUnitIDSelectForm2012):
         muids = self.get_available_marine_unit_ids()[1]
         count, data = db.get_all_records(
             self.mapper_class,
-            self.mapper_class.MarineUnitID.in_(muids)
+            self.mapper_class.MarineUnitID.in_(muids),
+            raw=True
         )
 
         species_ids = [row.MSFD8a_Species_ID for row in data]
         mc_spi = sql.MSFD8aSpeciesPressuresImpact
         count, data_spi = db.get_all_records(
             mc_spi,
-            mc_spi.MSFD8a_Species.in_(species_ids)
+            mc_spi.MSFD8a_Species.in_(species_ids),
+            raw=True
         )
 
         mc_ssa = sql.MSFD8aSpeciesStatusAssessment
         count, data_ssa = db.get_all_records(
             mc_ssa,
-            mc_ssa.MSFD8a_Species.in_(species_ids)
+            mc_ssa.MSFD8a_Species.in_(species_ids),
+            raw=True
         )
 
         species_sa_ids = [row.MSFD8a_Species_StatusAssessment_ID
@@ -408,7 +423,8 @@ class A81aSpeciesSubForm(MarineUnitIDSelectForm2012):
         mc_ssi = sql.MSFD8aSpeciesStatusIndicator
         count, data_ssi = db.get_all_records(
             mc_ssi,
-            mc_ssi.MSFD8a_Species_StatusAssessment.in_(species_sa_ids)
+            mc_ssi.MSFD8a_Species_StatusAssessment.in_(species_sa_ids),
+            raw=True
         )
 
         xlsdata = [
@@ -499,14 +515,16 @@ class A81aOtherSubForm(MarineUnitIDSelectForm2012):
         muids = self.get_available_marine_unit_ids()[1]
         count, data = db.get_all_records(
             self.mapper_class,
-            self.mapper_class.MarineUnitID.in_(muids)
+            self.mapper_class.MarineUnitID.in_(muids),
+            raw=True
         )
 
         other_ids = [row.MSFD8a_Other_ID for row in data]
         mc_other_sa = sql.MSFD8aOtherStatusAssessment
         count, data_other_sa = db.get_all_records(
             mc_other_sa,
-            mc_other_sa.MSFD8a_Other.in_(other_ids)
+            mc_other_sa.MSFD8a_Other.in_(other_ids),
+            raw=True
         )
 
         other_status_ids = [row.MSFD8a_Other_StatusAssessment_ID
@@ -514,7 +532,8 @@ class A81aOtherSubForm(MarineUnitIDSelectForm2012):
         mc_other_si = sql.MSFD8aOtherStatusIndicator
         count, data_other_si = db.get_all_records(
             mc_other_si,
-            mc_other_si.MSFD8a_Other_StatusAssessment.in_(other_status_ids)
+            mc_other_si.MSFD8a_Other_StatusAssessment.in_(other_status_ids),
+            raw=True
         )
 
         xlsdata = [
@@ -604,7 +623,8 @@ class A81aNisSubForm(MarineUnitIDSelectForm2012):
     def download_results(self):
         muids = self.get_available_marine_unit_ids()[1]
         count, data = db.get_all_records(
-            self.mapper_class, self.mapper_class.MarineUnitID.in_(muids)
+            self.mapper_class, self.mapper_class.MarineUnitID.in_(muids),
+            raw=True
         )
 
         xlsdata = [
@@ -653,7 +673,8 @@ class A81aPhysicalSubForm(MarineUnitIDSelectForm2012):
         muids = self.get_available_marine_unit_ids()[1]
         count, data = db.get_all_records(
             self.mapper_class,
-            self.mapper_class.MarineUnitID.in_(muids)
+            self.mapper_class.MarineUnitID.in_(muids),
+            raw=True
         )
 
         xlsdata = [
@@ -710,7 +731,8 @@ class A81cForm(MarineUnitIDSelectForm2012):
 
         count, data = db.get_all_records(
             self.mapper_class,
-            self.mapper_class.MarineUnitID.in_(muids)
+            self.mapper_class.MarineUnitID.in_(muids),
+            raw=True
         )
 
         uses_ids = [row.MSFD8c_Uses_ID for row in data]
@@ -718,13 +740,15 @@ class A81cForm(MarineUnitIDSelectForm2012):
         mc_pressure = sql.MSFD8cPressure
         count, data_p = db.get_all_records(
             mc_pressure,
-            mc_pressure.MSFD8c_Uses_ID.in_(uses_ids)
+            mc_pressure.MSFD8c_Uses_ID.in_(uses_ids),
+            raw=True
         )
 
         mc_depend = sql.MSFD8cDepend
         count, data_d = db.get_all_records(
             mc_depend,
-            mc_depend.MSFD8c_Uses_ID.in_(uses_ids)
+            mc_depend.MSFD8c_Uses_ID.in_(uses_ids),
+            raw=True
         )
 
         xlsdata = [

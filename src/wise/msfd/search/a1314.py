@@ -239,7 +239,8 @@ class A1314ItemDisplay(ItemDisplayForm):
         mc_report = sql.MSFD13ReportInfoFurtherInfo
         count, data_report = get_all_records(
             mc_report,
-            mc_report.ReportID.in_(report_ids)
+            mc_report.ReportID.in_(report_ids),
+            raw=True
         )
 
         xlsdata = [

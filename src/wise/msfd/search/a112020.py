@@ -94,98 +94,114 @@ class A11MProgrammeDisplay2020(ItemDisplayForm2018, A112020Mixin):
 
         count, mp_data = db.get_all_records(
             self.mapper_class,
-            self.mapper_class.ProgrammeCode.in_(prog_codes)
+            self.mapper_class.ProgrammeCode.in_(prog_codes),
+            raw=True
         )
         mp_ids = [x.Id for x in mp_data]
 
         count, features = db.get_all_records(
             sql2018.ART11ProgrammesFeature,
-            sql2018.ART11ProgrammesFeature.IdMonitoringProgramme.in_(mp_ids)
+            sql2018.ART11ProgrammesFeature.IdMonitoringProgramme.in_(mp_ids),
+            raw=True
         )
         feature_ids = [x.Id for x in features]
 
         count, elements = db.get_all_records(
             sql2018.ART11ProgrammesElement,
-            sql2018.ART11ProgrammesElement.IdFeature.in_(feature_ids)
+            sql2018.ART11ProgrammesElement.IdFeature.in_(feature_ids),
+            raw=True
         )
         element_ids = [x.Id for x in elements]
 
         count, criterias = db.get_all_records(
             sql2018.ART11ProgrammesCriterion,
-            sql2018.ART11ProgrammesCriterion.IdElement.in_(element_ids)
+            sql2018.ART11ProgrammesCriterion.IdElement.in_(element_ids),
+            raw=True
         )
         criteria_ids = [x.Id for x in criterias]
 
         mc = sql2018.ART11ProgrammesCriteriaParameter
         count, crit_params = db.get_all_records(
             mc,
-            mc.IdCriteria.in_(criteria_ids)
+            mc.IdCriteria.in_(criteria_ids),
+            raw=True
         )
 
         mc = sql2018.ART11ProgrammesRelatedIndicator
         count, indicators = db.get_all_records(
             mc,
-            mc.IdMonitoringProgramme.in_(mp_ids)
+            mc.IdMonitoringProgramme.in_(mp_ids),
+            raw=True
         )
 
         mc = sql2018.ART11ProgrammesMonitoringProgrammeDataAcces
         count, data_access = db.get_all_records(
             mc,
-            mc.IdMonitoringProgramme.in_(mp_ids)
+            mc.IdMonitoringProgramme.in_(mp_ids),
+            raw=True
         )
 
         mc = sql2018.ART11ProgrammesMonitoringProgrammeMarineReportingUnit
         count, mru = db.get_all_records(
             mc,
-            mc.IdMonitoringProgramme.in_(mp_ids)
+            mc.IdMonitoringProgramme.in_(mp_ids),
+            raw=True
         )
 
         mc = sql2018.ART11ProgrammesMonitoringProgrammeMonitoringMethod
         count, method = db.get_all_records(
             mc,
-            mc.IdMonitoringProgramme.in_(mp_ids)
+            mc.IdMonitoringProgramme.in_(mp_ids),
+            raw=True
         )
 
         mc = sql2018.ART11ProgrammesMonitoringProgrammeMonitoringPurpose
         count, purpose = db.get_all_records(
             mc,
-            mc.IdMonitoringProgramme.in_(mp_ids)
+            mc.IdMonitoringProgramme.in_(mp_ids),
+            raw=True
         )
 
         mc = sql2018.ART11ProgrammesMonitoringProgrammeMonitoringType
         count, type = db.get_all_records(
             mc,
-            mc.IdMonitoringProgramme.in_(mp_ids)
+            mc.IdMonitoringProgramme.in_(mp_ids),
+            raw=True
         )
 
         mc = sql2018.ART11ProgrammesMonitoringProgrammeOldProgrammeCode
         count, oldcode = db.get_all_records(
             mc,
-            mc.IdMonitoringProgramme.in_(mp_ids)
+            mc.IdMonitoringProgramme.in_(mp_ids),
+            raw=True
         )
 
         mc = sql2018.ART11ProgrammesMonitoringProgrammeOtherPoliciesConvention
         count, policies = db.get_all_records(
             mc,
-            mc.IdMonitoringProgramme.in_(mp_ids)
+            mc.IdMonitoringProgramme.in_(mp_ids),
+            raw=True
         )
 
         mc = sql2018.ART11ProgrammesMonitoringProgrammeRegionalCooperationCoordination
         count, coord = db.get_all_records(
             mc,
-            mc.IdMonitoringProgramme.in_(mp_ids)
+            mc.IdMonitoringProgramme.in_(mp_ids),
+            raw=True
         )
 
         mc = sql2018.ART11ProgrammesMonitoringProgrammeRegionalCooperationCountry
         count, country = db.get_all_records(
             mc,
-            mc.IdMonitoringProgramme.in_(mp_ids)
+            mc.IdMonitoringProgramme.in_(mp_ids),
+            raw=True
         )
 
         mc = sql2018.ART11ProgrammesMonitoringProgrammeSpatialScope
         count, scope = db.get_all_records(
             mc,
-            mc.IdMonitoringProgramme.in_(mp_ids)
+            mc.IdMonitoringProgramme.in_(mp_ids),
+            raw=True
         )
 
         xlsdata = [
@@ -411,12 +427,14 @@ class A11MStrategyDisplay2020(ItemDisplayForm2018, A112020Mixin):
         strategy_ids = db.get_unique_from_mapper(
             mc,
             'IdMonitoringStrategy',
-            mc.MonitoringProgrammes.in_(prog_codes)
+            mc.MonitoringProgrammes.in_(prog_codes),
+            raw=True
         )
 
         count, strategy_data = db.get_all_records(
             self.mapper_class,
             self.mapper_class.Id.in_(strategy_ids),
+            raw=True
         )
         metadata_ids = [x.IdMetadata for x in strategy_data]
         strategy_ids = [x.Id for x in strategy_data]
@@ -425,36 +443,42 @@ class A11MStrategyDisplay2020(ItemDisplayForm2018, A112020Mixin):
         count, metadata = db.get_all_records(
             mc,
             mc.Id.in_(metadata_ids),
+            raw=True
         )
 
         mc = sql2018.ART11StrategiesMetadataResponsibleCompetentAuthority
         count, comp_auth = db.get_all_records(
             mc,
             mc.IdMetadata.in_(metadata_ids),
+            raw=True
         )
 
         mc = sql2018.ART11StrategiesMetadataResponsibleOrganisation
         count, resp_org = db.get_all_records(
             mc,
             mc.IdMetadata.in_(metadata_ids),
+            raw=True
         )
 
         mc = sql2018.ART11StrategiesMonitoringStrategyMonitoringProgramme
         count, mon_prog = db.get_all_records(
             mc,
             mc.IdMonitoringStrategy.in_(strategy_ids),
+            raw=True
         )
 
         mc = sql2018.ART11StrategiesMonitoringStrategyRelatedMeasure
         count, measures = db.get_all_records(
             mc,
             mc.IdMonitoringStrategy.in_(strategy_ids),
+            raw=True
         )
 
         mc = sql2018.ART11StrategiesMonitoringStrategyRelatedTarget
         count, targets = db.get_all_records(
             mc,
             mc.IdMonitoringStrategy.in_(strategy_ids),
+            raw=True
         )
 
         xlsdata = [
