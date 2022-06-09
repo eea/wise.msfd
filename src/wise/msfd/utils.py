@@ -935,11 +935,20 @@ def temporal_scope_transform(value):
     return value
 
 
+def ges_component(value):
+    from .labels import GES_LABELS
+
+    mru_labels = getattr(GES_LABELS, 'ges_components')
+    label = mru_labels.get(value, value)
+
+    return label
+
 TRANSFORMS = {
     'Area': area_transform,
     'Marine Unit(s)': mrus_transform,
     'MarineUnitID': mrus_transform,
     'MarineReportingUnit': mrus_transform,
     'Q4h_TemporalScopeEndDate': temporal_scope_transform,
-    'TemporalScope': temporal_scope_transform
+    'TemporalScope': temporal_scope_transform,
+    'GESComponent': ges_component,
 }
