@@ -12,7 +12,6 @@
   <include package=".compliance" />
   <include package=".translation" />
 
-  <include file="patch.zcml" />
   <include file="profiles.zcml" />
   <include file="utility.zcml" />
 
