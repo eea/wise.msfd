@@ -938,8 +938,17 @@ def temporal_scope_transform(value):
 def ges_component(value):
     from .labels import GES_LABELS
 
-    mru_labels = getattr(GES_LABELS, 'ges_components')
-    label = mru_labels.get(value, value)
+    _labels = getattr(GES_LABELS, 'ges_components')
+    label = _labels.get(value, value)
+
+    return label
+
+
+def country_code(value):
+    from .labels import GES_LABELS
+
+    _labels = getattr(GES_LABELS, 'countries')
+    label = _labels.get(value, value)
 
     return label
 
@@ -951,4 +960,5 @@ TRANSFORMS = {
     'Q4h_TemporalScopeEndDate': temporal_scope_transform,
     'TemporalScope': temporal_scope_transform,
     'GESComponent': ges_component,
+    'CountryCode': country_code,
 }

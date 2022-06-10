@@ -114,7 +114,7 @@ class A4Form(ItemDisplayForm):
         )
         country_code = country_code.MSFD4_Import_ReportingCountry
 
-        return self.print_value(country_code)
+        return self.print_value(country_code, 'CountryCode')
 
     def get_db_results(self):
         klass_join = sql.MSFD4Import
@@ -244,7 +244,7 @@ class A4ItemDisplay2018to2024(ItemDisplayForm):
     def get_current_country(self):
         country_code = self.item[0]['Country']
 
-        return self.print_value(country_code)
+        return self.print_value(country_code, 'CountryCode')
 
     @db.use_db_session('2018')
     def get_db_results(self):

@@ -61,7 +61,7 @@ class A18MeasureProgressDisplay(ItemDisplayForm):
             report_id
         )
 
-        country = self.print_value(res.CountryCode)
+        country = self.print_value(res.CountryCode, 'CountryCode')
 
         return country
 
@@ -215,7 +215,7 @@ class A18CategoryDisplay(ItemDisplayForm):
             report_id
         )
 
-        country = self.print_value(res.CountryCode)
+        country = self.print_value(res.CountryCode, 'CountryCode')
 
         return country
 

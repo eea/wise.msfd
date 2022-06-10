@@ -216,7 +216,7 @@ class A1314ItemDisplay(ItemDisplayForm):
             mc.ReportID == report_id
         )
         country_code = data[0].MemberState
-        print_value = self.print_value(country_code)
+        print_value = self.print_value(country_code, 'CountryCode')
 
         return print_value
 

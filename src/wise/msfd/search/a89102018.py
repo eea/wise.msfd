@@ -71,7 +71,7 @@ class Art9Display(ItemDisplayForm):
             mc_join.Id == id_ges_comp
         )
 
-        country = self.print_value(res[0].CountryCode)
+        country = self.print_value(res[0].CountryCode, 'CountryCode')
 
         return country
 
@@ -299,7 +299,7 @@ class A2018Art10Display(ItemDisplayForm):
             mc_join.MonitoringProgramme == monitoring_programme
         )
 
-        country = self.print_value(res[0].MemberState)
+        country = self.print_value(res[0].MemberState, 'CountryCode')
 
         return country
 
@@ -1572,7 +1572,7 @@ class A2018IndicatorsDisplay(ItemDisplayForm):
             report_id
         )
 
-        country = self.print_value(res.CountryCode)
+        country = self.print_value(res.CountryCode, 'CountryCode')
 
         return country
 

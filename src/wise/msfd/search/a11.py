@@ -290,7 +290,7 @@ class A11MonProgDisplay(ItemDisplayForm):
             mc_join.MonitoringProgramme == monitoring_programme
         )
 
-        country = self.print_value(res[0].MemberState)
+        country = self.print_value(res[0].MemberState, 'CountryCode')
 
         self._import_id = res[0].Import
 
@@ -583,7 +583,7 @@ class A11MonSubDisplay(MultiItemDisplayForm):
             sub_programme
         )
 
-        country = self.print_value(res.MemberState)
+        country = self.print_value(res.MemberState, 'CountryCode')
 
         self._import_id = res.Import
 

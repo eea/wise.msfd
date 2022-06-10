@@ -84,7 +84,7 @@ class Article19Display(ItemDisplayForm):
             report_id
         )
 
-        country = self.print_value(res.Country)
+        country = self.print_value(res.Country, 'CountryCode')
 
         return country
 

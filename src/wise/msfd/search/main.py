@@ -79,7 +79,7 @@ class CompetentAuthorityItemDisplay(ItemDisplayForm):
         if not country_code:
             return ''
 
-        country = self.print_value(country_code)
+        country = self.print_value(country_code, 'CountryCode')
 
         return country
 
@@ -227,7 +227,7 @@ class RegionalCoopItemDisplay(ItemDisplayForm):
         if not country_code:
             return ''
 
-        country = self.print_value(country_code)
+        country = self.print_value(country_code, 'CountryCode')
 
         return country
 

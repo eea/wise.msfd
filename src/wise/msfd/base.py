@@ -241,7 +241,7 @@ class BaseUtil(object):
             return ''
 
         country_code = data[0]
-        print_value = self.print_value(country_code.CountryCode)
+        print_value = self.print_value(country_code.CountryCode, 'CountryCode')
 
         return print_value
 
@@ -267,7 +267,7 @@ class BaseUtil(object):
             return ''
 
         country_code = data[0]
-        print_value = self.print_value(country_code.MemberState)
+        print_value = self.print_value(country_code.MemberState, 'CountryCode')
 
         return print_value
 

@@ -326,6 +326,7 @@ class LabelCollection(object):
     Needed because ReferenceFeature does not contain all features
     """
 
+    countries = _parse_labels('Countries')
     features = _parse_labels('Features')
     pressures = _parse_labels('Pressures')
     parameters = _parse_labels('Parameters')
