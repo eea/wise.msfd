@@ -44,6 +44,7 @@
               <li tal:repeat="text_report python: text_reports[:5]">
                 <a tal:attributes="href python: text_report[1];
                       title python: 'Reported on: ' + text_report[2]"
+                    target="_blank"
                     tal:content="python: text_report[0]">FileName1</a>
               </li>
             </ul>
@@ -54,6 +55,7 @@
               <li tal:repeat="text_report python: text_reports[5:]">
                 <a tal:attributes="href python: text_report[1];
                       title python: 'Reported on: ' + text_report[2]"
+                    target="_blank"
                     tal:content="python: text_report[0]">FileName1</a>
               </li>
             </ul>
@@ -77,13 +79,13 @@
                 <td></td>
                 <td tal:repeat="assessment python: view.get_secondary_articles(view._country_folder)">
                   <a tal:attributes="href python: assessment.absolute_url() + '/@@view-report-data-2018';
-                      class python: 'btn btn-xs btn-primary'">Reports</a>
+                      class python: 'btn btn-xs btn-primary'" target="_blank">Reports</a>
                 </td>
                 <td tal:define="assessment python: view._country_folder['art8esa']">
                   <a tal:attributes="href python: assessment.absolute_url() + '/@@view-report-data-2012';
-                      class python: 'btn btn-xs btn-success'">2012</a>
+                      class python: 'btn btn-xs btn-success'" target="_blank">2012</a>
                   <a tal:attributes="href python: assessment.absolute_url() + '/@@view-report-data-2018-art8-esa';
-                      class python: 'btn btn-xs btn-primary'">2018</a>
+                      class python: 'btn btn-xs btn-primary'" target="_blank">2018</a>
                 </td>
                 <td colspan="22"></td>
               </tr>
