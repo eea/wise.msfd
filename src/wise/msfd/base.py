@@ -289,6 +289,8 @@ class BaseUtil(object):
             return print_value(value)
 
         if field_name in TRANSFORMS:
+            value = value.strip()
+            
             transformer = TRANSFORMS.get(field_name)
 
             return transformer(value)
