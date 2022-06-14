@@ -1159,7 +1159,7 @@
     if (formAction.includes("api/++api++")) {
       var newFormAction = formAction;
     } else {
-      var newFormAction = formAction.replace("msfd", "api/++api++/msfd");
+      var newFormAction = formAction.replace("marine", "marine/api/++api++");
     }
 
     $('.wise-search-form-container form').attr('action', newFormAction);
@@ -1557,7 +1557,7 @@
 
   function searchFormAjax(boundary, data, url, formData) {
     if (!url.includes("api/++api++")) {
-      url = url.replace('msfd', 'api/++api++/msfd');
+      url = url.replace("marine", "marine/api/++api++");
     }
 
     
@@ -1777,7 +1777,7 @@
     if (formAction.includes("api/++api++")) {
       var newFormAction = formAction;
     } else {
-      var newFormAction = formAction.replace("msfd", "api/++api++/msfd");
+      var newFormAction = formAction.replace("marine", "marine/api/++api++");
     }
 
     $('.wise-search-form-container form').attr('action', newFormAction);

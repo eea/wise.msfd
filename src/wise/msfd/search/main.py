@@ -33,7 +33,7 @@ class StartView(BrowserView, BasePublicPage):
 
 
 class StartMSCompetentAuthoritiesForm(MainForm):
-    name = 'msfd-ca'
+    name = 'competent-authorities'
 
     record_title = title = 'Article 7 (Competent Authorities)'
     fields = Fields(interfaces.IMemberStatesArt7)
@@ -131,7 +131,7 @@ class A4Form2018to2024(EmbeddedForm):
 
 
 class StartA4Form(MainForm):
-    name = 'msfd-mru'
+    name = 'marine-units'
     session_name = '2012'
 
     fields = Fields(interfaces.IStartArticle4)
@@ -292,7 +292,7 @@ class StartArticle8Form(MainForm):
     """ Select one of the articles: 8(a,b,c,d)/9/10
     """
 
-    name = 'msfd-a8'
+    name = 'assessments'
     session_name = '2012'
 
     fields = Fields(interfaces.IReportingPeriodSelectA8)
@@ -309,7 +309,7 @@ class StartArticle9Form(MainForm):
     """ Select one of the articles: 8(a,b,c,d)/9/10
     """
 
-    name = 'msfd-a9'
+    name = 'determination-of-good-environmental-status'
     session_name = '2012'
 
     fields = Fields(interfaces.IReportingPeriodSelectA9)
@@ -326,7 +326,7 @@ class StartArticle10Form(MainForm):
     """ Select one of the articles: 8(a,b,c,d)/9/10
     """
 
-    name = 'msfd-a10'
+    name = 'establishment-of-environmental-targets'
     session_name = '2012'
 
     fields = Fields(interfaces.IReportingPeriodSelectA10)
@@ -405,16 +405,16 @@ class AreaTypesForm(EmbeddedForm):
     def get_subform(self):
         main_form = self.get_main_form().name
 
-        if main_form == 'msfd-mru':
+        if main_form == 'marine-units':
             return A4Form(self, self.request)
 
-        # if main_form == 'msfd-a9':
+        # if main_form == 'determination-of-good-environmental-status':
         #     return A9Form(self, self.request)
 
-        if main_form == 'msfd-a10':
+        if main_form == 'establishment-of-environmental-targets':
             return A10Form(self, self.request)
 
-        if main_form == 'msfd-a8':
+        if main_form == 'assessments':
             # For Art 8.1a and 8.1b we return the theme class
             klass = self.get_flattened_data(self).get('theme')
 

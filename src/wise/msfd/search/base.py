@@ -212,9 +212,9 @@ def true(view):
 
 
 MAIN_FORMS = (
-    Tab('msfd-start', 'msfd-start', 'Start',
-        'About MSFD reporting data explorer', '', '', true),
-    Tab('msfd-mru', 'msfd-mru', 'Article 4', 'Marine Units',
+    # Tab('msfd-start', 'msfd-start', 'Start',
+    #     'About MSFD reporting data explorer', '', '', true),
+    Tab('marine-units', 'marine-units', 'Article 4', 'Marine Units',
         ' Geographical areas used by Member States for the implementation of\n\
         the Directive compatible with the marine regions and subregions listed\n\
         in the Directive.',
@@ -223,34 +223,34 @@ MAIN_FORMS = (
     #     'Member States coordination with third countries having sovereignty or\n\
     #     jurisdiction over waters in the same marine region or subregion.',
     #     '', true),
-    Tab('msfd-ca', 'msfd-ca', 'Article 7', 'Competent Authorities',
+    Tab('competent-authorities', 'competent-authorities', 'Article 7', 'Competent Authorities',
         'Member States authority or authorities for the implementation of the\n\
         Directive with respect to their marine waters.',
         '', true),
-    Tab('msfd-a8', 'msfd-a8', 'Article 8', 'Assessments',
+    Tab('assessments', 'assessments', 'Article 8', 'Assessments',
         'Assessments of Member States marine waters comprising: a) analysis of\n\
         the essential features and characteristics, b) analysis of the\n\
         predominant pressures and impacts, and c) economic and social analysis\n\
         of the use of those waters.', '', true),
-    Tab('msfd-a9', 'msfd-a9', 'Article 9',
+    Tab('determination-of-good-environmental-status', 'determination-of-good-environmental-status', 'Article 9',
         'Determination of good environmental status',
         'Determination of the good environmental status of the Descriptors,\n\
         for Member States marine waters and in respect of each marine region\n\
         or subregion.', '', true),
-    Tab('msfd-a10', 'msfd-a10', 'Article 10',
+    Tab('establishment-of-environmental-targets', 'establishment-of-environmental-targets', 'Article 10',
         'Establishment of environmental targets',
         'Environmental targets and associated indicators for Member States\n\
         marine waters to guide progress towards achieving good environmental\n\
         status in their marine environment.', '', true),
-    Tab('msfd-c2', 'msfd-c2', 'Article 11', 'Monitoring programmes',
+    Tab('monitoring-programmes', 'monitoring-programmes', 'Article 11', 'Monitoring programmes',
         'Programmes established by Member States to monitor the environmental\n\
         status of their marine waters.', '', true),
-    Tab('msfd-c3', 'msfd-c3', 'Articles 13 & 18',
+    Tab('programmes-of-measures-progress-of-pom', 'programmes-of-measures-progress-of-pom', 'Articles 13 & 18',
         'Programmes of measures & Progress of PoM',
         'Measures to be taken in order to achieve or maintain good environmental\n\
         status, and progress in the implementation of the programmes of measures.',
         '', true),
-    Tab('msfd-a14', 'msfd-a14', 'Article 14',
+    Tab('exceptions', 'exceptions', 'Article 14',
         'Exceptions',
         'Exceptions reported whenever good environmental status cannot be achieved.',
         '', true),
@@ -258,7 +258,7 @@ MAIN_FORMS = (
     #     '2018 reporting exercise', '', true),
     # Tab('msfd-c5', 'msfd-c5', 'Article 18',
     #     'Progress on the implementation of PoM', '', true),
-    Tab('msfd-c6', 'msfd-c6', 'Article 19.3', 'Datasets used',
+    Tab('datasets-used', 'datasets-used', 'Article 19.3', 'Datasets used',
         'Access to data resulting from the GES assessments and the monitoring\n\
         programmes.', '', true),
 )

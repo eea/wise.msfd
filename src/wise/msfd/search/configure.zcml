@@ -14,64 +14,64 @@
     />
 
   <browser:page
-    for="*"
-    name="msfd-ca"
+    for="plone.app.layout.navigation.interfaces.INavigationRoot"
+    name="competent-authorities"
     permission="zope2.View"
     class = ".main.StartMSCompetentAuthoritiesView"
     />
 
   <browser:page
-    for="*"
-    name="msfd-mru"
+    for="plone.app.layout.navigation.interfaces.INavigationRoot"
+    name="marine-units"
     class=".main.StartArticle4View"
     permission="zope2.View"
     />
 
   <browser:page
-    for="*"
-    name="msfd-a8"
+    for="plone.app.layout.navigation.interfaces.INavigationRoot"
+    name="assessments"
     class=".main.StartArticle8View"
     permission="zope2.View"
     />
 
   <browser:page
-    for="*"
-    name="msfd-a9"
+    for="plone.app.layout.navigation.interfaces.INavigationRoot"
+    name="determination-of-good-environmental-status"
     class=".main.StartArticle9View"
     permission="zope2.View"
     />
 
   <browser:page
-    for="*"
-    name="msfd-a10"
+    for="plone.app.layout.navigation.interfaces.INavigationRoot"
+    name="establishment-of-environmental-targets"
     class=".main.StartArticle10View"
     permission="zope2.View"
     />
 
   <browser:page
-    for="*"
-    name="msfd-c2"
+    for="plone.app.layout.navigation.interfaces.INavigationRoot"
+    name="monitoring-programmes"
     class=".main.StartArticle11View"
     permission="zope2.View"
     />
 
   <browser:page
-    for="*"
-    name="msfd-c3"
+    for="plone.app.layout.navigation.interfaces.INavigationRoot"
+    name="programmes-of-measures-progress-of-pom"
     class=".main.StartArticle1314View"
     permission="zope2.View"
     />
 
   <browser:page
-    for="*"
-    name="msfd-a14"
+    for="plone.app.layout.navigation.interfaces.INavigationRoot"
+    name="exceptions"
     class=".main.StartArticle14View"
     permission="zope2.View"
     />
 
   <browser:page
-    for="*"
-    name="msfd-c6"
+    for="plone.app.layout.navigation.interfaces.INavigationRoot"
+    name="datasets-used"
     class=".main.StartArticle19View"
     permission="zope2.View"
   />

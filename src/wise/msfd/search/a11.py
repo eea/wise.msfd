@@ -25,7 +25,7 @@ class StartArticle11Form(MainForm):
     """
 
     # record_title = 'Article 11'
-    name = 'msfd-c2'
+    name = 'monitoring-programmes'
     session_name = '2012'
 
     fields = Fields(interfaces.IStartArticle11)

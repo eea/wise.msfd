@@ -22,7 +22,7 @@ from .utils import data_to_xls, register_form_art1314
 
 class StartArticle1314Form(MainForm):
     fields = Fields(interfaces.IStartArticles1314)
-    name = 'msfd-c3'
+    name = 'programmes-of-measures-progress-of-pom'
 
     session_name = '2012'
 
@@ -55,7 +55,7 @@ class StartArticle14Form(MainForm):
     record_title = title = 'Article 14 - Exceptions'
     report_type = "Exceptions"
     session_name = '2012'
-    name = 'msfd-a14'
+    name = 'exceptions'
 
     fields = Fields(interfaces.IArticles1314Region)
     fields['region_subregions'].widgetFactory = CheckBoxFieldWidget

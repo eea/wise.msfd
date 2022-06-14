@@ -19,7 +19,7 @@ class StartArticle19Form(MainForm):
     """ Start class for Article 19
     """
 
-    name = 'msfd-c6'
+    name = 'datasets-used'
     session_name = '2012'
 
     fields = Fields(interfaces.IArticle19ReportingPeriod)
