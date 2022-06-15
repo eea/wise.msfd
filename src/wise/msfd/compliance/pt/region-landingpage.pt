@@ -76,10 +76,15 @@
              <a class="article-box-anchor"
                 tal:define="_href python:'/marine/assessment-module/regional-descriptors-assessments/' + context._rcode + '/assessments'"
                 tal:attributes="href python:can_view_assessment_data and _href or '';">
-                <div class="article-box col-lg-4 col-xs-6" style="height: 380px;"
-                    tal:attributes="title python: can_view_assessment_data and '' or 'You don\'t have permission to access this section.'">
+                <div class="article-box col-lg-4 col-xs-6 help-popover" style="height: 380px;"
+                    data-trigger="hover"
+                    data-html="true"
+                    data-placement="left"
+                    tal:attributes="data-content python: can_view_assessment_data and '' or 'You don\'t have permission to access this section.'">
                  <div class="article-box-wrapper"
                     tal:attributes="class python: can_view_assessment_data and 'article-box-wrapper' or 'article-box-wrapper disabled'">
+                    <i tal:condition="python: not can_view_assessment_data" 
+                      class="article-box-locked glyphicon glyphicon-lock"></i>
                    <div class="article-box-header">
                      <h4 class="tab-subtitle">Assessments
                      </h4>
