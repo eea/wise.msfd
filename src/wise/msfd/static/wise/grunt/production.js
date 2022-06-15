@@ -33,6 +33,9 @@ module.exports = {
         '<%= path.dest %>/css/pdf_export.css': [
           '<%= path.src %>/less/pdf_export.less',
         ],
+        '<%= path.dest %>/css/breadcrumbs.css': [
+          '<%= path.src %>/less/breadcrumbs.less',
+        ],
       },
     },
   },
@@ -70,6 +73,7 @@ module.exports = {
           {
             'tabs.css': 'dist/css/tabs.css',
             'compliance.css': 'dist/css/compliance.css',
+            'breadcrumbs.css': 'dist/css/breadcrumbs.css',
             'tabs.js': 'dist/js/tabs.js',
             'compliance.js': 'dist/js/compliance.js',
             'assessment-edit.js': 'dist/js/assessment-edit.js',

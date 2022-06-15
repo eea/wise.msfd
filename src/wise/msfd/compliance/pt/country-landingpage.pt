@@ -17,93 +17,94 @@
     <div id="layout-contents" 
         tal:define="text context/text | nothing;
           can_view_assessment_data python:view.can_view_assessment_data()">
-      <div id="wise-search-form">
+      <div id="wise-search-form" class="full-width-marker">
         <div id="wise-search-form-top">
           <div tal:condition="text" tal:content="structure text/output"></div>
-
-          <div class="topnav articles-wrapper row">
-            <a class="article-box-anchor"
-              tal:define="_href python: '/marine/assessment-module/national-summaries/' + view.context._ccode + '/overview'"
-              tal:attributes="href python:_href">
-              <div class="article-box col-lg-4 col-xs-6" style="height: 380px;">
-                <div class="article-box-wrapper">
-                  <div class="article-box-header">
-                    <h4 class="tab-subtitle">Overview</h4>
-                    <div class="tab-title"
-                        tal:content="string: Overview for ${view/context/title}">Overview for MS
+          <div class="full-width-marker">
+            <div class="topnav articles-wrapper row">
+              <a class="article-box-anchor"
+                tal:define="_href python: '/marine/assessment-module/national-summaries/' + view.context._ccode + '/overview'"
+                tal:attributes="href python:_href">
+                <div class="article-box col-lg-4 col-xs-6" style="height: 380px;">
+                  <div class="article-box-wrapper">
+                    <div class="article-box-header">
+                      <h4 class="tab-subtitle">Overview</h4>
+                      <div class="tab-title"
+                          tal:content="string: Overview for ${view/context/title}">Overview for MS
+                      </div>
                     </div>
-                  </div>
-                  <div class="article-description"
-                      tal:content="string:Overview of the data reported by ${view/context/title} for each phase of the Marine Strategy Framework Directive (MSFD) implementation cycle, and of the corresponding assessment by the European Commission.">
-                    Page description
-                  </div>
-                  <a href=""
-                    tal:attributes="href python:_href"
-                    class="article-link"
-                    target="_blank">
-                    <span class="link-btn"></span>
-                  </a>
-                </div>
-              </div>
-            </a>
-
-            <a class="article-box-anchor"
-              tal:define="_href python:'/marine/policy-and-reporting/assessment-by-country/' + view.context.id + '/reports'"
-              tal:attributes="href python:_href">
-              <div class="article-box col-lg-4 col-xs-6" style="height: 380px;">
-                <div class="article-box-wrapper">
-                  <div class="article-box-header">
-                    <h4 class="tab-subtitle">Reports
-                    </h4>
-                    <div class="tab-title"
-                        tal:content="string: View reports for ${view/context/title}">View reports by Member State
+                    <div class="article-description"
+                        tal:content="string:Overview of the data reported by ${view/context/title} for each phase of the Marine Strategy Framework Directive (MSFD) implementation cycle, and of the corresponding assessment by the European Commission.">
+                      Page description
                     </div>
+                    <a href=""
+                      tal:attributes="href python:_href"
+                      class="article-link"
+                      target="_blank">
+                      <span class="link-btn"></span>
+                    </a>
                   </div>
-                  <div class="article-description"
-                      tal:content="string:Access the reports (text reports and e-reports) produced by ${view/context/title} in compliance with its reporting obligations under the Marine Strategy Framework Directive (MSFD), for each phase of the MSFD implementation cycle.">
-                    Page description
-                  </div>
-                  <a href=""
-                    tal:attributes="href python:_href"
-                    class="article-link"
-                    target="_blank">
-                    <span class="link-btn"></span>
-                  </a>
                 </div>
-              </div>
-            </a>
+              </a>
 
-            <a class="article-box-anchor" 
-              tal:define="_href python:'/marine/assessment-module/national-descriptors-assessments/' + view.context._ccode + '/assessments'"
-              tal:attributes="href python:can_view_assessment_data and _href or ''">
-              <div class="article-box col-lg-4 col-xs-6 help-popover" style="height: 380px;"
-                  data-trigger="hover"
-                  data-html="true"
-                  data-placement="left"
-                  tal:attributes="data-content python: can_view_assessment_data and '' or 'You don\'t have permission to access this section.'">
-                <div class="article-box-wrapper"
-                    tal:attributes="class python: can_view_assessment_data and 'article-box-wrapper' or 'article-box-wrapper disabled'">
-                  <i tal:condition="python: not can_view_assessment_data" 
-                      class="article-box-locked glyphicon glyphicon-lock"></i>
-                  <div class="article-box-header">
-                    <h4 class="tab-subtitle">Assessments
-                    </h4>
-                    <div class="tab-title">View or edit the ongoing assessments
+              <a class="article-box-anchor"
+                tal:define="_href python:'/marine/policy-and-reporting/assessment-by-country/' + view.context.id + '/reports'"
+                tal:attributes="href python:_href">
+                <div class="article-box col-lg-4 col-xs-6" style="height: 380px;">
+                  <div class="article-box-wrapper">
+                    <div class="article-box-header">
+                      <h4 class="tab-subtitle">Reports
+                      </h4>
+                      <div class="tab-title"
+                          tal:content="string: View reports for ${view/context/title}">View reports by Member State
+                      </div>
                     </div>
+                    <div class="article-description"
+                        tal:content="string:Access the reports (text reports and e-reports) produced by ${view/context/title} in compliance with its reporting obligations under the Marine Strategy Framework Directive (MSFD), for each phase of the MSFD implementation cycle.">
+                      Page description
+                    </div>
+                    <a href=""
+                      tal:attributes="href python:_href"
+                      class="article-link"
+                      target="_blank">
+                      <span class="link-btn"></span>
+                    </a>
                   </div>
-                  <div class="article-description"
-                      tal:content="string:Access the assessments of the European Commission for each phase of the MSFD implementation cycle for ${view/context/title}.">
-                    Page description
-                  </div>
-                  <a href=""
-                    tal:attributes="href python:can_view_assessment_data and _href or ''"
-                    class="article-link"
-                    target="_blank">
-                    <span class="link-btn"></span>
-                  </a>
                 </div>
-              </div>
-            </a>
+              </a>
+
+              <a class="article-box-anchor" 
+                tal:define="_href python:'/marine/assessment-module/national-descriptors-assessments/' + view.context._ccode + '/assessments'"
+                tal:attributes="href python:can_view_assessment_data and _href or ''">
+                <div class="article-box col-lg-4 col-xs-6 help-popover" style="height: 380px;"
+                    data-trigger="hover"
+                    data-html="true"
+                    data-placement="left"
+                    tal:attributes="data-content python: can_view_assessment_data and '' or 'You don\'t have permission to access this section.'">
+                  <div class="article-box-wrapper"
+                      tal:attributes="class python: can_view_assessment_data and 'article-box-wrapper' or 'article-box-wrapper disabled'">
+                    <i tal:condition="python: not can_view_assessment_data" 
+                        class="article-box-locked glyphicon glyphicon-lock"></i>
+                    <div class="article-box-header">
+                      <h4 class="tab-subtitle">Assessments
+                      </h4>
+                      <div class="tab-title">View or edit the ongoing assessments
+                      </div>
+                    </div>
+                    <div class="article-description"
+                        tal:content="string:Access the assessments of the European Commission for each phase of the MSFD implementation cycle for ${view/context/title}.">
+                      Page description
+                    </div>
+                    <a href=""
+                      tal:attributes="href python:can_view_assessment_data and _href or ''"
+                      class="article-link"
+                      target="_blank">
+                      <span class="link-btn"></span>
+                    </a>
+                  </div>
+                </div>
+              </a>
+            </div>
           </div>
         </div>
       </div>

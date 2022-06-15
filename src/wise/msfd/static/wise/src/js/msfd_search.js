@@ -1155,7 +1155,7 @@
         }*/
 
     initPageElems();
-    var formAction = $('.wise-search-form-container form').attr('action');
+    var formAction = $('.wise-search-form-container form').attr('action') || '';
     if (formAction.includes("api/++api++")) {
       var newFormAction = formAction;
     } else {
@@ -1560,7 +1560,6 @@
       url = url.replace("marine", "marine/api/++api++");
     }
 
-    
     $.ajax({
       type: 'POST',
       contentType: 'multipart/form-data; boundary=' + boundary,
@@ -1773,8 +1772,8 @@
       initPageElems();
     }, 100);
 
-    var formAction = $('.wise-search-form-container form').attr('action');
-    if (formAction.includes("api/++api++")) {
+    var formAction = $('.wise-search-form-container form').attr('action') || '';
+    if (formAction && formAction.includes("api/++api++")) {
       var newFormAction = formAction;
     } else {
       var newFormAction = formAction.replace("marine", "marine/api/++api++");
