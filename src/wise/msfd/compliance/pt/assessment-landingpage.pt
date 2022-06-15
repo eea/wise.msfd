@@ -26,8 +26,7 @@
             </div>   
 
             <div class="topnav articles-wrapper row">
-              <div class="article-box-anchor" style="width: 33.33333333%;">
-                <div class="article-box">
+                <div class="article-box col-lg-4 col-xs-6">
                   <div class="article-box-wrapper" styleZ="background-color: #2dd2b7;">
                     <div class="article-box-header">
                       <h4 class="tab-subtitle">EU overview</h4>
@@ -43,9 +42,7 @@
                     <!-- <div class="article-description">Description here ...</div> -->
                   </div>
                 </div>
-              </div>            
-              <div class="article-box-anchor" style="width: 33.33333333%;">
-                <div class="article-box">
+                <div class="article-box col-lg-4 col-xs-6">
                   <div class="article-box-wrapper">
                     <div class="article-box-header">
                       <h4 class="tab-subtitle">Reports and assessments</h4>
@@ -62,9 +59,7 @@
                     <!-- <div class="article-description">Access reports for a country</div> -->
                   </div>
                 </div>
-              </div>     
-              <div class="article-box-anchor" style="width: 33.33333333%;">
-                <div class="article-box">
+                <div class="article-box col-lg-4 col-xs-6">
                   <div class="article-box-wrapper" styleZ="background-color: #fad0c3;">
                     <div class="article-box-header">
                       <h4 class="tab-subtitle">Regional reports and assessments</h4>
@@ -81,7 +76,6 @@
                     <!-- <div class="article-description">Access reports for a region</div> -->
                   </div>
                 </div>
-              </div>  
             </div>         
 
         </div>
