@@ -80,7 +80,7 @@
                     data-trigger="hover"
                     data-html="true"
                     data-placement="left"
-                    tal:attributes="data-content python: can_view_assessment_data and '' or 'You don\'t have permission to access this section.'">
+                    tal:attributes="data-content python: not can_view_assessment_data and 'You don\'t have permission to access this section.' or ''">
                  <div class="article-box-wrapper"
                     tal:attributes="class python: can_view_assessment_data and 'article-box-wrapper' or 'article-box-wrapper disabled'">
                     <i tal:condition="python: not can_view_assessment_data" 
