@@ -87,8 +87,10 @@ class RegionalDescriptorRegionsOverview(BaseRegComplianceView):
     def _countryregion_folder(self):
         site = portal.get()
 
+        rcode = getattr(self.context, '_rcode', self.context.id)
+
         country_folder = site['marine']['assessment-module'] \
-            ['regional-descriptors-assessments'][self.context._rcode]
+            ['regional-descriptors-assessments'][rcode]
         
         return country_folder
 

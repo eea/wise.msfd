@@ -18,6 +18,7 @@ from plone.api.portal import get_tool
 from plone.api.user import get_roles
 from plone.memoize import ram
 from plone.memoize.view import memoize
+from Products.CMFCore.utils import getToolByName
 from Products.Five.browser import BrowserView
 from wise.msfd import db, sql, sql2018
 from wise.msfd.base import BasePublicPage
@@ -236,6 +237,15 @@ def report_data_cache_key(func, self, *args, **kwargs):
 
 
 class SecurityMixin:
+
+    def get_object_by_path(self, path):
+        if path.startswith('/'):
+            path = path[1:]
+
+        portal = getToolByName(self.context, 'portal_url').getPortalObject()
+        _obj = portal.unrestrictedTraverse(path)
+
+        return _obj
 
     def check_permission(self, permission, context=None):
 
