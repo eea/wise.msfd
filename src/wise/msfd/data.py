@@ -326,6 +326,91 @@ ORDER BY DESC(?date)
     return urls
 
 
+def get_report_fileurl_art13_2016(filename, country, region):
+    q = """
+PREFIX cr: <http://cr.eionet.europa.eu/ontologies/contreg.rdf#>
+PREFIX terms: <http://purl.org/dc/terms/>
+PREFIX schema: <http://rod.eionet.europa.eu/schema.rdf#>
+PREFIX core: <http://www.w3.org/2004/02/skos/core#>
+
+SELECT distinct ?file
+WHERE {
+?file terms:date ?date .
+?file cr:mediaType 'text/xml' .
+?file terms:isPartOf ?isPartOf .
+?file cr:xmlSchema ?schema .
+?file schema:restricted ?restricted.
+?isPartOf schema:locality ?locality .
+?isPartOf schema:obligation ?obligation .
+?obligation core:notation ?obligationNr .
+?locality core:notation ?notation .
+FILTER (?notation = '%s')
+FILTER (?obligationNr = '612')
+FILTER (str(?schema) = 'http://dd.eionet.europa.eu/schemas/MSFD13/MSFD13_1p0.xsd')
+FILTER regex(str(?file), '/%s')
+#FILTER (?restricted = 0)
+}
+ORDER BY DESC(?date)
+""" % (country.upper(), filename)
+
+    service = sparql.Service('https://cr.eionet.europa.eu/sparql')
+
+    logger.info("Getting fileurl Art13 with SPARQL: %s - %s",
+                country, region)
+    try:
+        req = service.query(q)
+        rows = req.fetchall()
+
+        urls = []
+
+        for row in rows:
+            url = row[0].value
+
+            urls.append(url)
+
+    except:
+        logger.exception('Got an error in querying SPARQL endpoint for '
+                         'Art11: %s - %s', country, region)
+
+        raise
+    
+    if urls:
+        return urls[0]
+
+    return ''
+    
+
+@db.use_db_session('2012')
+def _get_report_filename_art13_2016(country, region, article, descriptor):
+    mc = sql.MSFD13Import
+
+    count, items = db.get_all_records(
+        mc,
+        mc.MemberStates == country,
+        mc.Region == region,
+        mc.Description == 'Success'
+    )
+
+    file_names = []
+    
+    for item in items:
+        file_name = item.FileName
+
+        if 'Measures' not in file_name:
+            continue
+
+        file_names.append(file_name)
+
+    # TODO: analyse cases when it returns more then one file
+    if len(file_names) != 1:
+        logger.warning("Could not find report filename for %s %s %s",
+                       country, region, article,)
+
+        return None
+
+    return file_names[0]
+
+
 def get_report_filename(report_version,
                         country, region, article, descriptor):
     """ Return the filename for imported information
@@ -369,6 +454,9 @@ def get_report_filename(report_version,
         },
         '2014': {
             'Art11': _get_report_fileurl_art11_2014,
+        },
+        '2016': {
+            'Art13': _get_report_filename_art13_2016,
         },
         '2018': {
             'Art7': _get_report_filename_art7_2018,

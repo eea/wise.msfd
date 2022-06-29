@@ -32,6 +32,7 @@ from wise.msfd.compliance.vocabulary import REGIONS
 from wise.msfd.data import (get_all_report_filenames,
                             get_envelope_release_date, get_factsheet_url,
                             get_report_file_url, get_report_filename,
+                            get_report_fileurl_art13_2016,
                             get_xml_report_data)
 from wise.msfd.gescomponents import (get_all_descriptors, get_descriptor,
                                      get_features)
@@ -49,6 +50,7 @@ from .a8esa import Article8ESA
 from .a9 import Article9, Article9Alternate
 from .a10 import Article10, Article10Alternate
 from .a11 import Article11, Article11Compare, Article11Overview
+from .a13 import Article13
 from .a34 import Article34, Article34_2018
 from .base import BaseView
 from .proxy import Proxy2018
@@ -186,6 +188,7 @@ class ReportData2012(BaseView, BaseUtil):
             'Art10': Article10,
             'Art11': Article11,
             'Art11Overview': Article11Overview,
+            'Art13': Article13
         }
 
         return res
@@ -417,6 +420,7 @@ class ReportData2012(BaseView, BaseUtil):
         )
         report_header = self.report_header_template(**report_header_data)
         try:
+            # import pdb; pdb.set_trace()
             report_data, report_data_rows = self.get_report_data()
         except:
             report_data, report_data_rows = 'Error in rendering report', []
@@ -742,6 +746,72 @@ class ReportData2014(ReportData2012):
 
         return self.index()
 
+
+class ReportData2016(ReportData2012):
+    year = '2016'
+    report_year = '2016'
+    report_due = '2016-10-15'
+
+    def get_report_view(self):
+        klass = self.article_implementations[self.article]
+
+        view = klass(self, self.request, self.country_code,
+                     self.country_region_code, self.descriptor, self.article,
+                     self.muids, self.fileurl)
+
+        return view
+
+    @db.use_db_session('2012')
+    def __call__(self):
+        # if self.descriptor.startswith('D1.'):       # map to old descriptor
+        #     # self._descriptor = 'D1'               # this hardcodes D1.x
+        #                                             # descriptors to D1
+        #     assert self.descriptor == 'D1'
+
+        if 'translate' in self.request.form:
+            report_view = self.get_report_view()
+            report_view.auto_translate()
+
+            messages = IStatusMessage(self.request)
+            messages.add(u"Auto-translation initiated, please refresh "
+                         u"in a couple of minutes", type=u"info")
+
+        print(("Will render report for: %s" % self.article))
+        
+        self.filename = filename = self.get_report_filename()
+        self.fileurl = fileurl = get_report_fileurl_art13_2016(
+            filename, self.country_code, self.country_region_code)
+        factsheet = None
+
+        source_file = ('File not found', None)
+        multiple_source_files = False
+
+        try:
+            factsheet = get_factsheet_url(fileurl)
+        except Exception:
+            logger.exception("Error in getting HTML Factsheet URL %s", fileurl)
+
+        source_file = (filename, fileurl + '/manage_document')
+
+        rep_info = self.get_reporting_information()
+
+        report_header_data = self.get_report_header_data(
+            rep_info.reporters, source_file, factsheet, rep_info.report_date,
+            multiple_source_files
+        )
+        report_header = self.report_header_template(**report_header_data)
+        try:
+            report_data, report_data_rows = self.get_report_data()
+        except:
+            report_data, report_data_rows = 'Error in rendering report', []
+        trans_edit_html = self.translate_view()()
+        self.report_html = report_header + report_data + trans_edit_html
+
+        if 'download' in self.request.form:
+
+            return self.download(report_data_rows, report_header_data)
+
+        return self.index()
 
 @implementer(IReportDataViewOverview)
 class ReportDataOverview2014Art11(ReportData2014):

@@ -1,0 +1,13 @@
+<tal:def tal:define="field nocall:options/field;
+    klass string:cf_${field/article}_${field/section} n_${field/name}">
+  <tr tal:attributes="class klass; data-level field/setlevel">
+    <th>
+      <span tal:content="python: field.title and field.title or field.name">First header</span>
+    </th>
+
+    <tal:rep tal:repeat="value options/vals">
+      <td tal:replace="structure value"></td>
+    </tal:rep>
+
+  </tr>
+</tal:def>

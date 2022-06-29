@@ -487,10 +487,24 @@ class NationalCompoundRow(TemplateMixin):
 
 
 def national_compoundrow(self, field, vals, raw_values):
+    """ Row with two headers (columns) """
     # FIELD = namedtuple("Field", ["group_name", "name", "title"])
     # field = FIELD(title, title, title)
 
     return NationalCompoundRow(self, self.request, field, vals, raw_values)
+
+
+class SingeHeaderRow(TemplateMixin):
+    """ Row with a single header """
+    template = ViewPageTemplateFile('pt/single-header-row.pt')
+
+    def __init__(self, context, request, field, vals, raw_values):
+        self.context = context
+        self.request = request
+        self.field = field
+        self.title = field.title
+        self.vals = vals
+        self.raw_values = raw_values
 
 
 @total_ordering

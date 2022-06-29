@@ -110,6 +110,14 @@
 
   <browser:page
     for="..interfaces.INationalDescriptorAssessment"
+    name="view-report-data-2016"
+    class=".reportdata.ReportData2016"
+    template="./pt/report-data-view.pt"
+    permission="zope2.View"
+    />
+
+  <browser:page
+    for="..interfaces.INationalDescriptorAssessment"
     name="view-report-data-2014-2020"
     class=".reportdata.ReportData20142020"
     template="./pt/report-data-view.pt"

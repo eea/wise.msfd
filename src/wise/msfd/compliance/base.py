@@ -293,13 +293,14 @@ class BaseComplianceView(BrowserView, BasePublicPage, SecurityMixin):
         return [desc[a.lower()] for a in self.ARTICLE_ORDER]
 
     def get_articles_part2(self, desc):
-        order = ['art13', 'art14', 'art18']
+        order = ['art14', 'art18']
 
         return order
 
     def get_report_year(self, year, article=None):
         report_years = {
-            'Art11': {'2012': '2014', '2018': '2020'}
+            'Art11': {'2012': '2014', '2018': '2020'},
+            'Art13': {'2012': '2016', '2018': '2022'}
         }
 
         if not article:

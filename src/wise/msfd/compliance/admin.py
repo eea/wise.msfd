@@ -94,6 +94,7 @@ class ToPDB(BrowserView):
 
 class BootstrapCompliance(BrowserView):
     """ Bootstrap the compliance module by creating all needed country folders
+        /bootstrap-compliance?setup=nationaldesc&production=1
     """
 
     compliance_folder_id = 'assessment-module'
@@ -257,6 +258,10 @@ class BootstrapCompliance(BrowserView):
 
                 # article 11
                 self.create_nda_folder(df, desc_code, 'Art11')
+
+                # article 13 and 14
+                self.create_nda_folder(df, desc_code, 'Art13')
+                self.create_nda_folder(df, desc_code, 'Art14')
 
         return cf
 
