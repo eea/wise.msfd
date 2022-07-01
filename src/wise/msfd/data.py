@@ -326,7 +326,14 @@ ORDER BY DESC(?date)
     return urls
 
 
-def get_report_fileurl_art13_2016(filename, country, region):
+def get_report_fileurl_art1314_2016(filename, country, region, article):
+    schemas_mapping = {
+        'Art13': 'http://dd.eionet.europa.eu/schemas/MSFD13/MSFD13_1p0.xsd',
+        'Art14': 'http://dd.eionet.europa.eu/schemas/MSFD13/MSFD13_1p0ex.xsd'
+    }
+
+    schema = schemas_mapping[article]
+
     q = """
 PREFIX cr: <http://cr.eionet.europa.eu/ontologies/contreg.rdf#>
 PREFIX terms: <http://purl.org/dc/terms/>
@@ -346,17 +353,17 @@ WHERE {
 ?locality core:notation ?notation .
 FILTER (?notation = '%s')
 FILTER (?obligationNr = '612')
-FILTER (str(?schema) = 'http://dd.eionet.europa.eu/schemas/MSFD13/MSFD13_1p0.xsd')
+FILTER (str(?schema) = '%s')
 FILTER regex(str(?file), '/%s')
 #FILTER (?restricted = 0)
 }
 ORDER BY DESC(?date)
-""" % (country.upper(), filename)
+""" % (country.upper(), schema, filename)
 
     service = sparql.Service('https://cr.eionet.europa.eu/sparql')
 
-    logger.info("Getting fileurl Art13 with SPARQL: %s - %s",
-                country, region)
+    logger.info("Getting fileurl %s with SPARQL: %s - %s",
+                article, country, region)
     try:
         req = service.query(q)
         rows = req.fetchall()
@@ -370,7 +377,7 @@ ORDER BY DESC(?date)
 
     except:
         logger.exception('Got an error in querying SPARQL endpoint for '
-                         'Art11: %s - %s', country, region)
+                         '%s: %s - %s', article, country, region)
 
         raise
     
@@ -397,6 +404,37 @@ def _get_report_filename_art13_2016(country, region, article, descriptor):
         file_name = item.FileName
 
         if 'Measures' not in file_name:
+            continue
+
+        file_names.append(file_name)
+
+    # TODO: analyse cases when it returns more then one file
+    if len(file_names) != 1:
+        logger.warning("Could not find report filename for %s %s %s",
+                       country, region, article,)
+
+        return None
+
+    return file_names[0]
+
+
+@db.use_db_session('2012')
+def _get_report_filename_art14_2016(country, region, article, descriptor):
+    mc = sql.MSFD13Import
+
+    count, items = db.get_all_records(
+        mc,
+        mc.MemberStates == country,
+        mc.Region == region,
+        mc.Description == 'Success'
+    )
+
+    file_names = []
+    
+    for item in items:
+        file_name = item.FileName
+
+        if 'Exception' not in file_name:
             continue
 
         file_names.append(file_name)
@@ -457,6 +495,7 @@ def get_report_filename(report_version,
         },
         '2016': {
             'Art13': _get_report_filename_art13_2016,
+            'Art14': _get_report_filename_art14_2016,
         },
         '2018': {
             'Art7': _get_report_filename_art7_2018,
@@ -470,9 +509,10 @@ def get_report_filename(report_version,
     return handler(country, region, article, descriptor)
 
 
-@cache(lambda func, filename: func.__name__ + filename + current_date())
+@cache(lambda func, filename, country_code: 
+        func.__name__ + filename + country_code + current_date())
 @timeit
-def get_report_file_url(filename):
+def get_report_file_url(filename, country_code=None):
     """ Retrieve the CDR url based on query in ContentRegistry
     """
 
@@ -481,33 +521,29 @@ def get_report_file_url(filename):
 
         return filename
 
-#     q = """
-# PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-# PREFIX cr: <http://cr.eionet.europa.eu/ontologies/contreg.rdf#>
-# PREFIX dc: <http://purl.org/dc/dcmitype/>
-# PREFIX dcterms: <http://purl.org/dc/terms/>
-#
-# SELECT ?file
-# WHERE {
-# ?file a dc:Dataset .
-# ?file dcterms:date ?date .
-# FILTER regex(str(?file), '%s')
-# }
-# ORDER BY DESC(?date)
-# LIMIT 1""" % filename
+    country_filter = ''
+
+    if country_code:
+        country_filter = "FILTER (?notation = '{}')".format(country_code)
 
     q = """
 PREFIX cr: <http://cr.eionet.europa.eu/ontologies/contreg.rdf#>
 PREFIX terms: <http://purl.org/dc/terms/>
+PREFIX schema: <http://rod.eionet.europa.eu/schema.rdf#>
+PREFIX core: <http://www.w3.org/2004/02/skos/core#>
 
 SELECT ?file
 WHERE {
 ?file terms:date ?date .
 ?file cr:mediaType 'text/xml'.
+?file terms:isPartOf ?isPartOf .
+?isPartOf schema:locality ?locality .
+?locality core:notation ?notation
 FILTER regex(str(?file), '/%s')
+%s
 }
 ORDER BY DESC(?date)
-LIMIT 1""" % filename
+LIMIT 1""" % (filename, country_filter)
 
     service = sparql.Service('https://cr.eionet.europa.eu/sparql')
 
@@ -565,7 +601,7 @@ def get_factsheet_url(url):
 
 
 @timeit
-def get_xml_report_data(filename):
+def get_xml_report_data(filename, country_code=None):
     if not filename:
         return ""
 
@@ -579,6 +615,12 @@ def get_xml_report_data(filename):
 
     if not xmldir:
         xmldir = tempfile.gettempdir()
+
+    if country_code:
+        xmldir = "{}/{}".format(xmldir, country_code)
+
+        if not os.path.isdir(xmldir):
+            os.mkdir(xmldir)
 
     assert '..' not in filename     # need better security?
 
@@ -595,7 +637,7 @@ def get_xml_report_data(filename):
         # https://cr.eionet.europa.eu/factsheet.action?uri=http%3A%2F%2Fcdr.eionet.europa.eu%2Fro%2Feu%2Fmsfd8910%2Fblkro%2Fenvux97qw%2FRO_MSFD10TI_20130430.xml&page1=http%3A%2F%2Fwww.w3.org%2F1999%2F02%2F22-rdf-syntax-ns%23type
 
         if not url:
-            url = get_report_file_url(filename)
+            url = get_report_file_url(filename, country_code)
 
         req = requests.get(url)
         text = req.content

@@ -35,6 +35,7 @@ REPORT_DEFS = {
     },
     '2016': {
         'Art13': ReportDefinition(f_2016, 'Art13'),
+        'Art14': ReportDefinition(f_2016, 'Art14'),
     },
     '2014': {
         'Art11': ReportDefinition(f_2014, 'Art11'),

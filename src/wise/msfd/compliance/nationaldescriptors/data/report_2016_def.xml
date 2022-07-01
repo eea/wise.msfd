@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <data>
   <Art13>
-    <element setlevel="0" name="MarineUnitID">Marine reporting units</element>
+    <element setlevel="0" name="MarineUnitID" label="mrus" convert="inverse_label">Marine reporting units</element>
     <element name="Features">Features</element>
     <element setlevel="1" name="KTM">Key type of measure (KTM)</element>
     <element name="Related pressures">Related pressures</element>
     <element name="Related activities causing pressures">Related activities causing pressures</element>
-    <element name="UniqueCode">Measure code</element>
-    <element name="Name">Measure name</element>
+    <element setlevel="2" name="UniqueCode">Measure code</element>
+    <element name="Name" translate="true">Measure name</element>
     <element name="LinkToExistingPolicies">Link to existing policies</element>
     <element name="Description, including mode of implementation">Description, including mode of implementation</element>
     <element name="Measure type">Measure type</element>
@@ -32,4 +32,17 @@
     <element name="WFD reporting areas">WFD reporting areas</element>
     <element name="Further information">Further information</element>
   </Art13>
+  <Art14>
+    <element name="MarineUnitID">Marine reporting units</element>
+    <element name="UniqueCode">Exception code</element>
+    <element name="Name" translate="true">Exception name</element>
+    <element name="Exception type">Exception type</element>
+    <element name="RelevantFeaturesFromMSFDAnnexIII">Relevant features</element>
+    <element name="SpatialScopeGeographicZones">Spatial scope (geographic zones)</element>
+    <element name="Mitigation">Mitigation</element>
+    <element name="Relevant targets">Relevant targets</element>
+    <element name="RelevantGESDescriptors">Relevant GES descriptors</element>
+    <element name="KTM">Key type of measure (KTM)</element>
+    <element name="SummaryReport">Further information - Summary Report</element>
+  </Art14>
 </data>

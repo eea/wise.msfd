@@ -32,7 +32,7 @@ from wise.msfd.compliance.vocabulary import REGIONS
 from wise.msfd.data import (get_all_report_filenames,
                             get_envelope_release_date, get_factsheet_url,
                             get_report_file_url, get_report_filename,
-                            get_report_fileurl_art13_2016,
+                            get_report_fileurl_art1314_2016,
                             get_xml_report_data)
 from wise.msfd.gescomponents import (get_all_descriptors, get_descriptor,
                                      get_features)
@@ -50,7 +50,7 @@ from .a8esa import Article8ESA
 from .a9 import Article9, Article9Alternate
 from .a10 import Article10, Article10Alternate
 from .a11 import Article11, Article11Compare, Article11Overview
-from .a13 import Article13
+from .a1314 import Article13, Article14
 from .a34 import Article34, Article34_2018
 from .base import BaseView
 from .proxy import Proxy2018
@@ -188,7 +188,8 @@ class ReportData2012(BaseView, BaseUtil):
             'Art10': Article10,
             'Art11': Article11,
             'Art11Overview': Article11Overview,
-            'Art13': Article13
+            'Art13': Article13,
+            'Art14': Article14
         }
 
         return res
@@ -458,7 +459,7 @@ class ReportData2012(BaseView, BaseUtil):
         if not filename:
             return default
 
-        text = get_xml_report_data(filename)
+        text = get_xml_report_data(filename, self.country_code)
         root = fromstring(text)
 
         reporters, date = self._get_reporting_info(root)
@@ -752,6 +753,12 @@ class ReportData2016(ReportData2012):
     report_year = '2016'
     report_due = '2016-10-15'
 
+    def _get_reporting_info(self, root):
+        reporter = [root.attrib['ReporterName']]
+        date = [root.attrib['ReportingDate']]
+
+        return reporter, date
+
     def get_report_view(self):
         klass = self.article_implementations[self.article]
 
@@ -779,8 +786,10 @@ class ReportData2016(ReportData2012):
         print(("Will render report for: %s" % self.article))
         
         self.filename = filename = self.get_report_filename()
-        self.fileurl = fileurl = get_report_fileurl_art13_2016(
-            filename, self.country_code, self.country_region_code)
+        self.fileurl = fileurl = get_report_fileurl_art1314_2016(
+            filename, self.country_code, self.country_region_code, self.article
+        )
+
         factsheet = None
 
         source_file = ('File not found', None)

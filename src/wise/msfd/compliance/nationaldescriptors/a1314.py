@@ -49,6 +49,11 @@ class A13Item(Item):
             ('MarineUnitID', self.mru),
             ('Features', self.default),
             ('KTM', self.ktm),
+            ('UniqueCode', self.unique_code),
+            ('Name', self.measure_name),
+            ('LinkToExistingPolicies', self.link_existing_policies),
+            ('RelevantGESDescriptors', self.relevant_ges_descr),
+            ('RelevantFeaturesFromMSFDAnnexIII', self.relevant_features),
         ]
 
         for title, getter in attrs:
@@ -64,30 +69,26 @@ class A13Item(Item):
     def ktm(self):
         return self.mrelax['KTM/text()'][0]
 
-    def programme_id(self):
-        return self.mpr['ReferenceExistingProgramme/ProgrammeID/text()'][0]
+    def unique_code(self):
+        return self.mrelax['UniqueCode/text()'][0]
 
-    def q4e_prog(self):
-        return self.mpr['MonitoringProgramme/Q4e_ProgrammeID/text()'][0]
+    def measure_name(self):
+        return self.mrelax['Name/text()'][0]
 
-    def q4f_prog(self):
-        v = self.mpr['MonitoringProgramme/Q4f_ProgrammeDescription/text()'][0]
+    def link_existing_policies(self):
+        items = self.mrelax['LinkToExistingPolicies/text()'] 
+        
+        return ItemListFiltered(items)
 
-        return v
+    def relevant_ges_descr(self):
+        items = self.mrelax['RelevantGESDescriptors/text()'] 
+        
+        return ItemListFiltered(items)
 
-    def q5e_natural(self):
-        v = self.mpr['MonitoringProgramme/Q5e_NaturalVariablity/text()'][0]
-        other = self.mpr['.//Q5e_NaturalVariablity/Q5e_Other/text()']
-
-        return ItemListFiltered(v.split(' ') + other)
-
-    def q5c_habitats(self):
-        v = self.mpr['.//Q5c_RelevantFeaturesPressuresImpacts' \
-                     '/Habitats/text()']
-        other = self.mpr['.//Q5c_RelevantFeaturesPressuresImpacts/Habitats' \
-                         '/Q5c_HabitatsOther/text()']
-
-        return ItemListFiltered(v + other)
+    def relevant_features(self):
+        items = self.mrelax['RelevantFeaturesFromMSFDAnnexIII/text()'] 
+        
+        return ItemListFiltered(items)
 
 
 class Article13(BaseArticle2012):
@@ -118,7 +119,7 @@ class Article13(BaseArticle2012):
 
     @property
     def sort_order(self):
-        order = ('MarineUnitID',)
+        order = ('MarineUnitID', 'KTM', 'UniqueCode')
 
         return order
 
@@ -140,7 +141,7 @@ class Article13(BaseArticle2012):
         if not filename:
             filename = self.get_report_filename()
 
-        text = get_xml_report_data(filename)
+        text = get_xml_report_data(filename, self.country_code)
 
         root = fromstring(text)
 
@@ -225,15 +226,140 @@ class Article13(BaseArticle2012):
             if not node.getchildren():
                 continue
 
-            # filter mp node by ges criteria
-            ges_crit = xp('.//RelevantGESDescriptors', node)
-            if ges_crit:
-                ges_crit_text = ges_crit[0].text
-                ges_crit = (
-                        ges_crit_text
-                        and set(ges_crit_text.split(' '))
-                        or set()
-                )
+            # filter node by ges criteria
+            ges_crit = xp('.//RelevantGESDescriptors/text()', node)
+            ges_crit = set(ges_crit)
+
+            if not all_ids.intersection(ges_crit):
+                continue
+
+            item = self._make_item(node, mru)
+            items.append(item)
+
+        self.rows = []
+
+        items = sorted(items,
+                       key=lambda i: [getattr(i, o) for o in self.sort_order])
+
+        self.cols = items
+        self.items_to_rows(items)
+
+    def __call__(self):
+        self.setup_data()
+
+        return self.template(data=self.rows)
+
+
+class A14Item(Item):
+    def __init__(self, context, exception_node, mru):
+
+        super(A14Item, self).__init__([])
+        
+        self.mru_name = mru and mru[0].text or ''
+        self.context = context
+        self.mnode = exception_node
+        self.mrelax = RelaxedNodeEmpty(exception_node, NSMAP)
+
+        attrs = [
+            ('MarineUnitID', self.mru),
+            ('UniqueCode', self.unique_code),
+            ('Name', self.measure_name),
+            ('RelevantFeaturesFromMSFDAnnexIII', self.relevant_features),
+            ('SpatialScopeGeographicZones', self.spatial_scope),
+            ('RelevantGESDescriptors', self.relevant_ges_descr),
+            ('KTM', self.ktm),
+            ('SummaryReport', self.default),          
+        ]
+
+        for title, getter in attrs:
+            self[title] = getter()
+            setattr(self, title, getter())
+
+    def default(self):
+        return ''
+
+    def mru(self):
+        return self.mru_name
+
+    def ktm(self):
+        return self.mrelax['KTM/text()'][0]
+
+    def unique_code(self):
+        return self.mrelax['UniqueCode/text()'][0]
+
+    def measure_name(self):
+        return self.mrelax['Name/text()'][0]
+
+    def link_existing_policies(self):
+        items = self.mrelax['LinkToExistingPolicies/text()'] 
+        
+        return ItemListFiltered(items)
+
+    def relevant_ges_descr(self):
+        items = self.mrelax['RelevantGESDescriptors/text()'] 
+        
+        return ItemListFiltered(items)
+
+    def relevant_features(self):
+        items = self.mrelax['RelevantFeaturesFromMSFDAnnexIII/text()'] 
+        
+        return ItemListFiltered(items)
+
+    def spatial_scope(self):
+        items = self.mrelax['SpatialScopeGeographicZones/text()'] 
+        
+        return ItemListFiltered(items)
+
+
+class Article14(Article13):
+    """ Article 14 implementation for 2016 year
+
+    klass(self, self.request, country_code, region_code,
+          descriptor, article,  muids)
+
+        1. Get the report filename with a sparql query
+        2. With the filename get the report url from CDR
+        3. Get the data from the xml file
+    """
+
+    @property
+    def sort_order(self):
+        order = ('MarineUnitID', 'KTM', 'UniqueCode')
+
+        return order
+
+    def _make_item(self, exception_node, mru):
+        item = A14Item(self, exception_node, mru)
+
+        return item
+
+    def setup_data(self):
+        descriptor_class = get_descriptor(self.descriptor)
+        all_ids = descriptor_class.all_ids()
+        self.descriptor_label = descriptor_class.title
+
+        if self.descriptor.startswith('D1.'):
+            all_ids.add('D1')
+
+        fileurl = self._filename
+
+        try:
+            root = self.get_report_file_root(fileurl)
+        except XMLSyntaxError:
+            pass
+
+        nodes = xp('//Exceptions', root)
+        mru = xp('//MarineUnitID', root)
+        items = []
+
+        for node in nodes:
+            # filter empty nodes
+            if not node.getchildren():
+                continue
+
+            # filter node by ges criteria
+            ges_crit = xp('.//RelevantGESDescriptors/text()', node)
+            ges_crit = set(ges_crit)
 
             if not all_ids.intersection(ges_crit):
                 continue
