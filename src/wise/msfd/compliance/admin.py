@@ -259,9 +259,10 @@ class BootstrapCompliance(BrowserView):
                 # article 11
                 self.create_nda_folder(df, desc_code, 'Art11')
 
-                # article 13 and 14
+                # article 13, 14, 18
                 self.create_nda_folder(df, desc_code, 'Art13')
                 self.create_nda_folder(df, desc_code, 'Art14')
+                self.create_nda_folder(df, desc_code, 'Art18')
 
         return cf
 

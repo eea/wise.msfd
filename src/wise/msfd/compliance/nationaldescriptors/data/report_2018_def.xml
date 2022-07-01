@@ -178,4 +178,23 @@
     <element name="CostDegradationResults" translate="true">Cost of degradation: results</element>
     <element name="CostDegradationRelatedIndicators" label="indicators" convert="csv_ges_labels_inverse_list_indicators">Related indicators</element>
   </Art8esa>
+
+  <Art18>
+    <element name="Marine reporting units">Marine reporting units</element>
+    <element name="Features">Features</element>
+    <element name="MeasureCode">Measure code</element>
+    <element name="MeasureName" translate="true">Measure name</element>
+    <element name="Category">Measure category (type)</element>
+    <element name="ImplementationProgress">Progress in implementation</element>
+    <element name="MeasureWithdrawn">Measure withdrawn</element>
+    <element name="ReasonWithdrawal">Reason for withdrawal</element>
+    <element name="ImplementationYear">Year of implementation (Temporal coverage - timeline for implementation)</element>
+    <element name="Delay">Delay</element>
+    <element name="ReasonDelay">Reasons for delay</element>
+    <element name="OtherObstacles">Other obstacles (Obstacles to implementation)</element>
+    <element name="TypeObstacle">Type of obstacle</element>
+    <element name="FurtherInformationObstacles">Further information on obstacle (Description)</element>
+    <element name="ProgressDescription">Brief description of progress (measurement of effectiveness of measure)</element>
+  </Art18>
+
 </data>

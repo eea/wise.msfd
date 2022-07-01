@@ -32,7 +32,7 @@ from wise.msfd.compliance.vocabulary import REGIONS
 from wise.msfd.data import (get_all_report_filenames,
                             get_envelope_release_date, get_factsheet_url,
                             get_report_file_url, get_report_filename,
-                            get_report_fileurl_art1314_2016,
+                            get_report_fileurl_art131418_2016,
                             get_xml_report_data)
 from wise.msfd.gescomponents import (get_all_descriptors, get_descriptor,
                                      get_features)
@@ -50,7 +50,7 @@ from .a8esa import Article8ESA
 from .a9 import Article9, Article9Alternate
 from .a10 import Article10, Article10Alternate
 from .a11 import Article11, Article11Compare, Article11Overview
-from .a1314 import Article13, Article14
+from .a131418 import Article13, Article14, Article18
 from .a34 import Article34, Article34_2018
 from .base import BaseView
 from .proxy import Proxy2018
@@ -189,7 +189,8 @@ class ReportData2012(BaseView, BaseUtil):
             'Art11': Article11,
             'Art11Overview': Article11Overview,
             'Art13': Article13,
-            'Art14': Article14
+            'Art14': Article14,
+            'Art18': Article18
         }
 
         return res
@@ -786,7 +787,7 @@ class ReportData2016(ReportData2012):
         print(("Will render report for: %s" % self.article))
         
         self.filename = filename = self.get_report_filename()
-        self.fileurl = fileurl = get_report_fileurl_art1314_2016(
+        self.fileurl = fileurl = get_report_fileurl_art131418_2016(
             filename, self.country_code, self.country_region_code, self.article
         )
 
@@ -821,6 +822,19 @@ class ReportData2016(ReportData2012):
             return self.download(report_data_rows, report_header_data)
 
         return self.index()
+
+
+class ReportData2018Art18(ReportData2016):
+    year = '2018'
+    report_year = '2018'
+    report_due = '2018-10-15'
+
+    def _get_reporting_info(self, root):
+        reporter = [root.attrib['ContactOrganisation']]
+        date = [root.attrib['ReportingDate']]
+
+        return reporter, date
+
 
 @implementer(IReportDataViewOverview)
 class ReportDataOverview2014Art11(ReportData2014):

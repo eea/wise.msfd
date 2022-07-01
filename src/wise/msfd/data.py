@@ -11,7 +11,7 @@ from pkg_resources import resource_filename
 
 import sparql
 from eea.cache import cache
-from wise.msfd import db, sql, sql_extra
+from wise.msfd import db, sql, sql_extra, sql2018
 
 from .utils import current_date, timeit
 from six.moves import zip
@@ -326,13 +326,21 @@ ORDER BY DESC(?date)
     return urls
 
 
-def get_report_fileurl_art1314_2016(filename, country, region, article):
+def get_report_fileurl_art131418_2016(filename, country, region, article):
     schemas_mapping = {
         'Art13': 'http://dd.eionet.europa.eu/schemas/MSFD13/MSFD13_1p0.xsd',
-        'Art14': 'http://dd.eionet.europa.eu/schemas/MSFD13/MSFD13_1p0ex.xsd'
+        'Art14': 'http://dd.eionet.europa.eu/schemas/MSFD13/MSFD13_1p0ex.xsd',
+        'Art18': 'http://dd.eionet.europa.eu/schemas/MSFD13/ART18.xsd'
+    }
+
+    obligation_mapping = {
+        'Art13': '612',
+        'Art14': '612',
+        'Art18': '661'
     }
 
     schema = schemas_mapping[article]
+    obligation = obligation_mapping[article]
 
     q = """
 PREFIX cr: <http://cr.eionet.europa.eu/ontologies/contreg.rdf#>
@@ -352,13 +360,13 @@ WHERE {
 ?obligation core:notation ?obligationNr .
 ?locality core:notation ?notation .
 FILTER (?notation = '%s')
-FILTER (?obligationNr = '612')
+FILTER (?obligationNr = '%s')
 FILTER (str(?schema) = '%s')
 FILTER regex(str(?file), '/%s')
 #FILTER (?restricted = 0)
 }
 ORDER BY DESC(?date)
-""" % (country.upper(), schema, filename)
+""" % (country.upper(), obligation, schema, filename)
 
     service = sparql.Service('https://cr.eionet.europa.eu/sparql')
 
@@ -449,6 +457,30 @@ def _get_report_filename_art14_2016(country, region, article, descriptor):
     return file_names[0]
 
 
+@db.use_db_session('2018')
+def _get_report_filename_art18_2018(country, region, article, descriptor):
+    mc = sql2018.ReportedInformation
+
+    count, items = db.get_all_records(
+        mc,
+        mc.CountryCode == country,
+        mc.Schema == 'ART18'
+    )
+
+    file_names = []
+    
+    # TODO: analyse cases when it returns more then one file
+    if len(items) != 1:
+        logger.warning("Could not find report filename for %s %s %s",
+                       country, region, article,)
+
+        return None
+
+    file_name = items[0].ReportedFileLink.split('/')[-1]
+
+    return file_name
+
+
 def get_report_filename(report_version,
                         country, region, article, descriptor):
     """ Return the filename for imported information
@@ -501,6 +533,7 @@ def get_report_filename(report_version,
             'Art7': _get_report_filename_art7_2018,
             'Art3': _get_report_filename_art3_4_2018,
             'Art4': _get_report_filename_art3_4_2018,
+            'Art18': _get_report_filename_art18_2018,
         }
     }
 

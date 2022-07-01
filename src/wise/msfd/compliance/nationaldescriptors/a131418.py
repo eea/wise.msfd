@@ -379,3 +379,144 @@ class Article14(Article13):
         self.setup_data()
 
         return self.template(data=self.rows)
+
+
+class A18Item(Item):
+    def __init__(self, context, exception_node):
+
+        super(A18Item, self).__init__([])
+        
+        self.context = context
+        self.mnode = exception_node
+        self.mrelax = RelaxedNodeEmpty(exception_node, NSMAP)
+        
+        attrs = [
+            ('MeasureCode', self.measure_code),
+            ('MeasureName', self.measure_name),
+            ('Category', self.category),
+            ('ImplementationProgress', self.impl_progress),
+            ('MeasureWithdrawn', self.measure_withdrawn),
+            ('ReasonWithdrawal', self.reason_withdrawal),
+            ('ImplementationYear', self.impl_year),
+            ('Delay', self.delay),
+            ('ReasonDelay', self.reson_delay),
+            ('OtherObstacles', self.other_obstacles),
+            ('TypeObstacle', self.type_obstacles),
+            ('FurtherInformationObstacles', self.further_info_obst),
+            ('ProgressDescription', self.progress_descr),
+        ]
+
+        for title, getter in attrs:
+            self[title] = getter()
+            setattr(self, title, getter())
+
+    def default(self):
+        return ''
+
+    def measure_code(self):
+        return self.mrelax['MeasureCode/text()'][0]
+
+    def measure_name(self):
+        return self.mrelax['MeasureName/text()'][0]
+
+    def category(self):
+        return self.mrelax['Category/text()'][0]
+    
+    def impl_progress(self):
+        return self.mrelax['ImplementationProgress/text()'][0]
+    
+    def measure_withdrawn(self):
+        return self.mrelax['MeasureWithdrawn/text()'][0]
+
+    def reason_withdrawal(self):
+        return self.mrelax['ReasonWithdrawal/text()'][0]
+
+    def impl_year(self):
+        return self.mrelax['ImplementationYear/text()'][0]
+
+    def delay(self):
+        return self.mrelax['Delay/text()'][0]
+
+    def reson_delay(self):
+        return self.mrelax['ReasonDelay/text()'][0]
+
+    def other_obstacles(self):
+        return self.mrelax['OtherObstacles/text()'][0]
+
+    def type_obstacles(self):
+        return self.mrelax['TypeObstacle/text()'][0]
+
+    def further_info_obst(self):
+        return self.mrelax['FurtherInformationObstacles/text()'][0]
+
+    def progress_descr(self):
+        return self.mrelax['ProgressDescription/text()'][0]
+
+
+class Article18(Article13):
+    """ Article 18 implementation for 2016 year
+
+    klass(self, self.request, country_code, region_code,
+          descriptor, article,  muids)
+
+        1. Get the report filename with a sparql query
+        2. With the filename get the report url from CDR
+        3. Get the data from the xml file
+    """
+
+    @property
+    def sort_order(self):
+        order = ('MeasureCode', )
+
+        return order
+
+    def _make_item(self, exception_node):
+        item = A18Item(self, exception_node)
+
+        return item
+
+    def setup_data(self):
+        descriptor_class = get_descriptor(self.descriptor)
+        all_ids = descriptor_class.all_ids()
+        self.descriptor_label = descriptor_class.title
+
+        if self.descriptor.startswith('D1.'):
+            all_ids.add('D1')
+
+        fileurl = self._filename
+
+        try:
+            root = self.get_report_file_root(fileurl)
+        except XMLSyntaxError:
+            pass
+
+        nodes = xp('//MeasureProgress', root)
+        items = []
+
+        for node in nodes:
+            # filter empty nodes
+            if not node.getchildren():
+                continue
+
+            # filter node by ges criteria
+            ges_crit = xp('.//Descriptor/text()', node)
+            ges_crit = set(ges_crit)
+
+            if not all_ids.intersection(ges_crit):
+                continue
+
+            item = self._make_item(node)
+            items.append(item)
+
+        self.rows = []
+
+        items = sorted(items,
+                       key=lambda i: [getattr(i, o) for o in self.sort_order])
+
+        self.cols = items
+        self.items_to_rows(items)
+
+    def __call__(self):
+        self.setup_data()
+
+        return self.template(data=self.rows)

@@ -158,6 +158,15 @@
     permission="zope2.View"
     />
 
+  <!-- view report data for 2018 -->
+  <browser:page
+    for="..interfaces.INationalDescriptorAssessment"
+    name="view-report-data-2018-art18"
+    class=".reportdata.ReportData2018Art18"
+    template="./pt/report-data-view.pt"
+    permission="zope2.View"
+    />
+
   <browser:page
     for="..interfaces.INationalDescriptorAssessmentSecondary"
     name="view-report-data-2018"
