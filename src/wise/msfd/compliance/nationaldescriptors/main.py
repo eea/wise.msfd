@@ -11,6 +11,8 @@ from persistent.list import PersistentList
 from plone.api import portal
 from plone.api.content import transition
 from plone.api.portal import get_tool
+from plone.intelligenttext.transforms import \
+    convertWebIntelligentPlainTextToHtml
 from plone.protect.interfaces import IDisableCSRFProtection
 from Products.Five.browser.pagetemplatefile import \
     ViewPageTemplateFile as Template
@@ -21,6 +23,7 @@ from wise.msfd.compliance.assessment import (ANSWERS_COLOR_TABLE,
                                              CONCLUSION_COLOR_TABLE,
                                              AssessmentDataMixin,
                                              get_assessment_data_2012_db,
+                                             get_assessment_data_2016_art1314,
                                              filter_assessment_data_2012)
 from wise.msfd.compliance.base import (
     NAT_DESC_QUESTIONS, is_row_relevant_for_descriptor)
@@ -907,6 +910,71 @@ class NationalDescriptorArticleView2012(NationalDescriptorArticleView):
             self.country_title,
             self.country_region_name,
         )
+
+
+class NationalDescriptorArticleView2016(NationalDescriptorArticleView):
+    """ NationalDescriptorArticleView2016 """
+
+    assessment_header_template = Template('../pt/assessment-header.pt')
+    assessment_data_2012_tpl = Template('./pt/assessment-data-2016.pt')
+
+    @property
+    def title(self):
+        return u"Commission assessment / {} / 2016 / {} / {} / {} ".format(
+            self.article,
+            self.descriptor_title,
+            self.country_title,
+            self.country_region_name,
+        )
+
+    def convertWIPT(self, text):
+        return convertWebIntelligentPlainTextToHtml(text)
+
+    def __call__(self):
+        alsoProvides(self.request, IDisableCSRFProtection)
+
+        # Assessment data 2012
+        # country_name = self._country_folder.title
+
+        try:
+            assessments_2012 = get_assessment_data_2016_art1314(
+                self.country_code,
+                self.descriptor,
+                self.article.replace('Art', ''),
+                self.country_region_code
+            )
+
+            import pdb; pdb.set_trace()
+
+            self.assessment_data_2016 = self.assessment_data_2012_tpl(
+                data=assessments_2012
+            )
+            report_by, assessors, assess_date, source_file = [
+                'Not found'] * 3 + [('Not found', '')]
+
+        except:
+            logger.exception("Could not get assessment data for 2012")
+            self.assessment_data_2012 = ''
+            score_2012 = 0
+            report_by, assessors, assess_date, source_file = [
+                'Not found'] * 3 + [('Not found', '')]
+
+        # Assessment header 2012
+
+        self.assessment_header_2016 = self.assessment_header_template(
+            report_by=report_by,
+            assessor_list=[],
+            assessors=assessors,
+            assess_date=assess_date,
+            source_file=source_file,
+            show_edit_assessors=False,
+            show_file_version=False,
+        )
+
+        # score_2012 = score_2012
+        # conclusion_2012_color = CONCLUSION_COLOR_TABLE.get(score_2012, 0)
+
+        return self.index()
 
 
 @implementer(INationaldescriptorSecondaryArticleView)

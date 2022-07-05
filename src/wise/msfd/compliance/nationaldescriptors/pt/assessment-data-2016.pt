@@ -1,0 +1,34 @@
+<div id="container-assessment-data-2012"
+    tal:define="assessments options/data">
+
+    <table class="table table-condensed assessment-data-table article-1314">
+      <tbody>
+        <tal:def tal:define="css_class python: 'as-value as-value-{}'.format('')">
+          <tr>
+            <th style="width: 150px;"></th>
+            <th>Assessment</th>
+            <th>Summary</th>
+            <th>Score</th>
+            <th>Conclusion</th>
+          </tr>
+          <tal:rep tal:repeat="assessment assessments">
+            <tr>
+              <th style="width: 150px;"
+                  tal:content="python: assessment.AssessmentCriteria">
+                Coverage of pressures and activities
+              </th>
+              <td tal:content="structure python: view.convertWIPT(assessment.Assessment)"></td>
+              <td tal:content="structure python: view.convertWIPT(assessment.Summary)"></td>
+              <td tal:content="python: assessment.Score"></td>
+              <td class="overall-values">
+                <div tal:attributes="class css_class"
+                    tal:content="python: assessment.Conclusion"></div>
+              </td>
+            </tr>
+
+          </tal:rep>
+        </tal:def>
+      </tbody>
+    </table>
+
+</div>

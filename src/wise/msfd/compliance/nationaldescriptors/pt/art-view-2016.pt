@@ -1,0 +1,91 @@
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en"
+  xmlns:tal="http://xml.zope.org/namespaces/tal"
+  xmlns:metal="http://xml.zope.org/namespaces/metal"
+  xmlns:i18n="http://xml.zope.org/namespaces/i18n"
+  lang="en"
+  metal:use-macro="context/main_template/macros/master"
+  i18n:domain="eea">
+
+  <body metal:fill-slot="content">
+
+    <div id="layout-contents" tal:define="text context/text | nothing" >
+      <div id="wise-search-form" class="full-width-marker">
+        <div id="wise-search-form-top">
+          <metal:tabs
+            metal:use-macro="context/wise-macros/macros/tabs"></metal:tabs>
+        </div>
+
+        <div class="start-page-content left-side-form">
+
+          <div metal:use-macro="context/global_statusmessage/macros/portal_message">
+            Status message
+          </div>
+
+          <h1 class="report-title"
+              tal:content="structure view/title">Assessment</h1>
+
+          <div id="report-data-navigation">
+            <div class="nda-link">
+              <a href="/marine/assessment-module/national-descriptors-assessments/${view/country_code/lower}/assessments">
+                <i class="glyphicon glyphicon-share-alt"></i>
+                Go to Assessments page
+              </a>
+            </div>
+
+            <div id="assessment-edit-infobox"></div>
+
+            <div metal:use-macro="context/wise-macros/macros/nat-desc-report-nav"></div>
+          </div>
+          <div class="scroll-to-top">
+            <button title="Scroll to top" class="scroll-button">
+              <i class="scroll-icon glyphicon glyphicon-chevron-up"></i>
+            </button>
+          </div>
+
+          <div id="nat-desc-art-menu">
+            <ul>
+              <li>
+                <a
+                  tal:attributes="href python: context.absolute_url() + '/@@edit-assessment-data-2018'"
+                  target="_blank">
+                  <i class="glyphicon glyphicon-edit"></i> Assessment
+                </a>
+                <a tal:attributes="href python: context.absolute_url() + '/@@view-edit-history'"
+                    class="glyphicon glyphicon-th pat-plone-modal"
+                    data-pat-plone-modal="height: 600px; content:#edit-history; width: 80%"></a>
+              </li>
+              <li>
+                <a tal:define="year python: view.get_report_year('2018')"
+                    tal:attributes="href python: context.absolute_url() + '/@@view-report-data-' + year"
+                    target="_blank">
+                  <i class="glyphicon glyphicon-th"></i><span tal:content="year">2018</span> Report
+                </a>
+              </li>
+              <li>
+                <a tal:define="year python: view.get_report_year('2012')"
+                    tal:attributes="href python: context.absolute_url() + '/@@view-report-data-' + year"
+                    target="_blank">
+                  <i class="glyphicon glyphicon-th"></i><span tal:content="year">2012</span> Report
+                </a>
+              </li>
+            </ul>
+          </div>
+
+          <div class="asts-header-data">
+            <h3 id="assessment-2012">2016 Assessment</h3>
+            <div class="ast-header-data">
+              <div tal:replace="structure view/assessment_header_2016"></div>
+              <div tal:replace="structure view/assessment_data_2016"></div>
+            </div>
+            <h3 id="assessment-2012">2016 Recommendations</h3>
+            <div class="ast-header-data">
+              <div tal:replace="structure view/recommendations_data_2016"></div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+  </body>
+</html>

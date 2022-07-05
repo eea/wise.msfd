@@ -168,13 +168,13 @@
                   </td>
                   <td tal:define="assessment python: desc['art18']">
                     <a tal:attributes="href python: assessment.absolute_url() + '/@@view-report-data-2018-art18'"
-                        class="btn btn-xs btn-success" target='_blank'>2016</a>
+                        class="btn btn-xs btn-success" target='_blank'>2018</a>
                     <!-- <a tal:define="is_report_2018 python: view.is_report_available_2018(region.id, desc.id, assessment.id);
                           is_disabled python: is_report_2018 and ' btn-primary' or ' not-reported'"
                         tal:attributes="href python: assessment.absolute_url() + '/@@view-report-data-2022';
                           class python: 'btn btn-xs' + is_disabled;
                           title python: is_report_2018 and ' ' or 'Not reported'"
-                        target='_blank'>2022</a> -->
+                        target='_blank'>2024</a> -->
                   </td>
                   <!-- <td tal:repeat="assessment python: view.get_articles_part2(desc)">
                     <i>Not available</i>

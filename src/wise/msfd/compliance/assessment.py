@@ -194,6 +194,13 @@ COM_ASSESSMENT = namedtuple(
 )
 
 
+COM_ASSESSMENT_Art13_2016 = namedtuple(
+    'COM_ASSESSMENT_Art13_2016',
+    ('Country', 'Region', 'Article', 'Descriptor', 'AssessmentCriteria', 
+     'Assessment', 'Summary', 'Score', 'Conclusion', 'SourceFile')
+)
+
+
 def get_assessment_data_2012_db(*args):
     """ Returns the assessment for 2012, from COM_Assessments_2012.csv
     """
@@ -246,6 +253,53 @@ def get_assessment_data_2012_db(*args):
         res_final.append(assess_row)
 
     return res_final
+
+
+def get_assessment_data_2016_art1314(*args):
+    """ Returns the assessment for 2016, 
+        from National_assessments_Art_1314_2016.csv
+    """
+
+    country, descriptor, article, region = args
+    descriptor = descriptor.split('.')[0]
+
+    if region == "ANS":
+        region = "ATL"
+
+    res = []
+    csv_f = resource_filename('wise.msfd', 
+        'data/National_assessments_Art_1314_2016.csv')
+
+    with open(csv_f, 'rt') as csvfile:
+        csv_file = csv.reader(csvfile, delimiter=';', quotechar='"')
+
+        for row in csv_file:
+            res.append(row)
+
+    results = []
+
+    for row in res[1:]:
+        assess_row = COM_ASSESSMENT_Art13_2016(*row[:10])
+
+        _country = assess_row.Country.strip()
+        if country != _country:
+            continue
+
+        _desc = assess_row.Descriptor.strip()
+        if descriptor != _desc:
+            continue
+
+        _region = assess_row.Region.strip()
+        if region != _region:
+            continue
+
+        _article = assess_row.Article.strip()
+        if article != _article:
+            continue
+
+        results.append(assess_row)
+
+    return results
 
 
 @db.use_db_session('2018')

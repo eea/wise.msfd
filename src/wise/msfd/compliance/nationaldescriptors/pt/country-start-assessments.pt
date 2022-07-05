@@ -205,7 +205,16 @@
                               title="Not started"
                               tal:attributes="href assessment/absolute_url;">2020</a> 
                         </td>
-                        <td style="text-align: center;" tal:repeat="assessment python: view.get_articles_part2(desc)">
+                        <td class="assessment-status-td" 
+                            tal:define="assessment python: desc['art13']">
+                          <div metal:use-macro="context/wise-macros/macros/assessment-status-bar-2016-2022"></div>
+                        </td>
+                        <td class="assessment-status-td" 
+                            tal:define="assessment python: desc['art14']">
+                          <i style="text-align: center; font-style: italic; font-weight: 300;">Not available</i>
+                        </td>
+                        <td class="assessment-status-td" 
+                            tal:define="assessment python: desc['art18']">
                           <i style="text-align: center; font-style: italic; font-weight: 300;">Not available</i>
                         </td>
                       </tr>
