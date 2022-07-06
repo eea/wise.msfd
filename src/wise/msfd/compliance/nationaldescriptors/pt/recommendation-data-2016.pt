@@ -1,0 +1,41 @@
+<div id="container-assessment-data-2012"
+    tal:define="general_rec options/general_rec;
+      descr_rec options/descr_rec">
+
+    <table class="table table-condensed assessment-data-table article-1314">
+      <tbody>
+        <tal:def tal:define="css_class python: 'as-value as-value-{}'.format('')">
+          <tr>
+            <th style="width: 150px;"></th>
+            <th>Recommendation code</th>
+            <th>Recommendation</th>
+          </tr>
+          <tal:rep tal:repeat="assessment general_rec">
+            <tr tal:define="index python: general_rec.index(assessment)">
+              <th tal:attributes="rowspan python: len(general_rec)"
+                  tal:condition="python: index == 0"
+                  style="width: 150px;"
+                  tal:content="python: assessment.Title">
+                General recommendation
+              </th>
+              <td tal:content="structure python: view.convertWIPT(assessment.RecCode)"></td>
+              <td tal:content="structure python: view.convertWIPT(assessment.Recommendation)"></td>
+            </tr>
+          </tal:rep>
+          <tal:rep tal:repeat="assessment descr_rec">
+            <tr tal:define="index python: descr_rec.index(assessment)">
+              <th tal:attributes="rowspan python: len(descr_rec)"
+                  tal:condition="python: index == 0"
+                  style="width: 150px;"
+                  tal:content="python: assessment.Title">
+                General recommendation
+              </th>
+              <td tal:content="structure python: view.convertWIPT(assessment.RecCode)"></td>
+              <td tal:content="structure python: view.convertWIPT(assessment.Recommendation)"></td>
+            </tr>
+          </tal:rep>
+        </tal:def>
+      </tbody>
+    </table>
+
+</div>

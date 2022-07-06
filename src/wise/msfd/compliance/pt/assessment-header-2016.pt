@@ -1,0 +1,20 @@
+<div>
+  <table class="table table-condensed assessment-data-table assessment-header article-1314">
+    <tr>
+      <th style="width: 150px;">Report by</th>
+      <td tal:content="structure options/assessors"/>
+    </tr>
+    <tr>
+      <th>Report date</th>
+      <td tal:content="options/assess_date"/>
+    </tr>
+    <tr>
+      <th>Report access</th>
+      <td>
+        <a tal:content="options/report_access"
+            tal:attributes="href options/report_access"></a>
+      </td>
+    </tr>
+  </table>
+
+</div>

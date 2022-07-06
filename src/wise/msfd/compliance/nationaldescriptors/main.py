@@ -24,6 +24,7 @@ from wise.msfd.compliance.assessment import (ANSWERS_COLOR_TABLE,
                                              AssessmentDataMixin,
                                              get_assessment_data_2012_db,
                                              get_assessment_data_2016_art1314,
+                                             get_recommendation_data_2016_art1314,
                                              filter_assessment_data_2012)
 from wise.msfd.compliance.base import (
     NAT_DESC_QUESTIONS, is_row_relevant_for_descriptor)
@@ -915,8 +916,9 @@ class NationalDescriptorArticleView2012(NationalDescriptorArticleView):
 class NationalDescriptorArticleView2016(NationalDescriptorArticleView):
     """ NationalDescriptorArticleView2016 """
 
-    assessment_header_template = Template('../pt/assessment-header.pt')
+    assessment_header_template = Template('../pt/assessment-header-2016.pt')
     assessment_data_2012_tpl = Template('./pt/assessment-data-2016.pt')
+    recommendations_template = Template('./pt/recommendation-data-2016.pt')
 
     @property
     def title(self):
@@ -929,6 +931,16 @@ class NationalDescriptorArticleView2016(NationalDescriptorArticleView):
 
     def convertWIPT(self, text):
         return convertWebIntelligentPlainTextToHtml(text)
+
+    def get_conclusion_color(self, score):
+        try:
+            score = int(score)
+        except:
+            pass
+
+        conclusion_color = CONCLUSION_COLOR_TABLE.get(score, 0)
+
+        return conclusion_color
 
     def __call__(self):
         alsoProvides(self.request, IDisableCSRFProtection)
@@ -944,31 +956,51 @@ class NationalDescriptorArticleView2016(NationalDescriptorArticleView):
                 self.country_region_code
             )
 
-            import pdb; pdb.set_trace()
+            # import pdb; pdb.set_trace()
 
             self.assessment_data_2016 = self.assessment_data_2012_tpl(
                 data=assessments_2012
             )
-            report_by, assessors, assess_date, source_file = [
-                'Not found'] * 3 + [('Not found', '')]
+            assessors = 'Milieu'
+            assess_date = '2018-04-13'
+            report_access = assessments_2012[0].SourceFile
 
         except:
             logger.exception("Could not get assessment data for 2012")
             self.assessment_data_2012 = ''
             score_2012 = 0
-            report_by, assessors, assess_date, source_file = [
-                'Not found'] * 3 + [('Not found', '')]
+            assessors = 'Milieu'
+            assess_date = '2018-04-13'
+
+        # Recommendations
+        recommendations = get_recommendation_data_2016_art1314(
+            self.country_code,
+            self.descriptor
+        )
+        general_rec = []
+        descr_rec = []
+        for rec in recommendations:
+            if rec.Descriptors == 'General':
+                general_rec.append(rec)
+            else:
+                descr_rec.append(rec)
+
+        self.recommendations_data_2016 = self.recommendations_template(
+            general_rec=general_rec,
+            descr_rec=descr_rec
+        )
+        
+        self.recommendations_header_2016 = self.assessment_header_template(
+            assessors=assessors,
+            assess_date='2018-07-31',
+            report_access='https://eur-lex.europa.eu/legal-content/PL/TXT/?uri=CELEX:52018SC0393'
+        )
 
         # Assessment header 2012
-
         self.assessment_header_2016 = self.assessment_header_template(
-            report_by=report_by,
-            assessor_list=[],
             assessors=assessors,
             assess_date=assess_date,
-            source_file=source_file,
-            show_edit_assessors=False,
-            show_file_version=False,
+            report_access=report_access
         )
 
         # score_2012 = score_2012

@@ -46,7 +46,7 @@
             <ul>
               <li>
                 <a
-                  tal:attributes="href python: context.absolute_url() + '/@@edit-assessment-data-2018'"
+                  tal:attributes="href python: context.absolute_url() + '/@@edit-assessment-data-2022'"
                   target="_blank">
                   <i class="glyphicon glyphicon-edit"></i> Assessment
                 </a>
@@ -77,10 +77,13 @@
               <div tal:replace="structure view/assessment_header_2016"></div>
               <div tal:replace="structure view/assessment_data_2016"></div>
             </div>
-            <h3 id="assessment-2012">2016 Recommendations</h3>
-            <div class="ast-header-data">
-              <div tal:replace="structure view/recommendations_data_2016"></div>
-            </div>
+            <tal:cond tal:condition="python: view.article == 'Art13'">
+              <h3 id="assessment-2012">2016 Recommendations</h3>
+              <div class="ast-header-data">
+                <div tal:replace="structure view/recommendations_header_2016"></div>
+                <div tal:replace="structure view/recommendations_data_2016"></div>
+              </div>
+            </tal:cond>
           </div>
 
         </div>

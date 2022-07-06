@@ -201,6 +201,13 @@ COM_ASSESSMENT_Art13_2016 = namedtuple(
 )
 
 
+COM_RECOMMENDATION_Art13_2016 = namedtuple(
+    'COM_RECOMMENDATION_Art13_2016',
+    ('Title', 'RecCode', 'Recommendation', 'MSRegion', 'Descriptors', 
+     'ReportURL', 'Comments')
+)
+
+
 def get_assessment_data_2012_db(*args):
     """ Returns the assessment for 2012, from COM_Assessments_2012.csv
     """
@@ -296,6 +303,46 @@ def get_assessment_data_2016_art1314(*args):
         _article = assess_row.Article.strip()
         if article != _article:
             continue
+
+        results.append(assess_row)
+
+    return results
+
+
+def get_recommendation_data_2016_art1314(*args):
+    """ Returns the recommendation for 2016, 
+        from Recommendations_Art_13_2016.csv
+    """
+
+    country, descriptor = args
+    descriptor = descriptor.split('.')[0]
+
+    res = []
+    csv_f = resource_filename('wise.msfd', 
+        'data/Recommendations_Art_13_2016.csv')
+
+    with open(csv_f, 'rt') as csvfile:
+        csv_file = csv.reader(csvfile, delimiter=';', quotechar='"')
+
+        for row in csv_file:
+            res.append(row)
+
+    results = []
+
+    for row in res[1:]:
+        _title = (row[3].strip() == 'General' and 'General recommendations' 
+                  or 'Descriptor recommendations')
+        _row = [_title] + row[:6]
+        assess_row = COM_RECOMMENDATION_Art13_2016(*_row)
+
+        _country = assess_row.MSRegion.strip()
+        if country != _country:
+            continue
+
+        _desc = assess_row.Descriptors.strip().split(',')
+        if descriptor not in _desc:
+            if 'General' not in _desc:
+                continue
 
         results.append(assess_row)
 
