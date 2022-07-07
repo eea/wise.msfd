@@ -1,8 +1,35 @@
 <div>
   <table class="table table-condensed assessment-data-table assessment-header article-1314">
     <tr>
-      <th style="width: 150px;">Report by</th>
-      <td tal:content="structure options/assessors"/>
+      <th style="width: 150px;">Report type</th>
+      <td tal:content="structure options/report_type"/>
+    </tr>
+    <tr>
+      <th>MSFD Article</th>
+      <td tal:content="structure options/msfd_article"/>
+    </tr>
+    <tr>
+      <th>GES Descriptor</th>
+      <td tal:content="structure options/ges_descriptor"/>
+    </tr>
+    <tr>
+      <th>Report on MS</th>
+      <td tal:content="structure options/report_on_ms"/>
+    </tr>
+    <tr>
+      <th>Region/Subregion</th>
+      <td tal:content="structure options/region_subregion"/>
+    </tr>
+    <tr>
+      <th>Based on MS report</th>
+      <td>
+        <a tal:content="options/based_on_report"
+            tal:attributes="href options/based_on_report"></a>
+      </td>
+    </tr>
+    <tr>
+      <th>Report by</th>
+      <td tal:content="structure options/report_by"/>
     </tr>
     <tr>
       <th>Report date</th>

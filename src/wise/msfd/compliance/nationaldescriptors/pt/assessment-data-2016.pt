@@ -1,5 +1,6 @@
 <div id="container-assessment-data-2012"
-    tal:define="assessments options/data">
+    tal:define="assessments options/data;
+        assessments_overall options/data_overall">
 
     <table class="table table-condensed assessment-data-table article-1314">
       <tbody>
@@ -23,6 +24,14 @@
               <div tal:attributes="class css_class"
                   tal:content="python: assessment.Conclusion"></div>
             </td>
+          </tr>
+        </tal:rep>
+        <tal:rep tal:repeat="assessment_overall assessments_overall">
+          <tr>
+            <th style="width: 150px;">
+              Overall conclusions
+            </th>
+            <td colspan="4" tal:content="python: view.convertWIPT(assessment_overall.Summary)">Conlcusion</td>
           </tr>
         </tal:rep>
       </tbody>

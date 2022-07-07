@@ -25,6 +25,7 @@ from wise.msfd.compliance.assessment import (ANSWERS_COLOR_TABLE,
                                              get_assessment_data_2012_db,
                                              get_assessment_data_2016_art1314,
                                              get_recommendation_data_2016_art1314,
+                                             get_assessment_data_2016_art1314_overall,
                                              filter_assessment_data_2012)
 from wise.msfd.compliance.base import (
     NAT_DESC_QUESTIONS, is_row_relevant_for_descriptor)
@@ -948,34 +949,43 @@ class NationalDescriptorArticleView2016(NationalDescriptorArticleView):
         # Assessment data 2012
         # country_name = self._country_folder.title
 
+        report_type = 'Commission assessment of MS report'
+        msfd_article = 'Art. 16 assessment of Art. 13 (2016)'
+        ges_descriptor = self.descriptor_obj.title
+        report_on_ms = self.country_name
+        region_subregion = self.country_region_name
+        based_on_report = ('https://cdr.eionet.europa.eu/{}/eu/msfd8910'
+            .format(self.country_code.lower()))
+        report_by = 'Milieu'
+        report_date = '2018-04-13'
+
         try:
             assessments_2012 = get_assessment_data_2016_art1314(
                 self.country_code,
-                self.descriptor,
+                self.descriptor_title,
                 self.article.replace('Art', ''),
                 self.country_region_code
             )
-
-            # import pdb; pdb.set_trace()
-
-            self.assessment_data_2016 = self.assessment_data_2012_tpl(
-                data=assessments_2012
+            assessments_overall = get_assessment_data_2016_art1314_overall(
+                self.country_code,
+                self.descriptor_title,
+                self.country_region_code
             )
-            assessors = 'Milieu'
-            assess_date = '2018-04-13'
+            self.assessment_data_2016 = self.assessment_data_2012_tpl(
+                data=assessments_2012,
+                data_overall=assessments_overall
+            )
             report_access = assessments_2012[0].SourceFile
 
         except:
             logger.exception("Could not get assessment data for 2012")
-            self.assessment_data_2012 = ''
-            score_2012 = 0
-            assessors = 'Milieu'
-            assess_date = '2018-04-13'
+            self.assessment_data_2016 = 'Not found'
+            report_access = 'Not found'
 
         # Recommendations
         recommendations = get_recommendation_data_2016_art1314(
             self.country_code,
-            self.descriptor
+            self.descriptor_title
         )
         general_rec = []
         descr_rec = []
@@ -990,21 +1000,31 @@ class NationalDescriptorArticleView2016(NationalDescriptorArticleView):
             descr_rec=descr_rec
         )
         
+        # Recommendation header
         self.recommendations_header_2016 = self.assessment_header_template(
-            assessors=assessors,
+            report_type='Commission recommendations to MS',
+            msfd_article=msfd_article,
+            ges_descriptor=ges_descriptor,
+            report_on_ms=report_on_ms,
+            region_subregion=region_subregion,
+            based_on_report=based_on_report,
+            report_by='Commission',
             assess_date='2018-07-31',
             report_access='https://eur-lex.europa.eu/legal-content/PL/TXT/?uri=CELEX:52018SC0393'
         )
 
-        # Assessment header 2012
+        # Assessment header 2016
         self.assessment_header_2016 = self.assessment_header_template(
-            assessors=assessors,
-            assess_date=assess_date,
+            report_type=report_type,
+            msfd_article=msfd_article,
+            ges_descriptor=ges_descriptor,
+            report_on_ms=report_on_ms,
+            region_subregion=region_subregion,
+            based_on_report=based_on_report,         
+            report_by=report_by,
+            assess_date=report_date,
             report_access=report_access
         )
-
-        # score_2012 = score_2012
-        # conclusion_2012_color = CONCLUSION_COLOR_TABLE.get(score_2012, 0)
 
         return self.index()
 

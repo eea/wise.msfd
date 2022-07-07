@@ -4,7 +4,7 @@ import logging
 import re
 from collections import namedtuple
 from eea.cache import cache
-from sqlalchemy import or_
+from sqlalchemy import desc, or_
 
 from pkg_resources import resource_filename
 from plone.api.portal import get_tool
@@ -207,6 +207,11 @@ COM_RECOMMENDATION_Art13_2016 = namedtuple(
      'ReportURL', 'Comments')
 )
 
+COM_ASSESSMENT_Art13_2016_Overall = namedtuple(
+    'COM_ASSESSMENT_Art13_2016_Overall',
+    ('Country', 'Region', 'Article', 'Descriptors', 'AssessCrit', 'Summary')
+)
+
 
 def get_assessment_data_2012_db(*args):
     """ Returns the assessment for 2012, from COM_Assessments_2012.csv
@@ -262,16 +267,25 @@ def get_assessment_data_2012_db(*args):
     return res_final
 
 
+def _get_csv_region(region):
+    if region == "ANS":
+        region = "ATL"
+
+    if region in ("MAL", ):
+        region = "MED"
+
+    return region
+
 def get_assessment_data_2016_art1314(*args):
     """ Returns the assessment for 2016, 
         from National_assessments_Art_1314_2016.csv
     """
 
     country, descriptor, article, region = args
-    descriptor = descriptor.split('.')[0]
+    if descriptor == 'D1-P':
+        descriptor = 'D1 Pelagic'
 
-    if region == "ANS":
-        region = "ATL"
+    region = _get_csv_region(region)
 
     res = []
     csv_f = resource_filename('wise.msfd', 
@@ -309,13 +323,31 @@ def get_assessment_data_2016_art1314(*args):
     return results
 
 
+def _get_csv_descriptor(descriptor):
+    descriptor_mapping = {
+        "D1-B": "D1, 4 – Birds", # birds
+        "D1-M": "D1, 4 – Mammals and reptiles", # mammals
+        "D1-R": "D1, 4 – Mammals and reptiles", # reptiles
+        "D1-F": "D1, 4 – Fish and cephalopods", # fish
+        "D1-C": "D1, 4 – Fish and cephalopods", # cephalopods
+        "D1-P": ("D1, 4 – Water column habitats", 
+                 "D1, 4, 6 – Seabed habitats"), # pelagic habitats
+    }
+
+    if descriptor in descriptor_mapping:
+        descriptor = descriptor_mapping[descriptor]
+
+    return descriptor
+
+
 def get_recommendation_data_2016_art1314(*args):
     """ Returns the recommendation for 2016, 
         from Recommendations_Art_13_2016.csv
     """
 
     country, descriptor = args
-    descriptor = descriptor.split('.')[0]
+
+    descriptor = _get_csv_descriptor(descriptor)
 
     res = []
     csv_f = resource_filename('wise.msfd', 
@@ -338,11 +370,73 @@ def get_recommendation_data_2016_art1314(*args):
         _country = assess_row.MSRegion.strip()
         if country != _country:
             continue
+        
+        if '/' in assess_row.Descriptors:
+            _desc = assess_row.Descriptors.strip().split('/')
+        elif '–' in assess_row.Descriptors:
+            _desc = [assess_row.Descriptors]
+        else:
+            _desc = assess_row.Descriptors.strip().split(', ')
 
-        _desc = assess_row.Descriptors.strip().split(',')
-        if descriptor not in _desc:
-            if 'General' not in _desc:
+        if isinstance(descriptor, (list, tuple)):
+            if not set(descriptor).intersection(set(_desc)):
                 continue
+        else:
+            if descriptor not in _desc:
+                if 'General' not in _desc:
+                    continue
+
+        results.append(assess_row)
+
+    return results
+
+
+def get_assessment_data_2016_art1314_overall(*args):
+    """ Returns the overall asssesment for 2016, 
+        from National_assessments_Art_13_2016_overall.csv
+    """
+
+    country, descriptor, region = args
+    descriptor = _get_csv_descriptor(descriptor)
+    region = _get_csv_region(region)
+
+    res = []
+    csv_f = resource_filename('wise.msfd', 
+        'data/National_assessments_Art_13_2016_overall.csv')
+
+    with open(csv_f, 'rt') as csvfile:
+        csv_file = csv.reader(csvfile, delimiter=';', quotechar='"')
+
+        for row in csv_file:
+            res.append(row)
+
+    results = []
+
+    for row in res[1:]:
+        assess_row = COM_ASSESSMENT_Art13_2016_Overall(*row[:6])
+
+        _country = assess_row.Country.strip()
+        if country != _country:
+            continue
+        
+        _region = assess_row.Region.strip()
+        if region != _region:
+            continue
+        
+        if '/' in assess_row.Descriptors:
+            _desc = assess_row.Descriptors.strip().split('/')
+        elif '–' in assess_row.Descriptors:
+            _desc = [assess_row.Descriptors]
+        else:
+            _desc = assess_row.Descriptors.strip().split(', ')
+
+        if isinstance(descriptor, (list, tuple)):
+            if not set(descriptor).intersection(set(_desc)):
+                continue
+        else:
+            if descriptor not in _desc:
+                if 'General' not in _desc:
+                    continue
 
         results.append(assess_row)
 
