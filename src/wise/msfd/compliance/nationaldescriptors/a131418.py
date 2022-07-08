@@ -26,17 +26,12 @@ NSMAP = {
 }
 
 
-SUBEMPTY = fromstring('<SubProgramme/>')
-FIELD = namedtuple("Field", ["group_name", "name", "title",
-                             "article", "section", "setlevel"])
-
-
 def xp(xpath, node):
     return node.xpath(xpath, namespaces=NSMAP)
 
 
 class A13Item(Item):
-    def __init__(self, context, measure_node, mru):
+    def __init__(self, context, measure_node, mru, further_info):
 
         super(A13Item, self).__init__([])
         
@@ -44,16 +39,22 @@ class A13Item(Item):
         self.context = context
         self.mnode = measure_node
         self.mrelax = RelaxedNodeEmpty(measure_node, NSMAP)
+        self.further_info = None
+
+        if further_info:
+            self.further_info = RelaxedNodeEmpty(further_info[0], NSMAP)
+
 
         attrs = [
             ('MarineUnitID', self.mru),
-            ('Features', self.default),
-            ('KTM', self.ktm),
             ('UniqueCode', self.unique_code),
             ('Name', self.measure_name),
             ('LinkToExistingPolicies', self.link_existing_policies),
+            ('KTM', self.ktm),
             ('RelevantGESDescriptors', self.relevant_ges_descr),
             ('RelevantFeaturesFromMSFDAnnexIII', self.relevant_features),
+            ('SpatialScopeGeographicZones', self.spatial_scope),
+            ('Further information', self.summary_report),          
         ]
 
         for title, getter in attrs:
@@ -90,6 +91,32 @@ class A13Item(Item):
         
         return ItemListFiltered(items)
 
+    def spatial_scope(self):
+        items = self.mrelax['SpatialScopeGeographicZones/text()'] 
+
+        if items:
+            return 'Reported'
+
+        return ''
+    
+    def summary_report(self):
+        items = self.further_info['*']
+        template = u'<a style="cursor: help;" target="_blank" href="{}">{}</a>'
+        res = []
+
+        for node in items:
+            text = node.text
+
+            if not text:
+                continue
+            
+            # name = "{}: {}".format(node.tag, text.split('/')[-1])
+            val = template.format(text, text.split('/')[-1])
+
+            res.append(val)
+
+        return ItemListFiltered(res)
+
 
 class Article13(BaseArticle2012):
     """ Article 13 implementation for 2016 year
@@ -119,7 +146,7 @@ class Article13(BaseArticle2012):
 
     @property
     def sort_order(self):
-        order = ('MarineUnitID', 'KTM', 'UniqueCode')
+        order = ('MarineUnitID', 'UniqueCode', 'KTM')
 
         return order
 
@@ -147,8 +174,8 @@ class Article13(BaseArticle2012):
 
         return root
 
-    def _make_item(self, measure_node, mru):
-        item = A13Item(self, measure_node, mru)
+    def _make_item(self, measure_node, mru, further_info):
+        item = A13Item(self, measure_node, mru, further_info)
 
         return item
 
@@ -219,6 +246,7 @@ class Article13(BaseArticle2012):
 
         nodes = xp('//Measures', root)
         mru = xp('//MarineUnitID', root)
+        further_info = xp('//FurtherInformation', root)
         items = []
 
         for node in nodes:
@@ -233,7 +261,7 @@ class Article13(BaseArticle2012):
             if not all_ids.intersection(ges_crit):
                 continue
 
-            item = self._make_item(node, mru)
+            item = self._make_item(node, mru, further_info)
             items.append(item)
 
         self.rows = []
@@ -251,7 +279,7 @@ class Article13(BaseArticle2012):
 
 
 class A14Item(Item):
-    def __init__(self, context, exception_node, mru):
+    def __init__(self, context, exception_node, mru, further_info):
 
         super(A14Item, self).__init__([])
         
@@ -259,16 +287,20 @@ class A14Item(Item):
         self.context = context
         self.mnode = exception_node
         self.mrelax = RelaxedNodeEmpty(exception_node, NSMAP)
+        self.further_info = None
+
+        if further_info:
+            self.further_info = RelaxedNodeEmpty(further_info[0], NSMAP)
 
         attrs = [
             ('MarineUnitID', self.mru),
             ('UniqueCode', self.unique_code),
             ('Name', self.measure_name),
+            ('KTM', self.ktm),
+            ('RelevantGESDescriptors', self.relevant_ges_descr),
             ('RelevantFeaturesFromMSFDAnnexIII', self.relevant_features),
             ('SpatialScopeGeographicZones', self.spatial_scope),
-            ('RelevantGESDescriptors', self.relevant_ges_descr),
-            ('KTM', self.ktm),
-            ('SummaryReport', self.default),          
+            ('SummaryReport', self.summary_report),          
         ]
 
         for title, getter in attrs:
@@ -308,7 +340,28 @@ class A14Item(Item):
     def spatial_scope(self):
         items = self.mrelax['SpatialScopeGeographicZones/text()'] 
         
+        if not items:
+            return 'Not reported'
+
         return ItemListFiltered(items)
+
+    def summary_report(self):
+        items = self.further_info['*']
+        template = u'<a style="cursor: help;" target="_blank" href="{}">{}</a>'
+        res = []
+
+        for node in items:
+            text = node.text
+
+            if not text:
+                continue
+            
+            # name = "{}: {}".format(node.tag, text.split('/')[-1])
+            val = template.format(text, text.split('/')[-1])
+
+            res.append(val)
+
+        return ItemListFiltered(res)
 
 
 class Article14(Article13):
@@ -328,8 +381,8 @@ class Article14(Article13):
 
         return order
 
-    def _make_item(self, exception_node, mru):
-        item = A14Item(self, exception_node, mru)
+    def _make_item(self, exception_node, mru, further_info):
+        item = A14Item(self, exception_node, mru, further_info)
 
         return item
 
@@ -350,6 +403,7 @@ class Article14(Article13):
 
         nodes = xp('//Exceptions', root)
         mru = xp('//MarineUnitID', root)
+        further_info = xp('//FurtherInformation', root)
         items = []
 
         for node in nodes:
@@ -364,7 +418,7 @@ class Article14(Article13):
             if not all_ids.intersection(ges_crit):
                 continue
 
-            item = self._make_item(node, mru)
+            item = self._make_item(node, mru, further_info)
             items.append(item)
 
         self.rows = []

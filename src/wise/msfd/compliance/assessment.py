@@ -347,7 +347,7 @@ def get_recommendation_data_2016_art1314(*args):
 
     country, descriptor = args
 
-    descriptor = _get_csv_descriptor(descriptor)
+    descriptor_alt = _get_csv_descriptor(descriptor)
 
     res = []
     csv_f = resource_filename('wise.msfd', 
@@ -378,8 +378,9 @@ def get_recommendation_data_2016_art1314(*args):
         else:
             _desc = assess_row.Descriptors.strip().split(', ')
 
-        if isinstance(descriptor, (list, tuple)):
-            if not set(descriptor).intersection(set(_desc)):
+        if isinstance(descriptor_alt, (list, tuple)):
+            if (not set(descriptor_alt).intersection(set(_desc)) and
+                    descriptor not in _desc):
                 continue
         else:
             if descriptor not in _desc:

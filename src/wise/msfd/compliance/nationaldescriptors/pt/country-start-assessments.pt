@@ -211,7 +211,7 @@
                         </td>
                         <td class="assessment-status-td" 
                             tal:define="assessment python: desc['art14']">
-                          <i style="text-align: center; font-style: italic; font-weight: 300;">Not available</i>
+                          <div metal:use-macro="context/wise-macros/macros/assessment-status-bar-2016-2022"></div>
                         </td>
                         <td class="assessment-status-td" 
                             tal:define="assessment python: desc['art18']">
