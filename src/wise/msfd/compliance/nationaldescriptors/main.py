@@ -989,11 +989,17 @@ class NationalDescriptorArticleView2016(NationalDescriptorArticleView):
         )
         general_rec = []
         descr_rec = []
+
         for rec in recommendations:
-            if rec.Descriptors == 'General':
-                general_rec.append(rec)
-            else:
-                descr_rec.append(rec)
+            if self.article == 'Art13':
+                if rec.Descriptors == 'General':
+                    general_rec.append(rec)
+                else:
+                    descr_rec.append(rec)
+
+            if self.article == 'Art14':
+                if rec.Descriptors == 'Exceptions':
+                    general_rec.append(rec)
 
         self.recommendations_data_2016 = self.recommendations_template(
             general_rec=general_rec,
@@ -1001,17 +1007,20 @@ class NationalDescriptorArticleView2016(NationalDescriptorArticleView):
         )
         
         # Recommendation header
-        self.recommendations_header_2016 = self.assessment_header_template(
-            report_type='Commission recommendations to MS',
-            msfd_article=msfd_article,
-            ges_descriptor=ges_descriptor,
-            report_on_ms=report_on_ms,
-            region_subregion=region_subregion,
-            based_on_report=based_on_report,
-            report_by='Commission',
-            assess_date='2018-07-31',
-            report_access='https://eur-lex.europa.eu/legal-content/PL/TXT/?uri=CELEX:52018SC0393'
-        )
+        if descr_rec or general_rec:
+            self.recommendations_header_2016 = self.assessment_header_template(
+                report_type='Commission recommendations to MS',
+                msfd_article=msfd_article,
+                ges_descriptor=ges_descriptor,
+                report_on_ms=report_on_ms,
+                region_subregion=region_subregion,
+                based_on_report=based_on_report,
+                report_by='Commission',
+                assess_date='2018-07-31',
+                report_access='https://eur-lex.europa.eu/legal-content/PL/TXT/?uri=CELEX:52018SC0393'
+            )
+        else:
+            self.recommendations_header_2016 = ''
 
         # Assessment header 2016
         self.assessment_header_2016 = self.assessment_header_template(

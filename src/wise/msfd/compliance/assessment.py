@@ -362,8 +362,15 @@ def get_recommendation_data_2016_art1314(*args):
     results = []
 
     for row in res[1:]:
-        _title = (row[3].strip() == 'General' and 'General recommendations' 
-                  or 'Descriptor recommendations')
+        row_title = row[3].strip()
+        
+        if row_title == 'General':
+            _title = 'General recommendations'
+        elif row_title == 'Exceptions':
+            _title = 'Recommendations on exceptions'
+        else:
+            _title = 'Descriptor recommendations'
+
         _row = [_title] + row[:6]
         assess_row = COM_RECOMMENDATION_Art13_2016(*_row)
 
@@ -384,7 +391,7 @@ def get_recommendation_data_2016_art1314(*args):
                 continue
         else:
             if descriptor not in _desc:
-                if 'General' not in _desc:
+                if 'General' not in _desc and 'Exceptions' not in _desc:
                     continue
 
         results.append(assess_row)

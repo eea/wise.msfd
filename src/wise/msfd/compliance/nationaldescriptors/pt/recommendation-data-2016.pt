@@ -2,7 +2,12 @@
     tal:define="general_rec options/general_rec;
       descr_rec options/descr_rec">
 
-    <table class="table table-condensed assessment-data-table article-1314">
+    <div tal:condition="python: not (general_rec or descr_rec)">
+      No recommendations for this descriptor.
+    </div>
+
+    <table tal:condition="python: general_rec or descr_rec"
+        class="table table-condensed assessment-data-table article-1314">
       <tbody>
         <tal:def tal:define="css_class python: 'as-value as-value-{}'.format('')">
           <tr>
