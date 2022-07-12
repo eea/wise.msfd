@@ -325,11 +325,11 @@ def get_assessment_data_2016_art1314(*args):
 
 def _get_csv_descriptor(descriptor):
     descriptor_mapping = {
-        "D1-B": "D1, 4 – Birds", # birds
-        "D1-M": "D1, 4 – Mammals and reptiles", # mammals
-        "D1-R": "D1, 4 – Mammals and reptiles", # reptiles
-        "D1-F": "D1, 4 – Fish and cephalopods", # fish
-        "D1-C": "D1, 4 – Fish and cephalopods", # cephalopods
+        "D1-B": ("D1, 4 – Birds",), # birds
+        "D1-M": ("D1, 4 – Mammals and reptiles",), # mammals
+        "D1-R": ("D1, 4 – Mammals and reptiles",), # reptiles
+        "D1-F": ("D1, 4 – Fish and cephalopods",), # fish
+        "D1-C": ("D1, 4 – Fish and cephalopods",), # cephalopods
         "D1-P": ("D1, 4 – Water column habitats", 
                  "D1, 4, 6 – Seabed habitats"), # pelagic habitats
     }
@@ -384,11 +384,12 @@ def get_recommendation_data_2016_art1314(*args):
             _desc = [assess_row.Descriptors]
         else:
             _desc = assess_row.Descriptors.strip().split(', ')
-
+        
+        # this is too complicated
         if isinstance(descriptor_alt, (list, tuple)):
-            if (not set(descriptor_alt).intersection(set(_desc)) and
-                    descriptor not in _desc):
-                continue
+            if (not set(descriptor_alt).intersection(set(_desc)) and descriptor not in _desc):
+                if 'General' not in _desc and 'Exceptions' not in _desc:
+                    continue
         else:
             if descriptor not in _desc:
                 if 'General' not in _desc and 'Exceptions' not in _desc:

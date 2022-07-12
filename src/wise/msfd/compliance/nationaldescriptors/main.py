@@ -994,7 +994,7 @@ class NationalDescriptorArticleView2016(NationalDescriptorArticleView):
             if self.article == 'Art13':
                 if rec.Descriptors == 'General':
                     general_rec.append(rec)
-                else:
+                elif rec.Descriptors != 'Exceptions':
                     descr_rec.append(rec)
 
             if self.article == 'Art14':
