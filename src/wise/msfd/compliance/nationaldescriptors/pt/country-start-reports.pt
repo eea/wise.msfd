@@ -39,7 +39,7 @@
                   tal:attributes="display-text python: 'Show all {} reports'.format(len(text_reports))"
                 class="assessment-read-more">Show all reports</span>
           </div>
-          <div class="assessment-dd-list-5">
+          <!-- <div class="assessment-dd-list-5">
             <ul style="margin: 0;">
               <li tal:repeat="text_report python: text_reports[:5]">
                 <a tal:attributes="href python: text_report[1];
@@ -59,7 +59,39 @@
                     tal:content="python: text_report[0]">FileName1</a>
               </li>
             </ul>
-          </div>
+          </div> -->
+          <table style="margin: 0;"
+              class="table as-table-overview table-striped table-country-start text-reports-table">
+            <tr class="article-title">
+              <th style="text-align: left; width: 50%;">Filename</th>
+              <th style="text-align: left">Report date</th>
+            </tr>
+            <tal:rep tal:repeat="text_report python: text_reports[:5]">
+              <tr>
+                <td>
+                  <a tal:attributes="href python: text_report[1];
+                      title python: 'Reported on: ' + text_report[2]"
+                    target="_blank"
+                    tal:content="python: text_report[0]">FileName1</a>
+                </td>
+                <td tal:content="python: text_report[2]"></td>
+              </tr>
+            </tal:rep>
+          </table>
+          <table style="margin: 0;"
+              class="table as-table-overview table-striped table-country-start text-reports-table assessment-dd-list">
+            <tal:rep tal:repeat="text_report python: text_reports[5:]">
+              <tr>
+                <td style="width: 50%;">
+                  <a tal:attributes="href python: text_report[1];
+                      title python: 'Reported on: ' + text_report[2]"
+                    target="_blank"
+                    tal:content="python: text_report[0]">FileName1</a>
+                </td>
+                <td tal:content="python: text_report[2]"></td>
+              </tr>
+            </tal:rep>
+          </table>
           <div tal:condition="python: not text_reports">
             <p>Not reported</p>
           </div>

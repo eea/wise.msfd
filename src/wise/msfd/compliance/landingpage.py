@@ -546,7 +546,10 @@ class BaseLandingPageRow(BaseComplianceView, AssessmentDataMixin,
 
     def __init__(self, context, request, year_def):
         super(BaseLandingPageRow, self).__init__(context, request)
-
+        
+        assessment_path = '/marine/assessment-module/national-descriptors-assessments/be/assessments'
+        assessment_folder = self.get_object_by_path(assessment_path)
+        
         data = []
 
         for row in year_def.rows:
@@ -569,7 +572,8 @@ class BaseLandingPageRow(BaseComplianceView, AssessmentDataMixin,
                 report_type = subrow_def.report_type
                 # task_product = subrow_def.task_product
 
-                if permission and not(self.check_permission(permission)):
+                if permission and not(
+                        self.check_permission(permission, assessment_folder)):
                     continue
 
                 _get_method = getattr(self, get_data_method, self._default)

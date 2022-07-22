@@ -968,6 +968,7 @@ if (!Array.prototype.last) {
           : $(this).attr("display-text");
       });
       $this.parents().siblings(".assessment-dd-list").fadeToggle();
+      $this.parents().siblings('.text-reports-table').find(".assessment-dd-list").fadeToggle();
     });
 
     var $scrollBtn = $(".scroll-to-top");
