@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<data>
+  <Art13>
+    <element setlevel="0" name="MarineReportingUnit" label="mrus" convert="inverse_label">Marine reporting units</element>
+    <element name="RegionSubregion">RegionSubregion</element>
+    <element setlevel="1" name="MeasureCode">Measure code</element>
+    <element name="MeasureOldCode">Measure old code</element>
+    <element name="MeasureName" translate="true">Measure name</element>
+    <element name="MeasureDescription" translate="true">Measure description</element>
+    <element name="UpdateType">Update type</element>
+    <element name="MeasureCategory">Measure category</element>
+    <element name="PolicyConventions">Policy conventions</element>
+    <element name="PolicyNational">Policy national</element>
+    <element name="ResponsibleCompetentAuthority">Responsible competent authority</element>
+    <element name="ResponsibleOrganisation">Responsible organisation</element>
+    <element name="CoordinationLevel">Coordination level</element>
+    <element name="RegionalCooperation_countries">Regional cooperation countries</element>
+    <element name="CEA">CEA</element>
+    <element name="CEAreference" convert="anchor">CEA reference</element>
+    <element name="CBA">CBA</element>
+    <element name="CBAreference" convert="anchor">CBA reference</element>
+    <element name="Financing">Financing</element>
+    <element name="SpatialScope">Spatial scope</element>
+    <element name="MeasurePurpose">Measure purpose</element>
+    <element name="Pressures">Pressures</element>
+    <element name="RelevantKTMs">Relevant KTMs</element>
+    <element name="RelevantTargets">Relevant targets</element>
+    <element name="RelatedIndicator">Related indicator</element>
+    <element name="GEScomponent">GEScomponent</element>
+    <element name="Feature">Feature</element>
+    <element name="Element">Element</element>
+    <element name="TemporalScope">Temporal scope</element>
+    <element name="ImplementationStatus">Implementation status</element>
+    <element name="ImplementationDelay">Implementation delay</element>
+    <element name="ProgressDescription">Progress description</element>
+    <element name="ReasonDescription">Reason description</element>
+  </Art13>
+  <Art14>
+    <element name="MarineReportingUnit" label="mrus" convert="csv_ges_labels_inverse_list" separator="; ">Marine reporting units</element>
+    <element name="RegionSubregion">Region subregion</element>
+    <element name="Exception_code">Exception code</element>
+    <element name="ExceptionOldCode">Exception old code</element>
+    <element name="Exception_name">Exception name</element>
+    <element name="ExceptionType">Exception type</element>
+    <element name="ExceptionReason">Exception reason</element>
+    <element name="GESachieved">GES achieved</element>
+    <element name="RelevantPressures">Relevant pressures</element>
+    <element name="RelevantTargets">Relevant targets</element>
+    <element name="GEScomponent">GES component</element>
+    <element name="RelevantFeatures">Relevant features</element>
+    <element name="JustificationDescription" translate="true">Justification description</element>
+    <element name="Spatial_scope_geographic_zones">Spatial scope geographic zones</element>
+    <element name="Mitigation">Mitigation</element>
+    <element name="MeasuresAdHoc">Measures ad hoc</element>
+    <element name="FurtherInformation" translate="true">Further information</element>
+  </Art14>
+</data>

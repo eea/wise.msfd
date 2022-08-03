@@ -440,6 +440,46 @@ class NatDescCountryOverviewReports(NationalDescriptorCountryOverview):
 
         return False
 
+    def _is_report_2018_art13(self, region, desc_id, data=None):
+        if not data:
+            data = self.art13_data
+
+        country_code = self.country_code.upper()
+        region = region.upper()
+        desc_id = desc_id.upper()
+        # descriptor_db = desc_id.replace('D4', 'D4/D1').replace('D6', 'D6/D1')
+        descriptor = get_descriptor(desc_id)
+        all_ids = list(descriptor.all_ids())
+        region_names = [
+            REGIONS[region].replace('&', 'and')
+        ]
+        region_names = [
+            ':' in rname and rname.split(':')[1].strip() or rname
+            for rname in region_names
+        ]
+
+        if desc_id.startswith('D1.'):
+            all_ids.append('D1')
+
+        for row in data:
+            if row.CountryCode != country_code:
+                continue
+            
+            desc_reported = set(row.GEScomponent.split('; '))
+
+            if not desc_reported.intersection(set(all_ids)):
+                continue
+            
+            regions_reported = set(row.RegionSubregion.split('; '))
+
+            if regions_reported.intersection(set(region_names)):
+                return True
+
+        return False
+
+    def _is_report_2018_art14(self, region, desc_id):
+        return self._is_report_2018_art13(region, desc_id, self.art14_data)
+
     def is_report_available_2018(self, region, descriptor, article):
         method_name = '_is_report_2018_' + article
 
@@ -475,6 +515,8 @@ class NatDescCountryOverviewReports(NationalDescriptorCountryOverview):
         self.art9_data = db.get_all_data_from_view_Art9(self.country_code)
         self.art10_data = db.get_all_data_from_view_Art10(self.country_code)
         self.art11_data = db.get_all_data_from_view_art11(self.country_code)
+        self.art13_data = db.get_all_data_from_view_art13(self.country_code)
+        self.art14_data = db.get_all_data_from_view_art14(self.country_code)
 
         return self.index()
 

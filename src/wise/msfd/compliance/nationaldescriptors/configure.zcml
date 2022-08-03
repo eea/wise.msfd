@@ -208,6 +208,15 @@
     permission="zope2.View"
     />
 
+  <!-- view report data for 2022 -->
+  <browser:page
+    for="..interfaces.INationalDescriptorAssessment"
+    name="view-report-data-2022"
+    class=".reportdata.ReportData2022"
+    template="./pt/report-data-view.pt"
+    permission="zope2.View"
+    />
+
   <browser:page
     for="*"
     name="reports-per-descriptor"

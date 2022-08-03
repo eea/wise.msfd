@@ -35,8 +35,8 @@ def simple_itemlist_art11_measures(field, value, lang):
     return ItemList(rows=set(vals))
 
 
-def csv_ges_labels_list(field, value, lang):
-    vals = set(value.split(','))
+def csv_ges_labels_list(field, value, lang, separator=','):
+    vals = set(value.split(separator))
 
     res = []
 
@@ -71,8 +71,8 @@ def ges_component_list(field, value, lang):
     return ItemList(rows=rows)
 
 
-def csv_ges_labels_inverse_list(field, value, lang):
-    vals = set(value.split(','))
+def csv_ges_labels_inverse_list(field, value, lang, separator=','):
+    vals = set(value.split(separator))
 
     res = []
 

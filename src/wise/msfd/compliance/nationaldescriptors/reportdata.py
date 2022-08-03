@@ -1076,7 +1076,9 @@ The data is retrieved from the MSFD2018_production.V_ART11_Strategies database v
 """,
         'Art8esa': """
 The data is retrieved from the MSFD2018_production.V_ART8_ESA_2018 database view.
-"""
+""",
+        'Art13': "To be completed...",
+        'Art14': "To be completed...",
     }
 
     @property
@@ -1087,6 +1089,8 @@ The data is retrieved from the MSFD2018_production.V_ART8_ESA_2018 database view
     Art9 = Template('pt/report-data-multiple-muid.pt')
     Art10 = Template('pt/report-data-multiple-muid.pt')
     Art11 = Template('pt/report-data-multiple-muid.pt')
+    Art13 = Template('pt/report-data-multiple-muid.pt')
+    Art14 = Template('pt/report-data-multiple-muid.pt')
     # Art9 = Template('pt/report-data-single-muid.pt')
 
     subform = None      # used for the snapshot selection form
@@ -1130,7 +1134,7 @@ The data is retrieved from the MSFD2018_production.V_ART8_ESA_2018 database view
         return order_by.get(descr, order_by['default'])
 
     def _get_order_cols_Art10(self):
-        order = ('TargetCode', 'Features', 'Element')
+        order = ('TargetCode', 'Features', 'Element', 'Parameter')
 
         return order
 
@@ -1408,6 +1412,108 @@ The data is retrieved from the MSFD2018_production.V_ART8_ESA_2018 database view
 
         return res
 
+    def get_data_from_view_Art13(self):
+        t = sql2018.t_V_ART13_Measures_2022
+
+        conditions = [
+            t.c.CountryCode == self.country_code,
+        ]
+
+        descriptor = get_descriptor(self.descriptor)
+        all_ids = list(descriptor.all_ids())
+
+        if self.descriptor.startswith('D1.'):
+            all_ids.append('D1')
+
+        count, q = db.get_all_records_ordered(
+            t,
+            ('MeasureCode', ),
+            *conditions
+        )
+
+        if hasattr(self._countryregion_folder, '_subregions'):
+            regions = self._countryregion_folder._subregions
+        else:
+            regions = [self.country_region_code]
+
+        # filter data by regions and descriptor
+        region_names = [
+            REGIONS[code].replace('&', 'and')
+            for code in regions
+        ]
+        region_names = [
+            ':' in rname and rname.split(':')[1].strip() or rname
+            for rname in region_names
+        ]
+
+        res = []
+
+        for row in q:
+            regions_reported = set(row.RegionSubregion.split(';'))
+
+            if not regions_reported.intersection(set(region_names)):
+                continue
+            
+            desc_reported = set(row.GEScomponent.split('; '))
+
+            if not desc_reported.intersection(set(all_ids)):
+                continue
+
+            res.append(row)
+
+        return res
+        
+    def get_data_from_view_Art14(self):
+        t = sql2018.t_V_ART14_Exceptions_2022
+
+        conditions = [
+            t.c.CountryCode == self.country_code,
+        ]
+
+        descriptor = get_descriptor(self.descriptor)
+        all_ids = list(descriptor.all_ids())
+
+        if self.descriptor.startswith('D1.'):
+            all_ids.append('D1')
+
+        count, q = db.get_all_records(
+            t,
+            *conditions,
+            order_by='Exception_code'
+        )
+
+        if hasattr(self._countryregion_folder, '_subregions'):
+            regions = self._countryregion_folder._subregions
+        else:
+            regions = [self.country_region_code]
+
+        # filter data by regions and descriptor
+        region_names = [
+            REGIONS[code].replace('&', 'and')
+            for code in regions
+        ]
+        region_names = [
+            ':' in rname and rname.split(':')[1].strip() or rname
+            for rname in region_names
+        ]
+
+        res = []
+
+        for row in q:
+            regions_reported = set(row.RegionSubregion.split(';'))
+
+            if not regions_reported.intersection(set(region_names)):
+                continue
+            
+            desc_reported = set(row.GEScomponent.split('; '))
+
+            if not desc_reported.intersection(set(all_ids)):
+                continue
+
+            res.append(row)
+
+        return res
+
     def get_data_from_view(self, article):
         data = getattr(self, 'get_data_from_view_' + article)()
 
@@ -1511,6 +1617,17 @@ The data is retrieved from the MSFD2018_production.V_ART8_ESA_2018 database view
 
                 data_by_mru = {"": []}
 
+        if self.article in ('Art13', 'Art14'):
+            # data_by_mru = consolidate_singlevalue_to_list(
+            #     data, 'MarineReportingUnit'
+            # )
+            data_by_mru = data
+
+            if data_by_mru:
+                data_by_mru = {"": data_by_mru}
+            else:
+                data_by_mru = {}
+
         res = []
         fields = self.get_report_definition()
 
@@ -1602,7 +1719,9 @@ The data is retrieved from the MSFD2018_production.V_ART8_ESA_2018 database view
             'Art8esa': 'ART8_ESA',
             'Art9': 'ART9_GES',
             'Art10': 'ART10_Targets',
-            'Art11': 'ART11_Programmes'
+            'Art11': 'ART11_Programmes',
+            'Art13': 'ART13_Measures',
+            'Art14': 'ART14_Exceptions',
         }
         count, item = db.get_item_by_conditions(
             t,
@@ -2182,6 +2301,19 @@ class ReportData2020(ReportData2018):
         )
 
         return report_header
+
+
+class ReportData2022(ReportData2018):
+    """ Implementation for Article 13 and 14 report data view for year 2022
+    """
+
+    report_year = '2022'        # used by cache key
+    year = '2022'       # used in report definition and translation
+    report_due = '2022-10-15'
+
+    @property
+    def muids(self):
+        return []
 
 
 @implementer(IReportDataViewOverview)

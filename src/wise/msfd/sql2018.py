@@ -2,6 +2,7 @@
 from __future__ import absolute_import
 from sqlalchemy import BigInteger, Column, Date, DateTime, Float, ForeignKey, Integer, Numeric, SmallInteger, String, Table, Unicode, UnicodeText
 from sqlalchemy.orm import relationship
+from sqlalchemy.dialects.mssql import NTEXT
 from sqlalchemy.dialects.mssql.base import BIT
 from sqlalchemy.sql.sqltypes import NullType
 from sqlalchemy.ext.declarative import declarative_base
@@ -1280,6 +1281,72 @@ t_V_ART11_Strategies_Programmes_2020 = Table(
     Column('GESCriteria', Unicode(10)),
     Column('P_Parameters', Unicode),
     Column('ParameterOther', Unicode(50))
+)
+
+
+t_V_ART13_Measures_2022 = Table(
+    'V_ART13_Measures_2022', metadata,
+    Column('CountryCode', Unicode(2), nullable=False),
+    Column('ReportingDate', Date, nullable=False),
+    Column('MeasureCode', Unicode(50)),
+    Column('MeasureOldCode', Unicode(500)),
+    Column('MeasureName', Unicode(700)),
+    Column('MeasureDescription', Unicode),
+    Column('UpdateType', Unicode(100)),
+    Column('MeasureCategory', Unicode(100)),
+    Column('PoliciesConventions', Unicode(2000)),
+    Column('PolicyNational', Unicode(2000)),
+    Column('ResponsibleCompetentAuthority', Unicode(2000)),
+    Column('ResponsibleOrganisation', Unicode(2000)),
+    Column('CoordinationLevel', Unicode(2000)),
+    Column('RegionalCooperation_countries', Unicode(2000)),
+    Column('CEA', Unicode(2000)),
+    Column('CEAreference', Unicode(2000)),
+    Column('CBA', Unicode(2000)),
+    Column('CBAreference', Unicode(2000)),
+    Column('Financing', Unicode(2000)),
+    Column('RegionSubregion', Unicode(2000)),
+    Column('SpatialScope', Unicode(2000)),
+    Column('MarineReportingUnit', Unicode(2000)),
+    Column('MeasurePurpose', Unicode(2000)),
+    Column('Pressures', Unicode(2000)),
+    Column('RelevantKTMs', Unicode(2000)),
+    Column('RelevantTargets', Unicode(2000)),
+    Column('RelatedIndicator', Unicode(2000)),
+    Column('GEScomponent', Unicode(2000)),
+    Column('Feature', Unicode(2000)),
+    Column('Element', Unicode(2000)),
+    Column('ImplementationStatus', Unicode(2000)),
+    Column('TemporalScope', Unicode(2000)),
+    Column('ImplementationDelay', Unicode(2000)),
+    Column('ImplementationReason', Unicode(2000)),
+    Column('ReasonDescription', Unicode(2500)),
+    Column('ProgressDescription', Unicode(2500)),
+    Column('References', Unicode(2500))
+)
+
+
+t_V_ART14_Exceptions_2022 = Table(
+    'V_ART14_Exceptions_2022', metadata,
+    Column('CountryCode', Unicode(2), nullable=False),
+    Column('ReportingDate', Date, nullable=False),
+    Column('Exception_code', Unicode(50)),
+    Column('ExceptionOldCode', Unicode(500)),
+    Column('Exception_name', Unicode(700)),
+    Column('ExceptionType', Unicode(500)),
+    Column('ExceptionReason', Unicode(500)),
+    Column('GESachieved', Unicode(500)),
+    Column('RelevantPressures', Unicode(500)),
+    Column('RelevantTarget', Unicode(500)),
+    Column('GEScomponent', Unicode(500)),
+    Column('RelevantFeatures', Unicode(500)),
+    Column('RegionSubregion', Unicode(500)),
+    Column('Spatial_scope_geographic_zones', Unicode(500)),
+    Column('MarineReportingUnit', Unicode(500)),
+    Column('JustificationDescription', NTEXT(1073741823)),
+    Column('MeasuresAdHoc', Unicode(500)),
+    Column('Mitigation', Unicode(2500)),
+    Column('FurtherInformation', Unicode(2000))
 )
 
 

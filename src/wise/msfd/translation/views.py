@@ -133,7 +133,6 @@ class SendTranslationRequest(BrowserView):
         text = normalize(text)
 
         delete_translation(text, source_lang)
-
         targetLanguages = self.request.form.get('targetLanguages', ['EN'])
 
         retrieve_translation(source_lang, text, targetLanguages, force=True)

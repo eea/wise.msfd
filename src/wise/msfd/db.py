@@ -403,6 +403,9 @@ def get_item_by_conditions(mapper_class, order_field, *conditions, **kwargs):
     # Laci disabled: sometimes gives unpredictable result,
     # might be the first() which brokes it?
     # item = q.offset(page).limit(1).first()
+    if not total:
+        return [0, {}]
+
     item = q[page]
 
     return [total, item]
@@ -940,6 +943,43 @@ def get_all_data_from_view_art11(country_code):
     count, q = get_all_records_ordered(
         t,
         (),
+        *conditions
+    )
+
+    res = [x for x in q]
+
+    return res    
+
+
+@use_db_session('2018')
+def get_all_data_from_view_art13(country_code):
+    t = sql2018.t_V_ART13_Measures_2022
+
+    conditions = [
+        t.c.CountryCode == country_code
+    ]
+
+    count, q = get_all_records_ordered(
+        t,
+        (),
+        *conditions
+    )
+
+    res = [x for x in q]
+
+    return res    
+
+
+@use_db_session('2018')
+def get_all_data_from_view_art14(country_code):
+    t = sql2018.t_V_ART14_Exceptions_2022
+
+    conditions = [
+        t.c.CountryCode == country_code
+    ]
+
+    count, q = get_all_records(
+        t,
         *conditions
     )
 

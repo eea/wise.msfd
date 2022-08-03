@@ -57,6 +57,7 @@ class ReportField(TemplateMixin):
         self.converter = node.get('convert')
         self.filter_values = node.get('filter')
         self.section = node.get('section', '')
+        self.separator = node.get('separator', '')
 
         self.drop = node.get('skip') == 'true'
 

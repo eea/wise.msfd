@@ -39,6 +39,8 @@ class Proxy2018(object):
         label_collection = field.label_collection
         converter_name = field.converter
         filter_values = field.filter_values
+        # separator used to split the value in a field, default is ',' 
+        separator = field.separator  
 
         # assert (label_name or converter), 'Field should be dropped'
 
@@ -61,7 +63,12 @@ class Proxy2018(object):
                     field, value, self.report_class
                 )
             else:
-                value = converter(field, value, self.report_class.country_code)
+                if separator:
+                    value = converter(
+                        field, value, self.report_class.country_code, separator)
+                else:
+                    value = converter(
+                        field, value, self.report_class.country_code)
 
         elif label_collection:
             title = GES_LABELS.get(label_collection, value)
