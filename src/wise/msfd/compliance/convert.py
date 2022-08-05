@@ -17,8 +17,9 @@ comma_separator_re = re.compile(r',(?=[^\s])')
 art11_measure_separator = re.compile(r'(?<=\'),')
 
 
-def simple_itemlist(field, value, lang):
-    vals = set(value.split(','))
+def simple_itemlist(field, value, lang, separator=","):
+    vals = value.split(separator)
+    vals = set([v.strip() for v in vals])
 
     return ItemList(rows=vals)
 
@@ -36,7 +37,8 @@ def simple_itemlist_art11_measures(field, value, lang):
 
 
 def csv_ges_labels_list(field, value, lang, separator=','):
-    vals = set(value.split(separator))
+    vals = value.split(separator)
+    vals = set([v.strip() for v in vals])
 
     res = []
 
@@ -64,15 +66,17 @@ def inverse_label(field, value, lang):
     return item
 
 
-def ges_component_list(field, value, lang):
-    values = value.split(',')
+def ges_component_list(field, value, lang, separator=','):
+    values = value.split(separator)
+    values = [v.strip() for v in values]
     rows = [ges_component(None, v, lang) for v in values]
 
     return ItemList(rows=rows)
 
 
 def csv_ges_labels_inverse_list(field, value, lang, separator=','):
-    vals = set(value.split(separator))
+    vals = value.split(separator)
+    vals = set([v.strip() for v in vals])
 
     res = []
 
@@ -84,8 +88,9 @@ def csv_ges_labels_inverse_list(field, value, lang, separator=','):
     return ItemList(rows=res)
 
 
-def csv_ges_labels_inverse_list_indicators(field, value, lang):
-    vals = set(value.split(','))
+def csv_ges_labels_inverse_list_indicators(field, value, lang, separator=','):
+    vals = value.split(separator)
+    vals = set([v.strip() for v in vals])
 
     res = []
 

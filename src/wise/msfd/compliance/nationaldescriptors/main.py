@@ -2,6 +2,7 @@
 """
 
 from __future__ import absolute_import
+import re
 from collections import namedtuple
 from logging import getLogger
 
@@ -46,6 +47,7 @@ from .interfaces import (INationaldescriptorArticleView,
 
 logger = getLogger('wise.msfd')
 
+RE_REGION_NORM = re.compile(r'^[A-Z]{3}\s')
 
 Assessment = namedtuple('Assessment',
                         [
@@ -465,14 +467,24 @@ class NatDescCountryOverviewReports(NationalDescriptorCountryOverview):
             if row.CountryCode != country_code:
                 continue
             
-            desc_reported = set(row.GEScomponent.split('; '))
+            desc_reported = row.GEScomponent.split(';')
+            desc_reported = set([d.strip() for d in desc_reported])
 
             if not desc_reported.intersection(set(all_ids)):
                 continue
             
-            regions_reported = set(row.RegionSubregion.split('; '))
+            regions_reported = row.RegionSubregion.split(';')
+            regions_reported = set([r.strip() for r in regions_reported])
+            regions_reported_norm = []
 
-            if regions_reported.intersection(set(region_names)):
+            for region_rep in regions_reported:
+                region_rep_norm = RE_REGION_NORM.sub('', region_rep)
+
+                regions_reported_norm.append(region_rep_norm)
+
+            regions_reported_norm = set(regions_reported_norm)
+
+            if regions_reported_norm.intersection(set(region_names)):
                 return True
 
         return False

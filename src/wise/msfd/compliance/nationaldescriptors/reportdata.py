@@ -1,6 +1,7 @@
 from __future__ import absolute_import
 from __future__ import print_function
 import logging
+import re
 from collections import OrderedDict, defaultdict, namedtuple
 from datetime import datetime
 from six.moves.html_parser import HTMLParser
@@ -64,6 +65,7 @@ import six
 logger = logging.getLogger('wise.msfd')
 
 NSMAP = {"w": "http://water.eionet.europa.eu/schemas/dir200856ec"}
+RE_REGION_NORM = re.compile(r'^[A-Z]{3}\s')
 
 
 ReportingInformation = namedtuple('ReportingInformation',
@@ -1449,12 +1451,22 @@ The data is retrieved from the MSFD2018_production.V_ART8_ESA_2018 database view
         res = []
 
         for row in q:
-            regions_reported = set(row.RegionSubregion.split(';'))
+            regions_reported = row.RegionSubregion.split(';')
+            regions_reported = set([r.strip() for r in regions_reported])
+            regions_reported_norm = []
 
-            if not regions_reported.intersection(set(region_names)):
+            for region_rep in regions_reported:
+                region_rep_norm = RE_REGION_NORM.sub('', region_rep)
+
+                regions_reported_norm.append(region_rep_norm)
+
+            regions_reported_norm = set(regions_reported_norm)
+
+            if not regions_reported_norm.intersection(set(region_names)):
                 continue
             
-            desc_reported = set(row.GEScomponent.split('; '))
+            desc_reported = row.GEScomponent.split(';')
+            desc_reported = set([d.strip() for d in desc_reported])
 
             if not desc_reported.intersection(set(all_ids)):
                 continue
@@ -1500,9 +1512,17 @@ The data is retrieved from the MSFD2018_production.V_ART8_ESA_2018 database view
         res = []
 
         for row in q:
-            regions_reported = set(row.RegionSubregion.split(';'))
+            regions_reported = set(row.RegionSubregion.split('; '))
+            regions_reported_norm = []
 
-            if not regions_reported.intersection(set(region_names)):
+            for region_rep in regions_reported:
+                region_rep_norm = RE_REGION_NORM.sub('', region_rep)
+
+                regions_reported_norm.append(region_rep_norm)
+
+            regions_reported_norm = set(regions_reported_norm)
+
+            if not regions_reported_norm.intersection(set(region_names)):
                 continue
             
             desc_reported = set(row.GEScomponent.split('; '))
