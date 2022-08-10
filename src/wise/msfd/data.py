@@ -545,7 +545,7 @@ def get_report_filename(report_version,
 @cache(lambda func, filename, country_code: 
         func.__name__ + filename + country_code + current_date())
 @timeit
-def get_report_file_url(filename, country_code=None):
+def get_report_file_url(filename, country_code=''):
     """ Retrieve the CDR url based on query in ContentRegistry
     """
 
@@ -634,7 +634,7 @@ def get_factsheet_url(url):
 
 
 @timeit
-def get_xml_report_data(filename, country_code=None):
+def get_xml_report_data(filename, country_code=''):
     if not filename:
         return ""
 

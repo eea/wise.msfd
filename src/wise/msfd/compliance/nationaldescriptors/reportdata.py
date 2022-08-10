@@ -398,13 +398,13 @@ class ReportData2012(BaseView, BaseUtil):
                 multiple_source_files = True
                 try:
                     source_file = [
-                        (f, get_report_file_url(f) + '/manage_document')
+                        (f, get_report_file_url(f, self.country_code) + '/manage_document')
                         for f in filename
                     ]
                 except:
                     logger.exception("Error in getting HTML Factsheet URL)")
             else:
-                url = get_report_file_url(filename)
+                url = get_report_file_url(filename, self.country_code)
                 if url:
                     try:
                         factsheet = get_factsheet_url(url)
@@ -424,7 +424,7 @@ class ReportData2012(BaseView, BaseUtil):
         )
         report_header = self.report_header_template(**report_header_data)
         try:
-            # import pdb; pdb.set_trace()
+            import pdb; pdb.set_trace()
             report_data, report_data_rows = self.get_report_data()
         except:
             report_data, report_data_rows = 'Error in rendering report', []
@@ -586,7 +586,7 @@ class ReportData2012Secondary(ReportData2012):
             trans_edit_html = self.translate_view()()
 
             if filename:
-                url = get_report_file_url(filename)
+                url = get_report_file_url(filename, self.country_code)
                 if url:
                     try:
                         factsheet = get_factsheet_url(url)
@@ -2032,7 +2032,7 @@ class ReportData2018Secondary(ReportData2018):
             return group[url_index + 1]
 
     def get_report_metadata_from_view(self, view, filename):
-        fileurl = get_report_file_url(filename)
+        fileurl = get_report_file_url(filename, self.country_code)
         root = view.get_report_file_root(filename)
 
         reporters = date = None
