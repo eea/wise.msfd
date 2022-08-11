@@ -424,7 +424,6 @@ class ReportData2012(BaseView, BaseUtil):
         )
         report_header = self.report_header_template(**report_header_data)
         try:
-            import pdb; pdb.set_trace()
             report_data, report_data_rows = self.get_report_data()
         except:
             report_data, report_data_rows = 'Error in rendering report', []
