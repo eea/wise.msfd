@@ -16,6 +16,8 @@ from plone.api import user
 from plone.api.content import get_state
 from plone.api.portal import get_tool
 from plone.api.user import get_roles
+from plone.intelligenttext.transforms import convertWebIntelligentPlainTextToHtml
+
 from plone.memoize import ram
 from plone.memoize.view import memoize
 from Products.CMFCore.utils import getToolByName
@@ -791,6 +793,8 @@ class AssessmentQuestionDefinition:
 
         sn = node.find('scoring')
         self.score_method = resolve(sn.get('determination-method'))
+        self.source_info = convertWebIntelligentPlainTextToHtml(
+            getattr(node.find('source-info'), 'text', '').strip())
 
     def calculate_score(self, descriptor, values):
         score_obj = Score(self, descriptor, values)
@@ -995,6 +999,8 @@ class AssessmentQuestionDefinition:
             res = filtered_targets(res, self)
         if self.article in ['Art3', 'Art4']:
             res = filtered_descriptors(res, self)
+        if self.article in ['Art13', 'Art14']:
+            res = filtered_descriptors(res, self)
 
         return sorted_criterions(res)
 
@@ -1015,6 +1021,8 @@ class AssessmentQuestionDefinition:
             'Art7': self._art_34_ids,
             'Art8esa': self._art_34_ids,
             'Art11': self._art_89_ids,
+            'Art13': self._art_89_ids,
+            'Art14': self._art_89_ids,
         }
 
         return impl[self.article](descriptor, **kwargs)

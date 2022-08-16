@@ -15,7 +15,9 @@
             metal:use-macro="context/wise-macros/macros/tabs"></metal:tabs>
         </div>
 
-        <div class="start-page-content left-side-form">
+        <div class="start-page-content left-side-form"
+            tal:define="year_2018 python: view.get_report_year('2018');
+                year_2012 python: view.get_report_year('2012')">
 
           <div metal:use-macro="context/global_statusmessage/macros/portal_message">
             Status message
@@ -49,7 +51,7 @@
             <ul>
               <li>
                 <a
-                  tal:attributes="href python: context.absolute_url() + '/@@edit-assessment-data-2018'"
+                  tal:attributes="href python: context.absolute_url() + '/@@edit-assessment-data-{}'.format(year_2018)"
                   target="_blank">
                   <i class="glyphicon glyphicon-edit"></i> Assessment
                 </a>
@@ -58,17 +60,15 @@
                     data-pat-plone-modal="height: 600px; content:#edit-history; width: 80%"></a>
               </li>
               <li>
-                <a tal:define="year python: view.get_report_year('2018')"
-                    tal:attributes="href python: context.absolute_url() + '/@@view-report-data-' + year"
+                <a tal:attributes="href python: context.absolute_url() + '/@@view-report-data-' + year_2018"
                     target="_blank">
-                  <i class="glyphicon glyphicon-th"></i><span tal:content="year">2018</span> Report
+                  <i class="glyphicon glyphicon-th"></i><span tal:content="year_2018">2018</span> Report
                 </a>
               </li>
               <li>
-                <a tal:define="year python: view.get_report_year('2012')"
-                    tal:attributes="href python: context.absolute_url() + '/@@view-report-data-' + year"
+                <a tal:attributes="href python: context.absolute_url() + '/@@view-report-data-' + year_2012"
                     target="_blank">
-                  <i class="glyphicon glyphicon-th"></i><span tal:content="year">2012</span> Report
+                  <i class="glyphicon glyphicon-th"></i><span tal:content="year_2012">2012</span> Report
                 </a>
               </li>
               <li tal:condition="python:False"><!--Removed-->
@@ -100,7 +100,7 @@
           </div>
 
           <div class="asts-header-data">
-            <h3 id="assessment-2018">2018 Assessment</h3>
+            <h3 id="assessment-2018" tal:content="python: '{} Assessment'.format(year_2018)">2018 Assessment</h3>
             <div class="ast-header-data">
               <div tal:replace="structure view/assessment_header_2018_html"></div>
               <div tal:replace="structure view/assessment_data_2018_html"></div>

@@ -50,23 +50,39 @@
 
               <div
                 class="subform"
-                tal:define="disabled python:subform._disabled and ' disabled' or ''"
+                tal:define="disabled python:subform._disabled and ' disabled' or '';
+                  source_info python: subform._source_info"
                 tal:attributes="class string:subform $disabled">
 
                 <div class="body">
                   <div class="left">
                     <div class="subform-title">
-                      <span tal:content="subform/title">Question here</span>
-                      <span
-                        style="float:right;"
-                        tal:define="last_change python: view.format_last_change(subform._last_update)"
-                        class="help-popover"
-                        data-trigger="hover"
-                        data-html="true"
-                        tal:attributes="title python: ''; data-content python: last_change">
-                        <span tal:content="string:Last change">Last change</span>
-                        <i class="glyphicon glyphicon-calendar"></i>
-                      </span>
+                      <div tal:content="subform/title">Question here</div>
+                      <div style="display: flex;
+                          float: right;
+                          flex-direction: column;
+                          align-items: flex-end;
+                          justify-content: center;">
+                        <span
+                          style="float:right;"
+                          tal:define="last_change python: view.format_last_change(subform._last_update)"
+                          class="help-popover"
+                          data-trigger="hover"
+                          data-html="true"
+                          tal:attributes="title python: ''; data-content python: last_change">
+                          <span tal:content="string:Last change">Last change</span>
+                          <i class="glyphicon glyphicon-calendar"></i>
+                        </span>
+                        <span tal:condition="source_info"
+                          style="float:right;"
+                          class="help-popover"
+                          data-trigger="hover"
+                          data-html="true"
+                          tal:attributes="title python: ''; data-content source_info">
+                          <span tal:content="string:Source info">Source info</span>
+                          <i class="glyphicon glyphicon-info-sign"></i>
+                        </span>
+                      </div>
                     </div>
 
                     <div class="fields-container">

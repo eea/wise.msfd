@@ -88,6 +88,11 @@ span.infobox-popover {
     }
 
     .subform-title {
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      align-items: center;
+      
       padding-bottom: 1rem;
       border-bottom: 1px solid #aaa;
       margin: 0;
@@ -95,8 +100,7 @@ span.infobox-popover {
       font-family: 'RobotoM';
       font-size: 13px;
 
-      > span:first-child {
-        display: inline-block;
+      > div:first-child {
         max-width: 80%;
         font-family: 'PoppinsSemiB';
         font-size: 16px;

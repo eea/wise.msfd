@@ -84,6 +84,13 @@
     />
 
   <browser:page
+    for="*"
+    name="edit-assessment-data-2022"
+    class=".assessment.EditAssessmentDataView2022"
+    permission="wise.ViewAssessmentEditPage"
+    />
+
+  <browser:page
     for="..interfaces.INationalDescriptorAssessmentSecondary"
     name="edit-assessment-data-2018"
     class=".assessment.EditAssessmentDataViewSecondary"

@@ -1,0 +1,597 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<questions article='Art13'>
+  <assessment-question id="A13Com01A" class="adequacy" use-criteria='none'>
+    <definition>
+      Has the Member State provided an overview of the updated POM corresponding to environmental targets?
+    </definition>
+    <source-info>Text-based report</source-info>
+    <answers>
+      <option score="1">Yes</option>
+      <option score="0.5">Partially</option>
+      <option score="0.250">Not clear</option>
+      <option score="0">No</option>
+      <option score="/">Not relevant</option>
+    </answers>
+    <scoring determination-method="wise.msfd.compliance.scoring.scoring_based">
+    </scoring>
+    <score-weight descriptor="D1.1" value="100" />
+    <score-weight descriptor="D1.2" value="100" />
+    <score-weight descriptor="D1.3" value="100" />
+    <score-weight descriptor="D1.4" value="100" />
+    <score-weight descriptor="D1.5" value="100" />
+    <score-weight descriptor="D1.6" value="100" />
+    <score-weight descriptor="D2" value="100" />
+    <score-weight descriptor="D3" value="100" />
+    <score-weight descriptor="D4" value="100" />
+    <score-weight descriptor="D5" value="100" />
+    <score-weight descriptor="D6" value="100" />
+    <score-weight descriptor="D7" value="100" />
+    <score-weight descriptor="D8" value="100" />
+    <score-weight descriptor="D9" value="100" />
+    <score-weight descriptor="D10" value="100" />
+    <score-weight descriptor="D11" value="100" />
+  </assessment-question>
+
+  <assessment-question id="A13Com02B" class="adequacy" use-criteria='none'>
+    <definition>
+      Has the Member State provided an overview of relevant updates/changes to the existing measures from the 1st cycle?
+    </definition>
+    <source-info>
+Text-based report
+
+E-reporting:
+  • UpdateType
+  • MeasureCategory
+    </source-info>
+    <answers>
+      <option score="1">Yes</option>
+      <option score="0.5">Partially</option>
+      <option score="0.250">Not clear</option>
+      <option score="0">No</option>
+      <option score="/">Not relevant</option>
+    </answers>
+    <scoring determination-method="wise.msfd.compliance.scoring.scoring_based">
+    </scoring>
+    <score-weight descriptor="D1.1" value="100" />
+    <score-weight descriptor="D1.2" value="100" />
+    <score-weight descriptor="D1.3" value="100" />
+    <score-weight descriptor="D1.4" value="100" />
+    <score-weight descriptor="D1.5" value="100" />
+    <score-weight descriptor="D1.6" value="100" />
+    <score-weight descriptor="D2" value="100" />
+    <score-weight descriptor="D3" value="100" />
+    <score-weight descriptor="D4" value="100" />
+    <score-weight descriptor="D5" value="100" />
+    <score-weight descriptor="D6" value="100" />
+    <score-weight descriptor="D7" value="100" />
+    <score-weight descriptor="D8" value="100" />
+    <score-weight descriptor="D9" value="100" />
+    <score-weight descriptor="D10" value="100" />
+    <score-weight descriptor="D11" value="100" />
+  </assessment-question>  
+
+  <assessment-question id="A13Ad01B" class="adequacy" use-criteria='none'>
+    <definition>
+      Has the Member State explained how the updates/changes to the existing measures from the first cycle contribute to achieve GES?
+    </definition>
+    <source-info>
+Answer to Com02B question
+
+Text-based report
+
+E-reporting
+  • Measure code
+  • MeasureOldCode
+  • MeasureCategory (Category 1.a and 1.b)
+  • UpdateType
+  • MeasureDescription
+  • MeasurePurpose
+  • RelevantKTMs
+  </source-info>
+    <answers>
+      <option score="1">Yes</option>
+      <option score="0.5">Partially</option>
+      <option score="0.250">Not clear</option>
+      <option score="0">No</option>
+      <option score="/">Not relevant</option>
+    </answers>
+    <scoring determination-method="wise.msfd.compliance.scoring.scoring_based">
+    </scoring>
+    <score-weight descriptor="D1.1" value="100" />
+    <score-weight descriptor="D1.2" value="100" />
+    <score-weight descriptor="D1.3" value="100" />
+    <score-weight descriptor="D1.4" value="100" />
+    <score-weight descriptor="D1.5" value="100" />
+    <score-weight descriptor="D1.6" value="100" />
+    <score-weight descriptor="D2" value="100" />
+    <score-weight descriptor="D3" value="100" />
+    <score-weight descriptor="D4" value="100" />
+    <score-weight descriptor="D5" value="100" />
+    <score-weight descriptor="D6" value="100" />
+    <score-weight descriptor="D7" value="100" />
+    <score-weight descriptor="D8" value="100" />
+    <score-weight descriptor="D9" value="100" />
+    <score-weight descriptor="D10" value="100" />
+    <score-weight descriptor="D11" value="100" />
+  </assessment-question>  
+  
+  <assessment-question id="A13Com03B" class="adequacy" use-criteria='none'>
+    <definition>
+      Has the Member State provided a gap analysis?
+    </definition>
+    <source-info>Text-based report</source-info>
+    <answers>
+      <option score="1">Yes</option>
+      <option score="0.5">Partially</option>
+      <option score="0">No</option>
+      <option score="/">Not relevant</option>
+    </answers>
+    <scoring determination-method="wise.msfd.compliance.scoring.scoring_based">
+    </scoring>
+    <score-weight descriptor="D1.1" value="100" />
+    <score-weight descriptor="D1.2" value="100" />
+    <score-weight descriptor="D1.3" value="100" />
+    <score-weight descriptor="D1.4" value="100" />
+    <score-weight descriptor="D1.5" value="100" />
+    <score-weight descriptor="D1.6" value="100" />
+    <score-weight descriptor="D2" value="100" />
+    <score-weight descriptor="D3" value="100" />
+    <score-weight descriptor="D4" value="100" />
+    <score-weight descriptor="D5" value="100" />
+    <score-weight descriptor="D6" value="100" />
+    <score-weight descriptor="D7" value="100" />
+    <score-weight descriptor="D8" value="100" />
+    <score-weight descriptor="D9" value="100" />
+    <score-weight descriptor="D10" value="100" />
+    <score-weight descriptor="D11" value="100" />
+  </assessment-question>  
+  
+  <assessment-question id="A13Ad02B" class="adequacy" use-criteria='none'>
+    <definition>
+      Does the Member State adequately identify all significant gaps to achieve the MSFD targets and ultimately GES?
+    </definition>
+    <source-info>Text-based report</source-info>
+    <answers>
+      <option score="1">Yes</option>
+      <option score="0.5">Partially</option>
+      <option score="0.250">Not clear</option>
+      <option score="0">No</option>
+      <option score="/">Not relevant</option>
+    </answers>
+    <scoring determination-method="wise.msfd.compliance.scoring.scoring_based">
+    </scoring>
+    <score-weight descriptor="D1.1" value="100" />
+    <score-weight descriptor="D1.2" value="100" />
+    <score-weight descriptor="D1.3" value="100" />
+    <score-weight descriptor="D1.4" value="100" />
+    <score-weight descriptor="D1.5" value="100" />
+    <score-weight descriptor="D1.6" value="100" />
+    <score-weight descriptor="D2" value="100" />
+    <score-weight descriptor="D3" value="100" />
+    <score-weight descriptor="D4" value="100" />
+    <score-weight descriptor="D5" value="100" />
+    <score-weight descriptor="D6" value="100" />
+    <score-weight descriptor="D7" value="100" />
+    <score-weight descriptor="D8" value="100" />
+    <score-weight descriptor="D9" value="100" />
+    <score-weight descriptor="D10" value="100" />
+    <score-weight descriptor="D11" value="100" />
+  </assessment-question>
+  
+  <assessment-question id="A13Com04C" class="adequacy" use-criteria='none'>
+    <definition>
+      Has the Member State withdrawn any of the new measures from the first cycle?
+    </definition>
+    <source-info>
+E-reporting
+  • MeasureCategory (category 2 a and b)
+  • ImplementationStatus
+    </source-info>
+    <answers>
+      <option score="1">Yes</option>
+      <option score="0.5">Partially</option>
+      <option score="0">No</option>
+      <option score="/">Not relevant</option>
+    </answers>
+    <scoring determination-method="wise.msfd.compliance.scoring.scoring_based">
+    </scoring>
+    <score-weight descriptor="D1.1" value="100" />
+    <score-weight descriptor="D1.2" value="100" />
+    <score-weight descriptor="D1.3" value="100" />
+    <score-weight descriptor="D1.4" value="100" />
+    <score-weight descriptor="D1.5" value="100" />
+    <score-weight descriptor="D1.6" value="100" />
+    <score-weight descriptor="D2" value="100" />
+    <score-weight descriptor="D3" value="100" />
+    <score-weight descriptor="D4" value="100" />
+    <score-weight descriptor="D5" value="100" />
+    <score-weight descriptor="D6" value="100" />
+    <score-weight descriptor="D7" value="100" />
+    <score-weight descriptor="D8" value="100" />
+    <score-weight descriptor="D9" value="100" />
+    <score-weight descriptor="D10" value="100" />
+    <score-weight descriptor="D11" value="100" />
+  </assessment-question>  
+
+  <assessment-question id="A13Ad03C" class="adequacy" use-criteria='none'>
+    <definition>
+      Is there an adequate justification for withdrawing new measures from the first cycle?
+    </definition>
+    <source-info>
+E-reporting
+    • MeasureCategory (category 2 a and b)
+    • ImplementationStatus
+    • ImplementationReason
+    • Reason description (optional)
+    • Measure description (optional)
+
+Text-report    
+</source-info>
+    <answers>
+      <option score="1">Yes</option>
+      <option score="0.5">Partially</option>
+      <option score="0.250">Not clear</option>
+      <option score="0">No</option>
+      <option score="/">Not relevant</option>
+    </answers>
+    <scoring determination-method="wise.msfd.compliance.scoring.scoring_based">
+    </scoring>
+    <score-weight descriptor="D1.1" value="100" />
+    <score-weight descriptor="D1.2" value="100" />
+    <score-weight descriptor="D1.3" value="100" />
+    <score-weight descriptor="D1.4" value="100" />
+    <score-weight descriptor="D1.5" value="100" />
+    <score-weight descriptor="D1.6" value="100" />
+    <score-weight descriptor="D2" value="100" />
+    <score-weight descriptor="D3" value="100" />
+    <score-weight descriptor="D4" value="100" />
+    <score-weight descriptor="D5" value="100" />
+    <score-weight descriptor="D6" value="100" />
+    <score-weight descriptor="D7" value="100" />
+    <score-weight descriptor="D8" value="100" />
+    <score-weight descriptor="D9" value="100" />
+    <score-weight descriptor="D10" value="100" />
+    <score-weight descriptor="D11" value="100" />
+  </assessment-question>
+
+  <assessment-question id="A13Com05C" class="adequacy" use-criteria='none'>
+    <definition>
+      Has the Member State modified any of the new measures from the first cycle?
+    </definition>
+    <source-info>
+E-reporting
+  • UpdateType (modified since 2015 PoM)
+    </source-info>
+    <answers>
+      <option score="1">Yes</option>
+      <option score="0.5">Partially</option>
+      <option score="0">No</option>
+      <option score="/">Not relevant</option>
+    </answers>
+    <scoring determination-method="wise.msfd.compliance.scoring.scoring_based">
+    </scoring>
+    <score-weight descriptor="D1.1" value="100" />
+    <score-weight descriptor="D1.2" value="100" />
+    <score-weight descriptor="D1.3" value="100" />
+    <score-weight descriptor="D1.4" value="100" />
+    <score-weight descriptor="D1.5" value="100" />
+    <score-weight descriptor="D1.6" value="100" />
+    <score-weight descriptor="D2" value="100" />
+    <score-weight descriptor="D3" value="100" />
+    <score-weight descriptor="D4" value="100" />
+    <score-weight descriptor="D5" value="100" />
+    <score-weight descriptor="D6" value="100" />
+    <score-weight descriptor="D7" value="100" />
+    <score-weight descriptor="D8" value="100" />
+    <score-weight descriptor="D9" value="100" />
+    <score-weight descriptor="D10" value="100" />
+    <score-weight descriptor="D11" value="100" />
+  </assessment-question>
+
+  <assessment-question id="A13Com06C" class="adequacy" use-criteria='none'>
+    <definition>
+      Has the Member State provided a list and summary of the additional new measures (from the 2nd cycle)?
+    </definition>
+    <source-info>
+Text-based report
+
+E-reporting
+    • UpdateType
+    • MeasureCategory    
+    </source-info>
+    <answers>
+      <option score="1">Yes</option>
+      <option score="0.5">Partially</option>
+      <option score="0">No</option>
+      <option score="/">Not relevant</option>
+    </answers>
+    <scoring determination-method="wise.msfd.compliance.scoring.scoring_based">
+    </scoring>
+    <score-weight descriptor="D1.1" value="100" />
+    <score-weight descriptor="D1.2" value="100" />
+    <score-weight descriptor="D1.3" value="100" />
+    <score-weight descriptor="D1.4" value="100" />
+    <score-weight descriptor="D1.5" value="100" />
+    <score-weight descriptor="D1.6" value="100" />
+    <score-weight descriptor="D2" value="100" />
+    <score-weight descriptor="D3" value="100" />
+    <score-weight descriptor="D4" value="100" />
+    <score-weight descriptor="D5" value="100" />
+    <score-weight descriptor="D6" value="100" />
+    <score-weight descriptor="D7" value="100" />
+    <score-weight descriptor="D8" value="100" />
+    <score-weight descriptor="D9" value="100" />
+    <score-weight descriptor="D10" value="100" />
+    <score-weight descriptor="D11" value="100" />
+  </assessment-question>
+
+  <assessment-question id="A13Ad04C" class="adequacy" use-criteria='none'>
+    <definition>
+      Are all relevant pressures addressed by the modified and the additional new measures?
+    </definition>
+    <source-info>
+E-reporting
+    • Measure description (optional)
+    • MeasurePurpose
+    • Pressures
+    • Feature
+
+Art. 8 reporting and assessment
+Text-report
+    </source-info>
+    <answers>
+      <option score="1">Yes</option>
+      <option score="0.5">Partially</option>
+      <option score="0.250">Not clear</option>
+      <option score="0">No</option>
+      <option score="/">Not relevant</option>
+    </answers>
+    <scoring determination-method="wise.msfd.compliance.scoring.scoring_based">
+    </scoring>
+    <score-weight descriptor="D1.1" value="100" />
+    <score-weight descriptor="D1.2" value="100" />
+    <score-weight descriptor="D1.3" value="100" />
+    <score-weight descriptor="D1.4" value="100" />
+    <score-weight descriptor="D1.5" value="100" />
+    <score-weight descriptor="D1.6" value="100" />
+    <score-weight descriptor="D2" value="100" />
+    <score-weight descriptor="D3" value="100" />
+    <score-weight descriptor="D4" value="100" />
+    <score-weight descriptor="D5" value="100" />
+    <score-weight descriptor="D6" value="100" />
+    <score-weight descriptor="D7" value="100" />
+    <score-weight descriptor="D8" value="100" />
+    <score-weight descriptor="D9" value="100" />
+    <score-weight descriptor="D10" value="100" />
+    <score-weight descriptor="D11" value="100" />
+  </assessment-question>
+
+  <assessment-question id="A13Ad05C" class="adequacy" use-criteria='none'>
+    <definition>
+      Are all modified new measures and additional new measures representing actions to achieve operational environmental targets?
+    </definition>
+    <source-info>
+E-reporting
+  • ‘RelevantTargets’
+
+Answer to Com01A question
+Art. 10 reporting and assessment
+
+Text-based report
+    </source-info>
+    <answers>
+      <option score="1">Yes</option>
+      <option score="0.5">Partially</option>
+      <option score="0.250">Not clear</option>
+      <option score="0">No</option>
+      <option score="/">Not relevant</option>
+    </answers>
+    <scoring determination-method="wise.msfd.compliance.scoring.scoring_based">
+    </scoring>
+    <score-weight descriptor="D1.1" value="100" />
+    <score-weight descriptor="D1.2" value="100" />
+    <score-weight descriptor="D1.3" value="100" />
+    <score-weight descriptor="D1.4" value="100" />
+    <score-weight descriptor="D1.5" value="100" />
+    <score-weight descriptor="D1.6" value="100" />
+    <score-weight descriptor="D2" value="100" />
+    <score-weight descriptor="D3" value="100" />
+    <score-weight descriptor="D4" value="100" />
+    <score-weight descriptor="D5" value="100" />
+    <score-weight descriptor="D6" value="100" />
+    <score-weight descriptor="D7" value="100" />
+    <score-weight descriptor="D8" value="100" />
+    <score-weight descriptor="D9" value="100" />
+    <score-weight descriptor="D10" value="100" />
+    <score-weight descriptor="D11" value="100" />
+  </assessment-question>
+
+  <assessment-question id="A13Ad06C" class="adequacy" use-criteria='none'>
+    <definition>
+      Has the Member State explained where the modified and additional new measures will be implemented?
+    </definition>
+    <source-info>
+E-reporting
+  • RegionSubregion
+  • SpatialScope
+  • MarineReportingUnit
+  • Specific location
+
+Text-based report 
+   </source-info>
+    <answers>
+      <option score="1">Yes</option>
+      <option score="0.5">Partially</option>
+      <option score="0.250">Not clear</option>
+      <option score="0">No</option>
+      <option score="/">Not relevant</option>
+    </answers>
+    <scoring determination-method="wise.msfd.compliance.scoring.scoring_based">
+    </scoring>
+    <score-weight descriptor="D1.1" value="100" />
+    <score-weight descriptor="D1.2" value="100" />
+    <score-weight descriptor="D1.3" value="100" />
+    <score-weight descriptor="D1.4" value="100" />
+    <score-weight descriptor="D1.5" value="100" />
+    <score-weight descriptor="D1.6" value="100" />
+    <score-weight descriptor="D2" value="100" />
+    <score-weight descriptor="D3" value="100" />
+    <score-weight descriptor="D4" value="100" />
+    <score-weight descriptor="D5" value="100" />
+    <score-weight descriptor="D6" value="100" />
+    <score-weight descriptor="D7" value="100" />
+    <score-weight descriptor="D8" value="100" />
+    <score-weight descriptor="D9" value="100" />
+    <score-weight descriptor="D10" value="100" />
+    <score-weight descriptor="D11" value="100" />
+  </assessment-question>
+
+  <assessment-question id="A13Ad07C" class="adequacy" use-criteria='none'>
+    <definition>
+      Has the Member State explained how the new measures will be implemented?
+    </definition>
+    <source-info>
+E-reporting
+  • MeasureDescription (optional)
+  • PoliciesConventions
+  • PolicyNational
+  • ResponsibleCompetentAuthority
+  • ResponsibleOrganisation (optional)
+  • CoordinationLevel
+  • RegionalCooperation_countries
+  • Financing
+  • Indicators
+
+Text-based report  
+ </source-info>
+    <answers>
+      <option score="1">Yes</option>
+      <option score="0.5">Partially</option>
+      <option score="0.250">Not clear</option>
+      <option score="0">No</option>
+      <option score="/">Not relevant</option>
+    </answers>
+    <scoring determination-method="wise.msfd.compliance.scoring.scoring_based">
+    </scoring>
+    <score-weight descriptor="D1.1" value="100" />
+    <score-weight descriptor="D1.2" value="100" />
+    <score-weight descriptor="D1.3" value="100" />
+    <score-weight descriptor="D1.4" value="100" />
+    <score-weight descriptor="D1.5" value="100" />
+    <score-weight descriptor="D1.6" value="100" />
+    <score-weight descriptor="D2" value="100" />
+    <score-weight descriptor="D3" value="100" />
+    <score-weight descriptor="D4" value="100" />
+    <score-weight descriptor="D5" value="100" />
+    <score-weight descriptor="D6" value="100" />
+    <score-weight descriptor="D7" value="100" />
+    <score-weight descriptor="D8" value="100" />
+    <score-weight descriptor="D9" value="100" />
+    <score-weight descriptor="D10" value="100" />
+    <score-weight descriptor="D11" value="100" />
+  </assessment-question>
+
+  <assessment-question id="A13Ad08C" class="adequacy" use-criteria='none'>
+    <definition>
+      Has the Member State explained when the modified and additional new measures will be implemented?
+    </definition>
+    <source-info>
+E-reporting
+  • ImplementationStatus
+  • TemporalScope
+  • ImplementationDelay
+  • ImplementationReason
+  • ReasonDescription
+
+Text-based report
+ </source-info>
+    <answers>
+      <option score="1">Yes</option>
+      <option score="0.5">Partially</option>
+      <option score="0.250">Not clear</option>
+      <option score="0">No</option>
+      <option score="/">Not relevant</option>
+    </answers>
+    <scoring determination-method="wise.msfd.compliance.scoring.scoring_based">
+    </scoring>
+    <score-weight descriptor="D1.1" value="100" />
+    <score-weight descriptor="D1.2" value="100" />
+    <score-weight descriptor="D1.3" value="100" />
+    <score-weight descriptor="D1.4" value="100" />
+    <score-weight descriptor="D1.5" value="100" />
+    <score-weight descriptor="D1.6" value="100" />
+    <score-weight descriptor="D2" value="100" />
+    <score-weight descriptor="D3" value="100" />
+    <score-weight descriptor="D4" value="100" />
+    <score-weight descriptor="D5" value="100" />
+    <score-weight descriptor="D6" value="100" />
+    <score-weight descriptor="D7" value="100" />
+    <score-weight descriptor="D8" value="100" />
+    <score-weight descriptor="D9" value="100" />
+    <score-weight descriptor="D10" value="100" />
+    <score-weight descriptor="D11" value="100" />
+  </assessment-question>
+
+  <assessment-question id="A13Com07C" class="adequacy" use-criteria='none'>
+    <definition>
+      Has the Member State identified new spatial protection measures, including marine protected areas?
+    </definition>
+    <source-info>Text-based report</source-info>
+    <answers>
+      <option score="1">Yes</option>
+      <option score="0.5">Partially</option>
+      <option score="0">No</option>
+      <option score="/">Not relevant</option>
+    </answers>
+    <scoring determination-method="wise.msfd.compliance.scoring.scoring_based">
+    </scoring>
+    <score-weight descriptor="D1.1" value="100" />
+    <score-weight descriptor="D1.2" value="100" />
+    <score-weight descriptor="D1.3" value="100" />
+    <score-weight descriptor="D1.4" value="100" />
+    <score-weight descriptor="D1.5" value="100" />
+    <score-weight descriptor="D1.6" value="100" />
+    <score-weight descriptor="D2" value="100" />
+    <score-weight descriptor="D3" value="100" />
+    <score-weight descriptor="D4" value="100" />
+    <score-weight descriptor="D5" value="100" />
+    <score-weight descriptor="D6" value="100" />
+    <score-weight descriptor="D7" value="100" />
+    <score-weight descriptor="D8" value="100" />
+    <score-weight descriptor="D9" value="100" />
+    <score-weight descriptor="D10" value="100" />
+    <score-weight descriptor="D11" value="100" />
+  </assessment-question>
+
+  <assessment-question id="A13Ad09C" class="adequacy" use-criteria='none'>
+    <definition>
+      Are the new MPA measures identifying the subject of protection and addressing identified pressures (per descriptor) adequately?
+    </definition>
+    <source-info>Text-based report</source-info>
+    <answers>
+      <option score="1">Yes</option>
+      <option score="0.5">Partially</option>
+      <option score="0.250">Not clear</option>
+      <option score="0">No</option>
+      <option score="/">Not relevant</option>
+    </answers>
+    <scoring determination-method="wise.msfd.compliance.scoring.scoring_based">
+    </scoring>
+    <score-weight descriptor="D1.1" value="100" />
+    <score-weight descriptor="D1.2" value="100" />
+    <score-weight descriptor="D1.3" value="100" />
+    <score-weight descriptor="D1.4" value="100" />
+    <score-weight descriptor="D1.5" value="100" />
+    <score-weight descriptor="D1.6" value="100" />
+    <score-weight descriptor="D2" value="100" />
+    <score-weight descriptor="D3" value="100" />
+    <score-weight descriptor="D4" value="100" />
+    <score-weight descriptor="D5" value="100" />
+    <score-weight descriptor="D6" value="100" />
+    <score-weight descriptor="D7" value="100" />
+    <score-weight descriptor="D8" value="100" />
+    <score-weight descriptor="D9" value="100" />
+    <score-weight descriptor="D10" value="100" />
+    <score-weight descriptor="D11" value="100" />
+  </assessment-question>
+</questions>

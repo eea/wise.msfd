@@ -253,6 +253,7 @@ class EditAssessmentDataForm(BaseView, EditAssessmentDataFormMain):
             form._question = question
             form._elements = elements
             form._disabled = self.is_disabled(question)
+            form._source_info = question.source_info
             # or is_other_tl or is_ec_user
 
             fields = []
@@ -327,6 +328,7 @@ class EditAssessmentDataForm(BaseView, EditAssessmentDataFormMain):
         )
         assessment_summary_form.subtitle = u''
         assessment_summary_form._disabled = self.read_only_access
+        assessment_summary_form._source_info = ''
         asf_fields = []
 
         for name, title in summary_fields:
@@ -352,6 +354,18 @@ class EditAssessmentDataForm(BaseView, EditAssessmentDataFormMain):
             return translated
 
         return value
+
+
+class EditAssessmentDataForm2022(EditAssessmentDataForm):
+    @property
+    def title(self):
+        return u"Edit Commission assessment / {} / 2022 / {} / {} " \
+               u"/ {} ".format(
+            self.article,
+            self.descriptor_title,
+            self.country_title,
+            self.country_region_name,
+        )
 
 
 class EditAssessmentDataFormSecondary(EditAssessmentDataForm):
@@ -391,5 +405,6 @@ class EditAssessmentDataFormSecondary(EditAssessmentDataForm):
 
 
 EditAssessmentDataView = wrap_form(EditAssessmentDataForm, MainFormWrapper)
+EditAssessmentDataView2022 = wrap_form(EditAssessmentDataForm2022, MainFormWrapper)
 EditAssessmentDataViewSecondary = wrap_form(EditAssessmentDataFormSecondary,
                                             EditAssessmentFormWrapperSecondary)
