@@ -1,0 +1,318 @@
+<p>
+  According to GD 18, the following aspects are required in the reporting on the
+  exceptions:
+</p>
+<table>
+  <tbody>
+    <tr>
+      <th>Schema field</th>
+      <th>Description</th>
+      <th>Property</th>
+    </tr>
+    <tr>
+      <td>
+        <p>ExceptionCode</p>
+      </td>
+      <td>
+        <p>Unique identifier code for the exception.</p>
+      </td>
+      <td>
+        <p>Required</p>
+        <p>Prefilled from first cycle</p>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <p>ExceptionOldCode</p>
+      </td>
+      <td >
+        <p>
+          Exception code(s) used in 2015 Art. 14 report, if changed in 2021.
+        </p>
+      </td>
+      <td >
+        <p>Required, where applicable</p>
+      </td>
+    </tr>
+    <tr>
+      <td >
+        <p>ExceptionName</p>
+      </td>
+      <td >
+        <p>Short name for the exception.</p>
+      </td>
+      <td >
+        <p>Required</p>
+        <p>Prefilled from first cycle</p>
+      </td>
+    </tr>
+    <tr>
+      <td >
+        <p>ExceptionType</p>
+      </td>
+      <td >
+        <p>
+          The most relevant MSFD Article 14 subparagraph which is applicable to
+          the exception
+        </p>
+      </td>
+      <td >
+        <p>Required</p>
+      </td>
+    </tr>
+    <tr>
+      <td >
+        <p>ExceptionReason</p>
+      </td>
+      <td >
+        <p>Indicates the main reason(s) for needing an exception</p>
+      </td>
+      <td >
+        <p>
+          Conditional: (in field &lsquo;ExceptionType&rsquo;, for all types
+          except Art.14(1)(e) &ndash; Natural conditions)
+        </p>
+      </td>
+    </tr>
+    <tr>
+      <td >
+        <p>GESachieved</p>
+      </td>
+      <td >
+        <p>
+          Estimated date by when GES is expected to be achieved, for an Article
+          14(1)(e) exception.
+        </p>
+      </td>
+      <td >
+        <p>
+          Conditional (if field &lsquo;ExceptionType&rsquo; = Art.14(1)(e)
+          &ndash; Natural conditions)
+        </p>
+      </td>
+    </tr>
+    <tr>
+      <td >
+        <p>RelevantPressures</p>
+      </td>
+      <td >
+        <p>
+          Pressures that are the key reason for applying the exception and which
+          are preventing the achievement of GES or associated targets
+        </p>
+      </td>
+      <td >
+        <p>
+          Conditional (in field &lsquo;ExceptionType&rsquo;, for all types
+          except Art. 14(1)(e) and 14(4).
+        </p>
+      </td>
+    </tr>
+    <tr>
+      <td >
+        <p>RelevantTargets</p>
+      </td>
+      <td >
+        <p>
+          Target(s), as reported under Art. 10, which are affected by the
+          exception.
+        </p>
+      </td>
+      <td >
+        <p>
+          Conditional (in field &lsquo;ExceptionType&rsquo;, for all types
+          except Art. 14(4)
+        </p>
+        <p>Prefilled from first cycle</p>
+      </td>
+    </tr>
+    <tr>
+      <td >
+        <p>GEScomponent</p>
+      </td>
+      <td >
+        <p>GES Descriptors and criteria affected by the exception</p>
+      </td>
+      <td >
+        <p>Required</p>
+        <p>Prefilled from first cycle (at descriptor level only)</p>
+      </td>
+    </tr>
+    <tr>
+      <td >
+        <p>RelevantFeatures</p>
+      </td>
+      <td >
+        <p>List of the features affected by the exception.</p>
+      </td>
+      <td >
+        <p>Required</p>
+        <p>
+          Prefilled from first cycle (at broad ecosystem component level only)
+        </p>
+      </td>
+    </tr>
+    <tr>
+      <td >
+        <p>RegionSubregion</p>
+      </td>
+      <td >
+        <p>MSFD region(s) and subregion(s) where the measure applies</p>
+      </td>
+      <td >
+        <p>Required</p>
+        <p>Prefilled from first cycle</p>
+      </td>
+    </tr>
+    <tr>
+      <td >
+        <p>Spatial scope_geographic zones</p>
+      </td>
+      <td >
+        <p>
+          Indicate the coverage of the exception according to the jurisdictional
+          zones of MSFD marine waters.
+        </p>
+      </td>
+      <td >
+        <p>Required</p>
+        <p>Prefilled from first cycle</p>
+      </td>
+    </tr>
+    <tr>
+      <td >
+        <p>MarineReportingUnit</p>
+      </td>
+      <td >
+        <p>Area(s) affected by the exception</p>
+      </td>
+      <td >
+        <p>Required</p>
+        <p>Prefilled from first cycle</p>
+      </td>
+    </tr>
+    <tr>
+      <td >
+        <p>JustificationDescription</p>
+      </td>
+      <td >
+        <p>
+          A specific and substantiated justification for applying the exception,
+          including the evidence used, the relevant aspects of the marine
+          environment affected (descriptors, features) and the areas affected
+        </p>
+      </td>
+      <td >
+        <p>Required</p>
+      </td>
+    </tr>
+    <tr>
+      <td >
+        <p>MeasuresAdHoc</p>
+      </td>
+      <td >
+        <p>
+          List of the ad-hoc measures taken which are relevant for this
+          exception
+        </p>
+      </td>
+      <td >
+        <p>
+          Conditional (if exception is notified under Art. 14(1) (b), (c) or
+          (d))
+        </p>
+      </td>
+    </tr>
+    <tr>
+      <td >
+        <p>Mitigation</p>
+      </td>
+      <td >
+        <p>Indicates the types of mitigation measures taken.</p>
+      </td>
+      <td >
+        <p>
+          Conditional (if exception is notified under Art. 14(1) (b), (c) or
+          (d))
+        </p>
+      </td>
+    </tr>
+    <tr>
+      <td >
+        <p>FurtherInformation</p>
+      </td>
+      <td >
+        <p>
+          Provide the section(s) of the Summary report and, if relevant, a URL
+          web link to a more detailed assessment of the Art. 14 exception.
+        </p>
+      </td>
+      <td >
+        <p>Required</p>
+        <p>Prefilled from first cycle</p>
+      </td>
+    </tr>
+  </tbody>
+</table>
+<p><br /></p>
+<p><br /></p>
+<p>
+  The assessor should indicate whether the following aspects are specified for
+  each exception:
+</p>
+<ul>
+  <li>
+    <p lang="fr-BE">
+      the relevant descriptors and targets (GEScomponent, RelevantFeatures,
+      RelevantTargets)
+    </p>
+  </li>
+  <li>
+    <p lang="fr-BE">
+      spatial coverage (RegionSubregion, MarineReportingUnit, Spatial
+      scope_geographic zones)
+    </p>
+  </li>
+  <li>
+    <p lang="fr-BE">the type of exception (ExceptionType)</p>
+  </li>
+  <li>
+    <p lang="fr-BE">
+      in case of Art. 14(1)(e) MSFD, an estimation, of when achieving GES can be
+      expected (GESachieved)
+    </p>
+  </li>
+  <li>
+    <p lang="fr-BE">
+      in case of Art. 14(1)(b)-(d) planned ad hoc measures to continue pursuing
+      the environmental targets, prevent further deterioration in the status of
+      the marine environment and mitigate adverse impacts at the level of marine
+      (sub)regions or in marine waters of other Member States. (MeasuresAdHoc,
+      Mitigation).
+    </p>
+  </li>
+  <li>
+    <p lang="fr-BE">
+      reasons invoked in accordance with first sub-paragraph of Article 14(1) -
+      for each instance; (ExceptionReason)
+    </p>
+  </li>
+  <li>
+    <p lang="fr-BE">justification / per instance (JustificationDescription).</p>
+  </li>
+</ul>
+<p>
+  Select &lsquo;yes&rsquo; if all the aspects are specified,
+  &lsquo;partially&rsquo; if at least 1/3 of them are specified, &lsquo;not
+  clear&rsquo; if the information reported is not clear and inconsistent,
+  &lsquo;no&rsquo; if no or less than 1/3 of the aspects are specified. Select
+  &lsquo;not relevant&rsquo; if there are no exceptions (&lsquo;no&rsquo; under
+  previous question).
+</p>
+<p><br /></p>
+<p>
+  For this question, priority will be given to e-reporting as there are specific
+  schema fields for each measure. If there is no information in the e-reporting,
+  check the text report. Specify where this information is found in the text
+  report.
+</p>

@@ -43,6 +43,23 @@
         <div tal:replace="structure view/help"
           tal:on-error="string:Error in help">Subform help here</div>
 
+        <div class="modal fade" id="question-intro" tabindex="-1" role="dialog">
+          <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+                <h3 class="modal-title"><span class='modal-question-id'>Question ID</span>: Question help</h3>
+              </div>
+              <div class="modal-body">Text here</div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
         <metal:form use-macro="context/@@ploneform-macros/titlelessform">
 
           <metal:fields fill-slot="fields">
@@ -51,13 +68,23 @@
               <div
                 class="subform"
                 tal:define="disabled python:subform._disabled and ' disabled' or '';
-                  source_info python: subform._source_info"
+                  source_info python: subform._source_info;
+                  question_intro python: view.get_question_intro(subform)"
                 tal:attributes="class string:subform $disabled">
 
                 <div class="body">
                   <div class="left">
                     <div class="subform-title">
-                      <div tal:content="subform/title">Question here</div>
+                      <div class="question-title">
+                        <i tal:condition="question_intro" 
+                          tal:attributes="data-text question_intro;
+                            data-questionid python: subform._question_id"
+                          title="Show question help" 
+                          class="question-intro glyphicon glyphicon-question-sign"
+                          data-toggle="modal" 
+                          data-target="#question-intro"></i>
+                        <div tal:content="subform/title">Question here</div>
+                      </div>
                       <div style="display: flex;
                           float: right;
                           flex-direction: column;
@@ -84,7 +111,6 @@
                         </span>
                       </div>
                     </div>
-
                     <div class="fields-container">
                       <div tal:repeat="fieldname subform/fields" class="fields-container-row">
                         <tal:def define="widget python: view.widgets[fieldname]">

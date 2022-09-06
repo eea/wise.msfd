@@ -251,6 +251,7 @@ class EditAssessmentDataForm(BaseView, EditAssessmentDataFormMain):
             form._question_type = question.klass
             form._question_phase = phase
             form._question = question
+            form._question_id = question.id
             form._elements = elements
             form._disabled = self.is_disabled(question)
             form._source_info = question.source_info
@@ -329,6 +330,7 @@ class EditAssessmentDataForm(BaseView, EditAssessmentDataFormMain):
         assessment_summary_form.subtitle = u''
         assessment_summary_form._disabled = self.read_only_access
         assessment_summary_form._source_info = ''
+        assessment_summary_form._question_id = ''
         asf_fields = []
 
         for name, title in summary_fields:

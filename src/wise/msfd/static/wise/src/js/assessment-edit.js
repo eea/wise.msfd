@@ -338,6 +338,15 @@
     });
   }
 
+  function setupQuestionIntroModal() {
+    $('i.question-intro').click(function() {
+      var questionIntroText = $(this).data().text;
+      var questionId = $(this).data().questionid;
+      $('#question-intro .modal-body').html(questionIntroText);
+      $('#question-intro .modal-title .modal-question-id').text(questionId);
+    });
+  }
+
   $(document).ready(function() {
     setCommentCookie();
     setupCommentsListing();
@@ -347,6 +356,7 @@
     setupFormSelectOptions();
     setupUnloadWarning();
     setupAssessmentInfobox();
+    setupQuestionIntroModal();
 
     $('.help-popover').popover();
 

@@ -780,6 +780,15 @@ class EditAssessmentDataFormMain(Form):
     def help(self):
         return render_assessment_help(self.criterias, self.descriptor)
 
+    def get_question_intro(self, subform):
+        if not hasattr(subform, '_question'):
+            return ''
+
+        question_id = subform._question.id
+        text = render_question_intro(question_id)
+
+        return text
+
     def is_disabled(self, question):
         """ Returns True if question is not editable
         """
@@ -879,6 +888,19 @@ def render_assessment_help(criterias, descriptor):
         rows.append(row)
 
     return help_template(rows=rows)
+
+
+def render_question_intro(question_id):
+    template = PageTemplateFile(
+        'src/wise.msfd/src/wise/msfd/compliance/nationaldescriptors'
+            + '/data/questionhelp/{}.pt'.format(question_id)
+    )
+    try:
+        text = template()
+    except:
+        text = ''
+
+    return text
 
 
 class AssessmentDataMixin(object):

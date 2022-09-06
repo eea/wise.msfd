@@ -9,7 +9,7 @@
   <script src="/++resource++msfd/bs3/js/bootstrap.min.js"></script>
   <script src="/++resource++static_js/wise_javascript_variables.js"></script>
   <script src="/++resource++static_js/compliance.js?rel=fa50f8bfac"></script>
-  <script src="/++resource++static_js/assessment-edit.js?rel=17d441bc00"></script>
+  <script src="/++resource++static_js/assessment-edit.js?rel=ef9a190023"></script>
   <script src="/++resource++msfd.trans/translate-comp.js"></script>
   <script src="/++resource++msfd/js/table-edit.js?rel=dd14d8aae5"></script>
 </tal:cond>
