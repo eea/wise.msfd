@@ -9,6 +9,7 @@ from zope.schema.vocabulary import SimpleTerm, SimpleVocabulary
 from AccessControl import Unauthorized
 from persistent.list import PersistentList
 from plone.api import user
+from plone.app.textfield import RichText
 # from plone.api.user import get_roles
 from plone.z3cform.layout import wrap_form
 from Products.Five.browser import BrowserView
@@ -309,7 +310,7 @@ class EditAssessmentDataForm(BaseView, EditAssessmentDataFormMain):
                 _name = '{}_{}_{}'.format(self.article, question.id, name)
 
                 default = assessment_data.get(_name, None)
-                _field = Text(title=title,
+                _field = RichText(title=title,
                               __name__=_name, required=False, default=default)
 
                 fields.append(_field)

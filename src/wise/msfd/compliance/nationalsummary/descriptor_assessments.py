@@ -3,6 +3,7 @@ import logging
 
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 from wise.msfd.compliance.assessment import AssessmentDataMixin
+from wise.msfd.compliance.vocabulary import ASSESSED_ARTICLES
 from wise.msfd.gescomponents import DESCRIPTOR_TYPES
 
 from .base import BaseNatSummaryView
@@ -18,14 +19,14 @@ class DescriptorLevelAssessments(BaseNatSummaryView, AssessmentDataMixin):
         'Art9': 'Article 9 - GES Determination',
         'Art8': 'Article 8 - Initial Assessment',
         'Art10': 'Article 10 - Environmental Targets',
-        'Art11': 'Article 11 - Monitoring Programmes'
+        'Art11': 'Article 11 - Monitoring Programmes',
     }
 
     descriptor_types = DESCRIPTOR_TYPES
 
     def get_article_title(self, article):
-
-        return self.article_titles[article]
+        return self.article_name(article)
+        # return self.article_titles[article]
 
     def __call__(self):
         data = self.setup_descriptor_level_assessment_data()
