@@ -1,0 +1,126 @@
+<p>
+  The updated Programme of Measures should describe how the new measures will be
+  implemented (e.g. by legal, policy, socio-economic or financial instruments),
+  and provide an overview of potentially co-financed measures (Article 22) where
+  relevant.
+</p>
+<p><br /></p>
+<p>The assessor must check whether:</p>
+<ul>
+  <li>
+    <p lang="fr-BE">
+      Implementation mechanisms are reported for each measure. The following
+      schema fields: &lsquo;MeasureDescription&rsquo;,
+      &lsquo;PoliciesConventions&rsquo;, PolicyNational,
+      ResponsibleCompetentAuthority, ResponsibleOrganisation, CoordinationLevel,
+      RegionalCooperation_countries.
+    </p>
+  </li>
+  <li>
+    <p lang="fr-BE">
+      Financing for the measures is secured (&lsquo;Financing&rsquo; schema
+      field)
+    </p>
+  </li>
+  <li>
+    <p lang="fr-BE">
+      The measure description clearly explains the &lsquo;modes of
+      actions&rsquo;
+    </p>
+  </li>
+  <li>
+    <p lang="fr-BE">
+      The MS clearly explains how the measures effectiveness will be assessed
+      (&ldquo;Indicators&rdquo; schema field)
+    </p>
+  </li>
+</ul>
+<p lang="en-US"><br /></p>
+<p>
+  The assessor must check these three aspects are reported for all relevant
+  measures in the relevant schema fields. Select &lsquo;yes&rsquo; if all
+  aspects are clearly reported for all relevant measures,
+  &lsquo;partially&rsquo; if only 1 or 2 out of three are specified or if they
+  are all specified but not for all the relevant measures, &lsquo;not
+  clear&rsquo; if the information reported is not clear and inconsistent,
+  &lsquo;no&rsquo; if they are not specified for any of the relevant measures.
+</p>
+<p lang="en-US"><br /></p>
+<p>
+  A categorisation of the &lsquo;modes of action&rsquo; is provided in the
+  guidance document (see GD 10, Annex A.3): technical, legislative, economic and
+  policy-driven. The following categories were used for detailed reporting of
+  new measures under Art. 13 MSFD under the first cycle:
+</p>
+<table >
+  <tbody>
+    <tr>
+      <td >
+        <p><strong>N&deg; Mode of action</strong></p>
+      </td>
+    </tr>
+    <tr>
+      <td >
+        <p>
+          1 <strong>Technical:</strong> an actual action that one can see (and
+          measure) in the field. In principle, a wide range of measures has a
+          primarily technical mode of action.
+        </p>
+      </td>
+    </tr>
+    <tr>
+      <td >
+        <p>
+          2 <strong>Legislative:</strong> Adapting or supplementing national
+          environmental law and other national legislation influencing the
+          marine environment to implement environmental targets and to
+          achieve/maintain GES.
+        </p>
+      </td>
+    </tr>
+    <tr>
+      <td >
+        <p>
+          3 <strong>Economic:</strong> such as economic incentives that provide
+          financial motives to stimulate the desired behaviour or discourage
+          unwanted behaviour. Financial instruments are often aimed at the
+          uptake of technical measures.
+        </p>
+      </td>
+    </tr>
+    <tr>
+      <td >
+        <p>
+          4 <strong>Policy-driven:</strong> Policy instruments can be economic
+          incentives, but also other instruments, such as voluntary agreements
+          with stakeholders, communication strategies, awareness-raising, and
+          education.
+        </p>
+      </td>
+    </tr>
+  </tbody>
+</table>
+<p><br /></p>
+<p>
+  No specific schema field is included for the second cycle reporting, but these
+  &lsquo;modes of action&rsquo; can be derived from the schema field
+  &lsquo;MeasureDescription&rsquo;.
+</p>
+<p><br /></p>
+<p>
+  In addition, GD18, p. 15-16 provides further guidance on what implementation
+  status would mean for the different modes of action. This must be checked in
+  the schema field &lsquo;ImplementationStatus&rsquo;.
+</p>
+<p><br /></p>
+<p>
+  Select &lsquo;not relevant&rsquo; if there are no modified and additional new
+  measures.
+</p>
+<p lang="en-US"><br /></p>
+<p>
+  For this question, priority will be given to e-reporting as there are specific
+  schema fields for each measure. If there is no information in the e-reporting,
+  check the text report. Specify where this information is found in the text
+  report.
+</p>

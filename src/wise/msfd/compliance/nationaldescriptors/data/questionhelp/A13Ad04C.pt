@@ -1,0 +1,393 @@
+<p>
+  This question assesses the consistency of the reporting across Article 13 (the
+  measures) and Article 8 (the pressures). It refers to the pressures that the
+  gap analysis identified (or should have identified) as needing to be
+  addressed.
+</p>
+<p><br /></p>
+<p>
+  There are specific schema fields to check in the e-reporting to determine
+  whether the Member State has clearly indicated what pressure(s) the measure
+  addresses. The assessor should cross-check this information with the
+  information reported under Article 8 to verify they are consistent. However,
+  the way pressures are addressed in Art 8 is quite generic, just listing the
+  type of pressure from the enumeration list &ndash; see table below.
+</p>
+<p><br /></p>
+<p>
+  <em
+    >An indicative list of pressures considered for Article 8(1)(b) assessments.
+    Certain pressures are directly relevant for particular descriptors and have
+    associated criteria in the GES Decision (primary criteria are in bold),
+    whilst other pressures needed to be considered in relation to Article
+    8(1)(a) assessments.</em
+  >
+</p>
+<table >
+  <tbody>
+    <tr>
+      <td >
+        <p><strong>Type</strong></p>
+      </td>
+      <td >
+        <p><strong>Theme</strong></p>
+      </td>
+      <td >
+        <p><strong>Pressure</strong></p>
+      </td>
+      <td >
+        <p><strong>Descriptor</strong></p>
+      </td>
+    </tr>
+    <tr>
+      <td rowspan="20" >
+        <p>Anthropogenic pressures on the marine environment (Table 2a)</p>
+      </td>
+      <td ></td>
+      <td >
+        <p>All pressures</p>
+      </td>
+      <td ></td>
+    </tr>
+    <tr>
+      <td rowspan="7" >
+        <p>Biological</p>
+      </td>
+      <td >
+        <p>All biological pressures</p>
+      </td>
+      <td ></td>
+    </tr>
+    <tr>
+      <td >
+        <p>Input or spread of non-indigenous species</p>
+      </td>
+      <td >
+        <p>D2</p>
+      </td>
+    </tr>
+    <tr>
+      <td >
+        <p>Input of microbial pathogens</p>
+      </td>
+      <td ></td>
+    </tr>
+    <tr>
+      <td >
+        <p>
+          Input of genetically modified species and translocation of native
+          species
+        </p>
+      </td>
+      <td ></td>
+    </tr>
+    <tr>
+      <td >
+        <p>
+          Loss of, or change to, natural biological communities due to
+          cultivation of animal or plant species
+        </p>
+      </td>
+      <td >
+        <p>D3</p>
+      </td>
+    </tr>
+    <tr>
+      <td >
+        <p>
+          Disturbance of species (e.g. where they breed, rest and feed) due to
+          human presence
+        </p>
+      </td>
+      <td ></td>
+    </tr>
+    <tr>
+      <td >
+        <p>
+          Extraction of, or mortality/injury to, wild species (by commercial and
+          recreational fishing and other activities)
+        </p>
+      </td>
+      <td >
+        <p>D3</p>
+      </td>
+    </tr>
+    <tr>
+      <td rowspan="4" >
+        <p>Physical</p>
+      </td>
+      <td >
+        <p>All physical pressures</p>
+      </td>
+      <td ></td>
+    </tr>
+    <tr>
+      <td >
+        <p>Physical disturbance to seabed</p>
+      </td>
+      <td >
+        <p>D6</p>
+      </td>
+    </tr>
+    <tr>
+      <td >
+        <p>Physical loss of the seabed</p>
+      </td>
+      <td >
+        <p>D6</p>
+      </td>
+    </tr>
+    <tr>
+      <td >
+        <p>Changes to hydrological conditions</p>
+      </td>
+      <td >
+        <p>D7</p>
+      </td>
+    </tr>
+    <tr>
+      <td rowspan="8" >
+        <p>Substances, litter and energy</p>
+      </td>
+      <td >
+        <p>All pressures related to inputs of substances, litter and energy</p>
+      </td>
+      <td ></td>
+    </tr>
+    <tr>
+      <td >
+        <p>
+          Input of nutrients &ndash; diffuse sources, point sources, atmospheric
+          deposition
+        </p>
+      </td>
+      <td >
+        <p>D5</p>
+      </td>
+    </tr>
+    <tr>
+      <td >
+        <p>Input of organic matter &ndash; diffuse sources and point sources</p>
+      </td>
+      <td >
+        <p>D5</p>
+      </td>
+    </tr>
+    <tr>
+      <td >
+        <p>
+          Input of other substances (e.g. synthetic substances, non-synthetic
+          substances, radionuclides) &ndash; diffuse sources, point sources,
+          atmospheric deposition, acute events
+        </p>
+      </td>
+      <td >
+        <p>D8</p>
+      </td>
+    </tr>
+    <tr>
+      <td >
+        <p>
+          Input of litter (solid waste matter, including micro-sized litter)
+        </p>
+      </td>
+      <td >
+        <p>D10</p>
+      </td>
+    </tr>
+    <tr>
+      <td >
+        <p>Input of anthropogenic sound (impulsive, continuous)</p>
+      </td>
+      <td >
+        <p>D11</p>
+      </td>
+    </tr>
+    <tr>
+      <td >
+        <p>
+          Input of other forms of energy (including electromagnetic fields,
+          light and heat)
+        </p>
+      </td>
+      <td >
+        <p>D11</p>
+      </td>
+    </tr>
+    <tr>
+      <td >
+        <p>Input of water&ndash;point sources (e.g. brine)</p>
+      </td>
+      <td ></td>
+    </tr>
+  </tbody>
+</table>
+<p><br /></p>
+<p>
+  To get a better understanding of the purpose of the measures and how it
+  addresses pressures, including pressures not identified under Article 8<em
+    >(1)</em
+  >
+  on different parts of the ecosystem, the assessor should check the scheme
+  fields: &lsquo;MeasureDescription&rsquo; (free text) and
+  &lsquo;MeasurePurpose&rsquo; where the MS is required to specify whether the
+  measure:
+</p>
+<p><br /></p>
+<ul>
+  <ul>
+    <ul>
+      <ul>
+        <ul>
+          <ol type="a">
+            <li>
+              <p lang="fr-BE">
+                Directly
+                <strong>prevent further inputs of pressure</strong> (e.g. by
+                managing the source activity)
+              </p>
+            </li>
+            <li>
+              <p lang="fr-BE">
+                Directly
+                <strong>reduce existing levels of the pressure</strong> in the
+                marine environment (e.g. removal of litter or oil spill
+                clean-up)
+              </p>
+            </li>
+            <li>
+              <p lang="fr-BE">
+                Indirectly
+                <strong>prevent further inputs of pressure</strong> (e.g. by
+                governance mechanisms, financial incentives, awareness
+                campaigns)
+              </p>
+            </li>
+            <li>
+              <p lang="fr-BE">
+                Directly<strong> restores</strong> a species or habitat(s)23
+              </p>
+            </li>
+            <li>
+              <p lang="fr-BE">
+                Ad-hoc measure for an exception under Art. 14(1) (b), (c) or (d)
+              </p>
+            </li>
+            <li>
+              <p lang="fr-BE">
+                <em
+                  >Improve knowledge base (e.g. by research or one-off
+                  surveys)</em
+                >
+              </p>
+            </li>
+            <li>
+              <p lang="fr-BE">
+                <em
+                  >Establish monitoring programmes (of relevant activities,
+                  pressures or impacts)</em
+                >
+              </p>
+            </li>
+            <li>
+              <p lang="fr-BE">
+                <em
+                  >Assess effectiveness of the measures (through assessing
+                  changes in state/impact/pressure in the marine
+                  environment)</em
+                >
+              </p>
+            </li>
+            <li>
+              <p lang="fr-BE"><em>Not known</em></p>
+            </li>
+          </ol>
+        </ul>
+      </ul>
+    </ul>
+  </ul>
+</ul>
+<p><br /></p>
+<p>
+  Note that, according to the definition in GD10, options f, g and h do not fall
+  within the definition of measures, but if reported in the PoM update (e.g.
+  because they were also reported in the first cycle), they should be classified
+  here. These categories should only be used when they are the main focus of the
+  reported &lsquo;measure&rsquo; (i.e. not if they are a component of a measure
+  focused on categories a-e).
+</p>
+<p><br /></p>
+<p>
+  In addition, the assessor should check the text report to verify whether any
+  supporting information justifies how the different pressures are addressed by
+  the modified new measures and the additional new measures in the second cycle,
+  i.e. assess whether the measures address all reported activities.
+</p>
+<p><br /></p>
+<p>
+  List the measures (codes and titles) and provide a brief summary, plus
+  conclusions about the addressed pressures.
+</p>
+<p><br /></p>
+<p>
+  To present the information, the assessor should fill the following table,
+  clearly distinguishing between the modified new measures and the additional
+  new measures:
+</p>
+<p><br /></p>
+<table >
+  <tbody>
+    <tr>
+      <td >
+        <p><strong>Measure Code</strong></p>
+      </td>
+      <td >
+        <p><strong>Measure Title</strong></p>
+      </td>
+      <td >
+        <p><strong>Pressure Addressed</strong></p>
+      </td>
+      <td >
+        <p><strong>Assessment</strong></p>
+      </td>
+    </tr>
+    <tr>
+      <td colspan="4" >
+        <p><em>Modified new measures</em></p>
+      </td>
+    </tr>
+    <tr>
+      <td ></td>
+      <td ></td>
+      <td ></td>
+      <td ></td>
+    </tr>
+    <tr>
+      <td colspan="4" >
+        <p><em>Additional new measures</em></p>
+      </td>
+    </tr>
+    <tr>
+      <td ></td>
+      <td ></td>
+      <td ></td>
+      <td ></td>
+    </tr>
+  </tbody>
+</table>
+<p><br /></p>
+<p><br /></p>
+<p>Specify where this information is found in the text report.</p>
+<p><br /></p>
+<p>
+  Select &lsquo;yes&rsquo; if all the relevant measures schema fields are linked
+  to relevant operational targets, &lsquo;partially&rsquo; if this is true only
+  for part of the relevant measures, &lsquo;not clear&rsquo; if the information
+  reported is not clear and inconsistent, &lsquo;no&rsquo; if none of the
+  relevant measures are linked to operational targets.
+</p>
+<p>
+  Select &lsquo;not relevant&rsquo; if there are no modified and additional new
+  measures.
+</p>
+<p><br /></p>

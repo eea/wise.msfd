@@ -1,0 +1,74 @@
+<p>
+  In cases where &lsquo;Measure withdrawn&rsquo; is selected, the MS must
+  provide a reason in &lsquo;ImplementationReason&rsquo;.
+</p>
+<p><br /></p>
+<p>
+  A predefined list of options for withdrawal, delay or other obstacles is
+  provided, which are consistent with the reasons identified under WFD
+  reporting25, but with adaptations as needed in the context of the MSFD:
+</p>
+<ul>
+  <li>
+    <p lang="fr-BE">
+      No obstacles to implementation; default response for when implementation
+      has proceeded as expected;
+    </p>
+  </li>
+  <li>
+    <p lang="fr-BE">
+      Acceptance: There are difficulties in the acceptance of the measure, e.g.
+      by certain stakeholders, government departments, Member States or in an EU
+      or regional context.
+    </p>
+  </li>
+  <li>
+    <p lang="fr-BE">
+      Financing: Lack of financing: no or insufficient budget (including
+      material and staff costs) yet approved.
+    </p>
+  </li>
+  <li>
+    <p lang="fr-BE">
+      Mechanism for implementation &ndash; national: There is a lack of
+      mechanism for the implementation at the national level, e.g. the necessary
+      regulation or other mechanism required for implementing the measure has
+      not yet been adopted.
+    </p>
+  </li>
+  <li>
+    <p lang="fr-BE">
+      Mechanism for implementation &ndash; regional: There is a lack of
+      mechanism for the implementation in a Regional Sea Convention, e.g. the
+      necessary regulation or other mechanism required for implementing the
+      measure has not yet been adopted.
+    </p>
+  </li>
+  <li>
+    <p lang="fr-BE">
+      Mechanism for implementation &ndash; EU: There is a lack of mechanism for
+      the implementation at the EU level, e.g. the necessary regulation or other
+      mechanism required for implementing the measure has not yet been adopted.
+    </p>
+  </li>
+  <li>
+    <p lang="fr-BE">
+      Mechanism for implementation &ndash; International: There is a lack of
+      mechanism for the implementation at the international level, e.g. the
+      necessary regulation or other mechanism required for implementing the
+      measure has not yet been adopted.
+    </p>
+  </li>
+</ul>
+<p><br /></p>
+<p>
+  Some further information about the measure might be reported in &lsquo;Measure
+  description&rsquo;, &lsquo;Reason description&rsquo; and in the text report.
+</p>
+<p><br /></p>
+<p>
+  The assessor should assess, with expert judgement, whether the justification
+  provided is adequate.
+</p>
+<p><br /></p>
+<p>If no measure is withdrawn, select &lsquo;not relevant&rsquo;.</p>

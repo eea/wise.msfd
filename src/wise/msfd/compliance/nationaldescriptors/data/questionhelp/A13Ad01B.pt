@@ -1,0 +1,319 @@
+<p>
+  The e-reporting information will be in an Excel file where the assessor can
+  check the relevant schema fields.
+</p>
+<p>The assessor must:</p>
+<ul>
+  <li>
+    <p lang="fr-BE">
+      List in bullet points format the existing measures that are modified and
+      the new existing measures if any.
+    </p>
+  </li>
+  <li>
+    <p lang="fr-BE">
+      Always mention the code and the title of the measures and provide a short
+      summary of the measure.
+    </p>
+  </li>
+  <li>
+    <p lang="fr-BE">
+      Differentiate between existing measures from WFD and existing measures
+      from other policies.
+    </p>
+  </li>
+  <li>
+    <p lang="fr-BE">
+      Check whether the MS specified the different categories of measures 1a/1b
+    </p>
+  </li>
+  <li>
+    <p lang="fr-BE">
+      Check whether the link between the updated/new existing measures and the
+      other policies is clear and relevant.
+    </p>
+    <ul>
+      <li>
+        <p lang="fr-BE">Are relevant KTM reported?</p>
+      </li>
+      <li>
+        <p lang="fr-BE">
+          Is all relevant legislation covered? Is there anything that the MS has
+          missed?
+        </p>
+      </li>
+    </ul>
+  </li>
+</ul>
+<p><br /></p>
+<p>
+  Annex A of GD 10 (section 1) provides, for each GES descriptor, an indicative
+  list of relevant EU legislation (Table below).
+</p>
+<p><br /></p>
+<table>
+  <tbody>
+    <tr>
+      <td  height="4">
+        <p><strong>Descriptor(s)</strong></p>
+      </td>
+      <td >
+        <p><strong>Key examples of related EU legislation</strong></p>
+      </td>
+    </tr>
+    <tr>
+      <td  height="5">
+        <p>D1, D4, D6</p>
+      </td>
+      <td >
+        <p>Birds Directive (2009/147/EC)</p>
+      </td>
+    </tr>
+    <tr>
+      <td  height="5">
+        <p>D1, D4, D6</p>
+      </td>
+      <td >
+        <p>Habitats Directive (92/42/EEC)</p>
+      </td>
+    </tr>
+    <tr>
+      <td  height="5">
+        <p>D2</p>
+      </td>
+      <td >
+        <p>
+          Regulation (EC) No 708/2007 concerning use of alien and locally absent
+          species in aquaculture
+        </p>
+      </td>
+    </tr>
+    <tr>
+      <td  height="5">
+        <p>D2</p>
+      </td>
+      <td >
+        <p>
+          Regulation (EU) No 1143/2014 on the prevention and management of the
+          introduction and spread of invasive alien species
+        </p>
+      </td>
+    </tr>
+    <tr>
+      <td  height="5">
+        <p>D3, D6</p>
+      </td>
+      <td >
+        <p>
+          Common Fisheries Policy (Regulation (EU) 1380/2013) and its related
+          legislation
+        </p>
+      </td>
+    </tr>
+    <tr>
+      <td  height="5">
+        <p>D5</p>
+      </td>
+      <td >
+        <p>National Emissions Ceilings (NEC) Directive (2016/2284/EU)</p>
+      </td>
+    </tr>
+    <tr>
+      <td  height="5">
+        <p>D5</p>
+      </td>
+      <td >
+        <p>Nitrate Directive (91/676/EEC)</p>
+      </td>
+    </tr>
+    <tr>
+      <td  height="5">
+        <p>D5, D10</p>
+      </td>
+      <td >
+        <p>Urban Waste Water Directive (91/27/EEC)</p>
+      </td>
+    </tr>
+    <tr>
+      <td  height="5">
+        <p>D6</p>
+      </td>
+      <td >
+        <p>Renewable energy directive (2018/2001/EU)</p>
+      </td>
+    </tr>
+    <tr>
+      <td  height="5">
+        <p>D6, D7, D11</p>
+      </td>
+      <td >
+        <p>EIA Directive (2011/92/EU)</p>
+      </td>
+    </tr>
+    <tr>
+      <td  height="5">
+        <p>D6, D7, D11</p>
+      </td>
+      <td >
+        <p>SEA directive (2001/42/EC)</p>
+      </td>
+    </tr>
+    <tr>
+      <td  height="5">
+        <p>D8</p>
+      </td>
+      <td >
+        <p>
+          Chemical legislation including Reach Regulation (Regulation 1907/2006)
+          and biocides Regulation 528/2012
+        </p>
+      </td>
+    </tr>
+    <tr>
+      <td  height="5">
+        <p>D8</p>
+      </td>
+      <td >
+        <p>
+          Directive 2014/94/EU on the deployment of alternative fuels
+          infrastructure
+        </p>
+      </td>
+    </tr>
+    <tr>
+      <td  height="5">
+        <p>D8</p>
+      </td>
+      <td >
+        <p>
+          Directive on Environmental Quality Standards (2008/105/EC), as amended
+          by Directive 2013/39/EU
+        </p>
+      </td>
+    </tr>
+    <tr>
+      <td  height="5">
+        <p>D8</p>
+      </td>
+      <td >
+        <p>Directive on industrial emissions (2010/75/EU)</p>
+      </td>
+    </tr>
+    <tr>
+      <td  height="5">
+        <p>D8</p>
+      </td>
+      <td >
+        <p>Sulphur Directive (2012/33)</p>
+      </td>
+    </tr>
+    <tr>
+      <td  height="5">
+        <p>D8, D10</p>
+      </td>
+      <td >
+        <p>Directive on ship-source pollutions (2009/123/EC)</p>
+      </td>
+    </tr>
+    <tr>
+      <td  height="5">
+        <p>D9</p>
+      </td>
+      <td >
+        <p>
+          Seafood legislation: Regulation 188/2006, Regulation 2073/2005,
+          Regulation 178/2002, Regulation 852/2004, Regulation 854/2004,
+          Regulation 853/2004
+        </p>
+      </td>
+    </tr>
+    <tr>
+      <td  height="5">
+        <p>D10</p>
+      </td>
+      <td >
+        <p>Bathing water directive (2006/7/EC)</p>
+      </td>
+    </tr>
+    <tr>
+      <td  height="5">
+        <p>D10</p>
+      </td>
+      <td >
+        <p>
+          Directive (EU) 2019/883 on port reception facilities for the delivery
+          of waste from ships
+        </p>
+      </td>
+    </tr>
+    <tr>
+      <td  height="5">
+        <p>D10</p>
+      </td>
+      <td >
+        <p>Waste Framework Directive (2008/9/EC)</p>
+      </td>
+    </tr>
+    <tr>
+      <td  height="4">
+        <p>D10</p>
+      </td>
+      <td >
+        <p>
+          Directive (EU) 2019/904 on the reduction of the impact of certain
+          plastic products on the environment
+        </p>
+      </td>
+    </tr>
+  </tbody>
+</table>
+<p><br /></p>
+<p>
+  The assessor should provide a conclusion on whether it is clear why the new
+  existing measures are relevant and how they contribute to achieving the
+  objectives of MSFD.
+</p>
+<p><br /></p>
+<p>
+  If existing measures have not been updated (see question Com02B.), select
+  &lsquo;not relevant&rsquo;.
+</p>
+<p><br /></p>
+<p>
+  Start by stating which response option you have selected and continue
+  explaining why. This is applicable to all summary boxes. E.g. &lsquo;
+</p>
+<ul>
+  <li>
+    <p lang="fr-BE">
+      &lsquo;The MS has not explained how the updates/changes to the existing
+      measures from the first cycle contribute to achieving GES&rsquo;; or
+    </p>
+  </li>
+  <li>
+    <p lang="fr-BE">
+      &lsquo;The MS has clearly explained how the updates/changes to the
+      existing measures from the first cycle contribute to achieving GES&rsquo;
+      or
+    </p>
+  </li>
+  <li>
+    <p lang="fr-BE">
+      The MS has only partially explained how the updates/changes to the
+      existing measures from the first cycle contribute to achieving GES&rsquo;.
+    </p>
+  </li>
+  <li>
+    <p lang="fr-BE">
+      &lsquo;It is not clear whether the MS has explained how the
+      updates/changes to the existing measures from the first cycle contribute
+      to achieving GES&rsquo;.
+    </p>
+  </li>
+  <li>
+    <p lang="fr-BE">
+      &lsquo;Not relevant because the MS has not reported any change to existing
+      measures&rsquo;.
+    </p>
+  </li>
+</ul>

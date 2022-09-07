@@ -1,0 +1,36 @@
+<p>
+  When a measure has been withdrawn, i.e. contrary to the Programme of Measures
+  reported under Article 13, the measure is no longer intended to be put into
+  practice. That means that the measure has been cancelled for objective,
+  specific and transparent reasons.
+</p>
+<p>
+  If a measure has been withdrawn, this amounts to an update of the Programme of
+  Measures. The updated Programme of Measures has to be reported only under
+  Article 13. However, Article 18 refers to the implementation of the original
+  Programme of Measures of which the measure in question was a part, and a
+  withdrawal amounts to a special case of the first implementation stage
+  &ldquo;Implementation not started&rdquo;. Therefore, the withdrawal needs to
+  be reported under Article 18.
+</p>
+<p><br /></p>
+<p>
+  Use only e-reporting, There are specific schema fields to check in the
+  e-reporting to answer this question. If no information found in e-reporting,
+  check text report.
+</p>
+<p><br /></p>
+<p>The assessor must:</p>
+<ul>
+  <li>
+    <p lang="fr-BE">
+      filter the relevant schema fields to see whether any new measure was
+      withdrawn in the second cycle PoM
+    </p>
+  </li>
+  <li>
+    <p lang="fr-BE">
+      list all modified measures per descriptor (code and title).
+    </p>
+  </li>
+</ul>
