@@ -91,6 +91,13 @@
     />
 
   <browser:page
+    for="*"
+    name="edit-assessment-data-2022-cross-cutting"
+    class=".assessment.EditAssessmentDataViewCrossCutting2022"
+    permission="wise.ViewAssessmentEditPage"
+    />
+
+  <browser:page
     for="..interfaces.INationalDescriptorAssessmentSecondary"
     name="edit-assessment-data-2018"
     class=".assessment.EditAssessmentDataViewSecondary"

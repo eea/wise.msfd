@@ -776,7 +776,6 @@ class EditAssessmentSummaryForm(Form, BaseComplianceView):
 
 
 class EditAssessmentDataFormMain(Form):
-
     @property
     def criterias(self):
         return self.descriptor_obj.sorted_criterions()      # criterions
@@ -785,12 +784,12 @@ class EditAssessmentDataFormMain(Form):
     def help(self):
         return render_assessment_help(self.criterias, self.descriptor)
 
-    def get_question_intro(self, subform):
+    def get_question_guidance(self, subform):
         if not hasattr(subform, '_question'):
             return ''
 
         question_id = subform._question.id
-        text = render_question_intro(question_id)
+        text = render_question_guidance(question_id)
 
         return text
 
@@ -895,7 +894,7 @@ def render_assessment_help(criterias, descriptor):
     return help_template(rows=rows)
 
 
-def render_question_intro(question_id):
+def render_question_guidance(question_id):
     template = PageTemplateFile(
         'src/wise.msfd/src/wise/msfd/compliance/nationaldescriptors'
             + '/data/questionhelp/{}.pt'.format(question_id)

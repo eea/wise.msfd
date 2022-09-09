@@ -47,6 +47,14 @@
 
   <browser:viewlet
     name="plone.htmlhead.title"
+    view='wise.msfd.compliance.interfaces.IEditAssessmentFormCrossCutting'
+    manager="plone.app.layout.viewlets.interfaces.IHtmlHead"
+    class=".viewlets.AssessmentEditTitleViewletCrossCutting"
+    permission="zope2.View"
+    />
+
+  <browser:viewlet
+    name="plone.htmlhead.title"
     view='.interfaces.INationaldescriptorArticleView'
     manager="plone.app.layout.viewlets.interfaces.IHtmlHead"
     class=".viewlets.ArticleTitleViewlet"

@@ -13,12 +13,6 @@
 
     <div class="left-side-form nat-edit-form">
 
-      <div class="crt-def">
-        <button type="button" class="btn btn-primary btn-lg"
-          data-toggle="modal" data-target="#assessment-help">
-          Criteria definition
-        </button>
-      </div>
       <h2 tal:content="structure view/title" class="report-title">Title here</h2>
       <!--<h4 class="process-phase-title" >-->
         <!--Current phase: <span tal:content="python: view.current_phase[1]">Adequacy</span>-->
@@ -35,13 +29,10 @@
 
         <div id="assessment-edit-infobox"></div>
 
-        <div metal:use-macro="context/wise-macros/macros/nat-desc-report-nav"></div>
+        <div metal:use-macro="context/wise-macros/macros/nat-desc-report-nav-cross-cutting"></div>
       </div>
 
       <div id="comp-national-descriptor">
-
-        <div tal:replace="structure view/help"
-          tal:on-error="string:Error in help">Subform help here</div>
 
         <div class="modal fade" id="question-intro" tabindex="-1" role="dialog">
           <div class="modal-dialog modal-lg" role="document">

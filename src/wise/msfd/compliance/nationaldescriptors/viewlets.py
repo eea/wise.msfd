@@ -79,6 +79,18 @@ class AssessmentEditTitleViewletSecondary(BaseTitleViewlet, BaseView):
                 u'{country}'.format(**params))
 
 
+class AssessmentEditTitleViewletCrossCutting(BaseTitleViewlet, BaseView):
+
+    @property
+    def page_title(self):
+        params = {
+            'country': self.country_name,
+        }
+
+        return (u'Edit COM/Cross cutting/2022/'
+                u'{country}'.format(**params))
+
+
 class ArticleTitleViewlet(BaseTitleViewlet, BaseView):
 
     @property

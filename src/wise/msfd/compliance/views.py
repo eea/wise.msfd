@@ -10,8 +10,11 @@ from plone import api
 from plone.api.content import get_state, transition
 from plone.app.layout.viewlets.content import ContentHistoryView
 from plone.dexterity.utils import createContentInContainer as create
+from plone.protect.interfaces import IDisableCSRFProtection
 from Products.Five.browser import BrowserView
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
+
+from zope.interface import alsoProvides
 
 from .base import BaseComplianceView, STATUS_COLORS
 from six.moves import range
@@ -145,6 +148,8 @@ class CommentsList(BaseComplianceView):
         return user.id
 
     def add_comment(self):
+        alsoProvides(self.request, IDisableCSRFProtection)
+
         form = self.request.form
         question_id = form.get('q').lower()
         thread_id = form.get('thread_id')

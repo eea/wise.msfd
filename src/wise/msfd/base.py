@@ -11,8 +11,9 @@ from Acquisition import aq_inner
 from plone.api.portal import get_tool
 from plone.z3cform.layout import FormWrapper
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
-from wise.msfd.compliance.interfaces import (IEditAssessmentForm,
-                                             IEditAssessmentFormSecondary)
+from wise.msfd.compliance.interfaces import (
+    IEditAssessmentForm, IEditAssessmentFormCrossCutting, 
+    IEditAssessmentFormSecondary)
 from z3c.form.field import Fields
 from z3c.form.form import Form
 
@@ -455,6 +456,13 @@ class EditAssessmentFormWrapperSecondary(MainFormWrapper):
     Needed to override the page title """
 
     # implements(IEditAssessmentFormSecondary)
+
+
+@implementer(IEditAssessmentFormCrossCutting)
+class EditAssessmentFormWrapperCrossCutting(MainFormWrapper):
+    """ Wrapper for EditAssessmentDataForm
+
+    Needed to override the page title """
 
 
 @implementer(IEmbeddedForm)

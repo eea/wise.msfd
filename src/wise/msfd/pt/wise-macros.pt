@@ -227,6 +227,11 @@
   </div>
 </metal:macro>
 
+<metal:macro define-macro="nat-desc-report-nav-cross-cutting">
+  <div class="report-nav fixed">
+  </div>
+</metal:macro>
+
 <metal:macro define-macro="reg-desc-report-nav">
   <div class="report-nav fixed">
     <div class="nav-wrapper">

@@ -661,7 +661,7 @@ def format_assessment_data(article, elements, questions, muids, data,
                 values.append(value)
 
         summary_title = '{}_{}_Summary'.format(article, question.id)
-        summary = t2rt(data.get(summary_title) or '')
+        summary = getattr(data.get(summary_title), 'output', '') or ''
 
         sn = '{}_{}_Score'.format(article, question.id)
         score = data.get(sn, {})

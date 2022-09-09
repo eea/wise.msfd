@@ -999,7 +999,7 @@ class AssessmentQuestionDefinition:
             res = filtered_targets(res, self)
         if self.article in ['Art3', 'Art4']:
             res = filtered_descriptors(res, self)
-        if self.article in ['Art13', 'Art14']:
+        if self.article in ['Art13', 'Art14', 'Art1314CrossCutting']:
             res = filtered_descriptors(res, self)
 
         return sorted_criterions(res)
@@ -1023,6 +1023,7 @@ class AssessmentQuestionDefinition:
             'Art11': self._art_89_ids,
             'Art13': self._art_89_ids,
             'Art14': self._art_89_ids,
+            'Art1314CrossCutting': lambda d, **kwargs: [],
         }
 
         return impl[self.article](descriptor, **kwargs)

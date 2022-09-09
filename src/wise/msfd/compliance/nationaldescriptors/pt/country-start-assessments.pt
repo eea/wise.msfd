@@ -190,6 +190,19 @@
                         <th>Article 18 Progress on measures</th>
                       </tr>
 
+                      <tr>
+                        <td class="assessment-status-td"><i>Cross-cutting</i></td>
+                        <td class="assessment-status-td">-</td>
+                        <td class="assessment-status-td">-</td>
+                        <td class="assessment-status-td">-</td>
+                        <td class="assessment-status-td">-</td>
+                        <td class="assessment-status-td" colspan="2">
+                          <a tal:attributes="href python: country_folder.absolute_url() + '/@@edit-assessment-data-2022-cross-cutting'"
+                              class="btn btn-xs btn-primary" target='_blank'>2022</a>
+                        </td>
+                        <td class="assessment-status-td">-</td>
+                      </tr>
+
                       <tr tal:repeat="desc python: view.get_descriptors(region)">
                         <th class="sticky-col sub-header">
                           <span tal:content="python: view.descriptor_for_code(desc.id).title">D0</span>

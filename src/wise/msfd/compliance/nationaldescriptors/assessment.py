@@ -14,8 +14,10 @@ from plone.app.textfield import RichText
 from plone.z3cform.layout import wrap_form
 from Products.Five.browser import BrowserView
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
-from wise.msfd.base import (EditAssessmentFormWrapper as MainFormWrapper,
-                            EditAssessmentFormWrapperSecondary)
+from wise.msfd.base import (
+    EditAssessmentFormWrapper as MainFormWrapper,
+    EditAssessmentFormWrapperCrossCutting,
+    EditAssessmentFormWrapperSecondary)
 from wise.msfd.base import EmbeddedForm
 from wise.msfd.compliance.assessment import (EditAssessmentDataFormMain,
                                              PHASES, additional_fields,
@@ -86,6 +88,7 @@ class EditAssessmentDataForm(BaseView, EditAssessmentDataFormMain):
     """
     name = 'art-view'
     section = 'national-descriptors'
+    edit_assessment_view_name = '/@@edit-assessment-data-2018'
 
     subforms = None
     year = session_name = '2018'
@@ -210,7 +213,7 @@ class EditAssessmentDataForm(BaseView, EditAssessmentDataFormMain):
             last.update(data)
             self.context.saved_assessment_data.append(last)
 
-        url = self.context.absolute_url() + '/@@edit-assessment-data-2018'
+        url = self.context.absolute_url() + self.edit_assessment_view_name
         self.request.response.setHeader('Content-Type', 'text/html')
 
         return self.request.response.redirect(url)
@@ -360,6 +363,8 @@ class EditAssessmentDataForm(BaseView, EditAssessmentDataFormMain):
 
 
 class EditAssessmentDataForm2022(EditAssessmentDataForm):
+    edit_assessment_view_name = '/@@edit-assessment-data-2022'
+
     @property
     def title(self):
         return u"Edit Commission assessment / {} / 2022 / {} / {} " \
@@ -369,6 +374,35 @@ class EditAssessmentDataForm2022(EditAssessmentDataForm):
             self.country_title,
             self.country_region_name,
         )
+
+
+class EditAssessmentDataFormCrossCutting2022(EditAssessmentDataForm):
+    edit_assessment_view_name = '/@@edit-assessment-data-2022-cross-cutting'
+    template = ViewPageTemplateFile("./pt/edit-assessment-data-cross-cutting.pt")
+
+    @property
+    def article(self):
+        return 'Art1314CrossCutting'
+
+    @property
+    def descriptor_title(self):
+        return 'CrossCutting'
+
+    @property
+    def descriptor(self):
+        return 'DCrossCutting'
+
+    @property
+    def descriptor_obj(self):
+        return 'DCrossCutting'
+
+    @property
+    def muids(self):
+        return []
+
+    @property
+    def title(self):
+        return u"Edit Commission Cross-Cutting assessment / 2022"
 
 
 class EditAssessmentDataFormSecondary(EditAssessmentDataForm):
@@ -408,6 +442,10 @@ class EditAssessmentDataFormSecondary(EditAssessmentDataForm):
 
 
 EditAssessmentDataView = wrap_form(EditAssessmentDataForm, MainFormWrapper)
-EditAssessmentDataView2022 = wrap_form(EditAssessmentDataForm2022, MainFormWrapper)
+EditAssessmentDataView2022 = wrap_form(
+    EditAssessmentDataForm2022, MainFormWrapper)
+EditAssessmentDataViewCrossCutting2022 = wrap_form(
+    EditAssessmentDataFormCrossCutting2022, 
+    EditAssessmentFormWrapperCrossCutting)
 EditAssessmentDataViewSecondary = wrap_form(EditAssessmentDataFormSecondary,
                                             EditAssessmentFormWrapperSecondary)
