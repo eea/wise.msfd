@@ -304,7 +304,8 @@ class BaseComplianceView(BrowserView, BasePublicPage, SecurityMixin):
             'Art11': {'2012': '2014', '2018': '2020'},
             'Art13': {'2012': '2016', '2018': '2022'},
             'Art14': {'2012': '2016', '2018': '2022'},
-            'Art18': {'2012': '2018', '2018': '2024'}
+            'Art18': {'2012': '2018', '2018': '2024'},
+            'Art1314CrossCutting': {'2012': '2016', '2018': '2022'}
         }
 
         if not article:
@@ -1023,7 +1024,7 @@ class AssessmentQuestionDefinition:
             'Art11': self._art_89_ids,
             'Art13': self._art_89_ids,
             'Art14': self._art_89_ids,
-            'Art1314CrossCutting': lambda d, **kwargs: [],
+            'Art1314CrossCutting': lambda d, **kwargs: ['All'],
         }
 
         return impl[self.article](descriptor, **kwargs)

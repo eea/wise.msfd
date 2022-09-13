@@ -63,6 +63,14 @@
 
   <browser:viewlet
     name="plone.htmlhead.title"
+    view='.interfaces.INationaldescriptorArticleViewCrossCutting'
+    manager="plone.app.layout.viewlets.interfaces.IHtmlHead"
+    class=".viewlets.ArticleTitleViewletCrossCutting"
+    permission="zope2.View"
+    />
+
+  <browser:viewlet
+    name="plone.htmlhead.title"
     view='.interfaces.INationaldescriptorSecondaryArticleView'
     manager="plone.app.layout.viewlets.interfaces.IHtmlHead"
     class=".viewlets.SecondaryArticleTitleViewlet"

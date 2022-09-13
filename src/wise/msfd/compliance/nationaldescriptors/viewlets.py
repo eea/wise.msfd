@@ -106,6 +106,17 @@ class ArticleTitleViewlet(BaseTitleViewlet, BaseView):
                 u'{country}/{region}'.format(**params))
 
 
+class ArticleTitleViewletCrossCutting(BaseTitleViewlet, BaseView):
+
+    @property
+    def page_title(self):
+        params = {
+            'country': self.country_name,
+        }
+
+        return (u'COM/2022/{country}'.format(**params))
+
+
 class SecondaryArticleTitleViewlet(BaseTitleViewlet, BaseView):
     @property
     def page_title(self):

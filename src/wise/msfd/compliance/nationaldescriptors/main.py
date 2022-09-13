@@ -42,8 +42,9 @@ from wise.msfd.utils import t2rt
 from .base import BaseView
 from ..interfaces import (ICountryDescriptorsFolder, ICountryStartAssessments,
                           ICountryStartReports, IMSFDReportingHistoryFolder)
-from .interfaces import (INationaldescriptorArticleView,
-                         INationaldescriptorSecondaryArticleView)
+from .interfaces import (
+    INationaldescriptorArticleView, INationaldescriptorArticleViewCrossCutting,
+    INationaldescriptorSecondaryArticleView)
 
 logger = getLogger('wise.msfd')
 
@@ -906,6 +907,130 @@ class NationalDescriptorArticleView(BaseView, AssessmentDataMixin):
             self.country_region_code, self.descriptor, self.article
         )
 
+        # score_2012 = score_2012
+        conclusion_2012_color = CONCLUSION_COLOR_TABLE.get(score_2012, 0)
+
+        change = (
+            assessment.phase_overall_scores
+            .get_range_index_for_phase('adequacy') - score_2012
+        )
+
+        # if 2018 adequacy is not relevant, change since 2012 is not relevant
+        if assessment.phase_overall_scores.adequacy['conclusion'][0] == '-':
+            change = 'Not relevant (-)'
+
+        self.assessment_data_2018_html = self.assessment_data_2018_tpl(
+            assessment=assessment,
+            score_2012=score_2012,
+            conclusion_2012=conclusion_2012,
+            conclusion_2012_color=conclusion_2012_color,
+            change_since_2012=change,
+            can_comment=self.can_comment
+        )
+
+        # Assessment header 2018
+        report_by_2018 = u'Commission'
+        # assessors_2018 = self.context.saved_assessment_data.assessors
+        assessors_2018 = getattr(
+            self.context.saved_assessment_data, 'ass_new', 'Not assessed'
+        )
+        assess_date_2018 = data.get('assess_date', u'Not assessed')
+        source_file_2018 = ('To be addedd...', '.')
+
+        can_edit = self.check_permission('wise.msfd: Edit Assessment')
+        show_edit_assessors = self.assessor_list and can_edit
+
+        file_version = self.get_file_version(self.country_date_assessed)
+
+        self.assessment_header_2018_html = self.assessment_header_template(
+            report_by=report_by_2018,
+            assessor_list=self.assessor_list,
+            assessors=assessors_2018,
+            assess_date=assess_date_2018,
+            source_file=source_file_2018,
+            show_edit_assessors=show_edit_assessors,
+            show_file_version=True,
+            file_version=file_version
+        )
+
+        return self.index()
+
+
+@implementer(INationaldescriptorArticleViewCrossCutting)
+class NationalDescriptorArticleViewCrossCutting(NationalDescriptorArticleView):
+    @property
+    def article(self):
+        return 'Art1314CrossCutting'
+
+    @property
+    def descriptor_title(self):
+        return 'CrossCutting'
+    
+    @property
+    def country_region_code(self):
+        return 'DCountryRegion'
+
+    @property
+    def descriptor(self):
+        return 'DCrossCutting'
+
+    @property
+    def descriptor_obj(self):
+        return 'DCrossCutting'
+
+    @property
+    def muids(self):
+        return []
+
+    @property
+    def title(self):
+        return u"Commission assessment / Cross cutting / 2022 / {}".format(
+            self.country_title,
+        )
+
+    def __call__(self):
+        alsoProvides(self.request, IDisableCSRFProtection)
+
+        if 'assessor' in self.request.form:
+            assessors = self.request.form['assessor']
+
+            if isinstance(assessors, list):
+                assessors = ', '.join(assessors)
+            self.context.saved_assessment_data.ass_new = assessors
+
+        # BBB:
+
+        context = self.context
+
+        if not hasattr(context, 'saved_assessment_data') or \
+                not isinstance(context.saved_assessment_data, PersistentList):
+            context.saved_assessment_data = AssessmentData()
+
+        # Assessment data 2018
+        data = self.context.saved_assessment_data.last()
+        elements = self.questions[0].get_all_assessed_elements(
+            self.descriptor_obj,
+            muids=self.muids
+        )
+
+        article_weights = ARTICLE_WEIGHTS
+        assessment = format_assessment_data(
+            self.article,
+            elements,
+            self.questions,
+            self.muids,
+            data,
+            self.descriptor_obj,
+            article_weights,
+            self
+        )
+        
+        assessment.phase_overall_scores.coherence = self.get_coherence_data(
+            self.country_region_code, self.descriptor, self.article
+        )
+
+        conclusion_2012 = ''
+        score_2012 = 0
         # score_2012 = score_2012
         conclusion_2012_color = CONCLUSION_COLOR_TABLE.get(score_2012, 0)
 

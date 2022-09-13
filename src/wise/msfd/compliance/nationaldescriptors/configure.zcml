@@ -28,6 +28,14 @@
 
   <browser:page
     for="..interfaces.INationalDescriptorAssessment"
+    name="nat-desc-art-view-cross-cutting"
+    template="./pt/art-view-cross-cutting.pt"
+    class=".main.NationalDescriptorArticleViewCrossCutting"
+    permission="wise.ViewAssessmentData"
+    />
+
+  <browser:page
+    for="..interfaces.INationalDescriptorAssessment"
     name="assessment-overview-2012"
     template="./pt/art-view-2012.pt"
     class=".main.NationalDescriptorArticleView2012"

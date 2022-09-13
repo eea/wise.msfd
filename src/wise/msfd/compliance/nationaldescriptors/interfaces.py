@@ -11,3 +11,8 @@ class INationaldescriptorSecondaryArticleView(Interface):
     """ Page to view a "secondary" article (Articles 3-4, 7, 8ESA)
         overview page
     """
+
+
+class INationaldescriptorArticleViewCrossCutting(Interface):
+    """ Page to view a Cross Cutting assessment overview page
+    """

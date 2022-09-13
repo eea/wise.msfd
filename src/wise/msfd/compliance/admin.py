@@ -234,6 +234,20 @@ class BootstrapCompliance(BrowserView):
                         title=name,
                         id=country_code)
 
+        # create 2022 Cross cutting assessment folder
+        art = 'cross-cutting-2022'
+        if art.lower() in cf.contentIds():
+            nda = cf[art.lower()]
+        else:
+            nda = create(cf,
+                         'wise.msfd.nationaldescriptorassessment',
+                         title=art)
+
+            logger.info("Created NationalDescriptorAssessment %s",
+                        nda.absolute_url())
+
+            self.set_layout(nda, '@@nat-desc-art-view-cross-cutting')
+
         for regid, region in self.get_country_regions(country_code):
             if regid.lower() in cf.contentIds():
                 reg = cf[regid.lower()]

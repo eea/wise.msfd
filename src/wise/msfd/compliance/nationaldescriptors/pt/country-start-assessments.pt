@@ -197,7 +197,7 @@
                         <td class="assessment-status-td">-</td>
                         <td class="assessment-status-td">-</td>
                         <td class="assessment-status-td" colspan="2">
-                          <a tal:attributes="href python: country_folder.absolute_url() + '/@@edit-assessment-data-2022-cross-cutting'"
+                          <a tal:attributes="href python: country_folder.absolute_url() + '/cross-cutting-2022'"
                               class="btn btn-xs btn-primary" target='_blank'>2022</a>
                         </td>
                         <td class="assessment-status-td">-</td>

@@ -105,6 +105,11 @@ ARTICLE_WEIGHTS = {
         'adequacy': 1.0,
         'consistency': 0,
         'coherence': 0
+    },
+    'Art1314CrossCutting': {
+        'adequacy': 1.0,
+        'consistency': 0,
+        'coherence': 0
     }
 }
 
