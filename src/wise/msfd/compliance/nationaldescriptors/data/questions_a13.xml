@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <questions article='Art13'>
-  <assessment-question id="A13Com01A" class="adequacy" use-criteria='none'>
+  <assessment-question id="Com01A" class="adequacy" use-criteria='none'>
     <definition>
       Has the Member State provided an overview of the updated POM corresponding to environmental targets?
     </definition>
@@ -32,7 +32,7 @@
     <score-weight descriptor="D11" value="100" />
   </assessment-question>
 
-  <assessment-question id="A13Com02B" class="adequacy" use-criteria='none'>
+  <assessment-question id="Com02B" class="adequacy" use-criteria='none'>
     <definition>
       Has the Member State provided an overview of relevant updates/changes to the existing measures from the 1st cycle?
     </definition>
@@ -70,7 +70,7 @@ E-reporting:
     <score-weight descriptor="D11" value="100" />
   </assessment-question>  
 
-  <assessment-question id="A13Ad01B" class="adequacy" use-criteria='none'>
+  <assessment-question id="Ad01B" class="adequacy" use-criteria='none'>
     <definition>
       Has the Member State explained how the updates/changes to the existing measures from the first cycle contribute to achieve GES?
     </definition>
@@ -115,7 +115,7 @@ E-reporting
     <score-weight descriptor="D11" value="100" />
   </assessment-question>  
   
-  <assessment-question id="A13Com03B" class="adequacy" use-criteria='none'>
+  <assessment-question id="Com03B" class="adequacy" use-criteria='none'>
     <definition>
       Has the Member State provided a gap analysis?
     </definition>
@@ -146,7 +146,7 @@ E-reporting
     <score-weight descriptor="D11" value="100" />
   </assessment-question>  
   
-  <assessment-question id="A13Ad02B" class="adequacy" use-criteria='none'>
+  <assessment-question id="Ad02B" class="adequacy" use-criteria='none'>
     <definition>
       Does the Member State adequately identify all significant gaps to achieve the MSFD targets and ultimately GES?
     </definition>
@@ -178,7 +178,7 @@ E-reporting
     <score-weight descriptor="D11" value="100" />
   </assessment-question>
   
-  <assessment-question id="A13Com04C" class="adequacy" use-criteria='none'>
+  <assessment-question id="Com04C" class="adequacy" use-criteria='none'>
     <definition>
       Has the Member State withdrawn any of the new measures from the first cycle?
     </definition>
@@ -213,7 +213,7 @@ E-reporting
     <score-weight descriptor="D11" value="100" />
   </assessment-question>  
 
-  <assessment-question id="A13Ad03C" class="adequacy" use-criteria='none'>
+  <assessment-question id="Ad03C" class="adequacy" use-criteria='none'>
     <definition>
       Is there an adequate justification for withdrawing new measures from the first cycle?
     </definition>
@@ -254,7 +254,7 @@ Text-report
     <score-weight descriptor="D11" value="100" />
   </assessment-question>
 
-  <assessment-question id="A13Com05C" class="adequacy" use-criteria='none'>
+  <assessment-question id="Com05C" class="adequacy" use-criteria='none'>
     <definition>
       Has the Member State modified any of the new measures from the first cycle?
     </definition>
@@ -288,7 +288,7 @@ E-reporting
     <score-weight descriptor="D11" value="100" />
   </assessment-question>
 
-  <assessment-question id="A13Com06C" class="adequacy" use-criteria='none'>
+  <assessment-question id="Com06C" class="adequacy" use-criteria='none'>
     <definition>
       Has the Member State provided a list and summary of the additional new measures (from the 2nd cycle)?
     </definition>
@@ -325,7 +325,7 @@ E-reporting
     <score-weight descriptor="D11" value="100" />
   </assessment-question>
 
-  <assessment-question id="A13Ad04C" class="adequacy" use-criteria='none'>
+  <assessment-question id="Ad04C" class="adequacy" use-criteria='none'>
     <definition>
       Are all relevant pressures addressed by the modified and the additional new measures?
     </definition>
@@ -366,7 +366,7 @@ Text-report
     <score-weight descriptor="D11" value="100" />
   </assessment-question>
 
-  <assessment-question id="A13Ad05C" class="adequacy" use-criteria='none'>
+  <assessment-question id="Ad05C" class="adequacy" use-criteria='none'>
     <definition>
       Are all modified new measures and additional new measures representing actions to achieve operational environmental targets?
     </definition>
@@ -406,7 +406,7 @@ Text-based report
     <score-weight descriptor="D11" value="100" />
   </assessment-question>
 
-  <assessment-question id="A13Ad06C" class="adequacy" use-criteria='none'>
+  <assessment-question id="Ad06C" class="adequacy" use-criteria='none'>
     <definition>
       Has the Member State explained where the modified and additional new measures will be implemented?
     </definition>
@@ -446,7 +446,7 @@ Text-based report
     <score-weight descriptor="D11" value="100" />
   </assessment-question>
 
-  <assessment-question id="A13Ad07C" class="adequacy" use-criteria='none'>
+  <assessment-question id="Ad07C" class="adequacy" use-criteria='none'>
     <definition>
       Has the Member State explained how the new measures will be implemented?
     </definition>
@@ -491,7 +491,7 @@ Text-based report
     <score-weight descriptor="D11" value="100" />
   </assessment-question>
 
-  <assessment-question id="A13Ad08C" class="adequacy" use-criteria='none'>
+  <assessment-question id="Ad08C" class="adequacy" use-criteria='none'>
     <definition>
       Has the Member State explained when the modified and additional new measures will be implemented?
     </definition>
@@ -532,7 +532,7 @@ Text-based report
     <score-weight descriptor="D11" value="100" />
   </assessment-question>
 
-  <assessment-question id="A13Com07C" class="adequacy" use-criteria='none'>
+  <assessment-question id="Com07C" class="adequacy" use-criteria='none'>
     <definition>
       Has the Member State identified new spatial protection measures, including marine protected areas?
     </definition>
@@ -563,7 +563,7 @@ Text-based report
     <score-weight descriptor="D11" value="100" />
   </assessment-question>
 
-  <assessment-question id="A13Ad09C" class="adequacy" use-criteria='none'>
+  <assessment-question id="Ad09C" class="adequacy" use-criteria='none'>
     <definition>
       Are the new MPA measures identifying the subject of protection and addressing identified pressures (per descriptor) adequately?
     </definition>

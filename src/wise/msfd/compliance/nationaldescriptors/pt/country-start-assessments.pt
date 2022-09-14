@@ -181,13 +181,13 @@
                       <tr class="article-title sticky-row"
                           tal:attributes="class python: 'article-title {}'.format(region.id == regions[0].id and 'sticky-row' or '')">
                         <th style="text-align: left;" class="sticky-col">Descriptor</th>
-                        <th>Art 9 GES Determination</th>
-                        <th>Article 8 Assessment</th>
-                        <th>Article 10 Targets</th>
-                        <th>Article 11 Monitoring</th>
-                        <th>Article 13 Measures</th>
-                        <th>Article 14 Exceptions</th>
-                        <th>Article 18 Progress on measures</th>
+                        <th>Art. 9 GES Determination</th>
+                        <th>Art. 8 Assessment</th>
+                        <th>Art. 10 Targets</th>
+                        <th>Art. 11 Monitoring</th>
+                        <th>Art. 13 Measures</th>
+                        <th>Art. 14 Exceptions</th>
+                        <th>Art. 18 Progress on measures</th>
                       </tr>
 
                       <tr>
@@ -196,10 +196,15 @@
                         <td class="assessment-status-td">-</td>
                         <td class="assessment-status-td">-</td>
                         <td class="assessment-status-td">-</td>
-                        <td class="assessment-status-td" colspan="2">
+                        <td class="assessment-status-td" colspan="2"
+                            tal:define="assessment python: country_folder['cross-cutting-2022']">
+                          <div metal:use-macro="context/wise-macros/macros/assessment-status-bar-cross-cutting-2022"></div>
+                        </td>
+
+                        <!-- <td class="assessment-status-td" colspan="2">
                           <a tal:attributes="href python: country_folder.absolute_url() + '/cross-cutting-2022'"
                               class="btn btn-xs btn-primary" target='_blank'>2022</a>
-                        </td>
+                        </td> -->
                         <td class="assessment-status-td">-</td>
                       </tr>
 

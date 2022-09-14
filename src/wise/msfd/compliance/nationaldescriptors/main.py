@@ -622,6 +622,10 @@ def format_assessment_data(article, elements, questions, muids, data,
         q_klass = question.klass
 
         if question.use_criteria == 'none':
+            field_title = u'All criteria'
+            if self.article in ('Art13', 'Art14', 'Art1314CrossCutting'):
+                field_title = u'Response options'
+
             field_name = '{}_{}'.format(article, question.id)
             color_index = 0
             label = 'Not filled in'
@@ -631,7 +635,7 @@ def format_assessment_data(article, elements, questions, muids, data,
                 label = choices[v]
                 color_index = ANSWERS_COLOR_TABLE[q_scores[v]]
 
-            value = (label, color_index, u'All criteria')
+            value = (label, color_index, field_title)
             values.append(value)
         else:
             for element in elements:

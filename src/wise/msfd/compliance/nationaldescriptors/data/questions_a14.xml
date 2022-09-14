@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <questions article='Art14'>
-  <assessment-question id="A14Com08D" class="adequacy" use-criteria='none'>
+  <assessment-question id="Com08D" class="adequacy" use-criteria='none'>
     <definition>
       Are exceptions identified?
     </definition>
@@ -39,7 +39,7 @@ Text-based report
     <score-weight descriptor="D11" value="100" />
   </assessment-question>
 
-  <assessment-question id="A14Com09D" class="adequacy" use-criteria='none'>
+  <assessment-question id="Com09D" class="adequacy" use-criteria='none'>
     <definition>
       Are all key aspects of the exceptions reported?
     </definition>
@@ -93,7 +93,7 @@ Text report (if e-reporting incomplete)
     <score-weight descriptor="D11" value="100" />
   </assessment-question>
 
-  <assessment-question id="A14Ad10D" class="adequacy" use-criteria='none'>
+  <assessment-question id="Ad10D" class="adequacy" use-criteria='none'>
     <definition>
       Is there an adequate justification for the exception(s) identified?
     </definition>

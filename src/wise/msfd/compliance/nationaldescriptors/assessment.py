@@ -265,6 +265,9 @@ class EditAssessmentDataForm(BaseView, EditAssessmentDataFormMain):
 
             if not elements:  # and question.use_criteria == 'none'
                 field_title = u'All criteria'
+                if self.article in ('Art13', 'Art14', 'Art1314CrossCutting'):
+                    field_title = u'Response options'
+
                 field_name = '{}_{}'.format(self.article, question.id)
                 choices = question.answers
 
