@@ -92,13 +92,13 @@ ARTICLE_WEIGHTS = {
         'coherence': 0
     },
     'Art13': {
-        'adequacy': 1.0,
-        'consistency': 0,
-        'coherence': 0
+        'adequacy': 0.6,
+        'completeness': 0.2,
+        'coherence': 0.2
     },
     'Art14': {
         'adequacy': 1.0,
-        'consistency': 0,
+        'completeness': 0,
         'coherence': 0
     },
     'Art18': {
@@ -109,6 +109,16 @@ ARTICLE_WEIGHTS = {
     'Art1314CrossCutting': {
         'adequacy': 1.0,
         'consistency': 0,
+        'coherence': 0
+    },
+    'Art13Completeness': {
+        'adequacy': 0,
+        'completeness': 1.0,
+        'coherence': 0
+    },
+    'Art14Completeness': {
+        'adequacy': 0,
+        'completeness': 1.0,
         'coherence': 0
     }
 }
@@ -176,7 +186,7 @@ Criteria = namedtuple(
 
 # TODO which question type belongs to which phase?
 PHASES = {
-    'phase1': ('adequacy', 'consistency'),
+    'phase1': ('adequacy', 'consistency', 'completeness'),
     'phase2': ('coherence', ),
     'phase3': (),
 }
@@ -1043,6 +1053,66 @@ class AssessmentDataMixin(object):
             'color': 0,
             'conclusion': (0, 'Not reported')
         }
+
+        for k, score in assess_data.items():
+            if '_Score' not in k:
+                continue
+
+            if not score:
+                continue
+
+            is_not_relevant = getattr(score, 'is_not_relevant', False)
+            weighted_score = getattr(score, 'final_score', 0)
+            max_weighted_score = getattr(score, 'weight', 0)
+
+            if is_not_relevant:
+                res['max_score'] -= max_weighted_score
+                continue
+
+            res['score'] += weighted_score
+
+        score_percent = int(round(res['max_score'] and (res['score'] * 100)
+                                  / res['max_score'] or 0))
+
+        # score_percent = res['score']
+        score_val = get_range_index(score_percent)
+
+        res['color'] = self.get_color_for_score(score_val)
+        res['conclusion'] = (score_val, self.get_conclusion(score_val))
+
+        if res['max_score'] == 0:
+            res['conclusion'] = ('-', 'Not relevant')
+            res['color'] = 0
+
+        return res
+
+    # @cache(lambda func, *args: '-'.join((func.__name__, args[1])), 
+    #         lifetime=1800)
+    def get_completeness_data(self, country_code):
+        """ For year 2012
+        :return: {'color': 5, 'score': 0, 'max_score': 0,
+                'conclusion': (1, 'Very poor')
+            }
+        """
+        res = {
+            'score': 0,
+            'max_score': 20,
+            'color': 0,
+            'conclusion': (0, 'Not reported')
+        }
+
+        article_folder = None
+        ccode = country_code.lower()
+        artcode = self.article.lower()
+
+        try:
+            article_folder = self.context.restrictedTraverse(
+                'marine/assessment-module/national-descriptors-assessments'
+                '/{}/{}-completeness-2022'.format(ccode, artcode))  
+        except:
+            return res
+            
+        assess_data = self._get_assessment_data(article_folder)
 
         for k, score in assess_data.items():
             if '_Score' not in k:

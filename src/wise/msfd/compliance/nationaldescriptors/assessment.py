@@ -265,7 +265,8 @@ class EditAssessmentDataForm(BaseView, EditAssessmentDataFormMain):
 
             if not elements:  # and question.use_criteria == 'none'
                 field_title = u'All criteria'
-                if self.article in ('Art13', 'Art14', 'Art1314CrossCutting'):
+                if self.article in ('Art13', 'Art14', 'Art1314CrossCutting',
+                        'Art13Completeness', 'Art14Completeness'):
                     field_title = u'Response options'
 
                 field_name = '{}_{}'.format(self.article, question.id)
@@ -408,6 +409,35 @@ class EditAssessmentDataFormCrossCutting2022(EditAssessmentDataForm):
         return u"Edit Commission Cross-Cutting assessment / 2022"
 
 
+class EditAssessmentDataFormCompleteness2022(EditAssessmentDataForm):
+    edit_assessment_view_name = '/@@edit-assessment-data-2022-completeness'
+    template = ViewPageTemplateFile("./pt/edit-assessment-data-cross-cutting.pt")
+
+    @property
+    def article(self):
+        return self.context._article
+
+    @property
+    def descriptor_title(self):
+        return 'Completeness'
+
+    @property
+    def descriptor(self):
+        return 'Completeness'
+
+    @property
+    def descriptor_obj(self):
+        return 'Completeness'
+
+    @property
+    def muids(self):
+        return []
+
+    @property
+    def title(self):
+        return u"Edit Commission Completeness assessment / 2022"
+
+
 class EditAssessmentDataFormSecondary(EditAssessmentDataForm):
     """ Implementation for secondary articles (A3-4, A7, A8ESA)
     """
@@ -449,6 +479,9 @@ EditAssessmentDataView2022 = wrap_form(
     EditAssessmentDataForm2022, MainFormWrapper)
 EditAssessmentDataViewCrossCutting2022 = wrap_form(
     EditAssessmentDataFormCrossCutting2022, 
+    EditAssessmentFormWrapperCrossCutting)
+EditAssessmentDataViewCompleteness2022 = wrap_form(
+    EditAssessmentDataFormCompleteness2022, 
     EditAssessmentFormWrapperCrossCutting)
 EditAssessmentDataViewSecondary = wrap_form(EditAssessmentDataFormSecondary,
                                             EditAssessmentFormWrapperSecondary)

@@ -1,0 +1,139 @@
+<div id="container-assessment-data-2018"
+    tal:define="assessment options/assessment;
+    score_2012 python: options['score_2012'];
+    conclusion_2012 python: '{} ({})'.format(options['conclusion_2012'], score_2012)">
+  <div class="table-wrap">
+    <table class="table table-condensed assessment-data-table">
+      <tbody>
+
+        <tr>
+          <th class="fixed-left as-question as-header">Question / assessed elements</th>
+          <th class="fixed-left as-header" tal:condition="not: assessment/gescomponents"></th>
+          <!--<th tal:repeat="g assessment/gescomponents" class="as-ges-component as-header"></th>-->
+          <th colspan="2" class="fixed-center as-ges-component as-header"></th>
+          <th class="fixed-right as-header">Conclusion</th>
+          <th class="fixed-right as-th-score as-header">Score</th>
+        </tr>
+
+        <tal:rep tal:repeat="row assessment/answers">
+          <tr>
+            <th class="fixed-left">
+            <div class="q-wrap">
+                <div class="q-id" tal:content="python: row.question.split(':')[0]">Question Id</div>
+                <div class="q-title" tal:content="python: row.question.split(':', 1)[1]">Question text</div>
+                </div>
+            </th>
+            <td colspan="2" class="fixed-center">
+              <tal:rep tal:repeat="value row/values" >
+                <div
+                  tal:attributes="class python: 'gescomp as-value as-value-{}'.format(value[1]);">
+
+                  <label for=""
+                    data-trigger="hover"
+                    data-html="true"
+                    tal:attributes="
+                    title python: value[0];
+                    data-content python: value[2]"
+                    >
+                    <span tal:content="python: value[2]">D0C0</span>
+                  </label>
+
+                </div>
+              </tal:rep>
+              <div class="assessment-summary"
+                  tal:content="structure row/summary">Summary</div>
+            </td>
+
+            <td tal:attributes="class python: 'fixed-right as-value as-value-{}'.format(row.conclusion_color)"
+              colspan="1">
+              <strong tal:condition="python: False"
+                  tal:content="python: '{} ({}%)'.format(row.conclusion, getattr(row.score, 'percentage'))">
+                <!-- DISABLED (alternate display) --> Very poor
+              </strong>
+              <strong tal:condition="row/score"
+                  tal:content="row/conclusion">Very poor</strong>
+            </td>
+
+            <td class="fixed-right">
+              <span tal:condition="row/score"
+                  class="score help-popover glyphicon glyphicon-info-sign"
+                  data-trigger="hover"
+                  data-html="true"
+                  data-placement="left"
+                  tal:attributes="title python: 'Score calculation algorithm';
+                    data-content python: getattr(row.score, 'score_tooltip', '');">
+              </span>
+              <span tal:condition="python: not row.score"
+                  class="score help-popover glyphicon glyphicon-exclamation-sign"
+                  data-trigger="hover"
+                  data-html="true"
+                  data-placement="left"
+                  tal:attributes="title python: 'Score calculation algorithm';
+                    data-content python: 'Score is calculated after all answers are filled in.';">
+              </span>
+              <span tal:content="python: getattr(row.score, 'final_score', 0)">0</span>
+            </td>
+
+          </tr>
+        </tal:rep>
+
+
+        <tr id="asssessment-overview-form-comments">
+          <th class="fixed-left">
+            Assessment summary, progress assessment and recommendations
+          </th>
+
+          <td class="fixed-center subform">
+            <div class="form-assessment-summary">
+                <div tal:replace="structure context/@@view-assessment-summary"></div>
+            </div>
+          </td>
+
+          <td class="overall-headers fixed-right">
+            <div class="as-value as-value-th">2022 Adequacy</div>
+            <div class="as-value as-value-th">2022 Overall</div>
+          </td>
+          <td class="overall-values fixed-right"
+            tal:define="phase_score python: assessment.phase_overall_scores">
+            <div tal:attributes="class python: 'as-value as-value-{}'.format(phase_score.adequacy['color'])"
+                 tal:define="conclusion python: phase_score.adequacy['conclusion'][1];
+                    score_value python: phase_score.adequacy['conclusion'][0]">
+              <strong tal:content="python: '{} ({})'.format(conclusion, score_value)">Good (3)</strong>
+            </div>
+            <div tal:attributes="class python: 'as-value as-value-{}'.format(assessment.overall_conclusion_color)">
+              <strong tal:content="python: '{} ({})'.format(
+                assessment.overall_conclusion[1], assessment.overall_conclusion[0])">Very poor (1)</strong>
+            </div>
+          </td>
+
+          <td class="overall-values fixed-right"
+            tal:define="phase_score python: assessment.phase_overall_scores">
+            <div tal:attributes="class python: 'as-value as-value-{}'.format(phase_score.adequacy['color'])"
+                 tal:define="score python: phase_score.get_score_for_phase('adequacy');">
+              <span class="score help-popover glyphicon glyphicon-info-sign"
+                  data-trigger="hover"
+                  data-html="true"
+                  data-placement="left"
+                  tal:attributes="title python: 'Score calculation algorithm';
+                    data-content python: phase_score.score_tooltip('adequacy');">
+              </span>
+              <span tal:content="python: '{}'.format(score)">65.5</span>
+            </div>
+            <div tal:attributes="class python: 'as-value as-value-{}'.format(assessment.overall_conclusion_color)">
+              <span class="score help-popover glyphicon glyphicon-info-sign"
+                  data-trigger="hover"
+                  data-html="true"
+                  data-placement="left"
+                  tal:attributes="title python: 'Score calculation algorithm';
+                    data-content python: phase_score.score_tooltip_overall_secondary(view.article);">
+              </span>
+              <span tal:content="python: '{}'.format(assessment.overall_score)">76.3</span>
+            </div>
+          </td>
+        </tr>
+
+      </tbody>
+    </table>
+  </div>
+
+</div>

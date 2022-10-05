@@ -39,10 +39,11 @@ from wise.msfd.data import _extract_pdf_assessments, get_text_reports_2018
 from wise.msfd.gescomponents import get_descriptor, get_features
 from wise.msfd.utils import t2rt
 
-from .base import BaseView
-from ..interfaces import (ICountryDescriptorsFolder, ICountryStartAssessments,
-                          ICountryStartReports, IMSFDReportingHistoryFolder)
-from .interfaces import (
+from wise.msfd.compliance.nationaldescriptors.base import BaseView
+from wise.msfd.compliance.interfaces import (
+    ICountryDescriptorsFolder, ICountryStartAssessments,
+    ICountryStartReports, IMSFDReportingHistoryFolder)
+from wise.msfd.compliance.nationaldescriptors.interfaces import (
     INationaldescriptorArticleView, INationaldescriptorArticleViewCrossCutting,
     INationaldescriptorSecondaryArticleView)
 
@@ -611,8 +612,8 @@ def format_assessment_data(article, elements, questions, muids, data,
     TODO: this is doing too much. Need to be simplified and refactored.
     """
     answers = []
-    phases = list(article_weights.values())[0].keys()
-    phase_overall_scores = OverallScores(article_weights)
+    phases = article_weights[article].keys()
+    phase_overall_scores = OverallScores(article_weights, article)
     descr_id = hasattr(descriptor, 'id') and descriptor.id or descriptor
 
     for question in questions:
@@ -623,7 +624,8 @@ def format_assessment_data(article, elements, questions, muids, data,
 
         if question.use_criteria == 'none':
             field_title = u'All criteria'
-            if self.article in ('Art13', 'Art14', 'Art1314CrossCutting'):
+            if self.article in ('Art13', 'Art14', 'Art1314CrossCutting', 
+                    'Art13Completeness', 'Art14Completeness'):
                 field_title = u'Response options'
 
             field_name = '{}_{}'.format(article, question.id)
@@ -723,6 +725,9 @@ def format_assessment_data(article, elements, questions, muids, data,
     if self.section == 'national-descriptors' and self.is_primary_article:
         phase_overall_scores.coherence = self.get_coherence_data(
             self.country_region_code, self.descriptor, article
+        )
+        phase_overall_scores.completeness = self.get_completeness_data(
+            self.country_code
         )
 
     # the overall score and conclusion for the whole article 2018
@@ -911,6 +916,9 @@ class NationalDescriptorArticleView(BaseView, AssessmentDataMixin):
             self.country_region_code, self.descriptor, self.article
         )
 
+        assessment.phase_overall_scores.completeness = self.get_completeness_data(
+            self.country_code
+        )
         # score_2012 = score_2012
         conclusion_2012_color = CONCLUSION_COLOR_TABLE.get(score_2012, 0)
 
@@ -960,8 +968,18 @@ class NationalDescriptorArticleView(BaseView, AssessmentDataMixin):
         return self.index()
 
 
+@implementer(INationaldescriptorArticleView)
+class NationalDescriptorArticleView2022(NationalDescriptorArticleView):
+    """"""
+
+    assessment_data_2018_tpl = Template('./pt/assessment-data-2022.pt')
+
+
 @implementer(INationaldescriptorArticleViewCrossCutting)
 class NationalDescriptorArticleViewCrossCutting(NationalDescriptorArticleView):
+    assessment_data_2018_tpl = Template(
+        './pt/assessment-data-2022-cross-cutting.pt')
+
     @property
     def article(self):
         return 'Art1314CrossCutting'
@@ -1029,10 +1047,6 @@ class NationalDescriptorArticleViewCrossCutting(NationalDescriptorArticleView):
             self
         )
         
-        assessment.phase_overall_scores.coherence = self.get_coherence_data(
-            self.country_region_code, self.descriptor, self.article
-        )
-
         conclusion_2012 = ''
         score_2012 = 0
         # score_2012 = score_2012
@@ -1082,6 +1096,44 @@ class NationalDescriptorArticleViewCrossCutting(NationalDescriptorArticleView):
         )
 
         return self.index()
+
+
+@implementer(INationaldescriptorArticleViewCrossCutting)
+class NationalDescriptorArticleViewCompleteness(
+        NationalDescriptorArticleViewCrossCutting):
+
+    assessment_data_2018_tpl = Template(
+        './pt/assessment-data-2022-completeness.pt')
+
+    @property
+    def article(self):
+        return self.context._article
+
+    @property
+    def descriptor_title(self):
+        return 'Completeness'
+    
+    @property
+    def country_region_code(self):
+        return 'Completeness'
+
+    @property
+    def descriptor(self):
+        return 'Completeness'
+
+    @property
+    def descriptor_obj(self):
+        return 'Completeness'
+
+    @property
+    def muids(self):
+        return []
+
+    @property
+    def title(self):
+        return u"Commission assessment / {} / 2022 / {}".format(
+            self.article, self.country_title,
+        )
 
 
 class NationalDescriptorArticleView2012(NationalDescriptorArticleView):

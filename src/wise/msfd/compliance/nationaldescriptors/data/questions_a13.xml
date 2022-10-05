@@ -1,75 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <questions article='Art13'>
-  <assessment-question id="Com01A" class="adequacy" use-criteria='none'>
-    <definition>
-      Has the Member State provided an overview of the updated POM corresponding to environmental targets?
-    </definition>
-    <source-info>Text-based report</source-info>
-    <answers>
-      <option score="1">Yes</option>
-      <option score="0.5">Partially</option>
-      <option score="0.250">Not clear</option>
-      <option score="0">No</option>
-      <option score="/">Not relevant</option>
-    </answers>
-    <scoring determination-method="wise.msfd.compliance.scoring.scoring_based">
-    </scoring>
-    <score-weight descriptor="D1.1" value="100" />
-    <score-weight descriptor="D1.2" value="100" />
-    <score-weight descriptor="D1.3" value="100" />
-    <score-weight descriptor="D1.4" value="100" />
-    <score-weight descriptor="D1.5" value="100" />
-    <score-weight descriptor="D1.6" value="100" />
-    <score-weight descriptor="D2" value="100" />
-    <score-weight descriptor="D3" value="100" />
-    <score-weight descriptor="D4" value="100" />
-    <score-weight descriptor="D5" value="100" />
-    <score-weight descriptor="D6" value="100" />
-    <score-weight descriptor="D7" value="100" />
-    <score-weight descriptor="D8" value="100" />
-    <score-weight descriptor="D9" value="100" />
-    <score-weight descriptor="D10" value="100" />
-    <score-weight descriptor="D11" value="100" />
-  </assessment-question>
-
-  <assessment-question id="Com02B" class="adequacy" use-criteria='none'>
-    <definition>
-      Has the Member State provided an overview of relevant updates/changes to the existing measures from the 1st cycle?
-    </definition>
-    <source-info>
-Text-based report
-
-E-reporting:
-  • UpdateType
-  • MeasureCategory
-    </source-info>
-    <answers>
-      <option score="1">Yes</option>
-      <option score="0.5">Partially</option>
-      <option score="0.250">Not clear</option>
-      <option score="0">No</option>
-      <option score="/">Not relevant</option>
-    </answers>
-    <scoring determination-method="wise.msfd.compliance.scoring.scoring_based">
-    </scoring>
-    <score-weight descriptor="D1.1" value="100" />
-    <score-weight descriptor="D1.2" value="100" />
-    <score-weight descriptor="D1.3" value="100" />
-    <score-weight descriptor="D1.4" value="100" />
-    <score-weight descriptor="D1.5" value="100" />
-    <score-weight descriptor="D1.6" value="100" />
-    <score-weight descriptor="D2" value="100" />
-    <score-weight descriptor="D3" value="100" />
-    <score-weight descriptor="D4" value="100" />
-    <score-weight descriptor="D5" value="100" />
-    <score-weight descriptor="D6" value="100" />
-    <score-weight descriptor="D7" value="100" />
-    <score-weight descriptor="D8" value="100" />
-    <score-weight descriptor="D9" value="100" />
-    <score-weight descriptor="D10" value="100" />
-    <score-weight descriptor="D11" value="100" />
-  </assessment-question>  
-
   <assessment-question id="Ad01B" class="adequacy" use-criteria='none'>
     <definition>
       Has the Member State explained how the updates/changes to the existing measures from the first cycle contribute to achieve GES?
@@ -97,53 +27,22 @@ E-reporting
     </answers>
     <scoring determination-method="wise.msfd.compliance.scoring.scoring_based">
     </scoring>
-    <score-weight descriptor="D1.1" value="100" />
-    <score-weight descriptor="D1.2" value="100" />
-    <score-weight descriptor="D1.3" value="100" />
-    <score-weight descriptor="D1.4" value="100" />
-    <score-weight descriptor="D1.5" value="100" />
-    <score-weight descriptor="D1.6" value="100" />
-    <score-weight descriptor="D2" value="100" />
-    <score-weight descriptor="D3" value="100" />
-    <score-weight descriptor="D4" value="100" />
-    <score-weight descriptor="D5" value="100" />
-    <score-weight descriptor="D6" value="100" />
-    <score-weight descriptor="D7" value="100" />
-    <score-weight descriptor="D8" value="100" />
-    <score-weight descriptor="D9" value="100" />
-    <score-weight descriptor="D10" value="100" />
-    <score-weight descriptor="D11" value="100" />
-  </assessment-question>  
-  
-  <assessment-question id="Com03B" class="adequacy" use-criteria='none'>
-    <definition>
-      Has the Member State provided a gap analysis?
-    </definition>
-    <source-info>Text-based report</source-info>
-    <answers>
-      <option score="1">Yes</option>
-      <option score="0.5">Partially</option>
-      <option score="0">No</option>
-      <option score="/">Not relevant</option>
-    </answers>
-    <scoring determination-method="wise.msfd.compliance.scoring.scoring_based">
-    </scoring>
-    <score-weight descriptor="D1.1" value="100" />
-    <score-weight descriptor="D1.2" value="100" />
-    <score-weight descriptor="D1.3" value="100" />
-    <score-weight descriptor="D1.4" value="100" />
-    <score-weight descriptor="D1.5" value="100" />
-    <score-weight descriptor="D1.6" value="100" />
-    <score-weight descriptor="D2" value="100" />
-    <score-weight descriptor="D3" value="100" />
-    <score-weight descriptor="D4" value="100" />
-    <score-weight descriptor="D5" value="100" />
-    <score-weight descriptor="D6" value="100" />
-    <score-weight descriptor="D7" value="100" />
-    <score-weight descriptor="D8" value="100" />
-    <score-weight descriptor="D9" value="100" />
-    <score-weight descriptor="D10" value="100" />
-    <score-weight descriptor="D11" value="100" />
+    <score-weight descriptor="D1.1" value="3" />
+    <score-weight descriptor="D1.2" value="3" />
+    <score-weight descriptor="D1.3" value="3" />
+    <score-weight descriptor="D1.4" value="3" />
+    <score-weight descriptor="D1.5" value="3" />
+    <score-weight descriptor="D1.6" value="3" />
+    <score-weight descriptor="D2" value="3" />
+    <score-weight descriptor="D3" value="3" />
+    <score-weight descriptor="D4" value="3" />
+    <score-weight descriptor="D5" value="3" />
+    <score-weight descriptor="D6" value="3" />
+    <score-weight descriptor="D7" value="3" />
+    <score-weight descriptor="D8" value="3" />
+    <score-weight descriptor="D9" value="3" />
+    <score-weight descriptor="D10" value="3" />
+    <score-weight descriptor="D11" value="3" />
   </assessment-question>  
   
   <assessment-question id="Ad02B" class="adequacy" use-criteria='none'>
@@ -160,58 +59,23 @@ E-reporting
     </answers>
     <scoring determination-method="wise.msfd.compliance.scoring.scoring_based">
     </scoring>
-    <score-weight descriptor="D1.1" value="100" />
-    <score-weight descriptor="D1.2" value="100" />
-    <score-weight descriptor="D1.3" value="100" />
-    <score-weight descriptor="D1.4" value="100" />
-    <score-weight descriptor="D1.5" value="100" />
-    <score-weight descriptor="D1.6" value="100" />
-    <score-weight descriptor="D2" value="100" />
-    <score-weight descriptor="D3" value="100" />
-    <score-weight descriptor="D4" value="100" />
-    <score-weight descriptor="D5" value="100" />
-    <score-weight descriptor="D6" value="100" />
-    <score-weight descriptor="D7" value="100" />
-    <score-weight descriptor="D8" value="100" />
-    <score-weight descriptor="D9" value="100" />
-    <score-weight descriptor="D10" value="100" />
-    <score-weight descriptor="D11" value="100" />
+    <score-weight descriptor="D1.1" value="15" />
+    <score-weight descriptor="D1.2" value="15" />
+    <score-weight descriptor="D1.3" value="15" />
+    <score-weight descriptor="D1.4" value="15" />
+    <score-weight descriptor="D1.5" value="15" />
+    <score-weight descriptor="D1.6" value="15" />
+    <score-weight descriptor="D2" value="15" />
+    <score-weight descriptor="D3" value="15" />
+    <score-weight descriptor="D4" value="15" />
+    <score-weight descriptor="D5" value="15" />
+    <score-weight descriptor="D6" value="15" />
+    <score-weight descriptor="D7" value="15" />
+    <score-weight descriptor="D8" value="15" />
+    <score-weight descriptor="D9" value="15" />
+    <score-weight descriptor="D10" value="15" />
+    <score-weight descriptor="D11" value="15" />
   </assessment-question>
-  
-  <assessment-question id="Com04C" class="adequacy" use-criteria='none'>
-    <definition>
-      Has the Member State withdrawn any of the new measures from the first cycle?
-    </definition>
-    <source-info>
-E-reporting
-  • MeasureCategory (category 2 a and b)
-  • ImplementationStatus
-    </source-info>
-    <answers>
-      <option score="1">Yes</option>
-      <option score="0.5">Partially</option>
-      <option score="0">No</option>
-      <option score="/">Not relevant</option>
-    </answers>
-    <scoring determination-method="wise.msfd.compliance.scoring.scoring_based">
-    </scoring>
-    <score-weight descriptor="D1.1" value="100" />
-    <score-weight descriptor="D1.2" value="100" />
-    <score-weight descriptor="D1.3" value="100" />
-    <score-weight descriptor="D1.4" value="100" />
-    <score-weight descriptor="D1.5" value="100" />
-    <score-weight descriptor="D1.6" value="100" />
-    <score-weight descriptor="D2" value="100" />
-    <score-weight descriptor="D3" value="100" />
-    <score-weight descriptor="D4" value="100" />
-    <score-weight descriptor="D5" value="100" />
-    <score-weight descriptor="D6" value="100" />
-    <score-weight descriptor="D7" value="100" />
-    <score-weight descriptor="D8" value="100" />
-    <score-weight descriptor="D9" value="100" />
-    <score-weight descriptor="D10" value="100" />
-    <score-weight descriptor="D11" value="100" />
-  </assessment-question>  
 
   <assessment-question id="Ad03C" class="adequacy" use-criteria='none'>
     <definition>
@@ -236,93 +100,22 @@ Text-report
     </answers>
     <scoring determination-method="wise.msfd.compliance.scoring.scoring_based">
     </scoring>
-    <score-weight descriptor="D1.1" value="100" />
-    <score-weight descriptor="D1.2" value="100" />
-    <score-weight descriptor="D1.3" value="100" />
-    <score-weight descriptor="D1.4" value="100" />
-    <score-weight descriptor="D1.5" value="100" />
-    <score-weight descriptor="D1.6" value="100" />
-    <score-weight descriptor="D2" value="100" />
-    <score-weight descriptor="D3" value="100" />
-    <score-weight descriptor="D4" value="100" />
-    <score-weight descriptor="D5" value="100" />
-    <score-weight descriptor="D6" value="100" />
-    <score-weight descriptor="D7" value="100" />
-    <score-weight descriptor="D8" value="100" />
-    <score-weight descriptor="D9" value="100" />
-    <score-weight descriptor="D10" value="100" />
-    <score-weight descriptor="D11" value="100" />
-  </assessment-question>
-
-  <assessment-question id="Com05C" class="adequacy" use-criteria='none'>
-    <definition>
-      Has the Member State modified any of the new measures from the first cycle?
-    </definition>
-    <source-info>
-E-reporting
-  • UpdateType (modified since 2015 PoM)
-    </source-info>
-    <answers>
-      <option score="1">Yes</option>
-      <option score="0.5">Partially</option>
-      <option score="0">No</option>
-      <option score="/">Not relevant</option>
-    </answers>
-    <scoring determination-method="wise.msfd.compliance.scoring.scoring_based">
-    </scoring>
-    <score-weight descriptor="D1.1" value="100" />
-    <score-weight descriptor="D1.2" value="100" />
-    <score-weight descriptor="D1.3" value="100" />
-    <score-weight descriptor="D1.4" value="100" />
-    <score-weight descriptor="D1.5" value="100" />
-    <score-weight descriptor="D1.6" value="100" />
-    <score-weight descriptor="D2" value="100" />
-    <score-weight descriptor="D3" value="100" />
-    <score-weight descriptor="D4" value="100" />
-    <score-weight descriptor="D5" value="100" />
-    <score-weight descriptor="D6" value="100" />
-    <score-weight descriptor="D7" value="100" />
-    <score-weight descriptor="D8" value="100" />
-    <score-weight descriptor="D9" value="100" />
-    <score-weight descriptor="D10" value="100" />
-    <score-weight descriptor="D11" value="100" />
-  </assessment-question>
-
-  <assessment-question id="Com06C" class="adequacy" use-criteria='none'>
-    <definition>
-      Has the Member State provided a list and summary of the additional new measures (from the 2nd cycle)?
-    </definition>
-    <source-info>
-Text-based report
-
-E-reporting
-    • UpdateType
-    • MeasureCategory    
-    </source-info>
-    <answers>
-      <option score="1">Yes</option>
-      <option score="0.5">Partially</option>
-      <option score="0">No</option>
-      <option score="/">Not relevant</option>
-    </answers>
-    <scoring determination-method="wise.msfd.compliance.scoring.scoring_based">
-    </scoring>
-    <score-weight descriptor="D1.1" value="100" />
-    <score-weight descriptor="D1.2" value="100" />
-    <score-weight descriptor="D1.3" value="100" />
-    <score-weight descriptor="D1.4" value="100" />
-    <score-weight descriptor="D1.5" value="100" />
-    <score-weight descriptor="D1.6" value="100" />
-    <score-weight descriptor="D2" value="100" />
-    <score-weight descriptor="D3" value="100" />
-    <score-weight descriptor="D4" value="100" />
-    <score-weight descriptor="D5" value="100" />
-    <score-weight descriptor="D6" value="100" />
-    <score-weight descriptor="D7" value="100" />
-    <score-weight descriptor="D8" value="100" />
-    <score-weight descriptor="D9" value="100" />
-    <score-weight descriptor="D10" value="100" />
-    <score-weight descriptor="D11" value="100" />
+    <score-weight descriptor="D1.1" value="3" />
+    <score-weight descriptor="D1.2" value="3" />
+    <score-weight descriptor="D1.3" value="3" />
+    <score-weight descriptor="D1.4" value="3" />
+    <score-weight descriptor="D1.5" value="3" />
+    <score-weight descriptor="D1.6" value="3" />
+    <score-weight descriptor="D2" value="3" />
+    <score-weight descriptor="D3" value="3" />
+    <score-weight descriptor="D4" value="3" />
+    <score-weight descriptor="D5" value="3" />
+    <score-weight descriptor="D6" value="3" />
+    <score-weight descriptor="D7" value="3" />
+    <score-weight descriptor="D8" value="3" />
+    <score-weight descriptor="D9" value="3" />
+    <score-weight descriptor="D10" value="3" />
+    <score-weight descriptor="D11" value="3" />
   </assessment-question>
 
   <assessment-question id="Ad04C" class="adequacy" use-criteria='none'>
@@ -348,22 +141,22 @@ Text-report
     </answers>
     <scoring determination-method="wise.msfd.compliance.scoring.scoring_based">
     </scoring>
-    <score-weight descriptor="D1.1" value="100" />
-    <score-weight descriptor="D1.2" value="100" />
-    <score-weight descriptor="D1.3" value="100" />
-    <score-weight descriptor="D1.4" value="100" />
-    <score-weight descriptor="D1.5" value="100" />
-    <score-weight descriptor="D1.6" value="100" />
-    <score-weight descriptor="D2" value="100" />
-    <score-weight descriptor="D3" value="100" />
-    <score-weight descriptor="D4" value="100" />
-    <score-weight descriptor="D5" value="100" />
-    <score-weight descriptor="D6" value="100" />
-    <score-weight descriptor="D7" value="100" />
-    <score-weight descriptor="D8" value="100" />
-    <score-weight descriptor="D9" value="100" />
-    <score-weight descriptor="D10" value="100" />
-    <score-weight descriptor="D11" value="100" />
+    <score-weight descriptor="D1.1" value="10" />
+    <score-weight descriptor="D1.2" value="10" />
+    <score-weight descriptor="D1.3" value="10" />
+    <score-weight descriptor="D1.4" value="10" />
+    <score-weight descriptor="D1.5" value="10" />
+    <score-weight descriptor="D1.6" value="10" />
+    <score-weight descriptor="D2" value="10" />
+    <score-weight descriptor="D3" value="10" />
+    <score-weight descriptor="D4" value="10" />
+    <score-weight descriptor="D5" value="10" />
+    <score-weight descriptor="D6" value="10" />
+    <score-weight descriptor="D7" value="10" />
+    <score-weight descriptor="D8" value="10" />
+    <score-weight descriptor="D9" value="10" />
+    <score-weight descriptor="D10" value="10" />
+    <score-weight descriptor="D11" value="10" />
   </assessment-question>
 
   <assessment-question id="Ad05C" class="adequacy" use-criteria='none'>
@@ -388,22 +181,22 @@ Text-based report
     </answers>
     <scoring determination-method="wise.msfd.compliance.scoring.scoring_based">
     </scoring>
-    <score-weight descriptor="D1.1" value="100" />
-    <score-weight descriptor="D1.2" value="100" />
-    <score-weight descriptor="D1.3" value="100" />
-    <score-weight descriptor="D1.4" value="100" />
-    <score-weight descriptor="D1.5" value="100" />
-    <score-weight descriptor="D1.6" value="100" />
-    <score-weight descriptor="D2" value="100" />
-    <score-weight descriptor="D3" value="100" />
-    <score-weight descriptor="D4" value="100" />
-    <score-weight descriptor="D5" value="100" />
-    <score-weight descriptor="D6" value="100" />
-    <score-weight descriptor="D7" value="100" />
-    <score-weight descriptor="D8" value="100" />
-    <score-weight descriptor="D9" value="100" />
-    <score-weight descriptor="D10" value="100" />
-    <score-weight descriptor="D11" value="100" />
+    <score-weight descriptor="D1.1" value="10" />
+    <score-weight descriptor="D1.2" value="10" />
+    <score-weight descriptor="D1.3" value="10" />
+    <score-weight descriptor="D1.4" value="10" />
+    <score-weight descriptor="D1.5" value="10" />
+    <score-weight descriptor="D1.6" value="10" />
+    <score-weight descriptor="D2" value="10" />
+    <score-weight descriptor="D3" value="10" />
+    <score-weight descriptor="D4" value="10" />
+    <score-weight descriptor="D5" value="10" />
+    <score-weight descriptor="D6" value="10" />
+    <score-weight descriptor="D7" value="10" />
+    <score-weight descriptor="D8" value="10" />
+    <score-weight descriptor="D9" value="10" />
+    <score-weight descriptor="D10" value="10" />
+    <score-weight descriptor="D11" value="10" />
   </assessment-question>
 
   <assessment-question id="Ad06C" class="adequacy" use-criteria='none'>
@@ -428,22 +221,22 @@ Text-based report
     </answers>
     <scoring determination-method="wise.msfd.compliance.scoring.scoring_based">
     </scoring>
-    <score-weight descriptor="D1.1" value="100" />
-    <score-weight descriptor="D1.2" value="100" />
-    <score-weight descriptor="D1.3" value="100" />
-    <score-weight descriptor="D1.4" value="100" />
-    <score-weight descriptor="D1.5" value="100" />
-    <score-weight descriptor="D1.6" value="100" />
-    <score-weight descriptor="D2" value="100" />
-    <score-weight descriptor="D3" value="100" />
-    <score-weight descriptor="D4" value="100" />
-    <score-weight descriptor="D5" value="100" />
-    <score-weight descriptor="D6" value="100" />
-    <score-weight descriptor="D7" value="100" />
-    <score-weight descriptor="D8" value="100" />
-    <score-weight descriptor="D9" value="100" />
-    <score-weight descriptor="D10" value="100" />
-    <score-weight descriptor="D11" value="100" />
+    <score-weight descriptor="D1.1" value="3" />
+    <score-weight descriptor="D1.2" value="3" />
+    <score-weight descriptor="D1.3" value="3" />
+    <score-weight descriptor="D1.4" value="3" />
+    <score-weight descriptor="D1.5" value="3" />
+    <score-weight descriptor="D1.6" value="3" />
+    <score-weight descriptor="D2" value="3" />
+    <score-weight descriptor="D3" value="3" />
+    <score-weight descriptor="D4" value="3" />
+    <score-weight descriptor="D5" value="3" />
+    <score-weight descriptor="D6" value="3" />
+    <score-weight descriptor="D7" value="3" />
+    <score-weight descriptor="D8" value="3" />
+    <score-weight descriptor="D9" value="3" />
+    <score-weight descriptor="D10" value="3" />
+    <score-weight descriptor="D11" value="3" />
   </assessment-question>
 
   <assessment-question id="Ad07C" class="adequacy" use-criteria='none'>
@@ -473,22 +266,22 @@ Text-based report
     </answers>
     <scoring determination-method="wise.msfd.compliance.scoring.scoring_based">
     </scoring>
-    <score-weight descriptor="D1.1" value="100" />
-    <score-weight descriptor="D1.2" value="100" />
-    <score-weight descriptor="D1.3" value="100" />
-    <score-weight descriptor="D1.4" value="100" />
-    <score-weight descriptor="D1.5" value="100" />
-    <score-weight descriptor="D1.6" value="100" />
-    <score-weight descriptor="D2" value="100" />
-    <score-weight descriptor="D3" value="100" />
-    <score-weight descriptor="D4" value="100" />
-    <score-weight descriptor="D5" value="100" />
-    <score-weight descriptor="D6" value="100" />
-    <score-weight descriptor="D7" value="100" />
-    <score-weight descriptor="D8" value="100" />
-    <score-weight descriptor="D9" value="100" />
-    <score-weight descriptor="D10" value="100" />
-    <score-weight descriptor="D11" value="100" />
+    <score-weight descriptor="D1.1" value="3" />
+    <score-weight descriptor="D1.2" value="3" />
+    <score-weight descriptor="D1.3" value="3" />
+    <score-weight descriptor="D1.4" value="3" />
+    <score-weight descriptor="D1.5" value="3" />
+    <score-weight descriptor="D1.6" value="3" />
+    <score-weight descriptor="D2" value="3" />
+    <score-weight descriptor="D3" value="3" />
+    <score-weight descriptor="D4" value="3" />
+    <score-weight descriptor="D5" value="3" />
+    <score-weight descriptor="D6" value="3" />
+    <score-weight descriptor="D7" value="3" />
+    <score-weight descriptor="D8" value="3" />
+    <score-weight descriptor="D9" value="3" />
+    <score-weight descriptor="D10" value="3" />
+    <score-weight descriptor="D11" value="3" />
   </assessment-question>
 
   <assessment-question id="Ad08C" class="adequacy" use-criteria='none'>
@@ -514,53 +307,22 @@ Text-based report
     </answers>
     <scoring determination-method="wise.msfd.compliance.scoring.scoring_based">
     </scoring>
-    <score-weight descriptor="D1.1" value="100" />
-    <score-weight descriptor="D1.2" value="100" />
-    <score-weight descriptor="D1.3" value="100" />
-    <score-weight descriptor="D1.4" value="100" />
-    <score-weight descriptor="D1.5" value="100" />
-    <score-weight descriptor="D1.6" value="100" />
-    <score-weight descriptor="D2" value="100" />
-    <score-weight descriptor="D3" value="100" />
-    <score-weight descriptor="D4" value="100" />
-    <score-weight descriptor="D5" value="100" />
-    <score-weight descriptor="D6" value="100" />
-    <score-weight descriptor="D7" value="100" />
-    <score-weight descriptor="D8" value="100" />
-    <score-weight descriptor="D9" value="100" />
-    <score-weight descriptor="D10" value="100" />
-    <score-weight descriptor="D11" value="100" />
-  </assessment-question>
-
-  <assessment-question id="Com07C" class="adequacy" use-criteria='none'>
-    <definition>
-      Has the Member State identified new spatial protection measures, including marine protected areas?
-    </definition>
-    <source-info>Text-based report</source-info>
-    <answers>
-      <option score="1">Yes</option>
-      <option score="0.5">Partially</option>
-      <option score="0">No</option>
-      <option score="/">Not relevant</option>
-    </answers>
-    <scoring determination-method="wise.msfd.compliance.scoring.scoring_based">
-    </scoring>
-    <score-weight descriptor="D1.1" value="100" />
-    <score-weight descriptor="D1.2" value="100" />
-    <score-weight descriptor="D1.3" value="100" />
-    <score-weight descriptor="D1.4" value="100" />
-    <score-weight descriptor="D1.5" value="100" />
-    <score-weight descriptor="D1.6" value="100" />
-    <score-weight descriptor="D2" value="100" />
-    <score-weight descriptor="D3" value="100" />
-    <score-weight descriptor="D4" value="100" />
-    <score-weight descriptor="D5" value="100" />
-    <score-weight descriptor="D6" value="100" />
-    <score-weight descriptor="D7" value="100" />
-    <score-weight descriptor="D8" value="100" />
-    <score-weight descriptor="D9" value="100" />
-    <score-weight descriptor="D10" value="100" />
-    <score-weight descriptor="D11" value="100" />
+    <score-weight descriptor="D1.1" value="3" />
+    <score-weight descriptor="D1.2" value="3" />
+    <score-weight descriptor="D1.3" value="3" />
+    <score-weight descriptor="D1.4" value="3" />
+    <score-weight descriptor="D1.5" value="3" />
+    <score-weight descriptor="D1.6" value="3" />
+    <score-weight descriptor="D2" value="3" />
+    <score-weight descriptor="D3" value="3" />
+    <score-weight descriptor="D4" value="3" />
+    <score-weight descriptor="D5" value="3" />
+    <score-weight descriptor="D6" value="3" />
+    <score-weight descriptor="D7" value="3" />
+    <score-weight descriptor="D8" value="3" />
+    <score-weight descriptor="D9" value="3" />
+    <score-weight descriptor="D10" value="3" />
+    <score-weight descriptor="D11" value="3" />
   </assessment-question>
 
   <assessment-question id="Ad09C" class="adequacy" use-criteria='none'>
@@ -577,21 +339,21 @@ Text-based report
     </answers>
     <scoring determination-method="wise.msfd.compliance.scoring.scoring_based">
     </scoring>
-    <score-weight descriptor="D1.1" value="100" />
-    <score-weight descriptor="D1.2" value="100" />
-    <score-weight descriptor="D1.3" value="100" />
-    <score-weight descriptor="D1.4" value="100" />
-    <score-weight descriptor="D1.5" value="100" />
-    <score-weight descriptor="D1.6" value="100" />
-    <score-weight descriptor="D2" value="100" />
-    <score-weight descriptor="D3" value="100" />
-    <score-weight descriptor="D4" value="100" />
-    <score-weight descriptor="D5" value="100" />
-    <score-weight descriptor="D6" value="100" />
-    <score-weight descriptor="D7" value="100" />
-    <score-weight descriptor="D8" value="100" />
-    <score-weight descriptor="D9" value="100" />
-    <score-weight descriptor="D10" value="100" />
-    <score-weight descriptor="D11" value="100" />
+    <score-weight descriptor="D1.1" value="10" />
+    <score-weight descriptor="D1.2" value="10" />
+    <score-weight descriptor="D1.3" value="10" />
+    <score-weight descriptor="D1.4" value="10" />
+    <score-weight descriptor="D1.5" value="10" />
+    <score-weight descriptor="D1.6" value="10" />
+    <score-weight descriptor="D2" value="10" />
+    <score-weight descriptor="D3" value="10" />
+    <score-weight descriptor="D4" value="10" />
+    <score-weight descriptor="D5" value="10" />
+    <score-weight descriptor="D6" value="10" />
+    <score-weight descriptor="D7" value="10" />
+    <score-weight descriptor="D8" value="10" />
+    <score-weight descriptor="D9" value="10" />
+    <score-weight descriptor="D10" value="10" />
+    <score-weight descriptor="D11" value="10" />
   </assessment-question>
 </questions>

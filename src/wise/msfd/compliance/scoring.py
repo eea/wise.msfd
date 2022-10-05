@@ -58,7 +58,7 @@ class OverallScores(object):
     """ Class used to store the score for each phase
     """
 
-    def __init__(self, article_weights):
+    def __init__(self, article_weights, article=None):
         self.article_weights = article_weights
         _init = {
             'score': 0,
@@ -66,8 +66,12 @@ class OverallScores(object):
             'conclusion': 'Not reported',
             'color': 0,
         }
+        if not article:
+            phases = list(article_weights.values())[0].keys()
+        else:
+            phases = article_weights[article].keys()
 
-        for phase in list(article_weights.values())[0].keys():
+        for phase in phases:
             d = {}
             d.update(_init)
             setattr(self, phase, d)
@@ -77,7 +81,8 @@ class OverallScores(object):
 
         :return: 80
         """
-        if article in ('Art3', 'Art4'):
+        if article in ('Art3', 'Art4', 'Art13', 'Art14', 'Art13Completeness', 
+                'Art14Completeness'):
             return self.get_overall_score_secondary(article)
 
         overall_score = 0
@@ -247,6 +252,38 @@ class OverallScores(object):
                "</br> <b>Overall max score</b>: {10}" \
                "</br></br><b>Final score</b>: {3} (Adequacy score * " \
                "Adequacy weight + Consistency score * Consistency weight + " \
+               "Coherence score * Coherence weight) / {10}" \
+               "</br>({4}*{5} + {6}*{7} + {8}*{9}) / {10}" \
+               .format(ad_wght, cn_wght, co_wght,
+                       overall_score_val,
+                       ad_score, ad_wght, cn_score, cn_wght, co_score, co_wght,
+                       int(overall_max))
+
+        return text
+
+    def score_tooltip_overall_2022(self, article):
+        overall_max = 0
+        weights = self.article_weights[article]
+        ad_wght = int(weights['adequacy'] * 100)
+        cn_wght = int(weights['completeness'] * 100)
+        co_wght = int(weights['coherence'] * 100)
+        ad_score = self.get_score_for_phase('adequacy')
+        cn_score = self.get_score_for_phase('completeness')
+        co_score = self.get_score_for_phase('coherence')
+        ad_max = getattr(self, 'adequacy')['max_score']
+        cn_max = getattr(self, 'completeness')['max_score']
+        co_max = getattr(self, 'coherence')['max_score']
+        overall_max += ad_max and weights['adequacy'] * 100 or 0
+        overall_max += cn_max and weights['completeness'] * 100 or 0
+        overall_max += co_max and weights['coherence'] * 100 or 0
+        overall_color, overall_score_val = self.get_overall_score(article)
+
+        text = "<b>Adequacy weight</b>: {0}" \
+               "</br><b>Completeness weight</b>: {1}" \
+               "</br><b>Coherence weight</b>: {2}" \
+               "</br> <b>Overall max score</b>: {10}" \
+               "</br></br><b>Final score</b>: {3} (Adequacy score * " \
+               "Adequacy weight + Completeness score * Completeness weight + " \
                "Coherence score * Coherence weight) / {10}" \
                "</br>({4}*{5} + {6}*{7} + {8}*{9}) / {10}" \
                .format(ad_wght, cn_wght, co_wght,

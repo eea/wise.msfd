@@ -28,9 +28,25 @@
 
   <browser:page
     for="..interfaces.INationalDescriptorAssessment"
+    name="nat-desc-art-view-2022"
+    template="./pt/art-view.pt"
+    class=".main.NationalDescriptorArticleView2022"
+    permission="wise.ViewAssessmentData"
+    />
+
+  <browser:page
+    for="..interfaces.INationalDescriptorAssessment"
     name="nat-desc-art-view-cross-cutting"
     template="./pt/art-view-cross-cutting.pt"
     class=".main.NationalDescriptorArticleViewCrossCutting"
+    permission="wise.ViewAssessmentData"
+    />
+
+  <browser:page
+    for="..interfaces.INationalDescriptorAssessment"
+    name="nat-desc-art-view-completeness"
+    template="./pt/art-view-completeness.pt"
+    class=".main.NationalDescriptorArticleViewCompleteness"
     permission="wise.ViewAssessmentData"
     />
 
@@ -102,6 +118,13 @@
     for="*"
     name="edit-assessment-data-2022-cross-cutting"
     class=".assessment.EditAssessmentDataViewCrossCutting2022"
+    permission="wise.ViewAssessmentEditPage"
+    />
+
+  <browser:page
+    for="*"
+    name="edit-assessment-data-2022-completeness"
+    class=".assessment.EditAssessmentDataViewCompleteness2022"
     permission="wise.ViewAssessmentEditPage"
     />
 

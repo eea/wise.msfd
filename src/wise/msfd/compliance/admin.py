@@ -184,7 +184,8 @@ class BootstrapCompliance(BrowserView):
                             title=title)
                 transition(obj=dt, transition=trans)
 
-    def create_nda_folder(self, df, desc_code, art):
+    def create_nda_folder(self, df, desc_code, art, 
+            layout='@@nat-desc-art-view'):
         if art.lower() in df.contentIds():
             nda = df[art.lower()]
         else:
@@ -200,7 +201,7 @@ class BootstrapCompliance(BrowserView):
             logger.info("Created NationalDescriptorAssessment %s",
                         nda.absolute_url())
 
-            self.set_layout(nda, '@@nat-desc-art-view')
+        self.set_layout(nda, layout)
 
         self.create_comments_folder(nda)
 
@@ -248,6 +249,36 @@ class BootstrapCompliance(BrowserView):
 
             self.set_layout(nda, '@@nat-desc-art-view-cross-cutting')
 
+        # Art 13 create 2022 completeness assessment folder
+        art = 'art13-completeness-2022'
+        if art.lower() in cf.contentIds():
+            nda = cf[art.lower()]
+        else:
+            nda = create(cf,
+                         'wise.msfd.nationaldescriptorassessment',
+                         title=art)
+
+            logger.info("Created NationalDescriptorAssessment %s",
+                        nda.absolute_url())
+
+            self.set_layout(nda, '@@nat-desc-art-view-completeness')
+            nda._article = 'Art13Completeness'
+
+        # Art 14 create 2022 completeness assessment folder
+        art = 'art14-completeness-2022'
+        if art.lower() in cf.contentIds():
+            nda = cf[art.lower()]
+        else:
+            nda = create(cf,
+                         'wise.msfd.nationaldescriptorassessment',
+                         title=art)
+
+            logger.info("Created NationalDescriptorAssessment %s",
+                        nda.absolute_url())
+
+            self.set_layout(nda, '@@nat-desc-art-view-completeness')
+            nda._article = 'Art14Completeness'
+
         for regid, region in self.get_country_regions(country_code):
             if regid.lower() in cf.contentIds():
                 reg = cf[regid.lower()]
@@ -274,8 +305,10 @@ class BootstrapCompliance(BrowserView):
                 self.create_nda_folder(df, desc_code, 'Art11')
 
                 # article 13, 14, 18
-                self.create_nda_folder(df, desc_code, 'Art13')
-                self.create_nda_folder(df, desc_code, 'Art14')
+                self.create_nda_folder(df, desc_code, 'Art13', 
+                    '@@nat-desc-art-view-2022')
+                self.create_nda_folder(df, desc_code, 'Art14',
+                    '@@nat-desc-art-view-2022')
                 self.create_nda_folder(df, desc_code, 'Art18')
 
         return cf

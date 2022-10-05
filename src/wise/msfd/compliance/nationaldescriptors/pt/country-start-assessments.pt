@@ -76,12 +76,12 @@
                 </td>
               </tr>
               <tr class="article-title">
-                <th>Article 8 Assessment</th>
-                <th>Art 9 GES Determination</th>
-                <th>Article 10 Targets</th>
-                <th>Article 11 Monitoring</th>
-                <th>Article 13 Measures & Article 14 Exceptions</th>
-                <th colspan="22">Article 18 Progress on measures</th>
+                <th>Art. 8 Assessment</th>
+                <th>Art. 9 GES Determination</th>
+                <th>Art. 10 Targets</th>
+                <th>Art. 11 Monitoring</th>
+                <th>Art. 13 Measures & Art. 14 Exceptions</th>
+                <th colspan="22">Art. 18 Progress on measures</th>
               </tr>
 
               <tr class="fullwidth-statusbar">
@@ -191,13 +191,35 @@
                       </tr>
 
                       <tr>
-                        <td class="assessment-status-td"><i>Cross-cutting</i></td>
+                        <td class="assessment-status-td" style="text-align: left;"><i>Cross-cutting</i></td>
                         <td class="assessment-status-td">-</td>
                         <td class="assessment-status-td">-</td>
                         <td class="assessment-status-td">-</td>
                         <td class="assessment-status-td">-</td>
                         <td class="assessment-status-td" colspan="2"
                             tal:define="assessment python: country_folder['cross-cutting-2022']">
+                          <div metal:use-macro="context/wise-macros/macros/assessment-status-bar-cross-cutting-2022"></div>
+                        </td>
+
+                        <!-- <td class="assessment-status-td" colspan="2">
+                          <a tal:attributes="href python: country_folder.absolute_url() + '/cross-cutting-2022'"
+                              class="btn btn-xs btn-primary" target='_blank'>2022</a>
+                        </td> -->
+                        <td class="assessment-status-td">-</td>
+                      </tr>
+
+                      <tr>
+                        <td class="assessment-status-td" style="text-align: left;"><i>Completeness</i></td>
+                        <td class="assessment-status-td">-</td>
+                        <td class="assessment-status-td">-</td>
+                        <td class="assessment-status-td">-</td>
+                        <td class="assessment-status-td">-</td>
+                        <td class="assessment-status-td"
+                            tal:define="assessment python: country_folder['art13-completeness-2022']">
+                          <div metal:use-macro="context/wise-macros/macros/assessment-status-bar-cross-cutting-2022"></div>
+                        </td>
+                        <td class="assessment-status-td"
+                            tal:define="assessment python: country_folder['art14-completeness-2022']">
                           <div metal:use-macro="context/wise-macros/macros/assessment-status-bar-cross-cutting-2022"></div>
                         </td>
 

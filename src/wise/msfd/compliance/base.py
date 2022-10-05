@@ -305,7 +305,9 @@ class BaseComplianceView(BrowserView, BasePublicPage, SecurityMixin):
             'Art13': {'2012': '2016', '2018': '2022'},
             'Art14': {'2012': '2016', '2018': '2022'},
             'Art18': {'2012': '2018', '2018': '2024'},
-            'Art1314CrossCutting': {'2012': '2016', '2018': '2022'}
+            'Art1314CrossCutting': {'2012': '2016', '2018': '2022'},
+            'Art13Completeness': {'2012': '2016', '2018': '2022'},
+            'Art14Completeness': {'2012': '2016', '2018': '2022'}
         }
 
         if not article:
@@ -1000,7 +1002,8 @@ class AssessmentQuestionDefinition:
             res = filtered_targets(res, self)
         if self.article in ['Art3', 'Art4']:
             res = filtered_descriptors(res, self)
-        if self.article in ['Art13', 'Art14', 'Art1314CrossCutting']:
+        if self.article in ['Art13', 'Art14', 'Art1314CrossCutting',
+                'Art13Completeness', 'Art14Completeness']:
             res = filtered_descriptors(res, self)
 
         return sorted_criterions(res)
@@ -1025,6 +1028,8 @@ class AssessmentQuestionDefinition:
             'Art13': self._art_89_ids,
             'Art14': self._art_89_ids,
             'Art1314CrossCutting': lambda d, **kwargs: ['All'],
+            'Art13Completeness': lambda d, **kwargs: ['All'],
+            'Art14Completeness': lambda d, **kwargs: ['All'],
         }
 
         return impl[self.article](descriptor, **kwargs)
