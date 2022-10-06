@@ -289,6 +289,7 @@ class BaseComplianceView(BrowserView, BasePublicPage, SecurityMixin):
     status_colors = STATUS_COLORS
     process_status_colors = PROCESS_STATUS_COLORS
     ARTICLE_ORDER = ('Art9', 'Art8', 'Art10')
+    skip_articles = ('Art11', 'Art13', 'Art14', 'Art18')
 
     def get_articles(self, desc):
 
@@ -584,6 +585,11 @@ class BaseComplianceView(BrowserView, BasePublicPage, SecurityMixin):
         article_folders = self.filter_contentvalues_by_iface(
             descr_folder, interfaces.INationalDescriptorAssessment
         )
+
+        article_folders = [
+            art for art in article_folders
+            if art.title not in self.skip_articles
+        ]
 
         article_folders = sorted(
             article_folders,

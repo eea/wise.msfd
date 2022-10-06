@@ -23,7 +23,7 @@ class RegDescriptorLevelAssessments(BaseRegSummaryView,
 
     def _get_article_data(self, region_code, descriptor,
                           assess_data, article):
-        phase_overall_scores = OverallScores(ARTICLE_WEIGHTS)
+        phase_overall_scores = OverallScores(ARTICLE_WEIGHTS, article)
 
         # Get the coherence scores from regional descriptors
         phase_overall_scores.coherence = self.get_coherence_data(

@@ -977,7 +977,7 @@ class AdminScoring(BaseComplianceView, AssessmentDataMixin):
         muids = self.muids(country_code, region_code, '2018')
         data = obj.saved_assessment_data.last()
 
-        phase_overall_scores = OverallScores(ARTICLE_WEIGHTS)
+        phase_overall_scores = OverallScores(ARTICLE_WEIGHTS, article_title)
         phase_overall_scores = self._setup_phase_overall_scores(
             phase_overall_scores, data, article_title)
         phase_overall_scores.coherence = self.get_coherence_data(
@@ -1142,7 +1142,7 @@ class AdminScoring(BaseComplianceView, AssessmentDataMixin):
         d_obj = 'Not linked'
         muids = []
 
-        phase_overall_scores = OverallScores(ARTICLE_WEIGHTS)
+        phase_overall_scores = OverallScores(ARTICLE_WEIGHTS, article_title)
         phase_overall_scores = self._setup_phase_overall_scores(
             phase_overall_scores, data, article_title)
 

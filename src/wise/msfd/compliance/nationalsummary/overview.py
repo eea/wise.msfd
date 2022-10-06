@@ -709,7 +709,7 @@ class ProgrammesOfMeasures(EnvironmentalTargetsTable):
                             for r in measures_data
                             if r.TargetCode in targets
                         ]
-                        measures_flat = tuple([
+                        measures_flat = set([
                             measure
                             for sublist in measures
                             for measure in sublist

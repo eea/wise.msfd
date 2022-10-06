@@ -932,6 +932,7 @@ class AssessmentDataMixin(object):
         from national descriptors assessment
     """
     overall_scores = {}
+    skip_articles = ('Art11', 'Art13', 'Art14', 'Art18')
 
     def t2rt(self, text):
         return t2rt(text)
@@ -1263,7 +1264,7 @@ class AssessmentDataMixin(object):
 
             if phase in phases_answered:
                 continue
-
+            
             phase_scores = getattr(phase_overall_scores, phase)
             phase_scores['max_score'] = 100
 
@@ -1302,7 +1303,7 @@ class AssessmentDataMixin(object):
         :return: DESCRIPTOR_SUMMARY namedtuple
         """
 
-        phase_overall_scores = OverallScores(ARTICLE_WEIGHTS)
+        phase_overall_scores = OverallScores(ARTICLE_WEIGHTS, article)
 
         # Get the adequacy, consistency scores from national descriptors
         phase_overall_scores = self._setup_phase_overall_scores(
@@ -1451,7 +1452,7 @@ class AssessmentDataMixin(object):
                 for article_folder in article_folders:
                     article = article_folder.title
 
-                    if article in ('Art11', ):
+                    if article in self.skip_articles:
                         continue
 
                     assess_data = self._get_assessment_data(article_folder)
