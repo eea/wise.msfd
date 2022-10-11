@@ -14,7 +14,7 @@
     "grunt-contrib-watch": "^1.0.0",
     "grunt-postcss": "^0.8.0",
     "load-grunt-tasks": "^3.4.1",
-    "merge": "^1.2.0"
+    "merge": "^2.1.1"
   },
   "author": "Eaudeweb",
   "license": "ISC",
