@@ -27,12 +27,14 @@ from wise.msfd.compliance.assessment import (ANSWERS_COLOR_TABLE,
                                              get_assessment_data_2016_art1314,
                                              get_recommendation_data_2016_art1314,
                                              get_assessment_data_2016_art1314_overall,
-                                             filter_assessment_data_2012)
+                                             filter_assessment_data_2012,
+                                             summary_fields_2016)
 from wise.msfd.compliance.base import (
     NAT_DESC_QUESTIONS, is_row_relevant_for_descriptor)
 from wise.msfd.compliance.content import AssessmentData
-from wise.msfd.compliance.scoring import (get_overall_conclusion,
-                                          get_range_index, OverallScores)
+from wise.msfd.compliance.scoring import (
+    get_overall_conclusion, get_overall_conclusion_2022,
+    get_range_index, get_range_index_2022, OverallScores)
 from wise.msfd.compliance.utils import ordered_regions_sortkey
 from wise.msfd.compliance.vocabulary import REGIONS
 from wise.msfd.data import _extract_pdf_assessments, get_text_reports_2018
@@ -750,6 +752,153 @@ def format_assessment_data(article, elements, questions, muids, data,
     return assessment
 
 
+def format_assessment_data_2022(article, elements, questions, muids, data,
+                           descriptor, article_weights, self):
+    """ Builds a data structure suitable for display in a template
+
+    This is used to generate the assessment data overview table for 2018
+
+    TODO: this is doing too much. Need to be simplified and refactored.
+    """
+    answers = []
+    phases = article_weights[article].keys()
+    phase_overall_scores = OverallScores(article_weights, article)
+    descr_id = hasattr(descriptor, 'id') and descriptor.id or descriptor
+
+    for question in questions:
+        values = []
+        choices = dict(enumerate(question.answers))
+        q_scores = question.scores
+        q_klass = question.klass
+
+        if question.use_criteria == 'none':
+            field_title = u'All criteria'
+            if self.article in ('Art13', 'Art14', 'Art1314CrossCutting', 
+                    'Art13Completeness', 'Art14Completeness'):
+                field_title = u'Response options'
+
+            field_name = '{}_{}'.format(article, question.id)
+            color_index = 0
+            label = 'Not filled in'
+            v = data.get(field_name, None)
+
+            if v is not None:
+                label = choices[v]
+                color_index = ANSWERS_COLOR_TABLE[q_scores[v]]
+
+            value = (label, color_index, field_title)
+            values.append(value)
+        else:
+            for element in elements:
+                field_name = '{}_{}_{}'.format(
+                    article, question.id, element.id
+                )
+
+                color_index = 0
+                label = u'{}: Not filled in'.format(element.title)
+
+                v = data.get(field_name, None)
+
+                if v is not None:
+                    label = u'{}: {}'.format(element.title, choices[v])
+                    try:
+                        color_index = ANSWERS_COLOR_TABLE[q_scores[v]]
+                    except Exception:
+                        logger.exception('Invalid color table')
+                        color_index = 0
+                        # label = 'Invalid color table'
+
+                value = (
+                    label,
+                    color_index,
+                    get_crit_val(question, element, descriptor)
+                )
+
+                values.append(value)
+
+        summary_title = '{}_{}_Summary'.format(article, question.id)
+        summary = getattr(data.get(summary_title), 'output', '') or ''
+
+        sn = '{}_{}_Score'.format(article, question.id)
+        score = data.get(sn, {})
+
+        conclusion = getattr(score, 'conclusion', '')
+        score_value = getattr(score, 'score_value', 0)
+
+        conclusion_color = CONCLUSION_COLOR_TABLE[score_value]
+
+        weighted_score = getattr(score, 'final_score', 0)
+        q_weight = getattr(score, 'weight',
+                           float(question.score_weights.get(descr_id, 0)))
+        max_weighted_score = q_weight
+        is_not_relevant = getattr(score, 'is_not_relevant', False)
+
+        # is_not_relevant is True if all answered options are 'Not relevant'
+        # maximum overall score is incremented if the is_not_relevant is False
+
+        if not is_not_relevant:
+            p_score = getattr(phase_overall_scores, q_klass)
+            p_score['score'] += weighted_score
+            p_score['max_score'] += max_weighted_score
+
+        qr = AssessmentRow(question.definition, summary, conclusion,
+                           conclusion_color, score, values)
+        answers.append(qr)
+
+    # assessment summary and recommendations
+    assess_sum = data.get('%s_assessment_summary' % article)
+    recommend = data.get('%s_recommendations' % article)
+
+    for phase in phases:
+        # set the conclusion and color based on the score for each phase
+        phase_scores = getattr(phase_overall_scores, phase)
+        phase_score = phase_overall_scores.get_score_for_phase(phase)
+
+        if (phase == 'consistency' and article == 'Art9'
+                or phase_scores['max_score'] == 0):
+            phase_scores['conclusion'] = ('-', 'Not relevant')
+            phase_scores['color'] = 0
+            continue
+
+        if phase == 'consistency' and phase_scores['score'] == 0:
+            phase_scores['conclusion'] = (0, 'Not consistent')
+            phase_scores['color'] = 3
+            continue
+
+        phase_scores['conclusion'] = get_overall_conclusion_2022(phase_score)
+        phase_scores['color'] = \
+            CONCLUSION_COLOR_TABLE[get_range_index_2022(phase_score)]
+
+    # for national descriptors and primary articles (Art 8, 9, 10)
+    # override the coherence score with the score from regional descriptors
+    if self.section == 'national-descriptors' and self.is_primary_article:
+        phase_overall_scores.coherence = self.get_coherence_data(
+            self.country_region_code, self.descriptor, article
+        )
+        phase_overall_scores.completeness = self.get_completeness_data(
+            self.country_code
+        )
+
+    # the overall score and conclusion for the whole article 2018
+    overall_score_val, overall_score = phase_overall_scores.\
+        get_overall_score(article)
+    overall_conclusion = get_overall_conclusion_2022(overall_score)
+    overall_conclusion_color = CONCLUSION_COLOR_TABLE.get(overall_score_val, 0)
+
+    assessment = Assessment(
+        elements,
+        answers,
+        assess_sum or '-',
+        recommend or '-',
+        phase_overall_scores,
+        overall_score,
+        overall_conclusion,
+        overall_conclusion_color
+    )
+
+    return assessment
+
+
 class NationalDescriptorRegionView(BaseView):
     section = 'national-descriptors'
 
@@ -821,6 +970,20 @@ class NationalDescriptorArticleView(BaseView, AssessmentDataMixin):
             file_name = file_url.split('/')[-1]
 
         return file_name, file_url, report_date, edit_url
+
+    def format_assessment_data(self, article, elements, questions, 
+            muids, data, descriptor_obj, article_weights):
+
+        return format_assessment_data(
+            article,
+            elements,
+            questions,
+            muids,
+            data,
+            descriptor_obj,
+            article_weights,
+            self
+        )
 
     def __call__(self):
         alsoProvides(self.request, IDisableCSRFProtection)
@@ -901,15 +1064,14 @@ class NationalDescriptorArticleView(BaseView, AssessmentDataMixin):
         )
 
         article_weights = ARTICLE_WEIGHTS
-        assessment = format_assessment_data(
+        assessment = self.format_assessment_data(
             self.article,
             elements,
             self.questions,
             self.muids,
             data,
             self.descriptor_obj,
-            article_weights,
-            self
+            article_weights
         )
 
         assessment.phase_overall_scores.coherence = self.get_coherence_data(
@@ -974,11 +1136,40 @@ class NationalDescriptorArticleView2022(NationalDescriptorArticleView):
 
     assessment_data_2018_tpl = Template('./pt/assessment-data-2022.pt')
 
+    def format_assessment_data(self, article, elements, questions, 
+            muids, data, descriptor_obj, article_weights):
+
+        return format_assessment_data_2022(
+            article,
+            elements,
+            questions,
+            muids,
+            data,
+            descriptor_obj,
+            article_weights,
+            self
+        )
+
 
 @implementer(INationaldescriptorArticleViewCrossCutting)
 class NationalDescriptorArticleViewCrossCutting(NationalDescriptorArticleView):
     assessment_data_2018_tpl = Template(
         './pt/assessment-data-2022-cross-cutting.pt')
+    summary_fields = summary_fields_2016
+
+    def format_assessment_data(self, article, elements, questions, 
+            muids, data, descriptor_obj, article_weights):
+
+        return format_assessment_data_2022(
+            article,
+            elements,
+            questions,
+            muids,
+            data,
+            descriptor_obj,
+            article_weights,
+            self
+        )
 
     @property
     def article(self):
@@ -1036,15 +1227,14 @@ class NationalDescriptorArticleViewCrossCutting(NationalDescriptorArticleView):
         )
 
         article_weights = ARTICLE_WEIGHTS
-        assessment = format_assessment_data(
+        assessment = self.format_assessment_data(
             self.article,
             elements,
             self.questions,
             self.muids,
             data,
             self.descriptor_obj,
-            article_weights,
-            self
+            article_weights
         )
         
         conclusion_2012 = ''

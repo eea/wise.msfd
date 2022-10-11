@@ -57,6 +57,27 @@
     permission="wise.ViewAssessmentData"
     />
 
+  <browser:page
+    for="..interfaces.INationalDescriptorAssessment"
+    name="view-assessment-summary-2022"
+    class="..assessment.ViewAssessmentSummaryForm2022"
+    permission="wise.ViewAssessmentData"
+    />
+
+  <browser:page
+    for="..interfaces.INationalDescriptorAssessment"
+    name="view-assessment-summary-cross-2022"
+    class="..assessment.ViewAssessmentSummaryFormCrossCutting2022"
+    permission="wise.ViewAssessmentData"
+    />
+
+  <browser:page
+    for="..interfaces.INationalDescriptorAssessment"
+    name="view-assessment-summary-completeness-2022"
+    class="..assessment.ViewAssessmentSummaryFormCompleteness2022"
+    permission="wise.ViewAssessmentData"
+    />
+
   <!-- The "Commission assessments - national overview" page -->
   <!-- <browser:page -->
   <!--   for="..interfaces.ICountryDescriptorsFolder" -->

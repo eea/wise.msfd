@@ -8,6 +8,15 @@ DEFAULT_RANGES = [
 ]
 
 
+DEFAULT_RANGES_2022 = [
+    [81, 100],
+    [61, 80],
+    [41, 60],
+    [21, 40],
+    [0, 20]
+]
+
+
 CONCLUSIONS = [
     'Not relevant',
     'Very good',
@@ -15,6 +24,16 @@ CONCLUSIONS = [
     'Poor',
     'Very poor',
     'Not reported',
+]
+
+
+CONCLUSIONS_2022 = [
+    'Not relevant',
+    'Very good',
+    'Good',
+    'Moderate',
+    'Poor',
+    'Very poor',
 ]
 
 
@@ -27,6 +46,17 @@ def get_range_index(percentage):
             return x
 
     return len(DEFAULT_RANGES) + 1
+
+
+def get_range_index_2022(percentage):
+    p = int(percentage)
+
+    for x, r in enumerate(reversed(DEFAULT_RANGES_2022)):
+        if (p >= r[0]) and (p <= r[1]):
+            # return x + 1
+            return x
+
+    return len(DEFAULT_RANGES_2022) + 1
 
 
 def scoring_based(answers, scores):
@@ -50,6 +80,19 @@ def get_overall_conclusion(concl_score):
 
     score = get_range_index(concl_score)
     conclusion = list(reversed(CONCLUSIONS))[score]
+
+    return score, conclusion
+
+
+def get_overall_conclusion_2022(concl_score):
+    if concl_score == '-':  # not relevant
+        return '-', CONCLUSIONS_2022[0]
+
+    if concl_score > 100:
+        return 1, 'Error'
+
+    score = get_range_index_2022(concl_score)
+    conclusion = list(reversed(CONCLUSIONS_2022))[score]
 
     return score, conclusion
 
@@ -81,9 +124,12 @@ class OverallScores(object):
 
         :return: 80
         """
-        if article in ('Art3', 'Art4', 'Art13', 'Art14', 'Art13Completeness', 
-                'Art14Completeness'):
+        if article in ('Art3', 'Art4'):
             return self.get_overall_score_secondary(article)
+
+        if article in ('Art13', 'Art14', 'Art13Completeness', 
+                'Art14Completeness', 'Art1314CrossCutting'):
+            return self.get_overall_score_2022(article)
 
         overall_score = 0
         max_score = 0
@@ -148,17 +194,55 @@ class OverallScores(object):
 
         return get_range_index(overall_score), overall_score
 
+    def get_overall_score_2022(self, article):
+        """ Overall conclusion art. XX: 2018
+
+        :return: 80
+        """
+
+        score_achieved = 0
+        max_score = 0
+        weights = self.article_weights[article]
+
+        for phase in weights:
+            _score = getattr(self, phase)['score']
+            _max_score = getattr(self, phase)['max_score']
+
+            score_achieved += _score
+            max_score += _max_score
+
+        overall_score = int(round(
+            max_score and (score_achieved * 100) / max_score or 0
+        ))
+
+        return get_range_index_2022(overall_score), overall_score
+
     def conclusion(self, phase):
         """ Get the conclusion text from score_value
 
         :return: string 'Very good'
         """
+        if self.question.article in ('Art13', 'Art14', 'Art13Completeness', 
+                'Art14Completeness', 'Art1314CrossCutting'):
+            return self.conclusion_2022(phase)
+
         score_value = self.get_range_index_for_phase(phase)
 
         if score_value == 0 and phase == 'consistency':
             return 'Not consistent'
 
         concl = list(reversed(CONCLUSIONS))[score_value]
+
+        return concl
+
+    def conclusion_2022(self, phase):
+        """ Get the conclusion text from score_value
+
+        :return: string 'Very good'
+        """
+        score_value = self.get_range_index_for_phase(phase)
+
+        concl = list(reversed(CONCLUSIONS_2022))[score_value]
 
         return concl
 
@@ -171,8 +255,12 @@ class OverallScores(object):
 
         return int(round(max_score and (score * 100) / max_score or 0))
 
-    def get_range_index_for_phase(self, phase):
+    def get_range_index_for_phase(self, phase, article=None):
         score = self.get_score_for_phase(phase)
+
+        if article and article in ('Art13', 'Art14', 'Art13Completeness', 
+                'Art14Completeness', 'Art1314CrossCutting'):
+            return get_range_index_2022(score)
 
         return get_range_index(score)
 
@@ -392,7 +480,12 @@ class Score(object):
 
         :return: string 'Very good'
         """
-        concl = list(reversed(CONCLUSIONS))[self.score_value]
+
+        if self.question.article in ('Art13', 'Art14', 'Art13Completeness', 
+                'Art14Completeness', 'Art1314CrossCutting'):
+            concl = list(reversed(CONCLUSIONS_2022))[self.score_value]
+        else:
+            concl = list(reversed(CONCLUSIONS))[self.score_value]
 
         return concl
 

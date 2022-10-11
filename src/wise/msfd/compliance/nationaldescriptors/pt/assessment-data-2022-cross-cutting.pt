@@ -85,7 +85,7 @@
 
           <td class="fixed-center subform">
             <div class="form-assessment-summary">
-                <div tal:replace="structure context/@@view-assessment-summary"></div>
+                <div tal:replace="structure context/@@view-assessment-summary-cross-2022"></div>
             </div>
           </td>
 

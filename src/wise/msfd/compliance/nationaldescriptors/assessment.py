@@ -21,7 +21,9 @@ from wise.msfd.base import (
 from wise.msfd.base import EmbeddedForm
 from wise.msfd.compliance.assessment import (EditAssessmentDataFormMain,
                                              PHASES, additional_fields,
-                                             summary_fields)
+                                             summary_fields,
+                                             summary_fields_2016,
+                                             summary_fields_2016_a13_complete)
 from wise.msfd.compliance.base import NAT_DESC_QUESTIONS
 from wise.msfd.compliance.content import AssessmentData
 from wise.msfd.compliance.scoring import Score
@@ -86,6 +88,7 @@ class ViewAssessmentEditHistorySecondary(ViewAssessmentEditHistory):
 class EditAssessmentDataForm(BaseView, EditAssessmentDataFormMain):
     """ Edit the assessment for a national descriptor, for a specific article
     """
+    summary_fields = summary_fields
     name = 'art-view'
     section = 'national-descriptors'
     edit_assessment_view_name = '/@@edit-assessment-data-2018'
@@ -341,7 +344,7 @@ class EditAssessmentDataForm(BaseView, EditAssessmentDataFormMain):
         assessment_summary_form._question_id = ''
         asf_fields = []
 
-        for name, title in summary_fields:
+        for name, title in self.summary_fields:
             _name = '{}_{}'.format(
                 self.article, name
             )
@@ -368,6 +371,7 @@ class EditAssessmentDataForm(BaseView, EditAssessmentDataFormMain):
 
 class EditAssessmentDataForm2022(EditAssessmentDataForm):
     edit_assessment_view_name = '/@@edit-assessment-data-2022'
+    summary_fields = summary_fields_2016
 
     @property
     def title(self):
@@ -383,6 +387,7 @@ class EditAssessmentDataForm2022(EditAssessmentDataForm):
 class EditAssessmentDataFormCrossCutting2022(EditAssessmentDataForm):
     edit_assessment_view_name = '/@@edit-assessment-data-2022-cross-cutting'
     template = ViewPageTemplateFile("./pt/edit-assessment-data-cross-cutting.pt")
+    summary_fields = summary_fields_2016
 
     @property
     def article(self):
@@ -412,6 +417,13 @@ class EditAssessmentDataFormCrossCutting2022(EditAssessmentDataForm):
 class EditAssessmentDataFormCompleteness2022(EditAssessmentDataForm):
     edit_assessment_view_name = '/@@edit-assessment-data-2022-completeness'
     template = ViewPageTemplateFile("./pt/edit-assessment-data-cross-cutting.pt")
+    
+    @property
+    def summary_fields(self):
+        if 'Art13' in self.article:
+            return summary_fields_2016_a13_complete
+
+        return summary_fields_2016
 
     @property
     def article(self):

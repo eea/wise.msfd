@@ -24,8 +24,8 @@ from wise.msfd.compliance.interfaces import (
     IRegionalDescriptorRegionsFolder, IRegionalDescriptorsFolder
 )
 from wise.msfd.compliance.regionaldescriptors.base import BaseRegComplianceView
-from wise.msfd.compliance.scoring import (CONCLUSIONS, get_range_index, 
-                                          OverallScores)
+from wise.msfd.compliance.scoring import (CONCLUSIONS, CONCLUSIONS_2022, 
+    get_range_index, get_range_index_2022, OverallScores)
 from wise.msfd.compliance.utils import (get_assessors, set_assessors,
                                         ordered_regions_sortkey)
 from wise.msfd.compliance.vocabulary import (REGIONAL_DESCRIPTORS_REGIONS,
@@ -97,9 +97,9 @@ ARTICLE_WEIGHTS = {
         'coherence': 0.2
     },
     'Art14': {
-        'adequacy': 1.0,
-        'completeness': 0,
-        'coherence': 0
+        'adequacy': 0.6,
+        'completeness': 0.2,
+        'coherence': 0.2
     },
     'Art18': {
         'adequacy': 1.0,
@@ -145,6 +145,16 @@ ANSWERS_COLOR_TABLE = {
     '/': 7       # not relevant
 }
 
+ANSWERS_COLOR_TABLE_2022 = {
+    '1': 1,      # very good
+    '0.75': 2,   # good
+    '0.5': 4,    # moderate
+    '0.25': 5,   # poor
+    '0': 3,      # very poor
+    '0.250': 6,  # not clear
+    '/': 7       # not relevant
+}
+
 # score_value as key, color as value
 CONCLUSION_COLOR_TABLE = {
     5: 0,       # not relevant
@@ -153,6 +163,19 @@ CONCLUSION_COLOR_TABLE = {
     2: 4,       # poor
     1: 5,       # very poor
     0: 3,       # not reported
+    0.5: 0o5,
+    1.5: 15,
+    2.5: 25,
+    3.5: 35,
+}
+
+CONCLUSION_COLOR_TABLE_2022 = {
+    5: 0,       # not relevant
+    4: 1,       # very good
+    3: 2,       # good
+    2: 4,       # moderate
+    1: 5,       # poor
+    0: 3,       # very poor
     0.5: 0o5,
     1.5: 15,
     2.5: 25,
@@ -199,6 +222,19 @@ additional_fields = {
 summary_fields = (
     ('assessment_summary', u'Assessment summary'),
     ('progress', u'Progress since 2012'),
+    ('recommendations', u'Recommendations for Member State'),
+)
+
+summary_fields_2016 = (
+    ('assessment_summary', u'Assessment summary'),
+    ('progress', u'Progress since 2016'),
+    ('recommendations', u'Recommendations for Member State'),
+)
+
+summary_fields_2016_a13_complete = (
+    ('structure', u'Structure and logic of the POM text report'),
+    ('assessment_summary', u'Assessment summary'),
+    ('progress', u'Progress since 2016'),
     ('recommendations', u'Recommendations for Member State'),
 )
 
@@ -686,7 +722,7 @@ class ViewAssessmentSummaryForm(BaseComplianceView):
     @property
     def summary_data(self):
         saved_data = self.context.saved_assessment_data.last()
-
+        
         _fields = []
 
         for name, title in self.summary_fields:
@@ -704,6 +740,39 @@ class ViewAssessmentSummaryForm(BaseComplianceView):
         fields = self.summary_data
 
         return self.template(fields=fields)
+
+
+class ViewAssessmentSummaryFormCrossCutting2022(ViewAssessmentSummaryForm):
+    @property
+    def article(self):
+        return 'Art1314CrossCutting'
+
+    @property
+    def summary_fields(self):
+        return summary_fields_2016
+
+
+class ViewAssessmentSummaryForm2022(ViewAssessmentSummaryForm):
+    @property
+    def summary_fields(self):
+        return summary_fields_2016
+
+
+class ViewAssessmentSummaryFormCompleteness2022(ViewAssessmentSummaryForm):
+    @property
+    def article(self):
+        if 'art13' in self.context.id:
+            return 'Art13Completeness'
+        
+        return 'Art14Completeness'
+
+    @property
+    def summary_fields(self):
+        if 'art13' in self.context.id:
+            return summary_fields_2016_a13_complete
+        
+        return summary_fields_2016
+
 
 
 class ViewAssessmentSummaryFormRegional(BaseRegComplianceView,
@@ -987,11 +1056,22 @@ class AssessmentDataMixin(object):
     def get_color_for_score(self, score_value):
         return CONCLUSION_COLOR_TABLE.get(score_value, 0)
 
+    def get_color_for_score_2022(self, score_value):
+        return CONCLUSION_COLOR_TABLE_2022.get(score_value, 0)
+
     def get_conclusion(self, score_value):
         try:
             concl = list(reversed(CONCLUSIONS))[score_value]
         except:
             concl = CONCLUSIONS[0]
+
+        return concl
+
+    def get_conclusion_2022(self, score_value):
+        try:
+            concl = list(reversed(CONCLUSIONS_2022))[score_value]
+        except:
+            concl = CONCLUSIONS_2022[0]
 
         return concl
 
@@ -1136,10 +1216,10 @@ class AssessmentDataMixin(object):
                                   / res['max_score'] or 0))
 
         # score_percent = res['score']
-        score_val = get_range_index(score_percent)
+        score_val = get_range_index_2022(score_percent)
 
-        res['color'] = self.get_color_for_score(score_val)
-        res['conclusion'] = (score_val, self.get_conclusion(score_val))
+        res['color'] = self.get_color_for_score_2022(score_val)
+        res['conclusion'] = (score_val, self.get_conclusion_2022(score_val))
 
         if res['max_score'] == 0:
             res['conclusion'] = ('-', 'Not relevant')
@@ -1271,7 +1351,8 @@ class AssessmentDataMixin(object):
         for phase in phases:
             # set the conclusion and color based on the score for each phase
             phase_scores = getattr(phase_overall_scores, phase)
-            score_val = phase_overall_scores.get_range_index_for_phase(phase)
+            score_val = phase_overall_scores.get_range_index_for_phase(
+                phase, article)
 
             if (phase == 'consistency' and article == 'Art9'
                     or phase_scores['max_score'] == 0):
