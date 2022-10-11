@@ -2,8 +2,9 @@ pipeline {
   agent any
 
   environment {
-        GIT_NAME = "eea.banner"
-        SONARQUBE_TAGS = "www.eea.europa.eu"
+        GIT_NAME = "wise.msfd"
+        GIT_HISTORYFILE = "CHANGES.rst"
+        SONARQUBE_TAGS = "water.eea.europa.eu"
     }
 
   stages {
