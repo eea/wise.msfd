@@ -107,7 +107,11 @@ class EditAssessmentDataForm(BaseView, EditAssessmentDataFormMain):
             return default
 
         # parse the datestring to reformat into a clearer format
-        local_time = datetime.datetime.strptime(local_time, '%b %d %Y %I:%M %p')
+        try:
+            local_time = datetime.datetime.strptime(local_time, '%b %d %Y %I:%M %p')
+        except:
+            local_time = datetime.datetime.strptime(local_time, '%b %d, %Y %I:%M %p')
+
         local_time = datetime.datetime.strftime(local_time, "%Y-%m-%d %H:%M")
 
         return local_time
