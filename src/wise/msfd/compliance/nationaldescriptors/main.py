@@ -912,6 +912,7 @@ class NationalDescriptorArticleView(BaseView, AssessmentDataMixin):
 
     year = '2018'       # used by self.muids
     _questions = NAT_DESC_QUESTIONS
+    show_file_version = True
 
     @property
     def title(self):
@@ -940,6 +941,9 @@ class NationalDescriptorArticleView(BaseView, AssessmentDataMixin):
         file_name = 'Date assessed not set'
         file_url = ''
         report_date = 'Not found'
+
+        if not self.show_file_version:
+            return file_name, edit_url, report_date, edit_url
 
         if not date_assessed:
             return file_name, edit_url, report_date, edit_url
@@ -1123,7 +1127,7 @@ class NationalDescriptorArticleView(BaseView, AssessmentDataMixin):
             assess_date=assess_date_2018,
             source_file=source_file_2018,
             show_edit_assessors=show_edit_assessors,
-            show_file_version=True,
+            show_file_version=self.show_file_version,
             file_version=file_version
         )
 
@@ -1135,6 +1139,7 @@ class NationalDescriptorArticleView2022(NationalDescriptorArticleView):
     """"""
 
     assessment_data_2018_tpl = Template('./pt/assessment-data-2022.pt')
+    show_file_version = False
 
     def format_assessment_data(self, article, elements, questions, 
             muids, data, descriptor_obj, article_weights):
@@ -1156,6 +1161,7 @@ class NationalDescriptorArticleViewCrossCutting(NationalDescriptorArticleView):
     assessment_data_2018_tpl = Template(
         './pt/assessment-data-2022-cross-cutting.pt')
     summary_fields = summary_fields_2016
+    show_file_version = False
 
     def format_assessment_data(self, article, elements, questions, 
             muids, data, descriptor_obj, article_weights):
@@ -1281,7 +1287,7 @@ class NationalDescriptorArticleViewCrossCutting(NationalDescriptorArticleView):
             assess_date=assess_date_2018,
             source_file=source_file_2018,
             show_edit_assessors=show_edit_assessors,
-            show_file_version=True,
+            show_file_version=self.show_file_version,
             file_version=file_version
         )
 
@@ -1294,6 +1300,7 @@ class NationalDescriptorArticleViewCompleteness(
 
     assessment_data_2018_tpl = Template(
         './pt/assessment-data-2022-completeness.pt')
+    show_file_version = False
 
     @property
     def article(self):
