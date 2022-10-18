@@ -413,6 +413,75 @@
 </metal:macro>
 
 
+<metal:macro define-macro="assessment-status-bar-2016-2022-d1">
+  <tal:def tal:define="status_color python: view.get_status_color(assessment_d1);
+      css_class python:'assessment-status-colorbar btn btn-xs btn-' + status_color;
+      url assessment/absolute_url;
+      url_d1 python: assessment_d1.absolute_url();
+      can_view_data python:view.can_view_assessment_data(assessment_d1);
+      can_edit_data python:view.can_view_edit_assessment_data(assessment_d1);
+      wf_states python: view.get_all_wf_states(assessment_d1);
+      current_state python: view.get_status(assessment_d1);">
+    <a tal:attributes="href python: url + '/@@assessment-overview-2016'"
+        class="assessment-status-colorbar btn btn-xs btn-primary">
+      <!-- <i class="glyphicon glyphicon-edit"></i> -->
+      2016
+    </a>
+    <a tal:attributes="href url_d1; class css_class">
+      <!-- <i class="glyphicon glyphicon-edit"></i> -->
+      2022
+      <!-- <span class="as-state-label" tal:content="current_state">Approved</span> -->
+    </a>
+    <div class="assessment-status-wrapper" >
+      <div class="assessment-status-processstate">
+        <form class="assessment-status process-state"
+              method="GET"
+              tal:attributes="action python: url_d1 + '/content_status_modify'">
+          <div>
+            <i class="glyphicon glyphicon-transfer"></i>
+            Process state:
+            <strong tal:content="python: view.get_status(assessment_d1)">Phase 0</strong>
+            <i class='glyphicon glyphicon-remove-circle close-button'></i>
+
+            <div class="phase-selector"
+              tal:condition="python: not(view.read_only_access)">
+              <select name="workflow_action"
+                class="pat-select2"
+                data-pat-select2="width:250px">
+                <option value=''>Choose action...</option>
+                <tal:rep repeat="trans python: view.get_transitions(assessment_d1)">
+                  <option tal:content="trans/title" tal:attributes="value trans/id">Send to Phase 0</option>
+                </tal:rep>
+              </select>
+            </div>
+          </div>
+        </form>
+        <div class="buttons-wrapper">
+          <a target="_blank"
+            tal:attributes="href python: url_d1 + '/@@edit-assessment-data-2022';
+                class css_class">Edit</a>
+          <a target="_blank"
+            tal:attributes="href url_d1; class css_class;">Overview</a>
+        </div>
+      </div>
+
+      <div>2022 assessment progress</div>
+      <a class="assessment-status-container2"
+        target="_blank"
+        tal:attributes="href url_d1">
+        <ul tal:define="current_index python: wf_states.index(current_state)">
+          <tal:rep tal:repeat="state wf_states">
+            <li tal:attributes="title state;
+                  class python: wf_states.index(state) < current_index and 'finished' or wf_states.index(state) == current_index and 'active '+ status_color or '';"
+                tal:content="state"></li>
+          </tal:rep>
+        </ul>
+      </a>
+    </div>
+  </tal:def>
+</metal:macro>
+
+
 <metal:macro define-macro="assessment-status-bar-cross-cutting-2022">
   <tal:def tal:define="status_color python: view.get_status_color(assessment);
       css_class python:'assessment-status-colorbar btn btn-xs btn-' + status_color;

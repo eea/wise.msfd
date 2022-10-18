@@ -17,7 +17,8 @@
 
         <div class="country-start-assessments-page start-page-content left-side-form"
              tal:define="country_folder python: view._country_folder;
-                  regions view/get_regions">
+                  regions view/get_regions;
+                  region_art1314 python: regions[0]">
 
           <h1>Commission assessments - national overview: <span tal:content="view/country_title"></span></h1>
           <div class="nda-link">
@@ -246,12 +247,16 @@
                               tal:attributes="href assessment/absolute_url;">2020</a> 
                         </td>
                         <td class="assessment-status-td" 
-                            tal:define="assessment python: desc['art13']">
-                          <div metal:use-macro="context/wise-macros/macros/assessment-status-bar-2016-2022"></div>
+                            tal:define="assessment_d1 python: desc.id.startswith('d1.') and view.get_descriptors(region_art1314)[0]['art13'] or region_art1314[desc.id]['art13'];
+                                assessment python: desc['art13']">
+                          <div metal:use-macro="context/wise-macros/macros/assessment-status-bar-2016-2022-d1"></div>
+                          <!-- <div tal:condition="python: not desc.id.startswith('d1.')" metal:use-macro="context/wise-macros/macros/assessment-status-bar-2016-2022"></div> -->
                         </td>
                         <td class="assessment-status-td" 
-                            tal:define="assessment python: desc['art14']">
-                          <div metal:use-macro="context/wise-macros/macros/assessment-status-bar-2016-2022"></div>
+                            tal:define="assessment_d1 python: desc.id.startswith('d1.') and view.get_descriptors(region_art1314)[0]['art14'] or region_art1314[desc.id]['art14']; 
+                                assessment python: desc['art14']">
+                          <div metal:use-macro="context/wise-macros/macros/assessment-status-bar-2016-2022-d1"></div>
+                          <!-- <div tal:condition="python: not desc.id.startswith('d1.')" metal:use-macro="context/wise-macros/macros/assessment-status-bar-2016-2022"></div> -->
                         </td>
                         <td class="assessment-status-td" 
                             tal:define="assessment python: desc['art18']">

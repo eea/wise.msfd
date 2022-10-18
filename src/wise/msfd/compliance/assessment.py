@@ -232,7 +232,7 @@ summary_fields_2016 = (
 )
 
 summary_fields_2016_a13_complete = (
-    ('structure', u'Structure and logic of the POM text report'),
+    # ('structure', u'Structure and logic of the POM text report'),
     ('assessment_summary', u'Assessment summary'),
     ('progress', u'Progress since 2016'),
     ('recommendations', u'Recommendations for Member State'),
@@ -730,7 +730,11 @@ class ViewAssessmentSummaryForm(BaseComplianceView):
                 self.article, name
             )
 
-            text = t2rt(saved_data.get(_name, None))
+            text_raw = saved_data.get(_name, None)
+            if hasattr(text_raw, 'output'):
+                text = text_raw.output
+            else:
+                text = t2rt(text_raw)
 
             _fields.append((title, text))
 
@@ -768,11 +772,22 @@ class ViewAssessmentSummaryFormCompleteness2022(ViewAssessmentSummaryForm):
 
     @property
     def summary_fields(self):
-        if 'art13' in self.context.id:
-            return summary_fields_2016_a13_complete
+        # if 'art13' in self.context.id:
+        #     return summary_fields_2016_a13_complete
         
         return summary_fields_2016
 
+
+class ViewAssessmentSummaryFormStructure2022(
+        ViewAssessmentSummaryFormCompleteness2022):
+
+    @property
+    def summary_fields(self):
+        summary_fields_2016_a13_complete = (
+            ('structure', u'Structure and logic of the POM text report'),
+        )        
+
+        return summary_fields_2016_a13_complete
 
 
 class ViewAssessmentSummaryFormRegional(BaseRegComplianceView,

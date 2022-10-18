@@ -241,6 +241,33 @@ class EditAssessmentDataForm(BaseView, EditAssessmentDataFormMain):
 
         forms = []
 
+        if self.article == 'Art13Completeness':
+            structure_logic_form = EmbeddedForm(self, self.request)
+            structure_logic_form.title = u"Structure and logic of the POM text report"
+            last_upd = '{}_structure_logic_last_upd'.format(self.article)
+            structure_logic_form._last_update = assessment_data.get(
+                last_upd, assess_date
+            )
+            structure_logic_form._assessor = assessment_data.get(
+                'assessor', '-'
+            )
+            structure_logic_form.subtitle = u''
+            structure_logic_form._disabled = self.read_only_access
+            structure_logic_form._source_info = ''
+            structure_logic_form._question_id = ''
+            asf_fields = []
+
+            _name = '{}_structure'.format(self.article)
+
+            default = assessment_data.get(_name, None)
+            _field = RichText(title='Structure and logic of the POM text report',
+                        __name__=_name, required=False, default=default)
+            asf_fields.append(_field)
+
+            structure_logic_form.fields = Fields(*asf_fields)
+
+            forms.append(structure_logic_form)
+
         for question in self.questions:
             phase = [
                 k
@@ -354,7 +381,7 @@ class EditAssessmentDataForm(BaseView, EditAssessmentDataFormMain):
             )
 
             default = assessment_data.get(_name, None)
-            _field = Text(title=title,
+            _field = RichText(title=title,
                           __name__=_name, required=False, default=default)
             asf_fields.append(_field)
 
