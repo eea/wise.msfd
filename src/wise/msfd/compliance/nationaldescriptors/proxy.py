@@ -93,18 +93,19 @@ class Proxy2018(object):
                 continue
 
             name = field.name
-            value = getattr(self.__o, name, extra.get(name, None))
+            value = getattr(self.__o, name, extra.get(name, ''))
 
             if not value:
                 continue
 
-            self.set_value(name, value)
+            self.set_value(name, value or '')
 
     def __getattr__(self, name):
         if name == '__o':
             return self.__o
 
-        return getattr(self.__o, name, self.extra.get(name, None))
+        # return '' to make the Proxies sortable
+        return getattr(self.__o, name, self.extra.get(name, '')) or ''
 
     def __iter__(self):
         """ Makes the proxy behave like a list of values
@@ -120,7 +121,7 @@ class Proxy2018(object):
         obj = cls.__new__(cls)
 
         for k, v in vars(self).items():
-            setattr(obj, k, None)
+            setattr(obj, k, '')
 
         obj.__o = []
         obj.extra = {}      # compatibility with __getattr__ from above

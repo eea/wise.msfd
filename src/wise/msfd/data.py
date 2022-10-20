@@ -411,14 +411,20 @@ def _get_report_filename_art13_2016(country, region, article, descriptor):
     for item in items:
         file_name = item.FileName
 
-        if 'Measures' not in file_name:
+        if 'Exception' in file_name:
             continue
 
         file_names.append(file_name)
 
     # TODO: analyse cases when it returns more then one file
-    if len(file_names) != 1:
-        logger.warning("Could not find report filename for %s %s %s",
+    if len(file_names) > 1:
+        logger.warning("More filenames found for %s %s %s",
+                       country, region, article,)
+
+        return file_names[0]
+
+    if not file_names:
+        logger.warning("Could not find filename for %s %s %s",
                        country, region, article,)
 
         return None
@@ -442,14 +448,20 @@ def _get_report_filename_art14_2016(country, region, article, descriptor):
     for item in items:
         file_name = item.FileName
 
-        if 'Exception' not in file_name:
+        if 'Measure' in file_name:
             continue
 
         file_names.append(file_name)
 
     # TODO: analyse cases when it returns more then one file
-    if len(file_names) != 1:
-        logger.warning("Could not find report filename for %s %s %s",
+    if len(file_names) > 1:
+        logger.warning("More filenames found for %s %s %s",
+                       country, region, article,)
+
+        return file_names[0]
+
+    if not file_names:
+        logger.warning("Could not find filename for %s %s %s",
                        country, region, article,)
 
         return None

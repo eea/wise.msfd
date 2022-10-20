@@ -652,8 +652,15 @@ class ReportData2014(ReportData2012):
     report_due = '2014-10-15'
 
     def _get_reporting_info(self, root):
-        reporter = [root.attrib['Organisation']]
-        date = [root.attrib['ReportingDate']]
+        try:
+            reporter = [root.attrib['Organisation']]
+        except:
+            reporter = ['Reporter not found']
+
+        try:
+            date = [root.attrib['ReportingDate']]
+        except:
+            date = ['Date not found']
 
         return reporter, date
 
