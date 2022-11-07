@@ -199,6 +199,8 @@ class CommentsList(BaseComplianceView):
             del q_folder[comment.id]
 
     def del_comment(self):
+        alsoProvides(self.request, IDisableCSRFProtection)
+
         form = self.request.form
 
         question_id = form.get('q').lower()
