@@ -1829,7 +1829,10 @@ The data is retrieved from the MSFD2018_production.V_ART8_ESA_2018 database view
                             values = []
 
                             for item in v.rows:
-                                item_title = item.name
+                                item_title = item
+                                
+                                if hasattr(item, 'name'):
+                                    item_title = item.name
 
                                 if label_name in inverse_fields:
                                     item_title = item.title
