@@ -66,6 +66,7 @@ logger = logging.getLogger('wise.msfd')
 
 NSMAP = {"w": "http://water.eionet.europa.eu/schemas/dir200856ec"}
 RE_REGION_NORM = re.compile(r'^[A-Z]{3}\s')
+FILENAME_FIX = re.compile(r'^[0-9]\-')
 
 
 ReportingInformation = namedtuple('ReportingInformation',
@@ -282,12 +283,15 @@ class ReportData2012(BaseView, BaseUtil):
 
     def get_report_filename(self, art=None):
         # needed in article report data implementations, to retrieve the file
+        filename = get_report_filename(self.year,
+            self.country_code,
+            self.country_region_code,
+            art or self.article,
+            self.descriptor)
 
-        return get_report_filename(self.year,
-                                   self.country_code,
-                                   self.country_region_code,
-                                   art or self.article,
-                                   self.descriptor)
+        filename_normalized = FILENAME_FIX.sub('', filename)
+
+        return filename_normalized
 
     @property
     def report_title(self):

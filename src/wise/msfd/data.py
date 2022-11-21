@@ -604,7 +604,6 @@ LIMIT 1""" % (filename, country_filter)
             splitted = url.split('/')
 
             filename_from_url = splitted[-1]
-
             if filename == filename_from_url:
                 urls.append(url)
 
