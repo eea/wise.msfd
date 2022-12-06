@@ -694,7 +694,7 @@ class Art11JRCReport(BaseComplianceView):
 
     def to_web_intelligent_text(self, text):
         return text 
-        
+
         return convertWebIntelligentPlainTextToHtml(text)
 
     @use_db_session('2018')

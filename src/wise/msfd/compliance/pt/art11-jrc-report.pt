@@ -21,44 +21,80 @@
             <div tal:condition="text_field" tal:content="structure python: text_field.output"></div>
 
             <div class="full-width-marker">
-                <h1>Art. 11 JRC report</h1>
+                <h1 style="margin-top: 0px !important;">Art. 11 JRC report</h1>
 
-                <h2>1. Progress from 2014</h2>
+                <div>
+                    <!-- <div style="font-family: 'PoppinsB'; color: #002d54; font-size: 20px;">Table of contents</div> -->
+                    <h2>Table of contents</h2>
+                    <div>
+                        <ul style="list-style-type: decimal">
+                            <li>
+                                <a tal:attributes="href python: '#Progress2014'">Progress from 2014</a>
+                            </li>
+                            <li>
+                                <a tal:attributes="href python: '#CoverageOfFeatures'">Coverage of features, elements, and parameters per descriptor</a>
+                            </li>
+                            <li>
+                                <a tal:attributes="href python: '#CoverageOfCriteria'">Coverage of criteria</a>
+                            </li>
+                            <li>
+                                <a tal:attributes="href python: '#SpatialTemporalCoverage'">Spatial and temporal coverage</a>
+                            </li>
+                            <li>
+                                <a tal:attributes="href python: '#AdequacyConsistency'">Adequacy and consistency</a>
+                            </li>
+                            <li>
+                                <a tal:attributes="href python: '#RegionalCoordination'">Regional coordination</a>
+                            </li>
+                            <li>
+                                <a tal:attributes="href python: '#OtherPoliciesCoherence'">Coherence with other policies</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <h2 id="Progress2014">1. Progress from 2014</h2>
                 <div tal:content="structure python: view.to_web_intelligent_text(getattr(data, 'Progress2014', 'No data reported.'))">Content here</div>
 
-                <h2>2. Coverage of features, elements, and parameters per descriptor</h2>
+                <h2 id="CoverageOfFeatures" >2. Coverage of features, elements, and parameters per descriptor</h2>
                 <div tal:content="structure python: view.to_web_intelligent_text(getattr(data, 'CoverageOfFeatures', 'No data reported.'))">Content here</div>
 
                 <h3>Recommendations</h3>
                 <div tal:content="structure python: view.to_web_intelligent_text(getattr(data, 'CoverageOfFeatures_Recommendation', 'No data reported.'))">Content here</div>
 
-                <h2>3. Coverage of criteria</h2>
+                <h2 id="CoverageOfCriteria">3. Coverage of criteria</h2>
                 <div tal:content="structure python: view.to_web_intelligent_text(getattr(data, 'CoverageOfCriteria', 'No data reported.'))">Content here</div>
 
                 <h3>Recommendations</h3>
                 <div tal:content="structure python: view.to_web_intelligent_text(getattr(data, 'CoverageOfCriteria_Recommendation', 'No data reported.'))">Content here</div>
 
-                <h2>4. Spatial and temporal coverage</h2>
+                <h2 id="SpatialTemporalCoverage">4. Spatial and temporal coverage</h2>
                 <div tal:content="structure python: view.to_web_intelligent_text(getattr(data, 'SpatialTemporalCoverage', 'No data reported.'))">Content here</div>
 
                 <h3>Recommendations</h3>
                 <div tal:content="structure python: view.to_web_intelligent_text(getattr(data, 'SpatialTemporalCoverage_Recommendation', 'No data reported.'))">Content here</div>
 
-                <h2>5. Adequacy and consistency</h2>
+                <h2 id="AdequacyConsistency">5. Adequacy and consistency</h2>
                 <div tal:content="structure python: view.to_web_intelligent_text(getattr(data, 'AdequacyConsistency', 'No data reported.'))">Content here</div>
 
                 <h3>Recommendations</h3>
                 <div tal:content="structure python: view.to_web_intelligent_text(getattr(data, 'AdequacyConsistency_Recommendation', 'No data reported.'))">Content here</div>
 
-                <h2>6. Regional coordination</h2>
+                <h2 id="RegionalCoordination">6. Regional coordination</h2>
                 <div tal:content="structure python: view.to_web_intelligent_text(getattr(data, 'RegionalCoordination', 'No data reported.'))">Content here</div>
 
                 <h3>Recommendations</h3>
                 <div tal:content="structure python: view.to_web_intelligent_text(getattr(data, 'RegionalCoordination_Recommendation', 'No data reported.'))">Content here</div>
 
-                <h2>7. Coherence with other policies</h2>
+                <h2 id="OtherPoliciesCoherence">7. Coherence with other policies</h2>
                 <div tal:content="structure python: view.to_web_intelligent_text(getattr(data, 'OtherPoliciesCoherence', 'No data reported.'))">Content here</div>
 
+            </div>
+
+            <div class="scroll-to-top">
+                <button title="Scroll to top" class="scroll-button">
+                    <i class="scroll-icon glyphicon glyphicon-chevron-up"></i>
+                </button>
             </div>
 
         </div>
