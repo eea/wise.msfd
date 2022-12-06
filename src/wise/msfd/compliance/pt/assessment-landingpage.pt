@@ -72,6 +72,25 @@
                     <!-- <div class="article-description">Access reports for a region</div> -->
                   </div>
                 </div>
+                <div tal:condition="view/can_view_assessment_data" 
+                    class="article-box col-lg-4 col-xs-6">
+                  <div class="article-box-wrapper">
+                    <div class="article-box-header">
+                      <h4 class="tab-subtitle">Art. 11 JRC reports</h4>
+                      <div class="tab-title">Art. 11 JRC reports by country</div>
+                    </div>
+                    <div class="country-dropdown-wrapper">
+                      <button class="country-dropdown-button">Select country<span class="link-btn"></span></button>
+                      <div class="country-dropdown-content">
+                        <a tal:repeat="country view/countries"
+                            tal:attributes="href python: '/marine/policy-and-reporting/assessment-by-country/' + country[1].lower().replace(' ', '-') + '/@@art11-jrc-report'"
+                            tal:content="python: country[1]">Belgium</a>
+                      </div>
+                    </div>
+                    <!-- <div class="article-description">Access reports for a country</div> -->
+                  </div>
+                </div>
+              </div>
             </div>         
 
         </div>

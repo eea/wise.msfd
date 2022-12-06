@@ -1,0 +1,73 @@
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en"
+  xmlns:tal="http://xml.zope.org/namespaces/tal"
+  xmlns:metal="http://xml.zope.org/namespaces/metal"
+  xmlns:i18n="http://xml.zope.org/namespaces/i18n"
+  lang="en"
+  metal:use-macro="context/main_template/macros/master"
+  i18n:domain="eea">
+
+  <head>
+    <metal:block fill-slot="style_slot">
+      <link href="/++resource++static_css/tabs.css" type="text/css" rel="stylesheet" />
+      <link href="/++resource++static_css/msfd_search.css" type="text/css" rel="stylesheet" />
+    </metal:block>
+  </head>
+
+  <body metal:fill-slot="main" tal:define="data options/data">
+    <div id="layout-contents">
+      <div id="wise-search-form" class="full-width-marker">
+        <div id="wise-search-form-top"
+            tal:define="text_field python: context.text or None" >
+            <div tal:condition="text_field" tal:content="structure python: text_field.output"></div>
+
+            <div class="full-width-marker">
+                <h1>Art. 11 JRC report</h1>
+
+                <h2>1. Progress from 2014</h2>
+                <div tal:content="structure python: view.to_web_intelligent_text(getattr(data, 'Progress2014', 'No data reported.'))">Content here</div>
+
+                <h2>2. Coverage of features, elements, and parameters per descriptor</h2>
+                <div tal:content="structure python: view.to_web_intelligent_text(getattr(data, 'CoverageOfFeatures', 'No data reported.'))">Content here</div>
+
+                <h3>Recommendations</h3>
+                <div tal:content="structure python: view.to_web_intelligent_text(getattr(data, 'CoverageOfFeatures_Recommendation', 'No data reported.'))">Content here</div>
+
+                <h2>3. Coverage of criteria</h2>
+                <div tal:content="structure python: view.to_web_intelligent_text(getattr(data, 'CoverageOfCriteria', 'No data reported.'))">Content here</div>
+
+                <h3>Recommendations</h3>
+                <div tal:content="structure python: view.to_web_intelligent_text(getattr(data, 'CoverageOfCriteria_Recommendation', 'No data reported.'))">Content here</div>
+
+                <h2>4. Spatial and temporal coverage</h2>
+                <div tal:content="structure python: view.to_web_intelligent_text(getattr(data, 'SpatialTemporalCoverage', 'No data reported.'))">Content here</div>
+
+                <h3>Recommendations</h3>
+                <div tal:content="structure python: view.to_web_intelligent_text(getattr(data, 'SpatialTemporalCoverage_Recommendation', 'No data reported.'))">Content here</div>
+
+                <h2>5. Adequacy and consistency</h2>
+                <div tal:content="structure python: view.to_web_intelligent_text(getattr(data, 'AdequacyConsistency', 'No data reported.'))">Content here</div>
+
+                <h3>Recommendations</h3>
+                <div tal:content="structure python: view.to_web_intelligent_text(getattr(data, 'AdequacyConsistency_Recommendation', 'No data reported.'))">Content here</div>
+
+                <h2>6. Regional coordination</h2>
+                <div tal:content="structure python: view.to_web_intelligent_text(getattr(data, 'RegionalCoordination', 'No data reported.'))">Content here</div>
+
+                <h3>Recommendations</h3>
+                <div tal:content="structure python: view.to_web_intelligent_text(getattr(data, 'RegionalCoordination_Recommendation', 'No data reported.'))">Content here</div>
+
+                <h2>7. Coherence with other policies</h2>
+                <div tal:content="structure python: view.to_web_intelligent_text(getattr(data, 'OtherPoliciesCoherence', 'No data reported.'))">Content here</div>
+
+            </div>
+
+        </div>
+      </div>
+    </div>
+
+    <metal:css fill-slot="formtop">
+      <script src="/++resource++msfd/js/msfd_search.js"></script>
+    </metal:css>
+
+  </body>
+</html>

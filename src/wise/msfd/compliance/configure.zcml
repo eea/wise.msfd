@@ -220,6 +220,13 @@
     permission="zope2.View"
     />
 
+  <browser:page
+    for="*"
+    name="art11-jrc-report"
+    class=".landingpage.Art11JRCReport"
+    permission="zope2.View"
+    />
+
   <!-- <subscriber -->
   <!--   for="ZPublisher.interfaces.IPubAfterTraversal" -->
   <!--   handler=".handle_traverse" -->

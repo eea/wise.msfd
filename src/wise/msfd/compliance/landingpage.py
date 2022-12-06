@@ -6,12 +6,17 @@ import lxml.etree
 
 from pkg_resources import resource_filename
 from plone.api.portal import get_tool
+from plone.intelligenttext.transforms import \
+    convertWebIntelligentPlainTextToHtml
+
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 
 from .assessment import AssessmentDataMixin
 from .base import BaseComplianceView
 from .interfaces import IMSFDReportingHistoryFolder
 from .vocabulary import get_all_countries, REGIONAL_DESCRIPTORS_REGIONS
+from ..db import get_all_records, use_db_session
+from ..sql2018 import ART11JRCAssessment
 
 # TODO make REPORTING_HISTORY_ENV get data from IMSFDReportingHistoryFolder
 # _msfd_reporting_history_data
@@ -683,3 +688,29 @@ class RegionLandingPage(BaseComplianceView):
 
     def __call__(self):
         return self.template()
+
+class Art11JRCReport(BaseComplianceView):
+    template = ViewPageTemplateFile("pt/art11-jrc-report.pt")
+
+    def to_web_intelligent_text(self, text):
+        return text 
+        
+        return convertWebIntelligentPlainTextToHtml(text)
+
+    @use_db_session('2018')
+    def get_data(self):
+        mc = ART11JRCAssessment
+        count, data = get_all_records(
+            mc,
+            mc.CountryCode == self.context._ccode.upper(),
+        )
+
+        if not data:
+            return {}
+
+        return data[0]
+
+    def __call__(self):
+        data = self.get_data()
+
+        return self.template(data=data)
