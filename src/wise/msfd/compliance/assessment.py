@@ -225,15 +225,35 @@ summary_fields = (
     ('recommendations', u'Recommendations for Member State'),
 )
 
-summary_fields_2016 = (
-    ('assessment_summary', u'Assessment summary'),
+summary_fields_2016_a13 = (
+    ('assessment_summary', u'Article 13 – Adequacy assessment conclusions'),
+    ('progress', u'Progress since 2016'),
+    ('recommendations', u'Recommendations for Member State'),
+)
+
+summary_fields_2016_a14 = (
+    ('assessment_summary', u'Article 14 – Adequacy assessment conclusions'),
     ('progress', u'Progress since 2016'),
     ('recommendations', u'Recommendations for Member State'),
 )
 
 summary_fields_2016_a13_complete = (
     # ('structure', u'Structure and logic of the POM text report'),
-    ('assessment_summary', u'Assessment summary'),
+    ('assessment_summary', u'Article 13 – Completeness assessment conclusions'),
+    # ('progress', u'Progress since 2016'),
+    ('recommendations', u'Recommendations for Member State'),
+)
+
+summary_fields_2016_a14_complete = (
+    # ('structure', u'Structure and logic of the POM text report'),
+    ('assessment_summary', u'Article 14 – Completeness assessment conclusions'),
+    # ('progress', u'Progress since 2016'),
+    ('recommendations', u'Recommendations for Member State'),
+)
+
+summary_fields_2016_cross = (
+    # ('structure', u'Structure and logic of the POM text report'),
+    ('assessment_summary', u'Cross-cutting assessment conclusions'),
     ('progress', u'Progress since 2016'),
     ('recommendations', u'Recommendations for Member State'),
 )
@@ -753,13 +773,16 @@ class ViewAssessmentSummaryFormCrossCutting2022(ViewAssessmentSummaryForm):
 
     @property
     def summary_fields(self):
-        return summary_fields_2016
+        return summary_fields_2016_cross
 
 
 class ViewAssessmentSummaryForm2022(ViewAssessmentSummaryForm):
     @property
     def summary_fields(self):
-        return summary_fields_2016
+        if self.article == 'Art13':
+            return summary_fields_2016_a13
+
+        return summary_fields_2016_a14
 
 
 class ViewAssessmentSummaryFormCompleteness2022(ViewAssessmentSummaryForm):
@@ -772,10 +795,10 @@ class ViewAssessmentSummaryFormCompleteness2022(ViewAssessmentSummaryForm):
 
     @property
     def summary_fields(self):
-        # if 'art13' in self.context.id:
-        #     return summary_fields_2016_a13_complete
-        
-        return summary_fields_2016
+        if self.article == 'Art13Completeness':
+            return summary_fields_2016_a13_complete
+
+        return summary_fields_2016_a14_complete
 
 
 class ViewAssessmentSummaryFormStructure2022(
@@ -783,11 +806,11 @@ class ViewAssessmentSummaryFormStructure2022(
 
     @property
     def summary_fields(self):
-        summary_fields_2016_a13_complete = (
+        _summary_fields_2016_a13_complete = (
             ('structure', u'Structure and logic of the POM text report'),
         )        
 
-        return summary_fields_2016_a13_complete
+        return _summary_fields_2016_a13_complete
 
 
 class ViewAssessmentSummaryFormRegional(BaseRegComplianceView,

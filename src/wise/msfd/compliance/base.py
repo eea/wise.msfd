@@ -804,6 +804,7 @@ class AssessmentQuestionDefinition:
         self.score_method = resolve(sn.get('determination-method'))
         self.source_info = convertWebIntelligentPlainTextToHtml(
             getattr(node.find('source-info'), 'text', '').strip())
+        self.q_heading = getattr(node.find('heading'), 'text', '').strip()
 
     def calculate_score(self, descriptor, values):
         score_obj = Score(self, descriptor, values)

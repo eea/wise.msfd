@@ -4,6 +4,7 @@
     <definition>
       Has the Member State provided an overview of the updated POM corresponding to environmental targets?
     </definition>
+    <heading>Section A - Environmental targets</heading>
     <source-info>Text-based report</source-info>
     <answers>
       <option score="1">Yes</option>
@@ -37,6 +38,7 @@
     <definition>
       Has the Member State provided an overview of relevant updates/changes to the existing measures from the 1st cycle?
     </definition>
+    <heading>Section B – Update of the first cycle’s existing measures and GAP analysis</heading>
     <source-info>
 Text-based report
 
@@ -108,6 +110,7 @@ E-reporting:
     <definition>
       Has the Member State withdrawn any of the new measures from the first cycle?
     </definition>
+    <heading>Section C – Identification and selection of additional new measures in the second cycle</heading>
     <source-info>
 E-reporting
   • MeasureCategory (category 2 a and b)

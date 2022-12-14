@@ -64,6 +64,9 @@
 
           <metal:fields fill-slot="fields">
             <tal:rep tal:repeat='subform view/subforms'>
+              
+              <h3 tal:condition="python: getattr(subform, '_q_heading', '')"
+                  tal:content="python: subform._q_heading">Section B - Update of first cycle</h3>
 
               <div
                 class="subform"

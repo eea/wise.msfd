@@ -28,7 +28,7 @@ from wise.msfd.compliance.assessment import (ANSWERS_COLOR_TABLE,
                                              get_recommendation_data_2016_art1314,
                                              get_assessment_data_2016_art1314_overall,
                                              filter_assessment_data_2012,
-                                             summary_fields_2016)
+                                             summary_fields_2016_cross)
 from wise.msfd.compliance.base import (
     NAT_DESC_QUESTIONS, is_row_relevant_for_descriptor)
 from wise.msfd.compliance.content import AssessmentData
@@ -1160,7 +1160,7 @@ class NationalDescriptorArticleView2022(NationalDescriptorArticleView):
 class NationalDescriptorArticleViewCrossCutting(NationalDescriptorArticleView):
     assessment_data_2018_tpl = Template(
         './pt/assessment-data-2022-cross-cutting.pt')
-    summary_fields = summary_fields_2016
+    summary_fields = summary_fields_2016_cross
     show_file_version = False
 
     def format_assessment_data(self, article, elements, questions, 
