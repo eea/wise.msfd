@@ -359,23 +359,28 @@ class EditAssessmentDataForm(BaseView, EditAssessmentDataFormMain):
             form.fields = Fields(*fields)
             forms.append(form)
 
-        # TODO assessment summary form moved to assesment overview page
-        assessment_summary_form = EmbeddedForm(self, self.request)
-        assessment_summary_form.title = u"Assessment summary"
-        last_upd = '{}_assess_summary_last_upd'.format(self.article)
-        assessment_summary_form._last_update = assessment_data.get(
-            last_upd, assess_date
-        )
-        assessment_summary_form._assessor = assessment_data.get(
-            'assessor', '-'
-        )
-        assessment_summary_form.subtitle = u''
-        assessment_summary_form._disabled = self.read_only_access
-        assessment_summary_form._source_info = ''
-        assessment_summary_form._question_id = ''
-        asf_fields = []
 
         for name, title in self.summary_fields:
+            assessment_summary_form = EmbeddedForm(self, self.request)
+            assessment_summary_form.title = title
+            last_upd = '{}_{}_last_upd'.format(name, self.article)
+            assessment_summary_form._last_update = assessment_data.get(
+                last_upd, assess_date
+            )
+            assessment_summary_form._assessor = assessment_data.get(
+                'assessor', '-'
+            )
+            assessment_summary_form.subtitle = u''
+            assessment_summary_form._disabled = self.read_only_access
+            assessment_summary_form._source_info = ''
+            _q_id = name
+            
+            if name == 'assessment_summary':
+                _q_id = 'summary'
+
+            assessment_summary_form._question_id = _q_id
+            asf_fields = []
+
             _name = '{}_{}'.format(
                 self.article, name
             )
@@ -385,9 +390,9 @@ class EditAssessmentDataForm(BaseView, EditAssessmentDataFormMain):
                           __name__=_name, required=False, default=default)
             asf_fields.append(_field)
 
-        assessment_summary_form.fields = Fields(*asf_fields)
+            assessment_summary_form.fields = Fields(*asf_fields)
 
-        forms.append(assessment_summary_form)
+            forms.append(assessment_summary_form)
 
         return forms
 

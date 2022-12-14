@@ -157,7 +157,7 @@
                   </div>
 
                   <div class="right discussion disc-tl"
-                       tal:define="question_id subform/_question/id | string:summary">
+                       tal:define="question_id subform/_question/id | subform/_question_id | string:summary">
                      <div class="comments-header">
                        <i class="comm-hide glyphicon glyphicon-plus-sign"
                          title="Show all comments"></i>
