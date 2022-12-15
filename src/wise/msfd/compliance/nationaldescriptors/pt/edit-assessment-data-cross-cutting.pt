@@ -50,6 +50,57 @@
             </div>
           </div>
         </div>
+ 
+        <div id="edit-comment-modal" class="modal fade" tabindex="-1" role="dialog">
+          <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+                <h3 class="modal-title">Edit comment</h3>
+              </div>
+              <div class="modal-body">
+                <h4 class="modal-comment-header">Original comment</h4>
+                <div class="modal-comment-section" id="comment-original-text">Original comment</div>
+                <form id="form-edit-comment">
+                  <input id="comm_original" 
+                        type="hidden"
+                        name="comm_original"
+                        tal:attributes="value python:'' or None" />
+                  <input id="comm_name" 
+                        type="hidden"
+                        name="comm_name"
+                        tal:attributes="value python:'' or None" />
+                  <input id="comm_time"  
+                        type="hidden"
+                        name="comm_time"
+                        tal:attributes="value python:'' or None" />
+                  <input id="q"   
+                        type="hidden"
+                        name="q"
+                        tal:attributes="value python:'' or None" />
+                  <input id="thread_id"   
+                        type="hidden"
+                        name="thread_id"
+                        tal:attributes="value python:'' or None" />
+                  <div class="form-group" tal:attributes="portal_url context/portal_url">
+                    <h4 class="modal-comment-header">New comment</h4>
+                    <textarea
+                      class="form-control"
+                      style="height: 10em;"
+                      type="text"
+                      id="new_comment"
+                      name="new_comment"></textarea>
+                    <div style="padding-top: 1rem;">
+                      <input class="submitComment btn btn-primary btn-s" type="submit" value="Save" />
+                    </div>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
 
         <metal:form use-macro="context/@@ploneform-macros/titlelessform">
 

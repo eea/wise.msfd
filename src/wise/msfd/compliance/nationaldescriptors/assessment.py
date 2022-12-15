@@ -411,6 +411,13 @@ class EditAssessmentDataForm(BaseView, EditAssessmentDataFormMain):
 
         return value
 
+    def comment_edit_modal(self):
+        return "TEST"
+        
+        comment_edit_modal = self.comment_edit_modal()()
+
+        return comment_edit_modal
+
 
 class EditAssessmentDataForm2022(EditAssessmentDataForm):
     edit_assessment_view_name = '/@@edit-assessment-data-2022'

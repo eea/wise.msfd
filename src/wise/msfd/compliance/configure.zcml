@@ -53,6 +53,14 @@
     />
 
   <browser:page
+    for="*"
+    name="edit_comment"
+    permission="zope2.View"
+    class=".views.CommentsList"
+    attribute="edit_comment"
+    />
+
+  <browser:page
     for=".interfaces.IComplianceModuleFolder"
     name="json-map"
     class=".views.ComplianceJSONMap"
