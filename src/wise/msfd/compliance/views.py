@@ -73,8 +73,7 @@ class CommentsList(BaseComplianceView):
     template = ViewPageTemplateFile('pt/comments-list.pt')
 
     def current_date(self):
-        import pdb; pdb.set_trace()
-        self.context.toLocalizedTime(datetime.now(), long_format=True)
+        return self.context.toLocalizedTime(datetime.now(), long_format=True)
 
     @property
     def content_history(self):
