@@ -84,7 +84,7 @@
                     <div class="country-dropdown-wrapper">
                       <button class="country-dropdown-button">Select country<span class="link-btn"></span></button>
                       <div class="country-dropdown-content">
-                        <a tal:repeat="country view/countries"
+                        <a tal:repeat="country view/countries_jrc_report"
                             tal:attributes="href python: '/marine/policy-and-reporting/assessment-by-country/' + country[1].lower().replace(' ', '-') + '/@@art11-jrc-report'"
                             tal:content="python: country[1]">Belgium</a>
                       </div>

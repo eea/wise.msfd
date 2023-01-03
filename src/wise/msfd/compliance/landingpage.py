@@ -611,6 +611,22 @@ class MSFDReportsAssessmentsLandingPage(BaseComplianceView):
         return countries
 
     @property
+    def countries_jrc_report(self):
+        # ccode, cname
+        countries = get_all_countries()
+
+        exclude_countries = ["UK", "MT", "BG", "EL", "PT"]
+        res = []
+
+        for ccode, cname in countries:
+            if ccode in exclude_countries:
+                continue
+
+            res.append((ccode, cname))
+
+        return res
+
+    @property
     def regions(self):
         regions = []
 
