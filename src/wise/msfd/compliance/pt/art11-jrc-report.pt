@@ -15,12 +15,12 @@
 
   <body metal:fill-slot="main" tal:define="data options/data">
     <div id="layout-contents">
-      <div id="wise-search-form" class="full-width-marker">
+      <div id="wise-search-form">
         <div id="wise-search-form-top"
             tal:define="text_field python: context.text or None" >
             <div tal:condition="text_field" tal:content="structure python: text_field.output"></div>
 
-            <div class="full-width-marker">
+            <div>
                 <h1 style="margin-top: 0px !important;">Art. 11 JRC report</h1>
 
                 <div>
