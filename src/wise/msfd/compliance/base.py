@@ -264,6 +264,10 @@ class SecurityMixin:
 
         return not can_edit
 
+    @property
+    def can_change_process_state(self):
+        return self.check_permission('wise.msfd: Change Process State')
+
     def can_manage(self):
         return self.check_permission('wise.msfd: Manage Compliance')
 

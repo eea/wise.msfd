@@ -81,7 +81,7 @@
                     <i class="glyphicon glyphicon-transfer"></i>
                     Process state:
                     <strong tal:content="view/get_status">Phase 0</strong>
-                    <select tal:condition="python: not(view.read_only_access)"
+                    <select tal:condition="python: view.can_change_process_state"
                         onchange="javascript:this.form.submit()" name="workflow_action"
                         class="pat-select2"
                         data-pat-select2="width:10em">
