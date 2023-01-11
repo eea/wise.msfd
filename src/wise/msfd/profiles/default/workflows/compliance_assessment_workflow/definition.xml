@@ -35,9 +35,11 @@
   </permission-map>
   <permission-map name="wise.msfd: Edit Assessment" acquired="False">
    <permission-role>Editor</permission-role>
+   <permission-role>Manager</permission-role>
   </permission-map>
   <permission-map name="wise.msfd: Change Process State" acquired="False">
    <permission-role>Editor</permission-role>
+   <permission-role>Manager</permission-role>
   </permission-map>
   <permission-map name="wise.msfd: View Assessment Data" acquired="False">
    <permission-role>Contributor</permission-role>
@@ -79,11 +81,11 @@
   </permission-map>
   <permission-map name="wise.msfd: Edit Assessment" acquired="False">
    <permission-role>Editor</permission-role>
-   <permission-role>Reviewer</permission-role>
+   <permission-role>Manager</permission-role>
   </permission-map>
   <permission-map name="wise.msfd: Change Process State" acquired="False">
    <permission-role>Editor</permission-role>
-   <permission-role>Reviewer</permission-role>
+   <permission-role>Manager</permission-role>
   </permission-map>
   <permission-map name="wise.msfd: View Assessment Data" acquired="False">
    <permission-role>Contributor</permission-role>
@@ -172,12 +174,10 @@
   <permission-map name="wise.msfd: Edit Assessment" acquired="False">
    <permission-role>Editor</permission-role>
    <permission-role>Manager</permission-role>
-   <permission-role>Reviewer</permission-role>
   </permission-map>
   <permission-map name="wise.msfd: Change Process State" acquired="False">
    <permission-role>Editor</permission-role>
    <permission-role>Manager</permission-role>
-   <permission-role>Reviewer</permission-role>
   </permission-map>
   <permission-map name="wise.msfd: View Assessment Data" acquired="False">
    <permission-role>Contributor</permission-role>
