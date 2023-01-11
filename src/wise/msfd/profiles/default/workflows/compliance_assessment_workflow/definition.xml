@@ -34,7 +34,6 @@
    <permission-role>Reviewer</permission-role>
   </permission-map>
   <permission-map name="wise.msfd: Edit Assessment" acquired="False">
-   <permission-role>Editor</permission-role>
    <permission-role>Manager</permission-role>
   </permission-map>
   <permission-map name="wise.msfd: Change Process State" acquired="False">
@@ -462,6 +461,7 @@
  <transition transition_id="send_for_work" title="Send for work by Topic Leads" new_state="in_work" trigger="USER" before_script="" after_script="">
   <action url="" category="workflow" icon="">Send for work by Topic Leads</action>
   <guard>
+   <guard-role>Manager</guard-role>
    <guard-role>Editor</guard-role>
    <guard-role>Contributor</guard-role>
   </guard>
