@@ -144,6 +144,26 @@ if (!Array.prototype.last) {
     });
   }
 
+  function setupProcessStateCheckboxes() {
+    $('.assessment-status-td.enable-process-state-change').each(function() {
+      var $this = $(this);
+
+      debugger;
+
+      var $input = $("<input type='checkbox' />")
+        .attr("name", "process-state-change")
+        .attr("value", $this.find('.assessment-status-wrapper form').attr('action'))
+        .appendTo($this);
+
+      $input.click(function(){
+        $(this)
+          .clone()
+          .attr("type", "hidden")
+          .appendTo("#form-process-state-change-bulk");
+      });
+    });
+  };
+
   $.fn.fixTableHeaderAndCellsHeight = function () {
     // because the <th> are position: absolute, they don't get the height of
     // the <td> cells, and the other way around.
@@ -1001,6 +1021,8 @@ if (!Array.prototype.last) {
       // setupScrollableTargets();
       setupTargetsWidth();
       setupAssessmentStatusChange();
+
+      setupProcessStateCheckboxes();
     });
   });
 })(window, document, $);
