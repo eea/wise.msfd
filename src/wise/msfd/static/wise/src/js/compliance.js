@@ -145,24 +145,78 @@ if (!Array.prototype.last) {
   }
 
   function setupProcessStateCheckboxes() {
-    $('.assessment-status-td.enable-process-state-change').each(function() {
+    $(".assessment-status-td.enable-process-state-change").each(function () {
       var $this = $(this);
+      var action = $this.find(".assessment-status-wrapper form").attr("action");
 
-      debugger;
-
-      var $input = $("<input type='checkbox' />")
+      var $inputCheckbox = $("<input type='checkbox' />")
         .attr("name", "process-state-change")
-        .attr("value", $this.find('.assessment-status-wrapper form').attr('action'))
+        .attr("value", action)
         .appendTo($this);
 
-      $input.click(function(){
-        $(this)
-          .clone()
-          .attr("type", "hidden")
-          .appendTo("#form-process-state-change-bulk");
+      $inputCheckbox.change(function () {
+        var value = $(this).attr("value");
+        var ischecked = $(this).is(":checked");
+
+        if (ischecked) {
+          // when the checkbox is checked
+          var inputNotExists =
+            $("#form-process-state-change-bulk").find(
+              "input[value='" + value + "' ]"
+            ).length === 0;
+
+          if (inputNotExists) {
+            $(this)
+              .clone()
+              .attr("type", "hidden")
+              .appendTo("#form-process-state-change-bulk");
+          }
+
+          // phase-selector pat-select2
+          var $newPhaseSelector = $(this)
+            .parent("td")
+            .find(".phase-selector")
+            .clone()
+            .attr("id", "process-state-bulk-select");
+
+          $newPhaseSelector.change(function () {
+            var $form = $(this).parents("form");
+            var url = $form[0].action;
+
+            $(document.body).addClass("cursor-wait");
+            $form.addClass("cursor-wait");
+
+            $.ajax({
+              url: url,
+              type: "POST",
+              data: $form.serialize(),
+              success: function () {
+                location.reload();
+              },
+            });
+          });
+
+          $("#form-process-state-change-bulk .phase-selector").replaceWith(
+            $newPhaseSelector
+          );
+        } else {
+          // when the checkbox is unchecked
+          $("#form-process-state-change-bulk")
+            .find("input[value='" + value + "' ]")
+            .remove();
+
+          // if there are no checkboxes checked, remove the select box too
+          if (
+            $("#form-process-state-change-bulk").find(
+              "input[name='process-state-change']"
+            ).length === 0
+          ) {
+            $("#form-process-state-change-bulk .phase-selector select").remove();
+          }
+        }
       });
     });
-  };
+  }
 
   $.fn.fixTableHeaderAndCellsHeight = function () {
     // because the <th> are position: absolute, they don't get the height of
@@ -988,7 +1042,11 @@ if (!Array.prototype.last) {
           : $(this).attr("display-text");
       });
       $this.parents().siblings(".assessment-dd-list").fadeToggle();
-      $this.parents().siblings('.text-reports-table').find(".assessment-dd-list").fadeToggle();
+      $this
+        .parents()
+        .siblings(".text-reports-table")
+        .find(".assessment-dd-list")
+        .fadeToggle();
     });
 
     var $scrollBtn = $(".scroll-to-top");

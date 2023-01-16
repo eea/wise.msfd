@@ -1593,3 +1593,30 @@ class AssessmentDataMixin(object):
             res.append((region_name, descriptor_data))
 
         return res
+
+
+class BulkProcessStateChange(object):
+    def __call__(self):
+        wftool = self.context.portal_workflow
+        target_state = self.request.form.get('workflow_action', None)
+        
+        if not target_state:
+            return 
+
+        assessments = self.request.form.get('process-state-change', [])
+        
+        if type(assessments) not in (list, tuple):
+            assessments = [assessments]
+
+        for url in assessments:
+            obj_path = '/'.join(url.split('/')[3:-1])
+            obj = self.context.restrictedTraverse(obj_path)
+
+            try:
+                wftool.doActionFor(obj, target_state)
+            except:
+                pass
+        
+        return_url = '/'.join(self.request.URL.split('/')[:-1]) + '/assessments'
+
+        return return_url

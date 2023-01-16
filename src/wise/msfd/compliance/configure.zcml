@@ -167,6 +167,14 @@
     for="*"
     />
 
+  <browser:page
+    name="process-state-change-bulk"
+    class=".assessment.BulkProcessStateChange"
+    permission="zope2.View"
+    for="*"
+    />
+
+
   <!-- Assessment module landing page -->
   <browser:page
     for="*"
