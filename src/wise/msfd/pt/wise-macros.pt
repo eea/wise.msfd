@@ -280,7 +280,7 @@
 
 <metal:macro define-macro="assessment-status-bar-2012-2018">
   <tal:def tal:define="status_color python: view.get_status_color(assessment);
-      css_class python:'assessment-status-colorbar btn btn-xs btn-' + status_color;
+      css_class python:'assessment-status-colorbar show-assessment-wrapper btn btn-xs btn-' + status_color;
       url assessment/absolute_url;
       can_view_data python:view.can_view_assessment_data(assessment);
       can_edit_data python:view.can_view_edit_assessment_data(assessment);
@@ -347,7 +347,7 @@
 
 <metal:macro define-macro="assessment-status-bar-2016-2022">
   <tal:def tal:define="status_color python: view.get_status_color(assessment);
-      css_class python:'assessment-status-colorbar btn btn-xs btn-' + status_color;
+      css_class python:'assessment-status-colorbar show-assessment-wrapper btn btn-xs btn-' + status_color;
       url assessment/absolute_url;
       can_view_data python:view.can_view_assessment_data(assessment);
       can_edit_data python:view.can_view_edit_assessment_data(assessment);
@@ -415,7 +415,7 @@
 
 <metal:macro define-macro="assessment-status-bar-2016-2022-d1">
   <tal:def tal:define="status_color python: view.get_status_color(assessment_d1);
-      css_class python:'assessment-status-colorbar btn btn-xs btn-' + status_color;
+      css_class python:'assessment-status-colorbar show-assessment-wrapper btn btn-xs btn-' + status_color;
       url assessment/absolute_url;
       url_d1 python: assessment_d1.absolute_url();
       can_view_data python:view.can_view_assessment_data(assessment_d1);
@@ -484,7 +484,7 @@
 
 <metal:macro define-macro="assessment-status-bar-cross-cutting-2022">
   <tal:def tal:define="status_color python: view.get_status_color(assessment);
-      css_class python:'assessment-status-colorbar btn btn-xs btn-' + status_color;
+      css_class python:'assessment-status-colorbar show-assessment-wrapper btn btn-xs btn-' + status_color;
       url assessment/absolute_url;
       can_view_data python:view.can_view_assessment_data(assessment);
       can_edit_data python:view.can_view_edit_assessment_data(assessment);

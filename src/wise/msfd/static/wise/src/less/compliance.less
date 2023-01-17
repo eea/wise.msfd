@@ -483,9 +483,44 @@ h4.process-phase-title {
   }
 }
 
-#form-process-state-change-bulk .phase-selector select{
-  margin-bottom: 1em;
-  box-shadow: 0px 0px 5px 5px #d43f3a;
+#process-state-change-bulk-wrapper {
+  display: none;
+  position: fixed;
+  right: 1em;
+  top: 200px;
+  z-index: 999;
+  padding: 1em;
+  background-color: white;
+  box-shadow: 0px 0px 3px 3px #337ab7;
+  border-radius: 5px;
+
+  .process-state-change-message {
+    display: none;
+  }
+
+  &.change-initiated {
+    color: #3c763d;
+    background-color: #dff0d8;
+    border-color: #d6e9c6;
+  }
+
+  .glyphicon {
+    float: right;
+    padding: 5px;
+    position: absolute;
+    right: 5px;
+    top: 5px;
+    cursor: pointer;
+    color: #d9534f;
+  }
+  
+  #form-process-state-change-bulk {
+    margin-top: 5px;
+  }
+
+  #form-process-state-change-bulk .phase-selector .pat-select2{
+    min-width: 260px;
+  }
 }
 
 .assessment-status-wrapper {
@@ -495,6 +530,10 @@ h4.process-phase-title {
   box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
   z-index: 1;
   padding: 0.5em 2em;
+
+  &:hover {
+    display: flex !important;
+  }
 
   .assessment-status-processstate {
     position: absolute;
@@ -753,6 +792,13 @@ h4.process-phase-title {
   position: relative;
   text-align: center;
 
+  input[name="process-state-change"] {
+    width: 15px;
+    height: 15px;
+    margin: auto;
+    vertical-align: middle;
+  }
+
   &.regional {
     .assessment-status-wrapper {
       width: 400px;  
@@ -778,11 +824,11 @@ h4.process-phase-title {
       }
     }
   }
-  &:hover {
-    .assessment-status-wrapper {
-      display: flex;
-    }
-  }
+  // &:hover {
+  //   .assessment-status-wrapper {
+  //     display: flex;
+  //   }
+  // }
 }
 
 .process-state-phase-form {

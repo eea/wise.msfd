@@ -111,6 +111,15 @@ if (!Array.prototype.last) {
     // ./assessment-module/national-descriptors-assessments/fi/assessments
     // ./assessment-module/regional-descriptors-assessments/bal/assessments
 
+    $(".assessment-status-colorbar.show-assessment-wrapper").hover(
+      function () {
+        $(this).siblings(".assessment-status-wrapper").css("display", "flex");
+      },
+      function () {
+        $(this).siblings(".assessment-status-wrapper").css("display", "none");
+      }
+    );
+
     $(".assessment-status-processstate").each(function () {
       var $this = $(this);
       var $processState = $this.find(".process-state");
@@ -145,6 +154,22 @@ if (!Array.prototype.last) {
   }
 
   function setupProcessStateCheckboxes() {
+    // uncheck all checkboxes and clear the form
+    $("#process-state-change-bulk-wrapper i.glyphicon").click(function () {
+      $(
+        ".assessment-status-td.enable-process-state-change input[name='process-state-change']"
+      ).each(function () {
+        $(this).prop("checked", false);
+      });
+
+      $("#process-state-change-bulk-wrapper").css("display", "none");
+
+      $(
+        "#process-state-change-bulk-wrapper #form-process-state-change-bulk input[name='process-state-change']"
+      ).remove();
+    });
+
+    // setup checkboxes
     $(".assessment-status-td.enable-process-state-change").each(function () {
       var $this = $(this);
       var action = $this.find(".assessment-status-wrapper form").attr("action");
@@ -172,19 +197,27 @@ if (!Array.prototype.last) {
               .appendTo("#form-process-state-change-bulk");
           }
 
-          // phase-selector pat-select2
+          // add select with the process states if does not exists yet
           var $newPhaseSelector = $(this)
             .parent("td")
             .find(".phase-selector")
             .clone()
             .attr("id", "process-state-bulk-select");
-
+          
+          $("#form-process-state-change-bulk .phase-selector").replaceWith(
+            $newPhaseSelector
+          );
+  
           $newPhaseSelector.change(function () {
+            // submit form when process state is selected
             var $form = $(this).parents("form");
             var url = $form[0].action;
 
             $(document.body).addClass("cursor-wait");
             $form.addClass("cursor-wait");
+            $("#process-state-change-bulk-wrapper").addClass("change-initiated");
+            $("#process-state-change-bulk-wrapper > *").css("display", "none");
+            $("#process-state-change-bulk-wrapper .process-state-change-message").fadeIn(200);
 
             $.ajax({
               url: url,
@@ -196,9 +229,7 @@ if (!Array.prototype.last) {
             });
           });
 
-          $("#form-process-state-change-bulk .phase-selector").replaceWith(
-            $newPhaseSelector
-          );
+          $("#process-state-change-bulk-wrapper").css("display", "block");
         } else {
           // when the checkbox is unchecked
           $("#form-process-state-change-bulk")
@@ -211,7 +242,10 @@ if (!Array.prototype.last) {
               "input[name='process-state-change']"
             ).length === 0
           ) {
-            $("#form-process-state-change-bulk .phase-selector select").remove();
+            $(
+              "#form-process-state-change-bulk .phase-selector select"
+            ).remove();
+            $("#process-state-change-bulk-wrapper").css("display", "none");
           }
         }
       });
