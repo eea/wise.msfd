@@ -1614,8 +1614,13 @@ class BulkProcessStateChange(object):
 
             try:
                 wftool.doActionFor(obj, target_state)
-            except:
-                pass
+                logger.info(
+                    "Changing state to %s for %s", 
+                    target_state, obj_path)
+            except Exception as e:
+                logger.warning(
+                    "%s: Couldn't change state to %s for %s", 
+                    e, target_state, obj_path)
         
         return_url = '/'.join(self.request.URL.split('/')[:-1]) + '/assessments'
 

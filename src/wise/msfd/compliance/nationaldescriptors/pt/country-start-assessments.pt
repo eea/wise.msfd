@@ -173,10 +173,11 @@
                 <p>Please wait...</p>
               </div>
               <div style="display: inline-block;">Process state change:</div>
-              <i title="Clear checkboxes" class="glyphicon glyphicon-ban-circle"/>
               <form id="form-process-state-change-bulk" method="GET" action="./@@process-state-change-bulk">
                 <div class="phase-selector"/>
               </form>
+              <button class="btn btn-sm btn-success btn-submit-form">Submit</button>
+              <button class="btn btn-sm btn-danger btn-clear-checkboxes" title="Clear checkboxes">Clear</button>
             </div>
             <div class="overflow-table sticky-overflow-header hidden-fixed-table">
               <div class="inner" style="overflow: auto;">
@@ -263,7 +264,7 @@
                           <div metal:use-macro="context/wise-macros/macros/assessment-status-bar-2016-2022-d1"></div>
                           <!-- <div tal:condition="python: not desc.id.startswith('d1.')" metal:use-macro="context/wise-macros/macros/assessment-status-bar-2016-2022"></div> -->
                         </td>
-                        <td class="assessment-status-td" 
+                        <td class="assessment-status-td enable-process-state-change" 
                             tal:define="assessment_d1 python: desc.id.startswith('d1.') and view.get_descriptors(region_art1314)[0]['art14'] or region_art1314[desc.id]['art14']; 
                                 assessment python: desc['art14']">
                           <div metal:use-macro="context/wise-macros/macros/assessment-status-bar-2016-2022-d1"></div>

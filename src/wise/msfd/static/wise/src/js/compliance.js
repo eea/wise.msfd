@@ -154,20 +154,45 @@ if (!Array.prototype.last) {
   }
 
   function setupProcessStateCheckboxes() {
-    // uncheck all checkboxes and clear the form
-    $("#process-state-change-bulk-wrapper i.glyphicon").click(function () {
+    // setup submit button
+    $("#process-state-change-bulk-wrapper .btn-submit-form").click(function () {
+      var $form = $(this).siblings("form#form-process-state-change-bulk");
+      var url = $form[0].action;
+
+      $(document.body).addClass("cursor-wait");
+      $form.addClass("cursor-wait");
+      $("#process-state-change-bulk-wrapper").addClass("change-initiated");
+      $("#process-state-change-bulk-wrapper > *").css("display", "none");
       $(
-        ".assessment-status-td.enable-process-state-change input[name='process-state-change']"
-      ).each(function () {
-        $(this).prop("checked", false);
+        "#process-state-change-bulk-wrapper .process-state-change-message"
+      ).fadeIn(200);
+
+      $.ajax({
+        url: url,
+        type: "POST",
+        data: $form.serialize(),
+        success: function () {
+          location.reload();
+        },
       });
-
-      $("#process-state-change-bulk-wrapper").css("display", "none");
-
-      $(
-        "#process-state-change-bulk-wrapper #form-process-state-change-bulk input[name='process-state-change']"
-      ).remove();
     });
+
+    // setup clear button, uncheck all checkboxes and clear the form
+    $("#process-state-change-bulk-wrapper .btn-clear-checkboxes").click(
+      function () {
+        $(
+          ".assessment-status-td.enable-process-state-change input[name='process-state-change']"
+        ).each(function () {
+          $(this).prop("checked", false);
+        });
+
+        $("#process-state-change-bulk-wrapper").css("display", "none");
+
+        $(
+          "#process-state-change-bulk-wrapper #form-process-state-change-bulk input[name='process-state-change']"
+        ).remove();
+      }
+    );
 
     // setup checkboxes
     $(".assessment-status-td.enable-process-state-change").each(function () {
@@ -203,31 +228,10 @@ if (!Array.prototype.last) {
             .find(".phase-selector")
             .clone()
             .attr("id", "process-state-bulk-select");
-          
+
           $("#form-process-state-change-bulk .phase-selector").replaceWith(
             $newPhaseSelector
           );
-  
-          $newPhaseSelector.change(function () {
-            // submit form when process state is selected
-            var $form = $(this).parents("form");
-            var url = $form[0].action;
-
-            $(document.body).addClass("cursor-wait");
-            $form.addClass("cursor-wait");
-            $("#process-state-change-bulk-wrapper").addClass("change-initiated");
-            $("#process-state-change-bulk-wrapper > *").css("display", "none");
-            $("#process-state-change-bulk-wrapper .process-state-change-message").fadeIn(200);
-
-            $.ajax({
-              url: url,
-              type: "POST",
-              data: $form.serialize(),
-              success: function () {
-                location.reload();
-              },
-            });
-          });
 
           $("#process-state-change-bulk-wrapper").css("display", "block");
         } else {
