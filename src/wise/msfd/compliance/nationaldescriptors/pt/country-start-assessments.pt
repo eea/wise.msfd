@@ -258,14 +258,14 @@
                               title="Not started"
                               tal:attributes="href assessment/absolute_url;">2020</a> 
                         </td>
-                        <td tal:attributes="class python: view.can_change_process_state and 'assessment-status-td enable-process-state-change' or 'assessment-status-td'"
+                        <td tal:attributes="class python: view.can_change_process_state(desc['art13']) and 'assessment-status-td enable-process-state-change' or 'assessment-status-td'"
                             class="assessment-status-td enable-process-state-change" 
                             tal:define="assessment_d1 python: desc.id.startswith('d1.') and view.get_descriptors(region_art1314)[0]['art13'] or region_art1314[desc.id]['art13'];
                                 assessment python: desc['art13']">
                           <div metal:use-macro="context/wise-macros/macros/assessment-status-bar-2016-2022-d1"></div>
                           <!-- <div tal:condition="python: not desc.id.startswith('d1.')" metal:use-macro="context/wise-macros/macros/assessment-status-bar-2016-2022"></div> -->
                         </td>
-                        <td tal:attributes="class python: view.can_change_process_state and 'assessment-status-td enable-process-state-change' or 'assessment-status-td'"
+                        <td tal:attributes="class python: view.can_change_process_state(desc['art14']) and 'assessment-status-td enable-process-state-change' or 'assessment-status-td'"
                             class="assessment-status-td enable-process-state-change" 
                             tal:define="assessment_d1 python: desc.id.startswith('d1.') and view.get_descriptors(region_art1314)[0]['art14'] or region_art1314[desc.id]['art14']; 
                                 assessment python: desc['art14']">
