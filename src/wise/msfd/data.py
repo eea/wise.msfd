@@ -2,6 +2,7 @@ from __future__ import absolute_import
 import csv
 import logging
 import os
+import re
 import tempfile
 from collections import defaultdict
 from datetime import datetime
@@ -17,6 +18,9 @@ from .utils import current_date, timeit
 from six.moves import zip
 
 logger = logging.getLogger('wise.msfd')
+
+
+ART13_FIX_FILENAME = re.compile(r'^[0-9]{2}\-')
 
 
 FILENAMES_MISSING_DB_ALL = {
@@ -414,6 +418,11 @@ def _get_report_filename_art13_2016(country, region, article, descriptor):
         if 'Exception' in file_name:
             continue
 
+        if 'exemptions' in file_name:
+            continue
+
+        file_name = ART13_FIX_FILENAME.sub('', file_name)
+
         file_names.append(file_name)
 
     # TODO: analyse cases when it returns more then one file
@@ -450,6 +459,8 @@ def _get_report_filename_art14_2016(country, region, article, descriptor):
 
         if 'Measure' in file_name:
             continue
+        
+        file_name = ART13_FIX_FILENAME.sub('', file_name)
 
         file_names.append(file_name)
 

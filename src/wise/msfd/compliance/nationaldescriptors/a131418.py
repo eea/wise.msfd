@@ -275,7 +275,18 @@ class Article13(BaseArticle2012):
     def __call__(self):
         self.setup_data()
 
-        return self.template(data=self.rows)
+        has_data = False
+        data = []
+
+        for row in self.rows:
+            if row.vals:
+                has_data = True
+                break
+
+        if has_data:
+            data = self.rows
+
+        return self.template(data=data)
 
 
 class A14Item(Item):
@@ -432,7 +443,18 @@ class Article14(Article13):
     def __call__(self):
         self.setup_data()
 
-        return self.template(data=self.rows)
+        has_data = False
+        data = []
+
+        for row in self.rows:
+            if row.vals:
+                has_data = True
+                break
+
+        if has_data:
+            data = self.rows
+
+        return self.template(data=data)
 
 
 class A18Item(Item):
