@@ -242,7 +242,8 @@ class Article13(BaseArticle2012):
         try:
             root = self.get_report_file_root(fileurl)
         except XMLSyntaxError:
-            pass
+            self.rows = []
+            return
 
         nodes = xp('//Measures', root)
         mru = xp('//MarineUnitID', root)
@@ -410,7 +411,8 @@ class Article14(Article13):
         try:
             root = self.get_report_file_root(fileurl)
         except XMLSyntaxError:
-            pass
+            self.rows = []
+            return
 
         nodes = xp('//Exceptions', root)
         mru = xp('//MarineUnitID', root)

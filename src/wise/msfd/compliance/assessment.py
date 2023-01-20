@@ -354,10 +354,10 @@ def get_assessment_data_2012_db(*args):
 
 
 def _get_csv_region(region):
-    if region == "ANS":
+    if region in ("ANS", "AMA", "ABI", "ACS"):
         region = "ATL"
 
-    if region in ("MAL", ):
+    if region in ("MAL", "MAD", "MWE"):
         region = "MED"
 
     return region

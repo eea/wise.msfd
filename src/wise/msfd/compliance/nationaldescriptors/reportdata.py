@@ -283,13 +283,16 @@ class ReportData2012(BaseView, BaseUtil):
 
     def get_report_filename(self, art=None):
         # needed in article report data implementations, to retrieve the file
-        filename = get_report_filename(self.year,
-            self.country_code,
-            self.country_region_code,
-            art or self.article,
+        filename = get_report_filename(self.year, 
+            self.country_code, 
+            self.country_region_code, 
+            art or self.article, 
             self.descriptor)
+        
+        filename_normalized = filename
 
-        filename_normalized = FILENAME_FIX.sub('', filename)
+        if filename:
+            filename_normalized = FILENAME_FIX.sub('', filename)
 
         return filename_normalized
 

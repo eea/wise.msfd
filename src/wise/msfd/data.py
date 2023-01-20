@@ -421,7 +421,8 @@ def _get_report_filename_art13_2016(country, region, article, descriptor):
         if 'exemptions' in file_name:
             continue
 
-        file_name = ART13_FIX_FILENAME.sub('', file_name)
+        if file_name:
+            file_name = ART13_FIX_FILENAME.sub('', file_name)
 
         file_names.append(file_name)
 
@@ -460,7 +461,11 @@ def _get_report_filename_art14_2016(country, region, article, descriptor):
         if 'Measure' in file_name:
             continue
         
-        file_name = ART13_FIX_FILENAME.sub('', file_name)
+        if 'Mesure' in file_name:
+            continue
+        
+        if file_name:
+            file_name = ART13_FIX_FILENAME.sub('', file_name)
 
         file_names.append(file_name)
 
