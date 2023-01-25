@@ -1,26 +1,131 @@
 <p>
-  Use only e-reporting, There are specific schema fields to check in the
-  e-reporting to answer this question. If no information found in e-reporting,
-  check text report. There may be cases where text reporting and e-reporting are
-  not consistent. The assessors can double-check in the module what were the
-  measures defined in the 1<sup>st</sup> cycle.
+  If gaps are identified between the set of updated existing measures and new
+  measures reported in the first cycle and what is needed to reach the
+  environmental targets and hence to achieve or maintain GES, the next step
+  consists of updating the new measures from the first cycle or identifying
+  possible additional new measures in the second cycle to meet the MSFD
+  environmental targets.
 </p>
-<p><br /></p>
+<p>
+  The updated Programme of Measures should provide an overview of the new
+  measures proposed in the updated Programme of Measures, specifying if new
+  measures from the first cycle have been modified to better address a certain
+  pressure.
+</p>
+<p>
+  <br />
+  Start by checking the e-reporting. There are specific schema fields to check
+  in the e-reporting to answer this question (filter). If no information is
+  found in e-reporting, check the text report. There may be cases where text
+  reporting and e-reporting are not consistent. The assessors can double check
+  in the module what were the measures defined in the 1<sup>st</sup> cycle. This
+  can be done directly in the module: select the tab &lsquo;2016 Report&rsquo;
+  in the assessment page. E.g. for BE:
+  <u
+    ><a
+      href="https://water.europa.eu/marine/assessment-module/national-descriptors-assessments/be/ans/d1.1/art13"
+      >https://water.europa.eu/marine/assessment-module/national-descriptors-assessments/be/ans/d1.1/art13</a
+    ></u
+  >
+</p>
+<p>
+  You can also checxk the measures reported by the MS in the first cycle in the
+  file: &lsquo;MSFD_FULL_list_of_measures_first cycle_ALL_MS&rsquo; in the Teams
+  channel:
+  <a
+    href="https://milieu.sharepoint.com/:x:/r/sites/MSFD124/Documents%20partages/Task%20P%20PoMS/Art.%2016%20Assessment/MS%20reporting/MSFD_FULL_list_of_measures_ALL_MS.xlsx?d=w2b6f8e6182184a389c440c6dac259b08&amp;csf=1&amp;web=1&amp;e=P4cONt"
+    >https://milieu.sharepoint.com/:x:/r/sites/MSFD124/Documents%20partages/Task%20P%20PoMS/Art.%2016%20Assessment/MS%20reporting/MSFD_FULL_list_of_measures_ALL_MS.xlsx?d=w2b6f8e6182184a389c440c6dac259b08&amp;csf=1&amp;web=1&amp;e=P4cONt</a
+  >
+</p>
+<p>&nbsp;</p>
+<p><strong>Use of response options:</strong></p>
+<p>&nbsp;</p>
+<ul>
+  <li>
+    <p lang="fr-BE">
+      <strong>Yes:</strong> the MS has modified one or more new measures from
+      the first cycle.
+    </p>
+  </li>
+  <li>
+    <p lang="fr-BE">
+      <strong>Partially:</strong> there are no new measures reported as modified
+      in the e-report, but in the text report there is some information on
+      modified new measures; the measures are reported but only a few of the
+      schema fields required are complete (e.g. there is no measure code, no
+      measure title).
+    </p>
+  </li>
+  <li>
+    <p lang="fr-BE">
+      <strong>No</strong>: the MS has not modified any new measure from the
+      first cycle.
+    </p>
+  </li>
+</ul>
+<p>&nbsp;</p>
+<p><strong>Structure of summary box:</strong></p>
+<p>
+  Start by stating which response option you have selected and continue
+  explaining why.
+</p>
+<p>&nbsp;</p>
 <p>The assessor must:</p>
 <ul>
   <li>
     <p lang="fr-BE">
-      filter the relevant schema fields to see whether any new measure was
-      modified in the second cycle PoM
+      Indicate whether the MS reported any new measure (category 2 measures) as
+      &lsquo;modified since 2015 POM&rsquo; in the e-report.
     </p>
   </li>
   <li>
     <p lang="fr-BE">
-      list all modified measures per descriptor (code and title).
+      List in the table below the category 2 measures reported as
+      &lsquo;modified since 2015&rsquo;, clearly stating to which descriptor
+      they are relevant (fill table below). The descriptor is reported under the
+      schema field &lsquo;GESComponent&rsquo;.
+    </p>
+  </li>
+  <li>
+    <p lang="fr-BE">
+      Indicate if information about modifications to new measures from the first
+      cycle is (also) presented in the text report.
     </p>
   </li>
 </ul>
-<p>
-  If the gap analysis defined that there is no need, this question is &lsquo;not
-  relevant&rsquo;.
-</p>
+<p lang="en-US">&nbsp;</p>
+<table width="870" cellspacing="0" cellpadding="7">
+  <colgroup>
+    <col width="140" />
+    <col width="314" />
+    <col width="372" />
+  </colgroup>
+  <tbody>
+    <tr>
+      <td width="140">
+        <p lang="en-US"><strong>Measure Code</strong></p>
+      </td>
+      <td width="314">
+        <p lang="en-US"><strong>Measure Title</strong></p>
+      </td>
+      <td width="372">
+        <p lang="en-US"><strong>Descriptor</strong></p>
+      </td>
+    </tr>
+    <tr>
+      <td width="140">&nbsp;</td>
+      <td width="314">&nbsp;</td>
+      <td width="372">&nbsp;</td>
+    </tr>
+    <tr>
+      <td width="140">&nbsp;</td>
+      <td width="314">&nbsp;</td>
+      <td width="372">&nbsp;</td>
+    </tr>
+    <tr>
+      <td width="140" height="11">&nbsp;</td>
+      <td width="314">&nbsp;</td>
+      <td width="372">&nbsp;</td>
+    </tr>
+  </tbody>
+</table>

@@ -2,7 +2,7 @@
 <questions article='Art13'>
   <assessment-question id="Ad01B" class="adequacy" use-criteria='none'>
     <definition>
-      Has the Member State explained how the updates/changes to the existing measures from the first cycle contribute to achieve GES?
+      Has the Member State clearly explained how the updates to the existing measures contribute to achieving GES?
     </definition>
     <heading>Section B – Update of the first cycle’s existing measures and GAP analysis</heading>
     <source-info>
@@ -15,9 +15,10 @@ E-reporting
   • MeasureOldCode
   • MeasureCategory (Category 1.a and 1.b)
   • UpdateType
-  • MeasureDescription
+  • MeasureDescription (optional)
   • MeasurePurpose
   • RelevantKTMs
+  • PolicyConventions
   </source-info>
     <answers>
       <option score="1">Yes</option>
@@ -48,9 +49,15 @@ E-reporting
   
   <assessment-question id="Ad02B" class="adequacy" use-criteria='none'>
     <definition>
-      Does the Member State adequately identify all significant gaps to achieve the MSFD targets and ultimately GES?
+      Has the Member State adequately identified all significant gaps to achieve the MSFD targets and ultimately GES?
     </definition>
-    <source-info>Text-based report</source-info>
+    <source-info>
+Answer to Com03B question
+
+Text-based report
+
+Art. 9 and 8 reporting and assessment (questions A09Ad5, A09Ad6, A09Ad7, A08Ad4)
+    </source-info>
     <answers>
       <option score="1">Yes</option>
       <option score="0.5">Partially</option>
@@ -122,18 +129,22 @@ Text-report
 
   <assessment-question id="Ad04C" class="adequacy" use-criteria='none'>
     <definition>
-      Are all relevant pressures addressed by the modified and the additional new measures?
+      Are all relevant pressures addressed by the modified and the additional new measures in the second cycle (category 2)?
     </definition>
     <source-info>
-E-reporting
+Answers to Com05C and Com06C questions
+
+e-reporting
     • Measure description (optional)
     • MeasurePurpose
     • Pressures
     • Feature
+    • Element
 
 Art. 8 reporting and assessment
-Text-report
-    </source-info>
+
+Text-report    
+  </source-info>
     <answers>
       <option score="1">Yes</option>
       <option score="0.5">Partially</option>
@@ -143,27 +154,27 @@ Text-report
     </answers>
     <scoring determination-method="wise.msfd.compliance.scoring.scoring_based">
     </scoring>
-    <score-weight descriptor="D1.1" value="10" />
-    <score-weight descriptor="D1.2" value="10" />
-    <score-weight descriptor="D1.3" value="10" />
-    <score-weight descriptor="D1.4" value="10" />
-    <score-weight descriptor="D1.5" value="10" />
-    <score-weight descriptor="D1.6" value="10" />
-    <score-weight descriptor="D2" value="10" />
-    <score-weight descriptor="D3" value="10" />
-    <score-weight descriptor="D4" value="10" />
-    <score-weight descriptor="D5" value="10" />
-    <score-weight descriptor="D6" value="10" />
-    <score-weight descriptor="D7" value="10" />
-    <score-weight descriptor="D8" value="10" />
-    <score-weight descriptor="D9" value="10" />
-    <score-weight descriptor="D10" value="10" />
-    <score-weight descriptor="D11" value="10" />
+    <score-weight descriptor="D1.1" value="15" />
+    <score-weight descriptor="D1.2" value="15" />
+    <score-weight descriptor="D1.3" value="15" />
+    <score-weight descriptor="D1.4" value="15" />
+    <score-weight descriptor="D1.5" value="15" />
+    <score-weight descriptor="D1.6" value="15" />
+    <score-weight descriptor="D2" value="15" />
+    <score-weight descriptor="D3" value="15" />
+    <score-weight descriptor="D4" value="15" />
+    <score-weight descriptor="D5" value="15" />
+    <score-weight descriptor="D6" value="15" />
+    <score-weight descriptor="D7" value="15" />
+    <score-weight descriptor="D8" value="15" />
+    <score-weight descriptor="D9" value="15" />
+    <score-weight descriptor="D10" value="15" />
+    <score-weight descriptor="D11" value="15" />
   </assessment-question>
 
   <assessment-question id="Ad05C" class="adequacy" use-criteria='none'>
     <definition>
-      Are all modified new measures and additional new measures representing actions to achieve operational environmental targets?
+      Do the modified and additional new measures in the second cycle (category 2) contribute to meet the operational environmental targets (and ultimately GES)?
     </definition>
     <source-info>
 E-reporting
@@ -171,8 +182,6 @@ E-reporting
 
 Answer to Com01A question
 Art. 10 reporting and assessment
-
-Text-based report
     </source-info>
     <answers>
       <option score="1">Yes</option>
@@ -183,22 +192,22 @@ Text-based report
     </answers>
     <scoring determination-method="wise.msfd.compliance.scoring.scoring_based">
     </scoring>
-    <score-weight descriptor="D1.1" value="10" />
-    <score-weight descriptor="D1.2" value="10" />
-    <score-weight descriptor="D1.3" value="10" />
-    <score-weight descriptor="D1.4" value="10" />
-    <score-weight descriptor="D1.5" value="10" />
-    <score-weight descriptor="D1.6" value="10" />
-    <score-weight descriptor="D2" value="10" />
-    <score-weight descriptor="D3" value="10" />
-    <score-weight descriptor="D4" value="10" />
-    <score-weight descriptor="D5" value="10" />
-    <score-weight descriptor="D6" value="10" />
-    <score-weight descriptor="D7" value="10" />
-    <score-weight descriptor="D8" value="10" />
-    <score-weight descriptor="D9" value="10" />
-    <score-weight descriptor="D10" value="10" />
-    <score-weight descriptor="D11" value="10" />
+    <score-weight descriptor="D1.1" value="5" />
+    <score-weight descriptor="D1.2" value="5" />
+    <score-weight descriptor="D1.3" value="5" />
+    <score-weight descriptor="D1.4" value="5" />
+    <score-weight descriptor="D1.5" value="5" />
+    <score-weight descriptor="D1.6" value="5" />
+    <score-weight descriptor="D2" value="5" />
+    <score-weight descriptor="D3" value="5" />
+    <score-weight descriptor="D4" value="5" />
+    <score-weight descriptor="D5" value="5" />
+    <score-weight descriptor="D6" value="5" />
+    <score-weight descriptor="D7" value="5" />
+    <score-weight descriptor="D8" value="5" />
+    <score-weight descriptor="D9" value="5" />
+    <score-weight descriptor="D10" value="5" />
+    <score-weight descriptor="D11" value="5" />
   </assessment-question>
 
   <assessment-question id="Ad06C" class="adequacy" use-criteria='none'>
@@ -243,7 +252,7 @@ Text-based report
 
   <assessment-question id="Ad07C" class="adequacy" use-criteria='none'>
     <definition>
-      Has the Member State explained how the new measures will be implemented?
+      Has the Member State explained how the modified and additional new measures will be implemented?
     </definition>
     <source-info>
 E-reporting

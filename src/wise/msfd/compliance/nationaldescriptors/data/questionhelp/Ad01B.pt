@@ -1,226 +1,251 @@
 <p>
-  The e-reporting information will be in an Excel file where the assessor can
-  check the relevant schema fields.
+  Before carrying out a gap analysis, the Member States should update the
+  measures, identified in the first cycle, that are already in place under other
+  policies (Existing measures- category 1 a,b), that contribute to addressing
+  the predominant pressures identified in the Art. 8 assessment and reaching
+  MSFD environmental targets under Art. 10.
 </p>
-<p>The assessor must:</p>
+<p>The update/changes to be assessed under this question relate to:</p>
 <ul>
   <li>
     <p lang="fr-BE">
-      List in bullet points format the existing measures that are modified and
-      the new existing measures if any.
+      existing measures (category 1) from the first cycle that have been
+      modified (we&rsquo;ll call them &lsquo;modified existing measures&rsquo;)
     </p>
   </li>
   <li>
     <p lang="fr-BE">
-      Always mention the code and the title of the measures and provide a short
-      summary of the measure.
+      existing measures (category 1) that were adopted for the purpose of other
+      policies
+      <u>after the Programme of Measures 2016-2021 had been established</u> (we
+      will call them &lsquo;additional existing measures&rsquo;)
     </p>
-  </li>
-  <li>
-    <p lang="fr-BE">
-      Differentiate between existing measures from WFD and existing measures
-      from other policies.
-    </p>
-  </li>
-  <li>
-    <p lang="fr-BE">
-      Check whether the MS specified the different categories of measures 1a/1b
-    </p>
-  </li>
-  <li>
-    <p lang="fr-BE">
-      Check whether the link between the updated/new existing measures and the
-      other policies is clear and relevant.
-    </p>
-    <ul>
-      <li>
-        <p lang="fr-BE">Are relevant KTM reported?</p>
-      </li>
-      <li>
-        <p lang="fr-BE">
-          Is all relevant legislation covered? Is there anything that the MS has
-          missed?
-        </p>
-      </li>
-    </ul>
   </li>
 </ul>
+<p>
+  The Member State should provide a list and a justification of modified or
+  additional category 1 measures that are included in the second cycle PoM.
+</p>
+<p><br /></p>
+<p>
+  <u
+    >There are specific schema fields to check in the e-reporting to answer this
+    question + the information found in the text report (check answer to Com02B
+    question as a starting point). To know whether the MS has </u
+  ><u><strong>modified existing measures</strong></u
+  ><u> or defined </u><u><strong>additional existing measures</strong></u
+  ><u> (adopted for the purposes of other policies after 2015)</u>, there are
+  specific schema fields to check in the e-reporting. The assessor can filter
+  them to see whether any changes to existing measures are made in the updated
+  POM (a list of modified or additional existing measures is already presented
+  in answer to Com02B question).
+</p>
+<p>
+  Under this adequacy question, the assessor will check whether any information
+  about the update to the existing measures is available in the text report and
+  judget whether they consider it adequate for the descriptor. We expect the MS
+  to mention/explain in the text report:
+</p>
+<p>
+  - modifications made to category 1 measures from the first cycle (modified
+  existing measures)
+</p>
+<p>
+  - any policy developments since 2016 relevant to the different descriptors for
+  which specific measures were adopted and must therefore be reported in the POM
+  as category 1 a,b measures (additional existing measures). This includes both
+  developments at EU level and at regional level (Regional Sea Convention).
+</p>
+<p><br /></p>
 <p><br /></p>
 <p>
   Annex A of GD 10 (section 1) provides, for each GES descriptor, an indicative
-  list of relevant EU legislation (Table below).
+  list of relevant EU legislation (Table below). The list is indicative. If the
+  assessor finds that additional legislation should be considered (e.g. for D5
+  National Emission Ceilings Directive, for D1-3-6 we&rsquo;d expect MS
+  mentioning the adoption of technical measures regulation
+  (https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX%3A32019R1241) as an
+  important step towards GES for those D&rsquo;s), it should clearly explain why
+  it is important for the descriptor that the MS adds measures linked to that
+  legislation/policy.
 </p>
 <p><br /></p>
-<table>
+<table width="775" cellspacing="0" cellpadding="7">
+  <colgroup>
+    <col width="133" />
+    <col width="612" />
+  </colgroup>
   <tbody>
     <tr>
-      <td  height="4">
+      <td width="133" height="4">
         <p><strong>Descriptor(s)</strong></p>
       </td>
-      <td >
-        <p><strong>Key examples of related EU legislation</strong></p>
+      <td width="612">
+        <p lang="en-US">
+          <strong>Key examples of related EU legislation</strong>
+        </p>
       </td>
     </tr>
     <tr>
-      <td  height="5">
-        <p>D1, D4, D6</p>
+      <td width="133" height="5">
+        <p lang="en-US">D1, D4, D6</p>
       </td>
-      <td >
-        <p>Birds Directive (2009/147/EC)</p>
-      </td>
-    </tr>
-    <tr>
-      <td  height="5">
-        <p>D1, D4, D6</p>
-      </td>
-      <td >
-        <p>Habitats Directive (92/42/EEC)</p>
+      <td width="612">
+        <p lang="en-US">Birds Directive (2009/147/EC)</p>
       </td>
     </tr>
     <tr>
-      <td  height="5">
-        <p>D2</p>
+      <td width="133" height="5">
+        <p lang="en-US">D1, D4, D6</p>
       </td>
-      <td >
-        <p>
+      <td width="612">
+        <p lang="en-US">Habitats Directive (92/42/EEC)</p>
+      </td>
+    </tr>
+    <tr>
+      <td width="133" height="5">
+        <p lang="en-US">D2</p>
+      </td>
+      <td width="612">
+        <p lang="en-US">
           Regulation (EC) No 708/2007 concerning use of alien and locally absent
           species in aquaculture
         </p>
       </td>
     </tr>
     <tr>
-      <td  height="5">
-        <p>D2</p>
+      <td width="133" height="5">
+        <p lang="en-US">D2</p>
       </td>
-      <td >
-        <p>
+      <td width="612">
+        <p lang="en-US">
           Regulation (EU) No 1143/2014 on the prevention and management of the
           introduction and spread of invasive alien species
         </p>
       </td>
     </tr>
     <tr>
-      <td  height="5">
-        <p>D3, D6</p>
+      <td width="133" height="5">
+        <p lang="en-US">D3, D6</p>
       </td>
-      <td >
-        <p>
+      <td width="612">
+        <p lang="en-US">
           Common Fisheries Policy (Regulation (EU) 1380/2013) and its related
           legislation
         </p>
       </td>
     </tr>
     <tr>
-      <td  height="5">
-        <p>D5</p>
+      <td width="133" height="5">
+        <p lang="en-US">D5</p>
       </td>
-      <td >
+      <td width="612">
         <p>National Emissions Ceilings (NEC) Directive (2016/2284/EU)</p>
       </td>
     </tr>
     <tr>
-      <td  height="5">
-        <p>D5</p>
+      <td width="133" height="5">
+        <p lang="en-US">D5</p>
       </td>
-      <td >
-        <p>Nitrate Directive (91/676/EEC)</p>
-      </td>
-    </tr>
-    <tr>
-      <td  height="5">
-        <p>D5, D10</p>
-      </td>
-      <td >
-        <p>Urban Waste Water Directive (91/27/EEC)</p>
+      <td width="612">
+        <p lang="en-US">Nitrate Directive (91/676/EEC)</p>
       </td>
     </tr>
     <tr>
-      <td  height="5">
-        <p>D6</p>
+      <td width="133" height="5">
+        <p lang="en-US">D5, D10</p>
       </td>
-      <td >
-        <p>Renewable energy directive (2018/2001/EU)</p>
-      </td>
-    </tr>
-    <tr>
-      <td  height="5">
-        <p>D6, D7, D11</p>
-      </td>
-      <td >
-        <p>EIA Directive (2011/92/EU)</p>
+      <td width="612">
+        <p lang="en-US">Urban Waste Water Directive (91/27/EEC)</p>
       </td>
     </tr>
     <tr>
-      <td  height="5">
-        <p>D6, D7, D11</p>
+      <td width="133" height="5">
+        <p lang="en-US">D6</p>
       </td>
-      <td >
-        <p>SEA directive (2001/42/EC)</p>
+      <td width="612">
+        <p lang="en-US">Renewable energy directive (2018/2001/EU)</p>
       </td>
     </tr>
     <tr>
-      <td  height="5">
-        <p>D8</p>
+      <td width="133" height="5">
+        <p lang="en-US">D6, D7, D11</p>
       </td>
-      <td >
-        <p>
+      <td width="612">
+        <p lang="en-US">EIA Directive (2011/92/EU)</p>
+      </td>
+    </tr>
+    <tr>
+      <td width="133" height="5">
+        <p lang="en-US">D6, D7, D11</p>
+      </td>
+      <td width="612">
+        <p lang="en-US">SEA directive (2001/42/EC)</p>
+      </td>
+    </tr>
+    <tr>
+      <td width="133" height="5">
+        <p lang="en-US">D8</p>
+      </td>
+      <td width="612">
+        <p lang="en-US">
           Chemical legislation including Reach Regulation (Regulation 1907/2006)
           and biocides Regulation 528/2012
         </p>
       </td>
     </tr>
     <tr>
-      <td  height="5">
-        <p>D8</p>
+      <td width="133" height="5">
+        <p lang="en-US">D8</p>
       </td>
-      <td >
-        <p>
+      <td width="612">
+        <p lang="en-US">
           Directive 2014/94/EU on the deployment of alternative fuels
           infrastructure
         </p>
       </td>
     </tr>
     <tr>
-      <td  height="5">
-        <p>D8</p>
+      <td width="133" height="5">
+        <p lang="en-US">D8</p>
       </td>
-      <td >
-        <p>
+      <td width="612">
+        <p lang="en-US">
           Directive on Environmental Quality Standards (2008/105/EC), as amended
           by Directive 2013/39/EU
         </p>
       </td>
     </tr>
     <tr>
-      <td  height="5">
-        <p>D8</p>
+      <td width="133" height="5">
+        <p lang="en-US">D8</p>
       </td>
-      <td >
+      <td width="612">
         <p>Directive on industrial emissions (2010/75/EU)</p>
       </td>
     </tr>
     <tr>
-      <td  height="5">
-        <p>D8</p>
+      <td width="133" height="5">
+        <p lang="en-US">D8</p>
       </td>
-      <td >
-        <p>Sulphur Directive (2012/33)</p>
-      </td>
-    </tr>
-    <tr>
-      <td  height="5">
-        <p>D8, D10</p>
-      </td>
-      <td >
-        <p>Directive on ship-source pollutions (2009/123/EC)</p>
+      <td width="612">
+        <p lang="en-US">Sulphur Directive (2012/33)</p>
       </td>
     </tr>
     <tr>
-      <td  height="5">
-        <p>D9</p>
+      <td width="133" height="5">
+        <p lang="en-US">D8, D10</p>
       </td>
-      <td >
-        <p>
+      <td width="612">
+        <p lang="en-US">Directive on ship-source pollutions (2009/123/EC)</p>
+      </td>
+    </tr>
+    <tr>
+      <td width="133" height="5">
+        <p lang="en-US">D9</p>
+      </td>
+      <td width="612">
+        <p lang="en-US">
           Seafood legislation: Regulation 188/2006, Regulation 2073/2005,
           Regulation 178/2002, Regulation 852/2004, Regulation 854/2004,
           Regulation 853/2004
@@ -228,38 +253,38 @@
       </td>
     </tr>
     <tr>
-      <td  height="5">
-        <p>D10</p>
+      <td width="133" height="5">
+        <p lang="en-US">D10</p>
       </td>
-      <td >
-        <p>Bathing water directive (2006/7/EC)</p>
+      <td width="612">
+        <p lang="en-US">Bathing water directive (2006/7/EC)</p>
       </td>
     </tr>
     <tr>
-      <td  height="5">
-        <p>D10</p>
+      <td width="133" height="5">
+        <p lang="en-US">D10</p>
       </td>
-      <td >
-        <p>
+      <td width="612">
+        <p lang="en-US">
           Directive (EU) 2019/883 on port reception facilities for the delivery
           of waste from ships
         </p>
       </td>
     </tr>
     <tr>
-      <td  height="5">
-        <p>D10</p>
+      <td width="133" height="5">
+        <p lang="en-US">D10</p>
       </td>
-      <td >
-        <p>Waste Framework Directive (2008/9/EC)</p>
+      <td width="612">
+        <p lang="en-US">Waste Framework Directive (2008/9/EC)</p>
       </td>
     </tr>
     <tr>
-      <td  height="4">
-        <p>D10</p>
+      <td width="133" height="4">
+        <p lang="en-US">D10</p>
       </td>
-      <td >
-        <p>
+      <td width="612">
+        <p lang="en-US">
           Directive (EU) 2019/904 on the reduction of the impact of certain
           plastic products on the environment
         </p>
@@ -269,19 +294,65 @@
 </table>
 <p><br /></p>
 <p>
-  The assessor should provide a conclusion on whether it is clear why the new
-  existing measures are relevant and how they contribute to achieving the
-  objectives of MSFD.
+  The assessor should provide a conclusion on whether it is clear why any of the
+  existing measures have been modified and why the additional existing measures
+  are relevant for the descriptor and how they contribute to achieving the
+  objectives of MSFD. Background information about the measures can be found in
+  &lsquo;measure description&rsquo; (which is an option field) or in the text
+  report. The other schema fields mentioned above (&lsquo;Source of
+  information&rsquo;) can help gather more details regarding the measure.
 </p>
 <p><br /></p>
-<p>
-  If existing measures have not been updated (see question Com02B.), select
-  &lsquo;not relevant&rsquo;.
-</p>
-<p><br /></p>
+<p><strong>Use of response options:</strong></p>
+<ul>
+  <li>
+    <p lang="fr-BE">
+      <strong>Yes</strong>: the explanations provided by the MS on the modified
+      and additional existing measures are clear and adequate.
+    </p>
+  </li>
+  <li>
+    <p lang="fr-BE">
+      <strong>Partially</strong>: the explanations provided by the MS on the
+      modified and additional existing measures are partially clear and adequate
+      (e.g. measure description schema field is empty but there is some
+      information in the text report), or they are clear and adequate but only
+      for some of all the existing measures modified/added.
+    </p>
+  </li>
+  <li>
+    <p lang="fr-BE">
+      <strong>Not clear: </strong>there is some information, but not enough/not
+      clear enough to understand how the updates to the existing measures
+      contribute to achieve GES;
+    </p>
+  </li>
+  <li>
+    <p lang="fr-BE">
+      <strong>No: </strong>some existing measures are reported as
+      &lsquo;modified since 2015 POM&rsquo; and/or &lsquo;new in 2021
+      POM&rsquo;, but there is no explanation as to why (i.e. measures
+      description field is empty and there is not additional information in the
+      text report).
+    </p>
+  </li>
+  <li>
+    <p lang="fr-BE">
+      <strong>Not relevant</strong>: No existing measures are reported as
+      &lsquo;modified since 2015 POM&rsquo; and/or &lsquo;new in 2021 POM&rsquo;
+      and no important policy developments have been missed. If the assessor
+      thinks that there should updates related to some policy developments,
+      clear explanations as to why should be added. he/she should add a comments
+      on what would be expected and then a recommendation at the end (the
+      response option remains &lsquo;not relevant&rsquo;).
+    </p>
+  </li>
+</ul>
+<p lang="en-US"><br /></p>
+<p><strong>Structure of summary box:</strong></p>
 <p>
   Start by stating which response option you have selected and continue
-  explaining why. This is applicable to all summary boxes. E.g. &lsquo;
+  explaining why. E.g. &lsquo;
 </p>
 <ul>
   <li>
@@ -317,3 +388,50 @@
     </p>
   </li>
 </ul>
+<p><br /></p>
+<p>The assessor must:</p>
+<ul>
+  <li>
+    <p lang="fr-BE">
+      <u><strong>List in bullet points format</strong></u> the existing measures
+      that are modified and the additional existing measures (new category 1
+      measures), if any (i.e. measures that were adopted for the purpose of
+      other policies
+      <u>after the Programme of Measures 2016-2021 had been established</u>).
+    </p>
+  </li>
+  <li>
+    <p lang="fr-BE">
+      Always mention the code and the title of the measures and provide short
+      summary of the measure.
+    </p>
+  </li>
+  <li>
+    <p lang="fr-BE">
+      Differentiate between existing measures from WFD and existing measures
+      from other policies.
+    </p>
+  </li>
+  <li>
+    <p lang="fr-BE">
+      Indicate whether the MS specified the different categories of measures
+      1a/1b
+    </p>
+  </li>
+  <li>
+    <p lang="fr-BE">
+      Specify whether the link between the modified /additional existing
+      measures and the other policies is clear and relevant.
+    </p>
+    <ul>
+      <li>
+        <p lang="fr-BE">Are relevant KTM reported?</p>
+      </li>
+    </ul>
+  </li>
+</ul>
+<p lang="fr-BE">
+  Are all relevant policies/legislation covered? Is there anything that the MS
+  has missed?
+</p>
+<p lang="en-US"><br /></p>

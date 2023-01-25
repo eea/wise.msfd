@@ -1,21 +1,68 @@
 <p>
-  The assessor must check if information is reported for all measures in the
-  relevant schema fields. Select &lsquo;yes&rsquo; if all the schema fields are
-  specified for all relevant measures, &lsquo;partially&rsquo; if at least 1/3
-  of them are specified or if they are all specified but not for all the
-  relevant measures, &lsquo;not clear&rsquo; if the information reported is not
-  clear and inconsistent, &lsquo;no&rsquo; if they are not specified for any of
-  the relevant measures.
+  The assessor must check if the information is reported for all measures in the
+  relevant schema fields and assess its adequacy. With his/her technical
+  expertise, the assessors should know whether a pressure is more prevalent in
+  an area than others. MRUs can be checked at the following link:
+  <u
+    ><a
+      href="https://tableau.discomap.eea.europa.eu/t/Wateronline/views/GESassessments_maps/OverallStatus_map?iframeSizedToWindow=true&amp;:embed=y&amp;:showAppBanner=false&amp;:display_count=no&amp;:showVizHome=no"
+      >https://tableau.discomap.eea.europa.eu/t/Wateronline/views/GESassessments_maps/OverallStatus_map?iframeSizedToWindow=true&amp;:embed=y&amp;:showAppBanner=false&amp;:display_count=no&amp;:showVizHome=no</a
+    ></u
+  >
 </p>
 <p><br /></p>
-<p>
-  Select &lsquo;not relevant&rsquo; if there are no modified and additional new
-  measures.
-</p>
-<p lang="en-US"><br /></p>
 <p>
   For this question, priority will be given to e-reporting as there are specific
   schema fields for each measure. If there is no information in the e-reporting,
   check the text report. Specify where this information is found in the text
   report.
 </p>
+<p><br /></p>
+<p><br /></p>
+<p><strong>Use of response options:</strong></p>
+<ul>
+  <li>
+    <p lang="fr-BE">
+      <strong>Yes: </strong>the Member State explained where the modified and
+      additional new measures will be implemented<strong> - </strong>all the
+      required schema fields are specified for all relevant measures and the
+      implementation locations are considered adequate
+    </p>
+  </li>
+  <li>
+    <p lang="fr-BE">
+      <strong>Partially: </strong>at least 1/3 of the required schema fields are
+      specified or if they are all specified but not for all the relevant
+      measures
+    </p>
+  </li>
+  <li>
+    <p lang="fr-BE">
+      <strong>Not clear:</strong> there is not enough information to understand
+      if the measures are linked to operational targets; the information
+      reported is not clear and inconsistent
+    </p>
+  </li>
+  <li>
+    <p lang="fr-BE">
+      <strong>No:</strong> the Member State has not explained where the modified
+      and additional new measures will be implemented &ndash; none of the schema
+      fields are specified for any of the relevant measures
+    </p>
+  </li>
+  <li>
+    <p lang="fr-BE">
+      <strong>Not relevant:</strong> there are no modified/additional new
+      measures.
+    </p>
+  </li>
+</ul>
+<p><br /></p>
+<p lang="en-US"><br /></p>
+<p><strong>Structure of the summary box:</strong></p>
+<p>
+  Start by stating which response option you have selected and continue
+  explaining why. Highlight where main gaps are and for which measure(s), so
+  that it is easier to draft recommendations.
+</p>
+<p><br /></p>

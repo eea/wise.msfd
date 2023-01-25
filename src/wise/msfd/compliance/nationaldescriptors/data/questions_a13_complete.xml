@@ -2,7 +2,7 @@
 <questions article='Art13Completeness'>
   <assessment-question id="Com01A" class="completeness" use-criteria='none'>
     <definition>
-      Has the Member State provided an overview of the updated POM corresponding to environmental targets?
+      Has the Member State provided an overview of the environmental targets corresponding to the POM?
     </definition>
     <heading>Section A - Environmental targets</heading>
     <source-info>Text-based report</source-info>
@@ -11,7 +11,6 @@
       <option score="0.5">Partially</option>
       <option score="0.250">Not clear</option>
       <option score="0">No</option>
-      <option score="/">Not relevant</option>
     </answers>
     <scoring determination-method="wise.msfd.compliance.scoring.scoring_based">
     </scoring>
@@ -36,22 +35,22 @@
 
   <assessment-question id="Com02B" class="completeness" use-criteria='none'>
     <definition>
-      Has the Member State provided an overview of relevant updates/changes to the existing measures from the 1st cycle?
+      Has the Member State provided an overview of relevant updates to the existing measures (category 1)?
     </definition>
     <heading>Section B – Update of the first cycle’s existing measures and GAP analysis</heading>
     <source-info>
 Text-based report
 
 E-reporting:
-  • UpdateType
-  • MeasureCategory
+  • MeasureCategory (category 1a, category 1b)
+  • UpdateType (measure modified since 2015 POM, measure new in 2021 POM)
+  • GES component
     </source-info>
     <answers>
       <option score="1">Yes</option>
       <option score="0.5">Partially</option>
       <option score="0.250">Not clear</option>
       <option score="0">No</option>
-      <option score="/">Not relevant</option>
     </answers>
     <scoring determination-method="wise.msfd.compliance.scoring.scoring_based">
     </scoring>
@@ -83,7 +82,6 @@ E-reporting:
       <option score="1">Yes</option>
       <option score="0.5">Partially</option>
       <option score="0">No</option>
-      <option score="/">Not relevant</option>
     </answers>
     <scoring determination-method="wise.msfd.compliance.scoring.scoring_based">
     </scoring>
@@ -114,13 +112,15 @@ E-reporting:
     <source-info>
 E-reporting
   • MeasureCategory (category 2 a and b)
-  • ImplementationStatus
+  • ImplementationStatus (Measure withdrawn)
+  • ImplementationReason
+  • Measure description (optional)
+  • GES component
     </source-info>
     <answers>
       <option score="1">Yes</option>
       <option score="0.5">Partially</option>
       <option score="0">No</option>
-      <option score="/">Not relevant</option>
     </answers>
     <scoring determination-method="wise.msfd.compliance.scoring.scoring_based">
     </scoring>
@@ -145,17 +145,22 @@ E-reporting
 
   <assessment-question id="Com05C" class="completeness" use-criteria='none'>
     <definition>
-      Has the Member State modified any of the new measures from the first cycle?
+      Has the Member State modified any of the new measures from the first cycle (category 2)?
     </definition>
     <source-info>
-E-reporting
-  • UpdateType (modified since 2015 PoM)
+e-reporting
+    • MeasureCategory (category 2 a and b)
+    • UpdateType (modified since 2015 PoM)
+    • MeasureCode
+    • MeasureName
+    • GESComponent
+
+text-based report
     </source-info>
     <answers>
       <option score="1">Yes</option>
       <option score="0.5">Partially</option>
       <option score="0">No</option>
-      <option score="/">Not relevant</option>
     </answers>
     <scoring determination-method="wise.msfd.compliance.scoring.scoring_based">
     </scoring>
@@ -180,20 +185,19 @@ E-reporting
 
   <assessment-question id="Com06C" class="completeness" use-criteria='none'>
     <definition>
-      Has the Member State provided a list and summary of the additional new measures (from the 2nd cycle)?
+      Has the Member State provided a list and summary of the additional new measures in the 2nd cycle (category2)?
     </definition>
     <source-info>
-Text-based report
-
-E-reporting
-    • UpdateType
-    • MeasureCategory    
+e-reporting
+    • MeasureCategory (category 2 a and b)
+    • UpdateType (new in 2021 POM)
+    • MeasureCode
+    • MeasureName
     </source-info>
     <answers>
       <option score="1">Yes</option>
       <option score="0.5">Partially</option>
       <option score="0">No</option>
-      <option score="/">Not relevant</option>
     </answers>
     <scoring determination-method="wise.msfd.compliance.scoring.scoring_based">
     </scoring>
@@ -225,7 +229,6 @@ E-reporting
       <option score="1">Yes</option>
       <option score="0.5">Partially</option>
       <option score="0">No</option>
-      <option score="/">Not relevant</option>
     </answers>
     <scoring determination-method="wise.msfd.compliance.scoring.scoring_based">
     </scoring>
