@@ -953,6 +953,41 @@ class AdminScoring(BaseComplianceView, AssessmentDataMixin):
         self.recalculate_score_for_objects(self.rdas, self.questions_reg,
                                            'regional')
 
+    def recalculate_scores_by_article(self):
+        # usage /recalculate-scores-by-article?article=Art13&section=national
+        article = self.request.form.get('article', None)
+        section = self.request.form.get('section', None)
+
+        if not article:
+            return 'Article not provided!'
+
+        if not section:
+            return 'Section not provided!'
+
+        if section == 'national':
+            objects = [
+                obj
+                for obj in self.ndas
+                if obj.title == article
+            ]
+
+            self.recalculate_score_for_objects(
+                objects, self.questions, 'national')
+
+        if section == 'regional':
+            objects = [
+                obj
+                for obj in self.ndas
+                if obj.title == article
+            ]
+
+            self.recalculate_score_for_objects(
+                objects, self.questions_reg, 'regional')
+
+        alsoProvides(self.request, IDisableCSRFProtection)
+
+        return 'Done'
+
     # @cache(lambda func, *args: func.__name__ + args[1].absolute_url(),
     #        lifetime=1800)
     def get_data(self, obj):
