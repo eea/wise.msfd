@@ -11,6 +11,7 @@
       <option score="0.5">Partially</option>
       <option score="0.250">Not clear</option>
       <option score="0">No</option>
+      <option score="/">Not relevant</option>
     </answers>
     <scoring determination-method="wise.msfd.compliance.scoring.scoring_based">
     </scoring>
@@ -51,6 +52,7 @@ E-reporting:
       <option score="0.5">Partially</option>
       <option score="0.250">Not clear</option>
       <option score="0">No</option>
+      <option score="/">Not relevant</option>
     </answers>
     <scoring determination-method="wise.msfd.compliance.scoring.scoring_based">
     </scoring>
@@ -82,6 +84,7 @@ E-reporting:
       <option score="1">Yes</option>
       <option score="0.5">Partially</option>
       <option score="0">No</option>
+      <option score="/">Not relevant</option>
     </answers>
     <scoring determination-method="wise.msfd.compliance.scoring.scoring_based">
     </scoring>
@@ -121,6 +124,7 @@ E-reporting
       <option score="1">Yes</option>
       <option score="0.5">Partially</option>
       <option score="0">No</option>
+      <option score="/">Not relevant</option>
     </answers>
     <scoring determination-method="wise.msfd.compliance.scoring.scoring_based">
     </scoring>
@@ -161,6 +165,7 @@ text-based report
       <option score="1">Yes</option>
       <option score="0.5">Partially</option>
       <option score="0">No</option>
+      <option score="/">Not relevant</option>
     </answers>
     <scoring determination-method="wise.msfd.compliance.scoring.scoring_based">
     </scoring>
@@ -198,6 +203,7 @@ e-reporting
       <option score="1">Yes</option>
       <option score="0.5">Partially</option>
       <option score="0">No</option>
+      <option score="/">Not relevant</option>
     </answers>
     <scoring determination-method="wise.msfd.compliance.scoring.scoring_based">
     </scoring>
@@ -229,6 +235,7 @@ e-reporting
       <option score="1">Yes</option>
       <option score="0.5">Partially</option>
       <option score="0">No</option>
+      <option score="/">Not relevant</option>
     </answers>
     <scoring determination-method="wise.msfd.compliance.scoring.scoring_based">
     </scoring>
