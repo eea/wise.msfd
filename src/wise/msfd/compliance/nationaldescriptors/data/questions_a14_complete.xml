@@ -18,6 +18,7 @@ Text-based report
       <option score="1">Yes</option>
       <option score="0.5">Partially</option>
       <option score="0">No</option>
+      <option score="/">Not relevant</option>
     </answers>
     <scoring determination-method="wise.msfd.compliance.scoring.scoring_based">
     </scoring>
