@@ -783,7 +783,11 @@ def format_assessment_data_2022(article, elements, questions, muids, data,
             v = data.get(field_name, None)
 
             if v is not None:
-                label = choices[v]
+                try:
+                    label = choices[v]
+                except:
+                    label = choices[-1]
+
                 color_index = ANSWERS_COLOR_TABLE[q_scores[v]]
 
             value = (label, color_index, field_title)

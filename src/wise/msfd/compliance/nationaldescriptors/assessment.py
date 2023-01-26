@@ -323,6 +323,12 @@ class EditAssessmentDataForm(BaseView, EditAssessmentDataFormMain):
                 # ])
 
                 default = assessment_data.get(field_name, None)
+
+                # if the selected answer was removed, then make the last 
+                # option to be the default 
+                if default > len(choices) - 1:
+                    default = len(choices) - 1
+
                 field = Choice(
                     title=field_title,
                     __name__=field_name,
