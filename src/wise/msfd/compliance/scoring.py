@@ -62,7 +62,13 @@ def get_range_index_2022(percentage):
 def scoring_based(answers, scores):
     raw_scores = []
     for answ in answers:
-        score = scores[answ]
+        # if the answer is not available 
+        # eg. 'Not relevant' was removed, get the score from the last option
+        try:
+            score = scores[answ]
+        except:
+            score = scores[-1]
+
         if score == '/':
             continue
 

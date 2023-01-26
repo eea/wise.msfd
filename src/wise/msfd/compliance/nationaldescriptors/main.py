@@ -783,6 +783,8 @@ def format_assessment_data_2022(article, elements, questions, muids, data,
             v = data.get(field_name, None)
 
             if v is not None:
+                # option no longer exists, we have to default to the last 
+                # available option
                 try:
                     label = choices[v]
                 except:
