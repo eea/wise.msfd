@@ -1207,7 +1207,7 @@ class AssessmentDataMixin(object):
 
     # @cache(lambda func, *args: '-'.join((func.__name__, args[1])), 
     #         lifetime=1800)
-    def get_completeness_data(self, country_code):
+    def get_completeness_data(self, country_code, article=''):
         """ For year 2012
         :return: {'color': 5, 'score': 0, 'max_score': 0,
                 'conclusion': (1, 'Very poor')
@@ -1222,12 +1222,15 @@ class AssessmentDataMixin(object):
 
         article_folder = None
         ccode = country_code.lower()
-        artcode = self.article.lower()
+        artcode = article.lower()
+
+        if not article:
+            artcode = self.article.lower()
 
         try:
-            article_folder = self.context.restrictedTraverse(
+            article_folder = self.context.unrestrictedTraverse(
                 'marine/assessment-module/national-descriptors-assessments'
-                '/{}/{}-completeness-2022'.format(ccode, artcode))  
+                '/{}/{}-completeness-2022'.format(ccode, artcode))
         except:
             return res
             

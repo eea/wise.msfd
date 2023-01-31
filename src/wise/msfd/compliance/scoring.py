@@ -214,7 +214,11 @@ class OverallScores(object):
             _score = getattr(self, phase)['score']
             _max_score = getattr(self, phase)['max_score']
 
-            score_achieved += _score
+            try:
+                score_achieved += _score
+            except:
+                pass 
+                
             max_score += _max_score
 
         overall_score = int(round(

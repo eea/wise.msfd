@@ -30,7 +30,7 @@ from Products.CMFPlacefulWorkflow.WorkflowPolicyConfig import \
     WorkflowPolicyConfig
 from Products.Five.browser import BrowserView
 from Products.statusmessages.interfaces import IStatusMessage
-from wise.msfd import db, sql2018
+from wise.msfd import db
 from wise.msfd.compliance.assessment import (ARTICLE_WEIGHTS,
                                              AssessmentDataMixin,
                                              OverallScores)
@@ -72,6 +72,8 @@ CONCLUSIONS = {
     '0.250': 'Not clear',
     '0': 'Not reported',
 }
+
+ARTICLES_2022 = ['Art13', 'Art14']
 
 
 def get_wf_state_id(context):
@@ -138,14 +140,7 @@ class BootstrapCompliance(BrowserView):
 
         return descriptors
 
-    @db.use_db_session('2018')
     def _get_articles(self):
-        # articles = db.get_unique_from_mapper(
-        #     sql2018.LMSFDArticle,
-        #     'MSFDArticle'
-        # )
-        # return articles
-
         return ['Art8', 'Art9', 'Art10']
 
     def set_layout(self, obj, name):
@@ -838,8 +833,65 @@ class AdminScoring(BaseComplianceView, AssessmentDataMixin):
             obj_title = obj.title.capitalize()
             if obj_title in _get_secondary_articles():
                 continue
+            
+            if obj_title in ARTICLES_2022:
+                continue
 
-            if obj_title in ('Art3-4'):
+            if obj_title in ('Art3-4', 'Art13-completeness-2022', 
+                    'Art14-completeness-2022', 'Cross-cutting-2022'):
+                continue
+
+            yield obj
+
+    @property
+    @timeit
+    def ndas_2022(self):
+        catalog = get_tool('portal_catalog')
+        brains = catalog.unrestrictedSearchResults(
+            portal_type='wise.msfd.nationaldescriptorassessment',
+        )
+
+        for brain in brains:
+            obj = brain._unrestrictedGetObject()
+
+            # safety check to exclude secondary articles
+            if not INationalDescriptorAssessment.providedBy(obj):
+                continue
+
+            # safety check to exclude secondary articles
+            obj_title = obj.title.capitalize()
+            if obj_title in _get_secondary_articles():
+                continue
+            
+            if obj_title not in ARTICLES_2022:
+                continue
+
+            if obj_title in ('Art3-4', 'Art13-completeness-2022', 
+                    'Art14-completeness-2022', 'Cross-cutting-2022'):
+                continue
+
+            yield obj
+
+    @property
+    @timeit
+    def ndas_cross(self):
+        catalog = get_tool('portal_catalog')
+        brains = catalog.unrestrictedSearchResults(
+            portal_type='wise.msfd.nationaldescriptorassessment',
+        )
+
+        for brain in brains:
+            obj = brain._unrestrictedGetObject()
+
+            # safety check to exclude secondary articles
+            if not INationalDescriptorAssessment.providedBy(obj):
+                continue
+
+            # safety check to exclude secondary articles
+            obj_title = obj.title.capitalize()
+
+            if obj_title not in ('Art13-completeness-2022', 
+                    'Art14-completeness-2022', 'Cross-cutting-2022'):
                 continue
 
             yield obj
@@ -1158,7 +1210,152 @@ class AdminScoring(BaseComplianceView, AssessmentDataMixin):
         yield (country_code, country_name, region_code, region_name,
                d_obj.id, d_obj.title,
                article_title, '', '2012 Adequacy change', '',
-               adequacy_2012_change, '', state, last_change)
+               adequacy_2012_change, '', state, last_change)    
+               
+    def get_data_2022(self, obj):
+        """ Get assessment data for a country assessment object
+        """
+
+        if not (hasattr(obj, 'saved_assessment_data')
+                and obj.saved_assessment_data):
+
+            return
+
+        state = get_wf_state_id(obj)
+        article_folder = obj
+        article_title = article_folder.title
+        descr = obj.aq_parent
+        descr_id = descr.id.upper()
+        region_code = obj.aq_parent.aq_parent.id.upper()
+        region_name = obj.aq_parent.aq_parent.title
+        country_code = obj.aq_parent.aq_parent.aq_parent.id.upper()
+        country_name = obj.aq_parent.aq_parent.aq_parent.title
+        d_obj = self.descriptor_obj(descr_id)
+        muids = [] # self.muids(country_code, region_code, '2022')
+        data = obj.saved_assessment_data.last()
+
+        phase_overall_scores = OverallScores(ARTICLE_WEIGHTS, article_title)
+        phase_overall_scores = self._setup_phase_overall_scores(
+            phase_overall_scores, data, article_title)
+        phase_overall_scores.completeness = self.get_completeness_data(
+            country_code, article_title
+        )
+
+        score_last_change = []
+
+        for k, val in data.items():
+            if not val:
+                continue
+
+            if '_Score' in k:
+                last_change_name = "{}_{}_Last_update".format(article_title,
+                                                              val.question.id)
+                last_change = data.get(last_change_name, '')
+                score_last_change.append(last_change)
+                last_change = last_change and last_change.isoformat() or ''
+
+                for i, v in enumerate(val.values):
+                    options = ([o.title
+                                for o in val.question.get_assessed_elements(
+                                    d_obj, muids=muids)] or ['All criteria'])
+
+                    # TODO IndexError: list index out of range
+                    # investigate this
+                    # Possible cause of error: D9C2 was removed and some old
+                    # questions have answered it
+                    try:
+                        option = options[i]
+                    except IndexError:
+                        continue
+                        option = 'ERROR with options: {} / index: {}'.format(
+                            ', '.join(options), i
+                        )
+
+                    answer = val.question.answers[v]
+                    score = val.question.scores[v]
+                    score_title = CONCLUSIONS[score]
+
+                    yield (
+                        country_code, country_name, region_code, region_name,
+                        d_obj.id, d_obj.title,
+                        article_title, val.question.id, option, answer,
+                        score, score_title, state, last_change)
+
+            elif '_Summary' in k:
+                article_id, question_id, _ = k.split('_')
+                last_change_name = "{}_{}_Last_update".format(article_id,
+                                                              question_id)
+                last_change = data.get(last_change_name, '')
+                last_change = last_change and last_change.isoformat() or ''
+
+                yield (country_code, country_name, region_code, region_name,
+                       d_obj.id, d_obj.title,
+                       article_id, question_id, 'Summary', val,
+                       '', '', state, last_change)
+
+            elif '_assessment_summary' in k:
+                article_id, _, __ = k.split('_')
+                last_change_name = "{}_assess_summary_last_upd".format(
+                    article_id
+                )
+                last_change = data.get(last_change_name, '')
+                last_change = last_change and last_change.isoformat() or ''
+
+                yield (country_code, country_name, region_code, region_name,
+                       d_obj.id, d_obj.title,
+                       article_id, ' ', 'Assessment conclusions', val,
+                       '', '', state, last_change)
+
+            elif '_recommendations' in k:
+                article_id, _ = k.split('_')
+                last_change_name = "{}_assess_summary_last_upd".format(
+                    article_id
+                )
+                last_change = data.get(last_change_name, '')
+                last_change = last_change and last_change.isoformat() or ''
+
+                yield (country_code, country_name, region_code, region_name,
+                       d_obj.id, d_obj.title,
+                       article_id, '', 'Recommendations', val,
+                       '', '', state, last_change)
+
+            elif '_progress' in k:
+                article_id, _ = k.split('_')
+                last_change_name = "{}_assess_summary_last_upd".format(
+                    article_id
+                )
+                last_change = data.get(last_change_name, '')
+                last_change = last_change and last_change.isoformat() or ''
+
+                yield (country_code, country_name, region_code, region_name,
+                       d_obj.id, d_obj.title,
+                       article_id, '', 'Progress', val,
+                       '', '', state, last_change)
+
+        score_last_change = [_f for _f in score_last_change if _f]
+        last_change = score_last_change and max(score_last_change) or ''
+        last_change = last_change and last_change.isoformat() or ''
+
+        phases = list(phase_overall_scores.article_weights[article_title].keys())
+
+        for phase in phases:
+            _phase_score = getattr(phase_overall_scores, phase, {})
+            score = phase_overall_scores.get_score_for_phase(phase)
+            score_title = _phase_score.get('conclusion', '')[1]
+
+            yield (country_code, country_name, region_code, region_name,
+                   d_obj.id, d_obj.title,
+                   article_title, '', '2022 {}'.format(phase.capitalize()), '',
+                   score, score_title, state, last_change)
+
+        overall_concl, score = phase_overall_scores.get_overall_score(
+            article_title)
+        score_title = self.get_conclusion(overall_concl)
+
+        yield (country_code, country_name, region_code, region_name,
+               d_obj.id, d_obj.title,
+               article_title, '', '2022 Overall', '',
+               score, score_title, state, last_change)
 
     def get_data_sec(self, obj):
         """ Get assessment data for a country assessment object
@@ -1269,7 +1466,130 @@ class AdminScoring(BaseComplianceView, AssessmentDataMixin):
 
         yield (country_code, country_title, article_title, '',
                '2018 Overall', '', score, score_title,
-               state, last_change)
+               state, last_change)  
+  
+    def get_data_cross_cutting(self, obj):
+        """ Get assessment data for a country assessment object
+        """
+
+        if not (hasattr(obj, 'saved_assessment_data')
+                and obj.saved_assessment_data):
+
+            return
+
+        
+        article_title = obj.title
+
+        if article_title == 'art13-completeness-2022':
+            article_title = 'Art13Completeness'
+
+        if article_title == 'art14-completeness-2022':
+            article_title = 'Art14Completeness'
+
+        if article_title == 'cross-cutting-2022':
+            article_title = 'Art1314CrossCutting'
+
+        state = get_wf_state_id(obj)
+        country_code = obj.aq_parent.id.upper()
+        country_title = obj.aq_parent.title
+        data = obj.saved_assessment_data.last()
+        d_obj = 'All descriptors'
+        muids = []
+
+        phase_overall_scores = OverallScores(ARTICLE_WEIGHTS, article_title)
+        phase_overall_scores = self._setup_phase_overall_scores(
+            phase_overall_scores, data, article_title)
+
+        score_last_change = []
+
+        for k, val in data.items():
+            if not val:
+                continue
+
+            if '_Score' in k:
+                last_change_name = "{}_{}_Last_update".format(article_title,
+                                                              val.question.id)
+                last_change = data.get(last_change_name, '')
+                score_last_change.append(last_change)
+                last_change = last_change and last_change.isoformat() or ''
+
+                for i, v in enumerate(val.values):
+                    options = ([o.title
+                                for o in val.question.get_assessed_elements(
+                                    d_obj, muids=muids)] or ['All criteria'])
+
+                    # TODO IndexError: list index out of range
+                    # investigate this
+                    # Possible cause of error: D9C2 was removed and some old
+                    # questions have answered it
+                    try:
+                        option = options[i]
+                    except IndexError:
+                        continue
+
+                    answer = val.question.answers[v]
+                    score = val.question.scores[v]
+                    score_title = CONCLUSIONS[score]
+
+                    yield (country_code, country_title, article_title,
+                           val.question.id, option, answer, score, score_title,
+                           state, last_change)
+
+            elif '_Summary' in k:
+                article_id, question_id, _ = k.split('_')
+                last_change_name = "{}_{}_Last_update".format(article_id,
+                                                              question_id)
+                last_change = data.get(last_change_name, '')
+                last_change = last_change and last_change.isoformat() or ''
+
+                yield (country_code, country_title, article_id, question_id,
+                       'Summary', val, '', '', state, last_change)
+
+            elif '_assessment_summary' in k:
+                article_id, _, __ = k.split('_')
+                last_change_name = "{}_assess_summary_last_upd".format(
+                    article_id
+                )
+                last_change = data.get(last_change_name, '')
+                last_change = last_change and last_change.isoformat() or ''
+
+                yield (country_code, country_title, article_id, '',
+                       'Assessment conclusions', val, 
+                       '', '', state, last_change)
+
+            elif '_recommendations' in k:
+                article_id, _ = k.split('_')
+                last_change_name = "{}_assess_summary_last_upd".format(
+                    article_id
+                )
+                last_change = data.get(last_change_name, '')
+                last_change = last_change and last_change.isoformat() or ''
+
+                yield (country_code, country_title, article_id, '',
+                       'Recommendations', val, '', '', state, last_change)
+
+            elif '_progress' in k:
+                article_id, _ = k.split('_')
+                last_change_name = "{}_assess_summary_last_upd".format(
+                    article_id
+                )
+                last_change = data.get(last_change_name, '')
+                last_change = last_change and last_change.isoformat() or ''
+
+                yield (country_code, country_title, article_id, '',
+                       'Progress', val, '', '', state, last_change)
+
+        score_last_change = [_f for _f in score_last_change if _f]
+        last_change = score_last_change and max(score_last_change) or ''
+        last_change = last_change and last_change.isoformat() or ''
+
+        overall_concl, score = phase_overall_scores.get_overall_score(
+            article_title)
+        score_title = self.get_conclusion(overall_concl)
+
+        yield (country_code, country_title, article_title, '',
+               '2022 Overall', '', score, score_title,
+               state, last_change)    
 
     def get_data_rda(self, obj):
         """ Get assessment data for a regional descriptor assessment
@@ -1404,6 +1724,9 @@ class AdminScoring(BaseComplianceView, AssessmentDataMixin):
                     x += 1
 
                     for iv, value in enumerate(row):
+                        if hasattr(value, 'output'):
+                            value = value.output
+
                         worksheet.write(x, iv, value)
 
         workbook.close()
@@ -1482,6 +1805,13 @@ class AdminScoring(BaseComplianceView, AssessmentDataMixin):
             # if (hasattr(nda, 'saved_assessment_data')
             #     and nda.saved_assessment_data)
         ]
+        nda_xlsdata_2022 = [
+            [row for row in self.get_data_2022(nda)]
+            for nda in self.ndas_2022
+            # if (hasattr(nda, 'saved_assessment_data')
+            #     and nda.saved_assessment_data)
+        ]
+        nda_xlsdata.extend(nda_xlsdata_2022)
 
         # Regional descriptors data
         rda_labels = ('Region', 'Region title', 'Descriptor',
@@ -1506,11 +1836,23 @@ class AdminScoring(BaseComplianceView, AssessmentDataMixin):
             for sec in self.ndas_sec
         ]
 
+        # Completeness and cross cutting data
+        cross_labels = ('Country', 'Country title', 
+                      'Article', 'Question', 'Option', 'Answer',
+                      'Score', 'Score title', 'State', 'Last change')
+
+        # transform data to lists to make it cacheable
+        cross_xlsdata = [
+            [row for row in self.get_data_cross_cutting(nda)]
+            for nda in self.ndas_cross
+        ]
+
         all_data = PersistentList()
         all_data.extend([
             ('National descriptors', nda_labels, nda_xlsdata),
             ('Regional descriptors', rda_labels, rda_xlsdata),
-            ('Articles 3, 4, 7', sec_labels, sec_xlsdata)
+            ('Articles 3, 4, 7', sec_labels, sec_xlsdata),
+            ('Completeness and cross cutting', cross_labels, cross_xlsdata),
         ])
         self.save_xsldata_to_annot(all_data)
 
@@ -1685,7 +2027,6 @@ class TranslateIndicators(BrowserView):
 
 
 class MigrateTranslationStorage(BrowserView):
-
     def __call__(self):
         site = portal.get()
         storage = ITranslationsStorage(site)
