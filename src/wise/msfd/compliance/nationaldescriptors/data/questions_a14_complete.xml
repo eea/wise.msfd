@@ -16,7 +16,7 @@ Text-based report
     </source-info>
     <answers>
       <option score="1">Yes</option>
-      <option score="0.5">Partially</option>
+      <option score="0.250">Not clear</option>
       <option score="0">No</option>
       <option score="/">Not relevant</option>
     </answers>
