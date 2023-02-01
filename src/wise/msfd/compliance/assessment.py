@@ -1042,6 +1042,9 @@ class AssessmentDataMixin(object):
     skip_articles = ('Art11', 'Art13', 'Art14', 'Art18')
 
     def t2rt(self, text):
+        if hasattr(text, 'output'):
+            return text.output
+            
         return t2rt(text)
 
     @property
@@ -1461,13 +1464,13 @@ class AssessmentDataMixin(object):
             self.get_color_for_score(overallscore_val)
         )
 
-        assessment_summary = t2rt(
+        assessment_summary = self.t2rt(
             assess_data.get('{}_assessment_summary'.format(article)) or '-'
         )
-        progress_assessment = t2rt(
+        progress_assessment = self.t2rt(
             assess_data.get('{}_progress'.format(article)) or '-'
         )
-        recommendations = t2rt(
+        recommendations = self.t2rt(
             assess_data.get('{}_recommendations'.format(article)) or '-'
         )
 
