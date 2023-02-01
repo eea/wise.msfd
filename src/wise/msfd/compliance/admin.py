@@ -1023,6 +1023,20 @@ class AdminScoring(BaseComplianceView, AssessmentDataMixin):
                 if obj.title == article
             ]
 
+            if not objects:
+                objects = [
+                    obj
+                    for obj in self.ndas_2022
+                    if obj.title == article
+                ]
+
+            if not objects:
+                objects = [
+                    obj
+                    for obj in self.ndas_cross
+                    if obj.title == article
+                ]
+
             self.recalculate_score_for_objects(
                 objects, self.questions, 'national')
 
