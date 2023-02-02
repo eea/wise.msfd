@@ -357,7 +357,7 @@ def _get_csv_region(region):
     if region in ("ANS", "AMA", "ABI", "ACS"):
         region = "ATL"
 
-    if region in ("MAL", "MAD", "MWE"):
+    if region in ("MAL", "MAD", "MWE", "MIC"):
         region = "MED"
 
     return region

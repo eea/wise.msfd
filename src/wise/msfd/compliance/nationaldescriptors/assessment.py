@@ -259,7 +259,7 @@ class EditAssessmentDataForm(BaseView, EditAssessmentDataFormMain):
             structure_logic_form.subtitle = u''
             structure_logic_form._disabled = self.read_only_access
             structure_logic_form._source_info = ''
-            structure_logic_form._question_id = ''
+            structure_logic_form._question_id = 'Art13StructureAndLogic'
             asf_fields = []
 
             _name = '{}_structure'.format(self.article)
