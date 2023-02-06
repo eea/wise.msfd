@@ -17,7 +17,7 @@ Text-based report
     <answers>
       <option score="1">Yes</option>
       <option score="0.250">Not clear</option>
-      <option score="0">No</option>
+      <option score="/">No</option>
       <option score="/">Not relevant</option>
     </answers>
     <scoring determination-method="wise.msfd.compliance.scoring.scoring_based">

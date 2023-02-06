@@ -120,7 +120,7 @@ E-reporting
     <answers>
       <option score="1">Yes</option>
       <option score="0.5">Partially</option>
-      <option score="0">No</option>
+      <option score="/">No</option>
     </answers>
     <scoring determination-method="wise.msfd.compliance.scoring.scoring_based">
     </scoring>
@@ -160,7 +160,7 @@ text-based report
     <answers>
       <option score="1">Yes</option>
       <option score="0.5">Partially</option>
-      <option score="0">No</option>
+      <option score="/">No</option>
     </answers>
     <scoring determination-method="wise.msfd.compliance.scoring.scoring_based">
     </scoring>
