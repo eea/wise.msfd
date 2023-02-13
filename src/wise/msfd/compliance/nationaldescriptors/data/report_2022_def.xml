@@ -32,6 +32,7 @@
     <element name="TemporalScope">Temporal scope</element>
     <element name="ImplementationStatus">Implementation status</element>
     <element name="ImplementationDelay">Implementation delay</element>
+    <element name="ImplementationReason">Implementation reason</element>
     <element name="ProgressDescription">Progress description</element>
     <element name="ReasonDescription">Reason description</element>
   </Art13>
