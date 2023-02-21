@@ -591,8 +591,10 @@ class ItemList(TemplateMixin):
         # the rows may be ItemLabel instances
 
         if sort and rows and (not isinstance(rows[0], six.string_types)):
-            self.rows = sorted(rows,
-                               key=lambda r: (r is not None) and r.title or '')
+            self.rows = sorted(
+                rows,
+                key=lambda r: (r is not None) 
+                    and not isinstance(r, six.string_types) and r.title or r)
         elif sort:
             self.rows = sorted(rows)
         else:
