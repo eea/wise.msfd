@@ -5,6 +5,7 @@ import re
 from collections import OrderedDict, defaultdict, namedtuple
 from datetime import datetime
 from six.moves.html_parser import HTMLParser
+from itertools import chain
 from io import BytesIO
 
 from lxml.etree import fromstring
@@ -1479,6 +1480,10 @@ The data is retrieved from the MSFD2018_production.V_ART8_ESA_2018 database view
                 continue
             
             desc_reported = row.GEScomponent.split(';')
+            # sometimes GEScomponents are separated by comma too
+            # also split by comma
+            desc_reported = [d.split(',') for d in desc_reported]
+            desc_reported = chain.from_iterable(desc_reported)
             desc_reported = set([d.strip() for d in desc_reported])
 
             if not desc_reported.intersection(set(all_ids)):
