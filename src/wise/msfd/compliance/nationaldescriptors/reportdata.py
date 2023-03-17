@@ -792,6 +792,13 @@ class ReportData2016(ReportData2012):
         #                                             # descriptors to D1
         #     assert self.descriptor == 'D1'
 
+        print(("Will render report for: %s" % self.article))
+        
+        self.filename = filename = self.get_report_filename()
+        self.fileurl = fileurl = get_report_fileurl_art131418_2016(
+            filename, self.country_code, self.country_region_code, self.article
+        )
+
         if 'translate' in self.request.form:
             report_view = self.get_report_view()
             report_view.auto_translate()
@@ -799,13 +806,6 @@ class ReportData2016(ReportData2012):
             messages = IStatusMessage(self.request)
             messages.add(u"Auto-translation initiated, please refresh "
                          u"in a couple of minutes", type=u"info")
-
-        print(("Will render report for: %s" % self.article))
-        
-        self.filename = filename = self.get_report_filename()
-        self.fileurl = fileurl = get_report_fileurl_art131418_2016(
-            filename, self.country_code, self.country_region_code, self.article
-        )
 
         factsheet = None
 
