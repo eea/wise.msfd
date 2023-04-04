@@ -1530,7 +1530,8 @@ The data is retrieved from the MSFD2018_production.V_ART8_ESA_2018 database view
         res = []
 
         for row in q:
-            regions_reported = set(row.RegionSubregion.split('; '))
+            regions_reported = set(row.RegionSubregion.split(';'))
+            regions_reported = set([r.strip() for r in regions_reported])
             regions_reported_norm = []
 
             for region_rep in regions_reported:
@@ -1543,7 +1544,8 @@ The data is retrieved from the MSFD2018_production.V_ART8_ESA_2018 database view
             if not regions_reported_norm.intersection(set(region_names)):
                 continue
             
-            desc_reported = set(row.GEScomponent.split('; '))
+            desc_reported = set(row.GEScomponent.split(';'))
+            desc_reported = set([d.strip() for d in desc_reported])
 
             if not desc_reported.intersection(set(all_ids)):
                 continue
