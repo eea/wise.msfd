@@ -71,9 +71,6 @@
                   <i class="glyphicon glyphicon-th"></i><span tal:content="year_2012">2012</span> Report
                 </a>
               </li>
-              <li tal:condition="python:False"><!--Removed-->
-                <a tal:attributes="href python: context.absolute_url() + '/@@view-report-data-2012-like-2018'"
-                   target="_blank"><i class="glyphicon glyphicon-th"></i>2012 Report (II)</a></li>
               <li class="process-state" style="display:flex; align-items: center">
                 <form method="GET"
                       tal:attributes="action python: context.absolute_url() + '/content_status_modify'">
@@ -97,6 +94,12 @@
                     class="link-overlay contentHistory glyphicon glyphicon-time" id="content-history" style="margin-left: 2rem"></a>
               </li>
             </ul>
+          </div>
+
+          <div id="download-report-data-form" tal:condition="view/enable_pdf_download">
+            <form method="POST" action="" tal:attributes="action request/getURL">
+              <button name="download_pdf" class="btn btn-primary">Download as PDF</button>
+            </form>
           </div>
 
           <div class="asts-header-data">

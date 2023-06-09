@@ -1,0 +1,37 @@
+<div class="article-assessment-pdf" tal:define="assessment view/assessment_formatted">
+    <h1 class="report-title" tal:content="structure view/title">Assessment</h1>
+
+    <div tal:repeat="row assessment/answers">
+        <h2 tal:content="row/question"></h2>
+        <div>
+            <tal:rep tal:repeat="value row/values">
+                <p>
+                    <span><b tal:content="python: value[2]"></b></span>: 
+                    <span tal:content="python: value[0]"></span>
+                </p>
+            </tal:rep>
+        </div>
+        <p><b>Summary</b></p>
+        <div tal:content="structure row/summary">Summary</div>
+    </div>
+    <h2>Assessment summary, progress assessment and recommendations</h2>
+
+    <div class="form-assessment-summary">
+        <h3 tal:condition="python: view.article == 'Art13Completeness'">Article 13 – Completeness assessment conclusions</h3>
+        <h3 tal:condition="python: view.article == 'Art14Completeness'">Article 14 – Completeness assessment conclusions</h3>
+        <div tal:content="structure python: hasattr(assessment, 'assessment_summary') and assessment.assessment_summary.raw or '-'"></div>
+        <h3>Recommendations for Member State</h3>
+        <div tal:content="structure python: hasattr(assessment, 'recommendations') and assessment.recommendations.raw or '-'"></div>
+    </div>
+
+    <div tal:define="phase_score python: assessment.phase_overall_scores">
+        <h2>Overall scores</h2>
+        <div tal:define="conclusion python: phase_score.completeness['conclusion'][1];
+                    score_value python: phase_score.completeness['conclusion'][0]">
+            <b>2022 Completeness</b>: <span tal:content="python: '{} ({})'.format(conclusion, score_value)"></span></div>
+        <div>
+            <b>2022 Overall</b>: <span tal:content="python: '{} ({})'.format(
+                assessment.overall_conclusion[1], assessment.overall_conclusion[0])"></span></div>
+    </div>
+
+</div>

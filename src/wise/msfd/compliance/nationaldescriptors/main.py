@@ -2,9 +2,13 @@
 """
 
 from __future__ import absolute_import
-import re
 from collections import namedtuple
+from datetime import datetime
 from logging import getLogger
+from pkg_resources import resource_filename
+
+import pdfkit
+import re
 
 from zope.interface import implementer, alsoProvides
 
@@ -149,12 +153,11 @@ class NationalDescriptorCountryOverview(BaseView):
     @property
     def _country_folder(self):
         site = portal.get()
-        
+
         ccode = getattr(self.context, '_ccode', self.context.id)
 
-        country_folder = site['marine']['assessment-module'] \
-            ['national-descriptors-assessments'][ccode]
-        
+        country_folder = site['marine']['assessment-module']['national-descriptors-assessments'][ccode]
+
         return country_folder
 
     def country_name_url(self):
@@ -255,7 +258,7 @@ class MSFDReportingHistoryMixin(object):
 
             if not hasattr(obj, '_msfd_reporting_history_data'):
                 continue
-            
+
             reporting_data = obj._msfd_reporting_history_data
 
             break
@@ -342,12 +345,12 @@ class NatDescCountryOverviewReports(NationalDescriptorCountryOverview):
             if row.CountryCode != country_code:
                 continue
 
-            if not (row.Region == region or row.Region == 'NotReported'  or row.Region is None):
+            if not (row.Region == region or row.Region == 'NotReported' or row.Region is None):
                 continue
 
             if row.GESComponent not in all_ids:
                 continue
-            
+
             if not row.Features:
                 return True
 
@@ -359,8 +362,8 @@ class NatDescCountryOverviewReports(NationalDescriptorCountryOverview):
             if feats.intersection(ok_features):
                 return True
 
-        return False    
-        
+        return False
+
     def _is_report_2018_art10(self, region, desc_id):
         country_code = self.country_code.upper()
         region = region.upper()
@@ -369,13 +372,13 @@ class NatDescCountryOverviewReports(NationalDescriptorCountryOverview):
         descriptor = get_descriptor(desc_id)
         all_ids = list(descriptor.all_ids())
         ok_features = set([f.name for f in get_features(desc_id)])
-    
+
         blacklist_descriptors = ['D1.1', 'D1.2', 'D1.3', 'D1.4', 'D1.5',
                                  'D1.6', 'D4', 'D6']
-        
+
         if descriptor.id in blacklist_descriptors:
             blacklist_descriptors.remove(descriptor.id)
-        
+
         blacklist_features = []
         for _desc in blacklist_descriptors:
             blacklist_features.extend([
@@ -390,7 +393,7 @@ class NatDescCountryOverviewReports(NationalDescriptorCountryOverview):
             if row.CountryCode != country_code:
                 continue
 
-            if not (row.Region == region 
+            if not (row.Region == region
                     or row.Region == 'NotReported'
                     or row.Region is None):
                 continue
@@ -400,7 +403,7 @@ class NatDescCountryOverviewReports(NationalDescriptorCountryOverview):
 
             if not ges_comps.intersection(all_ids):
                 continue
-            
+
             if not desc_id.startswith('D1.'):
                 return True
 
@@ -412,8 +415,8 @@ class NatDescCountryOverviewReports(NationalDescriptorCountryOverview):
             if row_needed:
                 return True
 
-        return False    
-        
+        return False
+
     def _is_report_2018_art11(self, region, desc_id):
         country_code = self.country_code.upper()
         region = region.upper()
@@ -438,7 +441,7 @@ class NatDescCountryOverviewReports(NationalDescriptorCountryOverview):
 
             if row.Descriptor not in all_ids:
                 continue
-            
+
             regions_reported = set(row.SubRegions.split(','))
 
             if regions_reported.intersection(set(region_names)):
@@ -470,13 +473,13 @@ class NatDescCountryOverviewReports(NationalDescriptorCountryOverview):
         for row in data:
             if row.CountryCode != country_code:
                 continue
-            
+
             desc_reported = row.GEScomponent.split(';')
             desc_reported = set([d.strip() for d in desc_reported])
 
             if not desc_reported.intersection(set(all_ids)):
                 continue
-            
+
             regions_reported = row.RegionSubregion.split(';')
             regions_reported = set([r.strip() for r in regions_reported])
             regions_reported_norm = []
@@ -504,8 +507,8 @@ class NatDescCountryOverviewReports(NationalDescriptorCountryOverview):
         if hasattr(self, method_name):
             check_method = getattr(self, method_name)
             available = check_method(region, descriptor)
-            
-        # print("Report for %s %s %s is %s" 
+
+        # print("Report for %s %s %s is %s"
         #         % (region, descriptor, article, available))
 
         return available
@@ -626,8 +629,8 @@ def format_assessment_data(article, elements, questions, muids, data,
 
         if question.use_criteria == 'none':
             field_title = u'All criteria'
-            if self.article in ('Art13', 'Art14', 'Art1314CrossCutting', 
-                    'Art13Completeness', 'Art14Completeness'):
+            if self.article in ('Art13', 'Art14', 'Art1314CrossCutting',
+                                'Art13Completeness', 'Art14Completeness'):
                 field_title = u'Response options'
 
             field_name = '{}_{}'.format(article, question.id)
@@ -753,7 +756,7 @@ def format_assessment_data(article, elements, questions, muids, data,
 
 
 def format_assessment_data_2022(article, elements, questions, muids, data,
-                           descriptor, article_weights, self):
+                                descriptor, article_weights, self):
     """ Builds a data structure suitable for display in a template
 
     This is used to generate the assessment data overview table for 2018
@@ -773,8 +776,8 @@ def format_assessment_data_2022(article, elements, questions, muids, data,
 
         if question.use_criteria == 'none':
             field_title = u'All criteria'
-            if self.article in ('Art13', 'Art14', 'Art1314CrossCutting', 
-                    'Art13Completeness', 'Art14Completeness'):
+            if self.article in ('Art13', 'Art14', 'Art1314CrossCutting',
+                                'Art13Completeness', 'Art14Completeness'):
                 field_title = u'Response options'
 
             field_name = '{}_{}'.format(article, question.id)
@@ -783,7 +786,7 @@ def format_assessment_data_2022(article, elements, questions, muids, data,
             v = data.get(field_name, None)
 
             if v is not None:
-                # option no longer exists, we have to default to the last 
+                # option no longer exists, we have to default to the last
                 # available option
                 try:
                     label = choices[v]
@@ -919,6 +922,7 @@ class NationalDescriptorArticleView(BaseView, AssessmentDataMixin):
     year = '2018'       # used by self.muids
     _questions = NAT_DESC_QUESTIONS
     show_file_version = True
+    enable_pdf_download = False
 
     @property
     def title(self):
@@ -981,8 +985,8 @@ class NationalDescriptorArticleView(BaseView, AssessmentDataMixin):
 
         return file_name, file_url, report_date, edit_url
 
-    def format_assessment_data(self, article, elements, questions, 
-            muids, data, descriptor_obj, article_weights):
+    def format_assessment_data(self, article, elements, questions,
+                               muids, data, descriptor_obj, article_weights):
 
         return format_assessment_data(
             article,
@@ -1083,6 +1087,12 @@ class NationalDescriptorArticleView(BaseView, AssessmentDataMixin):
             self.descriptor_obj,
             article_weights
         )
+        self.assessment_formatted = assessment
+        self.progress_assessment = data.get(
+            "{}_{}".format(self.article, "progress"), "-")
+
+        if 'download_pdf' in self.request.form:
+            return self.download_pdf()
 
         assessment.phase_overall_scores.coherence = self.get_coherence_data(
             self.country_region_code, self.descriptor, self.article
@@ -1140,15 +1150,82 @@ class NationalDescriptorArticleView(BaseView, AssessmentDataMixin):
         return self.index()
 
 
+class AssessmentPDFMixin(object):
+    assessment_data_2018_tpl = Template('./pt/assessment-data-2022.pt')
+    show_file_version = False
+    pdf_template = Template("./pt/assessment-pdf.pt")
+    enable_pdf_download = True
+
+    def pdf_name(self):
+        fname = "{}-{}-{}-{}-{}".format(
+            self.country_name, self.country_region_code, self.descriptor,
+            self.article, str(datetime.now().date())
+        )
+
+        return fname
+
+    def _get_toc(self):
+        xsl_file = resource_filename('wise.msfd', 'data/pdf_toc.xsl'),
+
+        toc = {"xsl-style-sheet": xsl_file}
+
+        return toc
+
+    def _get_css(self):
+        return [
+            resource_filename('wise.msfd',
+                              'static/wise/dist/css/compliance.css'),
+            resource_filename('wise.msfd',
+                              'static/wise/dist/css/pdf_export.css'),
+        ]
+
+    def download_pdf(self):
+        options = {
+            'margin-top': '0.5in',
+            'margin-right': '0.5in',
+            'margin-bottom': '0.5in',
+            'margin-left': '0.5in',
+            'footer-font-size': '7',
+            'footer-right': '[page]',
+            'encoding': "UTF-8",
+            'load-error-handling': 'ignore',
+            # 'load-media-error-handling': 'ignore'
+        }
+        css = self._get_css()
+        cover = ""  # self._get_cover()
+        toc = self._get_toc()
+        path_wkhtmltopdf = '/plone/instance/parts/wkhtmltopdf/wkhtmltopdf'
+        config = pdfkit.configuration(wkhtmltopdf=path_wkhtmltopdf)
+
+        doc = pdfkit.from_string(
+            self.pdf_template(), False, options=options,
+            cover="",
+            toc=toc,
+            css=css,
+            cover_first=True,
+            configuration=config
+        )
+        sh = self.request.response.setHeader
+
+        sh('Content-Type', 'application/pdf')
+
+        sh('Content-Disposition',
+           'attachment; filename=%s.pdf' % self.pdf_name())
+
+        return doc
+
+
 @implementer(INationaldescriptorArticleView)
-class NationalDescriptorArticleView2022(NationalDescriptorArticleView):
+class NationalDescriptorArticleView2022(NationalDescriptorArticleView,
+                                        AssessmentPDFMixin):
     """"""
 
     assessment_data_2018_tpl = Template('./pt/assessment-data-2022.pt')
     show_file_version = False
+    enable_pdf_download = True
 
-    def format_assessment_data(self, article, elements, questions, 
-            muids, data, descriptor_obj, article_weights):
+    def format_assessment_data(self, article, elements, questions,
+                               muids, data, descriptor_obj, article_weights):
 
         return format_assessment_data_2022(
             article,
@@ -1163,14 +1240,24 @@ class NationalDescriptorArticleView2022(NationalDescriptorArticleView):
 
 
 @implementer(INationaldescriptorArticleViewCrossCutting)
-class NationalDescriptorArticleViewCrossCutting(NationalDescriptorArticleView):
+class NationalDescriptorArticleViewCrossCutting(NationalDescriptorArticleView,
+                                                AssessmentPDFMixin):
     assessment_data_2018_tpl = Template(
         './pt/assessment-data-2022-cross-cutting.pt')
     summary_fields = summary_fields_2016_cross
     show_file_version = False
+    enable_pdf_download = True
+    pdf_template = Template("./pt/assessment-pdf-cross.pt")
 
-    def format_assessment_data(self, article, elements, questions, 
-            muids, data, descriptor_obj, article_weights):
+    def pdf_name(self):
+        fname = "{}-{}-{}".format(
+            self.country_name, self.article, str(datetime.now().date())
+        )
+
+        return fname
+
+    def format_assessment_data(self, article, elements, questions,
+                               muids, data, descriptor_obj, article_weights):
 
         return format_assessment_data_2022(
             article,
@@ -1190,7 +1277,7 @@ class NationalDescriptorArticleViewCrossCutting(NationalDescriptorArticleView):
     @property
     def descriptor_title(self):
         return 'CrossCutting'
-    
+
     @property
     def country_region_code(self):
         return 'DCountryRegion'
@@ -1248,7 +1335,7 @@ class NationalDescriptorArticleViewCrossCutting(NationalDescriptorArticleView):
             self.descriptor_obj,
             article_weights
         )
-        
+
         conclusion_2012 = ''
         score_2012 = 0
         # score_2012 = score_2012
@@ -1262,6 +1349,13 @@ class NationalDescriptorArticleViewCrossCutting(NationalDescriptorArticleView):
         # if 2018 adequacy is not relevant, change since 2012 is not relevant
         if assessment.phase_overall_scores.adequacy['conclusion'][0] == '-':
             change = 'Not relevant (-)'
+
+        self.assessment_formatted = assessment
+        self.progress_assessment = data.get(
+            "{}_{}".format(self.article, "progress"), "-")
+
+        if 'download_pdf' in self.request.form:
+            return self.download_pdf()
 
         self.assessment_data_2018_html = self.assessment_data_2018_tpl(
             assessment=assessment,
@@ -1302,11 +1396,14 @@ class NationalDescriptorArticleViewCrossCutting(NationalDescriptorArticleView):
 
 @implementer(INationaldescriptorArticleViewCrossCutting)
 class NationalDescriptorArticleViewCompleteness(
-        NationalDescriptorArticleViewCrossCutting):
+        NationalDescriptorArticleViewCrossCutting,
+        AssessmentPDFMixin):
 
     assessment_data_2018_tpl = Template(
         './pt/assessment-data-2022-completeness.pt')
     show_file_version = False
+    enable_pdf_download = True
+    pdf_template = Template("./pt/assessment-pdf-completeness.pt")
 
     @property
     def article(self):
@@ -1315,7 +1412,7 @@ class NationalDescriptorArticleViewCompleteness(
     @property
     def descriptor_title(self):
         return 'Completeness'
-    
+
     @property
     def country_region_code(self):
         return 'Completeness'
@@ -1341,7 +1438,7 @@ class NationalDescriptorArticleViewCompleteness(
 
 class NationalDescriptorArticleView2012(NationalDescriptorArticleView):
     """ NationalDescriptorArticleView2012 """
-    
+
     @property
     def title(self):
         return u"Commission assessment / {} / 2012 / {} / {} / {} ".format(
@@ -1393,7 +1490,7 @@ class NationalDescriptorArticleView2016(NationalDescriptorArticleView):
         report_on_ms = self.country_name
         region_subregion = self.country_region_name
         based_on_report = ('https://cdr.eionet.europa.eu/{}/eu/msfd8910'
-            .format(self.country_code.lower()))
+                           .format(self.country_code.lower()))
         report_by = 'Milieu'
         report_date = '2018-04-13'
 
@@ -1443,7 +1540,7 @@ class NationalDescriptorArticleView2016(NationalDescriptorArticleView):
             general_rec=general_rec,
             descr_rec=descr_rec
         )
-        
+
         # Recommendation header
         if descr_rec or general_rec:
             self.recommendations_header_2016 = self.assessment_header_template(
@@ -1467,7 +1564,7 @@ class NationalDescriptorArticleView2016(NationalDescriptorArticleView):
             ges_descriptor=ges_descriptor,
             report_on_ms=report_on_ms,
             region_subregion=region_subregion,
-            based_on_report=based_on_report,         
+            based_on_report=based_on_report,
             report_by=report_by,
             assess_date=report_date,
             report_access=report_access
