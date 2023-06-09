@@ -292,6 +292,74 @@ class MSFDReportingHistoryMixin(object):
         return res[-1]
 
 
+class AssessmentPDFMixin(object):
+    assessment_data_2018_tpl = Template('./pt/assessment-data-2022.pt')
+    show_file_version = False
+    pdf_template = Template("./pt/assessment-pdf.pt")
+    enable_pdf_download = True
+
+    def pdf_name(self):
+        fname = "{}-{}-{}-{}-{}".format(
+            self.country_name, self.country_region_code, self.descriptor,
+            self.article, str(datetime.now().date())
+        )
+
+        return fname
+
+    def _get_toc(self):
+        xsl_file = resource_filename('wise.msfd', 'data/pdf_toc.xsl'),
+
+        toc = {"xsl-style-sheet": xsl_file}
+
+        return toc
+
+    def _get_css(self):
+        return [
+            resource_filename('wise.msfd',
+                              'static/wise/dist/css/compliance.css'),
+            resource_filename('wise.msfd',
+                              'static/wise/dist/css/pdf_export.css'),
+        ]
+
+    def pdf_html(self):
+        return self.pdf_template()
+
+    def download_pdf(self):
+        options = {
+            'margin-top': '0.5in',
+            'margin-right': '0.5in',
+            'margin-bottom': '0.5in',
+            'margin-left': '0.5in',
+            'footer-font-size': '7',
+            'footer-right': '[page]',
+            'encoding': "UTF-8",
+            'load-error-handling': 'ignore',
+            # 'load-media-error-handling': 'ignore'
+        }
+        css = self._get_css()
+        cover = ""  # self._get_cover()
+        toc = self._get_toc()
+        path_wkhtmltopdf = '/plone/instance/parts/wkhtmltopdf/wkhtmltopdf'
+        config = pdfkit.configuration(wkhtmltopdf=path_wkhtmltopdf)
+
+        doc = pdfkit.from_string(
+            self.pdf_html(), False, options=options,
+            cover="",
+            toc=toc,
+            css=css,
+            cover_first=True,
+            configuration=config
+        )
+        sh = self.request.response.setHeader
+
+        sh('Content-Type', 'application/pdf')
+
+        sh('Content-Disposition',
+           'attachment; filename=%s.pdf' % self.pdf_name())
+
+        return doc
+
+
 @implementer(ICountryStartReports)
 class NatDescCountryOverviewReports(NationalDescriptorCountryOverview):
     """ Class declaration needed to be able to override HTML head title """
@@ -542,8 +610,12 @@ class NatDescCountryOverviewReports(NationalDescriptorCountryOverview):
 
 @implementer(ICountryStartAssessments)
 class NatDescCountryOverviewAssessments(NationalDescriptorCountryOverview,
-                                        MSFDReportingHistoryMixin):
+                                        MSFDReportingHistoryMixin,
+                                        AssessmentPDFMixin):
     """ Class declaration needed to be able to override HTML head title """
+
+    questions = NAT_DESC_QUESTIONS
+    pdf_template = Template("./pt/assessment-pdf.pt")
 
     def get_url_art12_2012(self):
         article = 'Article 12 (Art.8-9-10)'
@@ -571,6 +643,77 @@ class NatDescCountryOverviewAssessments(NationalDescriptorCountryOverview,
 
         return self.get_msfd_url(article, country_code,
                                  report_type, task_product)
+
+    def pdf_name(self):
+        fname = "{}-{}".format(
+            self.country_name, str(datetime.now().date())
+        )
+
+        return fname
+    
+    def descriptor_obj(self, descriptor):
+        return get_descriptor(descriptor.upper())
+
+    def pdf_html(self):
+        result = []
+
+        region_folder = self.get_regions()[0]
+
+        # cross cutting here
+        # art13 completeness here
+        # art 13 per descriptor
+        for descr_id, descriptor_folder in region_folder.contentItems():
+            if descr_id == 'd1':
+                continue
+
+            result.append("<h2>{}</h2>".format(descr_id.upper()))
+            art13_folder = descriptor_folder['art13']
+
+            data = art13_folder.saved_assessment_data.last()
+            elements = self.questions['Art13'][0].get_all_assessed_elements(
+                self.descriptor_obj(descr_id),
+                muids=[]  #self.muids
+            )
+
+            article_weights = ARTICLE_WEIGHTS
+            self.section = ''
+            assessment = format_assessment_data_2022(
+                'Art13',
+                elements,
+                self.questions['Art13'],
+                [],
+                data,
+                self.descriptor_obj(descr_id),
+                article_weights,
+                self
+            )
+            assessment_formatted = assessment
+            progress_assessment = data.get(
+                "{}_{}".format('Art13', "progress"), "-")
+            
+            try:
+                result.append(self.pdf_template(assessment_formatted=assessment_formatted, article='Art13', progress_assessment=progress_assessment))
+            except:
+                import pdb; pdb.set_trace()
+
+            
+        # art14 completeness here
+        # art 14 per descriptor
+        for descr_id, descriptor_folder in region_folder.contentItems():
+            if descr_id == 'd1':
+                continue
+
+            art14_folder = descriptor_folder['art14']
+
+            view = NationalDescriptorArticleView2022
+
+        return "".join(result)
+
+    def __call__(self):
+        if 'download_pdf' in self.request.form:
+            return self.download_pdf()
+
+        return self.index()
 
 
 def get_crit_val(question, element, descriptor):
@@ -776,7 +919,7 @@ def format_assessment_data_2022(article, elements, questions, muids, data,
 
         if question.use_criteria == 'none':
             field_title = u'All criteria'
-            if self.article in ('Art13', 'Art14', 'Art1314CrossCutting',
+            if article in ('Art13', 'Art14', 'Art1314CrossCutting',
                                 'Art13Completeness', 'Art14Completeness'):
                 field_title = u'Response options'
 
@@ -1091,9 +1234,6 @@ class NationalDescriptorArticleView(BaseView, AssessmentDataMixin):
         self.progress_assessment = data.get(
             "{}_{}".format(self.article, "progress"), "-")
 
-        if 'download_pdf' in self.request.form:
-            return self.download_pdf()
-
         assessment.phase_overall_scores.coherence = self.get_coherence_data(
             self.country_region_code, self.descriptor, self.article
         )
@@ -1150,74 +1290,8 @@ class NationalDescriptorArticleView(BaseView, AssessmentDataMixin):
         return self.index()
 
 
-class AssessmentPDFMixin(object):
-    assessment_data_2018_tpl = Template('./pt/assessment-data-2022.pt')
-    show_file_version = False
-    pdf_template = Template("./pt/assessment-pdf.pt")
-    enable_pdf_download = True
-
-    def pdf_name(self):
-        fname = "{}-{}-{}-{}-{}".format(
-            self.country_name, self.country_region_code, self.descriptor,
-            self.article, str(datetime.now().date())
-        )
-
-        return fname
-
-    def _get_toc(self):
-        xsl_file = resource_filename('wise.msfd', 'data/pdf_toc.xsl'),
-
-        toc = {"xsl-style-sheet": xsl_file}
-
-        return toc
-
-    def _get_css(self):
-        return [
-            resource_filename('wise.msfd',
-                              'static/wise/dist/css/compliance.css'),
-            resource_filename('wise.msfd',
-                              'static/wise/dist/css/pdf_export.css'),
-        ]
-
-    def download_pdf(self):
-        options = {
-            'margin-top': '0.5in',
-            'margin-right': '0.5in',
-            'margin-bottom': '0.5in',
-            'margin-left': '0.5in',
-            'footer-font-size': '7',
-            'footer-right': '[page]',
-            'encoding': "UTF-8",
-            'load-error-handling': 'ignore',
-            # 'load-media-error-handling': 'ignore'
-        }
-        css = self._get_css()
-        cover = ""  # self._get_cover()
-        toc = self._get_toc()
-        path_wkhtmltopdf = '/plone/instance/parts/wkhtmltopdf/wkhtmltopdf'
-        config = pdfkit.configuration(wkhtmltopdf=path_wkhtmltopdf)
-
-        doc = pdfkit.from_string(
-            self.pdf_template(), False, options=options,
-            cover="",
-            toc=toc,
-            css=css,
-            cover_first=True,
-            configuration=config
-        )
-        sh = self.request.response.setHeader
-
-        sh('Content-Type', 'application/pdf')
-
-        sh('Content-Disposition',
-           'attachment; filename=%s.pdf' % self.pdf_name())
-
-        return doc
-
-
 @implementer(INationaldescriptorArticleView)
-class NationalDescriptorArticleView2022(NationalDescriptorArticleView,
-                                        AssessmentPDFMixin):
+class NationalDescriptorArticleView2022(NationalDescriptorArticleView):
     """"""
 
     assessment_data_2018_tpl = Template('./pt/assessment-data-2022.pt')
@@ -1240,14 +1314,12 @@ class NationalDescriptorArticleView2022(NationalDescriptorArticleView,
 
 
 @implementer(INationaldescriptorArticleViewCrossCutting)
-class NationalDescriptorArticleViewCrossCutting(NationalDescriptorArticleView,
-                                                AssessmentPDFMixin):
+class NationalDescriptorArticleViewCrossCutting(NationalDescriptorArticleView):
     assessment_data_2018_tpl = Template(
         './pt/assessment-data-2022-cross-cutting.pt')
     summary_fields = summary_fields_2016_cross
     show_file_version = False
     enable_pdf_download = True
-    pdf_template = Template("./pt/assessment-pdf-cross.pt")
 
     def pdf_name(self):
         fname = "{}-{}-{}".format(
@@ -1354,9 +1426,6 @@ class NationalDescriptorArticleViewCrossCutting(NationalDescriptorArticleView,
         self.progress_assessment = data.get(
             "{}_{}".format(self.article, "progress"), "-")
 
-        if 'download_pdf' in self.request.form:
-            return self.download_pdf()
-
         self.assessment_data_2018_html = self.assessment_data_2018_tpl(
             assessment=assessment,
             score_2012=score_2012,
@@ -1396,14 +1465,12 @@ class NationalDescriptorArticleViewCrossCutting(NationalDescriptorArticleView,
 
 @implementer(INationaldescriptorArticleViewCrossCutting)
 class NationalDescriptorArticleViewCompleteness(
-        NationalDescriptorArticleViewCrossCutting,
-        AssessmentPDFMixin):
+        NationalDescriptorArticleViewCrossCutting):
 
     assessment_data_2018_tpl = Template(
         './pt/assessment-data-2022-completeness.pt')
     show_file_version = False
     enable_pdf_download = True
-    pdf_template = Template("./pt/assessment-pdf-completeness.pt")
 
     @property
     def article(self):

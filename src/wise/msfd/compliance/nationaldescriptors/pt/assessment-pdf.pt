@@ -1,8 +1,6 @@
-<div class="article-assessment-pdf" tal:define="assessment view/assessment_formatted">
-    <h1 class="report-title" tal:content="structure view/title">Assessment</h1>
-
+<div class="article-assessment-pdf" tal:define="assessment options/assessment_formatted">
     <div tal:repeat="row assessment/answers">
-        <h2 tal:content="row/question"></h2>
+        <h3 tal:content="row/question"></h3>
         <div>
             <tal:rep tal:repeat="value row/values">
                 <p>
@@ -14,20 +12,20 @@
         <p><b>Summary</b></p>
         <div tal:content="structure row/summary">Summary</div>
     </div>
-    <h2>Assessment summary, progress assessment and recommendations</h2>
+    <h3>Assessment summary, progress assessment and recommendations</h3>
 
     <div class="form-assessment-summary">
-        <h3 tal:condition="python: view.article == 'Art13'">Article 13 – Adequacy assessment conclusions</h3>
-        <h3 tal:condition="python: view.article == 'Art14'">Article 14 – Adequacy assessment conclusions</h3>
-        <div tal:content="structure python: hasattr(assessment, 'assessment_summary') and assessment.assessment_summary.raw or '-'"></div>
-        <h3>Progress since 2016</h3>
-        <div tal:content="structure python: hasattr(view, 'progress_assessment') and view.progress_assessment.raw or '-'"></div>
-        <h3>Recommendations for Member State</h3>
-        <div tal:content="structure python: hasattr(assessment, 'recommendations') and assessment.recommendations.raw or '-'"></div>
+        <h4 tal:condition="python: options['article'] == 'Art13'">Article 13 – Adequacy assessment conclusions</h4>
+        <h4 tal:condition="python: options['article'] == 'Art14'">Article 14 – Adequacy assessment conclusions</h4>
+        <div tal:content="structure python: getattr(assessment.assessment_summary, 'raw', '-')"></div>
+        <h4>Progress since 2016</h4>
+        <div tal:content="structure python: getattr(options['progress_assessment'], 'raw', '-')"></div>
+        <h4>Recommendations for Member State</h4>
+        <div tal:content="structure python: getattr(assessment.recommendations, 'raw', '-')"></div>
     </div>
 
     <div tal:define="phase_score python: assessment.phase_overall_scores">
-        <h2>Overall scores</h2>
+        <h3>Overall scores</h3>
         <div tal:define="conclusion python: phase_score.adequacy['conclusion'][1];
                     score_value python: phase_score.adequacy['conclusion'][0]">
             <b>2022 Adequacy</b>: <span tal:content="python: '{} ({})'.format(conclusion, score_value)"></span></div>

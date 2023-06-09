@@ -33,6 +33,12 @@
             </button>
           </div>
 
+          <div id="download-report-data-form">
+            <form method="POST" action="" tal:attributes="action request/getURL">
+              <button name="download_pdf" class="btn btn-primary">Download Art. 13 and Art. 14 as PDF</button>
+            </form>
+          </div>
+
           <div class="process-state-phase-form" tal:condition="False">
             <form class="process-state"
               method="GET"

@@ -96,12 +96,6 @@
             </ul>
           </div>
 
-          <div id="download-report-data-form" tal:condition="view/enable_pdf_download">
-            <form method="POST" action="" tal:attributes="action request/getURL">
-              <button name="download_pdf" class="btn btn-primary">Download as PDF</button>
-            </form>
-          </div>
-
           <div class="asts-header-data">
             <h3 id="assessment-2018" tal:content="python: '{} Assessment'.format(year_2018)">2018 Assessment</h3>
             <div class="ast-header-data">
