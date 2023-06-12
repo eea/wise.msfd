@@ -733,9 +733,13 @@ class NatDescCountryOverviewAssessments(NationalDescriptorCountryOverview,
                 continue
 
             result.append("<h3>{}</h3>".format(descr_id.upper()))
-            art13_folder = descriptor_folder['art13']
+            if descr_id.startswith('d1.'):
+                art13_folder = region_folder['d1.1']['art13']
+            else:
+                art13_folder = descriptor_folder['art13']
 
             data = art13_folder.saved_assessment_data.last()
+
             elements = self.questions['Art13'][0].get_all_assessed_elements(
                 self.descriptor_obj(descr_id),
                 muids=[]  #self.muids
@@ -802,9 +806,12 @@ class NatDescCountryOverviewAssessments(NationalDescriptorCountryOverview,
                 continue
 
             result.append("<h3>{}</h3>".format(descr_id.upper()))
-            art13_folder = descriptor_folder['art14']
+            if descr_id.startswith('d1.'):
+                art14_folder = region_folder['d1.1']['art14']
+            else:
+                art14_folder = descriptor_folder['art14']
 
-            data = art13_folder.saved_assessment_data.last()
+            data = art14_folder.saved_assessment_data.last()
             elements = self.questions['Art14'][0].get_all_assessed_elements(
                 self.descriptor_obj(descr_id),
                 muids=[]  #self.muids
