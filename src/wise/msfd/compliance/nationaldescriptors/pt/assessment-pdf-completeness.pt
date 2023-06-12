@@ -1,6 +1,8 @@
-<div class="article-assessment-pdf" tal:define="assessment view/assessment_formatted">
-    <h1 class="report-title" tal:content="structure view/title">Assessment</h1>
-
+<div class="article-assessment-pdf" tal:define="assessment options/assessment_formatted">
+    <tal:cond tal:condition="python: options['article'] == 'Art13Completeness'">
+        <h3>Structure and logic of the POM text report</h3>
+        <div tal:content="structure python: getattr(options['structure'], 'raw', '-')"></div>
+    </tal:cond>
     <div tal:repeat="row assessment/answers">
         <h2 tal:content="row/question"></h2>
         <div>
@@ -17,11 +19,11 @@
     <h2>Assessment summary, progress assessment and recommendations</h2>
 
     <div class="form-assessment-summary">
-        <h3 tal:condition="python: view.article == 'Art13Completeness'">Article 13 – Completeness assessment conclusions</h3>
-        <h3 tal:condition="python: view.article == 'Art14Completeness'">Article 14 – Completeness assessment conclusions</h3>
-        <div tal:content="structure python: hasattr(assessment, 'assessment_summary') and assessment.assessment_summary.raw or '-'"></div>
+        <h3 tal:condition="python: options['article'] == 'Art13Completeness'">Article 13 – Completeness assessment conclusions</h3>
+        <h3 tal:condition="python: options['article'] == 'Art14Completeness'">Article 14 – Completeness assessment conclusions</h3>
+        <div tal:content="structure python: getattr(assessment.assessment_summary, 'raw', '-')"></div>
         <h3>Recommendations for Member State</h3>
-        <div tal:content="structure python: hasattr(assessment, 'recommendations') and assessment.recommendations.raw or '-'"></div>
+        <div tal:content="structure python: getattr(assessment.recommendations, 'raw', '-')"></div>
     </div>
 
     <div tal:define="phase_score python: assessment.phase_overall_scores">

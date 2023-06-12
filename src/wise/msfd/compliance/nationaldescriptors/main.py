@@ -616,6 +616,8 @@ class NatDescCountryOverviewAssessments(NationalDescriptorCountryOverview,
 
     questions = NAT_DESC_QUESTIONS
     pdf_template = Template("./pt/assessment-pdf.pt")
+    pdf_template_cross = Template("./pt/assessment-pdf-cross.pt")
+    pdf_template_completeness = Template("./pt/assessment-pdf-completeness.pt")
 
     def get_url_art12_2012(self):
         article = 'Article 12 (Art.8-9-10)'
@@ -658,15 +660,79 @@ class NatDescCountryOverviewAssessments(NationalDescriptorCountryOverview,
         result = []
 
         region_folder = self.get_regions()[0]
+        
+        result.append("<h1>{} - Assessment of PoM</h1>".format(self.country_name))
 
         # cross cutting here
+        result.append("<h2>1. {}</h2>".format("Cross cutting"))
+        cross_cutting_folder = self.context['cross-cutting-2022']
+
+        data = cross_cutting_folder.saved_assessment_data.last()
+        elements = self.questions['Art1314CrossCutting'][0].get_all_assessed_elements(
+            'DCrossCutting',
+            muids=[]  #self.muids
+        )
+
+        article_weights = ARTICLE_WEIGHTS
+        self.section = ''
+        assessment = format_assessment_data_2022(
+            'Art1314CrossCutting',
+            elements,
+            self.questions['Art1314CrossCutting'],
+            [],
+            data,
+            'DCrossCutting',
+            article_weights,
+            self
+        )
+        assessment_formatted = assessment
+        progress_assessment = data.get(
+            "{}_{}".format('Art1314CrossCutting', "progress"), "-")
+        
+        result.append(self.pdf_template_cross(
+            assessment_formatted=assessment_formatted, 
+            progress_assessment=progress_assessment))
+
         # art13 completeness here
+        result.append("<h2>2. {}</h2>".format("Article 13 completeness"))
+
+        completeness_folder = self.context['art13-completeness-2022']
+
+        data = completeness_folder.saved_assessment_data.last()
+        elements = self.questions['Art13Completeness'][0].get_all_assessed_elements(
+            'Completeness',
+            muids=[]  #self.muids
+        )
+
+        article_weights = ARTICLE_WEIGHTS
+        self.section = ''
+        assessment = format_assessment_data_2022(
+            'Art13Completeness',
+            elements,
+            self.questions['Art13Completeness'],
+            [],
+            data,
+            'Completeness',
+            article_weights,
+            self
+        )
+        assessment_formatted = assessment
+        structure = data.get(
+            "{}_{}".format('Art13Completeness', "structure"), "-")
+        
+        result.append(self.pdf_template_completeness(
+            assessment_formatted=assessment_formatted, 
+            article='Art13Completeness', 
+            structure=structure))
+
         # art 13 per descriptor
+        result.append("<h2>3. {}</h2>".format("Article 13 per descriptor"))
+
         for descr_id, descriptor_folder in region_folder.contentItems():
             if descr_id == 'd1':
                 continue
 
-            result.append("<h2>{}</h2>".format(descr_id.upper()))
+            result.append("<h3>{}</h3>".format(descr_id.upper()))
             art13_folder = descriptor_folder['art13']
 
             data = art13_folder.saved_assessment_data.last()
@@ -691,21 +757,79 @@ class NatDescCountryOverviewAssessments(NationalDescriptorCountryOverview,
             progress_assessment = data.get(
                 "{}_{}".format('Art13', "progress"), "-")
             
-            try:
-                result.append(self.pdf_template(assessment_formatted=assessment_formatted, article='Art13', progress_assessment=progress_assessment))
-            except:
-                import pdb; pdb.set_trace()
-
+            result.append(self.pdf_template(
+                assessment_formatted=assessment_formatted, 
+                article='Art13', 
+                progress_assessment=progress_assessment))
             
         # art14 completeness here
+        result.append("<h2>4. {}</h2>".format("Article 14 completeness"))
+
+        completeness_folder = self.context['art14-completeness-2022']
+
+        data = completeness_folder.saved_assessment_data.last()
+        elements = self.questions['Art14Completeness'][0].get_all_assessed_elements(
+            'Completeness',
+            muids=[]  #self.muids
+        )
+
+        article_weights = ARTICLE_WEIGHTS
+        self.section = ''
+        assessment = format_assessment_data_2022(
+            'Art14Completeness',
+            elements,
+            self.questions['Art14Completeness'],
+            [],
+            data,
+            'Completeness',
+            article_weights,
+            self
+        )
+        assessment_formatted = assessment
+        progress_assessment = data.get(
+            "{}_{}".format('Art14Completeness', "progress"), "-")
+        
+        result.append(self.pdf_template_completeness(
+            assessment_formatted=assessment_formatted, 
+            article='Art14Completeness', 
+            progress_assessment=progress_assessment))        
+            
         # art 14 per descriptor
+        result.append("<h2>5. {}</h2>".format("Article 14 per descriptor"))
+
         for descr_id, descriptor_folder in region_folder.contentItems():
             if descr_id == 'd1':
                 continue
 
-            art14_folder = descriptor_folder['art14']
+            result.append("<h3>{}</h3>".format(descr_id.upper()))
+            art13_folder = descriptor_folder['art14']
 
-            view = NationalDescriptorArticleView2022
+            data = art13_folder.saved_assessment_data.last()
+            elements = self.questions['Art14'][0].get_all_assessed_elements(
+                self.descriptor_obj(descr_id),
+                muids=[]  #self.muids
+            )
+
+            article_weights = ARTICLE_WEIGHTS
+            self.section = ''
+            assessment = format_assessment_data_2022(
+                'Art14',
+                elements,
+                self.questions['Art14'],
+                [],
+                data,
+                self.descriptor_obj(descr_id),
+                article_weights,
+                self
+            )
+            assessment_formatted = assessment
+            progress_assessment = data.get(
+                "{}_{}".format('Art14', "progress"), "-")
+            
+            result.append(self.pdf_template(
+                assessment_formatted=assessment_formatted, 
+                article='Art14', 
+                progress_assessment=progress_assessment))
 
         return "".join(result)
 
