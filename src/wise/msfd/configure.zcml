@@ -15,6 +15,16 @@
   <include file="profiles.zcml" />
   <include file="utility.zcml" />
 
+  <plone:behavior
+    name="wise.spmeasure"
+    title="SPMeasure fields"
+    description="Adds Measure form fields"
+    factory=".behavior.SPMeasureFields"
+    provides=".interfaces.ISPMeasureFields"
+    for="plone.dexterity.interfaces.IDexterityContent"
+    marker=".interfaces.ISPMeasureFields"
+    />
+
   <browser:page
     for="*"
     name="wise-macros"

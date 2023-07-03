@@ -79,6 +79,7 @@
   <element value="publication_report"/>
   <element value="spatial_dataset"/>
   <element value="visualization"/>
+  <element value="spmeasures"/>
  </property>
  <property name="allow_discussion">False</property>
  <property name="default_view">listing_view</property>
