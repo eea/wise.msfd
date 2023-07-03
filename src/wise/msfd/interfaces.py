@@ -4,6 +4,7 @@ from zope.schema import Choice, List  # Int, Text, TextLine
 from plone.supermodel import model
 from plone.autoform.interfaces import IFormFieldProvider
 from zope.schema import Text
+from zope.interface import provider
 
 # from plone.app.textfield import RichText
 
