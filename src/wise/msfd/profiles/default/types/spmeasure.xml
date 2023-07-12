@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <object name="spmeasure" meta_type="Dexterity FTI"
    i18n:domain="plone" xmlns:i18n="http://xml.zope.org/namespaces/i18n">
- <property name="title" i18n:translate="">Shipping and Ports Measures</property>
+ <property name="title" i18n:translate="">Shipping and Ports Measure</property>
  <property name="description" i18n:translate=""></property>
  <property name="icon_expr">string:${portal_url}/document_icon.png</property>
  <property name="factory">spmeasure</property>
