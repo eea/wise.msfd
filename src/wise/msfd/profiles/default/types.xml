@@ -115,4 +115,5 @@
  <object name="CompositePage" meta_type="Dexterity FTI"/>
  <object name="clonable_type" meta_type="Dexterity FTI"/>
  <object name="dashboard" meta_type="Dexterity FTI"/>
+ <object name="spmeasure" meta_type="Dexterity FTI"/>
 </object>
