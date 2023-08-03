@@ -4,6 +4,7 @@ from zope.schema import Choice, List  # Int, Text, TextLine
 from plone.supermodel import model
 from plone.autoform.interfaces import IFormFieldProvider
 from zope.interface import provider
+from zope.schema import Text
 
 class IMainForm(Interface):
     """ A marker interface to easily identify main forms
@@ -43,7 +44,7 @@ class IMarineUnitIDsSelect(Interface):
 class ISPMeasureFields(model.Schema):
     """Fields for SPMeasure """
 
-    measure_name = List(title=u"Measure name", description=u"", required=False)
+    measure_name = Text(title=u"Measure name", description=u"", required=False)
     sector = List(title=u"Sector", description=u"", required=False)
     use = List(title=u"Use or activity", description=u"", required=False)
     origin = List(title=u"Origin of the measure",
