@@ -6,7 +6,6 @@ from .interfaces import (ISPMeasureFields)
 class SPMeasureFields(MetadataBase):
     """SPMeasure fields"""
 
-    measure_name = DCFieldProperty(ISPMeasureFields["measure_name"])
     sector = DCFieldProperty(ISPMeasureFields["sector"])
     use = DCFieldProperty(ISPMeasureFields["use"])
     origin = DCFieldProperty(ISPMeasureFields["origin"])

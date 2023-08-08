@@ -44,7 +44,6 @@ class IMarineUnitIDsSelect(Interface):
 class ISPMeasureFields(model.Schema):
     """Fields for SPMeasure """
 
-    measure_name = Text(title=u"Measure name", description=u"", required=False)
     sector = List(title=u"Sector", description=u"", required=False)
     use = List(title=u"Use or activity", description=u"", required=False)
     origin = List(title=u"Origin of the measure",
