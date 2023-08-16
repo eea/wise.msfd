@@ -6,6 +6,7 @@ from plone.autoform.interfaces import IFormFieldProvider
 from zope.interface import provider
 from zope.schema import Text
 
+
 class IMainForm(Interface):
     """ A marker interface to easily identify main forms
     """
@@ -78,3 +79,95 @@ class ISPMeasureFields(model.Schema):
                          description=u"", required=False)
     ranking = List(title=u"Ranking", description=u"", required=False)
     season = List(title=u"Season", description=u"", required=False)
+    approaching_areas = List(title=u"Approaching Areas",
+                             description=u"", required=False)
+    areas_to_be_avoided = List(
+        title=u"Areas To Be Avoided", description=u"", required=False)
+    descriptors = List(title=u"Descriptors", description=u"", required=False)
+    ecological_impacts = List(
+        title=u"Ecological Impacts", description=u"", required=False)
+    future_scenarios = List(title=u"Future Scenarios",
+                            description=u"", required=False)
+    effect_on_hydromorphology = List(
+        title=u"Effect On Hydromorphology", description=u"", required=False)
+    ktms_it_links_to = List(title=u"Ktms It Links To",
+                            description=u"", required=False)
+    links_to_existing_policies = List(
+        title=u"Links To Existing Policies", description=u"", required=False)
+    msfd_spatial_scope = List(
+        title=u"Msfd Spatial Scope", description=u"", required=False)
+    mspd_implementation_status = List(
+        title=u"Mspd Implementation Status", description=u"", required=False)
+    nature_of_physical_modification = List(
+        title=u"Nature Of Physical Modification", description=u"", required=False)
+    source = List(title=u"Source", description=u"", required=False)
+    authority = List(title=u"Authority", description=u"", required=False)
+    general_view = List(title=u"General View", description=u"", required=False)
+    ports = List(title=u"Ports", description=u"", required=False)
+    future_expectations = List(
+        title=u"Future Expectations", description=u"", required=False)
+    safety_manner = List(title=u"Safety Manner",
+                         description=u"", required=False)
+    objective = List(title=u"Objective", description=u"", required=False)
+    categories = List(title=u"Categories", description=u"", required=False)
+    precautionary_areas = List(
+        title=u"Precautionary Areas", description=u"", required=False)
+    priority_areas = List(title=u"Priority Areas",
+                          description=u"", required=False)
+    relevant_targets = List(title=u"Relevant Targets",
+                            description=u"", required=False)
+    relevant_features_from_msfd_annex_iii = List(
+        title=u"Relevant Features From Msfd Annex Iii", description=u"", required=False)
+    region = List(title=u"Region", description=u"", required=False)
+    shipping_tackled = List(title=u"Shipping Tackled",
+                            description=u"", required=False)
+    traffic_separation_scheme = List(
+        title=u"Traffic Separation Scheme", description=u"", required=False)
+    type_of_pressure = List(title=u"Type Of Pressure",
+                            description=u"", required=False)
+    approaching_areas = List(title=u"Approaching Areas",
+                             description=u"", required=False)
+    areas_to_be_avoided = List(
+        title=u"Areas To Be Avoided", description=u"", required=False)
+    descriptors = List(title=u"Descriptors", description=u"", required=False)
+    ecological_impacts = List(
+        title=u"Ecological Impacts", description=u"", required=False)
+    future_scenarios = List(title=u"Future Scenarios",
+                            description=u"", required=False)
+    effect_on_hydromorphology = List(
+        title=u"Effect On Hydromorphology", description=u"", required=False)
+    ktms_it_links_to = List(title=u"Ktms It Links To",
+                            description=u"", required=False)
+    links_to_existing_policies = List(
+        title=u"Links To Existing Policies", description=u"", required=False)
+    msfd_spatial_scope = List(
+        title=u"Msfd Spatial Scope", description=u"", required=False)
+    mspd_implementation_status = List(
+        title=u"Mspd Implementation Status", description=u"", required=False)
+    nature_of_physical_modification = List(
+        title=u"Nature Of Physical Modification", description=u"", required=False)
+    source = List(title=u"Source", description=u"", required=False)
+    authority = List(title=u"Authority", description=u"", required=False)
+    general_view = List(title=u"General View", description=u"", required=False)
+    ports = List(title=u"Ports", description=u"", required=False)
+    future_expectations = List(
+        title=u"Future Expectations", description=u"", required=False)
+    safety_manner = List(title=u"Safety Manner",
+                         description=u"", required=False)
+    objective = List(title=u"Objective", description=u"", required=False)
+    categories = List(title=u"Categories", description=u"", required=False)
+    precautionary_areas = List(
+        title=u"Precautionary Areas", description=u"", required=False)
+    priority_areas = List(title=u"Priority Areas",
+                          description=u"", required=False)
+    relevant_targets = List(title=u"Relevant Targets",
+                            description=u"", required=False)
+    relevant_features_from_msfd_annex_iii = List(
+        title=u"Relevant Features From Msfd Annex Iii", description=u"", required=False)
+    region = List(title=u"Region", description=u"", required=False)
+    shipping_tackled = List(title=u"Shipping Tackled",
+                            description=u"", required=False)
+    traffic_separation_scheme = List(
+        title=u"Traffic Separation Scheme", description=u"", required=False)
+    type_of_pressure = List(title=u"Type Of Pressure",
+                            description=u"", required=False)
