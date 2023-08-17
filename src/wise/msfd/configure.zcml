@@ -25,6 +25,11 @@
     for="plone.dexterity.interfaces.IDexterityContent"
     marker=".interfaces.ISPMeasureFields"
     />
+  
+  <subscriber
+    for=".interfaces.ISPMeasureFields
+         zope.lifecycleevent.interfaces.IObjectModifiedEvent"
+    handler=".behavior.handle_origin_change" />
 
   <browser:page
     for="*"

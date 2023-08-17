@@ -1,6 +1,58 @@
 from plone.app.dexterity.behaviors.metadata import (
     DCFieldProperty, MetadataBase)
 from .interfaces import (ISPMeasureFields)
+from zope.lifecycleevent.interfaces import IObjectModifiedEvent
+from zope.component import adapter
+from plone import api
+
+@adapter(ISPMeasureFields, IObjectModifiedEvent)
+def handle_origin_change(obj, event):
+    # List of fields to reset when `origin` changes
+    fields_to_reset = [
+        'nature_of_physical_modification',
+        'effect_on_hydromorphology',
+        'ecological_impacts',
+        'links_to_existing_policies',
+        'ktms_it_links_to',
+        'relevant_targets',
+        'relevant_features_from_msfd_annex_iii',
+        'msfd_spatial_scope',
+        'measure_purpose',
+        'measure_location',
+        'measure_response',
+        'measure_additional_info',
+        'pressure_type',
+        'pressure_name',
+        'ranking',
+        'region',
+        'mspd_implementation_status',
+        'shipping_tackled',
+        'traffic_separation_scheme',
+        'priority_areas',
+        'approaching_areas',
+        'precautionary_areas',
+        'areas_to_be_avoided',
+        'future_scenarios',
+        'source',
+        'authority',
+        'general_view',
+        'ports',
+        'future_expectations',
+        'safety_manner',
+        'objective',
+        'categories'
+    ]
+
+    # Check if the `origin` field has been changed
+    for descriptor in event.descriptions:
+        if descriptor.attributes and 'origin' in descriptor.attributes:
+            
+            # Reset the fields to empty lists
+            for field in fields_to_reset:
+                setattr(obj, field, [])
+
+            # Optional: Reindex the object if required
+            obj.reindexObject()
 
 
 class SPMeasureFields(MetadataBase):
