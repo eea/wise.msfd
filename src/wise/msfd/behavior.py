@@ -3,7 +3,6 @@ from plone.app.dexterity.behaviors.metadata import (
 from .interfaces import (ISPMeasureFields)
 from zope.lifecycleevent.interfaces import IObjectModifiedEvent
 from zope.component import adapter
-from plone import api
 
 @adapter(ISPMeasureFields, IObjectModifiedEvent)
 def handle_origin_change(obj, event):
