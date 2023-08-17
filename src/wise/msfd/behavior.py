@@ -4,6 +4,7 @@ from .interfaces import (ISPMeasureFields)
 from zope.lifecycleevent.interfaces import IObjectModifiedEvent
 from zope.component import adapter
 
+
 @adapter(ISPMeasureFields, IObjectModifiedEvent)
 def handle_origin_change(obj, event):
     # List of fields to reset when `origin` changes
@@ -44,8 +45,9 @@ def handle_origin_change(obj, event):
 
     # Check if the `origin` field has been changed
     for descriptor in event.descriptions:
-        if descriptor.attributes and 'origin' in descriptor.attributes:
-            
+
+        if descriptor.attributes and 'ISPMeasureFields.origin' in descriptor.attributes:
+
             # Reset the fields to empty lists
             for field in fields_to_reset:
                 setattr(obj, field, [])
@@ -79,29 +81,40 @@ class SPMeasureFields(MetadataBase):
     ranking = DCFieldProperty(ISPMeasureFields["ranking"])
     season = DCFieldProperty(ISPMeasureFields["season"])
     approaching_areas = DCFieldProperty(ISPMeasureFields["approaching_areas"])
-    areas_to_be_avoided = DCFieldProperty(ISPMeasureFields["areas_to_be_avoided"])
+    areas_to_be_avoided = DCFieldProperty(
+        ISPMeasureFields["areas_to_be_avoided"])
     descriptors = DCFieldProperty(ISPMeasureFields["descriptors"])
-    ecological_impacts = DCFieldProperty(ISPMeasureFields["ecological_impacts"])
+    ecological_impacts = DCFieldProperty(
+        ISPMeasureFields["ecological_impacts"])
     future_scenarios = DCFieldProperty(ISPMeasureFields["future_scenarios"])
-    effect_on_hydromorphology = DCFieldProperty(ISPMeasureFields["effect_on_hydromorphology"])
+    effect_on_hydromorphology = DCFieldProperty(
+        ISPMeasureFields["effect_on_hydromorphology"])
     ktms_it_links_to = DCFieldProperty(ISPMeasureFields["ktms_it_links_to"])
-    links_to_existing_policies = DCFieldProperty(ISPMeasureFields["links_to_existing_policies"])
-    msfd_spatial_scope = DCFieldProperty(ISPMeasureFields["msfd_spatial_scope"])
-    mspd_implementation_status = DCFieldProperty(ISPMeasureFields["mspd_implementation_status"])
-    nature_of_physical_modification = DCFieldProperty(ISPMeasureFields["nature_of_physical_modification"])
+    links_to_existing_policies = DCFieldProperty(
+        ISPMeasureFields["links_to_existing_policies"])
+    msfd_spatial_scope = DCFieldProperty(
+        ISPMeasureFields["msfd_spatial_scope"])
+    mspd_implementation_status = DCFieldProperty(
+        ISPMeasureFields["mspd_implementation_status"])
+    nature_of_physical_modification = DCFieldProperty(
+        ISPMeasureFields["nature_of_physical_modification"])
     source = DCFieldProperty(ISPMeasureFields["source"])
     authority = DCFieldProperty(ISPMeasureFields["authority"])
     general_view = DCFieldProperty(ISPMeasureFields["general_view"])
     ports = DCFieldProperty(ISPMeasureFields["ports"])
-    future_expectations = DCFieldProperty(ISPMeasureFields["future_expectations"])
+    future_expectations = DCFieldProperty(
+        ISPMeasureFields["future_expectations"])
     safety_manner = DCFieldProperty(ISPMeasureFields["safety_manner"])
     objective = DCFieldProperty(ISPMeasureFields["objective"])
     categories = DCFieldProperty(ISPMeasureFields["categories"])
-    precautionary_areas = DCFieldProperty(ISPMeasureFields["precautionary_areas"])
+    precautionary_areas = DCFieldProperty(
+        ISPMeasureFields["precautionary_areas"])
     priority_areas = DCFieldProperty(ISPMeasureFields["priority_areas"])
     relevant_targets = DCFieldProperty(ISPMeasureFields["relevant_targets"])
-    relevant_features_from_msfd_annex_iii = DCFieldProperty(ISPMeasureFields["relevant_features_from_msfd_annex_iii"])
+    relevant_features_from_msfd_annex_iii = DCFieldProperty(
+        ISPMeasureFields["relevant_features_from_msfd_annex_iii"])
     region = DCFieldProperty(ISPMeasureFields["region"])
     shipping_tackled = DCFieldProperty(ISPMeasureFields["shipping_tackled"])
-    traffic_separation_scheme = DCFieldProperty(ISPMeasureFields["traffic_separation_scheme"])
+    traffic_separation_scheme = DCFieldProperty(
+        ISPMeasureFields["traffic_separation_scheme"])
     type_of_pressure = DCFieldProperty(ISPMeasureFields["type_of_pressure"])
