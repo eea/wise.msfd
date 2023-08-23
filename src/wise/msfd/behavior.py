@@ -3,6 +3,8 @@ from plone.app.dexterity.behaviors.metadata import (
 from .interfaces import (ISPMeasureFields)
 from zope.lifecycleevent.interfaces import IObjectModifiedEvent
 from zope.component import adapter
+import traceback
+
 
 
 @adapter(ISPMeasureFields, IObjectModifiedEvent)
@@ -43,9 +45,13 @@ def handle_origin_change(obj, event):
         'categories'
     ]
 
+    stack = traceback.format_stack()
+    if any("collective.exportimport" in s for s in stack):
+        return
+
+
     # Check if the `origin` field has been changed
     for descriptor in event.descriptions:
-
         if descriptor.attributes and 'ISPMeasureFields.origin' in descriptor.attributes:
 
             # Reset the fields to empty lists
