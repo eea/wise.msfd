@@ -66,6 +66,7 @@ class SPMeasureFields(MetadataBase):
     """SPMeasure fields"""
 
     sector = DCFieldProperty(ISPMeasureFields["sector"])
+    code = DCFieldProperty(ISPMeasureFields["code"])
     use = DCFieldProperty(ISPMeasureFields["use"])
     origin = DCFieldProperty(ISPMeasureFields["origin"])
     nature = DCFieldProperty(ISPMeasureFields["nature"])

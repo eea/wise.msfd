@@ -47,6 +47,8 @@ class ISPMeasureFields(model.Schema):
 
     sector = List(title=u"Sector", description=u"", required=False)
     use = List(title=u"Use or activity", description=u"", required=False)
+    code = Text(title=u"Code", description=u"", required=False)
+
     origin = List(title=u"Origin of the measure",
                   description=u"", required=False)
     nature = List(title=u"Nature of the measure",
