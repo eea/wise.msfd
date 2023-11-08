@@ -587,6 +587,13 @@ def get_report_file_url(filename, country_code=''):
     if country_code:
         country_filter = "FILTER (?notation = '{}')".format(country_code)
 
+    if country_code in ('EL', 'GR'):
+        country_filter = "FILTER (?notation in ('GR', 'EL'))"
+
+    if country_code in ('LT', ):
+        if ',' in filename:
+            filename = filename.replace(',', '%2C')
+
     q = """
 PREFIX cr: <http://cr.eionet.europa.eu/ontologies/contreg.rdf#>
 PREFIX terms: <http://purl.org/dc/terms/>

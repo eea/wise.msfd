@@ -502,15 +502,20 @@ class NatDescCountryOverviewReports(NationalDescriptorCountryOverview):
 
         if desc_id.startswith('D1.'):
             all_ids.append('D1')
-
+        
         for row in self.art11_data:
             if row.CountryCode != country_code:
                 continue
 
             if row.Descriptor not in all_ids:
                 continue
+            
+            sub_regions = row.SubRegions or ''
 
-            regions_reported = set(row.SubRegions.split(','))
+            if not sub_regions:
+                return True
+
+            regions_reported = set(sub_regions.split(','))
 
             if regions_reported.intersection(set(region_names)):
                 return True
