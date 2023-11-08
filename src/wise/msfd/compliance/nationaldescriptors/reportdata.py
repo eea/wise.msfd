@@ -285,10 +285,10 @@ class ReportData2012(BaseView, BaseUtil):
     def get_report_filename(self, art=None):
         # needed in article report data implementations, to retrieve the file
         filename = get_report_filename(self.year,
-            self.country_code,
-            self.country_region_code,
-            art or self.article,
-            self.descriptor)
+                                       self.country_code,
+                                       self.country_region_code,
+                                       art or self.article,
+                                       self.descriptor)
 
         filename_normalized = filename
 
@@ -296,7 +296,7 @@ class ReportData2012(BaseView, BaseUtil):
             if isinstance(filename, (tuple, list)):
                 filename_normalized = [
                     FILENAME_FIX.sub('', fname)
-                    for fname in filename ]
+                    for fname in filename]
             else:
                 filename_normalized = FILENAME_FIX.sub('', filename)
 
@@ -356,7 +356,8 @@ class ReportData2012(BaseView, BaseUtil):
                                 worksheet.write(i, j + 1, "#".join(v_rows))
                                 continue
                             except:
-                                import pdb; pdb.set_trace()
+                                import pdb
+                                pdb.set_trace()
 
                         worksheet.write(i, j + 1, '')
 
@@ -407,11 +408,12 @@ class ReportData2012(BaseView, BaseUtil):
         multiple_source_files = False
 
         if filename:
-            if isinstance(filename, tuple):
+            if isinstance(filename, (tuple, list)):
                 multiple_source_files = True
                 try:
                     source_file = [
-                        (f, get_report_file_url(f, self.country_code) + '/manage_document')
+                        (f, get_report_file_url(
+                            f, self.country_code) + '/manage_document')
                         for f in filename
                     ]
                 except:
@@ -425,7 +427,8 @@ class ReportData2012(BaseView, BaseUtil):
                         logger.exception("Error in getting HTML Factsheet URL %s",
                                          url)
                 else:
-                    logger.warning("No factsheet url, filename is: %r", filename)
+                    logger.warning(
+                        "No factsheet url, filename is: %r", filename)
 
                 source_file = (filename, url + '/manage_document')
 
@@ -467,7 +470,10 @@ class ReportData2012(BaseView, BaseUtil):
 
         if not filename:
             f = self.filename
-            filename = isinstance(f, tuple) and f[0] or f
+            filename = isinstance(f, (tuple, list)) and f[0] or f
+        else:
+            filename = isinstance(
+                filename, (tuple, list)) and filename[0] or filename
 
         default = ReportingInformation('2013-04-30', 'Member State')
 
@@ -508,7 +514,7 @@ class ReportData2012Secondary(ReportData2012):
         )
 
         return title
-    
+
     @cache(get_reportdata_key, dependencies=['translation'])
     def get_report_data(self, filename):
         view = self.get_report_view(filename)
@@ -541,7 +547,7 @@ class ReportData2012Secondary(ReportData2012):
             # add worksheet with report header data
             worksheet = workbook.add_worksheet(
                 six.text_type('Report header' + region_code))
-            
+
             for i, (wtitle, wdata) in enumerate(report_header.items()):
                 wtitle = wtitle.title().replace('_', ' ')
 
@@ -576,7 +582,8 @@ class ReportData2012Secondary(ReportData2012):
                                 worksheet.write(i, j + 1, "#".join(v_rows))
                                 continue
                             except:
-                                import pdb; pdb.set_trace()
+                                import pdb
+                                pdb.set_trace()
 
                         worksheet.write(i, j + 1, '')
 
@@ -613,7 +620,7 @@ class ReportData2012Secondary(ReportData2012):
 
             rep_info = self.get_reporting_information(filename)
             report_header_data = self.get_report_header_data(
-                rep_info.reporters, source_file, factsheet, 
+                rep_info.reporters, source_file, factsheet,
                 rep_info.report_date, multiple_source_files
             )
             report_header_data['region_name'] = REGIONS[region_code]
@@ -621,23 +628,24 @@ class ReportData2012Secondary(ReportData2012):
             report_header_data['title'] = (
                 region_index == 0 and self.report_title or '')
             report_header = self.report_header_template(**report_header_data)
-            
+
             try:
                 # import pdb; pdb.set_trace()
                 report_data, report_data_rows = self.get_report_data(filename)
             except:
                 report_data, report_data_rows = 'Error in rendering report', []
-            
+
             download_rows[region_code] = report_data_rows["Report data"]
             download_headers[region_code] = report_header_data
             rendered_results.append(report_header + report_data)
 
         if 'download' in self.request.form:
 
-            return self.download(download_rows, download_headers)  # report_header_data
+            # report_header_data
+            return self.download(download_rows, download_headers)
 
         res = "<hr/>".join(rendered_results)
-        self.report_html = res + "" + trans_edit_html     
+        self.report_html = res + "" + trans_edit_html
 
         return self.index()
 
@@ -798,7 +806,7 @@ class ReportData2016(ReportData2012):
         #     assert self.descriptor == 'D1'
 
         print(("Will render report for: %s" % self.article))
-        
+
         self.filename = filename = self.get_report_filename()
         self.fileurl = fileurl = get_report_fileurl_art131418_2016(
             filename, self.country_code, self.country_region_code, self.article
@@ -1483,7 +1491,7 @@ The data is retrieved from the MSFD2018_production.V_ART8_ESA_2018 database view
 
             if not regions_reported_norm.intersection(set(region_names)):
                 continue
-            
+
             desc_reported = row.GEScomponent.split(';')
             # sometimes GEScomponents are separated by comma too
             # also split by comma
@@ -1497,7 +1505,7 @@ The data is retrieved from the MSFD2018_production.V_ART8_ESA_2018 database view
             res.append(row)
 
         return res
-        
+
     def get_data_from_view_Art14(self):
         t = sql2018.t_V_ART14_Exceptions_2022
 
@@ -1548,7 +1556,7 @@ The data is retrieved from the MSFD2018_production.V_ART8_ESA_2018 database view
 
             if not regions_reported_norm.intersection(set(region_names)):
                 continue
-            
+
             desc_reported = set(row.GEScomponent.split(';'))
             desc_reported = set([d.strip() for d in desc_reported])
 
@@ -1611,7 +1619,7 @@ The data is retrieved from the MSFD2018_production.V_ART8_ESA_2018 database view
             if data_by_mru:
                 data_by_region = defaultdict(list)
 
-                # group data by region, also filter items without 
+                # group data by region, also filter items without
                 # CostDegradation or UsesActivities data
                 for item in data_by_mru:
                     is_needed = has_cost_uses_data(item)
@@ -1849,7 +1857,7 @@ The data is retrieved from the MSFD2018_production.V_ART8_ESA_2018 database view
 
                             for item in v.rows:
                                 item_title = item
-                                
+
                                 if hasattr(item, 'name'):
                                     item_title = item.name
 
@@ -1865,18 +1873,19 @@ The data is retrieved from the MSFD2018_production.V_ART8_ESA_2018 database view
                         else:
                             if hasattr(v, 'name') and v.name:
                                 val = v.name
-                                
+
                                 if label_name in inverse_fields:
                                     val = v.title
-                                
+
                                 v = val
-                                
+
                             v = v and six.text_type(v) or ''
                             transl = get_translated(v, self.country_code) or v
-                        
+
                         worksheet.write(i, j + 1, transl or '')
                     except:
-                        import pdb; pdb.set_trace()
+                        import pdb
+                        pdb.set_trace()
 
         workbook.close()
         out.seek(0)
@@ -2164,7 +2173,6 @@ class ReportData2018Secondary(ReportData2018):
         url = self.context.absolute_url() + '/@@view-report-data-2018'
         return self.request.response.redirect(url)
 
-
     def get_translatable_data(self, view):
         res = []
 
@@ -2192,7 +2200,7 @@ class ReportData2018Secondary(ReportData2018):
 
         template = self.get_template(self.article)
         urls = get_all_report_filenames(self.country_code, self.article)
-        
+
         rendered_results = []
 
         # identify order of files, grouped by region. If multiple regions are
@@ -2238,7 +2246,8 @@ class ReportData2018Secondary(ReportData2018):
             else:
                 data_by_mru = {'no mru': data}
 
-            fields = get_report_definition(self.year, self.article).get_fields()
+            fields = get_report_definition(
+                self.year, self.article).get_fields()
 
             for mru, rows in data_by_mru.items():
                 _rows = items_to_rows(rows, fields)
