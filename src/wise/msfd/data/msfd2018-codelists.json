@@ -523,6 +523,10 @@
   ],
   "Countries": [
     {
+      "code": "AT",
+      "label": "Austria"
+    },
+    {
       "code": "BE",
       "label": "Belgium"
     },
@@ -565,6 +569,10 @@
     {
       "code": "HR",
       "label": "Croatia"
+    },
+    {
+      "code": "HU",
+      "label": "Hungary"
     },
     {
       "code": "IE",
