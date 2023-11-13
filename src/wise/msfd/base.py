@@ -290,8 +290,12 @@ class BaseUtil(object):
             return print_value(value)
 
         if field_name in TRANSFORMS:
-            value = value.strip()
-            
+            try:
+                value = value.strip()
+            except AttributeError:
+                # do not strip, value is not string
+                pass
+
             transformer = TRANSFORMS.get(field_name)
 
             return transformer(value)

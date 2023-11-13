@@ -16,8 +16,9 @@ COMMON_LABELS = {}                        # vocabulary of labels
 # Collection of label fixes, where the description/title for a value
 # is not appropriate
 LABEL_FIX = {
-    "ANS": "North-east Atlantic Ocean: Greater North Sea",
+    "ANS": "NE Atlantic: Greater North Sea",
     "CY": 'Cyprus',
+    "CZ": 'Czechia',
     'D4': '(Descriptor) D4 - Food webs',
     'D6': '(Descriptor) D6 - Sea-floor integrity'
 }
