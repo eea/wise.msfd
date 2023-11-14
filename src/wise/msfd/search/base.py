@@ -52,7 +52,7 @@ class ItemDisplayForm(EmbeddedForm):
             self.data['page'] = 0
 
         self.count, self.item = self.get_db_results()
-
+        
         if self.count == (int(self.data['page']) + 1):
             del self.actions['next']
 
@@ -106,15 +106,11 @@ class ItemDisplayForm(EmbeddedForm):
 
         return latest_ids
 
-    # def item_title(self, item):
-    #     state = inspect(item)
-    #
-    #     if state.identity:
-    #         id = state.identity[0]
-    #     else:
-    #         id = 0
-    #
-    #     return (item.__class__.__name__, id)
+    # def __call__(self):
+    #     import pdb; pdb.set_trace()
+    #     super(ItemDisplayForm, self).__call__()
+        
+    #     return self.template()
 
 
 class ItemDisplayForm2018(ItemDisplayForm):
@@ -286,7 +282,7 @@ class MainForm(BaseEnhancedForm, BasePublicPage, Form):
     def handle_continue(self, action):
         self.reset_page = True
 
-    @buttonAndHandler(u'Download as spreadsheet', name='download')
+    @buttonAndHandler(u'Download all data as spreadsheet', name='download')
     def handle_download(self, action):
         self.should_download = True
 
@@ -375,6 +371,8 @@ class MainForm(BaseEnhancedForm, BasePublicPage, Form):
 
         if hasattr(ctx, 'download_results'):
             return getattr(ctx, 'blacklist_labels', []), ctx.download_results
+        
+        return [], None
 
     def find_spreadsheet_title(self):
         """ Not used, just an experiment to provide custom spreadsheet titles

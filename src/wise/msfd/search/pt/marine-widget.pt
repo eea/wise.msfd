@@ -1,5 +1,7 @@
 <div xmlns="http://www.w3.org/1999/xhtml"
-       xmlns:tal="http://xml.zope.org/namespaces/tal" tal:condition="view/items" tal:on-error="nothing" tal:omit-tag="">
+       xmlns:tal="http://xml.zope.org/namespaces/tal" tal:condition="view/items" 
+       tal:on-error="string: Error"
+       tal:omit-tag="">
        <select id="" name="" class="" tabindex="" disabled="" multiple="" size="" tal:attributes="id view/id;
                         name string:${view/name}:list;
                         class view/klass;

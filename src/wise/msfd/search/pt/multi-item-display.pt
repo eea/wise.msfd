@@ -4,7 +4,6 @@
   id view/form_name">
 
   <metal:block use-macro="context/@@ploneform-macros/fields" />
-
   <tal:block tal:condition="python: view.item ">
     <div id="item-title-wrapper">
       <h3 id="article-id">
