@@ -166,24 +166,26 @@ def get_region_subregions_vb_factory_art6(context):
 
 
 @provider(IVocabularyFactory)
-@db.use_db_session('2012')
+# @db.use_db_session('2012')
 def get_member_states_vb_factory(context):
-    conditions = []
+    # conditions = []
 
-    t = sql.t_MSFD4_GegraphicalAreasID
+    # t = sql.t_MSFD4_GegraphicalAreasID
 
-    if hasattr(context, 'get_selected_region_subregions'):
-        regions = context.get_selected_region_subregions()
+    # if hasattr(context, 'get_selected_region_subregions'):
+    #     regions = context.get_selected_region_subregions()
 
-        if regions:
-            conditions.append(t.c.RegionSubRegions.in_(regions))
+    #     if regions:
+    #         conditions.append(t.c.RegionSubRegions.in_(regions))
 
-    count, rows = db.get_all_records(
-        t,
-        *conditions
-    )
+    # count, rows = db.get_all_records(
+    #     t,
+    #     *conditions
+    # )
+    # return values_to_vocab(set(x[1] for x in rows))
 
-    return values_to_vocab(set(x[1] for x in rows))
+    _labels = getattr(GES_LABELS, 'countries')
+    return values_to_vocab(_labels.keys())
 
 
 @provider(IVocabularyFactory)

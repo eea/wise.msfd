@@ -280,6 +280,9 @@ def get_marine_unit_ids(**data):
         conditions.append(table.c.RegionSubRegions.in_(
             data['region_subregions']))
 
+    if 'area_types' in data and data['area_types']:
+        conditions.append(table.c.AreaType.in_(data['area_types']))
+
     try:
         query = sess.query(col).filter(
             *conditions
