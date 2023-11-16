@@ -10,7 +10,7 @@ from zope.interface import provider
 from zope.schema.interfaces import IVocabularyFactory
 from zope.schema.vocabulary import SimpleTerm, SimpleVocabulary
 
-from wise.msfd.search.utils import FORMS_ART1314
+from wise.msfd.search.utils import FORMS_ART13, FORMS_ART1318
 
 from . import db, sql, sql_extra, sql2018
 from .labels import COMMON_LABELS, GES_LABELS
@@ -133,6 +133,12 @@ def values_to_vocab(values):
     vocab = SimpleVocabulary(terms)
 
     return vocab
+
+
+@provider(IVocabularyFactory)
+def ges_component_basic_vocabulary(context):
+    _labels = getattr(GES_LABELS, 'ges_components')
+    return values_to_vocab(_labels.keys())
 
 
 @provider(IVocabularyFactory)
@@ -622,18 +628,19 @@ def marine_unit_id_vocab_factory(context):
 
 
 @provider(IVocabularyFactory)
-def a1314_report_types(context):
-    terms = [SimpleTerm(v, k, v.title) for k, v in FORMS_ART1314.items()]
+def a13_reporting_period(context):
+    terms = [SimpleTerm(v, k, v.title) for k, v in FORMS_ART13.items()]
     terms.sort(key=lambda t: t.title)
     vocab = SimpleVocabulary(terms)
 
-    # values = (
-    #     ("Measures", 'Article 13 - Measures'),
-    #     ("Exceptions", 'Article 14 - Exceptions')
-    # )
-    #
-    # terms = [SimpleTerm(x, x, t) for x, t in values]
-    # vocab = SimpleVocabulary(terms)
+    return vocab
+
+
+@provider(IVocabularyFactory)
+def a1314_report_types(context):
+    terms = [SimpleTerm(v, k, v.title) for k, v in FORMS_ART1318.items()]
+    terms.sort(key=lambda t: t.title)
+    vocab = SimpleVocabulary(terms)
 
     return vocab
 

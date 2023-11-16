@@ -9,10 +9,10 @@ from .. import db, sql2018
 from ..base import EmbeddedForm
 from ..utils import db_objects_to_dict
 from .base import ItemDisplayForm
-from .utils import register_form_art18, register_form_art1314
+from .utils import register_form_art18, register_form_art1318
 
 
-@register_form_art1314
+@register_form_art1318
 class StartArticle18Form(EmbeddedForm):
     """ Start form for Article 18 - 2019 reporting year
     """

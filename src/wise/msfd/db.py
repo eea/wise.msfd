@@ -385,6 +385,7 @@ def get_collapsed_item(mapper_class, klass_join, order_field, collapses,
 # @cache(db_result_key)
 def get_item_by_conditions(mapper_class, order_field, *conditions, **kwargs):
     """Paged retrieval of items based on conditions
+        Use for mapper class
     """
     page = kwargs.get('page', 0)
     sess = session()
@@ -395,6 +396,38 @@ def get_item_by_conditions(mapper_class, order_field, *conditions, **kwargs):
 
     try:
         q = sess.query(mapper_class).filter(
+            *conditions
+        ).order_by(order_field)
+    except:
+        sess.rollback()
+        logger.exception("MSFD database is timed out")
+        return []
+
+    total = q.count()
+    # Laci disabled: sometimes gives unpredictable result,
+    # might be the first() which brokes it?
+    # item = q.offset(page).limit(1).first()
+    if not total:
+        return [0, {}]
+
+    item = q[page]
+
+    return [total, item]
+
+
+def get_item_by_conditions_table(table, order_field, *conditions, **kwargs):
+    """Paged retrieval of items based on conditions
+        Used for table
+    """
+    page = kwargs.get('page', 0)
+    sess = session()
+    order_field = getattr(table.c, order_field)
+
+    if kwargs.get('reverse', False) is True:
+        order_field = order_field.desc()
+
+    try:
+        q = sess.query(table).filter(
             *conditions
         ).order_by(order_field)
     except:

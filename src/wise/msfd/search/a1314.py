@@ -8,19 +8,16 @@ from z3c.form.browser.checkbox import CheckBoxFieldWidget
 from z3c.form.field import Fields
 
 from . import interfaces
-from .. import db, sql
+from .. import db, sql, sql2018
 from ..base import EmbeddedForm, MarineUnitIDSelectForm
-from ..db import get_all_records, get_all_records_join
-from ..interfaces import IMarineUnitIDsSelect
-from .. labels import COMMON_LABELS, GES_LABELS
+from ..labels import COMMON_LABELS, GES_LABELS
 from ..utils import default_value_from_field
 from .base import ItemDisplayForm, MainForm
-from .utils import data_to_xls, register_form_art1314
-
-# all_values_from_field,#
+from .utils import register_form_art13, register_form_art1318
 
 
 class StartArticle1314Form(MainForm):
+    """StartArticle1314Form"""
     fields = Fields(interfaces.IStartArticles1314)
     name = 'programmes-of-measures-progress-of-pom'
 
@@ -37,9 +34,26 @@ class StartArticle1314Form(MainForm):
         return default_value_from_field(self, self.fields['report_type'])
 
 
-@register_form_art1314
+@register_form_art1318
 class Article13Form(EmbeddedForm):
+    """Article13Form"""
     record_title = title = 'Article 13 - Measures'
+    fields = Fields(interfaces.IStartArticle13)
+    session_name = '2012'
+
+    def get_subform(self):
+        klass = self.data.get('reporting_period')
+        session_name = klass.session_name
+        db.threadlocals.session_name = session_name
+
+        return klass(self, self.request)
+
+
+@register_form_art13
+class Article132016Form(EmbeddedForm):
+    """Article132016Form"""
+    record_title = 'Article 13 - Measures'
+    title = '2016 reporting exercise'
     report_type = "Measures"
     session_name = '2012'
 
@@ -50,7 +64,68 @@ class Article13Form(EmbeddedForm):
         return MemberStatesForm(self, self.request)
 
 
-# @register_form_art1314
+@register_form_art13
+class Article132022Form(EmbeddedForm):
+    """Article132022Form"""
+    record_title = 'Article 13 - Measures'
+    title = '2022 reporting exercise'
+    report_type = "Measures"
+    session_name = '2018'
+
+    fields = Fields(interfaces.IMemberStates)
+    fields['member_states'].widgetFactory = CheckBoxFieldWidget
+
+    def get_subform(self):
+        return Article132022DescriptorForm(self, self.request)
+
+
+class Article132022DescriptorForm(EmbeddedForm):
+    """Article132022DescriptorForm"""
+
+    fields = Fields(interfaces.IGESComponentsBasic)
+    fields['ges_component'].widgetFactory = CheckBoxFieldWidget
+
+    def get_subform(self):
+        return Article132022Display(self, self.request)
+
+
+class Article132022Display(ItemDisplayForm):
+    """ Article132022Display """
+    title = "Measure Progress display"
+    mapper_class = sql2018.t_V_ART13_Measures_2022
+    order_field = 'CountryCode'
+    css_class = 'left-side-form'
+
+    def get_reported_date(self):
+        return self.item.ReportingDate
+
+    def get_current_country(self):
+        country = self.print_value(self.item.CountryCode, 'CountryCode')
+
+        return country
+
+    @db.use_db_session('2018')
+    def get_db_results(self):
+        page = self.get_page()
+   
+        countries = self.get_form_data_by_key(self, 'member_states')
+        ges_comps = self.get_form_data_by_key(self, 'ges_component')
+
+        conditions = []
+
+        if countries:
+            conditions.append(self.mapper_class.c.CountryCode.in_(countries))
+
+        item = db.get_item_by_conditions_table(
+            self.mapper_class,
+            self.order_field,
+            *conditions,
+            page=page
+        )
+
+        return item
+
+
 class StartArticle14Form(MainForm):
     record_title = title = 'Article 14 - Exceptions'
     report_type = "Exceptions"
@@ -211,7 +286,7 @@ class A1314ItemDisplay(ItemDisplayForm):
         mc = sql.MSFD13ReportingInfoMemberState
         report_id = self.item.ReportID
 
-        count, data = get_all_records(
+        count, data = db.get_all_records(
             mc,
             mc.ReportID == report_id
         )
@@ -237,7 +312,7 @@ class A1314ItemDisplay(ItemDisplayForm):
 
         report_ids = [row.ReportID for row in data]
         mc_report = sql.MSFD13ReportInfoFurtherInfo
-        count, data_report = get_all_records(
+        count, data_report = db.get_all_records(
             mc_report,
             mc_report.ReportID.in_(report_ids),
             raw=True
