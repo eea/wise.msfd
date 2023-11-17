@@ -3,6 +3,7 @@
 from __future__ import absolute_import
 import json
 import unicodedata
+from itertools import chain
 
 from sqlalchemy import and_, or_
 from sqlalchemy.sql.schema import Table
@@ -136,9 +137,23 @@ def values_to_vocab(values):
 
 
 @provider(IVocabularyFactory)
-def ges_component_basic_vocabulary(context):
-    _labels = getattr(GES_LABELS, 'ges_components')
-    return values_to_vocab(_labels.keys())
+def ges_component_a132022_vocabulary(context):
+    table = sql2018.t_V_ART13_Measures_2022
+    res = db.get_unique_from_table(table, "GEScomponent")
+    ges_components = set()
+
+    for ges_comp in res:
+        ges_comps = ges_comp.split(';')
+        # sometimes GEScomponents are separated by comma too
+        # also split by comma
+        ges_comps = [d.split(',') for d in ges_comps if d]
+        ges_comps = chain.from_iterable(ges_comps)
+        ges_comps = set([d.strip() for d in ges_comps])
+
+        ges_components.update(ges_comps)
+
+    # _labels = getattr(GES_LABELS, 'ges_components')
+    return values_to_vocab(list(ges_components))
 
 
 @provider(IVocabularyFactory)

@@ -252,11 +252,11 @@ class IGESComponents(Interface):
         value_type=Choice(vocabulary="wise_search_a2018_ges_component")
     )
 
-class IGESComponentsBasic(Interface):
+class IGESComponentsA132022(Interface):
     ges_component = List(
         title=u"GES Component",
         required=False,
-        value_type=Choice(vocabulary="wise_search_ges_component_basic")
+        value_type=Choice(vocabulary="wise_search_ges_component_a132022")
     )
 
 

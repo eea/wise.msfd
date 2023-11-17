@@ -2,6 +2,7 @@
 """
 from __future__ import absolute_import
 from sqlalchemy import and_
+from itertools import chain
 
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 from z3c.form.browser.checkbox import CheckBoxFieldWidget
@@ -82,7 +83,7 @@ class Article132022Form(EmbeddedForm):
 class Article132022DescriptorForm(EmbeddedForm):
     """Article132022DescriptorForm"""
 
-    fields = Fields(interfaces.IGESComponentsBasic)
+    fields = Fields(interfaces.IGESComponentsA132022)
     fields['ges_component'].widgetFactory = CheckBoxFieldWidget
 
     def get_subform(self):
@@ -95,6 +96,10 @@ class Article132022Display(ItemDisplayForm):
     mapper_class = sql2018.t_V_ART13_Measures_2022
     order_field = 'CountryCode'
     css_class = 'left-side-form'
+    blacklist = ("ReportingDate", "CountryCode")
+    blacklist_labels = ["MeasureCode", "MeasureOldCode",
+                        "ImplementationDelay", "PoliciesConventions",
+                        "RelevantKTMs", "CoordinationLevel"]
 
     def get_reported_date(self):
         return self.item.ReportingDate
@@ -107,7 +112,7 @@ class Article132022Display(ItemDisplayForm):
     @db.use_db_session('2018')
     def get_db_results(self):
         page = self.get_page()
-   
+
         countries = self.get_form_data_by_key(self, 'member_states')
         ges_comps = self.get_form_data_by_key(self, 'ges_component')
 
@@ -116,14 +121,30 @@ class Article132022Display(ItemDisplayForm):
         if countries:
             conditions.append(self.mapper_class.c.CountryCode.in_(countries))
 
-        item = db.get_item_by_conditions_table(
-            self.mapper_class,
-            self.order_field,
-            *conditions,
-            page=page
-        )
+        sess = db.session()
+        q = sess.query(self.mapper_class).filter(
+            *conditions).order_by(self.order_field)
 
-        return item
+        rows_filtered = []
+
+        for row in q:
+            ges_reported = row.GEScomponent.split(';')
+            # sometimes GEScomponents are separated by comma too
+            # also split by comma
+            ges_reported = [d.split(',') for d in ges_reported]
+            ges_reported = chain.from_iterable(ges_reported)
+            ges_reported = set([d.strip() for d in ges_reported])
+
+            if set(ges_comps).intersection(set(ges_reported)):
+                rows_filtered.append(row)
+
+        total = len(rows_filtered)
+        if not total:
+            return [0, {}]
+
+        item = rows_filtered[page]
+
+        return [total, item]
 
 
 class StartArticle14Form(MainForm):
@@ -243,7 +264,7 @@ class A1314ItemDisplay(ItemDisplayForm):
     mapper_class = sql.MSFD13MeasuresInfo
     order_field = 'ID'
     css_class = 'left-side-form'
-    
+
     blacklist = ['ReportID', 'MeasureID']
     use_blacklist = True
 
@@ -348,7 +369,8 @@ class A1314ItemDisplay(ItemDisplayForm):
 
         env_target_labels = getattr(GES_LABELS, 'env_targets')
 
-        env_targets = list(extra_data.items())[0][1]["RelevantEnvironmentalTargets"]
+        env_targets = list(extra_data.items())[
+            0][1]["RelevantEnvironmentalTargets"]
 
         for row in env_targets:
             label = env_target_labels[mru].get(row['InfoText'], '')

@@ -4,6 +4,7 @@ import logging
 import os
 import re
 import time
+from itertools import chain
 from collections import OrderedDict, defaultdict, namedtuple
 from six.moves.cPickle import dumps
 from hashlib import md5
@@ -960,6 +961,58 @@ def ges_component(value):
     return label
 
 
+def common_split_transform(value, label_name):
+    from .labels import GES_LABELS
+
+    if ";" in value:
+        values = value.split(';')
+        values = [d.split(',') for d in values]
+        values = chain.from_iterable(values)
+        values = set([d.strip() for d in values])
+
+        _labels = getattr(GES_LABELS, label_name)
+
+        labels = [
+            ItemLabel(x, _labels.get(x, x)) 
+            for x in values
+        ]
+
+        return ItemList(rows=labels)
+    
+    _labels = getattr(GES_LABELS, label_name)
+    label = _labels.get(value, value)
+
+    return label
+
+def ges_component_art132022(value):
+    label_name = 'ges_components'
+
+    return common_split_transform(value, label_name)
+
+
+def feature_transform(value):
+    label_name = 'features'
+
+    return common_split_transform(value, label_name)
+    
+
+def targets_transform(value):
+    label_name = 'targets'
+
+    return common_split_transform(value, label_name)
+
+def ktms_transform(value):
+    label_name = 'ktms'
+
+    return common_split_transform(value, label_name)
+
+
+def pressures_transform(value):
+    label_name = 'pressures'
+
+    return common_split_transform(value, label_name)
+
+
 def country_code(value):
     from .labels import GES_LABELS
 
@@ -976,5 +1029,10 @@ TRANSFORMS = {
     'Q4h_TemporalScopeEndDate': temporal_scope_transform,
     'TemporalScope': temporal_scope_transform,
     'GESComponent': ges_component,
+    'GEScomponent': ges_component_art132022,
     'CountryCode': country_code,
+    'Feature': feature_transform,
+    'RelevantTargets': targets_transform,
+    'RelevantKTMs': ktms_transform,
+    'Pressures': pressures_transform,
 }

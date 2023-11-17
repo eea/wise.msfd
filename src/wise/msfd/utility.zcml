@@ -136,8 +136,8 @@
     />
 
   <utility
-    component=".vocabulary.ges_component_basic_vocabulary"
-    name="wise_search_ges_component_basic"
+    component=".vocabulary.ges_component_a132022_vocabulary"
+    name="wise_search_ges_component_a132022"
     />
 
   <!--
