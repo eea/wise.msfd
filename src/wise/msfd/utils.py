@@ -1032,7 +1032,10 @@ TRANSFORMS = {
     'GEScomponent': ges_component_art132022,
     'CountryCode': country_code,
     'Feature': feature_transform,
+    'RelevantFeatures': feature_transform,
+    'RelevantPressures': pressures_transform,
     'RelevantTargets': targets_transform,
+    'RelevantTarget': targets_transform,
     'RelevantKTMs': ktms_transform,
     'Pressures': pressures_transform,
 }

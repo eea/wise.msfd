@@ -123,6 +123,14 @@ class IStartArticle13(Interface):
     )
 
 
+class IStartArticle14(Interface):
+    reporting_period = Choice(
+        title=u"Reporting period",
+        vocabulary="wise_search_a14_reporting_period",
+        required=False,
+    )
+
+
 class IStartArticles1314(Interface):
     report_type = Choice(
         title=u"Report Type",
@@ -257,6 +265,14 @@ class IGESComponentsA132022(Interface):
         title=u"GES Component",
         required=False,
         value_type=Choice(vocabulary="wise_search_ges_component_a132022")
+    )
+
+
+class IGESComponentsA142022(Interface):
+    ges_component = List(
+        title=u"GES Component",
+        required=False,
+        value_type=Choice(vocabulary="wise_search_ges_component_a142022")
     )
 
 

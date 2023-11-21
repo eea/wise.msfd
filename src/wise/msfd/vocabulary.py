@@ -11,7 +11,7 @@ from zope.interface import provider
 from zope.schema.interfaces import IVocabularyFactory
 from zope.schema.vocabulary import SimpleTerm, SimpleVocabulary
 
-from wise.msfd.search.utils import FORMS_ART13, FORMS_ART1318
+from wise.msfd.search.utils import FORMS_ART13, FORMS_ART1318, FORMS_ART14
 
 from . import db, sql, sql_extra, sql2018
 from .labels import COMMON_LABELS, GES_LABELS
@@ -139,6 +139,26 @@ def values_to_vocab(values):
 @provider(IVocabularyFactory)
 def ges_component_a132022_vocabulary(context):
     table = sql2018.t_V_ART13_Measures_2022
+    res = db.get_unique_from_table(table, "GEScomponent")
+    ges_components = set()
+
+    for ges_comp in res:
+        ges_comps = ges_comp.split(';')
+        # sometimes GEScomponents are separated by comma too
+        # also split by comma
+        ges_comps = [d.split(',') for d in ges_comps if d]
+        ges_comps = chain.from_iterable(ges_comps)
+        ges_comps = set([d.strip() for d in ges_comps])
+
+        ges_components.update(ges_comps)
+
+    # _labels = getattr(GES_LABELS, 'ges_components')
+    return values_to_vocab(list(ges_components))
+
+
+@provider(IVocabularyFactory)
+def ges_component_a142022_vocabulary(context):
+    table = sql2018.t_V_ART14_Exceptions_2022
     res = db.get_unique_from_table(table, "GEScomponent")
     ges_components = set()
 
@@ -645,6 +665,15 @@ def marine_unit_id_vocab_factory(context):
 @provider(IVocabularyFactory)
 def a13_reporting_period(context):
     terms = [SimpleTerm(v, k, v.title) for k, v in FORMS_ART13.items()]
+    terms.sort(key=lambda t: t.title)
+    vocab = SimpleVocabulary(terms)
+
+    return vocab
+
+
+@provider(IVocabularyFactory)
+def a14_reporting_period(context):
+    terms = [SimpleTerm(v, k, v.title) for k, v in FORMS_ART14.items()]
     terms.sort(key=lambda t: t.title)
     vocab = SimpleVocabulary(terms)
 
