@@ -274,7 +274,10 @@ def data_to_xls(data, blacklist_labels=None):
                 if f not in blacklist_labels:
                     label = print_value_xls(value, f)
 
-                worksheet.write(j + 1, i, label)
+                try:
+                    worksheet.write(j + 1, i, label)
+                except TypeError:
+                    worksheet.write(j + 1, i, str(label))
 
     workbook.close()
     out.seek(0)

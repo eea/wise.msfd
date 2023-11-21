@@ -111,6 +111,39 @@ class Article132022Display(ItemDisplayForm):
         return country
 
     @db.use_db_session('2018')
+    def download_results(self):
+        countries = self.get_form_data_by_key(self, 'member_states')
+        ges_comps = self.get_form_data_by_key(self, 'ges_component')
+
+        conditions = []
+
+        if countries:
+            conditions.append(self.mapper_class.c.CountryCode.in_(countries))
+
+        sess = db.session()
+        q = sess.query(self.mapper_class).filter(
+            *conditions).order_by(self.order_field)
+
+        rows_filtered = []
+
+        for row in q:
+            ges_reported = row.GEScomponent.split(';')
+            # sometimes GEScomponents are separated by comma too
+            # also split by comma
+            ges_reported = [d.split(',') for d in ges_reported]
+            ges_reported = chain.from_iterable(ges_reported)
+            ges_reported = set([d.strip() for d in ges_reported])
+
+            if set(ges_comps).intersection(set(ges_reported)):
+                rows_filtered.append(row)
+
+        xlsdata = [
+            ('MSFD13Measures', rows_filtered)
+        ]
+
+        return xlsdata
+
+    @db.use_db_session('2018')
     def get_db_results(self):
         page = self.get_page()
 
@@ -221,6 +254,39 @@ class Article142022Display(ItemDisplayForm):
         country = self.print_value(self.item.CountryCode, 'CountryCode')
 
         return country
+
+    @db.use_db_session('2018')
+    def download_results(self):
+        countries = self.get_form_data_by_key(self, 'member_states')
+        ges_comps = self.get_form_data_by_key(self, 'ges_component')
+
+        conditions = []
+
+        if countries:
+            conditions.append(self.mapper_class.c.CountryCode.in_(countries))
+
+        sess = db.session()
+        q = sess.query(self.mapper_class).filter(
+            *conditions).order_by(self.order_field)
+
+        rows_filtered = []
+
+        for row in q:
+            ges_reported = row.GEScomponent.split(';')
+            # sometimes GEScomponents are separated by comma too
+            # also split by comma
+            ges_reported = [d.split(',') for d in ges_reported]
+            ges_reported = chain.from_iterable(ges_reported)
+            ges_reported = set([d.strip() for d in ges_reported])
+
+            if set(ges_comps).intersection(set(ges_reported)):
+                rows_filtered.append(row)
+
+        xlsdata = [
+            ('MSFD14Measures', rows_filtered)
+        ]
+
+        return xlsdata
 
     @db.use_db_session('2018')
     def get_db_results(self):
