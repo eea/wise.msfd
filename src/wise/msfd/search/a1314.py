@@ -215,7 +215,7 @@ class Article142016Form(EmbeddedForm):
 @register_form_art14
 class Article142022Form(EmbeddedForm):
     """Article142022Form"""
-    record_title = 'Article 14 - Measures'
+    record_title = 'Article 14 - Exceptions'
     title = '2022 reporting exercise'
     report_type = "Exceptions"
     session_name = '2018'
