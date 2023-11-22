@@ -421,15 +421,13 @@ class UniqueCodesForm(EmbeddedForm):
 
 
 class A1314ItemDisplay(ItemDisplayForm):
-    """ The implementation for the Article 9 (GES determination) form
-    """
+    """ A1314ItemDisplay """
     extra_data_template = ViewPageTemplateFile('pt/extra-data-item.pt')
     pivot_template = ViewPageTemplateFile('pt/extra-data-pivot-notselect.pt')
 
     mapper_class = sql.MSFD13MeasuresInfo
     order_field = 'ID'
     css_class = 'left-side-form'
-
     blacklist = ['ReportID', 'MeasureID']
     use_blacklist = True
 
@@ -439,6 +437,17 @@ class A1314ItemDisplay(ItemDisplayForm):
         'col_import_time': 'Time',
         'col_filename': 'FileName'
     }
+
+    @property
+    def article(self):
+        report_type = self.context.context.report_type
+
+        article = {
+            'Measures': 'MSFD13_2016',
+            'Exceptions': 'MSFD14_2016',
+        }
+
+        return article[report_type]
 
     def get_import_id(self):
         report_id = self.item.ReportID

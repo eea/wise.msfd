@@ -27,19 +27,25 @@ LABEL_FIX = {
 # Labels used to override the default db column name into a
 # user friendly text
 DISPLAY_LABELS = {
-    'MSFD4_Import_ReportingCountry': "Country",
-    'AssessmentsPeriod': 'Assessment Period',
-    'UniqueCode': 'Measure code',
-    # Article 4
-    'rZoneId': 'Region',
-    'thematicId': 'Identifier',
-    'nameTxtInt': 'Name in English',
-    'nameText': 'Name in the national language',
-    'spZoneType': 'Zone type',
-    'legisSName': 'Legislation short name',
-    'Area': 'Area (km2)',
-    # Article 19.3
-    'MarineUnitID': 'Marine Reporting unit'
+    'ALL': {
+        'MSFD4_Import_ReportingCountry': "Country",
+        'AssessmentsPeriod': 'Assessment Period',
+        'UniqueCode': 'Measure code',
+        # Article 4
+        'rZoneId': 'Region',
+        'thematicId': 'Identifier',
+        'nameTxtInt': 'Name in English',
+        'nameText': 'Name in the national language',
+        'spZoneType': 'Zone type',
+        'legisSName': 'Legislation short name',
+        'Area': 'Area (km2)',
+        # Article 19.3
+        'MarineUnitID': 'Marine Reporting unit'
+    },
+    'MSFD14_2016': {
+        'UniqueCode': 'Exception code',
+        'Name': 'Exception name'
+    }
 }
 
 logger = logging.getLogger('wise.msfd')

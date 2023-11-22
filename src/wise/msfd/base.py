@@ -12,7 +12,7 @@ from plone.api.portal import get_tool
 from plone.z3cform.layout import FormWrapper
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 from wise.msfd.compliance.interfaces import (
-    IEditAssessmentForm, IEditAssessmentFormCrossCutting, 
+    IEditAssessmentForm, IEditAssessmentFormCrossCutting,
     IEditAssessmentFormSecondary)
 from z3c.form.field import Fields
 from z3c.form.form import Form
@@ -49,9 +49,11 @@ class BaseUtil(object):
 
         This is used to transform the database column names to usable labels
         """
+        article = getattr(self, 'article', 'ALL')
+        labels = DISPLAY_LABELS.get(article, None) or DISPLAY_LABELS['ALL']
 
-        if text in DISPLAY_LABELS:
-            return DISPLAY_LABELS[text]
+        if text in labels:
+            return labels[text]
 
         text = text.replace('_', ' ')
 
