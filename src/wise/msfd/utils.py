@@ -1028,6 +1028,7 @@ TRANSFORMS = {
     'MarineReportingUnit': mrus_transform,
     'Q4h_TemporalScopeEndDate': temporal_scope_transform,
     'TemporalScope': temporal_scope_transform,
+    'GES Component': ges_component,
     'GESComponent': ges_component,
     'GEScomponent': ges_component_art132022,
     'CountryCode': country_code,
