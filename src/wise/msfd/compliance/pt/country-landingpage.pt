@@ -16,7 +16,7 @@
   <body metal:fill-slot="main">
     <div id="layout-contents" 
         tal:define="text context/text | nothing;
-          assessment_path python:'/marine/assessment-module/national-descriptors-assessments/' + view.context._ccode + '/assessments';
+          assessment_path python:'/assessment-module/national-descriptors-assessments/' + view.context._ccode + '/assessments';
           assessment_folder python: view.get_object_by_path(assessment_path);
           can_view_assessment_data python:view.can_view_assessment_data(assessment_folder)">
       <div id="wise-search-form" class="full-width-marker">
