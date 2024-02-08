@@ -156,7 +156,7 @@ class NationalDescriptorCountryOverview(BaseView):
 
         ccode = getattr(self.context, '_ccode', self.context.id)
 
-        country_folder = site['marine']['assessment-module']['national-descriptors-assessments'][ccode]
+        country_folder = site['assessment-module']['national-descriptors-assessments'][ccode]
 
         return country_folder
 

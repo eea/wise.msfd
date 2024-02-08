@@ -89,7 +89,7 @@ class RegionalDescriptorRegionsOverview(BaseRegComplianceView):
 
         rcode = getattr(self.context, '_rcode', self.context.id)
 
-        country_folder = site['marine']['assessment-module'] \
+        country_folder = site['assessment-module'] \
             ['regional-descriptors-assessments'][rcode]
         
         return country_folder
