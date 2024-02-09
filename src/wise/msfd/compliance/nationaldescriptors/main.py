@@ -142,7 +142,8 @@ class NationalDescriptorCountryOverview(BaseView):
         # return the url of the assessment module
         site = portal.get()
         url = site.absolute_url()
-        final_url = url + "/marine/assessment-module"
+
+        final_url = url + "/assessment-module"
 
         return final_url
 
