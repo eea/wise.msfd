@@ -1407,9 +1407,16 @@ class AssessmentDataMixin(object):
                 phase_scores['conclusion'] = (0, 'Not consistent')
                 phase_scores['color'] = 3
             else:
-                phase_scores['conclusion'] = (score_val,
-                                              self.get_conclusion(score_val))
-                phase_scores['color'] = self.get_color_for_score(score_val)
+                if article in ('Art13', 'Art14', 'Art13Completeness',
+                               'Art13Completeness', 'Art1314CrossCutting'):
+                    phase_scores['conclusion'] = (score_val,
+                            self.get_conclusion_2022(score_val))
+                    phase_scores['color'] = self.get_color_for_score_2022(score_val)
+
+                else:
+                    phase_scores['conclusion'] = (score_val,
+                                                self.get_conclusion(score_val))
+                    phase_scores['color'] = self.get_color_for_score(score_val)
 
         return phase_overall_scores
 

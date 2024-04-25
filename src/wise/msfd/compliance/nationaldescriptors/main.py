@@ -1428,7 +1428,7 @@ class NationalDescriptorArticleView(BaseView, AssessmentDataMixin):
 
 @implementer(INationaldescriptorArticleView)
 class NationalDescriptorArticleView2022(NationalDescriptorArticleView):
-    """"""
+    """ NationalDescriptorArticleView2022 """
 
     assessment_data_2018_tpl = Template('./pt/assessment-data-2022.pt')
     show_file_version = False

@@ -31,9 +31,13 @@ from Products.CMFPlacefulWorkflow.WorkflowPolicyConfig import \
 from Products.Five.browser import BrowserView
 from Products.statusmessages.interfaces import IStatusMessage
 from wise.msfd import db
-from wise.msfd.compliance.assessment import (ARTICLE_WEIGHTS,
-                                             AssessmentDataMixin,
-                                             OverallScores)
+from wise.msfd.compliance.assessment import (
+    ARTICLE_WEIGHTS, AssessmentDataMixin, # OverallScores
+    )
+from wise.msfd.compliance.scoring import (
+    get_overall_conclusion, get_overall_conclusion_2022,
+    get_range_index, get_range_index_2022, OverallScores)
+
 from wise.msfd.compliance.interfaces import (INationalDescriptorAssessment,
                                              INationalDescriptorAssessmentSecondary)
 from wise.msfd.compliance.vocabulary import (get_all_countries,
@@ -71,6 +75,16 @@ CONCLUSIONS = {
     '0.25': 'Very poor',
     '0.250': 'Not clear',
     '0': 'Not reported',
+}
+
+CONCLUSIONS_2022 = {
+    '/': 'Not relevant',
+    '1': 'Very good',
+    '0.75': 'Good',
+    '0.5': 'Moderate',
+    '0.25': 'Poor',
+    '0.250': 'Not clear',
+    '0': 'Very poor',
 }
 
 ARTICLES_2022 = ['Art13', 'Art14']
@@ -1225,7 +1239,7 @@ class AdminScoring(BaseComplianceView, AssessmentDataMixin):
                d_obj.id, d_obj.title,
                article_title, '', '2012 Adequacy change', '',
                adequacy_2012_change, '', state, last_change)    
-               
+
     def get_data_2022(self, obj):
         """ Get assessment data for a country assessment object
         """
@@ -1287,7 +1301,7 @@ class AdminScoring(BaseComplianceView, AssessmentDataMixin):
 
                     answer = val.question.answers[v]
                     score = val.question.scores[v]
-                    score_title = CONCLUSIONS[score]
+                    score_title = CONCLUSIONS_2022[score]
 
                     yield (
                         country_code, country_name, region_code, region_name,
@@ -1364,7 +1378,7 @@ class AdminScoring(BaseComplianceView, AssessmentDataMixin):
 
         overall_concl, score = phase_overall_scores.get_overall_score(
             article_title)
-        score_title = self.get_conclusion(overall_concl)
+        score_title = self.get_conclusion_2022(overall_concl)
 
         yield (country_code, country_name, region_code, region_name,
                d_obj.id, d_obj.title,
@@ -1481,7 +1495,7 @@ class AdminScoring(BaseComplianceView, AssessmentDataMixin):
         yield (country_code, country_title, article_title, '',
                '2018 Overall', '', score, score_title,
                state, last_change)  
-  
+
     def get_data_cross_cutting(self, obj):
         """ Get assessment data for a country assessment object
         """
@@ -1491,7 +1505,6 @@ class AdminScoring(BaseComplianceView, AssessmentDataMixin):
 
             return
 
-        
         article_title = obj.title
 
         if article_title == 'art13-completeness-2022':
@@ -1543,7 +1556,7 @@ class AdminScoring(BaseComplianceView, AssessmentDataMixin):
 
                     answer = val.question.answers[v]
                     score = val.question.scores[v]
-                    score_title = CONCLUSIONS[score]
+                    score_title = CONCLUSIONS_2022[score]
 
                     yield (country_code, country_title, article_title,
                            val.question.id, option, answer, score, score_title,
@@ -1599,7 +1612,7 @@ class AdminScoring(BaseComplianceView, AssessmentDataMixin):
 
         overall_concl, score = phase_overall_scores.get_overall_score(
             article_title)
-        score_title = self.get_conclusion(overall_concl)
+        score_title = self.get_conclusion_2022(overall_concl)
 
         yield (country_code, country_title, article_title, '',
                '2022 Overall', '', score, score_title,
