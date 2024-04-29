@@ -407,7 +407,7 @@ class BootstrapCompliance(BrowserView):
             if code.lower() in ns.contentIds():
                 cf = ns[code.lower()]
             else:
-                # national_summary type used for Assessment summary/pdf export
+                # national_summary Art. 12 (8-9-10) National report - 2018
                 cf = create(ns,
                             'national_summary',
                             title=country,
@@ -417,7 +417,7 @@ class BootstrapCompliance(BrowserView):
             alsoProvides(cf, interfaces.INationalSummaryCountryFolder)
             # self.create_comments_folder(cf)
 
-            # create the overview folder
+            # create the country overview folder
             if 'overview' in cf.contentIds():
                 of = cf['overview']
             else:
@@ -428,6 +428,18 @@ class BootstrapCompliance(BrowserView):
 
             self.set_layout(of, 'national-overview')
             alsoProvides(of, interfaces.INationalSummaryOverviewFolder)
+
+            # create the Art. 16 (13-14) National report - 2022
+            if 'art16-2022' in cf.contentIds():
+                art16f = cf['art16-2022']
+            else:
+                art16f = create(cf,
+                            'wise.msfd.nationalsummary2022',
+                            title='National summary 2022',
+                            id='art16-2022')
+
+            self.set_layout(art16f, 'national-overview')
+            alsoProvides(art16f, interfaces.INationalSummaryOverviewFolder)
 
     def setup_regionalsummaries(self, parent):
         if 'regional-summaries' in parent.contentIds():

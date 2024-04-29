@@ -2,9 +2,9 @@
 <object name="national_summary" meta_type="Dexterity FTI"
    i18n:domain="wise.msfd" xmlns:i18n="http://xml.zope.org/namespaces/i18n">
  <property name="title"
-    i18n:translate="">Assessment Summary (PDF export)</property>
+    i18n:translate="">Assessment Summary 2018</property>
  <property name="description"
-    i18n:translate="">A container for Assessment Summaries used for PDF exports</property>
+    i18n:translate="">Art. 12 (8-9-10) National report - 2020</property>
  <property name="icon_expr">string:${portal_url}/document_icon.png</property>
  <property name="factory">national_summary</property>
  <property
