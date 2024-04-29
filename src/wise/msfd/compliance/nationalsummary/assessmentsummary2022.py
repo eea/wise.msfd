@@ -10,12 +10,27 @@ import logging
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 from Products.statusmessages.interfaces import IStatusMessage
 from plone.api import portal
+from wise.msfd.compliance.assessment import (ANSWERS_COLOR_TABLE,
+                                             ARTICLE_WEIGHTS,
+                                             CONCLUSION_COLOR_TABLE,
+                                             AssessmentDataMixin,
+                                             get_assessment_data_2012_db,
+                                             get_assessment_data_2016_art1314,
+                                             get_recommendation_data_2016_art1314,
+                                             get_assessment_data_2016_art1314_overall,
+                                             filter_assessment_data_2012,
+                                             summary_fields_2016_cross)
+from wise.msfd.compliance.base import (
+    NAT_DESC_QUESTIONS, is_row_relevant_for_descriptor)
+
 from wise.msfd.compliance.interfaces import (INationalSummary2022Folder,
+                                             INationalSummaryCountryFolder,
                                              INationalSummaryEdit,
                                              IRecommendationStorage)
-from wise.msfd.compliance.main import (
-    RecommendationsTable, STORAGE_KEY
-    )
+from wise.msfd.compliance.main import (RecommendationsTable, STORAGE_KEY)
+from wise.msfd.compliance.nationaldescriptors.main import (
+    format_assessment_data_2022
+)
 from wise.msfd.compliance.vocabulary import get_regions_for_country
 from wise.msfd.gescomponents import DESCRIPTOR_TYPES
 from wise.msfd.translation import retrieve_translation
@@ -32,8 +47,32 @@ from .introduction import Introduction
 logger = logging.getLogger('wise.msfd')
 
 
+class CrossCuttingTable(BaseNatSummaryView):
+    """"""
+
+    template = ViewPageTemplateFile('pt/summary-assessment.pt')
+    sections = (
+        ("E Socio-economic assessment", ["Ad11E", "Ad12E"]),
+        ("Impact of climate change", ["Ad13F",]),
+        ("Funding of the measures", ["Ad14G", "Ad15G"]),
+        ("Links to other policies", ["Ad16H", "Ad17H", "Ad18H"]),
+        ("Regional cooperation and transboundary impacts", ["Ad19I", "Ad20I"]),
+        ("Public consultation", ["Ad21J", "Ad22J"]),
+        ("Administrative processes", ["Ad23K", "Ad24K"]),
+    )
+
+    def __init__(self, context, request, assessment_data):
+        super(CrossCuttingTable, self).__init__(context, request)
+
+        self.assessment_data = assessment_data
+
+
 @implementer(INationalSummary2022Folder)
 class AssessmentSummary2022View(BaseNatSummaryView):
+    questions = NAT_DESC_QUESTIONS
+    article_weights = ARTICLE_WEIGHTS
+    articles_needed = ('Art13', 'Art14', 'Art13-completeness-2022',
+                       'Art14-completeness-2022', 'Cross-cutting-2022')
     help_text = "HELP TEXT"
     template = ViewPageTemplateFile('pt/report-data.pt')
     report_header_template = ViewPageTemplateFile(
@@ -42,6 +81,56 @@ class AssessmentSummary2022View(BaseNatSummaryView):
     year = "2012"
 
     render_header = True
+
+    def setup_data_cross_cutting(self, assessment_data):
+        elements = self.questions['Art1314CrossCutting'][0].get_all_assessed_elements(
+            'DCrossCutting',
+            muids=[]  # self.muids
+        )
+
+        self.assessment_data_cross_cutting = format_assessment_data_2022(
+            'Art1314CrossCutting',
+            elements,
+            self.questions['Art1314CrossCutting'],
+            [],
+            assessment_data,
+            'DCrossCutting',
+            self.article_weights,
+            self
+        )
+
+    def setup_data(self):
+        catalog = portal.get_tool('portal_catalog')
+        brains = catalog.unrestrictedSearchResults(
+            portal_type='wise.msfd.nationaldescriptorassessment',
+        )
+
+        res = []
+
+        for brain in brains:
+            obj = brain._unrestrictedGetObject()
+            obj_title = obj.title.capitalize()
+
+            if obj_title not in self.articles_needed:
+                continue
+
+            # x = self.get_parent_by_iface(INationalSummary2022Folder)
+            # xx = self.get_parent_by_iface(INationalSummaryCountryFolder)
+
+            if self.country_code.lower() in obj.getPhysicalPath():
+                assessment_data = obj.saved_assessment_data.last() if hasattr(
+                    obj, 'saved_assessment_data') else {}
+
+                if (assessment_data):
+                    if 'Cross-cutting-2022' in obj_title:
+                        self.setup_data_cross_cutting(assessment_data)
+
+                    res.append(obj)
+
+        import pdb
+        pdb.set_trace()
+
+        return res
 
     # def _get_css(self):
     #     return [
@@ -116,6 +205,8 @@ class AssessmentSummary2022View(BaseNatSummaryView):
         )
         # trans_edit_html = self.translate_view()()
 
+        data = self.setup_data()
+
         # 4. Descriptor-level assessments
         # descriptor_lvl_assess = DescriptorLevelAssessments(self, self.request)
         # descriptor_lvl_assess_view = descriptor_lvl_assess()
@@ -126,8 +217,8 @@ class AssessmentSummary2022View(BaseNatSummaryView):
         # introduction = Introduction(self.context, self.request)
 
         # 2. Summary Assessment
-        # sum_assess = SummaryAssessment(self, self.request, overall_scores,
-        #                                nat_desc_country_folder)
+        # cross_cutting = CrossCuttingTable(
+        #     self, self.request, self.assessment_data_cross_cutting)
 
         # 3. Progress Assessment
         # prog_assess = ProgressAssessment(self, self.request)
@@ -135,7 +226,7 @@ class AssessmentSummary2022View(BaseNatSummaryView):
         self.tables = [
             report_header,
             # introduction,
-            # sum_assess,
+            # cross_cutting,
             # prog_assess,
             # descriptor_lvl_assess,
             # trans_edit_html,

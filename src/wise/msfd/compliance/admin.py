@@ -314,7 +314,7 @@ class BootstrapCompliance(BrowserView):
                 self.create_nda_folder(df, desc_code, 'Art11')
 
                 # article 13, 14, 18
-                self.create_nda_folder(df, desc_code, 'Art13', 
+                self.create_nda_folder(df, desc_code, 'Art13',
                     '@@nat-desc-art-view-2022')
                 self.create_nda_folder(df, desc_code, 'Art14',
                     '@@nat-desc-art-view-2022')

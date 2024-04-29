@@ -27,7 +27,7 @@
  <property name="default_view_fallback">False</property>
  <property name="add_permission">cmf.AddPortalContent</property>
  <property
-    name="klass">wise.msfd.compliance.content.NationalSummaryCountryFolder</property>
+    name="klass">wise.msfd.compliance.content.NationalSummary2022Folder</property>
  <property name="behaviors">
   <element value="plone.app.content.interfaces.INameFromTitle"/>
  </property>

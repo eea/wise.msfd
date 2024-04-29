@@ -11,6 +11,7 @@ from .interfaces import (ICountryDescriptorsFolder,
                          INationalSummaryCountryFolder,
                          INationalSummaryEdit,
                          INationalSummaryOverviewFolder,
+                         INationalSummary2022Folder,
                          IRegionalDescriptorAssessment,
                          IRegionalDescriptorRegionsFolder,
                          IRegionalSummaryRegionFolder,
@@ -47,6 +48,13 @@ class RegionDescriptorsFolder(Container):
 
 @implementer(INationalSummaryCountryFolder)
 class NationalSummaryCountryFolder(Container):
+    """ Assessment implementation for national summary assessments
+    """
+    # implements(INationalSummaryCountryFolder)
+
+
+@implementer(INationalSummary2022Folder)
+class NationalSummary2022Folder(Container):
     """ Assessment implementation for national summary assessments
     """
     # implements(INationalSummaryCountryFolder)
