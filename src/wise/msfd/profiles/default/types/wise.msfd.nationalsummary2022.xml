@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<object name="national_summary" meta_type="Dexterity FTI"
+<object name="wise.msfd.nationalsummary2022" meta_type="Dexterity FTI"
    i18n:domain="wise.msfd" xmlns:i18n="http://xml.zope.org/namespaces/i18n">
  <property name="title"
-    i18n:translate="">Assessment Summary 2018</property>
+    i18n:translate="">Assessment Summary 2022</property>
  <property name="description"
-    i18n:translate="">Art. 12 (8-9-10) National report - 2018</property>
+    i18n:translate="">Art. 16 (13-14) National report - 2022</property>
  <property name="icon_expr">string:${portal_url}/document_icon.png</property>
- <property name="factory">national_summary</property>
+ <property name="factory">wise.msfd.nationalsummary2022</property>
  <property
-    name="add_view_expr">string:${folder_url}/++add++national_summary</property>
+    name="add_view_expr">string:${folder_url}/++add++wise.msfd.nationalsummary2022</property>
  <property name="link_target"></property>
  <property name="immediate_view">view</property>
  <property name="global_allow">True</property>
@@ -34,7 +34,7 @@
  <property name="schema"></property>
  <property name="model_source"></property>
  <property
-    name="model_file">wise.msfd.compliance.nationalsummary:national_summary_country_model.xml</property>
+    name="model_file">wise.msfd.compliance.nationalsummary:wise.msfd.nationalsummary2022_model.xml</property>
  <property name="schema_policy">dexterity</property>
  <alias from="(Default)" to="(dynamic view)"/>
  <alias from="edit" to="@@edit"/>

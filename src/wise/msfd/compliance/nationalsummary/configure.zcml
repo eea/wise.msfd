@@ -41,4 +41,13 @@
     permission="zope2.View"
     />
 
+  <!-- National summary / Art 16 Assessment view 2022 -->
+  <browser:page
+    for="..interfaces.INationalSummary2022Folder"
+    name="assessment-summary-2022"
+    class=".assessmentsummary2022.AssessmentSummary2022View"
+    template="./pt/report-data-view.pt"
+    permission="wise.ViewAssessmentData"
+    />
+
 </configure>

@@ -1,0 +1,104 @@
+<model xmlns:form="http://namespaces.plone.org/supermodel/form"
+       xmlns:i18n="http://xml.zope.org/namespaces/i18n"
+       xmlns:marshal="http://namespaces.plone.org/supermodel/marshal"
+       xmlns:security="http://namespaces.plone.org/supermodel/security"
+       xmlns="http://namespaces.plone.org/supermodel/schema">
+    <schema>
+        <field name="date_assessed"
+               type="zope.schema.Text">
+            <description/>
+            <required>False</required>
+            <title>Date assessed</title>
+        </field>
+        <field name="authors"
+               type="plone.app.textfield.RichText">
+            <description/>
+            <required>False</required>
+            <title>Cover page authors</title>
+            <default>Paola Banfi, Guillermo Gea, Lucille Labayle, David Landais, Melanie Muro, Goncalo Moreira,
+            Alicia McNeil, and Imbory Thomas. The main authors are Richard White (D1, 4, 6),
+            Elena San Martin (D2), Suzannah Walmsley (D3), William Parr (D5), Christophe Le Visage (D7),
+            Norman Green (D8 and 9), Annemie Volckaert (D10) and Frank Thomsen (D11).</default>
+        </field>
+        <field name="contract"
+               type="plone.app.textfield.RichText">
+            <description/>
+            <required>False</required>
+            <title>Cover page contract</title>
+            <default>No 11.0661/ENV/2018/791580/SER/ENV.C.2.</default>
+        </field>
+        <field name="logo"
+               type="plone.app.textfield.RichText">
+            <description/>
+            <required>False</required>
+            <title>Cover page logo</title>
+            <default>
+                &lt;img src="/marine/++resource++static_images/cover_logos.png"&gt;
+            </default>
+        </field>
+        <field name="scope_of_marine_waters"
+               type="plone.app.textfield.RichText">
+            <description/>
+            <required>False</required>
+            <title>Scope of marine waters</title>
+        </field>
+        <field name="reporting_areas"
+               type="plone.app.textfield.RichText">
+            <description/>
+            <required>False</required>
+            <title>Reporting areas</title>
+            <default>
+&lt;p&gt;The map shows the Marine Reporting Units (MRUs) listed in the table and reported for use with the 2018 updates of Articles 8, 9 and 10.&lt;/p&gt;
+&lt;p&gt;The table provides:&lt;/p&gt;
+    &lt;ol style="list-style-type: lower-alpha;"&gt;
+        &lt;li&gt;a list of MRUs, including the relevant region or subregion, the area type, its code and name, as reported by the Member State;&lt;/li&gt;
+        &lt;li&gt;an English translation (where appropriate) of the MRU name;&lt;/li&gt;
+        &lt;li&gt;the areal extent of the MRU (km2);&lt;/li&gt;
+        &lt;li&gt;the proportion of the Member State’s marine waters taken by the MRU (%). Values greater than 100% are likely to indicate use of MRUs which extend beyond the Member State’s marine waters (for example, one used by a regional sea convention); if the total across all MRUs exceeds 100% (but no single MRU exceeds 100%), it may indicate some MRUs are overlapping or nested within others, particularly where the Member State has used different (sets of) MRUs per descriptor;&lt;/li&gt;
+        &lt;li&gt;the MSFD Descriptors for which the MRU is used (Articles 8 and 9). D1.1 = D1-Birds, D1.2 = D1-Mammals, D1.3 = D1-Reptiles, D1.4 = D1-Fish, D1.5 = D1-Cephalopods, D1.6 = D1-Pelagic habitats &lt;/li&gt;
+    &lt;/ol&gt;
+            </default>
+        </field>
+        <field name="assessment_methodology"
+               type="plone.app.textfield.RichText">
+            <description/>
+            <required>False</required>
+            <title>Assessment methodology</title>
+            <default>
+&lt;p&gt;The assessment applied the same broad criteria as the previous Article 12 assessment which was carried out between 2012 and 2014 to allow for an effective comparison and monitoring of progress:&lt;/p&gt;
+    &lt;ol style="list-style-type: lower-alpha;"&gt;
+        &lt;li&gt;Adequacy: assessing whether the reported information is good enough to meet the objectives of the Directive and the technical requirements of Articles 8, 9 and 10. &lt;/li&gt;
+        &lt;li&gt;Consistency across the Marine Strategy (hereinafter: Consistency): assessing the logical flow of reporting of one Member State for Articles 8, 9 and 10, including the identification of missing links, conflicts, and gaps.&lt;/li&gt;
+        &lt;li&gt;Regional coherence (hereinafter: Coherence): assessing the relationships between the reports of the Member States, within each marine region or subregion.&lt;/li&gt;
+    &lt;/ol&gt;
+&lt;p&gt;For the 2018 reporting exercise, Member States reported using the criteria and methodological standards on good environmental status of marine waters, and specifications and standardised methods for monitoring and assessment laid down in the Commission Decision (EU) 2017/848 of 17 May 2017. An assessment framework was developed on the Directive’s key concepts and the standards established by the Commission Decision. For each article and broad assessment criteria, a set of assessment questions was defined to structure the assessment exercise. Each assessment question was scored based on the degree to which the broad assessment criteria were met by the reported information. The assessment was carried out through an online tool.&lt;/p&gt;
+&lt;p&gt;The assessment was based on the e-reporting information (xml and shapefiles) provided by the Member State. Any text reports submitted were not consulted.&lt;/p&gt;
+            </default>
+        </field>
+        <field name="summary_of_assessment_text"
+               type="plone.app.textfield.RichText">
+            <description/>
+            <required>False</required>
+            <title>Summary of the assessment text</title>
+        </field>
+        <field name="progress_intro"
+               type="plone.app.textfield.RichText">
+            <description/>
+            <required>False</required>
+            <title>Assessment of national progress introductory text</title>
+        </field>
+        <field name="progress_recommendations_2012"
+               type="plone.app.textfield.RichText">
+            <description/>
+            <required>False</required>
+            <title>2014 recommendations to Member State</title>
+        </field>
+        <field name="progress_recommendations_2018"
+               type="plone.app.textfield.RichText">
+            <description/>
+            <required>False</required>
+            <title>Progress against 2014 recommendations to Member State</title>
+        </field>
+    </schema>
+</model>
+

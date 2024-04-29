@@ -430,16 +430,16 @@ class BootstrapCompliance(BrowserView):
             alsoProvides(of, interfaces.INationalSummaryOverviewFolder)
 
             # create the Art. 16 (13-14) National report - 2022
-            if 'art16-2022' in cf.contentIds():
-                art16f = cf['art16-2022']
+            if 'assessment-summary-2022' in cf.contentIds():
+                art16f = cf['assessment-summary-2022']
             else:
                 art16f = create(cf,
                             'wise.msfd.nationalsummary2022',
                             title='National summary 2022',
-                            id='art16-2022')
+                            id='assessment-summary-2022')
 
-            self.set_layout(art16f, 'national-overview')
-            alsoProvides(art16f, interfaces.INationalSummaryOverviewFolder)
+            self.set_layout(art16f, 'assessment-summary-2022')
+            alsoProvides(art16f, interfaces.INationalSummary2022Folder)
 
     def setup_regionalsummaries(self, parent):
         if 'regional-summaries' in parent.contentIds():

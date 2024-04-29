@@ -229,6 +229,13 @@ class INationalSummaryCountryFolder(Interface):
     """
 
 
+class INationalSummary2022Folder(Interface):
+    """ A container for national summaries 2022
+
+    Ex: /assessment-module/national-summaries/lv/assessment-summary-2022
+    """
+
+
 class INationalSummaryOverviewFolder(Interface):
     """ A container for national summaries overview
 

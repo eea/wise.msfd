@@ -17,5 +17,6 @@
  <object name="wise.msfd.reportinghistoryfolder" meta_type="Dexterity FTI"/>
  <object name="wise.msfd.regionalsummaryoverview" meta_type="Dexterity FTI"/>
  <object name="wise.msfd.msrecommendationfeedback" meta_type="Dexterity FTI"/>
+ <object name="wise.msfd.nationalsummary2022" meta_type="Dexterity FTI"/>
  <object name="spmeasure" meta_type="Dexterity FTI"/>
 </object>
