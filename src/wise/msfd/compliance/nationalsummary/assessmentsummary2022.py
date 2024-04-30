@@ -12,7 +12,7 @@ from Products.statusmessages.interfaces import IStatusMessage
 from plone.api import portal
 from wise.msfd.compliance.assessment import (ANSWERS_COLOR_TABLE,
                                              ARTICLE_WEIGHTS,
-                                             CONCLUSION_COLOR_TABLE,
+                                             CONCLUSION_COLOR_TABLE_2022,
                                              AssessmentDataMixin,
                                              get_assessment_data_2012_db,
                                              get_assessment_data_2016_art1314,
@@ -31,6 +31,7 @@ from wise.msfd.compliance.main import (RecommendationsTable, STORAGE_KEY)
 from wise.msfd.compliance.nationaldescriptors.main import (
     format_assessment_data_2022
 )
+from wise.msfd.compliance.scoring import get_overall_conclusion_2022
 from wise.msfd.compliance.vocabulary import get_regions_for_country
 from wise.msfd.gescomponents import DESCRIPTOR_TYPES
 from wise.msfd.translation import retrieve_translation
@@ -48,23 +49,58 @@ logger = logging.getLogger('wise.msfd')
 
 
 class CrossCuttingTable(BaseNatSummaryView):
-    """"""
+    """ CrossCuttingTable """
 
-    template = ViewPageTemplateFile('pt/summary-assessment.pt')
+    template = ViewPageTemplateFile('pt/cross-cutting-2022.pt')
     sections = (
         ("E Socio-economic assessment", ["Ad11E", "Ad12E"]),
         ("Impact of climate change", ["Ad13F",]),
         ("Funding of the measures", ["Ad14G", "Ad15G"]),
-        ("Links to other policies", ["Ad16H", "Ad17H", "Ad18H"]),
-        ("Regional cooperation and transboundary impacts", ["Ad19I", "Ad20I"]),
-        ("Public consultation", ["Ad21J", "Ad22J"]),
-        ("Administrative processes", ["Ad23K", "Ad24K"]),
+        ("Links to other policies", ["Ad16G", "Ad17G", "Ad18G"]),
+        ("Regional cooperation and transboundary impacts", ["Ad19H", "Ad20H"]),
+        ("Public consultation", ["Ad21I", "Ad22I"]),
+        ("Administrative processes", ["Ad23J", "Ad24J"]),
     )
 
     def __init__(self, context, request, assessment_data):
         super(CrossCuttingTable, self).__init__(context, request)
 
         self.assessment_data = assessment_data
+
+    def get_score_for_section(self, section_questions):
+        total_score = 0
+        total_weight = 0
+
+        for answer in self.assessment_data.answers:
+            qcode = answer.question.split(':')[0]
+
+            if qcode not in section_questions:
+                continue
+
+            score_achieved = answer.score.score_achieved
+            weight = answer.score.weight
+
+            total_score = total_score + (score_achieved * weight)
+            total_weight = total_weight + weight
+
+        # import pdb
+        # pdb.set_trace()
+
+        final_score = total_score / total_weight if total_weight else 0
+        score_value, conclusion = get_overall_conclusion_2022(
+            final_score * 100)
+        conclusion_color = CONCLUSION_COLOR_TABLE_2022.get(score_value, 0)
+
+        return conclusion_color, conclusion
+
+    def __call__(self):
+        data = []
+
+        for section_name, section_questions in self.sections:
+            data.append(
+                (section_name, self.get_score_for_section(section_questions)))
+
+        return self.template(data=data)
 
 
 @implementer(INationalSummary2022Folder)
@@ -126,9 +162,6 @@ class AssessmentSummary2022View(BaseNatSummaryView):
                         self.setup_data_cross_cutting(assessment_data)
 
                     res.append(obj)
-
-        import pdb
-        pdb.set_trace()
 
         return res
 
@@ -217,16 +250,13 @@ class AssessmentSummary2022View(BaseNatSummaryView):
         # introduction = Introduction(self.context, self.request)
 
         # 2. Summary Assessment
-        # cross_cutting = CrossCuttingTable(
-        #     self, self.request, self.assessment_data_cross_cutting)
-
-        # 3. Progress Assessment
-        # prog_assess = ProgressAssessment(self, self.request)
+        cross_cutting = CrossCuttingTable(
+            self, self.request, self.assessment_data_cross_cutting)
 
         self.tables = [
             report_header,
             # introduction,
-            # cross_cutting,
+            cross_cutting,
             # prog_assess,
             # descriptor_lvl_assess,
             # trans_edit_html,
