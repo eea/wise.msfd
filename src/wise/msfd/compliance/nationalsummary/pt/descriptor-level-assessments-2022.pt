@@ -1,0 +1,90 @@
+<div tal:define="data options/data"
+     class="nat-sum-descriptor-level-assessments"
+     id="container-assessment-data-2018">
+  <!--<h3>Descriptor-level assessments</h3>-->
+
+  <div class="report-section">
+    <h3>Descriptor-level assessments</h3>
+
+    <tal:rep tal:repeat="descriptor_type python: view.descriptor_types"
+        tal:define="descriptor_section data">
+      <h4 tal:content="python: descriptor_type[0]">Pressure-based descriptors</h4>
+      <tal:rep tal:repeat="descriptor python: descriptor_type[1]">
+        <tal:block tal:define="descriptor_data python: [d for d in descriptor_section if d[0][0] == descriptor][0]">
+          <h5 tal:content="python: descriptor_data[0][1]">D7 - Hydrographical changes</h5>
+
+          <div tal:repeat="article_section python:descriptor_data[1]">
+            <tal:block tal:define="article_data python: article_section[1]">
+              <p class="article-title"
+                 tal:content="python: view.get_article_title(article_section[0])">
+                 Article 8
+              </p>
+              <div>
+                <div>
+                  <label>Assessment summary</label>
+                  <p tal:content="structure python: article_data.assessment_summary">
+                    Long text
+                  </p>
+                </div>
+                <div>
+                  <label>Progress since 2012</label>
+                  <p tal:content="structure python: article_data.progress_assessment">
+                    Long text
+                  </p>
+                </div>
+                <div>
+                  <label>Recommendations</label>
+                  <p tal:content="structure python: article_data.recommendations">
+                    Long text
+                  </p>
+                </div>
+              </div>
+              <div class="ast-header-data">
+                <table class="table table-condensed assessment-data-table">
+                  <tr>
+                    <td tal:content="python: '{} - {} - {}'.format(article_section[0], descriptor, view.country_name)"></td>
+                    <td class="overall-values">
+                      <div class="as-value"><div>Adequacy</div></div>
+                    </td>
+                    <td class="overall-values">
+                      <div class="as-value"><div>Completeness</div></div>
+                    </td>
+                    <td class="overall-values">
+                      <div class="as-value"><div>Coherence</div></div>
+                    </td>
+                    <td class="overall-values">
+                      <div class="as-value"><div>Overall</div></div>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>Assessment 2022</td>
+                    <td class="overall-values">
+                      <div tal:attributes="class python: 'as-value as-value-{}'.format(article_data.adequacy[1])">
+                        <div tal:content="python: article_data.adequacy[0]">Good (3)</div>
+                      </div>
+                    </td>
+                    <td class="overall-values">
+                      <div tal:attributes="class python: 'as-value as-value-{}'.format(article_data.completeness[1])">
+                        <div tal:content="python: article_data.completeness[0]">Very good (4)</div>
+                      </div>
+                    </td>
+                    <td class="overall-values">
+                      <div tal:attributes="class python: 'as-value as-value-{}'.format(article_data.coherence[1])">
+                        <div tal:content="python: article_data.coherence[0]"> Poor (2)</div>
+                      </div>
+                    </td>
+                    <td class="overall-values">
+                      <div tal:attributes="class python: 'as-value as-value-{}'.format(article_data.overall_score_2022[1])">
+                        <div tal:content="python: article_data.overall_score_2022[0]">Poor (2)</div>
+                      </div>
+                    </td>
+                  </tr>
+                </table>
+              </div>
+            </tal:block>
+          </div>
+        </tal:block>
+      </tal:rep>
+    </tal:rep>
+  </div>
+</div>

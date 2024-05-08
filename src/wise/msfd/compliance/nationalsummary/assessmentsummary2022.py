@@ -13,7 +13,7 @@ from plone.api import portal
 from wise.msfd.compliance.assessment import (ANSWERS_COLOR_TABLE,
                                              ARTICLE_WEIGHTS,
                                              CONCLUSION_COLOR_TABLE_2022,
-                                             AssessmentDataMixin,
+                                             DESCRIPTOR_SUMMARY_2022,
                                              get_assessment_data_2012_db,
                                              get_assessment_data_2016_art1314,
                                              get_recommendation_data_2016_art1314,
@@ -32,8 +32,7 @@ from wise.msfd.compliance.nationaldescriptors.main import (
     format_assessment_data_2022
 )
 from wise.msfd.compliance.scoring import get_overall_conclusion_2022
-from wise.msfd.compliance.vocabulary import get_regions_for_country
-from wise.msfd.gescomponents import DESCRIPTOR_TYPES
+from wise.msfd.gescomponents import DESCRIPTOR_TYPES, get_descriptor
 from wise.msfd.translation import retrieve_translation
 from wise.msfd.utils import timeit
 
@@ -42,18 +41,93 @@ from zope.interface import implementer
 import pdfkit
 
 from .base import BaseNatSummaryView
-from .descriptor_assessments import DescriptorLevelAssessments
 from .introduction import Introduction
 
 logger = logging.getLogger('wise.msfd')
 
 
-class CrossCuttingTable(BaseNatSummaryView):
-    """ CrossCuttingTable """
+class DescriptorLevelAssessments2022(BaseNatSummaryView):
+    template = ViewPageTemplateFile('pt/descriptor-level-assessments-2022.pt')
+    descriptor_types = DESCRIPTOR_TYPES
+
+    def get_article_title(self, article):
+        return self.article_name(article)
+
+    def __init__(self, context, request, data_art13, data_art14):
+        super(DescriptorLevelAssessments2022, self).__init__(context, request)
+
+        self.assessment_data_art13 = data_art13
+        self.assessment_data_art14 = data_art14
+
+    def __call__(self):
+        """ 
+        :return: res =  [
+            ("D7 - Hydrographical changes", [
+                    ("Art13", DESCRIPTOR_SUMMARY),
+                    ("Art14", DESCRIPTOR_SUMMARY),
+                ]
+            ),
+            ("D1.4 - Birds", [
+                    ("Art13", DESCRIPTOR_SUMMARY),
+                    ("Art14", DESCRIPTOR_SUMMARY),
+                ]
+            ),
+        ]
+        """
+        descriptors = DESCRIPTOR_TYPES[0][1] + DESCRIPTOR_TYPES[1][1]
+        data = []
+
+        for descriptor in descriptors:
+            descr_obj = get_descriptor(descriptor)
+            articles_data = []
+            # Art13
+            if descriptor in ['D1.2', 'D1.3', 'D1.4', 'D1.5', 'D1.6']:
+                _article_data = self.assessment_data_art13['D1.1']
+            else:
+                _article_data = self.assessment_data_art13[descriptor]
+
+            assessment_summary = _article_data.assessment_summary.output
+            progress_assessment = _article_data.progress.output
+            recommendations = _article_data.recommendations.output
+
+            _adequacy = _article_data.phase_overall_scores.adequacy
+            adequacy = ("{} ({})".format(_adequacy['conclusion'][1],
+                                         _adequacy['conclusion'][0]),
+                        _adequacy['color'])
+
+            _completeness = _article_data.phase_overall_scores.completeness
+            completeness = ("{} ({})".format(_completeness['conclusion'][1],
+                                         _completeness['conclusion'][0]),
+                        _completeness['color'])
+
+            _coherence = _article_data.phase_overall_scores.coherence
+            coherence = ("{} ({})".format(_coherence['conclusion'][1],
+                                         _coherence['conclusion'][0]),
+                        _coherence['color'])
+
+            overall_score_2022 = (
+                "{} ({})".format(_article_data.overall_conclusion[1], 
+                                 _article_data.overall_conclusion[0]),
+                _article_data.overall_conclusion_color)
+
+            art_data = DESCRIPTOR_SUMMARY_2022(
+                assessment_summary, progress_assessment, recommendations,
+                adequacy, completeness, coherence, overall_score_2022
+            )
+            articles_data.append(('Art13', art_data))
+            # Art14
+            # TODO
+            data.append(((descr_obj.id, descr_obj.title), articles_data))
+
+        return self.template(data=data)
+
+
+class CrossCuttingTable2022(BaseNatSummaryView):
+    """ CrossCuttingTable2022 """
 
     template = ViewPageTemplateFile('pt/cross-cutting-2022.pt')
     sections = (
-        ("E Socio-economic assessment", ["Ad11E", "Ad12E"]),
+        ("Socio-economic assessment", ["Ad11E", "Ad12E"]),
         ("Impact of climate change", ["Ad13F",]),
         ("Funding of the measures", ["Ad14G", "Ad15G"]),
         ("Links to other policies", ["Ad16G", "Ad17G", "Ad18G"]),
@@ -63,7 +137,7 @@ class CrossCuttingTable(BaseNatSummaryView):
     )
 
     def __init__(self, context, request, assessment_data):
-        super(CrossCuttingTable, self).__init__(context, request)
+        super(CrossCuttingTable2022, self).__init__(context, request)
 
         self.assessment_data = assessment_data
 
@@ -118,22 +192,44 @@ class AssessmentSummary2022View(BaseNatSummaryView):
 
     render_header = True
 
-    def setup_data_cross_cutting(self, assessment_data):
-        elements = self.questions['Art1314CrossCutting'][0].get_all_assessed_elements(
-            'DCrossCutting',
+    def setup_article_data(self, assessment_data, article_title, descriptor):
+        elements = self.questions[article_title][0].get_all_assessed_elements(
+            descriptor,
             muids=[]  # self.muids
         )
 
-        self.assessment_data_cross_cutting = format_assessment_data_2022(
-            'Art1314CrossCutting',
+        res = format_assessment_data_2022(
+            article_title,
             elements,
-            self.questions['Art1314CrossCutting'],
+            self.questions[article_title],
             [],
             assessment_data,
-            'DCrossCutting',
+            descriptor,
             self.article_weights,
             self
         )
+
+        return res
+
+    def setup_data_cross_cutting(self, assessment_data):
+        return self.setup_article_data(
+            assessment_data, 'Art1314CrossCutting', 'DCrossCutting')
+
+    def setup_data_completeness_art13(self, assessment_data):
+        return self.setup_article_data(
+            assessment_data, 'Art13Completeness', 'Completeness')
+
+    def setup_data_completeness_art14(self, assessment_data):
+        return self.setup_article_data(
+            assessment_data, 'Art13Completeness', 'Completeness')
+
+    def setup_data_art13(self, assessment_data, descriptor_id=''):
+        return self.setup_article_data(
+            assessment_data, 'Art13', get_descriptor(descriptor_id.upper()))
+
+    def setup_data_art14(self, assessment_data, descriptor_id=''):
+        return self.setup_article_data(
+            assessment_data, 'Art14', get_descriptor(descriptor_id.upper()))
 
     def setup_data(self):
         catalog = portal.get_tool('portal_catalog')
@@ -141,7 +237,11 @@ class AssessmentSummary2022View(BaseNatSummaryView):
             portal_type='wise.msfd.nationaldescriptorassessment',
         )
 
-        res = []
+        self.data_cross_cutting = {}
+        self.data_completeness_art13 = {}
+        self.data_completeness_art14 = {}
+        self.data_art13 = {}
+        self.data_art14 = {}
 
         for brain in brains:
             obj = brain._unrestrictedGetObject()
@@ -158,12 +258,33 @@ class AssessmentSummary2022View(BaseNatSummaryView):
                     obj, 'saved_assessment_data') else {}
 
                 if (assessment_data):
-                    if 'Cross-cutting-2022' in obj_title:
-                        self.setup_data_cross_cutting(assessment_data)
+                    if obj_title == 'Cross-cutting-2022':
+                        _data = self.setup_data_cross_cutting(assessment_data)
+                        self.data_cross_cutting['All'] = _data
 
-                    res.append(obj)
+                    elif obj_title == 'Art13-completeness-2022':
+                        _data = self.setup_data_completeness_art13(
+                            assessment_data)
+                        self.data_completeness_art13['All'] = _data
 
-        return res
+                    elif obj_title == 'Art14-completeness-2022':
+                        _data = self.setup_data_completeness_art14(
+                            assessment_data)
+                        self.data_completeness_art14['All'] = _data
+
+                    elif obj_title == 'Art13':
+                        descr_id = obj.aq_parent.id.upper()
+                        _data = self.setup_data_art13(
+                            assessment_data, descr_id)
+                        self.data_art13[descr_id] = _data
+
+                    elif obj_title == 'Art14':
+                        descr_id = obj.aq_parent.id.upper()
+                        _data = self.setup_data_art14(
+                            assessment_data, descr_id)
+                        self.data_art14[descr_id] = _data
+
+                    # res.append(obj)
 
     # def _get_css(self):
     #     return [
@@ -238,27 +359,31 @@ class AssessmentSummary2022View(BaseNatSummaryView):
         )
         # trans_edit_html = self.translate_view()()
 
-        data = self.setup_data()
-
-        # 4. Descriptor-level assessments
-        # descriptor_lvl_assess = DescriptorLevelAssessments(self, self.request)
-        # descriptor_lvl_assess_view = descriptor_lvl_assess()
-        # overall_scores = descriptor_lvl_assess.overall_scores
-        # nat_desc_country_folder = descriptor_lvl_assess.nat_desc_country_folder
+        self.setup_data()
 
         # 1. Introduction
         # introduction = Introduction(self.context, self.request)
 
-        # 2. Summary Assessment
-        cross_cutting = CrossCuttingTable(
-            self, self.request, self.assessment_data_cross_cutting)
+        # 4. Descriptor-level assessments
+        descriptor_lvl_assess = DescriptorLevelAssessments2022(
+            self,
+            self.request,
+            self.data_art13,
+            self.data_art14)
+        # descriptor_lvl_assess_view = descriptor_lvl_assess()
+        # overall_scores = descriptor_lvl_assess.overall_scores
+        # nat_desc_country_folder = descriptor_lvl_assess.nat_desc_country_folder
+
+        # 1. Cross cutting
+        cross_cutting = CrossCuttingTable2022(
+            self, self.request, self.data_cross_cutting['All'])
 
         self.tables = [
             report_header,
             # introduction,
             cross_cutting,
             # prog_assess,
-            # descriptor_lvl_assess,
+            descriptor_lvl_assess,
             # trans_edit_html,
         ]
 

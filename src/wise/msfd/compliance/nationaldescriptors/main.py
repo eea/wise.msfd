@@ -66,7 +66,8 @@ Assessment = namedtuple('Assessment',
                             'phase_overall_scores',
                             'overall_score',
                             'overall_conclusion',
-                            'overall_conclusion_color'
+                            'overall_conclusion_color',
+                            'progress'
                         ])
 AssessmentRow = namedtuple('AssessmentRow',
                            [
@@ -1028,7 +1029,8 @@ def format_assessment_data(article, elements, questions, muids, data,
         phase_overall_scores,
         overall_score,
         overall_conclusion,
-        overall_conclusion_color
+        overall_conclusion_color,
+        ''
     )
 
     return assessment
@@ -1136,6 +1138,7 @@ def format_assessment_data_2022(article, elements, questions, muids, data,
     # assessment summary and recommendations
     assess_sum = data.get('%s_assessment_summary' % article)
     recommend = data.get('%s_recommendations' % article)
+    progress = data.get('%s_progress' % article)
 
     for phase in phases:
         # set the conclusion and color based on the score for each phase
@@ -1181,7 +1184,8 @@ def format_assessment_data_2022(article, elements, questions, muids, data,
         phase_overall_scores,
         overall_score,
         overall_conclusion,
-        overall_conclusion_color
+        overall_conclusion_color,
+        progress or '-',
     )
 
     return assessment

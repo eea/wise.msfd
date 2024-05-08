@@ -131,6 +131,12 @@ DESCRIPTOR_SUMMARY = namedtuple(
      'coherence_change_since_2012',]
 )
 
+DESCRIPTOR_SUMMARY_2022 = namedtuple(
+    'DESCRIPTOR_SUMMARY_2022',
+    ['assessment_summary', 'progress_assessment', 'recommendations',
+     'adequacy', 'completeness', 'coherence', 'overall_score_2022']
+)
+
 
 # This somehow translates the real value in a color, to be able to compress the
 # displayed information in the assessment table
