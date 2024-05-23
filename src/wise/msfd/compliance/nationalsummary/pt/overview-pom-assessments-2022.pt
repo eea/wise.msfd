@@ -1,0 +1,55 @@
+<div class="nat-sum-summary-assessment overview-assessment-section">
+    <h3>Overview of the results of the PoM assessment</h3>
+    <h4>Conclusions on the completeness of information reported by the Member State in the updated PoM</h4>
+    <div tal:define="completeness_art13_data options/completeness_art13_data;
+            completeness_art14_data options/completeness_art14_data">
+        <div class="ast-header-data" style="width: 700px;">
+            <table class=" table table-condensed assessment-data-table">
+                <tr>
+                    <th></th>
+                    <th>Score (with colour codes)</th>
+                </tr>
+                <tr>
+                    <th>Completeness Article 13</th>
+                    <td class="overall-values" style="width: 200px;">
+                        <div tal:attributes="class python: 'gescomp as-value as-value-{}'.format(completeness_art13_data[0])">
+                            <div tal:content="python: '{}'.format(completeness_art13_data[1])">Medium</div>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <th>Completeness Article 14</th>
+                    <td class="overall-values" style="width: 200px;">
+                        <div tal:attributes="class python: 'gescomp as-value as-value-{}'.format(completeness_art14_data[0])">
+                            <div tal:content="python: '{}'.format(completeness_art14_data[1])">Medium</div>
+                        </div>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+    <h4>Conclusions on the adequacy of the cross-cutting information reported by the Member State in the updated PoM</h4>
+    <div class="ast-header-data" style="width: 700px;"
+            tal:define="cross_cutting_rows options/cross_cutting_data">
+        <table class=" table table-condensed assessment-data-table">
+            <tr>
+                <th>Cross-cutting aspects</th>
+                <th>Score (with colour codes)</th>
+            </tr>
+            <tal:rep tal:repeat="row cross_cutting_rows">
+                <tr>
+                    <th class="overall-values" style="width: 400px;">
+                        <div tal:content="python: row[0]">Impact of climate change</div>
+                    </th>
+                    <td class="overall-values" style="width: 200px;">
+                        <div tal:attributes="class python: 'gescomp as-value as-value-{}'.format(row[1][0])">
+                            <div tal:content="python: '{}'.format(row[1][1])">Medium</div>
+                        </div>
+                    </td>
+                </tr>
+            </tal:rep>
+        </table>
+    </div>
+    <h4>Conclusions on the adequacy of the descriptor-specific information reported by the Member State in the updated PoM, by article</h4>
+    <div>To be implemented...</div>
+</div>

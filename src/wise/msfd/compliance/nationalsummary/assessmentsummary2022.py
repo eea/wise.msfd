@@ -41,12 +41,22 @@ from zope.interface import implementer
 import pdfkit
 
 from .base import BaseNatSummaryView
-from .introduction import Introduction
+
 
 logger = logging.getLogger('wise.msfd')
 
 
+class Introduction(BaseNatSummaryView):
+    """ Introduction """
+
+    template = ViewPageTemplateFile("pt/introduction-2022.pt")
+
+    def __call__(self):
+        return self.template()
+
 class DescriptorLevelAssessments2022(BaseNatSummaryView):
+    """ DescriptorLevelAssessments2022 """
+
     template = ViewPageTemplateFile('pt/descriptor-level-assessments-2022.pt')
     descriptor_types = DESCRIPTOR_TYPES
 
@@ -122,10 +132,10 @@ class DescriptorLevelAssessments2022(BaseNatSummaryView):
         return self.template(data=data)
 
 
-class CrossCuttingTable2022(BaseNatSummaryView):
-    """ CrossCuttingTable2022 """
+class OverviewPOMAssessment2022(BaseNatSummaryView):
+    """ OverviewPOMAssessment2022 """
 
-    template = ViewPageTemplateFile('pt/cross-cutting-2022.pt')
+    template = ViewPageTemplateFile('pt/overview-pom-assessments-2022.pt')
     sections = (
         ("Socio-economic assessment", ["Ad11E", "Ad12E"]),
         ("Impact of climate change", ["Ad13F",]),
@@ -136,16 +146,19 @@ class CrossCuttingTable2022(BaseNatSummaryView):
         ("Administrative processes", ["Ad23J", "Ad24J"]),
     )
 
-    def __init__(self, context, request, assessment_data):
-        super(CrossCuttingTable2022, self).__init__(context, request)
+    def __init__(self, context, request, cross_cuting_data, 
+                 completeness_art13_data, completeness_art14_data):
+        super(OverviewPOMAssessment2022, self).__init__(context, request)
 
-        self.assessment_data = assessment_data
+        self.cross_cuting_data = cross_cuting_data
+        self.completeness_art13_data = completeness_art13_data
+        self.completeness_art14_data = completeness_art14_data
 
     def get_score_for_section(self, section_questions):
         total_score = 0
         total_weight = 0
 
-        for answer in self.assessment_data.answers:
+        for answer in self.cross_cuting_data.answers:
             qcode = answer.question.split(':')[0]
 
             if qcode not in section_questions:
@@ -168,13 +181,26 @@ class CrossCuttingTable2022(BaseNatSummaryView):
         return conclusion_color, conclusion
 
     def __call__(self):
-        data = []
+        cross_cutting_data = []
 
         for section_name, section_questions in self.sections:
-            data.append(
+            cross_cutting_data.append(
                 (section_name, self.get_score_for_section(section_questions)))
 
-        return self.template(data=data)
+        completeness_art13_data = [
+            self.completeness_art13_data.overall_conclusion_color,
+            self.completeness_art13_data.overall_conclusion[1],
+        ]
+        completeness_art14_data = [
+            self.completeness_art14_data.overall_conclusion_color,
+            self.completeness_art14_data.overall_conclusion[1],
+        ]
+
+        return self.template(
+            cross_cutting_data=cross_cutting_data,
+            completeness_art13_data=completeness_art13_data,
+            completeness_art14_data=completeness_art14_data
+        )
 
 
 @implementer(INationalSummary2022Folder)
@@ -221,7 +247,7 @@ class AssessmentSummary2022View(BaseNatSummaryView):
 
     def setup_data_completeness_art14(self, assessment_data):
         return self.setup_article_data(
-            assessment_data, 'Art13Completeness', 'Completeness')
+            assessment_data, 'Art14Completeness', 'Completeness')
 
     def setup_data_art13(self, assessment_data, descriptor_id=''):
         return self.setup_article_data(
@@ -362,28 +388,29 @@ class AssessmentSummary2022View(BaseNatSummaryView):
         self.setup_data()
 
         # 1. Introduction
-        # introduction = Introduction(self.context, self.request)
+        introduction = Introduction(self.context, self.request)
 
-        # 4. Descriptor-level assessments
+        # 2. Overview of the results of the PoM assessment
+        overview_pom = OverviewPOMAssessment2022(
+            self, self.request,
+            self.data_cross_cutting['All'],
+            self.data_completeness_art13['All'],
+            self.data_completeness_art14['All'],
+        )
+
+        # 5. Descriptor-level assessments
         descriptor_lvl_assess = DescriptorLevelAssessments2022(
             self,
             self.request,
             self.data_art13,
             self.data_art14)
-        # descriptor_lvl_assess_view = descriptor_lvl_assess()
-        # overall_scores = descriptor_lvl_assess.overall_scores
-        # nat_desc_country_folder = descriptor_lvl_assess.nat_desc_country_folder
-
-        # 1. Cross cutting
-        cross_cutting = CrossCuttingTable2022(
-            self, self.request, self.data_cross_cutting['All'])
 
         self.tables = [
             report_header,
-            # introduction,
-            cross_cutting,
+            introduction,
+            overview_pom,
             # prog_assess,
-            descriptor_lvl_assess,
+            # descriptor_lvl_assess,
             # trans_edit_html,
         ]
 
