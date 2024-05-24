@@ -53,7 +53,7 @@
     </div>
 
     <div id="download-report-data-form">
-      <form method="POST" action="" tal:attributes="action request/getURL">
+      <form method="POST" action="" tal:attributes="action python: context.absolute_url() + '/edit'">
         <button name="edit-data" class="btn btn-primary">Edit</button>
         <!--<button name="download" class="btn btn-primary">Download as document (odt)</button>-->
         <button name="download_pdf" class="btn btn-primary">Download as PDF</button>

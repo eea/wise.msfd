@@ -42,6 +42,11 @@ DESCRIPTOR_TYPES = [
                                  'D3', 'D1.6', 'D6', 'D4'])
 ]
 
+DESCRIPTOR_TYPES_2022 = [
+    ("Pollution descriptors", ['D10', 'D5', 'D8', 'D9', 'D11']),
+    ("Biodiversity descriptors", ['D1.1', 'D6', 'D4', 'D3', 'D2', 'D7'])
+]
+
 
 class ElementDefinition:
     def __init__(self, node, root):

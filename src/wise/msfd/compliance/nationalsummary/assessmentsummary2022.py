@@ -32,7 +32,7 @@ from wise.msfd.compliance.nationaldescriptors.main import (
     format_assessment_data_2022
 )
 from wise.msfd.compliance.scoring import get_overall_conclusion_2022
-from wise.msfd.gescomponents import DESCRIPTOR_TYPES, get_descriptor
+from wise.msfd.gescomponents import DESCRIPTOR_TYPES_2022, get_descriptor
 from wise.msfd.translation import retrieve_translation
 from wise.msfd.utils import timeit
 
@@ -46,6 +46,20 @@ from .base import BaseNatSummaryView
 logger = logging.getLogger('wise.msfd')
 
 
+class CrossCuttingAssessment2022(BaseNatSummaryView):
+    """ CrossCuttingAssessment2022 """
+    template = ViewPageTemplateFile("pt/cross-cutting-assessment-2022.pt")
+
+    def __call__(self):
+        return self.template()
+
+class OverviewPOMEXceptions2022(BaseNatSummaryView):
+    """ OverviewPOMEXceptions2022 """
+    template = ViewPageTemplateFile("pt/overview-pom-exceptions-2022.pt")
+
+    def __call__(self):
+        return self.template()
+
 class Introduction(BaseNatSummaryView):
     """ Introduction """
 
@@ -58,7 +72,7 @@ class DescriptorLevelAssessments2022(BaseNatSummaryView):
     """ DescriptorLevelAssessments2022 """
 
     template = ViewPageTemplateFile('pt/descriptor-level-assessments-2022.pt')
-    descriptor_types = DESCRIPTOR_TYPES
+    descriptor_types = DESCRIPTOR_TYPES_2022
 
     def get_article_title(self, article):
         return self.article_name(article)
@@ -84,7 +98,7 @@ class DescriptorLevelAssessments2022(BaseNatSummaryView):
             ),
         ]
         """
-        descriptors = DESCRIPTOR_TYPES[0][1] + DESCRIPTOR_TYPES[1][1]
+        descriptors = self.descriptor_types[0][1] + self.descriptor_types[1][1]
         data = []
 
         for descriptor in descriptors:
@@ -120,13 +134,49 @@ class DescriptorLevelAssessments2022(BaseNatSummaryView):
                                  _article_data.overall_conclusion[0]),
                 _article_data.overall_conclusion_color)
 
-            art_data = DESCRIPTOR_SUMMARY_2022(
+            art_data13 = DESCRIPTOR_SUMMARY_2022(
                 assessment_summary, progress_assessment, recommendations,
                 adequacy, completeness, coherence, overall_score_2022
             )
-            articles_data.append(('Art13', art_data))
+            articles_data.append(('Art13', art_data13))
+
             # Art14
-            # TODO
+            if descriptor in ['D1.2', 'D1.3', 'D1.4', 'D1.5', 'D1.6']:
+                _article_data = self.assessment_data_art14['D1.1']
+            else:
+                _article_data = self.assessment_data_art14[descriptor]
+
+            assessment_summary = _article_data.assessment_summary.output
+            progress_assessment = _article_data.progress.output
+            recommendations = getattr(
+                _article_data.recommendations, 'output', '-')
+
+            _adequacy = _article_data.phase_overall_scores.adequacy
+            adequacy = ("{} ({})".format(_adequacy['conclusion'][1],
+                                         _adequacy['conclusion'][0]),
+                        _adequacy['color'])
+
+            _completeness = _article_data.phase_overall_scores.completeness
+            completeness = ("{} ({})".format(_completeness['conclusion'][1],
+                                         _completeness['conclusion'][0]),
+                        _completeness['color'])
+
+            _coherence = _article_data.phase_overall_scores.coherence
+            coherence = ("{} ({})".format(_coherence['conclusion'][1],
+                                         _coherence['conclusion'][0]),
+                        _coherence['color'])
+
+            overall_score_2022 = (
+                "{} ({})".format(_article_data.overall_conclusion[1], 
+                                 _article_data.overall_conclusion[0]),
+                _article_data.overall_conclusion_color)
+
+            art_data14 = DESCRIPTOR_SUMMARY_2022(
+                assessment_summary, progress_assessment, recommendations,
+                adequacy, completeness, coherence, overall_score_2022
+            )
+            articles_data.append(('Art14', art_data14))
+
             data.append(((descr_obj.id, descr_obj.title), articles_data))
 
         return self.template(data=data)
@@ -147,12 +197,22 @@ class OverviewPOMAssessment2022(BaseNatSummaryView):
     )
 
     def __init__(self, context, request, cross_cuting_data, 
-                 completeness_art13_data, completeness_art14_data):
+                 completeness_art13_data, completeness_art14_data,
+                 data_art13, data_art14):
         super(OverviewPOMAssessment2022, self).__init__(context, request)
 
         self.cross_cuting_data = cross_cuting_data
         self.completeness_art13_data = completeness_art13_data
         self.completeness_art14_data = completeness_art14_data
+        self.data_art13 = data_art13
+        self.data_art14 = data_art14
+
+    @property
+    def overview_pom_figures(self):
+        context = self.context.context
+        output = self.get_field_value('overview_pom_figures', context)
+
+        return output
 
     def get_score_for_section(self, section_questions):
         total_score = 0
@@ -169,9 +229,6 @@ class OverviewPOMAssessment2022(BaseNatSummaryView):
 
             total_score = total_score + (score_achieved * weight)
             total_weight = total_weight + weight
-
-        # import pdb
-        # pdb.set_trace()
 
         final_score = total_score / total_weight if total_weight else 0
         score_value, conclusion = get_overall_conclusion_2022(
@@ -196,10 +253,33 @@ class OverviewPOMAssessment2022(BaseNatSummaryView):
             self.completeness_art14_data.overall_conclusion[1],
         ]
 
+        descriptor_specific_data = []
+
+        for descr_type, descr_codes in DESCRIPTOR_TYPES_2022:
+            descr_type_data = []
+            for descr_code in descr_codes:
+                a13data = self.data_art13[descr_code]
+                art13 = (
+                    a13data.phase_overall_scores.adequacy['conclusion'][1],
+                    a13data.phase_overall_scores.adequacy['color'])
+                a14data = self.data_art14[descr_code]
+                art14 = (
+                    a14data.phase_overall_scores.adequacy['conclusion'][1],
+                    a14data.phase_overall_scores.adequacy['color'])
+
+                descr_obj = get_descriptor(descr_code)
+                descr_title = descr_obj.title
+                descr_type_data.append(
+                    (descr_title, {"Art13": art13, "Art14": art14})
+                )
+
+            descriptor_specific_data.append((descr_type, descr_type_data))
+
         return self.template(
             cross_cutting_data=cross_cutting_data,
             completeness_art13_data=completeness_art13_data,
-            completeness_art14_data=completeness_art14_data
+            completeness_art14_data=completeness_art14_data,
+            descriptor_specific_data=descriptor_specific_data
         )
 
 
@@ -396,6 +476,18 @@ class AssessmentSummary2022View(BaseNatSummaryView):
             self.data_cross_cutting['All'],
             self.data_completeness_art13['All'],
             self.data_completeness_art14['All'],
+            self.data_art13,
+            self.data_art14
+        )
+
+        # 3. Overview MS PoM and Exceptions
+        overview_pom_exceptions = OverviewPOMEXceptions2022(
+            self, self.request
+        )
+
+        # 4. Cross cutting assessment
+        cross_cutting_assessment = CrossCuttingAssessment2022(
+            self, self.request
         )
 
         # 5. Descriptor-level assessments
@@ -409,8 +501,9 @@ class AssessmentSummary2022View(BaseNatSummaryView):
             report_header,
             introduction,
             overview_pom,
-            # prog_assess,
-            # descriptor_lvl_assess,
+            overview_pom_exceptions,
+            cross_cutting_assessment,
+            descriptor_lvl_assess,
             # trans_edit_html,
         ]
 
