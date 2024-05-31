@@ -26,6 +26,7 @@ from wise.msfd import db, sql2018
 from wise.msfd.compliance.assessment import (ANSWERS_COLOR_TABLE,
                                              ARTICLE_WEIGHTS,
                                              CONCLUSION_COLOR_TABLE,
+                                             CONCLUSION_COLOR_TABLE_2022,
                                              AssessmentDataMixin,
                                              get_assessment_data_2012_db,
                                              get_assessment_data_2016_art1314,
@@ -503,14 +504,14 @@ class NatDescCountryOverviewReports(NationalDescriptorCountryOverview):
 
         if desc_id.startswith('D1.'):
             all_ids.append('D1')
-        
+
         for row in self.art11_data:
             if row.CountryCode != country_code:
                 continue
 
             if row.Descriptor not in all_ids:
                 continue
-            
+
             sub_regions = row.SubRegions or ''
 
             if not sub_regions:
@@ -658,7 +659,7 @@ class NatDescCountryOverviewAssessments(NationalDescriptorCountryOverview,
         )
 
         return fname
-    
+
     def descriptor_obj(self, descriptor):
         return get_descriptor(descriptor.upper())
 
@@ -666,8 +667,9 @@ class NatDescCountryOverviewAssessments(NationalDescriptorCountryOverview,
         result = []
 
         region_folder = self.get_regions()[0]
-        
-        result.append("<h1>{} - Assessment of PoM</h1>".format(self.country_name))
+
+        result.append(
+            "<h1>{} - Assessment of PoM</h1>".format(self.country_name))
 
         # cross cutting here
         result.append("<h2>1. {}</h2>".format("Cross cutting"))
@@ -676,7 +678,7 @@ class NatDescCountryOverviewAssessments(NationalDescriptorCountryOverview,
         data = cross_cutting_folder.saved_assessment_data.last()
         elements = self.questions['Art1314CrossCutting'][0].get_all_assessed_elements(
             'DCrossCutting',
-            muids=[]  #self.muids
+            muids=[]  # self.muids
         )
 
         article_weights = ARTICLE_WEIGHTS
@@ -694,9 +696,9 @@ class NatDescCountryOverviewAssessments(NationalDescriptorCountryOverview,
         assessment_formatted = assessment
         progress_assessment = data.get(
             "{}_{}".format('Art1314CrossCutting', "progress"), "-")
-        
+
         result.append(self.pdf_template_cross(
-            assessment_formatted=assessment_formatted, 
+            assessment_formatted=assessment_formatted,
             progress_assessment=progress_assessment))
 
         # art13 completeness here
@@ -707,7 +709,7 @@ class NatDescCountryOverviewAssessments(NationalDescriptorCountryOverview,
         data = completeness_folder.saved_assessment_data.last()
         elements = self.questions['Art13Completeness'][0].get_all_assessed_elements(
             'Completeness',
-            muids=[]  #self.muids
+            muids=[]  # self.muids
         )
 
         article_weights = ARTICLE_WEIGHTS
@@ -725,10 +727,10 @@ class NatDescCountryOverviewAssessments(NationalDescriptorCountryOverview,
         assessment_formatted = assessment
         structure = data.get(
             "{}_{}".format('Art13Completeness', "structure"), "-")
-        
+
         result.append(self.pdf_template_completeness(
-            assessment_formatted=assessment_formatted, 
-            article='Art13Completeness', 
+            assessment_formatted=assessment_formatted,
+            article='Art13Completeness',
             structure=structure))
 
         # art 13 per descriptor
@@ -748,7 +750,7 @@ class NatDescCountryOverviewAssessments(NationalDescriptorCountryOverview,
 
             elements = self.questions['Art13'][0].get_all_assessed_elements(
                 self.descriptor_obj(descr_id),
-                muids=[]  #self.muids
+                muids=[]  # self.muids
             )
 
             article_weights = ARTICLE_WEIGHTS
@@ -766,12 +768,12 @@ class NatDescCountryOverviewAssessments(NationalDescriptorCountryOverview,
             assessment_formatted = assessment
             progress_assessment = data.get(
                 "{}_{}".format('Art13', "progress"), "-")
-            
+
             result.append(self.pdf_template(
-                assessment_formatted=assessment_formatted, 
-                article='Art13', 
+                assessment_formatted=assessment_formatted,
+                article='Art13',
                 progress_assessment=progress_assessment))
-            
+
         # art14 completeness here
         result.append("<h2>4. {}</h2>".format("Article 14 completeness"))
 
@@ -780,7 +782,7 @@ class NatDescCountryOverviewAssessments(NationalDescriptorCountryOverview,
         data = completeness_folder.saved_assessment_data.last()
         elements = self.questions['Art14Completeness'][0].get_all_assessed_elements(
             'Completeness',
-            muids=[]  #self.muids
+            muids=[]  # self.muids
         )
 
         article_weights = ARTICLE_WEIGHTS
@@ -798,12 +800,12 @@ class NatDescCountryOverviewAssessments(NationalDescriptorCountryOverview,
         assessment_formatted = assessment
         progress_assessment = data.get(
             "{}_{}".format('Art14Completeness', "progress"), "-")
-        
+
         result.append(self.pdf_template_completeness(
-            assessment_formatted=assessment_formatted, 
-            article='Art14Completeness', 
-            progress_assessment=progress_assessment))        
-            
+            assessment_formatted=assessment_formatted,
+            article='Art14Completeness',
+            progress_assessment=progress_assessment))
+
         # art 14 per descriptor
         result.append("<h2>5. {}</h2>".format("Article 14 per descriptor"))
 
@@ -820,7 +822,7 @@ class NatDescCountryOverviewAssessments(NationalDescriptorCountryOverview,
             data = art14_folder.saved_assessment_data.last()
             elements = self.questions['Art14'][0].get_all_assessed_elements(
                 self.descriptor_obj(descr_id),
-                muids=[]  #self.muids
+                muids=[]  # self.muids
             )
 
             article_weights = ARTICLE_WEIGHTS
@@ -838,10 +840,10 @@ class NatDescCountryOverviewAssessments(NationalDescriptorCountryOverview,
             assessment_formatted = assessment
             progress_assessment = data.get(
                 "{}_{}".format('Art14', "progress"), "-")
-            
+
             result.append(self.pdf_template(
-                assessment_formatted=assessment_formatted, 
-                article='Art14', 
+                assessment_formatted=assessment_formatted,
+                article='Art14',
                 progress_assessment=progress_assessment))
 
         return "".join(result)
@@ -1058,7 +1060,7 @@ def format_assessment_data_2022(article, elements, questions, muids, data,
         if question.use_criteria == 'none':
             field_title = u'All criteria'
             if article in ('Art13', 'Art14', 'Art1314CrossCutting',
-                                'Art13Completeness', 'Art14Completeness'):
+                           'Art13Completeness', 'Art14Completeness'):
                 field_title = u'Response options'
 
             field_name = '{}_{}'.format(article, question.id)
@@ -1453,6 +1455,17 @@ class NationalDescriptorArticleView2022(NationalDescriptorArticleView):
         )
 
 
+CROSS_CUTTING_SECTIONS = (
+    ("Socio-economic assessment", ["Ad11E", "Ad12E"]),
+    ("Impact of climate change", ["Ad13F",]),
+    ("Funding of the measures", ["Ad14G", "Ad15G"]),
+    ("Links to other policies", ["Ad16G", "Ad17G", "Ad18G"]),
+    ("Regional cooperation and transboundary impacts", ["Ad19H", "Ad20H"]),
+    ("Public consultation", ["Ad21I", "Ad22I"]),
+    ("Administrative processes", ["Ad23J", "Ad24J"]),
+)
+
+
 @implementer(INationaldescriptorArticleViewCrossCutting)
 class NationalDescriptorArticleViewCrossCutting(NationalDescriptorArticleView):
     assessment_data_2018_tpl = Template(
@@ -1481,6 +1494,53 @@ class NationalDescriptorArticleViewCrossCutting(NationalDescriptorArticleView):
             article_weights,
             self
         )
+
+    def get_rowspan_for_section(self, question_id):
+        for _, question_ids in CROSS_CUTTING_SECTIONS:
+            if question_id in question_ids:
+                return len(question_ids)
+
+        return 1
+
+    def question_is_first_in_section(self, question_id):
+        for _, question_ids in CROSS_CUTTING_SECTIONS:
+            if question_id == question_ids[0]:
+                return True
+
+        return False
+
+    def get_section_score(self, question_id):
+        total_score = 0
+        total_weight = 0
+
+        section_questions = [
+            x[1] 
+            for x in CROSS_CUTTING_SECTIONS
+            if question_id in x[1]
+        ]
+
+        for answer in self.assessment_formatted.answers:
+            qcode = answer.question.split(':')[0]
+
+            if qcode not in section_questions[0]:
+                continue
+
+            score_achieved = answer.score.score_achieved
+            weight = answer.score.weight
+
+            total_score = total_score + (score_achieved * weight)
+            total_weight = total_weight + weight
+
+        final_score = total_score / total_weight if total_weight else 0
+        score_value, conclusion = get_overall_conclusion_2022(
+            final_score * 100)
+        conclusion_color = CONCLUSION_COLOR_TABLE_2022.get(score_value, 0)
+
+        for section_name, question_ids in CROSS_CUTTING_SECTIONS:
+            if question_id in question_ids:
+                return section_name, conclusion, conclusion_color
+
+        return ('Not found', 'Not relevant', '0')
 
     @property
     def article(self):

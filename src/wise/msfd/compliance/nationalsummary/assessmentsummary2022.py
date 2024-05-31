@@ -29,6 +29,7 @@ from wise.msfd.compliance.interfaces import (INationalSummary2022Folder,
                                              IRecommendationStorage)
 from wise.msfd.compliance.main import (RecommendationsTable, STORAGE_KEY)
 from wise.msfd.compliance.nationaldescriptors.main import (
+    CROSS_CUTTING_SECTIONS,
     format_assessment_data_2022
 )
 from wise.msfd.compliance.scoring import get_overall_conclusion_2022
@@ -186,15 +187,7 @@ class OverviewPOMAssessment2022(BaseNatSummaryView):
     """ OverviewPOMAssessment2022 """
 
     template = ViewPageTemplateFile('pt/overview-pom-assessments-2022.pt')
-    sections = (
-        ("Socio-economic assessment", ["Ad11E", "Ad12E"]),
-        ("Impact of climate change", ["Ad13F",]),
-        ("Funding of the measures", ["Ad14G", "Ad15G"]),
-        ("Links to other policies", ["Ad16G", "Ad17G", "Ad18G"]),
-        ("Regional cooperation and transboundary impacts", ["Ad19H", "Ad20H"]),
-        ("Public consultation", ["Ad21I", "Ad22I"]),
-        ("Administrative processes", ["Ad23J", "Ad24J"]),
-    )
+    sections = CROSS_CUTTING_SECTIONS
 
     def __init__(self, context, request, cross_cuting_data, 
                  completeness_art13_data, completeness_art14_data,
