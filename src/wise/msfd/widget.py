@@ -31,7 +31,7 @@ class MarineUnitIDSelectWidget(SelectWidget):
 
 
 def MarineUnitIDSelectFieldWidget(field, source, request=None):
-
+    """MarineUnitIDSelectFieldWidget"""
     if request is None:
         real_request = source
     else:

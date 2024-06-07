@@ -1,17 +1,23 @@
+"""utils.py"""
 from __future__ import absolute_import
 import datetime
 import logging
 import os
 import re
 import time
+import importlib
+from importlib._bootstrap import _resolve_name
 from itertools import chain
 from collections import OrderedDict, defaultdict, namedtuple
-from six.moves.cPickle import dumps
 from hashlib import md5
 from inspect import getsource, isclass
 from functools import total_ordering
 from pkg_resources import resource_filename
-from six import string_types
+from six import string_types, text_type
+from six.moves.cPickle import dumps
+from six.moves import map
+from six.moves import zip
+
 from sqlalchemy import inspect
 from zope.annotation.interfaces import IAnnotations
 from zope.component import getUtility
@@ -24,12 +30,9 @@ from plone.intelligenttext.transforms import \
 from plone.memoize import volatile
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 from chameleon.zpt.template import PageTemplateFile
-import six
-from six.moves import map
-from six.moves import zip
 
 
-# TODO: move this registration to search package
+# move this registration to search package
 BLACKLIST = ['ID', 'Import', 'Id']
 
 logger = logging.getLogger('wise.msfd')
@@ -38,10 +41,12 @@ WEIGHTS_ANNOT_KEY = 'wise.msfd.weights'
 
 
 def cmp(a, b):
-    return (a > b) - (a < b) 
+    """cmp"""
+    return (a > b) - (a < b)
 
 
 def class_id(obj):
+    """class_id"""
     if type(obj) is type:
         klass = obj
     else:
@@ -54,16 +59,12 @@ def scan(namespace):
     """ Scans the namespace for modules and imports them, to activate decorator
     """
 
-    import importlib
-    from importlib._bootstrap import _resolve_name
-
     name = _resolve_name(namespace, 'wise.msfd.search', 1)
     importlib.import_module(name)
 
 
 def __setup_common_labels():
     from .labels import COMMON_LABELS, GES_LABELS
-
     common_labels = {}
     common_labels.update(COMMON_LABELS)
     common_labels.update(getattr(GES_LABELS, 'indicators'))
@@ -75,7 +76,7 @@ def __setup_common_labels():
 
 
 def print_value(value):
-    # TODO: this is only used in search package
+    """this is only used in search package"""
 
     common_labels = __setup_common_labels()
 
@@ -92,16 +93,16 @@ def print_value(value):
                     common_labels[value]
                 )
                 ret = tmpl.format(value, html)
-            except UnicodeEncodeError as e:
+            except UnicodeEncodeError:
                 try:
                     ret = tmpl.format(value,
                                       common_labels[value].encode('utf-8'))
-                except UnicodeEncodeError as e:
+                except UnicodeEncodeError:
                     ret = tmpl.format(value.encode('utf-8'),
                                       common_labels[value].encode('utf-8'))
             except Exception as e:
                 logger.exception("Error print_value: %r", e)
-                ret = tmpl.format(value, six.text_type(common_labels[value]))
+                ret = tmpl.format(value, text_type(common_labels[value]))
 
             return ret
 
@@ -116,7 +117,7 @@ def print_value(value):
 
     if not isinstance(value, base_values):
 
-        # TODO: right now we're not showing complex, table-like values
+        # right now we're not showing complex, table-like values
         # Activate below to show tables
         # return self.value_template(item=value)
 
@@ -127,7 +128,8 @@ def print_value(value):
 
 
 def print_value_xls(value, fieldname):
-    # TODO: this is only used in search package
+    """print_value_xls"""
+    # this is only used in search package
 
     if fieldname in TRANSFORMS:
         transformer = TRANSFORMS.get(fieldname)
@@ -147,7 +149,7 @@ def print_value_xls(value, fieldname):
             try:
                 html = common_labels[value]
                 ret = tmpl.format(html)
-            except UnicodeEncodeError as e:
+            except UnicodeEncodeError:
                 ret = tmpl.format(common_labels[value].encode('utf-8'))
             except Exception as e:
                 logger.exception("Error print_value_xls: %r", e)
@@ -169,6 +171,7 @@ def print_value_xls(value, fieldname):
 
 
 def get_obj_fields(obj, use_blacklist=True, whitelist=None):
+    """get_obj_fields"""
     whitelist = whitelist or []
     whitelist = getattr(obj, 'whitelist', whitelist)
     fields = []
@@ -176,7 +179,7 @@ def get_obj_fields(obj, use_blacklist=True, whitelist=None):
     try:
         mapper = inspect(obj)
         keys = [c.key for c in mapper.attrs]  # forgo sorted use
-    except:  # NoInspectionAvailable
+    except Exception:  # NoInspectionAvailable
         keys = [k for k in obj.keys()]
 
         return keys
@@ -277,6 +280,7 @@ def change_orientation(data):
 
 
 def group_data(data, pivot, remove_pivot=True):
+    """group_data"""
     out = defaultdict(list)
 
     # count_distinct_values = len(set(row.get(pivot, '') for row in data))
@@ -329,8 +333,6 @@ def default_value_from_field(context, field):
 
     term = vocab._terms[0]
 
-    # TODO: should we always return term.value?
-
     if isclass(term.value):
         return term.value
 
@@ -338,12 +340,11 @@ def default_value_from_field(context, field):
 
 
 def all_values_from_field(context, field):
+    """all_values_from_field"""
     if isinstance(field.field, Choice):
         return default_value_from_field(context, field)
 
     if not isinstance(field.field, List):
-        # TODO: do we use other types of fields?
-
         return None
 
     # we use the parent for the vocabulary because parents usually have the
@@ -361,6 +362,7 @@ def all_values_from_field(context, field):
 
 
 def request_cache_key(func, self):
+    """request_cache_key"""
     form = sorted(self.request.form.items())
     bits = self.__class__.__name__ + dumps(form)
     key = md5(bits).hexdigest()
@@ -369,6 +371,7 @@ def request_cache_key(func, self):
 
 
 def db_result_key(func, *argss, **kwargs):
+    """db_result_key"""
     if kwargs.get('raw', False):
         raise volatile.DontCache
 
@@ -427,6 +430,7 @@ def t2rt(text):
 
 
 def _parse_files_in_location(location, check_filename, parser):
+    """_parse_files_in_location"""
     dirpath = resource_filename('wise.msfd', location)
     out = {}
 
@@ -436,7 +440,7 @@ def _parse_files_in_location(location, check_filename, parser):
             logger.info("Parsing file: %s", fname)
             try:
                 res = parser(fpath)
-            except:
+            except Exception:
                 logger.exception('Could not parse file: %s', fpath)
 
                 continue
@@ -449,6 +453,7 @@ def _parse_files_in_location(location, check_filename, parser):
 
 
 def get_element_by_id(root, id):
+    """get_element_by_id"""
     if id.startswith('#'):
         id = id[1:]
 
@@ -476,6 +481,7 @@ class TemplateMixin:
 
 
 class NationalCompoundRow(TemplateMixin):
+    """NationalCompoundRow"""
     template = ViewPageTemplateFile('pt/national-compound-row.pt')
 
     def __init__(self, context, request, field, vals, raw_values):
@@ -564,7 +570,7 @@ class ItemLabel(TemplateMixin):
         out = {}
 
         for k, v in values.items():
-            if isinstance(v, six.text_type):
+            if isinstance(v, text_type):
                 pass
             elif v is None:
                 v = u''
@@ -590,19 +596,18 @@ class ItemList(TemplateMixin):
         rows = list(rows)
 
         # the rows may be ItemLabel instances
-
-        if sort and rows and (not isinstance(rows[0], six.string_types)):
+        if sort and rows and (not isinstance(rows[0], string_types)):
             self.rows = sorted(
                 rows,
-                key=lambda r: (r is not None) 
-                    and not isinstance(r, six.string_types) and r.title or r)
+                key=lambda r: (r is not None)
+                    and not isinstance(r, string_types) and r.title or r)
         elif sort:
             self.rows = sorted(rows)
         else:
             self.rows = rows
 
     def __repr__(self):
-        v = ', '.join(map(six.text_type, self.rows))
+        v = ', '.join(map(text_type, self.rows))
 
         return v
         # return "<ItemList of %s children>" % len(self.rows)
@@ -662,11 +667,13 @@ class LabeledItemList(ItemList):
 
 
 class ItemListGroup(LabeledItemList):
+    """ItemListGroup"""
     template = PageTemplateFile(
         'src/wise.msfd/src/wise/msfd/pt/grouped-list.pt')
 
 
 class CompoundRow(TemplateMixin):
+    """CompoundRow"""
     multi_row = PageTemplateFile(
         'src/wise.msfd/src/wise/msfd/pt/compound-row.pt')
     one_row = PageTemplateFile(
@@ -686,6 +693,7 @@ class CompoundRow(TemplateMixin):
 
 
 class Row(TemplateMixin):
+    """Row"""
     template = PageTemplateFile(
         'src/wise.msfd/src/wise/msfd/pt/simple-row.pt')
 
@@ -696,6 +704,7 @@ class Row(TemplateMixin):
 
 
 class RawRow(TemplateMixin):
+    """RawRow"""
     template = PageTemplateFile('src/wise.msfd/src/wise/msfd/pt/row.pt')
 
     def __init__(self, title, values, raw_values=None):
@@ -705,6 +714,7 @@ class RawRow(TemplateMixin):
 
 
 class TableHeader(TemplateMixin):
+    """TableHeader"""
     template = PageTemplateFile(
         'src/wise.msfd/src/wise/msfd/pt/table-header.pt')
 
@@ -714,6 +724,7 @@ class TableHeader(TemplateMixin):
 
 
 class SimpleTable(TemplateMixin):
+    """SimpleTable"""
     template = PageTemplateFile('src/wise.msfd/src/wise/msfd/pt/table.pt')
 
     def __init__(self, title, values):
@@ -849,6 +860,7 @@ def items_to_rows(data, fields, return_empty=False):
 
 
 def to_html(text):
+    """to_html"""
     if not text:
         return text
 
@@ -859,7 +871,8 @@ def to_html(text):
 
 
 def row_to_dict(table, row):
-    # TODO: couldn't we use row.keys(), so that we don't need table?
+    """row_to_dict"""
+    # couldn't we use row.keys(), so that we don't need table?
     cols = list(table.c.keys())
     res = {k: v for k, v in zip(cols, row)}
 
@@ -911,6 +924,7 @@ def fixedorder_sortkey(value, order):
 
 
 def get_annot():
+    """get_annot"""
     site = getSite()
     annot = IAnnotations(site, {})
 
@@ -918,26 +932,28 @@ def get_annot():
 
 
 def get_weight_from_annot(q_id, descr):
+    """get_weight_from_annot"""
     annot = get_annot()
     aw = annot.get(WEIGHTS_ANNOT_KEY, {})
 
     try:
         x = aw[str(q_id)].get(descr, '')
-    except:
+    except Exception:
         x = ''
 
     return x
 
 
 def area_transform(value):
+    """area_transform"""
     new_val = "{:.2f}".format(value)
 
     return new_val
 
 
 def mrus_transform(value):
+    """mrus_transform"""
     from .labels import GES_LABELS
-
     mru_labels = getattr(GES_LABELS, 'mrus')
     label = mru_labels.get(value, 'No name available')
     template = u"{} ({})".format(label, value)
@@ -946,6 +962,7 @@ def mrus_transform(value):
 
 
 def temporal_scope_transform(value):
+    """temporal_scope_transform"""
     if '9999' in value:
         return value.replace('9999', 'Ongoing')
 
@@ -953,8 +970,8 @@ def temporal_scope_transform(value):
 
 
 def ges_component(value):
+    """ges_component"""
     from .labels import GES_LABELS
-
     _labels = getattr(GES_LABELS, 'ges_components')
     label = _labels.get(value, value)
 
@@ -962,8 +979,8 @@ def ges_component(value):
 
 
 def common_split_transform(value, label_name):
+    """common_split_transform"""
     from .labels import GES_LABELS
-
     if ";" in value:
         values = value.split(';')
         values = [d.split(',') for d in values]
@@ -985,37 +1002,42 @@ def common_split_transform(value, label_name):
     return label
 
 def ges_component_art132022(value):
+    """ges_component_art132022"""
     label_name = 'ges_components'
 
     return common_split_transform(value, label_name)
 
 
 def feature_transform(value):
+    """feature_transform"""
     label_name = 'features'
 
     return common_split_transform(value, label_name)
     
 
 def targets_transform(value):
+    """targets_transform"""
     label_name = 'targets'
 
     return common_split_transform(value, label_name)
 
 def ktms_transform(value):
+    """ktms_transform"""
     label_name = 'ktms'
 
     return common_split_transform(value, label_name)
 
 
 def pressures_transform(value):
+    """pressures_transform"""
     label_name = 'pressures'
 
     return common_split_transform(value, label_name)
 
 
 def country_code(value):
+    """country_code"""
     from .labels import GES_LABELS
-
     _labels = getattr(GES_LABELS, 'countries')
     label = _labels.get(value, value)
 

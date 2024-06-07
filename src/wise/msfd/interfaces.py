@@ -1,5 +1,5 @@
 from __future__ import absolute_import
-from zope.interface import Attribute, Interface
+from zope.interface import Interface
 from zope.schema import Choice, List  # Int, Text, TextLine
 from plone.supermodel import model
 from plone.autoform.interfaces import IFormFieldProvider
@@ -22,6 +22,7 @@ class IEmbeddedForm(Interface):
 
 
 class IMarineUnitIDSelect(Interface):
+    """IMarineUnitIDSelect"""
     marine_unit_id = Choice(
         title=u"MarineUnitID",
         # description=u"Select one or more MarineUnitIDs that you're
@@ -32,6 +33,7 @@ class IMarineUnitIDSelect(Interface):
 
 
 class IMarineUnitIDsSelect(Interface):
+    """IMarineUnitIDsSelect"""
     marine_unit_ids = List(
         title=u"MarineUnitID",
         # description=u"Select one or more MarineUnitIDs that you're

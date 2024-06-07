@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 
 from __future__ import absolute_import
-from eea.cache import cache
 
 import csv
 import logging
@@ -11,10 +10,11 @@ from collections import namedtuple
 import lxml.etree
 from pkg_resources import resource_filename
 
+from eea.cache import cache
 from wise.msfd import db, sql, sql2018, sql_extra
-from wise.msfd.labels import COMMON_LABELS, TERMSLIST
+from wise.msfd.labels import TERMSLIST
 from wise.msfd.utils import (ItemLabel, _parse_files_in_location,
-                             get_element_by_id, natural_sort_key, timeit)
+                             get_element_by_id, natural_sort_key)
 import six
 
 logger = logging.getLogger('wise.msfd')
@@ -49,24 +49,28 @@ DESCRIPTOR_TYPES_2022 = [
 
 
 class ElementDefinition:
+    """ElementDefinition"""
     def __init__(self, node, root):
         self.id = node.get('id')
         self.definition = node.text.strip()
 
 
 class DummyMSD:
+    """DummyMSD"""
     def __init__(self):
         self.id = object()
         self.definition = ''
 
 
 class MetodologicalStandardDefinition:
+    """MetodologicalStandardDefinition"""
     def __init__(self, node, root):
         self.id = node.get('id')
         self.definition = node.text.strip()
 
 
 class CriteriaAssessmentDefinition:
+    """CriteriaAssessmentDefinition"""
     def __init__(self, node, root):
         self.id = node.get('id')
         defn = node.find('definition')
@@ -96,6 +100,7 @@ class CriteriaAssessmentDefinition:
 
     @property
     def title(self):
+        """title"""
         if self._primary_for_descriptors:
             primary = True
         else:
@@ -106,13 +111,14 @@ class CriteriaAssessmentDefinition:
 
 
 def parse_elements_file(fpath):
+    """parse_elements_file"""
     # Note: this parsing is pretty optimistic that there's a single descriptor
     # in the file. Keep that true
     res = []
 
     try:
         root = lxml.etree.parse(fpath).getroot()
-    except:
+    except Exception:
         logger.exception('Could not parse file: %s', fpath)
 
         return
@@ -157,10 +163,12 @@ class Descriptor(ItemLabel):
         self.criterions = criterions or set()
 
     def is_descriptor(self):
+        """is_descriptor"""
         return True
 
     @property
     def template_vars(self):
+        """template_vars"""
         # ItemLabel support
         title = self.id
 
@@ -178,6 +186,7 @@ class Descriptor(ItemLabel):
         }
 
     def all_ids(self):
+        """all_ids"""
         res = set()
         res.add(self.id)
 
@@ -198,6 +207,7 @@ class Descriptor(ItemLabel):
         return res
 
     def sorted_criterions(self):
+        """sorted_criterions"""
         crits = {c.id: c for c in self.criterions}
         # ids = crits.keys()
 
@@ -233,6 +243,7 @@ class Criterion(ItemLabel):
 
     @property
     def template_vars(self):
+        """template_vars"""
         # ItemLabel support
         # title = self._title or self.id
         #
@@ -245,6 +256,7 @@ class Criterion(ItemLabel):
         }
 
     def is_descriptor(self):
+        """is_descriptor"""
         return False
 
     def __init__(self, id, title, descriptor):
@@ -279,13 +291,16 @@ class Criterion(ItemLabel):
         return "<Criterion {}>".format(title)
 
     def is_2018_exclusive(self):
+        """is_2018_exclusive"""
         return not self.alternatives
 
     def is_2012_exclusive(self):
+        """is_2012_exclusive"""
         return not self._id
 
     @property
     def title(self):
+        """title"""
         alter = self.alternatives
 
         if not alter:
@@ -319,13 +334,16 @@ class Criterion(ItemLabel):
     #     return False
 
     def all_ids(self):
+        """all_ids"""
 
         return set([self.id] + [x[0] for x in self.alternatives])
 
     def has_alternative(self, id):
+        """has_alternative"""
         return any([x.id == id for x in self.alternatives])
 
     def is_primary(self, descriptor):
+        """is_primary"""
         if hasattr(self, '_primary'):
             return self._primary
 
@@ -337,6 +355,7 @@ class Criterion(ItemLabel):
 
 
 def parse_ges_extended_format():
+    """parse_ges_extended_format"""
     csv_f = resource_filename('wise.msfd',
                               'data/ges_terms.csv')
 
@@ -443,6 +462,7 @@ def get_criterion(ges_id):
 
 
 def get_ges_component(ges_id):
+    """get_ges_component"""
     if ges_id.upper() == 'D6/D1':
         ges_id = 'D6'
     elif ges_id.upper() == 'D4/D1':
@@ -462,6 +482,7 @@ def get_ges_component(ges_id):
 
 
 def parse_parameters():
+    """parse_parameters"""
     res = {}
 
     for par in TERMSLIST['ReferenceParameter']:
@@ -483,6 +504,7 @@ PARAMETERS = parse_parameters()
 
 
 def get_parameters(descriptor_code=None):
+    """get_parameters"""
 
     if descriptor_code is None:
         return list(PARAMETERS.values())
@@ -498,9 +520,9 @@ def get_parameters(descriptor_code=None):
     return res
 
 
-# TODO: move all label related code to labels.py
 @db.use_db_session('2012')
 def parse_features_from_db_2012():
+    """parse_features_from_db_2012"""
     res = {}
 
     mc = sql_extra.MSFD9Feature
@@ -521,6 +543,7 @@ FEATURES_DB_2012 = parse_features_from_db_2012()
 
 @db.use_db_session('2018')
 def parse_features_from_db_2018():
+    """parse_features_from_db_2018"""
     res = {}
 
     mc = sql2018.LFeature
@@ -542,7 +565,6 @@ def parse_features_from_db_2018():
 
 FEATURES_DB_2018 = parse_features_from_db_2018()
 
-# TODO the list is not complete, get the complete list if needed in the future
 FEATURES_ORDER = [
     'EcosysElemAll',
     'SppAll',
@@ -821,6 +843,7 @@ ANTHROPOGENIC_FEATURES_SHORT_NAMES = [
 
 
 def parse_features():
+    """parse_features"""
     res = {}
 
     if not FEATURES_DB_2018:
@@ -914,6 +937,7 @@ FEATURES = parse_features()
 
 @cache(lambda func, *args: func.__name__ + args[0], lifetime=1800)
 def get_features(descriptor_code=None):
+    """get_features"""
     if descriptor_code is None:
         return list(FEATURES.values())
 
@@ -924,6 +948,7 @@ def get_features(descriptor_code=None):
 
 
 def is_descriptor(value):
+    """is_descriptor"""
     return bool(DESC_RE.match(value))
 
 
@@ -1015,6 +1040,7 @@ class MarineReportingUnit(ItemLabel):
 
 @db.use_db_session('2012')
 def _muids_2012(country, region):
+    """_muids_2012"""
     t = sql.t_MSFD4_GegraphicalAreasID
     count, res = db.get_all_records(
         (t.c.MarineUnitID,
@@ -1034,6 +1060,7 @@ def _muids_2012(country, region):
 
 @db.use_db_session('2018')
 def _muids_2018(country, region):
+    """_muids_2018"""
     # this method needs "raw" access because the shapefile column slows things
     t = sql2018.MarineReportingUnit
 
