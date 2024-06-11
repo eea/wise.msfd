@@ -73,6 +73,14 @@
 
   <browser:page
     for="*"
+    name="recalculate-scores-by-article"
+    class=".admin.AdminScoringExportXML"
+    attribute="recalculate_scores_by_article"
+    permission="cmf.ManagePortal"
+  />
+
+  <browser:page
+    for="*"
     name="view-workflow-states"
     class=".admin.SetupAssessmentWorkflowStates"
     attribute="view_objects"

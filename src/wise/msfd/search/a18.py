@@ -1,4 +1,4 @@
-
+#pylint: skip-file
 from __future__ import absolute_import
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 from z3c.form.browser.checkbox import CheckBoxFieldWidget
@@ -8,11 +8,11 @@ from . import interfaces
 from .. import db, sql2018
 from ..base import EmbeddedForm
 from ..utils import db_objects_to_dict
-from .base import ItemDisplayForm, MainForm
-from .utils import data_to_xls, register_form_art18, register_form_art1314
+from .base import ItemDisplayForm
+from .utils import register_form_art18, register_form_art1318
 
 
-@register_form_art1314
+@register_form_art1318
 class StartArticle18Form(EmbeddedForm):
     """ Start form for Article 18 - 2019 reporting year
     """

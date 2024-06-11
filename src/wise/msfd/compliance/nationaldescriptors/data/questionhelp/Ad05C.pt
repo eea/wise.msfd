@@ -5,14 +5,17 @@
 </p>
 <p>
   The assessors should check whether the targets reported under Article 13
-  correspond to the targets reported under Article 10. Only the targets that
-  were considered operational during Article 12 assessments should be considered
-  (positive score (<em>adequate or partially adequate</em> to question
+  correspond to the targets reported under Article 10.
+  <u
+    >Only the targets that were considered operational in Article 12 assessments
+    should be considered</u
+  >
+  (positive score (green or orange color code to question
   <em
     >A10Ad1 &ndash; Do the targets address the achievement of GES by focusing on
-    reducing relevant pressures and impacts?).
-  </em>
-  The list of targets reported under Article 10 and their assessment can be
+    reducing relevant pressures and impacts?).</em
+  >
+  The list of targets reported under Article 10 and their assessment should be
   consulted directly in the module.
 </p>
 <p><br /></p>
@@ -20,7 +23,13 @@
   If new targets are reported, these must be listed in the summary box and will
   be taken into account throughout this assessment exercise.
 </p>
-<p><br /></p>
+<p>
+  <br />
+  For this question, priority will be given to e-reporting as there are specific
+  schema fields for each measure. If there is no information in the e-reporting,
+  check the text report. Specify where this information is found in the text
+  report.
+</p>
 <p>
   NOTE: The link between the measures and the targets might be provided only in
   the e-reporting and by using the codes provided under Art 10 without a
@@ -28,8 +37,54 @@
   are used, the assessment team may not be able to connect these targets with
   the ones reported in 2018.
 </p>
+<p><strong>Use of response options:</strong></p>
 <p><br /></p>
-<p>The assessor must:</p>
+<ul>
+  <li>
+    <p lang="fr-BE">
+      <strong>Yes&nbsp;:</strong> all the relevant modified and additional new
+      measures are linked to relevant operational targets and as such contribute
+      to meet the operational environmental targets and ultimately GES.
+    </p>
+  </li>
+  <li>
+    <p lang="fr-BE">
+      <strong>Partially:</strong> some of the relevant modified and additional
+      new measures are linked to relevant operational targets and as such
+      contribute to meet the operational environmental targets and ultimately
+      GES.
+    </p>
+  </li>
+  <li>
+    <p lang="fr-BE">
+      <strong>Not clear: </strong>there is not enough information to understand
+      if the measures are linked to operational targets; the information
+      reported is not clear and inconsistent
+    </p>
+  </li>
+  <li>
+    <p lang="fr-BE">
+      <strong>No</strong>: none of the modified/additional new measures is
+      linked to operational targets.
+    </p>
+  </li>
+  <li>
+    <p lang="fr-BE">
+      <strong>Not relevant</strong>: there are no modified/additional new
+      measures.
+    </p>
+  </li>
+</ul>
+<p><br /></p>
+<p><strong>Structure of the summary box:</strong></p>
+<p>
+  Start by stating which response option you have selected and continue
+  explaining why.
+</p>
+<p>
+  <br />
+  The assessor must:
+</p>
 <ul>
   <li>
     <p>
@@ -45,28 +100,9 @@
   </li>
   <li>
     <p>
-      Specify whether all measures are clearly linked to one or more targets and
-      highlight gaps/weaknesses if any (e.g. that the measures are linked to
-      targets that were considered not operational)
+      Specify whether all modified/additional new measures are clearly linked to
+      one or more targets and highlight gaps/weaknesses if any (e.g. that the
+      measures are linked to targets that were considered not operational)
     </p>
   </li>
 </ul>
-<p><br /></p>
-<p>
-  Select &lsquo;yes&rsquo; if all the relevant measures schema fields are linked
-  to relevant operational targets, &lsquo;partially&rsquo; if this is true only
-  for part of the relevant measures, &lsquo;not clear&rsquo; if the information
-  reported is not clear and inconsistent, &lsquo;no&rsquo; if none of the
-  relevant measures are linked to operational targets.
-</p>
-<p>
-  Select &lsquo;not relevant&rsquo; if there are no modified and additional new
-  measures.
-</p>
-<p lang="en-US"><br /></p>
-<p>
-  For this question, priority will be given to e-reporting as there are specific
-  schema fields for each measure. If there is no information in the e-reporting,
-  check the text report. Specify where this information is found in the text
-  report.
-</p>

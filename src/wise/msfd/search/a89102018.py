@@ -1,6 +1,4 @@
-# TODO: we need to check behavior of this module after modifications to
-# extractData() in EmbeddedForm
-
+#pylint: skip-file
 from __future__ import absolute_import
 from collections import OrderedDict
 from sqlalchemy import and_, or_
@@ -16,7 +14,7 @@ from ..sql_extra import MSFD4GeographicalAreaID
 from ..utils import (all_values_from_field, change_orientation,
                      db_objects_to_dict, group_data, ItemLabel, ItemList)
 from .base import ItemDisplayForm
-from .utils import (data_to_xls, register_form_a8_2018, register_form_art9,
+from .utils import (register_form_a8_2018, register_form_art9,
                     register_form_art19, register_form_art10)
 from six.moves import map
 
@@ -458,7 +456,31 @@ class A2018Art10Display(ItemDisplayForm):
         paremeters = db_objects_to_dict(result, excluded_columns)
         paremeters = group_data(paremeters, 'Parameter', remove_pivot=False)
 
+        mc_gescomp = sql2018.ART10TargetsTargetGESComponent
+        count, res = db.get_all_records(
+            mc_gescomp,
+            mc_gescomp.IdTarget == target_id
+        )
+        gescomps = [{'GES Component': row.GESComponent} for row in res]
+
+        mc_features = sql2018.ART10TargetsTargetFeature
+        count, res = db.get_all_records(
+            mc_features,
+            mc_features.IdTarget == target_id
+        )
+        features = [{'Feature': row.Feature} for row in res]
+
+        mc_measures = sql2018.ART10TargetsTargetMeasure
+        count, res = db.get_all_records(
+            mc_measures,
+            mc_measures.IdTarget == target_id
+        )
+        measures = [{'Measure': row.Measure} for row in res]
+
         res = [
+            ('GES Components', {'GES Components': gescomps}),
+            ('Features', {'Features': features}),
+            ('Measures', {'Measures': measures}),
             ('Progress assessment', paremeters),
         ]
 
@@ -585,7 +607,7 @@ class A2018Art81abDisplay(ItemDisplayForm):
         'col_import_id': 'Id',
         'col_import_time': 'ReportingDate'
     }
-    
+
     blacklist_labels = ['Criteria']
 
     def get_reported_date(self):

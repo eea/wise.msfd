@@ -1,0 +1,36 @@
+<div class="article-assessment-pdf" tal:define="assessment options/assessment_formatted">
+    <div tal:repeat="row assessment/answers">
+        <h3 tal:content="row/question"></h3>
+        <div>
+            <tal:rep tal:repeat="value row/values">
+                <p>
+                    <span><b tal:content="python: value[2]"></b></span>: 
+                    <span tal:content="python: value[0]"></span>
+                </p>
+            </tal:rep>
+        </div>
+        <p><b>Summary</b></p>
+        <div tal:content="structure row/summary">Summary</div>
+    </div>
+    <h3>Assessment summary, progress assessment and recommendations</h3>
+
+    <div class="form-assessment-summary">
+        <h4>Cross-cutting assessment conclusions</h4>
+        <div tal:content="structure python: getattr(assessment.assessment_summary, 'raw', '-')"></div>
+        <h4>Progress since 2016</h4>
+        <div tal:content="structure python: getattr(options['progress_assessment'], 'raw', '-')"></div>
+        <h4>Recommendations for Member State</h4>
+        <div tal:content="structure python: getattr(assessment.recommendations, 'raw', '-')"></div>
+    </div>
+
+    <div tal:define="phase_score python: assessment.phase_overall_scores">
+        <h3>Overall scores</h3>
+        <div tal:define="conclusion python: phase_score.adequacy['conclusion'][1];
+                    score_value python: phase_score.adequacy['conclusion'][0]">
+            <b>2022 Adequacy</b>: <span tal:content="python: '{} ({})'.format(conclusion, score_value)"></span></div>
+        <div>
+            <b>2022 Overall</b>: <span tal:content="python: '{} ({})'.format(
+                assessment.overall_conclusion[1], assessment.overall_conclusion[0])"></span></div>
+    </div>
+
+</div>

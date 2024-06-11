@@ -1,3 +1,4 @@
+#pylint: skip-file
 from __future__ import absolute_import
 import re
 from collections import defaultdict
@@ -19,7 +20,9 @@ FORMS_ART9_2012 = {}
 FORMS_ART10 = {}
 FORMS_ART10_2012 = {}
 FORMS_ART11 = {}
-FORMS_ART1314 ={}
+FORMS_ART13 = {}
+FORMS_ART14 = {}
+FORMS_ART1318 = {}
 FORMS_ART18 = {}
 FORMS_ART19 = {}
 SUBFORMS = defaultdict(set)        # store subform references
@@ -94,9 +97,21 @@ def register_form_art11(klass):
     return klass
 
 
-def register_form_art1314(klass):
+def register_form_art13(klass):
+    FORMS_ART13[class_id(klass)] = klass
 
-    FORMS_ART1314[class_id(klass)] = klass
+    return klass
+
+
+def register_form_art14(klass):
+    FORMS_ART14[class_id(klass)] = klass
+
+    return klass
+
+
+def register_form_art1318(klass):
+
+    FORMS_ART1318[class_id(klass)] = klass
 
     return klass
 
@@ -260,7 +275,10 @@ def data_to_xls(data, blacklist_labels=None):
                 if f not in blacklist_labels:
                     label = print_value_xls(value, f)
 
-                worksheet.write(j + 1, i, label)
+                try:
+                    worksheet.write(j + 1, i, label)
+                except TypeError:
+                    worksheet.write(j + 1, i, str(label))
 
     workbook.close()
     out.seek(0)

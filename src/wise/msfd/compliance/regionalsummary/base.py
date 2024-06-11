@@ -1,4 +1,4 @@
-
+#pylint: skip-file
 from __future__ import absolute_import
 from plone.api.content import get_state
 from plone.api.portal import get_tool

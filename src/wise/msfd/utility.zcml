@@ -81,6 +81,16 @@
     />
 
   <utility
+    component=".vocabulary.a13_reporting_period"
+    name="wise_search_a13_reporting_period"
+    />
+
+  <utility
+    component=".vocabulary.a14_reporting_period"
+    name="wise_search_a14_reporting_period"
+    />
+
+  <utility
     component=".vocabulary.a1314_report_types"
     name="wise_search_a1314_report_types"
     />
@@ -128,6 +138,16 @@
   <utility
     component=".vocabulary.ges_component_art112020"
     name="wise_search_ges_component_a112020"
+    />
+
+  <utility
+    component=".vocabulary.ges_component_a132022_vocabulary"
+    name="wise_search_ges_component_a132022"
+    />
+
+  <utility
+    component=".vocabulary.ges_component_a142022_vocabulary"
+    name="wise_search_ges_component_a142022"
     />
 
   <!--

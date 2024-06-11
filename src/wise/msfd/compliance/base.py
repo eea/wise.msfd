@@ -1,3 +1,4 @@
+#pylint: skip-file
 from __future__ import absolute_import
 import logging
 from collections import namedtuple
@@ -7,8 +8,7 @@ import lxml.etree
 from sqlalchemy.orm import aliased
 from zope.component import getMultiAdapter
 from zope.dottedname.resolve import resolve
-from zope.interface import implementer, implements
-from zope.security import checkPermission
+from zope.interface import implementer
 
 from Acquisition import aq_inner
 from eea.cache import cache
@@ -29,7 +29,7 @@ from wise.msfd.compliance.utils import get_assessors, ordered_regions_sortkey
 from wise.msfd.compliance.vocabulary import ASSESSED_ARTICLES  # , REGIONS
 from wise.msfd.gescomponents import (get_all_descriptors, get_descriptor,
                                      get_features, get_marine_units,
-                                     sorted_criterions, Descriptor)
+                                     sorted_criterions)
 from wise.msfd.translation.interfaces import ITranslationContext
 from wise.msfd.utils import (Tab, _parse_files_in_location, current_date,
                              fixedorder_sortkey, natural_sort_key,
@@ -263,6 +263,9 @@ class SecurityMixin:
         can_edit = self.check_permission('wise.msfd: Edit Assessment')
 
         return not can_edit
+
+    def can_change_process_state(self, context=None):
+        return self.check_permission('wise.msfd: Change Process State', context)
 
     def can_manage(self):
         return self.check_permission('wise.msfd: Manage Compliance')
@@ -804,6 +807,7 @@ class AssessmentQuestionDefinition:
         self.score_method = resolve(sn.get('determination-method'))
         self.source_info = convertWebIntelligentPlainTextToHtml(
             getattr(node.find('source-info'), 'text', '').strip())
+        self.q_heading = getattr(node.find('heading'), 'text', '').strip()
 
     def calculate_score(self, descriptor, values):
         score_obj = Score(self, descriptor, values)
@@ -1138,7 +1142,6 @@ class BaseArticle2012(BrowserView):
 
 @implementer(ITranslationContext)
 class TranslationContext(object):
-    # implements(ITranslationContext)
 
     def __init__(self, context):
         self.context = context

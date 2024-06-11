@@ -94,7 +94,7 @@
             <div class="as-value as-value-th">2022 Completeness</div>
             <div class="as-value as-value-th">2022 Coherence</div>
             <div class="as-value as-value-th">2022 Overall</div>
-            <div class="as-value as-value-th">2016 Adequacy: change since 2016</div>
+            <!-- <div class="as-value as-value-th">2016 Adequacy: change since 2016</div> -->
           </td>
           <td class="overall-values fixed-right"
             tal:define="phase_score python: assessment.phase_overall_scores">
@@ -117,9 +117,9 @@
               <strong tal:content="python: '{} ({})'.format(
                 assessment.overall_conclusion[1], assessment.overall_conclusion[0])">Very poor (1)</strong>
             </div>
-            <div tal:attributes="class python: 'as-value as-value-{}'.format(options['conclusion_2012_color'])">
+            <!-- <div tal:attributes="class python: 'as-value as-value-{}'.format(options['conclusion_2012_color'])">
               <strong tal:content="conclusion_2012">Adequate(3)</strong>
-            </div>
+            </div> -->
           </td>
 
           <td class="overall-values fixed-right"
@@ -167,8 +167,8 @@
               </span>
               <span tal:content="python: '{}'.format(assessment.overall_score)">76.3</span>
             </div>
-            <div class='as-value'
-                 tal:content="options/change_since_2012">-1</div>
+            <!-- <div class='as-value'
+                 tal:content="options/change_since_2012">-1</div> -->
           </td>
         </tr>
 

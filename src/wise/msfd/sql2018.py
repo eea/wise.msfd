@@ -1,6 +1,7 @@
+#pylint: skip-file
 # coding: utf-8
 from __future__ import absolute_import
-from sqlalchemy import BigInteger, Column, Date, DateTime, Float, ForeignKey, Integer, Numeric, SmallInteger, String, Table, Unicode, UnicodeText
+from sqlalchemy import BigInteger, Column, Date, DateTime, Float, ForeignKey, Identity, Integer, Numeric, SmallInteger, String, Table, Unicode, UnicodeText
 from sqlalchemy.orm import relationship
 from sqlalchemy.dialects.mssql import NTEXT
 from sqlalchemy.dialects.mssql.base import BIT
@@ -2140,3 +2141,22 @@ t_V_Subregion_Spatial = Table(
     Column('MarineRegionId', Unicode(50), nullable=False),
     Column('SHAPE', NullType)
 )
+
+
+class ART11JRCAssessment(Base):
+    __tablename__ = 'ART11_JRC_Assessment'
+
+    Id = Column(BigInteger, Identity(start=1, increment=1), primary_key=True)
+    CountryCode = Column(String(2, 'Latin1_General_CI_AS'), nullable=False)
+    Progress2014 = Column(Unicode)
+    CoverageOfFeatures = Column(Unicode)
+    CoverageOfFeatures_Recommendation = Column(Unicode)
+    CoverageOfCriteria = Column(Unicode)
+    CoverageOfCriteria_Recommendation = Column(Unicode)
+    SpatialTemporalCoverage = Column(Unicode)
+    SpatialTemporalCoverage_Recommendation = Column(Unicode)
+    AdequacyConsistency = Column(Unicode)
+    AdequacyConsistency_Recommendation = Column(Unicode)
+    RegionalCoordination = Column(Unicode)
+    RegionalCoordination_Recommendation = Column(Unicode)
+    OtherPoliciesCoherence = Column(Unicode)

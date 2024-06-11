@@ -13,13 +13,15 @@
           <th colspan="2" class="fixed-center as-ges-component as-header"></th>
           <th class="fixed-right as-header">Conclusion</th>
           <th class="fixed-right as-th-score as-header">Score</th>
+          <th class="fixed-right as-th-score as-header">Section score</th>
         </tr>
 
         <tal:rep tal:repeat="row assessment/answers">
-          <tr>
+          <tr tal:define="question_id python: row.question.split(':')[0]"
+              tal:attributes="style python: 'border-top: 5px solid #ddd' if view.question_is_first_in_section(question_id) else ''">
             <th class="fixed-left">
             <div class="q-wrap">
-                <div class="q-id" tal:content="python: row.question.split(':')[0]">Question Id</div>
+                <div class="q-id" tal:content="python: question_id">Question Id</div>
                 <div class="q-title" tal:content="python: row.question.split(':', 1)[1]">Question text</div>
                 </div>
             </th>
@@ -73,7 +75,12 @@
               </span>
               <span tal:content="python: getattr(row.score, 'final_score', 0)">0</span>
             </td>
-
+            <td tal:condition="python: view.question_is_first_in_section(question_id)"
+                tal:attributes="class python: 'fixed-right as-value as-value-{}'.format(section_score[2]);
+                  rowspan python: view.get_rowspan_for_section(question_id)"
+                tal:define="section_score python: view.get_section_score(question_id)">
+              <strong><span tal:content="python: '{} ({})'.format(section_score[0], section_score[1])">Medium</span></strong>
+            </td>
           </tr>
         </tal:rep>
 

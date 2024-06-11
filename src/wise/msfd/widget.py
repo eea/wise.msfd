@@ -1,3 +1,4 @@
+# pylint: skip-file
 from __future__ import absolute_import
 from z3c.form.browser.select import SelectWidget
 from z3c.form.interfaces import NO_VALUE
@@ -31,7 +32,7 @@ class MarineUnitIDSelectWidget(SelectWidget):
 
 
 def MarineUnitIDSelectFieldWidget(field, source, request=None):
-
+    """MarineUnitIDSelectFieldWidget"""
     if request is None:
         real_request = source
     else:
