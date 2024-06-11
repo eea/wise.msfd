@@ -1,4 +1,4 @@
-#pylint: skip-file
+# pylint: skip-file
 from __future__ import absolute_import
 from zope.interface import Interface
 from zope.schema import Choice, List  # Int, Text, TextLine
@@ -60,7 +60,8 @@ class ISPMeasureFields(model.Schema):
     impacts = List(title=u"Measure impacts to",
                    description=u"", required=False)
     impacts_further_details = List(
-        title=u"Measure impacts to, further details", description=u"", required=False)
+        title=u"Measure impacts to, further details", description=u"", 
+        required=False)
     water_body_cat = List(title=u"Water body category",
                           description=u"", required=False)
     spatial_scope = List(title=u"Spatial scope",
@@ -104,7 +105,8 @@ class ISPMeasureFields(model.Schema):
     mspd_implementation_status = List(
         title=u"Mspd Implementation Status", description=u"", required=False)
     nature_of_physical_modification = List(
-        title=u"Nature Of Physical Modification", description=u"", required=False)
+        title=u"Nature Of Physical Modification", description=u"", 
+        required=False)
     source = List(title=u"Source", description=u"", required=False)
     authority = List(title=u"Authority", description=u"", required=False)
     general_view = List(title=u"General View", description=u"", required=False)
@@ -122,7 +124,8 @@ class ISPMeasureFields(model.Schema):
     relevant_targets = List(title=u"Relevant Targets",
                             description=u"", required=False)
     relevant_features_from_msfd_annex_iii = List(
-        title=u"Relevant Features From Msfd Annex Iii", description=u"", required=False)
+        title=u"Relevant Features From Msfd Annex Iii", description=u"", 
+        required=False)
     region = List(title=u"Region", description=u"", required=False)
     shipping_tackled = List(title=u"Shipping Tackled",
                             description=u"", required=False)
@@ -150,7 +153,8 @@ class ISPMeasureFields(model.Schema):
     mspd_implementation_status = List(
         title=u"Mspd Implementation Status", description=u"", required=False)
     nature_of_physical_modification = List(
-        title=u"Nature Of Physical Modification", description=u"", required=False)
+        title=u"Nature Of Physical Modification", description=u"", 
+        required=False)
     source = List(title=u"Source", description=u"", required=False)
     authority = List(title=u"Authority", description=u"", required=False)
     general_view = List(title=u"General View", description=u"", required=False)
@@ -168,7 +172,8 @@ class ISPMeasureFields(model.Schema):
     relevant_targets = List(title=u"Relevant Targets",
                             description=u"", required=False)
     relevant_features_from_msfd_annex_iii = List(
-        title=u"Relevant Features From Msfd Annex Iii", description=u"", required=False)
+        title=u"Relevant Features From Msfd Annex Iii", description=u"", 
+        required=False)
     region = List(title=u"Region", description=u"", required=False)
     shipping_tackled = List(title=u"Shipping Tackled",
                             description=u"", required=False)

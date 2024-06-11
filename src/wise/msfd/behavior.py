@@ -1,4 +1,4 @@
-#pylint: skip-file
+# pylint: skip-file
 """behavior.py"""
 import traceback
 from plone.app.dexterity.behaviors.metadata import (
@@ -51,10 +51,10 @@ def handle_origin_change(obj, event):
     if any("collective.exportimport" in s for s in stack):
         return
 
-
     # Check if the `origin` field has been changed
     for descriptor in event.descriptions:
-        if descriptor.attributes and 'ISPMeasureFields.origin' in descriptor.attributes:
+        if (descriptor.attributes 
+            and 'ISPMeasureFields.origin' in descriptor.attributes):
 
             # Reset the fields to empty lists
             for field in fields_to_reset:
