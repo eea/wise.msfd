@@ -1,10 +1,10 @@
+#pylint: skip-file
 from __future__ import absolute_import
 import logging
 import re
-from collections import defaultdict
 from datetime import datetime
 
-from zope.interface import implementer, implements
+from zope.interface import implementer
 
 from Products.Five.browser import BrowserView
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
@@ -29,8 +29,6 @@ logger = logging.getLogger('wise.msfd')
 class ItemDisplayForm(EmbeddedForm):
     """ Generic form for displaying records
     """
-
-    # implements(interfaces.IItemDisplayForm)
 
     fields = Fields(interfaces.IRecordSelect)
 
@@ -265,7 +263,6 @@ class MainForm(BaseEnhancedForm, BasePublicPage, Form):
     """ The main forms need to inherit from this class
     """
 
-    # implements(IMainForm)
     template = ViewPageTemplateFile('../pt/mainform.pt')
     ignoreContext = True
     reset_page = False

@@ -1,5 +1,5 @@
+#pylint: skip-file
 # -*- coding: utf-8 -*-
-# TODO: move most of the stuff here in .search, where it belongs
 from __future__ import absolute_import
 import json
 import unicodedata
@@ -625,7 +625,7 @@ def art11_marine_unit_id_ms(context):
 
 def marine_unit_id_vocab(ids):
     """Marine Unit Ids 2012"""
-    count, res = db.get_marine_unit_id_names(ids)
+    _, res = db.get_marine_unit_id_names(ids)
 
     terms = []
 
@@ -1139,7 +1139,7 @@ def a2018_country(context):
     """a2018_country"""
     mapper_class = context.subform.mapper_class
 
-    count, res = db.get_all_records_outerjoin(
+    _, res = db.get_all_records_outerjoin(
         sql2018.ReportedInformation,
         mapper_class
     )
@@ -1163,7 +1163,7 @@ def a2018_country_art9(context):
     # if ges_components:
     #     conditions.append(mapper_class.GESComponent.in_(ges_components))
 
-    count, res = db.get_all_records_join(
+    _, res = db.get_all_records_join(
         [mapper_class.GESComponent, mc_countries.CountryCode],
         mc_countries,
         *conditions

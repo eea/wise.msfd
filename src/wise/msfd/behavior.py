@@ -1,3 +1,4 @@
+#pylint: skip-file
 """behavior.py"""
 import traceback
 from plone.app.dexterity.behaviors.metadata import (

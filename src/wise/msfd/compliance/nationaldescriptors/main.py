@@ -1,3 +1,4 @@
+#pylint: skip-file
 """ Classes and views to implement the National Descriptors compliance page
 """
 

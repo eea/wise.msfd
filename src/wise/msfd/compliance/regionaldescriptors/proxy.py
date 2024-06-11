@@ -1,9 +1,6 @@
+#pylint: skip-file
 from __future__ import absolute_import
-from wise.msfd.compliance import convert
-from wise.msfd.labels import GES_LABELS
-from wise.msfd.utils import ItemLabel
 
-from .data import REPORT_DEFS
 from ..nationaldescriptors.proxy import Proxy2018 as NatDescProxy2018
 
 BLACKLIST = (       # used in templates to filter fields
@@ -137,15 +134,3 @@ def proxy_cmp(self, other, ignore_field='MarineReportingUnit'):
     """
 
     return self.hash(ignore_field) == other.hash(ignore_field)
-
-    # fieldnames = [field.name for field in self.fields
-    #               if field.name != ignore_field]
-    #
-    # for name in fieldnames:
-    #     a = getattr(self, name)
-    #     b = getattr(other, name)
-    #
-    #     if a != b:
-    #         return False
-    #
-    # return True

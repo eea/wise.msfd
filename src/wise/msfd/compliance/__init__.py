@@ -11,6 +11,7 @@ logger = logging.getLogger(__name__)
 
 
 def handle_traverse(event):
+    """handle_traverse"""
     req = event.request
     parents = req.other['PARENTS']
 

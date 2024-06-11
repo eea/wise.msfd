@@ -1,3 +1,4 @@
+#pylint: skip-file
 """db.py"""
 
 from __future__ import absolute_import

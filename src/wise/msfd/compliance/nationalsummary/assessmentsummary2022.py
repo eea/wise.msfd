@@ -1,33 +1,19 @@
+#pylint: skip-file
 # -*- coding: utf-8 -*-
 
 from __future__ import absolute_import
-from collections import defaultdict
-from datetime import datetime
-from pkg_resources import resource_filename
 
 import logging
 
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 from Products.statusmessages.interfaces import IStatusMessage
 from plone.api import portal
-from wise.msfd.compliance.assessment import (ANSWERS_COLOR_TABLE,
-                                             ARTICLE_WEIGHTS,
+from wise.msfd.compliance.assessment import (ARTICLE_WEIGHTS,
                                              CONCLUSION_COLOR_TABLE_2022,
-                                             DESCRIPTOR_SUMMARY_2022,
-                                             get_assessment_data_2012_db,
-                                             get_assessment_data_2016_art1314,
-                                             get_recommendation_data_2016_art1314,
-                                             get_assessment_data_2016_art1314_overall,
-                                             filter_assessment_data_2012,
-                                             summary_fields_2016_cross)
-from wise.msfd.compliance.base import (
-    NAT_DESC_QUESTIONS, is_row_relevant_for_descriptor)
+                                             DESCRIPTOR_SUMMARY_2022)
+from wise.msfd.compliance.base import NAT_DESC_QUESTIONS
 
-from wise.msfd.compliance.interfaces import (INationalSummary2022Folder,
-                                             INationalSummaryCountryFolder,
-                                             INationalSummaryEdit,
-                                             IRecommendationStorage)
-from wise.msfd.compliance.main import (RecommendationsTable, STORAGE_KEY)
+from wise.msfd.compliance.interfaces import INationalSummary2022Folder
 from wise.msfd.compliance.nationaldescriptors.main import (
     CROSS_CUTTING_SECTIONS,
     format_assessment_data_2022

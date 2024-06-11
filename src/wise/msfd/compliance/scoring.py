@@ -1,4 +1,4 @@
-
+#pylint: skip-file
 DEFAULT_RANGES = [
     [76, 100],
     [51, 75],

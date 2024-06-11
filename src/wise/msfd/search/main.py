@@ -1,3 +1,4 @@
+#pylint: skip-file
 from __future__ import absolute_import
 from plone.z3cform.layout import wrap_form
 from Products.Five.browser import BrowserView

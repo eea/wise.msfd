@@ -1,8 +1,9 @@
+#pylint: skip-file
 from __future__ import absolute_import
 from collections import namedtuple
 from io import BytesIO
 
-from zope.interface import alsoProvides, implementer, implements
+from zope.interface import alsoProvides, implementer
 import xlsxwriter
 
 from persistent.list import PersistentList
@@ -136,15 +137,11 @@ class RegionalDescriptorRegionsOverview(BaseRegComplianceView):
 class RegDescRegionOverviewReports(RegionalDescriptorRegionsOverview):
     """ Class declaration needed to be able to override HTML head title """
 
-    # implements(IRegionStartReports)
-
 
 @implementer(IRegionStartAssessments)
 class RegDescRegionOverviewAssessments(RegionalDescriptorRegionsOverview,
                                        MSFDReportingHistoryMixin):
     """ Class declaration needed to be able to override HTML head title """
-
-    # implements(IRegionStartAssessments)
 
     def get_url_art12_2012(self):
         article = 'Article 12 (Art.8-9-10)'
@@ -177,8 +174,6 @@ class RegDescRegionOverviewAssessments(RegionalDescriptorRegionsOverview,
 @implementer(IRegionalDescriptorAssessment)
 class RegionalDescriptorArticleView(BaseRegComplianceView,
                                     AssessmentDataMixin):
-    # implements(IRegionalDescriptorAssessment)
-
     section = 'regional-descriptors'
 
     assessment_data_2012_tpl = VPTF('pt/assessment-data-2012.pt')

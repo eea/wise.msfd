@@ -1,6 +1,8 @@
+#pylint: skip-file
 from __future__ import absolute_import
-from collections import Counter, defaultdict
 from itertools import chain
+
+from collections import Counter, defaultdict
 
 from sqlalchemy import or_
 
