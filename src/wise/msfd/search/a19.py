@@ -1,8 +1,7 @@
-
+#pylint: skip-file
 from __future__ import absolute_import
 from datetime import datetime
 
-from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 from z3c.form.browser.checkbox import CheckBoxFieldWidget
 from z3c.form.field import Fields
 

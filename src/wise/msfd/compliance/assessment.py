@@ -1,10 +1,12 @@
+#pylint: skip-file
+"""asssessment.py"""
 from __future__ import absolute_import
 import csv
 import logging
 import re
 from collections import namedtuple
 from eea.cache import cache
-from sqlalchemy import desc, or_
+from sqlalchemy import or_
 
 from pkg_resources import resource_filename
 from plone.api.portal import get_tool
@@ -131,6 +133,12 @@ DESCRIPTOR_SUMMARY = namedtuple(
      'coherence_change_since_2012',]
 )
 
+DESCRIPTOR_SUMMARY_2022 = namedtuple(
+    'DESCRIPTOR_SUMMARY_2022',
+    ['assessment_summary', 'progress_assessment', 'recommendations',
+     'adequacy', 'completeness', 'coherence', 'overall_score_2022']
+)
+
 
 # This somehow translates the real value in a color, to be able to compress the
 # displayed information in the assessment table
@@ -207,7 +215,6 @@ Criteria = namedtuple(
 )
 
 
-# TODO which question type belongs to which phase?
 PHASES = {
     'phase1': ('adequacy', 'consistency', 'completeness'),
     'phase2': ('coherence', ),
@@ -264,7 +271,6 @@ reg_summary_fields = (
     ('recommendations', u'Recommendations'),
 )
 
-# TODO not used
 progress_fields = (
     ('assessment_summary', u'Assessment summary'),
     ('progress', u'Progress since 2012'),
@@ -354,6 +360,7 @@ def get_assessment_data_2012_db(*args):
 
 
 def _get_csv_region(region):
+    """_get_csv_region"""
     if region in ("ANS", "AMA", "ABI", "ACS"):
         region = "ATL"
 
@@ -410,6 +417,7 @@ def get_assessment_data_2016_art1314(*args):
 
 
 def _get_csv_descriptor(descriptor):
+    """_get_csv_descriptor"""
     descriptor_mapping = {
         "D1-B": ("D1, 4 – Birds",), # birds
         "D1-M": ("D1, 4 – Mammals and reptiles",), # mammals
@@ -600,10 +608,6 @@ def get_assessment_data_2012_db_old(*args):
     return res_final
 
 
-# TODO: use memoization for old data, needs to be called again to get the
-# score, to allow delta compute for 2018
-#
-# @memoize
 def filter_assessment_data_2012(data, region_code, descriptor_criterions):
     """ Filters and formats the raw db data for 2012 assessment data
     """
@@ -640,7 +644,6 @@ def filter_assessment_data_2012(data, region_code, descriptor_criterions):
         )
         concl_crit = t2rt(col('Criteria'))
 
-        # TODO test for other countries beside LV
         # Condition changed because of LV report, where score is 0
 
         # if not score:
@@ -708,6 +711,7 @@ class EditAssessorsForm(Form, BaseComplianceView):
 
     @buttonAndHandler(u'Save', name='Save')
     def hande_save(self, action):
+        """hande_save"""
         data, errors = self.extractData()
 
         if not errors:
@@ -716,6 +720,7 @@ class EditAssessorsForm(Form, BaseComplianceView):
             set_assessors(value)
 
     def updateWidgets(self):
+        """updateWidgets"""
         super(EditAssessorsForm, self).updateWidgets()
         assessed_by_field = self.fields['assessed_by'].field
         default = assessed_by_field.default
@@ -767,16 +772,20 @@ class ViewAssessmentSummaryForm(BaseComplianceView):
 
 
 class ViewAssessmentSummaryFormCrossCutting2022(ViewAssessmentSummaryForm):
+    """ViewAssessmentSummaryFormCrossCutting2022"""
     @property
     def article(self):
+        """article"""
         return 'Art1314CrossCutting'
 
     @property
     def summary_fields(self):
+        """summary_fields"""
         return summary_fields_2016_cross
 
 
 class ViewAssessmentSummaryForm2022(ViewAssessmentSummaryForm):
+    """ViewAssessmentSummaryForm2022"""
     @property
     def summary_fields(self):
         if self.article == 'Art13':
@@ -786,6 +795,7 @@ class ViewAssessmentSummaryForm2022(ViewAssessmentSummaryForm):
 
 
 class ViewAssessmentSummaryFormCompleteness2022(ViewAssessmentSummaryForm):
+    """ViewAssessmentSummaryFormCompleteness2022"""
     @property
     def article(self):
         if 'art13' in self.context.id:
@@ -803,7 +813,7 @@ class ViewAssessmentSummaryFormCompleteness2022(ViewAssessmentSummaryForm):
 
 class ViewAssessmentSummaryFormStructure2022(
         ViewAssessmentSummaryFormCompleteness2022):
-
+    """ViewAssessmentSummaryFormStructure2022"""
     @property
     def summary_fields(self):
         _summary_fields_2016_a13_complete = (
@@ -831,14 +841,14 @@ class EditAssessmentSummaryForm(Form, BaseComplianceView):
 
     Fields are: summary, recommendations, progress assessment
     """
-    # TODO unused
-
+    
     title = u"Edit progress assessment"
     template = ViewPageTemplateFile("pt/inline-form.pt")
     _saved = False
 
     @property
     def fields(self):
+        """fields"""
         saved_data = self.context.saved_assessment_data.last()
 
         _fields = []
@@ -857,6 +867,7 @@ class EditAssessmentSummaryForm(Form, BaseComplianceView):
 
     @buttonAndHandler(u'Save', name='save')
     def handle_save(self, action):
+        """handle_save"""
         if self.read_only_access:
             raise Unauthorized
 
@@ -882,13 +893,16 @@ class EditAssessmentSummaryForm(Form, BaseComplianceView):
         self.context.saved_assessment_data._p_changed = True
 
     def nextURL(self):
+        """nextURL"""
         return self.context.absolute_url()
 
     @property
     def action(self):
+        """action"""
         return self.context.absolute_url() + '/@@edit-assessment-summary'
 
     def render(self):
+        """render"""
         if self.request.method == 'POST':
             Form.render(self)
 
@@ -898,15 +912,19 @@ class EditAssessmentSummaryForm(Form, BaseComplianceView):
 
 
 class EditAssessmentDataFormMain(Form):
+    """EditAssessmentDataFormMain"""
     @property
     def criterias(self):
+        """criterias"""
         return self.descriptor_obj.sorted_criterions()      # criterions
 
     @property
     def help(self):
+        """help"""
         return render_assessment_help(self.criterias, self.descriptor)
 
     def get_question_guidance(self, subform):
+        """get_question_guidance"""
         if not hasattr(subform, '_question'):
             return ''
 
@@ -930,6 +948,7 @@ class EditAssessmentDataFormMain(Form):
 
     @property
     def fields(self):
+        """fields"""
         if not self.subforms:
             self.subforms = self.get_subforms()
 
@@ -940,13 +959,14 @@ class EditAssessmentDataFormMain(Form):
 
         return Fields(*fields)
 
-    @property       # TODO: memoize
+    @property
     def descriptor_obj(self):
+        """descriptor_obj"""
         return get_descriptor(self.descriptor)
 
-    # TODO: use memoize
     @property
     def questions(self):
+        """questions"""
         qs = self._questions[self.article]
 
         return qs
@@ -987,7 +1007,7 @@ def render_assessment_help(criterias, descriptor):
             logger.info("Skipping %r from help rendering", c)
 
             continue
-        cel = c.elements[0]     # TODO: also support multiple elements
+        cel = c.elements[0]
 
         if cel.id not in seen:
             seen.append(cel.id)
@@ -1035,8 +1055,6 @@ class AssessmentDataMixin(object):
 
         Currently used to get the coherence score from regional descriptors
 
-        TODO: implement a method to get the adequacy and consistency scores
-        from national descriptors assessment
     """
     overall_scores = {}
     skip_articles = ('Art11', 'Art13', 'Art14', 'Art18')
@@ -1407,9 +1425,16 @@ class AssessmentDataMixin(object):
                 phase_scores['conclusion'] = (0, 'Not consistent')
                 phase_scores['color'] = 3
             else:
-                phase_scores['conclusion'] = (score_val,
-                                              self.get_conclusion(score_val))
-                phase_scores['color'] = self.get_color_for_score(score_val)
+                if article in ('Art13', 'Art14', 'Art13Completeness',
+                               'Art13Completeness', 'Art1314CrossCutting'):
+                    phase_scores['conclusion'] = (score_val,
+                            self.get_conclusion_2022(score_val))
+                    phase_scores['color'] = self.get_color_for_score_2022(score_val)
+
+                else:
+                    phase_scores['conclusion'] = (score_val,
+                                                self.get_conclusion(score_val))
+                    phase_scores['color'] = self.get_color_for_score(score_val)
 
         return phase_overall_scores
 

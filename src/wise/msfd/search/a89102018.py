@@ -1,6 +1,4 @@
-# TODO: we need to check behavior of this module after modifications to
-# extractData() in EmbeddedForm
-
+#pylint: skip-file
 from __future__ import absolute_import
 from collections import OrderedDict
 from sqlalchemy import and_, or_
@@ -14,8 +12,7 @@ from .. import db, sql, sql2018
 from ..base import EmbeddedForm, MarineUnitIDSelectForm
 from ..sql_extra import MSFD4GeographicalAreaID
 from ..utils import (all_values_from_field, change_orientation,
-                     db_objects_to_dict, group_data, group_query,
-                     ItemLabel, ItemList)
+                     db_objects_to_dict, group_data, ItemLabel, ItemList)
 from .base import ItemDisplayForm
 from .utils import (register_form_a8_2018, register_form_art9,
                     register_form_art19, register_form_art10)

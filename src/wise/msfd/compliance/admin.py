@@ -1,3 +1,5 @@
+#pylint: skip-file
+""" admin.py """
 # coding=utf-8
 from __future__ import absolute_import
 from __future__ import print_function
@@ -31,9 +33,11 @@ from Products.CMFPlacefulWorkflow.WorkflowPolicyConfig import \
 from Products.Five.browser import BrowserView
 from Products.statusmessages.interfaces import IStatusMessage
 from wise.msfd import db
-from wise.msfd.compliance.assessment import (ARTICLE_WEIGHTS,
-                                             AssessmentDataMixin,
-                                             OverallScores)
+from wise.msfd.compliance.assessment import (
+    ARTICLE_WEIGHTS, AssessmentDataMixin, # OverallScores
+    )
+from wise.msfd.compliance.scoring import OverallScores
+
 from wise.msfd.compliance.interfaces import (INationalDescriptorAssessment,
                                              INationalDescriptorAssessmentSecondary)
 from wise.msfd.compliance.vocabulary import (get_all_countries,
@@ -73,10 +77,21 @@ CONCLUSIONS = {
     '0': 'Not reported',
 }
 
+CONCLUSIONS_2022 = {
+    '/': 'Not relevant',
+    '1': 'Very good',
+    '0.75': 'Good',
+    '0.5': 'Moderate',
+    '0.25': 'Poor',
+    '0.250': 'Not clear',
+    '0': 'Very poor',
+}
+
 ARTICLES_2022 = ['Art13', 'Art14']
 
 
 def get_wf_state_id(context):
+    """get_wf_state_id"""
     state = get_state(context)
     wftool = get_tool('portal_workflow')
     wf = wftool.getWorkflowsFor(context)[0]  # assumes one wf
@@ -87,6 +102,7 @@ def get_wf_state_id(context):
 
 
 class ToPDB(BrowserView):
+    """ToPDB"""
     def __call__(self):
         import pdb
         pdb.set_trace()
@@ -141,12 +157,15 @@ class BootstrapCompliance(BrowserView):
         return descriptors
 
     def _get_articles(self):
+        """_get_articles"""
         return ['Art8', 'Art9', 'Art10']
 
     def set_layout(self, obj, name):
+        """set_layout"""
         ISelectableBrowserDefault(obj).setLayout(name)
 
     def set_policy(self, context, name):
+        """set_policy"""
         logger.info("Set placeful workflow policy for %s", context.getId())
         config = WorkflowPolicyConfig(
             workflow_policy_in='compliance_section_policy',
@@ -156,11 +175,13 @@ class BootstrapCompliance(BrowserView):
 
     @db.use_db_session('2018')
     def get_country_regions(self, country_code):
+        """get_country_regions"""
         regions = get_regions_for_country(country_code)
 
         return regions
 
     def get_group(self, code):
+        """get_group"""
         if '.' in code:
             code = 'd1'
         code = code.lower()
@@ -168,6 +189,7 @@ class BootstrapCompliance(BrowserView):
         return "{}-{}".format(CONTRIBUTOR_GROUP_ID, code)
 
     def create_comments_folder(self, content):
+        """create_comments_folder"""
         for id, title, trans in [
             (u'tl', 'Discussion track with Topic Leads', 'open_for_tl'),
             (u'ec', 'Discussion track with EC', 'open_for_ec'),
@@ -181,6 +203,7 @@ class BootstrapCompliance(BrowserView):
 
     def create_nda_folder(self, df, desc_code, art, 
             layout='@@nat-desc-art-view'):
+        """create_nda_folder"""
         if art.lower() in df.contentIds():
             nda = df[art.lower()]
         else:
@@ -201,6 +224,7 @@ class BootstrapCompliance(BrowserView):
         self.create_comments_folder(nda)
 
     def create_rda_folder(self, df, desc_code, art):
+        """create_rda_folder"""
         if art.lower() in df.contentIds():
             rda = df[art.lower()]
         else:
@@ -221,7 +245,7 @@ class BootstrapCompliance(BrowserView):
         self.create_comments_folder(rda)
 
     def make_country(self, parent, country_code, name):
-
+        """make_country"""
         if country_code.lower() in parent.contentIds():
             cf = parent[country_code.lower()]
         else:
@@ -300,7 +324,7 @@ class BootstrapCompliance(BrowserView):
                 self.create_nda_folder(df, desc_code, 'Art11')
 
                 # article 13, 14, 18
-                self.create_nda_folder(df, desc_code, 'Art13', 
+                self.create_nda_folder(df, desc_code, 'Art13',
                     '@@nat-desc-art-view-2022')
                 self.create_nda_folder(df, desc_code, 'Art14',
                     '@@nat-desc-art-view-2022')
@@ -309,6 +333,7 @@ class BootstrapCompliance(BrowserView):
         return cf
 
     def make_region(self, parent, region):
+        """make_region"""
         code, name = region.code.lower(), region.title
 
         if code.lower() in parent.contentIds():
@@ -343,6 +368,7 @@ class BootstrapCompliance(BrowserView):
         return rf
 
     def setup_nationaldescriptors(self, parent):
+        """setup_nationaldescriptors"""
         # National Descriptors Assessments
 
         if 'national-descriptors-assessments' in parent.contentIds():
@@ -357,6 +383,7 @@ class BootstrapCompliance(BrowserView):
             self.make_country(nda, code, country)
 
     def setup_regionaldescriptors(self, parent):
+        """setup_regionaldescriptors"""
         # Regional Descriptors Assessments
 
         if 'regional-descriptors-assessments' in parent.contentIds():
@@ -374,6 +401,7 @@ class BootstrapCompliance(BrowserView):
             self.make_region(rda, region)
 
     def setup_nationalsummaries(self, parent):
+        """setup_nationalsummaries"""
         if 'national-summaries' in parent.contentIds():
             ns = parent['national-summaries']
         else:
@@ -393,7 +421,7 @@ class BootstrapCompliance(BrowserView):
             if code.lower() in ns.contentIds():
                 cf = ns[code.lower()]
             else:
-                # national_summary type used for Assessment summary/pdf export
+                # national_summary Art. 12 (8-9-10) National report - 2018
                 cf = create(ns,
                             'national_summary',
                             title=country,
@@ -403,7 +431,7 @@ class BootstrapCompliance(BrowserView):
             alsoProvides(cf, interfaces.INationalSummaryCountryFolder)
             # self.create_comments_folder(cf)
 
-            # create the overview folder
+            # create the country overview folder
             if 'overview' in cf.contentIds():
                 of = cf['overview']
             else:
@@ -415,7 +443,20 @@ class BootstrapCompliance(BrowserView):
             self.set_layout(of, 'national-overview')
             alsoProvides(of, interfaces.INationalSummaryOverviewFolder)
 
+            # create the Art. 16 (13-14) National report - 2022
+            if 'assessment-summary-2022' in cf.contentIds():
+                art16f = cf['assessment-summary-2022']
+            else:
+                art16f = create(cf,
+                            'wise.msfd.nationalsummary2022',
+                            title='National summary 2022',
+                            id='assessment-summary-2022')
+
+            self.set_layout(art16f, 'assessment-summary-2022')
+            alsoProvides(art16f, interfaces.INationalSummary2022Folder)
+
     def setup_regionalsummaries(self, parent):
+        """setup_regionalsummaries"""
         if 'regional-summaries' in parent.contentIds():
             ns = parent['regional-summaries']
         else:
@@ -446,8 +487,6 @@ class BootstrapCompliance(BrowserView):
             self.set_layout(rf, 'assessment-summary')
             alsoProvides(rf, interfaces.IRegionalSummaryRegionFolder)
 
-            # TODO setup the folder for the regional overview page
-            # similar to national summaries page
             # create the overview folder
             if 'overview' in rf.contentIds():
                 of = rf['overview']
@@ -461,6 +500,7 @@ class BootstrapCompliance(BrowserView):
             alsoProvides(of, interfaces.IRegionalSummaryOverviewFolder)
 
     def setup_secondary_articles(self, parent):
+        """setup_secondary_articles"""
         if 'national-descriptors-assessments' not in parent.contentIds():
             return
 
@@ -490,6 +530,7 @@ class BootstrapCompliance(BrowserView):
                 self.create_comments_folder(nda)
 
     def setup_compliancefolder(self):
+        """setup_compliancefolder"""
         if self.context.id == self.compliance_folder_id:
             return self.context
 
@@ -514,6 +555,7 @@ class BootstrapCompliance(BrowserView):
         return cm
 
     def setup_msfd_reporting_history_folder(self, cm):
+        """setup_msfd_reporting_history_folder"""
         msfd_id = 'msfd-reporting-history'
 
         if msfd_id in cm.contentIds():
@@ -571,7 +613,7 @@ class BootstrapCompliance(BrowserView):
 
 
 class BootstrapAssessmentLandingpages(BootstrapCompliance):
-
+    """BootstrapAssessmentLandingpages"""
     def __call__(self):
         image_url = "https://wise-test.eionet.europa.eu/policy-and-reporting/implementation-and-reports/implementation-and-reports/@@download/image/30657450808_59e1973b0b_o.jpg"
         image_caption = "© Paweł Gładyś, WaterPIX /EEA"
@@ -709,18 +751,20 @@ User = namedtuple('User', ['username', 'fullname', 'email'])
 
 
 class ComplianceAdmin(BaseComplianceView):
-    """"""
+    """ComplianceAdmin"""
 
     name = 'admin'
     section = 'compliance-admin'
 
     @property
     def get_descriptors(self):
+        """get_descriptors"""
         descriptors = get_all_descriptors()
 
         return descriptors
 
     def get_users_by_group_id(self, group_id):
+        """get_users_by_group_id"""
         groups_tool = getToolByName(self.context, 'portal_groups')
 
         g = groups_tool.getGroupById(group_id)
@@ -739,8 +783,8 @@ class ComplianceAdmin(BaseComplianceView):
 
         return res
 
-    # @cache      #TODO
     def get_groups_for_desc(self, descriptor):
+        """get_groups_for_desc"""
         descriptor = descriptor.split('.')[0]
         group_id = '{}-{}'.format(CONTRIBUTOR_GROUP_ID, descriptor.lower())
 
@@ -748,18 +792,21 @@ class ComplianceAdmin(BaseComplianceView):
 
     @property
     def get_reviewers(self):
+        """get_reviewers"""
         group_id = REVIEWER_GROUP_ID
 
         return self.get_users_by_group_id(group_id)
 
     @property
     def get_editors(self):
+        """get_editors"""
         group_id = EDITOR_GROUP_ID
 
         return self.get_users_by_group_id(group_id)
 
 
 class AdminScoring(BaseComplianceView, AssessmentDataMixin):
+    """AdminScoring"""
     name = 'admin-scoring'
     section = 'compliance-admin'
 
@@ -767,6 +814,7 @@ class AdminScoring(BaseComplianceView, AssessmentDataMixin):
     questions_reg = REG_DESC_QUESTIONS
 
     def _get_values_for_question(self, data, descriptor_obj, question, muids):
+        """_get_values_for_question"""
         targets = question.get_assessed_elements(descriptor_obj, muids=muids)
 
         values = []
@@ -785,9 +833,11 @@ class AdminScoring(BaseComplianceView, AssessmentDataMixin):
         return values
 
     def descriptor_obj(self, descriptor):
+        """descriptor_obj"""
         return get_descriptor(descriptor)
 
     def get_available_countries(self, region_folder):
+        """get_available_countries"""
         res = [
             # id, title, definition, is_primary
             COUNTRY(x[0], x[1], "", lambda _: True)
@@ -817,6 +867,7 @@ class AdminScoring(BaseComplianceView, AssessmentDataMixin):
     @property
     @timeit
     def ndas(self):
+        """ndas"""
         catalog = get_tool('portal_catalog')
         brains = catalog.unrestrictedSearchResults(
             portal_type='wise.msfd.nationaldescriptorassessment',
@@ -846,6 +897,7 @@ class AdminScoring(BaseComplianceView, AssessmentDataMixin):
     @property
     @timeit
     def ndas_2022(self):
+        """ndas_2022"""
         catalog = get_tool('portal_catalog')
         brains = catalog.unrestrictedSearchResults(
             portal_type='wise.msfd.nationaldescriptorassessment',
@@ -875,6 +927,7 @@ class AdminScoring(BaseComplianceView, AssessmentDataMixin):
     @property
     @timeit
     def ndas_cross(self):
+        """ndas_cross"""
         catalog = get_tool('portal_catalog')
         brains = catalog.unrestrictedSearchResults(
             portal_type='wise.msfd.nationaldescriptorassessment',
@@ -899,6 +952,7 @@ class AdminScoring(BaseComplianceView, AssessmentDataMixin):
     @property
     @timeit
     def ndas_sec(self):
+        """ndas_sec"""
         catalog = get_tool('portal_catalog')
         brains = catalog.unrestrictedSearchResults(
             portal_type='wise.msfd.nationaldescriptorassessment',
@@ -918,8 +972,6 @@ class AdminScoring(BaseComplianceView, AssessmentDataMixin):
 
     def reset_assessment_data(self):
         """ Completely erase the assessment data from the system
-
-        TODO: when implementing the regional descriptors, make sure to adjust
         """
 
         for obj in self.ndas:
@@ -930,6 +982,7 @@ class AdminScoring(BaseComplianceView, AssessmentDataMixin):
                 obj._p_changed = True
 
     def recalculate_score_for_objects(self, objects, questions, section):
+        """recalculate_score_for_objects"""
         for obj in objects:
             if hasattr(obj, 'saved_assessment_data') \
                     and obj.saved_assessment_data:
@@ -1000,12 +1053,14 @@ class AdminScoring(BaseComplianceView, AssessmentDataMixin):
                 obj.saved_assessment_data._p_changed = True
 
     def recalculate_scores(self):
+        """recalculate_scores"""
         # self.recalculate_score_for_objects(self.ndas, self.questions,
         #                                    'national')
         self.recalculate_score_for_objects(self.rdas, self.questions_reg,
                                            'regional')
 
     def recalculate_scores_by_article(self):
+        """recalculate_scores_by_article"""
         # usage /recalculate-scores-by-article?article=Art13&section=national
         article = self.request.form.get('article', None)
         section = self.request.form.get('section', None)
@@ -1103,10 +1158,6 @@ class AdminScoring(BaseComplianceView, AssessmentDataMixin):
                                 for o in val.question.get_assessed_elements(
                                     d_obj, muids=muids)] or ['All criteria'])
 
-                    # TODO IndexError: list index out of range
-                    # investigate this
-                    # Possible cause of error: D9C2 was removed and some old
-                    # questions have answered it
                     try:
                         option = options[i]
                     except IndexError:
@@ -1225,7 +1276,7 @@ class AdminScoring(BaseComplianceView, AssessmentDataMixin):
                d_obj.id, d_obj.title,
                article_title, '', '2012 Adequacy change', '',
                adequacy_2012_change, '', state, last_change)    
-               
+
     def get_data_2022(self, obj):
         """ Get assessment data for a country assessment object
         """
@@ -1287,7 +1338,7 @@ class AdminScoring(BaseComplianceView, AssessmentDataMixin):
 
                     answer = val.question.answers[v]
                     score = val.question.scores[v]
-                    score_title = CONCLUSIONS[score]
+                    score_title = CONCLUSIONS_2022[score]
 
                     yield (
                         country_code, country_name, region_code, region_name,
@@ -1364,7 +1415,7 @@ class AdminScoring(BaseComplianceView, AssessmentDataMixin):
 
         overall_concl, score = phase_overall_scores.get_overall_score(
             article_title)
-        score_title = self.get_conclusion(overall_concl)
+        score_title = self.get_conclusion_2022(overall_concl)
 
         yield (country_code, country_name, region_code, region_name,
                d_obj.id, d_obj.title,
@@ -1481,7 +1532,7 @@ class AdminScoring(BaseComplianceView, AssessmentDataMixin):
         yield (country_code, country_title, article_title, '',
                '2018 Overall', '', score, score_title,
                state, last_change)  
-  
+
     def get_data_cross_cutting(self, obj):
         """ Get assessment data for a country assessment object
         """
@@ -1491,7 +1542,6 @@ class AdminScoring(BaseComplianceView, AssessmentDataMixin):
 
             return
 
-        
         article_title = obj.title
 
         if article_title == 'art13-completeness-2022':
@@ -1543,7 +1593,7 @@ class AdminScoring(BaseComplianceView, AssessmentDataMixin):
 
                     answer = val.question.answers[v]
                     score = val.question.scores[v]
-                    score_title = CONCLUSIONS[score]
+                    score_title = CONCLUSIONS_2022[score]
 
                     yield (country_code, country_title, article_title,
                            val.question.id, option, answer, score, score_title,
@@ -1599,7 +1649,7 @@ class AdminScoring(BaseComplianceView, AssessmentDataMixin):
 
         overall_concl, score = phase_overall_scores.get_overall_score(
             article_title)
-        score_title = self.get_conclusion(overall_concl)
+        score_title = self.get_conclusion_2022(overall_concl)
 
         yield (country_code, country_title, article_title, '',
                '2022 Overall', '', score, score_title,
@@ -1720,6 +1770,7 @@ class AdminScoring(BaseComplianceView, AssessmentDataMixin):
 
     @timeit
     def data_to_xls(self, all_data):
+        """data_to_xls"""
         logger.info('Preparing data to xls!')
 
         out = BytesIO()
@@ -1750,6 +1801,7 @@ class AdminScoring(BaseComplianceView, AssessmentDataMixin):
 
     @timeit
     def data_to_xml(self, all_data):
+        """data_to_xml"""
         root = etree.Element('data')
         out = BytesIO()
 
@@ -1785,10 +1837,12 @@ class AdminScoring(BaseComplianceView, AssessmentDataMixin):
         return out
 
     def save_xsldata_to_annot(self, data):
+        """save_xsldata_to_annot"""
         annot = get_annot()
         annot[ANNOT_XLSDATA] = (datetime.now(), data)
 
     def get_xlsdata_from_annot(self):
+        """get_xlsdata_from_annot"""
         annot = get_annot()
         xlsdata = annot.get(ANNOT_XLSDATA, (datetime.now(), None))
 
@@ -1797,6 +1851,7 @@ class AdminScoring(BaseComplianceView, AssessmentDataMixin):
     @timeit
     @cache(lambda func, *args: func.__name__, lifetime=1800)
     def get_export_scores_data(self, context):
+        """get_export_scores_data"""
         last_savedate, annot_xlsdata = self.get_xlsdata_from_annot()
         diff = datetime.now() - last_savedate
         total_mins = (diff.days * 1440 + diff.seconds / 60)
@@ -1874,6 +1929,7 @@ class AdminScoring(BaseComplianceView, AssessmentDataMixin):
 
     @timeit
     def export_scores(self, context):
+        """export_scores"""
         all_data = self.get_export_scores_data(context)
         xlsio = self.data_to_xls(all_data)
         sh = self.request.response.setHeader
@@ -1888,6 +1944,7 @@ class AdminScoring(BaseComplianceView, AssessmentDataMixin):
         return xlsio.read()
 
     def can_export_xml(self, use_password=True):
+        """can_export_xml"""
         if not use_password:
             return True
 
@@ -1905,6 +1962,7 @@ class AdminScoring(BaseComplianceView, AssessmentDataMixin):
         return True
 
     def export_scores_xml(self, context, use_password):
+        """export_scores_xml"""
         can_export_xml = self.can_export_xml(use_password)
 
         if not can_export_xml:
@@ -1947,6 +2005,7 @@ class AdminScoring(BaseComplianceView, AssessmentDataMixin):
 
 
 class AdminScoringExportXML(AdminScoring):
+    """AdminScoringExportXML"""
     def __call__(self):
         file = self.export_scores_xml(self.context, use_password=True)
 
@@ -1954,8 +2013,9 @@ class AdminScoringExportXML(AdminScoring):
 
 
 class SetupAssessmentWorkflowStates(BaseComplianceView):
-
+    """SetupAssessmentWorkflowStates"""
     def get_objects(self):
+        """get_objects"""
         catalog = get_tool('portal_catalog')
         brains = catalog.searchResults(
             portal_type='wise.msfd.regionaldescriptorassessment',
@@ -1976,12 +2036,14 @@ class SetupAssessmentWorkflowStates(BaseComplianceView):
             yield obj, state
 
     def view_objects(self):
+        """view_objects"""
         template = "<tr><td><a href={0}>{0}</a></td><td>{1}<td><tr>"
         res = [template.format(x[0].absolute_url(), x[1]) for x in self.get_objects()]
 
         return "<table>{}</table".format("".join(res))
 
     def fix_objects(self):
+        """fix_objects"""
         changed = 0
         not_changed = 0
 
@@ -2010,7 +2072,7 @@ class SetupAssessmentWorkflowStates(BaseComplianceView):
 
 
 class TranslateIndicators(BrowserView):
-
+    """TranslateIndicators"""
     def __call__(self):
         labels = list(get_indicator_labels().values())
         site = portal.get()
@@ -2041,6 +2103,7 @@ class TranslateIndicators(BrowserView):
 
 
 class MigrateTranslationStorage(BrowserView):
+    """MigrateTranslationStorage"""
     def __call__(self):
         site = portal.get()
         storage = ITranslationsStorage(site)

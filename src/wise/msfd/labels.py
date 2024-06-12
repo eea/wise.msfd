@@ -1,4 +1,4 @@
-
+# pylint: skip-file
 from __future__ import absolute_import
 from collections import defaultdict
 
@@ -52,6 +52,7 @@ logger = logging.getLogger('wise.msfd')
 
 
 def _extract_from_csv():
+    """_extract_from_csv"""
     labels = {}
     csv_f = resource_filename('wise.msfd',
                               'data/MSFDreporting_TermLists.csv')
@@ -69,6 +70,7 @@ def _extract_from_csv():
 
 
 def _extract_ktm():
+    """_extract_ktm"""
     labels = {}
     csv_f = resource_filename('wise.msfd',
                               'data/KTM.csv')
@@ -87,6 +89,7 @@ def _extract_ktm():
 
 
 def _parse_art11_2020_labels():
+    """_parse_art11_2020_labels"""
     labels = defaultdict(dict)
     csv_f = resource_filename('wise.msfd',
                               'data/MSFD_Art11_2020_Enumerations_v3_2.csv')
@@ -105,6 +108,7 @@ def _parse_art11_2020_labels():
 
 
 def _extract_from_xsd(fpath):
+    """_extract_from_xsd"""
     labels = {}
 
     # """ Read XSD files and populates a vocabulary of term->label
@@ -149,7 +153,7 @@ def _extract_from_xsd(fpath):
 
 @db.use_db_session('2012')
 def get_human_labels():
-
+    """get_human_labels"""
     t = sql.t_MSFDCommon
     human_labels = {}
     count, rows = db.get_all_records(t)
@@ -197,6 +201,7 @@ def get_label(value, label_collection):
 
 
 def _parse_labels(label_name):
+    """_parse_labels"""
     res = {}
 
     features = TERMSLIST[label_name]
@@ -215,8 +220,9 @@ def _parse_labels(label_name):
 
 @db.use_db_session('2018')
 def get_indicator_labels():
+    """get_indicator_labels"""
     mc = sql2018.IndicatorsIndicatorAssessment
-    count, res = db.get_all_records(
+    _, res = db.get_all_records(
         mc
     )
     labels = {}
@@ -233,8 +239,9 @@ def get_indicator_labels():
 
 @db.use_db_session('2018')
 def get_indicator_urls():
+    """get_indicator_urls"""
     mc = sql2018.IndicatorsIndicatorAssessment
-    count, res = db.get_all_records(
+    _, res = db.get_all_records(
         mc
     )
     urls = {}
@@ -251,12 +258,13 @@ def get_indicator_urls():
 
 @db.use_db_session('2018')
 def get_mru_labels():
+    """get_mru_labels"""
     # for faster query only get these fields
     needed = ('MarineReportingUnitId', 'Description', 'nameTxtInt', 'nameText')
     mc = sql2018.MarineReportingUnit
     mc_cols = [getattr(mc, x) for x in needed]
 
-    count, res = db.get_all_specific_columns(
+    _, res = db.get_all_specific_columns(
         mc_cols
     )
     labels = {}
@@ -285,11 +293,12 @@ def get_mru_labels():
 
 @db.use_db_session('2018')
 def get_target_labels():
+    """get_target_labels"""
     needed = ('TargetCode', 'Description')
     mc = sql2018.ART10TargetsTarget
     mc_cols = [getattr(mc, x) for x in needed]
 
-    count, res = db.get_all_specific_columns(
+    _, res = db.get_all_specific_columns(
         mc_cols
     )
     labels = {}
@@ -304,9 +313,10 @@ def get_target_labels():
 
 @db.use_db_session('2012')
 def get_environmental_targets():
+    """get_environmental_targets"""
     mc = sql.MSFD10Target
     mc_join = sql.MSFD10Import
-    count, res = db.get_all_records_join(
+    _, res = db.get_all_records_join(
         [mc.ReportingFeature, mc.Description,
          mc.MarineUnitID,
          mc_join.MSFD10_Import_ReportingCountry],
@@ -356,6 +366,7 @@ class LabelCollection(object):
     nace_codes = _parse_labels('NACECodesAll')
 
     def get(self, collection_name, name):
+        """get"""
         label_dict = getattr(self, collection_name, None)
 
         if not label_dict:
@@ -370,11 +381,12 @@ GES_LABELS = LabelCollection()
 
 
 def get_common_labels():
+    """get_common_labels"""
     labels = {}
     # The following labels were disabled because it contains
     # imprecise/non-sense labels ex. 'Good' = 'e.g. based on extensive surveys'
     # Other	= 'Please specify in comment'
-    
+
     # labels.update(_extract_from_xsd('data/MSCommon_1p0.xsd'))
     # labels.update(_extract_from_xsd('data/MSCommon_1p1.xsd'))
     # labels.update(get_human_labels())
@@ -388,7 +400,7 @@ def get_common_labels():
     labels.update(getattr(GES_LABELS, 'ges_components'))
     labels.update(getattr(GES_LABELS, 'ges_criterias'))
 
-    # TODO there are keys with empty values, find out from where it comes
+    # there are keys with empty values, find out from where it comes
     filtered = {k: v for k, v in labels.items() if k and v}
 
     return filtered

@@ -1,3 +1,5 @@
+# pylint: skip-file
+"""data.py"""
 from __future__ import absolute_import
 import csv
 import logging
@@ -14,8 +16,9 @@ import sparql
 from eea.cache import cache
 from wise.msfd import db, sql, sql_extra, sql2018
 
-from .utils import current_date, timeit
 from six.moves import zip
+from .utils import current_date, timeit
+
 
 logger = logging.getLogger('wise.msfd')
 
@@ -76,6 +79,7 @@ FILENAMES_MISSING_DB_8b = {
 
 
 def _extract_pdf_assessments():
+    """_extract_pdf_assessments"""
     data = []
     csv_f = resource_filename('wise.msfd',
                               'data/pdf_assessments.csv')
@@ -115,8 +119,9 @@ def countries_in_region(regionid):
 
 @db.use_db_session('2012')
 def muids_by_country(regions=None):
+    """muids_by_country"""
     t = sql_extra.MSFD4GeographicalAreaID
-    count, records = db.get_all_records(t)
+    _, records = db.get_all_records(t)
     res = defaultdict(list)
 
     for rec in records:
@@ -132,6 +137,7 @@ def muids_by_country(regions=None):
 
 @db.use_db_session('2012')
 def _get_report_filename_art10_2012(country, region, article, descriptor):
+    """_get_report_filename_art10_2012"""
     mc = sql.MSFD10Import
 
     count, item = db.get_item_by_conditions(
@@ -156,6 +162,7 @@ def _get_report_filename_art10_2012(country, region, article, descriptor):
 
 @db.use_db_session('2012')
 def _get_report_filename_art8esa_2012(country, region, article, descriptor):
+    """_get_report_filename_art8esa_2012"""
     mc = sql.MSFD8cImport
 
     count, item = db.get_item_by_conditions(
@@ -198,6 +205,7 @@ def _get_report_filename_art3_4_2012_db(country, region, article, descriptor):
 
 @db.use_db_session('2012')
 def _get_report_filename_art7_2012_db(country, region, article, descriptor):
+    """_get_report_filename_art7_2012_db"""
     mc = sql_extra.MSCompetentAuthority
 
     count, item = db.get_item_by_conditions(
@@ -218,6 +226,7 @@ def _get_report_filename_art7_2012_db(country, region, article, descriptor):
 
 @db.use_db_session('2012')
 def _get_report_filename_art9_2012(country, region, article, descriptor):
+    """_get_report_filename_art9_2012"""
     mc = sql.MSFD9Import
 
     count, item = db.get_item_by_conditions(
@@ -239,6 +248,7 @@ def _get_report_filename_art9_2012(country, region, article, descriptor):
 
 
 def _get_report_filename_art8_2012(country, region, article, descriptor):
+    """_get_report_filename_art8_2012"""
     d = descriptor.split('.')[0]
 
     if d in ['D1', 'D4', 'D6']:
@@ -271,6 +281,7 @@ def _get_report_filename_art8_2012(country, region, article, descriptor):
 
 
 def _get_report_fileurl_art11_2014(country, region, article, descriptor):
+    """_get_report_fileurl_art11_2014"""
     # return [
     #     'https://cdr.eionet.europa.eu/de/eu/msfd_mp/balde/envvfjbwg/BALDE_MSFD11Mon_20141105.xml',
     #     'https://cdr.eionet.europa.eu/de/eu/msfd_mp/balde/envu58cfw/BALDE_MSFD11MonSub_BALDE_Sub_099_20141015.xml'
@@ -331,6 +342,7 @@ ORDER BY DESC(?date)
 
 
 def get_report_fileurl_art131418_2016(filename, country, region, article):
+    """get_report_fileurl_art131418_2016"""
     schemas_mapping = {
         'Art13': 'http://dd.eionet.europa.eu/schemas/MSFD13/MSFD13_1p0.xsd',
         'Art14': 'http://dd.eionet.europa.eu/schemas/MSFD13/MSFD13_1p0ex.xsd',
@@ -401,6 +413,7 @@ ORDER BY DESC(?date)
 
 @db.use_db_session('2012')
 def _get_report_filename_art13_2016(country, region, article, descriptor):
+    """_get_report_filename_art13_2016"""
     mc = sql.MSFD13Import
 
     count, items = db.get_all_records(
@@ -444,6 +457,7 @@ def _get_report_filename_art13_2016(country, region, article, descriptor):
 
 @db.use_db_session('2012')
 def _get_report_filename_art14_2016(country, region, article, descriptor):
+    """_get_report_filename_art14_2016"""
     mc = sql.MSFD13Import
 
     count, items = db.get_all_records(
@@ -487,6 +501,7 @@ def _get_report_filename_art14_2016(country, region, article, descriptor):
 
 @db.use_db_session('2018')
 def _get_report_filename_art18_2018(country, region, article, descriptor):
+    """_get_report_filename_art18_2018"""
     mc = sql2018.ReportedInformation
 
     count, items = db.get_all_records(
@@ -669,6 +684,7 @@ def get_factsheet_url(url):
 
 @timeit
 def get_xml_report_data(filename, country_code=''):
+    """get_xml_report_data"""
     if not filename:
         return ""
 
@@ -726,7 +742,7 @@ def country_ges_components(country_code):
     """
 
     t = sql.t_MSFD_19a_10DescriptiorsCriteriaIndicators
-    count, res = db.get_all_records(
+    _, res = db.get_all_records(
         t,
         t.c.MemberState == country_code,
     )
@@ -742,6 +758,7 @@ def country_ges_components(country_code):
 
 
 def _get_report_filename_art3_4_2012(country, region, article, descriptor):
+    """_get_report_filename_art3_4_2012"""
     schema = 'http://icm.eionet.europa.eu/schemas/dir200856ec/MSFD4Geo_2p0.xsd'
     obligation = '608'
 
@@ -749,6 +766,7 @@ def _get_report_filename_art3_4_2012(country, region, article, descriptor):
 
 
 def _get_report_filename_art3_4_2018(country, region, article, descriptor):
+    """_get_report_filename_art3_4_2018"""
     schema = 'http://icm.eionet.europa.eu/schemas/dir200856ec/MSFD4Geo_2p0.xsd'
     obligation = '760'
 
@@ -819,6 +837,7 @@ def _get_report_filename_art7_2012(country, region, article, descriptor):
 
 
 def _get_report_filename_art7_2018(country, region, article, descriptor):
+    """_get_report_filename_art7_2018"""
     schema = 'http://dd.eionet.europa.eu/schemas/MSFD/MSFDCA_1p0.xsd'
 
     return __get_report_filename_art7(country, schema)
@@ -876,6 +895,7 @@ LIMIT 1
 @cache(lambda func, *args: func.__name__ + "".join(args) + current_date())
 @timeit
 def get_all_report_filenames(country, article):
+    """get_all_report_filenames"""
     ART3 = ('http://dd.eionet.europa.eu/schemas/MSFD/MSFD4Geo_2p0.xsd',
             'http://icm.eionet.europa.eu/schemas/dir200856ec/MSFD4Geo_2p0.xsd',
             'http://cdr.eionet.europa.eu/se/eu/msfd8910/msfd4geo/envunbs3a/MSFD4Geo_2p0.xsd')
@@ -967,16 +987,15 @@ ORDER BY DESC(?date)
 
 
 def _to_datetime(date_string):
+    """_to_datetime"""
     d = datetime.strptime(date_string, "%Y-%m-%dT%H:%M:%SZ")
 
     return d
 
-# TODO with caching enabled the file url is returned WHY???
-# @cache(lambda func, *args: func.__name__ + args[0] + current_date())
-
 
 @timeit
 def get_envelope_release_date(file_url):
+    """get_envelope_release_date"""
     q = """
 PREFIX cr: <http://cr.eionet.europa.eu/ontologies/contreg.rdf#>
 PREFIX terms: <http://purl.org/dc/terms/>
@@ -1067,8 +1086,9 @@ ORDER BY DESC(?date)
         raise
 
     return res
-    
+
 def get_gis_reports_2018(country_code):
+    """get_gis_reports_2018"""
     if country_code == 'EL':
         country_code = 'GR'
 

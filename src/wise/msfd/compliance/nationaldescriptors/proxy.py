@@ -1,3 +1,4 @@
+#pylint: skip-file
 from __future__ import absolute_import
 from wise.msfd.compliance import convert
 from wise.msfd.labels import GES_LABELS

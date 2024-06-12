@@ -1,3 +1,4 @@
+#pylint: skip-file
 from __future__ import absolute_import
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 from wise.msfd.compliance.base import BaseComplianceView

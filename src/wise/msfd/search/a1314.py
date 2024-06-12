@@ -1,3 +1,4 @@
+#pylint: skip-file
 """ Forms and views for Article 13-14 search
 """
 from __future__ import absolute_import

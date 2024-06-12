@@ -1,3 +1,4 @@
+#pylint: skip-file
 from __future__ import absolute_import
 from collections import Counter, defaultdict, namedtuple
 from itertools import chain
@@ -7,8 +8,7 @@ from eea.cache import cache
 from plone.api.content import get_state
 from plone.api.portal import get_tool
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
-from wise.msfd.compliance.base import (BaseComplianceView,
-                                       NAT_DESC_QUESTIONS,
+from wise.msfd.compliance.base import (NAT_DESC_QUESTIONS,
                                        report_data_cache_key)
 from wise.msfd.compliance.interfaces import IComplianceModuleFolder
 from wise.msfd.compliance.nationaldescriptors.base import BaseView

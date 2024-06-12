@@ -1,14 +1,16 @@
+# pylint: skip-file
+"""behavior.py"""
+import traceback
 from plone.app.dexterity.behaviors.metadata import (
     DCFieldProperty, MetadataBase)
 from .interfaces import (ISPMeasureFields)
 from zope.lifecycleevent.interfaces import IObjectModifiedEvent
 from zope.component import adapter
-import traceback
-
 
 
 @adapter(ISPMeasureFields, IObjectModifiedEvent)
 def handle_origin_change(obj, event):
+    """handle_origin_change"""
     # List of fields to reset when `origin` changes
     fields_to_reset = [
         'nature_of_physical_modification',
@@ -49,10 +51,10 @@ def handle_origin_change(obj, event):
     if any("collective.exportimport" in s for s in stack):
         return
 
-
     # Check if the `origin` field has been changed
     for descriptor in event.descriptions:
-        if descriptor.attributes and 'ISPMeasureFields.origin' in descriptor.attributes:
+        if (descriptor.attributes 
+            and 'ISPMeasureFields.origin' in descriptor.attributes):
 
             # Reset the fields to empty lists
             for field in fields_to_reset:

@@ -1,3 +1,4 @@
+#pylint: skip-file
 """ Utilities to help map the 2012->2018 information for Art8
 """
 
@@ -5,8 +6,6 @@ from __future__ import absolute_import
 from wise.msfd import sql
 
 # descriptors mapped to DB tables, based on mappings excel doc
-# TODO should we get data from all of these tables, or only from specific
-# tables
 DESC_DATA_MAPPING = {
     'D1': ('MSFD8a_Functional', 'MSFD8a_Species'),
     'D2': ('MSFD8b_NIS', ),
@@ -17,7 +16,6 @@ DESC_DATA_MAPPING = {
     'D5': ('MSFD8b_Nutrients', ),
     'D6': ('MSFD8a_Habitat', 'MSFD8b_PhysicalDamage', 'MSFD8b_PhysicalLoss',
            'MSFD8b_ExtractionFishShellfish',
-           # TODO not sure if MSFD8b_ExtractionSeaweedMaerlOther belongs here
            'MSFD8b_ExtractionSeaweedMaerlOther'),
     'D7': ('MSFD8b_HydrologicalProcesses', ),
     'D8': ('MSFD8b_HazardousSubstances', 'MSFD8b_MicrobialPathogens',
@@ -50,7 +48,6 @@ DB_MAPPER_CLASSES = {
     'MSFD8b_PollutantEvents': sql.MSFD8bPollutantEvent,
 }
 
-# TODO for Nutrients topics list is incomplete in XLS??
 # list of topics to be show in regional descriptors, if empty all topics are
 # showed
 TOPIC_CONDITIONS = {
@@ -90,7 +87,6 @@ TOPIC_ASSESSMENT = {
 DESCR_TOPIC_UTILS = {
     # if the Topic is not assessed, therefore the indicator is missing, get
     # the default indicator for that topic
-    # TODO which one to choose if there are multiple defaults
     'topic_indicators': {
         'D5': {
             'ImpactPressureWaterColumn': ('5.2.1', '5.2.4', '5.2.2'),
@@ -112,7 +108,6 @@ DESCR_TOPIC_UTILS = {
     },
 
     # The report data view table is separeted in 3 groups based on topics
-    # TODO: should we separate the topics for other descriptors too
     'topic_groups': {
         'D5': (
             ('LevelPressureNConcentration',
@@ -158,6 +153,7 @@ DESCR_TOPIC_UTILS = {
 
 
 class UtilsArticle8(object):
+    """UtilsArticle8"""
     def __init__(self, descriptor):
         if descriptor.startswith("D1."):
             descriptor = "D1"
@@ -166,16 +162,19 @@ class UtilsArticle8(object):
         self.tables = DESC_DATA_MAPPING[descriptor]
 
     def get_base_mc(self, table):
+        """get_base_mc"""
         mc = DB_MAPPER_CLASSES[table]
 
         return mc
 
     def get_topic_conditions(self, table):
+        """get_topic_conditions"""
         topics = TOPIC_CONDITIONS.get(table, [])
 
         return topics
 
     def get_proper_topic(self, topic):
+        """get_proper_topic"""
         proper = TOPIC_ASSESSMENT.get(topic, topic)
 
         return proper

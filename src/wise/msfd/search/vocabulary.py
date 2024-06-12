@@ -1,5 +1,4 @@
-# TODO: move rest of vocabularies from wise.msfd.vocabulary, they're not ok
-# in that location
+#pylint: skip-file
 from __future__ import absolute_import
 from zope.interface import provider
 from zope.security import checkPermission

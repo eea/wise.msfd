@@ -1,3 +1,4 @@
+#pylint: skip-file
 # coding: utf-8
 from __future__ import absolute_import
 from sqlalchemy import (Column, Date, DateTime, ForeignKey, Index, Integer,

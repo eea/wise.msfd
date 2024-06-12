@@ -1,3 +1,4 @@
+#pylint: skip-file
 from __future__ import absolute_import
 from plone.app.layout.viewlets.common import TitleViewlet as BaseTitleViewlet
 

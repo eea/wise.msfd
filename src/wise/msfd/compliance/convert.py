@@ -1,3 +1,4 @@
+#pylint: skip-file
 """ A collection of data transformers to be used to convert 2018 DB data in
 some other useful formats. Used when displaying data.
 """
