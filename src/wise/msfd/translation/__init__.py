@@ -153,7 +153,7 @@ def retrieve_translation(country_code,
     if not target_languages:
         target_languages = ['EN']
 
-    dest = '{}/@@translate-callback?source_lang={}'.format(site_url,
+    dest = '{}/assessment-module/@@translate-callback?source_lang={}'.format(site_url,
                                                            country_code)
 
     logger.info('Translate callback URL: %s', dest)
