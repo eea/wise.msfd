@@ -181,7 +181,7 @@ def retrieve_translation(country_code,
         data=json.dumps(data),
         headers={'Content-Type': 'application/json'}
     )
-    logger.info('Response from translation request: %r', resp.content)
+    logger.info('Response from translation request: %r', resp)
 
     res = {
         "transId": resp.content,
