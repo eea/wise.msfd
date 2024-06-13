@@ -1,6 +1,7 @@
 #pylint: skip-file
 from __future__ import absolute_import
 import logging
+import cgi
 
 from zope import event
 from zope.security import checkPermission
@@ -29,8 +30,12 @@ class TranslationCallback(BrowserView):
         event.notify(InvalidateMemCacheEvent(raw=True, dependencies=deps))
         logger.info('Invalidate cache for dependencies: %s', ', '.join(deps))
 
-        form = self.request.form
         qs = self.request["QUERY_STRING"]
+        parsed = cgi.parse_qs(qs)
+        form = {}
+        for name, val in parsed.items():
+            form[name] = val[0]
+
         logger.info("Form received: %s", form)
         logger.info("qs received: %s", qs)
         form.pop('request-id', None)
