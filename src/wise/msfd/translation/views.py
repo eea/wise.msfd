@@ -19,7 +19,7 @@ import six
 
 logger = logging.getLogger('wise.msfd.translation')
 
-
+# vim src/wise.msfd/src/wise/msfd/translation/views.py
 class TranslationCallback(BrowserView):
     """ This view is called by the EC translation service.
     Saves the translation in Annotations
@@ -33,10 +33,20 @@ class TranslationCallback(BrowserView):
         qs = self.request["QUERY_STRING"]
         parsed = parse_qs(qs)
         form = {}
+
         for name, val in parsed.items():
             form[name] = val[0]
 
-        logger.info("Form received: %s", form)
+        original = form.pop('external-reference', '')
+        original = normalize(original)
+
+        _file = self.request._file.read()
+        try:
+            translated = _file.decode('utf-8').strip()
+        except:
+            logger.error("Cannot decode translation: %s", )
+            return '{}'
+
         form.pop('request-id', None)
         form.pop('target-language', None)
 
@@ -45,17 +55,14 @@ class TranslationCallback(BrowserView):
         if language is None:
             language = ITranslationContext(self.context).language
 
-        original = form.pop('external-reference', '')
-        original = normalize(original)
-
-        translated = form.pop('translation', list(form.keys())[0]).strip()
+        # translated = form.pop('translation', list(form.keys())[0]).strip()
 
         # translated = decode_text(translated)
         # it seems the EC service sends translated text in latin-1.
         # Please double-check, but the decode_text that automatically detects
         # the encoding doesn't seem to do a great job
 
-        translated = translated  # .decode('latin-1')
+        # translated = translated  # .decode('latin-1')
 
         save_translation(original, translated, language)
 
