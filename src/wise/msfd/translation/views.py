@@ -30,7 +30,9 @@ class TranslationCallback(BrowserView):
         logger.info('Invalidate cache for dependencies: %s', ', '.join(deps))
 
         form = self.request.form
+        qs = self.request["QUERY_STRING"]
         logger.info("Form received: %s", form)
+        logger.info("qs received: %s", qs)
         form.pop('request-id', None)
         form.pop('target-language', None)
 
