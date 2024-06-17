@@ -1156,12 +1156,10 @@
 
     initPageElems();
     var formAction = $('.wise-search-form-container form').attr('action') || '';
-    // this formAction replace is not needed anymore
-    if (formAction.includes("api/++api++")) {
+    if (formAction.includes("/marine/++api++")) {
       var newFormAction = formAction;
     } else {
-      // var newFormAction = formAction.replace("marine", "marine/++api++");
-      var newFormAction = formAction;
+      var newFormAction = formAction.replace("/marine", "/marine/++api++");
     }
 
     $('.wise-search-form-container form').attr('action', newFormAction);
@@ -1558,9 +1556,9 @@
   }
 
   function searchFormAjax(boundary, data, url, formData) {
-    // if (!url.includes("api/++api++")) {
-    //   url = url.replace("marine", "marine/++api++");
-    // }
+    if (!url.includes("/marine/++api++")) {
+      url = url.replace("/marine", "/marine/++api++");
+    }
 
     $.ajax({
       type: 'POST',
@@ -1775,12 +1773,10 @@
     }, 100);
 
     var formAction = $('.wise-search-form-container form').attr('action') || '';
-    // this formAction replace is not needed anymore
-    if (formAction.includes("api/++api++")) {
+    if (formAction.includes("/marine/++api++")) {
       var newFormAction = formAction;
     } else {
-      // var newFormAction = formAction.replace("marine", "marine/++api++");
-      var newFormAction = formAction;
+      var newFormAction = formAction.replace("/marine", "/marine/++api++");
     }
 
     $('.wise-search-form-container form').attr('action', newFormAction);
