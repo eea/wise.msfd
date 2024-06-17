@@ -1,6 +1,7 @@
 #pylint: skip-file
 from __future__ import absolute_import
 import logging
+import os
 from urllib.parse import parse_qs
 
 from zope import event
@@ -36,6 +37,13 @@ class TranslationCallback(BrowserView):
 
         for name, val in parsed.items():
             form[name] = val[0]
+
+        translate_key_ENV = os.environ.get("TRANSLATE_KEY", 'MISSING_ENV')
+        translate_key_FORM = form.get('translateKey', 'MISSING_FORM')
+
+        if translate_key_ENV != translate_key_FORM:
+            logger.error('TRANSLATE_KEY from request not equal with the key from ENV!')
+            return '{}'
 
         original = form.pop('external-reference', '')
         original = normalize(original)
