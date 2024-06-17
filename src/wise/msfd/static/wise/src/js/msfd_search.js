@@ -1156,10 +1156,12 @@
 
     initPageElems();
     var formAction = $('.wise-search-form-container form').attr('action') || '';
+    // this formAction replace is not needed anymore
     if (formAction.includes("api/++api++")) {
       var newFormAction = formAction;
     } else {
-      var newFormAction = formAction.replace("marine", "marine/++api++");
+      // var newFormAction = formAction.replace("marine", "marine/++api++");
+      var newFormAction = formAction;
     }
 
     $('.wise-search-form-container form').attr('action', newFormAction);
@@ -1556,9 +1558,9 @@
   }
 
   function searchFormAjax(boundary, data, url, formData) {
-    if (!url.includes("api/++api++")) {
-      url = url.replace("marine", "marine/++api++");
-    }
+    // if (!url.includes("api/++api++")) {
+    //   url = url.replace("marine", "marine/++api++");
+    // }
 
     $.ajax({
       type: 'POST',
@@ -1773,10 +1775,12 @@
     }, 100);
 
     var formAction = $('.wise-search-form-container form').attr('action') || '';
-    if (formAction && formAction.includes("api/++api++")) {
+    // this formAction replace is not needed anymore
+    if (formAction.includes("api/++api++")) {
       var newFormAction = formAction;
     } else {
-      var newFormAction = formAction.replace("marine", "marine/++api++");
+      // var newFormAction = formAction.replace("marine", "marine/++api++");
+      var newFormAction = formAction;
     }
 
     $('.wise-search-form-container form').attr('action', newFormAction);
