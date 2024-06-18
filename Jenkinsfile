@@ -5,6 +5,9 @@ pipeline {
         GIT_NAME = "wise.msfd"
         GIT_HISTORYFILE = "CHANGES.rst"
         SONARQUBE_TAGS = "water.eea.europa.eu"
+        LINK_FREETDS_STATICALLY = "YES"
+        LINK_OPENSSL = "YES"
+        LINK_KRB5 = "YES"
     }
 
   stages {
