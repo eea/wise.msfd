@@ -5,7 +5,7 @@ from zope.security import checkPermission
 from zope.schema.interfaces import IVocabularyFactory
 from zope.schema.vocabulary import SimpleTerm, SimpleVocabulary
 
-from .. import db, sql, sql2018
+from .. import db, sql
 from ..vocabulary import values_to_vocab
 from .utils import (FORMS_ART4, FORMS_ART8, FORMS_ART8_2012, FORMS_ART8_2018,
                     FORMS_ART9_2012, FORMS_ART9,

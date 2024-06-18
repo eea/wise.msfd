@@ -3,7 +3,7 @@ from __future__ import absolute_import
 from collections import defaultdict
 
 import lxml.etree
-from zope.interface import Attribute, Interface, implementer, implements
+from zope.interface import Attribute, Interface, implementer
 
 from Products.Five.browser.pagetemplatefile import PageTemplateFile
 from wise.msfd.gescomponents import get_descriptor
@@ -44,7 +44,6 @@ class DummyReportField(TemplateMixin):
 class ReportField(TemplateMixin):
     """ An object representing the field (row) definition in a report table
     """
-    # implements(IReportField)
 
     template = PageTemplateFile('pt/report_field_header.pt')
 

@@ -8,7 +8,7 @@ from ..base import EmbeddedForm, MarineUnitIDSelectForm2012
 from .base import ItemDisplay, MultiItemDisplayForm
 from .interfaces import IA81Form
 from .main import RegionForm
-from .utils import (data_to_xls, register_form_a8_2012, register_form_section,
+from .utils import (register_form_a8_2012, register_form_section,
                     register_subform)
 
 

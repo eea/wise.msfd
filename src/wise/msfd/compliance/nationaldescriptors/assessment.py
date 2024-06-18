@@ -4,7 +4,7 @@ import collections
 import datetime
 import logging
 
-from zope.schema import Choice, Text
+from zope.schema import Choice
 from zope.schema.vocabulary import SimpleTerm, SimpleVocabulary
 
 from AccessControl import Unauthorized

@@ -9,7 +9,7 @@ import threading
 
 from collections import defaultdict
 
-from sqlalchemy import create_engine, distinct, func, and_, or_
+from sqlalchemy import create_engine, func, and_, or_
 from sqlalchemy.orm import scoped_session, sessionmaker
 from sqlalchemy.orm.relationships import RelationshipProperty
 from zope.sqlalchemy import register
@@ -816,7 +816,7 @@ def latest_import_ids_2018():
         if rowid >= groups[k]:
             groups[k] = rowid
 
-    latest_ids = [v for k, v in groups.items()]
+    latest_ids = [v for _k, v in groups.items()]
 
     return latest_ids
 

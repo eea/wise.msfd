@@ -4,8 +4,6 @@ from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 from wise.msfd.compliance.base import BaseComplianceView
 from wise.msfd.compliance.interfaces import ICountryDescriptorsFolder
 
-from .data import REPORT_DEFS
-
 
 class BaseView(BaseComplianceView):
     """ Base view specific to national descriptor pages

@@ -6,7 +6,6 @@ import logging
 
 from zope.tales.expressions import StringExpr
 
-from Products.Five.browser import BrowserView
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 from Products.PageTemplates.Expressions import createTrustedZopeEngine
 

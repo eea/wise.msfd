@@ -40,7 +40,7 @@ from wise.msfd.data import (get_all_report_filenames,
 from wise.msfd.gescomponents import (get_all_descriptors, get_descriptor,
                                      get_features)
 from wise.msfd.translation import get_translated, retrieve_translation
-from wise.msfd.utils import (ItemLabel, current_date, items_to_rows,
+from wise.msfd.utils import (current_date, items_to_rows,
                              natural_sort_key, timeit)
 from z3c.form.button import buttonAndHandler
 from z3c.form.field import Fields

@@ -45,7 +45,6 @@ from wise.msfd.compliance.utils import ordered_regions_sortkey
 from wise.msfd.compliance.vocabulary import REGIONS
 from wise.msfd.data import _extract_pdf_assessments, get_text_reports_2018
 from wise.msfd.gescomponents import get_descriptor, get_features
-from wise.msfd.utils import t2rt
 
 from wise.msfd.compliance.nationaldescriptors.base import BaseView
 from wise.msfd.compliance.interfaces import (
@@ -340,7 +339,7 @@ class AssessmentPDFMixin(object):
             # 'load-media-error-handling': 'ignore'
         }
         css = self._get_css()
-        cover = ""  # self._get_cover()
+        # cover = ""  # self._get_cover()
         toc = self._get_toc()
         path_wkhtmltopdf = '/plone/instance/parts/wkhtmltopdf/wkhtmltopdf'
         config = pdfkit.configuration(wkhtmltopdf=path_wkhtmltopdf)

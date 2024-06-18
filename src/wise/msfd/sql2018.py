@@ -8,8 +8,6 @@ from sqlalchemy.dialects.mssql.base import BIT
 from sqlalchemy.sql.sqltypes import NullType
 from sqlalchemy.ext.declarative import declarative_base
 
-from . import sql
-
 Base = declarative_base()
 metadata = Base.metadata
 

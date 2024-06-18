@@ -326,7 +326,7 @@ ORDER BY DESC(?date)
 
         for row in rows:
             url = row[0].value
-            splitted = url.split('/')
+            # splitted = url.split('/')
 
             # filename_from_url = splitted[-1]
 
@@ -510,7 +510,7 @@ def _get_report_filename_art18_2018(country, region, article, descriptor):
         mc.Schema == 'ART18'
     )
 
-    file_names = []
+    # file_names = []
     
     # TODO: analyse cases when it returns more then one file
     if len(items) != 1:
