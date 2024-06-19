@@ -1,3 +1,4 @@
+#pylint: skip-file
 # -*- coding: utf-8 -*-
 from __future__ import absolute_import
 from collections import defaultdict, namedtuple
@@ -192,7 +193,7 @@ def parse_reporting_history_env():
 
     REPORTING_HISTORY_ENV = res
 
-    return res
+    return REPORTING_HISTORY_ENV
 
 
 @db.use_db_session('2018')

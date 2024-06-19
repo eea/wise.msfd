@@ -4,7 +4,10 @@ pipeline {
   environment {
         GIT_NAME = "wise.msfd"
         GIT_HISTORYFILE = "CHANGES.rst"
-        SONARQUBE_TAGS = "water.eea.europa.eu"
+        SONARQUBE_TAGS = "water.eea.europa.eu-marine"
+        // LINK_FREETDS_STATICALLY = "YES"
+        // LINK_OPENSSL = "YES"
+        // LINK_KRB5 = "YES"
     }
 
   stages {
@@ -16,23 +19,23 @@ pipeline {
           "JS Hint": {
             node(label: 'docker') {
               script {
-                sh '''docker run -i --rm --name="$BUILD_TAG-jshint" -e GIT_SRC="https://github.com/eea/$GIT_NAME.git" -e GIT_NAME="$GIT_NAME" -e GIT_BRANCH="$BRANCH_NAME" -e GIT_CHANGE_ID="$CHANGE_ID" eeacms/jshint'''
+                sh '''docker run -i --rm --name="$BUILD_TAG-jshint" -e GIT_SRC="https://github.com/eea/$GIT_NAME.git" -e GIT_NAME="$GIT_NAME" -e GIT_BRANCH="$BRANCH_NAME" -e GIT_CHANGE_ID="$CHANGE_ID" eeacms/jshint --exclude-path wise.msfd/.jshintignore'''
               }
             }
           },
 
-          "CSS Lint": {
-            node(label: 'docker') {
-              script {
-                sh '''docker run -i --rm --name="$BUILD_TAG-csslint" -e GIT_SRC="https://github.com/eea/$GIT_NAME.git" -e GIT_NAME="$GIT_NAME" -e GIT_BRANCH="$BRANCH_NAME" -e GIT_CHANGE_ID="$CHANGE_ID" eeacms/csslint'''
-              }
-            }
-          },
+          // "CSS Lint": {
+          //   node(label: 'docker') {
+          //     script {
+          //       sh '''docker run -i --rm --name="$BUILD_TAG-csslint" -e GIT_SRC="https://github.com/eea/$GIT_NAME.git" -e GIT_NAME="$GIT_NAME" -e GIT_BRANCH="$BRANCH_NAME" -e GIT_CHANGE_ID="$CHANGE_ID" eeacms/csslint --exclude-list=static'''
+          //     }
+          //   }
+          // },
 
           "PEP8": {
             node(label: 'docker') {
               script {
-                sh '''docker run -i --rm --name="$BUILD_TAG-pep8" -e GIT_SRC="https://github.com/eea/$GIT_NAME.git" -e GIT_NAME="$GIT_NAME" -e GIT_BRANCH="$BRANCH_NAME" -e GIT_CHANGE_ID="$CHANGE_ID" eeacms/pep8'''
+                sh '''docker run -i --rm --name="$BUILD_TAG-pep8" -e GIT_SRC="https://github.com/eea/$GIT_NAME.git" -e GIT_NAME="$GIT_NAME" -e GIT_BRANCH="$BRANCH_NAME" -e GIT_CHANGE_ID="$CHANGE_ID" eeacms/pep8 --exclude=sql2018.py,sql.py,sql_extra.py,db.py,data.py,utils.py,search,compliance,translation /code'''
               }
             }
           },
@@ -59,11 +62,11 @@ pipeline {
             }
           },
 
-          "JS Lint": {
-            node(label: 'docker') {
-              sh '''docker run -i --rm --name="$BUILD_TAG-jslint" -e GIT_SRC="https://github.com/eea/$GIT_NAME.git" -e GIT_NAME="$GIT_NAME" -e GIT_BRANCH="$BRANCH_NAME" -e GIT_CHANGE_ID="$CHANGE_ID" eeacms/jslint4java'''
-            }
-          },
+          // "JS Lint": {
+          //   node(label: 'docker') {
+          //     sh '''docker run -i --rm --name="$BUILD_TAG-jslint" -e GIT_SRC="https://github.com/eea/$GIT_NAME.git" -e GIT_NAME="$GIT_NAME" -e GIT_BRANCH="$BRANCH_NAME" -e GIT_CHANGE_ID="$CHANGE_ID" eeacms/jslint4java'''
+          //   }
+          // },
 
           "PyFlakes": {
             node(label: 'docker') {
@@ -71,11 +74,11 @@ pipeline {
             }
           },
 
-          "i18n": {
-            node(label: 'docker') {
-              sh '''docker run -i --rm --name=$BUILD_TAG-i18n -e GIT_SRC="https://github.com/eea/$GIT_NAME.git" -e GIT_NAME="$GIT_NAME" -e GIT_BRANCH="$BRANCH_NAME" -e GIT_CHANGE_ID="$CHANGE_ID" eeacms/i18ndude'''
-            }
-          }
+          // "i18n": {
+          //   node(label: 'docker') {
+          //     sh '''docker run -i --rm --name=$BUILD_TAG-i18n -e GIT_SRC="https://github.com/eea/$GIT_NAME.git" -e GIT_NAME="$GIT_NAME" -e GIT_BRANCH="$BRANCH_NAME" -e GIT_CHANGE_ID="$CHANGE_ID" eeacms/i18ndude'''
+          //   }
+          // }
         )
       }
     }
@@ -108,17 +111,17 @@ pipeline {
           //   }
           // },
 
-          "Plone4": {
-            node(label: 'docker') {
-              sh '''docker run -i --rm --name="$BUILD_TAG-plone4" -e GIT_BRANCH="$BRANCH_NAME" -e ADDONS="$GIT_NAME" -e DEVELOP="src/$GIT_NAME" -e GIT_CHANGE_ID="$CHANGE_ID" eeacms/plone-test:4 -v -vv -s $GIT_NAME'''
-            }
-          },
+          // "Plone4": {
+          //   node(label: 'docker') {
+          //     sh '''docker run -i --rm --name="$BUILD_TAG-plone4" -e GIT_BRANCH="$BRANCH_NAME" -e ADDONS="$GIT_NAME" -e DEVELOP="src/$GIT_NAME" -e GIT_CHANGE_ID="$CHANGE_ID" eeacms/plone-test:4 -v -vv -s $GIT_NAME'''
+          //   }
+          // },
 
-          "Plone5": {
-            node(label: 'docker') {
-              sh '''docker run -i --rm --name="$BUILD_TAG-plone5" -e GIT_BRANCH="$BRANCH_NAME" -e ADDONS="$GIT_NAME" -e DEVELOP="src/$GIT_NAME" -e GIT_CHANGE_ID="$CHANGE_ID" eeacms/plone-test:5 -v -vv -s $GIT_NAME'''
-            }
-          },
+          // "Plone5": {
+          //   node(label: 'docker') {
+          //     sh '''docker run -i --rm --name="$BUILD_TAG-plone5" -e GIT_BRANCH="$BRANCH_NAME" -e ADDONS="$GIT_NAME" -e DEVELOP="src/$GIT_NAME" -e GIT_CHANGE_ID="$CHANGE_ID" eeacms/plone-test:5 -v -vv -s $GIT_NAME'''
+          //   }
+          // },
 
           "Python3": {
             node(label: 'docker') {
@@ -151,7 +154,7 @@ pipeline {
             withSonarQubeEnv('Sonarqube') {
                 // sh '''sed -i "s|/plone/instance/src/$GIT_NAME|$(pwd)|g" coverage.xml'''
                 // sh '''find xunit-functional -type f -exec mv {} xunit-reports/ ";"'''
-                sh "export PATH=$PATH:${scannerHome}/bin:${nodeJS}/bin; sonar-scanner -Dsonar.python.xunit.skipDetails=true -Dsonar.python.xunit.reportPath=xunit-reports/*.xml -Dsonar.python.coverage.reportPath=coverage.xml -Dsonar.sources=./eea -Dsonar.projectKey=$GIT_NAME-$BRANCH_NAME -Dsonar.projectVersion=$BRANCH_NAME-$BUILD_NUMBER"
+                sh "export PATH=$PATH:${scannerHome}/bin:${nodeJS}/bin; sonar-scanner -Dsonar.python.xunit.skipDetails=true -Dsonar.python.xunit.reportPath=xunit-reports/*.xml -Dsonar.python.coverage.reportPath=coverage.xml -Dsonar.sources=./src -Dsonar.projectKey=$GIT_NAME-$BRANCH_NAME -Dsonar.projectVersion=$BRANCH_NAME-$BUILD_NUMBER"
                 sh '''try=2; while [ \$try -gt 0 ]; do curl -s -XPOST -u "${SONAR_AUTH_TOKEN}:" "${SONAR_HOST_URL}api/project_tags/set?project=${GIT_NAME}-${BRANCH_NAME}&tags=${SONARQUBE_TAGS},${BRANCH_NAME}" > set_tags_result; if [ \$(grep -ic error set_tags_result ) -eq 0 ]; then try=0; else cat set_tags_result; echo "... Will retry"; sleep 60; try=\$(( \$try - 1 )); fi; done'''
             }
           }

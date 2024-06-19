@@ -2,93 +2,6 @@
 <object name="portal_types" meta_type="Plone Types Tool">
  <property
     name="title">Controls the available content types in your portal</property>
- <object name="Discussion Item" meta_type="Factory-based Type Information"/>
- <object name="Plone Site"
-    meta_type="Factory-based Type Information with dynamic views"/>
- <object name="TempFolder" meta_type="Factory-based Type Information"/>
- <object name="Collection" meta_type="Dexterity FTI"/>
- <object name="Document" meta_type="Dexterity FTI"/>
- <object name="Folder" meta_type="Dexterity FTI"/>
- <object name="Link" meta_type="Dexterity FTI"/>
- <object name="File" meta_type="Dexterity FTI"/>
- <object name="Image" meta_type="Dexterity FTI"/>
- <object name="News Item" meta_type="Dexterity FTI"/>
- <object name="Event" meta_type="Dexterity FTI"/>
- <object name="frontpage-banner" meta_type="Dexterity FTI"/>
- <object name="country_factsheet" meta_type="Dexterity FTI"/>
- <object name="country_factsheet_section" meta_type="Dexterity FTI"/>
- <object name="external_report" meta_type="Dexterity FTI"/>
- <object name="external_datasources" meta_type="Dexterity FTI"/>
- <object name="key_message_card" meta_type="Dexterity FTI"/>
- <object name="Sparql"
-    meta_type="Factory-based Type Information with dynamic views"/>
- <object name="SparqlBookmarksFolder"
-    meta_type="Factory-based Type Information with dynamic views"/>
- <object name="PDFTool"
-    meta_type="Factory-based Type Information with dynamic views"/>
- <object name="PDFTheme"
-    meta_type="Factory-based Type Information with dynamic views"/>
- <object name="FieldsetFolder"
-    meta_type="Factory-based Type Information with dynamic views"/>
- <object name="FormBooleanField"
-    meta_type="Factory-based Type Information with dynamic views"/>
- <object name="FormCaptchaField"
-    meta_type="Factory-based Type Information with dynamic views"/>
- <object name="FormCustomScriptAdapter"
-    meta_type="Factory-based Type Information with dynamic views"/>
- <object name="FormDateField"
-    meta_type="Factory-based Type Information with dynamic views"/>
- <object name="FormFileField"
-    meta_type="Factory-based Type Information with dynamic views"/>
- <object name="FormFixedPointField"
-    meta_type="Factory-based Type Information with dynamic views"/>
- <object name="FormFolder"
-    meta_type="Factory-based Type Information with dynamic views"/>
- <object name="FormIntegerField"
-    meta_type="Factory-based Type Information with dynamic views"/>
- <object name="FormLabelField"
-    meta_type="Factory-based Type Information with dynamic views"/>
- <object name="FormLikertField"
-    meta_type="Factory-based Type Information with dynamic views"/>
- <object name="FormLinesField"
-    meta_type="Factory-based Type Information with dynamic views"/>
- <object name="FormMailerAdapter"
-    meta_type="Factory-based Type Information with dynamic views"/>
- <object name="FormMultiSelectionField"
-    meta_type="Factory-based Type Information with dynamic views"/>
- <object name="FormPasswordField"
-    meta_type="Factory-based Type Information with dynamic views"/>
- <object name="FormRichLabelField"
-    meta_type="Factory-based Type Information with dynamic views"/>
- <object name="FormRichTextField"
-    meta_type="Factory-based Type Information with dynamic views"/>
- <object name="FormSaveDataAdapter"
-    meta_type="Factory-based Type Information with dynamic views"/>
- <object name="FormSelectionField"
-    meta_type="Factory-based Type Information with dynamic views"/>
- <object name="FormStringField"
-    meta_type="Factory-based Type Information with dynamic views"/>
- <object name="FormTextField"
-    meta_type="Factory-based Type Information with dynamic views"/>
- <object name="FormThanksPage"
-    meta_type="Factory-based Type Information with dynamic views"/>
- <object name="FieldsetStart"
-    meta_type="Factory-based Type Information with dynamic views"/>
- <object name="FieldsetEnd"
-    meta_type="Factory-based Type Information with dynamic views"/>
- <object name="DepictionTool" meta_type="Factory-based Type Information"/>
- <object name="AliasVocabulary" meta_type="Factory-based Type Information"/>
- <object name="SimpleVocabulary" meta_type="Factory-based Type Information"/>
- <object name="SimpleVocabularyTerm"
-    meta_type="Factory-based Type Information"/>
- <object name="SortedSimpleVocabulary"
-    meta_type="Factory-based Type Information"/>
- <object name="TreeVocabulary" meta_type="Factory-based Type Information"/>
- <object name="TreeVocabularyTerm"
-    meta_type="Factory-based Type Information"/>
- <object name="VdexFileVocabulary"
-    meta_type="Factory-based Type Information"/>
- <object name="VocabularyLibrary" meta_type="Factory-based Type Information"/>
  <object name="wise.msfd.nationaldescriptorassessment"
     meta_type="Dexterity FTI"/>
  <object name="wise.msfd.countrydescriptorsfolder" meta_type="Dexterity FTI"/>
@@ -102,17 +15,8 @@
  <object name="wise.msfd.nationalsummaryoverview" meta_type="Dexterity FTI"/>
  <object name="wise.msfd.nationalsummaryedit" meta_type="Dexterity FTI"/>
  <object name="wise.msfd.reportinghistoryfolder" meta_type="Dexterity FTI"/>
- <object name="data_visualization" meta_type="Dexterity FTI"/>
- <object name="publication_report" meta_type="Dexterity FTI"/>
- <object name="spatial_dataset" meta_type="Dexterity FTI"/>
- <object name="map_interactive" meta_type="Dexterity FTI"/>
- <object name="dataset" meta_type="Dexterity FTI"/>
- <object name="indicator" meta_type="Dexterity FTI"/>
  <object name="wise.msfd.regionalsummaryoverview" meta_type="Dexterity FTI"/>
  <object name="wise.msfd.msrecommendationfeedback" meta_type="Dexterity FTI"/>
- <object name="discodataconnector" meta_type="Dexterity FTI"/>
- <object name="visualization" meta_type="Dexterity FTI"/>
- <object name="CompositePage" meta_type="Dexterity FTI"/>
- <object name="clonable_type" meta_type="Dexterity FTI"/>
- <object name="dashboard" meta_type="Dexterity FTI"/>
+ <object name="wise.msfd.nationalsummary2022" meta_type="Dexterity FTI"/>
+ <object name="spmeasure" meta_type="Dexterity FTI"/>
 </object>

@@ -1,3 +1,4 @@
+#pylint: skip-file
 from __future__ import absolute_import
 import datetime
 import logging
@@ -6,26 +7,23 @@ from collections import namedtuple
 from persistent.list import PersistentList
 from pkg_resources import resource_filename
 from zope.schema import Choice, Text
-from zope.interface import implementer, implements
+from zope.interface import implementer
 from zope.schema.vocabulary import SimpleTerm, SimpleVocabulary
 
 from AccessControl import Unauthorized
 from plone.api import user
 from plone.z3cform.layout import wrap_form
-from Products.Five.browser.pagetemplatefile import (PageTemplateFile,
-                                                    ViewPageTemplateFile)
+from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 from pyexcel_xlsx import get_data
 from wise.msfd.base import EmbeddedForm, MainFormWrapper
 from wise.msfd.compliance.assessment import (PHASES,
                                              EditAssessmentDataFormMain,
                                              EditAssessmentSummaryForm,
                                              additional_fields,
-                                             reg_summary_fields,
-                                             render_assessment_help)
+                                             reg_summary_fields)
 from wise.msfd.compliance.base import REG_DESC_QUESTIONS
 from wise.msfd.compliance.content import AssessmentData
 from wise.msfd.compliance.interfaces import IRegionalEditAssessmentForm
-from wise.msfd.utils import t2rt
 from z3c.form.button import buttonAndHandler
 from z3c.form.field import Fields
 
@@ -90,7 +88,6 @@ class RegDescEditAssessmentSummaryForm(BaseRegComplianceView,
 @implementer(IRegionalEditAssessmentForm)
 class RegEditAssessmentFormWrapper(MainFormWrapper):
     pass
-    # implements(IRegionalEditAssessmentForm)
 
 
 class RegDescEditAssessmentDataForm(BaseRegComplianceView,

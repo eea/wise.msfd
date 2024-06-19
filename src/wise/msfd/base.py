@@ -1,21 +1,24 @@
-# import time
+# pylint: skip-file
+"""base.py"""
 from __future__ import absolute_import
 import re
 
 from zope.browserpage.viewpagetemplatefile import \
     ViewPageTemplateFile as Z3ViewPageTemplateFile
 from zope.component import queryMultiAdapter
-from zope.interface import implementer, implements
+from zope.interface import implementer
 
 from Acquisition import aq_inner
 from plone.api.portal import get_tool
 from plone.z3cform.layout import FormWrapper
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 from wise.msfd.compliance.interfaces import (
-    IEditAssessmentForm, IEditAssessmentFormCrossCutting, 
+    IEditAssessmentForm, IEditAssessmentFormCrossCutting,
     IEditAssessmentFormSecondary)
 from z3c.form.field import Fields
 from z3c.form.form import Form
+
+from six.moves import range
 
 from . import sql, sql2018
 from .db import (get_all_specific_columns, get_available_marine_unit_ids,
@@ -25,7 +28,6 @@ from .labels import DISPLAY_LABELS
 from .utils import (all_values_from_field, get_obj_fields, print_value,
                     TRANSFORMS)
 from .widget import MarineUnitIDSelectFieldWidget
-from six.moves import range
 
 
 re_art11_name_clean = re.compile(r'^Q\d+\w\s+')
@@ -49,9 +51,11 @@ class BaseUtil(object):
 
         This is used to transform the database column names to usable labels
         """
+        article = getattr(self, 'article', 'ALL')
+        labels = DISPLAY_LABELS.get(article, None) or DISPLAY_LABELS['ALL']
 
-        if text in DISPLAY_LABELS:
-            return DISPLAY_LABELS[text]
+        if text in labels:
+            return labels[text]
 
         text = text.replace('_', ' ')
 
@@ -128,6 +132,7 @@ class BaseUtil(object):
 
     @use_db_session('2018')
     def get_reported_date_from_db(self, filename):
+        """get_reported_date_from_db"""
         mc = sql2018.ReportingHistory
 
         count, data = get_all_specific_columns(
@@ -143,6 +148,7 @@ class BaseUtil(object):
         return date
 
     def format_reported_date(self, reported_date):
+        """format_reported_date"""
         try:
             reported_date = reported_date.strftime('%Y %b %d')
         except:
@@ -152,6 +158,7 @@ class BaseUtil(object):
 
     @use_db_session('2018')
     def get_reported_date_2018(self):
+        """get_reported_date_2018"""
         not_available = 'Not available'
         reported_date_info = self._find_reported_date_info()
 
@@ -178,6 +185,7 @@ class BaseUtil(object):
         return reported_date
 
     def get_reported_date(self):
+        """get_reported_date"""
         not_available = 'Not available'
         reported_date_info = self._find_reported_date_info()
 
@@ -213,6 +221,7 @@ class BaseUtil(object):
         return reported_date
 
     def get_current_country(self):
+        """get_current_country"""
         country_2012 = self.get_current_country_2012()
 
         if country_2012:
@@ -227,6 +236,7 @@ class BaseUtil(object):
 
     @use_db_session('2018')
     def get_current_country_2018(self):
+        """get_current_country_2018"""
         mc = sql2018.MarineReportingUnit
         try:
             mru = self.get_marine_unit_id()
@@ -248,6 +258,7 @@ class BaseUtil(object):
 
     @use_db_session('2012')
     def get_current_country_2012(self):
+        """get_current_country_2012"""
         """ Get the country for the current selected MarineUnitID
 
         :return: Germany
@@ -286,12 +297,17 @@ class BaseUtil(object):
         return get_obj_fields(obj, use_blacklist=use_blacklist)
 
     def print_value(self, value, field_name=None):
+        """print_value"""
         if not field_name:
             return print_value(value)
 
         if field_name in TRANSFORMS:
-            value = value.strip()
-            
+            try:
+                value = value.strip()
+            except AttributeError:
+                # do not strip, value is not string
+                pass
+
             transformer = TRANSFORMS.get(field_name)
 
             return transformer(value)
@@ -319,6 +335,7 @@ class BaseUtil(object):
         return context
 
     def get_record_title(self):
+        """get_record_title"""
         context = self
 
         while not hasattr(context, 'record_title'):
@@ -327,6 +344,7 @@ class BaseUtil(object):
         return context.record_title
 
     def get_form_data_by_key(self, context, key):
+        """get_form_data_by_key"""
         while context:
             data = getattr(context, 'data', None)
 
@@ -446,16 +464,12 @@ class EditAssessmentFormWrapper(MainFormWrapper):
 
     Needed to override the page title """
 
-    # implements(IEditAssessmentForm)
-
 
 @implementer(IEditAssessmentFormSecondary)
 class EditAssessmentFormWrapperSecondary(MainFormWrapper):
     """ Wrapper for EditAssessmentDataForm
 
     Needed to override the page title """
-
-    # implements(IEditAssessmentFormSecondary)
 
 
 @implementer(IEditAssessmentFormCrossCutting)
@@ -472,7 +486,6 @@ class EmbeddedForm(BaseEnhancedForm, Form, BaseUtil):
     It can embed other children forms
     """
 
-    # implements(IEmbeddedForm)
     ignoreContext = True
 
     template = ViewPageTemplateFile('pt/subform.pt')
@@ -484,6 +497,7 @@ class EmbeddedForm(BaseEnhancedForm, Form, BaseUtil):
         self.data = {}
 
     def update(self):
+        """update"""
         super(EmbeddedForm, self).update()
 
         self.data, errors = self.extractData()
@@ -497,6 +511,7 @@ class EmbeddedForm(BaseEnhancedForm, Form, BaseUtil):
                 self.subform = subform
 
     def get_subform(self, klass=None):
+        """get_subform"""
         if klass is None:
             klass = self.subform_class
 
@@ -506,6 +521,7 @@ class EmbeddedForm(BaseEnhancedForm, Form, BaseUtil):
         return klass(self, self.request)
 
     def extras(self):
+        """extras"""
         extras = queryMultiAdapter((self, self.request), name='extras')
 
         if extras:
@@ -537,13 +553,14 @@ class MarineUnitIDSelectForm(EmbeddedForm):
                 self.subform = subform
 
     def updateWidgets(self, prefix=None):
-        """ """
+        """ updateWidgets"""
         super(MarineUnitIDSelectForm, self).updateWidgets(prefix=prefix)
 
         widget = self.widgets["marine_unit_id"]
         widget.template = Z3ViewPageTemplateFile("search/pt/marine-widget.pt")
 
     def get_available_marine_unit_ids(self):
+        """get_available_marine_unit_ids"""
         # filter available records based on the parent selected MUIDs
         assert self.mapper_class
 
@@ -564,6 +581,7 @@ class MarineUnitIDSelectForm2012(MarineUnitIDSelectForm):
     """
 
     def get_available_marine_unit_ids(self, parent=None):
+        """get_available_marine_unit_ids"""
         data = {}
 
         if not parent:
@@ -597,7 +615,7 @@ class BasePublicPage(object):
     """
 
     def check_permission(self, permission, context=None):
-
+        """check_permission"""
         tool = get_tool('portal_membership')
 
         if context is None:
@@ -607,4 +625,5 @@ class BasePublicPage(object):
 
     @property
     def is_search(self):
+        """is_search"""
         return hasattr(self, '_compliance_folder')

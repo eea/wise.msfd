@@ -7,30 +7,88 @@
 <p>
   If a measure has been withdrawn, this amounts to an update of the Programme of
   Measures. The updated Programme of Measures has to be reported only under
-  Article 13. However, Article 18 refers to the implementation of the original
-  Programme of Measures of which the measure in question was a part, and a
-  withdrawal amounts to a special case of the first implementation stage
-  &ldquo;Implementation not started&rdquo;. Therefore, the withdrawal needs to
-  be reported under Article 18.
+  Article 13.
 </p>
 <p><br /></p>
 <p>
-  Use only e-reporting, There are specific schema fields to check in the
-  e-reporting to answer this question. If no information found in e-reporting,
-  check text report.
+  Use first e-reporting to answer this question, There are specific schema
+  fields to check in the e-reporting (filtering) to answer this question.
+</p>
+<p>
+  If the information between e-reporting and text report is not consistent,
+  select &lsquo;not clear&rsquo;. If more information is found in the text
+  report, it needs to be clearly explained.
 </p>
 <p><br /></p>
+<p><strong>Use of response options:</strong></p>
+<ul>
+  <li>
+    <p lang="fr-BE">
+      <strong>Yes</strong>: the MS has reported one or more category 2 measures
+      from the first cycle as &lsquo;withdrawn&rsquo; and there is an
+      explanation as to why (either in &lsquo;ImplementationReason&rsquo; or in
+      &lsquo;Measure description&rsquo;).
+    </p>
+  </li>
+  <li>
+    <p lang="fr-BE">
+      <strong>Partial</strong>: the MS has reported one or more category 2
+      measures from the first cycle as &lsquo;withdrawn&rsquo; but there is no
+      explanation as to why.
+    </p>
+  </li>
+  <li>
+    <p lang="fr-BE">
+      <strong>No</strong>: there are no measures reported as withdrawn.
+    </p>
+  </li>
+</ul>
+<p><strong>Structure of summary box:</strong></p>
+<p>
+  Start by stating which response option you have selected and continue
+  explaining why.
+</p>
+<p lang="en-US"><br /></p>
 <p>The assessor must:</p>
 <ul>
   <li>
     <p lang="fr-BE">
-      filter the relevant schema fields to see whether any new measure was
-      withdrawn in the second cycle PoM
-    </p>
-  </li>
-  <li>
-    <p lang="fr-BE">
-      list all modified measures per descriptor (code and title).
+      list all withdrawn new measures per descriptor (code, title and
+      descriptor), and specify whether there is an explanation or not. including
+      a comment on clarity/adequacy of the explanation provided.
     </p>
   </li>
 </ul>
+<p><br /></p>
+<p><br /></p>
+<table width="428" cellspacing="0" cellpadding="7">
+  <colgroup>
+    <col width="91" />
+    <col width="222" />
+    <col width="70" />
+  </colgroup>
+  <tbody>
+    <tr>
+      <td width="91" height="5">
+        <p lang="en-US"><strong>Measure Code</strong></p>
+      </td>
+      <td width="222">
+        <p lang="en-US"><strong>Measure Title</strong></p>
+      </td>
+      <td width="70">
+        <p lang="en-US"><strong>Descriptor</strong></p>
+      </td>
+    </tr>
+    <tr>
+      <td colspan="3" width="412" height="6">
+        <p lang="en-US"><em>Modified existing measures</em></p>
+      </td>
+    </tr>
+    <tr>
+      <td width="91" height="5"></td>
+      <td width="222"></td>
+      <td width="70"></td>
+    </tr>
+  </tbody>
+</table>
+<p><br /></p>

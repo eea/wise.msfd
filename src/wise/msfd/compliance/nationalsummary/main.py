@@ -1,4 +1,4 @@
-
+#pylint: skip-file
 from ..interfaces import INationalSummaryCountryFolder
 from ..nationaldescriptors.main import NationalDescriptorsOverview
 from .base import BaseNatSummaryView

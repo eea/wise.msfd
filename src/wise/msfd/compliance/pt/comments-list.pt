@@ -41,6 +41,9 @@
         </span>
       </div>
       <div tal:content="comment/text" class="comment">Comment here</div>
+      <i tal:condition="python: view.can_edit_comment(comment.Creator())"
+         class="comm-edit glyphicon glyphicon-edit"
+         title="Edit comment"></i>
       <i tal:condition="python: view.can_delete_comment(comment.Creator())"
          class="comm-del glyphicon glyphicon-remove-circle"
          title="Remove comment"></i>
@@ -52,7 +55,7 @@
       tal:condition="has_latest_comments">
     <span
       tal:content="python:plone.toLocalizedTime(latest_comments[0]['time'], long_format=True)">
-      Jul 10, 2019 01:42 PM</span> - Today
+      Jul 10, 2019 01:42 PM</span> - <span tal:content="view/current_date">Today</span>
   </li>
 
   <li class="process-state"
@@ -79,6 +82,10 @@
     </div>
 
     <div tal:content="comment/text" class="comment">Comment here</div>
+    <i tal:condition="python: view.can_edit_comment(comment.Creator())"
+        data-toggle="modal" data-target="#edit-comment-modal"
+        class="comm-edit glyphicon glyphicon-edit"
+        title="Edit comment"></i>
     <i tal:condition="python: view.can_delete_comment(comment.Creator())"
        class="comm-del glyphicon glyphicon-remove-circle"
        title="Remove comment"></i>

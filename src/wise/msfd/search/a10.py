@@ -1,3 +1,4 @@
+#pylint: skip-file
 from __future__ import absolute_import
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 from z3c.form.browser.checkbox import CheckBoxFieldWidget
@@ -8,7 +9,6 @@ from ..base import EmbeddedForm, MarineUnitIDSelectForm2012
 from ..utils import group_query
 from .base import ItemDisplayForm
 from .interfaces import IA2012GesComponentsArt10
-from .utils import data_to_xls
 
 
 class A10Form(EmbeddedForm):

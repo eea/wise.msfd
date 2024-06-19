@@ -1,12 +1,16 @@
 <p>
-  In cases where &lsquo;Measure withdrawn&rsquo; is selected, the MS must
+  When a measure has been withdrawn, i.e. contrary to the Programme of Measures
+  reported under Article 13, the measure is no longer intended to be put into
+  practice. That means that the measure has been cancelled for objective,
+  specific and transparent reasons. In cases where &lsquo;Measure
+  withdrawn&rsquo; is selected (see answer to Com04C question) , the MS must
   provide a reason in &lsquo;ImplementationReason&rsquo;.
 </p>
 <p><br /></p>
 <p>
   A predefined list of options for withdrawal, delay or other obstacles is
   provided, which are consistent with the reasons identified under WFD
-  reporting25, but with adaptations as needed in the context of the MSFD:
+  reporting, but with adaptations as needed in the context of the MSFD:
 </p>
 <ul>
   <li>
@@ -64,11 +68,60 @@
 <p>
   Some further information about the measure might be reported in &lsquo;Measure
   description&rsquo;, &lsquo;Reason description&rsquo; and in the text report.
-</p>
-<p><br /></p>
-<p>
   The assessor should assess, with expert judgement, whether the justification
   provided is adequate.
 </p>
 <p><br /></p>
-<p>If no measure is withdrawn, select &lsquo;not relevant&rsquo;.</p>
+<p><strong>Use of response options:</strong></p>
+<p><br /></p>
+<ul>
+  <li>
+    <p lang="fr-BE">
+      <strong>Yes:</strong> There is an adequate justification for all the
+      measures withdrawn.
+    </p>
+  </li>
+  <li>
+    <p lang="fr-BE">
+      <strong>Partially: </strong>There is an adequate justification for at
+      least half of the measures withdrawn.
+    </p>
+  </li>
+  <li>
+    <p lang="fr-BE">
+      <strong>Not clear</strong>: The justification provided in not clear or
+      there is not enough information provided to understand why the measure(s)
+      were withdrawn. The information provided in the e-report and the text
+      report is inconsistent.
+    </p>
+  </li>
+  <li>
+    <p lang="fr-BE">
+      <strong>No: </strong>The justification provided in not adequate or there
+      is no justification.
+    </p>
+  </li>
+  <li>
+    <p lang="fr-BE">
+      <strong>Not relevant</strong>: there are no measures withdrawn (see answer
+      to Com04C question).
+    </p>
+  </li>
+</ul>
+<p><br /></p>
+<p><strong>Structure of summary box:</strong></p>
+<p>
+  Start by stating which response option you have selected and continue
+  explaining why.
+</p>
+<p lang="en-US"><br /></p>
+<ul>
+  <li>
+    <p>
+      list all withdrawn new measures per descriptor (code and title)
+      <strong>in bullet point format</strong> including a comment on
+      clarity/adequacy of the explanation provided.
+    </p>
+  </li>
+</ul>
+<p><br /></p>

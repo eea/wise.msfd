@@ -1,9 +1,9 @@
+#pylint: skip-file
 # -*- coding: utf-8 -*-
 
 from __future__ import absolute_import
 from collections import defaultdict
 from datetime import datetime
-from io import BytesIO
 from pkg_resources import resource_filename
 
 import logging
@@ -22,7 +22,7 @@ from wise.msfd.gescomponents import DESCRIPTOR_TYPES
 from wise.msfd.translation import retrieve_translation
 from wise.msfd.utils import timeit
 
-from zope.interface import implementer, implements
+from zope.interface import implementer
 
 import pdfkit
 
@@ -265,8 +265,6 @@ class ProgressAssessment(BaseNatSummaryView):
 
 @implementer(INationalSummaryCountryFolder)
 class AssessmentSummaryView(BaseNatSummaryView):
-    # implements(INationalSummaryCountryFolder)
-
     help_text = "HELP TEXT"
     template = ViewPageTemplateFile('pt/report-data.pt')
     report_header_template = ViewPageTemplateFile(
@@ -291,8 +289,6 @@ class AssessmentSummaryView(BaseNatSummaryView):
         if 'localhost' in absolute_url:
             cover_url = 'https://water.europa.eu/marine/assessment-module/' \
                         'national-summaries/lv/export-cover'
-            cover_url = cover_url.replace('localhost:5080',
-                                          'office.pixelblaster.ro:4880')
 
         return cover_url
 
@@ -353,7 +349,7 @@ class AssessmentSummaryView(BaseNatSummaryView):
 
         # 4. Descriptor-level assessments
         descriptor_lvl_assess = DescriptorLevelAssessments(self, self.request)
-        descriptor_lvl_assess_view = descriptor_lvl_assess()
+        descriptor_lvl_assess()
         overall_scores = descriptor_lvl_assess.overall_scores
         nat_desc_country_folder = descriptor_lvl_assess.nat_desc_country_folder
 

@@ -3,6 +3,7 @@
   xmlns:browser="http://namespaces.zope.org/browser"
   xmlns:i18n="http://namespaces.zope.org/i18n"
   xmlns:z3c="http://namespaces.zope.org/z3c"
+  xmlns:plone="http://namespaces.plone.org/plone"
   i18n_domain="wise.msfd">
 
   <include file="permissions.zcml" />
@@ -14,6 +15,21 @@
 
   <include file="profiles.zcml" />
   <include file="utility.zcml" />
+
+  <plone:behavior
+    name="wise.spmeasurefields"
+    title="SPMeasure fields"
+    description="Adds Measure form fields"
+    factory=".behavior.SPMeasureFields"
+    provides=".interfaces.ISPMeasureFields"
+    for="plone.dexterity.interfaces.IDexterityContent"
+    marker=".interfaces.ISPMeasureFields"
+    />
+  
+  <subscriber
+    for=".interfaces.ISPMeasureFields
+         zope.lifecycleevent.interfaces.IObjectModifiedEvent"
+    handler=".behavior.handle_origin_change" />
 
   <browser:page
     for="*"
@@ -69,12 +85,5 @@
     name="lz-string.js"
     file="./static/wise/dist/js/lz-string.js"
     />
-
-  <!-- <browser:page -->
-  <!--   name="test&#45;tpl&#45;cache" -->
-  <!--   for="*" -->
-  <!--   class=".cache.CacheTestView" -->
-  <!--   permission="zope.Public" -->
-  <!--   /> -->
 
 </configure>

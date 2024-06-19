@@ -1,3 +1,4 @@
+#pylint: skip-file
 from __future__ import absolute_import
 
 import logging
@@ -5,18 +6,12 @@ import re
 from collections import defaultdict
 
 from lxml.etree import fromstring
-from sqlalchemy.orm.relationships import RelationshipProperty
 
 from Products.Five.browser.pagetemplatefile import \
     ViewPageTemplateFile as Template
-from wise.msfd import db, sql  # , sql2018
 from wise.msfd.data import get_xml_report_data
-from wise.msfd.gescomponents import (Criterion, MarineReportingUnit,
-                                     get_criterion, get_descriptor)
-from wise.msfd.labels import COMMON_LABELS
 from wise.msfd.translation import retrieve_translation
-from wise.msfd.utils import (Item, ItemLabel, ItemList, Node, RawRow, 
-                             RelaxedNode, Row)
+from wise.msfd.utils import (Item, RawRow, RelaxedNode)
 
 from ..base import BaseArticle2012
 from .data import REPORT_DEFS

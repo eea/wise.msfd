@@ -78,6 +78,13 @@
     permission="wise.ViewAssessmentData"
     />
 
+  <browser:page
+    for="..interfaces.INationalDescriptorAssessment"
+    name="view-assessment-summary-structure-2022"
+    class="..assessment.ViewAssessmentSummaryFormStructure2022"
+    permission="wise.ViewAssessmentData"
+    />
+
   <!-- The "Commission assessments - national overview" page -->
   <!-- <browser:page -->
   <!--   for="..interfaces.ICountryDescriptorsFolder" -->

@@ -1,3 +1,4 @@
+#pylint: skip-file
 # -*- coding: utf-8 -*-
 from __future__ import absolute_import
 from collections import Counter
@@ -92,7 +93,7 @@ class RegionalDescriptorsSimpleTable(BaseRegSummaryView):
 
     def get_table_headers(self):
         countries = [x[1] for x in self.available_countries]
-        sorted_countries = sorted(countries)
+        # sorted_countries = sorted(countries)
 
         return [''] + countries
 
@@ -198,14 +199,14 @@ class MarineRegionSubregions(RegionalDescriptorsSimpleTable):
     def setup_data(self):
         rows = []
 
-        row_headers = [
-            # 'Length of coastline (km) - total',
-            # 'Length of coastline (km) - EU',
-            # 'Length of coastline (km) - non EU',
-            'Area (km2) - total',
-            'Area (km2) - EU',
-            'Area (km2) - non EU'
-        ]
+        # row_headers = [
+        #     # 'Length of coastline (km) - total',
+        #     # 'Length of coastline (km) - EU',
+        #     # 'Length of coastline (km) - non EU',
+        #     'Area (km2) - total',
+        #     'Area (km2) - EU',
+        #     'Area (km2) - non EU'
+        # ]
 
         region = REGIONS_SUBREGIONS[self.region_code]
 

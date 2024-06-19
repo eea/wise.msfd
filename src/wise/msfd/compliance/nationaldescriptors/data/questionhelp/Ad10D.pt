@@ -1,5 +1,5 @@
 <p>
-  In relation to Article 14.1, the MSFD obliges Member States to identify
+  With relation to Article 14.1 the MSFD obliges Member States to identify
   instances where the environmental targets or GES cannot be achieved in every
   aspect/cannot be achieved within the time schedule in the programmes of
   measures. Member States' views have to be substantiated to the Commission
@@ -11,7 +11,7 @@
   Article 14.4 provides for a possibility not to take specific steps (measures)
   due to their disproportionate costs or lack of significant risk to the marine
   environment. If invoked, Member States must avoid that the achievement of GES
-  is permanently compromised and provide the Commission with the necessary
+  be permanently compromised and provide the Commission with the necessary
   justification to substantiate its decision. As mentioned above, Member States
   cannot apply exceptions under Article 14 to the whole territory of their
   marine waters. Given that exceptions under Article 14.4 concern 'specific
@@ -25,7 +25,7 @@
 <p><br /></p>
 <p>
   Exceptions under the MSFD need to be interpreted in the light of the general
-  objectives of the Directive (the protection of the marine environment) and the
+  objectives of the Directive (the protection of marine environment) and the
   operational objectives (achievement of GES). The interpretation of Article 14
   of the MSFD should be restrictive. The justification for applying exceptions
   provided by Member States should be kept simple and the information provided
@@ -48,24 +48,31 @@
   following guidance for reporting a justification:
 </p>
 <p><br /></p>
-<table>
+<table width="934" cellspacing="0" cellpadding="7">
+  <colgroup>
+    <col width="296" />
+    <col width="297" />
+    <col width="296" />
+  </colgroup>
   <tbody>
     <tr>
-      <td >
-        <p><strong>ExceptionType</strong></p>
+      <td width="296">
+        <p lang="en-US"><strong>ExceptionType</strong></p>
       </td>
-      <td >
-        <p><strong>ExceptionReason</strong></p>
+      <td width="297">
+        <p lang="en-US"><strong>ExceptionReason</strong></p>
       </td>
-      <td >
-        <p><strong>JustificationDescription</strong></p>
+      <td width="296">
+        <p lang="en-US"><strong>JustificationDescription</strong></p>
       </td>
     </tr>
     <tr>
-      <td >
-        <p>Art. 14(1)(a) &ndash; Member State is not responsible</p>
+      <td width="296">
+        <p lang="en-US">
+          Art. 14(1)(a) &ndash; Member State is not responsible
+        </p>
       </td>
-      <td >
+      <td width="297">
         <ul>
           <li>
             <p lang="fr-BE">
@@ -90,8 +97,8 @@
           </li>
         </ul>
       </td>
-      <td >
-        <p>
+      <td width="296">
+        <p lang="en-US">
           Justification to include relevant countries or international Competent
           Authorities. If notified under Article 15, provide date notified and
           letter, or indicate intention to provide a notification under Article
@@ -100,10 +107,10 @@
       </td>
     </tr>
     <tr>
-      <td >
-        <p>Art. 14(1)(b) &ndash; Natural causes</p>
+      <td width="296">
+        <p lang="en-US">Art. 14(1)(b) &ndash; Natural causes</p>
       </td>
-      <td >
+      <td width="297">
         <ul>
           <li>
             <p lang="fr-BE">Floods</p>
@@ -116,15 +123,15 @@
           </li>
         </ul>
       </td>
-      <td >
-        <p>no specific requirements</p>
+      <td width="296">
+        <p lang="en-US">no specific requirements</p>
       </td>
     </tr>
     <tr>
-      <td >
-        <p> Art. 14(1)(c) &ndash; Force majeure</p>
+      <td width="296">
+        <p lang="en-US"> Art. 14(1)(c) &ndash; Force majeure</p>
       </td>
-      <td >
+      <td width="297">
         <ul>
           <li>
             <p lang="fr-BE">Armed conflict</p>
@@ -140,15 +147,15 @@
           </li>
         </ul>
       </td>
-      <td >
-        <p>no specific requirements</p>
+      <td width="296">
+        <p lang="en-US">no specific requirements</p>
       </td>
     </tr>
     <tr>
-      <td >
-        <p>Art. 14(1)(d) &ndash; Overriding public interest</p>
+      <td width="296">
+        <p lang="en-US">Art. 14(1)(d) &ndash; Overriding public interest</p>
       </td>
-      <td >
+      <td width="297">
         <ul>
           <li>
             <p lang="fr-BE">Protecting fundamental values for citizens</p>
@@ -167,23 +174,23 @@
           </li>
         </ul>
       </td>
-      <td >
-        <p>
+      <td width="296">
+        <p lang="en-US">
           Justification to include how it is ensured that achievement of GES is
           not permanently precluded/ compromised.
         </p>
       </td>
     </tr>
     <tr>
-      <td >
-        <p>Art. 14(1)(e) &ndash; Natural conditions</p>
+      <td width="296">
+        <p lang="en-US">Art. 14(1)(e) &ndash; Natural conditions</p>
       </td>
-      <td >
-        <p>
+      <td width="297">
+        <p lang="en-US">
           &lsquo;Exception reason&rsquo; not required. Instead, the MS should
           report &lsquo;GES Achieved&rsquo;.
         </p>
-        <p>
+        <p lang="en-US">
           In the case of Art 14(1)(e), provide an estimation of when GES is
           expected to be achieved (YYYY-YYYY). To allow for uncertainty in
           predicting a specific year, a date range can be entered. The range
@@ -191,18 +198,20 @@
           is less certainty (e.g. the timescale is far off).
         </p>
       </td>
-      <td >
-        <p>
+      <td width="296">
+        <p lang="en-US">
           Justification to include the date by when GES is expected to be
           reached.
         </p>
       </td>
     </tr>
     <tr>
-      <td >
-        <p>Art. 14(4) &ndash; No significant risk or disproportionate costs.</p>
+      <td width="296">
+        <p lang="en-US">
+          Art. 14(4) &ndash; No significant risk or disproportionate costs.
+        </p>
       </td>
-      <td >
+      <td width="297">
         <ul>
           <li>
             <p lang="fr-BE">No significant risk</p>
@@ -212,13 +221,13 @@
           </li>
         </ul>
       </td>
-      <td >
-        <p>
+      <td width="296">
+        <p lang="en-US">
           Substantiate how there would be no further deterioration and
           demonstrate that the achievement of GES will not be permanently
           compromised.
         </p>
-        <p>
+        <p lang="en-US">
           For disproportionate costs, specify which Descriptor(s) and Annex III
           elements are relevant.
         </p>
@@ -240,7 +249,7 @@
   Exception under Art. 14.4 raises some difficulties of interpretation, in
   particular in terms of what can be considered as &lsquo;significant
   risk&rsquo; and &lsquo;significant costs&rsquo;. As discussed in the context
-  of POMESA<a href="#sdfootnote1sym" name="sdfootnote1anc"><sup>1</sup></a> ,
+  of POMESA<a href="#sdfootnote5sym" name="sdfootnote5anc"><sup>5</sup></a> ,
   the latter must be understood in the context of the MSFD and in light of the
   precautionary principle, this was agreed to be only the case either in
   elements that are in GES or, at least, not deteriorating, in which case it
@@ -248,15 +257,18 @@
   monitoring programme.
 </p>
 <p lang="en-US"><br /></p>
-<table>
+<table width="604" cellspacing="0" cellpadding="2" bgcolor="#ededed">
+  <colgroup>
+    <col width="598" />
+  </colgroup>
   <tbody>
     <tr>
-      <td >
+      <td bgcolor="#44546a" width="598">
         <p><strong>Assessing disproportionate costs</strong></p>
       </td>
     </tr>
     <tr>
-      <td>
+      <td bgcolor="#ededed" width="598">
         <p>
           In line with available discussions and with work carried out in
           support to the WFD implementation process, whether costs are
@@ -268,7 +280,7 @@
           achieving GES). If costs of measures are higher (or higher by x% -
           e.g. 20%) than total benefits expected from achieving GES, than these
           costs could be considered as disproportionate &ndash; and support the
-          justification of exemptions ; (b) at the scale of individual
+          justification of execeptions ; (b) at the scale of individual
           activities or of a sector that will support the costs of measures
           &ndash; by assessing the relative importance of the costs of measures
           (considered as additional to costs already supported by sectors) in
@@ -309,18 +321,23 @@
     </tr>
   </tbody>
 </table>
-<p lang="en-US"><br /></p>
 <p><br /></p>
 <p>
-  If the same exception is used as in the 1<sup>st</sup> cycle, the assessor
-  will check whether some further action beyond the use of the exception has
-  been taken at national level in order to, if not achieve GES or the
-  environmental targets, at least improve the environmental conditions in
+  The assessor should check if the same exceptions are used as in the first
+  cycle. If the same exception is used as in the 1<sup>st</sup> cycle, the
+  assessor will check whether some further action beyond the use of the
+  exception has been taken at national level in order to, if not achieve GES or
+  the environmental targets, at least improve the environmental conditions in
   comparison with the PoM reported by the Member State in the first
   implementation cycle.
 </p>
 <p><br /></p>
-<p>If there are no exceptions, select &lsquo;not relevant&rsquo;.</p>
+<p>
+  If it is noted that an exception was reported in the first cycle, but it is
+  not anymore (see the answer to question Com08D), the answer to this question
+  should be &lsquo;not relevant&rsquo;, but the progress assessment should be
+  completed.
+</p>
 <p><br /></p>
 <p>
   For this question, priority will be given to e-reporting as there are specific
@@ -328,3 +345,53 @@
   check the text report. Specify where this information is found in the text
   report.
 </p>
+<p><br /></p>
+<p><strong>Use of response options:</strong></p>
+<ul>
+  <li>
+    <p lang="fr-BE">
+      <strong>Yes: </strong>there is an adequate justification for all the
+      exception(s) identified &ndash; all the aspects mentioned above a well
+      covered.
+    </p>
+  </li>
+  <li>
+    <p lang="fr-BE">
+      <strong>Partially: </strong>there is an adequate justification for half of
+      the exception(s) identified; some of the aspects mentioned above a well
+      covered.
+    </p>
+  </li>
+  <li>
+    <p lang="fr-BE">
+      <strong>Not clear: </strong>there is not enough information to understand
+      if the justification is adequate; the information reported is not clear
+      and inconsistent
+    </p>
+  </li>
+  <li>
+    <p lang="fr-BE">
+      <strong>No: </strong>the justification provided is not adequate for all
+      the exceptions reported.
+    </p>
+  </li>
+  <li>
+    <p lang="fr-BE">
+      <strong>Not relevant</strong>: there are no exceptions. However, the
+      assessor should check if exceptions were reported in the first cycle (see
+      the answer to question Com08D). If yes, the progress assessment should be
+      completed.
+    </p>
+  </li>
+</ul>
+<p><br /></p>
+<p><strong>Structure of summary box:</strong></p>
+<p>
+  Start by stating which response option you have selected and continue
+  explaining why. List the exceptions in bullet point format and provide an
+  assessment of the adequacy of the justificationreferringefer to all the
+  aspects mentioned in this guidance box. Highlight where the main gaps are and
+  for which measure(s), so that it is easier to draft recommendations. Specify
+  where this information is found in the text report.
+</p>
+<p><br /></p>

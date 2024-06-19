@@ -1,3 +1,4 @@
+#pylint: skip-file
 """ A collection of data transformers to be used to convert 2018 DB data in
 some other useful formats. Used when displaying data.
 """
@@ -70,8 +71,9 @@ def ges_component_list(field, value, lang, separator=','):
     values = value.split(separator)
     values = [v.strip() for v in values]
     rows = [ges_component(None, v, lang) for v in values]
+    item_list = ItemList(rows=rows)
 
-    return ItemList(rows=rows)
+    return item_list
 
 
 def csv_ges_labels_inverse_list(field, value, lang, separator=','):

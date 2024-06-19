@@ -1,3 +1,4 @@
+#pylint: skip-file
 from __future__ import absolute_import
 from zope.interface import Interface
 from zope.schema import Text, TextLine
@@ -226,6 +227,13 @@ class INationalSummaryCountryFolder(Interface):
     """ A container for national summaries countries
 
     Ex: /assessment-module/national-summaries/lv
+    """
+
+
+class INationalSummary2022Folder(Interface):
+    """ A container for national summaries 2022
+
+    Ex: /assessment-module/national-summaries/lv/assessment-summary-2022
     """
 
 

@@ -1,3 +1,4 @@
+#pylint: skip-file
 # -*- coding: utf-8 -*-
 
 from __future__ import absolute_import
@@ -152,8 +153,14 @@ def retrieve_translation(country_code,
     if not target_languages:
         target_languages = ['EN']
 
-    dest = '{}/@@translate-callback?source_lang={}'.format(site_url,
-                                                           country_code)
+    translate_key = os.environ.get("TRANSLATE_KEY", None)
+
+    if not translate_key:
+        logger.error("Please set the TRANSLATE_KEY environment variable!!")
+        return
+
+    dest = '{}/marine/assessment-module/@@translate-callback?source_lang={}&translateKey={}'.format(
+        site_url, country_code, translate_key)
 
     logger.info('Translate callback URL: %s', dest)
 

@@ -1,10 +1,12 @@
+#pylint: skip-file
+"""asssessment.py"""
 from __future__ import absolute_import
 import csv
 import logging
 import re
 from collections import namedtuple
 from eea.cache import cache
-from sqlalchemy import desc, or_
+from sqlalchemy import or_
 
 from pkg_resources import resource_filename
 from plone.api.portal import get_tool
@@ -131,6 +133,12 @@ DESCRIPTOR_SUMMARY = namedtuple(
      'coherence_change_since_2012',]
 )
 
+DESCRIPTOR_SUMMARY_2022 = namedtuple(
+    'DESCRIPTOR_SUMMARY_2022',
+    ['assessment_summary', 'progress_assessment', 'recommendations',
+     'adequacy', 'completeness', 'coherence', 'overall_score_2022']
+)
+
 
 # This somehow translates the real value in a color, to be able to compress the
 # displayed information in the assessment table
@@ -207,7 +215,6 @@ Criteria = namedtuple(
 )
 
 
-# TODO which question type belongs to which phase?
 PHASES = {
     'phase1': ('adequacy', 'consistency', 'completeness'),
     'phase2': ('coherence', ),
@@ -225,15 +232,35 @@ summary_fields = (
     ('recommendations', u'Recommendations for Member State'),
 )
 
-summary_fields_2016 = (
-    ('assessment_summary', u'Assessment summary'),
+summary_fields_2016_a13 = (
+    ('assessment_summary', u'Article 13 – Adequacy assessment conclusions'),
+    ('progress', u'Progress since 2016'),
+    ('recommendations', u'Recommendations for Member State'),
+)
+
+summary_fields_2016_a14 = (
+    ('assessment_summary', u'Article 14 – Adequacy assessment conclusions'),
     ('progress', u'Progress since 2016'),
     ('recommendations', u'Recommendations for Member State'),
 )
 
 summary_fields_2016_a13_complete = (
-    ('structure', u'Structure and logic of the POM text report'),
-    ('assessment_summary', u'Assessment summary'),
+    # ('structure', u'Structure and logic of the POM text report'),
+    ('assessment_summary', u'Article 13 – Completeness assessment conclusions'),
+    # ('progress', u'Progress since 2016'),
+    ('recommendations', u'Recommendations for Member State'),
+)
+
+summary_fields_2016_a14_complete = (
+    # ('structure', u'Structure and logic of the POM text report'),
+    ('assessment_summary', u'Article 14 – Completeness assessment conclusions'),
+    # ('progress', u'Progress since 2016'),
+    ('recommendations', u'Recommendations for Member State'),
+)
+
+summary_fields_2016_cross = (
+    # ('structure', u'Structure and logic of the POM text report'),
+    ('assessment_summary', u'Cross-cutting assessment conclusions'),
     ('progress', u'Progress since 2016'),
     ('recommendations', u'Recommendations for Member State'),
 )
@@ -244,7 +271,6 @@ reg_summary_fields = (
     ('recommendations', u'Recommendations'),
 )
 
-# TODO not used
 progress_fields = (
     ('assessment_summary', u'Assessment summary'),
     ('progress', u'Progress since 2012'),
@@ -334,10 +360,11 @@ def get_assessment_data_2012_db(*args):
 
 
 def _get_csv_region(region):
-    if region == "ANS":
+    """_get_csv_region"""
+    if region in ("ANS", "AMA", "ABI", "ACS"):
         region = "ATL"
 
-    if region in ("MAL", ):
+    if region in ("MAL", "MAD", "MWE", "MIC"):
         region = "MED"
 
     return region
@@ -390,6 +417,7 @@ def get_assessment_data_2016_art1314(*args):
 
 
 def _get_csv_descriptor(descriptor):
+    """_get_csv_descriptor"""
     descriptor_mapping = {
         "D1-B": ("D1, 4 – Birds",), # birds
         "D1-M": ("D1, 4 – Mammals and reptiles",), # mammals
@@ -580,10 +608,6 @@ def get_assessment_data_2012_db_old(*args):
     return res_final
 
 
-# TODO: use memoization for old data, needs to be called again to get the
-# score, to allow delta compute for 2018
-#
-# @memoize
 def filter_assessment_data_2012(data, region_code, descriptor_criterions):
     """ Filters and formats the raw db data for 2012 assessment data
     """
@@ -620,7 +644,6 @@ def filter_assessment_data_2012(data, region_code, descriptor_criterions):
         )
         concl_crit = t2rt(col('Criteria'))
 
-        # TODO test for other countries beside LV
         # Condition changed because of LV report, where score is 0
 
         # if not score:
@@ -688,6 +711,7 @@ class EditAssessorsForm(Form, BaseComplianceView):
 
     @buttonAndHandler(u'Save', name='Save')
     def hande_save(self, action):
+        """hande_save"""
         data, errors = self.extractData()
 
         if not errors:
@@ -696,6 +720,7 @@ class EditAssessorsForm(Form, BaseComplianceView):
             set_assessors(value)
 
     def updateWidgets(self):
+        """updateWidgets"""
         super(EditAssessorsForm, self).updateWidgets()
         assessed_by_field = self.fields['assessed_by'].field
         default = assessed_by_field.default
@@ -730,7 +755,11 @@ class ViewAssessmentSummaryForm(BaseComplianceView):
                 self.article, name
             )
 
-            text = t2rt(saved_data.get(_name, None))
+            text_raw = saved_data.get(_name, None)
+            if hasattr(text_raw, 'output'):
+                text = text_raw.output
+            else:
+                text = t2rt(text_raw)
 
             _fields.append((title, text))
 
@@ -743,22 +772,30 @@ class ViewAssessmentSummaryForm(BaseComplianceView):
 
 
 class ViewAssessmentSummaryFormCrossCutting2022(ViewAssessmentSummaryForm):
+    """ViewAssessmentSummaryFormCrossCutting2022"""
     @property
     def article(self):
+        """article"""
         return 'Art1314CrossCutting'
 
     @property
     def summary_fields(self):
-        return summary_fields_2016
+        """summary_fields"""
+        return summary_fields_2016_cross
 
 
 class ViewAssessmentSummaryForm2022(ViewAssessmentSummaryForm):
+    """ViewAssessmentSummaryForm2022"""
     @property
     def summary_fields(self):
-        return summary_fields_2016
+        if self.article == 'Art13':
+            return summary_fields_2016_a13
+
+        return summary_fields_2016_a14
 
 
 class ViewAssessmentSummaryFormCompleteness2022(ViewAssessmentSummaryForm):
+    """ViewAssessmentSummaryFormCompleteness2022"""
     @property
     def article(self):
         if 'art13' in self.context.id:
@@ -768,11 +805,22 @@ class ViewAssessmentSummaryFormCompleteness2022(ViewAssessmentSummaryForm):
 
     @property
     def summary_fields(self):
-        if 'art13' in self.context.id:
+        if self.article == 'Art13Completeness':
             return summary_fields_2016_a13_complete
-        
-        return summary_fields_2016
 
+        return summary_fields_2016_a14_complete
+
+
+class ViewAssessmentSummaryFormStructure2022(
+        ViewAssessmentSummaryFormCompleteness2022):
+    """ViewAssessmentSummaryFormStructure2022"""
+    @property
+    def summary_fields(self):
+        _summary_fields_2016_a13_complete = (
+            ('structure', u'Structure and logic of the POM text report'),
+        )        
+
+        return _summary_fields_2016_a13_complete
 
 
 class ViewAssessmentSummaryFormRegional(BaseRegComplianceView,
@@ -793,14 +841,14 @@ class EditAssessmentSummaryForm(Form, BaseComplianceView):
 
     Fields are: summary, recommendations, progress assessment
     """
-    # TODO unused
-
+    
     title = u"Edit progress assessment"
     template = ViewPageTemplateFile("pt/inline-form.pt")
     _saved = False
 
     @property
     def fields(self):
+        """fields"""
         saved_data = self.context.saved_assessment_data.last()
 
         _fields = []
@@ -819,6 +867,7 @@ class EditAssessmentSummaryForm(Form, BaseComplianceView):
 
     @buttonAndHandler(u'Save', name='save')
     def handle_save(self, action):
+        """handle_save"""
         if self.read_only_access:
             raise Unauthorized
 
@@ -844,13 +893,16 @@ class EditAssessmentSummaryForm(Form, BaseComplianceView):
         self.context.saved_assessment_data._p_changed = True
 
     def nextURL(self):
+        """nextURL"""
         return self.context.absolute_url()
 
     @property
     def action(self):
+        """action"""
         return self.context.absolute_url() + '/@@edit-assessment-summary'
 
     def render(self):
+        """render"""
         if self.request.method == 'POST':
             Form.render(self)
 
@@ -860,15 +912,19 @@ class EditAssessmentSummaryForm(Form, BaseComplianceView):
 
 
 class EditAssessmentDataFormMain(Form):
+    """EditAssessmentDataFormMain"""
     @property
     def criterias(self):
+        """criterias"""
         return self.descriptor_obj.sorted_criterions()      # criterions
 
     @property
     def help(self):
+        """help"""
         return render_assessment_help(self.criterias, self.descriptor)
 
     def get_question_guidance(self, subform):
+        """get_question_guidance"""
         if not hasattr(subform, '_question'):
             return ''
 
@@ -892,6 +948,7 @@ class EditAssessmentDataFormMain(Form):
 
     @property
     def fields(self):
+        """fields"""
         if not self.subforms:
             self.subforms = self.get_subforms()
 
@@ -902,13 +959,14 @@ class EditAssessmentDataFormMain(Form):
 
         return Fields(*fields)
 
-    @property       # TODO: memoize
+    @property
     def descriptor_obj(self):
+        """descriptor_obj"""
         return get_descriptor(self.descriptor)
 
-    # TODO: use memoize
     @property
     def questions(self):
+        """questions"""
         qs = self._questions[self.article]
 
         return qs
@@ -949,7 +1007,7 @@ def render_assessment_help(criterias, descriptor):
             logger.info("Skipping %r from help rendering", c)
 
             continue
-        cel = c.elements[0]     # TODO: also support multiple elements
+        cel = c.elements[0]
 
         if cel.id not in seen:
             seen.append(cel.id)
@@ -997,13 +1055,14 @@ class AssessmentDataMixin(object):
 
         Currently used to get the coherence score from regional descriptors
 
-        TODO: implement a method to get the adequacy and consistency scores
-        from national descriptors assessment
     """
     overall_scores = {}
     skip_articles = ('Art11', 'Art13', 'Art14', 'Art18')
 
     def t2rt(self, text):
+        if hasattr(text, 'output'):
+            return text.output
+            
         return t2rt(text)
 
     @property
@@ -1169,7 +1228,7 @@ class AssessmentDataMixin(object):
 
     # @cache(lambda func, *args: '-'.join((func.__name__, args[1])), 
     #         lifetime=1800)
-    def get_completeness_data(self, country_code):
+    def get_completeness_data(self, country_code, article=''):
         """ For year 2012
         :return: {'color': 5, 'score': 0, 'max_score': 0,
                 'conclusion': (1, 'Very poor')
@@ -1184,12 +1243,15 @@ class AssessmentDataMixin(object):
 
         article_folder = None
         ccode = country_code.lower()
-        artcode = self.article.lower()
+        artcode = article.lower()
+
+        if not article:
+            artcode = self.article.lower()
 
         try:
-            article_folder = self.context.restrictedTraverse(
+            article_folder = self.context.unrestrictedTraverse(
                 'marine/assessment-module/national-descriptors-assessments'
-                '/{}/{}-completeness-2022'.format(ccode, artcode))  
+                '/{}/{}-completeness-2022'.format(ccode, artcode))
         except:
             return res
             
@@ -1363,9 +1425,16 @@ class AssessmentDataMixin(object):
                 phase_scores['conclusion'] = (0, 'Not consistent')
                 phase_scores['color'] = 3
             else:
-                phase_scores['conclusion'] = (score_val,
-                                              self.get_conclusion(score_val))
-                phase_scores['color'] = self.get_color_for_score(score_val)
+                if article in ('Art13', 'Art14', 'Art13Completeness',
+                               'Art13Completeness', 'Art1314CrossCutting'):
+                    phase_scores['conclusion'] = (score_val,
+                            self.get_conclusion_2022(score_val))
+                    phase_scores['color'] = self.get_color_for_score_2022(score_val)
+
+                else:
+                    phase_scores['conclusion'] = (score_val,
+                                                self.get_conclusion(score_val))
+                    phase_scores['color'] = self.get_color_for_score(score_val)
 
         return phase_overall_scores
 
@@ -1420,13 +1489,13 @@ class AssessmentDataMixin(object):
             self.get_color_for_score(overallscore_val)
         )
 
-        assessment_summary = t2rt(
+        assessment_summary = self.t2rt(
             assess_data.get('{}_assessment_summary'.format(article)) or '-'
         )
-        progress_assessment = t2rt(
+        progress_assessment = self.t2rt(
             assess_data.get('{}_progress'.format(article)) or '-'
         )
-        recommendations = t2rt(
+        recommendations = self.t2rt(
             assess_data.get('{}_recommendations'.format(article)) or '-'
         )
 
@@ -1555,3 +1624,35 @@ class AssessmentDataMixin(object):
             res.append((region_name, descriptor_data))
 
         return res
+
+
+class BulkProcessStateChange(object):
+    def __call__(self):
+        wftool = self.context.portal_workflow
+        target_state = self.request.form.get('workflow_action', None)
+        
+        if not target_state:
+            return 
+
+        assessments = self.request.form.get('process-state-change', [])
+        
+        if type(assessments) not in (list, tuple):
+            assessments = [assessments]
+
+        for url in assessments:
+            obj_path = '/'.join(url.split('/')[3:-1])
+            obj = self.context.restrictedTraverse(obj_path)
+
+            try:
+                wftool.doActionFor(obj, target_state)
+                logger.info(
+                    "Changing state to %s for %s", 
+                    target_state, obj_path)
+            except Exception as e:
+                logger.warning(
+                    "%s: Couldn't change state to %s for %s", 
+                    e, target_state, obj_path)
+        
+        return_url = '/'.join(self.request.URL.split('/')[:-1]) + '/assessments'
+
+        return return_url

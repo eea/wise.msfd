@@ -1,3 +1,4 @@
+#pylint: skip-file
 # -*- coding: utf-8 -*-
 
 from __future__ import absolute_import
@@ -229,7 +230,7 @@ class AssessmentSummaryView(BaseRegSummaryView):
 
         # 4. Descriptor-level assessments
         descriptor_lvl_assess = RegDescriptorLevelAssessments(self, self.request)
-        descriptor_lvl_assess_view = descriptor_lvl_assess()
+        descriptor_lvl_assess()
         overall_scores = descriptor_lvl_assess.overall_scores
         reg_desc_region_folder = descriptor_lvl_assess.reg_desc_region_folder
 

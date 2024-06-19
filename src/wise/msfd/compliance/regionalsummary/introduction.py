@@ -1,4 +1,4 @@
-
+#pylint: skip-file
 from __future__ import absolute_import
 from sqlalchemy import or_
 

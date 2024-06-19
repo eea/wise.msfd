@@ -4,7 +4,7 @@
 </tal:cond>
 
 <tal:cond tal:condition="python: 'assessment-module' in request.URL0 or 'assessment-per-descriptor' in request.URL0 or 'policy-and-reporting/assessment-by' in request.URL0">
-  <link href="/++resource++static_css/compliance.css?rel=8c8dbdde8b" type="text/css" rel="stylesheet" />
+  <link href="/++resource++static_css/compliance.css?rel=80ae2ace24" type="text/css" rel="stylesheet" />
 </tal:cond>
 
 <tal:cond tal:condition="python: 'assessment-module' in request.URL0">

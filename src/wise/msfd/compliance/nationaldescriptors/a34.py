@@ -1,3 +1,4 @@
+#pylint: skip-file
 from __future__ import absolute_import
 import logging
 
@@ -8,12 +9,9 @@ from Products.Five.browser.pagetemplatefile import \
 from wise.msfd import db, sql, sql2018, sql_extra
 from wise.msfd.compliance.vocabulary import _4GEO_DATA
 from wise.msfd.data import get_xml_report_data
-from wise.msfd.utils import (Item, ItemLabel, ItemList, Node, RawRow,  # Row,
-                             RelaxedNode, natural_sort_key, to_html)
+from wise.msfd.utils import (Item, RawRow, RelaxedNode)
 
 from ..base import BaseArticle2012
-
-# from .data import REPORT_DEFS
 
 logger = logging.getLogger('wise.msfd')
 

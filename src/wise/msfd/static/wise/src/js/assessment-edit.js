@@ -101,7 +101,7 @@
 
       $this.on('click', function(){
         var $this = $(this);
-        var $comel = $('.comments', $this.closest('.right'));
+        var $comel = $('.comments', $this.closest('.right')); //comment element
         var commentName = $this.siblings('.comm-crtr').find('.comment-name').text();
         var commentTime = $this.siblings('.comm-crtr').find('.comment-time').text();
         var text = $this.siblings('.comment').text();
@@ -124,6 +124,39 @@
             setupAccordions($el);
           });
         }
+      });
+    });
+  }
+
+  function setupEditComments($el) {
+    $el.find('.comms .comm-edit').each(function(){
+      var $this = $(this);
+      clickEventExists = $this.data('click-event-setup');
+      if(clickEventExists === 'true'){
+        return;
+      }
+      $this.data('click-event-setup', 'true');
+      
+      $this.on('click', function(){
+        var $this = $(this);
+        var $comel = $('.comments', $this.closest('.right')); // comment element
+        var commentName = $this.siblings('.comm-crtr').find('.comment-name').text();
+        var commentTime = $this.siblings('.comm-crtr').find('.comment-time').text();
+        var text = $this.siblings('.comment').text();
+        var qid = $el.data('question-id');
+        var threadId = $el.data('thread-id');
+  
+        var $editCommentModal = $('#edit-comment-modal');
+        $('#comment-original-text', $editCommentModal).text(text);
+        $('#new_comment', $editCommentModal).val(text);
+
+        $('#comm_original', $editCommentModal).val(text);
+        $('#comm_name', $editCommentModal).val(commentName);
+        $('#comm_time', $editCommentModal).val(commentTime);
+        $('#q', $editCommentModal).val(qid);
+        $('#thread_id', $editCommentModal).val(threadId);
+        $('#form-edit-comment').data('comel', $comel);
+        $('#form-edit-comment').data('el', $el);
       });
     });
   }
@@ -162,6 +195,7 @@
         q: qid,
         thread_id: threadId
       };
+
       $.post(url, data, function(text){
         setCommentCookie();
         $comel.html(text);
@@ -364,8 +398,34 @@
     $('.subform .right .comments').mouseenter(
       function(){
         setupDeleteComments($(this));
+        setupEditComments($(this));
       }
     );
+    $('#form-edit-comment').submit(function(event){
+      event.preventDefault();
+
+      if( $(this).hasClass('form-submitted') ){
+        return;
+      }
+      
+      $(this).addClass('form-submitted');
+      $('#edit-comment-modal *').css("cursor", "wait");
+      var url = './@@edit_comment';
+      var $comel = $(this).data('comel');
+      var $el = $(this).data('el');
+      
+      $.post(url, $(this).serialize(), function(text){
+        setCommentCookie();
+        $comel.html(text);
+        colorComments();
+        setupAccordions($el);
+        $('#edit-comment-modal *').css("cursor", "default");
+        jQuery.noConflict();
+        $('#edit-comment-modal').modal('toggle');
+        $('#form-edit-comment').removeClass('form-submitted');
+      });
+
+    });
 
     var $win = $(window);
 

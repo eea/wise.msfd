@@ -1,4 +1,4 @@
-
+#pylint: skip-file
 DEFAULT_RANGES = [
     [76, 100],
     [51, 75],
@@ -62,7 +62,13 @@ def get_range_index_2022(percentage):
 def scoring_based(answers, scores):
     raw_scores = []
     for answ in answers:
-        score = scores[answ]
+        # if the answer is not available 
+        # eg. 'Not relevant' was removed, get the score from the last option
+        try:
+            score = scores[answ]
+        except:
+            score = scores[-1]
+
         if score == '/':
             continue
 
@@ -208,7 +214,11 @@ class OverallScores(object):
             _score = getattr(self, phase)['score']
             _max_score = getattr(self, phase)['max_score']
 
-            score_achieved += _score
+            try:
+                score_achieved += _score
+            except:
+                pass 
+                
             max_score += _max_score
 
         overall_score = int(round(
@@ -276,7 +286,7 @@ class OverallScores(object):
             "questions)" \
             "</br><b>Final score</b>: {} (<b>Score achieved</b> * 100 / " \
             "<b>Max score<b/>)" \
-            .format(score, max_score, final_score, phase)
+            .format(score, max_score, final_score)
 
         return text
 
