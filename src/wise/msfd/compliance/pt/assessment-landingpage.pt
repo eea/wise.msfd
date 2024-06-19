@@ -18,7 +18,7 @@
       <div id="wise-search-form" class="full-width-marker">
         <div id="wise-search-form-top"
             tal:define="text_field python: context.text or None;
-              assessment_folder python: view.get_object_by_path('/marine/assessment-module');
+              assessment_folder python: view.get_object_by_path('/assessment-module');
               can_view_assessment_data python:view.can_view_assessment_data(assessment_folder)" >
           <div tal:condition="text_field" tal:content="structure python: text_field.output"></div>
 
