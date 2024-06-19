@@ -3,7 +3,6 @@ from __future__ import absolute_import
 from __future__ import print_function
 import json
 import logging
-import time
 from collections import deque
 from datetime import datetime
 
@@ -18,7 +17,7 @@ from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 
 from zope.interface import alsoProvides
 
-from .base import BaseComplianceView, STATUS_COLORS
+from .base import BaseComplianceView
 from six.moves import range
 
 logger = logging.getLogger('wise.msfd')

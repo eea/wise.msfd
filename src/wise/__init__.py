@@ -1,3 +1,3 @@
-#pylint: skip-file
+# pylint: skip-file
 # -*- coding: utf-8 -*-
 __import__('pkg_resources').declare_namespace(__name__)

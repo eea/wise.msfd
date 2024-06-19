@@ -1,6 +1,6 @@
 #pylint: skip-file
 from __future__ import absolute_import
-from zope.interface import implements, implementer
+from zope.interface import implementer
 
 from persistent.list import PersistentList
 from plone.dexterity.content import Container

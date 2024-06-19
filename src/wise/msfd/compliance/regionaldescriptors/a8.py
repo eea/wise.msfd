@@ -8,7 +8,6 @@ from wise.msfd import db, sql  # , sql_extra
 from wise.msfd.data import muids_by_country
 from wise.msfd.gescomponents import (FEATURES_DB_2012, FEATURES_DB_2018,
                                      FEATURES_ORDER, THEMES_2018_ORDER)
-from wise.msfd.labels import GES_LABELS, COMMON_LABELS
 from wise.msfd.translation import get_translated
 from wise.msfd.utils import ItemLabel, fixedorder_sortkey
 

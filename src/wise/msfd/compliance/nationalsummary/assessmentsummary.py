@@ -349,7 +349,7 @@ class AssessmentSummaryView(BaseNatSummaryView):
 
         # 4. Descriptor-level assessments
         descriptor_lvl_assess = DescriptorLevelAssessments(self, self.request)
-        descriptor_lvl_assess_view = descriptor_lvl_assess()
+        descriptor_lvl_assess()
         overall_scores = descriptor_lvl_assess.overall_scores
         nat_desc_country_folder = descriptor_lvl_assess.nat_desc_country_folder
 

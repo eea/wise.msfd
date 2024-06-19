@@ -11,9 +11,8 @@ from Products.Five.browser.pagetemplatefile import \
 from wise.msfd.data import get_report_filename, get_xml_report_data
 from wise.msfd.gescomponents import get_descriptor
 from wise.msfd.translation import retrieve_translation
-from wise.msfd.utils import (Item, ItemLabel, ItemListFiltered, Node, RawRow,
-                             RelaxedNode, RelaxedNodeEmpty, Row,
-                             national_compoundrow, natural_sort_key, to_html)
+from wise.msfd.utils import (Item, ItemListFiltered, RelaxedNodeEmpty,
+                             national_compoundrow)
 
 from ..base import BaseArticle2012
 import six

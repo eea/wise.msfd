@@ -286,7 +286,7 @@ class OverallScores(object):
             "questions)" \
             "</br><b>Final score</b>: {} (<b>Score achieved</b> * 100 / " \
             "<b>Max score<b/>)" \
-            .format(score, max_score, final_score, phase)
+            .format(score, max_score, final_score)
 
         return text
 

@@ -6,7 +6,6 @@ import logging
 
 from zope.tales.expressions import StringExpr
 
-from Products.Five.browser import BrowserView
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 from Products.PageTemplates.Expressions import createTrustedZopeEngine
 
@@ -49,25 +48,3 @@ class CacheViewPageTemplateFile(ViewPageTemplateFile):
     """CacheViewPageTemplateFile"""
     def pt_getEngine(self):
         return getEngine()
-
-
-class CacheTestView(BrowserView):
-    """CacheTestView"""
-    index = CacheViewPageTemplateFile('pt/test-cache.pt')
-
-    def test_meth(self):
-        """test_meth"""
-        logger.warning("Executed test method")
-
-        return 'test output'
-
-    def cache_key(self):
-        """cache_key"""
-        return 'key'
-
-    def show_cache_content(self):
-        """show_cache_content"""
-        return _cache
-
-    def __call__(self):
-        return self.index()

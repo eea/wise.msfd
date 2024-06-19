@@ -9,9 +9,8 @@ from . import interfaces
 from .. import sql
 from .. import db
 from ..base import BasePublicPage, EmbeddedForm, MainFormWrapper
-from ..db import (get_competent_auth_data, get_all_records,
-                  get_all_records_join, get_item_by_conditions_art_6,
-                  threadlocals)
+from ..db import (get_competent_auth_data, get_all_records_join, 
+                  get_item_by_conditions_art_6, threadlocals)
 from ..interfaces import IMarineUnitIDsSelect
 from ..sql import t_MS_CompetentAuthorities
 from ..utils import scan
@@ -22,7 +21,7 @@ from .a4 import A4Form, A4MemberStatesForm
 from .a9 import A9Form
 from .a10 import A10Form
 from .base import MAIN_FORMS, ItemDisplayForm, MainForm
-from .utils import (data_to_xls, get_form, register_form_art4,
+from .utils import (get_form, register_form_art4,
                     register_form_a8_2012, register_form_art8,
                     register_form_a9_2012, register_form_art9,
                     register_form_a10_2012, register_form_art10)

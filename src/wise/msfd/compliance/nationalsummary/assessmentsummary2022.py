@@ -25,8 +25,6 @@ from wise.msfd.utils import timeit
 
 from zope.interface import implementer
 
-import pdfkit
-
 from .base import BaseNatSummaryView
 
 
