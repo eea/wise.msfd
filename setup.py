@@ -40,8 +40,9 @@ setup(
         'plone.api',
         'plone.app.contenttypes',
 
-        'zope.sqlalchemy',
-        'pymssql',
+        'zope.sqlalchemy==2.0',
+        'pymssql==2.2.8',
+        'SQLAlchemy==1.4.46',
         'sparql-client',
         # 'pyodbc',
         'langdetect',  # used in translations

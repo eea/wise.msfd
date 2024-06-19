@@ -302,7 +302,7 @@ def article_sort_helper(term):
     chars = []
 
     for c in text:
-        if c.isdigit() or c is '.':
+        if c.isdigit() or c == '.':
             chars.append(c)
         else:
             chars.append(str(ord(c)))
@@ -318,7 +318,7 @@ def article_sort_helper_2018(term):
     chars = []
 
     for c in text:
-        if c.isdigit() or c is '.':
+        if c.isdigit() or c == '.':
             chars.append(c)
         else:
             chars.append(str(ord(c)))

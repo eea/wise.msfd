@@ -4,8 +4,6 @@ from wise.msfd.compliance import convert
 from wise.msfd.labels import GES_LABELS
 from wise.msfd.utils import ItemLabel
 
-from .data import get_report_definition
-
 BLACKLIST = (       # used in templates to filter fields
     'CountryCode',
     'ReportingDate',

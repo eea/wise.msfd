@@ -53,8 +53,8 @@ def handle_origin_change(obj, event):
 
     # Check if the `origin` field has been changed
     for descriptor in event.descriptions:
-        if (descriptor.attributes 
-            and 'ISPMeasureFields.origin' in descriptor.attributes):
+        if (descriptor.attributes and
+                'ISPMeasureFields.origin' in descriptor.attributes):
 
             # Reset the fields to empty lists
             for field in fields_to_reset:

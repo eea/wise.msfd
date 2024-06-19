@@ -193,7 +193,7 @@ def parse_reporting_history_env():
 
     REPORTING_HISTORY_ENV = res
 
-    return res
+    return REPORTING_HISTORY_ENV
 
 
 @db.use_db_session('2018')

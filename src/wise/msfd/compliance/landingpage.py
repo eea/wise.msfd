@@ -293,11 +293,11 @@ class LandingpageDataMixin:
         data = {}
 
         for folder in self._reg_desc_region_folders:
-            region_title = [
-                r.title
-                for r in REGIONAL_DESCRIPTORS_REGIONS
-                if r.code == folder.id.upper()
-            ][0]
+            # region_title = [
+            #     r.title
+            #     for r in REGIONAL_DESCRIPTORS_REGIONS
+            #     if r.code == folder.id.upper()
+            # ][0]
             
             reg_id = folder.id.upper()
             # url = "/marine/policy-and-reporting/assessment-by-region" \

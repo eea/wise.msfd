@@ -626,7 +626,7 @@ class BaseRegDescRow(BaseRegComplianceView):
         for country in self.context.available_countries:
             value = []
             c_code = country[0]
-            c_name = country[1]
+            # c_name = country[1]
             regions = [r.code for r in REGIONAL_DESCRIPTORS_REGIONS
                        if len(r.subregions) == 1 and c_code in r.countries
                        and r.code in subregions[0]]

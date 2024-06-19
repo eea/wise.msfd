@@ -8,9 +8,7 @@ from Products.Five.browser.pagetemplatefile import \
     ViewPageTemplateFile as Template
 from wise.msfd.data import get_report_filename, get_xml_report_data
 from wise.msfd.translation import retrieve_translation
-from wise.msfd.utils import (Item, ItemLabel, ItemList, Node, RawRow,
-                             RelaxedNode, RelaxedNodeEmpty, Row,
-                             natural_sort_key, to_html)
+from wise.msfd.utils import (Item, RawRow, RelaxedNodeEmpty)
 
 from ..base import BaseArticle2012
 from .data import REPORT_DEFS

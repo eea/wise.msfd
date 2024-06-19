@@ -4,7 +4,6 @@ import logging
 
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 from wise.msfd.compliance.assessment import AssessmentDataMixin
-from wise.msfd.compliance.vocabulary import ASSESSED_ARTICLES
 from wise.msfd.gescomponents import DESCRIPTOR_TYPES
 
 from .base import BaseNatSummaryView
