@@ -1,0 +1,7 @@
+include *.md *.rst *.txt
+graft docs
+graft src
+global-exclude *pyc
+global-exclude *~
+global-exclude *.un~
+global-include *.mo
