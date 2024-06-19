@@ -14,6 +14,7 @@ setup(
     name='wise.msfd',
     version='1.0a1',
     description="WISE MSFD",
+    long_description_content_type="text/x-rst",
     long_description=long_description,
     # Get more from https://pypi.python.org/pypi?%3Aaction=list_classifiers
     classifiers=[
