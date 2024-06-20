@@ -12,7 +12,7 @@ long_description = '\n\n'.join([
 
 setup(
     name='wise.msfd',
-    version='1.0a1',
+    version='1.0',
     description="WISE MSFD",
     long_description_content_type="text/x-rst",
     long_description=long_description,
