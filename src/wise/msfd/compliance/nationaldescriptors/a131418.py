@@ -1,6 +1,5 @@
-
+#pylint: skip-file
 from __future__ import absolute_import
-from collections import namedtuple
 
 import logging
 
@@ -242,7 +241,8 @@ class Article13(BaseArticle2012):
         try:
             root = self.get_report_file_root(fileurl)
         except XMLSyntaxError:
-            pass
+            self.rows = []
+            return
 
         nodes = xp('//Measures', root)
         mru = xp('//MarineUnitID', root)
@@ -275,7 +275,18 @@ class Article13(BaseArticle2012):
     def __call__(self):
         self.setup_data()
 
-        return self.template(data=self.rows)
+        has_data = False
+        data = []
+
+        for row in self.rows:
+            if row.vals:
+                has_data = True
+                break
+
+        if has_data:
+            data = self.rows
+
+        return self.template(data=data)
 
 
 class A14Item(Item):
@@ -399,7 +410,8 @@ class Article14(Article13):
         try:
             root = self.get_report_file_root(fileurl)
         except XMLSyntaxError:
-            pass
+            self.rows = []
+            return
 
         nodes = xp('//Exceptions', root)
         mru = xp('//MarineUnitID', root)
@@ -432,7 +444,18 @@ class Article14(Article13):
     def __call__(self):
         self.setup_data()
 
-        return self.template(data=self.rows)
+        has_data = False
+        data = []
+
+        for row in self.rows:
+            if row.vals:
+                has_data = True
+                break
+
+        if has_data:
+            data = self.rows
+
+        return self.template(data=data)
 
 
 class A18Item(Item):

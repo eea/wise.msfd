@@ -1,12 +1,11 @@
-# TODO: move rest of vocabularies from wise.msfd.vocabulary, they're not ok
-# in that location
+#pylint: skip-file
 from __future__ import absolute_import
 from zope.interface import provider
 from zope.security import checkPermission
 from zope.schema.interfaces import IVocabularyFactory
 from zope.schema.vocabulary import SimpleTerm, SimpleVocabulary
 
-from .. import db, sql, sql2018
+from .. import db, sql
 from ..vocabulary import values_to_vocab
 from .utils import (FORMS_ART4, FORMS_ART8, FORMS_ART8_2012, FORMS_ART8_2018,
                     FORMS_ART9_2012, FORMS_ART9,

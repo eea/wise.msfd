@@ -1,26 +1,26 @@
+#pylint: skip-file
 """ Forms and views for Article 13-14 search
 """
 from __future__ import absolute_import
 from sqlalchemy import and_
+from itertools import chain
 
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 from z3c.form.browser.checkbox import CheckBoxFieldWidget
 from z3c.form.field import Fields
 
 from . import interfaces
-from .. import db, sql
+from .. import db, sql, sql2018
 from ..base import EmbeddedForm, MarineUnitIDSelectForm
-from ..db import get_all_records, get_all_records_join
-from ..interfaces import IMarineUnitIDsSelect
-from .. labels import COMMON_LABELS, GES_LABELS
+from ..labels import COMMON_LABELS, GES_LABELS
 from ..utils import default_value_from_field
 from .base import ItemDisplayForm, MainForm
-from .utils import data_to_xls, register_form_art1314
-
-# all_values_from_field,#
+from .utils import (register_form_art13,
+                    register_form_art1318, register_form_art14)
 
 
 class StartArticle1314Form(MainForm):
+    """StartArticle1314Form"""
     fields = Fields(interfaces.IStartArticles1314)
     name = 'programmes-of-measures-progress-of-pom'
 
@@ -37,9 +37,26 @@ class StartArticle1314Form(MainForm):
         return default_value_from_field(self, self.fields['report_type'])
 
 
-@register_form_art1314
+@register_form_art1318
 class Article13Form(EmbeddedForm):
+    """Article13Form"""
     record_title = title = 'Article 13 - Measures'
+    fields = Fields(interfaces.IStartArticle13)
+    session_name = '2012'
+
+    def get_subform(self):
+        klass = self.data.get('reporting_period')
+        session_name = klass.session_name
+        db.threadlocals.session_name = session_name
+
+        return klass(self, self.request)
+
+
+@register_form_art13
+class Article132016Form(EmbeddedForm):
+    """Article132016Form"""
+    record_title = 'Article 13 - Measures'
+    title = '2016 reporting exercise'
     report_type = "Measures"
     session_name = '2012'
 
@@ -50,9 +67,141 @@ class Article13Form(EmbeddedForm):
         return MemberStatesForm(self, self.request)
 
 
-# @register_form_art1314
+@register_form_art13
+class Article132022Form(EmbeddedForm):
+    """Article132022Form"""
+    record_title = 'Article 13 - Measures'
+    title = '2022 reporting exercise'
+    report_type = "Measures"
+    session_name = '2018'
+
+    fields = Fields(interfaces.IMemberStates)
+    fields['member_states'].widgetFactory = CheckBoxFieldWidget
+
+    def get_subform(self):
+        return Article132022DescriptorForm(self, self.request)
+
+
+class Article132022DescriptorForm(EmbeddedForm):
+    """Article132022DescriptorForm"""
+
+    fields = Fields(interfaces.IGESComponentsA132022)
+    fields['ges_component'].widgetFactory = CheckBoxFieldWidget
+
+    def get_subform(self):
+        return Article132022Display(self, self.request)
+
+
+class Article132022Display(ItemDisplayForm):
+    """ Article132022Display """
+    title = "Measure Progress display"
+    mapper_class = sql2018.t_V_ART13_Measures_2022
+    order_field = 'CountryCode'
+    css_class = 'left-side-form'
+    blacklist = ("ReportingDate", "CountryCode")
+    blacklist_labels = ["MeasureCode", "MeasureOldCode",
+                        "ImplementationDelay", "PoliciesConventions",
+                        "RelevantKTMs", "CoordinationLevel"]
+
+    def get_reported_date(self):
+        return self.item.ReportingDate
+
+    def get_current_country(self):
+        country = self.print_value(self.item.CountryCode, 'CountryCode')
+
+        return country
+
+    @db.use_db_session('2018')
+    def download_results(self):
+        countries = self.get_form_data_by_key(self, 'member_states')
+        ges_comps = self.get_form_data_by_key(self, 'ges_component')
+
+        conditions = []
+
+        if countries:
+            conditions.append(self.mapper_class.c.CountryCode.in_(countries))
+
+        sess = db.session()
+        q = sess.query(self.mapper_class).filter(
+            *conditions).order_by(self.order_field)
+
+        rows_filtered = []
+
+        for row in q:
+            ges_reported = row.GEScomponent.split(';')
+            # sometimes GEScomponents are separated by comma too
+            # also split by comma
+            ges_reported = [d.split(',') for d in ges_reported]
+            ges_reported = chain.from_iterable(ges_reported)
+            ges_reported = set([d.strip() for d in ges_reported])
+
+            if set(ges_comps).intersection(set(ges_reported)):
+                rows_filtered.append(row)
+
+        xlsdata = [
+            ('MSFD13Measures', rows_filtered)
+        ]
+
+        return xlsdata
+
+    @db.use_db_session('2018')
+    def get_db_results(self):
+        page = self.get_page()
+
+        countries = self.get_form_data_by_key(self, 'member_states')
+        ges_comps = self.get_form_data_by_key(self, 'ges_component')
+
+        conditions = []
+
+        if countries:
+            conditions.append(self.mapper_class.c.CountryCode.in_(countries))
+
+        sess = db.session()
+        q = sess.query(self.mapper_class).filter(
+            *conditions).order_by(self.order_field)
+
+        rows_filtered = []
+
+        for row in q:
+            ges_reported = row.GEScomponent.split(';')
+            # sometimes GEScomponents are separated by comma too
+            # also split by comma
+            ges_reported = [d.split(',') for d in ges_reported]
+            ges_reported = chain.from_iterable(ges_reported)
+            ges_reported = set([d.strip() for d in ges_reported])
+
+            if set(ges_comps).intersection(set(ges_reported)):
+                rows_filtered.append(row)
+
+        total = len(rows_filtered)
+        if not total:
+            return [0, {}]
+
+        item = rows_filtered[page]
+
+        return [total, item]
+
+
 class StartArticle14Form(MainForm):
     record_title = title = 'Article 14 - Exceptions'
+    session_name = '2012'
+    name = 'exceptions'
+    report_type = "Exceptions"
+
+    fields = Fields(interfaces.IStartArticle14)
+
+    def get_subform(self):
+        klass = self.data.get('reporting_period')
+        session_name = klass.session_name
+        db.threadlocals.session_name = session_name
+
+        return klass(self, self.request)
+
+
+@register_form_art14
+class Article142016Form(EmbeddedForm):
+    record_title = 'Article 14 - Exceptions'
+    title = '2016 reporting exercise'
     report_type = "Exceptions"
     session_name = '2012'
     name = 'exceptions'
@@ -63,6 +212,119 @@ class StartArticle14Form(MainForm):
     def get_subform(self):
         return MemberStatesForm(self, self.request)
 
+
+@register_form_art14
+class Article142022Form(EmbeddedForm):
+    """Article142022Form"""
+    record_title = 'Article 14 - Exceptions'
+    title = '2022 reporting exercise'
+    report_type = "Exceptions"
+    session_name = '2018'
+
+    fields = Fields(interfaces.IMemberStates)
+    fields['member_states'].widgetFactory = CheckBoxFieldWidget
+
+    def get_subform(self):
+        return Article142022DescriptorForm(self, self.request)
+
+
+class Article142022DescriptorForm(EmbeddedForm):
+    """Article142022DescriptorForm"""
+
+    fields = Fields(interfaces.IGESComponentsA142022)
+    fields['ges_component'].widgetFactory = CheckBoxFieldWidget
+
+    def get_subform(self):
+        return Article142022Display(self, self.request)
+
+
+class Article142022Display(ItemDisplayForm):
+    """ Article142022Display """
+    title = "Exceptions display"
+    mapper_class = sql2018.t_V_ART14_Exceptions_2022
+    order_field = 'CountryCode'
+    css_class = 'left-side-form'
+    blacklist = ("ReportingDate", "CountryCode")
+    blacklist_labels = ["Exception_code", "ExceptionOldCode",
+                        "Exception_name"]
+
+    def get_reported_date(self):
+        return self.item.ReportingDate
+
+    def get_current_country(self):
+        country = self.print_value(self.item.CountryCode, 'CountryCode')
+
+        return country
+
+    @db.use_db_session('2018')
+    def download_results(self):
+        countries = self.get_form_data_by_key(self, 'member_states')
+        ges_comps = self.get_form_data_by_key(self, 'ges_component')
+
+        conditions = []
+
+        if countries:
+            conditions.append(self.mapper_class.c.CountryCode.in_(countries))
+
+        sess = db.session()
+        q = sess.query(self.mapper_class).filter(
+            *conditions).order_by(self.order_field)
+
+        rows_filtered = []
+
+        for row in q:
+            ges_reported = row.GEScomponent.split(';')
+            # sometimes GEScomponents are separated by comma too
+            # also split by comma
+            ges_reported = [d.split(',') for d in ges_reported]
+            ges_reported = chain.from_iterable(ges_reported)
+            ges_reported = set([d.strip() for d in ges_reported])
+
+            if set(ges_comps).intersection(set(ges_reported)):
+                rows_filtered.append(row)
+
+        xlsdata = [
+            ('MSFD14Measures', rows_filtered)
+        ]
+
+        return xlsdata
+
+    @db.use_db_session('2018')
+    def get_db_results(self):
+        page = self.get_page()
+
+        countries = self.get_form_data_by_key(self, 'member_states')
+        ges_comps = self.get_form_data_by_key(self, 'ges_component')
+
+        conditions = []
+
+        if countries:
+            conditions.append(self.mapper_class.c.CountryCode.in_(countries))
+
+        sess = db.session()
+        q = sess.query(self.mapper_class).filter(
+            *conditions).order_by(self.order_field)
+
+        rows_filtered = []
+
+        for row in q:
+            ges_reported = row.GEScomponent.split(';')
+            # sometimes GEScomponents are separated by comma too
+            # also split by comma
+            ges_reported = [d.split(',') for d in ges_reported]
+            ges_reported = chain.from_iterable(ges_reported)
+            ges_reported = set([d.strip() for d in ges_reported])
+
+            if set(ges_comps).intersection(set(ges_reported)):
+                rows_filtered.append(row)
+
+        total = len(rows_filtered)
+        if not total:
+            return [0, {}]
+
+        item = rows_filtered[page]
+
+        return [total, item]
 
 class MemberStatesForm(EmbeddedForm):
     """ Select the member states based on region
@@ -160,15 +422,13 @@ class UniqueCodesForm(EmbeddedForm):
 
 
 class A1314ItemDisplay(ItemDisplayForm):
-    """ The implementation for the Article 9 (GES determination) form
-    """
+    """ A1314ItemDisplay """
     extra_data_template = ViewPageTemplateFile('pt/extra-data-item.pt')
     pivot_template = ViewPageTemplateFile('pt/extra-data-pivot-notselect.pt')
 
     mapper_class = sql.MSFD13MeasuresInfo
     order_field = 'ID'
     css_class = 'left-side-form'
-    
     blacklist = ['ReportID', 'MeasureID']
     use_blacklist = True
 
@@ -178,6 +438,17 @@ class A1314ItemDisplay(ItemDisplayForm):
         'col_import_time': 'Time',
         'col_filename': 'FileName'
     }
+
+    @property
+    def article(self):
+        report_type = self.context.context.report_type
+
+        article = {
+            'Measures': 'MSFD13_2016',
+            'Exceptions': 'MSFD14_2016',
+        }
+
+        return article[report_type]
 
     def get_import_id(self):
         report_id = self.item.ReportID
@@ -211,7 +482,7 @@ class A1314ItemDisplay(ItemDisplayForm):
         mc = sql.MSFD13ReportingInfoMemberState
         report_id = self.item.ReportID
 
-        count, data = get_all_records(
+        count, data = db.get_all_records(
             mc,
             mc.ReportID == report_id
         )
@@ -237,7 +508,7 @@ class A1314ItemDisplay(ItemDisplayForm):
 
         report_ids = [row.ReportID for row in data]
         mc_report = sql.MSFD13ReportInfoFurtherInfo
-        count, data_report = get_all_records(
+        count, data_report = db.get_all_records(
             mc_report,
             mc_report.ReportID.in_(report_ids),
             raw=True
@@ -273,7 +544,8 @@ class A1314ItemDisplay(ItemDisplayForm):
 
         env_target_labels = getattr(GES_LABELS, 'env_targets')
 
-        env_targets = list(extra_data.items())[0][1]["RelevantEnvironmentalTargets"]
+        env_targets = list(extra_data.items())[
+            0][1]["RelevantEnvironmentalTargets"]
 
         for row in env_targets:
             label = env_target_labels[mru].get(row['InfoText'], '')

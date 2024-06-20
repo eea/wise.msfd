@@ -1,3 +1,4 @@
+#pylint: skip-file
 from __future__ import absolute_import
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 from z3c.form.browser.checkbox import CheckBoxFieldWidget
@@ -10,8 +11,6 @@ from ..db import (get_all_records, get_available_marine_unit_ids,
 from ..utils import group_query
 from .base import ItemDisplayForm
 from .interfaces import IA2012GesComponentsArt9, IAreaTypes
-from .utils import data_to_xls, register_form_art9
-
 
 class A9Form(EmbeddedForm):
     """ Select the MarineUnitID for the Article 9 form

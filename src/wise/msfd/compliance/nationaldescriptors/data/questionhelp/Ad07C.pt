@@ -1,8 +1,16 @@
+<p><br /></p>
 <p>
-  The updated Programme of Measures should describe how the new measures will be
-  implemented (e.g. by legal, policy, socio-economic or financial instruments),
-  and provide an overview of potentially co-financed measures (Article 22) where
-  relevant.
+  The updated Programme of Measures should describe how the modified/additional
+  new measures will be implemented (e.g. by legal, policy, socio-economic or
+  financial instruments), and provide an overview of potentially co-financed
+  measures (Article 22) where relevant.
+</p>
+<p>
+  <br />
+  For this question, priority will be given to e-reporting as there are specific
+  schema fields for each measure. If there is no information in the e-reporting,
+  check the text report. Specify where this information is found in the text
+  report.
 </p>
 <p><br /></p>
 <p>The assessor must check whether:</p>
@@ -10,10 +18,10 @@
   <li>
     <p lang="fr-BE">
       Implementation mechanisms are reported for each measure. The following
-      schema fields: &lsquo;MeasureDescription&rsquo;,
-      &lsquo;PoliciesConventions&rsquo;, PolicyNational,
-      ResponsibleCompetentAuthority, ResponsibleOrganisation, CoordinationLevel,
-      RegionalCooperation_countries.
+      schema fields: &lsquo;PoliciesConventions&rsquo;, PolicyNational,
+      ResponsibleCompetentAuthority, , CoordinationLevel,
+      RegionalCooperation_countries. &lsquo;MeasureDescription&rsquo;;
+      ResponsibleOrganisation are optional fields.
     </p>
   </li>
   <li>
@@ -24,44 +32,52 @@
   </li>
   <li>
     <p lang="fr-BE">
-      The measure description clearly explains the &lsquo;modes of
-      actions&rsquo;
+      Indicators are reported and clear; they adequately help measuring
+      progress.
     </p>
   </li>
   <li>
     <p lang="fr-BE">
-      The MS clearly explains how the measures effectiveness will be assessed
-      (&ldquo;Indicators&rdquo; schema field)
+      The measure description clearly explains the &lsquo;modes of
+      actions&rsquo;
     </p>
   </li>
 </ul>
-<p lang="en-US"><br /></p>
 <p>
-  The assessor must check these three aspects are reported for all relevant
-  measures in the relevant schema fields. Select &lsquo;yes&rsquo; if all
-  aspects are clearly reported for all relevant measures,
-  &lsquo;partially&rsquo; if only 1 or 2 out of three are specified or if they
-  are all specified but not for all the relevant measures, &lsquo;not
-  clear&rsquo; if the information reported is not clear and inconsistent,
-  &lsquo;no&rsquo; if they are not specified for any of the relevant measures.
+  The assessor must check these four aspects are reported for all relevant
+  measures in the relevant schema fields and
+  <strong
+    >add their expert judgment to say whether they think these implementation
+    mechanisms are sufficient.</strong
+  >
+  For instance, if all measures are implemented only through technical means, it
+  might not be sufficient, some measures may require legislative interventions.
+  It is also useful to understand the level of coordination between different
+  authorities as we know that the lack of coordination between different
+  ministries is one of the main reasons why many MSFD-related measures fail. The
+  primary example of that is between fisheries and environment, but there are
+  many other examples (e.g. maritime transport, agriculture, etc.).
 </p>
-<p lang="en-US"><br /></p>
 <p>
+  <br />
   A categorisation of the &lsquo;modes of action&rsquo; is provided in the
   guidance document (see GD 10, Annex A.3): technical, legislative, economic and
   policy-driven. The following categories were used for detailed reporting of
   new measures under Art. 13 MSFD under the first cycle:
 </p>
-<table >
+<table width="935" cellspacing="0" cellpadding="7">
+  <colgroup>
+    <col width="919" />
+  </colgroup>
   <tbody>
     <tr>
-      <td >
-        <p><strong>N&deg; Mode of action</strong></p>
+      <td width="919">
+        <p lang="en-US"><strong>N&deg; Mode of action</strong></p>
       </td>
     </tr>
     <tr>
-      <td >
-        <p>
+      <td width="919">
+        <p lang="en-US">
           1 <strong>Technical:</strong> an actual action that one can see (and
           measure) in the field. In principle, a wide range of measures has a
           primarily technical mode of action.
@@ -69,8 +85,8 @@
       </td>
     </tr>
     <tr>
-      <td >
-        <p>
+      <td width="919">
+        <p lang="en-US">
           2 <strong>Legislative:</strong> Adapting or supplementing national
           environmental law and other national legislation influencing the
           marine environment to implement environmental targets and to
@@ -79,8 +95,8 @@
       </td>
     </tr>
     <tr>
-      <td >
-        <p>
+      <td width="919">
+        <p lang="en-US">
           3 <strong>Economic:</strong> such as economic incentives that provide
           financial motives to stimulate the desired behaviour or discourage
           unwanted behaviour. Financial instruments are often aimed at the
@@ -89,8 +105,8 @@
       </td>
     </tr>
     <tr>
-      <td >
-        <p>
+      <td width="919">
+        <p lang="en-US">
           4 <strong>Policy-driven:</strong> Policy instruments can be economic
           incentives, but also other instruments, such as voluntary agreements
           with stakeholders, communication strategies, awareness-raising, and
@@ -113,14 +129,54 @@
   the schema field &lsquo;ImplementationStatus&rsquo;.
 </p>
 <p><br /></p>
-<p>
-  Select &lsquo;not relevant&rsquo; if there are no modified and additional new
-  measures.
-</p>
 <p lang="en-US"><br /></p>
+<p><strong>Use of response options:</strong></p>
+<ul>
+  <li>
+    <p lang="fr-BE">
+      <strong>Yes: </strong>the Member State explained how the new measures will
+      be implemented<strong> - </strong>all required aspects mentioned above are
+      clearly reported for all relevant measures and it is clear that there is
+      an adequate implementation plan for the measures
+    </p>
+  </li>
+  <li>
+    <p lang="fr-BE">
+      <strong>Partially: </strong>only 2 out of four of the aspects mentioned
+      above are specified or if they are all specified but not for all the
+      relevant measures; it is not entirely clear that there is an adequate
+      implementation plan for the measures
+    </p>
+  </li>
+  <li>
+    <p lang="fr-BE">
+      <strong>Not clear: </strong>there is not enough information to understand
+      if the measures are linked to operational targets; the information
+      reported is not clear and inconsistent
+    </p>
+  </li>
+  <li>
+    <p lang="fr-BE">
+      <strong>No: </strong>the Member State has not explained how the new
+      measures will be implemented - none of the required aspects mentioned
+      above are reported for any of the relevant measures and nor there is
+      information in the text report.
+    </p>
+  </li>
+  <li>
+    <p lang="fr-BE">
+      <strong>Not relevant: </strong>there are no modified/additional new
+      measures.
+    </p>
+  </li>
+</ul>
+<p lang="en-US"><br /></p>
+<p><strong>Structure of the summary box:</strong></p>
 <p>
-  For this question, priority will be given to e-reporting as there are specific
-  schema fields for each measure. If there is no information in the e-reporting,
-  check the text report. Specify where this information is found in the text
-  report.
+  Start by stating which response option you have selected and continue
+  explaining why. Highlight where main gaps are and for which measure(s), so
+  that it is easier to draft recommendations.
 </p>
+<p>.</p>
+<p lang="en-US"><br /></p>
+<p><br /></p>

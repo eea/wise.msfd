@@ -1,17 +1,22 @@
+#pylint: skip-file
 # -*- coding: utf-8 -*-
-
 from __future__ import absolute_import
 from collections import namedtuple
 import lxml.etree
 
 from pkg_resources import resource_filename
 from plone.api.portal import get_tool
+from plone.intelligenttext.transforms import \
+    convertWebIntelligentPlainTextToHtml
+
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 
 from .assessment import AssessmentDataMixin
 from .base import BaseComplianceView
 from .interfaces import IMSFDReportingHistoryFolder
 from .vocabulary import get_all_countries, REGIONAL_DESCRIPTORS_REGIONS
+from ..db import get_all_records, use_db_session
+from ..sql2018 import ART11JRCAssessment
 
 # TODO make REPORTING_HISTORY_ENV get data from IMSFDReportingHistoryFolder
 # _msfd_reporting_history_data
@@ -288,11 +293,11 @@ class LandingpageDataMixin:
         data = {}
 
         for folder in self._reg_desc_region_folders:
-            region_title = [
-                r.title
-                for r in REGIONAL_DESCRIPTORS_REGIONS
-                if r.code == folder.id.upper()
-            ][0]
+            # region_title = [
+            #     r.title
+            #     for r in REGIONAL_DESCRIPTORS_REGIONS
+            #     if r.code == folder.id.upper()
+            # ][0]
             
             reg_id = folder.id.upper()
             # url = "/marine/policy-and-reporting/assessment-by-region" \
@@ -546,10 +551,10 @@ class BaseLandingPageRow(BaseComplianceView, AssessmentDataMixin,
 
     def __init__(self, context, request, year_def):
         super(BaseLandingPageRow, self).__init__(context, request)
-        
-        assessment_path = '/marine/assessment-module/national-descriptors-assessments/be/assessments'
+
+        assessment_path = '/assessment-module/national-descriptors-assessments/be/assessments'
         assessment_folder = self.get_object_by_path(assessment_path)
-        
+
         data = []
 
         for row in year_def.rows:
@@ -604,6 +609,22 @@ class MSFDReportsAssessmentsLandingPage(BaseComplianceView):
         countries = get_all_countries()
 
         return countries
+
+    @property
+    def countries_jrc_report(self):
+        # ccode, cname
+        countries = get_all_countries()
+
+        exclude_countries = ["UK", "MT", "BG", "EL", "PT"]
+        res = []
+
+        for ccode, cname in countries:
+            if ccode in exclude_countries:
+                continue
+
+            res.append((ccode, cname))
+
+        return res
 
     @property
     def regions(self):
@@ -683,3 +704,29 @@ class RegionLandingPage(BaseComplianceView):
 
     def __call__(self):
         return self.template()
+
+class Art11JRCReport(BaseComplianceView):
+    template = ViewPageTemplateFile("pt/art11-jrc-report.pt")
+
+    def to_web_intelligent_text(self, text):
+        return text 
+
+        return convertWebIntelligentPlainTextToHtml(text)
+
+    @use_db_session('2018')
+    def get_data(self):
+        mc = ART11JRCAssessment
+        count, data = get_all_records(
+            mc,
+            mc.CountryCode == self.context._ccode.upper(),
+        )
+
+        if not data:
+            return {}
+
+        return data[0]
+
+    def __call__(self):
+        data = self.get_data()
+
+        return self.template(data=data)

@@ -1,4 +1,4 @@
-#
+#pylint: skip-file
 from __future__ import absolute_import
 import logging
 
@@ -11,6 +11,7 @@ logger = logging.getLogger(__name__)
 
 
 def handle_traverse(event):
+    """handle_traverse"""
     req = event.request
     parents = req.other['PARENTS']
 

@@ -32,8 +32,9 @@
     <element name="TemporalScope">Temporal scope</element>
     <element name="ImplementationStatus">Implementation status</element>
     <element name="ImplementationDelay">Implementation delay</element>
-    <element name="ProgressDescription">Progress description</element>
-    <element name="ReasonDescription">Reason description</element>
+    <element name="ImplementationReason">Implementation reason</element>
+    <element name="ProgressDescription" translate="true">Progress description</element>
+    <element name="ReasonDescription" translate="true">Reason description</element>
   </Art13>
   <Art14>
     <element name="MarineReportingUnit" label="mrus" convert="csv_ges_labels_inverse_list" separator=";">Marine reporting units</element>

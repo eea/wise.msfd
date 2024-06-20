@@ -1,6 +1,94 @@
+<p>
+  Before replying to this question, the assessor should check if exceptions were
+  reported in the first cycle. This can be done in &lsquo;2016 report&rsquo; tab
+  at the top of the assessment page in the module. This requires to check
+  descriptor by descriptor, but it is important to do it at this stage as this
+  aspects can be easily overlooked by the TL in the adequacy question.
+</p>
+<p><br /></p>
+<p>
+  For this question, priority will be given to e-reporting as there are specific
+  schema fields for each measure. If there is no information in the e-reporting,
+  check the text report. Specify where this information is found in the text
+  report.
+</p>
+<p><br /></p>
+<p><strong>Use of response options:</strong></p>
+<ul>
+  <li>
+    <p lang="fr-BE">
+      <strong>Yes: </strong>one or more exceptions are identified
+    </p>
+  </li>
+  <li>
+    <p lang="fr-BE">
+      <strong>Not clear:</strong> there are no exceptions reported as
+      modified/new exceptions in the e-report, but in the text report there is
+      some information on exceptions; only some of the schema fields required
+      are reported;
+    </p>
+  </li>
+  <li>
+    <p lang="fr-BE">
+      <strong>No&nbsp;: </strong>No exceptions are identified as it was in the
+      first cycle.
+    </p>
+  </li>
+</ul>
+<p><br /></p>
+<p><strong>Structure of summary box:</strong></p>
+<p>
+  Start by stating which response option you have selected and continue
+  explaining why.
+</p>
+<p lang="en-US"><br /></p>
 <p>The assessor must:</p>
 <ul>
-    <li>check if any exceptions are reported, for which descriptor and whether exceptions reported in the first cycles have been modified</li>
-    <li>list the exceptions and specify what type they are.</li>
+  <li>
+    <p lang="fr-BE">
+      If exceptions are identified, list in table format the exceptions reported
+      in the second cycle: indicate the relevant descriptor, the type and
+      whether they are the same as in previous cycle, new or modified.
+    </p>
+  </li>
 </ul>
-<p>For this question, priority will be given to e-reporting as there are specific schema fields for each measure. If there is no information in the e-reporting, check the text report. Specify where this information is found in the text report.</p>
+<p lang="en-US"><br /></p>
+<table width="973" cellspacing="0" cellpadding="1">
+  <colgroup>
+    <col width="93" />
+    <col width="121" />
+    <col width="310" />
+    <col width="243" />
+    <col width="187" />
+    <col width="6" />
+  </colgroup>
+  <tbody>
+    <tr>
+      <td bgcolor="#ffffff" width="93">
+        <p><strong>Exception_code:</strong></p>
+      </td>
+      <td bgcolor="#ffffff" width="121">
+        <p><strong>ExceptionOldCode:</strong></p>
+      </td>
+      <td bgcolor="#ffffff" width="310">
+        <p><strong>Exception_name:</strong></p>
+      </td>
+      <td bgcolor="#ffffff" width="243">
+        <p><strong>Exception Type</strong></p>
+      </td>
+      <td bgcolor="#ffffff" width="187">
+        <p><strong>Descriptor:</strong></p>
+      </td>
+      <td width="6"></td>
+    </tr>
+    <tr>
+      <td bgcolor="#ffffff" width="93"></td>
+      <td bgcolor="#ffffff" width="121"></td>
+      <td bgcolor="#ffffff" width="310"></td>
+      <td bgcolor="#ffffff" width="243"></td>
+      <td colspan="2" bgcolor="#ffffff" width="195"></td>
+    </tr>
+  </tbody>
+</table>
+<p lang="en-US"><br /></p>
+<p lang="en-US"><br /></p>

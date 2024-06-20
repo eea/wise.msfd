@@ -5,6 +5,13 @@
   <div class="table-wrap">
     <table class="table table-condensed assessment-data-table">
       <tbody>
+        <tr tal:condition="python: 'art13' in context.id">
+          <td class="fixed-center subform" colspan="99">
+            <div class="form-assessment-summary">
+                <div tal:content="structure context/@@view-assessment-summary-structure-2022">Long text</div>
+            </div>
+          </td>
+        </tr>
 
         <tr>
           <th class="fixed-left as-question as-header">Question / assessed elements</th>

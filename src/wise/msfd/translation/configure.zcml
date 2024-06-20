@@ -34,7 +34,7 @@
     />
 
   <browser:page
-    for="Products.CMFCore.interfaces.ISiteRoot"
+    for="plone.app.layout.navigation.interfaces.INavigationRoot"
     name="edit-translation"
     class=".admin.TranslationsOverview"
     attribute="edit_translation"
@@ -42,7 +42,7 @@
     />
 
   <browser:page
-    for="Products.CMFCore.interfaces.ISiteRoot"
+    for="plone.app.layout.navigation.interfaces.INavigationRoot"
     name="add-translation"
     class=".admin.TranslationsOverview"
     attribute="add_translation"
@@ -50,7 +50,7 @@
     />
 
   <browser:page
-    for="Products.CMFCore.interfaces.ISiteRoot"
+    for="plone.app.layout.navigation.interfaces.INavigationRoot"
     name="approve-translations"
     class=".admin.TranslationsOverview"
     attribute="approve_translations"
@@ -58,7 +58,7 @@
     />
 
   <browser:page
-    for="Products.CMFCore.interfaces.ISiteRoot"
+    for="plone.app.layout.navigation.interfaces.INavigationRoot"
     name="export-translations"
     class=".admin.TranslationsOverview"
     attribute="export_translations"
@@ -66,7 +66,7 @@
     />
 
   <browser:page
-    for="Products.CMFCore.interfaces.ISiteRoot"
+    for="plone.app.layout.navigation.interfaces.INavigationRoot"
     name="import-translations"
     class=".admin.TranslationsOverview"
     attribute="import_translations"

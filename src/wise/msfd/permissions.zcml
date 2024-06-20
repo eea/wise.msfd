@@ -16,6 +16,12 @@
     />
 
   <permission
+    id="wise.ChangeProcessState"
+    title="wise.msfd: Change Process State"
+    description="Change assessment process state"
+    />
+
+  <permission
     id="wise.ViewAssessmentEditPage"
     title="wise.msfd: View Assessment Edit Page"
     description="Allows access to the assessment edit page, but not save"

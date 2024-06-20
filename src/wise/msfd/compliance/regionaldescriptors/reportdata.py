@@ -1,4 +1,4 @@
-
+#pylint: skip-file
 from __future__ import absolute_import
 from collections import OrderedDict
 import logging
@@ -7,7 +7,7 @@ from io import BytesIO
 
 from sqlalchemy import or_
 
-from zope.interface import implementer, implementer_only, implements, implementsOnly
+from zope.interface import implementer, implementer_only
 
 import xlsxwriter
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
@@ -18,8 +18,7 @@ from wise.msfd.compliance.interfaces import (IRegionalReportDataView,
                                              IRegReportDataViewOverview)
 from wise.msfd.compliance.utils import DummyReportField
 from wise.msfd.data import get_report_filename
-from wise.msfd.gescomponents import (FEATURES_ORDER, get_features,
-                                     get_parameters)
+from wise.msfd.gescomponents import (FEATURES_ORDER, get_features)
 from wise.msfd.translation import retrieve_translation
 from wise.msfd.utils import (ItemLabel, ItemList, fixedorder_sortkey,
                              items_to_rows, timeit)
@@ -45,8 +44,6 @@ href_regex = re.compile(r'(?<=href=\")[^\"]+(?=\")')
 
 @implementer(IRegionalReportDataView)
 class RegReportData2012(BaseRegComplianceView):
-    # implements(IRegionalReportDataView)
-
     help_text = "HELP TEXT"
     template = ViewPageTemplateFile('pt/report-data.pt')
     year = "2012"
@@ -152,8 +149,6 @@ class RegReportData2012(BaseRegComplianceView):
 
 @implementer(IRegionalReportDataView)
 class RegReportData2014(ReportData2014, BaseRegComplianceView):
-    # implements(IRegionalReportDataView)
-
     @property
     def article_implementations(self):
         res = {
@@ -253,8 +248,6 @@ class RegReportData2014(ReportData2014, BaseRegComplianceView):
 
 @implementer(IRegionalReportDataView)
 class RegReportData2018(BaseRegComplianceView):
-    # implements(IRegionalReportDataView)
-
     help_text = "HELP TEXT"
     template = ViewPageTemplateFile('pt/report-data.pt')
     year = "2018"
@@ -623,8 +616,6 @@ class RegReportData2018(BaseRegComplianceView):
 
 @implementer_only(IRegionalReportDataView)
 class RegReportData2020(ReportData2020, RegReportData2018):
-    # implementsOnly(IRegionalReportDataView)
-
     report_due = "2020-10-15"
     report_by = None
     section = 'regional-descriptors'
@@ -728,8 +719,6 @@ class RegReportData2020(ReportData2020, RegReportData2018):
 
 @implementer_only(IRegReportDataViewOverview)
 class RegReportDataOverview2020Art11(RegReportData2020):
-    # implementsOnly(IRegReportDataViewOverview)
-
     is_primary_article = False
 
     @property

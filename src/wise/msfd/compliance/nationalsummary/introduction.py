@@ -1,3 +1,4 @@
+#pylint: skip-file
 from __future__ import absolute_import
 import logging
 from collections import defaultdict, namedtuple
@@ -64,7 +65,7 @@ class AssessmentAreas2018(BaseNatSummaryView):
     @db.use_db_session('2018')
     def get_data(self):
         mapper_class = sql2018.MRUsPublication
-        mc_mru_descr = sql2018.MarineReportingUnit
+        # mc_mru_descr = sql2018.MarineReportingUnit
         data = _4GEO_DATA
         data_filtered = [
             row

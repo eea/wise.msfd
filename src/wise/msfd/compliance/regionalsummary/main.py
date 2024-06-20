@@ -1,4 +1,4 @@
-
+#pylint: skip-file
 from ..nationaldescriptors.main import CountryStatus
 from .base import BaseRegSummaryView
 

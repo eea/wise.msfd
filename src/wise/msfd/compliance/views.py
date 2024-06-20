@@ -1,9 +1,10 @@
+#pylint: skip-file
 from __future__ import absolute_import
 from __future__ import print_function
 import json
 import logging
-import time
 from collections import deque
+from datetime import datetime
 
 from eea.cache import cache
 from plone import api
@@ -16,7 +17,7 @@ from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 
 from zope.interface import alsoProvides
 
-from .base import BaseComplianceView, STATUS_COLORS
+from .base import BaseComplianceView
 from six.moves import range
 
 logger = logging.getLogger('wise.msfd')
@@ -70,6 +71,9 @@ class CommentsList(BaseComplianceView):
     """ Renders a list of comments, to be loaded with Ajax in assessment edit
     """
     template = ViewPageTemplateFile('pt/comments-list.pt')
+
+    def current_date(self):
+        return self.context.toLocalizedTime(datetime.now(), long_format=True)
 
     @property
     def content_history(self):
@@ -141,6 +145,12 @@ class CommentsList(BaseComplianceView):
 
         return self.check_permission('wise.msfd: Delete Comment')
 
+    def can_edit_comment(self, user):
+        if self.current_user == user:
+            return True
+
+        return False
+
     @property
     def current_user(self):
         user = api.user.get_current()
@@ -199,6 +209,8 @@ class CommentsList(BaseComplianceView):
             del q_folder[comment.id]
 
     def del_comment(self):
+        alsoProvides(self.request, IDisableCSRFProtection)
+
         form = self.request.form
 
         question_id = form.get('q').lower()
@@ -217,6 +229,46 @@ class CommentsList(BaseComplianceView):
         if q_folder:
             new_comments = q_folder.contentValues()
             self._del_comments_from_q_folder(form, q_folder, new_comments)
+
+        return self.template()
+
+    def _edit_comments_from_q_folder(self, form, q_folder, comments):
+        to_local_time = self.context.Plone.toLocalizedTime
+        old_comment = form.get('comm_original')
+        new_comment = form.get('new_comment')
+        comm_time = form.get('comm_time')
+        comm_name = form.get('comm_name')
+
+        for comment in comments:
+            if comment.text != old_comment or comment.Creator() != comm_name:
+                continue
+
+            if to_local_time(comment.created(), long_format=True) != comm_time:
+                continue
+
+            comment.text = new_comment
+
+    def edit_comment(self):
+        alsoProvides(self.request, IDisableCSRFProtection)
+
+        form = self.request.form
+
+        question_id = form.get('q').lower()
+
+        # old comments
+        for thread_id in ('ec', 'tl'):
+            folder = self.context.get(thread_id, {})
+            q_folder = folder.get(question_id, {})
+            if q_folder:
+                old_comments = q_folder.contentValues()
+                self._edit_comments_from_q_folder(form, q_folder, old_comments)
+
+        # new comments
+        folder = self.context
+        q_folder = folder.get(question_id, {})
+        if q_folder:
+            new_comments = q_folder.contentValues()
+            self._edit_comments_from_q_folder(form, q_folder, new_comments)
 
         return self.template()
 
@@ -241,7 +293,7 @@ class CommentsList(BaseComplianceView):
         Comments are no longer stored in ec/tl folders, instead on national
         descriptor assessment folder (../fi/bal/d5/art9)
         """
-
+        
         folder = self.context
         question_id = self.request.form.get('q', 'missing-id').lower()
         old_comments = self.old_comments(question_id)

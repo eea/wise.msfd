@@ -1,3 +1,4 @@
+#pylint: skip-file
 from __future__ import absolute_import
 from collections import defaultdict
 from itertools import chain
@@ -229,7 +230,7 @@ class ViewSavedAssessmentData(BrowserView):
         brains = catalog.searchResults(
             portal_type='wise.msfd.nationaldescriptorassessment',
             path={
-                "query": "/Plone/marine/assessment-module"
+                "query": "/Plone/assessment-module"
                          "/national-descriptors-assessments"
             }
         )

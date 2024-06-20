@@ -14,6 +14,7 @@ setup(
     name='wise.msfd',
     version='1.0a1',
     description="WISE MSFD",
+    long_description_content_type="text/x-rst",
     long_description=long_description,
     # Get more from https://pypi.python.org/pypi?%3Aaction=list_classifiers
     classifiers=[
@@ -40,8 +41,9 @@ setup(
         'plone.api',
         'plone.app.contenttypes',
 
-        'zope.sqlalchemy',
-        'pymssql',
+        'zope.sqlalchemy==2.0',
+        'pymssql==2.2.8',
+        'SQLAlchemy==1.4.46',
         'sparql-client',
         # 'pyodbc',
         'langdetect',  # used in translations

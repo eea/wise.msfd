@@ -1,56 +1,109 @@
 <p>
-  The updated Programme of Measures should provide the list of additional new
-  measures (short description), while more specific details on these measures
-  should be provided in the form of factsheets as described in chapter 6 of GD10
-  (e-reporting &lsquo;detailed information on new measures&rsquo;).
+  If gaps are identified between the set of updated existing measures and new
+  measures reported in the first cycle and what is needed to reach the
+  environmental targets and hence to achieve or maintain GES, the next step
+  consists of updating the new measures from the first cycle or identifying
+  possible additional new measures in the second cycle to meet the MSFD
+  environmental targets.
 </p>
 <p>
-  There are specific schema fields to check in the e-reporting to answer this
-  question.
+  According to GD10, the updated Programme of Measures should provide the list
+  of additional new measures (short description), while more specific details on
+  these measures should be provided in the form of factsheets as described in
+  chapter 6 of GD10 (e-reporting &lsquo;detailed information on new
+  measures&rsquo;).
 </p>
-<p><br /></p>
+<p>
+  <br />
+  Start by checking the e-reporting. There are specific schema fields to check
+  in the e-reporting to answer this question (filter). If no information is
+  found in e-reporting, check the text report (measures fiches or factsheets).
+  There may be cases where text reporting and e-reporting are not consistent.
+</p>
+<p><strong>Use of response options:</strong></p>
+<ul>
+  <li>
+    <p lang="fr-BE">
+      <strong>Yes: </strong>the Member State provided a list and summary of the
+      additional new measures in the second cycle.
+    </p>
+  </li>
+  <li>
+    <p lang="fr-BE">
+      <strong>Partially: </strong>the Member State provided a list of the
+      additional new measures but not a summary.
+    </p>
+  </li>
+  <li>
+    <p lang="fr-BE">
+      <strong>No: </strong>the Member States has not provided a list of the
+      additional new measures.
+    </p>
+  </li>
+</ul>
+<p><strong>Structure of summary box:</strong></p>
+<p>
+  Start by stating which response option you have selected and continue
+  explaining why.
+</p>
 <p>The assessor must:</p>
+<p><br /></p>
 <ul>
   <li>
-    <p lang="fr-BE">
-      filter the relevant schema fields to see whether any additional new
-      measure is defined in the second cycle PoM
+    <p>
+      Indicate whether the MS reported any new measure (category 2 measures) as
+      &lsquo;new in 2021 POM&rsquo; in the e-report.
     </p>
   </li>
   <li>
-    <p lang="fr-BE">
-      list all additional new measures per descriptor (code and title).
+    <p>
+      List in the table below the category 2 measures reported as
+      &lsquo;modified since 2015&rsquo;, clearly stating to which descriptor
+      they are relevant (fill table below). The descriptor is reported under the
+      schema field &lsquo;GESComponent&rsquo;.
+    </p>
+  </li>
+  <li>
+    <p>
+      Indicate if information about modifications to new measures from the first
+      cycle is (also) presented in the text report.
     </p>
   </li>
 </ul>
+<p lang="en-US"><br /></p>
+<table width="870" cellspacing="0" cellpadding="7">
+  <colgroup>
+    <col width="140" />
+    <col width="314" />
+    <col width="372" />
+  </colgroup>
+  <tbody>
+    <tr>
+      <td width="140">
+        <p lang="en-US"><strong>Measure Code</strong></p>
+      </td>
+      <td width="314">
+        <p lang="en-US"><strong>Measure Title</strong></p>
+      </td>
+      <td width="372">
+        <p lang="en-US"><strong>Descriptor</strong></p>
+      </td>
+    </tr>
+    <tr>
+      <td width="140"></td>
+      <td width="314"></td>
+      <td width="372"></td>
+    </tr>
+    <tr>
+      <td width="140"></td>
+      <td width="314"></td>
+      <td width="372"></td>
+    </tr>
+    <tr>
+      <td width="140" height="11"></td>
+      <td width="314"></td>
+      <td width="372"></td>
+    </tr>
+  </tbody>
+</table>
 <p><br /></p>
-<p>
-  For the first pilot, the assessor must review the information provided in the
-  text report and:
-</p>
-<ul>
-  <li>
-    <p lang="fr-BE">
-      Indicate if the text report provides information on whether additional new
-      measures are defined in the second cycle
-    </p>
-  </li>
-  <li>
-    <p lang="fr-BE">
-      Indicate if such information is presented in the general overview or if it
-      is specific for each descriptor
-    </p>
-  </li>
-  <li>
-    <p lang="fr-BE">
-      Specify whether additional new measures are presented in a general way in
-      the text or if there is a full detailed list (e.g. presented in a table).
-    </p>
-  </li>
-</ul>
-<p><br /></p>
-<p>Specify where this information is found in the text report.</p>
-<p>
-  If the gap analysis defined that there is no need, this question is &lsquo;not
-  relevant&rsquo;.
-</p>

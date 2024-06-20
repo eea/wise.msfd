@@ -1156,10 +1156,10 @@
 
     initPageElems();
     var formAction = $('.wise-search-form-container form').attr('action') || '';
-    if (formAction.includes("api/++api++")) {
+    if (formAction.includes("/marine/++api++")) {
       var newFormAction = formAction;
     } else {
-      var newFormAction = formAction.replace("marine", "marine/api/++api++");
+      var newFormAction = formAction.replace("/marine", "/marine/++api++");
     }
 
     $('.wise-search-form-container form').attr('action', newFormAction);
@@ -1556,8 +1556,8 @@
   }
 
   function searchFormAjax(boundary, data, url, formData) {
-    if (!url.includes("api/++api++")) {
-      url = url.replace("marine", "marine/api/++api++");
+    if (!url.includes("/marine/++api++")) {
+      url = url.replace("/marine", "/marine/++api++");
     }
 
     $.ajax({
@@ -1773,10 +1773,10 @@
     }, 100);
 
     var formAction = $('.wise-search-form-container form').attr('action') || '';
-    if (formAction && formAction.includes("api/++api++")) {
+    if (formAction.includes("/marine/++api++")) {
       var newFormAction = formAction;
     } else {
-      var newFormAction = formAction.replace("marine", "marine/api/++api++");
+      var newFormAction = formAction.replace("/marine", "/marine/++api++");
     }
 
     $('.wise-search-form-container form').attr('action', newFormAction);

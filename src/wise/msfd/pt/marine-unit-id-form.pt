@@ -5,7 +5,8 @@
     <tal:widgets repeat="widget view/widgets/values">
       <div class="select-article"
         tal:define="hidden python:widget.mode == 'hidden'"
-        tal:omit-tag="hidden" >
+        tal:omit-tag="hidden" 
+        tal:condition="python: widget.items">
         <div class="field"
           tal:define="error widget/error;
           hidden python:widget.mode == 'hidden';"
@@ -29,6 +30,9 @@
   <tal:def define="subform view/subform | nothing">
     <div tal:condition="subform">
       <div tal:content="structure subform">subform here</div>
+    </div>
+    <div tal:condition="not: subform">
+      <h4>No data reported yet</h4>
     </div>
   </tal:def>
 </div>

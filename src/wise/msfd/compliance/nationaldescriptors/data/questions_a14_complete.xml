@@ -4,6 +4,7 @@
     <definition>
       Are exceptions identified?
     </definition>
+    <heading>Section D –Exceptions (if any) (Art. 14)</heading>
     <source-info>
 e-reporting
   • Exception code
@@ -15,8 +16,8 @@ Text-based report
     </source-info>
     <answers>
       <option score="1">Yes</option>
-      <option score="0.5">Partially</option>
-      <option score="0">No</option>
+      <option score="0.250">Not clear</option>
+      <option score="/">No</option>
       <option score="/">Not relevant</option>
     </answers>
     <scoring determination-method="wise.msfd.compliance.scoring.scoring_based">

@@ -17,7 +17,9 @@
     <div id="layout-contents">
       <div id="wise-search-form" class="full-width-marker">
         <div id="wise-search-form-top"
-            tal:define="text_field python: context.text or None" >
+            tal:define="text_field python: context.text or None;
+              assessment_folder python: view.get_object_by_path('/assessment-module');
+              can_view_assessment_data python:view.can_view_assessment_data(assessment_folder)" >
           <div tal:condition="text_field" tal:content="structure python: text_field.output"></div>
 
           <div class="full-width-marker">
@@ -72,6 +74,25 @@
                     <!-- <div class="article-description">Access reports for a region</div> -->
                   </div>
                 </div>
+                <div tal:condition="python: can_view_assessment_data" 
+                    class="article-box col-lg-4 col-xs-6">
+                  <div class="article-box-wrapper">
+                    <div class="article-box-header">
+                      <h4 class="tab-subtitle">Art. 11 JRC reports</h4>
+                      <div class="tab-title">Art. 11 JRC reports by country</div>
+                    </div>
+                    <div class="country-dropdown-wrapper">
+                      <button class="country-dropdown-button">Select country<span class="link-btn"></span></button>
+                      <div class="country-dropdown-content">
+                        <a tal:repeat="country view/countries_jrc_report"
+                            tal:attributes="href python: '/marine/policy-and-reporting/assessment-by-country/' + country[1].lower().replace(' ', '-') + '/@@art11-jrc-report'"
+                            tal:content="python: country[1]">Belgium</a>
+                      </div>
+                    </div>
+                    <!-- <div class="article-description">Access reports for a country</div> -->
+                  </div>
+                </div>
+              </div>
             </div>         
 
         </div>

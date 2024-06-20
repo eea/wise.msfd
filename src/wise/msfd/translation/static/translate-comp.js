@@ -45,7 +45,7 @@
       var orig_text = $original.text().trim();
       var $form = $('#form-edit-translation');
       var translation = $("#new_transl", $form).val();
-      var url = $('.form-group').attr('portal_url') + '/marine-api/@@edit-translation';
+      var url = $('.form-group').attr('portal_url') + '/assessment-module/@@edit-translation';
       var language = $form.children('input').attr('value');
 
       $.ajax({
@@ -243,7 +243,7 @@
 
     $("a.auto-translate").click(function() {
       $this = $(this);
-      var url = "/marine/translate-text";
+      var url = "/marine/assessment-module/translate-text";
       var data = {};
       data['language'] = $this.attr('selectedlang');
       data['text'] = $this.parents('tr').children('td')[0].outerText;

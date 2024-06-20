@@ -111,6 +111,15 @@ if (!Array.prototype.last) {
     // ./assessment-module/national-descriptors-assessments/fi/assessments
     // ./assessment-module/regional-descriptors-assessments/bal/assessments
 
+    $(".assessment-status-colorbar.show-assessment-wrapper").hover(
+      function () {
+        $(this).siblings(".assessment-status-wrapper").css("display", "flex");
+      },
+      function () {
+        $(this).siblings(".assessment-status-wrapper").css("display", "none");
+      }
+    );
+
     $(".assessment-status-processstate").each(function () {
       var $this = $(this);
       var $processState = $this.find(".process-state");
@@ -140,6 +149,109 @@ if (!Array.prototype.last) {
         success: function () {
           location.reload();
         },
+      });
+    });
+  }
+
+  function setupProcessStateCheckboxes() {
+    // setup submit button
+    $("#process-state-change-bulk-wrapper .btn-submit-form").click(function () {
+      var $form = $(this).siblings("form#form-process-state-change-bulk");
+      var url = $form[0].action;
+
+      $(document.body).addClass("cursor-wait");
+      $form.addClass("cursor-wait");
+      $("#process-state-change-bulk-wrapper").addClass("change-initiated");
+      $("#process-state-change-bulk-wrapper > *").css("display", "none");
+      $(
+        "#process-state-change-bulk-wrapper .process-state-change-message"
+      ).fadeIn(200);
+
+      $.ajax({
+        url: url,
+        type: "POST",
+        data: $form.serialize(),
+        success: function () {
+          location.reload();
+        },
+      });
+    });
+
+    // setup clear button, uncheck all checkboxes and clear the form
+    $("#process-state-change-bulk-wrapper .btn-clear-checkboxes").click(
+      function () {
+        $(
+          ".assessment-status-td.enable-process-state-change input[name='process-state-change']"
+        ).each(function () {
+          $(this).prop("checked", false);
+        });
+
+        $("#process-state-change-bulk-wrapper").css("display", "none");
+
+        $(
+          "#process-state-change-bulk-wrapper #form-process-state-change-bulk input[name='process-state-change']"
+        ).remove();
+      }
+    );
+
+    // setup checkboxes
+    $(".assessment-status-td.enable-process-state-change").each(function () {
+      var $this = $(this);
+      var action = $this.find(".assessment-status-wrapper form").attr("action");
+
+      var $inputCheckbox = $("<input type='checkbox' />")
+        .attr("name", "process-state-change")
+        .attr("value", action)
+        .appendTo($this);
+
+      $inputCheckbox.change(function () {
+        var value = $(this).attr("value");
+        var ischecked = $(this).is(":checked");
+
+        if (ischecked) {
+          // when the checkbox is checked
+          var inputNotExists =
+            $("#form-process-state-change-bulk").find(
+              "input[value='" + value + "' ]"
+            ).length === 0;
+
+          if (inputNotExists) {
+            $(this)
+              .clone()
+              .attr("type", "hidden")
+              .appendTo("#form-process-state-change-bulk");
+          }
+
+          // add select with the process states if does not exists yet
+          var $newPhaseSelector = $(this)
+            .parent("td")
+            .find(".phase-selector")
+            .clone()
+            .attr("id", "process-state-bulk-select");
+
+          $("#form-process-state-change-bulk .phase-selector").replaceWith(
+            $newPhaseSelector
+          );
+
+          $("#process-state-change-bulk-wrapper").css("display", "block");
+        } else {
+          // when the checkbox is unchecked
+          $("#form-process-state-change-bulk")
+            .find("input[value='" + value + "' ]")
+            .remove();
+
+          // if there are no checkboxes checked, remove the select box too
+          if (
+            $("#form-process-state-change-bulk").find(
+              "input[name='process-state-change']"
+            ).length === 0
+          ) {
+            $(
+              "#form-process-state-change-bulk .phase-selector select"
+            ).remove();
+            $("#process-state-change-bulk-wrapper").css("display", "none");
+          }
+        }
       });
     });
   }
@@ -960,6 +1072,7 @@ if (!Array.prototype.last) {
     addFixedTable();
     regionalDescriptorsGroupTableHeaders();
 
+    $(".pat-plone-modal").attr("href", "https://water.europa.eu/marine-api/marine/login");
     $(".assessment-read-more").click(function () {
       var $this = $(this);
       $this.text(function (a, b) {
@@ -968,7 +1081,11 @@ if (!Array.prototype.last) {
           : $(this).attr("display-text");
       });
       $this.parents().siblings(".assessment-dd-list").fadeToggle();
-      $this.parents().siblings('.text-reports-table').find(".assessment-dd-list").fadeToggle();
+      $this
+        .parents()
+        .siblings(".text-reports-table")
+        .find(".assessment-dd-list")
+        .fadeToggle();
     });
 
     var $scrollBtn = $(".scroll-to-top");
@@ -1001,6 +1118,8 @@ if (!Array.prototype.last) {
       // setupScrollableTargets();
       setupTargetsWidth();
       setupAssessmentStatusChange();
+
+      setupProcessStateCheckboxes();
     });
   });
 })(window, document, $);

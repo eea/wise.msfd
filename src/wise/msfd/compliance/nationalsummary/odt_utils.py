@@ -1,3 +1,4 @@
+#pylint: skip-file
 from __future__ import absolute_import
 from collections import defaultdict
 import datetime
@@ -6,7 +7,7 @@ from lpod.heading import odf_create_heading
 from lpod.paragraph import odf_create_paragraph
 from lpod.style import (make_table_cell_border_string, odf_create_style,
                         odf_create_table_cell_style)
-from lpod.table import odf_create_table, odf_create_row, odf_create_cell
+from lpod.table import odf_create_table, odf_create_row
 import six
 
 
