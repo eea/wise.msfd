@@ -1,0 +1,8 @@
+Changelog
+=========
+
+1.2 - (2024-06-20)
+-----------------------
+
+* Initial release.
+  [laszlocseh]
