@@ -230,7 +230,7 @@ class ViewSavedAssessmentData(BrowserView):
         brains = catalog.searchResults(
             portal_type='wise.msfd.nationaldescriptorassessment',
             path={
-                "query": "/Plone/marine/assessment-module"
+                "query": "/Plone/assessment-module"
                          "/national-descriptors-assessments"
             }
         )

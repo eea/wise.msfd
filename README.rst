@@ -162,21 +162,25 @@ National descriptors section
 
 National descriptor Article assessment
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
 In the Article assessment overview page we have navigation links to all the
-  relevant pages for that assessment:
+relevant pages for that assessment:
+
   - 2012 Report Data,
   - 2018 Report Data,
   - Edit the Assessment
   - and finally a security-based workflow state change dropdown.
 
 The assessment overview shows two overview sections:
-  - one for the 2012 assessment and
-  - one for the 2018 assessment. an
 
-In the 2018 assessment overview we have an overview of each question, with
-color-coded values for each involved criterion and calculates a score based on
+  - one for the 2012 assessment and
+  - one for the 2018 assessment.
+
+In the 2018 assessment overview we have an overview of each question, with 
+color-coded values for each involved criterion and calculates a score based on 
 descriptor-appropriate weighting tables. It also shows:
-  - the assessment summary,
+
+  - the assessment summary
   - the recommendations
   - and allows the editing of the progress assessment field.
 
