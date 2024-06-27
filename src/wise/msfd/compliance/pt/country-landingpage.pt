@@ -16,7 +16,7 @@
   <body metal:fill-slot="main">
     <div id="layout-contents" 
         tal:define="text context/text | nothing;
-          assessment_path python:'/assessment-module/national-descriptors-assessments/' + view.context._ccode + '/assessments';
+          assessment_path python:'/marine/assessment-module/national-descriptors-assessments/' + view.context._ccode + '/assessments';
           assessment_folder python: view.get_object_by_path(assessment_path);
           can_view_assessment_data python:view.can_view_assessment_data(assessment_folder)">
       <div id="wise-search-form" class="full-width-marker">
@@ -76,7 +76,7 @@
               </a>
 
               <a class="article-box-anchor" 
-                tal:define="_href string:/marine${assessment_path}"
+                tal:define="_href assessment_path"
                 tal:attributes="href python:can_view_assessment_data and _href or ''">
                 <div class="article-box col-lg-4 col-xs-6 help-popover" style="height: 380px;"
                     data-trigger="hover"

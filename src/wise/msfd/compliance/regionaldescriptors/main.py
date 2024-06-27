@@ -76,7 +76,7 @@ class RegionalDescriptorRegionsOverview(BaseRegComplianceView):
         # return the url of the assessment module
         site = portal.get()
         url = site.absolute_url()
-        final_url = url + "/assessment-module"
+        final_url = url + "/marine/assessment-module"
 
         return final_url
 
@@ -90,7 +90,7 @@ class RegionalDescriptorRegionsOverview(BaseRegComplianceView):
 
         rcode = getattr(self.context, '_rcode', self.context.id)
 
-        country_folder = site['assessment-module'] \
+        country_folder = site['marine']['assessment-module'] \
             ['regional-descriptors-assessments'][rcode]
         
         return country_folder

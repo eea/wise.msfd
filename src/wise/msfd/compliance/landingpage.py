@@ -552,7 +552,7 @@ class BaseLandingPageRow(BaseComplianceView, AssessmentDataMixin,
     def __init__(self, context, request, year_def):
         super(BaseLandingPageRow, self).__init__(context, request)
 
-        assessment_path = '/assessment-module/national-descriptors-assessments/be/assessments'
+        assessment_path = '/marine/assessment-module/national-descriptors-assessments/be/assessments'
         assessment_folder = self.get_object_by_path(assessment_path)
 
         data = []
