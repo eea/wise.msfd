@@ -44,8 +44,8 @@ DESCRIPTOR_TYPES = [
 ]
 
 DESCRIPTOR_TYPES_2022 = [
-    ("Pollution descriptors", ['D10', 'D5', 'D8', 'D9', 'D11']),
-    ("Biodiversity descriptors", ['D1.1', 'D6', 'D4', 'D3', 'D2', 'D7'])
+    ("Pollution descriptors", ['D5', 'D8', 'D9', 'D10', 'D11']),
+    ("Biodiversity descriptors", ['D1.1', 'D2', 'D3', 'D4', 'D6', 'D7'])
 ]
 
 

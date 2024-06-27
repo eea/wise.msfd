@@ -145,7 +145,7 @@ class NationalDescriptorCountryOverview(BaseView):
         site = portal.get()
         url = site.absolute_url()
 
-        final_url = url + "/assessment-module"
+        final_url = url + "/marine/assessment-module"
 
         return final_url
 
@@ -159,7 +159,7 @@ class NationalDescriptorCountryOverview(BaseView):
 
         ccode = getattr(self.context, '_ccode', self.context.id)
 
-        country_folder = site['assessment-module']['national-descriptors-assessments'][ccode]
+        country_folder = site['marine']['assessment-module']['national-descriptors-assessments'][ccode]
 
         return country_folder
 
