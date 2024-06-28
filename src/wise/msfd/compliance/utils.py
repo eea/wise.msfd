@@ -1,5 +1,7 @@
 #pylint: skip-file
 from __future__ import absolute_import
+import os
+import pathlib
 from collections import defaultdict
 
 import lxml.etree
@@ -29,7 +31,9 @@ class IReportField(Interface):
 
 
 class DummyReportField(TemplateMixin):
-    template = PageTemplateFile('pt/report_field_header.pt')
+    template = PageTemplateFile(
+        os.path.join(str(pathlib.Path(__file__).parent.resolve()),
+        'pt/report_field_header.pt'))
 
     def __init__(self, proxy_obj):
         self.title = proxy_obj.title
@@ -45,7 +49,9 @@ class ReportField(TemplateMixin):
     """ An object representing the field (row) definition in a report table
     """
 
-    template = PageTemplateFile('pt/report_field_header.pt')
+    template = PageTemplateFile(
+        os.path.join(str(pathlib.Path(__file__).parent.resolve()),
+                     'pt/report_field_header.pt'))
 
     def __init__(self, node, article):
         self.title = node.text
