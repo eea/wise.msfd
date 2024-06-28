@@ -1,10 +1,10 @@
 # pylint: skip-file
 # -*- coding: utf-8 -*-
 
+from __future__ import absolute_import
 import os
 import pathlib
 
-from __future__ import absolute_import
 from collections import defaultdict
 import logging
 
