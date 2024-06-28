@@ -4,6 +4,7 @@ from __future__ import absolute_import
 import datetime
 import logging
 import os
+import pathlib
 import re
 import time
 import importlib
@@ -584,14 +585,18 @@ class ItemLabel(TemplateMixin):
 
         return self.template(**out)
 
-    template = PageTemplateFile('src/wise.msfd/src/wise/msfd/pt/label.pt')
+    # template = PageTemplateFile('pt/label.pt')
+    template = PageTemplateFile(os.path.join(
+        str(pathlib.Path(__file__).parent.resolve()), 'pt/label.pt'))
 
 
 class ItemList(TemplateMixin):
     """ Render a python list of ItemLabels as an HTML list
     """
 
-    template = PageTemplateFile('src/wise.msfd/src/wise/msfd/pt/list.pt')
+    # template = PageTemplateFile('src/wise.msfd/src/wise/msfd/pt/list.pt')
+    template = PageTemplateFile(os.path.join(
+        str(pathlib.Path(__file__).parent.resolve()), 'pt/list.pt'))
 
     def __init__(self, rows, sort=True):
         rows = list(rows)
@@ -601,7 +606,7 @@ class ItemList(TemplateMixin):
             self.rows = sorted(
                 rows,
                 key=lambda r: (r is not None)
-                    and not isinstance(r, string_types) and r.title or r)
+                and not isinstance(r, string_types) and r.title or r)
         elif sort:
             self.rows = sorted(rows)
         else:
@@ -657,7 +662,7 @@ class LabeledItemList(ItemList):
     """ List that renders using <div> instead of <ul>
     """
     template = PageTemplateFile(
-        'src/wise.msfd/src/wise/msfd/pt/labeled-list.pt')
+        os.path.join(str(pathlib.Path(__file__).parent.resolve()), 'pt/labeled-list.pt'))
 
     def __init__(self, rows):
         self.rows = rows
@@ -670,15 +675,15 @@ class LabeledItemList(ItemList):
 class ItemListGroup(LabeledItemList):
     """ItemListGroup"""
     template = PageTemplateFile(
-        'src/wise.msfd/src/wise/msfd/pt/grouped-list.pt')
+        os.path.join(str(pathlib.Path(__file__).parent.resolve()), 'pt/grouped-list.pt'))
 
 
 class CompoundRow(TemplateMixin):
     """CompoundRow"""
     multi_row = PageTemplateFile(
-        'src/wise.msfd/src/wise/msfd/pt/compound-row.pt')
+        os.path.join(str(pathlib.Path(__file__).parent.resolve()), 'pt/compound-row.pt'))
     one_row = PageTemplateFile(
-        'src/wise.msfd/src/wise/msfd/pt/compound-one-row.pt')
+        os.path.join(str(pathlib.Path(__file__).parent.resolve()), 'pt/compound-one-row.pt'))
 
     @property
     def template(self):
@@ -696,7 +701,7 @@ class CompoundRow(TemplateMixin):
 class Row(TemplateMixin):
     """Row"""
     template = PageTemplateFile(
-        'src/wise.msfd/src/wise/msfd/pt/simple-row.pt')
+        os.path.join(str(pathlib.Path(__file__).parent.resolve()), 'pt/simple-row.pt'))
 
     def __init__(self, title, values):
         self.title = title
@@ -706,7 +711,8 @@ class Row(TemplateMixin):
 
 class RawRow(TemplateMixin):
     """RawRow"""
-    template = PageTemplateFile('src/wise.msfd/src/wise/msfd/pt/row.pt')
+    template = PageTemplateFile(os.path.join(
+        str(pathlib.Path(__file__).parent.resolve()), 'pt/row.pt'))
 
     def __init__(self, title, values, raw_values=None):
         self.title = title
@@ -717,7 +723,7 @@ class RawRow(TemplateMixin):
 class TableHeader(TemplateMixin):
     """TableHeader"""
     template = PageTemplateFile(
-        'src/wise.msfd/src/wise/msfd/pt/table-header.pt')
+        os.path.join(str(pathlib.Path(__file__).parent.resolve()), 'pt/table-header.pt'))
 
     def __init__(self, title, values):
         self.title = title
@@ -726,7 +732,8 @@ class TableHeader(TemplateMixin):
 
 class SimpleTable(TemplateMixin):
     """SimpleTable"""
-    template = PageTemplateFile('src/wise.msfd/src/wise/msfd/pt/table.pt')
+    template = PageTemplateFile(os.path.join(
+        str(pathlib.Path(__file__).parent.resolve()), 'pt/table.pt'))
 
     def __init__(self, title, values):
         self.title = title
@@ -991,16 +998,17 @@ def common_split_transform(value, label_name):
         _labels = getattr(GES_LABELS, label_name)
 
         labels = [
-            ItemLabel(x, _labels.get(x, x)) 
+            ItemLabel(x, _labels.get(x, x))
             for x in values
         ]
 
         return ItemList(rows=labels)
-    
+
     _labels = getattr(GES_LABELS, label_name)
     label = _labels.get(value, value)
 
     return label
+
 
 def ges_component_art132022(value):
     """ges_component_art132022"""
@@ -1014,13 +1022,14 @@ def feature_transform(value):
     label_name = 'features'
 
     return common_split_transform(value, label_name)
-    
+
 
 def targets_transform(value):
     """targets_transform"""
     label_name = 'targets'
 
     return common_split_transform(value, label_name)
+
 
 def ktms_transform(value):
     """ktms_transform"""
@@ -1043,6 +1052,7 @@ def country_code(value):
     label = _labels.get(value, value)
 
     return label
+
 
 TRANSFORMS = {
     'Area': area_transform,
