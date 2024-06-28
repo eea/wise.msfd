@@ -1,5 +1,8 @@
-#pylint: skip-file
+# pylint: skip-file
 # -*- coding: utf-8 -*-
+
+import os
+import pathlib
 
 from __future__ import absolute_import
 from collections import defaultdict
@@ -20,7 +23,7 @@ from wise.msfd.gescomponents import (ANTHROPOGENIC_FEATURES_SHORT_NAMES,
                                      GES_DESCRIPTORS, THEMES_2018_ORDER)
 from wise.msfd.labels import get_label
 from wise.msfd.translation import retrieve_translation
-from wise.msfd.utils import (ItemLabel, ItemList, fixedorder_sortkey, 
+from wise.msfd.utils import (ItemLabel, ItemList, fixedorder_sortkey,
                              items_to_rows, timeit)
 
 from ..nationaldescriptors.data import get_report_definition
@@ -54,8 +57,9 @@ class TableOfContents(BrowserView):
 
 
 class ItemListOverview(ItemList):
-    template = PageTemplateFile(
-        'src/wise.msfd/src/wise/msfd/compliance/nationalsummary/pt/list.pt')
+    template = PageTemplateFile(os.path.join(
+        str(pathlib.Path(__file__).parent.resolve()),
+        'pt/list.pt'))
 
 
 class ReportData2018SecondaryOverview(ReportData2018Secondary,
@@ -305,7 +309,7 @@ class PressuresTableBase(BaseNatSummaryView):
 @register_section
 class UsesHumanActivities(PressuresTableBase):
     title = 'Uses and human activities and their pressures ' \
-                    'on marine environment'
+        'on marine environment'
     article = 'Analysis of predominant pressures and impacts, ' \
               'including human activity (Art. 8(1)(b))'
     _id = 'nat-overview-activ'
@@ -392,8 +396,8 @@ class UsesHumanActivities(PressuresTableBase):
                         # if pressure is ending with 'All' it applies to all
                         # features in the current theme
                         pressures = [i for i in list(features_rep.intersection(
-                                set(features_for_theme))
-                            ) if i.endswith('All') or i == feature]
+                            set(features_for_theme))
+                        ) if i.endswith('All') or i == feature]
 
                         # These pressures apply to all themes and features
                         # general_pressures_reported = list(
@@ -449,8 +453,8 @@ class PressureTableMarineEnv(PressuresTableBase):
                         # if pressure is ending with 'All' it applies to all
                         # features in the current theme
                         pressures = [i for i in list(features_rep.intersection(
-                                set(features_for_theme))
-                            ) if i.endswith('All') or i == feature]
+                            set(features_for_theme))
+                        ) if i.endswith('All') or i == feature]
 
                         # These pressures apply to all themes and features
                         general_pressures_reported = list(
@@ -479,7 +483,7 @@ class GESExtentAchieved(PressuresTableBase):
     template = ViewPageTemplateFile('pt/overview-ges-extent-table.pt')
 
     title = 'Current environmental status and extent to ' \
-                    'which GES is achieved (as reported in 2018)'
+        'which GES is achieved (as reported in 2018)'
     article = 'Assessments of current environental status and ' \
               'pressures and impacts (Art. 8(1)(a)(b))'
     _id = 'nat-overview-gesextent'
@@ -611,8 +615,8 @@ class EnvironmentalTargetsTable(PressuresTableBase):
                         # if pressure is ending with 'All' it applies to all
                         # features in the current theme
                         pressures = [i for i in list(features_rep.intersection(
-                                set(features_for_theme))
-                            ) if i.endswith('All') or i == feature]
+                            set(features_for_theme))
+                        ) if i.endswith('All') or i == feature]
 
                         # These pressures apply to all themes and features
                         general_pressures_reported = list(
@@ -687,8 +691,8 @@ class ProgrammesOfMeasures(EnvironmentalTargetsTable):
                         # if pressure is ending with 'All' it applies to all
                         # features in the current theme
                         pressures = [i for i in list(features_rep.intersection(
-                                set(features_for_theme))
-                            ) if i.endswith('All') or i == feature]
+                            set(features_for_theme))
+                        ) if i.endswith('All') or i == feature]
 
                         # These pressures apply to all themes and features
                         general_pressures_reported = list(

@@ -1,9 +1,11 @@
-#pylint: skip-file
+# pylint: skip-file
 """asssessment.py"""
 from __future__ import absolute_import
 import csv
 import logging
 import re
+import os
+import pathlib
 from collections import namedtuple
 from eea.cache import cache
 from sqlalchemy import or_
@@ -26,8 +28,8 @@ from wise.msfd.compliance.interfaces import (
     IRegionalDescriptorRegionsFolder, IRegionalDescriptorsFolder
 )
 from wise.msfd.compliance.regionaldescriptors.base import BaseRegComplianceView
-from wise.msfd.compliance.scoring import (CONCLUSIONS, CONCLUSIONS_2022, 
-    get_range_index, get_range_index_2022, OverallScores)
+from wise.msfd.compliance.scoring import (CONCLUSIONS, CONCLUSIONS_2022,
+                                          get_range_index, get_range_index_2022, OverallScores)
 from wise.msfd.compliance.utils import (get_assessors, set_assessors,
                                         ordered_regions_sortkey)
 from wise.msfd.compliance.vocabulary import (REGIONAL_DESCRIPTORS_REGIONS,
@@ -288,14 +290,14 @@ COM_ASSESSMENT = namedtuple(
 
 COM_ASSESSMENT_Art13_2016 = namedtuple(
     'COM_ASSESSMENT_Art13_2016',
-    ('Country', 'Region', 'Article', 'Descriptor', 'AssessmentCriteria', 
+    ('Country', 'Region', 'Article', 'Descriptor', 'AssessmentCriteria',
      'Assessment', 'Summary', 'Score', 'Conclusion', 'SourceFile')
 )
 
 
 COM_RECOMMENDATION_Art13_2016 = namedtuple(
     'COM_RECOMMENDATION_Art13_2016',
-    ('Title', 'RecCode', 'Recommendation', 'MSRegion', 'Descriptors', 
+    ('Title', 'RecCode', 'Recommendation', 'MSRegion', 'Descriptors',
      'ReportURL', 'Comments')
 )
 
@@ -369,6 +371,7 @@ def _get_csv_region(region):
 
     return region
 
+
 def get_assessment_data_2016_art1314(*args):
     """ Returns the assessment for 2016, 
         from National_assessments_Art_1314_2016.csv
@@ -381,8 +384,8 @@ def get_assessment_data_2016_art1314(*args):
     region = _get_csv_region(region)
 
     res = []
-    csv_f = resource_filename('wise.msfd', 
-        'data/National_assessments_Art_1314_2016.csv')
+    csv_f = resource_filename('wise.msfd',
+                              'data/National_assessments_Art_1314_2016.csv')
 
     with open(csv_f, 'rt') as csvfile:
         csv_file = csv.reader(csvfile, delimiter=';', quotechar='"')
@@ -419,13 +422,13 @@ def get_assessment_data_2016_art1314(*args):
 def _get_csv_descriptor(descriptor):
     """_get_csv_descriptor"""
     descriptor_mapping = {
-        "D1-B": ("D1, 4 – Birds",), # birds
-        "D1-M": ("D1, 4 – Mammals and reptiles",), # mammals
-        "D1-R": ("D1, 4 – Mammals and reptiles",), # reptiles
-        "D1-F": ("D1, 4 – Fish and cephalopods",), # fish
-        "D1-C": ("D1, 4 – Fish and cephalopods",), # cephalopods
-        "D1-P": ("D1, 4 – Water column habitats", 
-                 "D1, 4, 6 – Seabed habitats"), # pelagic habitats
+        "D1-B": ("D1, 4 – Birds",),  # birds
+        "D1-M": ("D1, 4 – Mammals and reptiles",),  # mammals
+        "D1-R": ("D1, 4 – Mammals and reptiles",),  # reptiles
+        "D1-F": ("D1, 4 – Fish and cephalopods",),  # fish
+        "D1-C": ("D1, 4 – Fish and cephalopods",),  # cephalopods
+        "D1-P": ("D1, 4 – Water column habitats",
+                 "D1, 4, 6 – Seabed habitats"),  # pelagic habitats
     }
 
     if descriptor in descriptor_mapping:
@@ -444,8 +447,8 @@ def get_recommendation_data_2016_art1314(*args):
     descriptor_alt = _get_csv_descriptor(descriptor)
 
     res = []
-    csv_f = resource_filename('wise.msfd', 
-        'data/Recommendations_Art_13_2016.csv')
+    csv_f = resource_filename('wise.msfd',
+                              'data/Recommendations_Art_13_2016.csv')
 
     with open(csv_f, 'rt') as csvfile:
         csv_file = csv.reader(csvfile, delimiter=';', quotechar='"')
@@ -457,7 +460,7 @@ def get_recommendation_data_2016_art1314(*args):
 
     for row in res[1:]:
         row_title = row[3].strip()
-        
+
         if row_title == 'General':
             _title = 'General recommendations'
         elif row_title == 'Exceptions':
@@ -471,14 +474,14 @@ def get_recommendation_data_2016_art1314(*args):
         _country = assess_row.MSRegion.strip()
         if country != _country:
             continue
-        
+
         if '/' in assess_row.Descriptors:
             _desc = assess_row.Descriptors.strip().split('/')
         elif '–' in assess_row.Descriptors:
             _desc = [assess_row.Descriptors]
         else:
             _desc = assess_row.Descriptors.strip().split(', ')
-        
+
         # this is too complicated
         if isinstance(descriptor_alt, (list, tuple)):
             if (not set(descriptor_alt).intersection(set(_desc)) and descriptor not in _desc):
@@ -504,8 +507,8 @@ def get_assessment_data_2016_art1314_overall(*args):
     region = _get_csv_region(region)
 
     res = []
-    csv_f = resource_filename('wise.msfd', 
-        'data/National_assessments_Art_13_2016_overall.csv')
+    csv_f = resource_filename('wise.msfd',
+                              'data/National_assessments_Art_13_2016_overall.csv')
 
     with open(csv_f, 'rt') as csvfile:
         csv_file = csv.reader(csvfile, delimiter=';', quotechar='"')
@@ -521,11 +524,11 @@ def get_assessment_data_2016_art1314_overall(*args):
         _country = assess_row.Country.strip()
         if country != _country:
             continue
-        
+
         _region = assess_row.Region.strip()
         if region != _region:
             continue
-        
+
         if '/' in assess_row.Descriptors:
             _desc = assess_row.Descriptors.strip().split('/')
         elif '–' in assess_row.Descriptors:
@@ -583,7 +586,7 @@ def get_assessment_data_2012_db_old(*args):
         if 'see' in overall_text.lower() or (not overall_text and
                                              'see d' in assess.lower()):
             descr_match = (descr_reg.match(overall_text)
-                            or descr_reg.match(assess))
+                           or descr_reg.match(assess))
             descriptor = descr_match.groups()[0]
 
             _, r = db.get_all_records(
@@ -747,7 +750,7 @@ class ViewAssessmentSummaryForm(BaseComplianceView):
     @property
     def summary_data(self):
         saved_data = self.context.saved_assessment_data.last()
-        
+
         _fields = []
 
         for name, title in self.summary_fields:
@@ -800,7 +803,7 @@ class ViewAssessmentSummaryFormCompleteness2022(ViewAssessmentSummaryForm):
     def article(self):
         if 'art13' in self.context.id:
             return 'Art13Completeness'
-        
+
         return 'Art14Completeness'
 
     @property
@@ -818,7 +821,7 @@ class ViewAssessmentSummaryFormStructure2022(
     def summary_fields(self):
         _summary_fields_2016_a13_complete = (
             ('structure', u'Structure and logic of the POM text report'),
-        )        
+        )
 
         return _summary_fields_2016_a13_complete
 
@@ -841,7 +844,7 @@ class EditAssessmentSummaryForm(Form, BaseComplianceView):
 
     Fields are: summary, recommendations, progress assessment
     """
-    
+
     title = u"Edit progress assessment"
     template = ViewPageTemplateFile("pt/inline-form.pt")
     _saved = False
@@ -971,11 +974,13 @@ class EditAssessmentDataFormMain(Form):
 
         return qs
 
+
 Cell = namedtuple('Cell', ['text', 'rowspan'])
 
 
-help_template = PageTemplateFile(
-    'src/wise.msfd/src/wise/msfd/compliance/pt/assessment-question-help.pt'
+help_template = PageTemplateFile(os.path.join(
+    str(pathlib.Path(__file__).parent.resolve()), 
+    'pt/assessment-question-help.pt')
 )
 
 
@@ -1038,8 +1043,8 @@ def render_assessment_help(criterias, descriptor):
 
 def render_question_guidance(question_id):
     template = PageTemplateFile(
-        'src/wise.msfd/src/wise/msfd/compliance/nationaldescriptors'
-            + '/data/questionhelp/{}.pt'.format(question_id)
+        os.path.join(str(pathlib.Path(__file__).parent.resolve()),
+        'nationaldescriptors/data/questionhelp/{}.pt'.format(question_id))
     )
     try:
         text = template()
@@ -1062,7 +1067,7 @@ class AssessmentDataMixin(object):
     def t2rt(self, text):
         if hasattr(text, 'output'):
             return text.output
-            
+
         return t2rt(text)
 
     @property
@@ -1226,7 +1231,7 @@ class AssessmentDataMixin(object):
 
         return res
 
-    # @cache(lambda func, *args: '-'.join((func.__name__, args[1])), 
+    # @cache(lambda func, *args: '-'.join((func.__name__, args[1])),
     #         lifetime=1800)
     def get_completeness_data(self, country_code, article=''):
         """ For year 2012
@@ -1254,7 +1259,7 @@ class AssessmentDataMixin(object):
                 '/{}/{}-completeness-2022'.format(ccode, artcode))
         except:
             return res
-            
+
         assess_data = self._get_assessment_data(article_folder)
 
         for k, score in assess_data.items():
@@ -1406,7 +1411,7 @@ class AssessmentDataMixin(object):
 
             if phase in phases_answered:
                 continue
-            
+
             phase_scores = getattr(phase_overall_scores, phase)
             phase_scores['max_score'] = 100
 
@@ -1428,12 +1433,13 @@ class AssessmentDataMixin(object):
                 if article in ('Art13', 'Art14', 'Art13Completeness',
                                'Art13Completeness', 'Art1314CrossCutting'):
                     phase_scores['conclusion'] = (score_val,
-                            self.get_conclusion_2022(score_val))
-                    phase_scores['color'] = self.get_color_for_score_2022(score_val)
+                                                  self.get_conclusion_2022(score_val))
+                    phase_scores['color'] = self.get_color_for_score_2022(
+                        score_val)
 
                 else:
                     phase_scores['conclusion'] = (score_val,
-                                                self.get_conclusion(score_val))
+                                                  self.get_conclusion(score_val))
                     phase_scores['color'] = self.get_color_for_score(score_val)
 
         return phase_overall_scores
@@ -1524,7 +1530,7 @@ class AssessmentDataMixin(object):
         if reg_assess_2012:
             __score = float(reg_assess_2012[0].overall_score)
             coherence_2012 = ("{} ({})".format(reg_assess_2012[0].conclusion,
-                                              int(__score)),
+                                               int(__score)),
                               self.get_color_for_score(__score))
             if cscore_val == '-':
                 cscore_val = 0
@@ -1630,12 +1636,12 @@ class BulkProcessStateChange(object):
     def __call__(self):
         wftool = self.context.portal_workflow
         target_state = self.request.form.get('workflow_action', None)
-        
+
         if not target_state:
-            return 
+            return
 
         assessments = self.request.form.get('process-state-change', [])
-        
+
         if type(assessments) not in (list, tuple):
             assessments = [assessments]
 
@@ -1646,13 +1652,14 @@ class BulkProcessStateChange(object):
             try:
                 wftool.doActionFor(obj, target_state)
                 logger.info(
-                    "Changing state to %s for %s", 
+                    "Changing state to %s for %s",
                     target_state, obj_path)
             except Exception as e:
                 logger.warning(
-                    "%s: Couldn't change state to %s for %s", 
+                    "%s: Couldn't change state to %s for %s",
                     e, target_state, obj_path)
-        
-        return_url = '/'.join(self.request.URL.split('/')[:-1]) + '/assessments'
+
+        return_url = '/'.join(self.request.URL.split('/')
+                              [:-1]) + '/assessments'
 
         return return_url

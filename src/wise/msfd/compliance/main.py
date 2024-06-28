@@ -1,6 +1,9 @@
 #pylint: skip-file
 # -*- coding: utf-8 -*-
 
+import os
+import pathlib
+
 from __future__ import absolute_import
 from datetime import datetime
 from io import BytesIO
@@ -89,7 +92,8 @@ class Recommendation(Persistent):
 
 class RecommendationsTable:
     template = PageTemplateFile(
-        'src/wise.msfd/src/wise/msfd/compliance/pt/recommendations-table.pt')
+        os.path.join(str(pathlib.Path(__file__).parent.resolve()),
+        'pt/recommendations-table.pt'))
 
     def __init__(self, recommendations, show_edit_buttons):
         self.recommendations = recommendations
