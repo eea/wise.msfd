@@ -201,8 +201,9 @@ def get_region_subregions_vb_factory_art6(context):
 
         # TODO find a way to create a vocab term with accented chars for ex.:
         # Nordostatlanten (ANS) och Östersjön (BAL)
-        _x = unicodedata.normalize('NFKD', x).encode('ASCII', 'ignore')
-        simple_term = SimpleTerm(_x, _x, COMMON_LABELS.get(x, x))
+        # _x = unicodedata.normalize('NFKD', x).encode('ASCII', 'ignore')
+        # simple_term = SimpleTerm(_x, _x, COMMON_LABELS.get(x, x))
+        simple_term = SimpleTerm(x, x, COMMON_LABELS.get(x, x))
         terms.append(simple_term)
 
     terms.sort(key=lambda t: t.title)
@@ -685,7 +686,7 @@ def marine_unit_id_vocab_factory(context):
 def a13_reporting_period(context):
     """a13_reporting_period"""
     terms = [SimpleTerm(v, k, v.title) for k, v in FORMS_ART13.items()]
-    terms.sort(key=lambda t: t.title)
+    terms.sort(key=lambda t: t.title, reverse=True)
     vocab = SimpleVocabulary(terms)
 
     return vocab
@@ -695,7 +696,7 @@ def a13_reporting_period(context):
 def a14_reporting_period(context):
     """a14_reporting_period"""
     terms = [SimpleTerm(v, k, v.title) for k, v in FORMS_ART14.items()]
-    terms.sort(key=lambda t: t.title)
+    terms.sort(key=lambda t: t.title, reverse=True)
     vocab = SimpleVocabulary(terms)
 
     return vocab

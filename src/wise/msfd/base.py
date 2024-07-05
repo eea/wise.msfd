@@ -64,8 +64,7 @@ class BaseUtil(object):
 
         for l in range(len(text) - 1):
             if text[l].islower() and text[l + 1].isupper():
-                text = text[:(l + 1)] + ' ' + \
-                    text[(l + 1):]
+                text = text[:(l + 1)] + ' ' + text[l+1].lower() + text[(l + 2):]
 
         return text
 
@@ -397,7 +396,11 @@ class BaseEnhancedForm(object):
                     widget = self.widgets[k]
                     widget.value = value
                     field = widget.field.bind(self.context)
-                    field.default = value
+                    # Art9 2012 Art6 strange error
+                    try:
+                        field.default = value
+                    except:
+                        continue
                     widget.field = field
                     widget.ignoreRequest = True
                     widget.update()
@@ -499,7 +502,6 @@ class EmbeddedForm(BaseEnhancedForm, Form, BaseUtil):
     def update(self):
         """update"""
         super(EmbeddedForm, self).update()
-
         self.data, errors = self.extractData()
 
         has_values = list(self.data.values()) and all(self.data.values())

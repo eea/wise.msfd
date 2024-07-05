@@ -28,8 +28,18 @@ LABEL_FIX = {
 # user friendly text
 DISPLAY_LABELS = {
     'ALL': {
+        'MSCACode': 'MSCA code',
+        'NACECode': 'NACE code',
+        'Element2Code': 'Element2 code',
+        'Element2CodeSource': 'Element2 code source',
+        'GESComponent': 'GES component',
+        'GESDescription': 'GES description',
+        'GESExtentAchieved': 'GES extent achieved',
+        'GESExtentUnit': 'GES extent unit',
+        'GESExtentThreshold': 'GES extent threshold',
+        'GESAchieved': 'GES achieved',
         'MSFD4_Import_ReportingCountry': "Country",
-        'AssessmentsPeriod': 'Assessment Period',
+        'AssessmentsPeriod': 'Assessment period',
         'UniqueCode': 'Measure code',
         # Article 4
         'rZoneId': 'Region',

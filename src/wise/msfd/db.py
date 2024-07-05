@@ -1,4 +1,4 @@
-#pylint: skip-file
+# pylint: skip-file
 """db.py"""
 
 from __future__ import absolute_import
@@ -6,6 +6,7 @@ from __future__ import print_function
 import logging
 import os
 import threading
+import unicodedata
 
 from collections import defaultdict
 
@@ -358,7 +359,8 @@ def get_collapsed_item(mapper_class, klass_join, order_field, collapses,
     all_cols = mapped_cols + mapped_cols_join
 
     try:
-        q = sess.query(*all_cols).join(klass_join).filter(*conditions).distinct()
+        q = sess.query(*all_cols).join(klass_join).filter(*
+                                                          conditions).distinct()
         all_items = q.all()
     except Exception:
         sess.rollback()
@@ -509,7 +511,18 @@ def get_item_by_conditions_art_6(
     filtered_coops = []
 
     for row in q:
-        if any(region in row.RegionsSubRegions for region in r_codes):
+        row_is_needed = False
+
+        try:
+            row_is_needed = any(region in unicodedata.normalize(
+                'NFKD', row.RegionsSubRegions).encode('ASCII', 'ignore')
+                for region in r_codes)
+        except TypeError: 
+            row_is_needed = any(region in row.RegionsSubRegions 
+                                for region in r_codes)
+                
+        if row_is_needed:
+
             filtered_coops.append(row)
 
     # item = q.offset(page).limit(1).first()
@@ -614,7 +627,6 @@ def get_related_record(klass, column, rel_id):
         sess.rollback()
         logger.exception("MSFD database is timed out")
         return []
-
 
     return [q.count(), item]
 
@@ -739,7 +751,8 @@ def get_all_records_outerjoin(mapper_class, klass_join, *conditions, **kw):
     """get_all_records_outerjoin"""
     sess = session()
     try:
-        res = sess.query(mapper_class).outerjoin(klass_join).filter(*conditions)
+        res = sess.query(mapper_class).outerjoin(
+            klass_join).filter(*conditions)
     except Exception:
         sess.rollback()
         logger.exception("MSFD database is timed out")
@@ -780,7 +793,6 @@ def compliance_art8_join(columns, mc_join1, mc_join2, *conditions):
         logger.exception("MSFD database is timed out")
         return []
 
-
     q = [x for x in q]
     count = len(q)
 
@@ -793,6 +805,8 @@ def latest_import_ids_2018():
     mc = sql2018.ReportedInformation
     mc_v = sql2018.t_V_ReportedInformation
 
+    # condition removed because Latvia does not have any envelopeStatus
+    # with 'End' value
     conditions = [
         mc_v.c.EnvelopeStatus == 'End'
     ]
@@ -926,6 +940,7 @@ def get_a11_descr_prog_code():
 
 A11_DESCR_PROG_CODES = get_a11_descr_prog_code()
 
+
 @use_db_session('2018')
 def get_all_data_from_view_Art8(country_code):
     """get_all_data_from_view_Art8"""
@@ -976,7 +991,7 @@ def get_all_data_from_view_Art9(country_code):
 
     out = [x for x in q]
 
-    return out    
+    return out
 
 
 @use_db_session('2018')
@@ -1014,7 +1029,7 @@ def get_all_data_from_view_art11(country_code):
 
     res = [x for x in q]
 
-    return res    
+    return res
 
 
 @use_db_session('2018')
@@ -1034,7 +1049,7 @@ def get_all_data_from_view_art13(country_code):
 
     res = [x for x in q]
 
-    return res    
+    return res
 
 
 @use_db_session('2018')
@@ -1053,7 +1068,7 @@ def get_all_data_from_view_art14(country_code):
 
     res = [x for x in q]
 
-    return res    
+    return res
 
 
 @use_db_session('2018')
