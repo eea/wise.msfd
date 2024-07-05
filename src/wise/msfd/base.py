@@ -64,7 +64,8 @@ class BaseUtil(object):
 
         for l in range(len(text) - 1):
             if text[l].islower() and text[l + 1].isupper():
-                text = text[:(l + 1)] + ' ' + text[l+1].lower() + text[(l + 2):]
+                text = (text[:(l + 1)] + ' ' + text[l+1].lower() 
+                        + text[(l + 2):])
 
         return text
 
