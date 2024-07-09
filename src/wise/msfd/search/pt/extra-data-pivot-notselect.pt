@@ -16,7 +16,7 @@
               <table class="listing" tal:condition="section_data">
                 <thead>
                   <tr tal:define="row_labels python:tab_title">
-                    <th  tal:content="row_labels">Label</th>
+                    <th tal:content="python: view.name_as_title(row_labels)">Label</th>
                   </tr>
                 </thead>
                 <tbody>

@@ -52,7 +52,9 @@ class BaseUtil(object):
         This is used to transform the database column names to usable labels
         """
         article = getattr(self, 'article', 'ALL')
-        labels = DISPLAY_LABELS.get(article, None) or DISPLAY_LABELS['ALL']
+        all_labels = DISPLAY_LABELS['ALL']
+        art_labels = DISPLAY_LABELS.get(article, {})
+        labels = {**all_labels, **art_labels}
 
         if text in labels:
             return labels[text]

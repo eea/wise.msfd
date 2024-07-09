@@ -297,7 +297,7 @@ class A11MProgrammeDisplay2020(ItemDisplayForm2018, A112020Mixin):
 
         res = [_data]
 
-        title = 'Related Indicators'
+        title = 'Related indicators'
         mc = sql2018.ART11ProgrammesRelatedIndicator
         count, indicator_data = db.get_all_specific_columns(
             [mc.RelatedIndicator_code, mc.RelatedIndicator_name],
@@ -314,14 +314,14 @@ class A11MProgrammeDisplay2020(ItemDisplayForm2018, A112020Mixin):
         _data = self.create_extra_data(
             sql2018.ART11ProgrammesMonitoringProgrammeDataAcces,
             'DataAccess',
-            'Data Access'
+            'Data access'
         )
         res.append(_data)
 
         _data = self.create_extra_data(
             sql2018.ART11ProgrammesMonitoringProgrammeMarineReportingUnit,
             'MarineReportingUnit',
-            'MarineReportingUnit(s)'
+            'Marine reporting unit(s)'
         )
         res.append(_data)
 
@@ -335,49 +335,49 @@ class A11MProgrammeDisplay2020(ItemDisplayForm2018, A112020Mixin):
         _data = self.create_extra_data(
             sql2018.ART11ProgrammesMonitoringProgrammeMonitoringPurpose,
             'MonitoringPurpose',
-            'Monitoring Purpose'
+            'Monitoring purpose'
         )
         res.append(_data)
 
         _data = self.create_extra_data(
             sql2018.ART11ProgrammesMonitoringProgrammeMonitoringType,
             'MonitoringType',
-            'Monitoring Type'
+            'Monitoring type'
         )
         res.append(_data)
 
         _data = self.create_extra_data(
             sql2018.ART11ProgrammesMonitoringProgrammeOldProgrammeCode,
             'OldProgrammeCode',
-            'Old Programme Code'
+            'Old programme code'
         )
         res.append(_data)
 
         _data = self.create_extra_data(
             sql2018.ART11ProgrammesMonitoringProgrammeOtherPoliciesConvention,
             'OtherPoliciesConventions',
-            'Other Policies Conventions'
+            'Other policies conventions'
         )
         res.append(_data)
 
         _data = self.create_extra_data(
             sql2018.ART11ProgrammesMonitoringProgrammeRegionalCooperationCoordination,
             'RegionalCooperation_coordination',
-            'Regional Cooperation Coordination'
+            'Regional cooperation coordination'
         )
         res.append(_data)
 
         _data = self.create_extra_data(
             sql2018.ART11ProgrammesMonitoringProgrammeRegionalCooperationCountry,
             'RegionalCooperation_countries',
-            'Regional Cooperation Countries'
+            'Regional cooperation countries'
         )
         res.append(_data)
 
         _data = self.create_extra_data(
             sql2018.ART11ProgrammesMonitoringProgrammeSpatialScope,
             'SpatialScope',
-            'Spatial Scope'
+            'Spatial scope'
         )
         res.append(_data)
 
@@ -566,7 +566,7 @@ class A11MStrategyDisplay2020(ItemDisplayForm2018, A112020Mixin):
         _data = self.create_extra_data(
             mc,
             'ResponsibleCompetentAuthority',
-            'Responsible Competent Authority',
+            'Responsible competent authority',
             mc.IdMetadata == meta_id
         )
         res.append(_data)
@@ -575,7 +575,7 @@ class A11MStrategyDisplay2020(ItemDisplayForm2018, A112020Mixin):
         _data = self.create_extra_data(
             mc,
             'ResponsibleOrganisations',
-            'Responsible Organisations',
+            'Responsible organisations',
             mc.IdMetadata == meta_id
         )
         res.append(_data)
@@ -584,13 +584,13 @@ class A11MStrategyDisplay2020(ItemDisplayForm2018, A112020Mixin):
         _data = self.create_extra_data(
             mc,
             'MonitoringProgrammes',
-            'Monitoring Programmes',
+            'Monitoring programmes',
             mc.IdMonitoringStrategy == strat_id
         )
         res.append(_data)
 
         mc = sql2018.ART11StrategiesMonitoringStrategyRelatedMeasure
-        title = 'Related Measures'
+        title = 'Related measures'
         _data = [title, {}]
         count, measures = db.get_all_records(
             mc,
@@ -608,7 +608,7 @@ class A11MStrategyDisplay2020(ItemDisplayForm2018, A112020Mixin):
         _data = self.create_extra_data(
             mc,
             'RelatedTargets',
-            'Related Targets',
+            'Related targets',
             mc.IdMonitoringStrategy == strat_id
         )
         res.append(_data)

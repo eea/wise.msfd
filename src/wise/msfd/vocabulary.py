@@ -236,16 +236,16 @@ def get_member_states_vb_factory(context):
     # return values_to_vocab(set(x[1] for x in rows))
 
     _labels = getattr(GES_LABELS, 'countries')
-    return values_to_vocab(_labels.keys())
+    label_keys = [k for k in _labels.keys() if k not in ('AT', 'HU') ]
+    return values_to_vocab(sorted(label_keys))
 
 
 @provider(IVocabularyFactory)
 @db.use_db_session('2018')
 def get_member_states_vb_factory_art4(context):
     """get_member_states_vb_factory_art4"""
-    conditions = []
-
     t = sql2018.MRUsPublication
+    conditions = [t.Country.not_in(['UK'])]
 
     if hasattr(context, 'get_selected_region_subregions'):
         regions = context.get_selected_region_subregions()
@@ -293,9 +293,14 @@ def get_member_states_vb_factory_art6(context):
 @provider(IVocabularyFactory)
 def get_member_states_vb_factory_art7(context):
     """get_member_states_vb_factory_art7"""
+    conditions = [
+        sql_extra.MSCompetentAuthority.C_CD.not_in(['AT', 'HU', 'UK', 'LU'])
+    ]
+
     res = db.get_unique_from_mapper(
         sql_extra.MSCompetentAuthority,
-        'C_CD'
+        'C_CD',
+        *conditions
     )
 
     return vocab_from_values(res)
@@ -1145,8 +1150,8 @@ def a2018_country(context):
         mapper_class
     )
 
-    res = [x.CountryCode for x in res]
-    res = list(set(res))
+    res = [x.CountryCode for x in res] + ['EL']
+    res = sorted(list(set(res)))
 
     return vocab_from_values(res)
 
@@ -1254,11 +1259,11 @@ def country_art112020(context):
     if regions:
         data = [x for x in data if x.Region in regions]
 
-    countries = []
+    countries = ['EL']
     for row in data:
         countries.append(row.CountryCode)
 
-    return vocab_from_values(set(countries))
+    return vocab_from_values(sorted(set(countries)))
 
 
 @provider(IVocabularyFactory)

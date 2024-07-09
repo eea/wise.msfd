@@ -47,7 +47,7 @@
   </tal:block>
 
   <div tal:condition="python: not view.item ">
-    <h4>No data reported yet</h4>
+    <h4>No data reported</h4>
   </div>
 
   <div id="form-data-primary"

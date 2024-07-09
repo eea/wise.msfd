@@ -164,9 +164,9 @@ def a19_region_subregions(context):
 
 @provider(IVocabularyFactory)
 def a19_member_states(context):
-    conditions = []
-
     mc = sql.MetadataArt193
+
+    conditions = [mc.Country.not_in(['At', 'HU'])]
 
     if hasattr(context, 'get_selected_region_subregions'):
         regions = context.get_selected_region_subregions()
