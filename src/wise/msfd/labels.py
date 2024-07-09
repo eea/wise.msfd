@@ -85,6 +85,10 @@ DISPLAY_LABELS = {
         # Article 19.3
         'MarineUnitID': 'Marine Reporting unit'
     },
+    'MSFD13_2016': {
+        'UniqueCode': 'Measure code',
+        'Name': 'Measure name'
+    },
     'MSFD14_2016': {
         'UniqueCode': 'Exception code',
         'Name': 'Exception name'

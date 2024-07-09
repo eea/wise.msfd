@@ -54,8 +54,9 @@ class BaseUtil(object):
         article = getattr(self, 'article', 'ALL')
         all_labels = DISPLAY_LABELS['ALL']
         art_labels = DISPLAY_LABELS.get(article, {})
-        all_labels.update(art_labels)
-        labels = all_labels
+        labels = all_labels.copy()
+        labels.update(art_labels)
+        
 
         if text in labels:
             return labels[text]
