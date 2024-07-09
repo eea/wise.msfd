@@ -54,8 +54,8 @@ class BaseUtil(object):
         article = getattr(self, 'article', 'ALL')
         all_labels = DISPLAY_LABELS['ALL']
         art_labels = DISPLAY_LABELS.get(article, {})
-        # pylint: disable=invalid-syntax
-        labels = {**all_labels, **art_labels}
+        all_labels.update(art_labels)
+        labels = all_labels
 
         if text in labels:
             return labels[text]
