@@ -2,7 +2,6 @@
 # -*- coding: utf-8 -*-
 from __future__ import absolute_import
 import json
-import unicodedata
 from itertools import chain
 
 from sqlalchemy import and_, or_
