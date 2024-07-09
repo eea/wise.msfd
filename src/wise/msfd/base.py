@@ -56,7 +56,6 @@ class BaseUtil(object):
         art_labels = DISPLAY_LABELS.get(article, {})
         labels = all_labels.copy()
         labels.update(art_labels)
-        
 
         if text in labels:
             return labels[text]
