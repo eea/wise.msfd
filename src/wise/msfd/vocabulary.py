@@ -236,7 +236,7 @@ def get_member_states_vb_factory(context):
     # return values_to_vocab(set(x[1] for x in rows))
 
     _labels = getattr(GES_LABELS, 'countries')
-    label_keys = [k for k in _labels.keys() if k not in ('AT', 'HU') ]
+    label_keys = [k for k in _labels.keys() if k not in ('AT', 'HU')]
     return values_to_vocab(sorted(label_keys))
 
 

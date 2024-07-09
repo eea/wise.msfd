@@ -54,6 +54,7 @@ class BaseUtil(object):
         article = getattr(self, 'article', 'ALL')
         all_labels = DISPLAY_LABELS['ALL']
         art_labels = DISPLAY_LABELS.get(article, {})
+        # pylint: disable=invalid-syntax
         labels = {**all_labels, **art_labels}
 
         if text in labels:
@@ -66,8 +67,8 @@ class BaseUtil(object):
 
         for l in range(len(text) - 1):
             if text[l].islower() and text[l + 1].isupper():
-                text = (text[:(l + 1)] + ' ' + text[l+1].lower() 
-                        + text[(l + 2):])
+                text = (text[:(l + 1)] + ' ' + text[l+1].lower() +
+                        text[(l + 2):])
 
         return text
 

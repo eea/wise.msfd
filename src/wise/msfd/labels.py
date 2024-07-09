@@ -37,7 +37,8 @@ DISPLAY_LABELS = {
         'SpatialScopeGeographicZones': 'Spatial scope, geographic zones',
         'LinkToExistingPolicies': 'Link to existing policies',
         'KTM': 'Key types of measures (KTM)',
-        'RelevantFeaturesFromMSFDAnnexIII': 'Relevant features from MSFD Annex III',
+        'RelevantFeaturesFromMSFDAnnexIII':
+            'Relevant features from MSFD Annex III',
         'RelevantGESDescriptors': 'Relevant GES descriptors',
         'RelevantEnvironmentalTargets': 'Relevant environmental targets',
         'RBDCode': 'River Basin District code (WFD)',
@@ -50,12 +51,15 @@ DISPLAY_LABELS = {
         'Q4g_SubProgrammeID': 'Sub programme ID',
         'Q10c_INSPIREStandard': 'INSPIRE standard',
         'MSFD11_Q5d_AdequacyForAssessmentGE': 'Adequacy for assessment GES',
-        'MSFD11_Q6b_AdequacyForAssessmentTarget': 'Adequacy for assessment target',
-        'MSFD11_Q7e_AdequacyForAssessmentMeasure': 'Adequacy for assessment measure',
+        'MSFD11_Q6b_AdequacyForAssessmentTarget':
+            'Adequacy for assessment target',
+        'MSFD11_Q7e_AdequacyForAssessmentMeasure':
+            'Adequacy for assessment measure',
         'AdequateUnderstandingGES': 'Adequate understanding GES',
         'Q5b_RelevantGESIndicators': 'Relevant GES indicators',
         'Q5a_RelevantGESCriteria': 'Relevant GES criteria',
-        'GESDescriptorsCriteriaIndicators': 'GES descriptors criteria indicators',
+        'GESDescriptorsCriteriaIndicators':
+            'GES descriptors criteria indicators',
         'InterimGESTarget': 'Interim GES target',
         'MSCACode': 'MSCA code',
         'NACECode': 'NACE code',
