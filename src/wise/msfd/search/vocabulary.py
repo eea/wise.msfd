@@ -17,7 +17,7 @@ from .utils import (FORMS_ART4, FORMS_ART8, FORMS_ART8_2012, FORMS_ART8_2018,
 @provider(IVocabularyFactory)
 def monitoring_programme_info_types(context):
     terms = [SimpleTerm(v, k, v.title) for k, v in FORMS_ART11.items()]
-    # terms.sort(key=lambda t: t.title)
+    terms.sort(key=lambda t: t.title, reverse=True)
     vocab = SimpleVocabulary(terms)
 
     return vocab
@@ -34,7 +34,7 @@ def _reporting_period(context, forms):
         if can_view:
             terms.append(term)
 
-    terms.sort(key=lambda t: t.title)
+    terms.sort(key=lambda t: t.title, reverse=True)
     vocab = SimpleVocabulary(terms)
 
     return vocab
@@ -86,7 +86,7 @@ def a19_reporting_period(context):
         term = SimpleTerm(v, k, v.title)
         terms.append(term)
 
-    terms.sort(key=lambda t: t.title)
+    terms.sort(key=lambda t: t.title, reverse=True)
     vocab = SimpleVocabulary(terms)
 
     return vocab
@@ -132,7 +132,7 @@ def articles_vocabulary_factory_a8(context):
 @provider(IVocabularyFactory)
 def a4_mru_reporting_cycle_factory(context):
     terms = [SimpleTerm(v, k, v.title) for k, v in FORMS_ART4.items()]
-    terms.sort(key=lambda t: t.title)
+    terms.sort(key=lambda t: t.title, reverse=True)
     vocab = SimpleVocabulary(terms)
 
     return vocab
@@ -164,9 +164,9 @@ def a19_region_subregions(context):
 
 @provider(IVocabularyFactory)
 def a19_member_states(context):
-    conditions = []
-
     mc = sql.MetadataArt193
+
+    conditions = [mc.Country.not_in(['At', 'HU'])]
 
     if hasattr(context, 'get_selected_region_subregions'):
         regions = context.get_selected_region_subregions()

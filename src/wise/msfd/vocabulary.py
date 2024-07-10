@@ -2,7 +2,6 @@
 # -*- coding: utf-8 -*-
 from __future__ import absolute_import
 import json
-import unicodedata
 from itertools import chain
 
 from sqlalchemy import and_, or_
@@ -201,8 +200,9 @@ def get_region_subregions_vb_factory_art6(context):
 
         # TODO find a way to create a vocab term with accented chars for ex.:
         # Nordostatlanten (ANS) och Östersjön (BAL)
-        _x = unicodedata.normalize('NFKD', x).encode('ASCII', 'ignore')
-        simple_term = SimpleTerm(_x, _x, COMMON_LABELS.get(x, x))
+        # _x = unicodedata.normalize('NFKD', x).encode('ASCII', 'ignore')
+        # simple_term = SimpleTerm(_x, _x, COMMON_LABELS.get(x, x))
+        simple_term = SimpleTerm(x, x, COMMON_LABELS.get(x, x))
         terms.append(simple_term)
 
     terms.sort(key=lambda t: t.title)
@@ -235,16 +235,16 @@ def get_member_states_vb_factory(context):
     # return values_to_vocab(set(x[1] for x in rows))
 
     _labels = getattr(GES_LABELS, 'countries')
-    return values_to_vocab(_labels.keys())
+    label_keys = [k for k in _labels.keys() if k not in ('AT', 'HU')]
+    return values_to_vocab(sorted(label_keys))
 
 
 @provider(IVocabularyFactory)
 @db.use_db_session('2018')
 def get_member_states_vb_factory_art4(context):
     """get_member_states_vb_factory_art4"""
-    conditions = []
-
     t = sql2018.MRUsPublication
+    conditions = [t.Country.not_in(['UK'])]
 
     if hasattr(context, 'get_selected_region_subregions'):
         regions = context.get_selected_region_subregions()
@@ -292,9 +292,14 @@ def get_member_states_vb_factory_art6(context):
 @provider(IVocabularyFactory)
 def get_member_states_vb_factory_art7(context):
     """get_member_states_vb_factory_art7"""
+    conditions = [
+        sql_extra.MSCompetentAuthority.C_CD.not_in(['AT', 'HU', 'UK', 'LU'])
+    ]
+
     res = db.get_unique_from_mapper(
         sql_extra.MSCompetentAuthority,
-        'C_CD'
+        'C_CD',
+        *conditions
     )
 
     return vocab_from_values(res)
@@ -685,7 +690,7 @@ def marine_unit_id_vocab_factory(context):
 def a13_reporting_period(context):
     """a13_reporting_period"""
     terms = [SimpleTerm(v, k, v.title) for k, v in FORMS_ART13.items()]
-    terms.sort(key=lambda t: t.title)
+    terms.sort(key=lambda t: t.title, reverse=True)
     vocab = SimpleVocabulary(terms)
 
     return vocab
@@ -695,7 +700,7 @@ def a13_reporting_period(context):
 def a14_reporting_period(context):
     """a14_reporting_period"""
     terms = [SimpleTerm(v, k, v.title) for k, v in FORMS_ART14.items()]
-    terms.sort(key=lambda t: t.title)
+    terms.sort(key=lambda t: t.title, reverse=True)
     vocab = SimpleVocabulary(terms)
 
     return vocab
@@ -1144,8 +1149,8 @@ def a2018_country(context):
         mapper_class
     )
 
-    res = [x.CountryCode for x in res]
-    res = list(set(res))
+    res = [x.CountryCode for x in res] + ['EL']
+    res = sorted(list(set(res)))
 
     return vocab_from_values(res)
 
@@ -1253,11 +1258,11 @@ def country_art112020(context):
     if regions:
         data = [x for x in data if x.Region in regions]
 
-    countries = []
+    countries = ['EL']
     for row in data:
         countries.append(row.CountryCode)
 
-    return vocab_from_values(set(countries))
+    return vocab_from_values(sorted(set(countries)))
 
 
 @provider(IVocabularyFactory)

@@ -1,8 +1,9 @@
-#pylint: skip-file
+# pylint: skip-file
 from __future__ import absolute_import
 from collections import OrderedDict
-from sqlalchemy import and_, or_
-
+from sqlalchemy import and_, func, or_, types as sqltypes
+from sqlalchemy.sql.elements import literal_column
+from sqlalchemy.sql.expression import cast
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 from z3c.form.browser.checkbox import CheckBoxFieldWidget
 from z3c.form.field import Fields
@@ -650,78 +651,207 @@ class A2018Art81abDisplay(ItemDisplayForm):
         )
         id_marine_units = [x.Id for x in marine_unit]
 
-        count, overall_status = db.get_all_records(
-            overall_status_mc,
-            overall_status_mc.Feature.in_(features),
-            overall_status_mc.GESComponent.in_(ges_components),
-            overall_status_mc.IdMarineUnit.in_(id_marine_units),
-            raw=True
-        )
-        id_overall_status = [x.Id for x in overall_status]
-        id_marine_units = [x.IdMarineUnit for x in overall_status]
+        # count, overall_status = db.get_all_records(
+        #     overall_status_mc,
+        #     overall_status_mc.Feature.in_(features),
+        #     overall_status_mc.GESComponent.in_(ges_components),
+        #     overall_status_mc.IdMarineUnit.in_(id_marine_units),
+        #     raw=True
+        # )
+        # id_overall_status = [x.Id for x in overall_status]
+        # id_marine_units = [x.IdMarineUnit for x in overall_status]
 
-        count, marine_unit = db.get_all_records(
-            mapper_class,
+        # count, marine_unit = db.get_all_records(
+        #     mapper_class,
+        #     mapper_class.Id.in_(id_marine_units),
+        #     raw=True
+        # )
+
+        from wise.msfd.db import session
+        sess = session()
+        mc_overall_pressure = sql2018.ART8GESOverallStatusPressure
+        mc_overall_target = sql2018.ART8GESOverallStatusTarget
+        mc_crit_val_ind = sql2018.ART8GESCriteriaValuesIndicator
+        mc_elem_status = sql2018.ART8GESElementStatu
+        mc_crit_status = sql2018.ART8GESCriteriaStatu
+        mc_crit_value = sql2018.ART8GESCriteriaValue
+        art8data = (sess.query(
+            mapper_class.Id,
+            mapper_class.MarineReportingUnit,
+            overall_status_mc.GESComponent,
+            overall_status_mc.Feature,
+            overall_status_mc.GESExtentUnit,
+            overall_status_mc.GESAchieved,
+            overall_status_mc.AssessmentsPeriod,
+            overall_status_mc.DescriptionOverallStatus,
+            overall_status_mc.IntegrationRuleTypeCriteria,
+            overall_status_mc.IntegrationRuleDescriptionCriteria,
+            overall_status_mc.IntegrationRuleDescriptionReferenceCriteria,
+            overall_status_mc.IntegrationRuleTypeParameter,
+            overall_status_mc.IntegrationRuleDescriptionParameter,
+            overall_status_mc.IntegrationRuleDescriptionReferenceParameter,
+            func.string_agg(cast(mc_overall_pressure.PressureCode, sqltypes.Unicode),
+                            literal_column("'###'")).label("PressureCode"),
+            func.string_agg(cast(mc_overall_target.TargetCode, sqltypes.Unicode),
+                            literal_column("'###'")).label("TargetCode"),
+            mc_elem_status.Element,
+            mc_elem_status.Element2,
+            mc_elem_status.ElementSource,
+            mc_elem_status.ElementCode,
+            mc_elem_status.Element2Code,
+            mc_elem_status.ElementCodeSource,
+            mc_elem_status.Element2CodeSource,
+            mc_elem_status.DescriptionElement,
+            mc_elem_status.ElementStatus,
+            mc_crit_status.Criteria,
+            mc_crit_status.CriteriaStatus,
+            mc_crit_status.DescriptionCriteria,
+            mc_crit_status.IdOverallStatus,
+            mc_crit_value.Parameter,
+            mc_crit_value.ParameterOther,
+            mc_crit_value.ThresholdValueUpper,
+            mc_crit_value.ThresholdValueLower,
+            mc_crit_value.ThresholdQualitative,
+            mc_crit_value.ThresholdValueSource,
+            mc_crit_value.ThresholdValueSourceOther,
+            mc_crit_value.ValueAchievedUpper,
+            mc_crit_value.ValueAchievedLower,
+            mc_crit_value.ValueUnit,
+            mc_crit_value.ValueUnitOther,
+            mc_crit_value.ProportionThresholdValue,
+            mc_crit_value.ProportionThresholdValueUnit,
+            mc_crit_value.ProportionValueAchieved,
+            mc_crit_value.Trend,
+            mc_crit_value.ParameterAchieved,
+            mc_crit_value.DescriptionParameter,
+            func.string_agg(cast(mc_crit_val_ind.IndicatorCode, sqltypes.Unicode),
+                            literal_column("'###'")).label("IndicatorCode")
+        )
+            .outerjoin(overall_status_mc, mapper_class.Id == overall_status_mc.IdMarineUnit)
+            .outerjoin(mc_overall_pressure, mc_overall_pressure.IdOverallStatus == overall_status_mc.Id)
+            .outerjoin(mc_overall_target, mc_overall_target.IdOverallStatus == overall_status_mc.Id)
+            .outerjoin(mc_elem_status, mc_elem_status.IdOverallStatus == overall_status_mc.Id)
+            .outerjoin(mc_crit_status, or_(
+                mc_crit_status.IdElementStatus == mc_elem_status.Id,
+                mc_crit_status.IdOverallStatus == overall_status_mc.Id))
+            .outerjoin(mc_crit_value, mc_crit_value.IdCriteriaStatus == mc_crit_status.Id)
+            .outerjoin(mc_crit_val_ind, mc_crit_val_ind.IdCriteriaValues == mc_crit_value.Id)
+            .filter(
             mapper_class.Id.in_(id_marine_units),
-            raw=True
+            overall_status_mc.Feature.in_(features),
+            overall_status_mc.GESComponent.in_(ges_components)
+        )
+            .group_by(
+            mapper_class.Id,
+            mapper_class.MarineReportingUnit,
+            overall_status_mc.GESComponent,
+            overall_status_mc.Feature,
+            overall_status_mc.GESExtentUnit,
+            overall_status_mc.GESAchieved,
+            overall_status_mc.AssessmentsPeriod,
+            overall_status_mc.DescriptionOverallStatus,
+            overall_status_mc.IntegrationRuleTypeCriteria,
+            overall_status_mc.IntegrationRuleDescriptionCriteria,
+            overall_status_mc.IntegrationRuleDescriptionReferenceCriteria,
+            overall_status_mc.IntegrationRuleTypeParameter,
+            overall_status_mc.IntegrationRuleDescriptionParameter,
+            overall_status_mc.IntegrationRuleDescriptionReferenceParameter,
+            mc_elem_status.Element,
+            mc_elem_status.Element2,
+            mc_elem_status.ElementSource,
+            mc_elem_status.ElementCode,
+            mc_elem_status.Element2Code,
+            mc_elem_status.ElementCodeSource,
+            mc_elem_status.Element2CodeSource,
+            mc_elem_status.DescriptionElement,
+            mc_elem_status.ElementStatus,
+            mc_crit_status.Criteria,
+            mc_crit_status.CriteriaStatus,
+            mc_crit_status.DescriptionCriteria,
+            mc_crit_status.IdOverallStatus,
+            mc_crit_value.Parameter,
+            mc_crit_value.ParameterOther,
+            mc_crit_value.ThresholdValueUpper,
+            mc_crit_value.ThresholdValueLower,
+            mc_crit_value.ThresholdQualitative,
+            mc_crit_value.ThresholdValueSource,
+            mc_crit_value.ThresholdValueSourceOther,
+            mc_crit_value.ValueAchievedUpper,
+            mc_crit_value.ValueAchievedLower,
+            mc_crit_value.ValueUnit,
+            mc_crit_value.ValueUnitOther,
+            mc_crit_value.ProportionThresholdValue,
+            mc_crit_value.ProportionThresholdValueUnit,
+            mc_crit_value.ProportionValueAchieved,
+            mc_crit_value.Trend,
+            mc_crit_value.ParameterAchieved,
+            mc_crit_value.DescriptionParameter)
+            .order_by(mapper_class.Id)
+            .distinct()
         )
 
-        mc = sql2018.ART8GESOverallStatusPressure
-        count, overall_status_pressure = db.get_all_records(
-            mc,
-            mc.IdOverallStatus.in_(id_overall_status),
-            raw=True
-        )
+        art8data = [x for x in art8data]
 
-        mc = sql2018.ART8GESOverallStatusTarget
-        count, overall_status_target = db.get_all_records(
-            mc,
-            mc.IdOverallStatus.in_(id_overall_status),
-            raw=True
-        )
+        # mc = sql2018.ART8GESOverallStatusPressure
+        # count, overall_status_pressure = db.get_all_records(
+        #     mc,
+        #     mc.IdOverallStatus.in_(id_overall_status),
+        #     raw=True
+        # )
 
-        mc = sql2018.ART8GESElementStatu
-        count, element_status = db.get_all_records(
-            mc,
-            mc.IdOverallStatus.in_(id_overall_status),
-            raw=True
-        )
-        id_element_status = [x.Id for x in element_status]
+        # mc = sql2018.ART8GESOverallStatusTarget
+        # count, overall_status_target = db.get_all_records(
+        #     mc,
+        #     mc.IdOverallStatus.in_(id_overall_status),
+        #     raw=True
+        # )
 
-        mc = sql2018.ART8GESCriteriaStatu
-        count, criteria_status = db.get_all_records(
-            mc,
-            or_(mc.IdOverallStatus.in_(id_overall_status),
-                mc.IdElementStatus.in_(id_element_status)),
-            raw=True
-        )
-        id_criteria_status = [x.Id for x in criteria_status]
+        # mc = sql2018.ART8GESElementStatu
+        # count, element_status = db.get_all_records(
+        #     mc,
+        #     mc.IdOverallStatus.in_(id_overall_status),
+        #     raw=True
+        # )
+        # id_element_status = [x.Id for x in element_status]
 
-        mc = sql2018.ART8GESCriteriaValue
-        count, criteria_value = db.get_all_records(
-            mc,
-            mc.IdCriteriaStatus.in_(id_criteria_status),
-            raw=True
-        )
-        id_criteria_value = [x.Id for x in criteria_value]
+        # mc = sql2018.ART8GESCriteriaStatu
+        # count, criteria_status = db.get_all_records(
+        #     mc,
+        #     or_(mc.IdOverallStatus.in_(id_overall_status),
+        #         mc.IdElementStatus.in_(id_element_status)),
+        #     raw=True
+        # )
+        # id_criteria_status = [x.Id for x in criteria_status]
 
-        mc = sql2018.ART8GESCriteriaValuesIndicator
-        count, criteria_value_ind = db.get_all_records(
-            mc,
-            mc.IdCriteriaValues.in_(id_criteria_value),
-            raw=True
-        )
+        # mc = sql2018.ART8GESCriteriaValue
+        # count, criteria_value = db.get_all_records(
+        #     mc,
+        #     mc.IdCriteriaStatus.in_(id_criteria_status),
+        #     raw=True
+        # )
+        # id_criteria_value = [x.Id for x in criteria_value]
+
+        # mc = sql2018.ART8GESCriteriaValuesIndicator
+        # count, criteria_value_ind = db.get_all_records(
+        #     mc,
+        #     mc.IdCriteriaValues.in_(id_criteria_value),
+        #     raw=True
+        # )
+
+        # xlsdata = [
+        #     # worksheet title, row data
+        #     ('ART8GESMarineUnit', marine_unit),
+        #     ('ART8GESOverallStatus', overall_status),
+        #     ('ART8GESOverallStatusPressure', overall_status_pressure),
+        #     ('ART8GESOverallStatusTarget', overall_status_target),
+        #     ('ART8GESElementStatus', element_status),
+        #     ('ART8GESCriteriaStatus', criteria_status),
+        #     ('ART8GESCriteriaValue', criteria_value),
+        #     ('ART8GESCriteriaValuesIndicator', criteria_value_ind),
+        # ]
 
         xlsdata = [
-            # worksheet title, row data
-            ('ART8GESMarineUnit', marine_unit),
-            ('ART8GESOverallStatus', overall_status),
-            ('ART8GESOverallStatusPressure', overall_status_pressure),
-            ('ART8GESOverallStatusTarget', overall_status_target),
-            ('ART8GESElementStatus', element_status),
-            ('ART8GESCriteriaStatus', criteria_status),
-            ('ART8GESCriteriaValue', criteria_value),
-            ('ART8GESCriteriaValuesIndicator', criteria_value_ind),
+            ('Data', art8data)
         ]
 
         return xlsdata
@@ -1751,7 +1881,7 @@ class A2018IndicatorsDisplay(ItemDisplayForm):
 
         if indicators_dataset:
             res.append(
-                ('Indicators Dataset', {'': indicators_dataset})
+                ('Indicators dataset', {'': indicators_dataset})
             )
 
         count, marine_unit = db.get_all_records(
@@ -1763,7 +1893,7 @@ class A2018IndicatorsDisplay(ItemDisplayForm):
 
         if marine_unit_ids:
             res.append(
-                ('MarineUnitID(s)', {'': marine_unit_ids})
+                ('Marine unit ID(s)', {'': marine_unit_ids})
             )
 
         return res

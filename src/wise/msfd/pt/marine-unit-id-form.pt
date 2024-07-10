@@ -32,7 +32,7 @@
       <div tal:content="structure subform">subform here</div>
     </div>
     <div tal:condition="not: subform">
-      <h4>No data reported yet</h4>
+      <h4>No data reported</h4>
     </div>
   </tal:def>
 </div>

@@ -1,4 +1,4 @@
-#pylint: skip-file
+# pylint: skip-file
 from __future__ import absolute_import
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 from z3c.form.browser.checkbox import CheckBoxFieldWidget
@@ -313,7 +313,7 @@ class A18CategoryDisplay(ItemDisplayForm):
         )
 
         data = db_objects_to_dict(data, excluded_columns)
-        res.append(('Category1bNotWFDMeasure', {'': data}))
+        res.append(('Category 1b not WFD measure', {'': data}))
 
         return res
 
@@ -366,8 +366,10 @@ class A18MeasureProgressForm(EmbeddedForm):
 @register_form_art18
 class A18CategoryForm(EmbeddedForm):
     """"""
-    record_title = "Article 18 (Category1bNotWFDMeasure)"
-    title = "Category1bNotWFDMeasure"
+    record_title = ("Article 18 (Measures of category 1b that are not related " +
+                    "to the Water Framework Directive (WFD))")
+
+    title = "Category 1b not WFD measure"
     display_klass = A18CategoryDisplay
     mapper_class = sql2018.ART18Category1bNotWFD
 

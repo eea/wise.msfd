@@ -797,6 +797,11 @@
         });
       },
     );
+
+    if($(selectorLeftForm + ' .tab-content .tab-pane.fade').length > 0) {
+      $($(selectorLeftForm + ' .tab-content.msfd-extra-tab-content .tab-pane.fade')[0]).addClass('in active');
+      $($(selectorLeftForm + ' .nav-tabs.msfd-extra-nav-tabs .nav-item')[0]).addClass('active');
+    }
   }
   /*
    * SELECT2 functions END

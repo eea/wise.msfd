@@ -975,10 +975,14 @@ class ReportData20142020(ReportData2014):
         self.get_report_view()
         metadata_2020 = self.report_metadata_2020
 
-        source_files_2020 = [
-            (x.ReportedFileLink, x.ReportedFileLink + '/manage_document')
-            for x in metadata_2020
-        ]
+        try:
+            source_files_2020 = [
+                (x.ReportedFileLink, x.ReportedFileLink + '/manage_document')
+                for x in metadata_2020
+            ]
+        except:
+            source_files_2020 = []
+            metadata_2020 = []
 
         report_date_2020 = (metadata_2020
                             and metadata_2020[0].ReportingDate.isoformat()

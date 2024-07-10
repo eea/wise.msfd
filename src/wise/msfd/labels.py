@@ -28,8 +28,51 @@ LABEL_FIX = {
 # user friendly text
 DISPLAY_LABELS = {
     'ALL': {
+        'GESachieved': 'GES achieved',
+        'GEScomponent': 'GES component',
+        'CBAreference': 'CBA reference',
+        'CBA': 'Cost-benefit analysis (CBA)',
+        'CEA': 'Cost-effectiveness analysis (CEA)',
+        'CEAreference': 'CEA reference',
+        'SpatialScopeGeographicZones': 'Spatial scope, geographic zones',
+        'LinkToExistingPolicies': 'Link to existing policies',
+        'KTM': 'Key types of measures (KTM)',
+        'RelevantFeaturesFromMSFDAnnexIII':
+            'Relevant features from MSFD Annex III',
+        'RelevantGESDescriptors': 'Relevant GES descriptors',
+        'RelevantEnvironmentalTargets': 'Relevant environmental targets',
+        'RBDCode': 'River Basin District code (WFD)',
+        'RelevantKTMs': 'Relevant Key types of measures (KTM)',
+        'RelationshipToCA': 'Relationship to CA',
+        'Q4e_ProgrammeID': 'Programme ID',
+        'Q5f_DescriptionGES': 'Description GES',
+        'Q5g_GapFillingDateGES': 'Gap filling date GES',
+        'Q5h_PlansGES': 'Plans GES',
+        'Q4g_SubProgrammeID': 'Sub programme ID',
+        'Q10c_INSPIREStandard': 'INSPIRE standard',
+        'MSFD11_Q5d_AdequacyForAssessmentGE': 'Adequacy for assessment GES',
+        'MSFD11_Q6b_AdequacyForAssessmentTarget':
+            'Adequacy for assessment target',
+        'MSFD11_Q7e_AdequacyForAssessmentMeasure':
+            'Adequacy for assessment measure',
+        'AdequateUnderstandingGES': 'Adequate understanding GES',
+        'Q5b_RelevantGESIndicators': 'Relevant GES indicators',
+        'Q5a_RelevantGESCriteria': 'Relevant GES criteria',
+        'GESDescriptorsCriteriaIndicators':
+            'GES descriptors criteria indicators',
+        'InterimGESTarget': 'Interim GES target',
+        'MSCACode': 'MSCA code',
+        'NACECode': 'NACE code',
+        'Element2Code': 'Element2 code',
+        'Element2CodeSource': 'Element2 code source',
+        'GESComponent': 'GES component',
+        'GESDescription': 'GES description',
+        'GESExtentAchieved': 'GES extent achieved',
+        'GESExtentUnit': 'GES extent unit',
+        'GESExtentThreshold': 'GES extent threshold',
+        'GESAchieved': 'GES achieved',
         'MSFD4_Import_ReportingCountry': "Country",
-        'AssessmentsPeriod': 'Assessment Period',
+        'AssessmentsPeriod': 'Assessment period',
         'UniqueCode': 'Measure code',
         # Article 4
         'rZoneId': 'Region',
@@ -41,6 +84,10 @@ DISPLAY_LABELS = {
         'Area': 'Area (km2)',
         # Article 19.3
         'MarineUnitID': 'Marine Reporting unit'
+    },
+    'MSFD13_2016': {
+        'UniqueCode': 'Measure code',
+        'Name': 'Measure name'
     },
     'MSFD14_2016': {
         'UniqueCode': 'Exception code',

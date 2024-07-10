@@ -47,7 +47,7 @@
   </tal:block>
 
   <div tal:condition="python: not view.item ">
-    <h4>No data reported yet</h4>
+    <h4>No data reported</h4>
   </div>
 
   <div id="form-data-primary" tal:content="structure view/data_template | nothing"></div>
@@ -57,7 +57,7 @@
 
     <div id="tabs-wrapper" tal:condition="sections">
       <!-- Nav tabs -->
-      <ul class="nav nav-tabs" id="tabs" role="tablist"  >
+      <ul class="nav nav-tabs msfd-extra-nav-tabs" id="tabs" role="tablist"  >
         <tal:block tal:repeat="section sections">
           <li class="nav-item" tal:condition="section/item">
             <a class="nav-link" tal:define="utitle section/title"
@@ -73,7 +73,7 @@
         </tal:block>
       </ul>
       <!-- Tab panes -->
-      <div class="tab-content" id="tabContents" >
+      <div class="tab-content msfd-extra-tab-content" id="tabContents" >
         <tal:loop repeat="section sections">
           <div class="tab-pane fade"
                tal:condition="section/item"

@@ -1054,6 +1054,14 @@ def country_code(value):
     return label
 
 
+def timescale_transform(value):
+    """timescale_transform"""
+    
+    t_value = "{}-{}".format(value[:4], value[4:])
+
+    return t_value
+
+
 TRANSFORMS = {
     'Area': area_transform,
     'Marine Unit(s)': mrus_transform,
@@ -1072,4 +1080,6 @@ TRANSFORMS = {
     'RelevantTarget': targets_transform,
     'RelevantKTMs': ktms_transform,
     'Pressures': pressures_transform,
+    'TimeScale': timescale_transform,
+    'UpdateDate': timescale_transform,
 }

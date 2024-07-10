@@ -272,7 +272,14 @@ def data_to_xls(data, blacklist_labels=None):
 
                 label = value
 
-                if f not in blacklist_labels:
+                # meaning its a concatenated list
+                if isinstance(label, string_types) and '###' in label:
+                    distinct_vals = set(label.split('###'))
+                    label = "; ".join([
+                        print_value_xls(v, f)
+                        for v in distinct_vals]
+                    )
+                elif f not in blacklist_labels:
                     label = print_value_xls(value, f)
 
                 try:
