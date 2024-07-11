@@ -50,6 +50,15 @@ class Introduction(BaseNatSummaryView):
 
     template = ViewPageTemplateFile("pt/introduction-2022.pt")
 
+    # @timeit
+    # def reporting_history_table(self):
+    #     view = ReportingHistoryTable(self, self.request)
+    #     rendered_view = view()
+
+    #     # self.report_hystory_data = view.report_hystory_data
+
+    #     return rendered_view
+
     def __call__(self):
         return self.template()
 
@@ -131,8 +140,16 @@ class DescriptorLevelAssessments2022(BaseNatSummaryView):
             else:
                 _article_data = self.assessment_data_art14[descriptor]
 
-            assessment_summary = _article_data.assessment_summary.output
-            progress_assessment = _article_data.progress.output
+            try:
+                assessment_summary = _article_data.assessment_summary.output
+            except AttributeError:
+                assessment_summary = _article_data.assessment_summary
+
+            try:
+                progress_assessment = _article_data.progress.output
+            except AttributeError:
+                progress_assessment = _article_data.progress
+
             recommendations = getattr(
                 _article_data.recommendations, 'output', '-')
 
@@ -195,7 +212,7 @@ class OverviewPOMAssessment2022(BaseNatSummaryView):
         total_score = 0
         total_weight = 0
 
-        for answer in self.cross_cuting_data.answers:
+        for answer in getattr(self.cross_cuting_data, 'answers', []):
             qcode = answer.question.split(':')[0]
 
             if qcode not in section_questions:
@@ -275,6 +292,10 @@ class AssessmentSummary2022View(BaseNatSummaryView):
 
     render_header = True
 
+    @property
+    def country_code(self):
+        return self.context.aq_parent.id
+
     def setup_article_data(self, assessment_data, article_title, descriptor):
         elements = self.questions[article_title][0].get_all_assessed_elements(
             descriptor,
@@ -332,7 +353,7 @@ class AssessmentSummary2022View(BaseNatSummaryView):
 
             if obj_title not in self.articles_needed:
                 continue
-
+            
             # x = self.get_parent_by_iface(INationalSummary2022Folder)
             # xx = self.get_parent_by_iface(INationalSummaryCountryFolder)
 
@@ -450,9 +471,9 @@ class AssessmentSummary2022View(BaseNatSummaryView):
         # 2. Overview of the results of the PoM assessment
         overview_pom = OverviewPOMAssessment2022(
             self, self.request,
-            self.data_cross_cutting['All'],
-            self.data_completeness_art13['All'],
-            self.data_completeness_art14['All'],
+            self.data_cross_cutting.get('All', {}),
+            self.data_completeness_art13.get('All', {}),
+            self.data_completeness_art14.get('All', {}),
             self.data_art13,
             self.data_art14
         )
