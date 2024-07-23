@@ -56,7 +56,7 @@ class CompetentAuthorityItemDisplay(ItemDisplayForm):
     order_field = 'C_CD'
     css_class = "left-side-form"
 
-    blacklist = ('Import_Time', 'Import_FileName', 'C_CD')
+    blacklist = ('Import_Time', 'Import_FileName', 'C_CD', 'METADATA', 'URL')
     blacklist_labels = ('C_CD', )
     use_blacklist = False
 
