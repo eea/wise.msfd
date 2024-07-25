@@ -48,7 +48,8 @@ DISPLAY_LABELS = {
         'Summary1': 'Summary',
         'URL_CA': 'URL',
         'CityNL': 'City (national language)',
-        'CompetentAuthorityNameNL': 'Competent authority name (national language)',
+        'CompetentAuthorityNameNL': 
+            'Competent authority name (national language)',
         'GESachieved': 'GES achieved',
         'GEScomponent': 'GES component',
         'CBAreference': 'CBA reference',
