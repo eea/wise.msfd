@@ -20,7 +20,7 @@
           <h1>Commission assessments - national overview: <span tal:content="context/title"></span></h1>
 
           <div class="nda-link">
-            <a href="/marine/policy-and-reporting/assessment-by-region/${view/region_name_url}">
+            <a href="/marine/policy-and-reporting/msfd-reports-and-assessments/assessments-by-regions/${view/region_name_url}">
               <i class="glyphicon glyphicon-share-alt"></i>
               Go to Region page
             </a>

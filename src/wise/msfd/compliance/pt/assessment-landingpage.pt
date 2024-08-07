@@ -50,7 +50,7 @@
                       <button class="country-dropdown-button">Select country<span class="link-btn"></span></button>
                       <div class="country-dropdown-content">
                         <a tal:repeat="country view/countries"
-                            tal:attributes="href python: '/marine/policy-and-reporting/assessment-by-country/' + country[1].lower().replace(' ', '-')"
+                            tal:attributes="href python: '/marine/policy-and-reporting/msfd-reports-and-assessments/assessments-by-countries/' + country[1].lower().replace(' ', '-')"
                             tal:content="python: country[1]">Belgium</a>
                       </div>
                     </div>
@@ -67,7 +67,7 @@
                       <button class="country-dropdown-button">Select region<span class="link-btn"></span></button>
                       <div class="country-dropdown-content" style="width: 240px;height: 188px;">
                         <a tal:repeat="country view/regions"
-                            tal:attributes="href python: '/marine/policy-and-reporting/assessment-by-region/' + country[1].lower().replace(' ', '-')"
+                            tal:attributes="href python: '/marine/policy-and-reporting/msfd-reports-and-assessments/assessments-by-regions/' + country[1].lower().replace(' ', '-')"
                             tal:content="python: country[1]">Baltic</a>
                       </div>
                     </div>
@@ -85,7 +85,7 @@
                       <button class="country-dropdown-button">Select country<span class="link-btn"></span></button>
                       <div class="country-dropdown-content">
                         <a tal:repeat="country view/countries_jrc_report"
-                            tal:attributes="href python: '/marine/policy-and-reporting/assessment-by-country/' + country[1].lower().replace(' ', '-') + '/@@art11-jrc-report'"
+                            tal:attributes="href python: '/marine/policy-and-reporting/msfd-reports-and-assessments/assessments-by-countries/' + country[1].lower().replace(' ', '-') + '/@@art11-jrc-report'"
                             tal:content="python: country[1]">Belgium</a>
                       </div>
                     </div>

@@ -9,7 +9,7 @@
 
     <div id="report-data-navigation">
       <div class="back-to-art">
-        <a href="/marine/policy-and-reporting/assessment-by-country/${view/country_name_url}">
+        <a href="/marine/policy-and-reporting/msfd-reports-and-assessments/assessments-by-countries/${view/country_name_url}">
           <i class="glyphicon glyphicon-share-alt"></i>
           Go to Country page
         </a>
