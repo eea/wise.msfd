@@ -1072,7 +1072,7 @@ if (!Array.prototype.last) {
     addFixedTable();
     regionalDescriptorsGroupTableHeaders();
 
-    $(".pat-plone-modal").attr("href", "https://water.europa.eu/marine-api/marine/login");
+    $(".pat-plone-modal").attr("href", "https://water.europa.eu/marine/assessment-module/login");
     $(".assessment-read-more").click(function () {
       var $this = $(this);
       $this.text(function (a, b) {
