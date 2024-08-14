@@ -1,0 +1,42 @@
+<div class="nat-sum-report-history">
+    <tal:cond tal:condition="view/has_data">
+        <div tal:define="allrows options/rows"
+            class="report-sectionZ">
+
+            <div class="overflow-table sticky-overflow-header hidden-fixed-table">
+            <div class="inner" style="overflow: auto">
+                <table class="table table-sticky-first-col table-bordered table-striped table-comp-translate table-report">
+                    <thead>
+                        <tr class="sticky-row">
+                        <th class="summary column-header" style="width: 50%;">Files available</th>
+                        <th class="summary column-header" style="width: 30%;">Access to reports</th>
+                        <th class="summary column-header" style="width: 7%;">Report due</th>
+                        <th class="summary column-header" style="width: 7%;">Report received</th>
+                        <th class="summary column-header" style="width: 6%;">Difference (days)</th>
+                        </tr>          
+                    </thead>
+
+                    <tbody>
+                        <tal:rep tal:repeat="row allrows">
+                        <tal:row replace="structure row"></tal:row>
+                        </tal:rep>
+                    </tbody>
+                </table>
+            </div>
+            </div>
+
+        </div>
+    </tal:cond>
+    <tal:cond tal:condition="not:view/has_data">
+        <div>
+            <p>No reports found on reportnet to be downloaded and processed by the assessment module, or the report is not public.</p>
+            <p>Check the available reports at: </p>
+            <ul>
+                <li><a href="https://reportnet.europa.eu/public/dataflow/363">MSFD Articles 13 and 14 - Reporting year 2022</a></li>
+                <li><a href="https://reportnet.europa.eu/public/dataflow/406">MSFD Articles 13 and 14 - Supporting documents - Reporting year 2022</a></li>
+            </ul>
+        </div>
+        
+        
+    </tal:cond>
+</div>

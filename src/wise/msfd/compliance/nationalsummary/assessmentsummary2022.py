@@ -4,6 +4,12 @@
 from __future__ import absolute_import
 
 import logging
+import requests
+import io
+import zipfile
+from collections import defaultdict, namedtuple
+from datetime import datetime
+from pyexcel_xlsx import get_data
 
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 from Products.statusmessages.interfaces import IStatusMessage
@@ -21,7 +27,7 @@ from wise.msfd.compliance.nationaldescriptors.main import (
 from wise.msfd.compliance.scoring import get_overall_conclusion_2022
 from wise.msfd.gescomponents import DESCRIPTOR_TYPES_2022, get_descriptor
 from wise.msfd.translation import retrieve_translation
-from wise.msfd.utils import timeit
+from wise.msfd.utils import (ItemList, TemplateMixin, timeit)
 
 from zope.interface import implementer
 
@@ -29,6 +35,35 @@ from .base import BaseNatSummaryView
 
 
 logger = logging.getLogger('wise.msfd')
+
+def compoundrow(self, title, rows, show_header=True):
+    """ Function to return a compound row for 2012 report"""
+
+    FIELD = namedtuple("Field", ["name", "title"])
+    field = FIELD(title, title)
+
+    return CompoundRow(self, self.request, field, rows, show_header)
+
+
+class CompoundRow(TemplateMixin):
+    template = ViewPageTemplateFile('pt/compound-row.pt')
+
+    def __init__(self, context, request, field, rows, show_header=True):
+        self.context = context
+        self.request = request
+        self.field = field
+        self.rows = rows
+        self.rowspan = len(rows)
+        self.show_header = show_header
+
+
+def calculate_reporting_delay(report_due, report_date):
+    # if reporting_delay:
+    #     return -reporting_delay
+
+    timedelta = report_due - report_date
+
+    return "{:+d}".format(timedelta.days)
 
 
 class CrossCuttingAssessment2022(BaseNatSummaryView):
@@ -45,19 +80,138 @@ class OverviewPOMEXceptions2022(BaseNatSummaryView):
     def __call__(self):
         return self.template()
 
+class ReportingHistoryTable(BaseNatSummaryView):
+    """ ReportingHistoryTable """
+    template = ViewPageTemplateFile("pt/report-history-table-2022.pt")
+    show_header = False
+    base_api_url = ("https://api.reportnet.europa.eu/dataset"
+                    "/exportPublicFile/dataflow")
+    def __init__(self, context, request):
+        super(ReportingHistoryTable, self).__init__(context, request)
+        self.data = []
+
+    obligation = "363"
+    obligation_text = "406"
+
+    @property
+    def country_code(self):
+        return self.context.context.aq_parent.id.upper()
+
+    def location_url(self, location, filename):
+        tmpl = "<a href={} target='_blank'>{}</a>"
+        location = location.replace(filename, '')
+
+        # return location
+        return tmpl.format(location, location)
+
+    def get_text_reports(self):
+        url = (f"{self.base_api_url}/{self.obligation_text}/dataProvider"
+               f"/12?fileName={self.country_code}-Supporting%20documents.zip")
+    def get_reports(self):
+        url_a13 = (f"{self.base_api_url}/{self.obligation}/dataProvider"
+            f"/12?fileName={self.country_code}-Measures.zip")
+        url_a14 = (f"{self.base_api_url}/{self.obligation}/dataProvider"
+            f"/12?fileName={self.country_code}-Exceptions.zip")
+        rows = []        
+
+        def _process_zip_file(url):
+            # Download the zip file
+            response = requests.get(url)
+            zip_file = io.BytesIO(response.content)
+
+            # Extract the Excel file from the zip
+            try:
+                with zipfile.ZipFile(zip_file) as z:
+                    for excel_filename in z.namelist():
+                        _row = {}
+                        excel_content = z.read(excel_filename)
+                        data = get_data(io.BytesIO(excel_content))
+
+                        if (len(data['ReporterInfo']) > 1 
+                                and data['ReporterInfo'][1]):
+                            _row["ReportingDate"] = datetime.strptime(
+                                data['ReporterInfo'][1][3], '%Y-%m-%d').date()
+                            _row["URL"] = (f"https://reportnet.europa.eu/public/"
+                                        f"dataflow/{self.obligation}")
+                            _row["FileName"] = excel_filename
+
+                            rows.append(_row)
+
+            except zipfile.BadZipFile:
+                logger.error("Failed to get report zipfile from %s", url)
+                return
+
+        _process_zip_file(url_a13)
+        _process_zip_file(url_a14)
+
+        self.data.extend(rows)
+
+    def get_all_data(self):
+        self.get_reports()
+
+        # Group the data by envelope, report due, report date and report delay
+        data = self.data
+        rows = []
+
+        groups = defaultdict(list)
+
+        for row in data:
+            filename = row.get('FileName')
+            envelope = self.location_url(row.get('URL'), filename)
+
+            # Article 18 files not relevant for this report, exclude them
+            if 'art18' in envelope:
+                continue
+
+            report_due = datetime(year=2022, month=3, day=31).date()
+            report_date = row.get('ReportingDate')
+            report_delay = report_due - report_date
+            k = (envelope, report_due, report_date, report_delay.days)
+
+            groups[k].append(filename)
+
+        for _k, filenames in groups.items():
+            values = [
+                ItemList(rows=set(filenames)),  # Filenames
+                _k[0],  # Envelope url
+                _k[1],  # Report due
+                _k[2],  # Report date
+                _k[3]  # Report delay
+            ]
+            rows.append(values)
+
+        sorted_rows = sorted(rows,
+                             key=lambda _row: (_row[3], _row[1]),
+                             reverse=True)
+
+        return sorted_rows
+
+
+    def __call__(self):
+        all_data = self.get_all_data()
+
+        self.allrows = [
+            compoundrow(self, 'Row', all_data,
+                        show_header=self.show_header)
+        ]
+
+        self.has_data = len(all_data)
+
+        return self.template(rows=self.allrows)
+    
 class Introduction(BaseNatSummaryView):
     """ Introduction """
 
     template = ViewPageTemplateFile("pt/introduction-2022.pt")
 
-    # @timeit
-    # def reporting_history_table(self):
-    #     view = ReportingHistoryTable(self, self.request)
-    #     rendered_view = view()
+    @timeit
+    def reporting_history_table(self):
+        view = ReportingHistoryTable(self, self.request)
+        rendered_view = view()
 
-    #     # self.report_hystory_data = view.report_hystory_data
+        # self.report_hystory_data = view.report_hystory_data
 
-    #     return rendered_view
+        return rendered_view
 
     def __call__(self):
         return self.template()
@@ -99,10 +253,14 @@ class DescriptorLevelAssessments2022(BaseNatSummaryView):
             descr_obj = get_descriptor(descriptor)
             articles_data = []
             # Art13
-            if descriptor in ['D1.2', 'D1.3', 'D1.4', 'D1.5', 'D1.6']:
-                _article_data = self.assessment_data_art13['D1.1']
-            else:
-                _article_data = self.assessment_data_art13[descriptor]
+            try:
+                if descriptor in ['D1.2', 'D1.3', 'D1.4', 'D1.5', 'D1.6']:
+                    _article_data = self.assessment_data_art13['D1.1']
+                else:
+                    _article_data = self.assessment_data_art13[descriptor]
+            except KeyError:
+                logger.error("Missing data for descriptor %s", descriptor)
+                return
 
             assessment_summary = _article_data.assessment_summary.output
             progress_assessment = _article_data.progress.output
@@ -239,12 +397,14 @@ class OverviewPOMAssessment2022(BaseNatSummaryView):
                 (section_name, self.get_score_for_section(section_questions)))
 
         completeness_art13_data = [
-            self.completeness_art13_data.overall_conclusion_color,
-            self.completeness_art13_data.overall_conclusion[1],
+            self.completeness_art13_data.get("overall_conclusion_color"),
+            self.completeness_art13_data.get("overall_conclusion") and 
+                self.completeness_art13_data.get("overall_conclusion")[1] or ''
         ]
         completeness_art14_data = [
-            self.completeness_art14_data.overall_conclusion_color,
-            self.completeness_art14_data.overall_conclusion[1],
+            self.completeness_art14_data.get("overall_conclusion_color"),
+            self.completeness_art14_data.get("overall_conclusion") and 
+                self.completeness_art14_data.get("overall_conclusion")[1] or ''
         ]
 
         descriptor_specific_data = []
@@ -252,14 +412,21 @@ class OverviewPOMAssessment2022(BaseNatSummaryView):
         for descr_type, descr_codes in DESCRIPTOR_TYPES_2022:
             descr_type_data = []
             for descr_code in descr_codes:
-                a13data = self.data_art13[descr_code]
-                art13 = (
-                    a13data.phase_overall_scores.adequacy['conclusion'][1],
-                    a13data.phase_overall_scores.adequacy['color'])
-                a14data = self.data_art14[descr_code]
-                art14 = (
-                    a14data.phase_overall_scores.adequacy['conclusion'][1],
-                    a14data.phase_overall_scores.adequacy['color'])
+                try:
+                    a13data = self.data_art13[descr_code]
+                    art13 = (
+                        a13data.phase_overall_scores.adequacy['conclusion'][1],
+                        a13data.phase_overall_scores.adequacy['color'])
+                except KeyError:
+                    art13 = ('Not assessed', '5')
+
+                try:
+                    a14data = self.data_art14[descr_code]
+                    art14 = (
+                        a14data.phase_overall_scores.adequacy['conclusion'][1],
+                        a14data.phase_overall_scores.adequacy['color'])
+                except KeyError:
+                    art14 = ('Not assessed', '5')
 
                 descr_obj = get_descriptor(descr_code)
                 descr_title = descr_obj.title
