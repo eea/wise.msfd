@@ -90,7 +90,7 @@ class ReportingHistoryTable(BaseNatSummaryView):
         super(ReportingHistoryTable, self).__init__(context, request)
         self.data = []
 
-    obligation = "363"
+    obligation = ""
     obligation_text = "406"
 
     country_numbers = {
@@ -116,12 +116,10 @@ class ReportingHistoryTable(BaseNatSummaryView):
         return tmpl.format(location, location)
 
     def get_reports(self):
-        url_a13 = (f"{self.base_api_url}/{self.obligation}/dataProvider"
-            f"/{self.country_number}"
-            f"?fileName={self.country_code}-Measures.zip")
-        url_a14 = (f"{self.base_api_url}/{self.obligation}/dataProvider"
-            f"/{self.country_number}"
-            f"?fileName={self.country_code}-Exceptions.zip")
+        url_a13 = ("{}/363/dataProvider/{}?fileName={}-Measures.zip".format(
+            self.base_api_url, self.country_number, self.country_code))
+        url_a14 = ("{}/363/dataProvider/{}?fileName={}-Exceptions.zip".format(
+            self.base_api_url, self.country_number, self.country_code))
         rows = []        
 
         def _process_zip_file(url, obligation):
@@ -142,8 +140,8 @@ class ReportingHistoryTable(BaseNatSummaryView):
                             _row["ReportingDate"] = datetime.strptime(
                                 data['ReporterInfo'][1][3], '%Y-%m-%d').date()
                             _row["URL"] = (
-                                f"https://reportnet.europa.eu/public/"
-                                f"dataflow/{obligation}"
+                                "https://reportnet.europa.eu/public/"
+                                "dataflow/{}".format(obligation)
                             )
                             _row["FileName"] = filename
 
@@ -153,13 +151,13 @@ class ReportingHistoryTable(BaseNatSummaryView):
                 logger.error("Failed to get report zipfile from %s", url)
                 return
 
-        _process_zip_file(url_a13, self.obligation)
-        _process_zip_file(url_a14, self.obligation)
+        _process_zip_file(url_a13, "363")
+        _process_zip_file(url_a14, "363")
 
         # Process text reports/supporting documents
-        url = (f"{self.base_api_url}/{self.obligation_text}/dataProvider"
-               f"/{self.country_number}"
-               f"?fileName={self.country_code}-Supporting%20documents.zip")
+        url = ("{}/406/dataProvider/{}?fileName={}-Supporting%20documents.zip"
+               .format(self.base_api_url, self.country_number, 
+                       self.country_code))
         
         # Download the zip file
         response = requests.get(url)
@@ -169,6 +167,9 @@ class ReportingHistoryTable(BaseNatSummaryView):
         try:
             with zipfile.ZipFile(zip_file) as z:
                 for filename in z.namelist():
+                    if filename.endswith("Supporting documents.xlsx"):
+                        continue
+
                     _row = {}
                     # excel_content = z.read(filename)
                     # data = get_data(io.BytesIO(excel_content))
@@ -176,8 +177,8 @@ class ReportingHistoryTable(BaseNatSummaryView):
                     _row["ReportingDate"] = datetime(
                         year=2022, month=3, day=31).date()
                     _row["URL"] = (
-                        f"https://reportnet.europa.eu/public/"
-                        f"dataflow/{self.obligation_text}"
+                        "https://reportnet.europa.eu/public/"
+                        "dataflow/{}".format(self.obligation_text)
                     )
                     _row["FileName"] = filename.replace(
                         "Supporting documents/", "")
