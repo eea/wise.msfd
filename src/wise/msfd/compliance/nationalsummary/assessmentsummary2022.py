@@ -148,7 +148,7 @@ class ReportingHistoryTable(BaseNatSummaryView):
                             rows.append(_row)
 
             except zipfile.BadZipFile:
-                logger.error("Failed to get report zipfile from %s", url)
+                logger.info("Failed to get report zipfile from %s", url)
                 return
 
         _process_zip_file(url_a13, "363")
@@ -186,7 +186,7 @@ class ReportingHistoryTable(BaseNatSummaryView):
                     rows.append(_row)
 
         except zipfile.BadZipFile:
-            logger.error("Failed to get report zipfile from %s", url)
+            logger.info("Failed to get report zipfile from %s", url)
             return
 
         self.data.extend(rows)
@@ -305,7 +305,7 @@ class DescriptorLevelAssessments2022(BaseNatSummaryView):
                 else:
                     _article_data = self.assessment_data_art13[descriptor]
             except KeyError:
-                logger.error("Missing data for descriptor %s", descriptor)
+                logger.info("Missing data for descriptor %s", descriptor)
                 return
 
             assessment_summary = _article_data.assessment_summary.output
