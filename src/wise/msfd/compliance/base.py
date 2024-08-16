@@ -769,6 +769,8 @@ def _a10_ids_cachekey(method, self, descriptor, **kwargs):
     return key
 
 
+
+
 def get_weights_from_xml(node):
     """ Initialize with values from questions xml
     """
@@ -809,8 +811,8 @@ class AssessmentQuestionDefinition:
             getattr(node.find('source-info'), 'text', '').strip())
         self.q_heading = getattr(node.find('heading'), 'text', '').strip()
 
-    def calculate_score(self, descriptor, values):
-        score_obj = Score(self, descriptor, values)
+    def calculate_score(self, descriptor, values, country_code=None):
+        score_obj = Score(self, descriptor, values, country_code)
 
         # if all options are 'Not relevant' return None, so the question will
         # behave like not answered and it will not count towards overall score

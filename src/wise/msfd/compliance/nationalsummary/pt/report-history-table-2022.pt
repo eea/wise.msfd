@@ -29,8 +29,7 @@
     </tal:cond>
     <tal:cond tal:condition="not:view/has_data">
         <div>
-            <p>No reports found on reportnet to be downloaded and processed by the assessment module, or the report is not public.</p>
-            <p>Check the available reports at: </p>
+            <p>No reports found on reportnet, check the available reports at:</p>
             <ul>
                 <li><a href="https://reportnet.europa.eu/public/dataflow/363">MSFD Articles 13 and 14 - Reporting year 2022</a></li>
                 <li><a href="https://reportnet.europa.eu/public/dataflow/406">MSFD Articles 13 and 14 - Supporting documents - Reporting year 2022</a></li>

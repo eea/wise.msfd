@@ -93,9 +93,20 @@ class ReportingHistoryTable(BaseNatSummaryView):
     obligation = "363"
     obligation_text = "406"
 
+    country_numbers = {
+        "HR": "12",
+        "EL": "1",
+        "MT": "29",
+        "DK": "22"
+    }
+
     @property
     def country_code(self):
         return self.context.context.aq_parent.id.upper()
+
+    @property
+    def country_number(self):
+        return self.country_numbers.get(self.country_code) or 0
 
     def location_url(self, location, filename):
         tmpl = "<a href={} target='_blank'>{}</a>"
@@ -104,17 +115,16 @@ class ReportingHistoryTable(BaseNatSummaryView):
         # return location
         return tmpl.format(location, location)
 
-    def get_text_reports(self):
-        url = (f"{self.base_api_url}/{self.obligation_text}/dataProvider"
-               f"/12?fileName={self.country_code}-Supporting%20documents.zip")
     def get_reports(self):
         url_a13 = (f"{self.base_api_url}/{self.obligation}/dataProvider"
-            f"/12?fileName={self.country_code}-Measures.zip")
+            f"/{self.country_number}"
+            f"?fileName={self.country_code}-Measures.zip")
         url_a14 = (f"{self.base_api_url}/{self.obligation}/dataProvider"
-            f"/12?fileName={self.country_code}-Exceptions.zip")
+            f"/{self.country_number}"
+            f"?fileName={self.country_code}-Exceptions.zip")
         rows = []        
 
-        def _process_zip_file(url):
+        def _process_zip_file(url, obligation):
             # Download the zip file
             response = requests.get(url)
             zip_file = io.BytesIO(response.content)
@@ -122,18 +132,20 @@ class ReportingHistoryTable(BaseNatSummaryView):
             # Extract the Excel file from the zip
             try:
                 with zipfile.ZipFile(zip_file) as z:
-                    for excel_filename in z.namelist():
+                    for filename in z.namelist():
                         _row = {}
-                        excel_content = z.read(excel_filename)
+                        excel_content = z.read(filename)
                         data = get_data(io.BytesIO(excel_content))
 
                         if (len(data['ReporterInfo']) > 1 
                                 and data['ReporterInfo'][1]):
                             _row["ReportingDate"] = datetime.strptime(
                                 data['ReporterInfo'][1][3], '%Y-%m-%d').date()
-                            _row["URL"] = (f"https://reportnet.europa.eu/public/"
-                                        f"dataflow/{self.obligation}")
-                            _row["FileName"] = excel_filename
+                            _row["URL"] = (
+                                f"https://reportnet.europa.eu/public/"
+                                f"dataflow/{obligation}"
+                            )
+                            _row["FileName"] = filename
 
                             rows.append(_row)
 
@@ -141,8 +153,40 @@ class ReportingHistoryTable(BaseNatSummaryView):
                 logger.error("Failed to get report zipfile from %s", url)
                 return
 
-        _process_zip_file(url_a13)
-        _process_zip_file(url_a14)
+        _process_zip_file(url_a13, self.obligation)
+        _process_zip_file(url_a14, self.obligation)
+
+        # Process text reports/supporting documents
+        url = (f"{self.base_api_url}/{self.obligation_text}/dataProvider"
+               f"/{self.country_number}"
+               f"?fileName={self.country_code}-Supporting%20documents.zip")
+        
+        # Download the zip file
+        response = requests.get(url)
+        zip_file = io.BytesIO(response.content)
+
+        # Extract the Excel file from the zip
+        try:
+            with zipfile.ZipFile(zip_file) as z:
+                for filename in z.namelist():
+                    _row = {}
+                    # excel_content = z.read(filename)
+                    # data = get_data(io.BytesIO(excel_content))
+
+                    _row["ReportingDate"] = datetime(
+                        year=2022, month=3, day=31).date()
+                    _row["URL"] = (
+                        f"https://reportnet.europa.eu/public/"
+                        f"dataflow/{self.obligation_text}"
+                    )
+                    _row["FileName"] = filename.replace(
+                        "Supporting documents/", "")
+
+                    rows.append(_row)
+
+        except zipfile.BadZipFile:
+            logger.error("Failed to get report zipfile from %s", url)
+            return
 
         self.data.extend(rows)
 
@@ -166,6 +210,7 @@ class ReportingHistoryTable(BaseNatSummaryView):
             report_due = datetime(year=2022, month=3, day=31).date()
             report_date = row.get('ReportingDate')
             report_delay = report_due - report_date
+
             k = (envelope, report_due, report_date, report_delay.days)
 
             groups[k].append(filename)
@@ -397,14 +442,16 @@ class OverviewPOMAssessment2022(BaseNatSummaryView):
                 (section_name, self.get_score_for_section(section_questions)))
 
         completeness_art13_data = [
-            self.completeness_art13_data.get("overall_conclusion_color"),
-            self.completeness_art13_data.get("overall_conclusion") and 
-                self.completeness_art13_data.get("overall_conclusion")[1] or ''
+            getattr(self.completeness_art13_data, "overall_conclusion_color", None),
+            getattr(self.completeness_art13_data, "overall_conclusion", None) and 
+                getattr(self.completeness_art13_data, "overall_conclusion", None)[1] 
+                or ''
         ]
         completeness_art14_data = [
-            self.completeness_art14_data.get("overall_conclusion_color"),
-            self.completeness_art14_data.get("overall_conclusion") and 
-                self.completeness_art14_data.get("overall_conclusion")[1] or ''
+            getattr(self.completeness_art14_data, "overall_conclusion_color", None),
+            getattr(self.completeness_art14_data, "overall_conclusion", None) and 
+                getattr(self.completeness_art14_data, "overall_conclusion", None)[1] 
+                or ''
         ]
 
         descriptor_specific_data = []

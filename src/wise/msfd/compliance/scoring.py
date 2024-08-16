@@ -37,6 +37,15 @@ CONCLUSIONS_2022 = [
 ]
 
 
+# specific weights for some qestions/countries/descriptor
+COUNTRY_WEIGHTS = {
+    # "Ad02B" : {
+    #     "CY": {
+    #         "D5": 10
+    #     }
+    # }
+}
+
 def get_range_index(percentage):
     p = int(percentage)
 
@@ -396,7 +405,10 @@ class Score(object):
     """ Class used to store scores for each question
     """
 
-    def __init__(self, question, descriptor, values):
+    # set specific weights for some of the countries
+    country_weights = COUNTRY_WEIGHTS
+
+    def __init__(self, question, descriptor, values, country_code=None):
         """
         :param question: instance of AssessmentQuestionDefinition
         :param descriptor: 'D5'
@@ -405,9 +417,18 @@ class Score(object):
         """
         self.descriptor = descriptor
         self.question = question
-        self.weight = float(question.score_weights.get(descriptor, 10.0))
+        self.weight = self.get_weight(question, descriptor, country_code)
         self.values = values
         self.scores = question.scores
+
+
+    def get_weight(self, question, descriptor, country_code):
+        """ Get the weight for the question"""
+        weight_from_xml = float(question.score_weights.get(descriptor, 10.0))
+        weight_for_country = float(self.country_weights.get(
+            question.id, {}).get(country_code, {}).get(descriptor, 0.0))
+        
+        return weight_for_country or weight_from_xml
 
     @property
     def is_not_relevant(self):
