@@ -1,4 +1,5 @@
 <div>
     <h3>GENERAL INTRODUCTION</h3>
-    <div>To be implemented...</div>
+    <h4>Reports submitted by the Member State</h4>
+    <div tal:replace="structure view/reporting_history_table">Reporting history</div>
 </div>

@@ -988,7 +988,8 @@ class AdminScoring(BaseComplianceView, AssessmentDataMixin):
                     and obj.saved_assessment_data:
 
                 logger.info('recalculating scores for %r', obj)
-
+                country_code = obj.aq_parent.aq_parent.aq_parent.id.upper()
+                
                 data = obj.saved_assessment_data.last()
                 new_overall_score = 0
                 scores = {k: v for k, v in data.items()
@@ -1001,7 +1002,6 @@ class AdminScoring(BaseComplianceView, AssessmentDataMixin):
                 if is_art10_nat_desc:
                     descriptor_id = obj.aq_parent.id.upper()
                     descriptor_obj = self.descriptor_obj(descriptor_id)
-                    country_code = obj.aq_parent.aq_parent.aq_parent.id.upper()
                     country_region_code = obj.aq_parent.aq_parent.id.upper()
                     year = '2018'
                     muids = self.muids(country_code, country_region_code, year)
@@ -1043,7 +1043,8 @@ class AdminScoring(BaseComplianceView, AssessmentDataMixin):
                             if field_name in k and isinstance(v, int)
                         ]
 
-                    new_score = _question.calculate_score(descriptor, values)
+                    new_score = _question.calculate_score(
+                        descriptor, values, country_code)
 
                     data[q_id] = new_score
                     new_overall_score += getattr(new_score,

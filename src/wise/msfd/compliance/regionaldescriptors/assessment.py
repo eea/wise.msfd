@@ -172,7 +172,8 @@ class RegDescEditAssessmentDataForm(BaseRegComplianceView,
             # score is updated if ALL of the fields have been answered
 
             if values and None not in values:
-                score = question.calculate_score(self.descriptor, values)
+                score = question.calculate_score(
+                    self.descriptor, values, self.country_code)
 
             name = '{}_{}_Score'.format(self.article, question.id)
             last_upd = '{}_{}_Last_update'.format(self.article, question.id)
