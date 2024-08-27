@@ -38,8 +38,8 @@
         </div>
       </metal:slot>
       <metal:css fill-slot="formtop">
-        <link href="/Plone/marine/++api++/++resource++static_css/tabs.css" type="text/css" rel="stylesheet" />
-        <link href="/Plone/marine/++api++/++resource++static_css/msfd_search.css" type="text/css" rel="stylesheet" />
+        <link href="/marine/++api++/++resource++static_css/tabs.css" type="text/css" rel="stylesheet" />
+        <link href="/marine/++api++/++resource++static_css/msfd_search.css" type="text/css" rel="stylesheet" />
         <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/3.5.4/select2.min.css" rel="stylesheet" />
         <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css" rel="stylesheet" />
         <!-- <script src="/++resource++msfd/bs3/js/bootstrap.min.js" type="application/javascript" rel="script"></script> -->

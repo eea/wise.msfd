@@ -266,6 +266,9 @@ class OverallScores(object):
             max_score and (score_achieved * 100) / max_score or 0
         ))
 
+        if max_score == 0:  # all phases not relevant
+            return 5, '-'
+        
         return get_range_index_2022(overall_score), overall_score
 
     def conclusion(self, phase):
