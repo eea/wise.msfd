@@ -82,8 +82,12 @@
                         tal:attributes="rowspan python: len(descr_type[1])"
                         tal:content="python: descr_type[0]">Pressure based</th>
                     <th>
-                        <div style="text-align: left"
+                        <div tal:condition="python: row[0] != 'D1 Birds'"
+                            style="text-align: left"
                             tal:content="python: row[0]">D1 - Birds
+                        </div>
+                        <div tal:condition="python: row[0] == 'D1 Birds'"
+                            style="text-align: left">D1 Biodiversity
                         </div>
                     </th>
                     <td>

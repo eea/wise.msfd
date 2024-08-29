@@ -251,7 +251,10 @@ class OverallScores(object):
         max_score = 0
         weights = self.article_weights[article]
 
-        for phase in weights:
+        for phase, weight in weights.items():
+            if weight == 0:
+                continue
+
             _score = getattr(self, phase)['score']
             _max_score = getattr(self, phase)['max_score']
 

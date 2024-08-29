@@ -98,7 +98,7 @@
 
           <td class="overall-headers fixed-right">
             <div class="as-value as-value-th">2022 Adequacy</div>
-            <div class="as-value as-value-th">2022 Overall</div>
+            <!-- <div class="as-value as-value-th">2022 Overall</div> -->
           </td>
           <td class="overall-values fixed-right"
             tal:define="phase_score python: assessment.phase_overall_scores">
@@ -107,10 +107,10 @@
                     score_value python: phase_score.adequacy['conclusion'][0]">
               <strong tal:content="python: '{} ({})'.format(conclusion, score_value)">Good (3)</strong>
             </div>
-            <div tal:attributes="class python: 'as-value as-value-{}'.format(assessment.overall_conclusion_color)">
+            <!-- <div tal:attributes="class python: 'as-value as-value-{}'.format(assessment.overall_conclusion_color)">
               <strong tal:content="python: '{} ({})'.format(
                 assessment.overall_conclusion[1], assessment.overall_conclusion[0])">Very poor (1)</strong>
-            </div>
+            </div> -->
           </td>
 
           <td class="overall-values fixed-right"
@@ -126,7 +126,7 @@
               </span>
               <span tal:content="python: '{}'.format(score)">65.5</span>
             </div>
-            <div tal:attributes="class python: 'as-value as-value-{}'.format(assessment.overall_conclusion_color)">
+            <!-- <div tal:attributes="class python: 'as-value as-value-{}'.format(assessment.overall_conclusion_color)">
               <span class="score help-popover glyphicon glyphicon-info-sign"
                   data-trigger="hover"
                   data-html="true"
@@ -135,7 +135,7 @@
                     data-content python: phase_score.score_tooltip_overall_secondary(view.article);">
               </span>
               <span tal:content="python: '{}'.format(assessment.overall_score)">76.3</span>
-            </div>
+            </div> -->
           </td>
         </tr>
 
