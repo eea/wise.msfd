@@ -1396,8 +1396,8 @@ class RegDescA82012(BaseRegComplianceView):
             indic_data = self.assessment_indicator_data[c]
             data = [
                 x.ThresholdProportion
-
                 for x in chain(*list(indic_data.values()))
+                if x.ThresholdProportion is not None
             ]
 
             if data:

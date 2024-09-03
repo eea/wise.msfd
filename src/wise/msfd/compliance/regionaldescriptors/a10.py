@@ -621,8 +621,8 @@ class RegDescA102012(BaseRegComplianceView):
 
                     for row in self.target_data
 
-                    if row.Topic == topic
-                    and row.MarineUnitID in muids
+                    if row.Topic == topic and row.MarineUnitID in muids
+                        and row.Proportion is not None
                 ]
                 found = len([x for x in data if x])
                 percentage = data and (found / float(len(data))) * 100 or 0.0
