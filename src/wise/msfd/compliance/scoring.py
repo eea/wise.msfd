@@ -1,4 +1,4 @@
-#pylint: skip-file
+# pylint: skip-file
 DEFAULT_RANGES = [
     [76, 100],
     [51, 75],
@@ -39,12 +39,44 @@ CONCLUSIONS_2022 = [
 
 # specific weights for some qestions/countries/descriptor
 COUNTRY_WEIGHTS = {
-    # "Ad02B" : {
-    #     "CY": {
-    #         "D5": 10
-    #     }
-    # }
+    "Ad02B": {
+        "CY": {
+            "D5": 3,
+            "D8": 3,
+            "D9": 3
+        },
+        "IE": {
+            "D2": 3,
+            "D5": 3,
+            "D7": 3,
+            "D8": 3,
+            "D9": 3
+        },
+        "LV": {
+            "D9": 3,
+        },
+        "NL": {
+            "D2": 3,
+            "D7": 3,
+            "D9": 3
+        },
+        "RO": {
+            "D9": 3,
+        },
+        "IT": {
+            "D7": 3,
+            "D9": 3,
+        },
+        "PT": {
+            "D5": 3,
+            "D7": 3,
+        },
+        "SI": {
+            "D9": 3,
+        },
+    }
 }
+
 
 def get_range_index(percentage):
     p = int(percentage)
@@ -71,7 +103,7 @@ def get_range_index_2022(percentage):
 def scoring_based(answers, scores):
     raw_scores = []
     for answ in answers:
-        # if the answer is not available 
+        # if the answer is not available
         # eg. 'Not relevant' was removed, get the score from the last option
         try:
             score = scores[answ]
@@ -142,8 +174,8 @@ class OverallScores(object):
         if article in ('Art3', 'Art4'):
             return self.get_overall_score_secondary(article)
 
-        if article in ('Art13', 'Art14', 'Art13Completeness', 
-                'Art14Completeness', 'Art1314CrossCutting'):
+        if article in ('Art13', 'Art14', 'Art13Completeness',
+                       'Art14Completeness', 'Art1314CrossCutting'):
             return self.get_overall_score_2022(article)
 
         overall_score = 0
@@ -167,7 +199,7 @@ class OverallScores(object):
         if (is_national
             and self.adequacy['score'] == 0 and self.consistency['score'] == 0
             and self.adequacy['max_score'] == 0
-            and self.consistency['max_score'] == 0):
+                and self.consistency['max_score'] == 0):
 
             return '-', '-'
 
@@ -219,21 +251,27 @@ class OverallScores(object):
         max_score = 0
         weights = self.article_weights[article]
 
-        for phase in weights:
+        for phase, weight in weights.items():
+            if weight == 0:
+                continue
+
             _score = getattr(self, phase)['score']
             _max_score = getattr(self, phase)['max_score']
 
             try:
                 score_achieved += _score
             except:
-                pass 
-                
+                pass
+
             max_score += _max_score
 
         overall_score = int(round(
             max_score and (score_achieved * 100) / max_score or 0
         ))
 
+        if max_score == 0:  # all phases not relevant
+            return 5, '-'
+        
         return get_range_index_2022(overall_score), overall_score
 
     def conclusion(self, phase):
@@ -241,8 +279,8 @@ class OverallScores(object):
 
         :return: string 'Very good'
         """
-        if self.question.article in ('Art13', 'Art14', 'Art13Completeness', 
-                'Art14Completeness', 'Art1314CrossCutting'):
+        if self.question.article in ('Art13', 'Art14', 'Art13Completeness',
+                                'Art14Completeness', 'Art1314CrossCutting'):
             return self.conclusion_2022(phase)
 
         score_value = self.get_range_index_for_phase(phase)
@@ -277,8 +315,8 @@ class OverallScores(object):
     def get_range_index_for_phase(self, phase, article=None):
         score = self.get_score_for_phase(phase)
 
-        if article and article in ('Art13', 'Art14', 'Art13Completeness', 
-                'Art14Completeness', 'Art1314CrossCutting'):
+        if article and article in ('Art13', 'Art14', 'Art13Completeness',
+                                   'Art14Completeness', 'Art1314CrossCutting'):
             return get_range_index_2022(score)
 
         return get_range_index(score)
@@ -421,14 +459,19 @@ class Score(object):
         self.values = values
         self.scores = question.scores
 
-
     def get_weight(self, question, descriptor, country_code):
         """ Get the weight for the question"""
         weight_from_xml = float(question.score_weights.get(descriptor, 10.0))
-        weight_for_country = float(self.country_weights.get(
-            question.id, {}).get(country_code, {}).get(descriptor, 0.0))
-        
-        return weight_for_country or weight_from_xml
+        weight_for_country = self.country_weights.get(question.id, {}).get(
+            country_code, {}).get(descriptor, None)
+
+        try:
+            weight_for_country = float(weight_for_country)
+        except (TypeError, ValueError):
+            weight_for_country = None
+
+        return (weight_for_country if weight_for_country is not None 
+                else weight_from_xml)
 
     @property
     def is_not_relevant(self):
@@ -512,8 +555,8 @@ class Score(object):
         :return: string 'Very good'
         """
 
-        if self.question.article in ('Art13', 'Art14', 'Art13Completeness', 
-                'Art14Completeness', 'Art1314CrossCutting'):
+        if self.question.article in ('Art13', 'Art14', 'Art13Completeness',
+                                'Art14Completeness', 'Art1314CrossCutting'):
             concl = list(reversed(CONCLUSIONS_2022))[self.score_value]
         else:
             concl = list(reversed(CONCLUSIONS))[self.score_value]

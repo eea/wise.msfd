@@ -97,13 +97,13 @@ ARTICLE_WEIGHTS = {
     },
     'Art13': {
         'adequacy': 0.6,
-        'completeness': 0.2,
-        'coherence': 0.2
+        'completeness': 0.4,
+        'coherence': 0
     },
     'Art14': {
         'adequacy': 0.6,
-        'completeness': 0.2,
-        'coherence': 0.2
+        'completeness': 0.4,
+        'coherence': 0
     },
     'Art18': {
         'adequacy': 1.0,
