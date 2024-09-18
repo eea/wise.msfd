@@ -1519,8 +1519,10 @@ class NationalDescriptorArticleViewCrossCutting(NationalDescriptorArticleView):
             for x in CROSS_CUTTING_SECTIONS
             if question_id in x[1]
         ]
-
         for answer in self.assessment_formatted.answers:
+            if not answer.score:
+                continue
+
             qcode = answer.question.split(':')[0]
 
             if qcode not in section_questions[0]:
