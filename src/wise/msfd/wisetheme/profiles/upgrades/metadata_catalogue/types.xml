@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<object name="portal_types" meta_type="Plone Types Tool">
+ <object name="data_visualization" meta_type="Dexterity FTI"/>
+ <object name="publication_report" meta_type="Dexterity FTI"/>
+ <object name="spatial_dataset" meta_type="Dexterity FTI"/>
+ <object name="map_interactive" meta_type="Dexterity FTI"/>
+ <object name="dataset" meta_type="Dexterity FTI"/>
+ <object name="indicator" meta_type="Dexterity FTI"/>
+</object>

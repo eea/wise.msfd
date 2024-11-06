@@ -1,0 +1,69 @@
+version: '2'
+services:
+    wise_indexer:
+        image: eeacms/esbootstrap:branch-es7
+        environment:
+          VERSION_INFO: eeacms/esbootstrap:branch-es7
+          elastic_host: es
+          AUTO_INDEXING: 'true'
+          elastic_index: wise
+          APP_CONFIG_DIRNAME: wise
+          elastic_appalias: 'latest'
+        # ports:
+        #   - '3000:3000'
+        volumes:
+          - .:/code/config
+          - ./data:/sources_from_git/app/config/wise/data
+        depends_on:
+          - es
+
+    es:
+        image: eeacms/elastic:7
+        depends_on:
+            - es-sysctl
+        ports:
+            - 9200:9200
+        volumes:
+            - ./elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml:z
+
+        environment:
+            - "cluster.name=es7_test"
+            - "node.name=es7_standalone"
+            - "discovery.type=single-node"
+            - "name=elastic7"
+        ulimits:
+            memlock:
+                soft: -1
+                hard: -1
+            nofile:
+                soft: 65536
+                hard: 65536
+        mem_limit: 4073741824
+        mem_swappiness: 0
+        cap_add:
+            - IPC_LOCK
+
+        volumes_from:
+            - es7-storage-volume
+
+    es-sysctl:
+        network_mode: none
+        image: rawmind/alpine-sysctl:0.1
+        privileged: true
+        environment:
+            - "SYSCTL_KEY=vm.max_map_count"
+            - "SYSCTL_VALUE=262144"
+
+    es7-storage-volume:
+        network_mode: none
+        image: rawmind/alpine-volume:0.0.2-1
+        environment:
+            - SERVICE_UID=1000
+            - SERVICE_GID=1000
+            - SERVICE_VOLUME=/usr/share/elasticsearch/data
+        volumes:
+            - ./es7-storage-volume:/usr/share/elasticsearch/data
+
+volumes:
+  es7-storage-volume:
+    driver: local

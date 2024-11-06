@@ -1,0 +1,25 @@
+<div tal:repeat="kv view/vocabs">
+  <h2 tal:content="python: kv[0]">Vocab name</h2>
+  <table class="listing" tal:on-error="string:error">
+    <thead>
+      <tr>
+        <th>
+          Token
+        </th>
+        <th>
+          Value
+        </th>
+        <th>
+          Title
+        </th>
+    </thead>
+    <tbody>
+    <tr tal:repeat="term python:kv[1](context)" tal:on-error="nothing">
+      <td tal:content="term/token">Token</td>
+      <td tal:content="nocall:term/value">Value</td>
+      <td tal:content="term/title">Title</td>
+    </tr>
+  </tbody>
+  </table>
+
+</div>

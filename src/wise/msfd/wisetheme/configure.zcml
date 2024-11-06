@@ -1,0 +1,171 @@
+<configure
+    xmlns="http://namespaces.zope.org/zope"
+    xmlns:monkey="http://namespaces.plone.org/monkey"
+    xmlns:genericsetup="http://namespaces.zope.org/genericsetup"
+    xmlns:i18n="http://namespaces.zope.org/i18n"
+    xmlns:browser="http://namespaces.zope.org/browser"
+    xmlns:plone="http://namespaces.plone.org/plone"
+    i18n_domain="eea"
+>
+
+    <i18n:registerTranslations directory="locales" />
+
+    <includeDependencies package="." />
+
+    <include package=".browser" />
+    <include file="search.zcml" />
+    <include package=".services" />
+
+    <plone:static
+        directory="theme"
+        name="wise-theme"
+        type="theme"
+    />
+
+    <plone:behavior
+        name="wise.external-links"
+        title="External Links"
+        description="Adds External Links fields"
+        factory=".behavior.ExternalLinks"
+        provides=".interfaces.IExternalLinks"
+        for="plone.dexterity.interfaces.IDexterityContent"
+        marker=".interfaces.IExternalLinks"
+    />
+
+    <plone:behavior
+        name="wise.reference-links"
+        title="References"
+        description="Adds Reference Links field"
+        factory=".behavior.ReferenceLinks"
+        provides=".interfaces.IReferenceLinks"
+        for="plone.dexterity.interfaces.IDexterityContent"
+        marker=".interfaces.IReferenceLinks"
+    />
+
+    <plone:behavior
+        name="wise.disclaimer"
+        title="Disclaimer"
+        description="Adds Disclaimer field"
+        factory=".behavior.Disclaimer"
+        provides=".interfaces.IDisclaimer"
+        for="plone.dexterity.interfaces.IDexterityContent"
+        marker=".interfaces.IDisclaimer"
+    />
+
+    <plone:behavior
+        name="wise.catalogue-metadata"
+        title="Wise Catalogue metadata"
+        description="Adds WISE Catalogue metadata fields"
+        factory=".behavior.CatalogueMetadata"
+        provides=".interfaces.ICatalogueMetadata"
+        for="plone.dexterity.interfaces.IDexterityContent"
+        marker=".interfaces.ICatalogueMetadata"
+    />
+
+    <!-- <genericsetup:registerProfile
+        name="default"
+        title="Plone Theme: WISE Theme"
+        description="Installs the Plone theme package wise.theme."
+        provides="Products.GenericSetup.interfaces.EXTENSION"
+        directory="profiles/default"
+        post_handler=".setuphandlers.post_install"
+    /> -->
+
+    <genericsetup:registerProfile
+        name="metadata_catalogue"
+        title="WISE Theme Metadata Catalogue"
+        description="Install metadata catalogue specific settings"
+        provides="Products.GenericSetup.interfaces.EXTENSION"
+        directory="profiles/upgrades/metadata_catalogue"
+    />
+
+    <!-- <genericsetup:registerProfile
+        name="uninstall"
+        title="Uninstall: Plone Theme: WISE Theme"
+        description="Uninstalls the Plone theme package wise.theme."
+        provides="Products.GenericSetup.interfaces.EXTENSION"
+        directory="profiles/uninstall"
+        post_handler=".setuphandlers.uninstall"
+    /> -->
+
+    <subscriber
+        for=".interfaces.ICatalogueMetadata
+           zope.lifecycleevent.IObjectCreatedEvent"
+      handler=".behavior.set_thumbnail"
+      />
+
+  <subscriber
+      for="*
+           Products.DCWorkflow.interfaces.IAfterTransitionEvent"
+      handler=".behavior.unset_effective_date"
+      />
+
+  <utility
+      factory=".setuphandlers.HiddenProfiles"
+      name="wise.theme-hiddenprofiles"
+      />
+
+  <interface interface=".interfaces.IHomepage" />
+  <interface interface=".interfaces.IFullWidthLayout" />
+  <interface interface=".interfaces.ICountriesFactsheetDatabase" />
+
+  <utility
+      name="wise_basemap_layers"
+      component=".vocabulary.layers_vocabulary"
+      />
+
+  <utility
+      name="wise_countries_vocabulary"
+      component=".vocabulary.countries_vocabulary"
+      />
+
+  <utility
+      name="wise_subthemes_vocabulary"
+      component=".vocabulary.subthemes_vocabulary"
+      />
+
+  <utility
+      name="wise_organisations_vocabulary"
+      component=".vocabulary.organisations_vocabulary"
+      />
+
+  <utility
+      name="wise_types_vocabulary"
+      component=".vocabulary.types_vocabulary"
+      />
+
+  <utility
+      name="wise_dpsir_vocabulary"
+      component=".vocabulary.dpsir_vocabulary"
+      />
+
+  <utility
+      name="wise_theme_vocabulary"
+      component=".vocabulary.ThemeVocabularyFactory"
+      />
+
+  <utility
+    name="wise_legislative_vocabulary"
+    component=".vocabulary.legislative_vocabulary"
+    />
+
+  <adapter
+      factory=".catalog.has_default_page"
+      name="has_default_page"
+      />
+
+  <adapter
+      factory=".catalog.block_types"
+      name="block_types"
+      />
+
+  <adapter factory=".siblings.Siblings" name="siblings"/>
+
+  <plone:service
+    method="GET"
+    for="zope.interface.Interface"
+    factory=".siblings.SiblingsGet"
+    name="@siblings"
+    permission="zope2.View"
+    />
+</configure>

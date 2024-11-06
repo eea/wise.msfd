@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<object name="portal_properties" meta_type="Plone Properties Tool">
+ <object name="navtree_properties" meta_type="Plone Property Sheet">
+  <property name="title">NavigationTree properties</property>
+ </object>
+ <object name="site_properties" meta_type="Plone Property Sheet">
+  <property name="title">Site wide properties</property>
+  <property name="preload_css" type="boolean">True</property>
+ </object>
+</object>

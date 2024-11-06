@@ -1,0 +1,211 @@
+{
+    "fields_mapping": [
+        {
+            "name": "CodeCatalogue",
+            "listing": {
+                "visible": true,
+                "title": "CodeCatalogue",
+                "pos": 10,
+                "display": { "pre": "", "field": "CodeCatalogue", "post": "</td>" }
+            },
+            "facet": {
+                "pos": 10,
+                "visible": false
+            }
+        },
+        {
+            "name": "Sector",
+            "listing": {
+                "visible": true,
+                "title": "Sector",
+                "pos": 20
+            },
+            "facet": {
+                "pos": 20,
+                "visible": true,
+                "title": "Sector",
+                "type": "facet",
+                "size": 100,
+                "order": "term",
+                "facet_display_options": ["sort", "checkbox"]
+            }
+        },
+        {
+            "name": "Use_or_activity",
+            "listing": {
+                "visible": true,
+                "title": "Use or activity",
+                "pos": 30
+            },
+            "facet": {
+                "pos": 30,
+                "visible": true,
+                "title": "Use or activity",
+                "type": "facet",
+                "size": 100,
+                "order": "term",
+                "facet_display_options": ["sort", "checkbox"]
+            }
+        },
+        {
+            "name": "Measure_name",
+            "listing": {
+                "visible": true,
+                "title": "Measure name",
+                "pos": 40
+            },
+            "facet": {
+                "pos": 40,
+                "visible": false
+            }
+        },
+        {
+            "name": "Status",
+            "listing": {
+                "visible": true,
+                "title": "Status",
+                "pos": 50
+            },
+            "facet": {
+                "pos": 50,
+                "visible": true,
+                "title": "Status",
+                "type": "facet",
+                "size": 100,
+                "order": "term",
+                "facet_display_options": ["sort", "checkbox"]
+            }
+        },
+        {
+            "name": "Origin_of_the_measure",
+            "listing": {
+                "visible": true,
+                "title": "Origin of the measure",
+                "pos": 60
+            },
+            "facet": {
+                "pos": 60,
+                "visible": true,
+                "title": "Origin of the measure",
+                "type": "facet",
+                "size": 100,
+                "order": "term",
+                "facet_display_options": ["sort", "checkbox"]
+            }
+        },
+        {
+            "name": "Nature_of_the_measure",
+            "listing": {
+                "visible": true,
+                "title": "Nature of the measure",
+                "pos": 70
+            },
+            "facet": {
+                "pos": 70,
+                "visible": true,
+                "title": "Nature of the measure",
+                "type": "facet",
+                "size": 100,
+                "order": "term",
+                "facet_display_options": ["sort", "checkbox"]
+            }
+        },
+        {
+            "name": "Water_body_category",
+            "listing": {
+                "visible": true,
+                "title": "Water body category",
+                "pos": 80
+            },
+            "facet": {
+                "pos": 80,
+                "visible": true,
+                "title": "Water body",
+                "type": "facet",
+                "size": 100,
+                "order": "term",
+                "facet_display_options": ["sort", "checkbox"]
+            }
+        },
+        {
+            "name": "Spatial_scope",
+            "listing": {
+                "visible": true,
+                "title": "Spatial scope",
+                "pos": 90
+            },
+            "facet": {
+                "pos": 90,
+                "visible": true,
+                "title": "Spatial scope",
+                "type": "facet",
+                "size": 100,
+                "order": "term",
+                "facet_display_options": ["sort", "checkbox"]
+            }
+        },
+        {
+            "name": "Country",
+            "listing": {
+                "visible": true,
+                "title": "Country",
+                "pos": 100
+            },
+            "facet": {
+                "pos": 100,
+                "visible": true,
+                "title": "Country",
+                "type": "facet",
+                "size": 100,
+                "order": "term",
+                "facet_display_options": ["sort", "checkbox"]
+            }
+        },
+        {
+            "name": "Measure_Impacts_to",
+            "listing": {
+                "visible": true,
+                "title": "Measure Impacts to",
+                "pos": 110
+            },
+            "facet": {
+                "pos": 110,
+                "visible": true,
+                "title": "Measure Impacts to",
+                "type": "facet",
+                "size": 100,
+                "order": "term",
+                "facet_display_options": ["sort", "checkbox"]
+            }
+        },
+        {
+            "name": "Measure_Impacts_to__further_details_",
+            "listing": {
+                "visible": true,
+                "title": "Measure Impacts to (further details)",
+                "pos": 120
+            },
+            "facet": {
+                "pos": 120,
+                "visible": false
+            }
+        },
+        {
+            "name": "Descriptors",
+            "listing": {
+                "visible": true,
+                "title": "Descriptors",
+                "pos": 130
+            },
+            "facet": {
+                "pos": 130,
+                "visible": true,
+                "title": "Descriptors",
+                "type": "facet",
+                "size": 100,
+                "order": "term",
+                "facet_display_options": ["sort", "checkbox"]
+            }
+        }
+    ]
+}

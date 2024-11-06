@@ -1,0 +1,102 @@
+<tal:cond tal:condition="exists: context/dashboard_url">
+  <div tal:define="url context/dashboard_url" tal:condition="url">
+    <div class="tableau-wrapper">
+      <div class="toolbar-button dl-button" title="Download">
+        <i class="glyphicon glyphicon-download-alt"></i>
+      </div>
+
+      <div class="tableau-download-dialog">
+        <div class="download-dialog-wrapper">
+          <div class="dialog-header">
+            <i class="glyphicon glyphicon-remove close-download-dialog"></i>
+            <span class="dialog-title">Download</span>
+          </div>
+
+          <div class="dialog-body">
+            <span>Select your file format.</span>
+            <button id="imageExport">Image</button>
+            <button id="dataExport">Data</button>
+            <button id="csvExport">CSV</button>
+            <button id="excelExport">Excel</button>
+            <button id="pdfExport">PDF</button>
+            <button id="pptExport">PowerPoint</button>
+            <button id="workbookExport">Tableau Workbook</button>
+          </div>
+        </div>
+      </div>
+
+      <script>
+        window._tableau = '${url}';
+      </script>
+
+      <div id="vizContainer"></div>
+
+      <script
+        type="text/javascript"
+        src="https://public.tableau.com/javascripts/api/tableau-2.min.js"></script>
+
+      <script>
+        //<![CDATA[
+          jQuery(document).ready(function() {
+            var viz;
+            function initViz() {
+              var containerDiv = document.getElementById("vizContainer");
+              url = window._tableau;
+
+              viz = new tableau.Viz(containerDiv, url, {
+                height: "900px",
+                width: "100%",
+                hideToolbar: true,
+              });
+            }
+
+            initViz();
+
+            $(".dl-button").prependTo(".dataviz-toolbar");
+            $(".tableau-download-dialog").appendTo(".dataviz-toolbar");
+
+            $("body").on("click", ".close-download-dialog", function () {
+              $(".tableau-download-dialog").hide();
+            });
+
+            $("body").on("click", ".dl-button", function() {
+              $(".tableau-download-dialog").show();
+            });
+
+            $("body").on("click", "#imageExport", function() {
+              viz.showExportImageDialog();
+            });
+
+            $("body").on("click", "#pdfExport", function() {
+              viz.showExportPDFDialog();
+            });
+
+            $("body").on("click", "#pptExport", function() {
+              viz.showExportPowerPointDialog();
+            });
+
+            $("body").on("click", "#csvExport", function() {
+              viz.showExportCrossTabDialog();
+            });
+
+            $("body").on("click", "#excelExport", function() {
+              viz.exportCrossTabToExcel();
+            });
+
+            $("body").on("click", "#dataExport", function() {
+              viz.showExportDataDialog();
+            });
+
+            $("body").on("click", "#workbookExport", function() {
+              try {
+                viz.showDownloadWorkbookDialog();
+              } catch (err) {
+                alert("Permissions are required to download the workbook.");
+              }
+            });
+          });
+        //]]>
+      </script>
+    </div>
+  </div>
+</tal:cond>

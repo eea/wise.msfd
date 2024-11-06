@@ -12,6 +12,7 @@
   <include package=".search" />
   <include package=".compliance" />
   <include package=".translation" />
+  <include package=".wisetheme" />
 
   <include file="profiles.zcml" />
   <include file="utility.zcml" />

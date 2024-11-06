@@ -1,0 +1,65 @@
+<div class="frontpage-reports-container">
+  <div class="fp-wrapper reports-wrapper"
+       tal:define="reports view/reports"
+       tal:condition="reports">
+
+    <h3 class="fp-heading">Latest publications and reports</h3>
+    <div class="row" tal:on-error="nothing">
+      <div class="col-md-12 col-sm-12">
+        <div class="reports">
+          <div tal:repeat="report reports" class="report-tile">
+            <div class="tile-wrapper">
+              <div tal:define="url string:${report/absolute_url}/@@images/image">
+                <div class="report-tile-img lazyload" tal:attributes="data-bg url">
+                </div>
+                <!-- <img tal:attributes="src string:${report/absolute_url}/@@images/image/thumb" /> -->
+              </div>
+              <div class="report-tile-content">
+                <a href=""
+                  tal:attributes="href report/external_url"
+                  target="_blank"
+                  rel="noopener"
+                  class="report-title-link">
+                  <h4 class="report-tile-title" tal:content="report/Title">Title</h4>
+                </a>
+                <div>
+                  <!-- <div class="published-info">Published on: <span tal:content="python: report.effective().Date()" >Effective</span></div> -->
+                  <p tal:content="report/Description">
+                    Description
+                  </p>
+
+                </div>
+              </div>
+              <div class="report-tile-bottom">
+                <a href=""
+                  target="_blank"
+                  tal:attributes="href report/remoteUrl"
+                  class="open-report-link">
+                  <img
+                    class="lazyload"
+                    alt="Newspaper icon"
+                    height="15"
+                    width="22"
+                    data-src="/marine/++theme++wise-theme/static/images/newspaper.svg"/>
+                    Open Publication
+                  </a>
+                </div>
+
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- <div class="col-md-4 col-sm-12">
+        <div class="reports-description"
+          tal:repeat="report python: view.reports()[:1]">
+          <div tal:condition="report/aq_parent/text|nothing"
+            tal:replace="structure report/aq_parent/text/output">
+            Report parent folder description
+          </div>
+        </div>
+      </div> -->
+
+    </div>
+  </div>
+</div>

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<object name="portal_catalog">
+   <index name="theme" meta_type="KeywordIndex">
+      <indexed_attr value="theme"/>
+   </index>
+   <index name="has_default_page" meta_type="FieldIndex">
+      <indexed_attr value="has_default_page"/>
+   </index>
+   <column value="has_default_page"/>
+
+   <index name="block_types" meta_type="KeywordIndex">
+    <indexed_attr value="block_types"/>
+  </index>
+</object>

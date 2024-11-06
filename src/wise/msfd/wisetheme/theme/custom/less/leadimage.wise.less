@@ -1,0 +1,83 @@
+// PAGE BANNER
+
+.template-edit {
+  .leadimage-header {
+    display: none !important;
+  }
+}
+
+.leadimage-view {
+  .leadImageOverride {
+    position: relative;
+  }
+
+  .leadimage-header {
+    position: relative;
+    display: block;
+  }
+
+  .leadimage-container {
+    overflow: hidden;
+    height: 360px;
+  }
+
+  .leadimage-wrapper {
+    height: 360px;
+
+    .leadimage {
+      height: 100%;
+      background-size: cover;
+      background-repeat: no-repeat;
+      background-position: center;
+      background-color: rgba(0, 0, 0, 0.8);
+    }
+  }
+
+  .leadimage-caption {
+    position: relative;
+    bottom: 1.5em;
+  }
+
+  .caption-description {
+    color: #fff;
+    font-size: 11px;
+    opacity: 0.8;
+    text-shadow: 1px 1px 1px #000;
+    font-style: italic;
+  }
+
+  .title-container {
+    position: absolute;
+    left: 0;
+    right: 0;
+    margin-left: auto;
+    margin-right: auto;
+    bottom: 15%;
+    z-index: 997;
+    text-align: left;
+  }
+
+  .leadimage-title {
+    color: #fff;
+    font-size: 40px;
+    font-family: "PoppinsB";
+    margin: 0;
+
+    @media only screen and (max-width: @screen-xs-min) {
+      font-size: 30px;
+    }
+  }
+
+  .image-layer {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+      to bottom,
+      rgba(0, 0, 0, 0.1),
+      rgba(0, 0, 0, 0.5) 100%
+    );
+  }
+}

@@ -46,22 +46,42 @@ setup(
         'setuptools',
         'plone.api',
         'plone.app.contenttypes',
-
         'zope.sqlalchemy==2.0',
         'pymssql==2.2.8',
         'SQLAlchemy==1.4.46',
         'sparql-client',
         # 'pyodbc',
         'langdetect',  # used in translations
-        'pyexcel-xlsx',
-
+        # 'pyexcel-xlsx',
         'z3c.formwidget.optgroup',  # used in compliance select lists
         'eea.cache',        # generic caching solution
         'Products.CMFPlacefulWorkflow',
+        # from wise.theme
+        'Products.GenericSetup>=1.8.2',
+        'z3c.jbot',
+        'plone.app.theming',
+        'plone.app.themingplugins',
+        'plone.app.robotframework',
+        'plone.app.testing',
+        'eea.api.dataconnector',
+        'webcouturier.dropdownmenu',
+        'robotsuite',
+        'pyexcel==0.6.7',
+        'pyexcel-xlsx==0.6.0',
+        'openpyxl==3.0.10',
+        'pdfkit',
+
     ],
     extras_require={
         'test': [
             'plone.app.testing',
+            # Plone KGS does not use this version, because it would break
+            # Remove if your package shall be part of coredev.
+            # plone_coredev tests as of 2016-04-01.
+            'plone.testing>=5.0.0',
+            'plone.app.contenttypes',
+            'plone.app.robotframework[debug]',
+
         ],
     },
     # entry_points="""

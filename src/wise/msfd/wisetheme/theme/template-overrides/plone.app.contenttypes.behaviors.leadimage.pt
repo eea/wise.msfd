@@ -1,0 +1,24 @@
+<div class="leadImageOverride"
+     tal:condition="view/available">
+
+  <div class="leadimage-container">
+    <div class="leadimage-wrapper"
+         tal:define="url string:${context/@@plone_context_state/object_url}/@@images/image">
+      <div class="leadimage"
+           tal:attributes="style string:background-image:url('${url}')">
+     </div>
+     <div class="image-layer"></div>
+     <div class="container title-container">
+       <h1 class="leadimage-title" tal:content="context/Title"></h1>
+     </div>
+    </div>
+    <div class="leadimage-caption">
+      <div class="container">
+        <div tal:condition="context/image_caption|nothing"
+             tal:content="context/image_caption"
+             class="caption-description">
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

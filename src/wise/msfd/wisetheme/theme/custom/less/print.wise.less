@@ -1,0 +1,348 @@
+@media print {
+  @page {
+    margin: 1.5cm 0.5cm;
+  }
+
+  * {
+    -webkit-print-color-adjust: exact !important;
+    color-adjust: exact !important;
+  }
+
+  html,
+  body {
+    height: 100%;
+  }
+
+  a {
+    page-break-inside: avoid;
+  }
+
+  a[href]:after {
+    content: none !important;
+  }
+
+  blockquote {
+    page-break-inside: avoid;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    page-break-after: avoid;
+    page-break-inside: avoid;
+  }
+
+  img {
+    page-break-before: auto;
+    page-break-after: auto;
+    page-break-inside: avoid;
+  }
+
+  p {
+    page-break-inside: avoid;
+    position: relative;
+  }
+
+  table,
+  pre {
+    page-break-inside: avoid;
+  }
+
+  ul,
+  ol,
+  dl {
+    page-break-before: avoid;
+  }
+
+  #print-button {
+    display: none;
+  }
+}
+
+#visual-portal-wrapper.print {
+  display: block;
+  height: auto !important;
+  padding-left: 0;
+
+  .outer-wrapper {
+    flex: none;
+  }
+
+  .container {
+    padding: 0 !important;
+    width: 670px !important;
+  }
+
+  img {
+    page-break-inside: avoid;
+    page-break-after: avoid;
+  }
+
+  table img {
+    padding: 0 10px;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    color: #000 !important;
+  }
+
+  a,
+  a > span {
+    color: #0077bc !important;
+  }
+
+  a[href]:after {
+    content: none;
+  }
+
+  table img {
+    height: auto;
+    width: 100%;
+  }
+
+  #content-core p {
+    color: #000 !important;
+  }
+
+  #edit-zone,
+  #select-countries-dropdown,
+  #print-button,
+  .print-btn-wrapper,
+  .footer-wrapper,
+  .right-actions-section,
+  .plone-breadcrumb,
+  .portletNavigationTree,
+  .right-sidebar,
+  .leadimage,
+  .image-layer,
+  .leadimage-caption,
+  .documentByLine,
+  .country-authorities .read-more,
+  .dataviz-toolbar,
+  .read-more-btn,
+  .article-link,
+  .toc-wrapper,
+  .marine-divider,
+  .scroll-to-top {
+    display: none;
+  }
+
+  .articles-wrapper {
+    display: block;
+  }
+
+  .article-box {
+    page-break-inside: avoid;
+    display: inline-block;
+  }
+
+  .article-box-header {
+    min-height: 70px;
+  }
+
+  .article-box-wrapper {
+    background-color: #59d3ff !important;
+  }
+
+  .collapse-content {
+    height: auto;
+    overflow: visible;
+  }
+
+  .tableau-vis {
+    display: none !important;
+  }
+
+  .leadimage-wrapper,
+  .leadimage-container {
+    height: auto;
+  }
+
+  .leadimage-title {
+    margin-top: 0;
+  }
+
+  .title-container {
+    position: relative !important;
+  }
+
+  .bottom-links {
+    margin-bottom: 2em;
+  }
+
+  .portlet {
+    page-break-inside: avoid;
+    page-break-after: avoid;
+  }
+
+  .site-logo-text {
+    color: #999 !important;
+  }
+
+  #content-header {
+    margin-bottom: 1em;
+  }
+
+  .tile-listing-wrapper .tile-title {
+    min-height: auto;
+    margin-bottom: 10px;
+  }
+
+  .dataTables_filter,
+  .dataTables_length {
+    display: none;
+  }
+
+  .dataTables_wrapper table.dataTable {
+    width: 100% !important;
+  }
+
+  .dataTables_wrapper table.dataTable thead th {
+    color: #fff;
+  }
+
+  .col-sm-4,
+  .col-md-4,
+  .col-md-8,
+  .col-sm-8,
+  .col-md-6,
+  .col-sm-9,
+  .col-lg-6 {
+    width: 100%;
+  }
+
+  .tableau-thumb {
+    display: block;
+    width: 100%;
+  }
+
+  .factsheet-tableau-vis {
+    display: none !important;
+  }
+
+  .label {
+    border: none;
+  }
+
+  .portlet {
+    .portletHeader,
+    .portletContent > *,
+    .portletContent > div:not(.portalMessage) {
+      padding-left: 0;
+    }
+  }
+
+  #country-factsheet {
+    .country-header-container {
+      background-color: #fff;
+      color: #000;
+    }
+
+    .country-map-thumb {
+      display: block;
+      margin-bottom: 2.5em;
+    }
+
+    .marine-country-map {
+      display: none;
+    }
+
+    .country-dashboard-section {
+      page-break-inside: avoid;
+      page-break-after: avoid;
+
+      &:not(:first-child) {
+        margin-top: 2em;
+      }
+    }
+
+    .map-info {
+      margin-top: 1em;
+    }
+
+    .marine-data {
+      margin: 1.5em 0;
+      border: none;
+      min-height: auto;
+    }
+
+    .listing-title-wrapper {
+      border-top: 1px solid #002d54;
+      padding-top: 1.5em;
+    }
+
+    .country-authorities {
+      background-color: #fff;
+      color: inherit;
+
+      .msp-link {
+        text-align: left;
+        margin-top: 0.5em;
+      }
+
+      .dd-list {
+        display: block !important;
+      }
+
+      a {
+        font-family: "PoppinsR";
+      }
+
+      li {
+        color: @link-color;
+      }
+    }
+
+    .marine-stats {
+      margin-bottom: 2em;
+    }
+
+    .marine-number:first-child {
+      margin-bottom: 2em;
+    }
+
+    .country-data-wrapper {
+      page-break-inside: avoid;
+      page-break-after: avoid;
+      margin: 0 -15px;
+      margin-top: 1.5em;
+    }
+
+    .ch-col {
+      padding: 0 15px;
+    }
+
+    .country-conventions .dd-content {
+      border-bottom: 1px solid transparent;
+      margin-bottom: 0;
+      padding-bottom: 0;
+    }
+  }
+
+  // wise msfd
+  .wise-search-form-container dd,
+  #wise-search-form dd {
+    overflow: auto;
+    max-height: auto;
+  }
+
+  .ui-autocomplete {
+    display: none;
+  }
+
+  .controls {
+    background-color: #ddd !important;
+  }
+
+  #form-buttons-download {
+    display: none;
+  }
+}

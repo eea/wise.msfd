@@ -1,0 +1,9 @@
+{
+  "searchlib": {
+    "url": "https://github.com/eea/searchlib.git",
+    "branch": "develop",
+    "path": "packages/searchlib",
+    "package": "@eeacms/search",
+    "develop": true
+  }
+}

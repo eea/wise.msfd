@@ -1,0 +1,149 @@
+//* // HOMEPAGE SLIDER //*//
+
+#slideshow {
+  max-width: 100% !important;
+  width: 100%;
+  height: 550px;
+}
+
+.slider-container {
+  position: relative;
+}
+
+.slideContainer {
+  width: 100%;
+  position: relative;
+}
+
+.slider-image-wrapper {
+  height: 550px;
+  overflow: hidden;
+
+  @media only screen and (max-width: @screen-xs-min) {
+    height: 410px;
+  }
+}
+
+.slider-caption {
+  position: absolute;
+  left: 0;
+  right: 0;
+  margin-left: auto;
+  margin-right: auto;
+  bottom: 15%;
+  color: #fff;
+  z-index: 99;
+}
+
+.slider-title {
+  color: #fff;
+  font-size: 40px;
+  font-family: "PoppinsSemiB";
+}
+
+.slider-title,
+.slider-description {
+  max-width: 650px;
+  padding: 10px 0;
+}
+
+.slider-description {
+  font-family: "PoppinsL";
+  font-size: 18px;
+}
+
+.slider-image {
+  height: 100%;
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: left center;
+}
+
+.slider-layer {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 9;
+  background-image: linear-gradient(to left, transparent, rgba(0, 0, 0, 0.7));
+}
+
+.slider-actions {
+  position: absolute;
+  left: 0;
+  right: 0;
+  margin-left: auto;
+  margin-right: auto;
+  bottom: 5%;
+  z-index: 997;
+  text-align: right;
+}
+
+.slider-copyright {
+  position: relative;
+  top: 65px;
+  font-size: 11px;
+  opacity: 0.6;
+  text-shadow: 1px 1px 1px #000;
+  font-family: "PoppinsR";
+}
+
+/* Arrows */
+
+.slide-prev,
+.slide-next {
+  display: inline-block;
+  width: 35px;
+  height: 35px;
+  cursor: pointer;
+  background: @darker-blue;
+  text-align: center;
+}
+
+.slide-prev:hover:before,
+.slide-prev:focus:before,
+.slide-next:hover:before,
+.slide-next:focus:before {
+  opacity: 1;
+}
+
+.slide-prev:before,
+.slide-next:before {
+  font-family: @icon-font-family;
+  font-size: 20px;
+  line-height: 1.7;
+  opacity: 0.75;
+  color: white;
+
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.slide-prev {
+  margin-right: -2px;
+}
+
+.slide-prev:before {
+  content: "\e257";
+}
+
+.slide-next:before {
+  content: "\e258";
+}
+
+@media screen and (max-width: 800px) {
+  .slider-caption {
+    display: block;
+  }
+
+  .slider-title {
+    width: 100%;
+    font-size: 18px;
+  }
+
+  .slider-description {
+    width: 100%;
+    font-size: 16px;
+  }
+}

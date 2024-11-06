@@ -1,0 +1,38 @@
+.standalone,
+.context,
+.destructive,
+[type="submit"],
+button {
+  border-radius: 0;
+  font-family: "RobotoM";
+}
+
+.context {
+  background-color: @darker-blue;
+}
+
+.context:hover,
+.context:focus,
+.context:active,
+.context.active,
+.open > .dropdown-toggle.context {
+  background-color: @blue;
+}
+
+.standalone:focus,
+.context:focus,
+.destructive:focus,
+[type="submit"]:focus,
+button:focus,
+.standalone:active:focus,
+.context:active:focus,
+.destructive:active:focus,
+[type="submit"]:active:focus,
+button:active:focus,
+.standalone.active:focus,
+.context.active:focus,
+.destructive.active:focus,
+[type="submit"].active:focus,
+button.active:focus {
+  outline: none;
+}

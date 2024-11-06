@@ -1,0 +1,5 @@
+<div class="col-xs-12 col-md-6 bottom-links reference-links"
+     tal:condition="python:context.reference_links">
+    <h3>References</h3>
+    <tal:cont tal:content="structure python: context.reference_links.output"></tal:cont>
+</div>

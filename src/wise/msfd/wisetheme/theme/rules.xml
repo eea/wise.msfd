@@ -1,0 +1,321 @@
+<?xml version="1.0" encoding="utf-8"?>
+<rules xmlns="http://namespaces.plone.org/diazo"
+  xmlns:css="http://namespaces.plone.org/diazo/css"
+  xmlns:xhtml="http://www.w3.org/1999/xhtml"
+  xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+  xmlns:xi="http://www.w3.org/2001/XInclude">
+
+  <theme href="index.html" />
+  <notheme css:if-not-content="#visual-portal-wrapper" />
+
+  <rules css:if-content="#portal-top">
+    <!-- Attributes -->
+    <copy attributes="*" css:theme="html" css:content="html" />
+    <!-- Base tag -->
+    <before css:theme="title" css:content="base" />
+    <!-- Title -->
+    <replace css:theme="title" css:content="title" />
+    <!-- Pull in Plone Meta -->
+    <after css:theme-children="head" css:content="head meta" />
+    <!-- Don't use Plone icons, use the theme's -->
+    <drop css:content="head link[rel='apple-touch-icon']" />
+    <drop css:content="head link[rel='shortcut icon']" />
+    <!-- drop the theme stylesheets -->
+    <drop theme="/html/head/link[rel='stylesheet']" />
+    <!-- CSS -->
+    <after css:theme-children="head" css:content="head style" />
+    <after css:theme-children="head" css:content="head link" />
+    <!-- Script -->
+    <after css:theme-children="body" css:content="head script" />
+  </rules>
+
+  <!-- Copy over the id/class attributes on the body tag. This is important for per-section styling -->
+  <copy attributes="*" css:content="body" css:theme="body" />
+
+  <!-- move global nav -->
+  <replace css:theme-children="#mainnavigation" css:content-children="#portal-mainnavigation" method="raw" />
+
+  <!-- full-width breadcrumb -->
+  <replace css:content="#viewlet-above-content" css:theme="#above-content" />
+
+  <!--hide breadcrumb on homepage-->
+  <!-- <rules css:if-content=".section-front-page">
+    <drop css:content="#viewlet-above-content"/>
+  </rules> -->
+
+
+  <rules css:if-not-content=".section-front-page, .wise-search-form-msfd">
+    <theme href="page.html" />
+  </rules>
+
+  <rules css:if-content=".wise-search-form-msfd">
+    <theme href="msfd.html" />
+  </rules>
+
+  <!-- hide print button on search page-->
+  <rules css:if-content=".template-measures-search">
+    <drop css:theme=".print-btn-wrapper" />
+  </rules>
+
+  <replace css:theme-children="#fp-key-messages" css:content-children=".fp-key-messages-container" method="raw" />
+  <drop css:content-children=".fp-key-messages-container" />
+
+  <replace css:theme-children="#frontpage-reports" css:content-children=".frontpage-reports-container" method="raw" />
+  <drop css:content-children=".frontpage-reports-container" />
+
+  <replace css:theme-children="#frontpage-header-slide" css:content-children=".frontpage-header-slide-container" method="raw" />
+  <drop css:content-children=".frontpage-header-slide-container" />
+
+  <!-- add .fullwidth class for compliance module -->
+  <rules css:if-content=".full-width-marker" css:if-not-content=".leadimage-header">
+    <prepend theme="/html/body">
+      <xsl:attribute name="class">
+        <xsl:value-of select="/html/body/@class"/> fullwidth</xsl:attribute>
+    </prepend>
+  </rules>
+
+  <!-- page lead image -->
+  <rules css:if-content=".leadimage-header" css:if-not-content=".full-width-marker">
+    <drop css:content=".documentFirstHeading" />
+    <prepend theme="/html/body">
+      <xsl:attribute name="class">
+        <xsl:value-of select="/html/body/@class"/> leadimage-view</xsl:attribute>
+    </prepend>
+
+    <drop css:content="#plone-document-byline" />
+    <before css:theme=".print-btn-wrapper">
+      <div class="col-xs-12">
+        <xsl:copy-of select='//*[@id="plone-document-byline"]' />
+      </div>
+    </before>
+  </rules>
+
+  <!-- fix cases when both fullwidth and lead-image is present -->
+  <rules css:if-content=".full-width-marker">
+    <rules css:if-content=".leadimage-header">
+      <prepend theme="/html/body">
+        <xsl:attribute name="class">
+          <xsl:value-of select="/html/body/@class"/> fullwidth leadimage-view</xsl:attribute>
+      </prepend>
+    </rules>
+  </rules>
+
+  <rules css:if-content=".leadImageOverride">
+    <drop css:content=".leadImageOverride" />
+  </rules>
+
+  <!-- <rules css:if-content=".site-Plone" css:if-not-content=".section-front-page">
+    <drop css:content=".slider-container"/>
+  </rules> -->
+
+  <rules css:if-content=".template-countryfactsheet_view">
+    <drop css:content=".documentFirstHeading" />
+
+    <!-- drop lead image from country profile view -->
+    <drop css:content=".leadimage-header" />
+
+    <drop css:content="#viewlet-below-content-title" />
+    <after css:content=".country-authorities">
+      <xsl:copy-of select='//*[@id="viewlet-below-content-title"]' />
+    </after>
+
+    <!-- <drop css:theme=".print-btn-wrapper" /> -->
+    <!-- <after css:content=".country-header-container">
+      <xsl:copy-of select='//*[@class="print-btn-wrapper"]' />
+    </after> -->
+
+    <!-- <replace css:theme="#content-container" method="raw">
+      <xsl:variable name="central">
+        <xsl:if test="//aside[@id='portal-column-one'] and //aside[@id='portal-column-two']">col-xs-12 col-sm-12</xsl:if>
+        <xsl:if test="//aside[@id='portal-column-two'] and not(//aside[@id='portal-column-one'])">col-xs-12 col-sm-12</xsl:if>
+        <xsl:if test="//aside[@id='portal-column-one'] and not(//aside[@id='portal-column-two'])">col-xs-12 col-sm-12</xsl:if>
+        <xsl:if test="not(//aside[@id='portal-column-one']) and not(//aside[@id='portal-column-two'])">col-xs-12 col-sm-12</xsl:if>
+      </xsl:variable>
+
+      <div class="{$central}">
+        <div class="row">
+          <div class="col-xs-12 col-sm-12">
+            <xsl:apply-templates css:select="#content" />
+          </div>
+        </div>
+      </div>
+    </replace> -->
+
+    <!-- <before css:theme&#45;children="#column2&#45;container" css:content="#select&#45;countries&#45;dropdown" /> -->
+
+  </rules>
+
+  <rules css:if-content=".template-tilelisting_view">
+    <replace css:theme="#content-container" method="raw">
+      <xsl:variable name="central">
+        <xsl:if test="//aside[@id='portal-column-one'] and //aside[@id='portal-column-two']">col-xs-12 col-sm-12</xsl:if>
+        <xsl:if test="//aside[@id='portal-column-two'] and not(//aside[@id='portal-column-one'])">col-xs-12 col-sm-9</xsl:if>
+        <xsl:if test="//aside[@id='portal-column-one'] and not(//aside[@id='portal-column-two'])">col-xs-12 col-sm-12</xsl:if>
+        <xsl:if test="not(//aside[@id='portal-column-one']) and not(//aside[@id='portal-column-two'])">col-xs-12 col-sm-12</xsl:if>
+      </xsl:variable>
+
+      <div class="{$central}">
+        <div class="row">
+          <div class="col-xs-12 col-sm-12">
+            <xsl:apply-templates css:select="#content" />
+          </div>
+        </div>
+      </div>
+    </replace>
+
+    <!-- Left column -->
+    <rules css:if-content="#portal-column-one">
+      <replace css:theme="#column1-container">
+        <div id="sidebar" class="col-xs-12 col-sm-3 sidebar-offcanvas">
+          <aside id="portal-column-one">
+            <xsl:copy-of css:select="#portal-column-one > *" />
+          </aside>
+        </div>
+      </replace>
+    </rules>
+
+    <!-- Right column -->
+    <rules css:if-content="#portal-column-two">
+      <replace css:theme="#column2-container">
+        <div id="sidebar" class="col-xs-12 col-sm-3 sidebar-offcanvas" role="complementary">
+          <aside id="portal-column-two">
+            <xsl:copy-of css:select="#portal-column-two > *" />
+          </aside>
+        </div>
+      </replace>
+    </rules>
+
+    <replace css:content="#viewlet-below-content" css:theme="#below-content" />
+  </rules>
+
+  <!-- Central column -->
+  <rules css:if-not-content="#wise-search-form">
+    <replace css:theme="#content-container" method="raw">
+      <xsl:variable name="central">
+        <xsl:if test="//aside[@id='portal-column-one'] and //aside[@id='portal-column-two']">col-xs-12 col-sm-4</xsl:if>
+        <xsl:if test="//aside[@id='portal-column-two'] and not(//aside[@id='portal-column-one'])">col-xs-12 col-sm-8</xsl:if>
+        <xsl:if test="//aside[@id='portal-column-one'] and not(//aside[@id='portal-column-two'])">col-xs-12 col-sm-8</xsl:if>
+        <xsl:if test="not(//aside[@id='portal-column-one']) and not(//aside[@id='portal-column-two'])">col-xs-12 col-sm-12</xsl:if>
+      </xsl:variable>
+
+      <div class="{$central}">
+        <!-- <p class="pull-right visible-xs">
+        <button type="button" class="btn btn-primary btn-xs" data-toggle="offcanvas">Toggle nav</button>
+      </p> -->
+        <div class="row">
+          <div class="col-xs-12 col-sm-12">
+            <xsl:apply-templates css:select="#content" />
+          </div>
+        </div>
+      </div>
+    </replace>
+    <replace css:content="#viewlet-below-content" css:theme="#below-content" />
+    <drop css:theme=".msfd-search-wrapper"/>
+  </rules>
+
+  <!-- MSFD search -->
+  <!-- When copying content to right side, only copy the fields and buttons.  -->
+  <xsl:template css:match="#wise-search-form .left-side-form">
+    <xsl:for-each css:select=".field">
+      <xsl:copy-of select="current()" ></xsl:copy-of>
+    </xsl:for-each>
+    <xsl:for-each css:select=".formControls">
+      <xsl:copy-of select="current()" ></xsl:copy-of>
+    </xsl:for-each>
+  </xsl:template>
+
+  <!-- Remove the nav pills from the sidebar -->
+  <xsl:template css:match="#wise-search-form-top" ></xsl:template>
+
+  <!-- msfd start page -->
+  <rules css:if-content=".template-msfd-start">
+    <replace css:theme-children=".intro-text" css:content="#wise-search-form > *" />
+    <replace css:content="#viewlet-below-content" css:theme="#below-content" />
+    <drop css:theme=".msfd-search-wrapper"/>
+  </rules>
+
+  <rules css:if-content="#wise-search-form" css:if-not-content=".template-msfd-start">
+    <!-- Copy everything to the right side. The content is that is copied
+         will be filtered by the xsl:template match-->
+    <replace css:theme-children=".side-section" css:content="#wise-search-form > *" />
+    <drop css:theme=".msfd-landing-page"/>
+    <drop css:theme="#viewlet-below-content"/>
+  </rules>
+
+  <rules css:if-content="#wise-search-form">
+    <!-- Replace the main content side with the content that is suitable for
+         the left side -->
+    <replace css:theme-children=".center-section">
+      <div id="content">
+        <div id="wise-search-form">
+          <xsl:for-each css:select="#wise-search-form-top">
+            <xsl:copy-of select="current()" ></xsl:copy-of>
+          </xsl:for-each>
+          <xsl:for-each css:select="#wise-search-form .left-side-form">
+            <xsl:copy-of select="current()" ></xsl:copy-of>
+          </xsl:for-each>
+        </div>
+      </div>
+    </replace>
+
+    <!-- drop sidebars -->
+    <drop css:theme="#column1-container"/>
+    <drop css:theme="#column2-container"/>
+  </rules>
+
+  <!-- Alert message -->
+  <replace css:theme-children="#global_statusmessage" css:content-children="#global_statusmessage" />
+
+  <!-- Left column -->
+  <rules css:if-content="#portal-column-one">
+    <replace css:theme="#column1-container">
+      <div id="sidebar" class="col-xs-12 col-sm-4 sidebar-offcanvas">
+        <aside id="portal-column-one">
+          <xsl:copy-of css:select="#portal-column-one > *" />
+        </aside>
+      </div>
+    </replace>
+  </rules>
+
+  <!-- Right column -->
+  <rules css:if-content="#portal-column-two">
+    <replace css:theme="#column2-container">
+      <div id="sidebar" class="col-xs-12 col-sm-4 sidebar-offcanvas" role="complementary">
+        <aside id="portal-column-two">
+          <xsl:copy-of css:select="#portal-column-two > *" />
+        </aside>
+      </div>
+    </replace>
+  </rules>
+
+  <!-- Content header -->
+  <!-- <replace css:theme="#portal-top" css:content-children="#portal-top" /> -->
+
+  <!-- Global Search box -->
+  <copy attributes="action method" css:content="#portal-searchbox form" css:theme=".search-modal form" />
+
+  <replace css:theme="#portal-anontools" css:content-children="#portal-anontools" />
+
+  <!-- login and user actions -->
+  <rules if-not="$is_anon">
+    <drop css:theme=".login-link" />
+  </rules>
+  <copy attributes="class href data-pat-plone-modal" css:content="#personaltools-login" css:theme=".login-link"/>
+
+  <rules if="$is_anon">
+    <drop css:theme=".user-actions" />
+  </rules>
+  <replace css:theme="#portal-personaltools" css:content="#personal-bar-container" />
+
+  <!-- Footer -->
+  <replace css:theme-children="#portal-footer" css:content-children="#portal-footer-wrapper" />
+
+  <!-- body -->
+  <drop css:content="body script" />
+  <after css:theme-children="body" css:content="body script" method="raw" />
+
+  <!-- toolbar -->
+  <replace css:theme="#portal-toolbar" css:content-children="#edit-bar" css:if-not-content=".ajax_load" css:if-content=".userrole-authenticated" />
+  <replace css:theme="#anonymous-actions" css:content-children="#portal-personaltools-wrapper" css:if-not-content=".ajax_load" css:if-content=".userrole-anonymous" />
+
+</rules>
