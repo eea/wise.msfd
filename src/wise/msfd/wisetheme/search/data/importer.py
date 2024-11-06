@@ -211,10 +211,11 @@ def main():
             if k in main \
                     and main[k] \
                     and main[k].lower() != v.lower():
-                print(
-                    f"Data conflict at position: : {i} ({main['_id']})")
-                print(f"Key: {k}. Conflicting sheet: {measure_name}.")
-                print(f"Master value: <{main[k]}>. Sheet value: <{v}>")
+                print("Data conflict at position: : {} ({})".format(
+                    i, main['_id']))
+                print("Key: {}. Conflicting sheet: {}.".format(k, measure_name))
+                print("Master value: <{}>. Sheet value: <{}>".format(
+                    main[k], v))
                 print("")
             else:
                 main[k] = v
@@ -230,7 +231,7 @@ def main():
         main['_index'] = index
 
     ids = set([rec['_id'] for rec in master_data])
-    print(f"Unique records: {len(ids)}")
+    print("Unique records: {}".format(len(ids)))
 
     resp = conn.indices.create(
         index,
@@ -246,7 +247,7 @@ def main():
     for doc in master_data:
         body.append(json.dumps({"create": doc}))
 
-    print(f"Indexing {len(master_data)} documents")
+    print("Indexing {} documents".format(len(master_data)))
     num_docs = len(master_data)
     progress = tqdm.tqdm(unit="docs", total=num_docs)
 
