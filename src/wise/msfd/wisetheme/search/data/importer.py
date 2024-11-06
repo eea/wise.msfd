@@ -41,7 +41,7 @@ def read_details_csv_files(location):
 
     res = {}
     for index, items in data.items():
-        res[index] = dict(zip([item['_id'] for item in items], items))
+        res[index] = dict(zip([i['_id'] for i in items], items))
 
     return res
 
@@ -230,7 +230,7 @@ def main():
         main['_id'] = _id
         main['_index'] = index
 
-    ids = set([rec['_id'] for rec in master_data])
+    ids = set([r['_id'] for r in master_data])
     print("Unique records: {}".format(len(ids)))
 
     resp = conn.indices.create(

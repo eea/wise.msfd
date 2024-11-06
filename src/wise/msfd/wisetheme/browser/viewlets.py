@@ -96,8 +96,7 @@ class FrontpageKeyMessagesViewlet(ViewletBase):
         if not isinstance(image, NamedBlobImage):
             return None
 
-        url = '{0}/@@images/image/large'.format(
-            obj.absolute_url(), image.filename)
+        url = '{0}/@@images/image/large'.format(obj.absolute_url())
         return url
 
 

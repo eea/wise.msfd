@@ -1,6 +1,6 @@
 # pylint: skip-file
 from __future__ import absolute_import
-from zope.interface import provider, implementer
+from zope.interface import provider
 from zope.schema.interfaces import IVocabularyFactory
 from plone.app.vocabularies.catalog import KeywordsVocabulary as BKV
 from zope.schema.vocabulary import SimpleTerm, SimpleVocabulary
