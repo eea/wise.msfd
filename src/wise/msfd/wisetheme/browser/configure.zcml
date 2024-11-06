@@ -1,0 +1,184 @@
+<configure
+    xmlns="http://namespaces.zope.org/zope"
+    xmlns:browser="http://namespaces.zope.org/browser"
+    xmlns:cmf="http://namespaces.zope.org/cmf"
+    xmlns:five="http://namespaces.zope.org/five"
+    xmlns:genericsetup="http://namespaces.zope.org/genericsetup"
+    xmlns:i18n="http://namespaces.zope.org/i18n"
+    xmlns:plone="http://namespaces.plone.org/plone"
+    xmlns:z3c="http://namespaces.zope.org/z3c"
+    i18n_domain="wise.theme"
+    >
+
+  <adapter
+      factory=".portlets.OverridePortletManagerRenderer"
+      provides="plone.portlets.interfaces.IPortletManagerRenderer"
+      />
+
+  <adapter
+      factory="plone.app.portlets.browser.editmanager.EditPortletManagerRenderer"
+      provides="plone.portlets.interfaces.IPortletManagerRenderer"
+      for="zope.interface.Interface
+           wise.theme.interfaces.IWiseThemeLayer
+           plone.app.portlets.browser.interfaces.IManageColumnPortletsView
+           plone.portlets.interfaces.IPortletManager"
+      />
+  <adapter
+      factory="plone.app.portlets.browser.editmanager.ContextualEditPortletManagerRenderer"
+      provides="plone.portlets.interfaces.IPortletManagerRenderer"
+      for="zope.interface.Interface
+           wise.theme.interfaces.IWiseThemeLayer
+           plone.app.portlets.browser.interfaces.IManageContextualPortletsView
+           plone.portlets.interfaces.IPortletManager"
+      />
+
+  <adapter
+      factory="plone.app.portlets.browser.editmanager.DashboardEditPortletManagerRenderer"
+      provides="plone.portlets.interfaces.IPortletManagerRenderer"
+      for="zope.interface.Interface
+           wise.theme.interfaces.IWiseThemeLayer
+           plone.app.portlets.browser.interfaces.IManageDashboardPortletsView
+           plone.app.portlets.interfaces.IDashboard"
+      />
+
+  <!-- Set overrides folder for Just-a-Bunch-Of-Templates product -->
+  <include
+      package="z3c.jbot"
+      file="meta.zcml"
+      />
+
+  <browser:jbot
+      directory="overrides"
+      layer="wise.theme.interfaces.IWiseThemeLayer"
+      />
+
+  <include file="overrides.zcml" />
+
+  <!-- Publish static files -->
+  <plone:static
+      directory="static"
+      name="wise.theme"
+      type="plone"
+      />
+
+  <browser:viewlet
+      name="references_viewlet"
+      for="..interfaces.IReferenceLinks"
+      manager="plone.app.layout.viewlets.interfaces.IBelowContent"
+      template="pt/references_viewlet.pt"
+      permission="zope2.View"
+      page="*"
+      request="*"
+      />
+
+
+  <browser:viewlet
+      name="tableau_viewlet"
+      for="plone.app.contenttypes.interfaces.IDocument"
+      manager="plone.app.layout.viewlets.interfaces.IBelowContentBody"
+      template="pt/tableau_dashboard.pt"
+      permission="zope2.View"
+      />
+
+  <browser:viewlet
+      name="external_links_viewlet"
+      for="..interfaces.IExternalLinks"
+      manager="plone.app.layout.viewlets.interfaces.IBelowContent"
+      template="pt/external_links_viewlet.pt"
+      permission="zope2.View"
+      page="*"
+      request="*"
+      />
+
+  <browser:viewlet
+      name="wise.frontpage.slideshow"
+      for="wise.theme.interfaces.IHomepage"
+      manager="plone.app.layout.viewlets.interfaces.IAboveContent"
+      class=".viewlets.SlidesViewlet"
+      template="pt/slideshow.pt"
+      permission="zope.Public"
+      />
+
+  <browser:viewlet
+      name="frontpage_reports"
+      for="wise.theme.interfaces.IHomepage"
+      manager="plone.app.layout.viewlets.interfaces.IBelowContentBody"
+      class=".viewlets.FrontpageReportsViewlet"
+      template="pt/frontpage-reports.pt"
+      permission="zope.Public"
+      layer="wise.theme.interfaces.IWiseThemeLayer"
+      />
+
+  <browser:viewlet
+      name="message_cards"
+      for="wise.theme.interfaces.IHomepage"
+      manager="plone.app.layout.viewlets.interfaces.IBelowContentBody"
+      class=".viewlets.FrontpageKeyMessagesViewlet"
+      template="pt/message-cards.pt"
+      permission="zope.Public"
+      layer="wise.theme.interfaces.IWiseThemeLayer"
+      />
+
+  <browser:viewlet
+      name="lead_image"
+      manager="plone.app.layout.viewlets.interfaces.IAboveContent"
+      class=".viewlets.LeadImage"
+      template="pt/lead-image.pt"
+      permission="zope.Public"
+      layer="wise.theme.interfaces.IWiseThemeLayer"
+      />
+
+  <browser:page
+      name="tilelisting_view"
+      for="plone.app.contenttypes.interfaces.IFolder"
+      template="pt/tilelisting.pt"
+      permission="zope2.View"
+      layer="plone.app.contenttypes.interfaces.IPloneAppContenttypesLayer"
+      menu="plone_displayviews"
+      title="Tile Listing View"
+      />
+
+  <configure package="plone.app.contenttypes.browser">
+    <browser:page
+        name="fullpage_view"
+        for="plone.app.contenttypes.interfaces.IDocument"
+        template="templates/document.pt"
+        permission="zope2.View"
+        layer="plone.app.contenttypes.interfaces.IPloneAppContenttypesLayer"
+        menu="plone_displayviews"
+        title="Fullpage Width View"
+        />
+  </configure>
+
+  <browser:page
+      name="gopdb"
+      for="*"
+      class=".misc.GoPDB"
+      permission="cmf.ManagePortal"
+      />
+
+  <browser:page
+      name="vocabulary_inspector"
+      for="*"
+      class=".misc.VocabularyInspector"
+      template="pt/vocab_inspector.pt"
+      permission="cmf.ManagePortal"
+      />
+
+  <browser:page
+      name="portal_tabs_view"
+      for="*"
+      class=".navigation.CatalogNavigationTabs"
+      allowed_attributes="topLevelTabs"
+      permission="zope.Public"
+      layer="wise.theme.interfaces.IWiseThemeLayer"
+      />
+
+  <browser:page
+      name="external_proxy"
+      for="*"
+      class=".misc.ExternalResourceProxy"
+      permission="zope.Public"
+      />
+
+</configure>

@@ -1,0 +1,16 @@
+<configure
+    xmlns="http://namespaces.zope.org/zope"
+    xmlns:plone="http://namespaces.plone.org/plone"
+>
+
+    <plone:service
+        method="GET"
+        accept="application/json,application/schema+json"
+        factory=".get.TypesGet"
+        for="Products.CMFPlone.interfaces.IPloneSiteRoot"
+        layer="wise.theme.interfaces.IWiseThemeLayer"
+        permission="zope2.View"
+        name="@types"
+    />
+
+</configure>

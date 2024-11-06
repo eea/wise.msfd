@@ -1,0 +1,19 @@
+{
+    "did_you_mean": {"type": "text", "analyzer": "didYouMean"},
+    "autocomplete": {"type": "text", "analyzer": "autocomplete"},
+
+    "CodeCatalogue":{"type" : "text","analyzer" : "none"},
+    "Sector": {"type" :"text", "analyzer" : "none", "fielddata": true },
+    "Use_or_activity": {"type" :"text", "analyzer" : "none", "fielddata": true },
+    "Measure_name":{"type" : "text","analyzer" : "none"},
+    "Status": {"type" :"text", "analyzer" : "none", "fielddata": true },
+    "Origin_of_the_measure": {"type" :"text", "analyzer" : "none", "fielddata": true },
+    "Nature_of_the_measure": {"type" :"text", "analyzer" : "none", "fielddata": true },
+    "Water_body_category": {"type" :"text", "analyzer" : "none", "fielddata": true },
+    "Spatial_scope": {"type" :"text", "analyzer" : "none", "fielddata": true },
+    "Country": {"type" :"text", "analyzer" : "none", "fielddata": true },
+    "Measure_Impacts_to": {"type" :"text", "analyzer" : "none", "fielddata": true },
+    "Measure_Impacts_to__further_details_":{"type" : "text","analyzer" : "none"},
+    "Descriptors": {"type" :"text", "analyzer" : "none", "fielddata": true },
+    "Descriptors_flags": {"type" :"text", "analyzer" : "none", "fielddata": true }
+}

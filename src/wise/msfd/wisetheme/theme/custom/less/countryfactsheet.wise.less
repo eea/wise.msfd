@@ -1,0 +1,481 @@
+.template-countryfactsheet_view {
+  .container {
+    width: 100% !important;
+    max-width: 100%;
+    padding: 0 2em;
+  }
+
+  #portal-breadcrumbs {
+    margin-bottom: 0;
+    position: relative;
+  }
+
+  main#main-container {
+    margin-top: 0;
+  }
+
+  .documentByLine {
+    display: none;
+  }
+
+  .plone-breadcrumb ol {
+    background-color: transparent;
+    color: @text-color;
+    padding-left: 0;
+    padding-bottom: 0;
+
+    li {
+      padding-right: 20px;
+    }
+
+    a,
+    li + li:before {
+      color: inherit;
+      left: -14px;
+    }
+
+    a:hover,
+    #breadcrumbs-current {
+      color: #000;
+    }
+  }
+
+  .portletNavigationTree {
+    margin-left: 0;
+  }
+
+  .print-btn-wrapper {
+    display: none;
+  }
+
+  #print-button {
+    position: relative;
+    top: 10px;
+  }
+}
+
+.country-title-wrapper {
+  display: flex;
+  justify-content: space-between;
+}
+
+.country-title {
+  color: @darker-blue;
+  font-size: 38px;
+  margin-bottom: 0.3em;
+  margin-top: 0;
+}
+
+.country-header-container {
+  background-color: #59d3ff;
+  margin: 0 -2em;
+  padding: 2em;
+  color: @darker-blue;
+
+  .row {
+    margin: 0 -20px;
+  }
+
+  .ch-col {
+    padding: 0 20px;
+  }
+}
+
+.dashboard-wrapper {
+  margin-top: 1.5em;
+}
+
+.country-data-wrapper {
+  margin: 0 -30px !important;
+  font-size: 15px;
+
+  .ch-col {
+    padding: 0 30px;
+  }
+}
+
+.marine-sub-title {
+  color: inherit;
+  margin-top: 0;
+  margin-bottom: 0.5em;
+  line-height: 31px;
+}
+
+.marine-data {
+  border-right: 1px solid @darker-blue;
+  min-height: 420px;
+}
+
+#country-factsheet .marine-country-map {
+  width: 100%;
+  height: 450px;
+  border-radius: 0;
+  border: none !important;
+  padding: 0px !important;
+}
+
+.country-map-thumb {
+  display: none;
+  width: 100%;
+}
+
+.marine-stats {
+  font-family: "PoppinsR";
+  font-size: 15px;
+  color: inherit;
+  width: 100%;
+  border: none;
+  border-radius: 0;
+  border-bottom: 1px solid @darker-blue;
+  background-color: transparent;
+  margin-bottom: 3.5em;
+
+  td {
+    padding: 0.5em 0;
+    border: none;
+  }
+
+  tr {
+    td:last-child {
+      text-align: right;
+      padding-left: 0.5em;
+    }
+  }
+
+  tbody {
+    > tr:not(:last-child) {
+      border-bottom: 1px solid @darker-blue;
+    }
+  }
+
+  tfoot tr {
+    font-family: "PoppinsSemiB";
+    border-top: 1px solid @darker-blue;
+  }
+}
+
+.marine-number {
+  &:first-child {
+    margin-bottom: 3.5em;
+  }
+
+  .figure-number {
+    font-family: "PoppinsB";
+    font-size: 55px;
+    line-height: 55px;
+  }
+
+  .figure-content {
+    font-family: "PoppinsR";
+    font-size: 15px;
+    display: block;
+
+    span {
+      font-family: "PoppinsB";
+    }
+  }
+}
+
+.country-conventions {
+  .dd-content {
+    padding-left: 19px;
+    > li {
+      list-style-type: square;
+
+      a {
+        font-family: "PoppinsR";
+        font-size: 15px;
+        color: inherit;
+        display: inline-block;
+        padding: 0 0 0.3em 0;
+
+        &:hover {
+          text-decoration: underline;
+        }
+      }
+    }
+  }
+}
+
+.marine-legend {
+  font-family: "PoppinsR";
+  display: flex;
+  align-items: center;
+  margin-bottom: 1em;
+}
+
+.marine-legend-title {
+  font-size: 22px;
+  margin: 0 !important;
+}
+
+.marine-legend-item {
+  margin-left: 1em;
+
+  > span {
+    position: relative;
+    top: 1px;
+    font-size: 14px;
+  }
+}
+
+.discreet-map-info {
+  color: inherit;
+  font-size: 11px;
+  margin-bottom: 0;
+  text-align: justify;
+}
+
+.country-authorities {
+  font-family: "RobotoL";
+  color: #fff;
+  margin: 0 -2em;
+  padding: 1em 2em;
+  background-color: @darker-blue;
+
+  li {
+    color: #fff !important;
+  }
+
+  a {
+    font-size: 15px;
+    color: #fff;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+
+  .msp-link {
+    text-align: right;
+
+    a {
+      text-decoration: underline;
+    }
+  }
+
+  .authority-title {
+    font-size: 15px;
+    position: relative;
+    font-family: "RobotoR";
+    padding-left: 1.2em;
+
+    &:before {
+      content: "";
+      position: absolute;
+      display: inline-block;
+      vertical-align: top;
+      border-style: solid;
+      border-width: 2px 2px 0 0;
+      height: 0.5em;
+      width: 0.5em;
+      top: 5px;
+      left: -1px;
+      transform: rotate(45deg);
+    }
+  }
+
+  .read-more {
+    cursor: pointer;
+    padding: 0 0.5em;
+    border-radius: 15px;
+    display: inline-block;
+    font-size: 14px;
+    color: @darker-blue;
+    background-color: #fff;
+    font-family: "RobotoM";
+    font-weight: normal;
+    width: 90px;
+    text-align: center;
+    margin: 0 2em;
+  }
+
+  .dd-list {
+    display: none;
+
+    ul {
+      list-style-position: outside;
+      list-style-type: square;
+      padding-left: 18px;
+      margin-top: 1em;
+      margin-bottom: 0;
+    }
+  }
+}
+
+.db-section-title {
+  font-size: 25px;
+  padding-top: 13px;
+  margin-top: 0;
+  margin-bottom: 1em;
+}
+
+.factsheet-tableau-vis {
+  margin-top: 5px;
+}
+
+.country-db-wrapper {
+  .country-dashboard-section:not(:first-child) {
+    margin-top: 4em;
+  }
+}
+
+.country-dashboard-section {
+  .container {
+    padding: 0;
+  }
+
+  .dashboard-text {
+    font-family: "RobotoL";
+    font-size: 17px;
+  }
+
+  .dashboard-source {
+    margin-top: 0.5em;
+
+    p {
+      font-family: "RobotoL";
+      font-size: 14px;
+      color: #6e6e6e !important;
+    }
+  }
+}
+
+.marine-divider {
+  padding-bottom: 25px;
+  margin-bottom: 15px;
+  border-bottom: 1px solid #eee;
+}
+
+// Countries dropdown
+.countries-dropdown {
+  position: relative;
+
+  .dd-select-wrapper {
+    display: block;
+    width: 100%;
+    height: 34px;
+    padding: 6px 12px;
+    font-size: 14px;
+    line-height: 1.5;
+    background-color: #fff;
+    background-image: none;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+
+  .dd-select {
+    color: #666;
+    display: block;
+    text-decoration: none;
+    font-weight: normal;
+    position: relative;
+
+    &:after {
+      content: "\e114";
+      font-family: @icon-font-family;
+      font-size: 11px;
+      position: absolute;
+      right: 0;
+      top: 3px;
+    }
+  }
+
+  .dd-select-list {
+    background: #fff;
+    display: none;
+    list-style: none;
+    position: absolute;
+    left: 0px;
+    top: 32px;
+    width: 100%;
+    min-width: 170px;
+    border: 1px solid #ccc;
+    max-height: 320px;
+    overflow: auto;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    z-index: 999;
+  }
+
+  .dd-country {
+    padding: 5px 12px;
+    display: block;
+    color: #666;
+    font-size: 14px;
+    cursor: pointer;
+
+    &:hover {
+      background-color: #e2e2e2;
+    }
+  }
+}
+
+@media only screen and (max-width: @screen-lg-min) {
+  .marine-data {
+    border: none;
+    min-height: auto;
+  }
+
+  .marine-number {
+    &:first-child {
+      margin-bottom: 1.5em;
+    }
+  }
+
+  .marine-stats {
+    margin-bottom: 1.5em;
+  }
+
+  .country-conventions {
+    .dd-content {
+      margin-bottom: 1.5em;
+      padding-bottom: 1em;
+      border-bottom: 1px solid @darker-blue;
+    }
+  }
+}
+
+@media only screen and (max-width: @screen-md-min) {
+  .marine-data {
+    margin-top: 1.5em;
+  }
+
+  .country-authorities {
+    .msp-link {
+      text-align: left;
+      margin-top: 1.5em;
+    }
+  }
+}
+
+@media only screen and (max-width: @screen-sm-min) {
+  .countries-dropdown {
+    margin-top: 25px;
+    max-width: 320px;
+  }
+
+  .country-authorities {
+    .read-more {
+      display: block;
+      margin: 10px 0;
+    }
+  }
+}
+
+@media only screen and (max-width: @screen-xs-min) {
+  .template-countryfactsheet_view {
+    .container {
+      padding: 0 20px !important;
+    }
+  }
+
+  .marine-legend {
+    display: block;
+  }
+
+  .marine-legend-item {
+    display: block;
+    margin: 0.5em 0;
+  }
+}

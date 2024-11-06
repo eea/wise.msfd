@@ -1,0 +1,56 @@
+<div class="frontpage-header-slide-container">
+    <tal:def tal:define="images view/images;">
+    <tal:cond tal:condition="images">
+
+      <div class="slider-container">
+        <div id="slideshow">
+          <tal:rep repeat="image images">
+            <div class="slideContainer"
+              tal:define="title image/Title;
+              description image/Description;
+              url image/getURL;
+              obj image/getObject;">
+
+              <div class="slider-caption container">
+                <div class="fp-wrapper">
+                  <div class="slider-title">
+                    <div tal:content="title">
+                      Welcome to WISE - MARINE
+                    </div>
+                  </div>
+
+                  <div class="slider-description">
+                    <p tal:content="description">
+                      WISE - Marine is a gateway to information on European marine
+                      in support of ocean governance and ecosystem based management.
+                    </p>
+                  </div>
+
+                  <div class="slider-copyright" tal:condition="obj/Rights|nothing">
+                    <p tal:content="obj/Rights">Image copyright</p>
+                  </div>
+                </div>
+              </div>
+
+              <div class="slider-layer"></div>
+              <a href="#">
+                <div class="slider-image-wrapper">
+                  <div class="slider-image lazyload"
+                       tal:attributes="data-bg string: ${url}">
+                  </div>
+                </div>
+              </a>
+            </div>
+          </tal:rep>
+        </div>
+
+        <div class="container slider-actions"
+             tal:condition="python: len(images) > 1">
+          <a class="slide-prev" href="#"></a>
+          <a class="slide-next" href="#"></a>
+        </div>
+      </div>
+
+    </tal:cond>
+  </tal:def>
+</div>

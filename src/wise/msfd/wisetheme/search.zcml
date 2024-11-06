@@ -1,0 +1,22 @@
+<configure
+    xmlns="http://namespaces.zope.org/zope"
+    xmlns:browser="http://namespaces.zope.org/browser"
+    xmlns:genericsetup="http://namespaces.zope.org/genericsetup"
+    xmlns:i18n="http://namespaces.zope.org/i18n"
+    xmlns:plone="http://namespaces.plone.org/plone"
+    i18n_domain="wise.theme"
+    >
+
+   <browser:page
+       name="measures-search"
+       for="*"
+       template="./search/build/index.html"
+       permission="zope.Public"
+       />
+
+   <browser:resourceDirectory
+       name="measures-catalogue"
+       directory="./search/build"
+       />
+
+</configure>

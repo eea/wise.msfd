@@ -1,0 +1,44 @@
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en"
+  xmlns:tal="http://xml.zope.org/namespaces/tal"
+  xmlns:metal="http://xml.zope.org/namespaces/metal"
+  xmlns:i18n="http://xml.zope.org/namespaces/i18n"
+  lang="en"
+  metal:use-macro="context/main_template/macros/master"
+  i18n:domain="plone">
+
+  <metal:content-core fill-slot="content-core">
+    <metal:content-core define-macro="content-core">
+
+      <div id="parent-fieldname-text">
+        <div tal:condition="context/text|nothing"
+          tal:replace="structure context/text/output">
+          <p>Folder description</p>
+        </div>
+      </div>
+
+      <div class="tile-listing">
+        <div class="row">
+          <div class="col-xs-12 col-md-4"
+               tal:repeat="item context/listFolderContents">
+            <div class="tile-listing-wrapper"
+                 tal:define="summary_id python: 'summary_' + item.title.lower().replace(' ', '_'); url python: item.absolute_url() + '/@@images/image/preview'">
+              <a class="tile-item-link"
+                 tal:attributes="href python: item.absolute_url()">
+
+                <div tal:condition="item/image"
+                     class="tile-image tile-listing-image"
+                     tal:attributes="style string:background-image:url('${url}')!important">
+                </div>
+                <h4 class="tile-title" tal:content="item/title">Title</h4>
+                <p class="tile-summary"
+                   tal:condition="item/Description"
+                   tal:content="item/Description"></p>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </metal:content-core>
+  </metal:content-core>
+</html>

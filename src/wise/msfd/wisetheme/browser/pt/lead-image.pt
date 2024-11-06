@@ -1,0 +1,23 @@
+<div class="leadimage-header"
+     tal:define="image view/lead_image"
+     tal:condition="image">
+  <div class="leadimage-container">
+    <div class="leadimage-wrapper">
+      <div class="leadimage"
+           tal:attributes="style string:background-image:url('${image/url}')">
+      </div>
+     <div class="image-layer"></div>
+     <div class="container title-container">
+       <h1 class="leadimage-title" tal:content="context/Title"></h1>
+     </div>
+    </div>
+    <div class="leadimage-caption">
+      <div class="container">
+        <div tal:condition="image/caption"
+             tal:content="image/caption"
+             class="caption-description">
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

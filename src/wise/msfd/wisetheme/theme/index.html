@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>WISE Marine</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <link
+      rel="icon"
+      type="image/x-icon"
+      href="/marine/++theme++wise-theme/static/images/marine_favicon.ico"
+    />
+    <link
+      rel="shortcut icon"
+      type="image/x-icon"
+      href="/marine/++theme++wise-theme/static/images/marine_favicon.ico"
+    />
+    <link
+      rel="apple-touch-icon"
+      href="/marine/++theme++wise-theme/static/images/marine_favicon-57.png"
+    />
+    <link
+      rel="apple-touch-icon"
+      sizes="114x114"
+      href="/marine/++theme++wise-theme/static/images/marine_favicon-114.png"
+    />
+    <link
+      rel="apple-touch-icon"
+      sizes="72x72"
+      href="/marine/++theme++wise-theme/static/images/marine_favicon-72.png"
+    />
+    <link
+      rel="apple-touch-icon"
+      sizes="144x144"
+      href="/marine/++theme++wise-theme/static/images/marine_favicon-144.png"
+    />
+
+    <meta name="application-name" content="WISE Marine" />
+    <meta name="msapplication-TileColor" content="#FFFFFF" />
+    <meta name="theme-color" content="#005588" />
+  </head>
+
+  <body>
+    <section id="portal-toolbar"></section>
+    <div class="outer-wrapper">
+      <div id="content-header" class="fp-header" role="banner">
+        <div class="fp-header-wrapper">
+          <div class="container">
+            <div class="fp-wrapper">
+              <header id="portal-top">
+                <div class="header-container">
+                  <div class="left-logo-section">
+                    <div class="logo-wrapper">
+                      <div class="site-logo">
+                        <a href="/marine">
+                          <img
+                            alt="WISE Marine logo"
+                            title="WISE Marine"
+                            height="64"
+                            width="135"
+                            src="/marine/++theme++wise-theme/static/images/marine-white.png"
+                          />
+                        </a>
+                      </div>
+                      <span class="site-logo-text">
+                        Marine Information System for Europe
+                      </span>
+                    </div>
+                  </div>
+                  <div class="right-actions-section">
+                    <div class="top-actions">
+                      <div class="top-actions-wrapper">
+                        <div class="search-wrapper">
+                          <span class="top-icon search-icon"></span>
+                          <div class="search-modal">
+                            <form method="GET" action="/marine/@@search">
+                              <input
+                                type="text"
+                                name="SearchableText"
+                                placeholder="Search all site ..."
+                              />
+                              <button class="search-submit" aria-label="Search">
+                                Search
+                              </button>
+                              <button
+                                class="submit-mobile-only"
+                                aria-label="Search"
+                              ></button>
+                            </form>
+                          </div>
+                        </div>
+
+                        <div class="user-wrapper">
+                          <div class="user-actions">
+                            <span class="top-icon user-icon"></span>
+                            <ul id="portal-personaltools"></ul>
+                          </div>
+                          <a class="login-link"></a>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="navigation-wrapper">
+                      <div id="mainnavigation-wrapper">
+                        <div id="mainnavigation"></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </header>
+            </div>
+          </div>
+        </div>
+
+        <div id="frontpage-header-slide"></div>
+      </div>
+      <!-- <header id="content-header" role="banner">
+        <div class="container">
+        <header id="portal-top">
+        </header>
+        <div id="anonymous-actions">
+        </div>
+        </div>
+        </header>
+        <div id="mainnavigation-wrapper">
+        <div id="mainnavigation">
+        </div>
+        </div> -->
+      <div id="above-content-wrapper">
+        <div id="above-content"></div>
+      </div>
+
+      <div class="container">
+        <div class="fp-wrapper">
+          <div class="row">
+            <div class="col-md-12 col-xs-12">
+              <aside id="global_statusmessage"></aside>
+            </div>
+          </div>
+
+          <main
+            id="main-container"
+            class="row row-offcanvas row-offcanvas-right"
+            role="main"
+          >
+            <div class="highlight-area row">
+              <div id="column1-container"></div>
+              <div id="content-container"></div>
+              <div id="column2-container"></div>
+            </div>
+          </main>
+        </div>
+      </div>
+
+      <div class="fp-container">
+        <div class="container">
+          <div class="fp-wrapper fp-intro">
+            <div class="fp-intro-text">
+              WISE-Marine provides access to information and data on the state
+              of Europe’s seas, on the pressures affecting them, and on the
+              actions being taken to protect and conserve the marine
+              environment.
+            </div>
+          </div>
+          <div class="fp-wrapper fp-spotlight">
+            <h3 class="fp-heading">In the spotlight</h3>
+            <div class="topic-wrapper">
+              <div class="topic-box">
+                <a
+                  href="/marine/data-maps-and-tools/msfd-reporting-information-products/msfd-reporting-data-explorer"
+                >
+                  <div class="topic-header">
+                    <img
+                      alt="Globe icon"
+                      src="/marine/++theme++wise-theme/static/images/globe.svg"
+                    />
+                    <h4 class="topic-title">
+                      MSFD Reporting Data <br />
+                      Explorer
+                    </h4>
+                  </div>
+                  <p>
+                    This tool, dedicated to Marine experts, provides information
+                    on the main MSFD Articles collected by Member States from
+                    2012 up to date.
+                  </p>
+                </a>
+              </div>
+              <div class="topic-box">
+                <a
+                  href="/marine/data-maps-and-tools/msfd-reporting-information-products/ges-assessment-dashboards"
+                >
+                  <div class="topic-header">
+                    <img
+                      alt="Dashboard icon"
+                      src="/marine/++theme++wise-theme/static/images/dashboard.svg"
+                    />
+                    <h4 class="topic-title">
+                      Visualisation tools on <br />
+                      Good Environmental Status assessments
+                    </h4>
+                  </div>
+                  <p>
+                    Results on the Good Environmental Status (GES) assessments
+                    reported by the EU Member States to the European Commission
+                    under Article 8 are presented in a dynamic format.
+                  </p>
+                </a>
+              </div>
+              <div class="topic-box">
+                <a
+                  href="/marine/data-maps-and-tools/map-viewers-visualization-tools/dashboards-on-marine-features-under-other-policies"
+                >
+                  <div class="topic-header">
+                    <img
+                      alt="Story map icon"
+                      src="/marine/++theme++wise-theme/static/images/story-map.svg"
+                    />
+                    <h4 class="topic-title">
+                      Dashboards on marine <br />
+                      features under other policies
+                    </h4>
+                  </div>
+                  <p>
+                    These dashboards present the ecological and chemical status
+                    assessments under the Water Framework Directive, the
+                    conservation status of marine species and habitats under the
+                    Habitats Directive and the coverage of Marine Protected
+                    Areas in European waters.
+                  </p>
+                </a>
+              </div>
+              <div class="topic-box">
+                <a href="/marine/countries-and-regional-seas/country-profiles">
+                  <div class="topic-header">
+                    <img
+                      alt="Europe map icon"
+                      src="/marine/++theme++wise-theme/static/images/europe.svg"
+                    />
+                    <h4 class="topic-title">
+                      Country Profile <br />Factsheets
+                    </h4>
+                  </div>
+                  <p>
+                    Information on the marine environment of EU Member States,
+                    including the state of features reported under different
+                    Directives.
+                  </p>
+                </a>
+              </div>
+              <div class="topic-box memory-box">
+                <!-- <div class="topic-header">
+                <img
+                alt="Europe map icon"
+                src="/marine/++theme++wise-theme/static/images/europe.svg"
+                />
+                <h4 class="topic-title">
+                Country Profile <br />Factsheets
+              </h4>
+            </div> -->
+                <div class="memory-box-wrapper">
+                  <p>
+                    In memory of
+                    <strong>Irene del Barrio Alvarellos,</strong>our colleague
+                    who has been instrumental in developing and running
+                    WISE-Marine, in particular the EU Marine Strategy Framework
+                    Directive reporting and assessment components.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="fp-container">
+        <div id="fp-key-messages"></div>
+      </div>
+
+      <div class="fp-container">
+        <div class="container">
+          <div id="frontpage-reports">
+            Hello world
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <footer class="footer-wrapper">
+      <div class="footer-top-wave"></div>
+      <div class="container">
+        <div class="fp-wrapper footer-content">
+          <ul class="bottom-nav">
+            <li class="footer-nav-item">
+              <a href="/marine" class="footer-nav-link">Home</a>
+            </li>
+            <li class="footer-nav-item">
+              <a href="mailto:WISE@eea.europa.eu" class="footer-nav-link"
+                >Contact</a
+              >
+            </li>
+            <li class="footer-nav-item">
+              <a href="/marine/sitemap" class="footer-nav-link">Site Map</a>
+            </li>
+            <li class="footer-nav-item">
+              <a
+                href="https://water.europa.eu/#legal-notice"
+                class="footer-nav-link"
+                >Privacy and Legal Notice</a
+              >
+            </li>
+          </ul>
+
+          <div class="row">
+            <div class="site-info-wrapper col-md-6 col-xs-12">
+              <div class="footer-logos-wrapper">
+                <a
+                  href="https://www.eea.europa.eu/"
+                  rel="noopener"
+                  target="_blank"
+                >
+                  <img
+                    alt="EEA Logo"
+                    title="European Environment Agency"
+                    class="lazyload"
+                    height="53"
+                    width="47"
+                    data-src="/marine/++theme++wise-theme/static/images/eea_mini.png"
+                  />
+                </a>
+                <a href="https://ec.europa.eu/" rel="noopener" target="_blank">
+                  <img
+                    alt="European Commission Logo"
+                    title="European Commission"
+                    class="lazyload"
+                    height="60"
+                    width="220"
+                    data-src="/marine/++theme++wise-theme/static/images/ec_logo.svg"
+                  />
+                </a>
+              </div>
+            </div>
+
+            <div class="eu-systems col-md-6 col-xs-12">
+              <div class="eu-systems-wrapper">
+                <p>Other European Information Systems:</p>
+                <ul class="footer-logos">
+                  <li class="footer-logo-item">
+                    <a
+                      href="https://biodiversity.europa.eu/"
+                      rel="noopener"
+                      target="_blank"
+                    >
+                      <img
+                        alt="BISE Logo"
+                        title="Biodiversity Information System for Europe"
+                        class="lazyload"
+                        height="50"
+                        width="170"
+                        data-src="/marine/++theme++wise-theme/static/images/bise-logo.svg"
+                      />
+                    </a>
+                  </li>
+                  <li class="footer-logo-item">
+                    <a
+                      href="https://climate-adapt.eea.europa.eu"
+                      rel="noopener"
+                      target="_blank"
+                    >
+                      <img
+                        alt="Climate-ADAPT Logo"
+                        title="Climate-ADAPT"
+                        class="lazyload"
+                        height="50"
+                        width="185"
+                        data-src="/marine/++theme++wise-theme/static/images/Climate_ADAPT_logo.svg"
+                      />
+                    </a>
+                  </li>
+                  <li class="footer-logo-item">
+                    <a
+                      href="https://water.europa.eu/marine"
+                      rel="noopener"
+                      target="_blank"
+                    >
+                      <img
+                        alt="WISE Marine Logo"
+                        title="Marine Water Information System for Europe"
+                        class="lazyload"
+                        height="50"
+                        width="130"
+                        data-src="/marine/++theme++wise-theme/static/images/wise-marine-logo.svg"
+                      />
+                    </a>
+                  </li>
+                  <li class="footer-logo-item">
+                    <a
+                      href="https://water.europa.eu/freshwater"
+                      rel="noopener"
+                      target="_blank"
+                    >
+                      <img
+                        alt="WISE Freshwater Logo"
+                        title="Freshwater Information System for Europe"
+                        class="lazyload"
+                        height="50"
+                        width="130"
+                        data-src="/marine/++theme++wise-theme/static/images/freshwater_logo.svg"
+                      />
+                    </a>
+                  </li>
+                  <li class="footer-logo-item">
+                    <a
+                      href="https://forest.eea.europa.eu/"
+                      rel="noopener"
+                      target="_blank"
+                    >
+                      <img
+                        alt="FISE Logo"
+                        title="Forest Information System for Europe"
+                        class="lazyload"
+                        height="50"
+                        width="150"
+                        data-src="/marine/++theme++wise-theme/static/images/fise-logo.svg"
+                      />
+                    </a>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+          <div class="footer-backdrop">
+            <img
+              alt="Footer fishes"
+              class="lazyload"
+              data-src="/marine/++theme++wise-theme/static/images/footer-fishes.svg"
+            />
+          </div>
+        </div>
+      </div>
+    </footer>
+    <!-- <footer id="portal-footer-wrapper" role="contentinfo">
+      <div class="container" id="portal-footer"></div>
+      </div>
+      </footer> -->
+
+    <!-- Matomo -->
+    <noscript data-diazo-image="true"
+      ><p>
+        <img
+          src="https://matomo.eea.europa.eu/piwik.php?idsite=19&amp;rec=1"
+          style="border: 0;"
+          alt=""
+        /></p
+    ></noscript>
+
+    <script type="text/javascript" data-diazo="matomo-analytics">
+      var _paq = _paq || [];
+      /* tracker methods like "setCustomDimension" should be called before "trackPageView" */
+      _paq.push(["trackPageView"]);
+      _paq.push(["enableLinkTracking"]);
+      (function() {
+        var u = "https://matomo.eea.europa.eu/";
+        _paq.push(["setTrackerUrl", u + "piwik.php"]);
+        _paq.push(["setSiteId", "19"]);
+        var d = document,
+          g = d.createElement("script"),
+          s = d.getElementsByTagName("script")[0];
+        g.type = "text/javascript";
+        g.async = true;
+        g.defer = true;
+        g.src = u + "piwik.js";
+        s.parentNode.insertBefore(g, s);
+      })();
+    </script>
+    <!-- End Matomo Code -->
+
+    <script>
+      document.addEventListener("lazybeforeunveil", function(e) {
+        var bg = e.target.getAttribute("data-bg");
+        if (bg) {
+          e.target.style.backgroundImage = "url(" + bg + ")";
+        }
+      });
+      (function() {
+        window.lazySizesConfig = window.lazySizesConfig || {};
+        window.lazySizesConfig.loadMode = 1;
+        window.lazySizesConfig.expand = 10;
+        window.lazySizesConfig.expFactor = 1.5;
+        window.lazySizesConfig = { loadHidden: false };
+      })();
+    </script>
+  </body>
+</html>

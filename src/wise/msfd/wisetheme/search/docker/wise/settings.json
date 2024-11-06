@@ -1,0 +1,67 @@
+{
+    "http": {
+        "port": 3000
+    },
+    "elastic": {
+        "index": "esbootstrapdata-wise",
+        "type": "resources",
+        "field_base":"",
+        "default_appalias": "prod",
+        "increment_threshold": 1
+    },
+    "external_templates": {
+        "local_path": "/external_templates",
+        "protocol": "https",
+        "host": "www.eea.europa.eu",
+        "head_path": "/templates/v3/getRequiredHead?render_full_html=False&cssonly=True&css_stack=external_templates",
+        "header_path": "/templates/v3/getHeader?render_full_html=False",
+        "footer_path": "/templates/v3/getFooter?render_full_html=False"
+    },
+    "layout_vars": {
+        "head_title": "wise",
+        "app_id": "wise",
+        "skip_resources_bundling": true,
+        "skip_external_template_styles": false,
+        "override_searchserver_resources": false,
+        "css_resources": {
+            "index_page": [
+                "css/no-more-tables.css",
+                "css/esbootstrap.facetview.css",
+                "custom.css"
+            ],
+            "details_page": [
+                "css/esbootstrap.facetview.css",
+                "custom.css"
+            ]
+        },
+        "js_resources": {
+            "index_page": [
+                "javascripts/esbootstrap.facetview.js",
+                "custom.js"
+            ],
+            "details_page": [
+                "http://www.eea.europa.eu/register_function.js",
+                "http://www.eea.europa.eu/nodeutilities.js",
+                "http://www.eea.europa.eu/mark_special_links.js",
+                "javascripts/jq.tools.js",
+                "custom.js"
+            ]
+        },
+        "site_title": "wise",
+        "site_description": "wise",
+        "es_debug_enabled": false
+
+    },
+    "source": {
+        "type": "file",
+        "autoswitch": "true",
+        "configuration": {
+            "type": "csv",
+            "bulksize": 2000,
+            "file": "/data/master.csv",
+            "data_modifier": "modify.js",
+            "encoding": "utf-8",
+            "delimiter": ","
+        }
+    }
+}

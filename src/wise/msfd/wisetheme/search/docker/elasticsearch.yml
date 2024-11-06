@@ -1,0 +1,11 @@
+#################################### Index ####################################
+
+#################################### Paths ####################################
+path:
+  logs: /usr/share/elasticsearch/logs
+  data: /usr/share/elasticsearch/data
+
+network.host: 0.0.0.0
+
+http.cors.enabled: true 
+http.cors.allow-origin: "*"

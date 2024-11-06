@@ -1,0 +1,32 @@
+<div tal:condition="view/enabled" id="page-toc">
+  <div class="toc-wrapper">
+    <div id="toc"></div>
+  </div>
+
+  <div class="scroll-to-top">
+    <button title="Scroll to top" class="scroll-button">
+      <i class="scroll-icon glyphicon glyphicon-chevron-up"></i>
+    </button>
+  </div>
+
+  <script>
+      jQuery(document).ready(function() {
+        $('.pat-autotoc').data('pat-autotoc', 'appendTo:#toc;scrollduration:slow;levels:h1,h2,h3,h4,h5,h6;appendTo:#toc');
+
+        // Scroll to top button
+        var $scrollBtn = $('.scroll-to-top');
+        $(window).scroll(function() {
+          if ($(this).scrollTop() > 500) {
+            $scrollBtn.fadeIn();
+          } else {
+            $scrollBtn.fadeOut();
+          }
+        });
+
+        $scrollBtn.click(function() {
+          $('html, body').animate({ scrollTop : 0 }, 500);
+          return false;
+        });
+      });
+  </script>
+</div>

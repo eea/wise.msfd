@@ -1,0 +1,27 @@
+<configure
+    xmlns="http://namespaces.zope.org/zope"
+    xmlns:five="http://namespaces.zope.org/five"
+    xmlns:z3c="http://namespaces.zope.org/z3c"
+    xmlns:browser="http://namespaces.zope.org/browser"
+    xmlns:i18n="http://namespaces.zope.org/i18n"
+    xmlns:genericsetup="http://namespaces.zope.org/genericsetup"
+    xmlns:grok="http://namespaces.zope.org/grok"
+    xmlns:plone="http://namespaces.plone.org/plone"
+    i18n_domain="wise.theme">
+
+  <!-- <browser:resource -->
+    <!-- layer="wise.theme.interfaces.IWiseThemeLayer" -->
+    <!-- name="plone.app.jquerytools.form.nonrequire.js" -->
+    <!-- file="resources/plone.app.jquerytools.form.nonrequire.js" -->
+    <!-- /> -->
+
+  <browser:viewlet
+    name="plone.resourceregistries.styles"
+    manager="plone.app.layout.viewlets.interfaces.IHtmlHeadLinks"
+    class="Products.CMFPlone.resources.browser.styles.StylesView"
+    template="overrides/styles_viewlet_override.pt"
+    layer="wise.theme.interfaces.IWiseThemeLayer"
+    permission="zope2.View"
+    />
+
+</configure>
