@@ -19,10 +19,12 @@ import types
 
 wisetheme_interfaces = types.ModuleType("wise.theme.interfaces")
 
+
 class IWiseThemeLayer(IDefaultBrowserLayer):
     """Marker interface that defines a browser layer."""
 
 wisetheme_interfaces.IWiseThemeLayer = IWiseThemeLayer
+
 
 class IHomepage(Interface):
     """Marker interface for the context object that is the homepage"""
@@ -30,6 +32,7 @@ class IHomepage(Interface):
 wisetheme_interfaces.IHomepage = IHomepage
 
 sys.modules["wise.theme.interfaces"] = wisetheme_interfaces
+
 
 class ICountriesFactsheetDatabase(Interface):
     """Marker interface for the context object that is the homepage"""

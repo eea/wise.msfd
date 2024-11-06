@@ -67,7 +67,7 @@ def read_master_csv_files(location):
 
 
 def fix_descriptor(rec):
-    descriptors = [f'D{n}' for n in range(1, 12)]
+    descriptors = ['D{}'.format(n) for n in range(1, 12)]
     s = []
     for d in descriptors:
         if rec[d] == '1':
