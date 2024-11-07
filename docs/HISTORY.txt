@@ -1,8 +1,10 @@
 Changelog
 =========
 
-3.1-dev0 - (unreleased)
+3.1 - (2024-11-07)
 ---------------------------
+* Change: added script to fix Indicators last update field
+  [laszlocseh]
 
 3.0 - (2024-11-06)
 ---------------------------
