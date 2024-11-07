@@ -22,7 +22,6 @@ class UpdateIndicatorLastUpdate(BrowserView):
 
             if current_value:
                 if isinstance(current_value, str):
-                    # If it's a string, split by space and keep only the date part
                     date_only = current_value.split(" ")[0]
                 elif isinstance(current_value, DateTime):
                     # If it's a DateTime object, convert to YYYY-MM-DD format
@@ -45,6 +44,6 @@ class UpdateIndicatorLastUpdate(BrowserView):
         updated_items = self.update_indicators()
 
         if updated_items:
-            return f"Updated {len(updated_items)} items: {', '.join(updated_items)}"
+            return "Updated {}!".format(len(updated_items))
         else:
             return "No items to update."
