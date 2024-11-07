@@ -6,7 +6,9 @@ from DateTime import DateTime
 
 
 class UpdateIndicatorLastUpdate(BrowserView):
+    """UpdateIndicatorLastUpdate"""
     def update_indicators(self):
+        """update_indicators"""
         updated_items = []
 
         # Access the portal catalog
@@ -45,5 +47,5 @@ class UpdateIndicatorLastUpdate(BrowserView):
 
         if updated_items:
             return "Updated {}!".format(len(updated_items))
-        else:
-            return "No items to update."
+
+        return "No items to update."
