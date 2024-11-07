@@ -4,24 +4,24 @@ Changelog
 3.1-dev0 - (unreleased)
 ---------------------------
 
-2.5 - (2024-11-06)
+3.0 - (2024-11-06)
 ---------------------------
-* Change: Release
+* Change: moved code from wise.theme
   [laszlocseh]
 
 2.4 - (2024-10-31)
 ---------------------------
-* Change: Develop
+* Change: assessment module: Art 13 changed HR country weight for D7
   [laszlocseh]
 
 2.3 - (2024-10-30)
 ---------------------------
-* Change: Develop
+* Change: assessment module: Art 13 changed HR country weight for D4, D5, D9
   [laszlocseh]
 
 2.2 - (2024-10-01)
 ---------------------------
-* Change: Develop
+* Change: change weight for question Ad02B
   [laszlocseh]
 
 2.1 - (2024-09-18)
