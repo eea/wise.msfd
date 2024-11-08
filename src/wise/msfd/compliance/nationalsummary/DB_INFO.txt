@@ -1,0 +1,53 @@
+National overview page https://water.europa.eu/marine/assessment-module/national-summaries/fr/overview
+
+1. Art. 7 Competent authorities
+- Get the reported filename from the sparql endpoint https://cr.eionet.europa.eu/sparql then process it
+PREFIX cr: <http://cr.eionet.europa.eu/ontologies/contreg.rdf#>
+PREFIX terms: <http://purl.org/dc/terms/>
+PREFIX schema: <http://rod.eionet.europa.eu/schema.rdf#>
+PREFIX core: <http://www.w3.org/2004/02/skos/core#>
+
+SELECT ?file
+WHERE {
+?file terms:date ?date .
+?file cr:mediaType 'text/xml' .
+?file terms:isPartOf ?isPartOf .
+?file cr:xmlSchema ?schema .
+?isPartOf schema:locality ?locality .
+?isPartOf schema:obligation ?obligation .
+?obligation core:notation ?obligationNr .
+?locality core:notation ?notation .
+FILTER (?notation = 'FR')
+FILTER (?obligationNr = '607')
+FILTER (str(?schema) = 'http://dd.eionet.europa.eu/schemas/MSFD/MSFDCA_1p0.xsd')
+}
+ORDER BY DESC(?date)
+LIMIT 1
+
+
+2. Where is the MSFD implemented?
+3. Areas for MSFD reporting
+- Same approach as Article 7
+
+4. Regional cooperation
+- Same approach as Articles 3, 4 and 7
+
+5. Uses and human activities and their pressures on marine environment
+- tables from MSFD2018_public: MSFD ART8_ESA_MarineUnit, ART8_ESA_Feature, ART8_ESA_UsesActivities, ART8_ESA_UsesActivities_Pressure
+
+6. Pressures affecting environmental status
+- MSFD2018_public.dbo.V_ART8_GES_2018
+
+7. Current environmental status and extent to which GES is achieved (as reported in 2018)
+- MSFD2018_public.dbo.V_ART8_GES_2018
+
+8. Environmental targets to achieve GES
+- MSFD2018_public.dbo.V_ART8_GES_2018*
+* the data is read from this table because it has both the TargetCodes and the PressureCodes. These two columns are needed to compute the table by pressures.
+In case of France these two column have no data, therefore the empty table.
+
+9. Measures to meet environmental targets and to achieve GES
+- MSFD2018_public.dbo.V_ART10_Targets_2018
+
+10. Exceptions reported when targets or GES cannot be achieved
+- MarineDB_public: MSFD13_ReportingInfo_MemberState, MSFD13_ReportingInfo, MSFD13_MeasuresInfo
