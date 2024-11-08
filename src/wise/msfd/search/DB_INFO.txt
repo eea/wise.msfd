@@ -1,0 +1,72 @@
+Article 4 (Reporting cycle 2018-2024)
+- MSFD2018_public.dbo.MRUs_Publication
+
+Article 4 (Reporting cycle 2012-2018)
+- MarineDB_public.dbo.MSFD4_GeograpicalAreasDescription
+- MarineDB_public.dbo.MSFD4_GegraphicalAreasID
+
+Article 7 (Competent Authorities)
+- MarineDB_public.dbo.MS_CompetentAuthorities
+
+Article 8.1ab (GES assessments) - 2018
+- MSFD2018_public.dbo.ART8_GES_MarineUnit and other related tables
+
+Article 8.1c (Economic and social analysis assessments) - 2018
+- MSFD2018_public.dbo.ART8_ESA_MarineUnit and other related tables
+
+Article 8.1a (Analysis of the environmental status) - 2012
+- tables from MarineDB_public database: MSFD8a_Ecosystem, MSFD8a_Functional, MSFD8a_Habitat, MSFD8a_Species, MSFD8a_Other, MSFD8a_NISInventory, MSFD8a_Physical and other related tables  
+
+Article 8.1b (Analysis of pressures & impacts) - 2012
+- tables from MarineDB_public database: MSFD8b_Acidification, MSFD8b_ExtractionFishShellfish, MSFD8b_ExtractionSeaweedMaerlOther, MSFD8b_HazardousSubstances, MSFD8b_HydrologicalProcesses, MSFD8b_Litter, MSFD8b_MicrobialPathogens, MSFD8b_NIS, MSFD8b_Noise, MSFD8b_Nutrients, MSFD8b_PhysicalDamage, MSFD8b_PhysicalLoss, MSFD8b_PollutantEvents and other related tables
+
+Article 8.1c (Economic and social analysis) - 2012
+- MarineDB_public.dbo.MSFD8c_Uses and other related tables
+
+Article 6 (Regional cooperation) - 2012
+- MarineDB_public.dbo.MSFD4_RegionalCooperation
+
+Article 9 (GES determination) - 2018
+- MSFD2018_public.dbo.ART9_GES_GESComponent and other related tables
+
+Article 9 (GES determination) - 2012
+- MarineDB_public.dbo.MSFD9_Descriptors and other related tables
+
+Article 10 (Targets and associated indicators) - 2018
+- MSFD2018_public.dbo.ART10_Targets_MarineUnit and other related tables
+
+Article 10 (Targets) - 2012
+- MarineDB_public.dbo.MSFD10_Targets and other related tables
+
+Article 11 (Monitoring Strategies) - 2020
+- MSFD2018_public.dbo.ART11_Strategies_MonitoringStrategy and other related tables
+
+Article 11 (Monitoring Programmes) - 2020
+- MSFD2018_public.dbo.ART11_Programmes_MonitoringProgramme and other related tables
+
+Article 11 (Monitoring Programmes) - 2014
+- MarineDB_public.dbo.MSFD11_MonitoringProgramme and other related tables
+
+Article 11 (Monitoring Subprogrammes) - 2014
+- MarineDB_public.dbo.MSFD11_SubProgramme and other related tables
+
+Article 13 - Measures 2022
+- MSFD2018_public.dbo.V_ART13_Measures_2022
+
+Article 13 - Measures 2016
+- MarineDB_public.dbo.MSFD13_MeasuresInfo and other related tables
+
+Article 18 (Measure Progress)
+- MSFD2018_public.dbo.ART18_MeasureProgress and other related tables
+
+Article 14 - Exceptions 2022
+- MSFD2018_public.dbo.V_ART14_Exceptions_2022
+
+Article 14 - Exceptions 2016
+- MarineDB_public.dbo.MSFD13_MeasuresInfo and other related tables
+
+Article 19.3 Datasets used - 2012
+- MarineDB_public.dbo.MetadataFeatures and other related tables
+
+Indicators (Article 8 & 10) - 2018
+- MSFD2018_public.dbo.Indicators_IndicatorAssessment and other related tables
