@@ -1,72 +1,112 @@
 Article 4 (Reporting cycle 2018-2024)
-- MSFD2018_public.dbo.MRUs_Publication
+- MSFD2018_public: Reporting_history, MRUs_Publication
 
 Article 4 (Reporting cycle 2012-2018)
-- MarineDB_public.dbo.MSFD4_GeograpicalAreasDescription
-- MarineDB_public.dbo.MSFD4_GegraphicalAreasID
+- MarineDB_public: MSFD4_Imports, MSFD4_GeograpicalAreasDescription, MSFD4_GegraphicalAreasID
 
 Article 7 (Competent Authorities)
-- MarineDB_public.dbo.MS_CompetentAuthorities
+- MarineDB_public: MS_CompetentAuthorities
 
 Article 8.1ab (GES assessments) - 2018
-- MSFD2018_public.dbo.ART8_GES_MarineUnit and other related tables
+- MSFD2018_public: V_ReportedInformation, ReportedInformation, ART8_GES_MarineUnit, ART8_GES_OverallStatus, ART8_GES_OverallStatus_Pressure, ART8_GES_OverallStatus_Target, ART8_GES_CriteriaValues_Indicator, ART8_GES_ElementStatus, ART8_GES_CriteriaStatus, ART8_GES_CriteriaValues
 
 Article 8.1c (Economic and social analysis assessments) - 2018
-- MSFD2018_public.dbo.ART8_ESA_MarineUnit and other related tables
+- MSFD2018_public: V_ReportedInformation, ReportedInformation, ART8_ESA_MarineUnit, ART8_ESA_Feature, ART8_ESA_Feature_NACE, ART8_ESA_Feature_GESComponent, ART8_ESA_CostDegradation, ART8_ESA_CostDegradation_Indicator, ART8_ESA_UsesActivities, ART8_ESA_UsesActivities_Indicator, ART8_ESA_UsesActivities_EcosystemService, ART8_ESA_UsesActivities_Pressure
 
 Article 8.1a (Analysis of the environmental status) - 2012
-- tables from MarineDB_public database: MSFD8a_Ecosystem, MSFD8a_Functional, MSFD8a_Habitat, MSFD8a_Species, MSFD8a_Other, MSFD8a_NISInventory, MSFD8a_Physical and other related tables  
+Ecosystem(s): 
+- MarineDB_public: MSFD8a_Imports, MSFD8a_Ecosystem, MSFD8a_Ecosystem_PressuresImpacts, MSFD8a_Ecosystem_StatusAssessment, MSFD8a_Ecosystem_StatusIndicator
+Functional group(s):
+- MarineDB_public: MSFD8a_Imports, MSFD8a_Functional, MSFD8a_Functional_PressuresImpacts ,MSFD8a_Functional_StatusAssessment, MSFD8a_Functional_StatusIndicator
+Habitat(s)
+- MarineDB_public: MSFD8a_Imports, MSFD8a_Habitat, MSFD8a_Habitat_PressuresImpacts, MSFD8a_Habitat_StatusAssessment, MSFD8a_Habitat_StatusIndicator
+NIS Inventory
+- MarineDB_public: MSFD8a_Imports, MSFD8a_NISInventory
+Other(s)
+- MarineDB_public: MSFD8a_Imports, MSFD8a_Other, MSFD8a_Other_StatusAssessment, MSFD8a_Other_StatusIndicator
+Physical
+- MarineDB_public: MSFD8a_Imports, MSFD8a_Physical
+Species(s)
+- MarineDB_public: MSFD8a_Imports, MSFD8a_Species, MSFD8a_Species_PressuresImpacts, MSFD8a_Species_StatusAssessment, MSFD8a_Species_StatusIndicator
 
 Article 8.1b (Analysis of pressures & impacts) - 2012
-- tables from MarineDB_public database: MSFD8b_Acidification, MSFD8b_ExtractionFishShellfish, MSFD8b_ExtractionSeaweedMaerlOther, MSFD8b_HazardousSubstances, MSFD8b_HydrologicalProcesses, MSFD8b_Litter, MSFD8b_MicrobialPathogens, MSFD8b_NIS, MSFD8b_Noise, MSFD8b_Nutrients, MSFD8b_PhysicalDamage, MSFD8b_PhysicalLoss, MSFD8b_PollutantEvents and other related tables
+Acidification
+- MarineDB_public: MSFD8b_Imports, MSFD8b_Acidification, MSFD8b_Acidification_Activity, MSFD8b_Acidification_ActivityDescription
+Extraction of fish and shellfish
+- MarineDB_public: MSFD8b_Imports, MSFD8b_ExtractionFishShellfish, MSFD8b_ExtractionFishShellfish_Assesment, MSFD8b_ExtractionFishShellfish_AssesmentIndicator, MSFD8b_ExtractionFishShellfish_Activity, MSFD8b_ExtractionFishShellfish_ActivityDescription, MSFD8b_ExtractionFishShellfish_SumInfo2_ImpactedElements
+Extraction of seaweed, maerl and other
+- MarineDB_public: MSFD8b_Imports, MSFD8b_ExtractionSeaweedMaerlOther, MSFD8b_ExtractionSeaweedMaerlOther_Assesment, MSFD8b_ExtractionSeaweedMaerlOther_AssesmentIndicator, MSFD8b_ExtractionSeaweedMaerlOther_Activity, MSFD8b_ExtractionSeaweedMaerlOther_ActivityDescription, MSFD8b_ExtractionSeaweedMaerlOther_SumInfo2_ImpactedElements
+Hazardous substances
+- MarineDB_public: MSFD8b_Imports, MSFD8b_HazardousSubstances, MSFD8b_HazardousSubstances_Assesment, MSFD8b_HazardousSubstances_AssesmentIndicator, MSFD8b_HazardousSubstances_Activity, MSFD8b_HazardousSubstances_ActivityDescription, MSFD8b_HazardousSubstances_SumInfo2_ImpactedElements
+Hydrological processes
+- MarineDB_public: MSFD8b_Imports, MSFD8b_HydrologicalProcesses, MSFD8b_HydrologicalProcesses_Assesment, MSFD8b_HydrologicalProcesses_AssesmentIndicator, MSFD8b_HydrologicalProcesses_Activity, MSFD8b_HydrologicalProcesses_ActivityDescription, MSFD8b_HydrologicalProcesses_SumInfo2_ImpactedElements
+Marine litter
+- MarineDB_public: MSFD8b_Imports, MSFD8b_MarineLitter, MSFD8b_Litter_Assesment, MSFD8b_Litter_AssesmentIndicator, MSFD8b_Litter_Activity, MSFD8b_Litter_ActivityDescription, MSFD8b_Litter_SumInfo2_ImpactedElements
+Microbial pathogens
+- MarineDB_public: MSFD8b_Imports, MSFD8b_MicrobialPathogens, MSFD8b_MicrobialPathogens_Assesment, MSFD8b_MicrobialPathogens_AssesmentIndicator, MSFD8b_MicrobialPathogens_Activity, MSFD8b_MicrobialPathogens_ActivityDescription
+Non-indigenous species
+- MarineDB_public: MSFD8b_Imports, MSFD8b_NIS, MSFD8b_NIS_Assesment, MSFD8b_NIS_AssesmentIndicator, MSFD8b_NIS_Activity, MSFD8b_NIS_ActivityDescription, MSFD8b_NIS_SumInfo2_ImpactedElements
+Nutrients
+- MarineDB_public: MSFD8b_Imports, MSFD8b_Nutrients, MSFD8b_Nutrients_Assesment, MSFD8b_Nutrients_AssesmentIndicator, MSFD8b_Nutrients_Activity, MSFD8b_Nutrients_ActivityDescription, MSFD8b_Nutrients_SumInfo2_ImpactedElements
+Physical damage
+- MarineDB_public: MSFD8b_Imports, MSFD8b_PhysicalDamage, MSFD8b_PhysicalDamage_Assesment, MSFD8b_PhysicalDamage_AssesmentIndicator, MSFD8b_PhysicalDamage_Activity, MSFD8b_PhysicalDamage_ActivityDescription, MSFD8b_PhysicalDamage_SumInfo2_ImpactedElements
+Physical loss
+- MarineDB_public: MSFD8b_Imports, MSFD8b_PhysicalLoss, MSFD8b_PhysicalLoss_Assesment, MSFD8b_PhysicalLoss_AssesmentIndicator, MSFD8b_PhysicalLoss_Activity, MSFD8b_PhysicalLoss_ActivityDescription, MSFD8b_PhysicalLoss_SumInfo2_ImpactedElements
+Pollutant events
+- MarineDB_public: MSFD8b_Imports, MSFD8b_PollutantEvents, MSFD8b_PollutantEvents_Assesment, MSFD8b_PollutantEvents_AssesmentIndicator, MSFD8b_PollutantEvents_Activity, MSFD8b_PollutantEvents_ActivityDescription, MSFD8b_PollutantEvents_SumInfo2_ImpactedElements
+Underwater noise
+- MarineDB_public: MSFD8b_Imports, MSFD8b_Noise, MSFD8b_Noise_Assesment, MSFD8b_Noise_AssesmentIndicator, MSFD8b_Noise_Activity, MSFD8b_Noise_ActivityDescription, MSFD8b_Noise_SumInfo2_ImpactedElements
 
 Article 8.1c (Economic and social analysis) - 2012
-- MarineDB_public.dbo.MSFD8c_Uses and other related tables
+- MarineDB_public: MSFD8cImport, MSFD8c_Uses, MSFD8c_Pressures, MSFD8c_Depend
 
 Article 6 (Regional cooperation) - 2012
-- MarineDB_public.dbo.MSFD4_RegionalCooperation
+- MarineDB_public: MSFD4_Imports, MSFD4_ReportingInformation, MSFD4_RegionalCooperation
 
 Article 9 (GES determination) - 2018
-- MSFD2018_public.dbo.ART9_GES_GESComponent and other related tables
+- MSFD2018_public: ReportedInformation, ART9_GES_GESComponent, ART9_GES_GESDetermination, ART9_GES_GESDetermination_Feature, ART9_GES_MarineUnit
 
 Article 9 (GES determination) - 2012
-- MarineDB_public.dbo.MSFD9_Descriptors and other related tables
+- MarineDB_public: MSFD9_Imports, MSFD9_Descriptors, MSFD9_Features
 
 Article 10 (Targets and associated indicators) - 2018
-- MSFD2018_public.dbo.ART10_Targets_MarineUnit and other related tables
+- MSFD2018_public: ReportedInformation, ART10_Targets_MarineUnit, ART10_Targets_Target, ART10_Targets_Target_Feature, ART10_Targets_Target_GESComponent, ART10_Targets_ProgressAssessment, 
 
 Article 10 (Targets) - 2012
-- MarineDB_public.dbo.MSFD10_Targets and other related tables
+- MarineDB_public: MSFD10_Imports, MSFD10_Targets, MSFD10_DESCrit, MSFD10_FeaturesPressures
 
 Article 11 (Monitoring Strategies) - 2020
-- MSFD2018_public.dbo.ART11_Strategies_MonitoringStrategy and other related tables
+- MSFD2018_public: ART11_Strategies_MonitoringStrategy, ART11_Strategies_Metadata, ART11_Strategies_MonitoringStrategy_MonitoringProgrammes, ART11_Strategies_Metadata_ResponsibleCompetentAuthorities, ART11_Strategies_Metadata_ResponsibleOrganisations, ART11_Strategies_MonitoringStrategy_MonitoringProgrammes, ART11_Strategies_MonitoringStrategy_RelatedMeasures, ART11_Strategies_MonitoringStrategy_RelatedTargets 
 
 Article 11 (Monitoring Programmes) - 2020
-- MSFD2018_public.dbo.ART11_Programmes_MonitoringProgramme and other related tables
+- MSFD2018_public: ART11_Programmes_MonitoringProgramme, ART11_Strategies_MonitoringStrategy, ART11_Strategies_MonitoringStrategy_MonitoringProgrammes, ART11_Programmes_Feature, ART11_Programmes_Element, ART11_Programmes_Criteria, ART11_Programmes_Criteria_Parameter, ART11_Programmes_RelatedIndicator, ART11_Programmes_MonitoringProgramme_DataAccess, ART11_Programmes_MonitoringProgramme_MarineReportingUnit, ART11_Programmes_MonitoringProgramme_MonitoringMethod, ART11_Programmes_MonitoringProgramme_MonitoringPurpose, ART11_Programmes_MonitoringProgramme_MonitoringType, ART11_Programmes_MonitoringProgramme_OldProgrammeCodes, ART11_Programmes_MonitoringProgramme_OtherPoliciesConventions, ART11_Programmes_MonitoringProgramme_RegionalCooperation_coordination, ART11_Programmes_MonitoringProgramme_RegionalCooperation_countries, ART11_Programmes_MonitoringProgramme_SpatialScope    
 
 Article 11 (Monitoring Programmes) - 2014
-- MarineDB_public.dbo.MSFD11_MonitoringProgramme and other related tables
+- MarineDB_public: MSFD11_Imports, MSFD11_MonitoringProgramme, MSFD11_MON, MSFD11_MP, MSFD11_MonitoringProgramme_List, MSFD11_MonitoringProgramme_MarineUnitID, MSFD11_MarineUnitID, MSFD11_Q6a_RelevantTarget 
 
 Article 11 (Monitoring Subprogrammes) - 2014
-- MarineDB_public.dbo.MSFD11_SubProgramme and other related tables
+- MarineDB_public: MSFD11_Imports, MSFD11_ReferenceSubProgramme, MSFD11_MONSub, MSFD11_MonitoringProgramme_MarineUnitID, MSFD11_MarineUnitID, MSFD11_MP, MSFD11_SubProgramme, MSFD11_SubProgrammeID_Match, MSFD11_Q9a_ElementMonitored, MSFD11_Q9b_MeasurementParameter
 
 Article 13 - Measures 2022
-- MSFD2018_public.dbo.V_ART13_Measures_2022
+- MSFD2018_public: V_ART13_Measures_2022
 
 Article 13 - Measures 2016
-- MarineDB_public.dbo.MSFD13_MeasuresInfo and other related tables
+- MarineDB_public: MSFD13_Imports, MSFD13_MeasuresInfo, MSFD13_Measures, MSFD13_ReportingInfo, MSFD13_ReportingInfo_MemberState, MSFD13_ReportInfo_FurtherInfo
 
 Article 18 (Measure Progress)
-- MSFD2018_public.dbo.ART18_MeasureProgress and other related tables
+- MSFD2018_public: ReportedInformation, ART18_MeasureProgress, ART18_MeasureProgress_Descriptor
+
+Article 18 (Category 1b not WFD measure)
+- MSFD2018_public: ReportedInformation, ART18_Category1bNotWFD, ART18_Category1bNotWFD_Measure
 
 Article 14 - Exceptions 2022
-- MSFD2018_public.dbo.V_ART14_Exceptions_2022
+- MSFD2018_public: V_ART14_Exceptions_2022
 
 Article 14 - Exceptions 2016
-- MarineDB_public.dbo.MSFD13_MeasuresInfo and other related tables
+- MarineDB_public: MSFD13_Imports, MSFD13_MeasuresInfo, MSFD13_Measures, MSFD13_ReportingInfo, MSFD13_ReportingInfo_MemberState, MSFD13_ReportInfo_FurtherInfo
 
 Article 19.3 Datasets used - 2012
-- MarineDB_public.dbo.MetadataFeatures and other related tables
+- MarineDB_public: MetadataFeatures, MetadataArt19_3
 
 Indicators (Article 8 & 10) - 2018
-- MSFD2018_public.dbo.Indicators_IndicatorAssessment and other related tables
+- MSFD2018_public: ReportedInformation, Indicators_Dataset. Indicators_IndicatorAssessment, Indicators_Feature_Feature, Indicators_Feature_GESComponent, IndicatorsMarineUnit
