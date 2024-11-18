@@ -1,6 +1,11 @@
 Changelog
 =========
 
+3.2 - (2024-11-18)
+---------------------------
+* Change: Release
+  [laszlocseh]
+
 3.1 - (2024-11-07)
 ---------------------------
 * Change: added script to fix Indicators last update field
