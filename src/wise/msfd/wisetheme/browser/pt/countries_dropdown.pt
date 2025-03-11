@@ -1,0 +1,22 @@
+<tal:def define="countries view/countries">
+  <div
+    tal:condition="countries"
+    id="select-countries-dropdown"
+    class="countries-dropdown">
+    <div class="dd-select-wrapper">
+      <div class="dd-select">
+        Choose a country
+      </div>
+    </div>
+    <div class="dd-select-list">
+      <tal:rep tal:repeat="brain countries">
+        <span
+           tal:attributes="data-value brain/getId"
+           tal:content="brain/Title"
+           class="dd-country">
+           Country name
+         </span>
+      </tal:rep>
+    </div>
+  </div>
+</tal:def>
