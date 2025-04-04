@@ -1,0 +1,19 @@
+
+<configure
+  xmlns="http://namespaces.zope.org/zope"
+  xmlns:genericsetup="http://namespaces.zope.org/genericsetup"
+  i18n_domain="eea">
+
+    <genericsetup:upgradeSteps
+        source="1"
+        destination="2"
+        profile="wise.msfd:default">
+
+    <genericsetup:upgradeDepends
+        title="Add Demo Site (MO) content type"
+        import_profile="wise.msfd:to_2"
+    />
+
+    </genericsetup:upgradeSteps>
+
+</configure>

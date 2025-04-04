@@ -17,4 +17,12 @@
     provides="Products.GenericSetup.interfaces.EXTENSION"
     />
 
+   <genericsetup:registerProfile
+    name="to_2"
+    title="Upgrade profile for wise.msfd to 2"
+    description=""
+    directory="profiles/upgrades/to_2"
+    provides="Products.GenericSetup.interfaces.EXTENSION"
+   />
+  
 </configure>

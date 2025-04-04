@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="utf-8"?>
+<object name="demo_site_mo" meta_type="Dexterity FTI" i18n:domain="plone"
+   xmlns:i18n="http://xml.zope.org/namespaces/i18n">
+ <property name="title" i18n:translate="">Demo Site (MO)</property>
+ <property name="description"
+    i18n:translate="">Demo site for Mission Ocean indicators</property>
+ <property name="icon_expr">string:${portal_url}/document_icon.png</property>
+ <property name="factory">demo_site_mo</property>
+ <property
+    name="add_view_expr">string:${folder_url}/++add++demo_site_mo</property>
+ <property name="link_target"></property>
+ <property name="immediate_view">view</property>
+ <property name="global_allow">True</property>
+ <property name="filter_content_types">True</property>
+ <property name="allowed_content_types"/>
+ <property name="allow_discussion">False</property>
+ <property name="default_view">view</property>
+ <property name="view_methods">
+  <element value="view"/>
+ </property>
+ <property name="default_view_fallback">False</property>
+ <property name="add_permission">cmf.AddPortalContent</property>
+ <property name="klass">plone.dexterity.content.Container</property>
+ <property name="behaviors">
+  <element value="plone.dublincore"/>
+  <element value="plone.namefromtitle"/>
+  <element value="volto.blocks.fixed.layout"/>
+  <element value="eea.coremetadata.behavior"/>
+ </property>
+ <property name="schema"></property>
+ <property
+    name="model_source">&lt;model xmlns:i18n=&quot;http://xml.zope.org/namespaces/i18n&quot; xmlns:form=&quot;http://namespaces.plone.org/supermodel/form&quot; xmlns:security=&quot;http://namespaces.plone.org/supermodel/security&quot; xmlns:users=&quot;http://namespaces.plone.org/supermodel/users&quot; xmlns:marshal=&quot;http://namespaces.plone.org/supermodel/marshal&quot; xmlns:lingua=&quot;http://namespaces.plone.org/supermodel/lingua&quot; xmlns=&quot;http://namespaces.plone.org/supermodel/schema&quot; i18n:domain=&quot;plone&quot;&gt;
+    &lt;schema&gt;
+      &lt;fieldset name=&quot;demo_site&quot; label=&quot;Demo Site&quot;&gt;
+        &lt;field name=&quot;project_ds&quot; type=&quot;zope.schema.Text&quot;&gt;
+          &lt;min_length/&gt;
+          &lt;required&gt;False&lt;/required&gt;
+          &lt;title&gt;Project (DS)&lt;/title&gt;
+        &lt;/field&gt;
+        &lt;field name=&quot;project_link_ds&quot; type=&quot;zope.schema.Text&quot;&gt;
+          &lt;required&gt;False&lt;/required&gt;
+          &lt;title&gt;Project link (DS)&lt;/title&gt;
+        &lt;/field&gt;
+        &lt;field name=&quot;country_ds&quot; type=&quot;zope.schema.Set&quot;&gt;
+          &lt;required&gt;False&lt;/required&gt;
+          &lt;title&gt;Country (DS)&lt;/title&gt;
+          &lt;value_type type=&quot;zope.schema.Choice&quot;&gt;
+            &lt;values&gt;
+              &lt;element&gt;Austria&lt;/element&gt;
+              &lt;element&gt;Belgium&lt;/element&gt;
+              &lt;element&gt;Bulgaria&lt;/element&gt;
+              &lt;element&gt;Croatia&lt;/element&gt;
+              &lt;element&gt;Czechia&lt;/element&gt;
+              &lt;element&gt;Cyprus&lt;/element&gt;
+              &lt;element&gt;Denmark&lt;/element&gt;
+              &lt;element&gt;Estonia&lt;/element&gt;
+              &lt;element&gt;European Union&lt;/element&gt;
+              &lt;element&gt;Finland&lt;/element&gt;
+              &lt;element&gt;France&lt;/element&gt;
+              &lt;element&gt;Germany&lt;/element&gt;
+              &lt;element&gt;Greece&lt;/element&gt;
+              &lt;element&gt;Hungary&lt;/element&gt;
+              &lt;element&gt;Iceland&lt;/element&gt;
+              &lt;element&gt;Ireland&lt;/element&gt;
+              &lt;element&gt;Italy&lt;/element&gt;
+              &lt;element&gt;Latvia&lt;/element&gt;
+              &lt;element&gt;Lithuania&lt;/element&gt;
+              &lt;element&gt;Luxembourg&lt;/element&gt;
+              &lt;element&gt;Malta&lt;/element&gt;
+              &lt;element&gt;Netherlands&lt;/element&gt;
+              &lt;element&gt;Norway&lt;/element&gt;
+              &lt;element&gt;Poland&lt;/element&gt;
+              &lt;element&gt;Portugal&lt;/element&gt;
+              &lt;element&gt;Romania&lt;/element&gt;
+              &lt;element&gt;Slovakia&lt;/element&gt;
+              &lt;element&gt;Slovenia&lt;/element&gt;
+              &lt;element&gt;Spain&lt;/element&gt;
+              &lt;element&gt;Sweden&lt;/element&gt;
+              &lt;element&gt;Switzerland&lt;/element&gt;
+              &lt;element&gt;United Kingdom&lt;/element&gt;
+            &lt;/values&gt;
+          &lt;/value_type&gt;
+        &lt;/field&gt;
+        &lt;field name=&quot;type_is_region&quot; type=&quot;zope.schema.Choice&quot;&gt;
+          &lt;required&gt;False&lt;/required&gt;
+          &lt;title&gt;Type (Is region)&lt;/title&gt;
+          &lt;values&gt;
+            &lt;element&gt;Associated region&lt;/element&gt;
+            &lt;element&gt;Demo site&lt;/element&gt;
+          &lt;/values&gt;
+        &lt;/field&gt;
+        &lt;field name=&quot;type_ds&quot; type=&quot;zope.schema.Set&quot;&gt;
+          &lt;required&gt;False&lt;/required&gt;
+          &lt;title&gt;Type (DS)&lt;/title&gt;
+          &lt;value_type type=&quot;zope.schema.Choice&quot;&gt;
+            &lt;values&gt;
+              &lt;element&gt;Demonstrative and testing sites&lt;/element&gt;
+              &lt;element&gt;Digital Twin&lt;/element&gt;
+              &lt;element&gt;Implementation and Synergies sites&lt;/element&gt;
+              &lt;element&gt;Industrial circular ecosystem&lt;/element&gt;
+              &lt;element&gt;Information Sites&lt;/element&gt;
+              &lt;element&gt;Living labs&lt;/element&gt;
+              &lt;element&gt;Lower Danube Pilot#1&lt;/element&gt;
+              &lt;element&gt;Lower Danube Pilot#2&lt;/element&gt;
+              &lt;element&gt;Lower Danube Pilot#3&lt;/element&gt;
+              &lt;element&gt;Lower Danube Pilot#4&lt;/element&gt;
+              &lt;element&gt;Lower Danube Sibling site#1&lt;/element&gt;
+              &lt;element&gt;Lower Danube Sibling site#2&lt;/element&gt;
+              &lt;element&gt;Lower Danube Sibling site#3&lt;/element&gt;
+              &lt;element&gt;Lower Danube Sibling site#4&lt;/element&gt;
+              &lt;element&gt;Mid Danube Pilot#1&lt;/element&gt;
+              &lt;element&gt;Mid Danube Pilot#2&lt;/element&gt;
+              &lt;element&gt;Mid Danube Pilot#3&lt;/element&gt;
+              &lt;element&gt;Mid Danube Sibling site#1&lt;/element&gt;
+              &lt;element&gt;Monitoring site&lt;/element&gt;
+              &lt;element&gt;Other&lt;/element&gt;
+              &lt;element&gt;Upper Danube Pilot#1&lt;/element&gt;
+              &lt;element&gt;Upper Danube Pilot#2&lt;/element&gt;
+              &lt;element&gt;Upper Danube Pilot#3&lt;/element&gt;
+              &lt;element&gt;Upper Danube Pilot#4&lt;/element&gt;
+              &lt;element&gt;Upper Danube Pilot#5&lt;/element&gt;
+              &lt;element&gt;Upper Danube Pilot#6&lt;/element&gt;
+              &lt;element&gt;Upper Danube Sibling Site#1&lt;/element&gt;
+              &lt;element&gt;Upper Danube Sibling Site#2&lt;/element&gt;
+            &lt;/values&gt;
+          &lt;/value_type&gt;
+        &lt;/field&gt;
+        &lt;field name=&quot;indicator_mo&quot; type=&quot;z3c.relationfield.schema.RelationList&quot;&gt;
+          &lt;description/&gt;
+          &lt;required&gt;False&lt;/required&gt;
+          &lt;title&gt;Indicators (MO)&lt;/title&gt;
+          &lt;value_type type=&quot;z3c.relationfield.schema.RelationChoice&quot;&gt;
+            &lt;title i18n:translate=&quot;&quot;&gt;Relation Choice&lt;/title&gt;
+            &lt;portal_type&gt;
+              &lt;element&gt;indicator_mo&lt;/element&gt;
+            &lt;/portal_type&gt;
+          &lt;/value_type&gt;
+        &lt;/field&gt;
+        &lt;field name=&quot;info_ds&quot; type=&quot;zope.schema.Text&quot;&gt;
+          &lt;required&gt;False&lt;/required&gt;
+          &lt;title&gt;Info (DS)&lt;/title&gt;
+        &lt;/field&gt;
+        &lt;field name=&quot;website_ds&quot; type=&quot;zope.schema.Text&quot;&gt;
+          &lt;required&gt;False&lt;/required&gt;
+          &lt;title&gt;Website (DS)&lt;/title&gt;
+        &lt;/field&gt;
+        &lt;field name=&quot;latitude&quot; type=&quot;zope.schema.Text&quot;&gt;
+          &lt;required&gt;False&lt;/required&gt;
+          &lt;title&gt;Latitude&lt;/title&gt;
+        &lt;/field&gt;
+        &lt;field name=&quot;longitude&quot; type=&quot;zope.schema.Text&quot;&gt;
+          &lt;required&gt;False&lt;/required&gt;
+          &lt;title&gt;Longitude&lt;/title&gt;
+        &lt;/field&gt;
+      &lt;/fieldset&gt;
+    &lt;/schema&gt;
+  &lt;/model&gt;</property>
+ <property name="model_file"></property>
+ <property name="schema_policy">dexterity</property>
+ <alias from="(Default)" to="(dynamic view)"/>
+ <alias from="edit" to="@@edit"/>
+ <alias from="sharing" to="@@sharing"/>
+ <alias from="view" to="(selected layout)"/>
+ <action title="View" action_id="view" category="object" condition_expr=""
+    icon_expr="" link_target="" url_expr="string:${object_url}"
+    visible="True">
+  <permission value="View"/>
+ </action>
+ <action title="Edit" action_id="edit" category="object" condition_expr=""
+    icon_expr="" link_target="" url_expr="string:${object_url}/edit"
+    visible="True">
+  <permission value="Modify portal content"/>
+ </action>
+</object>
