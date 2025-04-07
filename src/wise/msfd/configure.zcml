@@ -17,6 +17,7 @@
 
   <include file="profiles.zcml" />
   <include file="utility.zcml" />
+  <include file="missionocean.zcml" />
 
   <plone:behavior
     name="wise.spmeasurefields"
@@ -32,14 +33,6 @@
     for=".interfaces.ISPMeasureFields
          zope.lifecycleevent.interfaces.IObjectModifiedEvent"
     handler=".behavior.handle_origin_change" />
-  
-  <browser:page
-    name="demo-sites-import"
-    for="*"
-    class=".missionocean.DemoSitesImportView"
-    permission="cmf.ManagePortal"
-    template="pt/demo-sites-import.pt"
-    />
 
   <browser:page
     for="*"

@@ -110,3 +110,114 @@ class DemoSitesImportView(form.Form):
         content.type_is_region = "Demo site"
 
         content.reindexObject()
+
+
+""" Case studies json  """
+
+import json
+import logging
+import lxml
+
+# from eea.climateadapt.translation.utils import translate_text
+from plone.api.portal import get_tool
+from Products.Five import BrowserView
+# from zope.component import getUtility
+# from zope.schema.interfaces import IVocabularyFactory
+
+# from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
+
+logger = logging.getLogger("eea.climateadapt")
+
+
+class DemoSiteItems(BrowserView):
+    """ Return demo sites needed for the map """
+
+    def __call__(self):
+        """"""
+        results = {
+            "type": "FeatureCollection",
+            "metadata": {
+                "generated": 1615559750000,
+                "url": "https://earthquake.usgs.gov/earthquakes"
+                    "/feed/v1.0/summary/all_month.geojson",
+                "title": "WISE Marine Demo Site arcgis items",
+                "status": 200,
+                "api": "1.10.3",
+                "count": 10739,
+            },
+            "features": [],
+        }
+
+        catalog = get_tool("portal_catalog")
+        brains = catalog.searchResults(
+            {
+                "portal_type": [
+                    "demo_site_mo",
+                ],
+                # "path": "/",
+                # "review_state": "published",
+            }
+        )
+
+        for brain in brains:
+            obj = brain.getObject()
+            if not getattr(obj, "latitude", ""):
+                continue
+
+            # if obj.general:
+            #     general_html = lxml.etree.fromstring(obj.general.raw)
+            #     long_description = general_html.cssselect(
+            #         'div .field--name-field-nwrm-cs-summary .field__item')
+            #     long_description = (
+            #         long_description[0].text if long_description else '')
+            # else:
+            #     long_description = ''
+            # measures = []
+
+            # if obj.measures:
+            #     measures = [
+            #         {"id": measure.to_id,
+            #          "title": measure.to_object.title,
+            #          "path": "/freshwater" +
+            #             measure.to_path.replace("/Plone", "")}
+            #         for measure in obj.measures
+            #     ]
+
+            # sectors = [
+            #     measure.to_object.measure_sector
+            #     for measure in obj.measures
+            # ]
+
+            results["features"].append(
+                {
+                    "properties": {
+                        "portal_type": obj.portal_type,
+                        # "nwrm_type": obj.nwrm_type,
+                        "title": obj.title,
+                        # "description": long_description,
+                        "url": brain.getURL(),
+                        "path": "/marine" + "/".join(
+                            obj.getPhysicalPath()).replace('/Plone', ''),
+                        "image": "",
+                        # "measures": measures,  # nwrms_implemented
+                        # "sectors": sorted(list(set(sectors)))
+                    },
+                    "geometry": {
+                        "type": "Point",
+                        # "coordinates": [geo.x, geo.y]
+                        "svg": {"fill_color": "#009900"},
+                        "color": "#009900",
+                        "coordinates": [
+                            # "6.0142918",
+                            # "49.5057481"
+                            obj.latitude,
+                            obj.longitude,
+                        ],
+                    },
+                }
+            )
+
+        response = self.request.response
+        response.setHeader("Content-type", "application/json")
+
+        return json.dumps(results)
