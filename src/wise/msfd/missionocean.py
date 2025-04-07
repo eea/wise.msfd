@@ -192,13 +192,21 @@ class DemoSiteItems(BrowserView):
                 {
                     "properties": {
                         "portal_type": obj.portal_type,
-                        # "nwrm_type": obj.nwrm_type,
                         "title": obj.title,
+                        "project": obj.project_ds,
+                        "project_link": obj.project_link_ds,
+                        "country": obj.country_ds,
+                        "type_is_region": obj.type_is_region,
+                        "type": obj.type_ds,
+                        "indicators": obj.indicator_mo,
+                        "info": obj.info_ds,
+                        "website": obj.website_ds,
+                        "objective": '',
                         # "description": long_description,
                         "url": brain.getURL(),
                         "path": "/marine" + "/".join(
                             obj.getPhysicalPath()).replace('/Plone', ''),
-                        "image": "",
+                        # "image": "",
                         # "measures": measures,  # nwrms_implemented
                         # "sectors": sorted(list(set(sectors)))
                     },
@@ -210,8 +218,9 @@ class DemoSiteItems(BrowserView):
                         "coordinates": [
                             # "6.0142918",
                             # "49.5057481"
-                            obj.latitude,
+                            # obj.latitude,
                             obj.longitude,
+                            obj.latitude,
                         ],
                     },
                 }
