@@ -61,7 +61,7 @@ setup(
         'z3c.jbot',
         'plone.app.theming',
         'plone.app.themingplugins',
-        'plone.app.robotframework',
+        # 'plone.app.robotframework',
         'plone.app.testing',
         'eea.api.dataconnector',
         'webcouturier.dropdownmenu',
@@ -80,7 +80,7 @@ setup(
             # plone_coredev tests as of 2016-04-01.
             'plone.testing>=5.0.0',
             'plone.app.contenttypes',
-            'plone.app.robotframework[debug]',
+            # 'plone.app.robotframework[debug]',
 
         ],
     },
