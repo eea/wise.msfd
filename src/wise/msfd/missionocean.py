@@ -1,19 +1,19 @@
-# from Products.Five.browser import BrowserView
 from plone import api
-# from plone.autoform import directives
+from plone.api.portal import get_tool
+from Products.Five import BrowserView
 from plone.namedfile.field import NamedFile
-# from plone.supermodel import model
 from z3c.form import button, field, form
-# from zope import schema
 from zope.interface import Interface
 import csv
 import io
-
-# from wise.msfd.compliance.vocabulary import get_all_countries
-
-# countries = dict(get_all_countries())
-
+import json
+import logging
+# import lxml
 from wise.msfd.wisetheme.vocabulary import countries_vocabulary
+
+
+logger = logging.getLogger("wise.msfd")
+
 countries = {code: vocab.title
                 for code, vocab in countries_vocabulary('').by_value.items()}
 
@@ -110,23 +110,6 @@ class DemoSitesImportView(form.Form):
         content.type_is_region = "Demo site"
 
         content.reindexObject()
-
-
-""" Case studies json  """
-
-import json
-import logging
-import lxml
-
-# from eea.climateadapt.translation.utils import translate_text
-from plone.api.portal import get_tool
-from Products.Five import BrowserView
-# from zope.component import getUtility
-# from zope.schema.interfaces import IVocabularyFactory
-
-# from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
-
-logger = logging.getLogger("eea.climateadapt")
 
 
 class DemoSiteItems(BrowserView):
