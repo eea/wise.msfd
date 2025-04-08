@@ -1,14 +1,15 @@
-from plone import api
-from plone.api.portal import get_tool
-from Products.Five import BrowserView
-from plone.namedfile.field import NamedFile
-from z3c.form import button, field, form
-from zope.interface import Interface
 import csv
 import io
 import json
 import logging
 # import lxml
+from plone import api
+from plone.api.portal import get_tool
+from plone.namedfile.field import NamedFile
+from Products.Five import BrowserView
+from z3c.form import button, field, form
+from zope.interface import Interface
+
 from wise.msfd.wisetheme.vocabulary import countries_vocabulary
 
 
@@ -37,6 +38,8 @@ countries.update({
 
 
 class DemoSitesImportSchema(Interface):
+    """ DemoSitesImportSchema """
+
     csv_file = NamedFile(
         title="CSV File",
         description="Upload a CSV file to import data.",
@@ -45,6 +48,8 @@ class DemoSitesImportSchema(Interface):
 
 
 class DemoSitesImportView(form.Form):
+    """ DemoSitesImportView """
+
     fields = field.Fields(DemoSitesImportSchema)
     ignoreContext = True
 
@@ -53,6 +58,7 @@ class DemoSitesImportView(form.Form):
 
     @button.buttonAndHandler('Import')
     def handleApply(self, action):
+        """handleApply"""
         data, errors = self.extractData()
         if errors:
             self.status = self.formErrorsMessage
@@ -64,6 +70,7 @@ class DemoSitesImportView(form.Form):
                                 request=self.request)
 
     def process_csv(self, csv_file):
+        """process_csv"""
         # Access the file data correctly
         csv_data = csv_file.data
         # Decode the data and remove the BOM if present
@@ -74,6 +81,7 @@ class DemoSitesImportView(form.Form):
             self.create_content(row)
 
     def create_content(self, row):
+        """create_content"""
         name_ds = row['Name_DS']
 
         if not name_ds or name_ds in ('To be defined',):
