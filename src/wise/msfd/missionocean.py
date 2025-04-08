@@ -15,7 +15,7 @@ from wise.msfd.wisetheme.vocabulary import countries_vocabulary
 logger = logging.getLogger("wise.msfd")
 
 countries = {code: vocab.title
-                for code, vocab in countries_vocabulary('').by_value.items()}
+             for code, vocab in countries_vocabulary('').by_value.items()}
 
 
 countries.update({
