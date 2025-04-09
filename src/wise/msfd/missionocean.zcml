@@ -1,0 +1,24 @@
+<configure
+  xmlns="http://namespaces.zope.org/zope"
+  xmlns:browser="http://namespaces.zope.org/browser"
+  xmlns:i18n="http://namespaces.zope.org/i18n"
+  xmlns:z3c="http://namespaces.zope.org/z3c"
+  xmlns:plone="http://namespaces.plone.org/plone"
+  i18n_domain="wise.msfd">
+
+  <browser:page
+    name="demo-sites-import"
+    for="*"
+    class=".missionocean.DemoSitesImportView"
+    permission="cmf.ManagePortal"
+    template="pt/demo-sites-import.pt"
+    />
+
+  <browser:page
+    name="demo-sites-map.arcgis.json"
+    for="*"
+    class=".missionocean.DemoSiteItems"
+    permission="zope2.View"
+    />
+
+  </configure>

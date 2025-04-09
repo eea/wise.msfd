@@ -13,9 +13,11 @@
   <include package=".compliance" />
   <include package=".translation" />
   <include package=".wisetheme" />
+  <include package=".upgrades" />
 
   <include file="profiles.zcml" />
   <include file="utility.zcml" />
+  <include file="missionocean.zcml" />
 
   <plone:behavior
     name="wise.spmeasurefields"
