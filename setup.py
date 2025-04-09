@@ -60,7 +60,7 @@ setup(
         'Products.GenericSetup>=1.8.2',
         'z3c.jbot',
         'plone.app.theming',
-        'plone.app.themingplugins',
+        # 'plone.app.themingplugins',
         # 'plone.app.robotframework',
         'plone.app.testing',
         'eea.api.dataconnector',
