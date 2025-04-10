@@ -16,8 +16,10 @@ from wise.msfd.wisetheme.vocabulary import countries_vocabulary
 
 logger = logging.getLogger("wise.msfd")
 
-countries_vocab = {code: vocab.title
-                   for code, vocab in countries_vocabulary('').by_value.items()}
+countries_vocab = {
+    code: vocab.title
+    for code, vocab in countries_vocabulary('').by_value.items()
+}
 
 
 countries_vocab.update({
@@ -63,24 +65,41 @@ class DemoSitesImportView(form.Form):
     label = "Import Demo Sites Data"
     description = "Upload a CSV file to import data into Plone."
 
-    def content_exists(self, row):
+    @property
+    def indicators_folder(self):
+        """indicators_folder"""
+        return self.context.aq_parent['mo-indicators']
+
+    def demosite_exists(self, row):
         """ check if content exists and return it """
 
         for content in self.context.contentValues():
             if row['Name_DS'] != content.title:
-                return None
+                continue
 
             if row['ID'] != content.id_ds:
-                return None
+                continue
 
-            country_codes = row['Country_DS'].split(',')
+            country_codes = row['Country_DS'].split(
+                ',') if row['Country_DS'] else []
             countries = [
                 countries_vocab.get(c.strip(), c.strip())
                 for c in country_codes
-            ]
+            ] or None
 
-            if countries != content.country_ds:
-                return None
+            if ((countries or content.country_ds)
+                    and countries != content.country_ds):
+                continue
+
+            return content
+
+        return None
+
+    def indicator_exists(self, title):
+        """indicator_exists"""
+        for content in self.indicators_folder.contentValues():
+            if title != content.title:
+                continue
 
             return content
 
@@ -119,7 +138,7 @@ class DemoSitesImportView(form.Form):
                 x['Objective']
                 for x in csv_reader_objectives
                 if x['ID'] == row['ID']
-                ]
+            ]
 
             self.create_content(row, objective[0] if objective else '')
 
@@ -127,10 +146,10 @@ class DemoSitesImportView(form.Form):
         """create_content"""
         name_ds = row['Name_DS']
 
-        if not name_ds:
+        if not name_ds or name_ds in ('to be confirmed', 'To be defined'):
             return
 
-        content = self.content_exists(row)
+        content = self.demosite_exists(row)
 
         if not content:
             content = api.content.create(
@@ -155,17 +174,26 @@ class DemoSitesImportView(form.Form):
             type_ds = row['Type_DS'].split(',')
             content.type_ds = [x.strip() for x in type_ds]
 
-        # content.indicator = row['Indicator']
+        for indicator in row['Indicator'].split(';'):
+            if not indicator:
+                continue
+
+            indicator = indicator.strip()
+            indicator_obj = self.indicator_exists(indicator)
+
+            if not indicator_obj:
+                indicator_obj = api.content.create(
+                    container=self.indicators_folder,
+                    type='indicator_mo',
+                    title=indicator,
+                )
+
         content.info_ds = row['Info_DS']
         content.website_ds = row['Website']
         content.latitude = row['Latitude']
         content.longitude = row['Longitude']
-
-        type_is_region = row['Type']
-        if type_is_region == 'Associated region':
-            content.type_is_region = "Associated region"
-        else:
-            content.type_is_region = "Demo site"
+        type_is_region = row.get('Type', 'Demo site')
+        content.type_is_region = type_is_region
 
         content.reindexObject()
 
