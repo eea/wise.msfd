@@ -32,6 +32,14 @@
     name="model_source">&lt;model xmlns:i18n=&quot;http://xml.zope.org/namespaces/i18n&quot; xmlns:form=&quot;http://namespaces.plone.org/supermodel/form&quot; xmlns:security=&quot;http://namespaces.plone.org/supermodel/security&quot; xmlns:users=&quot;http://namespaces.plone.org/supermodel/users&quot; xmlns:marshal=&quot;http://namespaces.plone.org/supermodel/marshal&quot; xmlns:lingua=&quot;http://namespaces.plone.org/supermodel/lingua&quot; xmlns=&quot;http://namespaces.plone.org/supermodel/schema&quot; i18n:domain=&quot;plone&quot;&gt;
     &lt;schema&gt;
       &lt;fieldset name=&quot;demo_site&quot; label=&quot;Demo Site&quot;&gt;
+        &lt;field name=&quot;id_ds&quot; type=&quot;zope.schema.Text&quot;&gt;
+          &lt;required&gt;False&lt;/required&gt;
+          &lt;title&gt;ID&lt;/title&gt;
+        &lt;/field&gt;
+        &lt;field name=&quot;objective_ds&quot; type=&quot;zope.schema.Text&quot;&gt;
+          &lt;required&gt;False&lt;/required&gt;
+          &lt;title&gt;Objective&lt;/title&gt;
+        &lt;/field&gt;
         &lt;field name=&quot;project_ds&quot; type=&quot;zope.schema.Text&quot;&gt;
           &lt;min_length/&gt;
           &lt;required&gt;False&lt;/required&gt;
