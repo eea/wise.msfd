@@ -10,7 +10,7 @@ from plone.namedfile.field import NamedFile
 from Products.Five import BrowserView
 from z3c.form import button, field, form
 from zope.interface import Interface
-
+from collective.relationhelpers import api as relapi
 from wise.msfd.wisetheme.vocabulary import countries_vocabulary
 
 
@@ -23,19 +23,27 @@ countries_vocab = {
 
 
 countries_vocab.update({
+    "AL": "Albania",
+    "AM": "Azerbaijan",
     "AR": "Armenia",
     "AT": "Austria",
+    "BA": "Bosnia and Herzegovina",
     "BR": "Brazil",
     "CZ": "Czechia",
+    "GE": "Georgia",
+    "GR": "Greece",
     "HU": "Hungary",
     "IS": "Iceland",
     "IL": "Israel",
     "MA": "Morocco",
     "ME": "Montenegro",
+    "MD": "Moldova",
     "NO": "Norway",
     "RS": "Serbia",
     "SK": "Slovakia",
     "TR": "Turkey",
+    "TU": "Tunisia",
+    "TN": "Tunisia",
     "UA": "Ukraine",
 })
 
@@ -74,14 +82,16 @@ class DemoSitesImportView(form.Form):
         """ check if content exists and return it """
 
         for content in self.context.contentValues():
-            if row['Name_DS'] != content.title:
+            name_ds = row.get('Name_DS', row.get('Region name'))
+            if name_ds != content.title:
                 continue
 
-            if row['ID'] != content.id_ds:
+            _id = row.get('ID', row.get('Id'))
+            if _id != content.id_ds:
                 continue
 
-            country_codes = row['Country_DS'].split(
-                ',') if row['Country_DS'] else []
+            _country = row.get('Country_DS', row.get('Country'))
+            country_codes = _country.split(',') if _country else []
             countries = [
                 countries_vocab.get(c.strip(), c.strip())
                 for c in country_codes
@@ -137,14 +147,14 @@ class DemoSitesImportView(form.Form):
             objective = [
                 x['Objective']
                 for x in csv_reader_objectives
-                if x['ID'] == row['ID']
+                if x['ID'] == row.get('ID', row.get('Id'))
             ]
 
             self.create_content(row, objective[0] if objective else '')
 
     def create_content(self, row, objective):
         """create_content"""
-        name_ds = row['Name_DS']
+        name_ds = row.get('Name_DS', row.get('Region name'))
 
         if not name_ds or name_ds in ('to be confirmed', 'To be defined'):
             return
@@ -155,30 +165,31 @@ class DemoSitesImportView(form.Form):
             content = api.content.create(
                 container=self.context,
                 type='demo_site_mo',
-                title=row['Name_DS'],
+                title=name_ds,
             )
 
-        content.id_ds = row['ID']
+        content.id_ds = row.get('ID', row.get('Id'))
         content.objective_ds = objective
         content.project_ds = row['Project']
         content.project_link_ds = row['Project link']
 
-        if row['Country_DS']:
-            country_ds = row['Country_DS'].split(',')
+        _country = row.get('Country_DS', row.get('Country'))
+        if _country:
+            country_ds = _country.split(',')
             content.country_ds = [
                 countries_vocab.get(c.strip(), c.strip())
                 for c in country_ds
             ]
 
-        if row['Type_DS']:
+        if row.get('Type_DS'):
             type_ds = row['Type_DS'].split(',')
             content.type_ds = [x.strip() for x in type_ds]
 
         for indicator in row['Indicator'].split(';'):
+            indicator = indicator.strip()
             if not indicator:
                 continue
 
-            indicator = indicator.strip()
             indicator_obj = self.indicator_exists(indicator)
 
             if not indicator_obj:
@@ -187,6 +198,9 @@ class DemoSitesImportView(form.Form):
                     type='indicator_mo',
                     title=indicator,
                 )
+
+            relapi.link_objects(
+                content, indicator_obj, 'indicator_mo')
 
         content.info_ds = row['Info_DS']
         content.website_ds = row['Website']
@@ -243,14 +257,16 @@ class DemoSiteItems(BrowserView):
             #     long_description = ''
             # measures = []
 
-            # if obj.measures:
-            #     measures = [
-            #         {"id": measure.to_id,
-            #          "title": measure.to_object.title,
-            #          "path": "/freshwater" +
-            #             measure.to_path.replace("/Plone", "")}
-            #         for measure in obj.measures
-            #     ]
+            indicators = []
+
+            if obj.indicator_mo:
+                indicators = [
+                    {"id": indicator.to_id,
+                     "title": indicator.to_object.title,
+                     "path": "/marine" +
+                        indicator.to_path.replace("/Plone", "")}
+                    for indicator in obj.indicator_mo
+                ]
 
             # sectors = [
             #     measure.to_object.measure_sector
@@ -267,7 +283,7 @@ class DemoSiteItems(BrowserView):
                         "country": obj.country_ds,
                         "type_is_region": obj.type_is_region,
                         "type": obj.type_ds,
-                        "indicators": obj.indicator_mo,
+                        "indicators": indicators,
                         "info": obj.info_ds,
                         "website": obj.website_ds,
                         "objective": obj.objective_ds,
