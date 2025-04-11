@@ -97,8 +97,8 @@ class DemoSitesImportView(form.Form):
                 for c in country_codes
             ] or None
 
-            if ((countries or content.country_ds)
-                    and countries != content.country_ds):
+            if ((countries or content.country_ds) and
+                    countries != content.country_ds):
                 continue
 
             return content
