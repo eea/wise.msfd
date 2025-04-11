@@ -3,4 +3,5 @@
  <property
     name="title">Controls the available content types in your portal</property>
  <object name="demo_site_mo" meta_type="Dexterity FTI"/>
+ <object name="indicator_mo" meta_type="Dexterity FTI"/>
 </object>

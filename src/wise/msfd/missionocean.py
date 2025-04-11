@@ -10,30 +10,40 @@ from plone.namedfile.field import NamedFile
 from Products.Five import BrowserView
 from z3c.form import button, field, form
 from zope.interface import Interface
-
+from collective.relationhelpers import api as relapi
 from wise.msfd.wisetheme.vocabulary import countries_vocabulary
 
 
 logger = logging.getLogger("wise.msfd")
 
-countries = {code: vocab.title
-             for code, vocab in countries_vocabulary('').by_value.items()}
+countries_vocab = {
+    code: vocab.title
+    for code, vocab in countries_vocabulary('').by_value.items()
+}
 
 
-countries.update({
+countries_vocab.update({
+    "AL": "Albania",
+    "AM": "Azerbaijan",
     "AR": "Armenia",
     "AT": "Austria",
+    "BA": "Bosnia and Herzegovina",
     "BR": "Brazil",
     "CZ": "Czechia",
+    "GE": "Georgia",
+    "GR": "Greece",
     "HU": "Hungary",
     "IS": "Iceland",
     "IL": "Israel",
     "MA": "Morocco",
     "ME": "Montenegro",
+    "MD": "Moldova",
     "NO": "Norway",
     "RS": "Serbia",
     "SK": "Slovakia",
     "TR": "Turkey",
+    "TU": "Tunisia",
+    "TN": "Tunisia",
     "UA": "Ukraine",
 })
 
@@ -41,9 +51,15 @@ countries.update({
 class DemoSitesImportSchema(Interface):
     """ DemoSitesImportSchema """
 
-    csv_file = NamedFile(
-        title="CSV File",
-        description="Upload a CSV file to import data.",
+    csv_demo_sites = NamedFile(
+        title="CSV File Demo sites",
+        description="Upload a CSV file woth demo sites to import data.",
+        required=True,
+    )
+
+    csv_objectives = NamedFile(
+        title="CSV File objectives",
+        description="Upload a CSV file with objectives to import data.",
         required=True,
     )
 
@@ -57,6 +73,48 @@ class DemoSitesImportView(form.Form):
     label = "Import Demo Sites Data"
     description = "Upload a CSV file to import data into Plone."
 
+    @property
+    def indicators_folder(self):
+        """indicators_folder"""
+        return self.context.aq_parent['mo-indicators']
+
+    def demosite_exists(self, row):
+        """ check if content exists and return it """
+
+        for content in self.context.contentValues():
+            name_ds = row.get('Name_DS', row.get('Region name'))
+            if name_ds != content.title:
+                continue
+
+            _id = row.get('ID', row.get('Id'))
+            if _id != content.id_ds:
+                continue
+
+            _country = row.get('Country_DS', row.get('Country'))
+            country_codes = _country.split(',') if _country else []
+            countries = [
+                countries_vocab.get(c.strip(), c.strip())
+                for c in country_codes
+            ] or None
+
+            if ((countries or content.country_ds) and
+                    countries != content.country_ds):
+                continue
+
+            return content
+
+        return None
+
+    def indicator_exists(self, title):
+        """indicator_exists"""
+        for content in self.indicators_folder.contentValues():
+            if title != content.title:
+                continue
+
+            return content
+
+        return None
+
     @button.buttonAndHandler('Import')
     def handleApply(self, action):
         """handleApply"""
@@ -65,58 +123,91 @@ class DemoSitesImportView(form.Form):
             self.status = self.formErrorsMessage
             return
 
-        csv_file = data['csv_file']
-        self.process_csv(csv_file)
-        api.portal.show_message(message="CSV file imported successfully!",
+        csv_demo_sites = data['csv_demo_sites']
+        csv_objectives = data['csv_objectives']
+        self.process_csv(csv_demo_sites, csv_objectives)
+        api.portal.show_message(message="Import successfull!",
                                 request=self.request)
 
-    def process_csv(self, csv_file):
+    def process_csv(self, csv_demo_sites, csv_objectives):
         """process_csv"""
         # Access the file data correctly
-        csv_data = csv_file.data
+        csv_data_demo_sites = csv_demo_sites.data
+        csv_data_objectives = csv_objectives.data
         # Decode the data and remove the BOM if present
-        csv_text = csv_data.decode('utf-8-sig')
-        csv_reader = csv.DictReader(io.StringIO(csv_text))
+        csv_text_demo_sites = csv_data_demo_sites.decode('utf-8-sig')
+        csv_reader_demo_sites = csv.DictReader(
+            io.StringIO(csv_text_demo_sites))
+        csv_text_objectives = csv_data_objectives.decode('utf-8-sig')
+        csv_reader_objectives_reader = csv.DictReader(
+            io.StringIO(csv_text_objectives))
+        csv_reader_objectives = [x for x in csv_reader_objectives_reader]
 
-        for row in csv_reader:
-            self.create_content(row)
+        for row in csv_reader_demo_sites:
+            objective = [
+                x['Objective']
+                for x in csv_reader_objectives
+                if x['ID'] == row.get('ID', row.get('Id'))
+            ]
 
-    def create_content(self, row):
+            self.create_content(row, objective[0] if objective else '')
+
+    def create_content(self, row, objective):
         """create_content"""
-        name_ds = row['Name_DS']
+        name_ds = row.get('Name_DS', row.get('Region name'))
 
-        if not name_ds or name_ds in ('To be defined',):
+        if not name_ds or name_ds in ('to be confirmed', 'To be defined'):
             return
 
-        # content_id = row['Name_DS']
-        content = api.content.create(
-            container=self.context,
-            type='demo_site_mo',
-            # id=content_id,
-            title=row['Name_DS'],
-            # description=row['Info_DS'],
-        )
+        content = self.demosite_exists(row)
 
+        if not content:
+            content = api.content.create(
+                container=self.context,
+                type='demo_site_mo',
+                title=name_ds,
+            )
+
+        content.id_ds = row.get('ID', row.get('Id'))
+        content.objective_ds = objective
         content.project_ds = row['Project']
         content.project_link_ds = row['Project link']
 
-        if row['Country_DS']:
-            country_ds = row['Country_DS'].split(',')
+        _country = row.get('Country_DS', row.get('Country'))
+        if _country:
+            country_ds = _country.split(',')
             content.country_ds = [
-                countries.get(c.strip(), c.strip())
+                countries_vocab.get(c.strip(), c.strip())
                 for c in country_ds
             ]
 
-        if row['Type_DS']:
+        if row.get('Type_DS'):
             type_ds = row['Type_DS'].split(',')
             content.type_ds = [x.strip() for x in type_ds]
 
-        # content.indicator = row['Indicator']
+        for indicator in row['Indicator'].split(';'):
+            indicator = indicator.strip()
+            if not indicator:
+                continue
+
+            indicator_obj = self.indicator_exists(indicator)
+
+            if not indicator_obj:
+                indicator_obj = api.content.create(
+                    container=self.indicators_folder,
+                    type='indicator_mo',
+                    title=indicator,
+                )
+
+            relapi.link_objects(
+                content, indicator_obj, 'indicator_mo')
+
         content.info_ds = row['Info_DS']
         content.website_ds = row['Website']
         content.latitude = row['Latitude']
         content.longitude = row['Longitude']
-        content.type_is_region = "Demo site"
+        type_is_region = row.get('Type', 'Demo site')
+        content.type_is_region = type_is_region
 
         content.reindexObject()
 
@@ -166,14 +257,16 @@ class DemoSiteItems(BrowserView):
             #     long_description = ''
             # measures = []
 
-            # if obj.measures:
-            #     measures = [
-            #         {"id": measure.to_id,
-            #          "title": measure.to_object.title,
-            #          "path": "/freshwater" +
-            #             measure.to_path.replace("/Plone", "")}
-            #         for measure in obj.measures
-            #     ]
+            indicators = []
+
+            if obj.indicator_mo:
+                indicators = [
+                    {"id": indicator.to_id,
+                     "title": indicator.to_object.title,
+                     "path": "/marine" +
+                        indicator.to_path.replace("/Plone", "")}
+                    for indicator in obj.indicator_mo
+                ]
 
             # sectors = [
             #     measure.to_object.measure_sector
@@ -190,10 +283,10 @@ class DemoSiteItems(BrowserView):
                         "country": obj.country_ds,
                         "type_is_region": obj.type_is_region,
                         "type": obj.type_ds,
-                        "indicators": obj.indicator_mo,
+                        "indicators": indicators,
                         "info": obj.info_ds,
                         "website": obj.website_ds,
-                        "objective": '',
+                        "objective": obj.objective_ds,
                         # "description": long_description,
                         "url": brain.getURL(),
                         "path": "/marine" + "/".join(
