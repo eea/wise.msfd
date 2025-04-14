@@ -107,7 +107,6 @@ class DemoSitesImportView(form.Form):
             if content.latitude != latitude:
                 continue
 
-
             if content.longitude != longitude:
                 continue
 
