@@ -101,6 +101,15 @@ class DemoSitesImportView(form.Form):
                     countries != content.country_ds):
                 continue
 
+            latitude = row['Latitude'] or ''
+            longitude = row['Longitude'] or ''
+
+            if content.latitude != latitude:
+                continue
+
+            if content.longitude != longitude:
+                continue
+
             return content
 
         return None
@@ -185,10 +194,14 @@ class DemoSitesImportView(form.Form):
             type_ds = row['Type_DS'].split(',')
             content.type_ds = [x.strip() for x in type_ds]
 
+        _indicators_visited = []
         for indicator in row['Indicator'].split(';'):
             indicator = indicator.strip()
-            if not indicator:
+
+            if not indicator or indicator in _indicators_visited:
                 continue
+
+            _indicators_visited.append(indicator)
 
             indicator_obj = self.indicator_exists(indicator)
 
@@ -204,8 +217,8 @@ class DemoSitesImportView(form.Form):
 
         content.info_ds = row['Info_DS']
         content.website_ds = row['Website']
-        content.latitude = row['Latitude']
-        content.longitude = row['Longitude']
+        content.latitude = row['Latitude'] or ''
+        content.longitude = row['Longitude'] or ''
         type_is_region = row.get('Type', 'Demo site')
         content.type_is_region = type_is_region
 
