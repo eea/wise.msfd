@@ -124,6 +124,17 @@ class DemoSitesImportView(form.Form):
 
         return None
 
+    def add_objective_prefix(self, objective):
+        """add_objective_prefix"""
+        # _obj_map = {
+        #     'Carbon-neutral and circular blue economy': 'Ob. 3:',
+        #     'Digital twin of the ocean': 'En. 1: ',
+        #     'Prevent and eliminate pollution of waters': 'Ob. 2:',
+        #     'Protect and restore marine and freshwater ecosystems': 'Ob. 1:',
+        #     'Public mobilisation and engagement': 'En. 2: ',
+        # }
+        return objective
+
     @button.buttonAndHandler('Import')
     def handleApply(self, action):
         """handleApply"""
@@ -154,7 +165,7 @@ class DemoSitesImportView(form.Form):
 
         for row in csv_reader_demo_sites:
             objective = [
-                x['Objective']
+                self.add_objective_prefix(x['Objective'])
                 for x in csv_reader_objectives
                 if x['ID'] == row.get('ID', row.get('Id'))
             ]
@@ -195,8 +206,13 @@ class DemoSitesImportView(form.Form):
             content.type_ds = [x.strip() for x in type_ds]
 
         _indicators_visited = []
+        indicator_blacklist = ['0']
+
         for indicator in row['Indicator'].split(';'):
             indicator = indicator.strip()
+
+            if indicator in indicator_blacklist:
+                continue
 
             if not indicator or indicator in _indicators_visited:
                 continue
