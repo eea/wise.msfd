@@ -36,7 +36,7 @@ from wise.msfd.compliance.assessment import (ANSWERS_COLOR_TABLE,
                                              filter_assessment_data_2012,
                                              summary_fields_2016_cross)
 from wise.msfd.compliance.base import (
-    NAT_DESC_QUESTIONS, is_row_relevant_for_descriptor)
+    get_question_display_id, NAT_DESC_QUESTIONS, is_row_relevant_for_descriptor)
 from wise.msfd.compliance.content import AssessmentData
 from wise.msfd.compliance.scoring import (
     get_overall_conclusion, get_overall_conclusion_2022,
@@ -1467,6 +1467,7 @@ CROSS_CUTTING_SECTIONS = (
 )
 
 
+
 @implementer(INationaldescriptorArticleViewCrossCutting)
 class NationalDescriptorArticleViewCrossCutting(NationalDescriptorArticleView):
     assessment_data_2018_tpl = Template(
@@ -1474,6 +1475,13 @@ class NationalDescriptorArticleViewCrossCutting(NationalDescriptorArticleView):
     summary_fields = summary_fields_2016_cross
     show_file_version = False
     enable_pdf_download = True
+
+    def get_question_display_id(self, question_id):
+        """ the question_id for some questions were changed and we cannot just change
+         the question_id as it is used to store the data
+          use this only to display a different question_id for the question """
+
+        return get_question_display_id(question_id)
 
     def pdf_name(self):
         fname = "{}-{}-{}".format(
