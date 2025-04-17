@@ -45,6 +45,27 @@ logger = logging.getLogger('wise.msfd')
 edw_logger = logging.getLogger('edw.logger')
 edw_logger.setLevel('WARNING')
 
+
+QUESTION_DISPLAY_IDS = {
+    "Ad16G": "Ad16H",
+    "Ad17G": "Ad17H",
+    "Ad18G": "Ad18H",
+    "Ad19H": "Ad19I",
+    "Ad20H": "Ad20I",
+    "Ad21I": "Ad21J",
+    "Ad22I": "Ad22J",
+    "Ad23J": "Ad23K",
+    "Ad24J": "Ad24K",
+}
+
+def get_question_display_id(question_id):
+    """ the question_id for some questions were changed and we cannot just change
+        the question_id as it is used to store the data
+        use this only to display a different question_id for the question """
+    
+    return QUESTION_DISPLAY_IDS.get(question_id, question_id)
+
+
 STATUS_ORDER = ("not_started", "in_work", "in_draft_review_tl",
                 "in_draft_review", "in_draft_review_com",
                 "in_final_review_tl", "in_final_review",
@@ -769,8 +790,6 @@ def _a10_ids_cachekey(method, self, descriptor, **kwargs):
     return key
 
 
-
-
 def get_weights_from_xml(node):
     """ Initialize with values from questions xml
     """
@@ -798,7 +817,9 @@ class AssessmentQuestionDefinition:
         self.klass = node.get('class')
         self.use_criteria = node.get('use-criteria')
         self.definition = u"{}: {}".format(
-            self.id, node.find('definition').text.strip())
+            # get_question_display_id(self.id), 
+            self.id,
+            node.find('definition').text.strip())
         self.answers = [x.strip()
                         for x in node.xpath('answers/option/text()')]
         self.scores = [s.strip()

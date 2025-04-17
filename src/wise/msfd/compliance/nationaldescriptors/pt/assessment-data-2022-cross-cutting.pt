@@ -21,7 +21,7 @@
               tal:attributes="style python: 'border-top: 5px solid #ddd' if view.question_is_first_in_section(question_id) else ''">
             <th class="fixed-left">
             <div class="q-wrap">
-                <div class="q-id" tal:content="python: question_id">Question Id</div>
+                <div class="q-id" tal:content="python: view.get_question_display_id(question_id)">Question Id</div>
                 <div class="q-title" tal:content="python: row.question.split(':', 1)[1]">Question text</div>
                 </div>
             </th>
