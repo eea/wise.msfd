@@ -3,7 +3,7 @@
 import traceback
 from plone.app.dexterity.behaviors.metadata import (
     DCFieldProperty, MetadataBase)
-from .interfaces import (ISPMeasureFields)
+from .interfaces import (ISPMeasureFields, IIndicatorMOFields)
 from zope.lifecycleevent.interfaces import IObjectModifiedEvent
 from zope.component import adapter
 
@@ -127,3 +127,9 @@ class SPMeasureFields(MetadataBase):
     traffic_separation_scheme = DCFieldProperty(
         ISPMeasureFields["traffic_separation_scheme"])
     type_of_pressure = DCFieldProperty(ISPMeasureFields["type_of_pressure"])
+
+
+class IndicatorMOFields(MetadataBase):
+    objective_ds = DCFieldProperty(IIndicatorMOFields["objective_ds"])
+    target_ds = DCFieldProperty(IIndicatorMOFields["target_ds"])
+    modified_date = DCFieldProperty(IIndicatorMOFields["modified_date"])
