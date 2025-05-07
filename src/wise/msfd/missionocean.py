@@ -154,7 +154,7 @@ class DemoSitesImportView(form.Form):
         """process_csv"""
         # Access the file data correctly
         csv_data_demo_sites = csv_demo_sites.data
-        csv_data_objectives = csv_objectives.get("data", {})
+        csv_data_objectives = csv_objectives.data if csv_objectives else {}
         # Decode the data and remove the BOM if present
         csv_text_demo_sites = csv_data_demo_sites.decode('utf-8-sig')
         csv_reader_demo_sites = csv.DictReader(
@@ -162,8 +162,7 @@ class DemoSitesImportView(form.Form):
 
         if csv_data_objectives:
             csv_text_objectives = csv_data_objectives.decode('utf-8-sig')
-            csv_reader_objectives_reader = csv.DictReader(
-                io.StringIO(csv_text_objectives))
+            csv_reader_objectives_reader = csv.DictReader(io.StringIO(csv_text_objectives))
             csv_reader_objectives = [x for x in csv_reader_objectives_reader]
 
         for row in csv_reader_demo_sites:
@@ -210,7 +209,7 @@ class DemoSitesImportView(form.Form):
         content.objective_ds = objectives
         content.target_ds = targets
         content.project_ds = row['Project']
-        content.project_link_ds = row['Project link']
+        content.project_link_ds = row.get('Project link', '')
 
         _country = row.get('Country_DS', row.get('Country'))
         if _country:
@@ -253,7 +252,7 @@ class DemoSitesImportView(form.Form):
             relapi.link_objects(
                 content, indicator_obj, 'indicator_mo')
 
-        content.info_ds = row['Info_DS']
+        content.info_ds = row.get('Info_DS', row.get('More info'))
         content.website_ds = row['Website']
         content.latitude = row['Latitude'] or ''
         content.longitude = row['Longitude'] or ''
