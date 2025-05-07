@@ -60,7 +60,7 @@ class DemoSitesImportSchema(Interface):
     csv_objectives = NamedFile(
         title="CSV File objectives",
         description="Upload a CSV file with objectives to import data.",
-        required=True,
+        required=False,
     )
 
 
@@ -144,8 +144,9 @@ class DemoSitesImportView(form.Form):
             return
 
         csv_demo_sites = data['csv_demo_sites']
-        csv_objectives = data['csv_objectives']
+        csv_objectives = data['csv_objectives'] or {}
         self.process_csv(csv_demo_sites, csv_objectives)
+        # self.process_csv(csv_demo_sites)
         api.portal.show_message(message="Import successfull!",
                                 request=self.request)
 
@@ -153,28 +154,45 @@ class DemoSitesImportView(form.Form):
         """process_csv"""
         # Access the file data correctly
         csv_data_demo_sites = csv_demo_sites.data
-        csv_data_objectives = csv_objectives.data
+        csv_data_objectives = csv_objectives.data if csv_objectives else {}
         # Decode the data and remove the BOM if present
         csv_text_demo_sites = csv_data_demo_sites.decode('utf-8-sig')
         csv_reader_demo_sites = csv.DictReader(
             io.StringIO(csv_text_demo_sites))
-        csv_text_objectives = csv_data_objectives.decode('utf-8-sig')
-        csv_reader_objectives_reader = csv.DictReader(
-            io.StringIO(csv_text_objectives))
-        csv_reader_objectives = [x for x in csv_reader_objectives_reader]
+
+        if csv_data_objectives:
+            csv_text_objectives = csv_data_objectives.decode('utf-8-sig')
+            csv_reader_objectives_reader = csv.DictReader(
+                io.StringIO(csv_text_objectives))
+            csv_reader_objectives = [x for x in csv_reader_objectives_reader]
 
         for row in csv_reader_demo_sites:
-            objective = [
-                self.add_objective_prefix(x['Objective'])
-                for x in csv_reader_objectives
-                if x['ID'] == row.get('ID', row.get('Id'))
-            ]
+            if csv_data_objectives:
+                objective = [
+                    self.add_objective_prefix(x['Objective'])
+                    for x in csv_reader_objectives
+                    if x['ID'] == row.get('ID', row.get('Id'))
+                ]
+            else:
+                objective = ''
 
             self.create_content(row, objective[0] if objective else '')
+            # self.create_content(row)
 
-    def create_content(self, row, objective):
+    def create_content(self, row, objective_csv):
         """create_content"""
         name_ds = row.get('Name_DS', row.get('Region name'))
+
+        if objective_csv:
+            # print("Using objective from additional CSV!")
+            objectives = [objective_csv]
+        else:
+            # print("Using objective from demo sites CSV!")
+            objectives = row.get('Obectives/enablers', '').split(';')
+            objectives = [x.strip() for x in objectives]
+
+        targets = row.get('Targets', '').split(';')
+        targets = [x.strip() for x in targets]
 
         if not name_ds or name_ds in ('to be confirmed', 'To be defined'):
             return
@@ -189,9 +207,10 @@ class DemoSitesImportView(form.Form):
             )
 
         content.id_ds = row.get('ID', row.get('Id'))
-        content.objective_ds = objective
+        content.objective_ds = objectives
+        content.target_ds = targets
         content.project_ds = row['Project']
-        content.project_link_ds = row['Project link']
+        content.project_link_ds = row.get('Project link', '')
 
         _country = row.get('Country_DS', row.get('Country'))
         if _country:
@@ -228,10 +247,13 @@ class DemoSitesImportView(form.Form):
                     title=indicator,
                 )
 
+            indicator_obj.target_ds = targets
+            indicator_obj.objective_ds = objectives
+
             relapi.link_objects(
                 content, indicator_obj, 'indicator_mo')
 
-        content.info_ds = row['Info_DS']
+        content.info_ds = row.get('Info_DS', row.get('More info'))
         content.website_ds = row['Website']
         content.latitude = row['Latitude'] or ''
         content.longitude = row['Longitude'] or ''
@@ -316,6 +338,7 @@ class DemoSiteItems(BrowserView):
                         "info": obj.info_ds,
                         "website": obj.website_ds,
                         "objective": obj.objective_ds,
+                        "target": obj.target_ds,
                         # "description": long_description,
                         "url": brain.getURL(),
                         "path": "/marine" + "/".join(

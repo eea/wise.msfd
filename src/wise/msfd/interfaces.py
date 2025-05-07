@@ -1,7 +1,7 @@
 # pylint: skip-file
 from __future__ import absolute_import
 from zope.interface import Interface
-from zope.schema import Choice, List  # Int, Text, TextLine
+from zope.schema import Choice, List, Set  # Int, Text, TextLine
 from plone.supermodel import model
 from plone.autoform.interfaces import IFormFieldProvider
 from zope.interface import provider
@@ -181,3 +181,13 @@ class ISPMeasureFields(model.Schema):
         title=u"Traffic Separation Scheme", description=u"", required=False)
     type_of_pressure = List(title=u"Type Of Pressure",
                             description=u"", required=False)
+
+
+@provider(IFormFieldProvider)
+class IIndicatorMOFields(model.Schema):
+    """Fields for indicator_mo content type """
+
+    objective_ds = Set(
+        title=u"Objective/enabler", description=u"", required=False)
+    target_ds = Set(title=u"Target", description=u"", required=False)
+    modified_date = Text(title=u"Objective", description=u"", required=False)
