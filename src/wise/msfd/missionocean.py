@@ -162,7 +162,8 @@ class DemoSitesImportView(form.Form):
 
         if csv_data_objectives:
             csv_text_objectives = csv_data_objectives.decode('utf-8-sig')
-            csv_reader_objectives_reader = csv.DictReader(io.StringIO(csv_text_objectives))
+            csv_reader_objectives_reader = csv.DictReader(
+                io.StringIO(csv_text_objectives))
             csv_reader_objectives = [x for x in csv_reader_objectives_reader]
 
         for row in csv_reader_demo_sites:
