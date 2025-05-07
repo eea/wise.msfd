@@ -187,6 +187,7 @@ class ISPMeasureFields(model.Schema):
 class IIndicatorMOFields(model.Schema):
     """Fields for indicator_mo content type """
 
-    objective_ds = Set(title=u"Objective/enabler", description=u"", required=False)
+    objective_ds = Set(
+        title=u"Objective/enabler", description=u"", required=False)
     target_ds = Set(title=u"Target", description=u"", required=False)
     modified_date = Text(title=u"Objective", description=u"", required=False)
