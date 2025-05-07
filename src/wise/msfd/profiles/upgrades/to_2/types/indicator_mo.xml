@@ -39,11 +39,11 @@
           &lt;title&gt;Objective/enabler&lt;/title&gt;
           &lt;value_type type=&quot;zope.schema.Choice&quot;&gt;
             &lt;values&gt;
-              &lt;element&gt;Protecting and restoring marine and freshwater ecosystems and biodiversity&lt;/element&gt;
-              &lt;element&gt;Prevent and eliminate pollution of waters&lt;/element&gt;
-              &lt;element&gt;Making the sustainable blue economy carbon-neutral and circular&lt;/element&gt;
-              &lt;element&gt;Digital twin of the ocean&lt;/element&gt;
-              &lt;element&gt;Public mobilisation and engagement&lt;/element&gt;
+              &lt;element&gt;Objective 1: Protect and restore marine and freshwater ecosystems and biodiversity&lt;/element&gt;
+              &lt;element&gt;Objective 2: Prevent and eliminate pollution of our oceans, seas and waters&lt;/element&gt;
+              &lt;element&gt;Objective 3: Make the sustainable blue economy carbon-neutral and circular&lt;/element&gt;
+              &lt;element&gt;Enabler 1: Digital twin of the ocean&lt;/element&gt;
+              &lt;element&gt;Enabler 2: Public mobilisation and engagement&lt;/element&gt;
             &lt;/values&gt;
           &lt;/value_type&gt;
         &lt;/field&gt;
