@@ -183,10 +183,10 @@ class DemoSitesImportView(form.Form):
         name_ds = row.get('Name_DS', row.get('Region name'))
 
         if objective_csv:
-            print("Using objective from additional CSV!")
+            # print("Using objective from additional CSV!")
             objectives = [objective_csv]
         else:
-            print("Using objective from demo sites CSV!")
+            # print("Using objective from demo sites CSV!")
             objectives = row.get('Obectives/enablers', '').split(';')
             objectives = [x.strip() for x in objectives]
 
