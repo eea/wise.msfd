@@ -53,6 +53,7 @@ countries_vocab.update({
     "UA": "Ukraine",
 })
 
+
 class IDemoSiteContent(Interface):
     """ Interface for Demo site content type
     """
