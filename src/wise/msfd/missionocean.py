@@ -389,8 +389,9 @@ class DemoSiteItems(BrowserView):
 @adapter(IDexterityContainer, Interface)
 # @adapter(IDemoSiteContent, Interface)
 class MissionOceanDeserializer(DeserializeFromJson):
-    """ """
-    def __call__(self, validate_all=False, data=None, create=False, mask_validation_errors=True):
+    """ MissionOceanDeserializer """
+    def __call__(self, validate_all=False, data=None, 
+                 create=False, mask_validation_errors=True):
         if data is None:
             data = json_body(self.request)
 
@@ -402,4 +403,5 @@ class MissionOceanDeserializer(DeserializeFromJson):
                     if "/marine/" in path:
                         value["@id"] = path.replace("/marine/", "/", 1)
 
-        return super().__call__(validate_all, data, create, mask_validation_errors)
+        return super(MissionOceanDeserializer, self).__call__(
+            validate_all, data, create, mask_validation_errors)
