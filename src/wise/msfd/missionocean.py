@@ -390,7 +390,7 @@ class DemoSiteItems(BrowserView):
 # @adapter(IDemoSiteContent, Interface)
 class MissionOceanDeserializer(DeserializeFromJson):
     """ MissionOceanDeserializer """
-    def __call__(self, validate_all=False, data=None, 
+    def __call__(self, validate_all=False, data=None,
                  create=False, mask_validation_errors=True):
         if data is None:
             data = json_body(self.request)
