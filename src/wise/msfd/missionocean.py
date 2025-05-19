@@ -6,10 +6,16 @@ import logging
 # import lxml
 from plone import api
 from plone.api.portal import get_tool
+from plone.dexterity.content import Container
 from plone.namedfile.field import NamedFile
+from plone.restapi.deserializer.dxcontent import DeserializeFromJson
+from plone.restapi.interfaces import IDeserializeFromJson
+from plone.dexterity.interfaces import IDexterityContainer
+from plone.restapi.deserializer import json_body
 from Products.Five import BrowserView
 from z3c.form import button, field, form
-from zope.interface import Interface
+from zope.component import adapter
+from zope.interface import Interface, implementer
 from collective.relationhelpers import api as relapi
 from wise.msfd.wisetheme.vocabulary import countries_vocabulary
 
@@ -46,6 +52,16 @@ countries_vocab.update({
     "TN": "Tunisia",
     "UA": "Ukraine",
 })
+
+class IDemoSiteContent(Interface):
+    """ Interface for Demo site content type
+    """
+
+
+@implementer(IDemoSiteContent)
+class DemoSiteContent(Container):
+    """ Demo site content
+    """
 
 
 class DemoSitesImportSchema(Interface):
@@ -367,3 +383,23 @@ class DemoSiteItems(BrowserView):
         response.setHeader("Content-type", "application/json")
 
         return json.dumps(results)
+
+
+@implementer(IDeserializeFromJson)
+@adapter(IDexterityContainer, Interface)
+# @adapter(IDemoSiteContent, Interface)
+class MissionOceanDeserializer(DeserializeFromJson):
+    """ """
+    def __call__(self, validate_all=False, data=None, create=False, mask_validation_errors=True):
+        if data is None:
+            data = json_body(self.request)
+
+        if data and "indicator_mo" in data:
+            logger.info("Fix path for indicator_mo relation!")
+            for value in data["indicator_mo"]:
+                if isinstance(value, dict) and "@id" in value:
+                    path = value["@id"]
+                    if "/marine/" in path:
+                        value["@id"] = path.replace("/marine/", "/", 1)
+
+        return super().__call__(validate_all, data, create, mask_validation_errors)

@@ -20,7 +20,7 @@
  </property>
  <property name="default_view_fallback">False</property>
  <property name="add_permission">cmf.AddPortalContent</property>
- <property name="klass">plone.dexterity.content.Container</property>
+ <property name="klass">wise.msfd.missionocean.DemoSiteContent</property>
  <property name="behaviors">
   <element value="plone.dublincore"/>
   <element value="plone.namefromtitle"/>
