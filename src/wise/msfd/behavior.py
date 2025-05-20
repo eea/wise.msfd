@@ -132,4 +132,4 @@ class SPMeasureFields(MetadataBase):
 class IndicatorMOFields(MetadataBase):
     objective_ds = DCFieldProperty(IIndicatorMOFields["objective_ds"])
     target_ds = DCFieldProperty(IIndicatorMOFields["target_ds"])
-    modified_date = DCFieldProperty(IIndicatorMOFields["modified_date"])
+    modification_date = DCFieldProperty(IIndicatorMOFields["modification_date"])

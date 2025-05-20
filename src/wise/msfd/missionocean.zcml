@@ -6,6 +6,40 @@
   xmlns:plone="http://namespaces.plone.org/plone"
   i18n_domain="wise.msfd">
 
+  <adapter
+    factory=".missionocean.MissionOceanDeserializer"
+  />
+  <!-- <adapter factory=".missionocean.UpdateModifiedDateExecutor" />
+
+  <plone:ruleAction
+      name="missionocean.UpdateModifiedDate"
+      title="Update indicator modified date"
+      description="Update indicator modified date"
+      for="*"
+      event="zope.interface.interfaces.IObjectEvent"
+      schema=".missionocean.IUpdateModifiedDateAction"
+      factory=".missionocean.UpdateModifiedDateAction"
+      addview="missionocean.UpdateModifiedDate"
+    /> -->
+  <!-- addview="missionocean.UpdateModifiedDate" -->
+
+<!-- <browser:page
+    name="missionocean.UpdateModifiedDate"
+    for="plone.app.contentrules.browser.interfaces.IRuleActionAdding"
+    class=".missionocean.UpdateModifiedDateAddForm"
+    permission="plone.app.contentrules.ManageContentRules"
+  /> -->
+
+  <plone:behavior
+    name="wise.indicatormofields"
+    title="Indicator (MO) fields"
+    description="Adds indicator MO form fields"
+    factory=".behavior.IndicatorMOFields"
+    provides=".interfaces.IIndicatorMOFields"
+    for="plone.dexterity.interfaces.IDexterityContent"
+    marker=".interfaces.IIndicatorMOFields"
+    />
+
   <browser:page
     name="demo-sites-import"
     for="*"
