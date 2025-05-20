@@ -401,7 +401,7 @@ class MissionOceanDeserializer(DeserializeFromJson):
             for value in data["indicator_mo"]:
                 if isinstance(value, dict) and "@id" in value:
                     path = value["@id"]
-                    if "/marine/" in path:
+                    if path.startswith("/marine/"):
                         value["@id"] = path.replace("/marine/", "/", 1)
 
         return super(MissionOceanDeserializer, self).__call__(
