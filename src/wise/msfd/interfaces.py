@@ -190,4 +190,5 @@ class IIndicatorMOFields(model.Schema):
     objective_ds = Set(
         title=u"Objective/enabler", description=u"", required=False)
     target_ds = Set(title=u"Target", description=u"", required=False)
-    modification_date = Date(title=u"Modified date (indicator)", description=u"", required=False)
+    modification_date = Date(
+        title=u"Modified date (indicator)", description=u"", required=False)
