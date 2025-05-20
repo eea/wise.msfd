@@ -406,3 +406,45 @@ class MissionOceanDeserializer(DeserializeFromJson):
 
         return super(MissionOceanDeserializer, self).__call__(
             validate_all, data, create, mask_validation_errors)
+
+
+# from OFS.SimpleItem import SimpleItem
+# from plone.contentrules.rule.interfaces import IExecutable, IRuleElementData
+# from plone.app.contentrules.browser.formhelper import NullAddForm
+
+
+# class UpdateModifiedDateAddForm(NullAddForm):
+#     """UpdateModifiedDateAddForm"""
+
+#     def create(self):
+#         return UpdateModifiedDateAction()
+
+
+# class IUpdateModifiedDateAction(Interface):
+#     """IUpdateModifiedDateAction"""
+
+
+# @implementer(IUpdateModifiedDateAction, IRuleElementData)
+# class UpdateModifiedDateAction(SimpleItem):
+#     """UpdateModifiedDateAction"""
+
+#     element = "missionocean.UpdateModifiedDate"
+#     summary = str("Update indicator modified date")
+
+
+# @implementer(IExecutable)
+# class UpdateModifiedDateExecutor(object):
+#     """Translate async executor"""
+
+#     adapts(Interface, IUpdateModifiedDateAction, Interface)
+
+#     def __init__(self, context, element, event):
+#         self.context = context
+#         self.element = element
+#         self.event = event
+
+#     def __call__(self):
+#         # import pdb; pdb.set_trace()
+
+#         logger.info("Update indicator modified date! %s", self.event.object)
+#         return True

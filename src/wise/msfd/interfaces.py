@@ -1,7 +1,7 @@
 # pylint: skip-file
 from __future__ import absolute_import
 from zope.interface import Interface
-from zope.schema import Choice, List, Set  # Int, Text, TextLine
+from zope.schema import Choice, Date, List, Set  # Int, Text, TextLine
 from plone.supermodel import model
 from plone.autoform.interfaces import IFormFieldProvider
 from zope.interface import provider
@@ -190,4 +190,5 @@ class IIndicatorMOFields(model.Schema):
     objective_ds = Set(
         title=u"Objective/enabler", description=u"", required=False)
     target_ds = Set(title=u"Target", description=u"", required=False)
-    modified_date = Text(title=u"Objective", description=u"", required=False)
+    modification_date = Date(
+        title=u"Modified date (indicator)", description=u"", required=False)

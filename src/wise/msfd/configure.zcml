@@ -28,25 +28,12 @@
     for="plone.dexterity.interfaces.IDexterityContent"
     marker=".interfaces.ISPMeasureFields"
     />
-  
-  <plone:behavior
-    name="wise.indicatormofields"
-    title="Indicator (MO) fields"
-    description="Adds indicator MO form fields"
-    factory=".behavior.IndicatorMOFields"
-    provides=".interfaces.IIndicatorMOFields"
-    for="plone.dexterity.interfaces.IDexterityContent"
-    marker=".interfaces.IIndicatorMOFields"
-    />
-  
+    
   <subscriber
     for=".interfaces.ISPMeasureFields
          zope.lifecycleevent.interfaces.IObjectModifiedEvent"
     handler=".behavior.handle_origin_change" />
 
-  <adapter
-    factory=".missionocean.MissionOceanDeserializer"
-  />
   <!-- for="wise.msfd.missionocean.IDemoSiteContent" -->
   <!-- provides="plone.restapi.interfaces.IDeserializeFromJson" -->
 
