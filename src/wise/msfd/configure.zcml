@@ -44,6 +44,12 @@
          zope.lifecycleevent.interfaces.IObjectModifiedEvent"
     handler=".behavior.handle_origin_change" />
 
+  <adapter
+    factory=".missionocean.MissionOceanDeserializer"
+  />
+  <!-- for="wise.msfd.missionocean.IDemoSiteContent" -->
+  <!-- provides="plone.restapi.interfaces.IDeserializeFromJson" -->
+
   <browser:page
     for="*"
     name="wise-macros"
