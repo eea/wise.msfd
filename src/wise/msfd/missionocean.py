@@ -333,7 +333,7 @@ class DemoSiteItems(BrowserView):
                      "title": indicator.to_object.title,
                      "path": "/marine" +
                         indicator.to_path.replace("/Plone", "")}
-                    for indicator in obj.indicator_mo
+                    for indicator in obj.indicator_mo if indicator.to_id
                 ]
 
             # sectors = [
