@@ -1,0 +1,283 @@
+<?xml version="1.0" encoding="utf-8"?>
+<object name="non_indigenous_species" meta_type="Dexterity FTI" i18n:domain="plone"
+   xmlns:i18n="http://xml.zope.org/namespaces/i18n">
+ <property name="title" i18n:translate="">Non-indigenous species</property>
+ <property name="description"
+    i18n:translate="">Non-indigenous species</property>
+ <property name="icon_expr">string:${portal_url}/document_icon.png</property>
+ <property name="factory">non_indigenous_species</property>
+ <property
+    name="add_view_expr">string:${folder_url}/++add++non_indigenous_species</property>
+ <property name="link_target"></property>
+ <property name="immediate_view">view</property>
+ <property name="global_allow">True</property>
+ <property name="filter_content_types">True</property>
+ <property name="allowed_content_types"/>
+ <property name="allow_discussion">False</property>
+ <property name="default_view">view</property>
+ <property name="view_methods">
+  <element value="view"/>
+ </property>
+ <property name="default_view_fallback">False</property>
+ <property name="add_permission">cmf.AddPortalContent</property>
+ <property name="klass">wise.msfd.nis.NonIndigenousSpeciesContent</property>
+ <property name="behaviors">
+  <element value="plone.dublincore"/>
+  <element value="plone.namefromtitle"/>
+  <element value="volto.blocks.fixed.layout"/>
+  <element value="eea.coremetadata.behavior"/>
+ </property>
+ <property name="schema"></property>
+ <property
+    name="model_source">&lt;model xmlns:i18n=&quot;http://xml.zope.org/namespaces/i18n&quot; xmlns:form=&quot;http://namespaces.plone.org/supermodel/form&quot; xmlns:security=&quot;http://namespaces.plone.org/supermodel/security&quot; xmlns:users=&quot;http://namespaces.plone.org/supermodel/users&quot; xmlns:marshal=&quot;http://namespaces.plone.org/supermodel/marshal&quot; xmlns:lingua=&quot;http://namespaces.plone.org/supermodel/lingua&quot; xmlns=&quot;http://namespaces.plone.org/supermodel/schema&quot; i18n:domain=&quot;plone&quot;&gt;
+    &lt;schema&gt;
+      &lt;fieldset name=&quot;nis&quot; label=&quot;Non indigenous species&quot;&gt;
+        &lt;field name=&quot;nis_species_name_original&quot; type=&quot;zope.schema.Text&quot;&gt;
+          &lt;description&gt;Scientific name&lt;/description&gt;
+          &lt;required&gt;True&lt;/required&gt;
+          &lt;title&gt;Species name original&lt;/title&gt;
+        &lt;/field&gt;
+        &lt;field name=&quot;nis_species_name_accepted&quot; type=&quot;zope.schema.Text&quot;&gt;
+          &lt;description&gt;Unique Scientific name - corrected based on the latest accepted (official) species name&lt;/description&gt;
+          &lt;required&gt;True&lt;/required&gt;
+          &lt;title&gt;Species name accepted&lt;/title&gt;
+        &lt;/field&gt;
+        &lt;field name=&quot;nis_scientificname_accepted&quot; type=&quot;zope.schema.Text&quot;&gt;
+          &lt;description&gt;Short unique Scientific name&lt;/description&gt;
+          &lt;required&gt;True&lt;/required&gt;
+          &lt;title&gt;Scientific name accepted&lt;/title&gt;
+        &lt;/field&gt;
+        &lt;field name=&quot;nis_list&quot; type=&quot;zope.schema.Choice&quot;&gt;
+          &lt;required&gt;False&lt;/required&gt;
+          &lt;title&gt;List&lt;/title&gt;
+          &lt;values&gt;
+            &lt;element&gt;MSFD&lt;/element&gt;
+          &lt;/values&gt;
+        &lt;/field&gt;
+        &lt;field name=&quot;nis_subregion&quot; type=&quot;zope.schema.Choice&quot;&gt;
+          &lt;description&gt;MSFD sub-region&lt;/description&gt;
+          &lt;required&gt;False&lt;/required&gt;
+          &lt;title&gt;Subregion&lt;/title&gt;
+          &lt;values&gt;
+            &lt;element&gt;Adriatic Sea&lt;/element&gt;
+            &lt;element&gt;Aegean-Levantine Sea&lt;/element&gt;
+            &lt;element&gt;Baltic Sea&lt;/element&gt;
+            &lt;element&gt;Bay of Biscay and the Iberian Coast&lt;/element&gt;
+            &lt;element&gt;Black Sea&lt;/element&gt;
+            &lt;element&gt;Celtic Seas&lt;/element&gt;
+            &lt;element&gt;Greater North Sea, incl. the Kattegat and the English Channel&lt;/element&gt;
+            &lt;element&gt;Ionian Sea and the Central Mediterranean Sea&lt;/element&gt;
+            &lt;element&gt;Macaronesia&lt;/element&gt;
+            &lt;element&gt;Western Mediterranean Sea&lt;/element&gt;
+          &lt;/values&gt;
+        &lt;/field&gt;
+        &lt;field name=&quot;nis_region&quot; type=&quot;zope.schema.Choice&quot;&gt;
+          &lt;description&gt;MSFD Region&lt;/description&gt;
+          &lt;required&gt;False&lt;/required&gt;
+          &lt;title&gt;Region&lt;/title&gt;
+          &lt;values&gt;
+            &lt;element&gt;Baltic Sea&lt;/element&gt;
+            &lt;element&gt;Black Sea&lt;/element&gt;
+            &lt;element&gt;Mediterranean Sea&lt;/element&gt;
+            &lt;element&gt;North-East Atlantic&lt;/element&gt;
+          &lt;/values&gt;
+        &lt;/field&gt;
+        &lt;field name=&quot;nis_status_comment&quot; type=&quot;zope.schema.Text&quot;&gt;
+          &lt;required&gt;False&lt;/required&gt;
+          &lt;title&gt;Status comment&lt;/title&gt;
+        &lt;/field&gt;
+        &lt;field name=&quot;nis_status&quot; type=&quot;zope.schema.Choice&quot;&gt;
+          &lt;required&gt;False&lt;/required&gt;
+          &lt;title&gt;Status&lt;/title&gt;
+          &lt;values&gt;
+            &lt;element&gt;non-indigenous&lt;/element&gt;
+            &lt;element&gt;cryptogenic&lt;/element&gt;
+            &lt;element&gt;partly native&lt;/element&gt;
+            &lt;element&gt;native/partly native&lt;/element&gt;
+            &lt;element&gt;range expanding&lt;/element&gt;
+            &lt;element&gt;absent&lt;/element&gt;
+            &lt;element&gt;data deficient&lt;/element&gt;
+            &lt;element&gt;questionable&lt;/element&gt;
+            &lt;element&gt;NA&lt;/element&gt;
+          &lt;/values&gt;
+        &lt;/field&gt;
+        &lt;field name=&quot;nis_group&quot; type=&quot;zope.schema.Choice&quot;&gt;
+          &lt;required&gt;False&lt;/required&gt;
+          &lt;title&gt;Group&lt;/title&gt;
+          &lt;values&gt;
+            &lt;element&gt;Primary producer&lt;/element&gt;
+            &lt;element&gt;Invertebrate&lt;/element&gt;
+            &lt;element&gt;Vertebrate&lt;/element&gt;
+            &lt;element&gt;pathogen/parasite&lt;/element&gt;
+          &lt;/values&gt;
+        &lt;/field&gt;
+        &lt;field name=&quot;nis_ver_inv_pp&quot; type=&quot;zope.schema.Choice&quot;&gt;
+          &lt;required&gt;False&lt;/required&gt;
+          &lt;title&gt;VER-INV-PP&lt;/title&gt;
+          &lt;values&gt;
+            &lt;element&gt;PP&lt;/element&gt;
+            &lt;element&gt;PP/Micro&lt;/element&gt;
+            &lt;element&gt;PP/Patho&lt;/element&gt;
+            &lt;element&gt;INV&lt;/element&gt;
+            &lt;element&gt;INV/Patho&lt;/element&gt;
+            &lt;element&gt;VER&lt;/element&gt;
+          &lt;/values&gt;
+        &lt;/field&gt;
+        &lt;field name=&quot;nis_taxonomy&quot; type=&quot;zope.schema.Text&quot;&gt;
+          &lt;description&gt;Taxonomic group based on Scientific name&lt;/description&gt;
+          &lt;required&gt;False&lt;/required&gt;
+          &lt;title&gt;Taxonomy&lt;/title&gt;
+        &lt;/field&gt;
+        &lt;field name=&quot;nis_ns_stand&quot; type=&quot;zope.schema.Text&quot;&gt;
+          &lt;description&gt;Year of introduction in Europe's seas or Region - based on first detection/collection date&lt;/description&gt;
+          &lt;required&gt;False&lt;/required&gt;
+          &lt;title&gt;NS stand&lt;/title&gt;
+        &lt;/field&gt;
+        &lt;field name=&quot;nis_year&quot; type=&quot;zope.schema.Text&quot;&gt;
+          &lt;description&gt;Year of first detection/reported in sub-region/country&lt;/description&gt;
+          &lt;required&gt;False&lt;/required&gt;
+          &lt;title&gt;Year&lt;/title&gt;
+        &lt;/field&gt;
+        &lt;field name=&quot;nis_period&quot; type=&quot;zope.schema.Choice&quot;&gt;
+          &lt;description&gt;&lt;/description&gt;
+          &lt;required&gt;False&lt;/required&gt;
+          &lt;title&gt;Period&lt;/title&gt;
+          &lt;values&gt;
+            &lt;element&gt;&amp;lt;1970&lt;/element&gt;
+            &lt;element&gt;1970-1975&lt;/element&gt;
+            &lt;element&gt;1976-1981&lt;/element&gt;
+            &lt;element&gt;1982-1987&lt;/element&gt;
+            &lt;element&gt;1988-1993&lt;/element&gt;
+            &lt;element&gt;1994-1999&lt;/element&gt;
+            &lt;element&gt;2000-2005&lt;/element&gt;
+            &lt;element&gt;2006-2011&lt;/element&gt;
+            &lt;element&gt;2012-2017&lt;/element&gt;
+            &lt;element&gt;2018-2023&lt;/element&gt;
+            &lt;element&gt;2024-&lt;/element&gt;
+          &lt;/values&gt;
+        &lt;/field&gt;
+        &lt;field name=&quot;nis_country&quot; type=&quot;zope.schema.Text&quot;&gt;
+          &lt;description&gt;Country of introduction/collection/detection&lt;/description&gt;
+          &lt;required&gt;False&lt;/required&gt;
+          &lt;title&gt;Country&lt;/title&gt;
+        &lt;/field&gt;
+        &lt;field name=&quot;nis_area&quot; type=&quot;zope.schema.Text&quot;&gt;
+          &lt;description&gt;Sub-region code&lt;/description&gt;
+          &lt;required&gt;False&lt;/required&gt;
+          &lt;title&gt;Area&lt;/title&gt;
+        &lt;/field&gt;
+        &lt;field name=&quot;nis_rel&quot; type=&quot;zope.schema.Text&quot;&gt;
+          &lt;description&gt;Pathway - release in nature (REL), including intentional release of aquarium species&lt;/description&gt;
+          &lt;required&gt;False&lt;/required&gt;
+          &lt;title&gt;REL&lt;/title&gt;
+        &lt;/field&gt;
+        &lt;field name=&quot;nis_ec&quot; type=&quot;zope.schema.Text&quot;&gt;
+          &lt;description&gt;Pathway - escape from confinement (EC), referring to the accidental escape or unintentional release of aquarium species&lt;/description&gt;
+          &lt;required&gt;False&lt;/required&gt;
+          &lt;title&gt;EC&lt;/title&gt;
+        &lt;/field&gt;
+        &lt;field name=&quot;nis_tc&quot; type=&quot;zope.schema.Text&quot;&gt;
+          &lt;description&gt;Pathway - transport-contaminant (TC), including contaminants on animals (except parasites, species transported by host/vector) and parasites on animals (including species transported by host and vector)&lt;/description&gt;
+          &lt;required&gt;False&lt;/required&gt;
+          &lt;title&gt;TC&lt;/title&gt;
+        &lt;/field&gt;
+        &lt;field name=&quot;nis_ts_other&quot; type=&quot;zope.schema.Text&quot;&gt;
+          &lt;description&gt;Pathway - transport-stowaway (TS) through other means of transport (TS-other)&lt;/description&gt;
+          &lt;required&gt;False&lt;/required&gt;
+          &lt;title&gt;TS-Other&lt;/title&gt;
+        &lt;/field&gt;
+        &lt;field name=&quot;nis_ts_ball&quot; type=&quot;zope.schema.Text&quot;&gt;
+          &lt;description&gt;Pathway - transport-stowaway (TS), through ship/boat ballast water (TS-ballasts)&lt;/description&gt;
+          &lt;required&gt;False&lt;/required&gt;
+          &lt;title&gt;TS-ball&lt;/title&gt;
+        &lt;/field&gt;
+        &lt;field name=&quot;nis_ts_hull&quot; type=&quot;zope.schema.Text&quot;&gt;
+          &lt;description&gt;Pathway - transport-stowaway (TS), through ship/boat hull fouling (TS-hull)&lt;/description&gt;
+          &lt;required&gt;False&lt;/required&gt;
+          &lt;title&gt;TS-hull&lt;/title&gt;
+        &lt;/field&gt;
+        &lt;field name=&quot;nis_cor&quot; type=&quot;zope.schema.Text&quot;&gt;
+          &lt;description&gt;Pathway - corridor (COR), referring to interconnected waterways/basins/seas (in the current context, this refers to the Suez Canal and human-made canals)&lt;/description&gt;
+          &lt;required&gt;False&lt;/required&gt;
+          &lt;title&gt;COR&lt;/title&gt;
+        &lt;/field&gt;
+        &lt;field name=&quot;nis_una&quot; type=&quot;zope.schema.Text&quot;&gt;
+          &lt;description&gt;Pathway - unaided (UNA), secondary spread, as appropriate&lt;/description&gt;
+          &lt;required&gt;False&lt;/required&gt;
+          &lt;title&gt;UNA&lt;/title&gt;
+        &lt;/field&gt;
+        &lt;field name=&quot;nis_unk&quot; type=&quot;zope.schema.Text&quot;&gt;
+          &lt;description&gt;Pathway - unknown (UNK)&lt;/description&gt;
+          &lt;required&gt;False&lt;/required&gt;
+          &lt;title&gt;UNK&lt;/title&gt;
+        &lt;/field&gt;
+        &lt;field name=&quot;nis_total&quot; type=&quot;zope.schema.Text&quot;&gt;
+          &lt;description&gt;sum of pathways&lt;/description&gt;
+          &lt;required&gt;False&lt;/required&gt;
+          &lt;title&gt;Total&lt;/title&gt;
+        &lt;/field&gt;
+        &lt;field name=&quot;nis_pathway_probability&quot; type=&quot;zope.schema.Choice&quot;&gt;
+          &lt;description&gt;&lt;/description&gt;
+          &lt;required&gt;False&lt;/required&gt;
+          &lt;title&gt;Pathway_Probability&lt;/title&gt;
+          &lt;values&gt;
+            &lt;element&gt;P_HIGH&lt;/element&gt;
+            &lt;element&gt;P_MED&lt;/element&gt;
+            &lt;element&gt;P_LOW&lt;/element&gt;
+          &lt;/values&gt;
+        &lt;/field&gt;
+        &lt;field name=&quot;nis_comment&quot; type=&quot;zope.schema.Text&quot;&gt;
+          &lt;description&gt;&lt;/description&gt;
+          &lt;required&gt;False&lt;/required&gt;
+          &lt;title&gt;Comment&lt;/title&gt;
+        &lt;/field&gt;
+        &lt;field name=&quot;nis_source&quot; type=&quot;zope.schema.Text&quot;&gt;
+          &lt;description&gt;&lt;/description&gt;
+          &lt;required&gt;False&lt;/required&gt;
+          &lt;title&gt;Source&lt;/title&gt;
+        &lt;/field&gt;
+        &lt;field name=&quot;nis_remarks&quot; type=&quot;zope.schema.Text&quot;&gt;
+          &lt;description&gt;&lt;/description&gt;
+          &lt;required&gt;False&lt;/required&gt;
+          &lt;title&gt;Remarks&lt;/title&gt;
+        &lt;/field&gt;
+        &lt;field name=&quot;nis_taxon_comment&quot; type=&quot;zope.schema.Text&quot;&gt;
+          &lt;description&gt;&lt;/description&gt;
+          &lt;required&gt;False&lt;/required&gt;
+          &lt;title&gt;Taxon_comment&lt;/title&gt;
+        &lt;/field&gt;
+        &lt;field name=&quot;nis_checked_by&quot; type=&quot;zope.schema.Text&quot;&gt;
+          &lt;description&gt;&lt;/description&gt;
+          &lt;required&gt;False&lt;/required&gt;
+          &lt;title&gt;Checked by&lt;/title&gt;
+        &lt;/field&gt;
+        &lt;field name=&quot;nis_checked_on&quot; type=&quot;zope.schema.Date&quot;&gt;
+          &lt;description&gt;&lt;/description&gt;
+          &lt;required&gt;False&lt;/required&gt;
+          &lt;title&gt;Checked on&lt;/title&gt;
+        &lt;/field&gt;
+        &lt;field name=&quot;nis_check_comment&quot; type=&quot;zope.schema.Text&quot;&gt;
+          &lt;description&gt;&lt;/description&gt;
+          &lt;required&gt;False&lt;/required&gt;
+          &lt;title&gt;Checked comment&lt;/title&gt;
+        &lt;/field&gt;
+      &lt;/fieldset&gt;
+    &lt;/schema&gt;
+  &lt;/model&gt;</property>
+ <property name="model_file"></property>
+ <property name="schema_policy">dexterity</property>
+ <alias from="(Default)" to="(dynamic view)"/>
+ <alias from="edit" to="@@edit"/>
+ <alias from="sharing" to="@@sharing"/>
+ <alias from="view" to="(selected layout)"/>
+ <action title="View" action_id="view" category="object" condition_expr=""
+    icon_expr="" link_target="" url_expr="string:${object_url}"
+    visible="True">
+  <permission value="View"/>
+ </action>
+ <action title="Edit" action_id="edit" category="object" condition_expr=""
+    icon_expr="" link_target="" url_expr="string:${object_url}/edit"
+    visible="True">
+  <permission value="Modify portal content"/>
+ </action>
+</object>

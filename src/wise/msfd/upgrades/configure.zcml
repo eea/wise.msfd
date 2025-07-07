@@ -9,10 +9,22 @@
         destination="2"
         profile="wise.msfd:default">
 
-    <genericsetup:upgradeDepends
-        title="Add Demo Site (MO) content type"
-        import_profile="wise.msfd:to_2"
-    />
+        <genericsetup:upgradeDepends
+            title="Add Demo Site (MO) content type"
+            import_profile="wise.msfd:to_2"
+        />
+
+    </genericsetup:upgradeSteps>
+
+    <genericsetup:upgradeSteps
+        source="2"
+        destination="3"
+        profile="wise.msfd:default">
+
+        <genericsetup:upgradeDepends
+            title="Add NIS content type"
+            import_profile="wise.msfd:to_3"
+        />
 
     </genericsetup:upgradeSteps>
 

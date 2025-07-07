@@ -18,6 +18,7 @@
   <include file="profiles.zcml" />
   <include file="utility.zcml" />
   <include file="missionocean.zcml" />
+  <include file="nis.zcml" />
 
   <plone:behavior
     name="wise.spmeasurefields"
