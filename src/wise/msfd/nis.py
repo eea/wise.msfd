@@ -1,8 +1,6 @@
 """ Non-indigenous species """
 import csv
 import io
-import json
-import logging
 
 from plone import api
 from plone.dexterity.content import Container
@@ -76,7 +74,8 @@ class NonIndigenousSpeciesImportView(form.Form):
         # Set only the attributes that exist in your XML/model_source
         content.nis_species_name_original = nis_species_name_original
         content.nis_species_name_accepted = row.get('Species_name_accepted')
-        content.nis_scientificname_accepted = row.get('ScientificName_accepted')
+        content.nis_scientificname_accepted = row.get(
+            'ScientificName_accepted')
         # content.nis_list = ''
         content.nis_subregion = row.get('Subregion')
         content.nis_region = row.get('Region')
