@@ -1,6 +1,12 @@
 Changelog
 =========
 
+
+4.6 - (2025-07-09)
+---------------------------
+* Change: Develop
+  [laszlocseh]
+
 4.5 - (2025-06-12)
 ---------------------------
 * Change: Release [claudiaifrim]

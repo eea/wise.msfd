@@ -1,0 +1,11 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:tal="http://xml.zope.org/namespaces/tal">
+    <body>
+        <h1>Import NIS Data</h1>
+        <form method="post" enctype="multipart/form-data">
+            <label for="csv_file">Upload CSV File:</label>
+            <input type="file" name="csv_file" id="csv_file" />
+            <button type="submit">Import</button>
+        </form>
+    </body>
+</html>

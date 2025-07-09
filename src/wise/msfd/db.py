@@ -808,7 +808,7 @@ def latest_import_ids_2018():
     # condition removed because Latvia does not have any envelopeStatus
     # with 'End' value
     conditions = [
-        mc_v.c.EnvelopeStatus == 'End'
+        # mc_v.c.EnvelopeStatus == 'End'
     ]
 
     sess = session()

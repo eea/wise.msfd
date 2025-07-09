@@ -15,7 +15,7 @@
     directory="profiles/default"
     description="Install wise.msfd"
     provides="Products.GenericSetup.interfaces.EXTENSION"
-    />
+  />
 
    <genericsetup:registerProfile
     name="to_2"
@@ -23,6 +23,14 @@
     description=""
     directory="profiles/upgrades/to_2"
     provides="Products.GenericSetup.interfaces.EXTENSION"
-   />
+  />
+  
+   <genericsetup:registerProfile
+    name="to_3"
+    title="Upgrade profile for wise.msfd to 3"
+    description=""
+    directory="profiles/upgrades/to_3"
+    provides="Products.GenericSetup.interfaces.EXTENSION"
+  />
   
 </configure>
