@@ -1,12 +1,56 @@
 """ Non-indigenous species """
 import csv
 import io
+import xlsxwriter
+import six
+
+import datetime
 
 from plone import api
+from plone.api.portal import get_tool
 from plone.dexterity.content import Container
 from plone.namedfile.field import NamedFile
 from zope.interface import Interface, implementer
 from z3c.form import button, field, form
+from Products.Five import BrowserView
+
+
+nis_fields = {
+    "Species_name_original": "nis_species_name_original",
+    "Species_name_accepted": "nis_species_name_accepted",
+    "ScientificName_accepted": "nis_scientificname_accepted",
+    "List": "nis_list",
+    "Subregion": "nis_subregion",
+    "Region": "nis_region",
+    "Status comment": "nis_status_comment",
+    "STATUS": "nis_status",
+    "Group": "nis_group",
+    "VER-INV-PP": "nis_ver_inv_pp",
+    "Taxonomy": "nis_taxonomy",
+    "NS stand": "nis_ns_stand",
+    "Year": "nis_year",
+    "Period": "nis_period",
+    "Country": "nis_country",
+    "Area": "nis_area",
+    "REL": "nis_rel",
+    "EC": "nis_ec",
+    "TC": "nis_tc",
+    "TS-0ther": "nis_ts_other",
+    "TS-ball": "nis_ts_ball",
+    "TS-hull": "nis_ts_hull",
+    "COR": "nis_cor",
+    "UNA": "nis_una",
+    "UNK": "nis_unk",
+    "Total": "nis_total",
+    "Pathway_Probability": "nis_pathway_probability",
+    "Comment": "nis_comment",
+    "Source": "nis_source",
+    "Remarks": "nis_remarks",
+    "Taxon_comment": "nis_taxon_comment",
+    "checked_by": "nis_checked_by",
+    "checked_on": "nis_checked_on",
+    "check_comment": "nis_check_comment"
+}
 
 
 class INonIndigenousSpeciesContent(Interface):
@@ -61,9 +105,14 @@ class NonIndigenousSpeciesImportView(form.Form):
         for row in csv_reader_nis:
             self.create_content(row)
 
+            print(f"Processing row {csv_reader_nis.line_num - 1}")
+
     def create_content(self, row):
         """create_content"""
         nis_species_name_original = row.get('Species_name_original')
+
+        if not nis_species_name_original:
+            return
 
         content = api.content.create(
             container=self.context,
@@ -71,37 +120,54 @@ class NonIndigenousSpeciesImportView(form.Form):
             title=nis_species_name_original,
         )
 
-        # Set only the attributes that exist in your XML/model_source
-        content.nis_species_name_original = nis_species_name_original
-        content.nis_species_name_accepted = row.get('Species_name_accepted')
-        content.nis_scientificname_accepted = row.get(
-            'ScientificName_accepted')
-        # content.nis_list = ''
-        content.nis_subregion = row.get('Subregion')
-        content.nis_region = row.get('Region')
-
-        content.nis_status_comment = row.get('Status comment')
-        content.nis_status = row.get('STATUS')
-        content.nis_group = row.get('Group')
-        content.nis_ver_inv_pp = row.get('VER-INV-PP')
-        # content.nis_taxonomy = ''
-        # content.nis_ns_stand = ''
-        content.nis_year = row.get('Year')
-        content.nis_period = row.get('Period')
-        # content.nis_country = ''
-        # content.nis_area = ''
-
-        content.nis_rel = row.get('REL')
-        content.nis_ec = row.get('EC')
-        content.nis_tc = row.get('TC')
-        content.nis_ts_other = row.get('TS-Other')
-        content.nis_ts_ball = row.get('TS-ball')
-        content.nis_ts_hull = row.get('TS-hull')
-        content.nis_cor = row.get('COR')
-        content.nis_una = row.get('UNA')
-        content.nis_unk = row.get('UNK')
-        content.nis_total = row.get('Total')
-        content.nis_pathway_probability = row.get('Pathway_Probability')
-        content.nis_comment = row.get('Comment')
+        for title, field_name in nis_fields.items():
+            setattr(content, field_name, row.get(title))
 
         content.reindexObject()
+
+
+class NISExport(BrowserView):
+    """ Export NIS data to xlsx """
+
+    def __call__(self):
+        """"""
+        catalog = get_tool("portal_catalog")
+        brains = catalog.searchResults(
+            {
+                "portal_type": [
+                    "non_indigenous_species",
+                ],
+                "sort_on": 'id',
+                "sort_order": 'ascending'
+            }
+        )
+
+        out = io.BytesIO()
+        workbook = xlsxwriter.Workbook(out, {'in_memory': True})
+
+        # add worksheet with report header data
+        worksheet = workbook.add_worksheet(six.text_type('Data'))
+
+        for i, (title, field_name) in enumerate(nis_fields.items()):
+            worksheet.write(0, i, title)
+
+        for i, brain in enumerate(brains):
+            obj = brain.getObject()
+
+            for j, (title, field_name) in enumerate(nis_fields.items()):
+                value = getattr(obj, field_name, '')
+                worksheet.write(i + 1, j, value)
+
+        workbook.close()
+        out.seek(0)
+
+        sh = self.request.response.setHeader
+
+        sh('Content-Type', 'application/vnd.openxmlformats-officedocument.'
+           'spreadsheetml.sheet')
+        fname = "-".join(('Marine Non Indigenous Species Data - ',
+                          datetime.datetime.now().strftime('%Y-%m-%d')))
+        sh('Content-Disposition',
+           'attachment; filename=%s.xlsx' % fname)
+
+        return out.read()

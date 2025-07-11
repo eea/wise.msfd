@@ -15,4 +15,11 @@
     template="pt/nis-import.pt"
     />
 
+  <browser:page
+    name="nis-export"
+    for="*"
+    class=".nis.NISExport"
+    permission="zope2.View"
+    />
+
   </configure>
