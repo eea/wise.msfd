@@ -192,3 +192,13 @@ class IIndicatorMOFields(model.Schema):
     target_ds = Set(title=u"Target", description=u"", required=False)
     modification_date = Date(
         title=u"Modified date (indicator)", description=u"", required=False)
+
+
+@provider(IFormFieldProvider)
+class INISFields(model.Schema):
+    """Fields for non_indigenous_species content type """
+
+    nis_region = Text(
+        title=u"Region", description=u"MSFD Region", required=False)
+    nis_subregion = Text(
+        title=u"Subregion", description=u"MSFD sub-region", required=False)

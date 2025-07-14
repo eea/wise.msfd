@@ -28,4 +28,11 @@
 
     </genericsetup:upgradeSteps>
 
+    <genericsetup:upgradeStep
+        title="Add NIS indexes and metadata"
+        source="3"
+        destination="4"
+        handler=".upgrades.add_nis_metadata"
+        profile="wise.msfd:default"
+    />
 </configure>

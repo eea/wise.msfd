@@ -3,7 +3,7 @@
 import traceback
 from plone.app.dexterity.behaviors.metadata import (
     DCFieldProperty, MetadataBase)
-from .interfaces import (ISPMeasureFields, IIndicatorMOFields)
+from .interfaces import (ISPMeasureFields, IIndicatorMOFields, INISFields)
 from zope.lifecycleevent.interfaces import IObjectModifiedEvent
 from zope.component import adapter
 
@@ -134,3 +134,8 @@ class IndicatorMOFields(MetadataBase):
     target_ds = DCFieldProperty(IIndicatorMOFields["target_ds"])
     modification_date = DCFieldProperty(
         IIndicatorMOFields["modification_date"])
+
+
+class NISFields(MetadataBase):
+    nis_region = DCFieldProperty(INISFields["nis_region"])
+    nis_subregion = DCFieldProperty(INISFields["nis_subregion"])

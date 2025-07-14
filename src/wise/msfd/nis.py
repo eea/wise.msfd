@@ -171,3 +171,30 @@ class NISExport(BrowserView):
            'attachment; filename=%s.xlsx' % fname)
 
         return out.read()
+
+# from plone.restapi.deserializer.dxcontent import DeserializeFromJson
+# from plone.restapi.interfaces import IDeserializeFromJson
+# from plone.dexterity.interfaces import IDexterityContainer
+# from plone.restapi.deserializer import json_body
+# from zope.component import adapter
+# from zope.interface import Interface, implementer
+
+# @implementer(IDeserializeFromJson)
+# @adapter(IDexterityContainer, Interface)
+# class NISDeserializer(DeserializeFromJson):
+#     """ NISDeserializer """
+#     def __call__(self, validate_all=False, data=None,
+#                  create=False, mask_validation_errors=True):
+#         if data is None:
+#             data = json_body(self.request)
+
+#         if data and "non_indigenous_species" in data:
+#             for value in data["non_indigenous_species"]:
+#                 import pdb; pdb.set_trace()
+#                 if isinstance(value, dict) and "@id" in value:
+#                     path = value["@id"]
+#                     if path.startswith("/marine/"):
+#                         value["@id"] = path.replace("/marine/", "/", 1)
+
+#         return super(NISDeserializer, self).__call__(
+#             validate_all, data, create, mask_validation_errors)
