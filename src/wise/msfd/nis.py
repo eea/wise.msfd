@@ -1,10 +1,9 @@
 """ Non-indigenous species """
+import datetime
 import csv
 import io
-import xlsxwriter
 import six
-
-import datetime
+import xlsxwriter
 
 from plone import api
 from plone.api.portal import get_tool
