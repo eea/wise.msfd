@@ -105,8 +105,6 @@ class NonIndigenousSpeciesImportView(form.Form):
         for row in csv_reader_nis:
             self.create_content(row)
 
-            print(f"Processing row {csv_reader_nis.line_num - 1}")
-
     def create_content(self, row):
         """create_content"""
         nis_species_name_original = row.get('Species_name_original')

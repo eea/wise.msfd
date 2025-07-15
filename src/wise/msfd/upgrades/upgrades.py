@@ -1,7 +1,5 @@
 """upgrades"""
 from Products.CMFCore.utils import getToolByName
-from Products.ZCatalog.Catalog import CatalogError
-from logging import getLogger
 
 
 indexes = [
