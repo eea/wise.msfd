@@ -6,6 +6,20 @@
   xmlns:plone="http://namespaces.plone.org/plone"
   i18n_domain="wise.msfd">
 
+  <!-- <adapter
+    factory=".nis.NISDeserializer"
+  /> -->
+
+  <!-- <plone:behavior
+    name="wise.nisfields"
+    title="Non-Indigenous Species fields"
+    description="Adds Non-Indigenous Species fields"
+    factory=".behavior.NISFields"
+    provides=".interfaces.INISFields"
+    for="plone.dexterity.interfaces.IDexterityContent"
+    marker=".interfaces.INISFields"
+    /> -->
+
 
   <browser:page
     name="nis-import"
@@ -13,6 +27,13 @@
     class=".nis.NonIndigenousSpeciesImportView"
     permission="cmf.ManagePortal"
     template="pt/nis-import.pt"
+    />
+
+  <browser:page
+    name="nis-export"
+    for="*"
+    class=".nis.NISExport"
+    permission="zope2.View"
     />
 
   </configure>
