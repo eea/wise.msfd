@@ -43,7 +43,7 @@ setup(
     package_dir={'': 'src'},
     include_package_data=True,
     zip_safe=False,
-    python_requires='>=3.8,<=3.11',  # Add Python version constraint
+    python_requires='>=3.8,<=3.12',  # Add Python version constraint
     install_requires=[
         'setuptools',
         'plone.api',
