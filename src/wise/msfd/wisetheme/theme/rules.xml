@@ -263,6 +263,36 @@
     <drop css:theme="#column2-container"/>
   </rules>
 
+  <!-- Only apply these rules if 'msfd-filters-on-top' is present -->
+  <rules css:if-content=".msfd-filters-on-top">
+    <drop css:content="#formfield-form-widgets-report_type" />
+    <after css:content="#formfield-form-widgets-reporting_period">
+      <xsl:copy-of select='//*[@id="formfield-form-widgets-report_type"]' />
+    </after>
+
+    <drop css:content="#formfield-form-widgets-article" />
+    <after css:content="#formfield-form-widgets-reporting_period">
+      <xsl:copy-of select='//*[@id="formfield-form-widgets-article"]' />
+    </after>
+
+    <drop if="//*[@id='formfield-form-widgets-reporting_period'] or //*[@id='formfield-form-widgets-reporting_cycle']"
+      css:content=".article-select" />
+    <before css:content="#formfield-form-widgets-reporting_period">
+      <xsl:copy-of select='//*[@class="article-select"]' />
+    </before>
+    <before css:content="#formfield-form-widgets-reporting_cycle">
+      <xsl:copy-of select='//*[@class="article-select"]' />
+    </before>
+
+    <drop css:content="#formfield-form-widgets-theme" />
+    <after css:content="#formfield-form-widgets-reporting_period">
+      <xsl:copy-of select='//*[@id="formfield-form-widgets-theme"]' />
+    </after>
+
+    <!-- Move #formfield-form-widgets-article after .article-select -->
+    <!-- <after css:theme=".article-select" css:content="#formfield-form-widgets-article" /> -->
+  </rules>
+
   <!-- Alert message -->
   <replace css:theme-children="#global_statusmessage" css:content-children="#global_statusmessage" />
 
