@@ -23,11 +23,16 @@ from .utils import db_result_key, group_query
 
 
 env = os.environ.get
+CRESTEDDUCK_HOST = env('CRESTEDDUCK_HOST', '')
+CRESTEDDUCK_DOMAIN = env('CRESTEDDUCK_DOMAIN', '')
+CRESTEDDUCK_USER = env('CRESTEDDUCK_USER', '')
+CRESTEDDUCK_PASSWORD = env('CRESTEDDUCK_PASSWORD', '')
 DSN = env('MSFDURI', 'mssql+pymssql://SA:bla3311!@msdb')  # ?charset=utf8mb4
 USE_MOCKSESSION = env('USE_MOCKSESSION', False)
 DBS = {
     '2012': env('MSFD_db_default', 'MarineDB_public'),
-    '2018': env('MSFD_db_2018', 'MSFD2018_production')  # has all needed views
+    '2018': env('MSFD_db_2018', 'MSFD2018_public'),  # has all needed views
+    '2024': env('MSFD_db_2024', 'MSFD2024_public')
     # MSFD2018_sandbox_25102018
     # MSFD2018_production_v2
 }
@@ -106,15 +111,17 @@ def session():
         return getattr(threadlocals, session_name)
 
     try:
-        _session = _make_session(DSN)
+        # import pdb; pdb.set_trace()
+        _session = _make_session_crestedduck()
         _session.execute(USE_DB.format(DBS[session_name]))
-        print("Session DSN: ", DSN)
-        print("Session DBS: ", DBS[session_name])
+        print("Session HOST: ", CRESTEDDUCK_HOST)
+        print("Session DBS:  ", DBS[session_name])
     except Exception:
+        # import pdb; pdb.set_trace()
         # TODO this is a temporary solution
         # Is it possible to switch back to MSFD database when it is online
         # without restarting?
-        print("Unable to connect to: ", DSN)
+        print("Unable to connect to: ", CRESTEDDUCK_HOST, session_name)
         print("Using MockSession()")
 
         return MockSession()
@@ -166,6 +173,7 @@ def use_db_session(session_name):
 
 def _make_session(dsn):
     """_make_session"""
+    print("#USING onager")
     engine = create_engine(dsn,  # , encoding="utf8"
                            pool_recycle=1800,
                            pool_pre_ping=True,
@@ -176,6 +184,34 @@ def _make_session(dsn):
     register(Session, keep_session=True)
 
     return Session()
+
+
+def _make_session_crestedduck():
+    print("#USING crestedduck")
+
+    dsn = ("mssql+pymssql://{}\\{}:{}@{}:1433".format(
+            CRESTEDDUCK_DOMAIN,
+            CRESTEDDUCK_USER,
+            CRESTEDDUCK_PASSWORD,
+            CRESTEDDUCK_HOST)
+    )
+
+    # Create SQLAlchemy engine
+    engine = create_engine(
+        dsn,
+        pool_recycle=1800,
+        pool_pre_ping=True,
+        connect_args={'timeout': 60}
+    )
+
+    Session = scoped_session(sessionmaker(bind=engine))
+    Session.expire_on_commit = False
+    register(Session, keep_session=True)
+
+    # Return the session
+    session = Session()
+
+    return session
 
 
 @cache(db_result_key)
@@ -517,10 +553,10 @@ def get_item_by_conditions_art_6(
             row_is_needed = any(region in unicodedata.normalize(
                 'NFKD', row.RegionsSubRegions).encode('ASCII', 'ignore')
                 for region in r_codes)
-        except TypeError: 
-            row_is_needed = any(region in row.RegionsSubRegions 
+        except TypeError:
+            row_is_needed = any(region in row.RegionsSubRegions
                                 for region in r_codes)
-                
+
         if row_is_needed:
 
             filtered_coops.append(row)

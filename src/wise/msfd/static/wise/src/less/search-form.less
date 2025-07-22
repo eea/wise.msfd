@@ -878,6 +878,95 @@
 .msfd-search-wrapper .row {
   margin-right: -15px;
   margin-left: -15px;
+
+  &.msfd-filters-on-top {
+    display: flex;
+    flex-direction: column-reverse;
+    color: #3d5265;
+
+    .formControls {
+      position: absolute;
+      right: 0;
+      bottom: -80px;
+      box-shadow: none;
+      background: none;
+      border: 0;
+    }
+
+    .wise-search-form-container .field{
+      margin: 1em 0
+    }
+
+    .msfd-start-link {
+      margin: 0;
+    }
+
+    .col-md-9.col-xs-12,
+    .col-md-3.col-xs-12 {
+      width: 100% !important;
+    }
+
+    .side-section {
+      display: flex;
+      gap: 1rem;
+      flex-direction: column;
+      overflow-y: visible;
+    }
+
+    .article-select {
+      padding: 0;
+      margin: 1em 0;
+      border: none;
+
+      label {
+        padding-bottom: 2px;
+      }
+    }
+
+    .form-right-side {
+        display: flex;
+        gap: 1rem;
+    }
+
+    .side-section .subform {
+      display: flex;
+      gap: 1rem;
+      
+      .option {
+        border: none
+      }
+
+      .option label {
+        max-width: 90%;
+      }
+
+      .option .label {
+        max-width: 30em;
+        min-width: 17em;
+        text-align: left;
+      }
+
+      > .field {
+        border: none;
+      }
+
+      .field > span {
+        border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+      }
+      
+      .field > span.controls {
+        height: 70px;
+        overflow: hidden;
+      }
+      .field > span.collapse.panel.panel-default {
+        height: 180px;
+        max-width: 300px;
+        border-left: 1px solid rgba(0, 0, 0, 0.1);
+        border-right: 1px solid rgba(0, 0, 0, 0.1);
+      }
+    }
+  }
+
 }
 
 .msfd-search-wrapper .col-md-3,
