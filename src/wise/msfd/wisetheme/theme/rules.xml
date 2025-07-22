@@ -265,17 +265,27 @@
 
   <!-- Only apply these rules if 'msfd-filters-on-top' is present -->
   <rules css:if-content=".msfd-filters-on-top">
+    <!-- <drop css:content=".msfd-start-link" />
+    <before css:content=".article-select">
+      <xsl:copy-of select='//*[@class="msfd-start-link"]' />
+    </before> -->
+
     <drop css:content="#formfield-form-widgets-report_type" />
     <after css:content="#formfield-form-widgets-reporting_period">
       <xsl:copy-of select='//*[@id="formfield-form-widgets-report_type"]' />
     </after>
+
+    <!-- <drop css:content="#formfield-form-widgets-monitoring_programme_info_type" />
+    <after css:content=".article-select">
+      <xsl:copy-of select='//*[@id="formfield-form-widgets-monitoring_programme_info_type"]' />
+    </after> -->
 
     <drop css:content="#formfield-form-widgets-article" />
     <after css:content="#formfield-form-widgets-reporting_period">
       <xsl:copy-of select='//*[@id="formfield-form-widgets-article"]' />
     </after>
 
-    <drop if="//*[@id='formfield-form-widgets-reporting_period'] or //*[@id='formfield-form-widgets-reporting_cycle']"
+    <drop if="//*[@id='formfield-form-widgets-reporting_period'] or //*[@id='formfield-form-widgets-reporting_cycle'] or //*[@id='formfield-form-widgets-monitoring_programme_info_type']"
       css:content=".article-select" />
     <before css:content="#formfield-form-widgets-reporting_period">
       <xsl:copy-of select='//*[@class="article-select"]' />
@@ -283,11 +293,15 @@
     <before css:content="#formfield-form-widgets-reporting_cycle">
       <xsl:copy-of select='//*[@class="article-select"]' />
     </before>
+    <before css:content="#formfield-form-widgets-monitoring_programme_info_type">
+      <xsl:copy-of select='//*[@class="article-select"]' />
+    </before>
 
     <drop css:content="#formfield-form-widgets-theme" />
     <after css:content="#formfield-form-widgets-reporting_period">
       <xsl:copy-of select='//*[@id="formfield-form-widgets-theme"]' />
     </after>
+
 
     <!-- Move #formfield-form-widgets-article after .article-select -->
     <!-- <after css:theme=".article-select" css:content="#formfield-form-widgets-article" /> -->

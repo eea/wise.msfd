@@ -882,8 +882,27 @@
   &.msfd-filters-on-top {
     display: flex;
     flex-direction: column-reverse;
+    color: #3d5265;
 
-    .col-md-9.col-xs-12 {
+    .formControls {
+      position: absolute;
+      right: 0;
+      bottom: -80px;
+      box-shadow: none;
+      background: none;
+      border: 0;
+    }
+
+    .wise-search-form-container .field{
+      margin: 1em 0
+    }
+
+    .msfd-start-link {
+      margin: 0;
+    }
+
+    .col-md-9.col-xs-12,
+    .col-md-3.col-xs-12 {
       width: 100% !important;
     }
 
@@ -891,11 +910,12 @@
       display: flex;
       gap: 1rem;
       flex-direction: column;
+      overflow-y: visible;
     }
 
     .article-select {
       padding: 0;
-      margin: 1.5em 0;
+      margin: 1em 0;
       border: none;
 
       label {
@@ -940,6 +960,7 @@
       }
       .field > span.collapse.panel.panel-default {
         height: 180px;
+        max-width: 300px;
         border-left: 1px solid rgba(0, 0, 0, 0.1);
         border-right: 1px solid rgba(0, 0, 0, 0.1);
       }
