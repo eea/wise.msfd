@@ -189,9 +189,11 @@ def _make_session(dsn):
 def _make_session_crestedduck():
     print("#USING crestedduck")
 
-    dsn = (
-        f"mssql+pymssql://{CRESTEDDUCK_DOMAIN}\\{CRESTEDDUCK_USER}"
-        f":{CRESTEDDUCK_PASSWORD}@{CRESTEDDUCK_HOST}:1433"
+    dsn = ("mssql+pymssql://{}\\{}:{}@{}:1433".format(
+            CRESTEDDUCK_DOMAIN,
+            CRESTEDDUCK_USER,
+            CRESTEDDUCK_PASSWORD,
+            CRESTEDDUCK_HOST)
     )
 
     # Create SQLAlchemy engine
