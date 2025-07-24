@@ -1,3 +1,4 @@
+""" run sqlacodegen only works with python <3.11 """
 
 import subprocess
 import os
