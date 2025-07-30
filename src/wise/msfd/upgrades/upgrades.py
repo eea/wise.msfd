@@ -3,11 +3,13 @@ from Products.CMFCore.utils import getToolByName
 
 
 indexes = [
+    'nis_species_name_original',
     'nis_species_name_accepted',
     'nis_scientificname_accepted',
     'nis_subregion',
     'nis_region',
-    'nis_group'
+    'nis_status',
+    'nis_group',
 ]
 
 
