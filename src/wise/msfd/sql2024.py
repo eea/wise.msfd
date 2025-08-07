@@ -1,3 +1,4 @@
+#pylint: skip-file
 # coding: utf-8
 from sqlalchemy import BigInteger, Column, DateTime, Float, MetaData, Table, Unicode
 from sqlalchemy.sql.sqltypes import NullType

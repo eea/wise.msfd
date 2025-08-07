@@ -9,13 +9,13 @@ from plone import api
 from plone.api.portal import get_tool
 from plone.dexterity.content import Container
 from plone.namedfile.field import NamedFile
-from zope.interface import Interface, implementer
+from zope.interface import Interface, implementer, provider
 from z3c.form import button, field, form
 from Products.Five import BrowserView
 from zope.schema.interfaces import IVocabularyFactory
 from Products.CMFCore.utils import getToolByName
 from zope.schema.vocabulary import SimpleTerm, SimpleVocabulary
-from zope.interface import provider
+
 
 nis_fields = {
     "Species_name_original": "nis_species_name_original",
@@ -53,6 +53,7 @@ nis_fields = {
     "checked_on": "nis_checked_on",
     "check_comment": "nis_check_comment"
 }
+
 
 def get_catalog_values(context, index):
     """get_catalog_values"""
