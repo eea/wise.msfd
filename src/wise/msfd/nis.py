@@ -12,7 +12,10 @@ from plone.namedfile.field import NamedFile
 from zope.interface import Interface, implementer
 from z3c.form import button, field, form
 from Products.Five import BrowserView
-
+from zope.schema.interfaces import IVocabularyFactory
+from Products.CMFCore.utils import getToolByName
+from zope.schema.vocabulary import SimpleTerm, SimpleVocabulary
+from zope.interface import provider
 
 nis_fields = {
     "Species_name_original": "nis_species_name_original",
@@ -50,6 +53,76 @@ nis_fields = {
     "checked_on": "nis_checked_on",
     "check_comment": "nis_check_comment"
 }
+
+def get_catalog_values(context, index):
+    """get_catalog_values"""
+
+    catalog = getToolByName(context, "portal_catalog")
+
+    return catalog.uniqueValuesFor(index)
+
+
+@provider(IVocabularyFactory)
+def nis_region_vocabulary(context):
+    """nis_region_vocabulary"""
+
+    catalog_values = get_catalog_values(
+        context, "nis_region"
+    )
+
+    terms = []
+    for key in catalog_values:
+        terms.append(
+            SimpleTerm(
+                key, key, key.encode("ascii", "ignore").decode("ascii")
+            )
+        )
+
+    terms.sort(key=lambda t: t.title)
+
+    return SimpleVocabulary(terms)
+
+
+@provider(IVocabularyFactory)
+def nis_subregion_vocabulary(context):
+    """nis_subregion_vocabulary"""
+
+    catalog_values = get_catalog_values(
+        context, "nis_subregion"
+    )
+
+    terms = []
+    for key in catalog_values:
+        terms.append(
+            SimpleTerm(
+                key, key, key.encode("ascii", "ignore").decode("ascii")
+            )
+        )
+
+    terms.sort(key=lambda t: t.title)
+
+    return SimpleVocabulary(terms)
+
+
+@provider(IVocabularyFactory)
+def nis_group_vocabulary(context):
+    """nis_group_vocabulary"""
+
+    catalog_values = get_catalog_values(
+        context, "nis_group"
+    )
+
+    terms = []
+    for key in catalog_values:
+        terms.append(
+            SimpleTerm(
+                key, key, key.encode("ascii", "ignore").decode("ascii")
+            )
+        )
+
+    terms.sort(key=lambda t: t.title)
+
+    return SimpleVocabulary(terms)
 
 
 class INonIndigenousSpeciesContent(Interface):
