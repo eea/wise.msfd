@@ -1,6 +1,11 @@
 Changelog
 =========
 
+5.0 - (2025-08-08)
+---------------------------
+* Change: Add docker pull in jenkins
+  [valentinab25]
+
 4.9 - (2025-08-08)
 ---------------------------
 * Change: Develop
