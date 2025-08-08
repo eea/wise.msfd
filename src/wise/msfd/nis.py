@@ -10,11 +10,11 @@ from plone.api.portal import get_tool
 from plone.dexterity.content import Container
 from plone.namedfile.field import NamedFile
 from zope.interface import Interface, implementer, provider
-from z3c.form import button, field, form
-from Products.Five import BrowserView
 from zope.schema.interfaces import IVocabularyFactory
-from Products.CMFCore.utils import getToolByName
 from zope.schema.vocabulary import SimpleTerm, SimpleVocabulary
+from z3c.form import button, field, form
+from Products.CMFCore.utils import getToolByName
+from Products.Five import BrowserView
 
 
 nis_fields = {
