@@ -1,0 +1,42 @@
+<?xml version="1.0"?>
+<registry >
+	<records interface="plone.app.querystring.interfaces.IQueryField"
+    	prefix="plone.app.querystring.field.nis_region">
+		<value key="title" translate="">Region</value>
+    	<value key="description" translate=""></value>
+    	<value key="enabled">True</value>
+    	<value key="sortable">True</value>
+    	<value key="operations">
+      		<element>plone.app.querystring.operation.selection.any</element>
+      		<element>plone.app.querystring.operation.selection.all</element>
+    	</value>
+    	<value key="group" translate="">Non-Indigenous Species</value>
+        <value key="vocabulary">nis_region_vocabulary</value>
+	</records>
+	<records interface="plone.app.querystring.interfaces.IQueryField"
+    	prefix="plone.app.querystring.field.nis_subregion">
+		<value key="title" translate="">Subregion</value>
+    	<value key="description" translate=""></value>
+    	<value key="enabled">True</value>
+    	<value key="sortable">True</value>
+    	<value key="operations">
+      		<element>plone.app.querystring.operation.selection.any</element>
+      		<element>plone.app.querystring.operation.selection.all</element>
+    	</value>
+    	<value key="group" translate="">Non-Indigenous Species</value>
+        <value key="vocabulary">nis_subregion_vocabulary</value>
+	</records>
+	<records interface="plone.app.querystring.interfaces.IQueryField"
+    	prefix="plone.app.querystring.field.nis_group">
+		<value key="title" translate="">Group</value>
+    	<value key="description" translate=""></value>
+    	<value key="enabled">True</value>
+    	<value key="sortable">True</value>
+    	<value key="operations">
+      		<element>plone.app.querystring.operation.selection.any</element>
+      		<element>plone.app.querystring.operation.selection.all</element>
+    	</value>
+    	<value key="group" translate="">Non-Indigenous Species</value>
+        <value key="vocabulary">nis_group_vocabulary</value>
+	</records>
+</registry>

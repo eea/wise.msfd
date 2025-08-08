@@ -9,9 +9,19 @@ from plone import api
 from plone.api.portal import get_tool
 from plone.dexterity.content import Container
 from plone.namedfile.field import NamedFile
-from zope.interface import Interface, implementer
+from plone.restapi.interfaces import IExpandableElement
+from plone.restapi.serializer.converters import json_compatible
+from plone.restapi.services import Service
+from zope.component import adapter, queryAdapter
+from zope.interface import Interface, implementer, provider
+from zope.schema.interfaces import IVocabularyFactory
+from zope.schema.vocabulary import SimpleTerm, SimpleVocabulary
 from z3c.form import button, field, form
+from Products.CMFCore.utils import getToolByName
 from Products.Five import BrowserView
+from Products.CMFPlone.interfaces import IPloneSiteRoot
+
+from eea.progress.workflow.interfaces import IWorkflowProgress
 
 
 nis_fields = {
@@ -50,6 +60,77 @@ nis_fields = {
     "checked_on": "nis_checked_on",
     "check_comment": "nis_check_comment"
 }
+
+
+def get_catalog_values(context, index):
+    """get_catalog_values"""
+
+    catalog = getToolByName(context, "portal_catalog")
+
+    return catalog.uniqueValuesFor(index)
+
+
+@provider(IVocabularyFactory)
+def nis_region_vocabulary(context):
+    """nis_region_vocabulary"""
+
+    catalog_values = get_catalog_values(
+        context, "nis_region"
+    )
+
+    terms = []
+    for key in catalog_values:
+        terms.append(
+            SimpleTerm(
+                key, key, key.encode("ascii", "ignore").decode("ascii")
+            )
+        )
+
+    terms.sort(key=lambda t: t.title)
+
+    return SimpleVocabulary(terms)
+
+
+@provider(IVocabularyFactory)
+def nis_subregion_vocabulary(context):
+    """nis_subregion_vocabulary"""
+
+    catalog_values = get_catalog_values(
+        context, "nis_subregion"
+    )
+
+    terms = []
+    for key in catalog_values:
+        terms.append(
+            SimpleTerm(
+                key, key, key.encode("ascii", "ignore").decode("ascii")
+            )
+        )
+
+    terms.sort(key=lambda t: t.title)
+
+    return SimpleVocabulary(terms)
+
+
+@provider(IVocabularyFactory)
+def nis_group_vocabulary(context):
+    """nis_group_vocabulary"""
+
+    catalog_values = get_catalog_values(
+        context, "nis_group"
+    )
+
+    terms = []
+    for key in catalog_values:
+        terms.append(
+            SimpleTerm(
+                key, key, key.encode("ascii", "ignore").decode("ascii")
+            )
+        )
+
+    terms.sort(key=lambda t: t.title)
+
+    return SimpleVocabulary(terms)
 
 
 class INonIndigenousSpeciesContent(Interface):
@@ -195,3 +276,47 @@ class NISExport(BrowserView):
 
 #         return super(NISDeserializer, self).__call__(
 #             validate_all, data, create, mask_validation_errors)
+
+
+@implementer(IExpandableElement)
+@adapter(Interface, Interface)
+class WorkflowProgress(object):
+    """ Get workflow progress
+    """
+
+    def __init__(self, context, request):
+        self.context = context
+        self.request = request
+
+    def __call__(self, expand=False):
+        result = {
+            "workflow.progress": {
+                "@id": "{}/@workflow.progress.nis".format(
+                    self.context.absolute_url())
+            }
+        }
+        if not expand:
+            return result
+
+        if IPloneSiteRoot.providedBy(self.context):
+            return result
+
+        progress = queryAdapter(self.context, IWorkflowProgress)
+        if progress:
+            result["workflow.progress"]['steps'] = json_compatible(
+                progress.steps)
+            result["workflow.progress"]['done'] = json_compatible(
+                progress.done)
+            result["workflow.progress"]['transitions'] = json_compatible(
+                progress.transitions)
+        return result
+
+
+class WorkflowProgressGet(Service):
+    """Get workflow progress information"""
+
+    def reply(self):
+        """ Reply
+        """
+        info = WorkflowProgress(self.context, self.request)
+        return info(expand=True)["workflow.progress"]

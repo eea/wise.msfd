@@ -36,4 +36,29 @@
     permission="zope2.View"
     />
 
+  <utility
+    component=".nis.nis_region_vocabulary"
+    name="nis_region_vocabulary"
+    />
+
+  <utility
+    component=".nis.nis_subregion_vocabulary"
+    name="nis_subregion_vocabulary"
+    />
+
+  <utility
+    component=".nis.nis_group_vocabulary"
+    name="nis_group_vocabulary"
+    />
+
+  <plone:service
+    method="GET"
+    name="@workflow.progress.nis"
+    for="Products.CMFCore.interfaces.IContentish"
+    factory=".nis.WorkflowProgressGet"
+    permission="zope2.View"
+    />
+  <!-- 
+    factory="eea.progress.workflow.restapi.get.WorkflowProgressGet"
+   -->
   </configure>

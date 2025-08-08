@@ -1,110 +1,113 @@
 <?xml version="1.0" encoding="utf-8"?>
 <object name="portal_workflow" meta_type="Plone Workflow Tool">
- <property
-    name="title">Contains workflow definitions for your portal</property>
- <object name="comment_one_state_workflow" meta_type="Workflow"/>
- <object name="comment_review_workflow" meta_type="Workflow"/>
- <object name="compliance_assessment_workflow" meta_type="Workflow"/>
- <object name="compliance_comments_section_workflow" meta_type="Workflow"/>
- <object name="compliance_national_summary_workflow" meta_type="Workflow"/>
- <object name="compliance_nationaldescriptor_workflow" meta_type="Workflow"/>
- <object name="compliance_regional_assessment_workflow" meta_type="Workflow"/>
- <object name="compliance_regionaldescriptor_workflow" meta_type="Workflow"/>
- <object name="compliance_section_workflow" meta_type="Workflow"/>
- <object name="ms_recommendations_feedback_workflow" meta_type="Workflow"/>
- <object name="folder_workflow" meta_type="Workflow"/>
- <object name="intranet_folder_workflow" meta_type="Workflow"/>
- <object name="intranet_workflow" meta_type="Workflow"/>
- <object name="one_state_workflow" meta_type="Workflow"/>
- <object name="plone_workflow" meta_type="Workflow"/>
- <object name="simple_publication_workflow" meta_type="Workflow"/>
- <object name="wise_generic_workflow" meta_type="Workflow"/>
- <object name="wise_workflow" meta_type="Workflow"/>
- <bindings>
-  <default>
-   <bound-workflow workflow_id="wise_generic_workflow"/>
-  </default>
-  <type type_id="ATBooleanCriterion"/>
-  <type type_id="ATCurrentAuthorCriterion"/>
-  <type type_id="ATDateCriteria"/>
-  <type type_id="ATDateRangeCriterion"/>
-  <type type_id="ATListCriterion"/>
-  <type type_id="ATPathCriterion"/>
-  <type type_id="ATPortalTypeCriterion"/>
-  <type type_id="ATReferenceCriterion"/>
-  <type type_id="ATRelativePathCriterion"/>
-  <type type_id="ATSelectionCriterion"/>
-  <type type_id="ATSimpleIntCriterion"/>
-  <type type_id="ATSimpleStringCriterion"/>
-  <type type_id="ATSortCriterion"/>
-  <type type_id="DepictionTool"/>
-  <type type_id="Discussion Item">
-   <bound-workflow workflow_id="comment_one_state_workflow"/>
-  </type>
-  <type type_id="FieldsetEnd"/>
-  <type type_id="FieldsetFolder"/>
-  <type type_id="FieldsetStart"/>
-  <type type_id="File"/>
-  <type type_id="FormBooleanField"/>
-  <type type_id="FormCaptchaField"/>
-  <type type_id="FormCustomScriptAdapter"/>
-  <type type_id="FormDateField"/>
-  <type type_id="FormFileField"/>
-  <type type_id="FormFixedPointField"/>
-  <type type_id="FormIntegerField"/>
-  <type type_id="FormLabelField"/>
-  <type type_id="FormLikertField"/>
-  <type type_id="FormLinesField"/>
-  <type type_id="FormMailerAdapter"/>
-  <type type_id="FormMultiSelectionField"/>
-  <type type_id="FormPasswordField"/>
-  <type type_id="FormRichLabelField"/>
-  <type type_id="FormRichTextField"/>
-  <type type_id="FormSaveDataAdapter"/>
-  <type type_id="FormSelectionField"/>
-  <type type_id="FormStringField"/>
-  <type type_id="FormTextField"/>
-  <type type_id="FormThanksPage"/>
-  <type type_id="Image"/>
-  <type type_id="PDFTheme"/>
-  <type type_id="PDFTool"/>
-  <type type_id="Plone Site"/>
-  <type type_id="Sparql">
-   <bound-workflow workflow_id="one_state_workflow"/>
-  </type>
-  <type type_id="SparqlBookmarksFolder">
-   <bound-workflow workflow_id="folder_workflow"/>
-  </type>
-  <type type_id="collective.cover.content">
-   <bound-workflow workflow_id="wise_generic_workflow"/>
-  </type>
-  <type type_id="country_factsheet_section"/>
-  <type type_id="national_summary">
-   <bound-workflow workflow_id="compliance_national_summary_workflow"/>
-  </type>
-  <type type_id="wise.msfd.commentsfolder">
-   <bound-workflow workflow_id="compliance_comments_section_workflow"/>
-  </type>
-  <type type_id="wise.msfd.countrydescriptorsfolder">
-   <bound-workflow workflow_id="compliance_nationaldescriptor_workflow"/>
-  </type>
-  <type type_id="wise.msfd.nationaldescriptorassessment">
-   <bound-workflow workflow_id="compliance_assessment_workflow"/>
-  </type>
-  <type type_id="wise.msfd.nationalsummaryoverview">
-   <bound-workflow workflow_id="compliance_national_summary_workflow"/>
-  </type>
-  <type type_id="wise.msfd.regionaldescriptorassessment">
-   <bound-workflow workflow_id="compliance_regional_assessment_workflow"/>
-  </type>
-  <type type_id="wise.msfd.regionalsummaryfolder">
-   <bound-workflow workflow_id="compliance_national_summary_workflow"/>
-  </type>
-  <type type_id="wise.msfd.regiondescriptorsfolder">
-   <bound-workflow workflow_id="compliance_regionaldescriptor_workflow"/>
-  </type>
-  <type type_id="wise.msfd.msrecommendationfeedback">
-   <bound-workflow workflow_id="ms_recommendations_feedback_workflow"/>
-  </type>
- </bindings>
+   <property name="title">Contains workflow definitions for your portal</property>
+   <object name="comment_one_state_workflow" meta_type="Workflow"/>
+   <object name="comment_review_workflow" meta_type="Workflow"/>
+   <object name="compliance_assessment_workflow" meta_type="Workflow"/>
+   <object name="compliance_comments_section_workflow" meta_type="Workflow"/>
+   <object name="compliance_national_summary_workflow" meta_type="Workflow"/>
+   <object name="compliance_nationaldescriptor_workflow" meta_type="Workflow"/>
+   <object name="compliance_regional_assessment_workflow" meta_type="Workflow"/>
+   <object name="compliance_regionaldescriptor_workflow" meta_type="Workflow"/>
+   <object name="compliance_section_workflow" meta_type="Workflow"/>
+   <object name="ms_recommendations_feedback_workflow" meta_type="Workflow"/>
+   <object name="folder_workflow" meta_type="Workflow"/>
+   <object name="intranet_folder_workflow" meta_type="Workflow"/>
+   <object name="intranet_workflow" meta_type="Workflow"/>
+   <object name="one_state_workflow" meta_type="Workflow"/>
+   <object name="plone_workflow" meta_type="Workflow"/>
+   <object name="simple_publication_workflow" meta_type="Workflow"/>
+   <object name="wise_generic_workflow" meta_type="Workflow"/>
+   <object name="wise_workflow" meta_type="Workflow"/>
+   <object name="nis_workflow" meta_type="Workflow"/>
+   <bindings>
+      <default>
+         <bound-workflow workflow_id="wise_generic_workflow"/>
+      </default>
+      <type type_id="ATBooleanCriterion"/>
+      <type type_id="ATCurrentAuthorCriterion"/>
+      <type type_id="ATDateCriteria"/>
+      <type type_id="ATDateRangeCriterion"/>
+      <type type_id="ATListCriterion"/>
+      <type type_id="ATPathCriterion"/>
+      <type type_id="ATPortalTypeCriterion"/>
+      <type type_id="ATReferenceCriterion"/>
+      <type type_id="ATRelativePathCriterion"/>
+      <type type_id="ATSelectionCriterion"/>
+      <type type_id="ATSimpleIntCriterion"/>
+      <type type_id="ATSimpleStringCriterion"/>
+      <type type_id="ATSortCriterion"/>
+      <type type_id="DepictionTool"/>
+      <type type_id="Discussion Item">
+         <bound-workflow workflow_id="comment_one_state_workflow"/>
+      </type>
+      <type type_id="FieldsetEnd"/>
+      <type type_id="FieldsetFolder"/>
+      <type type_id="FieldsetStart"/>
+      <type type_id="File"/>
+      <type type_id="FormBooleanField"/>
+      <type type_id="FormCaptchaField"/>
+      <type type_id="FormCustomScriptAdapter"/>
+      <type type_id="FormDateField"/>
+      <type type_id="FormFileField"/>
+      <type type_id="FormFixedPointField"/>
+      <type type_id="FormIntegerField"/>
+      <type type_id="FormLabelField"/>
+      <type type_id="FormLikertField"/>
+      <type type_id="FormLinesField"/>
+      <type type_id="FormMailerAdapter"/>
+      <type type_id="FormMultiSelectionField"/>
+      <type type_id="FormPasswordField"/>
+      <type type_id="FormRichLabelField"/>
+      <type type_id="FormRichTextField"/>
+      <type type_id="FormSaveDataAdapter"/>
+      <type type_id="FormSelectionField"/>
+      <type type_id="FormStringField"/>
+      <type type_id="FormTextField"/>
+      <type type_id="FormThanksPage"/>
+      <type type_id="Image"/>
+      <type type_id="PDFTheme"/>
+      <type type_id="PDFTool"/>
+      <type type_id="Plone Site"/>
+      <type type_id="Sparql">
+         <bound-workflow workflow_id="one_state_workflow"/>
+      </type>
+      <type type_id="SparqlBookmarksFolder">
+         <bound-workflow workflow_id="folder_workflow"/>
+      </type>
+      <type type_id="collective.cover.content">
+         <bound-workflow workflow_id="wise_generic_workflow"/>
+      </type>
+      <type type_id="country_factsheet_section"/>
+      <type type_id="national_summary">
+         <bound-workflow workflow_id="compliance_national_summary_workflow"/>
+      </type>
+      <type type_id="wise.msfd.commentsfolder">
+         <bound-workflow workflow_id="compliance_comments_section_workflow"/>
+      </type>
+      <type type_id="wise.msfd.countrydescriptorsfolder">
+         <bound-workflow workflow_id="compliance_nationaldescriptor_workflow"/>
+      </type>
+      <type type_id="wise.msfd.nationaldescriptorassessment">
+         <bound-workflow workflow_id="compliance_assessment_workflow"/>
+      </type>
+      <type type_id="wise.msfd.nationalsummaryoverview">
+         <bound-workflow workflow_id="compliance_national_summary_workflow"/>
+      </type>
+      <type type_id="wise.msfd.regionaldescriptorassessment">
+         <bound-workflow workflow_id="compliance_regional_assessment_workflow"/>
+      </type>
+      <type type_id="wise.msfd.regionalsummaryfolder">
+         <bound-workflow workflow_id="compliance_national_summary_workflow"/>
+      </type>
+      <type type_id="wise.msfd.regiondescriptorsfolder">
+         <bound-workflow workflow_id="compliance_regionaldescriptor_workflow"/>
+      </type>
+      <type type_id="wise.msfd.msrecommendationfeedback">
+         <bound-workflow workflow_id="ms_recommendations_feedback_workflow"/>
+      </type>
+      <type type_id="non_indigenous_species">
+         <bound-workflow workflow_id="nis_workflow"/>
+      </type>
+   </bindings>
 </object>
