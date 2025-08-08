@@ -283,14 +283,18 @@ class NISExport(BrowserView):
 class WorkflowProgress(object):
     """ Get workflow progress
     """
+
     def __init__(self, context, request):
         self.context = context
         self.request = request
 
     def __call__(self, expand=False):
-        result = {"workflow.progress": {
-            "@id": "{}/@workflow.progress.nis".format(self.context.absolute_url())
-        }}
+        result = {
+            "workflow.progress": {
+                "@id": "{}/@workflow.progress.nis".format(
+                    self.context.absolute_url())
+            }
+        }
         if not expand:
             return result
 
