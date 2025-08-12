@@ -2,7 +2,7 @@
      tal:attributes="id view/form_id | string:wise-search-form;
         class string:wise-search-form-msfd">
 
-  <div id="wise-search-form-top"
+  <div id="wise-search-form-top" class="msfd-filters-on-top"
        tal:attributes="id view/form_id_top | string:wise-search-form-top">
     <!-- <metal:tabs
        metal:use-macro="context/wise-macros/macros/tabs"></metal:tabs> -->
