@@ -41,7 +41,7 @@
       border-bottom: 2px solid #52616f;
       margin: 0px;
       font-size: 18px;
-      font-weight: bolder;
+      font-weight: 500;
 
       .article-id-country {
         font-size: 24px;
@@ -129,9 +129,6 @@
 
   .panel-heading {
     padding: 10px 15px;
-    // border-bottom: 1px solid transparent;
-    // border-top-left-radius: 3px;
-    // border-top-right-radius: 3px;
   }
 
   .panel-title > a,
@@ -227,10 +224,10 @@
     // border-bottom: 1px solid rgba(0, 0, 0, 0.1);
 
     .horizontal {
-      font-size: 1.5rem;
+      font-size: 14px;
 
       a {
-        font-size: 1.5rem;
+        font-size: 14px;
       }
     }
 
@@ -345,34 +342,27 @@
   .apply-filters {
     display: none;
     width: 80px;
-    padding: 0.3rem 0.4rem;
-    margin: 0.5rem 0;
+    padding: 0.2rem 0.5rem !important;
+    margin-bottom: 1em;
     font-size: 11px;
 
     span {
-      font-weight: bold;
+      font-weight: 500;
     }
   }
 
   .ui-autocomplete {
     position: relative;
-    display: inline-block;
     display: flex;
+    align-items: center;
     width: 100%;
     flex-direction: row;
-    padding-right: 0.6em;
-
-    .search-span:hover {
-      background-color: #ffffe0;
-    }
+    margin-top: 0.5rem;
 
     .search-icon {
       position: relative;
-      top: 3px;
       display: inline-block;
-      padding: 0;
       margin-right: 5px;
-      background: transparent;
 
       &:after {
         content: '\f002';
@@ -385,20 +375,16 @@
       width: 100%;
       height: auto;
       padding: 5px;
-      // border: none;
+      box-shadow: none;
+      border: 1px solid #ccc;
       border-radius: 4px;
-
-      &:focus {
-        border: none;
-        outline: none;
-      }
+      height: 30px;
     }
 
     .clear-btn {
       position: absolute;
-      top: -2px;
+      top: 5px;
       right: 5px;
-      padding-top: 3px;
       cursor: pointer;
 
       &:active {
@@ -416,9 +402,6 @@
 }
 
 .controls {
-  padding: 0.8em 0;
-  // background-color: #e5e5e5;
-
   > span {
     font-size: 12px;
   }
@@ -443,9 +426,6 @@
   }
 
   label.horizontal {
-    // width: 100%;
-    // padding-right: 0;
-    // padding-bottom: 2px;
     padding-left: 0;
 
     &:after {
@@ -559,7 +539,7 @@
         margin-right: 0.5em;
         margin-bottom: 2px;
         font-size: 1em;
-        font-weight: bold;
+        font-weight: 500;
       }
     }
   }
@@ -581,7 +561,7 @@
     .section-title {
       display: inline-block;
       margin-right: 1.5rem;
-      font-weight: bold;
+      font-weight: 500;
     }
   }
 
@@ -907,22 +887,12 @@
     //   width: 100% !important;
     // }
 
-    .side-section {
-      // display: flex;
-      // gap: 1rem;
-      // flex-direction: column;
-      // overflow-y: visible;
+    .article-select {
+      label {
+        font-size: 14px;
+        display: block;
+      }
     }
-
-    // .article-select {
-    //   padding: 0;
-    //   margin: 1em 0;
-    //   border: none;
-
-    //   label {
-    //     padding-bottom: 2px;
-    //   }
-    // }
 
     .form-right-side {
       display: flex;
@@ -947,19 +917,25 @@
       }
 
       .wrapped-content.open {
-        z-index: 9999 !important;
+        z-index: 99 !important;
       }
 
       .panel-title {
-        font-weight: 700;
+        font-weight: normal;
         padding: 0.5em 1em;
-        font-size: 18px;
+        font-size: 16px;
         position: relative;
         margin: 0;
+        display: block !important;
+
+        &:after {
+          content: '\f107' !important;
+          font: normal normal normal 16px/1 FontAwesome;
+        }
       }
 
       .panel-title.open {
-        z-index: 99999 !important;
+        z-index: 999 !important;
         box-shadow:
           0 5px 0 #fff,
           0 0 4px rgba(0, 0, 0, 0.25);
@@ -973,6 +949,7 @@
         min-height: 60px;
         display: block;
         overflow: auto;
+        margin-top: 0.5em;
       }
 
       .option {
@@ -1099,7 +1076,7 @@ dd {
 // }
 
 .select2-container {
-  width: 100% !important;
+  display: inline !important;
 }
 
 // .controls .ui-autocomplete .search-span:hover {

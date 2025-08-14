@@ -116,12 +116,12 @@
     var invertSel =
       '<a data-value="invert"><label><span class="label">Invert selection</span></label></a>' +
       '<div class="btn btn-default apply-filters" data-value="apply"><span>Apply filters</span></div>' +
-      '<span class="ui-autocomplete">' +
+      '<div class="ui-autocomplete">' +
       '<span class=" search-icon" ></span>' +
       '<span class="search-span">' +
       '<input class="ui-autocomplete-input" type="text" />' +
       '<span class="clear-btn"></span>' +
-      '</span>' +
+      '</div>' +
       '</div>';
     return spAll + spClear + invertSel;
   }
@@ -250,9 +250,7 @@
 
     var $label = $field.find('.horizontal');
 
-    if (!$label.hasClass('panel-title')) {
-      $label.addClass('panel-title');
-    }
+    $label.addClass('panel-title panel-heading');
 
     $label.nextAll().wrapAll('<div class="wrapped-content"></div>');
 
