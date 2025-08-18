@@ -87,19 +87,23 @@
 
     $('#form-buttons-continue').hide('fast');
 
-    var fbDownload = $('#form-buttons-download');
-    if (fbDownload.length > 0) {
+    var $downloadBtn = $('#form-buttons-download');
+    var $centerSection = $('.center-section');
+    if ($downloadBtn.length > 0) {
       var dBtn =
-        fbDownload.prop('outerHTML').replace('input', 'button') +
-        ' <span style="margin-left:0.4rem;">Download as spreadsheet</span>';
-      var btnForm = fbDownload.parent();
-
-      fbDownload.remove();
-
+        $downloadBtn.prop('outerHTML').replace('input', 'button') +
+        ' <span>Download as spreadsheet</span>';
+      var btnForm = $downloadBtn.parent();
+      $downloadBtn.remove();
       btnForm.append($(dBtn));
-      $('#form-buttons-download')
+
+      $downloadBtn = $('#form-buttons-download')
         .val('Download as spreadsheet')
-        .addClass('glyphicon glyphicon-download-alt');
+        .addClass('ui button primary inverted');
+
+      if ($centerSection.length) {
+        $downloadBtn.appendTo($centerSection);
+      }
     }
   }
 
@@ -244,40 +248,49 @@
   }
 
   function addCheckboxPanel($field, fieldId, cheks) {
-    console.log('$field', $field);
-    console.log('fieldId', fieldId);
-    console.log('cheks', cheks);
+    $field.addClass('panel-group');
 
-    var $label = $field.find('.horizontal');
-
+    var $label = $field.find('> label.horizontal');
     $label.addClass('panel-title panel-heading');
 
-    $label.nextAll().wrapAll('<div class="wrapped-content"></div>');
-
     var $content = $label.next('.wrapped-content');
+    if (!$content.length) {
+      $label.nextAll().wrapAll('<div class="wrapped-content"></div>');
+      $content = $label.next('.wrapped-content');
+    }
+
     var chekspan = $content.find('> span:not(.controls)');
     chekspan.addClass('panel-default');
 
-    $content.hide();
+    $content.hide().removeClass('open');
+    $label.removeClass('open');
 
-    $label.off('click').on('click', function () {
+    $label.off('click.accordion').on('click.accordion', function (e) {
+      e.stopPropagation();
+
       var $thisLabel = $(this);
       var $thisContent = $thisLabel.next('.wrapped-content');
 
       if ($thisContent.is(':visible')) {
-        // Close this panel
         $thisContent.hide().removeClass('open');
         $thisLabel.removeClass('open');
       } else {
-        // Close all other panels
         $('.wrapped-content').hide().removeClass('open');
         $('.panel-title').removeClass('open');
 
-        // Open this panel
         $thisContent.show().addClass('open');
         $thisLabel.addClass('open');
       }
     });
+
+    $(document)
+      .off('click.accordionOutside')
+      .on('click.accordionOutside', function (e) {
+        if ($(e.target).closest('.panel-group').length === 0) {
+          $('.wrapped-content').hide().removeClass('open');
+          $('.panel-title').removeClass('open');
+        }
+      });
 
     // $field.addClass('panel-group');
     // var label = $field.find('.horizontal.panel-title');
@@ -309,10 +322,6 @@
 
     // $field.find('.accordion-toggle').addClass('accordion-after');
 
-    // // --- Wrap all siblings after the panel heading ---
-    // // This wraps all elements after the label (panel-heading panel-title)
-    // // label.nextAll().wrapAll('<div class="wrapped-content"></div>');
-
     // // hidden-colapse event
     // chekspan.on('hidden.bs.collapse', function () {
     //   chekspan.fadeOut('fast');
@@ -335,19 +344,19 @@
     //   }, 600);
     // });
 
-    // if (cheks.length < 6) {
-    //   $field.find('.controls .ui-autocomplete').hide();
-    // } else {
-    //   chekspan.append("<span class='noresults hidden'>No results found</span>");
-    //   chekspan.data('checked_items', []);
+    if (cheks.length < 6) {
+      $field.find('.controls .ui-autocomplete').hide();
+    } else {
+      chekspan.append("<span class='noresults hidden'>No results found</span>");
+      chekspan.data('checked_items', []);
 
-    //   var data = chekspan.data('checked_items');
-    //   $.each($field.find('input:checked'), function (idx, el) {
-    //     data.push(el.id);
-    //   });
+      var data = chekspan.data('checked_items');
+      $.each($field.find('input:checked'), function (idx, el) {
+        data.push(el.id);
+      });
 
-    //   addAutoComplete($field);
-    // }
+      addAutoComplete($field);
+    }
   }
 
   function sortCheckboxesByChecked($field) {
@@ -1076,6 +1085,12 @@
       1000,
     );
 
+    var $heading = $('.msfd-heading');
+    var $startLink = $('.msfd-start-link');
+    if ($heading.length && $startLink.length) {
+      $heading.insertAfter($startLink);
+    }
+
     addCheckboxHandlers($(selectorFormContainer));
     addCheckboxLabelHandlers();
     attachSelect2();
@@ -1403,7 +1418,7 @@
     $('#wise-search-form-top').append(
       '<div class="alert alert-danger alert-dismissible show" style="margin-top: 2rem;" role="alert">' +
         '  <strong>There was a error from the server.</strong> You should check in on some of those fields from the form.' +
-        '  <button type="button" class="close" data-dismiss="alert" aria-label="Close">' +
+        '  <button type="button" class="ui button close" data-dismiss="alert" aria-label="Close">' +
         '    <span aria-hidden="true">&times;</span>' +
         '  </button>' +
         '</div>',
