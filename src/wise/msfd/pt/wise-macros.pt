@@ -60,7 +60,7 @@
       About MSFD reporting data explorer
       <img src="/marine/++api++/++resource++msfd/images/msfd-mini.png">
     </a> -->
-    <div>
+    <div class="msfd-heading">
       <h2 class="main-title" tal:content="structure view/main_title">Article X</h2>
       <div class="main-subtitle" tal:content="structure view/subtitle">
         Subtitle here
