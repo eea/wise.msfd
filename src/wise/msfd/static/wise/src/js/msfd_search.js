@@ -87,6 +87,12 @@
 
     $('#form-buttons-continue').hide('fast');
 
+    var $article13 = $('#article132022form');
+    var $article13form = $('#article13form');
+    if ($article13.length && $article13form.length) {
+      $article13.insertAfter($article13form);
+    }
+
     var $downloadBtn = $('#form-buttons-download');
     var $centerSection = $('.center-section');
     if ($downloadBtn.length > 0) {
@@ -152,7 +158,6 @@
     }
 
     $field.find('.apply-filters').show();
-    //$(evtarget).find(".apply-filters").show();
     labels.removeClass('hidden');
 
     var toSearch = $(evtarget).val().toLowerCase().replace(/\s/g, '_');
@@ -167,15 +172,8 @@
           .text()
           .toLowerCase()
           .replace(/\s/g, '_');
-        //return temp;
-        return (
-          $(item)
-            .text()
-            .toLowerCase()
-            /*.replace(/^\s+|\s+$/g, '')*/
-            /*.replace(/_/g, "")*/
-            .replace(/\s/g, '_')
-        );
+
+        return $(item).text().toLowerCase().replace(/\s/g, '_');
       });
 
     var found = [];
@@ -253,10 +251,10 @@
     var $label = $field.find('> label.horizontal');
     $label.addClass('panel-title panel-heading');
 
-    var $content = $label.next('.wrapped-content');
+    var $content = $label.next('.panel-content');
     if (!$content.length) {
-      $label.nextAll().wrapAll('<div class="wrapped-content"></div>');
-      $content = $label.next('.wrapped-content');
+      $label.nextAll().wrapAll('<div class="panel-content"></div>');
+      $content = $label.next('.panel-content');
     }
 
     var chekspan = $content.find('> span:not(.controls)');
@@ -269,13 +267,13 @@
       e.stopPropagation();
 
       var $thisLabel = $(this);
-      var $thisContent = $thisLabel.next('.wrapped-content');
+      var $thisContent = $thisLabel.next('.panel-content');
 
       if ($thisContent.is(':visible')) {
         $thisContent.hide().removeClass('open');
         $thisLabel.removeClass('open');
       } else {
-        $('.wrapped-content').hide().removeClass('open');
+        $('.panel-content').hide().removeClass('open');
         $('.panel-title').removeClass('open');
 
         $thisContent.show().addClass('open');
@@ -287,62 +285,10 @@
       .off('click.accordionOutside')
       .on('click.accordionOutside', function (e) {
         if ($(e.target).closest('.panel-group').length === 0) {
-          $('.wrapped-content').hide().removeClass('open');
+          $('.panel-content').hide().removeClass('open');
           $('.panel-title').removeClass('open');
         }
       });
-
-    // $field.addClass('panel-group');
-    // var label = $field.find('.horizontal.panel-title');
-    // label.nextAll().wrapAll('<div class="wrapped-content"></div>');
-
-    // var chekspan = $field.find('> span:not(.controls)');
-    // chekspan
-    //   .addClass(fieldId + '-collapse')
-    //   .addClass('collapse')
-    //   .addClass('panel')
-    //   .addClass('panel-default');
-
-    // // Ensure panel and controls are collapsed/hidden by default
-    // chekspan.removeClass('in show').hide();
-    // $field.find('.controls').hide();
-
-    // var label = $field.find('.horizontal');
-
-    // var alabel =
-    //   "<a data-toggle='collapse' class='accordion-toggle' >" +
-    //   label.text() +
-    //   '</a>';
-    // label.html(alabel);
-
-    // label.addClass('panel-heading panel-title');
-
-    // label.attr('data-toggle', 'collapse');
-    // label.attr('data-target', '.' + fieldId + '-collapse');
-
-    // $field.find('.accordion-toggle').addClass('accordion-after');
-
-    // // hidden-colapse event
-    // chekspan.on('hidden.bs.collapse', function () {
-    //   chekspan.fadeOut('fast');
-    //   $field.find('.controls').slideUp('fast');
-    //   $field.css({ 'border-bottom': '1px solid #ccc;' });
-    // });
-
-    // // show accordion
-    // chekspan.on('show.bs.collapse', function () {
-    //   chekspan.fadeIn('fast');
-    //   $field.find('.controls').slideDown('fast');
-    //   $field.find('> span').css({ display: 'block' });
-    //   $field.find('.accordion-toggle').addClass('accordion-after');
-    // });
-
-    // // hide accordion
-    // chekspan.on('hide.bs.collapse', function () {
-    //   window.setTimeout(function () {
-    //     $field.find('.accordion-toggle').removeClass('accordion-after');
-    //   }, 600);
-    // });
 
     if (cheks.length < 6) {
       $field.find('.controls .ui-autocomplete').hide();
@@ -525,7 +471,6 @@
     $controls.on('click', "a[data-value='all']", checkboxHandlerAll);
     $controls.on('click', "a[data-value='none']", checkboxHandlerNone);
     $controls.on('click', "a[data-value='invert']", checkboxHandlerInvert);
-    //$(".controls .apply-filters").on("click", $( selectorFormContainer + " .formControls #form-buttons-continue").trigger("click") );
 
     $controls.one('click', '.apply-filters', function () {
       $(selectorFormContainer + " [name='form.widgets.page']").val(0);
@@ -700,7 +645,6 @@
 
         $(selectElement).on('select2-open', function () {
           var trh = $(marineUnitTriggerSelector).offset().top;
-          //$(".select2-top-override-dropdown").css("margin-top", $("#marine-unit-trigger").height()/2 + "px" );
           $(marineUnitTriggerSelector + ' .arrow').hide();
           $('.select2-top-override-dropdown').css({
             top:
@@ -713,8 +657,6 @@
         });
 
         $(selectElement).on('select2-selecting', function (ev) {
-          //$(selectorLeftForm + " "+  marineUnitTriggerSelector +"  a").text(ev.object.text);
-
           $(selectorFormContainer + " [name='form.widgets.page']").val(0);
           $(selectorFormContainer + ' #form-widgets-marine_unit_id')
             .select2()
@@ -804,7 +746,6 @@
           $(elem).select2(options);
         } else {
           $(elem).hide();
-          //$(elem).after("<span>"+ $($(elem).find("option")[0]).attr("title") +"</span>");
         }
       },
     );
@@ -943,9 +884,9 @@
       $(opts[opts.length - 1]).val()
     ) {
       var topNextBtn =
-        '<button type="submit" ' +
-        'id="form-buttons-next-top" name="marine.buttons.next" class="submit-widget button-field btn btn-default pagination-next" value="">' +
-        '            </button>';
+        '<button type="submit" id="form-buttons-next-top" name="marine.buttons.next"' +
+        'class="submit-widget button-field btn btn-default pagination-next" value="">' +
+        '</button>';
 
       $(formBtnNextTop).append(topNextBtn);
 
@@ -1011,12 +952,6 @@
 
   function paginationInputHandlers() {
     var inp = $('.pagination-text .pagination-input');
-
-    // hide pagination input on focus out
-    /*inp.on("focusout", function (){
-            inp.hide();
-            $(paginationTextResult).show();
-        });*/
 
     // pagination input delay auto-submit
     inp.bind('focusout', function (e) {
@@ -1200,15 +1135,6 @@
       .remove();
     $(selectorLeftForm + ' #wise-search-form-top').after(centerContentD);
 
-    /*var res = $data.find( selectorLeftForm );
-
-        if(res.children().length === 1){
-            if($(res[0]).attr("id") === "wise-search-form-top" ){
-                $( selectorLeftForm + " #wise-search-form-top").after("<span class='no-results'>No results found.</span>");
-            }
-
-        }*/
-
     initPageElems();
     var formAction = $('.wise-search-form-container form').attr('action') || '';
     if (formAction.includes('/marine/++api++')) {
@@ -1353,16 +1279,10 @@
       });
     }
 
-    // $(selectorFormContainer).find("[name='form.buttons.prev']").remove();
-    // $(selectorFormContainer).find("[name='form.buttons.next']").remove();
-
-    //$("s2id_form-widgets-marine_unit_id").select2().enable(true);
-
     $(selectorLeftForm + ' #loader-placeholder').remove();
 
     $('#form-widgets-marine_unit_id').prop('disabled', false);
 
-    //if($( selectorLeftForm + " select").val() === "--NOVALUE--" ) $( selectorLeftForm + " select").val(window.WISE.marineUnit).trigger("change.select2");
     if ($(selectorLeftForm + ' select').hasClass('js-example-basic-single')) {
       // Select2 has been initialized
       if (
