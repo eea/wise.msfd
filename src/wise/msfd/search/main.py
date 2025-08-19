@@ -80,7 +80,10 @@ class CompetentAuthorityItemDisplay(ItemDisplayForm):
             return ''
 
         country = self.print_value(country_code, 'CountryCode')
-
+        
+        if country == country_code:
+            country = self.print_value(country_code)
+        
         return country
 
     def download_results(self):
