@@ -48,15 +48,19 @@
       }
     }
 
-    .mru-select-wrapper {
-      display: flex;
-      justify-content: space-between;
-      margin: 0.5rem 0;
-      align-items: center;
-    }
+    // .mru-select-wrapper {
+    //   display: flex;
+    //   justify-content: space-between;
+    //   margin: 0.5rem 0;
+    //   align-items: top;
+    // }
 
     #mru-select-prev-next-wrapper {
-      text-align: right;
+      display: flex;
+      -ms-flex-align: start;
+      align-items: flex-start;
+      -ms-flex-pack: justify;
+      justify-content: space-between;
     }
   }
 
@@ -121,7 +125,7 @@
     }
 
     &.bottom {
-      padding: 0.2rem 0.8rem;
+      padding: 0.2rem 0.5rem;
       margin: 0;
     }
 
@@ -193,13 +197,22 @@
     flex-flow: row wrap;
   }
 
+  dl dt:last-of-type,
+  dl dd:last-of-type {
+    border-bottom: none;
+  }
+
   dt {
     width: 30%;
-    border-bottom: 1px dotted #ccc;
-    margin-top: 0.4rem;
+    border-right: 1px solid #0079cf;
     clear: left;
     float: left;
     font-weight: 500;
+    padding-top: 0.4rem;
+
+    &:not(:last-child) {
+      border-bottom: 1px solid #3d5265;
+    }
   }
 
   dd {
@@ -208,14 +221,11 @@
     max-width: 70%;
     max-height: 200px;
     padding: 0.4rem;
-    padding-left: 0.6rem;
-    margin-top: 0.4rem;
-    background-color: #eee;
     float: left;
 
-    // span {
-    //   white-space: pre-line;
-    // }
+    &:not(:last-child) {
+      border-bottom: 1px solid #3d5265;
+    }
   }
 
   .tab-content {
@@ -487,6 +497,7 @@
     padding: 0 1rem;
     color: #777;
     font-size: smaller;
+    text-align: center;
   }
 
   #form-data-primary {
@@ -560,7 +571,7 @@
 
     .section-title {
       display: inline-block;
-      margin-right: 1.5rem;
+      margin-top: 1.5rem;
       font-weight: 500;
     }
   }
@@ -620,6 +631,9 @@
   .form-buttons-next {
     background-color: #29a2d9;
     color: white;
+    border: none;
+    border-radius: 0;
+    padding: 0 8px !important;
 
     &:hover {
       background-color: #0071b3;
@@ -652,7 +666,7 @@
 
 .prev-next-row {
   margin: 1em 0;
-  text-align: right;
+  // text-align: right;
 
   > span {
     display: block;
