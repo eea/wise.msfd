@@ -50,6 +50,7 @@ class CacheViewPageTemplateFile(ViewPageTemplateFile):
     def pt_getEngine(self):
         return getEngine()
 
+
 def install_patches():
     paths.CONTEXT_ENDPOINTS = [
         "?expand=subsite,siblings",
