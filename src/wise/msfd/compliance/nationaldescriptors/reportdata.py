@@ -2737,7 +2737,7 @@ class ExportMSReportData(BaseView):
 
         conditions = [t.c.GESComponent.in_(all_ids)]
 
-        count, q = db.get_all_records_ordered(
+        _, q = db.get_all_records_ordered(
             t,
             (
                 "Region",
