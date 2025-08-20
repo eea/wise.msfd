@@ -96,8 +96,6 @@ ORDER_COLS_ART11 = (
     "Feature",
 )
 
-FORMATS = ["%Y-%m-%d", "%d-%m-%Y", "%d/%m/%Y"]
-
 
 def date_format(date):
     date_placeholder = "-"
