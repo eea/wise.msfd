@@ -103,9 +103,7 @@ def date_format(date):
     if not date:
         return date_placeholder
 
-    # for format in FORMATS:
     try:
-        # return datetime.strptime(date, format).date().isoformat()
         return parser.parse(date).date().isoformat()
     except ValueError:
         return date_placeholder
