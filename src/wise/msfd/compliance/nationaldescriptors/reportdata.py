@@ -527,8 +527,7 @@ class ReportData2012(BaseView, BaseUtil):
             filename = isinstance(filename, (tuple, list)
                                   ) and filename[0] or filename
 
-        default = ReportingInformation(
-            date_format("15/04/2013"), "Member State")
+        default = ReportingInformation('2013-04-30', 'Member State')
 
         if not filename:
             return default
