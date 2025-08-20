@@ -919,10 +919,15 @@ class ReportData2016(ReportData2012):
         source_file = ("File not found", None)
         multiple_source_files = False
 
-        try:
-            factsheet = get_factsheet_url(fileurl)
-        except Exception:
-            logger.exception("Error in getting HTML Factsheet URL %s", fileurl)
+        if fileurl:
+            try:
+                factsheet = get_factsheet_url(fileurl)
+            except Exception:
+                logger.exception(
+                    "Error in getting HTML Factsheet URL %s", fileurl)
+        else:
+            logger.warning(
+                "No factsheet url, filename is: %r", filename)
 
         source_file = (filename, fileurl + "/manage_document")
 
@@ -2378,6 +2383,7 @@ class ReportData2018Secondary(ReportData2018):
 
             res = []
             source_file = (url.rsplit("/", 1)[-1], url + "/manage_document")
+
             factsheet = get_factsheet_url(url)
 
             view()  # updates the view
