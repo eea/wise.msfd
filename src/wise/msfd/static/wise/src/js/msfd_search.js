@@ -246,6 +246,8 @@
   }
 
   function addCheckboxPanel($field, fieldId, cheks) {
+    var $wrapper = $('.msfd-search-wrapper');
+
     $field.addClass('panel-group');
 
     var $label = $field.find('> label.horizontal');
@@ -272,12 +274,19 @@
       if ($thisContent.is(':visible')) {
         $thisContent.hide().removeClass('open');
         $thisLabel.removeClass('open');
+
+        if ($('.panel-content.open').length === 0) {
+          $wrapper.find('.dimmer').remove();
+        }
       } else {
         $('.panel-content').hide().removeClass('open');
         $('.panel-title').removeClass('open');
+        $wrapper.find('.dimmer').remove();
 
         $thisContent.show().addClass('open');
         $thisLabel.addClass('open');
+
+        $wrapper.append('<div class="dimmer"/>');
       }
     });
 
@@ -287,6 +296,7 @@
         if ($(e.target).closest('.panel-group').length === 0) {
           $('.panel-content').hide().removeClass('open');
           $('.panel-title').removeClass('open');
+          $wrapper.find('.dimmer').remove();
         }
       });
 
@@ -1137,10 +1147,10 @@
 
     initPageElems();
     var formAction = $('.wise-search-form-container form').attr('action') || '';
-    if (formAction.includes('/marine/++api++')) {
+    if (formAction.includes('/++api++')) {
       var newFormAction = formAction;
     } else {
-      var newFormAction = formAction.replace('/marine', '/marine/++api++');
+      var newFormAction = formAction.replace('3000/', '3000/++api++');
     }
 
     $('.wise-search-form-container form').attr('action', newFormAction);
@@ -1531,8 +1541,8 @@
   }
 
   function searchFormAjax(boundary, data, url, formData) {
-    if (!url.includes('/marine/++api++')) {
-      url = url.replace('/marine', '/marine/++api++');
+    if (!url.includes('/++api++')) {
+      url = url.replace('3000/', '3000/++api++');
     }
 
     $.ajax({
@@ -1748,10 +1758,10 @@
     }, 100);
 
     var formAction = $('.wise-search-form-container form').attr('action') || '';
-    if (formAction.includes('/marine/++api++')) {
+    if (formAction.includes('/++api++')) {
       var newFormAction = formAction;
     } else {
-      var newFormAction = formAction.replace('/marine', '/marine/++api++');
+      var newFormAction = formAction.replace('3000/', '3000/++api++');
     }
 
     $('.wise-search-form-container form').attr('action', newFormAction);
