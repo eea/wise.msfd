@@ -672,48 +672,48 @@
 }
 
 //tablet
-// @media (max-width: @screen-md-max) {
-//   .side-section {
-//     overflow-y: auto;
-//   }
+@media (max-width: @screen-md-max) {
+  // .side-section {
+  //   overflow-y: auto;
+  // }
 
-//   .wise-search-form-container > ul.topnav,
-//   #wise-search-form > ul.topnav {
-//     padding-top: 10px;
+  // .wise-search-form-container > ul.topnav,
+  // #wise-search-form > ul.topnav {
+  //   padding-top: 10px;
 
-//     li {
-//       width: 100%;
-//       padding-bottom: 0;
-//       margin-bottom: 2px;
-//       border-bottom-left-radius: 0;
-//       border-bottom-right-radius: 0;
-//       border-top-left-radius: 0px;
-//       border-top-right-radius: 0px;
-//     }
-//   }
+  //   li {
+  //     width: 100%;
+  //     padding-bottom: 0;
+  //     margin-bottom: 2px;
+  //     border-bottom-left-radius: 0;
+  //     border-bottom-right-radius: 0;
+  //     border-top-left-radius: 0px;
+  //     border-top-right-radius: 0px;
+  //   }
+  // }
 
-//   #wise-search-form dd {
-//     max-width: 100%;
-//     max-height: auto;
-//     padding-right: 1rem;
-//     padding-left: 1rem;
-//   }
+  #wise-search-form dd {
+    max-width: 100%;
+    max-height: auto;
+    padding-right: 1rem;
+    padding-left: 1rem;
+  }
 
-//   #marine-widget-top {
-//     display: block;
+  // #marine-widget-top {
+  //   display: block;
 
-//     #form-buttons-prev-top {
-//       width: auto !important;
-//       margin-right: 2px;
-//     }
+  //   #form-buttons-prev-top {
+  //     width: auto !important;
+  //     margin-right: 2px;
+  //   }
 
-//     .select-article {
-//       .field {
-//         display: block;
-//       }
-//     }
-//   }
-// }
+  //   .select-article {
+  //     .field {
+  //       display: block;
+  //     }
+  //   }
+  // }
+}
 
 // TABLET
 @media (max-width: @screen-md-min) {
@@ -748,11 +748,13 @@
   .wise-search-form-container,
   #wise-search-form {
     dt {
-      border-bottom: none;
+      border-bottom: none !important;
+      border-right: none !important;
     }
 
     dd {
       margin-bottom: 1.5rem;
+      border-right: none !important;
     }
   }
 
