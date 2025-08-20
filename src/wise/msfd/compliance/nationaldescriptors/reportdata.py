@@ -2737,14 +2737,14 @@ class ExportMSReportData(BaseView):
 
         conditions = [t.c.GESComponent.in_(all_ids)]
 
-        _, q = db.get_all_records_ordered(
+        count, q = db.get_all_records_ordered(
             t,
             (
                 "Region",
                 "CountryCode",
                 "GESComponent",
             ),
-            *conditions,
+            *conditions
         )
 
         ok_features = set([f.name for f in get_features(_descriptor)])
