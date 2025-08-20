@@ -9,7 +9,7 @@ from plone.restapi.deserializer import utils
 from plone.uuid.interfaces import IUUID, IUUIDAware
 from zope.component import getMultiAdapter
 from zope.i18nmessageid.message import MessageFactory
-
+from .cache import install_patches
 
 EEAMessageFactory = MessageFactory('eea')
 
@@ -73,3 +73,4 @@ def path2uid(context, link):
 
 
 utils.path2uid = path2uid
+install_patches()
