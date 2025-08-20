@@ -29,7 +29,7 @@
         </li>
       </tal:rep>
     </ul>
-    <!-- <div class="visible-xs" style="clear: both;"> -->
+
     <div class="visible-xs">
       <div class="article-select">
         <div tal:content="view/tab_select_label | string:Select ${tab_type}:">
@@ -66,6 +66,14 @@
         Subtitle here
       </div>
     </div>
+
+    <div class="active-filters-section">
+      <div class="active-filters-header">
+        <h4 class="active-filters-title">Active filters</h4>
+        <i class="fa fa-chevron-down" aria-hidden="true"></i>
+      </div>
+      <div class="active-filters-list"></div>
+    </div>
   </div>
 </metal:macro>
 
@@ -76,7 +84,6 @@
     <img src="/marine/++api++/++resource++msfd/images/msfd-mini.png">
   </a>
 
-  <!-- <div class="visible-xs" style="clear: both;"> -->
   <div class="article-select" tal:define="tab_type view/tabs_type | string:article">
     <label tal:content="view/tab_select_label | string:Select ${tab_type}:">
       Select article/tab:

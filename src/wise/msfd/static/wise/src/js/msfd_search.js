@@ -245,6 +245,70 @@
     });
   }
 
+  function addActiveFilters($field) {
+    var $section = $('.active-filters-section');
+    var $list = $('.active-filters-list');
+    var $header = $section.find('.active-filters-header');
+    var $icon = $header.find('i');
+
+    $list.hide();
+
+    function renderFilters() {
+      $list.empty();
+
+      $(selectorFormContainer + ', ' + selectorLeftForm)
+        .find('[data-fieldname]')
+        .each(function () {
+          var $f = $(this);
+          var title = $f.find('> label.horizontal').text().trim();
+          var checked = $f.find("input[type='checkbox']:checked");
+
+          if (checked.length) {
+            var $group = $('<div class="active-filter-group"></div>');
+            $group.append(
+              '<span class="filter-group-title">' + title + ':</span>',
+            );
+
+            checked.each(function () {
+              var $cb = $(this);
+              var text = $cb.parent().text().trim();
+
+              var $tag = $(
+                '<span class="active-filter-item">' +
+                  text +
+                  '<button type="button" class="ui button clear-filter">' +
+                  '<i class="fa fa-times" aria-hidden="true"/>' +
+                  '</button>' +
+                  '</span>',
+              );
+
+              $tag.find('.clear-filter').on('click', function (e) {
+                e.preventDefault();
+                if ($cb.is(':checked')) {
+                  $cb[0].click();
+                }
+              });
+
+              $group.append($tag);
+            });
+
+            $list.append($group);
+          }
+        });
+    }
+
+    $field.on('change', "input[type='checkbox']", renderFilters);
+
+    $header
+      .off('click.activeFiltersToggle')
+      .on('click.activeFiltersToggle', function () {
+        $list.slideToggle(200);
+        $icon.toggleClass('fa-chevron-up fa-chevron-down ');
+      });
+
+    renderFilters();
+  }
+
   function addCheckboxPanel($field, fieldId, cheks) {
     var $wrapper = $('.msfd-search-wrapper');
 
@@ -401,6 +465,7 @@
             .css('padding', 0);
         } else {
           addCheckboxPanel($field, fieldId, cheks);
+          addActiveFilters($field);
 
           $field.find('.search-icon').on('click', function (ev) {
             $(ev.target).parent().find('input').trigger('focus');
@@ -1147,10 +1212,10 @@
 
     initPageElems();
     var formAction = $('.wise-search-form-container form').attr('action') || '';
-    if (formAction.includes('/marine/++api++')) {
+    if (formAction.includes('3000/++api++')) {
       var newFormAction = formAction;
     } else {
-      var newFormAction = formAction.replace('/marine', '/marine/++api++');
+      var newFormAction = formAction.replace('3000/', '3000/++api++/');
     }
 
     $('.wise-search-form-container form').attr('action', newFormAction);
@@ -1541,8 +1606,8 @@
   }
 
   function searchFormAjax(boundary, data, url, formData) {
-    if (!url.includes('/marine/++api++')) {
-      url = url.replace('/marine', '/marine/++api++');
+    if (!url.includes('/++api++')) {
+      url = url.replace('3000/', '3000/++api++/');
     }
 
     $.ajax({
@@ -1758,10 +1823,10 @@
     }, 100);
 
     var formAction = $('.wise-search-form-container form').attr('action') || '';
-    if (formAction.includes('/marine/++api++')) {
+    if (formAction.includes('3000/++api++')) {
       var newFormAction = formAction;
     } else {
-      var newFormAction = formAction.replace('/marine', '/marine/++api++');
+      var newFormAction = formAction.replace('3000/', '3000/++api++/');
     }
 
     $('.wise-search-form-container form').attr('action', newFormAction);

@@ -22,6 +22,66 @@
   background: rgba(255, 255, 255, 0.2);
 }
 
+.active-filters-section {
+  border: 1px solid #e6e7e8;
+  background-color: #f9f9f9;
+  padding: 1em;
+
+  .active-filters-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    cursor: pointer;
+
+    .active-filters-title {
+      margin-bottom: 0;
+    }
+  }
+
+  .active-filter-group {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: baseline;
+    padding: 8px 15px;
+    margin-top: 10px;
+    margin-right: 11px;
+    background-color: #ebebeb;
+    font-size: 15px;
+    gap: 0.7em;
+  }
+
+  .filter-group-title {
+    font-weight: 500;
+  }
+
+  .active-filter-item {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+
+  .clear-filter {
+    padding: 2px 3px;
+    line-height: 0.5;
+    cursor: pointer;
+    border: 1px solid #0079cf;
+    box-shadow: none !important;
+    border-radius: 3px;
+    margin: 0;
+    background: transparent;
+
+    &:hover {
+      background-color: transparent;
+    }
+
+    i {
+      font-size: 10px;
+      color: #0079cf;
+    }
+  }
+}
+
 .wise-search-form-container,
 #wise-search-form {
   opacity: 0;
