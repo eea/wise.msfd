@@ -2,10 +2,11 @@
 <dc-workflow workflow_id="nis_workflow" title="Non-Indigenous Species Workflow" description=" - Workflow for the Non-Indigenous Species" state_variable="review_state" initial_state="draft" manager_bypass="False">
  <permission>Access contents information</permission>
  <permission>Modify portal content</permission>
- <permission>View</permission>
  <permission>Review portal content</permission>
+ <permission>View</permission>
  <state state_id="approved" title="Approved">
   <exit-transition transition_id="publish"/>
+  <exit-transition transition_id="send_back_to_submitted"/>
   <permission-map name="Access contents information" acquired="False">
    <permission-role>Editor</permission-role>
    <permission-role>Manager</permission-role>
@@ -56,6 +57,7 @@
  </state>
  <state state_id="published" title="Published">
   <description>EEA experts: published</description>
+  <exit-transition transition_id="send_back_to_approved"/>
   <permission-map name="Access contents information" acquired="False">
    <permission-role>Anonymous</permission-role>
   </permission-map>
@@ -111,9 +113,21 @@
    <guard-role>Reviewer</guard-role>
   </guard>
  </transition>
+ <transition transition_id="send_back_to_approved" title="Send back to approved" new_state="approved" trigger="USER" before_script="" after_script="">
+  <action url="%(content_url)s/content_status_modify?workflow_action=send_back_to_approved" category="workflow" icon="">Send back to approved</action>
+  <guard>
+   <guard-role>Reviewer</guard-role>
+  </guard>
+ </transition>
  <transition transition_id="send_back_to_draft" title="Send back to draft" new_state="draft" trigger="USER" before_script="" after_script="">
   <description>Send back to draft for corrections</description>
   <action url="%(content_url)s/content_status_modify?workflow_action=send_back_to_draft" category="workflow" icon="">Send back to draft</action>
+  <guard>
+   <guard-role>Reviewer</guard-role>
+  </guard>
+ </transition>
+ <transition transition_id="send_back_to_submitted" title="Send back to submitted" new_state="submitted" trigger="USER" before_script="" after_script="">
+  <action url="%(content_url)s/content_status_modify?workflow_action=send_back_to_submitted" category="workflow" icon="">Send back to submitted</action>
   <guard>
    <guard-role>Reviewer</guard-role>
   </guard>

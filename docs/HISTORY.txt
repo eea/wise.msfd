@@ -1,6 +1,11 @@
 Changelog
 =========
 
+5.1 - (2025-08-20)
+---------------------------
+* Change: Release
+  [laszlocseh]
+
 5.0 - (2025-08-08)
 ---------------------------
 * Change: Add docker pull in jenkins

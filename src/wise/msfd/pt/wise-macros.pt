@@ -55,11 +55,11 @@
 
 <metal:macro define-macro="top-section">
   <div>
-    <a href="/marine/data-maps-and-tools/msfd-reporting-information-products/msfd-reporting-data-explorer"
+    <!-- <a href="/marine/data-maps-and-tools/msfd-reporting-information-products/msfd-reporting-data-explorer"
       class="msfd-start-link">
       About MSFD reporting data explorer
       <img src="/marine/++api++/++resource++msfd/images/msfd-mini.png">
-    </a>
+    </a> -->
     <div>
       <h2 class="main-title" tal:content="structure view/main_title">Article X</h2>
       <div class="main-subtitle" tal:content="structure view/subtitle">
@@ -70,6 +70,12 @@
 </metal:macro>
 
 <metal:macro define-macro="articles-select">
+  <a href="/marine/data-maps-and-tools/msfd-reporting-information-products/msfd-reporting-data-explorer"
+    class="msfd-start-link">
+    About MSFD reporting data explorer
+    <img src="/marine/++api++/++resource++msfd/images/msfd-mini.png">
+  </a>
+
   <!-- <div class="visible-xs" style="clear: both;"> -->
   <div class="article-select" tal:define="tab_type view/tabs_type | string:article">
     <label tal:content="view/tab_select_label | string:Select ${tab_type}:">
