@@ -113,6 +113,14 @@
     }
   }
 
+  table.table-report {
+    tr {
+      &:last-child th {
+        border-bottom: none;
+      }
+    }
+  }
+
   table.listing {
     width: 100%;
     border: none;
@@ -138,10 +146,6 @@
     tr {
       &:not(:last-child) td {
         border-bottom: 1px solid #acbac7;
-      }
-
-      &:last-child th {
-        border-bottom: none;
       }
     }
 

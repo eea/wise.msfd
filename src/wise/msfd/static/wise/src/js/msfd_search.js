@@ -1893,5 +1893,9 @@
     removeNoValues();
     fixTableHeaderAndCellsHeight();
     addDoubleScroll();
+
+    $(window).on('resize', function () {
+      fixTableHeaderAndCellsHeight();
+    });
   });
 })(window, document, jQuery);
