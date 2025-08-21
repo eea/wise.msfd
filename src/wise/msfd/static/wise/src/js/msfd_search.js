@@ -145,7 +145,10 @@
     if ($(evtarget).val() === '') {
       no_results.addClass('hidden');
       labels.removeClass('hidden');
-      var data = $field.find('.panel').data('checked_items');
+      var data = $field
+        .find('.panel-content > span:not(.controls)')
+        .data('checked_items');
+
       if (data) {
         $.each(inputs, function (idx, el) {
           // 96264 in case we have an empty searchfield checked items
