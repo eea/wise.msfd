@@ -2,6 +2,8 @@
 """cache.py"""
 from __future__ import absolute_import
 from __future__ import print_function
+from plone.restapi.cache import paths
+from plone.cachepurging.purger import logger as purgeLogger
 import logging
 
 from zope.tales.expressions import StringExpr
@@ -10,8 +12,7 @@ from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 from Products.PageTemplates.Expressions import createTrustedZopeEngine
 
 logger = logging.getLogger(__name__)
-
-_cache = {}
+purgeLogger.setLevel(logging.DEBUG)
 
 
 class CacheExpr(StringExpr):
@@ -48,3 +49,12 @@ class CacheViewPageTemplateFile(ViewPageTemplateFile):
     """CacheViewPageTemplateFile"""
     def pt_getEngine(self):
         return getEngine()
+
+
+def install_patches():
+    paths.CONTEXT_ENDPOINTS = [
+        "?expand=subsite,siblings",
+        "/?expand=subsite,siblings",
+    ]
+
+    logger.info("plone.restapi cache purging paths were setup")

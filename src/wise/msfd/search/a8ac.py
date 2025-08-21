@@ -122,7 +122,7 @@ class A81aEcosystemPressures(ItemDisplay):
 
 @register_form_section(A81aEcoItemDisplay)
 class A81aEcosystemAsessment(ItemDisplay):
-    title = 'Status Asessment'
+    title = 'Status Assessment'
 
     extra_data_template = ViewPageTemplateFile('pt/extra-data-item.pt')
 
@@ -238,7 +238,7 @@ class A81aFunctionalGroupPressures(ItemDisplay):
 
 @register_form_section(A81aFunctItemDisplay)
 class A81aFunctionalGroupAsessment(ItemDisplay):
-    title = 'Status Asessment'
+    title = 'Status Assessment'
 
     extra_data_template = ViewPageTemplateFile('pt/extra-data-item.pt')
 
@@ -353,7 +353,7 @@ class A81aHabitatPressures(ItemDisplay):
 
 @register_form_section(A81aHabitatItemDisplay)
 class A81aHabitatAsessment(ItemDisplay):
-    title = 'Status Asessment'
+    title = 'Status Assessment'
 
     extra_data_template = ViewPageTemplateFile('pt/extra-data-item.pt')
 
@@ -468,7 +468,7 @@ class A81aSpeciesPressures(ItemDisplay):
 
 @register_form_section(A81aSpeciesItemDisplay)
 class A81aSpeciesAsessment(ItemDisplay):
-    title = 'Status Asessment'
+    title = 'Status Assessment'
 
     extra_data_template = ViewPageTemplateFile('pt/extra-data-item.pt')
 
@@ -574,7 +574,7 @@ class A81aOtherItemDisplay(MultiItemDisplayForm):
 
 @register_form_section(A81aOtherItemDisplay)
 class A81aOtherAsessment(ItemDisplay):
-    title = 'Status Asessment'
+    title = 'Status Assessment'
 
     extra_data_template = ViewPageTemplateFile('pt/extra-data-item.pt')
 
