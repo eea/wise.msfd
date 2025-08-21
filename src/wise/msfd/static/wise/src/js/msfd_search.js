@@ -127,9 +127,8 @@
       '<a data-value="invert"><label><span class="label">Invert selection</span></label></a>' +
       '<div class="btn btn-default apply-filters" data-value="apply"><span>Apply filters</span></div>' +
       '<div class="ui-autocomplete">' +
-      '<span class=" search-icon" ></span>' +
       '<span class="search-span">' +
-      '<input class="ui-autocomplete-input" type="text" />' +
+      '<input class="ui-autocomplete-input" type="text" placeholder="Quick search"/>' +
       '<span class="clear-btn"></span>' +
       '</div>' +
       '</div>';
@@ -249,7 +248,9 @@
     var $section = $('.active-filters-section');
     var $list = $('.active-filters-list');
     var $header = $section.find('.active-filters-header');
-    var $icon = $header.find('i');
+    var $icon = $header.find('i.fa');
+
+    // $('.wise-search-form-container .form-right-side').first().after($section);
 
     $list.hide();
 
