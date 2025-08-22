@@ -261,6 +261,12 @@
           &lt;required&gt;False&lt;/required&gt;
           &lt;title&gt;Checked comment&lt;/title&gt;
         &lt;/field&gt;
+        &lt;field name=&quot;nis_assigned_to&quot; type=&quot;zope.schema.Choice&quot;&gt;
+          &lt;description&gt;&lt;/description&gt;
+          &lt;required&gt;False&lt;/required&gt;
+          &lt;title&gt;Assigned to&lt;/title&gt;
+          &lt;vocabulary&gt;nis_experts_vocabulary&lt;/vocabulary&gt;
+        &lt;/field&gt;
       &lt;/fieldset&gt;
     &lt;/schema&gt;
   &lt;/model&gt;</property>

@@ -1,4 +1,9 @@
 """ Non-indigenous species """
+from plone.protect.interfaces import IDisableCSRFProtection
+import json
+from zExceptions import BadRequest
+from zope.publisher.interfaces import IPublishTraverse
+from zope.interface import implementer, alsoProvides
 import datetime
 import csv
 import io
@@ -68,6 +73,32 @@ def get_catalog_values(context, index):
     catalog = getToolByName(context, "portal_catalog")
 
     return catalog.uniqueValuesFor(index)
+
+
+@provider(IVocabularyFactory)
+def nis_experts_vocabulary(context):
+    """nis_experts_vocabulary"""
+
+    terms = []
+    group_id = "extranet-wisemarine-nisexternalexperts"
+
+    group = api.group.get(group_id)
+
+    if group:
+        for user in group.getGroupMembers():
+            title = "{} ({})".format(
+                user.getProperty("fullname") or user.id,
+                user.id
+            )
+            terms.append(
+                SimpleTerm(
+                    value=title,
+                    token=title,
+                    title=title
+                )
+            )
+
+    return SimpleVocabulary(terms)
 
 
 @provider(IVocabularyFactory)
@@ -208,16 +239,20 @@ class NISExport(BrowserView):
     """ Export NIS data to xlsx """
 
     def __call__(self):
-        """"""
+        """call"""
+        filters = {
+            "portal_type": ["non_indigenous_species"],
+            "sort_on": "id",
+            "sort_order": "ascending"
+        }
+
+        # setup filters from request
+        for f in json.loads(self.request.form.get("query", "{}")):
+            filters[f['i']] = f['v']
+
         catalog = get_tool("portal_catalog")
-        brains = catalog.searchResults(
-            {
-                "portal_type": [
-                    "non_indigenous_species",
-                ],
-                "sort_on": 'id',
-                "sort_order": 'ascending'
-            }
+        brains = catalog.unrestrictedSearchResults(
+            filters
         )
 
         out = io.BytesIO()
@@ -230,7 +265,8 @@ class NISExport(BrowserView):
             worksheet.write(0, i, title)
 
         for i, brain in enumerate(brains):
-            obj = brain.getObject()
+            # obj = brain.getObject()
+            obj = brain._unrestrictedGetObject()
 
             for j, (title, field_name) in enumerate(nis_fields.items()):
                 value = getattr(obj, field_name, '')
@@ -249,33 +285,6 @@ class NISExport(BrowserView):
            'attachment; filename=%s.xlsx' % fname)
 
         return out.read()
-
-# from plone.restapi.deserializer.dxcontent import DeserializeFromJson
-# from plone.restapi.interfaces import IDeserializeFromJson
-# from plone.dexterity.interfaces import IDexterityContainer
-# from plone.restapi.deserializer import json_body
-# from zope.component import adapter
-# from zope.interface import Interface, implementer
-
-# @implementer(IDeserializeFromJson)
-# @adapter(IDexterityContainer, Interface)
-# class NISDeserializer(DeserializeFromJson):
-#     """ NISDeserializer """
-#     def __call__(self, validate_all=False, data=None,
-#                  create=False, mask_validation_errors=True):
-#         if data is None:
-#             data = json_body(self.request)
-
-#         if data and "non_indigenous_species" in data:
-#             for value in data["non_indigenous_species"]:
-#                 import pdb; pdb.set_trace()
-#                 if isinstance(value, dict) and "@id" in value:
-#                     path = value["@id"]
-#                     if path.startswith("/marine/"):
-#                         value["@id"] = path.replace("/marine/", "/", 1)
-
-#         return super(NISDeserializer, self).__call__(
-#             validate_all, data, create, mask_validation_errors)
 
 
 @implementer(IExpandableElement)
@@ -320,3 +329,131 @@ class WorkflowProgressGet(Service):
         """
         info = WorkflowProgress(self.context, self.request)
         return info(expand=True)["workflow.progress"]
+
+
+@implementer(IPublishTraverse)
+class BulkAssign(Service):
+    """Bulk assign content items to a user."""
+
+    def __init__(self, context, request):
+        super().__init__(context, request)
+        self.params = []
+
+    def publishTraverse(self, request, name):
+        self.params.append(name)
+        return self
+
+    def _send_email(self, email, subject, body):
+        try:
+            api.portal.send_email(
+                recipient=email,
+                sender="wise-marine@eea.europa.eu",
+                subject=subject,
+                body=body,
+            )
+        except Exception as e:
+            api.portal.show_message(
+                message="Failed to notify user: {}".format(str(e)),
+                request=self.request,
+                type="error"
+            )
+
+    def _notify_user(self, username, items):
+        """Send an email notification to the assigned user."""
+        user = api.user.get(username=username)
+        if not user:
+            return
+
+        email = user.getProperty("email", "")
+        fullname = user.getProperty("fullname", username)
+
+        if not email:
+            return
+
+        subject = "[water.europa.eu - NIS] You have been assigned {} new item(s)".format(
+            len(items))
+        body = (
+            "Dear {},\n\n".format(fullname) +
+            "You have been assigned the following items:\n" +
+            "\n".join(items)
+        )
+
+        self._send_email(email, subject, body)
+
+    def _notify_eea_group(self, username, items):
+        """Send an email notification to the assigned user."""
+        user = api.user.get(username=username)
+        if not user:
+            return
+
+        email = "extranet-wisemarine-nisreviewers@roles.eea.eionet.europa.eu"
+        fullname = user.getProperty("fullname", username)
+
+        subject = "[water.europa.eu - NIS] {} have been assigned {}" \
+                  "new item(s)".format(fullname, len(items))
+        body = (
+            "Dear NIS Database Reviewers,\n\n" +
+            "{} have been assigned the following items:\n".format(fullname) +
+            "\n".join(items)
+        )
+
+        self._send_email(email, subject, body)
+
+    def reply(self):
+        alsoProvides(self.request, IDisableCSRFProtection)
+        data = json.loads(self.request.get("BODY", "{}"))
+
+        items = data.get("items", [])
+        assignee = data.get("assigned_to", None)
+
+        if not items or not assignee:
+            raise BadRequest("Missing items or assigned_to")
+
+        updated = []
+        username = assignee.split(" (")[1].replace(")", "")
+
+        for path in items:
+            obj = api.content.get(path=path)
+            if not obj:
+                continue
+            setattr(obj, "nis_assigned_to", assignee)
+            api.user.grant_roles(username=username, roles=["Editor"], obj=obj)
+            obj.reindexObject()
+            updated.append(obj.absolute_url())
+
+        # self._notify_user(username, updated)
+        # self._notify_eea_group(username, updated)
+
+        return {
+            "success": True,
+            "updated": updated,
+            "assigned_to": assignee,
+        }
+
+
+# from plone.restapi.deserializer.dxcontent import DeserializeFromJson
+# from plone.restapi.interfaces import IDeserializeFromJson
+# from plone.dexterity.interfaces import IDexterityContainer
+# from plone.restapi.deserializer import json_body
+# from zope.component import adapter
+# from zope.interface import Interface, implementer
+
+# @implementer(IDeserializeFromJson)
+# @adapter(IDexterityContainer, Interface)
+# class NISDeserializer(DeserializeFromJson):
+#     """ NISDeserializer """
+#     def __call__(self, validate_all=False, data=None,
+#                  create=False, mask_validation_errors=True):
+#         if data is None:
+#             data = json_body(self.request)
+
+#         if data and "non_indigenous_species" in data:
+#             for value in data["non_indigenous_species"]:
+#                 import pdb; pdb.set_trace()
+#                 if isinstance(value, dict) and "@id" in value:
+#                     path = value["@id"]
+#                     if path.startswith("/marine/"):
+#                         value["@id"] = path.replace("/marine/", "/", 1)
+
+#         return super(NISDeserializer, self).__call__(
+#             validate_all, data, create, mask_validation_errors)

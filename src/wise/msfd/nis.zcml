@@ -51,6 +51,12 @@
     name="nis_group_vocabulary"
     />
 
+  <utility
+    provides="zope.schema.interfaces.IVocabularyFactory"
+    component=".nis.nis_experts_vocabulary"
+    name="nis_experts_vocabulary"
+  />
+
   <plone:service
     method="GET"
     name="@workflow.progress.nis"
@@ -58,6 +64,22 @@
     factory=".nis.WorkflowProgressGet"
     permission="zope2.View"
     />
+
+  <!-- <browser:page
+      name="@bulk-assign"
+      for="*"
+      factory=".nis.BulkAssign"
+      permission="cmf.ModifyPortalContent"
+      request-method="POST"
+  /> -->
+  <plone:service
+      method="POST"
+      name="@bulk-assign"
+      for="*"
+      factory=".nis.BulkAssign"
+      permission="cmf.ModifyPortalContent"
+  />
+
   <!-- 
     factory="eea.progress.workflow.restapi.get.WorkflowProgressGet"
    -->
