@@ -1,26 +1,26 @@
 """ Non-indigenous species """
-from plone.protect.interfaces import IDisableCSRFProtection
+
 import json
-from zExceptions import BadRequest
-from zope.publisher.interfaces import IPublishTraverse
-from zope.interface import implementer, alsoProvides
 import datetime
 import csv
 import io
 import six
 import xlsxwriter
 
+from zExceptions import BadRequest
 from plone import api
 from plone.api.portal import get_tool
 from plone.dexterity.content import Container
 from plone.namedfile.field import NamedFile
+from plone.protect.interfaces import IDisableCSRFProtection
 from plone.restapi.interfaces import IExpandableElement
 from plone.restapi.serializer.converters import json_compatible
 from plone.restapi.services import Service
 from zope.component import adapter, queryAdapter
-from zope.interface import Interface, implementer, provider
+from zope.interface import Interface, implementer, provider, alsoProvides
 from zope.schema.interfaces import IVocabularyFactory
 from zope.schema.vocabulary import SimpleTerm, SimpleVocabulary
+from zope.publisher.interfaces import IPublishTraverse
 from z3c.form import button, field, form
 from Products.CMFCore.utils import getToolByName
 from Products.Five import BrowserView
@@ -336,14 +336,16 @@ class BulkAssign(Service):
     """Bulk assign content items to a user."""
 
     def __init__(self, context, request):
-        super().__init__(context, request)
+        super(BulkAssign, self).__init__(context, request)
         self.params = []
 
     def publishTraverse(self, request, name):
+        """publishTraverse"""
         self.params.append(name)
         return self
 
     def _send_email(self, email, subject, body):
+        """_send_email"""
         try:
             api.portal.send_email(
                 recipient=email,
@@ -370,8 +372,8 @@ class BulkAssign(Service):
         if not email:
             return
 
-        subject = "[water.europa.eu - NIS] You have been assigned {} new item(s)".format(
-            len(items))
+        subject = "[water.europa.eu - NIS] You have been assigned " \
+            "{} new item(s)".format(len(items))
         body = (
             "Dear {},\n\n".format(fullname) +
             "You have been assigned the following items:\n" +
@@ -400,6 +402,7 @@ class BulkAssign(Service):
         self._send_email(email, subject, body)
 
     def reply(self):
+        """reply"""
         alsoProvides(self.request, IDisableCSRFProtection)
         data = json.loads(self.request.get("BODY", "{}"))
 
@@ -421,8 +424,8 @@ class BulkAssign(Service):
             obj.reindexObject()
             updated.append(obj.absolute_url())
 
-        # self._notify_user(username, updated)
-        # self._notify_eea_group(username, updated)
+        self._notify_user(username, updated)
+        self._notify_eea_group(username, updated)
 
         return {
             "success": True,
