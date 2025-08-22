@@ -10,6 +10,7 @@ indexes = [
     'nis_region',
     'nis_status',
     'nis_group',
+    'nis_assigned_to',
 ]
 
 

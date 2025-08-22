@@ -160,7 +160,12 @@
 }
 
 .article-select {
-  margin-top: 2rem;
+  margin: 1.5em 0;
+  position: relative;
+}
+
+label {
+  font-weight: normal;
 }
 
 .collapse {
@@ -209,25 +214,20 @@
 
   a.article-box-anchor {
     color: #002d54;
-
-    // &:hover,
-    // &:focus {
-    //   border: 1px solid #002d54;
-    // }
   }
 
   .article-box {
     height: 100%;
     padding: 20px 20px;
     color: #002d54;
-    
+
     .article-box-locked {
       position: absolute;
       top: 2rem;
       right: 2rem;
       font-size: 3rem;
     }
-    
+
     .article-box-wrapper {
       position: relative;
       height: 100%;
@@ -330,9 +330,6 @@
     }
 
     .country-dropdown-wrapper {
-      // position: relative;
-      // display: inline-block;
-
       &:hover {
         .country-dropdown-content {
           display: flex;
@@ -368,7 +365,7 @@
           padding: 12px 16px;
           text-decoration: none;
           display: block;
-          font-family: "PoppinsL";
+          font-family: 'PoppinsL';
 
           &:hover {
             background-color: #ddd;
@@ -380,21 +377,30 @@
 }
 
 @media screen and (max-width: 1200px) {
-  .articles-wrapper .article-box .country-dropdown-wrapper .country-dropdown-content {
+  .articles-wrapper
+    .article-box
+    .country-dropdown-wrapper
+    .country-dropdown-content {
     height: 375px;
     width: 370px;
   }
 }
 
 @media screen and (max-width: 850px) {
-  .articles-wrapper .article-box .country-dropdown-wrapper .country-dropdown-content {
+  .articles-wrapper
+    .article-box
+    .country-dropdown-wrapper
+    .country-dropdown-content {
     height: 565px;
     width: 270px;
   }
 }
 
 @media screen and (max-width: 650px) {
-  .articles-wrapper .article-box .country-dropdown-wrapper .country-dropdown-content {
+  .articles-wrapper
+    .article-box
+    .country-dropdown-wrapper
+    .country-dropdown-content {
     height: 375px;
     width: 380px;
   }
@@ -411,7 +417,10 @@
 }
 
 @media screen and (max-width: 500px) {
-  .articles-wrapper .article-box .country-dropdown-wrapper .country-dropdown-content {
+  .articles-wrapper
+    .article-box
+    .country-dropdown-wrapper
+    .country-dropdown-content {
     height: 565px;
     width: 270px;
   }

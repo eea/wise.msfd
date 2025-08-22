@@ -62,12 +62,17 @@ Select2 Override style
   .select2-container {
     .select2-choice {
       height: auto !important;
-      border: 1px solid #dce4ec !important;
-      background-image: none !important;
-      border-radius: 0px !important;
+      border: 2px solid #004b7f !important;
+      background: white;
+      color: #004b7f;
+      border-radius: 5px !important;
+      border: none;
+      padding: 0.5em 1em;
       box-shadow: none;
-      font-size: 14px;
-      text-indent: 1px;
+      font-weight: 500;
+      display: flex;
+      justify-content: space-between;
+      font-size: 15px;
 
       div {
         border-left: 1px solid #dce4ec;
@@ -80,6 +85,16 @@ Select2 Override style
         background: transparent;
         background-image: none;
         border-radius: 0px;
+        position: relative;
+
+        &:after {
+          content: '\f107' !important;
+          font: normal normal normal 16px/1 FontAwesome;
+        }
+
+        b {
+          background: none;
+        }
       }
     }
 
@@ -145,9 +160,9 @@ Select2 Override style
   margin: 0;
 
   .select2-highlighted {
-    background: @flat-theme-dark-color !important;
+    background: #ededed !important;
     border-radius: 0px;
-    color: #fff !important;
+    color: inherit !important;
   }
 }
 
@@ -255,6 +270,7 @@ Select2 Override style
 }
 
 .select2-result-label {
-  font-family: inherit;
-  font-size: 12px;
+  padding: 0 0.4em !important;
+  min-height: auto;
+  font-size: 15px;
 }

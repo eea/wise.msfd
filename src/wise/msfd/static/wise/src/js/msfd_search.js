@@ -87,19 +87,29 @@
 
     $('#form-buttons-continue').hide('fast');
 
-    var fbDownload = $('#form-buttons-download');
-    if (fbDownload.length > 0) {
-      var dBtn =
-        fbDownload.prop('outerHTML').replace('input', 'button') +
-        ' <span style="margin-left:0.4rem;">Download as spreadsheet</span>';
-      var btnForm = fbDownload.parent();
+    var $article13 = $('#article132022form');
+    var $article13form = $('#article13form');
+    if ($article13.length && $article13form.length) {
+      $article13.insertAfter($article13form);
+    }
 
-      fbDownload.remove();
+    var $downloadBtn = $('#form-buttons-download');
+    var $centerSection = $('.center-section');
+    var $form = $('#wise-search-form-container > form');
 
-      btnForm.append($(dBtn));
-      $('#form-buttons-download')
-        .val('Download as spreadsheet')
-        .addClass('glyphicon glyphicon-download-alt');
+    if ($downloadBtn.length > 0) {
+      $centerSection.find('#form-buttons-download').remove();
+      var $newBtn = $('<button/>', {
+        id: 'form-buttons-download',
+        type: 'submit',
+        form: $form.attr('id'),
+        name: 'form.buttons.download',
+        class: 'ui button primary inverted',
+        text: 'Download as spreadsheet',
+      });
+
+      $centerSection.append($newBtn);
+      $downloadBtn.remove();
     }
   }
 
@@ -108,7 +118,7 @@
    * */
   function generateControlDiv() {
     var spAll =
-      '<span class="controls">' +
+      '<div class="controls">' +
       '<span>Select :</span><a data-value="all"><label>' +
       '<span class="label">All</span></label></a>';
     var spClear =
@@ -116,13 +126,12 @@
     var invertSel =
       '<a data-value="invert"><label><span class="label">Invert selection</span></label></a>' +
       '<div class="btn btn-default apply-filters" data-value="apply"><span>Apply filters</span></div>' +
-      '<span class="ui-autocomplete">' +
-      '<span class=" search-icon" ></span>' +
+      '<div class="ui-autocomplete">' +
       '<span class="search-span">' +
-      '<input class="ui-autocomplete-input" type="text" />' +
+      '<input class="ui-autocomplete-input" type="text" placeholder="Quick search"/>' +
       '<span class="clear-btn"></span>' +
-      '</span>' +
-      '</span>';
+      '</div>' +
+      '</div>';
     return spAll + spClear + invertSel;
   }
 
@@ -136,7 +145,10 @@
     if ($(evtarget).val() === '') {
       no_results.addClass('hidden');
       labels.removeClass('hidden');
-      var data = $field.find('.panel').data('checked_items');
+      var data = $field
+        .find('.panel-content > span:not(.controls)')
+        .data('checked_items');
+
       if (data) {
         $.each(inputs, function (idx, el) {
           // 96264 in case we have an empty searchfield checked items
@@ -148,7 +160,6 @@
     }
 
     $field.find('.apply-filters').show();
-    //$(evtarget).find(".apply-filters").show();
     labels.removeClass('hidden');
 
     var toSearch = $(evtarget).val().toLowerCase().replace(/\s/g, '_');
@@ -163,15 +174,8 @@
           .text()
           .toLowerCase()
           .replace(/\s/g, '_');
-        //return temp;
-        return (
-          $(item)
-            .text()
-            .toLowerCase()
-            /*.replace(/^\s+|\s+$/g, '')*/
-            /*.replace(/_/g, "")*/
-            .replace(/\s/g, '_')
-        );
+
+        return $(item).text().toLowerCase().replace(/\s/g, '_');
       });
 
     var found = [];
@@ -243,67 +247,130 @@
     });
   }
 
+  function addActiveFilters($field) {
+    var $section = $('.active-filters-section');
+    var $list = $('.active-filters-list');
+    var $header = $section.find('.active-filters-header');
+    var $icon = $header.find('i.fa');
+
+    // $('.wise-search-form-container .form-right-side').first().after($section);
+
+    $list.hide();
+
+    function renderFilters() {
+      $list.empty();
+
+      $(selectorFormContainer + ', ' + selectorLeftForm)
+        .find('[data-fieldname]')
+        .each(function () {
+          var $f = $(this);
+          var title = $f.find('> label.horizontal').text().trim();
+          var checked = $f.find("input[type='checkbox']:checked");
+
+          if (checked.length) {
+            var $group = $('<div class="active-filter-group"></div>');
+            $group.append(
+              '<span class="filter-group-title">' + title + ':</span>',
+            );
+
+            checked.each(function () {
+              var $cb = $(this);
+              var text = $cb.parent().text().trim();
+
+              var $tag = $(
+                '<span class="active-filter-item">' +
+                  text +
+                  '<button type="button" class="ui button clear-filter">' +
+                  '<i class="fa fa-times" aria-hidden="true"/>' +
+                  '</button>' +
+                  '</span>',
+              );
+
+              $tag.find('.clear-filter').on('click', function (e) {
+                e.preventDefault();
+                if ($cb.is(':checked')) {
+                  $cb[0].click();
+                }
+              });
+
+              $group.append($tag);
+            });
+
+            $list.append($group);
+          }
+        });
+    }
+
+    $field.on('change', "input[type='checkbox']", renderFilters);
+
+    $header
+      .off('click.activeFiltersToggle')
+      .on('click.activeFiltersToggle', function () {
+        $list.slideToggle(200);
+        $icon.toggleClass('fa-chevron-up fa-chevron-down ');
+      });
+
+    renderFilters();
+  }
+
   function addCheckboxPanel($field, fieldId, cheks) {
+    var $wrapper = $('.msfd-search-wrapper');
+
     $field.addClass('panel-group');
 
-    var chekspan = $field.find('> span:not(.controls)');
-    // chekspan.css("border-radius", 0);
-    chekspan
-      .addClass(fieldId + '-collapse')
-      .addClass('collapse')
-      .addClass('panel')
-      .addClass('panel-default');
+    var $label = $field.find('> label.horizontal');
+    $label.addClass('panel-title panel-heading');
 
-    var label = $field.find('.horizontal');
+    var $content = $label.next('.panel-content');
+    if (!$content.length) {
+      $label.nextAll().wrapAll('<div class="panel-content"></div>');
+      $content = $label.next('.panel-content');
+    }
 
-    var alabel =
-      "<a data-toggle='collapse' class='accordion-toggle' >" +
-      label.text() +
-      '</a>';
-    label.html(alabel);
+    var chekspan = $content.find('> span:not(.controls)');
+    chekspan.addClass('panel-default');
 
-    label.addClass('panel-heading').addClass('panel-title');
+    $content.hide().removeClass('open');
+    $label.removeClass('open');
 
-    label.attr('data-toggle', 'collapse');
-    label.attr('data-target', '.' + fieldId + '-collapse');
+    $label.off('click.accordion').on('click.accordion', function (e) {
+      e.stopPropagation();
 
-    // if already checked than collapse
-    // double collapse fix
-    // chekspan.collapse({ toggle: true });
-    // chekspan.collapse({ toggle: true });
+      var $thisLabel = $(this);
+      var $thisContent = $thisLabel.next('.panel-content');
 
-    $field.find('.accordion-toggle').addClass('accordion-after');
+      if ($thisContent.is(':visible')) {
+        $thisContent.hide().removeClass('open');
+        $thisLabel.removeClass('open');
 
-    // hidden-colapse event
-    chekspan.on('hidden.bs.collapse', function () {
-      chekspan.fadeOut('fast');
-      $field.find('.controls').slideUp('fast');
-      $field.css({ 'border-bottom': '1px solid #ccc;' });
+        if ($('.panel-content.open').length === 0) {
+          $wrapper.find('.dimmer').remove();
+        }
+      } else {
+        $('.panel-content').hide().removeClass('open');
+        $('.panel-title').removeClass('open');
+        $wrapper.find('.dimmer').remove();
+
+        $thisContent.show().addClass('open');
+        $thisLabel.addClass('open');
+
+        $wrapper.append('<div class="dimmer"/>');
+      }
     });
 
-    // show accordion
-    chekspan.on('show.bs.collapse', function () {
-      // collapsed
-      chekspan.fadeIn('fast');
-      $field.find('.controls').slideDown('fast');
-      $field.find('> span').css({ display: 'block' });
-      $field.find('.accordion-toggle').addClass('accordion-after');
-    });
+    $(document)
+      .off('click.accordionOutside')
+      .on('click.accordionOutside', function (e) {
+        if ($(e.target).closest('.panel-group').length === 0) {
+          $('.panel-content').hide().removeClass('open');
+          $('.panel-title').removeClass('open');
+          $wrapper.find('.dimmer').remove();
+        }
+      });
 
-    // hide accordion
-    chekspan.on('hide.bs.collapse', function () {
-      // not collapsed
-      window.setTimeout(function () {
-        $field.find('.accordion-toggle').removeClass('accordion-after');
-      }, 600);
-    });
-
-    // initialize autocomplete for more than 6 checkboxes
     if (cheks.length < 6) {
       $field.find('.controls .ui-autocomplete').hide();
     } else {
-      // 96264 save checked items when having search input in case the user
-      // goes back on the search
       chekspan.append("<span class='noresults hidden'>No results found</span>");
       chekspan.data('checked_items', []);
 
@@ -312,7 +379,6 @@
         data.push(el.id);
       });
 
-      // TIBI TODO: re-enable
       addAutoComplete($field);
     }
   }
@@ -403,6 +469,7 @@
             .css('padding', 0);
         } else {
           addCheckboxPanel($field, fieldId, cheks);
+          addActiveFilters($field);
 
           $field.find('.search-icon').on('click', function (ev) {
             $(ev.target).parent().find('input').trigger('focus');
@@ -433,8 +500,6 @@
       if ($(rest[idx]).val() !== 'all' && $(rest[idx]).val() !== 'none')
         $(rest[idx]).prop('checked', true);
     });
-
-    //$( selectorFormContainer + " .formControls #form-buttons-continue").trigger("click");
   }
 
   function checkboxHandlerNone(ev) {
@@ -449,10 +514,7 @@
 
     $.each(rest, function (idx) {
       $(rest[idx]).prop('checked', false);
-      //if( $(rest[idx]).val() !== "none")
     });
-
-    //$( selectorFormContainer + " .formControls #form-buttons-continue").trigger("click");
   }
 
   function checkboxHandlerInvert(ev) {
@@ -481,7 +543,6 @@
     $.each(unchecked, function (idx) {
       $(unchecked[idx]).prop('checked', true);
     });
-    //$( selectorFormContainer + " .formControls #form-buttons-continue").trigger("click");
   }
 
   function addCheckboxHandlers() {
@@ -489,7 +550,6 @@
     $controls.on('click', "a[data-value='all']", checkboxHandlerAll);
     $controls.on('click', "a[data-value='none']", checkboxHandlerNone);
     $controls.on('click', "a[data-value='invert']", checkboxHandlerInvert);
-    //$(".controls .apply-filters").on("click", $( selectorFormContainer + " .formControls #form-buttons-continue").trigger("click") );
 
     $controls.one('click', '.apply-filters', function () {
       $(selectorFormContainer + " [name='form.widgets.page']").val(0);
@@ -587,9 +647,10 @@
 
         var self = this;
         window.setTimeout(function () {
-          $(
-            selectorFormCont + ' .formControls #form-buttons-continue',
-          ).trigger('click', { select: self });
+          $(selectorFormCont + ' .formControls #form-buttons-continue').trigger(
+            'click',
+            { select: self },
+          );
         }, 300);
       });
     });
@@ -663,7 +724,6 @@
 
         $(selectElement).on('select2-open', function () {
           var trh = $(marineUnitTriggerSelector).offset().top;
-          //$(".select2-top-override-dropdown").css("margin-top", $("#marine-unit-trigger").height()/2 + "px" );
           $(marineUnitTriggerSelector + ' .arrow').hide();
           $('.select2-top-override-dropdown').css({
             top:
@@ -676,8 +736,6 @@
         });
 
         $(selectElement).on('select2-selecting', function (ev) {
-          //$(selectorLeftForm + " "+  marineUnitTriggerSelector +"  a").text(ev.object.text);
-
           $(selectorFormContainer + " [name='form.widgets.page']").val(0);
           $(selectorFormContainer + ' #form-widgets-marine_unit_id')
             .select2()
@@ -760,17 +818,16 @@
       containerCssClass: 'extra-details-select',
     };
 
-    $.each($(selectorLeftForm + ' .extra-details-select'), function (
-      idx,
-      elem,
-    ) {
-      if ($(elem).find('option').length > 1) {
-        $(elem).select2(options);
-      } else {
-        $(elem).hide();
-        //$(elem).after("<span>"+ $($(elem).find("option")[0]).attr("title") +"</span>");
-      }
-    });
+    $.each(
+      $(selectorLeftForm + ' .extra-details-select'),
+      function (idx, elem) {
+        if ($(elem).find('option').length > 1) {
+          $(elem).select2(options);
+        } else {
+          $(elem).hide();
+        }
+      },
+    );
 
     $(selectorLeftForm + ' .extra-details .tab-panel').fadeOut(
       'slow',
@@ -798,9 +855,16 @@
       },
     );
 
-    if($(selectorLeftForm + ' .tab-content .tab-pane.fade').length > 0) {
-      $($(selectorLeftForm + ' .tab-content.msfd-extra-tab-content .tab-pane.fade')[0]).addClass('in active');
-      $($(selectorLeftForm + ' .nav-tabs.msfd-extra-nav-tabs .nav-item')[0]).addClass('active');
+    if ($(selectorLeftForm + ' .tab-content .tab-pane.fade').length > 0) {
+      $(
+        $(
+          selectorLeftForm +
+            ' .tab-content.msfd-extra-tab-content .tab-pane.fade',
+        )[0],
+      ).addClass('in active');
+      $(
+        $(selectorLeftForm + ' .nav-tabs.msfd-extra-nav-tabs .nav-item')[0],
+      ).addClass('active');
     }
   }
   /*
@@ -899,9 +963,9 @@
       $(opts[opts.length - 1]).val()
     ) {
       var topNextBtn =
-        '<button type="submit" ' +
-        'id="form-buttons-next-top" name="marine.buttons.next" class="submit-widget button-field btn btn-default pagination-next" value="">' +
-        '            </button>';
+        '<button type="submit" id="form-buttons-next-top" name="marine.buttons.next"' +
+        'class="submit-widget button-field btn btn-default pagination-next" value="">' +
+        '</button>';
 
       $(formBtnNextTop).append(topNextBtn);
 
@@ -967,12 +1031,6 @@
 
   function paginationInputHandlers() {
     var inp = $('.pagination-text .pagination-input');
-
-    // hide pagination input on focus out
-    /*inp.on("focusout", function (){
-            inp.hide();
-            $(paginationTextResult).show();
-        });*/
 
     // pagination input delay auto-submit
     inp.bind('focusout', function (e) {
@@ -1040,6 +1098,12 @@
       { opacity: 1 },
       1000,
     );
+
+    var $heading = $('.msfd-heading');
+    var $startLink = $('.msfd-start-link');
+    if ($heading.length && $startLink.length) {
+      $heading.insertAfter($startLink);
+    }
 
     addCheckboxHandlers($(selectorFormContainer));
     addCheckboxLabelHandlers();
@@ -1150,21 +1214,12 @@
       .remove();
     $(selectorLeftForm + ' #wise-search-form-top').after(centerContentD);
 
-    /*var res = $data.find( selectorLeftForm );
-
-        if(res.children().length === 1){
-            if($(res[0]).attr("id") === "wise-search-form-top" ){
-                $( selectorLeftForm + " #wise-search-form-top").after("<span class='no-results'>No results found.</span>");
-            }
-
-        }*/
-
     initPageElems();
     var formAction = $('.wise-search-form-container form').attr('action') || '';
-    if (formAction.includes("/marine/++api++")) {
+    if (formAction.includes('/marine/++api++')) {
       var newFormAction = formAction;
     } else {
-      var newFormAction = formAction.replace("/marine", "/marine/++api++");
+      var newFormAction = formAction.replace('/marine', '/marine/++api++');
     }
 
     $('.wise-search-form-container form').attr('action', newFormAction);
@@ -1303,16 +1358,10 @@
       });
     }
 
-    // $(selectorFormContainer).find("[name='form.buttons.prev']").remove();
-    // $(selectorFormContainer).find("[name='form.buttons.next']").remove();
-
-    //$("s2id_form-widgets-marine_unit_id").select2().enable(true);
-
     $(selectorLeftForm + ' #loader-placeholder').remove();
 
     $('#form-widgets-marine_unit_id').prop('disabled', false);
 
-    //if($( selectorLeftForm + " select").val() === "--NOVALUE--" ) $( selectorLeftForm + " select").val(window.WISE.marineUnit).trigger("change.select2");
     if ($(selectorLeftForm + ' select').hasClass('js-example-basic-single')) {
       // Select2 has been initialized
       if (
@@ -1368,7 +1417,7 @@
     $('#wise-search-form-top').append(
       '<div class="alert alert-danger alert-dismissible show" style="margin-top: 2rem;" role="alert">' +
         '  <strong>There was a error from the server.</strong> You should check in on some of those fields from the form.' +
-        '  <button type="button" class="close" data-dismiss="alert" aria-label="Close">' +
+        '  <button type="button" class="ui button close" data-dismiss="alert" aria-label="Close">' +
         '    <span aria-hidden="true">&times;</span>' +
         '  </button>' +
         '</div>',
@@ -1561,8 +1610,8 @@
   }
 
   function searchFormAjax(boundary, data, url, formData) {
-    if (!url.includes("/marine/++api++")) {
-      url = url.replace("/marine", "/marine/++api++");
+    if (!url.includes('/marine/++api++')) {
+      url = url.replace('/marine', '/marine/++api++');
     }
 
     $.ajax({
@@ -1778,10 +1827,10 @@
     }, 100);
 
     var formAction = $('.wise-search-form-container form').attr('action') || '';
-    if (formAction.includes("/marine/++api++")) {
+    if (formAction.includes('/marine/++api++')) {
       var newFormAction = formAction;
     } else {
-      var newFormAction = formAction.replace("/marine", "/marine/++api++");
+      var newFormAction = formAction.replace('/marine', '/marine/++api++');
     }
 
     $('.wise-search-form-container form').attr('action', newFormAction);
@@ -1844,5 +1893,9 @@
     removeNoValues();
     fixTableHeaderAndCellsHeight();
     addDoubleScroll();
+
+    $(window).on('resize', function () {
+      fixTableHeaderAndCellsHeight();
+    });
   });
 })(window, document, jQuery);
