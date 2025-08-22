@@ -95,21 +95,21 @@
 
     var $downloadBtn = $('#form-buttons-download');
     var $centerSection = $('.center-section');
+    var $form = $('#wise-search-form-container > form');
+
     if ($downloadBtn.length > 0) {
-      var dBtn =
-        $downloadBtn.prop('outerHTML').replace('input', 'button') +
-        ' <span>Download as spreadsheet</span>';
-      var btnForm = $downloadBtn.parent();
+      $centerSection.find('#form-buttons-download').remove();
+      var $newBtn = $('<button/>', {
+        id: 'form-buttons-download',
+        type: 'submit',
+        form: $form.attr('id'),
+        name: 'form.buttons.download',
+        class: 'ui button primary inverted',
+        text: 'Download as spreadsheet',
+      });
+
+      $centerSection.append($newBtn);
       $downloadBtn.remove();
-      btnForm.append($(dBtn));
-
-      $downloadBtn = $('#form-buttons-download')
-        .val('Download as spreadsheet')
-        .addClass('ui button primary inverted');
-
-      if ($centerSection.length) {
-        $downloadBtn.appendTo($centerSection);
-      }
     }
   }
 
