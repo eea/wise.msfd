@@ -98,6 +98,14 @@ def nis_experts_vocabulary(context):
                 )
             )
 
+        terms.append(
+            SimpleTerm(
+                value="laszlo-reader",
+                token="laszlo-reader",
+                title="laszlo-reader"
+            )
+        )
+
     return SimpleVocabulary(terms)
 
 
@@ -413,7 +421,11 @@ class BulkAssign(Service):
             raise BadRequest("Missing items or assigned_to")
 
         updated = []
-        username = assignee.split(" (")[1].replace(")", "")
+
+        try:
+            username = assignee.split(" (")[1].replace(")", "")
+        except Exception:
+            username = assignee
 
         for path in items:
             obj = api.content.get(path=path)

@@ -9,6 +9,7 @@
   <exit-transition transition_id="send_back_to_submitted"/>
   <permission-map name="Access contents information" acquired="False">
    <permission-role>Editor</permission-role>
+   <permission-role>Reader</permission-role>
    <permission-role>Manager</permission-role>
    <permission-role>Reviewer</permission-role>
    <permission-role>Site Administrator</permission-role>
@@ -24,6 +25,7 @@
   </permission-map>
   <permission-map name="View" acquired="False">
    <permission-role>Editor</permission-role>
+   <permission-role>Reader</permission-role>
    <permission-role>Manager</permission-role>
    <permission-role>Reviewer</permission-role>
    <permission-role>Site Administrator</permission-role>
@@ -34,6 +36,7 @@
   <exit-transition transition_id="submit"/>
   <permission-map name="Access contents information" acquired="False">
    <permission-role>Editor</permission-role>
+   <permission-role>Reader</permission-role>
    <permission-role>Manager</permission-role>
    <permission-role>Reviewer</permission-role>
    <permission-role>Site Administrator</permission-role>
@@ -49,6 +52,7 @@
    <permission-role>Site Administrator</permission-role>
   </permission-map>
   <permission-map name="View" acquired="False">
+   <permission-role>Reader</permission-role>
    <permission-role>Editor</permission-role>
    <permission-role>Manager</permission-role>
    <permission-role>Reviewer</permission-role>
@@ -80,6 +84,7 @@
   <permission-map name="Access contents information" acquired="False">
    <permission-role>Editor</permission-role>
    <permission-role>Manager</permission-role>
+   <permission-role>Reader</permission-role>
    <permission-role>Reviewer</permission-role>
    <permission-role>Site Administrator</permission-role>
   </permission-map>
@@ -96,6 +101,7 @@
    <permission-role>Editor</permission-role>
    <permission-role>Manager</permission-role>
    <permission-role>Reviewer</permission-role>
+   <permission-role>Reader</permission-role>
    <permission-role>Site Administrator</permission-role>
   </permission-map>
  </state>
