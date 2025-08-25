@@ -1,5 +1,6 @@
 """ Non-indigenous species """
 
+import logging
 import json
 import datetime
 import csv
@@ -27,6 +28,9 @@ from Products.Five import BrowserView
 from Products.CMFPlone.interfaces import IPloneSiteRoot
 
 from eea.progress.workflow.interfaces import IWorkflowProgress
+
+
+logger = logging.getLogger('wise.msfd')
 
 
 nis_fields = {
@@ -81,30 +85,28 @@ def nis_experts_vocabulary(context):
 
     terms = []
     group_id = "extranet-wisemarine-nisexternalexperts"
-
     group = api.group.get(group_id)
 
-    if group:
-        for user in group.getGroupMembers():
-            title = "{} ({})".format(
-                user.getProperty("fullname") or user.id,
-                user.id
-            )
-            terms.append(
-                SimpleTerm(
-                    value=title,
-                    token=title,
-                    title=title
-                )
-            )
-
+    for user in group.getGroupMembers():
+        title = "{} ({})".format(
+            user.getProperty("fullname") or user.id,
+            user.id
+        )
         terms.append(
             SimpleTerm(
-                value="laszlo-reader",
-                token="laszlo-reader",
-                title="laszlo-reader"
+                value=title,
+                token=title,
+                title=title
             )
         )
+
+    terms.append(
+        SimpleTerm(
+            value="laszlo-reader",
+            token="laszlo-reader",
+            title="laszlo-reader"
+        )
+    )
 
     return SimpleVocabulary(terms)
 
@@ -375,18 +377,21 @@ class BulkAssign(Service):
             return
 
         email = user.getProperty("email", "")
-        fullname = user.getProperty("fullname", username)
-
         if not email:
             return
 
-        subject = "[water.europa.eu - NIS] You have been assigned " \
+        fullname = user.getProperty("fullname") or username
+
+        subject = " You have been assigned " \
             "{} new item(s)".format(len(items))
         body = (
             "Dear {},\n\n".format(fullname) +
             "You have been assigned the following items:\n" +
             "\n".join(items)
         )
+
+        logger.info("Subject: %s", subject)
+        logger.info("Body: %s", body)
 
         self._send_email(email, subject, body)
 
@@ -397,15 +402,18 @@ class BulkAssign(Service):
             return
 
         email = "extranet-wisemarine-nisreviewers@roles.eea.eionet.europa.eu"
-        fullname = user.getProperty("fullname", username)
+        fullname = user.getProperty("fullname") or username
 
-        subject = "[water.europa.eu - NIS] {} have been assigned {}" \
-                  "new item(s)".format(fullname, len(items))
+        subject = " {} have been assigned {}" \
+                  " new item(s)".format(fullname, len(items))
         body = (
             "Dear NIS Database Reviewers,\n\n" +
             "{} have been assigned the following items:\n".format(fullname) +
             "\n".join(items)
         )
+
+        logger.info("Subject: %s", subject)
+        logger.info("Body: %s", body)
 
         self._send_email(email, subject, body)
 
@@ -428,13 +436,15 @@ class BulkAssign(Service):
             username = assignee
 
         for path in items:
+            path = path.replace("/marine/", "/")
             obj = api.content.get(path=path)
             if not obj:
                 continue
             setattr(obj, "nis_assigned_to", assignee)
             api.user.grant_roles(username=username, roles=["Editor"], obj=obj)
             obj.reindexObject()
-            updated.append(obj.absolute_url())
+            updated.append(
+                obj.absolute_url().replace(path, '/marine{}'.format(path)))
 
         self._notify_user(username, updated)
         self._notify_eea_group(username, updated)
