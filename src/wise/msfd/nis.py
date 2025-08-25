@@ -1,12 +1,12 @@
 """ Non-indigenous species """
 
+import logging
 import json
 import datetime
 import csv
 import io
 import six
 import xlsxwriter
-import logging
 
 from zExceptions import BadRequest
 from plone import api
