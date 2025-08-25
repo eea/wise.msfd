@@ -443,8 +443,7 @@ class BulkAssign(Service):
             setattr(obj, "nis_assigned_to", assignee)
             api.user.grant_roles(username=username, roles=["Editor"], obj=obj)
             obj.reindexObject()
-            updated.append(
-                obj.absolute_url().replace(path, '/marine{}'.format(path)))
+            updated.append(obj.absolute_url())
 
         self._notify_user(username, updated)
         self._notify_eea_group(username, updated)
