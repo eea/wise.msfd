@@ -1061,6 +1061,33 @@ def timescale_transform(value):
 
     return t_value
 
+def fix_data_access_url(value):
+    """fix_data_access_url"""
+    if not value:
+        return value
+
+    if not value.startswith('http'):
+        if value.startswith('www.'):
+            value = 'http://' + value
+        if value.startswith('ttp'):
+            value = 'h' + value
+
+    if value.startswith('http'):
+        value = '<a href="{}" target="_blank">{}</a>'.format(value, value)
+
+    return value
+
+def data_access_transform(value):
+    """data_access_transform"""
+    
+    # t_value = "{}-{}".format(value[:4], value[4:])
+    res = []
+    
+    for v in value:
+        res.append("<li>{}</li>".format(fix_data_access_url(v)))
+
+    return "<ul>{}</ul>".format("".join(res))
+
 
 TRANSFORMS = {
     'Area': area_transform,
@@ -1082,4 +1109,5 @@ TRANSFORMS = {
     'Pressures': pressures_transform,
     'TimeScale': timescale_transform,
     'UpdateDate': timescale_transform,
+    'DataAccess': data_access_transform,
 }
