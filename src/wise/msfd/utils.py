@@ -971,6 +971,9 @@ def mrus_transform(value):
 
 def temporal_scope_transform(value):
     """temporal_scope_transform"""
+    if not value:
+        return value
+
     if '9999' in value:
         return value.replace('9999', 'Ongoing')
 
@@ -989,6 +992,10 @@ def ges_component(value):
 def common_split_transform(value, label_name):
     """common_split_transform"""
     from .labels import GES_LABELS
+
+    if not value:
+        return value
+
     if ";" in value:
         values = value.split(';')
         values = [d.split(',') for d in values]
@@ -1056,7 +1063,9 @@ def country_code(value):
 
 def timescale_transform(value):
     """timescale_transform"""
-    
+    if not value:
+        return value
+
     t_value = "{}-{}".format(value[:4], value[4:])
 
     return t_value
