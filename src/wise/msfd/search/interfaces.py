@@ -394,7 +394,7 @@ class IGESComponentArt112020(Interface):
 
 # Article 19
 class IArticle19ReportingPeriod(Interface):
-    reporting_period = Choice(title=u"Reporting period",
+    reporting_period = Choice(title=u"Information type",
                               required=False,
                               vocabulary="wise_search_reporting_period_art19")
 

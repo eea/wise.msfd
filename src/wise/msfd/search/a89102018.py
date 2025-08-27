@@ -1902,7 +1902,7 @@ class A2018IndicatorsDisplay(ItemDisplayForm):
 @register_form_art19
 class A2018ArticleIndicators(EmbeddedForm):
     record_title = 'Indicators (Article 8 & 10)'
-    title = '2018 reporting exercise'
+    title = '2018 Article 8 & 10'
     session_name = '2018'
 
     mapper_class = sql2018.IndicatorsIndicatorAssessment

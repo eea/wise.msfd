@@ -100,14 +100,6 @@ def nis_experts_vocabulary(context):
             )
         )
 
-    terms.append(
-        SimpleTerm(
-            value="laszlo-reader",
-            token="laszlo-reader",
-            title="laszlo-reader"
-        )
-    )
-
     return SimpleVocabulary(terms)
 
 
