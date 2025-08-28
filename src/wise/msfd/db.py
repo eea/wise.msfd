@@ -222,7 +222,10 @@ def get_unique_from_table(table, column):
 
     sess = session()
     try:
-        res = sess.query(col).distinct().order_by(col)
+        res = sess.query(col)\
+            .filter(and_(col != '', col != None))\
+            .distinct()\
+            .order_by(col)
     except Exception:
         sess.rollback()
         logger.exception("MSFD database is timed out")

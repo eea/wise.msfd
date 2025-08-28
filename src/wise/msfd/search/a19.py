@@ -192,7 +192,7 @@ class A11DataAccessDisplay2020(ItemDisplayForm2018, A112020Mixin):
 
         _item = SimpleNamespace(
             IdReportedInformation=reportid_needed,
-            DataAccess="\n".join(data_access)
+            DataAccess=data_access
         )
         _item.keys = lambda: _item.__dict__.keys()
 

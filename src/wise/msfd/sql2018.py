@@ -1340,7 +1340,7 @@ t_V_ART14_Exceptions_2022 = Table(
     Column('GEScomponent', Unicode(500)),
     Column('RelevantFeatures', Unicode(500)),
     Column('RegionSubregion', Unicode(500)),
-    Column('Spatial_scope_geographic_zones', Unicode(500)),
+    Column('Spatial_scope_geographic_zones{}', Unicode(500)),
     Column('MarineReportingUnit', Unicode(500)),
     Column('JustificationDescription', NTEXT(1073741823)),
     Column('MeasuresAdHoc', Unicode(500)),

@@ -28,6 +28,7 @@ LABEL_FIX = {
 # user friendly text
 DISPLAY_LABELS = {
     'ALL': {
+        'Spatial scope geographic zones{{}}': 'Spatial scope geographic zones',
         'SpatialDistribution1': 'Spatial distribution',
         'Habitat_FunctionalGroup': 'Habitat functional group',
         'Sum2Confidence': 'Summary 2 confidence',

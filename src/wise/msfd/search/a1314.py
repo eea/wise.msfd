@@ -163,6 +163,8 @@ class Article132022Display(ItemDisplayForm):
         rows_filtered = []
 
         for row in q:
+            if not row.GEScomponent:
+                continue
             ges_reported = row.GEScomponent.split(';')
             # sometimes GEScomponents are separated by comma too
             # also split by comma
