@@ -29,7 +29,6 @@
         </li>
       </tal:rep>
     </ul>
-
     <div class="visible-xs">
       <div class="article-select">
         <div tal:content="view/tab_select_label | string:Select ${tab_type}:">
@@ -55,34 +54,21 @@
 
 <metal:macro define-macro="top-section">
   <div>
-    <!-- <a href="/marine/data-maps-and-tools/msfd-reporting-information-products/msfd-reporting-data-explorer"
+    <a href="/marine/data-maps-and-tools/msfd-reporting-information-products/msfd-reporting-data-explorer"
       class="msfd-start-link">
       About MSFD reporting data explorer
       <img src="/marine/++api++/++resource++msfd/images/msfd-mini.png">
-    </a> -->
-    <div class="msfd-heading">
+    </a>
+    <div>
       <h2 class="main-title" tal:content="structure view/main_title">Article X</h2>
       <div class="main-subtitle" tal:content="structure view/subtitle">
         Subtitle here
       </div>
     </div>
-
-    <div class="active-filters-section">
-      <div class="active-filters-header">
-        <h4 class="active-filters-title">Active filters</h4>
-        <i class="fa fa-chevron-down" aria-hidden="true"></i>
-      </div>
-      <div class="active-filters-list"></div>
-    </div>
   </div>
 </metal:macro>
 
 <metal:macro define-macro="articles-select">
-  <a href="/marine/data-maps-and-tools/msfd-reporting-information-products/msfd-reporting-data-explorer"
-    class="msfd-start-link">
-    About MSFD reporting data explorer
-    <img src="/marine/++api++/++resource++msfd/images/msfd-mini.png">
-  </a>
 
   <div class="article-select" tal:define="tab_type view/tabs_type | string:article">
     <label tal:content="view/tab_select_label | string:Select ${tab_type}:">
