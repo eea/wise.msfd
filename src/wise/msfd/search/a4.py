@@ -165,7 +165,7 @@ class A4Form(ItemDisplayForm):
         )
 
         data = db_objects_to_dict(data, excluded_columns)
-        res.append(('MSFD4 GegraphicalAreasID', {'': data}))
+        res.append(('MSFD Geographical Areas ID', {'': data}))
 
         return res
 
