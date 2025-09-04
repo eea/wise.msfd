@@ -30,7 +30,7 @@
 
     <div class="visible-xs">
       <div class="article-select">
-        <label tal:content="view/tab_select_label | string:Select ${tab_type}:">
+        <label tal:content="view/tab_select_label | python:tab_type.capitalize()">
           Select article/tab:
         </label>
         <select class="notselect" id="mobile-select-article">
