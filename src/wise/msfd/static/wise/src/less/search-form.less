@@ -30,8 +30,8 @@
 
   .active-filters-header {
     display: flex;
-    align-items: center;
-    justify-content: space-between;
+    align-items: start;
+    gap: 1em;
     cursor: pointer;
 
     .active-filters-title {
@@ -291,6 +291,9 @@
   .field {
     .horizontal {
       font-size: 14px;
+      font-weight: 500;
+      margin-bottom: 5px;
+      display: flex;
 
       a {
         font-size: 14px;
@@ -600,7 +603,6 @@
     overflow: auto;
 
     .section-title {
-      display: inline-block;
       margin-top: 1.5rem;
       font-weight: 500;
     }
@@ -611,8 +613,7 @@
   }
 
   .extra-details-select {
-    width: auto;
-    min-width: 50%;
+    max-width: 250px;
   }
 
   &.notselect {
@@ -651,41 +652,29 @@
   }
 }
 
-#wise-search-form .form-buttons-next-row {
-  display: inline-block;
+#wise-search-form {
+  .form-buttons-next-row,
+  .form-buttons-prev-row {
+    display: inline-block;
 
-  .label {
-    padding: 0;
-  }
-
-  .form-buttons-next {
-    background-color: #004b7f;
-    color: white;
-    border: none;
-    border-radius: 0;
-    padding: 0 8px !important;
-
-    &:hover {
-      background-color: #0071b3;
-      color: white;
+    .label {
+      padding: 0;
     }
   }
-}
 
-.form-buttons-prev-row {
-  display: inline-block;
-
-  .label {
-    padding: 0;
-  }
-
-  .form-buttons-prev {
-    background-color: #29a2d9;
-    color: white;
-
-    &:hover {
-      background-color: #0071b3;
+  .prev-next-row {
+    .form-buttons-next,
+    .form-buttons-prev {
+      background-color: #004b7f;
       color: white;
+      border: none;
+      border-radius: 0;
+      padding: 0 8px !important;
+
+      &:hover {
+        background-color: #0071b3;
+        color: white;
+      }
     }
   }
 }
@@ -859,12 +848,18 @@
   .msfd-filters-on-top {
     color: #3d5265;
 
-    .article-select {
-      max-width: 250px;
-
+    .article-select,
+    .form-right-side {
       label {
         font-size: 14px;
+        font-weight: 500;
+        margin-bottom: 5px;
+        display: flex;
       }
+    }
+
+    .article-select {
+      max-width: 250px;
     }
 
     .form-right-side {
@@ -889,10 +884,12 @@
 
     .panel-title {
       padding: 0.8em 1em;
-      font-size: 16px;
+      font-size: 16px !important;
+      font-weight: normal !important;
       position: relative;
       display: block !important;
       background-color: #fff;
+      margin: 0 !important;
 
       &:after {
         content: '\f107' !important;
@@ -1037,6 +1034,6 @@ table {
   }
 
   dd {
-    max-height: none;;
+    max-height: none;
   }
 }
