@@ -1156,56 +1156,37 @@
    * */
   function beforeSendForm(jqXHR, settings) {
     window.WISE.blocks = [];
-    //$("#ajax-spinner2").hide();
-
     $(selectorLeftForm + ' .no-results').remove();
 
-    var t = "<div id='wise-search-form-container-preloader'/>";
-    var sp = $('#ajax-spinner2').attr('id', 'ajax-spinner-form').show();
-
-    $(selectorFormContainer).append(t);
-    $('#wise-search-form-container-preloader').append(sp);
-
     $('#form-widgets-marine_unit_id').prop('disabled', true);
-    //$("s2id_form-widgets-marine_unit_id").select2("enable",false);
-    $("[name='form.buttons.prev']").prop('disabled', true);
-    $("[name='form.buttons.next']").prop('disabled', true);
+    $("[name='form.buttons.prev'], [name='form.buttons.next']").prop(
+      'disabled',
+      true,
+    );
+    $("[name='marine.buttons.prev'], [name='marine.buttons.next']").prop(
+      'disabled',
+      true,
+    );
 
-    $("[name='marine.buttons.prev']").prop('disabled', true);
-    $("[name='marine.buttons.next']").prop('disabled', true);
-
-    if ($('#marine-widget-top').length > 0) {
-      var cont = $('#marine-widget-top').next();
-      cont.css('position', 'relative');
-    } else {
-      cont = $('.left-side-form');
-    }
+    var cont =
+      $('#marine-widget-top').length > 0
+        ? $('#marine-widget-top').next()
+        : $('.left-side-form');
+    cont.css('position', 'relative');
 
     cont.prepend("<div id='wise-search-form-preloader'/>");
-
     $('#wise-search-form-preloader').append(
-      "<span style='position: absolute;" +
-        ' display: block;' +
-        ' left: 50%;' +
-        "top: 10%;'></span>",
+      "<span style='position: absolute; display: block; left: 50%; top: 50%;'></span>",
     );
     $('#wise-search-form-preloader > span').append(
       $('#ajax-spinner2').clone().attr('id', 'ajax-spinner-center').show(),
     );
 
-    $('#ajax-spinner-center').css({
-      position: 'fixed',
-      //"top" : "50%",
-      //"left" : "30%",
-      // "transform" : "translateX(-50%)"
-    });
-
+    $('#ajax-spinner-center').css({ position: 'fixed' });
     $('#wise-search-form-top').find('.alert').remove();
-    //window.WISE.marineUnit = $(selectorLeftForm + " select").val(  );
 
     loading = true;
   }
-
   function formSuccess(data, status, req) {
     $(selectorLeftForm + ' #wise-search-form-top')
       .siblings()
