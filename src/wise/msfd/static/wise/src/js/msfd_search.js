@@ -256,19 +256,21 @@
       .each(function () {
         var $f = $(this);
         var fieldName = $f.find('> label.horizontal').text().trim();
+
         var values = $f
           .find("input[type='checkbox']:checked")
           .map(function () {
-            return $(this).parent().text().trim();
+            return $(this).closest('.option').text().trim();
           })
           .get();
+
         window.WISE.appliedFilters[fieldName] = values;
       });
 
     $(document).trigger('filters:applied');
   }
 
-  function addActiveFilters($field) {
+  function addActiveFilters() {
     var $section = $('.active-filters-section');
     var $list = $('.active-filters-list');
     var $header = $section.find('.active-filters-header');
@@ -290,8 +292,23 @@
         );
 
         values.forEach(function (text) {
+          var $checkbox = $('[data-fieldname]')
+            .filter(function () {
+              return (
+                $(this).find('> label.horizontal').text().trim() === fieldName
+              );
+            })
+            .find("input[type='checkbox']")
+            .filter(function () {
+              return $(this).parent().text().trim() === text;
+            });
+
+          var checkboxId = $checkbox.attr('id') || '';
+
           var $tag = $(
-            '<span class="active-filter-item">' +
+            '<span class="active-filter-item" data-id="' +
+              checkboxId +
+              '">' +
               text +
               '<button type="button" class="ui button clear-filter">' +
               '<i class="fa fa-times" aria-hidden="true"></i>' +
@@ -302,23 +319,12 @@
           $tag.find('.clear-filter').on('click', function (e) {
             e.preventDefault();
 
-            var $fieldNode = $(
-              selectorFormContainer + ', ' + selectorLeftForm,
-            ).find("[data-fieldname='" + fieldName + "']");
-            var $cb = $fieldNode
-              .find('.option')
-              .filter(function () {
-                return $(this).text().trim() === text;
-              })
-              .find("input[type='checkbox']");
-
-            if ($cb.length && $cb.is(':checked')) {
-              $cb[0].click();
+            if (checkboxId) {
+              var $cb = $('#' + checkboxId);
+              if ($cb.length && $cb.is(':checked')) {
+                $cb.closest('.option').trigger('click');
+              }
             }
-
-            $(
-              selectorFormContainer + ' .formControls #form-buttons-continue',
-            ).trigger('click', { button: this });
           });
 
           $group.append($tag);
@@ -1430,17 +1436,6 @@
   }
 
   function formAjaxError(req, status, error) {
-    /*if(window.WISE.formData.length > 0){
-            var data = $($(window.WISE.formData)[0]).find(".field");
-            $.each( data , function (indx, $field) {
-                var chk = $($field).find(".option input[type='checkbox']:checked");
-                if(chk.length > 0){
-                    // TODO
-                }
-
-            });
-        }*/
-
     $('#wise-search-form-top').find('.alert').remove();
     $('#wise-search-form-top').append(
       '<div class="alert alert-danger alert-dismissible show" style="margin-top: 2rem;" role="alert">' +
@@ -1451,8 +1446,6 @@
         '</div>',
     );
 
-    // $(selectorFormContainer).find("[name='form.buttons.prev']").remove();
-    // $(selectorFormContainer).find("[name='form.buttons.next']").remove();
     $('#form-widgets-marine_unit_id').prop('disabled', false);
 
     $('#wise-search-form-container-preloader').remove();
@@ -1512,7 +1505,6 @@
         var panel_group, subform_parent, subform_children;
         panel_group = $(el).closest('.panel-group');
         subform_parent = panel_group.closest('.subform');
-        //subform_children = subform_parent.find('.subform');
         subform_children = $(el).parent().parent().next();
 
         if (
