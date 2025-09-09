@@ -1239,7 +1239,11 @@
 
     $('.wise-search-form-container form').attr('action', newFormAction);
     removeNoValues();
-    fixTableHeaderAndCellsHeight();
+
+    setTimeout(function () {
+      fixTableHeaderAndCellsHeight();
+    }, 300);
+
     //addDoubleScroll();
 
     $("[name='form.buttons.prev']").prop('disabled', false);
@@ -1369,7 +1373,11 @@
       $(selectorFormContainer).fadeIn('fast', function () {
         $(selectorLeftForm + ' #wise-search-form-top')
           .siblings()
-          .fadeIn('fast');
+          .fadeIn('fast', function () {
+            setTimeout(function () {
+              fixTableHeaderAndCellsHeight();
+            }, 50);
+          });
       });
     }
 
@@ -1412,7 +1420,9 @@
     $('table.listing:not(.nosort) tbody').each(setoddeven);
 
     if (typeof scanforlinks !== 'undefined') jQuery(scanforlinks);
-
+    setTimeout(function () {
+      fixTableHeaderAndCellsHeight();
+    }, 300);
     addDoubleScroll();
   }
 
@@ -1765,22 +1775,30 @@
   $.fn.fixTableHeaderAndCellsHeight = function () {
     // because the <th> are position: absolute, they don't get the height of
     // the <td> cells, and the other way around.
+    var MIN_HEIGHT = 30;
 
     this.each(function () {
-      $('th', this).each(function () {
-        var $th = $(this);
-        var $next = $('td', $th.parent());
-        var cells_max_height = Math.max($next.height());
-        var height = Math.max($th.height(), cells_max_height);
+      $(this)
+        .find('tr')
+        .each(function () {
+          var $tr = $(this);
+          var $th = $tr.find('th');
+          var $tds = $tr.find('td');
 
-        $th.height(height);
+          if ($th.length) {
+            // calculate tallest among th and its td siblings
+            var cells_max_height = 0;
+            $tds.each(function () {
+              cells_max_height = Math.max(cells_max_height, $(this).height());
+            });
 
-        if ($th.height() >= cells_max_height) {
-          $next.height($th.height());
-        }
+            var height = Math.max($th.height(), cells_max_height, MIN_HEIGHT);
 
-        $('div', this).css('margin-top', '-4px');
-      });
+            // set consistent height
+            $th.height(height);
+            $tds.height(height);
+          }
+        });
     });
   };
 
@@ -1892,7 +1910,9 @@
     $('.topnav a').on('click', resetStorageForPage);
 
     removeNoValues();
-    fixTableHeaderAndCellsHeight();
+    setTimeout(function () {
+      fixTableHeaderAndCellsHeight();
+    }, 300);
     addDoubleScroll();
 
     $(window).on('resize', function () {
