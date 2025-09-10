@@ -27,6 +27,19 @@
         <value key="vocabulary">nis_subregion_vocabulary</value>
 	</records>
 	<records interface="plone.app.querystring.interfaces.IQueryField"
+    	prefix="plone.app.querystring.field.nis_country">
+		<value key="title" translate="">Country</value>
+    	<value key="description" translate=""></value>
+    	<value key="enabled">True</value>
+    	<value key="sortable">True</value>
+    	<value key="operations">
+      		<element>plone.app.querystring.operation.selection.any</element>
+      		<element>plone.app.querystring.operation.selection.all</element>
+    	</value>
+    	<value key="group" translate="">Non-Indigenous Species</value>
+        <value key="vocabulary">nis_country_vocabulary</value>
+	</records>
+	<records interface="plone.app.querystring.interfaces.IQueryField"
     	prefix="plone.app.querystring.field.nis_group">
 		<value key="title" translate="">Group</value>
     	<value key="description" translate=""></value>

@@ -1,11 +1,9 @@
 # pylint: skip-file
 from __future__ import absolute_import
-from zope.interface import Interface
-from zope.schema import Choice, Date, List, Set  # Int, Text, TextLine
+from zope.interface import Interface, provider
+from zope.schema import Choice, Date, List, Set, Text  # Int, TextLine
 from plone.supermodel import model
 from plone.autoform.interfaces import IFormFieldProvider
-from zope.interface import provider
-from zope.schema import Text
 
 
 class IMainForm(Interface):
@@ -202,3 +200,8 @@ class INISFields(model.Schema):
         title=u"Region", description=u"MSFD Region", required=False)
     nis_subregion = Text(
         title=u"Subregion", description=u"MSFD sub-region", required=False)
+    nis_country = List(
+        title=u"Country",
+        description=u"Select one or more countries",
+        required=False,
+    )

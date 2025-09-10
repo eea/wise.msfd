@@ -8,6 +8,7 @@ indexes = [
     'nis_scientificname_accepted',
     'nis_subregion',
     'nis_region',
+    'nis_country',
     'nis_status',
     'nis_group',
     'nis_assigned_to',
@@ -22,7 +23,10 @@ def add_nis_metadata(context):
     for index_name in indexes:
         # Add index if it doesn't exist
         if index_name not in catalog.indexes():
-            catalog.addIndex(index_name, 'FieldIndex')
+            if index_name in ('nis_country',):
+                catalog.addIndex(index_name, 'KeywordIndex')
+            else:
+                catalog.addIndex(index_name, 'FieldIndex')
 
         # Add metadata column if it doesn't exist
         if index_name not in catalog.schema():

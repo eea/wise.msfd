@@ -8,6 +8,8 @@ import io
 import six
 import xlsxwriter
 
+from urllib.parse import urlparse, parse_qs
+
 from zExceptions import BadRequest
 from plone import api
 from plone.api.portal import get_tool
@@ -40,6 +42,7 @@ nis_fields = {
     "List": "nis_list",
     "Subregion": "nis_subregion",
     "Region": "nis_region",
+    "Country": "nis_country",
     "Status comment": "nis_status_comment",
     "STATUS": "nis_status",
     "Group": "nis_group",
@@ -48,7 +51,6 @@ nis_fields = {
     "NS stand": "nis_ns_stand",
     "Year": "nis_year",
     "Period": "nis_period",
-    "Country": "nis_country",
     "Area": "nis_area",
     "REL": "nis_rel",
     "EC": "nis_ec",
@@ -130,6 +132,27 @@ def nis_subregion_vocabulary(context):
 
     catalog_values = get_catalog_values(
         context, "nis_subregion"
+    )
+
+    terms = []
+    for key in catalog_values:
+        terms.append(
+            SimpleTerm(
+                key, key, key.encode("ascii", "ignore").decode("ascii")
+            )
+        )
+
+    terms.sort(key=lambda t: t.title)
+
+    return SimpleVocabulary(terms)
+
+
+@provider(IVocabularyFactory)
+def nis_country_vocabulary(context):
+    """nis_country_vocabulary"""
+
+    catalog_values = get_catalog_values(
+        context, "nis_country"
     )
 
     terms = []
@@ -416,6 +439,25 @@ class BulkAssign(Service):
 
         items = data.get("items", [])
         assignee = data.get("assigned_to", None)
+        search = getattr(urlparse(data.get("search", "{}")), "query", "{}")
+        # import pdb; pdb.set_trace()
+
+        if items and items[0] == 'All' and search:
+            filters = {
+                "portal_type": ["non_indigenous_species"],
+                "sort_on": "id",
+                "sort_order": "ascending"
+            }
+
+            # setup filters from request
+            for f in json.loads(parse_qs(search).get("query", [None])[0]):
+                filters[f['i']] = f['v']
+
+            catalog = get_tool("portal_catalog")
+            brains = catalog.unrestrictedSearchResults(
+                filters
+            )
+            items = [x.getObject().absolute_url_path() for x in brains]
 
         if not items or not assignee:
             raise BadRequest("Missing items or assigned_to")
@@ -433,12 +475,23 @@ class BulkAssign(Service):
             if not obj:
                 continue
             setattr(obj, "nis_assigned_to", assignee)
+
+            local_roles = obj.__ac_local_roles__ or {}
+
+            for userid, roles in list(local_roles.items()):
+                if userid == username:
+                    continue
+
+                if "Editor" in roles:
+                    del obj.__ac_local_roles__[userid]
+                    # api.user.revoke_roles(username=userid, obj=obj, roles=["Editor"])
+            
             api.user.grant_roles(username=username, roles=["Editor"], obj=obj)
             obj.reindexObject()
             updated.append(obj.absolute_url())
 
-        self._notify_user(username, updated)
-        self._notify_eea_group(username, updated)
+        # self._notify_user(username, updated)
+        # self._notify_eea_group(username, updated)
 
         return {
             "success": True,

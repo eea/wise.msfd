@@ -47,6 +47,11 @@
     />
 
   <utility
+    component=".nis.nis_country_vocabulary"
+    name="nis_country_vocabulary"
+    />
+
+  <utility
     component=".nis.nis_group_vocabulary"
     name="nis_group_vocabulary"
     />
