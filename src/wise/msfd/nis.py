@@ -1,4 +1,5 @@
 """ Non-indigenous species """
+from urllib.parse import urlparse, parse_qs
 
 import logging
 import json
@@ -7,8 +8,6 @@ import csv
 import io
 import six
 import xlsxwriter
-
-from urllib.parse import urlparse, parse_qs
 
 from zExceptions import BadRequest
 from plone import api
@@ -484,14 +483,13 @@ class BulkAssign(Service):
 
                 if "Editor" in roles:
                     del obj.__ac_local_roles__[userid]
-                    # api.user.revoke_roles(username=userid, obj=obj, roles=["Editor"])
-            
+
             api.user.grant_roles(username=username, roles=["Editor"], obj=obj)
             obj.reindexObject()
             updated.append(obj.absolute_url())
 
-        # self._notify_user(username, updated)
-        # self._notify_eea_group(username, updated)
+        self._notify_user(username, updated)
+        self._notify_eea_group(username, updated)
 
         return {
             "success": True,
