@@ -200,15 +200,18 @@ class INonIndigenousSpeciesContent(Interface):
 
 @adapter(INonIndigenousSpeciesContent, IObjectAddedEvent)
 def validate_total_on_add(obj, event):
+    """validate_total_on_add"""
     _validate_total(obj)
 
 
 @adapter(INonIndigenousSpeciesContent, IObjectModifiedEvent)
 def validate_total_on_edit(obj, event):
+    """validate_total_on_edit"""
     _validate_total(obj)
 
 
 def _calculate_total(obj):
+    """_calculate_total"""
     total = (
         float(obj.nis_rel or 0) +
         float(obj.nis_ec or 0) +
@@ -225,6 +228,7 @@ def _calculate_total(obj):
 
 
 def _validate_total(obj):
+    """_validate_total"""
     total = _calculate_total(obj)
 
     if round(total, 6) != 1.0:
@@ -239,6 +243,7 @@ class NonIndigenousSpeciesContent(Container):
 
     @property
     def nis_total(self):
+        """nis_total"""
         total = _calculate_total(self)
 
         return total
