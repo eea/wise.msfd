@@ -197,6 +197,7 @@ class INonIndigenousSpeciesContent(Interface):
     """ Interface for Non indigenous species content type
     """
 
+
 @adapter(INonIndigenousSpeciesContent, IObjectAddedEvent)
 def validate_total_on_add(obj, event):
     _validate_total(obj)
@@ -209,18 +210,19 @@ def validate_total_on_edit(obj, event):
 
 def _calculate_total(obj):
     total = (
-        float(obj.nis_rel or 0)
-        + float(obj.nis_ec or 0)
-        + float(obj.nis_tc or 0)
-        + float(obj.nis_ts_other or 0)
-        + float(obj.nis_ts_ball or 0)
-        + float(obj.nis_ts_hull or 0)
-        + float(obj.nis_cor or 0)
-        + float(obj.nis_una or 0)
-        + float(obj.nis_unk or 0)
+        float(obj.nis_rel or 0) +
+        float(obj.nis_ec or 0) +
+        float(obj.nis_tc or 0) +
+        float(obj.nis_ts_other or 0) +
+        float(obj.nis_ts_ball or 0) +
+        float(obj.nis_ts_hull or 0) +
+        float(obj.nis_cor or 0) +
+        float(obj.nis_una or 0) +
+        float(obj.nis_unk or 0)
     )
 
     return total
+
 
 def _validate_total(obj):
     total = _calculate_total(obj)
@@ -240,6 +242,7 @@ class NonIndigenousSpeciesContent(Container):
         total = _calculate_total(self)
 
         return total
+
 
 class NonIndigenousSpeciesImportSchema(Interface):
     """ NonIndigenousSpeciesImportSchema """
