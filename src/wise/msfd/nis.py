@@ -19,7 +19,12 @@ from plone.restapi.interfaces import IExpandableElement
 from plone.restapi.serializer.converters import json_compatible
 from plone.restapi.services import Service
 from zope.component import adapter, queryAdapter
-from zope.interface import Interface, implementer, provider, alsoProvides
+from zope.interface import (
+    Interface, implementer, provider, alsoProvides, Invalid
+)
+from zope.lifecycleevent.interfaces import (
+    IObjectModifiedEvent, IObjectAddedEvent
+)
 from zope.schema.interfaces import IVocabularyFactory
 from zope.schema.vocabulary import SimpleTerm, SimpleVocabulary
 from zope.publisher.interfaces import IPublishTraverse
@@ -192,11 +197,49 @@ class INonIndigenousSpeciesContent(Interface):
     """ Interface for Non indigenous species content type
     """
 
+@adapter(INonIndigenousSpeciesContent, IObjectAddedEvent)
+def validate_total_on_add(obj, event):
+    _validate_total(obj)
+
+
+@adapter(INonIndigenousSpeciesContent, IObjectModifiedEvent)
+def validate_total_on_edit(obj, event):
+    _validate_total(obj)
+
+
+def _calculate_total(obj):
+    total = (
+        float(obj.nis_rel or 0)
+        + float(obj.nis_ec or 0)
+        + float(obj.nis_tc or 0)
+        + float(obj.nis_ts_other or 0)
+        + float(obj.nis_ts_ball or 0)
+        + float(obj.nis_ts_hull or 0)
+        + float(obj.nis_cor or 0)
+        + float(obj.nis_una or 0)
+        + float(obj.nis_unk or 0)
+    )
+
+    return total
+
+def _validate_total(obj):
+    total = _calculate_total(obj)
+
+    if round(total, 6) != 1.0:
+        raise Invalid(
+            "SUM of each pathway must be 1. Currently: %s" % total
+        )
+
 
 @implementer(INonIndigenousSpeciesContent)
 class NonIndigenousSpeciesContent(Container):
     """NonIndigenousSpeciesContent"""
 
+    @property
+    def nis_total(self):
+        total = _calculate_total(self)
+
+        return total
 
 class NonIndigenousSpeciesImportSchema(Interface):
     """ NonIndigenousSpeciesImportSchema """
