@@ -20,11 +20,12 @@ from plone.restapi.serializer.converters import json_compatible
 from plone.restapi.services import Service
 from zope.component import adapter, queryAdapter
 from zope.interface import (
-    Interface, implementer, provider, alsoProvides, Invalid
+    Interface, implementer, provider, alsoProvides
 )
 from zope.lifecycleevent.interfaces import (
     IObjectModifiedEvent, IObjectAddedEvent
 )
+from zope.schema import ValidationError
 from zope.schema.interfaces import IVocabularyFactory
 from zope.schema.vocabulary import SimpleTerm, SimpleVocabulary
 from zope.publisher.interfaces import IPublishTraverse
@@ -232,9 +233,13 @@ def _validate_total(obj):
     total = _calculate_total(obj)
 
     if round(total, 6) != 1.0:
-        raise Invalid(
+        raise TotalValidationMessage(
             "SUM of each pathway must be 1. Currently: %s" % total
         )
+
+class TotalValidationMessage(ValidationError):
+    """TotalValidationMessage"""
+    __doc__ = "SUM of each pathway must be 1"
 
 
 @implementer(INonIndigenousSpeciesContent)
