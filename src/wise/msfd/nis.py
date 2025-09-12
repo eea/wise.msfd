@@ -33,7 +33,6 @@ from z3c.form import button, field, form
 from Products.CMFCore.utils import getToolByName
 from Products.Five import BrowserView
 from Products.CMFPlone.interfaces import IPloneSiteRoot
-from zExceptions import BadRequest
 from eea.progress.workflow.interfaces import IWorkflowProgress
 
 
