@@ -237,6 +237,7 @@ def _validate_total(obj):
             "SUM of each pathway must be 1. Currently: %s" % total
         )
 
+
 class TotalValidationMessage(ValidationError):
     """TotalValidationMessage"""
     __doc__ = "SUM of each pathway must be 1"
