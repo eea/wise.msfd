@@ -47,6 +47,11 @@
     />
 
   <utility
+    component=".nis.nis_country_vocabulary"
+    name="nis_country_vocabulary"
+    />
+
+  <utility
     component=".nis.nis_group_vocabulary"
     name="nis_group_vocabulary"
     />
@@ -79,6 +84,16 @@
       factory=".nis.BulkAssign"
       permission="cmf.ModifyPortalContent"
   />
+
+  <subscriber
+      for=".nis.INonIndigenousSpeciesContent
+          zope.lifecycleevent.interfaces.IObjectAddedEvent"
+      handler=".nis.validate_total_on_add" />
+
+  <subscriber
+      for=".nis.INonIndigenousSpeciesContent
+          zope.lifecycleevent.interfaces.IObjectModifiedEvent"
+      handler=".nis.validate_total_on_edit" />
 
   <!-- 
     factory="eea.progress.workflow.restapi.get.WorkflowProgressGet"

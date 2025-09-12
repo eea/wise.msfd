@@ -247,68 +247,103 @@
     });
   }
 
-  function addActiveFilters($field) {
+  function getAppliedFilters() {
+    window.WISE = window.WISE || {};
+    window.WISE.appliedFilters = {};
+
+    $(selectorFormContainer + ', ' + selectorLeftForm)
+      .find('[data-fieldname]')
+      .each(function () {
+        var $f = $(this);
+        var fieldName = $f.find('> label.horizontal').text().trim();
+
+        var values = $f
+          .find("input[type='checkbox']:checked")
+          .map(function () {
+            return $(this).closest('.option').text().trim();
+          })
+          .get();
+
+        window.WISE.appliedFilters[fieldName] = values;
+      });
+
+    $(document).trigger('filters:applied');
+  }
+
+  function addActiveFilters() {
     var $section = $('.active-filters-section');
     var $list = $('.active-filters-list');
     var $header = $section.find('.active-filters-header');
     var $icon = $header.find('i.fa');
-
-    // $('.wise-search-form-container .form-right-side').first().after($section);
 
     $list.hide();
 
     function renderFilters() {
       $list.empty();
 
-      $(selectorFormContainer + ', ' + selectorLeftForm)
-        .find('[data-fieldname]')
-        .each(function () {
-          var $f = $(this);
-          var title = $f.find('> label.horizontal').text().trim();
-          var checked = $f.find("input[type='checkbox']:checked");
+      var applied = (window.WISE && window.WISE.appliedFilters) || {};
 
-          if (checked.length) {
-            var $group = $('<div class="active-filter-group"></div>');
-            $group.append(
-              '<span class="filter-group-title">' + title + ':</span>',
-            );
+      $.each(applied, function (fieldName, values) {
+        if (!values || !values.length) return;
 
-            checked.each(function () {
-              var $cb = $(this);
-              var text = $cb.parent().text().trim();
+        var $group = $('<div class="active-filter-group"></div>');
+        $group.append(
+          '<span class="filter-group-title">' + fieldName + ':</span>',
+        );
 
-              var $tag = $(
-                '<span class="active-filter-item">' +
-                  text +
-                  '<button type="button" class="ui button clear-filter">' +
-                  '<i class="fa fa-times" aria-hidden="true"/>' +
-                  '</button>' +
-                  '</span>',
+        values.forEach(function (text) {
+          var $checkbox = $('[data-fieldname]')
+            .filter(function () {
+              return (
+                $(this).find('> label.horizontal').text().trim() === fieldName
               );
-
-              $tag.find('.clear-filter').on('click', function (e) {
-                e.preventDefault();
-                if ($cb.is(':checked')) {
-                  $cb[0].click();
-                }
-              });
-
-              $group.append($tag);
+            })
+            .find("input[type='checkbox']")
+            .filter(function () {
+              return $(this).parent().text().trim() === text;
             });
 
-            $list.append($group);
-          }
-        });
-    }
+          var checkboxId = $checkbox.attr('id') || '';
 
-    $field.on('change', "input[type='checkbox']", renderFilters);
+          var $tag = $(
+            '<span class="active-filter-item" data-id="' +
+              checkboxId +
+              '">' +
+              text +
+              '<button type="button" class="ui button clear-filter">' +
+              '<i class="fa fa-times" aria-hidden="true"></i>' +
+              '</button>' +
+              '</span>',
+          );
+
+          $tag.find('.clear-filter').on('click', function (e) {
+            e.preventDefault();
+
+            if (checkboxId) {
+              var $cb = $('#' + checkboxId);
+              if ($cb.length && $cb.is(':checked')) {
+                $cb.closest('.option').trigger('click');
+              }
+            }
+          });
+
+          $group.append($tag);
+        });
+
+        $list.append($group);
+      });
+    }
 
     $header
       .off('click.activeFiltersToggle')
       .on('click.activeFiltersToggle', function () {
         $list.slideToggle(200);
-        $icon.toggleClass('fa-chevron-up fa-chevron-down ');
+        $icon.toggleClass('fa-chevron-up fa-chevron-down');
       });
+
+    $(document)
+      .off('filters:applied.render')
+      .on('filters:applied.render', renderFilters);
 
     renderFilters();
   }
@@ -368,18 +403,23 @@
         }
       });
 
-    if (cheks.length < 6) {
-      $field.find('.controls .ui-autocomplete').hide();
-    } else {
-      chekspan.append("<span class='noresults hidden'>No results found</span>");
-      chekspan.data('checked_items', []);
+    chekspan.append("<span class='noresults hidden'>No results found</span>");
+    chekspan.data('checked_items', []);
 
-      var data = chekspan.data('checked_items');
-      $.each($field.find('input:checked'), function (idx, el) {
-        data.push(el.id);
-      });
+    var data = chekspan.data('checked_items');
+    $.each($field.find('input:checked'), function (idx, el) {
+      data.push(el.id);
+    });
 
-      addAutoComplete($field);
+    addAutoComplete($field);
+
+    var $subforms = $('.panel-title').closest('.subform');
+    if ($subforms.length && !$subforms.parent().hasClass('subforms-wrapper')) {
+      $subforms.wrapAll('<div class="subforms-wrapper"></div>');
+      var $form = $subforms.first().closest('form');
+      if ($form.length) {
+        $form.append($form.find('.subforms-wrapper'));
+      }
     }
   }
 
@@ -460,21 +500,12 @@
           $(cheks[idx]).attr('title', text.trim());
         });
 
-        if (cheks.length < 4) {
-          $field.find('.controls a').hide();
-          $field
-            .find('.controls')
-            .html('')
-            .css('height', '1px')
-            .css('padding', 0);
-        } else {
-          addCheckboxPanel($field, fieldId, cheks);
-          addActiveFilters($field);
+        addCheckboxPanel($field, fieldId, cheks);
+        addActiveFilters($field);
 
-          $field.find('.search-icon').on('click', function (ev) {
-            $(ev.target).parent().find('input').trigger('focus');
-          });
-        }
+        $field.find('.search-icon').on('click', function (ev) {
+          $(ev.target).parent().find('input').trigger('focus');
+        });
 
         sortCheckboxesByChecked($field);
       }
@@ -1117,6 +1148,7 @@
 
     setPaginationButtons();
     initPaginationInput();
+    getAppliedFilters();
   }
 
   /*
@@ -1124,56 +1156,37 @@
    * */
   function beforeSendForm(jqXHR, settings) {
     window.WISE.blocks = [];
-    //$("#ajax-spinner2").hide();
-
     $(selectorLeftForm + ' .no-results').remove();
 
-    var t = "<div id='wise-search-form-container-preloader'/>";
-    var sp = $('#ajax-spinner2').attr('id', 'ajax-spinner-form').show();
-
-    $(selectorFormContainer).append(t);
-    $('#wise-search-form-container-preloader').append(sp);
-
     $('#form-widgets-marine_unit_id').prop('disabled', true);
-    //$("s2id_form-widgets-marine_unit_id").select2("enable",false);
-    $("[name='form.buttons.prev']").prop('disabled', true);
-    $("[name='form.buttons.next']").prop('disabled', true);
+    $("[name='form.buttons.prev'], [name='form.buttons.next']").prop(
+      'disabled',
+      true,
+    );
+    $("[name='marine.buttons.prev'], [name='marine.buttons.next']").prop(
+      'disabled',
+      true,
+    );
 
-    $("[name='marine.buttons.prev']").prop('disabled', true);
-    $("[name='marine.buttons.next']").prop('disabled', true);
-
-    if ($('#marine-widget-top').length > 0) {
-      var cont = $('#marine-widget-top').next();
-      cont.css('position', 'relative');
-    } else {
-      cont = $('.left-side-form');
-    }
+    var cont =
+      $('#marine-widget-top').length > 0
+        ? $('#marine-widget-top').next()
+        : $('.left-side-form');
+    cont.css('position', 'relative');
 
     cont.prepend("<div id='wise-search-form-preloader'/>");
-
     $('#wise-search-form-preloader').append(
-      "<span style='position: absolute;" +
-        ' display: block;' +
-        ' left: 50%;' +
-        "top: 10%;'></span>",
+      "<span style='position: absolute; display: block; left: 50%; top: 50%;'></span>",
     );
     $('#wise-search-form-preloader > span').append(
       $('#ajax-spinner2').clone().attr('id', 'ajax-spinner-center').show(),
     );
 
-    $('#ajax-spinner-center').css({
-      position: 'fixed',
-      //"top" : "50%",
-      //"left" : "30%",
-      // "transform" : "translateX(-50%)"
-    });
-
+    $('#ajax-spinner-center').css({ position: 'fixed' });
     $('#wise-search-form-top').find('.alert').remove();
-    //window.WISE.marineUnit = $(selectorLeftForm + " select").val(  );
 
     loading = true;
   }
-
   function formSuccess(data, status, req) {
     $(selectorLeftForm + ' #wise-search-form-top')
       .siblings()
@@ -1215,16 +1228,22 @@
     $(selectorLeftForm + ' #wise-search-form-top').after(centerContentD);
 
     initPageElems();
+
+    getAppliedFilters();
     var formAction = $('.wise-search-form-container form').attr('action') || '';
     if (formAction.includes('/marine/++api++')) {
       var newFormAction = formAction;
     } else {
-      var newFormAction = formAction.replace('/marine', '/marine/++api++');
+      var newFormAction = formAction.replace('/marine/', '/marine/++api++/');
     }
 
     $('.wise-search-form-container form').attr('action', newFormAction);
     removeNoValues();
-    fixTableHeaderAndCellsHeight();
+
+    setTimeout(function () {
+      fixTableHeaderAndCellsHeight();
+    }, 300);
+
     //addDoubleScroll();
 
     $("[name='form.buttons.prev']").prop('disabled', false);
@@ -1354,7 +1373,11 @@
       $(selectorFormContainer).fadeIn('fast', function () {
         $(selectorLeftForm + ' #wise-search-form-top')
           .siblings()
-          .fadeIn('fast');
+          .fadeIn('fast', function () {
+            setTimeout(function () {
+              fixTableHeaderAndCellsHeight();
+            }, 50);
+          });
       });
     }
 
@@ -1397,22 +1420,13 @@
     $('table.listing:not(.nosort) tbody').each(setoddeven);
 
     if (typeof scanforlinks !== 'undefined') jQuery(scanforlinks);
-
+    setTimeout(function () {
+      fixTableHeaderAndCellsHeight();
+    }, 300);
     addDoubleScroll();
   }
 
   function formAjaxError(req, status, error) {
-    /*if(window.WISE.formData.length > 0){
-            var data = $($(window.WISE.formData)[0]).find(".field");
-            $.each( data , function (indx, $field) {
-                var chk = $($field).find(".option input[type='checkbox']:checked");
-                if(chk.length > 0){
-                    // TODO
-                }
-
-            });
-        }*/
-
     $('#wise-search-form-top').find('.alert').remove();
     $('#wise-search-form-top').append(
       '<div class="alert alert-danger alert-dismissible show" style="margin-top: 2rem;" role="alert">' +
@@ -1423,8 +1437,6 @@
         '</div>',
     );
 
-    // $(selectorFormContainer).find("[name='form.buttons.prev']").remove();
-    // $(selectorFormContainer).find("[name='form.buttons.next']").remove();
     $('#form-widgets-marine_unit_id').prop('disabled', false);
 
     $('#wise-search-form-container-preloader').remove();
@@ -1484,7 +1496,6 @@
         var panel_group, subform_parent, subform_children;
         panel_group = $(el).closest('.panel-group');
         subform_parent = panel_group.closest('.subform');
-        //subform_children = subform_parent.find('.subform');
         subform_children = $(el).parent().parent().next();
 
         if (
@@ -1611,7 +1622,7 @@
 
   function searchFormAjax(boundary, data, url, formData) {
     if (!url.includes('/marine/++api++')) {
-      url = url.replace('/marine', '/marine/++api++');
+      url = url.replace('/marine/', '/marine/++api++/');
     }
 
     $.ajax({
@@ -1764,22 +1775,30 @@
   $.fn.fixTableHeaderAndCellsHeight = function () {
     // because the <th> are position: absolute, they don't get the height of
     // the <td> cells, and the other way around.
+    var MIN_HEIGHT = 30;
 
     this.each(function () {
-      $('th', this).each(function () {
-        var $th = $(this);
-        var $next = $('td', $th.parent());
-        var cells_max_height = Math.max($next.height());
-        var height = Math.max($th.height(), cells_max_height);
+      $(this)
+        .find('tr')
+        .each(function () {
+          var $tr = $(this);
+          var $th = $tr.find('th');
+          var $tds = $tr.find('td');
 
-        $th.height(height);
+          if ($th.length) {
+            // calculate tallest among th and its td siblings
+            var cells_max_height = 0;
+            $tds.each(function () {
+              cells_max_height = Math.max(cells_max_height, $(this).height());
+            });
 
-        if ($th.height() >= cells_max_height) {
-          $next.height($th.height());
-        }
+            var height = Math.max($th.height(), cells_max_height, MIN_HEIGHT);
 
-        $('div', this).css('margin-top', '-4px');
-      });
+            // set consistent height
+            $th.height(height);
+            $tds.height(height);
+          }
+        });
     });
   };
 
@@ -1830,7 +1849,7 @@
     if (formAction.includes('/marine/++api++')) {
       var newFormAction = formAction;
     } else {
-      var newFormAction = formAction.replace('/marine', '/marine/++api++');
+      var newFormAction = formAction.replace('/marine/', '/marine/++api++/');
     }
 
     $('.wise-search-form-container form').attr('action', newFormAction);
@@ -1891,7 +1910,9 @@
     $('.topnav a').on('click', resetStorageForPage);
 
     removeNoValues();
-    fixTableHeaderAndCellsHeight();
+    setTimeout(function () {
+      fixTableHeaderAndCellsHeight();
+    }, 300);
     addDoubleScroll();
 
     $(window).on('resize', function () {

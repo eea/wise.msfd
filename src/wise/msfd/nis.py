@@ -1,4 +1,5 @@
 """ Non-indigenous species """
+from urllib.parse import urlparse, parse_qs
 
 import logging
 import json
@@ -18,7 +19,12 @@ from plone.restapi.interfaces import IExpandableElement
 from plone.restapi.serializer.converters import json_compatible
 from plone.restapi.services import Service
 from zope.component import adapter, queryAdapter
-from zope.interface import Interface, implementer, provider, alsoProvides
+from zope.interface import (
+    Interface, implementer, provider, alsoProvides, Invalid
+)
+from zope.lifecycleevent.interfaces import (
+    IObjectModifiedEvent, IObjectAddedEvent
+)
 from zope.schema.interfaces import IVocabularyFactory
 from zope.schema.vocabulary import SimpleTerm, SimpleVocabulary
 from zope.publisher.interfaces import IPublishTraverse
@@ -40,6 +46,7 @@ nis_fields = {
     "List": "nis_list",
     "Subregion": "nis_subregion",
     "Region": "nis_region",
+    "Country": "nis_country",
     "Status comment": "nis_status_comment",
     "STATUS": "nis_status",
     "Group": "nis_group",
@@ -48,7 +55,6 @@ nis_fields = {
     "NS stand": "nis_ns_stand",
     "Year": "nis_year",
     "Period": "nis_period",
-    "Country": "nis_country",
     "Area": "nis_area",
     "REL": "nis_rel",
     "EC": "nis_ec",
@@ -146,6 +152,27 @@ def nis_subregion_vocabulary(context):
 
 
 @provider(IVocabularyFactory)
+def nis_country_vocabulary(context):
+    """nis_country_vocabulary"""
+
+    catalog_values = get_catalog_values(
+        context, "nis_country"
+    )
+
+    terms = []
+    for key in catalog_values:
+        terms.append(
+            SimpleTerm(
+                key, key, key.encode("ascii", "ignore").decode("ascii")
+            )
+        )
+
+    terms.sort(key=lambda t: t.title)
+
+    return SimpleVocabulary(terms)
+
+
+@provider(IVocabularyFactory)
 def nis_group_vocabulary(context):
     """nis_group_vocabulary"""
 
@@ -171,9 +198,55 @@ class INonIndigenousSpeciesContent(Interface):
     """
 
 
+@adapter(INonIndigenousSpeciesContent, IObjectAddedEvent)
+def validate_total_on_add(obj, event):
+    """validate_total_on_add"""
+    _validate_total(obj)
+
+
+@adapter(INonIndigenousSpeciesContent, IObjectModifiedEvent)
+def validate_total_on_edit(obj, event):
+    """validate_total_on_edit"""
+    _validate_total(obj)
+
+
+def _calculate_total(obj):
+    """_calculate_total"""
+    total = (
+        float(obj.nis_rel or 0) +
+        float(obj.nis_ec or 0) +
+        float(obj.nis_tc or 0) +
+        float(obj.nis_ts_other or 0) +
+        float(obj.nis_ts_ball or 0) +
+        float(obj.nis_ts_hull or 0) +
+        float(obj.nis_cor or 0) +
+        float(obj.nis_una or 0) +
+        float(obj.nis_unk or 0)
+    )
+
+    return total
+
+
+def _validate_total(obj):
+    """_validate_total"""
+    total = _calculate_total(obj)
+
+    if round(total, 6) != 1.0:
+        raise Invalid(
+            "SUM of each pathway must be 1. Currently: %s" % total
+        )
+
+
 @implementer(INonIndigenousSpeciesContent)
 class NonIndigenousSpeciesContent(Container):
     """NonIndigenousSpeciesContent"""
+
+    @property
+    def nis_total(self):
+        """nis_total"""
+        total = _calculate_total(self)
+
+        return total
 
 
 class NonIndigenousSpeciesImportSchema(Interface):
@@ -416,6 +489,25 @@ class BulkAssign(Service):
 
         items = data.get("items", [])
         assignee = data.get("assigned_to", None)
+        search = getattr(urlparse(data.get("search", "{}")), "query", "{}")
+        # import pdb; pdb.set_trace()
+
+        if items and items[0] == 'All' and search:
+            filters = {
+                "portal_type": ["non_indigenous_species"],
+                "sort_on": "id",
+                "sort_order": "ascending"
+            }
+
+            # setup filters from request
+            for f in json.loads(parse_qs(search).get("query", [None])[0]):
+                filters[f['i']] = f['v']
+
+            catalog = get_tool("portal_catalog")
+            brains = catalog.unrestrictedSearchResults(
+                filters
+            )
+            items = [x.getObject().absolute_url_path() for x in brains]
 
         if not items or not assignee:
             raise BadRequest("Missing items or assigned_to")
@@ -433,6 +525,16 @@ class BulkAssign(Service):
             if not obj:
                 continue
             setattr(obj, "nis_assigned_to", assignee)
+
+            local_roles = obj.__ac_local_roles__ or {}
+
+            for userid, roles in list(local_roles.items()):
+                if userid == username:
+                    continue
+
+                if "Editor" in roles:
+                    del obj.__ac_local_roles__[userid]
+
             api.user.grant_roles(username=username, roles=["Editor"], obj=obj)
             obj.reindexObject()
             updated.append(obj.absolute_url())

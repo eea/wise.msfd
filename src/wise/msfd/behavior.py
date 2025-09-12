@@ -139,3 +139,4 @@ class IndicatorMOFields(MetadataBase):
 class NISFields(MetadataBase):
     nis_region = DCFieldProperty(INISFields["nis_region"])
     nis_subregion = DCFieldProperty(INISFields["nis_subregion"])
+    nis_country = DCFieldProperty(INISFields["nis_country"])
