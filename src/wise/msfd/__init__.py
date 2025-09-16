@@ -3,11 +3,14 @@
 
 """ Main product initializer
 """
+import types
+import sys
 
 from Acquisition import aq_parent
 from plone.restapi.deserializer import utils
 from plone.uuid.interfaces import IUUID, IUUIDAware
 from zope.component import getMultiAdapter
+from zope.interface import Interface
 from zope.i18nmessageid.message import MessageFactory
 from .cache import install_patches
 
@@ -74,3 +77,52 @@ def path2uid(context, link):
 
 utils.path2uid = path2uid
 install_patches()
+
+########################
+# mock interfaces for the plone 6 migration
+
+class ILinkedDataHomepage(Interface):
+    """Mock interface: ILinkedDataHomepage"""
+
+interfaces_mock = types.ModuleType('eea.dexterity.rdfmarshaller.interfaces')
+interfaces_mock.ILinkedDataHomepage = ILinkedDataHomepage
+sys.modules['eea.dexterity.rdfmarshaller.interfaces'] = interfaces_mock
+
+
+class IDataGridFieldLayer(Interface):
+    """Mock interface: IDataGridFieldLayer"""
+
+interfaces_mock = types.ModuleType('collective.z3cform.datagridfield.interfaces')
+interfaces_mock.IDataGridFieldLayer = IDataGridFieldLayer
+sys.modules['collective.z3cform.datagridfield.interfaces'] = interfaces_mock
+
+
+class IEEARabbitMQPloneInstalled(Interface):
+    """Mock interface: IEEARabbitMQPloneInstalled"""
+
+interfaces_mock = types.ModuleType('eea.rabbitmq.plone.interfaces.layers')
+interfaces_mock.IEEARabbitMQPloneInstalled = IEEARabbitMQPloneInstalled
+sys.modules['eea.rabbitmq.plone.interfaces.layers'] = interfaces_mock
+
+
+class IPloneAppImagecroppingLayer(Interface):
+    """Mock interface: IPloneAppImagecroppingLayer"""
+
+interfaces_mock = types.ModuleType('plone.app.imagecropping.interfaces')
+interfaces_mock.IPloneAppImagecroppingLayer = IPloneAppImagecroppingLayer
+sys.modules['plone.app.imagecropping.interfaces'] = interfaces_mock
+
+
+class IImageCroppingMarker(Interface):
+    """Mock interface: IImageCroppingMarker"""
+
+interfaces_mock = types.ModuleType('plone.app.imagecropping.interfaces')
+interfaces_mock.IImageCroppingMarker = IImageCroppingMarker
+sys.modules['plone.app.imagecropping.interfaces'] = interfaces_mock
+
+class IEeaPrivacyscreenLayer(Interface):
+    """Mock interface: IEeaPrivacyscreenLayer"""
+
+interfaces_mock = types.ModuleType('eea.privacyscreen.interfaces')
+interfaces_mock.IEeaPrivacyscreenLayer = IEeaPrivacyscreenLayer
+sys.modules['eea.privacyscreen.interfaces'] = interfaces_mock
