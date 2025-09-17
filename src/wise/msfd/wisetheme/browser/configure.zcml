@@ -47,12 +47,12 @@
       file="meta.zcml"
       />
 
-  <browser:jbot
+  <!-- <browser:jbot
       directory="overrides"
       layer="wise.theme.interfaces.IWiseThemeLayer"
       />
 
-  <include file="overrides.zcml" />
+  <include file="overrides.zcml" /> -->
 
   <!-- Publish static files -->
   <plone:static
