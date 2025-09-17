@@ -27,10 +27,10 @@ class BlockType(object):
             self.out.add(_type)
 
 
-@indexer(IDexterityContent)
-def block_types(obj):
-    blocks_type = set()
-    bt = BlockType(obj, blocks_type)
-    traverser = BlocksTraverser(obj)
-    traverser(bt)
-    return list(blocks_type)
+# @indexer(IDexterityContent)
+# def block_types(obj):
+#     blocks_type = set()
+#     bt = BlockType(obj, blocks_type)
+#     traverser = BlocksTraverser(obj)
+#     traverser(bt)
+#     return list(blocks_type)

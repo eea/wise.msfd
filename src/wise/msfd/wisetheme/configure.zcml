@@ -10,7 +10,7 @@
 
     <i18n:registerTranslations directory="locales" />
 
-    <includeDependencies package="." />
+    <!-- <includeDependencies package="." /> -->
 
     <include package=".browser" />
     <include file="search.zcml" />
@@ -161,18 +161,18 @@
       name="has_default_page"
       />
 
-  <adapter
+  <!-- <adapter
       factory=".catalog.block_types"
       name="block_types"
-      />
+      /> -->
 
-  <adapter factory=".siblings.Siblings" name="siblings"/>
+  <!-- <adapter factory=".siblings.Siblings" name="siblings"/> -->
 
-  <plone:service
+  <!-- <plone:service
     method="GET"
     for="zope.interface.Interface"
     factory=".siblings.SiblingsGet"
     name="@siblings"
     permission="zope2.View"
-    />
+    /> -->
 </configure>
