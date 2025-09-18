@@ -3,6 +3,7 @@
 
 """ Main product initializer
 """
+import base64
 import types
 import sys
 
@@ -81,8 +82,10 @@ install_patches()
 ########################
 # mock interfaces for the plone 6 migration
 
+
 class ILinkedDataHomepage(Interface):
     """Mock interface: ILinkedDataHomepage"""
+
 
 interfaces_mock = types.ModuleType('eea.dexterity.rdfmarshaller.interfaces')
 interfaces_mock.ILinkedDataHomepage = ILinkedDataHomepage
@@ -92,13 +95,16 @@ sys.modules['eea.dexterity.rdfmarshaller.interfaces'] = interfaces_mock
 class IDataGridFieldLayer(Interface):
     """Mock interface: IDataGridFieldLayer"""
 
-interfaces_mock = types.ModuleType('collective.z3cform.datagridfield.interfaces')
+
+interfaces_mock = types.ModuleType(
+    'collective.z3cform.datagridfield.interfaces')
 interfaces_mock.IDataGridFieldLayer = IDataGridFieldLayer
 sys.modules['collective.z3cform.datagridfield.interfaces'] = interfaces_mock
 
 
 class IEEARabbitMQPloneInstalled(Interface):
     """Mock interface: IEEARabbitMQPloneInstalled"""
+
 
 interfaces_mock = types.ModuleType('eea.rabbitmq.plone.interfaces.layers')
 interfaces_mock.IEEARabbitMQPloneInstalled = IEEARabbitMQPloneInstalled
@@ -108,6 +114,7 @@ sys.modules['eea.rabbitmq.plone.interfaces.layers'] = interfaces_mock
 class IPloneAppImagecroppingLayer(Interface):
     """Mock interface: IPloneAppImagecroppingLayer"""
 
+
 interfaces_mock = types.ModuleType('plone.app.imagecropping.interfaces')
 interfaces_mock.IPloneAppImagecroppingLayer = IPloneAppImagecroppingLayer
 sys.modules['plone.app.imagecropping.interfaces'] = interfaces_mock
@@ -116,13 +123,21 @@ sys.modules['plone.app.imagecropping.interfaces'] = interfaces_mock
 class IImageCroppingMarker(Interface):
     """Mock interface: IImageCroppingMarker"""
 
+
 interfaces_mock = types.ModuleType('plone.app.imagecropping.interfaces')
 interfaces_mock.IImageCroppingMarker = IImageCroppingMarker
 sys.modules['plone.app.imagecropping.interfaces'] = interfaces_mock
 
+
 class IEeaPrivacyscreenLayer(Interface):
     """Mock interface: IEeaPrivacyscreenLayer"""
+
 
 interfaces_mock = types.ModuleType('eea.privacyscreen.interfaces')
 interfaces_mock.IEeaPrivacyscreenLayer = IEeaPrivacyscreenLayer
 sys.modules['eea.privacyscreen.interfaces'] = interfaces_mock
+
+if not hasattr(base64, "encodestring"):
+    base64.encodestring = base64.encodebytes
+if not hasattr(base64, "decodestring"):
+    base64.decodestring = base64.decodebytes
