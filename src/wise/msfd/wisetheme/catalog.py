@@ -2,9 +2,9 @@
 from __future__ import absolute_import
 from plone.dexterity.interfaces import IDexterityContainer
 # from plone.indexer.decorator import indexer
-from plone.dexterity.interfaces import IDexterityContent
+# from plone.dexterity.interfaces import IDexterityContent
 from plone.indexer import indexer
-from .blocks import BlocksTraverser
+# from .blocks import BlocksTraverser
 
 
 @indexer(IDexterityContainer)
