@@ -64,12 +64,13 @@ setup(
         # 'plone.app.robotframework',
         'plone.app.testing',
         'eea.api.dataconnector',
-        'webcouturier.dropdownmenu',
+        # 'webcouturier.dropdownmenu',
         'robotsuite',
         'pyexcel==0.6.7',
         'pyexcel-xlsx==0.6.0',
         'openpyxl==3.0.10',
         'pdfkit',
+        'dnspython===2.7.0'
 
     ],
     extras_require={
@@ -84,8 +85,8 @@ setup(
 
         ],
     },
-    # entry_points="""
-    # [z3c.autoinclude.plugin]
-    # target = plone
-    # """,
+    entry_points="""
+    [z3c.autoinclude.plugin]
+    target = plone
+    """,
 )

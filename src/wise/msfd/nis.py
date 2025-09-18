@@ -33,7 +33,6 @@ from z3c.form import button, field, form
 from Products.CMFCore.utils import getToolByName
 from Products.Five import BrowserView
 from Products.CMFPlone.interfaces import IPloneSiteRoot
-
 from eea.progress.workflow.interfaces import IWorkflowProgress
 
 
@@ -233,9 +232,12 @@ def _validate_total(obj):
     total = _calculate_total(obj)
 
     if round(total, 6) != 1.0:
-        raise TotalValidationMessage(
-            "SUM of each pathway must be 1. Currently: %s" % total
+        raise BadRequest(
+             "SUM of each pathway must be 1. Currently: {}".format(total)
         )
+        # raise TotalValidationMessage(
+        #     "SUM of each pathway must be 1. Currently: %s" % total
+        # )
 
 
 class TotalValidationMessage(ValidationError):
