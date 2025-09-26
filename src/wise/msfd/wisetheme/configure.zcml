@@ -22,6 +22,12 @@
         type="theme"
     />
 
+    <plone:static
+        directory="themep6"
+        name="wise-themep6"
+        type="theme"
+    />
+
     <browser:page
         name="update-indicator-lastupdate"
         for="*"
