@@ -4,26 +4,26 @@
 </tal:cond>
 
 <tal:cond tal:condition="python: 'assessment-module' in request.URL0 or 'policy-and-reporting/assessment-by' in request.URL0">
-  <script src="/marine/++resource++msfd/js/jquery.min.js"></script>
+  <script src="/++resource++msfd/js/jquery.min.js"></script>
   <!-- <script src="/++plone++static/components/select2/select2.js"></script> -->
-  <script src="/marine/++resource++msfd/bs3/js/bootstrap.min.js"></script>
-  <script src="/marine/++resource++static_js/wise_javascript_variables.js"></script>
-  <script src="/marine/++resource++static_js/compliance.js?rel=389d2d5d04"></script>
-  <script src="/marine/++resource++static_js/assessment-edit.js?rel=df85034d6f"></script>
-  <script src="/marine/++resource++msfd.trans/translate-comp.js"></script>
-  <script src="/marine/++resource++msfd/js/table-edit.js?rel=dd14d8aae5"></script>
+  <script src="/++resource++msfd/bs3/js/bootstrap.min.js"></script>
+  <script src="/++resource++static_js/wise_javascript_variables.js"></script>
+  <script src="/++resource++static_js/compliance.js?rel=389d2d5d04"></script>
+  <script src="/++resource++static_js/assessment-edit.js?rel=df85034d6f"></script>
+  <script src="/++resource++msfd.trans/translate-comp.js"></script>
+  <script src="/++resource++msfd/js/table-edit.js?rel=dd14d8aae5"></script>
 </tal:cond>
 
 <tal:cond tal:condition="python: '/assessments' in request.URL0 or '/determination-of-good-environmental-status' in request.URL0 or '/establishment-of-environmental-targets' in request.URL0 or '/monitoring-programmes' in request.URL0">
-  <script src="/marine/++resource++msfd/js/jquery.min.js"></script>
+  <script src="/++resource++msfd/js/jquery.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/3.5.4/select2.min.js" defer></script>
-  <script src="/marine/++resource++msfd/bs3/js/bootstrap.min.js"></script>
+  <script src="/++resource++msfd/bs3/js/bootstrap.min.js"></script>
 </tal:cond>
 
-<tal:cond tal:condition="python: 'edit-assessment-data' in request.URL0 or 'national-descriptors-assessments' in request.URL0 or 'regional-descriptors-assessments' in request.URL0" >
-  <script src="/marine/++plone++static/components/select2/select2.js"></script>
+<tal:cond tal:condition="python: 'edit-assessment-data' in request.URL0 or 'national-descriptors-assessments' in request.URL0 or 'regional-descriptors-assessments' in request.URL0">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/3.5.4/select2.min.js" defer></script>
 </tal:cond>
 
 <tal:cond tal:condition="python: 'assessment-module' in request.URL0 or 'msfd-data' in request.URL0 or 'policy-and-reporting/assessment-by' in request.URL0">
-  <script src="/marine/++resource++static_js/tabs.js?rel=7490a93573"></script>
+  <script src="/++resource++static_js/tabs.js?rel=7490a93573"></script>
 </tal:cond>

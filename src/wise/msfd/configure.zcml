@@ -70,6 +70,10 @@
     file="./static/wise/dist/js/msfd_search.js"
     />
   <browser:resource
+    name="jquery.min.js"
+    file="./static/wise/dist/js/jquery.min.js"
+    />
+  <browser:resource
     name="wise_javascript_variables.js"
     file="./static/wise/dist/js/wise_javascript_variables.js"
     />
