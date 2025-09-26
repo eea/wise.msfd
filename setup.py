@@ -70,7 +70,7 @@ setup(
         'pyexcel-xlsx==0.6.0',
         'openpyxl==3.0.10',
         'pdfkit',
-        'dnspython===2.7.0'
+        'dnspython==2.7.0'
 
     ],
     extras_require={
