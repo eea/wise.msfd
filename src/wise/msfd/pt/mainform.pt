@@ -53,6 +53,7 @@
         <!-- <script src="++plone++static/components/bootstrap/js/collapse.js"></script> -->
         <script src="/++resource++msfd/js/tabs.js"></script>
         <script src="/++resource++msfd/js/msfd_search.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/3.5.4/select2.min.js" defer></script>
       </metal:css>
     </metal:block>
   </div>
