@@ -658,7 +658,7 @@ class A11MStrategyDisplay2020(ItemDisplayForm2018, A112020Mixin):
         )
         # RelatedMeasure_code, RelatedMeasure_name
         data_db = [
-            "<b>{}</b> - {}".format(x.RelatedMeasure_code, x.RelatedMeasure_name)
+            "{} - {}".format(x.RelatedMeasure_code, x.RelatedMeasure_name)
             for x in data_db 
             if x
         ]

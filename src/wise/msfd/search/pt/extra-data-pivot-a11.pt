@@ -17,7 +17,7 @@
                 <dt class="fixed-positionZ"
                     tal:content="python:view.name_as_title(row[0])">Label</dt>
                 <!-- style="margin: 5px 0px; display: block; border-bottom: 1px solid #acbac7;" -->
-                <dd tal:condition="python: row[1]">
+                <dd style="max-height: 300px;" tal:condition="python: row[1]">
                   <span
                     style="margin: 5px 0px; display: block; border-bottom: 1px solid #acbac7;"
                     tal:repeat="v python:row[1][:-1]"
