@@ -146,7 +146,7 @@
       no_results.addClass('hidden');
       labels.removeClass('hidden');
       var data = $field
-        .find('.panel-content > span:not(.controls)')
+        .find('.panel-content > div:not(.controls)')
         .data('checked_items');
 
       if (data) {
@@ -227,7 +227,8 @@
   }
 
   function addAutoComplete($field) {
-    $field.find('.ui-autocomplete-input').autocomplete({
+    var $input = $field.find('.ui-autocomplete-input');
+    $input.autocomplete({
       minLength: 0,
       source: [],
       search: function (event) {
@@ -235,13 +236,11 @@
       },
       create: function () {
         var that = this;
-        var removeBtn = $(this)
-          .parentsUntil('.ui-autocomplete')
-          .find('.clear-btn ');
-        removeBtn.on('click', null, that, function (ev) {
-          $(this).parentsUntil('.controls').find('input').val('');
-          $(this).parentsUntil('.controls').find('input').trigger('change');
-          $(ev.data).autocomplete('search', 'undefined');
+        var $removeBtn = $(this).closest('.ui-autocomplete').find('.clear-btn');
+        $removeBtn.on('click', function (ev) {
+          $(that).val('');
+          $(that).trigger('change');
+          searchAutoComplete(that, $field);
         });
       },
     });
@@ -255,26 +254,16 @@
       .find('[data-fieldname]')
       .each(function () {
         var $f = $(this);
-        var machineName = $f.data('fieldname');
-        var labelText = $f.find('> label.form-label').text().trim();
+        var fieldName = $f.find('> label.horizontal').text().trim();
 
         var values = $f
           .find("input[type='checkbox']:checked")
           .map(function () {
-            return $(this)
-              .closest('.form-check')
-              .find('label span.label.option')
-              .text()
-              .trim();
+            return $(this).closest('.option').text().trim();
           })
           .get();
 
-        if (values.length) {
-          window.WISE.appliedFilters[machineName] = {
-            label: labelText,
-            values: values,
-          };
-        }
+        window.WISE.appliedFilters[fieldName] = values;
       });
 
     $(document).trigger('filters:applied');
@@ -293,29 +282,24 @@
 
       var applied = (window.WISE && window.WISE.appliedFilters) || {};
 
-      console.log('applied', applied);
-
-      $.each(applied, function (fieldName, data) {
-        if (!data || !data.values.length) return;
-
-        var labelText = data.label;
+      $.each(applied, function (fieldName, values) {
+        if (!values || !values.length) return;
 
         var $group = $('<div class="active-filter-group"></div>');
         $group.append(
-          '<span class="filter-group-title">' + labelText + ':</span>',
+          '<span class="filter-group-title">' + fieldName + ':</span>',
         );
 
-        data.values.forEach(function (text) {
-          var $checkbox = $('[data-fieldname="' + fieldName + '"]')
-            .find("input[type='checkbox']")
+        values.forEach(function (text) {
+          var $checkbox = $('[data-fieldname]')
             .filter(function () {
               return (
-                $(this)
-                  .closest('.form-check')
-                  .find('label span.label.option')
-                  .text()
-                  .trim() === text
+                $(this).find('> label.horizontal').text().trim() === fieldName
               );
+            })
+            .find("input[type='checkbox']")
+            .filter(function () {
+              return $(this).parent().text().trim() === text;
             });
 
           var checkboxId = $checkbox.attr('id') || '';
@@ -337,7 +321,7 @@
             if (checkboxId) {
               var $cb = $('#' + checkboxId);
               if ($cb.length && $cb.is(':checked')) {
-                $cb.closest('.form-check').find('input').trigger('click');
+                $cb.closest('.option').trigger('click');
               }
             }
           });
@@ -375,6 +359,14 @@
     if (!$content.length) {
       $label.nextAll().wrapAll('<div class="panel-content"></div>');
       $content = $label.next('.panel-content');
+    }
+
+    var $controls = $content.children('.controls');
+    if (!$controls.length) {
+      var all = generateControlDiv();
+      $content.prepend(all);
+    } else if ($controls.length > 1) {
+      $controls.slice(1).remove();
     }
 
     var chekspan = $content.find('> div:not(.controls)');
@@ -497,11 +489,8 @@
 
     $fields.each(function (indx, field) {
       var $field = $(field);
-      var cheks = $field.find('.label');
-
-      var allcheckboxes = cheks
-        .closest('.form-check')
-        .find("input[type='checkbox']");
+      var cheks = $field.find('.option');
+      var allcheckboxes = cheks.find("input[type='checkbox']");
 
       var hasChecks = allcheckboxes.length > 0;
       // has checkboxes
@@ -509,10 +498,6 @@
         var fieldId = $field.attr('id');
 
         fieldAutoSubmitSetup(fieldId, $field);
-
-        // add "controls"
-        var all = generateControlDiv();
-        $field.find('> label.form-label').after(all);
 
         //tooltips
         cheks.each(function (idx) {
@@ -622,22 +607,35 @@
     );
 
     var triggerClick = function (chV, ev) {
-      //reset page
+      // reset page
       $(selectorFormContainer + " [name='form.widgets.page']").val(0);
-      if (exceptVal.indexOf(chV) === -1)
-        $(ev.target).find("input[type='checkbox']").trigger('click');
+
+      if (exceptVal.indexOf(chV) === -1) {
+        if ($(ev.target).is("input[type='checkbox']")) {
+          // if the target IS the checkbox, trigger change directly
+          $(ev.target).trigger('change');
+        } else {
+          // otherwise, find the checkbox inside
+          $(ev.target).find("input[type='checkbox']").trigger('click');
+        }
+      }
     };
 
     // listener for click on the whole span
-    allch.on('click', '.option', function (ev) {
+    allch.on('click', '.form-check, input[type="checkbox"]', function (ev) {
       $('#ajax-spinner2').hide();
-      var checkboxV = $(this).find("input[type='checkbox']").val();
+
+      var $checkbox = $(this).is('input[type="checkbox"]')
+        ? $(this)
+        : $(this).find("input[type='checkbox']");
+
+      var checkboxV = $checkbox.val();
+
       if (
-        window.WISE.blocks.indexOf(
-          $(this).parentsUntil('.field').parent().attr('id'),
-        ) !== -1
+        window.WISE.blocks.indexOf($checkbox.closest('.field').attr('id')) !==
+        -1
       ) {
-        //return false;
+        return false;
       } else {
         triggerClick(checkboxV, ev);
       }
@@ -1131,7 +1129,8 @@
   function initPageElems() {
     // move marine unit id below form title and pagination as seen on the
     // other article tabs
-    $('.form-check-label').find('.label').addClass('option');
+    $('.form-check').addClass('option');
+    $('.form-label').addClass('horizontal');
     var pagination = $('.prev-next-row').eq(0);
     if (pagination.length) {
       $('#marine-widget-top').detach().insertBefore(pagination);
@@ -1209,6 +1208,7 @@
 
     loading = true;
   }
+
   function formSuccess(data, status, req) {
     $(selectorLeftForm + ' #wise-search-form-top')
       .siblings()
