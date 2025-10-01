@@ -1,0 +1,42 @@
+<div
+  tal:define="extra_data options/extra_data | view/get_extra_data"
+  class="extra-details">
+
+    <div style="overflow: initial;"
+        class="extra-details-section"
+         tal:repeat="info extra_data" >
+      <h4 class="section-title" tal:content="python: info[0]"></h4>
+      <div tal:condition="python: len(info[1]) == 0">No data </div>
+
+      <div class="section-selectZ" tal:condition="python: len(info[1])>0">
+        <tal:section
+          define="data python: info[1];">
+          <div class="double-scrollZ">
+            <dl>
+              <tal:rep tal:repeat="row data">
+                <dt class="fixed-positionZ"
+                    tal:content="python:view.name_as_title(row[0])">Label</dt>
+                <!-- style="margin: 5px 0px; display: block; border-bottom: 1px solid #acbac7;" -->
+                <dd tal:condition="python: row[1]">
+                  <span
+                    style="margin: 5px 0px; display: block; border-bottom: 1px solid #acbac7;"
+                    tal:repeat="v python:row[1][:-1]"
+                    tal:content="structure python:view.print_value(v, row[0])">
+                      Value
+                  </span>
+                  <span
+                    style="margin: 5px 0px; display: block;"
+                    tal:content="structure python:view.print_value(row[1][-1], row[0])">
+                      Value
+                  </span>
+                </dd>
+                <dd tal:condition="python: not row[1]">
+                  <em>No value</em>
+                </dd>
+              </tal:rep>
+            </dl>
+          </div>
+        </tal:section>
+      </div>
+    </div>
+</div>

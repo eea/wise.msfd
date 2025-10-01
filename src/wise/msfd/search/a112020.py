@@ -1,4 +1,4 @@
-#pylint: skip-file
+# pylint: skip-file
 from __future__ import absolute_import
 import logging
 
@@ -255,7 +255,7 @@ class A11MProgrammeDisplay2020(ItemDisplayForm2018, A112020Mixin):
 
         result = (
             title,
-            {'': [{'': x} for x in data_db],}
+            {'': [{'': x} for x in data_db], }
         )
 
         return result
@@ -406,8 +406,9 @@ class A11MStrategyDisplay2020(ItemDisplayForm2018, A112020Mixin):
     title = "Monitoring Strategies display"
     extra_data_template = ViewPageTemplateFile('pt/extra-data-pivot.pt')
     mapper_class = sql2018.ART11StrategiesMonitoringStrategy
-
+    extra_data_template_v2 = ViewPageTemplateFile('pt/extra-data-pivot-a11.pt')
     # blacklist_labels = ()
+    blacklist = ()
 
     def get_import_id(self):
         metadata_id = self.item.IdMetadata
@@ -562,55 +563,118 @@ class A11MStrategyDisplay2020(ItemDisplayForm2018, A112020Mixin):
 
         res.append(_data)
 
-        mc = sql2018.ART11StrategiesMetadataResponsibleCompetentAuthority
-        _data = self.create_extra_data(
-            mc,
-            'ResponsibleCompetentAuthority',
-            'Responsible competent authority',
-            mc.IdMetadata == meta_id
-        )
-        res.append(_data)
+        # mc = sql2018.ART11StrategiesMetadataResponsibleCompetentAuthority
+        # _data = self.create_extra_data(
+        #     mc,
+        #     'ResponsibleCompetentAuthority',
+        #     'Responsible competent authority',
+        #     mc.IdMetadata == meta_id
+        # )
+        # res.append(_data)
 
-        mc = sql2018.ART11StrategiesMetadataResponsibleOrganisation
-        _data = self.create_extra_data(
-            mc,
-            'ResponsibleOrganisations',
-            'Responsible organisations',
-            mc.IdMetadata == meta_id
-        )
-        res.append(_data)
+        # mc = sql2018.ART11StrategiesMetadataResponsibleOrganisation
+        # _data = self.create_extra_data(
+        #     mc,
+        #     'ResponsibleOrganisations',
+        #     'Responsible organisations',
+        #     mc.IdMetadata == meta_id
+        # )
+        # res.append(_data)
 
-        mc = sql2018.ART11StrategiesMonitoringStrategyMonitoringProgramme
-        _data = self.create_extra_data(
-            mc,
-            'MonitoringProgrammes',
-            'Monitoring programmes',
-            mc.IdMonitoringStrategy == strat_id
-        )
-        res.append(_data)
+        # mc = sql2018.ART11StrategiesMonitoringStrategyMonitoringProgramme
+        # _data = self.create_extra_data(
+        #     mc,
+        #     'MonitoringProgrammes',
+        #     'Monitoring programmes',
+        #     mc.IdMonitoringStrategy == strat_id
+        # )
+        # res.append(_data)
 
-        mc = sql2018.ART11StrategiesMonitoringStrategyRelatedMeasure
-        title = 'Related measures'
-        _data = [title, {}]
-        count, measures = db.get_all_records(
-            mc,
-            mc.IdMonitoringStrategy == strat_id
-        )
-        measures = db_objects_to_dict(measures,
-                                      ('Id', 'IdMonitoringStrategy'))
+        # mc = sql2018.ART11StrategiesMonitoringStrategyRelatedMeasure
+        # title = 'Related measures'
+        # _data = [title, {}]
+        # count, measures = db.get_all_records(
+        #     mc,
+        #     mc.IdMonitoringStrategy == strat_id
+        # )
+        # measures = db_objects_to_dict(measures,
+        #                               ('Id', 'IdMonitoringStrategy'))
 
-        if measures:
-            _data = (title, {'': measures})
+        # if measures:
+        #     _data = (title, {'': measures})
 
-        res.append(_data)
+        # res.append(_data)
 
-        mc = sql2018.ART11StrategiesMonitoringStrategyRelatedTarget
-        _data = self.create_extra_data(
-            mc,
-            'RelatedTargets',
-            'Related targets',
-            mc.IdMonitoringStrategy == strat_id
-        )
-        res.append(_data)
+        # mc = sql2018.ART11StrategiesMonitoringStrategyRelatedTarget
+        # _data = self.create_extra_data(
+        #     mc,
+        #     'RelatedTargets',
+        #     'Related targets',
+        #     mc.IdMonitoringStrategy == strat_id
+        # )
+        # res.append(_data)
 
         return res
+
+    def extras(self):
+        html = self.extra_data_template(extra_data=self.get_extra_data())
+
+        extra_data = []
+        meta_id = self.item.IdMetadata
+        strat_id = self.item.Id
+
+        mc = sql2018.ART11StrategiesMetadataResponsibleCompetentAuthority
+        data_db = db.get_unique_from_mapper(
+            mc,
+            'ResponsibleCompetentAuthority',
+            mc.IdMetadata == meta_id
+        )
+        data_db = [x for x in data_db if x]
+        extra_data.append(['Responsible competent authority', data_db or []])
+
+        mc = sql2018.ART11StrategiesMetadataResponsibleOrganisation
+        data_db = db.get_unique_from_mapper(
+            mc,
+            'ResponsibleOrganisations',
+            mc.IdMetadata == meta_id
+        )
+        data_db = [x for x in data_db if x]
+        extra_data.append(['Responsible organisations', data_db or []])
+
+        mc = sql2018.ART11StrategiesMonitoringStrategyMonitoringProgramme
+        data_db = db.get_unique_from_mapper(
+            mc,
+            'MonitoringProgrammes',
+            mc.IdMonitoringStrategy == strat_id
+        )
+        data_db = [x for x in data_db if x]
+        extra_data.append(['Monitoring programmes', data_db or []])
+
+        # TODO 
+        mc = sql2018.ART11StrategiesMonitoringStrategyRelatedMeasure
+        _, data_db = db.get_all_records(
+            mc,
+            mc.IdMonitoringStrategy == strat_id
+        )
+        # RelatedMeasure_code, RelatedMeasure_name
+        data_db = [
+            "<b>{}</b> - {}".format(x.RelatedMeasure_code, x.RelatedMeasure_name)
+            for x in data_db 
+            if x
+        ]
+        extra_data.append(['Related measures', data_db or []])
+
+        mc = sql2018.ART11StrategiesMonitoringStrategyRelatedTarget
+        data_db = db.get_unique_from_mapper(
+            mc,
+            'RelatedTargets',
+            mc.IdMonitoringStrategy == strat_id
+        )
+        data_db = [x for x in data_db if x]
+        extra_data.append(['Related targets', data_db or []])
+
+        extra_html = self.extra_data_template_v2(extra_data=([
+            "Responsible competent authority, organisations, monitoring programmes, related measures, related targets", extra_data
+        ],))
+
+        return html + extra_html
