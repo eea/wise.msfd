@@ -603,6 +603,10 @@ class A2018Art81abDisplay(ItemDisplayForm):
         'pt/extra-data-pivot-8ab.pt'
     )
 
+    secondary_extra_template_v2 = ViewPageTemplateFile(
+        'pt/extra-data-pivot-8ab-v2.pt'
+    )
+
     reported_date_info = {
         'mapper_class': sql2018.ReportedInformation,
         'col_import_id': 'Id',
@@ -1033,9 +1037,9 @@ class A2018Art81abDisplay(ItemDisplayForm):
 
         id_overall = self.item.Id
 
-        self.blacklist = ('Id', 'IdOverallStatus', 'IdElementStatus',
-                          'IdCriteriaStatus', 'IdCriteriaValues')
-        excluded_columns = ()
+        # self.blacklist = ('Id', 'IdOverallStatus', 'IdElementStatus',
+        #                   'IdCriteriaStatus', 'IdCriteriaValues')
+        # excluded_columns = ()
 
         pressure_codes = db.get_unique_from_mapper(
             sql2018.ART8GESOverallStatusPressure,
@@ -1049,82 +1053,82 @@ class A2018Art81abDisplay(ItemDisplayForm):
             sql2018.ART8GESOverallStatusTarget.IdOverallStatus == id_overall
         )
 
-        element_status_orig = db.get_all_columns_from_mapper(
-            sql2018.ART8GESElementStatu,
-            'Id',
-            sql2018.ART8GESElementStatu.IdOverallStatus == id_overall
-        )
-        element_status = db_objects_to_dict(element_status_orig,
-                                            excluded_columns)
+        # element_status_orig = db.get_all_columns_from_mapper(
+        #     sql2018.ART8GESElementStatu,
+        #     'Id',
+        #     sql2018.ART8GESElementStatu.IdOverallStatus == id_overall
+        # )
+        # element_status = db_objects_to_dict(element_status_orig,
+        #                                     excluded_columns)
 
-        final_rows = []
+        # final_rows = []
 
-        for row in element_status:
-            _row = OrderedDict()
-            _row.update(row)
+        # for row in element_status:
+        #     _row = OrderedDict()
+        #     _row.update(row)
 
-            id_elem_status = row['Id']
-            s = sql2018.ART8GESCriteriaStatu
+        #     id_elem_status = row['Id']
+        #     s = sql2018.ART8GESCriteriaStatu
 
-            criteria_status_orig = db.get_all_columns_from_mapper(
-                s,
-                'Id',
-                or_(s.IdOverallStatus == id_overall,
-                    s.IdElementStatus == id_elem_status)
-            )
+        #     criteria_status_orig = db.get_all_columns_from_mapper(
+        #         s,
+        #         'Id',
+        #         or_(s.IdOverallStatus == id_overall,
+        #             s.IdElementStatus == id_elem_status)
+        #     )
 
-            criteria_statuses = db_objects_to_dict(criteria_status_orig,
-                                                   excluded_columns)
+        #     criteria_statuses = db_objects_to_dict(criteria_status_orig,
+        #                                            excluded_columns)
 
-            if not criteria_statuses:
-                final_rows.append(_row.copy())
-                continue
+        #     if not criteria_statuses:
+        #         final_rows.append(_row.copy())
+        #         continue
 
-            for criteria_status in criteria_statuses:
-                _row.update(criteria_status)
-                id_criteria_status = criteria_status['Id']
+        #     for criteria_status in criteria_statuses:
+        #         _row.update(criteria_status)
+        #         id_criteria_status = criteria_status['Id']
 
-                s = sql2018.ART8GESCriteriaValue
-                criteria_value_orig = db.get_all_columns_from_mapper(
-                    s,
-                    'Id',
-                    s.IdCriteriaStatus == id_criteria_status
-                )
-                criteria_values = db_objects_to_dict(criteria_value_orig,
-                                                     excluded_columns)
+        #         s = sql2018.ART8GESCriteriaValue
+        #         criteria_value_orig = db.get_all_columns_from_mapper(
+        #             s,
+        #             'Id',
+        #             s.IdCriteriaStatus == id_criteria_status
+        #         )
+        #         criteria_values = db_objects_to_dict(criteria_value_orig,
+        #                                              excluded_columns)
 
-                if not criteria_values:
-                    final_rows.append(_row.copy())
-                    continue
+        #         if not criteria_values:
+        #             final_rows.append(_row.copy())
+        #             continue
 
-                for criteria_value in criteria_values:
-                    _row.update(criteria_value)
-                    id_criteria_value = criteria_value['Id']
+        #         for criteria_value in criteria_values:
+        #             _row.update(criteria_value)
+        #             id_criteria_value = criteria_value['Id']
 
-                    s = sql2018.ART8GESCriteriaValuesIndicator
-                    criteria_value_ind = db.get_unique_from_mapper(
-                        s,
-                        'IndicatorCode',
-                        s.IdCriteriaValues == id_criteria_value
-                    )
+        #             s = sql2018.ART8GESCriteriaValuesIndicator
+        #             criteria_value_ind = db.get_unique_from_mapper(
+        #                 s,
+        #                 'IndicatorCode',
+        #                 s.IdCriteriaValues == id_criteria_value
+        #             )
 
-                    if not criteria_value_ind:
-                        final_rows.append(_row.copy())
-                        continue
+        #             if not criteria_value_ind:
+        #                 final_rows.append(_row.copy())
+        #                 continue
 
-                    values = [
-                        ItemLabel(v, self.print_value(v))
-                        for v in criteria_value_ind
-                    ]
+        #             values = [
+        #                 ItemLabel(v, self.print_value(v))
+        #                 for v in criteria_value_ind
+        #             ]
 
-                    _row.update(
-                        {'IndicatorCode': ItemList(values)}
-                    )
+        #             _row.update(
+        #                 {'IndicatorCode': ItemList(values)}
+        #             )
 
-                    final_rows.append(_row.copy())
+        #             final_rows.append(_row.copy())
 
-        _sorted_rows = sorted(final_rows, key=lambda d: d['Element'])
-        extra_final = _sorted_rows and change_orientation(_sorted_rows) or []
+        # _sorted_rows = sorted(final_rows, key=lambda d: d['Element'])
+        # extra_final = _sorted_rows and change_orientation(_sorted_rows) or []
 
         res = []
         res_extra = []
@@ -1139,20 +1143,120 @@ class A2018Art81abDisplay(ItemDisplayForm):
                 '': [{'TargetCode': x} for x in target_codes]
             }))
 
-        res_extra.append(
-            ('Element Status, Criteria Status, '
-             'Parameter assessments and Related indicator', extra_final)
-        )
+        # res_extra.append(
+        #     ('Element Status, Criteria Status, '
+        #      'Parameter assessments and Related indicator', extra_final)
+        # )
 
         self.extra_data = res_extra
 
         return res
 
+    def get_extra_data_v2(self):
+        if not self.item:
+            return {}
+
+        id_overall = self.item.Id
+        self.blacklist = ('Id', 'IdOverallStatus', 'IdElementStatus',
+                    'IdCriteriaStatus', 'IdCriteriaValues',
+                    '_criteria_statuses', '_criteria_values')
+
+        excluded_columns = ()
+
+        element_status_orig = db.get_all_columns_from_mapper(
+            sql2018.ART8GESElementStatu,
+            'Id',
+            sql2018.ART8GESElementStatu.IdOverallStatus == id_overall
+        )
+        
+        element_status = db_objects_to_dict(element_status_orig,
+                                            excluded_columns)
+        final_rows = []
+
+        for row in element_status:
+            _es = OrderedDict()
+            _es.update(row)
+
+            id_elem_status = row['Id']
+            s = sql2018.ART8GESCriteriaStatu
+
+            criteria_status_orig = db.get_all_columns_from_mapper(
+                s,
+                'Id',
+                or_(s.IdOverallStatus == id_overall,
+                    s.IdElementStatus == id_elem_status)
+            )
+
+            criteria_statuses = db_objects_to_dict(criteria_status_orig,
+                                                   excluded_columns)
+            _es['_criteria_statuses'] = []
+
+            if not criteria_statuses:
+                final_rows.append(_es.copy())
+                continue
+
+            for criteria_status in criteria_statuses:
+                _cs = OrderedDict()
+                _cs.update(criteria_status)
+                _es['_criteria_statuses'].append(_cs)
+                id_criteria_status = criteria_status['Id']
+
+                s = sql2018.ART8GESCriteriaValue
+                criteria_value_orig = db.get_all_columns_from_mapper(
+                    s,
+                    'Id',
+                    s.IdCriteriaStatus == id_criteria_status
+                )
+                criteria_values = db_objects_to_dict(criteria_value_orig,
+                                                     excluded_columns)
+
+                _cs['_criteria_values'] = []
+                if not criteria_values:
+                    # final_rows.append(_row.copy())
+                    continue
+
+                for criteria_value in criteria_values:
+                    _cv = OrderedDict()
+                    _cv.update(criteria_value)
+                    _cs['_criteria_values'].append(_cv)
+                    id_criteria_value = criteria_value['Id']
+
+                    s = sql2018.ART8GESCriteriaValuesIndicator
+                    criteria_value_ind = db.get_unique_from_mapper(
+                        s,
+                        'IndicatorCode',
+                        s.IdCriteriaValues == id_criteria_value
+                    )
+
+                    if not criteria_value_ind:
+                        _cv.update(
+                            {'Related Indicator(s)': ''}
+                        )
+                        continue
+
+                    values = [
+                        ItemLabel(v, self.print_value(v))
+                        for v in criteria_value_ind
+                    ]
+
+                    _cv.update(
+                        {'Related Indicator(s)': ItemList(values)}
+                    )
+
+            final_rows.append(_es.copy())
+
+        _sorted_rows = sorted(final_rows, key=lambda d: d['Element'])
+        # extra_final = _sorted_rows and change_orientation(_sorted_rows) or []
+
+        return _sorted_rows
+
     def extras(self):
         html = self.extra_data_template(extra_data=self.get_extra_data())
-        extra_html = self.secondary_extra_template(extra_data=self.extra_data)
+        # extra_html = self.secondary_extra_template(extra_data=self.extra_data)
+        extra_data_v2 = self.get_extra_data_v2()
+        extra_v2 = self.secondary_extra_template_v2(extra_data=extra_data_v2)
 
-        return html + extra_html
+        return html + extra_v2
 
 
 @register_form_a8_2018
