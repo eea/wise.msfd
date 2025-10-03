@@ -12,7 +12,7 @@ from . import interfaces
 from .. import db, sql, sql2018
 from ..base import EmbeddedForm, MarineUnitIDSelectForm
 from ..sql_extra import MSFD4GeographicalAreaID
-from ..utils import (all_values_from_field, change_orientation,
+from ..utils import (all_values_from_field,
                      db_objects_to_dict, group_data, ItemLabel, ItemList)
 from .base import ItemDisplayForm
 from .utils import (register_form_a8_2018, register_form_art9,

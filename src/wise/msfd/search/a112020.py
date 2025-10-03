@@ -547,11 +547,11 @@ class A11MStrategyDisplay2020(ItemDisplayForm2018, A112020Mixin):
         res = []
 
         meta_id = self.item.IdMetadata
-        strat_id = self.item.Id
+        # strat_id = self.item.Id
 
         title = 'Metadata'
         _data = [title, {}]
-        count, metadata = db.get_all_records(
+        _, metadata = db.get_all_records(
             sql2018.ART11StrategiesMetadatum,
             sql2018.ART11StrategiesMetadatum.Id == meta_id
         )
