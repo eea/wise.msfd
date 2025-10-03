@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="utf-8"?>
+<rules xmlns="http://namespaces.plone.org/diazo"
+       xmlns:css="http://namespaces.plone.org/diazo/css"
+       xmlns:xhtml="http://www.w3.org/1999/xhtml"
+       xmlns:xi="http://www.w3.org/2001/XInclude"
+       xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+>
+
+  <!--
+    You can include this rules file in your own theme as follows:
+
+    <rules xmlns="http://namespaces.plone.org/diazo"
+           xmlns:css="http://namespaces.plone.org/diazo/css"
+           xmlns:xhtml="http://www.w3.org/1999/xhtml"
+           xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+           xmlns:xi="http://www.w3.org/2001/XInclude">
+        <xi:include href="++theme++barceloneta/backend.xml" />
+        <rules css:if-content="body.viewpermission-view, body.viewpermission-none">
+           <theme href="index.html" />
+           ... your rules
+        </rules>
+    </rules>
+
+    This will include the toolbar in your theme and use Barceloneta to theme
+    all your backend pages such as site setup and edit.
+    -->
+
+  <!-- <xi:include href="++theme++barceloneta/grid-col-marker.xml"/> -->
+
+  <!-- Toolbar -->
+  <before css:content="#edit-bar"
+          css:if-content=".userrole-authenticated"
+          css:if-not-content=".ajax_load"
+          css:theme-children="body"
+  />
+  <replace css:content-children="#portal-personaltools-wrapper"
+           css:if-content=".userrole-anonymous"
+           css:if-not-content=".ajax_load"
+           css:theme="#anonymous-actions"
+  />
+
+  <!-- Cut down barceloneta without just for backend UI -->
+  <rules css:if-not-content="body.viewpermission-view, body.viewpermission-none">
+
+    <theme href="../++theme++barceloneta/index.html" />
+    <notheme css:if-not-content="#visual-portal-wrapper" />
+
+    <!-- We can't control the bundle from here due to include. Just hard code -->
+    <after css:theme-children="head">
+      <link href="++theme++barceloneta/css/barceloneta.css"
+            rel="stylesheet"
+      />
+    </after>
+
+    <rules css:if-content="#portal-top">
+      <!-- Attributes -->
+      <copy attributes="*"
+            css:content="html"
+            css:theme="html"
+      />
+      <!-- Base tag -->
+      <before css:content="base"
+              css:theme="title"
+      />
+      <!-- Title -->
+      <replace css:content="head title"
+               css:theme="head title"
+      />
+      <!-- Pull in Plone Meta -->
+      <after css:content="head meta"
+             css:theme-children="head"
+      />
+      <!-- Don't use Plone icons, use the theme's -->
+      <drop css:content="head link[rel='apple-touch-icon']" />
+      <drop css:content="head link[rel='shortcut icon']" />
+    </rules>
+
+    <!-- Copy over the id/class attributes on the body tag. This is important for per-section styling -->
+    <copy attributes="*"
+          css:content="body"
+          css:theme="body"
+    />
+
+    <!-- CSS -->
+    <drop css:content="head link[data-bundle='diazo']" />
+    <after css:content="head link"
+           css:theme-children="head"
+    />
+
+    <!-- Script -->
+    <drop css:content="head script[data-bundle='diazo']" />
+    <after css:content="head script"
+           css:theme-children="head"
+    />
+
+    <!-- We don't need global nav -->
+    <drop css:theme="#mainnavigation-wrapper" />
+
+    <!-- Hero unit on homepage only -->
+    <drop css:if-not-content="body.template-document_view.section-front-page"
+          css:theme="div.principal"
+    />
+
+    <!-- Content header -->
+    <replace css:content-children="#portal-top"
+             css:theme="#portal-top"
+    />
+
+    <!-- full-width breadcrumb -->
+    <replace css:content="#viewlet-above-content"
+             css:theme="#above-content"
+    />
+
+    <!-- Central column -->
+    <replace css:content-children="#portal-column-content"
+             css:theme-children="#portal-column-content"
+    />
+
+    <!-- Alert message -->
+    <replace css:content-children="#global_statusmessage"
+             css:theme-children="#global_statusmessage"
+    />
+
+    <!-- Left column -->
+    <after css:content-children="#portal-column-one"
+           css:theme-children="#portal-column-one"
+    />
+    <drop css:if-not-content="#portal-column-one"
+          css:theme="#portal-column-one"
+    />
+
+    <!-- Right column -->
+    <after css:content-children="#portal-column-two"
+           css:theme-children="#portal-column-two"
+    />
+    <drop css:if-not-content="#portal-column-two"
+          css:theme="#portal-column-two"
+    />
+
+
+    <!-- Content header -->
+    <drop css:theme="#portal-top" />
+    <drop css:theme="#portal-footer-wrapper" />
+
+  </rules>
+
+</rules>

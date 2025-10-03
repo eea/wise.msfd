@@ -30,9 +30,14 @@
 
   .active-filters-header {
     display: flex;
-    align-items: start;
-    gap: 1em;
+    align-items: center;
+    gap: 0.8em;
     cursor: pointer;
+
+    i {
+      position: relative;
+      top: -2px;
+    }
 
     .active-filters-title {
       margin-bottom: 0;
@@ -81,6 +86,16 @@
       color: #0079cf;
     }
   }
+}
+
+.form-check-input {
+  margin-top: 6px;
+}
+
+.form-label {
+  font-size: 14px;
+  font-weight: 500;
+  margin-bottom: 5px;
 }
 
 .wise-search-form-container,
@@ -158,6 +173,7 @@
         position: absolute;
         background-color: white;
         width: 15rem;
+        color: inherit;
         margin-left: -15.1rem;
       }
     }
@@ -274,6 +290,7 @@
   dd {
     overflow: auto;
     width: 100%;
+    margin: 0;
     max-width: 75%;
     max-height: 200px;
     padding: 0.4rem;
@@ -287,27 +304,27 @@
     padding-top: 10px;
   }
 
-  .field {
-    .horizontal {
-      font-size: 14px;
-      font-weight: 500;
-      margin-bottom: 5px;
-      display: flex;
+  // .field {
+  //   .horizontal {
+  //     font-size: 14px;
+  //     font-weight: 500;
+  //     margin-bottom: 5px;
+  //     display: flex;
 
-      a {
-        font-size: 14px;
-      }
-    }
+  //     a {
+  //       font-size: 14px;
+  //     }
+  //   }
 
-    .horizontal:hover {
-      cursor: pointer;
-    }
+  //   .horizontal:hover {
+  //     cursor: pointer;
+  //   }
 
-    &.error {
-      border: inherit;
-      background-color: transparent;
-    }
-  }
+  //   &.error {
+  //     border: inherit;
+  //     background-color: transparent;
+  //   }
+  // }
 
   [data-fieldname='form.widgets.page'] {
     border-bottom: none;
@@ -315,50 +332,6 @@
 }
 
 .option {
-  display: block;
-
-  input[type='checkbox'] {
-    display: none;
-  }
-
-  input[type='checkbox'] {
-    position: relative;
-    top: 2px;
-    display: inline-block;
-    padding: @checkboxes-radius*2;
-    border: 1px solid #cdcece;
-    margin-left: 2px;
-    -webkit-appearance: none;
-    background-color: #fafafa;
-    border-radius: @checkboxes-radius;
-
-    &:active,
-    &:checked:active {
-      box-shadow:
-        0 1px 2px rgba(0, 0, 0, 0.05),
-        inset 0px 1px 3px rgba(0, 0, 0, 0.1);
-    }
-
-    &:checked {
-      border: 1px solid #adb8c0;
-      background-color: #e9ecee;
-      -webkit-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
-      -moz-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
-      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
-      color: #99a1a7;
-
-      &:after {
-        position: absolute;
-        top: 0;
-        left: 1px;
-        color: #337ab7;
-        content: '\2714';
-        font-size: 13px;
-        line-height: 12px;
-      }
-    }
-  }
-
   label {
     display: inline-block;
     overflow: hidden;
@@ -400,6 +373,7 @@
     padding: 0.2rem 0.5rem !important;
     margin-bottom: 1em;
     font-size: 11px;
+    border: none;
 
     span {
       font-weight: 500;
@@ -644,6 +618,25 @@
   }
 }
 
+#mobile-select-article {
+  border: 2px solid #004b7f !important;
+  background: white;
+  color: #004b7f;
+  border-radius: 5px !important;
+  border: none;
+  padding: 0.3em 0.5em;
+  box-shadow: none;
+  font-weight: 500;
+  display: flex;
+  justify-content: space-between;
+  font-size: 15px;
+  width: 220px !important;
+
+  option {
+    width: 220px !important;
+  }
+}
+
 #wise-search-form div.formControls {
   [name='form.buttons.next'] {
     position: absolute;
@@ -833,14 +826,12 @@
 
 .label {
   display: inline-block;
-  padding: 0.8em 0.7em;
+  padding: 0.6em 0.5em;
   border-radius: 0.25em;
   font-size: 13px;
   font-weight: 500;
-  line-height: 1;
-  text-align: center;
-  vertical-align: baseline;
-  white-space: nowrap;
+  line-height: 1.2;
+  text-align: left;
 }
 
 .msfd-search-wrapper {
@@ -853,7 +844,6 @@
         font-size: 14px;
         font-weight: 500;
         margin-bottom: 5px;
-        display: flex;
       }
     }
 
@@ -927,11 +917,12 @@
       }
 
       .option .label {
-        padding: 0.5em;
+        padding: 0.5em 0.3em;
       }
 
       > .field {
         border: none;
+        max-width: 250px;
       }
     }
   }
@@ -967,7 +958,7 @@ dd {
 }
 
 .wise-search-form-container .field {
-  margin: 1.5em 0;
+  margin: 1em 0;
   position: relative;
 }
 
