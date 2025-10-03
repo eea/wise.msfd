@@ -1,14 +1,14 @@
 <div
   tal:define="extra_data options/extra_data | view/get_extra_data"
   class="extra-details">
-  <h4 class="section-title">Element Status, Criteria Status, Criteria Values and Related indicator(s)</h4>
+  <h4 style="font-weight: 500;" class="section-title">Element Status, Criteria Status, Criteria Values and Related indicator(s)</h4>
   <div style="overflow: initial;"
       class="extra-details-section"
         tal:repeat="element_status extra_data" >
     
     <div tal:condition="python: len(element_status) == 0">No data </div>
     <fieldset style="border: 1px solid #acbac7; padding: 1em;">
-      <legend style="padding: 0 0.5em; color: #002d54; border: none; width: auto; font-size: 18px; margin: 0; font-family: PoppinsB;">Element Status</legend>
+      <legend style="font-weight: 600; float: none; padding: 0 0.5em; color: #002d54; border: none; width: auto; font-size: 18px; margin: 0; font-family: PoppinsB;">Element Status</legend>
       <dl style="margin-bottom: 10px;">
         <tal:rep tal:repeat="key python: element_status.keys()">
           <tal:section tal:condition="python: key not in view.blacklist">
@@ -29,7 +29,7 @@
 
       <tal:rep tal:repeat="criteria_status python: element_status.get('_criteria_statuses', [])">
         <fieldset style="border: 1px solid #acbac7; padding: 1em; margin-top: 1em;">
-          <legend style="padding: 0 0.5em; color: #002d54; border: none; width: auto; font-size: 18px; margin: 0; font-family: PoppinsB;">Criteria Status</legend>
+          <legend style="font-weight: 600; float: none;  padding: 0 0.5em; color: #002d54; border: none; width: auto; font-size: 18px; margin: 0; font-family: PoppinsB;">Criteria Status</legend>
           <dl style="margin-bottom: 10px;">
             <tal:rep tal:repeat="key python: criteria_status.keys()">
               <tal:section tal:condition="python: key not in view.blacklist">
@@ -50,7 +50,7 @@
 
           <tal:rep tal:repeat="criteria_values python: criteria_status.get('_criteria_values', [])">
             <fieldset style="border: 1px solid #acbac7; padding: 1em; margin-top: 1em;">
-              <legend style="padding: 0 0.5em; color: #002d54; border: none; width: auto; font-size: 18px; margin: 0; font-family: PoppinsB;">Criteria Values</legend>
+              <legend style="font-weight: 600; float: none;  padding: 0 0.5em; color: #002d54; border: none; width: auto; font-size: 18px; margin: 0; font-family: PoppinsB;">Criteria Values</legend>
               <dl style="margin-bottom: 10px;">
                 <tal:rep tal:repeat="key python: criteria_values.keys()">
                   <tal:section tal:condition="python: key not in view.blacklist">
