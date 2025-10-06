@@ -64,7 +64,7 @@ setup(
         # 'plone.app.robotframework',
         'plone.app.testing',
         'eea.api.dataconnector',
-        # 'webcouturier.dropdownmenu',
+        'webcouturier.dropdownmenu',
         'robotsuite',
         'pyexcel==0.6.7',
         'pyexcel-xlsx==0.6.0',
