@@ -622,7 +622,9 @@
     };
 
     // listener for click on the whole span
+    allch.off('click', '.form-check, input[type="checkbox"]');
     allch.on('click', '.form-check, input[type="checkbox"]', function (ev) {
+      ev.stopPropagation();
       $('#ajax-spinner2').hide();
 
       var $checkbox = $(this).is('input[type="checkbox"]')
@@ -635,7 +637,8 @@
         window.WISE.blocks.indexOf($checkbox.closest('.field').attr('id')) !==
         -1
       ) {
-        return false;
+        $checkbox.prop("checked", !$checkbox.prop("checked"));
+        // return false;
       } else {
         triggerClick(checkboxV, ev);
       }
@@ -731,7 +734,7 @@
     if ($.fn.select2 !== undefined) {
       $selectArticle.select2(moptions);
       $selectArticle.one('select2-selecting', function (ev) {
-        document.location.href = ev.choice.id;
+        document.location.href = document.location.pathname.split('/').slice(0, -1).join('/') + ev.choice.id.replace("./", '/');
       });
     }
   }
@@ -1646,6 +1649,9 @@
     if (!url.includes('/marine/++api++')) {
       url = url.replace('/marine/', '/marine/++api++/');
     }
+    if (url.includes('localhost')) {
+      url = url.replace('http://localhost:3000/', 'http://localhost:3000/++api++/');
+    }
 
     $.ajax({
       type: 'POST',
@@ -1758,7 +1764,6 @@
       if (compareVals(LZString.decompress(defForm), strContent[2])) {
         var url = form.attr('action');
         var boundary = sessionStore.getItem('boundary');
-
         searchFormAjax(boundary, dec, url);
 
         // TODO: url shortner
@@ -1906,17 +1911,28 @@
         // this way we reset the configurations below the given facet
         // with which we interacted with
         var called_from = arguments[1];
-        var called_from_button = called_from && called_from['button'];
-        var called_from_select = called_from && called_from['select'];
 
-        var resetFacets = true;
+        // if it is from a subform (second row of filters) like Country,
+        // GES Component, Feature etc. then we do not reset the facets below
+        var isSubform = $(called_from.button).closest('.subforms-wrapper').length > 0;
+        var resetFacets = !isSubform;
+
         if (resetFacets) {
-          resetConfigsbelowFacet(
-            called_from,
-            called_from_button,
-            called_from_select,
-            arguments,
-          );
+          // empty subforms-wrapper
+          $('.subforms-wrapper').empty();
+          // simulate a click on the first option of the subforms, to reset the
+          // facets below it
+          // var firstOption = $('.subforms-wrapper .form-check.option').first();
+          // var calledFrom = {button: firstOption[0]};
+          // var called_from_button = called_from && called_from['button'];
+          // var called_from_select = called_from && called_from['select'];
+
+          // resetConfigsbelowFacet(
+          //   called_from,
+          //   called_from_button,
+          //   called_from_select,
+          //   arguments,
+          // );
         }
 
         var form = $(selectorFormContainer).find('form');
