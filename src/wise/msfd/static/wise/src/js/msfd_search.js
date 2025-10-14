@@ -1914,7 +1914,12 @@
 
         // if it is from a subform (second row of filters) like Country,
         // GES Component, Feature etc. then we do not reset the facets below
-        var isSubform = $(called_from.button).closest('.subforms-wrapper').length > 0;
+        try {
+          var isSubform = $(called_from.button).closest('.subforms-wrapper').length > 0;
+        } catch (e) {
+          var isSubform = true;
+        }
+        
         var resetFacets = !isSubform;
 
         if (resetFacets) {
