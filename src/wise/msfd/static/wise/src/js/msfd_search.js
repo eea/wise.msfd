@@ -1269,7 +1269,7 @@
       fixTableHeaderAndCellsHeight();
     }, 300);
 
-    //addDoubleScroll();
+    // addDoubleScroll();
 
     $("[name='form.buttons.prev']").prop('disabled', false);
     $("[name='form.buttons.next']").prop('disabled', false);
@@ -1447,6 +1447,7 @@
     if (typeof scanforlinks !== 'undefined') jQuery(scanforlinks);
     setTimeout(function () {
       fixTableHeaderAndCellsHeight();
+      fixDoubleScrollWidth();
     }, 300);
     addDoubleScroll();
   }
@@ -1834,20 +1835,32 @@
     $table.fixTableHeaderAndCellsHeight();
   }
 
+  function fixDoubleScrollWidth() {
+    // fix double scroll width
+    $('.cloned-scroll-top').each(function () {
+      var $clonedScrollTop = $(this);
+      var $table = $clonedScrollTop.parent().find('table');
+      var tableWidth = $table.outerWidth((includeMargin = true));
+
+      if (tableWidth == null || tableWidth <= $table.parent().width()) {
+        $clonedScrollTop.children().width(0);
+        return;
+      }
+      debugger;
+      $clonedScrollTop.children().width(tableWidth);
+    });
+  }
+
   function addDoubleScroll() {
     var secondScroll =
       '<div class="cloned-scroll-top" style="overflow-x: auto;">' +
-      '<div style="height: 1px; margin-left: 165px;"></div>' +
+      '<div style="height: 1px;"></div>' +
       '</div>';
 
     $('.double-scroll').each(function () {
       var $doubleScroll = $(this);
       var $table = $doubleScroll.find('table');
       var tableWidth = $table.outerWidth((includeMargin = true));
-
-      if (tableWidth == null || tableWidth <= $table.parent().width()) {
-        return;
-      }
 
       $doubleScroll.parent().before(secondScroll);
       var $clonedScrollTop = $doubleScroll
@@ -1862,6 +1875,11 @@
       $doubleScroll.scroll(function () {
         $clonedScrollTop.scrollLeft($doubleScroll.scrollLeft());
       });
+
+      if (tableWidth == null || tableWidth <= $table.parent().width()) {
+        $clonedScrollTop.children().width(0);
+        return;
+      }
 
       $clonedScrollTop.children().width(tableWidth);
     });
@@ -1914,7 +1932,12 @@
 
         // if it is from a subform (second row of filters) like Country,
         // GES Component, Feature etc. then we do not reset the facets below
-        var isSubform = $(called_from.button).closest('.subforms-wrapper').length > 0;
+        try {
+          var isSubform = $(called_from.button).closest('.subforms-wrapper').length > 0;
+        } catch (e) {
+          var isSubform = true;
+        }
+        
         var resetFacets = !isSubform;
 
         if (resetFacets) {
