@@ -1,20 +1,14 @@
-<div id="wise-search-form" class="wise-search-form-msfd"
-     tal:attributes="id view/form_id | string:wise-search-form;
+<div id="wise-search-form" class="wise-search-form-msfd" tal:attributes="id view/form_id | string:wise-search-form;
         class string:wise-search-form-msfd">
 
-  <div id="wise-search-form-top" class="msfd-filters-on-top"
-       tal:attributes="id view/form_id_top | string:wise-search-form-top">
-    <!-- <metal:tabs
-       metal:use-macro="context/wise-macros/macros/tabs"></metal:tabs> -->
-       <metal:tabs
-          metal:use-macro="context/wise-macros/macros/top-section"></metal:tabs>
+  <div id="wise-search-form-top" class="msfd-filters-on-topZ" tal:attributes="id view/form_id_top | string:wise-search-form-top">
+    <!-- <metal:tabs metal:use-macro="context/wise-macros/macros/tabs"></metal:tabs> -->
+    <metal:tabs metal:use-macro="context/wise-macros/macros/top-section"></metal:tabs>
   </div>
 
-  <metal:select
-     metal:use-macro="context/wise-macros/macros/articles-select"></metal:select>
+  <metal:select metal:use-macro="context/wise-macros/macros/articles-select"></metal:select>
 
-  <div class="wise-search-form-container"
-    tal:attributes="id view/form_container_class | string:wise-search-form-container">
+  <div class="wise-search-form-container" tal:attributes="id view/form_container_class | string:wise-search-form-container">
 
     <!-- <h2 tal:content="view/title">Title here</h2> -->
 
@@ -25,7 +19,7 @@
     <metal:block use-macro="context/@@ploneform-macros/titlelessform">
       <metal:slot fill-slot="fields">
         <div class="form-right-side">
-          <metal:block use-macro="context/@@ploneform-macros/fields" ></metal:block>
+          <metal:block use-macro="context/@@ploneform-macros/fields"></metal:block>
         </div>
       </metal:slot>
       <metal:slot fill-slot="actions">
@@ -34,27 +28,27 @@
           <metal:block use-macro="context/@@ploneform-macros/actions" />
           <div id="ajax-spinner" style="display: none;">
             <img src="/marine/++api++/++resource++msfd/images/spinner.gif" alt="">
+            </div>
           </div>
-        </div>
-      </metal:slot>
-      <metal:css fill-slot="formtop">
-        <link href="/marine/++api++/++resource++static_css/tabs.css" type="text/css" rel="stylesheet" />
-        <link href="/marine/++api++/++resource++static_css/msfd_search.css" type="text/css" rel="stylesheet" />
-        <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/3.5.4/select2.min.css" rel="stylesheet" />
-        <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css" rel="stylesheet" />
-        <!-- <script src="/++resource++msfd/bs3/js/bootstrap.min.js" type="application/javascript" rel="script"></script> -->
-        <!-- <link href="/++resource++static_css/bootstrap.css" type="text/css" rel="stylesheet" /> -->
-        <script>
+        </metal:slot>
+        <metal:css fill-slot="formtop">
+          <link href="/marine/++api++/++resource++static_css/tabs.css" type="text/css" rel="stylesheet" />
+          <link href="/marine/++api++/++resource++static_css/msfd_search.css" type="text/css" rel="stylesheet" />
+          <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/3.5.4/select2.min.css" rel="stylesheet" />
+          <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css" rel="stylesheet" />
+          <!-- <script src="/++resource++msfd/bs3/js/bootstrap.min.js" type="application/javascript" rel="script"></script> -->
+          <!-- <link href="/++resource++static_css/bootstrap.css" type="text/css" rel="stylesheet" /> -->
+          <script>
           require = undefined;
           define = undefined;
-        </script>
-        <script src="/marine/++resource++msfd/js/jquery-ui.js"></script>
-        <!-- <script src="++plone++static/components/select2/select2.js"></script> -->
-        <!-- <script src="++plone++static/components/bootstrap/js/collapse.js"></script> -->
-        <script src="/marine/++resource++msfd/js/tabs.js"></script>
-        <script src="/marine/++resource++msfd/js/msfd_search.js"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/3.5.4/select2.min.js" defer></script>
-      </metal:css>
-    </metal:block>
-  </div>
+          </script>
+          <script src="/marine/++resource++msfd/js/jquery-ui.js"></script>
+          <!-- <script src="++plone++static/components/select2/select2.js"></script> -->
+          <!-- <script src="++plone++static/components/bootstrap/js/collapse.js"></script> -->
+          <script src="/marine/++resource++msfd/js/tabs.js"></script>
+          <script src="/marine/++resource++msfd/js/msfd_search.js"></script>
+          <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/3.5.4/select2.min.js" defer></script>
+</metal:css>
+</metal:block>
+</div>
 </div>

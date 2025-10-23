@@ -22,6 +22,9 @@
     </xsl:for-each>
   </xsl:template>
 
+  <!-- Remove the nav pills from the sidebar -->
+  <xsl:template css:match="#wise-search-form-top" ></xsl:template>
+
   <!-- msfd start page -->
   <rules css:if-content=".template-msfd-start">
     <replace css:theme-children=".intro-text" css:content="#wise-search-form > *" />
