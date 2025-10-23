@@ -87,20 +87,30 @@
 
     $('#form-buttons-continue').hide('fast');
 
-    var fbDownload = $('#form-buttons-download');
-    if (fbDownload.length > 0) {
-      var dBtn =
-        fbDownload.prop('outerHTML').replace('input', 'button') +
-        ' <span style="margin-left:0.4rem;">Download as spreadsheet</span>';
-      var btnForm = fbDownload.parent();
-
-      fbDownload.remove();
-
-      btnForm.append($(dBtn));
-      $('#form-buttons-download')
-        .val('Download as spreadsheet')
-        .addClass('glyphicon glyphicon-download-alt');
+    var $article13 = $('#article132022form');
+    var $article13form = $('#article13form');
+    if ($article13.length && $article13form.length) {
+      $article13.insertAfter($article13form);
     }
+
+    // var $downloadBtn = $('#form-buttons-download');
+    // var $centerSection = $('.center-section');
+    // var $form = $('#wise-search-form-container > form');
+
+    // if ($downloadBtn.length > 0) {
+    //   $centerSection.find('#form-buttons-download').remove();
+    //   var $newBtn = $('<button/>', {
+    //     id: 'form-buttons-download',
+    //     type: 'submit',
+    //     form: $form.attr('id'),
+    //     name: 'form.buttons.download',
+    //     class: 'ui button primary inverted',
+    //     text: 'Download as spreadsheet',
+    //   });
+
+    //   $centerSection.append($newBtn);
+    //   $downloadBtn.remove();
+    // }
   }
 
   /*
@@ -108,7 +118,7 @@
    * */
   function generateControlDiv() {
     var spAll =
-      '<span class="controls">' +
+      '<div class="controls">' +
       '<span>Select :</span><a data-value="all"><label>' +
       '<span class="label">All</span></label></a>';
     var spClear =
@@ -116,13 +126,12 @@
     var invertSel =
       '<a data-value="invert"><label><span class="label">Invert selection</span></label></a>' +
       '<div class="btn btn-default apply-filters" data-value="apply"><span>Apply filters</span></div>' +
-      '<span class="ui-autocomplete">' +
-      '<span class=" search-icon" ></span>' +
+      '<div class="ui-autocomplete">' +
       '<span class="search-span">' +
-      '<input class="ui-autocomplete-input" type="text" />' +
+      '<input class="ui-autocomplete-input" type="text" placeholder="Quick search"/>' +
       '<span class="clear-btn"></span>' +
-      '</span>' +
-      '</span>';
+      '</div>' +
+      '</div>';
     return spAll + spClear + invertSel;
   }
 
@@ -136,7 +145,10 @@
     if ($(evtarget).val() === '') {
       no_results.addClass('hidden');
       labels.removeClass('hidden');
-      var data = $field.find('.panel').data('checked_items');
+      var data = $field
+        .find('.panel-content > div:not(.controls)')
+        .data('checked_items');
+
       if (data) {
         $.each(inputs, function (idx, el) {
           // 96264 in case we have an empty searchfield checked items
@@ -148,7 +160,6 @@
     }
 
     $field.find('.apply-filters').show();
-    //$(evtarget).find(".apply-filters").show();
     labels.removeClass('hidden');
 
     var toSearch = $(evtarget).val().toLowerCase().replace(/\s/g, '_');
@@ -163,15 +174,8 @@
           .text()
           .toLowerCase()
           .replace(/\s/g, '_');
-        //return temp;
-        return (
-          $(item)
-            .text()
-            .toLowerCase()
-            /*.replace(/^\s+|\s+$/g, '')*/
-            /*.replace(/_/g, "")*/
-            .replace(/\s/g, '_')
-        );
+
+        return $(item).text().toLowerCase().replace(/\s/g, '_');
       });
 
     var found = [];
@@ -223,7 +227,8 @@
   }
 
   function addAutoComplete($field) {
-    $field.find('.ui-autocomplete-input').autocomplete({
+    var $input = $field.find('.ui-autocomplete-input');
+    $input.autocomplete({
       minLength: 0,
       source: [],
       search: function (event) {
@@ -231,89 +236,197 @@
       },
       create: function () {
         var that = this;
-        var removeBtn = $(this)
-          .parentsUntil('.ui-autocomplete')
-          .find('.clear-btn ');
-        removeBtn.on('click', null, that, function (ev) {
-          $(this).parentsUntil('.controls').find('input').val('');
-          $(this).parentsUntil('.controls').find('input').trigger('change');
-          $(ev.data).autocomplete('search', 'undefined');
+        var $removeBtn = $(this).closest('.ui-autocomplete').find('.clear-btn');
+        $removeBtn.on('click', function (ev) {
+          $(that).val('');
+          $(that).trigger('change');
+          searchAutoComplete(that, $field);
         });
       },
     });
   }
 
-  function addCheckboxPanel($field, fieldId, cheks) {
-    $field.addClass('panel-group');
+  function getAppliedFilters() {
+    window.WISE = window.WISE || {};
+    window.WISE.appliedFilters = {};
 
-    var chekspan = $field.find('> span:not(.controls)');
-    // chekspan.css("border-radius", 0);
-    chekspan
-      .addClass(fieldId + '-collapse')
-      .addClass('collapse')
-      .addClass('panel')
-      .addClass('panel-default');
+    $(selectorFormContainer + ', ' + selectorLeftForm)
+      .find('[data-fieldname]')
+      .each(function () {
+        var $f = $(this);
+        var fieldName = $f.find('> label.horizontal').text().trim();
 
-    var label = $field.find('.horizontal');
+        var values = $f
+          .find("input[type='checkbox']:checked")
+          .map(function () {
+            return $(this).closest('.option').text().trim();
+          })
+          .get();
 
-    var alabel =
-      "<a data-toggle='collapse' class='accordion-toggle' >" +
-      label.text() +
-      '</a>';
-    label.html(alabel);
-
-    label.addClass('panel-heading').addClass('panel-title');
-
-    label.attr('data-toggle', 'collapse');
-    label.attr('data-target', '.' + fieldId + '-collapse');
-
-    // if already checked than collapse
-    // double collapse fix
-    // chekspan.collapse({ toggle: true });
-    // chekspan.collapse({ toggle: true });
-
-    $field.find('.accordion-toggle').addClass('accordion-after');
-
-    // hidden-colapse event
-    chekspan.on('hidden.bs.collapse', function () {
-      chekspan.fadeOut('fast');
-      $field.find('.controls').slideUp('fast');
-      $field.css({ 'border-bottom': '1px solid #ccc;' });
-    });
-
-    // show accordion
-    chekspan.on('show.bs.collapse', function () {
-      // collapsed
-      chekspan.fadeIn('fast');
-      $field.find('.controls').slideDown('fast');
-      $field.find('> span').css({ display: 'block' });
-      $field.find('.accordion-toggle').addClass('accordion-after');
-    });
-
-    // hide accordion
-    chekspan.on('hide.bs.collapse', function () {
-      // not collapsed
-      window.setTimeout(function () {
-        $field.find('.accordion-toggle').removeClass('accordion-after');
-      }, 600);
-    });
-
-    // initialize autocomplete for more than 6 checkboxes
-    if (cheks.length < 6) {
-      $field.find('.controls .ui-autocomplete').hide();
-    } else {
-      // 96264 save checked items when having search input in case the user
-      // goes back on the search
-      chekspan.append("<span class='noresults hidden'>No results found</span>");
-      chekspan.data('checked_items', []);
-
-      var data = chekspan.data('checked_items');
-      $.each($field.find('input:checked'), function (idx, el) {
-        data.push(el.id);
+        window.WISE.appliedFilters[fieldName] = values;
       });
 
-      // TIBI TODO: re-enable
-      addAutoComplete($field);
+    $(document).trigger('filters:applied');
+  }
+
+  function addActiveFilters() {
+    var $section = $('.active-filters-section');
+    var $list = $('.active-filters-list');
+    var $header = $section.find('.active-filters-header');
+    var $icon = $header.find('i.fa');
+
+    $list.hide();
+
+    function renderFilters() {
+      $list.empty();
+
+      var applied = (window.WISE && window.WISE.appliedFilters) || {};
+
+      $.each(applied, function (fieldName, values) {
+        if (!values || !values.length) return;
+
+        var $group = $('<div class="active-filter-group"></div>');
+        $group.append(
+          '<span class="filter-group-title">' + fieldName + ':</span>',
+        );
+
+        values.forEach(function (text) {
+          var $checkbox = $('[data-fieldname]')
+            .filter(function () {
+              return (
+                $(this).find('> label.horizontal').text().trim() === fieldName
+              );
+            })
+            .find("input[type='checkbox']")
+            .filter(function () {
+              return $(this).parent().text().trim() === text;
+            });
+
+          var checkboxId = $checkbox.attr('id') || '';
+
+          var $tag = $(
+            '<span class="active-filter-item" data-id="' +
+              checkboxId +
+              '">' +
+              text +
+              '<button type="button" class="ui button clear-filter">' +
+              '<i class="fa fa-times" aria-hidden="true"></i>' +
+              '</button>' +
+              '</span>',
+          );
+
+          $tag.find('.clear-filter').on('click', function (e) {
+            e.preventDefault();
+
+            if (checkboxId) {
+              var $cb = $('#' + checkboxId);
+              if ($cb.length && $cb.is(':checked')) {
+                $cb.closest('.option').trigger('click');
+              }
+            }
+          });
+
+          $group.append($tag);
+        });
+
+        $list.append($group);
+      });
+    }
+
+    $header
+      .off('click.activeFiltersToggle')
+      .on('click.activeFiltersToggle', function () {
+        $list.slideToggle(200);
+        $icon.toggleClass('fa-chevron-up fa-chevron-down');
+      });
+
+    $(document)
+      .off('filters:applied.render')
+      .on('filters:applied.render', renderFilters);
+
+    renderFilters();
+  }
+
+  function addCheckboxPanel($field, fieldId, cheks) {
+    var $wrapper = $('.msfd-search-wrapper');
+
+    $field.addClass('panel-group');
+
+    var $label = $field.find('> label.form-label');
+    $label.addClass('panel-title panel-heading');
+
+    var $content = $label.next('.panel-content');
+    if (!$content.length) {
+      $label.nextAll().wrapAll('<div class="panel-content"></div>');
+      $content = $label.next('.panel-content');
+    }
+
+    var $controls = $content.children('.controls');
+    if (!$controls.length) {
+      var all = generateControlDiv();
+      $content.prepend(all);
+    } else if ($controls.length > 1) {
+      $controls.slice(1).remove();
+    }
+
+    var chekspan = $content.find('> div:not(.controls)');
+    chekspan.addClass('panel-default');
+
+    // $content.hide().removeClass('open');
+    // $label.removeClass('open');
+
+    // $label.off('click.accordion').on('click.accordion', function (e) {
+    //   e.stopPropagation();
+
+    //   var $thisLabel = $(this);
+    //   var $thisContent = $thisLabel.next('.panel-content');
+
+    //   if ($thisContent.is(':visible')) {
+    //     $thisContent.hide().removeClass('open');
+    //     $thisLabel.removeClass('open');
+
+    //     if ($('.panel-content.open').length === 0) {
+    //       $wrapper.find('.dimmer').remove();
+    //     }
+    //   } else {
+    //     $('.panel-content').hide().removeClass('open');
+    //     $('.panel-title').removeClass('open');
+    //     $wrapper.find('.dimmer').remove();
+
+    //     $thisContent.show().addClass('open');
+    //     $thisLabel.addClass('open');
+
+    //     $wrapper.append('<div class="dimmer"/>');
+    //   }
+    // });
+
+    // $(document)
+    //   .off('click.accordionOutside')
+    //   .on('click.accordionOutside', function (e) {
+    //     if ($(e.target).closest('.panel-group').length === 0) {
+    //       $('.panel-content').hide().removeClass('open');
+    //       $('.panel-title').removeClass('open');
+    //       $wrapper.find('.dimmer').remove();
+    //     }
+    //   });
+
+    chekspan.append("<span class='noresults hidden'>No results found</span>");
+    chekspan.data('checked_items', []);
+
+    var data = chekspan.data('checked_items');
+    $.each($field.find('input:checked'), function (idx, el) {
+      data.push(el.id);
+    });
+
+    addAutoComplete($field);
+
+    var $subforms = $('.panel-title').closest('.subform');
+    if ($subforms.length && !$subforms.parent().hasClass('subforms-wrapper')) {
+      $subforms.wrapAll('<div class="subforms-wrapper"></div>');
+      var $form = $subforms.first().closest('form');
+      if ($form.length) {
+        $form.append($form.find('.subforms-wrapper'));
+      }
     }
   }
 
@@ -373,10 +486,12 @@
 
   function generateCheckboxes($fields, $fieldsnr) {
     var count = $fieldsnr;
+
     $fields.each(function (indx, field) {
       var $field = $(field);
       var cheks = $field.find('.option');
       var allcheckboxes = cheks.find("input[type='checkbox']");
+
       var hasChecks = allcheckboxes.length > 0;
       // has checkboxes
       if (hasChecks) {
@@ -384,30 +499,18 @@
 
         fieldAutoSubmitSetup(fieldId, $field);
 
-        // add "controls"
-        var all = generateControlDiv();
-        $field.find('> label.horizontal').after(all);
-
         //tooltips
         cheks.each(function (idx) {
           var text = $(cheks[idx]).text();
           $(cheks[idx]).attr('title', text.trim());
         });
 
-        if (cheks.length < 4) {
-          $field.find('.controls a').hide();
-          $field
-            .find('.controls')
-            .html('')
-            .css('height', '1px')
-            .css('padding', 0);
-        } else {
-          addCheckboxPanel($field, fieldId, cheks);
+        addCheckboxPanel($field, fieldId, cheks);
+        addActiveFilters($field);
 
-          $field.find('.search-icon').on('click', function (ev) {
-            $(ev.target).parent().find('input').trigger('focus');
-          });
-        }
+        $field.find('.search-icon').on('click', function (ev) {
+          $(ev.target).parent().find('input').trigger('focus');
+        });
 
         sortCheckboxesByChecked($field);
       }
@@ -433,8 +536,6 @@
       if ($(rest[idx]).val() !== 'all' && $(rest[idx]).val() !== 'none')
         $(rest[idx]).prop('checked', true);
     });
-
-    //$( selectorFormContainer + " .formControls #form-buttons-continue").trigger("click");
   }
 
   function checkboxHandlerNone(ev) {
@@ -449,10 +550,7 @@
 
     $.each(rest, function (idx) {
       $(rest[idx]).prop('checked', false);
-      //if( $(rest[idx]).val() !== "none")
     });
-
-    //$( selectorFormContainer + " .formControls #form-buttons-continue").trigger("click");
   }
 
   function checkboxHandlerInvert(ev) {
@@ -481,7 +579,6 @@
     $.each(unchecked, function (idx) {
       $(unchecked[idx]).prop('checked', true);
     });
-    //$( selectorFormContainer + " .formControls #form-buttons-continue").trigger("click");
   }
 
   function addCheckboxHandlers() {
@@ -489,7 +586,6 @@
     $controls.on('click', "a[data-value='all']", checkboxHandlerAll);
     $controls.on('click', "a[data-value='none']", checkboxHandlerNone);
     $controls.on('click', "a[data-value='invert']", checkboxHandlerInvert);
-    //$(".controls .apply-filters").on("click", $( selectorFormContainer + " .formControls #form-buttons-continue").trigger("click") );
 
     $controls.one('click', '.apply-filters', function () {
       $(selectorFormContainer + " [name='form.widgets.page']").val(0);
@@ -511,22 +607,38 @@
     );
 
     var triggerClick = function (chV, ev) {
-      //reset page
+      // reset page
       $(selectorFormContainer + " [name='form.widgets.page']").val(0);
-      if (exceptVal.indexOf(chV) === -1)
-        $(ev.target).find("input[type='checkbox']").trigger('click');
+
+      if (exceptVal.indexOf(chV) === -1) {
+        if ($(ev.target).is("input[type='checkbox']")) {
+          // if the target IS the checkbox, trigger change directly
+          $(ev.target).trigger('change');
+        } else {
+          // otherwise, find the checkbox inside
+          $(ev.target).find("input[type='checkbox']").trigger('click');
+        }
+      }
     };
 
     // listener for click on the whole span
-    allch.on('click', '.option', function (ev) {
+    allch.off('click', '.form-check, input[type="checkbox"]');
+    allch.on('click', '.form-check, input[type="checkbox"]', function (ev) {
+      ev.stopPropagation();
       $('#ajax-spinner2').hide();
-      var checkboxV = $(this).find("input[type='checkbox']").val();
+
+      var $checkbox = $(this).is('input[type="checkbox"]')
+        ? $(this)
+        : $(this).find("input[type='checkbox']");
+
+      var checkboxV = $checkbox.val();
+
       if (
-        window.WISE.blocks.indexOf(
-          $(this).parentsUntil('.field').parent().attr('id'),
-        ) !== -1
+        window.WISE.blocks.indexOf($checkbox.closest('.field').attr('id')) !==
+        -1
       ) {
-        //return false;
+        $checkbox.prop("checked", !$checkbox.prop("checked"));
+        // return false;
       } else {
         triggerClick(checkboxV, ev);
       }
@@ -622,7 +734,7 @@
     if ($.fn.select2 !== undefined) {
       $selectArticle.select2(moptions);
       $selectArticle.one('select2-selecting', function (ev) {
-        document.location.href = ev.choice.id;
+        document.location.href = document.location.pathname.split('/').slice(0, -1).join('/') + ev.choice.id.replace("./", '/');
       });
     }
   }
@@ -664,7 +776,6 @@
 
         $(selectElement).on('select2-open', function () {
           var trh = $(marineUnitTriggerSelector).offset().top;
-          //$(".select2-top-override-dropdown").css("margin-top", $("#marine-unit-trigger").height()/2 + "px" );
           $(marineUnitTriggerSelector + ' .arrow').hide();
           $('.select2-top-override-dropdown').css({
             top:
@@ -677,8 +788,6 @@
         });
 
         $(selectElement).on('select2-selecting', function (ev) {
-          //$(selectorLeftForm + " "+  marineUnitTriggerSelector +"  a").text(ev.object.text);
-
           $(selectorFormContainer + " [name='form.widgets.page']").val(0);
           $(selectorFormContainer + ' #form-widgets-marine_unit_id')
             .select2()
@@ -768,7 +877,6 @@
           $(elem).select2(options);
         } else {
           $(elem).hide();
-          //$(elem).after("<span>"+ $($(elem).find("option")[0]).attr("title") +"</span>");
         }
       },
     );
@@ -907,9 +1015,9 @@
       $(opts[opts.length - 1]).val()
     ) {
       var topNextBtn =
-        '<button type="submit" ' +
-        'id="form-buttons-next-top" name="marine.buttons.next" class="submit-widget button-field btn btn-default pagination-next" value="">' +
-        '            </button>';
+        '<button type="submit" id="form-buttons-next-top" name="marine.buttons.next"' +
+        'class="submit-widget button-field btn btn-default pagination-next" value="">' +
+        '</button>';
 
       $(formBtnNextTop).append(topNextBtn);
 
@@ -976,12 +1084,6 @@
   function paginationInputHandlers() {
     var inp = $('.pagination-text .pagination-input');
 
-    // hide pagination input on focus out
-    /*inp.on("focusout", function (){
-            inp.hide();
-            $(paginationTextResult).show();
-        });*/
-
     // pagination input delay auto-submit
     inp.bind('focusout', function (e) {
       var val = $(e.target).val();
@@ -1030,6 +1132,8 @@
   function initPageElems() {
     // move marine unit id below form title and pagination as seen on the
     // other article tabs
+    $('.form-check').addClass('option');
+    $('.form-label').addClass('horizontal');
     var pagination = $('.prev-next-row').eq(0);
     if (pagination.length) {
       $('#marine-widget-top').detach().insertBefore(pagination);
@@ -1040,14 +1144,21 @@
     var $fields = $(selectorFormContainer + ', ' + selectorLeftForm).find(
       '[data-fieldname]',
     );
-    if ($fields.length > 0) {
-      generateCheckboxes($fields, $fields.length);
-    }
 
     $(selectorFormContainer + ',' + selectorLeftForm).animate(
       { opacity: 1 },
       1000,
     );
+
+    if ($fields.length > 0) {
+      generateCheckboxes($fields, $fields.length);
+    }
+
+    var $heading = $('.msfd-heading');
+    var $startLink = $('.msfd-start-link');
+    if ($heading.length && $startLink.length) {
+      $heading.insertAfter($startLink);
+    }
 
     addCheckboxHandlers($(selectorFormContainer));
     addCheckboxLabelHandlers();
@@ -1061,6 +1172,7 @@
 
     setPaginationButtons();
     initPaginationInput();
+    getAppliedFilters();
   }
 
   /*
@@ -1068,52 +1180,34 @@
    * */
   function beforeSendForm(jqXHR, settings) {
     window.WISE.blocks = [];
-    //$("#ajax-spinner2").hide();
-
     $(selectorLeftForm + ' .no-results').remove();
 
-    var t = "<div id='wise-search-form-container-preloader'/>";
-    var sp = $('#ajax-spinner2').attr('id', 'ajax-spinner-form').show();
-
-    $(selectorFormContainer).append(t);
-    $('#wise-search-form-container-preloader').append(sp);
-
     $('#form-widgets-marine_unit_id').prop('disabled', true);
-    //$("s2id_form-widgets-marine_unit_id").select2("enable",false);
-    $("[name='form.buttons.prev']").prop('disabled', true);
-    $("[name='form.buttons.next']").prop('disabled', true);
+    $("[name='form.buttons.prev'], [name='form.buttons.next']").prop(
+      'disabled',
+      true,
+    );
+    $("[name='marine.buttons.prev'], [name='marine.buttons.next']").prop(
+      'disabled',
+      true,
+    );
 
-    $("[name='marine.buttons.prev']").prop('disabled', true);
-    $("[name='marine.buttons.next']").prop('disabled', true);
-
-    if ($('#marine-widget-top').length > 0) {
-      var cont = $('#marine-widget-top').next();
-      cont.css('position', 'relative');
-    } else {
-      cont = $('.left-side-form');
-    }
+    var cont =
+      $('#marine-widget-top').length > 0
+        ? $('#marine-widget-top').next()
+        : $('.left-side-form');
+    cont.css('position', 'relative');
 
     cont.prepend("<div id='wise-search-form-preloader'/>");
-
     $('#wise-search-form-preloader').append(
-      "<span style='position: absolute;" +
-        ' display: block;' +
-        ' left: 50%;' +
-        "top: 10%;'></span>",
+      "<span style='position: absolute; display: block; left: 50%; top: 50%;'></span>",
     );
     $('#wise-search-form-preloader > span').append(
       $('#ajax-spinner2').clone().attr('id', 'ajax-spinner-center').show(),
     );
 
-    $('#ajax-spinner-center').css({
-      position: 'fixed',
-      //"top" : "50%",
-      //"left" : "30%",
-      // "transform" : "translateX(-50%)"
-    });
-
+    $('#ajax-spinner-center').css({ position: 'fixed' });
     $('#wise-search-form-top').find('.alert').remove();
-    //window.WISE.marineUnit = $(selectorLeftForm + " select").val(  );
 
     loading = true;
   }
@@ -1158,27 +1252,28 @@
       .remove();
     $(selectorLeftForm + ' #wise-search-form-top').after(centerContentD);
 
-    /*var res = $data.find( selectorLeftForm );
-
-        if(res.children().length === 1){
-            if($(res[0]).attr("id") === "wise-search-form-top" ){
-                $( selectorLeftForm + " #wise-search-form-top").after("<span class='no-results'>No results found.</span>");
-            }
-
-        }*/
-
     initPageElems();
+
+    getAppliedFilters();
     var formAction = $('.wise-search-form-container form').attr('action') || '';
     if (formAction.includes('/marine/++api++')) {
       var newFormAction = formAction;
     } else {
       var newFormAction = formAction.replace('/marine/', '/marine/++api++/');
     }
+    if (formAction.includes('localhost') && !formAction.includes('++api++')) {
+      newFormAction = newFormAction.replace('http://localhost:3000/', 'http://localhost:3000/++api++/');
+    }
+
 
     $('.wise-search-form-container form').attr('action', newFormAction);
     removeNoValues();
-    fixTableHeaderAndCellsHeight();
-    //addDoubleScroll();
+
+    setTimeout(function () {
+      fixTableHeaderAndCellsHeight();
+    }, 300);
+
+    // addDoubleScroll();
 
     $("[name='form.buttons.prev']").prop('disabled', false);
     $("[name='form.buttons.next']").prop('disabled', false);
@@ -1307,20 +1402,18 @@
       $(selectorFormContainer).fadeIn('fast', function () {
         $(selectorLeftForm + ' #wise-search-form-top')
           .siblings()
-          .fadeIn('fast');
+          .fadeIn('fast', function () {
+            setTimeout(function () {
+              fixTableHeaderAndCellsHeight();
+            }, 50);
+          });
       });
     }
-
-    // $(selectorFormContainer).find("[name='form.buttons.prev']").remove();
-    // $(selectorFormContainer).find("[name='form.buttons.next']").remove();
-
-    //$("s2id_form-widgets-marine_unit_id").select2().enable(true);
 
     $(selectorLeftForm + ' #loader-placeholder').remove();
 
     $('#form-widgets-marine_unit_id').prop('disabled', false);
 
-    //if($( selectorLeftForm + " select").val() === "--NOVALUE--" ) $( selectorLeftForm + " select").val(window.WISE.marineUnit).trigger("change.select2");
     if ($(selectorLeftForm + ' select').hasClass('js-example-basic-single')) {
       // Select2 has been initialized
       if (
@@ -1356,34 +1449,24 @@
     $('table.listing:not(.nosort) tbody').each(setoddeven);
 
     if (typeof scanforlinks !== 'undefined') jQuery(scanforlinks);
-
+    setTimeout(function () {
+      fixTableHeaderAndCellsHeight();
+      fixDoubleScrollWidth();
+    }, 300);
     addDoubleScroll();
   }
 
   function formAjaxError(req, status, error) {
-    /*if(window.WISE.formData.length > 0){
-            var data = $($(window.WISE.formData)[0]).find(".field");
-            $.each( data , function (indx, $field) {
-                var chk = $($field).find(".option input[type='checkbox']:checked");
-                if(chk.length > 0){
-                    // TODO
-                }
-
-            });
-        }*/
-
     $('#wise-search-form-top').find('.alert').remove();
     $('#wise-search-form-top').append(
       '<div class="alert alert-danger alert-dismissible show" style="margin-top: 2rem;" role="alert">' +
         '  <strong>There was a error from the server.</strong> You should check in on some of those fields from the form.' +
-        '  <button type="button" class="close" data-dismiss="alert" aria-label="Close">' +
+        '  <button type="button" class="ui button close" data-dismiss="alert" aria-label="Close">' +
         '    <span aria-hidden="true">&times;</span>' +
         '  </button>' +
         '</div>',
     );
 
-    // $(selectorFormContainer).find("[name='form.buttons.prev']").remove();
-    // $(selectorFormContainer).find("[name='form.buttons.next']").remove();
     $('#form-widgets-marine_unit_id').prop('disabled', false);
 
     $('#wise-search-form-container-preloader').remove();
@@ -1443,7 +1526,6 @@
         var panel_group, subform_parent, subform_children;
         panel_group = $(el).closest('.panel-group');
         subform_parent = panel_group.closest('.subform');
-        //subform_children = subform_parent.find('.subform');
         subform_children = $(el).parent().parent().next();
 
         if (
@@ -1572,6 +1654,9 @@
     if (!url.includes('/marine/++api++')) {
       url = url.replace('/marine/', '/marine/++api++/');
     }
+    if (url.includes('localhost')) {
+      url = url.replace('http://localhost:3000/', 'http://localhost:3000/++api++/');
+    }
 
     $.ajax({
       type: 'POST',
@@ -1684,7 +1769,6 @@
       if (compareVals(LZString.decompress(defForm), strContent[2])) {
         var url = form.attr('action');
         var boundary = sessionStore.getItem('boundary');
-
         searchFormAjax(boundary, dec, url);
 
         // TODO: url shortner
@@ -1723,22 +1807,30 @@
   $.fn.fixTableHeaderAndCellsHeight = function () {
     // because the <th> are position: absolute, they don't get the height of
     // the <td> cells, and the other way around.
+    var MIN_HEIGHT = 30;
 
     this.each(function () {
-      $('th', this).each(function () {
-        var $th = $(this);
-        var $next = $('td', $th.parent());
-        var cells_max_height = Math.max($next.height());
-        var height = Math.max($th.height(), cells_max_height);
+      $(this)
+        .find('tr')
+        .each(function () {
+          var $tr = $(this);
+          var $th = $tr.find('th');
+          var $tds = $tr.find('td');
 
-        $th.height(height);
+          if ($th.length) {
+            // calculate tallest among th and its td siblings
+            var cells_max_height = 0;
+            $tds.each(function () {
+              cells_max_height = Math.max(cells_max_height, $(this).height());
+            });
 
-        if ($th.height() >= cells_max_height) {
-          $next.height($th.height());
-        }
+            var height = Math.max($th.height(), cells_max_height, MIN_HEIGHT);
 
-        $('div', this).css('margin-top', '-4px');
-      });
+            // set consistent height
+            $th.height(height);
+            $tds.height(height);
+          }
+        });
     });
   };
 
@@ -1747,20 +1839,31 @@
     $table.fixTableHeaderAndCellsHeight();
   }
 
+  function fixDoubleScrollWidth() {
+    // fix double scroll width
+    $('.cloned-scroll-top').each(function () {
+      var $clonedScrollTop = $(this);
+      var $table = $clonedScrollTop.parent().find('table');
+      var tableWidth = $table.outerWidth((includeMargin = true));
+
+      if (tableWidth == null || tableWidth <= $table.parent().width()) {
+        $clonedScrollTop.children().width(0);
+        return;
+      }
+      $clonedScrollTop.children().width(tableWidth);
+    });
+  }
+
   function addDoubleScroll() {
     var secondScroll =
       '<div class="cloned-scroll-top" style="overflow-x: auto;">' +
-      '<div style="height: 1px; margin-left: 165px;"></div>' +
+      '<div style="height: 1px;"></div>' +
       '</div>';
 
     $('.double-scroll').each(function () {
       var $doubleScroll = $(this);
       var $table = $doubleScroll.find('table');
       var tableWidth = $table.outerWidth((includeMargin = true));
-
-      if (tableWidth == null || tableWidth <= $table.parent().width()) {
-        return;
-      }
 
       $doubleScroll.parent().before(secondScroll);
       var $clonedScrollTop = $doubleScroll
@@ -1775,6 +1878,11 @@
       $doubleScroll.scroll(function () {
         $clonedScrollTop.scrollLeft($doubleScroll.scrollLeft());
       });
+
+      if (tableWidth == null || tableWidth <= $table.parent().width()) {
+        $clonedScrollTop.children().width(0);
+        return;
+      }
 
       $clonedScrollTop.children().width(tableWidth);
     });
@@ -1791,6 +1899,10 @@
     } else {
       var newFormAction = formAction.replace('/marine/', '/marine/++api++/');
     }
+    if (formAction.includes('localhost') && !formAction.includes('++api++')) {
+      newFormAction = newFormAction.replace('http://localhost:3000/', 'http://localhost:3000/++api++/');
+    }
+
 
     $('.wise-search-form-container form').attr('action', newFormAction);
 
@@ -1824,17 +1936,34 @@
         // this way we reset the configurations below the given facet
         // with which we interacted with
         var called_from = arguments[1];
-        var called_from_button = called_from && called_from['button'];
-        var called_from_select = called_from && called_from['select'];
 
-        var resetFacets = true;
+        // if it is from a subform (second row of filters) like Country,
+        // GES Component, Feature etc. then we do not reset the facets below
+        try {
+          debugger;
+          var isSubform = called_from.from_marine_widget || $(called_from.button).closest('.subforms-wrapper').length > 0;
+        } catch (e) {
+          var isSubform = true;
+        }
+        
+        var resetFacets = !isSubform;
+
         if (resetFacets) {
-          resetConfigsbelowFacet(
-            called_from,
-            called_from_button,
-            called_from_select,
-            arguments,
-          );
+          // empty subforms-wrapper
+          $('.subforms-wrapper').empty();
+          // simulate a click on the first option of the subforms, to reset the
+          // facets below it
+          // var firstOption = $('.subforms-wrapper .form-check.option').first();
+          // var calledFrom = {button: firstOption[0]};
+          // var called_from_button = called_from && called_from['button'];
+          // var called_from_select = called_from && called_from['select'];
+
+          // resetConfigsbelowFacet(
+          //   called_from,
+          //   called_from_button,
+          //   called_from_select,
+          //   arguments,
+          // );
         }
 
         var form = $(selectorFormContainer).find('form');
@@ -1850,7 +1979,13 @@
     $('.topnav a').on('click', resetStorageForPage);
 
     removeNoValues();
-    fixTableHeaderAndCellsHeight();
+    setTimeout(function () {
+      fixTableHeaderAndCellsHeight();
+    }, 300);
     addDoubleScroll();
+
+    $(window).on('resize', function () {
+      fixTableHeaderAndCellsHeight();
+    });
   });
 })(window, document, jQuery);
