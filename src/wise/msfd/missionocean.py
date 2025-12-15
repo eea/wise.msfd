@@ -3,6 +3,7 @@ import csv
 import io
 import json
 import logging
+from collections import defaultdict
 # import lxml
 from plone import api
 from plone.api.portal import get_tool
@@ -13,6 +14,7 @@ from plone.restapi.interfaces import IDeserializeFromJson
 from plone.dexterity.interfaces import IDexterityContainer
 from plone.restapi.deserializer import json_body
 from Products.Five import BrowserView
+from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 from z3c.form import button, field, form
 from zope.component import adapter
 from zope.interface import Interface, implementer
@@ -83,12 +85,21 @@ class DemoSitesImportSchema(Interface):
 
 class DemoSitesImportView(form.Form):
     """ DemoSitesImportView """
-
+    template = ViewPageTemplateFile("./pt/demo-sites-import.pt")
     fields = field.Fields(DemoSitesImportSchema)
     ignoreContext = True
 
     label = "Import Demo Sites Data"
     description = "Upload a CSV file to import data into Plone."
+
+    def __init__(self, context, request):
+        super().__init__(context, request)
+        self.show_table = False
+        self.matched_rows = {}
+        self.matched = 0
+        self.unmatched = 0
+        self.new = 0
+        self.unmatched_list = []
 
     @property
     def indicators_folder(self):
@@ -99,25 +110,29 @@ class DemoSitesImportView(form.Form):
         """ check if content exists and return it """
 
         for content in self.context.contentValues():
-            name_ds = row.get('Name_DS', row.get('Region name'))
-            if name_ds != content.title:
-                continue
-
+            # ID must match
             _id = row.get('ID', row.get('Id'))
             if _id != content.id_ds:
                 continue
 
+            # country must match
             _country = row.get('Country_DS', row.get('Country'))
             country_codes = _country.split(',') if _country else []
-            countries = [
+            countries = set([
                 countries_vocab.get(c.strip(), c.strip())
                 for c in country_codes
-            ] or None
+            ]) or None
 
-            if ((countries or content.country_ds) and
-                    countries != content.country_ds):
+            if ((countries or content.country_ds)
+                    and countries != content.country_ds):
                 continue
 
+            # one of these must match: name_ds or coordinates
+            name_ds = row.get('Name_DS', row.get('Region name'))
+            if name_ds == content.title:
+                return content
+
+            # latitude and longitude
             latitude = row['Latitude'] or ''
             longitude = row['Longitude'] or ''
 
@@ -162,12 +177,33 @@ class DemoSitesImportView(form.Form):
 
         csv_demo_sites = data['csv_demo_sites']
         csv_objectives = data['csv_objectives'] or {}
-        self.process_csv(csv_demo_sites, csv_objectives)
+        self.process_csv(csv_demo_sites, csv_objectives, do_create=True)
         # self.process_csv(csv_demo_sites)
-        api.portal.show_message(message="Import successfull!",
-                                request=self.request)
+        message = (
+            f"Import successful! Matched: {self.matched}, "
+            f"Unmatched: {self.unmatched}, New: {self.new}"
+        )
+        api.portal.show_message(message=message, request=self.request)
 
-    def process_csv(self, csv_demo_sites, csv_objectives):
+    @button.buttonAndHandler('Show Matches')
+    def handleShowMatches(self, action):
+        """handleShowMatches"""
+        data, errors = self.extractData()
+        if errors:
+            self.status = self.formErrorsMessage
+            return
+
+        csv_demo_sites = data['csv_demo_sites']
+        csv_objectives = data['csv_objectives'] or {}
+        self.process_csv(csv_demo_sites, csv_objectives, do_create=False)
+        message = (
+            f"Import successful! Matched: {self.matched}, "
+            f"Unmatched: {self.unmatched}, New: {self.new}"
+        )
+        api.portal.show_message(message=message, request=self.request)
+        self.show_table = True
+
+    def process_csv(self, csv_demo_sites, csv_objectives, do_create=False):
         """process_csv"""
         # Access the file data correctly
         csv_data_demo_sites = csv_demo_sites.data
@@ -183,6 +219,14 @@ class DemoSitesImportView(form.Form):
                 io.StringIO(csv_text_objectives))
             csv_reader_objectives = [x for x in csv_reader_objectives_reader]
 
+        # Initialize counters
+        self.matched = 0
+        self.new = 0
+        existing_sites = list(self.context.contentValues())
+        total_existing = len(existing_sites)
+        matched_contents = set()
+        matched_rows = defaultdict(list)
+
         for row in csv_reader_demo_sites:
             if csv_data_objectives:
                 objective = [
@@ -193,8 +237,36 @@ class DemoSitesImportView(form.Form):
             else:
                 objective = ''
 
-            self.create_content(row, objective[0] if objective else '')
-            # self.create_content(row)
+            content = self.demosite_exists(row)
+            if content:
+                self.matched += 1
+                matched_contents.add(content)
+                matched_rows[content].append(row)
+            else:
+                self.new += 1
+
+            if do_create:
+                self.create_content(row, objective[0] if objective else '')
+
+        self.unmatched = total_existing - self.matched
+        self.matched_rows = dict(matched_rows)
+        unmatched_sites = [
+            c for c in existing_sites if c not in matched_contents]
+        self.unmatched_list = [
+            {
+                'name_ds': c.title,
+                'ID': getattr(c, 'id_ds', ''),
+                'Country_DS': getattr(c, 'country_ds') or [],
+                'latitude': getattr(c, 'latitude', ''),
+                'longitude': getattr(c, 'longitude', '')
+            }
+            for c in unmatched_sites
+        ]
+        for item in self.unmatched_list:
+            logger.info("Unmatched demo site: Name=%s, ID=%s, Country=%s, Lat=%s, Lon=%s",
+                        item['name_ds'], item['ID'], ', '.join(
+                            item['Country_DS']),
+                        item['latitude'], item['longitude'])
 
     def create_content(self, row, objective_csv):
         """create_content"""
@@ -391,6 +463,7 @@ class DemoSiteItems(BrowserView):
 # @adapter(IDemoSiteContent, Interface)
 class MissionOceanDeserializer(DeserializeFromJson):
     """ MissionOceanDeserializer """
+
     def __call__(self, validate_all=False, data=None,
                  create=False, mask_validation_errors=True):
         if data is None:
