@@ -106,6 +106,47 @@ class DemoSitesImportView(form.Form):
         """indicators_folder"""
         return self.context.aq_parent['mo-indicators']
 
+    def demosite_matches_row(self, content, row):
+        """Check if a demo site content item matches a CSV row"""
+        # Check ID match
+        _id = row.get('ID', row.get('Id'))
+        if _id != content.id_ds:
+            return False
+
+        # Check country match
+        _country = row.get('Country_DS', row.get('Country'))
+        country_codes = _country.split(',') if _country else []
+        countries = set([
+            countries_vocab.get(c.strip(), c.strip())
+            for c in country_codes
+        ]) or None
+
+        if ((countries or content.country_ds) and
+                countries != content.country_ds):
+            return False
+
+        # One of these must match: name_ds or coordinates
+        # Check coordinates match
+        name_match = False
+        # coords_match = False
+        # latitude = row.get('Latitude') or ''
+        # longitude = row.get('Longitude') or ''
+
+        # if not latitude and not longitude:
+        #     coords_match = False
+
+        # if (latitude and longitude and content.latitude == latitude
+        #         and content.longitude == longitude):
+        #     coords_match = True
+
+        name_ds = row.get('Name_DS', row.get('Region name'))
+        if (name_ds == content.title
+                or name_ds in content.title
+                or content.title in name_ds):
+            name_match = True
+
+        return name_match  # or coords_match
+
     def demosite_exists(self, row):
         """ check if content exists and return it """
 
@@ -219,6 +260,9 @@ class DemoSitesImportView(form.Form):
                 io.StringIO(csv_text_objectives))
             csv_reader_objectives = [x for x in csv_reader_objectives_reader]
 
+        # Convert CSV rows to a list to allow multiple iterations
+        csv_rows = [row for row in csv_reader_demo_sites]
+
         # Initialize counters
         self.matched = 0
         self.new = 0
@@ -226,27 +270,37 @@ class DemoSitesImportView(form.Form):
         total_existing = len(existing_sites)
         matched_contents = set()
         matched_rows = defaultdict(list)
+        matched_csv_rows = set()
 
-        for row in csv_reader_demo_sites:
-            if csv_data_objectives:
-                objective = [
-                    self.add_objective_prefix(x['Objective'])
-                    for x in csv_reader_objectives
-                    if x['ID'] == row.get('ID', row.get('Id'))
-                ]
-            else:
-                objective = ''
+        # Iterate through existing demo sites and find matches in CSV
+        for content in existing_sites:
+            matching_rows = []
+            for idx, row in enumerate(csv_rows):
+                if self.demosite_matches_row(content, row):
+                    matching_rows.append(row)
+                    matched_csv_rows.add(idx)
 
-            content = self.demosite_exists(row)
-            if content:
+            if matching_rows:
                 self.matched += 1
                 matched_contents.add(content)
-                matched_rows[content].append(row)
-            else:
-                self.new += 1
+                matched_rows[content] = matching_rows
 
-            if do_create:
-                self.create_content(row, objective[0] if objective else '')
+                if do_create and matching_rows:
+                    # Use the first matching row's objectives
+                    first_row = matching_rows[0]
+                    if csv_data_objectives:
+                        objective = [
+                            self.add_objective_prefix(x['Objective'])
+                            for x in csv_reader_objectives
+                            if x['ID'] == first_row.get('ID', first_row.get('Id'))
+                        ]
+                    else:
+                        objective = ''
+                    self.update_content(content, first_row,
+                                        objective[0] if objective else '')
+
+        # Count new items from CSV that don't match any existing site
+        self.new = len(csv_rows) - len(matched_csv_rows)
 
         self.unmatched = total_existing - self.matched
         self.matched_rows = dict(matched_rows)
@@ -262,11 +316,102 @@ class DemoSitesImportView(form.Form):
             }
             for c in unmatched_sites
         ]
-        for item in self.unmatched_list:
-            logger.info("Unmatched demo site: Name=%s, ID=%s, Country=%s, Lat=%s, Lon=%s",
-                        item['name_ds'], item['ID'], ', '.join(
-                            item['Country_DS']),
-                        item['latitude'], item['longitude'])
+
+        if do_create:
+            # Retract unmatched content (set to private)
+            for content in unmatched_sites:
+                try:
+                    api.content.transition(obj=content, to_state='private')
+                    logger.info("Retracted demo site: %s", content.title)
+                except Exception as e:
+                    logger.warning(
+                        "Failed to retract demo site %s: %s", content.title, str(e))
+
+            # Create new content from unmatched CSV rows
+            for idx, row in enumerate(csv_rows):
+                if idx not in matched_csv_rows:
+                    if csv_data_objectives:
+                        objective = [
+                            self.add_objective_prefix(x['Objective'])
+                            for x in csv_reader_objectives
+                            if x['ID'] == row.get('ID', row.get('Id'))
+                        ]
+                    else:
+                        objective = ''
+                    self.create_content(row, objective[0] if objective else '')
+
+        # for item in self.unmatched_list:
+        #     logger.info("Unmatched demo site: Name=%s, ID=%s, Country=%s, Lat=%s, Lon=%s",
+        #                 item['name_ds'], item['ID'], ', '.join(
+        #                     item['Country_DS']),
+        #                 item['latitude'], item['longitude'])
+
+    def update_content(self, content, row, objective_csv):
+        """update_content - updates an existing demo site with CSV data"""
+        if objective_csv:
+            objectives = [objective_csv]
+        else:
+            objectives = row.get('Obectives/enablers', '').split(';')
+            objectives = [x.strip() for x in objectives]
+
+        targets = row.get('Targets', '').split(';')
+        targets = [x.strip() for x in targets]
+
+        content.objective_ds = objectives
+        content.target_ds = targets
+        content.project_ds = row['Project']
+        content.project_link_ds = row.get('Project link', '')
+
+        _country = row.get('Country_DS', row.get('Country'))
+        if _country:
+            country_ds = _country.split(',')
+            content.country_ds = [
+                countries_vocab.get(c.strip(), c.strip())
+                for c in country_ds
+            ]
+
+        if row.get('Type_DS'):
+            type_ds = row['Type_DS'].split(',')
+            content.type_ds = [x.strip() for x in type_ds]
+
+        _indicators_visited = []
+        indicator_blacklist = ['0']
+
+        for indicator in row['Indicator'].split(';'):
+            indicator = indicator.strip()
+
+            if indicator in indicator_blacklist:
+                continue
+
+            if not indicator or indicator in _indicators_visited:
+                continue
+
+            _indicators_visited.append(indicator)
+
+            indicator_obj = self.indicator_exists(indicator)
+
+            if not indicator_obj:
+                indicator_obj = api.content.create(
+                    container=self.indicators_folder,
+                    type='indicator_mo',
+                    title=indicator,
+                )
+
+            indicator_obj.target_ds = targets
+            indicator_obj.objective_ds = objectives
+
+            relapi.link_objects(
+                content, indicator_obj, 'indicator_mo')
+
+        content.info_ds = row.get('Info_DS', row.get('More info'))
+        content.website_ds = row.get('Website', '')
+        content.level_of_impl = row.get('Level of implementation', '')
+        content.latitude = row['Latitude'] or ''
+        content.longitude = row['Longitude'] or ''
+        type_is_region = row.get('Type', 'Demo site')
+        content.type_is_region = type_is_region
+
+        content.reindexObject()
 
     def create_content(self, row, objective_csv):
         """create_content"""
@@ -343,7 +488,8 @@ class DemoSitesImportView(form.Form):
                 content, indicator_obj, 'indicator_mo')
 
         content.info_ds = row.get('Info_DS', row.get('More info'))
-        content.website_ds = row['Website']
+        content.website_ds = row.get('Website', '')
+        content.level_of_impl = row.get('Level of implementation', '')
         content.latitude = row['Latitude'] or ''
         content.longitude = row['Longitude'] or ''
         type_is_region = row.get('Type', 'Demo site')
