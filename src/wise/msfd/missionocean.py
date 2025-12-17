@@ -18,6 +18,7 @@ from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 from z3c.form import button, field, form
 from zope.component import adapter
 from zope.interface import Interface, implementer
+
 from collective.relationhelpers import api as relapi
 from wise.msfd.wisetheme.vocabulary import countries_vocabulary
 
@@ -54,6 +55,17 @@ countries_vocab.update({
     "TN": "Tunisia",
     "UA": "Ukraine",
 })
+
+
+def get_type_is_region(row):
+    """get_type_is_region"""
+    # type_is_region = row.get('Type', 'Demo site')
+    type_ds = row.get('Type_DS', '')
+
+    if type_ds != 'Associated region':
+        return 'Demo site'
+
+    return type_ds
 
 
 class IDemoSiteContent(Interface):
@@ -225,6 +237,7 @@ class DemoSitesImportView(form.Form):
             f"Unmatched: {self.unmatched}, New: {self.new}"
         )
         api.portal.show_message(message=message, request=self.request)
+        self.show_table = True
 
     @button.buttonAndHandler('Show Matches')
     def handleShowMatches(self, action):
@@ -296,6 +309,7 @@ class DemoSitesImportView(form.Form):
                         ]
                     else:
                         objective = ''
+
                     self.update_content(content, first_row,
                                         objective[0] if objective else '')
 
@@ -312,25 +326,21 @@ class DemoSitesImportView(form.Form):
                 'ID': getattr(c, 'id_ds', ''),
                 'Country_DS': getattr(c, 'country_ds') or [],
                 'latitude': getattr(c, 'latitude', ''),
-                'longitude': getattr(c, 'longitude', '')
+                'longitude': getattr(c, 'longitude', ''),
+                'type_is_region': getattr(c, 'type_is_region', '')
             }
             for c in unmatched_sites
         ]
 
         if do_create:
-            # Retract unmatched content (set to private) only if type_is_region is "Demo site"
+            # Retract unmatched content (set to private)
             for content in unmatched_sites:
-                type_is_region = getattr(content, 'type_is_region', '')
-                if type_is_region == 'Demo site':
-                    try:
-                        api.content.transition(obj=content, to_state='private')
-                        logger.info("Retracted demo site: %s", content.title)
-                    except Exception as e:
-                        logger.warning(
-                            "Failed to retract demo site %s: %s", content.title, str(e))
-                else:
-                    logger.info(
-                        "Skipped retraction for non-demo-site: %s (type_is_region=%s)", content.title, type_is_region)
+                try:
+                    api.content.transition(obj=content, to_state='private')
+                    logger.info("Retracted demo site: %s", content.title)
+                except Exception as e:
+                    logger.warning(
+                        "Failed to retract demo site %s: %s", content.title, str(e))
 
             # Create new content from unmatched CSV rows
             for idx, row in enumerate(csv_rows):
@@ -356,8 +366,8 @@ class DemoSitesImportView(form.Form):
         if objective_csv:
             objectives = [objective_csv]
         else:
-            objectives = row.get('Obectives/enablers', '').split(';')
-            objectives = [x.strip() for x in objectives]
+            objectives = row.get('Objectives/enablers', '').split(';')
+            objectives = [x.strip() for x in objectives if x]
 
         targets = row.get('Targets', '').split(';')
         targets = [x.strip() for x in targets]
@@ -370,13 +380,14 @@ class DemoSitesImportView(form.Form):
         _country = row.get('Country_DS', row.get('Country'))
         if _country:
             country_ds = _country.split(',')
-            content.country_ds = [
+            content.country_ds = set([
                 countries_vocab.get(c.strip(), c.strip())
                 for c in country_ds
-            ]
+            ])
 
         if row.get('Type_DS'):
-            type_ds = row['Type_DS'].split(',')
+            type_ds = row['Type_DS'].replace(
+                'Living Labs', 'Living labs').replace("&", "and").split(',')
             content.type_ds = [x.strip() for x in type_ds]
 
         _indicators_visited = []
@@ -402,18 +413,24 @@ class DemoSitesImportView(form.Form):
                     title=indicator,
                 )
 
-            indicator_obj.target_ds = targets
-            indicator_obj.objective_ds = objectives
+                indicator_obj.target_ds = targets
+                indicator_obj.objective_ds = objectives
 
-            relapi.link_objects(
-                content, indicator_obj, 'indicator_mo')
+            if not content.indicator_mo:
+                continue
+
+            rel_objects = [x.to_object for x in content.indicator_mo]
+
+            if indicator_obj not in rel_objects:
+                relapi.link_objects(
+                    content, indicator_obj, 'indicator_mo')
 
         content.info_ds = row.get('Info_DS', row.get('More info'))
         content.website_ds = row.get('Website', '')
-        content.level_of_impl = row.get('Level of implementation', '')
+        content.level_of_impl = row.get('Level of implementation', None)
         content.latitude = row['Latitude'] or ''
         content.longitude = row['Longitude'] or ''
-        type_is_region = row.get('Type', 'Demo site')
+        type_is_region = get_type_is_region(row)
         content.type_is_region = type_is_region
 
         content.reindexObject()
@@ -427,7 +444,7 @@ class DemoSitesImportView(form.Form):
             objectives = [objective_csv]
         else:
             # print("Using objective from demo sites CSV!")
-            objectives = row.get('Obectives/enablers', '').split(';')
+            objectives = row.get('Objectives/enablers', '').split(';')
             objectives = [x.strip() for x in objectives]
 
         targets = row.get('Targets', '').split(';')
@@ -436,7 +453,8 @@ class DemoSitesImportView(form.Form):
         if not name_ds or name_ds in ('to be confirmed', 'To be defined'):
             return
 
-        content = self.demosite_exists(row)
+        # content = self.demosite_exists(row)
+        content = None
 
         if not content:
             content = api.content.create(
@@ -454,10 +472,10 @@ class DemoSitesImportView(form.Form):
         _country = row.get('Country_DS', row.get('Country'))
         if _country:
             country_ds = _country.split(',')
-            content.country_ds = [
+            content.country_ds = set([
                 countries_vocab.get(c.strip(), c.strip())
                 for c in country_ds
-            ]
+            ])
 
         if row.get('Type_DS'):
             type_ds = row['Type_DS'].split(',')

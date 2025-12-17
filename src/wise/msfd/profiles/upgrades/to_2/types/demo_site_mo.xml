@@ -99,7 +99,7 @@
               &lt;element&gt;Digital Twin&lt;/element&gt;
               &lt;element&gt;Implementation and Synergies sites&lt;/element&gt;
               &lt;element&gt;Industrial circular ecosystem&lt;/element&gt;
-              &lt;element&gt;Information Sites&lt;/element&gt;
+              &lt;element&gt;Information sites&lt;/element&gt;
               &lt;element&gt;Living labs&lt;/element&gt;
               &lt;element&gt;Lower Danube Pilot#1&lt;/element&gt;
               &lt;element&gt;Lower Danube Pilot#2&lt;/element&gt;
@@ -123,6 +123,12 @@
               &lt;element&gt;Upper Danube Pilot#6&lt;/element&gt;
               &lt;element&gt;Upper Danube Sibling Site#1&lt;/element&gt;
               &lt;element&gt;Upper Danube Sibling Site#2&lt;/element&gt;
+              &lt;element&gt;Associated region&lt;/element&gt;
+              &lt;element&gt;Implementation and synergy sites&lt;/element&gt;
+              &lt;element&gt;Monitoring sites&lt;/element&gt;
+              &lt;element&gt;Pilot sites&lt;/element&gt;
+              &lt;element&gt;Sibling sites&lt;/element&gt;
+              &lt;element&gt;Use cases&lt;/element&gt;
             &lt;/values&gt;
           &lt;/value_type&gt;
         &lt;/field&gt;
