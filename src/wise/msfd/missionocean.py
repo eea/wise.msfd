@@ -252,8 +252,10 @@ class DemoSitesImportView(form.Form):
         csv_objectives = data['csv_objectives'] or {}
         self.process_csv(csv_demo_sites, csv_objectives, do_create=False)
         message = (
-            f"Import successful! Matched: {self.matched}, "
-            f"Unmatched: {self.unmatched}, New: {self.new}"
+            "Import successful! Matched: {}, "
+            "Unmatched: {}, New: {}".format(
+                self.matched, self.unmatched, self.new
+            )
         )
         api.portal.show_message(message=message, request=self.request)
         self.show_table = True
