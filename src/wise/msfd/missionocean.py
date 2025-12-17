@@ -105,7 +105,7 @@ class DemoSitesImportView(form.Form):
     description = "Upload a CSV file to import data into Plone."
 
     def __init__(self, context, request):
-        super().__init__(context, request)
+        super(DemoSitesImportView).__init__(context, request)
         self.show_table = False
         self.matched_rows = {}
         self.matched = 0
