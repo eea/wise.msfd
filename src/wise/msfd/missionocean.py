@@ -104,14 +104,14 @@ class DemoSitesImportView(form.Form):
     label = "Import Demo Sites Data"
     description = "Upload a CSV file to import data into Plone."
 
-    def __init__(self, context, request):
-        super(DemoSitesImportView).__init__(context, request)
-        self.show_table = False
-        self.matched_rows = {}
-        self.matched = 0
-        self.unmatched = 0
-        self.new = 0
-        self.unmatched_list = []
+    # def __init__(self, context, request):
+    # super().__init__(context, request)
+    show_table = False
+    matched_rows = {}
+    matched = 0
+    unmatched = 0
+    new = 0
+    unmatched_list = []
 
     @property
     def indicators_folder(self):
@@ -368,9 +368,11 @@ class DemoSitesImportView(form.Form):
             objectives = row.get('Objectives/enablers', '').split(';')
             objectives = [x.strip() for x in objectives if x]
 
+        name_ds = row.get('Name_DS', row.get('Region name'))
         targets = row.get('Targets', '').split(';')
         targets = [x.strip() for x in targets]
 
+        content.title = name_ds
         content.objective_ds = objectives
         content.target_ds = targets
         content.project_ds = row['Project']
