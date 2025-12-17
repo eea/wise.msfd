@@ -318,14 +318,19 @@ class DemoSitesImportView(form.Form):
         ]
 
         if do_create:
-            # Retract unmatched content (set to private)
+            # Retract unmatched content (set to private) only if type_is_region is "Demo site"
             for content in unmatched_sites:
-                try:
-                    api.content.transition(obj=content, to_state='private')
-                    logger.info("Retracted demo site: %s", content.title)
-                except Exception as e:
-                    logger.warning(
-                        "Failed to retract demo site %s: %s", content.title, str(e))
+                type_is_region = getattr(content, 'type_is_region', '')
+                if type_is_region == 'Demo site':
+                    try:
+                        api.content.transition(obj=content, to_state='private')
+                        logger.info("Retracted demo site: %s", content.title)
+                    except Exception as e:
+                        logger.warning(
+                            "Failed to retract demo site %s: %s", content.title, str(e))
+                else:
+                    logger.info(
+                        "Skipped retraction for non-demo-site: %s (type_is_region=%s)", content.title, type_is_region)
 
             # Create new content from unmatched CSV rows
             for idx, row in enumerate(csv_rows):
