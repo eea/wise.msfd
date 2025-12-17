@@ -232,8 +232,10 @@ class DemoSitesImportView(form.Form):
         self.process_csv(csv_demo_sites, csv_objectives, do_create=True)
         # self.process_csv(csv_demo_sites)
         message = (
-            f"Import successful! Matched: {self.matched}, "
-            f"Unmatched: {self.unmatched}, New: {self.new}"
+            "Import successful! Matched: {}, "
+            "Unmatched: {}, New: {}".format(
+                self.matched, self.unmatched, self.new
+            )
         )
         api.portal.show_message(message=message, request=self.request)
         self.show_table = True
@@ -304,8 +306,8 @@ class DemoSitesImportView(form.Form):
                         objective = [
                             self.add_objective_prefix(x['Objective'])
                             for x in csv_reader_objectives
-                            if (x['ID']
-                                == first_row.get('ID', first_row.get('Id')))
+                            if (x['ID'] ==
+                                first_row.get('ID', first_row.get('Id')))
                         ]
                     else:
                         objective = ''
