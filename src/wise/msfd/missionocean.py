@@ -152,9 +152,8 @@ class DemoSitesImportView(form.Form):
         #     coords_match = True
 
         name_ds = row.get('Name_DS', row.get('Region name'))
-        if (name_ds == content.title
-                or name_ds in content.title
-                or content.title in name_ds):
+        if (name_ds == content.title or name_ds in content.title or
+                content.title in name_ds):
             name_match = True
 
         return name_match  # or coords_match
@@ -176,8 +175,8 @@ class DemoSitesImportView(form.Form):
                 for c in country_codes
             ]) or None
 
-            if ((countries or content.country_ds)
-                    and countries != content.country_ds):
+            if ((countries or content.country_ds) and
+                    countries != content.country_ds):
                 continue
 
             # one of these must match: name_ds or coordinates
@@ -305,7 +304,8 @@ class DemoSitesImportView(form.Form):
                         objective = [
                             self.add_objective_prefix(x['Objective'])
                             for x in csv_reader_objectives
-                            if x['ID'] == first_row.get('ID', first_row.get('Id'))
+                            if (x['ID']
+                                == first_row.get('ID', first_row.get('Id')))
                         ]
                     else:
                         objective = ''
@@ -340,7 +340,8 @@ class DemoSitesImportView(form.Form):
                     logger.info("Retracted demo site: %s", content.title)
                 except Exception as e:
                     logger.warning(
-                        "Failed to retract demo site %s: %s", content.title, str(e))
+                        "Failed to retract demo site %s: %s",
+                        content.title, str(e))
 
             # Create new content from unmatched CSV rows
             for idx, row in enumerate(csv_rows):
@@ -354,12 +355,6 @@ class DemoSitesImportView(form.Form):
                     else:
                         objective = ''
                     self.create_content(row, objective[0] if objective else '')
-
-        # for item in self.unmatched_list:
-        #     logger.info("Unmatched demo site: Name=%s, ID=%s, Country=%s, Lat=%s, Lon=%s",
-        #                 item['name_ds'], item['ID'], ', '.join(
-        #                     item['Country_DS']),
-        #                 item['latitude'], item['longitude'])
 
     def update_content(self, content, row, objective_csv):
         """update_content - updates an existing demo site with CSV data"""
