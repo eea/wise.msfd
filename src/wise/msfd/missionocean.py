@@ -3,6 +3,7 @@ import csv
 import io
 import json
 import logging
+from collections import defaultdict
 # import lxml
 from plone import api
 from plone.api.portal import get_tool
@@ -13,9 +14,11 @@ from plone.restapi.interfaces import IDeserializeFromJson
 from plone.dexterity.interfaces import IDexterityContainer
 from plone.restapi.deserializer import json_body
 from Products.Five import BrowserView
+from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 from z3c.form import button, field, form
 from zope.component import adapter
 from zope.interface import Interface, implementer
+
 from collective.relationhelpers import api as relapi
 from wise.msfd.wisetheme.vocabulary import countries_vocabulary
 
@@ -54,6 +57,17 @@ countries_vocab.update({
 })
 
 
+def get_type_is_region(row):
+    """get_type_is_region"""
+    # type_is_region = row.get('Type', 'Demo site')
+    type_ds = row.get('Type_DS', '')
+
+    if type_ds != 'Associated region':
+        return 'Demo site'
+
+    return type_ds
+
+
 class IDemoSiteContent(Interface):
     """ Interface for Demo site content type
     """
@@ -83,41 +97,94 @@ class DemoSitesImportSchema(Interface):
 
 class DemoSitesImportView(form.Form):
     """ DemoSitesImportView """
-
+    template = ViewPageTemplateFile("./pt/demo-sites-import.pt")
     fields = field.Fields(DemoSitesImportSchema)
     ignoreContext = True
 
     label = "Import Demo Sites Data"
     description = "Upload a CSV file to import data into Plone."
 
+    # def __init__(self, context, request):
+    # super().__init__(context, request)
+    show_table = False
+    matched_rows = {}
+    matched = 0
+    unmatched = 0
+    new = 0
+    unmatched_list = []
+
     @property
     def indicators_folder(self):
         """indicators_folder"""
         return self.context.aq_parent['mo-indicators']
 
+    def demosite_matches_row(self, content, row):
+        """Check if a demo site content item matches a CSV row"""
+        # Check ID match
+        _id = row.get('ID', row.get('Id'))
+        if _id != content.id_ds:
+            return False
+
+        # Check country match
+        _country = row.get('Country_DS', row.get('Country'))
+        country_codes = _country.split(',') if _country else []
+        countries = set([
+            countries_vocab.get(c.strip(), c.strip())
+            for c in country_codes
+        ]) or None
+
+        if ((countries or content.country_ds) and
+                countries != content.country_ds):
+            return False
+
+        # One of these must match: name_ds or coordinates
+        # Check coordinates match
+        name_match = False
+        # coords_match = False
+        # latitude = row.get('Latitude') or ''
+        # longitude = row.get('Longitude') or ''
+
+        # if not latitude and not longitude:
+        #     coords_match = False
+
+        # if (latitude and longitude and content.latitude == latitude
+        #         and content.longitude == longitude):
+        #     coords_match = True
+
+        name_ds = row.get('Name_DS', row.get('Region name'))
+        if (name_ds == content.title or name_ds in content.title or
+                content.title in name_ds):
+            name_match = True
+
+        return name_match  # or coords_match
+
     def demosite_exists(self, row):
         """ check if content exists and return it """
 
         for content in self.context.contentValues():
-            name_ds = row.get('Name_DS', row.get('Region name'))
-            if name_ds != content.title:
-                continue
-
+            # ID must match
             _id = row.get('ID', row.get('Id'))
             if _id != content.id_ds:
                 continue
 
+            # country must match
             _country = row.get('Country_DS', row.get('Country'))
             country_codes = _country.split(',') if _country else []
-            countries = [
+            countries = set([
                 countries_vocab.get(c.strip(), c.strip())
                 for c in country_codes
-            ] or None
+            ]) or None
 
             if ((countries or content.country_ds) and
                     countries != content.country_ds):
                 continue
 
+            # one of these must match: name_ds or coordinates
+            name_ds = row.get('Name_DS', row.get('Region name'))
+            if name_ds == content.title:
+                return content
+
+            # latitude and longitude
             latitude = row['Latitude'] or ''
             longitude = row['Longitude'] or ''
 
@@ -162,12 +229,38 @@ class DemoSitesImportView(form.Form):
 
         csv_demo_sites = data['csv_demo_sites']
         csv_objectives = data['csv_objectives'] or {}
-        self.process_csv(csv_demo_sites, csv_objectives)
+        self.process_csv(csv_demo_sites, csv_objectives, do_create=True)
         # self.process_csv(csv_demo_sites)
-        api.portal.show_message(message="Import successfull!",
-                                request=self.request)
+        message = (
+            "Import successful! Matched: {}, "
+            "Unmatched: {}, New: {}".format(
+                self.matched, self.unmatched, self.new
+            )
+        )
+        api.portal.show_message(message=message, request=self.request)
+        self.show_table = True
 
-    def process_csv(self, csv_demo_sites, csv_objectives):
+    @button.buttonAndHandler('Show Matches')
+    def handleShowMatches(self, action):
+        """handleShowMatches"""
+        data, errors = self.extractData()
+        if errors:
+            self.status = self.formErrorsMessage
+            return
+
+        csv_demo_sites = data['csv_demo_sites']
+        csv_objectives = data['csv_objectives'] or {}
+        self.process_csv(csv_demo_sites, csv_objectives, do_create=False)
+        message = (
+            "Import successful! Matched: {}, "
+            "Unmatched: {}, New: {}".format(
+                self.matched, self.unmatched, self.new
+            )
+        )
+        api.portal.show_message(message=message, request=self.request)
+        self.show_table = True
+
+    def process_csv(self, csv_demo_sites, csv_objectives, do_create=False):
         """process_csv"""
         # Access the file data correctly
         csv_data_demo_sites = csv_demo_sites.data
@@ -183,18 +276,165 @@ class DemoSitesImportView(form.Form):
                 io.StringIO(csv_text_objectives))
             csv_reader_objectives = [x for x in csv_reader_objectives_reader]
 
-        for row in csv_reader_demo_sites:
-            if csv_data_objectives:
-                objective = [
-                    self.add_objective_prefix(x['Objective'])
-                    for x in csv_reader_objectives
-                    if x['ID'] == row.get('ID', row.get('Id'))
-                ]
-            else:
-                objective = ''
+        # Convert CSV rows to a list to allow multiple iterations
+        csv_rows = [row for row in csv_reader_demo_sites]
 
-            self.create_content(row, objective[0] if objective else '')
-            # self.create_content(row)
+        # Initialize counters
+        self.matched = 0
+        self.new = 0
+        existing_sites = list(self.context.contentValues())
+        total_existing = len(existing_sites)
+        matched_contents = set()
+        matched_rows = defaultdict(list)
+        matched_csv_rows = set()
+
+        # Iterate through existing demo sites and find matches in CSV
+        for content in existing_sites:
+            matching_rows = []
+            for idx, row in enumerate(csv_rows):
+                if self.demosite_matches_row(content, row):
+                    matching_rows.append(row)
+                    matched_csv_rows.add(idx)
+
+            if matching_rows:
+                self.matched += 1
+                matched_contents.add(content)
+                matched_rows[content] = matching_rows
+
+                if do_create and matching_rows:
+                    # Use the first matching row's objectives
+                    first_row = matching_rows[0]
+                    if csv_data_objectives:
+                        objective = [
+                            self.add_objective_prefix(x['Objective'])
+                            for x in csv_reader_objectives
+                            if (x['ID'] ==
+                                first_row.get('ID', first_row.get('Id')))
+                        ]
+                    else:
+                        objective = ''
+
+                    self.update_content(content, first_row,
+                                        objective[0] if objective else '')
+
+        # Count new items from CSV that don't match any existing site
+        self.new = len(csv_rows) - len(matched_csv_rows)
+
+        self.unmatched = total_existing - self.matched
+        self.matched_rows = dict(matched_rows)
+        unmatched_sites = [
+            c for c in existing_sites if c not in matched_contents]
+        self.unmatched_list = [
+            {
+                'name_ds': c.title,
+                'ID': getattr(c, 'id_ds', ''),
+                'Country_DS': getattr(c, 'country_ds') or [],
+                'latitude': getattr(c, 'latitude', ''),
+                'longitude': getattr(c, 'longitude', ''),
+                'type_is_region': getattr(c, 'type_is_region', '')
+            }
+            for c in unmatched_sites
+        ]
+
+        if do_create:
+            # Retract unmatched content (set to private)
+            for content in unmatched_sites:
+                try:
+                    api.content.transition(obj=content, to_state='private')
+                    logger.info("Retracted demo site: %s", content.title)
+                except Exception as e:
+                    logger.warning(
+                        "Failed to retract demo site %s: %s",
+                        content.title, str(e))
+
+            # Create new content from unmatched CSV rows
+            for idx, row in enumerate(csv_rows):
+                if idx not in matched_csv_rows:
+                    if csv_data_objectives:
+                        objective = [
+                            self.add_objective_prefix(x['Objective'])
+                            for x in csv_reader_objectives
+                            if x['ID'] == row.get('ID', row.get('Id'))
+                        ]
+                    else:
+                        objective = ''
+                    self.create_content(row, objective[0] if objective else '')
+
+    def update_content(self, content, row, objective_csv):
+        """update_content - updates an existing demo site with CSV data"""
+        if objective_csv:
+            objectives = [objective_csv]
+        else:
+            objectives = row.get('Objectives/enablers', '').split(';')
+            objectives = [x.strip() for x in objectives if x]
+
+        name_ds = row.get('Name_DS', row.get('Region name'))
+        targets = row.get('Targets', '').split(';')
+        targets = [x.strip() for x in targets]
+
+        content.title = name_ds
+        content.objective_ds = objectives
+        content.target_ds = targets
+        content.project_ds = row['Project']
+        content.project_link_ds = row.get('Project link', '')
+
+        _country = row.get('Country_DS', row.get('Country'))
+        if _country:
+            country_ds = _country.split(',')
+            content.country_ds = set([
+                countries_vocab.get(c.strip(), c.strip())
+                for c in country_ds
+            ])
+
+        if row.get('Type_DS'):
+            type_ds = row['Type_DS'].replace(
+                'Living Labs', 'Living labs').replace("&", "and").split(',')
+            content.type_ds = [x.strip() for x in type_ds]
+
+        _indicators_visited = []
+        indicator_blacklist = ['0']
+
+        for indicator in row['Indicator'].split(';'):
+            indicator = indicator.strip()
+
+            if indicator in indicator_blacklist:
+                continue
+
+            if not indicator or indicator in _indicators_visited:
+                continue
+
+            _indicators_visited.append(indicator)
+
+            indicator_obj = self.indicator_exists(indicator)
+
+            if not indicator_obj:
+                indicator_obj = api.content.create(
+                    container=self.indicators_folder,
+                    type='indicator_mo',
+                    title=indicator,
+                )
+
+                indicator_obj.target_ds = targets
+                indicator_obj.objective_ds = objectives
+
+            if not content.indicator_mo:
+                continue
+
+            rel_objects = [x.to_object for x in content.indicator_mo]
+
+            if indicator_obj not in rel_objects:
+                relapi.link_objects(
+                    content, indicator_obj, 'indicator_mo')
+
+        content.info_ds = row.get('Info_DS', row.get('More info'))
+        content.website_ds = row.get('Website', '')
+        content.level_of_impl = row.get('Level of implementation', None)
+        content.latitude = row['Latitude'] or ''
+        content.longitude = row['Longitude'] or ''
+        type_is_region = get_type_is_region(row)
+        content.type_is_region = type_is_region
+
+        content.reindexObject()
 
     def create_content(self, row, objective_csv):
         """create_content"""
@@ -205,7 +445,7 @@ class DemoSitesImportView(form.Form):
             objectives = [objective_csv]
         else:
             # print("Using objective from demo sites CSV!")
-            objectives = row.get('Obectives/enablers', '').split(';')
+            objectives = row.get('Objectives/enablers', '').split(';')
             objectives = [x.strip() for x in objectives]
 
         targets = row.get('Targets', '').split(';')
@@ -214,7 +454,8 @@ class DemoSitesImportView(form.Form):
         if not name_ds or name_ds in ('to be confirmed', 'To be defined'):
             return
 
-        content = self.demosite_exists(row)
+        # content = self.demosite_exists(row)
+        content = None
 
         if not content:
             content = api.content.create(
@@ -232,10 +473,10 @@ class DemoSitesImportView(form.Form):
         _country = row.get('Country_DS', row.get('Country'))
         if _country:
             country_ds = _country.split(',')
-            content.country_ds = [
+            content.country_ds = set([
                 countries_vocab.get(c.strip(), c.strip())
                 for c in country_ds
-            ]
+            ])
 
         if row.get('Type_DS'):
             type_ds = row['Type_DS'].split(',')
@@ -271,7 +512,8 @@ class DemoSitesImportView(form.Form):
                 content, indicator_obj, 'indicator_mo')
 
         content.info_ds = row.get('Info_DS', row.get('More info'))
-        content.website_ds = row['Website']
+        content.website_ds = row.get('Website', '')
+        content.level_of_impl = row.get('Level of implementation', '')
         content.latitude = row['Latitude'] or ''
         content.longitude = row['Longitude'] or ''
         type_is_region = row.get('Type', 'Demo site')
@@ -391,6 +633,7 @@ class DemoSiteItems(BrowserView):
 # @adapter(IDemoSiteContent, Interface)
 class MissionOceanDeserializer(DeserializeFromJson):
     """ MissionOceanDeserializer """
+
     def __call__(self, validate_all=False, data=None,
                  create=False, mask_validation_errors=True):
         if data is None:

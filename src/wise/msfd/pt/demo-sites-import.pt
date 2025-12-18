@@ -1,11 +1,68 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
-    xmlns:tal="http://xml.zope.org/namespaces/tal">
+    xmlns:metal="http://xml.zope.org/namespaces/metal"
+    xmlns:tal="http://xml.zope.org/namespaces/tal"
+    xmlns:z3c="http://namespaces.zope.org/z3c" i18n:domain="zope">
     <body>
-        <h1>Import Demo Sites Data</h1>
-        <form method="post" enctype="multipart/form-data">
-            <label for="csv_file">Upload CSV File:</label>
-            <input type="file" name="csv_file" id="csv_file" />
-            <button type="submit">Import</button>
-        </form>
+        <metal:form use-macro="view/context/@@ploneform-macros/form">
+            Form goes here
+        </metal:form>
+        <div tal:condition="python:hasattr(view, 'matched_rows') and view.matched_rows">
+            <h2>Matched Demo Sites</h2>
+            <p>Matched: <span tal:content="view/matched">0</span>, Unmatched: <span tal:content="view/unmatched">0</span>, New: <span tal:content="view/new">0</span>
+            </p>
+            <table border="1">
+                <thead>
+                    <tr>
+                        <th>Page ID</th>
+                        <th>Page Name</th>
+                        <th>Page Country</th>
+                        <th>Page Latitude</th>
+                        <th>Page Longitude</th>
+                        <th>CSV Rows</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr tal:repeat="item python:view.matched_rows.items()">
+                        <td tal:content="python:getattr(item[0], 'id_ds', '')">ID</td>
+                        <td tal:content="python:item[0].title">Name</td>
+                        <td tal:content="python:', '.join(getattr(item[0], 'country_ds', []) or [])">Country</td>
+                        <td tal:content="python:getattr(item[0], 'latitude', '')">Latitude</td>
+                        <td tal:content="python:getattr(item[0], 'longitude', '')">Longitude</td>
+                        <td>
+                            <div tal:repeat="row python:item[1]">
+                                ID: <span tal:content="python:row.get('ID', '')">ID</span>, Name: <span tal:content="python:row.get('Name_DS', '')">Name</span>, Country: <span tal:content="python:row.get('Country_DS', '')">Country</span>, Lat: <span tal:content="python:row.get('Latitude', '')">Latitude</span>, Lon: <span tal:content="python:row.get('Longitude', '')">Longitude</span>
+                                <br />
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div tal:condition="python:hasattr(view, 'unmatched_list') and view.unmatched_list">
+            <h2>Unmatched Demo Sites</h2>
+            <table border="1">
+                <thead>
+                    <tr>
+                        <th>Page ID</th>
+                        <th>Page Name</th>
+                        <th>Page Country</th>
+                        <th>Page Latitude</th>
+                        <th>Page Longitude</th>
+                        <th>Type</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr tal:repeat="item python:view.unmatched_list">
+                        <td tal:content="python:item.get('ID', '')">ID</td>
+                        <td tal:content="python:item.get('name_ds', '')">Name</td>
+                        <td tal:content="python:', '.join(item.get('Country_DS', []) or [])">Country</td>
+                        <td tal:content="python:item.get('latitude', '')">Latitude</td>
+                        <td tal:content="python:item.get('longitude', '')">Longitude</td>
+                        <td tal:content="python:item.get('type_is_region', '')">Type</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
     </body>
 </html>
