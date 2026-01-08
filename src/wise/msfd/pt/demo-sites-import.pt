@@ -64,5 +64,29 @@
                 </tbody>
             </table>
         </div>
+
+        <div tal:condition="python:hasattr(view, 'new_list') and view.new_list">
+            <h2>New Demo Sites (from CSV)</h2>
+            <table border="1">
+                <thead>
+                    <tr>
+                        <th>CSV ID</th>
+                        <th>CSV Name</th>
+                        <th>CSV Country</th>
+                        <th>CSV Latitude</th>
+                        <th>CSV Longitude</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr tal:repeat="row python:view.new_list">
+                        <td tal:content="python:row.get('ID', '')">ID</td>
+                        <td tal:content="python:row.get('Name_DS', '')">Name</td>
+                        <td tal:content="python:row.get('Country_DS', '')">Country</td>
+                        <td tal:content="python:row.get('Latitude', '')">Latitude</td>
+                        <td tal:content="python:row.get('Longitude', '')">Longitude</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
     </body>
 </html>

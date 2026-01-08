@@ -112,6 +112,7 @@ class DemoSitesImportView(form.Form):
     unmatched = 0
     new = 0
     unmatched_list = []
+    new_list = []
 
     @property
     def indicators_folder(self):
@@ -150,10 +151,10 @@ class DemoSitesImportView(form.Form):
         # if (latitude and longitude and content.latitude == latitude
         #         and content.longitude == longitude):
         #     coords_match = True
-
-        name_ds = row.get('Name_DS', row.get('Region name'))
-        if (name_ds == content.title or name_ds in content.title or
-                content.title in name_ds):
+        name_ds = row.get('Name_DS', row.get('Region name', '')).strip()
+        if (name_ds != '' and content.title != '' and
+            (name_ds == content.title or name_ds in content.title or
+             content.title in name_ds)):
             name_match = True
 
         return name_match  # or coords_match
@@ -334,6 +335,12 @@ class DemoSitesImportView(form.Form):
                 'type_is_region': getattr(c, 'type_is_region', '')
             }
             for c in unmatched_sites
+        ]
+
+        # Build list of new CSV rows that don't match any existing site
+        self.new_list = [
+            row for idx, row in enumerate(csv_rows)
+            if idx not in matched_csv_rows
         ]
 
         if do_create:
