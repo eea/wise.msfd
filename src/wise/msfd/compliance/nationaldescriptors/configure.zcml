@@ -28,6 +28,14 @@
 
   <browser:page
     for="..interfaces.INationalDescriptorAssessment"
+    name="nat-desc-art-view-2024"
+    template="./pt/art-view-2024.pt"
+    class=".main.NationalDescriptorArticleView2024"
+    permission="wise.ViewAssessmentData"
+    />
+
+  <browser:page
+    for="..interfaces.INationalDescriptorAssessment"
     name="nat-desc-art-view-2022"
     template="./pt/art-view.pt"
     class=".main.NationalDescriptorArticleView2022"
@@ -104,6 +112,13 @@
     for="*"
     name="edit-assessment-data-2018"
     class=".assessment.EditAssessmentDataView"
+    permission="wise.ViewAssessmentEditPage"
+    />
+
+  <browser:page
+    for="*"
+    name="edit-assessment-data-2024"
+    class=".assessment.EditAssessmentDataView2024"
     permission="wise.ViewAssessmentEditPage"
     />
 

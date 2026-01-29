@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<questions article='Art10-2024'>
+
+  <assessment-question id="A10Ad1" class="adequacy" use-criteria='all-targets'>
+    <definition>
+     Do the targets address the achievement of GES by focusing on reducing relevant pressures and impacts?
+    </definition>
+    <answers>
+      <option score="1">Target refers to a reduction in the level of a pressure</option>
+      <option score="1">Target refers to a reduction in the level of an impact</option>
+      <option score="0.5">Target implicitly refers to a reduction in the level of pressure</option>
+      <option score="0.5">Target implicitly refers to a reduction in the level of an impact</option>
+      <option score="0">Target refers to a desired level of a pressure in the sea</option>
+      <option score="0">Target refers to a desired level of an impact in the sea</option>
+      <option score="0">Target refers to the desired state of an ecosystem component in the sea</option>
+      <option score="0.25">Target refers to another topic</option>
+      <option score="0.25">It is not an operational target</option>
+      <!--<option score="0">2012 target not reported in 2018 (no explanation provided)</option>-->
+      <option score="0.250">Not clear</option>
+      <option score="/">Not relevant</option>
+    </answers>
+    <scoring determination-method="wise.msfd.compliance.scoring.scoring_based">
+    </scoring>
+    <score-weight descriptor="D1.1" value="40" />
+    <score-weight descriptor="D1.2" value="40" />
+    <score-weight descriptor="D1.3" value="40" />
+    <score-weight descriptor="D1.4" value="40" />
+    <score-weight descriptor="D1.5" value="40" />
+    <score-weight descriptor="D1.6" value="40" />
+    <score-weight descriptor="D2" value="40" />
+    <score-weight descriptor="D3" value="40" />
+    <score-weight descriptor="D4" value="40" />
+    <score-weight descriptor="D5" value="40" />
+    <score-weight descriptor="D6" value="40" />
+    <score-weight descriptor="D7" value="40" />
+    <score-weight descriptor="D8" value="40" />
+    <score-weight descriptor="D9" value="40" />
+    <score-weight descriptor="D10" value="40" />
+    <score-weight descriptor="D11" value="40" />
+  </assessment-question>
+
+  <assessment-question id="A10Ad2" class="adequacy" use-criteria='2024-targets'>
+    <definition>
+      To what extent are the targets measurable?
+    </definition>
+    <answers>
+      <option score="1">Target is measurable</option>
+      <option score="0.5">Target is partially measurable</option>
+      <option score="0">Target is not measurable</option>
+      <option score="0.250">Not clear</option>
+      <option score="/">Not relevant</option>
+    </answers>
+    <scoring determination-method="wise.msfd.compliance.scoring.scoring_based">
+    </scoring>
+    <score-weight descriptor="D1.1" value="30" />
+    <score-weight descriptor="D1.2" value="30" />
+    <score-weight descriptor="D1.3" value="30" />
+    <score-weight descriptor="D1.4" value="30" />
+    <score-weight descriptor="D1.5" value="30" />
+    <score-weight descriptor="D1.6" value="30" />
+    <score-weight descriptor="D2" value="30" />
+    <score-weight descriptor="D3" value="30" />
+    <score-weight descriptor="D4" value="30" />
+    <score-weight descriptor="D5" value="30" />
+    <score-weight descriptor="D6" value="30" />
+    <score-weight descriptor="D7" value="30" />
+    <score-weight descriptor="D8" value="30" />
+    <score-weight descriptor="D9" value="30" />
+    <score-weight descriptor="D10" value="30" />
+    <score-weight descriptor="D11" value="30" />
+  </assessment-question>
+
+  <assessment-question id="A10Ad3" class="adequacy" use-criteria='2024-targets'>
+    <definition>
+      Has an assessment of progress with the target since 2012 been made?
+    </definition>
+    <answers>
+      <option score="1">Progress with target assessed</option>
+      <option score="0.5">Progress with target partially assessed</option>
+      <option score="0">Progress with target not assessed</option>
+      <option score="0.250">Not clear</option>
+      <option score="/">Not relevant</option>
+    </answers>
+    <scoring determination-method="wise.msfd.compliance.scoring.scoring_based">
+    </scoring>
+    <score-weight descriptor="D1.1" value="30" />
+    <score-weight descriptor="D1.2" value="30" />
+    <score-weight descriptor="D1.3" value="30" />
+    <score-weight descriptor="D1.4" value="30" />
+    <score-weight descriptor="D1.5" value="30" />
+    <score-weight descriptor="D1.6" value="30" />
+    <score-weight descriptor="D2" value="30" />
+    <score-weight descriptor="D3" value="30" />
+    <score-weight descriptor="D4" value="30" />
+    <score-weight descriptor="D5" value="30" />
+    <score-weight descriptor="D6" value="30" />
+    <score-weight descriptor="D7" value="30" />
+    <score-weight descriptor="D8" value="30" />
+    <score-weight descriptor="D9" value="30" />
+    <score-weight descriptor="D10" value="30" />
+    <score-weight descriptor="D11" value="30" />
+  </assessment-question>
+
+  <assessment-question id="A0810Cy1" class="consistency" use-criteria='2024-targets'>
+    <definition>
+     To what extent do targets adequately address the gap between current (2018) state and GES?
+    </definition>
+    <answers>
+      <option score="1">Target contributes to gap between current state and GES</option>
+      <option score="1">MS reports GES as achieved, target supports maintaining GES</option>
+      <option score="0.5">Target contributes partially to gap between current state and GES / to maintaining GES</option>
+      <option score="0">Target does not contribute to gap between current state and GES / to maintaining GES</option>
+      <option score="0.250">Not clear</option>
+      <option score="/">Not relevant</option>
+    </answers>
+    <scoring determination-method="wise.msfd.compliance.scoring.scoring_based">
+    </scoring>
+    <score-weight descriptor="D1.1" value="70" />
+    <score-weight descriptor="D1.2" value="70" />
+    <score-weight descriptor="D1.3" value="70" />
+    <score-weight descriptor="D1.4" value="70" />
+    <score-weight descriptor="D1.5" value="70" />
+    <score-weight descriptor="D1.6" value="70" />
+    <score-weight descriptor="D2" value="70" />
+    <score-weight descriptor="D3" value="70" />
+    <score-weight descriptor="D4" value="70" />
+    <score-weight descriptor="D5" value="70" />
+    <score-weight descriptor="D6" value="70" />
+    <score-weight descriptor="D7" value="70" />
+    <score-weight descriptor="D8" value="70" />
+    <score-weight descriptor="D9" value="70" />
+    <score-weight descriptor="D10" value="70" />
+    <score-weight descriptor="D11" value="70" />
+  </assessment-question>
+
+  <assessment-question id="A1013Cy2" class="consistency" use-criteria='2024-targets'>
+    <definition>
+     To what extent are the targets clearly linked to measures that aim to reduce the related pressures and impacts?
+    </definition>
+    <answers>
+      <option score="1">Target is linked to measures (all) aimed at reducing relevant pressures/impacts for this descriptor</option>
+      <option score="0.5">Target is linked to some measures aimed at reducing relevant pressures/impacts for this descriptor / target is linked to measures indirectly aimed at reducing relevant pressures/impacts for this descriptor</option>
+      <option score="0.25">Target is linked to measures which are not aimed at reducing relevant pressures/impacts for this descriptor</option>
+      <option score="0">Target is not linked to measures</option>
+      <option score="0.250">Not clear</option>
+      <option score="/">Not relevant</option>
+    </answers>
+    <scoring determination-method="wise.msfd.compliance.scoring.scoring_based">
+    </scoring>
+    <score-weight descriptor="D1.1" value="30" />
+    <score-weight descriptor="D1.2" value="30" />
+    <score-weight descriptor="D1.3" value="30" />
+    <score-weight descriptor="D1.4" value="30" />
+    <score-weight descriptor="D1.5" value="30" />
+    <score-weight descriptor="D1.6" value="30" />
+    <score-weight descriptor="D2" value="30" />
+    <score-weight descriptor="D3" value="30" />
+    <score-weight descriptor="D4" value="30" />
+    <score-weight descriptor="D5" value="30" />
+    <score-weight descriptor="D6" value="30" />
+    <score-weight descriptor="D7" value="30" />
+    <score-weight descriptor="D8" value="30" />
+    <score-weight descriptor="D9" value="30" />
+    <score-weight descriptor="D10" value="30" />
+    <score-weight descriptor="D11" value="30" />
+  </assessment-question>
+</questions>

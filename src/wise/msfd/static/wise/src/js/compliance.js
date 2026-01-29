@@ -51,7 +51,7 @@ if (!Array.prototype.last) {
     // and the assessment-data-table is scrollable
     var $tableWrap = $(".table-wrap");
     var $assessmentTable = $(
-      "#container-assessment-data-2018 .assessment-data-table"
+      "#container-assessment-data-2018 .assessment-data-table",
     );
     if ($assessmentTable.width() <= $tableWrap.width()) {
       return;
@@ -81,7 +81,7 @@ if (!Array.prototype.last) {
     // create a clone of the assessment data 2018 table and overlap the original table
     // with fixed question and score columns
     $(
-      "#container-assessment-data-2018 .table.table-condensed.assessment-data-table"
+      "#container-assessment-data-2018 .table.table-condensed.assessment-data-table",
     )
       .clone(true)
       .appendTo("#container-assessment-data-2018")
@@ -113,11 +113,11 @@ if (!Array.prototype.last) {
 
     $(".assessment-status-colorbar.show-assessment-wrapper").hover(
       function () {
-        $(this).siblings(".assessment-status-wrapper").css("display", "flex");
+        $(this).next(".assessment-status-wrapper").css("display", "flex");
       },
       function () {
-        $(this).siblings(".assessment-status-wrapper").css("display", "none");
-      }
+        $(this).next(".assessment-status-wrapper").css("display", "none");
+      },
     );
 
     $(".assessment-status-processstate").each(function () {
@@ -130,7 +130,7 @@ if (!Array.prototype.last) {
     });
 
     $(
-      ".assessment-status-wrapper .assessment-status.process-state select"
+      ".assessment-status-wrapper .assessment-status.process-state select",
     ).change(function () {
       var $form = $(this).parents("form");
       var $assessmentContainers = $(".assessment-status-container2");
@@ -164,7 +164,7 @@ if (!Array.prototype.last) {
       $("#process-state-change-bulk-wrapper").addClass("change-initiated");
       $("#process-state-change-bulk-wrapper > *").css("display", "none");
       $(
-        "#process-state-change-bulk-wrapper .process-state-change-message"
+        "#process-state-change-bulk-wrapper .process-state-change-message",
       ).fadeIn(200);
 
       $.ajax({
@@ -181,7 +181,7 @@ if (!Array.prototype.last) {
     $("#process-state-change-bulk-wrapper .btn-clear-checkboxes").click(
       function () {
         $(
-          ".assessment-status-td.enable-process-state-change input[name='process-state-change']"
+          ".assessment-status-td.enable-process-state-change input[name='process-state-change']",
         ).each(function () {
           $(this).prop("checked", false);
         });
@@ -189,15 +189,18 @@ if (!Array.prototype.last) {
         $("#process-state-change-bulk-wrapper").css("display", "none");
 
         $(
-          "#process-state-change-bulk-wrapper #form-process-state-change-bulk input[name='process-state-change']"
+          "#process-state-change-bulk-wrapper #form-process-state-change-bulk input[name='process-state-change']",
         ).remove();
-      }
+      },
     );
 
     // setup checkboxes
     $(".assessment-status-td.enable-process-state-change").each(function () {
       var $this = $(this);
-      var action = $this.find(".assessment-status-wrapper form").attr("action");
+      var action = $this
+        .find(".assessment-status-wrapper form")
+        .last()
+        .attr("action");
 
       var $inputCheckbox = $("<input type='checkbox' />")
         .attr("name", "process-state-change")
@@ -212,10 +215,11 @@ if (!Array.prototype.last) {
           // when the checkbox is checked
           var inputNotExists =
             $("#form-process-state-change-bulk").find(
-              "input[value='" + value + "' ]"
+              "input[value='" + value + "' ]",
             ).length === 0;
 
           if (inputNotExists) {
+            console.log("this: ", $(this));
             $(this)
               .clone()
               .attr("type", "hidden")
@@ -230,7 +234,7 @@ if (!Array.prototype.last) {
             .attr("id", "process-state-bulk-select");
 
           $("#form-process-state-change-bulk .phase-selector").replaceWith(
-            $newPhaseSelector
+            $newPhaseSelector,
           );
 
           $("#process-state-change-bulk-wrapper").css("display", "block");
@@ -243,11 +247,11 @@ if (!Array.prototype.last) {
           // if there are no checkboxes checked, remove the select box too
           if (
             $("#form-process-state-change-bulk").find(
-              "input[name='process-state-change']"
+              "input[name='process-state-change']",
             ).length === 0
           ) {
             $(
-              "#form-process-state-change-bulk .phase-selector select"
+              "#form-process-state-change-bulk .phase-selector select",
             ).remove();
             $("#process-state-change-bulk-wrapper").css("display", "none");
           }
@@ -286,7 +290,7 @@ if (!Array.prototype.last) {
             $(this)
               .parents(".overflow-table.side-by-side-table")
               .siblings(".overflow-table.side-by-side-table-right")
-              .find("tr")[index]
+              .find("tr")[index],
           ).children();
           $next = $.merge($next, $nextSideBySide);
         }
@@ -308,7 +312,7 @@ if (!Array.prototype.last) {
         var height = Math.max(
           $th.height(),
           $subheader.height(),
-          cells_max_height
+          cells_max_height,
         );
 
         $th.height(height);
@@ -371,7 +375,7 @@ if (!Array.prototype.last) {
             $(this)
               .parents(".overflow-table.side-by-side-table")
               .siblings(".overflow-table.side-by-side-table-right")
-              .find("tr")[index]
+              .find("tr")[index],
           );
           var $nextSideBySide = $rowSideBySide.children("td");
           var $thSideBySide = $rowSideBySide.children("th");
@@ -696,7 +700,7 @@ if (!Array.prototype.last) {
         '<div class="top-scroll">' +
         '<div class="top-scroll-inner"></div>' +
         "</div>" +
-        "</div>"
+        "</div>",
     );
 
     $cs.insertAfter($(".overflow-table").find(".inner"));
@@ -716,7 +720,7 @@ if (!Array.prototype.last) {
       var topScrollInner = topScroll.find(".top-scroll-inner");
       var tableScroll = $(".inner", $tParent);
       var tableWidth = $(".table-report", $tParent).outerWidth(
-        (includeMargin = true)
+        (includeMargin = true),
       );
       var tableHeaderWidth = $("th", $tParent).width();
       var tableAndHeaderWidth = tableWidth + tableHeaderWidth;
@@ -771,7 +775,7 @@ if (!Array.prototype.last) {
           '<table class="table table-bordered table-striped fixed-table">' +
           "</table>" +
           "</div>" +
-          "</div>"
+          "</div>",
       );
 
       // Register click event for button to clear all pinned rows for the current table
@@ -1072,7 +1076,10 @@ if (!Array.prototype.last) {
     addFixedTable();
     regionalDescriptorsGroupTableHeaders();
 
-    $(".pat-plone-modal").attr("href", "https://water.europa.eu/marine/assessment-module/login");
+    $(".pat-plone-modal").attr(
+      "href",
+      "https://water.europa.eu/marine/assessment-module/login",
+    );
     $(".assessment-read-more").click(function () {
       var $this = $(this);
       $this.text(function (a, b) {

@@ -65,6 +65,11 @@ ARTICLE_WEIGHTS = {
         'consistency': 0.2,
         'coherence': 0.2
     },
+    'Art10-2024': {
+        'adequacy': 0.6,
+        'consistency': 0.2,
+        'coherence': 0.2
+    },
     'Art3': {
         'adequacy': 1.0,
         'consistency': 1.0,
@@ -979,7 +984,7 @@ Cell = namedtuple('Cell', ['text', 'rowspan'])
 
 
 help_template = PageTemplateFile(os.path.join(
-    str(pathlib.Path(__file__).parent.resolve()), 
+    str(pathlib.Path(__file__).parent.resolve()),
     'pt/assessment-question-help.pt')
 )
 
@@ -1044,7 +1049,7 @@ def render_assessment_help(criterias, descriptor):
 def render_question_guidance(question_id):
     template = PageTemplateFile(
         os.path.join(str(pathlib.Path(__file__).parent.resolve()),
-        'nationaldescriptors/data/questionhelp/{}.pt'.format(question_id))
+                     'nationaldescriptors/data/questionhelp/{}.pt'.format(question_id))
     )
     try:
         text = template()

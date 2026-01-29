@@ -34,8 +34,8 @@ h6 {
 }
 
 p,
-div > ul,
-div > ol {
+div>ul,
+div>ol {
   font-family: 'RobotoL';
   font-size: 18px;
 }
@@ -92,6 +92,7 @@ body.plone-toolbar-left-expanded {
     border: none;
   }
 }
+
 // generic fixes, should be temporary. This fixes the really long breadcrumbs
 .content-page .main-content {
   margin-top: 4em !important;
@@ -112,12 +113,12 @@ body.plone-toolbar-left-expanded {
 }
 
 .msfd-search-wrapper {
-  > .row {
-    > .col-md-3 {
+  >.row {
+    >.col-md-3 {
       display: none;
     }
 
-    > .col-md-9 {
+    >.col-md-9 {
       width: 100%;
     }
   }
@@ -418,6 +419,7 @@ body.plone-toolbar-left-expanded {
     }
 
     .article-title {
+
       th,
       td {
         background-color: #aaa;
@@ -503,18 +505,19 @@ h4.process-phase-title {
     background-color: #dff0d8;
     border-color: #d6e9c6;
   }
-  
+
   #form-process-state-change-bulk {
     margin-top: 5px;
     margin-bottom: 5px;
   }
 
-  #form-process-state-change-bulk .phase-selector .pat-select2{
+  #form-process-state-change-bulk .phase-selector .pat-select2 {
     min-width: 260px;
   }
 }
 
-.assessment-status-wrapper {
+.assessment-status-wrapper,
+.assessment-status-wrapper-2024 {
   display: flex;
   position: absolute;
   background-color: white;
@@ -648,7 +651,7 @@ h4.process-phase-title {
         background-color: @btn-danger-bg;
       }
 
-      + li:after {
+      +li:after {
         background-color: @btn-danger-bg;
       }
     }
@@ -666,7 +669,7 @@ h4.process-phase-title {
         background-color: @default-color;
       }
 
-      + li:after {
+      +li:after {
         background-color: @default-color;
       }
     }
@@ -683,7 +686,7 @@ h4.process-phase-title {
         background-color: @btn-warning-bg;
       }
 
-      + li:after {
+      +li:after {
         background-color: @btn-warning-bg;
       }
     }
@@ -700,7 +703,7 @@ h4.process-phase-title {
         background-color: @btn-warning-2-bg;
       }
 
-      + li:after {
+      +li:after {
         background-color: @btn-warning-2-bg;
       }
     }
@@ -717,7 +720,7 @@ h4.process-phase-title {
         background-color: @btn-primary-bg;
       }
 
-      + li:after {
+      +li:after {
         background-color: @btn-primary-bg;
       }
     }
@@ -734,7 +737,7 @@ h4.process-phase-title {
         background-color: @btn-success-bg;
       }
 
-      + li:after {
+      +li:after {
         background-color: @btn-success-bg;
       }
     }
@@ -751,7 +754,7 @@ h4.process-phase-title {
         background-color: @btn-success-2-bg;
       }
 
-      + li:after {
+      +li:after {
         background-color: @btn-success-2-bg;
       }
     }
@@ -792,7 +795,7 @@ h4.process-phase-title {
 
   &.regional {
     .assessment-status-wrapper {
-      width: 400px;  
+      width: 400px;
     }
   }
 
@@ -815,6 +818,7 @@ h4.process-phase-title {
       }
     }
   }
+
   // &:hover {
   //   .assessment-status-wrapper {
   //     display: flex;
@@ -1051,6 +1055,7 @@ span.has-new-comments {
 
 .ast-header-data table.assessment-data-table,
 .overview-assessment-section table.assessment-data-table {
+
   td,
   div.gescomp,
   .overall-values div.as-value,
@@ -1079,28 +1084,44 @@ span.has-new-comments {
 
     &.as-value-0 {
       background-color: #eee !important;
-    } // not completed
+    }
+
+    // not completed
     &.as-value-1 {
       background-color: Rgb(0, 180, 0) !important;
-    } // very good
+    }
+
+    // very good
     &.as-value-2 {
       background-color: Rgb(150, 235, 150) !important;
-    } // good
+    }
+
+    // good
     &.as-value-3 {
       background-color: Rgb(255, 90, 90) !important;
-    } // not reported
+    }
+
+    // not reported
     &.as-value-4 {
       background-color: Rgb(255, 204, 153) !important;
-    } // poor
+    }
+
+    // poor
     &.as-value-5 {
       background-color: Rgb(255, 150, 150) !important;
-    } // very poor
+    }
+
+    // very poor
     &.as-value-6 {
       background-color: #b8d1e0 !important;
-    } // not clear
+    }
+
+    // not clear
     &.as-value-7 {
       background-color: Rgb(221, 221, 221) !important;
-    } // not relevant
+    }
+
+    // not relevant
     &.as-value-05 {
       background-color: #d85d5d !important;
     }
@@ -1137,7 +1158,7 @@ span.has-new-comments {
     margin-top: 1em;
     margin-bottom: 0;
     color: #1d1d1d !important;
-    
+
     &.article-1314 {
       th {
         width: initial;
@@ -1145,6 +1166,7 @@ span.has-new-comments {
         padding: 0 1rem;
       }
     }
+
     tr.overall-score th,
     tr.overall-score td {
       width: 15%;
@@ -1487,18 +1509,19 @@ table.comp-c-listing {
 
   .fixed-table-inner,
   .table-landingpage {
-    .BAL-C + .ATL-C,
-    .BAL + .ATL,
-    .BAL-A + .ATL-A,
-    .BAL-CA + .ATL-CA,
-    .ATL-C + .MED-C,
-    .ATL + .MED,
-    .ATL-A + .MED-A,
-    .ATL-CA + .MED-CA,
-    .MED-C + .BLK-C,
-    .MED + .BLK,
-    .MED-A + .BLK-A,
-    .MED-CA + .BLK-CA {
+
+    .BAL-C+.ATL-C,
+    .BAL+.ATL,
+    .BAL-A+.ATL-A,
+    .BAL-CA+.ATL-CA,
+    .ATL-C+.MED-C,
+    .ATL+.MED,
+    .ATL-A+.MED-A,
+    .ATL-CA+.MED-CA,
+    .MED-C+.BLK-C,
+    .MED+.BLK,
+    .MED-A+.BLK-A,
+    .MED-CA+.BLK-CA {
       border-left: 3px solid #ddd !important;
     }
 
@@ -1531,6 +1554,7 @@ table.comp-c-listing {
 
     tr {
       &.landpage-header {
+
         th,
         td,
         a {

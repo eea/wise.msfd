@@ -1,4 +1,4 @@
-#pylint: skip-file
+# pylint: skip-file
 """ Classes and views to implement the National Descriptors compliance page
 """
 
@@ -868,6 +868,9 @@ def get_crit_val(question, element, descriptor):
         if use_crit == '2018-targets' and element.year == '2018':
             return element.title
 
+        if use_crit == '2024-targets' and element.year == '2024':
+            return element.title
+
         return ''
 
     is_prim = element.is_primary(descriptor)
@@ -1212,8 +1215,9 @@ class NationalDescriptorArticleView(BaseView, AssessmentDataMixin):
 
     @property
     def title(self):
-        return u"Commission assessment / {} / 2018 / {} / {} / {} ".format(
+        return u"Commission assessment / {} / {} / {} / {} / {} ".format(
             self.article,
+            self.year,
             self.descriptor_title,
             self.country_title,
             self.country_region_name,
@@ -1362,7 +1366,6 @@ class NationalDescriptorArticleView(BaseView, AssessmentDataMixin):
             self.descriptor_obj,
             muids=self.muids
         )
-
         article_weights = ARTICLE_WEIGHTS
         assessment = self.format_assessment_data(
             self.article,
@@ -1434,6 +1437,15 @@ class NationalDescriptorArticleView(BaseView, AssessmentDataMixin):
 
 
 @implementer(INationaldescriptorArticleView)
+class NationalDescriptorArticleView2024(NationalDescriptorArticleView):
+    """ NationalDescriptorArticleView2024 """
+    year = '2024'
+
+    assessment_data_2012_tpl = Template('./pt/assessment-data-2012.pt')
+    assessment_data_2018_tpl = Template('./pt/assessment-data-2024.pt')
+
+
+@implementer(INationaldescriptorArticleView)
 class NationalDescriptorArticleView2022(NationalDescriptorArticleView):
     """ NationalDescriptorArticleView2022 """
 
@@ -1465,7 +1477,6 @@ CROSS_CUTTING_SECTIONS = (
     ("Public consultation", ["Ad21I", "Ad22I"]),
     ("Administrative processes", ["Ad23J", "Ad24J"]),
 )
-
 
 
 @implementer(INationaldescriptorArticleViewCrossCutting)
@@ -1523,7 +1534,7 @@ class NationalDescriptorArticleViewCrossCutting(NationalDescriptorArticleView):
         total_weight = 0
 
         section_questions = [
-            x[1] 
+            x[1]
             for x in CROSS_CUTTING_SECTIONS
             if question_id in x[1]
         ]

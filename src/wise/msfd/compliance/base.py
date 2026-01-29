@@ -1,4 +1,4 @@
-#pylint: skip-file
+# pylint: skip-file
 from __future__ import absolute_import
 import logging
 from collections import namedtuple
@@ -22,7 +22,7 @@ from plone.memoize import ram
 from plone.memoize.view import memoize
 from Products.CMFCore.utils import getToolByName
 from Products.Five.browser import BrowserView
-from wise.msfd import db, sql, sql2018
+from wise.msfd import db, sql, sql2018, sql2024
 from wise.msfd.base import BasePublicPage
 from wise.msfd.compliance.scoring import Score  # , compute_score
 from wise.msfd.compliance.utils import get_assessors, ordered_regions_sortkey
@@ -58,11 +58,12 @@ QUESTION_DISPLAY_IDS = {
     "Ad24J": "Ad24K",
 }
 
+
 def get_question_display_id(question_id):
     """ the question_id for some questions were changed and we cannot just change
         the question_id as it is used to store the data
         use this only to display a different question_id for the question """
-    
+
     return QUESTION_DISPLAY_IDS.get(question_id, question_id)
 
 
@@ -187,8 +188,13 @@ def is_row_relevant_for_descriptor(row, descriptor, ok_features,
     # other_ges_comps_2018 = [v for v in ges_comps_2018 if v != descriptor]
     # if ges_comps.intersection(set(other_ges_comps_2018)):
     #     return False
+    _feats = []
+    if hasattr(row, 'Features'):
+        _feats = row.Features
+    elif hasattr(row, 'Feature'):
+        _feats = row.Feature
 
-    feats = set(row.Features.split(','))
+    feats = set(_feats.split(','))
 
     # Get row if one of the features is associated with relevant features
     # for current descriptor
@@ -781,7 +787,17 @@ class BaseComplianceView(BrowserView, BasePublicPage, SecurityMixin):
 
             return obj
 
+
 def _a10_ids_cachekey(method, self, descriptor, **kwargs):
+    muids = [m.id for m in kwargs['muids']]
+    key = '{}-{}-{}'.format(
+        method.__name__, descriptor.id, ','.join(muids)
+    )
+
+    return key
+
+
+def _a10_ids_cachekey_2024(method, self, descriptor, **kwargs):
     muids = [m.id for m in kwargs['muids']]
     key = '{}-{}-{}'.format(
         method.__name__, descriptor.id, ','.join(muids)
@@ -817,7 +833,7 @@ class AssessmentQuestionDefinition:
         self.klass = node.get('class')
         self.use_criteria = node.get('use-criteria')
         self.definition = u"{}: {}".format(
-            # get_question_display_id(self.id), 
+            # get_question_display_id(self.id),
             self.id,
             node.find('definition').text.strip())
         self.answers = [x.strip()
@@ -907,6 +923,36 @@ class AssessmentQuestionDefinition:
 
         return res_sorted
 
+    def __get_a10_2024_targets(self, descr_obj, ok_ges_ids, muids):
+        # This method filters the targets from the assessment edit and
+        # assessment overview pages
+
+        # Get all targets without filtering by feature
+        # targets = self.__get_a10_2018_targets_from_table(ok_ges_ids, muids)
+
+        # Get targets filtered by feature, Only relevant for D1.x
+        targets = self.__get_a10_2024_targets_from_view(
+            descr_obj, ok_ges_ids, muids
+        )
+
+        res = [Target(t.TargetCode,  # .encode('ascii', errors='ignore'),
+                      t.TargetCode,
+                      t.Description,
+                      '2024')
+
+               for t in targets]
+
+        if not res:
+            res = [Target('NoTargetsReported',
+                          'NoTargetsReported',
+                          'No targets reported',
+                          '2024')]
+
+        # sort Targets and make them distinct
+        res_sorted = sorted(set(res), key=lambda _x: natural_sort_key(_x.id))
+
+        return res_sorted
+
     @db.use_db_session('2018')
     def __get_a10_2018_targets_from_table(self, ok_ges_ids, muids):
         T = sql2018.ART10TargetsTarget
@@ -978,6 +1024,59 @@ class AssessmentQuestionDefinition:
 
         return ges_filtered
 
+    @db.use_db_session('2024')
+    def __get_a10_2024_targets_from_view(self, descr_obj, ok_ges_ids, muids):
+        t = sql2024.t_V_ART10_Target_WM
+        descriptor = descr_obj.id
+
+        # use db.get_all_records because of caching
+        # sess = db.session()
+        # q = sess.query(t).filter(t.c.MarineReportingUnit.in_(muids))
+
+        _count, q = db.get_all_records(
+            t,
+            t.c.MarineReportingUnit.in_(muids)
+        )
+
+        ges_filtered = []
+
+        for row in q:
+            ges_comps = getattr(row, 'GEScomponent', ())
+            ges_comps = set([g.strip() for g in ges_comps.split(',')])
+
+            if ges_comps.intersection(ok_ges_ids):
+                ges_filtered.append(row)
+
+        if descriptor.startswith('D1.'):
+            feature_filtered = []
+            ok_features = set([f.name for f in get_features(descriptor)])
+            blacklist_descriptors = ['D1.1', 'D1.2', 'D1.3', 'D1.4', 'D1.5',
+                                     'D1.6', 'D4', 'D6']
+            blacklist_descriptors.remove(descriptor)
+            blacklist_features = []
+
+            for _desc in blacklist_descriptors:
+                blacklist_features.extend([
+                    f.name for f in get_features(_desc)
+                ])
+
+            blacklist_features = set(blacklist_features)
+
+            for row in ges_filtered:
+                ges_comps = getattr(row, 'GEScomponent', ())
+                ges_comps = set([g.strip() for g in ges_comps.split(',')])
+
+                row_needed = is_row_relevant_for_descriptor(
+                    row, descriptor, ok_features, blacklist_features, ges_comps
+                )
+
+                if row_needed:
+                    feature_filtered.append(row)
+
+            ges_filtered = feature_filtered
+
+        return ges_filtered
+
     @ram.cache(_a10_ids_cachekey)
     def _art_10_ids(self, descriptor, **kwargs):
         muids = [x.id for x in kwargs['muids']]
@@ -990,6 +1089,21 @@ class AssessmentQuestionDefinition:
                                                    muids)
         # targets_2012 = self.__get_a10_2012_targets(ok_ges_ids, muids)
         targets_all = targets_2018
+
+        return targets_all
+
+    @ram.cache(_a10_ids_cachekey_2024)
+    def _art_10_ids_2024(self, descriptor, **kwargs):
+        muids = [x.id for x in kwargs['muids']]
+        ok_ges_ids = descriptor.all_ids()
+
+        if descriptor.id.startswith('D1.'):
+            ok_ges_ids.add('D1')
+
+        targets_2024 = self.__get_a10_2024_targets(descriptor, ok_ges_ids,
+                                                   muids)
+        # targets_2012 = self.__get_a10_2012_targets(ok_ges_ids, muids)
+        targets_all = targets_2024
 
         return targets_all
 
@@ -1036,7 +1150,7 @@ class AssessmentQuestionDefinition:
         if self.article in ['Art3', 'Art4']:
             res = filtered_descriptors(res, self)
         if self.article in ['Art13', 'Art14', 'Art1314CrossCutting',
-                'Art13Completeness', 'Art14Completeness']:
+                            'Art13Completeness', 'Art14Completeness']:
             res = filtered_descriptors(res, self)
 
         return sorted_criterions(res)
@@ -1053,6 +1167,7 @@ class AssessmentQuestionDefinition:
             'Art8': self._art_89_ids,
             'Art9': self._art_89_ids,
             'Art10': self._art_10_ids,
+            'Art10-2024': self._art_10_ids_2024,
             'Art3': self._art_34_ids,
             'Art4': self._art_4_ids,
             'Art7': self._art_34_ids,
