@@ -848,6 +848,21 @@ class AssessmentQuestionDefinition:
             getattr(node.find('source-info'), 'text', '').strip())
         self.q_heading = getattr(node.find('heading'), 'text', '').strip()
 
+    def fix_gescomp(self, gescomp):
+        gescomp_map = {
+            "D1B": "D1.1",  # birds
+            "D1M": "D1.2",  # mammals
+            "D1R": "D1.3",  # reptiles
+            "D1F": "D1.4",  # fish
+            "D1C": "D1.5",  # cephalopods
+            "D1P": "D1.6",  # pelagic habitats
+        }
+
+        if gescomp not in gescomp_map:
+            return gescomp
+
+        return gescomp_map[gescomp]
+
     def calculate_score(self, descriptor, values, country_code=None):
         score_obj = Score(self, descriptor, values, country_code)
 
@@ -1042,7 +1057,10 @@ class AssessmentQuestionDefinition:
 
         for row in q:
             ges_comps = getattr(row, 'GEScomponent', ())
-            ges_comps = set([g.strip() for g in ges_comps.split(',')])
+            ges_comps = set([
+                self.fix_gescomp(g.strip())
+                for g in ges_comps.split(',')
+            ])
 
             if ges_comps.intersection(ok_ges_ids):
                 ges_filtered.append(row)

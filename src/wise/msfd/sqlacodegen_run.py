@@ -1,8 +1,15 @@
-""" run sqlacodegen only works with python <3.11 
+"""   
 need python 3.10
+
+pyenv install 3.10.12
+pyenv virtualenv 3.10.12 sqlacodegen310
+pyenv shell sqlacodegen310
 pip install 'sqlacodegen<3'
 pip install SQLAlchemy==1.4.46
 pip install pymssql
+
+python sqlacodegen_run.py
+
 """
 
 import subprocess
@@ -31,15 +38,3 @@ cmd = [
 
 
 subprocess.run(cmd, check=True)
-
-# from sqlacodegen.main import main
-# import sys
-
-# sys.argv = [
-#     "sqlacodegen",
-#     "--outfile", "sql2024_NEW.py",
-#     "--schema", "data,dbo",
-#     "{}/MSFD2024_public".format(dsn),
-# ]
-
-# main()

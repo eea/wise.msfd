@@ -578,7 +578,6 @@ t_V_ART10_Target_WM = Table(
     Column('SnapshotId', BigInteger),
     Column('ReportingDate', DateTime),
     Column('Comment', Unicode),
-    Column('Element', Unicode),
     Column('Parameter', Unicode),
     Column('TargetValue', Float(53)),
     Column('TargetValueOperator', Unicode),
