@@ -137,6 +137,16 @@ interfaces_mock = types.ModuleType('eea.privacyscreen.interfaces')
 interfaces_mock.IEeaPrivacyscreenLayer = IEeaPrivacyscreenLayer
 sys.modules['eea.privacyscreen.interfaces'] = interfaces_mock
 
+
+class IDropdownSpecific(Interface):
+    """Mock interface: IDropdownSpecific"""
+
+
+interfaces_mock = types.ModuleType(
+    'webcouturier.dropdownmenu.browser.interfaces')
+interfaces_mock.IDropdownSpecific = IDropdownSpecific
+sys.modules['webcouturier.dropdownmenu.browser.interfaces'] = interfaces_mock
+
 if not hasattr(base64, "encodestring"):
     base64.encodestring = base64.encodebytes
 if not hasattr(base64, "decodestring"):
