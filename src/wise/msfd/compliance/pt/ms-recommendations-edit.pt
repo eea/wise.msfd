@@ -1,21 +1,16 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en"
   xmlns:tal="http://xml.zope.org/namespaces/tal"
   xmlns:metal="http://xml.zope.org/namespaces/metal"
-  xmlns:i18n="http://xml.zope.org/namespaces/i18n"
-  lang="en"
-  metal:use-macro="context/main_template/macros/master"
-  i18n:domain="eea">
+  xmlns:i18n="http://xml.zope.org/namespaces/i18n" lang="en" metal:use-macro="context/main_template/macros/master" i18n:domain="eea">
 
-  <body metal:fill-slot="content">
-    <div id="layout-contents" tal:define="text context/text | nothing" >
+  <metal:block fill-slot="main">
+    <div id="layout-contents" tal:define="text context/text | nothing">
       <div id="wise-search-form" class="full-width-marker">
         <div id="wise-search-form-top">
-          <metal:tabs
-            metal:use-macro="context/wise-macros/macros/tabs"></metal:tabs>
+          <metal:tabs metal:use-macro="context/wise-macros/macros/tabs"></metal:tabs>
         </div>
 
-        <div id="comp-national-descriptor" 
-            class="start-page-content left-side-form edit-recommendation-feedback">
+        <div id="comp-national-descriptor" class="start-page-content left-side-formZ edit-recommendation-feedback">
           <h1 class="report-title" tal:content="view/title">Edit MS responses to Article 12 recommendations for </h1>
 
           <div class="nda-link">
@@ -26,20 +21,14 @@
           </div>
 
           <div class="process-state-phase-form" tal:condition="view/can_manage">
-            <form class="process-state"
-              method="GET"
-              tal:attributes="action python: context.absolute_url() + '/content_status_modify'">
+            <form class="process-state" method="GET" tal:attributes="action python: context.absolute_url() + '/content_status_modify'">
               <div>
                 <i class="glyphicon glyphicon-transfer"></i>
                 Process state:
                 <strong tal:content="view/get_status">Phase 0</strong>
 
-                <div class="phase-selector"
-                  tal:condition="python: not(view.read_only_access)">
-                  <select onchange="javascript:this.form.submit()"
-                    name="workflow_action"
-                    class="pat-select2"
-                    data-pat-select2="width:10em">
+                <div class="phase-selector" tal:condition="python: not(view.read_only_access)">
+                  <select onchange="javascript:this.form.submit()" name="workflow_action" class="pat-select2" data-pat-select2="width:10em">
                     <option value=''>Choose action...</option>
                     <tal:rep repeat="trans view/get_transitions">
                       <option tal:content="trans/title" tal:attributes="value trans/id">
@@ -62,11 +51,9 @@
           <metal:form use-macro="context/@@ploneform-macros/titlelessform">
             <metal:fields fill-slot="fields">
               <tal:def tal:define="subforms_grouped python: view.subforms">
-                <!-- <h4 tal:condition="subforms"
-                  tal:content="python: '{} ({}) - {} recommendations'.format(region[1], region[0], len(subforms))">Baltic</h4> -->
-                
-                <div tal:repeat='subform_group subforms_grouped'
-                    class="recommendation-subform-wrap">
+                <!-- <h4 tal:condition="subforms" tal:content="python: '{} ({}) - {} recommendations'.format(region[1], region[0], len(subforms))">Baltic</h4> -->
+
+                <div tal:repeat='subform_group subforms_grouped' class="recommendation-subform-wrap">
                   <div class="recommendation-subform">
                     <div class="recommendation-info-container">
                       <div class="subform-title">
@@ -80,35 +67,23 @@
                     </div>
 
                     <tal:rep tal:repeat="subform python: subform_group[1]">
-                      <h5 tal:condition="python: hasattr(subform, 'region_title')"
-                          tal:content="subform/region_title"></h5>
-                      <!-- <div tal:condition="python: hasattr(subform, 'ms_region')" 
-                          tal:content="subform/ms_region"></div> -->
+                      <h5 tal:condition="python: hasattr(subform, 'region_title')" tal:content="subform/region_title"></h5>
+                      <!-- <div tal:condition="python: hasattr(subform, 'ms_region')" tal:content="subform/ms_region"></div> -->
                       <div class="fields-container">
                         <div tal:repeat="fieldname subform/fields" class="fields-container-row">
                           <tal:def define="widget python: view.widgets[fieldname]">
 
-                            <div class="field"
-                              tal:define="error widget/error;
+                            <div class="field" tal:define="error widget/error;
                               hidden python:widget.mode == 'hidden';
-                              element nocall: widget/field/_element | nothing;"
-                              tal:attributes="class python:'field' + (error and ' error' or '')">
+                              element nocall: widget/field/_element | nothing;" tal:attributes="class python:'field' + (error and ' error' or '')">
 
-                              <span class="fieldRequired" title="Required"
-                                tal:condition="python:widget.required and not hidden"
-                                i18n:translate="label_required"
-                                i18n:attributes="title title_required;">
+                              <span class="fieldRequired" title="Required" tal:condition="python:widget.required and not hidden" i18n:translate="label_required" i18n:attributes="title title_required;">
                                 (Required)
                               </span>
 
                               <div class="widget">
                                 <div>
-                                  <label for=""
-                                    tal:condition="not:hidden"
-                                    class="help-popover"
-                                    data-trigger="hover"
-                                    data-html="true"
-                                    tal:attributes="for widget/id;
+                                  <label for="" tal:condition="not:hidden" class="help-popover" data-trigger="hover" data-html="true" tal:attributes="for widget/id;
                                     title python: element and element.title or '';">
                                     <span i18n:translate="" tal:content="widget/label">label</span>
                                   </label>
@@ -136,27 +111,17 @@
                         <div tal:repeat="fieldname subform/fields" class="fields-container-row">
                           <tal:def define="widget python: view.widgets[fieldname]">
 
-                            <div class="field"
-                              tal:define="error widget/error;
+                            <div class="field" tal:define="error widget/error;
                               hidden python:widget.mode == 'hidden';
-                              element nocall: widget/field/_element | nothing;"
-                              tal:attributes="class python:'field' + (error and ' error' or '')">
+                              element nocall: widget/field/_element | nothing;" tal:attributes="class python:'field' + (error and ' error' or '')">
 
-                              <span class="fieldRequired" title="Required"
-                                tal:condition="python:widget.required and not hidden"
-                                i18n:translate="label_required"
-                                i18n:attributes="title title_required;">
+                              <span class="fieldRequired" title="Required" tal:condition="python:widget.required and not hidden" i18n:translate="label_required" i18n:attributes="title title_required;">
                                 (Required)
                               </span>
 
                               <div class="widget">
                                 <div>
-                                  <label for=""
-                                    tal:condition="not:hidden"
-                                    class="help-popover"
-                                    data-trigger="hover"
-                                    data-html="true"
-                                    tal:attributes="for widget/id;
+                                  <label for="" tal:condition="not:hidden" class="help-popover" data-trigger="hover" data-html="true" tal:attributes="for widget/id;
                                     title python: element and element.title or '';">
                                     <span i18n:translate="" tal:content="widget/label">label</span>
                                   </label>
@@ -203,10 +168,10 @@
 
           </tal:rep> -->
 
-          
+
         </div>
       </div>
     </div>
 
-  </body>
+  </metal:block>
 </html>

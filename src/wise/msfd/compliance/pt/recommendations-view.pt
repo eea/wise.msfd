@@ -1,12 +1,9 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en"
   xmlns:tal="http://xml.zope.org/namespaces/tal"
   xmlns:metal="http://xml.zope.org/namespaces/metal"
-  xmlns:i18n="http://xml.zope.org/namespaces/i18n"
-  lang="en"
-  metal:use-macro="context/main_template/macros/master"
-  i18n:domain="eea">
+  xmlns:i18n="http://xml.zope.org/namespaces/i18n" lang="en" metal:use-macro="context/main_template/macros/master" i18n:domain="eea">
 
-  <body metal:fill-slot="content">
+  <metal:block fill-slot="main">
 
     <div id="wise-search-form" class="full-width-marker">
 
@@ -14,7 +11,7 @@
         <metal:tabs metal:use-macro="context/wise-macros/macros/tabs"></metal:tabs>
       </div>
 
-      <div class="left-side-form">
+      <div class="left-side-formZ">
 
         <h3 class="report-title">COM/Art12/2018/Recommendations</h3>
 
@@ -35,33 +32,32 @@
                     <textarea style="height: 2em;" id="recomm-id" name="rec_id" class="form-control" required disabled></textarea>
                   </div>-->
                   <input type="hidden" id="recomm-id" name="rec_id">
-                  <div class="form-group">
-                    <label>Recommendation code:</label>
-                    <textarea style="height: 2em;" id="recomm-code" name="rec_code" class="form-control" required></textarea>
-                  </div>
-                  <div class="form-group">
-                    <label>Topic:</label>
-                    <select id="topic" name="topic" class="form-control" autocomplete="off" required>
-                      <tal:rep tal:repeat="topic view/topics">
-                        <option tal:content="topic"></option>
-                      </tal:rep>
-                    </select>
-                  </div>
-                  <div class="form-group">
-                    <label>Recommendation text:</label>
-                    <textarea style="height: 6.5em;" id="recomm-text" name="rec_text" class="form-control" required></textarea>
-                  </div>
-                  <div>
-                    <i style="color: grey;">(hold CTRL key for multiple selections)</i>
-                  </div>
-                  <div class="container-form-group-multiple">
-                    <div class="form-group multiple">
-                      <label>Applicable MS or (sub)region:</label>
-                      <select id="ms-region" size="20" multiple name="ms_or_region" class="form-control" autocomplete="off" required>
-                        <optgroup label="Countries">
+                    <div class="form-group">
+                      <label>Recommendation code:</label>
+                      <textarea style="height: 2em;" id="recomm-code" name="rec_code" class="form-control" required></textarea>
+</div>
+<div class="form-group">
+                        <label>Topic:</label>
+                        <select id="topic" name="topic" class="form-control" autocomplete="off" required>
+<tal:rep tal:repeat="topic view/topics">
+                          <option tal:content="topic"></option>
+                        </tal:rep>
+                      </select>
+                    </div>
+                    <div class="form-group">
+                      <label>Recommendation text:</label>
+                      <textarea style="height: 6.5em;" id="recomm-text" name="rec_text" class="form-control" required></textarea>
+</div>
+<div>
+<i style="color: grey;">(hold CTRL key for multiple selections)</i>
+                    </div>
+                    <div class="container-form-group-multiple">
+                      <div class="form-group multiple">
+                        <label>Applicable MS or (sub)region:</label>
+                        <select id="ms-region" size="20" multiple name="ms_or_region" class="form-control" autocomplete="off" required>
+<optgroup label="Countries">
                           <tal:rep tal:repeat="country view/countries">
-                            <option tal:attributes="value python: country;"
-                                  tal:content="python: '{}'.format(country)">Belgium (BE)</option>
+                            <option tal:attributes="value python: country;" tal:content="python: '{}'.format(country)">Belgium (BE)</option>
                           </tal:rep>
                         </optgroup>
                         <optgroup label="Europe">
@@ -69,8 +65,7 @@
                         </optgroup>
                         <optgroup label="Regions">
                           <tal:rep tal:repeat="region view/regions">
-                            <option tal:attributes="value python: region[0];"
-                                  tal:content="python: '{} ({})'.format(region[0], region[1])">Belgium (BE)</option>
+                            <option tal:attributes="value python: region[0];" tal:content="python: '{} ({})'.format(region[0], region[1])">Belgium (BE)</option>
                           </tal:rep>
                         </optgroup>
                       </select>
@@ -78,75 +73,59 @@
                     <div class="form-group multiple">
                       <label>Applicable descriptors:</label>
                       <select id="descriptors" size="20" multiple name="descriptors" class="form-control" autocomplete="off" required>
-                        <tal:rep tal:repeat="descriptor view/descriptors">
-                          <option tal:attributes="value python: descriptor[0]"
-                              tal:content="python: descriptor[1]">D1</option>
-                        </tal:rep>
-                      </select>
-                    </div>
+<tal:rep tal:repeat="descriptor view/descriptors">
+                        <option tal:attributes="value python: descriptor[0]" tal:content="python: descriptor[1]">D1</option>
+                      </tal:rep>
+                    </select>
                   </div>
-                  <input class="submitRecomm btn btn-primary btn-s"
-                         type="submit" value="Save"
-                         name="add-recommendation"/>
-                  <input class="submitRecomm btn btn-danger btn-s"
-                         type="submit" value="Remove"
-                         name="remove-recommendation"/>
-                </form>
-              </div>
+                </div>
+                <input class="submitRecomm btn btn-primary btn-s" type="submit" value="Save" name="add-recommendation"/>
+                <input class="submitRecomm btn btn-danger btn-s" type="submit" value="Remove" name="remove-recommendation"/>
+              </form>
             </div>
           </div>
         </div>
-        <div id="edit-topics" class="modal fade" tabindex="-1" role="dialog">
-          <div class="modal-dialog modal-lg" role="document">
-            <div class="modal-content">
-              <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                  <span aria-hidden="true">&times;</span>
-                </button>
-                <h3 class="modal-title">Edit topics</h3>
-              </div>
-
-              <div class="modal-body">
-                <form id="topic-form" method="POST" action="@@recommendations">
-                  <div class="form-group">
-                    <label>Topics:</label>
-                    <i style="color: grey;">(topics are separated by a newline)</i>
-                    <textarea rows="40" stylezz="height: 6.5em;" id="topics-text" name="topics" class="form-control" required
-                        tal:content="python: '\r\n'.join(view.topics)"></textarea>
-                  </div>
-                  <input class="submitRecomm btn btn-primary btn-s"
-                         type="submit" value="Save"
-                         name="edit-topics"/>
-                </form>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div tal:condition="python: view.can_view_assessment_data()">
-          <a class="btn btn-s btn-primary"
-            data-toggle="modal"
-            data-target="#edit-recommendation">
-              Add recommendation
-          </a>
-          <a class="btn btn-s btn-primary"
-            data-toggle="modal"
-            data-target="#edit-topics">
-              Edit topics
-          </a>
-          <form style="display: inline-block;" id="download" method="POST" action="@@recommendations">
-            <input class="btn btn-primary btn-s"
-                    type="submit" value="Download as excel"
-                    name="download-excel"/>
-            <input class="btn btn-primary btn-s"
-                    type="submit" value="Migrate recommendations"
-                    name="migrate-recommendations"/>
-          </form>
-        </div>
-
-        <table tal:replace="structure view/recommendations_table"></table>
       </div>
+      <div id="edit-topics" class="modal fade" tabindex="-1" role="dialog">
+        <div class="modal-dialog modal-lg" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+              <h3 class="modal-title">Edit topics</h3>
+            </div>
+
+            <div class="modal-body">
+              <form id="topic-form" method="POST" action="@@recommendations">
+                <div class="form-group">
+                  <label>Topics:</label>
+                  <i style="color: grey;">(topics are separated by a newline)</i>
+                  <textarea rows="40" stylezz="height: 6.5em;" id="topics-text" name="topics" class="form-control" required tal:content="python: '\r\n'.join(view.topics)"></textarea>
+                </div>
+                <input class="submitRecomm btn btn-primary btn-s" type="submit" value="Save" name="edit-topics"/>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div tal:condition="python: view.can_view_assessment_data()">
+        <a class="btn btn-s btn-primary" data-toggle="modal" data-target="#edit-recommendation">
+              Add recommendation
+        </a>
+        <a class="btn btn-s btn-primary" data-toggle="modal" data-target="#edit-topics">
+              Edit topics
+        </a>
+        <form style="display: inline-block;" id="download" method="POST" action="@@recommendations">
+          <input class="btn btn-primary btn-s" type="submit" value="Download as excel" name="download-excel"/>
+          <input class="btn btn-primary btn-s" type="submit" value="Migrate recommendations" name="migrate-recommendations"/>
+        </form>
+      </div>
+
+      <table tal:replace="structure view/recommendations_table"></table>
     </div>
-  </body>
+  </div>
+</metal:block>
 
 </html>

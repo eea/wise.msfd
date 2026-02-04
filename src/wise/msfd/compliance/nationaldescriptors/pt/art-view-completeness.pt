@@ -1,31 +1,25 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en"
   xmlns:tal="http://xml.zope.org/namespaces/tal"
   xmlns:metal="http://xml.zope.org/namespaces/metal"
-  xmlns:i18n="http://xml.zope.org/namespaces/i18n"
-  lang="en"
-  metal:use-macro="context/main_template/macros/master"
-  i18n:domain="eea">
+  xmlns:i18n="http://xml.zope.org/namespaces/i18n" lang="en" metal:use-macro="context/main_template/macros/master" i18n:domain="eea">
 
-  <body metal:fill-slot="content">
+  <metal:block fill-slot="main">
 
-    <div id="layout-contents" tal:define="text context/text | nothing" >
+    <div id="layout-contents" tal:define="text context/text | nothing">
       <div id="wise-search-form" class="full-width-marker">
         <div id="wise-search-form-top">
-          <metal:tabs
-            metal:use-macro="context/wise-macros/macros/tabs"></metal:tabs>
+          <metal:tabs metal:use-macro="context/wise-macros/macros/tabs"></metal:tabs>
         </div>
 
-        <div class="start-page-content left-side-form"
-            tal:define="year_2018 python: view.get_report_year('2018');
+        <div class="start-page-content left-side-formZ" tal:define="year_2018 python: view.get_report_year('2018');
                 year_2012 python: view.get_report_year('2012')">
 
           <div metal:use-macro="context/global_statusmessage/macros/portal_message">
             Status message
           </div>
 
-          <h1 class="report-title"
-              tal:content="structure view/title">Assessment</h1>
-          <h4 class="process-phase-title" >
+          <h1 class="report-title" tal:content="structure view/title">Assessment</h1>
+          <h4 class="process-phase-title">
             Current phase: <span tal:content="python: view.current_phase[1]">Adequacy</span>
           </h4>
 
@@ -50,36 +44,26 @@
           <div id="nat-desc-art-menu">
             <ul>
               <li>
-                <a
-                  tal:attributes="href python: context.absolute_url() + '/@@edit-assessment-data-2022-completeness'"
-                  target="_blank">
+                <a tal:attributes="href python: context.absolute_url() + '/@@edit-assessment-data-2022-completeness'" target="_blank">
                   <i class="glyphicon glyphicon-edit"></i> Assessment
                 </a>
-                <a tal:attributes="href python: context.absolute_url() + '/@@view-edit-history'"
-                    class="glyphicon glyphicon-th pat-plone-modal"
-                    data-pat-plone-modal="height: 600px; content:#edit-history; width: 80%"></a>
+                <a tal:attributes="href python: context.absolute_url() + '/@@view-edit-history'" class="glyphicon glyphicon-th pat-plone-modal" data-pat-plone-modal="height: 600px; content:#edit-history; width: 80%"></a>
               </li>
               <li class="process-state" style="display:flex; align-items: center">
-                <form method="GET"
-                      tal:attributes="action python: context.absolute_url() + '/content_status_modify'">
+                <form method="GET" tal:attributes="action python: context.absolute_url() + '/content_status_modify'">
                   <div>
                     <i class="glyphicon glyphicon-transfer"></i>
                     Process state:
                     <strong tal:content="view/get_status">Phase 0</strong>
-                    <select tal:condition="python: view.can_change_process_state()"
-                        onchange="javascript:this.form.submit()" name="workflow_action"
-                        class="pat-select2"
-                        data-pat-select2="width:10em">
+                    <select tal:condition="python: view.can_change_process_state()" onchange="javascript:this.form.submit()" name="workflow_action" class="pat-select2" data-pat-select2="width:10em">
                       <option value=''>Choose action...</option>
                       <tal:rep repeat="trans view/get_transitions">
-                        <option tal:content="trans/title"
-                          tal:attributes="value trans/id">Send to Phase 0</option>
+                        <option tal:content="trans/title" tal:attributes="value trans/id">Send to Phase 0</option>
                       </tal:rep>
                     </select>
                   </div>
                 </form>
-                <a tal:attributes="href python: context.absolute_url() + '/@@historyview'"
-                    class="link-overlay contentHistory glyphicon glyphicon-time" id="content-history" style="margin-left: 2rem"></a>
+                <a tal:attributes="href python: context.absolute_url() + '/@@historyview'" class="link-overlay contentHistory glyphicon glyphicon-time" id="content-history" style="margin-left: 2rem"></a>
               </li>
             </ul>
           </div>
@@ -102,5 +86,5 @@
       </div>
     </div>
 
-  </body>
+  </metal:block>
 </html>

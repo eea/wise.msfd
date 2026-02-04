@@ -1,26 +1,22 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en"
   xmlns:tal="http://xml.zope.org/namespaces/tal"
   xmlns:metal="http://xml.zope.org/namespaces/metal"
-  xmlns:i18n="http://xml.zope.org/namespaces/i18n"
-  lang="en"
-  metal:use-macro="context/main_template/macros/master"
-  i18n:domain="eea">
+  xmlns:i18n="http://xml.zope.org/namespaces/i18n" lang="en" metal:use-macro="context/main_template/macros/master" i18n:domain="eea">
 
-  <body metal:fill-slot="content">
+  <metal:block fill-slot="main">
 
-    <div id="layout-contents" tal:define="text context/text | nothing" >
-      <div id="wise-search-form" class="full-width-marker">
+    <div id="layout-contents" tal:define="text context/text | nothing">
+      <div id="wise-search-form" class="full-width-marker msfd-search-wrapper">
         <div id="wise-search-form-top">
-          <metal:tabs
-            metal:use-macro="context/wise-macros/macros/tabs"></metal:tabs>
+          <metal:tabs metal:use-macro="context/wise-macros/macros/tabs"></metal:tabs>
         </div>
 
-        <div class="country-start-assessments-page start-page-content left-side-form"
-             tal:define="country_folder python: view._country_folder;
+        <div class="country-start-assessments-page start-page-content left-side-formZ" tal:define="country_folder python: view._country_folder;
                   regions view/get_regions;
                   region_art1314 python: regions[0]">
 
-          <h1>Commission assessments - national overview: <span tal:content="view/country_title"></span></h1>
+          <h1>Commission assessments - national overview: <span tal:content="view/country_title"></span>
+          </h1>
           <div class="nda-link">
             <a href="/marine/policy-and-reporting/msfd-reports-and-assessments/assessments-by-countries/${view/country_name_url}">
               <i class="glyphicon glyphicon-share-alt"></i>
@@ -40,20 +36,14 @@
           </div>
 
           <div class="process-state-phase-form" tal:condition="False">
-            <form class="process-state"
-              method="GET"
-              tal:attributes="action python: context.absolute_url() + '/content_status_modify'">
+            <form class="process-state" method="GET" tal:attributes="action python: context.absolute_url() + '/content_status_modify'">
               <div>
                 <i class="glyphicon glyphicon-transfer"></i>
                 Process state:
                 <strong tal:content="python: view.get_status(country_folder)">Phase 0</strong>
 
-                <div class="phase-selector"
-                  tal:condition="python: not(view.read_only_access)">
-                  <select onchange="javascript:this.form.submit()"
-                    name="workflow_action"
-                    class="pat-select2"
-                    data-pat-select2="width:10em">
+                <div class="phase-selector" tal:condition="python: not(view.read_only_access)">
+                  <select onchange="javascript:this.form.submit()" name="workflow_action" class="pat-select2" data-pat-select2="width:10em">
                     <option value=''>Choose action...</option>
                     <tal:rep repeat="trans python: view.get_transitions(country_folder)">
                       <option tal:content="trans/title" tal:attributes="value trans/id">
@@ -64,18 +54,14 @@
                 </div>
               </div>
             </form>
-            <form class="send-to-tl"
-              method="POST" action="."
-              tal:condition="python: view.ready_phase2(regions)">
+            <form class="send-to-tl" method="POST" action="." tal:condition="python: view.ready_phase2(regions)">
 
               <span tal:replace="structure context/@@authenticator/authenticator"/>
-              <input class="btn btn-success"
-                type="Submit" name="send_to_tl" value="Send all to TL"/>
+              <input class="btn btn-success" type="Submit" name="send_to_tl" value="Send all to TL"/>
             </form>
           </div>
 
-          <table style="margin-bottom: 0;"
-              class="table as-table-overview table-striped table-country-start">
+          <table style="margin-bottom: 0;" class="table as-table-overview table-striped table-country-start">
             <tbody>
               <tr class="tr-assessment-module-header">
                 <td colspan="99">
@@ -93,39 +79,25 @@
 
               <tr class="fullwidth-statusbar">
                 <td colspan="3">
-<!--                  <div style="text-align: center; font-style: italic; font-weight: 300;">Art. 12 (8-9-10) National report - 2012</div>-->
-                  <a style="margin-bottom: 5px;"
-                      target="_blank"
-                      tal:attributes="href view/get_url_art12_2012"
-                      class="assessment-status-colorbar btn btn-xs btn-default">Art. 12 (8-9-10) National report - 2012</a>
+                  <!--                  <div style="text-align: center; font-style: italic; font-weight: 300;">Art. 12 (8-9-10) National report - 2012</div>-->
+                  <a style="margin-bottom: 5px;" target="_blank" tal:attributes="href view/get_url_art12_2012" class="assessment-status-colorbar btn btn-xs btn-default">Art. 12 (8-9-10) National report - 2012</a>
                 </td>
                 <td>
-<!--                  <div style="text-align: center; font-style: italic; font-weight: 300;">Art. 12 (11) National report - 2014</div>-->
-                  <a style="margin-bottom: 5px;"
-                      target="_blank"
-                      tal:attributes="href view/get_url_art12_2014"
-                      class="assessment-status-colorbar btn btn-xs btn-default">Art. 12 (11) National report - 2014</a>
+                  <!--                  <div style="text-align: center; font-style: italic; font-weight: 300;">Art. 12 (11) National report - 2014</div>-->
+                  <a style="margin-bottom: 5px;" target="_blank" tal:attributes="href view/get_url_art12_2014" class="assessment-status-colorbar btn btn-xs btn-default">Art. 12 (11) National report - 2014</a>
                 </td>
                 <td>
-<!--                  <div style="text-align: center; font-style: italic; font-weight: 300;">Art. 16 (13-14) National report - 2016</div>-->
-                  <a style="margin-bottom: 5px;"
-                      target="_blank"
-                      tal:attributes="href view/get_url_art12_2016"
-                      class="assessment-status-colorbar btn btn-xs btn-default">Art. 16 (13-14) National report - 2016</a>
+                  <!--                  <div style="text-align: center; font-style: italic; font-weight: 300;">Art. 16 (13-14) National report - 2016</div>-->
+                  <a style="margin-bottom: 5px;" target="_blank" tal:attributes="href view/get_url_art12_2016" class="assessment-status-colorbar btn btn-xs btn-default">Art. 16 (13-14) National report - 2016</a>
                 </td>
                 <td colspan="2">
                   <div style="text-align: center; font-style: italic; font-weight: 300;">Art. 20 (18) National report - 2019</div>
                 </td>
               </tr>
               <tr class="fullwidth-statusbar">
-                <td colspan="3" 
-                    class="assessment-status-td"
-                    tal:define="assessment python: view.national_report_art12;
+                <td colspan="3" class="assessment-status-td" tal:define="assessment python: view.national_report_art12;
                         assessment_title python:'Art. 12 (8-9-10) National report - 2018'">
-                  <!-- <a style="margin-bottom: 5px;"
-                      target="_blank"
-                      tal:attributes="href assessment/absolute_url"
-                      class="assessment-status-colorbar btn btn-xs btn-default">Art. 12 (8-9-10) National report - 2018</a> -->
+                  <!-- <a style="margin-bottom: 5px;" target="_blank" tal:attributes="href assessment/absolute_url" class="assessment-status-colorbar btn btn-xs btn-default">Art. 12 (8-9-10) National report - 2018</a> -->
                   <div metal:use-macro="context/wise-macros/macros/assessment-status-bar"></div>
                 </td>
                 <td>
@@ -147,16 +119,14 @@
               </tr>
               <tr>
                 <tal:rep tal:repeat="assessment python: view.get_secondary_articles(view._country_folder)">
-                  <td style="text-align: center;"
-                      colspan="3" tal:condition="python: assessment.id == 'art7'">
-                    <div><i>Not assessed</i></div>
+                  <td style="text-align: center;" colspan="3" tal:condition="python: assessment.id == 'art7'">
+                    <div>
+                      <i>Not assessed</i>
+                    </div>
                   </td>
                 </tal:rep>
                 <tal:rep tal:repeat="assessment python: view.get_secondary_articles(view._country_folder)">
-                  <td class="assessment-status-td" 
-                      style="text-align: center;"
-                      tal:define="assessment_title python: 'View assessment'"
-                      tal:condition="python: assessment.id != 'art7'">
+                  <td class="assessment-status-td" style="text-align: center;" tal:define="assessment_title python: 'View assessment'" tal:condition="python: assessment.id != 'art7'">
                     <div metal:use-macro="context/wise-macros/macros/assessment-status-bar"></div>
                   </td>
                 </tal:rep>
@@ -175,7 +145,7 @@
           <div class="report-section-X">
             <div id="process-state-change-bulk-wrapper">
               <div class="process-state-change-message">
-                <p>Process state change initiated!</p> 
+                <p>Process state change initiated!</p>
                 <p>Please wait...</p>
               </div>
               <div style="display: inline-block;">Process state change:</div>
@@ -187,18 +157,15 @@
             </div>
             <div class="overflow-table sticky-overflow-header hidden-fixed-table">
               <div class="inner" style="overflow: auto;">
-                  <!--<h3 tal:attributes="id region/id" tal:content="region/title"-->
-                      <!--style="position: sticky; left: 0;">Region name</h3>-->
-                <table style="margin-top: -0.8em;"
-                    class="table table-sticky-first-col as-table-overview table-striped table-country-start table-homepage-assessmentsZ table-report">
+                <!--<h3 tal:attributes="id region/id" tal:content="region/title"-->
+                <!--style="position: sticky; left: 0;">Region name</h3>-->
+                <table style="margin-top: -0.8em;" class="table table-sticky-first-col as-table-overview table-striped table-country-start table-homepage-assessmentsZ table-report">
                   <tbody>
-                    <tal:rep tal:repeat="region regions">                
+                    <tal:rep tal:repeat="region regions">
                       <tr>
-                        <th colspan="2" class="region-title sticky-col"
-                            tal:attributes="id region/id" tal:content="region/title">Baltic</th>
+                        <th colspan="2" class="region-title sticky-col" tal:attributes="id region/id" tal:content="region/title">Baltic</th>
                       </tr>
-                      <tr class="article-title sticky-row"
-                          tal:attributes="class python: 'article-title {}'.format(region.id == regions[0].id and 'sticky-row' or '')">
+                      <tr class="article-title sticky-row" tal:attributes="class python: 'article-title {}'.format(region.id == regions[0].id and 'sticky-row' or '')">
                         <th style="text-align: left;" class="sticky-col">Descriptor</th>
                         <th>Art. 9 GES Determination</th>
                         <th>Art. 8 Assessment</th>
@@ -210,41 +177,40 @@
                       </tr>
 
                       <tr>
-                        <td class="assessment-status-td" style="text-align: left;"><i>Cross-cutting</i></td>
+                        <td class="assessment-status-td" style="text-align: left;">
+                          <i>Cross-cutting</i>
+                        </td>
                         <td class="assessment-status-td">-</td>
                         <td class="assessment-status-td">-</td>
                         <td class="assessment-status-td">-</td>
                         <td class="assessment-status-td">-</td>
-                        <td class="assessment-status-td" colspan="2"
-                            tal:define="assessment python: country_folder['cross-cutting-2022']">
+                        <td class="assessment-status-td" colspan="2" tal:define="assessment python: country_folder['cross-cutting-2022']">
                           <div metal:use-macro="context/wise-macros/macros/assessment-status-bar-cross-cutting-2022"></div>
                         </td>
 
                         <!-- <td class="assessment-status-td" colspan="2">
-                          <a tal:attributes="href python: country_folder.absolute_url() + '/cross-cutting-2022'"
-                              class="btn btn-xs btn-primary" target='_blank'>2022</a>
+                          <a tal:attributes="href python: country_folder.absolute_url() + '/cross-cutting-2022'" class="btn btn-xs btn-primary" target='_blank'>2022</a>
                         </td> -->
                         <td class="assessment-status-td">-</td>
                       </tr>
 
                       <tr>
-                        <td class="assessment-status-td" style="text-align: left;"><i>Completeness</i></td>
+                        <td class="assessment-status-td" style="text-align: left;">
+                          <i>Completeness</i>
+                        </td>
                         <td class="assessment-status-td">-</td>
                         <td class="assessment-status-td">-</td>
                         <td class="assessment-status-td">-</td>
                         <td class="assessment-status-td">-</td>
-                        <td class="assessment-status-td"
-                            tal:define="assessment python: country_folder['art13-completeness-2022']">
+                        <td class="assessment-status-td" tal:define="assessment python: country_folder['art13-completeness-2022']">
                           <div metal:use-macro="context/wise-macros/macros/assessment-status-bar-cross-cutting-2022"></div>
                         </td>
-                        <td class="assessment-status-td"
-                            tal:define="assessment python: country_folder['art14-completeness-2022']">
+                        <td class="assessment-status-td" tal:define="assessment python: country_folder['art14-completeness-2022']">
                           <div metal:use-macro="context/wise-macros/macros/assessment-status-bar-cross-cutting-2022"></div>
                         </td>
 
                         <!-- <td class="assessment-status-td" colspan="2">
-                          <a tal:attributes="href python: country_folder.absolute_url() + '/cross-cutting-2022'"
-                              class="btn btn-xs btn-primary" target='_blank'>2022</a>
+                          <a tal:attributes="href python: country_folder.absolute_url() + '/cross-cutting-2022'" class="btn btn-xs btn-primary" target='_blank'>2022</a>
                         </td> -->
                         <td class="assessment-status-td">-</td>
                       </tr>
@@ -253,35 +219,28 @@
                         <th class="sticky-col sub-header">
                           <span tal:content="python: view.descriptor_for_code(desc.id).title">D0</span>
                         </th>
-                        <td class="assessment-status-td" 
-                            tal:repeat="assessment python: view.get_articles(desc)">
+                        <td class="assessment-status-td" tal:repeat="assessment python: view.get_articles(desc)">
                           <div metal:use-macro="context/wise-macros/macros/assessment-status-bar-2012-2018"></div>
                         </td>
-                        <td class="assessment-status-td" 
-                            tal:define="assessment python: desc['art11']">
+                        <td class="assessment-status-td" tal:define="assessment python: desc['art11']">
                           <!-- <div metal:use-macro="context/wise-macros/macros/assessment-status-bar-2012-2018"></div> -->
-                          <a class="assessment-status-colorbar btn btn-xs btn-default"
-                              title="Not started"
-                              tal:attributes="href assessment/absolute_url;">2020</a> 
+                          <a class="assessment-status-colorbar btn btn-xs btn-default" title="Not started" tal:attributes="href assessment/absolute_url;">2020</a>
                         </td>
                         <tal:def tal:define="assessment_d1 python: desc.id.startswith('d1.') and view.get_descriptors(region_art1314)[0]['art13'] or region_art1314[desc.id]['art13'];
                                   assessment python: desc['art13']">
-                          <td tal:attributes="class python: view.can_change_process_state(assessment_d1) and 'assessment-status-td enable-process-state-change' or 'assessment-status-td'"
-                              class="assessment-status-td enable-process-state-change">
+                          <td tal:attributes="class python: view.can_change_process_state(assessment_d1) and 'assessment-status-td enable-process-state-change' or 'assessment-status-td'" class="assessment-status-td enable-process-state-change">
                             <div metal:use-macro="context/wise-macros/macros/assessment-status-bar-2016-2022-d1"></div>
                             <!-- <div tal:condition="python: not desc.id.startswith('d1.')" metal:use-macro="context/wise-macros/macros/assessment-status-bar-2016-2022"></div> -->
                           </td>
                         </tal:def>
                         <tal:def tal:define="assessment_d1 python: desc.id.startswith('d1.') and view.get_descriptors(region_art1314)[0]['art14'] or region_art1314[desc.id]['art14']; 
                                   assessment python: desc['art14']">
-                          <td tal:attributes="class python: view.can_change_process_state(assessment_d1) and 'assessment-status-td enable-process-state-change' or 'assessment-status-td'"
-                              class="assessment-status-td enable-process-state-change">
+                          <td tal:attributes="class python: view.can_change_process_state(assessment_d1) and 'assessment-status-td enable-process-state-change' or 'assessment-status-td'" class="assessment-status-td enable-process-state-change">
                             <div metal:use-macro="context/wise-macros/macros/assessment-status-bar-2016-2022-d1"></div>
                             <!-- <div tal:condition="python: not desc.id.startswith('d1.')" metal:use-macro="context/wise-macros/macros/assessment-status-bar-2016-2022"></div> -->
                           </td>
                         </tal:def>
-                        <td class="assessment-status-td" 
-                            tal:define="assessment python: desc['art18']">
+                        <td class="assessment-status-td" tal:define="assessment python: desc['art18']">
                           <i style="text-align: center; font-style: italic; font-weight: 300;">Not available</i>
                         </td>
                       </tr>
@@ -295,5 +254,5 @@
       </div>
     </div>
 
-  </body>
+  </metal:block>
 </html>

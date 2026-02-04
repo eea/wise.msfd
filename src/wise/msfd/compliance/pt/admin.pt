@@ -1,20 +1,17 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en"
   xmlns:tal="http://xml.zope.org/namespaces/tal"
   xmlns:metal="http://xml.zope.org/namespaces/metal"
-  xmlns:i18n="http://xml.zope.org/namespaces/i18n"
-  lang="en"
-  metal:use-macro="context/main_template/macros/master"
-  i18n:domain="eea">
+  xmlns:i18n="http://xml.zope.org/namespaces/i18n" lang="en" metal:use-macro="context/main_template/macros/master" i18n:domain="eea">
 
-  <body metal:fill-slot="content">
+  <metal:block fill-slot="main">
 
-    <div id="layout-contents" tal:define="text context/text | nothing" >
+    <div id="layout-contents" tal:define="text context/text | nothing">
       <div id="wise-search-form" class="full-width-marker">
         <div id="wise-search-form-top">
           <metal:tabs metal:use-macro="context/wise-macros/macros/tabs"></metal:tabs>
         </div>
 
-        <div class="start-page-content left-side-form">
+        <div class="start-page-content left-side-formZ">
 
           <h1>Management page</h1>
 
@@ -26,49 +23,35 @@
           </div>
 
           <div class="form-group">
-            <a class="btn btn-primary btn-small btn-success"
-              tal:attributes="href string:${view/_compliance_folder/absolute_url}/@@compliance-users"
-              target="_blank">
+            <a class="btn btn-primary btn-small btn-success" tal:attributes="href string:${view/_compliance_folder/absolute_url}/@@compliance-users" target="_blank">
               <i class="glyphicon glyphicon-user"></i>
               Compliance Users
             </a>
 
-            <a class="btn btn-primary btn-small btn-success"
-              tal:attributes="href string:${view/_compliance_folder/absolute_url}/national-descriptors-assessments/@@translations-overview"
-              target="_blank">
+            <a class="btn btn-primary btn-small btn-success" tal:attributes="href string:${view/_compliance_folder/absolute_url}/national-descriptors-assessments/@@translations-overview" target="_blank">
               <i class="glyphicon glyphicon-globe"></i>Translations overview</a>
 
-            <a class="btn btn-primary btn-small btn-success"
-              tal:attributes="href string:${view/_compliance_folder/absolute_url}/national-descriptors-assessments/@@edit-assessors"
-              target="_blank">
+            <a class="btn btn-primary btn-small btn-success" tal:attributes="href string:${view/_compliance_folder/absolute_url}/national-descriptors-assessments/@@edit-assessors" target="_blank">
               <i class="glyphicon glyphicon-pencil"></i>
               Edit assessors
             </a>
 
-            <a class="btn btn-primary btn-small btn-success"
-              tal:attributes="href string:${view/_compliance_folder/absolute_url}/national-descriptors-assessments/@@admin-scoring"
-              target="_blank">
+            <a class="btn btn-primary btn-small btn-success" tal:attributes="href string:${view/_compliance_folder/absolute_url}/national-descriptors-assessments/@@admin-scoring" target="_blank">
               <i class="glyphicon glyphicon-modal-window"></i>
               Scoring operations
             </a>
 
-            <a class="btn btn-primary btn-small btn-success"
-              tal:attributes="href string:${view/_compliance_folder/absolute_url}/national-descriptors-assessments/@@admin-scoring?export-scores=1"
-              target="_blank">
+            <a class="btn btn-primary btn-small btn-success" tal:attributes="href string:${view/_compliance_folder/absolute_url}/national-descriptors-assessments/@@admin-scoring?export-scores=1" target="_blank">
               <i class="glyphicon glyphicon-export"></i>
               Export Compliance Data
             </a>
 
-            <a class="btn btn-primary btn-small btn-success"
-              tal:attributes="href string:${view/_compliance_folder/absolute_url}/msfd-reporting-history"
-              target="_blank">
+            <a class="btn btn-primary btn-small btn-success" tal:attributes="href string:${view/_compliance_folder/absolute_url}/msfd-reporting-history" target="_blank">
               <i class="glyphicon glyphicon-file"></i>
               Edit MSFD Reporting History data
             </a>
 
-            <a class="btn btn-primary btn-small btn-success"
-              tal:attributes="href string:${view/_compliance_folder/absolute_url}/@@recommendations"
-              target="_blank">
+            <a class="btn btn-primary btn-small btn-success" tal:attributes="href string:${view/_compliance_folder/absolute_url}/@@recommendations" target="_blank">
               <i class="glyphicon glyphicon-book"></i>
               Edit recommendations
             </a>
@@ -79,5 +62,5 @@
       </div>
     </div>
 
-  </body>
+  </metal:block>
 </html>

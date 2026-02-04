@@ -1,4 +1,4 @@
-#pylint: skip-file
+# pylint: skip-file
 """ Classes and views to implement the National Descriptors compliance page
 """
 
@@ -1467,7 +1467,6 @@ CROSS_CUTTING_SECTIONS = (
 )
 
 
-
 @implementer(INationaldescriptorArticleViewCrossCutting)
 class NationalDescriptorArticleViewCrossCutting(NationalDescriptorArticleView):
     assessment_data_2018_tpl = Template(
@@ -1523,7 +1522,7 @@ class NationalDescriptorArticleViewCrossCutting(NationalDescriptorArticleView):
         total_weight = 0
 
         section_questions = [
-            x[1] 
+            x[1]
             for x in CROSS_CUTTING_SECTIONS
             if question_id in x[1]
         ]

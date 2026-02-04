@@ -1,20 +1,17 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en"
   xmlns:tal="http://xml.zope.org/namespaces/tal"
   xmlns:metal="http://xml.zope.org/namespaces/metal"
-  xmlns:i18n="http://xml.zope.org/namespaces/i18n"
-  lang="en"
-  metal:use-macro="context/main_template/macros/master"
-  i18n:domain="eea">
+  xmlns:i18n="http://xml.zope.org/namespaces/i18n" lang="en" metal:use-macro="context/main_template/macros/master" i18n:domain="eea">
 
-  <body metal:fill-slot="content">
+  <metal:block fill-slot="main">
 
-    <div id="layout-contents" tal:define="text context/text | nothing" >
+    <div id="layout-contents" tal:define="text context/text | nothing">
       <div id="wise-search-form" class="full-width-marker">
         <div id="wise-search-form-top">
           <metal:tabs metal:use-macro="context/wise-macros/macros/tabs"></metal:tabs>
         </div>
 
-        <div class="start-page-content left-side-form">
+        <div class="start-page-content left-side-formZ">
 
           <h3>Assigned Topic Leads overview</h3>
 
@@ -35,7 +32,7 @@
                   <div tal:repeat="user python: view.get_groups_for_desc(desc[0])">
                     <a href="" tal:attributes="href string:mailto:${user/email}">
                       <strong tal:content="user/fullname">Fullname</strong>
-                      (<span tal:content="user/username">Username</span>)
+                      (                      <span tal:content="user/username">Username</span>)
                     </a>
                   </div>
                 </td>
@@ -56,7 +53,7 @@
                   <div tal:repeat="user python: view.get_reviewers">
                     <a href="" tal:attributes="href string:mailto:${user/email}">
                       <strong tal:content="user/fullname">Fullname</strong>
-                      (<span tal:content="user/username">Username</span>)
+                      (                      <span tal:content="user/username">Username</span>)
                     </a>
                   </div>
                 </td>
@@ -77,7 +74,7 @@
                   <div tal:repeat="user python: view.get_editors">
                     <a href="" tal:attributes="href string:mailto:${user/email}">
                       <strong tal:content="user/fullname">Fullname</strong>
-                      (<span tal:content="user/username">Username</span>)
+                      (                      <span tal:content="user/username">Username</span>)
                     </a>
                   </div>
                 </td>
@@ -88,5 +85,5 @@
       </div>
     </div>
 
-  </body>
+  </metal:block>
 </html>

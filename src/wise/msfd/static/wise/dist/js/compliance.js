@@ -1,2 +1,1160 @@
-Array.prototype.last||(Array.prototype.last=function(){return this[this.length-1]}),function(u,b,g){function m(){var t=g(".overflow-table"),o=g(u);t.each(function(){var e=g(this),t=e,s=g(".top-scroll",t),i=s.find(".top-scroll-inner"),a=g(".inner",t),n=g(".table-report",t).outerWidth(includeMargin=!0),l=n+g("th",t).width(),r=g(".scroll-wrapper",t);i.width(n),s.on("scroll",function(){a.scrollLeft(g(this).scrollLeft())}),a.on("scroll",function(){s.scrollLeft(g(this).scrollLeft())}),l>e.width()&&o.on("resize scroll",function(){var t=o.scrollTop();e.isInViewport()?r.addClass("fixed-scroll"):r.removeClass("fixed-scroll"),t>=e.offset().top+e.outerHeight()-u.innerHeight?r.hide():r.show()})})}g.fn.fixTableHeaderAndCellsHeight=function(){this.each(function(){g("th",this).each(function(t){var e,s,i,a,n,l,r;g(this).parents("table").hasClass("skip-height-fix")||(a=g(this).parents(".overflow-table").hasClass("side-by-side-table-left"),g(this).parents(".overflow-table").hasClass("side-by-side-table-right")||(s=(e=g(this)).parent().children('td:not(".sub-header")'),a&&(a=g(g(this).parents(".overflow-table.side-by-side-table").siblings(".overflow-table.side-by-side-table-right").find("tr")[t]).children(),s=g.merge(s,a)),t=g("td.sub-header",e.parent()),i=[],s.each(function(){var t,e=g(this);e.hasClass("translatable")?(t=e.find(".tr-text").height(),i.push(t)):i.push(e.height())}),a=Math.max.apply(Math,i),n=Math.max(e.height(),t.height(),a),e.height(n),t.height(n),l=e.height(),r=e.innerHeight(),a<=l&&s.each(function(){g(this).hasClass("translatable")?g(this).height(r):g(this).height(l)}),g("div",this).css("margin-top","-4px")))})})},g.fn.fixTableHeaderHeight=function(){this.each(function(){g(this).parents("table").hasClass("skip-height-fix")||g("th",this).each(function(t){var e,s,i=g(this),a=g("td",i.parent()),n=[],l=g(this).parents(".overflow-table").hasClass("side-by-side-table-left");g(this).parents(".overflow-table").hasClass("side-by-side-table-right")||l||(l&&(e=(t=g(g(this).parents(".overflow-table.side-by-side-table").siblings(".overflow-table.side-by-side-table-right").find("tr")[t])).children("td"),s=t.children("th"),a=g.merge(a,e)),a.each(function(){var t,e=g(this);e.hasClass("translatable")?(t=e.find(".tr-text").height(),n.push(t)):n.push(e.height())}),t=Math.max.apply(Math,n),i.height(t),l&&s.height(t))})})},g.fn.simplifyTable=function(){var t=g(this),i=(t.data("original")||t.data("original",t.html()),{curentLevel:0,setlimits:[{level:-1,limits:[]}]});g("tr",this).each(function(){var t,a,e,n,s,l;a=i,e=[],n=[],s=null!=(s=g(t=this).data("level"))?parseInt(s):-1,g(a.setlimits).each(function(){if(this.level==s)return n=this.limits,!1}),0==n.length&&(n=a.setlimits[a.setlimits.length-1].limits),g("td",t).not(".sub-header").each(function(t){0!=e.length&&!n.includes(t)&&g(this).text().trim()==g(e.last().last()).text().trim()?e.last().push(this):e.push([this])}),g(e).each(function(){var t;1<this.length&&(t=this.length,g(this[0]).attr("colspan",t),g(this.slice(1)).each(function(){g(this).remove()}))}),-1!=s&&(n=[],a.curentLevel=s,g(e).each(function(){var t=this.length;n.length&&(t+=n[n.length-1]),n.push(t)}),a.setlimits.push({level:a.curentLevel,limits:n.slice(0)})),l=0,g("td",t).not(".sub-header").each(function(t){var e,s=a.curentLevel,i=parseInt(g(this).attr("colspan")||"1");if(l+=i,n.includes(l)){if(0<s)for(e=0;e<a.setlimits.length;e++)if(a.setlimits[e].limits.includes(l)){s=a.setlimits[e].level;break}g(this).addClass("endgroup_"+s)}})}),t.data("simplified",t.html())},g.fn.toggleTable=function(t){var e=g(this).data("original"),s=g(this).data("simplified");t?g(this).html(s):(g(this).hide(),g(this).empty().html(e),g(this).show()),setupReadMoreModal(),setupTranslateClickHandlers(),g(this).fixTableHeaderAndCellsHeight()},u.setupReadMoreModal=function(){var t=g(".table-report"),s=g("#read-more-modal"),i=g(".modal-content-wrapper");t.find(".tr-text").each(function(){g(this).text();var t,e=g(this).html();397<e.length&&(g(this).addClass("short"),t=e.substr(0,297.75)+"...",g(this).html(t),g(this).on("click",function(){i.html(e),s.modal("show")}))}),g(".btn-close-modal").click(function(){i.empty()})},g.fn.isInViewport=function(){var t=g(this).offset().top,e=t+g(this).height(),s=g(u).scrollTop(),i=s+g(u).height();return s<e&&t<i},g.fn.setupFixedTableRows=function(){g(this).each(function(){var t=g(this),n=t.find(".fixed-table-wrapper"),l=(g("th",t.parent()),g(".table-report",t).width()),r=g(".inner",t),o=g(".fixed-table-inner",t);function c(t){function e(){r.scrollLeft(g(this).scrollLeft())}function s(){o.scrollLeft(g(this).scrollLeft())}t?(o.on("scroll",e),r.on("scroll",s)):(o.off("scroll",e),r.off("scroll",s))}c(!0),t.find(".fix-row").each(function(t){t="cb"+t++;g(this).val(t)}),t.find(".fix-row").change(function(){var s,t=g(this),e=t.val(),i=t.closest(".overflow-table").find(".fixed-table"),a=t.closest(".overflow-table").find(".fixed-table-wrapper");i.width(l),t.is(":checked")?(a.addClass("sticky-table"),t.closest(".report-section").siblings(".report-section").each(function(){($ftw=g(this).find(".fixed-table-wrapper")).find("button.reset-pins").click()}),t=t.closest("tr"),s=t.children("td"),(t=t.clone()).children("td").width(function(t,e){return s.eq(t).outerWidth()}),t.appendTo(i).attr("data-row",e)):(n.find('tr[data-row="'+e+'"]').slideUp("fast",function(){g(this).remove()}),1===i.find("tr").length&&a.removeClass("sticky-table")),n.find(".fix-row").change(function(){var t=g(this),e=t.val();0===t.closest("tr").siblings().length&&t.closest(".fixed-table-wrapper").removeClass("sticky-table"),t.closest("tr").remove(),g('.fix-row[value="'+e+'"]').prop("checked",!1)}),c(!1),o.scrollLeft(r.scrollLeft()),c(!0)})}),g(u).on("resize scroll",function(){0<g(".report-nav.sticky").length?g(".fixed-table-wrapper").each(function(){g(this).css("top","56px")}):g(".fixed-table-wrapper").each(function(){g(this).css("top","0")})})},g.fn.setupStickyRows=function(){($stickyTable=g(".table-sticky-first-col")).find("tr").each(function(){g(this).find("th.sticky-col").each(function(){$currentTh=g(this),($prevTh=g(this).prev(".sticky-col")).hasClass("sticky-col")?(prevWidth=$prevTh.outerWidth(),prevLeft=parseInt($prevTh.css("left")),$currentTh.css({left:prevWidth+prevLeft})):$currentTh.css("left",-1)})}),$fixedTable=g(this).find(".fixed-table"),g(this).find(".fixed-table-wrapper").addClass("sticky-table"),g(this).find(".inner table").hasClass("table-sticky-first-col")&&$fixedTable.addClass("table-sticky-first-col"),g(this).find("tr.sticky-row").each(function(){g(this).children().each(function(){var t=g(this).outerWidth();g(this).css("min-width",t),g(this).css("width",t),g(this).css("background-color",g(this).css("background-color")),g(this).css("color",g(this).css("color")),g(this).css("text-align",g(this).css("text-align"))}),(clone=g(this).clone()).appendTo($fixedTable)}),g(u).on("resize scroll",function(){g(".overflow-table").each(function(){var t=g(this),a=(t.find(".fixed-table-wrapper"),[]);t.find(".inner tr.sticky-row").each(function(){var t=g(this).offset().top,e=parseInt(g(u).scrollTop()),s=g(this).parents(".overflow-table"),s=s.offset().top+s.outerHeight(),i=g(this).parents("thead").outerHeight();isInViewport=e<t||s<e+i,a.push(isInViewport)}),a.includes(!1)?t.removeClass("hidden-fixed-table"):t.addClass("hidden-fixed-table")})})},g(b).ready(function(s){var d,a,e,t,n,l,r;function f(){g(".table-report").each(function(){g(this).fixTableHeaderAndCellsHeight()})}setupReadMoreModal(),g(".button-field").addClass("btn"),g(".toggle-sidebar").hide(),a=[],g((d||".wise-search-form-container")+" select").each(function(t,e){var s=g(e).attr("id");if(-1!==a.indexOf(s))return!1;g(e).addClass("js-example-basic-single");s={placeholder:"Select an option",closeOnSelect:!0,dropdownAutoWidth:!0,width:"100%",theme:"flat"};g(e).find("option").length<10&&(s.minimumResultsForSearch=1/0),g(e).select2(s)}),t=g("#report-data-navigation"),g("button",t).on("click",function(){return g(".nav-body",t).toggle(),g(this).children().addClass("glyphicon").toggleClass("glyphicon-menu-hamburger glyphicon-remove-circle"),!1}),g(".nav-body",t).hide(),n=g(".report-nav"),l=g(".report-title"),0<n.length&&(e=n.offset().top,g(u).scroll(function(){var t=g(u).scrollTop(),t=e<=t;n.toggleClass("sticky",t),l.toggleClass("fixed-title",t)})),g(u).resize(function(){clearTimeout(r),r=setTimeout(f,500)}),u.matchMedia("(max-width: 768px)").matches&&g(".overflow-table h5").width(g(".overflow-table table").width()),g('<div class="scroll-wrapper"><i class="glyphicon glyphicon-th"></i><div class="top-scroll"><div class="top-scroll-inner"></div></div></div>').insertAfter(g(".overflow-table").find(".inner")),g(".overflow-table").each(function(){var t=g(this).find("table"),e=g('<input type="checkbox" class="fix-row"/>'),s=g('<div class="fixed-table-wrapper"><button title="Clear filters" class="reset-pins"><i class="glyphicon glyphicon-remove-circle"></i></button><div class="fixed-table-inner"><table class="table table-bordered table-striped fixed-table"></table></div></div>');s.find("button.reset-pins").click(function(){($ftw=g(this).closest(".fixed-table-wrapper")).removeClass("sticky-table"),$ftw.find("tr").remove(),($innerTable=$ftw.siblings(".inner")).find("tr input").prop("checked",!1)}),(t.find("td.sub-header").length?t.find("td.sub-header"):t.find("th div")).append(e),s.insertBefore(g(this).find(".inner"))});var o=g(".first-header");if(0!==o.length){var c,p="",p=o[0].firstElementChild.innerText;for(i=1;i<o.length;i++)p===(c=o[i].firstElementChild.innerText)?(o[i].firstElementChild.innerText="",g(o[i-1]).css("border-bottom","0px")):p=c}s(".pat-plone-modal").attr("href","https://water.europa.eu/marine/assessment-module/login"),s(".assessment-read-more").click(function(){var t=s(this);t.text(function(t,e){return e.startsWith("Show")?"Hide reports":s(this).attr("display-text")}),t.parents().siblings(".assessment-dd-list").fadeToggle(),t.parents().siblings(".text-reports-table").find(".assessment-dd-list").fadeToggle()});var h=s(".scroll-to-top");s(u).scroll(function(){400<s(this).scrollTop()?h.fadeIn():h.fadeOut()}),h.click(function(){return s("html, body").animate({scrollTop:0},400),!1}),s(u).on("load",function(){var e,t;g(".simplify-form").next().find(".table-report").each(function(){g(this).simplifyTable()}),g(".simplify-form button").on("click",function(){var t="true"==g(this).attr("aria-pressed");$p=g(this).parent().next(),g(".table-report",$p).toggleTable(!t),$p.setupFixedTableRows(),m()}),s(".overflow-table").each(function(){s(this).setupFixedTableRows(),s(this).find(".table-report").fixTableHeaderAndCellsHeight(),s(this).setupStickyRows()}),m(),t=g(".table-wrap"),g("#container-assessment-data-2018 .assessment-data-table").width()<=t.width()||(g("div.gescomp",t).css({display:"inline-table","min-width":"inherit",width:"inherit"}),e=0,g("div.gescomp",t).each(function(){var t=g(this).width();e<t&&(e=t)}),g("div.gescomp",t).css({width:e})),g(".assessment-status-colorbar.show-assessment-wrapper").hover(function(){g(this).siblings(".assessment-status-wrapper").css("display","flex")},function(){g(this).siblings(".assessment-status-wrapper").css("display","none")}),g(".assessment-status-processstate").each(function(){var t=g(this);t.find(".process-state");t.on("click",function(){t.toggleClass("active")})}),g(".assessment-status-wrapper .assessment-status.process-state select").change(function(){var t=g(this).parents("form"),e=g(".assessment-status-container2"),s=t[0].action;g(b.body).addClass("cursor-wait"),t.addClass("cursor-wait"),e.each(function(){g(this).addClass("cursor-wait")}),g.ajax({url:s,type:"POST",data:t.serialize(),success:function(){location.reload()}})}),g("#process-state-change-bulk-wrapper .btn-submit-form").click(function(){var t=g(this).siblings("form#form-process-state-change-bulk"),e=t[0].action;g(b.body).addClass("cursor-wait"),t.addClass("cursor-wait"),g("#process-state-change-bulk-wrapper").addClass("change-initiated"),g("#process-state-change-bulk-wrapper > *").css("display","none"),g("#process-state-change-bulk-wrapper .process-state-change-message").fadeIn(200),g.ajax({url:e,type:"POST",data:t.serialize(),success:function(){location.reload()}})}),g("#process-state-change-bulk-wrapper .btn-clear-checkboxes").click(function(){g(".assessment-status-td.enable-process-state-change input[name='process-state-change']").each(function(){g(this).prop("checked",!1)}),g("#process-state-change-bulk-wrapper").css("display","none"),g("#process-state-change-bulk-wrapper #form-process-state-change-bulk input[name='process-state-change']").remove()}),g(".assessment-status-td.enable-process-state-change").each(function(){var t=g(this),e=t.find(".assessment-status-wrapper form").attr("action");g("<input type='checkbox' />").attr("name","process-state-change").attr("value",e).appendTo(t).change(function(){var t,e=g(this).attr("value");g(this).is(":checked")?(0===g("#form-process-state-change-bulk").find("input[value='"+e+"' ]").length&&g(this).clone().attr("type","hidden").appendTo("#form-process-state-change-bulk"),t=g(this).parent("td").find(".phase-selector").clone().attr("id","process-state-bulk-select"),g("#form-process-state-change-bulk .phase-selector").replaceWith(t),g("#process-state-change-bulk-wrapper").css("display","block")):(g("#form-process-state-change-bulk").find("input[value='"+e+"' ]").remove(),0===g("#form-process-state-change-bulk").find("input[name='process-state-change']").length&&(g("#form-process-state-change-bulk .phase-selector select").remove(),g("#process-state-change-bulk-wrapper").css("display","none")))})})})})}(window,document,$);
-//# sourceMappingURL=compliance.js.map
+if (!Array.prototype.last) {
+  Array.prototype.last = function () {
+    return this[this.length - 1];
+  };
+}
+
+(function (window, document, $) {
+  var selectorFormContainer = ".wise-search-form-container";
+  var exceptVal = ["all", "none", "invert", "apply"];
+  /*
+   * SELECT2 functions
+   * */
+  // TODO: please explain what this does and why it's needed
+  function setupSelects2(selector) {
+    var forbiddenIDs = [];
+    var selectorFormCont = selector || selectorFormContainer;
+
+    $(selectorFormCont + " select").each(function (ind, selectElement) {
+      var selectedElementID = $(selectElement).attr("id");
+      if (forbiddenIDs.indexOf(selectedElementID) !== -1) {
+        return false;
+      }
+
+      $(selectElement).addClass("js-example-basic-single");
+      var lessOptions = $(selectElement).find("option").length < 10;
+
+      var options = {
+        placeholder: "Select an option",
+        closeOnSelect: true,
+        dropdownAutoWidth: true,
+        width: "100%",
+        theme: "flat",
+      };
+      if (lessOptions) options.minimumResultsForSearch = Infinity;
+
+      $(selectElement).select2(options);
+    });
+  }
+
+  function initStyling() {
+    // TODO: is this still needed? I don't think so
+    //$("#form-buttons-continue").hide("fast");
+    $(".button-field").addClass("btn");
+
+    // mobile hide .toggle-sidebar
+    $(".toggle-sidebar").hide();
+  }
+
+  function setupTargetsWidth() {
+    // Make targets extend on multiple rows when there are many targets
+    // and the assessment-data-table is scrollable
+    var $tableWrap = $(".table-wrap");
+    var $assessmentTable = $(
+      "#container-assessment-data-2018 .assessment-data-table",
+    );
+    if ($assessmentTable.width() <= $tableWrap.width()) {
+      return;
+    }
+
+    $("div.gescomp", $tableWrap).css({
+      display: "inline-table",
+      "min-width": "inherit",
+      width: "inherit",
+    });
+
+    var maxGescompWidth = 0;
+    $("div.gescomp", $tableWrap).each(function () {
+      var width = $(this).width();
+      if (width > maxGescompWidth) {
+        maxGescompWidth = width;
+      }
+    });
+
+    $("div.gescomp", $tableWrap).css({ width: maxGescompWidth });
+
+    // $(window).on('resize', adjustTargetsWidth);
+  }
+
+  function setupScrollableTargets() {
+    // NOT USED
+    // create a clone of the assessment data 2018 table and overlap the original table
+    // with fixed question and score columns
+    $(
+      "#container-assessment-data-2018 .table.table-condensed.assessment-data-table",
+    )
+      .clone(true)
+      .appendTo("#container-assessment-data-2018")
+      .addClass("clone");
+
+    var $orig = $(".table-wrap .table.table-condensed.assessment-data-table");
+    var $clone = $(".table.table-condensed.assessment-data-table.clone");
+    var origLength = $orig.find("tr").length;
+    var origHeight, cloneHeight;
+
+    for (var i = 0; i < origLength; i++) {
+      var x = $clone.find("tr")[i];
+      cloneHeight = $(x).find(".fixed-center").innerHeight();
+      origHeight = $($orig.find("tr")[i]).innerHeight();
+
+      if (origHeight > cloneHeight) {
+        $(x).css("height", origHeight + "px");
+      } else {
+        $($orig.find("tr")[i]).css("height", cloneHeight + "px");
+      }
+    }
+  }
+
+  function setupAssessmentStatusChange() {
+    // Setup the process status change forms to make it possible
+    // to change the assessment status on pages like
+    // ./assessment-module/national-descriptors-assessments/fi/assessments
+    // ./assessment-module/regional-descriptors-assessments/bal/assessments
+
+    $(".assessment-status-colorbar.show-assessment-wrapper").hover(
+      function () {
+        $(this).siblings(".assessment-status-wrapper").css("display", "flex");
+      },
+      function () {
+        $(this).siblings(".assessment-status-wrapper").css("display", "none");
+      },
+    );
+
+    $(".assessment-status-processstate").each(function () {
+      var $this = $(this);
+      var $processState = $this.find(".process-state");
+
+      $this.on("click", function () {
+        $this.toggleClass("active");
+      });
+    });
+
+    $(
+      ".assessment-status-wrapper .assessment-status.process-state select",
+    ).change(function () {
+      var $form = $(this).parents("form");
+      var $assessmentContainers = $(".assessment-status-container2");
+      var url = $form[0].action;
+
+      $(document.body).addClass("cursor-wait");
+      $form.addClass("cursor-wait");
+      $assessmentContainers.each(function () {
+        $(this).addClass("cursor-wait");
+      });
+
+      $.ajax({
+        url: url,
+        type: "POST",
+        data: $form.serialize(),
+        success: function () {
+          location.reload();
+        },
+      });
+    });
+  }
+
+  function setupProcessStateCheckboxes() {
+    // setup submit button
+    $("#process-state-change-bulk-wrapper .btn-submit-form").click(function () {
+      var $form = $(this).siblings("form#form-process-state-change-bulk");
+      var url = $form[0].action;
+
+      $(document.body).addClass("cursor-wait");
+      $form.addClass("cursor-wait");
+      $("#process-state-change-bulk-wrapper").addClass("change-initiated");
+      $("#process-state-change-bulk-wrapper > *").css("display", "none");
+      $(
+        "#process-state-change-bulk-wrapper .process-state-change-message",
+      ).fadeIn(200);
+
+      $.ajax({
+        url: url,
+        type: "POST",
+        data: $form.serialize(),
+        success: function () {
+          location.reload();
+        },
+      });
+    });
+
+    // setup clear button, uncheck all checkboxes and clear the form
+    $("#process-state-change-bulk-wrapper .btn-clear-checkboxes").click(
+      function () {
+        $(
+          ".assessment-status-td.enable-process-state-change input[name='process-state-change']",
+        ).each(function () {
+          $(this).prop("checked", false);
+        });
+
+        $("#process-state-change-bulk-wrapper").css("display", "none");
+
+        $(
+          "#process-state-change-bulk-wrapper #form-process-state-change-bulk input[name='process-state-change']",
+        ).remove();
+      },
+    );
+
+    // setup checkboxes
+    $(".assessment-status-td.enable-process-state-change").each(function () {
+      var $this = $(this);
+      var action = $this
+        .find(".assessment-status-wrapper form")
+        .last()
+        .attr("action");
+
+      var $inputCheckbox = $("<input type='checkbox' />")
+        .attr("name", "process-state-change")
+        .attr("value", action)
+        .appendTo($this);
+
+      $inputCheckbox.change(function () {
+        var value = $(this).attr("value");
+        var ischecked = $(this).is(":checked");
+
+        if (ischecked) {
+          // when the checkbox is checked
+          var inputNotExists =
+            $("#form-process-state-change-bulk").find(
+              "input[value='" + value + "' ]",
+            ).length === 0;
+
+          if (inputNotExists) {
+            $(this)
+              .clone()
+              .attr("type", "hidden")
+              .appendTo("#form-process-state-change-bulk");
+          }
+
+          // Find the original phase-selector
+          var $originalPhaseSelector = $(this)
+            .parent("td")
+            .find(".phase-selector");
+
+          // Clone the entire phase-selector
+          var $newPhaseSelector = $originalPhaseSelector
+            .clone(false) // Don't clone event handlers
+            .attr("id", "process-state-bulk-select");
+
+          // Remove all select2 generated elements from the clone
+          $newPhaseSelector.find(".select2-container").remove();
+          $newPhaseSelector.find("select").show().css("display", "");
+
+          // Remove select2 classes and data attributes
+          var $select = $newPhaseSelector
+            .find("select")
+            .removeClass("select2-offscreen select2-hidden-accessible")
+            .removeAttr("data-select2-id")
+            .removeAttr("tabindex")
+            .removeAttr("aria-hidden")
+            .removeAttr("style");
+
+          $("#form-process-state-change-bulk .phase-selector").replaceWith(
+            $newPhaseSelector,
+          );
+
+          // Reinitialize Select2 v3 on the new select element
+          if (typeof $select.select2 === "function") {
+            $select.select2({
+              width: "250px",
+              minimumResultsForSearch: -1, // Hide search box
+            });
+          }
+
+          $("#process-state-change-bulk-wrapper").css("display", "block");
+        } else {
+          // when the checkbox is unchecked
+          $("#form-process-state-change-bulk")
+            .find("input[value='" + value + "' ]")
+            .remove();
+
+          // if there are no checkboxes checked, remove the select box too
+          if (
+            $("#form-process-state-change-bulk").find(
+              "input[name='process-state-change']",
+            ).length === 0
+          ) {
+            var $select = $(
+              "#form-process-state-change-bulk .phase-selector select",
+            );
+            // Destroy Select2 v3
+            if ($select.data("select2")) {
+              $select.select2("destroy");
+            }
+            $select.remove();
+            $("#process-state-change-bulk-wrapper").css("display", "none");
+          }
+        }
+      });
+    });
+  }
+
+  $.fn.fixTableHeaderAndCellsHeight = function () {
+    // because the <th> are position: absolute, they don't get the height of
+    // the <td> cells, and the other way around.
+
+    this.each(function () {
+      $("th", this).each(function (index) {
+        if ($(this).parents("table").hasClass("skip-height-fix")) {
+          return;
+        }
+
+        var isSideBySideLeft = $(this)
+          .parents(".overflow-table")
+          .hasClass("side-by-side-table-left");
+        var isSideBySideRigth = $(this)
+          .parents(".overflow-table")
+          .hasClass("side-by-side-table-right");
+
+        if (isSideBySideRigth) {
+          return;
+        }
+
+        var $th = $(this);
+        // var $next = $('td:not(".sub-header")', $th.parent());
+        var $next = $th.parent().children('td:not(".sub-header")');
+
+        if (isSideBySideLeft) {
+          var $nextSideBySide = $(
+            $(this)
+              .parents(".overflow-table.side-by-side-table")
+              .siblings(".overflow-table.side-by-side-table-right")
+              .find("tr")[index],
+          ).children();
+          $next = $.merge($next, $nextSideBySide);
+        }
+
+        var $subheader = $("td.sub-header", $th.parent());
+        var tdHeights = [];
+
+        $next.each(function () {
+          var $this = $(this);
+          if ($this.hasClass("translatable")) {
+            var hght = $this.find(".tr-text").height();
+            tdHeights.push(hght);
+          } else {
+            tdHeights.push($this.height());
+          }
+        });
+
+        var cells_max_height = Math.max.apply(Math, tdHeights);
+        var height = Math.max(
+          $th.height(),
+          $subheader.height(),
+          cells_max_height,
+        );
+
+        $th.height(height);
+        $subheader.height(height);
+        var thHeight = $th.height();
+        var thInnerHeight = $th.innerHeight();
+
+        if (thHeight >= cells_max_height) {
+          $next.each(function () {
+            if ($(this).hasClass("translatable")) {
+              $(this).height(thInnerHeight);
+            } else {
+              $(this).height(thHeight);
+            }
+          });
+          //$next.height(thHeight);
+        }
+
+        $("div", this).css("margin-top", "-4px");
+      });
+    });
+
+    // $('tr .lang-toolbar', this).each(function() {
+    //   console.log('fixing', this);
+    //   var $this = $(this);
+    //   var height = $this.parents('tr').height();
+    //   $this.css('height', height);
+    // });
+  };
+
+  $.fn.fixTableHeaderHeight = function fixTableHeaderHeight() {
+    // TODO not used anymore, replaced by fixTableHeaderAndCellsHeight
+
+    // Because of the way the <th> cells are positioned absolute, to be able to
+    // keep them fixed, they are "disconnected" from the regular box sizing
+    // layout algorithm. For this reason we have to recompute their height (to
+    // make either the <td> or the <th> match same height
+    this.each(function () {
+      if ($(this).parents("table").hasClass("skip-height-fix")) {
+        return;
+      }
+
+      $("th", this).each(function (index) {
+        var $th = $(this);
+        var $next = $("td", $th.parent());
+        var tdHeights = [];
+        var isSideBySideLeft = $(this)
+          .parents(".overflow-table")
+          .hasClass("side-by-side-table-left");
+        var isSideBySideRigth = $(this)
+          .parents(".overflow-table")
+          .hasClass("side-by-side-table-right");
+
+        if (isSideBySideRigth || isSideBySideLeft) {
+          return;
+        }
+
+        if (isSideBySideLeft) {
+          var $rowSideBySide = $(
+            $(this)
+              .parents(".overflow-table.side-by-side-table")
+              .siblings(".overflow-table.side-by-side-table-right")
+              .find("tr")[index],
+          );
+          var $nextSideBySide = $rowSideBySide.children("td");
+          var $thSideBySide = $rowSideBySide.children("th");
+          $next = $.merge($next, $nextSideBySide);
+        }
+
+        $next.each(function () {
+          var $this = $(this);
+          if ($this.hasClass("translatable")) {
+            var hght = $this.find(".tr-text").height();
+            tdHeights.push(hght);
+          } else {
+            tdHeights.push($this.height());
+          }
+        });
+
+        var cells_max_height = Math.max.apply(Math, tdHeights);
+
+        $th.height(cells_max_height);
+        if (isSideBySideLeft) {
+          $thSideBySide.height(cells_max_height);
+        }
+      });
+    });
+  };
+
+  function mergeCellsInRow(row, cache) {
+    /* This function visually groups and merges cells in table, to optimize
+     * for reading information.
+     *
+     * It joins adjacent cells that have identical text, but uses group
+     * definitions to establish "limits" on what it can merge. Finally, those
+     * "groups" end cells are marked with special classes, to distinguish them
+     * visually.
+     */
+
+    var sets = [];
+
+    // get the appropriate limits from the cache, based on the current level
+    var limits = [];
+    var rowLevel = $(row).data("level");
+    rowLevel = rowLevel != undefined ? parseInt(rowLevel) : -1;
+    $(cache.setlimits).each(function () {
+      if (this.level == rowLevel) {
+        limits = this.limits;
+        return false;
+      }
+    });
+    if (limits.length == 0) {
+      limits = cache.setlimits[cache.setlimits.length - 1].limits;
+    }
+
+    // group cells by similarity
+    $("td", row)
+      .not(".sub-header")
+      .each(function (ix) {
+        if (sets.length == 0 || limits.includes(ix)) {
+          sets.push([this]);
+        } else {
+          var thisText = $(this).text().trim();
+          var lastText = $(sets.last().last()).text().trim();
+
+          if (thisText == lastText) {
+            sets.last().push(this);
+          } else {
+            sets.push([this]);
+          }
+        }
+      });
+
+    // merge cells that are duplicated
+    $(sets).each(function () {
+      if (this.length > 1) {
+        var colspan = this.length;
+        $(this[0]).attr("colspan", colspan); // .addClass('merged');
+        $(this.slice(1)).each(function () {
+          $(this).remove();
+        });
+      }
+    });
+
+    // compute new group limits
+    if (rowLevel != -1) {
+      limits = [];
+      cache.curentLevel = rowLevel;
+
+      $(sets).each(function () {
+        var l = this.length;
+        if (limits.length) {
+          l += limits[limits.length - 1];
+        }
+        limits.push(l);
+      });
+      cache.setlimits.push({
+        level: cache.curentLevel,
+        limits: limits.slice(0), // makes a copy
+      });
+    }
+
+    // apply special class to group end cells
+    var cursor = 0;
+    $("td", row)
+      .not(".sub-header")
+      .each(function (iy) {
+        var level = cache.curentLevel;
+        var l;
+        var prevset;
+
+        var c = parseInt($(this).attr("colspan") || "1");
+        cursor += c;
+
+        if (limits.includes(cursor)) {
+          if (level > 0) {
+            // traverse all previous limits to see which major one includes
+            // this limit
+            for (l = 0; l < cache.setlimits.length; l++) {
+              prevset = cache.setlimits[l].limits;
+              if (prevset.includes(cursor)) {
+                level = cache.setlimits[l].level;
+                break;
+              }
+            }
+          }
+          $(this).addClass("endgroup_" + level);
+        }
+      });
+  }
+
+  $.fn.simplifyTable = function simplifyTable() {
+    var $table = $(this);
+
+    if (!$table.data("original")) {
+      $table.data("original", $table.html());
+    }
+
+    var cache = {
+      curentLevel: 0,
+      setlimits: [
+        {
+          level: -1,
+          limits: [],
+        },
+      ],
+    };
+    $("tr", this).each(function () {
+      mergeCellsInRow(this, cache);
+    });
+
+    // Laci disable
+    // $table.fixTableHeaderHeight();
+    // $table.fixTableHeaderAndCellsHeight();
+    $table.data("simplified", $table.html());
+  };
+
+  $.fn.toggleTable = function toggleTable(onoff) {
+    var original = $(this).data("original");
+    var simplified = $(this).data("simplified");
+
+    if (onoff) {
+      //$(this).simplifyTable();
+      $(this).html(simplified);
+    } else {
+      $(this).hide();
+      $(this).empty().html(original);
+      $(this).show();
+      //setupTranslateClickHandlers();
+      //setupReadMoreModal();
+    }
+    setupReadMoreModal();
+    setupTranslateClickHandlers();
+    $(this).fixTableHeaderAndCellsHeight();
+  };
+
+  /* Used in report data table create a 'read more' modal if the cell content
+   * is too long
+   */
+  window.setupReadMoreModal = function () {
+    var $table = $(".table-report");
+    var $modal = $("#read-more-modal");
+    var $modalContent = $(".modal-content-wrapper");
+    var maxchars = 397;
+    var sep = "...";
+    var $cells = $table.find(".tr-text");
+    $cells.each(function () {
+      var t = $(this).text();
+      var t_html = $(this).html();
+
+      if (t_html.length > maxchars) {
+        $(this).addClass("short");
+        var sh = t_html.substr(0, 0.75 * maxchars) + sep;
+        $(this).html(sh);
+        $(this).on("click", function () {
+          $modalContent.html(t_html);
+          $modal.modal("show");
+        });
+      }
+    });
+
+    $(".btn-close-modal").click(function () {
+      $modalContent.empty();
+    });
+
+    // Laci disable
+    // $table.fixTableHeaderAndCellsHeight();
+  };
+
+  function setupReportNavigation() {
+    // This is a menu that is triggered from a button. When scrolling down, it
+    // sticks to the top. Allows navigation between articles/years
+    var $reportnav = $("#report-data-navigation");
+    $("button", $reportnav).on("click", function () {
+      $(".nav-body", $reportnav).toggle();
+      $(this)
+        .children()
+        .addClass("glyphicon")
+        .toggleClass("glyphicon-menu-hamburger glyphicon-remove-circle");
+      return false;
+    });
+    $(".nav-body", $reportnav).hide();
+
+    // sticky report data navigation
+    var $rn = $(".report-nav");
+    var $title = $(".report-title");
+
+    if ($rn.length > 0) {
+      var stickyOffset = $rn.offset().top;
+
+      $(window).scroll(function () {
+        var scroll = $(window).scrollTop();
+        var fixElement = scroll >= stickyOffset;
+        $rn.toggleClass("sticky", fixElement);
+        $title.toggleClass("fixed-title", fixElement);
+      });
+    }
+  }
+
+  function setupTableScrolling() {
+    // TODO not used
+    // When dealing with a really wide table, with wide cells, we want to keep
+    // the text relatively narrow, but always keep in view that cell content
+    var $ot = $(".overflow-table table");
+
+    $ot.each(function () {
+      var $tw = $(this);
+      var $td = $tw.find("td");
+
+      if (!$td.length) {
+        return;
+      }
+
+      // get table header cell right position
+      var $th = $tw.find("th");
+      var thRight = $th.position().left + $th.outerWidth();
+
+      $td.each(function () {
+        var $this = $(this);
+        var scrollTimer;
+
+        $(".report-page-view .overflow-table .inner").scroll(function () {
+          clearTimeout(scrollTimer);
+
+          if ($this.attr("colspan") > 1) {
+            var tdText = $this.find(".td-content");
+            var tdLeft = $this.position().left;
+            var tdRight = tdLeft + $this.outerWidth(); // get table cell right position
+            var tdTextWidth = $this.find(".td-content").width();
+            var thAndCellWidth = tdTextWidth + thRight;
+
+            $this.css("height", $this.outerHeight());
+
+            scrollTimer = setTimeout(afterScroll, 1);
+
+            if (tdLeft < thRight) {
+              tdText.addClass("td-scrolled").css("left", thRight + 5);
+            } else {
+              $this.css("height", "");
+              tdText.removeClass("td-scrolled");
+            }
+
+            if (thAndCellWidth >= tdRight) {
+              $this.addClass("td-relative");
+            } else {
+              $this.removeClass("td-relative");
+            }
+          }
+        });
+
+        function afterScroll() {
+          // Tibi: temporarily disabled
+          // $('.btn-translate').on('click', function() {
+          //   var $btn = $(this);
+          //   var transTextHeight = $btn.closest('.td-content').outerHeight();
+          //   var $td = $btn.closest('td.translatable');
+          //   var $th = $td.siblings('th');
+          //   $td.css({
+          //     'height': transTextHeight,
+          //     'padding': '0'
+          //   });
+          //   $btn.closest('.td-content').css('padding', '8px');
+          //   $th.css('height', transTextHeight);
+          // });
+        }
+      });
+    });
+  }
+
+  // check if element is in viewport
+  $.fn.isInViewport = function () {
+    var elementTop = $(this).offset().top;
+    var elementBottom = elementTop + $(this).height();
+
+    var viewportTop = $(window).scrollTop();
+    var viewportBottom = viewportTop + $(window).height();
+
+    return elementBottom > viewportTop && elementTop < viewportBottom;
+  };
+
+  function addCustomScroll() {
+    var $cs = $(
+      '<div class="scroll-wrapper">' +
+        '<i class="glyphicon glyphicon-th"></i>' +
+        '<div class="top-scroll">' +
+        '<div class="top-scroll-inner"></div>' +
+        "</div>" +
+        "</div>",
+    );
+
+    $cs.insertAfter($(".overflow-table").find(".inner"));
+  }
+
+  function setupCustomScroll() {
+    // A fixed scrollbar at the bottom of the window for tables
+
+    var $ot = $(".overflow-table");
+    var $win = $(window);
+
+    $ot.each(function () {
+      var $t = $(this);
+      // var $tParent = $t.parent();
+      var $tParent = $t;
+      var topScroll = $(".top-scroll", $tParent);
+      var topScrollInner = topScroll.find(".top-scroll-inner");
+      var tableScroll = $(".inner", $tParent);
+      var tableWidth = $(".table-report", $tParent).outerWidth(
+        (includeMargin = true),
+      );
+      var tableHeaderWidth = $("th", $tParent).width();
+      var tableAndHeaderWidth = tableWidth + tableHeaderWidth;
+      var customScroll = $(".scroll-wrapper", $tParent);
+
+      topScrollInner.width(tableWidth);
+
+      topScroll.on("scroll", function () {
+        tableScroll.scrollLeft($(this).scrollLeft());
+      });
+
+      tableScroll.on("scroll", function () {
+        topScroll.scrollLeft($(this).scrollLeft());
+      });
+
+      if (tableAndHeaderWidth > $t.width()) {
+        $win.on("resize scroll", function () {
+          var scroll = $win.scrollTop();
+
+          if ($t.isInViewport()) {
+            customScroll.addClass("fixed-scroll");
+          } else {
+            customScroll.removeClass("fixed-scroll");
+          }
+
+          // hide custom scrollbar when it reaches the bottom of the table
+          if (
+            scroll >=
+            $t.offset().top + $t.outerHeight() - window.innerHeight
+          ) {
+            customScroll.hide();
+          } else {
+            customScroll.show();
+          }
+        });
+      }
+    });
+  }
+
+  function addFixedTable() {
+    var $ot = $(".overflow-table");
+
+    $ot.each(function () {
+      var $table = $(this).find("table");
+      var $cb = $('<input type="checkbox" class="fix-row"/>');
+      var $ft = $(
+        '<div class="fixed-table-wrapper">' +
+          '<button title="Clear filters" class="reset-pins">' +
+          '<i class="glyphicon glyphicon-remove-circle"></i>' +
+          "</button>" +
+          '<div class="fixed-table-inner">' +
+          '<table class="table table-bordered table-striped fixed-table">' +
+          "</table>" +
+          "</div>" +
+          "</div>",
+      );
+
+      // Register click event for button to clear all pinned rows for the current table
+      $ft.find("button.reset-pins").click(function () {
+        $ftw = $(this).closest(".fixed-table-wrapper");
+        $ftw.removeClass("sticky-table");
+        $ftw.find("tr").remove();
+
+        $innerTable = $ftw.siblings(".inner");
+        $innerTable.find("tr input").prop("checked", false);
+      });
+
+      if ($table.find("td.sub-header").length) {
+        // Regional descriptors
+        $table.find("td.sub-header").append($cb);
+      } else {
+        // National descriptors
+        $table.find("th div").append($cb);
+      }
+
+      $ft.insertBefore($(this).find(".inner"));
+    });
+  }
+
+  $.fn.setupFixedTableRows = function () {
+    // Allows report table rows to be fixed while scrolling
+    // var $ot = $('.overflow-table');
+    var $ot = $(this);
+
+    // The .each is necessary, we can have more overflow-tables
+    $ot.each(function () {
+      var $t = $(this);
+      var $fixedTable = $t.find(".fixed-table-wrapper");
+      var $th = $("th", $t.parent());
+      var tableW = $(".table-report", $t).width();
+      var tableScroll = $(".inner", $t);
+      var fixedTableInner = $(".fixed-table-inner", $t);
+
+      function toggleSyncScrolls(onoff) {
+        function f1() {
+          tableScroll.scrollLeft($(this).scrollLeft());
+        }
+        function f2() {
+          fixedTableInner.scrollLeft($(this).scrollLeft());
+        }
+        if (onoff) {
+          fixedTableInner.on("scroll", f1);
+          tableScroll.on("scroll", f2);
+        } else {
+          fixedTableInner.off("scroll", f1);
+          tableScroll.off("scroll", f2);
+        }
+      }
+      toggleSyncScrolls(true);
+
+      $t.find(".fix-row").each(function (i) {
+        var val = "cb" + i++;
+        // var checkBox = $(this).find('.fix-row');
+        var checkBox = $(this);
+        checkBox.val(val);
+      });
+
+      var checkBox = $t.find(".fix-row");
+      checkBox.change(function () {
+        var $this = $(this);
+        var value = $this.val();
+        var table = $this.closest(".overflow-table").find(".fixed-table");
+        var tableWrapper = $this
+          .closest(".overflow-table")
+          .find(".fixed-table-wrapper");
+        table.width(tableW);
+
+        if ($this.is(":checked")) {
+          tableWrapper.addClass("sticky-table");
+
+          //for other tables find the reset button and trigger the click event
+          var $parentReportSection = $this.closest(".report-section");
+          var $otherReportSections =
+            $parentReportSection.siblings(".report-section");
+          $otherReportSections.each(function () {
+            $ftw = $(this).find(".fixed-table-wrapper");
+            $ftw.find("button.reset-pins").click();
+          });
+
+          // clone table row, but keep the width of the original table cells
+          var target = $this.closest("tr");
+          var target_children = target.children("td");
+          var clone = target.clone();
+          clone.children("td").width(function (i, val) {
+            return target_children.eq(i).outerWidth();
+          });
+          clone.appendTo(table).attr("data-row", value);
+
+          // disable for test
+          //$t.find('.table').fixTableHeaderAndCellsHeight();
+          // setupTableScrolling();
+        } else {
+          $fixedTable
+            .find('tr[data-row="' + value + '"]')
+            .slideUp("fast", function () {
+              $(this).remove();
+            });
+
+          if (table.find("tr").length === 1) {
+            tableWrapper.removeClass("sticky-table");
+          }
+        }
+
+        var $cb = $fixedTable.find(".fix-row");
+        $cb.change(function () {
+          var $this = $(this);
+          var value = $this.val();
+
+          if ($this.closest("tr").siblings().length === 0) {
+            $this.closest(".fixed-table-wrapper").removeClass("sticky-table");
+          }
+
+          $this.closest("tr").remove();
+          $('.fix-row[value="' + value + '"]').prop("checked", false);
+        });
+
+        toggleSyncScrolls(false);
+        fixedTableInner.scrollLeft(tableScroll.scrollLeft());
+        toggleSyncScrolls(true);
+      });
+    });
+
+    $(window).on("resize scroll", function () {
+      if ($(".report-nav.sticky").length > 0) {
+        $(".fixed-table-wrapper").each(function () {
+          $(this).css("top", "56px");
+        });
+      } else {
+        $(".fixed-table-wrapper").each(function () {
+          $(this).css("top", "0");
+        });
+      }
+    });
+  };
+
+  function setupResponsiveness() {
+    // fire resize event after the browser window resizing it's completed
+    var resizeTimer;
+    $(window).resize(function () {
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(doneResizing, 500);
+    });
+
+    function doneResizing() {
+      // $('.table-report').fixTableHeaderHeight();
+      $(".table-report").each(function () {
+        $(this).fixTableHeaderAndCellsHeight();
+      });
+    }
+
+    if (window.matchMedia("(max-width: 768px)").matches) {
+      $(".overflow-table h5").width($(".overflow-table table").width());
+    }
+
+    // tibi: temporarily disabled. I don't know what td-content does
+    // var $td = $('.overflow-table table td');
+    // $td.children('div').wrapInner('<div class="td-content" />');
+  }
+
+  function setupSimplifiedTables() {
+    $(".simplify-form")
+      .next()
+      .find(".table-report")
+      .each(function () {
+        $(this).simplifyTable();
+      });
+
+    $(".simplify-form button").on("click", function () {
+      var onoff = $(this).attr("aria-pressed") == "true";
+      $p = $(this).parent().next();
+      $(".table-report", $p).toggleTable(!onoff);
+      // Laci disable
+      $p.setupFixedTableRows();
+      setupCustomScroll();
+    });
+  }
+
+  function regionalDescriptorsGroupTableHeaders() {
+    var $headers = $(".first-header");
+    if ($headers.length === 0) {
+      return;
+    }
+    var compareText = "";
+    var currentText = "";
+
+    compareText = $headers[0].firstElementChild.innerText;
+
+    for (i = 1; i < $headers.length; i++) {
+      currentText = $headers[i].firstElementChild.innerText;
+
+      if (compareText === currentText) {
+        $headers[i].firstElementChild.innerText = "";
+        $($headers[i - 1]).css("border-bottom", "0px");
+      } else {
+        compareText = currentText;
+      }
+
+      //debugger;
+    }
+  }
+
+  $.fn.setupStickyRows = function () {
+    // make first th element(s) with 'sticky-col' class stick to the left of the
+    // screen when scrolling horizontally
+    $stickyTable = $(".table-sticky-first-col");
+    $stickyTable.find("tr").each(function () {
+      $(this)
+        .find("th.sticky-col")
+        .each(function () {
+          $currentTh = $(this);
+          $prevTh = $(this).prev(".sticky-col");
+
+          if ($prevTh.hasClass("sticky-col")) {
+            prevWidth = $prevTh.outerWidth();
+            prevLeft = parseInt($prevTh.css("left"));
+            $currentTh.css({ left: prevWidth + prevLeft });
+          } else {
+            $currentTh.css("left", -1);
+          }
+        });
+    });
+
+    // Pin all rows with 'sticky-row' class
+    $fixedTable = $(this).find(".fixed-table");
+    var tableWrapper = $(this).find(".fixed-table-wrapper");
+    tableWrapper.addClass("sticky-table");
+
+    if ($(this).find(".inner table").hasClass("table-sticky-first-col")) {
+      $fixedTable.addClass("table-sticky-first-col");
+    }
+
+    $(this)
+      .find("tr.sticky-row")
+      .each(function () {
+        $(this)
+          .children()
+          .each(function () {
+            var width = $(this).outerWidth();
+            $(this).css("min-width", width);
+            $(this).css("width", width);
+            $(this).css("background-color", $(this).css("background-color"));
+            $(this).css("color", $(this).css("color"));
+            $(this).css("text-align", $(this).css("text-align"));
+          });
+
+        clone = $(this).clone();
+        clone.appendTo($fixedTable);
+      });
+
+    // on scroll check if the all rows 'sticky-row' are displayed on screen
+    // if not show the 'fixed-table' with the pinned rows
+    $(window).on("resize scroll", function () {
+      $(".overflow-table").each(function () {
+        var $ot = $(this);
+        var tableWrapper = $ot.find(".fixed-table-wrapper");
+        var stickyRowsInView = [];
+
+        $ot.find(".inner tr.sticky-row").each(function () {
+          var elementTop = $(this).offset().top;
+          var viewportTop = parseInt($(window).scrollTop());
+          // var viewportBottom = viewportTop + $(window).height();
+          var $currentOT = $(this).parents(".overflow-table");
+          var otTop = $currentOT.offset().top;
+          var otBottom = otTop + $currentOT.outerHeight();
+          var theadHeight = $(this).parents("thead").outerHeight();
+
+          // if this is false, we display the sticky bar on the top
+          isInViewport =
+            // $(this).isInViewport() ||
+            // elementTop > viewportBottom
+            elementTop > viewportTop || otBottom < viewportTop + theadHeight;
+
+          stickyRowsInView.push(isInViewport);
+        });
+
+        if (stickyRowsInView.includes(false)) {
+          $ot.removeClass("hidden-fixed-table");
+        } else {
+          $ot.addClass("hidden-fixed-table");
+        }
+      });
+    });
+  };
+
+  $(document).ready(function ($) {
+    setupReadMoreModal();
+    initStyling();
+    setupSelects2();
+    setupReportNavigation();
+    // setupTableScrolling();
+    setupResponsiveness();
+    addCustomScroll();
+    addFixedTable();
+    regionalDescriptorsGroupTableHeaders();
+
+    $(".pat-plone-modal").attr(
+      "href",
+      "https://water.europa.eu/marine/assessment-module/login",
+    );
+    $(".assessment-read-more").click(function () {
+      var $this = $(this);
+      $this.text(function (a, b) {
+        return b.startsWith("Show")
+          ? "Hide reports"
+          : $(this).attr("display-text");
+      });
+      $this.parents().siblings(".assessment-dd-list").fadeToggle();
+      $this
+        .parents()
+        .siblings(".text-reports-table")
+        .find(".assessment-dd-list")
+        .fadeToggle();
+    });
+
+    var $scrollBtn = $(".scroll-to-top");
+    $(window).scroll(function () {
+      if ($(this).scrollTop() > 400) {
+        $scrollBtn.fadeIn();
+      } else {
+        $scrollBtn.fadeOut();
+      }
+    });
+
+    $scrollBtn.click(function () {
+      $("html, body").animate({ scrollTop: 0 }, 400);
+      return false;
+    });
+
+    $(window).on("load", function () {
+      // setupReadMoreModal();
+      setupSimplifiedTables();
+      var $ot = $(".overflow-table");
+      $ot.each(function () {
+        $(this).setupFixedTableRows();
+        $(this).find(".table-report").fixTableHeaderAndCellsHeight();
+        // when loading the screen pin all rows marked with 'sticky-row' class
+        // and display them if they are not in viewport
+        $(this).setupStickyRows();
+      });
+      setupCustomScroll();
+
+      // setupScrollableTargets();
+      setupTargetsWidth();
+      setupAssessmentStatusChange();
+
+      setupProcessStateCheckboxes();
+    });
+  });
+})(window, document, $);
