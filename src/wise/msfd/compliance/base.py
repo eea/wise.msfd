@@ -1065,33 +1065,33 @@ class AssessmentQuestionDefinition:
             if ges_comps.intersection(ok_ges_ids):
                 ges_filtered.append(row)
 
-        if descriptor.startswith('D1.'):
-            feature_filtered = []
-            ok_features = set([f.name for f in get_features(descriptor)])
-            blacklist_descriptors = ['D1.1', 'D1.2', 'D1.3', 'D1.4', 'D1.5',
-                                     'D1.6', 'D4', 'D6']
-            blacklist_descriptors.remove(descriptor)
-            blacklist_features = []
+        # if descriptor.startswith('D1.'):
+        #     feature_filtered = []
+        #     ok_features = set([f.name for f in get_features(descriptor)])
+        #     blacklist_descriptors = ['D1.1', 'D1.2', 'D1.3', 'D1.4', 'D1.5',
+        #                              'D1.6', 'D4', 'D6']
+        #     blacklist_descriptors.remove(descriptor)
+        #     blacklist_features = []
 
-            for _desc in blacklist_descriptors:
-                blacklist_features.extend([
-                    f.name for f in get_features(_desc)
-                ])
+        #     for _desc in blacklist_descriptors:
+        #         blacklist_features.extend([
+        #             f.name for f in get_features(_desc)
+        #         ])
 
-            blacklist_features = set(blacklist_features)
+        #     blacklist_features = set(blacklist_features)
 
-            for row in ges_filtered:
-                ges_comps = getattr(row, 'GEScomponent', ())
-                ges_comps = set([g.strip() for g in ges_comps.split(',')])
+        #     for row in ges_filtered:
+        #         ges_comps = getattr(row, 'GEScomponent', ())
+        #         ges_comps = set([g.strip() for g in ges_comps.split(',')])
 
-                row_needed = is_row_relevant_for_descriptor(
-                    row, descriptor, ok_features, blacklist_features, ges_comps
-                )
+        #         row_needed = is_row_relevant_for_descriptor(
+        #             row, descriptor, ok_features, blacklist_features, ges_comps
+        #         )
 
-                if row_needed:
-                    feature_filtered.append(row)
+        #         if row_needed:
+        #             feature_filtered.append(row)
 
-            ges_filtered = feature_filtered
+        #     ges_filtered = feature_filtered
 
         return ges_filtered
 
