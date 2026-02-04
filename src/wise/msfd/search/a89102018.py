@@ -12,8 +12,8 @@ from . import interfaces
 from .. import db, sql, sql2018
 from ..base import EmbeddedForm, MarineUnitIDSelectForm
 from ..sql_extra import MSFD4GeographicalAreaID
-from ..utils import (all_values_from_field, change_orientation,
-                     db_objects_to_dict, group_data, ItemLabel, ItemList)
+from ..utils import (all_values_from_field, db_objects_to_dict,
+                     group_data, ItemLabel, ItemList)
 from .base import ItemDisplayForm
 from .utils import (register_form_a8_2018, register_form_art9,
                     register_form_art19, register_form_art10)
@@ -1158,8 +1158,8 @@ class A2018Art81abDisplay(ItemDisplayForm):
 
         id_overall = self.item.Id
         self.blacklist = ('Id', 'IdOverallStatus', 'IdElementStatus',
-                    'IdCriteriaStatus', 'IdCriteriaValues',
-                    '_criteria_statuses', '_criteria_values')
+                          'IdCriteriaStatus', 'IdCriteriaValues',
+                          '_criteria_statuses', '_criteria_values')
 
         excluded_columns = ()
 
@@ -1168,7 +1168,7 @@ class A2018Art81abDisplay(ItemDisplayForm):
             'Id',
             sql2018.ART8GESElementStatu.IdOverallStatus == id_overall
         )
-        
+
         element_status = db_objects_to_dict(element_status_orig,
                                             excluded_columns)
         final_rows = []

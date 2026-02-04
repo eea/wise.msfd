@@ -952,7 +952,7 @@ class AssessmentQuestionDefinition:
 
         res = [Target(t.TargetCode,  # .encode('ascii', errors='ignore'),
                       t.TargetCode,
-                      t.Description,
+                      t.TargetDescription,
                       '2024')
 
                for t in targets]
@@ -1041,7 +1041,7 @@ class AssessmentQuestionDefinition:
 
     @db.use_db_session('2024')
     def __get_a10_2024_targets_from_view(self, descr_obj, ok_ges_ids, muids):
-        t = sql2024.t_V_ART10_Target_WM
+        t = sql2024.t_ART10_Targets_Target
         descriptor = descr_obj.id
 
         # use db.get_all_records because of caching
@@ -1059,7 +1059,7 @@ class AssessmentQuestionDefinition:
             ges_comps = getattr(row, 'GEScomponent', ())
             ges_comps = set([
                 self.fix_gescomp(g.strip())
-                for g in ges_comps.split(',')
+                for g in ges_comps.split(';')
             ])
 
             if ges_comps.intersection(ok_ges_ids):
