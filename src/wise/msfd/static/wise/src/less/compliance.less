@@ -29,9 +29,9 @@ table>tfoot>tr>td {
 }
 
 h1 {
-  margin: 2.5rem 0 3rem 0 !important;
-  color: #002d54;
-  font-weight: 600;
+  margin: 2rem 0 2rem 0 !important;
+  color: #002d54 !important;
+  font-weight: 600 !important;
 }
 
 h2,
@@ -109,6 +109,11 @@ body.plone-toolbar-left-expanded {
 }
 
 .start-page-content {
+  a {
+    // color: #007bb3;
+    text-decoration: none;
+  }
+
   img {
     width: 95%;
   }
@@ -379,7 +384,7 @@ body.plone-toolbar-left-expanded {
 .assessment-module-header,
 .tr-assessment-module-header div {
   padding: 0.1em 1em;
-  margin: 1em -0.7em;
+  margin: 1em -1.4em;
   background-color: #002d54;
   color: white;
   font-size: 1.5em;
@@ -390,10 +395,11 @@ body.plone-toolbar-left-expanded {
 
   td {
     padding: 0;
+    box-shadow: none !important;
   }
 
   div {
-    margin: 1em -1.1em;
+    margin: 1em -1.8em;
   }
 }
 
@@ -1259,7 +1265,7 @@ span.has-new-comments {
 
   a {
     position: relative;
-    top: -1.5em;
+    top: -2.5em;
   }
 }
 
@@ -1296,8 +1302,8 @@ table.comp-c-listing {
 
 #report-data-navigation {
   position: relative;
-  margin-top: 1.5em;
-  margin-bottom: 1em;
+  // margin-top: 1.5em;
+  // margin-bottom: 1em;
 
   div.back-to-descr {
     display: inline-block;
@@ -1874,4 +1880,18 @@ table.comp-c-listing {
       padding: 5px;
     }
   }
+}
+
+#mainform-tabs {
+  margin: 0px -2em;
+
+  a {
+    // color: #007bb3;
+    text-decoration: none;
+  }
+}
+
+#mainnavigation-wrapper,
+#above-content-wrapper {
+  display: none;
 }

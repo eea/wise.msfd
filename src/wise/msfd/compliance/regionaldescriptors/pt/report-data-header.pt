@@ -8,11 +8,12 @@
 
     <h3 class="report-title" tal:content="structure options/title">201X Member State Report</h3>
 
-    <div id="report-data-navigation"
-        tal:condition="python: options.get('show_navigation') != False and view.can_view_assessment_data()">
+    <div id="report-data-navigation" tal:condition="python: options.get('show_navigation') != False and view.can_view_assessment_data()">
       <div class="back-to-art">
         <a href="/marine/assessment-module/regional-descriptors-assessments/${view/country_region_code/lower}/reports">
-          <i class="glyphicon glyphicon-share-alt"></i>
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-left" viewBox="0 0 16 16">
+            <path fill-rule="evenodd" d="M15 8a.5.5 0 0 0-.5-.5H2.707l3.147-3.146a.5.5 0 1 0-.708-.708l-4 4a.5.5 0 0 0 0 .708l4 4a.5.5 0 0 0 .708-.708L2.707 8.5H14.5A.5.5 0 0 0 15 8"/>
+          </svg>
           Go to Reports page
         </a>
       </div>
@@ -27,7 +28,9 @@
     </div>
     <div class="scroll-to-top">
       <button title="Scroll to top" class="scroll-button">
-        <i class="scroll-icon glyphicon glyphicon-chevron-up"></i>
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="scroll-icon bi bi-chevron-up" viewBox="0 0 16 16">
+          <path fill-rule="evenodd" d="M7.646 4.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1-.708.708L8 5.707l-5.646 5.647a.5.5 0 0 1-.708-.708z"/>
+        </svg>
       </button>
     </div>
 
@@ -60,17 +63,14 @@
 
     <div id="download-report-data-form">
       <div tal:condition="python:False" class="crt-def">
-        <button type="button"
-          class="btn btn-primary btn-small btn-success"
-          data-toggle="modal" data-target="#reportdata-help">
+        <button type="button" class="btn btn-primary btn-small btn-success" data-toggle="modal" data-target="#reportdata-help">
           Harvesting details
         </button>
       </div>
 
       <form method="POST" action="" tal:attributes="action request/getURL">
         <button name="download" class="btn btn-primary">View report data in Excel</button>
-        <button tal:condition="options/use_translation"
-            name="translate" class="btn btn-secondary">Auto-translate</button>
+        <button tal:condition="options/use_translation" name="translate" class="btn btn-secondary">Auto-translate</button>
       </form>
 
       <div class="modal fade" id="reportdata-help" tabindex="-1" role="dialog">

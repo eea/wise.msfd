@@ -11,7 +11,7 @@
 
     <div id="layout-contents" tal:define="text context/text | nothing">
       <div id="wise-search-form">
-        <div id="wise-search-form-top">
+        <div id="wise-search-form-topZ">
           <metal:tabs metal:use-macro="context/wise-macros/macros/tabs"></metal:tabs>
         </div>
 
