@@ -1,6 +1,5 @@
-(function($){
-
-  $.fn.isInViewport = function() {
+(function ($) {
+  $.fn.isInViewport = function () {
     var elementTop = $(this).offset().top;
     var elementBottom = elementTop + $(this).outerHeight();
 
@@ -11,66 +10,66 @@
   };
 
   function setCommentCookie() {
-    var token = 's--Plone' + window.location.pathname.split('/').slice(0,-1).join('-');
+    var token =
+      "s--Plone" + window.location.pathname.split("/").slice(0, -1).join("-");
     document.cookie = token + "=" + Date.now() + ";path=/";
   }
 
   function colorComments() {
     // setup colored chat depending on user
     colorPalette = {
-      'light': ["lightgreen", "lightblue", "lightgoldenrodyellow", "lightgrey"],
-      'dark': ["darkgreen", "darkblue", "darkmagenta", "darkred"]
-    }
-
-    usernames = {
-      'light': [],
-      'dark': []
+      light: ["lightgreen", "lightblue", "lightgoldenrodyellow", "lightgrey"],
+      dark: ["darkgreen", "darkblue", "darkmagenta", "darkred"],
     };
 
-    $('.comment-name').each(function(){
-      var groupId = $(this).attr('group-id');
+    usernames = {
+      light: [],
+      dark: [],
+    };
+
+    $(".comment-name").each(function () {
+      var groupId = $(this).attr("group-id");
       var username = $(this).text();
 
       if (usernames[groupId].indexOf(username) === -1) {
         usernames[groupId].push(username);
       }
-
     });
 
-    $('.comms').each(function(){
-      var $commentName = $(this).find('.comment-name');
+    $(".comms").each(function () {
+      var $commentName = $(this).find(".comment-name");
       var commenter = $commentName.text();
-      var groupId = $commentName.attr('group-id');
+      var groupId = $commentName.attr("group-id");
       var colorP = colorPalette[groupId];
 
       indx = usernames[groupId].indexOf(commenter);
       color = colorP[indx % colorP.length];
 
-      $comment = $(this).find('.comment');
-      $comment.css('background-color', color);
-      if (groupId === 'light'){
-        $comment.css('color', 'black');
+      $comment = $(this).find(".comment");
+      $comment.css("background-color", color);
+      if (groupId === "light") {
+        $comment.css("color", "black");
       }
     });
   }
 
   function setupAccordions($el) {
-    var $acc = $el.find('.accordion');
+    var $acc = $el.find(".accordion");
     var i;
 
     for (i = 0; i < $acc.length; i++) {
-      $acc[i].addEventListener("click", function() {
+      $acc[i].addEventListener("click", function () {
         this.classList.toggle("active");
-        var $comments = $(this).nextUntil('li.accordion');
-        $comments.each(function(){
+        var $comments = $(this).nextUntil("li.accordion");
+        $comments.each(function () {
           this.classList.toggle("active");
         });
       });
 
-      if(i == $acc.length -1) {
+      if (i == $acc.length - 1) {
         $acc[i].classList.toggle("active");
-        var $comments = $($acc[i]).nextUntil('li.accordion');
-        $comments.each(function(){
+        var $comments = $($acc[i]).nextUntil("li.accordion");
+        $comments.each(function () {
           this.classList.toggle("active");
         });
       }
@@ -78,10 +77,10 @@
   }
 
   function loadComments($el) {
-    var qid = $el.data('question-id');
-    var threadId = $el.data('thread-id');
-    var url = './@@ast-comments?q=' + qid + '&thread_id=' + threadId;
-    $.get(url, function(text){
+    var qid = $el.data("question-id");
+    var threadId = $el.data("thread-id");
+    var url = "./@@ast-comments?q=" + qid + "&thread_id=" + threadId;
+    $.get(url, function (text) {
       //console.log('getting comments from url', url);
       $el.html(text);
       colorComments();
@@ -90,26 +89,34 @@
   }
 
   function setupDeleteComments($el) {
-    $el.find('.comms .comm-del').each(function(){
+    $el.find(".comms .comm-del").each(function () {
       var $this = $(this);
-      clickEventExists = $this.data('click-event-setup');
-      if(clickEventExists === 'true'){
+      clickEventExists = $this.data("click-event-setup");
+      if (clickEventExists === "true") {
         return;
       }
-      $this.data('click-event-setup', 'true');
+      $this.data("click-event-setup", "true");
       //console.log("setup delete comments");
 
-      $this.on('click', function(){
+      $this.on("click", function () {
         var $this = $(this);
-        var $comel = $('.comments', $this.closest('.right')); //comment element
-        var commentName = $this.siblings('.comm-crtr').find('.comment-name').text();
-        var commentTime = $this.siblings('.comm-crtr').find('.comment-time').text();
-        var text = $this.siblings('.comment').text();
-        var qid = $el.data('question-id');
-        var threadId = $el.data('thread-id');
+        var $comel = $(".comments", $this.closest(".right")); //comment element
+        var commentName = $this
+          .siblings(".comm-crtr")
+          .find(".comment-name")
+          .text();
+        var commentTime = $this
+          .siblings(".comm-crtr")
+          .find(".comment-time")
+          .text();
+        var text = $this.siblings(".comment").text();
+        var qid = $el.data("question-id");
+        var threadId = $el.data("thread-id");
 
-        if (confirm("Are you sure you want to delete the comment '" + text + "'?")) {
-          var url = './@@del_comment';
+        if (
+          confirm("Are you sure you want to delete the comment '" + text + "'?")
+        ) {
+          var url = "./@@del_comment";
           var data = {
             comm_name: commentName,
             comm_time: commentTime,
@@ -117,7 +124,7 @@
             q: qid,
             thread_id: threadId,
           };
-          $.post(url, data, function(text){
+          $.post(url, data, function (text) {
             setCommentCookie();
             $comel.html(text);
             colorComments();
@@ -129,48 +136,54 @@
   }
 
   function setupEditComments($el) {
-    $el.find('.comms .comm-edit').each(function(){
+    $el.find(".comms .comm-edit").each(function () {
       var $this = $(this);
-      clickEventExists = $this.data('click-event-setup');
-      if(clickEventExists === 'true'){
+      clickEventExists = $this.data("click-event-setup");
+      if (clickEventExists === "true") {
         return;
       }
-      $this.data('click-event-setup', 'true');
-      
-      $this.on('click', function(){
-        var $this = $(this);
-        var $comel = $('.comments', $this.closest('.right')); // comment element
-        var commentName = $this.siblings('.comm-crtr').find('.comment-name').text();
-        var commentTime = $this.siblings('.comm-crtr').find('.comment-time').text();
-        var text = $this.siblings('.comment').text();
-        var qid = $el.data('question-id');
-        var threadId = $el.data('thread-id');
-  
-        var $editCommentModal = $('#edit-comment-modal');
-        $('#comment-original-text', $editCommentModal).text(text);
-        $('#new_comment', $editCommentModal).val(text);
+      $this.data("click-event-setup", "true");
 
-        $('#comm_original', $editCommentModal).val(text);
-        $('#comm_name', $editCommentModal).val(commentName);
-        $('#comm_time', $editCommentModal).val(commentTime);
-        $('#q', $editCommentModal).val(qid);
-        $('#thread_id', $editCommentModal).val(threadId);
-        $('#form-edit-comment').data('comel', $comel);
-        $('#form-edit-comment').data('el', $el);
+      $this.on("click", function () {
+        var $this = $(this);
+        var $comel = $(".comments", $this.closest(".right")); // comment element
+        var commentName = $this
+          .siblings(".comm-crtr")
+          .find(".comment-name")
+          .text();
+        var commentTime = $this
+          .siblings(".comm-crtr")
+          .find(".comment-time")
+          .text();
+        var text = $this.siblings(".comment").text();
+        var qid = $el.data("question-id");
+        var threadId = $el.data("thread-id");
+
+        var $editCommentModal = $("#edit-comment-modal");
+        $("#comment-original-text", $editCommentModal).text(text);
+        $("#new_comment", $editCommentModal).val(text);
+
+        $("#comm_original", $editCommentModal).val(text);
+        $("#comm_name", $editCommentModal).val(commentName);
+        $("#comm_time", $editCommentModal).val(commentTime);
+        $("#q", $editCommentModal).val(qid);
+        $("#thread_id", $editCommentModal).val(threadId);
+        $("#form-edit-comment").data("comel", $comel);
+        $("#form-edit-comment").data("el", $el);
       });
     });
   }
 
   function setupCommentsListing() {
-    $(window).on('resize scroll', function() {
-      $('.subform .right .comments').each(function(){
+    $(window).on("resize scroll", function () {
+      $(".subform .right .comments").each(function () {
         var $n = $(this);
 
-        if ($n.data('comments-loaded') === 'true') {
+        if ($n.data("comments-loaded") === "true") {
           return;
         }
         if ($n.isInViewport()) {
-          $n.data('comments-loaded', 'true');
+          $n.data("comments-loaded", "true");
           loadComments($n);
         }
       });
@@ -178,28 +191,28 @@
   }
 
   function setupPostComments() {
-    $('.subform .right .textline button').on('click', function() {
+    $(".subform .right .textline button").on("click", function () {
       var $btn = $(this);
-      var $comel = $('.comments', $btn.closest('.right'));
-      var $textarea = $('textarea', $btn.closest('.textline'));
+      var $comel = $(".comments", $btn.closest(".right"));
+      var $textarea = $("textarea", $btn.closest(".textline"));
 
-      var qid = $comel.data('question-id');
-      var threadId = $comel.data('thread-id');
+      var qid = $comel.data("question-id");
+      var threadId = $comel.data("thread-id");
       var text = $textarea.val();
 
       if (!text) return false;
 
-      var url = './@@add_comment';
+      var url = "./@@add_comment";
       var data = {
-        text:text,
+        text: text,
         q: qid,
-        thread_id: threadId
+        thread_id: threadId,
       };
 
-      $.post(url, data, function(text){
+      $.post(url, data, function (text) {
         setCommentCookie();
         $comel.html(text);
-        $textarea.val('');
+        $textarea.val("");
         colorComments();
         setupAccordions($comel);
       });
@@ -209,43 +222,47 @@
   }
 
   function setupToggleComments() {
-    var $discTl = $('.right.disc-tl')
-    var $discEc = $('.right.disc-ec')
-    var existsDiscTl = $discTl.length
-    var existsDiscEc = $discEc.length
+    var $discTl = $(".right.disc-tl");
+    var $discEc = $(".right.disc-ec");
+    var existsDiscTl = $discTl.length;
+    var existsDiscEc = $discEc.length;
 
-    $('.comm-hide').click(function() {
+    $(".comm-hide").click(function () {
       // Close button transformed into a 'show all comments' button
       // $(this).closest('.right').addClass('inactive');
-      $(this).siblings('.comments').find('li').each(function(){
-        $(this).addClass('active');
-      });
+      $(this)
+        .siblings(".comments")
+        .find("li")
+        .each(function () {
+          $(this).addClass("active");
+        });
     });
 
-    $('.right.discussion .comments').click(function(){
-      $thisComm = $(this).closest('.right');
+    $(".right.discussion .comments").click(function () {
+      $thisComm = $(this).closest(".right");
 
-      if($thisComm.hasClass('inactive')){
-        $thisComm.toggleClass('inactive');
+      if ($thisComm.hasClass("inactive")) {
+        $thisComm.toggleClass("inactive");
       }
     });
   }
 
-  function setupDisableAssessmentForms(){
+  function setupDisableAssessmentForms() {
     // used in edit assessment form
     // add the disabled attribute for select/textarea elements
     // if the question type does not match the process phase
-    $('#comp-national-descriptor div.subform.disabled div.left')
-      .find('textarea').each(function(){
-        $(this).attr('disabled', true);
-    });
+    $("#comp-national-descriptor div.subform.disabled div.left")
+      .find("textarea")
+      .each(function () {
+        $(this).attr("disabled", true);
+      });
 
     // used in edit assessment form
     // remove the disabled attribute when submitting the form
     // data from disabled attributes is not submitted
-    $('.kssattr-formname-edit-assessment-data-2018').submit(function(){
-      $(':disabled').each(function(){
-        $(this).removeAttr('disabled');
+    $(".kssattr-formname-edit-assessment-data-2018").submit(function () {
+      $(":disabled").each(function () {
+        $(this).removeAttr("disabled");
       });
     });
   }
@@ -253,16 +270,24 @@
   function setupFormSelectOptions() {
     // used in edit assessment form
     // override plone's default 'No value' option with '-'
-    $('#comp-national-descriptor div.subform div.left div.assessment-form-input')
-      .find("option:contains('No value'), span.select2-chosen:contains('No value')").each(function(){
-        $(this).text('-');
-    });
+    $(
+      "#comp-national-descriptor div.subform div.left div.assessment-form-input",
+    )
+      .find(
+        "option:contains('No value'), span.select2-chosen:contains('No value')",
+      )
+      .each(function () {
+        $(this).text("-");
+      });
 
     // in edit ms responses to recommendations remove the 'No value' from the options
-    $('.edit-recommendation-feedback div.assessment-form-input')
-      .find("option:contains('No value'), span.select2-chosen:contains('No value')").each(function(){
+    $(".edit-recommendation-feedback div.assessment-form-input")
+      .find(
+        "option:contains('No value'), span.select2-chosen:contains('No value')",
+      )
+      .each(function () {
         $(this).remove();
-    });
+      });
   }
 
   function setupUnloadWarning() {
@@ -270,17 +295,17 @@
     // Warn user before leaving the page with unsaved changes
     var submitted = false;
     var modified = false;
-    var $nd = $('.fields-container');
+    var $nd = $(".fields-container");
 
-    $('#comp-national-descriptor form').submit(function() {
+    $("#comp-national-descriptor form").submit(function () {
       submitted = true;
     });
 
-    $nd.on('change', 'input, textarea, select', function(e) {
+    $nd.on("change", "input, textarea, select", function (e) {
       modified = true;
     });
 
-    $(window).bind('beforeunload', function() {
+    $(window).bind("beforeunload", function () {
       if (modified && !submitted) {
         // most browsers ignores custom messages,
         // in that case the browser default message will be used
@@ -288,31 +313,30 @@
       }
     });
 
-    var $select = $nd.find('.select2-container');
-    var $textarea = $nd.find('textarea');
-    $select.closest('.fields-container-row').addClass('flex-select');
-    $textarea.closest('.fields-container-row').addClass('flex-textarea');
+    var $select = $nd.find(".form-select");
+    var $textarea = $nd.find("textarea");
+    $select.closest(".fields-container-row").addClass("flex-select");
+    $textarea.closest(".fields-container-row").addClass("flex-textarea");
   }
 
   function adjustInfoboxPosition() {
-    var $repNavToggle = $('#report-nav-toggle');
-    var $repNav = $('.report-nav.sticky');
-    var $infobox = $('#assessment-edit-infobox');
+    var $repNavToggle = $("#report-nav-toggle");
+    var $repNav = $(".report-nav.sticky");
+    var $infobox = $("#assessment-edit-infobox");
     var infoboxLength = $infobox.children().length;
-    var $ff = $('.form-right-side.fixed-save-btn');
+    var $ff = $(".form-right-side.fixed-save-btn");
 
-    if (infoboxLength > 0 && $repNav.length){
-      $repNav.addClass('has-infobox');
-      $infobox.show().css('display', 'inline-block');
+    if (infoboxLength > 0 && $repNav.length) {
+      $repNav.addClass("has-infobox");
+      $infobox.show().css("display", "inline-block");
       var leftPos = $repNavToggle.position().left - 16;
 
       if ($ff.length) leftPos = $ff.position().left;
 
       leftPos = leftPos - $infobox.width();
-      $infobox.css('left', leftPos + 'px');
-    }
-    else {
-      $repNav.removeClass('has-infobox');
+      $infobox.css("left", leftPos + "px");
+    } else {
+      $repNav.removeClass("has-infobox");
       $infobox.hide();
     }
   }
@@ -322,66 +346,71 @@
     // the infobox will show all ges components/targets with 'Not relevant' option selected
     function _addGescompsToInfobox() {
       var gesComps = [];
-      var $allQuestions = $('<div>');
-      var $infobox = $('div#assessment-edit-infobox');
-      var message = "'Not relevant' option selected for the following questions:";
+      var $allQuestions = []; //$("<div>");
+      var $infobox = $("div#assessment-edit-infobox");
+      var message =
+        "'Not relevant' option selected for the following questions: ";
       $infobox.empty();
 
-      $('.subform .left select option:selected').each(function(){
+      $(".subform .left select option:selected").each(function () {
         var value = $(this).text();
-        var _id = $(this).parent().attr('id').split('_').slice(-2);
+        var _id = $(this).parent().attr("id").split("_").slice(-2);
         var questionId = _id[0];
         var _idGescomp = _id[1];
 
-        if (_idGescomp.match('[^a-zA-Z]')) _idGescomp = _idGescomp.split('-').join('.');
+        if (_idGescomp.match("[^a-zA-Z]"))
+          _idGescomp = _idGescomp.split("-").join(".");
 
-        if(value == 'Not relevant') {
-          $allQuestions.append($("<span>").addClass('infobox-popover')
-            .append(questionId + ": " + _idGescomp));
+        if (value == "Not relevant") {
+          // $allQuestions.append(
+          //   $("<span>")
+          //     .addClass("infobox-popover")
+          //     .append(questionId + ": " + _idGescomp),
+          // );
+          $allQuestions.push(questionId + ": " + _idGescomp);
 
           if (gesComps.indexOf(_idGescomp) === -1) gesComps.push(_idGescomp);
         }
       });
 
-      gesComps.forEach(function(value, index, array) {
-        $infobox.append($('<span>').attr('class', 'info-item').append(value)
-        );
+      gesComps.forEach(function (value, index, array) {
+        $infobox.append($("<span>").attr("class", "info-item").append(value));
       });
 
-      $infobox.attr('class', 'help-popover')
-          .attr('data-trigger', 'hover')
-          .attr('data-html', 'true')
-          .attr('data-placement', 'bottom')
-          .attr('data-content', $allQuestions.html())
-          .attr('data-original-title', message).popover();
+      $infobox
+        .attr("class", "pat-tooltip")
+        .attr("title", message + $allQuestions.join(", "));
+      // .popover();
 
-      if(gesComps.length === 0) {
+      if (gesComps.length === 0) {
         $infobox.hide();
         return;
       }
 
-      $infobox
-      .append($('<i class="glyphicon glyphicon-exclamation-sign infobox-icon">'));
-
+      $infobox.append(
+        $(
+          '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-exclamation-circle" viewBox="0 0 16 16">   <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>   <path d="M7.002 11a1 1 0 1 1 2 0 1 1 0 0 1-2 0M7.1 4.995a.905.905 0 1 1 1.8 0l-.35 3.507a.552.552 0 0 1-1.1 0z"/> </svg>',
+        ),
+      );
     }
     _addGescompsToInfobox();
 
-    $('select').change(function(){
+    $("select").change(function () {
       _addGescompsToInfobox();
       adjustInfoboxPosition();
     });
   }
 
   function setupQuestionIntroModal() {
-    $('i.question-intro').click(function() {
+    $("i.question-intro").click(function () {
       var questionIntroText = $(this).data().text;
       var questionId = $(this).data().questionid;
-      $('#question-intro .modal-body').html(questionIntroText);
-      $('#question-intro .modal-title .modal-question-id').text(questionId);
+      $("#question-intro .modal-body").html(questionIntroText);
+      $("#question-intro .modal-title .modal-question-id").text(questionId);
     });
   }
 
-  $(document).ready(function() {
+  $(document).ready(function () {
     setCommentCookie();
     setupCommentsListing();
     setupPostComments();
@@ -392,66 +421,63 @@
     setupAssessmentInfobox();
     setupQuestionIntroModal();
 
-    $('.help-popover').popover();
+    $(".help-popover").popover();
 
     // When hovering over the comments section add delete comment event for each comment
-    $('.subform .right .comments').mouseenter(
-      function(){
-        setupDeleteComments($(this));
-        setupEditComments($(this));
-      }
-    );
-    $('#form-edit-comment').submit(function(event){
+    $(".subform .right .comments").mouseenter(function () {
+      setupDeleteComments($(this));
+      setupEditComments($(this));
+    });
+    $("#form-edit-comment").submit(function (event) {
       event.preventDefault();
 
-      if( $(this).hasClass('form-submitted') ){
+      if ($(this).hasClass("form-submitted")) {
         return;
       }
-      
-      $(this).addClass('form-submitted');
-      $('#edit-comment-modal *').css("cursor", "wait");
-      var url = './@@edit_comment';
-      var $comel = $(this).data('comel');
-      var $el = $(this).data('el');
-      
-      $.post(url, $(this).serialize(), function(text){
+
+      $(this).addClass("form-submitted");
+      $("#edit-comment-modal *").css("cursor", "wait");
+      var url = "./@@edit_comment";
+      var $comel = $(this).data("comel");
+      var $el = $(this).data("el");
+
+      $.post(url, $(this).serialize(), function (text) {
         setCommentCookie();
         $comel.html(text);
         colorComments();
         setupAccordions($el);
-        $('#edit-comment-modal *').css("cursor", "default");
+        $("#edit-comment-modal *").css("cursor", "default");
         jQuery.noConflict();
-        $('#edit-comment-modal').modal('toggle');
-        $('#form-edit-comment').removeClass('form-submitted');
+        $("#edit-comment-modal").modal("toggle");
+        $("#form-edit-comment").removeClass("form-submitted");
       });
-
     });
 
     var $win = $(window);
 
     // set comment section height for overflow
-    var $sf = $('.subform');
-    $sf.each(function() {
+    var $sf = $(".subform");
+    $sf.each(function () {
       var $this = $(this);
-      var $com = $this.find('.right');
-      var formHeight = $this.find('.left').innerHeight();
+      var $com = $this.find(".right");
+      var formHeight = $this.find(".left").innerHeight();
 
-      $com.innerHeight(formHeight + 30);
+      $com.innerHeight(formHeight + 260);
 
-      var resizeTimer;
-      $win.resize(function() {
-        clearTimeout(resizeTimer);
-        resizeTimer = setTimeout(function(){
-          $com = $this.find('.right');
-          formHeight = $this.find('.left').innerHeight();
-          $com.innerHeight(formHeight);
-        }, 100)
-      });
+      // var resizeTimer;
+      // $win.resize(function () {
+      //   clearTimeout(resizeTimer);
+      //   resizeTimer = setTimeout(function () {
+      //     $com = $this.find(".right");
+      //     formHeight = $this.find(".left").innerHeight();
+      //     $com.innerHeight(formHeight);
+      //   }, 100);
+      // });
     });
 
     // sticky save button
-    var $sfw = $('.form-right-side');
-    var $rn = $('.report-nav');
+    var $sfw = $(".form-right-side");
+    var $rn = $(".report-nav");
     var btnPos = 0;
     var rnOffset = 0;
     var scroll, space;
@@ -463,19 +489,17 @@
 
     // $sfw.find('#form-buttons-save').addClass('btn-success');
     // Button to translate targets only displayed for art10
-    var $btnTranslate = $sfw.find('#form-buttons-translate');
-    $btnTranslate.addClass('btn-secondary');
-    if(window.location.pathname.indexOf('art10') == -1){
-      $btnTranslate.css('display', 'none');
+    var $btnTranslate = $sfw.find("#form-buttons-translate");
+    $btnTranslate.addClass("btn-secondary");
+    if (window.location.pathname.indexOf("art10") == -1) {
+      $btnTranslate.css("display", "none");
     }
 
-    $win.scroll(function() {
+    $win.scroll(function () {
       scroll = $win.scrollTop();
-      var fixElement = (scroll + space < btnPos) && (scroll >= rnOffset);
-      $sfw.toggleClass('fixed-save-btn', fixElement);
+      var fixElement = scroll + space < btnPos && scroll >= rnOffset;
+      $sfw.toggleClass("fixed-save-btn", fixElement);
       adjustInfoboxPosition();
     });
-
   });
-
-}(jQuery));
+})(jQuery);

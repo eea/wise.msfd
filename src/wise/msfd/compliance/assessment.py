@@ -958,7 +958,12 @@ class EditAssessmentDataFormMain(Form):
         fields = []
 
         for subform in self.subforms:
-            fields.extend(subform.fields._data_values)
+            # Use values() to get just the field objects
+            fields.extend(subform.fields.values())
+
+            # Or use items() if you need both names and fields
+            # for name, field in subform.fields.items():
+            #     fields.append(field)
 
         return Fields(*fields)
 
@@ -979,7 +984,7 @@ Cell = namedtuple('Cell', ['text', 'rowspan'])
 
 
 help_template = PageTemplateFile(os.path.join(
-    str(pathlib.Path(__file__).parent.resolve()), 
+    str(pathlib.Path(__file__).parent.resolve()),
     'pt/assessment-question-help.pt')
 )
 
@@ -1044,7 +1049,7 @@ def render_assessment_help(criterias, descriptor):
 def render_question_guidance(question_id):
     template = PageTemplateFile(
         os.path.join(str(pathlib.Path(__file__).parent.resolve()),
-        'nationaldescriptors/data/questionhelp/{}.pt'.format(question_id))
+                     'nationaldescriptors/data/questionhelp/{}.pt'.format(question_id))
     )
     try:
         text = template()

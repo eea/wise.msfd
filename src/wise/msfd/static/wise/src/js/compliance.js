@@ -11,31 +11,31 @@ if (!Array.prototype.last) {
    * SELECT2 functions
    * */
   // TODO: please explain what this does and why it's needed
-  function setupSelects2(selector) {
-    var forbiddenIDs = [];
-    var selectorFormCont = selector || selectorFormContainer;
+  // function setupSelects2(selector) {
+  //   var forbiddenIDs = [];
+  //   var selectorFormCont = selector || selectorFormContainer;
 
-    $(selectorFormCont + " select").each(function (ind, selectElement) {
-      var selectedElementID = $(selectElement).attr("id");
-      if (forbiddenIDs.indexOf(selectedElementID) !== -1) {
-        return false;
-      }
+  //   $(selectorFormCont + " select").each(function (ind, selectElement) {
+  //     var selectedElementID = $(selectElement).attr("id");
+  //     if (forbiddenIDs.indexOf(selectedElementID) !== -1) {
+  //       return false;
+  //     }
 
-      $(selectElement).addClass("js-example-basic-single");
-      var lessOptions = $(selectElement).find("option").length < 10;
+  //     $(selectElement).addClass("js-example-basic-single");
+  //     var lessOptions = $(selectElement).find("option").length < 10;
 
-      var options = {
-        placeholder: "Select an option",
-        closeOnSelect: true,
-        dropdownAutoWidth: true,
-        width: "100%",
-        theme: "flat",
-      };
-      if (lessOptions) options.minimumResultsForSearch = Infinity;
+  //     var options = {
+  //       placeholder: "Select an option",
+  //       closeOnSelect: true,
+  //       dropdownAutoWidth: true,
+  //       width: "100%",
+  //       theme: "flat",
+  //     };
+  //     if (lessOptions) options.minimumResultsForSearch = Infinity;
 
-      $(selectElement).select2(options);
-    });
-  }
+  //     $(selectElement).select2(options);
+  //   });
+  // }
 
   function initStyling() {
     // TODO: is this still needed? I don't think so
@@ -1096,13 +1096,27 @@ if (!Array.prototype.last) {
   $(document).ready(function ($) {
     setupReadMoreModal();
     initStyling();
-    setupSelects2();
+    // setupSelects2();
     setupReportNavigation();
     // setupTableScrolling();
     setupResponsiveness();
     addCustomScroll();
     addFixedTable();
     regionalDescriptorsGroupTableHeaders();
+
+    // $(".pat-tooltip").tooltip({
+    //   html: true,
+    //   title: $(this).attr("title"),
+    // });
+    // $('[data-bs-toggle="tooltip"]').tooltip({
+    //   html: true,
+    // });
+    // var popoverTriggerList = [].slice.call(
+    //   document.querySelectorAll('[data-bs-toggle="popover"]'),
+    // );
+    // var popoverList = popoverTriggerList.map(function (popoverTriggerEl) {
+    //   return new bootstrap.Popover(popoverTriggerEl);
+    // });
 
     $(".pat-plone-modal").attr(
       "href",
