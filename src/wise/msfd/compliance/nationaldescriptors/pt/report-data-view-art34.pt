@@ -89,7 +89,7 @@
             </div>
           </tal:rep>
 
-          <div id="read-more-modal" class="modal fade" role="dialog">
+          <div id="read-more-modal" class="modal" role="dialog">
             <div class="modal-dialog">
               <div class="modal-content">
                 <div class="modal-header">

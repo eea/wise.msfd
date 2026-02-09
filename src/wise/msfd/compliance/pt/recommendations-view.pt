@@ -15,7 +15,7 @@
 
         <h3 class="report-title">COM/Art12/2018/Recommendations</h3>
 
-        <div id="edit-recommendation" class="modal fade" tabindex="-1" role="dialog">
+        <div id="edit-recommendation" class="modal" tabindex="-1" role="dialog">
           <div class="modal-dialog modal-lg" role="document">
             <div class="modal-content">
               <div class="modal-header">
@@ -86,7 +86,7 @@
           </div>
         </div>
       </div>
-      <div id="edit-topics" class="modal fade" tabindex="-1" role="dialog">
+      <div id="edit-topics" class="modal" tabindex="-1" role="dialog">
         <div class="modal-dialog modal-lg" role="document">
           <div class="modal-content">
             <div class="modal-header">

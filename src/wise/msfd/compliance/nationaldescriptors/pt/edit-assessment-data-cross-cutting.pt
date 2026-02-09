@@ -30,7 +30,7 @@
 
       <div id="comp-national-descriptor">
 
-        <div class="modal fade" id="question-intro" tabindex="-1" role="dialog">
+        <div class="modal" id="question-intro" tabindex="-1" role="dialog">
           <div class="modal-dialog modal-lg" role="document">
             <div class="modal-content">
               <div class="modal-header">
@@ -48,7 +48,7 @@
           </div>
         </div>
 
-        <div id="edit-comment-modal" class="modal fade" tabindex="-1" role="dialog">
+        <div id="edit-comment-modal" class="modal" tabindex="-1" role="dialog">
           <div class="modal-dialog modal-lg" role="document">
             <div class="modal-content">
               <div class="modal-header">

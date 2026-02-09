@@ -61,7 +61,7 @@
 
       label {
         position: relative;
-        top: -0.5em;
+        top: -0.7em;
       }
     }
 
@@ -112,11 +112,13 @@
       table.fixed-table {
         border: 0;
         margin-bottom: 0;
-        border-collapse: initial;
+        border-collapse: collapse;
         font-size: 70%;
         table-layout: inherit;
 
         tr {
+          border-top: 0;
+
           &:last-child th {
             border-bottom: 0;
           }
@@ -231,7 +233,7 @@
             padding: 6px 6px 6px 6px;
             border: 0;
             border-bottom: 1px solid #ddd;
-
+            color: #212529 !important;
             background: #efefef;
             text-align: right;
             vertical-align: top;
@@ -255,6 +257,7 @@
             padding: 6px;
             border-top: none;
             border-left: none;
+            color: #212529 !important;
 
             &.summary {
               min-width: 10rem;
@@ -294,6 +297,8 @@
             ul {
               min-width: 16rem;
               margin: 0 0 0 -1rem !important;
+              padding: 0;
+              font-size: inherit !important;
 
               &.cell-listing {
                 // display: flex;

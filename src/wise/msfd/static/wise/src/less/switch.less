@@ -15,11 +15,12 @@
   top: 50%;
   transform: translateY(-50%);
 }
+
 // Mixin for Switch Colors
 // Variables: @color, @bg, @active-bg
 // @btn-default-bg
-.toggle-color(@color: @btn-default-color; @bg: #CCC; @active-bg: @brand-primary;) {
-  background: @bg;
+.toggle-color(@color: @btn-default-color; @bg: #CCC; @active-bg: @brand-primary; ) {
+  background: @bg !important;
   color: @color;
 
   &:before,
@@ -28,13 +29,13 @@
   }
 
   &.active {
-    background-color: @active-bg;
+    background-color: @active-bg !important;
   }
 }
 
 // Mixin for Default Switch Styles
 // Variables: @size, @margin, @color, @bg, @active-bg, @font-size
-.toggle-mixin(@size: @toggle-default-size; @margin: @toggle-default-label-width; @font-size: @toggle-default-font-size;) {
+.toggle-mixin(@size: @toggle-default-size; @margin: @toggle-default-label-width; @font-size: @toggle-default-font-size; ) {
   position: relative;
   width: @size * 2;
   height: @size;
@@ -47,6 +48,7 @@
 
   &:focus,
   &.focus {
+
     &,
     &.active {
       outline: none;
@@ -79,7 +81,7 @@
     opacity: 0.5;
   }
 
-  > .handle {
+  >.handle {
     position: absolute;
     top: (@size * 0.25) / 2;
     left: (@size * 0.25) / 2;
@@ -93,7 +95,7 @@
   &.active {
     transition: background-color 0.25s;
 
-    > .handle {
+    >.handle {
       left: @size + ((@size * 0.25) / 2);
       transition: left 0.25s;
     }
@@ -108,6 +110,7 @@
   }
 
   &.btn-sm {
+
     &:before,
     &:after {
       left: @size * 0.275;
@@ -138,6 +141,7 @@
   }
 
   &.btn-xs {
+
     &:before,
     &:after {
       display: none;
@@ -151,18 +155,18 @@
   .toggle-color;
 
   &.btn-lg {
-    .toggle-mixin(@size: 2.5rem; @font-size: 1rem; @margin: 5rem;);
+    .toggle-mixin(@size: 2.5rem; @font-size: 1rem; @margin: 5rem; );
   }
 
   &.btn-sm {
-    .toggle-mixin(@font-size: 0.55rem; @margin: 0.5rem;);
+    .toggle-mixin(@font-size: 0.55rem; @margin: 0.5rem; );
   }
 
   &.btn-xs {
-    .toggle-mixin(@size:1rem;@margin:0;);
+    .toggle-mixin(@size: 1rem; @margin: 0; );
   }
 
   &.btn-secondary {
-    .toggle-color(@active-bg:@grey-theme-color);
+    .toggle-color(@active-bg: @grey-theme-color);
   }
 }

@@ -2,7 +2,7 @@
   This needs to be moved to the compliance folder
 -->
 
-<div class="modal fade" id="assessment-help" tabindex="-1" role="dialog">
+<div class="modal" id="assessment-help" tabindex="-1" role="dialog">
   <div class="modal-dialog modal-lg" role="document">
     <div class="modal-content">
       <div class="modal-header">
