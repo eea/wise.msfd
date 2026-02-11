@@ -1125,10 +1125,14 @@ class AdminScoring(BaseComplianceView, AssessmentDataMixin):
                 and obj.saved_assessment_data):
 
             return
-
+        year = '2018'
         state = get_wf_state_id(obj)
         article_folder = obj
         article_title = article_folder.title
+
+        if '2024' in article_title:
+            year = '2024'
+
         descr = obj.aq_parent
         descr_id = descr.id.upper()
         region_code = obj.aq_parent.aq_parent.id.upper()
@@ -1136,7 +1140,7 @@ class AdminScoring(BaseComplianceView, AssessmentDataMixin):
         country_code = obj.aq_parent.aq_parent.aq_parent.id.upper()
         country_name = obj.aq_parent.aq_parent.aq_parent.title
         d_obj = self.descriptor_obj(descr_id)
-        muids = self.muids(country_code, region_code, '2018')
+        muids = self.muids(country_code, region_code, year)
         data = obj.saved_assessment_data.last()
 
         phase_overall_scores = OverallScores(ARTICLE_WEIGHTS, article_title)
@@ -1246,7 +1250,8 @@ class AdminScoring(BaseComplianceView, AssessmentDataMixin):
 
             yield (country_code, country_name, region_code, region_name,
                    d_obj.id, d_obj.title,
-                   article_title, '', '2018 {}'.format(phase.capitalize()), '',
+                   article_title, '', '{} {}'.format(
+                       year, phase.capitalize()), '',
                    score, score_title, state, last_change)
 
         overall_concl, score = phase_overall_scores.get_overall_score(
@@ -1255,7 +1260,7 @@ class AdminScoring(BaseComplianceView, AssessmentDataMixin):
 
         yield (country_code, country_name, region_code, region_name,
                d_obj.id, d_obj.title,
-               article_title, '', '2018 Overall', '',
+               article_title, '', '{} Overall'.format(year), '',
                score, score_title, state, last_change)
 
         # 2012 Adequacy and change
@@ -1270,17 +1275,19 @@ class AdminScoring(BaseComplianceView, AssessmentDataMixin):
 
         yield (country_code, country_name, region_code, region_name,
                d_obj.id, d_obj.title,
-               article_title, '', '2018 Adequacy score value', '',
+               article_title, '', '{} Adequacy score value'.format(year), '',
                adeq_2018_score_val, '', state, last_change)
 
         yield (country_code, country_name, region_code, region_name,
                d_obj.id, d_obj.title,
-               article_title, '', '2012 Adequacy score value', '',
+               article_title, '', '{} Adequacy score value'.format(
+                   int(year) - 6), '',
                score_2012, concl_2012, state, last_change)
 
         yield (country_code, country_name, region_code, region_name,
                d_obj.id, d_obj.title,
-               article_title, '', '2012 Adequacy change', '',
+               article_title, '', '{} Adequacy change'.format(
+                   int(year) - 6), '',
                adequacy_2012_change, '', state, last_change)
 
     def get_data_2022(self, obj):
