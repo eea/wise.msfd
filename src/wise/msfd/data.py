@@ -8,6 +8,7 @@ import re
 import tempfile
 from collections import defaultdict
 from datetime import datetime
+# from urllib.error import HTTPError
 
 import requests
 from pkg_resources import resource_filename
@@ -319,7 +320,7 @@ ORDER BY DESC(?date)
     logger.info("Getting fileurl Art11 with SPARQL: %s - %s",
                 country, region)
     try:
-        req = service.query(q)
+        req = service.query(q, timeout=20)
         rows = req.fetchall()
 
         urls = []
@@ -389,7 +390,7 @@ ORDER BY DESC(?date)
     logger.info("Getting fileurl %s with SPARQL: %s - %s",
                 article, country, region)
     try:
-        req = service.query(q)
+        req = service.query(q, timeout=20)
         rows = req.fetchall()
 
         urls = []
@@ -404,12 +405,12 @@ ORDER BY DESC(?date)
                          '%s: %s - %s', article, country, region)
 
         raise
-    
+
     if urls:
         return urls[0]
 
     return ''
-    
+
 
 @db.use_db_session('2012')
 def _get_report_filename_art13_2016(country, region, article, descriptor):
@@ -424,7 +425,7 @@ def _get_report_filename_art13_2016(country, region, article, descriptor):
     )
 
     file_names = []
-    
+
     for item in items:
         file_name = item.FileName
 
@@ -468,16 +469,16 @@ def _get_report_filename_art14_2016(country, region, article, descriptor):
     )
 
     file_names = []
-    
+
     for item in items:
         file_name = item.FileName
 
         if 'Measure' in file_name:
             continue
-        
+
         if 'Mesure' in file_name:
             continue
-        
+
         if file_name:
             file_name = ART13_FIX_FILENAME.sub('', file_name)
 
@@ -511,7 +512,7 @@ def _get_report_filename_art18_2018(country, region, article, descriptor):
     )
 
     # file_names = []
-    
+
     # TODO: analyse cases when it returns more then one file
     if len(items) != 1:
         logger.warning("Could not find report filename for %s %s %s",
@@ -585,8 +586,8 @@ def get_report_filename(report_version,
     return handler(country, region, article, descriptor)
 
 
-@cache(lambda func, filename, country_code: 
-        func.__name__ + filename + country_code + current_date())
+@cache(lambda func, filename, country_code:
+       func.__name__ + filename + country_code + current_date())
 @timeit
 def get_report_file_url(filename, country_code=''):
     """ Retrieve the CDR url based on query in ContentRegistry
@@ -632,7 +633,7 @@ LIMIT 1""" % (filename, country_filter)
 
     logger.info("Getting filename with SPARQL: %s", filename)
     try:
-        req = service.query(q)
+        req = service.query(q, timeout=20)
         rows = req.fetchall()
 
         urls = []
@@ -807,7 +808,7 @@ LIMIT 1
     service = sparql.Service('https://cr.eionet.europa.eu/sparql')
     filename = ''
     try:
-        req = service.query(q)
+        req = service.query(q, timeout=20)
         rows = req.fetchall()
         if not rows:
             logger.warning("Filename not found for query: %s", q)
@@ -878,7 +879,7 @@ LIMIT 1
     service = sparql.Service('https://cr.eionet.europa.eu/sparql')
     filename = ''
     try:
-        req = service.query(q)
+        req = service.query(q, timeout=20)
         rows = req.fetchall()
         url = rows[0][0].value
         splitted = url.split('/')
@@ -955,7 +956,7 @@ ORDER BY DESC(?date)
     urls = []
 
     try:
-        req = service.query(q)
+        req = service.query(q, timeout=20)
         rows = req.fetchall()
 
         for row in rows:
@@ -973,7 +974,7 @@ ORDER BY DESC(?date)
     if article.lower() in ('art3', 'art4'):
         if country.upper() == 'IT':
             urls.insert(1, 'https://cdr.eionet.europa.eu/it/eu/msfd_art17/'
-                '2018reporting/spatialdata/envxd9fqa/IT_MSFD4Geo_20181220.xml')
+                        '2018reporting/spatialdata/envxd9fqa/IT_MSFD4Geo_20181220.xml')
 
         if country.upper() == 'LT':
             urls.append("https://cdr.eionet.europa.eu/lt/eu/msfd_art17/"
@@ -1016,7 +1017,7 @@ LIMIT 1
     service = sparql.Service('https://cr.eionet.europa.eu/sparql')
 
     try:
-        req = service.query(q)
+        req = service.query(q, timeout=20)
         rows = req.fetchall()
 
         if not rows:
@@ -1033,7 +1034,7 @@ LIMIT 1
         raise
 
     release_date = _to_datetime(released)
-    
+
     return release_date
 
 
@@ -1070,7 +1071,7 @@ ORDER BY DESC(?date)
     res = []
 
     try:
-        req = service.query(q, timeout=30)
+        req = service.query(q, timeout=20)
         rows = req.fetchall()
 
         for row in rows:
@@ -1086,6 +1087,7 @@ ORDER BY DESC(?date)
         raise
 
     return res
+
 
 def get_gis_reports_2018(country_code):
     """get_gis_reports_2018"""
@@ -1118,7 +1120,7 @@ ORDER BY DESC(?date)
     res = []
 
     try:
-        req = service.query(q, timeout=30)
+        req = service.query(q, timeout=20)
         rows = req.fetchall()
 
         for row in rows:
