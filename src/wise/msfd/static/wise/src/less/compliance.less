@@ -41,6 +41,8 @@ h5,
 h6 {
   margin-top: 3rem !important;
   margin-bottom: 2rem !important;
+  font-weight: 500 !important;
+  color: #002d54 !important;
 }
 
 p,
@@ -484,6 +486,11 @@ div.subform-refresh {
 
 .kssattr-formname-edit-assessment-summary,
 .wise-search-form-container {
+  .report-title {
+    color: #002d54;
+    font-weight: 600;
+  }
+
   .formControls {
     margin: 0;
   }
@@ -1226,7 +1233,7 @@ span.has-new-comments {
       &.as-header {
         padding: 0.4rem;
         background-color: #0071b3 !important;
-        color: white;
+        color: white !important;
         // min-height: 65px;
       }
 
@@ -1307,8 +1314,13 @@ table.comp-c-listing {
 
 #report-data-navigation {
   position: relative;
+  height: 47px;
   // margin-top: 1.5em;
   // margin-bottom: 1em;
+
+  &.height-fix {
+    height: 155px;
+  }
 
   div.back-to-descr {
     display: inline-block;

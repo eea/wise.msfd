@@ -283,7 +283,7 @@ class OverallScores(object):
 
         if max_score == 0:  # all phases not relevant
             return 5, '-'
-        
+
         return get_range_index_2022(overall_score), overall_score
 
     def conclusion(self, phase):
@@ -292,7 +292,7 @@ class OverallScores(object):
         :return: string 'Very good'
         """
         if self.question.article in ('Art13', 'Art14', 'Art13Completeness',
-                                'Art14Completeness', 'Art1314CrossCutting'):
+                                     'Art14Completeness', 'Art1314CrossCutting'):
             return self.conclusion_2022(phase)
 
         score_value = self.get_range_index_for_phase(phase)
@@ -339,12 +339,12 @@ class OverallScores(object):
         final_score = self.get_score_for_phase(phase)
 
         text = \
-            "<b>Score achieved</b>: {} (Sum of the scores from each question)"\
-            "</br><b>Max score</b>: {} (Maximum possible score: sum of the " \
-            "weights from each question, excluding <b>Not relevant</b> " \
-            "questions)" \
-            "</br><b>Final score</b>: {} (<b>Score achieved</b> * 100 / " \
-            "<b>Max score<b/>)" \
+            "Score achieved: {} (Sum of the scores from each question); "\
+            "Max score: {} (Maximum possible score: sum of the " \
+            "weights from each question, excluding 'Not relevant' " \
+            "questions); " \
+            "Final score: {} ('Score achieved' * 100 / " \
+            "'Max score'')" \
             .format(score, max_score, final_score)
 
         return text
@@ -364,12 +364,12 @@ class OverallScores(object):
             max_score += _max_score
 
         text = \
-            "<b>Score achieved</b>: {} (Sum of the scores from each question)"\
-            "</br><b>Max score</b>: {} (Maximum possible score: sum of " \
+            "Score achieved: {} (Sum of the scores from each question); "\
+            "Max score: {} (Maximum possible score: sum of " \
             "the weights from each question, excluding " \
-            "<b>Not relevant</b> questions)" \
-            "</br><b>Final score</b>: {} (<b>Score achieved</b> * 100 / " \
-            "<b>Max score</b>)" \
+            "'Not relevant' questions); " \
+            "Final score: {} ('Score achieved' * 100 / " \
+            "Max score)" \
             .format(score_achieved, max_score, overall_score_val)
 
         return text
@@ -379,10 +379,9 @@ class OverallScores(object):
         co_wght = int(weights['coherence'] * 100)
         overall_color, overall_score_val = self.get_overall_score(article)
 
-        text = "<b>Coherence weight</b>: {}" \
-               "</br><b>Final score</b>: {} (<b>Coherence</b> score)" \
-               .format(co_wght,
-                       overall_score_val)
+        text = "Coherence weight: {}; " \
+               "Final score: {} ('Coherence' score)" \
+               .format(co_wght, overall_score_val)
 
         return text
 
@@ -403,14 +402,14 @@ class OverallScores(object):
         overall_max += co_max and weights['coherence'] * 100 or 0
         overall_color, overall_score_val = self.get_overall_score(article)
 
-        text = "<b>Adequacy weight</b>: {0}" \
-               "</br><b>Consistency weight</b>: {1}" \
-               "</br><b>Coherence weight</b>: {2}" \
-               "</br> <b>Overall max score</b>: {10}" \
-               "</br></br><b>Final score</b>: {3} (Adequacy score * " \
+        text = "Adequacy weight: {0}; " \
+               "Consistency weight: {1}; " \
+               "Coherence weight: {2}; " \
+               "Overall max score: {10}; " \
+               "Final score: {3} (Adequacy score * " \
                "Adequacy weight + Consistency score * Consistency weight + " \
-               "Coherence score * Coherence weight) / {10}" \
-               "</br>({4}*{5} + {6}*{7} + {8}*{9}) / {10}" \
+               "Coherence score * Coherence weight) / {10} " \
+               "({4}*{5} + {6}*{7} + {8}*{9}) / {10}" \
                .format(ad_wght, cn_wght, co_wght,
                        overall_score_val,
                        ad_score, ad_wght, cn_score, cn_wght, co_score, co_wght,
@@ -435,14 +434,14 @@ class OverallScores(object):
         overall_max += co_max and weights['coherence'] * 100 or 0
         overall_color, overall_score_val = self.get_overall_score(article)
 
-        text = "<b>Adequacy weight</b>: {0}" \
-               "</br><b>Completeness weight</b>: {1}" \
-               "</br><b>Coherence weight</b>: {2}" \
-               "</br> <b>Overall max score</b>: {10}" \
-               "</br></br><b>Final score</b>: {3} (Adequacy score * " \
+        text = "Adequacy weight: {0}; " \
+               "Completeness weight: {1}; " \
+               "Coherence weight: {2}; " \
+               "Overall max score: {10}; " \
+               "Final score: {3} (Adequacy score * " \
                "Adequacy weight + Completeness score * Completeness weight + " \
-               "Coherence score * Coherence weight) / {10}" \
-               "</br>({4}*{5} + {6}*{7} + {8}*{9}) / {10}" \
+               "Coherence score * Coherence weight) / {10} " \
+               "({4}*{5} + {6}*{7} + {8}*{9}) / {10}" \
                .format(ad_wght, cn_wght, co_wght,
                        overall_score_val,
                        ad_score, ad_wght, cn_score, cn_wght, co_score, co_wght,
@@ -482,7 +481,7 @@ class Score(object):
         except (TypeError, ValueError):
             weight_for_country = None
 
-        return (weight_for_country if weight_for_country is not None 
+        return (weight_for_country if weight_for_country is not None
                 else weight_from_xml)
 
     @property
@@ -568,7 +567,7 @@ class Score(object):
         """
 
         if self.question.article in ('Art13', 'Art14', 'Art13Completeness',
-                                'Art14Completeness', 'Art1314CrossCutting'):
+                                     'Art14Completeness', 'Art1314CrossCutting'):
             concl = list(reversed(CONCLUSIONS_2022))[self.score_value]
         else:
             concl = list(reversed(CONCLUSIONS))[self.score_value]
@@ -614,14 +613,14 @@ class Score(object):
         raw_score = ' + '.join(str(x) for x in self.raw_scores)
 
         text = \
-            '<b>Weight</b>: {}' \
-            '</br><b>Max score</b>: {} (number of answered criterias/targets ' \
-            'excluding answers where option selected is "Not relevant")' \
-            '</br><b>Score achieved</b>: {} (Sum of the scores {})' \
-            '</br><b>Percentage</b>: {} (<b>Score achieved</b> * 100 / ' \
-            '<b>Max score</b>)' \
-            '</br><b>Weighted score</b>: {} (Final score ' \
-            '<b>Percentage</b> * <b>Weight</b> / 100)' \
+            'Weight: {}; ' \
+            'Max score: {} (number of answered criterias/targets ' \
+            'excluding answers where option selected is "Not relevant"); ' \
+            'Score achieved: {} (Sum of the scores {}); ' \
+            'Percentage: {} ("Score achieved" * 100 / ' \
+            'Max score); ' \
+            'Weighted score: {} (Final score ' \
+            'Percentage * Weight / 100)' \
             .format(self.weight, self.max_score, self.score_achieved,
                     raw_score, self.percentage, self.final_score)
 

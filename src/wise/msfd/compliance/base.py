@@ -16,7 +16,7 @@ from plone.api import user
 from plone.api.content import get_state
 from plone.api.portal import get_tool
 from plone.api.user import get_roles
-from plone.intelligenttext.transforms import convertWebIntelligentPlainTextToHtml
+from plone.intelligenttext.transforms import convertHtmlToWebIntelligentPlainText
 
 from plone.memoize import ram
 from plone.memoize.view import memoize
@@ -830,8 +830,11 @@ class AssessmentQuestionDefinition:
 
         sn = node.find('scoring')
         self.score_method = resolve(sn.get('determination-method'))
-        self.source_info = convertWebIntelligentPlainTextToHtml(
-            getattr(node.find('source-info'), 'text', '').strip())
+        # self.source_info = convertWebIntelligentPlainTextToHtml(
+        #     getattr(node.find('source-info'), 'text', '').strip())
+        self.source_info = convertHtmlToWebIntelligentPlainText(
+            getattr(node.find('source-info'), 'text', '').strip()
+            .replace('\n\n', '; '))
         self.q_heading = getattr(node.find('heading'), 'text', '').strip()
 
     def calculate_score(self, descriptor, values, country_code=None):

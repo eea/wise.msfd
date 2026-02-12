@@ -627,13 +627,15 @@ if (!Array.prototype.last) {
     // sticky report data navigation
     var $rn = $(".report-nav");
     var $title = $(".report-title");
+    var $reportDataNav = $("#report-data-navigation");
 
     if ($rn.length > 0) {
-      var stickyOffset = $rn.offset().top - 24;
+      var stickyOffset = $rn.offset().top;
 
       $(window).scroll(function () {
         var scroll = $(window).scrollTop();
         var fixElement = scroll >= stickyOffset;
+        $reportDataNav.toggleClass("height-fix", fixElement);
         $rn.toggleClass("sticky", fixElement);
         $title.toggleClass("fixed-title", fixElement);
       });

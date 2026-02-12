@@ -87,7 +87,7 @@
 
                               <div class="widget">
                                 <div>
-                                  <label for="" tal:condition="not:hidden" class="help-popover" data-trigger="hover" data-html="true" tal:attributes="for widget/id;
+                                  <label for="" tal:condition="not:hidden" class="pat-tooltip" tal:attributes="for widget/id;
                                     title python: element and element.title or '';">
                                     <span i18n:translate="" tal:content="widget/label">label</span>
                                   </label>
@@ -125,7 +125,7 @@
 
                               <div class="widget">
                                 <div>
-                                  <label for="" tal:condition="not:hidden" class="help-popover" data-trigger="hover" data-html="true" tal:attributes="for widget/id;
+                                  <label for="" tal:condition="not:hidden" class="pat-tooltip" tal:attributes="for widget/id;
                                     title python: element and element.title or '';">
                                     <span i18n:translate="" tal:content="widget/label">label</span>
                                   </label>

@@ -77,8 +77,8 @@
                   <div class="left">
                     <div class="subform-title">
                       <span tal:content="subform/title">Question here</span>
-                      <span style="float:right;" tal:define="last_change python: view.format_last_change(subform._last_update)" class="help-popover" data-trigger="hover" data-html="true" tal:attributes="title python: '';
-                          data-content python: last_change">
+                      <span style="float:right;" tal:define="last_change python: view.format_last_change(subform._last_update)" class="pat-tooltip" tal:attributes="titleZ python: '';
+                          title last_change">
                         <span tal:content="string:Last change">Last change</span>
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-calendar-check" viewBox="0 0 16 16">
                           <path d="M10.854 7.146a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708 0l-1.5-1.5a.5.5 0 1 1 .708-.708L7.5 9.793l2.646-2.647a.5.5 0 0 1 .708 0"/>
@@ -102,9 +102,8 @@
 
                             <div class="widget">
                               <div>
-                                <label for="" tal:condition="not:hidden" class="help-popover" data-trigger="hover" data-html="true" tal:attributes="for widget/id;
-                                  title python: element and element.title or '';
-                                  data-content python: ''">
+                                <label for="" tal:condition="not:hidden" class="pat-tooltip" tal:attributes="for widget/id;
+                                  title python: element and element.title or '';">
                                   <span i18n:translate="" tal:content="widget/label">label</span>
                                   <!-- <span tal:condition="element" class="glyphicon glyphicon-question-sign"></span> -->
                                 </label>
