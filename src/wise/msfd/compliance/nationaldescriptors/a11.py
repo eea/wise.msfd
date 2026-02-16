@@ -1,4 +1,4 @@
-#pylint: skip-file
+# pylint: skip-file
 from __future__ import absolute_import
 from collections import namedtuple
 
@@ -336,34 +336,34 @@ class A11Item(Item):
         return v
 
     def q5c_habitats(self):
-        v = self.mpr['.//Q5c_RelevantFeaturesPressuresImpacts' \
+        v = self.mpr['.//Q5c_RelevantFeaturesPressuresImpacts'
                      '/Habitats/text()']
-        other = self.mpr['.//Q5c_RelevantFeaturesPressuresImpacts/Habitats' \
+        other = self.mpr['.//Q5c_RelevantFeaturesPressuresImpacts/Habitats'
                          '/Q5c_HabitatsOther/text()']
 
         return ItemListFiltered(v + other)
 
     def q5c_species(self):
-        v = self.mpr['.//Q5c_RelevantFeaturesPressuresImpacts' \
+        v = self.mpr['.//Q5c_RelevantFeaturesPressuresImpacts'
                      '/SpeciesList/text()'][0]
-        other = self.mpr['.//Q5c_RelevantFeaturesPressuresImpacts/SpeciesList'\
+        other = self.mpr['.//Q5c_RelevantFeaturesPressuresImpacts/SpeciesList'
                          '/Q5c_SpeciesOther/text()']
 
         return ItemListFiltered(v.split(' ') + other)
 
     def q5c_physical(self):
-        v = self.mpr['.//Q5c_RelevantFeaturesPressuresImpacts' \
+        v = self.mpr['.//Q5c_RelevantFeaturesPressuresImpacts'
                      '/PhysicalChemicalFeatures/text()'][0]
-        other = self.mpr['.//Q5c_RelevantFeaturesPressuresImpacts' \
-                         '/PhysicalChemicalFeatures' \
+        other = self.mpr['.//Q5c_RelevantFeaturesPressuresImpacts'
+                         '/PhysicalChemicalFeatures'
                          '/Q5c_PhysicalChemicalOther/text()']
-        
+
         return ItemListFiltered(v.split(' ') + other)
 
     def q5c_pressures(self):
-        v = self.mpr['.//Q5c_RelevantFeaturesPressuresImpacts' \
+        v = self.mpr['.//Q5c_RelevantFeaturesPressuresImpacts'
                      '/Pressures/text()'][0]
-        other = self.mpr['.//Q5c_RelevantFeaturesPressuresImpacts' \
+        other = self.mpr['.//Q5c_RelevantFeaturesPressuresImpacts'
                          '/Pressures/Q5c_PressureOther/text()']
 
         return ItemListFiltered(v.split(' ') + other)
@@ -375,14 +375,14 @@ class A11Item(Item):
 
     def q5a_gescrit(self):
         v = self.mpr['.//Q5a_RelevantGESCriteria/text()'][0]
-        other = self.mpr['.//Q5a_RelevantGESCriteria' \
+        other = self.mpr['.//Q5a_RelevantGESCriteria'
                          '/Q5a_DescriptionOther/text()']
 
         return ItemListFiltered(v.split(' ') + other)
 
     def q5a_gesindicator(self):
         v = self.mpr['.//Q5b_RelevantGESIndicators/text()'][0]
-        other = self.mpr['.//Q5b_RelevantGESIndicators' \
+        other = self.mpr['.//Q5b_RelevantGESIndicators'
                          '/Q5b_DescriptionOther/text()']
 
         return ItemListFiltered(v.split(' ') + other)
@@ -393,13 +393,13 @@ class A11Item(Item):
         return ItemListFiltered(v.split(' '))
 
     def q9b_spec_popsize(self):
-        v = self.subr['.//Species_population_size/MeasurementParameter' \
+        v = self.subr['.//Species_population_size/MeasurementParameter'
                       '/text()'][0]
 
         return ItemListFiltered(v.split(' '))
 
     def q9b_spec_popchar(self):
-        v = self.subr['.//Species_population_characteristics' \
+        v = self.subr['.//Species_population_characteristics'
                       '/MeasurementParameter/text()'][0]
 
         return ItemListFiltered(v.split(' '))
@@ -420,13 +420,13 @@ class A11Item(Item):
         return ItemListFiltered(v.split(' '))
 
     def q9b_hab_cond_phys(self):
-        v = self.subr['.//Habitat_condition_physical-chemical' \
+        v = self.subr['.//Habitat_condition_physical-chemical'
                       '/MeasurementParameter/text()'][0]
 
         return ItemListFiltered(v.split(' '))
 
     def q9b_hab_cond_bio(self):
-        v = self.subr['.//Habitat_condition_biological' \
+        v = self.subr['.//Habitat_condition_biological'
                       '/MeasurementParameter/text()'][0]
 
         return ItemListFiltered(v.split(' '))
@@ -745,9 +745,9 @@ class Article11(BaseArticle2012):
             if ges_crit:
                 ges_crit_text = ges_crit[0].text
                 ges_crit = (
-                        ges_crit_text
-                        and set(ges_crit_text.split(' '))
-                        or set()
+                    ges_crit_text
+                    and set(ges_crit_text.split(' '))
+                    or set()
                 )
 
             if not all_ids.intersection(ges_crit):
@@ -756,17 +756,23 @@ class Article11(BaseArticle2012):
             subprogrammes = xp('.//ReferenceSubProgramme', mp)
 
             for sub_prog in subprogrammes:
-                subprog_id = xp('./SubMonitoringProgrammeID/text()', sub_prog)
+                subprog_id = xp(
+                    './SubMonitoringProgrammeID/text()', sub_prog)
                 subprog_id = subprog_id[0].replace('.xml', '').strip()
-                subp_name = xp('./SubMonitoringProgrammeName/text()', sub_prog)
+                subp_name = xp(
+                    './SubMonitoringProgrammeName/text()', sub_prog)
+                subp_name = subp_name or ['No name']
 
                 sub_prog_node = [
                     x
                     for x in sub_prog_nodes
                     if xp('./Q4g_SubProgrammeID', x)[0].text == subprog_id
                 ]
-                sub_prog_node = (len(sub_prog_node) and sub_prog_node[0]
-                                 or SUBEMPTY)
+                if (isinstance(sub_prog_node, list)
+                        and len(sub_prog_node) > 0):
+                    sub_prog_node = sub_prog_node[0]
+                else:
+                    sub_prog_node = SUBEMPTY
 
                 item = self._make_item(mp, sub_prog_node, subp_name[0])
                 items.append(item)
@@ -828,8 +834,8 @@ class A11OverviewItem(Item):
         return self.r['Q4a_ResponsibleCompetentAuthority/text()'][0]
 
     def q4b_responsible_org(self):
-        v = self.r['Q4b_ResponsibleOrganisations' \
-                      '/Q4b_ResponsibleOrganisation/text()']
+        v = self.r['Q4b_ResponsibleOrganisations'
+                   '/Q4b_ResponsibleOrganisation/text()']
 
         return ItemListFiltered(v)
 
@@ -975,8 +981,8 @@ class Article11Overview(Article11):
                     _val = val[1]
 
                     transl = self.context.translate_value(
-                                field_name, _val, self.country_code)
-                    
+                        field_name, _val, self.country_code)
+
                     _field = FIELD(field.title, title, title,
                                    self.article, '', '')
 

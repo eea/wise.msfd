@@ -1575,7 +1575,8 @@ The data is retrieved from the MSFD2018_production.V_ART8_ESA_2018 database view
         res = []
 
         for row in q:
-            regions_reported = set(row.SubRegions.split(","))
+            _subregions = getattr(row, "SubRegions", "") or ""
+            regions_reported = set(_subregions.split(","))
 
             if regions_reported.intersection(set(region_names)):
                 res.append(row)

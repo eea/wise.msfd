@@ -6,7 +6,7 @@
   <metal:block fill-slot="main">
 
     <div id="layout-contents" tal:define="text context/text | nothing">
-      <div id="wise-search-form" class="full-width-marker">
+      <div id="wise-search-form" class="full-width-marker msfd-search-wrapper">
         <div id="wise-search-form-topZ">
           <metal:tabs metal:use-macro="context/wise-macros/macros/tabs"></metal:tabs>
         </div>
@@ -61,8 +61,8 @@
           <table class="table as-table-overview table-striped table-country-start">
             <tbody>
               <tr class="article-title">
-                <th>Art. 8 Assessment</th>
                 <th>Art. 9 GES Determination</th>
+                <th>Art. 8 Assessment</th>
                 <th>Art. 10 Targets</th>
                 <th>Art. 11 Monitoring</th>
                 <th>Art. 13 Measures</th>
@@ -115,8 +115,8 @@
                 <tbody>
                   <tr class="article-title sticky-row">
                     <th style="text-align: left;" class="sticky-col">Descriptor</th>
-                    <th>Art. 8 Assessment</th>
                     <th>Art. 9 GES Determination</th>
+                    <th>Art. 8 Assessment</th>
                     <th>Art. 10 Targets</th>
                     <th>Art. 11 Monitoring</th>
                     <th>Art. 13 Measures</th>

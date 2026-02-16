@@ -6,7 +6,7 @@
   <metal:block fill-slot="main">
 
     <div id="layout-contents" tal:define="text context/text | nothing">
-      <div id="wise-search-form" class="full-width-marker">
+      <div id="wise-search-form" class="full-width-marker msfd-search-wrapper">
         <div id="wise-search-form-topZ">
           <metal:tabs metal:use-macro="context/wise-macros/macros/tabs"></metal:tabs>
         </div>
@@ -29,7 +29,7 @@
                   <a href="" tal:attributes="href region/url" tal:content="region/name">Germany</a>
                 </td>
                 <td>
-                  <a href="" class="class string:p-${region/state_id}" tal:content="region/status" tal:define="color python:view.process_status_colors.get(region.state_id, 'secondary')" tal:attributes="class string:process-status btn btn-xs btn-${color}; href region/url">
+                  <a href="" class="class string:p-${region/state_id}" tal:content="region/status" tal:define="color python:view.process_status_colors.get(region.state_id, 'secondary')" tal:attributes="class string:process-status btn btn-xs btn-${color}; href python: region.url + '/assessments'">
                     Phase -1
                   </a>
 

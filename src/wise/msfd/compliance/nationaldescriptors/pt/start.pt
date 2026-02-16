@@ -5,7 +5,7 @@
 
   <metal:slot metal:fill-slot="main" i18n:domain="cmf_default">
     <div id="layout-contents" tal:define="text context/text | nothing">
-      <div id="wise-search-form" class="full-width-marker">
+      <div id="wise-search-form" class="full-width-marker msfd-search-wrapper">
         <div id="wise-search-form-topZ">
           <metal:tabs metal:use-macro="context/wise-macros/macros/tabs"></metal:tabs>
         </div>
@@ -29,7 +29,7 @@
                   Germany
                 </th>
                 <td>
-                  <a href="" class="class string:p-${country/state_id}" tal:content="country/status" tal:define="color python:view.process_status_colors.get(country.state_id, 'secondary')" tal:attributes="class string:process-status btn btn-xs btn-${color}; href country/url">
+                  <a href="" class="class string:p-${country/state_id}" tal:content="country/status" tal:define="color python:view.process_status_colors.get(country.state_id, 'secondary')" tal:attributes="class string:process-status btn btn-xs btn-${color}; href python: country.url + '/assessments'">
                     Phase -1
                   </a>
                 </td>
