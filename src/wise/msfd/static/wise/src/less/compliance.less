@@ -1744,8 +1744,18 @@ table.comp-c-listing {
 }
 
 #recommendation-edit-table {
+  th {
+    background-color: gray;
+  }
+
   td:not(:last-child):not(:first-child) {
     min-width: 150px;
+  }
+}
+
+#edit-topics {
+  textarea {
+    height: 10em;
   }
 }
 
@@ -1783,6 +1793,7 @@ table.comp-c-listing {
   .btn {
     margin-top: 1em;
     margin-left: 10px;
+    height: fit-content;
   }
 
   #textarea,
@@ -1798,6 +1809,10 @@ table.comp-c-listing {
     flex-direction: row;
     align-items: stretch;
     justify-content: space-evenly;
+
+    .form-control {
+      height: 10em;
+    }
   }
 
   .form-group.disabled {

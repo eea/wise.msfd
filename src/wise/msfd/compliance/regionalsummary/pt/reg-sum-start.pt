@@ -6,7 +6,7 @@
   <metal:block fill-slot="main">
 
     <div id="layout-contents" tal:define="text context/text | nothing">
-      <div id="wise-search-form" class="full-width-marker">
+      <div id="wise-search-form" class="full-width-marker msfd-search-wrapper">
         <div id="wise-search-form-topZ">
           <metal:tabs metal:use-macro="context/wise-macros/macros/tabs"></metal:tabs>
         </div>

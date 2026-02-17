@@ -5,7 +5,7 @@
 
   <metal:block fill-slot="main">
 
-    <div id="wise-search-form" class="full-width-marker">
+    <div id="wise-search-form" class="full-width-marker msfd-search-wrapper">
 
       <div id="wise-search-form-top">
         <metal:tabs metal:use-macro="context/wise-macros/macros/tabs"></metal:tabs>
