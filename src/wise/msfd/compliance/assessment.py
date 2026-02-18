@@ -55,8 +55,20 @@ ARTICLE_WEIGHTS = {
         'consistency': 0.0,
         'coherence': 0.4
     },
+    'Art9-2024': {
+        'adequacy': 0.6,
+        'completeness': 0.0,
+        'consistency': 0.0,
+        'coherence': 0.4
+    },
     'Art8': {
         'adequacy': 0.6,
+        'consistency': 0.2,
+        'coherence': 0.2
+    },
+    'Art8-2024': {
+        'adequacy': 0.6,
+        'completeness': 0.0,
         'consistency': 0.2,
         'coherence': 0.2
     },
@@ -749,6 +761,13 @@ class ViewAssessmentSummaryForm(BaseComplianceView):
     template = ViewPageTemplateFile("pt/assessment-summary-form-view.pt")
 
     @property
+    def progress_year(self):
+        if '2024' in self.context.title:
+            return '2018'
+
+        return '2012'
+
+    @property
     def summary_fields(self):
         return summary_fields
 
@@ -769,7 +788,7 @@ class ViewAssessmentSummaryForm(BaseComplianceView):
             else:
                 text = t2rt(text_raw)
 
-            _fields.append((title, text))
+            _fields.append((title.replace('2012', self.progress_year), text))
 
         return _fields
 

@@ -221,6 +221,12 @@
                         </th>
                         <td tal:attributes="class python: view.can_change_process_state(assessment) and 'assessment-status-td enable-process-state-change' or 'assessment-status-td'" tal:repeat="assessment python: view.get_articles(desc)">
                           <div metal:use-macro="context/wise-macros/macros/assessment-status-bar-2012-2018"></div>
+                          <tal:def tal:define="assessment_2024 python: desc['art8-2024']">
+                            <div tal:condition="python: assessment.id == 'art8'" metal:use-macro="context/wise-macros/macros/assessment-status-bar-2024"></div>
+                          </tal:def>
+                          <tal:def tal:define="assessment_2024 python: desc['art9-2024']">
+                            <div tal:condition="python: assessment.id == 'art9'" metal:use-macro="context/wise-macros/macros/assessment-status-bar-2024"></div>
+                          </tal:def>
                           <tal:def tal:define="assessment_2024 python: desc['art10-2024']">
                             <div tal:condition="python: assessment.id == 'art10'" metal:use-macro="context/wise-macros/macros/assessment-status-bar-2024"></div>
                           </tal:def>

@@ -873,6 +873,9 @@ def get_crit_val(question, element, descriptor):
 
         return ''
 
+    if question.id != 'A08Q3' and element.is_descriptor():
+        return ''
+
     is_prim = element.is_primary(descriptor)
     crit = element.id
 
@@ -883,6 +886,9 @@ def get_crit_val(question, element, descriptor):
         return crit
 
     if use_crit == 'all':
+        return crit
+
+    if use_crit == 'all-and-descriptor':
         return crit
 
     if is_prim and use_crit == 'primary':

@@ -876,6 +876,12 @@ class AssessmentQuestionDefinition:
     def _art_89_ids(self, descriptor, **kwargs):
         return sorted_criterions(descriptor.criterions)
 
+    def _art_89_ids_2024(self, descriptor, **kwargs):
+        descriptor.definition = descriptor.title
+        descriptor.is_primary = lambda x: False
+
+        return [descriptor] + sorted_criterions(descriptor.criterions)
+
     @db.use_db_session('2012')
     def __get_a10_2012_targets(self, ok_ges_ids, muids):
         sess = db.session()
@@ -1161,7 +1167,7 @@ class AssessmentQuestionDefinition:
 
         res = self.get_all_assessed_elements(descriptor, **kwargs)
 
-        if self.article in ['Art8', 'Art9', 'Art11']:
+        if self.article in ['Art8', 'Art9', 'Art11', 'Art8-2024', 'Art9-2024']:
             res = filtered_criterias(res, self, descriptor)
         if self.article in ['Art10']:
             res = filtered_targets(res, self)
@@ -1183,7 +1189,9 @@ class AssessmentQuestionDefinition:
         """
         impl = {
             'Art8': self._art_89_ids,
+            'Art8-2024': self._art_89_ids_2024,
             'Art9': self._art_89_ids,
+            'Art9-2024': self._art_89_ids,
             'Art10': self._art_10_ids,
             'Art10-2024': self._art_10_ids_2024,
             'Art3': self._art_34_ids,
@@ -1222,8 +1230,11 @@ def filtered_criterias(criterias, question, descriptor):
     if question.use_criteria == 'secondary':
         crits = [c for c in criterias if c.is_primary(descriptor) is False]
 
-    if question.use_criteria == 'all':
+    if question.use_criteria in ('all', 'all-and-descriptor'):
         crits = criterias
+
+    if question.use_criteria != 'all-and-descriptor':
+        crits = [c for c in criterias if c.is_descriptor() is False]
 
     if question.use_criteria == 'none':
         crits = []

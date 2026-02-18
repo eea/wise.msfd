@@ -159,7 +159,7 @@ class BootstrapCompliance(BrowserView):
 
     def _get_articles(self):
         """_get_articles"""
-        return ['Art8', 'Art9', 'Art10', 'Art10-2024']
+        return ['Art8', 'Art9', 'Art10', 'Art8-2024', 'Art9-2024', 'Art10-2024']
 
     def set_layout(self, obj, name):
         """set_layout"""
