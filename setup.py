@@ -47,7 +47,7 @@ setup(
         'plone.api',
         'plone.app.contenttypes',
         'zope.sqlalchemy==2.0',
-        'pymssql==2.2.8',
+        'pymssql==2.3.0',
         'SQLAlchemy==1.4.46',
         'sparql-client',
         # 'pyodbc',
