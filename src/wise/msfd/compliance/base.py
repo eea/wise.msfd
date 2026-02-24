@@ -1233,7 +1233,9 @@ def filtered_criterias(criterias, question, descriptor):
     if question.use_criteria in ('all', 'all-and-descriptor'):
         crits = criterias
 
-    if question.use_criteria != 'all-and-descriptor':
+    # for Art8 2024 questions
+    if ((question.id.startswith('A08Q') or question.id.startswith('A0809Q6'))
+            and question.use_criteria != 'all-and-descriptor'):
         crits = [c for c in criterias if c.is_descriptor() is False]
 
     if question.use_criteria == 'none':

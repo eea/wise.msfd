@@ -983,7 +983,6 @@ def format_assessment_data(article, elements, questions, muids, data,
 
         # is_not_relevant is True if all answered options are 'Not relevant'
         # maximum overall score is incremented if the is_not_relevant is False
-
         if not is_not_relevant:
             p_score = getattr(phase_overall_scores, q_klass)
             p_score['score'] += weighted_score
@@ -1023,9 +1022,10 @@ def format_assessment_data(article, elements, questions, muids, data,
         phase_overall_scores.coherence = self.get_coherence_data(
             self.country_region_code, self.descriptor, article
         )
-        phase_overall_scores.completeness = self.get_completeness_data(
-            self.country_code
-        )
+        if self.year != '2024':
+            phase_overall_scores.completeness = self.get_completeness_data(
+                self.country_code
+            )
 
     # the overall score and conclusion for the whole article 2018
     overall_score_val, overall_score = phase_overall_scores.\
@@ -1295,6 +1295,21 @@ class NationalDescriptorArticleView(BaseView, AssessmentDataMixin):
             self
         )
 
+    def set_coherence_data(self):
+        coherence_data = self.get_coherence_data(
+            self.country_region_code, self.descriptor, self.article
+        )
+        self.assessment.phase_overall_scores.coherence = coherence_data
+
+    def set_completeness_data(self):
+        compl_data = self.get_completeness_data(self.country_code)
+        self.assessment.phase_overall_scores.completeness = compl_data
+
+    def set_consistency_data_2024(self):
+        phase_overall_scores.coherence = self.get_coherence_data(
+            self.country_region_code, self.descriptor, article
+        )
+
     def __call__(self):
         alsoProvides(self.request, IDisableCSRFProtection)
 
@@ -1373,7 +1388,7 @@ class NationalDescriptorArticleView(BaseView, AssessmentDataMixin):
             muids=self.muids
         )
         article_weights = ARTICLE_WEIGHTS
-        assessment = self.format_assessment_data(
+        self.assessment = self.format_assessment_data(
             self.article,
             elements,
             self.questions,
@@ -1382,31 +1397,28 @@ class NationalDescriptorArticleView(BaseView, AssessmentDataMixin):
             self.descriptor_obj,
             article_weights
         )
-        self.assessment_formatted = assessment
+        self.assessment_formatted = self.assessment
         self.progress_assessment = data.get(
             "{}_{}".format(self.article, "progress"), "-")
 
-        assessment.phase_overall_scores.coherence = self.get_coherence_data(
-            self.country_region_code, self.descriptor, self.article
-        )
+        # set the coherence and completeness data for national descriptors
+        self.set_coherence_data()
+        self.set_completeness_data()
 
-        assessment.phase_overall_scores.completeness = self.get_completeness_data(
-            self.country_code
-        )
         # score_2012 = score_2012
         conclusion_2012_color = CONCLUSION_COLOR_TABLE.get(score_2012, 0)
 
         change = (
-            assessment.phase_overall_scores
+            self.assessment.phase_overall_scores
             .get_range_index_for_phase('adequacy') - score_2012
         )
 
         # if 2018 adequacy is not relevant, change since 2012 is not relevant
-        if assessment.phase_overall_scores.adequacy['conclusion'][0] == '-':
+        if self.assessment.phase_overall_scores.adequacy['conclusion'][0] == '-':
             change = 'Not relevant (-)'
 
         self.assessment_data_2018_html = self.assessment_data_2018_tpl(
-            assessment=assessment,
+            assessment=self.assessment,
             score_2012=score_2012,
             conclusion_2012=conclusion_2012,
             conclusion_2012_color=conclusion_2012_color,
@@ -1449,6 +1461,9 @@ class NationalDescriptorArticleView2024(NationalDescriptorArticleView):
 
     assessment_data_2012_tpl = Template('./pt/assessment-data-2012.pt')
     assessment_data_2018_tpl = Template('./pt/assessment-data-2024.pt')
+
+    def set_completeness_data(self):
+        pass
 
 
 @implementer(INationaldescriptorArticleView)

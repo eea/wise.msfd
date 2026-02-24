@@ -56,10 +56,10 @@ ARTICLE_WEIGHTS = {
         'coherence': 0.4
     },
     'Art9-2024': {
-        'adequacy': 0.6,
         'completeness': 0.0,
-        'consistency': 0.0,
-        'coherence': 0.4
+        'adequacy': 0.6,
+        'consistency': 0.2,
+        'coherence': 0.2
     },
     'Art8': {
         'adequacy': 0.6,
@@ -67,8 +67,8 @@ ARTICLE_WEIGHTS = {
         'coherence': 0.2
     },
     'Art8-2024': {
-        'adequacy': 0.6,
         'completeness': 0.0,
+        'adequacy': 0.6,
         'consistency': 0.2,
         'coherence': 0.2
     },
@@ -1215,6 +1215,56 @@ class AssessmentDataMixin(object):
             break
 
         assess_data = self._get_assessment_data(article_folder)
+
+        res = {
+            'score': 0,
+            'max_score': 100,
+            'color': 0,
+            'conclusion': (0, 'Not reported')
+        }
+
+        for k, score in assess_data.items():
+            if '_Score' not in k:
+                continue
+
+            if not score:
+                continue
+
+            is_not_relevant = getattr(score, 'is_not_relevant', False)
+            weighted_score = getattr(score, 'final_score', 0)
+            max_weighted_score = getattr(score, 'weight', 0)
+
+            if is_not_relevant:
+                res['max_score'] -= max_weighted_score
+                continue
+
+            res['score'] += weighted_score
+
+        score_percent = int(round(res['max_score'] and (res['score'] * 100)
+                                  / res['max_score'] or 0))
+
+        # score_percent = res['score']
+        score_val = get_range_index(score_percent)
+
+        res['color'] = self.get_color_for_score(score_val)
+        res['conclusion'] = (score_val, self.get_conclusion(score_val))
+
+        if res['max_score'] == 0:
+            res['conclusion'] = ('-', 'Not relevant')
+            res['color'] = 0
+
+        return res
+
+    def get_consistency_2024(self):
+        """ For year 2018
+        :return: {'color': 5, 'score': 0, 'max_score': 0,
+                'conclusion': (1, 'Very poor')
+            }
+        """
+
+        article8_folder = self.context.aq_parent['art8-2024']
+
+        assess_data = self._get_assessment_data(article8_folder)
 
         res = {
             'score': 0,
