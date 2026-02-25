@@ -1,4 +1,4 @@
-#pylint: skip-file
+# pylint: skip-file
 # -*- coding: utf-8 -*-
 
 from __future__ import absolute_import
@@ -93,7 +93,7 @@ class Recommendation(Persistent):
 class RecommendationsTable:
     template = PageTemplateFile(
         os.path.join(str(pathlib.Path(__file__).parent.resolve()),
-        'pt/recommendations-table.pt'))
+                     'pt/recommendations-table.pt'))
 
     def __init__(self, recommendations, show_edit_buttons):
         self.recommendations = recommendations
@@ -113,36 +113,36 @@ class RecommendationsView(BaseComplianceView):
     ]
 
     __topics = (
-'Allocation of species to species groups',
-'Assess progress with targets',
-'Assessment methodology',
-'Assessment scales/areas',
-'Coherence of extent to which GES is achieved',
-'Coherent assessment methodology',
-'Coherent qualitative GES description',
-'Coherent quantitative GES determination',
-'Coherent set of elements',
-'Coherent use of primary criteria',
-'Coherent use of secondary criteria',
-'Extent to which GES is achieved',
-'Features and elements assessed',
-'Good status based on low risk',
-'Guidance on good status based on low risk',
-'Guidance on quantitative GES determination',
-'Integrated MSFD and Birds Directive assessments',
-'Key pressures in (sub)region',
-'Key pressures preventing GES',
-'Link target to direct measures',
-'Lists of parameters and units for reporting',
-'Measurable joint targets',
-'Measurable targets',
-'(Sub)regional targets',
-'Qualitative GES description',
-'Quantify gap to GES',
-'Quantitative GES determination',
-'Targets for key pressures',
-'Use of primary criteria',
-'Use of secondary criteria',
+        'Allocation of species to species groups',
+        'Assess progress with targets',
+        'Assessment methodology',
+        'Assessment scales/areas',
+        'Coherence of extent to which GES is achieved',
+        'Coherent assessment methodology',
+        'Coherent qualitative GES description',
+        'Coherent quantitative GES determination',
+        'Coherent set of elements',
+        'Coherent use of primary criteria',
+        'Coherent use of secondary criteria',
+        'Extent to which GES is achieved',
+        'Features and elements assessed',
+        'Good status based on low risk',
+        'Guidance on good status based on low risk',
+        'Guidance on quantitative GES determination',
+        'Integrated MSFD and Birds Directive assessments',
+        'Key pressures in (sub)region',
+        'Key pressures preventing GES',
+        'Link target to direct measures',
+        'Lists of parameters and units for reporting',
+        'Measurable joint targets',
+        'Measurable targets',
+        '(Sub)regional targets',
+        'Qualitative GES description',
+        'Quantify gap to GES',
+        'Quantitative GES determination',
+        'Targets for key pressures',
+        'Use of primary criteria',
+        'Use of secondary criteria',
     )
 
     @property
@@ -199,7 +199,7 @@ class RecommendationsView(BaseComplianceView):
         worksheet = workbook.add_worksheet(six.text_type(wtitle)[:30])
 
         for i, value in enumerate(self.headers):
-                worksheet.write(0, i, six.text_type(value or ''))
+            worksheet.write(0, i, six.text_type(value or ''))
 
         row_index = 1
 
@@ -213,6 +213,7 @@ class RecommendationsView(BaseComplianceView):
         out.seek(0)
 
         return out
+
     def download(self, xlsdata):
         xlsio = self.data_to_xls(xlsdata)
         sh = self.request.response.setHeader
@@ -232,7 +233,7 @@ class RecommendationsView(BaseComplianceView):
         site = portal.get()
         storage = IRecommendationStorage(site)
         storage_recom = storage.get(STORAGE_KEY, None)
-        
+
         if 'migrate-recommendations' in self.request.form:
             new_recommendations = []
 
@@ -243,22 +244,22 @@ class RecommendationsView(BaseComplianceView):
                 if len(rec_code) == 4:
                     rec_code = "/".join((
                         rec_code[0], rec_code[1], rec_code[3].strip()
-                        ))
+                    ))
                 else:
                     rec_code = "/".join(rec_code)
 
                 recommendation = Recommendation(
-                    id_recom, 
-                    rec_code, 
-                    recommendation.topic, 
-                    recommendation.text, 
-                    recommendation.ms_region, 
+                    id_recom,
+                    rec_code,
+                    recommendation.topic,
+                    recommendation.text,
+                    recommendation.ms_region,
                     recommendation.descriptors
-                    )
-                # storage_recom.pop(recommendation.code, None)    
+                )
+                # storage_recom.pop(recommendation.code, None)
                 # storage_recom.pop(id_recom, None)
-                # storage_recom.pop(int(id_recom), None)        
-                
+                # storage_recom.pop(int(id_recom), None)
+
                 new_recommendations.append(recommendation)
 
             # asd = [x for x in storage_recom.keys()]
@@ -293,7 +294,7 @@ class RecommendationsView(BaseComplianceView):
                 ])
 
                 id_recom = str(int(max_id) + 1)
-            
+
             recom = Recommendation(
                 id_recom, code, topic, text, ms_region, descriptors)
 
@@ -301,7 +302,7 @@ class RecommendationsView(BaseComplianceView):
 
         if 'remove-recommendation' in self.request.form:
             form_data = self.request.form
-            
+
             id_recom = form_data.get('rec_id', '')
             storage_recom.pop(id_recom)
 
@@ -387,7 +388,7 @@ class MSFDReportingHistoryView(BaseComplianceView):
     def _msfd_rep_history_data(self):
         """ all data including the headers """
         data = self.context._msfd_reporting_history_data
-        
+
         return data
 
     def msfd_rep_history_headers(self, use_blacklist=True):
@@ -395,7 +396,7 @@ class MSFDReportingHistoryView(BaseComplianceView):
         # do not show these columns
         blacklist_headers = self.blacklist_headers
         headers = (
-            self._msfd_rep_history_data 
+            self._msfd_rep_history_data
             and self._msfd_rep_history_data[0] or [])
 
         if use_blacklist:
@@ -414,9 +415,9 @@ class MSFDReportingHistoryView(BaseComplianceView):
         # fields = self._msfd_rep_history_data[1]._fields
         # columns = set(fields) - set(blacklist_headers)
 
-        columns = ['Year', 'MSFDArticle', 'TaskProduct', 'ReportType', 
-            'DateDue', 'DateReceived', 'CountryCode', 'FileName', 
-            'LocationURL'] 
+        columns = ['Year', 'MSFDArticle', 'TaskProduct', 'ReportType',
+                   'DateDue', 'DateReceived', 'CountryCode', 'FileName',
+                   'LocationURL']
 
         return columns
 
@@ -430,8 +431,8 @@ class MSFDReportingHistoryView(BaseComplianceView):
         res = []
 
         for index, report_row in enumerate(data):
-            if (report_row.ARES == 'Yes' and not report_row.CIRCABC 
-                and not report_row.WISE):
+            if (report_row.ARES == 'Yes' and not report_row.CIRCABC
+                    and not report_row.WISE):
                 continue
 
             res.append((index, report_row))

@@ -49,24 +49,24 @@
                 </a>
                 <a tal:attributes="href python: context.absolute_url() + '/@@view-edit-history'" class="glyphicon glyphicon-th pat-plone-modal" data-pat-plone-modal="height: 600px; content:#edit-history; width: 80%"></a>
               </li>
-              <!-- <li>
+              <li>
                 <a tal:attributes="href python: context.absolute_url() + '/@@view-report-data-2024'" target="_blank">
                   <i class="glyphicon glyphicon-th"></i>
                   <span>2024</span> Report
                 </a>
               </li>
               <li>
-                <a tal:attributes="href python: context.absolute_url() + '/@@view-report-data-2018'" target="_blank">
+                <a tal:attributes="href python: context.absolute_url().replace('-2024', '') + '/@@view-report-data-2018'" target="_blank">
                   <i class="glyphicon glyphicon-th"></i>
                   <span>2018</span> Report
                 </a>
               </li>
               <li>
-                <a tal:attributes="href python: context.absolute_url() + '/@@view-report-data-2012'" target="_blank">
+                <a tal:attributes="href python: context.absolute_url().replace('-2024', '') + '/@@view-report-data-2012'" target="_blank">
                   <i class="glyphicon glyphicon-th"></i>
                   <span>2012</span> Report
                 </a>
-              </li> -->
+              </li>
               <li class="process-state" style="display:flex; align-items: center">
                 <form method="GET" tal:attributes="action python: context.absolute_url() + '/content_status_modify'">
                   <div>

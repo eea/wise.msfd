@@ -1,4 +1,4 @@
-#pylint: skip-file
+# pylint: skip-file
 from __future__ import absolute_import
 from pkg_resources import resource_filename
 
@@ -6,6 +6,7 @@ from wise.msfd.compliance.utils import ReportDefinition
 
 
 definition_files = {
+    '2024': 'data/report_2024_def.xml',
     '2022': 'data/report_2022_def.xml',
     '2020': 'data/report_2020_def.xml',
     '2018': 'data/report_2018_def.xml',
@@ -20,9 +21,14 @@ f_2016 = resource_filename(__package__, definition_files['2016'])
 f_2018 = resource_filename(__package__, definition_files['2018'])
 f_2020 = resource_filename(__package__, definition_files['2020'])
 f_2022 = resource_filename(__package__, definition_files['2022'])
-
+f_2024 = resource_filename(__package__, definition_files['2024'])
 
 REPORT_DEFS = {
+    '2024': {
+        'Art8-2024': ReportDefinition(f_2024, 'Art8-2024'),
+        'Art9-2024': ReportDefinition(f_2024, 'Art9-2024'),
+        'Art10-2024': ReportDefinition(f_2024, 'Art10-2024'),
+    },
     '2022': {
         'Art13': ReportDefinition(f_2022, 'Art13'),
         'Art14': ReportDefinition(f_2022, 'Art14')

@@ -1251,11 +1251,14 @@ The data is retrieved from the MSFD2018_production.V_ART8_ESA_2018 database view
 
     @property
     def help_text(self):
-        return self.help_texts[self.article]
+        return self.help_texts.get(self.article, "")
 
     Art8 = Template("pt/report-data-multiple-muid.pt")
+    Art8_2024 = Template("pt/report-data-multiple-muid.pt")
     Art9 = Template("pt/report-data-multiple-muid.pt")
+    Art9_2024 = Template("pt/report-data-multiple-muid.pt")
     Art10 = Template("pt/report-data-multiple-muid.pt")
+    Art10_2024 = Template("pt/report-data-multiple-muid.pt")
     Art11 = Template("pt/report-data-multiple-muid.pt")
     Art13 = Template("pt/report-data-multiple-muid.pt")
     Art14 = Template("pt/report-data-multiple-muid.pt")
@@ -1696,7 +1699,8 @@ The data is retrieved from the MSFD2018_production.V_ART8_ESA_2018 database view
         return res
 
     def get_data_from_view(self, article):
-        data = getattr(self, "get_data_from_view_" + article)()
+        art = article.replace("-", "_")
+        data = getattr(self, "get_data_from_view_" + art)()
 
         return data
 
@@ -1731,7 +1735,7 @@ The data is retrieved from the MSFD2018_production.V_ART8_ESA_2018 database view
 
                 self.focus_muids = self._get_muids_from_data(data)
 
-        if self.article == "Art8":
+        if self.article in ("Art8", "Art8-2024"):
             order = self._get_order_cols_Art8(self.descriptor)
             data = consolidate_singlevalue_to_list(
                 data,
@@ -1768,7 +1772,7 @@ The data is retrieved from the MSFD2018_production.V_ART8_ESA_2018 database view
             else:
                 data_by_mru = {}
 
-        if self.article == "Art10":
+        if self.article in ("Art10", "Art10-2024"):
             # data_by_mru = group_by_mru(data)
             order = self._get_order_cols_Art10()
             data_by_mru = consolidate_singlevalue_to_list(
@@ -1779,7 +1783,7 @@ The data is retrieved from the MSFD2018_production.V_ART8_ESA_2018 database view
             else:
                 data_by_mru = {}
 
-        if self.article == "Art9":
+        if self.article in ("Art9", "Art9-2024"):
             data_by_mru = consolidate_singlevalue_to_list(
                 data, "MarineReportingUnit")
             if data_by_mru:
@@ -1898,9 +1902,12 @@ The data is retrieved from the MSFD2018_production.V_ART8_ESA_2018 database view
         t = sql2018.ReportedInformation
         schemas = {
             "Art8": "ART8_GES",
+            "Art8-2024": "ART8_GES",
             "Art8esa": "ART8_ESA",
             "Art9": "ART9_GES",
+            "Art9-2024": "ART9_GES",
             "Art10": "ART10_Targets",
+            "Art10-2024": "ART10_Targets",
             "Art11": "ART11_Programmes",
             "Art13": "ART13_Measures",
             "Art14": "ART14_Exceptions",
@@ -2081,7 +2088,7 @@ The data is retrieved from the MSFD2018_production.V_ART8_ESA_2018 database view
         return self.request.response.redirect(self.translate_redirect_url)
 
     def get_template(self, article):
-        template = getattr(self, article, None)
+        template = getattr(self, article.replace("-", "_"), None)
 
         return template
 
@@ -2517,6 +2524,27 @@ class ReportData2022(ReportData2018):
     @property
     def muids(self):
         return []
+
+
+class ReportData2024(ReportData2018):
+    """Implementation for Article 8, 9 and 10 report data view for year 2024"""
+
+    report_year = "2024"  # used by cache key
+    year = "2024"  # used in report definition and translation
+    report_due = "2024-10-15"
+
+    # @property
+    # def muids(self):
+    #     return []
+
+    def get_data_from_view_Art8_2024(self):
+        return self.get_data_from_view_Art8()
+
+    def get_data_from_view_Art10_2024(self):
+        return self.get_data_from_view_Art10()
+
+    def get_data_from_view_Art9_2024(self):
+        return self.get_data_from_view_Art9()
 
 
 @implementer(IReportDataViewOverview)
