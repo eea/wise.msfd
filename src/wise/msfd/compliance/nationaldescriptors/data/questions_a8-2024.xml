@@ -11,8 +11,8 @@
       <option score="0.5">26-50% of criteria elements are reported</option>
       <option score="0.25">1-25% of criteria elements are reported</option>
       <option score="0">No criteria elements reported</option>
-      <option score="/">Not relevant</option>
       <option score="0.250">Not clear</option>
+      <option score="/">Not relevant</option>
     </answers>
     <scoring determination-method="wise.msfd.compliance.scoring.scoring_based">
     </scoring>
@@ -34,16 +34,16 @@
     <score-weight descriptor="D11" value="30" />
   </assessment-question>
 
-  <assessment-question id="A08Q2" class="completeness" use-criteria='all'>
+  <assessment-question id="A08Q2" class="completeness" use-criteria='none'>
     <definition>
       Does the Member State provide a conclusion on the current status?
     </definition>
     <answers>
-      <option score="1">Quantitative data and conclusions assessed for all relevant criteria/elements (≥76 %)</option>
-      <option score="0.75">Quantitative data and conclusions assessed for most relevant criteria/elements (51–75 %)</option>
-      <option score="0.5">Partial assessment of data and conclusions (26-50 %)</option>
-      <option score="0.25">Very limited assessment of data or conclusions (≤25 %)</option>
-      <option score="0">No quantitative data or conclusions assessed</option>
+      <option score="1">76-100% of parameters, criteria and elements reported with status assessments</option>
+      <option score="0.75">51-75% of parameters, criteria and elements reported with status assessments</option>
+      <option score="0.5">26-50% of parameters, criteria and elements reported with status assessments</option>
+      <option score="0.25">1-25% of parameters, criteria and elements reported with status assessments / not clear</option>
+      <option score="0">No parameters, criteria and elements reported with status assessments</option>
       <option score="/">Not relevant</option>
     </answers>
     <scoring determination-method="wise.msfd.compliance.scoring.scoring_based">
@@ -107,12 +107,11 @@
      Is the reported conclusion consistent with the quantitative information reported (values achieved and threshold values)?
     </definition>
     <answers>
-      <option score="1">Values achieved assessed for all relevant parameters (≥ 75 %)</option>
-      <option score="0.75">Values achieved assessed for most relevant parameters (51-75 %)</option>
-      <option score="0.5">Partial assessment of values achieved (26-50 %)</option>
-      <option score="0.25">Very limited assessment of values achieved (≤25 %)</option>
+      <option score="1">Adequate explanation</option>
+      <option score="0.5">Partially adequate explanation</option>
+      <option score="0.25">Limited/unclear explanation</option>
+      <option score="0">No explanation</option>
       <option score="/">Not relevant</option>
-      <option score="0.250">Not clear</option>
     </answers>
     <scoring determination-method="wise.msfd.compliance.scoring.scoring_based">
     </scoring>
@@ -136,7 +135,7 @@
 
   <assessment-question id="A08Q5" class="completeness" use-criteria='all'>
     <definition>
-      Is the assessment under Art. 8 based on the latest (2018) determination of GES under Art. 9?
+      Is an assessment of the extent of pressure, impacts or good state reported?
     </definition>
     <answers>
       <option score="1">Extent of pressure is reported for this criterion</option>
@@ -175,10 +174,9 @@
       Is the assessment under Art. 8 consistent with the latest (2024) determination of GES under Art. 9?
     </definition>
     <answers>
-      <option score="1">Criteria reported under Art. 8 consistent with Art. 9</option>
-      <option score="0.5">Criteria reported under Art. 8 but missing under Art. 9</option>
-      <option score="0.5">Criteria reported under Art. 9 but missing under Art. 8</option>
-      <option score="0">Status not assessed against the latest GES determination for this criterion</option>
+      <option score="1">Status for this criterion assessed against the latest GES determination</option>
+      <option score="0.5">Status for this criterion partially assessed against the latest GES determination</option>
+      <option score="0">Status not assessed against the latest GES determination</option>
       <option score="0.250">Not clear</option>
       <option score="/">Not relevant</option>
     </answers>

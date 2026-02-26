@@ -8,8 +8,8 @@
       <option score="1">Primary criterion used with 2017 code</option>
       <option score="1">Primary criterion replaced with secondary criterion (with adequate justification) - applicable for D5C5 only</option>
       <option score="1">Primary criterion not used (with adequate justification)</option>
-      <option score="0.250">Not clear</option>
       <option score="0">Primary criterion not used (with inadequate justification)</option>
+      <option score="0.250">Not clear</option>
       <option score="/">Not relevant</option>
     </answers>
     <scoring determination-method="wise.msfd.compliance.scoring.scoring_based">
@@ -38,8 +38,8 @@
     </definition>
     <answers>
       <option score="1">Secondary criterion used with 2017 code</option>
+      <option score="0">Secondary criterion not used</option>
       <option score="0.250">Not clear</option>
-      <option score="0">Secondary criteria not used</option>
       <option score="/">Not relevant</option>
     </answers>
     <scoring determination-method="wise.msfd.compliance.scoring.scoring_based">
@@ -68,8 +68,7 @@
     </definition>
     <answers>
       <option score="1">Adequate qualitative aspects specified for this criterion</option>
-      <option score="0.5">Partially adequate or partially clear qualitative aspects specified for this criterion</option>
-      <option score="0.25">(Partially) clear but not adequate qualitative aspects in definition of this criterion</option>
+      <option score="0.5">Partially adequate qualitative aspects specified for this criterion</option>
       <option score="0">Qualitative aspects not specified for this criterion</option>
       <option score="0.250">Not clear</option>
       <option score="/">Not relevant</option>
@@ -131,8 +130,9 @@
     </definition>
     <answers>
       <option score="1">Adequate threshold values defined for this criterion</option>
-      <option score="0.5">Partially adequate threshold values partially defined for this criterion</option>
-      <option score="0">Threshold values defined are not considered adequate for this criterion</option>
+      <option score="0.5">Partially adequate threshold values defined for this criterion</option>
+      <option score="0">No adequate threshold values defined for this criterion</option>
+      <option score="0.250">Not clear</option>
       <option score="/">Not relevant</option>
     </answers>
     <scoring determination-method="wise.msfd.compliance.scoring.scoring_based">
