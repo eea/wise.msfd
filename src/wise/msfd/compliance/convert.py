@@ -1,4 +1,4 @@
-#pylint: skip-file
+# pylint: skip-file
 """ A collection of data transformers to be used to convert 2018 DB data in
 some other useful formats. Used when displaying data.
 """
@@ -117,7 +117,7 @@ def art11_indicators(field, value, lang):
 
 
 def format_nr(field, value, lang):
-    if value:
+    if value is not None:
         return "%.2f" % value
 
     return value

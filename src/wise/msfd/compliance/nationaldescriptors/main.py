@@ -1305,8 +1305,6 @@ class NationalDescriptorArticleView(BaseView, AssessmentDataMixin):
         compl_data = self.get_completeness_data(self.country_code)
         self.assessment.phase_overall_scores.completeness = compl_data
 
-    def set_consistency_data_2024(self):
-        pass
 
     def __call__(self):
         alsoProvides(self.request, IDisableCSRFProtection)
@@ -1402,7 +1400,6 @@ class NationalDescriptorArticleView(BaseView, AssessmentDataMixin):
         # set the coherence and completeness data for national descriptors
         self.set_coherence_data()
         self.set_completeness_data()
-        self.set_consistency_data_2024()
 
         # score_2012 = score_2012
         conclusion_2012_color = CONCLUSION_COLOR_TABLE.get(score_2012, 0)
@@ -1463,13 +1460,6 @@ class NationalDescriptorArticleView2024(NationalDescriptorArticleView):
 
     def set_completeness_data(self):
         pass
-
-    def set_consistency_data_2024(self):
-        return
-        import pdb
-        pdb.set_trace()
-        cons_data = self.get_consistency_2024()
-        self.assessment.phase_overall_scores.consistency = cons_data
 
 
 @implementer(INationaldescriptorArticleView)

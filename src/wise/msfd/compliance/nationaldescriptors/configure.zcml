@@ -163,7 +163,7 @@
   <browser:page
     for="..interfaces.INationalDescriptorAssessment"
     name="view-report-data-2012"
-    class=".reportdata.ReportData2012"
+    class=".reportdata.reportdata2012.ReportData2012"
     template="./pt/report-data-view.pt"
     permission="zope2.View"
     />
@@ -171,7 +171,7 @@
   <browser:page
     for="..interfaces.INationalDescriptorAssessment"
     name="view-report-data-2014"
-    class=".reportdata.ReportData2014"
+    class=".reportdata.reportdata.ReportData2014"
     template="./pt/report-data-view.pt"
     permission="zope2.View"
     />
@@ -179,7 +179,7 @@
   <browser:page
     for="..interfaces.INationalDescriptorAssessment"
     name="view-report-data-2016"
-    class=".reportdata.ReportData2016"
+    class=".reportdata.reportdata.ReportData2016"
     template="./pt/report-data-view.pt"
     permission="zope2.View"
     />
@@ -187,7 +187,7 @@
   <browser:page
     for="..interfaces.INationalDescriptorAssessment"
     name="view-report-data-2014-2020"
-    class=".reportdata.ReportData20142020"
+    class=".reportdata.reportdata.ReportData20142020"
     template="./pt/report-data-view.pt"
     permission="zope2.View"
     />
@@ -195,7 +195,7 @@
   <browser:page
     for="..interfaces.INationalRegionDescriptorFolder"
     name="art11-view-report-data-2014"
-    class=".reportdata.ReportDataOverview2014Art11"
+    class=".reportdata.reportdata.ReportDataOverview2014Art11"
     template="./pt/report-data-view.pt"
     permission="zope2.View"
     />
@@ -203,7 +203,7 @@
   <browser:page
     for="..interfaces.INationalDescriptorAssessmentSecondary"
     name="view-report-data-2012"
-    class=".reportdata.ReportData2012Secondary"
+    class=".reportdata.reportdata2012.ReportData2012Secondary"
     template="./pt/report-data-view.pt"
     permission="zope2.View"
     />
@@ -212,7 +212,7 @@
   <browser:page
     for="..interfaces.INationalDescriptorAssessment"
     name="view-report-data-2012-like-2018"
-    class=".reportdata.ReportData2012Like2018"
+    class=".reportdata.reportdata2012.ReportData2012Like2018"
     template="./pt/report-data-view.pt"
     permission="zope2.View"
     />
@@ -221,7 +221,7 @@
   <browser:page
     for="..interfaces.INationalDescriptorAssessment"
     name="view-report-data-2018"
-    class=".reportdata.ReportData2018"
+    class=".reportdata.reportdata2018.ReportData2018"
     template="./pt/report-data-view.pt"
     permission="zope2.View"
     />
@@ -230,7 +230,7 @@
   <browser:page
     for="..interfaces.INationalDescriptorAssessment"
     name="view-report-data-2018-art18"
-    class=".reportdata.ReportData2018Art18"
+    class=".reportdata.reportdata.ReportData2018Art18"
     template="./pt/report-data-view.pt"
     permission="zope2.View"
     />
@@ -238,7 +238,7 @@
   <browser:page
     for="..interfaces.INationalDescriptorAssessmentSecondary"
     name="view-report-data-2018"
-    class=".reportdata.ReportData2018Secondary"
+    class=".reportdata.reportdata.ReportData2018Secondary"
     template="./pt/report-data-view.pt"
     permission="zope2.View"
     />
@@ -246,7 +246,7 @@
   <browser:page
     for="..interfaces.INationalDescriptorAssessmentSecondary"
     name="view-report-data-2018-art8-esa"
-    class=".reportdata.ReportData2018Art8ESA"
+    class=".reportdata.reportdata.ReportData2018Art8ESA"
     template="./pt/report-data-view.pt"
     permission="zope2.View"
     />
@@ -255,7 +255,7 @@
   <browser:page
     for="..interfaces.INationalDescriptorAssessment"
     name="view-report-data-2020"
-    class=".reportdata.ReportData2020"
+    class=".reportdata.reportdata.ReportData2020"
     template="./pt/report-data-view.pt"
     permission="zope2.View"
     />
@@ -263,7 +263,7 @@
   <browser:page
     for="..interfaces.INationalRegionDescriptorFolder"
     name="art11-view-report-data-2020"
-    class=".reportdata.ReportDataOverview2020Art11"
+    class=".reportdata.reportdata.ReportDataOverview2020Art11"
     template="./pt/report-data-view.pt"
     permission="zope2.View"
     />
@@ -272,7 +272,7 @@
   <browser:page
     for="..interfaces.INationalDescriptorAssessment"
     name="view-report-data-2022"
-    class=".reportdata.ReportData2022"
+    class=".reportdata.reportdata.ReportData2022"
     template="./pt/report-data-view.pt"
     permission="zope2.View"
     />
@@ -281,7 +281,7 @@
   <browser:page
     for="..interfaces.INationalDescriptorAssessment"
     name="view-report-data-2024"
-    class=".reportdata.ReportData2024"
+    class=".reportdata.reportdata.ReportData2024"
     template="./pt/report-data-view.pt"
     permission="zope2.View"
     />
@@ -289,7 +289,7 @@
   <browser:page
     for="*"
     name="reports-per-descriptor"
-    class=".reportdata.ExportMSReportData"
+    class=".reportdata.exportreportdata.ExportMSReportData"
     permission="zope2.View"
     />
 

@@ -28,10 +28,11 @@ dsn = ("mssql+pymssql://{}\\{}:{}@{}:1433".format(
     CRESTEDDUCK_HOST)
 )
 
+# need to run for each scehma separately
 cmd = [
     "sqlacodegen",
     "--outfile", "sql2024_NEW.py",
-    "--schema=spatial",
+    "--schema=data",
     # "--schema", "data,dbo,spatial",
     "{}/MSFD2024_public".format(dsn),
 ]

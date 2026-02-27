@@ -1,4 +1,4 @@
-#pylint: skip-file
+# pylint: skip-file
 from __future__ import absolute_import
 from collections import OrderedDict
 import logging
@@ -23,8 +23,10 @@ from wise.msfd.translation import retrieve_translation
 from wise.msfd.utils import (ItemLabel, ItemList, fixedorder_sortkey,
                              items_to_rows, timeit)
 
-from ..nationaldescriptors.reportdata import (ORDER_COLS_ART11, ReportData2014,
-                                              ReportData2020)
+from ..nationaldescriptors.reportdata.utils import ORDER_COLS_ART11
+from ..nationaldescriptors.reportdata.reportdata import (
+    ReportData2014,
+    ReportData2020)
 from ..nationaldescriptors.utils import (consolidate_singlevalue_to_list,
                                          group_multiple_fields)
 from .a8 import RegDescA82012, RegDescA82018Row
@@ -80,7 +82,8 @@ class RegReportData2012(BaseRegComplianceView):
                 worksheet.write(row_index, 1, six.text_type(sub_title or ''))
 
                 for j, value in enumerate(values):
-                    worksheet.write(row_index, j + 2, six.text_type(value or ''))
+                    worksheet.write(row_index, j + 2,
+                                    six.text_type(value or ''))
 
                 row_index += 1
 
@@ -240,7 +243,8 @@ class RegReportData2014(ReportData2014, BaseRegComplianceView):
                     continue
 
                 if 'msfd_mp/' + subregion.lower() not in fileurl:
-                    import pdb; pdb.set_trace()
+                    import pdb
+                    pdb.set_trace()
                     continue
 
         return filenames
@@ -269,7 +273,7 @@ class RegReportData2018(BaseRegComplianceView):
                 self.article,
                 self.descriptor_title,
                 self.country_region_name,
-            )
+        )
 
         return title
 
@@ -498,7 +502,8 @@ class RegReportData2018(BaseRegComplianceView):
 
                 if field_name in self.TRANSLATABLES:
                     worksheet.write(row_index, 0, title + ' [Translation]')
-                    worksheet.write(row_index, 1, six.text_type(sub_title or ''))
+                    worksheet.write(
+                        row_index, 1, six.text_type(sub_title or ''))
 
                     for j, value in enumerate(values):
                         # if 'value' is a list/tuple meaning it contains both
@@ -510,7 +515,8 @@ class RegReportData2018(BaseRegComplianceView):
                         try:
                             unicode_value = six.text_type(value)
                         except:
-                            unicode_value = six.text_type(value.decode('utf-8'))
+                            unicode_value = six.text_type(
+                                value.decode('utf-8'))
 
                         worksheet.write(row_index, j + 2, unicode_value or '')
 

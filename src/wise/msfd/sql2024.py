@@ -570,6 +570,7 @@ t_V_ART10_Target_WM = Table(
     Column('GEScomponent', Unicode),
     Column('Feature', Unicode),
     Column('TargetPurpose', Unicode),
+    Column('Element', Unicode),
     Column('TargetDescription', Unicode),
     Column('Timescale', Unicode),
     Column('UpdateDate', Unicode),
@@ -591,6 +592,37 @@ t_V_ART10_Target_WM = Table(
     Column('GES_Description', String(
         78, 'Latin1_General_CI_AS'), nullable=False),
     Column('ReportingCycle', String(4, 'Latin1_General_CI_AS'), nullable=False),
+    schema='dbo'
+)
+
+
+t_V_ART10_Targets_2024 = Table(
+    'V_ART10_Targets_2024', metadata,
+    Column('CountryCode', Unicode(2)),
+    Column('ReportingDate', DateTime),
+    Column('Region', Unicode),
+    Column('MarineReportingUnit', Unicode),
+    Column('TargetCode', Unicode),
+    Column('TargetOldCode', Unicode),
+    Column('TargetDescription', Unicode),
+    Column('TargetPurpose', Unicode),
+    Column('Timescale', Unicode),
+    Column('UpdateDate', Unicode),
+    Column('UpdateTypeTarget', Unicode),
+    Column('GEScomponent', Unicode),
+    Column('Feature', Unicode),
+    Column('RelatedMeasures', Unicode),
+    Column('Parameter', Unicode),
+    Column('Element', Unicode),
+    Column('TargetValue', Float(53)),
+    Column('TargetValueOperator', Unicode),
+    Column('ValueAchievedUpper', Float(53)),
+    Column('ValueAchievedLower', Float(53)),
+    Column('ValueUnit', Unicode),
+    Column('TargetStatus', Unicode),
+    Column('AssessmentPeriod', Unicode),
+    Column('ProgressDescription', Unicode),
+    Column('RelatedIndicator', Unicode),
     schema='dbo'
 )
 
@@ -814,6 +846,24 @@ t_V_ART8_GES_Parameter_WM = Table(
 )
 
 
+t_V_ART9_GES_2024 = Table(
+    'V_ART9_GES_2024', metadata,
+    Column('CountryCode', Unicode(2)),
+    Column('ReportingDate', DateTime),
+    Column('Region', Unicode),
+    Column('MarineReportingUnit', Unicode),
+    Column('GEScomponent', Unicode),
+    Column('JustificationDelay', Unicode),
+    Column('JustificationNonUse', Unicode),
+    Column('Feature', Unicode),
+    Column('GESDescriptor', Unicode),
+    Column('DeterminationDate', Unicode),
+    Column('UpdateTypeGES', Unicode),
+    Column('GESDescription', Unicode),
+    schema='dbo'
+)
+
+
 t_V_Art8_GES_Feature_2024_area_WM = Table(
     'V_Art8_GES_Feature_2024_area_WM', metadata,
     Column('CountryCode', Unicode(2)),
@@ -823,6 +873,27 @@ t_V_Art8_GES_Feature_2024_area_WM = Table(
     Column('MarineReportingUnit', Unicode),
     Column('Region_Art4', Unicode),
     Column('area_km2', Float(53)),
+    schema='dbo'
+)
+
+
+t_V_Indicators_2024 = Table(
+    'V_Indicators_2024', metadata,
+    Column('CountryCode', Unicode(2)),
+    Column('IndicatorCode', Unicode),
+    Column('IndicatorTitle', Unicode),
+    Column('SourceAssessmentIndicator', Unicode),
+    Column('ReportingMethodIndicator', Unicode),
+    Column('RelatedTargets', Unicode),
+    Column('UniqueReference', Unicode),
+    Column('DatasetVoidReason', Unicode),
+    Column('MarineReportingUnit', Unicode),
+    Column('RegionalAssessmentArea', Unicode),
+    Column('GEScomponent', Unicode),
+    Column('Feature', Unicode),
+    Column('MD_URL', Unicode),
+    Column('URL', Unicode),
+    Column('ReportingDate', Date),
     schema='dbo'
 )
 
@@ -890,8 +961,98 @@ t_MarineReportingUnit_Publication = Table(
 )
 
 
+t_MarineReportingUnit_Publication_old = Table(
+    'MarineReportingUnit_Publication_old', metadata,
+    Column('countryCode', String(2, 'Latin1_General_CI_AS'), nullable=False),
+    Column('MarineReportingUnitId', Unicode(100), nullable=False),
+    Column('MarineReportingUnitIdOld', Unicode(100)),
+    Column('MarineReportingUnitName', Unicode(255)),
+    Column('RegionSubRegion', Unicode(3), nullable=False),
+    Column('inspireIdLocalId', Unicode(100)),
+    Column('inspireIdNamespace', Unicode(255)),
+    Column('inspireIdVersionId', Unicode(255)),
+    Column('thematicIdIdentifier', Unicode(100)),
+    Column('thematicIdIdentifierScheme', Unicode(100)),
+    Column('nameText', Unicode(1000)),
+    Column('nameTextInternational', Unicode(255)),
+    Column('nameLanguage', Unicode(100)),
+    Column('designationPeriodBegin', Date),
+    Column('designationPeriodEnd', Date),
+    Column('beginLifespanVersion', Date),
+    Column('envDomain', Unicode(100)),
+    Column('zoneType', Unicode(255)),
+    Column('specialisedZoneType', Unicode(255)),
+    Column('legisSName', Unicode(255)),
+    Column('legisName', Unicode(500)),
+    Column('legisDate', Date),
+    Column('legisDateT', Unicode(255)),
+    Column('legisLink', Unicode(1000)),
+    Column('legisLevel', Unicode(255)),
+    Column('relatedZoneIdentifier', Unicode(255)),
+    Column('relatedZoneIdentifierScheme', Unicode(255)),
+    Column('isMarineWater', Boolean, nullable=False),
+    Column('statusCode', String(255, 'Latin1_General_CI_AS'), nullable=False),
+    Column('statusDate', Date),
+    Column('statusRemarks', Unicode(1000)),
+    Column('metadata_versionId', String(1000, 'Latin1_General_CI_AS')),
+    Column('metadata_beginLifeSpanVersion', DateTime),
+    Column('metadata_statements', String(collation='Latin1_General_CI_AS')),
+    Column('sizeValue', Float(53)),
+    Column('sizeUom', String(3, 'Latin1_General_CI_AS'), nullable=False),
+    Column('snapshotId', BigInteger),
+    Column('geomEPSG_3035', NullType),
+    Column('geomEPSG_4258', NullType),
+    schema='spatial'
+)
+
+
 t_MarineReportingUnit_Reference = Table(
     'MarineReportingUnit_Reference', metadata,
+    Column('countryCode', String(2, 'Latin1_General_CI_AS'), nullable=False),
+    Column('MarineReportingUnitId', Unicode(100), nullable=False),
+    Column('MarineReportingUnitIdOld', Unicode(100)),
+    Column('MarineReportingUnitName', Unicode(255)),
+    Column('RegionSubRegion', Unicode(3), nullable=False),
+    Column('inspireIdLocalId', Unicode(100)),
+    Column('inspireIdNamespace', Unicode(255)),
+    Column('inspireIdVersionId', Unicode(255)),
+    Column('thematicIdIdentifier', Unicode(100)),
+    Column('thematicIdIdentifierScheme', Unicode(100)),
+    Column('nameText', Unicode(1000)),
+    Column('nameTextInternational', Unicode(255)),
+    Column('nameLanguage', Unicode(100)),
+    Column('designationPeriodBegin', Date),
+    Column('designationPeriodEnd', Date),
+    Column('beginLifespanVersion', Date),
+    Column('envDomain', Unicode(100)),
+    Column('zoneType', Unicode(255)),
+    Column('specialisedZoneType', Unicode(255)),
+    Column('legisSName', Unicode(255)),
+    Column('legisName', Unicode(500)),
+    Column('legisDate', Date),
+    Column('legisDateT', Unicode(255)),
+    Column('legisLink', Unicode(1000)),
+    Column('legisLevel', Unicode(255)),
+    Column('relatedZoneIdentifier', Unicode(255)),
+    Column('relatedZoneIdentifierScheme', Unicode(255)),
+    Column('isMarineWater', Boolean, nullable=False),
+    Column('statusCode', String(255, 'Latin1_General_CI_AS'), nullable=False),
+    Column('statusDate', Date),
+    Column('statusRemarks', Unicode(1000)),
+    Column('metadata_versionId', String(1000, 'Latin1_General_CI_AS')),
+    Column('metadata_beginLifeSpanVersion', DateTime),
+    Column('metadata_statements', String(collation='Latin1_General_CI_AS')),
+    Column('sizeValue', Float(53)),
+    Column('sizeUom', String(3, 'Latin1_General_CI_AS'), nullable=False),
+    Column('snapshotId', BigInteger),
+    Column('geomEPSG_3035', NullType),
+    Column('geomEPSG_4258', NullType),
+    schema='spatial'
+)
+
+
+t_MarineReportingUnit_Reference_old = Table(
+    'MarineReportingUnit_Reference_old', metadata,
     Column('countryCode', String(2, 'Latin1_General_CI_AS'), nullable=False),
     Column('MarineReportingUnitId', Unicode(100), nullable=False),
     Column('MarineReportingUnitIdOld', Unicode(100)),
