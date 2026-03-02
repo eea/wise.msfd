@@ -25,7 +25,8 @@ from Products.Five.browser import BrowserView
 from wise.msfd import db, sql, sql2018, sql2024
 from wise.msfd.base import BasePublicPage
 from wise.msfd.compliance.scoring import Score  # , compute_score
-from wise.msfd.compliance.utils import get_assessors, ordered_regions_sortkey
+from wise.msfd.compliance.utils import (get_assessors, ordered_regions_sortkey,
+                                        fix_gescomp_2024)
 from wise.msfd.compliance.vocabulary import ASSESSED_ARTICLES  # , REGIONS
 from wise.msfd.gescomponents import (get_all_descriptors, get_descriptor,
                                      get_features, get_marine_units,
@@ -848,21 +849,6 @@ class AssessmentQuestionDefinition:
             getattr(node.find('source-info'), 'text', '').strip())
         self.q_heading = getattr(node.find('heading'), 'text', '').strip()
 
-    def fix_gescomp(self, gescomp):
-        gescomp_map = {
-            "D1B": "D1.1",  # birds
-            "D1M": "D1.2",  # mammals
-            "D1R": "D1.3",  # reptiles
-            "D1F": "D1.4",  # fish
-            "D1C": "D1.5",  # cephalopods
-            "D1P": "D1.6",  # pelagic habitats
-        }
-
-        if gescomp not in gescomp_map:
-            return gescomp
-
-        return gescomp_map[gescomp]
-
     def calculate_score(self, descriptor, values, country_code=None):
         score_obj = Score(self, descriptor, values, country_code)
 
@@ -1064,7 +1050,7 @@ class AssessmentQuestionDefinition:
         for row in q:
             ges_comps = getattr(row, 'GEScomponent', ())
             ges_comps = set([
-                self.fix_gescomp(g.strip())
+                fix_gescomp_2024(g.strip())
                 for g in ges_comps.split(';')
             ])
 

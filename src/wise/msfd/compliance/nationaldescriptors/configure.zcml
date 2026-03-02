@@ -281,7 +281,7 @@
   <browser:page
     for="..interfaces.INationalDescriptorAssessment"
     name="view-report-data-2024"
-    class=".reportdata.reportdata.ReportData2024"
+    class=".reportdata.reportdata2024.ReportData2024"
     template="./pt/report-data-view.pt"
     permission="zope2.View"
     />

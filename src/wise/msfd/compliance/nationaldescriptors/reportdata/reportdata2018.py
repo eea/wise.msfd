@@ -682,6 +682,8 @@ The data is retrieved from the MSFD2018_production.V_ART8_ESA_2018 database view
                 data_by_mru = {"": data_by_mru}
             else:
                 data_by_mru = {}
+
+        if self.article == "Art9":
             insert_missing_criterions(data_by_mru, self.descriptor_obj)
 
         if self.article == "Art11":
