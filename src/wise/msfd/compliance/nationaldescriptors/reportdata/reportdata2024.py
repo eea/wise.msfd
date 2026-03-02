@@ -167,7 +167,7 @@ class ReportData2024(ReportData2018):
         conditions = [
             t.c.CountryCode == self.country_code,
             or_(
-                t.c.Region_Art4 is None,
+                t.c.Region_Art4.is_(None),
                 t.c.Region_Art4 == self.country_region_code
             ),
             # t.c.MarineReportingUnit.in_(muids),     #
@@ -216,7 +216,13 @@ class ReportData2024(ReportData2018):
     def get_data_from_view_Art10_2024(self):
         t = sql2024.t_V_ART10_Targets_2024
 
-        conditions = [t.c.CountryCode == self.country_code]
+        conditions = [
+            t.c.CountryCode == self.country_code,
+            or_(
+                t.c.Region.is_(None),
+                t.c.Region == self.country_region_code
+            ),
+        ]
 
         _, res = db.get_all_records_ordered(
             t, self._get_order_cols_Art10(), *conditions
@@ -311,6 +317,10 @@ class ReportData2024(ReportData2018):
 
         conditions = [
             t.c.CountryCode == self.country_code,
+            or_(
+                t.c.Region.is_(None),
+                t.c.Region == self.country_region_code
+            ),
             # t.c.GEScomponent.in_(all_ids),
         ]
 
