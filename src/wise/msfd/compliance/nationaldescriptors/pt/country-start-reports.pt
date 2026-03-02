@@ -165,6 +165,21 @@
                           class python: 'btn btn-xs' + is_disabled;
                           title python: is_report_2018 and ' ' or 'Not reported' "
                         target='_blank'>2018</a>
+                    <tal:def tal:define="assessment_2024 python: desc['art8-2024']">
+                      <a tal:condition="python: assessment.id == 'art8'" 
+                        tal:attributes="href python: assessment_2024.absolute_url() + '/@@view-report-data-2024'"
+                          class="btn btn-xs btn-warning" target='_blank'>2024</a>
+                    </tal:def>
+                    <tal:def tal:define="assessment_2024 python: desc['art9-2024']">
+                      <a tal:condition="python: assessment.id == 'art9'" 
+                        tal:attributes="href python: assessment_2024.absolute_url() + '/@@view-report-data-2024'"
+                          class="btn btn-xs btn-warning" target='_blank'>2024</a>
+                    </tal:def>
+                    <tal:def tal:define="assessment_2024 python: desc['art10-2024']">
+                      <a tal:condition="python: assessment.id == 'art10'" 
+                        tal:attributes="href python: assessment_2024.absolute_url() + '/@@view-report-data-2024'"
+                          class="btn btn-xs btn-warning" target='_blank'>2024</a>
+                    </tal:def>
                   </td>
                   <td tal:define="assessment python: desc['art11']">
                     <a tal:attributes="href python: assessment.absolute_url() + '/@@view-report-data-2014'"
