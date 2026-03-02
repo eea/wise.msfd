@@ -220,3 +220,11 @@ def __link_to_nat_desc_art11(field, value, self):
         res.append(ItemLabel(r, template.format(report_url, r)))
 
     return ItemList(res)
+
+
+def art8_2024_test_results(field, value, lang):
+    if value:
+        template = u'<div class="test-results-{0}">{0}</div>'
+        return template.format(value)
+
+    return value

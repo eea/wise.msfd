@@ -4,6 +4,7 @@ from __future__ import print_function
 from types import SimpleNamespace
 import logging
 
+from sqlalchemy import or_
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile as Template
 from wise.msfd import db, sql2024
 from wise.msfd.compliance.utils import fix_gescomp_2024
@@ -12,6 +13,73 @@ from wise.msfd.gescomponents import get_descriptor, get_features
 from .reportdata2018 import ReportData2018
 
 logger = logging.getLogger("wise.msfd")
+
+
+def get_test_tv_value(row_ns):
+    """get_test_tv_value"""
+
+    _res = "NA"
+    operator = getattr(row_ns, "ThresholdValueOperator", None)
+
+    if operator is not None:
+        operator = operator.strip()
+        val_achieved = row_ns.ValueAchievedUpper
+        threshold_val = row_ns.ThresholdValueUpper
+
+        if val_achieved is None or threshold_val is None:
+            return _res
+
+        if operator in ("<=", "<= (value and upper confidence interval)"):
+            _result = row_ns.ValueAchievedUpper <= row_ns.ThresholdValueUpper
+        elif operator == ">=":
+            _result = row_ns.ValueAchievedUpper >= row_ns.ThresholdValueUpper
+        elif operator == "<":
+            _result = row_ns.ValueAchievedUpper < row_ns.ThresholdValueUpper
+        elif operator == ">":
+            _result = row_ns.ValueAchievedUpper > row_ns.ThresholdValueUpper
+        else:
+            _result = False
+
+        _res = "Yes" if _result else "No"
+    else:
+        return _res
+
+    return _res
+
+
+def get_test_result_value(row_ns):
+    """get_test_result_value"""
+
+    parameter_achieved = getattr(row_ns, 'ParameterAchieved', '')
+    test_tv = getattr(row_ns, 'TestTV', '')
+
+    # Check if any of the OR conditions are true
+    condition = (
+        # First AND: ParameterAchieved is "Not assessed" or "Unknown" AND TestTV is "NA"
+        (parameter_achieved in ("Not assessed", "Unknown") and test_tv == "NA") or
+        # Second AND: ParameterAchieved is "Yes" AND TestTV is "Yes"
+        (parameter_achieved == "Yes" and test_tv == "Yes") or
+        # Third AND: ParameterAchieved is "No" AND TestTV is "No"
+        (parameter_achieved == "No" and test_tv == "No")
+    )
+
+    return "Correct" if condition else "False"
+
+
+class RowNamespace(SimpleNamespace):
+    """SimpleNamespace with dict-like interface for compatibility"""
+
+    def keys(self):
+        return self.__dict__.keys()
+
+    def values(self):
+        return self.__dict__.values()
+
+    def items(self):
+        return self.__dict__.items()
+
+    def get(self, key, default=None):
+        return self.__dict__.get(key, default)
 
 
 class ReportData2024(ReportData2018):
@@ -98,7 +166,10 @@ class ReportData2024(ReportData2018):
         # muids = [x.id for x in self.muids]
         conditions = [
             t.c.CountryCode == self.country_code,
-            # t.c.Region == self.country_region_code,
+            or_(
+                t.c.Region_Art4 is None,
+                t.c.Region_Art4 == self.country_region_code
+            ),
             # t.c.MarineReportingUnit.in_(muids),     #
             # t.c.GEScomponent.in_(all_ids),
         ]
@@ -120,7 +191,13 @@ class ReportData2024(ReportData2018):
             ])
 
             if ges_comps.intersection(all_ids):
-                out.append(row)
+                # Convert to RowNamespace and add new attributes
+                row_ns = RowNamespace(**dict(row._mapping))
+                test_tv_value = get_test_tv_value(row_ns)
+                row_ns.TestTV = test_tv_value
+                test_result_value = get_test_result_value(row_ns)
+                row_ns.TestResults = test_result_value
+                out.append(row_ns)
 
             # if not self.descriptor.startswith("D1."):
             #     out.append(row)

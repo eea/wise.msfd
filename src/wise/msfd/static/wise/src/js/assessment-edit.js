@@ -454,7 +454,7 @@
       });
     });
 
-    // var $win = $(window);
+    var $win = $(window);
 
     // set comment section height for overflow
     // var $sf = $(".subform");
@@ -463,18 +463,18 @@
     //   var $com = $this.find(".right");
     //   var formHeight = $this.find(".left").innerHeight();
 
-      // $com.innerHeight(formHeight + 30);
+    // $com.innerHeight(formHeight + 30);
 
-      // var resizeTimer;
-      // $win.resize(function() {
-      //   clearTimeout(resizeTimer);
-      //   resizeTimer = setTimeout(function(){
-      //     $com = $this.find('.right');
-      //     formHeight = $this.find('.left').innerHeight();
-      //     $com.innerHeight(formHeight);
-      //   }, 100)
-      // });
-    });
+    // var resizeTimer;
+    // $win.resize(function() {
+    //   clearTimeout(resizeTimer);
+    //   resizeTimer = setTimeout(function(){
+    //     $com = $this.find('.right');
+    //     formHeight = $this.find('.left').innerHeight();
+    //     $com.innerHeight(formHeight);
+    //   }, 100)
+    // });
+    // });
 
     // sticky save button
     var $sfw = $(".form-right-side");

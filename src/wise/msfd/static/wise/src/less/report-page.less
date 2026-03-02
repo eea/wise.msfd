@@ -257,6 +257,25 @@
             border-top: none;
             border-left: none;
 
+            div:has(div.test-results-Correct),
+            div:has(div.test-results-False) {
+              max-width: none;
+            }
+
+            .test-results-Correct {
+              background-color: #5cb85c;
+              color: white;
+              padding: 2px 5px;
+              width: 100%;
+            }
+
+            .test-results-False {
+              background-color: #d9534f;
+              color: white;
+              padding: 2px 5px;
+              width: 100%;
+            }
+
             &.summary {
               min-width: 10rem;
 

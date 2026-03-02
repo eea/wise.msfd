@@ -41,7 +41,7 @@
 
   <Art8-2024>
     <element section="ges" name="Region_Art8">Regional assessment area</element>
-    <element section="ges" name="ComponentMRUs">Component MRUs</element>
+    <element section="ges" name="ComponentMRUs" convert="simple_itemlist">Component MRUs</element>
     <element section="ges" name="GEScomponent" convert="ges_component">GES component</element>
     <element section="ges" setlevel="0" name="Feature" label="features">Feature</element>
     <element section="element" setlevel="1" name="Element">Element</element>
@@ -74,7 +74,7 @@
     <element section="elementstatus" setlevel="2" name="ElementStatus">Element status</element>
     <element section="elementstatus" name="DescriptionElement" translate="true">Description element</element>
 
-    <element section="overallstatus" setlevel="0" name="SourceAssessmentFeature">Source assessment feature</element>
+    <element section="overallstatus" setlevel="0" name="SourceAssessmentFeature" convert="simple_itemlist">Source assessment feature</element>
     <element section="overallstatus" name="ReportingMethodFeature">Reporting method feature</element>
     <element section="overallstatus" name="TrendFeature">Trend feature</element>
     <element section="overallstatus" name="IntegrationRuleTypeParameter" label="parameters">Integration rule type parameter</element>
@@ -91,5 +91,7 @@
     <element section="overallstatus" name="AssessmentPeriod">Assessments period</element>
     <element section="overallstatus" name="PressureCode" label="pressures" convert="csv_ges_labels_list">Related pressures</element>
     <element section="overallstatus" name="TargetCode" label="targets" convert="csv_ges_labels_inverse_list">Related targets</element>
+    <element name="TestTV">Test TV</element>
+    <element name="TestResults" convert="art8_2024_test_results">Test results</element>
   </Art8-2024>
 </data>
