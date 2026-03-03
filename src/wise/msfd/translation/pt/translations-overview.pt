@@ -3,10 +3,10 @@
   xmlns:metal="http://xml.zope.org/namespaces/metal"
   xmlns:i18n="http://xml.zope.org/namespaces/i18n" lang="en" metal:use-macro="context/main_template/macros/master" i18n:domain="eea">
 
-  <body metal:fill-slot="content">
+  <metal:block fill-slot="main">
 
-    <div id="wise-search-form" class="full-width-marker">
-      <div class="start-page-content left-side-form translation-view">
+    <div id="wise-search-form" class="full-width-marker msfd-search-wrapper">
+      <div class="start-page-content left-side-formZ translation-view">
         <h1>Manage translations</h1>
         <div class="row">
           <div class="col-md-10 col-xs-12">
@@ -157,5 +157,5 @@
         </div>        <!-- end of .row -->
       </div>
     </div>    <!-- end of #wise-search-form -->
-  </body>
+  </metal:block>
 </html>
