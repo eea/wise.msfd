@@ -3,10 +3,10 @@ from __future__ import absolute_import
 from __future__ import print_function
 import re
 import logging
+import html
 from collections import namedtuple
 from dateutil import parser
 from six import text_type, string_types
-from six.moves.html_parser import HTMLParser
 
 from zope.security import checkPermission
 
@@ -111,8 +111,7 @@ def serialize_rows(rows):
 
             for v in row.raw_values:
                 if isinstance(v, str):
-                    parser = HTMLParser()
-                    v = parser.unescape(v)  # .decode('utf-8'))
+                    v = html.unescape(v)  # .decode('utf-8'))
 
                 if not isinstance(v, string_types):
                     if not v:

@@ -228,7 +228,7 @@
                         <th class="sticky-col sub-header">
                           <span tal:content="python: view.descriptor_for_code(desc.id).title">D0</span>
                         </th>
-                        <td class="assessment-status-td" tal:repeat="assessment python: view.get_articles(desc)">
+                        <td tal:attributes="class python: view.can_change_process_state(assessment) and 'assessment-status-td enable-process-state-change' or 'assessment-status-td'" tal:repeat="assessment python: view.get_articles(desc)">
                           <div metal:use-macro="context/wise-macros/macros/assessment-status-bar-2012-2018"></div>
                           <tal:def tal:define="assessment_2024 python: desc['art8-2024']">
                             <div tal:condition="python: assessment.id == 'art8'" metal:use-macro="context/wise-macros/macros/assessment-status-bar-2024"></div>

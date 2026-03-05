@@ -873,7 +873,8 @@ def get_crit_val(question, element, descriptor):
 
         return ''
 
-    if question.id != 'A08Q3' and element.is_descriptor():
+    if question.id != 'A08Q3' and (
+            hasattr(element, 'is_descriptor') and element.is_descriptor()):
         return ''
 
     is_prim = element.is_primary(descriptor)
@@ -1304,7 +1305,6 @@ class NationalDescriptorArticleView(BaseView, AssessmentDataMixin):
     def set_completeness_data(self):
         compl_data = self.get_completeness_data(self.country_code)
         self.assessment.phase_overall_scores.completeness = compl_data
-
 
     def __call__(self):
         alsoProvides(self.request, IDisableCSRFProtection)
