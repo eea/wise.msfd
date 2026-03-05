@@ -47,13 +47,15 @@ th {
   width: 100%;
   max-width: 100%;
   margin-bottom: @line-height-computed;
+
   // Cells
-  > thead,
-  > tbody,
-  > tfoot {
-    > tr {
-      > th,
-      > td {
+  >thead,
+  >tbody,
+  >tfoot {
+    >tr {
+
+      >th,
+      >td {
         padding: @table-cell-padding;
         line-height: @line-height-base;
         vertical-align: top;
@@ -61,24 +63,28 @@ th {
       }
     }
   }
+
   // Bottom align for column headings
-  > thead > tr > th {
+  >thead>tr>th {
     vertical-align: bottom;
     border-bottom: 2px solid @table-border-color;
   }
+
   // Remove top border from thead by default
-  > caption + thead,
-  > colgroup + thead,
-  > thead:first-child {
-    > tr:first-child {
-      > th,
-      > td {
+  >caption+thead,
+  >colgroup+thead,
+  >thead:first-child {
+    >tr:first-child {
+
+      >th,
+      >td {
         border-top: 0;
       }
     }
   }
+
   // Account for multiple tbody instances
-  > tbody + tbody {
+  >tbody+tbody {
     border-top: 2px solid @table-border-color;
   }
 
@@ -92,13 +98,16 @@ th {
 // Condensed table w/ half padding
 
 .table-condensed {
-  > thead,
-  > tbody,
-  > tfoot {
-    > tr {
-      > th,
-      > td {
+
+  >thead,
+  >tbody,
+  >tfoot {
+    >tr {
+
+      >th,
+      >td {
         padding: @table-condensed-cell-padding;
+        color: #212529 !important;
       }
     }
   }
@@ -111,19 +120,23 @@ th {
 
 .table-bordered {
   border: 1px solid @table-border-color;
-  > thead,
-  > tbody,
-  > tfoot {
-    > tr {
-      > th,
-      > td {
+
+  >thead,
+  >tbody,
+  >tfoot {
+    >tr {
+
+      >th,
+      >td {
         border: 1px solid @table-border-color;
       }
     }
   }
-  > thead > tr {
-    > th,
-    > td {
+
+  >thead>tr {
+
+    >th,
+    >td {
       border-bottom-width: 2px;
     }
   }
@@ -135,7 +148,7 @@ th {
 // Default zebra-stripe styles (alternating gray and transparent backgrounds)
 
 .table-striped {
-  > tbody > tr:nth-of-type(odd) {
+  >tbody>tr:nth-of-type(odd) {
     background-color: @table-bg-accent;
   }
 }
@@ -147,7 +160,7 @@ th {
 
 
 .table-hover {
-  > tbody > tr:hover {
+  >tbody>tr:hover {
     background-color: @table-bg-hover;
   }
 }
@@ -184,16 +197,17 @@ th {
     border: 1px solid @table-border-color;
 
     // Tighten up spacing
-    > .table {
+    >.table {
       margin-bottom: 0;
 
       // Ensure the content doesn't wrap
-      > thead,
-      > tbody,
-      > tfoot {
-        > tr {
-          > th,
-          > td {
+      >thead,
+      >tbody,
+      >tfoot {
+        >tr {
+
+          >th,
+          >td {
             white-space: nowrap;
           }
         }
@@ -201,20 +215,24 @@ th {
     }
 
     // Special overrides for the bordered tables
-    > .table-bordered {
+    >.table-bordered {
       border: 0;
+      border-top: 0;
 
       // Nuke the appropriate borders so that the parent can handle them
-      > thead,
-      > tbody,
-      > tfoot {
-        > tr {
-          > th:first-child,
-          > td:first-child {
+      >thead,
+      >tbody,
+      >tfoot {
+        >tr {
+          border-top: 0;
+
+          >th:first-child,
+          >td:first-child {
             border-left: 0;
           }
-          > th:last-child,
-          > td:last-child {
+
+          >th:last-child,
+          >td:last-child {
             border-right: 0;
           }
         }
@@ -223,11 +241,12 @@ th {
       // Only nuke the last row's bottom-border in `tbody` and `tfoot` since
       // chances are there will be only one `tr` in a `thead` and that would
       // remove the border altogether.
-      > tbody,
-      > tfoot {
-        > tr:last-child {
-          > th,
-          > td {
+      >tbody,
+      >tfoot {
+        >tr:last-child {
+
+          >th,
+          >td {
             border-bottom: 0;
           }
         }

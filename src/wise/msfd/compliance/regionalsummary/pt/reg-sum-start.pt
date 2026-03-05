@@ -1,21 +1,17 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en"
   xmlns:tal="http://xml.zope.org/namespaces/tal"
   xmlns:metal="http://xml.zope.org/namespaces/metal"
-  xmlns:i18n="http://xml.zope.org/namespaces/i18n"
-  lang="en"
-  metal:use-macro="context/main_template/macros/master"
-  i18n:domain="eea">
+  xmlns:i18n="http://xml.zope.org/namespaces/i18n" lang="en" metal:use-macro="context/main_template/macros/master" i18n:domain="eea">
 
-  <body metal:fill-slot="content">
+  <metal:block fill-slot="main">
 
-    <div id="layout-contents" tal:define="text context/text | nothing" >
-      <div id="wise-search-form" class="full-width-marker">
-        <div id="wise-search-form-top">
-          <metal:tabs
-            metal:use-macro="context/wise-macros/macros/tabs"></metal:tabs>
+    <div id="layout-contents" tal:define="text context/text | nothing">
+      <div id="wise-search-form" class="full-width-marker msfd-search-wrapper">
+        <div id="wise-search-form-topZ">
+          <metal:tabs metal:use-macro="context/wise-macros/macros/tabs"></metal:tabs>
         </div>
 
-        <div class="start-page-content left-side-form">
+        <div class="start-page-content left-side-formZ">
 
           <h1>Art. 12 (2018) regional summary reports</h1>
 
@@ -33,15 +29,13 @@
                   Germany
                 </th>
                 <td>
-                  <a tal:content="region/status"
-                    tal:define="color python:view.process_status_colors.get(region.state_id, 'default')"
-                    tal:attributes="class string:process-status btn btn-xs btn-${color};
+                  <a tal:content="region/status" tal:define="color python:view.process_status_colors.get(region.state_id, 'default')" tal:attributes="class string:process-status btn btn-xs btn-${color};
                       href python: region.url + '/@@assessment-summary'">
                     Phase -1
                   </a>
                 </td>
                 <!--<td>-->
-                  <!--<a tal:attributes="href python: '{}/@@sum-region-start'.format(region.url)">View report</a>-->
+                <!--<a tal:attributes="href python: '{}/@@sum-region-start'.format(region.url)">View report</a>-->
                 <!--</td>-->
               </tr>
             </tbody>
@@ -51,5 +45,5 @@
       </div>
     </div>
 
-  </body>
+  </metal:block>
 </html>

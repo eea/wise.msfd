@@ -1,5 +1,4 @@
-<tal:block
-  tal:define="
+<tal:block tal:define="
   text python: options['text'] or '';
   translation python: options['translation'] or '';
   active_text python: translation or text;
@@ -21,25 +20,28 @@
   <td class="translatable" tal:attributes="source-lang options/source_lang">
     <div class="w-t" tal:condition="python: text">
 
-      <div class="lang-toolbar"
-           tal:attributes="class tbar_class"
-           tal:condition="show_toolbar">
+      <div class="lang-toolbar" tal:attributes="class tbar_class" tal:condition="show_toolbar">
         <tal:cond tal:condition="translation">
           <button tal:attributes="class btn_trans_class">EN</button>
           <button tal:attributes="class btn_text_class" tal:content="options/source_lang">LV</button>
         </tal:cond>
 
         <tal:cond condition="can_translate">
-          <button data-toggle="modal" data-target="#edit-translation" class="btn btn-light btn-xs editTransl">
-            <i class="glyphicon glyphicon-edit"></i>
+          <button data-bs-toggle="modal" data-bs-target="#edit-translation" class="btn btn-light btn-xs editTransl">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
+              <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
+              <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z"/>
+            </svg>
           </button>
           <button class="btn btn-light btn-xs autoTransl">
-            <i class="glyphicon glyphicon-refresh"></i>
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-clockwise" viewBox="0 0 16 16">
+              <path fill-rule="evenodd" d="M8 3a5 5 0 1 0 4.546 2.914.5.5 0 0 1 .908-.417A6 6 0 1 1 8 2z"/>
+              <path d="M8 4.466V.534a.25.25 0 0 1 .41-.192l2.36 1.966c.12.1.12.284 0 .384L8.41 4.658A.25.25 0 0 1 8 4.466"/>
+            </svg>
           </button>
         </tal:cond>
       </div>
-      <div class="tr-text" tal:content='structure active_text'
-        tal:attributes= "data-original text; data-translation translation;">
+      <div class="tr-text" tal:content='structure active_text' tal:attributes= "data-original text; data-translation translation;">
       </div>
 
     </div>

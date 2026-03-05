@@ -983,7 +983,12 @@ class EditAssessmentDataFormMain(Form):
         fields = []
 
         for subform in self.subforms:
-            fields.extend(subform.fields._data_values)
+            # Use values() to get just the field objects
+            fields.extend(subform.fields.values())
+
+            # Or use items() if you need both names and fields
+            # for name, field in subform.fields.items():
+            #     fields.append(field)
 
         return Fields(*fields)
 

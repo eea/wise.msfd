@@ -108,7 +108,7 @@ class RecommendationsView(BaseComplianceView):
     name = 'recommendation'
     section = 'compliance-admin'
     headers = [
-        'Recommendation code', 'Topic', 'Recommendation text',
+        'ID', 'Recommendation code', 'Topic', 'Recommendation text',
         'Applicable MS or (sub)region', 'Applicable descriptors', 'Edit'
     ]
 

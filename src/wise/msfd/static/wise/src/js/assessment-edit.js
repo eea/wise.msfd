@@ -313,7 +313,7 @@
       }
     });
 
-    var $select = $nd.find(".select2-container");
+    var $select = $nd.find(".form-select");
     var $textarea = $nd.find("textarea");
     $select.closest(".fields-container-row").addClass("flex-select");
     $textarea.closest(".fields-container-row").addClass("flex-textarea");
@@ -346,10 +346,10 @@
     // the infobox will show all ges components/targets with 'Not relevant' option selected
     function _addGescompsToInfobox() {
       var gesComps = [];
-      var $allQuestions = $("<div>");
+      var $allQuestions = []; //$("<div>");
       var $infobox = $("div#assessment-edit-infobox");
       var message =
-        "'Not relevant' option selected for the following questions:";
+        "'Not relevant' option selected for the following questions: ";
       $infobox.empty();
 
       $(".subform .left select option:selected").each(function () {
@@ -362,11 +362,12 @@
           _idGescomp = _idGescomp.split("-").join(".");
 
         if (value == "Not relevant") {
-          $allQuestions.append(
-            $("<span>")
-              .addClass("infobox-popover")
-              .append(questionId + ": " + _idGescomp),
-          );
+          // $allQuestions.append(
+          //   $("<span>")
+          //     .addClass("infobox-popover")
+          //     .append(questionId + ": " + _idGescomp),
+          // );
+          $allQuestions.push(questionId + ": " + _idGescomp);
 
           if (gesComps.indexOf(_idGescomp) === -1) gesComps.push(_idGescomp);
         }
@@ -377,13 +378,9 @@
       });
 
       $infobox
-        .attr("class", "help-popover")
-        .attr("data-trigger", "hover")
-        .attr("data-html", "true")
-        .attr("data-placement", "bottom")
-        .attr("data-content", $allQuestions.html())
-        .attr("data-original-title", message)
-        .popover();
+        .attr("class", "pat-tooltip")
+        .attr("title", message + $allQuestions.join(", "));
+      // .popover();
 
       if (gesComps.length === 0) {
         $infobox.hide();
@@ -391,7 +388,9 @@
       }
 
       $infobox.append(
-        $('<i class="glyphicon glyphicon-exclamation-sign infobox-icon">'),
+        $(
+          '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-exclamation-circle" viewBox="0 0 16 16">   <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>   <path d="M7.002 11a1 1 0 1 1 2 0 1 1 0 0 1-2 0M7.1 4.995a.905.905 0 1 1 1.8 0l-.35 3.507a.552.552 0 0 1-1.1 0z"/> </svg>',
+        ),
       );
     }
     _addGescompsToInfobox();

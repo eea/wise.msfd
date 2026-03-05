@@ -8,7 +8,7 @@
    </index>
    <column value="has_default_page"/>
 
-   <index name="block_types" meta_type="KeywordIndex">
+   <!-- <index name="block_types" meta_type="KeywordIndex">
     <indexed_attr value="block_types"/>
-  </index>
+  </index> -->
 </object>

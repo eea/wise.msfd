@@ -19,9 +19,19 @@
 // .container {
 //   max-width: 100% !important;
 // }
+table>thead>tr>th,
+table>tbody>tr>th,
+table>tfoot>tr>th,
+table>thead>tr>td,
+table>tbody>tr>td,
+table>tfoot>tr>td {
+  border: 1px solid #e5e5e5;
+}
 
 h1 {
-  margin: 2.5rem 0 3rem 0 !important;
+  margin: 2rem 0 2rem 0 !important;
+  color: #002d54 !important;
+  font-weight: 600 !important;
 }
 
 h2,
@@ -31,23 +41,25 @@ h5,
 h6 {
   margin-top: 3rem !important;
   margin-bottom: 2rem !important;
+  font-weight: 500 !important;
+  color: #002d54 !important;
 }
 
 p,
 div>ul,
 div>ol {
-  font-family: 'RobotoL';
-  font-size: 18px;
+  font-family: 'Roboto';
+  font-size: 16px;
 }
 
 label {
-  font-family: 'RobotoM';
+  font-family: 'Roboto';
   font-weight: normal !important;
 }
 
 b,
 strong {
-  font-family: 'RobotoB';
+  font-family: 'Roboto';
   font-weight: normal;
 }
 
@@ -99,6 +111,11 @@ body.plone-toolbar-left-expanded {
 }
 
 .start-page-content {
+  a {
+    // color: #007bb3;
+    text-decoration: none;
+  }
+
   img {
     width: 95%;
   }
@@ -176,7 +193,7 @@ body.plone-toolbar-left-expanded {
     }
 
     th {
-      font-family: 'RobotoM';
+      font-family: 'Roboto';
       font-weight: normal;
     }
   }
@@ -203,6 +220,7 @@ body.plone-toolbar-left-expanded {
       th {
         border: none;
         color: white !important;
+        background-color: #aaa !important;
       }
     }
   }
@@ -360,7 +378,7 @@ body.plone-toolbar-left-expanded {
   border-radius: 15px;
   color: #002d54;
   cursor: pointer;
-  font-family: 'RobotoM';
+  font-family: 'Roboto';
   font-size: 0.6em;
   font-weight: normal;
   text-align: center;
@@ -369,7 +387,7 @@ body.plone-toolbar-left-expanded {
 .assessment-module-header,
 .tr-assessment-module-header div {
   padding: 0.1em 1em;
-  margin: 1em -0.7em;
+  margin: 1em -1.4em;
   background-color: #002d54;
   color: white;
   font-size: 1.5em;
@@ -380,10 +398,11 @@ body.plone-toolbar-left-expanded {
 
   td {
     padding: 0;
+    box-shadow: none !important;
   }
 
   div {
-    margin: 1em -1.1em;
+    margin: 1em -1.8em;
   }
 }
 
@@ -468,6 +487,11 @@ div.subform-refresh {
 
 .kssattr-formname-edit-assessment-summary,
 .wise-search-form-container {
+  .report-title {
+    color: #002d54;
+    font-weight: 600;
+  }
+
   .formControls {
     margin: 0;
   }
@@ -872,23 +896,23 @@ span.has-new-comments {
 
 // Custom colored buttons for process states
 .btn-warning-2 {
-  border: solid 1px @btn-warning-2-border;
-  background-color: @btn-warning-2-bg;
-  color: #fff;
+  border: solid 1px @btn-warning-2-border !important;
+  background-color: @btn-warning-2-bg !important;
+  color: #fff !important;
 
   &:hover {
-    background-color: @btn-warning-2-border;
+    background-color: @btn-warning-2-border !important;
     color: #fff !important;
   }
 }
 
 .btn-success-2 {
-  border: solid 1px @btn-success-2-border;
-  background-color: @btn-success-2-bg;
-  color: #fff;
+  border: solid 1px @btn-success-2-border !important;
+  background-color: @btn-success-2-bg !important;
+  color: #fff !important;
 
   &:hover {
-    background-color: @btn-success-2-border;
+    background-color: @btn-success-2-border !important;
     color: #fff !important;
   }
 }
@@ -910,7 +934,7 @@ span.has-new-comments {
       font-size: 15px;
 
       a {
-        font-family: 'RobotoM';
+        font-family: 'Roboto';
       }
 
       .glyphicon {
@@ -976,6 +1000,7 @@ span.has-new-comments {
     &.fixed-center {
       padding: 0px;
       border: none;
+      font-weight: 300;
 
       div.assessment-summary {
         min-height: 20px;
@@ -1143,6 +1168,7 @@ span.has-new-comments {
 .ast-header-data {
   padding: 1em;
   background-color: #ddd;
+  font-size: 15px;
 
   table.assessment-header {
     margin: 0 !important;
@@ -1203,12 +1229,13 @@ span.has-new-comments {
 
       .q-title {
         width: 100%;
+        font-weight: 500;
       }
 
       &.as-header {
         padding: 0.4rem;
         background-color: #0071b3 !important;
-        color: white;
+        color: white !important;
         // min-height: 65px;
       }
 
@@ -1250,7 +1277,7 @@ span.has-new-comments {
 
   a {
     position: relative;
-    top: -1.5em;
+    top: -2.5em;
   }
 }
 
@@ -1283,12 +1310,19 @@ table.comp-c-listing {
   z-index: 1001;
   top: -13px;
   font-size: 18px;
+  margin: 1.6em !important;
+  font-weight: 600;
 }
 
 #report-data-navigation {
   position: relative;
-  margin-top: 1.5em;
-  margin-bottom: 1em;
+  height: 47px;
+  // margin-top: 1.5em;
+  // margin-bottom: 1em;
+
+  &.height-fix {
+    height: 155px;
+  }
 
   div.back-to-descr {
     display: inline-block;
@@ -1472,6 +1506,19 @@ table.comp-c-listing {
 .wise-search-landingpage {
   overflow-x: auto;
 
+  .fixed-table-wrapper.sticky-table {
+    font-size: 15px;
+    width: calc(~'100% - 120px');
+  }
+
+  .table-sticky-first-col tr th.sticky-col {
+    background-color: #efefef;
+  }
+
+  tr.landpage-header.sticky-row th {
+    font-weight: 600 !important;
+  }
+
   .overflow-table .fixed-table-inner {
     tr {
       th:last-of-type {
@@ -1631,7 +1678,7 @@ table.comp-c-listing {
 
       background-color: #efefef;
       border-radius: 0;
-      font-family: 'RobotoM';
+      font-family: 'Roboto';
       //color: #333;
       font-weight: 200;
     }
@@ -1711,8 +1758,18 @@ table.comp-c-listing {
 }
 
 #recommendation-edit-table {
+  th {
+    background-color: gray;
+  }
+
   td:not(:last-child):not(:first-child) {
     min-width: 150px;
+  }
+}
+
+#edit-topics {
+  textarea {
+    height: 10em;
   }
 }
 
@@ -1750,6 +1807,7 @@ table.comp-c-listing {
   .btn {
     margin-top: 1em;
     margin-left: 10px;
+    height: fit-content;
   }
 
   #textarea,
@@ -1765,6 +1823,10 @@ table.comp-c-listing {
     flex-direction: row;
     align-items: stretch;
     justify-content: space-evenly;
+
+    .form-control {
+      height: 10em;
+    }
   }
 
   .form-group.disabled {
@@ -1793,7 +1855,7 @@ table.comp-c-listing {
   }
 
   .popover-content p {
-    font-family: 'RobotoR';
+    font-family: 'Roboto';
     font-size: 14px;
   }
 }
@@ -1857,7 +1919,7 @@ table.comp-c-listing {
       border-bottom: 1px solid #aaa;
       margin: 0;
       color: #002d54;
-      font-family: 'PoppinsSemiB';
+      font-family: 'Roboto';
       font-size: 16px;
     }
 
@@ -1865,4 +1927,18 @@ table.comp-c-listing {
       padding: 5px;
     }
   }
+}
+
+#mainform-tabs {
+  margin: 0px -2em;
+
+  a {
+    // color: #007bb3;
+    text-decoration: none;
+  }
+}
+
+#mainnavigation-wrapper,
+#above-content-wrapper {
+  display: none;
 }

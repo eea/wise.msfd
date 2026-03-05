@@ -2,9 +2,9 @@
 from __future__ import absolute_import
 from plone.dexterity.interfaces import IDexterityContainer
 # from plone.indexer.decorator import indexer
-from plone.dexterity.interfaces import IDexterityContent
+# from plone.dexterity.interfaces import IDexterityContent
 from plone.indexer import indexer
-from .blocks import BlocksTraverser
+# from .blocks import BlocksTraverser
 
 
 @indexer(IDexterityContainer)
@@ -27,10 +27,10 @@ class BlockType(object):
             self.out.add(_type)
 
 
-@indexer(IDexterityContent)
-def block_types(obj):
-    blocks_type = set()
-    bt = BlockType(obj, blocks_type)
-    traverser = BlocksTraverser(obj)
-    traverser(bt)
-    return list(blocks_type)
+# @indexer(IDexterityContent)
+# def block_types(obj):
+#     blocks_type = set()
+#     bt = BlockType(obj, blocks_type)
+#     traverser = BlocksTraverser(obj)
+#     traverser(bt)
+#     return list(blocks_type)

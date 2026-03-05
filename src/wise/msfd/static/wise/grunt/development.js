@@ -20,6 +20,7 @@ module.exports = {
           "<%= path.src %>/less/select2-top-override.less",
         ],
         "<%= path.dest %>/css/compliance.css": [
+          "<%= path.src %>/less/custom.wise.less",
           "<%= path.src %>/less/compliance.less",
           "<%= path.src %>/less/report-page.less",
           "<%= path.src %>/less/assessment-edit.less",

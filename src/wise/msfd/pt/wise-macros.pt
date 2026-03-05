@@ -138,19 +138,23 @@
       <div class="nav-wrapper">
         <div class="nav-header">
           <button id="report-nav-toggle" class="nav-toggle">
-            <i class="glyphicon glyphicon-menu-hamburger"></i>
+            <i class="glyphicon glyphicon-menu-hamburger">
+              <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="bi bi-list" viewBox="0 0 16 16">
+                <path fill-rule="evenodd" d="M2.5 12a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5"/>
+              </svg>
+            </i>
           </button>
         </div>
 
         <div class="nav-body">
           <div class="art-title">
-            <a href="" tal:attributes="href view/_country_folder/absolute_url" tal:content="view/country_name" target="_blank">EU</a>
+            <a href="" tal:attributes="href python: view._country_folder.absolute_url() + '/assessments'" tal:content="view/country_name" target="_blank">EU</a>
           </div>
 
           <div class="nav-regions">
             <div tal:repeat="region_folder view/get_region_folders" class="nav-region">
               <div class="region">
-                <a tal:content="region_folder/title_or_id" tal:attributes="href python: '{}#{}'.format(view._country_folder.absolute_url(), region_folder.id)" target="_blank">
+                <a tal:content="region_folder/title_or_id" tal:attributes="href python: '{}/assessments#{}'.format(view._country_folder.absolute_url(), region_folder.id)" target="_blank">
                   Baltic
                 </a>
               </div>
@@ -183,12 +187,16 @@
       <div class="nav-wrapper">
         <div class="nav-header">
           <button id="report-nav-toggle" class="nav-toggle">
-            <i class="glyphicon glyphicon-menu-hamburger"></i>
+            <i class="glyphicon glyphicon-menu-hamburger">
+              <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="bi bi-list" viewBox="0 0 16 16">
+                <path fill-rule="evenodd" d="M2.5 12a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5"/>
+              </svg>
+            </i>
           </button>
         </div>
         <div class="nav-body">
           <div class="art-title">
-            <a href="" tal:attributes="href view/_country_folder/absolute_url" tal:content="view/country_name" target="_blank">EU</a>
+            <a href="" tal:attributes="href python: view._country_folder.absolute_url() + '/assessments'" tal:content="view/country_name" target="_blank">EU</a>
           </div>
           <div class="nav-articles">
             <div tal:repeat="art view/get_secondary_article_folders" class="art">
@@ -219,13 +227,17 @@
       <div class="nav-wrapper">
         <div class="nav-header">
           <button id="report-nav-toggle" class="nav-toggle">
-            <i class="glyphicon glyphicon-menu-hamburger"></i>
+            <i class="glyphicon glyphicon-menu-hamburger">
+              <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="bi bi-list" viewBox="0 0 16 16">
+                <path fill-rule="evenodd" d="M2.5 12a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5"/>
+              </svg>
+            </i>
           </button>
         </div>
 
         <div class="nav-body">
           <div class="art-title">
-            <a href="" tal:attributes="href view/_countryregion_folder/absolute_url" tal:content="view/region_name" target="_blank">EU</a>
+            <a href="" tal:attributes="href python: view._countryregion_folder.absolute_url() + '/assessments'" tal:content="view/region_name" target="_blank">EU</a>
           </div>
 
           <div class="nav-articles">
@@ -262,15 +274,15 @@
       2012
       </a>
       <a tal:attributes="href url; class css_class">
-        <!-- <i class="glyphicon glyphicon-edit"></i> -->
       2018
-                                                      <!-- <span class="as-state-label" tal:content="current_state">Approved</span> -->
       </a>
       <div class="assessment-status-wrapper">
         <div class="assessment-status-processstate">
           <form class="assessment-status process-state" method="GET" tal:attributes="action python: url + '/content_status_modify'">
             <div>
-              <i class="glyphicon glyphicon-transfer"></i>
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-left-right" viewBox="0 0 16 16">
+                <path fill-rule="evenodd" d="M1 11.5a.5.5 0 0 0 .5.5h11.793l-3.147 3.146a.5.5 0 0 0 .708.708l4-4a.5.5 0 0 0 0-.708l-4-4a.5.5 0 0 0-.708.708L13.293 11H1.5a.5.5 0 0 0-.5.5m14-7a.5.5 0 0 1-.5.5H2.707l3.147 3.146a.5.5 0 1 1-.708.708l-4-4a.5.5 0 0 1 0-.708l4-4a.5.5 0 1 1 .708.708L2.707 4H14.5a.5.5 0 0 1 .5.5"/>
+              </svg>
             Process state:
               <strong tal:content="python: view.get_status(assessment)">Phase 0</strong>
               <i class='glyphicon glyphicon-remove-circle close-button'></i>
@@ -365,19 +377,18 @@
       wf_states python: view.get_all_wf_states(assessment);
       current_state python: view.get_status(assessment)">
       <a tal:attributes="href python: url + '/@@assessment-overview-2016'" class="assessment-status-colorbar btn btn-xs btn-primary">
-        <!-- <i class="glyphicon glyphicon-edit"></i> -->
-      2016
+        2016
       </a>
       <a tal:attributes="href url; class css_class">
-        <!-- <i class="glyphicon glyphicon-edit"></i> -->
-      2022
-                                                      <!-- <span class="as-state-label" tal:content="current_state">Approved</span> -->
+        2022
       </a>
       <div class="assessment-status-wrapper">
         <div class="assessment-status-processstate">
           <form class="assessment-status process-state" method="GET" tal:attributes="action python: url + '/content_status_modify'">
             <div>
-              <i class="glyphicon glyphicon-transfer"></i>
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-left-right" viewBox="0 0 16 16">
+                <path fill-rule="evenodd" d="M1 11.5a.5.5 0 0 0 .5.5h11.793l-3.147 3.146a.5.5 0 0 0 .708.708l4-4a.5.5 0 0 0 0-.708l-4-4a.5.5 0 0 0-.708.708L13.293 11H1.5a.5.5 0 0 0-.5.5m14-7a.5.5 0 0 1-.5.5H2.707l3.147 3.146a.5.5 0 1 1-.708.708l-4-4a.5.5 0 0 1 0-.708l4-4a.5.5 0 1 1 .708.708L2.707 4H14.5a.5.5 0 0 1 .5.5"/>
+              </svg>
             Process state:
               <strong tal:content="python: view.get_status(assessment)">Phase 0</strong>
               <i class='glyphicon glyphicon-remove-circle close-button'></i>
@@ -423,19 +434,18 @@
       wf_states python: view.get_all_wf_states(assessment_d1);
       current_state python: view.get_status(assessment_d1);">
       <a tal:attributes="href python: url + '/@@assessment-overview-2016'" class="assessment-status-colorbar btn btn-xs btn-primary">
-        <!-- <i class="glyphicon glyphicon-edit"></i> -->
-      2016
+        2016
       </a>
       <a tal:attributes="href url_d1; class css_class">
-        <!-- <i class="glyphicon glyphicon-edit"></i> -->
-      2022
-                                                      <!-- <span class="as-state-label" tal:content="current_state">Approved</span> -->
+        2022
       </a>
       <div class="assessment-status-wrapper">
         <div class="assessment-status-processstate">
           <form class="assessment-status process-state" method="GET" tal:attributes="action python: url_d1 + '/content_status_modify'">
             <div>
-              <i class="glyphicon glyphicon-transfer"></i>
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-left-right" viewBox="0 0 16 16">
+                <path fill-rule="evenodd" d="M1 11.5a.5.5 0 0 0 .5.5h11.793l-3.147 3.146a.5.5 0 0 0 .708.708l4-4a.5.5 0 0 0 0-.708l-4-4a.5.5 0 0 0-.708.708L13.293 11H1.5a.5.5 0 0 0-.5.5m14-7a.5.5 0 0 1-.5.5H2.707l3.147 3.146a.5.5 0 1 1-.708.708l-4-4a.5.5 0 0 1 0-.708l4-4a.5.5 0 1 1 .708.708L2.707 4H14.5a.5.5 0 0 1 .5.5"/>
+              </svg>
             Process state:
               <strong tal:content="python: view.get_status(assessment_d1)">Phase 0</strong>
               <i class='glyphicon glyphicon-remove-circle close-button'></i>
@@ -480,15 +490,15 @@
       wf_states python: view.get_all_wf_states(assessment);
       current_state python: view.get_status(assessment)">
       <a tal:attributes="href url; class css_class">
-        <!-- <i class="glyphicon glyphicon-edit"></i> -->
-      2022
-                                                      <!-- <span class="as-state-label" tal:content="current_state">Approved</span> -->
+        2022
       </a>
       <div class="assessment-status-wrapper">
         <div class="assessment-status-processstate">
           <form class="assessment-status process-state" method="GET" tal:attributes="action python: url + '/content_status_modify'">
             <div>
-              <i class="glyphicon glyphicon-transfer"></i>
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-left-right" viewBox="0 0 16 16">
+                <path fill-rule="evenodd" d="M1 11.5a.5.5 0 0 0 .5.5h11.793l-3.147 3.146a.5.5 0 0 0 .708.708l4-4a.5.5 0 0 0 0-.708l-4-4a.5.5 0 0 0-.708.708L13.293 11H1.5a.5.5 0 0 0-.5.5m14-7a.5.5 0 0 1-.5.5H2.707l3.147 3.146a.5.5 0 1 1-.708.708l-4-4a.5.5 0 0 1 0-.708l4-4a.5.5 0 1 1 .708.708L2.707 4H14.5a.5.5 0 0 1 .5.5"/>
+              </svg>
             Process state:
               <strong tal:content="python: view.get_status(assessment)">Phase 0</strong>
               <i class='glyphicon glyphicon-remove-circle close-button'></i>
@@ -536,7 +546,9 @@
         <div class="assessment-status-processstate">
           <form class="assessment-status process-state" method="GET" tal:attributes="action python: url + '/content_status_modify'">
             <div>
-              <i class="glyphicon glyphicon-transfer"></i>
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-left-right" viewBox="0 0 16 16">
+                <path fill-rule="evenodd" d="M1 11.5a.5.5 0 0 0 .5.5h11.793l-3.147 3.146a.5.5 0 0 0 .708.708l4-4a.5.5 0 0 0 0-.708l-4-4a.5.5 0 0 0-.708.708L13.293 11H1.5a.5.5 0 0 0-.5.5m14-7a.5.5 0 0 1-.5.5H2.707l3.147 3.146a.5.5 0 1 1-.708.708l-4-4a.5.5 0 0 1 0-.708l4-4a.5.5 0 1 1 .708.708L2.707 4H14.5a.5.5 0 0 1 .5.5"/>
+              </svg>
             Process state:
               <strong tal:content="python: view.get_status(assessment)">Phase 0</strong>
               <i class='glyphicon glyphicon-remove-circle close-button'></i>

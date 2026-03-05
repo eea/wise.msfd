@@ -2,9 +2,9 @@
 @import 'variables.less';
 
 // Report page
-.report-page-view .report-section .overflow-table .fixed-table-wrapper table.fixed-table tr th {
-  left: 17px;
-}
+// .report-page-view .report-section .overflow-table .fixed-table-wrapper table.fixed-table tr th {
+//   left: 17px;
+// }
 
 .report-page-view .report-section.art8-esa .overflow-table table.table-report tr td,
 .report-page-view .report-section.art8-esa .overflow-table .fixed-table-inner table.fixed-table tr td {
@@ -12,6 +12,10 @@
 }
 
 .report-page-view {
+  .report-title {
+    font-weight: 600;
+    color: #002d54;
+  }
 
   .report-section {
     position: relative;
@@ -62,7 +66,7 @@
 
       label {
         position: relative;
-        top: -0.5em;
+        top: -0.7em;
       }
     }
 
@@ -113,11 +117,13 @@
       table.fixed-table {
         border: 0;
         margin-bottom: 0;
-        border-collapse: initial;
+        border-collapse: collapse;
         font-size: 70%;
         table-layout: inherit;
 
         tr {
+          border-top: 0;
+
           &:last-child th {
             border-bottom: 0;
           }
@@ -232,7 +238,7 @@
             padding: 6px 6px 6px 6px;
             border: 0;
             border-bottom: 1px solid #ddd;
-
+            color: #212529 !important;
             background: #efefef;
             text-align: right;
             vertical-align: top;
@@ -256,6 +262,7 @@
             padding: 6px;
             border-top: none;
             border-left: none;
+            color: #212529 !important;
 
             div:has(div.test-results-Correct),
             div:has(div.test-results-False) {
@@ -314,6 +321,8 @@
             ul {
               min-width: 16rem;
               margin: 0 0 0 -1rem !important;
+              padding: 0;
+              font-size: inherit !important;
 
               &.cell-listing {
                 // display: flex;
@@ -410,8 +419,8 @@ body.plone-toolbar-left-default {
 
   .fixed-table-wrapper,
   .scroll-wrapper.fixed-scroll {
-    left: 60px;
-    width: calc(~'100% - 60px');
+    left: 90px;
+    width: calc(~'100% - 90px');
   }
 }
 
@@ -419,10 +428,16 @@ body.plone-toolbar-left-expanded {
 
   .fixed-table-wrapper,
   .scroll-wrapper.fixed-scroll {
-    left: 120px;
-    width: calc(~'100% - 120px');
+    left: 253px;
+    width: calc(~'100% - 283px');
   }
 }
+
+// .fixed-table-wrapper,
+// .scroll-wrapper.fixed-scroll {
+//   left: 120px;
+//   width: calc(~'100% - 120px');
+// }
 
 .fixed-table-wrapper {
   &.sticky-table {
@@ -458,7 +473,7 @@ body.plone-toolbar-left-expanded {
     right: 0;
     left: 2px;
     max-height: 50%;
-    padding: 0 17px;
+    // padding: 0 17px;
     background-color: #fff;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
     overflow-x: auto;

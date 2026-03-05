@@ -1,4 +1,4 @@
-#pylint: skip-file
+# pylint: skip-file
 from __future__ import absolute_import
 import datetime
 import logging
@@ -6,12 +6,13 @@ from collections import namedtuple
 
 from persistent.list import PersistentList
 from pkg_resources import resource_filename
-from zope.schema import Choice, Text
+from zope.schema import Choice
 from zope.interface import implementer
 from zope.schema.vocabulary import SimpleTerm, SimpleVocabulary
 
 from AccessControl import Unauthorized
 from plone.api import user
+from plone.app.textfield import RichText
 from plone.z3cform.layout import wrap_form
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 from pyexcel_xlsx import get_data
@@ -121,12 +122,14 @@ class RegDescEditAssessmentDataForm(BaseRegComplianceView,
             return default
 
         # parse the datestring to reformat into a clearer format
-        local_time = datetime.datetime.strptime(
-            local_time, '%b %d %Y %I:%M %p'
-        )
-        local_time = datetime.datetime.strftime(
-            local_time, "%Y-%m-%d %H:%M"
-        )
+        try:
+            local_time = datetime.datetime.strptime(
+                local_time, '%b %d %Y %I:%M %p')
+        except:
+            local_time = datetime.datetime.strptime(
+                local_time, '%b %d, %Y %I:%M %p')
+
+        local_time = datetime.datetime.strftime(local_time, "%Y-%m-%d %H:%M")
 
         return local_time
 
@@ -323,8 +326,8 @@ class RegDescEditAssessmentDataForm(BaseRegComplianceView,
                 _name = '{}_{}_{}'.format(self.article, question.id, name)
 
                 default = assessment_data.get(_name, None)
-                _field = Text(title=title,
-                              __name__=_name, required=False, default=default)
+                _field = RichText(title=title,
+                                  __name__=_name, required=False, default=default)
 
                 fields.append(_field)
 
@@ -350,8 +353,8 @@ class RegDescEditAssessmentDataForm(BaseRegComplianceView,
             )
 
             default = assessment_data.get(_name, None)
-            _field = Text(title=title,
-                          __name__=_name, required=False, default=default)
+            _field = RichText(title=title,
+                              __name__=_name, required=False, default=default)
             asf_fields.append(_field)
 
         assessment_summary_form.fields = Fields(*asf_fields)

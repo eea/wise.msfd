@@ -3,15 +3,15 @@
   xmlns:metal="http://xml.zope.org/namespaces/metal"
   xmlns:i18n="http://xml.zope.org/namespaces/i18n" lang="en" metal:use-macro="context/main_template/macros/master" i18n:domain="eea">
 
-  <body metal:fill-slot="content">
+  <metal:block fill-slot="main">
 
     <div id="layout-contents" tal:define="text context/text | nothing">
-      <div id="wise-search-form" class="full-width-marker">
-        <div id="wise-search-form-top">
+      <div id="wise-search-form" class="full-width-marker msfd-search-wrapper">
+        <div id="wise-search-form-topZ">
           <metal:tabs metal:use-macro="context/wise-macros/macros/tabs"></metal:tabs>
         </div>
 
-        <div class="country-start-assessments-page start-page-content left-side-form" tal:define="country_folder python: view._country_folder;
+        <div class="country-start-assessments-page start-page-content left-side-formZ" tal:define="country_folder python: view._country_folder;
                   regions view/get_regions;
                   region_art1314 python: regions[0]">
 
@@ -19,13 +19,20 @@
           </h1>
           <div class="nda-link">
             <a href="/marine/policy-and-reporting/msfd-reports-and-assessments/assessments-by-countries/${view/country_name_url}">
-              <i class="glyphicon glyphicon-share-alt"></i>
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-left" viewBox="0 0 16 16">
+                <path fill-rule="evenodd" d="M15 8a.5.5 0 0 0-.5-.5H2.707l3.147-3.146a.5.5 0 1 0-.708-.708l-4 4a.5.5 0 0 0 0 .708l4 4a.5.5 0 0 0 .708-.708L2.707 8.5H14.5A.5.5 0 0 0 15 8"/>
+              </svg>
               Go to Country page
             </a>
           </div>
           <div class="scroll-to-top">
             <button title="Scroll to top" class="scroll-button">
-              <i class="scroll-icon glyphicon glyphicon-chevron-up"></i>
+              <!-- <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="scroll-icon bi bi-chevron-up" viewBox="0 0 16 16">
+                <path fill-rule="evenodd" d="M7.646 4.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1-.708.708L8 5.707l-5.646 5.647a.5.5 0 0 1-.708-.708z"/>
+              </svg> -->
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="scroll-icon bi bi-chevron-up" viewBox="0 0 16 16">
+                <path fill-rule="evenodd" d="M7.646 4.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1-.708.708L8 5.707l-5.646 5.647a.5.5 0 0 1-.708-.708z"/>
+              </svg>
             </button>
           </div>
 
@@ -38,7 +45,9 @@
           <div class="process-state-phase-form" tal:condition="False">
             <form class="process-state" method="GET" tal:attributes="action python: context.absolute_url() + '/content_status_modify'">
               <div>
-                <i class="glyphicon glyphicon-transfer"></i>
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-left-right" viewBox="0 0 16 16">
+                  <path fill-rule="evenodd" d="M1 11.5a.5.5 0 0 0 .5.5h11.793l-3.147 3.146a.5.5 0 0 0 .708.708l4-4a.5.5 0 0 0 0-.708l-4-4a.5.5 0 0 0-.708.708L13.293 11H1.5a.5.5 0 0 0-.5.5m14-7a.5.5 0 0 1-.5.5H2.707l3.147 3.146a.5.5 0 1 1-.708.708l-4-4a.5.5 0 0 1 0-.708l4-4a.5.5 0 1 1 .708.708L2.707 4H14.5a.5.5 0 0 1 .5.5"/>
+                </svg>
                 Process state:
                 <strong tal:content="python: view.get_status(country_folder)">Phase 0</strong>
 
@@ -219,7 +228,7 @@
                         <th class="sticky-col sub-header">
                           <span tal:content="python: view.descriptor_for_code(desc.id).title">D0</span>
                         </th>
-                        <td tal:attributes="class python: view.can_change_process_state(assessment) and 'assessment-status-td enable-process-state-change' or 'assessment-status-td'" tal:repeat="assessment python: view.get_articles(desc)">
+                        <td class="assessment-status-td" tal:repeat="assessment python: view.get_articles(desc)">
                           <div metal:use-macro="context/wise-macros/macros/assessment-status-bar-2012-2018"></div>
                           <tal:def tal:define="assessment_2024 python: desc['art8-2024']">
                             <div tal:condition="python: assessment.id == 'art8'" metal:use-macro="context/wise-macros/macros/assessment-status-bar-2024"></div>
@@ -263,5 +272,5 @@
       </div>
     </div>
 
-  </body>
+  </metal:block>
 </html>

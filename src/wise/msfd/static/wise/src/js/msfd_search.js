@@ -146,7 +146,7 @@
       no_results.addClass('hidden');
       labels.removeClass('hidden');
       var data = $field
-        .find('.panel-content > span:not(.controls)')
+        .find('.panel-content > div:not(.controls)')
         .data('checked_items');
 
       if (data) {
@@ -227,7 +227,8 @@
   }
 
   function addAutoComplete($field) {
-    $field.find('.ui-autocomplete-input').autocomplete({
+    var $input = $field.find('.ui-autocomplete-input');
+    $input.autocomplete({
       minLength: 0,
       source: [],
       search: function (event) {
@@ -235,13 +236,11 @@
       },
       create: function () {
         var that = this;
-        var removeBtn = $(this)
-          .parentsUntil('.ui-autocomplete')
-          .find('.clear-btn ');
-        removeBtn.on('click', null, that, function (ev) {
-          $(this).parentsUntil('.controls').find('input').val('');
-          $(this).parentsUntil('.controls').find('input').trigger('change');
-          $(ev.data).autocomplete('search', 'undefined');
+        var $removeBtn = $(this).closest('.ui-autocomplete').find('.clear-btn');
+        $removeBtn.on('click', function (ev) {
+          $(that).val('');
+          $(that).trigger('change');
+          searchAutoComplete(that, $field);
         });
       },
     });
@@ -353,7 +352,7 @@
 
     $field.addClass('panel-group');
 
-    var $label = $field.find('> label.horizontal');
+    var $label = $field.find('> label.form-label');
     $label.addClass('panel-title panel-heading');
 
     var $content = $label.next('.panel-content');
@@ -362,7 +361,15 @@
       $content = $label.next('.panel-content');
     }
 
-    var chekspan = $content.find('> span:not(.controls)');
+    var $controls = $content.children('.controls');
+    if (!$controls.length) {
+      var all = generateControlDiv();
+      $content.prepend(all);
+    } else if ($controls.length > 1) {
+      $controls.slice(1).remove();
+    }
+
+    var chekspan = $content.find('> div:not(.controls)');
     chekspan.addClass('panel-default');
 
     $content.hide().removeClass('open');
@@ -479,20 +486,18 @@
 
   function generateCheckboxes($fields, $fieldsnr) {
     var count = $fieldsnr;
+
     $fields.each(function (indx, field) {
       var $field = $(field);
       var cheks = $field.find('.option');
       var allcheckboxes = cheks.find("input[type='checkbox']");
+
       var hasChecks = allcheckboxes.length > 0;
       // has checkboxes
       if (hasChecks) {
         var fieldId = $field.attr('id');
 
         fieldAutoSubmitSetup(fieldId, $field);
-
-        // add "controls"
-        var all = generateControlDiv();
-        $field.find('> label.horizontal').after(all);
 
         //tooltips
         cheks.each(function (idx) {
@@ -602,22 +607,38 @@
     );
 
     var triggerClick = function (chV, ev) {
-      //reset page
+      // reset page
       $(selectorFormContainer + " [name='form.widgets.page']").val(0);
-      if (exceptVal.indexOf(chV) === -1)
-        $(ev.target).find("input[type='checkbox']").trigger('click');
+
+      if (exceptVal.indexOf(chV) === -1) {
+        if ($(ev.target).is("input[type='checkbox']")) {
+          // if the target IS the checkbox, trigger change directly
+          $(ev.target).trigger('change');
+        } else {
+          // otherwise, find the checkbox inside
+          $(ev.target).find("input[type='checkbox']").trigger('click');
+        }
+      }
     };
 
     // listener for click on the whole span
-    allch.on('click', '.option', function (ev) {
+    allch.off('click', '.form-check, input[type="checkbox"]');
+    allch.on('click', '.form-check, input[type="checkbox"]', function (ev) {
+      ev.stopPropagation();
       $('#ajax-spinner2').hide();
-      var checkboxV = $(this).find("input[type='checkbox']").val();
+
+      var $checkbox = $(this).is('input[type="checkbox"]')
+        ? $(this)
+        : $(this).find("input[type='checkbox']");
+
+      var checkboxV = $checkbox.val();
+
       if (
-        window.WISE.blocks.indexOf(
-          $(this).parentsUntil('.field').parent().attr('id'),
-        ) !== -1
+        window.WISE.blocks.indexOf($checkbox.closest('.field').attr('id')) !==
+        -1
       ) {
-        //return false;
+        $checkbox.prop("checked", !$checkbox.prop("checked"));
+        // return false;
       } else {
         triggerClick(checkboxV, ev);
       }
@@ -713,7 +734,7 @@
     if ($.fn.select2 !== undefined) {
       $selectArticle.select2(moptions);
       $selectArticle.one('select2-selecting', function (ev) {
-        document.location.href = ev.choice.id;
+        document.location.href = document.location.pathname.split('/').slice(0, -1).join('/') + ev.choice.id.replace("./", '/');
       });
     }
   }
@@ -1111,6 +1132,8 @@
   function initPageElems() {
     // move marine unit id below form title and pagination as seen on the
     // other article tabs
+    $('.form-check').addClass('option');
+    $('.form-label').addClass('horizontal');
     var pagination = $('.prev-next-row').eq(0);
     if (pagination.length) {
       $('#marine-widget-top').detach().insertBefore(pagination);
@@ -1121,14 +1144,15 @@
     var $fields = $(selectorFormContainer + ', ' + selectorLeftForm).find(
       '[data-fieldname]',
     );
-    if ($fields.length > 0) {
-      generateCheckboxes($fields, $fields.length);
-    }
 
     $(selectorFormContainer + ',' + selectorLeftForm).animate(
       { opacity: 1 },
       1000,
     );
+
+    if ($fields.length > 0) {
+      generateCheckboxes($fields, $fields.length);
+    }
 
     var $heading = $('.msfd-heading');
     var $startLink = $('.msfd-start-link');
@@ -1187,6 +1211,7 @@
 
     loading = true;
   }
+
   function formSuccess(data, status, req) {
     $(selectorLeftForm + ' #wise-search-form-top')
       .siblings()
@@ -1244,7 +1269,7 @@
       fixTableHeaderAndCellsHeight();
     }, 300);
 
-    //addDoubleScroll();
+    // addDoubleScroll();
 
     $("[name='form.buttons.prev']").prop('disabled', false);
     $("[name='form.buttons.next']").prop('disabled', false);
@@ -1422,6 +1447,7 @@
     if (typeof scanforlinks !== 'undefined') jQuery(scanforlinks);
     setTimeout(function () {
       fixTableHeaderAndCellsHeight();
+      fixDoubleScrollWidth();
     }, 300);
     addDoubleScroll();
   }
@@ -1624,6 +1650,9 @@
     if (!url.includes('/marine/++api++')) {
       url = url.replace('/marine/', '/marine/++api++/');
     }
+    if (url.includes('localhost')) {
+      url = url.replace('http://localhost:3000/', 'http://localhost:3000/++api++/');
+    }
 
     $.ajax({
       type: 'POST',
@@ -1736,7 +1765,6 @@
       if (compareVals(LZString.decompress(defForm), strContent[2])) {
         var url = form.attr('action');
         var boundary = sessionStore.getItem('boundary');
-
         searchFormAjax(boundary, dec, url);
 
         // TODO: url shortner
@@ -1807,20 +1835,32 @@
     $table.fixTableHeaderAndCellsHeight();
   }
 
+  function fixDoubleScrollWidth() {
+    // fix double scroll width
+    $('.cloned-scroll-top').each(function () {
+      var $clonedScrollTop = $(this);
+      var $table = $clonedScrollTop.parent().find('table');
+      var tableWidth = $table.outerWidth((includeMargin = true));
+
+      if (tableWidth == null || tableWidth <= $table.parent().width()) {
+        $clonedScrollTop.children().width(0);
+        return;
+      }
+      debugger;
+      $clonedScrollTop.children().width(tableWidth);
+    });
+  }
+
   function addDoubleScroll() {
     var secondScroll =
       '<div class="cloned-scroll-top" style="overflow-x: auto;">' +
-      '<div style="height: 1px; margin-left: 165px;"></div>' +
+      '<div style="height: 1px;"></div>' +
       '</div>';
 
     $('.double-scroll').each(function () {
       var $doubleScroll = $(this);
       var $table = $doubleScroll.find('table');
       var tableWidth = $table.outerWidth((includeMargin = true));
-
-      if (tableWidth == null || tableWidth <= $table.parent().width()) {
-        return;
-      }
 
       $doubleScroll.parent().before(secondScroll);
       var $clonedScrollTop = $doubleScroll
@@ -1835,6 +1875,11 @@
       $doubleScroll.scroll(function () {
         $clonedScrollTop.scrollLeft($doubleScroll.scrollLeft());
       });
+
+      if (tableWidth == null || tableWidth <= $table.parent().width()) {
+        $clonedScrollTop.children().width(0);
+        return;
+      }
 
       $clonedScrollTop.children().width(tableWidth);
     });
@@ -1884,17 +1929,33 @@
         // this way we reset the configurations below the given facet
         // with which we interacted with
         var called_from = arguments[1];
-        var called_from_button = called_from && called_from['button'];
-        var called_from_select = called_from && called_from['select'];
 
-        var resetFacets = true;
+        // if it is from a subform (second row of filters) like Country,
+        // GES Component, Feature etc. then we do not reset the facets below
+        try {
+          var isSubform = $(called_from.button).closest('.subforms-wrapper').length > 0;
+        } catch (e) {
+          var isSubform = true;
+        }
+        
+        var resetFacets = !isSubform;
+
         if (resetFacets) {
-          resetConfigsbelowFacet(
-            called_from,
-            called_from_button,
-            called_from_select,
-            arguments,
-          );
+          // empty subforms-wrapper
+          $('.subforms-wrapper').empty();
+          // simulate a click on the first option of the subforms, to reset the
+          // facets below it
+          // var firstOption = $('.subforms-wrapper .form-check.option').first();
+          // var calledFrom = {button: firstOption[0]};
+          // var called_from_button = called_from && called_from['button'];
+          // var called_from_select = called_from && called_from['select'];
+
+          // resetConfigsbelowFacet(
+          //   called_from,
+          //   called_from_button,
+          //   called_from_select,
+          //   arguments,
+          // );
         }
 
         var form = $(selectorFormContainer).find('form');

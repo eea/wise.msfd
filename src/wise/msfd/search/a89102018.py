@@ -1168,7 +1168,6 @@ class A2018Art81abDisplay(ItemDisplayForm):
             'Id',
             sql2018.ART8GESElementStatu.IdOverallStatus == id_overall
         )
-
         element_status = db_objects_to_dict(element_status_orig,
                                             excluded_columns)
         final_rows = []
