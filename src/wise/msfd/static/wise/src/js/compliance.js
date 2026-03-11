@@ -1140,13 +1140,6 @@ if (!Array.prototype.last) {
       _xhrOpen.apply(this, arguments);
     };
 
-    $(document).on("ajaxComplete", function (event, xhr, settings) {
-      console.log("AJAX URL:", settings.url);
-      console.log("Response URL:", xhr.responseURL);
-      console.log("Status:", xhr.status);
-      console.log("---");
-    });
-
     $(".assessment-read-more").click(function () {
       var $this = $(this);
       $this.text(function (a, b) {
