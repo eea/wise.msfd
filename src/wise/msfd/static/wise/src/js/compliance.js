@@ -1122,7 +1122,7 @@ if (!Array.prototype.last) {
     // });
 
     // Fix login url
-    $(".pat-plone-modal").attr("href", "/marine/assessment-module/login");
+    // $(".pat-plone-modal").attr("href", "/marine/assessment-module/login");
     // Fix redirect on login
     var _xhrOpen = XMLHttpRequest.prototype.open;
     XMLHttpRequest.prototype.open = function (method, url) {
