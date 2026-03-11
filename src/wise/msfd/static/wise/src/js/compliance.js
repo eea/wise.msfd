@@ -1121,10 +1121,32 @@ if (!Array.prototype.last) {
     //   return new bootstrap.Popover(popoverTriggerEl);
     // });
 
-    $(".pat-plone-modal").attr(
-      "href",
-      "https://water.europa.eu/marine/assessment-module/login",
-    );
+    // Fix login url
+    $(".pat-plone-modal").attr("href", "/marine/assessment-module/login");
+    // Fix redirect on login
+    var _xhrOpen = XMLHttpRequest.prototype.open;
+    XMLHttpRequest.prototype.open = function (method, url) {
+      var self = this;
+      this.addEventListener("load", function () {
+        if (
+          method === "POST" &&
+          url.indexOf("login") !== -1 &&
+          self.responseURL.indexOf("login") === -1
+        ) {
+          $(".modal-wrapper").hide();
+          window.location.href = self.responseURL;
+        }
+      });
+      _xhrOpen.apply(this, arguments);
+    };
+
+    $(document).on("ajaxComplete", function (event, xhr, settings) {
+      console.log("AJAX URL:", settings.url);
+      console.log("Response URL:", xhr.responseURL);
+      console.log("Status:", xhr.status);
+      console.log("---");
+    });
+
     $(".assessment-read-more").click(function () {
       var $this = $(this);
       $this.text(function (a, b) {
