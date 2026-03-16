@@ -1263,7 +1263,7 @@ class NationalDescriptorArticleView(BaseView, AssessmentDataMixin):
         }
 
         if self.article not in schemas:
-            return file_name, edit_url, report_date, edit_url
+            return 'File not available', edit_url, report_date, edit_url
 
         count, data = db.get_all_records(
             t,
