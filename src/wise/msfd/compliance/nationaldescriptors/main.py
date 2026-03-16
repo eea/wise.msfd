@@ -1261,6 +1261,10 @@ class NationalDescriptorArticleView(BaseView, AssessmentDataMixin):
             'Art9': 'ART9_GES',
             'Art10': 'ART10_Targets',
         }
+
+        if self.article not in schemas:
+            return file_name, edit_url, report_date, edit_url
+
         count, data = db.get_all_records(
             t,
             t.CountryCode == self.country_code,
