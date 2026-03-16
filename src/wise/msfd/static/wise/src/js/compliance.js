@@ -1,8 +1,8 @@
-if (!Array.prototype.last) {
-  Array.prototype.last = function () {
-    return this[this.length - 1];
-  };
-}
+// if (!Array.prototype.last) {
+//   Array.prototype.last = function () {
+//     return this[this.length - 1];
+//   };
+// }
 
 (function (window, document, $) {
   var selectorFormContainer = ".wise-search-form-container";
